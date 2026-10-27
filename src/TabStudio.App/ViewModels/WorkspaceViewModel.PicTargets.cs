@@ -108,6 +108,7 @@ public sealed partial class WorkspaceViewModel
             await RunToolchainProjectAsync(item.Info);
             if (!_lastPicBuildSucceeded) return;
             if (profile.Protocol is "pymcuprog" or "pk2cmd" or "pic32prog" && !await PreparePicToolAsync(profile.Protocol)) return;
+            using var deviceReservation = SerialMonitor.ReserveDeviceOperation();
             await SerialMonitor.ReleaseAsync();
             var devices = _toolchains.Usb.Devices;
             if (devices.Count == 0) throw new IOException("Connect the bootloader/programmer with a USB-OTG cable, then try Flash again.");

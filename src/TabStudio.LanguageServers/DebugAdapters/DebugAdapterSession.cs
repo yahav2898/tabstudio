@@ -433,7 +433,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             SupportsVariableType: true,
             SupportsVariablePaging: false,
             SupportsRunInTerminalRequest: options.SupportsRunInTerminal,
-            SupportsMemoryReferences: false,
+            SupportsMemoryReferences: true,
             SupportsProgressReporting: false,
             SupportsInvalidatedEvent: false,
             SupportsStartDebuggingRequest: options.SupportsChildSessions,
@@ -621,6 +621,9 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             EvaluateForHovers = dto.SupportsEvaluateForHovers == true,
             SetVariable = dto.SupportsSetVariable == true,
             SetExpression = dto.SupportsSetExpression == true,
+            ReadMemory = dto.SupportsReadMemoryRequest == true,
+            WriteMemory = dto.SupportsWriteMemoryRequest == true,
+            Disassemble = dto.SupportsDisassembleRequest == true,
             ExceptionInfo = dto.SupportsExceptionInfoRequest == true,
             Terminate = dto.SupportsTerminateRequest == true,
             ExceptionFilters = (dto.ExceptionBreakpointFilters ?? [])

@@ -47,6 +47,11 @@ public interface IToolchainRuntime
     /// <returns>The program's full path, or <see langword="null"/> when it is not installed.</returns>
     string? Resolve(string command);
 
+    /// <summary>Resolves a program using the SDK that owns a project directory, when supported.</summary>
+    /// <param name="command">A program name or full path.</param>
+    /// <param name="workingDirectory">The document or project directory selecting its SDK.</param>
+    string? ResolveForDirectory(string command, string workingDirectory) => Resolve(command);
+
     /// <summary>What the Terminal runs: the environment's interactive shell, in a folder.</summary>
     /// <param name="workingDirectory">The folder, usually the workspace's.</param>
     /// <param name="size">The terminal's size.</param>

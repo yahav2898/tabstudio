@@ -1,4 +1,5 @@
 using TabStudio.Toolchains.Catalog;
+using TabStudio.Toolchains.Embedded.Projects;
 using TabStudio.Toolchains.Microchip;
 
 namespace TabStudio.Toolchains.Projects;
@@ -31,6 +32,7 @@ public static class ToolchainProjectDetector
         ArgumentNullException.ThrowIfNull(root);
         ArgumentNullException.ThrowIfNull(catalog);
         var result = new List<ToolchainProject>();
+        var embeddedRoots = new HashSet<string>(StringComparer.Ordinal);
         if (!Directory.Exists(root))
         {
             return result;
@@ -68,8 +70,34 @@ public static class ToolchainProjectDetector
 
             var inMplabProject = File.Exists(Path.Combine(folder, MplabProject.Marker))
                 || result.Any(p => MicrochipInstallation.IsCompiler(p.Toolchain.Id) && IsInside(folder, p.Directory));
+            EmbeddedProject? embedded;
+            try
+            {
+                embedded = EmbeddedProjectDetector.Read(folder);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                embedded = null;
+            }
+            var embeddedId = embedded is null ? null : EmbeddedBuildPlanner.ToolchainId(embedded.Kind);
+            if (embedded is not null)
+            {
+                embeddedRoots.Add(folder);
+            }
+            if (embedded is not null && toolchains.FirstOrDefault(t => t.Id == embeddedId) is { } embeddedToolchain)
+            {
+                result.Add(new ToolchainProject(embeddedToolchain, folder, embedded.Marker));
+            }
+            var insideEmbedded = embeddedRoots.Any(r => r == folder || IsInside(folder, r));
             foreach (var toolchain in toolchains)
             {
+                if (toolchain.Auxiliary) continue;
+                // An embedded build system owns its C/C++/Rust/Python source tree. Never run its cross-target
+                // firmware as a host executable or rediscover each source directory as a desktop project.
+                if (toolchain.Id == embeddedId || insideEmbedded && toolchain.Id is "cpp" or "python" or "rust")
+                {
+                    continue;
+                }
                 // MPLAB owns its Makefiles and C sources, including source-only child folders.
                 if (inMplabProject && toolchain.Id == "cpp")
                 {

@@ -1,0 +1,72 @@
+name: Canonical embedded starters
+
+on:
+  push:
+    branches: [main, agent/embedded-universal]
+    paths:
+      - 'src/TabStudio.App/Services/ProjectTemplates.Embedded.cs'
+      - 'src/TabStudio.Toolchains/**'
+      - 'native/embedded/**'
+      - 'build/android/native/**'
+      - 'build/pic/build_box64.py'
+      - 'build/embedded/template-build-check/**'
+      - 'build/embedded/templates.sh'
+      - 'build/embedded/build-proot-test.sh'
+      - '.github/workflows/embedded-templates.yml'
+  pull_request:
+    paths:
+      - 'src/TabStudio.App/Services/ProjectTemplates.Embedded.cs'
+      - 'src/TabStudio.Toolchains/**'
+      - 'native/embedded/**'
+      - 'build/android/native/**'
+      - 'build/pic/build_box64.py'
+      - 'build/embedded/template-build-check/**'
+      - 'build/embedded/templates.sh'
+      - 'build/embedded/build-proot-test.sh'
+      - '.github/workflows/embedded-templates.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: embedded-templates-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  templates:
+    name: App starters / ${{ matrix.group }} / ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 110
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        # AVR and ESP have the longest package downloads; the oldest ARM compilers need the verified Box64 policy on ARM64.
+        group: [avr, esp, arm-legacy, teensy-pico, stm32]
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Install signed native PRoot and Box64 build prerequisites
+        run: sudo apt-get update -qq && sudo apt-get install -y build-essential cmake libtalloc-dev gawk unzip
+      - name: Generate actual app starters and build through production PlatformIO installer and PRoot
+        run: |
+          set -o pipefail
+          mkdir -p ci-out/canonical-templates
+          bash build/embedded/templates.sh "$RUNNER_TEMP/canonical-templates" ci-out/canonical-templates '${{ matrix.group }}' 2>&1 | tee ci-out/canonical-templates/console.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical-templates-${{ matrix.group }}-${{ matrix.runner }}-${{ github.event_name }}
+          path: ci-out/canonical-templates/
+          if-no-files-found: error
+      - name: Publish logs
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh starters-${{ matrix.group }}-${{ matrix.runner }} ${{ job.status }}

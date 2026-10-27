@@ -31,13 +31,27 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
     public TestExplorerViewModel Tests => _tests ??= new TestExplorerViewModel(this, _ui);
 
     /// <inheritdoc />
-    bool ITestRunHost.CanStartTestRun => _language is not null && _testRun is null && (State is IdeState.Ready or IdeState.Failed || CanReplayUiTestsNow);
+    bool ITestRunHost.CanStartTestRun => (_language is not null || _tests?.Entries.Any(e => e.Result?.Test.Framework == TestFramework.External) == true)
+        && _testRun is null && (State is IdeState.Ready or IdeState.Failed || CanReplayUiTestsNow);
 
     /// <inheritdoc />
     async Task ITestRunHost.RunTestsAsync(TestRunRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
-        if (_language is not { } language || Workspace is not { } workspace || _testRun is not null)
+        if (Workspace is not { } workspace || _testRun is not null)
+        {
+            return;
+        }
+        try
+        {
+            request = await RunEmbeddedTestSelectionsAsync(request);
+        }
+        catch (OperationCanceledException)
+        {
+            Output.WriteLine("========== Embedded test run cancelled ==========", OutputKind.Info);
+            return;
+        }
+        if (request.Projects.Count == 0 || _language is not { } language)
         {
             return;
         }

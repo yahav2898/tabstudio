@@ -40,6 +40,10 @@ public sealed class LoopbackLauncher(IServerProcessLauncher inner) : IServerProc
         command is LanguageServerCommand or DebugAdapterCommand ? command : _inner.Resolve(command);
 
     /// <inheritdoc />
+    public string? ResolveForDirectory(string command, string workingDirectory) =>
+        command is LanguageServerCommand or DebugAdapterCommand ? command : _inner.ResolveForDirectory(command, workingDirectory);
+
+    /// <inheritdoc />
     public IServerProcess Start(ServerStartInfo startInfo)
     {
         ArgumentNullException.ThrowIfNull(startInfo);

@@ -1,0 +1,43 @@
+--- a/src/GNUmakefile
++++ b/src/GNUmakefile
+@@ -44,6 +44,8 @@
+ 	syscall/syscall.o	\
+ 	syscall/chain.o		\
+ 	syscall/enter.o		\
++	syscall/wch_guard.o	\
++	syscall/wch_usbfs.o	\
+ 	syscall/exit.o		\
+ 	syscall/sysnum.o	\
+ 	syscall/socket.o	\
+--- a/src/syscall/enter.c
++++ b/src/syscall/enter.c
+@@ -48,6 +48,7 @@
+ #include <sys/ioctl.h>   /* ioctl(2): SIOCGIFMTU / SIOCGIFHWADDR */
+ #include <sys/time.h>    /* struct timeval, for SO_RCVTIMEO */
+ #include "syscall/pipe_shadow.h"
++#include "syscall/wch_usbfs.h"
+ 
+ /* ABI-stable rtnetlink constants we synthesise for the loopback reply.
+  * Defined locally so we needn't pull in <linux/if.h> / <linux/if_arp.h>,
+@@ -3062,6 +3063,13 @@
+ 		break;
+ 
+ 	case PR_ioctl: {
++		long guarded_result;
++		if (tabstudio_wch_ioctl(tracee, &guarded_result)) {
++			set_sysnum(tracee, PR_void);
++			poke_reg(tracee, SYSARG_RESULT, (word_t) guarded_result);
++			status = guarded_result < 0 ? (int) guarded_result : 0;
++			break;
++		}
+ 		word_t cmd = peek_reg(tracee, CURRENT, SYSARG_2);
+ 		word_t arg = peek_reg(tracee, CURRENT, SYSARG_3);
+ 
+--- a/src/syscall/seccomp.c
++++ b/src/syscall/seccomp.c
+@@ -373,3 +373,2 @@
+-#ifdef __ANDROID__
+-	{ PR_ioctl,		FILTER_SYSEXIT },
+-#endif
++	/* Keep the native permissioned USB broker in the seccomp trace set. */
++	{ PR_ioctl,		FILTER_SYSEXIT },

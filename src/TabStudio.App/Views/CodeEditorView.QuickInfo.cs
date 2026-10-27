@@ -85,6 +85,10 @@ public sealed partial class CodeEditorView
         try
         {
             info = await _features.GetQuickInfoAsync(_document.FilePath, offset, request.Token);
+            if (!IsInStringOrComment(offset) && Workspace?.GetEmbeddedRegisterQuickInfo(_document.Document.Text, offset) is { } registers)
+            {
+                info = info is null ? registers : info with { Sections = [.. info.Sections, .. registers.Sections] };
+            }
         }
         catch (OperationCanceledException)
         {

@@ -1601,6 +1601,1459 @@
         }
       ],
       "errorPattern": "^(?<message>PIC build: error: .+)$"
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        ".ioc"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "embedded-arm",
+      "name": "ARM bare-metal GCC",
+      "description": "ARM bare-metal GCC, newlib, CMake, clangd and Make for firmware builds; debug probes use the permissioned USB bridge.",
+      "packages": [
+        "gcc-arm-none-eabi",
+        "g++-arm-none-eabi",
+        "newlib-arm-none-eabi",
+        "binutils-arm-none-eabi",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "gcc-arm-none-eabi",
+      "host": {
+        "commands": [
+          "arm-none-eabi-gcc"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "arm-none-eabi-gcc",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": ".ioc",
+            "command": [
+              "arm-none-eabi-gcc",
+              "--version"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        ".tabstudio-riscv"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "embedded-riscv",
+      "name": "RISC-V bare-metal GCC",
+      "description": "RISC-V bare-metal GCC and newlib with CMake and Make; choose the exact ABI and linker script for the target.",
+      "packages": [
+        "gcc-riscv-none-elf",
+        "g++-riscv-none-elf",
+        "newlib-riscv-none-elf",
+        "binutils-riscv-none-elf",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "gcc-riscv-none-elf",
+      "host": {
+        "commands": [
+          "riscv-none-elf-gcc"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "riscv-none-elf-gcc",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": ".tabstudio-riscv",
+            "command": [
+              "riscv-none-elf-gcc",
+              "--version"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        ".tabstudio-avr"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "embedded-avr",
+      "name": "AVR GCC",
+      "description": "AVR GCC, avr-libc, binutils and avrdude for application firmware; fuse writes are separate protected operations.",
+      "packages": [
+        "gcc-avr",
+        "avr-libc",
+        "binutils-avr",
+        "avrdude",
+        "make",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "gcc-avr",
+      "host": {
+        "commands": [
+          "avr-gcc"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "avr-gcc",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": ".tabstudio-avr",
+            "command": [
+              "avr-gcc",
+              "--version"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [],
+      "projectFiles": [],
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "embedded-support",
+      "name": "Embedded USB tools",
+      "description": "OpenOCD, avrdude, dfu-util and stm32flash with permissioned USB bridges and libusb compatibility dependencies; physical probe and bootloader validation remains separate.",
+      "packages": [
+        "openocd",
+        "avrdude",
+        "dfu-util",
+        "stm32flash",
+        "libusb",
+        "libusb-compat",
+        "libusb-dev",
+        "build-base",
+        "python3"
+      ],
+      "versionPackage": "openocd",
+      "host": {
+        "commands": [
+          "openocd"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "auxiliary": true
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        "platformio.ini"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "platformio",
+      "name": "PlatformIO Core",
+      "description": "PlatformIO Core 6.1.18 in an isolated Python environment with every dependency SHA-256 pinned; platform package architecture support is checked by PlatformIO.",
+      "packages": [
+        "python3",
+        "py3-pip",
+        "git",
+        "make",
+        "cmake",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "python3",
+      "host": {
+        "commands": [
+          "pio"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "pio",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "platformio.ini",
+            "command": [
+              "pio",
+              "--version"
+            ]
+          }
+        ]
+      },
+      "pinnedVersion": "6.1.18",
+      "setup": [
+        {
+          "name": "PlatformIO isolated Python environment",
+          "removes": [
+            "/opt/tabstudio/platformio"
+          ],
+          "command": [
+            "python3",
+            "-m",
+            "venv",
+            "/opt/tabstudio/platformio"
+          ]
+        },
+        {
+          "name": "PlatformIO verified dependency lock",
+          "file": {
+            "path": "/opt/tabstudio/platformio.requirements.txt",
+            "content": "ajsonrpc==1.2.0 --hash=sha256:0fa2c1cf8e619d18ffee96043822032d6520eda65d3b712f9540a3a63e9cac25\nanyio==4.15.1 --hash=sha256:6152fdbbf9a77fdec97731721bebf7c4c44f7c29b424b0065826173efc7ed101\nbottle==0.13.4 --hash=sha256:045684fbd2764eac9cdeb824861d1551d113e8b683d8d26e296898d3dd99a12e\ncertifi==2026.10.23 --hash=sha256:e9b54de76e530bb6cf0ccd036787103acb58fd42ba930ea8bf948ddbaa2f61d1\ncharset-normalizer==3.5.2 --hash=sha256:b6b751274acb69d77b3323d6b7dbaa3c7fdfc1eb829b7eb61d262f32e1af9685\nclick==8.1.7 --hash=sha256:ae74fb96c20a0277a1d615f1e4d73c8414f5a98db8b799a7931d1582f3390c28\ncolorama==0.4.6 --hash=sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6\nh11==0.16.0 --hash=sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86\nidna==3.20 --hash=sha256:ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c\nmarshmallow==3.26.2 --hash=sha256:013fa8a3c4c276c24d26d84ce934dc964e2aa794345a0f8c7e5a7191482c8a73\npackaging==26.3 --hash=sha256:d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c\nplatformio==6.1.18 --hash=sha256:94ef70a242ddcb93e020b0250c4f61e65b347411e8dfe36f79efb759c09324fa\npyelftools==0.33 --hash=sha256:f215ad5f47d3f1373a21496a6c9e0707c622840d0622f23ff7ce08678b020036\npyserial==3.5 --hash=sha256:c4451db6ba391ca6ca299fb3ec7bae67a5c55dde170964c7a14ceefec02f2cf0\nrequests==2.34.2 --hash=sha256:2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0\nsemantic-version==2.10.0 --hash=sha256:de78a3b8e0feda74cabc54aab2da702113e33ac9d9eb9d2389bcf1f58b7d9177\nstarlette==0.46.2 --hash=sha256:595633ce89f8ffa71a015caed34a5b2dc1c0cdb3f0f1fbd1e69339cf2abeec35\ntabulate==0.10.0 --hash=sha256:f0b0622e567335c8fabaaa659f1b33bcb6ddfe2e496071b743aa113f8774f2d3\ntyping_extensions==4.16.0 --hash=sha256:481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8\nurllib3==2.8.0 --hash=sha256:0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3\nuvicorn==0.34.3 --hash=sha256:16246631db62bdfbf069b0645177d6e8a77ba950cfedbfd093acef9444e4d885\nwsproto==1.3.2 --hash=sha256:61eea322cdf56e8cc904bd3ad7573359a242ba65688716b0710a5eb12beab584\n"
+          }
+        },
+        {
+          "name": "PlatformIO pinned wheels",
+          "command": [
+            "/opt/tabstudio/platformio/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "--only-binary=:all:",
+            "--require-hashes",
+            "-r",
+            "/opt/tabstudio/platformio.requirements.txt"
+          ]
+        },
+        {
+          "name": "PlatformIO launcher",
+          "file": {
+            "path": "/usr/local/bin/pio",
+            "executable": true,
+            "content": "#!/bin/sh\nexport PLATFORMIO_SETTING_ENABLE_TELEMETRY=no\nexec /opt/tabstudio/platformio/bin/python -P -m platformio \"$@\"\n"
+          }
+        }
+      ]
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://arduino.github.io/arduino-cli/",
+      "license": "GPL-3.0-only",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".ino"
+      ],
+      "projectFiles": [
+        "sketch.yaml"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "arduino",
+      "name": "Arduino CLI",
+      "description": "Arduino CLI 1.5.1 from SHA-256 pinned official ARM64, ARMv7 and x64 archives; board cores are installed separately under their own licences.",
+      "packages": [
+        "python3",
+        "ca-certificates",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "python3",
+      "host": {
+        "commands": [
+          "arduino-cli"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "arduino-cli",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "sketch.yaml",
+            "command": [
+              "arduino-cli",
+              "--version"
+            ]
+          }
+        ]
+      },
+      "pinnedVersion": "1.5.1",
+      "setup": [
+        {
+          "name": "Arduino CLI 1.5.1 aarch64",
+          "architectures": [
+            "aarch64"
+          ],
+          "archive": {
+            "url": "https://github.com/arduino/arduino-cli/releases/download/v1.5.1/arduino-cli_1.5.1_Linux_ARM64.tar.gz",
+            "sha256": "1e69e077479f300614d4551334e0a33f08ee40b04315d83b8e7e0e94f0d0ee62",
+            "destination": "/opt/tabstudio/arduino-cli",
+            "size": 16155457
+          }
+        },
+        {
+          "name": "Arduino CLI 1.5.1 x86_64",
+          "architectures": [
+            "x86_64"
+          ],
+          "archive": {
+            "url": "https://github.com/arduino/arduino-cli/releases/download/v1.5.1/arduino-cli_1.5.1_Linux_64bit.tar.gz",
+            "sha256": "28a8e119c498a25607821c36cb2dc49e8463941b261a0d99091baa7bc692dd2b",
+            "destination": "/opt/tabstudio/arduino-cli",
+            "size": 17630765
+          }
+        },
+        {
+          "name": "Arduino CLI 1.5.1 armv7",
+          "architectures": [
+            "armv7"
+          ],
+          "archive": {
+            "url": "https://github.com/arduino/arduino-cli/releases/download/v1.5.1/arduino-cli_1.5.1_Linux_ARMv7.tar.gz",
+            "sha256": "890af36e9873606e4dfa743534846186621b9f3a339175ea3ec481adecf07143",
+            "destination": "/opt/tabstudio/arduino-cli",
+            "size": 16434757
+          }
+        },
+        {
+          "name": "Arduino CLI launcher",
+          "file": {
+            "path": "/usr/local/bin/arduino-cli",
+            "executable": true,
+            "content": "#!/bin/sh\nexec /opt/tabstudio/arduino-cli/arduino-cli \"$@\"\n"
+          }
+        }
+      ]
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://github.com/espressif/esp-idf",
+      "license": "Apache-2.0",
+      "estimatedDownloadSize": 3000000000,
+      "estimatedInstalledSize": 8000000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        "sdkconfig"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "esp-idf",
+      "name": "ESP-IDF",
+      "description": "ESP-IDF 5.4.1 at an exact source revision, including pinned submodules, in the shared Ubuntu environment. Espressif SHA-256-verifies native Xtensa/RISC-V archives for all targets. Python releases, build tools and vendor constraints are SHA-256 locked; installation needs several GB.",
+      "packages": [
+        "python3",
+        "git",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "python3",
+      "host": {
+        "commands": [
+          "idf.py"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "idf.py",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "sdkconfig",
+            "command": [
+              "idf.py",
+              "--version"
+            ]
+          }
+        ]
+      },
+      "pinnedVersion": "5.4.1"
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://github.com/zephyrproject-rtos/zephyr",
+      "license": "Apache-2.0",
+      "estimatedDownloadSize": 900000000,
+      "estimatedInstalledSize": 3000000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        "west.yml"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "zephyr",
+      "name": "Zephyr SDK",
+      "description": "Zephyr 4.1.0 sources and common Arm HAL modules at immutable revisions, native signed GNU Arm tools, West 1.3.0 and SHA-256-locked Python dependencies. Other board modules and architectures require their explicit west update/toolchain selection.",
+      "packages": [
+        "python3",
+        "git",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "python3",
+      "host": {
+        "commands": [
+          "west"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "west",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "west.yml",
+            "command": [
+              "west",
+              "--version"
+            ]
+          }
+        ]
+      },
+      "pinnedVersion": "4.1.0"
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://github.com/raspberrypi/pico-sdk",
+      "license": "BSD-3-Clause",
+      "estimatedDownloadSize": 800000000,
+      "estimatedInstalledSize": 2500000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        "pico_sdk_import.cmake"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "pico-sdk",
+      "name": "Raspberry Pi Pico SDK",
+      "description": "Raspberry Pi Pico SDK 2.1.1 and its exact submodules with native signed GNU Arm tools in the shared Ubuntu environment. Installation compiles a Pico blink ELF before reporting ready.",
+      "packages": [
+        "python3",
+        "git",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "python3",
+      "host": {
+        "commands": [
+          "cmake"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "cmake",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "pico_sdk_import.cmake",
+            "command": [
+              "cmake",
+              "--version"
+            ]
+          }
+        ]
+      },
+      "pinnedVersion": "2.1.1"
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "MIT",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".py"
+      ],
+      "projectFiles": [
+        ".micropython"
+      ],
+      "languageServer": {
+        "id": "pyright",
+        "command": [
+          "pyright-langserver",
+          "--stdio"
+        ],
+        "languages": [
+          "python"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "micropython",
+      "name": "MicroPython / CircuitPython",
+      "description": "MicroPython and CircuitPython REPL and verified active-file synchronization with mpremote 1.26.1 through the permissioned USB serial bridge.",
+      "packages": [
+        "python3",
+        "py3-pip"
+      ],
+      "versionPackage": "python3",
+      "host": {
+        "commands": [
+          "mpremote"
+        ],
+        "versionArguments": [
+          "--help"
+        ]
+      },
+      "run": {
+        "file": [
+          "mpremote",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": ".micropython",
+            "command": [
+              "mpremote",
+              "--version"
+            ]
+          }
+        ]
+      },
+      "pinnedVersion": "1.26.1",
+      "setup": [
+        {
+          "name": "mpremote Python environment",
+          "command": [
+            "python3",
+            "-m",
+            "venv",
+            "/opt/tabstudio/mpremote"
+          ]
+        },
+        {
+          "name": "mpremote verified dependency lock",
+          "file": {
+            "path": "/opt/tabstudio/mpremote.requirements.txt",
+            "content": "mpremote==1.26.1 --hash=sha256:39251644305be718c52bc5965315adc4ae824901750abf6a3fb63683234df05c\nplatformdirs==4.13.5 --hash=sha256:53d3ec4280b815c1e0b02edad7f9ee8fda1ba9c0865dd9c2e6e63849ce82fc1e\npyserial==3.5 --hash=sha256:c4451db6ba391ca6ca299fb3ec7bae67a5c55dde170964c7a14ceefec02f2cf0\n"
+          }
+        },
+        {
+          "name": "mpremote pinned wheels",
+          "command": [
+            "/opt/tabstudio/mpremote/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "--only-binary=:all:",
+            "--require-hashes",
+            "-r",
+            "/opt/tabstudio/mpremote.requirements.txt"
+          ]
+        },
+        {
+          "name": "mpremote launcher",
+          "file": {
+            "path": "/usr/local/bin/mpremote",
+            "executable": true,
+            "content": "#!/bin/sh\nexec /opt/tabstudio/mpremote/bin/python -P -m mpremote \"$@\"\n"
+          }
+        }
+      ]
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": false,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        ".uvprojx",
+        ".ewp",
+        ".cproj"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "embedded-import",
+      "name": "Vendor embedded import",
+      "description": "Vendor embedded import project detection and native build plans; SDK installation and architecture validation are required before this entry can be offered in the Store.",
+      "packages": [
+        "python3",
+        "git",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "python3",
+      "host": {
+        "commands": [
+          "cmake"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "cmake",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": ".uvprojx",
+            "command": [
+              "cmake",
+              "--version"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later AND GPL-2.0-or-later",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [],
+      "projectFiles": [],
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "embedded-debug",
+      "name": "Embedded GDB debugger",
+      "description": "OpenOCD and Python-enabled GDB multiarch DAP for halted-target debugging through a supported permissioned libusb probe.",
+      "packages": [
+        "openocd",
+        "gdb-multiarch",
+        "python3"
+      ],
+      "versionPackage": "gdb-multiarch",
+      "host": {
+        "commands": [
+          "gdb-multiarch"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "auxiliary": true
+    },
+    {
+      "id": "probe-rs",
+      "name": "probe-rs",
+      "description": "Official probe-rs 0.32.0 tools in the embedded glibc environment with an exact permissioned USBFS inventory; USB transfer and individual probes require hardware verification.",
+      "auxiliary": true,
+      "listed": true,
+      "homepage": "https://probe.rs/",
+      "license": "MIT OR Apache-2.0",
+      "packages": [
+        "python3"
+      ],
+      "versionPackage": "python3",
+      "pinnedVersion": "0.32.0",
+      "estimatedDownloadSize": 22506272,
+      "estimatedInstalledSize": 160000000,
+      "host": {
+        "commands": [
+          "probe-rs"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "fileExtensions": [],
+      "projectFiles": [],
+      "setup": [
+        {
+          "name": "probe-rs v0.32.0 aarch64",
+          "architectures": [
+            "aarch64"
+          ],
+          "archive": {
+            "url": "https://github.com/probe-rs/probe-rs/releases/download/v0.32.0/probe-rs-tools-aarch64-unknown-linux-gnu.tar.xz",
+            "sha256": "7c818cfd77808e806bf8f4d108c9137910b4fb28e0fe5c464d39782dbbc8af31",
+            "size": 21444944,
+            "destination": "/opt/tabstudio/probe-rs"
+          }
+        },
+        {
+          "name": "probe-rs v0.32.0 x86_64",
+          "architectures": [
+            "x86_64"
+          ],
+          "archive": {
+            "url": "https://github.com/probe-rs/probe-rs/releases/download/v0.32.0/probe-rs-tools-x86_64-unknown-linux-gnu.tar.xz",
+            "sha256": "c2ccc46049e52a5d403ef212078cd637ecda55b662708327960558f83e851ff5",
+            "size": 22506272,
+            "destination": "/opt/tabstudio/probe-rs"
+          }
+        }
+      ],
+      "debugAdapter": {
+        "id": "probe-rs-dap",
+        "command": [
+          "probe-rs",
+          "dap-server"
+        ],
+        "type": "probe-rs",
+        "languages": []
+      }
+    },
+    {
+      "id": "embedded-esptool",
+      "packages": [
+        "python3",
+        "ca-certificates",
+        "libusb"
+      ],
+      "name": "Espressif esptool",
+      "description": "Official esptool 5.6.0 standalone ARM64/x64 binaries, SHA-256 verified, in the shared glibc environment. Serial flashing only; no eFuse actions are exposed.",
+      "homepage": "https://github.com/espressif/esptool",
+      "license": "GPL-2.0-or-later",
+      "auxiliary": true,
+      "listed": true,
+      "pinnedVersion": "5.6.0",
+      "estimatedDownloadSize": 71469509,
+      "estimatedInstalledSize": 200000000,
+      "host": {
+        "commands": [
+          "esptool",
+          "esptool.py"
+        ],
+        "versionArguments": [
+          "version"
+        ]
+      },
+      "setup": [
+        {
+          "name": "Official esptool 5.6.0 ARM64",
+          "architectures": [
+            "aarch64"
+          ],
+          "archive": {
+            "url": "https://github.com/espressif/esptool/releases/download/v5.6.0/esptool-v5.6.0-linux-aarch64.tar.gz",
+            "sha256": "7723120429394b4d6d974d694e5cf378e00259381a7f8856c2c88492041b9f59",
+            "size": 71469509,
+            "destination": "/opt/tabstudio/flash/esptool"
+          }
+        },
+        {
+          "name": "Official esptool 5.6.0 x64",
+          "architectures": [
+            "x86_64"
+          ],
+          "archive": {
+            "url": "https://github.com/espressif/esptool/releases/download/v5.6.0/esptool-v5.6.0-linux-amd64.tar.gz",
+            "sha256": "1590723cfa9675983f49d0bf2895b8507f8d2879082e51bb7ef02a8bca88d354",
+            "size": 78380843,
+            "destination": "/opt/tabstudio/flash/esptool"
+          }
+        }
+      ]
+    },
+    {
+      "id": "embedded-picotool",
+      "packages": [
+        "python3",
+        "ca-certificates",
+        "libusb"
+      ],
+      "name": "Raspberry Pi picotool",
+      "description": "Official picotool 2.3.1 ARM64/x64 binaries, SHA-256 verified, in the shared glibc environment, with permissioned USB and application-only upload profiles.",
+      "homepage": "https://github.com/raspberrypi/pico-sdk-tools",
+      "license": "BSD-3-Clause",
+      "auxiliary": true,
+      "listed": true,
+      "pinnedVersion": "2.3.1",
+      "estimatedDownloadSize": 1027494,
+      "estimatedInstalledSize": 6000000,
+      "host": {
+        "commands": [
+          "picotool"
+        ],
+        "versionArguments": [
+          "version"
+        ]
+      },
+      "setup": [
+        {
+          "name": "Official picotool 2.3.1 ARM64",
+          "architectures": [
+            "aarch64"
+          ],
+          "archive": {
+            "url": "https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.3.1-0/picotool-2.3.1-aarch64-lin.tar.gz",
+            "sha256": "8cce5579c92e77c0439f34d4f49d37b1dc7d1e7c455233398f2e7b49599f67aa",
+            "size": 970927,
+            "destination": "/opt/tabstudio/flash/picotool"
+          }
+        },
+        {
+          "name": "Official picotool 2.3.1 x64",
+          "architectures": [
+            "x86_64"
+          ],
+          "archive": {
+            "url": "https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.3.1-0/picotool-2.3.1-x86_64-lin.tar.gz",
+            "sha256": "878a1a1e7d8336b8be60300c7218f366d9790c0d3a211b181d6d172e80b1248e",
+            "size": 1027494,
+            "destination": "/opt/tabstudio/flash/picotool"
+          }
+        }
+      ]
+    },
+    {
+      "id": "embedded-bossac",
+      "name": "BOSSA SAM-BA client",
+      "description": "Build the SHA-256-pinned upstream bossac 1.9.1 natively in Alpine using signed compiler dependencies; original sources, licenses and locked dependencies are retained. Physical programming remains hardware-unverified.",
+      "homepage": "https://github.com/shumatech/BOSSA",
+      "license": "BSD-3-Clause",
+      "auxiliary": true,
+      "listed": true,
+      "pinnedVersion": "1.9.1",
+      "estimatedDownloadSize": 544082,
+      "estimatedInstalledSize": 18000000,
+      "packages": [
+        "python3",
+        "build-base"
+      ],
+      "host": {
+        "commands": [
+          "bossac"
+        ],
+        "versionArguments": [
+          "--help"
+        ]
+      },
+      "setup": [
+        {
+          "name": "Upstream bossac 1.9.1 source",
+          "archive": {
+            "url": "https://github.com/shumatech/BOSSA/archive/refs/tags/1.9.1.tar.gz",
+            "sha256": "ca650455dfa36cbd029010167347525bea424717a71a691381c0811591c93e72",
+            "size": 544082,
+            "destination": "/opt/tabstudio/flash/bossac"
+          }
+        }
+      ]
+    },
+    {
+      "id": "embedded-teensy",
+      "name": "Teensy HalfKay client",
+      "description": "Build the SHA-256-pinned upstream teensy_loader_cli 2.3 natively in Alpine using signed compiler dependencies; original sources, licenses and locked dependencies are retained. Physical programming remains hardware-unverified.",
+      "homepage": "https://github.com/PaulStoffregen/teensy_loader_cli",
+      "license": "GPL-3.0-only",
+      "auxiliary": true,
+      "listed": true,
+      "pinnedVersion": "2.3",
+      "estimatedDownloadSize": 127016,
+      "estimatedInstalledSize": 4000000,
+      "packages": [
+        "python3",
+        "build-base",
+        "libusb-compat-dev",
+        "linux-headers"
+      ],
+      "host": {
+        "commands": [
+          "teensy_loader_cli"
+        ],
+        "versionArguments": [
+          "--list-mcus"
+        ]
+      },
+      "setup": [
+        {
+          "name": "Upstream teensy_loader_cli 2.3 source",
+          "archive": {
+            "url": "https://github.com/PaulStoffregen/teensy_loader_cli/archive/refs/tags/2.3.tar.gz",
+            "sha256": "d9c5357d7e8b99e9a9ae93f5e921c35a133a4a5d399f57eec10f3a606be5d89f",
+            "size": 127016,
+            "destination": "/opt/tabstudio/flash/teensy_loader_cli"
+          }
+        }
+      ]
+    },
+    {
+      "id": "embedded-wchisp",
+      "name": "WCH ROM ISP client",
+      "description": "Build the SHA-256-pinned upstream wchisp 0.3.0 natively in Alpine using signed compiler dependencies; original sources, licenses and locked dependencies are retained. Physical programming remains hardware-unverified.",
+      "homepage": "https://github.com/ch32-rs/wchisp",
+      "license": "GPL-2.0",
+      "auxiliary": true,
+      "listed": true,
+      "pinnedVersion": "0.3.0",
+      "estimatedDownloadSize": 39429,
+      "estimatedInstalledSize": 850000000,
+      "packages": [
+        "python3",
+        "build-base",
+        "rust",
+        "cargo",
+        "pkgconf",
+        "libusb-dev"
+      ],
+      "host": {
+        "commands": [
+          "wchisp"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "setup": [
+        {
+          "name": "Upstream wchisp 0.3.0 source",
+          "archive": {
+            "url": "https://github.com/ch32-rs/wchisp/archive/refs/tags/v0.3.0.tar.gz",
+            "sha256": "bd6a20b5976a19a56f3fea6694d964edbba99a394fc1513a6cbf8d9040a04538",
+            "size": 39429,
+            "destination": "/opt/tabstudio/flash/wchisp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "embedded-mspdebug",
+      "name": "MSP430 MSPDebug client",
+      "description": "Build the SHA-256-pinned upstream mspdebug 0.26 natively in Alpine using signed compiler dependencies; original sources, licenses and locked dependencies are retained. Physical programming remains hardware-unverified.",
+      "homepage": "https://github.com/dlbeer/mspdebug",
+      "license": "GPL-2.0-or-later",
+      "auxiliary": true,
+      "listed": true,
+      "pinnedVersion": "0.26",
+      "estimatedDownloadSize": 366846,
+      "estimatedInstalledSize": 14000000,
+      "packages": [
+        "python3",
+        "build-base",
+        "libusb-compat-dev",
+        "linux-headers"
+      ],
+      "host": {
+        "commands": [
+          "mspdebug"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "setup": [
+        {
+          "name": "Upstream mspdebug 0.26 source",
+          "archive": {
+            "url": "https://github.com/dlbeer/mspdebug/archive/refs/tags/v0.26.tar.gz",
+            "sha256": "9e2c1562adeee79c73d75f0521032b01543163772f5ec30a7d6e9f6d708214b8",
+            "size": 366846,
+            "destination": "/opt/tabstudio/flash/mspdebug"
+          }
+        }
+      ]
+    },
+    {
+      "id": "embedded-rust",
+      "name": "Rust Embedded SDK",
+      "description": "Rust 1.97.0 native ARM64/x64 compiler, Cargo, rust-analyzer, rust-src, rustfmt and Clippy with ten standard bare-metal Arm/RV32 targets. Official release component archives are SHA-256 pinned; tier-3 AVR/Xtensa and rustup toolchain overrides require separate setup.",
+      "languages": [
+        "Rust"
+      ],
+      "listed": true,
+      "auxiliary": false,
+      "homepage": "https://www.rust-lang.org",
+      "license": "MIT OR Apache-2.0",
+      "estimatedDownloadSize": 500000000,
+      "estimatedInstalledSize": 1800000000,
+      "fileExtensions": [
+        ".rs"
+      ],
+      "projectFiles": [],
+      "pinnedVersion": "1.97.0",
+      "packages": [],
+      "host": {
+        "commands": [
+          "rustc"
+        ],
+        "versionArguments": [
+          "--version"
+        ],
+        "versionPattern": "rustc (?<version>\\S+)"
+      },
+      "run": {
+        "entries": [],
+        "environment": {
+          "CARGO_TERM_COLOR": "never"
+        }
+      },
+      "languageServer": {
+        "id": "rust-analyzer",
+        "command": [
+          "rust-analyzer"
+        ],
+        "languages": [
+          "rust"
+        ]
+      },
+      "additionalToolIds": [
+        "cargo",
+        "rustc",
+        "rustfmt",
+        "cargo-clippy"
+      ],
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+): (?<severity>error|warning|note): (?<message>.*)$"
+        },
+        {
+          "pattern": "-->\\s+(?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)"
+        },
+        {
+          "pattern": "panicked at (?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)"
+        }
+      ],
+      "errorPattern": "^error(?:\\[[^\\]]+\\])?: (?<message>.*)$",
+      "sourceFolderIsProject": false
+    },
+    {
+      "id": "embedded-ch32fun",
+      "name": "CH32V003 ch32fun starter SDK",
+      "description": "Pinned upstream CH32fun startup, linker scripts and MCU declarations with native Alpine RV32EC GCC; installation compiles the original blink example without opening a probe.",
+      "homepage": "https://github.com/cnlohr/ch32fun",
+      "license": "MIT AND GPL-3.0-or-later WITH GCC-exception-3.1",
+      "listed": true,
+      "pinnedVersion": "a800cbd1f1ca5e250c73da83c669f0965d2052e5",
+      "estimatedDownloadSize": 62959765,
+      "estimatedInstalledSize": 300000000,
+      "packages": [
+        "gcc-riscv-none-elf",
+        "g++-riscv-none-elf",
+        "newlib-riscv-none-elf",
+        "binutils-riscv-none-elf",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "host": {
+        "commands": [
+          "riscv-none-elf-gcc"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "setup": [
+        {
+          "name": "Pinned ch32fun MCU support sources",
+          "archive": {
+            "url": "https://github.com/cnlohr/ch32fun/archive/a800cbd1f1ca5e250c73da83c669f0965d2052e5.tar.gz",
+            "sha256": "69da911012466b3e5e13053c677e4578061843a2d6947de2e919a0fdeb43b411",
+            "size": 2959765,
+            "destination": "/opt/tabstudio/ch32fun"
+          }
+        },
+        {
+          "name": "Compile upstream CH32V003 startup and linker without hardware",
+          "command": [
+            "make",
+            "-C",
+            "/opt/tabstudio/ch32fun/ch32fun-a800cbd1f1ca5e250c73da83c669f0965d2052e5/examples/blink",
+            "-j2",
+            "build",
+            "PREFIX=riscv-none-elf",
+            "GENERATED_LD_FILE=/opt/tabstudio/ch32fun/validation-ch32v003.ld"
+          ],
+          "runAfterSetupChanges": true
+        }
+      ],
+      "languages": [
+        "C"
+      ],
+      "fileExtensions": [
+        ".c",
+        ".h",
+        ".s",
+        ".S"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "run": {
+        "file": [
+          "riscv-none-elf-gcc",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": ".tabstudio-ch32fun",
+            "command": [
+              "make",
+              "build"
+            ]
+          }
+        ]
+      },
+      "projectFiles": [
+        ".tabstudio-ch32fun"
+      ]
+    },
+    {
+      "id": "embedded-nrfutil",
+      "name": "Nordic legacy Secure DFU client",
+      "description": "Verified unchanged pc-nrfutil 6.1.7 from Nordic nrf5sdk-tools 1.1.0 for serial application DFU; native x64 or explicit Box64 on ARM64, with retained vendor license and no Python package modification.",
+      "homepage": "https://www.nordicsemi.com/Products/Development-tools/nRF-Util",
+      "license": "LicenseRef-Nordic-1-Clause",
+      "auxiliary": true,
+      "listed": true,
+      "pinnedVersion": "6.1.7",
+      "estimatedDownloadSize": 32471565,
+      "estimatedInstalledSize": 100000000,
+      "packages": [
+        "python3",
+        "ca-certificates"
+      ],
+      "host": {
+        "commands": [
+          "nrfutil"
+        ],
+        "versionArguments": [
+          "version"
+        ]
+      }
+    },
+    {
+      "id": "embedded-wlink",
+      "name": "WCH-Link guarded CH32V003 client",
+      "description": "Unchanged source-pinned native wlink with locked dependencies. CH32V003 programming additionally requires TabStudio’s native USB guard, exact observed chip identity and independent flash readback.",
+      "homepage": "https://github.com/ch32-rs/wlink",
+      "license": "MIT OR Apache-2.0",
+      "auxiliary": true,
+      "listed": false,
+      "pinnedVersion": "0.1.3",
+      "estimatedDownloadSize": 120000000,
+      "estimatedInstalledSize": 400000000,
+      "packages": [
+        "python3",
+        "build-base",
+        "rust",
+        "cargo",
+        "pkgconf",
+        "eudev-dev"
+      ],
+      "host": {
+        "commands": [
+          "wlink"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      }
     }
   ]
 }

@@ -496,6 +496,20 @@
         "console": "integratedTerminal"
       }
     },
+    "embedded-probe-rs": {
+      "name": "On-chip probe-rs",
+      "languages": [],
+      "command": "probe-rs",
+      "args": [ "dap-server" ],
+      "package": "probe-rs"
+    },
+    "embedded-gdb": {
+      "name": "On-chip GDB (OpenOCD)",
+      "languages": [],
+      "command": "gdb-multiarch",
+      "args": [ "--quiet", "--nx", "--interpreter=dap" ],
+      "package": "embedded-debug"
+    },
     "gpsim": {
       "name": "PIC18 simulator (gpsim)",
       "languages": [

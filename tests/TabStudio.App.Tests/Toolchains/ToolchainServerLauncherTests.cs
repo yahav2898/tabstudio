@@ -98,6 +98,147 @@ public sealed partial class ToolchainServerLauncherTests
         Assert.Equal(3, await process.Exited.WaitAsync(TimeSpan.FromSeconds(30)));
     }
 
+    [Theory]
+    [InlineData("arduino")]
+    [InlineData("esp")]
+    [InlineData("zephyr")]
+    [InlineData("pico")]
+    [InlineData("cube")]
+    public void Embedded_clangd_uses_the_actual_planned_database_directory_before_the_first_build(string kind)
+    {
+        using var folder = new TempDirectory();
+        CreateEmbeddedProject(folder, kind);
+        var runtime = new FakeRuntime();
+        string[] original = ["--background-index", "--header-insertion=never"];
+        var expected = Path.Combine(folder.Path, ".tabstudio", "embedded", "build");
+        Assert.False(Directory.Exists(expected));
+
+        using var process = new ToolchainServerLauncher(runtime).Start(new ServerStartInfo("/usr/bin/clangd", original,
+            folder.Path, new Dictionary<string, string?> { ["SDK_PATH"] = "/opt/sdk" }));
+
+        var spec = Assert.Single(runtime.Started).Spec;
+        Assert.Equal([.. original, "--compile-commands-dir=" + expected], spec.Arguments);
+        Assert.Equal(folder.Path, spec.WorkingDirectory);
+        Assert.Equal("/opt/sdk", spec.Environment["SDK_PATH"]);
+        Assert.Equal(["share " + folder.Path, "start /usr/bin/clangd"], runtime.Calls);
+        Assert.DoesNotContain(spec.Arguments, argument => argument.StartsWith("--query-driver", StringComparison.Ordinal));
+        Assert.True(Directory.Exists(expected));
+        Assert.False(File.Exists(Path.Combine(expected, "compile_commands.json")));
+        Assert.False(File.Exists(Path.Combine(folder.Path, ".clangd")));
+    }
+
+    [Theory]
+    [InlineData("--compile-commands-dir=/reviewed/database")]
+    [InlineData("-compile-commands-dir=/reviewed/database")]
+    [InlineData("--compile-commands-dir")]
+    [InlineData("-compile-commands-dir")]
+    public void Explicit_clangd_database_arguments_are_preserved(string option)
+    {
+        using var folder = new TempDirectory();
+        CreateEmbeddedProject(folder, "pico");
+        var runtime = new FakeRuntime();
+        string[] arguments = option.Contains('=') ? ["--background-index", option] : ["--background-index", option, "/reviewed/database"];
+        using var process = new ToolchainServerLauncher(runtime).Start(new ServerStartInfo("/usr/bin/clangd", arguments, folder.Path, new Dictionary<string, string?>()));
+        Assert.Equal(arguments, Assert.Single(runtime.Started).Spec.Arguments);
+        Assert.False(Directory.Exists(Path.Combine(folder.Path, ".tabstudio", "embedded", "build")));
+    }
+
+    [Theory]
+    [InlineData("compile_commands.json", "[{\"command\":\"reviewed-compiler -DUSER_FLAGS\"}]")]
+    [InlineData(".clangd", "CompileFlags: { CompilationDatabase: reviewed-build }\n")]
+    public void Existing_user_database_and_yaml_database_choices_keep_normal_clangd_discovery(string name, string contents)
+    {
+        using var folder = new TempDirectory();
+        CreateEmbeddedProject(folder, "pico");
+        var path = folder.Write(name, contents);
+        var runtime = new FakeRuntime();
+        string[] arguments = ["--background-index"];
+        using var process = new ToolchainServerLauncher(runtime).Start(new ServerStartInfo("/usr/bin/clangd", arguments, folder.Path, new Dictionary<string, string?>()));
+        Assert.Equal(arguments, Assert.Single(runtime.Started).Spec.Arguments);
+        Assert.Equal(contents, File.ReadAllText(path));
+        Assert.False(Directory.Exists(Path.Combine(folder.Path, ".tabstudio", "embedded", "build")));
+    }
+
+    [Fact]
+    public void An_existing_ancestor_database_keeps_clangds_normal_discovery_authoritative()
+    {
+        using var folder = new TempDirectory();
+        var database = folder.Write("compile_commands.json", "[]\n");
+        var project = Path.Combine(folder.Path, "firmware");
+        Directory.CreateDirectory(project);
+        File.WriteAllText(Path.Combine(project, "CMakeLists.txt"), "include(pico_sdk_import.cmake)\npico_sdk_init()\n");
+        var runtime = new FakeRuntime();
+        using var process = new ToolchainServerLauncher(runtime).Start(new ServerStartInfo("/usr/bin/clangd-18", [], project, new Dictionary<string, string?>()));
+        Assert.Empty(Assert.Single(runtime.Started).Spec.Arguments);
+        Assert.Equal("[]\n", File.ReadAllText(database));
+        Assert.False(Directory.Exists(Path.Combine(project, ".tabstudio")));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Invalid_or_oversized_embedded_configuration_cannot_prevent_a_language_server_start(bool oversized)
+    {
+        using var folder = new TempDirectory();
+        CreateEmbeddedProject(folder, "pico");
+        folder.Write(".tabstudio/embedded.json", oversized ? new string('x', 65537) : "{ invalid JSON");
+        var runtime = new FakeRuntime();
+        using var process = new ToolchainServerLauncher(runtime).Start(new ServerStartInfo("/usr/bin/clangd", ["--background-index"], folder.Path, new Dictionary<string, string?>()));
+        Assert.Equal(["--background-index"], Assert.Single(runtime.Started).Spec.Arguments);
+        Assert.False(Directory.Exists(Path.Combine(folder.Path, ".tabstudio", "embedded", "build")));
+    }
+
+    [Fact]
+    public void Other_servers_do_not_receive_clangd_options_or_create_build_directories()
+    {
+        using var folder = new TempDirectory();
+        CreateEmbeddedProject(folder, "pico");
+        var runtime = new FakeRuntime();
+        using var process = new ToolchainServerLauncher(runtime).Start(new ServerStartInfo("rust-analyzer", [], folder.Path, new Dictionary<string, string?>()));
+        Assert.Empty(Assert.Single(runtime.Started).Spec.Arguments);
+        Assert.False(Directory.Exists(Path.Combine(folder.Path, ".tabstudio", "embedded", "build")));
+    }
+
+    [Fact]
+    public void A_symlinked_generated_directory_does_not_redirect_automatic_clangd_setup()
+    {
+        if (OperatingSystem.IsWindows()) return;
+        using var folder = new TempDirectory();
+        using var other = new TempDirectory();
+        CreateEmbeddedProject(folder, "pico");
+        Directory.CreateSymbolicLink(Path.Combine(folder.Path, ".tabstudio"), other.Path);
+        var runtime = new FakeRuntime();
+        using var process = new ToolchainServerLauncher(runtime).Start(new ServerStartInfo("/usr/bin/clangd", [], folder.Path, new Dictionary<string, string?>()));
+        Assert.Empty(Assert.Single(runtime.Started).Spec.Arguments);
+        Assert.False(Directory.Exists(Path.Combine(other.Path, "embedded", "build")));
+    }
+
+    private static void CreateEmbeddedProject(TempDirectory folder, string kind)
+    {
+        switch (kind)
+        {
+            case "arduino":
+                folder.Write(Path.GetFileName(folder.Path) + ".ino", "void setup(){} void loop(){}\n");
+                folder.Write(".tabstudio/embedded.json", "{\"board\":\"arduino:avr:uno\"}");
+                break;
+            case "esp":
+                folder.Write("CMakeLists.txt", "include($ENV{IDF_PATH}/tools/cmake/project.cmake)\n");
+                folder.Write("sdkconfig", "CONFIG_IDF_TARGET=\"esp32c3\"\n");
+                break;
+            case "zephyr":
+                folder.Write("CMakeLists.txt", "find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})\n");
+                folder.Write(".tabstudio/embedded.json", "{\"board\":\"nrf52840dk/nrf52840\"}");
+                break;
+            case "cube":
+                folder.Write("blink.ioc", "Mcu.CPN=STM32F401RE\n");
+                folder.Write("CMakeLists.txt", "project(blink C ASM)\n");
+                break;
+            default:
+                folder.Write("CMakeLists.txt", "include(pico_sdk_import.cmake)\npico_sdk_init()\n");
+                break;
+        }
+    }
+
     /// <summary>A Linux environment whose programs are fakes: it records what it was asked to do.</summary>
     private sealed class FakeRuntime : IToolchainRuntime
     {

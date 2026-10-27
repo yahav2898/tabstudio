@@ -43,6 +43,14 @@ internal sealed class FakeLauncher(Action<FakeLanguageServer>? configure = null)
 
     public string? Resolve(string command) => Missing.Contains(command) ? null : "/fake/bin/" + command;
 
+    public (string Command, string Directory)? LastResolutionContext { get; private set; }
+
+    public string? ResolveForDirectory(string command, string workingDirectory)
+    {
+        LastResolutionContext = (command, workingDirectory);
+        return Resolve(command);
+    }
+
     public IServerProcess Start(ServerStartInfo startInfo)
     {
         if (StartFailure is { } failure)

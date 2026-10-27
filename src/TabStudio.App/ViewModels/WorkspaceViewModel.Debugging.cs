@@ -817,6 +817,9 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
     private void NotifyDebugCommands()
     {
+        ReadEmbeddedMemoryCommand.NotifyCanExecuteChanged();
+        DisassembleEmbeddedCommand.NotifyCanExecuteChanged();
+        NotifyEmbeddedPeripheralCommands();
         ApplyHotReloadCommand.NotifyCanExecuteChanged();
         StartDebuggingCommand.NotifyCanExecuteChanged();
         StepIntoCommand.NotifyCanExecuteChanged();

@@ -1,0 +1,119 @@
+--- a/src/syscall/enter.c
++++ b/src/syscall/enter.c
+@@ -20,6 +20,8 @@
+  * 02110-1301 USA.
+  */
+ 
++#include <stdlib.h>      /* getenv(3) */
++#include <sys/stat.h>    /* fstat(2), stat(2) */
+ #include <errno.h>       /* errno(3), E* */
+ #include <talloc.h>      /* talloc_*, */
+ #include <sys/un.h>      /* struct sockaddr_un, */
+@@ -1884,6 +1886,78 @@
+  * -errno if an error occured from the tracee's point-of-view (EFAULT
+  * for instance), otherwise 0.
+  */
++/**
++ * Hand the one Android-permissioned usbfs handle to raw-syscall clients.
++ * The tracer's environment is fixed by the app, not by a guest process.
++ * Unlike reopening /proc/self/fd/3 this duplicates the already-granted
++ * open file description without repeating device-node DAC checks.
++ * Return 1 when rewritten, 0 for unrelated paths, or -errno on refusal.
++ */
++static int tabstudio_usb_open(Tracee *tracee, int dirfd,
++			     const char *path, int flags)
++{
++	const char *selected = getenv("TABSTUDIO_USB_DEVPATH");
++	const char *descriptor = getenv("TABSTUDIO_USB_FD");
++	char guest[PATH_MAX];
++	char base[PATH_MAX];
++	char procfd[64];
++	struct stat granted, child;
++	int i, status;
++
++	if (selected == NULL || descriptor == NULL || strcmp(descriptor, "3") != 0)
++		return 0;
++	/* Accept only one literal Linux usbfs bus/address, never a glob,
++	 * arbitrary file, parent traversal, or an inherited descriptor chosen
++	 * by untrusted project configuration. */
++	if (strlen(selected) != 20 || strncmp(selected, "/dev/bus/usb/", 13) != 0
++	    || selected[16] != '/')
++		return 0;
++	for (i = 13; i < 20; i++) {
++		if (i != 16 && (selected[i] < '0' || selected[i] > '9'))
++			return 0;
++	}
++	if (strncmp(selected + 13, "000", 3) == 0 || strcmp(selected + 17, "000") == 0)
++		return 0;
++	if (path[0] == '\0')
++		return 0;
++	if (path[0] == '/') {
++		if (strcmp(path, selected) != 0)
++			return 0;
++	} else {
++		if (dirfd == AT_FDCWD)
++			status = getcwd2(tracee, base);
++		else {
++			status = readlink_proc_pid_fd(tracee->pid, dirfd, base);
++			if (status >= 0)
++				status = detranslate_path(tracee, base, NULL);
++		}
++		if (status < 0 || join_paths(2, guest, base, path) < 0 || strcmp(guest, selected) != 0)
++			return 0;
++	}
++	if ((flags & (O_CREAT | O_TRUNC | O_EXCL | O_DIRECTORY)) != 0)
++		return -EINVAL;
++#ifdef O_PATH
++	if ((flags & O_PATH) != 0)
++		return -EINVAL;
++#endif
++	/* If a guest closed/reused fd 3, refuse instead of duplicating an
++	 * unrelated file. The parent keeps its granted connection open. */
++	if (fstat(3, &granted) != 0)
++		return -EBADF;
++	if (snprintf(procfd, sizeof(procfd), "/proc/%d/fd/3", tracee->pid) >= (int)sizeof(procfd)
++	    || stat(procfd, &child) != 0
++	    || child.st_dev != granted.st_dev || child.st_ino != granted.st_ino
++	    || child.st_rdev != granted.st_rdev || (child.st_mode & S_IFMT) != (granted.st_mode & S_IFMT))
++		return -EBADF;
++	set_sysnum(tracee, PR_fcntl);
++	poke_reg(tracee, SYSARG_1, 3);
++	poke_reg(tracee, SYSARG_2, (flags & O_CLOEXEC) != 0 ? F_DUPFD_CLOEXEC : F_DUPFD);
++	poke_reg(tracee, SYSARG_3, 4);
++	tracee->sysexit_pending = true;
++	tracee->restart_how = PTRACE_SYSCALL;
++	return 1;
++}
++
+ int translate_syscall_enter(Tracee *tracee)
+ {
+ 	int flags;
+@@ -2651,6 +2725,15 @@
+ 	case PR_open:
+ 		flags = peek_reg(tracee, CURRENT, SYSARG_2);
+ 
++		status = get_sysarg_path(tracee, path, SYSARG_1);
++		if (status < 0)
++			break;
++		status = tabstudio_usb_open(tracee, AT_FDCWD, path, flags);
++		if (status != 0) {
++			if (status > 0) status = 0;
++			break;
++		}
++
+ 		if (tracee->execfn_addr != 0
+ 		    && read_string(tracee, path, peek_reg(tracee, CURRENT, SYSARG_1), PATH_MAX) > 0
+ 		    && strcmp(path, "/proc/self/auxv") == 0) {
+@@ -2801,6 +2884,12 @@
+ 		status = get_sysarg_path(tracee, path, SYSARG_2);
+ 		if (status < 0)
+ 			break;
++
++		status = tabstudio_usb_open(tracee, dirfd, path, flags);
++		if (status != 0) {
++			if (status > 0) status = 0;
++			break;
++		}
+ 
+ 		if (tracee->execfn_addr != 0 && strcmp(path, "/proc/self/auxv") == 0) {
+ 			tracee->sysexit_pending = true;

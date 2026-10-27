@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             xmlns:svd="using:TabStudio.Toolchains.Embedded.Peripherals"
+             x:Class="TabStudio.App.Views.EmbeddedPeripheralsView"
+             x:DataType="vm:WorkspaceViewModel">
+  <DockPanel Margin="10,6">
+    <StackPanel DockPanel.Dock="Top" Spacing="6">
+      <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="6">
+        <TextBlock Text="{Binding EmbeddedPeripheralDevice}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+        <Button Grid.Column="1" Content="Load SVD" Command="{Binding LoadEmbeddedSvdCommand}" />
+        <Button Grid.Column="2" Content="Read selected register" Command="{Binding ReadSelectedEmbeddedRegisterCommand}" />
+        <Button Grid.Column="3" Content="Edit field…" Command="{Binding EditSelectedEmbeddedRegisterCommand}" />
+      </Grid>
+      <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+        <ComboBox ItemsSource="{Binding EmbeddedPeripheralCatalog}" SelectedItem="{Binding SelectedEmbeddedPeripheral}" HorizontalAlignment="Stretch"
+                  AutomationProperties.Name="Device peripheral">
+          <ComboBox.ItemTemplate><DataTemplate x:DataType="svd:SvdPeripheral"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate>
+        </ComboBox>
+        <ComboBox Grid.Column="1" ItemsSource="{Binding EmbeddedRegisterCatalog}" SelectedItem="{Binding SelectedEmbeddedRegister}" HorizontalAlignment="Stretch"
+                  AutomationProperties.Name="Device register">
+          <ComboBox.ItemTemplate><DataTemplate x:DataType="svd:SvdRegister"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate>
+        </ComboBox>
+      </Grid>
+      <TextBlock Classes="muted small" Text="{Binding EmbeddedPeripheralDescription}" TextWrapping="Wrap" MaxHeight="44" />
+      <TextBlock Classes="small" Text="{Binding EmbeddedPeripheralSnapshot}" TextWrapping="Wrap" />
+      <Grid ColumnDefinitions="150,55,130,*" Margin="4,3,4,0">
+        <TextBlock Text="Field" /><TextBlock Grid.Column="1" Text="Bits" /><TextBlock Grid.Column="2" Text="Value" /><TextBlock Grid.Column="3" Text="Description" />
+      </Grid>
+    </StackPanel>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <ItemsControl ItemsSource="{Binding EmbeddedRegisterFields}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:EmbeddedRegisterFieldRow">
+            <Grid ColumnDefinitions="150,55,130,*" Margin="4,4" MinWidth="520">
+              <TextBlock Text="{Binding Name}" TextWrapping="Wrap" />
+              <TextBlock Grid.Column="1" Text="{Binding Bits}" />
+              <TextBlock Grid.Column="2" Text="{Binding Value}" />
+              <TextBlock Grid.Column="3" Text="{Binding Description}" TextWrapping="Wrap" />
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

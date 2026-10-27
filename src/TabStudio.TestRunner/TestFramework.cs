@@ -15,4 +15,7 @@ public enum TestFramework
 
     /// <summary>MSTest: <c>[TestMethod]</c> and <c>[DataTestMethod]</c> methods in a <c>[TestClass]</c>.</summary>
     MSTest,
+
+    /// <summary>A host or on-target embedded test executed by its native harness and imported into Test Explorer.</summary>
+    External,
 }

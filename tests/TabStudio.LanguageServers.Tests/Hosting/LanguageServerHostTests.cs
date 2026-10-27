@@ -12,6 +12,15 @@ namespace TabStudio.LanguageServers.Tests.Hosting;
 public sealed class LanguageServerHostTests
 {
     [Fact]
+    public async Task Server_resolution_receives_the_document_directory_before_choosing_a_native_SDK()
+    {
+        await using var workspace = new FakeWorkspace();
+        var path = workspace.Write("firmware/src/main.rs", "#![no_std]");
+        Assert.NotNull(workspace.Host.FindServer(path));
+        Assert.Equal(("rust-analyzer", Path.GetDirectoryName(path)!), workspace.Launcher.LastResolutionContext);
+    }
+
+    [Fact]
     public async Task Opening_a_file_starts_its_server_and_initializes_it_with_honest_capabilities()
     {
         await using var workspace = new FakeWorkspace();

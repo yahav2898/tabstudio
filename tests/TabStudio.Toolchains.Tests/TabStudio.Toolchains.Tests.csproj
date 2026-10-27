@@ -17,6 +17,9 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+    <EmbeddedResource Include="Embedded/Fixtures/idf-5.4.1-esp32c3-security-defaults.json" LogicalName="Embedded.Idf541DefaultSecurity.json" />
+    <EmbeddedResource Include="Embedded/Fixtures/idf-5.4.1-partitions.json" LogicalName="Embedded.Idf541Partitions.json" />
+    <EmbeddedResource Include="Embedded/Fixtures/picotool-2.3.1-rp2350-e10.json" LogicalName="Embedded.Picotool231Rp2350E10.json" />
   </ItemGroup>
 
 </Project>

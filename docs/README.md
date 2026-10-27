@@ -20,6 +20,7 @@ Start with the [README](../README.md) for what TabStudio is and how to install i
 | [TabStudio Live](features/live.md) | Coding together in real time on the same Wi-Fi: sharing, following, shared debugging, classrooms and the security model |
 | [Mobile and web servers](features/mobile.md) | Server previews, Android builds on the tablet, iOS builds in the cloud |
 | [Microchip PIC](features/pic.md) | XC8 and XC32 builds on the tablet, flashing over USB, debugging in gpsim |
+| [Embedded firmware](features/embedded.md) | Native firmware projects, permissioned USB bridges, upload/debug, backups, memory/register analysis and explicit verification limits |
 | [Port to Avalonia](features/porting.md) | Converting WPF and Windows Forms projects into Avalonia projects |
 | [Time-travel debugging](features/time-travel.md) | Recording a C# run and stepping back through its timeline |
 | [Layout checks](layout-checks.md) | SWRM001 to SWRM005: what Swarm checks on every screen, and how to fix each finding |

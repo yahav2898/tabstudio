@@ -30,6 +30,7 @@ public sealed class ToolchainServices : IDisposable
 {
     private readonly HttpClient? _http;
     private readonly AlpinePackageManager? _packages;
+    private readonly EmbeddedGlibcToolchainInstaller? _embeddedInstaller;
     private readonly Lock _gate = new();
     private HttpClient? _hostHttp;
     private Task? _firstRefresh;
@@ -55,8 +56,10 @@ public sealed class ToolchainServices : IDisposable
         var downloader = new Downloader(_http);
         Environment = new AlpineEnvironment(Path.Combine(paths.Root, "Toolchains", "linux"), catalog.Linux, Platform, downloader, [paths.Projects]);
         _packages = new AlpinePackageManager(Environment, _http, downloader, new ApkTool(Environment.Runtime));
-        Manager = new ToolchainManager(catalog, new FlutterToolchainInstaller(
-            new LinuxToolchainInstaller(Environment, _packages, downloader), Path.Combine(paths.Root, "Toolchains", "flutter"), Platform, downloader, [paths.Projects]));
+        _embeddedInstaller = new EmbeddedGlibcToolchainInstaller(new FlutterToolchainInstaller(
+            new LinuxToolchainInstaller(Environment, _packages, downloader), Path.Combine(paths.Root, "Toolchains", "flutter"), Platform, downloader, [paths.Projects]),
+            Path.Combine(paths.Root, "Toolchains", "embedded-glibc"), Platform, downloader, [paths.Projects]);
+        Manager = new ToolchainManager(catalog, _embeddedInstaller);
     }
 
     /// <summary>Wraps a manager built elsewhere, such as one over a fake mirror in tests.</summary>
@@ -159,6 +162,19 @@ public sealed class ToolchainServices : IDisposable
     /// <summary>Android USB permissions and open connection lifetime.</summary>
     public IUsbHost Usb { get; } = new NoUsbHost();
 
+    /// <summary>Prepares PlatformIO's native-first x86 fallback without changing compatible native package selection.</summary>
+    /// <param name="line">Verified runtime preparation output.</param>
+    /// <param name="cancellationToken">Stops preparation.</param>
+    public Task PrepareEmbeddedBox64Async(Action<string> line, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(line);
+        if (_embeddedInstaller is null)
+        {
+            throw new NotSupportedException("PlatformIO's optional Box64 package mode requires the Android embedded glibc environment.");
+        }
+        return Manager.ConfigureRuntimeAsync(token => _embeddedInstaller.PrepareBox64Async(line, token), cancellationToken);
+    }
+
     /// <summary>Installs USB support without requiring an XC license or compiler download.</summary>
     /// <param name="developmentTools">Also prepares native builds of optional programmer/simulator tools.</param>
     /// <param name="line">Setup output.</param>
@@ -191,6 +207,56 @@ public sealed class ToolchainServices : IDisposable
 
     /// <summary>The Linux environment on Android, or <see langword="null"/> on a desktop computer.</summary>
     public AlpineEnvironment? Environment { get; }
+
+    /// <summary>Installs permissioned libusb and POSIX serial bridges without installing a compiler.</summary>
+    /// <param name="line">Package and native compilation output.</param>
+    /// <param name="cancellationToken">Stops installation and compilation.</param>
+    public Task PrepareEmbeddedSupportAsync(Action<string> line, CancellationToken cancellationToken) =>
+        Manager.ConfigureRuntimeAsync(async token =>
+        {
+            if (Environment is not { } environment || _packages is null)
+            {
+                throw new NotSupportedException("USB-OTG requires the Android Linux environment.");
+            }
+
+            var packages = TabStudio.Toolchains.Embedded.UsbBridgeInstallation.Packages;
+            if (packages.Any(name => _packages.Installed.Find(name) is null))
+            {
+                var plan = await _packages.PlanInstallAsync(packages, token).ConfigureAwait(false);
+                await _packages.DownloadAsync(plan, (_, package) => line("Downloading " + package.Name), token).ConfigureAwait(false);
+                await _packages.InstallAsync(packages, upgrade: false, line, token).ConfigureAwait(false);
+            }
+
+            var sources = TabStudio.Toolchains.Embedded.UsbBridgeInstallation.SupportFiles;
+            var fingerprint = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(
+                string.Join('\n', packages) + "\n" + string.Join('\n', sources.Select(source => source.Key + "\n" + source.Value)) +
+                string.Join('\n', TabStudio.Toolchains.Embedded.UsbBridgeInstallation.BuildCommands.Select(command => command.CommandLine)))));
+            var stamp = Path.Combine(environment.Rootfs, TabStudio.Toolchains.Embedded.UsbBridgeInstallation.ToolsDirectory.TrimStart('/'), ".bridge-build.sha256");
+            var rebuild = !File.Exists(stamp) || await File.ReadAllTextAsync(stamp, token).ConfigureAwait(false) != fingerprint;
+            foreach (var source in sources)
+            {
+                var destination = Path.Combine(environment.Rootfs, TabStudio.Toolchains.Embedded.UsbBridgeInstallation.ToolsDirectory.TrimStart('/'), source.Key);
+                Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+                if (!File.Exists(destination) || await File.ReadAllTextAsync(destination, token).ConfigureAwait(false) != source.Value)
+                {
+                    await File.WriteAllTextAsync(destination, source.Value, token).ConfigureAwait(false);
+                    rebuild = true;
+                }
+            }
+
+            rebuild |= TabStudio.Toolchains.Embedded.UsbBridgeInstallation.BuildCommands.Any(command =>
+                !File.Exists(Path.Combine(environment.Rootfs, command.Arguments[9].TrimStart('/'))));
+            if (rebuild) File.Delete(stamp);
+            foreach (var command in TabStudio.Toolchains.Embedded.UsbBridgeInstallation.BuildCommands)
+            {
+                if (!rebuild) continue;
+                var result = await TabStudio.Toolchains.Processes.CommandRunner.RunAsync(Runtime, command, line, token).ConfigureAwait(false);
+                if (!result.Succeeded) throw new IOException("Could not build the embedded USB bridge: " + result.Tail());
+            }
+            if (!File.Exists(Path.Combine(environment.Rootfs, "usr", "lib", "libhidapi-libusb.so.0")))
+                throw new IOException("The signed hidapi package did not provide its libusb backend; CMSIS-DAP v1 cannot use Android hidraw.");
+            await File.WriteAllTextAsync(stamp, fingerprint, token).ConfigureAwait(false);
+        }, cancellationToken);
 
     /// <summary>Retrieves Microchip's terms for the Store's explicit acceptance dialog.</summary>
     /// <param name="cancellationToken">Cancels the request.</param>
@@ -257,6 +323,7 @@ public sealed class ToolchainServices : IDisposable
     public void Dispose()
     {
         Manager.Dispose();
+        _embeddedInstaller?.Dispose();
         _packages?.Dispose();
         _http?.Dispose();
         _hostHttp?.Dispose();

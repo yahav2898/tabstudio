@@ -23,6 +23,11 @@ public interface IServerProcessLauncher
     /// <returns>The program's full path, or <see langword="null"/> when it is not installed.</returns>
     string? Resolve(string command);
 
+    /// <summary>Resolves a server in its document's SDK context; ordinary launchers use their existing search path.</summary>
+    /// <param name="command">The server name or full path.</param>
+    /// <param name="workingDirectory">The directory containing the document.</param>
+    string? ResolveForDirectory(string command, string workingDirectory) => Resolve(command);
+
     /// <summary>Starts a program with its standard streams redirected.</summary>
     /// <param name="startInfo">What to start.</param>
     /// <returns>The running program.</returns>

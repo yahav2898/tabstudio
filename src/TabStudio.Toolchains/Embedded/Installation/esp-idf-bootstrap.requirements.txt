@@ -1,0 +1,10 @@
+# ESP-IDF 5.4.1 native Ubuntu 24.04 ARM64/x64 CPython 3.12 dependencies.
+# Source commit:4c2820d377d1375e787bcef612f0c32c1427d183 tools/requirements/requirements.core.txt.
+# Vendor5.4constraints snapshot SHA256:5eb288ae09027642441fbfcd5e2404ec34d525b0d7b2ed54d0c677e7d3381652.
+# All release hashes from PyPI JSON. Only esptool uses a source archive; install bootstrap
+# first and use --no-build-isolation --only-binary=:all: --no-binary=esptool.
+setuptools==80.9.0 \
+    --hash=sha256:062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922
+
+wheel==0.45.1 \
+    --hash=sha256:708e7481cc80179af0e556bbf0cc00b8444c7321e2700b8d8580231d13017248

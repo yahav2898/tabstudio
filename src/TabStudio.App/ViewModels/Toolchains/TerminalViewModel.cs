@@ -148,6 +148,29 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
     /// <summary>Asks the view to take the keyboard focus.</summary>
     public void RequestFocus() => FocusRequested?.Invoke(this, EventArgs.Empty);
 
+    /// <summary>Runs an interactive tool in this terminal, retaining its caller's resource lifetime until exit.</summary>
+    /// <param name="spec">A tool such as the MicroPython REPL, with argument-vector parameters.</param>
+    /// <param name="title">The terminal tab title.</param>
+    /// <param name="cancellationToken">Stops the program and all its children.</param>
+    public async Task<ProcessExit> RunProgramAsync(ProcessStartSpec spec, string title, CancellationToken cancellationToken)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ArgumentNullException.ThrowIfNull(spec);
+        // Keys must reach this program, not a host's shell this Terminal is mirroring.
+        Mirror(null);
+        StopShell();
+        var process = _toolchains.Runtime.Start(spec with { Terminal = _size });
+        _process = process;
+        Message = null;
+        NeedsSetup = false;
+        IsRunning = true;
+        Title = title;
+        _ = ReadAsync(process);
+        _ = WatchAsync(process);
+        RequestFocus();
+        return await process.WaitAsync(cancellationToken);
+    }
+
     /// <summary>Shows the host's shell instead of one of this device's, or a shell of its own again.</summary>
     /// <param name="input">Where typing goes, or <see langword="null"/> to stop showing the host's shell.</param>
     public void Mirror(Action<byte[]>? input)

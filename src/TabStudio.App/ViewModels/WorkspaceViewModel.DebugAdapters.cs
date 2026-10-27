@@ -580,6 +580,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
 
         var version = ++_adapterPauses;
+        _embeddedRtosStoppedEvidence = (session, version, stop.AllThreadsStopped);
         IReadOnlyList<DapThread> threads;
         try
         {
@@ -621,6 +622,9 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
 
         await ShowAdapterFrameAsync(CallStack.ActiveFrame);
+        // Actual exception stops may capture only the bound embedded GDB session. The capture core checks
+        // ICSR.VECTACTIVE, exact profile/ELF and this halt epoch before publishing any automatic diagnosis.
+        await TryCaptureEmbeddedFaultAutomaticallyAsync(session, stop, version);
     }
 
     /// <summary>Reads a thread's call stack into the Call Stack panel.</summary>
@@ -656,8 +660,11 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             return;
         }
 
+        // A different DAP thread can represent another target core. Invalidate paused snapshots and
+        // pending register-write confirmations even when every core remains halted.
+        var version = _adapterThread == thread ? _adapterPauses : ++_adapterPauses;
         _adapterThread = thread;
-        if (await ShowAdapterStackAsync(session, thread, _adapterPauses))
+        if (await ShowAdapterStackAsync(session, thread, version))
         {
             await ShowAdapterFrameAsync(CallStack.ActiveFrame);
         }
@@ -949,6 +956,11 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     private void RestartAdapter()
     {
+        if (_adapter?.Adapter.Id is "embedded-gdb" or "embedded-probe-rs")
+        {
+            _ = RestartEmbeddedDebugAsync();
+            return;
+        }
         if (_adapter?.Adapter.Id == "flutter")
         {
             _ = ReloadFlutterAsync(fullRestart: true);
@@ -1007,6 +1019,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
         _adapterRoot = null;
         _adapter = null;
+        if (session.Adapter.Id is "embedded-gdb" or "embedded-probe-rs") DisposeEmbeddedDebug();
         _adapterPauses++;
         _adapterCurrent = null;
         _adapterFrames = [];
@@ -1074,6 +1087,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         var root = _adapterRoot ?? _adapter;
         _adapterRoot = null;
         _adapter = null;
+        DisposeEmbeddedDebug();
         if (root is not null)
         {
             _ = root.DisposeAsync().AsTask();

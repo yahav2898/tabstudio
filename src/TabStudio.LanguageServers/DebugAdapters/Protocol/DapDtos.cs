@@ -42,6 +42,9 @@ internal sealed record CapabilitiesDto(
     bool? SupportsRestartRequest,
     bool? SupportsDelayedStackTraceLoading,
     bool? SupportsSingleThreadExecutionRequests,
+    bool? SupportsReadMemoryRequest,
+    bool? SupportsWriteMemoryRequest,
+    bool? SupportsDisassembleRequest,
     IReadOnlyList<ExceptionBreakpointsFilterDto>? ExceptionBreakpointFilters);
 
 /// <summary>A source file.</summary>

@@ -37,6 +37,12 @@ public interface IUsbConnection : IDisposable
 
     /// <summary>The borrowed platform descriptor, never a path to a USB device node.</summary>
     int FileDescriptor { get; }
+
+    /// <summary>Device/configuration descriptor bytes obtained from the permissioned connection, or empty when unavailable.</summary>
+    ReadOnlyMemory<byte> RawDescriptors => ReadOnlyMemory<byte>.Empty;
+
+    /// <summary>Current USB configuration read from the permissioned device; unknown configurations cannot be guessed for usbfs clients.</summary>
+    int? ActiveConfiguration => null;
 }
 
 /// <summary>Platform USB permission and descriptor ownership.</summary>
@@ -49,6 +55,34 @@ public interface IUsbHost
     /// <param name="device">A currently attached device.</param>
     /// <param name="cancellationToken">Cancels waiting for permission.</param>
     Task<IUsbConnection> OpenAsync(UsbDeviceInfo device, CancellationToken cancellationToken);
+}
+
+/// <summary>The attachment transition observed by a USB host.</summary>
+public enum UsbDeviceChangeKind
+{
+    /// <summary>A device appeared in the platform USB service's current device list.</summary>
+    Attached,
+    /// <summary>A previously attached device disappeared from the platform USB service's list.</summary>
+    Detached,
+}
+
+/// <summary>An attachment change. Device metadata does not imply USB permission or identify a target MCU.</summary>
+/// <param name="device">Platform descriptor metadata for the affected device.</param>
+/// <param name="kind">Whether the device appeared or disappeared.</param>
+public sealed class UsbDeviceChangedEventArgs(UsbDeviceInfo device, UsbDeviceChangeKind kind) : EventArgs
+{
+    /// <summary>The affected USB attachment.</summary>
+    public UsbDeviceInfo Device { get; } = device;
+
+    /// <summary>The attachment transition.</summary>
+    public UsbDeviceChangeKind Kind { get; } = kind;
+}
+
+/// <summary>Optional USB hot-plug notifications. Implementations observe only while subscribed; enumeration never requests permission.</summary>
+public interface IUsbHotplugHost
+{
+    /// <summary>Raised after the platform reports a device-list change. Callers marshal UI work to their dispatcher.</summary>
+    event EventHandler<UsbDeviceChangedEventArgs>? DevicesChanged;
 }
 
 /// <summary>Desktop hosts use their installed tools, or the Windows Bridge.</summary>

@@ -20,6 +20,7 @@ public sealed partial class CodeEditorView
     private Popup? _lightBulbPopup;
     private IReadOnlyList<CodeActionItem> _codeActions = [];
     private (int Start, int Length, int Edits) _codeActionsFor = (-1, -1, -1);
+    private int _codeActionsRegisterRevision;
 
     /// <summary>The quick fixes and refactorings at the caret, from the last time they were listed. For tests.</summary>
     public IReadOnlyList<CodeActionItem> CodeActions => _codeActions;
@@ -77,12 +78,17 @@ public sealed partial class CodeEditorView
 
         _document.SyncText();
         var span = (Start: _editor.SelectionLength > 0 ? _editor.SelectionStart : _editor.CaretOffset, Length: _editor.SelectionLength, Edits: _document.EditCount);
-        if (span == _codeActionsFor)
+        var registerRevision = Workspace?.EmbeddedRegisterMetadataRevision ?? 0;
+        if (span == _codeActionsFor && registerRevision == _codeActionsRegisterRevision)
         {
             return _codeActions;
         }
 
         var actions = await _features.GetCodeActionsAsync(_document.FilePath, span.Start, span.Length, cancellationToken);
+        if (!IsInStringOrComment(span.Start) && Workspace is { } workspace)
+        {
+            actions = [.. actions, .. workspace.GetEmbeddedMaskCodeActions(_document.FilePath, _document.Document.Text, span.Start)];
+        }
         if (cancellationToken.IsCancellationRequested || span.Edits != _document.EditCount)
         {
             return null;
@@ -90,6 +96,7 @@ public sealed partial class CodeEditorView
 
         _codeActions = actions;
         _codeActionsFor = span;
+        _codeActionsRegisterRevision = registerRevision;
         return actions;
     }
 
@@ -174,6 +181,18 @@ public sealed partial class CodeEditorView
     /// <param name="action">An action from <see cref="CodeActions"/>.</param>
     internal async Task ApplyCodeActionAsync(CodeActionItem action)
     {
+        if (action.Id.StartsWith("embedded-mask:", StringComparison.Ordinal))
+        {
+            HideLightBulb();
+            if (_codeActionsFor.Edits == _document.EditCount && Workspace is { } owner &&
+                owner.GetEmbeddedMaskCodeActionEdit(action.Id, _document.FilePath, _document.Document.Text) is { } edit)
+            {
+                await owner.ApplyDocumentEditsAsync([edit]);
+            }
+            _codeActionsFor = (-1, -1, -1);
+            _editor.TextArea.Focus();
+            return;
+        }
         if (_features is null)
         {
             return;

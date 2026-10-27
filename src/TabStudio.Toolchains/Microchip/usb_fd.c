@@ -25,8 +25,19 @@
 #include <stdint.h>
 #include <errno.h>
 #include <dlfcn.h>
+#include <pthread.h>
+#include <fcntl.h>
 
-static libusb_context *permission_context;
+/* Keep one wrapped view per libusb context, so concurrent contexts do not
+ * accidentally attach transfers to another context's event loop. A view owns
+ * its base handle until libusb_exit; lists retain ordinary device references. */
+struct permission_view {
+    libusb_context *context;
+    libusb_device_handle *base;
+    struct permission_view *next;
+};
+static struct permission_view *views;
+static pthread_mutex_t view_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static int permitted_fd(void) {
     const char *text = getenv("TABSTUDIO_USB_FD");
@@ -34,12 +45,12 @@ static int permitted_fd(void) {
     if (!text || !*text) return -1;
     errno = 0;
     long fd = strtol(text, &end, 10);
-    return errno || *end || fd != 3 ? -1 : (int)fd;
+    return errno || *end || fd != 3 || fcntl((int)fd, F_GETFD) < 0 ? -1 : (int)fd;
 }
 
 int libusb_init_context(libusb_context **context, const struct libusb_init_option original[], int count) {
     if (permitted_fd() < 0) return LIBUSB_ERROR_ACCESS;
-    if (count < 0 || count > 16) return LIBUSB_ERROR_INVALID_PARAM;
+    if (count < 0 || count > 16 || (count && !original)) return LIBUSB_ERROR_INVALID_PARAM;
     struct libusb_init_option options[17];
     int selected = 0;
     for (int i = 0; i < count; i++) if (original[i].option != LIBUSB_OPTION_NO_DEVICE_DISCOVERY) options[selected++] = original[i];
@@ -47,23 +58,38 @@ int libusb_init_context(libusb_context **context, const struct libusb_init_optio
     int (*initialize)(libusb_context **, const struct libusb_init_option *, int) = dlsym(RTLD_NEXT, "libusb_init_context");
     if (!initialize) return LIBUSB_ERROR_NOT_SUPPORTED;
     int result = initialize(context, options, selected);
-    if (result == 0) permission_context = context ? *context : NULL;
     return result;
 }
 
 int libusb_init(libusb_context **context) { return libusb_init_context(context, NULL, 0); }
 
+/* Must be called with view_lock held. */
+static int get_view(libusb_context *context, struct permission_view **output) {
+    for (struct permission_view *view = views; view; view = view->next) {
+        if (view->context == context) { *output = view; return 0; }
+    }
+    struct permission_view *view = calloc(1, sizeof(*view));
+    if (!view) return LIBUSB_ERROR_NO_MEM;
+    int result = libusb_wrap_sys_device(context, (intptr_t)permitted_fd(), &view->base);
+    if (result < 0) { free(view); return result; }
+    view->context = context;
+    view->next = views;
+    views = view;
+    *output = view;
+    return 0;
+}
+
 ssize_t libusb_get_device_list(libusb_context *context, libusb_device ***list) {
     if (!list || permitted_fd() < 0) return LIBUSB_ERROR_ACCESS;
     *list = NULL;
-    libusb_device_handle *handle = NULL;
-    int result = libusb_wrap_sys_device(context, (intptr_t)permitted_fd(), &handle);
-    if (result < 0) return result;
     libusb_device **selected = calloc(2, sizeof(*selected));
-    if (!selected) { libusb_close(handle); return LIBUSB_ERROR_NO_MEM; }
-    selected[0] = libusb_ref_device(libusb_get_device(handle));
-    libusb_close(handle);
-    permission_context = context;
+    if (!selected) return LIBUSB_ERROR_NO_MEM;
+    pthread_mutex_lock(&view_lock);
+    struct permission_view *view = NULL;
+    int result = get_view(context, &view);
+    if (result == 0) selected[0] = libusb_ref_device(libusb_get_device(view->base));
+    pthread_mutex_unlock(&view_lock);
+    if (result < 0) { free(selected); return result; }
     *list = selected;
     /* libusb_free_device_list releases each ref and frees this allocation. */
     return 1;
@@ -71,7 +97,17 @@ ssize_t libusb_get_device_list(libusb_context *context, libusb_device ***list) {
 
 int libusb_open(libusb_device *device, libusb_device_handle **handle) {
     if (!device || !handle || permitted_fd() < 0) return LIBUSB_ERROR_ACCESS;
-    return libusb_wrap_sys_device(permission_context, (intptr_t)permitted_fd(), handle);
+    *handle = NULL;
+    pthread_mutex_lock(&view_lock);
+    int result = LIBUSB_ERROR_NO_DEVICE;
+    for (struct permission_view *view = views; view; view = view->next) {
+        if (libusb_get_device(view->base) == device) {
+            result = libusb_wrap_sys_device(view->context, (intptr_t)permitted_fd(), handle);
+            break;
+        }
+    }
+    pthread_mutex_unlock(&view_lock);
+    return result;
 }
 
 libusb_device_handle *libusb_open_device_with_vid_pid(libusb_context *context, uint16_t vid, uint16_t pid) {
@@ -84,4 +120,22 @@ libusb_device_handle *libusb_open_device_with_vid_pid(libusb_context *context, u
         return NULL;
     }
     return handle;
+}
+
+void libusb_exit(libusb_context *context) {
+    pthread_mutex_lock(&view_lock);
+    struct permission_view **link = &views;
+    while (*link) {
+        struct permission_view *view = *link;
+        if (view->context == context) {
+            *link = view->next;
+            libusb_close(view->base);
+            free(view);
+            break;
+        }
+        link = &view->next;
+    }
+    pthread_mutex_unlock(&view_lock);
+    void (*finish)(libusb_context *) = dlsym(RTLD_NEXT, "libusb_exit");
+    if (finish) finish(context);
 }

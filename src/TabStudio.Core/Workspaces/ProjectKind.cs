@@ -84,6 +84,9 @@ public enum ProjectKind
     /// developer control plane on a computer, and builds with code its SDK generates for the projects it references.
     /// </summary>
     AspireAppHost,
+
+    /// <summary>Firmware built by its native project system and uploaded to an explicitly selected external device.</summary>
+    EmbeddedFirmware,
 }
 
 /// <summary>

@@ -152,6 +152,13 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        if (CurrentToolchainProject() is { } native && TabStudio.Toolchains.Embedded.Projects.EmbeddedProjectDetector.Read(native.Project.Directory) is { } embedded)
+        {
+            try { await BuildEmbeddedCoreAsync(embedded); }
+            catch (Exception error) when (IsEmbeddedError(error)) { EmbeddedFailure(error); }
+            return;
+        }
+
         if (Workspace is { } workspace)
         {
             var csharp = workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp).ToList();

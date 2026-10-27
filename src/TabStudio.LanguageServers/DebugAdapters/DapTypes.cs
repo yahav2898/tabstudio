@@ -31,6 +31,15 @@ public sealed record DapCapabilities
     /// <summary>Whether expressions can be assigned, such as watches.</summary>
     public bool SetExpression { get; init; }
 
+    /// <summary>Whether the adapter implements the DAP readMemory request.</summary>
+    public bool ReadMemory { get; init; }
+
+    /// <summary>Whether the adapter implements the DAP writeMemory request.</summary>
+    public bool WriteMemory { get; init; }
+
+    /// <summary>Whether the adapter implements the DAP disassemble request.</summary>
+    public bool Disassemble { get; init; }
+
     /// <summary>Whether it tells more about the exception the program stopped at.</summary>
     public bool ExceptionInfo { get; init; }
 

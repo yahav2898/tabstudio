@@ -172,6 +172,7 @@
             <MenuItem Header="GitHub Actio_ns" Command="{Binding ShowActionsCommand}" />
             <MenuItem Header="Pull Re_quests" Command="{Binding ShowPullRequestsCommand}" />
             <MenuItem Header="_Test Explorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
+            <MenuItem Header="Device _Peripherals" Command="{Binding ShowEmbeddedPeripheralsCommand}" />
             <MenuItem Header="Claude _Agent" Command="{Binding ShowAgentCommand}" />
             <MenuItem Header="S_warm" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Swarm}"
                       IsVisible="{Binding IsSwarmAvailable}" />
@@ -225,6 +226,7 @@
             <MenuItem Header="GitHub _Account..." Command="{Binding GitChanges.Account.OpenCommand}" />
           </MenuItem>
           <MenuItem Header="_Build">
+            <MenuItem Header="Embedded _Firmware" Command="{Binding BuildEmbeddedCommand}" />
             <MenuItem Header="Build Android APK" Command="{Binding BuildAndroidCommand}" />
             <MenuItem Header="Run Android App" Command="{Binding RunAndroidCommand}" />
             <MenuItem Header="Build for iOS…" Command="{Binding BuildForIosCommand}" />
@@ -249,6 +251,41 @@
             <MenuItem Header="Run C_urrent File" Command="{Binding RunCurrentFileCommand}" />
             <MenuItem Header="{Binding PicFlashMenuText}" Command="{Binding FlashPicCommand}" IsVisible="{Binding IsPicProject}" />
             <MenuItem Header="PIC _Target…" Command="{Binding ConfigurePicTargetCommand}" IsVisible="{Binding IsPicProject}" />
+            <MenuItem Header="_Embedded">
+              <MenuItem Header="_Devices and probes" Command="{Binding ShowEmbeddedDevicesCommand}" />
+              <MenuItem Header="Read target _identity" Command="{Binding IdentifyEmbeddedTargetCommand}" />
+              <MenuItem Header="_Board and build configuration…" Command="{Binding ConfigureEmbeddedCommand}" />
+              <MenuItem Header="_Build firmware" Command="{Binding BuildEmbeddedCommand}" />
+              <MenuItem Header="_Upload and verify" Command="{Binding UploadEmbeddedCommand}" />
+              <MenuItem Header="Upload UF2 to _BOOTSEL storage" Command="{Binding UploadUf2StorageCommand}" />
+              <MenuItem Header="Debug on _chip…" Command="{Binding DebugEmbeddedChipCommand}" />
+              <MenuItem Header="RTT and _defmt logs" Command="{Binding StartEmbeddedLogsCommand}" />
+              <MenuItem Header="Upload over _Wi-Fi…" Command="{Binding UploadEmbeddedOtaCommand}" />
+              <MenuItem Header="_Production batch…" Command="{Binding ProductionFlashEmbeddedCommand}" />
+              <MenuItem Header="_Backup firmware…" Command="{Binding BackupEmbeddedFirmwareCommand}" />
+              <MenuItem Header="Compare firmware _dumps…" Command="{Binding CompareFirmwareDumpsCommand}" />
+              <Separator />
+              <MenuItem Header="_Memory report" Command="{Binding AnalyzeEmbeddedMemoryCommand}" />
+              <MenuItem Header="_Stack analysis" Command="{Binding AnalyzeEmbeddedStackCommand}" />
+              <MenuItem Header="Decode _crash" Command="{Binding DecodeEmbeddedCrashCommand}" />
+              <MenuItem Header="Capture halted Cortex-M _fault" Command="{Binding CaptureEmbeddedFaultCommand}" />
+              <Separator />
+              <MenuItem Header="Load CMSIS-_SVD…" Command="{Binding LoadEmbeddedSvdCommand}" />
+              <MenuItem Header="Load register _header…" Command="{Binding LoadEmbeddedRegisterHeaderCommand}" />
+              <MenuItem Header="Inspect _peripheral register…" Command="{Binding InspectEmbeddedRegisterCommand}" />
+              <MenuItem Header="Read target _memory…" Command="{Binding ReadEmbeddedMemoryCommand}" />
+              <MenuItem Header="_Disassembly…" Command="{Binding DisassembleEmbeddedCommand}" />
+              <MenuItem Header="Edit register _field…" Command="{Binding EditEmbeddedRegisterFieldCommand}" />
+              <MenuItem Header="RTOS _threads" Command="{Binding ShowEmbeddedRtosThreadsCommand}" />
+              <MenuItem Header="Check _pin conflicts" Command="{Binding CheckEmbeddedPinsCommand}" />
+              <MenuItem Header="Run embedded _tests" Command="{Binding RunEmbeddedTestsCommand}" />
+              <MenuItem Header="Run tests on _board" Command="{Binding RunEmbeddedBoardTestsCommand}" />
+              <MenuItem Header="Run Unity tests over _serial" Command="{Binding RunSerialEmbeddedTestsCommand}" />
+              <MenuItem Header="Import test _results…" Command="{Binding ImportEmbeddedTestResultsCommand}" />
+              <MenuItem Header="MicroPython _REPL" Command="{Binding OpenMicroPythonReplCommand}" />
+              <MenuItem Header="Sync active Python _file" Command="{Binding SyncMicroPythonFileCommand}" />
+              <MenuItem Header="Import _vendor project…" Command="{Binding ImportEmbeddedProjectCommand}" />
+            </MenuItem>
             <MenuItem Header="MPLAB _Configuration…" Command="{Binding SelectPicConfigurationCommand}" IsVisible="{Binding IsPicProject}" />
             <MenuItem Header="On-chip Debugging in _MPLAB X…" Command="{Binding DebugPicOnBridgeCommand}" IsVisible="{Binding IsPicProject}" />
             <MenuItem Header="Brea_k All (Ctrl+Alt+Break)" Command="{Binding BreakAllCommand}" />
@@ -759,6 +796,8 @@
                         IsVisible="{Binding ShowsLogcatTab}" />
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSerialMonitorSelected}"
                         Command="{Binding ShowSerialMonitorCommand}" Content="Serial Monitor" IsVisible="{Binding ShowsSerialMonitorTab}" />
+                <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsEmbeddedPeripheralsSelected}"
+                        Command="{Binding ShowEmbeddedPeripheralsCommand}" Content="Peripherals" IsVisible="{Binding ShowsEmbeddedPeripheralsTab}" />
               </StackPanel>
               </ScrollViewer>
               <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -798,6 +837,7 @@
               </Panel>
               <views:LocalsView DataContext="{Binding Locals}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsLocalsSelected}" />
               <views:WatchView DataContext="{Binding Watch}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsWatchSelected}" />
+              <views:EmbeddedPeripheralsView IsVisible="{Binding IsEmbeddedPeripheralsSelected}" />
               <views:CallStackView DataContext="{Binding CallStack}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsCallStackSelected}" />
               <Panel x:Name="LogcatPanel" IsVisible="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.Logcat}}">
                 <views:OutputView DataContext="{Binding Logcat}" />
@@ -1081,7 +1121,7 @@
               </ListBox.ItemTemplate>
             </ListBox>
           </Border>
-          <TextBox x:Name="PromptBox" Classes="large mono" Text="{Binding Prompt.Text}" IsVisible="{Binding Prompt.HasInput}" />
+          <TextBox x:Name="PromptBox" Classes="large mono" Text="{Binding Prompt.Text}" PasswordChar="{Binding Prompt.PasswordCharacter}" IsVisible="{Binding Prompt.HasInput}" />
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
             <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Cancel" Command="{Binding Prompt.CancelCommand}" />
             <Button Theme="{StaticResource AccentButton}" Height="40" Padding="18,0" Content="{Binding Prompt.ConfirmText}"

@@ -110,7 +110,7 @@ public sealed class LanguageServerHost : IAsyncDisposable, ISnapshotSource
         {
             foreach (var command in server.Commands)
             {
-                if (Launcher.Resolve(command) is { } executable)
+                if (Launcher.ResolveForDirectory(command, Path.GetDirectoryName(Path.GetFullPath(filePath))!) is { } executable)
                 {
                     return new LanguageServerMatch(language, server, executable);
                 }
