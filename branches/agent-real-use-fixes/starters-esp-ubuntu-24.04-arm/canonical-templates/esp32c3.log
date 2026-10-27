@@ -1,0 +1,109 @@
+> pio run --environment esp32c3 --jobs 2
+********************************************************************************
+If you like PlatformIO, please:
+- star it on GitHub > https://github.com/platformio/platformio-core
+- follow us on LinkedIn to stay up-to-date on the latest project news > https://www.linkedin.com/company/platformio/
+- try PlatformIO IDE for embedded development > https://platformio.org/platformio-ide
+********************************************************************************
+
+Processing esp32c3 (platform: espressif32@8.0.0; board: esp32-c3-devkitm-1; framework: arduino)
+--------------------------------------------------------------------------------
+Platform Manager: Installing espressif32 @ 8.0.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Platform Manager: espressif32@8.0.0 has been installed!
+Tool Manager: Installing platformio/toolchain-riscv32-esp @ 14.2.0+20260121
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin/.l2s.riscv32-esp-elf-ar0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin/.l2s.riscv32-esp-elf-ar0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin/.l2s.riscv32-esp-elf-readelf0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin/.l2s.riscv32-esp-elf-readelf0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin/.l2s.riscv32-esp-elf-strip0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin/.l2s.riscv32-esp-elf-strip0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin/.l2s.riscv32-esp-elf-gcc0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin/.l2s.riscv32-esp-elf-gcc0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin/.l2s.riscv32-esp-elf-ld0001.0004' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin/.l2s.riscv32-esp-elf-ld0001.0004`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin/.l2s.riscv32-esp-elf-objcopy0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin/.l2s.riscv32-esp-elf-objcopy0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp/bin`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-g4b5ifmp`
+Tool Manager: toolchain-riscv32-esp@14.2.0+20260121 has been installed!
+Tool Manager: Installing platformio/toolchain-xtensa-esp-elf @ 14.2.0+20260121
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-as0001.0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-as0001.0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-strip0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-strip0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-ld0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-ld0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-strip0001.0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-strip0001.0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-ranlib0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-ranlib0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-objcopy0001.0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-objcopy0001.0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-as0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-as0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-ld0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-ld0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-objcopy0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-objcopy0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-readelf0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0slf7w6i/bin/.l2s.xtensa-esp-elf-readelf0001`
+Tool Manager: toolchain-xtensa-esp-elf@14.2.0+20260121 has been installed!
+Tool Manager: Installing espressif/tool-xtensa-esp-elf-gdb @ ~12.1.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-xtensa-esp-elf-gdb@12.1.0+20221002 has been installed!
+Tool Manager: Installing espressif/tool-riscv32-esp-elf-gdb @ ~12.1.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-riscv32-esp-elf-gdb@12.1.0+20221002 has been installed!
+Tool Manager: Installing platformio/framework-arduinoespressif32 @ ~4.30312.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduinoespressif32@4.30312.261024 has been installed!
+Tool Manager: Installing platformio/framework-arduinoespressif32-esp32c3-libs @ ~3.3.12
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduinoespressif32-esp32c3-libs@3.3.12 has been installed!
+Tool Manager: Installing platformio/tool-esptool @ ~2.50400.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70%
+Tool Manager: tool-esptool@2.50400.0 has been installed!
+Tool Manager: Installing platformio/tool-scons @ ~4.40801.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-scons@4.40801.0 has been installed!
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/esp32-c3-devkitm-1.html
+PLATFORM: Espressif 32 (8.0.0) > Espressif ESP32-C3-DevKitM-1
+HARDWARE: ESP32C3 160MHz, 320KB RAM, 4MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-builtin, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 4.30312.261024 (3.3.12) 
+ - framework-arduinoespressif32-esp32c3-libs @ 3.3.12 
+ - tool-esptool @ 2.50400.0 (5.4.0) 
+ - tool-riscv32-esp-elf-gdb @ 12.1.0+20221002 
+ - tool-xtensa-esp-elf-gdb @ 12.1.0+20221002 
+ - toolchain-riscv32-esp @ 14.2.0+20260121 
+ - toolchain-xtensa-esp-elf @ 14.2.0+20260121
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 44 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Compiling .pio/build/esp32c3/src/main.cpp.o
+Building .pio/build/esp32c3/bootloader.bin
+esptool v5.4.0
+Creating ESP32-C3 image...
+Merged 2 ELF sections.
+Successfully created ESP32-C3 image.
+Generating partitions .pio/build/esp32c3/partitions.bin
+Compiling .pio/build/esp32c3/FrameworkArduino/ColorFormat.c.o
+Compiling .pio/build/esp32c3/FrameworkArduino/Esp.cpp.o
+Compiling .pio/build/esp32c3/FrameworkArduino/FirmwareMSC.cpp.o
+Compiling .pio/build/esp32c3/FrameworkArduino/FunctionalInterrupt.cpp.o
+Compiling .pio/build/esp32c3/FrameworkArduino/HEXBuilder.cpp.o
+Compiling .pio/build/esp32c3/FrameworkArduino/HWCDC.cpp.o
+Compiling .pio/build/esp32c3/FrameworkArduino/HardwareSerial.cpp.o
