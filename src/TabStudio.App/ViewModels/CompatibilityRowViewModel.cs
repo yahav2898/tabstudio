@@ -47,7 +47,33 @@ public sealed record CompatibilityRowViewModel(CompatibilityReport Report)
 
     /// <summary>Whether installing a toolchain from the Toolchain Store makes it run here.</summary>
     public bool CanInstallToolchain => InstallToolchainText is not null;
+
+    /// <summary>
+    /// The project's SQL Server, when it uses one that cannot run here and nothing answers for it, which the row offers
+    /// to replace: a SQL Server on the network, or PostgreSQL or SQLite when the project supports them.
+    /// </summary>
+    public SqlServerAdvice? SqlServer { get; init; }
+
+    /// <summary>Whether the row offers to connect to a SQL Server on the network or in the cloud.</summary>
+    public bool CanConnectSqlServer => SqlServer is not null;
+
+    /// <summary>The label of the switch to a database that runs here, such as "Use PostgreSQL", when the project supports one.</summary>
+    public string? SwitchDatabaseText => SqlServer?.Usage switch
+    {
+        { SupportsPostgreSql: true } => "Use PostgreSQL",
+        { SupportsSqlite: true } => "Use SQLite",
+        _ => null,
+    };
+
+    /// <summary>Whether the project can switch to a database that runs here.</summary>
+    public bool CanSwitchDatabase => SwitchDatabaseText is not null;
 }
+
+/// <summary>Why a project's SQL Server cannot be used here, and the connection string it is about.</summary>
+/// <param name="Usage">The project's use of SQL Server.</param>
+/// <param name="Connection">The connection string nothing answered for, or <see langword="null"/> when the configuration has none.</param>
+/// <param name="Message">The one message the Compatibility Doctor and the Output show.</param>
+public sealed record SqlServerAdvice(SqlServerUsage Usage, SqlServerConnection? Connection, string Message);
 
 /// <summary>One technology detected in a workspace, shown as a chip.</summary>
 /// <param name="Name">The technology, such as ".NET 10" or "React".</param>

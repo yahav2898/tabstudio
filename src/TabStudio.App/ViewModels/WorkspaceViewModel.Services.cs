@@ -30,7 +30,17 @@ public sealed partial class WorkspaceViewModel
 
     partial void ConfigureServiceDatabaseExplorer(ref IServiceDatabaseExplorer? databases);
 
-    private Task<bool> PrepareServicesAsync(ProjectInfo project) => PrepareServicesAsync(project.DirectoryPath);
+    private async Task<bool> PrepareServicesAsync(ProjectInfo project)
+    {
+        if (!await PrepareServicesAsync(project.DirectoryPath))
+        {
+            return false;
+        }
+
+        // Saved Database Explorer connections that replace the project's SQL Server, and the message when none answers.
+        _serviceEnvironment = await AddDatabaseEnvironmentAsync(project, _serviceEnvironment);
+        return true;
+    }
 
     private async Task<bool> PrepareServicesAsync(string projectDirectory)
     {

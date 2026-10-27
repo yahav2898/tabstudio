@@ -136,8 +136,7 @@ public static class SqlServerDetector
     {
         for (var current = exception; current is not null; current = current.InnerException)
         {
-            var type = current.GetType().FullName ?? string.Empty;
-            if (type.EndsWith(".SqlException", StringComparison.Ordinal)
+            if (current.GetType().Name == "SqlException"
                 || (current is PlatformNotSupportedException && (current.Message.Contains("SqlClient", StringComparison.Ordinal) || current.StackTrace?.Contains("SqlClient", StringComparison.Ordinal) == true))
                 || current.StackTrace?.Contains("Microsoft.Data.SqlClient.SqlConnection", StringComparison.Ordinal) == true
                 || current.StackTrace?.Contains("System.Data.SqlClient.SqlConnection", StringComparison.Ordinal) == true)
