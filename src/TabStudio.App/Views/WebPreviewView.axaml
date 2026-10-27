@@ -14,10 +14,11 @@
     <!-- Address bar -->
     <Border DockPanel.Dock="Top" Padding="6,4" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto">
-        <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Back" Command="{Binding GoBackCommand}">
+        <!-- A WPF app is one page: its toolbar makes room for the zoom instead of the history buttons. -->
+        <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Back" Command="{Binding GoBackCommand}" IsVisible="{Binding !IsWpfApp}">
           <controls:StrokeIcon Data="{StaticResource Icon.Back}" Size="15" />
         </Button>
-        <Button Grid.Column="1" Theme="{StaticResource ToolButton}" ToolTip.Tip="Forward" Command="{Binding GoForwardCommand}">
+        <Button Grid.Column="1" Theme="{StaticResource ToolButton}" ToolTip.Tip="Forward" Command="{Binding GoForwardCommand}" IsVisible="{Binding !IsWpfApp}">
           <controls:StrokeIcon Data="{StaticResource Icon.Forward}" Size="15" />
         </Button>
         <Button Grid.Column="2" Theme="{StaticResource ToolButton}" ToolTip.Tip="Reload" Command="{Binding ReloadCommand}">
@@ -36,7 +37,7 @@
         <Button Grid.Column="5" Theme="{StaticResource ToolButton}" ToolTip.Tip="Open in browser" Command="{Binding OpenInBrowserCommand}">
           <StackPanel Orientation="Horizontal" Spacing="5">
             <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="15" />
-            <TextBlock Text="Open in browser" VerticalAlignment="Center" />
+            <TextBlock Text="Open in browser" VerticalAlignment="Center" IsVisible="{Binding !IsWpfApp}" />
           </StackPanel>
         </Button>
       </Grid>
