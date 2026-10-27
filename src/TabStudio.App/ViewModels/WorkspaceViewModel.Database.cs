@@ -57,7 +57,7 @@ public sealed partial class WorkspaceViewModel
                 PackageReferences = [new PackageReferenceInfo("Microsoft.EntityFrameworkCore.Design", version)] };
             var restored = await _compiler.Packages.RestoreAsync(tool, cancellationToken: token);
             if (!restored.Success) throw new InvalidOperationException("Could not restore the matching EF Core design tools. Check NuGet connectivity and the project's EF version.");
-            runtime.AddRange(restored.RuntimeAssemblies);
+            runtime.AddRange(restored.RuntimeFiles);
         }
         token.ThrowIfCancellationRequested();
         // EF's design API is synchronous and has no cancellation token. Once started, let it finish.

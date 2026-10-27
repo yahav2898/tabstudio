@@ -78,7 +78,7 @@ public sealed class NotebookPackageResolver : INotebookReferenceResolver
             .ToList();
         if (errors.Count == 0)
         {
-            return Hand(result.CompileAssemblies, result.RuntimeAssemblies);
+            return Hand(result.CompileAssemblies, result.RuntimeFiles);
         }
 
         // A package that cannot be restored is not asked for again by later #r lines.

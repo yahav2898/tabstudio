@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Runtime.Loader;
 using TabStudio.Compilation;
+using TabStudio.Compilation.Running;
 
 namespace TabStudio.TestRunner.Loading;
 
@@ -28,6 +29,7 @@ internal sealed class TestLoadContext : AssemblyLoadContext
     private readonly Dictionary<string, Assembly> _loaded = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _gate = new();
     private readonly PackageLoadContext? _packages;
+    private readonly PackageNativeLibraries _nativeLibraries;
 
     /// <summary>Creates a context for a test project.</summary>
     /// <param name="name">A name for diagnostics, usually the test project's name.</param>
@@ -47,13 +49,15 @@ internal sealed class TestLoadContext : AssemblyLoadContext
             _compiled[assembly.Name] = assembly;
         }
 
+        _nativeLibraries = new PackageNativeLibraries(runtimeAssemblyPaths);
+        var assemblies = PackageNativeLibraries.Assemblies(runtimeAssemblyPaths);
         _runtimePaths = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var path in runtimeAssemblyPaths)
+        foreach (var path in assemblies)
         {
             _ = _runtimePaths.TryAdd(Path.GetFileNameWithoutExtension(path), path);
         }
 
-        _probingDirectories = runtimeAssemblyPaths
+        _probingDirectories = assemblies
             .Select(path => Path.GetDirectoryName(path))
             .OfType<string>()
             .Distinct(StringComparer.Ordinal)
@@ -116,4 +120,7 @@ internal sealed class TestLoadContext : AssemblyLoadContext
 
         return null;
     }
+
+    /// <inheritdoc />
+    protected override nint LoadUnmanagedDll(string unmanagedDllName) => _nativeLibraries.Load(unmanagedDllName);
 }
