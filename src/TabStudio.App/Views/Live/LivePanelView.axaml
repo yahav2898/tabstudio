@@ -152,11 +152,11 @@
                     </Border>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
                       <StackPanel Orientation="Horizontal" Spacing="6">
-                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
-                        <Border Classes="pill">
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                        <Border Classes="pill" VerticalAlignment="Center">
                           <TextBlock Text="{Binding RoleText}" />
                         </Border>
-                        <controls:StrokeIcon Data="{StaticResource Icon.Hand}" Size="14" Foreground="{DynamicResource Brush.Warning}" IsVisible="{Binding HandRaised}" />
+                        <controls:StrokeIcon Data="{StaticResource Icon.Hand}" Size="14" Foreground="{DynamicResource Brush.Warning}" IsVisible="{Binding HandRaised}" VerticalAlignment="Center" />
                       </StackPanel>
                       <TextBlock Classes="muted small" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" IsVisible="{Binding HasDetail}" />
                     </StackPanel>

@@ -74,7 +74,7 @@ public sealed class LiveSessionTests
 
         // Each sees the other's caret, in the other's color, with the other's name.
         guestProgram.Live.ReportPlace(10, 14, 1);
-        await UiTestHelpers.WaitUntilAsync(() => hostProgram.Live!.Carets.Any(c => c.Name == "Noam's phone"), Timeout, "the guest's caret on the host");
+        await UiTestHelpers.WaitUntilAsync(() => hostProgram.Live!.Carets.Any(c => c.Name == "Noam's phone" && c.Head == 14), Timeout, "the guest's caret on the host");
         var caret = hostProgram.Live!.Carets.Single();
         Assert.Equal((10, 14), (caret.Anchor, caret.Head));
         Assert.NotEqual(host.Session.Self!.Color, guest.Session.Self!.Color);
@@ -158,7 +158,7 @@ public sealed class LiveSessionTests
         Assert.Equal("Following Dana's tablet", guest.Workspace.LivePanel!.StatusText);
 
         // The host opens another file: the follower's IDE opens it too.
-        var greeterPath = Path.Combine(Path.GetDirectoryName(hostProgram.FilePath)!, "Greeter.cs");
+        var greeterPath = Directory.GetFiles(host.Workspace.Workspace!.RootDirectory, "Greeter.cs", SearchOption.AllDirectories).Single();
         var hostGreeter = await host.OpenSharedAsync(greeterPath);
         await UiTestHelpers.WaitUntilAsync(() => guest.Workspace.ActiveDocument?.FileName == "Greeter.cs" && guest.Workspace.ActiveDocument.Live is not null, Timeout, "the follower to open Greeter.cs");
         var guestGreeter = guest.Workspace.ActiveDocument!;
@@ -278,6 +278,7 @@ public sealed class LiveSessionTests
         {
             var hostProgram = host.Workspace.ActiveDocument!;
             var guestProgram = await guest.OpenSharedAsync(guest.PathOf(host, hostProgram.FilePath));
+            host.Workspace.LivePanel!.CloseShareCommand.Execute(null);
             host.Workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.Live);
             guest.Workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.Live);
 
@@ -295,7 +296,8 @@ public sealed class LiveSessionTests
             hostProgram.CaretOffset = dana;
             hostProgram.Live!.ReportPlace(dana, dana, 1);
             await UiTestHelpers.WaitUntilAsync(
-                () => hostProgram.Live.Carets.Count == 1 && guestProgram.Live.Carets.Count == 1 && hostProgram.HasLiveAvatars && guestProgram.HasLiveAvatars,
+                () => hostProgram.Live.Carets is [{ Anchor: var anchor }] && anchor == noam && guestProgram.Live.Carets is [{ Head: var head }] && head == dana
+                    && hostProgram.HasLiveAvatars && guestProgram.HasLiveAvatars,
                 Timeout,
                 "each device to show the other's caret");
             await UiTestHelpers.WaitUntilAsync(
