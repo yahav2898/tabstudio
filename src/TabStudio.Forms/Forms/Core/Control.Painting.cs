@@ -126,6 +126,42 @@ public partial class Control
         }
     }
 
+    /// <summary>
+    /// Draws the control and its children into a bitmap, at the top left of a rectangle and clipped to it, as they are
+    /// drawn on the screen: what tutorial apps use to save a game board or a form as a picture. A form is drawn
+    /// without the window frame, which the app preview draws.
+    /// </summary>
+    /// <param name="bitmap">The bitmap.</param>
+    /// <param name="targetBounds">Where to draw, in the bitmap's pixels.</param>
+    /// <exception cref="ArgumentException">The rectangle is empty.</exception>
+    public void DrawToBitmap(Bitmap bitmap, Rectangle targetBounds)
+    {
+        ArgumentNullException.ThrowIfNull(bitmap);
+        if (targetBounds.Width <= 0 || targetBounds.Height <= 0 || targetBounds.X < 0 || targetBounds.Y < 0)
+        {
+            throw new ArgumentException("Parameter is not valid: targetBounds must be a rectangle with a positive size inside the bitmap.", nameof(targetBounds));
+        }
+
+        CreateControl();
+        var buffer = bitmap.Buffer;
+        var clip = Rectangle.Intersect(Rectangle.Intersect(targetBounds, new Rectangle(0, 0, bitmap.Width, bitmap.Height)), new Rectangle(targetBounds.Location, Size));
+        var origin = targetBounds.Location;
+        if (this is Form { TopLevel: true })
+        {
+            // The client area sits where it does in the window, below the title bar the app preview draws.
+            var insets = NonClientInsets;
+            origin = new Point(origin.X + insets.Left, origin.Y + insets.Top);
+            PaintClient(buffer.Recorder, Rectangle.Intersect(clip, new Rectangle(origin, ClientSize)), origin);
+        }
+        else
+        {
+            PaintTree(buffer.Recorder, clip, origin);
+        }
+
+        buffer.Recorded();
+        buffer.Flush();
+    }
+
     /// <summary>Paints the control and its children, with its bounds' top left at a point of the window.</summary>
     /// <param name="builder">Where drawing is recorded.</param>
     /// <param name="clip">The area that may be drawn, in the window's client area.</param>

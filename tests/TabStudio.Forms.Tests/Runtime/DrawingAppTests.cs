@@ -380,3 +380,34 @@ public sealed class MdiTests
         Assert.True(run.Invoke(() => inner.Visible));
     }
 }
+
+/// <summary>Control.DrawToBitmap, as games use it to save a picture of the board.</summary>
+public sealed class DrawToBitmapTests
+{
+    [AvaloniaFact]
+    public void A_control_draws_itself_and_its_children_into_a_bitmap()
+    {
+        Panel board = null!;
+        using var run = FormsTestRun.Start(() =>
+        {
+            var form = new Form { ClientSize = new Size(300, 200) };
+            board = new Panel { Location = new Point(10, 10), Size = new Size(120, 80), BackColor = Color.Navy };
+            board.Paint += (_, e) => e.Graphics.FillRectangle(Brushes.Lime, 10, 10, 20, 20);
+            board.Controls.Add(new Panel { Location = new Point(60, 40), Size = new Size(30, 20), BackColor = Color.Orange });
+            form.Controls.Add(board);
+            return form;
+        });
+
+        var (navy, lime, orange, outside) = run.Invoke(() =>
+        {
+            using var picture = new Bitmap(200, 100);
+            board.DrawToBitmap(picture, new Rectangle(5, 5, board.Width, board.Height));
+            return (picture.GetPixel(5 + 100, 5 + 10), picture.GetPixel(5 + 15, 5 + 15), picture.GetPixel(5 + 70, 5 + 50), picture.GetPixel(150, 95));
+        });
+
+        Assert.Equal(Color.Navy.ToArgb(), navy.ToArgb());
+        Assert.Equal(Color.Lime.ToArgb(), lime.ToArgb());
+        Assert.Equal(Color.Orange.ToArgb(), orange.ToArgb());
+        Assert.Equal(0, outside.A);
+    }
+}
