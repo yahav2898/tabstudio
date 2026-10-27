@@ -78,8 +78,10 @@ public sealed class WpfPreviewFitTests : IClassFixture<SharedToolchain>, IDispos
         await WaitForAsync(chrome.WaitUntilAsync("document.body.innerText.includes('Not clicked')", TimeSpan.FromSeconds(150)), "the wide window");
 
         // The page lays the window out exactly as the calculator says, for the pane it is in, and all of it is in view.
-        var fit = await SettledLayoutAsync(chrome, "fit");
+        // The browser first loaded the page before the side bar was laid out; drawn again, it has the pane's size.
+        await WaitForAsync(webView.RefreshAsync(), "the preview's browser");
         var pane = webView.Control.Bounds.Size;
+        var fit = await SettledLayoutAsync(chrome, "fit", pane.Width);
         Assert.True(WindowWidth > pane.Width, $"The window ({WindowWidth} wide) should be larger than the pane ({pane.Width}).");
         Assert.InRange(Number(fit, "paneWidth"), pane.Width - 1, pane.Width + 1);
         var expected = PreviewLayoutCalculator.Compute(PreviewZoomMode.Fit, Number(fit, "paneWidth"), Number(fit, "paneHeight"), WindowWidth, WindowHeight);
@@ -111,7 +113,7 @@ public sealed class WpfPreviewFitTests : IClassFixture<SharedToolchain>, IDispos
         Assert.Contains("tabstudio-view=actual", webView.Page?.Query, StringComparison.Ordinal);
         await WaitForAsync(webView.Rendering, "the preview's browser");
         await WaitForAsync(chrome.WaitUntilAsync("document.body.innerText.includes('Not clicked')", TimeSpan.FromSeconds(150)), "the wide window again");
-        var actual = await SettledLayoutAsync(chrome, "actual");
+        var actual = await SettledLayoutAsync(chrome, "actual", pane.Width);
         Assert.Equal(1, Number(actual, "scale"));
         Assert.Equal(1, Number(actual, "pageScale"), 2);
         Assert.True(
@@ -193,16 +195,17 @@ public sealed class WpfPreviewFitTests : IClassFixture<SharedToolchain>, IDispos
     }
 
     /// <summary>
-    /// Waits until the page applied a mode for the window's declared size and the browser zoomed to it, and returns the
-    /// layout with the browser's zoom as <c>pageScale</c>.
+    /// Waits until the page applied a mode for the window's declared size in a pane of the width given and the browser
+    /// zoomed to it, and returns the layout with the browser's zoom as <c>pageScale</c>.
     /// </summary>
-    private static async Task<JsonNode> SettledLayoutAsync(HeadlessChrome chrome, string mode)
+    private static async Task<JsonNode> SettledLayoutAsync(HeadlessChrome chrome, string mode, double paneWidth)
     {
         var condition = $$"""
             (() => {
                 const layout = window.tabStudioWpf && window.tabStudioWpf.layout;
                 const meta = document.getElementById('tabstudio-wpf-viewport');
                 return !!layout && layout.mode === '{{mode}}' && !layout.fills && meta.content.includes('user-scalable')
+                    && Math.abs(layout.paneWidth - {{paneWidth.ToString(CultureInfo.InvariantCulture)}}) < 1.5
                     && Math.abs(window.visualViewport.scale - layout.scale) < 0.002;
             })()
             """;
