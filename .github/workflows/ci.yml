@@ -428,6 +428,20 @@ jobs:
     name: Real repositories
     runs-on: ubuntu-latest
     timeout-minutes: 75
+    # SimplCommerce's first page needs its SQL Server database. SQL Server has no ARM64 Linux engine, so a tablet
+    # connects to one on the network; here that is this x64 container, reached through TABSTUDIO_SQLSERVER.
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: TabStudio-ci-1433
+        ports: [1433:1433]
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P TabStudio-ci-1433 -Q 'SELECT 1' -b"
+          --health-interval 10s --health-timeout 5s --health-retries 20
+    env:
+      TABSTUDIO_SQLSERVER: Server=tcp:127.0.0.1,1433;Database=SimplCommerce;User ID=sa;Password=TabStudio-ci-1433;TrustServerCertificate=True;MultipleActiveResultSets=true
     steps:
       - uses: actions/checkout@v4
 
@@ -443,6 +457,9 @@ jobs:
 
       - name: Clone the pinned repositories
         run: python3 build/ci/real-repos.py "$RUNNER_TEMP/real-repos"
+
+      - name: Create the databases their first pages need
+        run: python3 build/ci/real-repos.py --migrate "$RUNNER_TEMP/real-repos" 2>&1 | tail -n 40
 
       - name: Open and build them in TabStudio
         env:

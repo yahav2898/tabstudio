@@ -16,7 +16,8 @@ namespace TabStudio.App.Tests.RealRepositories;
 /// Ctrl+Shift+B. The repositories and their error baselines are in <c>build/ci/real-repos.json</c>, pinned to commits
 /// that <c>build/ci/real-repos.py</c> clones into <c>TABSTUDIO_REAL_REPOS</c>. A build may only lower a baseline: more
 /// errors fail the test, and fewer ask for the lower number to be recorded. Reports go to
-/// <c>TABSTUDIO_REAL_REPOS_OUT</c> and screenshots to <c>TABSTUDIO_SCREENSHOTS</c>. Without the variables, nothing runs.
+/// <c>TABSTUDIO_REAL_REPOS_OUT</c> and screenshots to <c>TABSTUDIO_SCREENSHOTS</c>. Without the variables, nothing runs;
+/// <c>TABSTUDIO_REAL_REPOS_ONLY</c> (comma-separated names) limits a run to some of the repositories.
 /// </summary>
 public sealed class RealRepositoryTests
 {
@@ -35,7 +36,8 @@ public sealed class RealRepositoryTests
         var problems = new List<string>();
         var summary = new StringBuilder("| Repository | Errors | Baseline | Warnings | Build |\n| --- | --- | --- | --- | --- |\n");
         var results = new JsonObject();
-        foreach (var repository in manifest["repositories"]!.AsArray())
+        var only = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_ONLY")?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        foreach (var repository in manifest["repositories"]!.AsArray().Where(r => only is null || only.Contains(r!["name"]!.GetValue<string>(), StringComparer.OrdinalIgnoreCase)))
         {
             var name = repository!["name"]!.GetValue<string>();
             var baseline = repository["maxErrors"]?.GetValue<int>();
@@ -44,7 +46,7 @@ public sealed class RealRepositoryTests
             Outcome outcome;
             try
             {
-                outcome = await OpenAndBuildAsync(solution, name, report);
+                outcome = await OpenAndBuildAsync(solution, name, repository["serve"], report);
             }
             catch (Exception ex) when (ex is not OutOfMemoryException)
             {
@@ -53,8 +55,14 @@ public sealed class RealRepositoryTests
             }
 
             await File.WriteAllTextAsync(Path.Combine(output, name + ".txt"), report.ToString());
-            results[name] = new JsonObject { ["errors"] = outcome.Errors, ["warnings"] = outcome.Warnings, ["seconds"] = Math.Round(outcome.Duration.TotalSeconds, 1) };
-            summary.Append(CultureInfo.InvariantCulture, $"| {name} | {outcome.Errors} | {baseline?.ToString(CultureInfo.InvariantCulture) ?? "none"} | {outcome.Warnings} | {outcome.Duration.TotalSeconds:F0} s |\n");
+            results[name] = new JsonObject { ["errors"] = outcome.Errors, ["warnings"] = outcome.Warnings, ["seconds"] = Math.Round(outcome.Duration.TotalSeconds, 1), ["served"] = outcome.Served };
+            var served = outcome.Served switch { true => ", served", false => ", NOT served", null => string.Empty };
+            summary.Append(CultureInfo.InvariantCulture, $"| {name} | {outcome.Errors} | {baseline?.ToString(CultureInfo.InvariantCulture) ?? "none"} | {outcome.Warnings} | {outcome.Duration.TotalSeconds:F0} s{served} |\n");
+            if (outcome.Served == false)
+            {
+                problems.Add($"{name} built, but its first page was not served as expected; see {name}.txt.");
+            }
+
             if (outcome.Errors < 0)
             {
                 problems.Add($"{name} did not open and build; see {name}.txt.");
@@ -74,9 +82,10 @@ public sealed class RealRepositoryTests
         Assert.True(problems.Count == 0, string.Join('\n', problems) + "\n\n" + summary);
     }
 
-    private sealed record Outcome(int Errors, int Warnings, TimeSpan Duration);
+    /// <param name="Served">Whether the first page was served as the repository's <c>serve</c> entry expects; <see langword="null"/> without one.</param>
+    private sealed record Outcome(int Errors, int Warnings, TimeSpan Duration, bool? Served = null);
 
-    private static async Task<Outcome> OpenAndBuildAsync(string solution, string name, StringBuilder report)
+    private static async Task<Outcome> OpenAndBuildAsync(string solution, string name, JsonNode? serve, StringBuilder report)
     {
         using var fixture = new WorkspaceFixture();
         var workspace = fixture.Workspace;
@@ -123,15 +132,82 @@ public sealed class RealRepositoryTests
             }
 
             UiTestHelpers.SaveScreenshot(window, $"real-{name}-2-built");
+            bool? served = serve is null ? null : await ServeFirstPageAsync(workspace, window, name, serve, report);
             report.AppendLine("Output:");
             var text = workspace.Output.Text;
             report.AppendLine(text.Length > 40000 ? text[^40000..] : text);
-            return new Outcome(errors.Count, warnings, duration);
+            return new Outcome(errors.Count, warnings, duration, served);
         }
         finally
         {
             window.Close();
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    /// <summary>
+    /// The <c>serve</c> check: F5 on the named web project, with each connection string in <c>connections</c> taken
+    /// from the environment variable it names and saved as the Database Explorer connection the run uses (as Connect to
+    /// SQL Server does), then a GET of <c>path</c>, which must answer <c>status</c> with <c>contains</c> in its body.
+    /// </summary>
+    private static async Task<bool> ServeFirstPageAsync(WorkspaceViewModel workspace, Window window, string name, JsonNode serve, StringBuilder report)
+    {
+        var projectName = serve["project"]!.GetValue<string>();
+        var path = serve["path"]?.GetValue<string>() ?? "/";
+        var status = serve["status"]?.GetValue<int>() ?? 200;
+        var contains = serve["contains"]?.GetValue<string>();
+        if (workspace.Workspace?.Projects.FirstOrDefault(p => p.Name == projectName) is not { } project)
+        {
+            report.AppendLine(CultureInfo.InvariantCulture, $"Serve: the project {projectName} is not in the solution.");
+            return false;
+        }
+
+        foreach (var (connectionName, variable) in serve["connections"]?.AsObject() ?? new JsonObject())
+        {
+            var value = Environment.GetEnvironmentVariable(variable!.GetValue<string>());
+            if (string.IsNullOrEmpty(value))
+            {
+                report.AppendLine(CultureInfo.InvariantCulture, $"Serve: {variable} is not set, so '{connectionName}' has no database to connect to.");
+                return false;
+            }
+
+            await workspace.DatabaseExplorer.SaveRunConnectionAsync(new TabStudio.Database.DatabaseConnection(
+                Guid.NewGuid(), WorkspaceViewModel.RunConnectionName(projectName, connectionName), TabStudio.Database.DatabaseProvider.SqlServer, value));
+        }
+
+        workspace.SetStartupProject(project);
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        var run = workspace.RunCommand.ExecuteAsync(null);
+        try
+        {
+            await UiTestHelpers.WaitUntilAsync(() => workspace.WebPreview.IsRunning || run.IsCompleted, TimeSpan.FromMinutes(6), "the web app to start");
+            if (!workspace.WebPreview.IsRunning)
+            {
+                report.AppendLine(CultureInfo.InvariantCulture, $"Serve: {projectName} did not start; see the Output below.");
+                return false;
+            }
+
+            using var http = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
+            using var response = await http.GetAsync(new Uri(workspace.WebPreview.AppAddress!, path));
+            var body = await response.Content.ReadAsStringAsync();
+            var ok = (int)response.StatusCode == status && (contains is null || body.Contains(contains, StringComparison.Ordinal));
+            report.AppendLine(CultureInfo.InvariantCulture, $"Serve: GET {path} answered {(int)response.StatusCode} in {clock.Elapsed.TotalSeconds:F1} s after F5, {body.Length} characters; expected {status}{(contains is null ? string.Empty : $" with '{contains}'")}: {(ok ? "OK" : "FAILED")}");
+            if (!ok)
+            {
+                report.AppendLine(body.Length > 4000 ? body[..4000] : body);
+            }
+
+            UiTestHelpers.SaveScreenshot(window, $"real-{name}-3-served");
+            return ok;
+        }
+        finally
+        {
+            if (workspace.StopCommand.CanExecute(null))
+            {
+                workspace.StopCommand.Execute(null);
+            }
+
+            await run.WaitAsync(TimeSpan.FromMinutes(1));
         }
     }
 
