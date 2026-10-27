@@ -1,5 +1,6 @@
 | Repository | Errors | Baseline | Warnings | Build |
 | --- | --- | --- | --- | --- |
-| SimplePaint | 2 | 0 | 0 | 1 s |
-| DrawPaint | 0 | 0 | 8 | 5 s |
+| WpfSimpleCalculator | 0 | 0 | 1 | 4 s |
+| SimplePaint | 0 | 0 | 0 | 1 s |
+| SimpleDrawingApp | 1 | 0 | 0 | 0 s |
 | WinFormsSnakeGame | 0 | 0 | 0 | 0 s |

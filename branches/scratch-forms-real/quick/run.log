@@ -1,7 +1,8 @@
 + python3 -
 + python3 build/ci/real-repos.py /home/runner/work/_temp/real-repos
+WpfSimpleCalculator: 9146bf6b4365f3c22a371e2525ce65ce32cb16ee
 SimplePaint: 09b1cadb04e99c8be951af682a8c9ec1e2d0eb94
-DrawPaint: 47f64e62bc89dd2bbe0793d4e3b650769556e6dd
+SimpleDrawingApp: cfe9f5cdf413bbf66db000e27b1b0aa95ba24121
 WinFormsSnakeGame: b79c3f0b7e60471ba3a17e83dc78c1e56f80f170
 + mkdir -p ci-out/screenshots
 + TABSTUDIO_REAL_REPOS=/home/runner/work/_temp/real-repos
@@ -10,27 +11,31 @@ WinFormsSnakeGame: b79c3f0b7e60471ba3a17e83dc78c1e56f80f170
 + dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --filter FullyQualifiedName~RealRepositoryTests
 + grep -E 'error|Failed|Passed!|Total|improved|baseline'
 + head -40
-[xUnit.net 00:00:10.22]     TabStudio.App.Tests.RealRepositories.RealRepositoryTests.Pinned_public_repositories_build_within_their_error_baselines [FAIL]
-  Failed TabStudio.App.Tests.RealRepositories.RealRepositoryTests.Pinned_public_repositories_build_within_their_error_baselines [9 s]
-   SimplePaint has 2 errors, more than its baseline of 0; see SimplePaint.txt.
+[xUnit.net 00:00:12.84]     TabStudio.App.Tests.RealRepositories.RealRepositoryTests.Pinned_public_repositories_build_within_their_error_baselines [FAIL]
+  Failed TabStudio.App.Tests.RealRepositories.RealRepositoryTests.Pinned_public_repositories_build_within_their_error_baselines [11 s]
+   SimpleDrawingApp has 1 errors, more than its baseline of 0; see SimpleDrawingApp.txt.
      at TabStudio.App.Tests.RealRepositories.RealRepositoryTests.Pinned_public_repositories_build_within_their_error_baselines() in /_/tests/TabStudio.App.Tests/RealRepositories/RealRepositoryTests.cs:line 74
-Failed!  - Failed:     1, Passed:     0, Skipped:     0, Total:     1, Duration: 9 s - TabStudio.App.Tests.dll (net10.0)
+Failed!  - Failed:     1, Passed:     0, Skipped:     0, Total:     1, Duration: 12 s - TabStudio.App.Tests.dll (net10.0)
 + cat ci-out/summary.md
 | Repository | Errors | Baseline | Warnings | Build |
 | --- | --- | --- | --- | --- |
-| SimplePaint | 2 | 0 | 0 | 1 s |
-| DrawPaint | 0 | 0 | 8 | 5 s |
+| WpfSimpleCalculator | 0 | 0 | 1 | 4 s |
+| SimplePaint | 0 | 0 | 0 | 1 s |
+| SimpleDrawingApp | 1 | 0 | 0 | 0 s |
 | WinFormsSnakeGame | 0 | 0 | 0 | 0 s |
 + for f in ci-out/*.txt
-+ echo '== ci-out/DrawPaint.txt'
-== ci-out/DrawPaint.txt
-+ grep -E 'load error|Compatibility|: |errors|x ' ci-out/DrawPaint.txt
++ echo '== ci-out/SimpleDrawingApp.txt'
+== ci-out/SimpleDrawingApp.txt
++ grep -E 'load error|Compatibility|: |errors|x ' ci-out/SimpleDrawingApp.txt
 + head -40
 Compatibility Doctor:
-  DrawingProject: Needs Windows via Windows Bridge - A .NET Framework project that needs Windows: it references DevExpress.Charts.v23.2.Core, DevExpress.CodeParser.v23.2, DevExpress.Data.Desktop.v23.2, DevExpress.Data.v23.2, DevExpress.DataAccess.v23.2, DevExpress.DataAccess.v23.2.UI, DevExpress.Diagram.v23.2.Core, DevExpress.Drawing.v23.2, DevExpress.Images.v23.2, DevExpress.Office.v23.2.Core, DevExpress.Pdf.v23.2.Core, DevExpress.Pdf.v23.2.Drawing, DevExpress.PivotGrid.v23.2.Core, DevExpress.Printing.v23.2.Core, DevExpress.RichEdit.v23.2.Core, DevExpress.RichEdit.v23.2.Export, DevExpress.Sparkline.v23.2.Core, DevExpress.Utils.v23.2, DevExpress.Utils.v23.2.UI, DevExpress.Xpo.v23.2, DevExpress.XtraBars.v23.2, DevExpress.XtraCharts.v23.2, DevExpress.XtraCharts.v23.2.Extensions, DevExpress.XtraCharts.v23.2.Wizard, DevExpress.XtraDiagram.v23.2, DevExpress.XtraEditors.v23.2, DevExpress.XtraGauges.v23.2.Core, DevExpress.XtraGrid.v23.2, DevExpress.XtraLayout.v23.2, DevExpress.XtraNavBar.v23.2, DevExpress.XtraPivotGrid.v23.2, DevExpress.XtraPrinting.v23.2, DevExpress.XtraReports.v23.2, DevExpress.XtraReports.v23.2.CodeCompletion, DevExpress.XtraReports.v23.2.Extensions, DevExpress.XtraRichEdit.v23.2, DevExpress.XtraScheduler.v23.2, DevExpress.XtraScheduler.v23.2.Core, DevExpress.XtraScheduler.v23.2.Core.Desktop, DevExpress.XtraTreeList.v23.2, DevExpress.XtraVerticalGrid.v23.2, System.Data.Linq, System.Data.OracleClient, System.Design and System.Drawing.Design, which are part of the .NET Framework on Windows only. It builds and runs on your PC through the Windows Bridge, and Upgrade project makes it an SDK-style .NET project.
-Built in 4.9 s: 0 errors, 8 warnings
-1>------ Skipped: Project: DrawingProject: a .NET Framework project that needs Windows: it references DevExpress.Charts.v23.2.Core, DevExpress.CodeParser.v23.2, DevExpress.Data.Desktop.v23.2, DevExpress.Data.v23.2, DevExpress.DataAccess.v23.2, DevExpress.DataAccess.v23.2.UI, DevExpress.Diagram.v23.2.Core, DevExpress.Drawing.v23.2, DevExpress.Images.v23.2, DevExpress.Office.v23.2.Core, DevExpress.Pdf.v23.2.Core, DevExpress.Pdf.v23.2.Drawing, DevExpress.PivotGrid.v23.2.Core, DevExpress.Printing.v23.2.Core, DevExpress.RichEdit.v23.2.Core, DevExpress.RichEdit.v23.2.Export, DevExpress.Sparkline.v23.2.Core, DevExpress.Utils.v23.2, DevExpress.Utils.v23.2.UI, DevExpress.Xpo.v23.2, DevExpress.XtraBars.v23.2, DevExpress.XtraCharts.v23.2, DevExpress.XtraCharts.v23.2.Extensions, DevExpress.XtraCharts.v23.2.Wizard, DevExpress.XtraDiagram.v23.2, DevExpress.XtraEditors.v23.2, DevExpress.XtraGauges.v23.2.Core, DevExpress.XtraGrid.v23.2, DevExpress.XtraLayout.v23.2, DevExpress.XtraNavBar.v23.2, DevExpress.XtraPivotGrid.v23.2, DevExpress.XtraPrinting.v23.2, DevExpress.XtraReports.v23.2, DevExpress.XtraReports.v23.2.CodeCompletion, DevExpress.XtraReports.v23.2.Extensions, DevExpress.XtraRichEdit.v23.2, DevExpress.XtraScheduler.v23.2, DevExpress.XtraScheduler.v23.2.Core, DevExpress.XtraScheduler.v23.2.Core.Desktop, DevExpress.XtraTreeList.v23.2, DevExpress.XtraVerticalGrid.v23.2, System.Data.Linq, System.Data.OracleClient, System.Design and System.Drawing.Design, which are part of the .NET Framework on Windows only ------
-========== Build: 0 succeeded, 0 failed, 1 skipped ==========
+  Paint-v2: Ready via Cross-platform Forms layer in the app preview - A .NET Framework project, run with .NET on this tablet. Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
+Built in 0.2 s: 1 errors, 0 warnings
+  1 x TS1001
+      [Paint-v2] Form1.cs(93,4): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. Return the exit code from Main instead.
+1>------ Build started: Project: Paint-v2, Configuration: Debug ------
+1>Form1.cs(93,4): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. Return the exit code from Main instead.
+========== Build: 0 succeeded, 1 failed ==========
 + for f in ci-out/*.txt
 + echo '== ci-out/SimplePaint.txt'
 == ci-out/SimplePaint.txt
@@ -38,14 +43,9 @@ Built in 4.9 s: 0 errors, 8 warnings
 + head -40
 Compatibility Doctor:
   Paint: Ready via Cross-platform Forms layer in the app preview - A .NET Framework project, run with .NET on this tablet. Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
-Built in 1.2 s: 2 errors, 0 warnings
-  2 x CS1061
-      [Paint] ShapeComponent.cs(63,28): error CS1061: 'GraphicsPath' does not contain a definition for 'IsOutlineVisible' and no accessible extension method 'IsOutlineVisible' accepting a first argument of type 'GraphicsPath' could be found (are you missing a using directive or an assembly reference?)
-      [Paint] frmMain.cs(255,19): error CS1061: 'Graphics' does not contain a definition for 'CopyFromScreen' and no accessible extension method 'CopyFromScreen' accepting a first argument of type 'Graphics' could be found (are you missing a using directive or an assembly reference?)
+Built in 0.7 s: 0 errors, 0 warnings
 1>------ Build started: Project: Paint, Configuration: Debug ------
-1>ShapeComponent.cs(63,28): error CS1061: 'GraphicsPath' does not contain a definition for 'IsOutlineVisible' and no accessible extension method 'IsOutlineVisible' accepting a first argument of type 'GraphicsPath' could be found (are you missing a using directive or an assembly reference?)
-1>frmMain.cs(255,19): error CS1061: 'Graphics' does not contain a definition for 'CopyFromScreen' and no accessible extension method 'CopyFromScreen' accepting a first argument of type 'Graphics' could be found (are you missing a using directive or an assembly reference?)
-========== Build: 0 succeeded, 1 failed ==========
+========== Build: 1 succeeded, 0 failed ==========
 + for f in ci-out/*.txt
 + echo '== ci-out/WinFormsSnakeGame.txt'
 == ci-out/WinFormsSnakeGame.txt
@@ -53,6 +53,17 @@ Built in 1.2 s: 2 errors, 0 warnings
 + head -40
 Compatibility Doctor:
   Classic Snakes Game Tutorial - MOO ICT: Ready via Cross-platform Forms layer in the app preview - A .NET Framework project, run with .NET on this tablet. Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
-Built in 0.4 s: 0 errors, 0 warnings
+Built in 0.3 s: 0 errors, 0 warnings
 1>------ Build started: Project: Classic Snakes Game Tutorial - MOO ICT, Configuration: Debug ------
+========== Build: 1 succeeded, 0 failed ==========
++ for f in ci-out/*.txt
++ echo '== ci-out/WpfSimpleCalculator.txt'
+== ci-out/WpfSimpleCalculator.txt
++ grep -E 'load error|Compatibility|: |errors|x ' ci-out/WpfSimpleCalculator.txt
++ head -40
+Compatibility Doctor:
+  Simple Calculator: Ready via OpenSilver in the web preview - A .NET Framework project, run with .NET on this tablet. Built on OpenSilver, which implements WPF's API, and run in the web preview. What OpenSilver lacks, such as 3D, Window.ShowDialog and some members, is named in the Error List; that code runs on your PC through the Windows Bridge.
+Built in 4.3 s: 0 errors, 1 warnings
+1>------ Build started: Project: Simple Calculator, Configuration: Debug ------
+1>MainWindow.xaml(1,1): warning TS7009: In the code OpenSilver's XAML compiler made from MainWindow.xaml: 'MainWindow.Equals' hides inherited member 'object.Equals(object?)'. Use the new keyword if hiding was intended. (CS0108)
 ========== Build: 1 succeeded, 0 failed ==========
