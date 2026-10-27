@@ -127,6 +127,23 @@ sequenceDiagram
   global packages folder in NuGet's layout, verified and extracted safely, and shared by every project.
 - **Assets** come from `ref/` or `lib/` for `net10.0` with NuGet's fallback rules. Packages that the framework
   already provides are pruned, so their assemblies always come from .NET itself.
+- **RID-specific assets.** Programs run with what the .NET host would pick for the device's runtime identifier:
+  `android-arm64` on a tablet (`RuntimeGraph.DeviceRuntimeIdentifier`), the host's portable RID such as `linux-x64`
+  elsewhere. `RuntimeGraph` walks the RID graph breadth-first as NuGet does (`android-arm64`, `linux-bionic-arm64`,
+  `linux-arm64`, `linux`, `unix-arm64`, `unix`, `any`), from a shipped subset of the SDK's portable graph merged with
+  the packages' `runtime.json` files. A `runtimes/{rid}/lib/{tfm}/` folder (nearest framework first, then nearest
+  RID) replaces the package's `lib/` group, so Microsoft.Data.SqlClient and System.Data.SqlClient run with their
+  `runtimes/unix/` implementations rather than their "not supported on this platform" stubs; a `_._` there means
+  nothing for that RID. Code still compiles against `ref/` or `lib/`, as with the SDK. The nearest
+  `runtimes/{rid}/native/` folder gives the native libraries (`RestoreResult.NativeLibraries`); programs get both
+  lists as `RestoreResult.RuntimeFiles`.
+- **Native libraries.** The program's load context (`ProgramLoadContext`, and the test runner's and notebooks'
+  contexts) resolves `[DllImport]` and `NativeLibrary.Load` through `PackageNativeLibraries`, probing the name with
+  `lib` and `.so`/`.dylib`/`.dll`. A library TabStudio already has mapped, such as its own `libSkiaSharp.so` or
+  `libe_sqlite3.so`, is reused rather than loaded a second time; on Android the APK's own copy (built for Bionic)
+  comes next, because packages' `linux-arm64` builds need glibc. Package libraries load from the global packages
+  folder in private app storage: Android's W^X rule forbids `exec()` there, not `dlopen`, so nothing is copied.
+  Swarm devices get the managed assemblies only, and WebAssembly apps never get native files.
 - **No-op restores** are instant: the inputs are hashed, and an unchanged project reuses its last result.
   Offline, versions already on the device are used.
 - **Shared frameworks.** A project on the Web SDK, or with a `FrameworkReference` to `Microsoft.AspNetCore.App`,
@@ -881,7 +898,8 @@ When an external display connects, the IDE moves to it and the tablet becomes it
 
 ## Run hosts
 
-The Compatibility Doctor gives every project a run host, and F5 uses it:
+The Compatibility Doctor gives every project a run host, and F5 uses it. A project whose SQL Server cannot be reached
+from here is marked "Needs a database" (see [Database Explorer](#database-explorer)).
 
 | Run host | Used for |
 | --- | --- |
@@ -950,6 +968,19 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) for code style, tests and how CI repor
 ## Database Explorer
 
 `TabStudio.Database` owns provider-neutral connection and schema records. `SchemaReader` uses SQLite's catalog and table/index/foreign-key pragmas, PostgreSQL's information schema and `pg_catalog`, and SQL Server's information schema and `sys` catalog. A fresh connection targets each selected database, so schemas and IntelliSense stay scoped to that database. The Explorer loads other databases when expanded; Refresh rereads the catalog. SqlClient is pinned to 7.0.3: its Unix assembly contains only managed SNI, whereas the 7.1 unified assembly initializes Windows native SNI on Mono. Android also enables managed networking at startup and in runtime configuration using the historically named `Switch.Microsoft.Data.SqlClient.UseManagedNetworkingOnWindows` switch. The device self-test opens a refused loopback port with both network providers so this dependency regression cannot silently return.
+
+**SQL Server apps.** SQL Server has no ARM64 Linux engine, so neither the tablet nor Services can run one.
+`SqlServerDetector` (Core) finds projects that use it (EF Core's SQL Server provider, Microsoft.Data.SqlClient or
+System.Data.SqlClient in the project or a project it references, and SQL Server connection strings in
+`appsettings*.json`) and probes each `host:port` over TCP for two seconds, off the UI thread; LocalDB and named pipes
+never answer on a tablet. When nothing answers, the Compatibility Doctor row becomes "Needs a database" and F5's
+Output says the same once, and a run that crashes with a `SqlException` or SqlClient's `PlatformNotSupportedException`
+gets that explanation after its stack trace. The row offers **Connect to SQL Server…** (the Explorer's connection form,
+filled in from appsettings with Windows sign-in replaced by a SQL login; saved encrypted as
+`<Project>: <ConnectionName>`, which F5 then supplies as `ConnectionStrings__<ConnectionName>`), and, when the
+project also references Npgsql's or SQLite's EF Core provider, **Use PostgreSQL** (a `compose.yaml` with a PostgreSQL
+service and the app's connection string, which Services runs on F5; never written over existing Compose files) or
+**Use SQLite** (a saved connection to a file beside the project). appsettings files are never changed.
 
 `SqlExecutor` opens and disposes an ADO.NET connection/command/reader per execution on a worker thread, including SQLite's synchronous implementation of its async API. Cancellation registers `DbCommand.Cancel`; SQLite uses `sqlite3_interrupt` because its command cancellation method does nothing. Readers consume every result set, storing at most 5,000 rows per set and 32 displayed sets. Each tab owns its cancellation lifetime. JSON exports preserve duplicate column names and SQL NULL as separate columns and row arrays; CSV uses invariant formatting and quotes/escapes every field.
 
