@@ -21,9 +21,11 @@ internal sealed class ChromeWebViewFactory(HeadlessChrome chrome) : IWebViewFact
 /// <summary>
 /// The web preview's browser on the headless desktop, for tests and screenshots: headless Chrome loads each page, and
 /// the preview shows a picture of it at the preview's size. The test drives the page through <see cref="Chrome"/>,
-/// such as clicking a button, then calls <see cref="RefreshAsync"/>.
+/// such as clicking a button, then calls <see cref="RefreshAsync"/>. With page zoom on, as the web preview turns it on
+/// for WPF apps, Chrome is a mobile browser with touch input, which honors the page's viewport meta tag and zoom as
+/// Android's WebView does.
 /// </summary>
-internal sealed class ChromeWebView : IWebView
+internal sealed class ChromeWebView : IZoomableWebView
 {
     private readonly Image _image = new()
     {
@@ -56,6 +58,9 @@ internal sealed class ChromeWebView : IWebView
 
     /// <inheritdoc />
     public Control Control => _host;
+
+    /// <inheritdoc />
+    public bool AllowsPageZoom { get; set; }
 
     /// <inheritdoc />
     public void Navigate(Uri uri)
@@ -93,7 +98,7 @@ internal sealed class ChromeWebView : IWebView
         }
 
         var size = _host.Bounds.Size;
-        await Chrome.ResizeAsync(size.Width >= 100 ? (int)size.Width : 480, size.Height >= 100 ? (int)size.Height : 640);
+        await Chrome.ResizeAsync(size.Width >= 100 ? (int)size.Width : 480, size.Height >= 100 ? (int)size.Height : 640, AllowsPageZoom);
         if (navigate)
         {
             await Chrome.NavigateAsync(page);
