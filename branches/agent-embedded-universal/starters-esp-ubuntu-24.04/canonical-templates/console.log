@@ -30,7 +30,6 @@ In file included from ./path/glue.c:31:
   CC	path/canon.o
   CC	path/f2fs-bug.o
   CC	path/proc.o
-  CC	path/temp.o
 ./path/proc.c: In function ‘readlink_proc’:
 ./path/proc.c:124:25: warning: ‘__builtin_strncpy’ specified bound depends on the length of the source argument [-Wstringop-truncation]
   124 |                         strncpy(result, string, status + 1);    \
@@ -56,6 +55,8 @@ In file included from ./path/glue.c:31:
 ./path/proc.c:131:17: note: in expansion of macro ‘SUBSTITUTE’
   131 |                 SUBSTITUTE(cwd, known_tracee->fs->cwd);
       |                 ^~~~~~~~~~
+  CC	path/temp.o
+  CC	syscall/syscall.o
 ./path/temp.c: In function ‘get_temp_directory’:
 ./path/temp.c:37:9: warning: ‘talloc_autofree_context’ is deprecated [-Wdeprecated-declarations]
    37 |         temp_directory = talloc_strdup(talloc_autofree_context(), tmp);
@@ -71,7 +72,6 @@ In file included from ./path/temp.c:9:
 /usr/include/talloc.h:1071:7: note: declared here
  1071 | void *talloc_autofree_context(void) _DEPRECATED_;
       |       ^~~~~~~~~~~~~~~~~~~~~~~
-  CC	syscall/syscall.o
   CC	syscall/chain.o
   CC	syscall/enter.o
   CC	syscall/wch_guard.o
@@ -2200,21 +2200,21 @@ Downloading: Ubuntu base
 Downloading: Ubuntu base
 Downloading: Ubuntu base
 Configuring: apt-get update
-Configuring: Get:1 http://archive.ubuntu.com/ubuntu noble InRelease [256 kB]
-Configuring: Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Configuring: Get:1 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Configuring: Get:2 http://archive.ubuntu.com/ubuntu noble InRelease [256 kB]
 Configuring: Get:3 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1146 kB]
 Configuring: Get:4 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
 Configuring: Get:5 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
-Configuring: Get:6 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages [1401 kB]
-Configuring: Get:7 http://archive.ubuntu.com/ubuntu noble/main Translation-en [513 kB]
-Configuring: Get:8 http://security.ubuntu.com/ubuntu noble-security/main Translation-en [231 kB]
-Configuring: Get:9 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1223 kB]
-Configuring: Get:10 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [15.0 MB]
-Configuring: Get:11 http://security.ubuntu.com/ubuntu noble-security/universe Translation-en [246 kB]
-Configuring: Get:12 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1713 kB]
-Configuring: Get:13 http://security.ubuntu.com/ubuntu noble-security/restricted Translation-en [392 kB]
-Configuring: Get:14 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [45.4 kB]
-Configuring: Get:15 http://security.ubuntu.com/ubuntu noble-security/multiverse Translation-en [12.1 kB]
+Configuring: Get:6 http://security.ubuntu.com/ubuntu noble-security/main Translation-en [231 kB]
+Configuring: Get:7 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1223 kB]
+Configuring: Get:8 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages [1401 kB]
+Configuring: Get:9 http://security.ubuntu.com/ubuntu noble-security/universe Translation-en [246 kB]
+Configuring: Get:10 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1713 kB]
+Configuring: Get:11 http://security.ubuntu.com/ubuntu noble-security/restricted Translation-en [392 kB]
+Configuring: Get:12 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [45.4 kB]
+Configuring: Get:13 http://security.ubuntu.com/ubuntu noble-security/multiverse Translation-en [12.1 kB]
+Configuring: Get:14 http://archive.ubuntu.com/ubuntu noble/main Translation-en [513 kB]
+Configuring: Get:15 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [15.0 MB]
 Configuring: Get:16 http://archive.ubuntu.com/ubuntu noble/universe Translation-en [5982 kB]
 Configuring: Get:17 http://archive.ubuntu.com/ubuntu noble/restricted amd64 Packages [93.9 kB]
 Configuring: Get:18 http://archive.ubuntu.com/ubuntu noble/restricted Translation-en [18.7 kB]
@@ -2234,7 +2234,7 @@ Configuring: Get:31 http://archive.ubuntu.com/ubuntu noble-backports/universe am
 Configuring: Get:32 http://archive.ubuntu.com/ubuntu noble-backports/universe Translation-en [18.6 kB]
 Configuring: Get:33 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Packages [748 B]
 Configuring: Get:34 http://archive.ubuntu.com/ubuntu noble-backports/multiverse Translation-en [340 B]
-Configuring: Fetched 35.2 MB in 5s (7267 kB/s)
+Configuring: Fetched 35.2 MB in 5s (6764 kB/s)
 Configuring: Reading package lists...
 Configuring: apt-get install -y --no-install-recommends ca-certificates curl git python3 python3-venv python3-pip build-essential cmake ninja-build xz-utils libusb-1.0-0-dev libhidapi-dev clangd
 Configuring: Reading package lists...
@@ -2450,7 +2450,7 @@ Configuring: Get:134 http://archive.ubuntu.com/ubuntu noble/universe amd64 libhi
 Configuring: Get:135 http://archive.ubuntu.com/ubuntu noble/universe amd64 libhidapi-hidraw0 amd64 0.14.0-1build1 [13.2 kB]
 Configuring: Get:136 http://archive.ubuntu.com/ubuntu noble/universe amd64 libhidapi-dev amd64 0.14.0-1build1 [28.2 kB]
 Configuring: debconf: delaying package configuration, since apt-utils is not installed
-Configuring: Fetched 189 MB in 9s (22.0 MB/s)
+Configuring: Fetched 189 MB in 6s (30.0 MB/s)
 Configuring: (Reading database ...
 Configuring: (Reading database ... 5%
 Configuring: (Reading database ... 10%
@@ -3180,8 +3180,8 @@ Configuring: Setting up libsasl2-modules-db:amd64 (2.1.28+dfsg1-5ubuntu3.1) ...
 Configuring: Setting up tzdata (2026e-0ubuntu0.24.04.1) ...
 Configuring: 
 Configuring: Current default time zone: 'Etc/UTC'
-Configuring: Local time is now:      Tue Oct 27 11:48:59 UTC 2026.
-Configuring: Universal Time is now:  Tue Oct 27 11:48:59 UTC 2026.
+Configuring: Local time is now:      Tue Oct 27 13:13:26 UTC 2026.
+Configuring: Universal Time is now:  Tue Oct 27 13:13:26 UTC 2026.
 Configuring: Run 'dpkg-reconfigure tzdata' if you wish to change it.
 Configuring: 
 Configuring: Setting up rpcsvc-proto (1.4.2-0ubuntu7) ...
@@ -3307,7 +3307,7 @@ Configuring: Setting up Bounded native build /opt/tabstudio/embedded/build-bin/m
 Configuring: cc -std=gnu17 -O2 -Wall -Wextra -Werror -shared -fPIC /opt/tabstudio/embedded/usb_fd.c -o /opt/tabstudio/embedded/libusb-fd.so -lusb-1.0 -ldl -pthread
 Configuring: cc -std=gnu17 -O2 -Wall -Wextra -Werror -shared -fPIC /opt/tabstudio/embedded/serial_posix.c -o /opt/tabstudio/embedded/serial-posix.so -ldl -pthread
 Configuring: cc -std=gnu17 -O2 -Wall -Wextra -Werror -shared -fPIC /opt/tabstudio/embedded/usbfs_fd.c -o /opt/tabstudio/embedded/usbfs-fd.so -ldl -pthread
-Configuring: python3 /opt/tabstudio/embedded/serial_bridge.py --virtual --shim /opt/tabstudio/embedded/serial-posix.so --port /tmp/tabstudio-bridge-test-d96bb2a6e1724ee5812ba37c0c876c58 -- python3 -c 'import array,fcntl,os,select,sys,termios,time,tty
+Configuring: python3 /opt/tabstudio/embedded/serial_bridge.py --virtual --shim /opt/tabstudio/embedded/serial-posix.so --port /tmp/tabstudio-bridge-test-2bf859eb28b04fd285be9f7390eac4a7 -- python3 -c 'import array,fcntl,os,select,sys,termios,time,tty
 fd=os.open(sys.argv[1],os.O_RDWR|os.O_NOCTTY)
 tty.setraw(fd)
 config=termios.tcgetattr(fd)
@@ -3339,60 +3339,60 @@ Configuring: Collecting ajsonrpc==1.2.0 (from -r /opt/tabstudio/platformio.requi
 Configuring:   Downloading ajsonrpc-1.2.0-py3-none-any.whl (22 kB)
 Configuring: Collecting anyio==4.15.1 (from -r /opt/tabstudio/platformio.requirements.txt (line 2))
 Configuring:   Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 132.1/132.1 kB 12.2 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 132.1/132.1 kB 16.1 MB/s eta 0:00:00
 Configuring: Collecting bottle==0.13.4 (from -r /opt/tabstudio/platformio.requirements.txt (line 3))
 Configuring:   Downloading bottle-0.13.4-py2.py3-none-any.whl (103 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.8/103.8 kB 25.6 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.8/103.8 kB 22.0 MB/s eta 0:00:00
 Configuring: Collecting certifi==2026.10.23 (from -r /opt/tabstudio/platformio.requirements.txt (line 4))
 Configuring:   Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 21.5 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 26.8 MB/s eta 0:00:00
 Configuring: Collecting charset-normalizer==3.5.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 5))
 Configuring:   Downloading charset_normalizer-3.5.2-py3-none-any.whl (68 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 68.9/68.9 kB 15.3 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 68.9/68.9 kB 13.6 MB/s eta 0:00:00
 Configuring: Collecting click==8.1.7 (from -r /opt/tabstudio/platformio.requirements.txt (line 6))
 Configuring:   Downloading click-8.1.7-py3-none-any.whl (97 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 97.9/97.9 kB 9.4 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 97.9/97.9 kB 19.3 MB/s eta 0:00:00
 Configuring: Collecting colorama==0.4.6 (from -r /opt/tabstudio/platformio.requirements.txt (line 7))
 Configuring:   Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
 Configuring: Collecting h11==0.16.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 8))
 Configuring:   Downloading h11-0.16.0-py3-none-any.whl (37 kB)
 Configuring: Collecting idna==3.20 (from -r /opt/tabstudio/platformio.requirements.txt (line 9))
 Configuring:   Downloading idna-3.20-py3-none-any.whl (69 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 17.0 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 14.4 MB/s eta 0:00:00
 Configuring: Collecting marshmallow==3.26.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 10))
 Configuring:   Downloading marshmallow-3.26.2-py3-none-any.whl (50 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 51.0/51.0 kB 12.0 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 51.0/51.0 kB 10.1 MB/s eta 0:00:00
 Configuring: Collecting packaging==26.3 (from -r /opt/tabstudio/platformio.requirements.txt (line 11))
 Configuring:   Downloading packaging-26.3-py3-none-any.whl (129 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 31.0 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 27.7 MB/s eta 0:00:00
 Configuring: Collecting platformio==6.1.18 (from -r /opt/tabstudio/platformio.requirements.txt (line 12))
 Configuring:   Downloading platformio-6.1.18-py3-none-any.whl (420 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 420.1/420.1 kB 43.4 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 420.1/420.1 kB 47.3 MB/s eta 0:00:00
 Configuring: Collecting pyelftools==0.33 (from -r /opt/tabstudio/platformio.requirements.txt (line 13))
 Configuring:   Downloading pyelftools-0.33-py3-none-any.whl (201 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 201.2/201.2 kB 44.1 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 201.2/201.2 kB 35.4 MB/s eta 0:00:00
 Configuring: Collecting pyserial==3.5 (from -r /opt/tabstudio/platformio.requirements.txt (line 14))
 Configuring:   Downloading pyserial-3.5-py2.py3-none-any.whl (90 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.6/90.6 kB 2.9 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.6/90.6 kB 17.0 MB/s eta 0:00:00
 Configuring: Collecting requests==2.34.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 15))
 Configuring:   Downloading requests-2.34.2-py3-none-any.whl (73 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 18.0 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 14.0 MB/s eta 0:00:00
 Configuring: Collecting semantic-version==2.10.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 16))
 Configuring:   Downloading semantic_version-2.10.0-py2.py3-none-any.whl (15 kB)
 Configuring: Collecting starlette==0.46.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 17))
 Configuring:   Downloading starlette-0.46.2-py3-none-any.whl (72 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.0/72.0 kB 16.7 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.0/72.0 kB 14.3 MB/s eta 0:00:00
 Configuring: Collecting tabulate==0.10.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 18))
 Configuring:   Downloading tabulate-0.10.0-py3-none-any.whl (39 kB)
 Configuring: Collecting typing_extensions==4.16.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 19))
 Configuring:   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 10.0 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 8.2 MB/s eta 0:00:00
 Configuring: Collecting urllib3==2.8.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 20))
 Configuring:   Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 35.4 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 25.6 MB/s eta 0:00:00
 Configuring: Collecting uvicorn==0.34.3 (from -r /opt/tabstudio/platformio.requirements.txt (line 21))
 Configuring:   Downloading uvicorn-0.34.3-py3-none-any.whl (62 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.4/62.4 kB 14.3 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.4/62.4 kB 12.8 MB/s eta 0:00:00
 Configuring: Collecting wsproto==1.3.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 22))
 Configuring:   Downloading wsproto-1.3.2-py3-none-any.whl (24 kB)
 Configuring: Installing collected packages: pyserial, bottle, urllib3, typing_extensions, tabulate, semantic-version, pyelftools, packaging, idna, h11, colorama, click, charset-normalizer, certifi, ajsonrpc, wsproto, uvicorn, requests, marshmallow, anyio, starlette, platformio
@@ -3418,40 +3418,40 @@ Completed: PlatformIO Core is installed in the embedded glibc environment
 [esp32] Tool Manager: Installing platformio/toolchain-riscv32-esp @ 14.2.0+20260121
 [esp32] Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
 [esp32] Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
-[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8/bin/.l2s.riscv32-esp-elf-gcc0001.0002' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8/bin/.l2s.riscv32-esp-elf-gcc0001.0002`
-[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0001' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0001`
-[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001`
-[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8/bin/.l2s.riscv32-esp-elf-objcopy0001' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8/bin/.l2s.riscv32-esp-elf-objcopy0001`
-[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8/bin/.l2s.riscv32-esp-elf-ar0001' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8/bin/.l2s.riscv32-esp-elf-ar0001`
-[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8/bin/.l2s.riscv32-esp-elf-as-xespv2p20001' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8/bin/.l2s.riscv32-esp-elf-as-xespv2p20001`
-[esp32] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8/bin' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8/bin`
-[esp32] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-7k9p61m8`
+[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4/bin/.l2s.riscv32-esp-elf-gcc0001.0002' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4/bin/.l2s.riscv32-esp-elf-gcc0001.0002`
+[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0001' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0001`
+[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001`
+[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4/bin/.l2s.riscv32-esp-elf-objcopy0001' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4/bin/.l2s.riscv32-esp-elf-objcopy0001`
+[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4/bin/.l2s.riscv32-esp-elf-ar0001' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4/bin/.l2s.riscv32-esp-elf-ar0001`
+[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4/bin/.l2s.riscv32-esp-elf-as-xespv2p20001' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4/bin/.l2s.riscv32-esp-elf-as-xespv2p20001`
+[esp32] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4/bin' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4/bin`
+[esp32] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ccubipl4`
 [esp32] Tool Manager: toolchain-riscv32-esp@14.2.0+20260121 has been installed!
 [esp32] Tool Manager: Installing platformio/toolchain-xtensa-esp-elf @ 14.2.0+20260121
 [esp32] Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
 [esp32] Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
-[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-s3d3u6ol/bin/.l2s.xtensa-esp-elf-nm0001' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-s3d3u6ol/bin/.l2s.xtensa-esp-elf-nm0001`
-[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-s3d3u6ol/bin/.l2s.xtensa-esp-elf-as0001' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-s3d3u6ol/bin/.l2s.xtensa-esp-elf-as0001`
-[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-s3d3u6ol/bin/.l2s.xtensa-esp-elf-c++0001.0002' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-s3d3u6ol/bin/.l2s.xtensa-esp-elf-c++0001.0002`
-[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-s3d3u6ol/bin/.l2s.xtensa-esp-elf-as0001.0001' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-s3d3u6ol/bin/.l2s.xtensa-esp-elf-as0001.0001`
-[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-s3d3u6ol/bin/.l2s.xtensa-esp-elf-nm0001.0001' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-s3d3u6ol/bin/.l2s.xtensa-esp-elf-nm0001.0001`
-[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-s3d3u6ol/bin/.l2s.xtensa-esp-elf-objdump0001' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-s3d3u6ol/bin/.l2s.xtensa-esp-elf-objdump0001`
-[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-s3d3u6ol/bin/.l2s.xtensa-esp-elf-c++0001' 
-[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-s3d3u6ol/bin/.l2s.xtensa-esp-elf-c++0001`
+[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ghsnnsl6/bin/.l2s.xtensa-esp-elf-nm0001' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ghsnnsl6/bin/.l2s.xtensa-esp-elf-nm0001`
+[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ghsnnsl6/bin/.l2s.xtensa-esp-elf-as0001' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ghsnnsl6/bin/.l2s.xtensa-esp-elf-as0001`
+[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ghsnnsl6/bin/.l2s.xtensa-esp-elf-c++0001.0002' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ghsnnsl6/bin/.l2s.xtensa-esp-elf-c++0001.0002`
+[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ghsnnsl6/bin/.l2s.xtensa-esp-elf-as0001.0001' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ghsnnsl6/bin/.l2s.xtensa-esp-elf-as0001.0001`
+[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ghsnnsl6/bin/.l2s.xtensa-esp-elf-nm0001.0001' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ghsnnsl6/bin/.l2s.xtensa-esp-elf-nm0001.0001`
+[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ghsnnsl6/bin/.l2s.xtensa-esp-elf-objdump0001' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ghsnnsl6/bin/.l2s.xtensa-esp-elf-objdump0001`
+[esp32] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ghsnnsl6/bin/.l2s.xtensa-esp-elf-c++0001' 
+[esp32] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-ghsnnsl6/bin/.l2s.xtensa-esp-elf-c++0001`
 [esp32] Tool Manager: toolchain-xtensa-esp-elf@14.2.0+20260121 has been installed!
 [esp32] Tool Manager: Installing espressif/tool-xtensa-esp-elf-gdb @ ~12.1.0
 [esp32] Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
@@ -3578,7 +3578,7 @@ Completed: PlatformIO Core is installed in the embedded glibc environment
 [esp32] Successfully created ESP32 image.
 [esp32] export_manifest([".pio/build/esp32/firmware.bin"], [".pio/build/esp32/firmware.elf"])
 [esp32] TabStudio: exported 4 distinct ESP flash images; no gaps merged or padded
-[esp32] ======================== [SUCCESS] Took 296.17 seconds ========================
+[esp32] ======================== [SUCCESS] Took 248.21 seconds ========================
 [esp32] Processing esp32 (platform: espressif32@8.0.0; board: esp32dev; framework: arduino)
 [esp32] --------------------------------------------------------------------------------
 [esp32] Verbose mode can be enabled via `-v, --verbose` option
@@ -3601,7 +3601,7 @@ Completed: PlatformIO Core is installed in the embedded glibc environment
 [esp32] No dependencies
 [esp32] Building in release mode
 [esp32] Building compilation database compile_commands.json
-[esp32] ========================= [SUCCESS] Took 6.76 seconds =========================
+[esp32] ========================= [SUCCESS] Took 5.55 seconds =========================
 CANONICAL_TEMPLATE_BUILT esp32 x86_64
 [esp32s3] ********************************************************************************
 [esp32s3] If you like PlatformIO, please:
@@ -3617,39 +3617,39 @@ CANONICAL_TEMPLATE_BUILT esp32 x86_64
 [esp32s3] Platform Manager: espressif32@8.0.0 has been installed!
 [esp32s3] Tool Manager: Installing platformio/toolchain-riscv32-esp @ 14.2.0+20260121
 [esp32s3] Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
-[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw/bin/.l2s.riscv32-esp-elf-gcc0001.0002' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw/bin/.l2s.riscv32-esp-elf-gcc0001.0002`
-[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0001' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0001`
-[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001`
-[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw/bin/.l2s.riscv32-esp-elf-objcopy0001' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw/bin/.l2s.riscv32-esp-elf-objcopy0001`
-[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw/bin/.l2s.riscv32-esp-elf-ar0001' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw/bin/.l2s.riscv32-esp-elf-ar0001`
-[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw/bin/.l2s.riscv32-esp-elf-as-xespv2p20001' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw/bin/.l2s.riscv32-esp-elf-as-xespv2p20001`
-[esp32s3] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw/bin' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw/bin`
-[esp32s3] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-fp20uwmw`
+[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_/bin/.l2s.riscv32-esp-elf-gcc0001.0002' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_/bin/.l2s.riscv32-esp-elf-gcc0001.0002`
+[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0001' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0001`
+[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001`
+[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_/bin/.l2s.riscv32-esp-elf-objcopy0001' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_/bin/.l2s.riscv32-esp-elf-objcopy0001`
+[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_/bin/.l2s.riscv32-esp-elf-ar0001' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_/bin/.l2s.riscv32-esp-elf-ar0001`
+[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_/bin/.l2s.riscv32-esp-elf-as-xespv2p20001' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_/bin/.l2s.riscv32-esp-elf-as-xespv2p20001`
+[esp32s3] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_/bin' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_/bin`
+[esp32s3] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-msewvx2_`
 [esp32s3] Tool Manager: toolchain-riscv32-esp@14.2.0+20260121 has been installed!
 [esp32s3] Tool Manager: Installing platformio/toolchain-xtensa-esp-elf @ 14.2.0+20260121
 [esp32s3] Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
-[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-rwkv38bb/bin/.l2s.xtensa-esp-elf-nm0001' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-rwkv38bb/bin/.l2s.xtensa-esp-elf-nm0001`
-[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-rwkv38bb/bin/.l2s.xtensa-esp-elf-as0001' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-rwkv38bb/bin/.l2s.xtensa-esp-elf-as0001`
-[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-rwkv38bb/bin/.l2s.xtensa-esp-elf-c++0001.0002' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-rwkv38bb/bin/.l2s.xtensa-esp-elf-c++0001.0002`
-[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-rwkv38bb/bin/.l2s.xtensa-esp-elf-as0001.0001' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-rwkv38bb/bin/.l2s.xtensa-esp-elf-as0001.0001`
-[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-rwkv38bb/bin/.l2s.xtensa-esp-elf-nm0001.0001' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-rwkv38bb/bin/.l2s.xtensa-esp-elf-nm0001.0001`
-[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-rwkv38bb/bin/.l2s.xtensa-esp-elf-objdump0001' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-rwkv38bb/bin/.l2s.xtensa-esp-elf-objdump0001`
-[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-rwkv38bb/bin/.l2s.xtensa-esp-elf-c++0001' 
-[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-rwkv38bb/bin/.l2s.xtensa-esp-elf-c++0001`
+[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-zt77p2tn/bin/.l2s.xtensa-esp-elf-nm0001' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-zt77p2tn/bin/.l2s.xtensa-esp-elf-nm0001`
+[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-zt77p2tn/bin/.l2s.xtensa-esp-elf-as0001' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-zt77p2tn/bin/.l2s.xtensa-esp-elf-as0001`
+[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-zt77p2tn/bin/.l2s.xtensa-esp-elf-c++0001.0002' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-zt77p2tn/bin/.l2s.xtensa-esp-elf-c++0001.0002`
+[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-zt77p2tn/bin/.l2s.xtensa-esp-elf-as0001.0001' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-zt77p2tn/bin/.l2s.xtensa-esp-elf-as0001.0001`
+[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-zt77p2tn/bin/.l2s.xtensa-esp-elf-nm0001.0001' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-zt77p2tn/bin/.l2s.xtensa-esp-elf-nm0001.0001`
+[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-zt77p2tn/bin/.l2s.xtensa-esp-elf-objdump0001' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-zt77p2tn/bin/.l2s.xtensa-esp-elf-objdump0001`
+[esp32s3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-zt77p2tn/bin/.l2s.xtensa-esp-elf-c++0001' 
+[esp32s3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-zt77p2tn/bin/.l2s.xtensa-esp-elf-c++0001`
 [esp32s3] Tool Manager: toolchain-xtensa-esp-elf@14.2.0+20260121 has been installed!
 [esp32s3] Tool Manager: Installing espressif/tool-xtensa-esp-elf-gdb @ ~12.1.0
 [esp32s3] Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
@@ -3771,7 +3771,7 @@ CANONICAL_TEMPLATE_BUILT esp32 x86_64
 [esp32s3] Successfully created ESP32-S3 image.
 [esp32s3] export_manifest([".pio/build/esp32s3/firmware.bin"], [".pio/build/esp32s3/firmware.elf"])
 [esp32s3] TabStudio: exported 4 distinct ESP flash images; no gaps merged or padded
-[esp32s3] ======================== [SUCCESS] Took 321.69 seconds ========================
+[esp32s3] ======================== [SUCCESS] Took 261.93 seconds ========================
 [esp32s3] Processing esp32s3 (platform: espressif32@8.0.0; board: esp32-s3-devkitc-1; framework: arduino)
 [esp32s3] --------------------------------------------------------------------------------
 [esp32s3] Verbose mode can be enabled via `-v, --verbose` option
@@ -3794,7 +3794,7 @@ CANONICAL_TEMPLATE_BUILT esp32 x86_64
 [esp32s3] No dependencies
 [esp32s3] Building in release mode
 [esp32s3] Building compilation database compile_commands.json
-[esp32s3] ========================= [SUCCESS] Took 6.92 seconds =========================
+[esp32s3] ========================= [SUCCESS] Took 5.86 seconds =========================
 CANONICAL_TEMPLATE_BUILT esp32s3 x86_64
 [esp32c3] ********************************************************************************
 [esp32c3] If you like PlatformIO, please:
@@ -3810,39 +3810,39 @@ CANONICAL_TEMPLATE_BUILT esp32s3 x86_64
 [esp32c3] Platform Manager: espressif32@8.0.0 has been installed!
 [esp32c3] Tool Manager: Installing platformio/toolchain-riscv32-esp @ 14.2.0+20260121
 [esp32c3] Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
-[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx/bin/.l2s.riscv32-esp-elf-gcc0001.0002' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx/bin/.l2s.riscv32-esp-elf-gcc0001.0002`
-[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0001' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0001`
-[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001`
-[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx/bin/.l2s.riscv32-esp-elf-objcopy0001' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx/bin/.l2s.riscv32-esp-elf-objcopy0001`
-[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx/bin/.l2s.riscv32-esp-elf-ar0001' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx/bin/.l2s.riscv32-esp-elf-ar0001`
-[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx/bin/.l2s.riscv32-esp-elf-as-xespv2p20001' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx/bin/.l2s.riscv32-esp-elf-as-xespv2p20001`
-[esp32c3] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx/bin' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx/bin`
-[esp32c3] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-w1tkgfjx`
+[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv/bin/.l2s.riscv32-esp-elf-gcc0001.0002' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv/bin/.l2s.riscv32-esp-elf-gcc0001.0002`
+[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0001' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0001`
+[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001`
+[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv/bin/.l2s.riscv32-esp-elf-objcopy0001' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv/bin/.l2s.riscv32-esp-elf-objcopy0001`
+[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv/bin/.l2s.riscv32-esp-elf-ar0001' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv/bin/.l2s.riscv32-esp-elf-ar0001`
+[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv/bin/.l2s.riscv32-esp-elf-as-xespv2p20001' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv/bin/.l2s.riscv32-esp-elf-as-xespv2p20001`
+[esp32c3] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv/bin' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv/bin`
+[esp32c3] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-33_0ezxv`
 [esp32c3] Tool Manager: toolchain-riscv32-esp@14.2.0+20260121 has been installed!
 [esp32c3] Tool Manager: Installing platformio/toolchain-xtensa-esp-elf @ 14.2.0+20260121
 [esp32c3] Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
-[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-12_9uy3o/bin/.l2s.xtensa-esp-elf-nm0001' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-12_9uy3o/bin/.l2s.xtensa-esp-elf-nm0001`
-[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-12_9uy3o/bin/.l2s.xtensa-esp-elf-as0001' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-12_9uy3o/bin/.l2s.xtensa-esp-elf-as0001`
-[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-12_9uy3o/bin/.l2s.xtensa-esp-elf-c++0001.0002' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-12_9uy3o/bin/.l2s.xtensa-esp-elf-c++0001.0002`
-[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-12_9uy3o/bin/.l2s.xtensa-esp-elf-as0001.0001' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-12_9uy3o/bin/.l2s.xtensa-esp-elf-as0001.0001`
-[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-12_9uy3o/bin/.l2s.xtensa-esp-elf-nm0001.0001' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-12_9uy3o/bin/.l2s.xtensa-esp-elf-nm0001.0001`
-[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-12_9uy3o/bin/.l2s.xtensa-esp-elf-objdump0001' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-12_9uy3o/bin/.l2s.xtensa-esp-elf-objdump0001`
-[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-12_9uy3o/bin/.l2s.xtensa-esp-elf-c++0001' 
-[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-12_9uy3o/bin/.l2s.xtensa-esp-elf-c++0001`
+[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-4i0kxucr/bin/.l2s.xtensa-esp-elf-nm0001' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-4i0kxucr/bin/.l2s.xtensa-esp-elf-nm0001`
+[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-4i0kxucr/bin/.l2s.xtensa-esp-elf-as0001' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-4i0kxucr/bin/.l2s.xtensa-esp-elf-as0001`
+[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-4i0kxucr/bin/.l2s.xtensa-esp-elf-c++0001.0002' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-4i0kxucr/bin/.l2s.xtensa-esp-elf-c++0001.0002`
+[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-4i0kxucr/bin/.l2s.xtensa-esp-elf-as0001.0001' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-4i0kxucr/bin/.l2s.xtensa-esp-elf-as0001.0001`
+[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-4i0kxucr/bin/.l2s.xtensa-esp-elf-nm0001.0001' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-4i0kxucr/bin/.l2s.xtensa-esp-elf-nm0001.0001`
+[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-4i0kxucr/bin/.l2s.xtensa-esp-elf-objdump0001' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-4i0kxucr/bin/.l2s.xtensa-esp-elf-objdump0001`
+[esp32c3] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-4i0kxucr/bin/.l2s.xtensa-esp-elf-c++0001' 
+[esp32c3] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-4i0kxucr/bin/.l2s.xtensa-esp-elf-c++0001`
 [esp32c3] Tool Manager: toolchain-xtensa-esp-elf@14.2.0+20260121 has been installed!
 [esp32c3] Tool Manager: Installing espressif/tool-xtensa-esp-elf-gdb @ ~12.1.0
 [esp32c3] Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
@@ -3964,7 +3964,7 @@ CANONICAL_TEMPLATE_BUILT esp32s3 x86_64
 [esp32c3] Successfully created ESP32-C3 image.
 [esp32c3] export_manifest([".pio/build/esp32c3/firmware.bin"], [".pio/build/esp32c3/firmware.elf"])
 [esp32c3] TabStudio: exported 4 distinct ESP flash images; no gaps merged or padded
-[esp32c3] ======================== [SUCCESS] Took 269.34 seconds ========================
+[esp32c3] ======================== [SUCCESS] Took 231.48 seconds ========================
 [esp32c3] Processing esp32c3 (platform: espressif32@8.0.0; board: esp32-c3-devkitm-1; framework: arduino)
 [esp32c3] --------------------------------------------------------------------------------
 [esp32c3] Verbose mode can be enabled via `-v, --verbose` option
@@ -3987,6 +3987,6 @@ CANONICAL_TEMPLATE_BUILT esp32s3 x86_64
 [esp32c3] No dependencies
 [esp32c3] Building in release mode
 [esp32c3] Building compilation database compile_commands.json
-[esp32c3] ========================= [SUCCESS] Took 6.51 seconds =========================
+[esp32c3] ========================= [SUCCESS] Took 5.74 seconds =========================
 CANONICAL_TEMPLATE_BUILT esp32c3 x86_64
 CANONICAL_TEMPLATE_GROUP_PASSED esp x86_64
