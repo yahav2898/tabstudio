@@ -9,6 +9,7 @@ using TabStudio.Compilation;
 using TabStudio.Compilation.Running;
 using TabStudio.Core.Compatibility;
 using TabStudio.Core.Diagnostics;
+using TabStudio.Core.Progress;
 using TabStudio.Core.Workspaces;
 
 namespace TabStudio.App.ViewModels;
@@ -154,11 +155,13 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeLink();
         Documents.CollectionChanged += (_, _) => UpdateActiveProjects();
         InitializeActions(browser, notifications, appActivity);
+        InitializeOperations(notifications, appActivity);
         InitializePullRequests();
         InitializeLiveTesting();
         InitializeLanguageServers(languageServers, browser);
         InitializeExtensions(extensions, browser);
         InitializeToolchains(toolchains);
+        InitializeToolchainOperations();
         InitializeRemoteSsh(remoteSsh);
         InitializeServices(serviceDatabases);
         InitializeSwarmScreens(swarm?.Registry);
@@ -322,7 +325,16 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         await Services.LoadAsync(preview.Workspace.RootDirectory);
 
         StatusText = "Loading C#";
-        _language = await CreateLanguageServiceAsync(preview.Workspace);
+        var loading = Operations.Begin(LanguageOperation, "Loading C#");
+        try
+        {
+            _language = await CreateLanguageServiceAsync(preview.Workspace);
+        }
+        finally
+        {
+            loading.Complete();
+        }
+
         LanguageServiceText = null;
 
         RestoreDebuggingState(session);
@@ -433,6 +445,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         DisposeActions();
         DisposePullRequests();
         _ = Services.DisposeAsync().AsTask();
+        DisposeOperations();
         DisposeToolchains();
         if (_ownsLocalAI) LocalAI.Dispose();
         GitChanges.Dispose();
@@ -462,23 +475,36 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
             return;
         }
 
+        // The projects of open documents first: what is on screen gets its diagnostics before the rest.
+        var projects = InAnalysisOrder(workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp));
+        var operation = Operations.Begin(AnalysisOperation, "Analyzing", new OperationProgress("Analyzing", 0, projects.Count, ProgressUnit.Projects));
         try
         {
-            foreach (var project in workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp))
+            for (var i = 0; i < projects.Count; i++)
             {
+                var project = projects[i];
                 while (IsThrottled && _device.Thermal == ThermalState.Hot)
                 {
                     await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
                 }
 
+                operation.Log("Analyzing " + project.Name);
                 var diagnostics = await language.GetProjectDiagnosticsAsync(project.FilePath, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
                 ApplyProjectDiagnostics(project, diagnostics);
+                operation.Report(new OperationProgress("Analyzing", i + 1, projects.Count, ProgressUnit.Projects));
             }
+
+            operation.Complete();
         }
         catch (OperationCanceledException)
         {
-            // The workspace closed, or a newer analysis replaced this one.
+            // The workspace closed, or a newer analysis replaced this one, which ended this one's operation.
+        }
+        catch (Exception)
+        {
+            operation.Complete(OperationOutcome.Failed);
+            throw;
         }
     }
 

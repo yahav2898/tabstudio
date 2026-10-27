@@ -83,7 +83,7 @@ public static partial class EmbeddedSdkBootstrap
                 ],
             };
 
-        private static readonly EmbeddedSdkRecipe Zephyr = new("zephyr", "7823374e872145b5bd018bfe447839eb36042611",
+        private static readonly EmbeddedSdkRecipe Zephyr = new("zephyr", "dccb09599635bdff17633fa7e9dab014b91dce90",
             new Uri("https://github.com/zephyrproject-rtos/zephyr.git"), ZephyrSource,
             ["gcc-arm-none-eabi", "libnewlib-arm-none-eabi", "device-tree-compiler"],
             [
@@ -116,7 +116,7 @@ public static partial class EmbeddedSdkBootstrap
                         if manifest != source or config.get('manifest', 'file', fallback='west.yml') != 'west.yml':
                             raise RuntimeError('The existing west workspace points at a different manifest; it was preserved.')
                     """ + "\n" },
-                new() { Path = ZephyrWorkspace + "/TABSTUDIO-SDK.txt", Content = "Zephyr 4.1.0 is checked out at its immutable source commit. CMSIS and Nordic/ST/Raspberry Pi HAL modules use west.yml's immutable revisions. Run west update in this workspace for additional boards' modules. The default GNU Arm toolchain uses signed Ubuntu packages; other architectures need their matching toolchain selection.\nWest 1.3.0 and all base Python dependencies are release- and SHA-256-locked for native Linux ARM64/x64 CPython 3.12. Source distributions use pinned setuptools/wheel without downloading isolated build dependencies.\n" },
+                new() { Path = ZephyrWorkspace + "/TABSTUDIO-SDK.txt", Content = "Zephyr 4.4.2 is checked out at its immutable source commit. CMSIS and Nordic/ST/Raspberry Pi HAL modules use west.yml's immutable revisions. Run west update in this workspace for additional boards' modules. The default GNU Arm toolchain uses signed Ubuntu packages; other architectures need their matching toolchain selection.\nWest 1.5.0 and all base Python dependencies are release- and SHA-256-locked for native Linux ARM64/x64 CPython 3.12. Source distributions use pinned setuptools/wheel without downloading isolated build dependencies.\n" },
             ],
             new Dictionary<string, string?>
             {

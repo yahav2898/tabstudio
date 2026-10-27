@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:ops="using:TabStudio.App.ViewModels.LongOperations"
+             x:Class="TabStudio.App.Views.LongOperations.OperationsPanel"
+             x:DataType="ops:OperationsViewModel">
+
+  <!--
+    The long operations running now, over the status bar: each with its stage and numbers, a progress bar, the time
+    left, Cancel where cancelling is safe, and its raw log behind Show details.
+  -->
+  <Border x:Name="PanelRoot" Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+          CornerRadius="8" Padding="12,10" BoxShadow="0 6 24 0 #40000000">
+    <DockPanel>
+      <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,6">
+        <TextBlock Text="Running now" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
+        <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Content="Close" Command="{Binding ClosePanelCommand}" ToolTip.Tip="Close" />
+      </Grid>
+      <ScrollViewer MaxHeight="420" HorizontalScrollBarVisibility="Disabled">
+        <ItemsControl x:Name="OperationList" ItemsSource="{Binding Items}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Spacing="12" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="ops:OperationItemViewModel">
+              <StackPanel Spacing="4">
+                <Grid ColumnDefinitions="*,Auto,Auto">
+                  <TextBlock Text="{Binding Title}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Text}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                  <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Content="{Binding DetailsLabel}"
+                          Command="{Binding ToggleDetailsCommand}" IsVisible="{Binding HasDetails}" Margin="6,0,0,0" />
+                  <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Content="Cancel" Command="{Binding CancelCommand}"
+                          IsVisible="{Binding CanCancel}" Margin="6,0,0,0" ToolTip.Tip="{Binding Title, StringFormat='Cancel {0}'}" />
+                </Grid>
+                <TextBlock Text="{Binding Stage}" Foreground="{DynamicResource Brush.TextSecondary}" FontSize="12.5" TextTrimming="CharacterEllipsis" />
+                <ProgressBar Height="4" MinHeight="4" Minimum="0" Maximum="100" Value="{Binding Percent}" IsIndeterminate="{Binding IsIndeterminate}" />
+                <TextBlock Text="{Binding RemainingText}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="12"
+                           IsVisible="{Binding RemainingText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                <Border IsVisible="{Binding ShowDetails}" Background="{DynamicResource Brush.Window}" BorderBrush="{DynamicResource Brush.Border}"
+                        BorderThickness="1" CornerRadius="4" Padding="6" Margin="0,4,0,0">
+                  <ScrollViewer MaxHeight="180" HorizontalScrollBarVisibility="Auto">
+                    <SelectableTextBlock Text="{Binding Details}" FontFamily="{DynamicResource CodeFont}" FontSize="11.5" Foreground="{DynamicResource Brush.TextSecondary}" />
+                  </ScrollViewer>
+                </Border>
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </DockPanel>
+  </Border>
+</UserControl>

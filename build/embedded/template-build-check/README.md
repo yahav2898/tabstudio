@@ -13,7 +13,7 @@ and missing or incorrectly labelled native executables can use unchanged x64 com
 
 Each job starts with an empty guest and cache. `PLATFORMIO_CACHE_DIR` shares first-verified package
 archives between the job's sequential builds, while each template keeps its installed package choices
-in its private Core directory. No cross-run cache is restored. Core 6.1.18 verifies registry SHA-256 on
+in its private Core directory. No cross-run cache is restored. Core 6.2.0 verifies registry SHA-256 on
 first download; subsequent cache hits trust those bytes. Extracted packages remain independent.
 
 Evidence records the original generated file hashes, complete build logs, actual ELF load ranges and

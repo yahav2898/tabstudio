@@ -9,7 +9,8 @@ namespace TabStudio.Android;
 
 /// <summary>
 /// System notifications on Android, in a "GitHub Actions" channel: a run that finished while TabStudio was in the
-/// background. Tapping one brings TabStudio back and opens the run. On Android 13 and later the user is asked
+/// background. Tapping one brings TabStudio back and opens the run. Long operations, such as an SDK download that runs
+/// on in the background, have a quiet "Long operations" channel with a progress bar. On Android 13 and later the user is asked
 /// for the POST_NOTIFICATIONS permission the first time they turn notifications on.
 /// </summary>
 internal sealed class AndroidNotifications : INotifications
@@ -18,6 +19,9 @@ internal sealed class AndroidNotifications : INotifications
     public const string TagExtra = "tabstudio.notification";
 
     private const string ChannelId = "github-actions";
+
+    /// <summary>The channel of long operations that run on in the background, such as an SDK download: quiet, no sound.</summary>
+    private const string OperationsChannelId = "operations";
     private const int PermissionRequestCode = 7301;
 
     /// <summary>Android 13's permission to post notifications (<c>Manifest.Permission.PostNotifications</c>).</summary>
@@ -42,6 +46,10 @@ internal sealed class AndroidNotifications : INotifications
                 Description = "When a workflow run you are waiting for finishes.",
             };
             manager.CreateNotificationChannel(channel);
+            manager.CreateNotificationChannel(new NotificationChannel(OperationsChannelId, "Long operations", NotificationImportance.Low)
+            {
+                Description = "Downloads, installs and builds that run on while TabStudio is in the background, and how they ended.",
+            });
         }
     }
 
@@ -117,15 +125,25 @@ internal sealed class AndroidNotifications : INotifications
             .SetFlags(ActivityFlags.SingleTop | ActivityFlags.ClearTop)
             .PutExtra(TagExtra, notification.Tag);
         var pending = PendingIntent.GetActivity(_context, notification.Tag.GetHashCode(StringComparison.Ordinal), open, PendingIntentFlags.Immutable | PendingIntentFlags.UpdateCurrent);
-        var built = new Notification.Builder(_context, ChannelId)
+        var operation = notification.Tag.StartsWith("operation:", StringComparison.Ordinal);
+        var builder = new Notification.Builder(_context, operation ? OperationsChannelId : ChannelId)
             .SetSmallIcon(Resource.Drawable.ic_stat_tabstudio)
             .SetContentTitle(notification.Title)
             .SetContentText(notification.Text)
             .SetStyle(new Notification.BigTextStyle().BigText(notification.Text))
-            .SetCategory(notification.IsFailure ? Notification.CategoryError : Notification.CategoryStatus)
+            .SetCategory(notification.IsFailure ? Notification.CategoryError : notification.IsProgress ? Notification.CategoryProgress : Notification.CategoryStatus)
             .SetContentIntent(pending)
-            .SetAutoCancel(true)
-            .Build();
+            .SetAutoCancel(!notification.IsProgress);
+        if (notification.IsProgress)
+        {
+            // An ongoing operation: the bar moves, the shade does not buzz on every update, and it cannot be swiped away
+            // while it runs; the notification that says how it ended replaces it.
+            builder.SetOngoing(true)
+                .SetOnlyAlertOnce(true)
+                .SetProgress(100, notification.ProgressPercent ?? 0, notification.ProgressPercent is null);
+        }
+
+        var built = builder.Build();
         manager.Notify(notification.Tag, 1, built);
     }
 

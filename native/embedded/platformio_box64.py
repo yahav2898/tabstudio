@@ -1,4 +1,4 @@
-"""Native-first PlatformIO 6.1.18 host-package fallback with executable ELF checks.
+"""Native-first PlatformIO 6.2.0 host-package fallback with executable ELF checks.
 
 A missing compatible native artifact or incompatible actual ELF architecture
 permits x86-64 selection; metadata mismatches retain the exact package version.
@@ -175,8 +175,8 @@ def configure_policy(architecture=None, allow_fallback=True):
     from platformio.package.manager.tool import ToolPackageManager
     from platformio.package.meta import PackageSpec
     from platformio.registry.mirror import RegistryFileMirrorIterator
-    if platformio.__version__ != "6.1.18":
-        raise ValueError("The Box64 package policy is verified only with pinned PlatformIO Core 6.1.18")
+    if platformio.__version__ != "6.2.0":
+        raise ValueError("The Box64 package policy is verified only with pinned PlatformIO Core 6.2.0")
     architecture = architecture or platform.machine()
     if architecture not in ("aarch64", "x86_64"):
         raise ValueError("PlatformIO package checking requires ARM64 or x64")

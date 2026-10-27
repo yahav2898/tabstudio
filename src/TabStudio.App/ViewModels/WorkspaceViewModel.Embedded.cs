@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.Toolchains.Catalog;
 using TabStudio.Core.Diagnostics;
+using TabStudio.Core.Progress;
 using TabStudio.Toolchains.Embedded.Devices;
 using TabStudio.Toolchains.Embedded.Flashing;
 using TabStudio.Toolchains.Embedded.Projects;
@@ -116,6 +117,9 @@ public sealed partial class WorkspaceViewModel
         _run = cancellation;
         State = IdeState.Running;
         StatusText = "Building " + project.Name;
+        var programName = EmbeddedSdkRequirements.ProgramName(project);
+        using var operation = new CompletingOperation(Operations.Begin("build:" + project.Directory, "Building " + programName, cancel: cancellation.Cancel));
+        using var follower = FollowOutput(operation.Operation);
         try
         {
             if (_toolchains.Platform.UsesLinuxEnvironment
@@ -126,6 +130,7 @@ public sealed partial class WorkspaceViewModel
             ErrorList.SetRunError(project.Directory, null);
             foreach (var step in plan.Preparation.Concat(plan.Build))
             {
+                operation.Operation.Report(OutputProgressParser.StageOf(step.Program, step.Arguments, programName));
                 Output.WriteLine("> " + step.CommandLine, OutputKind.Info);
                 var result = project.Kind == EmbeddedProjectKind.Rust
                     ? await BuildEmbeddedCargoAsync(step, cancellation.Token)
@@ -139,13 +144,14 @@ public sealed partial class WorkspaceViewModel
                     return false;
                 }
             }
+            operation.Outcome = OperationOutcome.Succeeded;
             State = IdeState.Ready;
             StatusText = "Firmware built";
             await ReportEmbeddedMemoryAsync(project.Directory, cancellation.Token);
             await ReportEmbeddedStackAsync(project, afterBuild: true);
             return true;
         }
-        catch (OperationCanceledException) { State = IdeState.Ready; StatusText = "Firmware build stopped"; return false; }
+        catch (OperationCanceledException) { operation.Outcome = OperationOutcome.Cancelled; State = IdeState.Ready; StatusText = "Firmware build stopped"; return false; }
         finally { _run = null; }
     }
 

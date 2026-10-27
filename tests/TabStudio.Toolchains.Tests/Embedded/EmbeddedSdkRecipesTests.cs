@@ -7,7 +7,7 @@ public sealed class EmbeddedSdkRecipesTests
 {
     [Theory]
     [InlineData("pico-sdk", "2.3.1", "079c6f39023649b154152db30f1d781e884879bc", "PICO_SDK_PATH")]
-    [InlineData("zephyr", "4.1.0", "7823374e872145b5bd018bfe447839eb36042611", "ZEPHYR_BASE")]
+    [InlineData("zephyr", "4.4.2", "dccb09599635bdff17633fa7e9dab014b91dce90", "ZEPHYR_BASE")]
     [InlineData("esp-idf", "5.4.1", "4c2820d377d1375e787bcef612f0c32c1427d183", "IDF_PATH")]
     public void Source_pins_and_environment_are_available_to_the_production_installer(string id, string version, string revision, string sourceVariable)
     {
@@ -29,9 +29,9 @@ public sealed class EmbeddedSdkRecipesTests
         var requirements = Assert.Single(recipe.Files, file => file.Path.EndsWith("/requirements.txt", StringComparison.Ordinal));
         var logicalLines = requirements.Content.Replace("\\\n", "", StringComparison.Ordinal).Split('\n')
             .Select(line => line.Trim()).Where(line => line.Length != 0 && !line.StartsWith('#')).ToArray();
-        Assert.Equal(31, logicalLines.Length);
+        Assert.Equal(35, logicalLines.Length);
         Assert.All(logicalLines, line => Assert.Matches(@"^[A-Za-z0-9_.-]+==[A-Za-z0-9_.+-]+\s+(--hash=sha256:[0-9a-f]{64}\s*)+$", line));
-        Assert.Contains(logicalLines, line => line.StartsWith("west==1.3.0 ", StringComparison.Ordinal));
+        Assert.Contains(logicalLines, line => line.StartsWith("west==1.5.0 ", StringComparison.Ordinal));
         var pipCommands = recipe.Commands.Where(command => command.Arguments.Contains("pip", StringComparer.Ordinal)).ToArray();
         Assert.Equal(2, pipCommands.Length);
         Assert.All(pipCommands, command => Assert.Contains("--require-hashes", command.Arguments));

@@ -64,7 +64,9 @@ public enum InstallStage
 /// <param name="Fraction">How much of the whole operation is done, from 0 to 1, or <see langword="null"/> when that is not known.</param>
 /// <param name="BytesDone">Bytes downloaded so far, during downloads.</param>
 /// <param name="BytesTotal">Bytes to download in all, during downloads.</param>
-public sealed record InstallProgress(InstallStage Stage, string Message, double? Fraction, long BytesDone = 0, long BytesTotal = 0);
+/// <param name="StepsDone">Packages installed so far, while installing: apk's <c>(12/40)</c>.</param>
+/// <param name="StepsTotal">Packages to install in all, while installing.</param>
+public sealed record InstallProgress(InstallStage Stage, string Message, double? Fraction, long BytesDone = 0, long BytesTotal = 0, int StepsDone = 0, int StepsTotal = 0);
 
 /// <summary>A toolchain's state, for the Toolchain Store and the IDE.</summary>
 public sealed record ToolchainStatus

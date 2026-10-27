@@ -50,8 +50,8 @@ def main():
     parser.add_argument("--work", required=True, type=Path)
     args = parser.parse_args()
     import platformio
-    if platformio.__version__ != "6.1.18":
-        raise ValueError("This proof requires the production pinned Core 6.1.18")
+    if platformio.__version__ != "6.2.0":
+        raise ValueError("This proof requires the production pinned Core 6.2.0")
     compiler = args.compiler.resolve()
     platform = args.platform.resolve()
     scons = args.scons.resolve()

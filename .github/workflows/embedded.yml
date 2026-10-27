@@ -67,6 +67,28 @@ jobs:
           name: embedded-alpine-${{ matrix.runner }}-${{ github.event_name }}
           path: embedded-alpine.log
 
+  # TEMPORARY (agent/real-use-fixes): fetches ESP-IDF 6.1's vendor Python constraints, which the recipe keeps as an
+  # app-owned offline snapshot, from Espressif's download server; remove once the snapshot is committed.
+  esp-idf-constraints:
+    name: Fetch ESP-IDF 6.1 vendor constraints (temporary)
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download the constraints snapshot
+        run: |
+          mkdir -p ci-out
+          curl -fsSL https://dl.espressif.com/dl/esp-idf/espidf.constraints.v6.1.txt -o ci-out/espidf.constraints.v6.1.txt
+          sha256sum ci-out/espidf.constraints.v6.1.txt | tee ci-out/SHA256SUMS
+      - name: Publish logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh esp-idf-constraints ${{ job.status }}
+
   contracts:
     name: Embedded parsers and USB bridge contracts
     runs-on: ubuntu-24.04

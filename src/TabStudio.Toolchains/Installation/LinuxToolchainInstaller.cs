@@ -376,8 +376,9 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
                 // "(3/29) Installing libffi (3.5.2-r1)"
                 if (StepPattern().Match(line) is { Success: true } step)
                 {
-                    var fraction = Ratio(long.Parse(step.Groups["n"].Value, System.Globalization.CultureInfo.InvariantCulture), long.Parse(step.Groups["of"].Value, System.Globalization.CultureInfo.InvariantCulture));
-                    progress?.Report(new InstallProgress(InstallStage.Installing, step.Groups["what"].Value.Trim(), 0.7 + (0.2 * fraction)));
+                    var n = int.Parse(step.Groups["n"].Value, System.Globalization.CultureInfo.InvariantCulture);
+                    var of = int.Parse(step.Groups["of"].Value, System.Globalization.CultureInfo.InvariantCulture);
+                    progress?.Report(new InstallProgress(InstallStage.Installing, step.Groups["what"].Value.Trim(), 0.7 + (0.2 * Ratio(n, of)), StepsDone: n, StepsTotal: of));
                 }
             },
             cancellationToken).ConfigureAwait(false);

@@ -244,7 +244,10 @@ When the window is taller than wide or narrower than 900:
   editing commands go into More. Nothing is clipped ("Run on In-pr…").
 - The **menu bar's search** becomes the Search button's icon; the solution chip trims with an ellipsis.
 - The **status bar** keeps the state (Ready, errors, debugging) on the left and the caret on the right; the rest folds
-  into More.
+  into More. A long operation (a download, an install, a restore, a build, an analysis) is one item with its stage,
+  numbers and time left, such as "Downloading Pico SDK 120/340 MB · about 2 min left", and a thin progress bar; tapping
+  it opens a small panel above it with every running operation, Cancel where stopping is safe, and Show details for
+  the raw log. It is never a dialog: the editor stays usable while it runs.
 - The **bottom panel** (Error List, Output) takes at most 40% of the height.
 - The **touch bar** shows icons only for its least used commands, and sits above the bottom panel, clear of the caret.
 - **Properties** is folded into its header.
