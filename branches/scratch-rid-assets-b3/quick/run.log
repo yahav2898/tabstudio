@@ -1,0 +1,46 @@
++ for p in tests/TabStudio.Core.Tests tests/TabStudio.Compilation.Tests tests/TabStudio.App.Tests
++ dotnet build tests/TabStudio.Core.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warn|Build succeeded|Time Elapsed'
++ sort -u
++ head -60
+Build succeeded.
+Time Elapsed 00:00:08.49
++ for p in tests/TabStudio.Core.Tests tests/TabStudio.Compilation.Tests tests/TabStudio.App.Tests
++ dotnet build tests/TabStudio.Compilation.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warn|Build succeeded|Time Elapsed'
++ sort -u
++ head -60
+Build succeeded.
+Time Elapsed 00:00:10.89
++ for p in tests/TabStudio.Core.Tests tests/TabStudio.Compilation.Tests tests/TabStudio.App.Tests
++ dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warn|Build succeeded|Time Elapsed'
++ sort -u
++ head -60
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/ViewModels/WorkspaceViewModel.SqlServer.cs(164,124): error CA1826: Do not use Enumerable methods on indexable collections. Instead use the collection directly. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1826) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/ViewModels/WorkspaceViewModel.SqlServer.cs(184,47): error CA1826: Do not use Enumerable methods on indexable collections. Instead use the collection directly. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1826) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/ViewModels/WorkspaceViewModel.SqlServer.cs(209,47): error CA1826: Do not use Enumerable methods on indexable collections. Instead use the collection directly. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1826) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/ViewModels/WorkspaceViewModel.SqlServer.cs(71,108): error CA1859: Change type of parameter 'environment' from 'System.Collections.Generic.IReadOnlyDictionary<string, string?>?' to 'System.Collections.Generic.Dictionary<string, string?>?' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+Time Elapsed 00:01:20.52
++ dotnet test tests/TabStudio.Core.Tests -c Release --no-build --logger 'console;verbosity=normal' --filter FullyQualifiedName~SqlServer
++ grep -E 'Failed|Error|Assert|Expected|Actual|Total|  at |Passed:'
++ head -60
+Total tests: 21
+     Passed: 21
+ Total time: 0.8436 Seconds
++ dotnet test tests/TabStudio.Compilation.Tests -c Release --no-build --logger 'console;verbosity=normal' --filter FullyQualifiedName~PackageNativeLibraries
++ grep -E 'Failed|Error|Assert|Expected|Actual|Total|Passed:'
++ head -40
+Total tests: 9
+     Passed: 9
+ Total time: 0.8229 Seconds
++ dotnet test tests/TabStudio.App.Tests -c Release --no-build --logger 'console;verbosity=normal' --filter 'FullyQualifiedName~SqlServerAdvice|FullyQualifiedName~NativePackageTests|FullyQualifiedName~WindowsBridgeIde|FullyQualifiedName~ServicesTests'
++ grep -vE '^\s*$'
++ tail -60
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
+The argument /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll is invalid. Please use the /help option to check the list of valid arguments.
++ dotnet test tests/TabStudio.Core.Tests -c Release --no-build
++ tail -3
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   167, Skipped:     0, Total:   167, Duration: 298 ms - TabStudio.Core.Tests.dll (net10.0)
