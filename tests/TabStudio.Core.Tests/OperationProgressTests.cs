@@ -177,7 +177,6 @@ public sealed class OperationProgressTests
 
         sdk.Complete();
         Assert.Equal([OperationOutcome.Succeeded], ended);
-        Assert.Empty(ended.Where(o => o is null));
     }
 
     [Fact]
