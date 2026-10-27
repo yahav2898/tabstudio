@@ -14,8 +14,22 @@ namespace TabStudio.App.ViewModels;
 /// </summary>
 public sealed partial class WorkspaceViewModel
 {
+    /// <summary>What the next run's Output says about its databases, written once the build has cleared the Output.</summary>
+    private readonly List<(string Text, OutputKind Kind)> _runNotes = [];
+
     /// <summary>The check of the workspace's SQL Server connections that runs after it opens, for tests to wait for.</summary>
     internal Task DatabaseCheck { get; private set; } = Task.CompletedTask;
+
+    /// <summary>Writes what <see cref="AddDatabaseEnvironmentAsync"/> found to the Output, at the start of the run's build.</summary>
+    private void WriteRunNotes()
+    {
+        foreach (var (text, kind) in _runNotes)
+        {
+            Output.WriteLine(text, kind);
+        }
+
+        _runNotes.Clear();
+    }
 
     /// <summary>
     /// The name of the saved Database Explorer connection that replaces a project's connection string when it runs,
@@ -115,6 +129,7 @@ public sealed partial class WorkspaceViewModel
     /// <returns>The run's environment with the saved connections added.</returns>
     internal async Task<IReadOnlyDictionary<string, string?>> AddDatabaseEnvironmentAsync(ProjectInfo project, IReadOnlyDictionary<string, string?> environment)
     {
+        _runNotes.Clear();
         var projects = Workspace?.Projects ?? [];
         if (await Task.Run(() => SqlServerDetector.Detect(project, projects)) is not { Connections.Count: > 0 } usage)
         {
@@ -129,7 +144,7 @@ public sealed partial class WorkspaceViewModel
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Text.Json.JsonException)
         {
-            Output.WriteLine($"The Database Explorer's saved connections could not be read: {ex.Message}", OutputKind.Info);
+            _runNotes.Add(($"The Database Explorer's saved connections could not be read: {ex.Message}", OutputKind.Info));
         }
 
         foreach (var connection in usage.Connections.Where(c => !result.ContainsKey(c.EnvironmentVariable)))
@@ -138,14 +153,14 @@ public sealed partial class WorkspaceViewModel
             if (saved.LastOrDefault(c => c.Name == name) is { } replacement)
             {
                 result[connection.EnvironmentVariable] = replacement.ConnectionString;
-                Output.WriteLine($"'{connection.Name}' comes from the Database Explorer connection '{name}' for this run ({connection.EnvironmentVariable}); {Path.GetFileName(connection.SourceFile)} is unchanged.", OutputKind.Info);
+                _runNotes.Add(($"'{connection.Name}' comes from the Database Explorer connection '{name}' for this run ({connection.EnvironmentVariable}); {Path.GetFileName(connection.SourceFile)} is unchanged.", OutputKind.Info));
             }
         }
 
         var (unreachable, answered) = await Task.Run(() => FindUnreachableAsync(usage, new HashSet<string>(), result));
         if (!answered)
         {
-            Output.WriteLine(SqlServerDetector.Explain(usage, unreachable) + " " + ChoicesHint(usage), OutputKind.Failure);
+            _runNotes.Add((SqlServerDetector.Explain(usage, unreachable) + " " + ChoicesHint(usage), OutputKind.Failure));
         }
 
         return result;

@@ -260,6 +260,7 @@ public sealed partial class WorkspaceViewModel
             SelectedPanel = BottomPanel.Output;
             IsBottomPanelVisible = true;
             Output.WriteLine($"Build started at {DateTime.Now.ToString("T", CultureInfo.CurrentCulture)}...", OutputKind.Info);
+            WriteRunNotes();
         }
 
         BuildResult? last = null;

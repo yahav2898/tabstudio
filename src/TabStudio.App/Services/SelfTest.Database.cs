@@ -44,7 +44,12 @@ public static partial class SelfTest
             var query = workspace.ActiveDocument?.DatabaseQuery ?? throw new InvalidOperationException("SQL tab did not open.");
             await query.ExecuteAsync("SELECT name FROM people; SELECT 2 AS second_result;");
             if (query.Results.Count != 2 || !Equals(query.Results[0].Data.Rows[0][0], "Tablet")) throw new InvalidOperationException("SQL results were incorrect.");
-            return new SelfTestResult(true, "Database: Keystore connection, SQLite schema and multiple SQL results passed", clock.Elapsed);
+
+            // A program's package e_sqlite3 (a glibc build for linux-arm64) resolves to the app's own Bionic copy.
+            var packageSqlite = Path.Combine(workspace.Workspace.RootDirectory, "packages", "sqlitepclraw.lib.e_sqlite3", "2.1.11", "runtimes", "linux-arm64", "native", "libe_sqlite3.so");
+            if ((OperatingSystem.IsAndroid() || OperatingSystem.IsLinux())
+                && new TabStudio.Compilation.Running.PackageNativeLibraries([packageSqlite]).Load("e_sqlite3") == 0) throw new InvalidOperationException("A program's e_sqlite3 did not resolve to the app's SQLite.");
+            return new SelfTestResult(true, "Database: Keystore connection, SQLite schema, multiple SQL results and package native SQLite passed", clock.Elapsed);
         }
         finally
         {

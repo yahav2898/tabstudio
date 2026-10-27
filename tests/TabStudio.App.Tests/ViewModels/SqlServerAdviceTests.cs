@@ -14,6 +14,8 @@ namespace TabStudio.App.Tests.ViewModels;
 /// </summary>
 public sealed class SqlServerAdviceTests
 {
+    private const string Configured = "Server=tcp:127.0.0.1,1;Database=Shop;Trusted_Connection=True;TrustServerCertificate=true";
+
     [AvaloniaFact]
     public async Task An_unreachable_SQL_Server_gets_one_clear_message_with_the_network_and_PostgreSQL_choices()
     {
@@ -34,9 +36,16 @@ public sealed class SqlServerAdviceTests
             StringComparison.Ordinal));
 
         // Port 1 never has a SQL Server, so the probe finds nothing, as on a tablet where "Server=." has none.
-        await File.WriteAllTextAsync(Path.Combine(Path.GetDirectoryName(project)!, "appsettings.json"), """
-            { "ConnectionStrings": { "DefaultConnection": "Server=tcp:127.0.0.1,1;Database=Shop;Trusted_Connection=True;TrustServerCertificate=true" } }
+        var directory = Path.GetDirectoryName(project)!;
+        await File.WriteAllTextAsync(Path.Combine(directory, "appsettings.json"), $$"""
+            { "ConnectionStrings": { "DefaultConnection": "{{Configured}}" } }
             """);
+        var program = Path.Combine(directory, "Program.cs");
+        var code = await File.ReadAllTextAsync(program);
+        await File.WriteAllTextAsync(program, code.Replace(
+            "app.Run();",
+            "app.MapGet(\"/connection\", (IConfiguration configuration) => configuration.GetConnectionString(\"DefaultConnection\") ?? \"none\");\napp.Run();",
+            StringComparison.Ordinal));
         var workspace = fixture.Workspace;
         await workspace.LoadAsync(solution);
         await workspace.DatabaseCheck;
@@ -63,10 +72,8 @@ public sealed class SqlServerAdviceTests
             window.Close();
         }
 
-        // F5's Output says the same, once, before the app starts.
-        var startup = workspace.Workspace!.Projects.Single(p => p.Name == "ShopWeb");
-        var environment = await workspace.AddDatabaseEnvironmentAsync(startup, new Dictionary<string, string?>());
-        Assert.Empty(environment);
+        // F5's Output says the same, once, and the app still starts with its appsettings value.
+        Assert.Equal(Configured, await RunAndReadConnectionAsync(workspace));
         Assert.Equal(1, Occurrences(workspace.Output.Text, "has no engine for ARM64 Linux"));
         Assert.Contains("Both choices are in the Compatibility Doctor", workspace.Output.Text, StringComparison.Ordinal);
 
@@ -84,11 +91,11 @@ public sealed class SqlServerAdviceTests
         await explorer.SaveConnectionCommand.ExecuteAsync(null);
         Assert.Contains(await explorer.LoadSavedConnectionsAsync(), c => c.Name == "ShopWeb: DefaultConnection" && c.ConnectionString == Network);
 
-        // The run uses the saved connection in place of appsettings, and the SQL Server message is not repeated.
-        environment = await workspace.AddDatabaseEnvironmentAsync(startup, new Dictionary<string, string?>());
-        Assert.Equal(Network, environment["ConnectionStrings__DefaultConnection"]);
+        // The next run uses the saved connection in place of appsettings, and has nothing to warn about.
+        Assert.Equal(Network, await RunAndReadConnectionAsync(workspace));
         Assert.Contains("'DefaultConnection' comes from the Database Explorer connection 'ShopWeb: DefaultConnection'", workspace.Output.Text, StringComparison.Ordinal);
-        Assert.Equal(1, Occurrences(workspace.Output.Text, "has no engine for ARM64 Linux"));
+        Assert.Equal(0, Occurrences(workspace.Output.Text, "has no engine for ARM64 Linux"));
+        Assert.Null(Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection"));
 
         // Use PostgreSQL: Compose gains a PostgreSQL service for Services to run, and the app its connection string.
         await workspace.SwitchDatabaseCommand.ExecuteAsync(row);
@@ -98,6 +105,28 @@ public sealed class SqlServerAdviceTests
         Assert.Contains(workspace.Services.Items, i => i.Name == "postgres");
         Assert.True(workspace.IsServicesSelected);
         Assert.Equal("Ready", workspace.Compatibility.Single(r => r.Project == "ShopWeb").Status);
+    }
+
+    /// <summary>F5, then the app's own view of its connection string, then Stop.</summary>
+    private static async Task<string> RunAndReadConnectionAsync(WorkspaceViewModel workspace)
+    {
+        var run = workspace.RunCommand.ExecuteAsync(null);
+        try
+        {
+            await UiTestHelpers.WaitUntilAsync(() => workspace.WebPreview.IsRunning || run.IsCompleted, TimeSpan.FromMinutes(4), "the web app to start");
+            Assert.True(workspace.WebPreview.IsRunning, workspace.Output.Text);
+            using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
+            return await http.GetStringAsync(new Uri(workspace.WebPreview.AppAddress!, "connection"));
+        }
+        finally
+        {
+            if (workspace.StopCommand.CanExecute(null))
+            {
+                workspace.StopCommand.Execute(null);
+            }
+
+            await run.WaitAsync(TimeSpan.FromSeconds(30));
+        }
     }
 
     private static int Occurrences(string text, string value)
