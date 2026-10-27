@@ -57,6 +57,7 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.Forms` | Windows Forms on Avalonia: `System.Windows.Forms` and `System.Drawing`, run in the app preview. | Avalonia |
 | `TabStudio.Forms.Design` | The Windows Forms designer's model: reads and writes `InitializeComponent`, the Toolbox and properties. | `TabStudio.Forms`, Roslyn |
 | `TabStudio.Swarm` | Swarm: the coordinator and members, deployment with cached attachments, the web gateway, the debug agent. | `TabStudio.Link`, `TabStudio.Debugging`, `TabStudio.Compilation` |
+| `TabStudio.Live` | TabStudio Live: the text CRDT, per-participant undo, the session protocol, the host and guest sessions, shared files and permissions. | `TabStudio.Link`, `TabStudio.Swarm` (debug records), `TabStudio.Core` |
 | `TabStudio.LanguageServers` | Language Server Protocol and Debug Adapter Protocol clients, server and adapter registry, launch configurations. | Nothing but the .NET base library |
 | `TabStudio.Extensions` | VS Code extensions from Open VSX: install and verify, and their grammars, language configurations, snippets and themes. | Nothing but the .NET base library |
 | `TabStudio.Agent` | Claude as a coding agent: the Messages API with streaming and prompt caching, tools over the workspace, Model Context Protocol servers, and sketch to XAML. | Core |
@@ -774,6 +775,33 @@ host that accepts several clients. The tablet is the coordinator:
   and the findings go to the Error List with a picture of each screen.
 - **Recorded UI tests.** A recording becomes an xUnit test in an Avalonia.Headless project with a generated driver,
   which replays per screen in Test Explorer and with `dotnet test`.
+
+## TabStudio Live
+
+`TabStudio.Live` is real-time collaborative editing between devices on the same network, on TabStudio Link's
+transport: a `tabstudio-link://live?` invitation, TLS with pinned certificates, and a session code that admits a whole
+class. The host is a hub that every guest connects to, and the authority on who may do what.
+
+- **Text.** Each shared document is a `SharedText`, a replicated growable array (RGA) of characters stored in runs.
+  Every character has an id (participant, Lamport clock); an insert names the character it follows, a delete marks
+  characters as tombstones, and concurrent inserts after the same character are ordered by clock, then participant,
+  so every device applies the same operations into the same text in any order. Per-participant sequence numbers form
+  a version vector: operations that arrive twice are ignored, those that arrive before what they depend on wait, and
+  a guest that reconnects exchanges only what the other side lacks. Positions (carets, selections) are character ids,
+  so they move with the text. Undo is per participant: it reverts that participant's own operations with new
+  operations, skipping text someone else already deleted.
+- **Messages.** JSON notifications and requests over the Link connection (`LiveMethods`): edits, presence, the
+  participants list, files and their contents as attachments, saves, the host's run state, output, Terminal, Error
+  List, breakpoints and pauses. Each connection has one ordered sender queue; a session's state lives on one
+  dispatcher thread, the UI thread in the app.
+- **Files.** The host lists the shared folder (`LiveWorkspaceFiles`), without hidden and build folders, links or large
+  files. A guest keeps a hash-checked copy (`LiveMirror`) under the app's cache, which the IDE opens as an ordinary
+  workspace, so IntelliSense and every language service run on the guest.
+- **The IDE.** `LiveDocumentBinder` keeps an editor's `TextDocument` and a `LiveDocument` in step and replaces the
+  editor's undo stack; `LivePresenceRenderer` draws the others' carets and selections. On the host,
+  `WorkspaceViewModel.LiveHost.cs` publishes the Output, Terminal, Error List, breakpoints and pauses and serves
+  guests' debugger requests; on a guest, `WorkspaceViewModel.LiveGuest.cs` shows them and routes F5, the steps and
+  breakpoints to the host.
 
 ## Language servers and debug adapters
 

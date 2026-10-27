@@ -157,7 +157,8 @@ public sealed partial class WorkspaceViewModel
     /// <param name="participant">The participant, or <see langword="null"/> to stop following.</param>
     public void FollowLive(int? participant)
     {
-        if (LiveSession is not { } session || participant == session.SelfId || (participant is { } id && session.Find(id) is null))
+        var session = LiveSession;
+        if (session is null || participant == session.SelfId || (participant is { } id && session.Find(id) is null))
         {
             participant = null;
         }
@@ -165,7 +166,7 @@ public sealed partial class WorkspaceViewModel
         _liveFollowed = participant;
         LivePanel?.ShowFollowed(participant);
         UpdateLiveActivity();
-        if (participant is { } followed && session!.PresenceOf(followed) is { } presence)
+        if (participant is { } followed && session?.PresenceOf(followed) is { } presence)
         {
             _ = ShowFollowedAsync(presence);
         }

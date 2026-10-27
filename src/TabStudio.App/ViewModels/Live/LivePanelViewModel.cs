@@ -46,7 +46,7 @@ public sealed partial class LivePanelViewModel : ObservableObject
 
     /// <summary>Whether this device is in a session.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsOff))]
+    [NotifyPropertyChangedFor(nameof(IsOff), nameof(IsGuest))]
     public partial bool IsInSession { get; private set; }
 
     /// <summary>Whether this device is in no session: the window offers to share or join.</summary>

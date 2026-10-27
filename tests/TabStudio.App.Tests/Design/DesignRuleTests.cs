@@ -38,6 +38,9 @@ public sealed partial class DesignRuleTests
         "Views/AgentPanelView.axaml#Settings",
         "Views/WorkspaceView.axaml#RecordingTimeline",
         "Views/WorkspaceView.axaml#PromptDialog",
+        "Views/Live/LivePanelView.axaml",
+        "Views/Live/LiveShareView.axaml",
+        "Views/Live/LiveJoinView.axaml",
     ];
 
     [Theory]
