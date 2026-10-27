@@ -108,7 +108,7 @@ public sealed class ClipboardImageProvider : ContentProvider
 
         // OpenableColumns: the display name and size any app may ask a content provider for.
         var cursor = new MatrixCursor(["_display_name", "_size"]);
-        cursor.AddRow(new Java.Lang.Object[] { new Java.Lang.String(Path.GetFileName(file)), new Java.Lang.Long(new FileInfo(file).Length) });
+        cursor.AddRow(new Java.Lang.Object[] { new Java.Lang.String(Path.GetFileName(file)), Java.Lang.Long.ValueOf(new FileInfo(file).Length) });
         return cursor;
     }
 
