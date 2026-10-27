@@ -1,0 +1,74 @@
+{
+  "architecture": "aarch64",
+  "group": "stm32",
+  "hostPackageMode": "auto",
+  "platformioCoreVersion": "6.1.18",
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "runtime": "Production EmbeddedGlibcToolchainInstaller / PRoot",
+  "elapsedSeconds": 412.5736622,
+  "passed": true,
+  "templates": [
+    {
+      "id": "nucleo-f401re",
+      "platformPackage": "ststm32@20.0.0",
+      "passed": true,
+      "seconds": 143.683406,
+      "firmwareBytes": 32720,
+      "firmwareSha256": "36186f976a61afabfebd7157fc4deb5d75e3fce7d30dbda96fb4b37a3682718d",
+      "ranges": [
+        {
+          "start": 134217728,
+          "length": 10912
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Upstream tool verifies programmed application flash.",
+      "stackFiles": 230,
+      "stackRows": 1208,
+      "compilationDatabaseEntries": 231,
+      "platformioIni": "; Firmware: STM32 Nucleo-F401RE\n[env:nucleo-f401re]\nplatform = ststm32@20.0.0\nboard = nucleo_f401re\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\n"
+    },
+    {
+      "id": "bluepill",
+      "platformPackage": "ststm32@20.0.0",
+      "passed": true,
+      "seconds": 103.6201934,
+      "firmwareBytes": 32120,
+      "firmwareSha256": "a11c18a3d3690b72f31c23a8bc8c3084d5b283009c784b7b827df1feb85c8eb4",
+      "ranges": [
+        {
+          "start": 134217728,
+          "length": 10372
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Upstream tool verifies programmed application flash.",
+      "stackFiles": 233,
+      "stackRows": 1033,
+      "compilationDatabaseEntries": 235,
+      "platformioIni": "; Firmware: STM32 Blue Pill\n[env:bluepill]\nplatform = ststm32@20.0.0\nboard = bluepill_f103c8\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\n"
+    },
+    {
+      "id": "blackpill",
+      "platformPackage": "ststm32@20.0.0",
+      "passed": true,
+      "seconds": 106.657362,
+      "firmwareBytes": 32596,
+      "firmwareSha256": "7e7da8f9d382be117db0f39c3aa095569077b25cc5c7a9ea30a08a63fe428571",
+      "ranges": [
+        {
+          "start": 134217728,
+          "length": 10632
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Upstream tool verifies programmed application flash.",
+      "stackFiles": 231,
+      "stackRows": 1135,
+      "compilationDatabaseEntries": 232,
+      "platformioIni": "; Firmware: STM32 Black Pill F411CE\n[env:blackpill]\nplatform = ststm32@20.0.0\nboard = blackpill_f411ce\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\n"
+    }
+  ],
+  "errors": []
+}
