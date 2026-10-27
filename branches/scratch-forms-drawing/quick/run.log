@@ -1,48 +1,33 @@
 + dotnet build tests/TabStudio.Forms.Tests -c Release -p:TreatWarningsAsErrors=true
-+ grep -E 'error|warning|Build succeeded'
-+ sed 's|/home/runner/work/tabstudio/tabstudio/||'
++ grep -E 'error|Build succeeded'
 + sort -u
-+ head -150
++ head -50
 Build succeeded.
-+ dotnet test tests/TabStudio.Forms.Tests -c Release --no-build --logger 'console;verbosity=normal'
-+ grep -vE '^\s*$'
-+ grep -E 'Failed|Error Message|Assert|differs|reference|at TabStudio|Exception|Total|Passed!|Failed!'
-+ head -150
-[xUnit.net 00:00:00.96]       Assert.Equal() Failure: Strings differ
-[xUnit.net 00:00:00.96]         /_/tests/TabStudio.Forms.Tests/Runtime/DrawingAppTests.cs(176,0): at TabStudio.Forms.Tests.Runtime.DrawingAppTests.A_RichTextBox_reads_and_writes_RTF()
-  Failed TabStudio.Forms.Tests.Runtime.DrawingAppTests.A_RichTextBox_reads_and_writes_RTF [8 ms]
-  Error Message:
-   Assert.Equal() Failure: Strings differ
-     at TabStudio.Forms.Tests.Runtime.DrawingAppTests.A_RichTextBox_reads_and_writes_RTF() in /_/tests/TabStudio.Forms.Tests/Runtime/DrawingAppTests.cs:line 176
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "rectangles") [63 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "hatch-brushes") [25 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "curves") [32 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "text") [425 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "clipping") [17 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "dashes") [8 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "path-gradient") [64 ms]
-  Passed TabStudio.Forms.Tests.Runtime.EventTests.Application_ThreadException_handles_exceptions_and_the_app_keeps_running [2 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "polygons") [4 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "compositing") [2 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "alpha-blending") [3 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "lines-antialiased") [3 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "arcs-and-pies") [4 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "images") [6 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "pen-caps") [10 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "transforms") [4 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "texture-brushes") [5 ms]
-[xUnit.net 00:00:04.06]       Assert.Equal() Failure: Values differ
-[xUnit.net 00:00:04.06]         /_/tests/TabStudio.Forms.Tests/Drawing/DrawingSceneTests.cs(112,0): at TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_bitmap_drawn_into_another_and_into_itself_keeps_its_pixels()
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "text-transformed") [10 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "ellipses") [4 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "linear-gradients") [10 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "lines") [3 ms]
-  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "pen-joins") [4 ms]
-  Failed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_bitmap_drawn_into_another_and_into_itself_keeps_its_pixels [2 ms]
++ dotnet test tests/TabStudio.Forms.Tests -c Release --no-build --filter 'FullyQualifiedName~RichTextBox|FullyQualifiedName~into_itself'
++ tail -40
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Tests/bin/Release/net10.0/TabStudio.Forms.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.40]     TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_bitmap_drawn_into_another_and_into_itself_keeps_its_pixels [FAIL]
+[xUnit.net 00:00:00.43]     TabStudio.Forms.Tests.Runtime.DrawingAppTests.A_RichTextBox_reads_and_writes_RTF [FAIL]
+  Failed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_bitmap_drawn_into_another_and_into_itself_keeps_its_pixels [40 ms]
   Error Message:
    Assert.Equal() Failure: Values differ
-     at TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_bitmap_drawn_into_another_and_into_itself_keeps_its_pixels() in /_/tests/TabStudio.Forms.Tests/Drawing/DrawingSceneTests.cs:line 112
-Test Run Failed.
-Total tests: 90
-     Failed: 2
- Total time: 4.5840 Seconds
+Expected: -256
+Actual:   -16777216
+  Stack Trace:
+     at TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_bitmap_drawn_into_another_and_into_itself_keeps_its_pixels() in /_/tests/TabStudio.Forms.Tests/Drawing/DrawingSceneTests.cs:line 121
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed TabStudio.Forms.Tests.Runtime.DrawingAppTests.A_RichTextBox_reads_and_writes_RTF [39 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+                            ↓ (pos 16)
+Expected: "Hello bold\nCafé €"
+Actual:   "Hello bold\nCafé 荤?"
+                            ↑ (pos 16)
+  Stack Trace:
+     at TabStudio.Forms.Tests.Runtime.DrawingAppTests.A_RichTextBox_reads_and_writes_RTF() in /_/tests/TabStudio.Forms.Tests/Runtime/DrawingAppTests.cs:line 176
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     2, Passed:     0, Skipped:     0, Total:     2, Duration: 216 ms - TabStudio.Forms.Tests.dll (net10.0)
