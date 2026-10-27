@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Globalization;
 using System.Reflection;
 using System.Resources;
 using System.Windows.Forms;
@@ -26,7 +27,7 @@ public sealed class ResxResourceTests
     {
         var resources = Load($"imagelist-{depth}.resx");
         using var list = new ImageList();
-        list.ImageStream = (ImageListStreamer)resources.GetObject("imageList1.ImageStream")!;
+        list.ImageStream = (ImageListStreamer)resources.GetObject("imageList1.ImageStream", CultureInfo.InvariantCulture)!;
 
         Assert.Equal(new Size(16, 16), list.ImageSize);
         Assert.Equal(5, list.Images.Count);
@@ -53,12 +54,12 @@ public sealed class ResxResourceTests
     {
         var resources = Load("imagelist-Depth32Bit.resx");
 
-        var picture = Assert.IsType<Bitmap>(resources.GetObject("pictureBox1.Image"));
+        var picture = Assert.IsType<Bitmap>(resources.GetObject("pictureBox1.Image", CultureInfo.InvariantCulture));
         Assert.Equal(new Size(16, 16), picture.Size);
         Assert.Equal(Color.Lime.ToArgb(), picture.GetPixel(8, 8).ToArgb());
-        Assert.IsType<Icon>(resources.GetObject("$this.Icon"));
-        Assert.Equal(new Point(12, 34), resources.GetObject("label1.Location"));
-        Assert.Equal("Hello", resources.GetString("label1.Text"));
+        Assert.IsType<Icon>(resources.GetObject("$this.Icon", CultureInfo.InvariantCulture));
+        Assert.Equal(new Point(12, 34), resources.GetObject("label1.Location", CultureInfo.InvariantCulture));
+        Assert.Equal("Hello", resources.GetString("label1.Text", CultureInfo.InvariantCulture));
     }
 
     [AvaloniaFact]
@@ -67,7 +68,7 @@ public sealed class ResxResourceTests
         using var first = new ImageList { ImageSize = new Size(8, 8) };
         first.Images.Add(new Bitmap(8, 8));
         using var second = new ImageList { ImageStream = first.ImageStream };
-        Assert.Equal(1, second.Images.Count);
+        Assert.Single(second.Images);
         Assert.Equal(new Size(8, 8), second.ImageSize);
     }
 

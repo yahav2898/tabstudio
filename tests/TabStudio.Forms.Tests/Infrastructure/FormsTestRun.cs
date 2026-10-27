@@ -121,6 +121,30 @@ internal sealed class FormsTestRun : IDisposable
         window.PointerReleased(point, MouseButtons.Left, touch: false);
     });
 
+    /// <summary>A mouse drag with the left button through points of a control's client area, as a finger draws.</summary>
+    /// <param name="control">The control.</param>
+    /// <param name="points">The points: pressed at the first, moved through the others in small steps, released at the last.</param>
+    public void Drag(Control control, params Point[] points)
+    {
+        ArgumentNullException.ThrowIfNull(points);
+        Assert.NotEmpty(points);
+        Deliver(() => Window(control).PointerPressed(ToWindow(control, points[0]), MouseButtons.Left, 1, touch: false));
+        for (var i = 1; i < points.Length; i++)
+        {
+            var (from, to) = (points[i - 1], points[i]);
+            var steps = Math.Max(1, Math.Max(Math.Abs(to.X - from.X), Math.Abs(to.Y - from.Y)) / 8);
+            for (var step = 1; step <= steps; step++)
+            {
+                var point = new Point(from.X + ((to.X - from.X) * step / steps), from.Y + ((to.Y - from.Y) * step / steps));
+                Deliver(() => Window(control).PointerMoved(ToWindow(control, point), touch: false));
+            }
+        }
+
+        Deliver(() => Window(control).PointerReleased(ToWindow(control, points[^1]), MouseButtons.Left, touch: false));
+
+        static FormWindow Window(Control control) => control.Window ?? throw new InvalidOperationException($"{control.Name} is not shown.");
+    }
+
     /// <summary>A tap at a point of a window's client area.</summary>
     public void TapWindow(Form form, Point point) => Deliver(() =>
     {
