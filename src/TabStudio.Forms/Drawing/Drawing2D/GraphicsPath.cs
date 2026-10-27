@@ -343,16 +343,89 @@ public sealed class GraphicsPath : MarshalByRefObject, ICloneable, IDisposable
         _open = _figures.Count > 0 && !_figures[^1].Closed ? _figures[^1] : null;
     }
 
-    /// <summary>Text cannot be added to a path on this device.</summary>
+    /// <summary>Adds the outlines of text, one closed figure per contour of each glyph.</summary>
     /// <param name="s">The text.</param>
     /// <param name="family">The font family.</param>
-    /// <param name="style">The font style.</param>
-    /// <param name="emSize">The size.</param>
-    /// <param name="origin">Where the text starts.</param>
-    /// <param name="format">The layout.</param>
-    /// <exception cref="NotSupportedException">Always.</exception>
+    /// <param name="style">The <see cref="System.Drawing.FontStyle"/>, as a number.</param>
+    /// <param name="emSize">The height of the em, in world units (not points).</param>
+    /// <param name="origin">Where the text's top left is.</param>
+    /// <param name="format">The alignment relative to <paramref name="origin"/>, or <see langword="null"/>.</param>
     public void AddString(string s, FontFamily family, int style, float emSize, PointF origin, StringFormat? format) =>
-        throw new NotSupportedException("GraphicsPath.AddString is not supported by TabStudio's Forms layer: draw text with Graphics.DrawString.");
+        AddString(s, family, style, emSize, new RectangleF(origin.X, origin.Y, float.PositiveInfinity, float.PositiveInfinity), format, atPoint: true);
+
+    /// <summary>Adds the outlines of text.</summary>
+    /// <param name="s">The text.</param>
+    /// <param name="family">The font family.</param>
+    /// <param name="style">The <see cref="System.Drawing.FontStyle"/>, as a number.</param>
+    /// <param name="emSize">The height of the em, in world units.</param>
+    /// <param name="origin">Where the text's top left is.</param>
+    /// <param name="format">The alignment, or <see langword="null"/>.</param>
+    public void AddString(string s, FontFamily family, int style, float emSize, Point origin, StringFormat? format) =>
+        AddString(s, family, style, emSize, (PointF)origin, format);
+
+    /// <summary>Adds the outlines of text laid out in a rectangle, wrapped at its width.</summary>
+    /// <param name="s">The text.</param>
+    /// <param name="family">The font family.</param>
+    /// <param name="style">The <see cref="System.Drawing.FontStyle"/>, as a number.</param>
+    /// <param name="emSize">The height of the em, in world units.</param>
+    /// <param name="layoutRect">The rectangle.</param>
+    /// <param name="format">The alignment and wrapping, or <see langword="null"/>.</param>
+    public void AddString(string s, FontFamily family, int style, float emSize, RectangleF layoutRect, StringFormat? format) =>
+        AddString(s, family, style, emSize, layoutRect, format, atPoint: false);
+
+    /// <summary>Adds the outlines of text laid out in a rectangle.</summary>
+    /// <param name="s">The text.</param>
+    /// <param name="family">The font family.</param>
+    /// <param name="style">The <see cref="System.Drawing.FontStyle"/>, as a number.</param>
+    /// <param name="emSize">The height of the em, in world units.</param>
+    /// <param name="layoutRect">The rectangle.</param>
+    /// <param name="format">The alignment and wrapping, or <see langword="null"/>.</param>
+    public void AddString(string s, FontFamily family, int style, float emSize, Rectangle layoutRect, StringFormat? format) =>
+        AddString(s, family, style, emSize, (RectangleF)layoutRect, format);
+
+    private void AddString(string s, FontFamily family, int style, float emSize, RectangleF layout, StringFormat? format, bool atPoint)
+    {
+        ArgumentNullException.ThrowIfNull(s);
+        ArgumentNullException.ThrowIfNull(family);
+        var fontStyle = (System.Drawing.FontStyle)style;
+        var spec = new FontSpec(
+            family.DrawingFamily,
+            emSize,
+            (fontStyle & System.Drawing.FontStyle.Bold) != 0,
+            (fontStyle & System.Drawing.FontStyle.Italic) != 0,
+            Underline: false,
+            Strikeout: false);
+        var text = Graphics.Prefixed(s, format?.HotkeyPrefix ?? System.Drawing.Text.HotkeyPrefix.None);
+        if (atPoint && format is { } pointFormat && (pointFormat.Alignment != StringAlignment.Near || pointFormat.LineAlignment != StringAlignment.Near))
+        {
+            // At a point, the alignment places the text's box around the point, as DrawString does.
+            var size = TextMetrics.Measure(text, spec);
+            var x = layout.X - (pointFormat.Alignment switch { StringAlignment.Center => (float)size.Width / 2, StringAlignment.Far => (float)size.Width, _ => 0 });
+            var y = layout.Y - (pointFormat.LineAlignment switch { StringAlignment.Center => (float)size.Height / 2, StringAlignment.Far => (float)size.Height, _ => 0 });
+            layout = new RectangleF(x, y, float.PositiveInfinity, float.PositiveInfinity);
+        }
+
+        var options = atPoint
+            ? TextOptions.AtPoint
+            : new TextOptions(
+                format?.Alignment ?? StringAlignment.Near,
+                format?.LineAlignment ?? StringAlignment.Near,
+                Wrap: ((format?.FormatFlags ?? 0) & StringFormatFlags.NoWrap) == 0 && layout.Width > 0,
+                Ellipsis: false,
+                Clip: false);
+        if (!atPoint && (layout.Width <= 0 || layout.Height <= 0))
+        {
+            layout = new RectangleF(layout.X, layout.Y, layout.Width > 0 ? layout.Width : float.PositiveInfinity, layout.Height > 0 ? layout.Height : float.PositiveInfinity);
+        }
+
+        StartFigure();
+        foreach (var figure in TextOutlines.Outline(text, spec, layout, options))
+        {
+            _figures.Add(Figure.From(figure));
+        }
+
+        _open = null;
+    }
 
     /// <summary>Applies a transformation to every point of the path.</summary>
     /// <param name="matrix">The transformation.</param>
@@ -466,6 +539,8 @@ public sealed class GraphicsPath : MarshalByRefObject, ICloneable, IDisposable
                 BezierSegmentData bezier => bezier.To,
                 _ => Start,
             };
+
+        public static Figure From(PathFigureData data) => new(data.Start) { Segments = [.. data.Segments], Closed = data.Closed };
 
         public Figure Copy() => new(Start) { Segments = [.. Segments], Closed = Closed };
 

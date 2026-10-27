@@ -94,9 +94,13 @@ internal sealed class DisplayListRenderer
 
         // Avalonia measures a bitmap's source rectangle in device-independent pixels at its own DPI; the images
         // here are at 96 DPI, so pixels and units are the same.
-        using (context.PushRenderOptions(new RenderOptions { BitmapInterpolationMode = image.Smooth ? BitmapInterpolationMode.HighQuality : BitmapInterpolationMode.None }))
+        var destination = ToRect(image.Destination);
+
+        // An image drawn at its own size keeps its pixels exactly, as GDI+ draws it.
+        var smooth = image.Smooth && (Math.Abs(destination.Width - source.Width) > 0.01 || Math.Abs(destination.Height - source.Height) > 0.01);
+        using (context.PushRenderOptions(new RenderOptions { BitmapInterpolationMode = smooth ? BitmapInterpolationMode.HighQuality : BitmapInterpolationMode.None }))
         {
-            context.DrawImage(bitmap, source, ToRect(image.Destination));
+            context.DrawImage(bitmap, source, destination);
         }
     }
 

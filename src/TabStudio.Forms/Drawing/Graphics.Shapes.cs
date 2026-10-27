@@ -69,6 +69,12 @@ public sealed partial class Graphics
     public void DrawRectangle(Pen pen, RectangleF rect)
     {
         ArgumentNullException.ThrowIfNull(pen);
+        if (rect.Width <= 0 || rect.Height <= 0)
+        {
+            // GDI+ draws nothing for an empty rectangle.
+            return;
+        }
+
         if (pen.Alignment == PenAlignment.Inset && pen.Width > 1)
         {
             // An inset pen draws inside the rectangle: its outer edge is the rectangle's edge.
@@ -77,8 +83,7 @@ public sealed partial class Graphics
             return;
         }
 
-        var offset = StrokeOffset(pen);
-        Record(new RectangleCommand(new RectangleF(rect.X + offset, rect.Y + offset, rect.Width, rect.Height), null, pen.ToSpec()));
+        Record(new RectangleCommand(rect, null, pen.ToSpec()));
     }
 
     /// <summary>Draws the outline of a rectangle.</summary>
@@ -133,9 +138,7 @@ public sealed partial class Graphics
     public void DrawLine(Pen pen, PointF pt1, PointF pt2)
     {
         ArgumentNullException.ThrowIfNull(pen);
-        var offset = StrokeOffset(pen);
-        var from = new PointF(pt1.X + offset, pt1.Y + offset);
-        var to = new PointF(pt2.X + offset, pt2.Y + offset);
+        var (from, to) = (pt1, pt2);
         if (pen.HasShapedCaps)
         {
             Stroke(Polyline([from, to], closed: false), pen);
@@ -177,7 +180,7 @@ public sealed partial class Graphics
         ArgumentNullException.ThrowIfNull(points);
         if (points.Length >= 2)
         {
-            Stroke(Polyline(Offset(points, StrokeOffset(pen)), closed: false), pen);
+            Stroke(Polyline(points, closed: false), pen);
         }
     }
 
@@ -192,8 +195,7 @@ public sealed partial class Graphics
     public void DrawEllipse(Pen pen, RectangleF rect)
     {
         ArgumentNullException.ThrowIfNull(pen);
-        var offset = StrokeOffset(pen);
-        Record(new EllipseCommand(new RectangleF(rect.X + offset, rect.Y + offset, rect.Width, rect.Height), null, pen.ToSpec()));
+        Record(new EllipseCommand(rect, null, pen.ToSpec()));
     }
 
     /// <summary>Draws the outline of an ellipse.</summary>
@@ -256,7 +258,7 @@ public sealed partial class Graphics
         ArgumentNullException.ThrowIfNull(points);
         if (points.Length >= 2)
         {
-            Record(new PathCommand(Polyline(Offset(points, StrokeOffset(pen)), closed: true), null, pen.ToSpec()));
+            Record(new PathCommand(Polyline(points, closed: true), null, pen.ToSpec()));
         }
     }
 
@@ -305,8 +307,7 @@ public sealed partial class Graphics
     {
         ArgumentNullException.ThrowIfNull(pen);
         using var path = new GraphicsPath();
-        var offset = StrokeOffset(pen);
-        path.AddArc(new RectangleF(rect.X + offset, rect.Y + offset, rect.Width, rect.Height), startAngle, sweepAngle);
+        path.AddArc(rect, startAngle, sweepAngle);
         Stroke(path.ToData(), pen);
     }
 
@@ -584,9 +585,6 @@ public sealed partial class Graphics
         ArgumentNullException.ThrowIfNull(points);
         return [.. points.Select(p => (PointF)p)];
     }
-
-    private static PointF[] Offset(PointF[] points, float offset) =>
-        offset == 0 ? points : [.. points.Select(p => new PointF(p.X + offset, p.Y + offset))];
 
     private static PathData Polyline(PointF[] points, bool closed)
     {

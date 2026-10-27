@@ -4,9 +4,8 @@ using TabStudio.Forms.Rendering;
 namespace System.Drawing.Drawing2D;
 
 /// <summary>
-/// A brush that blends from a center color out to the colors of a path's edge, painting only inside the path. It
-/// is drawn as a radial gradient from the center point to the path's bounds, which matches GDI+ for ellipses and
-/// is close for other shapes.
+/// A brush that blends from a center color out to the colors of a path's edge, painting only inside the path, as
+/// GDI+ does: along each line from the center point to the edge.
 /// </summary>
 public sealed class PathGradientBrush : Brush
 {
@@ -69,7 +68,7 @@ public sealed class PathGradientBrush : Brush
     /// <summary>The color at the center point.</summary>
     public Color CenterColor { get; set; } = Color.White;
 
-    /// <summary>The colors of the edge; the first is used all around.</summary>
+    /// <summary>The colors of the edge: one for all of it, or one per point of a polygon.</summary>
 #pragma warning disable CA1819 // GDI+'s own shape.
     public Color[] SurroundColors
     {
@@ -208,7 +207,12 @@ public sealed class PathGradientBrush : Brush
             stops = [.. stops.Select(stop => stop with { Offset = stop.Offset * (1 - focus) }), new GradientStopSpec(1, stops[^1].Argb)];
         }
 
-        return new PathGradientBrushSpec(Rectangle, _path, CenterPoint, stops, _transform);
+        return new PathGradientBrushSpec(Rectangle, _path, CenterPoint, stops, _transform)
+        {
+            SurroundArgb = _surroundColors.Length > 1 && _interpolation is null && _blend is null && focus == 0
+                ? [.. _surroundColors.Select(SystemColorValues.Argb)]
+                : null,
+        };
     }
 
     private static GraphicsPath Polygon(PointF[] points)

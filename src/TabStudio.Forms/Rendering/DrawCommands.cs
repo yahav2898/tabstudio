@@ -71,7 +71,8 @@ internal sealed record HatchBrushSpec(HatchStyle Style, uint ForeArgb, uint Back
 
 /// <summary>
 /// A gradient from a center color out to the edge of a path, as <see cref="PathGradientBrush"/> paints: it paints
-/// only inside its path, and is drawn as a radial gradient filling the path's bounds.
+/// only inside its path, blending along each line from the center to the edge, with each point of a polygon's edge
+/// its own surround color when there is one per point.
 /// </summary>
 /// <param name="Bounds">The bounds of the brush's path.</param>
 /// <param name="Path">The brush's path: nothing outside it is painted.</param>
@@ -80,6 +81,9 @@ internal sealed record HatchBrushSpec(HatchStyle Style, uint ForeArgb, uint Back
 /// <param name="Transform">The brush's own transformation, applied before the surface's.</param>
 internal sealed record PathGradientBrushSpec(RectangleF Bounds, PathData Path, PointF Center, IReadOnlyList<GradientStopSpec> Stops, Matrix3x2 Transform) : BrushSpec
 {
+    /// <summary>The surround colors, one per point of the path's edge, or <see langword="null"/> for one color all around.</summary>
+    public IReadOnlyList<uint>? SurroundArgb { get; init; }
+
     /// <inheritdoc />
     public override uint MainColor => Stops[^1].Argb;
 }
@@ -134,6 +138,12 @@ internal sealed record StateCommand(Matrix3x2 Transform, RectangleF Clip, bool A
 
     /// <summary>Whether shapes and images replace the pixels under them, as <see cref="CompositingMode.SourceCopy"/> asks.</summary>
     public bool SourceCopy { get; init; }
+
+    /// <summary>
+    /// Whether whole coordinates are pixel centers, as GDI+ puts them by default: shapes are then drawn half a pixel
+    /// right and down of where Skia, whose whole coordinates are pixel corners, would put them.
+    /// </summary>
+    public bool PixelCenters { get; init; } = true;
 }
 
 /// <summary>A rectangle, filled, outlined or both, optionally with rounded corners.</summary>

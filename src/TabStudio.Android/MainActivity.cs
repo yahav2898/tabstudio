@@ -136,6 +136,7 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
                 services.AddSingleton<IWebViewFactory>(_ => new AndroidWebViewFactory(() => this));
                 services.AddSingleton<INotifications>(notifications);
                 services.AddSingleton<IQrScanner>(_ => new AndroidQrScanner(() => this));
+                services.AddSingleton<IImageClipboard>(_ => new AndroidImageClipboard(context));
                 services.AddSingleton<IDeviceIdentity>(_ => new AndroidDeviceIdentity(context));
 
                 // Presentations on external displays belong to the current activity.

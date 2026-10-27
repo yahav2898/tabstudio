@@ -24,6 +24,13 @@ internal static class SkiaPainter
         try
         {
             Clip(canvas, state);
+            if (state.PixelCenters)
+            {
+                // Just under half a pixel when aliased: Skia rounds an aliased edge at exactly half a pixel up.
+                var shift = state.Antialias ? 0.5f : 0.49f;
+                canvas.Translate(shift, shift);
+            }
+
             canvas.Concat(ToSkia(state.Transform));
             foreach (var command in commands)
             {
@@ -233,8 +240,18 @@ internal static class SkiaPainter
                 {
                     clip.Transform(ToSkia(gradient.Transform));
                     canvas.ClipPath(clip, SKClipOperation.Intersect, state.Antialias);
-                    paint.Shader = Shader(state, gradient);
-                    canvas.DrawPath(path, paint);
+                    if (paint.Style == SKPaintStyle.Fill)
+                    {
+                        canvas.ClipPath(path, SKClipOperation.Intersect, state.Antialias);
+                        paint.Color = SKColors.White;
+                        var (positions, colors) = PathGradientMesh(gradient);
+                        canvas.DrawVertices(SKVertexMode.Triangles, positions, colors, paint);
+                    }
+                    else
+                    {
+                        paint.Shader = Shader(state, gradient);
+                        canvas.DrawPath(path, paint);
+                    }
                 }
 
                 canvas.RestoreToCount(saved);
@@ -305,7 +322,10 @@ internal static class SkiaPainter
                 var pixelExact = transform.M11 == 1 && transform.M22 == 1 && transform.M12 == 0 && transform.M21 == 0
                     && state.Transform.M11 == 1 && state.Transform.M22 == 1 && state.Transform.M12 == 0 && state.Transform.M21 == 0;
                 var sampling = pixelExact ? new SKSamplingOptions(SKFilterMode.Nearest) : new SKSamplingOptions(SKFilterMode.Linear);
-                return SKShader.CreateImage(image, x, y, sampling, ToSkia(transform));
+
+                // With pixel centers at whole coordinates, a texel's center is too.
+                var local = state.PixelCenters ? ToSkia(transform).PreConcat(SKMatrix.CreateTranslation(-0.5f, -0.5f)) : ToSkia(transform);
+                return SKShader.CreateImage(image, x, y, sampling, local);
             }
 
             case HatchBrushSpec hatch:
@@ -313,6 +333,11 @@ internal static class SkiaPainter
                 // Hatch patterns are fixed to the surface's pixels, whatever the world transform.
                 var pattern = HatchPatterns.Image(hatch.Style, hatch.ForeArgb, hatch.BackArgb);
                 var local = Matrix3x2.Invert(state.Transform, out var inverse) ? ToSkia(inverse) : SKMatrix.Identity;
+                if (state.PixelCenters)
+                {
+                    local = local.PreConcat(SKMatrix.CreateTranslation(-0.5f, -0.5f));
+                }
+
                 return SKShader.CreateImage(pattern, SKShaderTileMode.Repeat, SKShaderTileMode.Repeat, new SKSamplingOptions(SKFilterMode.Nearest), local);
             }
 
@@ -321,6 +346,73 @@ internal static class SkiaPainter
             default:
                 return null;
         }
+    }
+
+    /// <summary>
+    /// The triangles of a path gradient: for each edge of the path, a fan of bands from the edge in to the center,
+    /// one per pair of neighboring colors, each colored at its corners, as GDI+ blends a path gradient.
+    /// </summary>
+    private static (SKPoint[] Positions, SKColor[] Colors) PathGradientMesh(PathGradientBrushSpec gradient)
+    {
+        var positions = new List<SKPoint>();
+        var colors = new List<SKColor>();
+        var transform = gradient.Transform;
+        var center = System.Numerics.Vector2.Transform(new System.Numerics.Vector2(gradient.Center.X, gradient.Center.Y), transform);
+        var stops = gradient.Stops.OrderBy(stop => stop.Offset).ToList();
+        if (stops[0].Offset > 0)
+        {
+            stops.Insert(0, stops[0] with { Offset = 0 });
+        }
+
+        if (stops[^1].Offset < 1)
+        {
+            stops.Add(stops[^1] with { Offset = 1 });
+        }
+
+        foreach (var figure in gradient.Path.Figures)
+        {
+            var edge = GeometryMath.Flatten(figure).Select(p => System.Numerics.Vector2.Transform(new System.Numerics.Vector2(p.X, p.Y), transform)).ToList();
+            if (edge.Count > 1 && edge[0] == edge[^1])
+            {
+                edge.RemoveAt(edge.Count - 1);
+            }
+
+            // Per-point surround colors apply to a polygon's own points, before flattening adds any.
+            var perPoint = gradient.SurroundArgb is { } surround && surround.Count >= figure.Segments.Count && figure.Segments.All(s => s is LineSegmentData)
+                ? surround
+                : null;
+            for (var i = 0; i < edge.Count; i++)
+            {
+                var a = edge[i];
+                var b = edge[(i + 1) % edge.Count];
+                for (var band = 0; band < stops.Count - 1; band++)
+                {
+                    var (outer, inner) = (stops[band], stops[band + 1]);
+                    var a1 = System.Numerics.Vector2.Lerp(a, center, outer.Offset);
+                    var b1 = System.Numerics.Vector2.Lerp(b, center, outer.Offset);
+                    var a2 = System.Numerics.Vector2.Lerp(a, center, inner.Offset);
+                    var b2 = System.Numerics.Vector2.Lerp(b, center, inner.Offset);
+                    var (ca1, cb1) = band == 0 && perPoint is not null
+                        ? (ToSkia(perPoint[Math.Min(i, perPoint.Count - 1)]), ToSkia(perPoint[Math.Min((i + 1) % edge.Count, perPoint.Count - 1)]))
+                        : (ToSkia(outer.Argb), ToSkia(outer.Argb));
+                    var c2 = ToSkia(inner.Argb);
+                    Triangle(positions, colors, (a1, ca1), (b1, cb1), (b2, c2));
+                    Triangle(positions, colors, (a1, ca1), (b2, c2), (a2, c2));
+                }
+            }
+        }
+
+        return ([.. positions], [.. colors]);
+    }
+
+    private static void Triangle(List<SKPoint> positions, List<SKColor> colors, (System.Numerics.Vector2 P, SKColor C) a, (System.Numerics.Vector2 P, SKColor C) b, (System.Numerics.Vector2 P, SKColor C) c)
+    {
+        positions.Add(new SKPoint(a.P.X, a.P.Y));
+        positions.Add(new SKPoint(b.P.X, b.P.Y));
+        positions.Add(new SKPoint(c.P.X, c.P.Y));
+        colors.Add(a.C);
+        colors.Add(b.C);
+        colors.Add(c.C);
     }
 
     private static (SKColor[] Colors, float[] Positions) Stops(IReadOnlyList<GradientStopSpec> stops, bool reverse)

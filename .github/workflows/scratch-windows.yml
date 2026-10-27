@@ -1,0 +1,32 @@
+name: Scratch Windows
+
+# Development-only: runs build/scratch-commands.sh on Windows, for GDI+ reference pictures.
+on:
+  push:
+    branches: ['scratchwin/**']
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Run scratch commands
+        run: |
+          mkdir -p ci-out
+          bash build/scratch-commands.sh > ci-out/run.log 2>&1 && echo PASS > ci-out/RESULT || echo FAIL > ci-out/RESULT
+          tail -n 60 ci-out/run.log
+      - name: Publish logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh quick ${{ job.status }}

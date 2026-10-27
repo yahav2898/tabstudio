@@ -15,61 +15,61 @@ internal static class HatchPatterns
 
     private static readonly ConcurrentDictionary<(HatchStyle Style, uint Fore, uint Back), SKImage> Images = new();
 
-    // Indexed by HatchStyle, 0 to 52.
+    // Indexed by HatchStyle, 0 to 52: GDI+'s own patterns, read from GDI+ by build/gdiplus-references.
     private static readonly ulong[] Rows =
     [
-        0x00000000000000FF, // Horizontal
-        0x0101010101010101, // Vertical
+        0xFF00000000000000, // Horizontal
+        0x8080808080808080, // Vertical
         0x8040201008040201, // ForwardDiagonal
         0x0102040810204080, // BackwardDiagonal
-        0x01010101010101FF, // Cross
+        0xFF80808080808080, // Cross
         0x8142241818244281, // DiagonalCross
-        0x0000000100000010, // Percent05
-        0x0000001100000011, // Percent10
-        0x0000005500000055, // Percent20
-        0x0011004400110044, // Percent25
-        0x0055002200550022, // Percent30
-        0x0055AA5500552255, // Percent40
-        0x55AA55AA55AA55AA, // Percent50
-        0x77AA77AA77AA77AA, // Percent60
-        0x55FFAAFF55FFAAFF, // Percent70
+        0x8000000008000000, // Percent05
+        0x8000080080000800, // Percent10
+        0x8800220088002200, // Percent20
+        0x8822882288228822, // Percent25
+        0xAA44AA11AA44AA11, // Percent30
+        0xAA55AA51AA55AA15, // Percent40
+        0xAA55AA55AA55AA55, // Percent50
+        0xEE55BB55EE55BB55, // Percent60
+        0x77DD77DD77DD77DD, // Percent70
         0x77FFDDFF77FFDDFF, // Percent75
-        0x77FFFFFF77FFFFFF, // Percent80
-        0x7FFFFFFFF7FFFFFF, // Percent90
+        0xEFFFFEFFEFFFFEFF, // Percent80
+        0xFFFFFFF7FFFFFF7F, // Percent90
         0x8844221188442211, // LightDownwardDiagonal
         0x1122448811224488, // LightUpwardDiagonal
         0xCC663399CC663399, // DarkDownwardDiagonal
-        0x993366CC993366CC, // DarkUpwardDiagonal
+        0x3366CC993366CC99, // DarkUpwardDiagonal
         0xC1E070381C0E0783, // WideDownwardDiagonal
         0x83070E1C3870E0C1, // WideUpwardDiagonal
         0x8888888888888888, // LightVertical
-        0x00FF000000FF0000, // LightHorizontal
-        0xAAAAAAAAAAAAAAAA, // NarrowVertical
-        0x00FF00FF00FF00FF, // NarrowHorizontal
+        0xFF000000FF000000, // LightHorizontal
+        0x5555555555555555, // NarrowVertical
+        0xFF00FF00FF00FF00, // NarrowHorizontal
         0xCCCCCCCCCCCCCCCC, // DarkVertical
-        0x0000FFFF0000FFFF, // DarkHorizontal
-        0x0000000088442211, // DashedDownwardDiagonal
-        0x0000000011224488, // DashedUpwardDiagonal
+        0xFFFF0000FFFF0000, // DarkHorizontal
+        0x0000884422110000, // DashedDownwardDiagonal
+        0x0000112244880000, // DashedUpwardDiagonal
         0xF00000000F000000, // DashedHorizontal
         0x8080808008080808, // DashedVertical
-        0x8004400208200110, // SmallConfetti
-        0x8C0D80C80CD80C80, // LargeConfetti
-        0x8142241800000000, // ZigZag
-        0x0000304A85000000, // Wave
-        0x8040201008040201, // DiagonalBrick
+        0x8008400210012004, // SmallConfetti
+        0xB130031BD8C00C8D, // LargeConfetti
+        0x8142241881422418, // ZigZag
+        0x001825C0001825C0, // Wave
+        0x0102040818244281, // DiagonalBrick
         0xFF808080FF080808, // HorizontalBrick
-        0x8822552288552288, // Weave
-        0xAA55AA55FF0000FF, // Plaid
-        0x8000000008142200, // Divot
-        0xAA000000AA000000, // DottedGrid
+        0x8854224588142251, // Weave
+        0xAA55AA55F0F0F0F0, // Plaid
+        0x0010081000800180, // Divot
+        0xAA00800080008000, // DottedGrid
         0x8000220008002200, // DottedDiamond
-        0x8106601824420181, // Shingle
+        0x038448300C020101, // Shingle
         0xFF66FF99FF66FF99, // Trellis
-        0x7E8181FFFF7E3C18, // Sphere
-        0x88888888FF888888, // SmallGrid
-        0xCC33CC33CC33CC33, // SmallCheckerBoard
+        0x77898F8F7798F8F8, // Sphere
+        0xFF888888FF888888, // SmallGrid
+        0x9966669999666699, // SmallCheckerBoard
         0xF0F0F0F00F0F0F0F, // LargeCheckerBoard
-        0x8142241824428100, // OutlinedDiamond
+        0x8244281028448201, // OutlinedDiamond
         0x10387CFE7C381000, // SolidDiamond
     ];
 
