@@ -1,0 +1,40 @@
++ for p in tests/TabStudio.Core.Tests tests/TabStudio.Wpf.Tests tests/TabStudio.App.Tests tests/TabStudio.Forms.Tests
++ dotnet build tests/TabStudio.Core.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warning|Build succeeded'
++ sed 's|/home/runner/work/tabstudio/tabstudio/||'
++ sort -u
++ head -40
+Build succeeded.
++ for p in tests/TabStudio.Core.Tests tests/TabStudio.Wpf.Tests tests/TabStudio.App.Tests tests/TabStudio.Forms.Tests
++ dotnet build tests/TabStudio.Wpf.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warning|Build succeeded'
++ sed 's|/home/runner/work/tabstudio/tabstudio/||'
++ sort -u
++ head -40
+Build succeeded.
++ for p in tests/TabStudio.Core.Tests tests/TabStudio.Wpf.Tests tests/TabStudio.App.Tests tests/TabStudio.Forms.Tests
++ dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warning|Build succeeded'
++ head -40
++ sort -u
++ sed 's|/home/runner/work/tabstudio/tabstudio/||'
+Build succeeded.
++ for p in tests/TabStudio.Core.Tests tests/TabStudio.Wpf.Tests tests/TabStudio.App.Tests tests/TabStudio.Forms.Tests
++ dotnet build tests/TabStudio.Forms.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warning|Build succeeded'
++ sed 's|/home/runner/work/tabstudio/tabstudio/||'
++ sort -u
++ head -40
+Build succeeded.
++ dotnet test tests/TabStudio.Core.Tests -c Release --no-build
++ grep -E 'Failed |Error Message|Passed!|Failed!'
++ head -20
+Passed!  - Failed:     0, Passed:   158, Skipped:     0, Total:   158, Duration: 270 ms - TabStudio.Core.Tests.dll (net10.0)
++ dotnet test tests/TabStudio.Forms.Tests -c Release --no-build
++ grep -E 'Failed |Error Message|Passed!|Failed!'
++ head -20
+Passed!  - Failed:     0, Passed:    95, Skipped:     0, Total:    95, Duration: 3 s - TabStudio.Forms.Tests.dll (net10.0)
++ dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter 'FullyQualifiedName~PreviewZoom|FullyQualifiedName~WebPreview|FullyQualifiedName~WpfPreviewFit|FullyQualifiedName~WindowsForms|FullyQualifiedName~LegacyFramework|FullyQualifiedName~SelfTest'
++ grep -E 'Failed |Error Message|Assert|Passed!|Failed!'
++ head -40
+Passed!  - Failed:     0, Passed:    37, Skipped:     0, Total:    37, Duration: 44 s - TabStudio.App.Tests.dll (net10.0)
