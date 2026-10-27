@@ -1,0 +1,17 @@
++ dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warning|Build succeeded'
++ sed 's|/home/runner/work/tabstudio/tabstudio/||'
++ sort -u
++ head -100
+Build succeeded.
++ dotnet test tests/TabStudio.App.Tests -c Release --no-build --logger 'console;verbosity=normal' --filter FullyQualifiedName~WindowsFormsAppTests
++ grep -vE '^\s*$'
++ grep -E 'Failed|Error Message|Assert|at TabStudio|Exception|Total|Passed|Expected|Actual|Timed out'
++ head -120
+  Passed TabStudio.App.Tests.ViewModels.WindowsFormsAppTests.F5_runs_a_form_in_the_app_preview_a_click_changes_its_label_and_saving_restarts_it [6 s]
+  Passed TabStudio.App.Tests.ViewModels.WindowsFormsAppTests.A_business_app_with_a_menu_a_grid_inputs_and_message_boxes_builds_and_runs [2 s]
+  Passed TabStudio.App.Tests.ViewModels.WindowsFormsAppTests.An_exception_a_click_handler_does_not_handle_ends_the_app_and_not_the_IDE [958 ms]
+  Passed TabStudio.App.Tests.ViewModels.WindowsFormsAppTests.SimplePaint_draws_mouse_strokes_on_its_bitmap_and_saves_them_as_a_PNG [2 s]
+Total tests: 4
+     Passed: 4
+ Total time: 13.9643 Seconds
