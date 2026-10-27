@@ -32,7 +32,13 @@ public static class UsbBridgeProcess
         var spec = WithConnection(connection, command);
         var environment = new Dictionary<string, string?>(spec.Environment);
         environment.TryGetValue("LD_PRELOAD", out var previous);
-        environment["LD_PRELOAD"] = UsbBridgeInstallation.ToolsDirectory + "/libusb-fd.so" + (string.IsNullOrEmpty(previous) ? string.Empty : ":" + previous);
+        var preload = UsbBridgeInstallation.ToolsDirectory + "/libusb-fd.so";
+        // Alpine links OpenOCD's HID driver to hidapi-hidraw by default. Both
+        // backends ship in the same signed hidapi package with the same public
+        // ABI. Preloading libusb's backend redirects every hid_* entry point,
+        // so CMSIS-DAP v1 reaches the already permissioned libusb view.
+        if (Path.GetFileName(command.Program) == "openocd") preload += ":libhidapi-libusb.so.0";
+        environment["LD_PRELOAD"] = preload + (string.IsNullOrEmpty(previous) ? string.Empty : ":" + previous);
         return spec with { Environment = environment };
     }
 

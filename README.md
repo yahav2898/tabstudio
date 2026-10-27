@@ -290,21 +290,28 @@ Native Android deployment of Flutter apps through the Android SDK toolchain is n
 
 - **Open native firmware projects.** PlatformIO, Arduino sketches and library examples, generated STM32Cube
   builds, ESP-IDF, Zephyr, Pico SDK and embedded Rust use their own build systems. The Toolchain Store adds
-  ARM/RISC-V/AVR GCC, pinned PlatformIO Core and Arduino CLI; board cores and SDKs remain separate prerequisites.
+  ARM/RISC-V/AVR GCC, pinned PlatformIO Core and Arduino CLI, with native glibc recipes for ESP-IDF, Zephyr,
+  Pico SDK and embedded Rust. Third-party board cores retain their own dependencies.
 - **Use Android's granted USB device.** Reused PIC USB drivers, a libusb descriptor bridge and a serial PTY/control
-  bridge let compatible upstream tools upload and verify application firmware. OpenOCD with GDB's DAP adapter
-  provides the on-chip debug route. Stock nusb/hidraw programs need further integration.
+  bridge let compatible upstream tools upload and verify application firmware. A separate permissioned usbfs
+  bridge supports stock nusb clients. Official probe-rs DAP and the OpenOCD/GDB fallback use the existing debugger;
+  OpenOCD selects a libusb HIDAPI backend for compatible HID probes.
 - **Choose the bootloader you use.** Typed routes cover WCH ROM ISP, MSP430, Nordic SDK Secure DFU application
-  packages and AVR UART UPDI. UPDI reuses pinned pymcuprog support; other routes need their compatible upstream
-  tool installed. Teensy HalfKay reports transfer completion with readback unavailable and is excluded from
+  packages and AVR UART UPDI. Profiles automatically install pinned native esptool/picotool distributions or
+  source-built BOSSA, Teensy, WCH and MSPDebug clients. UPDI reuses pinned pymcuprog support; legacy Nordic DFU
+  still requires a separately installed compatible CLI. Teensy HalfKay reports transfer completion with readback unavailable and is excluded from
   verified production batches. Physical hardware remains unverified.
+- **Copy BOOTSEL firmware without mounting a disk.** A permissioned USB storage worker and user-space FAT
+  driver submit family-checked RP2040/RP2350 UF2 files. USB/file acceptance is kept distinct from flash verification.
 - **Keep evidence from real work.** Read application flash twice before saving a backup, compare dumps, program
   an explicitly selected batch with per-board verification/logs, or upload to an ArduinoOTA-capable Wi-Fi board.
 - **Understand the firmware.** Linked-ELF memory treemaps and build-size changes, crash decoding with matching
-  symbols, conservative stack budgets, pin checks, SVD register inspection and verified mask quick fixes. Host
-  tests and imported board test results appear in Test Explorer; mpremote opens the board REPL and verifies file sync.
+  symbols, conservative stack budgets, pin checks, SVD register inspection and verified mask quick fixes. Native
+  RTT/defmt logs stream into Output; static memory and disassembly snapshots use the paused debugger. Host
+  tests, probe-rs board-test runs with flash verification and imported board results appear in Test Explorer; mpremote opens the
+  board REPL and verifies file sync. Board-test flash/RTT acquisition remains hardware-unverified.
 - **Review the actual coverage.** Templates and synthetic/emulator tests do not verify physical boards. SDK
-  installation, unsupported programmer routes, RTT/defmt acquisition and hardware checks still have gaps. The
+  package compatibility, unsupported programmer routes, RTT/defmt acquisition and hardware checks still have gaps. The
   [embedded guide](docs/features/embedded.md) lists every route, its verification evidence and its limits.
 
 ### GitHub

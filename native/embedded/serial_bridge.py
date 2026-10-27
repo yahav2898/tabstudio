@@ -212,7 +212,10 @@ class SerialBridge:
                 values = self.dispatch(request)
                 status = 0
             except (OSError, ValueError, struct.error) as error:
-                status, values = getattr(error, "errno", None) or errno.EINVAL, [0, 0, 0, 0]
+                status = getattr(error, "errno", None) or (errno.EIO if isinstance(error, OSError) else errno.EINVAL)
+                values = [0, 0, 0, 0]
+                if isinstance(error, OSError):
+                    print("USB serial control failed: " + str(error), file=sys.stderr, flush=True)
             with contextlib.suppress(OSError):
                 os.write(self.response, RESPONSE.pack(status, token, *values))
 

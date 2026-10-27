@@ -233,6 +233,8 @@ int ioctl(int fd, request_t request, ...) {
     va_end(args);
     if (!serial_fd(fd)) return native_ioctl(fd, request, argument);
     uint32_t values[4];
+    /* musl declares ioctl request as signed int; Linux encodes direction in bit 31. */
+    const uint32_t request_code = (uint32_t)request;
     if (request == TIOCMGET) {
         if (!argument) { errno = EFAULT; return -1; }
         if (rpc(TS_MODEM, 0, 0, 0, 0, values) < 0) return -1;
@@ -252,34 +254,34 @@ int ioctl(int fd, request_t request, ...) {
         return rpc(TS_BREAK, 1, argument ? (uint32_t)argument * 100 : 250, 0, 0, NULL);
     }
     if (request == TCFLSH) return rpc(TS_FLUSH, (uint32_t)argument, 0, 0, 0, NULL);
-    if (request == TCGETS || (unsigned long)request == TS_TCGETS2) {
+    if (request == TCGETS || request_code == (uint32_t)TS_TCGETS2) {
         if (!argument) { errno = EFAULT; return -1; }
         if (native_ioctl(fd, TCGETS, argument) < 0 || rpc(TS_GET_CONFIG, 0, 0, 0, 0, values) < 0) return -1;
         struct ts_termios *term = (void *)argument;
         term->cflag = (uint32_t)coding(term->cflag, values[1], values[2], values[3]);
         term->cflag = (term->cflag & ~CBAUD) | baud_code(values[0]);
-        if ((unsigned long)request == TS_TCGETS2) {
+        if (request_code == (uint32_t)TS_TCGETS2) {
             struct ts_termios2 *term2 = (void *)argument;
             term2->ispeed = term2->ospeed = values[0];
         }
         return 0;
     }
     if (request == TCSETS || request == TCSETSW || request == TCSETSF ||
-        (unsigned long)request == TS_TCSETS2 || (unsigned long)request == TS_TCSETSW2 || (unsigned long)request == TS_TCSETSF2) {
+        request_code == (uint32_t)TS_TCSETS2 || request_code == (uint32_t)TS_TCSETSW2 || request_code == (uint32_t)TS_TCSETSF2) {
         if (!argument) { errno = EFAULT; return -1; }
         const struct ts_termios *term = (void *)argument;
         uint32_t baud = baud_value(term->cflag & CBAUD);
         if ((term->cflag & CBAUD) == TS_BOTHER) {
-            if ((unsigned long)request != TS_TCSETS2 && (unsigned long)request != TS_TCSETSW2 && (unsigned long)request != TS_TCSETSF2) { errno = EINVAL; return -1; }
+            if (request_code != (uint32_t)TS_TCSETS2 && request_code != (uint32_t)TS_TCSETSW2 && request_code != (uint32_t)TS_TCSETSF2) { errno = EINVAL; return -1; }
             const struct ts_termios2 *term2 = (void *)argument;
             baud = term2->ospeed;
             if (term2->ispeed && term2->ispeed != baud) { errno = ENOTSUP; return -1; }
         }
-        if (request != TCSETS && (unsigned long)request != TS_TCSETS2 && rpc(TS_DRAIN, 0, 0, 0, 0, NULL) < 0) return -1;
+        if (request != TCSETS && request_code != (uint32_t)TS_TCSETS2 && rpc(TS_DRAIN, 0, 0, 0, 0, NULL) < 0) return -1;
         if (configure(term->cflag, baud) < 0) return -1;
         struct ts_termios local = *term;
         local.cflag = ((uint32_t)coding(local.cflag, 8, 1, 0) & ~CBAUD) | B38400 | CLOCAL | CREAD;
-        request_t local_request = (request == TCSETSF || (unsigned long)request == TS_TCSETSF2) ? TCSETSF : TCSETS;
+        request_t local_request = (request == TCSETSF || request_code == (uint32_t)TS_TCSETSF2) ? TCSETSF : TCSETS;
         return native_ioctl(fd, local_request, (uintptr_t)&local);
     }
     return native_ioctl(fd, request, argument);

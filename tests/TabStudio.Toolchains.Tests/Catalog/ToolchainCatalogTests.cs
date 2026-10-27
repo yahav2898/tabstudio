@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using TabStudio.Toolchains.Catalog;
+using TabStudio.Toolchains.Embedded.Installation;
+using TabStudio.Toolchains.Installation;
 
 namespace TabStudio.Toolchains.Tests.Catalog;
 
@@ -12,7 +14,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void Describes_languages_flutter_and_the_separately_licensed_pic_compilers()
     {
-        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "kotlin", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "esp-idf", "zephyr", "pico-sdk", "micropython", "embedded-import", "embedded-debug", "probe-rs"], Catalog.Toolchains.Select(t => t.Id));
+        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "kotlin", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "esp-idf", "zephyr", "pico-sdk", "micropython", "embedded-import", "embedded-debug", "probe-rs", "embedded-esptool", "embedded-picotool", "embedded-bossac", "embedded-teensy", "embedded-wchisp", "embedded-mspdebug", "embedded-rust"], Catalog.Toolchains.Select(t => t.Id));
         var languages = Catalog.Toolchains.SelectMany(t => t.Languages).ToHashSet();
         Assert.Superset(new HashSet<string> { "Python", "JavaScript", "TypeScript", "C", "C++", "Rust", "Go", "Java", "Kotlin", "Dart" }, languages);
     }
@@ -20,7 +22,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void The_store_lists_the_finished_toolchains()
     {
-        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "micropython", "embedded-debug", "probe-rs"], Catalog.Listed.Select(t => t.Id));
+        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "micropython", "embedded-debug", "probe-rs", "embedded-esptool", "embedded-picotool", "embedded-bossac", "embedded-teensy", "embedded-wchisp", "embedded-mspdebug"], Catalog.Listed.Select(t => t.Id));
         Assert.Equal("jdtls", Catalog.Find("android")!.LanguageServer!.Id);
         Assert.Contains("kotlin-language-server", Catalog.Find("android")!.AdditionalToolIds);
     }
@@ -41,7 +43,34 @@ public sealed class ToolchainCatalogTests
                 Assert.Null(toolchain.Run);
                 continue;
             }
-            if (toolchain.Id != "flutter")
+            var sdk = EmbeddedSdkBootstrap.Recipes.Get(toolchain.Id);
+            if (sdk is not null)
+            {
+                // Native firmware SDKs are configured by the production installer and build planner;
+                // they must never invent a host command that executes the cross-compiled ELF.
+                Assert.True(EmbeddedGlibcToolchainInstaller.Handles(toolchain.Id));
+                Assert.Matches("^[0-9a-f]{40}$", sdk.Revision);
+                Assert.Equal("https", sdk.Repository.Scheme);
+                Assert.NotEmpty(sdk.Packages);
+                Assert.NotEmpty(sdk.Commands);
+                Assert.All(sdk.Commands, command => Assert.False(string.IsNullOrWhiteSpace(command.Program)));
+                Assert.Equal("2", EmbeddedSdkBootstrap.Environment(toolchain.Id)[EmbeddedSdkBootstrap.JobsVariable]);
+                Assert.False(toolchain.SourceFolderIsProject);
+                if (!sdk.CheckoutSource)
+                {
+                    var archives = sdk.Setup.Select(step => step.Archive).OfType<ArchiveDefinition>().ToArray();
+                    Assert.NotEmpty(archives);
+                    Assert.All(archives, archive =>
+                    {
+                        Assert.Equal("https", archive.Url.Scheme);
+                        Assert.Matches("^[0-9a-f]{64}$", archive.Sha256);
+                    });
+                    Assert.NotEmpty(sdk.RequiredArtifacts);
+                    Assert.Empty(toolchain.Run!.File);
+                    Assert.Empty(toolchain.Run.Entries);
+                }
+            }
+            else if (toolchain.Id != "flutter")
             {
                 // Flutter installs into its own Ubuntu environment instead of from Alpine packages.
                 Assert.NotEmpty(toolchain.Packages);
@@ -49,12 +78,15 @@ public sealed class ToolchainCatalogTests
             }
             Assert.NotEmpty(toolchain.FileExtensions);
             Assert.All(toolchain.FileExtensions, e => Assert.StartsWith(".", e, StringComparison.Ordinal));
-            Assert.NotEmpty(toolchain.ProjectFiles);
             Assert.NotNull(toolchain.Run);
-            Assert.NotEmpty(toolchain.Run.File);
-            Assert.Contains(toolchain.Run.File, a => a.Contains("{file}", StringComparison.Ordinal));
-            Assert.NotEmpty(toolchain.Run.Entries);
-            Assert.All(toolchain.Run.Entries, e => Assert.NotEmpty(e.Command));
+            if (sdk is null)
+            {
+                Assert.NotEmpty(toolchain.ProjectFiles);
+                Assert.NotEmpty(toolchain.Run.File);
+                Assert.Contains(toolchain.Run.File, a => a.Contains("{file}", StringComparison.Ordinal));
+                Assert.NotEmpty(toolchain.Run.Entries);
+                Assert.All(toolchain.Run.Entries, e => Assert.NotEmpty(e.Command));
+            }
             Assert.NotNull(toolchain.Host);
             Assert.NotEmpty(toolchain.Host.Commands);
             Assert.NotNull(toolchain.LanguageServer);
@@ -68,7 +100,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void General_purpose_language_toolchains_have_a_debug_adapter()
     {
-        foreach (var toolchain in Catalog.Listed.Where(t => t.Id is not ("android" or "xc32" or "embedded-arm" or "embedded-riscv" or "embedded-avr" or "embedded-support" or "platformio" or "arduino" or "micropython" or "embedded-debug")))
+        foreach (var toolchain in Catalog.Listed.Where(t => !t.Auxiliary && t.Id is not ("android" or "xc32" or "embedded-arm" or "embedded-riscv" or "embedded-avr" or "embedded-support" or "platformio" or "arduino" or "micropython" or "embedded-debug")))
         {
             Assert.NotNull(toolchain.DebugAdapter);
             Assert.NotEmpty(toolchain.DebugAdapter.Command);

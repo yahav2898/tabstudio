@@ -96,6 +96,7 @@ public sealed class ProjectsTests
         var options = new EmbeddedBuildOptions { Board = "arduino:avr:uno", Port = "/dev/ttyUSB0" };
         var plan = EmbeddedBuildPlanner.Plan(project, options);
         Assert.Equal("arduino-cli", Assert.Single(plan.Build).Program);
+        Assert.Contains("--jobs", Assert.Single(plan.Build).Arguments);
         Assert.Contains("--only-compilation-database", Assert.Single(plan.Preparation).Arguments);
         Assert.Contains("--input-dir", Assert.Single(plan.Upload).Arguments);
         Assert.EndsWith("compile_commands.json", plan.CompilationDatabase, StringComparison.Ordinal);
@@ -120,8 +121,9 @@ public sealed class ProjectsTests
         temp.Write("sdkconfig", "CONFIG_IDF_TARGET=\"esp32c3\"\n");
         var project = EmbeddedProjectDetector.Read(temp.Path)!;
         Assert.Equal("esp32c3", project.Target);
-        var plan = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { Port = "/dev/ttyACM0" });
+        var plan = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { Port = "/dev/ttyACM0", Jobs = 3 });
         Assert.Contains("-DIDF_TARGET=esp32c3", Assert.Single(plan.Build).Arguments);
+        Assert.Equal("3", Assert.Single(plan.Build).Environment["TABSTUDIO_EMBEDDED_JOBS"]);
         Assert.Equal("flash", Assert.Single(plan.Upload).Arguments[^1]);
         Assert.Empty(plan.Preparation);
     }
@@ -152,6 +154,8 @@ public sealed class ProjectsTests
             Board = "nrf5340dk/nrf5340/cpuapp", Runner = "openocd", Port = "granted-probe:1",
         });
         Assert.Contains("nrf5340dk/nrf5340/cpuapp", Assert.Single(plan.Build).Arguments);
+        Assert.Contains("--build-opt=-j2", Assert.Single(plan.Build).Arguments);
+        Assert.Contains("--pristine=auto", Assert.Single(plan.Build).Arguments);
         Assert.Equal(["flash", "--build-dir", Path.Combine(temp.Path, ".tabstudio", "embedded", "build"), "--runner", "openocd"], Assert.Single(plan.Upload).Arguments);
     }
 
@@ -178,6 +182,7 @@ public sealed class ProjectsTests
         Assert.Equal(EmbeddedProjectKind.Rust, project.Kind);
         Assert.Equal("thumbv7em-none-eabihf", project.Target);
         var plan = EmbeddedBuildPlanner.Plan(project);
+        Assert.Equal("embedded-rust", plan.ToolchainId);
         Assert.Contains("thumbv7em-none-eabihf", Assert.Single(plan.Build).Arguments);
         Assert.Empty(plan.Upload);
         Assert.DoesNotContain("run", plan.Build[0].Arguments);
@@ -271,5 +276,36 @@ public sealed class ProjectsTests
         var plan = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { Port = "/dev/ttyUSB0" });
         Assert.DoesNotContain("--environment", Assert.Single(plan.Build).Arguments);
         Assert.Empty(plan.Upload);
+    }
+
+    [Fact]
+    public void Cube_presets_preserve_vendor_toolchain_settings_and_ignore_checked_in_host_caches()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("blink.ioc", "Mcu.Name=STM32F401RE\n");
+        temp.Write("CMakeLists.txt", "project(blink C)\n");
+        temp.Write("CMakePresets.json", """
+            {"version":3,"configurePresets":[
+              {"name":"default","hidden":true,"toolchainFile":"${sourceDir}/cmake/gcc-arm-none-eabi.cmake"},
+              {"name":"Debug","inherits":"default"},{"name":"Release","inherits":"default"}]}
+            """);
+        temp.Write("build/Debug/CMakeCache.txt", "CMAKE_HOME_DIRECTORY:INTERNAL=C:/old-machine/blink\n");
+        var plan = EmbeddedBuildPlanner.Plan(EmbeddedProjectDetector.Read(temp.Path)!);
+        var configure = Assert.Single(plan.Preparation);
+        Assert.Equal(["--preset", "Debug", "-S", temp.Path, "-B", temp.Resolve(".tabstudio/embedded/build"), "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], configure.Arguments);
+        Assert.Equal("cmake", Assert.Single(plan.Build).Program);
+    }
+
+    [Fact]
+    public void Multiple_board_specific_CMake_presets_require_explicit_selection_and_keep_native_inheritance()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("CMakeLists.txt", "include(pico_sdk_import.cmake)\n");
+        temp.Write("CMakePresets.json", """{"version":3,"configurePresets":[{"name":"pico"},{"name":"pico2"}]}""");
+        var project = EmbeddedProjectDetector.Read(temp.Path)!;
+        Assert.Empty(EmbeddedBuildPlanner.Plan(project).Build);
+        var plan = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { Environment = "pico2" });
+        Assert.Equal("pico2", Assert.Single(plan.Preparation).Arguments[1]);
+        Assert.DoesNotContain(Assert.Single(plan.Preparation).Arguments, argument => argument.StartsWith("-DPICO_BOARD=", StringComparison.Ordinal));
     }
 }

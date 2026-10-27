@@ -250,7 +250,9 @@
               <MenuItem Header="_Board and build configuration…" Command="{Binding ConfigureEmbeddedCommand}" />
               <MenuItem Header="_Build firmware" Command="{Binding BuildEmbeddedCommand}" />
               <MenuItem Header="_Upload and verify" Command="{Binding UploadEmbeddedCommand}" />
+              <MenuItem Header="Upload UF2 to _BOOTSEL storage" Command="{Binding UploadUf2StorageCommand}" />
               <MenuItem Header="Debug on _chip…" Command="{Binding DebugEmbeddedChipCommand}" />
+              <MenuItem Header="RTT and _defmt logs" Command="{Binding StartEmbeddedLogsCommand}" />
               <MenuItem Header="Upload over _Wi-Fi…" Command="{Binding UploadEmbeddedOtaCommand}" />
               <MenuItem Header="_Production batch…" Command="{Binding ProductionFlashEmbeddedCommand}" />
               <MenuItem Header="_Backup firmware…" Command="{Binding BackupEmbeddedFirmwareCommand}" />
@@ -264,10 +266,13 @@
               <MenuItem Header="Load CMSIS-_SVD…" Command="{Binding LoadEmbeddedSvdCommand}" />
               <MenuItem Header="Load register _header…" Command="{Binding LoadEmbeddedRegisterHeaderCommand}" />
               <MenuItem Header="Inspect _peripheral register…" Command="{Binding InspectEmbeddedRegisterCommand}" />
+              <MenuItem Header="Read target _memory…" Command="{Binding ReadEmbeddedMemoryCommand}" />
+              <MenuItem Header="_Disassembly…" Command="{Binding DisassembleEmbeddedCommand}" />
               <MenuItem Header="Edit register _field…" Command="{Binding EditEmbeddedRegisterFieldCommand}" />
               <MenuItem Header="RTOS _threads" Command="{Binding ShowEmbeddedRtosThreadsCommand}" />
               <MenuItem Header="Check _pin conflicts" Command="{Binding CheckEmbeddedPinsCommand}" />
               <MenuItem Header="Run embedded _tests" Command="{Binding RunEmbeddedTestsCommand}" />
+              <MenuItem Header="Run tests on _board" Command="{Binding RunEmbeddedBoardTestsCommand}" />
               <MenuItem Header="Import test _results…" Command="{Binding ImportEmbeddedTestResultsCommand}" />
               <MenuItem Header="MicroPython _REPL" Command="{Binding OpenMicroPythonReplCommand}" />
               <MenuItem Header="Sync active Python _file" Command="{Binding SyncMicroPythonFileCommand}" />

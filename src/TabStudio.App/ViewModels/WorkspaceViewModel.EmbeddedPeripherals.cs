@@ -158,7 +158,9 @@ public sealed partial class WorkspaceViewModel
         try
         {
             using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            var value = await ReadPeripheralRegisterAsync(adapter, entry.Register, timeout.Token);
+            var epoch = Volatile.Read(ref _adapterPauses);
+            var value = await ReadPeripheralRegisterAsync(adapter, entry.Register, epoch, timeout.Token);
+            EnsureEmbeddedInspectionPaused(adapter, epoch);
             Output.WriteLine($"{entry.Peripheral.Name}.{entry.Register.Name} = 0x{value:X}", OutputKind.Info);
             foreach (var field in entry.Register.Fields)
             {
@@ -182,12 +184,15 @@ public sealed partial class WorkspaceViewModel
             StatusText = "Load the selected device's SVD and pause its embedded debug adapter first.";
             return;
         }
+        var epoch = Volatile.Read(ref _adapterPauses);
         var fieldIndex = await Prompt.ChooseAsync("Edit register field", "Choose an ordinary writable field. Read/write side effects and configuration registers are refused.", "Select", entry.Register.Fields.Select(f => f.Name + " — " + f.Description).ToArray());
         if (fieldIndex is null || fieldIndex < 0 || fieldIndex >= entry.Register.Fields.Count) return;
         var field = entry.Register.Fields[fieldIndex.Value];
         await _peripheralOperation.WaitAsync();
+        var writeRequested = false;
         try
         {
+            EnsureEmbeddedInspectionPaused(adapter, epoch);
             var mapFile = Path.Combine(workspace.RootDirectory, ".tabstudio", "peripheral-access.json");
             if (!File.Exists(mapFile)) throw new InvalidOperationException("Register writes require the reviewed device/register/address allowlist in .tabstudio/peripheral-access.json. SVD metadata never grants write permission.");
             if (new FileInfo(mapFile).Length > 256 * 1024) throw new InvalidDataException("Peripheral access map exceeds 256 KiB.");
@@ -198,19 +203,21 @@ public sealed partial class WorkspaceViewModel
             if (input is null) return;
             var requested = ParsePeripheralUnsigned(input);
             using var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(2));
-            var current = await ReadPeripheralRegisterAsync(adapter, entry.Register, timeout.Token);
+            var current = await ReadPeripheralRegisterAsync(adapter, entry.Register, epoch, timeout.Token);
             var write = RegisterAccess.CreateFieldWrite(entry.Register, field, requested, current);
             var confirmation = $"WRITE {device.Name} {entry.Peripheral.Name}.{entry.Register.Name}.{field.Name} @ 0x{write.Address:X}: 0x{current:X} -> 0x{write.Value:X}";
             var typed = await Prompt.AskAsync("Confirm ordinary peripheral write", confirmation + "\nType this exact operation to apply it to the halted target:", "Write", "");
             if (typed != confirmation) return;
-            EnsurePeripheralTargetPaused(adapter);
-            if (await ReadPeripheralRegisterAsync(adapter, entry.Register, timeout.Token) != current)
+            EnsureEmbeddedInspectionPaused(adapter, epoch);
+            if (await ReadPeripheralRegisterAsync(adapter, entry.Register, epoch, timeout.Token) != current)
                 throw new InvalidOperationException("The register changed while confirmation was open. Inspect and review it again.");
             var bytes = new byte[write.SizeBits / 8];
             for (var i = 0; i < bytes.Length; i++) bytes[i] = (byte)(write.Value >> (8 * i));
-            EnsurePeripheralTargetPaused(adapter);
+            EnsureEmbeddedInspectionPaused(adapter, epoch);
+            writeRequested = true;
             await adapter.WriteMemoryAsync(write.Address, bytes, timeout.Token);
-            var verified = await ReadPeripheralRegisterAsync(adapter, entry.Register, timeout.Token);
+            EnsureEmbeddedInspectionPaused(adapter, epoch);
+            var verified = await ReadPeripheralRegisterAsync(adapter, entry.Register, epoch, timeout.Token);
             if (verified != write.Value) throw new InvalidDataException($"Register readback 0x{verified:X} did not match 0x{write.Value:X}. The write was sent; inspect before retrying.");
             ShowOutputSource(Output);
             Output.WriteLine(confirmation + " — readback verified", OutputKind.Info);
@@ -218,7 +225,7 @@ public sealed partial class WorkspaceViewModel
         }
         catch (Exception error) when (error is IOException or UnauthorizedAccessException or InvalidOperationException or JsonException or FormatException or OverflowException or DebugAdapterException or OperationCanceledException or KeyNotFoundException)
         {
-            StatusText = "Register write: " + error.Message;
+            StatusText = "Register write: " + error.Message + (writeRequested ? " A write request was sent; inspect the target before retrying." : "");
         }
         finally { _peripheralOperation.Release(); }
     }
@@ -236,7 +243,9 @@ public sealed partial class WorkspaceViewModel
         try
         {
             using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            var reader = new PeripheralRtosReader(this, adapter);
+            var epoch = Volatile.Read(ref _adapterPauses);
+            EnsureEmbeddedInspectionPaused(adapter, epoch);
+            var reader = new PeripheralRtosReader(this, adapter, epoch);
             var options = new RtosReadOptions();
             var optionsFile = Workspace is { } workspace ? Path.Combine(workspace.RootDirectory, ".tabstudio", "rtos.json") : null;
             if (optionsFile is not null && File.Exists(optionsFile))
@@ -249,6 +258,7 @@ public sealed partial class WorkspaceViewModel
             }
             var threads = kind == 0 ? await RtosThreadReader.ReadFreeRtosAsync(reader, options, timeout.Token)
                 : await RtosThreadReader.ReadZephyrAsync(reader, options, timeout.Token);
+            EnsureEmbeddedInspectionPaused(adapter, epoch);
             ShowOutputSource(Output);
             foreach (var thread in threads)
                 Output.WriteLine($"{thread.Name} @ 0x{thread.Address:X}: {thread.State}, priority {thread.Priority}; stack {(thread.StackBytes is { } size ? size + " B" : "unavailable")}; minimum unused stack {(thread.MinimumFreeStackBytes is { } unused ? unused + " B (verified fill-pattern scan)" : "unreported without verified initialization settings")}.", OutputKind.Info);
@@ -274,21 +284,16 @@ public sealed partial class WorkspaceViewModel
         return registerIndex is { } index && index >= 0 && index < peripheral.Registers.Count ? (peripheral, peripheral.Registers[index]) : null;
     }
 
-    private async Task<ulong> ReadPeripheralRegisterAsync(DebugAdapterSession adapter, SvdRegister register, CancellationToken cancellationToken)
+    private async Task<ulong> ReadPeripheralRegisterAsync(DebugAdapterSession adapter, SvdRegister register, int epoch, CancellationToken cancellationToken)
     {
-        EnsurePeripheralTargetPaused(adapter);
+        EnsureEmbeddedInspectionPaused(adapter, epoch);
         if (register.SizeBits is not (8 or 16 or 32 or 64)) throw new InvalidDataException("Register debug access requires an 8/16/32/64-bit width.");
         if (_embeddedSvd?.ByteOrder != "little") throw new InvalidDataException("This register view requires an explicitly little-endian SVD CPU description. Big/selectable/unspecified byte order needs a target-specific adapter.");
         var bytes = await adapter.ReadMemoryAsync(register.Address, register.SizeBits / 8, cancellationToken);
+        EnsureEmbeddedInspectionPaused(adapter, epoch);
         ulong value = 0;
         for (var i = 0; i < bytes.Length; i++) value |= (ulong)bytes[i] << (8 * i);
         return value;
-    }
-
-    private void EnsurePeripheralTargetPaused(DebugAdapterSession adapter)
-    {
-        if (!IsPaused || !ReferenceEquals(adapter, _adapter) || adapter.HasEnded)
-            throw new InvalidOperationException("The selected target is no longer halted in this debug session.");
     }
 
     private static ulong ParsePeripheralUnsigned(string text)
@@ -299,14 +304,15 @@ public sealed partial class WorkspaceViewModel
             : ulong.Parse(input, NumberStyles.None, CultureInfo.InvariantCulture);
     }
 
-    private sealed class PeripheralRtosReader(WorkspaceViewModel owner, DebugAdapterSession adapter) : IRtosDebugReader
+    private sealed class PeripheralRtosReader(WorkspaceViewModel owner, DebugAdapterSession adapter, int epoch) : IRtosDebugReader
     {
         public async Task<ulong> EvaluateUnsignedAsync(string expression, CancellationToken cancellationToken)
         {
-            owner.EnsurePeripheralTargetPaused(adapter);
+            owner.EnsureEmbeddedInspectionPaused(adapter, epoch);
             try
             {
                 var result = await adapter.EvaluateAsync(expression, null, DapEvaluateContext.Watch, cancellationToken);
+                owner.EnsureEmbeddedInspectionPaused(adapter, epoch);
                 var hexadecimal = Regex.Match(result.Result, @"\b0x[0-9a-fA-F]+", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
                 if (hexadecimal.Success) return ParsePeripheralUnsigned(hexadecimal.Value);
                 var number = Regex.Match(result.Result, @"^\s*(?:\([^)]*\)\s*)?(\d+)(?:\s|$)", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
@@ -316,10 +322,12 @@ public sealed partial class WorkspaceViewModel
             catch (DebugAdapterException error) { throw new NotSupportedException("Matching RTOS type/symbol information is unavailable: " + error.Message, error); }
         }
 
-        public Task<byte[]> ReadMemoryAsync(ulong address, int count, CancellationToken cancellationToken)
+        public async Task<byte[]> ReadMemoryAsync(ulong address, int count, CancellationToken cancellationToken)
         {
-            owner.EnsurePeripheralTargetPaused(adapter);
-            return adapter.ReadMemoryAsync(address, count, cancellationToken);
+            owner.EnsureEmbeddedInspectionPaused(adapter, epoch);
+            var bytes = await adapter.ReadMemoryAsync(address, count, cancellationToken);
+            owner.EnsureEmbeddedInspectionPaused(adapter, epoch);
+            return bytes;
         }
     }
 }

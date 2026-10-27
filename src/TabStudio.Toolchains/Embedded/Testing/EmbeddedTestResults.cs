@@ -61,7 +61,7 @@ public sealed class EmbeddedTestOutputParser
     private static readonly Regex TapPlan = new(@"^1\.\.(?<count>\d+)(?:\s*#\s*SKIP\b(?<reason>.*))?\s*$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase, RegexTimeout);
     private static readonly Regex RustLine = new(@"^test (?<name>.+?) \.\.\. (?<result>ok|FAILED|ignored)(?:, (?<message>.*))?$", RegexOptions.CultureInvariant, RegexTimeout);
     private static readonly Regex DefmtLine = new(@"(?:^|\s)\((?<index>\d+)/(?<count>\d+)\) (?<action>running|ignoring) `(?<name>[^`]+)`\.\.\.$", RegexOptions.CultureInvariant, RegexTimeout);
-    private static readonly Regex UnitySummary = new(@"^(?<count>\d+) Tests \d+ Failures \d+ Ignored$", RegexOptions.CultureInvariant, RegexTimeout);
+    private static readonly Regex UnitySummary = new(@"^(?<count>\d+) Tests (?<failed>\d+) Failures (?<skipped>\d+) Ignored$", RegexOptions.CultureInvariant, RegexTimeout);
     private static readonly Regex RustCount = new(@"^running (?<count>\d+) tests?$", RegexOptions.CultureInvariant, RegexTimeout);
     private readonly string _boardId;
     private readonly EmbeddedTestFormat _format;
@@ -76,6 +76,8 @@ public sealed class EmbeddedTestOutputParser
     private bool _badSequence;
     private int _rustBatchCount;
     private int _unityBatchCount;
+    private int _unityBatchFailed;
+    private int _unityBatchSkipped;
 
     /// <summary>Creates a parser for exactly one device or host stream.</summary>
     /// <param name="boardId">The device identity, stable for the test run.</param>
@@ -97,6 +99,9 @@ public sealed class EmbeddedTestOutputParser
 
     /// <summary>All observed results so far. An incomplete run must be finalized with <see cref="Complete"/>.</summary>
     public IReadOnlyList<EmbeddedTestResult> Results => _results;
+
+    /// <summary>Whether the harness explicitly emitted its final summary; process exit alone never sets this.</summary>
+    public bool HarnessCompleted => _harnessCompleted;
 
     /// <summary>Consumes one complete decoded line and returns only results added by that line.</summary>
     /// <param name="line">The decoded line without its newline.</param>
@@ -196,11 +201,15 @@ public sealed class EmbeddedTestOutputParser
             _harnessCompleted = true;
             _expected = int.TryParse(summary.Groups["count"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var count)
                 ? count : throw new InvalidDataException("Invalid Unity test count.");
-            if (_expected != _unityBatchCount)
+            if (_expected != _unityBatchCount
+                || !int.TryParse(summary.Groups["failed"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var failures) || failures != _unityBatchFailed
+                || !int.TryParse(summary.Groups["skipped"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var skipped) || skipped != _unityBatchSkipped)
             {
                 Add("[harness]", EmbeddedTestOutcome.Errored, "Unity's summary did not match the received individual results.");
             }
             _unityBatchCount = 0;
+            _unityBatchFailed = 0;
+            _unityBatchSkipped = 0;
             return;
         }
         var match = UnityLine.Match(line);
@@ -215,6 +224,8 @@ public sealed class EmbeddedTestOutputParser
             _ => EmbeddedTestOutcome.Skipped,
         };
         _unityBatchCount++;
+        _unityBatchFailed += outcome == EmbeddedTestOutcome.Failed ? 1 : 0;
+        _unityBatchSkipped += outcome == EmbeddedTestOutcome.Skipped ? 1 : 0;
         _harnessCompleted = false;
         var number = int.TryParse(match.Groups["line"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var parsed) && parsed > 0 ? (int?)parsed : null;
         _results.Add(new(_boardId, _format, match.Groups["name"].Value, outcome,

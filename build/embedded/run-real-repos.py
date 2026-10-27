@@ -71,6 +71,9 @@ class Runner:
         self.errors = 0
 
     def run(self, args: list[str], cwd: Path, env: dict | None = None, timeout: int = 1200, count_errors: bool = False) -> None:
+        env = dict(os.environ if env is None else env)
+        env.pop("PYTHONSAFEPATH", None)
+        env["PLATFORMIO_SETTING_ENABLE_TELEMETRY"] = "no"
         label = f"{len(self.steps) + 1:02d}-{Path(args[0]).name}"
         log = self.output / (label + ".log")
         started = time.monotonic()
@@ -144,7 +147,9 @@ class Runner:
         env = dict(os.environ)
         # Builds must not send PlatformIO analytics, including a first run before settings exist.
         env["PLATFORMIO_SETTING_ENABLE_TELEMETRY"] = "no"
-        env["PYTHONSAFEPATH"] = "1"
+        # Vendor SDK scripts import sibling modules from their script directories. Python safe-path
+        # mode is scoped to PlatformIO; applying it to ESP-IDF/Zephyr breaks their official scripts.
+        env.pop("PYTHONSAFEPATH", None)
         if kind == "platformio":
             # The upstream example names an unversioned registry platform. Use this exact checked-out
             # platform implementation instead; archive the explicit override and leave its sources intact.
@@ -184,11 +189,13 @@ class Runner:
             self.run(["bash", "-c", 'set -e; . "$IDF_PATH/export.sh"; exec python "$IDF_PATH/tools/idf.py" -C "$1" -B "$2" "-DIDF_TARGET=$3" build', "tabstudio-idf", str(project), str(build), e["target"]], repo, env, count_errors=True)
             self.require(build / "hello_world.elf")
         elif kind == "zephyr":
-            self.run([sys.executable, "-m", "pip", "install", "-r", str(repo / "scripts/requirements-base.txt")], repo)
+            locks = ROOT / "src/TabStudio.Toolchains/Embedded/Installation"
+            self.run([sys.executable, "-m", "pip", "install", "--require-hashes", "-r", str(locks / "zephyr-bootstrap.requirements.txt")], repo, env)
+            self.run([sys.executable, "-m", "pip", "install", "--require-hashes", "--no-build-isolation", "-r", str(locks / "zephyr.requirements.txt")], repo, env)
             self.run(["west", "init", "-l", str(repo)], self.work)
             self.run(["west", "update", "--narrow", "-o=--depth=1", "cmsis"], self.work)
             env.update(ZEPHYR_BASE=str(repo), ZEPHYR_TOOLCHAIN_VARIANT="cross-compile", CROSS_COMPILE=arm_cross_prefix(env))
-            self.run(["west", "build", "-b", e["board"], "-d", str(build), str(project), "--", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], self.work, env, count_errors=True)
+            self.run(["west", "build", "--build-opt=-j2", "-b", e["board"], "-d", str(build), str(project), "--", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], self.work, env, count_errors=True)
             self.require(build / "zephyr/zephyr.elf")
         elif kind == "rust":
             self.run(["rustup", "toolchain", "install", e["rust"], "--profile", "minimal", "--component", "rust-src", "--target", e["target"]], repo)

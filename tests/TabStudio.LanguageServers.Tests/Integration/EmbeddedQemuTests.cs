@@ -116,6 +116,15 @@ public sealed class EmbeddedQemuTests(ITestOutputHelper output)
             Assert.Contains("42", value.Result, StringComparison.Ordinal);
             var disassembly = await session.EvaluateAsync("x/4i $pc", frames[0].Id, DapEvaluateContext.Repl, cancellation);
             Assert.False(string.IsNullOrWhiteSpace(disassembly.Result));
+            Assert.True(session.Capabilities.Disassemble, "The real GDB DAP adapter must advertise native disassembly support.");
+            var pc = await session.EvaluateAsync("(unsigned long)$pc", frames[0].Id, DapEvaluateContext.Watch, cancellation);
+            var pcText = pc.Result.Trim();
+            var pcAddress = pcText.StartsWith("0x", StringComparison.OrdinalIgnoreCase)
+                ? ulong.Parse(pcText.AsSpan(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture)
+                : ulong.Parse(pcText, NumberStyles.None, CultureInfo.InvariantCulture);
+            var instructions = await session.DisassembleAsync(pcAddress, 4, cancellation);
+            Assert.Equal(4, instructions.Count);
+            Assert.Contains(instructions, instruction => !instruction.IsInvalid && !string.IsNullOrWhiteSpace(instruction.Instruction));
             if (architecture != "avr")
             {
                 var address = await session.EvaluateAsync("(unsigned long)&counter", frames[0].Id, DapEvaluateContext.Watch, cancellation);

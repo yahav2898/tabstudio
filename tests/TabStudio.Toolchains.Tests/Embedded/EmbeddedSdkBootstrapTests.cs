@@ -15,7 +15,7 @@ public sealed class EmbeddedSdkBootstrapTests
         Assert.Equal(program, command.Program);
         Assert.Equal([argument], command.Arguments);
         Assert.Equal("no", command.Environment["PLATFORMIO_SETTING_ENABLE_TELEMETRY"]);
-        Assert.Equal("1", command.Environment["PYTHONSAFEPATH"]);
+        Assert.DoesNotContain("PYTHONSAFEPATH", command.Environment.Keys);
     }
 
     [Fact]
@@ -27,5 +27,23 @@ public sealed class EmbeddedSdkBootstrapTests
         Assert.Contains("python -P -m platformio", launcher.Content, StringComparison.Ordinal);
         Assert.Contains("python3-venv", EmbeddedSdkBootstrap.BasePackages);
         Assert.Contains("libusb-1.0-0-dev", EmbeddedSdkBootstrap.BasePackages);
+    }
+
+    [Theory]
+    [InlineData("esp-idf")]
+    [InlineData("zephyr")]
+    [InlineData("pico-sdk")]
+    public void Native_SDKs_scope_their_compiler_job_limit_without_breaking_Python_sibling_imports(string id)
+    {
+        var environment = EmbeddedSdkBootstrap.Environment(id);
+        Assert.Equal("2", environment[EmbeddedSdkBootstrap.JobsVariable]);
+        Assert.StartsWith(EmbeddedSdkBootstrap.BuildToolsDirectory + ":", environment["PATH"], StringComparison.Ordinal);
+        Assert.DoesNotContain("PYTHONSAFEPATH", environment.Keys);
+        Assert.All(EmbeddedSdkBootstrap.BuildLimiters, file =>
+        {
+            Assert.True(file.Executable);
+            Assert.Contains("\"$@\" \"-j$jobs\"", file.Content, StringComparison.Ordinal);
+            Assert.DoesNotContain("eval", file.Content, StringComparison.Ordinal);
+        });
     }
 }

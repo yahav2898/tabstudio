@@ -52,7 +52,23 @@ public sealed partial class ProjectTemplates
             """ + "\n");
         File.WriteAllText(Path.Combine(root, ".gitignore"), ".pio/\n.tabstudio/\n");
         WriteKnownAvrFlashProfile(root, board.Id);
+        WriteEspMetadataFlashProfile(root, board.Id);
         return root;
+    }
+
+    private static void WriteEspMetadataFlashProfile(string root, string boardId)
+    {
+        if (boardId is not ("esp32" or "esp32s3" or "esp32c3")) return;
+        File.AppendAllText(Path.Combine(root, "platformio.ini"), "extra_scripts = post:tabstudio_esp_flash.py\n");
+        File.WriteAllText(Path.Combine(root, "tabstudio_esp_flash.py"), TabStudio.Toolchains.Embedded.Installation.EmbeddedFlashToolInstallation.PlatformIoEspExporterSource);
+        var metadata = ".pio/build/" + boardId + "/tabstudio-flasher-args.json";
+        var profile = new EmbeddedFlashRequest
+        {
+            Protocol = EmbeddedFlashProtocol.Esptool, Target = "FROM_METADATA", FirmwarePath = metadata,
+            EspFlasherArguments = metadata, WorkingDirectory = root, SerialPort = "/dev/ttyUSB0",
+        };
+        Directory.CreateDirectory(Path.Combine(root, ".tabstudio"));
+        File.WriteAllText(Path.Combine(root, ".tabstudio", "embedded-flash.json"), JsonSerializer.Serialize(profile, AvrFlashJson) + "\n");
     }
 
     private static void WriteKnownAvrFlashProfile(string root, string boardId)

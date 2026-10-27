@@ -1,4 +1,5 @@
 using TabStudio.Toolchains.Embedded.Projects;
+using TabStudio.Toolchains.Embedded.Installation;
 using TabStudio.Toolchains.Processes;
 
 namespace TabStudio.Toolchains.Runtimes;
@@ -53,6 +54,24 @@ public sealed class EmbeddedGlibcRuntime(IToolchainRuntime primary, IToolchainRu
         {
             return "embedded-picotool";
         }
+        if (command == "idf.py" || command.StartsWith("/opt/tabstudio/esp-idf/", StringComparison.Ordinal)
+            || command.StartsWith("/opt/tabstudio/esp-idf-tools/", StringComparison.Ordinal))
+        {
+            return "esp-idf";
+        }
+        if (command == "west" || command.StartsWith("/opt/tabstudio/zephyr-workspace/", StringComparison.Ordinal)
+            || command.StartsWith("/opt/tabstudio/zephyr-python/", StringComparison.Ordinal))
+        {
+            return "zephyr";
+        }
+        if (command.StartsWith("/opt/tabstudio/pico-sdk/", StringComparison.Ordinal))
+        {
+            return "pico-sdk";
+        }
+        if (command.StartsWith("/opt/tabstudio/embedded-rust/", StringComparison.Ordinal))
+        {
+            return "embedded-rust";
+        }
         return null;
     }
 
@@ -86,14 +105,25 @@ public sealed class EmbeddedGlibcRuntime(IToolchainRuntime primary, IToolchainRu
         {
             [RoutingMarker] = "1",
             ["PLATFORMIO_SETTING_ENABLE_TELEMETRY"] = "no",
-            ["PYTHONSAFEPATH"] = "1",
         };
+        foreach (var entry in EmbeddedSdkBootstrap.Environment(id ?? "embedded"))
+        {
+            environment.TryAdd(entry.Key, entry.Value);
+        }
+        EmbeddedSdkBootstrap.ApplyBuildLimits(id ?? "embedded", environment);
         if (IsClangd(spec.Program))
         {
             Volatile.Write(ref _clangdDirectory, spec.WorkingDirectory);
         }
         // The original inherited descriptors, private USB inventory and PTY mounts are retained unchanged.
-        return embedded.Start(spec with { Environment = environment });
+        var program = id == "embedded-rust" && IsRustTool(spec.Program)
+            ? "/opt/tabstudio/embedded-rust/bin/" + Path.GetFileName(spec.Program) : spec.Program;
+        var routed = spec with { Program = program, Environment = environment };
+        if (id == "platformio" && environment.GetValueOrDefault(EmbeddedBox64Installation.Marker) == "1")
+        {
+            routed = EmbeddedBox64Installation.Wrap(routed);
+        }
+        return embedded.Start(routed);
     }
 
     /// <inheritdoc />
@@ -111,6 +141,21 @@ public sealed class EmbeddedGlibcRuntime(IToolchainRuntime primary, IToolchainRu
     }
 
     /// <inheritdoc />
+    public string? ResolveForDirectory(string command, string workingDirectory)
+    {
+        ArgumentNullException.ThrowIfNull(command);
+        ArgumentException.ThrowIfNullOrWhiteSpace(workingDirectory);
+        var id = ToolchainForSpec(new ProcessStartSpec { Program = command, WorkingDirectory = workingDirectory });
+        if (id is null)
+        {
+            return primary.ResolveForDirectory(command, workingDirectory);
+        }
+        var program = id == "embedded-rust" && IsRustTool(command)
+            ? "/opt/tabstudio/embedded-rust/bin/" + Path.GetFileName(command) : command;
+        return isBaseReady() && isReady(id) ? embedded.Resolve(program) : null;
+    }
+
+    /// <inheritdoc />
     public ProcessStartSpec Shell(string workingDirectory, TerminalSize size) => primary.Shell(workingDirectory, size);
 
     /// <inheritdoc />
@@ -124,9 +169,13 @@ public sealed class EmbeddedGlibcRuntime(IToolchainRuntime primary, IToolchainRu
     public string? ToDevicePath(string programPath, string? workingDirectory)
     {
         var context = workingDirectory ?? Volatile.Read(ref _clangdDirectory);
-        if (ToolchainForCommand(programPath) is not null || isBaseReady() && context is not null && OwningProject(context) is not null)
+        if (ToolchainForCommand(programPath) is not null)
         {
             return embedded.ToDevicePath(programPath, workingDirectory);
+        }
+        if (isBaseReady() && context is not null && OwningProject(context) is not null)
+        {
+            return embedded.ToDevicePath(programPath, workingDirectory) ?? primary.ToDevicePath(programPath, workingDirectory);
         }
         return primary.ToDevicePath(programPath, workingDirectory)
             ?? (isBaseReady() ? embedded.ToDevicePath(programPath, workingDirectory) : null);
@@ -146,26 +195,40 @@ public sealed class EmbeddedGlibcRuntime(IToolchainRuntime primary, IToolchainRu
                 return ToolchainForCommand(spec.Arguments[separator + 1]);
             }
         }
-        if (IsClangd(spec.Program) && spec.WorkingDirectory is { } directory)
+        if ((IsClangd(spec.Program) || Path.GetFileName(spec.Program) is "cmake" or "ninja" or "make")
+            && spec.WorkingDirectory is { } directory)
         {
             return OwningProject(directory);
+        }
+        if (IsRustTool(spec.Program)
+            && spec.WorkingDirectory is { } rustDirectory && OwningProject(rustDirectory) == "embedded-rust")
+        {
+            return "embedded-rust";
         }
         return null;
     }
 
     private static bool IsClangd(string command) => command is "clangd" or "/usr/bin/clangd" or "/usr/local/bin/clangd";
 
+    private static bool IsRustTool(string command)
+    {
+        if (command.StartsWith("/usr/local/bin/", StringComparison.Ordinal)) command = command[15..];
+        else if (command.StartsWith("/usr/bin/", StringComparison.Ordinal)) command = command[9..];
+        return command is "cargo" or "rustc" or "rust-analyzer" or "rustfmt" or "cargo-fmt" or "cargo-clippy" or "clippy-driver";
+    }
+
     private static string? OwningProject(string directory)
     {
         try
         {
-            var current = Path.GetFullPath(directory);
+            string? current = Path.GetFullPath(directory);
             for (var depth = 0; depth < 12 && current is not null; depth++, current = Path.GetDirectoryName(current))
             {
                 var kind = EmbeddedProjectDetector.Read(current)?.Kind;
-                if (kind is EmbeddedProjectKind.PlatformIO or EmbeddedProjectKind.Arduino)
+                if (kind is EmbeddedProjectKind.PlatformIO or EmbeddedProjectKind.Arduino or EmbeddedProjectKind.EspIdf
+                    or EmbeddedProjectKind.Zephyr or EmbeddedProjectKind.PicoSdk or EmbeddedProjectKind.Rust)
                 {
-                    return kind == EmbeddedProjectKind.PlatformIO ? "platformio" : "arduino";
+                    return EmbeddedBuildPlanner.ToolchainId(kind.Value);
                 }
                 if (Directory.Exists(Path.Combine(current, ".git")) || File.Exists(Path.Combine(current, ".git")))
                 {

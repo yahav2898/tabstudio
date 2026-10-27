@@ -11,7 +11,7 @@ public static class UsbBridgeInstallation
     public const string ToolsDirectory = "/opt/tabstudio/embedded";
 
     /// <summary>Packages from signed Alpine indexes needed to compile and run the bridges.</summary>
-    public static IReadOnlyList<string> Packages { get; } = ["python3", "libusb", "libusb-compat", "libusb-dev", "build-base"];
+    public static IReadOnlyList<string> Packages { get; } = ["python3", "libusb", "libusb-compat", "libusb-dev", "hidapi", "build-base"];
 
     /// <summary>Sources copied from the APK, reusing the existing permissioned PIC drivers.</summary>
     public static IReadOnlyDictionary<string, string> SupportFiles => new Dictionary<string, string>
@@ -20,8 +20,11 @@ public static class UsbBridgeInstallation
         ["usb_device.py"] = MicrochipInstallation.Resource("usb_device.py"),
         ["usb_serial.py"] = MicrochipInstallation.Resource("usb_serial.py"),
         ["serial_bridge.py"] = Resource("serial_bridge.py"),
+        ["box64_runtime.py"] = Resource("box64_runtime.py"),
+        ["platformio_box64.py"] = Resource("platformio_box64.py"),
         ["serial_posix.c"] = Resource("serial_posix.c"),
         ["usbfs_fd.c"] = Resource("usbfs_fd.c"),
+        ["msc_worker.py"] = Resource("msc_worker.py"),
     };
 
     /// <summary>Native build commands; failures must be surfaced before any flashing attempt.</summary>

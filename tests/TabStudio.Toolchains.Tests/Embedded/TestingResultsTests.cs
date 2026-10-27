@@ -44,6 +44,15 @@ public sealed class TestingResultsTests
     }
 
     [Fact]
+    public void A_Unity_summary_reporting_missing_failures_cannot_make_the_run_green()
+    {
+        var parser = new EmbeddedTestOutputParser("board", EmbeddedTestFormat.Unity);
+        parser.Feed("test.c:10:test_one:PASS");
+        parser.Feed("1 Tests 1 Failures 0 Ignored");
+        Assert.Contains(parser.Complete(), result => result.Outcome == EmbeddedTestOutcome.Errored);
+    }
+
+    [Fact]
     public void Tap_plans_failures_and_skip_todo_directives_are_parsed()
     {
         var parser = new EmbeddedTestOutputParser("host", EmbeddedTestFormat.Tap);

@@ -13,6 +13,9 @@ public sealed partial class WorkspaceViewModel
     {
         try
         {
+            if (_adapter is not null || IsDebugging || _embeddedDebugUsb is not null)
+                throw new InvalidOperationException("Stop the active debugger before identifying a target; one process owns the USB probe.");
+            await _embeddedDebugCleanup;
             if (IsRemoteWorkspace || _toolchains.Environment is null)
                 throw new NotSupportedException("Identify target uses an Android USB-OTG connection. On a desktop, use its installed probe-rs info command.");
             var devices = _toolchains.Usb.Devices;
@@ -24,6 +27,8 @@ public sealed partial class WorkspaceViewModel
                 throw new NotSupportedException("This probe exposes only a HID interface. Stock probe-rs CMSIS-DAP v1 uses native hidraw; choose a supported bulk-USB probe or its OpenOCD/HIDAPI-libusb route.");
             var toolchain = _toolchains.Catalog.Find("probe-rs") ?? throw new NotSupportedException("The pinned probe-rs toolchain is missing from this Toolchain Store catalog.");
             if (!await EnsureToolchainReadyAsync(toolchain, "Target identification uses the pinned official probe-rs executable in the embedded glibc environment.")) return;
+            if (_adapter is not null || IsDebugging || _embeddedDebugUsb is not null || _run is not null)
+                throw new InvalidOperationException("Another target operation started while choosing the probe. Stop it before identifying the target.");
             await SerialMonitor.ReleaseAsync();
             using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(90));
             _run = cancellation;

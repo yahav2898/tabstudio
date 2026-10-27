@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
+using TabStudio.Toolchains.Embedded.Installation;
 using TabStudio.Toolchains.Processes;
 using TabStudio.Toolchains.Projects;
 
@@ -27,7 +28,7 @@ public static class EmbeddedBuildPlanner
         EmbeddedProjectKind.Stm32Cube => "embedded-arm",
         EmbeddedProjectKind.Zephyr => "zephyr",
         EmbeddedProjectKind.PicoSdk => "pico-sdk",
-        EmbeddedProjectKind.Rust => "rust",
+        EmbeddedProjectKind.Rust => "embedded-rust",
         EmbeddedProjectKind.MicroPython => "micropython",
         EmbeddedProjectKind.GccCMakeArm => "embedded-arm",
         EmbeddedProjectKind.GccCMakeAvr => "embedded-avr",
@@ -60,6 +61,10 @@ public static class EmbeddedBuildPlanner
     {
         ArgumentNullException.ThrowIfNull(project);
         options ??= LoadOptions(project.Directory);
+        if (options.HostPackageMode is not ("native" or "boxed-x86_64"))
+            throw new ArgumentException("HostPackageMode must be native or boxed-x86_64.", nameof(options));
+        if (options.HostPackageMode == "boxed-x86_64" && project.Kind != EmbeddedProjectKind.PlatformIO)
+            throw new ArgumentException("Box64 host-package mode currently applies only to PlatformIO.", nameof(options));
         ValidateToken(options.Board, nameof(options.Board));
         ValidateToken(options.Environment, nameof(options.Environment));
         ValidateToken(options.Target, nameof(options.Target));
@@ -77,6 +82,9 @@ public static class EmbeddedBuildPlanner
         ProcessStartSpec Command(string program, params string[] arguments) => new()
         {
             Program = program, Arguments = arguments, WorkingDirectory = project.Directory,
+            Environment = project.Kind is EmbeddedProjectKind.EspIdf or EmbeddedProjectKind.Zephyr or EmbeddedProjectKind.PicoSdk
+                ? new Dictionary<string, string?> { [EmbeddedSdkBootstrap.JobsVariable] = jobs }
+                : new Dictionary<string, string?>(),
         };
 
         switch (project.Kind)
@@ -94,10 +102,18 @@ public static class EmbeddedBuildPlanner
                     }
                 }
                 var selection = environment is null ? Array.Empty<string>() : new[] { "--environment", environment };
-                build.Add(Command("pio", ["run", .. selection, "--jobs", jobs]));
+                ProcessStartSpec PlatformIo(params string[] arguments)
+                {
+                    var command = Command("pio", arguments);
+                    return options.HostPackageMode == "boxed-x86_64" ? command with
+                    {
+                        Environment = new Dictionary<string, string?> { [EmbeddedBox64Installation.Marker] = "1" },
+                    } : command;
+                }
+                build.Add(PlatformIo(["run", .. selection, "--jobs", jobs]));
                 if (environment is not null && options.Port is not null)
                 {
-                    upload.Add(Command("pio", ["run", .. selection, "--target", "upload", "--upload-port", options.Port]));
+                    upload.Add(PlatformIo(["run", .. selection, "--target", "upload", "--upload-port", options.Port]));
                 }
                 else
                 {
@@ -112,6 +128,8 @@ public static class EmbeddedBuildPlanner
                     notes.Add("Generate PlatformIO's compilation database with pio run -t compiledb to enable exact clangd flags; existing databases are preserved.");
                 }
                 notes.Add("PlatformIO owns its packages and platform versions. ARM64 package availability must be checked before installation; x86-only packages need an explicit compatible runtime.");
+                if (options.HostPackageMode == "boxed-x86_64")
+                    notes.Add("Explicit Box64 fallback uses a private project package cache. Compatible ARM64 artifacts remain preferred; x86 binaries stay unchanged in a retained original tree. Translation is slower and requires the APK's pinned translator.");
                 break;
             }
             case EmbeddedProjectKind.Arduino:
@@ -133,7 +151,7 @@ public static class EmbeddedBuildPlanner
                     break;
                 }
                 var libraryArgs = library ? new[] { "--library", project.Directory } : Array.Empty<string>();
-                string[] compilationArgs = ["compile", "--fqbn", fqbn, "--build-path", buildDirectory, .. libraryArgs, sketchDirectory];
+                string[] compilationArgs = ["compile", "--fqbn", fqbn, "--jobs", jobs, "--build-path", buildDirectory, .. libraryArgs, sketchDirectory];
                 preparation.Add(Command("arduino-cli", [.. compilationArgs[..^1], "--only-compilation-database", sketchDirectory]));
                 build.Add(Command("arduino-cli", compilationArgs));
                 compilationDatabase = Path.Combine(buildDirectory, "compile_commands.json");
@@ -173,7 +191,7 @@ public static class EmbeddedBuildPlanner
                     notes.Add("Set board to an installed west board identifier before building.");
                     break;
                 }
-                build.Add(Command("west", "build", "--build-dir", buildDirectory, "--board", board,
+                build.Add(Command("west", "build", "--pristine=auto", "--build-opt=-j" + jobs, "--build-dir", buildDirectory, "--board", board,
                     project.Directory, "--", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"));
                 compilationDatabase = Path.Combine(buildDirectory, "compile_commands.json");
                 if (options.Port is not null || options.Runner is not null)
@@ -196,8 +214,12 @@ public static class EmbeddedBuildPlanner
                     notes.Add("Pico SDK selects the board from the project's native configuration/defaults. Select an explicit matching board before upload.");
                 }
                 var boardArgs = board is null ? Array.Empty<string>() : new[] { "-DPICO_BOARD=" + board };
-                preparation.Add(Command("cmake", ["-S", project.Directory, "-B", buildDirectory,
-                    .. boardArgs, "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"]));
+                if (CMakeConfiguration(project.Directory, buildDirectory, options.Environment,
+                    [.. boardArgs, "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], notes) is not { } picoConfigure)
+                {
+                    break;
+                }
+                preparation.Add(picoConfigure);
                 build.Add(Command("cmake", "--build", buildDirectory, "--parallel", jobs));
                 compilationDatabase = Path.Combine(buildDirectory, "compile_commands.json");
                 if (options.Firmware is not null && options.Port is not null)
@@ -217,8 +239,12 @@ public static class EmbeddedBuildPlanner
             {
                 if (File.Exists(Path.Combine(project.Directory, "CMakeLists.txt")))
                 {
-                    preparation.Add(Command("cmake", "-S", project.Directory, "-B", buildDirectory,
-                        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"));
+                    if (CMakeConfiguration(project.Directory, buildDirectory, options.Environment,
+                        ["-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], notes) is not { } configure)
+                    {
+                        break;
+                    }
+                    preparation.Add(configure);
                     build.Add(Command("cmake", "--build", buildDirectory, "--parallel", jobs));
                     compilationDatabase = Path.Combine(buildDirectory, "compile_commands.json");
                 }
@@ -238,7 +264,7 @@ public static class EmbeddedBuildPlanner
                 if (options.Chip is not null && options.Firmware is not null && options.Port is not null)
                 {
                     upload.Add(Command("probe-rs", "download", "--chip", options.Chip, FirmwarePath(project.Directory, options.Firmware)));
-                    notes.Add("Stock nusb probe-rs is not covered by the libusb shim. Enable this command only when the selected probe-rs FD backend is verified by the device service.");
+                    notes.Add("probe-rs receives the granted probe through the verified USBFS descriptor bridge; the device service must wrap this command before execution.");
                 }
                 else
                 {
@@ -328,5 +354,60 @@ public static class EmbeddedBuildPlanner
             throw new ArgumentException("The selected Arduino example must contain a sketch matching its folder name.", nameof(sketch));
         }
         return example;
+    }
+
+    private static ProcessStartSpec? CMakeConfiguration(string directory, string buildDirectory, string? requested,
+        IReadOnlyList<string> arguments, List<string> notes)
+    {
+        var presets = new List<string>();
+        var hasPresets = false;
+        foreach (var name in new[] { "CMakePresets.json", "CMakeUserPresets.json" })
+        {
+            var path = Path.Combine(directory, name);
+            if (!File.Exists(path))
+            {
+                continue;
+            }
+            hasPresets = true;
+            var info = new FileInfo(path);
+            if (info.Length > 2 * 1024 * 1024 || (info.Attributes & FileAttributes.ReparsePoint) != 0)
+            {
+                throw new InvalidDataException("CMake presets must be regular JSON files smaller than 2 MB.");
+            }
+            using var json = JsonDocument.Parse(File.ReadAllText(path), new JsonDocumentOptions
+            {
+                AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip, MaxDepth = 64,
+            });
+            if (!json.RootElement.TryGetProperty("configurePresets", out var entries) || entries.ValueKind != JsonValueKind.Array)
+            {
+                continue;
+            }
+            foreach (var entry in entries.EnumerateArray())
+            {
+                if (entry.ValueKind == JsonValueKind.Object
+                    && (!entry.TryGetProperty("hidden", out var hidden) || hidden.ValueKind != JsonValueKind.True)
+                    && entry.TryGetProperty("name", out var presetName) && presetName.ValueKind == JsonValueKind.String
+                    && presetName.GetString() is { Length: > 0 } value)
+                {
+                    presets.Add(value);
+                }
+            }
+        }
+        var selected = requested;
+        if (hasPresets && selected is null)
+        {
+            selected = presets.Contains("Debug", StringComparer.Ordinal) ? "Debug" : presets.Count == 1 ? presets[0] : null;
+            if (selected is null)
+            {
+                notes.Add("Select Environment as an exact CMake configure preset. The project has multiple or imported presets; its toolchain settings must be preserved.");
+                return null;
+            }
+        }
+        var selection = selected is not null && hasPresets ? new[] { "--preset", selected } : Array.Empty<string>();
+        return new ProcessStartSpec
+        {
+            Program = "cmake", Arguments = [.. selection, "-S", directory, "-B", buildDirectory, .. arguments],
+            WorkingDirectory = directory,
+        };
     }
 }

@@ -1922,6 +1922,9 @@
       "setup": [
         {
           "name": "PlatformIO isolated Python environment",
+          "removes": [
+            "/opt/tabstudio/platformio"
+          ],
           "command": [
             "python3",
             "-m",
@@ -1954,7 +1957,7 @@
           "file": {
             "path": "/usr/local/bin/pio",
             "executable": true,
-            "content": "#!/bin/sh\nexport PLATFORMIO_SETTING_ENABLE_TELEMETRY=no\nexport PYTHONSAFEPATH=1\nexec /opt/tabstudio/platformio/bin/python -P -m platformio \"$@\"\n"
+            "content": "#!/bin/sh\nexport PLATFORMIO_SETTING_ENABLE_TELEMETRY=no\nexec /opt/tabstudio/platformio/bin/python -P -m platformio \"$@\"\n"
           }
         }
       ]
@@ -2077,10 +2080,10 @@
         "C++"
       ],
       "listed": false,
-      "homepage": "https://gcc.gnu.org/",
-      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
-      "estimatedDownloadSize": 60000000,
-      "estimatedInstalledSize": 300000000,
+      "homepage": "https://github.com/espressif/esp-idf",
+      "license": "Apache-2.0",
+      "estimatedDownloadSize": 3000000000,
+      "estimatedInstalledSize": 8000000000,
       "fileExtensions": [
         ".c",
         ".cpp",
@@ -2110,7 +2113,7 @@
       ],
       "id": "esp-idf",
       "name": "ESP-IDF",
-      "description": "ESP-IDF project detection and native build plans; SDK installation and architecture validation are required before this entry can be offered in the Store.",
+      "description": "ESP-IDF 5.4.1 at an exact source revision, including pinned submodules, in the shared Ubuntu environment. Espressif SHA-256-verifies native Xtensa/RISC-V archives for all targets. Vendor Python constraints remain online; installation needs several GB.",
       "packages": [
         "python3",
         "git",
@@ -2142,7 +2145,8 @@
             ]
           }
         ]
-      }
+      },
+      "pinnedVersion": "5.4.1"
     },
     {
       "languages": [
@@ -2150,10 +2154,10 @@
         "C++"
       ],
       "listed": false,
-      "homepage": "https://gcc.gnu.org/",
-      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
-      "estimatedDownloadSize": 60000000,
-      "estimatedInstalledSize": 300000000,
+      "homepage": "https://github.com/zephyrproject-rtos/zephyr",
+      "license": "Apache-2.0",
+      "estimatedDownloadSize": 900000000,
+      "estimatedInstalledSize": 3000000000,
       "fileExtensions": [
         ".c",
         ".cpp",
@@ -2183,7 +2187,7 @@
       ],
       "id": "zephyr",
       "name": "Zephyr SDK",
-      "description": "Zephyr SDK project detection and native build plans; SDK installation and architecture validation are required before this entry can be offered in the Store.",
+      "description": "Zephyr 4.1.0 sources and common Arm HAL modules at immutable revisions, native signed GNU Arm tools, West 1.3.0 and SHA-256-locked Python dependencies. Other board modules and architectures require their explicit west update/toolchain selection.",
       "packages": [
         "python3",
         "git",
@@ -2215,7 +2219,8 @@
             ]
           }
         ]
-      }
+      },
+      "pinnedVersion": "4.1.0"
     },
     {
       "languages": [
@@ -2223,10 +2228,10 @@
         "C++"
       ],
       "listed": false,
-      "homepage": "https://gcc.gnu.org/",
-      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
-      "estimatedDownloadSize": 60000000,
-      "estimatedInstalledSize": 300000000,
+      "homepage": "https://github.com/raspberrypi/pico-sdk",
+      "license": "BSD-3-Clause",
+      "estimatedDownloadSize": 800000000,
+      "estimatedInstalledSize": 2500000000,
       "fileExtensions": [
         ".c",
         ".cpp",
@@ -2256,7 +2261,7 @@
       ],
       "id": "pico-sdk",
       "name": "Raspberry Pi Pico SDK",
-      "description": "Raspberry Pi Pico SDK project detection and native build plans; SDK installation and architecture validation are required before this entry can be offered in the Store.",
+      "description": "Raspberry Pi Pico SDK 2.1.1 and its exact submodules with native signed GNU Arm tools in the shared Ubuntu environment. Installation compiles a Pico blink ELF before reporting ready.",
       "packages": [
         "python3",
         "git",
@@ -2288,7 +2293,8 @@
             ]
           }
         ]
-      }
+      },
+      "pinnedVersion": "2.1.1"
     },
     {
       "languages": [
@@ -2388,7 +2394,7 @@
           "file": {
             "path": "/usr/local/bin/mpremote",
             "executable": true,
-            "content": "#!/bin/sh\nexec /opt/tabstudio/mpremote/bin/python -m mpremote \"$@\"\n"
+            "content": "#!/bin/sh\nexec /opt/tabstudio/mpremote/bin/python -P -m mpremote \"$@\"\n"
           }
         }
       ]
@@ -2564,6 +2570,319 @@
         "type": "probe-rs",
         "languages": []
       }
+    },
+    {
+      "id": "embedded-esptool",
+      "packages": [
+        "python3",
+        "ca-certificates",
+        "libusb"
+      ],
+      "name": "Espressif esptool",
+      "description": "Official esptool 5.6.0 standalone ARM64/x64 binaries, SHA-256 verified, in the shared glibc environment. Serial flashing only; no eFuse actions are exposed.",
+      "homepage": "https://github.com/espressif/esptool",
+      "license": "GPL-2.0-or-later",
+      "auxiliary": true,
+      "listed": true,
+      "pinnedVersion": "5.6.0",
+      "estimatedDownloadSize": 71469509,
+      "estimatedInstalledSize": 200000000,
+      "host": {
+        "commands": [
+          "esptool",
+          "esptool.py"
+        ],
+        "versionArguments": [
+          "version"
+        ]
+      },
+      "setup": [
+        {
+          "name": "Official esptool 5.6.0 ARM64",
+          "architectures": [
+            "aarch64"
+          ],
+          "archive": {
+            "url": "https://github.com/espressif/esptool/releases/download/v5.6.0/esptool-v5.6.0-linux-aarch64.tar.gz",
+            "sha256": "7723120429394b4d6d974d694e5cf378e00259381a7f8856c2c88492041b9f59",
+            "size": 71469509,
+            "destination": "/opt/tabstudio/flash/esptool"
+          }
+        },
+        {
+          "name": "Official esptool 5.6.0 x64",
+          "architectures": [
+            "x86_64"
+          ],
+          "archive": {
+            "url": "https://github.com/espressif/esptool/releases/download/v5.6.0/esptool-v5.6.0-linux-amd64.tar.gz",
+            "sha256": "1590723cfa9675983f49d0bf2895b8507f8d2879082e51bb7ef02a8bca88d354",
+            "size": 78380843,
+            "destination": "/opt/tabstudio/flash/esptool"
+          }
+        }
+      ]
+    },
+    {
+      "id": "embedded-picotool",
+      "packages": [
+        "python3",
+        "ca-certificates",
+        "libusb"
+      ],
+      "name": "Raspberry Pi picotool",
+      "description": "Official picotool 2.3.1 ARM64/x64 binaries, SHA-256 verified, in the shared glibc environment, with permissioned USB and application-only upload profiles.",
+      "homepage": "https://github.com/raspberrypi/pico-sdk-tools",
+      "license": "BSD-3-Clause",
+      "auxiliary": true,
+      "listed": true,
+      "pinnedVersion": "2.3.1",
+      "estimatedDownloadSize": 1027494,
+      "estimatedInstalledSize": 6000000,
+      "host": {
+        "commands": [
+          "picotool"
+        ],
+        "versionArguments": [
+          "version"
+        ]
+      },
+      "setup": [
+        {
+          "name": "Official picotool 2.3.1 ARM64",
+          "architectures": [
+            "aarch64"
+          ],
+          "archive": {
+            "url": "https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.3.1-0/picotool-2.3.1-aarch64-lin.tar.gz",
+            "sha256": "8cce5579c92e77c0439f34d4f49d37b1dc7d1e7c455233398f2e7b49599f67aa",
+            "size": 970927,
+            "destination": "/opt/tabstudio/flash/picotool"
+          }
+        },
+        {
+          "name": "Official picotool 2.3.1 x64",
+          "architectures": [
+            "x86_64"
+          ],
+          "archive": {
+            "url": "https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.3.1-0/picotool-2.3.1-x86_64-lin.tar.gz",
+            "sha256": "878a1a1e7d8336b8be60300c7218f366d9790c0d3a211b181d6d172e80b1248e",
+            "size": 1027494,
+            "destination": "/opt/tabstudio/flash/picotool"
+          }
+        }
+      ]
+    },
+    {
+      "id": "embedded-bossac",
+      "name": "BOSSA SAM-BA client",
+      "description": "Build the SHA-256-pinned upstream bossac 1.9.1 natively in Alpine using signed compiler dependencies; original sources, licenses and locked dependencies are retained. Physical programming remains hardware-unverified.",
+      "homepage": "https://github.com/shumatech/BOSSA",
+      "license": "BSD-3-Clause",
+      "auxiliary": true,
+      "listed": true,
+      "pinnedVersion": "1.9.1",
+      "estimatedDownloadSize": 544082,
+      "estimatedInstalledSize": 18000000,
+      "packages": [
+        "python3",
+        "build-base"
+      ],
+      "host": {
+        "commands": [
+          "bossac"
+        ],
+        "versionArguments": [
+          "--help"
+        ]
+      },
+      "setup": [
+        {
+          "name": "Upstream bossac 1.9.1 source",
+          "archive": {
+            "url": "https://github.com/shumatech/BOSSA/archive/refs/tags/1.9.1.tar.gz",
+            "sha256": "ca650455dfa36cbd029010167347525bea424717a71a691381c0811591c93e72",
+            "size": 544082,
+            "destination": "/opt/tabstudio/flash/bossac"
+          }
+        }
+      ]
+    },
+    {
+      "id": "embedded-teensy",
+      "name": "Teensy HalfKay client",
+      "description": "Build the SHA-256-pinned upstream teensy_loader_cli 2.3 natively in Alpine using signed compiler dependencies; original sources, licenses and locked dependencies are retained. Physical programming remains hardware-unverified.",
+      "homepage": "https://github.com/PaulStoffregen/teensy_loader_cli",
+      "license": "GPL-3.0-only",
+      "auxiliary": true,
+      "listed": true,
+      "pinnedVersion": "2.3",
+      "estimatedDownloadSize": 127016,
+      "estimatedInstalledSize": 4000000,
+      "packages": [
+        "python3",
+        "build-base",
+        "libusb-compat-dev"
+      ],
+      "host": {
+        "commands": [
+          "teensy_loader_cli"
+        ],
+        "versionArguments": [
+          "--list-mcus"
+        ]
+      },
+      "setup": [
+        {
+          "name": "Upstream teensy_loader_cli 2.3 source",
+          "archive": {
+            "url": "https://github.com/PaulStoffregen/teensy_loader_cli/archive/refs/tags/2.3.tar.gz",
+            "sha256": "d9c5357d7e8b99e9a9ae93f5e921c35a133a4a5d399f57eec10f3a606be5d89f",
+            "size": 127016,
+            "destination": "/opt/tabstudio/flash/teensy_loader_cli"
+          }
+        }
+      ]
+    },
+    {
+      "id": "embedded-wchisp",
+      "name": "WCH ROM ISP client",
+      "description": "Build the SHA-256-pinned upstream wchisp 0.3.0 natively in Alpine using signed compiler dependencies; original sources, licenses and locked dependencies are retained. Physical programming remains hardware-unverified.",
+      "homepage": "https://github.com/ch32-rs/wchisp",
+      "license": "GPL-2.0",
+      "auxiliary": true,
+      "listed": true,
+      "pinnedVersion": "0.3.0",
+      "estimatedDownloadSize": 39429,
+      "estimatedInstalledSize": 850000000,
+      "packages": [
+        "python3",
+        "build-base",
+        "rust",
+        "cargo",
+        "pkgconf",
+        "libusb-dev"
+      ],
+      "host": {
+        "commands": [
+          "wchisp"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "setup": [
+        {
+          "name": "Upstream wchisp 0.3.0 source",
+          "archive": {
+            "url": "https://github.com/ch32-rs/wchisp/archive/refs/tags/v0.3.0.tar.gz",
+            "sha256": "bd6a20b5976a19a56f3fea6694d964edbba99a394fc1513a6cbf8d9040a04538",
+            "size": 39429,
+            "destination": "/opt/tabstudio/flash/wchisp"
+          }
+        }
+      ]
+    },
+    {
+      "id": "embedded-mspdebug",
+      "name": "MSP430 MSPDebug client",
+      "description": "Build the SHA-256-pinned upstream mspdebug 0.26 natively in Alpine using signed compiler dependencies; original sources, licenses and locked dependencies are retained. Physical programming remains hardware-unverified.",
+      "homepage": "https://github.com/dlbeer/mspdebug",
+      "license": "GPL-2.0-or-later",
+      "auxiliary": true,
+      "listed": true,
+      "pinnedVersion": "0.26",
+      "estimatedDownloadSize": 366846,
+      "estimatedInstalledSize": 14000000,
+      "packages": [
+        "python3",
+        "build-base",
+        "libusb-compat-dev",
+        "linux-headers"
+      ],
+      "host": {
+        "commands": [
+          "mspdebug"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "setup": [
+        {
+          "name": "Upstream mspdebug 0.26 source",
+          "archive": {
+            "url": "https://github.com/dlbeer/mspdebug/archive/refs/tags/v0.26.tar.gz",
+            "sha256": "9e2c1562adeee79c73d75f0521032b01543163772f5ec30a7d6e9f6d708214b8",
+            "size": 366846,
+            "destination": "/opt/tabstudio/flash/mspdebug"
+          }
+        }
+      ]
+    },
+    {
+      "id": "embedded-rust",
+      "name": "Rust Embedded SDK",
+      "description": "Rust 1.97.0 native ARM64/x64 compiler, Cargo, rust-analyzer, rust-src, rustfmt and Clippy with ten standard bare-metal Arm/RV32 targets. Official release component archives are SHA-256 pinned; tier-3 AVR/Xtensa and rustup toolchain overrides require separate setup.",
+      "languages": [
+        "Rust"
+      ],
+      "listed": false,
+      "auxiliary": false,
+      "homepage": "https://www.rust-lang.org",
+      "license": "MIT OR Apache-2.0",
+      "estimatedDownloadSize": 500000000,
+      "estimatedInstalledSize": 1800000000,
+      "fileExtensions": [
+        ".rs"
+      ],
+      "projectFiles": [],
+      "pinnedVersion": "1.97.0",
+      "packages": [],
+      "host": {
+        "commands": [
+          "rustc"
+        ],
+        "versionArguments": [
+          "--version"
+        ],
+        "versionPattern": "rustc (?<version>\\S+)"
+      },
+      "run": {
+        "entries": [],
+        "environment": {
+          "CARGO_TERM_COLOR": "never"
+        }
+      },
+      "languageServer": {
+        "id": "rust-analyzer",
+        "command": [
+          "rust-analyzer"
+        ],
+        "languages": [
+          "rust"
+        ]
+      },
+      "additionalToolIds": [
+        "cargo",
+        "rustc",
+        "rustfmt",
+        "cargo-clippy"
+      ],
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+): (?<severity>error|warning|note): (?<message>.*)$"
+        },
+        {
+          "pattern": "-->\\s+(?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)"
+        },
+        {
+          "pattern": "panicked at (?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)"
+        }
+      ],
+      "errorPattern": "^error(?:\\[[^\\]]+\\])?: (?<message>.*)$",
+      "sourceFolderIsProject": false
     }
   ]
 }

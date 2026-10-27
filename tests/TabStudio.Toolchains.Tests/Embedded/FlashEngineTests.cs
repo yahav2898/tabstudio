@@ -142,7 +142,12 @@ public sealed class FlashEngineTests : IDisposable
     {
         var image = _temp.Resolve("image with spaces.bin");
         File.WriteAllBytes(image, [1, 2, 3, 4]);
-        var plan = EmbeddedFlashPlanner.Plan(Request(protocol, image));
+        var request = Request(protocol, image);
+        if (protocol == EmbeddedFlashProtocol.Avrdude)
+        {
+            request = request with { BinaryAddress = 0, ApplicationFlash = [new(0, 4096)] };
+        }
+        var plan = EmbeddedFlashPlanner.Plan(request);
         Assert.Equal(command, plan.Steps[0].Program);
         Assert.Equal(image, plan.FirmwarePath);
         Assert.NotNull(plan.FirmwareSha256);

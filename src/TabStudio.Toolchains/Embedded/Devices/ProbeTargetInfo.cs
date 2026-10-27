@@ -60,8 +60,16 @@ public static class ProbeTargetInfoReader
     [
         "PROBE_RS_CHIP", "PROBE_RS_CHIP_DESCRIPTION_PATH", "PROBE_RS_PROTOCOL", "PROBE_RS_CYCLE_POWER",
         "PROBE_RS_NON_INTERACTIVE", "PROBE_RS_PROBE", "PROBE_RS_SPEED", "PROBE_RS_CONNECT_UNDER_RESET",
-        "PROBE_RS_DRY_RUN", "PROBE_RS_ALLOW_ERASE_ALL"
+        "PROBE_RS_DRY_RUN", "PROBE_RS_ALLOW_ERASE_ALL", "PROBE_RS_PREFER_FLASH_ALGO"
     ];
+
+    /// <summary>Clears inherited target/erase/reset/power overrides before a typed info/logging operation selects its explicit arguments.</summary>
+    public static IReadOnlyDictionary<string, string?> SafeAttachEnvironment()
+    {
+        var environment = ProbeEnvironment.ToDictionary(name => name, _ => (string?)null, StringComparer.Ordinal);
+        environment[EmbeddedGlibcRuntime.RoutingMarker] = "1";
+        return environment;
+    }
 
     /// <summary>Constructs fixed verbose info arguments for exactly the selected USB VID/PID, clearing inherited attach/erase/reset overrides.</summary>
     public static ProcessStartSpec Command(UsbDeviceInfo device, string workingDirectory)
@@ -70,14 +78,12 @@ public static class ProbeTargetInfoReader
         ArgumentException.ThrowIfNullOrWhiteSpace(workingDirectory);
         if (device.VendorId is < 0 or > ushort.MaxValue || device.ProductId is < 0 or > ushort.MaxValue)
             throw new ArgumentException("USB VID/PID must be unsigned 16-bit values.", nameof(device));
-        var environment = ProbeEnvironment.ToDictionary(name => name, _ => (string?)null, StringComparer.Ordinal);
-        environment[EmbeddedGlibcRuntime.RoutingMarker] = "1";
         return new ProcessStartSpec
         {
             Program = "probe-rs",
             Arguments = ["info", "--verbose", "--non-interactive", "--probe", string.Create(CultureInfo.InvariantCulture, $"{device.VendorId:x4}:{device.ProductId:x4}")],
             WorkingDirectory = workingDirectory,
-            Environment = environment,
+            Environment = SafeAttachEnvironment(),
         };
     }
 

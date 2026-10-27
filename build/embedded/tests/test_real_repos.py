@@ -84,7 +84,7 @@ class RealRepositoryManifestTests(unittest.TestCase):
             self.assertEqual([RUNNER.sys.executable, "-P", "-m", "platformio"], argv[:4])
             self.assertEqual(project, command.call_args.args[1])
             self.assertEqual("no", command.call_args.args[2]["PLATFORMIO_SETTING_ENABLE_TELEMETRY"])
-            self.assertEqual("1", command.call_args.args[2]["PYTHONSAFEPATH"])
+            self.assertNotIn("PYTHONSAFEPATH", command.call_args.args[2])
 
     def test_cloned_repositories_register_authoritative_origin_before_submodules(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -119,6 +119,27 @@ class RealRepositoryManifestTests(unittest.TestCase):
             private_build = str(runner.work / "build")
             self.assertEqual(["cmake", "--preset", "Debug", "-B", private_build], configure[:5])
             self.assertEqual(["cmake", "--build", private_build], build[:3])
+
+    def test_vendor_sdk_scripts_keep_their_required_sibling_module_imports(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            repository = root / "source"
+            repository.mkdir()
+            entry = next(e for e in RUNNER.entries() if e["kind"] == "esp-idf")
+            runner = RUNNER.Runner(entry, root / "work", root / "out")
+            with patch.object(runner, "clone", return_value=repository), patch.object(runner, "run") as command, patch.object(runner, "require"), patch.dict(RUNNER.os.environ, {"PYTHONSAFEPATH": "1"}):
+                runner.build()
+            self.assertEqual(2, command.call_count)
+            for call in command.call_args_list:
+                self.assertNotIn("PYTHONSAFEPATH", call.args[2])
+
+    def test_every_child_receives_import_compatible_environment_without_telemetry(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            runner = RUNNER.Runner(RUNNER.entries()[0], root / "work", root / "out")
+            with patch.dict(RUNNER.os.environ, {"PYTHONSAFEPATH": "1", "PLATFORMIO_SETTING_ENABLE_TELEMETRY": "yes"}):
+                runner.run([RUNNER.sys.executable, "-c", "import os; assert 'PYTHONSAFEPATH' not in os.environ; assert os.environ['PLATFORMIO_SETTING_ENABLE_TELEMETRY'] == 'no'"], root)
+            self.assertEqual(0, runner.steps[-1]["exitCode"])
 
 
 if __name__ == "__main__":

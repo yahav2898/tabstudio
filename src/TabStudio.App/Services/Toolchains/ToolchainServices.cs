@@ -94,6 +94,19 @@ public sealed class ToolchainServices : IDisposable
     /// <summary>Android USB permissions and open connection lifetime.</summary>
     public IUsbHost Usb { get; } = new NoUsbHost();
 
+    /// <summary>Prepares explicitly requested x86-only PlatformIO host packages without changing native package selection.</summary>
+    /// <param name="line">Verified runtime preparation output.</param>
+    /// <param name="cancellationToken">Stops preparation.</param>
+    public Task PrepareEmbeddedBox64Async(Action<string> line, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(line);
+        if (_embeddedInstaller is null)
+        {
+            throw new NotSupportedException("PlatformIO's optional Box64 package mode requires the Android embedded glibc environment.");
+        }
+        return Manager.ConfigureRuntimeAsync(token => _embeddedInstaller.PrepareBox64Async(line, token), cancellationToken);
+    }
+
     /// <summary>Installs USB support without requiring an XC license or compiler download.</summary>
     /// <param name="developmentTools">Also prepares native builds of optional programmer/simulator tools.</param>
     /// <param name="line">Setup output.</param>
@@ -148,7 +161,7 @@ public sealed class ToolchainServices : IDisposable
 
             var sources = TabStudio.Toolchains.Embedded.UsbBridgeInstallation.SupportFiles;
             var fingerprint = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(
-                string.Join('\n', sources.Select(source => source.Key + "\n" + source.Value)) +
+                string.Join('\n', packages) + "\n" + string.Join('\n', sources.Select(source => source.Key + "\n" + source.Value)) +
                 string.Join('\n', TabStudio.Toolchains.Embedded.UsbBridgeInstallation.BuildCommands.Select(command => command.CommandLine)))));
             var stamp = Path.Combine(environment.Rootfs, TabStudio.Toolchains.Embedded.UsbBridgeInstallation.ToolsDirectory.TrimStart('/'), ".bridge-build.sha256");
             var rebuild = !File.Exists(stamp) || await File.ReadAllTextAsync(stamp, token).ConfigureAwait(false) != fingerprint;
@@ -172,6 +185,8 @@ public sealed class ToolchainServices : IDisposable
                 var result = await TabStudio.Toolchains.Processes.CommandRunner.RunAsync(Runtime, command, line, token).ConfigureAwait(false);
                 if (!result.Succeeded) throw new IOException("Could not build the embedded USB bridge: " + result.Tail());
             }
+            if (!File.Exists(Path.Combine(environment.Rootfs, "usr", "lib", "libhidapi-libusb.so.0")))
+                throw new IOException("The signed hidapi package did not provide its libusb backend; CMSIS-DAP v1 cannot use Android hidraw.");
             await File.WriteAllTextAsync(stamp, fingerprint, token).ConfigureAwait(false);
         }, cancellationToken);
 

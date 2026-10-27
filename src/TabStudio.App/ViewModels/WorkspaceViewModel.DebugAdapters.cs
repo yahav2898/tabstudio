@@ -638,8 +638,11 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             return;
         }
 
+        // A different DAP thread can represent another target core. Invalidate paused snapshots and
+        // pending register-write confirmations even when every core remains halted.
+        var version = _adapterThread == thread ? _adapterPauses : ++_adapterPauses;
         _adapterThread = thread;
-        if (await ShowAdapterStackAsync(session, thread, _adapterPauses))
+        if (await ShowAdapterStackAsync(session, thread, version))
         {
             await ShowAdapterFrameAsync(CallStack.ActiveFrame);
         }

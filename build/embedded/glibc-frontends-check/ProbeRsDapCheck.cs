@@ -9,6 +9,8 @@ using TabStudio.Toolchains.Runtimes;
 /// <summary>Real production-guest DAP initialization; intentionally does not attach any physical target.</summary>
 internal static class ProbeRsDapCheck
 {
+    private static readonly JsonSerializerOptions EvidenceJson = new() { WriteIndented = true };
+
     public static async Task VerifyAsync(IToolchainRuntime runtime, string directory, string evidencePath, CancellationToken cancellationToken)
     {
         var adapter = new DebugAdapterDefinition
@@ -32,7 +34,7 @@ internal static class ProbeRsDapCheck
                 adapter = "probe-rs 0.32.0", transport = "stdio", dapInitialized = true,
                 configurationDone = session.Capabilities.ConfigurationDone, hardwareVerified = false,
                 chipAttached = false, flashingRequested = false,
-            }, new JsonSerializerOptions { WriteIndented = true }), cancellationToken);
+            }, EvidenceJson), cancellationToken);
             Console.WriteLine("PROBE_RS_DAP_INITIALIZE_PASSED (no target attached)");
         }
         string details;

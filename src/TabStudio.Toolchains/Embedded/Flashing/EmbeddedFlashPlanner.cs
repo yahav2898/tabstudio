@@ -60,6 +60,10 @@ public sealed record EmbeddedFlashRequest
     public string? ProbeSelector { get; init; }
     /// <summary>Raw-binary start address; image formats that encode addresses retain them.</summary>
     public ulong? BinaryAddress { get; init; }
+    /// <summary>Physical start of main flash for tools using flash-relative offsets; zero for SAMD/SAME, 0x80000 for SAM3X.</summary>
+    public ulong FlashBaseAddress { get; init; }
+    /// <summary>Authoritative ESP-IDF flasher_args.json or resolved template export. When set, every metadata image is flashed separately.</summary>
+    public string? EspFlasherArguments { get; init; }
     /// <summary>Parsed image segments.</summary>
     public IReadOnlyList<FlashAddressRange> FirmwareRegions { get; init; } = [];
     /// <summary>Permitted application flash for the actual chip and bootloader.</summary>
@@ -87,7 +91,14 @@ public sealed record EmbeddedFlashRequest
 /// <param name="FirmwareSha256">Digest bound to the validated firmware ranges.</param>
 /// <param name="Verified">The route performs target verification, rather than reporting transport completion only.</param>
 public sealed record EmbeddedFlashPlan(IReadOnlyList<ProcessStartSpec> Steps, bool Touch1200Baud, string Verification,
-    string? ReadbackPath = null, string? FirmwarePath = null, string? FirmwareSha256 = null, bool Verified = true);
+    string? ReadbackPath = null, string? FirmwarePath = null, string? FirmwareSha256 = null, bool Verified = true)
+{
+    /// <summary>Additional immutable inputs used by a multi-image plan, including its build/security metadata.</summary>
+    public IReadOnlyList<EmbeddedFirmwareInput> FirmwareInputs { get; init; } = [];
+}
+
+/// <summary>A concrete validated input whose digest must remain unchanged before, between and after programming operations.</summary>
+public sealed record EmbeddedFirmwareInput(string Path, string Sha256);
 
 /// <summary>Creates argument-safe upload commands. It never accepts arbitrary extra flags or configuration-write operations.</summary>
 public static class EmbeddedFlashPlanner
@@ -105,6 +116,11 @@ public static class EmbeddedFlashPlanner
     public static EmbeddedFlashPlan Plan(EmbeddedFlashRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
+        if (request.EspFlasherArguments is not null)
+        {
+            if (request.Protocol != EmbeddedFlashProtocol.Esptool) throw new ArgumentException("ESP multi-image metadata requires the esptool protocol.", nameof(request));
+            return EspFlashManifestReader.Plan(request);
+        }
         if (new FileInfo(request.FirmwarePath).Length is <= 0 or > 128 * 1024 * 1024)
         {
             throw new InvalidDataException("Firmware must contain 1 byte..128 MiB.");
@@ -114,6 +130,7 @@ public static class EmbeddedFlashPlanner
             ? new[] { NrfDfuPackage.Inspect(imageBytes, request.BinaryAddress ?? throw new ArgumentException("Select the actual Nordic application-partition address.", nameof(request))).ApplicationRange }
             : FirmwareImageInspector.Inspect(imageBytes, Path.GetExtension(request.FirmwarePath), request.BinaryAddress);
         FlashSafety.ValidateFirmware(actualRanges, request.ApplicationFlash);
+        EmbeddedConfigurationGuard.Validate(request, imageBytes);
         request = request with { FirmwareRegions = actualRanges };
         Token(request.Target, nameof(request.Target));
         if (request.BaudRate is < 300 or > 4_000_000)
@@ -141,9 +158,9 @@ public static class EmbeddedFlashPlanner
         switch (request.Protocol)
         {
             case EmbeddedFlashProtocol.Avrdude:
-                if (extension is not (".hex" or ".bin") || firmware.Contains(':', StringComparison.Ordinal))
+                if (extension is not (".hex" or ".bin") || firmware.Contains(':', StringComparison.Ordinal) || extension == ".bin" && request.BinaryAddress != 0)
                 {
-                    throw new ArgumentException("avrdude requires a HEX/BIN path without a colon.", nameof(request));
+                    throw new ArgumentException("avrdude requires a HEX/BIN path without a colon. Raw BIN starts at flash byte zero; use addressed HEX for a nonzero application address.", nameof(request));
                 }
                 Token(request.Programmer, nameof(request.Programmer));
                 Serial(request.SerialPort);
@@ -158,8 +175,8 @@ public static class EmbeddedFlashPlanner
                 }
                 Serial(request.SerialPort);
                 Add("esptool.py", "--chip", request.Target, "--port", request.SerialPort!, "--baud", request.BaudRate.ToString(CultureInfo.InvariantCulture),
-                    "--after", "no_reset", "write_flash", "0x" + address, firmware);
-                Add("esptool.py", "--chip", request.Target, "--port", request.SerialPort!, "--before", "no_reset", "--after", "hard_reset", "verify_flash", "0x" + address, firmware);
+                    "--after", "no-reset", "write-flash", "0x" + address, firmware);
+                Add("esptool.py", "--chip", request.Target, "--port", request.SerialPort!, "--before", "no-reset", "--after", "hard-reset", "verify-flash", "0x" + address, firmware);
                 break;
             case EmbeddedFlashProtocol.Stm32Flash:
                 Serial(request.SerialPort);
@@ -200,12 +217,13 @@ public static class EmbeddedFlashPlanner
                 break;
             case EmbeddedFlashProtocol.Bossac:
                 Serial(request.SerialPort);
-                if (extension != ".bin")
+                if (extension != ".bin" || request.BinaryAddress is not { } binaryStart || binaryStart < request.FlashBaseAddress ||
+                    binaryStart - request.FlashBaseAddress > int.MaxValue)
                 {
-                    throw new ArgumentException("bossac requires a board-specific application BIN.", nameof(request));
+                    throw new ArgumentException("bossac requires a board-specific application BIN and a representable offset from the actual main-flash base.", nameof(request));
                 }
                 // No -b boot-configuration flag: application upload is not permission to change GPNVM bits.
-                Add("bossac", "--port=" + request.SerialPort, "-w", "-v", firmware, "-R");
+                Add("bossac", "--port=" + request.SerialPort, "-o", (binaryStart - request.FlashBaseAddress).ToString(CultureInfo.InvariantCulture), "-w", "-v", firmware, "-R");
                 break;
             case EmbeddedFlashProtocol.OpenOcd:
                 Config(request.InterfaceConfig);

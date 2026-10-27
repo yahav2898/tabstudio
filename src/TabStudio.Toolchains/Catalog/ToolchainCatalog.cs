@@ -136,6 +136,7 @@ public sealed record ToolchainCatalog
         var catalog = Load(stream);
         return catalog with { Toolchains = [.. catalog.Toolchains.Select(t => Microchip.MicrochipInstallation.IsCompiler(t.Id)
             ? Microchip.MicrochipInstallation.WithSetup(t)
-            : t.Id == "embedded-support" ? t with { Setup = Embedded.UsbBridgeInstallation.Setup } : t)] };
+            : t.Id == "embedded-support" ? t with { Setup = Embedded.UsbBridgeInstallation.Setup }
+                : Embedded.Installation.EmbeddedFlashToolInstallation.Handles(t.Id) ? Embedded.Installation.EmbeddedFlashToolInstallation.WithSetup(t) : t)] };
     }
 }

@@ -13,4 +13,4 @@ bash "$root/build/embedded/build-proot-test.sh" "$work/proot"
 dotnet run --project "$root/build/embedded/glibc-frontends-check" -- \
   "$work/proot/proot-$PROOT_VERSION/src/proot" \
   "$work/proot/proot-$PROOT_VERSION/src/loader/loader" \
-  "$work/installer" "$output"
+  "$work/installer" "$output" "${@:3}"

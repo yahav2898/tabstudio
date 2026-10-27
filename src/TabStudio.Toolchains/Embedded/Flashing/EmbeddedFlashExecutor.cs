@@ -44,6 +44,21 @@ public static class EmbeddedFlashExecutor
         {
             throw new InvalidDataException("Firmware changed after the safe upload plan was created. Build and validate it again.");
         }
+        async Task ValidateInputsAsync()
+        {
+            foreach (var input in plan.FirmwareInputs)
+            {
+                if (await DigestAsync(input.Path, cancellationToken).ConfigureAwait(false) != input.Sha256)
+                {
+                    throw new InvalidDataException("An ESP image or build/security metadata changed after validation: " + input.Path + ". Further operations were stopped.");
+                }
+            }
+        }
+        await ValidateInputsAsync().ConfigureAwait(false);
+        foreach (var input in plan.FirmwareInputs)
+        {
+            output?.Report("Validated input SHA-256: " + input.Sha256 + " " + input.Path);
+        }
         if (plan.Touch1200Baud)
         {
             if (prepareBootloader is null)
@@ -63,6 +78,7 @@ public static class EmbeddedFlashExecutor
             foreach (var step in plan.Steps)
             {
                 cancellationToken.ThrowIfCancellationRequested();
+                await ValidateInputsAsync().ConfigureAwait(false);
                 if (await DigestAsync(plan.FirmwarePath, cancellationToken).ConfigureAwait(false) != digest)
                 {
                     throw new InvalidDataException("Firmware changed during upload. Further operations were stopped.");
@@ -92,6 +108,11 @@ public static class EmbeddedFlashExecutor
             if (await DigestAsync(plan.FirmwarePath, cancellationToken).ConfigureAwait(false) != digest)
             {
                 throw new InvalidDataException("Firmware changed while an upload tool was running; success cannot be attributed to the validated input.");
+            }
+            await ValidateInputsAsync().ConfigureAwait(false);
+            if (plan.FirmwareInputs.Count > 0)
+            {
+                digest = Convert.ToHexStringLower(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(string.Join('\n', plan.FirmwareInputs.Select(input => input.Sha256)))));
             }
             return new(digest, elapsed.Elapsed, completed, plan.Verified);
         }

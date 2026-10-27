@@ -292,7 +292,11 @@ public sealed partial class WorkspaceViewModel
         }
         var request = JsonSerializer.Deserialize<EmbeddedFlashRequest>(await File.ReadAllTextAsync(path), EmbeddedJson)
             ?? throw new InvalidDataException("Flash profile is empty.");
-        return request with { WorkingDirectory = project.Directory, FirmwarePath = Path.GetFullPath(request.FirmwarePath, project.Directory) };
+        return request with
+        {
+            WorkingDirectory = project.Directory, FirmwarePath = Path.GetFullPath(request.FirmwarePath, project.Directory),
+            EspFlasherArguments = request.EspFlasherArguments is { } metadata ? Path.GetFullPath(metadata, project.Directory) : null,
+        };
     }
 
     private async Task<IUsbConnection?> OpenEmbeddedFlashConnectionAsync(CancellationToken cancellationToken)
@@ -338,6 +342,18 @@ public sealed partial class WorkspaceViewModel
 
     private async Task PrepareEmbeddedProtocolAsync(EmbeddedFlashRequest request, CancellationToken cancellationToken)
     {
+        if (TabStudio.Toolchains.Embedded.Installation.EmbeddedFlashToolInstallation.ToolchainId(request.Protocol) is { } id)
+        {
+            var tool = _toolchains.Catalog.Find(id) ?? throw new InvalidOperationException("The flashing tool is missing from the Store catalog: " + id);
+            if (!await EnsureToolchainReadyAsync(tool, "This firmware route uses " + tool.Name + "."))
+            {
+                throw new OperationCanceledException(cancellationToken);
+            }
+        }
+        if (request.Protocol == EmbeddedFlashProtocol.NrfDfu && !_toolchains.Runtime.HasCommand("nrfutil"))
+        {
+            throw new NotSupportedException("Nordic legacy pc-nrfutil 6.1.7 requires Python 3.7..3.10 plus its native pc_ble_driver_py dependency. A verified ARM64 installer for the current Alpine/Ubuntu Python runtime is unavailable. Install a compatible legacy CLI explicitly or use a supported probe route; no USB programming was attempted.");
+        }
         if (request.Protocol != EmbeddedFlashProtocol.PymcuprogUpdi || _toolchains.Environment is null)
         {
             return;

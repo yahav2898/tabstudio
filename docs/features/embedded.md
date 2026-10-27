@@ -37,10 +37,10 @@ The existing PIC F5 simulator and ordinary language F5 behavior remain documente
 | PlatformIO | `platformio.ini`; `pio run`, preserving environments, inheritance, platform versions and native scripts | Existing `compile_commands.json` is preserved. Run `pio run -t compiledb` for exact clangd flags. Core is installed; every platform's ARM64/musl package availability is a separate question. |
 | Arduino sketches and libraries | `.ino`, `sketch.yaml`, `library.properties`; `arduino-cli compile` with an explicit FQBN; a library requires an explicit `Sketch` example directory | The build first requests Arduino's compilation database. Install the selected board core/libraries separately. A library itself is not an executable sketch. |
 | STM32CubeMX/CubeIDE | `.ioc` plus generated CMake or Make files; preserve their startup, CPU flags and linker script | CMake exports compilation commands. An Eclipse `.cproject` is not independently translated into a complete Cube build; generate/retain a portable build first. CubeMX's generator is not bundled. |
-| ESP-IDF | IDF CMake markers, `sdkconfig`; `idf.py` with the selected target | Requires a matching installed ESP-IDF environment and target tools. No automatic Espressif glibc SDK installer is supplied yet. |
-| Zephyr | west/Zephyr markers; `west build` with the exact board | Requires a prepared west workspace, matching modules and toolchain. No complete SDK installer is supplied yet. |
-| Raspberry Pi Pico SDK | `pico_sdk_import.cmake` or Pico CMake usage; CMake with the selected `PICO_BOARD` | Requires the SDK and a `PICO_SDK_PATH`/project configuration visible to the build process. Pico/Pico W/Pico 2/Pico 2 W are distinct choices. |
-| Rust embedded | Cargo with embedded target/linker markers, including `memory.x`; Cargo preserves its configuration and uses `--locked` when a lockfile exists | Existing rust-analyzer handles editing. Install the target's standard-library artifacts and linker tools separately. Stock Android probe-rs/nusb is not enabled by the libusb bridge. |
+| ESP-IDF | IDF CMake markers, `sdkconfig`; `idf.py` with the selected target | The native glibc recipe pins ESP-IDF 5.4.1 and its submodules, vendor tool hashes and Python distributions. The selected target remains native project configuration; third-party components can have their own prerequisites. |
+| Zephyr | west/Zephyr markers; `west build` with the exact board | The native glibc recipe pins Zephyr 4.1.0, west/Python wheels and its manifest modules, using signed ARM/RISC-V compilers. Out-of-tree west workspaces retain their own dependencies and board definitions. |
+| Raspberry Pi Pico SDK | `pico_sdk_import.cmake` or Pico CMake usage; CMake with the selected `PICO_BOARD` | The native glibc recipe pins Pico SDK 2.1.1 and its submodules and exports its SDK path only for Pico projects. Pico/Pico W/Pico 2/Pico 2 W are distinct choices. |
+| Rust embedded | Cargo with embedded target/linker markers, including `memory.x`; Cargo preserves its configuration and uses `--locked` when a lockfile exists | A separate embedded Rust SDK installs SHA-256-pinned official Rust 1.97.0 components, rust-analyzer, rust-src and ten ARM/RV32 target libraries in the glibc environment. Native project context selects its server/compiler; ordinary host Rust retains its existing toolchain. Official probe-rs uses the separate permissioned usbfs bridge. |
 | MicroPython/CircuitPython | Board-Python markers and explicit `.py` file operations through mpremote | **MicroPython REPL** opens the existing Terminal; **Sync active Python file** copies that file and compares an independent readback. This does not install firmware, provide CircuitPython-specific REPL guarantees, or delete other board files. |
 | Keil, IAR, Atmel/Microchip Studio | `.uvprojx`, `.ewp`, `.cproj`; explicit import creates a separate GCC/CMake project | Original files are untouched. Import notes describe unresolved linker/startup/ABI/language differences. Import success is not a linked or flashed firmware result. |
 
@@ -117,32 +117,32 @@ upstream IDCODE, ARM debug-port/CPUID and vendor DID records, with protocol cont
 An IDCODE or core model does not uniquely identify an MCU or board, so flash/debug profiles still require the
 actual chip and memory map. The command clears inherited erase-all, power-cycle, under-reset and custom target
 overrides. Verbose info uses upstream's default debug sequences without erase/unlock permission; attaching can
-affect live debug state. Native HID-only CMSIS-DAP v1 is refused. Physical target interrogation is hardware-unverified;
+affect live debug state. Native probe-rs HID-only CMSIS-DAP v1 is refused; its OpenOCD fallback uses the signed libusb HIDAPI backend. Physical target interrogation is hardware-unverified;
 automatic interrogation on plug-in and a complete device-association editing UI are not implemented yet.
 
 ### Probes and target families
 
 | Probe | Current route | Verification and limits |
 | --- | --- | --- |
-| ST-Link V2/V3 | OpenOCD's supported libusb backend and installed interface/target scripts | Identity hints, safe plans and debug startup contracts tested locally; no hardware verification. Exact clone/firmware/target support belongs to the installed OpenOCD version. |
-| CMSIS-DAP v2, DAPLink bulk interface | OpenOCD libusb route | Backend integration is implemented; no physical DAPLink verification. |
-| CMSIS-DAP v1 HID, DAPLink HID interface | Requires a libusb-backed HIDAPI build | Native Linux hidraw/udev builds cannot use this bridge. No ready verified HIDAPI rebuild is provided. |
-| Raspberry Pi Debug Probe/picoprobe | CMSIS-DAP/OpenOCD where that probe firmware and target are supported | Descriptor hint and command contracts only; hardware-unverified. |
-| J-Link | OpenOCD's applicable open backend | USB hint only is not SEGGER software installation or proof of target support. No hardware verification. |
-| ESP USB-Serial-JTAG | Serial download through an installed esptool; debug needs a supporting Espressif OpenOCD build | The stock Alpine OpenOCD package does not establish vendor-fork coverage. No hardware verification. |
+| ST-Link V2/V3 | probe-rs bulk-USB route; OpenOCD libusb fallback with installed scripts | Identity hints, safe plans and debug startup contracts tested locally; no hardware verification. Exact clone/firmware/target support belongs to the installed OpenOCD version. |
+| CMSIS-DAP v2, DAPLink bulk interface | probe-rs bulk-USB route; OpenOCD libusb fallback | Backend integration is implemented; no physical DAPLink verification. |
+| CMSIS-DAP v1 HID, DAPLink HID interface | OpenOCD with the signed HIDAPI-libusb backend selected in its private preload chain | An unchanged HIDAPI client is tested with the granted-FD libusb bridge. Native hidraw/udev and probe-rs's HID-only backend remain separate; physical DAPLink is hardware-unverified. |
+| Raspberry Pi Debug Probe/picoprobe | probe-rs/CMSIS-DAP or OpenOCD where that probe firmware and target are supported | Descriptor hint and command contracts only; hardware-unverified. |
+| J-Link | probe-rs or OpenOCD's applicable open backend | USB hint only is not SEGGER software installation or proof of target support. No hardware verification. |
+| ESP USB-Serial-JTAG | Installed native esptool download; probe-rs for supported USB-JTAG targets or a matching Espressif OpenOCD build | The stock Alpine OpenOCD package does not establish vendor-fork coverage. No hardware verification. |
 | WCH-Link | Requires the matching WCH SWIO/JTAG implementation and target support | VID/PID hint exists. The matching vendor OpenOCD/wlink package and complete route are not supplied/verified. |
-| probe-rs probes | Stock nusb bulk-USB transport foundation; native-host typed download plan | Permissioned inventory enumeration and raw FD routing are verified on CI. Android tool packaging/integration and physical probe/target I/O need separate qualification; native hidraw CMSIS-DAP v1 remains unsupported. |
+| probe-rs probes | Pinned official 0.32 native ARM64/x64 glibc binaries; permissioned nusb download, DAP, identity and logging routes | Verified on CI: actual installer, official DAP initialization, stock nusb enumeration and raw FD routing. Physical probe/target I/O remains hardware-unverified; native hidraw CMSIS-DAP v1 uses the OpenOCD fallback. |
 
 | Requested target families | Present foundation | Remaining qualification |
 | --- | --- | --- |
 | STM32, all families | Exact OpenOCD config plus ARM toolchain or native Cube/PlatformIO build | No blanket all-family validation; each part/config/protection state requires confirmation and hardware tests. |
-| nRF51/52/53 | OpenOCD where supported; native Zephyr/PlatformIO/Rust project plans | SDK/core installation, multicore behavior and each part's probe support remain unverified. |
-| RP2040/RP2350 | Pico SDK/PlatformIO plans; OpenOCD and picotool command routes | Board/architecture selection is explicit. No user-space BOOTSEL FAT mass-storage writer. |
+| nRF51/52/53 | OpenOCD where supported; native Zephyr/PlatformIO/Rust project plans | Exact SDK/core selection, multicore behavior and each part's physical probe support require qualification. |
+| RP2040/RP2350 | Pico SDK/PlatformIO plans; OpenOCD/picotool routes and permissioned BOOTSEL UF2 storage copy | Explicit board, application bounds and UF2 family; FAT/BOT synthetic tests and independent file readback, no physical-board qualification. |
 | SAMD/SAME | ARM builds, OpenOCD or compatible bossac bootloader plan | Exact bootloader offset and installed tool are required; no hardware verification. |
 | NXP LPC/Kinetis/i.MX RT | ARM/native ecosystem build and applicable OpenOCD config | No packaged vendor SDK or claim that every NXP target works. Teensy's bootloader route has separate limits below. |
-| GD32, CH32V | Applicable upstream/vendor OpenOCD and GCC architecture | Vendor forks/SWIO and CH32 programmer installation remain incomplete; a generic RISC-V toolchain is insufficient. |
-| ESP32-C3/C6/H2 | ESP-IDF/native ecosystem build; exact esptool chip selection | Espressif compiler/runtime installation and USB-JTAG debug integration require further work. |
-| Other probe-rs/OpenOCD targets | Typed OpenOCD configuration can address targets supported by the installed backend | Upstream support lists are not TabStudio hardware verification or Android nusb compatibility. |
+| GD32, CH32V | Applicable upstream/vendor OpenOCD and GCC architecture | The Store supplies WCH ROM ISP; WCH-Link SWIO/vendor forks are separate. A generic RISC-V compiler alone does not establish a complete target startup/linker/debug workflow. |
+| ESP32-C3/C6/H2 | ESP-IDF/native ecosystem build; exact esptool chip selection | The native ESP-IDF recipe supplies its selected target toolchain. Each chip/USB-JTAG backend, board layout and physical reset path still requires hardware qualification. |
+| Other probe-rs/OpenOCD targets | Typed probe-rs chip selection or installed OpenOCD configuration can address upstream-supported targets | Upstream support lists are not TabStudio hardware verification or Android nusb compatibility. |
 
 ### Bootloaders and programming routes
 
@@ -151,22 +151,56 @@ automatic interrogation on plug-in and a complete device-association editing UI 
 | Arduino AVR Optiboot/STK500v1 | avrdude application write plus explicit verify | Safe image/range/argument plans and AVR profile tests; avrdude is in the Store. Hardware-unverified. |
 | Arduino Mega STK500v2 | avrdude `wiring` application upload/verify | Explicit ATmega2560 profile; hardware-unverified. |
 | Leonardo/Micro AVR109 | 1200-baud touch, re-permission, avrdude write/verify | Known template profiles and bridge contracts; physical bootloader transitions unverified. |
-| SAMD SAM-BA | 1200-baud flow plus bossac `-w -v -R`, without boot-configuration flags | bossac must be installed separately. Exact bootloader/layout required; hardware-unverified. |
-| ESP32/S2/S3/C3/C6/H2 ROM loader | Exact esptool chip, addressed BIN write then verify | esptool must be installed separately. One-image safe plan; core-provided multi-image flash arguments are not automatically imported. Reset sequencing is hardware-unverified. |
+| SAMD SAM-BA | 1200-baud flow plus bossac `-o OFFSET -w -v -R`, without boot-configuration flags | The Store builds pinned BOSSA 1.9.1 source natively. BIN address becomes an explicit flash-relative offset, preserving the selected bootloader boundary. Exact bootloader/layout required; hardware-unverified. |
+| ESP32/S2/S3/C3/C6/H2 ROM loader | Exact esptool chip, addressed BIN write then verify | The Store installs official esptool 5.6.0 ARM64/x64 binaries with pinned SHA-256 in its glibc environment. One-image safe plan; core-provided multi-image flash arguments are not automatically imported. Reset sequencing is hardware-unverified. |
 | STM32 ROM UART | stm32flash explicit BIN range with verify | stm32flash is installed through the embedded USB Store entry from signed Alpine packages. BOOT pins/reset and exact target map are external prerequisites. Hardware-unverified. |
 | STM32 USB DFU | dfu-util write, independent upload/readback and byte comparison | dfu-util is in the Store. Exact VID/PID, alternate and application range required. Read-protected/non-readback DFU cannot pass this route. Hardware-unverified. |
-| RP2040/RP2350 BOOTSEL | picotool addressed ELF/UF2/BIN load with verify | picotool must be installed separately. UF2 image parsing is tested; FAT mass-storage transfer over USB Host API is not implemented. Hardware-unverified. |
+| RP2040/RP2350 BOOTSEL | picotool addressed ELF/UF2/BIN load with verify, or **Upload UF2 via BOOTSEL storage** through USB Host BOT/SCSI and user-space FAT | The Store installs official picotool 2.3.1 ARM64/x64 binaries pinned by SHA-256 in its glibc environment. Storage accepts standard RP ROM identities, actual INFO_UF2, a matching family and explicit XIP application ranges. USB/file acceptance is distinct from flash readback; ROM reset before final status is explicitly unconfirmed. FAT/BOT image tests and independent GNU mtools readback passed locally. Hardware-unverified. |
 | nRF51/52 Nordic SDK Secure DFU | Application-only ZIP through legacy pc-nrfutil 6.x `dfu usb-serial` or `dfu serial` | ZIP/manifest/protobuf size/type/SHA-256 checks are unit-tested. Target bootloader validates compatibility/signature and object CRCs. Requires separately installed compatible pc-nrfutil and an existing Secure DFU bootloader; not modern nRFutil, BLE DFU or SoftDevice/bootloader updates. Hardware-unverified. |
-| Teensy HalfKay | Exact-board `teensy_loader_cli --mcu=TEENSY40/TEENSY41 -v` HEX transfer | Transfer completion only: `-v` means verbose, not verify. UI says **Firmware transferred; readback unavailable** and production batches refuse this route. Loader must be installed separately; press the board’s Program button before granting its HalfKay device. No first-device soft-reboot command is used. Hardware-unverified. |
-| WCH ROM ISP | wchisp 0.3-compatible `info --chip` preflight, then default `flash` with ISP verification | Raw BIN must explicitly start at code-flash address zero. USB or explicit UART transport is supported; UART baud is 115200/1000000/2000000. Requires separately installed compatible wchisp. No config-reset/unprotect flags. CH32V003 has UART ISP, no USB ISP, and requires application-controlled bootloader entry. WCH-Link/wlink SWIO is a separate route. Hardware-unverified. |
-| MSP430 mspdebug | Addressed HEX/ELF `prog` then target-memory `verify`, with `-n` disabling startup scripts | Explicit rf2500, olimex variants, uif, goodfet or mehfet driver; serial/USB as supported by that driver. BSL drivers with automatic mass erase/unlock and vendor tilib are refused. Requires separately installed mspdebug; legacy libusb compatibility is a signed Alpine dependency. Hardware-unverified. |
+| Teensy HalfKay | Exact-board `teensy_loader_cli --mcu=TEENSY40/TEENSY41 -v` HEX transfer | Transfer completion only: `-v` means verbose, not verify. UI says **Firmware transferred; readback unavailable** and production batches refuse this route. The Store builds pinned Teensy Loader 2.3 source with dynamic libusb-compat; press the board’s Program button before granting its HalfKay device. No first-device soft-reboot command is used. Hardware-unverified. |
+| WCH ROM ISP | wchisp 0.3-compatible `info --chip` preflight, then default `flash` with ISP verification | Raw BIN must explicitly start at code-flash address zero. USB or explicit UART transport is supported; UART baud is 115200/1000000/2000000. The Store builds pinned wchisp 0.3.0 source with its checked Cargo.lock and dynamic libusb. No config-reset/unprotect flags. CH32V003 has UART ISP, no USB ISP, and requires application-controlled bootloader entry. WCH-Link/wlink SWIO is a separate route. Hardware-unverified. |
+| MSP430 mspdebug | Addressed HEX/ELF `prog` then target-memory `verify`, with `-n` disabling startup scripts | Explicit rf2500, olimex variants, uif, goodfet or mehfet driver; serial/USB as supported by that driver. BSL drivers with automatic mass erase/unlock and vendor tilib are refused. The Store builds pinned MSPDebug 0.26 source; legacy libusb compatibility is a signed Alpine dependency. Hardware-unverified. |
 | AVR UPDI | pymcuprog UART `write --verify` using an exact supported AVR and application-only HEX; installed avrdude `serialupdi` can also be selected | Android prepares the existing SHA-256-pinned MIT Python support wheels without downloading/licensing XC. Requires a compatible UPDI adapter/circuit and device module. No high-voltage activation, chip unlock, user-row, fuse or explicit chip-erase operation. Hardware-unverified. |
 | PIC AN1388 HID/UART, MCC UART, PKOB nano, PICkit scripting, gpsim, Bridge | Existing PIC implementations are reused | See [PIC support](pic.md) for exact device/protocol/compiler evidence and vendor limits. Those historical tests do not verify newly added physical boards. |
 
+### Automatic flashing-client installation
+
+Opening a flash profile and choosing upload resolves its auxiliary Toolchain Store entry before requesting USB
+permission. The following clients have declared, verified-download installation paths; physical flashing remains
+hardware-unverified:
+
+| Client | Installed source/distribution | Runtime and installation proof |
+| --- | --- | --- |
+| esptool | Official 5.6.0 ARM64/x64 standalone archives, SHA-256 pinned from release metadata | Shared Ubuntu/glibc, original bundled dependencies retained. Actual x64 download/CLI/PATH smoke passed locally; ARM64/native CI checks the same recipe. |
+| picotool | Official Raspberry Pi 2.3.1 ARM64/x64 archives, SHA-256 pinned from release metadata | Shared Ubuntu/glibc. Uses the official binary rather than fetching a whole Pico SDK just to compile this host client. Actual x64 download/CLI/PATH smoke passed locally; ARM64 CI checks the same recipe. |
+| bossac | Official BOSSA 1.9.1 source archive, SHA-256 pinned from downloaded bytes | Native Alpine C++ build, version fixed explicitly because source archives have no Git metadata. Actual x64 source/build/PATH smoke passed locally; musl/ARM64 CI covers the production recipe. |
+| teensy_loader_cli | Official 2.3 source archive, SHA-256 pinned from downloaded bytes | Native Alpine C build using signed libusb-compat development packages. Actual x64 compile/PATH/MCU-capability smoke passed locally; source hash establishes the version. ARM64/musl recipe is exercised in CI. |
+| wchisp | Official 0.3.0 source archive, SHA-256 pinned from downloaded bytes | Native Alpine Rust build with `--locked --no-default-features --jobs 2`. Cargo.lock pins/checks dependencies; dynamic system libusb enables the descriptor bridge. Actual x64 source/version/PATH/dynamic-link smoke passed locally; ARM64/musl recipe is exercised in CI. |
+| mspdebug | Official v0.26 source archive, SHA-256 pinned from downloaded bytes | Native Alpine C build, readline omitted, libusb-compat dynamic backend. Actual x64 source/version/PATH smoke and the tool's simulator program/verify/mismatch checks passed locally. Source, license and upstream TI3410 transport firmware are retained. ARM64/musl recipe is exercised in CI. |
+| pymcuprog UART UPDI | Existing 3.19.4.61 MIT wheel and support wheels, SHA-256 pinned | Existing PIC support downloader; no XC compiler or XC license download. |
+| pc-nrfutil 6.1.7 | Typed legacy route; automatic ARM64 installation is unavailable | Its published source requires Python >=3.7,<3.11 and pc_ble_driver_py, incompatible with the current Ubuntu 24.04/Python 3.12 side environment. A missing CLI produces this explanation before permission/programming. An explicitly installed compatible CLI can still be used. |
+
+Installers validate the native executable/capabilities before creating PATH aliases. Sources and upstream licenses
+are retained. CI runs the same helpers on x64 and ARM64 and checks that native USB clients link the expected dynamic
+USB backend. A successful host install does not prove execution on a physical Android tablet or target board.
+
+The ESP-IDF 5.4.1 SDK recipe also fixes all 58 core/build Python distributions to exact releases and actual
+PyPI SHA-256 hashes for native Ubuntu CPython 3.12 ARM64/x64. Its only source archive, esptool 4.12.0, builds
+with locked setuptools/wheel and no isolated dependency downloads. The app installs a frozen vendor v5.4
+constraints file and runs the unmodified upstream checker offline; it does not fetch rolling Python constraints
+or run `install-python-env`. Clean x64 installation, `pip check`, upstream version checks and ARM64 archive/hash
+selection passed locally. Actual SDK firmware builds use the separate production installer CI matrix;
+project-selected components keep their own dependency manifests/locks and licenses.
+
 ### Additional route configuration
 
+For BOSSA, `binaryAddress` is the application's actual target address. `flashBaseAddress` is the physical start of
+main flash (zero by default for SAMD/SAME; SAM3X uses `524288`). The planner passes their checked difference to
+`bossac -o`; it never silently writes a bootloader-offset image at offset zero. Page alignment is checked by bossac
+against the connected chip's actual geometry. Whole-flash erase and GPNVM boot-configuration flags are omitted.
+
 The flash-profile `protocol` accepts `Teensy`, `WchIsp`, `MspDebug`, `NrfDfu` and `PymcuprogUpdi` in addition to
-previous routes. These use the same parsed-image boundaries and content-stability checks. Normal transfer-only
+previous routes. Installable routes prepare their declared Store client automatically and use the same parsed-image boundaries and content-stability checks. Normal transfer-only
 outcomes remain distinct from target-verified outcomes; a successfully launched process is not sufficient.
 
 - **Teensy:** set `target` to the exact logical board ID, such as `TEENSY40` or `TEENSY41`, and use the correct
@@ -191,8 +225,8 @@ outcomes remain distinct from target-verified outcomes; a successfully launched 
 CLI contracts were checked against [PJRC's loader usage](https://github.com/PaulStoffregen/teensy_loader_cli),
 [wchisp](https://github.com/ch32-rs/wchisp), [MSPDebug's manual](https://github.com/dlbeer/mspdebug/blob/master/mspdebug.man),
 [Nordic's legacy CLI and init format](https://github.com/NordicSemiconductor/pc-nrfutil), and
-[Microchip's pymcuprog CLI](https://github.com/microchip-pic-avr-tools/pymcuprog). Compatible tool installation and
-physical-board validation are still required; the command/fixture tests do not stand in for either.
+[Microchip's pymcuprog CLI](https://github.com/microchip-pic-avr-tools/pymcuprog). The declared native installation checks and
+physical-board validation remain separate; the command/fixture tests do not stand in for either.
 
 ## Board starters
 
@@ -233,6 +267,26 @@ describing the selected device, register, old/new values, reversibility and cons
 configuration operation. It refuses eFuse burning and permanent read-out protection/RDP level 2 outright.
 The SVD field editor also refuses configuration and side-effect registers; loading an SVD never authorizes a write.
 
+Application address bounds alone cannot recognize security words embedded inside normal program flash.
+Generic OpenOCD/probe-rs plans therefore inspect actual BIN/HEX/ELF bytes using a reviewed, exact-part policy:
+
+| Reviewed parts | In-image check | Current supported application values |
+| --- | --- | --- |
+| LPC1769/68/67/66/65/64/63 and LPC1759/58/56/54/52, plus the explicitly listed package identifiers in `EmbeddedConfigurationGuard` | CRP word at `0x2FC` | Complete `0x00000000` or `0xFFFFFFFF`. CRP1/2/3, partial words and other unreviewed values are refused before erase. LPC1751 is excluded because support depends on its silicon part ID. |
+| MK64FN1M0VLL12/VDC12/VLQ12/VMD12 and MK64FX512VLL12/VDC12/VLQ12/VMD12 | FCF at `0x400..0x40F` | All 16 bytes must be present: `FF FF FF FF FF FF FF FF FF FF FF FF FE FF FF FF`. An erased `FSEC=FF` enables security; it is refused. |
+
+Sparse holes remain unknown rather than being filled with invented current-device values. K64 partial images
+without the complete FCF are currently refused, including bootloader-offset updates, because a generic erase
+plan cannot prove configuration preservation. Known `lpc17xx.cfg`/`kx.cfg` scripts require a reviewed exact
+part. These checks do not silently rewrite the firmware or offer a confirmation bypass: the ordinary upload
+has no live old-value read with which to authorize a configuration change. Other targets and custom scripts
+need device-specific review; this small policy registry is not a universal security-word detector.
+
+The policies follow NXP [UM10360 §32.6/Table 568](https://www.keil.com/dd/docs/datashts/philips/lpc17xx_um.pdf),
+[AN4835 §5.1](https://www.nxp.com/docs/en/application-note/AN4835.pdf),
+[AN4507 Tables 1/4](https://www.nxp.com/docs/en/application-note/AN4507.pdf), and the exact ordering table in
+the [K64 datasheet](https://www.nxp.com/docs/en/data-sheet/K64P144M120SF5.pdf).
+
 **Backup firmware** reads one explicitly mapped application interval twice using OpenOCD, stm32flash or
 readback-capable STM32 DFU. It only saves a new backup when both reads agree and match the expected byte count.
 Read protection is never removed. **Compare firmware dumps** reports whole-file SHA-256 hashes, the exact number
@@ -249,10 +303,36 @@ the target's final acceptance, and keeps the entered password in memory for that
 run an OTA-capable application with a suitable partition layout. Its acknowledgment is not physical flash
 readback or a security guarantee from TLS; this is the upstream OTA protocol, not a bootloader installer.
 
+**Upload UF2 via BOOTSEL storage** uses Android's granted USB connection without mounting a disk or requesting
+root. It accepts only `2e8a:0003`/`2e8a:000f`, a SCSI Bulk-Only interface and the matching `INFO_UF2.TXT` read
+from the actual volume. The selected project's flash profile must name its `.uf2` and exact application ranges.
+Every block must contain the correct RP2040/RP2350 family, a unique aligned 256-byte payload and an address
+inside both those ranges and the conservative first 16 MiB XIP window. RAM, OTP, non-main-flash, mixed-family,
+extension and custom white-labeled bootloader containers are refused by this route.
+
+The block worker issues bounded SCSI INQUIRY, READ CAPACITY, READ(10) and WRITE(10) commands through the existing
+USB descriptor bridge. Its read-only phase checks the actual 512-byte BPB and FAT12/16/32 allocation, mirrors or
+active FAT, root entries and file chains. A superfloppy or one ordinary FAT MBR partition is accepted; GPT,
+extended partitions, repair, formatting and overwriting existing files are never requested. It allocates free
+clusters, stages the FAT copies, applicable FAT32 FSInfo and a new short root filename, then submits the UF2.
+Failures attempt metadata rollback when transport is still available; that cannot undo target flash already
+programmed by ROM. Pre-write cancellation sends no writes.
+
+RP BOOTSEL is a synthetic filesystem that consumes UF2 rather than an ordinary persistent USB disk. The result
+therefore reports USB command acknowledgment and optional filesystem-sector readback separately, and never
+labels either as MCU flash verification. A disconnect after the last payload but before its CSW is explicitly
+**submitted, final status unavailable**; it is not successful programming proof. Physical ROM behavior, USB
+controllers and reset timing remain hardware-unverified.
+
 ## On-chip debugging, registers and RTOS tasks
 
-**Debug on chip** builds symbols and starts the selected installed OpenOCD interface/target configuration through
-the permissioned libusb connection. The GDB endpoint binds to loopback; Tcl/telnet endpoints are disabled. A
+**Debug on chip** uses the selected backend and matching ELF. `Backend: "ProbeRs"` starts the pinned official
+probe-rs DAP server with an explicit `Chip`, through the permissioned nusb inventory. Its attach configuration
+disables flashing, full erase, unlock permission and connect-under-reset overrides. Official DAP initialization
+is tested on native ARM64/x64; a physical probe session is hardware-unverified.
+
+The OpenOCD fallback starts the selected installed interface/target configuration through the permissioned libusb
+connection. The GDB endpoint binds to loopback; Tcl/telnet endpoints are disabled. A
 Python-enabled, all-target GDB 14+ with its real `gdb.dap` adapter attaches through TabStudio's existing DAP client.
 GDB capability/module checks reject an unsuitable installation before claiming a debug session.
 
@@ -272,7 +352,7 @@ This attaches and halts; it does not silently flash a new program. Upload the ma
 the typed profile does not accept arbitrary project Tcl or memory-write startup commands.
 
 The existing DAP UI provides breakpoints, stepping, call stack and locals. DAP memory read/write transport has
-strict length/address checks; instruction output can be requested through the adapter's console where supported.
+strict length/address checks; the static memory and disassembly commands below use the corresponding protocol requests.
 The QEMU/simavr tests exercise the real adapter/client path, not OpenOCD's physical probe transport. Availability
 of a particular peripheral, multicore target or architecture still depends on OpenOCD/GDB support and wiring.
 
@@ -290,15 +370,34 @@ the actual chip header; **Ctrl+.** on an eligible literal mask offers an existin
 definition equals the SVD field mask. It does not invent vendor macro names. Full register-aware completion across
 arbitrary HAL abstractions/macros is not implemented.
 
+**Read target memory** and **Disassemble target code** are static paused snapshots through the actual DAP
+`readMemory` and `disassemble` requests. Enter an unsigned decimal/hex address and a bounded count (up to 4096
+bytes or 256 instructions). Memory appears as hex bytes and printable ASCII; disassembly retains actual opcodes,
+symbols, unavailable-instruction markers and existing mapped source links in Output/ informational Error List
+rows. The adapter must advertise support. If the target resumes, stops again or disconnects while a request is
+pending, the mixed/stale result is discarded. These commands do not poll, resume the CPU or write memory.
+
 **RTOS threads** reads halted FreeRTOS lists or Zephyr's monitored thread chain through the firmware's actual
 debug types and symbols. Names, states, priorities and available stack extents are bounded/cycle checked. All
 cores must be halted. Zephyr needs thread monitoring; missing types/configurations are reported. The reader can
 scan a verified stack-fill pattern when explicitly supplied by a caller; the current UI does not guess fill
 settings or claim a stack high-water mark when these are unknown.
 
-Live RTT acquisition and binary defmt decoding are not integrated into this workflow yet. OpenOCD/debug output
-and ordinary serial logs use existing Output/Serial Monitor. The test importer accepts already decoded logs;
-that is not a claim of real-time RTT/defmt transport.
+**Start RTT/defmt logs** runs the official probe-rs 0.32 `attach` command and streams its native decoded output
+into Output. Select `Backend: "ProbeRs"`, the exact `Chip` and the ELF for the firmware already running in
+`.tabstudio/embedded-debug.json`. On Android, the selected USB probe uses the permissioned inventory/FD bridge;
+desktop hosts use their installed probe-rs and an explicit `ProbeSelector`. Keep the writable `_SEGGER_RTT`
+control-block symbol in the ELF. TabStudio reads that actual symbol instead of guessing a RAM scan range.
+The upstream decoder uses the matching ELF's defmt metadata for the RTT channel named `defmt`; other channels
+use upstream's ordinary channel handling. No custom defmt decoder or generated example log is substituted.
+
+This command does not build, flash or request reset/erase/unlock. It uses upstream's `AttachToRunning` monitor,
+which preserves the existing RTT header. Attaching can resume the target; vector catches are disabled and RTT
+uses `no-block-skip` mode so a full buffer can drop logs rather than stall firmware. The native tool selects
+the RTT core from the actual control-block address and chip memory map; the DAP `CoreIndex` is not a CLI logging
+override. Stop disconnects the logger and releases its USB connection/inventory. A separate logger is refused
+while a debugger owns the probe. Command construction and metadata guards have unit tests; physical acquisition
+and decoding from a real target remain hardware-unverified.
 
 ## Memory, crash, stack and pin analysis
 
@@ -373,17 +472,33 @@ uses, placing conflicts in the Error List. `.tabstudio/pin-map.json` can provide
 without it, nonexistent-pin validation is not claimed. Dynamic expressions, aliases, includes, full preprocessor
 evaluation and every Zephyr pinctrl dialect are outside this bounded static check.
 
-## Tests on the host and board results
+## Tests on the host and board
 
 **Run embedded tests** runs an already built host Unity/TAP/GoogleTest executable or Cargo's actual host target.
 `.tabstudio/embedded-tests.json` names the format, executable/arguments and host identity. Arguments remain
 separate strings; Rust host tests explicitly override an inherited bare-metal target. GoogleTest gets a fresh XML
 report per run. Nonzero exits, truncated output or incomplete harness summaries cannot become a passing run.
 
-**Import test results** reads an actual Unity, TAP, defmt-test, Rust text log or GoogleTest XML report and retains
-the supplied board identity in Test Explorer. This is useful for logs produced by a supported external/on-target
-harness, but TabStudio does not yet flash/run a complete on-target Unity/defmt-test campaign or acquire RTT data
-automatically. A host result is never labeled as a physical-board result.
+**Run board tests** uses the pinned official `probe-rs run` to flash, verify, reset and execute one explicitly
+selected board's already-built test ELF. The same `.tabstudio/embedded-tests.json` supplies `Format`, the actual
+`BoardId`, `TimeoutSeconds` (5–3600), `RttChannel` (0–15), and optionally `RttChannelName`. Set `Format` to `Unity`
+for RTT text, `DefmtTest` for the native ELF-backed defmt decoder, or `Rust` for upstream's native `embedded-test`
+harness. The exact test ELF and chip must agree between the `ProbeRs` flash/debug profiles. Its actual load
+segments are checked against the configured application-flash map, copied to private storage and SHA-256 checked
+again before invocation. The command requests preverification, post-flash verification and restoration of bytes
+outside the image in erased sectors; it never requests chip erase or protection changes.
+
+The full bounded stream feeds Test Explorer, retaining `BoardId` separately from the probe selector. Unity and
+old defmt-test require the matching ELF's actual `_SEGGER_RTT` symbol and stop the monitor after their explicit
+final summary. RTT blocks when full to preserve test records. A multi-channel image may need its exact
+`RttChannelName` (`Terminal` for Unity and `defmt` for DefmtTest by default) to remove upstream's channel prefix.
+Native `embedded-test` requires its real ELF metadata and a successful native command exit. Stop, timeout,
+disconnect, lost summary and oversized/truncated output become errors, never inferred passes. Android uses the
+same granted bulk-USB/nusb bridge; active debugging must be stopped first. Managed tests exercise real-form
+harness streams through a fake process runtime. Physical flash, RTT acquisition and tests remain hardware-unverified.
+
+**Import test results** also reads an actual Unity, TAP, defmt-test, Rust text log or GoogleTest XML report and
+retains the supplied board identity in Test Explorer. A host result is never labeled as a physical-board result.
 
 ## Verification and reproducibility
 
@@ -394,6 +509,7 @@ runs. Check the final PR SHA for completed results; adding a workflow is not evi
 | --- | --- |
 | Embedded library tests | Parsers, safe image bounds and command plans, device associations, backups/diffs, OTA protocol contracts, SVD/pins/RTOS readers and test-result parsing. Analysis tests also read a real host ELF. |
 | Native USB tests | An unchanged compiled POSIX C client uses the real PTY/shim; synthetic adapter requests and mock libusb ABI ownership are replayed. No physical captures. |
+| BOOTSEL storage tests | Synthetic CBW/CSW and SCSI transcripts; FAT12/16/32 superfloppy/MBR images, mirrors/active FAT, packed FAT12 entries, FAT32 FSInfo, cancellation, refusal and rollback. GNU mtools independently reads six generated files byte-for-byte. No physical USB or flash verification. |
 | IDE tests | Template/configuration contracts, actual analysis/test commands, treemap escaping/proportions, Test Explorer results and screenshots. |
 | Cortex-M emulator | Real ARM cross-compile, QEMU Cortex-M3, GDB DAP and TabStudio DAP client: source breakpoint, stack, locals, stepping and memory. Locally exercised; not a physical STM32/probe test. |
 | RISC-V emulator | Real RV32 cross-compile, QEMU, GDB DAP and TabStudio DAP client with the same debugger checks. Locally exercised; not an ESP32/CH32 hardware test. |
@@ -414,11 +530,15 @@ python3 -m unittest discover -s build/embedded/tests -p 'test_*.py' -v
 dotnet test tests/TabStudio.Toolchains.Tests --filter FullyQualifiedName~Embedded
 dotnet test tests/TabStudio.LanguageServers.Tests --filter FullyQualifiedName~Embedded
 dotnet test tests/TabStudio.App.Tests --filter FullyQualifiedName~Embedded
+TABSTUDIO_FAT_PROOF=/tmp/tabstudio-fat-proof \
+  dotnet test tests/TabStudio.Toolchains.Tests --filter FullyQualifiedName~StorageTests
+python3 build/embedded/verify-fat-images.py /tmp/tabstudio-fat-proof
 TABSTUDIO_EMBEDDED_EMULATORS=1 TABSTUDIO_REPO_ROOT="$PWD" \
   dotnet test tests/TabStudio.LanguageServers.Tests --filter FullyQualifiedName~EmbeddedQemuTests
 ```
 
-The emulator command requires the cross compilers, QEMU, simavr and a suitable GDB on the host. The CI workflow
+The independent FAT proof requires GNU mtools (`mtype`). It reads only generated regular image files, never a
+hardware disk. The emulator command requires the cross compilers, QEMU, simavr and a suitable GDB on the host. The CI workflow
 lists those packages. Synthetic fixtures are described in [USB bridge verification](../../build/embedded/tests/README.md).
 Real hardware captures still need the exact device/probe firmware, target part, tool version, firmware digest,
 redistribution permission and expected result; none have been fabricated for this change.
@@ -431,14 +551,14 @@ They answer ordinary development questions without needing a second computer or 
 
 The implementation reuses the Toolchain Store, PIC USB lifetime/drivers, existing terminal, clangd/rust-analyzer,
 Error List, Test Explorer and DAP client. It does not introduce another process runtime or bypass Android USB
-permissions. OpenOCD plus GDB DAP supplies the current implemented debug route. The separate PRoot usbfs bridge
+permissions. Official probe-rs DAP and the OpenOCD plus GDB DAP fallback reuse the same debugger UI. The separate PRoot usbfs bridge
 has CI-verified static/raw FD routing and stock nusb enumeration, which establishes the transport foundation;
 it does not establish a physical probe-rs programming or debug session.
 
-Remaining work includes physical nusb/usbfs I/O qualification and native hidraw/HIDAPI v1 transport,
-user-space BOOTSEL FAT storage, complete board/core/SDK ARM64/glibc
-installation and Box64 package fallback, automatic interrogation on plug-in and device-association UI, the unimplemented
-programmers listed above, automatic crash detection/full unwind beyond explicit supported capture, complete call-graph extraction, RTT/defmt acquisition,
-fully automated on-target test campaigns, F5 orchestration across every unsupported board/transport and physical-board
+Remaining work includes physical nusb/usbfs, HIDAPI and BOOTSEL storage I/O qualification, a native probe-rs hidraw
+backend, exhaustive third-party board/core package compatibility, automatic interrogation on plug-in and a complete
+device-association UI, WCH-Link SWIO/vendor debug support and legacy pc-nrfutil installation, automatic crash
+detection/full unwind beyond explicit supported capture, complete call-graph proof and hardware RTT/defmt qualification,
+parallel on-target test campaigns, F5 orchestration across every unsupported board/transport and physical-board
 verification. The existing [Windows Bridge](../ARCHITECTURE.md#windows-bridge) remains available for workflows
 that need vendor desktop software. See [third-party notices](../../THIRD-PARTY-NOTICES.md) for downloaded tools.

@@ -13,6 +13,25 @@ public sealed class EmbeddedTemplateTests : IDisposable
     private static readonly JsonSerializerOptions ProfileJson = new(JsonSerializerDefaults.Web) { Converters = { new JsonStringEnumConverter() } };
 
     [Theory]
+    [InlineData("esp32")]
+    [InlineData("esp32s3")]
+    [InlineData("esp32c3")]
+    public void Esp_starters_flash_only_resolved_post_build_metadata_instead_of_guessing_offsets(string id)
+    {
+        var root = new ProjectTemplates(new AppPaths(_temp.Path)).Create("embedded-" + id, "Firmware");
+        var profile = JsonSerializer.Deserialize<EmbeddedFlashRequest>(File.ReadAllText(Path.Combine(root, ".tabstudio", "embedded-flash.json")), ProfileJson)!;
+        Assert.Equal(EmbeddedFlashProtocol.Esptool, profile.Protocol);
+        Assert.Equal("FROM_METADATA", profile.Target);
+        Assert.Equal(".pio/build/" + id + "/tabstudio-flasher-args.json", profile.EspFlasherArguments);
+        Assert.Null(profile.BinaryAddress);
+        Assert.Empty(profile.ApplicationFlash);
+        Assert.Contains("extra_scripts = post:tabstudio_esp_flash.py", File.ReadAllText(Path.Combine(root, "platformio.ini")), StringComparison.Ordinal);
+        var exporter = File.ReadAllText(Path.Combine(root, "tabstudio_esp_flash.py"));
+        Assert.Contains("UPLOADERFLAGS", exporter, StringComparison.Ordinal);
+        Assert.Contains("$ESP32_APP_OFFSET", exporter, StringComparison.Ordinal);
+    }
+
+    [Theory]
     [InlineData("uno", "uno")]
     [InlineData("nano", "nanoatmega328new")]
     [InlineData("mega", "megaatmega2560")]

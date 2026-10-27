@@ -11,6 +11,33 @@ public sealed class ExtendedFlashRoutesTests : IDisposable
     private readonly TempDirectory _temporary = new();
 
     [Fact]
+    public void Avrdude_cannot_rebase_a_raw_binary_away_from_flash_zero()
+    {
+        var request = Request(EmbeddedFlashProtocol.Avrdude, Binary("avr.bin")) with
+        {
+            Target = "m328p", Programmer = "arduino", BinaryAddress = 128,
+        };
+        Assert.Throws<ArgumentException>(() => EmbeddedFlashPlanner.Plan(request));
+    }
+
+    [Theory]
+    [InlineData(0x2000ul, 0ul, "8192")]
+    [InlineData(0x80000ul, 0x80000ul, "0")]
+    public void Bossac_preserves_bootloader_and_physical_flash_base_offsets(ulong application, ulong flashBase, string offset)
+    {
+        var request = Request(EmbeddedFlashProtocol.Bossac, Binary("application.bin")) with
+        {
+            BinaryAddress = application, FlashBaseAddress = flashBase, ApplicationFlash = [new(application, 16384)],
+        };
+        var step = Assert.Single(EmbeddedFlashPlanner.Plan(request).Steps);
+        var at = step.Arguments.ToList().IndexOf("-o");
+        Assert.True(at >= 0);
+        Assert.Equal(offset, step.Arguments[at + 1]);
+        Assert.DoesNotContain(step.Arguments, argument => argument is "-b" or "--boot" or "-e" or "--erase");
+        Assert.Throws<ArgumentException>(() => EmbeddedFlashPlanner.Plan(request with { FlashBaseAddress = application + 1 }));
+    }
+
+    [Fact]
     public void Teensy_transfer_does_not_pretend_verbose_is_verify_or_reboot_another_board()
     {
         var image = _temporary.Write("teensy.hex", ":0400000001020304F2\n:00000001FF\n");

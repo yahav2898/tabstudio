@@ -4,6 +4,7 @@ using TabStudio.Testing;
 using TabStudio.Toolchains.Catalog;
 using TabStudio.Toolchains.Downloads;
 using TabStudio.Toolchains.Embedded;
+using TabStudio.Toolchains.Embedded.Installation;
 using TabStudio.Toolchains.Installation;
 using TabStudio.Toolchains.Linux;
 using TabStudio.Toolchains.Processes;
@@ -22,6 +23,10 @@ public sealed class EmbeddedGlibcTests
     [InlineData("/root/.arduino15/packages/arduino/tools/avr-gcc/bin/avr-gcc", "arduino")]
     [InlineData("probe-rs", "probe-rs")]
     [InlineData("cargo-embed", "probe-rs")]
+    [InlineData("idf.py", "esp-idf")]
+    [InlineData("west", "zephyr")]
+    [InlineData("/opt/tabstudio/pico-sdk/tools/pioasm", "pico-sdk")]
+    [InlineData("/opt/tabstudio/embedded-rust/bin/cargo", "embedded-rust")]
     [InlineData("/usr/local/bin/cargo-flash", "probe-rs")]
     [InlineData("/opt/tabstudio/platformio-evil/pio", null)]
     [InlineData("python3", null)]
@@ -108,6 +113,128 @@ public sealed class EmbeddedGlibcTests
         Assert.Equal(glibcHeader, runtime.ToDevicePath("/usr/include/stdint.h", null));
         using var desktopServer = runtime.Start(new ProcessStartSpec { Program = "clangd", WorkingDirectory = project.Resolve("alpine") });
         Assert.Equal(alpineHeader, runtime.ToDevicePath("/usr/include/stdint.h", null));
+    }
+
+    [Fact]
+    public void A_glibc_clangd_context_does_not_hide_another_languages_sources_in_Alpine()
+    {
+        using var project = new TempDirectory();
+        project.Write("app/platformio.ini", "[env:uno]\nboard=uno");
+        var rustSource = project.Write("alpine/root/.cargo/registry/src/serde/lib.rs", "// Rust source");
+        var primary = new FakeRuntime { Rootfs = project.Resolve("alpine") };
+        var guest = new FakeRuntime { Rootfs = project.Resolve("glibc") };
+        var runtime = new EmbeddedGlibcRuntime(primary, guest, _ => true, () => true);
+        using var server = runtime.Start(new ProcessStartSpec { Program = "clangd", WorkingDirectory = project.Resolve("app") });
+        Assert.Equal(rustSource, runtime.ToDevicePath("/root/.cargo/registry/src/serde/lib.rs", null));
+    }
+
+    [Fact]
+    public void Native_frontends_do_not_force_Python_safe_path_on_vendor_script_children()
+    {
+        var primary = new FakeRuntime();
+        var guest = new FakeRuntime();
+        var runtime = new EmbeddedGlibcRuntime(primary, guest, _ => true, () => true);
+        using var probe = runtime.Start(new ProcessStartSpec { Program = "probe-rs" });
+        Assert.DoesNotContain("PYTHONSAFEPATH", Assert.Single(guest.Started).Environment.Keys);
+        using var explicitSetting = runtime.Start(new ProcessStartSpec
+        {
+            Program = "arduino-cli", Environment = new Dictionary<string, string?> { ["PYTHONSAFEPATH"] = "0" },
+        });
+        Assert.Equal("0", guest.Started[^1].Environment["PYTHONSAFEPATH"]);
+    }
+
+    [Fact]
+    public void SDK_commands_keep_vendor_Python_imports_and_limit_generators_even_with_a_user_PATH()
+    {
+        var guest = new FakeRuntime();
+        var runtime = new EmbeddedGlibcRuntime(new FakeRuntime(), guest, _ => true, () => true);
+        using var process = runtime.Start(new ProcessStartSpec
+        {
+            Program = "idf.py", Arguments = ["build"],
+            Environment = new Dictionary<string, string?>
+            {
+                ["PATH"] = "/workspace/custom-tools:/usr/bin", [EmbeddedSdkBootstrap.JobsVariable] = "5",
+            },
+        });
+        var started = Assert.Single(guest.Started);
+        Assert.Equal(EmbeddedSdkBootstrap.BuildToolsDirectory + ":/workspace/custom-tools:/usr/bin", started.Environment["PATH"]);
+        Assert.Equal("5", started.Environment[EmbeddedSdkBootstrap.JobsVariable]);
+        Assert.Equal("/opt/tabstudio/esp-idf", started.Environment["IDF_PATH"]);
+        Assert.DoesNotContain("PYTHONSAFEPATH", started.Environment.Keys);
+    }
+
+    [Fact]
+    public void Bare_metal_Rust_uses_its_native_cross_targets_while_desktop_Cargo_keeps_the_existing_toolchain()
+    {
+        using var project = new TempDirectory();
+        project.Write("firmware/Cargo.toml", "[package]\nname='firmware'\nversion='0.1.0'");
+        project.Write("firmware/.cargo/config.toml", "[build]\ntarget='thumbv7em-none-eabihf'");
+        project.Write("firmware/src/main.rs", "#![no_std]\n#![no_main]");
+        project.Write("desktop/Cargo.toml", "[package]\nname='desktop'\nversion='0.1.0'");
+        var primary = new FakeRuntime();
+        var guest = new FakeRuntime();
+        var runtime = new EmbeddedGlibcRuntime(primary, guest, _ => true, () => true);
+        foreach (var program in new[] { "cargo", "rustc", "rust-analyzer", "/usr/bin/rust-analyzer" })
+        {
+            using var embedded = runtime.Start(new ProcessStartSpec { Program = program, WorkingDirectory = project.Resolve("firmware/src") });
+            using var desktop = runtime.Start(new ProcessStartSpec { Program = program, WorkingDirectory = project.Resolve("desktop") });
+        }
+        Assert.Equal(4, guest.Started.Count);
+        Assert.Equal(4, primary.Started.Count);
+        Assert.All(guest.Started, command => Assert.Equal("1", command.Environment[EmbeddedGlibcRuntime.RoutingMarker]));
+        Assert.All(guest.Started, command => Assert.StartsWith("/opt/tabstudio/embedded-rust/bin/", command.Program, StringComparison.Ordinal));
+        Assert.Equal("/opt/tabstudio/embedded-rust/bin/rust-analyzer", runtime.ResolveForDirectory("rust-analyzer", project.Resolve("firmware/src")));
+        Assert.Equal("rust-analyzer", runtime.ResolveForDirectory("rust-analyzer", project.Resolve("desktop")));
+        var unready = new EmbeddedGlibcRuntime(primary, guest, _ => false, () => true);
+        Assert.Null(unready.ResolveForDirectory("rust-analyzer", project.Resolve("firmware/src")));
+    }
+
+    [Fact]
+    public async Task Source_SDK_installation_verifies_its_commit_and_firmware_before_readiness_and_removes_owned_caches()
+    {
+        using var fixture = new InstallerFixture();
+        var sdk = ToolchainCatalog.Default.Find("pico-sdk")!;
+        var recipe = EmbeddedSdkBootstrap.Recipes.Get(sdk.Id)!;
+        fixture.Guest.CommandOutput = spec => spec.Program == "git" && spec.Arguments.Contains("rev-parse") ? recipe.Revision : null;
+        var failure = await Assert.ThrowsAsync<ToolchainInstallException>(() => fixture.Installer.InstallAsync(sdk, null, CancellationToken.None));
+        Assert.Contains("required firmware", failure.Message, StringComparison.Ordinal);
+        Assert.False(fixture.Installer.IsToolchainReady(sdk.Id));
+        fixture.Guest.BeforeStart = spec =>
+        {
+            if (spec.Program == "cmake" && spec.Arguments.Contains("--build"))
+            {
+                foreach (var artifact in recipe.RequiredArtifacts)
+                {
+                    var path = Path.Combine(fixture.Installer.Rootfs, artifact.TrimStart('/'));
+                    Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+                    File.WriteAllText(path, "firmware produced by test runtime");
+                }
+            }
+        };
+        await fixture.Installer.InstallAsync(sdk, null, CancellationToken.None);
+        Assert.True(fixture.Installer.IsToolchainReady(sdk.Id));
+        Assert.Contains(fixture.Guest.Started, spec => spec.Program == "git" && spec.Arguments.Contains(recipe.Revision));
+        Assert.Contains(fixture.Guest.Started, spec => spec.Program == "git" && spec.Arguments.Contains(recipe.Repository.AbsoluteUri));
+        Assert.Contains(fixture.Guest.Started, spec => spec.Program == "git" && spec.Arguments.Contains("protocol.file.allow=never"));
+        Assert.All(fixture.Guest.Started.Where(spec => spec.Program == "cmake"), spec =>
+            Assert.StartsWith(EmbeddedSdkBootstrap.BuildToolsDirectory + ":", spec.Environment["PATH"], StringComparison.Ordinal));
+        await fixture.Installer.RemoveAsync(sdk, [], null, CancellationToken.None);
+        Assert.False(fixture.Installer.IsToolchainReady(sdk.Id));
+        Assert.False(Directory.Exists(Path.Combine(fixture.Installer.Rootfs, recipe.SourceDirectory.TrimStart('/'))));
+        Assert.All(recipe.Removes, path => Assert.False(Directory.Exists(Path.Combine(fixture.Installer.Rootfs, path.TrimStart('/')))));
+        Assert.True(File.Exists(Path.Combine(fixture.Installer.Rootfs, "opt/tabstudio/embedded/serial-posix.so")));
+    }
+
+    [Fact]
+    public async Task A_source_checkout_that_reports_the_wrong_commit_never_runs_SDK_setup()
+    {
+        using var fixture = new InstallerFixture();
+        var sdk = ToolchainCatalog.Default.Find("pico-sdk")!;
+        fixture.Guest.CommandOutput = spec => spec.Program == "git" && spec.Arguments.Contains("rev-parse") ? new string('0', 40) : null;
+        var failure = await Assert.ThrowsAsync<ToolchainInstallException>(() => fixture.Installer.InstallAsync(sdk, null, CancellationToken.None));
+        Assert.Equal(InstallFailure.IntegrityFailed, failure.Failure);
+        Assert.DoesNotContain(fixture.Guest.Started, spec => spec.Program == "cmake");
+        Assert.False(fixture.Installer.IsToolchainReady(sdk.Id));
     }
 
     [Fact]
@@ -213,6 +340,7 @@ public sealed class EmbeddedGlibcTests
             if (seedImage)
             {
                 _temp.Write("embedded/rootfs/usr/bin/apt-get", "");
+                _temp.Write("embedded/rootfs/usr/bin/cmake", "");
                 _temp.Write("embedded/rootfs/etc/os-release", "ID=ubuntu");
                 _temp.Write("embedded/rootfs/.tabstudio-embedded-image", FlutterToolchainInstaller.RootImage(architecture)?.Sha256 ?? "unsupported");
             }
@@ -231,6 +359,7 @@ public sealed class EmbeddedGlibcTests
         public string? Rootfs { get; set; }
         public string? FailProgram { get; set; }
         public Action<ProcessStartSpec>? BeforeStart { get; set; }
+        public Func<ProcessStartSpec, string?>? CommandOutput { get; set; }
         public string DisplayName => "fake";
         public RuntimeKind Kind => RuntimeKind.Linux;
         public ToolchainProcess Start(ProcessStartSpec spec)
@@ -244,14 +373,19 @@ public sealed class EmbeddedGlibcTests
                 Directory.CreateDirectory(Path.GetDirectoryName(file)!);
                 File.WriteAllText(file, "test ABI shared library");
             }
-            var text = spec.Arguments.Contains("--virtual") ? "EMBEDDED_BRIDGE_PASSED" : "PlatformIO Core, version 6.1.18";
+            var text = CommandOutput?.Invoke(spec) ?? (spec.Arguments.Contains("--virtual") ? "EMBEDDED_BRIDGE_PASSED" : "PlatformIO Core, version 6.1.18");
             return new ToolchainProcess(new FakeHandle(spec.Program == FailProgram ? 1 : 0, text), spec);
         }
         public bool HasCommand(string command) => true;
         public string? Resolve(string command) => command;
         public ProcessStartSpec Shell(string workingDirectory, TerminalSize size) => new() { Program = "primary-shell", WorkingDirectory = workingDirectory, Terminal = size };
         public void ShareFolder(string folder) { }
-        public string? ToDevicePath(string programPath, string? workingDirectory) => Rootfs is null ? programPath : Path.Combine(Rootfs, programPath.TrimStart('/'));
+        public string? ToDevicePath(string programPath, string? workingDirectory)
+        {
+            if (Rootfs is null) return programPath;
+            var candidate = Path.Combine(Rootfs, programPath.TrimStart('/'));
+            return File.Exists(candidate) ? candidate : null;
+        }
     }
 
     private sealed class FakeInstaller : IToolchainInstaller

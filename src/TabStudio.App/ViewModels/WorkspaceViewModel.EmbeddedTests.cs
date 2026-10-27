@@ -48,7 +48,8 @@ public sealed partial class WorkspaceViewModel
                 IsBottomPanelVisible = true;
                 return;
             }
-            if (options.Format == EmbeddedTestFormat.Rust && _toolchains.Catalog.Find("rust") is { } toolchain
+            var rustToolchainId = project.Kind == EmbeddedProjectKind.Rust ? EmbeddedBuildPlanner.ToolchainId(project.Kind) : "rust";
+            if (options.Format == EmbeddedTestFormat.Rust && _toolchains.Catalog.Find(rustToolchainId) is { } toolchain
                 && !await EnsureToolchainReadyAsync(toolchain, "Run the project's native host-side tests."))
             {
                 return;

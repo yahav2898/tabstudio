@@ -96,16 +96,22 @@ public sealed partial class WorkspaceViewModel
         StatusText = "Building " + project.Name;
         try
         {
+            if (plan.Build.Any(command => command.Environment.GetValueOrDefault("TABSTUDIO_PLATFORMIO_BOX64") == "1"))
+            {
+                await _toolchains.PrepareEmbeddedBox64Async(line => Output.WriteLine(line, OutputKind.Info), cancellation.Token);
+            }
+            ErrorList.SetRunError(project.Directory, null);
             foreach (var step in plan.Preparation.Concat(plan.Build))
             {
                 Output.WriteLine("> " + step.CommandLine, OutputKind.Info);
-                var result = await OutputProcess.RunAsync(_toolchains.Runtime, step, Output, null, cancellation.Token);
+                var result = project.Kind == EmbeddedProjectKind.Rust
+                    ? await BuildEmbeddedCargoAsync(step, cancellation.Token)
+                    : await OutputProcess.RunAsync(_toolchains.Runtime, step, Output, null, cancellation.Token);
                 if (!result.Succeeded)
                 {
                     State = IdeState.Failed;
                     StatusText = "Firmware build failed";
-                    var nativeProjects = ToolchainProjectDetector.Detect(project.Directory, _toolchains.Catalog);
-                    if (nativeProjects.Count > 0) ReportToolchainRun(nativeProjects[0], project.Marker, result);
+                    ReportToolchainRun(new ToolchainProject(toolchain, project.Directory, project.Marker), project.Marker, result);
                     return false;
                 }
             }
@@ -118,6 +124,29 @@ public sealed partial class WorkspaceViewModel
         finally { _run = null; }
     }
 
+    private async Task<OutputProcessResult> BuildEmbeddedCargoAsync(ProcessStartSpec command, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await CommandRunner.RunAsync(_toolchains.Runtime, command, line =>
+            {
+                if (CargoBuildOutput.Display(line) is { Length: > 0 } display)
+                {
+                    Output.WriteLine(display, OutputKind.Program);
+                }
+            }, cancellationToken);
+            var diagnostics = CargoBuildOutput.Diagnostics(result.Output)
+                .Concat(result.Output.Split('\n').Select(CargoBuildOutput.Display).OfType<string>().SelectMany(line => line.Split('\n')))
+                .ToArray();
+            return new OutputProcessResult(result.Exit, diagnostics);
+        }
+        catch (ToolchainRuntimeException error)
+        {
+            Output.WriteLine(error.Message, OutputKind.Failure);
+            return new OutputProcessResult(null, [], error.Message);
+        }
+    }
+
     /// <summary>Programs only an explicitly mapped application image through one selected permissioned USB device.</summary>
     [RelayCommand(CanExecute = nameof(CanRun))]
     private async Task UploadEmbeddedAsync()
@@ -126,6 +155,7 @@ public sealed partial class WorkspaceViewModel
         {
             if (await SelectEmbeddedProjectAsync() is not { } project || !await BuildEmbeddedCoreAsync(project)) return;
             var profilePath = Path.Combine(project.Directory, ".tabstudio", "embedded-flash.json");
+            if (!File.Exists(profilePath)) await TryCreateEspMetadataProfileAsync(project, profilePath);
             if (!File.Exists(profilePath))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(profilePath)!);
@@ -146,6 +176,7 @@ public sealed partial class WorkspaceViewModel
             {
                 WorkingDirectory = project.Directory,
                 FirmwarePath = Path.GetFullPath(request.FirmwarePath, project.Directory),
+                EspFlasherArguments = request.EspFlasherArguments is { } metadata ? Path.GetFullPath(metadata, project.Directory) : null,
                 SerialPort = _toolchains.Environment is null ? request.SerialPort
                     : Path.Combine(project.Directory, ".tabstudio", "dev", "ttyUSB0"),
             };

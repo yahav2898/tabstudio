@@ -54,6 +54,16 @@ public sealed class UsbBridgeTests
     }
 
     [Fact]
+    public void OpenOCD_HID_calls_use_the_same_package_libusb_backend_before_linked_hidraw()
+    {
+        using var device = new Connection(42);
+        var command = new ProcessStartSpec { Program = "/usr/bin/openocd", Environment = new Dictionary<string, string?> { ["LD_PRELOAD"] = "/other.so" } };
+        var spec = UsbBridgeProcess.CreateLibUsb(device, command);
+        Assert.Equal(UsbBridgeInstallation.ToolsDirectory + "/libusb-fd.so:libhidapi-libusb.so.0:/other.so", spec.Environment["LD_PRELOAD"]);
+        Assert.Contains("hidapi", UsbBridgeInstallation.Packages);
+    }
+
+    [Fact]
     public void Serial_bridge_keeps_tool_arguments_out_of_shell_and_validates_line_settings()
     {
         using var device = new Connection(42);

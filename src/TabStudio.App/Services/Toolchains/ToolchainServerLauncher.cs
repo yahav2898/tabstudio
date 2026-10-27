@@ -25,6 +25,10 @@ public sealed class ToolchainServerLauncher(IToolchainRuntime runtime) : IServer
     public string? Resolve(string command) => string.IsNullOrWhiteSpace(command) ? null : _runtime.Resolve(command);
 
     /// <inheritdoc />
+    public string? ResolveForDirectory(string command, string workingDirectory) =>
+        string.IsNullOrWhiteSpace(command) ? null : _runtime.ResolveForDirectory(command, workingDirectory);
+
+    /// <inheritdoc />
     public IServerProcess Start(ServerStartInfo startInfo)
     {
         ArgumentNullException.ThrowIfNull(startInfo);

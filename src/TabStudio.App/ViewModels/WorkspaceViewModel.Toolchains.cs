@@ -416,7 +416,8 @@ public sealed partial class WorkspaceViewModel
                 {
                     await OpenMicroPythonReplAsync();
                 }
-                else if (File.Exists(Path.Combine(project.Directory, ".tabstudio", "embedded-flash.json")))
+                else if (File.Exists(Path.Combine(project.Directory, ".tabstudio", "embedded-flash.json")) ||
+                         embedded.Kind == TabStudio.Toolchains.Embedded.Projects.EmbeddedProjectKind.EspIdf)
                 {
                     await UploadEmbeddedAsync();
                     if (State == IdeState.Ready && StatusText == "Firmware upload verified")

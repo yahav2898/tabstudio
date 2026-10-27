@@ -32,3 +32,34 @@ hot-plug timing and native hidraw/CMSIS-DAP v1 remain unverified or unsupported.
 The serial worker creates an explicit private PTY alias (usually `.tabstudio/dev/ttyUSB0`) and substitutes it into `{port}` tool arguments. It does not create kernel serial devices or install unrestricted `/dev` access. CDC input modem status has no synchronous generic request and reports only host-controlled DTR/RTS. Hardware RTS/CTS and distinct input/output baud rates are refused. Flush clears PTY queues; generic CDC has no portable hardware FIFO purge. Drain includes a conservative UART wire-time budget after USB OUT acceptance, bounded at 60 seconds.
 
 Real captures should be contributed with device/probe firmware, VID/PID, target part, tool version, upstream source, permission to redistribute, operation, expected result and a SHA-256 of the firmware under test. Do not rename these synthetic fixtures into captures. Electrical reset timing, hot-plug/re-enumeration, USB host-controller quirks and actual programming/verification require physical hardware tests.
+
+## BOOTSEL storage contracts
+
+`python3 build/embedded/tests/test_msc.py` uses an independently scripted synthetic USB transport to check the
+production worker's exact 31-byte CBW, 13-byte CSW, tag/residue/status validation, SCSI byte order, command
+bounds, pre-write authorization and final-status disconnection reporting. These are not captured ROM traffic.
+No FORMAT, reset or arbitrary SCSI operation is exposed. The worker borrows one already granted Android USB FD.
+
+The managed `StorageTests` create FAT12, FAT16 and FAT32 volumes, both as superfloppies and inside MBR images.
+They exercise existing-file preservation, mirrors and active FAT, a packed FAT12 entry crossing a sector,
+FAT32 primary/backup FSInfo, application/family/identity refusal, cancellation, races, failure rollback and a
+ROM-like final-payload disconnection. Export those regular scratch images and verify them independently:
+
+```sh
+TABSTUDIO_FAT_PROOF=/tmp/tabstudio-fat-proof \
+  dotnet test tests/TabStudio.Toolchains.Tests --filter FullyQualifiedName~StorageTests
+python3 build/embedded/verify-fat-images.py /tmp/tabstudio-fat-proof
+```
+
+The second command requires GNU mtools (`mtype`) and compares the actual copied file with its UF2 bytes.
+It does not mount anything or open a hardware disk. Local mtools 4.0.43 read all six generated files correctly.
+These checks establish FAT interoperability and protocol contracts; they do not establish physical RP ROM
+programming or flash readback. RP BOOTSEL is a synthetic filesystem and may reset once the UF2 is consumed.
+
+Primary specifications and implementation references:
+
+- [USB Mass Storage Bulk-Only Transport 1.0](https://www.usb.org/sites/default/files/usbmassbulk_10.pdf).
+- [Microsoft FAT specification](https://www.scs.stanford.edu/~zyedidia/docs/_other/fat.pdf).
+- [RP2040 ROM virtual disk](https://github.com/raspberrypi/pico-bootrom-rp2040/blob/master/bootrom/virtual_disk.c)
+  and [RP2350 ROM virtual disk](https://github.com/raspberrypi/pico-bootrom-rp2350/blob/master/src/nsboot/usb_virtual_disk.c).
+- [UF2 family registry](https://github.com/microsoft/uf2/blob/master/utils/uf2families.json).
