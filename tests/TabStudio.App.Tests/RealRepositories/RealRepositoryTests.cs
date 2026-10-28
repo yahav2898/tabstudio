@@ -129,6 +129,17 @@ public sealed class RealRepositoryTests
             var report = new StringBuilder().AppendLine(CultureInfo.InvariantCulture, $"{name} at {repository["sha"]!.GetValue<string>()}");
             // The project's folder in the repository, as a person opens one sample of a repository of samples.
             var folder = repository["folder"]?.GetValue<string>() is { } subfolder ? Path.Combine(clones, name, subfolder) : Path.Combine(clones, name);
+            if (repository["services"]?.GetValue<string>() == "job")
+            {
+                // The job's service containers stand in for the repository's Compose services, which run natively on a
+                // tablet: its Compose file is set aside, so the run uses the .env below.
+                foreach (var compose in new[] { "docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml" }.Select(f => Path.Combine(folder, f)).Where(File.Exists))
+                {
+                    File.Move(compose, compose + ".job", overwrite: true);
+                    report.AppendLine(CultureInfo.InvariantCulture, $"Set aside {Path.GetFileName(compose)}: the job's containers serve its databases.");
+                }
+            }
+
             if (repository["dotenv"] is JsonObject dotenv)
             {
                 // The variables the repository's README asks a person to put in .env.

@@ -18,7 +18,7 @@ public static partial class RunPlanner
             case "php":
                 // php -l takes several files from PHP 8.3; vendor and node_modules are other people's code.
                 return CommandSpec(project, ["sh", "-c",
-                    "find . \\( -name vendor -o -name node_modules -o -name .git -o -name .tabstudio -o -name storage \\) -prune -o -name '*.php' -print0 | xargs -0 -r -n 64 php -d display_errors=stderr -d error_reporting=-1 -l > /dev/null"]);
+                    "find \"$PWD\" \\( -name vendor -o -name node_modules -o -name .git -o -name .tabstudio -o -name storage \\) -prune -o -name '*.php' -print0 | xargs -0 -r -n 64 php -d display_errors=stderr -d error_reporting=-1 -l > /dev/null"]);
             case "swift":
                 return File.Exists(Path.Combine(project.Directory, "Package.swift")) ? CommandSpec(project, ["swift", "build"]) : null;
             case "kotlin":
