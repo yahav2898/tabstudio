@@ -1,0 +1,208 @@
+gs-accessing-data-jpa at ef48947528dba9021776282e12299e5298e66bca
+Toolchain projects:
+  java: /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/pom.xml
+Startup project: java /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/pom.xml
+Set up in 3.0 s
+Ran in 12.3 s
+Project setup:
+
+Output:
+Running complete with Java 21.0.13
+> mvn -B -Dstyle.color=never -DskipTests package org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies -DincludeScope=runtime
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------< com.example:accessing-data-jpa-complete >---------------
+[INFO] Building accessing-data-jpa-complete 0.0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa/4.0.8/spring-boot-starter-data-jpa-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa/4.0.8/spring-boot-starter-data-jpa-4.0.8.pom (2.7 kB at 7.0 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-jdbc/4.0.8/spring-boot-starter-jdbc-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-jdbc/4.0.8/spring-boot-starter-jdbc-4.0.8.pom (2.5 kB at 17 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jdbc/4.0.8/spring-boot-jdbc-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jdbc/4.0.8/spring-boot-jdbc-4.0.8.pom (2.6 kB at 24 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-sql/4.0.8/spring-boot-sql-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-sql/4.0.8/spring-boot-sql-4.0.8.pom (2.0 kB at 28 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-transaction/4.0.8/spring-boot-transaction-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-transaction/4.0.8/spring-boot-transaction-4.0.8.pom (2.4 kB at 34 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-persistence/4.0.8/spring-boot-persistence-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-persistence/4.0.8/spring-boot-persistence-4.0.8.pom (2.2 kB at 33 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-tx/7.0.9/spring-tx-7.0.9.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-tx/7.0.9/spring-tx-7.0.9.pom (2.2 kB at 35 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-jdbc/7.0.9/spring-jdbc-7.0.9.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-jdbc/7.0.9/spring-jdbc-7.0.9.pom (2.4 kB at 17 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa/4.0.8/spring-boot-data-jpa-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa/4.0.8/spring-boot-data-jpa-4.0.8.pom (2.6 kB at 43 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-commons/4.0.8/spring-boot-data-commons-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-commons/4.0.8/spring-boot-data-commons-4.0.8.pom (2.5 kB at 23 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-commons/4.0.7/spring-data-commons-4.0.7.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-commons/4.0.7/spring-data-commons-4.0.7.pom (10 kB at 103 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/data/build/spring-data-parent/4.0.7/spring-data-parent-4.0.7.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/data/build/spring-data-parent/4.0.7/spring-data-parent-4.0.7.pom (63 kB at 651 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/data/build/spring-data-build/4.0.7/spring-data-build-4.0.7.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/data/build/spring-data-build/4.0.7/spring-data-build-4.0.7.pom (6.0 kB at 83 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-tracing-bom/1.6.7/micrometer-tracing-bom-1.6.7.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-tracing-bom/1.6.7/micrometer-tracing-bom-1.6.7.pom (4.2 kB at 73 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-hibernate/4.0.8/spring-boot-hibernate-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-hibernate/4.0.8/spring-boot-hibernate-4.0.8.pom (2.4 kB at 26 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa/4.0.8/spring-boot-jpa-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa/4.0.8/spring-boot-jpa-4.0.8.pom (2.6 kB at 21 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-orm/7.0.9/spring-orm-7.0.9.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-orm/7.0.9/spring-orm-7.0.9.pom (2.6 kB at 36 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/hibernate/orm/hibernate-core/7.2.24.Final/hibernate-core-7.2.24.Final.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/hibernate/orm/hibernate-core/7.2.24.Final/hibernate-core-7.2.24.Final.pom (5.4 kB at 32 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/hibernate/models/hibernate-models/1.0.1/hibernate-models-1.0.1.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/hibernate/models/hibernate-models/1.0.1/hibernate-models-1.0.1.pom (2.1 kB at 17 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-jpa/4.0.7/spring-data-jpa-4.0.7.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-jpa/4.0.7/spring-data-jpa-4.0.7.pom (13 kB at 138 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-jpa-parent/4.0.7/spring-data-jpa-parent-4.0.7.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-jpa-parent/4.0.7/spring-data-jpa-parent-4.0.7.pom (8.7 kB at 104 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-aspects/7.0.9/spring-aspects-7.0.9.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-aspects/7.0.9/spring-aspects-7.0.9.pom (2.0 kB at 27 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa-test/4.0.8/spring-boot-starter-data-jpa-test-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa-test/4.0.8/spring-boot-starter-data-jpa-test-4.0.8.pom (2.7 kB at 17 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-jdbc-test/4.0.8/spring-boot-starter-jdbc-test-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-jdbc-test/4.0.8/spring-boot-starter-jdbc-test-4.0.8.pom (2.5 kB at 34 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jdbc-test/4.0.8/spring-boot-jdbc-test-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jdbc-test/4.0.8/spring-boot-jdbc-test-4.0.8.pom (2.3 kB at 26 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa-test/4.0.8/spring-boot-data-jpa-test-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa-test/4.0.8/spring-boot-data-jpa-test-4.0.8.pom (2.5 kB at 30 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa-test/4.0.8/spring-boot-jpa-test-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa-test/4.0.8/spring-boot-jpa-test-4.0.8.pom (2.5 kB at 46 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa/4.0.8/spring-boot-starter-data-jpa-4.0.8.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-jdbc/4.0.8/spring-boot-starter-jdbc-4.0.8.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa/4.0.8/spring-boot-data-jpa-4.0.8.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-commons/4.0.8/spring-boot-data-commons-4.0.8.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-persistence/4.0.8/spring-boot-persistence-4.0.8.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa/4.0.8/spring-boot-starter-data-jpa-4.0.8.jar (4.8 kB at 52 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-commons/4.0.7/spring-data-commons-4.0.7.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-commons/4.0.8/spring-boot-data-commons-4.0.8.jar (30 kB at 340 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-hibernate/4.0.8/spring-boot-hibernate-4.0.8.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-jdbc/4.0.8/spring-boot-starter-jdbc-4.0.8.jar (4.8 kB at 48 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa/4.0.8/spring-boot-jpa-4.0.8.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa/4.0.8/spring-boot-data-jpa-4.0.8.jar (16 kB at 146 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/hibernate/orm/hibernate-core/7.2.24.Final/hibernate-core-7.2.24.Final.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-persistence/4.0.8/spring-boot-persistence-4.0.8.jar (16 kB at 107 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/hibernate/models/hibernate-models/1.0.1/hibernate-models-1.0.1.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-hibernate/4.0.8/spring-boot-hibernate-4.0.8.jar (29 kB at 193 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-orm/7.0.9/spring-orm-7.0.9.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa/4.0.8/spring-boot-jpa-4.0.8.jar (24 kB at 134 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-jpa/4.0.7/spring-data-jpa-4.0.7.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-commons/4.0.7/spring-data-commons-4.0.7.jar (1.7 MB at 7.6 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-tx/7.0.9/spring-tx-7.0.9.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-orm/7.0.9/spring-orm-7.0.9.jar (226 kB at 874 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-aspects/7.0.9/spring-aspects-7.0.9.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-tx/7.0.9/spring-tx-7.0.9.jar (292 kB at 958 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jdbc/4.0.8/spring-boot-jdbc-4.0.8.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-aspects/7.0.9/spring-aspects-7.0.9.jar (50 kB at 152 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-sql/4.0.8/spring-boot-sql-4.0.8.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-jpa/4.0.7/spring-data-jpa-4.0.7.jar (2.2 MB at 6.0 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-transaction/4.0.8/spring-boot-transaction-4.0.8.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/hibernate/models/hibernate-models/1.0.1/hibernate-models-1.0.1.jar (218 kB at 598 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-jdbc/7.0.9/spring-jdbc-7.0.9.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jdbc/4.0.8/spring-boot-jdbc-4.0.8.jar (201 kB at 544 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa-test/4.0.8/spring-boot-starter-data-jpa-test-4.0.8.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-sql/4.0.8/spring-boot-sql-4.0.8.jar (36 kB at 92 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-jdbc-test/4.0.8/spring-boot-starter-jdbc-test-4.0.8.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-transaction/4.0.8/spring-boot-transaction-4.0.8.jar (21 kB at 48 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jdbc-test/4.0.8/spring-boot-jdbc-test-4.0.8.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa-test/4.0.8/spring-boot-starter-data-jpa-test-4.0.8.jar (4.8 kB at 11 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa-test/4.0.8/spring-boot-data-jpa-test-4.0.8.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/hibernate/orm/hibernate-core/7.2.24.Final/hibernate-core-7.2.24.Final.jar (14 MB at 30 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa-test/4.0.8/spring-boot-jpa-test-4.0.8.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-jdbc-test/4.0.8/spring-boot-starter-jdbc-test-4.0.8.jar (4.8 kB at 9.7 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-jdbc/7.0.9/spring-jdbc-7.0.9.jar (481 kB at 935 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa-test/4.0.8/spring-boot-data-jpa-test-4.0.8.jar (9.4 kB at 18 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jdbc-test/4.0.8/spring-boot-jdbc-test-4.0.8.jar (21 kB at 37 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa-test/4.0.8/spring-boot-jpa-test-4.0.8.jar (9.5 kB at 15 kB/s)
+[INFO] 
+[INFO] --- maven-resources-plugin:3.3.1:resources (default-resources) @ accessing-data-jpa-complete ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.14.1:compile (default-compile) @ accessing-data-jpa-complete ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 3 source files with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:3.3.1:testResources (default-testResources) @ accessing-data-jpa-complete ---
+[INFO] skip non existing resourceDirectory /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.14.1:testCompile (default-testCompile) @ accessing-data-jpa-complete ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.5.6:test (default-test) @ accessing-data-jpa-complete ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:3.4.2:jar (default-jar) @ accessing-data-jpa-complete ---
+[INFO] Building jar: /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/target/accessing-data-jpa-complete-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:4.0.8:repackage (repackage) @ accessing-data-jpa-complete ---
+[INFO] Replacing main artifact /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/target/accessing-data-jpa-complete-0.0.1-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/target/accessing-data-jpa-complete-0.0.1-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.8.1:copy-dependencies (default-cli) @ accessing-data-jpa-complete ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.725 s
+[INFO] Finished at: 2026-10-28T15:46:29Z
+[INFO] ------------------------------------------------------------------------
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.8)
+
+2026-10-28T15:46:30.846Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : Starting AccessingDataJpaApplication using Java 21.0.13 with PID 17494 (/home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/target/classes started by runner in /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete)
+2026-10-28T15:46:30.850Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : No active profile set, falling back to 1 default profile: "default"
+2026-10-28T15:46:31.434Z  INFO 17494 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28T15:46:31.488Z  INFO 17494 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 42 ms. Found 1 JPA repository interface.
+2026-10-28T15:46:31.989Z  INFO 17494 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-28T15:46:32.174Z  INFO 17494 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:1e51c592-8b52-45f0-9279-cbb94439ffe5 user=SA
+2026-10-28T15:46:32.176Z  INFO 17494 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-28T15:46:32.217Z  INFO 17494 --- [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-28T15:46:32.267Z  INFO 17494 --- [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.24.Final
+2026-10-28T15:46:32.655Z  INFO 17494 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28T15:46:32.732Z  INFO 17494 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:1e51c592-8b52-45f0-9279-cbb94439ffe5]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: 1E51C592-8B52-45F0-9279-CBB94439FFE5/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28T15:46:33.487Z  INFO 17494 --- [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-28T15:46:33.513Z  INFO 17494 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T15:46:33.613Z  INFO 17494 --- [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-28T15:46:33.848Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : Started AccessingDataJpaApplication in 3.459 seconds (process running for 3.859)
+2026-10-28T15:46:33.925Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : Customers found with findAll():
+2026-10-28T15:46:33.925Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : -------------------------------
+2026-10-28T15:46:34.052Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
+2026-10-28T15:46:34.052Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=2, firstName='Chloe', lastName='O'Brian']
+2026-10-28T15:46:34.052Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=3, firstName='Kim', lastName='Bauer']
+2026-10-28T15:46:34.052Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=4, firstName='David', lastName='Palmer']
+2026-10-28T15:46:34.052Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=5, firstName='Michelle', lastName='Dessler']
+2026-10-28T15:46:34.052Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : 
+2026-10-28T15:46:34.059Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer found with findById(1L):
+2026-10-28T15:46:34.060Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : --------------------------------
+2026-10-28T15:46:34.060Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
+2026-10-28T15:46:34.060Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : 
+2026-10-28T15:46:34.060Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer found with findByLastName('Bauer'):
+2026-10-28T15:46:34.060Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : --------------------------------------------
+2026-10-28T15:46:34.356Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
+2026-10-28T15:46:34.356Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=3, firstName='Kim', lastName='Bauer']
+2026-10-28T15:46:34.357Z  INFO 17494 --- [           main] c.e.a.AccessingDataJpaApplication        : 
+2026-10-28T15:46:34.368Z  INFO 17494 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T15:46:34.378Z  INFO 17494 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-10-28T15:46:34.385Z  INFO 17494 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+
+The program 'complete' has exited with code 0 (0x0).
+
