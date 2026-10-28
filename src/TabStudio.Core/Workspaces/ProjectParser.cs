@@ -906,7 +906,7 @@ public static partial class ProjectParser
         if (dash >= 0)
         {
             var platform = targetFramework[(dash + 1)..];
-            var digits = platform.IndexOfAny("0123456789".ToCharArray());
+            var digits = platform.AsSpan().IndexOfAnyInRange('0', '9');
             evaluation.TryAdd("TargetPlatformIdentifier", digits < 0 ? platform : platform[..digits]);
         }
     }
