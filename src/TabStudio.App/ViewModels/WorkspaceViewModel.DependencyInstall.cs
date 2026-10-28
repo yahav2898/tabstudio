@@ -204,7 +204,10 @@ public sealed partial class WorkspaceViewModel
         return (result, choice.Version);
     }
 
-    /// <summary>Chooses the project's Python from what it asks for and what its pins install on.</summary>
+    /// <summary>
+    /// Chooses the project's Python from what it asks for and what its pins install on: those of a requirements
+    /// manifest, and those its lock files (<c>poetry.lock</c>, <c>uv.lock</c>) record.
+    /// </summary>
     private async Task<PythonVersionChoice?> ChoosePythonAsync(ToolchainProject project, DependencyInstallDefinition dependency, CancellationToken cancellationToken)
     {
         var request = PythonVersionRequest.Find(project.Directory);
@@ -212,9 +215,9 @@ public sealed partial class WorkspaceViewModel
         (int Minor, IReadOnlyList<PythonRelease> Limiting)? pins = null;
         var platform = _toolchains.Runtime.Kind == RuntimeKind.Linux ? PythonPlatform.Alpine : OperatingSystem.IsLinux() ? PythonPlatform.Glibc : null;
         var manifest = Path.Combine(project.Directory, dependency.Manifest);
-        if (platform is not null && dependency.Manifest.EndsWith(".txt", StringComparison.OrdinalIgnoreCase) && request?.Range.ExactMinor is null)
+        if (platform is not null && request?.Range.ExactMinor is null)
         {
-            var pinned = PythonRequirements.Pins(manifest);
+            var pinned = PythonDependencies.Pins(project.Directory, manifest);
             if (pinned.Count > 0)
             {
                 ProjectSetupOutput.WriteLine($"Reading which Python versions the {pinned.Count} pinned packages have wheels for, from PyPI.", OutputKind.Info);
@@ -357,11 +360,14 @@ public sealed partial class WorkspaceViewModel
             : failure.NeedsBuildTools && !_toolchains.CanInstallAlpinePackages
                 ? $" Install what its build needs on this computer (a C compiler and Python's headers{(failure.Package is { } pkg && PythonBuildPackages.Default.For(pkg) is { Needs: { } needs } ? ", and " + needs : string.Empty)}), then use Tools > Install Project Packages."
                 : string.Empty;
+        // Never suggest the Python that just failed: an older one, such as 3.12 after 3.14 or 3.11 after 3.12.
+        var older = PipFailure.OlderPython(python);
         var next = failure.Kind switch
         {
+            PipFailureKind.Build when failure.UnsupportedPythonAdvice(python) is { } advice => $" {advice} Then use Tools > Install Project Packages.",
             PipFailureKind.Build => failure.Package is { } name && PythonBuildPackages.Default.For(name)?.Note is { } note
                 ? $" {note}"
-                : $" A .python-version file naming the Python the project was written for, such as 3.12, lets pip use a prebuilt wheel{(failure.Package is null ? "." : $", as does a {failure.Package} release that ships one.")}",
+                : $" A .python-version file naming the Python the project was written for, {(older is null ? "an older one" : "such as " + older)}, lets pip use a prebuilt wheel{(failure.Package is null ? "." : $", as does a {failure.Package} release that ships one.")}",
             PipFailureKind.NoMatchingVersion => " Pin a version that supports this Python, or add a .python-version file naming the Python the project was written for.",
             PipFailureKind.Network or PipFailureKind.DiskFull => " Then use Tools > Install Project Packages.",
             _ => string.Empty,

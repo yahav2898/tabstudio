@@ -148,16 +148,39 @@ public sealed record RunDefinition
 
 /// <summary>
 /// One way to run a project: it applies when <see cref="File"/> exists in the project folder and, when
-/// <see cref="Json"/> is set, that file has a value at that path.
+/// <see cref="Json"/> is set, that file has a value at that path; when <see cref="Contains"/> or
+/// <see cref="Excludes"/> is set, the file's text matches each of the one and none of the other; and when
+/// <see cref="Requires"/> is set, the project depends on those packages.
 /// </summary>
 public sealed record EntryRule
 {
     /// <summary>
     /// The file that must exist, relative to the project folder. One folder of the path may be <c>*</c>, such as
-    /// <c>src/*/__main__.py</c>: the first folder there, in name order, with the file, and its name is the
-    /// <c>{match}</c> placeholder.
+    /// <c>src/*/__main__.py</c>: the first folder there, in name order, with the file (and, with
+    /// <see cref="Contains"/>, the text it asks for), and its name is the <c>{match}</c> placeholder.
     /// </summary>
     public required string File { get; init; }
+
+    /// <summary>
+    /// Regular expressions that <see cref="File"/>'s text must each match, with <c>^</c> and <c>$</c> at line
+    /// boundaries, such as an import of <c>fastapi</c> and a line <c>app = FastAPI(</c>; empty when the file's
+    /// existence is enough. They tell a module that defines a web app apart from any other module of that name.
+    /// </summary>
+    public IReadOnlyList<string> Contains { get; init; } = [];
+
+    /// <summary>
+    /// Regular expressions none of which <see cref="File"/>'s text may match, as <see cref="Contains"/> reads them,
+    /// such as an <c>if __name__ == "__main__":</c> block, which makes a module a script that runs itself.
+    /// </summary>
+    public IReadOnlyList<string> Excludes { get; init; } = [];
+
+    /// <summary>
+    /// Packages the project must depend on for the command to work, such as <c>uvicorn</c>, as the project's Python
+    /// manifests and lock files list them (<c>requirements.txt</c>, <c>pyproject.toml</c>, <c>Pipfile</c>,
+    /// <c>poetry.lock</c>, <c>uv.lock</c>); empty when the command needs none. A rule whose file matches but whose
+    /// packages are missing does not apply, and the run says which are missing.
+    /// </summary>
+    public IReadOnlyList<string> Requires { get; init; } = [];
 
     /// <summary>
     /// A dotted path into <see cref="File"/>, which must then be JSON, such as <c>scripts.start</c>; the value is the
@@ -179,7 +202,8 @@ public sealed record EntryRule
 
     /// <summary>
     /// What the program is called in the Output panel, such as <c>flask run</c>, when <see cref="File"/> is a
-    /// settings file rather than the program; <see langword="null"/> names it after the file.
+    /// settings file rather than the program; <see langword="null"/> names it after the file. Placeholders such as
+    /// <c>{match}</c> are filled in, as in <c>uvicorn {match}.main:app</c>.
     /// </summary>
     public string? Name { get; init; }
 

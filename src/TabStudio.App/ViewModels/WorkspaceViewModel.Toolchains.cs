@@ -482,7 +482,7 @@ public sealed partial class WorkspaceViewModel
             return Path.Combine(project.Directory, "lib/main.dart");
         foreach (var rule in toolchain.Run?.Entries ?? [])
         {
-            if (RunPlanner.FindEntry(project.Directory, rule.File) is not { FullPath: var file })
+            if (RunPlanner.FindEntry(project.Directory, rule) is not { FullPath: var file })
             {
                 continue;
             }
@@ -562,6 +562,15 @@ public sealed partial class WorkspaceViewModel
 
         if (planned is not { } plan)
         {
+            if (RunPlanner.UnmetEntryOf(project) is { } unmet)
+            {
+                // A web app whose server the project does not list, such as a FastAPI app without uvicorn.
+                var missing = string.Join(" and ", unmet.Missing);
+                Output.WriteLine($"{project.Name} is a web app in {unmet.Entry.RelativePath}, which runs with {unmet.EntryPoint}, but the project's dependencies do not list {missing}. Add {missing} to them, install the project's packages, and press F5 again.", OutputKind.Failure);
+                StatusText = $"{missing} is missing";
+                return;
+            }
+
             var extensions = string.Join(" or ", toolchain.FileExtensions.Take(2));
             Output.WriteLine($"{project.Name} has no entry point to run. Open a {extensions} file and press F5 to run it, or add {(toolchain.Run?.Entries is [var first, ..] ? first.File : "one")}.", OutputKind.Failure);
             StatusText = "Nothing to run";
