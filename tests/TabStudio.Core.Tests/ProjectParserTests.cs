@@ -8,6 +8,38 @@ public sealed class ProjectParserTests
     private static readonly string ProjectPath = Path.Combine(Path.GetTempPath(), "Sample", "App", "App.csproj");
 
     [Fact]
+    public void The_project_s_own_item_groups_keep_only_what_their_conditions_allow()
+    {
+        // Humanizer's benchmarks: the repository's own project, or its NuGet package when UseBaselinePackage is true.
+        var xml = """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFrameworks>net11.0;net10.0;net8.0</TargetFrameworks>
+                <UseBaselinePackage Condition="'$(UseBaselinePackage)' == ''">false</UseBaselinePackage>
+              </PropertyGroup>
+              <ItemGroup Condition="'$(UseBaselinePackage)' == 'true'">
+                <PackageReference Include="Humanizer" Version="3.0.10" />
+              </ItemGroup>
+              <ItemGroup Condition="'$(UseBaselinePackage)' != 'true'">
+                <ProjectReference Include="..\Humanizer\Humanizer.csproj" />
+              </ItemGroup>
+              <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+                <PackageReference Include="Net8Only" Version="1.0.0" />
+              </ItemGroup>
+              <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+                <PackageReference Include="DebugOnly" Version="1.0.0" />
+              </ItemGroup>
+            </Project>
+            """;
+
+        var project = ProjectParser.Parse(ProjectPath, xml);
+
+        Assert.Equal(["DebugOnly"], project.PackageReferences.Select(p => p.Name));
+        Assert.Single(project.ProjectReferences);
+    }
+
+    [Fact]
     public void Reads_an_sdk_style_console_project()
     {
         const string xml = """

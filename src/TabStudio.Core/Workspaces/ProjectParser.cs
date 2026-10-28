@@ -281,14 +281,19 @@ public static partial class ProjectParser
             ExpandPropertyReferences(properties);
         }
 
-        // Items in imported files keep only the groups their conditions allow, evaluated for the target framework
-        // TabStudio builds the project for (see EvaluationTargetFramework).
+        // Items, in the project and in imported files, keep only the groups their conditions allow, evaluated for the
+        // target framework TabStudio builds the project for (see EvaluationTargetFramework) and, as MSBuild defaults
+        // them, the Debug configuration on any CPU. Humanizer's benchmarks reference Humanizer's project, or its NuGet
+        // package when UseBaselinePackage is true: both made every type exist twice.
         var evaluation = new Dictionary<string, string>(properties, StringComparer.OrdinalIgnoreCase);
         if (EvaluationTargetFramework(ReadTargetFrameworks(properties)) is { } evaluationFramework)
         {
             evaluation["TargetFramework"] = evaluationFramework;
         }
 
+        evaluation.TryAdd("Configuration", "Debug");
+        evaluation.TryAdd("Platform", "AnyCPU");
+        MsBuildConditions.RemoveFalse(root, evaluation, directory);
         List<XElement> allRoots = [root, .. ImportedRoots(importedFiles, evaluation)];
         var packages = ReadPackageReferences(
             allRoots,
