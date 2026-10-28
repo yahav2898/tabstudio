@@ -289,6 +289,7 @@ public static partial class ProjectParser
         if (EvaluationTargetFramework(ReadTargetFrameworks(properties)) is { } evaluationFramework)
         {
             evaluation["TargetFramework"] = evaluationFramework;
+            AddFrameworkProperties(evaluation, evaluationFramework);
         }
 
         evaluation.TryAdd("Configuration", "Debug");
@@ -876,6 +877,38 @@ public static partial class ProjectParser
         }
 
         return !string.IsNullOrEmpty(directory) && Path.IsPathRooted(expanded) ? Path.GetRelativePath(directory, expanded) : expanded;
+    }
+
+    /// <summary>
+    /// The properties the SDK derives from a target framework, which conditions test as often as the framework itself:
+    /// <c>TargetFrameworkIdentifier</c> (<c>.NETCoreApp</c>, <c>.NETStandard</c>, <c>.NETFramework</c>),
+    /// <c>TargetFrameworkVersion</c> (<c>v10.0</c>) and, for a platform framework such as <c>net10.0-android</c>,
+    /// <c>TargetPlatformIdentifier</c>. A project that sets one keeps its own.
+    /// </summary>
+    private static void AddFrameworkProperties(Dictionary<string, string> evaluation, string targetFramework)
+    {
+        var dash = targetFramework.IndexOf('-', StringComparison.Ordinal);
+        var framework = (dash < 0 ? targetFramework : targetFramework[..dash]).ToLowerInvariant();
+        (string? identifier, string? version) =
+            framework.StartsWith("netstandard", StringComparison.Ordinal) ? (".NETStandard", framework["netstandard".Length..])
+            : framework.StartsWith("netcoreapp", StringComparison.Ordinal) ? (".NETCoreApp", framework["netcoreapp".Length..])
+            : framework.StartsWith("net", StringComparison.Ordinal) && framework.Contains('.', StringComparison.Ordinal) ? (".NETCoreApp", framework[3..])
+            : framework.StartsWith("net", StringComparison.Ordinal) && framework.Length > 3 && framework[3..].All(char.IsAsciiDigit)
+                ? (".NETFramework", string.Join('.', framework[3..].ToCharArray()))
+            : (null, null);
+        if (identifier is null)
+        {
+            return;
+        }
+
+        evaluation.TryAdd("TargetFrameworkIdentifier", identifier);
+        evaluation.TryAdd("TargetFrameworkVersion", "v" + version);
+        if (dash >= 0)
+        {
+            var platform = targetFramework[(dash + 1)..];
+            var digits = platform.IndexOfAny("0123456789".ToCharArray());
+            evaluation.TryAdd("TargetPlatformIdentifier", digits < 0 ? platform : platform[..digits]);
+        }
     }
 
     private static List<string> ReadTargetFrameworks(Dictionary<string, string> properties)

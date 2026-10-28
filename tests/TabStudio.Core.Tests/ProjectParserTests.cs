@@ -30,12 +30,18 @@ public sealed class ProjectParserTests
               <ItemGroup Condition="'$(Configuration)' == 'Debug'">
                 <PackageReference Include="DebugOnly" Version="1.0.0" />
               </ItemGroup>
+              <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' ">
+                <PackageReference Include="NetCoreOnly" Version="1.0.0" />
+              </ItemGroup>
+              <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+                <PackageReference Include="NetFrameworkOnly" Version="1.0.0" />
+              </ItemGroup>
             </Project>
             """;
 
         var project = ProjectParser.Parse(ProjectPath, xml);
 
-        Assert.Equal(["DebugOnly"], project.PackageReferences.Select(p => p.Name));
+        Assert.Equal(["DebugOnly", "NetCoreOnly"], project.PackageReferences.Select(p => p.Name));
         Assert.Single(project.ProjectReferences);
     }
 
