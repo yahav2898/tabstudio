@@ -1,0 +1,152 @@
+{
+  "repository": {
+    "name": "zephyr-synchronization",
+    "url": "https://github.com/zephyrproject-rtos/zephyr",
+    "sha": "dccb09599635bdff17633fa7e9dab014b91dce90",
+    "kind": "zephyr",
+    "project": "samples/synchronization",
+    "maxErrors": 0,
+    "note": "a kernel sample (blinky needs an LED, which qemu_cortex_m3 does not have)",
+    "board": "qemu_cortex_m3"
+  },
+  "seconds": 139.33,
+  "passed": true,
+  "error": null,
+  "compilerErrors": 0,
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "steps": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/zephyr-synchronization/source",
+      "log": "01-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "add",
+        "origin",
+        "https://github.com/zephyrproject-rtos/zephyr"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/zephyr-synchronization/source",
+      "log": "02-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "fetch",
+        "--depth",
+        "1",
+        "--no-tags",
+        "origin",
+        "dccb09599635bdff17633fa7e9dab014b91dce90"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/zephyr-synchronization/source",
+      "log": "03-git.log",
+      "seconds": 8.636,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "FETCH_HEAD"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/zephyr-synchronization/source",
+      "log": "04-git.log",
+      "seconds": 3.423,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.12.15/x64/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "--require-hashes",
+        "-r",
+        "/home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/Embedded/Installation/zephyr-bootstrap.requirements.txt"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/zephyr-synchronization/source",
+      "log": "05-python.log",
+      "seconds": 2.019,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.12.15/x64/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "--require-hashes",
+        "--no-build-isolation",
+        "-r",
+        "/home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/Embedded/Installation/zephyr.requirements.txt"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/zephyr-synchronization/source",
+      "log": "06-python.log",
+      "seconds": 4.526,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "west",
+        "init",
+        "-l",
+        "/home/runner/work/_temp/embedded-repos/zephyr-synchronization/source"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/zephyr-synchronization",
+      "log": "07-west.log",
+      "seconds": 0.165,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "west",
+        "update",
+        "--narrow",
+        "-o=--depth=1",
+        "cmsis",
+        "cmsis_6"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/zephyr-synchronization",
+      "log": "08-west.log",
+      "seconds": 1.518,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "west",
+        "build",
+        "--build-opt=-j2",
+        "-b",
+        "qemu_cortex_m3",
+        "-d",
+        "/home/runner/work/_temp/embedded-repos/zephyr-synchronization/build",
+        "/home/runner/work/_temp/embedded-repos/zephyr-synchronization/source/samples/synchronization",
+        "--",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/zephyr-synchronization",
+      "log": "09-west.log",
+      "seconds": 119.028,
+      "exitCode": 0,
+      "compilerErrors": 0
+    },
+    {
+      "firmware": "/home/runner/work/_temp/embedded-repos/zephyr-synchronization/build/zephyr/zephyr.elf",
+      "bytes": 352000,
+      "sha256": "faaffc6333338b9d61bb15b2bd66649a9c9c769376f864b15a7a20d21be520f7"
+    }
+  ]
+}
