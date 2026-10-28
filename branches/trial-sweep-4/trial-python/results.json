@@ -1,0 +1,95 @@
+[
+  {
+    "name": "fastapi-realworld-example-app",
+    "area": "python",
+    "sha": "029eb7781c60d5f563ee8990a0cbfb79b244538c",
+    "expect": "web-first-route",
+    "opened": "2.0 s",
+    "loadErrors": [],
+    "doctor": [
+      "fastapi-realworld-example-app: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it."
+    ],
+    "doctorSummary": "1 Needs a toolchain",
+    "startup": "fastapi-realworld-example-app (python)",
+    "setup": "notice: installable could not be installed: installable could not be installed: it has no prebuilt wheel for Python 3.10 on this computer, so pip compiled it, and the build failed (error: failed-wheel-build-for-install). Install what its build needs on this computer (a C compiler and Python\u0027s headers), then use Tools \u003E Install Project Packages. A .python-version file naming the Python the project was written for, such as 3.9, lets pip use a prebuilt wheel, as does a installable release that ships one.",
+    "analysis": "32.6 s",
+    "errors": "0 errors, 0 warnings",
+    "errorCodes": [],
+    "build": "0 errors in 0 s",
+    "buildErrorCodes": [],
+    "run": "exited before listening",
+    "stages": [
+      "Setting up projects: Checking project setup",
+      "Loading C#: Loading C#",
+      "Loading C#: Succeeded after 1.4 s",
+      "Analyzing: Analyzing",
+      "Analyzing: Succeeded after 0.0 s",
+      "Setting up projects: Setting up fastapi-realworld-example-app: pip install -e .",
+      "Installing fastapi-realworld-example-app\u0027s packages: Installing packages: pip install -e .",
+      "Installing fastapi-realworld-example-app\u0027s packages: Failed after 17.0 s",
+      "Setting up projects: Succeeded after 29.4 s"
+    ]
+  },
+  {
+    "name": "flask-tutorial",
+    "area": "python",
+    "sha": "d086db856be187255b8ec61ef409357393020f32",
+    "expect": "web-first-route",
+    "opened": "0.7 s",
+    "loadErrors": [],
+    "doctor": [
+      "tutorial: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it."
+    ],
+    "doctorSummary": "1 Needs a toolchain",
+    "startup": "tutorial (python)",
+    "setup": "ok in 5 s",
+    "analysis": "10.3 s",
+    "errors": "0 errors, 0 warnings",
+    "errorCodes": [],
+    "build": "0 errors in 0 s",
+    "buildErrorCodes": [],
+    "run": "GET / 500",
+    "stages": [
+      "Setting up projects: Checking project setup",
+      "Loading C#: Loading C#",
+      "Loading C#: Succeeded after 0.6 s",
+      "Analyzing: Analyzing",
+      "Analyzing: Succeeded after 0.0 s",
+      "Setting up projects: Setting up tutorial: pip install -e .",
+      "Installing tutorial\u0027s packages: Installing packages: pip install -e .",
+      "Installing tutorial\u0027s packages: Succeeded after 3.9 s",
+      "Setting up projects: Succeeded after 6.1 s"
+    ]
+  },
+  {
+    "name": "django-realworld-example-app",
+    "area": "python",
+    "sha": "29c9d42831fa0cfc5a4aa7561f674396eacf20a2",
+    "expect": "web-first-route",
+    "opened": "0.3 s",
+    "loadErrors": [],
+    "doctor": [
+      "django-realworld-example-app: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it."
+    ],
+    "doctorSummary": "1 Needs a toolchain",
+    "startup": "django-realworld-example-app (python)",
+    "setup": "ok in 7 s",
+    "analysis": "12.2 s",
+    "errors": "0 errors, 0 warnings",
+    "errorCodes": [],
+    "build": "0 errors in 0 s",
+    "buildErrorCodes": [],
+    "run": "exited before listening with code 1",
+    "stages": [
+      "Setting up projects: Checking project setup",
+      "Loading C#: Loading C#",
+      "Loading C#: Succeeded after 0.1 s",
+      "Analyzing: Analyzing",
+      "Analyzing: Succeeded after 0.0 s",
+      "Setting up projects: Setting up django-realworld-example-app: pip install -r requirements.txt",
+      "Installing django-realworld-example-app\u0027s packages: Installing packages: pip install -r requirements.txt",
+      "Installing django-realworld-example-app\u0027s packages: Succeeded after 5.1 s",
+      "Setting up projects: Succeeded after 7.5 s"
+    ]
+  }
+]

@@ -1,0 +1,213 @@
+fastapi-realworld-example-app at 029eb7781c60d5f563ee8990a0cbfb79b244538c, opening /home/runner/work/_temp/repos/fastapi-realworld-example-app
+Opened in 2.0 s: fastapi-realworld-example-app, solution (none)
+  toolchain project python: /home/runner/work/_temp/repos/fastapi-realworld-example-app/pyproject.toml
+Compatibility Doctor:
+  fastapi-realworld-example-app: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+F5 startup project: fastapi-realworld-example-app (python) /home/runner/work/_temp/repos/fastapi-realworld-example-app/pyproject.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Run: exited before listening (0 s after F5)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 1.4 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up fastapi-realworld-example-app: pip install -e .
+  Installing fastapi-realworld-example-app's packages: Installing packages: pip install -e .
+  Installing fastapi-realworld-example-app's packages: Failed after 17.0 s
+  Setting up projects: Succeeded after 29.4 s
+Project setup:
+------ fastapi-realworld-example-app: pip install -e . ------
+Reading which Python versions the 35 pinned packages have wheels for, from PyPI.
+> uv venv --seed --python 3.10 .venv
+Downloading cpython-3.10.22-linux-x86_64-gnu (download) (28.0MiB)
+ Downloaded cpython-3.10.22-linux-x86_64-gnu (download)
+Using CPython 3.10.22
+Creating virtual environment with seed packages at: .venv
+ + packaging==26.3
+ + pip==26.2.2
+ + setuptools==84.2.1
+ + wheel==0.48.0
+Activate with: .venv/bin/activate
+> /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/repos/fastapi-realworld-example-app
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+ERROR: Project file:///home/runner/work/_temp/repos/fastapi-realworld-example-app uses a build backend that is missing the 'build_editable' hook, so it cannot be installed in editable mode. Consider using a build backend that supports PEP 660.
+> /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/bin/python -m pip install --disable-pip-version-check .
+Processing ./.
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting Unidecode<2.0,>=1.3 (from fastapi-realworld-example-app==0.0.0)
+  Downloading Unidecode-1.4.0-py3-none-any.whl.metadata (13 kB)
+Collecting aiosql<7.0,>=6.2 (from fastapi-realworld-example-app==0.0.0)
+  Downloading aiosql-6.5-py3-none-any.whl.metadata (691 bytes)
+Collecting alembic<2.0,>=1.8 (from fastapi-realworld-example-app==0.0.0)
+  Downloading alembic-1.20.1-py3-none-any.whl.metadata (7.3 kB)
+Collecting asyncpg<0.27.0,>=0.26.0 (from fastapi-realworld-example-app==0.0.0)
+  Downloading asyncpg-0.26.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+Collecting databases<0.7.0,>=0.6.1 (from fastapi-realworld-example-app==0.0.0)
+  Downloading databases-0.6.2-py3-none-any.whl.metadata (5.4 kB)
+Collecting fastapi<0.80.0,>=0.79.1 (from fastapi-realworld-example-app==0.0.0)
+  Downloading fastapi-0.79.1-py3-none-any.whl.metadata (25 kB)
+Collecting loguru<0.7.0,>=0.6.0 (from fastapi-realworld-example-app==0.0.0)
+  Downloading loguru-0.6.0-py3-none-any.whl.metadata (21 kB)
+Collecting passlib<2.0,>=1.7 (from passlib[bcrypt]<2.0,>=1.7->fastapi-realworld-example-app==0.0.0)
+  Downloading passlib-1.7.4-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting psycopg2-binary<3.0.0,>=2.9.3 (from fastapi-realworld-example-app==0.0.0)
+  Downloading psycopg2_binary-2.9.13-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (4.9 kB)
+Collecting pydantic<2.0,>=1.9 (from pydantic[dotenv,email]<2.0,>=1.9->fastapi-realworld-example-app==0.0.0)
+  Downloading pydantic-1.10.26-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (155 kB)
+Collecting pyjwt<3.0,>=2.4 (from fastapi-realworld-example-app==0.0.0)
+  Downloading pyjwt-2.15.1-py3-none-any.whl.metadata (3.5 kB)
+Collecting pypika<0.49.0,>=0.48.9 (from fastapi-realworld-example-app==0.0.0)
+  Downloading PyPika-0.48.9.tar.gz (67 kB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting python-slugify<7.0,>=6.1 (from fastapi-realworld-example-app==0.0.0)
+  Downloading python_slugify-6.1.2-py2.py3-none-any.whl.metadata (7.6 kB)
+Collecting uvicorn<0.19.0,>=0.18.2 (from fastapi-realworld-example-app==0.0.0)
+  Downloading uvicorn-0.18.3-py3-none-any.whl.metadata (6.2 kB)
+Requirement already satisfied: setuptools in ./.venv/lib/python3.10/site-packages (from aiosql<7.0,>=6.2->fastapi-realworld-example-app==0.0.0) (84.2.1)
+Collecting SQLAlchemy>=2.0 (from alembic<2.0,>=1.8->fastapi-realworld-example-app==0.0.0)
+  Downloading sqlalchemy-2.0.55-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (9.7 kB)
+Collecting Mako (from alembic<2.0,>=1.8->fastapi-realworld-example-app==0.0.0)
+  Downloading mako-1.4.3-py3-none-any.whl.metadata (2.9 kB)
+Collecting typing-extensions>=4.12 (from alembic<2.0,>=1.8->fastapi-realworld-example-app==0.0.0)
+  Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting tomli (from alembic<2.0,>=1.8->fastapi-realworld-example-app==0.0.0)
+  Using cached tomli-2.5.0-py3-none-any.whl.metadata (10 kB)
+INFO: pip is looking at multiple versions of databases to determine which version is compatible with other requirements. This could take a while.
+Collecting databases<0.7.0,>=0.6.1 (from fastapi-realworld-example-app==0.0.0)
+  Downloading databases-0.6.1-py3-none-any.whl.metadata (5.4 kB)
+Collecting alembic<2.0,>=1.8 (from fastapi-realworld-example-app==0.0.0)
+  Downloading alembic-1.20.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting greenlet>=1 (from SQLAlchemy>=2.0->alembic<2.0,>=1.8->fastapi-realworld-example-app==0.0.0)
+  Downloading greenlet-3.5.6-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+Collecting alembic<2.0,>=1.8 (from fastapi-realworld-example-app==0.0.0)
+  Downloading alembic-1.19.2-py3-none-any.whl.metadata (7.3 kB)
+Collecting sqlalchemy<=1.4.41,>=1.4 (from databases<0.7.0,>=0.6.1->fastapi-realworld-example-app==0.0.0)
+  Downloading SQLAlchemy-1.4.41-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (10.0 kB)
+Collecting starlette==0.19.1 (from fastapi<0.80.0,>=0.79.1->fastapi-realworld-example-app==0.0.0)
+  Downloading starlette-0.19.1-py3-none-any.whl.metadata (5.6 kB)
+Collecting anyio<5,>=3.4.0 (from starlette==0.19.1->fastapi<0.80.0,>=0.79.1->fastapi-realworld-example-app==0.0.0)
+  Using cached anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+Collecting exceptiongroup>=1.0.2 (from anyio<5,>=3.4.0->starlette==0.19.1->fastapi<0.80.0,>=0.79.1->fastapi-realworld-example-app==0.0.0)
+  Using cached exceptiongroup-1.3.1-py3-none-any.whl.metadata (6.7 kB)
+Collecting idna>=2.8 (from anyio<5,>=3.4.0->starlette==0.19.1->fastapi<0.80.0,>=0.79.1->fastapi-realworld-example-app==0.0.0)
+  Using cached idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting bcrypt>=3.1.0 (from passlib[bcrypt]<2.0,>=1.7->fastapi-realworld-example-app==0.0.0)
+  Downloading bcrypt-5.0.0-cp39-abi3-manylinux_2_34_x86_64.whl.metadata (10 kB)
+Collecting python-dotenv>=0.10.4 (from pydantic[dotenv,email]<2.0,>=1.9->fastapi-realworld-example-app==0.0.0)
+  Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+Collecting email-validator>=1.0.3 (from pydantic[dotenv,email]<2.0,>=1.9->fastapi-realworld-example-app==0.0.0)
+  Downloading email_validator-2.3.0-py3-none-any.whl.metadata (26 kB)
+Collecting text-unidecode>=1.3 (from python-slugify<7.0,>=6.1->fastapi-realworld-example-app==0.0.0)
+  Downloading text_unidecode-1.3-py2.py3-none-any.whl.metadata (2.4 kB)
+Collecting click>=7.0 (from uvicorn<0.19.0,>=0.18.2->fastapi-realworld-example-app==0.0.0)
+  Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn<0.19.0,>=0.18.2->fastapi-realworld-example-app==0.0.0)
+  Using cached h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting dnspython>=2.0.0 (from email-validator>=1.0.3->pydantic[dotenv,email]<2.0,>=1.9->fastapi-realworld-example-app==0.0.0)
+  Downloading dnspython-2.8.0-py3-none-any.whl.metadata (5.7 kB)
+Collecting MarkupSafe>=2.0 (from Mako->alembic<2.0,>=1.8->fastapi-realworld-example-app==0.0.0)
+  Downloading markupsafe-3.0.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Downloading aiosql-6.5-py3-none-any.whl (16 kB)
+Downloading databases-0.6.2-py3-none-any.whl (21 kB)
+Downloading SQLAlchemy-1.4.41-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 48.0 MB/s  0:00:00
+Downloading alembic-1.19.2-py3-none-any.whl (267 kB)
+Downloading asyncpg-0.26.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.6/2.6 MB 90.4 MB/s  0:00:00
+Downloading fastapi-0.79.1-py3-none-any.whl (54 kB)
+Downloading starlette-0.19.1-py3-none-any.whl (63 kB)
+Using cached anyio-4.15.1-py3-none-any.whl (132 kB)
+Downloading loguru-0.6.0-py3-none-any.whl (58 kB)
+Downloading passlib-1.7.4-py2.py3-none-any.whl (525 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 525.6/525.6 kB 52.4 MB/s  0:00:00
+Downloading psycopg2_binary-2.9.13-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.3/4.3 MB 121.4 MB/s  0:00:00
+Downloading pydantic-1.10.26-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 108.0 MB/s  0:00:00
+Downloading pyjwt-2.15.1-py3-none-any.whl (33 kB)
+Downloading python_slugify-6.1.2-py2.py3-none-any.whl (9.4 kB)
+Downloading Unidecode-1.4.0-py3-none-any.whl (235 kB)
+Downloading uvicorn-0.18.3-py3-none-any.whl (57 kB)
+Downloading bcrypt-5.0.0-cp39-abi3-manylinux_2_34_x86_64.whl (278 kB)
+Downloading click-8.5.0-py3-none-any.whl (125 kB)
+Downloading email_validator-2.3.0-py3-none-any.whl (35 kB)
+Downloading dnspython-2.8.0-py3-none-any.whl (331 kB)
+Using cached exceptiongroup-1.3.1-py3-none-any.whl (16 kB)
+Downloading greenlet-3.5.6-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (622 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 622.8/622.8 kB 63.5 MB/s  0:00:00
+Using cached h11-0.16.0-py3-none-any.whl (37 kB)
+Using cached idna-3.20-py3-none-any.whl (69 kB)
+Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+Downloading text_unidecode-1.3-py2.py3-none-any.whl (78 kB)
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading mako-1.4.3-py3-none-any.whl (80 kB)
+Downloading markupsafe-3.0.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (20 kB)
+Using cached tomli-2.5.0-py3-none-any.whl (14 kB)
+Building wheels for collected packages: fastapi-realworld-example-app, pypika
+  Building wheel for fastapi-realworld-example-app (pyproject.toml): started
+  Building wheel for fastapi-realworld-example-app (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Building wheel for fastapi-realworld-example-app (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [25 lines of output]
+      The "poetry.dev-dependencies" section is deprecated and will be removed in a future version. Use "poetry.group.dev.dependencies" instead.
+      Traceback (most recent call last):
+        File "/home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+        File "/home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 280, in build_wheel
+          return _build_backend().build_wheel(
+        File "/tmp/pip-build-env-qs08r2uj/overlay/lib/python3.10/site-packages/poetry/core/masonry/api.py", line 58, in build_wheel
+          return WheelBuilder.make_in(
+        File "/tmp/pip-build-env-qs08r2uj/overlay/lib/python3.10/site-packages/poetry/core/masonry/builders/wheel.py", line 95, in make_in
+          wb.build(target_dir=directory)
+        File "/tmp/pip-build-env-qs08r2uj/overlay/lib/python3.10/site-packages/poetry/core/masonry/builders/wheel.py", line 135, in build
+          self._copy_module(zip_file)
+        File "/tmp/pip-build-env-qs08r2uj/overlay/lib/python3.10/site-packages/poetry/core/masonry/builders/wheel.py", line 307, in _copy_module
+          to_add = self.find_files_to_add()
+        File "/tmp/pip-build-env-qs08r2uj/overlay/lib/python3.10/site-packages/poetry/core/masonry/builders/builder.py", line 157, in find_files_to_add
+          for include in self._module.includes:
+        File "/home/runner/.local/share/uv/python/cpython-3.10-linux-x86_64-gnu/lib/python3.10/functools.py", line 981, in __get__
+          val = self.func(instance)
+        File "/tmp/pip-build-env-qs08r2uj/overlay/lib/python3.10/site-packages/poetry/core/masonry/builders/builder.py", line 70, in _module
+          return Module(
+        File "/tmp/pip-build-env-qs08r2uj/overlay/lib/python3.10/site-packages/poetry/core/masonry/utils/module.py", line 68, in __init__
+          raise ModuleOrPackageNotFoundError(
+      poetry.core.masonry.utils.module.ModuleOrPackageNotFoundError: No file/folder found for package fastapi-realworld-example-app
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for fastapi-realworld-example-app
+  Building wheel for pypika (pyproject.toml): started
+  Building wheel for pypika (pyproject.toml): finished with status 'done'
+  Created wheel for pypika: filename=pypika-0.48.9-py2.py3-none-any.whl size=53801 sha256=5366b84bf28a9dc41b200d130099d1a7ec045e0af354ae4bdb25035f537a3ae1
+  Stored in directory: /home/runner/.cache/pip/wheels/e1/26/51/d0bffb3d2fd82256676d7ad3003faea3bd6dddc9577af665f4
+Successfully built pypika
+Failed to build fastapi-realworld-example-app
+error: failed-wheel-build-for-install
+
+× Failed to build installable wheels for some pyproject.toml based projects
+╰─> fastapi-realworld-example-app
+installable could not be installed: it has no prebuilt wheel for Python 3.10 on this computer, so pip compiled it, and the build failed (error: failed-wheel-build-for-install). Install what its build needs on this computer (a C compiler and Python's headers), then use Tools > Install Project Packages. A .python-version file naming the Python the project was written for, such as 3.9, lets pip use a prebuilt wheel, as does a installable release that ships one.
+
+Output:
+fastapi-realworld-example-app needs no build: Python runs it from its source. Press Ctrl+F5 to run it.
+
