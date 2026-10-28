@@ -5,302 +5,131 @@ Toolchain projects:
   php: /home/runner/work/_temp/real-repos/BookStack/composer.json
   node: /home/runner/work/_temp/real-repos/BookStack/package.json
 Startup project: php /home/runner/work/_temp/real-repos/BookStack/composer.json
-Set up in 18.7 s
-Ran in 0.1 s
+Set up in 15.7 s
+Web preview: http://127.0.0.1:34503/
+GET http://127.0.0.1:34503/: 200 OK, 9540 characters
+Ran in 8.5 s
 Project setup:
 
 Output:
------- Setting up BookStack: composer install ------
-> composer install --no-interaction --no-progress --prefer-dist
-> @php -r "!file_exists('bootstrap/cache/services.php') || @unlink('bootstrap/cache/services.php');"
-Installing dependencies from lock file (including require-dev)
-Verifying lock file contents can be installed on current platform.
-Package operations: 151 installs, 0 updates, 0 removals
-  - Downloading aws/aws-crt-php (v1.2.7)
-  - Downloading dasprid/enum (1.0.7)
-  - Downloading bacon/bacon-qr-code (v3.1.1)
-  - Downloading doctrine/inflector (2.1.0)
-  - Downloading masterminds/html5 (2.11.0)
-  - Downloading symfony/polyfill-mbstring (v1.43.0)
-  - Downloading sabberworm/php-css-parser (v9.5.0)
-  - Downloading dompdf/php-svg-lib (1.0.2)
-  - Downloading dompdf/php-font-lib (1.0.2)
-  - Downloading dompdf/dompdf (v3.1.6)
-  - Downloading symfony/http-foundation (v7.4.21)
-  - Downloading guzzlehttp/promises (2.6.0)
-  - Downloading guzzlehttp/uri-template (v1.0.11)
-  - Downloading intervention/gif (4.2.4)
-  - Downloading intervention/image (3.11.10)
-  - Downloading itsgoingd/clockwork (v5.3.5)
-  - Downloading symfony/process (v7.4.21)
-  - Downloading knplabs/knp-snappy (v1.7.3)
-  - Downloading phpstan/phpstan (2.3.1)
-  - Downloading vlucas/phpdotenv (v5.7.0)
-  - Downloading symfony/css-selector (v7.4.18)
-  - Downloading symfony/var-dumper (v7.4.21)
-  - Downloading symfony/uid (v7.4.21)
-  - Downloading symfony/routing (v7.4.21)
-  - Downloading symfony/polyfill-php83 (v1.43.0)
-  - Downloading symfony/mime (v7.4.19)
-  - Downloading symfony/event-dispatcher (v7.4.17)
-  - Downloading symfony/mailer (v7.4.19)
-  - Downloading symfony/error-handler (v7.4.20)
-  - Downloading symfony/http-kernel (v7.4.21)
-  - Downloading symfony/finder (v7.4.20)
-  - Downloading symfony/polyfill-intl-grapheme (v1.43.0)
-  - Downloading symfony/string (v7.4.21)
-  - Downloading symfony/console (v7.4.21)
-  - Downloading brick/math (0.14.8)
-  - Downloading symfony/translation (v7.4.17)
-  - Downloading symfony/clock (v7.4.21)
-  - Downloading nesbot/carbon (3.15.0)
-  - Downloading league/uri-interfaces (7.9.0)
-  - Downloading league/uri (7.9.0)
-  - Downloading nette/utils (v4.1.5)
-  - Downloading nette/schema (v1.3.6)
-  - Downloading ralouphie/getallheaders (3.0.3)
-  - Downloading guzzlehttp/psr7 (2.13.2)
-  - Downloading guzzlehttp/guzzle (7.16.0)
-  - Downloading laravel/framework (v12.70.0)
-  - Downloading iamcal/sql-parser (v0.7)
-  - Downloading larastan/larastan (v3.13.0)
-  - Downloading paragonie/random_compat (v9.99.100)
-  - Downloading paragonie/constant_time_encoding (v3.1.3)
-  - Downloading phpseclib/phpseclib (3.0.57)
-  - Downloading league/oauth1-client (v1.12.0)
-  - Downloading firebase/php-jwt (v7.2.1)
-  - Downloading laravel/socialite (v5.30.0)
-  - Downloading laravel/tinker (v2.11.1)
-  - Downloading symfony/filesystem (v7.4.21)
-  - Downloading mtdowling/jmespath.php (2.9.2)
-  - Downloading aws/aws-sdk-php (3.401.3)
-  - Downloading league/flysystem-aws-s3-v3 (3.35.3)
-  - Downloading league/html-to-markdown (5.2.3)
-  - Downloading league/oauth2-client (2.9.1)
-  - Downloading robrichards/xmlseclibs (3.1.5)
-  - Downloading onelogin/php-saml (4.3.2)
-  - Downloading theseer/tokenizer (1.3.1)
-  - Downloading sebastian/version (5.0.2)
-  - Downloading sebastian/lines-of-code (3.0.1)
-  - Downloading sebastian/environment (7.2.1)
-  - Downloading sebastian/complexity (4.0.1)
-  - Downloading sebastian/code-unit-reverse-lookup (4.0.1)
-  - Downloading phpunit/php-text-template (4.0.1)
-  - Downloading phpunit/php-file-iterator (5.1.1)
-  - Downloading phpunit/php-code-coverage (11.0.12)
-  - Downloading phpunit/php-invoker (5.0.1)
-  - Downloading phpunit/php-timer (7.0.1)
-  - Downloading pragmarx/google2fa (v9.1.0)
-  - Downloading predis/predis (v3.7.0)
-  - Downloading sebastian/cli-parser (3.0.2)
-  - Downloading sebastian/code-unit (3.0.3)
-  - Downloading sebastian/recursion-context (6.0.3)
-  - Downloading sebastian/exporter (6.3.2)
-  - Downloading sebastian/diff (6.0.2)
-  - Downloading sebastian/comparator (6.3.3)
-  - Downloading sebastian/object-reflector (4.0.1)
-  - Downloading sebastian/global-state (7.0.2)
-  - Downloading sebastian/object-enumerator (6.0.1)
-  - Downloading sebastian/type (5.1.3)
-  - Downloading socialiteproviders/manager (4.9.2)
-  - Downloading socialiteproviders/discord (4.2.0)
-  - Downloading socialiteproviders/gitlab (4.1.0)
-  - Downloading socialiteproviders/microsoft-azure (5.2.1)
-  - Downloading socialiteproviders/okta (4.5.0)
-  - Downloading socialiteproviders/twitch (5.4.0)
-  - Downloading squizlabs/php_codesniffer (4.0.4)
-  - Downloading symfony/dom-crawler (v7.4.17)
-  - Downloading phpunit/phpunit (11.5.57)
-  - Downloading ssddanbrown/asserthtml (v3.2.0)
-  - Downloading ssddanbrown/htmldiff (v2.0.0)
-  - Downloading ezyang/htmlpurifier (v4.19.1)
-  - Downloading xemlock/htmlpurifier-html5 (v0.1.12)
-  - Installing aws/aws-crt-php (v1.2.7): Extracting archive
-  - Installing dasprid/enum (1.0.7): Extracting archive
-  - Installing bacon/bacon-qr-code (v3.1.1): Extracting archive
-  - Installing doctrine/inflector (2.1.0): Extracting archive
-  - Installing doctrine/lexer (3.0.3): Extracting archive
-  - Installing masterminds/html5 (2.11.0): Extracting archive
-  - Installing symfony/polyfill-mbstring (v1.43.0): Extracting archive
-  - Installing sabberworm/php-css-parser (v9.5.0): Extracting archive
-  - Installing dompdf/php-svg-lib (1.0.2): Extracting archive
-  - Installing dompdf/php-font-lib (1.0.2): Extracting archive
-  - Installing dompdf/dompdf (v3.1.6): Extracting archive
-  - Installing dragonmantank/cron-expression (v3.6.1): Extracting archive
-  - Installing symfony/deprecation-contracts (v3.7.1): Extracting archive
-  - Installing psr/container (2.0.2): Extracting archive
-  - Installing fakerphp/faker (v1.24.1): Extracting archive
-  - Installing symfony/http-foundation (v7.4.21): Extracting archive
-  - Installing fruitcake/php-cors (v1.4.0): Extracting archive
-  - Installing guzzlehttp/promises (2.6.0): Extracting archive
-  - Installing symfony/polyfill-php80 (v1.43.0): Extracting archive
-  - Installing guzzlehttp/uri-template (v1.0.11): Extracting archive
-  - Installing intervention/gif (4.2.4): Extracting archive
-  - Installing intervention/image (3.11.10): Extracting archive
-  - Installing itsgoingd/clockwork (v5.3.5): Extracting archive
-  - Installing symfony/process (v7.4.21): Extracting archive
-  - Installing psr/log (3.0.2): Extracting archive
-  - Installing knplabs/knp-snappy (v1.7.3): Extracting archive
-  - Installing phpstan/phpstan (2.3.1): Extracting archive
-  - Installing voku/portable-ascii (2.1.1): Extracting archive
-  - Installing symfony/polyfill-ctype (v1.37.0): Extracting archive
-  - Installing phpoption/phpoption (1.10.0): Extracting archive
-  - Installing graham-campbell/result-type (v1.2.0): Extracting archive
-  - Installing vlucas/phpdotenv (v5.7.0): Extracting archive
-  - Installing symfony/css-selector (v7.4.18): Extracting archive
-  - Installing tijsverkoyen/css-to-inline-styles (v2.4.0): Extracting archive
-  - Installing symfony/var-dumper (v7.4.21): Extracting archive
-  - Installing symfony/polyfill-uuid (v1.43.0): Extracting archive
-  - Installing symfony/uid (v7.4.21): Extracting archive
-  - Installing symfony/routing (v7.4.21): Extracting archive
-  - Installing symfony/polyfill-php85 (v1.43.0): Extracting archive
-  - Installing symfony/polyfill-php84 (v1.43.0): Extracting archive
-  - Installing symfony/polyfill-php83 (v1.43.0): Extracting archive
-  - Installing symfony/polyfill-intl-normalizer (v1.43.0): Extracting archive
-  - Installing symfony/polyfill-intl-idn (v1.43.0): Extracting archive
-  - Installing symfony/mime (v7.4.19): Extracting archive
-  - Installing symfony/service-contracts (v3.7.3): Extracting archive
-  - Installing psr/event-dispatcher (1.0.0): Extracting archive
-  - Installing symfony/event-dispatcher-contracts (v3.7.1): Extracting archive
-  - Installing symfony/event-dispatcher (v7.4.17): Extracting archive
-  - Installing egulias/email-validator (4.0.4): Extracting archive
-  - Installing symfony/mailer (v7.4.19): Extracting archive
-  - Installing symfony/error-handler (v7.4.20): Extracting archive
-  - Installing symfony/http-kernel (v7.4.21): Extracting archive
-  - Installing symfony/finder (v7.4.20): Extracting archive
-  - Installing symfony/polyfill-intl-grapheme (v1.43.0): Extracting archive
-  - Installing symfony/string (v7.4.21): Extracting archive
-  - Installing symfony/console (v7.4.21): Extracting archive
-  - Installing ramsey/collection (2.1.1): Extracting archive
-  - Installing brick/math (0.14.8): Extracting archive
-  - Installing ramsey/uuid (4.9.4): Extracting archive
-  - Installing psr/simple-cache (3.0.0): Extracting archive
-  - Installing nunomaduro/termwind (v2.4.0): Extracting archive
-  - Installing symfony/translation-contracts (v3.7.1): Extracting archive
-  - Installing symfony/translation (v7.4.17): Extracting archive
-  - Installing symfony/polyfill-time (v1.42.0): Extracting archive
-  - Installing psr/clock (1.0.0): Extracting archive
-  - Installing symfony/clock (v7.4.21): Extracting archive
-  - Installing carbonphp/carbon-doctrine-types (3.2.1): Extracting archive
-  - Installing nesbot/carbon (3.15.0): Extracting archive
-  - Installing monolog/monolog (3.12.1): Extracting archive
-  - Installing psr/http-message (2.0): Extracting archive
-  - Installing psr/http-factory (1.1.0): Extracting archive
-  - Installing league/uri-interfaces (7.9.0): Extracting archive
-  - Installing league/uri (7.9.0): Extracting archive
-  - Installing league/mime-type-detection (1.17.0): Extracting archive
-  - Installing league/flysystem-local (3.35.3): Extracting archive
-  - Installing league/flysystem (3.36.0): Extracting archive
-  - Installing nette/utils (v4.1.5): Extracting archive
-  - Installing nette/schema (v1.3.6): Extracting archive
-  - Installing dflydev/dot-access-data (v3.0.3): Extracting archive
-  - Installing league/config (v1.2.0): Extracting archive
-  - Installing league/commonmark (2.10.4): Extracting archive
-  - Installing laravel/serializable-closure (v2.1.0): Extracting archive
-  - Installing laravel/prompts (v0.3.26): Extracting archive
-  - Installing psr/http-client (1.0.3): Extracting archive
-  - Installing ralouphie/getallheaders (3.0.3): Extracting archive
-  - Installing guzzlehttp/psr7 (2.13.2): Extracting archive
-  - Installing guzzlehttp/guzzle (7.16.0): Extracting archive
-  - Installing laravel/framework (v12.70.0): Extracting archive
-  - Installing iamcal/sql-parser (v0.7): Extracting archive
-  - Installing larastan/larastan (v3.13.0): Extracting archive
-  - Installing paragonie/random_compat (v9.99.100): Extracting archive
-  - Installing paragonie/constant_time_encoding (v3.1.3): Extracting archive
-  - Installing phpseclib/phpseclib (3.0.57): Extracting archive
-  - Installing league/oauth1-client (v1.12.0): Extracting archive
-  - Installing firebase/php-jwt (v7.2.1): Extracting archive
-  - Installing laravel/socialite (v5.30.0): Extracting archive
-  - Installing nikic/php-parser (v5.9.0): Extracting archive
-  - Installing psy/psysh (v0.12.24): Extracting archive
-  - Installing laravel/tinker (v2.11.1): Extracting archive
-  - Installing symfony/filesystem (v7.4.21): Extracting archive
-  - Installing mtdowling/jmespath.php (2.9.2): Extracting archive
-  - Installing aws/aws-sdk-php (3.401.3): Extracting archive
-  - Installing league/flysystem-aws-s3-v3 (3.35.3): Extracting archive
-  - Installing league/html-to-markdown (5.2.3): Extracting archive
-  - Installing league/oauth2-client (2.9.1): Extracting archive
-  - Installing hamcrest/hamcrest-php (v3.0.0): Extracting archive
-  - Installing mockery/mockery (1.6.15): Extracting archive
-  - Installing myclabs/deep-copy (1.14.0): Extracting archive
-  - Installing filp/whoops (2.18.7): Extracting archive
-  - Installing nunomaduro/collision (v8.9.5): Extracting archive
-  - Installing robrichards/xmlseclibs (3.1.5): Extracting archive
-  - Installing onelogin/php-saml (4.3.2): Extracting archive
-  - Installing phar-io/version (3.2.1): Extracting archive
-  - Installing phar-io/manifest (2.0.4): Extracting archive
-  - Installing theseer/tokenizer (1.3.1): Extracting archive
-  - Installing sebastian/version (5.0.2): Extracting archive
-  - Installing sebastian/lines-of-code (3.0.1): Extracting archive
-  - Installing sebastian/environment (7.2.1): Extracting archive
-  - Installing sebastian/complexity (4.0.1): Extracting archive
-  - Installing sebastian/code-unit-reverse-lookup (4.0.1): Extracting archive
-  - Installing phpunit/php-text-template (4.0.1): Extracting archive
-  - Installing phpunit/php-file-iterator (5.1.1): Extracting archive
-  - Installing phpunit/php-code-coverage (11.0.12): Extracting archive
-  - Installing phpunit/php-invoker (5.0.1): Extracting archive
-  - Installing phpunit/php-timer (7.0.1): Extracting archive
-  - Installing pragmarx/google2fa (v9.1.0): Extracting archive
-  - Installing predis/predis (v3.7.0): Extracting archive
-  - Installing sebastian/cli-parser (3.0.2): Extracting archive
-  - Installing sebastian/code-unit (3.0.3): Extracting archive
-  - Installing sebastian/recursion-context (6.0.3): Extracting archive
-  - Installing sebastian/exporter (6.3.2): Extracting archive
-  - Installing sebastian/diff (6.0.2): Extracting archive
-  - Installing sebastian/comparator (6.3.3): Extracting archive
-  - Installing sebastian/object-reflector (4.0.1): Extracting archive
-  - Installing sebastian/global-state (7.0.2): Extracting archive
-  - Installing sebastian/object-enumerator (6.0.1): Extracting archive
-  - Installing sebastian/type (5.1.3): Extracting archive
-  - Installing socialiteproviders/manager (4.9.2): Extracting archive
-  - Installing socialiteproviders/discord (4.2.0): Extracting archive
-  - Installing socialiteproviders/gitlab (4.1.0): Extracting archive
-  - Installing socialiteproviders/microsoft-azure (5.2.1): Extracting archive
-  - Installing socialiteproviders/okta (4.5.0): Extracting archive
-  - Installing socialiteproviders/twitch (5.4.0): Extracting archive
-  - Installing squizlabs/php_codesniffer (4.0.4): Extracting archive
-  - Installing symfony/dom-crawler (v7.4.17): Extracting archive
-  - Installing staabm/side-effects-detector (1.0.5): Extracting archive
-  - Installing phpunit/phpunit (11.5.57): Extracting archive
-  - Installing ssddanbrown/asserthtml (v3.2.0): Extracting archive
-  - Installing ssddanbrown/htmldiff (v2.0.0): Extracting archive
-  - Installing ezyang/htmlpurifier (v4.19.1): Extracting archive
-  - Installing xemlock/htmlpurifier-html5 (v0.1.12): Extracting archive
-Generating optimized autoload files
-> Illuminate\Foundation\ComposerScripts::postAutoloadDump
-> @php artisan package:discover --ansi
+Running artisan serve with PHP 8.5.12
+> php artisan migrate --force --no-interaction
 
-   INFO  Discovering packages.  
+   INFO  Preparing database.  
 
-  itsgoingd/clockwork ................................................... DONE
-  laravel/socialite ..................................................... DONE
-  laravel/tinker ........................................................ DONE
-  nesbot/carbon ......................................................... DONE
-  nunomaduro/collision .................................................. DONE
-  nunomaduro/termwind ................................................... DONE
-  socialiteproviders/manager ............................................ DONE
+  Creating migration table ..................................... 217.56ms DONE
 
-94 packages you are using are looking for funding.
-Use the `composer fund` command to find out more!
-> @php artisan cache:clear
+   INFO  Running migrations.  
 
-   INFO  Application cache cleared successfully.  
+  2014_10_12_000000_create_users_table ......................... 217.34ms DONE
+  2014_10_12_100000_create_password_resets_table ................ 25.37ms DONE
+  2015_07_12_114933_create_books_table .......................... 21.56ms DONE
+  2015_07_12_190027_create_pages_table ........................... 6.87ms DONE
+  2015_07_13_172121_create_images_table .......................... 4.71ms DONE
+  2015_07_27_172342_create_chapters_table ........................ 5.35ms DONE
+  2015_08_08_200447_add_users_to_entities ...................... 201.71ms DONE
+  2015_08_09_093534_create_page_revisions_table .................. 5.21ms DONE
+  2015_08_16_142133_create_activities_table ...................... 6.77ms DONE
+  2015_08_29_105422_add_roles_and_permissions .................. 130.56ms DONE
+  2015_08_30_125859_create_settings_table ........................ 6.15ms DONE
+  2015_08_31_175240_add_search_indexes ........................... 0.03ms DONE
+  2015_09_04_165821_create_social_accounts_table ................ 12.50ms DONE
+  2015_09_05_164707_add_email_confirmation_table ................ 17.44ms DONE
+  2015_11_21_145609_create_views_table ........................... 4.78ms DONE
+  2015_11_26_221857_add_entity_indexes ......................... 425.24ms DONE
+  2015_12_05_145049_fulltext_weighting ........................... 0.06ms DONE
+  2015_12_07_195238_add_image_upload_types ..................... 295.69ms DONE
+  2015_12_09_195748_add_user_avatars ............................. 5.03ms DONE
+  2016_01_11_210908_add_external_auth_to_users .................. 17.32ms DONE
+  2016_02_25_184030_add_slug_to_revisions ....................... 75.51ms DONE
+  2016_02_27_120329_update_permissions_and_roles ................ 70.81ms DONE
+  2016_02_28_084200_add_entity_access_controls .................. 86.14ms DONE
+  2016_03_09_203143_add_page_revision_types ..................... 16.23ms DONE
+  2016_03_13_082138_add_page_drafts ............................. 18.07ms DONE
+  2016_03_25_123157_add_markdown_support ........................ 60.42ms DONE
+  2016_04_09_100730_add_view_permissions_to_roles ............... 18.65ms DONE
+  2016_04_20_192649_create_joint_permissions_table ............. 148.74ms DONE
+  2016_05_06_185215_create_tags_table ........................... 20.34ms DONE
+  2016_07_07_181521_add_summary_to_page_revisions ............... 11.50ms DONE
+  2016_09_29_101449_remove_hidden_roles ......................... 63.49ms DONE
+  2016_10_09_142037_create_attachments_table .................... 26.27ms DONE
+  2017_01_21_163556_create_cache_table .......................... 13.61ms DONE
+  2017_01_21_163602_create_sessions_table ....................... 12.09ms DONE
+  2017_03_19_091553_create_search_index_table .................. 205.87ms DONE
+  2017_04_20_185112_add_revision_counts ......................... 35.50ms DONE
+  2017_07_02_152834_update_db_encoding_to_ut8mb4 ................. 0.05ms DONE
+  2017_08_01_130541_create_comments_table ....................... 23.65ms DONE
+  2017_08_29_102650_add_cover_image_display ..................... 10.61ms DONE
+  2018_07_15_173514_add_role_external_auth_id ................... 16.21ms DONE
+  2018_08_04_115700_create_bookshelves_table ................... 108.67ms DONE
+  2019_07_07_112515_add_template_support ........................ 21.63ms DONE
+  2019_08_17_140214_add_user_invites_table ...................... 13.06ms DONE
+  2019_12_29_120917_add_api_auth ................................ 18.68ms DONE
+  2020_08_04_111754_drop_joint_permissions_id ................... 29.43ms DONE
+  2020_08_04_131052_remove_role_name_field ...................... 17.35ms DONE
+  2020_09_19_094251_add_activity_indexes ......................... 9.85ms DONE
+  2020_09_27_210059_add_entity_soft_deletes .................... 193.65ms DONE
+  2020_09_27_210528_create_deletions_table ...................... 15.47ms DONE
+  2020_11_07_232321_simplify_activities_table .................. 183.80ms DONE
+  2020_12_30_173528_add_owned_by_field_to_entities ............. 123.02ms DONE
+  2021_01_30_225441_add_settings_type_column ..................... 7.55ms DONE
+  2021_03_08_215138_add_user_slug ............................... 18.36ms DONE
+  2021_05_15_173110_create_favourites_table ..................... 41.49ms DONE
+  2021_06_30_173111_create_mfa_values_table ..................... 12.17ms DONE
+  2021_07_03_085038_add_mfa_enforced_to_roles_table .............. 5.79ms DONE
+  2021_08_28_161743_add_export_role_permission ................... 2.42ms DONE
+  2021_09_26_044614_add_activities_ip_column .................... 10.14ms DONE
+  2021_11_26_070438_add_index_for_user_ip ........................ 4.66ms DONE
+  2021_12_07_111343_create_webhooks_table ....................... 27.41ms DONE
+  2021_12_13_152024_create_jobs_table ............................ 8.05ms DONE
+  2021_12_13_152120_create_failed_jobs_table .................... 10.02ms DONE
+  2022_01_03_154041_add_webhooks_timeout_error_columns .......... 47.98ms DONE
+  2022_04_17_101741_add_editor_change_field_and_permission ...... 30.11ms DONE
+  2022_04_25_140741_update_polymorphic_types .................... 12.36ms DONE
+  2022_07_16_170051_drop_joint_permission_type ................. 265.18ms DONE
+  2022_08_17_092941_create_references_table ..................... 47.28ms DONE
+  2022_09_02_082910_fix_shelf_cover_image_types .................. 0.49ms DONE
+  2022_10_07_091406_flatten_entity_permissions_table ............ 20.95ms DONE
+  2022_10_08_104202_drop_entity_restricted_field ............... 113.38ms DONE
+  2023_01_24_104625_refactor_joint_permissions_storage .......... 44.43ms DONE
+  2023_01_28_141230_copy_color_settings_for_dark_mode ............ 0.88ms DONE
+  2023_02_20_093655_increase_attachments_path_length ............ 10.91ms DONE
+  2023_02_23_200227_add_updated_at_index_to_pages ................ 5.96ms DONE
+  2023_06_10_071823_remove_guest_user_secondary_roles ............ 1.54ms DONE
+  2023_06_25_181952_remove_bookshelf_create_entity_permissions ... 0.03ms DONE
+  2023_07_25_124945_add_receive_notifications_role_permissions ... 2.11ms DONE
+  2023_07_31_104430_create_watches_table ........................ 41.14ms DONE
+  2023_08_21_174248_increase_cache_size ......................... 21.41ms DONE
+  2023_12_02_104541_add_default_template_to_books ............... 64.39ms DONE
+  2023_12_17_140913_add_description_html_to_entities ............ 91.47ms DONE
+  2024_01_01_104542_add_default_template_to_chapters ............ 21.16ms DONE
+  2024_02_04_141358_add_views_updated_index ..................... 41.55ms DONE
+  2024_05_04_154409_rename_activity_relation_columns ............. 8.98ms DONE
+  2024_09_29_140340_ensure_editor_value_set ...................... 1.75ms DONE
+  2024_10_29_114420_add_import_role_permission ................... 2.66ms DONE
+  2024_11_02_160700_create_imports_table ......................... 9.89ms DONE
+  2024_11_27_171039_add_instance_id_setting ...................... 5.12ms DONE
+  2025_01_29_180933_create_sort_rules_table ...................... 5.40ms DONE
+  2025_02_05_150842_add_sort_rule_id_to_books .................. 179.63ms DONE
+  2025_04_18_215145_add_content_refs_and_archived_to_comments .. 237.15ms DONE
+  2025_09_02_111542_remove_unused_columns ....................... 20.72ms DONE
+  2025_09_15_132850_create_entities_table ...................... 262.73ms DONE
+  2025_09_15_134701_migrate_entity_data .......................... 6.26ms DONE
+  2025_09_15_134751_update_entity_relation_columns ............. 553.42ms DONE
+  2025_09_15_134813_drop_old_entity_tables ...................... 15.84ms DONE
+  2025_10_18_163331_clean_user_id_references ................... 170.49ms DONE
+  2025_10_22_134507_update_comments_relation_field_names ......... 8.01ms DONE
+  2025_11_23_161812_create_slug_history_table ................... 21.79ms DONE
+  2025_12_15_140219_create_mention_history_table ............... 120.17ms DONE
+  2025_12_19_103417_add_views_viewable_type_index ................ 4.13ms DONE
+  2026_04_19_141616_add_revision_view_all_permission ............. 2.41ms DONE
+  2026_07_27_201402_update_users_external_auth_id_collation ..... 17.03ms DONE
 
-> @php artisan view:clear
 
-   INFO  Compiled views cleared successfully.  
+   INFO  Server running on [http://127.0.0.1:34503].  
 
-========== composer install: succeeded ==========
------- Setting up BookStack: npm ci ------
-> npm ci --no-fund --no-audit
-npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
-npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+  Press Ctrl+C to stop the server
 
-added 644 packages in 6s
-========== npm ci: succeeded ==========
------- Setting up BookStack: php artisan key:generate ------
 
-   INFO  Application key set successfully.  
-
-========== php artisan key:generate: succeeded ==========
+The program 'artisan serve' was stopped.
 
