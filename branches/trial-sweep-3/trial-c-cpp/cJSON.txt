@@ -1,0 +1,192 @@
+cJSON at 6d9f2443ab071f86e5d9b43025a40929ec41c46c, opening /home/runner/work/_temp/repos/cJSON
+Opened in 0.3 s: cJSON, solution (none)
+  toolchain project cpp: /home/runner/work/_temp/repos/cJSON/CMakeLists.txt
+  toolchain project cpp: /home/runner/work/_temp/repos/cJSON/fuzzing/CMakeLists.txt
+  toolchain project cpp: /home/runner/work/_temp/repos/cJSON/tests/CMakeLists.txt
+  toolchain project node: /home/runner/work/_temp/repos/cJSON/tests/json-patch-tests/package.json
+  toolchain project python: /home/runner/work/_temp/repos/cJSON/tests/unity/auto
+  toolchain project cpp: /home/runner/work/_temp/repos/cJSON/tests/unity/test/Makefile
+Compatibility Doctor:
+  cJSON: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+  fuzzing: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+  tests: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+  json-patch-tests: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+  auto: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  test: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+F5 startup project: cJSON (cpp) /home/runner/work/_temp/repos/cJSON/CMakeLists.txt
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Run: exited with code 0 (1 s after F5)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 2.9 s
+  Building cJSON: Building cJSON
+  Building cJSON: Configuring CMake
+  Building cJSON: Generating build files
+  Building cJSON: Building 2%
+  Building cJSON: Building 4%
+  Building cJSON: Building 6%
+  Building cJSON: Building 8%
+  Building cJSON: Building 11%
+  Building cJSON: Building 13%
+  Building cJSON: Building 15%
+  Building cJSON: Building 17%
+  Building cJSON: Building 20%
+  Building cJSON: Building 22%
+  Building cJSON: Building 24%
+  Building cJSON: Building 26%
+  Building cJSON: Building 28%
+  Building cJSON: Building 31%
+  Building cJSON: Building 33%
+  Building cJSON: Building 35%
+  Building cJSON: Building 37%
+  Building cJSON: Building 40%
+  Building cJSON: Building 42%
+  Building cJSON: Building 44%
+  Building cJSON: Building 46%
+  Building cJSON: Building 48%
+  Building cJSON: Building 51%
+  Building cJSON: Building 53%
+  Building cJSON: Building 55%
+  Building cJSON: Building 57%
+  Building cJSON: Building 60%
+  Building cJSON: Building 62%
+  Building cJSON: Building 64%
+  Building cJSON: Building 66%
+  Building cJSON: Building 68%
+  Building cJSON: Building 71%
+  Building cJSON: Building 73%
+  Building cJSON: Building 75%
+  Building cJSON: Building 77%
+  Building cJSON: Building 80%
+  Building cJSON: Building 82%
+  Building cJSON: Building 84%
+  Building cJSON: Building 86%
+  Building cJSON: Building 88%
+  Building cJSON: Building 91%
+  Building cJSON: Building 93%
+  Building cJSON: Building 95%
+  Building cJSON: Building 97%
+  Building cJSON: Building 100%
+  Building cJSON: Succeeded after 6.7 s
+  Building cJSON: Building cJSON
+  Building cJSON: Configuring CMake
+  Building cJSON: Generating build files
+  Building cJSON: Building 4%
+  Building cJSON: Building 8%
+  Building cJSON: Building 13%
+  Building cJSON: Building 17%
+  Building cJSON: Building 22%
+  Building cJSON: Building 26%
+  Building cJSON: Building 31%
+  Building cJSON: Building 35%
+  Building cJSON: Building 40%
+  Building cJSON: Building 44%
+  Building cJSON: Building 48%
+  Building cJSON: Building 53%
+  Building cJSON: Building 57%
+  Building cJSON: Building 62%
+  Building cJSON: Building 66%
+  Building cJSON: Building 71%
+  Building cJSON: Building 75%
+  Building cJSON: Building 80%
+  Building cJSON: Building 84%
+  Building cJSON: Building 88%
+  Building cJSON: Building 93%
+  Building cJSON: Building 100%
+  Building cJSON: Succeeded after 0.5 s
+Project setup:
+
+Output:
+Running cJSON with C and C++ 13.3.0
+> cmake --build /home/runner/work/_temp/repos/cJSON/.tabstudio/cmake --config Debug
+> cmake -S /home/runner/work/_temp/repos/cJSON -B /home/runner/work/_temp/repos/cJSON/.tabstudio/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+CMake Deprecation Warning at CMakeLists.txt:2 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+
+
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/runner/work/_temp/repos/cJSON/.tabstudio/cmake
+[  4%] Built target cjson
+[  8%] Built target cJSON_test
+[ 13%] Built target unity
+[ 17%] Built target parse_examples
+[ 22%] Built target parse_number
+[ 26%] Built target parse_hex4
+[ 31%] Built target parse_string
+[ 35%] Built target parse_array
+[ 40%] Built target parse_object
+[ 44%] Built target parse_value
+[ 48%] Built target print_string
+[ 53%] Built target print_number
+[ 57%] Built target print_array
+[ 62%] Built target print_object
+[ 66%] Built target print_value
+[ 71%] Built target misc_tests
+[ 75%] Built target parse_with_opts
+[ 80%] Built target compare_tests
+[ 84%] Built target cjson_add
+[ 88%] Built target readme_examples
+[ 93%] Built target minify_tests
+[100%] Built target fuzz_main
+Version: 1.7.19
+{
+	"name":	"Jack (\"Bee\") Nimble",
+	"format":	{
+		"type":	"rect",
+		"width":	1920,
+		"height":	1080,
+		"interlace":	false,
+		"frame rate":	24
+	}
+}
+["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+[[0, -1, 0], [1, 0, 0], [0, 0, 1]]
+{
+	"Image":	{
+		"Width":	800,
+		"Height":	600,
+		"Title":	"View from 15th Floor",
+		"Thumbnail":	{
+			"Url":	"http:/*www.example.com/image/481989943",
+			"Height":	125,
+			"Width":	"100"
+		},
+		"IDs":	[116, 943, 234, 38793]
+	}
+}
+[{
+		"precision":	"zip",
+		"Latitude":	37.7668,
+		"Longitude":	-122.3959,
+		"Address":	"",
+		"City":	"SAN FRANCISCO",
+		"State":	"CA",
+		"Zip":	"94107",
+		"Country":	"US"
+	}, {
+		"precision":	"zip",
+		"Latitude":	37.371991,
+		"Longitude":	-122.026,
+		"Address":	"",
+		"City":	"SUNNYVALE",
+		"State":	"CA",
+		"Zip":	"94085",
+		"Country":	"US"
+	}]
+{
+	"number":	null
+}
+
+The program 'cJSON_test' has exited with code 0 (0x0).
+
