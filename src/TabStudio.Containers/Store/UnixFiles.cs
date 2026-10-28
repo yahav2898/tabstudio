@@ -17,6 +17,12 @@ internal static partial class UnixFiles
     [LibraryImport("libc", EntryPoint = "utimensat", StringMarshalling = StringMarshalling.Utf8, SetLastError = true)]
     private static partial int SetTimesNative(int directory, string path, Timespec[] times, int flags);
 
+    [LibraryImport("libc", EntryPoint = "kill", SetLastError = true)]
+    private static partial int KillNative(int pid, int signal);
+
+    /// <summary>Sends a signal to a process; false when it is gone or not ours.</summary>
+    public static bool TrySignal(int pid, int signal) => !OperatingSystem.IsWindows() && pid > 0 && KillNative(pid, signal) == 0;
+
     [StructLayout(LayoutKind.Sequential)]
     private struct Timespec
     {
