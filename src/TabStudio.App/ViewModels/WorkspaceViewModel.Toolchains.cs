@@ -652,8 +652,9 @@ public sealed partial class WorkspaceViewModel
             State = IdeState.Ready;
             StatusText = "Stopped";
         }
-        else if (result.Succeeded)
+        else if (result.Succeeded || result.NothingToRunReason is not null)
         {
+            // A build with several programs and none chosen yet still built them all.
             Output.WriteLine($"Build succeeded: '{name}' is ready to run.", OutputKind.Info);
             State = IdeState.Ready;
             StatusText = "Build succeeded";
