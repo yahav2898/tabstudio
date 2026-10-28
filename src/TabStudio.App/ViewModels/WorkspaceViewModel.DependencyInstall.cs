@@ -71,6 +71,16 @@ public sealed partial class WorkspaceViewModel
             if (!python)
             {
                 var result = await OutputProcess.RunAsync(_toolchains.Runtime, step, Output, null, cancellationToken, toolchain: project.Toolchain.Id);
+                if (!result.Succeeded && !cancellationToken.IsCancellationRequested && NpmInstallInstead(step) is { } install)
+                {
+                    // npm ci refuses a lock file out of step with package.json, and npm 10 can fail on an old one;
+                    // npm install updates the lock file instead, as a person would run next.
+                    Output.WriteLine($"npm ci failed ({FirstInstallError(result)}), so TabStudio runs npm install instead, which updates package-lock.json.", OutputKind.Info);
+                    Output.WriteLine("> " + install.CommandLine, OutputKind.Info);
+                    step = install;
+                    result = await OutputProcess.RunAsync(_toolchains.Runtime, step, Output, null, cancellationToken, toolchain: project.Toolchain.Id);
+                }
+
                 if (!result.Succeeded)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
@@ -93,6 +103,16 @@ public sealed partial class WorkspaceViewModel
                 ProjectSetupOutput.WriteLine("> " + fallback.CommandLine, OutputKind.Info);
                 version = null;
                 outcome = await OutputProcess.RunAsync(_toolchains.Runtime, fallback, ProjectSetupOutput, null, cancellationToken, toolchain: "python");
+            }
+
+            if (!outcome.Succeeded && !creates && !cancellationToken.IsCancellationRequested && NonEditable(step, outcome) is { } plain)
+            {
+                // An older build backend, such as Poetry's before 1.1, cannot install the project in editable mode;
+                // installed normally it still gets its dependencies, and F5 runs its code from the folder.
+                Output.WriteLine($"{project.Name}'s build backend cannot install it in editable mode, so TabStudio installs it normally.", OutputKind.Info);
+                ProjectSetupOutput.WriteLine("> " + plain.CommandLine, OutputKind.Info);
+                step = plain;
+                outcome = await OutputProcess.RunAsync(_toolchains.Runtime, step, ProjectSetupOutput, null, cancellationToken, toolchain: "python");
             }
 
             if (!outcome.Succeeded && !creates && !cancellationToken.IsCancellationRequested)
@@ -387,10 +407,13 @@ public sealed partial class WorkspaceViewModel
     /// </summary>
     private void ReportInstallFailure(ToolchainProject project, ProcessStartSpec step, OutputProcessResult result)
     {
-        var message = $"{project.Name}'s packages were not installed: {step.CommandLine} failed ({FirstInstallError(result)}). Fix that, then use Tools > Install Project Packages.";
+        var why = $"{step.CommandLine} failed ({FirstInstallError(result)}). Fix that, then use Tools > Install Project Packages.";
+        var message = $"{project.Name}'s packages were not installed: {why}";
         Output.WriteLine(message, OutputKind.Failure);
         ProjectSetupOutput.WriteLine(message, OutputKind.Failure);
-        _installFailures[project.Directory] = message;
+
+        // The notice's title already says the packages were not installed.
+        _installFailures[project.Directory] = why;
         _installFailureTitles[project.Directory] = $"{project.Name}'s packages were not installed";
     }
 
@@ -409,6 +432,19 @@ public sealed partial class WorkspaceViewModel
         ?? LastLine(result);
 
     private static readonly string[] NpmBookkeeping = ["error code ", "error path ", "error errno ", "error syscall ", "error command sh ", "ERR! code ", "ERR! path ", "ERR! errno ", "ERR! syscall ", "ERR! command sh "];
+
+    /// <summary><c>npm install</c> with <paramref name="step"/>'s options when it is an <c>npm ci</c>; otherwise <see langword="null"/>.</summary>
+    internal static ProcessStartSpec? NpmInstallInstead(ProcessStartSpec step) =>
+        Path.GetFileNameWithoutExtension(step.Program) == "npm" && step.Arguments is ["ci", ..] ? step with { Arguments = ["install", .. step.Arguments.Skip(1)] } : null;
+
+    /// <summary>
+    /// The same pip install without <c>-e</c>, when it failed because the project's build backend has no
+    /// <c>build_editable</c> hook (PEP 660); otherwise <see langword="null"/>.
+    /// </summary>
+    internal static ProcessStartSpec? NonEditable(ProcessStartSpec step, OutputProcessResult failed) =>
+        step.Arguments.Contains("-e") && failed.Lines.Any(l => l.Contains("missing the 'build_editable' hook", StringComparison.Ordinal))
+            ? step with { Arguments = [.. step.Arguments.Where(a => a != "-e")] }
+            : null;
 
     /// <summary>The offer over the editor after a failed install: its message, and the full log one tap away.</summary>
     private ToolchainNoticeViewModel? InstallFailureNotice(ToolchainProject project) =>
