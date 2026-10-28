@@ -1,0 +1,44 @@
+fastapi-realworld-example-app at 029eb7781c60d5f563ee8990a0cbfb79b244538c, opening /home/runner/work/_temp/repos/fastapi-realworld-example-app
+Opened in 3.1 s: fastapi-realworld-example-app, solution (none)
+  toolchain project python: /home/runner/work/_temp/repos/fastapi-realworld-example-app/pyproject.toml
+Compatibility Doctor:
+  fastapi-realworld-example-app: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+F5 startup project: fastapi-realworld-example-app (python) /home/runner/work/_temp/repos/fastapi-realworld-example-app/pyproject.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Run: exited before listening (0 s after F5)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 2.1 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up fastapi-realworld-example-app: pip install -e .
+  Installing fastapi-realworld-example-app's packages: Installing packages: pip install -e .
+  Installing fastapi-realworld-example-app's packages: Failed after 11.2 s
+  Setting up projects: Succeeded after 19.2 s
+Project setup:
+------ fastapi-realworld-example-app: pip install -e . ------
+Reading which Python versions the 35 pinned packages have wheels for, from PyPI.
+> uv venv --seed --python 3.10 .venv
+Downloading cpython-3.10.22-linux-x86_64-gnu (download) (28.0MiB)
+ Downloaded cpython-3.10.22-linux-x86_64-gnu (download)
+Using CPython 3.10.22
+Creating virtual environment with seed packages at: .venv
+ + packaging==26.3
+ + pip==26.2.2
+ + setuptools==84.2.1
+ + wheel==0.48.0
+Activate with: .venv/bin/activate
+> /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/repos/fastapi-realworld-example-app
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+ERROR: Project file:///home/runner/work/_temp/repos/fastapi-realworld-example-app uses a build backend that is missing the 'build_editable' hook, so it cannot be installed in editable mode. Consider using a build backend that supports PEP 660.
+The project's packages could not be installed: ERROR: Project file:///home/runner/work/_temp/repos/fastapi-realworld-example-app uses a build backend that is missing the 'build_editable' hook, so it cannot be installed in editable mode. Consider u…
+
+Output:
+fastapi-realworld-example-app needs no build: Python runs it from its source. Press Ctrl+F5 to run it.
+
