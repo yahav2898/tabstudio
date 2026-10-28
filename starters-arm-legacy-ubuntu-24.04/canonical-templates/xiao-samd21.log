@@ -28,10 +28,10 @@ Tool Manager: Installing platformio/framework-cmsis-atmel @ ~1.2.2
 Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
 Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
 Tool Manager: framework-cmsis-atmel@1.2.2 has been installed!
-Tool Manager: Installing platformio/tool-scons @ ~4.40801.0
+Tool Manager: Installing platformio/tool-scons @ ~4.41101.0
 Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
 Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
-Tool Manager: tool-scons@4.40801.0 has been installed!
+Tool Manager: tool-scons@4.41101.0 has been installed!
 Verbose mode can be enabled via `-v, --verbose` option
 CONFIGURATION: https://docs.platformio.org/page/boards/atmelsam/seeed_xiao.html
 PLATFORM: Atmel SAM (9.0.0) > Seeeduino XIAO
@@ -89,10 +89,10 @@ Compiling .pio/build/xiao-samd21/FrameworkArduino/startup.c.o
 Compiling .pio/build/xiao-samd21/FrameworkArduino/wiring.c.o
 Compiling .pio/build/xiao-samd21/FrameworkArduino/wiring_analog.c.o
 Compiling .pio/build/xiao-samd21/FrameworkArduino/wiring_digital.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/wiring_private.c.o
 .tabstudio/platformio-boxed/packages/framework-arduino-samd-seeed/cores/arduino/wiring_analog.c:35:12: warning: '_dacResolution' defined but not used [-Wunused-variable]
  static int _dacResolution = 10;
             ^~~~~~~~~~~~~~
-Compiling .pio/build/xiao-samd21/FrameworkArduino/wiring_private.c.o
 Compiling .pio/build/xiao-samd21/FrameworkArduino/wiring_pwm.cpp.o
 Compiling .pio/build/xiao-samd21/FrameworkArduino/wiring_shift.c.o
 .tabstudio/platformio-boxed/packages/framework-arduino-samd-seeed/cores/arduino/wiring_pwm.cpp: In function 'void noPwm(uint32_t)':
@@ -107,7 +107,7 @@ Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
 RAM:   [=         ]   7.3% (used 2408 bytes from 32768 bytes)
 Flash: [          ]   4.1% (used 10872 bytes from 262144 bytes)
 Building .pio/build/xiao-samd21/firmware.bin
-========================= [SUCCESS] Took 93.18 seconds =========================
+========================= [SUCCESS] Took 81.43 seconds =========================
 > pio run --environment xiao-samd21 --target compiledb --jobs 2
 Processing xiao-samd21 (platform: atmelsam@9.0.0; board: seeed_xiao; framework: arduino)
 --------------------------------------------------------------------------------
@@ -128,4 +128,4 @@ Scanning dependencies...
 No dependencies
 Building in release mode
 Building compilation database compile_commands.json
-========================= [SUCCESS] Took 4.07 seconds =========================
+========================= [SUCCESS] Took 3.23 seconds =========================
