@@ -91,10 +91,12 @@ public sealed class NodeRunTests
         await UiTestHelpers.WaitUntilAsync(() => workspace.ToolchainNotice is not null, because: "the offer");
         await workspace.ToolchainNotice!.Action.ExecuteAsync(null);
 
-        Assert.Contains("local's packages were not installed: npm install", workspace.Output.Text, StringComparison.Ordinal);
-        Assert.Equal("local's packages were not installed", workspace.ToolchainNotice?.Title);
+        // The project is named after its folder.
+        var name = Path.GetFileName(folder.Path);
+        Assert.Contains($"{name}'s packages were not installed: npm install", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Equal($"{name}'s packages were not installed", workspace.ToolchainNotice?.Title);
 
         await workspace.RunCommand.ExecuteAsync(null);
-        Assert.Contains("local's packages were not installed, so it may fail to start.", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Contains($"{name}'s packages were not installed, so it may fail to start.", workspace.Output.Text, StringComparison.Ordinal);
     }
 }
