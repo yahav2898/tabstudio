@@ -1,0 +1,65 @@
+flask-tutorial at d086db856be187255b8ec61ef409357393020f32, opening /home/runner/work/_temp/repos/flask-tutorial/examples/tutorial
+Opened in 0.1 s: tutorial, solution (none)
+  toolchain project python: /home/runner/work/_temp/repos/flask-tutorial/examples/tutorial/pyproject.toml
+Compatibility Doctor:
+  tutorial: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+F5 startup project: tutorial (python) /home/runner/work/_temp/repos/flask-tutorial/examples/tutorial/pyproject.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Run: exited before listening (0 s after F5)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up tutorial: pip install -e .
+  Installing tutorial's packages: Installing packages: pip install -e .
+  Installing tutorial's packages: Succeeded after 5.2 s
+  Setting up projects: Succeeded after 7.8 s
+Project setup:
+------ tutorial: pip install -e . ------
+> python3 -m venv .venv
+> /home/runner/work/_temp/repos/flask-tutorial/examples/tutorial/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/repos/flask-tutorial/examples/tutorial
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting flask (from flaskr==1.0.0)
+  Downloading flask-3.1.3-py3-none-any.whl.metadata (3.2 kB)
+Collecting blinker>=1.9.0 (from flask->flaskr==1.0.0)
+  Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+Collecting click>=8.1.3 (from flask->flaskr==1.0.0)
+  Using cached click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting itsdangerous>=2.2.0 (from flask->flaskr==1.0.0)
+  Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+Collecting jinja2>=3.1.2 (from flask->flaskr==1.0.0)
+  Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting markupsafe>=2.1.1 (from flask->flaskr==1.0.0)
+  Using cached markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting werkzeug>=3.1.0 (from flask->flaskr==1.0.0)
+  Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+Downloading flask-3.1.3-py3-none-any.whl (103 kB)
+Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+Using cached click-8.5.0-py3-none-any.whl (125 kB)
+Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+Using cached markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
+Building wheels for collected packages: flaskr
+  Building editable for flaskr (pyproject.toml): started
+  Building editable for flaskr (pyproject.toml): finished with status 'done'
+  Created wheel for flaskr: filename=flaskr-1.0.0-py2.py3-none-any.whl size=2647 sha256=78cee46135a2f91eb3a7c09c6cbf423a6115a6196c3e1692e72c5bd4c0bfd445
+  Stored in directory: /tmp/pip-ephem-wheel-cache-tme_74qq/wheels/64/35/ff/bd6614b1f92d527b71e1c6558742bf412df431e16f43707a64
+Successfully built flaskr
+Installing collected packages: markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, flask, flaskr
+Successfully installed blinker-1.9.0 click-8.5.0 flask-3.1.3 flaskr-1.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 werkzeug-3.1.9
+
+Output:
+tutorial has no entry point to run. Open a .py or .pyw file and press F5 to run it, or add .flaskenv.
+
