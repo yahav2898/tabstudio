@@ -1,0 +1,356 @@
+{
+ "comment": "Repository sweep for 0.19.2 (trial/sweep-* branches only). Each entry is cloned at 'sha' and 'open' is opened in TabStudio as a person would. 'expect' is the run check: build (build only), console-exit-0, web-first-route, gui-window, or explained (the Compatibility Doctor and the Error List must say in one line why it cannot run on a tablet). Embedded entries run in the embedded job.",
+ "repositories": [
+  {
+   "name": "refit-Refit-slnx",
+   "area": "dotnet-generators",
+   "url": "https://github.com/reactiveui/refit",
+   "sha": "92ae878250798dc103a01304704a99bb8033ed77",
+   "open": "src/Refit.slnx",
+   "kind": "dotnet",
+   "expect": "build",
+   "note": "Refit's own generator, net10.0 and a net11.0 target"
+  },
+  {
+   "name": "Mediator-Mediator-slnx",
+   "area": "dotnet-generators",
+   "url": "https://github.com/martinothamar/Mediator",
+   "sha": "8b87a0ed74747b7e4be907db220b930a50fbeb98",
+   "open": "Mediator.slnx",
+   "kind": "dotnet",
+   "expect": "build",
+   "note": "source-generated mediator; compose.yml for benchmarks"
+  },
+  {
+   "name": "StronglyTypedId-StronglyTypedId-sln",
+   "area": "dotnet-generators",
+   "url": "https://github.com/andrewlock/StronglyTypedId",
+   "sha": "6bd17db4a4b700eaad9e209baf41478cc3f0bbe9",
+   "open": "StronglyTypedId.sln",
+   "kind": "dotnet",
+   "expect": "build",
+   "note": "incremental generator, netstandard2.0 to net9.0"
+  },
+  {
+   "name": "spectre-console-Spectre-Console-slnx",
+   "area": "dotnet-generators",
+   "url": "https://github.com/spectreconsole/spectre.console",
+   "sha": "e8045f7c53c3c217a7f93f362f5256f1fadc0020",
+   "open": "src/Spectre.Console.slnx",
+   "kind": "dotnet",
+   "expect": "console-exit-0",
+   "note": "solution under src/, global.json pins SDK 10.0.401"
+  },
+  {
+   "name": "MVVM-Samples-samples",
+   "area": "dotnet-generators",
+   "url": "https://github.com/CommunityToolkit/MVVM-Samples",
+   "sha": "7d67102cd25e918f7a687427225dfbabe9ec9deb",
+   "open": "samples",
+   "kind": "dotnet",
+   "expect": "explained",
+   "note": "MAUI, UWP and Xamarin heads only: the Doctor must explain them; MvvmSample.Core must build"
+  },
+  {
+   "name": "TodoApi-TodoApp-sln",
+   "area": "aspnet",
+   "url": "https://github.com/davidfowl/TodoApi",
+   "sha": "307a1eadbbd77a3004c318f2377e4818bc400af6",
+   "open": "TodoApp.sln",
+   "kind": "dotnet",
+   "expect": "web-first-route",
+   "note": "net9.0 with global.json 9.0.100, Aspire AppHost"
+  },
+  {
+   "name": "ContosoUniversityDotNetCore-Pages-ContosoUniversity-sln",
+   "area": "aspnet",
+   "url": "https://github.com/jbogard/ContosoUniversityDotNetCore-Pages",
+   "sha": "abb4c08bd4fbc14fc2ea6c56b31c3381d83ea9ab",
+   "open": "ContosoUniversity.sln",
+   "kind": "dotnet",
+   "expect": "web-first-route",
+   "note": "SQL Server through Services, Aspire AppHost"
+  },
+  {
+   "name": "blazor-samples-BlazorSample_BlazorWebApp",
+   "area": "aspnet",
+   "url": "https://github.com/dotnet/blazor-samples",
+   "sha": "9729f03106b6e146863ff9198e9d751e113d78c5",
+   "open": "10.0/BlazorSample_BlazorWebApp",
+   "kind": "dotnet",
+   "expect": "web-first-route",
+   "note": "one sample of a 72-solution repository"
+  },
+  {
+   "name": "MudBlazor-MudBlazor-slnx",
+   "area": "aspnet",
+   "url": "https://github.com/MudBlazor/MudBlazor",
+   "sha": "ed6b3e023a4780c29c7951da580751733227892a",
+   "open": "src/MudBlazor.slnx",
+   "kind": "dotnet",
+   "expect": "web-first-route",
+   "note": "startup must be MudBlazor.Docs.Server; global.json 10.0.400; TFM via $(PrimaryTargetFramework)"
+  },
+  {
+   "name": "eShop-eShop-slnx",
+   "area": "doctor",
+   "url": "https://github.com/dotnet/eShop",
+   "sha": "913acea66708a59595351174cee9b29f37179d29",
+   "open": "eShop.slnx",
+   "kind": "dotnet",
+   "expect": "explained",
+   "note": "Aspire AppHost, MSTest.Sdk from global.json msbuild-sdks, MAUI client"
+  },
+  {
+   "name": "maui-samples-TodoSQLite",
+   "area": "doctor",
+   "url": "https://github.com/dotnet/maui-samples",
+   "sha": "e78b47511ac706bb179abc4a09f182355ae75178",
+   "open": "10.0/Data/TodoSQLite",
+   "kind": "dotnet",
+   "expect": "explained",
+   "note": "MAUI only: must be explained, never crash"
+  },
+  {
+   "name": "Dock-Dock-slnx",
+   "area": "avalonia-tui",
+   "url": "https://github.com/wieslawsoltes/Dock",
+   "sha": "4b12dc1ef877d9950e5d1c620a9261d820afef72",
+   "open": "Dock.slnx",
+   "kind": "dotnet",
+   "expect": "gui-window",
+   "note": "113 projects; samples are Avalonia apps"
+  },
+  {
+   "name": "Terminal-Gui-Terminal-slnx",
+   "area": "avalonia-tui",
+   "url": "https://github.com/gui-cs/Terminal.Gui",
+   "sha": "f210f00f638f3968654c31d93ecbbcb814902a71",
+   "open": "Terminal.slnx",
+   "kind": "dotnet",
+   "expect": "console-exit-0",
+   "note": "UICatalog is a terminal UI"
+  },
+  {
+   "name": "nestjs-realworld-example-app",
+   "area": "node",
+   "url": "https://github.com/lujakob/nestjs-realworld-example-app",
+   "sha": "c1c2cc4e448b279ff083272df1ac50d20c3304fa",
+   "open": ".",
+   "kind": "node",
+   "expect": "web-first-route",
+   "note": "NestJS + TypeORM + MySQL through Services"
+  },
+  {
+   "name": "next-learn-final-example",
+   "area": "node",
+   "url": "https://github.com/vercel/next-learn",
+   "sha": "bb2558441a6673ab76c89914c25018bffa27a2ba",
+   "open": "dashboard/final-example",
+   "kind": "node",
+   "expect": "web-first-route",
+   "note": "Next.js dashboard, Postgres"
+  },
+  {
+   "name": "express-hello-world",
+   "area": "node",
+   "url": "https://github.com/expressjs/express",
+   "sha": "1c6f1b0fe4000977b9a7b4f34097e4d527dd9824",
+   "open": "examples/hello-world",
+   "kind": "node",
+   "expect": "web-first-route",
+   "note": "Express example inside the framework's repository"
+  },
+  {
+   "name": "vite-template-react-ts",
+   "area": "node",
+   "url": "https://github.com/vitejs/vite",
+   "sha": "cce559ab158cc6b177d0911a0bea73436b48faff",
+   "open": "packages/create-vite/template-react-ts",
+   "kind": "node",
+   "expect": "web-first-route",
+   "note": "Vite + React template"
+  },
+  {
+   "name": "fastapi-realworld-example-app",
+   "area": "python",
+   "url": "https://github.com/nsidnev/fastapi-realworld-example-app",
+   "sha": "029eb7781c60d5f563ee8990a0cbfb79b244538c",
+   "open": ".",
+   "kind": "python",
+   "expect": "web-first-route",
+   "note": "FastAPI, Postgres"
+  },
+  {
+   "name": "flask-tutorial",
+   "area": "python",
+   "url": "https://github.com/pallets/flask",
+   "sha": "d086db856be187255b8ec61ef409357393020f32",
+   "open": "examples/tutorial",
+   "kind": "python",
+   "expect": "web-first-route",
+   "note": "flaskr, SQLite (flask init-db first)"
+  },
+  {
+   "name": "django-realworld-example-app",
+   "area": "python",
+   "url": "https://github.com/gothinkster/django-realworld-example-app",
+   "sha": "29c9d42831fa0cfc5a4aa7561f674396eacf20a2",
+   "open": ".",
+   "kind": "python",
+   "expect": "web-first-route",
+   "note": "Django"
+  },
+  {
+   "name": "gs-rest-service-complete",
+   "area": "java",
+   "url": "https://github.com/spring-guides/gs-rest-service",
+   "sha": "3f4cef01152596c19bc4d37939409358812b1421",
+   "open": "complete",
+   "kind": "java",
+   "expect": "web-first-route",
+   "note": "both pom.xml and build.gradle: try Maven and Gradle",
+   "buildSystems": [
+    "maven",
+    "gradle"
+   ]
+  },
+  {
+   "name": "gs-accessing-data-jpa-complete",
+   "area": "java",
+   "url": "https://github.com/spring-guides/gs-accessing-data-jpa",
+   "sha": "ef48947528dba9021776282e12299e5298e66bca",
+   "open": "complete",
+   "kind": "java",
+   "expect": "console-exit-0",
+   "note": "Spring Boot with a database (H2, JPA)"
+  },
+  {
+   "name": "golang-gin-realworld-example-app",
+   "area": "go-rust",
+   "url": "https://github.com/gothinkster/golang-gin-realworld-example-app",
+   "sha": "626c372d259472148d93303f74aa9b9a1cdcef24",
+   "open": ".",
+   "kind": "go",
+   "expect": "web-first-route",
+   "note": "Gin, SQLite"
+  },
+  {
+   "name": "glow",
+   "area": "go-rust",
+   "url": "https://github.com/charmbracelet/glow",
+   "sha": "8b0600fa445535b9c53194c0d4f7fe3cf700ef3e",
+   "open": ".",
+   "kind": "go",
+   "expect": "console-exit-0",
+   "note": "glow --version"
+  },
+  {
+   "name": "ripgrep",
+   "area": "go-rust",
+   "url": "https://github.com/BurntSushi/ripgrep",
+   "sha": "91f5d22ef48bde459d90a8c7dbeab416e97d0f2b",
+   "open": ".",
+   "kind": "rust",
+   "expect": "console-exit-0",
+   "note": "rg --version"
+  },
+  {
+   "name": "mdBook",
+   "area": "go-rust",
+   "url": "https://github.com/rust-lang/mdBook",
+   "sha": "b60b3ee736a327305ecdefd5768b42d95eb05b56",
+   "open": ".",
+   "kind": "rust",
+   "expect": "console-exit-0",
+   "note": "mdbook --version"
+  },
+  {
+   "name": "json",
+   "area": "c-cpp",
+   "url": "https://github.com/nlohmann/json",
+   "sha": "da83aa92c88aa4bcacc3bc29cef59fec5d257543",
+   "open": ".",
+   "kind": "cmake",
+   "expect": "build",
+   "note": "CMake, header-only with tests"
+  },
+  {
+   "name": "kilo",
+   "area": "c-cpp",
+   "url": "https://github.com/antirez/kilo",
+   "sha": "323d93b29bd89a2cb446de90c4ed4fea1764176e",
+   "open": ".",
+   "kind": "make",
+   "expect": "build",
+   "note": "make; a terminal editor, needs a TTY to run"
+  },
+  {
+   "name": "cJSON",
+   "area": "c-cpp",
+   "url": "https://github.com/DaveGamble/cJSON",
+   "sha": "6d9f2443ab071f86e5d9b43025a40929ec41c46c",
+   "open": ".",
+   "kind": "cmake",
+   "expect": "console-exit-0",
+   "note": "CMake or make; cJSON_test exits 0"
+  }
+ ],
+ "embeddedRepositories": [
+  {
+   "name": "Marlin",
+   "area": "embedded",
+   "url": "https://github.com/MarlinFirmware/Marlin",
+   "sha": "94c540b9f98dbe31d73bf4fe5108c8d955df39c9",
+   "open": ".",
+   "kind": "platformio",
+   "expect": "build",
+   "note": "default env mega2560",
+   "environment": "mega2560"
+  },
+  {
+   "name": "firmware",
+   "area": "embedded",
+   "url": "https://github.com/meshtastic/firmware",
+   "sha": "eaba8b95bebab04c4f13a27b63e000ebdc1e5fac",
+   "open": ".",
+   "kind": "platformio",
+   "expect": "build",
+   "note": "one classic ESP32 env (default heltec-v3 is ESP32-S3)",
+   "environment": "tbeam"
+  },
+  {
+   "name": "esp-idf-blink",
+   "area": "embedded",
+   "url": "https://github.com/espressif/esp-idf",
+   "sha": "4d80c1b29aeabc8e735ffc6e1be9bb23e95d1d5d",
+   "open": "examples/get-started/blink",
+   "kind": "esp-idf",
+   "expect": "build",
+   "note": "hello_world is already in real-repos.json",
+   "target": "esp32c3"
+  },
+  {
+   "name": "zephyr-blinky",
+   "area": "embedded",
+   "url": "https://github.com/zephyrproject-rtos/zephyr",
+   "sha": "ec98918869caeb2ddaef6e698f9ff36fb60a97ac",
+   "open": "samples/basic/blinky",
+   "kind": "zephyr",
+   "expect": "build",
+   "note": "hello_world is already in real-repos.json",
+   "board": "qemu_cortex_m3"
+  },
+  {
+   "name": "Servo-Sweep",
+   "area": "embedded",
+   "url": "https://github.com/arduino-libraries/Servo",
+   "sha": "440b319ec11ea2664df8ce201c271c935de28a2d",
+   "open": "examples/Sweep",
+   "kind": "arduino",
+   "expect": "build",
+   "note": "Arduino library example",
+   "fqbn": "arduino:avr:uno"
+  }
+ ]
+}
