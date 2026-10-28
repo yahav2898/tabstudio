@@ -4,7 +4,7 @@ namespace TabStudio.Services.Compose;
 
 /// <summary>
 /// The database a Laravel app's <c>.env</c> names (<c>DB_CONNECTION=mysql</c>, <c>mariadb</c> or <c>pgsql</c> on this
-/// device), offered in Services for a repository with no Compose file. F5 starts it, and the app gets <c>DB_HOST</c>,
+/// device), offered in Services for a repository with no Compose file, unless a database already answers there. F5 starts it, and the app gets <c>DB_HOST</c>,
 /// <c>DB_PORT</c>, <c>DB_DATABASE</c>, <c>DB_USERNAME</c> and <c>DB_PASSWORD</c> for it; Laravel reads the process's
 /// environment before its <c>.env</c>, so the file is never changed. SQLite and a database on the network are the
 /// app's own.
@@ -16,6 +16,19 @@ public static class LaravelServices
 
     /// <summary>The password of the database TabStudio runs when the app's <c>.env</c> leaves it empty and the server needs one.</summary>
     public const string Credential = "tabstudio";
+
+    private static bool IsListening(string host, int port)
+    {
+        try
+        {
+            using var client = new System.Net.Sockets.TcpClient();
+            return client.ConnectAsync(host == "localhost" ? "127.0.0.1" : host, port).Wait(TimeSpan.FromMilliseconds(300)) && client.Connected;
+        }
+        catch (Exception ex) when (ex is AggregateException or System.Net.Sockets.SocketException or ArgumentException)
+        {
+            return false;
+        }
+    }
 
     /// <summary>
     /// A Laravel app's Compose file, as Laravel Sail writes it, with its run pointed at the database its <c>.env</c>
@@ -85,11 +98,19 @@ public static class LaravelServices
             return null;
         }
 
+        var mysql = image.StartsWith("mariadb", StringComparison.Ordinal);
+        var target = mysql ? 3306 : 5432;
+
+        // A database already answering where .env points, such as one the user runs, is the app's own.
+        var port = int.TryParse(PhpProject.EnvValue(settings, "DB_PORT"), out var configuredPort) ? configuredPort : target;
+        if (host is "127.0.0.1" or "localhost" or "::1" && IsListening(host, port))
+        {
+            return null;
+        }
+
         var database = PhpProject.EnvValue(settings, "DB_DATABASE") is { Length: > 0 } name ? name : "laravel";
         var user = PhpProject.EnvValue(settings, "DB_USERNAME") is { Length: > 0 } username ? username : "root";
         var password = PhpProject.EnvValue(settings, "DB_PASSWORD") ?? string.Empty;
-        var mysql = image.StartsWith("mariadb", StringComparison.Ordinal);
-        var target = mysql ? 3306 : 5432;
         Dictionary<string, string?> environment;
         if (mysql && string.Equals(user, "root", StringComparison.Ordinal))
         {

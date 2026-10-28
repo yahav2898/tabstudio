@@ -49,6 +49,16 @@ public sealed class LaravelServicesTests : IDisposable
         Assert.Equal(LaravelServices.Credential, project.RunEnvironment["DB_PASSWORD"]);
     }
 
+    [Fact]
+    public void A_database_already_answering_where_env_points_is_the_apps_own()
+    {
+        using var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
+        listener.Start();
+        var port = ((System.Net.IPEndPoint)listener.LocalEndpoint).Port;
+
+        Assert.Null(LaravelServices.Discover(WriteLaravel($"DB_CONNECTION=mysql\nDB_HOST=127.0.0.1\nDB_PORT={port}\nDB_USERNAME=root\n")));
+    }
+
     [Theory]
     [InlineData("DB_CONNECTION=sqlite\n")]
     [InlineData("DB_CONNECTION=mysql\nDB_HOST=db.example.com\n")]

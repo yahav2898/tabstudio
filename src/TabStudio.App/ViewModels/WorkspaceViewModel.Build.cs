@@ -171,7 +171,8 @@ public sealed partial class WorkspaceViewModel
                 if (State == IdeState.Failed) break;
             }
 
-            if (State != IdeState.Failed)
+            // After the solution's own projects, unless they failed: a state left from an earlier build does not count.
+            if (csharp.Count == 0 || State != IdeState.Failed)
             {
                 await BuildToolchainProjectsAsync(clearOutput: csharp.Count == 0);
             }
