@@ -469,7 +469,7 @@ jobs:
 
       # The toolchains the Python, Java, Rust and Node.js repositories run with, as the Toolchain Store installs them on a
       # tablet: Python with uv (which installs the CPython a project's pins need), OpenJDK 21 with Maven, Rust with Cargo,
-      # and Node.js 22 with npm.
+      # Node.js 22 with npm, and Go (CMake and GCC are on the runner).
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -489,11 +489,16 @@ jobs:
         with:
           node-version: '22'
 
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: false
+
       - name: Install Maven
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y maven
-          mvn -v; cargo --version; uv --version; python3 --version; node --version
+          mvn -v; cargo --version; uv --version; python3 --version; node --version; go version; cmake --version | head -1
 
       - uses: actions/cache@v4
         with:

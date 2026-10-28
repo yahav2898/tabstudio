@@ -127,18 +127,21 @@ public sealed class RealRepositoryTests
                 repository["web"]?.GetValue<string>(),
                 repository["expect"]?.GetValue<string>());
             var report = new StringBuilder().AppendLine(CultureInfo.InvariantCulture, $"{name} at {repository["sha"]!.GetValue<string>()}");
+
+            // The app's folder in the repository, such as next-learn's dashboard/final-example.
+            var folder = Path.Combine(clones, name, (repository["folder"]?.GetValue<string>() ?? ".").Replace('/', Path.DirectorySeparatorChar));
             if (repository["dotenv"] is JsonObject dotenv)
             {
                 // The variables the repository's README asks a person to put in .env.
                 var lines = dotenv.Select(pair => $"{pair.Key}={pair.Value!.GetValue<string>()}");
-                await File.WriteAllLinesAsync(Path.Combine(clones, name, ".env"), lines);
+                await File.WriteAllLinesAsync(Path.Combine(folder, ".env"), lines);
                 report.AppendLine(CultureInfo.InvariantCulture, $".env: {string.Join(", ", dotenv.Select(pair => pair.Key))}");
             }
 
             RunOutcome outcome;
             try
             {
-                outcome = await OpenAndRunAsync(Path.Combine(clones, name), name, expected, report);
+                outcome = await OpenAndRunAsync(folder, name, expected, report);
             }
             catch (Exception ex) when (ex is not OutOfMemoryException)
             {
