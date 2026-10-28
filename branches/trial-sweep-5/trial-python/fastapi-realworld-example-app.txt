@@ -1,0 +1,244 @@
+fastapi-realworld-example-app at 029eb7781c60d5f563ee8990a0cbfb79b244538c, opening /home/runner/work/_temp/repos/fastapi-realworld-example-app
+Opened in 3.7 s: fastapi-realworld-example-app, solution (none)
+  toolchain project python: /home/runner/work/_temp/repos/fastapi-realworld-example-app/pyproject.toml
+Compatibility Doctor:
+  fastapi-realworld-example-app: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+F5 startup project: fastapi-realworld-example-app (python) /home/runner/work/_temp/repos/fastapi-realworld-example-app/pyproject.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Run: exited before listening (0 s after F5)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 2.8 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up fastapi-realworld-example-app: pip install -e .
+  Installing fastapi-realworld-example-app's packages: Installing packages: pip install -e .
+  Installing fastapi-realworld-example-app's packages: Succeeded after 24.3 s
+  Setting up projects: Succeeded after 38.7 s
+Project setup:
+.7.0,>=0.6.1->fastapi-realworld-example-app==0.0.0)
+  Downloading SQLAlchemy-1.4.41-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (10.0 kB)
+Collecting starlette==0.19.1 (from fastapi<0.80.0,>=0.79.1->fastapi-realworld-example-app==0.0.0)
+  Downloading starlette-0.19.1-py3-none-any.whl.metadata (5.6 kB)
+Collecting anyio<5,>=3.4.0 (from starlette==0.19.1->fastapi<0.80.0,>=0.79.1->fastapi-realworld-example-app==0.0.0)
+  Using cached anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+Collecting exceptiongroup>=1.0.2 (from anyio<5,>=3.4.0->starlette==0.19.1->fastapi<0.80.0,>=0.79.1->fastapi-realworld-example-app==0.0.0)
+  Using cached exceptiongroup-1.3.1-py3-none-any.whl.metadata (6.7 kB)
+Collecting idna>=2.8 (from anyio<5,>=3.4.0->starlette==0.19.1->fastapi<0.80.0,>=0.79.1->fastapi-realworld-example-app==0.0.0)
+  Using cached idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting bcrypt>=3.1.0 (from passlib[bcrypt]<2.0,>=1.7->fastapi-realworld-example-app==0.0.0)
+  Downloading bcrypt-5.0.0-cp39-abi3-manylinux_2_34_x86_64.whl.metadata (10 kB)
+Collecting email-validator>=1.0.3 (from pydantic[dotenv,email]<2.0,>=1.9->fastapi-realworld-example-app==0.0.0)
+  Downloading email_validator-2.3.0-py3-none-any.whl.metadata (26 kB)
+Collecting python-dotenv>=0.10.4 (from pydantic[dotenv,email]<2.0,>=1.9->fastapi-realworld-example-app==0.0.0)
+  Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+Collecting text-unidecode>=1.3 (from python-slugify<7.0,>=6.1->fastapi-realworld-example-app==0.0.0)
+  Downloading text_unidecode-1.3-py2.py3-none-any.whl.metadata (2.4 kB)
+Collecting click>=7.0 (from uvicorn<0.19.0,>=0.18.2->fastapi-realworld-example-app==0.0.0)
+  Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn<0.19.0,>=0.18.2->fastapi-realworld-example-app==0.0.0)
+  Using cached h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting dnspython>=2.0.0 (from email-validator>=1.0.3->pydantic[dotenv,email]<2.0,>=1.9->fastapi-realworld-example-app==0.0.0)
+  Downloading dnspython-2.8.0-py3-none-any.whl.metadata (5.7 kB)
+Collecting MarkupSafe>=2.0 (from Mako->alembic<2.0,>=1.8->fastapi-realworld-example-app==0.0.0)
+  Downloading markupsafe-3.0.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Downloading aiosql-6.5-py3-none-any.whl (16 kB)
+Downloading databases-0.6.2-py3-none-any.whl (21 kB)
+Downloading SQLAlchemy-1.4.41-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 95.2 MB/s  0:00:00
+Downloading alembic-1.19.2-py3-none-any.whl (267 kB)
+Downloading asyncpg-0.26.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.6/2.6 MB 127.2 MB/s  0:00:00
+Downloading fastapi-0.79.1-py3-none-any.whl (54 kB)
+Downloading starlette-0.19.1-py3-none-any.whl (63 kB)
+Using cached anyio-4.15.1-py3-none-any.whl (132 kB)
+Downloading loguru-0.6.0-py3-none-any.whl (58 kB)
+Downloading passlib-1.7.4-py2.py3-none-any.whl (525 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 525.6/525.6 kB 84.8 MB/s  0:00:00
+Downloading psycopg2_binary-2.9.13-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.3/4.3 MB 204.8 MB/s  0:00:00
+Downloading pydantic-1.10.26-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 152.6 MB/s  0:00:00
+Downloading pyjwt-2.15.1-py3-none-any.whl (33 kB)
+Downloading python_slugify-6.1.2-py2.py3-none-any.whl (9.4 kB)
+Downloading Unidecode-1.4.0-py3-none-any.whl (235 kB)
+Downloading uvicorn-0.18.3-py3-none-any.whl (57 kB)
+Downloading bcrypt-5.0.0-cp39-abi3-manylinux_2_34_x86_64.whl (278 kB)
+Downloading click-8.5.0-py3-none-any.whl (125 kB)
+Downloading email_validator-2.3.0-py3-none-any.whl (35 kB)
+Downloading dnspython-2.8.0-py3-none-any.whl (331 kB)
+Using cached exceptiongroup-1.3.1-py3-none-any.whl (16 kB)
+Downloading greenlet-3.5.6-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (622 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 622.8/622.8 kB 119.3 MB/s  0:00:00
+Using cached h11-0.16.0-py3-none-any.whl (37 kB)
+Using cached idna-3.20-py3-none-any.whl (69 kB)
+Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+Downloading text_unidecode-1.3-py2.py3-none-any.whl (78 kB)
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading mako-1.4.3-py3-none-any.whl (80 kB)
+Downloading markupsafe-3.0.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (20 kB)
+Using cached tomli-2.5.0-py3-none-any.whl (14 kB)
+Building wheels for collected packages: fastapi-realworld-example-app, pypika
+  Building wheel for fastapi-realworld-example-app (pyproject.toml): started
+  Building wheel for fastapi-realworld-example-app (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Building wheel for fastapi-realworld-example-app (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [25 lines of output]
+      The "poetry.dev-dependencies" section is deprecated and will be removed in a future version. Use "poetry.group.dev.dependencies" instead.
+      Traceback (most recent call last):
+        File "/home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+        File "/home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 280, in build_wheel
+          return _build_backend().build_wheel(
+        File "/tmp/pip-build-env-ntwrrfr8/overlay/lib/python3.10/site-packages/poetry/core/masonry/api.py", line 58, in build_wheel
+          return WheelBuilder.make_in(
+        File "/tmp/pip-build-env-ntwrrfr8/overlay/lib/python3.10/site-packages/poetry/core/masonry/builders/wheel.py", line 95, in make_in
+          wb.build(target_dir=directory)
+        File "/tmp/pip-build-env-ntwrrfr8/overlay/lib/python3.10/site-packages/poetry/core/masonry/builders/wheel.py", line 135, in build
+          self._copy_module(zip_file)
+        File "/tmp/pip-build-env-ntwrrfr8/overlay/lib/python3.10/site-packages/poetry/core/masonry/builders/wheel.py", line 307, in _copy_module
+          to_add = self.find_files_to_add()
+        File "/tmp/pip-build-env-ntwrrfr8/overlay/lib/python3.10/site-packages/poetry/core/masonry/builders/builder.py", line 157, in find_files_to_add
+          for include in self._module.includes:
+        File "/home/runner/.local/share/uv/python/cpython-3.10-linux-x86_64-gnu/lib/python3.10/functools.py", line 981, in __get__
+          val = self.func(instance)
+        File "/tmp/pip-build-env-ntwrrfr8/overlay/lib/python3.10/site-packages/poetry/core/masonry/builders/builder.py", line 70, in _module
+          return Module(
+        File "/tmp/pip-build-env-ntwrrfr8/overlay/lib/python3.10/site-packages/poetry/core/masonry/utils/module.py", line 68, in __init__
+          raise ModuleOrPackageNotFoundError(
+      poetry.core.masonry.utils.module.ModuleOrPackageNotFoundError: No file/folder found for package fastapi-realworld-example-app
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for fastapi-realworld-example-app
+  Building wheel for pypika (pyproject.toml): started
+  Building wheel for pypika (pyproject.toml): finished with status 'done'
+  Created wheel for pypika: filename=pypika-0.48.9-py2.py3-none-any.whl size=53801 sha256=9283c92d565154884e3a77ea66963f30fe4c639b56975c5b6a0fd19101582b05
+  Stored in directory: /home/runner/.cache/pip/wheels/e1/26/51/d0bffb3d2fd82256676d7ad3003faea3bd6dddc9577af665f4
+Successfully built pypika
+Failed to build fastapi-realworld-example-app
+error: failed-wheel-build-for-install
+
+× Failed to build installable wheels for some pyproject.toml based projects
+╰─> fastapi-realworld-example-app
+> /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/bin/python -m pip install --disable-pip-version-check -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt
+Collecting aiosql==6.2 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 1))
+  Downloading aiosql-6.2-py3-none-any.whl.metadata (644 bytes)
+Collecting alembic==1.8.1 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 2))
+  Downloading alembic-1.8.1-py3-none-any.whl.metadata (7.2 kB)
+Collecting anyio==3.5.0 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 3))
+  Downloading anyio-3.5.0-py3-none-any.whl.metadata (4.7 kB)
+Collecting asyncpg==0.26.0 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 4))
+  Using cached asyncpg-0.26.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+Collecting bcrypt==3.2.0 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 5))
+  Downloading bcrypt-3.2.0-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl.metadata (7.5 kB)
+Collecting cffi==1.15.0 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 6))
+  Downloading cffi-1.15.0-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (1.2 kB)
+Collecting click==8.0.3 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 7))
+  Downloading click-8.0.3-py3-none-any.whl.metadata (3.2 kB)
+Collecting colorama==0.4.4 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 8))
+  Downloading colorama-0.4.4-py2.py3-none-any.whl.metadata (14 kB)
+Collecting databases==0.6.1 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 9))
+  Using cached databases-0.6.1-py3-none-any.whl.metadata (5.4 kB)
+Collecting dnspython==2.2.0 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 10))
+  Downloading dnspython-2.2.0-py3-none-any.whl.metadata (1.2 kB)
+Collecting email-validator==1.1.3 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 11))
+  Downloading email_validator-1.1.3-py2.py3-none-any.whl.metadata (18 kB)
+Collecting fastapi==0.79.1 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 12))
+  Using cached fastapi-0.79.1-py3-none-any.whl.metadata (25 kB)
+Collecting greenlet==1.1.2 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 13))
+  Downloading greenlet-1.1.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.9 kB)
+Collecting h11==0.12.0 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 14))
+  Downloading h11-0.12.0-py3-none-any.whl.metadata (8.1 kB)
+Collecting idna==3.3 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 15))
+  Downloading idna-3.3-py3-none-any.whl.metadata (9.8 kB)
+Collecting loguru==0.6.0 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 16))
+  Using cached loguru-0.6.0-py3-none-any.whl.metadata (21 kB)
+Collecting mako==1.1.6 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 17))
+  Downloading Mako-1.1.6-py2.py3-none-any.whl.metadata (2.9 kB)
+Collecting markupsafe==2.0.1 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 18))
+  Downloading MarkupSafe-2.0.1-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (3.2 kB)
+Collecting passlib==1.7.4 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 19))
+  Using cached passlib-1.7.4-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting psycopg2-binary==2.9.3 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 20))
+  Downloading psycopg2_binary-2.9.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.4 kB)
+Collecting pycparser==2.21 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 21))
+  Downloading pycparser-2.21-py2.py3-none-any.whl.metadata (1.1 kB)
+Collecting pydantic==1.9.2 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 22))
+  Downloading pydantic-1.9.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (127 kB)
+Collecting pyjwt==2.4.0 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 23))
+  Downloading PyJWT-2.4.0-py3-none-any.whl.metadata (4.1 kB)
+Collecting pypika==0.48.9 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 24))
+  Using cached pypika-0.48.9-py2.py3-none-any.whl
+Collecting python-dotenv==0.19.2 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 25))
+  Downloading python_dotenv-0.19.2-py2.py3-none-any.whl.metadata (18 kB)
+Collecting python-slugify==6.1.2 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 26))
+  Using cached python_slugify-6.1.2-py2.py3-none-any.whl.metadata (7.6 kB)
+Collecting six==1.16.0 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 27))
+  Downloading six-1.16.0-py2.py3-none-any.whl.metadata (1.8 kB)
+Collecting sniffio==1.2.0 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 28))
+  Downloading sniffio-1.2.0-py3-none-any.whl.metadata (3.6 kB)
+Collecting sqlalchemy==1.4.31 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 29))
+  Downloading SQLAlchemy-1.4.31-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (10.0 kB)
+Collecting starlette==0.19.1 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 30))
+  Using cached starlette-0.19.1-py3-none-any.whl.metadata (5.6 kB)
+Collecting text-unidecode==1.3 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 31))
+  Using cached text_unidecode-1.3-py2.py3-none-any.whl.metadata (2.4 kB)
+Collecting typing-extensions==3.10.0.2 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 32))
+  Downloading typing_extensions-3.10.0.2-py3-none-any.whl.metadata (2.1 kB)
+Collecting unidecode==1.3.4 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 33))
+  Downloading Unidecode-1.3.4-py3-none-any.whl.metadata (13 kB)
+Collecting uvicorn==0.18.2 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 34))
+  Downloading uvicorn-0.18.2-py3-none-any.whl.metadata (6.2 kB)
+Collecting win32-setctime==1.1.0 (from -r /home/runner/work/_temp/repos/fastapi-realworld-example-app/.venv/tabstudio-locked-requirements.txt (line 35))
+  Downloading win32_setctime-1.1.0-py3-none-any.whl.metadata (2.3 kB)
+Downloading aiosql-6.2-py3-none-any.whl (16 kB)
+Downloading alembic-1.8.1-py3-none-any.whl (209 kB)
+Downloading anyio-3.5.0-py3-none-any.whl (79 kB)
+Using cached asyncpg-0.26.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.6 MB)
+Downloading bcrypt-3.2.0-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl (61 kB)
+Downloading cffi-1.15.0-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (446 kB)
+Downloading click-8.0.3-py3-none-any.whl (97 kB)
+Downloading colorama-0.4.4-py2.py3-none-any.whl (16 kB)
+Downloading databases-0.6.1-py3-none-any.whl (21 kB)
+Downloading SQLAlchemy-1.4.31-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 49.7 MB/s  0:00:00
+Downloading dnspython-2.2.0-py3-none-any.whl (266 kB)
+Downloading email_validator-1.1.3-py2.py3-none-any.whl (18 kB)
+Using cached fastapi-0.79.1-py3-none-any.whl (54 kB)
+Downloading pydantic-1.9.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.0/12.0 MB 145.7 MB/s  0:00:00
+Downloading greenlet-1.1.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (155 kB)
+Downloading h11-0.12.0-py3-none-any.whl (54 kB)
+Downloading idna-3.3-py3-none-any.whl (61 kB)
+Using cached loguru-0.6.0-py3-none-any.whl (58 kB)
+Downloading Mako-1.1.6-py2.py3-none-any.whl (75 kB)
+Downloading MarkupSafe-2.0.1-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl (30 kB)
+Using cached passlib-1.7.4-py2.py3-none-any.whl (525 kB)
+Downloading psycopg2_binary-2.9.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 202.0 MB/s  0:00:00
+Downloading pycparser-2.21-py2.py3-none-any.whl (118 kB)
+Downloading PyJWT-2.4.0-py3-none-any.whl (18 kB)
+Downloading python_dotenv-0.19.2-py2.py3-none-any.whl (17 kB)
+Using cached python_slugify-6.1.2-py2.py3-none-any.whl (9.4 kB)
+Downloading six-1.16.0-py2.py3-none-any.whl (11 kB)
+Downloading sniffio-1.2.0-py3-none-any.whl (10 kB)
+Using cached starlette-0.19.1-py3-none-any.whl (63 kB)
+Using cached text_unidecode-1.3-py2.py3-none-any.whl (78 kB)
+Downloading typing_extensions-3.10.0.2-py3-none-any.whl (26 kB)
+Downloading Unidecode-1.3.4-py3-none-any.whl (235 kB)
+Downloading uvicorn-0.18.2-py3-none-any.whl (57 kB)
+Downloading win32_setctime-1.1.0-py3-none-any.whl (3.6 kB)
+Installing collected packages: typing-extensions, text-unidecode, pypika, passlib, win32-setctime, unidecode, sniffio, six, python-slugify, python-dotenv, pyjwt, pydantic, pycparser, psycopg2-binary, markupsafe, loguru, idna, h11, greenlet, dnspython, colorama, click, asyncpg, aiosql, uvicorn, sqlalchemy, mako, email-validator, cffi, anyio, starlette, databases, bcrypt, alembic, fastapi
+
+Successfully installed aiosql-6.2 alembic-1.8.1 anyio-3.5.0 asyncpg-0.26.0 bcrypt-3.2.0 cffi-1.15.0 click-8.0.3 colorama-0.4.4 databases-0.6.1 dnspython-2.2.0 email-validator-1.1.3 fastapi-0.79.1 greenlet-1.1.2 h11-0.12.0 idna-3.3 loguru-0.6.0 mako-1.1.6 markupsafe-2.0.1 passlib-1.7.4 psycopg2-binary-2.9.3 pycparser-2.21 pydantic-1.9.2 pyjwt-2.4.0 pypika-0.48.9 python-dotenv-0.19.2 python-slugify-6.1.2 six-1.16.0 sniffio-1.2.0 sqlalchemy-1.4.31 starlette-0.19.1 text-unidecode-1.3 typing-extensions-3.10.0.2 unidecode-1.3.4 uvicorn-0.18.2 win32-setctime-1.1.0
+
+Output:
+fastapi-realworld-example-app needs no build: Python runs it from its source. Press Ctrl+F5 to run it.
+
