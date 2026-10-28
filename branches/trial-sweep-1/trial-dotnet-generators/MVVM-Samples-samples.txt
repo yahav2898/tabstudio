@@ -1,0 +1,54 @@
+Opened in 0.2 s
+Workspace: MvvmSampleXF, solution: /home/runner/work/_temp/repos/MVVM-Samples-samples/samples/MvvmSampleXF.sln
+  project MvvmSampleXF.Android [CSharp] /home/runner/work/_temp/repos/MVVM-Samples-samples/samples/MvvmSampleXF/MvvmSampleXF.Android/MvvmSampleXF.Android.csproj
+  project MvvmSampleXF.iOS [CSharp] /home/runner/work/_temp/repos/MVVM-Samples-samples/samples/MvvmSampleXF/MvvmSampleXF.iOS/MvvmSampleXF.iOS.csproj
+  project MvvmSampleXF [CSharp] /home/runner/work/_temp/repos/MVVM-Samples-samples/samples/MvvmSampleXF/MvvmSampleXF/MvvmSampleXF.csproj
+  project MvvmSample.Core [CSharp] /home/runner/work/_temp/repos/MVVM-Samples-samples/samples/MvvmSample.Core/MvvmSample.Core.csproj
+Compatibility Doctor:
+  MvvmSampleXF.Android: Library via Built with its users - A library is compiled together with the projects that reference it.
+  MvvmSampleXF.iOS: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  MvvmSampleXF: Library via Built with its users - A library is compiled together with the projects that reference it.
+  MvvmSample.Core: Library via Built with its users - A library is compiled together with the projects that reference it.
+Built in 7.3 s
+Errors: 31, warnings: 5
+  27 x CS0103: App.xaml.cs(18,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+  4 x NU1202: error NU1202: Package Xamarin.AndroidX.AppCompat.Resources 1.1.0.1 is not compatible with net10.0 (.NETCoreApp,Version=v10.0). It supports: monoandroid90.
+Output:
+Build started at 09:57:28...
+1>------ Build started: Project: MvvmSample.Core, Configuration: Debug ------
+1>SamplePageViewModel.cs(67,28): warning CS8600: Converting null literal or possible null value to non-nullable type.
+1>SamplePageViewModel.cs(69,54): warning CS8604: Possible null reference argument for parameter 'path3' in 'string Path.Combine(string path1, string path2, string path3, string path4)'.
+1>MvvmSample.Core -> compiled in memory (40 KB, 180 ms)
+2>------ Build started: Project: MvvmSampleXF, Configuration: Debug ------
+2>App.xaml.cs(18,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>AppShell.xaml.cs(17,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>FlyoutHeader.xaml.cs(17,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>InteractiveSample.xaml.cs(31,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>AsyncRelayCommandPage.xaml.cs(14,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>BuildingTheUIPage.xaml.cs(14,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>IntroductionPage.xaml.cs(14,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>IoCPage.xaml.cs(14,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>MessengerPage.xaml.cs(14,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>MessengerRequestPage.xaml.cs(14,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>MessengerSendPage.xaml.cs(14,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>ObservableObjectPage.xaml.cs(14,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>PuttingThingsTogetherPage.xaml.cs(14,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>RedditBrowserPage.xaml.cs(13,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>RedditBrowserPage.xaml.cs(19,13): error CS0103: The name 'SubredditWidget' does not exist in the current context
+2>RedditBrowserPage.xaml.cs(20,13): error CS0103: The name 'PostWidget' does not exist in the current context
+2>RedditBrowserPage.xaml.cs(21,13): error CS0103: The name 'SubredditWidget' does not exist in the current context
+2>RedditBrowserPage.xaml.cs(27,13): error CS0103: The name 'SubredditWidget' does not exist in the current context
+2>RedditBrowserPage.xaml.cs(28,13): error CS0103: The name 'PostWidget' does not exist in the current context
+2>RedditBrowserPage.xaml.cs(34,36): error CS0103: The name 'RedditTabView' does not exist in the current context
+2>RedditBrowserPage.xaml.cs(35,31): error CS0103: The name 'RedditTabView' does not exist in the current context
+2>RedditServicePage.xaml.cs(14,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>RelayCommandPage.xaml.cs(14,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>SettingUpTheViewModelsPage.xaml.cs(14,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>SettingsServicePage.xaml.cs(14,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>PostWidget.xaml.cs(14,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>SubredditWidget.xaml.cs(16,13): error CS0103: The name 'InitializeComponent' does not exist in the current context
+2>FileService.cs(35,20): warning CS8603: Possible null reference return.
+3>------ Build started: Project: MvvmSampleXF.Android, Configuration: Debug ------
+4>------ Build started: Project: MvvmSampleXF.iOS, Configuration: Debug ------
+========== Build: 1 succeeded, 3 failed ==========
+
