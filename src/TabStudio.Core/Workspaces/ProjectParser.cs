@@ -313,6 +313,7 @@ public static partial class ProjectParser
                 Path.GetFileNameWithoutExtension(filePath)),
             FrameworkReferences = ReadFrameworkReferences(root, sdk, properties),
             CompileIncludes = ReadItemPatterns(root, "Compile", "Include", properties),
+            CompileIncludeExcludes = ReadIncludeExcludes(root, "Compile", properties),
             CompileRemoves = ReadItemPatterns(root, "Compile", "Remove", properties),
             EmbeddedResourceIncludes = ReadItemPatterns(root, "EmbeddedResource", "Include", properties),
             EmbeddedResourceRemoves = ReadItemPatterns(root, "EmbeddedResource", "Remove", properties),
@@ -810,6 +811,38 @@ public static partial class ProjectParser
             .OfType<string>()
             .Distinct(StringComparer.Ordinal)
             .ToList();
+    }
+
+    /// <summary>
+    /// The <c>Exclude</c> patterns of an item type's items, keyed by each of their <c>Include</c> patterns, both
+    /// expanded as <see cref="ReadItemPatterns"/> expands them. An item without <c>Exclude</c> gives its includes none,
+    /// which are then left out; the first item with an include counts.
+    /// </summary>
+    private static Dictionary<string, IReadOnlyList<string>> ReadIncludeExcludes(XElement root, string itemType, Dictionary<string, string> properties)
+    {
+        var directory = properties.GetValueOrDefault("MSBuildProjectDirectory");
+        List<string> Patterns(string? value) =>
+            [.. (value ?? string.Empty).Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(pattern => ExpandPattern(pattern, properties, directory))
+                .OfType<string>()
+                .Distinct(StringComparer.Ordinal)];
+
+        var excludes = new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal);
+        foreach (var item in root.Descendants().Where(e => e.Name.LocalName == itemType && e.Attribute("Include") is not null))
+        {
+            var exclude = Patterns(item.Attribute("Exclude")?.Value);
+            foreach (var include in Patterns(item.Attribute("Include")?.Value))
+            {
+                excludes.TryAdd(include, exclude);
+            }
+        }
+
+        foreach (var include in excludes.Where(e => e.Value.Count == 0).Select(e => e.Key).ToList())
+        {
+            excludes.Remove(include);
+        }
+
+        return excludes;
     }
 
     private static string? ExpandPattern(string pattern, Dictionary<string, string> properties, string? directory)

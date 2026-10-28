@@ -159,6 +159,16 @@ public sealed record ProjectInfo
     /// <summary>Patterns from <c>&lt;Compile Include="..." /&gt;</c> items, relative to the project directory.</summary>
     public IReadOnlyList<string> CompileIncludes { get; init; } = [];
 
+    /// <summary>
+    /// The <c>Exclude</c> patterns of <c>&lt;Compile Include="..." Exclude="..." /&gt;</c> items, keyed by their
+    /// <c>Include</c> pattern as it is in <see cref="CompileIncludes"/>: files the include leaves out, as Dock's
+    /// <c>Exclude="..\Dock.Model.ReactiveUI\bin\**;..\Dock.Model.ReactiveUI\obj\**"</c>. Unlike
+    /// <see cref="CompileRemoves"/>, they apply to that include only. An include without one is not here; of several
+    /// items with the same <c>Include</c>, the first counts.
+    /// </summary>
+    public IReadOnlyDictionary<string, IReadOnlyList<string>> CompileIncludeExcludes { get; init; } =
+        new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal);
+
     /// <summary>Patterns from <c>&lt;Compile Remove="..." /&gt;</c> items, relative to the project directory.</summary>
     public IReadOnlyList<string> CompileRemoves { get; init; } = [];
 
