@@ -43,7 +43,7 @@ public sealed class SourceTestDiscovererTests
 
     private const string VisualBasicRootNamespace = "MyRoot";
 
-    private const string VisualBasicXunitSource = """
+    private const string VisualBasicXunitSource = """"
         Imports Xunit
 
         Namespace Calculator.Tests
@@ -98,7 +98,7 @@ public sealed class SourceTestDiscovererTests
             End Module
 
         End Namespace
-        """;
+        """";
 
     [Fact]
     public void Finds_xunit_tests_with_the_semantic_model_at_the_right_positions()

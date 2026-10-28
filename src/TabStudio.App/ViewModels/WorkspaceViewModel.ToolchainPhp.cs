@@ -115,7 +115,7 @@ public sealed partial class WorkspaceViewModel
     /// <c>PHP_INI_SCAN_DIR</c> adds to PHP's, for the program and every PHP process it starts, as <c>php artisan
     /// serve</c> does, and it connects to the adapter on a free port of this device.
     /// </summary>
-    private LaunchConfiguration PreparePhpDebug(ToolchainProject project, LaunchConfiguration configuration)
+    private static LaunchConfiguration PreparePhpDebug(ToolchainProject project, LaunchConfiguration configuration)
     {
         var port = RunPlanner.FreeLoopbackPort();
         var folder = Path.Combine(project.Directory, ".tabstudio", "php-debug");
