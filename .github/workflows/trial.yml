@@ -18,6 +18,8 @@ env:
 jobs:
   trial:
     name: Open real repositories (${{ matrix.area }})
+    # A trial/*embedded branch runs only the embedded job below.
+    if: ${{ !endsWith(github.ref_name, 'embedded') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 200
     strategy:
@@ -93,3 +95,42 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: bash build/ci/publish-logs.sh trial-${{ matrix.area }} ${{ job.status }}
+
+  # The embedded repositories, built with their real toolchains by the runner the Embedded firmware workflow's
+  # real-repositories job uses, from build/ci/trial-sweep.json instead of real-repos.json.
+  embedded:
+    name: Embedded trial / ${{ matrix.project }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [marlin, meshtastic-tbeam, esp-idf-blink, zephyr-synchronization, arduino-servo]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install host build prerequisites
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends git cmake ninja-build build-essential python3-venv libusb-1.0-0 libffi-dev libssl-dev
+      - name: Install Arm cross compiler from signed Ubuntu packages
+        if: matrix.project == 'zephyr-synchronization'
+        run: sudo apt-get install -y --no-install-recommends gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
+      - name: Install pinned build front ends
+        if: matrix.project == 'marlin' || matrix.project == 'meshtastic-tbeam'
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: -r build/embedded/platformio.requirements.txt
+      - name: Compile the pinned public repository
+        run: |
+          python build/embedded/run-real-repos.py --manifest build/ci/trial-sweep.json --only '${{ matrix.project }}' \
+            --work "$RUNNER_TEMP/embedded-repos" --output ci-out/embedded-repos || echo "BUILD FAILED" | tee ci-out/failed.txt
+          cat ci-out/embedded-repos/*/summary.json | python3 -c 'import json,sys; s=json.load(sys.stdin); print("passed" if s["passed"] else "FAILED: " + str(s["error"]), "in", s["seconds"], "s")' | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Publish the reports
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p ci-out
+          bash build/ci/publish-logs.sh trial-embedded-${{ matrix.project }} ${{ job.status }}

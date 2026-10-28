@@ -298,59 +298,55 @@
  ],
  "embeddedRepositories": [
   {
-   "name": "Marlin",
-   "area": "embedded",
+   "name": "marlin",
    "url": "https://github.com/MarlinFirmware/Marlin",
    "sha": "94c540b9f98dbe31d73bf4fe5108c8d955df39c9",
-   "open": ".",
    "kind": "platformio",
-   "expect": "build",
-   "note": "default env mega2560",
+   "project": ".",
+   "maxErrors": 0,
+   "note": "Marlin's default env, an Arduino Mega 2560 printer board",
    "environment": "mega2560"
   },
   {
-   "name": "firmware",
-   "area": "embedded",
+   "name": "meshtastic-tbeam",
    "url": "https://github.com/meshtastic/firmware",
    "sha": "eaba8b95bebab04c4f13a27b63e000ebdc1e5fac",
-   "open": ".",
    "kind": "platformio",
-   "expect": "build",
-   "note": "one classic ESP32 env (default heltec-v3 is ESP32-S3)",
+   "project": ".",
+   "maxErrors": 0,
+   "note": "one classic ESP32 env (the default, heltec-v3, is an ESP32-S3)",
    "environment": "tbeam"
   },
   {
    "name": "esp-idf-blink",
-   "area": "embedded",
    "url": "https://github.com/espressif/esp-idf",
-   "sha": "4d80c1b29aeabc8e735ffc6e1be9bb23e95d1d5d",
-   "open": "examples/get-started/blink",
+   "sha": "fff9895c82d744c7237be8847347bdd1b07c6643",
    "kind": "esp-idf",
-   "expect": "build",
-   "note": "hello_world is already in real-repos.json",
+   "project": "examples/get-started/blink",
+   "maxErrors": 0,
+   "note": "ESP-IDF's other get-started example (hello_world is in real-repos.json); led_strip comes from the component registry",
    "target": "esp32c3"
   },
   {
-   "name": "zephyr-blinky",
-   "area": "embedded",
+   "name": "zephyr-synchronization",
    "url": "https://github.com/zephyrproject-rtos/zephyr",
-   "sha": "ec98918869caeb2ddaef6e698f9ff36fb60a97ac",
-   "open": "samples/basic/blinky",
+   "sha": "dccb09599635bdff17633fa7e9dab014b91dce90",
    "kind": "zephyr",
-   "expect": "build",
-   "note": "hello_world is already in real-repos.json",
+   "project": "samples/synchronization",
+   "maxErrors": 0,
+   "note": "a kernel sample (blinky needs an LED, which qemu_cortex_m3 does not have)",
    "board": "qemu_cortex_m3"
   },
   {
-   "name": "Servo-Sweep",
-   "area": "embedded",
+   "name": "arduino-servo",
    "url": "https://github.com/arduino-libraries/Servo",
    "sha": "440b319ec11ea2664df8ce201c271c935de28a2d",
-   "open": "examples/Sweep",
    "kind": "arduino",
-   "expect": "build",
-   "note": "Arduino library example",
-   "fqbn": "arduino:avr:uno"
+   "project": "examples/Sweep",
+   "maxErrors": 0,
+   "note": "an Arduino library's example",
+   "fqbn": "arduino:avr:uno",
+   "core": "arduino:avr@1.8.6"
   }
  ]
 }
