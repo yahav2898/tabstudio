@@ -1,0 +1,44 @@
+postgres:17-alpine layers 10
+pull seconds 6.5
+redis:7-alpine layers 7
+pull seconds 3.1
+nginx:alpine layers 8
+pull seconds 3.8
+copy seconds .271949471
+two postgres ready after 3.035636227
+tail: option used in invalid context -- 3
+LISTEN 0      200        127.0.0.1:25432      0.0.0.0:*    users:(("postgres",pid=3301,fd=6))
+LISTEN 0      200        127.0.0.1:15432      0.0.0.0:*    users:(("postgres",pid=3300,fd=6))
+LISTEN 0      200            [::1]:25432         [::]:*    users:(("postgres",pid=3301,fd=7))
+LISTEN 0      200            [::1]:15432         [::]:*    users:(("postgres",pid=3300,fd=7))
+== host to published
+        1
+
+== client container by name
+ db ok
+
+ db2 ok
+
+== self localhost
+ self ok
+
+3451:C 28 Oct 2026 20:58:02.685 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+3451:M 28 Oct 2026 20:58:02.685 * monotonic clock: POSIX clock_gettime
+3451:M 28 Oct 2026 20:58:02.686 * Running mode=standalone, port=6379.
+3451:M 28 Oct 2026 20:58:02.687 * Server initialized
+3451:M 28 Oct 2026 20:58:02.687 * Ready to accept connections tcp
+== redis
+PONG
+2026/10/28 20:58:05 [notice] 3470#3470: start worker process 3495
+2026/10/28 20:58:05 [notice] 3470#3470: start worker process 3496
+2026/10/28 20:58:05 [notice] 3470#3470: start worker process 3497
+LISTEN 0      511        127.0.0.1:18080      0.0.0.0:*    users:(("nginx",pid=3497,fd=6),("nginx",pid=3496,fd=6),("nginx",pid=3495,fd=6),("nginx",pid=3494,fd=6),("nginx",pid=3470,fd=6))
+LISTEN 0      511        127.0.0.1:16379      0.0.0.0:*    users:(("redis-server",pid=3451,fd=6))                                                                                         
+LISTEN 0      511            [::1]:18080         [::]:*    users:(("nginx",pid=3497,fd=7),("nginx",pid=3496,fd=7),("nginx",pid=3495,fd=7),("nginx",pid=3494,fd=7),("nginx",pid=3470,fd=7))
+LISTEN 0      511            [::1]:16379         [::]:*    users:(("redis-server",pid=3451,fd=7))                                                                                         
+== nginx
+<title>Welcome to nginx!</title>
+65M	/home/runner/work/_temp/c/nginx/
+332M	/home/runner/work/_temp/c/pg2/
+332M	/home/runner/work/_temp/c/postgres/
+40M	/home/runner/work/_temp/c/redis/
