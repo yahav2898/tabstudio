@@ -19,7 +19,7 @@ jobs:
   trial:
     name: Open real repositories (${{ matrix.area }})
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: 200
     strategy:
       fail-fast: false
       matrix:
@@ -31,31 +31,62 @@ jobs:
         with:
           global-json-file: global.json
 
+      # The toolchains these repositories set up with, as the Toolchain Store installs them on a tablet (CMake, make and
+      # GCC are on the runner already).
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: false
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: false
+
+      - name: Install Maven
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y maven
+          mvn -v; cargo --version; uv --version; node --version; go version; cmake --version | head -1
+
       - name: Clone the repositories at their pinned commits
-        id: clone
         env:
           AREA: ${{ matrix.area }}
         run: |
-          mkdir -p "$RUNNER_TEMP/repos"
-          list=""
-          while IFS=$'\t' read -r name url sha open; do
+          jq -r --arg area "$AREA" '.repositories[] | select(.area == $area) | [.name, .url, .sha] | @tsv' build/ci/trial-sweep.json |
+          while IFS=$'\t' read -r name url sha; do
             dir="$RUNNER_TEMP/repos/$name"
             git init -q "$dir"
             git -C "$dir" fetch -q --depth 1 "$url" "$sha"
-            git -C "$dir" checkout -q FETCH_HEAD
-            list="$list$name=$dir/$open;"
-          done < <(jq -r --arg area "$AREA" '.repositories[] | select(.area == $area) | [.name, .url, .sha, .open] | @tsv' build/ci/trial-sweep.json)
-          echo "repos=$list" >> "$GITHUB_OUTPUT"
+            git -C "$dir" -c advice.detachedHead=false checkout -q FETCH_HEAD
+            echo "$name: $sha"
+          done
 
-      - name: Open and build them in TabStudio
+      - name: Open, set up, build and run them in TabStudio
         env:
-          TABSTUDIO_TRIAL_REPOS: ${{ steps.clone.outputs.repos }}
+          TABSTUDIO_TRIAL_ROOT: ${{ runner.temp }}/repos
+          TABSTUDIO_TRIAL_AREA: ${{ matrix.area }}
           TABSTUDIO_TRIAL_OUT: ${{ github.workspace }}/ci-out
           TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
         run: |
           mkdir -p ci-out/screenshots
-          dotnet test tests/TabStudio.App.Tests -c Release --filter "FullyQualifiedName~RepoTrialTests" > ci-out/test.log 2>&1 || true
-          tail -5 ci-out/test.log
+          dotnet test tests/TabStudio.App.Tests -c Release --filter "FullyQualifiedName~RepoTrialTests" --logger "console;verbosity=normal" > ci-out/test.log 2>&1 || true
+          tail -20 ci-out/test.log
+          if [ -f ci-out/summary.md ]; then cat ci-out/summary.md | tee -a "$GITHUB_STEP_SUMMARY"; fi
 
       - name: Publish the reports
         if: always()
