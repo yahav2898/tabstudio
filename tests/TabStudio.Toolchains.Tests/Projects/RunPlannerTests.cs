@@ -97,6 +97,29 @@ public sealed class RunPlannerTests : IDisposable
         Assert.Single(RunPlanner.PlanDependencies(project, dependency));
     }
 
+    [Theory]
+    [InlineData("next start", "next dev", "npm run dev")]
+    [InlineData("nuxt start", "nuxt dev", "npm run dev")]
+    [InlineData("vite preview", "vite", "npm run dev")]
+    [InlineData("node server.js", "nodemon server.js", "npm start")]
+    public void A_Node_project_whose_start_script_serves_a_production_build_runs_its_dev_script(string start, string dev, string expected)
+    {
+        // next start fails until next build has made .next, which a person runs once before deploying.
+        _workspace.Write("package.json", $$"""{ "name": "web", "scripts": { "start": "{{start}}", "dev": "{{dev}}", "build": "next build" } }""");
+        var project = new ToolchainProject(Node, _workspace.Path, "package.json");
+
+        Assert.Equal(expected, RunPlanner.PlanProject(project)!.EntryPoint);
+    }
+
+    [Fact]
+    public void A_Node_project_with_only_a_production_start_script_still_runs_it()
+    {
+        _workspace.Write("package.json", """{ "name": "web", "scripts": { "start": "next start" } }""");
+        var project = new ToolchainProject(Node, _workspace.Path, "package.json");
+
+        Assert.Equal("npm start", RunPlanner.PlanProject(project)!.EntryPoint);
+    }
+
     [Fact]
     public void A_Node_project_runs_its_start_script()
     {

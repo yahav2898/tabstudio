@@ -165,6 +165,12 @@ public sealed record EntryRule
     /// </summary>
     public string? Json { get; init; }
 
+    /// <summary>
+    /// A regular expression: the rule does not apply when the <see cref="Json"/> value matches it, such as a
+    /// <c>start</c> script that serves a production build (<c>next start</c>), which fails until that build exists.
+    /// </summary>
+    public string? NotMatching { get; init; }
+
     /// <summary>A command to run first, such as a build, or empty.</summary>
     public IReadOnlyList<string> Build { get; init; } = [];
 

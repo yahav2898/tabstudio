@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using TabStudio.Toolchains.Catalog;
 using TabStudio.Toolchains.Embedded.Projects;
 using TabStudio.Toolchains.Processes;
@@ -112,6 +113,12 @@ public static partial class RunPlanner
             var file = entry.FullPath;
             string? json = null;
             if (rule.Json is { } jsonPath && (json = ReadJson(file, jsonPath)) is null)
+            {
+                continue;
+            }
+
+            if (rule.NotMatching is { } pattern && json is not null
+                && Regex.IsMatch(json, pattern, RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)))
             {
                 continue;
             }

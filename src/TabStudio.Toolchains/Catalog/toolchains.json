@@ -410,6 +410,7 @@
           {
             "file": "package.json",
             "json": "scripts.start",
+            "notMatching": "\\b(?:next|nuxt|nuxi) start\\b|\\b(?:vite|astro) preview\\b|\\b(?:remix|react-router)-serve\\b",
             "command": [
               "npm",
               "start"
@@ -431,6 +432,14 @@
               "npm",
               "run",
               "serve"
+            ]
+          },
+          {
+            "file": "package.json",
+            "json": "scripts.start",
+            "command": [
+              "npm",
+              "start"
             ]
           },
           {
