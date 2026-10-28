@@ -24,14 +24,22 @@ public sealed partial class WorkspaceViewModel
     [ObservableProperty]
     public partial ServerNoticeViewModel? ServerNotice { get; private set; }
 
-    private void OfferServer(int port, int generation) => _ui.Post(() =>
+    private void OfferServer(int port, int generation) => _ = OfferServerAsync(port, generation);
+
+    private async Task OfferServerAsync(int port, int generation)
+    {
+        // IPv4's loopback, or IPv6's for a dev server bound to "localhost" where that is ::1.
+        var address = await ListeningPorts.LoopbackAddressAsync(port).ConfigureAwait(false);
+        _ui.Post(() => OfferServer(port, generation, address));
+    }
+
+    private void OfferServer(int port, int generation, Uri address)
     {
         if (_disposed || generation != _serverGeneration || !_offeredPorts.Add(port))
         {
             return;
         }
 
-        var address = new Uri($"http://127.0.0.1:{port}/");
         ServerNotice = new ServerNoticeViewModel(port,
             new RelayCommand(() =>
             {
@@ -48,7 +56,7 @@ public sealed partial class WorkspaceViewModel
             WebPreview.Show(StartupProject?.Name ?? "Capacitor app", address, null);
             SelectSideBarPanel(SideBarPanel.WebPreview);
         }
-    });
+    }
 
     private Action<int> BeginServerRun()
     {
