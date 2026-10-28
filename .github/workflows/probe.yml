@@ -10,11 +10,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
-        with: { distribution: temurin, java-version: '21' }
+        with:
+          distribution: temurin
+          java-version: '21'
       - name: Kotlin breakpoints through java-debug
         run: |
           exec > >(tee -a /tmp/out.txt) 2>&1
-          set -x
           curl -fsSL https://download.eclipse.org/jdtls/milestones/1.58.0/jdt-language-server-1.58.0-202604151538.tar.gz -o jdtls.tgz
           mkdir -p /tmp/jdtls /tmp/jd && tar -xzf jdtls.tgz -C /tmp/jdtls
           curl -fsSL https://open-vsx.org/api/vscjava/vscode-java-debug/0.60.0/file/vscjava.vscode-java-debug-0.60.0.vsix -o jd.vsix && unzip -q jd.vsix -d /tmp/jd
@@ -23,11 +24,18 @@ jobs:
           timeout 600 python3 probe/kotlin_java_debug.py
       - if: always()
         uses: actions/upload-artifact@v4
-        with: { name: kotlin-debug, path: /tmp/out.txt }
+        with:
+          name: kotlin-debug
+          path: /tmp/out.txt
   kotlin-lsp:
     strategy:
+      fail-fast: false
       matrix:
-        include: [{ arch: aarch64, runner: ubuntu-24.04-arm }, { arch: amd64, runner: ubuntu-latest }]
+        include:
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+          - arch: amd64
+            runner: ubuntu-latest
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
@@ -35,11 +43,10 @@ jobs:
         run: |
           exec > >(tee -a /tmp/out.txt) 2>&1
           bash probe/kotlin_lsp.sh ${{ matrix.arch }}
-          curl -fsSL https://raw.githubusercontent.com/Kotlin/kotlin-lsp/main/LICENSE | head -5
-      - name: kotlin-lsp in Alpine with OpenJDK
+      - name: kotlin-lsp on glibc with its own runtime
         run: |
           exec > >(tee -a /tmp/out.txt) 2>&1
-          docker run --rm -v /tmp/kls:/kls -v $PWD/probe:/probe alpine:3.24 sh -c 'apk add --no-cache openjdk21-jdk python3 bash >/dev/null; ls /kls/extension/server; cat /kls/extension/server/*.sh 2>/dev/null | head -60; java -version' || true
+          timeout 900 python3 probe/kotlin_lsp_test.py /tmp/kls/extension/server/bin/intellij-server --stdio || echo "exit $?"
       - if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -55,14 +62,38 @@ jobs:
           docker run --rm -v $PWD/probe:/probe alpine:3.24 sh /probe/php.sh
       - if: always()
         uses: actions/upload-artifact@v4
-        with: { name: php, path: /tmp/out.txt }
+        with:
+          name: php
+          path: /tmp/out.txt
+  swift:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+          - arch: x86_64
+            runner: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Swift toolchain, SwiftPM, sourcekit-lsp and lldb-dap in Ubuntu 24.04
+        run: |
+          exec > >(tee -a /tmp/out.txt) 2>&1
+          docker run --rm --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -v $PWD/probe:/probe ubuntu:24.04 bash /probe/swift.sh
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: swift-${{ matrix.arch }}
+          path: /tmp/out.txt
   publish:
     if: always()
-    needs: [kotlin-debug, kotlin-lsp, php]
+    needs: [kotlin-debug, kotlin-lsp, php, swift]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
-        with: { path: out }
+        with:
+          path: out
       - run: |
           cd out && git init -q && git add -A && git -c user.name=ci -c user.email=ci@example.com commit -qm "probe $GITHUB_SHA"
           git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/probe-results/more-languages

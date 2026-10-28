@@ -36,11 +36,15 @@ def req(cmd, args, timeout=120):
     return d.wait(lambda m: m.get('type') == 'response' and m.get('request_seq') == s, timeout)
 req('initialize', {'adapterID': 'java', 'linesStartAt1': True, 'columnsStartAt1': True, 'pathFormat': 'path'})
 seq[0] += 1; launch_seq = seq[0]
-d.send({'seq': launch_seq, 'type': 'request', 'command': 'launch', 'arguments': {'mainClass': 'demo.MainKt', 'classPaths': [root + '/out', stdlib], 'cwd': root, 'console': 'internalConsole', 'projectName': ''}})
+d.send({'seq': launch_seq, 'type': 'request', 'command': 'launch', 'arguments': {'mainClass': 'demo.MainKt', 'classPaths': [root + '/out', stdlib], 'cwd': root, 'console': 'internalConsole', 'projectName': '', 'sourcePaths': [root + '/src']}})
 d.wait(lambda m: m.get('type') == 'event' and m.get('event') == 'initialized', 120)
-for mode in ['kotlin']:
-    r = req('setBreakpoints', {'source': {'path': src, 'name': 'Main.kt'}, 'breakpoints': [{'line': 6}], 'lines': [6]})
-    print('BREAKPOINTS', json.dumps(r.get('body')), flush=True)
+# A Java stub whose line 6 is inside a method of demo.Greeter: java-debug reads the class name from it.
+stub_dir = root + '/.tabstudio/kotlin-debug/demo'; os.makedirs(stub_dir, exist_ok=True)
+stub = stub_dir + '/Greeter.java'
+lines = ['package demo;', 'class Greeter { void tabstudio() {'] + ['int l%d = 0;' % i for i in range(3, 40)] + ['} }']
+open(stub, 'w').write('\n'.join(lines) + '\n')
+r = req('setBreakpoints', {'source': {'path': stub, 'name': 'Greeter.java'}, 'breakpoints': [{'line': 6}], 'lines': [6]})
+print('BREAKPOINTS', json.dumps(r.get('body')), flush=True)
 req('configurationDone', {})
 try:
     st = d.wait(lambda m: m.get('type') == 'event' and m.get('event') in ('stopped', 'terminated', 'exited'), 90)

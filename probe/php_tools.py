@@ -20,7 +20,7 @@ def req(cmd, args, timeout=60):
     return d.wait(lambda m: m.get('type') == 'response' and m.get('request_seq') == s, timeout)
 req('initialize', {'adapterID': 'php', 'linesStartAt1': True, 'columnsStartAt1': True, 'pathFormat': 'path'})
 seq[0] += 1
-d.send({'seq': seq[0], 'type': 'request', 'command': 'launch', 'arguments': {'program': src, 'cwd': root, 'port': 0, 'runtimeExecutable': 'php', 'externalConsole': False}})
+d.send({'seq': seq[0], 'type': 'request', 'command': 'launch', 'arguments': {'program': src, 'cwd': root, 'port': 0, 'runtimeExecutable': 'php', 'runtimeArgs': ['-dzend_extension=xdebug.so', '-dxdebug.mode=debug', '-dxdebug.start_with_request=yes'], 'externalConsole': False}})
 d.wait(lambda m: m.get('type') == 'event' and m.get('event') == 'initialized', 60)
 print('BP', req('setBreakpoints', {'source': {'path': src}, 'breakpoints': [{'line': 7}]}).get('body'), flush=True)
 req('configurationDone', {})
