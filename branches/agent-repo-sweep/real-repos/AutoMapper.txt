@@ -10,7 +10,7 @@ Compatibility Doctor:
   docs: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
   docs: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
 Startup project: Benchmark
-Built in 6.9 s: 0 errors, 49 warnings
+Built in 7.6 s: 0 errors, 49 warnings
 Packages with analyzers or MSBuild files:
   emptyfiles 4.4.0
       build/EmptyFiles.targets
@@ -230,20 +230,18 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Output:
-Build started at 21:55:18...
+Build started at 23:10:28...
 1>------ Build started: Project: AutoMapper, Configuration: Debug ------
------- Setting up docs: pip install -r requirements.txt ------
-1>AutoMapper -> compiled in memory (303.5 KB, 229 ms)
+1>AutoMapper -> compiled in memory (303.5 KB, 281 ms)
 2>------ Build started: Project: AutoMapper.DI.Tests, Configuration: Debug ------
-> python3 -m venv .venv
-2>AutoMapper.DI.Tests -> compiled in memory (26.5 KB, 247 ms)
+2>AutoMapper.DI.Tests -> compiled in memory (26.5 KB, 278 ms)
 3>------ Build started: Project: Benchmark, Configuration: Debug ------
-3>Benchmark -> compiled in memory (24 KB, 242 ms)
+3>Benchmark -> compiled in memory (24 KB, 205 ms)
 4>------ Build started: Project: AutoMapper.IntegrationTests, Configuration: Debug ------
 4>IntegrationTest.cs(26,27): warning CS0618: 'MsSqlBuilder.MsSqlBuilder()' is obsolete: 'This parameterless constructor is obsolete and will be removed. Use the constructor with the image parameter instead: https://github.com/testcontainers/testcontainers-dotnet/discussions/1470#discussioncomment-15185721.'
-4>AutoMapper.IntegrationTests -> compiled in memory (572.5 KB, 860 ms)
+4>AutoMapper.IntegrationTests -> compiled in memory (572.5 KB, 747 ms)
 5>------ Build started: Project: TestApp, Configuration: Debug ------
-5>TestApp -> compiled in memory (7 KB, 220 ms)
+5>TestApp -> compiled in memory (7 KB, 263 ms)
 6>------ Build started: Project: AutoMapper.UnitTests, Configuration: Debug ------
 > /home/runner/work/_temp/real-repos/AutoMapper/docs/.venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
 6>BidirectionalRelationshipsWithoutPR.cs(23,39): warning CS0649: Field 'CyclesWithInheritance.FlowSwitch<T>.Connections' is never assigned to, and will always have its default value null
@@ -294,6 +292,6 @@ Build started at 21:55:18...
 6>OpenGenerics.cs(334,23): warning CS0649: Field 'GenericMemberValueResolver.Destination<TKey, TValue>.MyValue' is never assigned to, and will always have its default value 
 6>MoreExplanatoryExceptionTests.cs(22,25): warning CS0649: Field 'MoreExplanatoryExceptionTests.EntitySource.NotSupported' is never assigned to, and will always have its default value 
 6>ShouldMapMethod.cs(27,21): warning CS0649: Field 'ShouldMapMethodInstanceMethods.Source._anotherValue' is never assigned to, and will always have its default value 0
-6>AutoMapper.UnitTests -> compiled in memory (1773 KB, 1760 ms)
+6>AutoMapper.UnitTests -> compiled in memory (1773 KB, 1698 ms)
 ========== Build: 6 succeeded, 0 failed ==========
 
