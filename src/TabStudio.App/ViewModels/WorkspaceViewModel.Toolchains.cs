@@ -511,11 +511,20 @@ public sealed partial class WorkspaceViewModel
         return Directory.EnumerateFiles(project.Directory).Where(toolchain.RunsFile).Order(StringComparer.Ordinal).FirstOrDefault() ?? project.MarkerPath;
     }
 
-    /// <summary>For a folder with one program at its top and no entry point, that program.</summary>
+    /// <summary>
+    /// For a folder with one program at its top and no entry point, that program. A tool's configuration file, such as
+    /// <c>eslint.config.mjs</c> or <c>vite.config.ts</c>, is not a program.
+    /// </summary>
     private static RunPlan? OnlyProgramOf(ToolchainProject project)
     {
-        var programs = Directory.EnumerateFiles(project.Directory).Where(project.Toolchain.RunsFile).Take(2).ToList();
+        var programs = Directory.EnumerateFiles(project.Directory).Where(project.Toolchain.RunsFile).Where(f => !IsToolConfiguration(f)).Take(2).ToList();
         return programs.Count == 1 ? RunPlanner.PlanFile(project, programs[0]) : null;
+    }
+
+    private static bool IsToolConfiguration(string file)
+    {
+        var name = Path.GetFileNameWithoutExtension(file);
+        return name.StartsWith('.') || name.EndsWith(".config", StringComparison.OrdinalIgnoreCase);
     }
 
     private async Task RunToolchainPlanAsync(ToolchainProject project, Func<RunPlan?> planner)

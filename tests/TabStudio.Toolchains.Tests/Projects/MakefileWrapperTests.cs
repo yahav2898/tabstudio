@@ -94,6 +94,35 @@ public sealed class MakefileWrapperTests : IDisposable
     }
 
     [Fact]
+    public void A_package_json_that_only_holds_tooling_comes_after_the_folder_s_real_project()
+    {
+        // mdBook: a Rust program, with a package.json for its front end's linters.
+        _folder.Write("Cargo.toml", "[package]\nname = \"mdbook\"\n");
+        _folder.Write("src/main.rs", "fn main() {}\n");
+        _folder.Write("package.json", """{ "name": "mdbook", "scripts": { "lint": "eslint ." }, "devDependencies": { "eslint": "^9.0.0" } }""");
+        _folder.Write("eslint.config.mjs", "export default [];\n");
+
+        var projects = ToolchainProjectDetector.Detect(_folder.Path, ToolchainCatalog.Default);
+
+        Assert.Equal(["rust", "node"], projects.Select(p => p.Toolchain.Id));
+    }
+
+    [Theory]
+    [InlineData("""{ "scripts": { "lint": "eslint ." } }""", true)]
+    [InlineData("""{ "devDependencies": { "prettier": "3" } }""", true)]
+    [InlineData("""{ "scripts": { "dev": "vite" } }""", false)]
+    [InlineData("""{ "scripts": { "start": "node index.js" } }""", false)]
+    [InlineData("""{ "main": "index.js" }""", false)]
+    [InlineData("""{ "bin": { "tool": "cli.js" } }""", false)]
+    [InlineData("not json", false)]
+    public void A_package_json_only_holds_tooling_when_nothing_in_it_runs(string json, bool expected)
+    {
+        _folder.Write("package.json", json);
+
+        Assert.Equal(expected, ToolchainProjectDetector.IsToolingOnly(Path.Combine(_folder.Path, "package.json")));
+    }
+
+    [Fact]
     public void A_C_project_with_only_a_Makefile_is_still_a_C_project()
     {
         _folder.Write("Makefile", "hello: hello.c\n\tcc -g -o hello hello.c\n");
