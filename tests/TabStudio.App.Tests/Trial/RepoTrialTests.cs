@@ -54,7 +54,21 @@ public sealed partial class RepoTrialTests
             var report = new StringBuilder().AppendLine(CultureInfo.InvariantCulture, $"{name} at {result["sha"]}, opening {folder}");
             try
             {
-                await TryAsync(folder, name, result["expect"]!.GetValue<string>(), report, result);
+                // What the README asks a person to create first: its .env, and settings files copied from examples.
+                if (entry["dotenv"] is JsonObject dotenv)
+                {
+                    await File.WriteAllLinesAsync(Path.Combine(folder, ".env"), dotenv.Select(pair => $"{pair.Key}={pair.Value!.GetValue<string>()}"));
+                }
+
+                foreach (var (file, content) in entry["files"]?.AsObject() ?? new JsonObject())
+                {
+                    var path = Path.Combine(folder, file.Replace('/', Path.DirectorySeparatorChar));
+                    Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+                    await File.WriteAllTextAsync(path, content!.GetValue<string>());
+                }
+
+                var route = entry["route"]?.GetValue<string>() ?? "/";
+                await TryAsync(folder, name, result["expect"]!.GetValue<string>(), route, report, result);
             }
             catch (Exception ex) when (ex is not OutOfMemoryException)
             {
@@ -76,7 +90,7 @@ public sealed partial class RepoTrialTests
         result["exception"] is { } exception && result[key] is null ? "exception: " + exception.GetValue<string>().Replace('|', '/').ReplaceLineEndings(" ")
         : (result[key]?.ToString() ?? "-").Replace('|', '/').ReplaceLineEndings(" ");
 
-    private static async Task TryAsync(string folder, string name, string expect, StringBuilder report, JsonObject result)
+    private static async Task TryAsync(string folder, string name, string expect, string route, StringBuilder report, JsonObject result)
     {
         using var fixture = new WorkspaceFixture();
         var workspace = fixture.Workspace;
@@ -183,7 +197,7 @@ public sealed partial class RepoTrialTests
                 run = workspace.RunCommand.ExecuteAsync(null);
                 result["run"] = expect switch
                 {
-                    "web-first-route" => await FirstRouteAsync(workspace, run, report),
+                    "web-first-route" => await FirstRouteAsync(workspace, run, route, report),
                     "gui-window" => await WindowAsync(workspace, run),
                     _ => await ExitAsync(workspace, run),
                 };
@@ -301,7 +315,7 @@ public sealed partial class RepoTrialTests
         return new Counts(errors.Count, warnings, codes);
     }
 
-    private static async Task<string> FirstRouteAsync(WorkspaceViewModel workspace, Task run, StringBuilder report)
+    private static async Task<string> FirstRouteAsync(WorkspaceViewModel workspace, Task run, string route, StringBuilder report)
     {
         await WaitAsync(() => workspace.WebPreview.IsRunning || workspace.ServerNotice is not null || run.IsCompleted, TimeSpan.FromMinutes(15));
         if (!workspace.WebPreview.IsRunning && workspace.ServerNotice is { } server)
@@ -310,11 +324,12 @@ public sealed partial class RepoTrialTests
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         }
 
-        if (!workspace.WebPreview.IsRunning || workspace.WebPreview.AppAddress is not { } address)
+        if (!workspace.WebPreview.IsRunning || workspace.WebPreview.AppAddress is not { } preview)
         {
             return run.IsCompleted ? $"exited before listening{ExitCode(workspace.Output.Text)}" : "did not listen";
         }
 
+        var address = new Uri(preview, route);
         using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
         for (var attempt = 0; ; attempt++)
         {
@@ -323,7 +338,7 @@ public sealed partial class RepoTrialTests
                 using var response = await http.GetAsync(address);
                 var body = await response.Content.ReadAsStringAsync();
                 report.AppendLine(CultureInfo.InvariantCulture, $"GET {address}: {(int)response.StatusCode}, {body.Length} characters");
-                return $"GET / {(int)response.StatusCode}";
+                return $"GET {route} {(int)response.StatusCode}";
             }
             catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException && attempt < 10)
             {
@@ -331,7 +346,7 @@ public sealed partial class RepoTrialTests
             }
             catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
             {
-                return "listened, but / did not answer: " + ex.Message;
+                return run.IsCompleted ? $"listened, then exited{ExitCode(workspace.Output.Text)}" : $"listened, but {route} did not answer: {ex.Message}";
             }
         }
     }
