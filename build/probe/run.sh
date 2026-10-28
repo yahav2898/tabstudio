@@ -23,4 +23,5 @@ pr $W/nginx --net-map=L80=18080,L* -w / /docker-entrypoint.sh nginx -g 'daemon o
 sleep 4; tail -20 $W/nginx.log
 curl -s http://127.0.0.1:18080/ | head -5
 du -sh $W/*/ 
+s=$(date +%s.%N); cp -a $W/postgres $W/pgcopy; echo "copy seconds $(echo "$(date +%s.%N) - $s" | bc)"
 kill %1 %2 %3
