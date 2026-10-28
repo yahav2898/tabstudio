@@ -63,6 +63,13 @@ public sealed class ProjectBuilder
     /// </summary>
     public const string NeedsPlatformWorkloadId = "TS2005";
 
+    /// <summary>
+    /// Reported, as a warning, for a project that references a project of the workspace as a source generator
+    /// (<c>OutputItemType="Analyzer"</c>) when that project does not compile, cannot be loaded or references the project
+    /// back: the code its generators would add is missing, and the errors that follow say where.
+    /// </summary>
+    public const string GeneratorProjectFailedId = "TS2006";
+
     private readonly IBuildSource _host;
 
     /// <summary>Creates a builder over a loaded workspace host or a snapshot of it.</summary>

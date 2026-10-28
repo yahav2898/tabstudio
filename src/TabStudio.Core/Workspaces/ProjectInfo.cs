@@ -38,9 +38,19 @@ public sealed record PackageReferenceInfo(string Name, string? Version, string? 
 /// <param name="OutputItemType">The <c>OutputItemType</c> metadata, such as <c>Analyzer</c> for an in-repo source generator.</param>
 public sealed record ProjectReferenceInfo(string Path, bool ReferenceOutputAssembly = true, bool IsPrivate = false, string? OutputItemType = null)
 {
-    /// <summary>Whether the referencing project compiles against this project's assembly, as a reference.</summary>
-    public bool IsCompiledAgainst =>
-        ReferenceOutputAssembly && !string.Equals(OutputItemType, "Analyzer", StringComparison.OrdinalIgnoreCase);
+    /// <summary>
+    /// Whether the referencing project compiles against this project's assembly, as a reference: what
+    /// <c>ReferenceOutputAssembly</c> says, whatever the <c>OutputItemType</c>. As in the SDK, a reference with
+    /// <c>OutputItemType="Analyzer"</c> and <c>ReferenceOutputAssembly</c> left at <c>true</c> gives the project both
+    /// ways, as an analyzer and as a reference (StronglyTypedId's attributes project).
+    /// </summary>
+    public bool IsCompiledAgainst => ReferenceOutputAssembly;
+
+    /// <summary>
+    /// Whether <c>OutputItemType</c> is <c>Analyzer</c>: the referenced project is a source generator or analyzer that
+    /// runs inside the referencing project's compilation.
+    /// </summary>
+    public bool IsAnalyzer => string.Equals(OutputItemType, "Analyzer", StringComparison.OrdinalIgnoreCase);
 }
 
 /// <summary>One argument of an assembly-level attribute the SDK generates.</summary>

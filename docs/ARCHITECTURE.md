@@ -166,6 +166,22 @@ errors, builds and the debugger all see the code they generate.
   downloaded the first time code uses one of those attributes; ASP.NET Core's come with its targeting pack.
 - **Loading.** `AnalyzerLoader` gives each folder its own `AssemblyLoadContext`, with Roslyn and its
   dependencies shared from the app.
+- **One copy of each.** When .NET and a package both bring an analyzer assembly of the same file name, such as
+  `Microsoft.Extensions.Logging.Generators.dll` from ASP.NET Core and from Microsoft.Extensions.Logging.Abstractions,
+  only the one with the higher assembly version runs, .NET's on a tie, as the SDK's `ResolvePackageFileConflicts`
+  leaves it. Running both would generate every member twice (CS0102, CS0111, CS0229).
+- **Generators built from the repository.** A `ProjectReference` with `OutputItemType="Analyzer"`, as Mediator,
+  Terminal.Gui, Spectre.Console, Dock and StronglyTypedId reference their own generators, gives the project a
+  `ProjectGeneratorReference`. The first time Roslyn asks for its generators, the referenced project is compiled
+  from the workspace's own compilation of it (its sources as edited, its restored packages, its embedded resources)
+  together with the projects it compiles against, emitted into memory, and loaded into a `GeneratorLoadContext` of
+  its own: the project assemblies from their images, Roslyn shared with the app as `AnalyzerLoader` shares it, the
+  .NET libraries from the app's runtime, and anything else from the generator project's restored packages. An edit
+  to the generator project, or to a project it compiles against, gives the projects that use it a new reference, so
+  their next compilation runs the edited generator; a build is reused while what it was made from is unchanged.
+  `ReferenceOutputAssembly` alone decides whether the project is also compiled against: left at `true`, it is both,
+  as StronglyTypedId's attributes project is. A project referenced only as a generator is not part of the program
+  and is not in its build order.
 - **Packages' props and targets.** The restore records each package's `build` and `buildTransitive` files as
   NuGet imports them (`buildTransitive` in place of `build` for a package referenced through another, the nearest
   target framework's folder, props before the project and targets after it). `ProjectParser.WithPackageBuildFiles`
@@ -182,7 +198,9 @@ errors, builds and the debugger all see the code they generate.
   `AvaloniaXamlLoader.Load(this)` so that the XAML is loaded at run time. XAML that is not well-formed is an
   error naming the file; a class that is not `partial` gets no generated part, as with Avalonia's own generator.
 - **Failures.** A generator that throws is a warning that names it (CS8785), never a reason for the build to
-  stop; the code it would have generated is then missing, and the errors that follow say where.
+  stop; the code it would have generated is then missing, and the errors that follow say where. A generator
+  project that does not compile, or that references the project using it, is one warning for that project
+  (TS2006) that names the generator project and gives its first error.
 
 ## Web apps
 

@@ -15,8 +15,9 @@ public sealed partial class RoslynWorkspaceHost
     /// <summary>
     /// The projects a project compiles against, as the SDK passes them to the compiler: the projects it references
     /// whose assemblies it uses, and, transitively, the projects those reference. As in the SDK, a reference with
-    /// <c>ReferenceOutputAssembly="false"</c> or <c>OutputItemType="Analyzer"</c> is a build dependency only, a
-    /// reference with <c>PrivateAssets="all"</c> does not flow on to the projects above it, and
+    /// <c>ReferenceOutputAssembly="false"</c> is a build dependency only (with <c>OutputItemType="Analyzer"</c>, a source
+    /// generator: see <see cref="ProjectGeneratorReference"/>), a reference with <c>PrivateAssets="all"</c> does not
+    /// flow on to the projects above it, and
     /// <c>DisableTransitiveProjectReferences</c> keeps a project to its own references. The caller holds the gate.
     /// </summary>
     /// <param name="project">The project.</param>

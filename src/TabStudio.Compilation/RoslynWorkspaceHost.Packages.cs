@@ -66,6 +66,7 @@ public sealed partial class RoslynWorkspaceHost
             }
 
             ApplyMetadataReferences(projectFilePath);
+            InvalidateGenerators(projectFilePath);
         }
     }
 
@@ -81,6 +82,7 @@ public sealed partial class RoslynWorkspaceHost
             if (_packageReferences.Remove(projectFilePath))
             {
                 ApplyMetadataReferences(projectFilePath);
+                InvalidateGenerators(projectFilePath);
             }
         }
     }

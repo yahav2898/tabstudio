@@ -131,6 +131,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         _projects.Clear();
         _projectsAsRead.Clear();
         _skeletons.Clear();
+        _generatorProjects.Clear();
 
         // An Aspire AppHost compiles against code only its SDK generates, and runs only on a computer (see the
         // Compatibility Doctor), so it is not compiled here. Nor is a .NET Framework program that needs Windows:
@@ -230,6 +231,11 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             {
                 ReloadKeepingTexts();
             }
+            else if (_projects.TryGetValue(id.ProjectId, out var edited))
+            {
+                // A source generator built from this project is built again for the projects that use it.
+                InvalidateGenerators(edited.FilePath);
+            }
 
             return true;
         }
@@ -276,6 +282,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             }
 
             _documents[filePath] = id;
+            InvalidateGenerators(_projects[owner].FilePath);
             return true;
         }
     }
@@ -289,6 +296,10 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             if (_documents.Remove(filePath, out var id))
             {
                 _workspace.TryApplyChanges(_workspace.CurrentSolution.RemoveDocument(id));
+                if (_projects.TryGetValue(id.ProjectId, out var project))
+                {
+                    InvalidateGenerators(project.FilePath);
+                }
             }
         }
     }
@@ -385,6 +396,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
         var diagnostics = await Razor.RazorCompilations.MapAsync(project, info, compilation.GetDiagnostics(cancellationToken), cancellationToken).ConfigureAwait(false);
         diagnostics.AddRange(AnalyzerFailuresFor(info, project.AnalyzerReferences.Select(r => r.FullPath)));
+        diagnostics.AddRange(GeneratorProjectFailures(info, project.AnalyzerReferences));
         if (WpfProject.UsesWpf(info))
         {
             return WpfDiagnostics.Explain(WpfDiagnostics.Map(compilation.GetDiagnostics(cancellationToken), info), compilation, info, cancellationToken);
@@ -515,7 +527,8 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         var result = await Razor.RazorCompilations.EmitAsync(project, info, compilation, checkInProcessSafety, stopwatch, cancellationToken).ConfigureAwait(false);
-        return AnalyzerFailuresFor(info, project.AnalyzerReferences.Select(r => r.FullPath)) is { Count: > 0 } failures
+        List<BuildDiagnostic> failures = [.. AnalyzerFailuresFor(info, project.AnalyzerReferences.Select(r => r.FullPath)), .. GeneratorProjectFailures(info, project.AnalyzerReferences)];
+        return failures.Count > 0
             ? result with { Diagnostics = [.. result.Diagnostics, .. failures] }
             : result;
     }
