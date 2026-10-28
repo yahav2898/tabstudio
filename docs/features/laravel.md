@@ -90,9 +90,9 @@ a form for the built-in server.
   Composer sets it up, Phpactor completes a method, `php -l` puts a syntax error in the Error List, the program runs
   with its input answered, PHPUnit passes in Test Explorer, and Xdebug stops at a breakpoint with its locals.
   Screenshots: [completion](../images/toolchains/php-completion.png), [breakpoint](../images/toolchains/php-breakpoint.png).
-- The real-repositories job opens `laravel/laravel` (v13.11.0) and `f1amy/laravel-realworld-example-app` (on the
-  job's PostgreSQL), sets them up, applies their migrations, and checks their first page through the web preview;
-  and `slimphp/Slim-Skeleton` (4.5.0) through PHP's built-in server.
+- The real-repositories job opens `laravel/laravel` (v13.11.0) and BookStack (a Laravel 12 app, on the job's MySQL),
+  sets them up, applies their migrations, and checks their first page through the web preview; and the Symfony
+  skeleton (v8.1.99) through PHP's built-in server.
 
 ## Limits
 

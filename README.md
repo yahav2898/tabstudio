@@ -249,7 +249,7 @@ From there, try **New project** for a template in any language, **Open from GitH
 - **Tested on real repositories.** CI opens 34 public repositories pinned to commits, builds and runs them in the
   IDE, and holds each to an error baseline that only goes down: .NET solutions such as MediatR, CleanArchitecture,
   Polly, eShopOnWeb, SimplCommerce, Conduit and Avalonia.Samples, classic Windows Forms and WPF tutorials, Visual Basic
-  Windows Forms and console projects, and Node, Python, Java, Rust, PHP (Laravel, Slim), Kotlin (Ktor, Spring Boot)
+  Windows Forms and console projects, and Node, Python, Java, Rust, PHP (Laravel, BookStack, Symfony), Kotlin (Ktor, Spring Boot)
   and Swift (Vapor, Swift Argument Parser) projects.
   The embedded workflow does the same for PlatformIO, Arduino, STM32Cube, Pico SDK and embedded Rust projects.
 

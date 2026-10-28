@@ -238,7 +238,7 @@ Store** כדי להוסיף שפה. כל גרסה מותקנת כעדכון מע
   את הפרויקטים והקונטיינרים של האפליקציה על מחשב.
 - **נבדק על מאגרי קוד אמיתיים.** ה-CI פותח 34 מאגרים ציבוריים, נעולים לקומיט, בונה ומריץ אותם בתוך סביבת הפיתוח,
   ומחזיק כל אחד לרף שגיאות שיכול רק לרדת: פתרונות .NET כמו MediatR, ‏CleanArchitecture, ‏Polly, ‏eShopOnWeb,
-  ‏SimplCommerce, ‏Conduit ו-Avalonia.Samples, מדריכי Windows Forms ו-WPF קלאסיים, פרויקטי Visual Basic, ופרויקטי Node, ‏Python, ‏Java, ‏Rust, ‏PHP ‏(Laravel, ‏Slim), ‏Kotlin ‏(Ktor, ‏Spring Boot) ו-Swift ‏(Vapor, ‏Swift Argument Parser). תהליך ה-embedded עושה אותו
+  ‏SimplCommerce, ‏Conduit ו-Avalonia.Samples, מדריכי Windows Forms ו-WPF קלאסיים, פרויקטי Visual Basic, ופרויקטי Node, ‏Python, ‏Java, ‏Rust, ‏PHP ‏(Laravel, ‏BookStack, ‏Symfony), ‏Kotlin ‏(Ktor, ‏Spring Boot) ו-Swift ‏(Vapor, ‏Swift Argument Parser). תהליך ה-embedded עושה אותו
   דבר לפרויקטי PlatformIO, ‏Arduino, ‏STM32Cube, ‏Pico SDK ו-Rust embedded.
 
 ### שירותים ומסדי נתונים
