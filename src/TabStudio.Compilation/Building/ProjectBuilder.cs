@@ -56,6 +56,13 @@ public sealed class ProjectBuilder
     /// </summary>
     public const string NeedsWindowsId = "TS2004";
 
+    /// <summary>
+    /// Reported for a project that needs a platform workload TabStudio does not have, such as a .NET MAUI app or the
+    /// Android head of a cross-platform app (see <see cref="ProjectClassifier.RequiredWorkload"/>), which is built on a
+    /// computer rather than compiled here.
+    /// </summary>
+    public const string NeedsPlatformWorkloadId = "TS2005";
+
     private readonly IBuildSource _host;
 
     /// <summary>Creates a builder over a loaded workspace host or a snapshot of it.</summary>
@@ -83,6 +90,18 @@ public sealed class ProjectBuilder
                 null,
                 project.Name);
             return new BuildResult(project.Name, [appHost], null, [], stopwatch.Elapsed);
+        }
+
+        // Before the .NET Framework check: a Xamarin project is in the same legacy format, but Upgrade project would not help.
+        if (ProjectClassifier.PlatformWorkloadReason(project) is { } workload)
+        {
+            var needsWorkload = new BuildDiagnostic(
+                NeedsPlatformWorkloadId,
+                DiagnosticSeverityLevel.Error,
+                $"'{project.Name}' cannot be built on this device: it {workload}. TabStudio leaves it out of builds.",
+                null,
+                project.Name);
+            return new BuildResult(project.Name, [needsWorkload], null, [], stopwatch.Elapsed);
         }
 
         if (NetFrameworkCompatibility.NeedsWindows(project))

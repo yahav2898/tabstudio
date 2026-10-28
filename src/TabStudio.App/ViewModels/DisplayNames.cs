@@ -28,6 +28,7 @@ public static class ProjectKindNames
         ProjectKind.Node => "Node.js",
         ProjectKind.StaticWebSite => "Static web site",
         ProjectKind.BuildScript => "Build script",
+        ProjectKind.Benchmark => "Benchmarks",
         _ => "Project",
     };
 }

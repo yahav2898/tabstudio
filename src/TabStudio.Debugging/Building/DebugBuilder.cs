@@ -49,6 +49,17 @@ public sealed class DebugBuilder
         var stopwatch = Stopwatch.StartNew();
         var info = new DebugInfoBuilder();
         var diagnostics = new List<BuildDiagnostic>();
+        if (ProjectClassifier.PlatformWorkloadReason(project) is { } workload)
+        {
+            diagnostics.Add(new BuildDiagnostic(
+                ProjectBuilder.NeedsPlatformWorkloadId,
+                DiagnosticSeverityLevel.Error,
+                $"'{project.Name}' cannot be debugged on this device: it {workload}.",
+                null,
+                project.Name));
+            return Finish(project.Name, diagnostics, null, [], stopwatch, info);
+        }
+
         if (project.Language != ProjectLanguage.CSharp || _host.FindProject(project.FilePath) is null)
         {
             diagnostics.Add(new BuildDiagnostic(

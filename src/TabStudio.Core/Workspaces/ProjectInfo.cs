@@ -193,6 +193,20 @@ public sealed record ProjectInfo
     /// </summary>
     public bool HasRazorComponents { get; init; }
 
+    /// <summary>
+    /// Whether the project folder of an app on the Web SDK has Razor views or pages (<c>.cshtml</c> files), as an MVC or
+    /// Razor Pages app does, rather than only serving an API. Set by <see cref="ProjectParser.Load"/>, which looks at the
+    /// files, and looked for only in an app without Razor components (<see cref="HasRazorComponents"/>), which has a UI
+    /// either way.
+    /// </summary>
+    public bool HasRazorViews { get; init; }
+
+    /// <summary>
+    /// The <c>Project</c> of each <c>&lt;Import&gt;</c> in the project file itself, as written, such as
+    /// <c>$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets</c>; SDK imports are not included.
+    /// </summary>
+    public IReadOnlyList<string> ImportPaths { get; init; } = [];
+
     /// <summary>The project's <c>&lt;Reference&gt;</c> items, in order: assemblies it compiles against by name or by file.</summary>
     public IReadOnlyList<AssemblyReferenceInfo> AssemblyReferences { get; init; } = [];
 

@@ -60,4 +60,105 @@ public sealed class StartupProjectSelectionTests
         Assert.Equal("Build script", script.Type);
         Assert.False(script.IsReady);
     }
+
+    /// <summary>
+    /// eShop: the MAUI app is not built and not started, and the tests of the AppHost are skipped with one line because
+    /// they reference it, rather than failing with its types missing. The Run menu lists programs in the order F5 picks
+    /// them, a smoke test under tests last.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task Projects_that_need_a_workload_or_reference_a_skipped_project_are_skipped_with_one_line_each()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("Shop/src/AppHost/AppHost.csproj", """
+            <Project Sdk="Aspire.AppHost.Sdk/13.0.0">
+              <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        temp.Write("Shop/src/AppHost/AppHost.cs", "var builder = DistributedApplication.CreateBuilder(args);\n");
+        temp.Write("Shop/src/ClientApp/ClientApp.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <TargetFrameworks>net10.0-android;net10.0-ios</TargetFrameworks>
+                <OutputType>Exe</OutputType>
+                <UseMaui>true</UseMaui>
+              </PropertyGroup>
+            </Project>
+            """);
+        temp.Write("Shop/src/ClientApp/Platforms/Android/MainActivity.cs", "public class MainActivity : MauiAppCompatActivity { }\n");
+        temp.Write("Shop/src/Tool/Tool.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        temp.Write("Shop/src/Tool/Program.cs", "System.Console.WriteLine(\"tool\");\n");
+        temp.Write("Shop/tests/Smoke/Smoke.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        temp.Write("Shop/tests/Smoke/Program.cs", "System.Console.WriteLine(\"smoke\");\n");
+        temp.Write("Shop/tests/AppHost.Tests/AppHost.Tests.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework><IsTestProject>true</IsTestProject></PropertyGroup>
+              <ItemGroup><ProjectReference Include="..\..\src\AppHost\AppHost.csproj" /></ItemGroup>
+            </Project>
+            """);
+        temp.Write("Shop/tests/AppHost.Tests/AppHostTests.cs", "public sealed class AppHostTests { }\n");
+        var solution = temp.Write("Shop/Shop.slnx", """
+            <Solution>
+              <Project Path="src/AppHost/AppHost.csproj" />
+              <Project Path="tests/Smoke/Smoke.csproj" />
+              <Project Path="src/ClientApp/ClientApp.csproj" />
+              <Project Path="src/Tool/Tool.csproj" />
+              <Project Path="tests/AppHost.Tests/AppHost.Tests.csproj" />
+            </Solution>
+            """);
+
+        using var fixture = new WorkspaceFixture();
+        await fixture.Workspace.LoadAsync(solution);
+        var workspace = fixture.Workspace;
+
+        Assert.Equal("Tool", workspace.StartupProject?.Name);
+        Assert.Equal(new[] { "Tool", "Smoke" }, workspace.StartupProjects.Select(option => option.Project.Name));
+        Assert.False(Assert.Single(workspace.Compatibility, row => row.Project == "ClientApp").IsReady);
+
+        await workspace.BuildCommand.ExecuteAsync(null);
+
+        var output = workspace.Output.Text;
+        Assert.Contains("Skipped: Project: ClientApp: it is a .NET MAUI project, which only .NET's MAUI workload builds, on a computer", output, StringComparison.Ordinal);
+        Assert.Contains("Skipped: Project: AppHost.Tests: it references AppHost, which is not built on this device", output, StringComparison.Ordinal);
+        Assert.DoesNotContain(workspace.ErrorList.Items, item => item.IsError);
+    }
+
+    /// <summary>StronglyTypedId: only libraries and tests, so there is no startup project, and the status bar says why.</summary>
+    [AvaloniaFact]
+    public async Task A_solution_of_libraries_and_tests_says_why_nothing_starts()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("Ids/src/Ids/Ids.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        temp.Write("Ids/src/Ids/Id.cs", "namespace Ids; public readonly record struct Id(int Value);\n");
+        temp.Write("Ids/test/Ids.Tests/Ids.Tests.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework><IsTestProject>true</IsTestProject></PropertyGroup>
+              <ItemGroup><ProjectReference Include="..\..\src\Ids\Ids.csproj" /></ItemGroup>
+            </Project>
+            """);
+        var solution = temp.Write("Ids/Ids.slnx", """
+            <Solution>
+              <Project Path="src/Ids/Ids.csproj" />
+              <Project Path="test/Ids.Tests/Ids.Tests.csproj" />
+            </Solution>
+            """);
+
+        using var fixture = new WorkspaceFixture();
+        await fixture.Workspace.LoadAsync(solution);
+
+        Assert.Null(fixture.Workspace.StartupProject);
+        Assert.Equal("This solution has only libraries and tests: run the tests in Test Explorer.", fixture.Workspace.StatusText);
+    }
 }

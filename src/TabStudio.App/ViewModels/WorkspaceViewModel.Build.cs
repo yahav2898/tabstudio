@@ -163,7 +163,8 @@ public sealed partial class WorkspaceViewModel
         if (Workspace is { } workspace)
         {
             var csharp = workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp).ToList();
-            var skipped = csharp.Where(p => p.Kind == ProjectKind.AspireAppHost || NetFrameworkCompatibility.NeedsWindows(p) || ProjectClassifier.IsMobilePlatformHead(p)).ToList();
+            var skipped = csharp.Where(IsNotBuiltHere).ToList();
+            AddProjectsThatReferenceSkipped(csharp, skipped);
             await BuildProjectsAsync(InDependencyOrder(csharp.Except(skipped).ToList()), showOutput: true, skipped: skipped);
             foreach (var item in _toolchainProjects.Where(t => TabStudio.Toolchains.Microchip.MicrochipInstallation.IsCompiler(t.Toolchain.Id)))
             {
@@ -217,15 +218,57 @@ public sealed partial class WorkspaceViewModel
         return ordered;
     }
 
+    /// <summary>
+    /// Whether a project of the solution is not built on this device: an Aspire AppHost, a .NET Framework program that
+    /// needs Windows, or a project that needs a platform workload, such as a .NET MAUI app.
+    /// </summary>
+    private static bool IsNotBuiltHere(ProjectInfo project) =>
+        project.Kind == ProjectKind.AspireAppHost || NetFrameworkCompatibility.NeedsWindows(project) || ProjectClassifier.NeedsPlatformWorkload(project);
+
+    /// <summary>
+    /// Adds to the skipped projects those that reference one of them, directly or through others, such as an AppHost's
+    /// tests: compiled without the project they reference, they would only report its types as missing.
+    /// </summary>
+    private static void AddProjectsThatReferenceSkipped(List<ProjectInfo> projects, List<ProjectInfo> skipped)
+    {
+        var added = true;
+        while (added)
+        {
+            added = false;
+            foreach (var project in projects.Except(skipped).ToList())
+            {
+                if (SkippedReference(project, skipped) is not null)
+                {
+                    skipped.Add(project);
+                    added = true;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// The first skipped project a project compiles against, or <see langword="null"/> when it compiles against none. A
+    /// reference for the build order only (<c>ReferenceOutputAssembly="false"</c>) does not count.
+    /// </summary>
+    private static ProjectInfo? SkippedReference(ProjectInfo project, List<ProjectInfo> skipped) =>
+        project.ProjectReferences
+            .Where(reference => project.GetProjectReference(reference).IsCompiledAgainst)
+            .Select(reference => skipped.FirstOrDefault(s => string.Equals(s.FilePath, reference, StringComparison.Ordinal)))
+            .FirstOrDefault(s => s is not null);
+
     /// <summary>Why a project of the solution is not built on this device, for the Output panel.</summary>
-    private static string SkipReason(ProjectInfo project) =>
+    /// <param name="project">The skipped project.</param>
+    /// <param name="skipped">Every skipped project, for one that is skipped because it references another.</param>
+    private static string SkipReason(ProjectInfo project, List<ProjectInfo> skipped) =>
         project.Kind == ProjectKind.AspireAppHost
             ? "an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers"
-            : NetFrameworkCompatibility.NeedsWindows(project)
-                ? $"a .NET Framework project that needs Windows: it {NetFrameworkCompatibility.WhyWindows(project)}"
-                : ProjectClassifier.IsMobilePlatformHead(project)
-                    ? $"it targets {string.Join(", ", project.TargetFrameworks)}, which only .NET's mobile workloads build, on a computer"
-                    : "it is not built on this device";
+            : ProjectClassifier.PlatformWorkloadReason(project) is { } workload
+                ? $"it {workload}"
+                : NetFrameworkCompatibility.NeedsWindows(project)
+                    ? $"a .NET Framework project that needs Windows: it {NetFrameworkCompatibility.WhyWindows(project)}"
+                    : SkippedReference(project, skipped) is { } reference
+                        ? $"it references {reference.Name}, which is not built on this device"
+                        : "it is not built on this device";
 
     private bool CanRun() => !_preparingServices && (IsRemoteWorkspace ? _remoteWorkspace?.Connection.IsConnected == true : StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning && !IsLiveGuest;
 
@@ -335,7 +378,7 @@ public sealed partial class WorkspaceViewModel
         for (var i = 0; i < skipped.Count; i++)
         {
             var prefix = $"{(projects.Count + i + 1).ToString(CultureInfo.InvariantCulture)}>";
-            Output.WriteLine($"{prefix}------ Skipped: Project: {skipped[i].Name}: {SkipReason(skipped[i])} ------", OutputKind.Info);
+            Output.WriteLine($"{prefix}------ Skipped: Project: {skipped[i].Name}: {SkipReason(skipped[i], skipped)} ------", OutputKind.Info);
         }
 
         operation.Outcome = failed == 0 ? OperationOutcome.Succeeded : OperationOutcome.Failed;

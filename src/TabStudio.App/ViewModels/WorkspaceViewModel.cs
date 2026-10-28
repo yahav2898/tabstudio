@@ -346,7 +346,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         }
 
         State = IdeState.Ready;
-        StatusText = "Ready";
+        StatusText = NoStartupProjectStatus() ?? "Ready";
         OnLoadedForLive();
         UpdateActiveProjects();
         StartPackageRestore(preview.Workspace);
@@ -360,6 +360,14 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <summary>Makes a project the startup project.</summary>
     /// <param name="project">The project.</param>
     public void SetStartupProject(ProjectInfo? project) => StartupProject = project;
+
+    /// <summary>
+    /// Why F5 has nothing to start, for the status bar once the workspace is open, such as
+    /// <c>This solution has only libraries and tests: run the tests in Test Explorer.</c>; <see langword="null"/> when
+    /// there is a startup project or launch configuration.
+    /// </summary>
+    private string? NoStartupProjectStatus() =>
+        IsRemoteWorkspace || StartupProject is not null || UsesLaunchTarget ? null : Workspace?.NoStartupProjectReason;
 
     [RelayCommand]
     private void SelectPanel(BottomPanel panel)
@@ -458,13 +466,21 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     private void LoadStartupProjects(Workspace workspace, string? preferred)
     {
         StartupProjects.Clear();
-        foreach (var project in workspace.Projects.Where(p => (p.IsExecutable || IsWindowsBridgeStartupProject(p)) && !p.IsTestProject && p.Kind is not (ProjectKind.AspireAppHost or ProjectKind.BuildScript) && !ProjectClassifier.IsMobilePlatformHead(p)))
+        var choices = workspace.Projects
+            .Where(p => (p.IsExecutable || IsWindowsBridgeStartupProject(p)) && !p.IsTestProject && p.Kind is not (ProjectKind.AspireAppHost or ProjectKind.BuildScript) && !ProjectClassifier.NeedsPlatformWorkload(p))
+            .ToList();
+
+        // In the order F5 chooses from, the default first; the programs it never picks by itself, such as benchmarks,
+        // follow in solution order, for a person to choose.
+        var candidates = workspace.StartupCandidates.Where(choices.Contains).ToList();
+        foreach (var project in candidates.Concat(choices.Except(candidates)))
         {
             StartupProjects.Add(new StartupProjectOption(project, new RelayCommand(() => SetStartupProject(project))));
         }
 
-        // A build script remembered from an earlier version, which picked them, is not kept.
-        StartupProject = workspace.Projects.FirstOrDefault(p => p.FilePath == preferred && p.Kind != ProjectKind.BuildScript)
+        // A build script or a project that needs a platform workload, remembered from an earlier version, which picked
+        // them, is not kept.
+        StartupProject = workspace.Projects.FirstOrDefault(p => p.FilePath == preferred && p.Kind != ProjectKind.BuildScript && !ProjectClassifier.NeedsPlatformWorkload(p))
             ?? workspace.DefaultStartupProject;
     }
 

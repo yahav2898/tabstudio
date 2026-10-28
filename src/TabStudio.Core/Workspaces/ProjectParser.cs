@@ -180,6 +180,16 @@ public static partial class ProjectParser
         }
     }
 
+    /// <summary>The <c>Project</c> of each <c>&lt;Import&gt;</c> a project file makes itself, as written; SDK imports are left out.</summary>
+    private static List<string> ReadImportPaths(XElement root) =>
+        root.Elements()
+            .SelectMany(e => e.Name.LocalName == "ImportGroup" ? e.Elements() : [e])
+            .Where(e => e.Name.LocalName == "Import" && e.Attribute("Sdk") is null)
+            .Select(e => e.Attribute("Project")?.Value.Trim())
+            .Where(path => !string.IsNullOrEmpty(path))
+            .Select(path => path!)
+            .ToList();
+
     /// <summary>The properties of files in evaluation order, later ones winning; <see langword="null"/> when there are none.</summary>
     private static Dictionary<string, string>? Merge(List<string> files)
     {
@@ -321,6 +331,7 @@ public static partial class ProjectParser
             AvaloniaResourceRemoves = ReadItemPatterns(root, "AvaloniaResource", "Remove", properties),
             AssemblyReferences = assemblyReferences,
             ComReferences = ReadComReferences(root),
+            ImportPaths = ReadImportPaths(root),
             Usings = [.. allRoots.SelectMany(r => ReadUsings(r)).Distinct()],
             RemovedUsings = [.. allRoots.SelectMany(r => ReadItemPatterns(r, "Using", "Remove", properties)).Distinct(StringComparer.Ordinal)],
             CompilerVisibleProperties = [.. generatorInputs.Properties.Distinct(StringComparer.OrdinalIgnoreCase)],

@@ -158,6 +158,38 @@ public sealed class RealRepositoryProjectTests : IDisposable
         Assert.NotEqual(appHost, workspace.DefaultStartupProject);
     }
 
+    /// <summary>
+    /// maui-samples' TodoSQLite: a .NET MAUI app is not compiled, which gave 48 errors from its Platforms folders, and a
+    /// build of it is one diagnostic that says why, not "only C# projects are compiled".
+    /// </summary>
+    [Fact]
+    public async Task A_MAUI_app_is_not_compiled_and_its_build_says_it_needs_the_MAUI_workload()
+    {
+        _temp.Write("TodoSQLite/TodoSQLite.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+                <OutputType>Exe</OutputType>
+                <UseMaui>true</UseMaui>
+              </PropertyGroup>
+            </Project>
+            """);
+        _temp.Write("TodoSQLite/Platforms/Android/MainActivity.cs", "using Android.App; public class MainActivity : MauiAppCompatActivity { }");
+        Library("Core", "namespace Core; public static class Todo { }");
+        Load("TodoSQLite/TodoSQLite.csproj", "Core/Core.csproj");
+        var workspace = WorkspaceLoader.Load(_temp.Resolve("All.slnx"));
+        var app = workspace.Projects.Single(p => p.Name == "TodoSQLite");
+
+        Assert.Null(_host.FindProject(app.FilePath));
+        Assert.Empty(await _host.GetProjectDiagnosticsAsync(app.FilePath));
+        var build = await new ProjectBuilder(_host).BuildAsync(app);
+        var diagnostic = Assert.Single(build.Diagnostics);
+        Assert.Equal(ProjectBuilder.NeedsPlatformWorkloadId, diagnostic.Id);
+        Assert.Contains("MAUI workload", diagnostic.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("only C# projects", diagnostic.Message, StringComparison.Ordinal);
+        Assert.False(build.Success);
+    }
+
     [Fact]
     public async Task An_executable_test_project_builds_without_a_Main_and_the_assembly_version_follows_Version()
     {

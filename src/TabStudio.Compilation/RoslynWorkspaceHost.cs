@@ -134,11 +134,12 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
         // An Aspire AppHost compiles against code only its SDK generates, and runs only on a computer (see the
         // Compatibility Doctor), so it is not compiled here. Nor is a .NET Framework program that needs Windows:
-        // compiled against .NET, its errors would only say that it is the wrong framework. Nor is the Android or iOS
-        // head of a cross-platform app, which only that platform's workload builds.
+        // compiled against .NET, its errors would only say that it is the wrong framework. Nor is a project that needs a
+        // platform workload, such as a .NET MAUI app or the Android or iOS head of a cross-platform app, which only that
+        // workload builds.
         var csharpProjects = workspace.Projects
             .Where(p => p.Language == ProjectLanguage.CSharp && p.Kind is not (ProjectKind.Unknown or ProjectKind.AspireAppHost))
-            .Where(p => !NetFrameworkCompatibility.NeedsWindows(p) && !ProjectClassifier.IsMobilePlatformHead(p))
+            .Where(p => !NetFrameworkCompatibility.NeedsWindows(p) && !ProjectClassifier.NeedsPlatformWorkload(p))
             .ToList();
 
         // Projects whose packages were restored before get what their packages' props and targets add.
