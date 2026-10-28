@@ -1,0 +1,6 @@
+| Repository | Opened | F5 startup | Setup | Analysis stable | Errors | Build | Run | Doctor |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TodoApi-TodoApp-sln | 1.8 s | Todo.Api | Restoring NuGet packages: Succeeded after 15.0 s | 22.0 s | 1 errors, 0 warnings | 1 errors in 2 s | exited before listening | 4 Ready, 2 Library, 1 Not supported |
+| ContosoUniversityDotNetCore-Pages-ContosoUniversity-sln | 0.2 s | ContosoUniversity | Restoring NuGet packages: Succeeded after 13.1 s | 19.0 s | 0 errors, 0 warnings | 0 errors in 2 s | GET / 500 | 2 Ready, 1 Not supported, 1 Library |
+| blazor-samples-BlazorSample_BlazorWebApp | 0.2 s | BlazorSample | Restoring NuGet packages: Succeeded after 2.0 s | 8.2 s | 0 errors, 0 warnings | 0 errors in 0 s | GET / 200 | 1 Ready |
+| MudBlazor-MudBlazor-slnx | 0.7 s | MudBlazor.Docs.Server | ok in 17 s | 89.3 s | 558 errors, 10 warnings | 295 errors in 28 s | exited before listening | 6 Library, 10 Ready, 1 Needs a toolchain |
