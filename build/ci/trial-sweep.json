@@ -1,5 +1,5 @@
 {
- "comment": "Repository sweep for 0.19.2 (trial/sweep-* branches only). Each entry is cloned at 'sha' and 'open' is opened in TabStudio as a person would. 'expect' is the run check: build (build only), console-exit-0, web-first-route, gui-window, or explained (the Compatibility Doctor and the Error List must say in one line why it cannot run on a tablet). Embedded entries run in the embedded job.",
+ "comment": "Repository sweep for 0.19.2 (trial/sweep-* branches only). Each entry is cloned at 'sha' and 'open' is opened in TabStudio as a person would. 'expect' is the run check: build (build only), console-exit-0, web-first-route, gui-window, or explained (the Compatibility Doctor and the Error List must say in one line why it cannot run on a tablet). Embedded entries run in the embedded job. 'route' is the page the web check requests (default /); 'dotenv' is the .env and 'files' the files the README asks a person to create first.",
  "repositories": [
   {
    "name": "refit-Refit-slnx",
@@ -139,7 +139,11 @@
    "open": ".",
    "kind": "node",
    "expect": "web-first-route",
-   "note": "NestJS + TypeORM + MySQL through Services"
+   "note": "NestJS + TypeORM + MySQL (the job's service); ormconfig.json and src/config.ts as its README asks, from their .example files",
+   "files": {
+    "ormconfig.json": "{\"type\": \"mysql\", \"host\": \"127.0.0.1\", \"port\": 3306, \"username\": \"root\", \"password\": \"tabstudio-ci\", \"database\": \"nestjsrealworld\", \"entities\": [\"src/**/**.entity{.ts,.js}\"], \"synchronize\": true}",
+    "src/config.ts": "export const SECRET = 'tabstudio-trial';\n"
+   }
   },
   {
    "name": "next-learn-final-example",
@@ -152,14 +156,14 @@
    "note": "Next.js dashboard, Postgres"
   },
   {
-   "name": "express-hello-world",
+   "name": "nodejs-docs-hello-world",
    "area": "node",
-   "url": "https://github.com/expressjs/express",
-   "sha": "1c6f1b0fe4000977b9a7b4f34097e4d527dd9824",
-   "open": "examples/hello-world",
+   "url": "https://github.com/Azure-Samples/nodejs-docs-hello-world",
+   "sha": "ab8695145fc34326f6b31b5d55eef4f7e22e7f18",
+   "open": ".",
    "kind": "node",
    "expect": "web-first-route",
-   "note": "Express example inside the framework's repository"
+   "note": "a standalone Express app (expressjs/express's own examples need the framework repository's install)"
   },
   {
    "name": "vite-template-react-ts",
@@ -179,7 +183,12 @@
    "open": ".",
    "kind": "python",
    "expect": "web-first-route",
-   "note": "FastAPI, Postgres"
+   "note": "FastAPI, Postgres (the job's service, as its README's .env.example names it)",
+   "dotenv": {
+    "SECRET_KEY": "tabstudio-trial",
+    "DEBUG": "True",
+    "DATABASE_URL": "postgresql://postgres:tabstudio-ci@localhost:5432/realworld"
+   }
   },
   {
    "name": "flask-tutorial",
@@ -213,7 +222,8 @@
    "buildSystems": [
     "maven",
     "gradle"
-   ]
+   ],
+   "route": "/greeting"
   },
   {
    "name": "gs-accessing-data-jpa-complete",
@@ -233,7 +243,8 @@
    "open": ".",
    "kind": "go",
    "expect": "web-first-route",
-   "note": "Gin, SQLite"
+   "note": "Gin, SQLite",
+   "route": "/api/tags"
   },
   {
    "name": "glow",
