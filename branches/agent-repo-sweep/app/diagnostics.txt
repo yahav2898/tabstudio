@@ -1,0 +1,82 @@
+== Processes left running
+    PID    PPID    PGID   RSS     ELAPSED COMMAND
+  13182       1   13182 767656      40:21 /usr/lib/jvm/temurin-21-jdk-amd64/bin/java --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED -XX:MaxMetaspaceSize=384m -XX:+HeapDumpOnOutOfMemoryError -Xms256m -Xmx512m -Dfile.encoding=UTF-8 -Duser.country -Duser.language=en -Duser.variant -cp /usr/share/gradle-9.8.1/lib/gradle-daemon-main-9.8.1.jar -javaagent:/usr/share/gradle-9.8.1/lib/agents/gradle-instrumentation-agent-9.8.1.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 9.8.1
+  58120       1    1869 195700      12:26 /usr/share/dotnet/sdk/10.0.403/Roslyn/bincore/VBCSCompiler -pipename:WAcWTViZvzcVAI0ZQWygl6OMzaUe49Dabl4RIF3MlGs
+   1886    1883    1869 155528      46:48 /tmp/provjobd106826282
+   1955    1936    1869 136912      44:44 /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
+   1936    1869    1869 102172      44:45 /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
+   1132       1    1132 70332       46:54 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+  14278       1   14278 51868       39:27 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
+    922       1     922 48212       46:54 /usr/bin/containerd
+    222       1     222 43684       47:01 /sbin/multipathd -d -s
+   1196     837     837 38544       46:54 /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.2-py3.12.egg -run-exthandlers
+    837       1     837 30944       46:54 /usr/bin/python3 -u /usr/sbin/waagent -daemon
+  14280   14278   14278 21632       39:27 php-fpm: pool www
+  14279   14278   14278 21628       39:27 php-fpm: pool www
+    811       1     811 20800       46:55 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+   1869       1    1869 19296       46:48 /opt/hca/hosted-compute-agent
+    156       1     156 18304       47:01 /usr/lib/systemd/systemd-journald
+      1       0       1 14392       47:02 /sbin/init
+    831       1     831 13816       46:54 /usr/libexec/udisks2/udisksd
+    440       1     440 13348       47:00 /usr/lib/systemd/systemd-resolved
+   1017       1    1017 12540       46:54 /usr/sbin/ModemManager
+   1023       1    1023 11672       46:54 /usr/lib/systemd/systemd --user
+    818       1     818 10148       46:54 /usr/lib/polkit-1/polkitd --no-debug
+    829       1     829 10032       46:54 /usr/lib/systemd/systemd-logind
+    639       1     639  9852       46:59 /usr/lib/systemd/systemd-networkd
+    227       1     227  8024       47:01 /usr/lib/systemd/systemd-udevd
+   1883    1869    1869  6952       46:48 sudo -n PROVJOBD_E2E=1 /tmp/provjobd106826282
+    985       1     985  6400       46:54 /usr/sbin/rsyslogd -n -iNONE
+    806       1     806  5600       46:55 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+    491       1     491  5108       47:00 /usr/sbin/haveged --Foreground --verbose=1
+  75097   15296    1869  4300       00:00 ps -eo pid,ppid,pgid,rss,etime,args --sort=-rss
+    939       1     938  3760       46:54 /usr/sbin/chronyd -F 1
+   1026    1023    1023  3660       46:54 (sd-pam)
+  15296    1955    1869  3584       39:00 /usr/bin/bash -e /home/runner/work/_temp/23a84952-6542-47b4-b441-145297eab224.sh
+    302       1     302  2964       47:01 /usr/lib/linux-tools/6.17.0-1022-azure/hv_kvp_daemon -n
+    879       1     879  2880       46:54 /usr/sbin/cron -f -P
+    927       1     927  2220       46:54 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
+    940       1     940  2104       46:54 /sbin/agetty -o -p -- \u --noclear - linux
+  75098   15296    1869  2052       00:00 head -n 40
+    942     939     938  1232       46:54 /usr/sbin/chronyd -F 1
+== Kernel messages
+[    3.306268] pci 7870:00:00.0: [1414:00ba] type 00 class 0x020000 PCIe Endpoint
+[    3.309867] pci 7870:00:00.0: BAR 0 [mem 0xfc2000000-0xfc3ffffff 64bit pref]
+[    3.310318] pci 7870:00:00.0: BAR 4 [mem 0xfc4000000-0xfc4007fff 64bit pref]
+[    3.310599] pci 7870:00:00.0: enabling Extended Tags
+[    3.335437] pci_bus 7870:00: busn_res: [bus 00-ff] end is updated to 00
+[    3.335445] pci 7870:00:00.0: BAR 0 [mem 0xfc2000000-0xfc3ffffff 64bit pref]: assigned
+[    3.336365] pci 7870:00:00.0: BAR 4 [mem 0xfc4000000-0xfc4007fff 64bit pref]: assigned
+[    3.337524] mana 7870:00:00.0: enabling device (0000 -> 0002)
+[    3.346511] mana 7870:00:00.0: Microsoft Azure Network Adapter protocol version: 0.1.1
+[    3.347791] hv_netvsc f8615163-0000-1000-2000-0022484aca0b eth0: VF registering: eth1
+[    3.347825] mana 7870:00:00.0 eth1: joined to eth0
+[    3.350117] mana 7870:00:00.0 ens1: renamed from eth1
+[    3.662821] mana 7870:00:00.0 ens1: Configured vPort 0 PD 18 DB 16
+[    3.667193] mana 7870:00:00.0 ens1: Configured steering vPort 0 entries 64
+[    3.667691] hv_netvsc f8615163-0000-1000-2000-0022484aca0b eth0: Data path switched to VF: ens1
+[    3.668024] mana 7870:00:00.0 mana_0: Port: 1 Link ACTIVE
+[    6.378446] EXT4-fs (nvme0n1p1): resizing filesystem from 19398395 to 39059195 blocks
+[    7.330568] EXT4-fs (nvme0n1p1): resized filesystem to 39059195
+[    7.383576] ephemeral0: Can't lookup blockdev
+[    7.422794] systemd-fstab-generator[775]: Checking was requested for "ephemeral0", but it is not a device.
+[    7.422803] systemd-fstab-generator[775]: x-systemd.device-timeout ignored for ephemeral0
+[    8.405401] block nvme0n1: No UUID available providing old NGUID
+[    8.499350] ephemeral0: Can't lookup blockdev
+[    8.658520] evm: overlay not supported
+[    8.661270] kauditd_printk_skb: 113 callbacks suppressed
+[    8.661273] audit: type=1400 audit(1793181092.303:124): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="rsyslogd" pid=864 comm="apparmor_parser"
+[    8.848615] loop0: detected capacity change from 0 to 8
+[    8.994843] audit: type=1400 audit(1793181092.636:125): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="/usr/lib/snapd/snap-confine" pid=1124 comm="apparmor_parser"
+[    9.003287] systemd-journald[156]: /var/log/journal/2d791d5cce6240faa3c626058b1ffc7d/user-1001.journal: Journal file uses a different sequence number ID, rotating.
+[    9.227071] audit: type=1400 audit(1793181092.868:126): apparmor="STATUS" operation="profile_load" profile="unconfined" name="docker-default" pid=1279 comm="apparmor_parser"
+[    9.438025] Adding 3145724k swap on /swapfile.  Priority:-2 extents:37 across:26501116k SS
+[    9.647769] systemd-fstab-generator[1387]: Checking was requested for "ephemeral0", but it is not a device.
+[    9.647779] systemd-fstab-generator[1387]: x-systemd.device-timeout ignored for ephemeral0
+[    9.746687] Initializing XFRM netlink socket
+[    9.887966] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+[   14.869834] systemd-fstab-generator[1786]: Checking was requested for "ephemeral0", but it is not a device.
+[   14.869845] systemd-fstab-generator[1786]: x-systemd.device-timeout ignored for ephemeral0
+[   15.035331] systemd-fstab-generator[1848]: Checking was requested for "ephemeral0", but it is not a device.
+[   15.035341] systemd-fstab-generator[1848]: x-systemd.device-timeout ignored for ephemeral0
+[   49.366905] hv_balloon: Max. dynamic memory size: 16384 MB
