@@ -1,0 +1,177 @@
+********************************************************************************
+If you like PlatformIO, please:
+- star it on GitHub > https://github.com/platformio/platformio-core
+- follow us on LinkedIn to stay up-to-date on the latest project news > https://www.linkedin.com/company/platformio/
+- try PlatformIO IDE for embedded development > https://platformio.org/platformio-ide
+********************************************************************************
+
+Processing mega2560 (board: megaatmega2560; platform: atmelavr@~4.0.1; framework: arduino)
+--------------------------------------------------------------------------------
+Platform Manager: Installing atmelavr @ ~4.0.1
+Downloading 0% 10% 20% 30% 40% 50% 60%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Platform Manager: atmelavr@4.0.1 has been installed!
+Tool Manager: Installing platformio/toolchain-atmelavr @ ~1.70300.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: toolchain-atmelavr@1.70300.191015 has been installed!
+Tool Manager: Installing platformio/framework-arduino-avr @ ~5.1.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduino-avr@5.1.0 has been installed!
+Tool Manager: Installing platformio/tool-scons @ ~4.41101.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-scons@4.41101.0 has been installed!
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/atmelavr/megaatmega2560.html
+PLATFORM: Atmel AVR (4.0.1) > Arduino Mega or Mega 2560 ATmega2560 (Mega 2560)
+HARDWARE: ATMEGA2560 16MHz, 8KB RAM, 248KB Flash
+DEBUG: Current (avr-stub) External (avr-stub, simavr)
+PACKAGES: 
+ - framework-arduino-avr @ 5.1.0 
+ - toolchain-atmelavr @ 1.70300.191015 (7.3.0)
+Converting Marlin.ino
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 5 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- Wire @ 1.0
+Building in release mode
+Compiling .pio/build/mega2560/src/src/inc/Warnings.cpp.o
+Compiling .pio/build/mega2560/lib3dd/Wire/Wire.cpp.o
+Compiling .pio/build/mega2560/lib3dd/Wire/utility/twi.c.o
+Archiving .pio/build/mega2560/libFrameworkArduinoVariant.a
+Indexing .pio/build/mega2560/libFrameworkArduinoVariant.a
+Compiling .pio/build/mega2560/FrameworkArduino/CDC.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/HardwareSerial.cpp.o
+Archiving .pio/build/mega2560/lib3dd/libWire.a
+Indexing .pio/build/mega2560/lib3dd/libWire.a
+Compiling .pio/build/mega2560/src/src/gcode/config/M221.cpp.o
+Compiling .pio/build/mega2560/src/src/lcd/marlinui.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/eeprom/M500-M504.cpp.o
+Compiling .pio/build/mega2560/src/src/module/stepper/indirection.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/AVR/u8g/u8g_com_HAL_AVR_sw_spi.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/motion/G2_G3.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/config/M220.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/units/M82_M83.cpp.o
+Compiling .pio/build/mega2560/src/src/module/stepper.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/AVR/registers.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/motion/G0_G1.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/config/M200-M205.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/temp/M303.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/control/M999.cpp.o
+Compiling .pio/build/mega2560/src/src/module/settings.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/AVR/fastio.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/host/M876.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/calibrate/G28.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/temp/M155.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/control/M85.cpp.o
+Compiling .pio/build/mega2560/src/src/module/planner.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/AVR/fast_pwm.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/host/M119.cpp.o
+Compiling .pio/build/mega2560/src/src/feature/host_actions.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/temp/M140_M190.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/control/M80_M81.cpp.o
+Compiling .pio/build/mega2560/src/src/module/motion.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/AVR/eeprom.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/host/M118.cpp.o
+Compiling .pio/build/mega2560/src/src/core/utility.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/temp/M106_M107.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/control/M211.cpp.o
+Compiling .pio/build/mega2560/src/src/module/fans.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/AVR/Servo.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/host/M115.cpp.o
+Compiling .pio/build/mega2560/src/src/core/serial.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/temp/M105.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/control/M17_M18_M84.cpp.o
+Compiling .pio/build/mega2560/src/src/module/endstops.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/AVR/MarlinSerial.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/host/M114.cpp.o
+Compiling .pio/build/mega2560/src/src/MarlinCore.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/temp/M104_M109.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/control/M120_M121.cpp.o
+Compiling .pio/build/mega2560/src/src/libs/vector_3.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/AVR/HAL_SPI.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/host/M113.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/shared/servo.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/stats/M75-M78.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/control/M111.cpp.o
+Compiling .pio/build/mega2560/src/src/libs/stopwatch.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/host/M110.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/shared/esp_wifi.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/stats/M31.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/control/M108_M112_M410.cpp.o
+Compiling .pio/build/mega2560/src/src/libs/numtostr.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/AVR/HAL.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/geometry/M206_M428.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/shared/eeprom_api.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/queue.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/config/M92.cpp.o
+Compiling .pio/build/mega2560/src/src/libs/crc16.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/geometry/G92.cpp.o
+Compiling .pio/build/mega2560/src/src/module/tool_change.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/shared/MinSerial.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/parser.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/config/M302.cpp.o
+Compiling .pio/build/mega2560/src/src/libs/buzzer.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/gcode_d.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/shared/HAL.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/motion/M400.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/config/M301.cpp.o
+Compiling .pio/build/mega2560/src/src/lcd/utf8.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/gcode.cpp.o
+Compiling .pio/build/mega2560/src/src/module/temperature.cpp.o
+Compiling .pio/build/mega2560/src/src/gcode/motion/G4.cpp.o
+Compiling .pio/build/mega2560/src/src/HAL/shared/Delay.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/HardwareSerial0.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/HardwareSerial1.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/HardwareSerial2.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/HardwareSerial3.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/IPAddress.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/PluggableUSB.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/Print.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/Stream.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/Tone.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/USBCore.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/WInterrupts.c.o
+Compiling .pio/build/mega2560/FrameworkArduino/WMath.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/WString.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/abi.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/hooks.c.o
+Compiling .pio/build/mega2560/FrameworkArduino/main.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/new.cpp.o
+Compiling .pio/build/mega2560/FrameworkArduino/wiring.c.o
+Compiling .pio/build/mega2560/FrameworkArduino/wiring_analog.c.o
+Compiling .pio/build/mega2560/FrameworkArduino/wiring_digital.c.o
+Compiling .pio/build/mega2560/FrameworkArduino/wiring_pulse.S.o
+Compiling .pio/build/mega2560/FrameworkArduino/wiring_pulse.c.o
+Compiling .pio/build/mega2560/FrameworkArduino/wiring_shift.c.o
+Archiving .pio/build/mega2560/libFrameworkArduino.a
+Indexing .pio/build/mega2560/libFrameworkArduino.a
+Linking .pio/build/mega2560/firmware.elf
+
+───────────────────────────────────────────────────────────────────────────────
+  Marlin bugfix-2.1.x
+───────────────────────────────────────────────────────────────────────────────
+  ♥  Marlin is free and open source, built by volunteers. If you find it
+     useful, please consider supporting its development:
+
+     GitHub Sponsors  https://github.com/sponsors/MarlinFirmware
+     Patreon          https://www.patreon.com/thinkyhead
+     Donate           https://thinkyhead.com/donate-to-marlin
+───────────────────────────────────────────────────────────────────────────────
+
+Checking size .pio/build/mega2560/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [===       ]  32.2% (used 2639 bytes from 8192 bytes)
+Flash: [==        ]  23.3% (used 59258 bytes from 253952 bytes)
+Building .pio/build/mega2560/firmware.hex
+Firmware: .pio/build/mega2560/firmware.hex
+========================= [SUCCESS] Took 25.21 seconds =========================
+
+Environment    Status    Duration
+-------------  --------  ------------
+mega2560       SUCCESS   00:00:25.214
+========================= 1 succeeded in 00:00:25.214 =========================
