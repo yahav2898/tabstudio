@@ -38,9 +38,11 @@ public sealed partial class ProjectTemplates
         File.WriteAllText(Path.Combine(executable, "main.swift"), $$"""
             // Ctrl+F5 runs; F5 debugs with LLDB. Answer in the Output panel.
             // Test Explorer runs the tests in Tests/{{library}}Tests with swift test.
+            import Foundation
             import {{library}}
 
             print("What is your name? ", terminator: "")
+            fflush(stdout)
             let name = readLine()?.trimmingCharacters(in: .whitespaces) ?? ""
             print(greet(name.isEmpty ? "world" : name))
 

@@ -14,7 +14,7 @@ public sealed class LaravelServicesTests : IDisposable
     [Fact]
     public void A_MySQL_app_gets_MariaDB_with_its_own_user_and_the_run_points_at_it()
     {
-        var app = WriteLaravel("DB_CONNECTION=mysql\nDB_HOST=127.0.0.1\nDB_PORT=3306\nDB_DATABASE=homestead\nDB_USERNAME=homestead\nDB_PASSWORD=secret\n");
+        var app = WriteLaravel("DB_CONNECTION=mysql\nDB_HOST=127.0.0.1\nDB_PORT=9\nDB_DATABASE=homestead\nDB_USERNAME=homestead\nDB_PASSWORD=secret\n");
 
         var project = Assert.IsType<ComposeProject>(LaravelServices.Discover(app));
 
@@ -37,11 +37,11 @@ public sealed class LaravelServicesTests : IDisposable
     [Fact]
     public void Root_with_an_empty_password_is_allowed_explicitly_and_PostgreSQL_gets_a_password()
     {
-        var app = WriteLaravel("DB_CONNECTION=mysql\nDB_DATABASE=laravel\nDB_USERNAME=root\nDB_PASSWORD=\n");
+        var app = WriteLaravel("DB_CONNECTION=mysql\nDB_PORT=9\nDB_DATABASE=laravel\nDB_USERNAME=root\nDB_PASSWORD=\n");
         var mysql = Assert.Single(LaravelServices.Discover(app)!.Services).Value;
         Assert.Equal("yes", mysql.Environment["MYSQL_ALLOW_EMPTY_PASSWORD"]);
 
-        _temp.Write("app/.env", "DB_CONNECTION=pgsql\nDB_HOST=localhost\nDB_DATABASE=shop\nDB_USERNAME=shop\n");
+        _temp.Write("app/.env", "DB_CONNECTION=pgsql\nDB_HOST=localhost\nDB_PORT=9\nDB_DATABASE=shop\nDB_USERNAME=shop\n");
         var project = LaravelServices.Discover(app)!;
         var postgres = Assert.Single(project.Services).Value;
         Assert.Equal("postgres:17", postgres.Image);
@@ -71,7 +71,7 @@ public sealed class LaravelServicesTests : IDisposable
     public void Reads_env_example_until_setup_creates_env_and_ignores_other_PHP_apps()
     {
         var app = WriteLaravel(null);
-        _temp.Write("app/.env.example", "DB_CONNECTION=mariadb\nDB_USERNAME=app\nDB_PASSWORD=app\n");
+        _temp.Write("app/.env.example", "DB_CONNECTION=mariadb\nDB_PORT=9\nDB_USERNAME=app\nDB_PASSWORD=app\n");
         Assert.Equal(".env.example", LaravelServices.Discover(app)!.Origin);
 
         _temp.Write("slim/composer.json", """{ "require": { "slim/slim": "^4" } }""");

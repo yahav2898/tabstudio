@@ -34,27 +34,27 @@ public sealed partial class ToolchainLanguageToolsTests
         document.Document.Text = original;
 
         document.Document.Text = original.Replace("print(greet(", "print(undefined_name(", StringComparison.Ordinal);
-        await workspace.BuildCommand.ExecuteAsync(null);
+        await workspace.BuildCommand.ExecuteAsync(null).WaitAsync(TimeSpan.FromMinutes(5));
         Assert.Equal(IdeState.Failed, workspace.State);
         Assert.Contains(workspace.ErrorList.Items, e => e.Description.Contains("undefined_name", StringComparison.Ordinal) && e.File == "main.swift");
         document.Document.Text = original;
 
         AnswerInput(workspace, "Ada");
-        await workspace.RunCommand.ExecuteAsync(null);
+        await workspace.RunCommand.ExecuteAsync(null).WaitAsync(TimeSpan.FromMinutes(5));
         Assert.Contains("Hello, Ada! This is Swift", workspace.Output.Text, StringComparison.Ordinal);
         Assert.Contains("has exited with code 0", workspace.Output.Text, StringComparison.Ordinal);
         Assert.Contains(workspace.Compatibility, r => r.ToolchainId == "swift" && r.IsReady);
 
         // Swift Testing in Test Explorer, run by swift test.
         await UiTestHelpers.WaitUntilAsync(() => workspace.Tests.Entries.Any(e => e.MethodName == "greetsByName"), because: "the Swift test in source");
-        await workspace.Tests.RunAllCommand.ExecuteAsync(null);
+        await workspace.Tests.RunAllCommand.ExecuteAsync(null).WaitAsync(TimeSpan.FromMinutes(5));
         Assert.Contains(workspace.Tests.Entries, e => e.MethodName == "greetsByName" && e.State == TestState.Passed);
 
         var library = Path.Combine(workspace.Workspace!.RootDirectory, "Sources", "GreeterCore", "Greeting.swift");
         var line = File.ReadAllLines(library).ToList().FindIndex(l => l.Contains("return message", StringComparison.Ordinal)) + 1;
         workspace.Breakpoints.Toggle(library, line);
         AnswerInput(workspace, "Ada");
-        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await workspace.StartDebuggingCommand.ExecuteAsync(null).WaitAsync(TimeSpan.FromMinutes(5));
         Assert.True(workspace.IsDebugging, workspace.Output.Text);
         await UiTestHelpers.WaitUntilAsync(() => workspace.IsPaused, TimeSpan.FromSeconds(120), because: "LLDB's breakpoint");
         await workspace.PauseShown;
