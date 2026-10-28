@@ -1,0 +1,2305 @@
+********************************************************************************
+If you like PlatformIO, please:
+- star it on GitHub > https://github.com/platformio/platformio-core
+- follow us on LinkedIn to stay up-to-date on the latest project news > https://www.linkedin.com/company/platformio/
+- try PlatformIO IDE for embedded development > https://platformio.org/platformio-ide
+********************************************************************************
+
+Processing tbeam (board: ttgo-tbeam; platform: 
+https://github.com/pioarduino/platform-espressif32/releases/download/55.03.312-1/platform-espressif32.zip; framework: arduino)
+--------------------------------------------------------------------------------
+Platform Manager: Installing https://github.com/pioarduino/platform-espressif32/releases/download/55.03.312-1/platform-espressif32.zip
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Platform Manager: espressif32@55.3.312 has been installed!
+Tool Manager: Installing https://github.com/pioarduino/esp_install/releases/download/v5.3.5/esp_install-v5.3.5.zip
+Downloading 0% 10% 20% 30% 40% 50% 60% 70%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-esp_install@5.3.5 has been installed!
+Created pioarduino Python virtual environment: /home/runner/.platformio/penv
+Tool Manager: Installing https://github.com/espressif/arduino-esp32/releases/download/3.3.12/esp32-core-3.3.12.tar.xz
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduinoespressif32@3.3.12 has been installed!
+Tool Manager: Installing https://github.com/espressif/arduino-esp32/releases/download/3.3.12/esp32-core-3.3.12-libs.tar.xz
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduinoespressif32-libs@5.5.5+sha.b774170ff46 has been installed!
+Tool Manager: Installing https://github.com/pioarduino/esp-idf/releases/download/v5.5.5/esp-idf-v5.5.5.tar.xz
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-espidf@3.50505.0 has been installed!
+Tool Manager: Installing https://github.com/pioarduino/registry/releases/download/0.0.1/xtensa-esp-elf-14.2.0_20260121.zip
+Downloading 0% 10%
+Unpacking 0% 10% 20%
+Tool Manager: toolchain-xtensa-esp-elf@14.2.0+20260121 has been installed!
+Tool Manager: Installing https://github.com/pioarduino/registry/releases/download/0.0.1/xtensa-esp-gdb-17.1_20260402.zip
+Downloading 0% 10%
+Unpacking 0% 10% 20%
+Tool Manager: tool-xtensa-esp-elf-gdb@17.1.0+20260402 has been installed!
+Tool Manager: Installing https://github.com/pioarduino/registry/releases/download/0.0.1/esptoolpy-v5.4.0.zip
+Downloading 0% 10%
+Unpacking 0% 10% 20%
+Tool Manager: tool-esptoolpy@5.4.0 has been installed!
+Tool Manager: Installing https://github.com/pioarduino/registry/releases/download/0.0.1/contrib-piohome-3.4.4.tar.gz
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: contrib-piohome@3.4.4 has been installed!
+Tool Manager: Installing https://github.com/pioarduino/registry/releases/download/0.0.1/cppcheck-v2.20.1.zip
+Downloading 0% 10%
+Unpacking 0% 10% 20%
+Tool Manager: tool-cppcheck@2.20.1 has been installed!
+Tool Manager: Installing https://github.com/pioarduino/registry/releases/download/0.0.1/cmake-4.0.3.zip
+Downloading 0% 10%
+Unpacking 0% 10% 20%
+Tool Manager: tool-cmake@4.0.3 has been installed!
+Tool Manager: Installing https://github.com/pioarduino/registry/releases/download/0.0.1/esp-rom-elfs-20260528.zip
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-esp-rom-elfs@2026.5.28 has been installed!
+Tool Manager: Installing https://github.com/pioarduino/registry/releases/download/0.0.1/ninja-1.13.1.zip
+Downloading 0% 10%
+Unpacking 0% 10% 20%
+Tool Manager: tool-ninja@1.13.1 has been installed!
+Tool Manager: Installing https://github.com/pioarduino/registry/releases/download/0.0.1/scons-4.11.1.zip
+Downloading 0% 10%
+Unpacking 0% 10% 20%
+Tool Manager: tool-scons@4.41101.0 has been installed!
+Tool Manager: Installing platformio/tool-mklittlefs @ 1.203.210628
+Downloading 0% 10% 20% 30% 40% 50% 60%
+Unpacking 0% 10% 20%
+Tool Manager: tool-mklittlefs@1.203.210628 has been installed!
+Tool Manager: Installing platformio/tool-scons @ ~4.41101.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-scons@4.41101.0 has been installed!
+Tool Manager: Installing file:///home/runner/.platformio/tools/tool-esptoolpy
+Tool Manager: tool-esptoolpy@5.4.0 has been installed!
+Tool Manager: Installing file:///home/runner/.platformio/tools/toolchain-xtensa-esp-elf
+Tool Manager: toolchain-xtensa-esp-elf@14.2.0+20260121 has been installed!
+Tool Manager: Installing file:///home/runner/.platformio/tools/tool-xtensa-esp-elf-gdb
+Tool Manager: tool-xtensa-esp-elf-gdb@17.1.0+20260402 has been installed!
+Installed freertos-gdb into /home/runner/.platformio/packages/tool-xtensa-esp-elf-gdb/share/gdb/python
+Tool Manager: Installing file:///home/runner/.platformio/tools/tool-cmake
+Tool Manager: tool-cmake@4.0.3 has been installed!
+Tool Manager: Installing file:///home/runner/.platformio/tools/tool-ninja
+Tool Manager: tool-ninja@1.13.1 has been installed!
+Tool Manager: Installing file:///home/runner/.platformio/tools/tool-esp-rom-elfs
+Tool Manager: tool-esp-rom-elfs@2026.5.28 has been installed!
+Tool Manager: Installing file:///home/runner/.platformio/tools/tool-cppcheck
+Tool Manager: tool-cppcheck@2.20.1 has been installed!
+Library Manager: Installing https://github.com/meshtastic/esp8266-oled-ssd1306/archive/bb93fd40685f22e850330ea162f1dd154a4e0685.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: ESP8266 and ESP32 OLED driver for SSD1306 displays@4.4.1 has been installed!
+Library Manager: Installing https://github.com/meshtastic/OneButton/archive/fa352d668c53f290cfa480a5f79ad422cd828c70.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: OneButton@2.6.1 has been installed!
+Library Manager: Installing https://github.com/meshtastic/arduino-fsm/archive/7db3702bf0cfe97b783d6c72595e3f38e0b19159.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: arduino-fsm@2.2.0 has been installed!
+Library Manager: Installing https://github.com/meshtastic/TinyGPSPlus/archive/71a82db35f3b973440044c476d4bcdc673b104f4.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: TinyGPSPlus@1.0.3 has been installed!
+Library Manager: Installing https://github.com/meshtastic/ArduinoThread/archive/b841b0415721f1341ea41cccfb4adccfaf951567.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: ArduinoThread@0.0.0+20261028181011 has been installed!
+Library Manager: Installing https://github.com/nanopb/nanopb/archive/0.4.92.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Nanopb@0.4.92 has been installed!
+Library Manager: Installing https://github.com/Erriez/ErriezCRC32/archive/refs/tags/1.0.1.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: ErriezCRC32@1.0.1 has been installed!
+Library Manager: Installing https://github.com/end2endzone/NonBlockingRTTTL/archive/refs/tags/1.4.0.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: NonBlockingRTTTL@1.4.0 has been installed!
+Library Manager: Installing https://github.com/thingsboard/pubsubclient/archive/refs/tags/v2.12.1.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: TBPubSubClient@2.12.1 has been installed!
+Library Manager: Installing https://github.com/arduino-libraries/NTPClient/archive/refs/tags/3.2.1.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: NTPClient@3.2.1 has been installed!
+Library Manager: Installing https://github.com/arcao/Syslog/archive/refs/tags/v2.0.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Syslog@2.0.0 has been installed!
+Library Manager: Installing https://github.com/jgromes/RadioLib/archive/510e00cfb05bbc3c2b7b524262785454944adb6e.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: RadioLib@7.7.1 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit_BusIO/archive/refs/tags/1.17.4.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit BusIO@1.17.4 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit_Sensor/archive/refs/tags/1.1.15.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit Unified Sensor@1.1.15 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit-GFX-Library/archive/refs/tags/1.12.6.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit GFX Library@1.12.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_NeoPixel/archive/1.15.5.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit NeoPixel@1.15.5 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit_SSD1306/archive/2.5.17.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit SSD1306@2.5.17 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_BMP280_Library/archive/refs/tags/3.0.0.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit BMP280 Library@3.0.0 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit-BMP085-Library/archive/refs/tags/1.2.4.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit BMP085 Library@1.2.4 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_BME280_Library/archive/refs/tags/2.3.0.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit BME280 Library@2.3.0 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_DPS310/archive/refs/tags/1.1.6.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit DPS310@1.1.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_SH110x/archive/2.1.15.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit SH110X@2.1.15 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_MCP9808_Library/archive/refs/tags/2.0.2.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit MCP9808 Library@2.0.2 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_INA260/archive/refs/tags/1.5.3.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit INA260 Library@1.5.3 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_INA219/archive/refs/tags/1.2.3.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit INA219@1.2.3 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_MPU6050/archive/refs/tags/2.2.9.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit MPU6050@2.2.9 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_LIS3DH/archive/refs/tags/1.3.0.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit LIS3DH@1.3.0 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_AHTX0/archive/refs/tags/2.0.6.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit AHTX0@2.0.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_LSM6DS/archive/refs/tags/4.7.4.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit LSM6DS@4.7.4 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_TSL2591_Library/archive/refs/tags/1.4.5.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit TSL2591 Library@1.4.5 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/EmotiBit/EmotiBit_MLX90632/archive/refs/tags/v1.0.8.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: EmotiBit MLX90632@1.0.8 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit-MLX90614-Library/archive/refs/tags/2.1.6.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit MLX90614 Library@2.1.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/RobTillaart/INA3221_RT/archive/refs/tags/0.4.2.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: INA3221@0.4.2 has been installed!
+Library Manager: Installing https://github.com/mprograms/QMC5883LCompass/archive/refs/tags/v1.2.3.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: QMC5883LCompass@1.2.3 has been installed!
+Library Manager: Installing https://github.com/DFRobot/DFRobot_RTU/archive/refs/tags/V1.0.6.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: DFRobot_RTU@1.0.6 has been installed!
+Library Manager: Installing https://github.com/DFRobot/DFRobot_RainfallSensor/archive/38fea5e02b40a5430be6dab39a99a6f6347d667e.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: DFRobot_RainfallSensor@1.0.0 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/sparkfun/SparkFun_AS3935_Lightning_Detector_Arduino_Library/archive/refs/tags/v1.4.9.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: SparkFun AS3935 Lightning Detector Arduino Library@1.4.9 has been installed!
+Library Manager: Installing https://github.com/RobTillaart/INA226/archive/refs/tags/0.6.6.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: INA226@0.6.6 has been installed!
+Library Manager: Installing https://github.com/sparkfun/SparkFun_MAX3010x_Sensor_Library/archive/refs/tags/v1.1.2.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: SparkFun MAX3010x Pulse and Proximity Sensor Library@1.1.2 has been installed!
+Library Manager: Installing https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary/archive/refs/tags/v1.3.2.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: SparkFun 9DoF IMU Breakout - ICM 20948 - Arduino Library@1.3.2 has been installed!
+Library Manager: Installing https://github.com/tdk-invn-oss/motion.arduino.ICM42670P/archive/refs/tags/1.0.8.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: ICM42670P@1.0.8 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit_LTR390/archive/refs/tags/1.1.2.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit LTR390 Library@1.1.2 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_PCT2075/archive/1.3.1.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit PCT2075@1.0.1 has been installed!
+Library Manager: Installing https://github.com/DFRobot/DFRobot_BMM150/archive/refs/tags/V1.0.0.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: DFRobot_BMM150@1.0.0 has been installed!
+Library Manager: Installing https://github.com/sparkfun/SparkFun_MMC5983MA_Magnetometer_Arduino_Library/archive/v1.1.5.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: SparkFun MMC5983MA Magnetometer Arduino Library@1.1.5 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit_TSL2561/archive/refs/tags/1.1.3.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit TSL2561@1.1.3 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/wollewald/BH1750_WE/archive/refs/tags/1.1.10.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: BH1750_WE@1.1.10 has been installed!
+Library Manager: Installing https://github.com/meshtastic/Fusion/archive/2051197a15b965260678e722ad62e63072e3254f.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Fusion@1.2.12 has been installed!
+Library Manager: Installing https://github.com/Sensirion/arduino-core/archive/refs/tags/0.7.3.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Sensirion Core@0.7.3 has been installed!
+Library Manager: Installing https://github.com/Sensirion/arduino-i2c-scd4x/archive/refs/tags/1.1.0.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Sensirion I2C SCD4x@1.1.0 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/Sensirion/arduino-i2c-sfa3x/archive/refs/tags/1.0.0.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Sensirion I2C SFA3x@1.0.0 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/Sensirion/arduino-i2c-scd30/archive/1.1.1.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Sensirion I2C SCD30@1.1.1 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/Sensirion/arduino-sht/archive/refs/tags/v1.2.6.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: arduino-sht@1.2.6 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit_SPA06_003/archive/refs/tags/1.0.2.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit SPA06_003@1.0.2 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/meshtastic/Seeed_PM2_5_sensor_HM3301/archive/2704ca254c7e2136c52ac23198dd05f5ba1e2f04.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Grove - Laser PM2.5 Sensor HM3301@1.0.3 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit_BMP3XX/archive/refs/tags/2.1.6.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit BMP3XX Library@2.1.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_MAX1704X/archive/refs/tags/1.0.3.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit MAX1704X@1.0.3 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_LPS2X/archive/refs/tags/2.0.6.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit LPS2X@2.0.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_VEML7700/archive/refs/tags/2.1.6.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit VEML7700 Library@2.1.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/sparkfun/SparkFun_Qwiic_Scale_NAU7802_Arduino_Library/archive/refs/tags/v1.0.6.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: SparkFun Qwiic Scale NAU7802 Arduino Library@1.0.6 has been installed!
+Library Manager: Installing closedcube/ClosedCube OPT3001 @ 1.1.2
+Downloading 0% 10%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70%
+Library Manager: ClosedCube OPT3001@1.1.2 has been installed!
+Library Manager: Installing https://github.com/meshtastic/DFRobot_LarkWeatherStation/archive/4de3a9cadef0f6a5220a8a906cf9775b02b0040d.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: DFRobot_LarkWeatherStation@1.0.0 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit_ADS1X15/archive/refs/tags/2.6.2.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit ADS1X15@2.6.2 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_DS248x/archive/refs/tags/1.2.0.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit DS248x@1.2.0 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_BME680/archive/refs/tags/2.0.6.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit BME680 Library@2.0.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/mverch67/libpax/archive/6f52ee989301cdabaeef00bcbf93bff55708ce2f.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: libpax@1.1.0 has been installed!
+Library Manager: Installing lewisxhe/XPowersLib @ 0.3.3
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: XPowersLib@0.3.3 has been installed!
+Library Manager: Installing https://github.com/meshtastic/Crypto/archive/1c817c2f27aa4593e07d0f7e13b3dbf8d980bcae.zip
+Downloading...
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Crypto@0.0.0+20261028181051 has been installed!
+Library Manager: Installing throwtheswitch/Unity @ ^2.6.1
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Unity@2.6.1 has been installed!
+Installed esptool from tl-install path: /home/runner/.platformio/packages/tool-esptoolpy
+Verbose mode can be enabled via `-v, --verbose` option
+PROGNAME: firmware-tbeam-2.8.2.eaba8b9
+ESP32_FS_IMAGE_NAME: littlefs-tbeam-2.8.2.eaba8b9
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/ttgo-tbeam.html
+PLATFORM: Espressif 32 (55.3.312) > TTGO T-Beam (PSRAM Disabled)
+HARDWARE: ESP32 240MHz, 1.25MB RAM, 4MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-prog, esp-prog-2, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - contrib-piohome @ 3.4.4 
+ - framework-arduinoespressif32 @ 3.3.12 
+ - framework-arduinoespressif32-libs @ 5.5.5+sha.b774170ff46 
+ - framework-espidf @ 3.50505.0 (5.5.5) 
+ - tool-cmake @ 4.0.3 
+ - tool-cppcheck @ 2.20.1 
+ - tool-esp-rom-elfs @ 2026.5.28 
+ - tool-esptoolpy @ 5.4.0 
+ - tool-mklittlefs @ 1.203.210628 (2.3) 
+ - tool-ninja @ 1.13.1 
+ - tool-scons @ 4.41101.0 (4.11.1) 
+ - tool-xtensa-esp-elf-gdb @ 17.1.0+20260402 
+ - toolchain-xtensa-esp-elf @ 14.2.0+20260121
+*** Compile Arduino IDF libs for tbeam ***
+*** "custom_component" is used to deselect managed idf components ***
+[ComponentManager] Created backup of build file
+[ComponentManager] Removed component: espressif/esp_hosted
+[ComponentManager] Removed component: espressif/esp_wifi_remote
+[ComponentManager] Removed component: espressif/esp_modem
+[ComponentManager] Removed component: espressif/esp-dsp
+[ComponentManager] Component not found: espressif/esp32-camera
+[ComponentManager] Removed component: espressif/libsodium
+[ComponentManager] Removed component: espressif/esp-modbus
+[ComponentManager] Removed component: espressif/qrcode
+[ComponentManager] Removed component: espressif/esp_insights
+[ComponentManager] Removed component: espressif/esp_diag_data_store
+[ComponentManager] Removed component: espressif/esp_diagnostics
+[ComponentManager] Removed component: espressif/esp_rainmaker
+[ComponentManager] Removed component: espressif/rmaker_common
+[ComponentManager] Removed component: chmorgan/esp-libhelix-mp3
+[ComponentManager] Component not found: espressif/esp-tflite-micro
+[ComponentManager] Removed component: espressif/esp-sr
+[ComponentManager] Component not found: espressif/esp_matter
+[ComponentManager] Removed component: espressif/esp-zboss-lib
+[ComponentManager] Removed component: espressif/esp-zigbee-lib
+[ComponentManager] Component not found: espressif/mqtt
+[ComponentManager] BT/BLE protection enabled
+[ComponentManager] Protected BT library: bt
+[ComponentManager] Protected BT library: nimble-arduino
+[ComponentManager] Ignored library: mqtt (1 entries)
+[ComponentManager] Ignored library: openthread (2 entries)
+[ComponentManager] Updated build file (3 total removals)
+[ComponentManager] Processed 15 ignored libraries
+[ComponentManager] Session completed with 28 changes
+*** Add "custom_sdkconfig" settings to IDF sdkconfig.defaults ***
+Info: Independent frequency mode (< 80MHz): Flash=40m, PSRAM=40
+Replace: # CONFIG_BOOTLOADER_LOG_LEVEL_NONE is not set with: CONFIG_BOOTLOADER_LOG_LEVEL_NONE=y
+Replace: # CONFIG_BOOTLOADER_SPI_CUSTOM_WP_PIN is not set with: # CONFIG_BOOTLOADER_SPI_CUSTOM_WP_PIN is not set
+Replace: CONFIG_BOOTLOADER_SPI_WP_PIN=7 with: CONFIG_BOOTLOADER_SPI_WP_PIN=7
+Replace: CONFIG_ESPTOOLPY_FLASHMODE_QIO=y with: # CONFIG_ESPTOOLPY_FLASHMODE_QIO is not set
+Replace: # CONFIG_ESPTOOLPY_FLASHMODE_QOUT is not set with: # CONFIG_ESPTOOLPY_FLASHMODE_QOUT is not set
+Replace: # CONFIG_ESPTOOLPY_FLASHMODE_DIO is not set with: CONFIG_ESPTOOLPY_FLASHMODE_DIO=y
+Replace: # CONFIG_ESPTOOLPY_FLASHMODE_DOUT is not set with: # CONFIG_ESPTOOLPY_FLASHMODE_DOUT is not set
+Replace: CONFIG_ESPTOOLPY_FLASHFREQ_80M=y with: # CONFIG_ESPTOOLPY_FLASHFREQ_80M is not set
+Replace: # CONFIG_ESPTOOLPY_FLASHFREQ_40M is not set with: CONFIG_ESPTOOLPY_FLASHFREQ_40M=y
+Replace: # CONFIG_ESPTOOLPY_FLASHFREQ_26M is not set with: # CONFIG_ESPTOOLPY_FLASHFREQ_26M is not set
+Replace: # CONFIG_ESPTOOLPY_FLASHFREQ_20M is not set with: # CONFIG_ESPTOOLPY_FLASHFREQ_20M is not set
+Replace: CONFIG_ESPTOOLPY_FLASHFREQ="80m" with: CONFIG_ESPTOOLPY_FLASHFREQ="40m"
+Replace: CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y with: CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y
+Replace: # CONFIG_ESPTOOLPY_FLASHSIZE_8MB is not set with: # CONFIG_ESPTOOLPY_FLASHSIZE_8MB is not set
+Replace: # CONFIG_ESPTOOLPY_FLASHSIZE_16MB is not set with: # CONFIG_ESPTOOLPY_FLASHSIZE_16MB is not set
+Replace: # CONFIG_ESPTOOLPY_FLASHSIZE_32MB is not set with: # CONFIG_ESPTOOLPY_FLASHSIZE_32MB is not set
+Replace: # CONFIG_ESPTOOLPY_FLASHSIZE_64MB is not set with: # CONFIG_ESPTOOLPY_FLASHSIZE_64MB is not set
+Replace: # CONFIG_ESPTOOLPY_FLASHSIZE_128MB is not set with: # CONFIG_ESPTOOLPY_FLASHSIZE_128MB is not set
+Replace: CONFIG_ESPTOOLPY_FLASHSIZE="4MB" with: CONFIG_ESPTOOLPY_FLASHSIZE="4MB"
+Replace: # CONFIG_ARDUHAL_LOG_COLORS is not set with: CONFIG_ARDUHAL_LOG_COLORS=y
+Replace: # CONFIG_ARDUINO_SELECTIVE_COMPILATION is not set with: CONFIG_ARDUINO_SELECTIVE_COMPILATION=y
+Replace: CONFIG_COMPILER_OPTIMIZATION_ASSERTIONS_ENABLE=y with: CONFIG_COMPILER_OPTIMIZATION_ASSERTIONS_ENABLE=n
+Replace: # CONFIG_COMPILER_OPTIMIZATION_ASSERTIONS_DISABLE is not set with: CONFIG_COMPILER_OPTIMIZATION_ASSERTIONS_DISABLE=y
+Replace: CONFIG_COMPILER_CXX_EXCEPTIONS=y with: CONFIG_COMPILER_CXX_EXCEPTIONS=n
+Replace: # CONFIG_COMPILER_STACK_CHECK_MODE_NONE is not set with: CONFIG_COMPILER_STACK_CHECK_MODE_NONE=y
+Replace: CONFIG_COMPILER_STACK_CHECK_MODE_NORM=y with: CONFIG_COMPILER_STACK_CHECK_MODE_NORM=n
+Replace: # CONFIG_COMPILER_DISABLE_GCC12_WARNINGS is not set with: CONFIG_COMPILER_DISABLE_GCC12_WARNINGS=y
+Replace: # CONFIG_COMPILER_DISABLE_GCC13_WARNINGS is not set with: CONFIG_COMPILER_DISABLE_GCC13_WARNINGS=y
+Replace: # CONFIG_COMPILER_DISABLE_GCC14_WARNINGS is not set with: CONFIG_COMPILER_DISABLE_GCC14_WARNINGS=y
+Replace: CONFIG_COMPILER_ORPHAN_SECTIONS_WARNING=y with: CONFIG_COMPILER_ORPHAN_SECTIONS_WARNING=n
+Replace: # CONFIG_COMPILER_ORPHAN_SECTIONS_PLACE is not set with: CONFIG_COMPILER_ORPHAN_SECTIONS_PLACE=y
+Replace: CONFIG_BT_ENABLED=y with: CONFIG_BT_ENABLED=y
+Replace: CONFIG_BT_BLUEDROID_ENABLED=y with: # CONFIG_BT_BLUEDROID_ENABLED is not set
+Replace: # CONFIG_BT_NIMBLE_ENABLED is not set with: CONFIG_BT_NIMBLE_ENABLED=y
+Replace: CONFIG_BT_CONTROLLER_ENABLED=y with: CONFIG_BT_CONTROLLER_ENABLED=y
+Replace: # CONFIG_BTDM_CTRL_MODE_BLE_ONLY is not set with: CONFIG_BTDM_CTRL_MODE_BLE_ONLY=y
+Replace: # CONFIG_BTDM_CTRL_MODE_BR_EDR_ONLY is not set with: # CONFIG_BTDM_CTRL_MODE_BR_EDR_ONLY is not set
+Replace: CONFIG_BTDM_CTRL_MODE_BTDM=y with: # CONFIG_BTDM_CTRL_MODE_BTDM is not set
+Replace: CONFIG_BLE_MESH=y with: CONFIG_BLE_MESH=n
+Replace: CONFIG_ETH_ENABLED=y with: CONFIG_ETH_ENABLED=n
+Replace: CONFIG_ESP_GDBSTUB_ENABLED=y with: CONFIG_ESP_GDBSTUB_ENABLED=n
+Replace: CONFIG_ESP_HTTP_CLIENT_ENABLE_HTTPS=y with: CONFIG_ESP_HTTP_CLIENT_ENABLE_HTTPS=n
+Replace: CONFIG_ESP_HTTP_CLIENT_ENABLE_BASIC_AUTH=y with: CONFIG_ESP_HTTP_CLIENT_ENABLE_BASIC_AUTH=n
+Replace: CONFIG_HTTPD_WS_SUPPORT=y with: CONFIG_HTTPD_WS_SUPPORT=n
+Replace: CONFIG_ESP_HTTPS_SERVER_ENABLE=y with: CONFIG_ESP_HTTPS_SERVER_ENABLE=n
+Replace: CONFIG_SPIRAM=y with: # CONFIG_SPIRAM is not set
+Replace: CONFIG_SPIRAM_CACHE_LIBTIME_IN_IRAM=y with: CONFIG_SPIRAM_CACHE_LIBTIME_IN_IRAM=n
+Replace: CONFIG_SPIRAM_CACHE_LIBCHAR_IN_IRAM=y with: CONFIG_SPIRAM_CACHE_LIBCHAR_IN_IRAM=n
+Replace: CONFIG_SPIRAM_CACHE_LIBSTR_IN_IRAM=y with: CONFIG_SPIRAM_CACHE_LIBSTR_IN_IRAM=n
+Replace: CONFIG_SPIRAM_CACHE_LIBMISC_IN_IRAM=y with: CONFIG_SPIRAM_CACHE_LIBMISC_IN_IRAM=n
+Replace: # CONFIG_RINGBUF_PLACE_FUNCTIONS_INTO_FLASH is not set with: CONFIG_RINGBUF_PLACE_FUNCTIONS_INTO_FLASH=y
+Replace: # CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_80 is not set with: # CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_80 is not set
+Replace: CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_160=y with: # CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_160 is not set
+Replace: # CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240 is not set with: CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
+Replace: CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ=160 with: CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ=240
+Replace: # CONFIG_ESP_SYSTEM_ESP32_SRAM1_REGION_AS_IRAM is not set with: CONFIG_ESP_SYSTEM_ESP32_SRAM1_REGION_AS_IRAM=y
+Replace: CONFIG_ESP_TASK_WDT_INIT=y with: CONFIG_ESP_TASK_WDT_INIT=n
+Replace: # CONFIG_ESP_WIFI_IRAM_OPT is not set with: CONFIG_ESP_WIFI_IRAM_OPT=n
+Replace: CONFIG_ESP_WIFI_ENABLE_WPA3_SAE=y with: CONFIG_ESP_WIFI_ENABLE_WPA3_SAE=n
+Replace: CONFIG_ESP_WIFI_ENABLE_SAE_H2E=y with: CONFIG_ESP_WIFI_ENABLE_SAE_H2E=n
+Replace: CONFIG_ESP_WIFI_ENABLE_WPA3_OWE_STA=y with: CONFIG_ESP_WIFI_ENABLE_WPA3_OWE_STA=n
+Replace: CONFIG_ESP_WIFI_ENTERPRISE_SUPPORT=y with: CONFIG_ESP_WIFI_ENTERPRISE_SUPPORT=n
+Replace: CONFIG_ESP_COREDUMP_ENABLE_TO_FLASH=y with: CONFIG_ESP_COREDUMP_ENABLE_TO_FLASH=n
+Replace: # CONFIG_ESP_COREDUMP_ENABLE_TO_NONE is not set with: CONFIG_ESP_COREDUMP_ENABLE_TO_NONE=y
+Replace: CONFIG_ESP_COREDUMP_ENABLE=y with: CONFIG_ESP_COREDUMP_ENABLE=n
+Replace: CONFIG_FREERTOS_USE_TRACE_FACILITY=y with: CONFIG_FREERTOS_USE_TRACE_FACILITY=n
+Replace: CONFIG_FREERTOS_USE_STATS_FORMATTING_FUNCTIONS=y with: CONFIG_FREERTOS_USE_STATS_FORMATTING_FUNCTIONS=n
+Replace: CONFIG_FREERTOS_GENERATE_RUN_TIME_STATS=y with: CONFIG_FREERTOS_GENERATE_RUN_TIME_STATS=n
+Replace: # CONFIG_FREERTOS_PLACE_FUNCTIONS_INTO_FLASH is not set with: CONFIG_FREERTOS_PLACE_FUNCTIONS_INTO_FLASH=y
+Replace: CONFIG_FREERTOS_PLACE_SNAPSHOT_FUNS_INTO_FLASH=y with: CONFIG_FREERTOS_PLACE_SNAPSHOT_FUNS_INTO_FLASH=y
+Replace: # CONFIG_LOG_COLORS is not set with: CONFIG_LOG_COLORS=y
+Replace: CONFIG_LWIP_IP_FORWARD=y with: CONFIG_LWIP_IP_FORWARD=n
+Replace: CONFIG_LWIP_IPV4_NAPT=y with: CONFIG_LWIP_IPV4_NAPT=n
+Replace: CONFIG_LWIP_PPP_SUPPORT=y with: CONFIG_LWIP_PPP_SUPPORT=n
+Replace: # CONFIG_MBEDTLS_ASYMMETRIC_CONTENT_LEN is not set with: CONFIG_MBEDTLS_ASYMMETRIC_CONTENT_LEN=y
+Replace: CONFIG_MBEDTLS_SSL_KEEP_PEER_CERTIFICATE=y with: CONFIG_MBEDTLS_SSL_KEEP_PEER_CERTIFICATE=y
+Replace: CONFIG_MBEDTLS_PKCS7_C=y with: CONFIG_MBEDTLS_PKCS7_C=n
+Replace: CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_FULL=y with: CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_FULL=n
+Replace: # CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_CMN is not set with: CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_CMN=y
+Replace: CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_MAX_CERTS=200 with: CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_MAX_CERTS=1
+Replace: CONFIG_MBEDTLS_CMAC_C=y with: CONFIG_MBEDTLS_CMAC_C=n
+Replace: CONFIG_MBEDTLS_SHA512_C=y with: CONFIG_MBEDTLS_SHA512_C=y
+Replace: CONFIG_MBEDTLS_KEY_EXCHANGE_ECDHE_PSK=y with: CONFIG_MBEDTLS_KEY_EXCHANGE_ECDHE_PSK=n
+Replace: CONFIG_MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA=y with: CONFIG_MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA=n
+Replace: CONFIG_MBEDTLS_KEY_EXCHANGE_ECDH_RSA=y with: CONFIG_MBEDTLS_KEY_EXCHANGE_ECDH_RSA=n
+Replace: CONFIG_MBEDTLS_KEY_EXCHANGE_ECJPAKE=y with: CONFIG_MBEDTLS_KEY_EXCHANGE_ECJPAKE=n
+Replace: CONFIG_MBEDTLS_SSL_RENEGOTIATION=y with: CONFIG_MBEDTLS_SSL_RENEGOTIATION=y
+Replace: CONFIG_MBEDTLS_SSL_PROTO_DTLS=y with: CONFIG_MBEDTLS_SSL_PROTO_DTLS=y
+Replace: CONFIG_MBEDTLS_SSL_ALPN=y with: CONFIG_MBEDTLS_SSL_ALPN=y
+Replace: CONFIG_MBEDTLS_CLIENT_SSL_SESSION_TICKETS=y with: CONFIG_MBEDTLS_CLIENT_SSL_SESSION_TICKETS=y
+Replace: CONFIG_MBEDTLS_SERVER_SSL_SESSION_TICKETS=y with: CONFIG_MBEDTLS_SERVER_SSL_SESSION_TICKETS=y
+Replace: CONFIG_MBEDTLS_CAMELLIA_C=y with: CONFIG_MBEDTLS_CAMELLIA_C=n
+Replace: CONFIG_MBEDTLS_CCM_C=y with: CONFIG_MBEDTLS_CCM_C=n
+Replace: CONFIG_MBEDTLS_X509_CRL_PARSE_C=y with: CONFIG_MBEDTLS_X509_CRL_PARSE_C=n
+Replace: CONFIG_MBEDTLS_X509_CSR_PARSE_C=y with: CONFIG_MBEDTLS_X509_CSR_PARSE_C=n
+Replace: CONFIG_MBEDTLS_ECP_DP_SECP192R1_ENABLED=y with: CONFIG_MBEDTLS_ECP_DP_SECP192R1_ENABLED=n
+Replace: CONFIG_MBEDTLS_ECP_DP_SECP224R1_ENABLED=y with: CONFIG_MBEDTLS_ECP_DP_SECP224R1_ENABLED=n
+Replace: CONFIG_MBEDTLS_ECP_DP_SECP384R1_ENABLED=y with: CONFIG_MBEDTLS_ECP_DP_SECP384R1_ENABLED=y
+Replace: CONFIG_MBEDTLS_ECP_DP_SECP521R1_ENABLED=y with: CONFIG_MBEDTLS_ECP_DP_SECP521R1_ENABLED=n
+Replace: CONFIG_MBEDTLS_ECP_DP_SECP192K1_ENABLED=y with: CONFIG_MBEDTLS_ECP_DP_SECP192K1_ENABLED=n
+Replace: CONFIG_MBEDTLS_ECP_DP_SECP224K1_ENABLED=y with: CONFIG_MBEDTLS_ECP_DP_SECP224K1_ENABLED=n
+Replace: CONFIG_MBEDTLS_ECP_DP_SECP256K1_ENABLED=y with: CONFIG_MBEDTLS_ECP_DP_SECP256K1_ENABLED=n
+Replace: CONFIG_MBEDTLS_ECP_DP_BP256R1_ENABLED=y with: CONFIG_MBEDTLS_ECP_DP_BP256R1_ENABLED=n
+Replace: CONFIG_MBEDTLS_ECP_DP_BP384R1_ENABLED=y with: CONFIG_MBEDTLS_ECP_DP_BP384R1_ENABLED=n
+Replace: CONFIG_MBEDTLS_ECP_DP_BP512R1_ENABLED=y with: CONFIG_MBEDTLS_ECP_DP_BP512R1_ENABLED=n
+Replace: # CONFIG_MBEDTLS_ALLOW_WEAK_CERTIFICATE_VERIFICATION is not set with: CONFIG_MBEDTLS_ALLOW_WEAK_CERTIFICATE_VERIFICATION=y
+Replace: CONFIG_MQTT_PROTOCOL_311=y with: CONFIG_MQTT_PROTOCOL_311=n
+Replace: CONFIG_MQTT_TRANSPORT_SSL=y with: CONFIG_MQTT_TRANSPORT_SSL=n
+Replace: CONFIG_MQTT_TRANSPORT_WEBSOCKET=y with: CONFIG_MQTT_TRANSPORT_WEBSOCKET=n
+Replace: CONFIG_MQTT_TRANSPORT_WEBSOCKET_SECURE=y with: CONFIG_MQTT_TRANSPORT_WEBSOCKET_SECURE=n
+Replace: # CONFIG_OPENTHREAD_ENABLED is not set with: CONFIG_OPENTHREAD_ENABLED=n
+Replace: # CONFIG_SPI_FLASH_SUPPORT_BOYA_CHIP is not set with: CONFIG_SPI_FLASH_SUPPORT_BOYA_CHIP=y
+Replace: CONFIG_WS_TRANSPORT=y with: CONFIG_WS_TRANSPORT=n
+Replace: CONFIG_UNITY_ENABLE_FLOAT=y with: CONFIG_UNITY_ENABLE_FLOAT=n
+Replace: CONFIG_UNITY_ENABLE_DOUBLE=y with: CONFIG_UNITY_ENABLE_DOUBLE=n
+Replace: CONFIG_UNITY_ENABLE_IDF_TEST_RUNNER=y with: CONFIG_UNITY_ENABLE_IDF_TEST_RUNNER=n
+Replace: CONFIG_VFS_SUPPORT_SELECT=y with: CONFIG_VFS_SUPPORT_SELECT=n
+Replace: CONFIG_VFS_SUPPRESS_SELECT_DEBUG_OUTPUT=y with: CONFIG_VFS_SUPPRESS_SELECT_DEBUG_OUTPUT=n
+Replace: CONFIG_VFS_SUPPORT_TERMIOS=y with: CONFIG_VFS_SUPPORT_TERMIOS=n
+Replace: CONFIG_ZB_ENABLED=y with: CONFIG_ZB_ENABLED=n
+Replace: CONFIG_ESP_INSIGHTS_ENABLED=y with: CONFIG_ESP_INSIGHTS_ENABLED=n
+Replace: CONFIG_MDNS_ENABLE_CONSOLE_CLI=y with: CONFIG_MDNS_ENABLE_CONSOLE_CLI=n
+Replace: CONFIG_MDNS_PREDEF_NETIF_AP=y with: CONFIG_MDNS_PREDEF_NETIF_AP=n
+Replace: CONFIG_NETWORK_PROV_NETWORK_TYPE_WIFI=y with: CONFIG_NETWORK_PROV_NETWORK_TYPE_WIFI=n
+Replace: # CONFIG_IDF_EXPERIMENTAL_FEATURES is not set with: CONFIG_IDF_EXPERIMENTAL_FEATURES=y
+Replace: # CONFIG_ESP32_DEFAULT_CPU_FREQ_80 is not set with: # CONFIG_ESP32_DEFAULT_CPU_FREQ_80 is not set
+Replace: CONFIG_ESP32_DEFAULT_CPU_FREQ_160=y with: # CONFIG_ESP32_DEFAULT_CPU_FREQ_160 is not set
+Replace: # CONFIG_ESP32_DEFAULT_CPU_FREQ_240 is not set with: CONFIG_ESP32_DEFAULT_CPU_FREQ_240=y
+Replace: # CONFIG_ESP32_WIFI_RX_IRAM_OPT is not set with: CONFIG_ESP32_WIFI_RX_IRAM_OPT=n
+Replace: CONFIG_ESP32_ENABLE_COREDUMP=y with: CONFIG_ESP32_ENABLE_COREDUMP=n
+Replace: CONFIG_PPP_SUPPORT=y with: CONFIG_PPP_SUPPORT=n
+Replace: # CONFIG_NEWLIB_NANO_FORMAT is not set with: CONFIG_NEWLIB_NANO_FORMAT=y
+Replace: CONFIG_SUPPORT_TERMIOS=y with: CONFIG_SUPPORT_TERMIOS=n
+Add: # CONFIG_ESPTOOLPY_FLASHFREQ_120M is not set
+Add: # CONFIG_BT_NIMBLE_LOG_LEVEL_INFO is not set
+Add: CONFIG_BT_NIMBLE_LOG_LEVEL_ERROR=y
+Add: CONFIG_MBEDTLS_SSL_IN_CONTENT_LEN=16384
+Add: CONFIG_MBEDTLS_SSL_OUT_CONTENT_LEN=4096
+Add: CONFIG_IEEE802154_ENABLED=n
+Add: CONFIG_ARDUINO_SELECTIVE_Ethernet=n
+Add: CONFIG_BT_NIMBLE_NVS_PERSIST=y
+Add: CONFIG_BT_NIMBLE_ROLE_CENTRAL=n
+Add: CONFIG_BT_NIMBLE_ROLE_OBSERVER=n
+Add: CONFIG_BT_NIMBLE_HOST_TASK_STACK_SIZE=5120
+Add: CONFIG_BT_NIMBLE_MAX_CCCDS=8
+Add: CONFIG_BT_NIMBLE_MAX_BONDS=6
+Add: CONFIG_BT_NIMBLE_MAX_CONNECTIONS=1
+Add: CONFIG_BT_CTRL_BLE_MAX_ACT=2
+Add: CONFIG_BT_CTRL_SCAN_DUPL_CACHE_SIZE=10
+Add: CONFIG_BT_NIMBLE_WHITELIST_SIZE=1
+Add: CONFIG_BT_NIMBLE_MSYS_1_BLOCK_COUNT=12
+Add: CONFIG_BT_NIMBLE_MSYS_2_BLOCK_COUNT=8
+Add: CONFIG_BT_NIMBLE_TRANSPORT_ACL_FROM_LL_COUNT=8
+Add: CONFIG_BT_NIMBLE_TRANSPORT_EVT_COUNT=12
+Add: CONFIG_BT_NIMBLE_ENABLE_PERIODIC_SYNC=n
+Add: CONFIG_BT_NIMBLE_ENABLE_PERIODIC_ADV=n
+Add: CONFIG_BT_NIMBLE_EXT_SCAN=n
+Add: CONFIG_BT_NIMBLE_EXT_ADV=n
+Add: CONFIG_BT_NIMBLE_PERIODIC_ADV_SYNC_TRANSFER=n
+Add: CONFIG_BT_NIMBLE_LL_CFG_FEAT_LE_2M_PHY=n
+Add: CONFIG_BT_NIMBLE_BLUFI_ENABLE=n
+Add: CONFIG_BT_NIMBLE_PROX_SERVICE=n
+Add: CONFIG_BT_NIMBLE_ANS_SERVICE=n
+Add: CONFIG_BT_NIMBLE_CTS_SERVICE=n
+Add: CONFIG_BT_NIMBLE_HTP_SERVICE=n
+Add: CONFIG_BT_NIMBLE_IPSS_SERVICE=n
+Add: CONFIG_BT_NIMBLE_TPS_SERVICE=n
+Add: CONFIG_BT_NIMBLE_IAS_SERVICE=n
+Add: CONFIG_BT_NIMBLE_LLS_SERVICE=n
+Add: CONFIG_BT_NIMBLE_SPS_SERVICE=y
+Add: CONFIG_BT_NIMBLE_HR_SERVICE=n
+Add: CONFIG_BT_NIMBLE_HID_SERVICE=n
+Add: CONFIG_BT_NIMBLE_BAS_SERVICE=n
+Add: CONFIG_BT_NIMBLE_DIS_SERVICE=n
+Add: CONFIG_ARDUINO_SELECTIVE_SPI=y
+Add: CONFIG_ARDUINO_SELECTIVE_Wire=y
+Add: CONFIG_ARDUINO_SELECTIVE_ESP_SR=n
+Add: CONFIG_ARDUINO_SELECTIVE_EEPROM=y
+Add: CONFIG_ARDUINO_SELECTIVE_Preferences=y
+Add: CONFIG_ARDUINO_SELECTIVE_Ticker=y
+Add: CONFIG_ARDUINO_SELECTIVE_Update=y
+Add: CONFIG_ARDUINO_SELECTIVE_Zigbee=n
+Add: CONFIG_ARDUINO_SELECTIVE_FS=y
+Add: CONFIG_ARDUINO_SELECTIVE_SD=y
+Add: CONFIG_ARDUINO_SELECTIVE_SD_MMC=y
+Add: CONFIG_ARDUINO_SELECTIVE_SPIFFS=y
+Add: CONFIG_ARDUINO_SELECTIVE_FFat=n
+Add: CONFIG_ARDUINO_SELECTIVE_LittleFS=y
+Add: CONFIG_ARDUINO_SELECTIVE_Network=y
+Add: CONFIG_ARDUINO_SELECTIVE_PPP=n
+Add: CONFIG_ARDUINO_SELECTIVE_Hash=y
+Add: CONFIG_ARDUINO_SELECTIVE_ArduinoOTA=n
+Add: CONFIG_ARDUINO_SELECTIVE_AsyncUDP=y
+Add: CONFIG_ARDUINO_SELECTIVE_DNSServer=n
+Add: CONFIG_ARDUINO_SELECTIVE_ESPmDNS=y
+Add: CONFIG_ARDUINO_SELECTIVE_HTTPClient=n
+Add: CONFIG_ARDUINO_SELECTIVE_Matter=n
+Add: CONFIG_ARDUINO_SELECTIVE_NetBIOS=n
+Add: CONFIG_ARDUINO_SELECTIVE_WebServer=n
+Add: CONFIG_ARDUINO_SELECTIVE_WiFi=y
+Add: CONFIG_ARDUINO_SELECTIVE_NetworkClientSecure=y
+Add: CONFIG_ARDUINO_SELECTIVE_WiFiProv=n
+Add: CONFIG_ARDUINO_SELECTIVE_BLE=y
+Add: CONFIG_ARDUINO_SELECTIVE_BluetoothSerial=n
+Add: CONFIG_ARDUINO_SELECTIVE_SimpleBLE=n
+Add: CONFIG_ARDUINO_SELECTIVE_RainMaker=n
+Add: CONFIG_ARDUINO_SELECTIVE_OpenThread=n
+Add: CONFIG_ARDUINO_SELECTIVE_Insights=n
+Add: # meshtastic_hybridcompile_cache_key: memory_type=default spiram=none
+Creating a new virtual environment for IDF Python dependencies using uv
+Using Python 3.12.15 environment at: /home/runner/.platformio/penv/.espidf-5.5.5
+Installing ESP-IDF's Python dependencies with uv
+Using Python 3.12.15 environment at: /home/runner/.platformio/penv/.espidf-5.5.5
+Resolved 31 packages in 463ms
+Downloading cryptography (4.0MiB)
+Downloading pygments (1.2MiB)
+Downloading pydantic-core (2.1MiB)
+ Downloaded pydantic-core
+ Downloaded pygments
+ Downloaded cryptography
+Prepared 31 packages in 132ms
+Installed 31 packages in 16ms
+ + annotated-types==0.8.0
+ + certifi==2026.10.23
+ + cffi==2.1.1
+ + charset-normalizer==3.5.2
+ + click==8.5.0
+ + colorama==0.4.6
+ + cryptography==44.0.3
+ + esp-idf-kconfig==3.7.0
+ + idf-component-manager==2.4.11
+ + idna==3.20
+ + jsonref==1.1.0
+ + markdown-it-py==4.2.0
+ + mdurl==0.1.2
+ + psutil==7.2.2
+ + pycparser==3.12
+ + pydantic==2.14.1
+ + pydantic-core==2.50.1
+ + pydantic-settings==2.16.2
+ + pygments==2.21.0
+ + pyparsing==3.3.3
+ + python-dotenv==1.2.4
+ + requests==2.34.2
+ + requests-file==3.0.1
+ + requests-toolbelt==1.0.0
+ + rich==15.0.0
+ + ruamel-yaml==0.19.1
+ + tqdm==4.70.1
+ + truststore==0.10.5
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.4
+ + urllib3==2.8.0
+Warning: the 'src_filter' option cannot be used with ESP-IDF. Select source files to build in the project CMakeLists.txt file.
+
+Reading CMake configuration...
+[ESP-IDF] Ignoring components based on lib_ignore: arduinoota, bt, esp_i2s, esp_now, esp_rainmaker, esp_sr, insights, matter, micro-rtsp, mqtt, nimble-arduino, openthread, segger_rtt, wifiprov, zigbee
+[nanopb] Installing Protocol Buffers dependencies
+Collecting protobuf>=3.19.1
+  Downloading protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+Downloading protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl (343 kB)
+Installing collected packages: protobuf
+Successfully installed protobuf-7.36.2
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.2
+[notice] To update, run: python -m pip install --upgrade pip
+[nanopb] Installing gRPC dependencies
+Collecting grpcio-tools>=1.43.0
+  Downloading grpcio_tools-1.85.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.3 kB)
+Requirement already satisfied: protobuf<8.0.0,>=7.35.1 in /home/runner/.platformio/penv/lib/python3.12/site-packages (from grpcio-tools>=1.43.0) (7.36.2)
+Collecting grpcio>=1.85.0 (from grpcio-tools>=1.43.0)
+  Downloading grpcio-1.85.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.8 kB)
+Collecting setuptools>=77.0.1 (from grpcio-tools>=1.43.0)
+  Downloading setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
+Requirement already satisfied: typing-extensions~=4.12 in /home/runner/.platformio/penv/lib/python3.12/site-packages (from grpcio>=1.85.0->grpcio-tools>=1.43.0) (4.16.0)
+Downloading grpcio_tools-1.85.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 63.9 MB/s eta 0:00:00
+Downloading grpcio-1.85.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (7.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.4/7.4 MB 292.4 MB/s eta 0:00:00
+Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 876.3/876.3 kB 183.1 MB/s eta 0:00:00
+Installing collected packages: setuptools, grpcio, grpcio-tools
+Successfully installed grpcio-1.85.0 grpcio-tools-1.85.0 setuptools-84.2.1
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.2
+[notice] To update, run: python -m pip install --upgrade pip
+[nanopb] No generation needed.
+Generating assembly for certificate bundle...
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+[nanopb] No generation needed.
+Found 102 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Using meshtastic platformio-custom.py, firmware version 2.8.2.eaba8b9 on tbeam
+Using flags:
+-DAPP_VERSION=2.8.2.eaba8b9
+-DAPP_VERSION_SHORT=2.8.2
+-DAPP_ENV=tbeam
+-DAPP_REPO=meshtastic/firmware
+-DBUILD_EPOCH=1793145600
+-DUSERPREFS_RINGTONE_RTTTL=\"24:d=32,o=5,b=565:f6,p,f6,4p,p,f6,p,f6,2p,p,b6,p,b6,p,b6,p,b6,p,b,p,b,p,b,p,b,p,b,p,b,p,b,p,b,1p.,2p.,p\"
+-DUSERPREFS_TZ_STRING=\"tzplaceholder                                         \"
+Compiling .pio/build/tbeam/.dummy/sketch.cpp.o
+Compiling .pio/build/tbeam/.dummy/arduino-lib-builder-gcc.c.o
+Compiling .pio/build/tbeam/.dummy/arduino-lib-builder-cpp.cpp.o
+Compiling .pio/build/tbeam/.dummy/arduino-lib-builder-as.S.o
+Generating LD script .pio/build/tbeam/esp-idf/esp_system/ld/memory.ld.in
+Generating LD script .pio/build/tbeam/esp-idf/esp_system/ld/sections.ld.in
+Generating LD script .pio/build/tbeam/memory.ld
+Compiling .pio/build/tbeam/app_trace/app_trace.c.o
+Compiling .pio/build/tbeam/app_trace/app_trace_util.c.o
+Compiling .pio/build/tbeam/app_trace/host_file_io.c.o
+Compiling .pio/build/tbeam/app_trace/port/port_uart.c.o
+Compiling .pio/build/tbeam/app_update/esp_ota_ops.c.o
+Compiling .pio/build/tbeam/app_update/esp_ota_app_desc.c.o
+Archiving .pio/build/tbeam/esp-idf/app_trace/libapp_trace.a
+Indexing .pio/build/tbeam/esp-idf/app_trace/libapp_trace.a
+Compiling .pio/build/tbeam/bootloader_support/src/bootloader_common.c.o
+Compiling .pio/build/tbeam/bootloader_support/src/bootloader_common_loader.c.o
+Compiling .pio/build/tbeam/bootloader_support/src/bootloader_clock_init.c.o
+Compiling .pio/build/tbeam/bootloader_support/src/bootloader_mem.c.o
+Archiving .pio/build/tbeam/esp-idf/app_update/libapp_update.a
+Indexing .pio/build/tbeam/esp-idf/app_update/libapp_update.a
+Compiling .pio/build/tbeam/bootloader_support/src/bootloader_random.c.o
+Compiling .pio/build/tbeam/bootloader_support/src/bootloader_efuse.c.o
+Compiling .pio/build/tbeam/bootloader_support/src/flash_encrypt.c.o
+Compiling .pio/build/tbeam/bootloader_support/src/secure_boot.c.o
+Compiling .pio/build/tbeam/bootloader_support/src/bootloader_random_esp32.c.o
+Compiling .pio/build/tbeam/bootloader_support/bootloader_flash/src/bootloader_flash.c.o
+Compiling .pio/build/tbeam/bootloader_support/bootloader_flash/src/flash_qio_mode.c.o
+Compiling .pio/build/tbeam/bootloader_support/bootloader_flash/src/bootloader_flash_config_esp32.c.o
+Compiling .pio/build/tbeam/bootloader_support/src/bootloader_utility.c.o
+Compiling .pio/build/tbeam/bootloader_support/src/flash_partitions.c.o
+Compiling .pio/build/tbeam/bootloader_support/src/esp_image_format.c.o
+Compiling .pio/build/tbeam/bootloader_support/src/bootloader_sha.c.o
+Compiling .pio/build/tbeam/bootloader_support/src/esp32/secure_boot_secure_features.c.o
+Compiling .pio/build/tbeam/bt/common/btc/core/btc_alarm.c.o
+Compiling .pio/build/tbeam/bt/common/api/esp_blufi_api.c.o
+Compiling .pio/build/tbeam/bt/common/hci_log/bt_hci_log.c.o
+Compiling .pio/build/tbeam/bt/common/btc/core/btc_manage.c.o
+Compiling .pio/build/tbeam/bt/common/hci_log/bt_hci_log_insights.c.o
+Archiving .pio/build/tbeam/esp-idf/bootloader_support/libbootloader_support.a
+Indexing .pio/build/tbeam/esp-idf/bootloader_support/libbootloader_support.a
+Compiling .pio/build/tbeam/bt/common/btc/core/btc_task.c.o
+Compiling .pio/build/tbeam/bt/common/btc/profile/esp/blufi/blufi_prf.c.o
+Compiling .pio/build/tbeam/bt/common/btc/profile/esp/blufi/blufi_protocol.c.o
+Compiling .pio/build/tbeam/bt/common/osi/alarm.c.o
+Compiling .pio/build/tbeam/bt/common/osi/allocator.c.o
+Compiling .pio/build/tbeam/bt/common/osi/buffer.c.o
+Compiling .pio/build/tbeam/bt/common/osi/config.c.o
+Compiling .pio/build/tbeam/bt/common/osi/fixed_queue.c.o
+Compiling .pio/build/tbeam/bt/common/osi/pkt_queue.c.o
+Compiling .pio/build/tbeam/bt/common/osi/fixed_pkt_queue.c.o
+Compiling .pio/build/tbeam/bt/common/osi/future.c.o
+Compiling .pio/build/tbeam/bt/common/osi/hash_functions.c.o
+Compiling .pio/build/tbeam/bt/common/osi/hash_map.c.o
+Compiling .pio/build/tbeam/bt/common/osi/list.c.o
+Compiling .pio/build/tbeam/bt/common/osi/mutex.c.o
+Compiling .pio/build/tbeam/bt/common/osi/thread.c.o
+Compiling .pio/build/tbeam/bt/common/osi/osi.c.o
+Compiling .pio/build/tbeam/bt/common/osi/semaphore.c.o
+Compiling .pio/build/tbeam/bt/common/ble_log/deprecated/ble_log_spi_out.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/utils.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/sha256.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/ecc.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/ctr_prng.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/ctr_mode.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/aes_decrypt.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/aes_encrypt.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/ccm_mode.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/ecc_dsa.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/cmac_mode.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/ecc_dh.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/hmac_prng.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/ecc_platform_specific.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/hmac.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/src/cbc_mode.c.o
+Compiling .pio/build/tbeam/bt/common/tinycrypt/port/esp_tinycrypt_port.c.o
+Compiling .pio/build/tbeam/bt/controller/esp32/bt.c.o
+Compiling .pio/build/tbeam/bt/controller/esp32/hli_api.c.o
+Compiling .pio/build/tbeam/bt/controller/esp32/hli_vectors.S.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/transport/src/transport.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/util/src/addr.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/gatt/src/ble_svc_gatt.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/tps/src/ble_svc_tps.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/ias/src/ble_svc_ias.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/ipss/src/ble_svc_ipss.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/ans/src/ble_svc_ans.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/hr/src/ble_svc_hr.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/htp/src/ble_svc_htp.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/gap/src/ble_svc_gap.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/bas/src/ble_svc_bas.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/dis/src/ble_svc_dis.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/lls/src/ble_svc_lls.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/prox/src/ble_svc_prox.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/cts/src/ble_svc_cts.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/hid/src/ble_svc_hid.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/sps/src/ble_svc_sps.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/cte/src/ble_svc_cte.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/services/ras/src/ble_svc_ras.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_cs.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_conn.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_store_util.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_sm.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_shutdown.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_l2cap_sig_cmd.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_hci_cmd.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_id.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_att_svr.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_gatts_lcl.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_ibeacon.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_atomic.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_sm_alg.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_stop.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_hci_evt.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_mqueue.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_periodic_sync.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_att.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_ead.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_aes_ccm.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_gattc.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_store.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_sm_lgcy.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_cfg.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_att_clt.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_l2cap_coc.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_mbuf.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_att_cmd.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_log.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_eddystone.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_startup.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_l2cap_sig.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_gap.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_sm_cmd.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_uuid.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_pvcy.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_flow.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_l2cap.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_sm_sc.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_misc.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_gatts.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_adv.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_hci.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_hci_util.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_hs_resolv.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/store/ram/src/ble_store_ram.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/store/config/src/ble_store_config.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/store/config/src/ble_store_nvs.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_gattc_cache.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_gattc_cache_conn.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/host/src/ble_eatt.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/porting/nimble/src/nimble_port.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/port/src/nvs_port.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/port/src/esp_nimble_mem.c.o
+Compiling .pio/build/tbeam/bt/common/btc/profile/esp/blufi/nimble_host/esp_blufi.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/porting/npl/freertos/src/nimble_port_freertos.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/esp-hci/src/esp_nimble_hci.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/nimble/transport/esp_ipc_legacy/src/hci_esp_ipc_legacy.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/porting/nimble/src/endian.c.o
+Compiling .pio/build/tbeam/bt/porting/mem/os_mempool.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/porting/nimble/src/mem.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/porting/nimble/src/os_mbuf.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/porting/nimble/src/os_msys_init.c.o
+Compiling .pio/build/tbeam/bt/host/nimble/nimble/porting/npl/freertos/src/npl_os_freertos.c.o
+Compiling .pio/build/tbeam/cmock/CMock/src/cmock.c.o
+Compiling .pio/build/tbeam/console/commands.c.o
+Archiving .pio/build/tbeam/esp-idf/cmock/libcmock.a
+Indexing .pio/build/tbeam/esp-idf/cmock/libcmock.a
+Compiling .pio/build/tbeam/console/esp_console_common.c.o
+Compiling .pio/build/tbeam/console/esp_console_repl_internal.c.o
+Compiling .pio/build/tbeam/console/split_argv.c.o
+Compiling .pio/build/tbeam/console/linenoise/linenoise.c.o
+Archiving .pio/build/tbeam/esp-idf/bt/libbt.a
+Compiling .pio/build/tbeam/console/esp_console_repl_chip.c.o
+Compiling .pio/build/tbeam/console/argtable3/arg_cmd.c.o
+Indexing .pio/build/tbeam/esp-idf/bt/libbt.a
+Compiling .pio/build/tbeam/console/argtable3/arg_date.c.o
+Compiling .pio/build/tbeam/console/argtable3/arg_dbl.c.o
+Compiling .pio/build/tbeam/console/argtable3/arg_dstr.c.o
+Compiling .pio/build/tbeam/console/argtable3/arg_end.c.o
+Compiling .pio/build/tbeam/console/argtable3/arg_file.c.o
+Compiling .pio/build/tbeam/console/argtable3/arg_hashtable.c.o
+Compiling .pio/build/tbeam/console/argtable3/arg_int.c.o
+Compiling .pio/build/tbeam/console/argtable3/arg_lit.c.o
+Compiling .pio/build/tbeam/console/argtable3/arg_rem.c.o
+Compiling .pio/build/tbeam/console/argtable3/arg_rex.c.o
+Compiling .pio/build/tbeam/console/argtable3/arg_str.c.o
+Compiling .pio/build/tbeam/console/argtable3/arg_utils.c.o
+Compiling .pio/build/tbeam/console/argtable3/argtable3.c.o
+Compiling .pio/build/tbeam/cxx/cxx_exception_stubs.cpp.o
+Compiling .pio/build/tbeam/cxx/cxx_guards.cpp.o
+Compiling .pio/build/tbeam/cxx/cxx_init.cpp.o
+Compiling .pio/build/tbeam/driver/deprecated/adc_legacy.c.o
+Archiving .pio/build/tbeam/esp-idf/console/libconsole.a
+Indexing .pio/build/tbeam/esp-idf/console/libconsole.a
+Compiling .pio/build/tbeam/driver/deprecated/adc_dma_legacy.c.o
+Compiling .pio/build/tbeam/driver/deprecated/dac_common_legacy.c.o
+Compiling .pio/build/tbeam/driver/deprecated/esp32/dac_legacy.c.o
+Archiving .pio/build/tbeam/esp-idf/cxx/libcxx.a
+Indexing .pio/build/tbeam/esp-idf/cxx/libcxx.a
+Compiling .pio/build/tbeam/driver/deprecated/timer_legacy.c.o
+Compiling .pio/build/tbeam/driver/i2c/i2c.c.o
+Compiling .pio/build/tbeam/driver/deprecated/i2s_legacy.c.o
+Compiling .pio/build/tbeam/driver/deprecated/mcpwm_legacy.c.o
+Compiling .pio/build/tbeam/driver/deprecated/pcnt_legacy.c.o
+Compiling .pio/build/tbeam/driver/deprecated/rmt_legacy.c.o
+Compiling .pio/build/tbeam/driver/deprecated/sigma_delta_legacy.c.o
+Compiling .pio/build/tbeam/driver/touch_sensor/touch_sensor_common.c.o
+Compiling .pio/build/tbeam/driver/touch_sensor/esp32/touch_sensor.c.o
+Compiling .pio/build/tbeam/driver/twai/twai.c.o
+Compiling .pio/build/tbeam/driver/deprecated/adc_i2s_deprecated.c.o
+Compiling .pio/build/tbeam/efuse/esp32/esp_efuse_table.c.o
+Compiling .pio/build/tbeam/efuse/esp32/esp_efuse_fields.c.o
+Compiling .pio/build/tbeam/efuse/esp32/esp_efuse_utility.c.o
+Compiling .pio/build/tbeam/efuse/src/esp_efuse_api.c.o
+Compiling .pio/build/tbeam/efuse/src/esp_efuse_fields.c.o
+Archiving .pio/build/tbeam/esp-idf/driver/libdriver.a
+Indexing .pio/build/tbeam/esp-idf/driver/libdriver.a
+Compiling .pio/build/tbeam/efuse/src/esp_efuse_utility.c.o
+Compiling .pio/build/tbeam/efuse/src/efuse_controller/keys/without_key_purposes/three_key_blocks/esp_efuse_api_key.c.o
+Compiling .pio/build/tbeam/efuse/src/esp_efuse_startup.c.o
+Compiling .pio/build/tbeam/esp-tls/esp_tls.c.o
+Archiving .pio/build/tbeam/esp-idf/efuse/libefuse.a
+Indexing .pio/build/tbeam/esp-idf/efuse/libefuse.a
+Compiling .pio/build/tbeam/esp-tls/esp-tls-crypto/esp_tls_crypto.c.o
+Compiling .pio/build/tbeam/esp-tls/esp_tls_error_capture.c.o
+Compiling .pio/build/tbeam/esp-tls/esp_tls_platform_port.c.o
+Compiling .pio/build/tbeam/esp-tls/esp_tls_mbedtls.c.o
+Compiling .pio/build/tbeam/esp_adc/adc_oneshot.c.o
+Compiling .pio/build/tbeam/esp_adc/adc_common.c.o
+Compiling .pio/build/tbeam/esp_adc/adc_cali.c.o
+Compiling .pio/build/tbeam/esp_adc/adc_cali_curve_fitting.c.o
+Compiling .pio/build/tbeam/esp_adc/deprecated/esp_adc_cal_common_legacy.c.o
+Archiving .pio/build/tbeam/esp-idf/esp-tls/libesp-tls.a
+Indexing .pio/build/tbeam/esp-idf/esp-tls/libesp-tls.a
+Compiling .pio/build/tbeam/esp_adc/adc_continuous.c.o
+Compiling .pio/build/tbeam/esp_adc/esp32/adc_dma.c.o
+Compiling .pio/build/tbeam/esp_adc/esp32/adc_cali_line_fitting.c.o
+Compiling .pio/build/tbeam/esp_adc/deprecated/esp32/esp_adc_cal_legacy.c.o
+Compiling .pio/build/tbeam/esp_app_format/esp_app_desc.c.o
+Compiling .pio/build/tbeam/esp_bootloader_format/esp_bootloader_desc.c.o
+Compiling .pio/build/tbeam/esp_coex/src/coexist.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_bootloader_format/libesp_bootloader_format.a
+Indexing .pio/build/tbeam/esp-idf/esp_bootloader_format/libesp_bootloader_format.a
+Archiving .pio/build/tbeam/esp-idf/esp_app_format/libesp_app_format.a
+Indexing .pio/build/tbeam/esp-idf/esp_app_format/libesp_app_format.a
+Compiling .pio/build/tbeam/esp_coex/src/lib_printf.c.o
+Compiling .pio/build/tbeam/esp_coex/esp32/esp_coex_adapter.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_adc/libesp_adc.a
+Compiling .pio/build/tbeam/esp_coex/src/coexist_debug_diagram.c.o
+Indexing .pio/build/tbeam/esp-idf/esp_adc/libesp_adc.a
+Compiling .pio/build/tbeam/esp_coex/src/coexist_debug.c.o
+Compiling .pio/build/tbeam/esp_common/src/esp_err_to_name.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_coex/libesp_coex.a
+Indexing .pio/build/tbeam/esp-idf/esp_coex/libesp_coex.a
+Compiling .pio/build/tbeam/esp_driver_cam/esp_cam_ctlr.c.o
+Compiling .pio/build/tbeam/esp_driver_cam/dvp_share_ctrl.c.o
+Compiling .pio/build/tbeam/esp_driver_dac/dac_oneshot.c.o
+Compiling .pio/build/tbeam/esp_driver_dac/dac_cosine.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_common/libesp_common.a
+Archiving .pio/build/tbeam/esp-idf/esp_driver_cam/libesp_driver_cam.a
+Indexing .pio/build/tbeam/esp-idf/esp_common/libesp_common.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_cam/libesp_driver_cam.a
+Compiling .pio/build/tbeam/esp_driver_dac/dac_continuous.c.o
+Compiling .pio/build/tbeam/esp_driver_dac/dac_common.c.o
+Compiling .pio/build/tbeam/esp_driver_dac/esp32/dac_dma.c.o
+Compiling .pio/build/tbeam/esp_driver_gpio/src/gpio.c.o
+Compiling .pio/build/tbeam/esp_driver_gpio/src/gpio_glitch_filter_ops.c.o
+Compiling .pio/build/tbeam/esp_driver_gpio/src/rtc_io.c.o
+Compiling .pio/build/tbeam/esp_driver_gptimer/src/gptimer.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_dac/libesp_driver_dac.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_dac/libesp_driver_dac.a
+Compiling .pio/build/tbeam/esp_driver_gptimer/src/gptimer_common.c.o
+Compiling .pio/build/tbeam/esp_driver_i2c/i2c_master.c.o
+Compiling .pio/build/tbeam/esp_driver_i2c/i2c_common.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_gptimer/libesp_driver_gptimer.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_gptimer/libesp_driver_gptimer.a
+Compiling .pio/build/tbeam/esp_driver_i2c/i2c_slave.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_gpio/libesp_driver_gpio.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_gpio/libesp_driver_gpio.a
+Compiling .pio/build/tbeam/esp_driver_i2s/i2s_common.c.o
+Compiling .pio/build/tbeam/esp_driver_i2s/i2s_std.c.o
+Compiling .pio/build/tbeam/esp_driver_i2s/i2s_pdm.c.o
+Compiling .pio/build/tbeam/esp_driver_i2s/i2s_platform.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_i2c/libesp_driver_i2c.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_i2c/libesp_driver_i2c.a
+Compiling .pio/build/tbeam/esp_driver_ledc/src/ledc.c.o
+Compiling .pio/build/tbeam/esp_driver_mcpwm/src/mcpwm_cap.c.o
+Compiling .pio/build/tbeam/esp_driver_mcpwm/src/mcpwm_cmpr.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_i2s/libesp_driver_i2s.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_i2s/libesp_driver_i2s.a
+Compiling .pio/build/tbeam/esp_driver_mcpwm/src/mcpwm_com.c.o
+Compiling .pio/build/tbeam/esp_driver_mcpwm/src/mcpwm_fault.c.o
+Compiling .pio/build/tbeam/esp_driver_mcpwm/src/mcpwm_gen.c.o
+Compiling .pio/build/tbeam/esp_driver_mcpwm/src/mcpwm_oper.c.o
+Compiling .pio/build/tbeam/esp_driver_mcpwm/src/mcpwm_sync.c.o
+Compiling .pio/build/tbeam/esp_driver_mcpwm/src/mcpwm_timer.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_ledc/libesp_driver_ledc.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_ledc/libesp_driver_ledc.a
+Compiling .pio/build/tbeam/esp_driver_pcnt/src/pulse_cnt.c.o
+Compiling .pio/build/tbeam/esp_driver_rmt/src/rmt_common.c.o
+Compiling .pio/build/tbeam/esp_driver_rmt/src/rmt_encoder.c.o
+Compiling .pio/build/tbeam/esp_driver_rmt/src/rmt_encoder_bytes.c.o
+Compiling .pio/build/tbeam/esp_driver_rmt/src/rmt_encoder_copy.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_mcpwm/libesp_driver_mcpwm.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_mcpwm/libesp_driver_mcpwm.a
+Compiling .pio/build/tbeam/esp_driver_rmt/src/rmt_encoder_simple.c.o
+Compiling .pio/build/tbeam/esp_driver_rmt/src/rmt_rx.c.o
+Compiling .pio/build/tbeam/esp_driver_rmt/src/rmt_tx.c.o
+Compiling .pio/build/tbeam/esp_driver_sdio/src/sdio_slave.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_pcnt/libesp_driver_pcnt.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_pcnt/libesp_driver_pcnt.a
+Compiling .pio/build/tbeam/esp_driver_sdm/src/sdm.c.o
+Compiling .pio/build/tbeam/esp_driver_sdmmc/src/sdmmc_transaction.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_sdm/libesp_driver_sdm.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_sdm/libesp_driver_sdm.a
+Compiling .pio/build/tbeam/esp_driver_sdmmc/src/sdmmc_host.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_rmt/libesp_driver_rmt.a
+Archiving .pio/build/tbeam/esp-idf/esp_driver_sdio/libesp_driver_sdio.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_rmt/libesp_driver_rmt.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_sdio/libesp_driver_sdio.a
+Compiling .pio/build/tbeam/esp_driver_sdspi/src/sdspi_crc.c.o
+Compiling .pio/build/tbeam/esp_driver_sdspi/src/sdspi_host.c.o
+Compiling .pio/build/tbeam/esp_driver_sdspi/src/sdspi_transaction.c.o
+Compiling .pio/build/tbeam/esp_driver_spi/src/gpspi/spi_common.c.o
+Compiling .pio/build/tbeam/esp_driver_spi/src/gpspi/spi_master.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_sdspi/libesp_driver_sdspi.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_sdspi/libesp_driver_sdspi.a
+Compiling .pio/build/tbeam/esp_driver_spi/src/gpspi/spi_slave.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_sdmmc/libesp_driver_sdmmc.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_sdmmc/libesp_driver_sdmmc.a
+Compiling .pio/build/tbeam/esp_driver_spi/src/gpspi/spi_dma.c.o
+Compiling .pio/build/tbeam/esp_driver_touch_sens/common/touch_sens_common.c.o
+Compiling .pio/build/tbeam/esp_driver_touch_sens/hw_ver1/touch_version_specific.c.o
+Compiling .pio/build/tbeam/esp_driver_twai/esp_twai.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_spi/libesp_driver_spi.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_spi/libesp_driver_spi.a
+Compiling .pio/build/tbeam/esp_driver_twai/esp_twai_onchip.c.o
+Compiling .pio/build/tbeam/esp_driver_uart/src/uart.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_touch_sens/libesp_driver_touch_sens.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_touch_sens/libesp_driver_touch_sens.a
+Compiling .pio/build/tbeam/esp_driver_uart/src/uart_wakeup.c.o
+Compiling .pio/build/tbeam/esp_driver_uart/src/uart_vfs.c.o
+Compiling .pio/build/tbeam/esp_eth/src/esp_eth.c.o
+Compiling .pio/build/tbeam/esp_eth/src/phy/esp_eth_phy_802_3.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_twai/libesp_driver_twai.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_twai/libesp_driver_twai.a
+Compiling .pio/build/tbeam/esp_eth/src/esp_eth_netif_glue.c.o
+Compiling .pio/build/tbeam/esp_eth/src/mac/esp_eth_mac_esp.c.o
+Compiling .pio/build/tbeam/esp_eth/src/mac/esp_eth_mac_esp_dma.c.o
+Compiling .pio/build/tbeam/esp_eth/src/mac/esp_eth_mac_esp_gpio.c.o
+Compiling .pio/build/tbeam/esp_eth/src/phy/esp_eth_phy_generic.c.o
+Compiling .pio/build/tbeam/esp_eth/src/phy/esp_eth_phy_dp83848.c.o
+Compiling .pio/build/tbeam/esp_eth/src/phy/esp_eth_phy_ip101.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_driver_uart/libesp_driver_uart.a
+Indexing .pio/build/tbeam/esp-idf/esp_driver_uart/libesp_driver_uart.a
+Compiling .pio/build/tbeam/esp_eth/src/phy/esp_eth_phy_ksz80xx.c.o
+Compiling .pio/build/tbeam/esp_eth/src/phy/esp_eth_phy_lan87xx.c.o
+Compiling .pio/build/tbeam/esp_eth/src/phy/esp_eth_phy_rtl8201.c.o
+Compiling .pio/build/tbeam/esp_eth/src/phy/esp_eth_phy_jl1101.c.o
+Compiling .pio/build/tbeam/esp_eth/src/spi/dm9051/esp_eth_mac_dm9051.c.o
+Compiling .pio/build/tbeam/esp_eth/src/spi/dm9051/esp_eth_phy_dm9051.c.o
+Compiling .pio/build/tbeam/esp_eth/src/spi/w5500/esp_eth_mac_w5500.c.o
+Compiling .pio/build/tbeam/esp_eth/src/spi/w5500/esp_eth_phy_w5500.c.o
+Compiling .pio/build/tbeam/esp_eth/src/spi/ksz8851snl/esp_eth_mac_ksz8851snl.c.o
+Compiling .pio/build/tbeam/esp_eth/src/spi/ksz8851snl/esp_eth_phy_ksz8851snl.c.o
+Compiling .pio/build/tbeam/esp_event/default_event_loop.c.o
+Compiling .pio/build/tbeam/esp_event/esp_event.c.o
+Compiling .pio/build/tbeam/esp_event/esp_event_private.c.o
+Compiling .pio/build/tbeam/esp_gdbstub/src/gdbstub.c.o
+Compiling .pio/build/tbeam/esp_gdbstub/src/gdbstub_transport.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_eth/libesp_eth.a
+Indexing .pio/build/tbeam/esp-idf/esp_eth/libesp_eth.a
+Compiling .pio/build/tbeam/esp_gdbstub/src/packet.c.o
+Compiling .pio/build/tbeam/esp_gdbstub/src/port/xtensa/gdbstub_xtensa.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_event/libesp_event.a
+Indexing .pio/build/tbeam/esp-idf/esp_event/libesp_event.a
+Compiling .pio/build/tbeam/esp_gdbstub/src/port/xtensa/gdbstub-entry.S.o
+Compiling .pio/build/tbeam/esp_gdbstub/src/port/xtensa/xt_debugexception.S.o
+Compiling .pio/build/tbeam/esp_hid/src/esp_hidd.c.o
+Compiling .pio/build/tbeam/esp_hid/src/esp_hidh.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_gdbstub/libesp_gdbstub.a
+Indexing .pio/build/tbeam/esp-idf/esp_gdbstub/libesp_gdbstub.a
+Compiling .pio/build/tbeam/esp_hid/src/esp_hid_common.c.o
+Compiling .pio/build/tbeam/esp_hid/src/nimble_hidd.c.o
+Compiling .pio/build/tbeam/esp_hid/src/nimble_hidh.c.o
+Compiling .pio/build/tbeam/esp_http_client/esp_http_client.c.o
+Compiling .pio/build/tbeam/esp_http_client/lib/http_auth.c.o
+Compiling .pio/build/tbeam/esp_http_client/lib/http_header.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_hid/libesp_hid.a
+Indexing .pio/build/tbeam/esp-idf/esp_hid/libesp_hid.a
+Compiling .pio/build/tbeam/esp_http_client/lib/http_utils.c.o
+Compiling .pio/build/tbeam/esp_http_server/src/httpd_main.c.o
+Compiling .pio/build/tbeam/esp_http_server/src/httpd_parse.c.o
+Compiling .pio/build/tbeam/esp_http_server/src/httpd_sess.c.o
+Compiling .pio/build/tbeam/esp_http_server/src/httpd_txrx.c.o
+Compiling .pio/build/tbeam/esp_http_server/src/httpd_uri.c.o
+Compiling .pio/build/tbeam/esp_http_server/src/httpd_ws.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_http_client/libesp_http_client.a
+Indexing .pio/build/tbeam/esp-idf/esp_http_client/libesp_http_client.a
+Compiling .pio/build/tbeam/esp_http_server/src/util/ctrl_sock.c.o
+Compiling .pio/build/tbeam/esp_https_ota/src/esp_https_ota.c.o
+Compiling .pio/build/tbeam/esp_https_server/src/https_server.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_http_server/libesp_http_server.a
+Indexing .pio/build/tbeam/esp-idf/esp_http_server/libesp_http_server.a
+Compiling .pio/build/tbeam/esp_hw_support/cpu.c.o
+Compiling .pio/build/tbeam/esp_hw_support/port/esp32/esp_cpu_intr.c.o
+Compiling .pio/build/tbeam/esp_hw_support/esp_memory_utils.c.o
+Compiling .pio/build/tbeam/esp_hw_support/port/esp32/cpu_region_protect.c.o
+Compiling .pio/build/tbeam/esp_hw_support/esp_clk.c.o
+Compiling .pio/build/tbeam/esp_hw_support/clk_ctrl_os.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_https_server/libesp_https_server.a
+Indexing .pio/build/tbeam/esp-idf/esp_https_server/libesp_https_server.a
+Compiling .pio/build/tbeam/esp_hw_support/hw_random.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_https_ota/libesp_https_ota.a
+Indexing .pio/build/tbeam/esp-idf/esp_https_ota/libesp_https_ota.a
+Compiling .pio/build/tbeam/esp_hw_support/intr_alloc.c.o
+Compiling .pio/build/tbeam/esp_hw_support/mac_addr.c.o
+Compiling .pio/build/tbeam/esp_hw_support/periph_ctrl.c.o
+Compiling .pio/build/tbeam/esp_hw_support/revision.c.o
+Compiling .pio/build/tbeam/esp_hw_support/rtc_module.c.o
+Compiling .pio/build/tbeam/esp_hw_support/regi2c_ctrl.c.o
+Compiling .pio/build/tbeam/esp_hw_support/esp_gpio_reserve.c.o
+Compiling .pio/build/tbeam/esp_hw_support/sar_periph_ctrl_common.c.o
+Compiling .pio/build/tbeam/esp_hw_support/port/esp32/io_mux.c.o
+Compiling .pio/build/tbeam/esp_hw_support/port/esp32/esp_clk_tree.c.o
+Compiling .pio/build/tbeam/esp_hw_support/dma/esp_dma_utils.c.o
+Compiling .pio/build/tbeam/esp_hw_support/dma/gdma_link.c.o
+Compiling .pio/build/tbeam/esp_hw_support/spi_bus_lock.c.o
+Compiling .pio/build/tbeam/esp_hw_support/clk_utils.c.o
+Compiling .pio/build/tbeam/esp_hw_support/port/esp_clk_tree_common.c.o
+Compiling .pio/build/tbeam/esp_hw_support/spi_share_hw_ctrl.c.o
+Compiling .pio/build/tbeam/esp_hw_support/adc_share_hw_ctrl.c.o
+Compiling .pio/build/tbeam/esp_hw_support/sleep_modem.c.o
+Compiling .pio/build/tbeam/esp_hw_support/sleep_modes.c.o
+Compiling .pio/build/tbeam/esp_hw_support/sleep_console.c.o
+Compiling .pio/build/tbeam/esp_hw_support/sleep_mspi.c.o
+Compiling .pio/build/tbeam/esp_hw_support/sleep_usb.c.o
+Compiling .pio/build/tbeam/esp_hw_support/sleep_gpio.c.o
+Compiling .pio/build/tbeam/esp_hw_support/sleep_event.c.o
+Compiling .pio/build/tbeam/esp_hw_support/rtc_wdt.c.o
+Compiling .pio/build/tbeam/esp_hw_support/mspi_timing_tuning/mspi_timing_tuning.c.o
+Compiling .pio/build/tbeam/esp_hw_support/sleep_wake_stub.c.o
+Compiling .pio/build/tbeam/esp_hw_support/esp_clock_output.c.o
+Compiling .pio/build/tbeam/esp_hw_support/power_supply/brownout.c.o
+Compiling .pio/build/tbeam/esp_hw_support/port/esp32/rtc_clk.c.o
+Compiling .pio/build/tbeam/esp_hw_support/port/esp32/rtc_clk_init.c.o
+Compiling .pio/build/tbeam/esp_hw_support/port/esp32/rtc_init.c.o
+Compiling .pio/build/tbeam/esp_hw_support/port/esp32/rtc_sleep.c.o
+Compiling .pio/build/tbeam/esp_hw_support/port/esp32/rtc_time.c.o
+Compiling .pio/build/tbeam/esp_hw_support/port/esp32/chip_info.c.o
+Compiling .pio/build/tbeam/esp_hw_support/port/esp32/cache_sram_mmu.c.o
+Compiling .pio/build/tbeam/esp_hw_support/port/esp32/sar_periph_ctrl.c.o
+Compiling .pio/build/tbeam/esp_lcd/src/esp_lcd_common.c.o
+Compiling .pio/build/tbeam/esp_lcd/src/esp_lcd_panel_io.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_hw_support/libesp_hw_support.a
+Compiling .pio/build/tbeam/esp_lcd/src/esp_lcd_panel_nt35510.c.o
+Indexing .pio/build/tbeam/esp-idf/esp_hw_support/libesp_hw_support.a
+Compiling .pio/build/tbeam/esp_lcd/src/esp_lcd_panel_ssd1306.c.o
+Compiling .pio/build/tbeam/esp_lcd/src/esp_lcd_panel_st7789.c.o
+Compiling .pio/build/tbeam/esp_lcd/src/esp_lcd_panel_ops.c.o
+Compiling .pio/build/tbeam/esp_lcd/i2c/esp_lcd_panel_io_i2c_v1.c.o
+Compiling .pio/build/tbeam/esp_lcd/i2c/esp_lcd_panel_io_i2c_v2.c.o
+Compiling .pio/build/tbeam/esp_lcd/spi/esp_lcd_panel_io_spi.c.o
+Compiling .pio/build/tbeam/esp_lcd/i80/esp_lcd_panel_io_i2s.c.o
+Compiling .pio/build/tbeam/esp_local_ctrl/src/esp_local_ctrl.c.o
+Compiling .pio/build/tbeam/esp_local_ctrl/src/esp_local_ctrl_handler.c.o
+Compiling .pio/build/tbeam/esp_local_ctrl/proto-c/esp_local_ctrl.pb-c.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_lcd/libesp_lcd.a
+Indexing .pio/build/tbeam/esp-idf/esp_lcd/libesp_lcd.a
+Compiling .pio/build/tbeam/esp_local_ctrl/src/esp_local_ctrl_transport_ble.c.o
+Compiling .pio/build/tbeam/esp_local_ctrl/src/esp_local_ctrl_transport_httpd.c.o
+Compiling .pio/build/tbeam/esp_mm/esp_mmu_map.c.o
+Compiling .pio/build/tbeam/esp_mm/port/esp32/ext_mem_layout.c.o
+Compiling .pio/build/tbeam/esp_mm/esp_cache_msync.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_local_ctrl/libesp_local_ctrl.a
+Indexing .pio/build/tbeam/esp-idf/esp_local_ctrl/libesp_local_ctrl.a
+Compiling .pio/build/tbeam/esp_mm/esp_cache_utils.c.o
+Compiling .pio/build/tbeam/esp_mm/cache_esp32.c.o
+Compiling .pio/build/tbeam/esp_mm/heap_align_hw.c.o
+Compiling .pio/build/tbeam/esp_netif/esp_netif_handlers.c.o
+Compiling .pio/build/tbeam/esp_netif/esp_netif_objects.c.o
+Compiling .pio/build/tbeam/esp_netif/esp_netif_defaults.c.o
+Compiling .pio/build/tbeam/esp_netif/lwip/esp_netif_lwip.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_mm/libesp_mm.a
+Indexing .pio/build/tbeam/esp-idf/esp_mm/libesp_mm.a
+Compiling .pio/build/tbeam/esp_netif/lwip/esp_netif_sntp.c.o
+Compiling .pio/build/tbeam/esp_netif/lwip/esp_netif_lwip_defaults.c.o
+Compiling .pio/build/tbeam/esp_netif/lwip/netif/wlanif.c.o
+Compiling .pio/build/tbeam/esp_netif/lwip/netif/ethernetif.c.o
+Compiling .pio/build/tbeam/esp_netif/lwip/netif/esp_pbuf_ref.c.o
+Compiling .pio/build/tbeam/esp_partition/partition.c.o
+Compiling .pio/build/tbeam/esp_partition/partition_target.c.o
+Compiling .pio/build/tbeam/esp_phy/src/phy_override.c.o
+Compiling .pio/build/tbeam/esp_phy/src/lib_printf.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_partition/libesp_partition.a
+Indexing .pio/build/tbeam/esp-idf/esp_partition/libesp_partition.a
+Compiling .pio/build/tbeam/esp_phy/src/phy_common.c.o
+Compiling .pio/build/tbeam/esp_phy/src/phy_init.c.o
+Compiling .pio/build/tbeam/esp_phy/esp32/phy_init_data.c.o
+Compiling .pio/build/tbeam/esp_phy/src/btbb_init.c.o
+Compiling .pio/build/tbeam/esp_pm/pm_locks.c.o
+Compiling .pio/build/tbeam/esp_pm/pm_trace.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_phy/libesp_phy.a
+Indexing .pio/build/tbeam/esp-idf/esp_phy/libesp_phy.a
+Compiling .pio/build/tbeam/esp_pm/pm_impl.c.o
+Compiling .pio/build/tbeam/esp_psram/system_layer/esp_psram_mspi.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_netif/libesp_netif.a
+Indexing .pio/build/tbeam/esp-idf/esp_netif/libesp_netif.a
+Compiling .pio/build/tbeam/esp_ringbuf/ringbuf.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_psram/libesp_psram.a
+Indexing .pio/build/tbeam/esp-idf/esp_psram/libesp_psram.a
+Compiling .pio/build/tbeam/esp_rom/patches/esp_rom_sys.c.o
+Compiling .pio/build/tbeam/esp_rom/patches/esp_rom_print.c.o
+Compiling .pio/build/tbeam/esp_rom/patches/esp_rom_crc.c.o
+Compiling .pio/build/tbeam/esp_rom/patches/esp_rom_uart.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_pm/libesp_pm.a
+Indexing .pio/build/tbeam/esp-idf/esp_pm/libesp_pm.a
+Compiling .pio/build/tbeam/esp_rom/patches/esp_rom_spiflash.c.o
+Compiling .pio/build/tbeam/esp_rom/patches/esp_rom_efuse.c.o
+Compiling .pio/build/tbeam/esp_rom/patches/esp_rom_gpio.c.o
+Compiling .pio/build/tbeam/esp_rom/patches/esp_rom_longjmp.S.o
+Compiling .pio/build/tbeam/esp_security/src/init.c.o
+Compiling .pio/build/tbeam/esp_security/src/esp_crypto_lock.c.o
+Compiling .pio/build/tbeam/esp_security/src/esp_crypto_periph_clk.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_ringbuf/libesp_ringbuf.a
+Indexing .pio/build/tbeam/esp-idf/esp_ringbuf/libesp_ringbuf.a
+Compiling .pio/build/tbeam/esp_system/esp_err.c.o
+Compiling .pio/build/tbeam/esp_system/crosscore_int.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_rom/libesp_rom.a
+Archiving .pio/build/tbeam/esp-idf/esp_security/libesp_security.a
+Indexing .pio/build/tbeam/esp-idf/esp_security/libesp_security.a
+Indexing .pio/build/tbeam/esp-idf/esp_rom/libesp_rom.a
+Compiling .pio/build/tbeam/esp_system/esp_ipc.c.o
+Compiling .pio/build/tbeam/esp_system/esp_system_console.c.o
+Compiling .pio/build/tbeam/esp_system/freertos_hooks.c.o
+Compiling .pio/build/tbeam/esp_system/int_wdt.c.o
+Compiling .pio/build/tbeam/esp_system/panic.c.o
+Compiling .pio/build/tbeam/esp_system/esp_system.c.o
+Compiling .pio/build/tbeam/esp_system/startup.c.o
+Compiling .pio/build/tbeam/esp_system/startup_funcs.c.o
+Compiling .pio/build/tbeam/esp_system/system_time.c.o
+Compiling .pio/build/tbeam/esp_system/stack_check.c.o
+Compiling .pio/build/tbeam/esp_system/ubsan.c.o
+Compiling .pio/build/tbeam/esp_system/xt_wdt.c.o
+Compiling .pio/build/tbeam/esp_system/task_wdt/task_wdt.c.o
+Compiling .pio/build/tbeam/esp_system/task_wdt/task_wdt_impl_timergroup.c.o
+Compiling .pio/build/tbeam/esp_system/port/cpu_start.c.o
+Compiling .pio/build/tbeam/esp_system/port/panic_handler.c.o
+Compiling .pio/build/tbeam/esp_system/port/esp_system_chip.c.o
+Compiling .pio/build/tbeam/esp_system/port/image_process.c.o
+Compiling .pio/build/tbeam/esp_system/port/esp_ipc_isr.c.o
+Compiling .pio/build/tbeam/esp_system/port/arch/xtensa/esp_ipc_isr_port.c.o
+Compiling .pio/build/tbeam/esp_system/port/arch/xtensa/esp_ipc_isr_handler.S.o
+Compiling .pio/build/tbeam/esp_system/port/arch/xtensa/esp_ipc_isr_routines.S.o
+Compiling .pio/build/tbeam/esp_system/port/arch/xtensa/panic_arch.c.o
+Compiling .pio/build/tbeam/esp_system/port/arch/xtensa/panic_handler_asm.S.o
+Compiling .pio/build/tbeam/esp_system/port/arch/xtensa/expression_with_stack.c.o
+Compiling .pio/build/tbeam/esp_system/port/arch/xtensa/expression_with_stack_asm.S.o
+Compiling .pio/build/tbeam/esp_system/port/arch/xtensa/debug_helpers.c.o
+Compiling .pio/build/tbeam/esp_system/port/arch/xtensa/debug_helpers_asm.S.o
+Compiling .pio/build/tbeam/esp_system/port/arch/xtensa/debug_stubs.c.o
+Compiling .pio/build/tbeam/esp_system/port/arch/xtensa/trax.c.o
+Compiling .pio/build/tbeam/esp_system/port/soc/esp32/highint_hdl.S.o
+Compiling .pio/build/tbeam/esp_system/port/soc/esp32/clk.c.o
+Compiling .pio/build/tbeam/esp_system/port/soc/esp32/reset_reason.c.o
+Compiling .pio/build/tbeam/esp_system/port/soc/esp32/system_internal.c.o
+Compiling .pio/build/tbeam/esp_system/port/soc/esp32/cache_err_int.c.o
+Compiling .pio/build/tbeam/esp_timer/src/esp_timer.c.o
+Compiling .pio/build/tbeam/esp_timer/src/esp_timer_init.c.o
+Compiling .pio/build/tbeam/esp_timer/src/ets_timer_legacy.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_system/libesp_system.a
+Indexing .pio/build/tbeam/esp-idf/esp_system/libesp_system.a
+Compiling .pio/build/tbeam/esp_timer/src/system_time.c.o
+Compiling .pio/build/tbeam/esp_timer/src/esp_timer_impl_common.c.o
+Compiling .pio/build/tbeam/esp_timer/src/esp_timer_impl_lac.c.o
+Compiling .pio/build/tbeam/esp_vfs_console/vfs_console.c.o
+Compiling .pio/build/tbeam/esp_wifi/src/lib_printf.c.o
+Compiling .pio/build/tbeam/esp_wifi/src/mesh_event.c.o
+Compiling .pio/build/tbeam/esp_wifi/src/smartconfig.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_timer/libesp_timer.a
+Archiving .pio/build/tbeam/esp-idf/esp_vfs_console/libesp_vfs_console.a
+Indexing .pio/build/tbeam/esp-idf/esp_timer/libesp_timer.a
+Indexing .pio/build/tbeam/esp-idf/esp_vfs_console/libesp_vfs_console.a
+Compiling .pio/build/tbeam/esp_wifi/src/wifi_init.c.o
+Compiling .pio/build/tbeam/esp_wifi/src/wifi_default.c.o
+Compiling .pio/build/tbeam/esp_wifi/src/wifi_netif.c.o
+Compiling .pio/build/tbeam/esp_wifi/src/wifi_default_ap.c.o
+Compiling .pio/build/tbeam/esp_wifi/esp32/esp_adapter.c.o
+Compiling .pio/build/tbeam/esp_wifi/regulatory/esp_wifi_regulatory.c.o
+Compiling .pio/build/tbeam/esp_wifi/src/smartconfig_ack.c.o
+Compiling .pio/build/tbeam/espcoredump/src/core_dump_init.c.o
+Compiling .pio/build/tbeam/espcoredump/src/core_dump_common.c.o
+Compiling .pio/build/tbeam/espcoredump/src/core_dump_flash.c.o
+Compiling .pio/build/tbeam/espcoredump/src/core_dump_uart.c.o
+Archiving .pio/build/tbeam/esp-idf/esp_wifi/libesp_wifi.a
+Indexing .pio/build/tbeam/esp-idf/esp_wifi/libesp_wifi.a
+Compiling .pio/build/tbeam/espcoredump/src/core_dump_elf.c.o
+Compiling .pio/build/tbeam/espcoredump/src/core_dump_binary.c.o
+Compiling .pio/build/tbeam/espcoredump/src/core_dump_sha.c.o
+Compiling .pio/build/tbeam/espcoredump/src/core_dump_crc.c.o
+Compiling .pio/build/tbeam/espcoredump/src/port/xtensa/core_dump_port.c.o
+Compiling .pio/build/tbeam/espcoredump/src/port/xtensa/core_dump_stack_switch.S.o
+Compiling .pio/build/tbeam/managed_components/espressif__cbor/tinycbor/src/cborencoder_close_container_checked.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__cbor/tinycbor/src/cborencoder.c.o
+Archiving .pio/build/tbeam/esp-idf/espcoredump/libespcoredump.a
+Indexing .pio/build/tbeam/esp-idf/espcoredump/libespcoredump.a
+Compiling .pio/build/tbeam/managed_components/espressif__cbor/tinycbor/src/cborencoder_float.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__cbor/tinycbor/src/cborerrorstrings.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__cbor/tinycbor/src/cborparser_dup_string.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__cbor/tinycbor/src/cborparser.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__cbor/tinycbor/src/cborparser_float.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__cbor/tinycbor/src/cborpretty_stdio.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__cbor/tinycbor/src/cborpretty.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__cbor/tinycbor/src/cbortojson.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__cbor/tinycbor/src/cborvalidation.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__cbor/tinycbor/src/open_memstream.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__fb_gfx/fb_gfx.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__lan867x/src/esp_eth_phy_lan867x.c.o
+Archiving .pio/build/tbeam/esp-idf/espressif__cbor/libespressif__cbor.a
+Indexing .pio/build/tbeam/esp-idf/espressif__cbor/libespressif__cbor.a
+Compiling .pio/build/tbeam/managed_components/espressif__lan86xx_common/src/esp_eth_phy_lan86xx.c.o
+Archiving .pio/build/tbeam/esp-idf/espressif__fb_gfx/libespressif__fb_gfx.a
+Indexing .pio/build/tbeam/esp-idf/espressif__fb_gfx/libespressif__fb_gfx.a
+Compiling .pio/build/tbeam/managed_components/espressif__mdns/mdns_responder.c.o
+Archiving .pio/build/tbeam/esp-idf/espressif__lan867x/libespressif__lan867x.a
+Compiling .pio/build/tbeam/managed_components/espressif__mdns/mdns_receive.c.o
+Indexing .pio/build/tbeam/esp-idf/espressif__lan867x/libespressif__lan867x.a
+Compiling .pio/build/tbeam/managed_components/espressif__mdns/mdns_utils.c.o
+Archiving .pio/build/tbeam/esp-idf/espressif__lan86xx_common/libespressif__lan86xx_common.a
+Indexing .pio/build/tbeam/esp-idf/espressif__lan86xx_common/libespressif__lan86xx_common.a
+Compiling .pio/build/tbeam/managed_components/espressif__mdns/mdns_debug.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__mdns/mdns_send.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__mdns/mdns_netif.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__mdns/mdns_querier.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__mdns/mdns_pcb.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__mdns/mdns_service.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__mdns/mdns_browser.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__mdns/mdns_cache.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__mdns/mdns_mem_caps.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__mdns/mdns_networking_lwip.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__network_provisioning/src/network_config.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__network_provisioning/src/network_scan.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__network_provisioning/src/network_ctrl.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__network_provisioning/src/manager.c.o
+Archiving .pio/build/tbeam/esp-idf/espressif__mdns/libespressif__mdns.a
+Indexing .pio/build/tbeam/esp-idf/espressif__mdns/libespressif__mdns.a
+Compiling .pio/build/tbeam/managed_components/espressif__network_provisioning/src/handlers.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__network_provisioning/src/scheme_console.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__network_provisioning/proto-c/network_config.pb-c.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__network_provisioning/proto-c/network_scan.pb-c.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__network_provisioning/proto-c/network_ctrl.pb-c.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__network_provisioning/proto-c/network_constants.pb-c.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__network_provisioning/src/scheme_softap.c.o
+Compiling .pio/build/tbeam/managed_components/espressif__network_provisioning/src/scheme_ble.c.o
+Compiling .pio/build/tbeam/fatfs/diskio/diskio.c.o
+Compiling .pio/build/tbeam/fatfs/diskio/diskio_rawflash.c.o
+Compiling .pio/build/tbeam/fatfs/diskio/diskio_wl.c.o
+Compiling .pio/build/tbeam/fatfs/src/ff.c.o
+Archiving .pio/build/tbeam/esp-idf/espressif__network_provisioning/libespressif__network_provisioning.a
+Indexing .pio/build/tbeam/esp-idf/espressif__network_provisioning/libespressif__network_provisioning.a
+Compiling .pio/build/tbeam/fatfs/src/ffunicode.c.o
+Compiling .pio/build/tbeam/fatfs/port/freertos/ffsystem.c.o
+Compiling .pio/build/tbeam/fatfs/diskio/diskio_sdmmc.c.o
+Compiling .pio/build/tbeam/fatfs/vfs/vfs_fat.c.o
+Compiling .pio/build/tbeam/fatfs/vfs/vfs_fat_sdmmc.c.o
+Compiling .pio/build/tbeam/fatfs/vfs/vfs_fat_spiflash.c.o
+Compiling .pio/build/tbeam/base64.cpp.o
+Compiling .pio/build/tbeam/cbuf.cpp.o
+Compiling .pio/build/tbeam/ColorFormat.c.o
+Compiling .pio/build/tbeam/chip-debug-report.cpp.o
+Compiling .pio/build/tbeam/esp32-hal-adc.c.o
+Archiving .pio/build/tbeam/esp-idf/fatfs/libfatfs.a
+Indexing .pio/build/tbeam/esp-idf/fatfs/libfatfs.a
+Compiling .pio/build/tbeam/esp32-hal-bt.c.o
+Compiling .pio/build/tbeam/esp32-hal-cpu.c.o
+Compiling .pio/build/tbeam/esp32-hal-dac.c.o
+Compiling .pio/build/tbeam/esp32-hal-gpio.c.o
+Compiling .pio/build/tbeam/esp32-hal-hosted.c.o
+Compiling .pio/build/tbeam/esp32-hal-i2c.c.o
+Compiling .pio/build/tbeam/esp32-hal-i2c-ng.c.o
+Compiling .pio/build/tbeam/esp32-hal-i2c-slave.c.o
+Compiling .pio/build/tbeam/esp32-hal-ledc.c.o
+Compiling .pio/build/tbeam/esp32-hal-log-wrapper.c.o
+Compiling .pio/build/tbeam/esp32-hal-matrix.c.o
+Compiling .pio/build/tbeam/esp32-hal-misc.c.o
+Compiling .pio/build/tbeam/esp32-hal-periman.c.o
+Compiling .pio/build/tbeam/esp32-hal-ldo.c.o
+Compiling .pio/build/tbeam/esp32-hal-psram.c.o
+Compiling .pio/build/tbeam/esp32-hal-rgb-led.c.o
+Compiling .pio/build/tbeam/esp32-hal-sigmadelta.c.o
+Compiling .pio/build/tbeam/esp32-hal-spi.c.o
+Compiling .pio/build/tbeam/esp32-hal-time.c.o
+Compiling .pio/build/tbeam/esp32-hal-timer.c.o
+Compiling .pio/build/tbeam/esp32-hal-tinyusb.c.o
+Compiling .pio/build/tbeam/esp32-hal-touch.c.o
+Compiling .pio/build/tbeam/esp32-hal-touch-ng.c.o
+Compiling .pio/build/tbeam/esp32-hal-uart.c.o
+Compiling .pio/build/tbeam/esp32-hal-rmt.c.o
+Compiling .pio/build/tbeam/Esp.cpp.o
+Compiling .pio/build/tbeam/freertos_stats.cpp.o
+Compiling .pio/build/tbeam/FunctionalInterrupt.cpp.o
+Compiling .pio/build/tbeam/HardwareSerial.cpp.o
+Compiling .pio/build/tbeam/HashBuilder.cpp.o
+Compiling .pio/build/tbeam/HEXBuilder.cpp.o
+Compiling .pio/build/tbeam/idf_openthread_mpool_wrapper.c.o
+Compiling .pio/build/tbeam/IPAddress.cpp.o
+Compiling .pio/build/tbeam/cdecode.c.o
+Compiling .pio/build/tbeam/cencode.c.o
+Compiling .pio/build/tbeam/MacAddress.cpp.o
+Compiling .pio/build/tbeam/main.cpp.o
+Compiling .pio/build/tbeam/MD5Builder.cpp.o
+Compiling .pio/build/tbeam/Print.cpp.o
+Compiling .pio/build/tbeam/stdlib_noniso.c.o
+Compiling .pio/build/tbeam/Stream.cpp.o
+Compiling .pio/build/tbeam/StreamString.cpp.o
+Compiling .pio/build/tbeam/StringUtils.cpp.o
+Compiling .pio/build/tbeam/Tone.cpp.o
+Compiling .pio/build/tbeam/HWCDC.cpp.o
+Compiling .pio/build/tbeam/USB.cpp.o
+Compiling .pio/build/tbeam/USBHost.cpp.o
+Compiling .pio/build/tbeam/USBCDC.cpp.o
+Compiling .pio/build/tbeam/USBMSC.cpp.o
+Compiling .pio/build/tbeam/FirmwareMSC.cpp.o
+Compiling .pio/build/tbeam/firmware_msc_fat.c.o
+Compiling .pio/build/tbeam/wiring_pulse.c.o
+Compiling .pio/build/tbeam/wiring_shift.c.o
+Compiling .pio/build/tbeam/WMath.cpp.o
+Compiling .pio/build/tbeam/WString.cpp.o
+Compiling .pio/build/tbeam/AsyncUDP.cpp.o
+Compiling .pio/build/tbeam/BLE2901.cpp.o
+Compiling .pio/build/tbeam/BLE2902.cpp.o
+Compiling .pio/build/tbeam/BLE2904.cpp.o
+Compiling .pio/build/tbeam/BLEAddress.cpp.o
+Compiling .pio/build/tbeam/BLEAdvertisedDevice.cpp.o
+Compiling .pio/build/tbeam/BLEAdvertising.cpp.o
+Compiling .pio/build/tbeam/BLEBeacon.cpp.o
+Compiling .pio/build/tbeam/BLECharacteristic.cpp.o
+Compiling .pio/build/tbeam/BLECharacteristicMap.cpp.o
+Compiling .pio/build/tbeam/BLEClient.cpp.o
+Compiling .pio/build/tbeam/BLEDescriptor.cpp.o
+Compiling .pio/build/tbeam/BLEDescriptorMap.cpp.o
+Compiling .pio/build/tbeam/BLEDevice.cpp.o
+Compiling .pio/build/tbeam/BLEEddystoneTLM.cpp.o
+Compiling .pio/build/tbeam/BLEEddystoneURL.cpp.o
+Compiling .pio/build/tbeam/BLEExceptions.cpp.o
+Compiling .pio/build/tbeam/BLEHIDDevice.cpp.o
+Compiling .pio/build/tbeam/BLERemoteCharacteristic.cpp.o
+Compiling .pio/build/tbeam/BLERemoteDescriptor.cpp.o
+Compiling .pio/build/tbeam/BLERemoteService.cpp.o
+Compiling .pio/build/tbeam/BLEScan.cpp.o
+Compiling .pio/build/tbeam/BLESecurity.cpp.o
+Compiling .pio/build/tbeam/BLEServer.cpp.o
+Compiling .pio/build/tbeam/BLEService.cpp.o
+Compiling .pio/build/tbeam/BLEServiceMap.cpp.o
+Compiling .pio/build/tbeam/BLEUtils.cpp.o
+Compiling .pio/build/tbeam/BLEUUID.cpp.o
+Compiling .pio/build/tbeam/BLEValue.cpp.o
+Compiling .pio/build/tbeam/FreeRTOS.cpp.o
+Compiling .pio/build/tbeam/GeneralUtils.cpp.o
+Compiling .pio/build/tbeam/EEPROM.cpp.o
+Compiling .pio/build/tbeam/ESP_Video.cpp.o
+Compiling .pio/build/tbeam/ESPmDNS.cpp.o
+Compiling .pio/build/tbeam/FS.cpp.o
+Compiling .pio/build/tbeam/vfs_api.cpp.o
+Compiling .pio/build/tbeam/SHA1Builder.cpp.o
+Compiling .pio/build/tbeam/SHA2Builder.cpp.o
+Compiling .pio/build/tbeam/SHA3Builder.cpp.o
+Compiling .pio/build/tbeam/PBKDF2_HMACBuilder.cpp.o
+Compiling .pio/build/tbeam/LittleFS.cpp.o
+Compiling .pio/build/tbeam/NetworkInterface.cpp.o
+Compiling .pio/build/tbeam/NetworkEvents.cpp.o
+Compiling .pio/build/tbeam/NetworkManager.cpp.o
+Compiling .pio/build/tbeam/NetworkClient.cpp.o
+Compiling .pio/build/tbeam/NetworkServer.cpp.o
+Compiling .pio/build/tbeam/NetworkUdp.cpp.o
+Compiling .pio/build/tbeam/Preferences.cpp.o
+Compiling .pio/build/tbeam/SD_MMC.cpp.o
+Compiling .pio/build/tbeam/SD.cpp.o
+Compiling .pio/build/tbeam/sd_diskio.cpp.o
+Compiling .pio/build/tbeam/sd_diskio_crc.c.o
+Compiling .pio/build/tbeam/SPIFFS.cpp.o
+Compiling .pio/build/tbeam/SPI.cpp.o
+Compiling .pio/build/tbeam/Ticker.cpp.o
+Compiling .pio/build/tbeam/Updater.cpp.o
+Compiling .pio/build/tbeam/UpdaterSHA256.cpp.o
+Compiling .pio/build/tbeam/UpdaterSHA512.cpp.o
+Compiling .pio/build/tbeam/HttpsOTAUpdate.cpp.o
+Compiling .pio/build/tbeam/Updater_Signing.cpp.o
+Compiling .pio/build/tbeam/ssl_client.cpp.o
+Compiling .pio/build/tbeam/NetworkClientSecure.cpp.o
+Compiling .pio/build/tbeam/WiFiAP.cpp.o
+Compiling .pio/build/tbeam/WiFi.cpp.o
+Compiling .pio/build/tbeam/WiFiGeneric.cpp.o
+Compiling .pio/build/tbeam/WiFiMulti.cpp.o
+Compiling .pio/build/tbeam/WiFiScan.cpp.o
+Compiling .pio/build/tbeam/WiFiSTA.cpp.o
+Compiling .pio/build/tbeam/STA.cpp.o
+Compiling .pio/build/tbeam/AP.cpp.o
+Compiling .pio/build/tbeam/Wire.cpp.o
+Compiling .pio/build/tbeam/freertos/heap_idf.c.o
+Compiling .pio/build/tbeam/freertos/app_startup.c.o
+Compiling .pio/build/tbeam/freertos/port_common.c.o
+Compiling .pio/build/tbeam/freertos/port_systick.c.o
+Compiling .pio/build/tbeam/freertos/FreeRTOS-Kernel/list.c.o
+Compiling .pio/build/tbeam/freertos/FreeRTOS-Kernel/queue.c.o
+Compiling .pio/build/tbeam/freertos/FreeRTOS-Kernel/tasks.c.o
+Compiling .pio/build/tbeam/freertos/FreeRTOS-Kernel/timers.c.o
+Compiling .pio/build/tbeam/freertos/FreeRTOS-Kernel/event_groups.c.o
+Compiling .pio/build/tbeam/freertos/FreeRTOS-Kernel/stream_buffer.c.o
+Compiling .pio/build/tbeam/freertos/FreeRTOS-Kernel/portable/xtensa/port.c.o
+Compiling .pio/build/tbeam/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S.o
+Compiling .pio/build/tbeam/freertos/FreeRTOS-Kernel/portable/xtensa/xtensa_init.c.o
+Compiling .pio/build/tbeam/freertos/FreeRTOS-Kernel/portable/xtensa/xtensa_overlay_os_hook.c.o
+Compiling .pio/build/tbeam/freertos/esp_additions/freertos_compatibility.c.o
+Compiling .pio/build/tbeam/freertos/esp_additions/idf_additions_event_groups.c.o
+Compiling .pio/build/tbeam/freertos/esp_additions/idf_additions.c.o
+Compiling .pio/build/tbeam/hal/hal_utils.c.o
+Compiling .pio/build/tbeam/hal/mpu_hal.c.o
+Compiling .pio/build/tbeam/hal/efuse_hal.c.o
+Compiling .pio/build/tbeam/hal/esp32/efuse_hal.c.o
+Archiving .pio/build/tbeam/esp-idf/freertos/libfreertos.a
+Indexing .pio/build/tbeam/esp-idf/freertos/libfreertos.a
+Compiling .pio/build/tbeam/hal/wdt_hal_iram.c.o
+Compiling .pio/build/tbeam/hal/mmu_hal.c.o
+Compiling .pio/build/tbeam/hal/esp32/cache_hal_esp32.c.o
+Compiling .pio/build/tbeam/hal/color_hal.c.o
+Compiling .pio/build/tbeam/hal/spi_flash_hal.c.o
+Compiling .pio/build/tbeam/hal/spi_flash_hal_iram.c.o
+Compiling .pio/build/tbeam/hal/spi_flash_encrypt_hal_iram.c.o
+Compiling .pio/build/tbeam/hal/esp32/clk_tree_hal.c.o
+Compiling .pio/build/tbeam/hal/uart_hal.c.o
+Compiling .pio/build/tbeam/hal/uart_hal_iram.c.o
+Archiving .pio/build/tbeam/esp-idf/framework-arduinoespressif32/libframework-arduinoespressif32.a
+Compiling .pio/build/tbeam/hal/gpio_hal.c.o
+Compiling .pio/build/tbeam/hal/rtc_io_hal.c.o
+Compiling .pio/build/tbeam/hal/timer_hal.c.o
+Indexing .pio/build/tbeam/esp-idf/framework-arduinoespressif32/libframework-arduinoespressif32.a
+Compiling .pio/build/tbeam/hal/ledc_hal.c.o
+Compiling .pio/build/tbeam/hal/ledc_hal_iram.c.o
+Compiling .pio/build/tbeam/hal/i2c_hal.c.o
+Compiling .pio/build/tbeam/hal/i2c_hal_iram.c.o
+Compiling .pio/build/tbeam/hal/rmt_hal.c.o
+Compiling .pio/build/tbeam/hal/pcnt_hal.c.o
+Compiling .pio/build/tbeam/hal/mcpwm_hal.c.o
+Compiling .pio/build/tbeam/hal/twai_hal_v1.c.o
+Compiling .pio/build/tbeam/hal/i2s_hal.c.o
+Compiling .pio/build/tbeam/hal/sdm_hal.c.o
+Compiling .pio/build/tbeam/hal/sdmmc_hal.c.o
+Compiling .pio/build/tbeam/hal/emac_hal.c.o
+Compiling .pio/build/tbeam/hal/adc_hal_common.c.o
+Compiling .pio/build/tbeam/hal/adc_oneshot_hal.c.o
+Compiling .pio/build/tbeam/hal/adc_hal.c.o
+Compiling .pio/build/tbeam/hal/mpi_hal.c.o
+Compiling .pio/build/tbeam/hal/sha_hal.c.o
+Compiling .pio/build/tbeam/hal/aes_hal.c.o
+Compiling .pio/build/tbeam/hal/brownout_hal.c.o
+Compiling .pio/build/tbeam/hal/spi_hal.c.o
+Compiling .pio/build/tbeam/hal/spi_hal_iram.c.o
+Compiling .pio/build/tbeam/hal/spi_slave_hal.c.o
+Compiling .pio/build/tbeam/hal/spi_slave_hal_iram.c.o
+Compiling .pio/build/tbeam/hal/sdio_slave_hal.c.o
+Compiling .pio/build/tbeam/hal/esp32/touch_sensor_hal.c.o
+Compiling .pio/build/tbeam/hal/touch_sensor_hal.c.o
+Compiling .pio/build/tbeam/hal/touch_sens_hal.c.o
+Compiling .pio/build/tbeam/hal/esp32/gpio_hal_workaround.c.o
+Compiling .pio/build/tbeam/heap/heap_caps_base.c.o
+Compiling .pio/build/tbeam/heap/heap_caps.c.o
+Compiling .pio/build/tbeam/heap/heap_caps_init.c.o
+Archiving .pio/build/tbeam/esp-idf/hal/libhal.a
+Indexing .pio/build/tbeam/esp-idf/hal/libhal.a
+Compiling .pio/build/tbeam/heap/multi_heap.c.o
+Compiling .pio/build/tbeam/heap/tlsf/tlsf.c.o
+Compiling .pio/build/tbeam/heap/multi_heap_poisoning.c.o
+Compiling .pio/build/tbeam/heap/port/memory_layout_utils.c.o
+Compiling .pio/build/tbeam/heap/port/esp32/memory_layout.c.o
+Compiling .pio/build/tbeam/http_parser/http_parser.c.o
+Compiling .pio/build/tbeam/managed_components/joltwallet__littlefs/src/littlefs/lfs.c.o
+Compiling .pio/build/tbeam/managed_components/joltwallet__littlefs/src/littlefs/lfs_util.c.o
+Compiling .pio/build/tbeam/managed_components/joltwallet__littlefs/src/esp_littlefs.c.o
+Archiving .pio/build/tbeam/esp-idf/heap/libheap.a
+Indexing .pio/build/tbeam/esp-idf/heap/libheap.a
+Compiling .pio/build/tbeam/managed_components/joltwallet__littlefs/src/littlefs_esp_part.c.o
+Compiling .pio/build/tbeam/managed_components/joltwallet__littlefs/src/lfs_config.c.o
+Compiling .pio/build/tbeam/json/cJSON/cJSON.c.o
+Compiling .pio/build/tbeam/json/cJSON/cJSON_Utils.c.o
+Archiving .pio/build/tbeam/esp-idf/http_parser/libhttp_parser.a
+Indexing .pio/build/tbeam/esp-idf/http_parser/libhttp_parser.a
+Compiling .pio/build/tbeam/log/src/os/log_timestamp.c.o
+Compiling .pio/build/tbeam/log/src/log_timestamp_common.c.o
+Compiling .pio/build/tbeam/log/src/os/log_lock.c.o
+Compiling .pio/build/tbeam/log/src/buffer/log_buffers.c.o
+Compiling .pio/build/tbeam/log/src/os/util.c.o
+Compiling .pio/build/tbeam/log/src/util.c.o
+Compiling .pio/build/tbeam/log/src/log_format_text.c.o
+Compiling .pio/build/tbeam/log/src/log_print.c.o
+Archiving .pio/build/tbeam/esp-idf/json/libjson.a
+Indexing .pio/build/tbeam/esp-idf/json/libjson.a
+Compiling .pio/build/tbeam/log/src/log.c.o
+Compiling .pio/build/tbeam/log/src/os/log_write.c.o
+Compiling .pio/build/tbeam/log/src/log_level/log_level.c.o
+Compiling .pio/build/tbeam/log/src/log_level/tag_log_level/tag_log_level.c.o
+Compiling .pio/build/tbeam/log/src/log_level/tag_log_level/linked_list/log_linked_list.c.o
+Compiling .pio/build/tbeam/log/src/log_level/tag_log_level/cache/log_binary_heap.c.o
+Compiling .pio/build/tbeam/lwip/apps/sntp/sntp.c.o
+Archiving .pio/build/tbeam/esp-idf/log/liblog.a
+Archiving .pio/build/tbeam/esp-idf/joltwallet__littlefs/libjoltwallet__littlefs.a
+Indexing .pio/build/tbeam/esp-idf/log/liblog.a
+Indexing .pio/build/tbeam/esp-idf/joltwallet__littlefs/libjoltwallet__littlefs.a
+Compiling .pio/build/tbeam/lwip/lwip/src/api/api_lib.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/api/api_msg.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/api/err.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/api/if_api.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/api/netbuf.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/api/netdb.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/api/netifapi.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/api/sockets.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/api/tcpip.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/apps/sntp/sntp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/apps/netbiosns/netbiosns.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/def.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/dns.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/inet_chksum.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/init.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ip.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/mem.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/memp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/netif.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/pbuf.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/raw.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/stats.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/sys.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/tcp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/tcp_in.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/tcp_out.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/timeouts.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/udp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv4/autoip.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv4/dhcp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv4/etharp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv4/icmp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv4/igmp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv4/ip4.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv4/ip4_napt.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv4/ip4_addr.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv4/ip4_frag.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv6/dhcp6.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv6/ethip6.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv6/icmp6.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv6/inet6.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv6/ip6.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv6/ip6_addr.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv6/ip6_frag.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv6/mld6.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/core/ipv6/nd6.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ethernet.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/bridgeif.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/bridgeif_fdb.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/slipif.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/auth.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/ccp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/chap-md5.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/chap-new.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/chap_ms.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/demand.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/eap.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/ecp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/eui64.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/fsm.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/ipcp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/ipv6cp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/lcp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/magic.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/mppe.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/multilink.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/ppp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/pppapi.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/pppcrypt.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/pppoe.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/pppol2tp.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/pppos.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/upap.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/utils.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/vj.c.o
+Compiling .pio/build/tbeam/lwip/port/hooks/tcp_isn_default.c.o
+Compiling .pio/build/tbeam/lwip/port/hooks/lwip_default_hooks.c.o
+Compiling .pio/build/tbeam/lwip/port/debug/lwip_debug.c.o
+Compiling .pio/build/tbeam/lwip/port/sockets_ext.c.o
+Compiling .pio/build/tbeam/lwip/port/freertos/sys_arch.c.o
+Compiling .pio/build/tbeam/lwip/port/if_index.c.o
+Compiling .pio/build/tbeam/lwip/port/acd_dhcp_check.c.o
+Compiling .pio/build/tbeam/lwip/port/esp32xx/vfs_lwip.c.o
+Compiling .pio/build/tbeam/lwip/apps/ping/esp_ping.c.o
+Compiling .pio/build/tbeam/lwip/apps/ping/ping.c.o
+Compiling .pio/build/tbeam/lwip/apps/ping/ping_sock.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/polarssl/arc4.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/polarssl/des.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/polarssl/md4.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/polarssl/md5.c.o
+Compiling .pio/build/tbeam/lwip/lwip/src/netif/ppp/polarssl/sha1.c.o
+Compiling .pio/build/tbeam/lwip/apps/dhcpserver/dhcpserver.c.o
+Compiling .pio/build/tbeam/mbedtls/esp_crt_bundle/esp_crt_bundle.c.o
+Compiling .pio/build/tbeam/x509_crt_bundle.S.o
+Compiling .pio/build/tbeam/mqtt/esp-mqtt/mqtt_client.c.o
+Archiving .pio/build/tbeam/esp-idf/mbedtls/libmbedtls.a
+Indexing .pio/build/tbeam/esp-idf/mbedtls/libmbedtls.a
+Compiling .pio/build/tbeam/mqtt/esp-mqtt/lib/mqtt_msg.c.o
+Compiling .pio/build/tbeam/mqtt/esp-mqtt/lib/mqtt_outbox.c.o
+Archiving .pio/build/tbeam/esp-idf/lwip/liblwip.a
+Compiling .pio/build/tbeam/mqtt/esp-mqtt/lib/platform_esp32_idf.c.o
+Indexing .pio/build/tbeam/esp-idf/lwip/liblwip.a
+Compiling .pio/build/tbeam/newlib/src/init.c.o
+Compiling .pio/build/tbeam/newlib/src/abort.c.o
+Compiling .pio/build/tbeam/newlib/src/assert.c.o
+Compiling .pio/build/tbeam/newlib/src/heap.c.o
+Compiling .pio/build/tbeam/newlib/src/locks.c.o
+Compiling .pio/build/tbeam/newlib/src/poll.c.o
+Compiling .pio/build/tbeam/newlib/src/pthread.c.o
+Compiling .pio/build/tbeam/newlib/src/random.c.o
+Compiling .pio/build/tbeam/newlib/src/getentropy.c.o
+Compiling .pio/build/tbeam/newlib/src/termios.c.o
+Compiling .pio/build/tbeam/newlib/src/stdatomic.c.o
+Compiling .pio/build/tbeam/newlib/src/time.c.o
+Compiling .pio/build/tbeam/newlib/src/sysconf.c.o
+Compiling .pio/build/tbeam/newlib/src/realpath.c.o
+Compiling .pio/build/tbeam/newlib/src/scandir.c.o
+Compiling .pio/build/tbeam/newlib/src/syscalls.c.o
+Compiling .pio/build/tbeam/newlib/src/reent_syscalls.c.o
+Compiling .pio/build/tbeam/newlib/src/port/esp_time_impl.c.o
+Compiling .pio/build/tbeam/newlib/src/flockfile.c.o
+Archiving .pio/build/tbeam/esp-idf/mqtt/libmqtt.a
+Indexing .pio/build/tbeam/esp-idf/mqtt/libmqtt.a
+Compiling .pio/build/tbeam/newlib/src/reent_init.c.o
+Compiling .pio/build/tbeam/newlib/src/newlib_init.c.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_api.cpp.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_cxx_api.cpp.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_item_hash_list.cpp.o
+Archiving .pio/build/tbeam/esp-idf/newlib/libnewlib.a
+Indexing .pio/build/tbeam/esp-idf/newlib/libnewlib.a
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_page.cpp.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_pagemanager.cpp.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_storage.cpp.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_handle_simple.cpp.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_handle_locked.cpp.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_partition.cpp.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_partition_lookup.cpp.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_partition_manager.cpp.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_types.cpp.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_platform.cpp.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_bootloader.c.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_encrypted_partition.cpp.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_bootloader_aes.c.o
+Compiling .pio/build/tbeam/nvs_flash/src/nvs_bootloader_xts_aes.c.o
+Compiling .pio/build/tbeam/nvs_sec_provider/nvs_sec_provider.c.o
+Archiving .pio/build/tbeam/esp-idf/nvs_sec_provider/libnvs_sec_provider.a
+Indexing .pio/build/tbeam/esp-idf/nvs_sec_provider/libnvs_sec_provider.a
+Compiling .pio/build/tbeam/openthread/src/spinel/esp_radio_spinel.cpp.o
+Compiling .pio/build/tbeam/openthread/src/spinel/esp_radio_spinel_uart_interface.cpp.o
+Compiling .pio/build/tbeam/openthread/src/port/esp_openthread_alarm.c.o
+Compiling .pio/build/tbeam/openthread/src/port/esp_openthread_logging.c.o
+Compiling .pio/build/tbeam/openthread/openthread/src/lib/spinel/spinel.c.o
+Compiling .pio/build/tbeam/openthread/openthread/src/lib/spinel/spinel_buffer.cpp.o
+Compiling .pio/build/tbeam/openthread/openthread/src/lib/spinel/spinel_decoder.cpp.o
+Archiving .pio/build/tbeam/esp-idf/nvs_flash/libnvs_flash.a
+Indexing .pio/build/tbeam/esp-idf/nvs_flash/libnvs_flash.a
+Compiling .pio/build/tbeam/openthread/openthread/src/lib/spinel/spinel_encoder.cpp.o
+Compiling .pio/build/tbeam/openthread/openthread/src/lib/spinel/spinel_helper.cpp.o
+Compiling .pio/build/tbeam/openthread/openthread/src/lib/spinel/radio_spinel.cpp.o
+Compiling .pio/build/tbeam/openthread/openthread/src/lib/spinel/spinel_driver.cpp.o
+Compiling .pio/build/tbeam/openthread/openthread/src/lib/spinel/logger.cpp.o
+Compiling .pio/build/tbeam/openthread/openthread/src/lib/hdlc/hdlc.cpp.o
+Compiling .pio/build/tbeam/openthread/openthread/src/lib/platform/exit_code.c.o
+Compiling .pio/build/tbeam/openthread/openthread/src/core/api/error_api.cpp.o
+Compiling .pio/build/tbeam/openthread/openthread/src/core/api/logging_api.cpp.o
+Compiling .pio/build/tbeam/openthread/openthread/src/core/common/error.cpp.o
+Compiling .pio/build/tbeam/openthread/openthread/src/core/common/log.cpp.o
+Compiling .pio/build/tbeam/openthread/openthread/src/core/common/string.cpp.o
+Compiling .pio/build/tbeam/openthread/openthread/src/core/mac/mac_frame.cpp.o
+Compiling .pio/build/tbeam/perfmon/xtensa_perfmon_access.c.o
+Compiling .pio/build/tbeam/perfmon/xtensa_perfmon_apis.c.o
+Compiling .pio/build/tbeam/perfmon/xtensa_perfmon_masks.c.o
+Compiling .pio/build/tbeam/protobuf-c/protobuf-c/protobuf-c/protobuf-c.c.o
+Compiling .pio/build/tbeam/protocomm/src/common/protocomm.c.o
+Archiving .pio/build/tbeam/esp-idf/perfmon/libperfmon.a
+Indexing .pio/build/tbeam/esp-idf/perfmon/libperfmon.a
+Compiling .pio/build/tbeam/protocomm/proto-c/constants.pb-c.c.o
+Compiling .pio/build/tbeam/protocomm/proto-c/sec0.pb-c.c.o
+Compiling .pio/build/tbeam/protocomm/proto-c/sec1.pb-c.c.o
+Compiling .pio/build/tbeam/protocomm/proto-c/sec2.pb-c.c.o
+Archiving .pio/build/tbeam/esp-idf/openthread/libopenthread.a
+Compiling .pio/build/tbeam/protocomm/proto-c/session.pb-c.c.o
+Indexing .pio/build/tbeam/esp-idf/openthread/libopenthread.a
+Compiling .pio/build/tbeam/protocomm/src/transports/protocomm_console.c.o
+Compiling .pio/build/tbeam/protocomm/src/transports/protocomm_httpd.c.o
+Compiling .pio/build/tbeam/protocomm/src/security/security0.c.o
+Compiling .pio/build/tbeam/protocomm/src/security/security1.c.o
+Compiling .pio/build/tbeam/protocomm/src/security/security2.c.o
+Compiling .pio/build/tbeam/protocomm/src/crypto/srp6a/esp_srp.c.o
+Archiving .pio/build/tbeam/esp-idf/protobuf-c/libprotobuf-c.a
+Indexing .pio/build/tbeam/esp-idf/protobuf-c/libprotobuf-c.a
+Compiling .pio/build/tbeam/protocomm/src/crypto/srp6a/esp_srp_mpi.c.o
+Compiling .pio/build/tbeam/protocomm/src/transports/protocomm_nimble.c.o
+Compiling .pio/build/tbeam/pthread/pthread.c.o
+Compiling .pio/build/tbeam/pthread/pthread_cond_var.c.o
+Compiling .pio/build/tbeam/pthread/pthread_local_storage.c.o
+Compiling .pio/build/tbeam/pthread/pthread_rwlock.c.o
+Compiling .pio/build/tbeam/pthread/pthread_semaphore.c.o
+Compiling .pio/build/tbeam/rt/FreeRTOS_POSIX_mqueue.c.o
+Archiving .pio/build/tbeam/esp-idf/pthread/libpthread.a
+Indexing .pio/build/tbeam/esp-idf/pthread/libpthread.a
+Compiling .pio/build/tbeam/rt/FreeRTOS_POSIX_utils.c.o
+Compiling .pio/build/tbeam/sdmmc/sdmmc_cmd.c.o
+Archiving .pio/build/tbeam/esp-idf/protocomm/libprotocomm.a
+Indexing .pio/build/tbeam/esp-idf/protocomm/libprotocomm.a
+Compiling .pio/build/tbeam/sdmmc/sdmmc_common.c.o
+Compiling .pio/build/tbeam/sdmmc/sdmmc_init.c.o
+Archiving .pio/build/tbeam/esp-idf/rt/librt.a
+Indexing .pio/build/tbeam/esp-idf/rt/librt.a
+Compiling .pio/build/tbeam/sdmmc/sdmmc_io.c.o
+Compiling .pio/build/tbeam/sdmmc/sdmmc_mmc.c.o
+Compiling .pio/build/tbeam/sdmmc/sdmmc_sd.c.o
+Compiling .pio/build/tbeam/sdmmc/sd_pwr_ctrl/sd_pwr_ctrl.c.o
+Compiling .pio/build/tbeam/soc/lldesc.c.o
+Compiling .pio/build/tbeam/soc/dport_access_common.c.o
+Compiling .pio/build/tbeam/soc/esp32/interrupts.c.o
+Compiling .pio/build/tbeam/soc/esp32/gpio_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/uart_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/dport_access.c.o
+Compiling .pio/build/tbeam/soc/esp32/adc_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/emac_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/spi_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/ledc_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/pcnt_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/rmt_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/sdm_periph.c.o
+Archiving .pio/build/tbeam/esp-idf/sdmmc/libsdmmc.a
+Indexing .pio/build/tbeam/esp-idf/sdmmc/libsdmmc.a
+Compiling .pio/build/tbeam/soc/esp32/i2s_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/i2c_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/timer_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/lcd_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/mcpwm_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/mpi_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/sdmmc_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/touch_sensor_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/twai_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/wdt_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/dac_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/rtc_io_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/sdio_slave_periph.c.o
+Compiling .pio/build/tbeam/soc/esp32/power_supply_periph.c.o
+Compiling .pio/build/tbeam/spi_flash/flash_brownout_hook.c.o
+Compiling .pio/build/tbeam/spi_flash/spi_flash_chip_drivers.c.o
+Compiling .pio/build/tbeam/spi_flash/spi_flash_chip_generic.c.o
+Archiving .pio/build/tbeam/esp-idf/soc/libsoc.a
+Compiling .pio/build/tbeam/spi_flash/spi_flash_chip_issi.c.o
+Indexing .pio/build/tbeam/esp-idf/soc/libsoc.a
+Compiling .pio/build/tbeam/spi_flash/spi_flash_chip_mxic.c.o
+Compiling .pio/build/tbeam/spi_flash/spi_flash_chip_gd.c.o
+Compiling .pio/build/tbeam/spi_flash/spi_flash_chip_winbond.c.o
+Compiling .pio/build/tbeam/spi_flash/spi_flash_chip_boya.c.o
+Compiling .pio/build/tbeam/spi_flash/spi_flash_chip_mxic_opi.c.o
+Compiling .pio/build/tbeam/spi_flash/spi_flash_chip_th.c.o
+Compiling .pio/build/tbeam/spi_flash/memspi_host_driver.c.o
+Compiling .pio/build/tbeam/spi_flash/cache_utils.c.o
+Compiling .pio/build/tbeam/spi_flash/flash_mmap.c.o
+Compiling .pio/build/tbeam/spi_flash/flash_ops.c.o
+Compiling .pio/build/tbeam/spi_flash/spi_flash_wrap.c.o
+Compiling .pio/build/tbeam/spi_flash/esp_flash_api.c.o
+Compiling .pio/build/tbeam/spi_flash/esp_flash_spi_init.c.o
+Compiling .pio/build/tbeam/spi_flash/spi_flash_os_func_app.c.o
+Compiling .pio/build/tbeam/spi_flash/spi_flash_os_func_noos.c.o
+Compiling .pio/build/tbeam/spiffs/spiffs_api.c.o
+Compiling .pio/build/tbeam/spiffs/spiffs/src/spiffs_cache.c.o
+Compiling .pio/build/tbeam/spiffs/spiffs/src/spiffs_check.c.o
+Compiling .pio/build/tbeam/spiffs/spiffs/src/spiffs_gc.c.o
+Compiling .pio/build/tbeam/spiffs/spiffs/src/spiffs_hydrogen.c.o
+Archiving .pio/build/tbeam/esp-idf/spi_flash/libspi_flash.a
+Indexing .pio/build/tbeam/esp-idf/spi_flash/libspi_flash.a
+Compiling .pio/build/tbeam/spiffs/spiffs/src/spiffs_nucleus.c.o
+Compiling .pio/build/tbeam/spiffs/esp_spiffs.c.o
+Compiling .pio/build/tbeam/tcp_transport/transport.c.o
+Compiling .pio/build/tbeam/tcp_transport/transport_ssl.c.o
+Compiling .pio/build/tbeam/tcp_transport/transport_internal.c.o
+Compiling .pio/build/tbeam/tcp_transport/transport_socks_proxy.c.o
+Compiling .pio/build/tbeam/ulp/ulp_common/ulp_common.c.o
+Compiling .pio/build/tbeam/ulp/ulp_common/ulp_adc.c.o
+Archiving .pio/build/tbeam/esp-idf/tcp_transport/libtcp_transport.a
+Indexing .pio/build/tbeam/esp-idf/tcp_transport/libtcp_transport.a
+Compiling .pio/build/tbeam/ulp/ulp_fsm/ulp.c.o
+Compiling .pio/build/tbeam/ulp/ulp_fsm/ulp_macro.c.o
+Compiling .pio/build/tbeam/unity/unity/src/unity.c.o
+Archiving .pio/build/tbeam/esp-idf/spiffs/libspiffs.a
+Indexing .pio/build/tbeam/esp-idf/spiffs/libspiffs.a
+Compiling .pio/build/tbeam/unity/unity_compat.c.o
+Compiling .pio/build/tbeam/unity/unity_utils_memory.c.o
+Archiving .pio/build/tbeam/esp-idf/ulp/libulp.a
+Indexing .pio/build/tbeam/esp-idf/ulp/libulp.a
+Compiling .pio/build/tbeam/unity/unity_port_esp32.c.o
+Compiling .pio/build/tbeam/unity/port/esp/unity_utils_memory_esp.c.o
+Compiling .pio/build/tbeam/vfs/vfs.c.o
+Compiling .pio/build/tbeam/vfs/vfs_eventfd.c.o
+Compiling .pio/build/tbeam/vfs/vfs_semihost.c.o
+Archiving .pio/build/tbeam/esp-idf/unity/libunity.a
+Indexing .pio/build/tbeam/esp-idf/unity/libunity.a
+Compiling .pio/build/tbeam/vfs/nullfs.c.o
+Compiling .pio/build/tbeam/wear_levelling/Partition.cpp.o
+Compiling .pio/build/tbeam/wear_levelling/SPI_Flash.cpp.o
+Compiling .pio/build/tbeam/wear_levelling/WL_Ext_Perf.cpp.o
+Compiling .pio/build/tbeam/wear_levelling/WL_Ext_Safe.cpp.o
+Compiling .pio/build/tbeam/wear_levelling/WL_Flash.cpp.o
+Compiling .pio/build/tbeam/wear_levelling/crc32.cpp.o
+Compiling .pio/build/tbeam/wear_levelling/wear_levelling.cpp.o
+Archiving .pio/build/tbeam/esp-idf/vfs/libvfs.a
+Indexing .pio/build/tbeam/esp-idf/vfs/libvfs.a
+Compiling .pio/build/tbeam/wifi_provisioning/src/wifi_config.c.o
+Compiling .pio/build/tbeam/wifi_provisioning/src/wifi_scan.c.o
+Compiling .pio/build/tbeam/wifi_provisioning/src/wifi_ctrl.c.o
+Compiling .pio/build/tbeam/wifi_provisioning/src/manager.c.o
+Compiling .pio/build/tbeam/wifi_provisioning/src/handlers.c.o
+Compiling .pio/build/tbeam/wifi_provisioning/src/scheme_console.c.o
+Archiving .pio/build/tbeam/esp-idf/wear_levelling/libwear_levelling.a
+Indexing .pio/build/tbeam/esp-idf/wear_levelling/libwear_levelling.a
+Compiling .pio/build/tbeam/wifi_provisioning/proto-c/wifi_config.pb-c.c.o
+Compiling .pio/build/tbeam/wifi_provisioning/proto-c/wifi_scan.pb-c.c.o
+Compiling .pio/build/tbeam/wifi_provisioning/proto-c/wifi_ctrl.pb-c.c.o
+Compiling .pio/build/tbeam/wifi_provisioning/proto-c/wifi_constants.pb-c.c.o
+Compiling .pio/build/tbeam/wifi_provisioning/src/scheme_softap.c.o
+Compiling .pio/build/tbeam/wifi_provisioning/src/scheme_ble.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/port/os_xtensa.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/port/eloop.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/ap/ap_config.c.o
+Archiving .pio/build/tbeam/esp-idf/wifi_provisioning/libwifi_provisioning.a
+Indexing .pio/build/tbeam/esp-idf/wifi_provisioning/libwifi_provisioning.a
+Compiling .pio/build/tbeam/wpa_supplicant/src/ap/ieee802_1x.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/ap/wpa_auth.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/ap/wpa_auth_ie.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/ap/pmksa_cache_auth.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/ap/sta_info.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/ap/ieee802_11.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/ap/comeback_token.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/common/sae.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/common/dragonfly.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/common/wpa_common.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/utils/bitfield.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/aes-siv.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/sha256-kdf.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/ccmp.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/aes-gcm.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/crypto_ops.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/dh_group5.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/dh_groups.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/ms_funcs.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/sha1-tlsprf.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/sha256-tlsprf.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/sha384-tlsprf.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/sha256-prf.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/sha1-prf.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/sha384-prf.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/md4-internal.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/sha1-tprf.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/eap_common/eap_wsc_common.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/common/ieee802_11_common.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/eap_peer/chap.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/eap_peer/eap.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/eap_peer/eap_common.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/eap_peer/eap_mschapv2.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/eap_peer/eap_peap.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/eap_peer/eap_peap_common.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/eap_peer/eap_tls.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/eap_peer/eap_tls_common.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/eap_peer/eap_ttls.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/eap_peer/mschapv2.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/eap_peer/eap_fast.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/eap_peer/eap_fast_common.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/eap_peer/eap_fast_pac.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/rsn_supp/pmksa_cache.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/rsn_supp/wpa.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/rsn_supp/wpa_ie.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/utils/base64.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/utils/common.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/utils/ext_password.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/utils/uuid.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/utils/wpabuf.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/utils/wpa_debug.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/utils/json.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/wps/wps.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/wps/wps_attr_build.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/wps/wps_attr_parse.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/wps/wps_attr_process.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/wps/wps_common.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/wps/wps_dev_attr.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/wps/wps_enrollee.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/esp_supplicant/src/esp_eap_client.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/esp_supplicant/src/esp_wpa2_api_port.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/esp_supplicant/src/esp_wpa_main.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/esp_supplicant/src/esp_wpas_glue.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/esp_supplicant/src/esp_common.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/esp_supplicant/src/esp_wps.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/esp_supplicant/src/esp_wpa3.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/esp_supplicant/src/esp_owe.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/esp_supplicant/src/esp_hostap.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/tls/asn1.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/tls/bignum.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/tls/pkcs1.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/tls/pkcs5.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/tls/pkcs8.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/tls/rsa.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/tls_internal.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/tls/tlsv1_client.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/tls/tlsv1_client_read.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/tls/tlsv1_client_write.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/tls/tlsv1_common.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/tls/tlsv1_cred.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/tls/tlsv1_record.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/tls/tlsv1_client_ocsp.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/tls/x509v3.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/esp_supplicant/src/crypto/crypto_mbedtls.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/esp_supplicant/src/crypto/crypto_mbedtls-bignum.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/esp_supplicant/src/crypto/crypto_mbedtls-rsa.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/esp_supplicant/src/crypto/crypto_mbedtls-ec.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/esp_supplicant/src/crypto/fastpbkdf2.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/rc4.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/des-internal.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/aes-wrap.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/aes-unwrap.c.o
+Compiling .pio/build/tbeam/wpa_supplicant/src/crypto/aes-ccm.c.o
+Compiling .pio/build/tbeam/xtensa/eri.c.o
+Compiling .pio/build/tbeam/xtensa/xt_trax.c.o
+Compiling .pio/build/tbeam/xtensa/xtensa_context.S.o
+Compiling .pio/build/tbeam/xtensa/xtensa_intr_asm.S.o
+Compiling .pio/build/tbeam/xtensa/xtensa_intr.c.o
+Compiling .pio/build/tbeam/xtensa/xtensa_vectors.S.o
+Archiving .pio/build/tbeam/esp-idf/wpa_supplicant/libwpa_supplicant.a
+Compiling .pio/build/tbeam/mbedtls/mbedtls/3rdparty/everest/library/everest.c.o
+Indexing .pio/build/tbeam/esp-idf/wpa_supplicant/libwpa_supplicant.a
+Compiling .pio/build/tbeam/mbedtls/mbedtls/3rdparty/everest/library/x25519.c.o
+Archiving .pio/build/tbeam/esp-idf/xtensa/libxtensa.a
+Indexing .pio/build/tbeam/esp-idf/xtensa/libxtensa.a
+Compiling .pio/build/tbeam/mbedtls/mbedtls/3rdparty/everest/library/Hacl_Curve25519_joined.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/aes.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/aesni.c.o
+Archiving .pio/build/tbeam/esp-idf/mbedtls/mbedtls/3rdparty/everest/libeverest.a
+Indexing .pio/build/tbeam/esp-idf/mbedtls/mbedtls/3rdparty/everest/libeverest.a
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/aesce.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/aria.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/asn1parse.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/asn1write.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/base64.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/bignum.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/bignum_core.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/bignum_mod.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/bignum_mod_raw.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/block_cipher.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/camellia.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ccm.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/chacha20.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/chachapoly.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/cipher.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/cipher_wrap.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/constant_time.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/cmac.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ctr_drbg.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/des.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/dhm.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ecdh.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ecdsa.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ecjpake.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ecp.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ecp_curves.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ecp_curves_new.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/entropy.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/entropy_poll.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/error.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/gcm.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/hkdf.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/hmac_drbg.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/lmots.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/lms.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/md.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/md5.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/memory_buffer_alloc.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/nist_kw.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/oid.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/padlock.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/pem.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/pk.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/pk_ecc.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/pk_wrap.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/pkcs12.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/pkcs5.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/pkparse.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/pkwrite.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/platform.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/platform_util.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/poly1305.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto_aead.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto_cipher.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto_client.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto_driver_wrappers_no_static.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto_ecp.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto_ffdh.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto_hash.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto_mac.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto_pake.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto_rsa.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto_random.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto_se.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto_slot_management.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_crypto_storage.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_its_file.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/psa_util.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ripemd160.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/rsa.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/rsa_alt_helpers.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/sha1.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/sha256.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/sha512.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/sha3.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/threading.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/timing.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/version.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/version_features.c.o
+Compiling .pio/build/tbeam/mbedtls/port/esp_hardware.c.o
+Compiling .pio/build/tbeam/mbedtls/port/esp_mem.c.o
+Compiling .pio/build/tbeam/mbedtls/port/esp_timing.c.o
+Compiling .pio/build/tbeam/mbedtls/port/aes/esp_aes_xts.c.o
+Compiling .pio/build/tbeam/mbedtls/port/aes/esp_aes_common.c.o
+Compiling .pio/build/tbeam/mbedtls/port/aes/block/esp_aes.c.o
+Compiling .pio/build/tbeam/mbedtls/port/sha/esp_sha.c.o
+Compiling .pio/build/tbeam/mbedtls/port/sha/parallel_engine/sha.c.o
+Compiling .pio/build/tbeam/mbedtls/port/bignum/esp_bignum.c.o
+Compiling .pio/build/tbeam/mbedtls/port/bignum/bignum_alt.c.o
+Compiling .pio/build/tbeam/mbedtls/port/sha/parallel_engine/esp_sha1.c.o
+Compiling .pio/build/tbeam/mbedtls/port/sha/parallel_engine/esp_sha256.c.o
+Compiling .pio/build/tbeam/mbedtls/port/sha/parallel_engine/esp_sha512.c.o
+Compiling .pio/build/tbeam/mbedtls/port/aes/esp_aes_gcm.c.o
+Compiling .pio/build/tbeam/mbedtls/port/md/esp_md.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/debug.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/mps_reader.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/mps_trace.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ssl_cache.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ssl_ciphersuites.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ssl_client.c.o
+Archiving .pio/build/tbeam/esp-idf/mbedtls/mbedtls/library/libmbedcrypto.a
+Indexing .pio/build/tbeam/esp-idf/mbedtls/mbedtls/library/libmbedcrypto.a
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ssl_cookie.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ssl_debug_helpers_generated.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ssl_msg.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ssl_ticket.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ssl_tls.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ssl_tls12_client.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ssl_tls12_server.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ssl_tls13_keys.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ssl_tls13_server.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ssl_tls13_client.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/ssl_tls13_generic.c.o
+Compiling .pio/build/tbeam/mbedtls/port/mbedtls_debug.c.o
+Compiling .pio/build/tbeam/mbedtls/port/esp_platform_time.c.o
+Compiling .pio/build/tbeam/mbedtls/port/net_sockets.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/pkcs7.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/x509.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/x509_create.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/x509_crl.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/x509_crt.c.o
+Archiving .pio/build/tbeam/esp-idf/mbedtls/mbedtls/library/libmbedtls.a
+Indexing .pio/build/tbeam/esp-idf/mbedtls/mbedtls/library/libmbedtls.a
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/x509_csr.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/x509write.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/x509write_crt.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/library/x509write_csr.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/3rdparty/p256-m/p256-m_driver_entrypoints.c.o
+Compiling .pio/build/tbeam/mbedtls/mbedtls/3rdparty/p256-m/p256-m/p256-m.c.o
+Generating partitions .pio/build/tbeam/partitions.bin
+Building FS image from 'data' directory to .pio/build/tbeam/littlefs-tbeam-2.8.2.eaba8b9.bin
+Archiving .pio/build/tbeam/esp-idf/mbedtls/mbedtls/3rdparty/p256-m/libp256m.a
+Indexing .pio/build/tbeam/esp-idf/mbedtls/mbedtls/3rdparty/p256-m/libp256m.a
+Archiving .pio/build/tbeam/esp-idf/mbedtls/mbedtls/library/libmbedx509.a
+Indexing .pio/build/tbeam/esp-idf/mbedtls/mbedtls/library/libmbedx509.a
+Generating project linker script .pio/build/tbeam/sections.ld
+Linking .pio/build/tbeam/firmware-tbeam-2.8.2.eaba8b9.elf
+                            Memory Type Usage Summary                             
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Memory Type/Section ┃ Used [bytes] ┃ Used [%] ┃ Remain [bytes] ┃ Total [bytes] ┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ Flash Code          │        96648 │          │                │               │
+│    .text            │        96648 │          │                │               │
+│ IRAM                │        41015 │    23.84 │         131017 │        172032 │
+│    .text            │        39987 │    23.24 │                │               │
+│    .vectors         │         1028 │      0.6 │                │               │
+│ Flash Data          │        39812 │          │                │               │
+│    .rodata          │        39556 │          │                │               │
+│    .appdesc         │          256 │          │                │               │
+│ DRAM                │        18396 │    14.77 │         106184 │        124580 │
+│    .data            │        14388 │    11.55 │                │               │
+│    .bss             │         4008 │     3.22 │                │               │
+└─────────────────────┴──────────────┴──────────┴────────────────┴───────────────┘
+Total image size: 191863 bytes (.bin may be padded larger)
+Note: The reported total sizes may be smaller than those in the technical reference manual due to reserved memory and application configuration. The total flash size available for the application is not included by default, as it cannot be reliably determined due to the presence of other data like the bootloader, partition table, and application partition size. The total external RAM size is not included either, because the amount of RAM connected to the chip is detected at boot and is not known during the build.
+export_link_files([".pio/build/tbeam/firmware-tbeam-2.8.2.eaba8b9.elf"], [".pio/build/tbeam/.dummy/sketch.cpp.o", ".pio/build/tbeam/.dummy/arduino-lib-builder-gcc.c.o", ".pio/build/tbeam/.dummy/arduino-lib-builder-cpp.cpp.o", ".pio/build/tbeam/.dummy/arduino-lib-builder-as.S.o"])
+Exported linker script /home/runner/work/_temp/embedded-repos/meshtastic-tbeam/source/.pio/build/tbeam/memory.ld -> /home/runner/work/_temp/embedded-repos/meshtastic-tbeam/source/.pio/build/tbeam/firmware-tbeam-2.8.2.eaba8b9.memory.ld
+Retrieving maximum program size .pio/build/tbeam/firmware-tbeam-2.8.2.eaba8b9.elf
+Checking size .pio/build/tbeam/firmware-tbeam-2.8.2.eaba8b9.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [          ]   1.4% (used 18396 bytes from 1310720 bytes)
+Flash: [=         ]   7.9% (used 191607 bytes from 2424832 bytes)
+*** Copied compiled esp32 IDF libraries to Arduino framework ***
+*** Starting Arduino compile tbeam with custom libraries ***
+Processing tbeam (board: ttgo-tbeam; platform: 
+https://github.com/pioarduino/platform-espressif32/releases/download/55.03.312-1/platform-espressif32.zip; framework: arduino)
+--------------------------------------------------------------------------------
+Platform Manager: Removing espressif32 @ 55.3.312
+Platform Manager: espressif32@55.3.312 has been removed!
+IncompatiblePlatform: Development platform 'espressif32' is not compatible with PlatformIO Core v6.2.0-post.1 and depends on PlatformIO Core >=6.2.0.
+
+*** Error 1
+*** Original Arduino "idf_component.yml" restored ***
+*** [checkprogsize] Explicit exit, status 1
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner/work/_temp/embedded-repos/meshtastic-tbeam/source/.pio/build/tbeam/.sconsign312.tmp':
+  File "/home/runner/.platformio/packages/tool-scons/scons-local-4.11.1/SCons/Script/Main.py", line 1524:
+    _exec_main(parser, values)
+  File "/home/runner/.platformio/packages/tool-scons/scons-local-4.11.1/SCons/Script/Main.py", line 1478:
+    _main(parser)
+  File "/home/runner/.platformio/packages/tool-scons/scons-local-4.11.1/SCons/Script/Main.py", line 1223:
+    nodes = _build_targets(fs, options, targets, target_top)
+  File "/home/runner/.platformio/packages/tool-scons/scons-local-4.11.1/SCons/Script/Main.py", line 1412:
+    jobs.run(postfunc = jobs_postfunc)
+  File "/home/runner/.platformio/packages/tool-scons/scons-local-4.11.1/SCons/Taskmaster/Job.py", line 117:
+    postfunc()
+  File "/home/runner/.platformio/packages/tool-scons/scons-local-4.11.1/SCons/Script/Main.py", line 1409:
+    SCons.SConsign.write()
+  File "/home/runner/.platformio/packages/tool-scons/scons-local-4.11.1/SCons/SConsign.py", line 131:
+    syncmethod()
+  File "/home/runner/.platformio/packages/tool-scons/scons-local-4.11.1/SCons/dblite.py", line 195:
+    with self._open(self._tmp_name, "wb", opener=self.opener) as f:
+  File "/home/runner/.platformio/packages/tool-scons/scons-local-4.11.1/SCons/dblite.py", line 177:
+    return os.open(path, flags, mode=self._mode)
+Exception ignored in: <function _Dblite.__del__ at 0x7f840ef223e0>
+Traceback (most recent call last):
+  File "/home/runner/.platformio/packages/tool-scons/scons-local-4.11.1/SCons/dblite.py", line 184, in __del__
+  File "/home/runner/.platformio/packages/tool-scons/scons-local-4.11.1/SCons/dblite.py", line 181, in close
+  File "/home/runner/.platformio/packages/tool-scons/scons-local-4.11.1/SCons/dblite.py", line 195, in sync
+  File "/home/runner/.platformio/packages/tool-scons/scons-local-4.11.1/SCons/dblite.py", line 177, in opener
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner/work/_temp/embedded-repos/meshtastic-tbeam/source/.pio/build/tbeam/.sconsign312.tmp'
+========================= [FAILED] Took 411.28 seconds =========================
+
+Environment    Status    Duration
+-------------  --------  ------------
+tbeam          FAILED    00:06:51.277
+==================== 1 failed, 0 succeeded in 00:06:51.277 ====================

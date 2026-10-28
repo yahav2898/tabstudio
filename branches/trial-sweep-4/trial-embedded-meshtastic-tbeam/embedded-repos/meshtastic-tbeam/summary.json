@@ -1,0 +1,91 @@
+{
+  "repository": {
+    "name": "meshtastic-tbeam",
+    "url": "https://github.com/meshtastic/firmware",
+    "sha": "eaba8b95bebab04c4f13a27b63e000ebdc1e5fac",
+    "kind": "platformio",
+    "project": ".",
+    "maxErrors": 0,
+    "note": "one classic ESP32 env (the default, heltec-v3, is an ESP32-S3)",
+    "environment": "tbeam"
+  },
+  "seconds": 415.377,
+  "passed": false,
+  "error": "Command exited 1: /opt/hostedtoolcache/Python/3.12.15/x64/bin/python; see /home/runner/work/tabstudio/tabstudio/ci-out/embedded-repos/meshtastic-tbeam/05-python.log",
+  "compilerErrors": 0,
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "steps": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/meshtastic-tbeam/source",
+      "log": "01-git.log",
+      "seconds": 0.008,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "add",
+        "origin",
+        "https://github.com/meshtastic/firmware"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/meshtastic-tbeam/source",
+      "log": "02-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "fetch",
+        "--depth",
+        "1",
+        "--no-tags",
+        "origin",
+        "eaba8b95bebab04c4f13a27b63e000ebdc1e5fac"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/meshtastic-tbeam/source",
+      "log": "03-git.log",
+      "seconds": 1.066,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "FETCH_HEAD"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/meshtastic-tbeam/source",
+      "log": "04-git.log",
+      "seconds": 0.215,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.12.15/x64/bin/python",
+        "-P",
+        "-m",
+        "platformio",
+        "run",
+        "--project-dir",
+        "/home/runner/work/_temp/embedded-repos/meshtastic-tbeam/source",
+        "--project-conf",
+        "/home/runner/work/_temp/embedded-repos/meshtastic-tbeam/source/tabstudio-ci.ini",
+        "--environment",
+        "tbeam"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/meshtastic-tbeam/source",
+      "log": "05-python.log",
+      "seconds": 414.073,
+      "exitCode": 1,
+      "compilerErrors": 0
+    }
+  ]
+}
