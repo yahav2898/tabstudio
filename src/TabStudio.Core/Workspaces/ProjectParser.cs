@@ -651,7 +651,7 @@ public static partial class ProjectParser
     /// expands them: Spectre.Console's <c>&lt;Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs"/&gt;</c> is
     /// <c>Generated/**/*.cs</c>. A pattern that names a property the project does not set is left out rather than
     /// expanded to nothing, which would turn <c>$(Unset)/**/*.cs</c> into every file of the project. A pattern that
-    /// becomes a path inside the project's folder is made relative to it, as the others are.
+    /// becomes an absolute path is made relative to the project's folder, as the others are.
     /// </summary>
     private static List<string> ReadItemPatterns(XElement root, string itemType, string attribute, Dictionary<string, string> properties)
     {
@@ -681,13 +681,7 @@ public static partial class ProjectParser
             return null;
         }
 
-        if (!string.IsNullOrEmpty(directory) && Path.IsPathRooted(expanded))
-        {
-            var relative = Path.GetRelativePath(directory, expanded);
-            return relative.StartsWith("..", StringComparison.Ordinal) ? expanded : relative;
-        }
-
-        return expanded;
+        return !string.IsNullOrEmpty(directory) && Path.IsPathRooted(expanded) ? Path.GetRelativePath(directory, expanded) : expanded;
     }
 
     private static List<string> ReadTargetFrameworks(Dictionary<string, string> properties)
