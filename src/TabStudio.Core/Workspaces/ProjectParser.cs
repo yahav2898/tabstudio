@@ -310,7 +310,7 @@ public static partial class ProjectParser
             AssemblyReferences = assemblyReferences,
             ComReferences = ReadComReferences(root),
             Usings = [.. allRoots.SelectMany(r => ReadUsings(r)).Distinct()],
-            RemovedUsings = [.. allRoots.SelectMany(r => ReadItemPatterns(r, "Using", "Remove")).Distinct(StringComparer.Ordinal)],
+            RemovedUsings = [.. allRoots.SelectMany(r => ReadItemPatterns(r, "Using", "Remove", properties)).Distinct(StringComparer.Ordinal)],
             CompilerVisibleProperties = [.. generatorInputs.Properties.Distinct(StringComparer.OrdinalIgnoreCase)],
             CompilerVisibleItemMetadata = [.. generatorInputs.Metadata.Distinct()],
             AdditionalFiles = generatorInputs.Files,
@@ -537,7 +537,7 @@ public static partial class ProjectParser
     /// </summary>
     private static List<string> ReadFrameworkReferences(XElement root, string? sdk, Dictionary<string, string> properties)
     {
-        var frameworks = ReadItemPatterns(root, "FrameworkReference", "Include");
+        var frameworks = ReadItemPatterns(root, "FrameworkReference", "Include", properties);
         var addsAspNetCore =
             string.Equals(sdk, "Microsoft.NET.Sdk.Web", StringComparison.OrdinalIgnoreCase)
             || (string.Equals(sdk, "Microsoft.NET.Sdk.Razor", StringComparison.OrdinalIgnoreCase)
