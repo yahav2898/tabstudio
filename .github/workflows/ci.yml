@@ -351,6 +351,7 @@ jobs:
           TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
         run: |
           mkdir -p ci-out/screenshots
+          { echo "PATH=$PATH"; for t in php composer phpactor php-debug-adapter kotlinc gradle kotlin-lsp jdtls swift sourcekit-lsp lldb-dap; do printf '%s: ' "$t"; command -v "$t" || echo missing; done; ls -la "$RUNNER_TEMP/php-tools/bin" || true; phpactor --version || true; } > ci-out/tools-path.log 2>&1
           status=0
           dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none \
             --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_PHP_template" --logger "console;verbosity=normal" \
