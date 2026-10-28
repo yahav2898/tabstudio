@@ -1,0 +1,120 @@
+{
+  "repository": {
+    "name": "esp-idf-blink",
+    "url": "https://github.com/espressif/esp-idf",
+    "sha": "fff9895c82d744c7237be8847347bdd1b07c6643",
+    "kind": "esp-idf",
+    "project": "examples/get-started/blink",
+    "maxErrors": 0,
+    "note": "ESP-IDF's other get-started example (hello_world is in real-repos.json); led_strip comes from the component registry",
+    "target": "esp32c3"
+  },
+  "seconds": 167.017,
+  "passed": true,
+  "error": null,
+  "compilerErrors": 0,
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "steps": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/esp-idf-blink/source",
+      "log": "01-git.log",
+      "seconds": 0.008,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "add",
+        "origin",
+        "https://github.com/espressif/esp-idf"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/esp-idf-blink/source",
+      "log": "02-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "fetch",
+        "--depth",
+        "1",
+        "--no-tags",
+        "origin",
+        "fff9895c82d744c7237be8847347bdd1b07c6643"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/esp-idf-blink/source",
+      "log": "03-git.log",
+      "seconds": 6.985,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "FETCH_HEAD"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/esp-idf-blink/source",
+      "log": "04-git.log",
+      "seconds": 1.67,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "protocol.file.allow=never",
+        "submodule",
+        "update",
+        "--init",
+        "--recursive",
+        "--depth",
+        "1"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/esp-idf-blink/source",
+      "log": "05-git.log",
+      "seconds": 41.487,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "bash",
+        "/home/runner/work/_temp/embedded-repos/esp-idf-blink/source/install.sh",
+        "esp32c3"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/esp-idf-blink/source",
+      "log": "06-bash.log",
+      "seconds": 66.203,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "bash",
+        "-c",
+        "set -e; . \"$IDF_PATH/export.sh\"; exec python \"$IDF_PATH/tools/idf.py\" -C \"$1\" -B \"$2\" \"-DIDF_TARGET=$3\" build",
+        "tabstudio-idf",
+        "/home/runner/work/_temp/embedded-repos/esp-idf-blink/source/examples/get-started/blink",
+        "/home/runner/work/_temp/embedded-repos/esp-idf-blink/build",
+        "esp32c3"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/esp-idf-blink/source",
+      "log": "07-bash.log",
+      "seconds": 50.642,
+      "exitCode": 0,
+      "compilerErrors": 0
+    },
+    {
+      "firmware": "/home/runner/work/_temp/embedded-repos/esp-idf-blink/build/blink.elf",
+      "bytes": 3558112,
+      "sha256": "cb2f09dd482159cb3dd684dade22c17309c11b5407ab2e06bbc4e6d852450e0b"
+    }
+  ]
+}
