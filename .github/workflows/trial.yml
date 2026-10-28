@@ -22,6 +22,24 @@ jobs:
     if: ${{ !endsWith(github.ref_name, 'embedded') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 200
+    # The databases the apps' READMEs ask for: on a tablet, TabStudio's Services or a server on the network.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: tabstudio-ci
+          POSTGRES_DB: realworld
+        ports: [5432:5432]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 20
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: tabstudio-ci
+          MYSQL_DATABASE: nestjsrealworld
+        ports: [3306:3306]
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1 -ptabstudio-ci" --health-interval 5s --health-timeout 5s --health-retries 30
     strategy:
       fail-fast: false
       matrix:
