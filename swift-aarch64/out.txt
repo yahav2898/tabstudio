@@ -1,0 +1,394 @@
+Unable to find image 'ubuntu:24.04' locally
+24.04: Pulling from library/ubuntu
+e2d2bb84d022: Pulling fs layer
+e2d2bb84d022: Verifying Checksum
+e2d2bb84d022: Download complete
+e2d2bb84d022: Pull complete
+Digest: sha256:24737cef17f4e22b1977df7d9a05e77c4e28b7da5b8911f8d8ccda136bf3573c
+Status: Downloaded newer image for ubuntu:24.04
++ export DEBIAN_FRONTEND=noninteractive
++ DEBIAN_FRONTEND=noninteractive
++ apt-get update -qq
++ apt-get install -y -qq binutils git gnupg2 libc6-dev libcurl4-openssl-dev libedit2 libgcc-13-dev libncurses-dev libpython3-dev libsqlite3-0 libstdc++-13-dev libxml2-dev libz3-dev pkg-config tzdata unzip zlib1g-dev python3 curl file
+++ uname -m
++ arch=aarch64
+++ '[' aarch64 = aarch64 ']'
+++ echo -aarch64
++ suffix=-aarch64
++ url=https://download.swift.org/swift-6.4.1-release/ubuntu2404-aarch64/swift-6.4.1-RELEASE/swift-6.4.1-RELEASE-ubuntu24.04-aarch64.tar.gz
++ curl -fsSL https://download.swift.org/swift-6.4.1-release/ubuntu2404-aarch64/swift-6.4.1-RELEASE/swift-6.4.1-RELEASE-ubuntu24.04-aarch64.tar.gz -o /tmp/swift.tgz
++ mkdir -p /opt/swift
++ tar -xzf /tmp/swift.tgz -C /opt/swift --strip-components=1
++ export PATH=/opt/swift/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++ PATH=/opt/swift/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++ swift build --help
++ grep -i -A2 'build-system\|debug-info'
++ head -20
+  --build-system <build-system>
+                          Specify the build system to use. (default: swiftbuild)
+        native            - Native Build System (deprecated)
+--
+  -debug-info-format <debug-info-format>
+                          The Debug Information Format to use. (values: dwarf,
+                          codeview, none)
++ mkdir -p /tmp/t
++ cd /tmp/t
++ cat
++ mkdir -p Sources/Greeter Sources/GreeterCore Tests/GreeterCoreTests Tests/XCTests
++ cat
++ cat
++ cat
++ cat
++ swift build
++ tail -3
+[36 / 39] Greeter-product
+[40 / 40] Greeter-product
+Build complete! (2.84 secs)
++ dbg default .build/debug/Greeter
+=== default
++ echo '=== default'
++ exe=.build/debug/Greeter
++ ls -la .build/debug/Greeter
+-rwxr-xr-x 1 root root 119896 Oct 28 20:21 .build/debug/Greeter
++ file -L .build/debug/Greeter
+.build/debug/Greeter: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, for GNU/Linux 3.7.0, BuildID[sha1]=c770208eb40ce844ae7faab187d738d6674e09c1, with debug_info, not stripped
++ grep -E 'debug|gnu_debuglink'
++ readelf -S -W .build/debug/Greeter
+  [44] .debug_abbrev     PROGBITS        0000000000000000 01013c 0001e2 00      0   0  1
+  [45] .debug_info       PROGBITS        0000000000000000 01031e 00031b 00      0   0  1
+  [46] .debug_ranges     PROGBITS        0000000000000000 010639 000060 00      0   0  1
+  [47] .debug_str        PROGBITS        0000000000000000 010699 000559 01  MS  0   0  1
+  [48] .debug_names      PROGBITS        0000000000000000 010bf4 000284 00      0   0  4
+  [49] .debug_line       PROGBITS        0000000000000000 010e78 0001b5 00      0   0  1
++ lldb --batch -o 'target create .build/debug/Greeter' -o 'b main.swift:4' -o 'b Greeting.swift:4' -o run -o 'frame variable' -o bt -o quit
++ tail -25
+(lldb) target create .build/debug/Greeter
+Current executable set to '/tmp/t/.build/debug/Greeter' (aarch64).
+(lldb) b main.swift:4
+Breakpoint 1: where = Greeter`main + 68 at main.swift:4:7, address = 0x00000000000013d0
+(lldb) b Greeting.swift:4
+Breakpoint 2: where = Greeter`greet(_:) + 368 at Greeting.swift:4:5, address = 0x0000000000001610
+(lldb) run
+Process 4197 launched: '/tmp/t/.build/debug/Greeter' (aarch64)
+Process 4197 stopped
+* thread #1, name = 'Greeter', stop reason = breakpoint 1.1
+      frame #0: 0x0000aaaaaaaa13d0 Greeter`main at main.swift:4:7
+   1   	import GreeterCore
+   2   	
+   3   	let name = "Ada"
+-> 4   	print(greet(name))
+    	      ^
+Target 0: (Greeter) stopped.
+(lldb) frame variable
+(lldb) bt
+* thread #1, name = 'Greeter', stop reason = breakpoint 1.1
+  * frame #0: 0x0000aaaaaaaa13d0 Greeter`main at main.swift:4:7
+    frame #1: 0x0000fffff74784c4 libc.so.6`___lldb_unnamed_symbol_28450 + 116
+    frame #2: 0x0000fffff7478598 libc.so.6`__libc_start_main + 152
+    frame #3: 0x0000aaaaaaaa1070 Greeter`_start + 48
+(lldb) quit
++ ls -la .build
+total 104
+drwxr-xr-x 6 root root  4096 Oct 28 20:21 .
+drwxr-xr-x 5 root root  4096 Oct 28 20:21 ..
+-rw-r--r-- 1 root root    10 Oct 28 20:21 .buildSystem_debug
+-rw-r--r-- 1 root root   209 Oct 28 20:21 CACHEDIR.TAG
+drwxr-xr-x 2 root root  4096 Oct 28 20:21 artifacts
+drwxr-xr-x 2 root root  4096 Oct 28 20:21 checkouts
+lrwxrwxrwx 1 root root    32 Oct 28 20:21 debug -> out/Products/Debug-linux-aarch64
+-rw-r--r-- 1 root root 69286 Oct 28 20:21 manifest.pif
+drwxr-xr-x 9 root root  4096 Oct 28 20:21 out
+drwxr-xr-x 2 root root  4096 Oct 28 20:21 repositories
+-rw-r--r-- 1 root root   125 Oct 28 20:21 workspace-state.json
++ readlink -f .build/debug
+/tmp/t/.build/out/Products/Debug-linux-aarch64
++ find .build -name '*.o' -path '*Greeting*'
++ head -3
++ xargs -r readelf -S -W
++ grep debug_info
++ rm -rf .build
+  [13] .debug_info       PROGBITS        0000000000000000 00035b 000156 00      0   0  1
+  [14] .rela.debug_info  RELA            0000000000000000 001168 000408 18   I 25  13  8
++ swift build --build-system native
++ tail -3
+[12/13] Linking Greeter
+Build complete! (2.88s)
+warning: '--build-system native' has been deprecated and will be removed in a future release; please report an issue at https://github.com/swiftlang/swift-package-manager/issues if you are unable to adopt the default build system.
++ dbg native .build/debug/Greeter
++ echo '=== native'
++ exe=.build/debug/Greeter
++ ls -la .build/debug/Greeter
+=== native
+-rwxr-xr-x 1 root root 118432 Oct 28 20:21 .build/debug/Greeter
++ file -L .build/debug/Greeter
+.build/debug/Greeter: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, for GNU/Linux 3.7.0, BuildID[sha1]=e73ce440b76d2267996ed99116f9cbb120ed53a7, with debug_info, not stripped
++ readelf -S -W .build/debug/Greeter
++ grep -E 'debug|gnu_debuglink'
+  [45] .debug_abbrev     PROGBITS        0000000000000000 019710 0001bf 00      0   0  1
+  [46] .debug_info       PROGBITS        0000000000000000 0198cf 0002eb 00      0   0  1
+  [47] .debug_ranges     PROGBITS        0000000000000000 019bba 000060 00      0   0  1
+  [48] .debug_str        PROGBITS        0000000000000000 019c1a 0005d8 01  MS  0   0  1
+  [49] .debug_names      PROGBITS        0000000000000000 01a1f4 000284 00      0   0  4
+  [50] .debug_line       PROGBITS        0000000000000000 01a478 0001b5 00      0   0  1
++ lldb --batch -o 'target create .build/debug/Greeter' -o 'b main.swift:4' -o 'b Greeting.swift:4' -o run -o 'frame variable' -o bt -o quit
++ tail -25
+(lldb) target create .build/debug/Greeter
+Current executable set to '/tmp/t/.build/debug/Greeter' (aarch64).
+(lldb) b main.swift:4
+Breakpoint 1: where = Greeter`Greeter_main + 68 at main.swift:4:7, address = 0x0000000000001290
+(lldb) b Greeting.swift:4
+Breakpoint 2: where = Greeter`greet(_:) + 368 at Greeting.swift:4:5, address = 0x00000000000014d0
+(lldb) run
+Process 4308 launched: '/tmp/t/.build/debug/Greeter' (aarch64)
+Process 4308 stopped
+* thread #1, name = 'Greeter', stop reason = breakpoint 1.1
+      frame #0: 0x0000aaaaaaaa1290 Greeter`Greeter_main at main.swift:4:7
+   1   	import GreeterCore
+   2   	
+   3   	let name = "Ada"
+-> 4   	print(greet(name))
+    	      ^
+Target 0: (Greeter) stopped.
+(lldb) frame variable
+(lldb) bt
+* thread #1, name = 'Greeter', stop reason = breakpoint 1.1
+  * frame #0: 0x0000aaaaaaaa1290 Greeter`Greeter_main at main.swift:4:7
+    frame #1: 0x0000fffff74784c4 libc.so.6`___lldb_unnamed_symbol_28450 + 116
+    frame #2: 0x0000fffff7478598 libc.so.6`__libc_start_main + 152
+    frame #3: 0x0000aaaaaaaa0f30 Greeter`_start + 48
+(lldb) quit
++ rm -rf .build
++ swift build -debug-info-format dwarf
++ tail -3
+[36 / 39] Greeter-product
+[40 / 40] Greeter-product
+Build complete! (2.91 secs)
++ dbg dwarf-flag .build/debug/Greeter
++ echo '=== dwarf-flag'
++ exe=.build/debug/Greeter
++ ls -la .build/debug/Greeter
+=== dwarf-flag
+-rwxr-xr-x 1 root root 119896 Oct 28 20:21 .build/debug/Greeter
++ file -L .build/debug/Greeter
+.build/debug/Greeter: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, for GNU/Linux 3.7.0, BuildID[sha1]=c770208eb40ce844ae7faab187d738d6674e09c1, with debug_info, not stripped
+  [44] .debug_abbrev     PROGBITS        0000000000000000 01013c 0001e2 00      0   0  1
+  [45] .debug_info       PROGBITS        0000000000000000 01031e 00031b 00      0   0  1
+  [46] .debug_ranges     PROGBITS        0000000000000000 010639 000060 00      0   0  1
+  [47] .debug_str        PROGBITS        0000000000000000 010699 000559 01  MS  0   0  1
+  [48] .debug_names      PROGBITS        0000000000000000 010bf4 000284 00      0   0  4
+  [49] .debug_line       PROGBITS        0000000000000000 010e78 0001b5 00      0   0  1
++ readelf -S -W .build/debug/Greeter
++ grep -E 'debug|gnu_debuglink'
++ lldb --batch -o 'target create .build/debug/Greeter' -o 'b main.swift:4' -o 'b Greeting.swift:4' -o run -o 'frame variable' -o bt -o quit
++ tail -25
+(lldb) target create .build/debug/Greeter
+Current executable set to '/tmp/t/.build/debug/Greeter' (aarch64).
+(lldb) b main.swift:4
+Breakpoint 1: where = Greeter`main + 68 at main.swift:4:7, address = 0x00000000000013d0
+(lldb) b Greeting.swift:4
+Breakpoint 2: where = Greeter`greet(_:) + 368 at Greeting.swift:4:5, address = 0x0000000000001610
+(lldb) run
+Process 4411 launched: '/tmp/t/.build/debug/Greeter' (aarch64)
+Process 4411 stopped
+* thread #1, name = 'Greeter', stop reason = breakpoint 1.1
+      frame #0: 0x0000aaaaaaaa13d0 Greeter`main at main.swift:4:7
+   1   	import GreeterCore
+   2   	
+   3   	let name = "Ada"
+-> 4   	print(greet(name))
+    	      ^
+Target 0: (Greeter) stopped.
+(lldb) frame variable
+(lldb) bt
+* thread #1, name = 'Greeter', stop reason = breakpoint 1.1
+  * frame #0: 0x0000aaaaaaaa13d0 Greeter`main at main.swift:4:7
+    frame #1: 0x0000fffff74784c4 libc.so.6`___lldb_unnamed_symbol_28450 + 116
+    frame #2: 0x0000fffff7478598 libc.so.6`__libc_start_main + 152
+    frame #3: 0x0000aaaaaaaa1070 Greeter`_start + 48
+(lldb) quit
++ rm -rf .build
++ swift build -Xswiftc -g -Xlinker --no-strip-debug
++ tail -3
+error: Ld /tmp/t/.build/out/Products/Debug-linux-aarch64/Greeter normal failed with a nonzero exit code. Command line:     cd /tmp/t
+    /opt/swift/usr/bin/swiftc -target aarch64-unknown-linux-gnu -emit-executable -L/tmp/t/.build/out/Intermediates.noindex/EagerLinkingTBDs/Debug-linux-aarch64 -L/tmp/t/.build/out/Products/Debug-linux-aarch64 @/tmp/t/.build/out/Intermediates.noindex/Greeter.build/Debug-linux-aarch64/Greeter-p.build/Objects-normal/aarch64/Greeter.LinkFileList -Xlinker -rpath -Xlinker \$ORIGIN -Xlinker -rpath -Xlinker /tmp/t/.build/out/Products/Debug-linux-aarch64/PackageFrameworks -Xlinker --gc-sections -Xclang-linker -rdynamic -L/opt/swift/usr/lib/swift/linux -L/usr/lib/swift @/tmp/t/.build/out/Intermediates.noindex/Greeter.build/Debug-linux-aarch64/Greeter-p.build/Objects-normal/aarch64/Greeter-swiftbuild.autolink -Xlinker --no-strip-debug -g -o /tmp/t/.build/out/Products/Debug-linux-aarch64/Greeter
+error: Build failed
++ dbg xswiftc .build/debug/Greeter
++ echo '=== xswiftc'
++ exe=.build/debug/Greeter
++ ls -la .build/debug/Greeter
+=== xswiftc
+ls: cannot access '.build/debug/Greeter': No such file or directory
++ file -L .build/debug/Greeter
+.build/debug/Greeter: cannot open `.build/debug/Greeter' (No such file or directory)
++ readelf -S -W .build/debug/Greeter
++ grep -E 'debug|gnu_debuglink'
+readelf: Error: '.build/debug/Greeter': No such file
++ echo 'no debug sections'
+no debug sections
++ lldb --batch -o 'target create .build/debug/Greeter' -o 'b main.swift:4' -o 'b Greeting.swift:4' -o run -o 'frame variable' -o bt -o quit
++ tail -25
+(lldb) target create .build/debug/Greeter
+error: '.build/debug/Greeter' does not exist
++ mkdir -p /tmp/l
++ cd /tmp/l
++ printf 'func g() -> Int {\n    let a = 42\n    return a\n}\nprint(g())\n'
++ swiftc -g -Onone hello.swift -o hello
++ dbg swiftc ./hello
++ echo '=== swiftc'
++ exe=./hello
++ ls -la ./hello
+=== swiftc
+-rwxr-xr-x 1 root root 96240 Oct 28 20:21 ./hello
++ file -L ./hello
+./hello: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, for GNU/Linux 3.7.0, BuildID[sha1]=33f6ba81fbc5b73212d3a1bdf7ca1077ff54bcca, with debug_info, not stripped
++ readelf -S -W ./hello
++ grep -E 'debug|gnu_debuglink'
+  [45] .debug_abbrev     PROGBITS        0000000000000000 014bc8 000116 00      0   0  1
+  [46] .debug_info       PROGBITS        0000000000000000 014cde 0001be 00      0   0  1
+  [47] .debug_ranges     PROGBITS        0000000000000000 014e9c 000030 00      0   0  1
+  [48] .debug_str        PROGBITS        0000000000000000 014ecc 0003b6 01  MS  0   0  1
+  [49] .debug_names      PROGBITS        0000000000000000 015284 000190 00      0   0  4
+  [50] .debug_line       PROGBITS        0000000000000000 015414 0000b5 00      0   0  1
++ lldb --batch -o 'target create ./hello' -o 'b main.swift:4' -o 'b Greeting.swift:4' -o run -o 'frame variable' -o bt -o quit
++ tail -25
+(lldb) target create ./hello
+Current executable set to '/tmp/l/hello' (aarch64).
+(lldb) b main.swift:4
+Breakpoint 1: no locations (pending).
+WARNING:  Unable to resolve breakpoint to any actual locations.
+(lldb) b Greeting.swift:4
+Breakpoint 2: no locations (pending).
+WARNING:  Unable to resolve breakpoint to any actual locations.
+(lldb) run
+42
+Process 4550 launched: '/tmp/l/hello' (aarch64)
+Process 4550 exited with status = 0 (0x00000000)
+(lldb) frame variable
+error: Command requires a process which is currently stopped.
++ cd /tmp/t
++ rm -rf .build
++ echo '=== tests'
+=== tests
++ tail -15
++ swift test --parallel --xunit-output /tmp/r/swift.xml
+◇ Suite Arithmetic started.
+◇ Test "Adds" started.
+✔ Test "Adds" passed after 0.001 seconds.
+◇ Test greetsByName() started.
+✔ Test greetsByName() passed after 0.001 seconds.
+◇ Test fails() started.
+✘ Test fails() recorded an issue at GreetingTests.swift:10:26: Expectation failed: 1 + 1 == 3
+↳ 1 + 1 == 3 → false
+↳   1 + 1 → 2
+✘ Test fails() failed after 0.002 seconds with 1 issue.
+✘ Suite Arithmetic failed after 0.002 seconds with 1 issue.
+✘ Test run with 3 tests in 1 suite failed after 0.002 seconds with 1 issue.
+Note: Some test targets reported failures:
+  - XCTests (XCTest)
+  - GreeterCoreTests (Swift Testing)
++ ls -la /tmp/r
+total 16
+drwxr-xr-x 2 root root 4096 Oct 28 20:21 .
+drwxrwxrwt 1 root root 4096 Oct 28 20:21 ..
+-rw-r--r-- 1 root root  655 Oct 28 20:21 swift-swift-testing.xml
+-rw-r--r-- 1 root root  374 Oct 28 20:21 swift.xml
++ for f in /tmp/r/*.xml
++ echo '--- /tmp/r/swift-swift-testing.xml'
+--- /tmp/r/swift-swift-testing.xml
++ cat /tmp/r/swift-swift-testing.xml
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<testsuites>
+  <testsuite name="TestResults" errors="0" tests="0" failures="0" skipped="0" time="0.000271311">
+
+  </testsuite>
+  <testsuite name="TestResults" errors="0" tests="3" failures="1" skipped="0" time="0.002581078">
+    <testcase classname="GreeterCoreTests" name="greetsByName()" time="0.000157509"/>
+    <testcase classname="GreeterCoreTests.Arithmetic" name="fails()" time="0.002046384">
+      <failure message="Expectation failed: 1 + 1 == 3 (error)"/>
+    </testcase>
+    <testcase classname="GreeterCoreTests.Arithmetic" name="adds()" time="0.000211786"/>
+  </testsuite>
+</testsuites>
++ for f in /tmp/r/*.xml
+--- /tmp/r/swift.xml
++ echo '--- /tmp/r/swift.xml'
++ cat /tmp/r/swift.xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<testsuites>
+<testsuite name="TestResults" errors="0" tests="2" failures="1" time="0.019256527">
+<testcase classname="XCTests.XTests" name="testFails" time="0.00956428">
+<failure message="failure"></failure>
+</testcase>
+<testcase classname="XCTests.XTests" name="testGreets" time="0.009692247">
+</testcase>
+</testsuite>
+</testsuites>
++ swift test --parallel --xunit-output /tmp/r2/swift.xml --filter 'GreeterCoreTests\.Arithmetic[./]adds(?:\(|$)|XTests\.XTests[./]testGreets(?:\(|$)'
++ tail -8
+◇ Test run started.
+↳ Testing Library Version: 6.4.1 (804dc4530ef3666)
+↳ Target Platform: aarch64-unknown-linux-gnu
+◇ Suite Arithmetic started.
+◇ Test "Adds" started.
+✔ Test "Adds" passed after 0.001 seconds.
+✔ Suite Arithmetic passed after 0.001 seconds.
+✔ Test run with 1 test in 1 suite passed after 0.001 seconds.
+--- /tmp/r2/swift-swift-testing.xml
++ for f in /tmp/r2/*.xml
++ echo '--- /tmp/r2/swift-swift-testing.xml'
++ cat /tmp/r2/swift-swift-testing.xml
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<testsuites>
+  <testsuite name="TestResults" errors="0" tests="0" failures="0" skipped="0" time="0.000217298">
+
+  </testsuite>
+  <testsuite name="TestResults" errors="0" tests="1" failures="0" skipped="0" time="0.000781732">
+    <testcase classname="GreeterCoreTests.Arithmetic" name="adds()" time="0.000191427"/>
+  </testsuite>
+</testsuites>
+--- /tmp/r2/swift.xml
++ for f in /tmp/r2/*.xml
++ echo '--- /tmp/r2/swift.xml'
++ cat /tmp/r2/swift.xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<testsuites>
+<testsuite name="TestResults" errors="0" tests="0" failures="0" time="0.0">
+</testsuite>
+</testsuites>
++ python3 /probe/swift_dap.py /tmp/t
+Building for debugging...
+[0/7] Write sources
+[2/7] Write swift-version-6A52383ED409C6A7.txt
+[4/9] Emitting module GreeterCore
+[5/9] Compiling GreeterCore Greeting.swift
+[6/10] Wrapping AST for GreeterCore for debugging
+[8/12] Compiling Greeter main.swift
+[9/12] Emitting module Greeter
+[10/13] Wrapping AST for Greeter for debugging
+[11/13] Write Objects.LinkFileList
+[12/13] Linking Greeter
+Build complete! (2.44s)
+warning: '--build-system native' has been deprecated and will be removed in a future release; please report an issue at https://github.com/swiftlang/swift-package-manager/issues if you are unable to adopt the default build system.
+<< {"body": {"$__lldb_version": "lldb version 21.0.0 (https://github.com/swiftlang/llvm-project.git revision 51091bd668a61591b761afe08e2776476e20ff1c)\nSwift version 6.4.1 (swift-6.4.1-RELEASE)", "completionTriggerCharacters": [".", " ", "\t"], "exceptionBreakpointFilters": [{"description": "C++ Catch", "filter": "cpp_catch", "label": "C++ Catch", "supportsCondition": true}, {"description": "C++ Thro
+<< {"command": "launch", "request_seq": 2, "seq": 0, "success": true, "type": "response"}
+<< {"event": "initialized", "seq": 0, "type": "event"}
+<< {"body": {"breakpoints": [{"column": 5, "id": 1, "instructionReference": "0xAAAAAAAA14D0", "line": 4, "source": {"name": "Greeting.swift", "path": "/tmp/t/Sources/GreeterCore/Greeting.swift"}, "verified": true}]}, "command": "setBreakpoints", "request_seq": 3, "seq": 0, "success": true, "type": "response"}
+<< {"body": {"breakpoint": {"column": 5, "id": 1, "instructionReference": "0xAAAAAAAA14D0", "line": 4, "verified": true}, "reason": "changed"}, "event": "breakpoint", "seq": 0, "type": "event"}
+BP {'body': {'breakpoints': [{'column': 5, 'id': 1, 'instructionReference': '0xAAAAAAAA14D0', 'line': 4, 'source': {'name': 'Greeting.swift', 'path': '/tmp/t/Sources/GreeterCore/Greeting.swift'}, 'verified': True}]}, 'command': 'setBreakpoints', 'request_seq': 3, 'seq': 0, 'success': True, 'type': 'response'}
+<< {"body": {"capabilities": {"supportsRestartRequest": true}}, "event": "capabilities", "seq": 0, "type": "event"}
+<< {"body": {"isLocalProcess": true, "name": "/tmp/t/.build/debug/Greeter", "startMethod": "launch", "systemProcessId": 5008}, "event": "process", "seq": 0, "type": "event"}
+<< {"command": "configurationDone", "request_seq": 4, "seq": 0, "success": true, "type": "response"}
+<< {"body": {"allThreadsStopped": true, "description": "breakpoint 1.1", "hitBreakpointIds": [1], "preserveFocusHint": false, "reason": "breakpoint", "threadCausedFocus": true, "threadId": 5008}, "event": "stopped", "seq": 0, "type": "event"}
+STOP {'body': {'allThreadsStopped': True, 'description': 'breakpoint 1.1', 'hitBreakpointIds': [1], 'preserveFocusHint': False, 'reason': 'breakpoint', 'threadCausedFocus': True, 'threadId': 5008}, 'event': 'stopped', 'seq': 0, 'type': 'event'}
+<< {"body": {"stackFrames": [{"column": 5, "id": 524288, "instructionPointerReference": "0xAAAAAAAA14D0", "line": 4, "moduleId": "E73CE440-B76D-2267-996E-D99116F9CBB1-20ED53A7", "name": "greet(_:)", "source": {"name": "Greeting.swift", "path": "/tmp/t/Sources/GreeterCore/Greeting.swift"}}, {"column": 7, "id": 524289, "instructionPointerReference": "0xAAAAAAAA12B4", "line": 4, "moduleId": "E73CE440-B7
+FRAMES ['greet(_:):4', 'Greeter_main:4', '___lldb_unnamed_symbol_28450:30', '__libc_start_main:39']
+<< {"body": {"scopes": [{"expensive": false, "name": "Locals", "namedVariables": 3, "presentationHint": "locals", "variablesReference": 1}, {"expensive": false, "name": "Globals", "namedVariables": 0, "variablesReference": 2}, {"expensive": false, "name": "Registers", "namedVariables": 5, "presentationHint": "registers", "variablesReference": 3}]}, "command": "scopes", "request_seq": 6, "seq": 0, "su
+<< {"body": {"variables": [{"declarationLocationReference": 8, "evaluateName": "name", "memoryReference": "0xFFFFFFFFFAF0", "name": "name", "type": "String", "value": "\"Ada\"", "variablesReference": 0}, {"declarationLocationReference": 10, "evaluateName": "answer", "name": "answer", "type": "Int", "value": "42", "variablesReference": 0}, {"declarationLocationReference": 12, "evaluateName": "message"
+LOCALS [('name', '"Ada"'), ('answer', '42'), ('message', '"Hello, Ada! The answer is 42."')]
+RESULT swift breakpoint OK
+<< {"body": {"category": "console", "output": "Process 5008 exited with status = 9 (0x00000009) killed\n"}, "event": "output", "seq": 0, "type": "event"}
+<< {"body": {"$__lldb_statistics": {"commands": "{}", "memory": "{\"strings\":{\"bytesTotal\":15990784,\"bytesUnused\":2419864,\"bytesUsed\":13570920}}", "plugins": "{\"abi\":[{\"enabled\":true,\"name\":\"SysV-arm64\"},{\"enabled\":true,\"name\":\"ABIMacOSX_arm64\"},{\"enabled\":true,\"name\":\"SysV-arm\"},{\"enabled\":true,\"name\":\"macosx-arm\"},{\"enabled\":true,\"name\":\"sysv-mips\"},{\"enabled
+<< {"command": "disconnect", "request_seq": 8, "seq": 0, "success": true, "type": "response"}
+<< {"body": {"exitCode": 9}, "event": "exited", "seq": 0, "type": "event"}
