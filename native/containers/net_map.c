@@ -1,36 +1,43 @@
-/* TabStudio's network map for PRoot: published ports and service addresses for containers.
+/* TabStudio's container network for PRoot.
  *
- * Android gives an app no network namespace, so every container shares the device's network. This extension
- * rewrites the socket addresses a container's programs use, so two containers that both listen on 5432 (or on 80,
- * which an app may not bind) can run side by side:
+ * Android gives an app no network namespace, so every container shares the device's network. This extension gives
+ * each container its own loopback address (127.42.x.y) and rewrites the socket addresses its programs use, so two
+ * containers can both listen on 5432, or on 80, which an app may not bind, and still reach each other by name:
  *
- *   --net-map=RULES   RULES is a comma-separated list, and the option may be repeated.
- *     B<port>=<port>                  bind(2) of any IPv4/IPv6 address with this port binds the new port instead.
- *     L<port>=<port>                  the same, and a wildcard address (0.0.0.0, ::) becomes loopback, so a
- *                                     container's port is reachable from the device but not from its network.
- *     L*                              every other wildcard bind becomes loopback, keeping its port.
- *     C<addr>:<port>=<addr>:<port>    connect(2) and sendto(2) to this IPv4 address and port go to the new one.
- *                                     IPv4-mapped IPv6 addresses (::ffff:a.b.c.d) match the same rules.
- *     C[<addr6>]:<port>=[<addr6>]:<port>   the same for an IPv6 address such as [::1].
+ *   --net-map=RULES   RULES is a comma-separated list; the option may be repeated.
+ *     A<addr>                       The container's own address. A bind(2) to a wildcard or loopback address
+ *                                   (0.0.0.0, 127.0.0.1, ::, ::1) on a port no P rule names binds this address
+ *                                   instead, and connect(2) to localhost reaches it.
+ *     P<port>=<host-port>           A published port: a wildcard or loopback bind of <port> binds 127.0.0.1:<host-port>
+ *                                   (for IPv6 [::1], or ::ffff:127.0.0.1 on a dual-stack socket), so the device and
+ *                                   the IDE reach it on localhost, and the container's own connections to
+ *                                   localhost:<port> go there too.
+ *     W<port>=<host-port>           The same, but a wildcard bind stays a wildcard: published on every interface.
+ *     C<addr>:<port>=<addr>:<port>  connect(2) and sendto(2) to this address go to the other one; a port of * matches
+ *                                   any port and keeps it. IPv4-mapped IPv6 addresses (::ffff:a.b.c.d) match too.
+ *                                   C[<v6>]:<port>=[<v6>]:<port> is the IPv6 form.
+ *     @<file>                       More rules, one per line, read from a file and read again when it changes:
+ *                                   the other containers' addresses, which change as containers start and stop.
  *
- * A wildcard IPv6 socket becomes [::1] when the program made it IPv6-only (setsockopt IPV6_V6ONLY, which nginx,
- * PostgreSQL and Redis do next to an IPv4 socket), and otherwise ::ffff:127.0.0.1, so a dual-stack listener (Node.js,
- * Java, Go) still answers 127.0.0.1.
+ * A wildcard IPv6 socket the program made IPv6-only (setsockopt IPV6_V6ONLY, as nginx, PostgreSQL and Redis do next
+ * to an IPv4 socket) gets [::1]; any other gets the IPv4-mapped form, so a dual-stack listener (Node.js, Java, Go)
+ * still answers on IPv4.
  *
  * Containers also get setgroups(2) as a success where Android refuses it (EPERM): su-exec, gosu and setpriv call it
  * when an image's entrypoint drops root, and under PRoot's simulated root there are no real groups to change.
  *
- * The rewritten address is copied to the tracee's stack (set_sysarg_data), so the program's own buffer keeps the
- * address it asked for. A program that binds port 0, or an address no rule names, is left alone.
- * Licensed like PRoot, GPL-2.0-or-later. */
+ * Every rewritten address is copied to the tracee's stack (set_sysarg_data), so the program's own buffer keeps the
+ * address it asked for. Licensed like PRoot, GPL-2.0-or-later. */
 
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <errno.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 #include <talloc.h>
 
 #include "extension/extension.h"
@@ -40,15 +47,15 @@
 #include "syscall/sysnum.h"
 #include "cli/note.h"
 
+typedef enum { RULE_PORT, RULE_WIDE_PORT, RULE_CONNECT } RuleKind;
+
 typedef struct {
-	bool connect;
-	bool loopback;         /* Bind rules: also turn a wildcard address into loopback. */
-	bool any_port;         /* "L*": matches every port, keeping it. */          /* false: a bind rule (port only); true: a connect/sendto rule (address and port). */
-	int family;            /* AF_INET or AF_INET6, for connect rules. */
+	RuleKind kind;
+	int family;            /* Connect rules: AF_INET or AF_INET6. */
 	uint8_t from_addr[16];
-	uint16_t from_port;
+	uint16_t from_port;    /* 0: any port. */
 	uint8_t to_addr[16];
-	uint16_t to_port;
+	uint16_t to_port;      /* 0: the same port. */
 } NetMapRule;
 
 typedef struct {
@@ -59,14 +66,30 @@ typedef struct {
 typedef struct {
 	NetMapRule *rules;
 	size_t count;
+	bool has_address;
+	uint8_t address[4];    /* The container's own IPv4 address. */
+	char *file;
+	struct timespec file_mtime;
+	NetMapRule *file_rules;
+	size_t file_count;
 	V6OnlySocket v6only[64]; /* Recent IPV6_V6ONLY sockets, consumed by their bind(2). */
 	size_t v6only_next;
 } NetMapConfig;
 
-static bool parse_port(const char *text, uint16_t *port)
+static const uint8_t v4_mapped_prefix[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff };
+static const uint8_t v6_loopback[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
+static const uint8_t v6_any[16] = { 0 };
+static const uint8_t v4_loopback[4] = { 127, 0, 0, 1 };
+
+static bool parse_port(const char *text, uint16_t *port, bool allow_any)
 {
 	char *end;
-	long value = strtol(text, &end, 10);
+	long value;
+	if (allow_any && strcmp(text, "*") == 0) {
+		*port = 0;
+		return true;
+	}
+	value = strtol(text, &end, 10);
 	if (end == text || *end != '\0' || value < 1 || value > 65535)
 		return false;
 	*port = (uint16_t) value;
@@ -77,21 +100,59 @@ static bool parse_port(const char *text, uint16_t *port)
 static bool parse_endpoint(char *text, int *family, uint8_t addr[16], uint16_t *port)
 {
 	char *colon;
+	memset(addr, 0, 16);
 	if (text[0] == '[') {
 		char *close = strchr(text, ']');
 		if (close == NULL || close[1] != ':')
 			return false;
 		*close = '\0';
 		*family = AF_INET6;
-		return inet_pton(AF_INET6, text + 1, addr) == 1 && parse_port(close + 2, port);
+		return inet_pton(AF_INET6, text + 1, addr) == 1 && parse_port(close + 2, port, true);
 	}
 	colon = strrchr(text, ':');
 	if (colon == NULL)
 		return false;
 	*colon = '\0';
 	*family = AF_INET;
-	memset(addr, 0, 16);
-	return inet_pton(AF_INET, text, addr) == 1 && parse_port(colon + 1, port);
+	return inet_pton(AF_INET, text, addr) == 1 && parse_port(colon + 1, port, true);
+}
+
+/* Parses one rule into @rule; returns 1 for a rule, 0 for something handled here (A, @), -1 for an error. */
+static int parse_rule(NetMapConfig *config, char *item, NetMapRule *rule)
+{
+	char *equals;
+	memset(rule, 0, sizeof(*rule));
+	if (item[0] == 'A')
+		return inet_pton(AF_INET, item + 1, config->address) == 1 ? (config->has_address = true, 0) : -1;
+	if (item[0] == '@') {
+		config->file = talloc_strdup(config, item + 1);
+		return config->file != NULL ? 0 : -1;
+	}
+	equals = strchr(item, '=');
+	if (equals == NULL)
+		return -1;
+	*equals = '\0';
+	if (item[0] == 'P' || item[0] == 'W') {
+		rule->kind = item[0] == 'P' ? RULE_PORT : RULE_WIDE_PORT;
+		return parse_port(item + 1, &rule->from_port, false) && parse_port(equals + 1, &rule->to_port, false) ? 1 : -1;
+	}
+	if (item[0] == 'C') {
+		int to_family;
+		rule->kind = RULE_CONNECT;
+		return parse_endpoint(item + 1, &rule->family, rule->from_addr, &rule->from_port)
+		       && parse_endpoint(equals + 1, &to_family, rule->to_addr, &rule->to_port)
+		       && to_family == rule->family ? 1 : -1;
+	}
+	return -1;
+}
+
+static int add_rule(TALLOC_CTX *owner, NetMapRule **rules, size_t *count, const NetMapRule *rule)
+{
+	*rules = talloc_realloc(owner, *rules, NetMapRule, *count + 1);
+	if (*rules == NULL)
+		return -1;
+	(*rules)[(*count)++] = *rule;
+	return 0;
 }
 
 static int parse_rules(NetMapConfig *config, const char *cli)
@@ -101,118 +162,210 @@ static int parse_rules(NetMapConfig *config, const char *cli)
 	char *item;
 	if (copy == NULL)
 		return -1;
-
 	for (item = strtok_r(copy, ",", &save); item != NULL; item = strtok_r(NULL, ",", &save)) {
 		NetMapRule rule;
-		char *equals = strchr(item, '=');
-		memset(&rule, 0, sizeof(rule));
-		if (strcmp(item, "L*") == 0) {
-			rule.loopback = true;
-			rule.any_port = true;
-			goto add;
-		}
-		if (equals == NULL || (item[0] != 'B' && item[0] != 'L' && item[0] != 'C'))
-			goto invalid;
-		*equals = '\0';
-		if (item[0] == 'B' || item[0] == 'L') {
-			rule.loopback = item[0] == 'L';
-			if (!parse_port(item + 1, &rule.from_port) || !parse_port(equals + 1, &rule.to_port))
-				goto invalid;
-		} else {
-			int to_family;
-			rule.connect = true;
-			if (!parse_endpoint(item + 1, &rule.family, rule.from_addr, &rule.from_port)
-			    || !parse_endpoint(equals + 1, &to_family, rule.to_addr, &rule.to_port)
-			    || to_family != rule.family)
-				goto invalid;
-		}
-add:
-		config->rules = talloc_realloc(config, config->rules, NetMapRule, config->count + 1);
-		if (config->rules == NULL)
+		int status = parse_rule(config, item, &rule);
+		if (status < 0) {
+			note(NULL, ERROR, USER, "--net-map: invalid rule '%s'", item);
 			return -1;
-		config->rules[config->count++] = rule;
-		continue;
-invalid:
-		note(NULL, ERROR, USER, "--net-map: invalid rule '%s'", item);
-		return -1;
+		}
+		if (status > 0 && add_rule(config, &config->rules, &config->count, &rule) < 0)
+			return -1;
 	}
 	return 0;
 }
 
-static const uint8_t v4_mapped_prefix[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff };
+/* Reads the rule file again when it changed; a rule file that is missing or invalid gives no file rules. */
+static void reload_file(NetMapConfig *config)
+{
+	struct stat status;
+	FILE *file;
+	char line[256];
+	if (config->file == NULL)
+		return;
+	if (stat(config->file, &status) < 0) {
+		config->file_count = 0;
+		return;
+	}
+	if (status.st_mtim.tv_sec == config->file_mtime.tv_sec && status.st_mtim.tv_nsec == config->file_mtime.tv_nsec)
+		return;
+	config->file_mtime = status.st_mtim;
+	config->file_count = 0;
+	file = fopen(config->file, "re");
+	if (file == NULL)
+		return;
+	while (fgets(line, sizeof(line), file) != NULL) {
+		NetMapRule rule;
+		NetMapConfig scratch;
+		line[strcspn(line, "\r\n")] = '\0';
+		if (line[0] != 'C')
+			continue; /* Only connect rules come from the file: binds belong to the container itself. */
+		memset(&scratch, 0, sizeof(scratch));
+		if (parse_rule(&scratch, line, &rule) == 1)
+			(void) add_rule(config, &config->file_rules, &config->file_count, &rule);
+	}
+	fclose(file);
+}
 
-/* Rewrites @address in place; returns true when a rule matched. */
-static const uint8_t v6_loopback[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
-static const uint8_t v6_any[16] = { 0 };
+static bool is_loopback_or_any4(const uint8_t addr[4])
+{
+	return addr[0] == 127 || (addr[0] == 0 && addr[1] == 0 && addr[2] == 0 && addr[3] == 0);
+}
 
-static bool apply_rules(const NetMapConfig *config, bool connect, bool v6only, struct sockaddr_storage *address, size_t length)
+static void set_mapped(uint8_t bytes[16], const uint8_t v4[4])
+{
+	memcpy(bytes, v4_mapped_prefix, 12);
+	memcpy(bytes + 12, v4, 4);
+}
+
+static const NetMapRule *find_port(const NetMapConfig *config, uint16_t port)
+{
+	size_t i;
+	for (i = 0; i < config->count; i++)
+		if (config->rules[i].kind != RULE_CONNECT && config->rules[i].from_port == port)
+			return &config->rules[i];
+	return NULL;
+}
+
+/* bind(2): returns true when @address changed. */
+static bool rewrite_bind(const NetMapConfig *config, bool v6only, struct sockaddr_storage *address, size_t length)
+{
+	if (address->ss_family == AF_INET && length >= sizeof(struct sockaddr_in)) {
+		struct sockaddr_in *in = (struct sockaddr_in *) address;
+		uint8_t *bytes = (uint8_t *) &in->sin_addr;
+		const NetMapRule *rule = find_port(config, ntohs(in->sin_port));
+		bool any = in->sin_addr.s_addr == htonl(INADDR_ANY);
+		if (!is_loopback_or_any4(bytes) || ntohs(in->sin_port) == 0)
+			return false;
+		if (rule != NULL) {
+			in->sin_port = htons(rule->to_port);
+			if (!(rule->kind == RULE_WIDE_PORT && any))
+				memcpy(bytes, v4_loopback, 4);
+			return true;
+		}
+		if (config->has_address) {
+			memcpy(bytes, config->address, 4);
+			return true;
+		}
+		return false;
+	}
+	if (address->ss_family == AF_INET6 && length >= sizeof(struct sockaddr_in6)) {
+		struct sockaddr_in6 *in6 = (struct sockaddr_in6 *) address;
+		uint8_t *bytes = in6->sin6_addr.s6_addr;
+		bool any = memcmp(bytes, v6_any, 16) == 0;
+		bool loopback = memcmp(bytes, v6_loopback, 16) == 0;
+		bool mapped = memcmp(bytes, v4_mapped_prefix, 12) == 0 && is_loopback_or_any4(bytes + 12);
+		const NetMapRule *rule = find_port(config, ntohs(in6->sin6_port));
+		if (!(any || loopback || mapped) || ntohs(in6->sin6_port) == 0)
+			return false;
+		if (rule != NULL) {
+			in6->sin6_port = htons(rule->to_port);
+			if (rule->kind == RULE_WIDE_PORT && any)
+				return true;
+			if (loopback || (any && v6only))
+				memcpy(bytes, v6_loopback, 16);
+			else
+				set_mapped(bytes, v4_loopback);
+			return true;
+		}
+		if (!config->has_address || loopback)
+			return false;
+		if (any && v6only)
+			memcpy(bytes, v6_loopback, 16); /* An IPv6-only listener stays on the device, not the network. */
+		else
+			set_mapped(bytes, config->address);
+		return true;
+	}
+	return false;
+}
+
+static bool match_connect(const NetMapRule *rule, int family, const uint8_t *addr, uint16_t port)
+{
+	return rule->kind == RULE_CONNECT && rule->family == family && (rule->from_port == 0 || rule->from_port == port)
+	       && memcmp(rule->from_addr, addr, family == AF_INET ? 4 : 16) == 0;
+}
+
+/* Applies the first matching connect rule to a v4 (or v4-mapped) destination. */
+static bool connect_v4(const NetMapConfig *config, uint8_t addr[4], uint16_t *port)
+{
+	size_t i;
+	const NetMapRule *rule;
+	const NetMapRule *lists[2] = { config->rules, config->file_rules };
+	size_t counts[2] = { config->count, config->file_count };
+	size_t list;
+	/* The container's own published ports, reached through localhost. */
+	if (addr[0] == 127 && config->has_address && (memcmp(addr, v4_loopback, 4) == 0 || memcmp(addr, config->address, 4) == 0)) {
+		rule = find_port(config, *port);
+		if (rule != NULL) {
+			memcpy(addr, v4_loopback, 4);
+			*port = rule->to_port;
+			return true;
+		}
+	}
+	for (list = 0; list < 2; list++) {
+		for (i = 0; i < counts[list]; i++) {
+			rule = &lists[list][i];
+			if (match_connect(rule, AF_INET, addr, *port)) {
+				memcpy(addr, rule->to_addr, 4);
+				if (rule->to_port != 0)
+					*port = rule->to_port;
+				return true;
+			}
+		}
+	}
+	/* Anything else on localhost is the container itself. */
+	if (config->has_address && memcmp(addr, v4_loopback, 4) == 0) {
+		memcpy(addr, config->address, 4);
+		return true;
+	}
+	return false;
+}
+
+static bool rewrite_connect(const NetMapConfig *config, struct sockaddr_storage *address, size_t length)
 {
 	size_t i;
 	if (address->ss_family == AF_INET && length >= sizeof(struct sockaddr_in)) {
 		struct sockaddr_in *in = (struct sockaddr_in *) address;
 		uint16_t port = ntohs(in->sin_port);
-		for (i = 0; i < config->count; i++) {
-			const NetMapRule *rule = &config->rules[i];
-			if (rule->connect != connect || (!rule->any_port && rule->from_port != port))
-				continue;
-			if (!connect) {
-				bool wildcard = in->sin_addr.s_addr == htonl(INADDR_ANY);
-				if (rule->any_port && !wildcard)
-					continue;
-				if (!rule->any_port)
-					in->sin_port = htons(rule->to_port);
-				if (rule->loopback && wildcard)
-					in->sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-				return true;
-			}
-			if (rule->family == AF_INET && memcmp(&in->sin_addr, rule->from_addr, 4) == 0) {
-				memcpy(&in->sin_addr, rule->to_addr, 4);
-				in->sin_port = htons(rule->to_port);
-				return true;
-			}
-		}
-	} else if (address->ss_family == AF_INET6 && length >= sizeof(struct sockaddr_in6)) {
+		if (!connect_v4(config, (uint8_t *) &in->sin_addr, &port))
+			return false;
+		in->sin_port = htons(port);
+		return true;
+	}
+	if (address->ss_family == AF_INET6 && length >= sizeof(struct sockaddr_in6)) {
 		struct sockaddr_in6 *in6 = (struct sockaddr_in6 *) address;
 		uint8_t *bytes = in6->sin6_addr.s6_addr;
 		uint16_t port = ntohs(in6->sin6_port);
-		bool mapped = memcmp(bytes, v4_mapped_prefix, 12) == 0;
-		for (i = 0; i < config->count; i++) {
-			const NetMapRule *rule = &config->rules[i];
-			if (rule->connect != connect || (!rule->any_port && rule->from_port != port))
-				continue;
-			if (!connect) {
-				bool wildcard = memcmp(bytes, v6_any, 16) == 0;
-				if (rule->any_port && !wildcard)
-					continue;
-				if (!rule->any_port)
-					in6->sin6_port = htons(rule->to_port);
-				if (rule->loopback && wildcard) {
-					if (v6only) {
-						memcpy(bytes, v6_loopback, 16);
-					} else {
-						memcpy(bytes, v4_mapped_prefix, 12);
-						bytes[12] = 127; bytes[13] = 0; bytes[14] = 0; bytes[15] = 1;
-					}
-				}
-				return true;
-			}
-			if (rule->family == AF_INET6 && memcmp(bytes, rule->from_addr, 16) == 0) {
+		if (memcmp(bytes, v4_mapped_prefix, 12) == 0) {
+			if (!connect_v4(config, bytes + 12, &port))
+				return false;
+			in6->sin6_port = htons(port);
+			return true;
+		}
+		for (i = 0; i < config->count + config->file_count; i++) {
+			const NetMapRule *rule = i < config->count ? &config->rules[i] : &config->file_rules[i - config->count];
+			if (match_connect(rule, AF_INET6, bytes, port)) {
 				memcpy(bytes, rule->to_addr, 16);
-				in6->sin6_port = htons(rule->to_port);
+				if (rule->to_port != 0)
+					in6->sin6_port = htons(rule->to_port);
 				return true;
 			}
-			if (rule->family == AF_INET && mapped && memcmp(bytes + 12, rule->from_addr, 4) == 0) {
-				memcpy(bytes + 12, rule->to_addr, 4);
+		}
+		if (memcmp(bytes, v6_loopback, 16) == 0 && config->has_address) {
+			/* [::1] in a container is the container: its published port, or its own address. */
+			const NetMapRule *rule = find_port(config, port);
+			if (rule != NULL) {
+				set_mapped(bytes, v4_loopback);
 				in6->sin6_port = htons(rule->to_port);
-				return true;
+			} else {
+				set_mapped(bytes, config->address);
 			}
+			return true;
 		}
 	}
 	return false;
 }
 
-/* Reads the address argument @address_reg (length in @length_reg), applies the rules, and points the argument at
- * a rewritten copy. */
 /* Whether this tracee made socket @fd IPv6-only; the entry is consumed. */
 static bool take_v6only(NetMapConfig *config, pid_t pid, int fd)
 {
@@ -229,42 +382,47 @@ static bool take_v6only(NetMapConfig *config, pid_t pid, int fd)
 static void note_setsockopt(Tracee *tracee, NetMapConfig *config)
 {
 	int value = 0;
+	int fd = (int) peek_reg(tracee, CURRENT, SYSARG_1);
 	size_t slot;
 	if ((int) peek_reg(tracee, CURRENT, SYSARG_2) != IPPROTO_IPV6
 	    || (int) peek_reg(tracee, CURRENT, SYSARG_3) != IPV6_V6ONLY
 	    || peek_reg(tracee, CURRENT, SYSARG_5) < sizeof(int)
 	    || read_data(tracee, &value, peek_reg(tracee, CURRENT, SYSARG_4), sizeof(int)) < 0)
 		return;
-	(void) take_v6only(config, tracee->pid, (int) peek_reg(tracee, CURRENT, SYSARG_1));
+	(void) take_v6only(config, tracee->pid, fd);
 	if (value == 0)
 		return;
 	slot = config->v6only_next++ % (sizeof(config->v6only) / sizeof(config->v6only[0]));
 	config->v6only[slot].pid = tracee->pid;
-	config->v6only[slot].fd = (int) peek_reg(tracee, CURRENT, SYSARG_1);
+	config->v6only[slot].fd = fd;
 }
 
+/* Reads the address argument @address_reg (length in @length_reg), rewrites it, and points the argument at the
+ * rewritten copy. */
 static int rewrite(Tracee *tracee, NetMapConfig *config, bool connect, Reg address_reg, Reg length_reg)
 {
 	struct sockaddr_storage address;
 	word_t pointer = peek_reg(tracee, CURRENT, address_reg);
 	word_t length = peek_reg(tracee, CURRENT, length_reg);
-	int status;
+	bool changed;
 
 	if (pointer == 0 || length < sizeof(sa_family_t) || length > sizeof(address))
 		return 0;
-
 	memset(&address, 0, sizeof(address));
-	status = read_data(tracee, &address, pointer, length);
-	if (status < 0)
+	if (read_data(tracee, &address, pointer, length) < 0)
 		return 0; /* Let the kernel report EFAULT itself. */
-
-	if (!apply_rules(config, connect,
-			 !connect && take_v6only(config, tracee->pid, (int) peek_reg(tracee, CURRENT, SYSARG_1)),
-			 &address, length))
+	if (address.ss_family != AF_INET && address.ss_family != AF_INET6)
 		return 0;
 
-	status = set_sysarg_data(tracee, &address, length, address_reg);
-	return status < 0 ? status : 0;
+	if (connect) {
+		reload_file(config);
+		changed = rewrite_connect(config, &address, length);
+	} else {
+		changed = rewrite_bind(config, take_v6only(config, tracee->pid, (int) peek_reg(tracee, CURRENT, SYSARG_1)), &address, length);
+	}
+	if (!changed)
+		return 0;
+	return set_sysarg_data(tracee, &address, length, address_reg) < 0 ? -EFAULT : 0;
 }
 
 int net_map_callback(Extension *extension, ExtensionEvent event, intptr_t data1, intptr_t data2 UNUSED)
@@ -279,9 +437,7 @@ int net_map_callback(Extension *extension, ExtensionEvent event, intptr_t data1,
 			{ PR_setgroups, FILTER_SYSEXIT },
 			FILTERED_SYSNUM_END
 		};
-		NetMapConfig *config;
-
-		config = talloc_zero(extension, NetMapConfig);
+		NetMapConfig *config = talloc_zero(extension, NetMapConfig);
 		if (config == NULL)
 			return -1;
 		extension->config = config;
@@ -290,7 +446,7 @@ int net_map_callback(Extension *extension, ExtensionEvent event, intptr_t data1,
 	}
 
 	case INHERIT_PARENT:
-		/* The rules never change after start: children share them. */
+		/* One configuration for the whole container: children share it. */
 		return 0;
 
 	case SYSCALL_ENTER_END: {
