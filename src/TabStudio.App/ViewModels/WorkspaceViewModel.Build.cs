@@ -162,13 +162,18 @@ public sealed partial class WorkspaceViewModel
 
         if (Workspace is { } workspace)
         {
-            var csharp = workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp).ToList();
+            var csharp = workspace.Projects.Where(p => p.IsRoslynLanguage).ToList();
             var skipped = csharp.Where(p => p.Kind == ProjectKind.AspireAppHost || NetFrameworkCompatibility.NeedsWindows(p) || ProjectClassifier.IsMobilePlatformHead(p)).ToList();
             await BuildProjectsAsync(InDependencyOrder(csharp.Except(skipped).ToList()), showOutput: true, skipped: skipped);
             foreach (var item in _toolchainProjects.Where(t => TabStudio.Toolchains.Microchip.MicrochipInstallation.IsCompiler(t.Toolchain.Id)))
             {
                 await RunToolchainProjectAsync(item.Info);
                 if (State == IdeState.Failed) break;
+            }
+
+            if (State != IdeState.Failed)
+            {
+                await BuildToolchainProjectsAsync(clearOutput: csharp.Count == 0);
             }
         }
     }

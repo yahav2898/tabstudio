@@ -55,7 +55,10 @@ public static partial class OutputProgressParser
             "cmake" when arguments.Contains("--build") => $"Building {what}",
             "cmake" when arguments.Contains("--install") => $"Installing {what}",
             "cmake" => "Configuring CMake",
-            "ninja" or "make" or "gmake" or "mingw32-make" or "idf.py" or "west" or "cargo" or "pio" or "platformio" or "arduino-cli" or "gradle" or "mvn" => $"Building {what}",
+            "ninja" or "make" or "gmake" or "mingw32-make" or "idf.py" or "west" or "cargo" or "pio" or "platformio" or "arduino-cli" or "gradle" or "mvn"
+                or "swift" or "swiftc" or "kotlinc" => $"Building {what}",
+            "npm" or "pnpm" or "yarn" when arguments is ["run", "build", ..] => $"Building {what}'s assets",
+            "composer" => "Installing packages",
             "npm" or "pnpm" or "yarn" or "pip" or "pip3" or "uv" or "apk" or "bundle" => "Installing packages",
             _ => $"Running {name}",
         };
@@ -65,7 +68,7 @@ public static partial class OutputProgressParser
 
     private static double Number(string text) => double.Parse(text, NumberStyles.Integer, CultureInfo.InvariantCulture);
 
-    [GeneratedRegex(@"^\[(?<done>\d+)/(?<total>\d+)\]\s", RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"^\[\s*(?<done>\d+)\s*/\s*(?<total>\d+)\s*\]\s", RegexOptions.CultureInvariant)]
     private static partial Regex Ninja();
 
     [GeneratedRegex(@"^\[\s*(?<percent>\d{1,3})%\]\s", RegexOptions.CultureInvariant)]

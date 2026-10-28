@@ -176,7 +176,8 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
     /// A repository's services: its Compose files, or without them the database its Prisma schema names
     /// (<see cref="PrismaServices"/>).
     /// </summary>
-    internal static ComposeProject? Discover(string directory) => ComposeReader.Discover(directory) ?? PrismaServices.Discover(directory);
+    internal static ComposeProject? Discover(string directory) =>
+        ComposeReader.Discover(directory) ?? PrismaServices.Discover(directory) ?? LaravelServices.Discover(directory);
 
     private async Task<bool> PerformAsync(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default)
     {

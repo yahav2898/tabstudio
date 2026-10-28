@@ -37,8 +37,14 @@ public sealed record FileType(
     (string Open, string Close)? BlockComment,
     string? HighlightingExtension)
 {
-    /// <summary>Whether Roslyn provides the language service for this file.</summary>
+    /// <summary>Whether this is a C# file.</summary>
     public bool IsCSharp => BadgeKind == BadgeKind.CSharp && DisplayName == "C#";
+
+    /// <summary>Whether this is a Visual Basic file.</summary>
+    public bool IsVisualBasic => BadgeKind == BadgeKind.CSharp && DisplayName == "Visual Basic";
+
+    /// <summary>Whether Roslyn provides the language service for this file: a C# or Visual Basic file.</summary>
+    public bool IsRoslyn => IsCSharp || IsVisualBasic;
 
     /// <summary>The VS Code language identifier, such as <c>perl</c>, when an installed extension contributes the language.</summary>
     public string? LanguageId { get; init; }
@@ -61,7 +67,7 @@ public static class FileTypes
     /// <summary>
     /// The file types installed extensions contribute: given a path and TabStudio's own type for it (or
     /// <see langword="null"/>), returns the type to use, or <see langword="null"/> when no extension claims the file.
-    /// C# files and notebooks keep their own type.
+    /// C# and Visual Basic files and notebooks keep their own type.
     /// </summary>
     public static Func<string, FileType?, FileType?>? Contributed { get; set; }
 
@@ -169,7 +175,7 @@ public static class FileTypes
             builtIn = ByExtension.GetValueOrDefault(extension);
         }
 
-        if (builtIn is { IsCSharp: true } or { BadgeKind: BadgeKind.Notebook })
+        if (builtIn is { IsRoslyn: true } or { BadgeKind: BadgeKind.Notebook })
         {
             return builtIn;
         }

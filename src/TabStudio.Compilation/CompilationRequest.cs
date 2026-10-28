@@ -53,7 +53,7 @@ public sealed record CompiledAssembly(string Name, byte[] Image, byte[]? Symbols
 {
     /// <summary>The exact compilation emitted into this image, retained for local Debug Hot Reload only.</summary>
     [System.Text.Json.Serialization.JsonIgnore]
-    public Microsoft.CodeAnalysis.CSharp.CSharpCompilation? HotReloadCompilation { get; init; }
+    public Microsoft.CodeAnalysis.Compilation? HotReloadCompilation { get; init; }
 }
 
 /// <summary>

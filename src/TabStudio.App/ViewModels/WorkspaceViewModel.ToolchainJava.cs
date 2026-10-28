@@ -36,7 +36,7 @@ public sealed partial class WorkspaceViewModel
         }
 
         var built = await OutputProcess.RunAsync(_toolchains.Runtime, plan.Build!, Output, null, cancellationToken, toolchain: project.Toolchain.Id);
-        if (built.Succeeded && project.Toolchain.Id == "java" && plan.EntryPoint == "build.gradle")
+        if (built.Succeeded && project.Toolchain.Id is "java" or "kotlin" && plan.EntryPoint == "build.gradle")
         {
             var classpath = Path.Combine(project.Directory, ".tabstudio", "java-classpath.txt");
             if (File.Exists(classpath))

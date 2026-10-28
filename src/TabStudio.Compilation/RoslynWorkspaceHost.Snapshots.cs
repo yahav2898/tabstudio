@@ -38,8 +38,8 @@ public sealed partial class RoslynWorkspaceHost
                     : solution.WithDocumentText(documentId, SourceText.From(text, Encoding.UTF8), PreservationMode.PreserveIdentity);
             }
             else if (text is not null
-                && path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase)
-                && OwningProject(projects.Values, path) is { } owner)
+                && OwningProject(projects.Values, path) is { } owner
+                && path.EndsWith(owner.IsVisualBasic ? ".vb" : ".cs", StringComparison.OrdinalIgnoreCase))
             {
                 var id = DocumentId.CreateNewId(projectIds[owner.FilePath], path);
                 solution = solution.AddDocument(DocumentInfo.Create(
