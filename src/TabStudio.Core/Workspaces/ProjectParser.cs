@@ -30,6 +30,9 @@ public static partial class ProjectParser
     /// <summary>The shared framework of ASP.NET Core.</summary>
     public const string AspNetCoreFramework = "Microsoft.AspNetCore.App";
 
+    /// <summary>The version the .NET SDK gives a project that sets neither <c>Version</c> nor <c>VersionPrefix</c>.</summary>
+    public const string DefaultVersion = "1.0.0";
+
     private const int MaxPropertyExpansionDepth = 8;
 
     /// <summary>File extensions TabStudio treats as project files.</summary>
@@ -57,8 +60,13 @@ public static partial class ProjectParser
         var projectXml = File.ReadAllText(fullPath);
 
         // MSBuild's evaluation order: Directory.Build.props and what it imports, Directory.Packages.props, the
-        // project with what it imports, then Directory.Build.targets and what it imports. Later files win.
-        var known = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        // project with what it imports, then Directory.Build.targets and what it imports. Later files win. MSBuild's
+        // reserved properties of the project are known from the start, as imports may use them.
+        var known = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["MSBuildProjectName"] = Path.GetFileNameWithoutExtension(fullPath),
+            ["MSBuildProjectDirectory"] = directory ?? string.Empty,
+        };
         var before = new List<string>();
         if (FindDirectoryBuildProps(directory) is { } directoryBuildProps)
         {
@@ -90,8 +98,6 @@ public static partial class ProjectParser
             known[key] = value;
         }
 
-        known.TryAdd("MSBuildProjectName", Path.GetFileNameWithoutExtension(fullPath));
-        known.TryAdd("MSBuildProjectDirectory", directory ?? string.Empty);
         var visited = new HashSet<string>(before, StringComparer.Ordinal) { fullPath };
         if (projectRoot is not null)
         {
@@ -112,9 +118,13 @@ public static partial class ProjectParser
 
     /// <summary>
     /// Adds a props or targets file and the files it imports, imported files first, to a list. An import is followed
-    /// when its path, after <c>$(MSBuildThisFileDirectory)</c> and the properties known so far, names a file that
-    /// exists, as in <c>&lt;Import Project="$(MSBuildThisFileDirectory)eng/$(ProjectType).targets" /&gt;</c>; SDK
-    /// imports, property functions and wildcards are not.
+    /// when its path, after <c>$(MSBuildThisFileDirectory)</c>, the properties known so far and the
+    /// <c>GetPathOfFileAbove</c> and <c>GetDirectoryNameOfFileAbove</c> property functions (see
+    /// <see cref="MsBuildImports"/>), names a file that exists, as in
+    /// <c>&lt;Import Project="$(MSBuildThisFileDirectory)eng/$(ProjectType).targets" /&gt;</c> or Refit's
+    /// <c>&lt;Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" /&gt;</c>;
+    /// SDK imports, other property functions and wildcards are not. An import of a file that does not exist is skipped,
+    /// as is one whose path comes out empty, as when <c>GetPathOfFileAbove</c> finds nothing.
     /// </summary>
     private static void CollectImports(string file, Dictionary<string, string> known, List<string> files, HashSet<string> visited, int depth = 0)
     {
@@ -150,7 +160,6 @@ public static partial class ProjectParser
     /// <summary>The files a project or props file imports whose paths can be worked out without evaluating MSBuild.</summary>
     private static IEnumerable<string> ImportsOf(XElement root, string file, Dictionary<string, string> known)
     {
-        var folder = Path.GetDirectoryName(file) ?? string.Empty;
         var imports = root.Elements()
             .SelectMany(e => e.Name.LocalName == "ImportGroup" ? e.Elements() : [e])
             .Where(e => e.Name.LocalName == "Import" && e.Attribute("Sdk") is null);
@@ -161,16 +170,7 @@ public static partial class ProjectParser
                 continue;
             }
 
-            var thisFile = WithThisFile(new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { ["path"] = project }, file)["path"];
-            var expanded = PropertyReference().Replace(thisFile, match =>
-                known.TryGetValue(match.Groups["name"].Value, out var value) ? value : match.Value);
-            if (expanded.Contains("$(", StringComparison.Ordinal) || expanded.Contains('*', StringComparison.Ordinal) || expanded.Contains("$([", StringComparison.Ordinal))
-            {
-                continue;
-            }
-
-            var path = Path.GetFullPath(Path.Combine(folder, expanded.Replace('\\', Path.DirectorySeparatorChar)));
-            if (File.Exists(path))
+            if (MsBuildImports.ResolvePath(project, file, known) is { } path && File.Exists(path))
             {
                 yield return path;
             }
@@ -262,6 +262,11 @@ public static partial class ProjectParser
         {
             AddLegacyProperties(properties, root, assemblyReferences);
         }
+        else if (AddVersionFromPrefix(properties))
+        {
+            // Properties such as <InformationalVersion>$(Version)</InformationalVersion> get it too.
+            ExpandPropertyReferences(properties);
+        }
 
         // Items in imported files keep only the groups their conditions allow, evaluated for the first target framework.
         var evaluation = new Dictionary<string, string>(properties, StringComparer.OrdinalIgnoreCase);
@@ -318,6 +323,33 @@ public static partial class ProjectParser
 
         var (kind, isTest) = ProjectClassifier.Classify(info);
         return info with { Kind = kind, IsTestProject = isTest };
+    }
+
+    /// <summary>
+    /// Sets <c>Version</c> as the .NET SDK does when a project gives only its parts: <c>VersionPrefix</c> (1.0.0 when it
+    /// is not set) followed by <c>-</c> and <c>VersionSuffix</c> when that is set, as StronglyTypedId's
+    /// <c>version.props</c> gives <c>1.0.0</c> and <c>beta08</c>. A project that sets neither keeps no <c>Version</c>,
+    /// as the parser leaves out the SDK's other defaults (and a version from git tags, as MinVer's, is not known);
+    /// <see cref="DefaultVersion"/> is the SDK's value then.
+    /// </summary>
+    /// <returns>Whether <c>Version</c> was set.</returns>
+    private static bool AddVersionFromPrefix(Dictionary<string, string> properties)
+    {
+        if (properties.ContainsKey("Version"))
+        {
+            return false;
+        }
+
+        var prefix = properties.GetValueOrDefault("VersionPrefix")?.Trim();
+        var suffix = properties.GetValueOrDefault("VersionSuffix")?.Trim();
+        if (prefix is null && suffix is null)
+        {
+            return false;
+        }
+
+        var version = string.IsNullOrEmpty(prefix) ? DefaultVersion : prefix;
+        properties["Version"] = string.IsNullOrEmpty(suffix) ? version : version + "-" + suffix;
+        return true;
     }
 
     /// <summary>

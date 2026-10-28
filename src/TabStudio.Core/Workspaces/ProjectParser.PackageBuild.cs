@@ -366,21 +366,7 @@ public static partial class ProjectParser
             properties.TryGetValue(match.Groups["name"].Value, out var value) ? value : string.Empty);
 
     /// <summary>Resolves the <c>$(MSBuildThisFile…)</c> properties, which mean the file that uses them.</summary>
-    private static string ThisFile(string text, string file)
-    {
-        if (!text.Contains("$(MSBuildThisFile", StringComparison.OrdinalIgnoreCase))
-        {
-            return text;
-        }
-
-        var folder = (Path.GetDirectoryName(file) ?? string.Empty).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-        return text
-            .Replace("$(MSBuildThisFileDirectory)", folder, StringComparison.OrdinalIgnoreCase)
-            .Replace("$(MSBuildThisFileFullPath)", file, StringComparison.OrdinalIgnoreCase)
-            .Replace("$(MSBuildThisFileName)", Path.GetFileNameWithoutExtension(file), StringComparison.OrdinalIgnoreCase)
-            .Replace("$(MSBuildThisFileExtension)", Path.GetExtension(file), StringComparison.OrdinalIgnoreCase)
-            .Replace("$(MSBuildThisFile)", Path.GetFileName(file), StringComparison.OrdinalIgnoreCase);
-    }
+    private static string ThisFile(string text, string file) => MsBuildImports.ExpandThisFile(text, file);
 
     private static string[] Split(string? value) =>
         (value ?? string.Empty).Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
