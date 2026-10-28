@@ -1,11 +1,12 @@
 #0 building with "default" instance using docker driver
 
 #1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile:
 #1 transferring dockerfile: 688B done
-#1 DONE 0.0s
+#1 DONE 0.4s
 
 #2 [internal] load metadata for mcr.microsoft.com/dotnet/sdk:10.0
-#2 DONE 0.3s
+#2 DONE 0.1s
 
 #3 [internal] load .dockerignore
 #3 transferring context: 2B done
@@ -17,47 +18,47 @@
 
 #5 [1/3] FROM mcr.microsoft.com/dotnet/sdk:10.0@sha256:de4fe90a98845d75910b9769662465c84de1a934665c431279d1382b2bddc02b
 #5 resolve mcr.microsoft.com/dotnet/sdk:10.0@sha256:de4fe90a98845d75910b9769662465c84de1a934665c431279d1382b2bddc02b done
-#5 sha256:de4fe90a98845d75910b9769662465c84de1a934665c431279d1382b2bddc02b 1.08kB / 1.08kB done
-#5 sha256:1f8c14bc5847dd84261170b482818d3a7edbc43ea9063ce4930da58b358fa5d0 0B / 3.60kB 0.1s
-#5 sha256:7a48b8f0e5c73d0cc2a85b008978396aa19d253dc1b96fdb0b769ee6dcbeca4a 0B / 29.77MB 0.1s
-#5 sha256:9c7b6b263d9d4c2e4718e16dae6d75cd8f4b5ccf206f1e7d48a98eb429981b03 2.64kB / 2.64kB done
+#5 sha256:d12f340d58c7c1903446a5acf78dd98e4662adae061cc5e9f4500c9c9e98d160 5.24MB / 37.62MB 0.1s
+#5 sha256:1f8c14bc5847dd84261170b482818d3a7edbc43ea9063ce4930da58b358fa5d0 3.60kB / 3.60kB 0.0s done
 #5 sha256:3192b8163619903b1b48ea1f37c042230d3c375a3812165971facb1781112b39 5.64kB / 5.64kB done
-#5 sha256:aa37eb26c52c0ddbcd32254925809fbdc9658dfd60665475f5a8bdbecc5d516e 0B / 17.16MB 0.1s
-#5 sha256:1f8c14bc5847dd84261170b482818d3a7edbc43ea9063ce4930da58b358fa5d0 3.60kB / 3.60kB 0.1s done
-#5 sha256:7a48b8f0e5c73d0cc2a85b008978396aa19d253dc1b96fdb0b769ee6dcbeca4a 24.12MB / 29.77MB 0.3s
-#5 sha256:aa37eb26c52c0ddbcd32254925809fbdc9658dfd60665475f5a8bdbecc5d516e 17.16MB / 17.16MB 0.3s
-#5 sha256:d12f340d58c7c1903446a5acf78dd98e4662adae061cc5e9f4500c9c9e98d160 2.10MB / 37.62MB 0.3s
+#5 sha256:7a48b8f0e5c73d0cc2a85b008978396aa19d253dc1b96fdb0b769ee6dcbeca4a 12.58MB / 29.77MB 0.1s
+#5 sha256:9c7b6b263d9d4c2e4718e16dae6d75cd8f4b5ccf206f1e7d48a98eb429981b03 2.64kB / 2.64kB done
+#5 sha256:aa37eb26c52c0ddbcd32254925809fbdc9658dfd60665475f5a8bdbecc5d516e 17.16MB / 17.16MB 0.1s
+#5 sha256:de4fe90a98845d75910b9769662465c84de1a934665c431279d1382b2bddc02b 1.08kB / 1.08kB done
+#5 sha256:d12f340d58c7c1903446a5acf78dd98e4662adae061cc5e9f4500c9c9e98d160 25.17MB / 37.62MB 0.2s
+#5 sha256:7a48b8f0e5c73d0cc2a85b008978396aa19d253dc1b96fdb0b769ee6dcbeca4a 29.77MB / 29.77MB 0.2s
+#5 sha256:aa37eb26c52c0ddbcd32254925809fbdc9658dfd60665475f5a8bdbecc5d516e 17.16MB / 17.16MB 0.2s done
+#5 sha256:d12f340d58c7c1903446a5acf78dd98e4662adae061cc5e9f4500c9c9e98d160 37.62MB / 37.62MB 0.3s
+#5 sha256:d12f340d58c7c1903446a5acf78dd98e4662adae061cc5e9f4500c9c9e98d160 37.62MB / 37.62MB 0.5s done
 #5 sha256:7a48b8f0e5c73d0cc2a85b008978396aa19d253dc1b96fdb0b769ee6dcbeca4a 29.77MB / 29.77MB 0.5s done
-#5 sha256:aa37eb26c52c0ddbcd32254925809fbdc9658dfd60665475f5a8bdbecc5d516e 17.16MB / 17.16MB 0.3s done
-#5 sha256:d12f340d58c7c1903446a5acf78dd98e4662adae061cc5e9f4500c9c9e98d160 35.65MB / 37.62MB 0.5s
 #5 sha256:f3c239e1a8382a39fd721de7ad1bd27a5821274273b253a7e6cf50c2cac1200b 156B / 156B 0.5s done
-#5 sha256:017220401ab5b691e12f8739a2b64a7f360cef11b805a2fa57a90af907173c18 0B / 13.09MB 0.5s
-#5 sha256:7ed664a3150a862fb3aab545ecafd771f6532bd31ab4881e9b570d3f1e7a6edd 0B / 24.45MB 0.5s
-#5 sha256:d12f340d58c7c1903446a5acf78dd98e4662adae061cc5e9f4500c9c9e98d160 37.62MB / 37.62MB 0.6s
-#5 sha256:017220401ab5b691e12f8739a2b64a7f360cef11b805a2fa57a90af907173c18 13.09MB / 13.09MB 0.6s
-#5 sha256:7ed664a3150a862fb3aab545ecafd771f6532bd31ab4881e9b570d3f1e7a6edd 16.78MB / 24.45MB 0.6s
 #5 extracting sha256:7a48b8f0e5c73d0cc2a85b008978396aa19d253dc1b96fdb0b769ee6dcbeca4a 0.1s
+#5 sha256:7ed664a3150a862fb3aab545ecafd771f6532bd31ab4881e9b570d3f1e7a6edd 10.49MB / 24.45MB 0.6s
+#5 sha256:017220401ab5b691e12f8739a2b64a7f360cef11b805a2fa57a90af907173c18 5.24MB / 13.09MB 0.6s
+#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 8.39MB / 194.31MB 0.6s
 #5 sha256:7ed664a3150a862fb3aab545ecafd771f6532bd31ab4881e9b570d3f1e7a6edd 24.45MB / 24.45MB 0.7s
+#5 sha256:017220401ab5b691e12f8739a2b64a7f360cef11b805a2fa57a90af907173c18 13.09MB / 13.09MB 0.7s
+#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 29.36MB / 194.31MB 0.7s
 #5 sha256:017220401ab5b691e12f8739a2b64a7f360cef11b805a2fa57a90af907173c18 13.09MB / 13.09MB 0.8s done
-#5 sha256:d12f340d58c7c1903446a5acf78dd98e4662adae061cc5e9f4500c9c9e98d160 37.62MB / 37.62MB 0.9s done
-#5 sha256:7ed664a3150a862fb3aab545ecafd771f6532bd31ab4881e9b570d3f1e7a6edd 24.45MB / 24.45MB 0.9s done
-#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 8.39MB / 194.31MB 1.2s
-#5 sha256:7a3f8cedb109146f80dca176bbb35fb0e2a737392d121ce9b328dd70d6977f7a 0B / 21.11MB 1.2s
-#5 sha256:463481a04bb2714ed800071b522ff9715918347e550ce0f750f866eb2ba70001 535B / 535B 1.2s done
-#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 33.55MB / 194.31MB 1.3s
-#5 sha256:7a3f8cedb109146f80dca176bbb35fb0e2a737392d121ce9b328dd70d6977f7a 21.11MB / 21.11MB 1.3s
+#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 41.94MB / 194.31MB 0.8s
+#5 sha256:7ed664a3150a862fb3aab545ecafd771f6532bd31ab4881e9b570d3f1e7a6edd 24.45MB / 24.45MB 0.8s done
+#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 63.96MB / 194.31MB 0.9s
+#5 sha256:3465c8a1b95f5898d31857b639729a75334c3c647861a0bd158871420485d488 12.58MB / 21.03MB 0.9s
+#5 sha256:7a3f8cedb109146f80dca176bbb35fb0e2a737392d121ce9b328dd70d6977f7a 13.63MB / 21.11MB 0.9s
+#5 sha256:463481a04bb2714ed800071b522ff9715918347e550ce0f750f866eb2ba70001 535B / 535B 0.8s done
+#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 92.27MB / 194.31MB 1.1s
+#5 sha256:3465c8a1b95f5898d31857b639729a75334c3c647861a0bd158871420485d488 21.03MB / 21.03MB 1.1s
+#5 sha256:7a3f8cedb109146f80dca176bbb35fb0e2a737392d121ce9b328dd70d6977f7a 21.11MB / 21.11MB 1.1s
+#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 115.34MB / 194.31MB 1.2s
+#5 sha256:3465c8a1b95f5898d31857b639729a75334c3c647861a0bd158871420485d488 21.03MB / 21.03MB 1.1s done
+#5 sha256:7a3f8cedb109146f80dca176bbb35fb0e2a737392d121ce9b328dd70d6977f7a 21.11MB / 21.11MB 1.1s done
+#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 157.29MB / 194.31MB 1.4s
 #5 extracting sha256:7a48b8f0e5c73d0cc2a85b008978396aa19d253dc1b96fdb0b769ee6dcbeca4a 0.9s done
-#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 84.93MB / 194.31MB 1.5s
-#5 sha256:3465c8a1b95f5898d31857b639729a75334c3c647861a0bd158871420485d488 0B / 21.03MB 1.5s
-#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 140.51MB / 194.31MB 1.7s
-#5 sha256:3465c8a1b95f5898d31857b639729a75334c3c647861a0bd158871420485d488 21.03MB / 21.03MB 1.7s
-#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 168.82MB / 194.31MB 1.8s
-#5 sha256:7a3f8cedb109146f80dca176bbb35fb0e2a737392d121ce9b328dd70d6977f7a 21.11MB / 21.11MB 1.7s done
-#5 sha256:3465c8a1b95f5898d31857b639729a75334c3c647861a0bd158871420485d488 21.03MB / 21.03MB 1.8s done
+#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 177.21MB / 194.31MB 1.5s
 #5 extracting sha256:aa37eb26c52c0ddbcd32254925809fbdc9658dfd60665475f5a8bdbecc5d516e 0.1s
-#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 194.31MB / 194.31MB 1.9s
-#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 194.31MB / 194.31MB 2.5s done
-#5 extracting sha256:aa37eb26c52c0ddbcd32254925809fbdc9658dfd60665475f5a8bdbecc5d516e 0.7s done
+#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 194.31MB / 194.31MB 1.7s
+#5 extracting sha256:aa37eb26c52c0ddbcd32254925809fbdc9658dfd60665475f5a8bdbecc5d516e 0.3s done
+#5 sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 194.31MB / 194.31MB 2.7s done
 #5 extracting sha256:1f8c14bc5847dd84261170b482818d3a7edbc43ea9063ce4930da58b358fa5d0
 #5 extracting sha256:1f8c14bc5847dd84261170b482818d3a7edbc43ea9063ce4930da58b358fa5d0 done
 #5 extracting sha256:d12f340d58c7c1903446a5acf78dd98e4662adae061cc5e9f4500c9c9e98d160 0.1s
@@ -67,228 +68,228 @@
 #5 extracting sha256:017220401ab5b691e12f8739a2b64a7f360cef11b805a2fa57a90af907173c18 0.1s
 #5 extracting sha256:017220401ab5b691e12f8739a2b64a7f360cef11b805a2fa57a90af907173c18 0.1s done
 #5 extracting sha256:7ed664a3150a862fb3aab545ecafd771f6532bd31ab4881e9b570d3f1e7a6edd
-#5 extracting sha256:7ed664a3150a862fb3aab545ecafd771f6532bd31ab4881e9b570d3f1e7a6edd 0.6s done
+#5 extracting sha256:7ed664a3150a862fb3aab545ecafd771f6532bd31ab4881e9b570d3f1e7a6edd 0.5s done
 #5 extracting sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611
-#5 extracting sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 2.6s done
+#5 extracting sha256:cb09e947f848c222feefb5d20fbc9c3fd4dd80d61c4e3d93e961a2b2f3123611 2.2s done
 #5 extracting sha256:7a3f8cedb109146f80dca176bbb35fb0e2a737392d121ce9b328dd70d6977f7a
-#5 extracting sha256:7a3f8cedb109146f80dca176bbb35fb0e2a737392d121ce9b328dd70d6977f7a 0.1s done
+#5 extracting sha256:7a3f8cedb109146f80dca176bbb35fb0e2a737392d121ce9b328dd70d6977f7a 0.0s done
 #5 extracting sha256:463481a04bb2714ed800071b522ff9715918347e550ce0f750f866eb2ba70001
 #5 extracting sha256:463481a04bb2714ed800071b522ff9715918347e550ce0f750f866eb2ba70001 done
 #5 extracting sha256:3465c8a1b95f5898d31857b639729a75334c3c647861a0bd158871420485d488 0.1s
-#5 extracting sha256:3465c8a1b95f5898d31857b639729a75334c3c647861a0bd158871420485d488 0.3s done
-#5 DONE 19.4s
+#5 extracting sha256:3465c8a1b95f5898d31857b639729a75334c3c647861a0bd158871420485d488 0.2s done
+#5 DONE 18.0s
 
 #6 [2/3] RUN apt-get update && apt-get install -y --no-install-recommends openssh-server python3 sudo     && useradd --create-home --shell /bin/bash developer     && passwd -d developer     && mkdir -p /run/sshd /home/developer/.ssh /home/developer/workspaces     && chmod 700 /home/developer/.ssh     && chown -R developer:developer /home/developer     && printf '%s\n' 'PasswordAuthentication no' 'KbdInteractiveAuthentication no' 'AllowTcpForwarding yes' 'PermitRootLogin no' 'HostKeyAlgorithms ssh-ed25519' >> /etc/ssh/sshd_config
-#6 0.258 Get:1 http://archive.ubuntu.com/ubuntu noble InRelease [256 kB]
-#6 0.430 Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
-#6 0.609 Get:3 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
-#6 0.695 Get:4 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
-#6 0.781 Get:5 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages [1808 kB]
-#6 1.051 Get:6 http://archive.ubuntu.com/ubuntu noble/restricted amd64 Packages [117 kB]
-#6 1.051 Get:7 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 Packages [331 kB]
-#6 1.064 Get:8 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [19.3 MB]
-#6 1.128 Get:9 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1412 kB]
-#6 1.445 Get:10 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2235 kB]
-#6 1.562 Get:11 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1739 kB]
-#6 1.568 Get:12 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [2172 kB]
-#6 1.576 Get:13 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [61.7 kB]
-#6 1.576 Get:14 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Packages [669 B]
-#6 1.576 Get:15 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [49.0 kB]
-#6 1.576 Get:16 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [36.0 kB]
-#6 2.106 Get:17 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [2122 kB]
-#6 2.427 Get:18 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [55.6 kB]
-#6 2.430 Get:19 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1550 kB]
-#6 2.628 Fetched 33.6 MB in 2s (13.5 MB/s)
-#6 2.628 Reading package lists...
-#6 3.295 Reading package lists...
-#6 3.930 Building dependency tree...
-#6 4.125 Reading state information...
-#6 4.310 The following additional packages will be installed:
-#6 4.310   adduser libapparmor1 libbsd0 libcbor0.10 libedit2 libfido2-1
-#6 4.311   libpython3-stdlib libpython3.12-minimal libpython3.12-stdlib libreadline8t64
-#6 4.311   libsqlite3-0 libwrap0 media-types netbase openssh-client openssh-sftp-server
-#6 4.311   python3-minimal python3.12 python3.12-minimal readline-common ucf
-#6 4.312 Suggested packages:
-#6 4.312   liblocale-gettext-perl cron quota ecryptfs-utils keychain libpam-ssh
-#6 4.312   monkeysphere ssh-askpass molly-guard ufw python3-doc python3-tk python3-venv
-#6 4.312   python3.12-venv python3.12-doc binutils binfmt-support readline-doc
-#6 4.312 Recommended packages:
-#6 4.312   xauth default-logind | logind | libpam-systemd ncurses-term ssh-import-id
-#6 4.369 The following NEW packages will be installed:
-#6 4.370   adduser libapparmor1 libbsd0 libcbor0.10 libedit2 libfido2-1
-#6 4.370   libpython3-stdlib libpython3.12-minimal libpython3.12-stdlib libreadline8t64
-#6 4.371   libsqlite3-0 libwrap0 media-types netbase openssh-client openssh-server
-#6 4.371   openssh-sftp-server python3 python3-minimal python3.12 python3.12-minimal
-#6 4.371   readline-common sudo ucf
-#6 4.520 0 upgraded, 24 newly installed, 0 to remove and 1 not upgraded.
-#6 4.520 Need to get 9818 kB of archives.
-#6 4.520 After this operation, 37.2 MB of additional disk space will be used.
-#6 4.520 Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-minimal amd64 3.12.3-1ubuntu0.17 [839 kB]
-#6 5.078 Get:2 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12-minimal amd64 3.12.3-1ubuntu0.17 [2335 kB]
-#6 5.314 Get:3 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3-minimal amd64 3.12.3-0ubuntu2.1 [27.4 kB]
-#6 5.315 Get:4 http://archive.ubuntu.com/ubuntu noble/main amd64 media-types all 10.1.0 [27.5 kB]
-#6 5.316 Get:5 http://archive.ubuntu.com/ubuntu noble/main amd64 netbase all 6.4 [13.1 kB]
-#6 5.317 Get:6 http://archive.ubuntu.com/ubuntu noble/main amd64 readline-common all 8.2-4build1 [56.5 kB]
-#6 5.319 Get:7 http://archive.ubuntu.com/ubuntu noble/main amd64 libreadline8t64 amd64 8.2-4build1 [153 kB]
-#6 5.345 Get:8 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libsqlite3-0 amd64 3.45.1-1ubuntu2.8 [702 kB]
-#6 5.418 Get:9 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-stdlib amd64 3.12.3-1ubuntu0.17 [2071 kB]
-#6 5.492 Get:10 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12 amd64 3.12.3-1ubuntu0.17 [651 kB]
-#6 5.500 Get:11 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3-stdlib amd64 3.12.3-0ubuntu2.1 [10.1 kB]
-#6 5.500 Get:12 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3 amd64 3.12.3-0ubuntu2.1 [23.0 kB]
-#6 5.501 Get:13 http://archive.ubuntu.com/ubuntu noble/main amd64 adduser all 3.137ubuntu1 [101 kB]
-#6 5.502 Get:14 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libbsd0 amd64 0.12.1-1build1.1 [41.2 kB]
-#6 5.503 Get:15 http://archive.ubuntu.com/ubuntu noble/main amd64 libedit2 amd64 3.1-20230828-1build1 [97.6 kB]
-#6 5.504 Get:16 http://archive.ubuntu.com/ubuntu noble/main amd64 libcbor0.10 amd64 0.10.2-1.2ubuntu2 [25.8 kB]
-#6 5.504 Get:17 http://archive.ubuntu.com/ubuntu noble/main amd64 libfido2-1 amd64 1.14.0-1build3 [83.5 kB]
-#6 5.515 Get:18 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 openssh-client amd64 1:9.6p1-3ubuntu13.20 [909 kB]
-#6 5.581 Get:19 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 openssh-sftp-server amd64 1:9.6p1-3ubuntu13.20 [37.4 kB]
-#6 5.582 Get:20 http://archive.ubuntu.com/ubuntu noble/main amd64 ucf all 3.0043+nmu1 [56.5 kB]
-#6 5.584 Get:21 http://archive.ubuntu.com/ubuntu noble/main amd64 libwrap0 amd64 7.6.q-33 [47.9 kB]
-#6 5.584 Get:22 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 openssh-server amd64 1:9.6p1-3ubuntu13.20 [512 kB]
-#6 5.588 Get:23 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libapparmor1 amd64 4.0.1really4.0.1-0ubuntu0.24.04.9 [51.5 kB]
-#6 5.589 Get:24 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 sudo amd64 1.9.15p5-3ubuntu5.24.04.4 [949 kB]
-#6 5.707 debconf: delaying package configuration, since apt-utils is not installed
-#6 5.732 Fetched 9818 kB in 1s (8048 kB/s)
-#6 5.742 Selecting previously unselected package libpython3.12-minimal:amd64.
-#6 5.742 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 9344 files and directories currently installed.)
-#6 5.751 Preparing to unpack .../libpython3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
-#6 5.752 Unpacking libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) ...
-#6 5.812 Selecting previously unselected package python3.12-minimal.
-#6 5.814 Preparing to unpack .../python3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
-#6 5.818 Unpacking python3.12-minimal (3.12.3-1ubuntu0.17) ...
-#6 5.854 Setting up libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) ...
-#6 5.857 Setting up python3.12-minimal (3.12.3-1ubuntu0.17) ...
-#6 6.456 Selecting previously unselected package python3-minimal.
-#6 6.456 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 9655 files and directories currently installed.)
-#6 6.461 Preparing to unpack .../0-python3-minimal_3.12.3-0ubuntu2.1_amd64.deb ...
-#6 6.462 Unpacking python3-minimal (3.12.3-0ubuntu2.1) ...
-#6 6.473 Selecting previously unselected package media-types.
-#6 6.474 Preparing to unpack .../1-media-types_10.1.0_all.deb ...
-#6 6.475 Unpacking media-types (10.1.0) ...
-#6 6.485 Selecting previously unselected package netbase.
-#6 6.486 Preparing to unpack .../2-netbase_6.4_all.deb ...
-#6 6.487 Unpacking netbase (6.4) ...
-#6 6.496 Selecting previously unselected package readline-common.
-#6 6.497 Preparing to unpack .../3-readline-common_8.2-4build1_all.deb ...
-#6 6.498 Unpacking readline-common (8.2-4build1) ...
-#6 6.509 Selecting previously unselected package libreadline8t64:amd64.
-#6 6.510 Preparing to unpack .../4-libreadline8t64_8.2-4build1_amd64.deb ...
-#6 6.514 Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8 to /lib/x86_64-linux-gnu/libhistory.so.8.usr-is-merged by libreadline8t64'
-#6 6.516 Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8.2 to /lib/x86_64-linux-gnu/libhistory.so.8.2.usr-is-merged by libreadline8t64'
-#6 6.519 Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8 to /lib/x86_64-linux-gnu/libreadline.so.8.usr-is-merged by libreadline8t64'
-#6 6.522 Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8.2 to /lib/x86_64-linux-gnu/libreadline.so.8.2.usr-is-merged by libreadline8t64'
-#6 6.524 Unpacking libreadline8t64:amd64 (8.2-4build1) ...
-#6 6.536 Selecting previously unselected package libsqlite3-0:amd64.
-#6 6.537 Preparing to unpack .../5-libsqlite3-0_3.45.1-1ubuntu2.8_amd64.deb ...
-#6 6.538 Unpacking libsqlite3-0:amd64 (3.45.1-1ubuntu2.8) ...
-#6 6.552 Selecting previously unselected package libpython3.12-stdlib:amd64.
-#6 6.553 Preparing to unpack .../6-libpython3.12-stdlib_3.12.3-1ubuntu0.17_amd64.deb ...
-#6 6.554 Unpacking libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) ...
-#6 6.627 Selecting previously unselected package python3.12.
-#6 6.628 Preparing to unpack .../7-python3.12_3.12.3-1ubuntu0.17_amd64.deb ...
-#6 6.629 Unpacking python3.12 (3.12.3-1ubuntu0.17) ...
-#6 6.641 Selecting previously unselected package libpython3-stdlib:amd64.
-#6 6.643 Preparing to unpack .../8-libpython3-stdlib_3.12.3-0ubuntu2.1_amd64.deb ...
-#6 6.643 Unpacking libpython3-stdlib:amd64 (3.12.3-0ubuntu2.1) ...
-#6 6.658 Setting up python3-minimal (3.12.3-0ubuntu2.1) ...
-#6 6.757 Selecting previously unselected package python3.
-#6 6.757 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 10132 files and directories currently installed.)
-#6 6.763 Preparing to unpack .../python3_3.12.3-0ubuntu2.1_amd64.deb ...
-#6 6.765 Unpacking python3 (3.12.3-0ubuntu2.1) ...
-#6 6.777 Selecting previously unselected package adduser.
-#6 6.778 Preparing to unpack .../adduser_3.137ubuntu1_all.deb ...
-#6 6.780 Unpacking adduser (3.137ubuntu1) ...
-#6 6.797 Setting up adduser (3.137ubuntu1) ...
-#6 6.811 Selecting previously unselected package libbsd0:amd64.
-#6 6.811 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 10201 files and directories currently installed.)
-#6 6.817 Preparing to unpack .../00-libbsd0_0.12.1-1build1.1_amd64.deb ...
-#6 6.817 Unpacking libbsd0:amd64 (0.12.1-1build1.1) ...
-#6 6.832 Selecting previously unselected package libedit2:amd64.
-#6 6.834 Preparing to unpack .../01-libedit2_3.1-20230828-1build1_amd64.deb ...
-#6 6.834 Unpacking libedit2:amd64 (3.1-20230828-1build1) ...
-#6 6.846 Selecting previously unselected package libcbor0.10:amd64.
-#6 6.847 Preparing to unpack .../02-libcbor0.10_0.10.2-1.2ubuntu2_amd64.deb ...
-#6 6.847 Unpacking libcbor0.10:amd64 (0.10.2-1.2ubuntu2) ...
-#6 6.858 Selecting previously unselected package libfido2-1:amd64.
-#6 6.859 Preparing to unpack .../03-libfido2-1_1.14.0-1build3_amd64.deb ...
-#6 6.860 Unpacking libfido2-1:amd64 (1.14.0-1build3) ...
-#6 6.871 Selecting previously unselected package openssh-client.
-#6 6.872 Preparing to unpack .../04-openssh-client_1%3a9.6p1-3ubuntu13.20_amd64.deb ...
-#6 6.876 Unpacking openssh-client (1:9.6p1-3ubuntu13.20) ...
-#6 6.901 Selecting previously unselected package openssh-sftp-server.
-#6 6.902 Preparing to unpack .../05-openssh-sftp-server_1%3a9.6p1-3ubuntu13.20_amd64.deb ...
-#6 6.903 Unpacking openssh-sftp-server (1:9.6p1-3ubuntu13.20) ...
-#6 6.914 Selecting previously unselected package ucf.
-#6 6.915 Preparing to unpack .../06-ucf_3.0043+nmu1_all.deb ...
-#6 6.916 Moving old data out of the way
-#6 6.917 Unpacking ucf (3.0043+nmu1) ...
-#6 6.932 Selecting previously unselected package libwrap0:amd64.
-#6 6.933 Preparing to unpack .../07-libwrap0_7.6.q-33_amd64.deb ...
-#6 6.933 Unpacking libwrap0:amd64 (7.6.q-33) ...
-#6 6.945 Selecting previously unselected package openssh-server.
-#6 6.946 Preparing to unpack .../08-openssh-server_1%3a9.6p1-3ubuntu13.20_amd64.deb ...
-#6 6.950 Unpacking openssh-server (1:9.6p1-3ubuntu13.20) ...
-#6 6.969 Selecting previously unselected package libapparmor1:amd64.
-#6 6.971 Preparing to unpack .../09-libapparmor1_4.0.1really4.0.1-0ubuntu0.24.04.9_amd64.deb ...
-#6 6.972 Unpacking libapparmor1:amd64 (4.0.1really4.0.1-0ubuntu0.24.04.9) ...
-#6 6.983 Selecting previously unselected package sudo.
-#6 6.984 Preparing to unpack .../10-sudo_1.9.15p5-3ubuntu5.24.04.4_amd64.deb ...
-#6 6.986 Unpacking sudo (1.9.15p5-3ubuntu5.24.04.4) ...
-#6 7.015 Setting up media-types (10.1.0) ...
-#6 7.017 Setting up libapparmor1:amd64 (4.0.1really4.0.1-0ubuntu0.24.04.9) ...
-#6 7.018 Setting up libcbor0.10:amd64 (0.10.2-1.2ubuntu2) ...
-#6 7.020 Setting up libsqlite3-0:amd64 (3.45.1-1ubuntu2.8) ...
-#6 7.021 Setting up libwrap0:amd64 (7.6.q-33) ...
-#6 7.025 Setting up sudo (1.9.15p5-3ubuntu5.24.04.4) ...
-#6 7.032 Setting up ucf (3.0043+nmu1) ...
-#6 7.081 debconf: unable to initialize frontend: Dialog
-#6 7.081 debconf: (TERM is not set, so the dialog frontend is not usable.)
-#6 7.081 debconf: falling back to frontend: Readline
-#6 7.086 debconf: unable to initialize frontend: Readline
-#6 7.086 debconf: (This frontend requires a controlling tty.)
-#6 7.086 debconf: falling back to frontend: Teletype
-#6 7.102 Setting up netbase (6.4) ...
-#6 7.107 Setting up libfido2-1:amd64 (1.14.0-1build3) ...
-#6 7.108 Setting up libbsd0:amd64 (0.12.1-1build1.1) ...
-#6 7.110 Setting up readline-common (8.2-4build1) ...
-#6 7.113 Setting up libedit2:amd64 (3.1-20230828-1build1) ...
-#6 7.114 Setting up libreadline8t64:amd64 (8.2-4build1) ...
-#6 7.116 Setting up libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) ...
-#6 7.118 Setting up openssh-client (1:9.6p1-3ubuntu13.20) ...
-#6 7.157 Setting up python3.12 (3.12.3-1ubuntu0.17) ...
-#6 7.796 Setting up libpython3-stdlib:amd64 (3.12.3-0ubuntu2.1) ...
-#6 7.797 Setting up openssh-sftp-server (1:9.6p1-3ubuntu13.20) ...
-#6 7.799 Setting up openssh-server (1:9.6p1-3ubuntu13.20) ...
-#6 7.850 debconf: unable to initialize frontend: Dialog
-#6 7.850 debconf: (TERM is not set, so the dialog frontend is not usable.)
-#6 7.850 debconf: falling back to frontend: Readline
-#6 7.855 debconf: unable to initialize frontend: Readline
-#6 7.855 debconf: (This frontend requires a controlling tty.)
-#6 7.855 debconf: falling back to frontend: Teletype
-#6 7.892 
-#6 7.892 Creating config file /etc/ssh/sshd_config with new version
-#6 7.913 Creating SSH2 RSA key; this may take some time ...
-#6 8.735 3072 SHA256:aUvlucG9wSWPSOb7Zs6ypVkvCxHvOkNYjNtQNCypWfo root@buildkitsandbox (RSA)
-#6 8.737 Creating SSH2 ECDSA key; this may take some time ...
-#6 8.741 256 SHA256:dtnbTi4nSNfuDQJKohks50nrV05ra7N5FAPpzuL13c4 root@buildkitsandbox (ECDSA)
-#6 8.743 Creating SSH2 ED25519 key; this may take some time ...
-#6 8.748 256 SHA256:UA2wtm6ZY4GEt/IcaCfzpLQoGixx6eRkRcXA8wfHdTk root@buildkitsandbox (ED25519)
-#6 8.796 invoke-rc.d: could not determine current runlevel
-#6 8.798 invoke-rc.d: policy-rc.d denied execution of start.
-#6 8.941 Setting up python3 (3.12.3-0ubuntu2.1) ...
-#6 8.946 running python rtupdate hooks for python3.12...
-#6 8.946 running python post-rtupdate hooks for python3.12...
-#6 9.010 Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
-#6 9.480 passwd: password changed.
-#6 DONE 10.1s
+#6 0.343 Get:1 http://archive.ubuntu.com/ubuntu noble InRelease [256 kB]
+#6 0.479 Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+#6 0.914 Get:3 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+#6 1.001 Get:4 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [55.6 kB]
+#6 1.057 Get:5 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+#6 1.151 Get:6 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1412 kB]
+#6 1.199 Get:7 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 Packages [331 kB]
+#6 1.300 Get:8 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [19.3 MB]
+#6 1.558 Get:9 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1550 kB]
+#6 1.676 Get:10 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [2122 kB]
+#6 1.879 Get:11 http://archive.ubuntu.com/ubuntu noble/restricted amd64 Packages [117 kB]
+#6 1.881 Get:12 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages [1808 kB]
+#6 1.983 Get:13 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [2172 kB]
+#6 1.990 Get:14 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1739 kB]
+#6 1.995 Get:15 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [61.7 kB]
+#6 1.995 Get:16 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2235 kB]
+#6 2.002 Get:17 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [36.0 kB]
+#6 2.003 Get:18 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [49.0 kB]
+#6 2.003 Get:19 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Packages [669 B]
+#6 2.559 Fetched 33.6 MB in 2s (13.9 MB/s)
+#6 2.559 Reading package lists...
+#6 3.069 Reading package lists...
+#6 3.554 Building dependency tree...
+#6 3.666 Reading state information...
+#6 3.772 The following additional packages will be installed:
+#6 3.773   adduser libapparmor1 libbsd0 libcbor0.10 libedit2 libfido2-1
+#6 3.773   libpython3-stdlib libpython3.12-minimal libpython3.12-stdlib libreadline8t64
+#6 3.773   libsqlite3-0 libwrap0 media-types netbase openssh-client openssh-sftp-server
+#6 3.773   python3-minimal python3.12 python3.12-minimal readline-common ucf
+#6 3.773 Suggested packages:
+#6 3.773   liblocale-gettext-perl cron quota ecryptfs-utils keychain libpam-ssh
+#6 3.773   monkeysphere ssh-askpass molly-guard ufw python3-doc python3-tk python3-venv
+#6 3.773   python3.12-venv python3.12-doc binutils binfmt-support readline-doc
+#6 3.773 Recommended packages:
+#6 3.773   xauth default-logind | logind | libpam-systemd ncurses-term ssh-import-id
+#6 3.822 The following NEW packages will be installed:
+#6 3.822   adduser libapparmor1 libbsd0 libcbor0.10 libedit2 libfido2-1
+#6 3.823   libpython3-stdlib libpython3.12-minimal libpython3.12-stdlib libreadline8t64
+#6 3.823   libsqlite3-0 libwrap0 media-types netbase openssh-client openssh-server
+#6 3.823   openssh-sftp-server python3 python3-minimal python3.12 python3.12-minimal
+#6 3.823   readline-common sudo ucf
+#6 3.941 0 upgraded, 24 newly installed, 0 to remove and 1 not upgraded.
+#6 3.941 Need to get 9818 kB of archives.
+#6 3.941 After this operation, 37.2 MB of additional disk space will be used.
+#6 3.941 Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-minimal amd64 3.12.3-1ubuntu0.17 [839 kB]
+#6 4.281 Get:2 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12-minimal amd64 3.12.3-1ubuntu0.17 [2335 kB]
+#6 4.380 Get:3 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3-minimal amd64 3.12.3-0ubuntu2.1 [27.4 kB]
+#6 4.381 Get:4 http://archive.ubuntu.com/ubuntu noble/main amd64 media-types all 10.1.0 [27.5 kB]
+#6 4.381 Get:5 http://archive.ubuntu.com/ubuntu noble/main amd64 netbase all 6.4 [13.1 kB]
+#6 4.381 Get:6 http://archive.ubuntu.com/ubuntu noble/main amd64 readline-common all 8.2-4build1 [56.5 kB]
+#6 4.383 Get:7 http://archive.ubuntu.com/ubuntu noble/main amd64 libreadline8t64 amd64 8.2-4build1 [153 kB]
+#6 4.385 Get:8 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libsqlite3-0 amd64 3.45.1-1ubuntu2.8 [702 kB]
+#6 4.399 Get:9 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-stdlib amd64 3.12.3-1ubuntu0.17 [2071 kB]
+#6 4.432 Get:10 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12 amd64 3.12.3-1ubuntu0.17 [651 kB]
+#6 4.439 Get:11 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3-stdlib amd64 3.12.3-0ubuntu2.1 [10.1 kB]
+#6 4.439 Get:12 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3 amd64 3.12.3-0ubuntu2.1 [23.0 kB]
+#6 4.476 Get:13 http://archive.ubuntu.com/ubuntu noble/main amd64 adduser all 3.137ubuntu1 [101 kB]
+#6 4.477 Get:14 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libbsd0 amd64 0.12.1-1build1.1 [41.2 kB]
+#6 4.477 Get:15 http://archive.ubuntu.com/ubuntu noble/main amd64 libedit2 amd64 3.1-20230828-1build1 [97.6 kB]
+#6 4.478 Get:16 http://archive.ubuntu.com/ubuntu noble/main amd64 libcbor0.10 amd64 0.10.2-1.2ubuntu2 [25.8 kB]
+#6 4.478 Get:17 http://archive.ubuntu.com/ubuntu noble/main amd64 libfido2-1 amd64 1.14.0-1build3 [83.5 kB]
+#6 4.478 Get:18 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 openssh-client amd64 1:9.6p1-3ubuntu13.20 [909 kB]
+#6 4.522 Get:19 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 openssh-sftp-server amd64 1:9.6p1-3ubuntu13.20 [37.4 kB]
+#6 4.523 Get:20 http://archive.ubuntu.com/ubuntu noble/main amd64 ucf all 3.0043+nmu1 [56.5 kB]
+#6 4.524 Get:21 http://archive.ubuntu.com/ubuntu noble/main amd64 libwrap0 amd64 7.6.q-33 [47.9 kB]
+#6 4.524 Get:22 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 openssh-server amd64 1:9.6p1-3ubuntu13.20 [512 kB]
+#6 4.569 Get:23 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libapparmor1 amd64 4.0.1really4.0.1-0ubuntu0.24.04.9 [51.5 kB]
+#6 4.570 Get:24 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 sudo amd64 1.9.15p5-3ubuntu5.24.04.4 [949 kB]
+#6 4.652 debconf: delaying package configuration, since apt-utils is not installed
+#6 4.675 Fetched 9818 kB in 1s (13.2 MB/s)
+#6 4.687 Selecting previously unselected package libpython3.12-minimal:amd64.
+#6 4.687 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 9344 files and directories currently installed.)
+#6 4.693 Preparing to unpack .../libpython3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
+#6 4.694 Unpacking libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) ...
+#6 4.745 Selecting previously unselected package python3.12-minimal.
+#6 4.745 Preparing to unpack .../python3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
+#6 4.748 Unpacking python3.12-minimal (3.12.3-1ubuntu0.17) ...
+#6 4.785 Setting up libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) ...
+#6 4.788 Setting up python3.12-minimal (3.12.3-1ubuntu0.17) ...
+#6 5.249 Selecting previously unselected package python3-minimal.
+#6 5.249 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 9655 files and directories currently installed.)
+#6 5.257 Preparing to unpack .../0-python3-minimal_3.12.3-0ubuntu2.1_amd64.deb ...
+#6 5.257 Unpacking python3-minimal (3.12.3-0ubuntu2.1) ...
+#6 5.272 Selecting previously unselected package media-types.
+#6 5.272 Preparing to unpack .../1-media-types_10.1.0_all.deb ...
+#6 5.273 Unpacking media-types (10.1.0) ...
+#6 5.286 Selecting previously unselected package netbase.
+#6 5.287 Preparing to unpack .../2-netbase_6.4_all.deb ...
+#6 5.287 Unpacking netbase (6.4) ...
+#6 5.330 Selecting previously unselected package readline-common.
+#6 5.331 Preparing to unpack .../3-readline-common_8.2-4build1_all.deb ...
+#6 5.332 Unpacking readline-common (8.2-4build1) ...
+#6 5.352 Selecting previously unselected package libreadline8t64:amd64.
+#6 5.352 Preparing to unpack .../4-libreadline8t64_8.2-4build1_amd64.deb ...
+#6 5.357 Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8 to /lib/x86_64-linux-gnu/libhistory.so.8.usr-is-merged by libreadline8t64'
+#6 5.360 Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8.2 to /lib/x86_64-linux-gnu/libhistory.so.8.2.usr-is-merged by libreadline8t64'
+#6 5.362 Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8 to /lib/x86_64-linux-gnu/libreadline.so.8.usr-is-merged by libreadline8t64'
+#6 5.365 Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8.2 to /lib/x86_64-linux-gnu/libreadline.so.8.2.usr-is-merged by libreadline8t64'
+#6 5.371 Unpacking libreadline8t64:amd64 (8.2-4build1) ...
+#6 5.384 Selecting previously unselected package libsqlite3-0:amd64.
+#6 5.386 Preparing to unpack .../5-libsqlite3-0_3.45.1-1ubuntu2.8_amd64.deb ...
+#6 5.386 Unpacking libsqlite3-0:amd64 (3.45.1-1ubuntu2.8) ...
+#6 5.401 Selecting previously unselected package libpython3.12-stdlib:amd64.
+#6 5.402 Preparing to unpack .../6-libpython3.12-stdlib_3.12.3-1ubuntu0.17_amd64.deb ...
+#6 5.403 Unpacking libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) ...
+#6 5.470 Selecting previously unselected package python3.12.
+#6 5.472 Preparing to unpack .../7-python3.12_3.12.3-1ubuntu0.17_amd64.deb ...
+#6 5.472 Unpacking python3.12 (3.12.3-1ubuntu0.17) ...
+#6 5.484 Selecting previously unselected package libpython3-stdlib:amd64.
+#6 5.485 Preparing to unpack .../8-libpython3-stdlib_3.12.3-0ubuntu2.1_amd64.deb ...
+#6 5.486 Unpacking libpython3-stdlib:amd64 (3.12.3-0ubuntu2.1) ...
+#6 5.503 Setting up python3-minimal (3.12.3-0ubuntu2.1) ...
+#6 5.595 Selecting previously unselected package python3.
+#6 5.595 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 10132 files and directories currently installed.)
+#6 5.600 Preparing to unpack .../python3_3.12.3-0ubuntu2.1_amd64.deb ...
+#6 5.603 Unpacking python3 (3.12.3-0ubuntu2.1) ...
+#6 5.615 Selecting previously unselected package adduser.
+#6 5.615 Preparing to unpack .../adduser_3.137ubuntu1_all.deb ...
+#6 5.617 Unpacking adduser (3.137ubuntu1) ...
+#6 5.635 Setting up adduser (3.137ubuntu1) ...
+#6 5.652 Selecting previously unselected package libbsd0:amd64.
+#6 5.652 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 10201 files and directories currently installed.)
+#6 5.657 Preparing to unpack .../00-libbsd0_0.12.1-1build1.1_amd64.deb ...
+#6 5.657 Unpacking libbsd0:amd64 (0.12.1-1build1.1) ...
+#6 5.668 Selecting previously unselected package libedit2:amd64.
+#6 5.669 Preparing to unpack .../01-libedit2_3.1-20230828-1build1_amd64.deb ...
+#6 5.669 Unpacking libedit2:amd64 (3.1-20230828-1build1) ...
+#6 5.685 Selecting previously unselected package libcbor0.10:amd64.
+#6 5.686 Preparing to unpack .../02-libcbor0.10_0.10.2-1.2ubuntu2_amd64.deb ...
+#6 5.687 Unpacking libcbor0.10:amd64 (0.10.2-1.2ubuntu2) ...
+#6 5.697 Selecting previously unselected package libfido2-1:amd64.
+#6 5.697 Preparing to unpack .../03-libfido2-1_1.14.0-1build3_amd64.deb ...
+#6 5.698 Unpacking libfido2-1:amd64 (1.14.0-1build3) ...
+#6 5.709 Selecting previously unselected package openssh-client.
+#6 5.710 Preparing to unpack .../04-openssh-client_1%3a9.6p1-3ubuntu13.20_amd64.deb ...
+#6 5.714 Unpacking openssh-client (1:9.6p1-3ubuntu13.20) ...
+#6 5.735 Selecting previously unselected package openssh-sftp-server.
+#6 5.735 Preparing to unpack .../05-openssh-sftp-server_1%3a9.6p1-3ubuntu13.20_amd64.deb ...
+#6 5.736 Unpacking openssh-sftp-server (1:9.6p1-3ubuntu13.20) ...
+#6 5.747 Selecting previously unselected package ucf.
+#6 5.747 Preparing to unpack .../06-ucf_3.0043+nmu1_all.deb ...
+#6 5.749 Moving old data out of the way
+#6 5.750 Unpacking ucf (3.0043+nmu1) ...
+#6 5.763 Selecting previously unselected package libwrap0:amd64.
+#6 5.764 Preparing to unpack .../07-libwrap0_7.6.q-33_amd64.deb ...
+#6 5.764 Unpacking libwrap0:amd64 (7.6.q-33) ...
+#6 5.776 Selecting previously unselected package openssh-server.
+#6 5.777 Preparing to unpack .../08-openssh-server_1%3a9.6p1-3ubuntu13.20_amd64.deb ...
+#6 5.780 Unpacking openssh-server (1:9.6p1-3ubuntu13.20) ...
+#6 5.810 Selecting previously unselected package libapparmor1:amd64.
+#6 5.811 Preparing to unpack .../09-libapparmor1_4.0.1really4.0.1-0ubuntu0.24.04.9_amd64.deb ...
+#6 5.812 Unpacking libapparmor1:amd64 (4.0.1really4.0.1-0ubuntu0.24.04.9) ...
+#6 5.823 Selecting previously unselected package sudo.
+#6 5.824 Preparing to unpack .../10-sudo_1.9.15p5-3ubuntu5.24.04.4_amd64.deb ...
+#6 5.826 Unpacking sudo (1.9.15p5-3ubuntu5.24.04.4) ...
+#6 5.854 Setting up media-types (10.1.0) ...
+#6 5.856 Setting up libapparmor1:amd64 (4.0.1really4.0.1-0ubuntu0.24.04.9) ...
+#6 5.858 Setting up libcbor0.10:amd64 (0.10.2-1.2ubuntu2) ...
+#6 5.859 Setting up libsqlite3-0:amd64 (3.45.1-1ubuntu2.8) ...
+#6 5.861 Setting up libwrap0:amd64 (7.6.q-33) ...
+#6 5.864 Setting up sudo (1.9.15p5-3ubuntu5.24.04.4) ...
+#6 5.871 Setting up ucf (3.0043+nmu1) ...
+#6 5.912 debconf: unable to initialize frontend: Dialog
+#6 5.912 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#6 5.912 debconf: falling back to frontend: Readline
+#6 5.917 debconf: unable to initialize frontend: Readline
+#6 5.917 debconf: (This frontend requires a controlling tty.)
+#6 5.917 debconf: falling back to frontend: Teletype
+#6 5.939 Setting up netbase (6.4) ...
+#6 5.943 Setting up libfido2-1:amd64 (1.14.0-1build3) ...
+#6 5.945 Setting up libbsd0:amd64 (0.12.1-1build1.1) ...
+#6 5.947 Setting up readline-common (8.2-4build1) ...
+#6 5.950 Setting up libedit2:amd64 (3.1-20230828-1build1) ...
+#6 5.951 Setting up libreadline8t64:amd64 (8.2-4build1) ...
+#6 5.953 Setting up libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) ...
+#6 5.954 Setting up openssh-client (1:9.6p1-3ubuntu13.20) ...
+#6 5.989 Setting up python3.12 (3.12.3-1ubuntu0.17) ...
+#6 6.504 Setting up libpython3-stdlib:amd64 (3.12.3-0ubuntu2.1) ...
+#6 6.505 Setting up openssh-sftp-server (1:9.6p1-3ubuntu13.20) ...
+#6 6.507 Setting up openssh-server (1:9.6p1-3ubuntu13.20) ...
+#6 6.549 debconf: unable to initialize frontend: Dialog
+#6 6.549 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#6 6.549 debconf: falling back to frontend: Readline
+#6 6.553 debconf: unable to initialize frontend: Readline
+#6 6.553 debconf: (This frontend requires a controlling tty.)
+#6 6.553 debconf: falling back to frontend: Teletype
+#6 6.588 
+#6 6.588 Creating config file /etc/ssh/sshd_config with new version
+#6 6.609 Creating SSH2 RSA key; this may take some time ...
+#6 7.659 3072 SHA256:vI86XMwGOLjtCTrl8p47V26NFp1Eq9ZGnxwiZ7SDAYo root@buildkitsandbox (RSA)
+#6 7.661 Creating SSH2 ECDSA key; this may take some time ...
+#6 7.666 256 SHA256:0vSYJ5w3Tfn+FDY90dwpoqgwPB26aGgDVtIelKBo8sU root@buildkitsandbox (ECDSA)
+#6 7.667 Creating SSH2 ED25519 key; this may take some time ...
+#6 7.672 256 SHA256:JHJDCB872ykFiLpDR9FzZnwIOQzwsRacXpUVSKCyvSQ root@buildkitsandbox (ED25519)
+#6 7.715 invoke-rc.d: could not determine current runlevel
+#6 7.717 invoke-rc.d: policy-rc.d denied execution of start.
+#6 7.832 Setting up python3 (3.12.3-0ubuntu2.1) ...
+#6 7.836 running python rtupdate hooks for python3.12...
+#6 7.836 running python post-rtupdate hooks for python3.12...
+#6 7.890 Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+#6 7.946 passwd: password changed.
+#6 DONE 8.5s
 
 #7 [3/3] COPY entrypoint.sh /entrypoint.sh
 #7 DONE 0.0s
 
 #8 exporting to image
 #8 exporting layers
-#8 exporting layers 1.0s done
-#8 writing image sha256:82071251c8da2a66d87db70f1ed8edf0095ca893627fb53a7f8dc1f245c8e35f done
+#8 exporting layers 0.9s done
+#8 writing image sha256:5d85405bff75ba62c299c3c60fdf79ea2aff859f490952285dbd82c73aae8344 done
 #8 naming to docker.io/library/tabstudio-openssh done
 #8 DONE 1.0s
-7d479a8679e6046cb639188faa1a52b08f2c9e2751d1fdeeeea44c395fbba425
+bb0e1be6bfa65cc4fef8549bb260efb50630c0ef6b784c17270b8870367384aa
