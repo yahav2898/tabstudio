@@ -1,0 +1,70 @@
+Opened in 0.3 s
+Workspace: TodoSQLite, solution: /home/runner/work/_temp/repos/maui-samples-TodoSQLite/10.0/Data/TodoSQLite/TodoSQLite.sln
+  project TodoSQLite [CSharp] /home/runner/work/_temp/repos/maui-samples-TodoSQLite/10.0/Data/TodoSQLite/TodoSQLite/TodoSQLite.csproj
+Compatibility Doctor:
+  TodoSQLite: Coming in an update via Android app - MAUI targets Android directly; the app will be packaged and installed on this tablet.
+Built in 6.4 s
+Errors: 48, warnings: 1
+  24 x CS0246: MainActivity.cs(1,7): error CS0246: The type or namespace name 'Android' could not be found (are you missing a using directive or an assembly reference?)
+  12 x CS0103: App.xaml.cs(7,5): error CS0103: The name 'InitializeComponent' does not exist in the current context
+  3 x CS0101: Main.cs(7,7): error CS0101: The namespace 'TodoSQLite' already contains a definition for 'Program'
+  3 x CS0111: Main.cs(11,14): error CS0111: Type 'Program' already defines a member called 'Main' with the same parameter types
+  2 x CS1061: Main.cs(14,7): error CS1061: 'Program' does not contain a definition for 'Run' and no accessible extension method 'Run' accepting a first argument of type 'Program' could be found (are you missing a using directive or an assembly reference?)
+  1 x CS0616: MainApplication.cs(6,2): error CS0616: 'Application' is not an attribute class
+  1 x CS1729: MainApplication.cs(10,5): error CS1729: 'MauiApplication' does not contain a constructor that takes 2 arguments
+  1 x CS0017: Program.cs(9,14): error CS0017: Program has more than one entry point defined. Compile with /main to specify the type that contains the entry point.
+  1 x CS0234: App.xaml.cs(1,17): error CS0234: The type or namespace name 'UI' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+Output:
+Build started at 09:58:06...
+1>------ Build started: Project: TodoSQLite, Configuration: Debug ------
+1>App.xaml.cs(7,5): error CS0103: The name 'InitializeComponent' does not exist in the current context
+1>AppShell.xaml.cs(9,3): error CS0103: The name 'InitializeComponent' does not exist in the current context
+1>MainActivity.cs(1,7): error CS0246: The type or namespace name 'Android' could not be found (are you missing a using directive or an assembly reference?)
+1>MainActivity.cs(2,7): error CS0246: The type or namespace name 'Android' could not be found (are you missing a using directive or an assembly reference?)
+1>MainActivity.cs(3,7): error CS0246: The type or namespace name 'Android' could not be found (are you missing a using directive or an assembly reference?)
+1>MainActivity.cs(7,2): error CS0246: The type or namespace name 'ActivityAttribute' could not be found (are you missing a using directive or an assembly reference?)
+1>MainActivity.cs(7,2): error CS0246: The type or namespace name 'Activity' could not be found (are you missing a using directive or an assembly reference?)
+1>MainActivity.cs(7,90): error CS0103: The name 'ConfigChanges' does not exist in the current context
+1>MainActivity.cs(7,117): error CS0103: The name 'ConfigChanges' does not exist in the current context
+1>MainActivity.cs(7,145): error CS0103: The name 'ConfigChanges' does not exist in the current context
+1>MainActivity.cs(7,168): error CS0103: The name 'ConfigChanges' does not exist in the current context
+1>MainActivity.cs(7,197): error CS0103: The name 'ConfigChanges' does not exist in the current context
+1>MainActivity.cs(7,232): error CS0103: The name 'ConfigChanges' does not exist in the current context
+1>MainActivity.cs(8,29): error CS0246: The type or namespace name 'MauiAppCompatActivity' could not be found (are you missing a using directive or an assembly reference?)
+1>MainApplication.cs(1,7): error CS0246: The type or namespace name 'Android' could not be found (are you missing a using directive or an assembly reference?)
+1>MainApplication.cs(2,7): error CS0246: The type or namespace name 'Android' could not be found (are you missing a using directive or an assembly reference?)
+1>MainApplication.cs(6,2): error CS0616: 'Application' is not an attribute class
+1>MainApplication.cs(7,32): error CS0246: The type or namespace name 'MauiApplication' could not be found (are you missing a using directive or an assembly reference?)
+1>MainApplication.cs(9,40): error CS0246: The type or namespace name 'JniHandleOwnership' could not be found (are you missing a using directive or an assembly reference?)
+1>MainApplication.cs(10,5): error CS1729: 'MauiApplication' does not contain a constructor that takes 2 arguments
+1>AppDelegate.cs(1,7): error CS0246: The type or namespace name 'Foundation' could not be found (are you missing a using directive or an assembly reference?)
+1>AppDelegate.cs(5,2): error CS0246: The type or namespace name 'RegisterAttribute' could not be found (are you missing a using directive or an assembly reference?)
+1>AppDelegate.cs(5,2): error CS0246: The type or namespace name 'Register' could not be found (are you missing a using directive or an assembly reference?)
+1>AppDelegate.cs(6,28): error CS0246: The type or namespace name 'MauiUIApplicationDelegate' could not be found (are you missing a using directive or an assembly reference?)
+1>Program.cs(1,7): error CS0246: The type or namespace name 'ObjCRuntime' could not be found (are you missing a using directive or an assembly reference?)
+1>Program.cs(2,7): error CS0246: The type or namespace name 'UIKit' could not be found (are you missing a using directive or an assembly reference?)
+1>Program.cs(9,14): error CS0017: Program has more than one entry point defined. Compile with /main to specify the type that contains the entry point.
+1>Program.cs(13,3): error CS0103: The name 'UIApplication' does not exist in the current context
+1>Main.cs(7,7): error CS0101: The namespace 'TodoSQLite' already contains a definition for 'Program'
+1>Main.cs(7,17): error CS0246: The type or namespace name 'MauiApplication' could not be found (are you missing a using directive or an assembly reference?)
+1>Main.cs(11,14): error CS0111: Type 'Program' already defines a member called 'Main' with the same parameter types
+1>Main.cs(14,7): error CS1061: 'Program' does not contain a definition for 'Run' and no accessible extension method 'Run' accepting a first argument of type 'Program' could be found (are you missing a using directive or an assembly reference?)
+1>App.xaml.cs(1,17): error CS0234: The type or namespace name 'UI' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+1>App.xaml.cs(11,28): error CS0246: The type or namespace name 'MauiWinUIApplication' could not be found (are you missing a using directive or an assembly reference?)
+1>App.xaml.cs(19,8): error CS1061: 'App' does not contain a definition for 'InitializeComponent' and no accessible extension method 'InitializeComponent' accepting a first argument of type 'App' could be found (are you missing a using directive or an assembly reference?)
+1>AppDelegate.cs(1,7): error CS0246: The type or namespace name 'Foundation' could not be found (are you missing a using directive or an assembly reference?)
+1>AppDelegate.cs(5,2): error CS0246: The type or namespace name 'RegisterAttribute' could not be found (are you missing a using directive or an assembly reference?)
+1>AppDelegate.cs(5,2): error CS0246: The type or namespace name 'Register' could not be found (are you missing a using directive or an assembly reference?)
+1>AppDelegate.cs(6,14): error CS0101: The namespace 'TodoSQLite' already contains a definition for 'AppDelegate'
+1>AppDelegate.cs(6,28): error CS0246: The type or namespace name 'MauiUIApplicationDelegate' could not be found (are you missing a using directive or an assembly reference?)
+1>AppDelegate.cs(8,29): error CS0111: Type 'AppDelegate' already defines a member called 'CreateMauiApp' with the same parameter types
+1>Program.cs(1,7): error CS0246: The type or namespace name 'ObjCRuntime' could not be found (are you missing a using directive or an assembly reference?)
+1>Program.cs(2,7): error CS0246: The type or namespace name 'UIKit' could not be found (are you missing a using directive or an assembly reference?)
+1>Program.cs(6,14): error CS0101: The namespace 'TodoSQLite' already contains a definition for 'Program'
+1>Program.cs(9,14): error CS0111: Type 'Program' already defines a member called 'Main' with the same parameter types
+1>Program.cs(13,3): error CS0103: The name 'UIApplication' does not exist in the current context
+1>TodoItemPage.xaml.cs(19,9): error CS0103: The name 'InitializeComponent' does not exist in the current context
+1>TodoListPage.xaml.cs(15,3): error CS0103: The name 'InitializeComponent' does not exist in the current context
+1>TodoItemPage.xaml.cs(27,19): warning CS0618: 'Page.DisplayAlert(string, string, string)' is obsolete: 'Use DisplayAlertAsync instead'
+========== Build: 0 succeeded, 1 failed ==========
+
