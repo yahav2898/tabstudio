@@ -1,0 +1,82 @@
+== Processes left running
+    PID    PPID    PGID   RSS     ELAPSED COMMAND
+  38676       1    2090 187112      06:38 /usr/share/dotnet/sdk/10.0.403/Roslyn/bincore/VBCSCompiler -pipename:WAcWTViZvzcVAI0ZQWygl6OMzaUe49Dabl4RIF3MlGs
+   2114    2112    2090 146376      35:49 /tmp/provjobd451257463
+   2219    2198    2090 135708      35:46 /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
+   2198    2090    2090 101532      35:48 /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
+   1285       1    1285 73696       35:52 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+  14628       1   14628 52056       27:54 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
+   1149       1    1149 44180       35:53 /usr/bin/containerd
+    224       1     224 43716       36:02 /sbin/multipathd -d -s
+   1913    1077    1077 37392       35:50 /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.3-py3.12.egg -run-exthandlers
+   1077       1    1077 30796       35:53 /usr/bin/python3 -u /usr/sbin/waagent -daemon
+   2090       1    2090 21944       35:49 /opt/hca/hosted-compute-agent
+  14632   14628   14628 21496       27:54 php-fpm: pool www
+  14631   14628   14628 21492       27:54 php-fpm: pool www
+   1040       1    1040 20920       35:53 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+    158       1     158 17816       36:02 /usr/lib/systemd/systemd-journald
+      1       0       1 14396       36:04 /sbin/init
+   1076       1    1076 13808       35:53 /usr/libexec/udisks2/udisksd
+    539       1     539 13328       36:00 /usr/lib/systemd/systemd-resolved
+   1211       1    1211 12964       35:53 /usr/sbin/ModemManager
+   1191       1    1191 11348       35:53 /usr/lib/systemd/systemd --user
+   1046       1    1046 10040       35:53 /usr/lib/polkit-1/polkitd --no-debug
+   1072       1    1072  9780       35:53 /usr/lib/systemd/systemd-logind
+    725       1     725  9736       35:58 /usr/lib/systemd/systemd-networkd
+    229       1     229  8008       36:02 /usr/lib/systemd/systemd-udevd
+   2112    2090    2090  7016       35:49 sudo -n PROVJOBD_E2E=1 /tmp/provjobd451257463
+    586       1     586  6564       36:00 /usr/sbin/haveged --Foreground --verbose=1
+   1178       1    1178  6336       35:53 /usr/sbin/rsyslogd -n -iNONE
+   1035       1    1035  5516       35:53 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+  47641   15651    2090  4216       00:00 ps -eo pid,ppid,pgid,rss,etime,args --sort=-rss
+   1218       1    1214  3696       35:52 /usr/sbin/chronyd -F 1
+   1196    1191    1191  3596       35:53 (sd-pam)
+  15651    2219    2090  3556       27:11 /usr/bin/bash -e /home/runner/work/_temp/b6c135dd-62a6-44bd-a068-a5c1f7f60d07.sh
+    394       1     394  2900       36:00 /usr/lib/linux-tools/6.17.0-1022-azure/hv_kvp_daemon -n
+   1103       1    1103  2756       35:53 /usr/sbin/cron -f -P
+   1122       1    1122  2156       35:53 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
+   1153       1    1153  2000       35:53 /sbin/agetty -o -p -- \u --noclear - linux
+  47642   15651    2090  1920       00:00 head -n 40
+   1239    1218    1214  1224       35:52 /usr/sbin/chronyd -F 1
+      2       0       0     0       36:04 [kthreadd]
+== Kernel messages
+[    7.662105] pci e76a:00:02.0: 0.000 Gb/s available PCIe bandwidth, limited by Unknown x0 link at e76a:00:02.0 (capable of 63.008 Gb/s with 8.0 GT/s PCIe x8 link)
+[    7.668836] pci_bus e76a:00: busn_res: [bus 00-ff] end is updated to 00
+[    7.668847] pci e76a:00:02.0: BAR 0 [mem 0xfc0000000-0xfc00fffff 64bit pref]: assigned
+[    7.900510] mlx5_core e76a:00:02.0: enabling device (0000 -> 0002)
+[    7.903624] mlx5_core e76a:00:02.0: firmware version: 14.30.5034
+[    8.038392] mlx5_core e76a:00:02.0: Flow counters bulk query buffer size increased, bulk_query_len(8)
+[    8.118121] hv_netvsc 7ced8d81-d2fd-7ced-8d81-d2fd7ced8d81 eth0: VF registering: eth1
+[    8.118901] mlx5_core e76a:00:02.0 eth1: joined to eth0
+[    8.118909] mlx5_core e76a:00:02.0 eth1: Disabling LRO, not supported in legacy RQ
+[    8.119395] mlx5_core e76a:00:02.0 eth1: Disabling LRO, not supported in legacy RQ
+[    8.119413] mlx5_core e76a:00:02.0: MLX5E: StrdRq(0) RqSz(1024) StrdSz(256) RxCqeCmprss(0 basic)
+[    8.131682] mlx5_core e76a:00:02.0 enP59242s1: renamed from eth1
+[    8.163744] MACsec IEEE 802.1AE
+[    8.281893] mlx5_core e76a:00:02.0 enP59242s1: Link up
+[    8.306761] hv_netvsc 7ced8d81-d2fd-7ced-8d81-d2fd7ced8d81 eth0: Data path switched to VF: enP59242s1
+[    8.307037] mlx5_core e76a:00:02.0 mlx5_0: Port: 1 Link ACTIVE
+[    9.039349] EXT4-fs (sda1): resizing filesystem from 19398395 to 39059195 blocks
+[    9.996950] EXT4-fs (sda1): resized filesystem to 39059195
+[   10.013954] ephemeral0: Can't lookup blockdev
+[   10.055812] systemd-fstab-generator[997]: Checking was requested for "ephemeral0", but it is not a device.
+[   10.055826] systemd-fstab-generator[997]: x-systemd.device-timeout ignored for ephemeral0
+[   11.151612] ephemeral0: Can't lookup blockdev
+[   11.262546] evm: overlay not supported
+[   11.366067] kauditd_printk_skb: 113 callbacks suppressed
+[   11.366071] audit: type=1400 audit(1793187867.890:124): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="rsyslogd" pid=1098 comm="apparmor_parser"
+[   11.601835] loop0: detected capacity change from 0 to 8
+[   11.898515] systemd-journald[158]: /var/log/journal/2d791d5cce6240faa3c626058b1ffc7d/user-1001.journal: Journal file uses a different sequence number ID, rotating.
+[   12.001954] audit: type=1400 audit(1793187868.527:125): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="/usr/lib/snapd/snap-confine" pid=1310 comm="apparmor_parser"
+[   12.182847] Adding 3145724k swap on /swapfile.  Priority:-2 extents:103 across:65789948k 
+[   12.232598] audit: type=1400 audit(1793187868.758:126): apparmor="STATUS" operation="profile_load" profile="unconfined" name="docker-default" pid=1483 comm="apparmor_parser"
+[   12.652797] Initializing XFRM netlink socket
+[   12.832105] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+[   13.146080] systemd-fstab-generator[1826]: Checking was requested for "ephemeral0", but it is not a device.
+[   13.146097] systemd-fstab-generator[1826]: x-systemd.device-timeout ignored for ephemeral0
+[   14.357214] systemd-fstab-generator[2008]: Checking was requested for "ephemeral0", but it is not a device.
+[   14.357228] systemd-fstab-generator[2008]: x-systemd.device-timeout ignored for ephemeral0
+[   14.623015] systemd-fstab-generator[2068]: Checking was requested for "ephemeral0", but it is not a device.
+[   14.623029] systemd-fstab-generator[2068]: x-systemd.device-timeout ignored for ephemeral0
+[   15.939109] workqueue: drm_fb_helper_damage_work hogged CPU for >10000us 11 times, consider switching to WQ_UNBOUND
+[   49.177580] hv_balloon: Max. dynamic memory size: 16384 MB
