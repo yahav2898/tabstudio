@@ -115,6 +115,16 @@ public sealed partial class WorkspaceViewModel
                 outcome = await OutputProcess.RunAsync(_toolchains.Runtime, step, ProjectSetupOutput, null, cancellationToken, toolchain: "python");
             }
 
+            if (!outcome.Succeeded && !creates && !cancellationToken.IsCancellationRequested && LockedInstead(project, step, outcome) is { } locked)
+            {
+                // An application, rather than a package, has nothing for its build backend to build (fastapi-realworld);
+                // as poetry install does for one, its lock file's packages are what it needs.
+                Output.WriteLine($"{project.Name} is an application its build backend cannot build as a package, so TabStudio installs the packages its lock file pins.", OutputKind.Info);
+                ProjectSetupOutput.WriteLine("> " + locked.CommandLine, OutputKind.Info);
+                step = locked;
+                outcome = await OutputProcess.RunAsync(_toolchains.Runtime, step, ProjectSetupOutput, null, cancellationToken, toolchain: "python");
+            }
+
             if (!outcome.Succeeded && !creates && !cancellationToken.IsCancellationRequested)
             {
                 outcome = await RetryPipWithBuildToolsAsync(project, step, outcome, cancellationToken);
@@ -445,6 +455,30 @@ public sealed partial class WorkspaceViewModel
         step.Arguments.Contains("-e") && failed.Lines.Any(l => l.Contains("missing the 'build_editable' hook", StringComparison.Ordinal))
             ? step with { Arguments = [.. step.Arguments.Where(a => a != "-e")] }
             : null;
+
+    /// <summary>
+    /// A pip install of the packages the project's <c>poetry.lock</c> or <c>uv.lock</c> pins, written to a requirements
+    /// file in its <c>.venv</c>, when installing the project itself failed because its build backend found no package
+    /// to build (Poetry's "No file/folder found for package"); otherwise <see langword="null"/>.
+    /// </summary>
+    internal static ProcessStartSpec? LockedInstead(ToolchainProject project, ProcessStartSpec step, OutputProcessResult failed)
+    {
+        if (!step.Arguments.Contains(".") || !failed.Lines.Any(l => l.Contains("No file/folder found for package", StringComparison.Ordinal)))
+        {
+            return null;
+        }
+
+        var pins = PythonDependencies.LockPins(project.Directory);
+        var venv = Path.Combine(project.Directory, ".venv");
+        if (pins.Count == 0 || !Directory.Exists(venv))
+        {
+            return null;
+        }
+
+        var requirements = Path.Combine(venv, "tabstudio-locked-requirements.txt");
+        File.WriteAllLines(requirements, pins.Select(pin => $"{pin.Name}=={pin.Version}"));
+        return step with { Arguments = [.. step.Arguments.Where(a => a is not "-e" and not "."), "-r", requirements] };
+    }
 
     /// <summary>The offer over the editor after a failed install: its message, and the full log one tap away.</summary>
     private ToolchainNoticeViewModel? InstallFailureNotice(ToolchainProject project) =>
