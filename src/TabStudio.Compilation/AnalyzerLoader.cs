@@ -88,13 +88,20 @@ internal sealed class AnalyzerLoader : IAnalyzerAssemblyLoader
 
         protected override Assembly? Load(AssemblyName assemblyName)
         {
-            // The compiler and the libraries it shares with analyzers come from TabStudio itself.
-            if (assemblyName.Name is not { } name || IsHostAssembly(name))
+            if (assemblyName.Name is not { } name)
             {
                 return null;
             }
 
+            // The compiler and the libraries it shares with analyzers come from TabStudio itself. Another assembly
+            // named Microsoft.CodeAnalysis.*, such as Microsoft.CodeAnalysis.ResxSourceGenerator beside its C#
+            // generator, is the package's own and comes from its folder.
             var candidate = Path.Combine(folder, name + ".dll");
+            if (IsCompilerAssembly(name) || (IsHostAssembly(name) && !File.Exists(candidate)))
+            {
+                return null;
+            }
+
             if (File.Exists(candidate))
             {
                 return LoadFromAssemblyPath(candidate);
@@ -105,7 +112,12 @@ internal sealed class AnalyzerLoader : IAnalyzerAssemblyLoader
         }
 
         private static bool IsHostAssembly(string name) =>
-            name.StartsWith("Microsoft.CodeAnalysis", StringComparison.Ordinal)
-            || name is "System.Collections.Immutable" or "System.Reflection.Metadata" or "netstandard";
+            name.StartsWith("Microsoft.CodeAnalysis", StringComparison.Ordinal) || IsCompilerAssembly(name);
+
+        /// <summary>The compiler's own assemblies and the libraries in its API, which an analyzer must share with the compiler that runs it.</summary>
+        private static bool IsCompilerAssembly(string name) =>
+            name is "Microsoft.CodeAnalysis" or "Microsoft.CodeAnalysis.CSharp" or "Microsoft.CodeAnalysis.VisualBasic"
+                or "Microsoft.CodeAnalysis.Workspaces" or "Microsoft.CodeAnalysis.CSharp.Workspaces" or "Microsoft.CodeAnalysis.VisualBasic.Workspaces"
+                or "System.Collections.Immutable" or "System.Reflection.Metadata" or "netstandard";
     }
 }
