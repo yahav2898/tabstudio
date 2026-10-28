@@ -544,7 +544,14 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         {
             if (ReferenceEquals(_session, session)) BeginHotReload(project, build.Result, assembly, build);
         });
-        if (session.Recording is not null) _recordedSession = session;
+        if (session.Recording is not null)
+        {
+            _recordedSession = session;
+            if (session.RecordingLimitation is { } limitation)
+            {
+                Output.WriteLine(limitation, OutputKind.Info);
+            }
+        }
         _debuggedProject = project;
         Breakpoints.Bind(session);
         switch (start)
