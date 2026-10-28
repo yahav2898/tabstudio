@@ -1,96 +1,14 @@
 == Output
------- Setting up Greeter: composer install ------
-> composer install --no-interaction --no-progress --prefer-dist
-No composer.lock file present. Updating dependencies to latest instead of installing from lock file. See https://getcomposer.org/install for more information.
-Loading composer repositories with package information
-Updating dependencies
-Lock file operations: 25 installs, 0 updates, 0 removals
-  - Locking myclabs/deep-copy (1.14.0)
-  - Locking nikic/php-parser (v5.9.0)
-  - Locking phar-io/manifest (2.0.4)
-  - Locking phar-io/version (3.2.1)
-  - Locking phpunit/php-code-coverage (12.5.8)
-  - Locking phpunit/php-file-iterator (6.0.2)
-  - Locking phpunit/php-invoker (6.0.0)
-  - Locking phpunit/php-text-template (5.0.1)
-  - Locking phpunit/php-timer (8.0.0)
-  - Locking phpunit/phpunit (12.5.42)
-  - Locking sebastian/cli-parser (4.2.1)
-  - Locking sebastian/comparator (7.1.8)
-  - Locking sebastian/complexity (5.0.0)
-  - Locking sebastian/diff (7.0.1)
-  - Locking sebastian/environment (8.1.2)
-  - Locking sebastian/exporter (7.0.3)
-  - Locking sebastian/global-state (8.0.3)
-  - Locking sebastian/lines-of-code (4.0.1)
-  - Locking sebastian/object-enumerator (7.0.0)
-  - Locking sebastian/object-reflector (5.0.0)
-  - Locking sebastian/recursion-context (7.0.1)
-  - Locking sebastian/type (6.0.4)
-  - Locking sebastian/version (6.0.1)
-  - Locking staabm/side-effects-detector (1.0.5)
-  - Locking theseer/tokenizer (2.0.1)
-Writing lock file
-Installing dependencies from lock file (including require-dev)
-Package operations: 25 installs, 0 updates, 0 removals
-  - Downloading staabm/side-effects-detector (1.0.5)
-  - Downloading sebastian/version (6.0.1)
-  - Downloading sebastian/type (6.0.4)
-  - Downloading sebastian/recursion-context (7.0.1)
-  - Downloading sebastian/object-reflector (5.0.0)
-  - Downloading sebastian/object-enumerator (7.0.0)
-  - Downloading sebastian/global-state (8.0.3)
-  - Downloading sebastian/exporter (7.0.3)
-  - Downloading sebastian/environment (8.1.2)
-  - Downloading sebastian/diff (7.0.1)
-  - Downloading sebastian/comparator (7.1.8)
-  - Downloading sebastian/cli-parser (4.2.1)
-  - Downloading phpunit/php-timer (8.0.0)
-  - Downloading phpunit/php-text-template (5.0.1)
-  - Downloading phpunit/php-invoker (6.0.0)
-  - Downloading phpunit/php-file-iterator (6.0.2)
-  - Downloading theseer/tokenizer (2.0.1)
-  - Downloading nikic/php-parser (v5.9.0)
-  - Downloading sebastian/lines-of-code (4.0.1)
-  - Downloading sebastian/complexity (5.0.0)
-  - Downloading phpunit/php-code-coverage (12.5.8)
-  - Downloading phar-io/version (3.2.1)
-  - Downloading phar-io/manifest (2.0.4)
-  - Downloading myclabs/deep-copy (1.14.0)
-  - Downloading phpunit/phpunit (12.5.42)
-  - Installing staabm/side-effects-detector (1.0.5): Extracting archive
-  - Installing sebastian/version (6.0.1): Extracting archive
-  - Installing sebastian/type (6.0.4): Extracting archive
-  - Installing sebastian/recursion-context (7.0.1): Extracting archive
-  - Installing sebastian/object-reflector (5.0.0): Extracting archive
-  - Installing sebastian/object-enumerator (7.0.0): Extracting archive
-  - Installing sebastian/global-state (8.0.3): Extracting archive
-  - Installing sebastian/exporter (7.0.3): Extracting archive
-  - Installing sebastian/environment (8.1.2): Extracting archive
-  - Installing sebastian/diff (7.0.1): Extracting archive
-  - Installing sebastian/comparator (7.1.8): Extracting archive
-  - Installing sebastian/cli-parser (4.2.1): Extracting archive
-  - Installing phpunit/php-timer (8.0.0): Extracting archive
-  - Installing phpunit/php-text-template (5.0.1): Extracting archive
-  - Installing phpunit/php-invoker (6.0.0): Extracting archive
-  - Installing phpunit/php-file-iterator (6.0.2): Extracting archive
-  - Installing theseer/tokenizer (2.0.1): Extracting archive
-  - Installing nikic/php-parser (v5.9.0): Extracting archive
-  - Installing sebastian/lines-of-code (4.0.1): Extracting archive
-  - Installing sebastian/complexity (5.0.0): Extracting archive
-  - Installing phpunit/php-code-coverage (12.5.8): Extracting archive
-  - Installing phar-io/version (3.2.1): Extracting archive
-  - Installing phar-io/manifest (2.0.4): Extracting archive
-  - Installing myclabs/deep-copy (1.14.0): Extracting archive
-  - Installing phpunit/phpunit (12.5.42): Extracting archive
-1 package suggestions were added by new dependencies, use `composer suggest` to see details.
-Generating autoload files
-23 packages you are using are looking for funding.
-Use the `composer fund` command to find out more!
-========== composer install: succeeded ==========
+------ Build started: Greeter (PHP) ------
+> sh -c 'find . \( -name vendor -o -name node_modules -o -name .git -o -name .tabstudio -o -name storage \) -prune -o -name '\''*.php'\'' -print0 | xargs -0 -r -n 64 php -d display_errors=stderr -d error_reporting=-1 -l > /dev/null'
+PHP Parse error:  syntax error, unexpected token ";" in ./main.php on line 14
+Parse error: syntax error, unexpected token ";" in ./main.php on line 14
+xargs: php: exited with status 255; aborting
+Greeter: build failed.
+========== Build: 0 succeeded, 1 failed ==========
 
 == State
-Ready: Set up: Greeter
+Failed: Build failed
 == Diagnostics
 
 == Locals
@@ -98,182 +16,237 @@ Ready: Set up: Greeter
 == Call Stack
 
 == Language Servers
-[Phpactor] phpactor was not found, so main.php has no IntelliSense. Install it on this computer, so that phpactor is on the PATH.
+22:19:35 [Phpactor] Starting Phpactor for /tmp/tabstudio-tests/6cc983fe4eac41cbb45919f0610f6f0e/app/Projects/Greeter: /home/runner/work/_temp/php-tools/bin/phpactor language-server
+22:19:35 [Phpactor] Sending request 'initialize - (1)'.
+22:19:36 [Phpactor] Starting language server, use -vvv for verbose output
+22:19:36 [Phpactor] Received response 'initialize - (1)' in 930ms.
+22:19:36 [Phpactor] Sending notification 'initialized'.
+22:19:36 [Phpactor] Sending notification 'workspace/didChangeConfiguration'.
+22:19:36 [Phpactor] Sending notification 'textDocument/didOpen'.
+22:19:36 [Phpactor] Phpactor is running (phpactor/phpactor 2026.10.07.0).
+22:19:36 [Phpactor] Received request 'window/workDoneProgress/create - ("76c22919-0384-4dfa-b0c1-9cd5b3417bcf")'.
+22:19:36 [Phpactor] Received notification '$/progress'.
+22:19:37 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:41 [Phpactor] Received notification '$/progress'.
+22:19:42 [Phpactor] Received notification '$/progress'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending request 'textDocument/completion - (2)'.
+22:19:43 [Phpactor] Received response 'textDocument/completion - (2)' in 43ms.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending request 'textDocument/completion - (3)'.
+22:19:43 [Phpactor] Received response 'textDocument/completion - (3)' in 9ms.
+22:19:43 [Phpactor] Sending request 'completionItem/resolve - (4)'.
+22:19:43 [Phpactor] Received response 'completionItem/resolve - (4)' in 29ms.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didChange'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Received notification 'textDocument/publishDiagnostics'.
+22:19:43 [Phpactor] Sending notification 'textDocument/didSave'.
 
 == Debug Adapters
 
 == PATH
-/home/runner/work/_temp/js-debug/bin:/home/runner/go/bin:/home/runner/work/_temp/jdtls/bin:/home/runner/work/_temp/gradle-8.14.4/bin:/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.13-9/x64/bin:/home/runner/work/_temp/cpp-bin:/opt/hostedtoolcache/go/1.26.10/x64/bin:/opt/hostedtoolcache/Python/3.12.15/x64/bin:/opt/hostedtoolcache/Python/3.12.15/x64:/opt/hostedtoolcache/node/22.23.4/x64/bin:/usr/share/dotnet:/snap/bin:/home/runner/.local/bin:/opt/pipx_bin:/home/runner/.cargo/bin:/home/runner/.config/composer/vendor/bin:/usr/local/.ghcup/bin:/home/runner/.dotnet/tools:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+/home/runner/work/_temp/js-debug/bin:/home/runner/go/bin:/home/runner/work/_temp/swift/usr/bin:/home/runner/work/_temp/kotlin-lsp/bin:/home/runner/work/_temp/kotlinc/bin:/home/runner/work/_temp/php-tools/bin:/opt/hostedtoolcache/setup-php/tools:/home/runner/.composer/vendor/bin:/home/runner/work/_temp/jdtls/bin:/home/runner/work/_temp/gradle-8.14.4/bin:/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.13-9/x64/bin:/home/runner/work/_temp/cpp-bin:/opt/hostedtoolcache/go/1.26.10/x64/bin:/opt/hostedtoolcache/Python/3.12.15/x64/bin:/opt/hostedtoolcache/Python/3.12.15/x64:/opt/hostedtoolcache/node/22.23.4/x64/bin:/usr/share/dotnet:/snap/bin:/home/runner/.local/bin:/opt/pipx_bin:/home/runner/.cargo/bin:/home/runner/.config/composer/vendor/bin:/usr/local/.ghcup/bin:/home/runner/.dotnet/tools:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 == Processes
     PID    PPID    PGID STAT     ELAPSED COMMAND
-      2       0       0 S          11:13 [kthreadd]
-      3       2       0 S          11:13  \_ [pool_workqueue_release]
-      4       2       0 I<         11:13  \_ [kworker/R-rcu_gp]
-      5       2       0 I<         11:13  \_ [kworker/R-sync_wq]
-      6       2       0 I<         11:13  \_ [kworker/R-kvfree_rcu_reclaim]
-      7       2       0 I<         11:13  \_ [kworker/R-slub_flushwq]
-      8       2       0 I<         11:13  \_ [kworker/R-netns]
-      9       2       0 I          11:13  \_ [kworker/0:0-events]
-     10       2       0 I<         11:13  \_ [kworker/0:0H-kblockd]
-     12       2       0 I          11:13  \_ [kworker/u16:0-flush-8:0]
-     13       2       0 I<         11:13  \_ [kworker/R-mm_percpu_wq]
-     14       2       0 S          11:13  \_ [ksoftirqd/0]
-     15       2       0 S<         11:13  \_ [pr/ttyS0]
-     16       2       0 I          11:13  \_ [rcu_sched]
-     17       2       0 S          11:13  \_ [rcu_exp_par_gp_kthread_worker/0]
-     18       2       0 S          11:13  \_ [rcu_exp_gp_kthread_worker]
-     19       2       0 S          11:13  \_ [migration/0]
-     20       2       0 S          11:13  \_ [kprobe-optimizer]
-     21       2       0 S          11:13  \_ [idle_inject/0]
-     22       2       0 S          11:13  \_ [cpuhp/0]
-     23       2       0 S          11:13  \_ [cpuhp/2]
-     24       2       0 S          11:13  \_ [idle_inject/2]
-     25       2       0 S          11:13  \_ [migration/2]
-     26       2       0 S          11:13  \_ [ksoftirqd/2]
-     28       2       0 I<         11:13  \_ [kworker/2:0H-kblockd]
-     29       2       0 S          11:13  \_ [cpuhp/1]
-     30       2       0 S          11:13  \_ [idle_inject/1]
-     31       2       0 S          11:13  \_ [migration/1]
-     32       2       0 S          11:13  \_ [ksoftirqd/1]
-     34       2       0 I<         11:13  \_ [kworker/1:0H-kblockd]
-     35       2       0 S          11:13  \_ [cpuhp/3]
-     36       2       0 S          11:13  \_ [idle_inject/3]
-     37       2       0 S          11:13  \_ [migration/3]
-     38       2       0 S          11:13  \_ [ksoftirqd/3]
-     40       2       0 I<         11:13  \_ [kworker/3:0H-kblockd]
-     41       2       0 S          11:13  \_ [kdevtmpfs]
-     42       2       0 I<         11:13  \_ [kworker/R-inet_frag_wq]
-     43       2       0 I          11:13  \_ [rcu_tasks_kthread]
-     44       2       0 I          11:13  \_ [rcu_tasks_rude_kthread]
-     45       2       0 S          11:13  \_ [kauditd]
-     46       2       0 S          11:13  \_ [khungtaskd]
-     47       2       0 I          11:13  \_ [kworker/u16:1-flush-8:0]
-     48       2       0 S          11:13  \_ [oom_reaper]
-     49       2       0 I          11:13  \_ [kworker/u16:2-events_unbound]
-     51       2       0 I<         11:13  \_ [kworker/R-writeback]
-     52       2       0 S          11:13  \_ [kcompactd0]
-     53       2       0 SN         11:13  \_ [ksmd]
-     54       2       0 SN         11:13  \_ [khugepaged]
-     55       2       0 I<         11:13  \_ [kworker/R-kblockd]
-     56       2       0 I<         11:13  \_ [kworker/R-blkcg_punt_bio]
-     57       2       0 I<         11:13  \_ [kworker/R-kintegrityd]
-     58       2       0 I          11:13  \_ [kworker/3:1-events]
-     59       2       0 S          11:13  \_ [irq/9-acpi]
-     60       2       0 I          11:13  \_ [kworker/1:1-events]
-     61       2       0 I<         11:13  \_ [kworker/R-tpm_dev_wq]
-     62       2       0 I<         11:13  \_ [kworker/R-ata_sff]
-     63       2       0 I<         11:13  \_ [kworker/R-md_bitmap]
-     64       2       0 I<         11:13  \_ [kworker/R-md_llbitmap_io]
-     65       2       0 I<         11:13  \_ [kworker/R-md_llbitmap_unplug]
-     66       2       0 I<         11:13  \_ [kworker/R-edac-poller]
-     67       2       0 I<         11:13  \_ [kworker/R-hv_vmbus_con]
-     68       2       0 I<         11:13  \_ [kworker/R-hv_vmbus_rescind]
-     69       2       0 I<         11:13  \_ [kworker/R-hv_pri_chan]
-     70       2       0 I<         11:13  \_ [kworker/R-hv_sub_chan]
-     71       2       0 I<         11:13  \_ [kworker/R-devfreq_wq]
-     72       2       0 S          11:13  \_ [watchdogd]
-     73       2       0 I<         11:13  \_ [kworker/R-quota_events_unbound]
-     74       2       0 S          11:13  \_ [kswapd0]
-     75       2       0 S          11:13  \_ [ecryptfs-kthread]
-     76       2       0 I<         11:13  \_ [kworker/R-kthrotld]
-     77       2       0 I<         11:13  \_ [kworker/R-acpi_thermal_pm]
-     78       2       0 I<         11:13  \_ [kworker/R-nfit]
-     79       2       0 S          11:13  \_ [scsi_eh_0]
-     80       2       0 S          11:13  \_ [scsi_eh_1]
-     81       2       0 I<         11:13  \_ [kworker/R-nvme-wq]
-     82       2       0 I<         11:13  \_ [kworker/R-scsi_tmf_1]
-     83       2       0 I<         11:13  \_ [kworker/R-scsi_tmf_0]
-     84       2       0 I<         11:13  \_ [kworker/R-nvme-reset-wq]
-     85       2       0 I<         11:13  \_ [kworker/R-nvme-delete-wq]
-     86       2       0 I<         11:13  \_ [kworker/R-nvme-auth-wq]
-     89       2       0 I          11:12  \_ [kworker/u16:3-events_power_efficient]
-     90       2       0 I          11:12  \_ [kworker/u16:4-events_power_efficient]
-     92       2       0 S          11:12  \_ [hv_balloon]
-     93       2       0 I<         11:12  \_ [kworker/R-mld]
-     94       2       0 I<         11:12  \_ [kworker/R-ipv6_addrconf]
-     95       2       0 I<         11:12  \_ [kworker/R-kstrp]
-     97       2       0 I<         11:12  \_ [kworker/u17:0]
-    108       2       0 I<         11:12  \_ [kworker/R-charger_manager]
-    109       2       0 S          11:12  \_ [jbd2/sda1-8]
-    110       2       0 I<         11:12  \_ [kworker/R-ext4-rsv-conversion]
-    111       2       0 I          11:12  \_ [kworker/2:2-mm_percpu_wq]
-    145       2       0 I<         11:12  \_ [kworker/2:1H-kblockd]
-    184       2       0 I<         11:12  \_ [kworker/R-kmpathd]
-    185       2       0 I<         11:12  \_ [kworker/R-kmpath_handlerd]
-    233       2       0 I<         11:11  \_ [kworker/0:1H-kblockd]
-    242       2       0 S          11:11  \_ [psimon]
-    320       2       0 S          11:11  \_ [card1-crtc0]
-    349       2       0 I<         11:11  \_ [kworker/R-tls-strp]
-    379       2       0 I          11:11  \_ [kworker/1:3-mm_percpu_wq]
-    380       2       0 I<         11:11  \_ [kworker/R-mlx5_cmd_2636:00:02.0]
-    381       2       0 I<         11:11  \_ [kworker/R-mlx5_health2636:00:02.0]
-    382       2       0 I<         11:11  \_ [kworker/R-mlx5_page_allocator]
-    383       2       0 I<         11:11  \_ [kworker/R-mlx5_events]
-    384       2       0 S          11:11  \_ [ptp1]
-    385       2       0 I<         11:11  \_ [kworker/R-mlx5_fc]
-    386       2       0 I<         11:11  \_ [kworker/R-mlx5_hv_vhca]
-    388       2       0 I<         11:11  \_ [kworker/R-mlx5e]
-    396       2       0 I<         11:11  \_ [kworker/R-mlx5e_arfs]
-    399       2       0 I<         11:11  \_ [kworker/R-ib-comp-wq]
-    400       2       0 I<         11:11  \_ [kworker/R-ib-comp-unb-wq]
-    401       2       0 I<         11:11  \_ [kworker/R-ib_mcast]
-    402       2       0 I<         11:11  \_ [kworker/R-ib_nl_sa_wq]
-    403       2       0 I<         11:10  \_ [kworker/R-mkey_cache]
-    421       2       0 I<         11:10  \_ [kworker/3:1H-kblockd]
-    445       2       0 S          11:10  \_ [jbd2/sda16-8]
-    446       2       0 I<         11:10  \_ [kworker/R-ext4-rsv-conversion]
-    496       2       0 I<         11:10  \_ [kworker/1:1H-kblockd]
-    663       2       0 I<         11:09  \_ [kworker/R-cfg80211]
-   1021       2       0 I          11:02  \_ [kworker/0:3-cgwb_release]
-   2066       2       0 S          10:58  \_ [psimon]
-   9566       2       0 I          05:38  \_ [kworker/0:1-events]
-   9743       2       0 I          05:33  \_ [kworker/1:0-mm_percpu_wq]
-   9757       2       0 I          05:30  \_ [kworker/2:0-events]
-  10360       2       0 I          05:13  \_ [kworker/3:0-events]
-  12991       2       0 I          03:43  \_ [kworker/0:2]
-  14412       2       0 I          00:09  \_ [kworker/2:1-mm_percpu_wq]
-  14413       2       0 I          00:09  \_ [kworker/3:2-events]
-      1       0       1 Ss         11:13 /sbin/init
-    162       1     162 S<s        11:12 /usr/lib/systemd/systemd-journald
-    224       1     224 SLsl       11:12 /sbin/multipathd -d -s
-    230       1     230 Ss         11:11 /usr/lib/systemd/systemd-udevd
-    414       1     414 Ss         11:10 /usr/lib/linux-tools/7.0.0-1017-azure/hv_kvp_daemon -n
-    549       1     549 Ss         11:10 /usr/lib/systemd/systemd-resolved
-    605       1     605 Ss         11:10 /usr/sbin/haveged --Foreground --verbose=1
-    744       1     744 Ss         11:07 /usr/lib/systemd/systemd-networkd
-   1029       1    1029 Ss         11:02 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
-   1034       1    1034 Ss         11:02 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
-   1036       1    1036 Ss         11:02 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
-   1204    1036    1036 S          11:01  \_ php-fpm: pool www
-   1208    1036    1036 S          11:01  \_ php-fpm: pool www
-   1041       1    1041 Ssl        11:02 /usr/lib/polkit-1/polkitd --no-debug
-   1069       1    1069 Ss         11:02 /usr/lib/systemd/systemd-logind
-   1071       1    1071 Ssl        11:02 /usr/libexec/udisks2/udisksd
-   1078       1    1078 Ss         11:02 /usr/bin/python3 -u /usr/sbin/waagent -daemon
-   1441    1078    1078 Sl         11:01  \_ /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.2-py3.12.egg -run-exthandlers
-   1143       1    1143 Ss         11:02 /usr/sbin/cron -f -P
-   1181       1    1181 Ssl        11:01 /usr/sbin/rsyslogd -n -iNONE
-   1183       1    1183 Ssl        11:01 /usr/bin/containerd
-   1199       1    1198 S          11:01 /usr/sbin/chronyd -F 1
-   1211    1199    1198 S          11:01  \_ /usr/sbin/chronyd -F 1
-   1250       1    1250 Ss+        11:01 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
-   1272       1    1272 Ssl        11:01 /usr/sbin/ModemManager
-   1276       1    1276 Ss+        11:01 /sbin/agetty -o -p -- \u --noclear - linux
-   1286       1    1286 Ss         11:01 /usr/lib/systemd/systemd --user
-   1334    1286    1286 S          11:01  \_ (sd-pam)
-   1331       1    1331 Ssl        11:01 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
-   2068       1    2068 Ssl        10:58 /opt/hca/hosted-compute-agent
-   2085    2068    2068 S          10:58  \_ sudo -n PROVJOBD_E2E=1 /tmp/provjobd2393655096
-   2087    2085    2068 Sl         10:58  |   \_ /tmp/provjobd2393655096
-   2150    2068    2068 Sl         09:27  \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
-   2170    2150    2068 Sl         09:26      \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
-  13884    2170    2068 S          02:20          \_ /usr/bin/bash -e /home/runner/work/_temp/5b31b84e-5b85-4319-aa47-2ac0ac325073.sh
-  13888   13884    2068 Sl         02:20              \_ dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none --filter FullyQualifiedName~ToolchainLanguageToolsTests.A_PHP_template --logger console;verbosity=normal
-  13910   13888    2068 Sl         02:20                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
-  14067   13910    2068 Sl         02:13                  |   \_ /usr/share/dotnet/dotnet exec /usr/share/dotnet/sdk/10.0.403/vstest.console.dll --framework:.NETCoreApp,Version=v10.0 --testCaseFilter:FullyQualifiedName~ToolchainLanguageToolsTests.A_PHP_template --logger:console;verbosity=normal /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll --Blame:CollectHangDump;HangDumpType=none;TestTimeout=10m --nologo --artifactsProcessingMode-collect --testSessionCorrelationId:13888_91d36d46-c1ac-4116-aa99-e83955097fe8
-  14080   14067    2068 Sl         02:13                  |       \_ /usr/share/dotnet/dotnet exec --runtimeconfig /usr/share/dotnet/sdk/10.0.403/datacollector.runtimeconfig.json --depsfile /usr/share/dotnet/sdk/10.0.403/datacollector.deps.json /usr/share/dotnet/sdk/10.0.403/datacollector.dll --port 37851 --parentprocessid 14067
-  14095   14067    2068 Sl         02:13                  |       \_ /usr/share/dotnet/dotnet exec --runtimeconfig /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.runtimeconfig.json --depsfile /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.deps.json /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/testhost.dll --port 43265 --endpoint 127.0.0.1:043265 --role client --parentprocessid 14067 --datacollectionport 36145 --telemetryoptedin false
-  14419   14095    2068 R          00:00                  |           \_ ps -eo pid,ppid,pgid,stat,etime,args --forest
-  13911   13888    2068 Sl         02:20                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
-  13912   13888    2068 Sl         02:20                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
-   9241       1    2068 Sl         07:35 /usr/share/dotnet/sdk/10.0.403/Roslyn/bincore/VBCSCompiler -pipename:WAcWTViZvzcVAI0ZQWygl6OMzaUe49Dabl4RIF3MlGs
+      2       0       0 S          08:32 [kthreadd]
+      3       2       0 S          08:32  \_ [pool_workqueue_release]
+      4       2       0 I<         08:32  \_ [kworker/R-rcu_gp]
+      5       2       0 I<         08:32  \_ [kworker/R-sync_wq]
+      6       2       0 I<         08:32  \_ [kworker/R-kvfree_rcu_reclaim]
+      7       2       0 I<         08:32  \_ [kworker/R-slub_flushwq]
+      8       2       0 I<         08:32  \_ [kworker/R-netns]
+     10       2       0 I<         08:32  \_ [kworker/0:0H-kblockd]
+     11       2       0 I          08:32  \_ [kworker/0:1-events]
+     12       2       0 I          08:32  \_ [kworker/u16:0-flush-8:0]
+     13       2       0 I<         08:32  \_ [kworker/R-mm_percpu_wq]
+     14       2       0 S          08:32  \_ [ksoftirqd/0]
+     15       2       0 S<         08:32  \_ [pr/ttyS0]
+     16       2       0 I          08:32  \_ [rcu_sched]
+     17       2       0 S          08:32  \_ [rcu_exp_par_gp_kthread_worker/0]
+     18       2       0 S          08:32  \_ [rcu_exp_gp_kthread_worker]
+     19       2       0 S          08:32  \_ [migration/0]
+     20       2       0 S          08:32  \_ [kprobe-optimizer]
+     21       2       0 S          08:32  \_ [idle_inject/0]
+     22       2       0 S          08:32  \_ [cpuhp/0]
+     23       2       0 S          08:32  \_ [cpuhp/2]
+     24       2       0 S          08:32  \_ [idle_inject/2]
+     25       2       0 S          08:32  \_ [migration/2]
+     26       2       0 S          08:32  \_ [ksoftirqd/2]
+     27       2       0 I          08:32  \_ [kworker/2:0-events]
+     28       2       0 I<         08:32  \_ [kworker/2:0H-kblockd]
+     29       2       0 S          08:32  \_ [cpuhp/1]
+     30       2       0 S          08:32  \_ [idle_inject/1]
+     31       2       0 S          08:32  \_ [migration/1]
+     32       2       0 S          08:32  \_ [ksoftirqd/1]
+     34       2       0 I<         08:32  \_ [kworker/1:0H-kblockd]
+     35       2       0 S          08:32  \_ [cpuhp/3]
+     36       2       0 S          08:32  \_ [idle_inject/3]
+     37       2       0 S          08:32  \_ [migration/3]
+     38       2       0 S          08:32  \_ [ksoftirqd/3]
+     40       2       0 I<         08:32  \_ [kworker/3:0H-kblockd]
+     41       2       0 S          08:32  \_ [kdevtmpfs]
+     42       2       0 I<         08:32  \_ [kworker/R-inet_frag_wq]
+     43       2       0 I          08:32  \_ [rcu_tasks_kthread]
+     44       2       0 I          08:32  \_ [rcu_tasks_rude_kthread]
+     45       2       0 S          08:32  \_ [kauditd]
+     46       2       0 S          08:32  \_ [khungtaskd]
+     47       2       0 I          08:32  \_ [kworker/u16:1-events_power_efficient]
+     48       2       0 S          08:32  \_ [oom_reaper]
+     49       2       0 I<         08:32  \_ [kworker/R-writeback]
+     50       2       0 I          08:32  \_ [kworker/u16:2-events_power_efficient]
+     51       2       0 I          08:32  \_ [kworker/1:1-events]
+     52       2       0 S          08:32  \_ [kcompactd0]
+     53       2       0 SN         08:32  \_ [ksmd]
+     54       2       0 SN         08:32  \_ [khugepaged]
+     55       2       0 I<         08:32  \_ [kworker/R-kblockd]
+     56       2       0 I<         08:32  \_ [kworker/R-blkcg_punt_bio]
+     57       2       0 I<         08:32  \_ [kworker/R-kintegrityd]
+     58       2       0 S          08:32  \_ [irq/9-acpi]
+     61       2       0 I<         08:32  \_ [kworker/R-tpm_dev_wq]
+     62       2       0 I<         08:32  \_ [kworker/R-ata_sff]
+     63       2       0 I<         08:32  \_ [kworker/R-md_bitmap]
+     64       2       0 I<         08:32  \_ [kworker/R-md_llbitmap_io]
+     65       2       0 I<         08:32  \_ [kworker/R-md_llbitmap_unplug]
+     66       2       0 I<         08:32  \_ [kworker/R-edac-poller]
+     67       2       0 I<         08:32  \_ [kworker/R-hv_vmbus_con]
+     68       2       0 I<         08:32  \_ [kworker/R-hv_vmbus_rescind]
+     69       2       0 I<         08:32  \_ [kworker/R-hv_pri_chan]
+     70       2       0 I<         08:32  \_ [kworker/R-hv_sub_chan]
+     71       2       0 I<         08:32  \_ [kworker/R-devfreq_wq]
+     72       2       0 S          08:32  \_ [watchdogd]
+     73       2       0 I<         08:32  \_ [kworker/R-quota_events_unbound]
+     74       2       0 S          08:32  \_ [kswapd0]
+     75       2       0 S          08:32  \_ [ecryptfs-kthread]
+     76       2       0 I<         08:32  \_ [kworker/R-kthrotld]
+     77       2       0 I<         08:32  \_ [kworker/R-acpi_thermal_pm]
+     78       2       0 I<         08:32  \_ [kworker/R-nfit]
+     79       2       0 S          08:32  \_ [scsi_eh_0]
+     80       2       0 S          08:32  \_ [scsi_eh_1]
+     81       2       0 I<         08:32  \_ [kworker/R-nvme-wq]
+     82       2       0 I<         08:32  \_ [kworker/R-scsi_tmf_0]
+     83       2       0 I<         08:32  \_ [kworker/R-scsi_tmf_1]
+     84       2       0 I<         08:32  \_ [kworker/R-nvme-reset-wq]
+     85       2       0 I<         08:32  \_ [kworker/R-nvme-delete-wq]
+     86       2       0 I<         08:32  \_ [kworker/R-nvme-auth-wq]
+     89       2       0 I          08:32  \_ [kworker/0:2-events]
+     92       2       0 S          08:32  \_ [hv_balloon]
+     93       2       0 I<         08:32  \_ [kworker/R-mld]
+     94       2       0 I<         08:32  \_ [kworker/R-ipv6_addrconf]
+     95       2       0 I<         08:32  \_ [kworker/R-kstrp]
+     97       2       0 I<         08:32  \_ [kworker/u17:0]
+    108       2       0 I<         08:32  \_ [kworker/R-charger_manager]
+    109       2       0 S          08:31  \_ [jbd2/sda1-8]
+    110       2       0 I<         08:31  \_ [kworker/R-ext4-rsv-conversion]
+    111       2       0 I          08:31  \_ [kworker/3:2-events]
+    145       2       0 I<         08:31  \_ [kworker/0:1H-kblockd]
+    183       2       0 I          08:31  \_ [kworker/1:2-events]
+    184       2       0 I<         08:31  \_ [kworker/R-kmpathd]
+    185       2       0 I<         08:31  \_ [kworker/R-kmpath_handlerd]
+    229       2       0 I<         08:31  \_ [kworker/1:1H-kblockd]
+    233       2       0 I<         08:31  \_ [kworker/3:1H-kblockd]
+    244       2       0 S          08:31  \_ [psimon]
+    306       2       0 S          08:30  \_ [card1-crtc0]
+    407       2       0 I<         08:29  \_ [kworker/2:1H-kblockd]
+    414       2       0 S          08:29  \_ [jbd2/sda16-8]
+    415       2       0 I<         08:29  \_ [kworker/R-ext4-rsv-conversion]
+    648       2       0 I<         08:28  \_ [kworker/R-cfg80211]
+   1127       2       0 I          08:22  \_ [kworker/3:3-events]
+   1160       2       0 I          08:22  \_ [kworker/2:3-events]
+   1499       2       0 I<         08:21  \_ [kworker/R-tls-strp]
+   2782       2       0 I<         08:00  \_ [kworker/R-mlx5_cmd_a4fb:00:02.0]
+   2785       2       0 I<         08:00  \_ [kworker/R-mlx5_healtha4fb:00:02.0]
+   2786       2       0 I<         08:00  \_ [kworker/R-mlx5_page_allocator]
+   2787       2       0 I<         08:00  \_ [kworker/R-mlx5_events]
+   2788       2       0 S          08:00  \_ [ptp1]
+   2789       2       0 I<         08:00  \_ [kworker/R-mlx5_fc]
+   2790       2       0 I<         08:00  \_ [kworker/R-mlx5_hv_vhca]
+   2794       2       0 I<         08:00  \_ [kworker/R-mlx5e]
+   2795       2       0 I<         08:00  \_ [kworker/R-mlx5e_arfs]
+   2808       2       0 I<         08:00  \_ [kworker/R-ib-comp-wq]
+   2809       2       0 I<         08:00  \_ [kworker/R-ib-comp-unb-wq]
+   2810       2       0 I<         08:00  \_ [kworker/R-ib_mcast]
+   2811       2       0 I<         08:00  \_ [kworker/R-ib_nl_sa_wq]
+   2830       2       0 I<         08:00  \_ [kworker/R-mkey_cache]
+   3240       2       0 I          07:49  \_ [kworker/u16:6-writeback]
+   4318       2       0 S          07:30  \_ [psimon]
+  11421       2       0 I          02:46  \_ [kworker/2:1-events]
+  11666       2       0 I          02:44  \_ [kworker/3:0-events]
+  11706       2       0 I          02:41  \_ [kworker/0:0-events]
+      1       0       1 Ss         08:32 /sbin/init
+    162       1     162 S<s        08:31 /usr/lib/systemd/systemd-journald
+    224       1     224 SLsl       08:31 /sbin/multipathd -d -s
+    231       1     231 Ss         08:31 /usr/lib/systemd/systemd-udevd
+    398       1     398 Ss         08:29 /usr/lib/linux-tools/7.0.0-1017-azure/hv_kvp_daemon -n
+    521       1     521 Ss         08:29 /usr/lib/systemd/systemd-resolved
+    589       1     589 Ss         08:29 /usr/sbin/haveged --Foreground --verbose=1
+    729       1     729 Ss         08:26 /usr/lib/systemd/systemd-networkd
+   1012       1    1012 Ss         08:22 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+   1017       1    1017 Ss         08:22 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+   1020       1    1020 Ss         08:22 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
+   1286    1020    1020 S          08:21  \_ php-fpm: pool www
+   1300    1020    1020 S          08:21  \_ php-fpm: pool www
+   1024       1    1024 Ssl        08:22 /usr/lib/polkit-1/polkitd --no-debug
+   1046       1    1046 Ss         08:22 /usr/lib/systemd/systemd-logind
+   1052       1    1052 Ssl        08:22 /usr/libexec/udisks2/udisksd
+   1053       1    1053 Ss         08:22 /usr/bin/python3 -u /usr/sbin/waagent -daemon
+   1506    1053    1053 Sl         08:21  \_ /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.2-py3.12.egg -run-exthandlers
+   1096       1    1096 Ss         08:22 /usr/sbin/cron -f -P
+   1122       1    1122 Ssl        08:22 /usr/bin/containerd
+   1158       1    1158 Ss+        08:22 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
+   1173       1    1173 Ss         08:22 /usr/lib/systemd/systemd --user
+   1223    1173    1173 S          08:21  \_ (sd-pam)
+   1176       1    1176 Ssl        08:22 /usr/sbin/rsyslogd -n -iNONE
+   1186       1    1183 S          08:22 /usr/sbin/chronyd -F 1
+   1194    1186    1183 S          08:22  \_ /usr/sbin/chronyd -F 1
+   1199       1    1199 Ss+        08:22 /sbin/agetty -o -p -- \u --noclear - linux
+   1208       1    1208 Ssl        08:21 /usr/sbin/ModemManager
+   1271       1    1271 Ssl        08:21 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+   2056       1    2056 Ssl        08:18 /opt/hca/hosted-compute-agent
+   2073    2056    2056 S          08:18  \_ sudo -n PROVJOBD_E2E=1 /tmp/provjobd1327017752
+   2075    2073    2056 Sl         08:18  |   \_ /tmp/provjobd1327017752
+   2107    2056    2056 Sl         08:17  \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
+   2135    2107    2056 Sl         08:16      \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
+  14075    2135    2056 S          00:23          \_ /usr/bin/bash -e /home/runner/work/_temp/f2d73483-af34-4f82-9f50-173d17734974.sh
+  14084   14075    2056 Sl         00:23              \_ dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none --filter FullyQualifiedName~ToolchainLanguageToolsTests.A_PHP_template --logger console;verbosity=normal
+  14106   14084    2056 Sl         00:22                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+  14107   14084    2056 Sl         00:22                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+  14108   14084    2056 Sl         00:22                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+  14188   14108    2056 Sl         00:18                      \_ dotnet exec --runtimeconfig /home/runner/work/tabstudio/tabstudio/.nuget/packages/avalonia.buildservices/11.3.2/tools/netstandard2.0/runtimeconfig.json /home/runner/work/tabstudio/tabstudio/.nuget/packages/avalonia.buildservices/11.3.2/tools/netstandard2.0/Avalonia.BuildServices.Collector.dll
+  14269   14108    2056 Sl         00:16                      \_ /usr/share/dotnet/dotnet exec /usr/share/dotnet/sdk/10.0.403/vstest.console.dll --framework:.NETCoreApp,Version=v10.0 --testCaseFilter:FullyQualifiedName~ToolchainLanguageToolsTests.A_PHP_template --logger:console;verbosity=normal /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll --Blame:CollectHangDump;HangDumpType=none;TestTimeout=10m --nologo --artifactsProcessingMode-collect --testSessionCorrelationId:14084_97bbd2c8-b12d-4965-aebd-df8af502194a
+  14282   14269    2056 Sl         00:15                          \_ /usr/share/dotnet/dotnet exec --runtimeconfig /usr/share/dotnet/sdk/10.0.403/datacollector.runtimeconfig.json --depsfile /usr/share/dotnet/sdk/10.0.403/datacollector.deps.json /usr/share/dotnet/sdk/10.0.403/datacollector.dll --port 41837 --parentprocessid 14269
+  14298   14269    2056 Sl         00:15                          \_ /usr/share/dotnet/dotnet exec --runtimeconfig /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.runtimeconfig.json --depsfile /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.deps.json /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/testhost.dll --port 37153 --endpoint 127.0.0.1:037153 --role client --parentprocessid 14269 --datacollectionport 35777 --telemetryoptedin false
+  14408   14298   14408 S          00:07                              \_ php /home/runner/work/_temp/php-tools/phpactor.phar language-server
+  14601   14298    2056 R          00:00                              \_ ps -eo pid,ppid,pgid,stat,etime,args --forest
+   4321       1    4321 Ss         07:30 php-fpm: master process (/etc/php/8.5/fpm/php-fpm.conf)
+   4322    4321    4321 S          07:29  \_ php-fpm: pool www
+   4323    4321    4321 S          07:29  \_ php-fpm: pool www
+   9608       1    2056 Sl         05:38 /usr/share/dotnet/sdk/10.0.403/Roslyn/bincore/VBCSCompiler -pipename:WAcWTViZvzcVAI0ZQWygl6OMzaUe49Dabl4RIF3MlGs
