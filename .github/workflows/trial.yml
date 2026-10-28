@@ -1,0 +1,64 @@
+name: Repository trial
+
+# Opens public repositories in the IDE and builds them, as a person would on the tablet. Runs only for trial/**
+# branches and publishes its reports and screenshots to ci-logs under branches/<branch>/trial-<area>/.
+# The repositories, pinned to commits, are build/ci/trial-sweep.json; each area runs as its own job.
+on:
+  push:
+    branches: ['trial/**']
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+
+jobs:
+  trial:
+    name: Open real repositories (${{ matrix.area }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        area: [dotnet-generators, aspnet, doctor, avalonia-tui, node, python, java, go-rust, c-cpp]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Clone the repositories at their pinned commits
+        id: clone
+        env:
+          AREA: ${{ matrix.area }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/repos"
+          list=""
+          while IFS=$'\t' read -r name url sha open; do
+            dir="$RUNNER_TEMP/repos/$name"
+            git init -q "$dir"
+            git -C "$dir" fetch -q --depth 1 "$url" "$sha"
+            git -C "$dir" checkout -q FETCH_HEAD
+            list="$list$name=$dir/$open;"
+          done < <(jq -r --arg area "$AREA" '.repositories[] | select(.area == $area) | [.name, .url, .sha, .open] | @tsv' build/ci/trial-sweep.json)
+          echo "repos=$list" >> "$GITHUB_OUTPUT"
+
+      - name: Open and build them in TabStudio
+        env:
+          TABSTUDIO_TRIAL_REPOS: ${{ steps.clone.outputs.repos }}
+          TABSTUDIO_TRIAL_OUT: ${{ github.workspace }}/ci-out
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          dotnet test tests/TabStudio.App.Tests -c Release --filter "FullyQualifiedName~RepoTrialTests" > ci-out/test.log 2>&1 || true
+          tail -5 ci-out/test.log
+
+      - name: Publish the reports
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh trial-${{ matrix.area }} ${{ job.status }}
