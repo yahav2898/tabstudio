@@ -1,0 +1,38 @@
+BookStack at 6265d5667dd6904b7aa0d05a8c60795cf104011b
+.env: APP_KEY, APP_ENV, APP_DEBUG, DB_CONNECTION, DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD
+Toolchain projects:
+  php: /home/runner/work/_temp/real-repos/BookStack/composer.json
+  node: /home/runner/work/_temp/real-repos/BookStack/package.json
+Startup project: php /home/runner/work/_temp/real-repos/BookStack/composer.json
+Set up in 18.2 s
+Ran in 0.3 s
+Project setup:
+
+Output:
+Running artisan serve with PHP 8.5.12
+> php artisan migrate --force --no-interaction
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for db failed: Temporary failure in name resolution (Connection: mysql, Host: db, Port: 3306, Database: bookstack-dev, SQL: select exists (select 1 from information_schema.tables where table_schema = schema() and table_name = 'migrations' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED')) as `exists`)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:838
+    834▕             $exceptionType = $this->isUniqueConstraintError($e)
+    835▕                 ? UniqueConstraintViolationException::class
+    836▕                 : QueryException::class;
+    837▕ 
+  ➜ 838▕             throw new $exceptionType(
+    839▕                 $this->getNameWithReadWriteType(),
+    840▕                 $query,
+    841▕                 $this->prepareBindings($bindings),
+    842▕                 $e,
+
+      +41 vendor frames 
+
+  42  artisan:35
+      Illuminate\Foundation\Console\Kernel::handle()
+
+BookStack's migrations could not be applied. Start the database its .env names in View > Services, or set DB_CONNECTION=sqlite in .env.
+
+The program 'artisan serve' has exited with code 1 (0x1).
+
