@@ -1,0 +1,365 @@
+spectre-console-Spectre-Console-slnx at e8045f7c53c3c217a7f93f362f5256f1fadc0020, opening /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.slnx
+Opened in 0.3 s: Spectre.Console, solution /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.slnx
+  project Spectre.Console.ImageSharp [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Extensions/Spectre.Console.ImageSharp/Spectre.Console.ImageSharp.csproj
+  project Spectre.Console.Json [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Extensions/Spectre.Console.Json/Spectre.Console.Json.csproj
+  project Benchmarks [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Benchmarks/Benchmarks.csproj
+  project Spectre.Console.Ansi.Tests [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi.Tests/Spectre.Console.Ansi.Tests.csproj
+  project Spectre.Console.Ansi [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Spectre.Console.Ansi.csproj
+  project Spectre.Console.SourceGenerator [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.csproj
+  project Spectre.Console.Testing [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Testing/Spectre.Console.Testing.csproj
+  project Spectre.Console.Tests [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Tests/Spectre.Console.Tests.csproj
+  project Spectre.Console [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Spectre.Console.csproj
+Compatibility Doctor:
+  Spectre.Console.ImageSharp: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Spectre.Console.Json: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Benchmarks: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  Spectre.Console.Ansi.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Spectre.Console.Ansi: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Spectre.Console.SourceGenerator: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Spectre.Console.Testing: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Spectre.Console.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Spectre.Console: Library via Built with its users - A library is compiled together with the projects that reference it.
+F5 startup project: Benchmarks /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Benchmarks/Benchmarks.csproj
+Error List after analysis: 151 errors, 916 warnings
+  83 x CS0433
+      [Spectre.Console.ImageSharp] CanvasImage.cs(133,43): error CS0433: The type 'Color' exists in both 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30' and 'Spectre.Console, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'
+      [Spectre.Console.Json] JsonText.cs(92,46): error CS0433: The type 'Color' exists in both 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30' and 'Spectre.Console, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'
+      [Spectre.Console.Json] JsonText.cs(93,50): error CS0433: The type 'Color' exists in both 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30' and 'Spectre.Console, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'
+      [Spectre.Console.Json] JsonText.cs(94,46): error CS0433: The type 'Color' exists in both 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30' and 'Spectre.Console, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'
+      [Spectre.Console.Json] JsonText.cs(95,44): error CS0433: The type 'Color' exists in both 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30' and 'Spectre.Console, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'
+      [Spectre.Console.Json] JsonText.cs(96,44): error CS0433: The type 'Color' exists in both 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30' and 'Spectre.Console, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'
+      [Spectre.Console.Json] JsonText.cs(97,46): error CS0433: The type 'Color' exists in both 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30' and 'Spectre.Console, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'
+      [Spectre.Console.Json] JsonText.cs(98,46): error CS0433: The type 'Color' exists in both 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30' and 'Spectre.Console, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'
+      [Spectre.Console.Json] JsonText.cs(99,48): error CS0433: The type 'Color' exists in both 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30' and 'Spectre.Console, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'
+      [Spectre.Console.Json] JsonText.cs(100,42): error CS0433: The type 'Color' exists in both 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30' and 'Spectre.Console, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'
+  25 x CS0029
+      [Spectre.Console] AnsiConsole.State.cs(16,16): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Color.cs(6)]' to 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs(17)]'
+      [Spectre.Console] AnsiConsole.State.cs(25,16): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Color.cs(6)]' to 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs(17)]'
+      [Spectre.Console] HtmlEncoder.cs(80,27): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs(17)]' to 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Color.cs(6)]'
+      [Spectre.Console] ElapsedTimeColumn.cs(14,40): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color' to 'Spectre.Console.Style'
+      [Spectre.Console] PercentageColumn.cs(16,49): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color' to 'Spectre.Console.Style'
+      [Spectre.Console] ProgressBarColumn.cs(16,49): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color' to 'Spectre.Console.Style'
+      [Spectre.Console] ProgressBarColumn.cs(21,48): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color' to 'Spectre.Console.Style'
+      [Spectre.Console] ProgressBarColumn.cs(26,49): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color' to 'Spectre.Console.Style'
+      [Spectre.Console] RemainingTimeColumn.cs(15,40): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color' to 'Spectre.Console.Style'
+      [Spectre.Console] SpinnerColumn.cs(77,41): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color' to 'Spectre.Console.Style?'
+  18 x CS1503
+      [Spectre.Console] AnsiConsole.State.cs(17,55): error CS1503: Argument 2: cannot convert from 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs(17)]' to 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Color.cs(6)]'
+      [Spectre.Console] AnsiConsole.State.cs(26,55): error CS1503: Argument 2: cannot convert from 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs(17)]' to 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Color.cs(6)]'
+      [Spectre.Console] IHasBorder.cs(84,71): error CS1503: Argument 2: cannot convert from 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs(17)]' to 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Color.cs(6)]'
+      [Spectre.Console] SelectionPrompt.cs(207,109): error CS1503: Argument 2: cannot convert from 'Spectre.Console.Color' to 'Spectre.Console.Color?'
+      [Spectre.Console] Canvas.cs(146,41): error CS1503: Argument 1: cannot convert from 'Spectre.Console.Color?' to 'Spectre.Console.Color?'
+      [Spectre.Console] Canvas.cs(147,41): error CS1503: Argument 2: cannot convert from 'Spectre.Console.Color?' to 'Spectre.Console.Color?'
+      [Spectre.Console] Canvas.cs(154,41): error CS1503: Argument 1: cannot convert from 'Spectre.Console.Color?' to 'Spectre.Console.Color?'
+      [Spectre.Console] Canvas.cs(161,41): error CS1503: Argument 1: cannot convert from 'Spectre.Console.Color?' to 'Spectre.Console.Color?'
+      [Spectre.Console] Canvas.cs(208,87): error CS1503: Argument 1: cannot convert from 'Spectre.Console.Color?' to 'Spectre.Console.Color?'
+      [Spectre.Console] BreakdownBar.cs(31,78): error CS1503: Argument 1: cannot convert from 'Spectre.Console.Color' to 'Spectre.Console.Color?'
+  12 x CS0117
+      [Spectre.Console] LegacyConsoleBackend.cs(60,32): error CS0117: 'Color' does not contain a definition for 'ToConsoleColor'
+      [Spectre.Console] LegacyConsoleBackend.cs(66,32): error CS0117: 'Color' does not contain a definition for 'ToConsoleColor'
+      [Spectre.Console] HtmlEncoder.cs(78,38): error CS0117: 'Color' does not contain a definition for 'Default'
+      [Spectre.Console] HtmlEncoder.cs(86,38): error CS0117: 'Color' does not contain a definition for 'Default'
+      [Spectre.Console] HtmlEncoder.cs(91,38): error CS0117: 'Color' does not contain a definition for 'Default'
+      [Spectre.Console] SelectionPrompt.cs(207,88): error CS0117: 'Color' does not contain a definition for 'Default'
+      [Spectre.Console] BarChart.cs(92,81): error CS0117: 'Color' does not contain a definition for 'Default'
+      [Spectre.Console] BarChart.cs(93,80): error CS0117: 'Color' does not contain a definition for 'Default'
+      [Spectre.Console] ExceptionStyle.cs(11,69): error CS0117: 'Color' does not contain a definition for 'Default'
+      [Spectre.Console] ExceptionStyle.cs(41,69): error CS0117: 'Color' does not contain a definition for 'Default'
+  6 x CS0103
+      [Spectre.Console] AnsiConsoleExtensions.Input.cs(79,29): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+      [Spectre.Console] AnsiConsoleExtensions.Input.cs(83,34): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+      [Spectre.Console] Color.Generated.g.cs(22,13): error CS0103: The name 'Number' does not exist in the current context
+      [Spectre.Console] Color.Generated.g.cs(23,13): error CS0103: The name 'IsDefault' does not exist in the current context
+      [Spectre.Console] Cell.cs(29,16): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+      [Spectre.Console] Cell.cs(60,28): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+  3 x CS0019
+      [Spectre.Console] MultiSelectionPrompt.cs(264,30): error CS0019: Operator '??' cannot be applied to operands of type 'Style?' and 'Color'
+      [Spectre.Console] SelectionPrompt.cs(205,29): error CS0019: Operator '??' cannot be applied to operands of type 'Style?' and 'Color'
+      [Spectre.Console] SelectionPrompt.cs(206,30): error CS0019: Operator '??' cannot be applied to operands of type 'Style?' and 'Color'
+  2 x CS1061
+      [Spectre.Console] BreakdownTags.cs(49,24): error CS1061: 'Color' does not contain a definition for 'ToMarkup' and no accessible extension method 'ToMarkup' accepting a first argument of type 'Color' could be found (are you missing a using directive or an assembly reference?)
+      [Spectre.Console] BreakdownTags.cs(61,28): error CS1061: 'Color' does not contain a definition for 'ToMarkup' and no accessible extension method 'ToMarkup' accepting a first argument of type 'Color' could be found (are you missing a using directive or an assembly reference?)
+  1 x CS7036
+      [Spectre.Console] Color.Generated.g.cs(20,15): error CS7036: There is no argument given that corresponds to the required parameter 'blue' of 'Color.Color(byte, byte, byte, byte, bool)'
+  1 x CS0246
+      [Spectre.Console] Usings.cs(18,14): error CS0246: The type or namespace name 'Wcwidth' could not be found (are you missing a using directive or an assembly reference?)
+Error List after the build: 68 errors, 916 warnings
+  25 x CS0029
+      [Spectre.Console] AnsiConsole.State.cs(16,16): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Color.cs(6)]' to 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs(17)]'
+      [Spectre.Console] AnsiConsole.State.cs(25,16): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Color.cs(6)]' to 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs(17)]'
+      [Spectre.Console] HtmlEncoder.cs(80,27): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs(17)]' to 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Color.cs(6)]'
+      [Spectre.Console] ElapsedTimeColumn.cs(14,40): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color' to 'Spectre.Console.Style'
+      [Spectre.Console] PercentageColumn.cs(16,49): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color' to 'Spectre.Console.Style'
+      [Spectre.Console] ProgressBarColumn.cs(16,49): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color' to 'Spectre.Console.Style'
+      [Spectre.Console] ProgressBarColumn.cs(21,48): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color' to 'Spectre.Console.Style'
+      [Spectre.Console] ProgressBarColumn.cs(26,49): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color' to 'Spectre.Console.Style'
+      [Spectre.Console] RemainingTimeColumn.cs(15,40): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color' to 'Spectre.Console.Style'
+      [Spectre.Console] SpinnerColumn.cs(77,41): error CS0029: Cannot implicitly convert type 'Spectre.Console.Color' to 'Spectre.Console.Style?'
+  18 x CS1503
+      [Spectre.Console] AnsiConsole.State.cs(17,55): error CS1503: Argument 2: cannot convert from 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs(17)]' to 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Color.cs(6)]'
+      [Spectre.Console] AnsiConsole.State.cs(26,55): error CS1503: Argument 2: cannot convert from 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs(17)]' to 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Color.cs(6)]'
+      [Spectre.Console] IHasBorder.cs(84,71): error CS1503: Argument 2: cannot convert from 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs(17)]' to 'Spectre.Console.Color [/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Color.cs(6)]'
+      [Spectre.Console] SelectionPrompt.cs(207,109): error CS1503: Argument 2: cannot convert from 'Spectre.Console.Color' to 'Spectre.Console.Color?'
+      [Spectre.Console] Canvas.cs(146,41): error CS1503: Argument 1: cannot convert from 'Spectre.Console.Color?' to 'Spectre.Console.Color?'
+      [Spectre.Console] Canvas.cs(147,41): error CS1503: Argument 2: cannot convert from 'Spectre.Console.Color?' to 'Spectre.Console.Color?'
+      [Spectre.Console] Canvas.cs(154,41): error CS1503: Argument 1: cannot convert from 'Spectre.Console.Color?' to 'Spectre.Console.Color?'
+      [Spectre.Console] Canvas.cs(161,41): error CS1503: Argument 1: cannot convert from 'Spectre.Console.Color?' to 'Spectre.Console.Color?'
+      [Spectre.Console] Canvas.cs(208,87): error CS1503: Argument 1: cannot convert from 'Spectre.Console.Color?' to 'Spectre.Console.Color?'
+      [Spectre.Console] BreakdownBar.cs(31,78): error CS1503: Argument 1: cannot convert from 'Spectre.Console.Color' to 'Spectre.Console.Color?'
+  12 x CS0117
+      [Spectre.Console] LegacyConsoleBackend.cs(60,32): error CS0117: 'Color' does not contain a definition for 'ToConsoleColor'
+      [Spectre.Console] LegacyConsoleBackend.cs(66,32): error CS0117: 'Color' does not contain a definition for 'ToConsoleColor'
+      [Spectre.Console] HtmlEncoder.cs(78,38): error CS0117: 'Color' does not contain a definition for 'Default'
+      [Spectre.Console] HtmlEncoder.cs(86,38): error CS0117: 'Color' does not contain a definition for 'Default'
+      [Spectre.Console] HtmlEncoder.cs(91,38): error CS0117: 'Color' does not contain a definition for 'Default'
+      [Spectre.Console] SelectionPrompt.cs(207,88): error CS0117: 'Color' does not contain a definition for 'Default'
+      [Spectre.Console] BarChart.cs(92,81): error CS0117: 'Color' does not contain a definition for 'Default'
+      [Spectre.Console] BarChart.cs(93,80): error CS0117: 'Color' does not contain a definition for 'Default'
+      [Spectre.Console] ExceptionStyle.cs(11,69): error CS0117: 'Color' does not contain a definition for 'Default'
+      [Spectre.Console] ExceptionStyle.cs(41,69): error CS0117: 'Color' does not contain a definition for 'Default'
+  6 x CS0103
+      [Spectre.Console] AnsiConsoleExtensions.Input.cs(79,29): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+      [Spectre.Console] AnsiConsoleExtensions.Input.cs(83,34): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+      [Spectre.Console] Color.Generated.g.cs(22,13): error CS0103: The name 'Number' does not exist in the current context
+      [Spectre.Console] Color.Generated.g.cs(23,13): error CS0103: The name 'IsDefault' does not exist in the current context
+      [Spectre.Console] Cell.cs(29,16): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+      [Spectre.Console] Cell.cs(60,28): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+  3 x CS0019
+      [Spectre.Console] MultiSelectionPrompt.cs(264,30): error CS0019: Operator '??' cannot be applied to operands of type 'Style?' and 'Color'
+      [Spectre.Console] SelectionPrompt.cs(205,29): error CS0019: Operator '??' cannot be applied to operands of type 'Style?' and 'Color'
+      [Spectre.Console] SelectionPrompt.cs(206,30): error CS0019: Operator '??' cannot be applied to operands of type 'Style?' and 'Color'
+  2 x CS1061
+      [Spectre.Console] BreakdownTags.cs(49,24): error CS1061: 'Color' does not contain a definition for 'ToMarkup' and no accessible extension method 'ToMarkup' accepting a first argument of type 'Color' could be found (are you missing a using directive or an assembly reference?)
+      [Spectre.Console] BreakdownTags.cs(61,28): error CS1061: 'Color' does not contain a definition for 'ToMarkup' and no accessible extension method 'ToMarkup' accepting a first argument of type 'Color' could be found (are you missing a using directive or an assembly reference?)
+  1 x CS7036
+      [Spectre.Console] Color.Generated.g.cs(20,15): error CS7036: There is no argument given that corresponds to the required parameter 'blue' of 'Color.Color(byte, byte, byte, byte, bool)'
+  1 x CS0246
+      [Spectre.Console] Usings.cs(18,14): error CS0246: The type or namespace name 'Wcwidth' could not be found (are you missing a using directive or an assembly reference?)
+Run: exited (1 s after F5)
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring NuGet packages 0/9 projects
+  Analyzing: Analyzing 0/9 projects
+  Analyzing: Analyzing 1/9 projects
+  Analyzing: Analyzing 2/9 projects
+  Analyzing: Analyzing 3/9 projects
+  Analyzing: Analyzing 4/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/9
+  Restoring NuGet packages: Downloading NuGet packages 2/9
+  Analyzing: Analyzing 5/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 3/9
+  Restoring NuGet packages: Downloading NuGet packages 4/9
+  Restoring NuGet packages: Downloading NuGet packages 5/9
+  Analyzing: Analyzing 6/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 6/9
+  Restoring NuGet packages: Downloading NuGet packages 7/9
+  Analyzing: Analyzing 7/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 8/9
+  Restoring NuGet packages: Downloading NuGet packages 9/9
+  Restoring NuGet packages: Restoring NuGet packages 1/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/9
+  Restoring NuGet packages: Downloading NuGet packages 2/9
+  Restoring NuGet packages: Downloading NuGet packages 3/9
+  Restoring NuGet packages: Downloading NuGet packages 4/9
+  Restoring NuGet packages: Downloading NuGet packages 5/9
+  Restoring NuGet packages: Downloading NuGet packages 6/9
+  Restoring NuGet packages: Downloading NuGet packages 7/9
+  Restoring NuGet packages: Downloading NuGet packages 8/9
+  Analyzing: Analyzing 8/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 9/9
+  Restoring NuGet packages: Restoring NuGet packages 2/9 projects
+  Analyzing: Analyzing 9/9 projects
+  Analyzing: Succeeded after 2.5 s
+  Restoring NuGet packages: Downloading NuGet packages 1/30
+  Restoring NuGet packages: Downloading NuGet packages 2/30
+  Restoring NuGet packages: Downloading NuGet packages 3/30
+  Restoring NuGet packages: Downloading NuGet packages 4/30
+  Restoring NuGet packages: Downloading NuGet packages 5/30
+  Restoring NuGet packages: Downloading NuGet packages 6/30
+  Restoring NuGet packages: Downloading NuGet packages 7/30
+  Restoring NuGet packages: Downloading NuGet packages 8/30
+  Restoring NuGet packages: Downloading NuGet packages 9/30
+  Restoring NuGet packages: Downloading NuGet packages 10/30
+  Restoring NuGet packages: Downloading NuGet packages 11/30
+  Restoring NuGet packages: Downloading NuGet packages 12/30
+  Restoring NuGet packages: Downloading NuGet packages 13/30
+  Restoring NuGet packages: Downloading NuGet packages 14/30
+  Restoring NuGet packages: Downloading NuGet packages 15/30
+  Restoring NuGet packages: Downloading NuGet packages 16/30
+  Restoring NuGet packages: Downloading NuGet packages 17/30
+  Restoring NuGet packages: Downloading NuGet packages 18/30
+  Restoring NuGet packages: Downloading NuGet packages 19/30
+  Restoring NuGet packages: Downloading NuGet packages 20/30
+  Restoring NuGet packages: Downloading NuGet packages 21/30
+  Restoring NuGet packages: Downloading NuGet packages 22/30
+  Restoring NuGet packages: Downloading NuGet packages 23/30
+  Restoring NuGet packages: Downloading NuGet packages 24/30
+  Restoring NuGet packages: Downloading NuGet packages 25/30
+  Restoring NuGet packages: Downloading NuGet packages 26/30
+  Restoring NuGet packages: Downloading NuGet packages 27/30
+  Restoring NuGet packages: Downloading NuGet packages 28/30
+  Restoring NuGet packages: Downloading NuGet packages 29/30
+  Restoring NuGet packages: Downloading NuGet packages 30/30
+  Restoring NuGet packages: Restoring NuGet packages 3/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/23
+  Restoring NuGet packages: Downloading NuGet packages 2/23
+  Restoring NuGet packages: Downloading NuGet packages 3/23
+  Restoring NuGet packages: Downloading NuGet packages 4/23
+  Restoring NuGet packages: Downloading NuGet packages 5/23
+  Restoring NuGet packages: Downloading NuGet packages 6/23
+  Restoring NuGet packages: Downloading NuGet packages 7/23
+  Restoring NuGet packages: Downloading NuGet packages 8/23
+  Restoring NuGet packages: Downloading NuGet packages 9/23
+  Restoring NuGet packages: Downloading NuGet packages 10/23
+  Restoring NuGet packages: Downloading NuGet packages 11/23
+  Restoring NuGet packages: Downloading NuGet packages 12/23
+  Restoring NuGet packages: Downloading NuGet packages 13/23
+  Restoring NuGet packages: Downloading NuGet packages 14/23
+  Restoring NuGet packages: Downloading NuGet packages 15/23
+  Restoring NuGet packages: Downloading NuGet packages 16/23
+  Restoring NuGet packages: Downloading NuGet packages 17/23
+  Restoring NuGet packages: Downloading NuGet packages 18/23
+  Restoring NuGet packages: Downloading NuGet packages 19/23
+  Restoring NuGet packages: Downloading NuGet packages 20/23
+  Restoring NuGet packages: Downloading NuGet packages 21/23
+  Restoring NuGet packages: Downloading NuGet packages 22/23
+  Restoring NuGet packages: Downloading NuGet packages 23/23
+  Restoring NuGet packages: Restoring NuGet packages 4/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/8
+  Restoring NuGet packages: Downloading NuGet packages 2/8
+  Restoring NuGet packages: Downloading NuGet packages 4/8
+  Restoring NuGet packages: Downloading NuGet packages 3/8
+  Restoring NuGet packages: Downloading NuGet packages 5/8
+  Restoring NuGet packages: Downloading NuGet packages 6/8
+  Restoring NuGet packages: Downloading NuGet packages 7/8
+  Restoring NuGet packages: Downloading NuGet packages 8/8
+  Restoring NuGet packages: Restoring NuGet packages 5/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/11
+  Restoring NuGet packages: Downloading NuGet packages 2/11
+  Restoring NuGet packages: Downloading NuGet packages 3/11
+  Restoring NuGet packages: Downloading NuGet packages 4/11
+  Restoring NuGet packages: Downloading NuGet packages 5/11
+  Restoring NuGet packages: Downloading NuGet packages 6/11
+  Restoring NuGet packages: Downloading NuGet packages 7/11
+  Restoring NuGet packages: Downloading NuGet packages 8/11
+  Restoring NuGet packages: Downloading NuGet packages 9/11
+  Restoring NuGet packages: Downloading NuGet packages 10/11
+  Restoring NuGet packages: Downloading NuGet packages 11/11
+  Restoring NuGet packages: Restoring NuGet packages 6/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/9
+  Restoring NuGet packages: Downloading NuGet packages 2/9
+  Restoring NuGet packages: Downloading NuGet packages 3/9
+  Restoring NuGet packages: Downloading NuGet packages 4/9
+  Restoring NuGet packages: Downloading NuGet packages 5/9
+  Restoring NuGet packages: Downloading NuGet packages 6/9
+  Restoring NuGet packages: Downloading NuGet packages 7/9
+  Restoring NuGet packages: Downloading NuGet packages 8/9
+  Restoring NuGet packages: Downloading NuGet packages 9/9
+  Restoring NuGet packages: Restoring NuGet packages 7/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/31
+  Restoring NuGet packages: Downloading NuGet packages 2/31
+  Restoring NuGet packages: Downloading NuGet packages 3/31
+  Restoring NuGet packages: Downloading NuGet packages 4/31
+  Restoring NuGet packages: Downloading NuGet packages 5/31
+  Restoring NuGet packages: Downloading NuGet packages 6/31
+  Restoring NuGet packages: Downloading NuGet packages 7/31
+  Restoring NuGet packages: Downloading NuGet packages 8/31
+  Restoring NuGet packages: Downloading NuGet packages 9/31
+  Restoring NuGet packages: Downloading NuGet packages 10/31
+  Restoring NuGet packages: Downloading NuGet packages 11/31
+  Restoring NuGet packages: Downloading NuGet packages 12/31
+  Restoring NuGet packages: Downloading NuGet packages 13/31
+  Restoring NuGet packages: Downloading NuGet packages 14/31
+  Restoring NuGet packages: Downloading NuGet packages 15/31
+  Restoring NuGet packages: Downloading NuGet packages 16/31
+  Restoring NuGet packages: Downloading NuGet packages 17/31
+  Restoring NuGet packages: Downloading NuGet packages 18/31
+  Restoring NuGet packages: Downloading NuGet packages 19/31
+  Restoring NuGet packages: Downloading NuGet packages 20/31
+  Restoring NuGet packages: Downloading NuGet packages 21/31
+  Restoring NuGet packages: Downloading NuGet packages 22/31
+  Restoring NuGet packages: Downloading NuGet packages 23/31
+  Restoring NuGet packages: Downloading NuGet packages 24/31
+  Restoring NuGet packages: Downloading NuGet packages 25/31
+  Restoring NuGet packages: Downloading NuGet packages 26/31
+  Restoring NuGet packages: Downloading NuGet packages 27/31
+  Restoring NuGet packages: Downloading NuGet packages 28/31
+  Restoring NuGet packages: Downloading NuGet packages 29/31
+  Restoring NuGet packages: Downloading NuGet packages 30/31
+  Restoring NuGet packages: Downloading NuGet packages 31/31
+  Restoring NuGet packages: Restoring NuGet packages 8/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/10
+  Restoring NuGet packages: Downloading NuGet packages 3/10
+  Restoring NuGet packages: Downloading NuGet packages 2/10
+  Restoring NuGet packages: Downloading NuGet packages 4/10
+  Restoring NuGet packages: Downloading NuGet packages 5/10
+  Restoring NuGet packages: Downloading NuGet packages 6/10
+  Restoring NuGet packages: Downloading NuGet packages 7/10
+  Restoring NuGet packages: Downloading NuGet packages 8/10
+  Restoring NuGet packages: Downloading NuGet packages 9/10
+  Restoring NuGet packages: Downloading NuGet packages 10/10
+  Restoring NuGet packages: Succeeded after 6.4 s
+  Analyzing: Analyzing 0/9 projects
+  Analyzing: Analyzing 1/9 projects
+  Analyzing: Analyzing 2/9 projects
+  Analyzing: Analyzing 3/9 projects
+  Analyzing: Analyzing 4/9 projects
+  Analyzing: Analyzing 5/9 projects
+  Analyzing: Analyzing 6/9 projects
+  Analyzing: Analyzing 7/9 projects
+  Analyzing: Analyzing 8/9 projects
+  Analyzing: Analyzing 9/9 projects
+  Analyzing: Succeeded after 1.2 s
+  Building: Building
+  Building: Building 0/9 projects
+  Building: Building 1/9 projects
+  Building: Building 2/9 projects
+  Building: Building 3/9 projects
+  Building: Building 4/9 projects
+  Building: Building 5/9 projects
+  Building: Building 6/9 projects
+  Building: Building 7/9 projects
+  Building: Building 8/9 projects
+  Building: Failed after 4.9 s
+  Building: Building
+  Building: Building Benchmarks
+  Building: Failed after 0.6 s
+Project setup:
+
+Output:
+type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>BreakdownTags.cs(11,12): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>BreakdownTags.cs(11,45): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>IBarChartItem.cs(21,5): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>IBreakdownChartItem.cs(21,5): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ExceptionStyle.cs(11,52): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ExceptionStyle.cs(11,63): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ExceptionStyle.cs(16,44): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ExceptionStyle.cs(21,41): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ExceptionStyle.cs(26,48): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ExceptionStyle.cs(31,48): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ExceptionStyle.cs(36,46): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ExceptionStyle.cs(41,49): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ExceptionStyle.cs(41,63): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ExceptionStyle.cs(46,45): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ExceptionStyle.cs(51,41): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ExceptionStyle.cs(56,48): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>FigletText.cs(16,12): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>FigletText.cs(57,40): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>FigletText.cs(460,58): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>FigletText.cs(464,31): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ProgressBar.cs(20,49): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ProgressBar.cs(21,48): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ProgressBar.cs(22,49): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ProgressBar.cs(25,78): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>ProgressBar.cs(25,109): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>TableRenderer.cs(5,58): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>TableRenderer.cs(6,58): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>TextPath.cs(217,62): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>TextPath.cs(242,57): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>TextPath.cs(267,57): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+1>TextPath.cs(292,57): warning CS0436: The type 'Color' in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs' conflicts with the imported type 'Color' in 'Spectre.Console.Ansi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=170fe27f8af98a30'. Using the type defined in '/home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Generated/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.Colors.ColorGenerator/Color.Generated.g.cs'.
+========== Build: 0 succeeded, 1 failed ==========
+
