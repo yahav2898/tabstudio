@@ -10,12 +10,21 @@ namespace TabStudio.Forms.Design.Code;
 /// </summary>
 internal static class VisualBasicCodeTokens
 {
-    /// <summary>Whether a name can be a component's or a method's: a Visual Basic identifier that is not a reserved keyword.</summary>
+    /// <summary>
+    /// Whether a name can be a component's or a method's: a Visual Basic identifier of letters, digits and underscores
+    /// that is not a reserved keyword, which Visual Basic reads as one identifier token.
+    /// </summary>
     /// <param name="name">The name.</param>
     public static bool IsValidName(string name)
     {
         ArgumentNullException.ThrowIfNull(name);
-        return SyntaxFacts.IsValidIdentifier(name) && SyntaxFactory.ParseToken(name).IsKind(SyntaxKind.IdentifierToken);
+        if (name.Length == 0 || char.IsDigit(name[0]) || !name.All(c => char.IsLetterOrDigit(c) || c == '_'))
+        {
+            return false;
+        }
+
+        var token = SyntaxFactory.ParseToken(name);
+        return token.IsKind(SyntaxKind.IdentifierToken) && !token.ContainsDiagnostics && token.ToString().Length == name.Length;
     }
 
     /// <summary>Whether code names a component, as <c>Button1</c> or <c>Me.Button1</c>, not as a member of something else.</summary>

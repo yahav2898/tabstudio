@@ -1,4 +1,5 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using TabStudio.Debugging.Symbols;
 using VisualBasicFacts = Microsoft.CodeAnalysis.VisualBasic.SyntaxFacts;
 
@@ -10,9 +11,10 @@ namespace TabStudio.Debugging.Instrumentation.VisualBasic;
 /// </summary>
 /// <remarks>
 /// Visual Basic never refuses to read a local before it is assigned (it is <c>Nothing</c> or zero), so unlike C# there
-/// is no definite assignment check: a <c>Dim x As Integer</c> shows <c>0</c>. <c>ByRef</c> parameters are only read in
-/// the function that declares them, because lambdas cannot capture them, and the hidden local that holds a
-/// <c>Function</c>'s return value is never shown.
+/// is no definite assignment check: a <c>Dim x As Integer</c> shows <c>0</c>. A local is not read inside the statement
+/// that declares it, such as a lambda in its own initializer, where an inferred type would become circular. <c>ByRef</c>
+/// parameters are only read in the function that declares them, because lambdas cannot capture them, and the hidden
+/// local that holds a <c>Function</c>'s return value is never shown.
 /// </remarks>
 internal static class VisualBasicLocalsCollector
 {
@@ -47,7 +49,7 @@ internal static class VisualBasicLocalsCollector
         foreach (var symbol in candidates)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            if (TryGetReadableType(symbol, position, context, out var type) &&
+            if (TryGetReadableType(symbol, position, context, cancellationToken, out var type) &&
                 !names.Contains(symbol.Name) &&
                 IsVisibleByName(model, symbol, position))
             {
@@ -89,7 +91,7 @@ internal static class VisualBasicLocalsCollector
         return (slots, values);
     }
 
-    private static bool TryGetReadableType(ISymbol symbol, int position, FunctionContext context, out ITypeSymbol type)
+    private static bool TryGetReadableType(ISymbol symbol, int position, FunctionContext context, CancellationToken cancellationToken, out ITypeSymbol type)
     {
         RefKind refKind;
         switch (symbol)
@@ -97,7 +99,9 @@ internal static class VisualBasicLocalsCollector
             case ILocalSymbol { IsFunctionValue: false } local:
                 type = local.Type;
                 refKind = local.RefKind;
-                if (local.Locations.FirstOrDefault() is not { IsInSource: true } location || location.SourceSpan.Start >= position)
+                if (local.Locations.FirstOrDefault() is not { IsInSource: true } location ||
+                    location.SourceSpan.Start >= position ||
+                    IsInsideDeclaration(local, position, cancellationToken))
                 {
                     return false;
                 }
@@ -116,6 +120,12 @@ internal static class VisualBasicLocalsCollector
             LocalsCollector.IsBoxable(type) &&
             context.CanRead(symbol.ContainingSymbol, byReference: refKind != RefKind.None);
     }
+
+    /// <summary>Whether a position is inside the statement that declares a local, such as its initializer.</summary>
+    private static bool IsInsideDeclaration(ILocalSymbol local, int position, CancellationToken cancellationToken) =>
+        local.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax(cancellationToken) is { } declaration &&
+        declaration.AncestorsAndSelf().OfType<StatementSyntax>().FirstOrDefault() is { } statement &&
+        statement.Span.Contains(position);
 
     private static bool IsVisibleByName(SemanticModel model, ISymbol symbol, int position)
     {

@@ -401,11 +401,12 @@ public class Network
         {
             return new Uri(address);
         }
-        catch (UriFormatException)
+        catch (UriFormatException ex)
         {
             throw new ArgumentException(
                 $"'{address}' is not a valid remote file address. A valid address should include a protocol, a path and a file name.",
-                nameof(address));
+                nameof(address),
+                ex);
         }
     }
 

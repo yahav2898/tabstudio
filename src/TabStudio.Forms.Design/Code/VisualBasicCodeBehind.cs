@@ -88,8 +88,8 @@ internal static class VisualBasicCodeBehind
         if (Methods(root, className).FirstOrDefault(m => Same(m.SubOrFunctionStatement.Identifier.ValueText, handlerName)) is { } existing)
         {
             var statement = existing.SubOrFunctionStatement;
-            var caret = existing.Statements.Count > 0 ? existing.Statements[0].SpanStart : TextLines.LineEnd(codeText, statement.Span.End);
-            if (source is null || handles is null || Handles(statement, source, eventName))
+            var caret = CaretIn(codeText, existing);
+            if (source is null || Handles(statement, source, eventName))
             {
                 return (codeText, caret);
             }
@@ -208,6 +208,32 @@ internal static class VisualBasicCodeBehind
     }
 
     private static SyntaxNode Parse(string text) => VisualBasicSyntaxTree.ParseText(text).GetRoot();
+
+    /// <summary>
+    /// Where the caret goes in a handler: at its first statement, or on the blank line of an empty one after its
+    /// indentation, where a new handler puts it.
+    /// </summary>
+    private static int CaretIn(string text, MethodBlockSyntax method)
+    {
+        if (method.Statements.Count > 0)
+        {
+            return method.Statements[0].SpanStart;
+        }
+
+        var lineStart = TextLines.LineEnd(text, method.SubOrFunctionStatement.Span.End);
+        if (lineStart >= method.EndSubOrFunctionStatement.SpanStart || !TextLines.IsBlankLine(text, lineStart))
+        {
+            return lineStart;
+        }
+
+        var position = lineStart;
+        while (position < text.Length && text[position] is ' ' or '\t')
+        {
+            position++;
+        }
+
+        return position;
+    }
 
     /// <summary>Takes the items a predicate picks off the class's Handles clauses, one at a time, each from the text the last one left.</summary>
     private static string RemoveHandles(string codeText, string className, Func<HandlesClauseItemSyntax, bool> predicate)

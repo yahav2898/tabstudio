@@ -135,14 +135,14 @@ internal sealed class DesignerFile
         }
 
         var ns = string.Join('.', type.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().Reverse().Select(n => n.Name.ToString()));
-        return new DesignerFile(text, type.Identifier.ValueText, ns, document, method.Body!.Span, componentFields, FieldsInsertionPoint(text, type, method))
+        return new DesignerFile(text, type.Identifier.ValueText, ns, document, method.Body!.Span, componentFields, FindFieldsInsertionPoint(text, type, method))
         {
             MemberIndent = TextLines.Indentation(method.GetLeadingTrivia().ToString()),
         };
     }
 
     /// <summary>Where new fields go: after the <c>#endregion</c> that follows InitializeComponent, or before the class's closing brace.</summary>
-    private static int FieldsInsertionPoint(string text, ClassDeclarationSyntax type, MethodDeclarationSyntax method)
+    private static int FindFieldsInsertionPoint(string text, ClassDeclarationSyntax type, MethodDeclarationSyntax method)
     {
         var region = type.DescendantTrivia().FirstOrDefault(t => t.IsKind(SyntaxKind.EndRegionDirectiveTrivia) && t.SpanStart > method.Span.End);
         if (region != default)
