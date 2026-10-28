@@ -171,6 +171,15 @@ public sealed partial class WorkspaceViewModel
                 if (State == IdeState.Failed) break;
             }
         }
+
+        // A Rust, Go, Java, CMake or Make startup project is compiled as F5 would compile it, without running it.
+        if (State != IdeState.Failed && StartupProject is { } chosen && FindToolchainProject(chosen) is { } startup
+            && !TabStudio.Toolchains.Microchip.MicrochipInstallation.IsCompiler(startup.Toolchain.Id)
+            && startup.Toolchain.Id is not ("android" or "flutter"))
+        {
+            var project = startup.Project;
+            await RunToolchainPlanAsync(project, () => PlanToolchainProject(project, ActiveDocument?.FilePath), buildOnly: true);
+        }
     }
 
     /// <summary>

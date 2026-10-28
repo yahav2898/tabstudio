@@ -527,7 +527,11 @@ public sealed partial class WorkspaceViewModel
         return name.StartsWith('.') || name.EndsWith(".config", StringComparison.OrdinalIgnoreCase);
     }
 
-    private async Task RunToolchainPlanAsync(ToolchainProject project, Func<RunPlan?> planner)
+    /// <summary>
+    /// F5 and Ctrl+F5 for a toolchain project: builds it when its plan has a build, then runs it. With
+    /// <paramref name="buildOnly"/>, Ctrl+Shift+B: builds it the same way and stops there.
+    /// </summary>
+    private async Task RunToolchainPlanAsync(ToolchainProject project, Func<RunPlan?> planner, bool buildOnly = false)
     {
         if (BlockLocalToolchainActionForRemote()) return;
         if (!await SaveAllCoreAsync())
@@ -546,7 +550,17 @@ public sealed partial class WorkspaceViewModel
         Output.Clear();
         SelectedPanel = BottomPanel.Output;
         IsBottomPanelVisible = true;
-        if (planner() is not { } plan)
+        var planned = planner();
+        if (buildOnly && planned?.Build is null)
+        {
+            // Python, Node.js and scripts run from their source: there is nothing to compile.
+            Output.WriteLine($"{project.Name} needs no build: {toolchain.Name} runs it from its source. Press Ctrl+F5 to run it.", OutputKind.Info);
+            State = IdeState.Ready;
+            StatusText = "Nothing to build";
+            return;
+        }
+
+        if (planned is not { } plan)
         {
             var extensions = string.Join(" or ", toolchain.FileExtensions.Take(2));
             Output.WriteLine($"{project.Name} has no entry point to run. Open a {extensions} file and press F5 to run it, or add {(toolchain.Run?.Entries is [var first, ..] ? first.File : "one")}.", OutputKind.Failure);
@@ -559,7 +573,7 @@ public sealed partial class WorkspaceViewModel
         State = IdeState.Running;
         StatusText = $"Running {plan.ProgramName}";
         var status = _toolchains.Manager.Status(toolchain.Id);
-        Output.WriteLine($"Running {plan.ProgramName} with {toolchain.Name}{(status.Version is { } version ? " " + version : string.Empty)}", OutputKind.Info);
+        Output.WriteLine($"{(buildOnly ? "Building" : "Running")} {plan.ProgramName} with {toolchain.Name}{(status.Version is { } version ? " " + version : string.Empty)}", OutputKind.Info);
         _run = new CancellationTokenSource();
         var listening = BeginServerRun();
         OutputProcessResult result;
@@ -582,6 +596,12 @@ public sealed partial class WorkspaceViewModel
 
                 plan = compiled.Plan;
                 var built = compiled.Result;
+                if (buildOnly)
+                {
+                    ReportToolchainBuild(project, plan.ProgramName, built);
+                    return;
+                }
+
                 if (!built.Succeeded)
                 {
                     result = built;
@@ -609,6 +629,34 @@ public sealed partial class WorkspaceViewModel
         }
 
         ReportToolchainRun(project, plan.ProgramName, result);
+    }
+
+    /// <summary>Ends Ctrl+Shift+B on a toolchain project: the build's errors in the Error List, and whether it succeeded.</summary>
+    /// <param name="project">The project that was built.</param>
+    /// <param name="name">The program's name (<see cref="RunPlan.ProgramName"/>).</param>
+    /// <param name="result">How the build ended.</param>
+    private void ReportToolchainBuild(ToolchainProject project, string name, OutputProcessResult result)
+    {
+        ErrorList.SetRunErrors(project.Directory, [.. Matcher(project.Toolchain).FindErrors(result.Lines, IsWorkspaceFile).Select(error => ToDiagnostic(project, error))]);
+        Output.WriteLine();
+        if (result.Exit is { WasStopped: true })
+        {
+            Output.WriteLine($"The build of '{name}' was stopped.", OutputKind.Info);
+            State = IdeState.Ready;
+            StatusText = "Stopped";
+        }
+        else if (result.Succeeded)
+        {
+            Output.WriteLine($"Build succeeded: '{name}' is ready to run.", OutputKind.Info);
+            State = IdeState.Ready;
+            StatusText = "Build succeeded";
+        }
+        else
+        {
+            Output.WriteLine($"The build of '{name}' failed; its errors are in the Error List.", OutputKind.Failure);
+            State = IdeState.Failed;
+            StatusText = "Build failed";
+        }
     }
 
     /// <summary>Ends a run: the exit line, as Visual Studio writes it, the Error List and the status bar.</summary>
