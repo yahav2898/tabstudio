@@ -2,6 +2,8 @@ name: Containers probe
 on:
   push:
     branches: ['probe/containers']
+permissions:
+  contents: write
 jobs:
   probe:
     strategy: { fail-fast: false, matrix: { runner: [ubuntu-24.04-arm, ubuntu-latest] } }
@@ -9,5 +11,10 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - run: bash build/ci/containers-proot.sh "$RUNNER_TEMP/proot"
-      - run: bash build/probe/run.sh 2>&1
+      - run: mkdir -p out && bash build/ci/containers-proot.sh "$RUNNER_TEMP/proot" > out/proot.log 2>&1; grep '^TABSTUDIO' out/proot.log >> "$GITHUB_ENV"
+      - run: bash build/probe/run.sh > out/run.log 2>&1; true
+      - if: always()
+        run: |
+          cp -r out "$RUNNER_TEMP/o" && cd "$RUNNER_TEMP/o" && git init -q && git add -A
+          git -c user.name=ci -c user.email=ci@example.com commit -qm "probe $GITHUB_SHA"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/probe-results/containers-${{ runner.arch }}
