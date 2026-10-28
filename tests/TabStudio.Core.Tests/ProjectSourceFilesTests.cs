@@ -71,6 +71,36 @@ public sealed class ProjectSourceFilesTests
     }
 
     [Fact]
+    public void A_compile_item_s_properties_are_expanded_as_msbuild_expands_them()
+    {
+        // Spectre.Console keeps its generators' output in Generated/ and removes it from compilation by a property.
+        using var temp = new TempDirectory();
+        temp.Write("App/App.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+                <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+                <SharedFolder>$(MSBuildProjectDirectory)/../Shared</SharedFolder>
+              </PropertyGroup>
+              <ItemGroup>
+                <Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
+                <Compile Include="$(SharedFolder)/Helpers.cs" />
+                <Compile Remove="$(NotSetAnywhere)/**/*.cs" />
+              </ItemGroup>
+            </Project>
+            """);
+        temp.Write("App/Program.cs");
+        temp.Write("App/Generated/Gen/Color.g.cs");
+        temp.Write("Shared/Helpers.cs");
+        var project = ProjectParser.Load(temp.Resolve("App/App.csproj"));
+
+        var files = ProjectSourceFiles.Enumerate(project);
+
+        // A property nothing sets removes nothing, rather than every file.
+        Assert.Equal(new[] { temp.Resolve("App/Program.cs"), temp.Resolve("Shared/Helpers.cs") }, files);
+    }
+
+    [Fact]
     public void Disabling_default_items_keeps_only_explicit_includes()
     {
         using var temp = new TempDirectory();

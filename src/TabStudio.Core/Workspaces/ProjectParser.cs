@@ -301,12 +301,12 @@ public static partial class ProjectParser
                 properties,
                 Path.GetFileNameWithoutExtension(filePath)),
             FrameworkReferences = ReadFrameworkReferences(root, sdk, properties),
-            CompileIncludes = ReadItemPatterns(root, "Compile", "Include"),
-            CompileRemoves = ReadItemPatterns(root, "Compile", "Remove"),
-            EmbeddedResourceIncludes = ReadItemPatterns(root, "EmbeddedResource", "Include"),
-            EmbeddedResourceRemoves = ReadItemPatterns(root, "EmbeddedResource", "Remove"),
-            AvaloniaResourceIncludes = ReadItemPatterns(root, "AvaloniaResource", "Include"),
-            AvaloniaResourceRemoves = ReadItemPatterns(root, "AvaloniaResource", "Remove"),
+            CompileIncludes = ReadItemPatterns(root, "Compile", "Include", properties),
+            CompileRemoves = ReadItemPatterns(root, "Compile", "Remove", properties),
+            EmbeddedResourceIncludes = ReadItemPatterns(root, "EmbeddedResource", "Include", properties),
+            EmbeddedResourceRemoves = ReadItemPatterns(root, "EmbeddedResource", "Remove", properties),
+            AvaloniaResourceIncludes = ReadItemPatterns(root, "AvaloniaResource", "Include", properties),
+            AvaloniaResourceRemoves = ReadItemPatterns(root, "AvaloniaResource", "Remove", properties),
             AssemblyReferences = assemblyReferences,
             ComReferences = ReadComReferences(root),
             Usings = [.. allRoots.SelectMany(r => ReadUsings(r)).Distinct()],
@@ -646,15 +646,49 @@ public static partial class ProjectParser
         item.Attribute(name)?.Value ?? item.Elements().FirstOrDefault(c => c.Name.LocalName == name)?.Value;
 
     /// <summary>Reads the patterns of one attribute (such as <c>Include</c>) on one item type, split on semicolons.</summary>
-    private static List<string> ReadItemPatterns(XElement root, string itemType, string attribute) =>
-        root.Descendants()
+    /// <summary>
+    /// The patterns of an item type's <paramref name="attribute"/>, with the project's properties expanded, as MSBuild
+    /// expands them: Spectre.Console's <c>&lt;Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs"/&gt;</c> is
+    /// <c>Generated/**/*.cs</c>. A pattern that names a property the project does not set is left out rather than
+    /// expanded to nothing, which would turn <c>$(Unset)/**/*.cs</c> into every file of the project. A pattern that
+    /// becomes a path inside the project's folder is made relative to it, as the others are.
+    /// </summary>
+    private static List<string> ReadItemPatterns(XElement root, string itemType, string attribute, Dictionary<string, string> properties)
+    {
+        var directory = properties.GetValueOrDefault("MSBuildProjectDirectory");
+        return root.Descendants()
             .Where(e => e.Name.LocalName == itemType)
             .Select(e => e.Attribute(attribute)?.Value)
             .Where(value => !string.IsNullOrWhiteSpace(value))
             .SelectMany(value => value!.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
-            .Where(pattern => !pattern.Contains("$(", StringComparison.Ordinal))
+            .Select(pattern => ExpandPattern(pattern, properties, directory))
+            .OfType<string>()
             .Distinct(StringComparer.Ordinal)
             .ToList();
+    }
+
+    private static string? ExpandPattern(string pattern, Dictionary<string, string> properties, string? directory)
+    {
+        if (!pattern.Contains("$(", StringComparison.Ordinal))
+        {
+            return pattern;
+        }
+
+        var expanded = PropertyReference().Replace(pattern, match =>
+            properties.TryGetValue(match.Groups["name"].Value, out var value) ? value : match.Value);
+        if (expanded.Contains("$(", StringComparison.Ordinal) || expanded.Length == 0)
+        {
+            return null;
+        }
+
+        if (!string.IsNullOrEmpty(directory) && Path.IsPathRooted(expanded))
+        {
+            var relative = Path.GetRelativePath(directory, expanded);
+            return relative.StartsWith("..", StringComparison.Ordinal) ? expanded : relative;
+        }
+
+        return expanded;
+    }
 
     private static List<string> ReadTargetFrameworks(Dictionary<string, string> properties)
     {
