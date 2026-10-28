@@ -1,50 +1,49 @@
-10-27 23:41:19.719  3364  3364 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-27 23:41:19.738  3364  3364 I AndroidRuntime: Using default boot image
-10-27 23:41:19.742  3364  3364 I AndroidRuntime: Leaving lock profiling enabled
-10-27 23:41:20.252  3364  3364 D AndroidRuntime: Calling main entry com.android.commands.am.Am
-10-27 23:41:20.569  3364  3364 I AndroidRuntime: VM exiting with result code 0.
-10-27 23:41:21.395  3413  3413 D nativeloader: Load /data/app/~~aVZzhu-ZHD_bvneeIek77A==/com.tabstudio.ide-eHRYcjg1PneP6Oxw9YEdfA==/lib/x86_64/libmonosgen-2.0.so using ns clns-7 from class loader (caller=/data/app/~~aVZzhu-ZHD_bvneeIek77A==/com.tabstudio.ide-eHRYcjg1PneP6Oxw9YEdfA==/base.apk): ok
-10-27 23:41:21.396  3413  3413 D nativeloader: Load /data/app/~~aVZzhu-ZHD_bvneeIek77A==/com.tabstudio.ide-eHRYcjg1PneP6Oxw9YEdfA==/lib/x86_64/libmonodroid.so using ns clns-7 from class loader (caller=/data/app/~~aVZzhu-ZHD_bvneeIek77A==/com.tabstudio.ide-eHRYcjg1PneP6Oxw9YEdfA==/base.apk): ok
-10-27 23:41:21.513  3413  3413 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
-10-27 23:41:21.517  3413  3413 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
-10-27 23:41:37.680  3413  3531 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
-10-27 23:41:37.680  3413  3531 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
-10-27 23:41:37.680  3413  3531 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
-10-27 23:41:37.680  3413  3531 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
-10-27 23:41:37.701  3413  3531 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
-10-27 23:41:37.701  3413  3531 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
-10-27 23:41:37.701  3413  3531 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
-10-27 23:41:37.701  3413  3531 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
-10-27 23:41:41.759  3413  3413 I TabStudio: TABSTUDIO_SELFTEST_START shard=ui
-10-27 23:41:44.379  3413  3526 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
-10-27 23:42:53.122  3413  3969 W monodroid-assembly: Shared library 'liblog' not loaded, p/invoke '__android_log_print' may fail
-10-27 23:42:53.125  3413  3969 I monodroid-net: Exception caught while cancelling connection: Java.IO.IOException: Canceled
-10-27 23:42:53.125  3413  3969 I monodroid-net:    at Java.Interop.JniEnvironment.InstanceMethods.CallVoidMethod(JniObjectReference instance, JniMethodInfo method, JniArgumentValue* args)
-10-27 23:42:53.125  3413  3969 I monodroid-net:    at Java.Interop.JniPeerMembers.JniInstanceMethods.InvokeAbstractVoidMethod(String encodedMember, IJavaPeerable self, JniArgumentValue* parameters)
-10-27 23:42:53.125  3413  3969 I monodroid-net:    at Javax.Net.Ssl.HttpsURLConnectionInvoker.Connect()
-10-27 23:42:53.125  3413  3969 I monodroid-net:    at Xamarin.Android.Net.AndroidMessageHandler.<>c__DisplayClass137_0.<ConnectAsync>b__0()
-10-27 23:42:53.125  3413  3969 I monodroid-net:   --- End of managed Java.IO.IOException stack trace ---
-10-27 23:42:53.125  3413  3969 I monodroid-net: java.io.IOException: Canceled
-10-27 23:42:53.125  3413  3969 I monodroid-net: 	at com.android.okhttp.internal.http.StreamAllocation.findConnection(StreamAllocation.java:183)
-10-27 23:42:53.125  3413  3969 I monodroid-net: 	at com.android.okhttp.internal.http.StreamAllocation.findHealthyConnection(StreamAllocation.java:128)
-10-27 23:42:53.125  3413  3969 I monodroid-net: 	at com.android.okhttp.internal.http.StreamAllocation.newStream(StreamAllocation.java:97)
-10-27 23:42:53.125  3413  3969 I monodroid-net: 	at com.android.okhttp.internal.http.HttpEngine.connect(HttpEngine.java:289)
-10-27 23:42:53.125  3413  3969 I monodroid-net: 	at com.android.okhttp.internal.http.HttpEngine.sendRequest(HttpEngine.java:232)
-10-27 23:42:53.125  3413  3969 I monodroid-net: 	at com.android.okhttp.internal.huc.HttpURLConnectionImpl.execute(HttpURLConnectionImpl.java:465)
-10-27 23:42:53.125  3413  3969 I monodroid-net: 	at com.android.okhttp.internal.huc.HttpURLConnectionImpl.connect(HttpURLConnectionImpl.java:131)
-10-27 23:42:53.125  3413  3969 I monodroid-net: 	at com.android.okhttp.internal.huc.DelegatingHttpsURLConnection.connect(DelegatingHttpsURLConnection.java:90)
-10-27 23:42:53.125  3413  3969 I monodroid-net: 	at com.android.okhttp.internal.huc.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:30)
-10-27 23:42:53.125  3413  3969 I monodroid-net: 
-10-27 23:43:56.823  3413  3413 D nativeloader: Load /data/app/~~6PdHWymC8Q49kooF02qmzQ==/com.google.android.trichromelibrary_636771938-wCv1UdnHh2EZFvLW9U2ESQ==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-9 from class loader (caller=/data/app/~~dEcElKpILs5szRtlfe-xqw==/com.google.android.webview-p576iPejrW2LRs2nX5reQQ==/WebViewGoogle.apk): ok
-10-27 23:43:58.044  5183  5183 D nativeloader: Load /data/app/~~6PdHWymC8Q49kooF02qmzQ==/com.google.android.trichromelibrary_636771938-wCv1UdnHh2EZFvLW9U2ESQ==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~dEcElKpILs5szRtlfe-xqw==/com.google.android.webview-p576iPejrW2LRs2nX5reQQ==/WebViewGoogle.apk): ok
-10-27 23:45:22.975  3413  4382 W monodroid-assembly: Assembly 'Uno.UI' (hash 283248a48688210b) not found
-10-27 23:45:22.975  3413  4382 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Uno.UI
-10-27 23:45:22.975  3413  4382 W monodroid-assembly: Assembly 'Uno.UI' (hash 283248a48688210b) not found
-10-27 23:45:22.975  3413  4382 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Uno.UI
-10-27 23:45:49.612  3413  3413 W com.tabstudio.ide: type=1400 audit(0.0:60): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Cache/Uno/preview/Uno.Fonts.Fluent/Fonts/uno-fluentui-assets.ttf" dev="dm-46" ino=508610 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-10-27 23:45:49.656  3413  3413 W com.tabstudio.ide: type=1400 audit(0.0:61): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Cache/Uno/preview/Uno.Fonts.OpenSans/Fonts/OpenSans-Bold.ttf" dev="dm-46" ino=508613 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-10-27 23:45:49.660  3413  3413 W com.tabstudio.ide: type=1400 audit(0.0:62): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Cache/Uno/preview/Uno.Fonts.OpenSans/Fonts/OpenSans-BoldItalic.ttf" dev="dm-46" ino=508614 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-10-27 23:45:49.660  3413  3413 W com.tabstudio.ide: type=1400 audit(0.0:63): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Cache/Uno/preview/Uno.Fonts.OpenSans/Fonts/OpenSans-ExtraBold.ttf" dev="dm-46" ino=508615 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-10-27 23:45:49.660  3413  3413 W com.tabstudio.ide: type=1400 audit(0.0:64): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Cache/Uno/preview/Uno.Fonts.OpenSans/Fonts/OpenSans-ExtraBoldItalic.ttf" dev="dm-46" ino=508616 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-10-27 23:45:49.660  3413  3413 W com.tabstudio.ide: type=1400 audit(0.0:65): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Cache/Uno/preview/Uno.Fonts.OpenSans/Fonts/OpenSans-Italic.ttf" dev="dm-46" ino=508617 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-10-27 23:45:49.668  3413  3413 W com.tabstudio.ide: type=1400 audit(0.0:66): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Cache/Uno/preview/Uno.Fonts.OpenSans/Fonts/OpenSans-Light.ttf" dev="dm-46" ino=508618 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-28 00:14:20.715  3321  3321 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-28 00:14:20.720  3321  3321 I AndroidRuntime: Using default boot image
+10-28 00:14:20.723  3321  3321 I AndroidRuntime: Leaving lock profiling enabled
+10-28 00:14:21.240  3321  3321 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-28 00:14:21.688  3321  3321 I AndroidRuntime: VM exiting with result code 0.
+10-28 00:14:22.439  3336  3336 D nativeloader: Load /data/app/~~xf-UY8621bHUaAGcmVYGIA==/com.tabstudio.ide-um9cMg7Bjug-OxmM05Uqjg==/lib/x86_64/libmonosgen-2.0.so using ns clns-7 from class loader (caller=/data/app/~~xf-UY8621bHUaAGcmVYGIA==/com.tabstudio.ide-um9cMg7Bjug-OxmM05Uqjg==/base.apk): ok
+10-28 00:14:22.471  3336  3336 D nativeloader: Load /data/app/~~xf-UY8621bHUaAGcmVYGIA==/com.tabstudio.ide-um9cMg7Bjug-OxmM05Uqjg==/lib/x86_64/libmonodroid.so using ns clns-7 from class loader (caller=/data/app/~~xf-UY8621bHUaAGcmVYGIA==/com.tabstudio.ide-um9cMg7Bjug-OxmM05Uqjg==/base.apk): ok
+10-28 00:14:23.857  3336  3336 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
+10-28 00:14:23.857  3336  3336 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
+10-28 00:14:29.993  1728  1852 D nativeloader: Load /data/app/~~afDGwStzmhf9sglVo_Uj1A==/com.google.android.trichromelibrary_636771938-6KVRPiioufY9IzUGKkfMhQ==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-9 from class loader (caller=/data/app/~~CWpXKu_ffKA5Yz-ietDEpA==/com.google.android.webview-hxOy3ffeBXhaUMQc51yndg==/WebViewGoogle.apk): ok
+10-28 00:14:32.114  3586  3586 D nativeloader: Load /data/app/~~afDGwStzmhf9sglVo_Uj1A==/com.google.android.trichromelibrary_636771938-6KVRPiioufY9IzUGKkfMhQ==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~CWpXKu_ffKA5Yz-ietDEpA==/com.google.android.webview-hxOy3ffeBXhaUMQc51yndg==/WebViewGoogle.apk): ok
+10-28 00:14:40.345  3336  3492 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
+10-28 00:14:40.345  3336  3492 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
+10-28 00:14:40.346  3336  3492 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
+10-28 00:14:40.346  3336  3492 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
+10-28 00:14:40.386  3336  3492 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
+10-28 00:14:40.387  3336  3492 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
+10-28 00:14:40.387  3336  3492 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
+10-28 00:14:40.387  3336  3492 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
+10-28 00:14:42.230  3336  3336 I TabStudio: TABSTUDIO_SELFTEST_START shard=ui
+10-28 00:14:44.990  3336  3488 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
+10-28 00:15:52.128  3336  3758 W monodroid-assembly: Shared library 'liblog' not loaded, p/invoke '__android_log_print' may fail
+10-28 00:15:52.145  3336  3758 I monodroid-net: Exception caught while cancelling connection: Java.IO.IOException: Canceled
+10-28 00:15:52.145  3336  3758 I monodroid-net:    at Java.Interop.JniEnvironment.InstanceMethods.CallVoidMethod(JniObjectReference instance, JniMethodInfo method, JniArgumentValue* args)
+10-28 00:15:52.147  3336  3758 I monodroid-net:    at Java.Interop.JniPeerMembers.JniInstanceMethods.InvokeAbstractVoidMethod(String encodedMember, IJavaPeerable self, JniArgumentValue* parameters)
+10-28 00:15:52.147  3336  3758 I monodroid-net:    at Javax.Net.Ssl.HttpsURLConnectionInvoker.Connect()
+10-28 00:15:52.147  3336  3758 I monodroid-net:    at Xamarin.Android.Net.AndroidMessageHandler.<>c__DisplayClass137_0.<ConnectAsync>b__0()
+10-28 00:15:52.147  3336  3758 I monodroid-net:   --- End of managed Java.IO.IOException stack trace ---
+10-28 00:15:52.147  3336  3758 I monodroid-net: java.io.IOException: Canceled
+10-28 00:15:52.147  3336  3758 I monodroid-net: 	at com.android.okhttp.internal.http.StreamAllocation.findConnection(StreamAllocation.java:183)
+10-28 00:15:52.148  3336  3758 I monodroid-net: 	at com.android.okhttp.internal.http.StreamAllocation.findHealthyConnection(StreamAllocation.java:128)
+10-28 00:15:52.148  3336  3758 I monodroid-net: 	at com.android.okhttp.internal.http.StreamAllocation.newStream(StreamAllocation.java:97)
+10-28 00:15:52.148  3336  3758 I monodroid-net: 	at com.android.okhttp.internal.http.HttpEngine.connect(HttpEngine.java:289)
+10-28 00:15:52.148  3336  3758 I monodroid-net: 	at com.android.okhttp.internal.http.HttpEngine.sendRequest(HttpEngine.java:232)
+10-28 00:15:52.148  3336  3758 I monodroid-net: 	at com.android.okhttp.internal.huc.HttpURLConnectionImpl.execute(HttpURLConnectionImpl.java:465)
+10-28 00:15:52.148  3336  3758 I monodroid-net: 	at com.android.okhttp.internal.huc.HttpURLConnectionImpl.connect(HttpURLConnectionImpl.java:131)
+10-28 00:15:52.148  3336  3758 I monodroid-net: 	at com.android.okhttp.internal.huc.DelegatingHttpsURLConnection.connect(DelegatingHttpsURLConnection.java:90)
+10-28 00:15:52.148  3336  3758 I monodroid-net: 	at com.android.okhttp.internal.huc.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:30)
+10-28 00:15:52.148  3336  3758 I monodroid-net: 
+10-28 00:17:03.622  3336  3336 D nativeloader: Load /data/app/~~afDGwStzmhf9sglVo_Uj1A==/com.google.android.trichromelibrary_636771938-6KVRPiioufY9IzUGKkfMhQ==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-9 from class loader (caller=/data/app/~~CWpXKu_ffKA5Yz-ietDEpA==/com.google.android.webview-hxOy3ffeBXhaUMQc51yndg==/WebViewGoogle.apk): ok
+10-28 00:18:27.389  3336  3490 W monodroid-assembly: Assembly 'Uno.UI' (hash 283248a48688210b) not found
+10-28 00:18:27.390  3336  3490 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Uno.UI
+10-28 00:18:27.390  3336  3490 W monodroid-assembly: Assembly 'Uno.UI' (hash 283248a48688210b) not found
+10-28 00:18:27.390  3336  3490 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Uno.UI
+10-28 00:18:49.104  3336  3336 W com.tabstudio.ide: type=1400 audit(0.0:52): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Cache/Uno/preview/Uno.Fonts.Fluent/Fonts/uno-fluentui-assets.ttf" dev="dm-46" ino=501678 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-28 00:18:49.152  3336  3336 W com.tabstudio.ide: type=1400 audit(0.0:53): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Cache/Uno/preview/Uno.Fonts.OpenSans/Fonts/OpenSans-Bold.ttf" dev="dm-46" ino=501681 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-28 00:18:49.172  3336  3336 W com.tabstudio.ide: type=1400 audit(0.0:54): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Cache/Uno/preview/Uno.Fonts.OpenSans/Fonts/OpenSans-BoldItalic.ttf" dev="dm-46" ino=501682 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-28 00:18:49.172  3336  3336 W com.tabstudio.ide: type=1400 audit(0.0:55): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Cache/Uno/preview/Uno.Fonts.OpenSans/Fonts/OpenSans-ExtraBold.ttf" dev="dm-46" ino=501683 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-28 00:18:49.172  3336  3336 W com.tabstudio.ide: type=1400 audit(0.0:56): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Cache/Uno/preview/Uno.Fonts.OpenSans/Fonts/OpenSans-ExtraBoldItalic.ttf" dev="dm-46" ino=501684 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
