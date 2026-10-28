@@ -4,7 +4,11 @@ namespace TabStudio.Core.Workspaces;
 /// A NuGet package referenced by a project.
 /// </summary>
 /// <param name="Name">The package id, for example <c>Newtonsoft.Json</c>.</param>
-/// <param name="Version">The requested version, when the project states one.</param>
+/// <param name="Version">
+/// The requested version, when the project states one: with central package management, the reference's
+/// <c>VersionOverride</c>, which wins over the central version, or else its <c>Version</c>. <see langword="null"/> for
+/// a reference whose version comes from <c>Directory.Packages.props</c>.
+/// </param>
 /// <param name="PrivateAssets">
 /// The reference's <c>PrivateAssets</c> metadata, such as <c>all</c>, which keeps the package from flowing to projects
 /// that reference this one; <see langword="null"/> when it is not set.

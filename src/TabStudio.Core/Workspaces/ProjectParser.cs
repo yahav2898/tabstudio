@@ -30,6 +30,9 @@ public static partial class ProjectParser
     /// <summary>The shared framework of ASP.NET Core.</summary>
     public const string AspNetCoreFramework = "Microsoft.AspNetCore.App";
 
+    /// <summary>The target framework TabStudio compiles every project against, whatever the project targets.</summary>
+    public const string CompiledTargetFramework = "net10.0";
+
     /// <summary>The version the .NET SDK gives a project that sets neither <c>Version</c> nor <c>VersionPrefix</c>.</summary>
     public const string DefaultVersion = "1.0.0";
 
@@ -268,15 +271,18 @@ public static partial class ProjectParser
             ExpandPropertyReferences(properties);
         }
 
-        // Items in imported files keep only the groups their conditions allow, evaluated for the first target framework.
+        // Items in imported files keep only the groups their conditions allow, evaluated for the target framework
+        // TabStudio builds the project for (see EvaluationTargetFramework).
         var evaluation = new Dictionary<string, string>(properties, StringComparer.OrdinalIgnoreCase);
-        if (!evaluation.ContainsKey("TargetFramework") && ReadTargetFrameworks(properties) is [var first, ..])
+        if (EvaluationTargetFramework(ReadTargetFrameworks(properties)) is { } evaluationFramework)
         {
-            evaluation["TargetFramework"] = first;
+            evaluation["TargetFramework"] = evaluationFramework;
         }
 
         List<XElement> allRoots = [root, .. ImportedRoots(importedFiles, evaluation)];
-        var packages = ReadPackageReferences(allRoots);
+        var packages = ReadPackageReferences(
+            allRoots,
+            centralVersions: string.Equals(properties.GetValueOrDefault("ManagePackageVersionsCentrally")?.Trim(), "true", StringComparison.OrdinalIgnoreCase));
         if (isLegacy)
         {
             packages.AddRange(ReadPackagesConfig(directory).Where(p => !packages.Any(existing => string.Equals(existing.Name, p.Name, StringComparison.OrdinalIgnoreCase))));
@@ -323,6 +329,95 @@ public static partial class ProjectParser
 
         var (kind, isTest) = ProjectClassifier.Classify(info);
         return info with { Kind = kind, IsTestProject = isTest };
+    }
+
+    /// <summary>
+    /// The target framework conditions in a project's imported files and in its <c>Directory.Packages.props</c> are
+    /// evaluated for: the one TabStudio builds the project for, which compiles every project against
+    /// <see cref="CompiledTargetFramework"/>. In order:
+    /// </summary>
+    /// <remarks>
+    /// <list type="number">
+    ///   <item><c>net10.0</c> itself, when the project lists it.</item>
+    ///   <item>
+    ///     Otherwise the .NET (Core) framework (<c>netcoreappX.Y</c>, or <c>netX.Y</c> from .NET 5 on, with or without
+    ///     a platform such as <c>-android</c>) of the highest version up to 10.0, whose assets .NET 10 can use; when
+    ///     there is none, the one of the lowest version above it. Of several with the same version, the first listed.
+    ///   </item>
+    ///   <item>Otherwise, for a project only for .NET Framework or .NET Standard, the first one listed.</item>
+    /// </list>
+    /// <para>
+    /// Refit's <c>net462;net470;…;net10.0;net11.0</c> is evaluated for <c>net10.0</c>, so a <c>&lt;When&gt;</c> for
+    /// <c>net11.0</c> or an item group for <c>net462</c> does not apply, as it does not to the code TabStudio compiles.
+    /// </para>
+    /// </remarks>
+    /// <param name="targetFrameworks">The project's target frameworks, in the order its file lists them.</param>
+    /// <returns>The framework, or <see langword="null"/> when the project lists none.</returns>
+    public static string? EvaluationTargetFramework(IReadOnlyList<string> targetFrameworks)
+    {
+        ArgumentNullException.ThrowIfNull(targetFrameworks);
+        if (targetFrameworks.Count == 0)
+        {
+            return null;
+        }
+
+        var exact = targetFrameworks.FirstOrDefault(f => string.Equals(f, CompiledTargetFramework, StringComparison.OrdinalIgnoreCase));
+        if (exact is not null)
+        {
+            return exact;
+        }
+
+        var compiled = new Version(10, 0);
+        var modern = targetFrameworks
+            .Select(f => (Framework: f, Version: DotNetVersionOf(f)))
+            .Where(f => f.Version is not null)
+            .Select(f => (f.Framework, Version: f.Version!))
+            .ToList();
+        var usable = modern.Where(f => f.Version <= compiled).ToList();
+        if (usable.Count > 0)
+        {
+            // MaxBy keeps the first of equal versions.
+            return usable.MaxBy(f => f.Version).Framework;
+        }
+
+        return modern.Count > 0 ? modern.MinBy(f => f.Version).Framework : targetFrameworks[0];
+    }
+
+    /// <summary>
+    /// The version of a .NET (Core) target framework: <c>8.0</c> for <c>net8.0</c> or <c>net8.0-android</c>, <c>3.1</c>
+    /// for <c>netcoreapp3.1</c>; <see langword="null"/> for .NET Framework (<c>net48</c>), .NET Standard and others.
+    /// </summary>
+    private static Version? DotNetVersionOf(string framework)
+    {
+        var name = framework.Trim();
+        var dash = name.IndexOf('-', StringComparison.Ordinal);
+        if (dash >= 0)
+        {
+            name = name[..dash];
+        }
+
+        string digits;
+        var isCoreApp = name.StartsWith("netcoreapp", StringComparison.OrdinalIgnoreCase);
+        if (isCoreApp)
+        {
+            digits = name["netcoreapp".Length..];
+        }
+        else if (name.StartsWith("net", StringComparison.OrdinalIgnoreCase) && name.Length > 3 && char.IsAsciiDigit(name[3]))
+        {
+            digits = name[3..];
+        }
+        else
+        {
+            return null;
+        }
+
+        // net48 and net472 have no dot: they are .NET Framework.
+        if (!digits.Contains('.', StringComparison.Ordinal) || !Version.TryParse(digits, out var version))
+        {
+            return null;
+        }
+
+        return isCoreApp || version.Major >= 5 ? version : null;
     }
 
     /// <summary>
@@ -540,16 +635,21 @@ public static partial class ProjectParser
         return slash >= 0 ? first[..slash] : first;
     }
 
-    /// <summary>The package references of a project, then of the files it imports: the first reference to a package wins.</summary>
-    private static List<PackageReferenceInfo> ReadPackageReferences(IEnumerable<XElement> roots) =>
+    /// <summary>
+    /// The package references of a project, then of the files it imports: the first reference to a package wins. With
+    /// central package management on, a reference's version is its <c>VersionOverride</c>, which wins over the version
+    /// in <c>Directory.Packages.props</c>, as Refit's <c>VersionOverride="$(MsCACSharpVersion)"</c> does, or else its
+    /// <c>Version</c>; with it off, NuGet ignores <c>VersionOverride</c>, which then counts only for a reference without
+    /// a <c>Version</c>.
+    /// </summary>
+    private static List<PackageReferenceInfo> ReadPackageReferences(IEnumerable<XElement> roots, bool centralVersions) =>
         roots.SelectMany((root, index) => index == 0 ? root.Descendants() : root.Descendants().Where(e => !e.Ancestors().Any(a => a.Name.LocalName == "Target")))
             .Where(e => e.Name.LocalName == "PackageReference")
             .Select(e => (Name: e.Attribute("Include")?.Value, Element: e))
             .Where(p => !string.IsNullOrWhiteSpace(p.Name))
             .Select(p => new PackageReferenceInfo(
                 p.Name!.Trim(),
-                p.Element.Attribute("Version")?.Value ??
-                p.Element.Elements().FirstOrDefault(c => c.Name.LocalName == "Version")?.Value,
+                ReferenceVersion(p.Element, centralVersions),
                 Metadata(p.Element, "PrivateAssets")?.Trim())
             {
                 IncludeAssets = Metadata(p.Element, "IncludeAssets")?.Trim(),
@@ -557,6 +657,19 @@ public static partial class ProjectParser
             })
             .DistinctBy(p => p.Name, StringComparer.OrdinalIgnoreCase)
             .ToList();
+
+    /// <summary>A package reference's version (see <see cref="ReadPackageReferences"/>); <see langword="null"/> when it states none.</summary>
+    private static string? ReferenceVersion(XElement reference, bool centralVersions)
+    {
+        var version = Metadata(reference, "Version");
+        var versionOverride = Metadata(reference, "VersionOverride");
+        if (string.IsNullOrWhiteSpace(versionOverride) || (!centralVersions && !string.IsNullOrWhiteSpace(version)))
+        {
+            return version;
+        }
+
+        return versionOverride;
+    }
 
     /// <summary>
     /// The shared frameworks a project uses: <c>FrameworkReference</c> items, plus ASP.NET Core for projects on the
