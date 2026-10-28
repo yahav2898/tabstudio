@@ -597,7 +597,7 @@ public sealed partial class WorkspaceViewModel
                 using (FollowOutput(building.Operation))
                 {
                     compiled = await BuildCargoOrToolchainAsync(project, plan, run.Token);
-                    building.Outcome = compiled.Result.Succeeded ? global::TabStudio.Core.Progress.OperationOutcome.Succeeded
+                    building.Outcome = compiled.Result.Succeeded || compiled.Result.NothingToRunReason is not null ? global::TabStudio.Core.Progress.OperationOutcome.Succeeded
                         : run.IsCancellationRequested ? global::TabStudio.Core.Progress.OperationOutcome.Cancelled : global::TabStudio.Core.Progress.OperationOutcome.Failed;
                 }
 
@@ -677,6 +677,15 @@ public sealed partial class WorkspaceViewModel
             ReportPicBuild(project, result.Lines, result.Exit?.Succeeded == true);
         }
         Output.WriteLine();
+        if (result.NothingToRunReason is { } reason)
+        {
+            // The build succeeded but no program was chosen: nothing ran, so no exit code is reported.
+            Output.WriteLine(reason, OutputKind.Failure);
+            State = IdeState.Ready;
+            StatusText = "Nothing to run";
+            return;
+        }
+
         if (result.Exit is not { } exit)
         {
             State = IdeState.Failed;

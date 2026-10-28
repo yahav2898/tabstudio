@@ -769,9 +769,12 @@ excluded. `MakefileWrapper` reads a Makefile's recipes and variables: one that o
 project. In a folder with both, a language's own manifest comes before a Makefile, so it is the default startup
 project. Programs are named after their target or binary (`RunPlan.ProgramName`), never `Makefile` or `pom.xml`. Alpine installs Clang, build-base (including make), CMake, clangd and LLDB with lldb-dap; desktops use
 PATH. CMake configures a Debug build, exports `compile_commands.json` for clangd and reports executable artifacts
-through its codemodel file API. An active source selects among several targets. Makefile projects need no special
-run target: the unique executable at the root or in `bin`, `build` or `out` runs. Ambiguous outputs need a launch
-configuration. Standalone files use their language's compiler with debug information. Compiler locations become
+through its codemodel file API. Of several targets, the one a `.tabstudio/launch.json` configuration's `program`
+names runs, else the one the active source belongs to, else the only one the top-level `CMakeLists.txt` defines
+(cJSON's `cJSON_test`, not its tests and fuzzers). Makefile projects need no special run target: the unique
+executable at the root or in `bin`, `build` or `out` runs, else the one a launch configuration names, else the only
+one at the root. When no program can be chosen, the run ends with one line that names the executables and how to
+choose one, and reports no exit code. Standalone files use their language's compiler with debug information. Compiler locations become
 Error List links.
 
 F5 uses LLDB DAP. Desktop programs use `runInTerminal`; on Android, LLDB launches within the same PRoot trace tree
