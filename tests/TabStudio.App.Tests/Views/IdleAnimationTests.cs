@@ -18,6 +18,7 @@ namespace TabStudio.App.Tests.Views;
 /// Avalonia runs a style's animation even while its control is hidden. Animations are found by asking every visual,
 /// and the transforms animations move, whether any property is animating, not by looking at TabStudio's own classes.
 /// </summary>
+[Collection(IdleAnimationTestGroup.Name)]
 public sealed class IdleAnimationTests
 {
     [AvaloniaFact]
@@ -123,4 +124,14 @@ public sealed class IdleAnimationTests
 
     private static bool IsAnimating(AvaloniaObject target) =>
         AvaloniaPropertyRegistry.Instance.GetRegistered(target).Any(target.IsAnimating);
+}
+
+/// <summary>
+/// The idle-animation tests tick the render clock and drain the UI thread for a second at a time, which would change
+/// the timing of tests running beside them, and they measure animations that other tests' windows also drive.
+/// </summary>
+[CollectionDefinition(Name, DisableParallelization = true)]
+public sealed class IdleAnimationTestGroup
+{
+    public const string Name = "Idle animations";
 }
