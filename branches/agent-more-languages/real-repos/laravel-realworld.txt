@@ -1,0 +1,66 @@
+laravel-realworld at c14fb8370b71a42a3a74b8ea936a1f96b2af9d69
+.env: APP_NAME, APP_ENV, APP_KEY, APP_DEBUG, DB_CONNECTION, DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD, CACHE_DRIVER, SESSION_DRIVER, QUEUE_CONNECTION
+Toolchain projects:
+  php: /home/runner/work/_temp/real-repos/laravel-realworld/composer.json
+  node: /home/runner/work/_temp/real-repos/laravel-realworld/package.json
+Startup project: php /home/runner/work/_temp/real-repos/laravel-realworld/composer.json
+Set up in 25.7 s
+Web preview: http://127.0.0.1:40905/
+GET http://127.0.0.1:40905/api/tags: Connection refused (127.0.0.1:40905); retrying
+GET http://127.0.0.1:40905/api/tags: 500 Internal Server Error, 940502 characters
+Error page: Carbon\Carbon::setLastErrors(): Argument #1 ($lastErrors) must be of type array, false given, called in /home/runner/work/_temp/real-repos/laravel-realworld/vendor/nesbot/carbon/src/Carbon/Traits/Creator.php on line 98
+<!DOCTYPE html>
+<html lang="en" class="auto">
+<!--
+TypeError: Carbon\Carbon::setLastErrors(): Argument #1 ($lastErrors) must be of type array, false given, called in /home/runner/work/_temp/real-repos/laravel-realworld/vendor/nesbot/carbon/src/Carbon/Traits/Creator.php on line 98 in file /home/runner/work/_temp/real-repos/laravel-realworld/vendor/nesbot/carbon/src/Carbon/Traits/Creator.php on line 928
+
+#0 /home/runner/work/_temp/real-repos/laravel-realworld/vendor/nesbot/carbon/src/Carbon/Traits/Creator.php(98): Carbon\Carbon::setLastErrors()
+#1 /home/runner/work/_temp/real-repos/laravel-realworld/vendor/nesbot/carbon/src/Carbon/Traits/Creator.php(252): Carbon\Carbon-&gt;__construct()
+#2 /home/runner/work/_temp/real-repos/laravel-realworld/vendor/laravel/framework/src/Illuminate/Support/InteractsWithTime.php(37): Carbon\Carbon::now()
+#3 /home/runner/work/_temp/real-repos/laravel-realworld/vendor/laravel/framework/src/Illuminate/Cache/RateLimiter.php(115): Illuminate\Cache\RateLimiter-&gt;availableAt()
+#4 /home/runner/work/_temp/real-repos/laravel-realworld/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(123): Illuminate\Cache\RateLimiter-&gt;hit()
+#5 /home/runner/work/_temp/real-repos/laravel-realworld/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(92): Illuminate\Routing\Middleware\ThrottleRequests-&gt;handleRequest()
+#6 /home/runner/work/_temp/real-repos/laravel-realworld/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(54): Illuminate\Routing\Middleware\ThrottleRequests-&gt;handleRequestUsingNamedLimiter()
+#7 /home/runner/work/_temp/real-repos/laravel-realworld/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\Routing\Middleware\ThrottleRequests-&gt;handle()
+#8 /home/runner/work/_temp/real-repos/laravel-realworld/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(116): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate
+Ran in 4.4 s
+Project setup:
+
+Output:
+Running artisan serve with PHP 8.5.12
+> php artisan migrate --force --no-interaction
+PHP Deprecated:  Monolog\Logger::addRecord(): Implicitly marking parameter $datetime as nullable is deprecated, the explicit nullable type must be used instead in /home/runner/work/_temp/real-repos/laravel-realworld/vendor/monolog/monolog/src/Monolog/Logger.php on line 312
+PHP Deprecated:  Illuminate\Log\Logger::__construct(): Implicitly marking parameter $dispatcher as nullable is deprecated, the explicit nullable type must be used instead in /home/runner/work/_temp/real-repos/laravel-realworld/vendor/laravel/framework/src/Illuminate/Log/Logger.php on line 43
+Migration table created successfully.
+Migrating: 2014_10_12_000000_create_users_table
+Migrated:  2014_10_12_000000_create_users_table (5.65ms)
+Migrating: 2014_10_12_100000_create_password_resets_table
+Migrated:  2014_10_12_100000_create_password_resets_table (2.97ms)
+Migrating: 2019_08_19_000000_create_failed_jobs_table
+Migrated:  2019_08_19_000000_create_failed_jobs_table (4.01ms)
+Migrating: 2019_12_14_000001_create_personal_access_tokens_table
+Migrated:  2019_12_14_000001_create_personal_access_tokens_table (5.35ms)
+Migrating: 2021_05_21_130644_add_fields_to_users_table
+Migrated:  2021_05_21_130644_add_fields_to_users_table (2.11ms)
+Migrating: 2021_05_23_123208_create_user_follower_table
+Migrated:  2021_05_23_123208_create_user_follower_table (4.04ms)
+Migrating: 2021_05_23_150828_create_articles_table
+Migrated:  2021_05_23_150828_create_articles_table (4.27ms)
+Migrating: 2021_05_23_150839_create_comments_table
+Migrated:  2021_05_23_150839_create_comments_table (5.54ms)
+Migrating: 2021_05_23_150848_create_tags_table
+Migrated:  2021_05_23_150848_create_tags_table (2.87ms)
+Migrating: 2021_05_23_151511_create_article_tag_table
+Migrated:  2021_05_23_151511_create_article_tag_table (3.27ms)
+Migrating: 2021_05_23_152011_create_article_favorite_table
+Migrated:  2021_05_23_152011_create_article_favorite_table (3.79ms)
+PHP Deprecated:  Monolog\Logger::addRecord(): Implicitly marking parameter $datetime as nullable is deprecated, the explicit nullable type must be used instead in /home/runner/work/_temp/real-repos/laravel-realworld/vendor/monolog/monolog/src/Monolog/Logger.php on line 312
+PHP Deprecated:  Illuminate\Log\Logger::__construct(): Implicitly marking parameter $dispatcher as nullable is deprecated, the explicit nullable type must be used instead in /home/runner/work/_temp/real-repos/laravel-realworld/vendor/laravel/framework/src/Illuminate/Log/Logger.php on line 43
+Starting Laravel development server: http://127.0.0.1:40905
+[Wed Oct 28 21:47:24 2026] PHP 8.5.12 Development Server (http://127.0.0.1:40905) started
+[Wed Oct 28 21:47:27 2026] 127.0.0.1:33600 Accepted
+[Wed Oct 28 21:47:28 2026] PHP Deprecated:  Monolog\Logger::addRecord(): Implicitly marking parameter $datetime as nullable is deprecated, the explicit nullable type must be used instead in /home/runner/work/_temp/real-repos/laravel-realworld/vendor/monolog/monolog/src/Monolog/Logger.php on line 312
+[Wed Oct 28 21:47:28 2026] PHP Deprecated:  Illuminate\Log\Logger::__construct(): Implicitly marking parameter $dispatcher as nullable is deprecated, the explicit nullable type must be used instead in /home/runner/work/_temp/real-repos/laravel-realworld/vendor/laravel/framework/src/Illuminate/Log/Logger.php on line 43
+
+The program 'artisan serve' was stopped.
+

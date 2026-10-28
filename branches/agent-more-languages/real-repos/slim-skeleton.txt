@@ -1,0 +1,27 @@
+slim-skeleton at 5b9ffd5ee8f82b5618a36a7f6fb23b9fa6ea2698
+Toolchain projects:
+  php: /home/runner/work/_temp/real-repos/slim-skeleton/composer.json
+Startup project: php /home/runner/work/_temp/real-repos/slim-skeleton/composer.json
+Set up in 5.5 s
+Web preview: http://127.0.0.1:41271/
+GET http://127.0.0.1:41271/: 500 Internal Server Error, 438 characters
+Error page: 
+{
+    "statusCode": 500,
+    "error": {
+        "type": "SERVER_ERROR",
+        "description": "ERROR: DI\\Definition\\Resolver\\ParameterResolver::resolveParameters(): Implicitly marking parameter $method as nullable is deprecated, the explicit nullable type must be used instead on line 40 in file \/home\/runner\/work\/_temp\/real-repos\/slim-skeleton\/vendor\/php-di\/php-di\/src\/Definition\/Resolver\/ParameterResolver.php."
+    }
+}
+Ran in 0.2 s
+Project setup:
+
+Output:
+Running php -S with PHP 8.5.12
+[Wed Oct 28 21:47:33 2026] PHP 8.5.12 Development Server (http://127.0.0.1:41271) started
+[Wed Oct 28 21:47:34 2026] 127.0.0.1:49116 Accepted
+[Wed Oct 28 21:47:34 2026] 127.0.0.1:49116 [200]: GET /
+[Wed Oct 28 21:47:34 2026] 127.0.0.1:49116 Closing
+
+The program 'php -S' was stopped.
+
