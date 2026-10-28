@@ -73,6 +73,8 @@ public sealed partial class WorkspaceViewModel
                 var result = await OutputProcess.RunAsync(_toolchains.Runtime, step, Output, null, cancellationToken, toolchain: project.Toolchain.Id);
                 if (!result.Succeeded)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    ReportInstallFailure(project, step, result);
                     return result;
                 }
 
@@ -371,6 +373,29 @@ public sealed partial class WorkspaceViewModel
         _installFailures[project.Directory] = message;
         _installFailureTitles[project.Directory] = failure.Package is null ? $"{project.Name}'s packages were not installed" : $"{failure.Package} could not be installed";
     }
+
+    /// <summary>
+    /// The one message a failed npm, cargo, go or other package install leaves in the Output panel and over the editor,
+    /// as a failed pip install does: which command failed and its first error, so that F5 does not then fail on a
+    /// half-installed project with nothing to say why.
+    /// </summary>
+    private void ReportInstallFailure(ToolchainProject project, ProcessStartSpec step, OutputProcessResult result)
+    {
+        var message = $"{project.Name}'s packages were not installed: {step.CommandLine} failed ({FirstInstallError(result)}). Fix that, then use Tools > Install Project Packages.";
+        Output.WriteLine(message, OutputKind.Failure);
+        ProjectSetupOutput.WriteLine(message, OutputKind.Failure);
+        _installFailures[project.Directory] = message;
+        _installFailureTitles[project.Directory] = $"{project.Name}'s packages were not installed";
+    }
+
+    /// <summary>The install's first line that says what went wrong, such as npm's first <c>npm error</c> that is not its log's location.</summary>
+    private static string FirstInstallError(OutputProcessResult result) =>
+        result.StartError
+        ?? result.Lines.Select(l => l.Trim()).FirstOrDefault(l =>
+            (l.StartsWith("npm error ", StringComparison.Ordinal) || l.StartsWith("npm ERR! ", StringComparison.Ordinal) || l.StartsWith("error", StringComparison.OrdinalIgnoreCase))
+            && !l.Contains("complete log", StringComparison.OrdinalIgnoreCase) && !l.Contains(" code ", StringComparison.Ordinal)
+            && l.TrimEnd(':').Length > "npm error".Length)
+        ?? LastLine(result);
 
     /// <summary>The offer over the editor after a failed install: its message, and the full log one tap away.</summary>
     private ToolchainNoticeViewModel? InstallFailureNotice(ToolchainProject project) =>

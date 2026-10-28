@@ -569,6 +569,13 @@ public sealed partial class WorkspaceViewModel
         }
 
         ErrorList.SetRunError(project.Directory, null);
+        if (!buildOnly && _installFailures.ContainsKey(project.Directory)
+            && _installFailureTitles.GetValueOrDefault(project.Directory) is { } notInstalled)
+        {
+            // It runs anyway, as a person may know the missing package does not matter, but a failure that follows is no surprise.
+            Output.WriteLine($"{notInstalled}, so it may fail to start. The install's log is in Output > Project Setup.", OutputKind.Failure);
+        }
+
         _runDirectory = plan.Run.WorkingDirectory ?? project.Directory;
         State = IdeState.Running;
         StatusText = $"Running {plan.ProgramName}";

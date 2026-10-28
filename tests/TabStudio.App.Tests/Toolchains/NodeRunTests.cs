@@ -76,4 +76,25 @@ public sealed class NodeRunTests
         await workspace.RunCommand.ExecuteAsync(null);
         Assert.Contains("Hi, npm!", workspace.Output.Text, StringComparison.Ordinal);
     }
+
+    [AvaloniaFact]
+    public async Task A_failed_npm_install_says_why_in_one_message_and_F5_warns_before_running()
+    {
+        using var fixture = new WorkspaceFixture();
+        using var folder = new TempDirectory();
+        // The package it depends on is not there, so npm install fails.
+        folder.Write("package.json", """{ "name": "local", "main": "index.js", "dependencies": { "greeting": "file:./missing" } }""");
+        folder.Write("index.js", "console.log(require('greeting')('npm'));\n");
+        var workspace = fixture.Workspace;
+        workspace.SetUpProjectsWhenTheyOpen = false;
+        await workspace.LoadAsync(folder.Path);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.ToolchainNotice is not null, because: "the offer");
+        await workspace.ToolchainNotice!.Action.ExecuteAsync(null);
+
+        Assert.Contains("local's packages were not installed: npm install", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Equal("local's packages were not installed", workspace.ToolchainNotice?.Title);
+
+        await workspace.RunCommand.ExecuteAsync(null);
+        Assert.Contains("local's packages were not installed, so it may fail to start.", workspace.Output.Text, StringComparison.Ordinal);
+    }
 }
