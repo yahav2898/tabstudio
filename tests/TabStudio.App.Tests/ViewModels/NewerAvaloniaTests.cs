@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using TabStudio.App.Previews;
 using TabStudio.Testing;
 
-namespace TabStudio.App.Tests.Previews;
+namespace TabStudio.App.Tests.ViewModels;
 
 /// <summary>
 /// An Avalonia app built for a newer Avalonia than TabStudio's says so in one line when it cannot start, rather than
