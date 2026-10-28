@@ -82,8 +82,10 @@ public sealed class NodeRunTests
     {
         using var fixture = new WorkspaceFixture();
         using var folder = new TempDirectory();
-        // The package it depends on is not there, so npm install fails.
-        folder.Write("package.json", """{ "name": "local", "main": "index.js", "dependencies": { "greeting": "file:./missing" } }""");
+        // Its install script fails, so npm install fails, as a native module's build does.
+        folder.Write("package.json", """{ "name": "local", "main": "index.js", "scripts": { "preinstall": "node -e \"console.error('cannot build'); process.exit(1)\"" }, "dependencies": { "greeting": "file:./greeting" } }""");
+        folder.Write("greeting/package.json", """{ "name": "greeting", "version": "1.0.0", "main": "index.js" }""");
+        folder.Write("greeting/index.js", "module.exports = (name) => `Hi, ${name}!`;\n");
         folder.Write("index.js", "console.log(require('greeting')('npm'));\n");
         var workspace = fixture.Workspace;
         workspace.SetUpProjectsWhenTheyOpen = false;
@@ -93,7 +95,7 @@ public sealed class NodeRunTests
 
         // The project is named after its folder.
         var name = Path.GetFileName(folder.Path);
-        Assert.Contains($"{name}'s packages were not installed: npm install", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.True(workspace.Output.Text.Contains($"{name}'s packages were not installed: npm install", StringComparison.Ordinal), workspace.Output.Text);
         Assert.Equal($"{name}'s packages were not installed", workspace.ToolchainNotice?.Title);
 
         await workspace.RunCommand.ExecuteAsync(null);

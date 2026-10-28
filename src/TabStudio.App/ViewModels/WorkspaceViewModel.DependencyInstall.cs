@@ -388,14 +388,21 @@ public sealed partial class WorkspaceViewModel
         _installFailureTitles[project.Directory] = $"{project.Name}'s packages were not installed";
     }
 
-    /// <summary>The install's first line that says what went wrong, such as npm's first <c>npm error</c> that is not its log's location.</summary>
+    /// <summary>
+    /// The install's first line that says what went wrong: npm's first <c>npm error</c> that is not one of its
+    /// bookkeeping lines (code, path, errno, syscall, the command it ran, where its log is), or another tool's first
+    /// <c>error</c> line.
+    /// </summary>
     private static string FirstInstallError(OutputProcessResult result) =>
         result.StartError
         ?? result.Lines.Select(l => l.Trim()).FirstOrDefault(l =>
             (l.StartsWith("npm error ", StringComparison.Ordinal) || l.StartsWith("npm ERR! ", StringComparison.Ordinal) || l.StartsWith("error", StringComparison.OrdinalIgnoreCase))
-            && !l.Contains("complete log", StringComparison.OrdinalIgnoreCase) && !l.Contains(" code ", StringComparison.Ordinal)
+            && !NpmBookkeeping.Any(prefix => l[(l.IndexOf(' ', StringComparison.Ordinal) + 1)..].TrimStart().StartsWith(prefix, StringComparison.Ordinal))
+            && !l.Contains("complete log", StringComparison.OrdinalIgnoreCase)
             && l.TrimEnd(':').Length > "npm error".Length)
         ?? LastLine(result);
+
+    private static readonly string[] NpmBookkeeping = ["error code ", "error path ", "error errno ", "error syscall ", "error command sh ", "ERR! code ", "ERR! path ", "ERR! errno ", "ERR! syscall ", "ERR! command sh "];
 
     /// <summary>The offer over the editor after a failed install: its message, and the full log one tap away.</summary>
     private ToolchainNoticeViewModel? InstallFailureNotice(ToolchainProject project) =>
