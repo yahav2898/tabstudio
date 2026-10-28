@@ -1,0 +1,293 @@
+spectre-console-Spectre-Console-slnx at e8045f7c53c3c217a7f93f362f5256f1fadc0020, opening /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.slnx
+Opened in 0.3 s: Spectre.Console, solution /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.slnx
+  project Spectre.Console.ImageSharp [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Extensions/Spectre.Console.ImageSharp/Spectre.Console.ImageSharp.csproj
+  project Spectre.Console.Json [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Extensions/Spectre.Console.Json/Spectre.Console.Json.csproj
+  project Benchmarks [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Benchmarks/Benchmarks.csproj
+  project Spectre.Console.Ansi.Tests [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi.Tests/Spectre.Console.Ansi.Tests.csproj
+  project Spectre.Console.Ansi [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Spectre.Console.Ansi.csproj
+  project Spectre.Console.SourceGenerator [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.csproj
+  project Spectre.Console.Testing [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Testing/Spectre.Console.Testing.csproj
+  project Spectre.Console.Tests [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Tests/Spectre.Console.Tests.csproj
+  project Spectre.Console [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Spectre.Console.csproj
+Compatibility Doctor:
+  Spectre.Console.ImageSharp: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Spectre.Console.Json: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Benchmarks: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  Spectre.Console.Ansi.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Spectre.Console.Ansi: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Spectre.Console.SourceGenerator: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Spectre.Console.Testing: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Spectre.Console.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Spectre.Console: Library via Built with its users - A library is compiled together with the projects that reference it.
+F5 startup project: Benchmarks /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Benchmarks/Benchmarks.csproj
+Error List after analysis: 170 errors, 2 warnings
+  134 x CS0117
+      [Spectre.Console.Json] JsonText.cs(92,52): error CS0117: 'Color' does not contain a definition for 'Grey'
+      [Spectre.Console.Json] JsonText.cs(93,56): error CS0117: 'Color' does not contain a definition for 'Grey'
+      [Spectre.Console.Json] JsonText.cs(94,52): error CS0117: 'Color' does not contain a definition for 'Blue'
+      [Spectre.Console.Json] JsonText.cs(95,50): error CS0117: 'Color' does not contain a definition for 'Yellow'
+      [Spectre.Console.Json] JsonText.cs(96,50): error CS0117: 'Color' does not contain a definition for 'Grey'
+      [Spectre.Console.Json] JsonText.cs(97,52): error CS0117: 'Color' does not contain a definition for 'Red'
+      [Spectre.Console.Json] JsonText.cs(98,52): error CS0117: 'Color' does not contain a definition for 'Green'
+      [Spectre.Console.Json] JsonText.cs(99,54): error CS0117: 'Color' does not contain a definition for 'Green'
+      [Spectre.Console.Json] JsonText.cs(100,48): error CS0117: 'Color' does not contain a definition for 'Grey'
+      [Spectre.Console.Ansi.Tests] AnsiMarkupTests.cs(84,68): error CS0117: 'Color' does not contain a definition for 'Yellow'
+  25 x CS0103
+      [Spectre.Console.Ansi] Color.cs(288,35): error CS0103: The name 'Black' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(289,34): error CS0103: The name 'Blue' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(290,34): error CS0103: The name 'Aqua' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(291,38): error CS0103: The name 'Navy' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(292,38): error CS0103: The name 'Teal' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(293,38): error CS0103: The name 'Grey' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(294,39): error CS0103: The name 'Green' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(295,41): error CS0103: The name 'Purple' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(296,37): error CS0103: The name 'Maroon' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(297,40): error CS0103: The name 'Olive' does not exist in the current context
+  7 x CS1061
+      [Spectre.Console] SpinnerColumn.cs(30,45): error CS1061: 'Spinner' does not contain a definition for 'Known' and no accessible extension method 'Known' accepting a first argument of type 'Spinner' could be found (are you missing a using directive or an assembly reference?)
+      [Spectre.Console] SpinnerColumn.cs(83,24): error CS1061: 'Spinner' does not contain a definition for 'Known' and no accessible extension method 'Known' accepting a first argument of type 'Spinner' could be found (are you missing a using directive or an assembly reference?)
+      [Spectre.Console] SpinnerColumn.cs(101,42): error CS1061: 'Spinner' does not contain a definition for 'Known' and no accessible extension method 'Known' accepting a first argument of type 'Spinner' could be found (are you missing a using directive or an assembly reference?)
+      [Spectre.Console] SpinnerColumn.cs(101,76): error CS1061: 'Spinner' does not contain a definition for 'Known' and no accessible extension method 'Known' accepting a first argument of type 'Spinner' could be found (are you missing a using directive or an assembly reference?)
+      [Spectre.Console] SpinnerColumn.cs(138,50): error CS1061: 'Spinner' does not contain a definition for 'Known' and no accessible extension method 'Known' accepting a first argument of type 'Spinner' could be found (are you missing a using directive or an assembly reference?)
+      [Spectre.Console] SpinnerColumn.cs(138,84): error CS1061: 'Spinner' does not contain a definition for 'Known' and no accessible extension method 'Known' accepting a first argument of type 'Spinner' could be found (are you missing a using directive or an assembly reference?)
+      [Spectre.Console] Status.cs(93,66): error CS1061: 'Spinner' does not contain a definition for 'Known' and no accessible extension method 'Known' accepting a first argument of type 'Spinner' could be found (are you missing a using directive or an assembly reference?)
+  2 x CS0426
+      [Spectre.Console.Tests] BackwardsCompatibilityTests.cs(60,50): error CS0426: The type name 'Known' does not exist in the type 'Spinner'
+      [Spectre.Console.Tests] BackwardsCompatibilityTests.cs(99,47): error CS0426: The type name 'Known' does not exist in the type 'Emoji'
+  1 x CS1729
+      [Spectre.Console.Ansi] Color.cs(11,44): error CS1729: 'Color' does not contain a constructor that takes 5 arguments
+  1 x CS0246
+      [Spectre.Console] Usings.cs(18,14): error CS0246: The type or namespace name 'Wcwidth' could not be found (are you missing a using directive or an assembly reference?)
+Error List after the build: 21 errors, 2 warnings
+  20 x CS0103
+      [Spectre.Console.Ansi] Color.cs(288,35): error CS0103: The name 'Black' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(289,34): error CS0103: The name 'Blue' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(290,34): error CS0103: The name 'Aqua' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(291,38): error CS0103: The name 'Navy' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(292,38): error CS0103: The name 'Teal' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(293,38): error CS0103: The name 'Grey' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(294,39): error CS0103: The name 'Green' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(295,41): error CS0103: The name 'Purple' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(296,37): error CS0103: The name 'Maroon' does not exist in the current context
+      [Spectre.Console.Ansi] Color.cs(297,40): error CS0103: The name 'Olive' does not exist in the current context
+  1 x CS1729
+      [Spectre.Console.Ansi] Color.cs(11,44): error CS1729: 'Color' does not contain a constructor that takes 5 arguments
+Run: exited (0 s after F5)
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring NuGet packages 0/9 projects
+  Analyzing: Analyzing 0/9 projects
+  Analyzing: Analyzing 1/9 projects
+  Analyzing: Analyzing 2/9 projects
+  Analyzing: Analyzing 3/9 projects
+  Analyzing: Analyzing 4/9 projects
+  Analyzing: Analyzing 5/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/9
+  Restoring NuGet packages: Downloading NuGet packages 2/9
+  Restoring NuGet packages: Downloading NuGet packages 3/9
+  Restoring NuGet packages: Downloading NuGet packages 4/9
+  Restoring NuGet packages: Downloading NuGet packages 5/9
+  Restoring NuGet packages: Downloading NuGet packages 6/9
+  Restoring NuGet packages: Downloading NuGet packages 7/9
+  Restoring NuGet packages: Downloading NuGet packages 8/9
+  Analyzing: Analyzing 6/9 projects
+  Analyzing: Analyzing 7/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 9/9
+  Restoring NuGet packages: Restoring NuGet packages 1/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/9
+  Restoring NuGet packages: Downloading NuGet packages 2/9
+  Restoring NuGet packages: Downloading NuGet packages 3/9
+  Restoring NuGet packages: Downloading NuGet packages 4/9
+  Restoring NuGet packages: Downloading NuGet packages 5/9
+  Restoring NuGet packages: Downloading NuGet packages 6/9
+  Restoring NuGet packages: Downloading NuGet packages 7/9
+  Restoring NuGet packages: Downloading NuGet packages 8/9
+  Analyzing: Analyzing 8/9 projects
+  Analyzing: Analyzing 9/9 projects
+  Analyzing: Succeeded after 1.5 s
+  Restoring NuGet packages: Downloading NuGet packages 9/9
+  Restoring NuGet packages: Restoring NuGet packages 2/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/30
+  Restoring NuGet packages: Downloading NuGet packages 2/30
+  Restoring NuGet packages: Downloading NuGet packages 3/30
+  Restoring NuGet packages: Downloading NuGet packages 4/30
+  Restoring NuGet packages: Downloading NuGet packages 5/30
+  Restoring NuGet packages: Downloading NuGet packages 6/30
+  Restoring NuGet packages: Downloading NuGet packages 7/30
+  Restoring NuGet packages: Downloading NuGet packages 8/30
+  Restoring NuGet packages: Downloading NuGet packages 9/30
+  Restoring NuGet packages: Downloading NuGet packages 10/30
+  Restoring NuGet packages: Downloading NuGet packages 11/30
+  Restoring NuGet packages: Downloading NuGet packages 12/30
+  Restoring NuGet packages: Downloading NuGet packages 13/30
+  Restoring NuGet packages: Downloading NuGet packages 14/30
+  Restoring NuGet packages: Downloading NuGet packages 15/30
+  Restoring NuGet packages: Downloading NuGet packages 16/30
+  Restoring NuGet packages: Downloading NuGet packages 17/30
+  Restoring NuGet packages: Downloading NuGet packages 18/30
+  Restoring NuGet packages: Downloading NuGet packages 19/30
+  Restoring NuGet packages: Downloading NuGet packages 20/30
+  Restoring NuGet packages: Downloading NuGet packages 21/30
+  Restoring NuGet packages: Downloading NuGet packages 22/30
+  Restoring NuGet packages: Downloading NuGet packages 23/30
+  Restoring NuGet packages: Downloading NuGet packages 24/30
+  Restoring NuGet packages: Downloading NuGet packages 25/30
+  Restoring NuGet packages: Downloading NuGet packages 26/30
+  Restoring NuGet packages: Downloading NuGet packages 27/30
+  Restoring NuGet packages: Downloading NuGet packages 28/30
+  Restoring NuGet packages: Downloading NuGet packages 29/30
+  Restoring NuGet packages: Downloading NuGet packages 30/30
+  Restoring NuGet packages: Restoring NuGet packages 3/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/23
+  Restoring NuGet packages: Downloading NuGet packages 2/23
+  Restoring NuGet packages: Downloading NuGet packages 3/23
+  Restoring NuGet packages: Downloading NuGet packages 4/23
+  Restoring NuGet packages: Downloading NuGet packages 5/23
+  Restoring NuGet packages: Downloading NuGet packages 6/23
+  Restoring NuGet packages: Downloading NuGet packages 7/23
+  Restoring NuGet packages: Downloading NuGet packages 8/23
+  Restoring NuGet packages: Downloading NuGet packages 9/23
+  Restoring NuGet packages: Downloading NuGet packages 10/23
+  Restoring NuGet packages: Downloading NuGet packages 11/23
+  Restoring NuGet packages: Downloading NuGet packages 12/23
+  Restoring NuGet packages: Downloading NuGet packages 13/23
+  Restoring NuGet packages: Downloading NuGet packages 14/23
+  Restoring NuGet packages: Downloading NuGet packages 15/23
+  Restoring NuGet packages: Downloading NuGet packages 16/23
+  Restoring NuGet packages: Downloading NuGet packages 17/23
+  Restoring NuGet packages: Downloading NuGet packages 18/23
+  Restoring NuGet packages: Downloading NuGet packages 19/23
+  Restoring NuGet packages: Downloading NuGet packages 20/23
+  Restoring NuGet packages: Downloading NuGet packages 21/23
+  Restoring NuGet packages: Downloading NuGet packages 22/23
+  Restoring NuGet packages: Downloading NuGet packages 23/23
+  Restoring NuGet packages: Restoring NuGet packages 4/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/8
+  Restoring NuGet packages: Downloading NuGet packages 2/8
+  Restoring NuGet packages: Downloading NuGet packages 3/8
+  Restoring NuGet packages: Downloading NuGet packages 4/8
+  Restoring NuGet packages: Downloading NuGet packages 5/8
+  Restoring NuGet packages: Downloading NuGet packages 6/8
+  Restoring NuGet packages: Downloading NuGet packages 7/8
+  Restoring NuGet packages: Downloading NuGet packages 8/8
+  Restoring NuGet packages: Restoring NuGet packages 5/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/11
+  Restoring NuGet packages: Downloading NuGet packages 2/11
+  Restoring NuGet packages: Downloading NuGet packages 3/11
+  Restoring NuGet packages: Downloading NuGet packages 4/11
+  Restoring NuGet packages: Downloading NuGet packages 5/11
+  Restoring NuGet packages: Downloading NuGet packages 6/11
+  Restoring NuGet packages: Downloading NuGet packages 7/11
+  Restoring NuGet packages: Downloading NuGet packages 8/11
+  Restoring NuGet packages: Downloading NuGet packages 9/11
+  Restoring NuGet packages: Downloading NuGet packages 10/11
+  Restoring NuGet packages: Downloading NuGet packages 11/11
+  Restoring NuGet packages: Restoring NuGet packages 6/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/9
+  Restoring NuGet packages: Downloading NuGet packages 2/9
+  Restoring NuGet packages: Downloading NuGet packages 3/9
+  Restoring NuGet packages: Downloading NuGet packages 4/9
+  Restoring NuGet packages: Downloading NuGet packages 5/9
+  Restoring NuGet packages: Downloading NuGet packages 6/9
+  Restoring NuGet packages: Downloading NuGet packages 7/9
+  Restoring NuGet packages: Downloading NuGet packages 8/9
+  Restoring NuGet packages: Downloading NuGet packages 9/9
+  Restoring NuGet packages: Restoring NuGet packages 7/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/31
+  Restoring NuGet packages: Downloading NuGet packages 2/31
+  Restoring NuGet packages: Downloading NuGet packages 3/31
+  Restoring NuGet packages: Downloading NuGet packages 4/31
+  Restoring NuGet packages: Downloading NuGet packages 5/31
+  Restoring NuGet packages: Downloading NuGet packages 6/31
+  Restoring NuGet packages: Downloading NuGet packages 7/31
+  Restoring NuGet packages: Downloading NuGet packages 8/31
+  Restoring NuGet packages: Downloading NuGet packages 9/31
+  Restoring NuGet packages: Downloading NuGet packages 10/31
+  Restoring NuGet packages: Downloading NuGet packages 11/31
+  Restoring NuGet packages: Downloading NuGet packages 12/31
+  Restoring NuGet packages: Downloading NuGet packages 13/31
+  Restoring NuGet packages: Downloading NuGet packages 14/31
+  Restoring NuGet packages: Downloading NuGet packages 15/31
+  Restoring NuGet packages: Downloading NuGet packages 16/31
+  Restoring NuGet packages: Downloading NuGet packages 17/31
+  Restoring NuGet packages: Downloading NuGet packages 18/31
+  Restoring NuGet packages: Downloading NuGet packages 19/31
+  Restoring NuGet packages: Downloading NuGet packages 20/31
+  Restoring NuGet packages: Downloading NuGet packages 21/31
+  Restoring NuGet packages: Downloading NuGet packages 22/31
+  Restoring NuGet packages: Downloading NuGet packages 23/31
+  Restoring NuGet packages: Downloading NuGet packages 24/31
+  Restoring NuGet packages: Downloading NuGet packages 25/31
+  Restoring NuGet packages: Downloading NuGet packages 26/31
+  Restoring NuGet packages: Downloading NuGet packages 27/31
+  Restoring NuGet packages: Downloading NuGet packages 28/31
+  Restoring NuGet packages: Downloading NuGet packages 29/31
+  Restoring NuGet packages: Downloading NuGet packages 30/31
+  Restoring NuGet packages: Downloading NuGet packages 31/31
+  Restoring NuGet packages: Restoring NuGet packages 8/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/10
+  Restoring NuGet packages: Downloading NuGet packages 2/10
+  Restoring NuGet packages: Downloading NuGet packages 3/10
+  Restoring NuGet packages: Downloading NuGet packages 4/10
+  Restoring NuGet packages: Downloading NuGet packages 5/10
+  Restoring NuGet packages: Downloading NuGet packages 6/10
+  Restoring NuGet packages: Downloading NuGet packages 7/10
+  Restoring NuGet packages: Downloading NuGet packages 8/10
+  Restoring NuGet packages: Downloading NuGet packages 9/10
+  Restoring NuGet packages: Downloading NuGet packages 10/10
+  Restoring NuGet packages: Succeeded after 5.5 s
+  Analyzing: Analyzing 0/9 projects
+  Analyzing: Analyzing 1/9 projects
+  Analyzing: Analyzing 2/9 projects
+  Analyzing: Analyzing 3/9 projects
+  Analyzing: Analyzing 4/9 projects
+  Analyzing: Analyzing 5/9 projects
+  Analyzing: Analyzing 6/9 projects
+  Analyzing: Analyzing 7/9 projects
+  Analyzing: Analyzing 8/9 projects
+  Analyzing: Analyzing 9/9 projects
+  Analyzing: Succeeded after 1.0 s
+  Building: Building
+  Building: Building 0/9 projects
+  Building: Building 1/9 projects
+  Building: Building 2/9 projects
+  Building: Building 3/9 projects
+  Building: Building 4/9 projects
+  Building: Building 5/9 projects
+  Building: Building 6/9 projects
+  Building: Building 7/9 projects
+  Building: Building 8/9 projects
+  Building: Failed after 0.9 s
+  Building: Building
+  Building: Building Benchmarks
+  Building: Failed after 0.1 s
+Project setup:
+
+Output:
+Build started at 14:04:52...
+1>------ Build started: Project: Benchmarks, Configuration: Debug ------
+1>Color.cs(11,44): error CS1729: 'Color' does not contain a constructor that takes 5 arguments
+1>Color.cs(288,35): error CS0103: The name 'Black' does not exist in the current context
+1>Color.cs(289,34): error CS0103: The name 'Blue' does not exist in the current context
+1>Color.cs(290,34): error CS0103: The name 'Aqua' does not exist in the current context
+1>Color.cs(291,38): error CS0103: The name 'Navy' does not exist in the current context
+1>Color.cs(292,38): error CS0103: The name 'Teal' does not exist in the current context
+1>Color.cs(293,38): error CS0103: The name 'Grey' does not exist in the current context
+1>Color.cs(294,39): error CS0103: The name 'Green' does not exist in the current context
+1>Color.cs(295,41): error CS0103: The name 'Purple' does not exist in the current context
+1>Color.cs(296,37): error CS0103: The name 'Maroon' does not exist in the current context
+1>Color.cs(297,40): error CS0103: The name 'Olive' does not exist in the current context
+1>Color.cs(298,34): error CS0103: The name 'Silver' does not exist in the current context
+1>Color.cs(299,35): error CS0103: The name 'Lime' does not exist in the current context
+1>Color.cs(300,37): error CS0103: The name 'Fuchsia' does not exist in the current context
+1>Color.cs(301,33): error CS0103: The name 'Red' does not exist in the current context
+1>Color.cs(302,35): error CS0103: The name 'White' does not exist in the current context
+1>Color.cs(303,36): error CS0103: The name 'Yellow' does not exist in the current context
+1>ColorPalette.cs(11,18): error CS0103: The name 'GenerateLegacyPalette' does not exist in the current context
+1>ColorPalette.cs(12,20): error CS0103: The name 'GenerateStandardPalette' does not exist in the current context
+1>ColorPalette.cs(13,20): error CS0103: The name 'GenerateEightBitPalette' does not exist in the current context
+1>ColorTable.cs(10,25): error CS0103: The name 'GenerateTable' does not exist in the current context
+========== Build: 0 succeeded, 1 failed ==========
+
