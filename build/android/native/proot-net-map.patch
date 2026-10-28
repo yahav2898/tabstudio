@@ -48,7 +48,7 @@ index 6ec5036..9538686 100644
 +                { .name = NULL, .separator = '\0', .value = NULL } },
 +          .handler = handle_option_net_map,
 +          .description = "Rewrite bound ports and connected addresses (TabStudio containers).",
-+          .detail = "\tB<port>=<port> rewrites bind(2); C<addr>:<port>=<addr>:<port> rewrites\n\
++          .detail = "\tB<port>=<port> and L<port>=<port> (to loopback) rewrite bind(2); C<addr>:<port>=<addr>:<port> rewrites\n\
 +\tconnect(2) and sendto(2). Rules are separated by commas.",
 +        },
          { .class = "Extension options",
