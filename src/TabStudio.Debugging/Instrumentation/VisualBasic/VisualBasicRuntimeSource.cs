@@ -66,9 +66,7 @@ internal static class VisualBasicRuntimeSource
 
         Namespace Global
 
-            <Global.System.Runtime.CompilerServices.CompilerGenerated>
-            <Global.System.Diagnostics.DebuggerNonUserCode>
-            Friend NotInheritable Class __TabStudioDebug
+            <Global.System.Runtime.CompilerServices.CompilerGenerated, Global.System.Diagnostics.DebuggerNonUserCode> Friend NotInheritable Class __TabStudioDebug
                 Private Shared ReadOnly s_enter As Global.System.Func(Of Integer, Object)
                 Private Shared ReadOnly s_exit As Global.System.Action(Of Object)
                 Private Shared ReadOnly s_suspend As Global.System.Action(Of Object)

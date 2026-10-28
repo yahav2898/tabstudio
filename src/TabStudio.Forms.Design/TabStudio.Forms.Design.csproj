@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <!--
-    The Windows Forms designer: reads a form's Form1.Designer.cs with Roslyn, builds the form from it on a design
-    surface without running any of the app's code, and writes the InitializeComponent the changes make back as
-    Visual Studio does. Its canvas is an Avalonia control the IDE hosts with the toolbox and the properties.
+    The Windows Forms designer: reads a form's Form1.Designer.cs or Form1.Designer.vb with Roslyn, builds the form from
+    it on a design surface without running any of the app's code, and writes the InitializeComponent the changes make
+    back as Visual Studio does, in C# or Visual Basic. Its canvas is an Avalonia control the IDE hosts with the toolbox
+    and the properties.
   -->
 
   <PropertyGroup>
@@ -15,6 +16,7 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" />
   </ItemGroup>
 
   <ItemGroup>

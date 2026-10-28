@@ -289,18 +289,28 @@ internal sealed class VisualBasicInstrumentingWalker
         member.ContainingType is { TypeKind: TypeKind.Class or TypeKind.Struct } type &&
         !(type.IsValueType && (member.IsAsync || member.IsIterator));
 
-    /// <summary>Whether the first statement calls another constructor, which Visual Basic requires to come first.</summary>
+    /// <summary>
+    /// Whether the first statement calls another constructor (<c>MyBase.New(...)</c>, <c>Me.New(...)</c> or
+    /// <c>MyClass.New(...)</c>), which Visual Basic requires to come first.
+    /// </summary>
     private bool StartsWithConstructorCall(SyntaxList<StatementSyntax> statements)
     {
-        var invocation = statements.FirstOrDefault() switch
+        var target = statements.FirstOrDefault() switch
         {
-            ExpressionStatementSyntax { Expression: InvocationExpressionSyntax call } => call,
-            CallStatementSyntax { Invocation: InvocationExpressionSyntax call } => call,
+            ExpressionStatementSyntax statement => statement.Expression,
+            CallStatementSyntax call => call.Invocation,
             _ => null,
         };
 
-        return invocation?.Expression is MemberAccessExpressionSyntax { Expression: MyBaseExpressionSyntax or MeExpressionSyntax or MyClassExpressionSyntax } &&
-            _model.GetSymbolInfo(invocation, _cancellationToken).Symbol is IMethodSymbol { MethodKind: MethodKind.Constructor };
+        var callee = target is InvocationExpressionSyntax invocation ? invocation.Expression : target;
+        if (target is null ||
+            callee is not MemberAccessExpressionSyntax { Expression: MyBaseExpressionSyntax or MeExpressionSyntax or MyClassExpressionSyntax } access)
+        {
+            return false;
+        }
+
+        return string.Equals(access.Name.Identifier.ValueText, "New", StringComparison.OrdinalIgnoreCase) ||
+            _model.GetSymbolInfo(target, _cancellationToken).Symbol is IMethodSymbol { MethodKind: MethodKind.Constructor };
     }
 
     /// <summary><c>On Error</c> and <c>Resume</c> cannot share a method with <c>Try</c>.</summary>

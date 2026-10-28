@@ -59,6 +59,7 @@ public sealed class CompilerServices
         var host = new RoslynWorkspaceHost(references);
         host.SetWpfXamlCompiler(WpfXamlCompiler);
         host.SetWindowsFormsReferences(WindowsFormsReferences.References);
+        host.SetVisualBasicReferences(VisualBasicReferences.References);
         return host;
     }
 

@@ -181,5 +181,50 @@ public sealed class LiveTestEngineTests : IDisposable
         Assert.Empty(Assert.Single(_solution.Listener.Builds).Modules);
     }
 
+    [Fact]
+    public async Task Visual_basic_projects_get_coverage_and_rerun_only_the_tests_an_edit_affects()
+    {
+        using var solution = new LiveSolution(visualBasic: true);
+        var library = LiveSolution.VisualBasicLibrary;
+
+        var summary = await solution.RunAsync();
+
+        Assert.Empty(summary.FailedBuilds);
+        Assert.Equal(4, summary.TestsRun);
+        Assert.Contains(solution.Listener.Queued, t => t.Id == "Calc.Tests.ArithmeticTests.Adds");
+        var add = solution.LibraryLine("Return a + b");
+        Assert.Equal(LiveSolution.LineOf(library, "Return a + b"), add.Line);
+        Assert.Equal(LineCoverageState.Covered, add.State);
+        Assert.Equal(
+            new[] { "Adds", "Adds_pairs(a: 1, b: 1, sum: 2)", "Adds_pairs(a: 2, b: 2, sum: 4)" },
+            add.Tests.Select(t => t.Test.DisplayName));
+        Assert.Equal(LineCoverageState.NotCovered, solution.LibraryLine("Return -value").State);
+        var subtractLine = LiveSolution.LineOf(library, "Public Function Subtract") + 1;
+        var file = solution.Engine.Index.GetFile(solution.LibraryFile)!;
+        Assert.Equal(LineCoverageState.Failing, Assert.Single(file.Lines, l => l.Line == subtractLine).State);
+
+        var fixedLibrary = library.Replace(
+            "Subtract(a As Integer, b As Integer) As Integer\n        Return a + b",
+            "Subtract(a As Integer, b As Integer) As Integer\n        Return a - b",
+            StringComparison.Ordinal);
+        solution.EditLibrary(fixedLibrary);
+        await solution.RunAsync();
+        Assert.Equal(new[] { "Subtracts" }, solution.QueuedMethods());
+        Assert.Equal(LineCoverageState.Covered, solution.LibraryLine("Return a - b").State);
+
+        solution.EditLibrary("' Arithmetic for the calculator.\n" + fixedLibrary);
+        await solution.RunAsync();
+        Assert.Empty(solution.QueuedMethods());
+        Assert.Equal(LiveSolution.LineOf(library, "Return a + b") + 1, solution.LibraryLine("Return a + b").Line);
+
+        solution.EditTests(LiveSolution.VisualBasicTests.Replace(
+            "    <Theory>",
+            "    <Fact>\n    Public Sub Negates()\n        Assert.True(Arithmetic.Negate(2) = -2)\n    End Sub\n\n    <Theory>",
+            StringComparison.Ordinal));
+        await solution.RunAsync();
+        Assert.Equal(new[] { "Negates" }, solution.QueuedMethods());
+        Assert.Equal(LineCoverageState.Covered, solution.LibraryLine("Return -value").State);
+    }
+
     public void Dispose() => _solution.Dispose();
 }

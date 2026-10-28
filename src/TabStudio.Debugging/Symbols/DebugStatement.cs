@@ -1,8 +1,9 @@
 namespace TabStudio.Debugging.Symbols;
 
 /// <summary>A variable whose value an instrumented statement hands to the debugger when it pauses there.</summary>
-/// <param name="Name">The name as written in the source, or <c>this</c>.</param>
-/// <param name="Type">The declared type as C# displays it, for example <c>List&lt;int&gt;</c>.</param>
+/// <param name="Name">The name as written in the source, or <c>this</c> (<c>Me</c> in Visual Basic).</param>
+/// <param name="Type">The declared type as the source's language displays it, for example <c>List&lt;int&gt;</c> or
+/// <c>List(Of Integer)</c>.</param>
 public sealed record DebugLocalSlot(string Name, string Type)
 {
     /// <summary>Whether the slot is a static field captured only by recording sessions.</summary>

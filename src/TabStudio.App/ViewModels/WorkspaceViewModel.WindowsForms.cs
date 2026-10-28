@@ -21,7 +21,7 @@ public sealed partial class WorkspaceViewModel
 
     /// <summary>Whether F5 shows a project in the app preview as a Windows Forms app.</summary>
     private static bool IsWindowsFormsApp(ProjectInfo project) =>
-        project.Language == ProjectLanguage.CSharp && project.IsExecutable
+        project.IsRoslynLanguage && project.IsExecutable
         && (project.Kind == ProjectKind.WinForms || WindowsFormsProject.UsesWindowsForms(project));
 
     /// <summary>Shows one build of a Windows Forms app until it ends, is stopped or crashes.</summary>

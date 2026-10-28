@@ -1,4 +1,3 @@
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.VisualBasic;
@@ -57,7 +56,7 @@ public static class SourceTestScanner
                 continue;
             }
 
-            SyntaxTree tree = visualBasicOptions is not null
+            var tree = visualBasicOptions is not null
                 ? VisualBasicSyntaxTree.ParseText(SourceText.From(text), visualBasicOptions, file, cancellationToken)
                 : CSharpSyntaxTree.ParseText(SourceText.From(text), csharpOptions, file, cancellationToken);
             classes.AddRange(SourceTestDiscoverer.Discover(tree, rootNamespace, cancellationToken));

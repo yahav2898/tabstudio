@@ -9,7 +9,8 @@ namespace TabStudio.LiveTesting.Tests;
 
 /// <summary>
 /// A small solution on disk, loaded in a workspace host the way the IDE loads it: a library with a bug and an xUnit
-/// project that tests it, with the xUnit assemblies of this test project standing in for restored packages.
+/// project that tests it, with the xUnit assemblies of this test project standing in for restored packages. Both
+/// projects are C#, or both Visual Basic.
 /// </summary>
 internal sealed class LiveSolution : IDisposable
 {
@@ -56,47 +57,102 @@ internal sealed class LiveSolution : IDisposable
         }
         """;
 
+    /// <summary>The library in Visual Basic: a module in the project's root namespace, <c>Calculator</c>.</summary>
+    public const string VisualBasicLibrary = """
+        Public Module Arithmetic
+            Public Function Add(a As Integer, b As Integer) As Integer
+                Return a + b
+            End Function
+
+            Public Function Subtract(a As Integer, b As Integer) As Integer
+                Return a + b
+            End Function
+
+            Public Function Negate(value As Integer) As Integer
+                Return -value
+            End Function
+        End Module
+        """;
+
+    /// <summary>The tests in Visual Basic, in the test project's root namespace, <c>Calc.Tests</c>.</summary>
+    public const string VisualBasicTests = """
+        Imports Calculator
+        Imports Xunit
+
+        Public Class ArithmeticTests
+            <Fact>
+            Public Sub Adds()
+                Assert.True(Arithmetic.Add(2, 3) = 5)
+            End Sub
+
+            <Fact>
+            Public Sub Subtracts()
+                Assert.True(Arithmetic.Subtract(3, 2) = 1)
+            End Sub
+
+            <Theory>
+            <InlineData(1, 1, 2)>
+            <InlineData(2, 2, 4)>
+            Public Sub Adds_pairs(a As Integer, b As Integer, sum As Integer)
+                Assert.True(Arithmetic.Add(a, b) = sum)
+            End Sub
+        End Class
+        """;
+
     private readonly TempDirectory _temp = new();
 
-    public LiveSolution()
+    /// <summary>Writes the solution and loads it.</summary>
+    /// <param name="visualBasic">Whether both projects are Visual Basic projects instead of C# ones.</param>
+    public LiveSolution(bool visualBasic = false)
     {
-        _temp.Write("Live.slnx", """
+        var projectExtension = visualBasic ? "vbproj" : "csproj";
+        var sourceExtension = visualBasic ? "vb" : "cs";
+        _temp.Write("Live.slnx", $"""
             <Solution>
-              <Project Path="Calc/Calc.csproj" />
-              <Project Path="Calc.Tests/Calc.Tests.csproj" />
+              <Project Path="Calc/Calc.{projectExtension}" />
+              <Project Path="Calc.Tests/Calc.Tests.{projectExtension}" />
             </Solution>
             """);
-        _temp.Write("Calc/Calc.csproj", """
+        _temp.Write($"Calc/Calc.{projectExtension}", visualBasic
+            ? """
+                <Project Sdk="Microsoft.NET.Sdk">
+                  <PropertyGroup>
+                    <TargetFramework>net10.0</TargetFramework>
+                    <RootNamespace>Calculator</RootNamespace>
+                  </PropertyGroup>
+                </Project>
+                """
+            : """
+                <Project Sdk="Microsoft.NET.Sdk">
+                  <PropertyGroup>
+                    <TargetFramework>net10.0</TargetFramework>
+                    <ImplicitUsings>enable</ImplicitUsings>
+                    <Nullable>enable</Nullable>
+                  </PropertyGroup>
+                </Project>
+                """);
+        LibraryFile = _temp.Write($"Calc/Arithmetic.{sourceExtension}", visualBasic ? VisualBasicLibrary : Library);
+        var csharpProperties = visualBasic ? string.Empty : "<ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>";
+        _temp.Write($"Calc.Tests/Calc.Tests.{projectExtension}", $$"""
             <Project Sdk="Microsoft.NET.Sdk">
               <PropertyGroup>
                 <TargetFramework>net10.0</TargetFramework>
-                <ImplicitUsings>enable</ImplicitUsings>
-                <Nullable>enable</Nullable>
-              </PropertyGroup>
-            </Project>
-            """);
-        LibraryFile = _temp.Write("Calc/Arithmetic.cs", Library);
-        _temp.Write("Calc.Tests/Calc.Tests.csproj", """
-            <Project Sdk="Microsoft.NET.Sdk">
-              <PropertyGroup>
-                <TargetFramework>net10.0</TargetFramework>
-                <ImplicitUsings>enable</ImplicitUsings>
-                <Nullable>enable</Nullable>
+                {{csharpProperties}}
                 <IsTestProject>true</IsTestProject>
               </PropertyGroup>
               <ItemGroup>
                 <PackageReference Include="xunit" Version="2.9.3" />
               </ItemGroup>
               <ItemGroup>
-                <ProjectReference Include="..\Calc\Calc.csproj" />
+                <ProjectReference Include="..\Calc\Calc.{{projectExtension}}" />
               </ItemGroup>
             </Project>
             """);
-        TestFile = _temp.Write("Calc.Tests/ArithmeticTests.cs", Tests);
+        TestFile = _temp.Write($"Calc.Tests/ArithmeticTests.{sourceExtension}", visualBasic ? VisualBasicTests : Tests);
 
         Host.Load(WorkspaceLoader.Load(_temp.Path), FileSystemTextProvider.Instance);
-        TestProject = Host.FindProject(_temp.Resolve("Calc.Tests/Calc.Tests.csproj"))!;
-        LibraryProject = Host.FindProject(_temp.Resolve("Calc/Calc.csproj"))!;
+        TestProject = Host.FindProject(_temp.Resolve($"Calc.Tests/Calc.Tests.{projectExtension}"))!;
+        LibraryProject = Host.FindProject(_temp.Resolve($"Calc/Calc.{projectExtension}"))!;
         Host.SetPackageReferences(TestProject.FilePath, XunitAssemblies);
         Builder = new CoverageBuilder(Host);
         Engine = new LiveTestEngine((project, uninstrumented, token) => Builder.BuildAsync(project, uninstrumented, token), _ => XunitAssemblies);

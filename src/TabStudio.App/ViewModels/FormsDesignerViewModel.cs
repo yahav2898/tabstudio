@@ -40,7 +40,8 @@ internal interface IFormsDesignerHost
 /// <summary>
 /// The Windows Forms designer of a form's code file, such as Form1.cs: the form built from Form1.Designer.cs on a
 /// touch canvas, the Toolbox, and the Properties and events of the selected control. Every change is written to
-/// Form1.Designer.cs as Visual Studio writes it, and can be undone; event handlers are added to Form1.cs.
+/// Form1.Designer.cs as Visual Studio writes it, and can be undone; event handlers are added to Form1.cs. A Visual
+/// Basic form's Form1.vb and Form1.Designer.vb are designed the same way, its handlers wired by Handles clauses.
 /// </summary>
 public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposable
 {
@@ -65,10 +66,12 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
         _host = host;
         _designerPath = designerPath;
         var className = Path.GetFileNameWithoutExtension(code.FilePath);
-        var rootType = CodeBehind.BaseTypeOf(code.Document.Text, className) ?? "Form";
+        var language = DesignerFile.LanguageOf(designerPath);
+        var rootType = CodeBehind.BaseTypeOf(code.Document.Text, className, language) ?? "Form";
         _written = ReadDesignerText();
-        Surface = new DesignSurface(_written, rootType, simplified);
+        Surface = new DesignSurface(_written, rootType, simplified, language, code.Document.Text);
         Surface.Changed += OnSurfaceChanged;
+        Surface.Deleted += OnComponentsDeleted;
         Canvas = new DesignCanvas { Surface = Surface };
         Canvas.SelectionChanged += (_, _) => OnSelectionChanged();
         Canvas.HandlerRequested += (_, component) => CreateHandler(component, null);
@@ -184,6 +187,7 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
         _disposed = true;
         _code.NavigationRequested -= OnCodeNavigationRequested;
         Surface.Changed -= OnSurfaceChanged;
+        Surface.Deleted -= OnComponentsDeleted;
         Canvas.Surface = null;
     }
 
@@ -238,12 +242,8 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
         var handler = handlerName ?? existing ?? CodeBehind.HandlerName(component.IsRoot ? Surface.ClassName : component.Name, eventName);
         try
         {
-            var (text, caret) = CodeBehind.AddHandler(_code.Document.Text, Surface.ClassName, handler, delegateType, Surface.Document?.Style.FullTypeNames ?? false);
-            if (existing != handler)
-            {
-                Surface.SetHandler(component, eventName, handler);
-            }
-
+            // In C#, the designer file wires it; in Visual Basic, the handler's Handles clause.
+            var (text, caret) = Surface.AttachHandler(_code.Document.Text, component, eventName, handler, delegateType);
             ApplyCode(text);
             Mode = FormsDesignerMode.Code;
             _code.NavigateToOffset(caret);
@@ -277,6 +277,9 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
             _written = text;
             Surface.Reload(text);
         }
+
+        // A Visual Basic form's handlers are wired by Handles clauses in its code, which may have changed there.
+        Surface.CodeText = _code.Document.Text;
     }
 
     partial void OnModeChanged(FormsDesignerMode value)
@@ -390,6 +393,9 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
 
     private void OnCodeNavigationRequested(object? sender, EventArgs e) => Mode = FormsDesignerMode.Code;
 
+    /// <summary>Deleted controls leave a Visual Basic form's Handles clauses, as in Visual Studio; their handlers stay.</summary>
+    private void OnComponentsDeleted(object? sender, IReadOnlyList<string> names) => ApplyCode(Surface.ForgetHandlers(_code.Document.Text, names));
+
     private void OnSurfaceChanged(object? sender, EventArgs e)
     {
         WriteDesignerText(Surface.Text);
@@ -493,7 +499,7 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
 
         if (path == "Visible")
         {
-            return component.GetCode("Visible") != "false";
+            return !string.Equals(component.GetCode("Visible"), "false", StringComparison.OrdinalIgnoreCase);
         }
 
         if (path == "Font.Size")
@@ -536,7 +542,7 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
 
         if (string.IsNullOrWhiteSpace(handler))
         {
-            Surface.SetHandler(component, eventName, null);
+            ApplyCode(Surface.DetachHandler(_code.Document.Text, component, eventName));
             return;
         }
 
@@ -618,5 +624,5 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
         document.Replace(start, old.Length - start - end, text.Substring(start, text.Length - start - end));
     }
 
-    private void RenameInCode(string oldName, string newName) => ApplyCode(CodeBehind.RenameField(_code.Document.Text, oldName, newName));
+    private void RenameInCode(string oldName, string newName) => ApplyCode(Surface.RenameInCode(_code.Document.Text, oldName, newName));
 }

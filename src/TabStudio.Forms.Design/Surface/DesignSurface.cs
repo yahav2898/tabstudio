@@ -19,27 +19,42 @@ internal sealed partial class DesignSurface
     private readonly Stack<string> _redo = new();
     private readonly string _rootTypeName;
     private readonly bool _simplified;
+    private readonly DesignerLanguage _language;
     private DesignerFile? _file;
 
     /// <summary>Opens a designer file.</summary>
-    /// <param name="designerText">The designer file's text, such as Form1.Designer.cs's.</param>
+    /// <param name="designerText">The designer file's text, such as Form1.Designer.cs's or Form1.Designer.vb's.</param>
     /// <param name="rootTypeName">The designed class's base type from its code file, such as <c>Form</c>.</param>
     /// <param name="simplified">
-    /// Whether the project imports System.Drawing and System.Windows.Forms, as one with implicit usings does: the
-    /// designer then writes <c>button1.Location = new Point(12, 12);</c>, as Visual Studio does for such projects,
-    /// even in a file written with <c>this.</c> and namespaces, such as the Windows Forms App template's.
+    /// Whether the project imports System.Drawing and System.Windows.Forms, as one with implicit usings does, and every
+    /// Visual Basic Windows Forms project does: the designer then writes <c>button1.Location = new Point(12, 12);</c>
+    /// (<c>Button1.Location = New Point(12, 12)</c>), as Visual Studio does for such projects, even in a file written
+    /// with <c>this.</c> or <c>Me.</c> and namespaces, such as the Windows Forms App templates'.
     /// </param>
-    public DesignSurface(string designerText, string rootTypeName = "Form", bool simplified = false)
+    /// <param name="language">The designer file's language.</param>
+    /// <param name="codeText">
+    /// The form's code file's text, such as Form1.vb's, whose handlers' Handles clauses wire a Visual Basic form's
+    /// events; see <see cref="CodeText"/>.
+    /// </param>
+    public DesignSurface(string designerText, string rootTypeName = "Form", bool simplified = false, DesignerLanguage language = DesignerLanguage.CSharp, string? codeText = null)
     {
         ArgumentNullException.ThrowIfNull(designerText);
         _rootTypeName = rootTypeName;
         _simplified = simplified;
+        _language = language;
+        _codeText = codeText;
         Text = designerText;
         Load(designerText);
     }
 
     /// <summary>Raised after an edit, an undo or a redo changed the designer file.</summary>
     public event EventHandler? Changed;
+
+    /// <summary>
+    /// Raised after components were deleted, with their names and those of the controls and items inside them, for a
+    /// Visual Basic form's handlers to let go of them (see <see cref="ForgetHandlers"/>).
+    /// </summary>
+    public event EventHandler<IReadOnlyList<string>>? Deleted;
 
     /// <summary>The designer file's text as the designer last wrote it.</summary>
     public string Text { get; private set; }
@@ -58,6 +73,9 @@ internal sealed partial class DesignSurface
 
     /// <summary>The designed class's namespace.</summary>
     public string Namespace => _file?.Namespace ?? string.Empty;
+
+    /// <summary>The designer file's language.</summary>
+    public DesignerLanguage Language => _language;
 
     /// <summary>The live form or user control.</summary>
     public Control? Root => Document?.Root.Instance as Control;
@@ -316,40 +334,46 @@ internal sealed partial class DesignSurface
     /// <summary>The component a collection item names: the first argument, as in <c>button1</c> or <c>button1, 0, 0</c>.</summary>
     internal static string FirstName(string item) => item.Split(',', 2)[0].Trim();
 
-    /// <summary>Turns a document written with <c>this.</c> and namespaces into the simplified style; the file changes on the first edit.</summary>
+    /// <summary>
+    /// Turns a document written with <c>this.</c> or <c>Me.</c> and namespaces into the simplified style; the file
+    /// changes on the first edit.
+    /// </summary>
     private static void Simplify(DesignDocument document)
     {
-        document.Style = document.Style with { QualifyWithThis = false, FullTypeNames = false };
+        var style = document.Style;
+        string Simplified(string code) => DesignCode.Simplify(style, code);
+        document.Style = style with { QualifyWithThis = false, FullTypeNames = false };
+        document.ContainerStatement = document.ContainerStatement is null ? null : Simplified(document.ContainerStatement);
         for (var i = 0; i < document.LeadingStatements.Count; i++)
         {
-            document.LeadingStatements[i] = CodeTokens.Simplify(document.LeadingStatements[i]);
+            document.LeadingStatements[i] = Simplified(document.LeadingStatements[i]);
         }
 
         foreach (var component in document.All)
         {
             if (!component.IsRoot)
             {
-                component.TypeName = CodeTokens.Simplify(component.TypeName);
-                component.ConstructorArguments = CodeTokens.Simplify(component.ConstructorArguments);
+                component.TypeName = Simplified(component.TypeName);
+                component.ConstructorArguments = Simplified(component.ConstructorArguments);
             }
 
             foreach (var property in component.Properties.ToList())
             {
-                component.SetCode(property.Path, CodeTokens.Simplify(property.Code));
+                component.SetCode(property.Path, Simplified(property.Code));
             }
 
             foreach (var add in component.Adds)
             {
-                add.RangeType = add.RangeType is null ? null : CodeTokens.Simplify(add.RangeType);
+                add.RangeType = add.RangeType is null ? null : Simplified(add.RangeType);
                 for (var i = 0; i < add.Items.Count; i++)
                 {
-                    add.Items[i] = CodeTokens.Simplify(add.Items[i]);
+                    add.Items[i] = Simplified(add.Items[i]);
                 }
             }
 
             for (var i = 0; i < component.OtherStatements.Count; i++)
             {
-                component.OtherStatements[i] = CodeTokens.Simplify(component.OtherStatements[i]);
+                component.OtherStatements[i] = Simplified(component.OtherStatements[i]);
             }
         }
     }
@@ -358,7 +382,7 @@ internal sealed partial class DesignSurface
     {
         try
         {
-            _file = DesignerFile.Parse(text, _rootTypeName);
+            _file = DesignerFile.Parse(text, _rootTypeName, _language);
             if (_file is null)
             {
                 LoadError = "The file has no InitializeComponent method to design.";
@@ -372,6 +396,7 @@ internal sealed partial class DesignSurface
                 Simplify(_file.Document);
             }
 
+            ApplyHandles(_file.Document);
             Problems = SurfaceBuilder.Build(_file.Document);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)

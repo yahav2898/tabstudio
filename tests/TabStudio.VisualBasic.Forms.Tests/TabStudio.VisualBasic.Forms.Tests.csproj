@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Tests of TabStudio's Microsoft.VisualBasic.Forms: the application framework run on a Forms thread of its own as
+    apps are (with Avalonia's headless platform measuring and drawing text), My.Computer and My.User, MsgBox and
+    InputBox through Microsoft.VisualBasic.Core, and Visual Basic programs compiled with Roslyn's My namespace against
+    the assembly and run.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Avalonia.Headless.XUnit" />
+    <PackageReference Include="Avalonia.Skia" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" VersionOverride="3.119.0" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\TabStudio.VisualBasic.Forms\TabStudio.VisualBasic.Forms.csproj" />
+    <ProjectReference Include="..\..\src\TabStudio.Forms\TabStudio.Forms.csproj" />
+    <!-- Compiles Visual Basic programs with the My namespace, as TabStudio does, against .NET's reference assemblies. -->
+    <ProjectReference Include="..\..\src\TabStudio.Compilation\TabStudio.Compilation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

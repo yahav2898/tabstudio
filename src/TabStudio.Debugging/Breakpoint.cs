@@ -17,6 +17,10 @@ namespace TabStudio.Debugging;
 /// <c>&amp;&amp;</c> and <c>||</c>. It is not a full C# expression: there are no method calls or arithmetic. A condition
 /// that cannot be evaluated stops the program and says why in <see cref="DebugPausedEventArgs.ConditionError"/>.
 /// </para>
+/// <para>
+/// In Visual Basic code the condition is written as Visual Basic writes it, such as <c>count = 3</c> or
+/// <c>name IsNot Nothing AndAlso total &gt; 10</c>, and names are not case-sensitive.
+/// </para>
 /// <para>Everything but <see cref="HitCount"/> is immutable; instances are thread-safe.</para>
 /// </remarks>
 public sealed class Breakpoint
