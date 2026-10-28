@@ -1,0 +1,118 @@
+{
+  "repository": {
+    "name": "arduino-servo",
+    "url": "https://github.com/arduino-libraries/Servo",
+    "sha": "440b319ec11ea2664df8ce201c271c935de28a2d",
+    "kind": "arduino",
+    "project": "examples/Sweep",
+    "maxErrors": 0,
+    "note": "an Arduino library's example",
+    "fqbn": "arduino:avr:uno",
+    "core": "arduino:avr@1.8.6"
+  },
+  "seconds": 14.0,
+  "passed": true,
+  "error": null,
+  "compilerErrors": 0,
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "steps": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-servo/source",
+      "log": "01-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "add",
+        "origin",
+        "https://github.com/arduino-libraries/Servo"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-servo/source",
+      "log": "02-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "fetch",
+        "--depth",
+        "1",
+        "--no-tags",
+        "origin",
+        "440b319ec11ea2664df8ce201c271c935de28a2d"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-servo/source",
+      "log": "03-git.log",
+      "seconds": 0.515,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "FETCH_HEAD"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-servo/source",
+      "log": "04-git.log",
+      "seconds": 0.008,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/home/runner/work/_temp/embedded-repos/arduino-servo/arduino-cli",
+        "core",
+        "update-index"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-servo/source",
+      "log": "05-arduino-cli.log",
+      "seconds": 3.422,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/home/runner/work/_temp/embedded-repos/arduino-servo/arduino-cli",
+        "core",
+        "install",
+        "arduino:avr@1.8.6"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-servo/source",
+      "log": "06-arduino-cli.log",
+      "seconds": 8.634,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/home/runner/work/_temp/embedded-repos/arduino-servo/arduino-cli",
+        "compile",
+        "--fqbn",
+        "arduino:avr:uno",
+        "--library",
+        "/home/runner/work/_temp/embedded-repos/arduino-servo/source",
+        "--build-path",
+        "/home/runner/work/_temp/embedded-repos/arduino-servo/build",
+        "/home/runner/work/_temp/embedded-repos/arduino-servo/source/examples/Sweep"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-servo/source",
+      "log": "07-arduino-cli.log",
+      "seconds": 0.766,
+      "exitCode": 0,
+      "compilerErrors": 0
+    },
+    {
+      "firmware": "/home/runner/work/_temp/embedded-repos/arduino-servo/build/Sweep.ino.elf",
+      "bytes": 24792,
+      "sha256": "b40f0f4254580c4e44c4732309f5d8c0354071acacd8808010f810a98a05012f"
+    }
+  ]
+}
