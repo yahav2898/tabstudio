@@ -44,8 +44,9 @@ public sealed class ProjectBuilder
     public const string UnsupportedLanguageId = "TS2002";
 
     /// <summary>
-    /// Reported for each package reference of a project whose packages have not been restored, that is, for which
-    /// <see cref="RoslynWorkspaceHost.SetPackageReferences"/> was never called.
+    /// Reported for each package reference of a project that is not restored: the project's packages have not been
+    /// restored, that is, <see cref="RoslynWorkspaceHost.SetPackageReferences"/> was never called for it, or its
+    /// restore could not restore that package.
     /// </summary>
     public const string UnrestoredPackageId = "TS2003";
 
@@ -114,15 +115,15 @@ public sealed class ProjectBuilder
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (!_host.ArePackagesRestored(current.FilePath))
-            {
-                diagnostics.AddRange(current.PackageReferences.Select(package => new BuildDiagnostic(
+            // Only the packages that really are missing: a restore with errors still referenced the others.
+            diagnostics.AddRange(current.PackageReferences
+                .Where(package => !_host.IsPackageRestored(current.FilePath, package.Name))
+                .Select(package => new BuildDiagnostic(
                     UnrestoredPackageId,
                     DiagnosticSeverityLevel.Warning,
                     $"NuGet package '{package.Name}' is not restored on this device, so code that uses it will not compile.",
                     null,
                     current.Name)));
-            }
 
             var isEntry = string.Equals(current.FilePath, project.FilePath, StringComparison.Ordinal);
             var result = await _host.EmitAsync(current.FilePath, checkInProcessSafety: isEntry && current.IsExecutable, cancellationToken).ConfigureAwait(false);

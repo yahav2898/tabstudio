@@ -66,16 +66,16 @@ public sealed class DebugBuilder
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            // As in ProjectBuilder: once the IDE restored a project's packages, the compilation references them.
-            if (!_host.ArePackagesRestored(current.FilePath))
-            {
-                diagnostics.AddRange(current.PackageReferences.Select(package => new BuildDiagnostic(
+            // As in ProjectBuilder: once the IDE restored a project's packages, the compilation references them, and
+            // only the packages its restore could not restore are missing.
+            diagnostics.AddRange(current.PackageReferences
+                .Where(package => !_host.IsPackageRestored(current.FilePath, package.Name))
+                .Select(package => new BuildDiagnostic(
                     ProjectBuilder.UnrestoredPackageId,
                     DiagnosticSeverityLevel.Warning,
                     $"NuGet package '{package.Name}' is not restored on this device, so code that uses it will not compile.",
                     null,
                     current.Name)));
-            }
 
             var isEntry = string.Equals(current.FilePath, project.FilePath, StringComparison.Ordinal);
             var compilation = await _host.GetCompilationAsync(current.FilePath, cancellationToken).ConfigureAwait(false) as CSharpCompilation;

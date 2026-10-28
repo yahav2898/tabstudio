@@ -103,15 +103,14 @@ public sealed class CoverageBuilder
         foreach (var current in _host.GetBuildOrder(testProject.FilePath))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            if (!_host.ArePackagesRestored(current.FilePath))
-            {
-                diagnostics.AddRange(current.PackageReferences.Select(package => new BuildDiagnostic(
+            diagnostics.AddRange(current.PackageReferences
+                .Where(package => !_host.IsPackageRestored(current.FilePath, package.Name))
+                .Select(package => new BuildDiagnostic(
                     ProjectBuilder.UnrestoredPackageId,
                     DiagnosticSeverityLevel.Warning,
                     $"NuGet package '{package.Name}' is not restored on this device, so code that uses it will not compile.",
                     null,
                     current.Name)));
-            }
 
             var isEntry = string.Equals(current.FilePath, testProject.FilePath, StringComparison.Ordinal);
             var instrument = !isEntry && !current.IsTestProject && uninstrumented?.Contains(current.FilePath) != true;

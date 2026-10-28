@@ -298,6 +298,12 @@ public sealed partial class WorkspaceViewModel
                 : new OperationProgress($"Building {project.Name}"));
             operation.Operation.Log($"Building {project.Name}");
             Output.WriteLine($"{prefix}------ Build started: Project: {project.Name}, Configuration: {Configuration} ------", OutputKind.Info);
+            if (RestoreFailed(project))
+            {
+                // As before, a failed restore does not stop the build by itself: its errors are in the Error List, and
+                // the build warns (TS2003) for the packages that are missing. The project compiles against the rest.
+                Output.WriteLine($"{prefix}warning: The NuGet restore of {project.Name} reported errors, so it is built without the packages that could not be restored. The Error List shows the restore's errors.", OutputKind.Warning);
+            }
 
             last = await (build ?? language.BuildAsync)(project, CancellationToken.None);
             results?.Add(last);

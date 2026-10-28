@@ -114,7 +114,8 @@ public sealed partial class PackageRestorer
         if (Options.UseRestoreCache && referencesValid && RestoreCache.TryRead(cachePath, inputsHash, project.Name) is { } cached)
         {
             progress?.Report(new RestoreProgress(RestoreStage.Completed, $"The packages of {project.Name} are up to date", cached.Packages.Count, cached.Packages.Count));
-            return WithFrameworks(cached, frameworks, frameworkDiagnostics) with { Duration = stopwatch.Elapsed };
+            var fromCache = cached with { UnrestoredReferences = FindUnrestoredReferences(project, cached.Packages) };
+            return WithFrameworks(fromCache, frameworks, frameworkDiagnostics) with { Duration = stopwatch.Elapsed };
         }
 
         diagnostics.AddRange(graph.Dependencies
@@ -153,9 +154,12 @@ public sealed partial class PackageRestorer
             NativeLibraries = packages.SelectMany(p => p.NativeLibraries).DistinctBy(Path.GetFileName, StringComparer.Ordinal).ToList(),
             Analyzers = Combine(packages.Where(p => p.FlowsAnalyzers).ToList(), p => p.Analyzers),
             Diagnostics = PackageDiagnostics.Sort(diagnostics),
+            UnrestoredReferences = FindUnrestoredReferences(project, packages),
             Duration = stopwatch.Elapsed,
         };
 
+        // A restore with errors still returns the packages it restored, but it is never remembered: the next
+        // restore with the same inputs tries the sources again and reports the errors again.
         if (Options.UseRestoreCache && result.Success)
         {
             RestoreCache.TryWrite(cachePath, inputsHash, result);
@@ -361,6 +365,20 @@ public sealed partial class PackageRestorer
             .Where(path => !_frameworkPackages.IsFrameworkAssembly(Path.GetFileNameWithoutExtension(path)))
             .Select(path => Path.Combine(directory, path.Replace('/', Path.DirectorySeparatorChar)))
             .ToList();
+
+    /// <summary>
+    /// The project's own package references that no restored package answers: not found, an invalid version, or a
+    /// download that failed. A package restored with problems, such as a version conflict, is restored.
+    /// </summary>
+    private static List<string> FindUnrestoredReferences(ProjectInfo project, IReadOnlyList<RestoredPackage> packages)
+    {
+        var restored = packages.Select(p => p.Id).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        return project.PackageReferences
+            .Select(r => r.Name)
+            .Where(id => !restored.Contains(id))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
 
     /// <summary>The assemblies of every package, without two assemblies of the same name: the first package wins.</summary>
     private static List<string> Combine(IReadOnlyList<RestoredPackage> packages, Func<RestoredPackage, IReadOnlyList<string>> select) =>
