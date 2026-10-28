@@ -17,6 +17,9 @@
  * PostgreSQL and Redis do next to an IPv4 socket), and otherwise ::ffff:127.0.0.1, so a dual-stack listener (Node.js,
  * Java, Go) still answers 127.0.0.1.
  *
+ * Containers also get setgroups(2) as a success where Android refuses it (EPERM): su-exec, gosu and setpriv call it
+ * when an image's entrypoint drops root, and under PRoot's simulated root there are no real groups to change.
+ *
  * The rewritten address is copied to the tracee's stack (set_sysarg_data), so the program's own buffer keeps the
  * address it asked for. A program that binds port 0, or an address no rule names, is left alone.
  * Licensed like PRoot, GPL-2.0-or-later. */
@@ -27,6 +30,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #include <talloc.h>
 
 #include "extension/extension.h"
@@ -272,6 +276,7 @@ int net_map_callback(Extension *extension, ExtensionEvent event, intptr_t data1,
 			{ PR_connect, 0 },
 			{ PR_sendto, 0 },
 			{ PR_setsockopt, 0 },
+			{ PR_setgroups, FILTER_SYSEXIT },
 			FILTERED_SYSNUM_END
 		};
 		NetMapConfig *config;
@@ -291,8 +296,6 @@ int net_map_callback(Extension *extension, ExtensionEvent event, intptr_t data1,
 	case SYSCALL_ENTER_END: {
 		Tracee *tracee = TRACEE(extension);
 		NetMapConfig *config = talloc_get_type_abort(extension->config, NetMapConfig);
-		if (config->count == 0)
-			return 0;
 		switch (get_sysnum(tracee, ORIGINAL)) {
 		case PR_bind:
 			return rewrite(tracee, config, false, SYSARG_2, SYSARG_3);
@@ -306,6 +309,13 @@ int net_map_callback(Extension *extension, ExtensionEvent event, intptr_t data1,
 		default:
 			return 0;
 		}
+	}
+
+	case SYSCALL_EXIT_END: {
+		Tracee *tracee = TRACEE(extension);
+		if (get_sysnum(tracee, ORIGINAL) == PR_setgroups && (int) peek_reg(tracee, CURRENT, SYSARG_RESULT) == -EPERM)
+			poke_reg(tracee, SYSARG_RESULT, 0);
+		return 0;
 	}
 
 	default:

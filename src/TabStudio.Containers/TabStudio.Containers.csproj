@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Containers without root: an OCI registry client and a content-addressed image store, a container runtime over
+    PRoot (the Linux environment TabStudio already runs), Dockerfile builds, Compose services from their real images,
+    dev containers, and a Docker-compatible command line and Engine API subset on a unix socket. No UI.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.Containers</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Services\TabStudio.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.Containers.Tests" />
+  </ItemGroup>
+
+</Project>
