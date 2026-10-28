@@ -89,6 +89,14 @@ public static class VisualBasicCompiler
             ["TRACE"] = true,
             ["PLATFORM"] = "AnyCPU",
             ["_MyType"] = MyTypeOf(project),
+            // As vbc defines them: the My template writes Sub Main only for a "winexe" TARGET.
+            ["TARGET"] = (project?.GetProperty("OutputType") ?? "Library").ToLowerInvariant() switch
+            {
+                "exe" => "exe",
+                "winexe" => "winexe",
+                _ => "library",
+            },
+            ["VBC_VER"] = 16.9,
         };
         symbols[optimize ? "RELEASE" : "DEBUG"] = true;
         foreach (var symbol in FrameworkSymbols)
