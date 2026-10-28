@@ -42,6 +42,18 @@ public sealed class SwiftProjectTests : IDisposable
     }
 
     [Fact]
+    public void A_package_with_a_CMake_build_beside_it_is_a_Swift_project_first()
+    {
+        _folder.Write("Package.swift", Manifest);
+        _folder.Write("CMakeLists.txt", "project(Tool LANGUAGES Swift)\n");
+        _folder.Write("Sources/Tool/main.swift", "print(1)\n");
+
+        var projects = ToolchainProjectDetector.Detect(_folder.Path, ToolchainCatalog.Default);
+
+        Assert.Equal("swift", projects[0].Toolchain.Id);
+    }
+
+    [Fact]
     public void A_Vapor_app_serves_on_a_free_local_port()
     {
         _folder.Write("Package.swift", """

@@ -269,6 +269,9 @@ public sealed class RealRepositoryTests
                 report.AppendLine(CultureInfo.InvariantCulture, $"GET {address}: {(int)response.StatusCode} {response.ReasonPhrase}, {body.Length} characters");
                 if ((int)response.StatusCode >= 500)
                 {
+                    // The error page's title and start, such as a Laravel exception's message, for the report.
+                    var title = System.Text.RegularExpressions.Regex.Match(body, "<title>(.*?)</title>", System.Text.RegularExpressions.RegexOptions.Singleline).Groups[1].Value.Trim();
+                    report.AppendLine(CultureInfo.InvariantCulture, $"Error page: {title}\n{(body.Length > 2000 ? body[..2000] : body)}");
                     return $"{address} answered {(int)response.StatusCode}";
                 }
 

@@ -230,13 +230,21 @@ public static class ToolchainProjectDetector
     /// </summary>
     private static void PreferPhpApps(List<ToolchainProject> result, string folder)
     {
-        var php = result.FindIndex(p => p.Directory == folder && p.Toolchain.Id == "php");
-        var node = result.FindIndex(p => p.Directory == folder && p.Toolchain.Id == "node");
-        if (php > node && node >= 0)
+        // A Laravel app's package.json builds its assets; a Swift package's CMakeLists.txt is its second build.
+        Prefer(result, folder, "php", "node");
+        Prefer(result, folder, "swift", "cpp");
+    }
+
+    /// <summary>Puts a folder's project of one toolchain before its project of another, as the folder's main build.</summary>
+    private static void Prefer(List<ToolchainProject> result, string folder, string first, string second)
+    {
+        var preferred = result.FindIndex(p => p.Directory == folder && p.Toolchain.Id == first);
+        var other = result.FindIndex(p => p.Directory == folder && p.Toolchain.Id == second);
+        if (preferred > other && other >= 0)
         {
-            var project = result[php];
-            result.RemoveAt(php);
-            result.Insert(node, project);
+            var project = result[preferred];
+            result.RemoveAt(preferred);
+            result.Insert(other, project);
         }
     }
 
