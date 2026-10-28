@@ -33,7 +33,7 @@ public sealed class Workspace
     /// AppHosts, projects that need a platform workload and the WebAssembly client of a Blazor Web App are never chosen;
     /// <see langword="null"/> when nothing else is left.
     /// </summary>
-    public ProjectInfo? DefaultStartupProject => StartupCandidates.FirstOrDefault();
+    public ProjectInfo? DefaultStartupProject => StartupCandidates is [var first, ..] ? first : null;
 
     /// <summary>
     /// The projects F5 can start, best first, in the order <see cref="DefaultStartupProject"/> chooses from: the first is
