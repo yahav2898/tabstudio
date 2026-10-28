@@ -87,6 +87,12 @@ public interface IEditorBreakpointOptions
 public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 {
     private readonly Dictionary<string, List<DapSourceBreakpoint>> _sentBreakpoints = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// Where the next adapter session reads breakpoints from when not from their own files, such as the Java sources
+    /// that put a Kotlin file's breakpoints in its classes; set before <see cref="LaunchAdapterAsync"/>.
+    /// </summary>
+    private Func<string, IReadOnlyList<DapSourceBreakpoint>, IReadOnlyList<DapBreakpointSource>?>? _pendingBreakpointSources;
     private readonly List<DebugAdapterSession> _adapterChildren = [];
     private DebugAdapterSession? _adapter;
     private DebugAdapterSession? _adapterRoot;
@@ -186,7 +192,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     /// <summary>Whether a file's breakpoints go to a debug adapter: its language has one, and Roslyn does not debug it.</summary>
     private bool UsesAdapterBreakpoints(string filePath) =>
-        !FileTypes.For(filePath).IsCSharp
+        !FileTypes.For(filePath).IsRoslyn
         && _languageServers?.Configuration.Registry is { } registry
         && registry.FindLanguage(filePath) is { } language
         && registry.FindAdaptersForLanguage(language.Id).Any();
@@ -286,6 +292,8 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         _adapterRoot = session;
         _adapterExitCode = null;
         _adapterTarget = target;
+        session.BreakpointSources = _pendingBreakpointSources;
+        _pendingBreakpointSources = null;
         _adapterLaunched = false;
         _sentBreakpoints.Clear();
         WireAdapterEvents(session);
@@ -505,7 +513,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     private bool IsAdapterFile(DebugAdapterSession session, string file)
     {
-        if (FileTypes.For(file).IsCSharp)
+        if (FileTypes.For(file).IsRoslyn)
         {
             return IsWindowsBridgeSession(session);
         }

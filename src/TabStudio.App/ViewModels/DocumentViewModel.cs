@@ -46,7 +46,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
         FileType = FileTypes.For(filePath);
         _file = file;
         _profile = profile;
-        _language = (FileType.IsCSharp || FileType.IsRazor) && language?.ContainsDocument(filePath) == true ? language : null;
+        _language = (FileType.IsRoslyn || FileType.IsRazor) && language?.ContainsDocument(filePath) == true ? language : null;
 
         Document = new TextDocument(file.Text) { FileName = filePath };
         Document.UndoStack.MarkAsOriginalFile();
@@ -70,7 +70,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
     /// Whether Roslyn colors this document. A Razor file's diagnostics come from Roslyn, and its colors from its
     /// TextMate grammar.
     /// </summary>
-    public bool UsesSemanticColoring => _language is not null && FileType.IsCSharp;
+    public bool UsesSemanticColoring => _language is not null && FileType.IsRoslyn;
 
     /// <summary>The text.</summary>
     public TextDocument Document { get; }
@@ -240,7 +240,8 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
 
         var text = Document.Text;
         var edits = _edits;
-        var syntax = await Task.Run(() => SyntaxClassifier.Classify(text));
+        var path = FilePath;
+        var syntax = await Task.Run(() => SyntaxClassifier.ClassifyFile(path, text));
         if (edits == _edits && !_disposed && !_hasSemanticClassification)
         {
             Classifications = syntax;

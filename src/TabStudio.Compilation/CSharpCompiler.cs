@@ -306,8 +306,7 @@ public sealed class CSharpCompiler
         var succeeded = emit.Success && diagnostics.All(d => d.Severity != DiagnosticSeverityLevel.Error);
         var assembly = succeeded ? new CompiledAssembly(name, image.ToArray(), symbols.ToArray())
         {
-            HotReloadCompilation = compilation.Options.OptimizationLevel == OptimizationLevel.Debug
-                ? compilation as CSharpCompilation : null,
+            HotReloadCompilation = compilation.Options.OptimizationLevel == OptimizationLevel.Debug ? compilation : null,
         } : null;
         stopwatch.Stop();
 

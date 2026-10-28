@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    TabStudio's Microsoft.VisualBasic.Forms: what Visual Basic's My namespace and the Windows Forms application
+    framework need beside Microsoft.VisualBasic.Core, which .NET ships only with the Windows Desktop runtime. It has the
+    names and behaviour of the Windows assembly (My.Application, My.Computer, My.User, MsgBox and InputBox), on
+    TabStudio's Forms layer and without Windows APIs, so Visual Basic console and Windows Forms apps run on the tablet.
+
+    Visual Basic projects compile against this assembly's reference assembly, which TabStudio.App embeds. At run time
+    programs and Microsoft.VisualBasic.Core (whose MsgBox and InputBox look up Microsoft.VisualBasic._Interaction in
+    "Microsoft.VisualBasic.Forms, Version=4.0.0.0") bind to the copy TabStudio itself loads. The binder compares the
+    simple name and requires a version at least the one asked for, never the public key token, so the assembly has
+    the version of .NET 10's own.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Microsoft.VisualBasic.Forms</AssemblyName>
+    <RootNamespace>Microsoft.VisualBasic</RootNamespace>
+    <AssemblyVersion>10.0.0.0</AssemblyVersion>
+    <Description>Visual Basic's application framework and My namespace (My.Application, My.Computer, My.User, MsgBox, InputBox) on TabStudio's Forms layer.</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Forms\TabStudio.Forms.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.VisualBasic.Forms.Tests" />
+  </ItemGroup>
+
+</Project>

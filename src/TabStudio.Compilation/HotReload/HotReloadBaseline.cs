@@ -2,7 +2,6 @@ using System.Collections.Immutable;
 using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 
 namespace TabStudio.Compilation.HotReload;
@@ -10,7 +9,7 @@ namespace TabStudio.Compilation.HotReload;
 /// <summary>A metadata, IL and portable-PDB delta, prepared without modifying the running program.</summary>
 public sealed class HotReloadDelta
 {
-    internal HotReloadDelta(byte[] metadata, byte[] il, byte[] pdb, CSharpCompilation compilation, EmitBaseline baseline, int generation, HotReloadBaseline owner)
+    internal HotReloadDelta(byte[] metadata, byte[] il, byte[] pdb, Microsoft.CodeAnalysis.Compilation compilation, EmitBaseline baseline, int generation, HotReloadBaseline owner)
     {
         Metadata = metadata;
         IL = il;
@@ -27,7 +26,7 @@ public sealed class HotReloadDelta
     public byte[] IL { get; }
     /// <summary>The portable-PDB delta.</summary>
     public byte[] Pdb { get; }
-    internal CSharpCompilation Compilation { get; }
+    internal Microsoft.CodeAnalysis.Compilation Compilation { get; }
     internal EmitBaseline Baseline { get; }
     internal int Generation { get; }
     internal HotReloadBaseline Owner { get; }
@@ -47,7 +46,7 @@ public sealed class HotReloadBaseline : IDisposable
     private readonly PEReader _pe;
     private readonly MetadataReaderProvider _pdb;
     private EmitBaseline _baseline;
-    private CSharpCompilation _compilation;
+    private Microsoft.CodeAnalysis.Compilation _compilation;
     private int _generation;
 
     /// <summary>Creates the baseline from the exact Debug compilation and the image that was loaded.</summary>
@@ -66,7 +65,7 @@ public sealed class HotReloadBaseline : IDisposable
     /// <param name="compilation">The edited compilation, including the same generators/instrumentation.</param>
     /// <param name="delta">The delta when there are supported changes, otherwise null.</param>
     /// <param name="cancellationToken">Cancels analysis and emission before the runtime is touched.</param>
-    public HotReloadResult EmitDifference(CSharpCompilation compilation, out HotReloadDelta? delta, CancellationToken cancellationToken = default)
+    public HotReloadResult EmitDifference(Microsoft.CodeAnalysis.Compilation compilation, out HotReloadDelta? delta, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(compilation);
         delta = null;
@@ -87,7 +86,7 @@ public sealed class HotReloadBaseline : IDisposable
 
         if (edits.Count == 0)
         {
-            return new(HotReloadStatus.NoChanges, "No executable C# changes to apply.", []);
+            return new(HotReloadStatus.NoChanges, compilation.Language == LanguageNames.VisualBasic ? "No executable Visual Basic changes to apply." : "No executable C# changes to apply.", []);
         }
 
         using var metadata = new MemoryStream();
@@ -101,7 +100,7 @@ public sealed class HotReloadBaseline : IDisposable
         }
 
         delta = new HotReloadDelta(metadata.ToArray(), il.ToArray(), pdb.ToArray(), compilation, result.Baseline!, _generation, this);
-        return new(HotReloadStatus.Applied, "C# edits are ready to apply.", []);
+        return new(HotReloadStatus.Applied, compilation.Language == LanguageNames.VisualBasic ? "Visual Basic edits are ready to apply." : "C# edits are ready to apply.", []);
     }
 
     /// <summary>Commits a prepared delta after the runtime accepted it.</summary>

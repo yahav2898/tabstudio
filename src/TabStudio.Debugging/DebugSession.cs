@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using TabStudio.Compilation.Running;
+using TabStudio.Core.Workspaces;
 using TabStudio.Debugging.Building;
 using TabStudio.Debugging.Engine;
 using TabStudio.Debugging.Inspection;
@@ -17,7 +18,8 @@ namespace TabStudio.Debugging;
 /// <para>
 /// Android lets no app attach a debugger to itself, so TabStudio debugs by instrumentation: <see cref="DebugBuilder"/>
 /// compiles the program with a call to the debugger before every statement, and the program pauses by blocking its
-/// thread inside that call. While it is paused, the IDE inspects its values on its own thread.
+/// thread inside that call. While it is paused, the IDE inspects its values on its own thread. C# and Visual Basic
+/// programs are debugged the same way.
 /// </para>
 /// <para>
 /// A session runs its program once: create a session from a <see cref="DebugBuild"/>, set breakpoints, then call
@@ -82,6 +84,7 @@ public sealed partial class DebugSession : IDisposable
 
         _build = build;
         _debugInfo = build.DebugInfo;
+        Language = build.Language;
         _engine = new DebugEngine(build.DebugInfo, new ValueInspector(new Evaluator(evaluationTimeout)), OnPaused, OnResumed);
         if (recording is not null) _engine.Recording = new Recording.DebugRecording(build.DebugInfo, recording);
     }
@@ -100,6 +103,12 @@ public sealed partial class DebugSession : IDisposable
 
     /// <summary>Where every statement and method of the build is, for the breakpoint margin.</summary>
     public DebugInfoMap DebugInfo => Volatile.Read(ref _debugInfo);
+
+    /// <summary>
+    /// The language of the debugged project: C# or Visual Basic. Values, types and breakpoint conditions read as the
+    /// language of the code each pause is in, which may differ in a solution that mixes both.
+    /// </summary>
+    public ProjectLanguage Language { get; }
 
     /// <summary>Updates source locations after a Hot Reload that preserves statement/method ids and local slots.</summary>
     /// <param name="info">The validated instrumenter's map for the new generation.</param>

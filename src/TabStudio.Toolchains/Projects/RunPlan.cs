@@ -19,6 +19,7 @@ public sealed record RunPlan(ProcessStartSpec? Build, ProcessStartSpec Run, stri
     [
         "Makefile", "makefile", "GNUmakefile", "CMakeLists.txt", "pom.xml", "build.gradle", "build.gradle.kts",
         "settings.gradle", "settings.gradle.kts", "Cargo.toml", "go.mod", "package.json", "pyproject.toml",
+        "composer.json", "artisan", "Package.swift",
     ];
 
     /// <summary>
@@ -41,7 +42,7 @@ public sealed record RunPlan(ProcessStartSpec? Build, ProcessStartSpec Run, stri
         }
 
         var program = Path.GetFileNameWithoutExtension(Run.Program);
-        if (program.Length > 0 && program is not ("app" or "java" or "node" or "python" or "python3" or "npm" or "dotnet" or "make" or "mvn" or "gradle"))
+        if (program.Length > 0 && program is not ("app" or "java" or "node" or "python" or "python3" or "npm" or "dotnet" or "make" or "mvn" or "gradle" or "php" or "composer" or "swift" or "kotlinc"))
         {
             return program;
         }
@@ -94,6 +95,21 @@ public static partial class RunPlanner
         if (project.Toolchain.Id == "flutter")
         {
             return FlutterProject.Plan(project.Directory);
+        }
+
+        if (project.Toolchain.Id == "php")
+        {
+            return PlanPhpProject(project);
+        }
+
+        if (project.Toolchain.Id == "kotlin")
+        {
+            return PlanKotlinProject(project);
+        }
+
+        if (project.Toolchain.Id == "swift")
+        {
+            return PlanSwiftProject(project);
         }
 
         var run = project.Toolchain.Run;
@@ -161,6 +177,16 @@ public static partial class RunPlanner
         if (project.Toolchain.Id == "java")
         {
             return PlanJavaFile(project, file);
+        }
+
+        if (project.Toolchain.Id == "kotlin")
+        {
+            return PlanKotlinFile(project, file) ?? throw new ArgumentException($"{Path.GetFileName(file)} is a build script, not a program.", nameof(file));
+        }
+
+        if (project.Toolchain.Id == "swift")
+        {
+            return PlanSwiftFile(project, file);
         }
 
         var relative = Path.GetRelativePath(project.Directory, file).Replace('\\', '/');
@@ -425,6 +451,12 @@ public static partial class RunPlanner
 
         return variables;
     }
+
+    /// <summary>A command run in a project's folder with its toolchain's environment, as its run plans' commands are.</summary>
+    /// <param name="project">The project.</param>
+    /// <param name="command">The program and its arguments.</param>
+    internal static ProcessStartSpec CommandSpec(ToolchainProject project, IReadOnlyList<string> command) =>
+        Spec(project, command, Variables(project, null, null));
 
     private static ProcessStartSpec Spec(ToolchainProject project, IReadOnlyList<string> command, Dictionary<string, string> variables, IReadOnlyDictionary<string, string>? entryEnvironment = null)
     {

@@ -311,6 +311,8 @@ public static partial class ProjectParser
             ComReferences = ReadComReferences(root),
             Usings = [.. allRoots.SelectMany(r => ReadUsings(r)).Distinct()],
             RemovedUsings = [.. allRoots.SelectMany(r => ReadItemPatterns(r, "Using", "Remove")).Distinct(StringComparer.Ordinal)],
+            Imports = [.. allRoots.SelectMany(r => ReadItemPatterns(r, "Import", "Include")).Distinct(StringComparer.Ordinal)],
+            RemovedImports = [.. allRoots.SelectMany(r => ReadItemPatterns(r, "Import", "Remove")).Distinct(StringComparer.Ordinal)],
             CompilerVisibleProperties = [.. generatorInputs.Properties.Distinct(StringComparer.OrdinalIgnoreCase)],
             CompilerVisibleItemMetadata = [.. generatorInputs.Metadata.Distinct()],
             AdditionalFiles = generatorInputs.Files,

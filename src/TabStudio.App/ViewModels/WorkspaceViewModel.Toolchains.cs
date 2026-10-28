@@ -166,6 +166,7 @@ public sealed partial class WorkspaceViewModel
         }
 
         ShowProperties(Explorer.SelectedItem?.Node);
+        OnToolchainTestProjectsChanged();
         if (_toolchainProjects.Count > 0)
         {
             // Once the workspace is open, a toolchain project shows its entry point, as a C# one shows Program.cs.
@@ -211,6 +212,9 @@ public sealed partial class WorkspaceViewModel
             "cpp" => ProjectKind.Cpp,
 
             "java" => ProjectKind.Java,
+            "php" => ProjectKind.Php,
+            "kotlin" => ProjectKind.Kotlin,
+            "swift" => ProjectKind.Swift,
             "android" => ProjectKind.Android,
             _ => ProjectKind.Unknown,
         },
@@ -508,7 +512,48 @@ public sealed partial class WorkspaceViewModel
             return java;
         }
 
+        if (toolchain.Id == "kotlin" && KotlinProject.MainSource(project.Directory) is { } kotlin)
+        {
+            return kotlin;
+        }
+
+        if (toolchain.Id == "php" && PhpEntryFile(project.Directory) is { } php)
+        {
+            return php;
+        }
+
+        if (toolchain.Id == "swift" && SwiftEntryFile(project.Directory) is { } swift)
+        {
+            return swift;
+        }
+
         return Directory.EnumerateFiles(project.Directory).Where(toolchain.RunsFile).Order(StringComparer.Ordinal).FirstOrDefault() ?? project.MarkerPath;
+    }
+
+    /// <summary>The PHP file to show first: a Laravel app's web routes, else the front controller or <c>index.php</c>.</summary>
+    private static string? PhpEntryFile(string directory) =>
+        new[] { Path.Combine(directory, "routes", "web.php"), Path.Combine(directory, "public", "index.php"), Path.Combine(directory, "index.php"), Path.Combine(directory, "main.php"), Path.Combine(directory, "app.php") }
+            .FirstOrDefault(File.Exists);
+
+    /// <summary>The Swift file to show first: the first executable's <c>main.swift</c> or only source, else <c>Package.swift</c>.</summary>
+    private static string? SwiftEntryFile(string directory)
+    {
+        foreach (var executable in SwiftProject.Executables(directory))
+        {
+            var folder = Path.Combine(directory, "Sources", executable);
+            var main = Path.Combine(folder, "main.swift");
+            if (File.Exists(main))
+            {
+                return main;
+            }
+
+            if (Directory.Exists(folder) && Directory.EnumerateFiles(folder, "*.swift").Order(StringComparer.Ordinal).FirstOrDefault() is { } first)
+            {
+                return first;
+            }
+        }
+
+        return File.Exists(Path.Combine(directory, "Package.swift")) ? Path.Combine(directory, "Package.swift") : null;
     }
 
     /// <summary>For a folder with one program at its top and no entry point, that program.</summary>
@@ -584,6 +629,13 @@ public sealed partial class WorkspaceViewModel
             if (await PreparePrismaDatabaseAsync(project, _run.Token) is { } migration)
             {
                 result = migration;
+                ReportToolchainRun(project, plan.ProgramName, result);
+                return;
+            }
+
+            if (await PrepareLaravelDatabaseAsync(project, _run.Token) is { } laravelMigration)
+            {
+                result = laravelMigration;
                 ReportToolchainRun(project, plan.ProgramName, result);
                 return;
             }

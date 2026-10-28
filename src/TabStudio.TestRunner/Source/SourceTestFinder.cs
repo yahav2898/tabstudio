@@ -1,25 +1,29 @@
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TabStudio.TestRunner.Naming;
 using TabStudio.TestRunner.Reflection;
 
 namespace TabStudio.TestRunner.Source;
 
-/// <summary>Finds the test classes and methods declared in one syntax tree.</summary>
+/// <summary>Finds the test classes and methods declared in one C# or Visual Basic syntax tree.</summary>
 /// <param name="tree">The tree.</param>
 /// <param name="model">Its semantic model, or <see langword="null"/> to match attributes by their written names.</param>
+/// <param name="rootNamespace">
+/// Without a semantic model, the Visual Basic project's root namespace, which the compiler puts in front of every
+/// namespace; empty for C#.
+/// </param>
 /// <param name="cancellationToken">Cancels the search.</param>
-internal sealed class SourceTestFinder(SyntaxTree tree, SemanticModel? model, CancellationToken cancellationToken)
+internal sealed class SourceTestFinder(SyntaxTree tree, SemanticModel? model, string rootNamespace, CancellationToken cancellationToken)
 {
+    private readonly SourceLanguage _language = SourceLanguage.Of(tree);
+
     /// <summary>A method that may be a test, with where it comes from.</summary>
-    private sealed record Candidate(MethodDeclarationSyntax Syntax, IMethodSymbol? Symbol, bool IsInherited);
+    private sealed record Candidate(SourceMethodDeclaration Declaration, IMethodSymbol? Symbol, bool IsInherited);
 
     /// <summary>Finds every test class in the tree.</summary>
     public List<SourceTestClass> Find()
     {
         var classes = new List<SourceTestClass>();
-        foreach (var declaration in tree.GetRoot(cancellationToken).DescendantNodes().OfType<ClassDeclarationSyntax>())
+        foreach (var declaration in _language.Types(tree.GetRoot(cancellationToken), rootNamespace))
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (FindClass(declaration) is { } found)
@@ -31,19 +35,18 @@ internal sealed class SourceTestFinder(SyntaxTree tree, SemanticModel? model, Ca
         return classes;
     }
 
-    private SourceTestClass? FindClass(ClassDeclarationSyntax declaration)
+    private SourceTestClass? FindClass(SourceTypeDeclaration declaration)
     {
-        var isStatic = declaration.Modifiers.Any(SyntaxKind.StaticKeyword);
-        if ((declaration.Modifiers.Any(SyntaxKind.AbstractKeyword) && !isStatic) || declaration.TypeParameterList is not null)
+        if ((declaration.IsAbstract && !declaration.IsStatic) || declaration.IsGeneric)
         {
             // Abstract classes run through the classes derived from them; generic ones are not supported.
             return null;
         }
 
-        var symbol = model?.GetDeclaredSymbol(declaration, cancellationToken);
-        var fullName = symbol is null ? SymbolNames.MetadataFullName(declaration) : SymbolNames.MetadataFullName(symbol);
+        var symbol = model?.GetDeclaredSymbol(declaration.Node, cancellationToken) as INamedTypeSymbol;
+        var fullName = symbol is null ? declaration.FullName : SymbolNames.MetadataFullName(symbol);
         var classAttributes = symbol is null
-            ? SourceAttribute.FromSyntax(declaration.AttributeLists)
+            ? SourceAttribute.FromSyntax(declaration.Attributes, _language)
             : ClassAttributes(symbol);
 
         var methods = new List<SourceTestMethod>();
@@ -88,7 +91,7 @@ internal sealed class SourceTestFinder(SyntaxTree tree, SemanticModel? model, Ca
         var attributes = new List<SourceAttribute>();
         for (var current = symbol; current is not null && current.SpecialType != SpecialType.System_Object; current = current.BaseType)
         {
-            attributes.AddRange(SourceAttribute.FromSymbol(current.GetAttributes(), cancellationToken));
+            attributes.AddRange(SourceAttribute.FromSymbol(current.GetAttributes(), _language, cancellationToken));
         }
 
         return attributes;
@@ -98,11 +101,10 @@ internal sealed class SourceTestFinder(SyntaxTree tree, SemanticModel? model, Ca
     /// The class's own methods and, with a semantic model, the ones it inherits from base classes in source.
     /// Inherited methods are listed once, for the first part of a partial class.
     /// </summary>
-    private List<Candidate> Candidates(ClassDeclarationSyntax declaration, INamedTypeSymbol? symbol)
+    private List<Candidate> Candidates(SourceTypeDeclaration declaration, INamedTypeSymbol? symbol)
     {
-        var candidates = declaration.Members
-            .OfType<MethodDeclarationSyntax>()
-            .Select(m => new Candidate(m, model?.GetDeclaredSymbol(m, cancellationToken), IsInherited: false))
+        var candidates = declaration.Methods
+            .Select(m => new Candidate(m, model?.GetDeclaredSymbol(m.Node, cancellationToken) as IMethodSymbol, IsInherited: false))
             .ToList();
 
         if (symbol is null || !IsFirstPart(declaration, symbol))
@@ -119,7 +121,7 @@ internal sealed class SourceTestFinder(SyntaxTree tree, SemanticModel? model, Ca
                     method.DeclaredAccessibility == Accessibility.Private ||
                     !declaredNames.Add(method.Name) ||
                     method.DeclaringSyntaxReferences is not [var reference, ..] ||
-                    reference.GetSyntax(cancellationToken) is not MethodDeclarationSyntax syntax)
+                    _language.MethodOf(reference.GetSyntax(cancellationToken)) is not { } syntax)
                 {
                     continue;
                 }
@@ -131,20 +133,25 @@ internal sealed class SourceTestFinder(SyntaxTree tree, SemanticModel? model, Ca
         return candidates;
     }
 
-    private static bool IsFirstPart(ClassDeclarationSyntax declaration, INamedTypeSymbol symbol) =>
+    /// <summary>
+    /// Whether a declaration is the first part of its class. The node a class symbol's syntax reference gives is the
+    /// one <see cref="SourceTypeDeclaration.Node"/> holds: the declaration in C#, the <c>Class</c> statement in Visual
+    /// Basic, whose reference spans the whole block.
+    /// </summary>
+    private bool IsFirstPart(SourceTypeDeclaration declaration, INamedTypeSymbol symbol) =>
         symbol.DeclaringSyntaxReferences is [var first, ..] &&
-        first.SyntaxTree == declaration.SyntaxTree &&
-        first.Span == declaration.Span;
+        first.SyntaxTree == declaration.Node.SyntaxTree &&
+        first.GetSyntax(cancellationToken).Span == declaration.Node.Span;
 
     private SourceTestMethod? FindMethod(Candidate candidate, string typeFullName, List<SourceAttribute> classAttributes)
     {
         var attributes = candidate.Symbol is { } symbol
-            ? SourceAttribute.FromSymbol(symbol.GetAttributes(), cancellationToken)
-            : SourceAttribute.FromSyntax(candidate.Syntax.AttributeLists);
+            ? SourceAttribute.FromSymbol(symbol.GetAttributes(), _language, cancellationToken)
+            : SourceAttribute.FromSyntax(candidate.Declaration.Attributes, _language);
 
         var parameterNames = candidate.Symbol is { } methodSymbol
             ? methodSymbol.Parameters.Select(p => p.Name).ToList()
-            : candidate.Syntax.ParameterList.Parameters.Select(p => p.Identifier.ValueText).ToList();
+            : candidate.Declaration.ParameterNames.ToList();
 
         var method = new MethodFacts(candidate, typeFullName, parameterNames, attributes, classAttributes);
         if (attributes.Find(a => a.Is(FrameworkNames.XunitFact, "Fact", "Theory")) is { } fact)
@@ -157,8 +164,10 @@ internal sealed class SourceTestFinder(SyntaxTree tree, SemanticModel? model, Ca
             return NUnit(method);
         }
 
+        // MSTest runs instance methods only, as the runner does.
         if (attributes.Find(a => a.Is(FrameworkNames.MSTestTestMethod, "TestMethod", "DataTestMethod")) is { } testMethod &&
-            classAttributes.Exists(a => a.Is(FrameworkNames.MSTestTestClass, "TestClass")))
+            classAttributes.Exists(a => a.Is(FrameworkNames.MSTestTestClass, "TestClass")) &&
+            !(candidate.Symbol?.IsStatic ?? candidate.Declaration.IsStatic))
         {
             return MSTest(method, testMethod);
         }
@@ -174,7 +183,7 @@ internal sealed class SourceTestFinder(SyntaxTree tree, SemanticModel? model, Ca
         List<SourceAttribute> Attributes,
         List<SourceAttribute> ClassAttributes)
     {
-        public string Name => Candidate.Syntax.Identifier.ValueText;
+        public string Name => Candidate.Declaration.Identifier.ValueText;
 
         public string FullyQualifiedName => TestNaming.FullyQualifiedName(TypeFullName, Name);
     }
@@ -225,7 +234,7 @@ internal sealed class SourceTestFinder(SyntaxTree tree, SemanticModel? model, Ca
             .ToList();
         var hasDynamicData = method.Attributes.Exists(a =>
             !a.Is(FrameworkNames.MSTestDataRow, "DataRow") &&
-            (a.Implements(FrameworkNames.MSTestDataSource) || a.ShortName == "DynamicData"));
+            (a.Implements(FrameworkNames.MSTestDataSource) || a.HasShortName("DynamicData")));
         var skip = IgnoreReason(method.Attributes, FrameworkNames.MSTestIgnore) ?? IgnoreReason(method.ClassAttributes, FrameworkNames.MSTestIgnore);
         var traits = method.ClassAttributes.Concat(method.Attributes)
             .Where(a => a.Is(FrameworkNames.MSTestTestCategory, "TestCategory"))
@@ -261,11 +270,11 @@ internal sealed class SourceTestFinder(SyntaxTree tree, SemanticModel? model, Ca
                 TestNaming.Unique(method.FullyQualifiedName + arguments, seen),
                 rowDisplay,
                 arguments,
-                row.Attribute.Location is { } location ? LocationOf(location) : LocationOf(method.Candidate.Syntax.Identifier),
+                row.Attribute.Location is { } location ? LocationOf(location) : LocationOf(method.Candidate.Declaration.Identifier),
                 string.IsNullOrWhiteSpace(row.SkipReason) ? null : row.SkipReason);
         }).ToList();
 
-        var identifier = method.Candidate.Syntax.Identifier;
+        var identifier = method.Candidate.Declaration.Identifier;
         return new SourceTestMethod
         {
             FullyQualifiedName = method.FullyQualifiedName,

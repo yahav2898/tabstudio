@@ -1,13 +1,16 @@
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace TabStudio.TestRunner.Source;
 
-/// <summary>Names types the way reflection does, from symbols or from syntax alone.</summary>
+/// <summary>Names types the way reflection does, from their symbols.</summary>
+/// <remarks>Names from syntax alone come from each language's <see cref="SourceLanguage"/>.</remarks>
 internal static class SymbolNames
 {
     /// <summary>The name <see cref="Type.FullName"/> would give a type, such as <c>Ns.Outer+Inner`1</c>.</summary>
     /// <param name="type">The type symbol.</param>
+    /// <remarks>
+    /// Visual Basic's root namespace is part of the symbol's namespace, so the name is the one the compiled type has.
+    /// </remarks>
     public static string MetadataFullName(INamedTypeSymbol type)
     {
         if (type.ContainingType is { } containing)
@@ -15,31 +18,8 @@ internal static class SymbolNames
             return MetadataFullName(containing) + "+" + type.MetadataName;
         }
 
-        var containingNamespace = type.ContainingNamespace;
-        return containingNamespace is null || containingNamespace.IsGlobalNamespace
-            ? type.MetadataName
-            : containingNamespace.ToDisplayString() + "." + type.MetadataName;
-    }
-
-    /// <summary>The same name, computed from the declaration's syntax when there is no semantic model.</summary>
-    /// <param name="declaration">The type declaration.</param>
-    public static string MetadataFullName(BaseTypeDeclarationSyntax declaration)
-    {
-        var name = declaration.Identifier.ValueText + Arity(declaration);
-        for (var parent = declaration.Parent; parent is not null; parent = parent.Parent)
-        {
-            switch (parent)
-            {
-                case BaseTypeDeclarationSyntax outer:
-                    name = outer.Identifier.ValueText + Arity(outer) + "+" + name;
-                    break;
-                case BaseNamespaceDeclarationSyntax namespaceDeclaration:
-                    name = namespaceDeclaration.Name.ToString() + "." + name;
-                    break;
-            }
-        }
-
-        return name;
+        var namespaceName = NamespaceName(type.ContainingNamespace);
+        return namespaceName.Length == 0 ? type.MetadataName : namespaceName + "." + type.MetadataName;
     }
 
     /// <summary>Splits a full name into its namespace and the rest.</summary>
@@ -51,8 +31,16 @@ internal static class SymbolNames
         return dot < 0 ? (string.Empty, fullName) : (outer[..dot], fullName[(dot + 1)..]);
     }
 
-    private static string Arity(BaseTypeDeclarationSyntax declaration) =>
-        declaration is TypeDeclarationSyntax { TypeParameterList.Parameters.Count: > 0 and var count }
-            ? "`" + count.ToString(System.Globalization.CultureInfo.InvariantCulture)
-            : string.Empty;
+    /// <summary>A namespace's dotted name as metadata writes it, without the escaping a language's display adds.</summary>
+    private static string NamespaceName(INamespaceSymbol? symbol)
+    {
+        var parts = new List<string>();
+        for (var current = symbol; current is { IsGlobalNamespace: false }; current = current.ContainingNamespace)
+        {
+            parts.Add(current.MetadataName);
+        }
+
+        parts.Reverse();
+        return string.Join('.', parts);
+    }
 }

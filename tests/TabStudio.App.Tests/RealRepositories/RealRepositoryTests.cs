@@ -39,7 +39,7 @@ public sealed class RealRepositoryTests
         var only = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_ONLY")?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         foreach (var repository in manifest["repositories"]!.AsArray().Where(r => only is null || only.Contains(r!["name"]!.GetValue<string>(), StringComparer.OrdinalIgnoreCase)))
         {
-            // Python, Java and Rust repositories run in the test below.
+            // Python, Java, Rust, Node.js, PHP, Kotlin and Swift repositories run in the test below.
             if (repository!["toolchain"] is not null)
             {
                 continue;
@@ -94,7 +94,7 @@ public sealed class RealRepositoryTests
     }
 
     /// <summary>
-    /// Opens the pinned Python, Java, Rust and Node.js repositories as a person would: the project setup installs their
+    /// Opens the pinned Python, Java, Rust, Node.js, PHP, Kotlin and Swift repositories as a person would: the project setup installs their
     /// toolchains' packages, and Ctrl+F5 builds and runs the startup project. A web app must answer its first page
     /// in the web preview; a command-line program must exit with code 0. Each repository's report has the setup
     /// log, the Output panel and screenshots.
@@ -127,18 +127,20 @@ public sealed class RealRepositoryTests
                 repository["web"]?.GetValue<string>(),
                 repository["expect"]?.GetValue<string>());
             var report = new StringBuilder().AppendLine(CultureInfo.InvariantCulture, $"{name} at {repository["sha"]!.GetValue<string>()}");
+            // The project's folder in the repository, as a person opens one sample of a repository of samples.
+            var folder = repository["folder"]?.GetValue<string>() is { } subfolder ? Path.Combine(clones, name, subfolder) : Path.Combine(clones, name);
             if (repository["dotenv"] is JsonObject dotenv)
             {
                 // The variables the repository's README asks a person to put in .env.
                 var lines = dotenv.Select(pair => $"{pair.Key}={pair.Value!.GetValue<string>()}");
-                await File.WriteAllLinesAsync(Path.Combine(clones, name, ".env"), lines);
+                await File.WriteAllLinesAsync(Path.Combine(folder, ".env"), lines);
                 report.AppendLine(CultureInfo.InvariantCulture, $".env: {string.Join(", ", dotenv.Select(pair => pair.Key))}");
             }
 
             RunOutcome outcome;
             try
             {
-                outcome = await OpenAndRunAsync(Path.Combine(clones, name), name, expected, report);
+                outcome = await OpenAndRunAsync(folder, name, expected, report);
             }
             catch (Exception ex) when (ex is not OutOfMemoryException)
             {

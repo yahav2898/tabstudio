@@ -69,12 +69,16 @@ public sealed class DebugPausedEventArgs : EventArgs
     /// <see cref="DebugValue.Expand"/> names them, such as <c>order.Customer.Name</c>, <c>items[0]</c> or
     /// <c>prices["tea"]</c>. The first part may also be a field or property of <c>this</c>.
     /// </summary>
-    /// <remarks>This is not a C# evaluator: method calls and operators are not supported.</remarks>
+    /// <remarks>
+    /// This is not a C# evaluator: method calls and operators are not supported. When the program paused in Visual Basic
+    /// code, the path reads as Visual Basic: <c>Me</c>, indexes such as <c>items(0)</c> or <c>prices("tea")</c>, and names
+    /// in any case.
+    /// </remarks>
     /// <param name="path">The path.</param>
     /// <returns>The value, or <see langword="null"/> when a part of the path does not exist.</returns>
     public DebugValue? FindValue(string path)
     {
         ArgumentNullException.ThrowIfNull(path);
-        return Inspection.ValuePath.Find(Locals, path);
+        return Inspection.ValuePath.Find(Locals, path, Inspection.SourceLanguage.IsVisualBasic(Location?.FilePath));
     }
 }

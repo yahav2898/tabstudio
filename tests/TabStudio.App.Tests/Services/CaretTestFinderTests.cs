@@ -95,6 +95,40 @@ public sealed class CaretTestFinderTests
         Assert.Null(CaretTestFinder.Find(string.Empty, FilePath, 0));
     }
 
+    [Fact]
+    public void Visual_basic_rows_tests_and_classes_are_found_with_the_root_namespace()
+    {
+        const string source = """
+            Imports Xunit
+
+            Public Class MathTests
+                <Fact>
+                Public Sub Adds()
+                    Assert.Equal(4, 2 + 2)
+                End Sub
+
+                <Theory>
+                <InlineData(1, 2)>
+                <InlineData(3, 4)>
+                Public Sub Orders(low As Integer, high As Integer)
+                    Assert.True(low < high)
+                End Sub
+
+                Private Shared Function Helper() As Integer
+                    Return 42
+                End Function
+            End Class
+            """;
+        CaretTests? At(string text) =>
+            CaretTestFinder.Find(source, "/work/Calculator.Tests/MathTests.vb", source.IndexOf(text, StringComparison.Ordinal) + 1, "Calculator.Tests");
+
+        Assert.Equal(new[] { "Calculator.Tests.MathTests.Adds" }, At("Assert.Equal(4")?.Names);
+        Assert.Equal(new[] { "Calculator.Tests.MathTests.Orders(3, 4)" }, At("InlineData(3, 4)")?.Names);
+        Assert.Equal("Orders(low: 3, high: 4)", At("InlineData(3, 4)")?.Description);
+        Assert.Equal(CaretTestScope.Class, At("Return 42")?.Scope);
+        Assert.Equal(new[] { "Calculator.Tests.MathTests" }, At("Imports Xunit")?.Names);
+    }
+
     private static CaretTests? Find(string text) =>
         CaretTestFinder.Find(Source, FilePath, Source.IndexOf(text, StringComparison.Ordinal) + 1);
 }
