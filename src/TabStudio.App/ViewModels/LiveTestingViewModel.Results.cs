@@ -16,7 +16,7 @@ public sealed partial class LiveTestingViewModel
     {
         ArgumentNullException.ThrowIfNull(document);
         document.LiveTesting = this;
-        if (_engine is { } engine && document.FileType.IsCSharp && !document.IsComparison)
+        if (_engine is { } engine && document.FileType.IsRoslyn && !document.IsComparison)
         {
             document.ShowLiveTestCoverage(engine.Index.GetFile(document.FilePath));
         }
@@ -31,7 +31,7 @@ public sealed partial class LiveTestingViewModel
             return;
         }
 
-        foreach (var document in _host.OpenDocuments.Where(d => d.FileType.IsCSharp && !d.IsComparison))
+        foreach (var document in _host.OpenDocuments.Where(d => d.FileType.IsRoslyn && !d.IsComparison))
         {
             document.ShowLiveTestCoverage(engine.Index.GetFile(document.FilePath));
         }

@@ -476,7 +476,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         }
 
         // The projects of open documents first: what is on screen gets its diagnostics before the rest.
-        var projects = InAnalysisOrder(workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp));
+        var projects = InAnalysisOrder(workspace.Projects.Where(p => p.IsRoslynLanguage));
         var operation = Operations.Begin(AnalysisOperation, "Analyzing", new OperationProgress("Analyzing", 0, projects.Count, ProgressUnit.Projects));
         try
         {

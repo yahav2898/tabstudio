@@ -80,7 +80,7 @@ public static class StackDetector
         }
 
         // An index.html is the startup item only when no .NET project or Node.js package serves the pages itself.
-        if (!found.ContainsKey(StackKind.DotNet) && !nodeServesPages && StaticSiteDetector.FindIndex(rootDirectory) is { } index)
+        if (!found.ContainsKey(StackKind.DotNet) && !found.ContainsKey(StackKind.Php) && !nodeServesPages && StaticSiteDetector.FindIndex(rootDirectory) is { } index)
         {
             found.TryAdd(StackKind.StaticSite, new StackComponent(StackKind.StaticSite, "Static web site", Path.GetRelativePath(rootDirectory, index)));
         }
@@ -154,6 +154,21 @@ public static class StackDetector
             case "BUILD.GRADLE.KTS" or "SETTINGS.GRADLE.KTS":
                 yield return new StackComponent(StackKind.Kotlin, "Kotlin", relativePath);
                 yield break;
+            case "COMPOSER.JSON":
+                foreach (var component in InspectComposerJson(fullPath, relativePath))
+                {
+                    yield return component;
+                }
+
+                yield break;
+            case "PACKAGE.SWIFT":
+                yield return new StackComponent(StackKind.Swift, "Swift", relativePath, ReadSwiftToolsVersion(fullPath));
+                if (FileContains(fullPath, "vapor/vapor"))
+                {
+                    yield return new StackComponent(StackKind.Vapor, "Vapor", relativePath);
+                }
+
+                yield break;
             case "FOUNDRY.TOML" or "HARDHAT.CONFIG.JS" or "HARDHAT.CONFIG.TS" or "HARDHAT.CONFIG.CJS" or "HARDHAT.CONFIG.MJS":
                 yield return new StackComponent(StackKind.Solidity, "Solidity", relativePath);
                 yield break;
@@ -179,8 +194,21 @@ public static class StackDetector
             case ".UVPROJX" or ".EWP" or ".CPROJ":
                 yield return new StackComponent(StackKind.EmbeddedVendor, "Embedded vendor project", relativePath);
                 break;
-            case ".SLN" or ".SLNX" or ".CSPROJ" or ".FSPROJ" or ".VBPROJ":
+            case ".SLN" or ".SLNX" or ".CSPROJ" or ".FSPROJ":
                 yield return new StackComponent(StackKind.DotNet, ".NET", relativePath);
+                break;
+            case ".VBPROJ":
+                yield return new StackComponent(StackKind.DotNet, ".NET", relativePath);
+                yield return new StackComponent(StackKind.VisualBasic, "Visual Basic", relativePath);
+                break;
+            case ".PHP":
+                yield return new StackComponent(StackKind.Php, "PHP", relativePath);
+                break;
+            case ".SWIFT":
+                yield return new StackComponent(StackKind.Swift, "Swift", relativePath);
+                break;
+            case ".KT":
+                yield return new StackComponent(StackKind.Kotlin, "Kotlin", relativePath);
                 break;
             case ".VCXPROJ":
                 yield return new StackComponent(StackKind.Cpp, "C++", relativePath);
@@ -278,6 +306,53 @@ public static class StackDetector
         ProjectKind.Uno => new StackComponent(StackKind.Uno, "Uno Platform", string.Empty),
         _ => null,
     };
+
+    /// <summary>PHP from a <c>composer.json</c>, with its PHP version constraint, and the framework it requires.</summary>
+    private static IEnumerable<StackComponent> InspectComposerJson(string path, string relativePath)
+    {
+        yield return new StackComponent(StackKind.Php, "PHP", relativePath, ReadJsonString(path, "require", "php"));
+        foreach (var (package, kind, name) in PhpFrameworks)
+        {
+            if (ReadJsonString(path, "require", package) is { } version)
+            {
+                yield return new StackComponent(kind, name, relativePath, version);
+            }
+        }
+    }
+
+    private static readonly (string Package, StackKind Kind, string Name)[] PhpFrameworks =
+    [
+        ("laravel/framework", StackKind.Laravel, "Laravel"),
+        ("symfony/framework-bundle", StackKind.Symfony, "Symfony"),
+        ("slim/slim", StackKind.Slim, "Slim"),
+    ];
+
+    /// <summary>The <c>swift-tools-version</c> a <c>Package.swift</c> declares on its first line, or <see langword="null"/>.</summary>
+    private static string? ReadSwiftToolsVersion(string path)
+    {
+        try
+        {
+            var first = File.ReadLines(path).FirstOrDefault() ?? string.Empty;
+            var marker = first.IndexOf("swift-tools-version:", StringComparison.Ordinal);
+            return marker < 0 ? null : first[(marker + "swift-tools-version:".Length)..].Trim();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    private static bool FileContains(string path, string text)
+    {
+        try
+        {
+            return File.ReadAllText(path).Contains(text, StringComparison.Ordinal);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return false;
+        }
+    }
 
     private static string? ReadJsonString(string path, params string[] propertyPath)
     {

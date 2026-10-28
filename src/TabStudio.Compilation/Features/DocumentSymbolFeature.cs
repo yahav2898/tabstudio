@@ -2,6 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using VBSyntax = Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace TabStudio.Compilation.Features;
 
@@ -9,8 +10,11 @@ namespace TabStudio.Compilation.Features;
 /// The namespaces, types and members declared in a file, for the navigation bar above the editor, the breadcrumb
 /// and an outline.
 /// </summary>
-/// <remarks>Works from syntax alone, so it is fast and also works while the file has errors.</remarks>
-public sealed class DocumentSymbolFeature
+/// <remarks>
+/// Works from syntax alone, so it is fast and also works while the file has errors. Serves C# and Visual Basic
+/// files; a Visual Basic module shows as a class.
+/// </remarks>
+public sealed partial class DocumentSymbolFeature
 {
     private readonly RoslynWorkspaceHost _host;
 
@@ -24,12 +28,17 @@ public sealed class DocumentSymbolFeature
     {
         ArgumentNullException.ThrowIfNull(filePath);
         if (_host.GetDocument(filePath) is not { } document
-            || await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false) is not CompilationUnitSyntax root)
+            || await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false) is not { } root)
         {
             return [];
         }
 
-        return Collect(root.Members, container: null);
+        return root switch
+        {
+            CompilationUnitSyntax unit => Collect(unit.Members, container: null),
+            VBSyntax.CompilationUnitSyntax unit => CollectVisualBasic(unit.Members, container: null),
+            _ => [],
+        };
     }
 
     /// <summary>

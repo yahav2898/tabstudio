@@ -55,9 +55,14 @@ public sealed partial class RoslynWorkspaceHost
         return [.. diagnostics.Where(d => d.Location is { } location && string.Equals(location.FilePath, filePath, StringComparison.Ordinal))];
     }
 
-    /// <summary>The parse options of a project: Razor's, with Uno's symbols for an Uno project.</summary>
-    private static CSharpParseOptions ParseOptionsFor(TsProject? project, bool optimize) =>
-        UnoBuild.WithSymbols(project, Razor.RazorCompiler.ParseOptionsFor(project, optimize));
+    /// <summary>
+    /// The parse options of a project: Razor's, with Uno's symbols for an Uno project; Visual Basic's for a Visual
+    /// Basic project.
+    /// </summary>
+    private static ParseOptions ParseOptionsFor(TsProject? project, bool optimize) =>
+        project is { IsVisualBasic: true }
+            ? VisualBasic.VisualBasicCompiler.CreateParseOptions(project, optimize)
+            : UnoBuild.WithSymbols(project, Razor.RazorCompiler.ParseOptionsFor(project, optimize));
 
     /// <summary>The compiler's diagnostics of a file, with the "not found" errors about Windows-only APIs explained for an Uno project.</summary>
     private static IEnumerable<Diagnostic> ExplainForUno(TsProject project, IEnumerable<Diagnostic> diagnostics) =>

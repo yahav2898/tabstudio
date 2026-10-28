@@ -1,0 +1,54 @@
+name: Build check
+on:
+  push:
+    branches: ['probe/build-**']
+permissions:
+  contents: write
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  DOTNET_MODIFIABLE_ASSEMBLIES: debug
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-probe-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: |
+            nuget-probe-
+            nuget-libs-
+      - name: Build
+        run: |
+          mkdir -p out
+          status=0
+          for p in src/TabStudio.Desktop tests/*.Tests; do
+            [ "$p" = tests/TabStudio.WindowsBridge.Windows.Tests ] && continue
+            dotnet build "$p" -c Release -p:TreatWarningsAsErrors=true > "out/build-$(basename $p).log" 2>&1 || status=1
+          done
+          cat out/build-*.log | grep -E ': (error|warning) [A-Z]+[0-9]+' | sed -E 's|/home/runner/work/tabstudio/tabstudio/||' | sort -u > out/errors.txt || true
+          wc -l out/errors.txt
+          echo "build=$status" > out/STATUS
+      - name: Test
+        if: always()
+        run: |
+          [ -f .probe-tests ] || exit 0
+          while IFS='|' read -r project filter; do
+            [ -z "$project" ] && continue
+            name=$(basename "$project")
+            dotnet test "$project" -c Release --no-build --blame-hang-timeout 10m --blame-hang-dump-type none ${filter:+--filter "$filter"} --logger "console;verbosity=normal" > "out/test-$name.log" 2>&1 && echo "$name passed" >> out/STATUS || echo "$name FAILED" >> out/STATUS
+            grep -E "^\s+(Failed|Passed|Skipped) |Error Message|Assert|Total tests|Passed!|Failed!" "out/test-$name.log" | head -400 > "out/summary-$name.txt" || true
+          done < .probe-tests
+      - name: Publish
+        if: always()
+        run: |
+          cp -r out "$RUNNER_TEMP/out" && cd "$RUNNER_TEMP/out" && git init -q && git add -A
+          git -c user.name=ci -c user.email=ci@example.com commit -qm "build $GITHUB_SHA"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/probe-results/${GITHUB_REF_NAME#probe/}

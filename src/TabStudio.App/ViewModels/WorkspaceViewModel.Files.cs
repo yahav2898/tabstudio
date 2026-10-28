@@ -26,7 +26,9 @@ public sealed partial class WorkspaceViewModel
         }
 
         var project = node.Project ?? workspace.FindProjectForFile(Path.Combine(folder, "_"));
-        var hint = project?.Language == ProjectLanguage.CSharp ? "A name such as Order or Order.cs creates a C# class." : "Include the extension, such as notes.md.";
+        var hint = project?.Language == ProjectLanguage.CSharp ? "A name such as Order or Order.cs creates a C# class."
+            : project?.IsVisualBasic == true ? "A name such as Order or Order.vb creates a Visual Basic class."
+            : "Include the extension, such as notes.md.";
         var typed = await Prompt.AskAsync("New File", $"In {DisplayFolder(folder)}. {hint}", "Create");
         if (typed is null || !IsValidName(typed))
         {

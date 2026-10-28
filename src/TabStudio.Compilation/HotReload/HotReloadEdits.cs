@@ -11,7 +11,18 @@ namespace TabStudio.Compilation.HotReload;
 /// </summary>
 internal static class HotReloadEdits
 {
-    public static (List<SemanticEdit> Edits, string? RudeEdit) Analyze(CSharpCompilation before, CSharpCompilation after, CancellationToken token)
+    /// <summary>The edits between two compilations of the same project, or why they need a restart.</summary>
+    /// <param name="before">The compilation the running program came from.</param>
+    /// <param name="after">The edited compilation.</param>
+    /// <param name="token">Cancels the analysis.</param>
+    public static (List<SemanticEdit> Edits, string? RudeEdit) Analyze(Microsoft.CodeAnalysis.Compilation before, Microsoft.CodeAnalysis.Compilation after, CancellationToken token) => (before, after) switch
+    {
+        (CSharpCompilation oldCSharp, CSharpCompilation newCSharp) => AnalyzeCSharp(oldCSharp, newCSharp, token),
+        (Microsoft.CodeAnalysis.VisualBasic.VisualBasicCompilation oldBasic, Microsoft.CodeAnalysis.VisualBasic.VisualBasicCompilation newBasic) => VisualBasicHotReloadEdits.Analyze(oldBasic, newBasic, token),
+        _ => ([], "Changing the project's language requires a restart."),
+    };
+
+    private static (List<SemanticEdit> Edits, string? RudeEdit) AnalyzeCSharp(CSharpCompilation before, CSharpCompilation after, CancellationToken token)
     {
         static IEnumerable<string> References(CSharpCompilation compilation) => compilation.References
             .Select(r => $"{compilation.GetAssemblyOrModuleSymbol(r)?.ToDisplayString()}|{r.Display}").Order(StringComparer.Ordinal);

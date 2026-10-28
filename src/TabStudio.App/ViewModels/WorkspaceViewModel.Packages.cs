@@ -48,7 +48,7 @@ public sealed partial class WorkspaceViewModel
     private static bool NeedsRestore(Workspace workspace, ProjectInfo project)
     {
         // A mobile platform head restores for its platform, which only that platform's workload provides.
-        if (project.Language != ProjectLanguage.CSharp || ProjectClassifier.IsMobilePlatformHead(project))
+        if (!project.IsRoslynLanguage || ProjectClassifier.IsMobilePlatformHead(project))
         {
             return false;
         }

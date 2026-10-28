@@ -397,6 +397,8 @@ status bar is teal in both themes: on `Brush.StatusBar.Well` over `Brush.Accent`
 | `Brush.Toolchain.Go` | `#2A8EA8` |
 | `Brush.Toolchain.Java` | `#B5612C` |
 | `Brush.Toolchain.Kotlin` | `#7F52D9` |
+| `Brush.Toolchain.Php` | `#5E6199` |
+| `Brush.Toolchain.Swift` | `#B83E1F` |
 | `Brush.Toolchain.Windows` | `#2B79C2` |
 | `Brush.Toolchain.Android` | `#2F7A45` |
 | `Brush.Toolchain.Flutter` | `#0D61B8` |

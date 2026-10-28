@@ -94,6 +94,15 @@ public enum ProjectKind
     /// processes, so it is never an app to run.
     /// </summary>
     BuildScript,
+
+    /// <summary>A PHP project: a <c>composer.json</c>, a Laravel, Symfony or Slim app, a PHP site or PHP scripts.</summary>
+    Php,
+
+    /// <summary>A Kotlin program on the JVM: a Gradle or Maven build that compiles Kotlin, or <c>.kt</c> and <c>.kts</c> files.</summary>
+    Kotlin,
+
+    /// <summary>A Swift package (<c>Package.swift</c>) or Swift files.</summary>
+    Swift,
 }
 
 /// <summary>

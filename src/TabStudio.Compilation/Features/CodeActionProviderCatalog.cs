@@ -6,13 +6,15 @@ using Microsoft.CodeAnalysis.CodeRefactorings;
 namespace TabStudio.Compilation.Features;
 
 /// <summary>
-/// The C# code fix and refactoring providers that ship in Roslyn's Features assemblies, found once by reflection.
+/// The C# and Visual Basic code fix and refactoring providers that ship in Roslyn's Features assemblies, found once
+/// by reflection.
 /// </summary>
 /// <remarks>
-/// Visual Studio composes these providers with MEF. TabStudio instead looks for the types exported for C#
-/// (<see cref="ExportCodeFixProviderAttribute"/> and <see cref="ExportCodeRefactoringProviderAttribute"/>) and
-/// creates the ones with a parameterless constructor. Providers that need constructor arguments or fail to start
-/// are skipped. Discovery takes a moment, so it happens on first use and is shared by every host.
+/// Visual Studio composes these providers with MEF. TabStudio instead looks for the types exported for C# or Visual
+/// Basic (<see cref="ExportCodeFixProviderAttribute"/> and <see cref="ExportCodeRefactoringProviderAttribute"/>) and
+/// creates the ones with a parameterless constructor. A provider exported for both languages is created once and
+/// serves both. Providers that need constructor arguments or fail to start are skipped. Discovery takes a moment, so
+/// it happens on first use and is shared by every host.
 /// </remarks>
 internal sealed class CodeActionProviderCatalog
 {
@@ -24,29 +26,40 @@ internal sealed class CodeActionProviderCatalog
     {
         ["CS8019"] = "RemoveUnnecessaryImportsFixable", // Unnecessary using directive.
         ["CS0105"] = "RemoveUnnecessaryImportsFixable", // Duplicate using directive.
+        ["BC50000"] = "RemoveUnnecessaryImportsFixable", // Unused Imports clause.
+        ["BC50001"] = "RemoveUnnecessaryImportsFixable", // Unused Imports statement.
     };
+
+    /// <summary>The languages whose providers are collected.</summary>
+    private static readonly string[] Languages = [LanguageNames.CSharp, LanguageNames.VisualBasic];
 
     private static readonly Lazy<CodeActionProviderCatalog> LazyInstance = new(Discover, LazyThreadSafetyMode.ExecutionAndPublication);
 
-    private readonly Dictionary<string, List<CodeFixProvider>> _fixesById;
+    private readonly Dictionary<string, LanguageProviders> _languages;
 
-    private CodeActionProviderCatalog(Dictionary<string, List<CodeFixProvider>> fixesById, List<CodeRefactoringProvider> refactorings)
-    {
-        _fixesById = fixesById;
-        Refactorings = refactorings;
-    }
+    private CodeActionProviderCatalog(Dictionary<string, LanguageProviders> languages) => _languages = languages;
 
     /// <summary>The shared catalog.</summary>
     public static CodeActionProviderCatalog Instance => LazyInstance.Value;
 
-    /// <summary>Every C# refactoring provider.</summary>
-    public IReadOnlyList<CodeRefactoringProvider> Refactorings { get; }
+    /// <summary>Every refactoring provider of a language.</summary>
+    /// <param name="language">The document's language, such as <see cref="LanguageNames.VisualBasic"/>.</param>
+    public IReadOnlyList<CodeRefactoringProvider> GetRefactorings(string language) =>
+        _languages.TryGetValue(language, out var providers) ? providers.Refactorings : [];
 
-    /// <summary>The fix providers for a diagnostic id.</summary>
-    public IReadOnlyList<CodeFixProvider> GetFixProviders(string diagnosticId)
+    /// <summary>The fix providers of a language for a diagnostic id.</summary>
+    /// <param name="language">The document's language, such as <see cref="LanguageNames.VisualBasic"/>.</param>
+    /// <param name="diagnosticId">The diagnostic, such as <c>CS0246</c> or <c>BC30002</c>.</param>
+    public IReadOnlyList<CodeFixProvider> GetFixProviders(string language, string diagnosticId)
     {
-        var providers = _fixesById.GetValueOrDefault(diagnosticId) ?? [];
-        if (DiagnosticAliases.TryGetValue(diagnosticId, out var alias) && _fixesById.TryGetValue(alias, out var aliased))
+        if (!_languages.TryGetValue(language, out var languageProviders))
+        {
+            return [];
+        }
+
+        var fixesById = languageProviders.FixesById;
+        var providers = fixesById.GetValueOrDefault(diagnosticId) ?? [];
+        if (DiagnosticAliases.TryGetValue(diagnosticId, out var alias) && fixesById.TryGetValue(alias, out var aliased))
         {
             providers = [.. providers, .. aliased];
         }
@@ -56,8 +69,7 @@ internal sealed class CodeActionProviderCatalog
 
     private static CodeActionProviderCatalog Discover()
     {
-        var fixesById = new Dictionary<string, List<CodeFixProvider>>(StringComparer.Ordinal);
-        var refactorings = new List<CodeRefactoringProvider>();
+        var languages = Languages.ToDictionary(l => l, _ => new LanguageProviders(), StringComparer.Ordinal);
 
         foreach (var type in FeatureAssemblies().SelectMany(LoadableTypes).OrderBy(t => t.FullName, StringComparer.Ordinal))
         {
@@ -66,35 +78,51 @@ internal sealed class CodeActionProviderCatalog
                 continue;
             }
 
-            if (typeof(CodeFixProvider).IsAssignableFrom(type)
-                && IsExportedForCSharp<ExportCodeFixProviderAttribute>(type, a => a.Languages)
-                && TryCreate<CodeFixProvider>(type) is { } fix)
+            if (typeof(CodeFixProvider).IsAssignableFrom(type))
             {
-                foreach (var id in FixableIds(fix))
+                var exportedFor = ExportedLanguages<ExportCodeFixProviderAttribute>(type, a => a.Languages);
+                if (exportedFor.Count == 0 || TryCreate<CodeFixProvider>(type) is not { } fix)
                 {
-                    if (!fixesById.TryGetValue(id, out var list))
-                    {
-                        list = [];
-                        fixesById[id] = list;
-                    }
+                    continue;
+                }
 
-                    list.Add(fix);
+                var ids = FixableIds(fix);
+                foreach (var language in exportedFor)
+                {
+                    var fixesById = languages[language].FixesById;
+                    foreach (var id in ids)
+                    {
+                        if (!fixesById.TryGetValue(id, out var list))
+                        {
+                            list = [];
+                            fixesById[id] = list;
+                        }
+
+                        list.Add(fix);
+                    }
                 }
             }
-            else if (typeof(CodeRefactoringProvider).IsAssignableFrom(type)
-                && IsExportedForCSharp<ExportCodeRefactoringProviderAttribute>(type, a => a.Languages)
-                && TryCreate<CodeRefactoringProvider>(type) is { } refactoring)
+            else if (typeof(CodeRefactoringProvider).IsAssignableFrom(type))
             {
-                refactorings.Add(refactoring);
+                var exportedFor = ExportedLanguages<ExportCodeRefactoringProviderAttribute>(type, a => a.Languages);
+                if (exportedFor.Count == 0 || TryCreate<CodeRefactoringProvider>(type) is not { } refactoring)
+                {
+                    continue;
+                }
+
+                foreach (var language in exportedFor)
+                {
+                    languages[language].Refactorings.Add(refactoring);
+                }
             }
         }
 
-        return new CodeActionProviderCatalog(fixesById, refactorings);
+        return new CodeActionProviderCatalog(languages);
     }
 
     private static IEnumerable<Assembly> FeatureAssemblies()
     {
-        foreach (var name in new[] { "Microsoft.CodeAnalysis.Features", "Microsoft.CodeAnalysis.CSharp.Features" })
+        foreach (var name in new[] { "Microsoft.CodeAnalysis.Features", "Microsoft.CodeAnalysis.CSharp.Features", "Microsoft.CodeAnalysis.VisualBasic.Features" })
         {
             Assembly? assembly;
             try
@@ -125,9 +153,14 @@ internal sealed class CodeActionProviderCatalog
         }
     }
 
-    private static bool IsExportedForCSharp<TAttribute>(Type type, Func<TAttribute, string[]> languages)
+    /// <summary>The languages, of those TabStudio serves, that a provider type is exported for.</summary>
+    private static List<string> ExportedLanguages<TAttribute>(Type type, Func<TAttribute, string[]> languages)
         where TAttribute : Attribute =>
-        type.GetCustomAttributes<TAttribute>(inherit: false).Any(a => languages(a).Contains(LanguageNames.CSharp, StringComparer.Ordinal));
+        type.GetCustomAttributes<TAttribute>(inherit: false)
+            .SelectMany(languages)
+            .Where(l => Languages.Contains(l, StringComparer.Ordinal))
+            .Distinct(StringComparer.Ordinal)
+            .ToList();
 
 #pragma warning disable CA1031 // A provider that cannot be created or queried is skipped, whatever the reason.
     private static T? TryCreate<T>(Type type)
@@ -160,4 +193,14 @@ internal sealed class CodeActionProviderCatalog
         }
     }
 #pragma warning restore CA1031
+
+    /// <summary>The providers of one language.</summary>
+    private sealed class LanguageProviders
+    {
+        /// <summary>The fix providers by the diagnostic id they fix.</summary>
+        public Dictionary<string, List<CodeFixProvider>> FixesById { get; } = new(StringComparer.Ordinal);
+
+        /// <summary>The refactoring providers.</summary>
+        public List<CodeRefactoringProvider> Refactorings { get; } = [];
+    }
 }

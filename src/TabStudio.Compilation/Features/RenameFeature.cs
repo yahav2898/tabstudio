@@ -3,10 +3,13 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.FindSymbols;
 using Microsoft.CodeAnalysis.Rename;
 using TabStudio.Core.Diagnostics;
+using VB = Microsoft.CodeAnalysis.VisualBasic;
 
 namespace TabStudio.Compilation.Features;
 
-/// <summary>Rename (F2): renames a symbol and every reference to it, across all loaded projects.</summary>
+/// <summary>
+/// Rename (F2): renames a symbol and every reference to it, across all loaded projects, C# and Visual Basic alike.
+/// </summary>
 public sealed class RenameFeature
 {
     private readonly RoslynWorkspaceHost _host;
@@ -28,7 +31,10 @@ public sealed class RenameFeature
     /// <summary>Computes the edits that rename the symbol at a position.</summary>
     /// <param name="filePath">Full path of the file.</param>
     /// <param name="position">Zero-based offset of the caret, on or just after the identifier.</param>
-    /// <param name="newName">The new name. Prefix it with <c>@</c> to use a keyword, such as <c>@class</c>.</param>
+    /// <param name="newName">
+    /// The new name. To use a keyword, prefix it with <c>@</c> in C#, such as <c>@class</c>, or put it in brackets in
+    /// Visual Basic, such as <c>[Class]</c>. Visual Basic names are case-insensitive, so a rename may only change case.
+    /// </param>
     /// <param name="options">What else to rename, or <see langword="null"/> for <see cref="RenameOptions.Default"/>.</param>
     /// <param name="cancellationToken">Cancels the rename.</param>
     /// <returns>The edits for every affected file, and any conflicts the new name causes.</returns>
@@ -48,7 +54,7 @@ public sealed class RenameFeature
             return RenameResult.Failed(target.Reason ?? "This element cannot be renamed.");
         }
 
-        if (ValidateName(newName) is { } invalid)
+        if (ValidateName(newName, document.Project.Language) is { } invalid)
         {
             return RenameResult.Failed(invalid);
         }
@@ -82,7 +88,7 @@ public sealed class RenameFeature
         if (_host.GetDocument(filePath) is not { } document
             || await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false) is not { } root)
         {
-            return (RenameTarget.Unavailable("The file is not part of a loaded C# project."), null, null);
+            return (RenameTarget.Unavailable("The file is not part of a loaded C# or Visual Basic project."), null, null);
         }
 
         if (FindIdentifier(root, Math.Clamp(position, 0, root.FullSpan.End)) is not { } token)
@@ -102,7 +108,7 @@ public sealed class RenameFeature
             || symbol is INamespaceSymbol { IsGlobalNamespace: true }
             || symbol.Locations.IsEmpty
             || symbol.Locations.Any(l => !l.IsInSource)
-            || (token.ValueText == "var" && symbol is ITypeSymbol { Name: not "var" }))
+            || (root.Language == LanguageNames.CSharp && token.ValueText == "var" && symbol is ITypeSymbol { Name: not "var" }))
         {
             return (RenameTarget.Unavailable("Only names declared in this solution can be renamed."), null, null);
         }
@@ -119,7 +125,7 @@ public sealed class RenameFeature
     private static SyntaxToken? FindIdentifier(SyntaxNode root, int position)
     {
         var token = root.FindToken(position);
-        if (token.IsKind(SyntaxKind.IdentifierToken) && token.Span.IntersectsWith(position))
+        if (IsIdentifier(token) && token.Span.IntersectsWith(position))
         {
             return token;
         }
@@ -127,7 +133,7 @@ public sealed class RenameFeature
         if (position > 0)
         {
             var left = root.FindToken(position - 1);
-            if (left.IsKind(SyntaxKind.IdentifierToken) && left.Span.IntersectsWith(position))
+            if (IsIdentifier(left) && left.Span.IntersectsWith(position))
             {
                 return left;
             }
@@ -135,6 +141,12 @@ public sealed class RenameFeature
 
         return null;
     }
+
+    /// <summary>Whether a token is an identifier of its language, C# or Visual Basic.</summary>
+    private static bool IsIdentifier(SyntaxToken token) =>
+        token.Language == LanguageNames.VisualBasic
+            ? token.RawKind == (int)VB.SyntaxKind.IdentifierToken
+            : token.IsKind(SyntaxKind.IdentifierToken);
 
     /// <summary>The symbol a rename at a name changes: renaming a constructor renames its type.</summary>
     private static ISymbol RenamedSymbolOf(ISymbol symbol)
@@ -151,10 +163,17 @@ public sealed class RenameFeature
 
     private static bool IsGenerated(Document document) =>
         document.FilePath is { } path
-        && (path.EndsWith(".g.cs", StringComparison.OrdinalIgnoreCase) || path.EndsWith(".g.i.cs", StringComparison.OrdinalIgnoreCase));
+        && (path.EndsWith(".g.cs", StringComparison.OrdinalIgnoreCase)
+            || path.EndsWith(".g.i.cs", StringComparison.OrdinalIgnoreCase)
+            || path.EndsWith(".g.vb", StringComparison.OrdinalIgnoreCase)
+            || path.EndsWith(".g.i.vb", StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>Checks that a new name is an identifier of the document's language, returning why it is not.</summary>
+    private static string? ValidateName(string name, string language) =>
+        language == LanguageNames.VisualBasic ? ValidateVisualBasicName(name) : ValidateCSharpName(name);
 
     /// <summary>Checks that a new name is a C# identifier, returning why it is not.</summary>
-    private static string? ValidateName(string name)
+    private static string? ValidateCSharpName(string name)
     {
         var escaped = name.StartsWith('@');
         var identifier = escaped ? name[1..] : name;
@@ -166,6 +185,27 @@ public sealed class RenameFeature
         if (!escaped && SyntaxFacts.GetKeywordKind(identifier) != SyntaxKind.None)
         {
             return $"'{name}' is a C# keyword. Use '@{name}' to name a symbol after it.";
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Checks that a new name is a Visual Basic identifier, returning why it is not. A reserved keyword must be
+    /// escaped with brackets, such as <c>[Class]</c>; contextual keywords such as <c>From</c> need not be.
+    /// </summary>
+    private static string? ValidateVisualBasicName(string name)
+    {
+        var escaped = name.Length >= 2 && name.StartsWith('[') && name.EndsWith(']');
+        var identifier = escaped ? name[1..^1] : name;
+        if (!VB.SyntaxFacts.IsValidIdentifier(identifier) || identifier == "_")
+        {
+            return $"'{name}' is not a valid Visual Basic name.";
+        }
+
+        if (!escaped && VB.SyntaxFacts.GetKeywordKind(identifier) != VB.SyntaxKind.None)
+        {
+            return $"'{name}' is a Visual Basic keyword. Use '[{name}]' to name a symbol after it.";
         }
 
         return null;

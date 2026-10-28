@@ -9,8 +9,9 @@ using Microsoft.CodeAnalysis.Text;
 namespace TabStudio.Compilation.Features;
 
 /// <summary>
-/// Quick fixes and refactorings, the Ctrl+. (light bulb) menu: add a missing <c>using</c>, implement an interface,
-/// generate a method, remove unnecessary usings and the rest of Roslyn's C# code actions.
+/// Quick fixes and refactorings, the Ctrl+. (light bulb) menu: add a missing <c>using</c> (<c>Imports</c> in Visual
+/// Basic), implement an interface, generate a method, remove unnecessary usings and the rest of Roslyn's C# and
+/// Visual Basic code actions. Each document gets the providers of its own language.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -169,7 +170,7 @@ public sealed class CodeActionFeature
     private static async Task<List<CodeAction>> GetFixesAsync(Document document, Diagnostic diagnostic, CodeActionProviderCatalog catalog, CancellationToken cancellationToken)
     {
         var actions = new List<CodeAction>();
-        foreach (var provider in catalog.GetFixProviders(diagnostic.Id))
+        foreach (var provider in catalog.GetFixProviders(document.Project.Language, diagnostic.Id))
         {
             var registered = new List<CodeAction>();
             var context = new CodeFixContext(
@@ -202,7 +203,7 @@ public sealed class CodeActionFeature
 
     private static async Task<List<CodeAction>> GetRefactoringsAsync(Document document, TextSpan span, CodeActionProviderCatalog catalog, CancellationToken cancellationToken)
     {
-        var providers = catalog.Refactorings;
+        var providers = catalog.GetRefactorings(document.Project.Language);
         var results = new List<CodeAction>?[providers.Count];
         var options = new ParallelOptions
         {
