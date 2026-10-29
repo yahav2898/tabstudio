@@ -232,8 +232,14 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
         }
     }
 
+    /// <summary>
+    /// The C# test projects whose tests Test Explorer finds and runs: those on xUnit, NUnit or MSTest, not TUnit, that
+    /// need no platform workload, such as a .NET MAUI app's tests.
+    /// </summary>
     private static List<ProjectInfo> TestProjectsOf(Workspace? workspace) =>
-        workspace?.Projects.Where(p => p.IsTestProject && p.Language == ProjectLanguage.CSharp).ToList() ?? [];
+        workspace?.Projects
+            .Where(p => p.IsTestProject && p.Language == ProjectLanguage.CSharp && !ProjectClassifier.UsesTUnit(p) && !ProjectClassifier.NeedsPlatformWorkload(p))
+            .ToList() ?? [];
 
     /// <summary>Whether a project is, or references directly or indirectly, another project.</summary>
     private static bool DependsOn(Workspace workspace, ProjectInfo project, ProjectInfo dependency)

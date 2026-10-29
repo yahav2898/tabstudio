@@ -185,9 +185,11 @@ public static class ToolchainProjectDetector
     public static bool IsMakefile(string marker) => marker is "Makefile" or "makefile" or "GNUmakefile";
 
     /// <summary>
-    /// In one folder, a language's own manifest (<c>Cargo.toml</c>, <c>go.mod</c>, <c>package.json</c>,
-    /// <c>pom.xml</c>) comes before a Makefile, so that the folder's first project, the default startup project,
-    /// is the one the Makefile usually drives.
+    /// In one folder, the project a person means to run comes first, so that it is the default startup project: a
+    /// language's own manifest (<c>Cargo.toml</c>, <c>go.mod</c>, <c>package.json</c>, <c>pom.xml</c>) before a
+    /// <c>package.json</c> that only holds tooling (linters, formatters: nothing to start, no <c>main</c> or
+    /// <c>bin</c>), as mdBook's beside its <c>Cargo.toml</c>, and both before a Makefile, which usually drives the
+    /// folder's real project.
     /// </summary>
     private static void PreferLanguageManifests(List<ToolchainProject> result, string folder)
     {
@@ -198,13 +200,49 @@ public static class ToolchainProjectDetector
         }
 
         var inFolder = result.Skip(first).ToList();
-        if (inFolder.Count < 2 || !inFolder.Any(p => p.Toolchain.Id == "cpp" && p.Marker is { } m && IsMakefile(m)))
+        if (inFolder.Count < 2)
+        {
+            return;
+        }
+
+        var ranks = inFolder.ToDictionary(p => p, Rank);
+        if (ranks.Values.All(r => r == 0))
         {
             return;
         }
 
         result.RemoveRange(first, inFolder.Count);
-        result.AddRange(inFolder.OrderBy(p => p.Toolchain.Id == "cpp" && p.Marker is { } marker && IsMakefile(marker) ? 1 : 0));
+        result.AddRange(inFolder.OrderBy(p => ranks[p]));
+    }
+
+    private static int Rank(ToolchainProject project) =>
+        project.Toolchain.Id == "cpp" && project.Marker is { } marker && IsMakefile(marker) ? 2
+        : project.Toolchain.Id == "node" && project.Marker == "package.json" && IsToolingOnly(Path.Combine(project.Directory, "package.json")) ? 1
+        : 0;
+
+    /// <summary>
+    /// Whether a <c>package.json</c> only holds tooling: no <c>start</c>, <c>dev</c> or <c>serve</c> script, and no
+    /// <c>main</c> or <c>bin</c> to run.
+    /// </summary>
+    /// <param name="packageJson">The file.</param>
+    public static bool IsToolingOnly(string packageJson)
+    {
+        try
+        {
+            using var document = System.Text.Json.JsonDocument.Parse(File.ReadAllText(packageJson));
+            var root = document.RootElement;
+            if (root.ValueKind != System.Text.Json.JsonValueKind.Object || root.TryGetProperty("main", out _) || root.TryGetProperty("bin", out _))
+            {
+                return false;
+            }
+
+            return !root.TryGetProperty("scripts", out var scripts) || scripts.ValueKind != System.Text.Json.JsonValueKind.Object
+                || !(scripts.TryGetProperty("start", out _) || scripts.TryGetProperty("dev", out _) || scripts.TryGetProperty("serve", out _));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Text.Json.JsonException)
+        {
+            return false;
+        }
     }
 
     private static bool IsInside(string folder, string ancestor) =>

@@ -52,8 +52,48 @@ public static class CompatibilityDoctor
     public static CompatibilityReport Diagnose(ProjectInfo project)
     {
         ArgumentNullException.ThrowIfNull(project);
+        // A Xamarin.Android project looks like a legacy .NET Framework one (TargetFrameworkVersion v13.0), but Upgrade
+        // project would not make it build: it needs its platform's workload.
+        if (DiagnoseWorkload(project) is { } workload)
+        {
+            return workload;
+        }
+
         var report = DiagnoseFramework(project);
         return ProjectParser.IsLegacyFrameworkProject(project) ? report with { CanUpgradeProject = true } : report;
+    }
+
+    /// <summary>
+    /// The verdict for a project that needs a platform workload TabStudio does not have (see
+    /// <see cref="ProjectClassifier.RequiredWorkload"/>); <see langword="null"/> for any other project.
+    /// </summary>
+    private static CompatibilityReport? DiagnoseWorkload(ProjectInfo project) => ProjectClassifier.RequiredWorkload(project) switch
+    {
+        PlatformWorkload.Maui => Report(
+            project, RunHost.None, CompatibilityStatus.Unsupported, ".NET MAUI, on a computer",
+            "Not supported: a .NET MAUI project is built by .NET's MAUI workload, on a computer. TabStudio leaves it out of builds."),
+
+        PlatformWorkload.MobilePlatform => DiagnosePlatformHead(project),
+
+        PlatformWorkload.Xamarin => Report(
+            project, RunHost.None, CompatibilityStatus.Unsupported, "Xamarin, on a computer",
+            "Not supported: a Xamarin project is built by Xamarin's tools in Visual Studio, on a computer. TabStudio leaves it out of builds."),
+
+        PlatformWorkload.Uwp => Report(
+            project, RunHost.None, CompatibilityStatus.Unsupported, "UWP, on Windows",
+            "Not supported: a UWP project is built by Visual Studio's Universal Windows Platform tools, on Windows. TabStudio leaves it out of builds."),
+
+        _ => null,
+    };
+
+    /// <summary>The verdict for the Android, iOS, Mac or Tizen head of a cross-platform app.</summary>
+    private static CompatibilityReport DiagnosePlatformHead(ProjectInfo project)
+    {
+        var platform = string.Join(" and ", project.TargetFrameworks.Select(PlatformName).OfType<string>().Distinct(StringComparer.Ordinal));
+        return Report(
+            project, RunHost.None, CompatibilityStatus.Unsupported, $"{platform} head, on a computer",
+            $"The {platform} head of a cross-platform app: it builds only with .NET's {platform} workload, on a computer. TabStudio leaves it out of builds; "
+            + "the app's shared project and its desktop head run here.");
     }
 
     /// <summary>The verdict, with .NET Framework programs first: they run here when their items allow, or need Windows.</summary>
@@ -83,25 +123,21 @@ public static class CompatibilityDoctor
                 ".NET Framework apps run on Windows only. They build and run on your PC through the Windows Bridge.");
         }
 
-        if (ProjectClassifier.IsMobilePlatformHead(project))
-        {
-            var platform = string.Join(" and ", project.TargetFrameworks.Select(PlatformName).Distinct(StringComparer.Ordinal));
-            return Report(
-                project, RunHost.None, CompatibilityStatus.Unsupported, $"{platform} head, on a computer",
-                $"The {platform} head of a cross-platform app: it builds only with .NET's {platform} workload, on a computer. TabStudio leaves it out of builds; "
-                + "the app's shared project and its desktop head run here.");
-        }
-
         return DiagnoseKind(project);
     }
 
-    /// <summary>The platform of a mobile target framework, such as Android for <c>net10.0-android</c>.</summary>
-    private static string PlatformName(string targetFramework) =>
+    /// <summary>
+    /// The platform of a mobile target framework, such as Android for <c>net10.0-android</c>; <see langword="null"/> for
+    /// one of another platform, such as Windows beside them.
+    /// </summary>
+    private static string? PlatformName(string targetFramework) =>
         targetFramework.Contains("-android", StringComparison.OrdinalIgnoreCase) ? "Android"
         : targetFramework.Contains("-maccatalyst", StringComparison.OrdinalIgnoreCase) ? "Mac Catalyst"
         : targetFramework.Contains("-tvos", StringComparison.OrdinalIgnoreCase) ? "tvOS"
         : targetFramework.Contains("-macos", StringComparison.OrdinalIgnoreCase) ? "macOS"
-        : "iOS";
+        : targetFramework.Contains("-tizen", StringComparison.OrdinalIgnoreCase) ? "Tizen"
+        : targetFramework.Contains("-ios", StringComparison.OrdinalIgnoreCase) ? "iOS"
+        : null;
 
     /// <summary>The verdict for what a project produces.</summary>
     private static CompatibilityReport DiagnoseKind(ProjectInfo project)
@@ -123,6 +159,10 @@ public static class CompatibilityDoctor
                 + "dotnet and other tools as processes, which a program cannot do on a tablet. TabStudio builds it with the solution but never starts it; "
                 + "build and run the other projects here, or run the script on a computer with the .NET SDK."),
 
+            ProjectKind.Benchmark => Report(
+                project, RunHost.None, CompatibilityStatus.Unsupported, "Benchmarks, on a computer",
+                "BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer."),
+
             ProjectKind.ConsoleApp when project.Language == ProjectLanguage.CSharp => Report(
                 project, RunHost.InProcess, CompatibilityStatus.Ready, "In-process",
                 "Compiled in memory and run right here, with its output in the Output panel."),
@@ -134,6 +174,10 @@ public static class CompatibilityDoctor
             ProjectKind.ClassLibrary => Report(
                 project, RunHost.None, CompatibilityStatus.NotRunnable, "Built with its users",
                 "A library is compiled together with the projects that reference it."),
+
+            ProjectKind.Test when ProjectClassifier.UsesTUnit(project) => Report(
+                project, RunHost.None, CompatibilityStatus.Unsupported, "TUnit, on a computer",
+                "Not supported: Test Explorer runs xUnit, NUnit and MSTest tests; TUnit tests run with dotnet test, on a computer."),
 
             ProjectKind.Test when project.Language == ProjectLanguage.CSharp => Report(
                 project, RunHost.InProcess, CompatibilityStatus.Ready, "Test Explorer",
@@ -172,8 +216,8 @@ public static class CompatibilityDoctor
                 $"Blazor WebAssembly apps run in the web preview. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
             ProjectKind.Worker => Report(
-                project, RunHost.InProcess, CompatibilityStatus.Planned, "In-process",
-                "Background services will run in-process, with logs in the Output panel."),
+                project, RunHost.InProcess, CompatibilityStatus.Unsupported, "In-process",
+                "A worker service starts in-process like a console app, but Stop cannot shut down its host: its background services keep running until TabStudio closes."),
 
             ProjectKind.Avalonia when project.Language == ProjectLanguage.CSharp => Report(
                 project, RunHost.AndroidView, CompatibilityStatus.Ready, "Native view in the app preview",
@@ -192,8 +236,8 @@ public static class CompatibilityDoctor
                 $"Uno and WinUI apps render beside the code. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
             ProjectKind.Maui => Report(
-                project, RunHost.AndroidView, CompatibilityStatus.Planned, "Android app",
-                "MAUI targets Android directly; the app will be packaged and installed on this tablet."),
+                project, RunHost.None, CompatibilityStatus.Unsupported, ".NET MAUI, on a computer",
+                "Not supported: a .NET MAUI project is built by .NET's MAUI workload, on a computer. TabStudio leaves it out of builds."),
 
             ProjectKind.Wpf when project.Language == ProjectLanguage.CSharp => Report(
                 project, RunHost.WebView, CompatibilityStatus.Ready, "OpenSilver in the web preview",

@@ -16,6 +16,16 @@ public sealed record OutputProcessResult(ProcessExit? Exit, IReadOnlyList<string
 {
     /// <summary>Whether it ran and exited with code 0.</summary>
     public bool Succeeded => Exit is { Succeeded: true };
+
+    /// <summary>
+    /// Why no program ran although the build succeeded, such as a CMake build with several executables and none
+    /// chosen; <see langword="null"/> when a program ran or could not start.
+    /// </summary>
+    public string? NothingToRunReason { get; init; }
+
+    /// <summary>The result of a run that built its project but had no program to start, for a reason the user can act on.</summary>
+    /// <param name="reason">One line that says why and how to choose a program.</param>
+    public static OutputProcessResult NothingToRun(string reason) => new(null, [reason]) { NothingToRunReason = reason };
 }
 
 /// <summary>

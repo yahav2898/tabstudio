@@ -1,3 +1,6 @@
+using TabStudio.Compilation;
+using TabStudio.Compilation.Building;
+using TabStudio.Core.Workspaces;
 using TabStudio.Packages.Installation;
 
 namespace TabStudio.Packages.Tests;
@@ -177,6 +180,114 @@ public sealed class PackageRestorerTests : IDisposable
         Assert.Contains("net11.0", error.Message, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// As in NuGet, one package that cannot be found does not take the others away: the restore fails with NU1101
+    /// for it alone, and the project compiles against the rest, with TS2003 only for the missing one.
+    /// </summary>
+    [Fact]
+    public async Task A_missing_package_reports_NU1101_and_the_project_still_compiles_against_the_others()
+    {
+        _fixture.Add(new TestPackage("Good", "1.0.0").WithAssembly("lib/net8.0"));
+        var project = _fixture.Project(("Good", "1.0.0"), ("Missing", "1.0.0"));
+        _fixture.Write("App/Program.cs", "Console.WriteLine(Good.Marker.Describe());");
+
+        var result = await _fixture.CreateRestorer().RestoreAsync(project);
+
+        Assert.False(result.Success);
+        var error = Assert.Single(result.Diagnostics);
+        Assert.Equal(PackageDiagnosticIds.PackageNotFound, error.Id);
+        Assert.Contains("Unable to find package Missing", error.Message, StringComparison.Ordinal);
+        Assert.Equal("Good", Assert.Single(result.Packages).Id);
+        Assert.Equal(new[] { "Good.dll" }, result.CompileAssemblies.Select(Path.GetFileName));
+        Assert.Equal(result.CompileAssemblies, result.RuntimeAssemblies);
+        Assert.Equal(new[] { "Missing" }, result.UnrestoredReferences);
+
+        var build = await BuildAsync(project, result);
+
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+        var unrestored = Assert.Single(build.Diagnostics, d => d.Id == ProjectBuilder.UnrestoredPackageId);
+        Assert.Contains("'Missing'", unrestored.Message, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// A version conflict (NU1107) fails the restore, but, as in NuGet, the graph keeps the version that won and every
+    /// other package, so nothing is missing from the compilation.
+    /// </summary>
+    [Fact]
+    public async Task A_version_conflict_reports_NU1107_and_keeps_every_package()
+    {
+        _fixture.Add(
+            new TestPackage("A", "1.0.0").WithAssembly("lib/net8.0").DependsOn("C", "[1.0.0]"),
+            new TestPackage("B", "1.0.0").WithAssembly("lib/net8.0").DependsOn("C", "[2.0.0]"),
+            new TestPackage("C", "1.0.0").WithAssembly("lib/net8.0"),
+            new TestPackage("C", "2.0.0").WithAssembly("lib/net8.0"),
+            new TestPackage("Good", "1.0.0").WithAssembly("lib/net8.0"));
+        var project = _fixture.Project(("A", "1.0.0"), ("B", "1.0.0"), ("Good", "1.0.0"));
+        _fixture.Write("App/Program.cs", "Console.WriteLine(A.Marker.Describe() + B.Marker.Describe() + C.Marker.Describe() + Good.Marker.Describe());");
+
+        var result = await _fixture.CreateRestorer().RestoreAsync(project);
+
+        Assert.False(result.Success);
+        var conflict = Assert.Single(result.Diagnostics, d => d.Id == PackageDiagnosticIds.VersionConflict);
+        Assert.Contains("Version conflict detected for C", conflict.Message, StringComparison.Ordinal);
+        Assert.Equal(new[] { "A", "B", "C", "Good" }, result.Packages.Select(p => p.Id));
+        Assert.Equal("2.0.0", result.Packages.Single(p => p.Id == "C").Version);
+        Assert.Equal(new[] { "A.dll", "B.dll", "C.dll", "Good.dll" }, result.CompileAssemblies.Select(Path.GetFileName));
+        Assert.Empty(result.UnrestoredReferences);
+
+        var build = await BuildAsync(project, result);
+
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+        Assert.DoesNotContain(build.Diagnostics, d => d.Id == ProjectBuilder.UnrestoredPackageId);
+    }
+
+    /// <summary>A version that does not parse (TS3003) leaves out that reference only.</summary>
+    [Fact]
+    public async Task An_invalid_version_leaves_out_only_its_own_package()
+    {
+        _fixture.Add(new TestPackage("Good", "1.0.0").WithAssembly("lib/net8.0"));
+        var project = _fixture.Project(("Good", "1.0.0"), ("Generated", "$(NoSuchVersionProperty)"));
+
+        var result = await _fixture.CreateRestorer().RestoreAsync(project);
+
+        Assert.False(result.Success);
+        Assert.Equal(PackageDiagnosticIds.InvalidVersion, Assert.Single(result.Diagnostics).Id);
+        Assert.Equal("Good", Assert.Single(result.Packages).Id);
+        Assert.Equal(new[] { "Good.dll" }, result.CompileAssemblies.Select(Path.GetFileName));
+        Assert.Equal(new[] { "Generated" }, result.UnrestoredReferences);
+    }
+
+    [Fact]
+    public async Task A_restore_with_errors_is_not_cached_and_the_next_one_tries_the_sources_again()
+    {
+        _fixture.Add(new TestPackage("Good", "1.0.0").WithAssembly("lib/net8.0"));
+        var project = _fixture.Project(("Good", "1.0.0"), ("Late", "1.0.0"));
+        var restorer = _fixture.CreateRestorer();
+
+        var first = await restorer.RestoreAsync(project);
+        var second = await restorer.RestoreAsync(project);
+
+        Assert.False(File.Exists(PackageRestorer.GetCacheFilePath(project)));
+        Assert.False(second.FromCache);
+        Assert.False(second.Success);
+        Assert.Equal(PackageDiagnosticIds.PackageNotFound, Assert.Single(second.Diagnostics).Id);
+        Assert.Equal(first.CompileAssemblies, second.CompileAssemblies);
+        Assert.Equal(new[] { "Late" }, second.UnrestoredReferences);
+
+        // Once the package is published, the restore succeeds, and from then on comes from the cache.
+        _fixture.Add(new TestPackage("Late", "1.0.0").WithAssembly("lib/net8.0"));
+        var third = await restorer.RestoreAsync(project);
+        var fourth = await restorer.RestoreAsync(project);
+
+        Assert.True(third.Success, Describe(third));
+        Assert.False(third.FromCache);
+        Assert.Empty(third.UnrestoredReferences);
+        Assert.Equal(new[] { "Good.dll", "Late.dll" }, third.CompileAssemblies.Select(Path.GetFileName));
+        Assert.True(fourth.FromCache);
+        Assert.Empty(fourth.UnrestoredReferences);
+        Assert.Equal(third.CompileAssemblies, fourth.CompileAssemblies);
+    }
+
     [Fact]
     public async Task Net_framework_only_packages_are_used_with_NU1701()
     {
@@ -243,6 +354,15 @@ public sealed class PackageRestorerTests : IDisposable
     public void Dispose() => _fixture.Dispose();
 
     private static string Describe(RestoreResult result) => string.Join('\n', result.Diagnostics);
+
+    /// <summary>Builds a project against what a restore gave it, as the IDE's language service does.</summary>
+    private static async Task<BuildResult> BuildAsync(ProjectInfo project, RestoreResult restore)
+    {
+        using var host = new RoslynWorkspaceHost();
+        host.Load(WorkspaceLoader.Load(project.FilePath), FileSystemTextProvider.Instance);
+        host.SetPackageReferences(project.FilePath, restore.CompileAssemblies, restore.UnrestoredReferences);
+        return await new ProjectBuilder(host).BuildAsync(host.FindProject(project.FilePath)!);
+    }
 
     /// <summary>Reports on the calling thread, unlike <see cref="Progress{T}"/>, so the list is complete when the restore returns.</summary>
     private sealed class SynchronousProgress(Action<RestoreProgress> report) : IProgress<RestoreProgress>

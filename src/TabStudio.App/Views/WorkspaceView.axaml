@@ -997,7 +997,7 @@
               <controls:StrokeIcon Classes.spinning="{Binding Operations.HasOperations}" Data="{StaticResource Icon.Spinner}" Size="13" Foreground="{DynamicResource Brush.OnAccent}" />
               <TextBlock x:Name="OperationsText" Text="{Binding Operations.StatusText}" FontSize="12" VerticalAlignment="Center" MaxWidth="380" TextTrimming="CharacterEllipsis" />
               <ProgressBar Width="56" Height="4" MinHeight="4" Minimum="0" Maximum="100" VerticalAlignment="Center"
-                           Value="{Binding Operations.Current.Percent, FallbackValue=0}" IsIndeterminate="{Binding Operations.Current.IsIndeterminate, FallbackValue=True}" />
+                           Value="{Binding Operations.Current.Percent, FallbackValue=0}" IsIndeterminate="{Binding Operations.Current.IsIndeterminate, FallbackValue=False}" />
             </StackPanel>
           </Button>
         </Panel>

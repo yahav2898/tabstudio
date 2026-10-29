@@ -42,6 +42,13 @@ public sealed class StrokeIcon : Control
         AffectsMeasure<StrokeIcon>(SizeProperty);
     }
 
+    /// <summary>Creates an icon.</summary>
+    public StrokeIcon()
+    {
+        // A spinner's "spinning" class is often bound; one that starts turning while hidden must not run its animation.
+        Classes.CollectionChanged += (_, _) => Theming.HiddenAnimations.Watch(this);
+    }
+
     /// <inheritdoc cref="DataProperty"/>
     public Geometry? Data
     {

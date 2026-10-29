@@ -1,5 +1,6 @@
+using System.Globalization;
 using System.Text.Json;
-using TabStudio.Toolchains.Processes;
+using TabStudio.LanguageServers.Configuration;
 using TabStudio.Toolchains.Projects;
 
 namespace TabStudio.App.ViewModels;
@@ -28,7 +29,11 @@ public sealed partial class WorkspaceViewModel
 
         try
         {
+            var root = Workspace?.RootDirectory ?? project.Directory;
+            var launch = NativeLaunchConfigurations(root);
+            var launchPrograms = launch.Select(c => c.Program!).ToList();
             string? executable;
+            string? chosenTarget = null;
             string message;
             if (plan.EntryPoint == "CMakeLists.txt")
             {
@@ -40,18 +45,20 @@ public sealed partial class WorkspaceViewModel
                 }
 
                 var targets = CMakeProject.Executables(build, project.Directory);
-                executable = targets.Count == 1 ? targets[0].Path : targets.FirstOrDefault(t => t.Sources.Contains(ActiveDocument?.FilePath, StringComparer.Ordinal))?.Path;
+                var chosen = CMakeProject.Choose(targets, project.Directory, ActiveDocument?.FilePath, launchPrograms, root);
+                executable = chosen?.Path;
+                chosenTarget = chosen?.Name;
                 message = targets.Count == 0
-                    ? "The CMake build has no executable target to run. Add one with add_executable, or choose the program in .tabstudio/launch.json."
-                    : $"The CMake build has {targets.Count} executable targets ({string.Join(", ", targets.Take(4).Select(t => Path.GetFileName(t.Path)))}). Open a source file of the one to run, or choose the program in .tabstudio/launch.json.";
+                    ? $"{project.Name} has no executable target to run. Add one with add_executable, or choose the program in .tabstudio/launch.json."
+                    : $"{project.Name} has {targets.Count.ToString(CultureInfo.InvariantCulture)} executable targets ({NamesOf(targets.Select(t => t.Name))}). Open a source file of the one to run, or name it as the \"program\" of a configuration in .tabstudio/launch.json.";
             }
             else if (project.Marker is { } marker && ToolchainProjectDetector.IsMakefile(marker))
             {
                 var binaries = NativePrograms.Find(project.Directory);
-                executable = binaries.Count == 1 ? binaries[0] : null;
+                executable = NativePrograms.Choose(binaries, project.Directory, launchPrograms, root);
                 message = binaries.Count == 0
                     ? $"make built no program in {project.Name} or its bin, build or out folder. Choose the program to run in .tabstudio/launch.json."
-                    : $"make built {binaries.Count} programs ({string.Join(", ", binaries.Take(4).Select(Path.GetFileName))}). Choose the one to run in .tabstudio/launch.json.";
+                    : $"make built {binaries.Count.ToString(CultureInfo.InvariantCulture)} programs ({NamesOf(binaries.Select(Path.GetFileName))}). Name the one to run as the \"program\" of a configuration in .tabstudio/launch.json.";
             }
             else
             {
@@ -59,18 +66,42 @@ public sealed partial class WorkspaceViewModel
                 message = $"The build of {project.Name} produced no program to run.";
             }
 
-            if (executable is not null)
+            if (executable is { } program)
             {
-                return (plan with { Run = plan.Run with { Program = executable, Arguments = [] } }, built);
+                // A launch configuration that names the program also gives its arguments.
+                var arguments = launch.FirstOrDefault(c => NativePrograms.Names(c.Program!, program, root) || string.Equals(c.Program, chosenTarget, StringComparison.Ordinal))?.Arguments ?? [];
+                return (plan with { Run = plan.Run with { Program = program, Arguments = arguments } }, built);
             }
 
-            Output.WriteLine(message, OutputKind.Failure);
-            return (plan, new(new ProcessExit(1, null, false), [message]));
+            // Nothing ran, so there is no exit code to report: the run ends saying what to choose.
+            return (plan, OutputProcessResult.NothingToRun(message));
         }
-        catch (Exception ex) when (ex is IOException or JsonException or KeyNotFoundException)
+        catch (Exception ex) when (ex is IOException or JsonException or KeyNotFoundException or InvalidOperationException)
         {
             Output.WriteLine(ex.Message, OutputKind.Failure);
-            return (plan, new(new ProcessExit(1, null, false), [ex.Message]));
+            return (plan, new(null, [ex.Message], ex.Message));
         }
+    }
+
+    /// <summary>
+    /// The launch configurations of <c>.tabstudio/launch.json</c> that start a program, with their variables replaced,
+    /// in order: their <c>program</c> chooses among the executables of a CMake or Make build.
+    /// </summary>
+    /// <param name="root">The workspace's root folder.</param>
+    private List<LaunchConfiguration> NativeLaunchConfigurations(string root)
+    {
+        var configuration = _languageServers?.Configuration ?? WorkspaceConfiguration.Load(root);
+        var variables = new LaunchVariables(root, ActiveDocument?.FilePath);
+        return [.. configuration.LaunchConfigurations
+            .Where(c => !c.IsAttach && !string.IsNullOrWhiteSpace(c.Program))
+            .Select(c => c.Substitute(variables))
+            .Where(c => !string.IsNullOrWhiteSpace(c.Program))];
+    }
+
+    /// <summary>The first few names of a list, for a one-line message, such as <c>cJSON_test, readme_examples, …</c>.</summary>
+    private static string NamesOf(IEnumerable<string?> names)
+    {
+        var all = names.ToList();
+        return string.Join(", ", all.Take(4)) + (all.Count > 4 ? ", …" : string.Empty);
     }
 }

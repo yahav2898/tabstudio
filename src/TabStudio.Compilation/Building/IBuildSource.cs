@@ -20,6 +20,14 @@ public interface IBuildSource
     /// <param name="projectFilePath">Full path of the project file.</param>
     bool ArePackagesRestored(string projectFilePath);
 
+    /// <summary>
+    /// Whether one of a project's package references is restored and referenced: the project's packages were
+    /// restored, and the restore did not report that package as one it could not restore.
+    /// </summary>
+    /// <param name="projectFilePath">Full path of the project file.</param>
+    /// <param name="packageId">The id of the package, as the project references it.</param>
+    bool IsPackageRestored(string projectFilePath, string packageId);
+
     /// <summary>Compiles one project into memory.</summary>
     /// <param name="projectFilePath">Full path of the project file.</param>
     /// <param name="checkInProcessSafety">Whether to reject calls that would close TabStudio.</param>

@@ -8,6 +8,44 @@ public sealed class ProjectParserTests
     private static readonly string ProjectPath = Path.Combine(Path.GetTempPath(), "Sample", "App", "App.csproj");
 
     [Fact]
+    public void The_project_s_own_item_groups_keep_only_what_their_conditions_allow()
+    {
+        // Humanizer's benchmarks: the repository's own project, or its NuGet package when UseBaselinePackage is true.
+        var xml = """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFrameworks>net11.0;net10.0;net8.0</TargetFrameworks>
+                <UseBaselinePackage Condition="'$(UseBaselinePackage)' == ''">false</UseBaselinePackage>
+              </PropertyGroup>
+              <ItemGroup Condition="'$(UseBaselinePackage)' == 'true'">
+                <PackageReference Include="Humanizer" Version="3.0.10" />
+              </ItemGroup>
+              <ItemGroup Condition="'$(UseBaselinePackage)' != 'true'">
+                <ProjectReference Include="..\Humanizer\Humanizer.csproj" />
+              </ItemGroup>
+              <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+                <PackageReference Include="Net8Only" Version="1.0.0" />
+              </ItemGroup>
+              <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+                <PackageReference Include="DebugOnly" Version="1.0.0" />
+              </ItemGroup>
+              <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' ">
+                <PackageReference Include="NetCoreOnly" Version="1.0.0" />
+              </ItemGroup>
+              <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+                <PackageReference Include="NetFrameworkOnly" Version="1.0.0" />
+              </ItemGroup>
+            </Project>
+            """;
+
+        var project = ProjectParser.Parse(ProjectPath, xml);
+
+        Assert.Equal(["DebugOnly", "NetCoreOnly"], project.PackageReferences.Select(p => p.Name));
+        Assert.Single(project.ProjectReferences);
+    }
+
+    [Fact]
     public void Reads_an_sdk_style_console_project()
     {
         const string xml = """
@@ -297,5 +335,66 @@ public sealed class ProjectParserTests
         var project = ProjectParser.Parse(ProjectPath, $"""<Project Sdk="{sdk}"><PropertyGroup>{properties}</PropertyGroup></Project>""");
 
         Assert.Equal(executable, project.IsExecutable);
+    }
+
+    [Theory]
+    [InlineData("net462;net470;net48;net8.0;net9.0;net10.0;net11.0", "net10.0")]
+    [InlineData("net8.0;net9.0", "net9.0")]
+    [InlineData("net9.0;net8.0", "net9.0")]
+    [InlineData("net11.0;net12.0", "net11.0")]
+    [InlineData("netstandard2.0;net8.0-android;net8.0-ios", "net8.0-android")]
+    [InlineData("net48;netcoreapp3.1", "netcoreapp3.1")]
+    [InlineData("net48;netstandard2.0", "net48")]
+    [InlineData("netstandard2.0", "netstandard2.0")]
+    public void Conditions_are_evaluated_for_the_framework_TabStudio_compiles(string targetFrameworks, string expected) =>
+        Assert.Equal(expected, ProjectParser.EvaluationTargetFramework(targetFrameworks.Split(';')));
+
+    [Fact]
+    public void A_project_without_target_frameworks_has_no_framework_for_conditions() =>
+        Assert.Null(ProjectParser.EvaluationTargetFramework([]));
+
+    [Fact]
+    public void Item_groups_of_imported_files_are_kept_for_net10_rather_than_the_first_framework()
+    {
+        // Refit lists net462 first; its Directory.Build.props adds .NET Framework polyfills only for net4*.
+        using var temp = new TempDirectory();
+        temp.Write("Directory.Build.props", """
+            <Project>
+              <ItemGroup Condition="'$(TargetFramework)' == 'net462'"><Using Include="Legacy.Polyfills" /></ItemGroup>
+              <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'"><Using Include="Modern.Helpers" /></ItemGroup>
+            </Project>
+            """);
+        var path = temp.Write("Lib/Lib.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFrameworks>net462;net8.0;net10.0</TargetFrameworks></PropertyGroup>
+            </Project>
+            """);
+
+        var project = ProjectParser.Load(path);
+
+        Assert.Contains(project.Usings, u => u.Name == "Modern.Helpers");
+        Assert.DoesNotContain(project.Usings, u => u.Name == "Legacy.Polyfills");
+    }
+
+    [Theory]
+    [InlineData("true", "2.0.0")]
+    [InlineData("false", "1.0.0")]
+    public void VersionOverride_wins_over_Version_with_central_package_management(string central, string expected)
+    {
+        // Refit: <PackageReference Include="Microsoft.CodeAnalysis.CSharp" VersionOverride="$(MsCACSharpVersion)" />.
+        var project = ProjectParser.Parse(ProjectPath, $"""
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><ManagePackageVersionsCentrally>{central}</ManagePackageVersionsCentrally></PropertyGroup>
+              <ItemGroup>
+                <PackageReference Include="Roslyn" VersionOverride="4.8.0" />
+                <PackageReference Include="Both" Version="1.0.0"><VersionOverride>2.0.0</VersionOverride></PackageReference>
+                <PackageReference Include="Central" />
+              </ItemGroup>
+            </Project>
+            """);
+
+        Assert.Equal("4.8.0", project.PackageReferences.Single(p => p.Name == "Roslyn").Version);
+        Assert.Equal(expected, project.PackageReferences.Single(p => p.Name == "Both").Version);
+        Assert.Null(project.PackageReferences.Single(p => p.Name == "Central").Version);
     }
 }

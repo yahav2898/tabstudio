@@ -482,7 +482,7 @@ public sealed partial class WorkspaceViewModel
             return Path.Combine(project.Directory, "lib/main.dart");
         foreach (var rule in toolchain.Run?.Entries ?? [])
         {
-            if (RunPlanner.FindEntry(project.Directory, rule.File) is not { FullPath: var file })
+            if (RunPlanner.FindEntry(project.Directory, rule) is not { FullPath: var file })
             {
                 continue;
             }
@@ -511,14 +511,27 @@ public sealed partial class WorkspaceViewModel
         return Directory.EnumerateFiles(project.Directory).Where(toolchain.RunsFile).Order(StringComparer.Ordinal).FirstOrDefault() ?? project.MarkerPath;
     }
 
-    /// <summary>For a folder with one program at its top and no entry point, that program.</summary>
+    /// <summary>
+    /// For a folder with one program at its top and no entry point, that program. A tool's configuration file, such as
+    /// <c>eslint.config.mjs</c> or <c>vite.config.ts</c>, is not a program.
+    /// </summary>
     private static RunPlan? OnlyProgramOf(ToolchainProject project)
     {
-        var programs = Directory.EnumerateFiles(project.Directory).Where(project.Toolchain.RunsFile).Take(2).ToList();
+        var programs = Directory.EnumerateFiles(project.Directory).Where(project.Toolchain.RunsFile).Where(f => !IsToolConfiguration(f)).Take(2).ToList();
         return programs.Count == 1 ? RunPlanner.PlanFile(project, programs[0]) : null;
     }
 
-    private async Task RunToolchainPlanAsync(ToolchainProject project, Func<RunPlan?> planner)
+    private static bool IsToolConfiguration(string file)
+    {
+        var name = Path.GetFileNameWithoutExtension(file);
+        return name.StartsWith('.') || name.EndsWith(".config", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// F5 and Ctrl+F5 for a toolchain project: builds it when its plan has a build, then runs it. With
+    /// <paramref name="buildOnly"/>, Ctrl+Shift+B: builds it the same way and stops there.
+    /// </summary>
+    private async Task RunToolchainPlanAsync(ToolchainProject project, Func<RunPlan?> planner, bool buildOnly = false)
     {
         if (BlockLocalToolchainActionForRemote()) return;
         if (!await SaveAllCoreAsync())
@@ -537,8 +550,27 @@ public sealed partial class WorkspaceViewModel
         Output.Clear();
         SelectedPanel = BottomPanel.Output;
         IsBottomPanelVisible = true;
-        if (planner() is not { } plan)
+        var planned = planner();
+        if (buildOnly && planned?.Build is null)
         {
+            // Python, Node.js and scripts run from their source: there is nothing to compile.
+            Output.WriteLine($"{project.Name} needs no build: {toolchain.Name} runs it from its source. Press Ctrl+F5 to run it.", OutputKind.Info);
+            State = IdeState.Ready;
+            StatusText = "Nothing to build";
+            return;
+        }
+
+        if (planned is not { } plan)
+        {
+            if (RunPlanner.UnmetEntryOf(project) is { } unmet)
+            {
+                // A web app whose server the project does not list, such as a FastAPI app without uvicorn.
+                var missing = string.Join(" and ", unmet.Missing);
+                Output.WriteLine($"{project.Name} is a web app in {unmet.Entry.RelativePath}, which runs with {unmet.EntryPoint}, but the project's dependencies do not list {missing}. Add {missing} to them, install the project's packages, and press F5 again.", OutputKind.Failure);
+                StatusText = $"{missing} is missing";
+                return;
+            }
+
             var extensions = string.Join(" or ", toolchain.FileExtensions.Take(2));
             Output.WriteLine($"{project.Name} has no entry point to run. Open a {extensions} file and press F5 to run it, or add {(toolchain.Run?.Entries is [var first, ..] ? first.File : "one")}.", OutputKind.Failure);
             StatusText = "Nothing to run";
@@ -546,11 +578,18 @@ public sealed partial class WorkspaceViewModel
         }
 
         ErrorList.SetRunError(project.Directory, null);
+        if (!buildOnly && _installFailures.ContainsKey(project.Directory)
+            && _installFailureTitles.GetValueOrDefault(project.Directory) is { } notInstalled)
+        {
+            // It runs anyway, as a person may know the missing package does not matter, but a failure that follows is no surprise.
+            Output.WriteLine($"{notInstalled}, so it may fail to start. The install's log is in Output > Project Setup.", OutputKind.Failure);
+        }
+
         _runDirectory = plan.Run.WorkingDirectory ?? project.Directory;
         State = IdeState.Running;
         StatusText = $"Running {plan.ProgramName}";
         var status = _toolchains.Manager.Status(toolchain.Id);
-        Output.WriteLine($"Running {plan.ProgramName} with {toolchain.Name}{(status.Version is { } version ? " " + version : string.Empty)}", OutputKind.Info);
+        Output.WriteLine($"{(buildOnly ? "Building" : "Running")} {plan.ProgramName} with {toolchain.Name}{(status.Version is { } version ? " " + version : string.Empty)}", OutputKind.Info);
         _run = new CancellationTokenSource();
         var listening = BeginServerRun();
         OutputProcessResult result;
@@ -567,12 +606,18 @@ public sealed partial class WorkspaceViewModel
                 using (FollowOutput(building.Operation))
                 {
                     compiled = await BuildCargoOrToolchainAsync(project, plan, run.Token);
-                    building.Outcome = compiled.Result.Succeeded ? global::TabStudio.Core.Progress.OperationOutcome.Succeeded
+                    building.Outcome = compiled.Result.Succeeded || compiled.Result.NothingToRunReason is not null ? global::TabStudio.Core.Progress.OperationOutcome.Succeeded
                         : run.IsCancellationRequested ? global::TabStudio.Core.Progress.OperationOutcome.Cancelled : global::TabStudio.Core.Progress.OperationOutcome.Failed;
                 }
 
                 plan = compiled.Plan;
                 var built = compiled.Result;
+                if (buildOnly)
+                {
+                    ReportToolchainBuild(project, plan.ProgramName, built);
+                    return;
+                }
+
                 if (!built.Succeeded)
                 {
                     result = built;
@@ -602,6 +647,35 @@ public sealed partial class WorkspaceViewModel
         ReportToolchainRun(project, plan.ProgramName, result);
     }
 
+    /// <summary>Ends Ctrl+Shift+B on a toolchain project: the build's errors in the Error List, and whether it succeeded.</summary>
+    /// <param name="project">The project that was built.</param>
+    /// <param name="name">The program's name (<see cref="RunPlan.ProgramName"/>).</param>
+    /// <param name="result">How the build ended.</param>
+    private void ReportToolchainBuild(ToolchainProject project, string name, OutputProcessResult result)
+    {
+        ErrorList.SetRunErrors(project.Directory, [.. Matcher(project.Toolchain).FindErrors(result.Lines, IsWorkspaceFile).Select(error => ToDiagnostic(project, error))]);
+        Output.WriteLine();
+        if (result.Exit is { WasStopped: true })
+        {
+            Output.WriteLine($"The build of '{name}' was stopped.", OutputKind.Info);
+            State = IdeState.Ready;
+            StatusText = "Stopped";
+        }
+        else if (result.Succeeded || result.NothingToRunReason is not null)
+        {
+            // A build with several programs and none chosen yet still built them all.
+            Output.WriteLine($"Build succeeded: '{name}' is ready to run.", OutputKind.Info);
+            State = IdeState.Ready;
+            StatusText = "Build succeeded";
+        }
+        else
+        {
+            Output.WriteLine($"The build of '{name}' failed; its errors are in the Error List.", OutputKind.Failure);
+            State = IdeState.Failed;
+            StatusText = "Build failed";
+        }
+    }
+
     /// <summary>Ends a run: the exit line, as Visual Studio writes it, the Error List and the status bar.</summary>
     /// <param name="project">The project that ran.</param>
     /// <param name="entryPoint">The program's name (<see cref="RunPlan.ProgramName"/>): its target or binary, never a build file.</param>
@@ -613,6 +687,15 @@ public sealed partial class WorkspaceViewModel
             ReportPicBuild(project, result.Lines, result.Exit?.Succeeded == true);
         }
         Output.WriteLine();
+        if (result.NothingToRunReason is { } reason)
+        {
+            // The build succeeded but no program was chosen: nothing ran, so no exit code is reported.
+            Output.WriteLine(reason, OutputKind.Failure);
+            State = IdeState.Ready;
+            StatusText = "Nothing to run";
+            return;
+        }
+
         if (result.Exit is not { } exit)
         {
             State = IdeState.Failed;
