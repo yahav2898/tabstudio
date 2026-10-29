@@ -474,9 +474,10 @@
                                     IsPinned="True" IconBrush="{DynamicResource Brush.Error}" Command="{Binding StopCommand}" IsVisible="{Binding IsRunning}" />
 
           <!-- Debugging, as Visual Studio's Debug toolbar: Start Without Debugging, or while debugging Break All, Stop, Restart and the steps. -->
-          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Restart}" IconSize="16" Label="Hot Reload" Gesture="Alt+F10"
+          <!-- Only where the runtime can apply edits: on Android, C# edits apply with a restart (the item below). -->
+          <controls:AdaptiveBarItem x:Name="HotReloadButton" Icon="{StaticResource Icon.Restart}" IconSize="16" Label="Hot Reload" Gesture="Alt+F10"
                                     Priority="95" Command="{Binding ApplyHotReloadCommand}"
-                                    ToolTip.Tip="Available in the desktop host. On Android 0.15, restart to apply C# edits." />
+                                    IsVisible="{x:Static hotReload:HotReloadSession.IsSupported}" />
           <controls:AdaptiveBarItem Icon="{StaticResource Icon.Restart}" IconSize="16" Label="Restart to apply edits"
                                     IsPinned="True" IsVisible="{Binding HotReloadNeedsRestart}" Command="{Binding RestartForHotReloadCommand}" />
           <controls:AdaptiveBarItem Icon="{StaticResource Icon.PlayOutline}" IconSize="15" Label="Start Without Debugging" Gesture="Ctrl+F5" ShowsLabel="False"
