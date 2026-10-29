@@ -8,7 +8,7 @@ Compatibility Doctor:
   docs: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
   docs: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
 Startup project: FluentValidation.Tests.Benchmarks
-Built in 7.3 s: 0 errors, 1 warnings
+Built in 7.6 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   microsoft.codeanalysis.analyzers 2.6.1
       analyzers/dotnet/cs/Microsoft.CodeAnalysis.Analyzers.dll
@@ -86,16 +86,15 @@ Packages with analyzers or MSBuild files:
       analyzers/dotnet/cs/Microsoft.Bcl.HashCode.dll
       analyzers/dotnet/cs/Zomp.SyncMethodGenerator.dll
 Output:
-Build started at 04:34:08...
+Build started at 05:21:54...
 1>------ Build started: Project: FluentValidation, Configuration: Debug ------
------- Setting up docs: pip install -r requirements.txt ------
-> python3 -m venv .venv
-1>FluentValidation -> compiled in memory (500.5 KB, 1601 ms)
+1>FluentValidation -> compiled in memory (500.5 KB, 1065 ms)
 2>------ Build started: Project: FluentValidation.DependencyInjectionExtensions, Configuration: Debug ------
-2>FluentValidation.DependencyInjectionExtensions -> compiled in memory (5.5 KB, 409 ms)
+2>FluentValidation.DependencyInjectionExtensions -> compiled in memory (5.5 KB, 338 ms)
 3>------ Build started: Project: FluentValidation.Tests, Configuration: Debug ------
-3>FluentValidation.Tests -> compiled in memory (683.5 KB, 1550 ms)
+> /home/runner/work/_temp/real-repos/FluentValidation/docs/.venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
+3>FluentValidation.Tests -> compiled in memory (683.5 KB, 1315 ms)
 4>------ Build started: Project: FluentValidation.Tests.Benchmarks, Configuration: Debug ------
-4>FluentValidation.Tests.Benchmarks -> compiled in memory (37 KB, 529 ms)
+4>FluentValidation.Tests.Benchmarks -> compiled in memory (37 KB, 425 ms)
 ========== Build: 4 succeeded, 0 failed ==========
 
