@@ -23,11 +23,11 @@ public sealed class SectionHeaderTests
         var document = XDocument.Load(Path.Combine(root!.FullName, "src", "TabStudio.App", file));
         var headers = document.Descendants()
             .Where(e => e.Name.LocalName == "TextBlock" && ((string?)e.Attribute("Classes"))?.Split(' ').Contains("section") == true)
-            .Select(e => (string?)e.Attribute("Text"))
-            .Where(text => text is { Length: > 1 } && !text.StartsWith('{'))
+            .Select(e => (string?)e.Attribute("Text") ?? string.Empty)
+            .Where(text => text.Length > 1 && !text.StartsWith('{'))
             .ToList();
 
         Assert.NotEmpty(headers);
-        Assert.All(headers, text => Assert.False(text!.Any(char.IsLetter) && text == text.ToUpperInvariant(), $"\"{text}\" is in capitals."));
+        Assert.All(headers, text => Assert.False(text.Where(char.IsLetter).All(char.IsUpper), $"\"{text}\" is in capitals."));
     }
 }
