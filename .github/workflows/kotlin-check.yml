@@ -1,0 +1,102 @@
+name: Kotlin check
+on:
+  push:
+    branches: ['probe/kotlin-*']
+permissions:
+  contents: write
+jobs:
+  kotlin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install Java tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y maven
+          cc -shared -nostdlib -fPIC -O2 -Wall -Wextra -Werror build/android/native/jvm-mapping.c -o "$RUNNER_TEMP/libtabstudio-jvm.so"
+          LD_PRELOAD="$RUNNER_TEMP/libtabstudio-jvm.so" java -version
+          curl -fsSL https://services.gradle.org/distributions/gradle-8.14.4-bin.zip -o "$RUNNER_TEMP/gradle.zip"
+          echo "f1771298a70f6db5a29daf62378c4e18a17fc33c9ba6b14362e0cdf40610380d  $RUNNER_TEMP/gradle.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/gradle-8.14.4/bin" >> "$GITHUB_PATH"
+          mkdir -p "$RUNNER_TEMP/jdtls" "$RUNNER_TEMP/java-debug"
+          curl -fsSL https://download.eclipse.org/jdtls/milestones/1.58.0/jdt-language-server-1.58.0-202604151538.tar.gz -o "$RUNNER_TEMP/jdtls.tar.gz"
+          echo "2a5bbe55ec91b4325392050dc422cead3220a2459b3766be35e1fff45b4a50d9  $RUNNER_TEMP/jdtls.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/jdtls.tar.gz" -C "$RUNNER_TEMP/jdtls"
+          curl -fsSL https://open-vsx.org/api/vscjava/vscode-java-debug/0.60.0/file/vscjava.vscode-java-debug-0.60.0.vsix -o "$RUNNER_TEMP/java-debug.vsix"
+          echo "f09ebe358a7b08b3c17b21b8d8207b0649acad120eb6f1604dc4f15379f59d66  $RUNNER_TEMP/java-debug.vsix" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/java-debug.vsix" -d "$RUNNER_TEMP/java-debug"
+          echo "$RUNNER_TEMP/jdtls/bin" >> "$GITHUB_PATH"
+          echo "TABSTUDIO_JAVA_DEBUG_BUNDLE=$RUNNER_TEMP/java-debug/extension/server/com.microsoft.java.debug.plugin-0.53.2.jar" >> "$GITHUB_ENV"
+
+      # PHP with Composer and Xdebug, which TabStudio loads itself for debug runs, as it does on a tablet.
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: xdebug
+          tools: composer
+          coverage: none
+      - name: Install PHP, Kotlin and Swift tools
+        timeout-minutes: 15
+        run: |
+          # Xdebug stays installed but off: the IDE's debug runs load it from an ini file of their own.
+          for ini in $(php --ini | grep -o '/[^, ]*xdebug[^, ]*\.ini'); do sudo rm -f "$ini"; done
+          php -m | grep -qi xdebug && { echo "Xdebug is still loaded"; exit 1; }
+          php -d zend_extension=xdebug.so -m | grep -qi xdebug
+          mkdir -p "$RUNNER_TEMP/php-tools/bin" "$RUNNER_TEMP/php-debug"
+          curl -fsSL https://github.com/phpactor/phpactor/releases/download/2026.10.07.0/phpactor.phar -o "$RUNNER_TEMP/php-tools/phpactor.phar"
+          echo "b28bf6166e016d539fc2f2aec18ef918b12590e436a6f1ccbdf30b5bbdbdb16b  $RUNNER_TEMP/php-tools/phpactor.phar" | sha256sum -c -
+          printf '#!/bin/sh\nexec php "%s/php-tools/phpactor.phar" "$@"\n' "$RUNNER_TEMP" > "$RUNNER_TEMP/php-tools/bin/phpactor"
+          curl -fsSL https://open-vsx.org/api/xdebug/php-debug/1.40.2/file/xdebug.php-debug-1.40.2.vsix -o "$RUNNER_TEMP/php-debug.vsix"
+          echo "17631993fe800083a2fc89a6782c8bf58a79603ad201ddff60d9b59ba2345d5f  $RUNNER_TEMP/php-debug.vsix" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/php-debug.vsix" -d "$RUNNER_TEMP/php-debug"
+          printf '#!/bin/sh\nexec node "%s/php-debug/extension/out/phpDebug.js" "$@"\n' "$RUNNER_TEMP" > "$RUNNER_TEMP/php-tools/bin/php-debug-adapter"
+          chmod +x "$RUNNER_TEMP/php-tools/bin/"*
+          echo "$RUNNER_TEMP/php-tools/bin" >> "$GITHUB_PATH"
+          # The Kotlin compiler and JetBrains' Kotlin language server, pinned as the Toolchain Store pins them.
+          curl -fsSL https://github.com/JetBrains/kotlin/releases/download/v2.4.21/kotlin-compiler-2.4.21.zip -o "$RUNNER_TEMP/kotlinc.zip"
+          echo "7cc140e76daf416a0424a5557f99afd7ca89ebd463ea1101261e3e01c33e75cd  $RUNNER_TEMP/kotlinc.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/kotlinc.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/kotlinc/bin" >> "$GITHUB_PATH"
+          mkdir -p "$RUNNER_TEMP/kotlin-lsp/bin"
+          curl -fsSL https://download.jetbrains.com/language-server/kotlin-server/263.7084.0/kotlin-server-0.0.27-linux-amd64.vsix -o "$RUNNER_TEMP/kotlin-lsp.vsix"
+          echo "6787185abb0e7f3b527484bb6cc4a881ce42b2e39320626937e65839751075e9  $RUNNER_TEMP/kotlin-lsp.vsix" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/kotlin-lsp.vsix" -d "$RUNNER_TEMP/kotlin-lsp"
+          rm "$RUNNER_TEMP/kotlin-lsp.vsix"
+          printf '#!/bin/sh\nexec "%s/kotlin-lsp/extension/server/bin/intellij-server" "$@"\n' "$RUNNER_TEMP" > "$RUNNER_TEMP/kotlin-lsp/bin/kotlin-lsp"
+          chmod +x "$RUNNER_TEMP/kotlin-lsp/bin/kotlin-lsp" "$RUNNER_TEMP/kotlin-lsp/extension/server/bin/intellij-server"
+          echo "$RUNNER_TEMP/kotlin-lsp/bin" >> "$GITHUB_PATH"
+          # Swift's official toolchain for Ubuntu 24.04, with the packages swift.org lists for it.
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq libz3-dev libncurses-dev libedit2 libpython3-dev > /dev/null
+          curl -fsSL https://download.swift.org/swift-6.4.1-release/ubuntu2404/swift-6.4.1-RELEASE/swift-6.4.1-RELEASE-ubuntu24.04.tar.gz -o "$RUNNER_TEMP/swift.tar.gz"
+          echo "7d246c7114077ad01dba4ad897628446ada4c489d6c7dbcf39ae3f25cbe17e8b  $RUNNER_TEMP/swift.tar.gz" | sha256sum -c -
+          mkdir -p "$RUNNER_TEMP/swift"
+          tar -xzf "$RUNNER_TEMP/swift.tar.gz" -C "$RUNNER_TEMP/swift" --strip-components=1
+          rm "$RUNNER_TEMP/swift.tar.gz"
+          echo "$RUNNER_TEMP/swift/usr/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/swift/usr/bin/swift" --version
+
+      - name: Test
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/out
+          TABSTUDIO_REAL_SERVERS: '1'
+        run: |
+          mkdir -p out
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template" --logger "console;verbosity=normal" > out/test.log 2>&1 || true
+      - name: Publish
+        if: always()
+        run: |
+          cp -r out "$RUNNER_TEMP/out" && cd "$RUNNER_TEMP/out" && git init -q && git add -A
+          git -c user.name=ci -c user.email=ci@example.com commit -qm "kotlin $GITHUB_SHA"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/probe-results/kotlin
