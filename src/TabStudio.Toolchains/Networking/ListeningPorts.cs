@@ -1,4 +1,6 @@
 using System.Globalization;
+using System.Net;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using TabStudio.Toolchains.Processes.Unix;
 
@@ -177,6 +179,40 @@ public static partial class ListeningPorts
         {
             return null;
         }
+    }
+
+    /// <summary>
+    /// The address a local server answers on: <c>http://127.0.0.1:port/</c>, or <c>http://[::1]:port/</c> when only IPv6's
+    /// loopback accepts the connection. A dev server bound to "localhost" (Vite, Next.js and others on Node 17 and later)
+    /// listens on whichever address localhost resolves to first, which is ::1 on Android's Alpine environment and on
+    /// most Linux computers.
+    /// </summary>
+    /// <param name="port">The port it listens on.</param>
+    /// <param name="cancellationToken">Stops the attempt.</param>
+    public static async Task<Uri> LoopbackAddressAsync(int port, CancellationToken cancellationToken = default)
+    {
+        foreach (var (address, host) in new[] { (IPAddress.Loopback, "127.0.0.1"), (IPAddress.IPv6Loopback, "[::1]") })
+        {
+            if (address.AddressFamily == AddressFamily.InterNetworkV6 && !Socket.OSSupportsIPv6)
+            {
+                continue;
+            }
+
+            try
+            {
+                using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                timeout.CancelAfter(TimeSpan.FromSeconds(1));
+                using var client = new TcpClient(address.AddressFamily);
+                await client.ConnectAsync(address, port, timeout.Token).ConfigureAwait(false);
+                return new Uri(string.Create(CultureInfo.InvariantCulture, $"http://{host}:{port}/"));
+            }
+            catch (Exception ex) when (ex is SocketException or OperationCanceledException && !cancellationToken.IsCancellationRequested)
+            {
+                // Not listening on this address: try the next one.
+            }
+        }
+
+        return new Uri(string.Create(CultureInfo.InvariantCulture, $"http://127.0.0.1:{port}/"));
     }
 
     private static bool IsLocal(string address) => address.ToUpperInvariant() switch

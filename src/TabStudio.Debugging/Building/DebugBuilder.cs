@@ -53,6 +53,17 @@ public sealed class DebugBuilder
         var stopwatch = Stopwatch.StartNew();
         var info = new DebugInfoBuilder();
         var diagnostics = new List<BuildDiagnostic>();
+        if (ProjectClassifier.PlatformWorkloadReason(project) is { } workload)
+        {
+            diagnostics.Add(new BuildDiagnostic(
+                ProjectBuilder.NeedsPlatformWorkloadId,
+                DiagnosticSeverityLevel.Error,
+                $"'{project.Name}' cannot be debugged on this device: it {workload}.",
+                null,
+                project.Name));
+            return Finish(project.Name, diagnostics, null, [], stopwatch, info);
+        }
+
         var language = project.IsVisualBasic ? ProjectLanguage.VisualBasic : ProjectLanguage.CSharp;
         if (!project.IsRoslynLanguage || _host.FindProject(project.FilePath) is null)
         {
@@ -71,16 +82,16 @@ public sealed class DebugBuilder
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            // As in ProjectBuilder: once the IDE restored a project's packages, the compilation references them.
-            if (!_host.ArePackagesRestored(current.FilePath))
-            {
-                diagnostics.AddRange(current.PackageReferences.Select(package => new BuildDiagnostic(
+            // As in ProjectBuilder: once the IDE restored a project's packages, the compilation references them, and
+            // only the packages its restore could not restore are missing.
+            diagnostics.AddRange(current.PackageReferences
+                .Where(package => !_host.IsPackageRestored(current.FilePath, package.Name))
+                .Select(package => new BuildDiagnostic(
                     ProjectBuilder.UnrestoredPackageId,
                     DiagnosticSeverityLevel.Warning,
                     $"NuGet package '{package.Name}' is not restored on this device, so code that uses it will not compile.",
                     null,
                     current.Name)));
-            }
 
             var isEntry = string.Equals(current.FilePath, project.FilePath, StringComparison.Ordinal);
             var compilation = await _host.GetCompilationAsync(current.FilePath, cancellationToken).ConfigureAwait(false);

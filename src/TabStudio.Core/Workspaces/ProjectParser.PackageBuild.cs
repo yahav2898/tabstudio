@@ -101,7 +101,10 @@ public static partial class ProjectParser
         public List<AdditionalFileItem> AdditionalFiles { get; } = [];
     }
 
-    /// <summary>The properties the .NET SDK sets for every project that packages' props and targets test.</summary>
+    /// <summary>
+    /// The properties the .NET SDK sets for every project that packages' props and targets test, for the target
+    /// framework TabStudio builds the project for (see <see cref="EvaluationTargetFramework"/>).
+    /// </summary>
     private static IEnumerable<(string Name, string Value)> SdkPropertiesOf(ProjectInfo project)
     {
         yield return ("Language", project.Language switch
@@ -113,7 +116,7 @@ public static partial class ProjectParser
         });
         yield return ("UsingMicrosoftNETSdk", project.Sdk is null ? string.Empty : "true");
         yield return ("TargetFrameworkIdentifier", ".NETCoreApp");
-        if (project.TargetFrameworks is [var framework, ..])
+        if (EvaluationTargetFramework(project.TargetFrameworks) is { } framework)
         {
             yield return ("TargetFramework", framework);
             var digits = framework.StartsWith("net", StringComparison.OrdinalIgnoreCase) ? new string([.. framework[3..].TakeWhile(c => char.IsAsciiDigit(c) || c == '.')]) : string.Empty;
@@ -366,21 +369,7 @@ public static partial class ProjectParser
             properties.TryGetValue(match.Groups["name"].Value, out var value) ? value : string.Empty);
 
     /// <summary>Resolves the <c>$(MSBuildThisFile…)</c> properties, which mean the file that uses them.</summary>
-    private static string ThisFile(string text, string file)
-    {
-        if (!text.Contains("$(MSBuildThisFile", StringComparison.OrdinalIgnoreCase))
-        {
-            return text;
-        }
-
-        var folder = (Path.GetDirectoryName(file) ?? string.Empty).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-        return text
-            .Replace("$(MSBuildThisFileDirectory)", folder, StringComparison.OrdinalIgnoreCase)
-            .Replace("$(MSBuildThisFileFullPath)", file, StringComparison.OrdinalIgnoreCase)
-            .Replace("$(MSBuildThisFileName)", Path.GetFileNameWithoutExtension(file), StringComparison.OrdinalIgnoreCase)
-            .Replace("$(MSBuildThisFileExtension)", Path.GetExtension(file), StringComparison.OrdinalIgnoreCase)
-            .Replace("$(MSBuildThisFile)", Path.GetFileName(file), StringComparison.OrdinalIgnoreCase);
-    }
+    private static string ThisFile(string text, string file) => MsBuildImports.ExpandThisFile(text, file);
 
     private static string[] Split(string? value) =>
         (value ?? string.Empty).Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);

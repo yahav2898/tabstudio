@@ -86,6 +86,7 @@ public sealed class ToolchainCatalogTests
                 Assert.Contains(toolchain.Run.File, a => a.Contains("{file}", StringComparison.Ordinal));
                 Assert.NotEmpty(toolchain.Run.Entries);
                 Assert.All(toolchain.Run.Entries, e => Assert.NotEmpty(e.Command));
+                Assert.All(toolchain.Run.Entries.SelectMany(e => e.Contains.Concat(e.Excludes)), pattern => _ = new Regex(pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant));
             }
             Assert.NotNull(toolchain.Host);
             Assert.NotEmpty(toolchain.Host.Commands);

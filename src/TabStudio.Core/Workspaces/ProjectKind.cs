@@ -103,6 +103,12 @@ public enum ProjectKind
 
     /// <summary>A Swift package (<c>Package.swift</c>) or Swift files.</summary>
     Swift,
+
+    /// <summary>
+    /// Benchmarks written with BenchmarkDotNet: a program that builds each benchmark into a separate program with the
+    /// .NET SDK and starts it as a process, so it is never an app to run on a tablet.
+    /// </summary>
+    Benchmark,
 }
 
 /// <summary>

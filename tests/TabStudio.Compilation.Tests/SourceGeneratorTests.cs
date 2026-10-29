@@ -53,6 +53,35 @@ public sealed class SourceGeneratorTests : IDisposable
     }
 
     [Fact]
+    public async Task A_generator_that_uses_its_package_s_own_Microsoft_CodeAnalysis_assembly_runs()
+    {
+        // As Microsoft.CodeAnalysis.ResxSourceGenerator.CSharp.dll uses Microsoft.CodeAnalysis.ResxSourceGenerator.dll,
+        // which only its package has: a Microsoft.CodeAnalysis name is not by itself one of the compiler's assemblies.
+        const string folder = "packages/greeting.text/1.0.0/analyzers/dotnet/cs/";
+        var library = Emit("Microsoft.CodeAnalysis.GreetingText", folder + "Microsoft.CodeAnalysis.GreetingText.dll",
+            "namespace Microsoft.CodeAnalysis.GreetingText; public static class Text { public static string Hello => \"Hello from the package's own assembly\"; }", []);
+        var generator = Emit("Greeting.Generator.CSharp", folder + "Greeting.Generator.CSharp.dll", """
+            using Microsoft.CodeAnalysis;
+
+            [Generator]
+            public sealed class GreetingGenerator : IIncrementalGenerator
+            {
+                public void Initialize(IncrementalGeneratorInitializationContext context) =>
+                    context.RegisterPostInitializationOutput(output => output.AddSource("Generated.g.cs",
+                        "namespace Tablet.App;\npublic static class Generated { public static string Hello => \"" + Microsoft.CodeAnalysis.GreetingText.Text.Hello + "\"; }\n"));
+            }
+            """, [MetadataReference.CreateFromFile(library)]);
+
+        _host.SetAnalyzers(_projectPath, [generator]);
+        var build = await new ProjectBuilder(_host).BuildAsync(Project);
+
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+        var console = new CapturingConsole();
+        await new ProgramRunner().RunAsync(build.EntryAssembly!, build.Dependencies, [], console);
+        Assert.Equal("Hello from the package's own assembly\n", console.Output);
+    }
+
+    [Fact]
     public async Task Framework_generators_reach_every_project_and_survive_a_reload()
     {
         _host.SetFrameworkAnalyzers([CompileGenerator("packs/generators/Greeting.Generator.dll")]);
@@ -169,6 +198,21 @@ public sealed class SourceGeneratorTests : IDisposable
     {
         _host.Dispose();
         _temp.Dispose();
+    }
+
+    /// <summary>Compiles an analyzer assembly against the compiler, as a package would ship it, and returns its path.</summary>
+    private string Emit(string name, string relativePath, string source, IEnumerable<MetadataReference> references)
+    {
+        var compilation = CSharpCompilation.Create(
+            name,
+            [CSharpSyntaxTree.ParseText(source)],
+            [.. Basic.Reference.Assemblies.Net100.References.All, MetadataReference.CreateFromFile(typeof(IIncrementalGenerator).Assembly.Location), .. references],
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+        var path = _temp.Resolve(relativePath);
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        var result = compilation.Emit(path);
+        Assert.True(result.Success, string.Join('\n', result.Diagnostics));
+        return path;
     }
 
     /// <summary>Compiles a small incremental generator, as a package would ship it, and returns its path.</summary>

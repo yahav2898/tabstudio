@@ -73,6 +73,22 @@ public sealed class CompatibilityDoctorTests
         Assert.False(string.IsNullOrWhiteSpace(report.Explanation));
     }
 
+    /// <summary>
+    /// The Doctor says Planned only for what docs/ROADMAP.md commits to. It promised worker services and MAUI apps in an
+    /// update, which the roadmap does not; their rows now say what is true today.
+    /// </summary>
+    [Theory]
+    [InlineData(ProjectKind.Worker)]
+    [InlineData(ProjectKind.Maui)]
+    [InlineData(ProjectKind.Benchmark)]
+    public void Kinds_the_roadmap_does_not_commit_to_are_not_reported_planned(ProjectKind kind)
+    {
+        var report = CompatibilityDoctor.Diagnose(Project(kind));
+
+        Assert.Equal(CompatibilityStatus.Unsupported, report.Status);
+        Assert.DoesNotContain(" will ", report.Explanation, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void Only_ready_projects_claim_they_can_run_today()
     {

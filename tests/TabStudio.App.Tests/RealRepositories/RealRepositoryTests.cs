@@ -127,8 +127,9 @@ public sealed class RealRepositoryTests
                 repository["web"]?.GetValue<string>(),
                 repository["expect"]?.GetValue<string>());
             var report = new StringBuilder().AppendLine(CultureInfo.InvariantCulture, $"{name} at {repository["sha"]!.GetValue<string>()}");
-            // The project's folder in the repository, as a person opens one sample of a repository of samples.
-            var folder = repository["folder"]?.GetValue<string>() is { } subfolder ? Path.Combine(clones, name, subfolder) : Path.Combine(clones, name);
+
+            // The app's folder in the repository, such as next-learn's dashboard/final-example.
+            var folder = Path.Combine(clones, name, (repository["folder"]?.GetValue<string>() ?? ".").Replace('/', Path.DirectorySeparatorChar));
             if (repository["services"]?.GetValue<string>() == "job")
             {
                 // The job's service containers stand in for the repository's Compose services, which run natively on a

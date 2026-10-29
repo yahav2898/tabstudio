@@ -48,6 +48,7 @@ public sealed partial class RoslynWorkspaceHost
             var project = WithPackageBuild(_projectsAsRead.GetValueOrDefault(id) ?? current);
             _projects[id] = project;
             ApplyPackageBuildUnderGate(id, project);
+            InvalidateGenerators(projectFilePath);
         }
     }
 

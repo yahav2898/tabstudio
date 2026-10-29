@@ -29,10 +29,12 @@ public sealed partial class WorkspaceViewModel
         StatusText = restarted ? $"Restarting {project.Name}" : $"Starting {project.Name}";
         _run = new CancellationTokenSource();
         _liveProject = project;
+        ErrorList.SetRunError(Path.GetDirectoryName(project.FilePath)!, null);
         var clock = Stopwatch.StartNew();
         ConsoleLease? console = null;
         RunEnvironment? environment = null;
         AvaloniaAppHost? app = null;
+        IReadOnlyList<string> packages = [];
         RunResult result;
         try
         {
@@ -40,7 +42,8 @@ public sealed partial class WorkspaceViewModel
             console = await ProcessConsole.AcquireAsync(_run.Token);
             console.Redirect(Output);
             environment = new RunEnvironment(_serviceEnvironment);
-            app = AvaloniaAppHost.Start(entry, build.Dependencies, _language!.GetPackageRuntimeAssemblies(project.FilePath));
+            packages = _language!.GetPackageRuntimeAssemblies(project.FilePath);
+            app = AvaloniaAppHost.Start(entry, build.Dependencies, packages);
             BeginHotReload(project, build, app.EntryAssembly, avalonia: app);
             var crashed = new TaskCompletionSource<Exception>(TaskCreationOptions.RunContinuationsAsynchronously);
             app.Crashed += (_, exception) => crashed.TrySetResult(exception);
@@ -75,6 +78,14 @@ public sealed partial class WorkspaceViewModel
             // XAML that does not load, or an exception in the app's startup code.
             // The message first, then where it happened, as for a crash.
             Output.WriteLine($"{project.Name} could not start: {ex.Message}", OutputKind.Error);
+            if (AvaloniaAppHost.NewerAvaloniaNote(packages) is { } newer)
+            {
+                // The reason, in one line, before the exception it explains.
+                Output.WriteLine(newer, OutputKind.Failure);
+                ErrorList.SetRunError(Path.GetDirectoryName(project.FilePath)!, new TabStudio.Core.Diagnostics.BuildDiagnostic(
+                    AvaloniaAppHost.NewerAvaloniaId, TabStudio.Core.Diagnostics.DiagnosticSeverityLevel.Error, newer, null, project.Name));
+            }
+
             Output.WriteLine(ex.ToString(), OutputKind.Error);
             result = new RunResult(RunOutcome.Crashed, -1, clock.Elapsed, ex);
         }

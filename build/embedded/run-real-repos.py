@@ -38,6 +38,14 @@ def arm_cross_prefix(environment: dict) -> str:
     return str(Path(compiler).absolute()).removesuffix("gcc")
 
 
+def cmake_project_name(folder: Path) -> str:
+    """The name in a CMakeLists.txt's project() call, which ESP-IDF gives the firmware it builds."""
+    match = re.search(r"(?im)^\s*project\(\s*([A-Za-z0-9_.+-]+)", (folder / "CMakeLists.txt").read_text(encoding="utf-8"))
+    if match is None:
+        raise RuntimeError(f"No project() in {folder / 'CMakeLists.txt'}")
+    return match.group(1)
+
+
 def entries(manifest: Path | None = None) -> list[dict]:
     """Read the shared Real repositories manifest, rejecting unpinned or unsafe entries."""
     path = manifest or ROOT / "build/ci/real-repos.json"
@@ -169,7 +177,8 @@ class Runner:
             self.run([cli, "core", "update-index"], repo, env)
             self.run([cli, "core", "install", e["core"]], repo, env)
             self.run([cli, "compile", "--fqbn", e["fqbn"], "--library", str(repo), "--build-path", str(build), str(project)], repo, env, count_errors=True)
-            self.require(build / "HelloWorld.ino.elf")
+            # arduino-cli names the firmware after the sketch folder.
+            self.require(build / f"{project.name}.ino.elf")
         elif kind == "stm32":
             # This real project committed a Windows CMakeCache inside its preset's binaryDir.
             # Retain the vendor preset/toolchain while overriding only the disposable build folder.
@@ -187,7 +196,8 @@ class Runner:
             # export.sh computes the vendor Python/toolchain environment. Arguments stay positional;
             # neither repository paths nor project settings are interpolated into shell source.
             self.run(["bash", "-c", 'set -e; . "$IDF_PATH/export.sh"; exec python "$IDF_PATH/tools/idf.py" -C "$1" -B "$2" "-DIDF_TARGET=$3" build', "tabstudio-idf", str(project), str(build), e["target"]], repo, env, count_errors=True)
-            self.require(build / "hello_world.elf")
+            # ESP-IDF names the firmware after the CMake project.
+            self.require(build / f"{cmake_project_name(project)}.elf")
         elif kind == "zephyr":
             locks = ROOT / "src/TabStudio.Toolchains/Embedded/Installation"
             self.run([sys.executable, "-m", "pip", "install", "--require-hashes", "-r", str(locks / "zephyr-bootstrap.requirements.txt")], repo, env)

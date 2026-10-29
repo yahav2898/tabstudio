@@ -36,9 +36,9 @@ public sealed partial class WorkspaceViewModel
                 : artifacts.FirstOrDefault(a => a.Source == active);
             if (selected is null)
             {
+                // Nothing ran, so there is no exit code to report: the run ends saying what to choose.
                 const string message = "Cargo built no unique command to run. Select a package's Cargo.toml as the startup project, or open the main source file of the binary to run.";
-                Output.WriteLine(message, OutputKind.Failure);
-                return (plan, new OutputProcessResult(new ProcessExit(1, null, false), [message]));
+                return (plan, OutputProcessResult.NothingToRun(message));
             }
 
             // The program is the binary Cargo built, such as fd, not its package (fd-find) or its manifest.

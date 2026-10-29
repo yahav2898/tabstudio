@@ -71,8 +71,20 @@ public sealed partial class WorkspaceViewModel
             if (!python)
             {
                 var result = await OutputProcess.RunAsync(_toolchains.Runtime, step, Output, null, cancellationToken, toolchain: project.Toolchain.Id);
+                if (!result.Succeeded && !cancellationToken.IsCancellationRequested && NpmInstallInstead(step) is { } install)
+                {
+                    // npm ci refuses a lock file out of step with package.json, and npm 10 can fail on an old one;
+                    // npm install updates the lock file instead, as a person would run next.
+                    Output.WriteLine($"npm ci failed ({FirstInstallError(result)}), so TabStudio runs npm install instead, which updates package-lock.json.", OutputKind.Info);
+                    Output.WriteLine("> " + install.CommandLine, OutputKind.Info);
+                    step = install;
+                    result = await OutputProcess.RunAsync(_toolchains.Runtime, step, Output, null, cancellationToken, toolchain: project.Toolchain.Id);
+                }
+
                 if (!result.Succeeded)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    ReportInstallFailure(project, step, result);
                     return result;
                 }
 
@@ -91,6 +103,26 @@ public sealed partial class WorkspaceViewModel
                 ProjectSetupOutput.WriteLine("> " + fallback.CommandLine, OutputKind.Info);
                 version = null;
                 outcome = await OutputProcess.RunAsync(_toolchains.Runtime, fallback, ProjectSetupOutput, null, cancellationToken, toolchain: "python");
+            }
+
+            if (!outcome.Succeeded && !creates && !cancellationToken.IsCancellationRequested && NonEditable(step, outcome) is { } plain)
+            {
+                // An older build backend, such as Poetry's before 1.1, cannot install the project in editable mode;
+                // installed normally it still gets its dependencies, and F5 runs its code from the folder.
+                Output.WriteLine($"{project.Name}'s build backend cannot install it in editable mode, so TabStudio installs it normally.", OutputKind.Info);
+                ProjectSetupOutput.WriteLine("> " + plain.CommandLine, OutputKind.Info);
+                step = plain;
+                outcome = await OutputProcess.RunAsync(_toolchains.Runtime, step, ProjectSetupOutput, null, cancellationToken, toolchain: "python");
+            }
+
+            if (!outcome.Succeeded && !creates && !cancellationToken.IsCancellationRequested && LockedInstead(project, step, outcome) is { } locked)
+            {
+                // An application, rather than a package, has nothing for its build backend to build (fastapi-realworld);
+                // as poetry install does for one, its lock file's packages are what it needs.
+                Output.WriteLine($"{project.Name} is an application its build backend cannot build as a package, so TabStudio installs the packages its lock file pins.", OutputKind.Info);
+                ProjectSetupOutput.WriteLine("> " + locked.CommandLine, OutputKind.Info);
+                step = locked;
+                outcome = await OutputProcess.RunAsync(_toolchains.Runtime, step, ProjectSetupOutput, null, cancellationToken, toolchain: "python");
             }
 
             if (!outcome.Succeeded && !creates && !cancellationToken.IsCancellationRequested)
@@ -202,7 +234,10 @@ public sealed partial class WorkspaceViewModel
         return (result, choice.Version);
     }
 
-    /// <summary>Chooses the project's Python from what it asks for and what its pins install on.</summary>
+    /// <summary>
+    /// Chooses the project's Python from what it asks for and what its pins install on: those of a requirements
+    /// manifest, and those its lock files (<c>poetry.lock</c>, <c>uv.lock</c>) record.
+    /// </summary>
     private async Task<PythonVersionChoice?> ChoosePythonAsync(ToolchainProject project, DependencyInstallDefinition dependency, CancellationToken cancellationToken)
     {
         var request = PythonVersionRequest.Find(project.Directory);
@@ -210,9 +245,9 @@ public sealed partial class WorkspaceViewModel
         (int Minor, IReadOnlyList<PythonRelease> Limiting)? pins = null;
         var platform = _toolchains.Runtime.Kind == RuntimeKind.Linux ? PythonPlatform.Alpine : OperatingSystem.IsLinux() ? PythonPlatform.Glibc : null;
         var manifest = Path.Combine(project.Directory, dependency.Manifest);
-        if (platform is not null && dependency.Manifest.EndsWith(".txt", StringComparison.OrdinalIgnoreCase) && request?.Range.ExactMinor is null)
+        if (platform is not null && request?.Range.ExactMinor is null)
         {
-            var pinned = PythonRequirements.Pins(manifest);
+            var pinned = PythonDependencies.Pins(project.Directory, manifest);
             if (pinned.Count > 0)
             {
                 ProjectSetupOutput.WriteLine($"Reading which Python versions the {pinned.Count} pinned packages have wheels for, from PyPI.", OutputKind.Info);
@@ -355,11 +390,14 @@ public sealed partial class WorkspaceViewModel
             : failure.NeedsBuildTools && !_toolchains.CanInstallAlpinePackages
                 ? $" Install what its build needs on this computer (a C compiler and Python's headers{(failure.Package is { } pkg && PythonBuildPackages.Default.For(pkg) is { Needs: { } needs } ? ", and " + needs : string.Empty)}), then use Tools > Install Project Packages."
                 : string.Empty;
+        // Never suggest the Python that just failed: an older one, such as 3.12 after 3.14 or 3.11 after 3.12.
+        var older = PipFailure.OlderPython(python);
         var next = failure.Kind switch
         {
+            PipFailureKind.Build when failure.UnsupportedPythonAdvice(python) is { } advice => $" {advice} Then use Tools > Install Project Packages.",
             PipFailureKind.Build => failure.Package is { } name && PythonBuildPackages.Default.For(name)?.Note is { } note
                 ? $" {note}"
-                : $" A .python-version file naming the Python the project was written for, such as 3.12, lets pip use a prebuilt wheel{(failure.Package is null ? "." : $", as does a {failure.Package} release that ships one.")}",
+                : $" A .python-version file naming the Python the project was written for, {(older is null ? "an older one" : "such as " + older)}, lets pip use a prebuilt wheel{(failure.Package is null ? "." : $", as does a {failure.Package} release that ships one.")}",
             PipFailureKind.NoMatchingVersion => " Pin a version that supports this Python, or add a .python-version file naming the Python the project was written for.",
             PipFailureKind.Network or PipFailureKind.DiskFull => " Then use Tools > Install Project Packages.",
             _ => string.Empty,
@@ -370,6 +408,76 @@ public sealed partial class WorkspaceViewModel
         ProjectSetupOutput.WriteLine(message, OutputKind.Failure);
         _installFailures[project.Directory] = message;
         _installFailureTitles[project.Directory] = failure.Package is null ? $"{project.Name}'s packages were not installed" : $"{failure.Package} could not be installed";
+    }
+
+    /// <summary>
+    /// The one message a failed npm, cargo, go or other package install leaves in the Output panel and over the editor,
+    /// as a failed pip install does: which command failed and its first error, so that F5 does not then fail on a
+    /// half-installed project with nothing to say why.
+    /// </summary>
+    private void ReportInstallFailure(ToolchainProject project, ProcessStartSpec step, OutputProcessResult result)
+    {
+        var why = $"{step.CommandLine} failed ({FirstInstallError(result)}). Fix that, then use Tools > Install Project Packages.";
+        var message = $"{project.Name}'s packages were not installed: {why}";
+        Output.WriteLine(message, OutputKind.Failure);
+        ProjectSetupOutput.WriteLine(message, OutputKind.Failure);
+
+        // The notice's title already says the packages were not installed.
+        _installFailures[project.Directory] = why;
+        _installFailureTitles[project.Directory] = $"{project.Name}'s packages were not installed";
+    }
+
+    /// <summary>
+    /// The install's first line that says what went wrong: npm's first <c>npm error</c> that is not one of its
+    /// bookkeeping lines (code, path, errno, syscall, the command it ran, where its log is), or another tool's first
+    /// <c>error</c> line.
+    /// </summary>
+    private static string FirstInstallError(OutputProcessResult result) =>
+        result.StartError
+        ?? result.Lines.Select(l => l.Trim()).FirstOrDefault(l =>
+            (l.StartsWith("npm error ", StringComparison.Ordinal) || l.StartsWith("npm ERR! ", StringComparison.Ordinal) || l.StartsWith("error", StringComparison.OrdinalIgnoreCase))
+            && !NpmBookkeeping.Any(prefix => l[(l.IndexOf(' ', StringComparison.Ordinal) + 1)..].TrimStart().StartsWith(prefix, StringComparison.Ordinal))
+            && !l.Contains("complete log", StringComparison.OrdinalIgnoreCase)
+            && l.TrimEnd(':').Length > "npm error".Length)
+        ?? LastLine(result);
+
+    private static readonly string[] NpmBookkeeping = ["error code ", "error path ", "error errno ", "error syscall ", "error command sh ", "ERR! code ", "ERR! path ", "ERR! errno ", "ERR! syscall ", "ERR! command sh "];
+
+    /// <summary><c>npm install</c> with <paramref name="step"/>'s options when it is an <c>npm ci</c>; otherwise <see langword="null"/>.</summary>
+    internal static ProcessStartSpec? NpmInstallInstead(ProcessStartSpec step) =>
+        Path.GetFileNameWithoutExtension(step.Program) == "npm" && step.Arguments is ["ci", ..] ? step with { Arguments = ["install", .. step.Arguments.Skip(1)] } : null;
+
+    /// <summary>
+    /// The same pip install without <c>-e</c>, when it failed because the project's build backend has no
+    /// <c>build_editable</c> hook (PEP 660); otherwise <see langword="null"/>.
+    /// </summary>
+    internal static ProcessStartSpec? NonEditable(ProcessStartSpec step, OutputProcessResult failed) =>
+        step.Arguments.Contains("-e") && failed.Lines.Any(l => l.Contains("missing the 'build_editable' hook", StringComparison.Ordinal))
+            ? step with { Arguments = [.. step.Arguments.Where(a => a != "-e")] }
+            : null;
+
+    /// <summary>
+    /// A pip install of the packages the project's <c>poetry.lock</c> or <c>uv.lock</c> pins, written to a requirements
+    /// file in its <c>.venv</c>, when installing the project itself failed because its build backend found no package
+    /// to build (Poetry's "No file/folder found for package"); otherwise <see langword="null"/>.
+    /// </summary>
+    internal static ProcessStartSpec? LockedInstead(ToolchainProject project, ProcessStartSpec step, OutputProcessResult failed)
+    {
+        if (!step.Arguments.Contains(".") || !failed.Lines.Any(l => l.Contains("No file/folder found for package", StringComparison.Ordinal)))
+        {
+            return null;
+        }
+
+        var pins = PythonDependencies.LockPins(project.Directory);
+        var venv = Path.Combine(project.Directory, ".venv");
+        if (pins.Count == 0 || !Directory.Exists(venv))
+        {
+            return null;
+        }
+
+        var requirements = Path.Combine(venv, "tabstudio-locked-requirements.txt");
+        File.WriteAllLines(requirements, pins.Select(pin => $"{pin.Name}=={pin.Version}"));
+        return step with { Arguments = [.. step.Arguments.Where(a => a is not "-e" and not "."), "-r", requirements] };
     }
 
     /// <summary>The offer over the editor after a failed install: its message, and the full log one tap away.</summary>

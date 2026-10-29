@@ -212,10 +212,52 @@
           },
           {
             "file": "main.py",
+            "contains": [
+              "^\\s*(from\\s+(fastapi|starlette)(\\.\\w+)*\\s+import\\b|import\\s+(fastapi|starlette)\\b)",
+              "^app\\s*(:[^=\\n]+)?=\\s*[A-Za-z_][\\w.]*\\("
+            ],
+            "excludes": [
+              "^if\\s+__name__\\s*==\\s*[\"']__main__[\"']"
+            ],
+            "requires": [
+              "uvicorn"
+            ],
+            "name": "uvicorn main:app",
+            "command": [
+              "{python}",
+              "-u",
+              "-m",
+              "uvicorn",
+              "main:app"
+            ]
+          },
+          {
+            "file": "main.py",
             "command": [
               "{python}",
               "-u",
               "main.py"
+            ]
+          },
+          {
+            "file": "app.py",
+            "contains": [
+              "^\\s*(from\\s+(fastapi|starlette)(\\.\\w+)*\\s+import\\b|import\\s+(fastapi|starlette)\\b)",
+              "^app\\s*(:[^=\\n]+)?=\\s*[A-Za-z_][\\w.]*\\("
+            ],
+            "excludes": [
+              "^if\\s+__name__\\s*==\\s*[\"']__main__[\"']"
+            ],
+            "requires": [
+              "uvicorn"
+            ],
+            "name": "uvicorn app:app",
+            "command": [
+              "{python}",
+              "-u",
+              "-m",
+              "uvicorn",
+              "app:app"
             ]
           },
           {
@@ -235,6 +277,82 @@
               "{match}"
             ],
             "environment": {
+              "PYTHONPATH": "src"
+            }
+          },
+          {
+            "file": "*/main.py",
+            "contains": [
+              "^\\s*(from\\s+(fastapi|starlette)(\\.\\w+)*\\s+import\\b|import\\s+(fastapi|starlette)\\b)",
+              "^app\\s*(:[^=\\n]+)?=\\s*[A-Za-z_][\\w.]*\\("
+            ],
+            "requires": [
+              "uvicorn"
+            ],
+            "name": "uvicorn {match}.main:app",
+            "command": [
+              "{python}",
+              "-u",
+              "-m",
+              "uvicorn",
+              "{match}.main:app"
+            ]
+          },
+          {
+            "file": "src/*/main.py",
+            "contains": [
+              "^\\s*(from\\s+(fastapi|starlette)(\\.\\w+)*\\s+import\\b|import\\s+(fastapi|starlette)\\b)",
+              "^app\\s*(:[^=\\n]+)?=\\s*[A-Za-z_][\\w.]*\\("
+            ],
+            "requires": [
+              "uvicorn"
+            ],
+            "name": "uvicorn {match}.main:app",
+            "command": [
+              "{python}",
+              "-u",
+              "-m",
+              "uvicorn",
+              "{match}.main:app"
+            ],
+            "environment": {
+              "PYTHONPATH": "src"
+            }
+          },
+          {
+            "file": "*/__init__.py",
+            "contains": [
+              "^\\s*(from\\s+flask\\s+import\\b|import\\s+flask\\b)",
+              "^\\s*(def\\s+create_app\\s*\\(|\\w+\\s*(:[^=\\n]+)?=\\s*(flask\\.)?Flask\\s*\\()"
+            ],
+            "name": "flask run ({match})",
+            "command": [
+              "{python}",
+              "-u",
+              "-m",
+              "flask",
+              "run"
+            ],
+            "environment": {
+              "FLASK_APP": "{match}"
+            }
+          },
+          {
+            "file": "src/*/__init__.py",
+            "contains": [
+              "^\\s*(from\\s+flask\\s+import\\b|import\\s+flask\\b)",
+              "^\\s*(def\\s+create_app\\s*\\(|\\w+\\s*(:[^=\\n]+)?=\\s*(flask\\.)?Flask\\s*\\()"
+            ],
+            "name": "flask run ({match})",
+            "command": [
+              "{python}",
+              "-u",
+              "-m",
+              "flask",
+              "run"
+            ],
+            "environment": {
+              "FLASK_APP": "{match}",
               "PYTHONPATH": "src"
             }
           }
@@ -410,6 +528,7 @@
           {
             "file": "package.json",
             "json": "scripts.start",
+            "notMatching": "\\b(?:next|nuxt|nuxi) start\\b|\\b(?:vite|astro) preview\\b|\\b(?:remix|react-router)-serve\\b",
             "command": [
               "npm",
               "start"
@@ -431,6 +550,14 @@
               "npm",
               "run",
               "serve"
+            ]
+          },
+          {
+            "file": "package.json",
+            "json": "scripts.start",
+            "command": [
+              "npm",
+              "start"
             ]
           },
           {

@@ -166,6 +166,22 @@ errors, builds and the debugger all see the code they generate.
   downloaded the first time code uses one of those attributes; ASP.NET Core's come with its targeting pack.
 - **Loading.** `AnalyzerLoader` gives each folder its own `AssemblyLoadContext`, with Roslyn and its
   dependencies shared from the app.
+- **One copy of each.** When .NET and a package both bring an analyzer assembly of the same file name, such as
+  `Microsoft.Extensions.Logging.Generators.dll` from ASP.NET Core and from Microsoft.Extensions.Logging.Abstractions,
+  only the one with the higher assembly version runs, .NET's on a tie, as the SDK's `ResolvePackageFileConflicts`
+  leaves it. Running both would generate every member twice (CS0102, CS0111, CS0229).
+- **Generators built from the repository.** A `ProjectReference` with `OutputItemType="Analyzer"`, as Mediator,
+  Terminal.Gui, Spectre.Console, Dock and StronglyTypedId reference their own generators, gives the project a
+  `ProjectGeneratorReference`. The first time Roslyn asks for its generators, the referenced project is compiled
+  from the workspace's own compilation of it (its sources as edited, its restored packages, its embedded resources)
+  together with the projects it compiles against, emitted into memory, and loaded into a `GeneratorLoadContext` of
+  its own: the project assemblies from their images, Roslyn shared with the app as `AnalyzerLoader` shares it, the
+  .NET libraries from the app's runtime, and anything else from the generator project's restored packages. An edit
+  to the generator project, or to a project it compiles against, gives the projects that use it a new reference, so
+  their next compilation runs the edited generator; a build is reused while what it was made from is unchanged.
+  `ReferenceOutputAssembly` alone decides whether the project is also compiled against: left at `true`, it is both,
+  as StronglyTypedId's attributes project is. A project referenced only as a generator is not part of the program
+  and is not in its build order.
 - **Packages' props and targets.** The restore records each package's `build` and `buildTransitive` files as
   NuGet imports them (`buildTransitive` in place of `build` for a package referenced through another, the nearest
   target framework's folder, props before the project and targets after it). `ProjectParser.WithPackageBuildFiles`
@@ -182,7 +198,9 @@ errors, builds and the debugger all see the code they generate.
   `AvaloniaXamlLoader.Load(this)` so that the XAML is loaded at run time. XAML that is not well-formed is an
   error naming the file; a class that is not `partial` gets no generated part, as with Avalonia's own generator.
 - **Failures.** A generator that throws is a warning that names it (CS8785), never a reason for the build to
-  stop; the code it would have generated is then missing, and the errors that follow say where.
+  stop; the code it would have generated is then missing, and the errors that follow say where. A generator
+  project that does not compile, or that references the project using it, is one warning for that project
+  (TS2006) that names the generator project and gives its first error.
 
 ## Web apps
 
@@ -769,9 +787,12 @@ excluded. `MakefileWrapper` reads a Makefile's recipes and variables: one that o
 project. In a folder with both, a language's own manifest comes before a Makefile, so it is the default startup
 project. Programs are named after their target or binary (`RunPlan.ProgramName`), never `Makefile` or `pom.xml`. Alpine installs Clang, build-base (including make), CMake, clangd and LLDB with lldb-dap; desktops use
 PATH. CMake configures a Debug build, exports `compile_commands.json` for clangd and reports executable artifacts
-through its codemodel file API. An active source selects among several targets. Makefile projects need no special
-run target: the unique executable at the root or in `bin`, `build` or `out` runs. Ambiguous outputs need a launch
-configuration. Standalone files use their language's compiler with debug information. Compiler locations become
+through its codemodel file API. Of several targets, the one a `.tabstudio/launch.json` configuration's `program`
+names runs, else the one the active source belongs to, else the only one the top-level `CMakeLists.txt` defines
+(cJSON's `cJSON_test`, not its tests and fuzzers). Makefile projects need no special run target: the unique
+executable at the root or in `bin`, `build` or `out` runs, else the one a launch configuration names, else the only
+one at the root. When no program can be chosen, the run ends with one line that names the executables and how to
+choose one, and reports no exit code. Standalone files use their language's compiler with debug information. Compiler locations become
 Error List links.
 
 F5 uses LLDB DAP. Desktop programs use `runInTerminal`; on Android, LLDB launches within the same PRoot trace tree

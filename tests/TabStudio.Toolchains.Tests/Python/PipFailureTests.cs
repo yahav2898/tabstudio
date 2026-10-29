@@ -136,5 +136,90 @@ public sealed class PipFailureTests
         Assert.Contains("distutils", failure.Summary("3.12", "here"), StringComparison.Ordinal);
     }
 
+    /// <summary>What pip printed for fastapi-realworld-example-app's asyncpg 0.26.0 on Python 3.12, abridged.</summary>
+    private const string AsyncpgLog = """
+        Collecting asyncpg==0.26.0
+          Downloading asyncpg-0.26.0.tar.gz (737 kB)
+        Building wheels for collected packages: asyncpg
+          Building wheel for asyncpg (pyproject.toml): started
+          Building wheel for asyncpg (pyproject.toml): finished with status 'error'
+          error: subprocess-exited-with-error
+
+          × Building wheel for asyncpg (pyproject.toml) did not run successfully.
+          │ exit code: 1
+          ╰─> [120 lines of output]
+              gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O3 -Wall -fPIC -I/root/.venv/include -I/usr/include/python3.12 -c asyncpg/pgproto/pgproto.c -o build/temp.linux-aarch64-cpython-312/asyncpg/pgproto/pgproto.o -O2 -fsigned-char -Wall -Wsign-compare -Wconversion
+              asyncpg/pgproto/pgproto.c: In function '__Pyx_PyInt_As_int64_t':
+              asyncpg/pgproto/pgproto.c:40263:53: error: 'PyLongObject' {aka 'struct _longobject'} has no member named 'ob_digit'
+              40263 |             const digit* digits = ((PyLongObject*)x)->ob_digit;
+                    |                                                     ^~
+              asyncpg/pgproto/pgproto.c:40318:27: error: too few arguments to function '_PyLong_AsByteArray'
+              error: command '/usr/bin/gcc' failed with exit code 1
+              [end of output]
+
+          note: This error originates from a subprocess, and is likely not a problem with pip.
+          ERROR: Failed building wheel for asyncpg
+        Failed to build asyncpg
+        ERROR: Could not build wheels for asyncpg, which is required to install pyproject.toml-based projects
+        """;
+
+    [Fact]
+    public void A_build_against_a_CPython_API_this_Python_removed_says_the_release_does_not_support_it()
+    {
+        var failure = PipFailure.Analyze(Lines(AsyncpgLog));
+
+        Assert.Equal(PipFailureKind.Build, failure.Kind);
+        Assert.Equal("asyncpg", failure.Package);
+        Assert.Equal("0.26.0", failure.Version);
+        Assert.True(failure.UnsupportedPython);
+        Assert.False(failure.NeedsBuildTools);
+        var summary = failure.Summary("3.12", "on this tablet");
+        Assert.Equal("asyncpg 0.26.0 could not be installed: this release of it does not support Python 3.12, whose C API its code was not written for.", summary);
+        Assert.DoesNotContain("\n", summary, StringComparison.Ordinal);
+        var advice = failure.UnsupportedPythonAdvice("3.12")!;
+        Assert.Contains("such as 3.11", advice, StringComparison.Ordinal);
+        Assert.Contains("a newer asyncpg release", advice, StringComparison.Ordinal);
+        Assert.DoesNotContain("3.12,", advice, StringComparison.Ordinal);
+        Assert.DoesNotContain("C compiler", summary + advice, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("src/x.c:10:5: error: unknown type name 'Py_UNICODE'")]
+    [InlineData("src/x.c:12:9: error: implicit declaration of function '_PyUnicode_Ready' [-Wimplicit-function-declaration]")]
+    [InlineData("src/x.c:3:10: fatal error: longintrepr.h: No such file or directory")]
+    [InlineData("x.c:7:20: error: 'PyThreadState' {aka 'struct _ts'} has no member named 'recursion_depth'")]
+    public void Other_CPython_API_errors_mean_an_unsupported_Python(string line)
+    {
+        var failure = PipFailure.Analyze(["Collecting oldext==1.0", "  error: subprocess-exited-with-error", line, "ERROR: Failed building wheel for oldext"]);
+
+        Assert.True(failure.UnsupportedPython);
+        Assert.False(failure.NeedsBuildTools);
+    }
+
+    [Fact]
+    public void A_deprecation_warning_or_a_missing_library_is_not_an_unsupported_Python()
+    {
+        var warning = PipFailure.Analyze(Lines("""
+            Collecting cffi==1.15.1
+                  c/x.c:5:1: warning: 'Py_UNICODE' is deprecated [-Wdeprecated-declarations]
+                  c/_cffi_backend.c:15:10: fatal error: ffi.h: No such file or directory
+            ERROR: Failed building wheel for cffi
+            """));
+
+        Assert.False(warning.UnsupportedPython);
+        Assert.True(warning.NeedsBuildTools);
+        Assert.Null(warning.UnsupportedPythonAdvice("3.12"));
+    }
+
+    [Theory]
+    [InlineData("3.14", "3.12")]
+    [InlineData("3.13", "3.12")]
+    [InlineData("3.12", "3.11")]
+    [InlineData("3.10", "3.9")]
+    [InlineData("3.8", null)]
+    [InlineData("3", null)]
+    public void The_older_Python_suggested_is_never_the_one_that_failed(string failed, string? suggested) =>
+        Assert.Equal(suggested, PipFailure.OlderPython(failed));
+
     private static string[] Lines(string text) => text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
 }

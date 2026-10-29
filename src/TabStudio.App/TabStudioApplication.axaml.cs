@@ -51,6 +51,8 @@ public sealed partial class TabStudioApplication : Application
 
         // The saved theme first, so the first frame is drawn in it; tests (no lifetime) start dark and choose their own.
         ThemeSync.Start(this);
+        // Hidden spinners and progress bars stop animating, so an idle IDE draws no frames.
+        HiddenAnimations.Start();
         if (ApplicationLifetime is not null)
         {
             Services.GetRequiredService<AppearanceService>().Apply();
