@@ -19,11 +19,59 @@ public sealed partial class WorkspaceViewModel
     /// <summary>The Kotlin file each breakpoint stub stands for, so a frame Java's debugger reports in a stub shows the Kotlin file.</summary>
     private readonly System.Collections.Concurrent.ConcurrentDictionary<string, string> _kotlinStubs = new(StringComparer.Ordinal);
 
+    /// <summary>The Kotlin file of each JVM class of the project being debugged, by binary and simple name.</summary>
+    private Dictionary<string, string> _kotlinClasses = new(StringComparer.Ordinal);
+
     /// <summary>The Kotlin file a breakpoint stub stands for, or the path itself.</summary>
     private string KotlinSourceOf(string path) => _kotlinStubs.TryGetValue(path, out var kotlin) ? kotlin : path;
 
+    /// <summary>
+    /// The Kotlin file of a frame Java's debugger reports without a source, such as <c>MainKt.greet(String)</c>: the
+    /// file whose code compiles into the frame's class. The JVM's line numbers are the Kotlin file's.
+    /// </summary>
+    private string? KotlinFileOfFrame(string frameName)
+    {
+        var call = frameName.IndexOf('(', StringComparison.Ordinal);
+        var qualified = call < 0 ? frameName : frameName[..call];
+        var dot = qualified.LastIndexOf('.');
+        if (dot <= 0)
+        {
+            return null;
+        }
+
+        var type = qualified[..dot];
+        return _kotlinClasses.TryGetValue(type, out var file) || _kotlinClasses.TryGetValue(type[(type.LastIndexOf('.') + 1)..], out file) ? file : null;
+    }
+
+    private static Dictionary<string, string> KotlinClassesOf(string directory)
+    {
+        var classes = new Dictionary<string, string>(StringComparer.Ordinal);
+        var files = Directory.EnumerateFiles(directory, "*.kt", new EnumerationOptions { RecurseSubdirectories = true, IgnoreInaccessible = true, MaxRecursionDepth = 12 })
+            .Where(f => Path.GetRelativePath(directory, f).Split(Path.DirectorySeparatorChar) is var parts
+                && !parts.Any(p => p is "build" or "out" || p.StartsWith('.')))
+            .Take(2000);
+        foreach (var file in files)
+        {
+            try
+            {
+                foreach (var binary in KotlinProject.LineClasses(file, File.ReadAllText(file)).Values.Distinct(StringComparer.Ordinal))
+                {
+                    classes.TryAdd(binary, file);
+                    classes.TryAdd(binary[(binary.LastIndexOf('.') + 1)..], file);
+                }
+            }
+            catch (IOException)
+            {
+                // A file removed while the classes are read.
+            }
+        }
+
+        return classes;
+    }
+
     private async Task<LaunchConfiguration?> PrepareKotlinDebugAsync(ToolchainProject project, LaunchConfiguration configuration)
     {
+        _kotlinClasses = await Task.Run(() => KotlinClassesOf(project.Directory));
         var stubs = Path.Combine(project.Directory, ".tabstudio", "kotlin-debug");
         Directory.CreateDirectory(stubs);
         KotlinProject.WriteBreakpointStubs(KotlinProject.MainSource(project.Directory) ?? Path.Combine(project.Directory, "Main.kt"), string.Empty, [], stubs);
