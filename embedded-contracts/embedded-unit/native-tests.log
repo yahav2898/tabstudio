@@ -20,10 +20,10 @@ test_existing_file_never_overwritten (test_bridges.NativeSerial.test_existing_fi
 test_unmodified_native_termios_and_ioctl_over_real_pty (test_bridges.NativeSerial.test_unmodified_native_termios_and_ioctl_over_real_pty) ... ok
 test_unrelated_posix_descriptors_are_untouched (test_bridges.NativeSerial.test_unrelated_posix_descriptors_are_untouched) ... ok
 test_both_esptool_aliases_point_at_same_verified_executable (test_flash_installers.NativeInstallerTests.test_both_esptool_aliases_point_at_same_verified_executable) ... esptool v5.6.0
-Installed native esptool from verified archive: /tmp/tmp5qp43okb/esptool
+Installed native esptool from verified archive: /tmp/tmpz8joxlxb/esptool
 ok
 test_native_package_layout_is_discovered_without_guessing_subfolder (test_flash_installers.NativeInstallerTests.test_native_package_layout_is_discovered_without_guessing_subfolder) ... picotool v2.3.1
-Installed native picotool from verified archive: /tmp/tmp48idl6jh/arbitrary-official-layout/picotool
+Installed native picotool from verified archive: /tmp/tmpnislp59r/arbitrary-official-layout/picotool
 ok
 test_two_executables_or_outside_symlink_are_not_arbitrarily_selected (test_flash_installers.NativeInstallerTests.test_two_executables_or_outside_symlink_are_not_arbitrarily_selected) ... ok
 test_wrong_version_creates_no_path_alias (test_flash_installers.NativeInstallerTests.test_wrong_version_creates_no_path_alias) ... ok
@@ -53,6 +53,8 @@ test_normal_terminal_version_and_dap_calls_keep_upstream_arguments_home_and_conf
 test_real_child_receives_only_explicit_usb_fd3_and_nonzero_exit_propagates (test_probe_presets.ProbePresetTests.test_real_child_receives_only_explicit_usb_fd3_and_nonzero_exit_propagates) ... ok
 test_termination_is_forwarded_child_is_reaped_and_private_home_is_cleaned (test_probe_presets.ProbePresetTests.test_termination_is_forwarded_child_is_reaped_and_private_home_is_cleaned) ... ok
 test_unchanged_official_cli_ignores_hostile_automatic_preset_in_project_and_original_home (test_probe_presets.ProbePresetTests.test_unchanged_official_cli_ignores_hostile_automatic_preset_in_project_and_original_home) ... skipped 'Actual official probe-rs binary is exercised separately by native installer CI'
+test_a_cmake_file_without_a_project_is_an_error (test_real_repos.FirmwareNameTests.test_a_cmake_file_without_a_project_is_an_error) ... ok
+test_esp_idf_firmware_is_named_after_the_cmake_project (test_real_repos.FirmwareNameTests.test_esp_idf_firmware_is_named_after_the_cmake_project) ... ok
 test_all_seven_workflows_have_real_commit_pins_and_zero_error_baselines (test_real_repos.RealRepositoryManifestTests.test_all_seven_workflows_have_real_commit_pins_and_zero_error_baselines) ... ok
 test_branch_names_are_not_accepted_as_source_pins (test_real_repos.RealRepositoryManifestTests.test_branch_names_are_not_accepted_as_source_pins) ... ok
 test_cloned_repositories_register_authoritative_origin_before_submodules (test_real_repos.RealRepositoryManifestTests.test_cloned_repositories_register_authoritative_origin_before_submodules) ... ok
@@ -94,6 +96,6 @@ ok
 test_only_native_linux_host_triples_are_accepted (test_wlink_installer.WlinkInstallerTests.test_only_native_linux_host_triples_are_accepted) ... ok
 
 ----------------------------------------------------------------------
-Ran 72 tests in 7.137s
+Ran 74 tests in 7.510s
 
 OK (skipped=1)
