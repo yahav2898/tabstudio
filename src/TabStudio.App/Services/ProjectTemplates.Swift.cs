@@ -42,7 +42,7 @@ public sealed partial class ProjectTemplates
             import {{library}}
 
             print("What is your name? ", terminator: "")
-            fflush(stdout)
+            fflush(nil) // Every output stream, as Swift 6 forbids the shared stdout here.
             let name = readLine()?.trimmingCharacters(in: .whitespaces) ?? ""
             print(greet(name.isEmpty ? "world" : name))
 
