@@ -68,6 +68,10 @@ public sealed class LinkScreenshotTests : IDisposable
         UiTestHelpers.SaveScreenshot(window, "link-05-host-qr");
 
         Assert.Equal("Waiting for a tablet", link.HostTitle);
+
+        // A cool device says only its cores: the design keeps quiet about what is fine ("Thermal OK" was shown).
+        Assert.DoesNotContain("Thermal", link.HostDeviceText, StringComparison.Ordinal);
+        Assert.EndsWith("cores", link.HostDeviceText, StringComparison.Ordinal);
         Assert.Matches("^[0-9A-Z]{4}-[0-9A-Z]{4}$", link.PairingCodeText);
 
         var tablet = Tablet("Galaxy Tab S9");

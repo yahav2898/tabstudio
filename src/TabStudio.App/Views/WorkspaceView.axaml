@@ -502,7 +502,7 @@
 
           <!-- Where the startup project runs; a tap chooses another target, as the Run button's menu does. -->
           <controls:AdaptiveBarItem x:Name="RunHostItem" Icon="{StaticResource Icon.Computer}" IconSize="16"
-                                    Label="{Binding RunHostText, StringFormat='Run on {0}'}" Priority="35" />
+                                    Label="{Binding RunHostText, StringFormat='Run on {0}'}" Priority="35" IsVisible="{Binding HasRunHost}" />
           <controls:AdaptiveBarSeparator />
           <controls:AdaptiveBarItem Icon="{StaticResource Icon.Comment}" IconSize="16" Label="Toggle Line Comment" Gesture="Ctrl+/" ShowsLabel="False"
                                     Priority="15" Command="{Binding ToggleCommentCommand}" />
@@ -782,8 +782,8 @@
             </Border>
             <Grid DockPanel.Dock="Top" Height="34" ColumnDefinitions="*,Auto" Margin="6,0">
               <!-- The tabs scroll sideways when the debugger's tabs leave too little room beside the Output's source. -->
-              <ScrollViewer Margin="0,0,10,0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
-              <StackPanel Orientation="Horizontal">
+              <ScrollViewer x:Name="BottomTabsScroller" Margin="0,0,10,0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+              <StackPanel x:Name="BottomTabs" Orientation="Horizontal">
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsErrorListSelected}"
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" Content="Error List" />
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsOutputSelected}"
@@ -811,8 +811,11 @@
               </StackPanel>
               </ScrollViewer>
               <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <TextBlock Classes="muted small" Text="Show output from:" VerticalAlignment="Center" Margin="0,0,8,0"
-                           IsVisible="{Binding IsOutputSelected}" />
+                <!-- On a narrow panel the label goes and the picker narrows, so the tabs and Hide keep their room. -->
+                <Panel x:Name="OutputSourceLabelHost" VerticalAlignment="Center">
+                  <TextBlock Classes="muted small" Text="Show output from:" VerticalAlignment="Center" Margin="0,0,8,0"
+                             IsVisible="{Binding IsOutputSelected}" />
+                </Panel>
                 <ComboBox x:Name="OutputSourceBox" MinWidth="170" Height="30" MinHeight="30" Margin="0,0,6,0" FontSize="12.5" VerticalAlignment="Center"
                           ItemsSource="{Binding OutputSources}" SelectedItem="{Binding SelectedOutputSource}" IsVisible="{Binding IsOutputSelected}">
                   <ComboBox.ItemTemplate>
@@ -827,14 +830,15 @@
                         Command="{Binding Terminal.ClearCommand}" IsVisible="{Binding IsTerminalSelected}" />
                 <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Restart"
                         Command="{Binding Terminal.RestartCommand}" IsVisible="{Binding IsTerminalSelected}" />
-                <Button Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0"
+                <Button x:Name="HideBottomPanelButton" Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0"
                         ToolTip.Tip="Hide" Command="{Binding ToggleBottomPanelCommand}">
                   <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
                 </Button>
               </StackPanel>
             </Grid>
             <!-- While debugging, the Call Stack stays in view beside Locals and Watch, as in Visual Studio's debug layout. -->
-            <Border DockPanel.Dock="Right" Width="380" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1,0,0,0"
+            <!-- Its width follows the panel's (WorkspaceView.Layout.cs): on a phone it gives Locals the room and keeps its tab. -->
+            <Border x:Name="CallStackBeside" DockPanel.Dock="Right" Width="380" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1,0,0,0"
                     IsVisible="{Binding ShowsCallStackBeside}">
               <views:CallStackView DataContext="{Binding CallStack}" />
             </Border>
@@ -985,7 +989,7 @@
               controls:AdaptiveBar.MinLength="48">
           <controls:StrokeIcon Size="13" VerticalAlignment="Center" Data="{Binding State, Converter={x:Static conv:AppConverters.StateIcon}}" Foreground="{DynamicResource Brush.OnAccent}" />
           <TextBlock x:Name="StatusMessageText" Grid.Column="1" Margin="6,0,0,0" Text="{Binding StatusText}" FontSize="12" Foreground="{DynamicResource Brush.OnAccent}"
-                     VerticalAlignment="Center" MaxWidth="460" TextTrimming="CharacterEllipsis" />
+                     VerticalAlignment="Center" MaxWidth="460" TextTrimming="WordEllipsis" />
         </Grid>
 
         <!--
@@ -998,7 +1002,7 @@
                   HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" ToolTip.Tip="{Binding Operations.StatusText}">
             <Grid ColumnDefinitions="Auto,*,Auto">
               <controls:StrokeIcon Classes.spinning="{Binding Operations.HasOperations}" Data="{StaticResource Icon.Spinner}" Size="13" VerticalAlignment="Center" Foreground="{DynamicResource Brush.OnAccent}" />
-              <TextBlock x:Name="OperationsText" Grid.Column="1" Margin="6,0" Text="{Binding Operations.StatusText}" FontSize="12" VerticalAlignment="Center" MaxWidth="380" TextTrimming="CharacterEllipsis" />
+              <TextBlock x:Name="OperationsText" Grid.Column="1" Margin="6,0" Text="{Binding Operations.StatusText}" FontSize="12" VerticalAlignment="Center" MaxWidth="380" TextTrimming="WordEllipsis" />
               <ProgressBar Grid.Column="2" Width="56" Height="4" MinHeight="4" Minimum="0" Maximum="100" VerticalAlignment="Center"
                            Value="{Binding Operations.Current.Percent, FallbackValue=0}" IsIndeterminate="{Binding Operations.Current.IsIndeterminate, FallbackValue=False}" />
             </Grid>

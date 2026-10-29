@@ -38,6 +38,9 @@ public sealed partial class WorkspaceViewModel
 {
     private readonly HashSet<string> _readyToolchains = new(StringComparer.Ordinal);
 
+    // The status bar's "IntelliSense needs …, which is not installed" message, while it shows.
+    private string? _missingServerStatus;
+
     /// <summary>
     /// Raised on the UI thread when a document's editor must be built again, such as when a language server that was
     /// just installed starts for it: the editor sets up IntelliSense, squiggles and semantic colors when it is built.
@@ -204,6 +207,9 @@ public sealed partial class WorkspaceViewModel
                 // Servers and adapters run in the workspace, so it must be visible to the toolchains' programs.
                 _toolchains.ShareFolder(workspace.RootDirectory);
                 break;
+            case nameof(RunHostText):
+                OnPropertyChanged(nameof(HasRunHost));
+                break;
             case nameof(ActiveDocument) or nameof(LanguageServerText):
                 UpdateServerInstallOffer();
                 OnPropertyChanged(nameof(ShowsLanguageServerText));
@@ -219,6 +225,8 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        var started = false;
+
         foreach (var document in Documents.ToList())
         {
             if (document.HasLanguageService || document.HasLanguageServer || document.IsNotebook || document.IsCiLog || document.IsComparison
@@ -232,7 +240,19 @@ public sealed partial class WorkspaceViewModel
             {
                 LanguageServerOutput.WriteLine($"[{document.LanguageServer!.ServerName}] Installed: starting it for {document.FileName}.", OutputKind.Info);
                 EditorRebuildRequested?.Invoke(this, document);
+                started = true;
             }
+        }
+
+        // However it was installed (the Store, F5's offer or the editor's), the status bar no longer says it is missing.
+        if (started && _missingServerStatus is { } missing && StatusText == missing)
+        {
+            StatusText = "Ready";
+        }
+
+        if (started)
+        {
+            _missingServerStatus = null;
         }
 
         UpdateLanguageServerText();

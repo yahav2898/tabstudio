@@ -111,7 +111,7 @@ public sealed partial class WorkspaceViewModel
         if (host.FindMissingServers(document.FilePath) is [{ } missing, ..] && host.Configuration.Registry.FindLanguage(document.FilePath) is { } language)
         {
             var install = MissingToolHint(missing.Name, missing.Command, missing.Package);
-            StatusText = $"{language.Name} IntelliSense needs {missing.Name}, which is not installed.{install}";
+            StatusText = _missingServerStatus = $"{language.Name} IntelliSense needs {missing.Name}, which is not installed.{install}";
             LanguageServerOutput.WriteLine($"[{missing.Name}] {missing.Command} was not found, so {document.FileName} has no IntelliSense.{install}", OutputKind.Info);
         }
     }

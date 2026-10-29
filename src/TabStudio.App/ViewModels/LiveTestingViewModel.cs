@@ -102,6 +102,14 @@ public sealed partial class LiveTestingViewModel : ObservableObject, ILiveTestin
     [NotifyPropertyChangedFor(nameof(StatusText), nameof(DetailText), nameof(HasFailures))]
     public partial int FailedCount { get; private set; }
 
+    /// <summary>
+    /// The number of tests excluded from Live Unit Testing. The summary names them, so a failing test the Test
+    /// Explorer still shows red is not hidden behind "0 failed".
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(StatusText), nameof(DetailText))]
+    public partial int ExcludedCount { get; private set; }
+
     /// <summary>The number of tests the current run runs.</summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(StatusText), nameof(DetailText))]
@@ -152,8 +160,10 @@ public sealed partial class LiveTestingViewModel : ObservableObject, ILiveTestin
         LiveTestingState.Paused => "Live Unit Testing paused",
         LiveTestingState.WaitingForIde => "Live Unit Testing waits for the IDE",
         LiveTestingState.WaitingForDevice => "Live Unit Testing waits for the device to cool down",
-        _ => string.Create(CultureInfo.InvariantCulture, $"Live Unit Testing: {PassedCount} passed, {FailedCount} failed"),
+        _ => string.Create(CultureInfo.InvariantCulture, $"Live Unit Testing: {PassedCount} passed, {FailedCount} failed{Excluded}"),
     };
+
+    private string Excluded => ExcludedCount == 0 ? string.Empty : string.Create(CultureInfo.InvariantCulture, $", {ExcludedCount} excluded");
 
     /// <summary>The Test Explorer's line about Live Unit Testing: its state and when it runs.</summary>
     public string DetailText
@@ -173,7 +183,7 @@ public sealed partial class LiveTestingViewModel : ObservableObject, ILiveTestin
                 LiveTestingState.Paused => "Paused. The markers show the last results; Continue runs the tests the changes since then affect.",
                 LiveTestingState.WaitingForIde => "Waiting until the IDE finishes building, running or debugging.",
                 LiveTestingState.WaitingForDevice => "Waiting for the device to cool down before running tests.",
-                _ => Problem ?? string.Create(CultureInfo.InvariantCulture, $"Up to date: {PassedCount} passed, {FailedCount} failed. {when}"),
+                _ => Problem ?? string.Create(CultureInfo.InvariantCulture, $"Up to date: {PassedCount} passed, {FailedCount} failed{Excluded}. {when}"),
             };
         }
     }
@@ -231,6 +241,7 @@ public sealed partial class LiveTestingViewModel : ObservableObject, ILiveTestin
         _discovered.Clear();
         PassedCount = 0;
         FailedCount = 0;
+        ExcludedCount = 0;
         RunningCount = 0;
         Problem = null;
         foreach (var document in _host.OpenDocuments)

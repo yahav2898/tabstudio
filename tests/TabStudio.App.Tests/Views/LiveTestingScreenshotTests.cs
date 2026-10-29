@@ -127,6 +127,9 @@ public sealed class LiveTestingScreenshotTests : IClassFixture<SharedToolchain>,
                 && workspace.Tests.Rows.Single(r => r.Name == "Tax_is_seventeen_percent").IsExcludedFromLiveTesting,
             RunTimeout,
             "the excluded test's lines to lose it");
+
+        // The summary names the excluded test, which the Test Explorer still shows as failed, instead of "0 failed".
+        await UiTestHelpers.WaitUntilAsync(() => workspace.LiveTesting.StatusText.EndsWith(", 1 excluded", StringComparison.Ordinal), RunTimeout, "the summary to count the excluded test");
         UiTestHelpers.SaveScreenshot(window, "live-06-excluded");
     }
 

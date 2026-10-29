@@ -134,8 +134,11 @@ public class AdaptiveBarItem : Button
     /// <summary>Whether the item can shrink to its icon: it has an icon and a label it shows.</summary>
     public bool CanCompact => Icon is not null && ShowsLabel && !string.IsNullOrEmpty(Label);
 
-    /// <summary>The item's width as an icon alone, after it was measured.</summary>
-    public double CompactWidth => DesiredSize.Width - (_face.FullWidth - _face.CompactWidth);
+    /// <summary>
+    /// The item's width as an icon alone, after it was measured: never under its minimum width, which a theme such as
+    /// ToolButton's sets, or folded buttons were laid out narrower than they draw and overlapped their neighbours.
+    /// </summary>
+    public double CompactWidth => Math.Max(MinWidth + Margin.Left + Margin.Right, DesiredSize.Width - (_face.FullWidth - _face.CompactWidth));
 
     /// <summary>What the tooltip and the More menu call the item: its label and key gesture.</summary>
     public string Title => string.IsNullOrEmpty(Gesture) ? Label ?? string.Empty : $"{Label} ({Gesture})";

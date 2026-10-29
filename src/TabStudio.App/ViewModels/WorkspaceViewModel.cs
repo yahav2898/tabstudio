@@ -282,6 +282,9 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <summary>Where the startup project runs, such as "In-process".</summary>
     public string RunHostText => IsRemoteWorkspace ? _remoteMarker! : StartupProject is { } project ? IsRunOnSwarm ? SwarmRunHostText : RunsViaFor(project) : LaunchTargetHost ?? "Nothing to run";
 
+    /// <summary>Whether there is somewhere to run: the toolbar shows no "Run on Nothing to run" without a startup project.</summary>
+    public bool HasRunHost => IsRemoteWorkspace || StartupProject is not null || LaunchTargetHost is not null;
+
     /// <summary>The build configuration, "Debug" or "Release".</summary>
     [ObservableProperty]
     public partial string Configuration { get; private set; } = "Debug";

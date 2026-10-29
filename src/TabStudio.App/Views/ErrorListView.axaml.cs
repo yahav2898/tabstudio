@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -9,6 +10,27 @@ namespace TabStudio.App.Views;
 /// <summary>The Error List. Tapping a row opens the file at the diagnostic's location.</summary>
 public sealed partial class ErrorListView : UserControl
 {
+    /// <summary>Whether the list is too narrow for its Project and File columns, as on a phone.</summary>
+    public static readonly StyledProperty<bool> IsCompactProperty =
+        AvaloniaProperty.Register<ErrorListView, bool>(nameof(IsCompact));
+
+    /// <summary>Below this width the rows show the code, the description and the line.</summary>
+    private const double CompactWidth = 640;
+
+    /// <inheritdoc cref="IsCompactProperty"/>
+    public bool IsCompact
+    {
+        get => GetValue(IsCompactProperty);
+        private set => SetValue(IsCompactProperty, value);
+    }
+
+    /// <inheritdoc />
+    protected override void OnSizeChanged(SizeChangedEventArgs e)
+    {
+        base.OnSizeChanged(e);
+        IsCompact = e.NewSize.Width < CompactWidth;
+    }
+
     /// <summary>Creates the view.</summary>
     public ErrorListView()
     {
