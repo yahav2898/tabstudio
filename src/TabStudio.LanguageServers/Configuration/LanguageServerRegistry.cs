@@ -196,6 +196,7 @@ public sealed class LanguageServerRegistry
                 Settings = node["settings"] is JsonObject settings ? JsonSettings.ExpandDottedNames(settings) : null,
                 Package = JsonSettings.GetString(node, "package"),
                 IsEnabled = JsonSettings.GetBoolean(node, "enabled") ?? true,
+                SendsClientProcessId = JsonSettings.GetBoolean(node, "clientProcessId") ?? true,
             });
         }
 

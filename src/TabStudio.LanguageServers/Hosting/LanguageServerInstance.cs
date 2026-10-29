@@ -389,7 +389,7 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
         timeout.CancelAfter(_host.Options.InitializeTimeout);
         var folderName = Path.GetFileName(RootDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
         var parameters = new InitializeParamsDto(
-            Environment.ProcessId,
+            Definition.SendsClientProcessId ? Environment.ProcessId : null,
             new ClientInfoDto(_host.Options.ClientName, _host.Options.ClientVersion),
             "en",
             RootDirectory,

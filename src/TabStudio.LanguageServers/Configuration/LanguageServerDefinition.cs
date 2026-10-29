@@ -47,6 +47,14 @@ public sealed record LanguageServerDefinition
     /// <summary>Whether to use it; a workspace can turn a built-in server off.</summary>
     public bool IsEnabled { get; init; } = true;
 
+    /// <summary>
+    /// Whether <c>initialize</c> names TabStudio's process (<c>processId</c>), which a server watches so it can exit
+    /// when its client dies. Eclipse JDT stops itself when, after 30 seconds without messages, it cannot see that
+    /// process; under PRoot that check can fail while TabStudio is running, so JDT is told no process and watches its
+    /// own parent, which ends with TabStudio, instead.
+    /// </summary>
+    public bool SendsClientProcessId { get; init; } = true;
+
     /// <summary>The program names to try, in order.</summary>
     public IEnumerable<string> Commands => [Command, .. AlternativeCommands];
 }

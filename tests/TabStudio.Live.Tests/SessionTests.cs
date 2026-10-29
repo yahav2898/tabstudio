@@ -260,6 +260,9 @@ public sealed class SessionTests
         });
         await LiveLoopback.UntilAsync(() => dana.On(() => dana.Session.Debug?.PauseId == 7), "Dana to see the pause");
         Assert.Equal(LiveRunPhase.Paused, await dana.On(() => dana.Session.RunState.Phase));
+
+        // The breakpoints are their own message, published after the pause, so they may land a moment later.
+        await LiveLoopback.UntilAsync(() => dana.On(() => dana.Session.Breakpoints.Count > 0), "Dana to see the breakpoints");
         Assert.Equal("Program.cs", (await dana.On(() => dana.Session.Breakpoints))[0].FilePath);
         var children = await dana.On(() => dana.Session.GetVariablesAsync(7, "args"));
         Assert.Equal("args.Count", Assert.Single(children).Path);

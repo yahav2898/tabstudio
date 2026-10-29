@@ -979,26 +979,28 @@
       <controls:AdaptiveBar x:Name="StatusBar" Spacing="6" Margin="6,0" ItemTheme="{StaticResource StatusBarButton}" MorePlacement="TopEdgeAlignedRight"
                             VerticalAlignment="Center" TextElement.Foreground="{DynamicResource Brush.OnAccent}" TextElement.FontSize="12">
         <!-- What the IDE is doing; long messages trim, with the whole message in the tooltip. -->
-        <StackPanel x:Name="StatusMessage" Orientation="Horizontal" Spacing="6" Margin="6,0,4,0" Background="Transparent" ToolTip.Tip="{Binding StatusText}">
-          <controls:StrokeIcon Size="13" Data="{Binding State, Converter={x:Static conv:AppConverters.StateIcon}}" Foreground="{DynamicResource Brush.OnAccent}" />
-          <TextBlock x:Name="StatusMessageText" Text="{Binding StatusText}" FontSize="12" Foreground="{DynamicResource Brush.OnAccent}"
+        <!-- It trims to the room the items after it leave, so on a phone it never pushes them out of the bar. -->
+        <Grid x:Name="StatusMessage" ColumnDefinitions="Auto,*" Margin="6,0,4,0" Background="Transparent" ToolTip.Tip="{Binding StatusText}"
+              controls:AdaptiveBar.MinLength="48">
+          <controls:StrokeIcon Size="13" VerticalAlignment="Center" Data="{Binding State, Converter={x:Static conv:AppConverters.StateIcon}}" Foreground="{DynamicResource Brush.OnAccent}" />
+          <TextBlock x:Name="StatusMessageText" Grid.Column="1" Margin="6,0,0,0" Text="{Binding StatusText}" FontSize="12" Foreground="{DynamicResource Brush.OnAccent}"
                      VerticalAlignment="Center" MaxWidth="460" TextTrimming="CharacterEllipsis" />
-        </StackPanel>
+        </Grid>
 
         <!--
           Long operations: the newest with its stage, numbers and time left ("Downloading Pico SDK 120/340 MB · about 2 min
           left"); tap for all of them, with Cancel where it is safe and each one's raw log.
         -->
-        <Panel controls:AdaptiveBar.Priority="100" IsVisible="{Binding Operations.HasOperations}"
+        <Panel controls:AdaptiveBar.Priority="100" IsVisible="{Binding Operations.HasOperations}" controls:AdaptiveBar.MinLength="120"
                controls:AdaptiveBar.MenuHeader="{Binding Operations.StatusText}" controls:AdaptiveBar.MenuCommand="{Binding Operations.TogglePanelCommand}">
           <Button x:Name="OperationsButton" Theme="{StaticResource StatusBarButton}" Height="24" Command="{Binding Operations.TogglePanelCommand}"
-                  ToolTip.Tip="{Binding Operations.StatusText}">
-            <StackPanel Orientation="Horizontal" Spacing="6">
-              <controls:StrokeIcon Classes.spinning="{Binding Operations.HasOperations}" Data="{StaticResource Icon.Spinner}" Size="13" Foreground="{DynamicResource Brush.OnAccent}" />
-              <TextBlock x:Name="OperationsText" Text="{Binding Operations.StatusText}" FontSize="12" VerticalAlignment="Center" MaxWidth="380" TextTrimming="CharacterEllipsis" />
-              <ProgressBar Width="56" Height="4" MinHeight="4" Minimum="0" Maximum="100" VerticalAlignment="Center"
+                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" ToolTip.Tip="{Binding Operations.StatusText}">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <controls:StrokeIcon Classes.spinning="{Binding Operations.HasOperations}" Data="{StaticResource Icon.Spinner}" Size="13" VerticalAlignment="Center" Foreground="{DynamicResource Brush.OnAccent}" />
+              <TextBlock x:Name="OperationsText" Grid.Column="1" Margin="6,0" Text="{Binding Operations.StatusText}" FontSize="12" VerticalAlignment="Center" MaxWidth="380" TextTrimming="CharacterEllipsis" />
+              <ProgressBar Grid.Column="2" Width="56" Height="4" MinHeight="4" Minimum="0" Maximum="100" VerticalAlignment="Center"
                            Value="{Binding Operations.Current.Percent, FallbackValue=0}" IsIndeterminate="{Binding Operations.Current.IsIndeterminate, FallbackValue=False}" />
-            </StackPanel>
+            </Grid>
           </Button>
         </Panel>
 
