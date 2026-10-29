@@ -1,6 +1,7 @@
 using TabStudio.App.Editing;
 using TabStudio.App.Services;
 using TabStudio.App.ViewModels;
+using TabStudio.LanguageServers.Features;
 using TabStudio.LanguageServers.Hosting;
 using static TabStudio.App.Tests.Views.EditorHarness;
 
@@ -31,22 +32,33 @@ public sealed partial class ToolchainLanguageToolsTests
         bool Listed() => view.Completion!.IsOpen && view.Completion.Items.Any(i => i.Entry.DisplayText.StartsWith("count", StringComparison.Ordinal));
         Type(view.Editor, "name.cou");
         var end = DateTime.UtcNow.AddSeconds(90);
-        var next = DateTime.UtcNow.AddSeconds(5);
+        var next = DateTime.UtcNow.AddSeconds(10);
         while (!Listed() && DateTime.UtcNow < end)
         {
             if (DateTime.UtcNow > next)
             {
-                // sourcekit-lsp can answer the "." trigger before it has the document's latest text (its list is then
-                // empty); ask again with List Members, as someone would.
-                document.RequestAction(EditorAction.ListMembers);
-                next = DateTime.UtcNow.AddSeconds(5);
+                // sourcekit-lsp keeps a completion session per position, and one made while it was still preparing the
+                // package stays empty: complete on the next line, a new position, as someone would retype it.
+                view.Completion!.Close();
+                Type(view.Editor, "\n");
+                Type(view.Editor, "name.cou");
+                next = DateTime.UtcNow.AddSeconds(10);
             }
 
             await Task.Delay(100);
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         }
 
-        Assert.True(Listed(), "sourcekit-lsp's completion list did not open in the editor.");
+        if (!Listed())
+        {
+            var line = view.Editor.Document.GetLineByOffset(view.Editor.CaretOffset);
+            var items = await server.GetCompletionsAsync(view.Editor.CaretOffset, LspCompletionTriggerKind.Invoked, null, deadline.Token);
+            Assert.Fail($"sourcekit-lsp's completion list did not open in the editor. Open: {view.Completion!.IsOpen}; "
+                + $"listed: {string.Join(", ", view.Completion.Items.Take(15).Select(i => i.Entry.DisplayText))}; "
+                + $"line {line.LineNumber}: '{view.Editor.Document.GetText(line)}', caret column {view.Editor.CaretOffset - line.Offset}; "
+                + $"the server now answers: {string.Join(", ", items?.Items.Take(15).Select(i => i.Label + "|" + i.FilterText) ?? ["nothing"])}");
+        }
+
         UiTestHelpers.SaveScreenshot(window, "toolchains-swift-completion");
         view.Completion!.Close();
         document.Document.Text = original;
