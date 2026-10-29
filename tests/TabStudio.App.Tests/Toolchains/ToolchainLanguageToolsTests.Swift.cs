@@ -28,7 +28,7 @@ public sealed partial class ToolchainLanguageToolsTests
         document.Document.Text = original;
 
         var view = ActiveEditor(window);
-        StartLineAfter(view.Editor, "let name = ");
+        StartLineAfter(view.Editor, ".trimmingCharacters(in: .whitespaces) ?? \"\"");
         bool Listed() => view.Completion!.IsOpen && view.Completion.Items.Any(i => i.Entry.DisplayText.StartsWith("count", StringComparison.Ordinal));
         Type(view.Editor, "name.cou");
         var end = DateTime.UtcNow.AddSeconds(90);
