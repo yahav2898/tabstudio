@@ -15,19 +15,19 @@ MainKt.greet(String)
 MainKt.main()
 MainKt.main(String[])
 == Language Servers
-01:49:37 [Kotlin by JetBrains] Starting Kotlin by JetBrains for /tmp/tabstudio-tests/468016f8bb5a481e93a0279ad77d4350/app/Projects/Greeter: /home/runner/work/_temp/kotlin-lsp/bin/kotlin-lsp --stdio
-01:49:37 [Kotlin by JetBrains] Sending request 'initialize - (1)'.
-01:49:38 [Kotlin by JetBrains] Oct 29, 2026 1:49:37 AM java.util.prefs.FileSystemPreferences setupUserRoot
-01:49:38 [Kotlin by JetBrains] INFO: Created user preferences directory.
-01:49:38 [Kotlin by JetBrains] IJ_JAVA_OPTIONS=
-01:49:38 [Kotlin by JetBrains] idea.config.path=/tmp/idea-system6018047088859225931/config
-01:49:38 [Kotlin by JetBrains] idea.system.path=/tmp/idea-system6018047088859225931/system
-01:49:38 [Kotlin by JetBrains] Log file: /tmp/idea-system6018047088859225931/system/log/intellij-server.log
-01:49:39 [Kotlin by JetBrains] Received notification 'window/logMessage'.
-01:49:39 [Kotlin by JetBrains] Process started with
-ServerLaunchConfig(protocolConfig=StdioServer(out=java.io.PrintStream@50dd3cad), systemPath=null, defaultLogLevel=INFO, logCategories={}, dataSharing=NONE, region=NOT_SET, caCertificates=[], eulaHash=null, portFile=null, idleShutdownTimeout=null)
-01:49:39 [Kotlin by JetBrains] Received notification 'window/logMessage'.
-01:49:39 [Kotlin by JetBrains] System Info
+02:13:15 [Kotlin by JetBrains] Starting Kotlin by JetBrains for /tmp/tabstudio-tests/9d8698a7b3f14856ad85aad4647e66df/app/Projects/Greeter: /home/runner/work/_temp/kotlin-lsp/bin/kotlin-lsp --stdio
+02:13:15 [Kotlin by JetBrains] Sending request 'initialize - (1)'.
+02:13:16 [Kotlin by JetBrains] Oct 29, 2026 2:13:15 AM java.util.prefs.FileSystemPreferences setupUserRoot
+02:13:16 [Kotlin by JetBrains] INFO: Created user preferences directory.
+02:13:16 [Kotlin by JetBrains] IJ_JAVA_OPTIONS=
+02:13:16 [Kotlin by JetBrains] idea.config.path=/tmp/idea-system16438910945025691419/config
+02:13:16 [Kotlin by JetBrains] idea.system.path=/tmp/idea-system16438910945025691419/system
+02:13:16 [Kotlin by JetBrains] Log file: /tmp/idea-system16438910945025691419/system/log/intellij-server.log
+02:13:17 [Kotlin by JetBrains] Received notification 'window/logMessage'.
+02:13:17 [Kotlin by JetBrains] Process started with
+ServerLaunchConfig(protocolConfig=StdioServer(out=java.io.PrintStream@239ef8d), systemPath=null, defaultLogLevel=INFO, logCategories={}, dataSharing=NONE, region=NOT_SET, caCertificates=[], eulaHash=null, portFile=null, idleShutdownTimeout=null)
+02:13:17 [Kotlin by JetBrains] Received notification 'window/logMessage'.
+02:13:17 [Kotlin by JetBrains] System Info
   os.name: Linux
   os.version: 7.0.0-1017-azure
   cpu.arch: X86_64
@@ -37,358 +37,336 @@ ServerLaunchConfig(protocolConfig=StdioServer(out=java.io.PrintStream@50dd3cad),
   java.vm.vendor: JetBrains s.r.o.
   ram.xmx: 2048MB
 
-01:49:39 [Kotlin by JetBrains] Received notification 'window/logMessage'.
-01:49:39 [Kotlin by JetBrains] Log file: /tmp/idea-system6018047088859225931/system/log/intellij-server.log
-01:49:40 [Kotlin by JetBrains] Received response 'initialize - (1)' in 3091ms.
-01:49:40 [Kotlin by JetBrains] Sending notification 'initialized'.
-01:49:40 [Kotlin by JetBrains] Sending notification 'workspace/didChangeConfiguration'.
-01:49:40 [Kotlin by JetBrains] Sending notification 'textDocument/didOpen'.
-01:49:40 [Kotlin by JetBrains] Kotlin by JetBrains is running (IntelliJ Language Server by JetBrains ILS-263.7084.0).
-01:49:40 [Kotlin by JetBrains] Received notification 'intellij/workspaceImportStatus'.
-01:49:40 [Kotlin by JetBrains] Sending request 'textDocument/semanticTokens/full - (2)'.
-01:49:40 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (1)'.
-01:49:40 [Kotlin by JetBrains] Sending notification '$/cancelRequest'.
-01:49:40 [Kotlin by JetBrains] Sending request 'textDocument/semanticTokens/full - (3)'.
-01:49:40 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:40 [Kotlin by JetBrains] Sending notification '$/cancelRequest'.
-01:49:40 [Kotlin by JetBrains] Sending request 'textDocument/completion - (4)'.
-01:49:40 [Kotlin by JetBrains] Received notification '$/progress'.
-01:49:40 [Kotlin by JetBrains] Received notification 'intellij/importLog'.
-01:49:40 [Kotlin by JetBrains] Received notification '$/progress'.
-01:49:40 [Kotlin by JetBrains] Fetching distribution.
-01:49:40 [Kotlin by JetBrains] Downloading https://services.gradle.org/distributions/gradle-9.7.0-bin.zip
-01:49:40 [Kotlin by JetBrains] Sending request 'textDocument/semanticTokens/full - (5)'.
-01:49:41 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
-01:49:42 [Kotlin by JetBrains] Received response 'textDocument/semanticTokens/full - (5)' in 1642ms.
-01:49:42 [Kotlin by JetBrains] Sending request 'textDocument/inlayHint - (6)'.
-01:49:42 [Kotlin by JetBrains] Received request 'workspace/configuration - (2)'.
-01:49:42 [Kotlin by JetBrains] Received response 'textDocument/inlayHint - (6)' in 48ms.
-01:49:42 [Kotlin by JetBrains] Sending request 'textDocument/foldingRange - (7)'.
-01:49:42 [Kotlin by JetBrains] Received response 'textDocument/foldingRange - (7)' in 28ms.
-01:49:42 [Kotlin by JetBrains] Received response 'textDocument/completion - (4)' in 2050ms.
-01:49:42 [Kotlin by JetBrains] Sending request 'textDocument/completion - (8)'.
-01:49:42 [Kotlin by JetBrains] Received response 'textDocument/completion - (8)' in 408ms.
-01:49:42 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:42 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:42 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:42 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:42 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:42 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:42 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:42 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:42 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:42 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:42 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:42 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:42 [Kotlin by JetBrains] Sending request 'textDocument/completion - (9)'.
-01:49:43 [Kotlin by JetBrains] Sending request 'textDocument/documentHighlight - (10)'.
-01:49:43 [Kotlin by JetBrains] Sending request 'textDocument/semanticTokens/full - (11)'.
-01:49:43 [Kotlin by JetBrains] Received response 'textDocument/documentHighlight - (10)' in 96ms.
-01:49:43 [Kotlin by JetBrains] Sending request 'textDocument/documentSymbol - (12)'.
-01:49:43 [Kotlin by JetBrains] Received response 'textDocument/semanticTokens/full - (11)' in 139ms.
-01:49:43 [Kotlin by JetBrains] Sending request 'textDocument/inlayHint - (13)'.
-01:49:43 [Kotlin by JetBrains] Received response 'textDocument/documentSymbol - (12)' in 28ms.
-01:49:43 [Kotlin by JetBrains] Received request 'workspace/configuration - (3)'.
-01:49:43 [Kotlin by JetBrains] Received response 'textDocument/inlayHint - (13)' in 39ms.
-01:49:43 [Kotlin by JetBrains] Sending request 'textDocument/foldingRange - (14)'.
-01:49:43 [Kotlin by JetBrains] Received response 'textDocument/foldingRange - (14)' in 6ms.
-01:49:43 [Kotlin by JetBrains] ...............................................................................................................................................
-01:49:43 [Kotlin by JetBrains] Received response 'textDocument/completion - (9)' in 629ms.
-01:49:43 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:43 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:49:43 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
-01:49:43 [Kotlin by JetBrains] Sending notification 'textDocument/didSave'.
-01:49:43 [Kotlin by JetBrains] Sending request 'textDocument/documentHighlight - (15)'.
-01:49:43 [Kotlin by JetBrains] Sending request 'textDocument/semanticTokens/full - (16)'.
-01:49:43 [Kotlin by JetBrains] Received response 'textDocument/documentHighlight - (15)' in 41ms.
-01:49:43 [Kotlin by JetBrains] Sending request 'textDocument/documentSymbol - (17)'.
-01:49:43 [Kotlin by JetBrains] Received response 'textDocument/documentSymbol - (17)' in 10ms.
-01:49:44 [Kotlin by JetBrains] Received response 'textDocument/semanticTokens/full - (16)' in 187ms.
-01:49:44 [Kotlin by JetBrains] Sending request 'textDocument/inlayHint - (18)'.
-01:49:44 [Kotlin by JetBrains] Received request 'workspace/configuration - (4)'.
-01:49:44 [Kotlin by JetBrains] Received response 'textDocument/inlayHint - (18)' in 15ms.
-01:49:44 [Kotlin by JetBrains] Sending request 'textDocument/foldingRange - (19)'.
-01:49:44 [Kotlin by JetBrains] Received response 'textDocument/foldingRange - (19)' in 7ms.
-01:49:44 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
-01:49:44 [Kotlin by JetBrains] Sending request 'textDocument/codeAction - (20)'.
-01:49:44 [Kotlin by JetBrains] Received response 'textDocument/codeAction - (20)' in 199ms.
-01:50:17 [Kotlin by JetBrains] Received notification 'intellij/importLog'.
-01:50:21 [Kotlin by JetBrains] Received notification 'intellij/importLog'.
-01:50:21 [Kotlin by JetBrains] Received notification 'intellij/importLog'.
-01:50:21 [Kotlin by JetBrains] Received notification 'intellij/importLog'.
-01:50:22 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (5)'.
-01:50:22 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:22 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:22 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:22 [Kotlin by JetBrains] Received notification 'intellij/importLog'.
-01:50:22 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:25 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:28 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:31 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
-01:50:32 [Kotlin by JetBrains] Sending notification 'textDocument/didSave'.
-01:50:32 [Kotlin by JetBrains] Sending request 'textDocument/semanticTokens/full - (21)'.
-01:50:32 [Kotlin by JetBrains] Received response 'textDocument/semanticTokens/full - (21)' in 440ms.
-01:50:32 [Kotlin by JetBrains] Sending request 'textDocument/inlayHint - (22)'.
-01:50:32 [Kotlin by JetBrains] Received request 'workspace/configuration - (6)'.
-01:50:32 [Kotlin by JetBrains] Received response 'textDocument/inlayHint - (22)' in 12ms.
-01:50:32 [Kotlin by JetBrains] Sending request 'textDocument/foldingRange - (23)'.
-01:50:32 [Kotlin by JetBrains] Received response 'textDocument/foldingRange - (23)' in 4ms.
-01:50:33 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:33 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:33 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:33 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:34 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:34 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:34 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:35 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:37 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:38 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:38 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:38 [Kotlin by JetBrains] Received notification 'intellij/workspaceImportState'.
-01:50:38 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (7)'.
-01:50:38 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:38 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:38 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:38 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:41 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
-01:50:44 [Kotlin by JetBrains] Received notification 'intellij/ready-for-test'.
-01:50:44 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (8)'.
-01:50:44 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:44 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:45 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:45 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (9)'.
-01:50:45 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:45 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:45 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:45 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:45 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (10)'.
-01:50:45 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:45 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:45 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:45 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:45 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (11)'.
-01:50:45 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:45 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:45 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:45 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (12)'.
-01:50:45 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:45 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:46 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:46 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:46 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (13)'.
-01:50:46 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:46 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:46 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:46 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (14)'.
-01:50:46 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:46 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:46 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:46 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (15)'.
-01:50:46 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:46 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:46 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:46 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (16)'.
-01:50:46 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:46 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:46 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:47 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
-01:50:49 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (17)'.
-01:50:49 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:49 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:49 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:49 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:49 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (18)'.
-01:50:49 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:49 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:49 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:49 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (19)'.
-01:50:49 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:49 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:49 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:49 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (20)'.
-01:50:49 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:49 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:49 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:50 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (21)'.
-01:50:50 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:50 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:50 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:50 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (22)'.
-01:50:50 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:50 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:50 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:50 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
-01:50:50 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (23)'.
-01:50:50 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:50 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:51 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:51 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (24)'.
-01:50:51 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:51 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:51 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:51 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:51 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
-01:50:51 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (25)'.
-01:50:51 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:51 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:52 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:52 [Kotlin by JetBrains] Received notification '$/progress'.
-01:50:52 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (26)'.
-01:50:52 [Kotlin by JetBrains] Received notification '$/cancelRequest'.
-01:50:52 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
-01:51:02 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (27)'.
-01:51:02 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:02 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:02 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (28)'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (29)'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (30)'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (31)'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (32)'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (33)'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (34)'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:03 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:04 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:04 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (35)'.
-01:51:04 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:04 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:04 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:04 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
-01:51:07 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (36)'.
-01:51:07 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:07 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:07 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:07 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (37)'.
-01:51:07 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:07 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:07 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:07 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (38)'.
-01:51:07 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:07 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (39)'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/cancelRequest'.
-01:51:08 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
-01:51:08 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (40)'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (41)'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (42)'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (43)'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (44)'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:08 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:09 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
-01:51:09 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (45)'.
-01:51:09 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:09 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:09 [Kotlin by JetBrains] Received notification '$/progress'.
-01:51:10 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
-01:51:16 [Eclipse JDT] Starting Eclipse JDT for /tmp/tabstudio-tests/468016f8bb5a481e93a0279ad77d4350/app/Projects/Greeter/.tabstudio/kotlin-debug: /home/runner/work/_temp/jdtls/bin/jdtls -data ${serverStorage}
-01:51:16 [Eclipse JDT] Sending request 'initialize - (1)'.
-01:51:16 [Eclipse JDT] WARNING: Using incubator modules: jdk.incubator.vector
-01:51:17 [Eclipse JDT] Oct 29, 2026 1:51:17 AM org.apache.aries.spifly.BaseActivator log
-01:51:17 [Eclipse JDT] INFO: Registered provider ch.qos.logback.classic.spi.LogbackServiceProvider of service org.slf4j.spi.SLF4JServiceProvider in bundle ch.qos.logback.classic
-01:51:19 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("1")'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received notification 'language/status'.
-01:51:19 [Eclipse JDT] Received notification 'language/status'.
-01:51:19 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("2")'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received response 'initialize - (1)' in 2700ms.
-01:51:19 [Eclipse JDT] Sending notification 'initialized'.
-01:51:19 [Eclipse JDT] Sending notification 'workspace/didChangeConfiguration'.
-01:51:19 [Eclipse JDT] Sending notification 'textDocument/didOpen'.
-01:51:19 [Eclipse JDT] Eclipse JDT is running (JDT Language Server (Standard) 1.58.0-SNAPSHOT).
-01:51:19 [Eclipse JDT] Sending request 'workspace/executeCommand - (2)'.
-01:51:19 [Eclipse JDT] Received notification 'language/status'.
-01:51:19 [Eclipse JDT] Received notification 'language/status'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received notification 'language/status'.
-01:51:19 [Eclipse JDT] Received notification 'language/status'.
-01:51:19 [Eclipse JDT] Received notification 'language/status'.
-01:51:19 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("3")'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("4")'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("5")'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("6")'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:19 [Eclipse JDT] Received notification '$/progress'.
-01:51:20 [Eclipse JDT] Received notification 'textDocument/publishDiagnostics'.
-01:51:20 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("7")'.
-01:51:20 [Eclipse JDT] Received notification '$/progress'.
-01:51:20 [Eclipse JDT] Received notification '$/progress'.
-01:51:20 [Eclipse JDT] Received notification '$/progress'.
-01:51:20 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("8")'.
-01:51:20 [Eclipse JDT] Received notification '$/progress'.
-01:51:20 [Eclipse JDT] Received notification '$/progress'.
-01:51:20 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("9")'.
-01:51:20 [Eclipse JDT] Received notification '$/progress'.
-01:51:20 [Eclipse JDT] Received notification '$/progress'.
-01:51:20 [Eclipse JDT] Received notification '$/progress'.
-01:51:20 [Eclipse JDT] Received notification '$/progress'.
-01:51:20 [Eclipse JDT] Received notification 'textDocument/publishDiagnostics'.
-01:51:20 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("10")'.
-01:51:20 [Eclipse JDT] Received notification '$/progress'.
-01:51:20 [Eclipse JDT] Received notification '$/progress'.
-01:51:20 [Eclipse JDT] Received notification 'textDocument/publishDiagnostics'.
-01:51:20 [Eclipse JDT] Received notification '$/progress'.
-01:51:24 [Eclipse JDT] Oct 29, 2026 1:51:24 AM com.microsoft.java.debug.plugin.internal.JavaDebuggerServerPlugin start
-01:51:24 [Eclipse JDT] INFO: Starting com.microsoft.java.debug.plugin
-01:51:24 [Eclipse JDT] Received response 'workspace/executeCommand - (2)' in 5002ms.
-01:51:24 [Eclipse JDT] Oct 29, 2026 1:51:24 AM com.microsoft.java.debug.core.UsageDataSession recordInfo
-01:51:24 [Eclipse JDT] INFO: launch debug info
-01:51:24 [Eclipse JDT] Oct 29, 2026 1:51:24 AM com.microsoft.java.debug.core.adapter.handler.LaunchRequestHandler launch
-01:51:24 [Eclipse JDT] INFO: Trying to launch Java Program with options:
-01:51:24 [Eclipse JDT] main-class: MainKt
-01:51:24 [Eclipse JDT] args: 
-01:51:24 [Eclipse JDT] module-path: 
-01:51:24 [Eclipse JDT] class-path: /tmp/tabstudio-tests/468016f8bb5a481e93a0279ad77d4350/app/Projects/Greeter/build/classes/java/main:/tmp/tabstudio-tests/468016f8bb5a481e93a0279ad77d4350/app/Projects/Greeter/build/classes/kotlin/main:/tmp/tabstudio-tests/468016f8bb5a481e93a0279ad77d4350/app/Projects/Greeter/build/resources/main:/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.21/c343e135bd1e7dd94b7ed76b4159068d888d09db/kotlin-stdlib-2.4.21.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar
-01:51:24 [Eclipse JDT] vmArgs: 
-01:51:24 [Eclipse JDT] Oct 29, 2026 1:51:24 AM com.microsoft.java.debug.core.adapter.handler.LaunchWithDebuggingDelegate lambda$launchInTerminal$0
-01:51:24 [Eclipse JDT] INFO: Launching debuggee in terminal console succeeded.
+02:13:17 [Kotlin by JetBrains] Received notification 'window/logMessage'.
+02:13:17 [Kotlin by JetBrains] Log file: /tmp/idea-system16438910945025691419/system/log/intellij-server.log
+02:13:18 [Kotlin by JetBrains] Received response 'initialize - (1)' in 3666ms.
+02:13:18 [Kotlin by JetBrains] Sending notification 'initialized'.
+02:13:18 [Kotlin by JetBrains] Sending notification 'workspace/didChangeConfiguration'.
+02:13:18 [Kotlin by JetBrains] Sending notification 'textDocument/didOpen'.
+02:13:18 [Kotlin by JetBrains] Kotlin by JetBrains is running (IntelliJ Language Server by JetBrains ILS-263.7084.0).
+02:13:18 [Kotlin by JetBrains] Received notification 'intellij/workspaceImportStatus'.
+02:13:18 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (1)'.
+02:13:18 [Kotlin by JetBrains] Sending request 'textDocument/semanticTokens/full - (2)'.
+02:13:18 [Kotlin by JetBrains] Sending notification '$/cancelRequest'.
+02:13:18 [Kotlin by JetBrains] Sending request 'textDocument/semanticTokens/full - (3)'.
+02:13:18 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:18 [Kotlin by JetBrains] Sending notification '$/cancelRequest'.
+02:13:18 [Kotlin by JetBrains] Sending request 'textDocument/completion - (4)'.
+02:13:18 [Kotlin by JetBrains] Received notification '$/progress'.
+02:13:18 [Kotlin by JetBrains] Received notification 'intellij/importLog'.
+02:13:18 [Kotlin by JetBrains] Received notification '$/progress'.
+02:13:19 [Kotlin by JetBrains] Fetching distribution.
+02:13:19 [Kotlin by JetBrains] Downloading https://services.gradle.org/distributions/gradle-9.7.0-bin.zip
+02:13:19 [Kotlin by JetBrains] Sending request 'textDocument/semanticTokens/full - (5)'.
+02:13:20 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
+02:13:20 [Kotlin by JetBrains] Received response 'textDocument/semanticTokens/full - (5)' in 1722ms.
+02:13:20 [Kotlin by JetBrains] Sending request 'textDocument/inlayHint - (6)'.
+02:13:20 [Kotlin by JetBrains] Received request 'workspace/configuration - (2)'.
+02:13:20 [Kotlin by JetBrains] Received response 'textDocument/inlayHint - (6)' in 54ms.
+02:13:20 [Kotlin by JetBrains] Sending request 'textDocument/foldingRange - (7)'.
+02:13:20 [Kotlin by JetBrains] Received response 'textDocument/foldingRange - (7)' in 28ms.
+02:13:20 [Kotlin by JetBrains] Received response 'textDocument/completion - (4)' in 2088ms.
+02:13:21 [Kotlin by JetBrains] Sending request 'textDocument/completion - (8)'.
+02:13:21 [Kotlin by JetBrains] Received response 'textDocument/completion - (8)' in 436ms.
+02:13:21 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:21 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:21 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:21 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:21 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:21 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:21 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:21 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:21 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:21 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:21 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:21 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:21 [Kotlin by JetBrains] Sending request 'textDocument/completion - (9)'.
+02:13:21 [Kotlin by JetBrains] Sending request 'textDocument/semanticTokens/full - (10)'.
+02:13:21 [Kotlin by JetBrains] Sending request 'textDocument/documentHighlight - (11)'.
+02:13:21 [Kotlin by JetBrains] ...............................................................................................................................................
+02:13:21 [Kotlin by JetBrains] Received response 'textDocument/documentHighlight - (11)' in 60ms.
+02:13:21 [Kotlin by JetBrains] Sending request 'textDocument/documentSymbol - (12)'.
+02:13:21 [Kotlin by JetBrains] Received response 'textDocument/semanticTokens/full - (10)' in 89ms.
+02:13:21 [Kotlin by JetBrains] Sending request 'textDocument/inlayHint - (13)'.
+02:13:21 [Kotlin by JetBrains] Received request 'workspace/configuration - (3)'.
+02:13:21 [Kotlin by JetBrains] Received response 'textDocument/documentSymbol - (12)' in 20ms.
+02:13:21 [Kotlin by JetBrains] Received response 'textDocument/inlayHint - (13)' in 14ms.
+02:13:21 [Kotlin by JetBrains] Sending request 'textDocument/foldingRange - (14)'.
+02:13:21 [Kotlin by JetBrains] Received response 'textDocument/foldingRange - (14)' in 4ms.
+02:13:22 [Kotlin by JetBrains] Received response 'textDocument/completion - (9)' in 469ms.
+02:13:22 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:22 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:13:22 [Kotlin by JetBrains] Sending notification 'textDocument/didSave'.
+02:13:22 [Kotlin by JetBrains] Sending request 'textDocument/semanticTokens/full - (15)'.
+02:13:22 [Kotlin by JetBrains] Sending request 'textDocument/documentHighlight - (16)'.
+02:13:22 [Kotlin by JetBrains] Received response 'textDocument/documentHighlight - (16)' in 32ms.
+02:13:22 [Kotlin by JetBrains] Sending request 'textDocument/documentSymbol - (17)'.
+02:13:22 [Kotlin by JetBrains] Received response 'textDocument/documentSymbol - (17)' in 7ms.
+02:13:22 [Kotlin by JetBrains] Received response 'textDocument/semanticTokens/full - (15)' in 143ms.
+02:13:22 [Kotlin by JetBrains] Sending request 'textDocument/inlayHint - (18)'.
+02:13:22 [Kotlin by JetBrains] Received request 'workspace/configuration - (4)'.
+02:13:22 [Kotlin by JetBrains] Received response 'textDocument/inlayHint - (18)' in 20ms.
+02:13:22 [Kotlin by JetBrains] Sending request 'textDocument/foldingRange - (19)'.
+02:13:22 [Kotlin by JetBrains] Received response 'textDocument/foldingRange - (19)' in 7ms.
+02:13:22 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
+02:13:22 [Kotlin by JetBrains] Sending request 'textDocument/codeAction - (20)'.
+02:13:22 [Kotlin by JetBrains] Received response 'textDocument/codeAction - (20)' in 250ms.
+02:13:53 [Kotlin by JetBrains] Received notification 'intellij/importLog'.
+02:13:57 [Kotlin by JetBrains] Received notification 'intellij/importLog'.
+02:13:57 [Kotlin by JetBrains] Received notification 'intellij/importLog'.
+02:13:57 [Kotlin by JetBrains] Received notification 'intellij/importLog'.
+02:13:57 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (5)'.
+02:13:57 [Kotlin by JetBrains] Received notification '$/progress'.
+02:13:57 [Kotlin by JetBrains] Received notification '$/progress'.
+02:13:58 [Kotlin by JetBrains] Received notification '$/progress'.
+02:13:58 [Kotlin by JetBrains] Received notification 'intellij/importLog'.
+02:13:58 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:01 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:03 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:06 [Kotlin by JetBrains] Sending notification 'textDocument/didChange'.
+02:14:06 [Kotlin by JetBrains] Sending notification 'textDocument/didSave'.
+02:14:06 [Kotlin by JetBrains] Sending request 'textDocument/semanticTokens/full - (21)'.
+02:14:07 [Kotlin by JetBrains] Received response 'textDocument/semanticTokens/full - (21)' in 843ms.
+02:14:07 [Kotlin by JetBrains] Sending request 'textDocument/inlayHint - (22)'.
+02:14:07 [Kotlin by JetBrains] Received request 'workspace/configuration - (6)'.
+02:14:07 [Kotlin by JetBrains] Received response 'textDocument/inlayHint - (22)' in 44ms.
+02:14:07 [Kotlin by JetBrains] Sending request 'textDocument/foldingRange - (23)'.
+02:14:07 [Kotlin by JetBrains] Received response 'textDocument/foldingRange - (23)' in 13ms.
+02:14:08 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:09 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:09 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:09 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:09 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:09 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:09 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:09 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:10 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:11 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:12 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:13 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:13 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:13 [Kotlin by JetBrains] Received notification 'intellij/workspaceImportState'.
+02:14:13 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (7)'.
+02:14:13 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:13 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:13 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:16 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
+02:14:19 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (8)'.
+02:14:19 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:19 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:19 [Kotlin by JetBrains] Received notification 'intellij/ready-for-test'.
+02:14:19 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:19 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (9)'.
+02:14:19 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:19 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:19 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:19 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:19 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (10)'.
+02:14:19 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:19 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (11)'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (12)'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (13)'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (14)'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (15)'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (16)'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:20 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:21 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
+02:14:23 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (17)'.
+02:14:23 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:23 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:23 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:23 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (18)'.
+02:14:23 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:23 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:23 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:24 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (19)'.
+02:14:24 [Kotlin by JetBrains] Received notification '$/cancelRequest'.
+02:14:24 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (20)'.
+02:14:24 [Kotlin by JetBrains] Received notification '$/cancelRequest'.
+02:14:24 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (21)'.
+02:14:24 [Kotlin by JetBrains] Received notification '$/cancelRequest'.
+02:14:24 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (22)'.
+02:14:24 [Kotlin by JetBrains] Received notification '$/cancelRequest'.
+02:14:24 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (23)'.
+02:14:24 [Kotlin by JetBrains] Received notification '$/cancelRequest'.
+02:14:24 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (24)'.
+02:14:24 [Kotlin by JetBrains] Received notification '$/cancelRequest'.
+02:14:25 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
+02:14:25 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (25)'.
+02:14:25 [Kotlin by JetBrains] Received notification '$/cancelRequest'.
+02:14:25 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (26)'.
+02:14:25 [Kotlin by JetBrains] Received notification '$/cancelRequest'.
+02:14:25 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
+02:14:37 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (27)'.
+02:14:37 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:37 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:37 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:37 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (28)'.
+02:14:37 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:37 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:37 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:37 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (29)'.
+02:14:37 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:37 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (30)'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (31)'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (32)'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (33)'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (34)'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (35)'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:38 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:39 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
+02:14:41 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (36)'.
+02:14:41 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:41 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:41 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:41 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (37)'.
+02:14:41 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:41 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:41 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:41 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (38)'.
+02:14:41 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:41 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:41 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:41 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (39)'.
+02:14:41 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:41 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:42 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:42 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
+02:14:42 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (40)'.
+02:14:42 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:42 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:42 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:42 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (41)'.
+02:14:42 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:42 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:43 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:43 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (42)'.
+02:14:43 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:43 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:43 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:44 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
+02:14:44 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (43)'.
+02:14:44 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:44 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:44 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:44 [Kotlin by JetBrains] Received request 'window/workDoneProgress/create - (44)'.
+02:14:44 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:44 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:44 [Kotlin by JetBrains] Received notification '$/progress'.
+02:14:45 [Kotlin by JetBrains] Received notification 'textDocument/publishDiagnostics'.
+02:14:50 [Eclipse JDT] Starting Eclipse JDT for /tmp/tabstudio-tests/9d8698a7b3f14856ad85aad4647e66df/app/Projects/Greeter/.tabstudio/kotlin-debug: /home/runner/work/_temp/jdtls/bin/jdtls -data ${serverStorage}
+02:14:50 [Eclipse JDT] Sending request 'initialize - (1)'.
+02:14:50 [Eclipse JDT] WARNING: Using incubator modules: jdk.incubator.vector
+02:14:50 [Eclipse JDT] Oct 29, 2026 2:14:50 AM org.apache.aries.spifly.BaseActivator log
+02:14:50 [Eclipse JDT] INFO: Registered provider ch.qos.logback.classic.spi.LogbackServiceProvider of service org.slf4j.spi.SLF4JServiceProvider in bundle ch.qos.logback.classic
+02:14:52 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("1")'.
+02:14:52 [Eclipse JDT] Received notification '$/progress'.
+02:14:52 [Eclipse JDT] Received notification '$/progress'.
+02:14:52 [Eclipse JDT] Received notification '$/progress'.
+02:14:52 [Eclipse JDT] Received notification 'language/status'.
+02:14:52 [Eclipse JDT] Received notification 'language/status'.
+02:14:52 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("2")'.
+02:14:52 [Eclipse JDT] Received notification '$/progress'.
+02:14:52 [Eclipse JDT] Received notification '$/progress'.
+02:14:52 [Eclipse JDT] Received response 'initialize - (1)' in 2669ms.
+02:14:52 [Eclipse JDT] Sending notification 'initialized'.
+02:14:52 [Eclipse JDT] Sending notification 'workspace/didChangeConfiguration'.
+02:14:52 [Eclipse JDT] Sending notification 'textDocument/didOpen'.
+02:14:52 [Eclipse JDT] Eclipse JDT is running (JDT Language Server (Standard) 1.58.0-SNAPSHOT).
+02:14:52 [Eclipse JDT] Sending request 'workspace/executeCommand - (2)'.
+02:14:52 [Eclipse JDT] Received notification 'language/status'.
+02:14:52 [Eclipse JDT] Received notification 'language/status'.
+02:14:52 [Eclipse JDT] Received notification '$/progress'.
+02:14:52 [Eclipse JDT] Received notification 'language/status'.
+02:14:52 [Eclipse JDT] Received notification 'language/status'.
+02:14:52 [Eclipse JDT] Received notification 'language/status'.
+02:14:52 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("3")'.
+02:14:52 [Eclipse JDT] Received notification '$/progress'.
+02:14:52 [Eclipse JDT] Received notification '$/progress'.
+02:14:52 [Eclipse JDT] Received notification '$/progress'.
+02:14:52 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("4")'.
+02:14:52 [Eclipse JDT] Received notification '$/progress'.
+02:14:52 [Eclipse JDT] Received notification '$/progress'.
+02:14:52 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("5")'.
+02:14:52 [Eclipse JDT] Received notification '$/progress'.
+02:14:52 [Eclipse JDT] Received notification '$/progress'.
+02:14:52 [Eclipse JDT] Received notification '$/progress'.
+02:14:53 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("6")'.
+02:14:53 [Eclipse JDT] Received notification '$/progress'.
+02:14:53 [Eclipse JDT] Received notification '$/progress'.
+02:14:53 [Eclipse JDT] Received notification '$/progress'.
+02:14:54 [Eclipse JDT] Received notification 'textDocument/publishDiagnostics'.
+02:14:54 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("7")'.
+02:14:54 [Eclipse JDT] Received notification '$/progress'.
+02:14:54 [Eclipse JDT] Received notification '$/progress'.
+02:14:54 [Eclipse JDT] Received notification '$/progress'.
+02:14:54 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("8")'.
+02:14:54 [Eclipse JDT] Received notification '$/progress'.
+02:14:54 [Eclipse JDT] Received notification '$/progress'.
+02:14:54 [Eclipse JDT] Received notification '$/progress'.
+02:14:54 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("9")'.
+02:14:54 [Eclipse JDT] Received notification '$/progress'.
+02:14:54 [Eclipse JDT] Received notification '$/progress'.
+02:14:54 [Eclipse JDT] Received notification '$/progress'.
+02:14:54 [Eclipse JDT] Received notification 'textDocument/publishDiagnostics'.
+02:14:54 [Eclipse JDT] Received request 'window/workDoneProgress/create - ("10")'.
+02:14:54 [Eclipse JDT] Received notification '$/progress'.
+02:14:54 [Eclipse JDT] Received notification '$/progress'.
+02:14:54 [Eclipse JDT] Received notification 'textDocument/publishDiagnostics'.
+02:14:54 [Eclipse JDT] Received notification '$/progress'.
+02:14:57 [Eclipse JDT] Oct 29, 2026 2:14:57 AM com.microsoft.java.debug.plugin.internal.JavaDebuggerServerPlugin start
+02:14:57 [Eclipse JDT] INFO: Starting com.microsoft.java.debug.plugin
+02:14:57 [Eclipse JDT] Received response 'workspace/executeCommand - (2)' in 4914ms.
+02:14:57 [Eclipse JDT] Oct 29, 2026 2:14:57 AM com.microsoft.java.debug.core.UsageDataSession recordInfo
+02:14:57 [Eclipse JDT] INFO: launch debug info
+02:14:57 [Eclipse JDT] Oct 29, 2026 2:14:57 AM com.microsoft.java.debug.core.adapter.handler.LaunchRequestHandler launch
+02:14:57 [Eclipse JDT] INFO: Trying to launch Java Program with options:
+02:14:57 [Eclipse JDT] main-class: MainKt
+02:14:57 [Eclipse JDT] args: 
+02:14:57 [Eclipse JDT] module-path: 
+02:14:57 [Eclipse JDT] class-path: /tmp/tabstudio-tests/9d8698a7b3f14856ad85aad4647e66df/app/Projects/Greeter/build/classes/java/main:/tmp/tabstudio-tests/9d8698a7b3f14856ad85aad4647e66df/app/Projects/Greeter/build/classes/kotlin/main:/tmp/tabstudio-tests/9d8698a7b3f14856ad85aad4647e66df/app/Projects/Greeter/build/resources/main:/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.21/c343e135bd1e7dd94b7ed76b4159068d888d09db/kotlin-stdlib-2.4.21.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar
+02:14:57 [Eclipse JDT] vmArgs: 
+02:14:58 [Eclipse JDT] Oct 29, 2026 2:14:58 AM com.microsoft.java.debug.core.adapter.handler.LaunchWithDebuggingDelegate lambda$launchInTerminal$0
+02:14:58 [Eclipse JDT] INFO: Launching debuggee in terminal console succeeded.
 
 == Debug Adapters
 [Java (java-debug)] Sending request 'launch' (2).
@@ -421,179 +399,180 @@ ServerLaunchConfig(protocolConfig=StdioServer(out=java.io.PrintStream@50dd3cad),
 /home/runner/work/_temp/js-debug/bin:/home/runner/go/bin:/home/runner/work/_temp/swift/usr/bin:/home/runner/work/_temp/kotlin-lsp/bin:/home/runner/work/_temp/kotlinc/bin:/home/runner/work/_temp/php-tools/bin:/opt/hostedtoolcache/setup-php/tools:/home/runner/.composer/vendor/bin:/home/runner/work/_temp/jdtls/bin:/home/runner/work/_temp/gradle-8.14.4/bin:/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.13-9/x64/bin:/home/runner/work/_temp/cpp-bin:/opt/hostedtoolcache/go/1.26.10/x64/bin:/opt/hostedtoolcache/Python/3.12.15/x64/bin:/opt/hostedtoolcache/Python/3.12.15/x64:/opt/hostedtoolcache/node/22.23.4/x64/bin:/usr/share/dotnet:/snap/bin:/home/runner/.local/bin:/opt/pipx_bin:/home/runner/.cargo/bin:/home/runner/.config/composer/vendor/bin:/usr/local/.ghcup/bin:/home/runner/.dotnet/tools:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 == Processes
     PID    PPID    PGID STAT     ELAPSED COMMAND
-      2       0       0 S          10:38 [kthreadd]
-      3       2       0 S          10:38  \_ [pool_workqueue_release]
-      4       2       0 I<         10:38  \_ [kworker/R-rcu_gp]
-      5       2       0 I<         10:38  \_ [kworker/R-sync_wq]
-      6       2       0 I<         10:38  \_ [kworker/R-kvfree_rcu_reclaim]
-      7       2       0 I<         10:38  \_ [kworker/R-slub_flushwq]
-      8       2       0 I<         10:38  \_ [kworker/R-netns]
-      9       2       0 I          10:38  \_ [kworker/0:0-events]
-     10       2       0 I<         10:38  \_ [kworker/0:0H-kblockd]
-     13       2       0 I<         10:38  \_ [kworker/R-mm_percpu_wq]
-     14       2       0 S          10:38  \_ [ksoftirqd/0]
-     15       2       0 S<         10:38  \_ [pr/ttyS0]
-     16       2       0 I          10:38  \_ [rcu_sched]
-     17       2       0 S          10:38  \_ [rcu_exp_par_gp_kthread_worker/0]
-     18       2       0 S          10:38  \_ [rcu_exp_gp_kthread_worker]
-     19       2       0 S          10:38  \_ [migration/0]
-     20       2       0 S          10:38  \_ [kprobe-optimizer]
-     21       2       0 S          10:38  \_ [idle_inject/0]
-     22       2       0 S          10:38  \_ [cpuhp/0]
-     23       2       0 S          10:38  \_ [cpuhp/2]
-     24       2       0 S          10:38  \_ [idle_inject/2]
-     25       2       0 S          10:38  \_ [migration/2]
-     26       2       0 S          10:38  \_ [ksoftirqd/2]
-     28       2       0 I<         10:38  \_ [kworker/2:0H-kblockd]
-     29       2       0 S          10:38  \_ [cpuhp/1]
-     30       2       0 S          10:38  \_ [idle_inject/1]
-     31       2       0 S          10:38  \_ [migration/1]
-     32       2       0 S          10:38  \_ [ksoftirqd/1]
-     33       2       0 I          10:38  \_ [kworker/1:0-events]
-     34       2       0 I<         10:38  \_ [kworker/1:0H-kblockd]
-     35       2       0 S          10:38  \_ [cpuhp/3]
-     36       2       0 S          10:38  \_ [idle_inject/3]
-     37       2       0 S          10:38  \_ [migration/3]
-     38       2       0 S          10:38  \_ [ksoftirqd/3]
-     39       2       0 I          10:38  \_ [kworker/3:0-events]
-     40       2       0 I<         10:38  \_ [kworker/3:0H-kblockd]
-     41       2       0 S          10:38  \_ [kdevtmpfs]
-     42       2       0 I<         10:38  \_ [kworker/R-inet_frag_wq]
-     43       2       0 I          10:38  \_ [rcu_tasks_kthread]
-     44       2       0 I          10:38  \_ [rcu_tasks_rude_kthread]
-     45       2       0 S          10:38  \_ [kauditd]
-     46       2       0 S          10:38  \_ [khungtaskd]
-     47       2       0 I          10:38  \_ [kworker/u16:1-mlx5_fc]
-     48       2       0 S          10:38  \_ [oom_reaper]
-     49       2       0 I          10:38  \_ [kworker/u16:2-flush-259:0]
-     51       2       0 I<         10:38  \_ [kworker/R-writeback]
-     52       2       0 S          10:38  \_ [kcompactd0]
-     53       2       0 SN         10:38  \_ [ksmd]
-     54       2       0 SN         10:38  \_ [khugepaged]
-     55       2       0 I<         10:38  \_ [kworker/R-kblockd]
-     56       2       0 I<         10:38  \_ [kworker/R-blkcg_punt_bio]
-     57       2       0 I<         10:38  \_ [kworker/R-kintegrityd]
-     58       2       0 I          10:37  \_ [kworker/2:1-events]
-     59       2       0 S          10:37  \_ [irq/9-acpi]
-     61       2       0 I<         10:37  \_ [kworker/R-tpm_dev_wq]
-     62       2       0 I<         10:37  \_ [kworker/R-ata_sff]
-     63       2       0 I<         10:37  \_ [kworker/R-md_bitmap]
-     64       2       0 I<         10:37  \_ [kworker/R-md_llbitmap_io]
-     65       2       0 I<         10:37  \_ [kworker/R-md_llbitmap_unplug]
-     66       2       0 I<         10:37  \_ [kworker/R-edac-poller]
-     67       2       0 I<         10:37  \_ [kworker/R-hv_vmbus_con]
-     68       2       0 I<         10:37  \_ [kworker/R-hv_vmbus_rescind]
-     69       2       0 I<         10:37  \_ [kworker/R-hv_pri_chan]
-     70       2       0 I<         10:37  \_ [kworker/R-hv_sub_chan]
-     71       2       0 I<         10:37  \_ [kworker/R-devfreq_wq]
-     72       2       0 S          10:37  \_ [watchdogd]
-     73       2       0 I<         10:37  \_ [kworker/R-quota_events_unbound]
-     74       2       0 S          10:37  \_ [kswapd0]
-     75       2       0 S          10:37  \_ [ecryptfs-kthread]
-     76       2       0 I<         10:37  \_ [kworker/R-kthrotld]
-     77       2       0 I<         10:37  \_ [kworker/R-acpi_thermal_pm]
-     78       2       0 I<         10:37  \_ [kworker/R-nfit]
-     79       2       0 S          10:37  \_ [scsi_eh_0]
-     80       2       0 I<         10:37  \_ [kworker/R-nvme-wq]
-     81       2       0 I<         10:37  \_ [kworker/R-scsi_tmf_0]
-     82       2       0 I<         10:37  \_ [kworker/R-nvme-reset-wq]
-     83       2       0 I<         10:37  \_ [kworker/R-nvme-delete-wq]
-     84       2       0 I<         10:37  \_ [kworker/R-nvme-auth-wq]
-     85       2       0 I          10:37  \_ [kworker/2:2-memcg]
-     87       2       0 I          10:37  \_ [kworker/0:3-cgroup_bpf_destroy]
-     88       2       0 I          10:37  \_ [kworker/u16:3-events_power_efficient]
-     89       2       0 I          10:37  \_ [kworker/3:2-events]
-     93       2       0 S          10:37  \_ [hv_balloon]
-     94       2       0 I<         10:37  \_ [kworker/R-mld]
-     95       2       0 I<         10:37  \_ [kworker/R-ipv6_addrconf]
-     96       2       0 I<         10:37  \_ [kworker/R-kstrp]
-     98       2       0 I<         10:37  \_ [kworker/u17:0]
-    109       2       0 I<         10:37  \_ [kworker/R-charger_manager]
-    110       2       0 S          10:37  \_ [jbd2/nvme0n1p1-8]
-    111       2       0 I<         10:37  \_ [kworker/R-ext4-rsv-conversion]
-    144       2       0 I<         10:37  \_ [kworker/3:1H-kblockd]
-    183       2       0 I<         10:36  \_ [kworker/1:1H-kblockd]
-    185       2       0 I<         10:36  \_ [kworker/R-kmpathd]
-    186       2       0 I<         10:36  \_ [kworker/R-kmpath_handlerd]
-    242       2       0 S          10:36  \_ [psimon]
-    300       2       0 I<         10:36  \_ [kworker/R-tls-strp]
-    304       2       0 S          10:36  \_ [card1-crtc0]
-    306       2       0 I<         10:36  \_ [kworker/0:1H-kblockd]
-    311       2       0 S          10:36  \_ [jbd2/nvme0n1p16-8]
-    312       2       0 I<         10:36  \_ [kworker/R-ext4-rsv-conversion]
-    328       2       0 I<         10:36  \_ [kworker/R-mlx5_cmd_1f70:00:02.0]
-    329       2       0 I<         10:36  \_ [kworker/R-mlx5_health1f70:00:02.0]
-    330       2       0 I<         10:36  \_ [kworker/R-mlx5_page_allocator]
-    331       2       0 I<         10:36  \_ [kworker/R-mlx5_events]
-    332       2       0 S          10:36  \_ [ptp1]
-    333       2       0 I<         10:36  \_ [kworker/R-mlx5_fc]
-    334       2       0 I<         10:36  \_ [kworker/R-mlx5_hv_vhca]
-    335       2       0 I<         10:35  \_ [kworker/R-mlx5e]
-    336       2       0 I<         10:35  \_ [kworker/R-mlx5e_arfs]
-    347       2       0 I<         10:35  \_ [kworker/R-ib-comp-wq]
-    348       2       0 I<         10:35  \_ [kworker/R-ib-comp-unb-wq]
-    349       2       0 I<         10:35  \_ [kworker/R-ib_mcast]
-    350       2       0 I<         10:35  \_ [kworker/R-ib_nl_sa_wq]
-    351       2       0 I<         10:35  \_ [kworker/R-mkey_cache]
-    374       2       0 I<         10:35  \_ [kworker/2:1H-kblockd]
-    574       2       0 I<         10:34  \_ [kworker/R-cfg80211]
-    659       2       0 I          10:33  \_ [kworker/1:3-events]
-   4119       2       0 S          08:10  \_ [psimon]
-   9742       2       0 I          04:58  \_ [kworker/2:0-mm_percpu_wq]
-   9879       2       0 I          04:51  \_ [kworker/3:1-events]
-  10104       2       0 I          04:49  \_ [kworker/0:1-events]
-  10369       2       0 I          04:46  \_ [kworker/1:1-events]
-  13409       2       0 I          03:11  \_ [kworker/0:2]
-  14465       2       0 I          02:01  \_ [kworker/u16:0]
-  15151       2       0 I          01:07  \_ [kworker/1:2-events]
-      1       0       1 Ss         10:38 /sbin/init
-    162       1     162 S<s        10:36 /usr/lib/systemd/systemd-journald
-    225       1     225 SLsl       10:36 /sbin/multipathd -d -s
-    230       1     230 Ss         10:36 /usr/lib/systemd/systemd-udevd
-    361       1     361 Ss         10:35 /usr/lib/linux-tools/7.0.0-1017-azure/hv_kvp_daemon -n
-    446       1     446 Ss         10:35 /usr/lib/systemd/systemd-resolved
-    514       1     514 Ss         10:35 /usr/sbin/haveged --Foreground --verbose=1
-    658       1     658 Ss         10:33 /usr/lib/systemd/systemd-networkd
-    826       1     826 Ss         10:29 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
-    831       1     831 Ss         10:29 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
-    833       1     833 Ss         10:29 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
-   1148     833     833 S          10:28  \_ php-fpm: pool www
-   1150     833     833 S          10:28  \_ php-fpm: pool www
-    838       1     838 Ssl        10:29 /usr/lib/polkit-1/polkitd --no-debug
-    845       1     845 Ss         10:29 /usr/lib/systemd/systemd-logind
-    854       1     854 Ssl        10:29 /usr/libexec/udisks2/udisksd
-    863       1     863 Ss         10:29 /usr/bin/python3 -u /usr/sbin/waagent -daemon
-   1273     863     863 Sl         10:28  \_ /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.2-py3.12.egg -run-exthandlers
-    891       1     891 Ss         10:28 /usr/sbin/cron -f -P
-    909       1     909 Ssl        10:28 /usr/bin/containerd
-    929       1     929 Ss+        10:28 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
-    947       1     947 Ss+        10:28 /sbin/agetty -o -p -- \u --noclear - linux
-    955       1     953 S          10:28 /usr/sbin/chronyd -F 1
-    957     955     953 S          10:28  \_ /usr/sbin/chronyd -F 1
-   1002       1    1002 Ssl        10:28 /usr/sbin/ModemManager
-   1075       1    1075 Ssl        10:28 /usr/sbin/rsyslogd -n -iNONE
-   1106       1    1106 Ssl        10:28 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
-   1122       1    1122 Ss         10:28 /usr/lib/systemd/systemd --user
-   1126    1122    1122 S          10:28  \_ (sd-pam)
-   1864       1    1864 Ssl        10:26 /opt/hca/hosted-compute-agent
-   1878    1864    1864 S          10:26  \_ sudo -n PROVJOBD_E2E=1 /tmp/provjobd3982374565
-   1880    1878    1864 Sl         10:26  |   \_ /tmp/provjobd3982374565
-   1946    1864    1864 Sl         09:23  \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
-   1966    1946    1864 Sl         09:21      \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
-  14477    1966    1864 S          02:00          \_ /usr/bin/bash -e /home/runner/work/_temp/c94c54aa-fa6a-4f5f-ba4d-39542d9070ff.sh
-  14479   14477    1864 Sl         02:00              \_ dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none --filter FullyQualifiedName~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template --logger console;verbosity=normal
-  14498   14479    1864 Sl         02:00                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
-  14499   14479    1864 Sl         02:00                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
-  14500   14479    1864 Sl         02:00                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
-  14643   14500    1864 Sl         01:55                      \_ /usr/share/dotnet/dotnet exec /usr/share/dotnet/sdk/10.0.403/vstest.console.dll --framework:.NETCoreApp,Version=v10.0 --testCaseFilter:FullyQualifiedName~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template --logger:console;verbosity=normal /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll --Blame:CollectHangDump;HangDumpType=none;TestTimeout=10m --nologo --artifactsProcessingMode-collect --testSessionCorrelationId:14479_87024c6c-b210-4978-9bb6-6e43a1c118f2
-  14656   14643    1864 Sl         01:55                          \_ /usr/share/dotnet/dotnet exec --runtimeconfig /usr/share/dotnet/sdk/10.0.403/datacollector.runtimeconfig.json --depsfile /usr/share/dotnet/sdk/10.0.403/datacollector.deps.json /usr/share/dotnet/sdk/10.0.403/datacollector.dll --port 40609 --parentprocessid 14643
-  14672   14643    1864 Sl         01:55                          \_ /usr/share/dotnet/dotnet exec --runtimeconfig /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.runtimeconfig.json --depsfile /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.deps.json /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/testhost.dll --port 33971 --endpoint 127.0.0.1:033971 --role client --parentprocessid 14643 --datacollectionport 36923 --telemetryoptedin false
-  14790   14672   14790 Sl         01:48                              \_ /home/runner/work/_temp/kotlin-lsp/extension/server/bin/intellij-server --stdio
-  15000   14790   15000 Ssl        01:39                              |   \_ /home/runner/work/_temp/kotlin-lsp/extension/server/jbr/bin/java --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --enable-native-access=ALL-UNNAMED -XX:MaxMetaspaceSize=384m -XX:+HeapDumpOnOutOfMemoryError -Xms256m -Xmx512m -Dfile.encoding=UTF-8 -Duser.country -Duser.language=en -Duser.variant -cp /home/runner/.gradle/wrapper/dists/gradle-9.7.0-bin/d4tj7w02tcgubx9zk9hbippn6/gradle-9.7.0/lib/gradle-daemon-server-9.7.0.jar -javaagent:/home/runner/.gradle/wrapper/dists/gradle-9.7.0-bin/d4tj7w02tcgubx9zk9hbippn6/gradle-9.7.0/lib/agents/gradle-instrumentation-agent-9.7.0.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 9.7.0
-  15764   14672   15764 Sl         00:08                              \_ -Declipse.application=org.eclipse.jdt.ls.core.id1 -Dosgi.bundles.defaultStartLevel=4 -Declipse.product=org.eclipse.jdt.ls.core.product -Dosgi.checkConfiguration=true -Dosgi.sharedConfiguration.area=/home/runner/work/_temp/jdtls/config_linux -Dosgi.sharedConfiguration.area.readOnly=true -Dosgi.configuration.cascaded=true -Xms1G --add-modules=ALL-SYSTEM --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED -jar /home/runner/work/_temp/jdtls/plugins/org.eclipse.equinox.launcher_1.7.100.v20251111-0406.jar -data /tmp/tabstudio-language-servers/7D1540988EBDDC72837FC2EF
-  15857   14672   15857 Sl         00:00                              \_ /usr/lib/jvm/temurin-21-jdk-amd64/bin/java -agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=localhost:36037 -cp /tmp/tabstudio-tests/468016f8bb5a481e93a0279ad77d4350/app/Projects/Greeter/build/classes/java/main:/tmp/tabstudio-tests/468016f8bb5a481e93a0279ad77d4350/app/Projects/Greeter/build/classes/kotlin/main:/tmp/tabstudio-tests/468016f8bb5a481e93a0279ad77d4350/app/Projects/Greeter/build/resources/main:/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.21/c343e135bd1e7dd94b7ed76b4159068d888d09db/kotlin-stdlib-2.4.21.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar MainKt
-  15910   14672    1864 R          00:00                              \_ ps -eo pid,ppid,pgid,stat,etime,args --forest
-   4122       1    4122 Ss         08:10 php-fpm: master process (/etc/php/8.5/fpm/php-fpm.conf)
-   4123    4122    4122 S          08:10  \_ php-fpm: pool www
-   4124    4122    4122 S          08:10  \_ php-fpm: pool www
-   9435       1    1864 Sl         06:39 /usr/share/dotnet/sdk/10.0.403/Roslyn/bincore/VBCSCompiler -pipename:WAcWTViZvzcVAI0ZQWygl6OMzaUe49Dabl4RIF3MlGs
+      2       0       0 S          10:31 [kthreadd]
+      3       2       0 S          10:31  \_ [pool_workqueue_release]
+      4       2       0 I<         10:31  \_ [kworker/R-rcu_gp]
+      5       2       0 I<         10:31  \_ [kworker/R-sync_wq]
+      6       2       0 I<         10:31  \_ [kworker/R-kvfree_rcu_reclaim]
+      7       2       0 I<         10:31  \_ [kworker/R-slub_flushwq]
+      8       2       0 I<         10:31  \_ [kworker/R-netns]
+     10       2       0 I<         10:31  \_ [kworker/0:0H-kblockd]
+     11       2       0 I          10:31  \_ [kworker/0:1-events]
+     12       2       0 I          10:31  \_ [kworker/u16:0-events_power_efficient]
+     13       2       0 I<         10:31  \_ [kworker/R-mm_percpu_wq]
+     14       2       0 S          10:31  \_ [ksoftirqd/0]
+     15       2       0 S<         10:31  \_ [pr/ttyS0]
+     16       2       0 I          10:31  \_ [rcu_sched]
+     17       2       0 S          10:31  \_ [rcu_exp_par_gp_kthread_worker/0]
+     18       2       0 S          10:31  \_ [rcu_exp_gp_kthread_worker]
+     19       2       0 S          10:31  \_ [migration/0]
+     20       2       0 S          10:31  \_ [kprobe-optimizer]
+     21       2       0 S          10:31  \_ [idle_inject/0]
+     22       2       0 S          10:31  \_ [cpuhp/0]
+     23       2       0 S          10:31  \_ [cpuhp/2]
+     24       2       0 S          10:31  \_ [idle_inject/2]
+     25       2       0 S          10:31  \_ [migration/2]
+     26       2       0 S          10:31  \_ [ksoftirqd/2]
+     27       2       0 I          10:31  \_ [kworker/2:0-events]
+     28       2       0 I<         10:31  \_ [kworker/2:0H-kblockd]
+     29       2       0 S          10:31  \_ [cpuhp/1]
+     30       2       0 S          10:31  \_ [idle_inject/1]
+     31       2       0 S          10:31  \_ [migration/1]
+     32       2       0 S          10:31  \_ [ksoftirqd/1]
+     34       2       0 I<         10:31  \_ [kworker/1:0H-kblockd]
+     35       2       0 S          10:31  \_ [cpuhp/3]
+     36       2       0 S          10:31  \_ [idle_inject/3]
+     37       2       0 S          10:31  \_ [migration/3]
+     38       2       0 S          10:31  \_ [ksoftirqd/3]
+     40       2       0 I<         10:31  \_ [kworker/3:0H-kblockd]
+     41       2       0 S          10:31  \_ [kdevtmpfs]
+     42       2       0 I<         10:31  \_ [kworker/R-inet_frag_wq]
+     43       2       0 I          10:31  \_ [rcu_tasks_kthread]
+     44       2       0 I          10:31  \_ [rcu_tasks_rude_kthread]
+     45       2       0 S          10:31  \_ [kauditd]
+     46       2       0 S          10:31  \_ [khungtaskd]
+     47       2       0 I          10:31  \_ [kworker/u16:1-events_unbound]
+     48       2       0 S          10:31  \_ [oom_reaper]
+     49       2       0 I          10:31  \_ [kworker/u16:2-events_power_efficient]
+     50       2       0 I          10:31  \_ [kworker/3:1-mm_percpu_wq]
+     51       2       0 I<         10:31  \_ [kworker/R-writeback]
+     52       2       0 S          10:31  \_ [kcompactd0]
+     53       2       0 SN         10:31  \_ [ksmd]
+     54       2       0 SN         10:31  \_ [khugepaged]
+     55       2       0 I<         10:31  \_ [kworker/R-kblockd]
+     56       2       0 I<         10:31  \_ [kworker/R-blkcg_punt_bio]
+     57       2       0 I<         10:31  \_ [kworker/R-kintegrityd]
+     59       2       0 S          10:30  \_ [irq/9-acpi]
+     60       2       0 I          10:30  \_ [kworker/1:1-cgroup_release]
+     61       2       0 I<         10:30  \_ [kworker/R-tpm_dev_wq]
+     62       2       0 I<         10:30  \_ [kworker/R-ata_sff]
+     63       2       0 I<         10:30  \_ [kworker/R-md_bitmap]
+     64       2       0 I<         10:30  \_ [kworker/R-md_llbitmap_io]
+     65       2       0 I<         10:30  \_ [kworker/R-md_llbitmap_unplug]
+     66       2       0 I<         10:30  \_ [kworker/R-edac-poller]
+     67       2       0 I<         10:30  \_ [kworker/R-hv_vmbus_con]
+     68       2       0 I<         10:30  \_ [kworker/R-hv_vmbus_rescind]
+     69       2       0 I<         10:30  \_ [kworker/R-hv_pri_chan]
+     70       2       0 I<         10:30  \_ [kworker/R-hv_sub_chan]
+     71       2       0 I<         10:30  \_ [kworker/R-devfreq_wq]
+     72       2       0 S          10:30  \_ [watchdogd]
+     73       2       0 I<         10:30  \_ [kworker/R-quota_events_unbound]
+     74       2       0 S          10:30  \_ [kswapd0]
+     75       2       0 S          10:30  \_ [ecryptfs-kthread]
+     76       2       0 I<         10:30  \_ [kworker/R-kthrotld]
+     77       2       0 I<         10:30  \_ [kworker/R-acpi_thermal_pm]
+     78       2       0 I<         10:30  \_ [kworker/R-nfit]
+     79       2       0 S          10:30  \_ [scsi_eh_0]
+     80       2       0 I<         10:30  \_ [kworker/R-nvme-wq]
+     81       2       0 I<         10:30  \_ [kworker/R-scsi_tmf_0]
+     82       2       0 I<         10:30  \_ [kworker/R-nvme-reset-wq]
+     83       2       0 I<         10:30  \_ [kworker/R-nvme-delete-wq]
+     84       2       0 I<         10:30  \_ [kworker/R-nvme-auth-wq]
+     87       2       0 I          10:30  \_ [kworker/0:3-events]
+     89       2       0 I          10:30  \_ [kworker/u16:4-events_power_efficient]
+     90       2       0 I          10:30  \_ [kworker/u16:5-flush-259:0]
+     91       2       0 I          10:30  \_ [kworker/u16:6-events_power_efficient]
+     93       2       0 S          10:30  \_ [hv_balloon]
+     94       2       0 I<         10:30  \_ [kworker/R-mld]
+     95       2       0 I<         10:30  \_ [kworker/R-ipv6_addrconf]
+     96       2       0 I<         10:30  \_ [kworker/R-kstrp]
+     98       2       0 I<         10:30  \_ [kworker/u17:0]
+    109       2       0 I<         10:30  \_ [kworker/R-charger_manager]
+    110       2       0 S          10:30  \_ [jbd2/nvme0n1p1-8]
+    111       2       0 I<         10:30  \_ [kworker/R-ext4-rsv-conversion]
+    140       2       0 I<         10:30  \_ [kworker/1:1H-kblockd]
+    179       2       0 I          10:29  \_ [kworker/1:2-events]
+    184       2       0 I<         10:29  \_ [kworker/3:1H-kblockd]
+    185       2       0 I<         10:29  \_ [kworker/R-kmpathd]
+    186       2       0 I<         10:29  \_ [kworker/R-kmpath_handlerd]
+    187       2       0 I          10:29  \_ [kworker/3:2-events]
+    243       2       0 I<         10:29  \_ [kworker/2:1H-kblockd]
+    245       2       0 I<         10:29  \_ [kworker/0:1H-kblockd]
+    248       2       0 S          10:29  \_ [psimon]
+    296       2       0 I<         10:29  \_ [kworker/R-tls-strp]
+    300       2       0 S          10:29  \_ [card1-crtc0]
+    317       2       0 I<         10:29  \_ [kworker/R-mlx5_cmd_6752:00:02.0]
+    318       2       0 I<         10:29  \_ [kworker/R-mlx5_health6752:00:02.0]
+    319       2       0 I<         10:29  \_ [kworker/R-mlx5_page_allocator]
+    320       2       0 I<         10:29  \_ [kworker/R-mlx5_events]
+    321       2       0 S          10:28  \_ [ptp1]
+    322       2       0 I<         10:28  \_ [kworker/R-mlx5_fc]
+    323       2       0 I<         10:28  \_ [kworker/R-mlx5_hv_vhca]
+    324       2       0 I<         10:28  \_ [kworker/R-mlx5e]
+    325       2       0 I<         10:28  \_ [kworker/R-mlx5e_arfs]
+    337       2       0 I<         10:28  \_ [kworker/R-ib-comp-wq]
+    338       2       0 I<         10:28  \_ [kworker/R-ib-comp-unb-wq]
+    339       2       0 I<         10:28  \_ [kworker/R-ib_mcast]
+    340       2       0 I<         10:28  \_ [kworker/R-ib_nl_sa_wq]
+    341       2       0 I<         10:28  \_ [kworker/R-mkey_cache]
+    364       2       0 I          10:28  \_ [kworker/2:3-mm_percpu_wq]
+    366       2       0 S          10:28  \_ [jbd2/nvme0n1p16-8]
+    367       2       0 I<         10:28  \_ [kworker/R-ext4-rsv-conversion]
+    578       2       0 I<         10:27  \_ [kworker/R-cfg80211]
+   4106       2       0 S          08:06  \_ [psimon]
+   9842       2       0 I          04:56  \_ [kworker/1:0-mm_percpu_wq]
+   9858       2       0 I          04:50  \_ [kworker/2:1-mm_percpu_wq]
+  10010       2       0 I          04:42  \_ [kworker/0:0-events]
+  10732       2       0 D          04:35  \_ [kworker/3:0+events]
+      1       0       1 Ss         10:31 /sbin/init
+    162       1     162 S<s        10:30 /usr/lib/systemd/systemd-journald
+    229       1     229 SLsl       10:29 /sbin/multipathd -d -s
+    235       1     235 Ss         10:29 /usr/lib/systemd/systemd-udevd
+    336       1     336 Ss         10:28 /usr/lib/linux-tools/7.0.0-1017-azure/hv_kvp_daemon -n
+    493       1     493 Ss         10:28 /usr/lib/systemd/systemd-resolved
+    519       1     519 Ss         10:27 /usr/sbin/haveged --Foreground --verbose=1
+    660       1     660 Ss         10:25 /usr/lib/systemd/systemd-networkd
+    815       1     815 Ss         10:20 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+    820       1     820 Ss         10:20 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+    822       1     822 Ss         10:20 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
+   1146     822     822 S          10:20  \_ php-fpm: pool www
+   1148     822     822 S          10:20  \_ php-fpm: pool www
+    827       1     827 Ssl        10:20 /usr/lib/polkit-1/polkitd --no-debug
+    855       1     855 Ss         10:20 /usr/lib/systemd/systemd-logind
+    857       1     857 Ssl        10:20 /usr/libexec/udisks2/udisksd
+    858       1     858 Ss         10:20 /usr/bin/python3 -u /usr/sbin/waagent -daemon
+   1138     858     858 Sl         10:20  \_ /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.2-py3.12.egg -run-exthandlers
+    882       1     882 Ss         10:20 /usr/sbin/cron -f -P
+    920       1     920 Ssl        10:20 /usr/sbin/rsyslogd -n -iNONE
+    921       1     921 Ssl        10:20 /usr/bin/containerd
+    929       1     929 Ss+        10:20 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
+    941       1     941 Ss+        10:20 /sbin/agetty -o -p -- \u --noclear - linux
+    965       1     963 S          10:20 /usr/sbin/chronyd -F 1
+    968     965     963 S          10:20  \_ /usr/sbin/chronyd -F 1
+   1036       1    1036 Ssl        10:20 /usr/sbin/ModemManager
+   1050       1    1050 Ss         10:20 /usr/lib/systemd/systemd --user
+   1085    1050    1050 S          10:20  \_ (sd-pam)
+   1075       1    1075 Ssl        10:20 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+   1853       1    1853 Ssl        10:17 /opt/hca/hosted-compute-agent
+   1866    1853    1853 S          10:17  \_ sudo -n PROVJOBD_E2E=1 /tmp/provjobd990644139
+   1869    1866    1853 Sl         10:17  |   \_ /tmp/provjobd990644139
+   1937    1853    1853 Sl         09:11  \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
+   1956    1937    1853 Sl         09:09      \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
+  14599    1956    1853 S          01:55          \_ /usr/bin/bash -e /home/runner/work/_temp/85426ff6-45bd-41c8-a7eb-2e57284fff74.sh
+  14601   14599    1853 Sl         01:55              \_ dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none --filter FullyQualifiedName~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template --logger console;verbosity=normal
+  14621   14601    1853 Sl         01:54                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+  14622   14601    1853 Sl         01:54                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+  14623   14601    1853 Sl         01:54                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+  14776   14623    1853 Sl         01:50                      \_ /usr/share/dotnet/dotnet exec /usr/share/dotnet/sdk/10.0.403/vstest.console.dll --framework:.NETCoreApp,Version=v10.0 --testCaseFilter:FullyQualifiedName~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template --logger:console;verbosity=normal /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll --Blame:CollectHangDump;HangDumpType=none;TestTimeout=10m --nologo --artifactsProcessingMode-collect --testSessionCorrelationId:14601_0c4f58aa-3bc2-4d63-afeb-78fcc9d33307
+  14789   14776    1853 Sl         01:50                          \_ /usr/share/dotnet/dotnet exec --runtimeconfig /usr/share/dotnet/sdk/10.0.403/datacollector.runtimeconfig.json --depsfile /usr/share/dotnet/sdk/10.0.403/datacollector.deps.json /usr/share/dotnet/sdk/10.0.403/datacollector.dll --port 39321 --parentprocessid 14776
+  14805   14776    1853 Sl         01:49                          \_ /usr/share/dotnet/dotnet exec --runtimeconfig /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.runtimeconfig.json --depsfile /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.deps.json /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/testhost.dll --port 42143 --endpoint 127.0.0.1:042143 --role client --parentprocessid 14776 --datacollectionport 35621 --telemetryoptedin false
+  14917   14805   14917 Sl         01:43                              \_ /home/runner/work/_temp/kotlin-lsp/extension/server/bin/intellij-server --stdio
+  15131   14917   15131 Ssl        01:34                              |   \_ /home/runner/work/_temp/kotlin-lsp/extension/server/jbr/bin/java --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --enable-native-access=ALL-UNNAMED -XX:MaxMetaspaceSize=384m -XX:+HeapDumpOnOutOfMemoryError -Xms256m -Xmx512m -Dfile.encoding=UTF-8 -Duser.country -Duser.language=en -Duser.variant -cp /home/runner/.gradle/wrapper/dists/gradle-9.7.0-bin/d4tj7w02tcgubx9zk9hbippn6/gradle-9.7.0/lib/gradle-daemon-server-9.7.0.jar -javaagent:/home/runner/.gradle/wrapper/dists/gradle-9.7.0-bin/d4tj7w02tcgubx9zk9hbippn6/gradle-9.7.0/lib/agents/gradle-instrumentation-agent-9.7.0.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 9.7.0
+  15891   14805   15891 Sl         00:08                              \_ -Declipse.application=org.eclipse.jdt.ls.core.id1 -Dosgi.bundles.defaultStartLevel=4 -Declipse.product=org.eclipse.jdt.ls.core.product -Dosgi.checkConfiguration=true -Dosgi.sharedConfiguration.area=/home/runner/work/_temp/jdtls/config_linux -Dosgi.sharedConfiguration.area.readOnly=true -Dosgi.configuration.cascaded=true -Xms1G --add-modules=ALL-SYSTEM --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED -jar /home/runner/work/_temp/jdtls/plugins/org.eclipse.equinox.launcher_1.7.100.v20251111-0406.jar -data /tmp/tabstudio-language-servers/49473F913839604B6AC1A18F
+  15980   14805   15980 Sl         00:00                              \_ /usr/lib/jvm/temurin-21-jdk-amd64/bin/java -agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=localhost:40543 -cp /tmp/tabstudio-tests/9d8698a7b3f14856ad85aad4647e66df/app/Projects/Greeter/build/classes/java/main:/tmp/tabstudio-tests/9d8698a7b3f14856ad85aad4647e66df/app/Projects/Greeter/build/classes/kotlin/main:/tmp/tabstudio-tests/9d8698a7b3f14856ad85aad4647e66df/app/Projects/Greeter/build/resources/main:/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.21/c343e135bd1e7dd94b7ed76b4159068d888d09db/kotlin-stdlib-2.4.21.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar MainKt
+  16012   14805    1853 R          00:00                              \_ ps -eo pid,ppid,pgid,stat,etime,args --forest
+   4115       1    4115 Ss         08:06 php-fpm: master process (/etc/php/8.5/fpm/php-fpm.conf)
+   4130    4115    4115 S          08:06  \_ php-fpm: pool www
+   4131    4115    4115 S          08:06  \_ php-fpm: pool www
+   9449       1    1853 Sl         06:29 /usr/share/dotnet/sdk/10.0.403/Roslyn/bincore/VBCSCompiler -pipename:WAcWTViZvzcVAI0ZQWygl6OMzaUe49Dabl4RIF3MlGs
+  13330       1   13330 Ssl        03:22 /usr/lib/jvm/temurin-21-jdk-amd64/bin/java --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED -XX:MaxMetaspaceSize=384m -XX:+HeapDumpOnOutOfMemoryError -Xms256m -Xmx512m -Dfile.encoding=UTF-8 -Duser.country -Duser.language=en -Duser.variant -cp /usr/share/gradle-9.8.2/lib/gradle-daemon-main-9.8.2.jar -javaagent:/usr/share/gradle-9.8.2/lib/agents/gradle-instrumentation-agent-9.8.2.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 9.8.2
