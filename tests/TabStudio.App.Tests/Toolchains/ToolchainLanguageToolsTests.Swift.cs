@@ -51,11 +51,11 @@ public sealed partial class ToolchainLanguageToolsTests
 
         if (!Listed())
         {
-            var line = view.Editor.Document.GetLineByOffset(view.Editor.CaretOffset);
+            var caretLine = view.Editor.Document.GetLineByOffset(view.Editor.CaretOffset);
             var items = await server.GetCompletionsAsync(view.Editor.CaretOffset, LspCompletionTriggerKind.Invoked, null, deadline.Token);
             Assert.Fail($"sourcekit-lsp's completion list did not open in the editor. Open: {view.Completion!.IsOpen}; "
                 + $"listed: {string.Join(", ", view.Completion.Items.Take(15).Select(i => i.Entry.DisplayText))}; "
-                + $"line {line.LineNumber}: '{view.Editor.Document.GetText(line)}', caret column {view.Editor.CaretOffset - line.Offset}; "
+                + $"line {caretLine.LineNumber}: '{view.Editor.Document.GetText(caretLine)}', caret column {view.Editor.CaretOffset - caretLine.Offset}; "
                 + $"the server now answers: {string.Join(", ", items?.Items.Take(15).Select(i => i.Label + "|" + i.FilterText) ?? ["nothing"])}");
         }
 
