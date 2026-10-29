@@ -27,18 +27,23 @@ public sealed partial class ToolchainLanguageToolsTests
 
         var view = ActiveEditor(window);
         StartLineAfter(view.Editor, "let name = ");
-        Type(view.Editor, "name.co");
         bool Listed() => view.Completion!.IsOpen && view.Completion.Items.Any(i => i.Entry.DisplayText.StartsWith("count", StringComparison.Ordinal));
-        for (var attempt = 0; attempt < 3 && !Listed(); attempt++)
+        for (var attempt = 0; attempt < 4 && !Listed(); attempt++)
         {
-            // sourcekit-lsp may still be indexing the package after a rebuild: type the last letter again.
+            // sourcekit-lsp may still be reading the document's latest version: retype the member access, so the
+            // "." trigger asks it again rather than filtering an empty list.
             if (attempt > 0)
             {
-                view.Editor.Document.Remove(view.Editor.CaretOffset - 1, 1);
+                view.Completion!.Close();
+                view.Editor.Document.Remove(view.Editor.CaretOffset - "name.cou".Length, "name.cou".Length);
+                await Task.Delay(1000);
             }
 
-            Type(view.Editor, "u");
-            var end = DateTime.UtcNow.AddSeconds(30);
+            Type(view.Editor, "name.");
+            await Task.Delay(300);
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            Type(view.Editor, "cou");
+            var end = DateTime.UtcNow.AddSeconds(25);
             while (!Listed() && DateTime.UtcNow < end)
             {
                 await Task.Delay(100);
