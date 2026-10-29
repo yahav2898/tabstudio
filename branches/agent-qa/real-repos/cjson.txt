@@ -1,0 +1,209 @@
+cjson at 6d9f2443ab071f86e5d9b43025a40929ec41c46c
+Toolchain projects:
+  cpp: /home/runner/work/_temp/real-repos/cjson/CMakeLists.txt
+  cpp: /home/runner/work/_temp/real-repos/cjson/fuzzing/CMakeLists.txt
+  cpp: /home/runner/work/_temp/real-repos/cjson/tests/CMakeLists.txt
+  node: /home/runner/work/_temp/real-repos/cjson/tests/json-patch-tests/package.json
+  python: /home/runner/work/_temp/real-repos/cjson/tests/unity/auto
+  cpp: /home/runner/work/_temp/real-repos/cjson/tests/unity/test/Makefile
+Startup project: cpp /home/runner/work/_temp/real-repos/cjson/CMakeLists.txt
+Set up in 3.2 s
+Ran in 6.6 s
+Project setup:
+
+Output:
+Running cjson with C and C++ 13.3.0
+> cmake --build /home/runner/work/_temp/real-repos/cjson/.tabstudio/cmake --config Debug
+> cmake -S /home/runner/work/_temp/real-repos/cjson -B /home/runner/work/_temp/real-repos/cjson/.tabstudio/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+CMake Deprecation Warning at CMakeLists.txt:2 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+
+
+-- The C compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Performing Test FLAG_SUPPORTED_stdc89
+-- Performing Test FLAG_SUPPORTED_stdc89 - Success
+-- Performing Test FLAG_SUPPORTED_pedantic
+-- Performing Test FLAG_SUPPORTED_pedantic - Success
+-- Performing Test FLAG_SUPPORTED_Wall
+-- Performing Test FLAG_SUPPORTED_Wall - Success
+-- Performing Test FLAG_SUPPORTED_Wextra
+-- Performing Test FLAG_SUPPORTED_Wextra - Success
+-- Performing Test FLAG_SUPPORTED_Werror
+-- Performing Test FLAG_SUPPORTED_Werror - Success
+-- Performing Test FLAG_SUPPORTED_Wstrictprototypes
+-- Performing Test FLAG_SUPPORTED_Wstrictprototypes - Success
+-- Performing Test FLAG_SUPPORTED_Wwritestrings
+-- Performing Test FLAG_SUPPORTED_Wwritestrings - Success
+-- Performing Test FLAG_SUPPORTED_Wshadow
+-- Performing Test FLAG_SUPPORTED_Wshadow - Success
+-- Performing Test FLAG_SUPPORTED_Winitself
+-- Performing Test FLAG_SUPPORTED_Winitself - Success
+-- Performing Test FLAG_SUPPORTED_Wcastalign
+-- Performing Test FLAG_SUPPORTED_Wcastalign - Success
+-- Performing Test FLAG_SUPPORTED_Wformat2
+-- Performing Test FLAG_SUPPORTED_Wformat2 - Success
+-- Performing Test FLAG_SUPPORTED_Wmissingprototypes
+-- Performing Test FLAG_SUPPORTED_Wmissingprototypes - Success
+-- Performing Test FLAG_SUPPORTED_Wstrictoverflow2
+-- Performing Test FLAG_SUPPORTED_Wstrictoverflow2 - Success
+-- Performing Test FLAG_SUPPORTED_Wcastqual
+-- Performing Test FLAG_SUPPORTED_Wcastqual - Success
+-- Performing Test FLAG_SUPPORTED_Wundef
+-- Performing Test FLAG_SUPPORTED_Wundef - Success
+-- Performing Test FLAG_SUPPORTED_Wswitchdefault
+-- Performing Test FLAG_SUPPORTED_Wswitchdefault - Success
+-- Performing Test FLAG_SUPPORTED_Wconversion
+-- Performing Test FLAG_SUPPORTED_Wconversion - Success
+-- Performing Test FLAG_SUPPORTED_Wccompat
+-- Performing Test FLAG_SUPPORTED_Wccompat - Success
+-- Performing Test FLAG_SUPPORTED_fstackprotectorstrong
+-- Performing Test FLAG_SUPPORTED_fstackprotectorstrong - Success
+-- Performing Test FLAG_SUPPORTED_Wcomma
+-- Performing Test FLAG_SUPPORTED_Wcomma - Failed
+-- Performing Test FLAG_SUPPORTED_Wdoublepromotion
+-- Performing Test FLAG_SUPPORTED_Wdoublepromotion - Success
+-- Performing Test FLAG_SUPPORTED_Wparentheses
+-- Performing Test FLAG_SUPPORTED_Wparentheses - Success
+-- Performing Test FLAG_SUPPORTED_Wformatoverflow
+-- Performing Test FLAG_SUPPORTED_Wformatoverflow - Success
+-- Performing Test FLAG_SUPPORTED_Wunusedmacros
+-- Performing Test FLAG_SUPPORTED_Wunusedmacros - Success
+-- Performing Test FLAG_SUPPORTED_Wmissingvariabledeclarations
+-- Performing Test FLAG_SUPPORTED_Wmissingvariabledeclarations - Failed
+-- Performing Test FLAG_SUPPORTED_Wusedbutmarkedunused
+-- Performing Test FLAG_SUPPORTED_Wusedbutmarkedunused - Failed
+-- Performing Test FLAG_SUPPORTED_Wswitchenum
+-- Performing Test FLAG_SUPPORTED_Wswitchenum - Success
+-- Performing Test FLAG_SUPPORTED_fvisibilityhidden
+-- Performing Test FLAG_SUPPORTED_fvisibilityhidden - Success
+-- Configuring done (2.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/runner/work/_temp/real-repos/cjson/.tabstudio/cmake
+[  2%] Building C object CMakeFiles/cjson.dir/cJSON.c.o
+[  4%] Linking C shared library libcjson.so
+[  4%] Built target cjson
+[  6%] Building C object CMakeFiles/cJSON_test.dir/test.c.o
+[  8%] Linking C executable cJSON_test
+[  8%] Built target cJSON_test
+[ 11%] Building C object tests/CMakeFiles/unity.dir/unity/src/unity.c.o
+[ 13%] Linking C static library libunity.a
+[ 13%] Built target unity
+[ 15%] Building C object tests/CMakeFiles/parse_examples.dir/parse_examples.c.o
+[ 17%] Linking C executable parse_examples
+[ 17%] Built target parse_examples
+[ 20%] Building C object tests/CMakeFiles/parse_number.dir/parse_number.c.o
+[ 22%] Linking C executable parse_number
+[ 22%] Built target parse_number
+[ 24%] Building C object tests/CMakeFiles/parse_hex4.dir/parse_hex4.c.o
+[ 26%] Linking C executable parse_hex4
+[ 26%] Built target parse_hex4
+[ 28%] Building C object tests/CMakeFiles/parse_string.dir/parse_string.c.o
+[ 31%] Linking C executable parse_string
+[ 31%] Built target parse_string
+[ 33%] Building C object tests/CMakeFiles/parse_array.dir/parse_array.c.o
+[ 35%] Linking C executable parse_array
+[ 35%] Built target parse_array
+[ 37%] Building C object tests/CMakeFiles/parse_object.dir/parse_object.c.o
+[ 40%] Linking C executable parse_object
+[ 40%] Built target parse_object
+[ 42%] Building C object tests/CMakeFiles/parse_value.dir/parse_value.c.o
+[ 44%] Linking C executable parse_value
+[ 44%] Built target parse_value
+[ 46%] Building C object tests/CMakeFiles/print_string.dir/print_string.c.o
+[ 48%] Linking C executable print_string
+[ 48%] Built target print_string
+[ 51%] Building C object tests/CMakeFiles/print_number.dir/print_number.c.o
+[ 53%] Linking C executable print_number
+[ 53%] Built target print_number
+[ 55%] Building C object tests/CMakeFiles/print_array.dir/print_array.c.o
+[ 57%] Linking C executable print_array
+[ 57%] Built target print_array
+[ 60%] Building C object tests/CMakeFiles/print_object.dir/print_object.c.o
+[ 62%] Linking C executable print_object
+[ 62%] Built target print_object
+[ 64%] Building C object tests/CMakeFiles/print_value.dir/print_value.c.o
+[ 66%] Linking C executable print_value
+[ 66%] Built target print_value
+[ 68%] Building C object tests/CMakeFiles/misc_tests.dir/misc_tests.c.o
+[ 71%] Linking C executable misc_tests
+[ 71%] Built target misc_tests
+[ 73%] Building C object tests/CMakeFiles/parse_with_opts.dir/parse_with_opts.c.o
+[ 75%] Linking C executable parse_with_opts
+[ 75%] Built target parse_with_opts
+[ 77%] Building C object tests/CMakeFiles/compare_tests.dir/compare_tests.c.o
+[ 80%] Linking C executable compare_tests
+[ 80%] Built target compare_tests
+[ 82%] Building C object tests/CMakeFiles/cjson_add.dir/cjson_add.c.o
+[ 84%] Linking C executable cjson_add
+[ 84%] Built target cjson_add
+[ 86%] Building C object tests/CMakeFiles/readme_examples.dir/readme_examples.c.o
+[ 88%] Linking C executable readme_examples
+[ 88%] Built target readme_examples
+[ 91%] Building C object tests/CMakeFiles/minify_tests.dir/minify_tests.c.o
+[ 93%] Linking C executable minify_tests
+[ 93%] Built target minify_tests
+[ 95%] Building C object fuzzing/CMakeFiles/fuzz_main.dir/fuzz_main.c.o
+[ 97%] Building C object fuzzing/CMakeFiles/fuzz_main.dir/cjson_read_fuzzer.c.o
+[100%] Linking C executable fuzz_main
+[100%] Built target fuzz_main
+Version: 1.7.19
+{
+	"name":	"Jack (\"Bee\") Nimble",
+	"format":	{
+		"type":	"rect",
+		"width":	1920,
+		"height":	1080,
+		"interlace":	false,
+		"frame rate":	24
+	}
+}
+["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+[[0, -1, 0], [1, 0, 0], [0, 0, 1]]
+{
+	"Image":	{
+		"Width":	800,
+		"Height":	600,
+		"Title":	"View from 15th Floor",
+		"Thumbnail":	{
+			"Url":	"http:/*www.example.com/image/481989943",
+			"Height":	125,
+			"Width":	"100"
+		},
+		"IDs":	[116, 943, 234, 38793]
+	}
+}
+[{
+		"precision":	"zip",
+		"Latitude":	37.7668,
+		"Longitude":	-122.3959,
+		"Address":	"",
+		"City":	"SAN FRANCISCO",
+		"State":	"CA",
+		"Zip":	"94107",
+		"Country":	"US"
+	}, {
+		"precision":	"zip",
+		"Latitude":	37.371991,
+		"Longitude":	-122.026,
+		"Address":	"",
+		"City":	"SUNNYVALE",
+		"State":	"CA",
+		"Zip":	"94085",
+		"Country":	"US"
+	}]
+{
+	"number":	null
+}
+
+The program 'cJSON_test' has exited with code 0 (0x0).
+
