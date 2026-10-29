@@ -1,53 +1,5 @@
 [
   {
-    "file": "variant.cpp",
-    "line": 59,
-    "column": 13,
-    "function": "void utox8(uint32_t, uint8_t*)",
-    "bytes": 20,
-    "bounded": true
-  },
-  {
-    "file": "variant.cpp",
-    "line": 46,
-    "column": 16,
-    "function": "unsigned int PINCOUNT_fn()",
-    "bytes": 0,
-    "bounded": true
-  },
-  {
-    "file": "variant.cpp",
-    "line": 54,
-    "column": 6,
-    "function": "void initVariant()",
-    "bytes": 0,
-    "bounded": true
-  },
-  {
-    "file": "variant.cpp",
-    "line": 74,
-    "column": 9,
-    "function": "uint8_t getUniqueSerialNumber(uint8_t*)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "variant.cpp",
-    "line": 82,
-    "column": 6,
-    "function": "void _ontouch1200bps_()",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "double_tap_usb_boot.cpp",
-    "line": 43,
-    "column": 51,
-    "function": "cpp)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
     "file": "Callback.h",
     "line": 306,
     "column": 17,
@@ -184,6 +136,22 @@
     "bounded": true
   },
   {
+    "file": "pinToIndex.cpp",
+    "line": 4,
+    "column": 5,
+    "function": "int PinNameToIndex(PinName)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "pinToIndex.cpp",
+    "line": 16,
+    "column": 9,
+    "function": "PinName digitalPinToPinName(pin_size_t)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
     "file": "wiring_pulse.cpp",
     "line": 198,
     "column": 15,
@@ -212,6 +180,158 @@
     "line": 284,
     "column": 15,
     "function": "long unsigned int pulseInLong(PinName, PinStatus, long unsigned int)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "wiring_digital.cpp",
+    "line": 52,
+    "column": 6,
+    "function": "void pinMode(pin_size_t, PinMode)",
+    "bytes": 32,
+    "bounded": true
+  },
+  {
+    "file": "wiring_digital.cpp",
+    "line": 28,
+    "column": 6,
+    "function": "void pinMode(PinName, PinMode)",
+    "bytes": 24,
+    "bounded": true
+  },
+  {
+    "file": "wiring_digital.cpp",
+    "line": 94,
+    "column": 6,
+    "function": "void digitalWrite(pin_size_t, PinStatus)",
+    "bytes": 32,
+    "bounded": true
+  },
+  {
+    "file": "wiring_digital.cpp",
+    "line": 84,
+    "column": 6,
+    "function": "void digitalWrite(PinName, PinStatus)",
+    "bytes": 24,
+    "bounded": true
+  },
+  {
+    "file": "wiring_digital.cpp",
+    "line": 117,
+    "column": 11,
+    "function": "PinStatus digitalRead(pin_size_t)",
+    "bytes": 24,
+    "bounded": true
+  },
+  {
+    "file": "wiring_digital.cpp",
+    "line": 107,
+    "column": 11,
+    "function": "PinStatus digitalRead(PinName)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "dtostrf.c.impl",
+    "line": 29,
+    "column": 7,
+    "function": "dtostrf",
+    "bytes": 40,
+    "bounded": true
+  },
+  {
+    "file": "itoa.c",
+    "line": 32,
+    "column": 14,
+    "function": "ltoa",
+    "bytes": 72,
+    "bounded": true
+  },
+  {
+    "file": "itoa.c",
+    "line": 27,
+    "column": 14,
+    "function": "itoa",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "itoa.c",
+    "line": 87,
+    "column": 14,
+    "function": "ultoa",
+    "bytes": 64,
+    "bounded": true
+  },
+  {
+    "file": "itoa.c",
+    "line": 82,
+    "column": 14,
+    "function": "utoa",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "WMath.cpp",
+    "line": 51,
+    "column": 6,
+    "function": "void randomSeed(long unsigned int)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "WMath.cpp",
+    "line": 61,
+    "column": 6,
+    "function": "long int random(long int)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "WMath.cpp",
+    "line": 74,
+    "column": 6,
+    "function": "long int random(long int, long int)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "timer.cpp",
+    "line": 11,
+    "column": 1,
+    "function": "arduino::ArduinoTimer::ArduinoTimer(void*)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "timer.cpp",
+    "line": 21,
+    "column": 1,
+    "function": "arduino::ArduinoTimer::~ArduinoTimer()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "timer.cpp",
+    "line": 27,
+    "column": 6,
+    "function": "void arduino::ArduinoTimer::start()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "timer.cpp",
+    "line": 31,
+    "column": 6,
+    "function": "void arduino::ArduinoTimer::stop()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "timer.cpp",
+    "line": 35,
+    "column": 6,
+    "function": "void arduino::ArduinoTimer::reset()",
     "bytes": 8,
     "bounded": true
   },
@@ -272,59 +392,19 @@
     "bounded": true
   },
   {
-    "file": "wiring_shift.cpp",
-    "line": 25,
-    "column": 9,
-    "function": "uint8_t shiftIn(pin_size_t, uint8_t, BitOrder)",
-    "bytes": 32,
-    "bounded": true
-  },
-  {
-    "file": "wiring_shift.cpp",
-    "line": 40,
+    "file": "arm_hal_random.c",
+    "line": 16,
     "column": 6,
-    "function": "void shiftOut(pin_size_t, uint8_t, BitOrder, uint8_t)",
-    "bytes": 32,
+    "function": "arm_random_module_init",
+    "bytes": 0,
     "bounded": true
   },
   {
-    "file": "dtostrf.c.impl",
-    "line": 29,
-    "column": 7,
-    "function": "dtostrf",
-    "bytes": 40,
-    "bounded": true
-  },
-  {
-    "file": "itoa.c",
-    "line": 32,
-    "column": 14,
-    "function": "ltoa",
-    "bytes": 72,
-    "bounded": true
-  },
-  {
-    "file": "itoa.c",
-    "line": 27,
-    "column": 14,
-    "function": "itoa",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "itoa.c",
-    "line": 87,
-    "column": 14,
-    "function": "ultoa",
-    "bytes": 64,
-    "bounded": true
-  },
-  {
-    "file": "itoa.c",
-    "line": 82,
-    "column": 14,
-    "function": "utoa",
-    "bytes": 8,
+    "file": "arm_hal_random.c",
+    "line": 20,
+    "column": 10,
+    "function": "arm_random_seed_get",
+    "bytes": 16,
     "bounded": true
   },
   {
@@ -656,46 +736,6 @@
     "bounded": true
   },
   {
-    "file": "abi.cpp",
-    "line": 24,
-    "column": 6,
-    "function": "void __cxa_pure_virtual()",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "abi.cpp",
-    "line": 30,
-    "column": 6,
-    "function": "void __cxa_deleted_virtual()",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "WMath.cpp",
-    "line": 51,
-    "column": 6,
-    "function": "void randomSeed(long unsigned int)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "WMath.cpp",
-    "line": 61,
-    "column": 6,
-    "function": "long int random(long int)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "WMath.cpp",
-    "line": 74,
-    "column": 6,
-    "function": "long int random(long int, long int)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
     "file": "Timer.h",
     "line": 136,
     "column": 7,
@@ -768,43 +808,19 @@
     "bounded": true
   },
   {
-    "file": "timer.cpp",
-    "line": 11,
-    "column": 1,
-    "function": "arduino::ArduinoTimer::ArduinoTimer(void*)",
-    "bytes": 16,
+    "file": "wiring_shift.cpp",
+    "line": 25,
+    "column": 9,
+    "function": "uint8_t shiftIn(pin_size_t, uint8_t, BitOrder)",
+    "bytes": 32,
     "bounded": true
   },
   {
-    "file": "timer.cpp",
-    "line": 21,
-    "column": 1,
-    "function": "arduino::ArduinoTimer::~ArduinoTimer()",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "timer.cpp",
-    "line": 27,
+    "file": "wiring_shift.cpp",
+    "line": 40,
     "column": 6,
-    "function": "void arduino::ArduinoTimer::start()",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "timer.cpp",
-    "line": 31,
-    "column": 6,
-    "function": "void arduino::ArduinoTimer::stop()",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "timer.cpp",
-    "line": 35,
-    "column": 6,
-    "function": "void arduino::ArduinoTimer::reset()",
-    "bytes": 8,
+    "function": "void shiftOut(pin_size_t, uint8_t, BitOrder, uint8_t)",
+    "bytes": 32,
     "bounded": true
   },
   {
@@ -944,86 +960,6 @@
     "bounded": true
   },
   {
-    "file": "pinToIndex.cpp",
-    "line": 4,
-    "column": 5,
-    "function": "int PinNameToIndex(PinName)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "pinToIndex.cpp",
-    "line": 16,
-    "column": 9,
-    "function": "PinName digitalPinToPinName(pin_size_t)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "arm_hal_random.c",
-    "line": 16,
-    "column": 6,
-    "function": "arm_random_module_init",
-    "bytes": 0,
-    "bounded": true
-  },
-  {
-    "file": "arm_hal_random.c",
-    "line": 20,
-    "column": 10,
-    "function": "arm_random_seed_get",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "wiring_digital.cpp",
-    "line": 52,
-    "column": 6,
-    "function": "void pinMode(pin_size_t, PinMode)",
-    "bytes": 32,
-    "bounded": true
-  },
-  {
-    "file": "wiring_digital.cpp",
-    "line": 28,
-    "column": 6,
-    "function": "void pinMode(PinName, PinMode)",
-    "bytes": 24,
-    "bounded": true
-  },
-  {
-    "file": "wiring_digital.cpp",
-    "line": 94,
-    "column": 6,
-    "function": "void digitalWrite(pin_size_t, PinStatus)",
-    "bytes": 32,
-    "bounded": true
-  },
-  {
-    "file": "wiring_digital.cpp",
-    "line": 84,
-    "column": 6,
-    "function": "void digitalWrite(PinName, PinStatus)",
-    "bytes": 24,
-    "bounded": true
-  },
-  {
-    "file": "wiring_digital.cpp",
-    "line": 117,
-    "column": 11,
-    "function": "PinStatus digitalRead(pin_size_t)",
-    "bytes": 24,
-    "bounded": true
-  },
-  {
-    "file": "wiring_digital.cpp",
-    "line": 107,
-    "column": 11,
-    "function": "PinStatus digitalRead(PinName)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
     "file": "main.cpp",
     "line": 24,
     "column": 5,
@@ -1072,6 +1008,22 @@
     "bounded": true
   },
   {
+    "file": "abi.cpp",
+    "line": 24,
+    "column": 6,
+    "function": "void __cxa_pure_virtual()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "abi.cpp",
+    "line": 30,
+    "column": 6,
+    "function": "void __cxa_deleted_virtual()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
     "file": "main.cpp",
     "line": 8,
     "column": 6,
@@ -1088,586 +1040,50 @@
     "bounded": true
   },
   {
-    "file": "Print.h",
-    "line": 62,
-    "column": 17,
-    "function": "virtual int arduino::Print::availableForWrite()",
-    "bytes": 0,
-    "bounded": true
-  },
-  {
-    "file": "Print.h",
-    "line": 93,
-    "column": 18,
-    "function": "virtual void arduino::Print::flush()",
-    "bytes": 0,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 32,
-    "column": 8,
-    "function": "virtual size_t arduino::Print::write(const uint8_t*, size_t)",
-    "bytes": 24,
-    "bounded": true
-  },
-  {
-    "file": "Print.h",
-    "line": 51,
-    "column": 12,
-    "function": "size_t arduino::Print::write(const char*)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 42,
-    "column": 8,
-    "function": "size_t arduino::Print::print(const arduino::__FlashStringHelper*)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
+    "file": "variant.cpp",
     "line": 59,
-    "column": 8,
-    "function": "size_t arduino::Print::print(const arduino::String\u0026)",
-    "bytes": 8,
+    "column": 13,
+    "function": "void utox8(uint32_t, uint8_t*)",
+    "bytes": 20,
     "bounded": true
   },
   {
-    "file": "Print.cpp",
-    "line": 64,
-    "column": 8,
-    "function": "size_t arduino::Print::print(const char*)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 69,
-    "column": 8,
-    "function": "size_t arduino::Print::print(char)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 145,
-    "column": 8,
-    "function": "size_t arduino::Print::print(const arduino::Printable\u0026)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 150,
-    "column": 8,
-    "function": "size_t arduino::Print::println()",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 138,
-    "column": 8,
-    "function": "size_t arduino::Print::println(const arduino::__FlashStringHelper*)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 155,
-    "column": 8,
-    "function": "size_t arduino::Print::println(const arduino::String\u0026)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 162,
-    "column": 8,
-    "function": "size_t arduino::Print::println(const char*)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 169,
-    "column": 8,
-    "function": "size_t arduino::Print::println(char)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 232,
-    "column": 8,
-    "function": "size_t arduino::Print::println(const arduino::Printable\u0026)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 241,
-    "column": 8,
-    "function": "size_t arduino::Print::printNumber(long unsigned int, uint8_t)",
-    "bytes": 64,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 89,
-    "column": 8,
-    "function": "size_t arduino::Print::print(long int, int)",
-    "bytes": 24,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 79,
-    "column": 8,
-    "function": "size_t arduino::Print::print(int, int)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 183,
-    "column": 8,
-    "function": "size_t arduino::Print::println(int, int)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 197,
-    "column": 8,
-    "function": "size_t arduino::Print::println(long int, int)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 105,
-    "column": 8,
-    "function": "size_t arduino::Print::print(long unsigned int, int)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 74,
-    "column": 8,
-    "function": "size_t arduino::Print::print(unsigned char, int)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 176,
-    "column": 8,
-    "function": "size_t arduino::Print::println(unsigned char, int)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 84,
-    "column": 8,
-    "function": "size_t arduino::Print::print(unsigned int, int)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 190,
-    "column": 8,
-    "function": "size_t arduino::Print::println(unsigned int, int)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 204,
-    "column": 8,
-    "function": "size_t arduino::Print::println(long unsigned int, int)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 284,
-    "column": 8,
-    "function": "size_t arduino::Print::printULLNumber(long long unsigned int, uint8_t)",
-    "bytes": 112,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 111,
-    "column": 8,
-    "function": "size_t arduino::Print::print(long long int, int)",
-    "bytes": 40,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 211,
-    "column": 8,
-    "function": "size_t arduino::Print::println(long long int, int)",
-    "bytes": 24,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 127,
-    "column": 8,
-    "function": "size_t arduino::Print::print(long long unsigned int, int)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 218,
-    "column": 8,
-    "function": "size_t arduino::Print::println(long long unsigned int, int)",
-    "bytes": 24,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 342,
-    "column": 8,
-    "function": "size_t arduino::Print::printFloat(double, int)",
-    "bytes": 32,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 133,
-    "column": 8,
-    "function": "size_t arduino::Print::print(double, int)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "Print.cpp",
-    "line": 225,
-    "column": 8,
-    "function": "size_t arduino::Print::println(double, int)",
-    "bytes": 24,
-    "bounded": true
-  },
-  {
-    "file": "CanMsg.h",
-    "line": 74,
-    "column": 11,
-    "function": "arduino::CanMsg::~CanMsg()",
-    "bytes": 0,
-    "bounded": true
-  },
-  {
-    "file": "CanMsg.h",
-    "line": 74,
-    "column": 11,
-    "function": "virtual arduino::CanMsg::~CanMsg()",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "CanMsg.h",
-    "line": 88,
-    "column": 18,
-    "function": "virtual size_t arduino::CanMsg::printTo(arduino::Print\u0026) const",
-    "bytes": 56,
-    "bounded": true
-  },
-  {
-    "file": "CanMsg.h",
-    "line": 66,
-    "column": 3,
-    "function": "arduino::CanMsg::CanMsg(const arduino::CanMsg\u0026)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "CanMsgRingbuffer.cpp",
-    "line": 37,
-    "column": 1,
-    "function": "arduino::CanMsgRingbuffer::CanMsgRingbuffer()",
-    "bytes": 24,
-    "bounded": true
-  },
-  {
-    "file": "CanMsgRingbuffer.cpp",
-    "line": 48,
-    "column": 6,
-    "function": "void arduino::CanMsgRingbuffer::enqueue(const arduino::CanMsg\u0026)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "CanMsgRingbuffer.cpp",
-    "line": 58,
-    "column": 8,
-    "function": "arduino::CanMsg arduino::CanMsgRingbuffer::dequeue()",
-    "bytes": 48,
-    "bounded": true
-  },
-  {
-    "file": "Common.cpp",
-    "line": 23,
-    "column": 6,
-    "function": "long int map(long int, long int, long int, long int, long int)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "Common.cpp",
-    "line": 28,
-    "column": 10,
-    "function": "uint16_t makeWord(uint16_t)",
-    "bytes": 0,
-    "bounded": true
-  },
-  {
-    "file": "Common.cpp",
-    "line": 29,
-    "column": 10,
-    "function": "uint16_t makeWord(uint8_t, uint8_t)",
-    "bytes": 0,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 302,
-    "column": 8,
-    "function": "virtual size_t arduino::IPAddress::printTo(arduino::Print\u0026) const",
-    "bytes": 56,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 27,
-    "column": 1,
-    "function": "arduino::IPAddress::IPAddress(arduino::IPType)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 25,
-    "column": 1,
-    "function": "arduino::IPAddress::IPAddress()",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 33,
-    "column": 1,
-    "function": "arduino::IPAddress::IPAddress(uint8_t, uint8_t, uint8_t, uint8_t)",
-    "bytes": 32,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 43,
-    "column": 1,
-    "function": "arduino::IPAddress::IPAddress(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t)",
-    "bytes": 64,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 63,
-    "column": 1,
-    "function": "arduino::IPAddress::IPAddress(uint32_t)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 79,
-    "column": 1,
-    "function": "arduino::IPAddress::IPAddress(const uint8_t*)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 81,
-    "column": 1,
-    "function": "arduino::IPAddress::IPAddress(arduino::IPType, const uint8_t*)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 97,
-    "column": 8,
-    "function": "arduino::String arduino::IPAddress::toString4() const",
-    "bytes": 40,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 104,
-    "column": 8,
-    "function": "arduino::String arduino::IPAddress::toString6() const",
-    "bytes": 112,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 115,
-    "column": 8,
-    "function": "arduino::String arduino::IPAddress::toString() const",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 131,
-    "column": 6,
-    "function": "bool arduino::IPAddress::fromString4(const char*)",
-    "bytes": 24,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 183,
-    "column": 6,
-    "function": "bool arduino::IPAddress::fromString6(const char*)",
-    "bytes": 40,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 124,
-    "column": 6,
-    "function": "bool arduino::IPAddress::fromString(const char*)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 92,
-    "column": 1,
-    "function": "arduino::IPAddress::IPAddress(const char*)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 251,
-    "column": 12,
-    "function": "arduino::IPAddress\u0026 arduino::IPAddress::operator=(const uint8_t*)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 260,
-    "column": 12,
-    "function": "arduino::IPAddress\u0026 arduino::IPAddress::operator=(const char*)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 266,
-    "column": 12,
-    "function": "arduino::IPAddress\u0026 arduino::IPAddress::operator=(uint32_t)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 276,
-    "column": 6,
-    "function": "bool arduino::IPAddress::operator==(const arduino::IPAddress\u0026) const",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 281,
-    "column": 6,
-    "function": "bool arduino::IPAddress::operator==(const uint8_t*) const",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 288,
-    "column": 9,
-    "function": "uint8_t arduino::IPAddress::operator[](int) const",
-    "bytes": 0,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 295,
-    "column": 10,
-    "function": "uint8_t\u0026 arduino::IPAddress::operator[](int)",
-    "bytes": 0,
-    "bounded": true
-  },
-  {
-    "file": "IPAddress.cpp",
-    "line": 368,
-    "column": 46,
-    "function": "cpp)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSB.cpp",
-    "line": 25,
-    "column": 5,
-    "function": "int arduino::PluggableUSB_::getInterface(uint8_t*)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSB.cpp",
-    "line": 38,
-    "column": 5,
-    "function": "int arduino::PluggableUSB_::getDescriptor(arduino::USBSetup\u0026)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSB.cpp",
-    "line": 50,
-    "column": 6,
-    "function": "void arduino::PluggableUSB_::getShortName(char*)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSB.cpp",
-    "line": 59,
-    "column": 6,
-    "function": "bool arduino::PluggableUSB_::setup(arduino::USBSetup\u0026)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSB.cpp",
-    "line": 70,
-    "column": 6,
-    "function": "bool arduino::PluggableUSB_::plug(arduino::PluggableUSBModule*)",
-    "bytes": 24,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSB.cpp",
-    "line": 97,
+    "file": "variant.cpp",
+    "line": 46,
     "column": 16,
-    "function": "arduino::PluggableUSB_\u0026 PluggableUSB()",
+    "function": "unsigned int PINCOUNT_fn()",
+    "bytes": 0,
+    "bounded": true
+  },
+  {
+    "file": "variant.cpp",
+    "line": 54,
+    "column": 6,
+    "function": "void initVariant()",
+    "bytes": 0,
+    "bounded": true
+  },
+  {
+    "file": "variant.cpp",
+    "line": 74,
+    "column": 9,
+    "function": "uint8_t getUniqueSerialNumber(uint8_t*)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "variant.cpp",
+    "line": 82,
+    "column": 6,
+    "function": "void _ontouch1200bps_()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "double_tap_usb_boot.cpp",
+    "line": 43,
+    "column": 51,
+    "function": "cpp)",
     "bytes": 16,
     "bounded": true
   },
@@ -1789,6 +1205,30 @@
     "column": 7,
     "function": "bool arduino::Stream::find(const char*)",
     "bytes": 32,
+    "bounded": true
+  },
+  {
+    "file": "Common.cpp",
+    "line": 23,
+    "column": 6,
+    "function": "long int map(long int, long int, long int, long int, long int)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "Common.cpp",
+    "line": 28,
+    "column": 10,
+    "function": "uint16_t makeWord(uint16_t)",
+    "bytes": 0,
+    "bounded": true
+  },
+  {
+    "file": "Common.cpp",
+    "line": 29,
+    "column": 10,
+    "function": "uint16_t makeWord(uint8_t, uint8_t)",
+    "bytes": 0,
     "bounded": true
   },
   {
@@ -2432,299 +1872,563 @@
     "bounded": true
   },
   {
-    "file": "USBDevice.h",
-    "line": 328,
-    "column": 22,
-    "function": "virtual uint16_t USBDevice::report_desc_dength()",
-    "bytes": 0,
+    "file": "IPAddress.cpp",
+    "line": 302,
+    "column": 8,
+    "function": "virtual size_t arduino::IPAddress::printTo(arduino::Print\u0026) const",
+    "bytes": 56,
     "bounded": true
   },
   {
-    "file": "USBDevice.h",
-    "line": 342,
-    "column": 18,
-    "function": "virtual void USBDevice::callback_power(bool)",
-    "bytes": 0,
+    "file": "IPAddress.cpp",
+    "line": 27,
+    "column": 1,
+    "function": "arduino::IPAddress::IPAddress(arduino::IPType)",
+    "bytes": 8,
     "bounded": true
   },
   {
-    "file": "USBDevice.h",
-    "line": 357,
-    "column": 18,
-    "function": "virtual void USBDevice::callback_sof(int)",
-    "bytes": 0,
+    "file": "IPAddress.cpp",
+    "line": 25,
+    "column": 1,
+    "function": "arduino::IPAddress::IPAddress()",
+    "bytes": 8,
     "bounded": true
   },
   {
-    "file": "PluggableUSBDevice.cpp",
+    "file": "IPAddress.cpp",
+    "line": 33,
+    "column": 1,
+    "function": "arduino::IPAddress::IPAddress(uint8_t, uint8_t, uint8_t, uint8_t)",
+    "bytes": 32,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 43,
+    "column": 1,
+    "function": "arduino::IPAddress::IPAddress(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t)",
+    "bytes": 64,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
     "line": 63,
-    "column": 6,
-    "function": "virtual void arduino::internal::PluggableUSBModule::callback_reset()",
-    "bytes": 0,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 118,
-    "column": 6,
-    "function": "virtual void arduino::PluggableUSBDevice::callback_reset()",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 127,
-    "column": 6,
-    "function": "virtual void arduino::PluggableUSBDevice::callback_state_change(USBDevice::DeviceState)",
+    "column": 1,
+    "function": "arduino::IPAddress::IPAddress(uint32_t)",
     "bytes": 16,
     "bounded": true
   },
   {
-    "file": "PluggableUSBDevice.cpp",
+    "file": "IPAddress.cpp",
+    "line": 79,
+    "column": 1,
+    "function": "arduino::IPAddress::IPAddress(const uint8_t*)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 81,
+    "column": 1,
+    "function": "arduino::IPAddress::IPAddress(arduino::IPType, const uint8_t*)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 97,
+    "column": 8,
+    "function": "arduino::String arduino::IPAddress::toString4() const",
+    "bytes": 40,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 104,
+    "column": 8,
+    "function": "arduino::String arduino::IPAddress::toString6() const",
+    "bytes": 112,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 115,
+    "column": 8,
+    "function": "arduino::String arduino::IPAddress::toString() const",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 131,
+    "column": 6,
+    "function": "bool arduino::IPAddress::fromString4(const char*)",
+    "bytes": 24,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 183,
+    "column": 6,
+    "function": "bool arduino::IPAddress::fromString6(const char*)",
+    "bytes": 40,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 124,
+    "column": 6,
+    "function": "bool arduino::IPAddress::fromString(const char*)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 92,
+    "column": 1,
+    "function": "arduino::IPAddress::IPAddress(const char*)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
     "line": 251,
-    "column": 16,
-    "function": "virtual const uint8_t* arduino::PluggableUSBDevice::string_imanufacturer_desc()",
+    "column": 12,
+    "function": "arduino::IPAddress\u0026 arduino::IPAddress::operator=(const uint8_t*)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 260,
+    "column": 12,
+    "function": "arduino::IPAddress\u0026 arduino::IPAddress::operator=(const char*)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 266,
+    "column": 12,
+    "function": "arduino::IPAddress\u0026 arduino::IPAddress::operator=(uint32_t)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 276,
+    "column": 6,
+    "function": "bool arduino::IPAddress::operator==(const arduino::IPAddress\u0026) const",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 281,
+    "column": 6,
+    "function": "bool arduino::IPAddress::operator==(const uint8_t*) const",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 288,
+    "column": 9,
+    "function": "uint8_t arduino::IPAddress::operator[](int) const",
     "bytes": 0,
     "bounded": true
   },
   {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 77,
-    "column": 1,
-    "function": "arduino::PluggableUSBDevice::~PluggableUSBDevice()",
+    "file": "IPAddress.cpp",
+    "line": 295,
+    "column": 10,
+    "function": "uint8_t\u0026 arduino::IPAddress::operator[](int)",
+    "bytes": 0,
+    "bounded": true
+  },
+  {
+    "file": "IPAddress.cpp",
+    "line": 368,
+    "column": 46,
+    "function": "cpp)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "CanMsg.h",
+    "line": 74,
+    "column": 11,
+    "function": "arduino::CanMsg::~CanMsg()",
+    "bytes": 0,
+    "bounded": true
+  },
+  {
+    "file": "CanMsg.h",
+    "line": 74,
+    "column": 11,
+    "function": "virtual arduino::CanMsg::~CanMsg()",
     "bytes": 8,
     "bounded": true
   },
   {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 77,
-    "column": 1,
-    "function": "virtual arduino::PluggableUSBDevice::~PluggableUSBDevice()",
+    "file": "CanMsg.h",
+    "line": 88,
+    "column": 18,
+    "function": "virtual size_t arduino::CanMsg::printTo(arduino::Print\u0026) const",
+    "bytes": 56,
+    "bounded": true
+  },
+  {
+    "file": "CanMsg.h",
+    "line": 66,
+    "column": 3,
+    "function": "arduino::CanMsg::CanMsg(const arduino::CanMsg\u0026)",
     "bytes": 8,
     "bounded": true
   },
   {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 135,
-    "column": 6,
-    "function": "virtual void arduino::PluggableUSBDevice::callback_request(const USBDevice::setup_packet_t*)",
-    "bytes": 32,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 152,
-    "column": 6,
-    "function": "virtual void arduino::PluggableUSBDevice::callback_request_xfer_done(const USBDevice::setup_packet_t*, bool)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 170,
-    "column": 6,
-    "function": "virtual void arduino::PluggableUSBDevice::callback_set_configuration(uint8_t)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 180,
-    "column": 6,
-    "function": "virtual void arduino::PluggableUSBDevice::callback_set_interface(uint16_t, uint8_t)",
+    "file": "CanMsgRingbuffer.cpp",
+    "line": 37,
+    "column": 1,
+    "function": "arduino::CanMsgRingbuffer::CanMsgRingbuffer()",
     "bytes": 24,
     "bounded": true
   },
   {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 189,
-    "column": 16,
-    "function": "virtual const uint8_t* arduino::PluggableUSBDevice::device_desc()",
-    "bytes": 32,
+    "file": "CanMsgRingbuffer.cpp",
+    "line": 48,
+    "column": 6,
+    "function": "void arduino::CanMsgRingbuffer::enqueue(const arduino::CanMsg\u0026)",
+    "bytes": 8,
     "bounded": true
   },
   {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 217,
-    "column": 16,
-    "function": "uint8_t TO_UNICODE(const char*, uint8_t*)",
-    "bytes": 24,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 225,
-    "column": 16,
-    "function": "virtual const uint8_t* arduino::PluggableUSBDevice::string_iinterface_desc()",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 242,
-    "column": 16,
-    "function": "virtual const uint8_t* arduino::PluggableUSBDevice::string_iproduct_desc()",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 262,
-    "column": 16,
-    "function": "virtual const uint8_t* arduino::PluggableUSBDevice::string_iserial_desc()",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 275,
-    "column": 16,
-    "function": "virtual const uint8_t* arduino::PluggableUSBDevice::configuration_desc(uint8_t)",
+    "file": "CanMsgRingbuffer.cpp",
+    "line": 58,
+    "column": 8,
+    "function": "arduino::CanMsg arduino::CanMsgRingbuffer::dequeue()",
     "bytes": 48,
     "bounded": true
   },
   {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 67,
-    "column": 1,
-    "function": "arduino::PluggableUSBDevice::PluggableUSBDevice(uint16_t, uint16_t)",
+    "file": "Print.h",
+    "line": 62,
+    "column": 17,
+    "function": "virtual int arduino::Print::availableForWrite()",
+    "bytes": 0,
+    "bounded": true
+  },
+  {
+    "file": "Print.h",
+    "line": 93,
+    "column": 18,
+    "function": "virtual void arduino::Print::flush()",
+    "bytes": 0,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 32,
+    "column": 8,
+    "function": "virtual size_t arduino::Print::write(const uint8_t*, size_t)",
     "bytes": 24,
     "bounded": true
   },
   {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 72,
-    "column": 1,
-    "function": "arduino::PluggableUSBDevice::PluggableUSBDevice(USBPhy*, uint16_t, uint16_t)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 88,
-    "column": 6,
-    "function": "bool arduino::PluggableUSBDevice::plug(arduino::internal::PluggableUSBModule*)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 106,
-    "column": 6,
-    "function": "void arduino::PluggableUSBDevice::init()",
-    "bytes": 24,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 82,
-    "column": 6,
-    "function": "void arduino::PluggableUSBDevice::begin()",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 305,
-    "column": 30,
-    "function": "arduino::PluggableUSBDevice\u0026 PluggableUSBD()",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 27,
-    "column": 6,
-    "function": "void arduino::internal::PluggableUSBModule::lock()",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 31,
-    "column": 6,
-    "function": "void arduino::internal::PluggableUSBModule::unlock()",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 35,
-    "column": 6,
-    "function": "void arduino::internal::PluggableUSBModule::assert_locked()",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 39,
-    "column": 6,
-    "function": "void arduino::internal::PluggableUSBModule::endpoint_abort(usb_ep_t)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 43,
-    "column": 6,
-    "function": "void arduino::internal::PluggableUSBModule::endpoint_stall(usb_ep_t)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 47,
-    "column": 6,
-    "function": "bool arduino::internal::PluggableUSBModule::read_start(usb_ep_t, uint8_t*, uint32_t)",
-    "bytes": 16,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
+    "file": "Print.h",
     "line": 51,
-    "column": 10,
-    "function": "uint32_t arduino::internal::PluggableUSBModule::read_finish(usb_ep_t)",
-    "bytes": 8,
-    "bounded": true
-  },
-  {
-    "file": "PluggableUSBDevice.cpp",
-    "line": 55,
-    "column": 6,
-    "function": "bool arduino::internal::PluggableUSBModule::write_start(usb_ep_t, uint8_t*, uint32_t)",
+    "column": 12,
+    "function": "size_t arduino::Print::write(const char*)",
     "bytes": 16,
     "bounded": true
   },
   {
-    "file": "PluggableUSBDevice.cpp",
+    "file": "Print.cpp",
+    "line": 42,
+    "column": 8,
+    "function": "size_t arduino::Print::print(const arduino::__FlashStringHelper*)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
     "line": 59,
-    "column": 10,
-    "function": "uint32_t arduino::internal::PluggableUSBModule::write_finish(usb_ep_t)",
+    "column": 8,
+    "function": "size_t arduino::Print::print(const arduino::String\u0026)",
     "bytes": 8,
     "bounded": true
   },
   {
-    "file": "PluggableUSBDevice.h",
-    "line": 132,
-    "column": 10,
-    "function": "virtual void arduino::PluggableUSBDevice::lock()",
+    "file": "Print.cpp",
+    "line": 64,
+    "column": 8,
+    "function": "size_t arduino::Print::print(const char*)",
     "bytes": 8,
     "bounded": true
   },
   {
-    "file": "PluggableUSBDevice.h",
-    "line": 139,
-    "column": 10,
-    "function": "virtual void arduino::PluggableUSBDevice::unlock()",
+    "file": "Print.cpp",
+    "line": 69,
+    "column": 8,
+    "function": "size_t arduino::Print::print(char)",
     "bytes": 8,
     "bounded": true
   },
   {
-    "file": "PluggableUSBDevice.h",
-    "line": 147,
-    "column": 10,
-    "function": "virtual void arduino::PluggableUSBDevice::assert_locked()",
+    "file": "Print.cpp",
+    "line": 145,
+    "column": 8,
+    "function": "size_t arduino::Print::print(const arduino::Printable\u0026)",
     "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 150,
+    "column": 8,
+    "function": "size_t arduino::Print::println()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 138,
+    "column": 8,
+    "function": "size_t arduino::Print::println(const arduino::__FlashStringHelper*)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 155,
+    "column": 8,
+    "function": "size_t arduino::Print::println(const arduino::String\u0026)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 162,
+    "column": 8,
+    "function": "size_t arduino::Print::println(const char*)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 169,
+    "column": 8,
+    "function": "size_t arduino::Print::println(char)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 232,
+    "column": 8,
+    "function": "size_t arduino::Print::println(const arduino::Printable\u0026)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 241,
+    "column": 8,
+    "function": "size_t arduino::Print::printNumber(long unsigned int, uint8_t)",
+    "bytes": 64,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 89,
+    "column": 8,
+    "function": "size_t arduino::Print::print(long int, int)",
+    "bytes": 24,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 79,
+    "column": 8,
+    "function": "size_t arduino::Print::print(int, int)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 183,
+    "column": 8,
+    "function": "size_t arduino::Print::println(int, int)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 197,
+    "column": 8,
+    "function": "size_t arduino::Print::println(long int, int)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 105,
+    "column": 8,
+    "function": "size_t arduino::Print::print(long unsigned int, int)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 74,
+    "column": 8,
+    "function": "size_t arduino::Print::print(unsigned char, int)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 176,
+    "column": 8,
+    "function": "size_t arduino::Print::println(unsigned char, int)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 84,
+    "column": 8,
+    "function": "size_t arduino::Print::print(unsigned int, int)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 190,
+    "column": 8,
+    "function": "size_t arduino::Print::println(unsigned int, int)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 204,
+    "column": 8,
+    "function": "size_t arduino::Print::println(long unsigned int, int)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 284,
+    "column": 8,
+    "function": "size_t arduino::Print::printULLNumber(long long unsigned int, uint8_t)",
+    "bytes": 112,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 111,
+    "column": 8,
+    "function": "size_t arduino::Print::print(long long int, int)",
+    "bytes": 40,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 211,
+    "column": 8,
+    "function": "size_t arduino::Print::println(long long int, int)",
+    "bytes": 24,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 127,
+    "column": 8,
+    "function": "size_t arduino::Print::print(long long unsigned int, int)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 218,
+    "column": 8,
+    "function": "size_t arduino::Print::println(long long unsigned int, int)",
+    "bytes": 24,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 342,
+    "column": 8,
+    "function": "size_t arduino::Print::printFloat(double, int)",
+    "bytes": 32,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 133,
+    "column": 8,
+    "function": "size_t arduino::Print::print(double, int)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "Print.cpp",
+    "line": 225,
+    "column": 8,
+    "function": "size_t arduino::Print::println(double, int)",
+    "bytes": 24,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSB.cpp",
+    "line": 25,
+    "column": 5,
+    "function": "int arduino::PluggableUSB_::getInterface(uint8_t*)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSB.cpp",
+    "line": 38,
+    "column": 5,
+    "function": "int arduino::PluggableUSB_::getDescriptor(arduino::USBSetup\u0026)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSB.cpp",
+    "line": 50,
+    "column": 6,
+    "function": "void arduino::PluggableUSB_::getShortName(char*)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSB.cpp",
+    "line": 59,
+    "column": 6,
+    "function": "bool arduino::PluggableUSB_::setup(arduino::USBSetup\u0026)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSB.cpp",
+    "line": 70,
+    "column": 6,
+    "function": "bool arduino::PluggableUSB_::plug(arduino::PluggableUSBModule*)",
+    "bytes": 24,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSB.cpp",
+    "line": 97,
+    "column": 16,
+    "function": "arduino::PluggableUSB_\u0026 PluggableUSB()",
+    "bytes": 16,
     "bounded": true
   },
   {
@@ -3221,6 +2925,302 @@
     "column": 28,
     "function": "cpp)",
     "bytes": 24,
+    "bounded": true
+  },
+  {
+    "file": "USBDevice.h",
+    "line": 328,
+    "column": 22,
+    "function": "virtual uint16_t USBDevice::report_desc_dength()",
+    "bytes": 0,
+    "bounded": true
+  },
+  {
+    "file": "USBDevice.h",
+    "line": 342,
+    "column": 18,
+    "function": "virtual void USBDevice::callback_power(bool)",
+    "bytes": 0,
+    "bounded": true
+  },
+  {
+    "file": "USBDevice.h",
+    "line": 357,
+    "column": 18,
+    "function": "virtual void USBDevice::callback_sof(int)",
+    "bytes": 0,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 63,
+    "column": 6,
+    "function": "virtual void arduino::internal::PluggableUSBModule::callback_reset()",
+    "bytes": 0,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 118,
+    "column": 6,
+    "function": "virtual void arduino::PluggableUSBDevice::callback_reset()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 127,
+    "column": 6,
+    "function": "virtual void arduino::PluggableUSBDevice::callback_state_change(USBDevice::DeviceState)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 251,
+    "column": 16,
+    "function": "virtual const uint8_t* arduino::PluggableUSBDevice::string_imanufacturer_desc()",
+    "bytes": 0,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 77,
+    "column": 1,
+    "function": "arduino::PluggableUSBDevice::~PluggableUSBDevice()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 77,
+    "column": 1,
+    "function": "virtual arduino::PluggableUSBDevice::~PluggableUSBDevice()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 135,
+    "column": 6,
+    "function": "virtual void arduino::PluggableUSBDevice::callback_request(const USBDevice::setup_packet_t*)",
+    "bytes": 32,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 152,
+    "column": 6,
+    "function": "virtual void arduino::PluggableUSBDevice::callback_request_xfer_done(const USBDevice::setup_packet_t*, bool)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 170,
+    "column": 6,
+    "function": "virtual void arduino::PluggableUSBDevice::callback_set_configuration(uint8_t)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 180,
+    "column": 6,
+    "function": "virtual void arduino::PluggableUSBDevice::callback_set_interface(uint16_t, uint8_t)",
+    "bytes": 24,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 189,
+    "column": 16,
+    "function": "virtual const uint8_t* arduino::PluggableUSBDevice::device_desc()",
+    "bytes": 32,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 217,
+    "column": 16,
+    "function": "uint8_t TO_UNICODE(const char*, uint8_t*)",
+    "bytes": 24,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 225,
+    "column": 16,
+    "function": "virtual const uint8_t* arduino::PluggableUSBDevice::string_iinterface_desc()",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 242,
+    "column": 16,
+    "function": "virtual const uint8_t* arduino::PluggableUSBDevice::string_iproduct_desc()",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 262,
+    "column": 16,
+    "function": "virtual const uint8_t* arduino::PluggableUSBDevice::string_iserial_desc()",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 275,
+    "column": 16,
+    "function": "virtual const uint8_t* arduino::PluggableUSBDevice::configuration_desc(uint8_t)",
+    "bytes": 48,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 67,
+    "column": 1,
+    "function": "arduino::PluggableUSBDevice::PluggableUSBDevice(uint16_t, uint16_t)",
+    "bytes": 24,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 72,
+    "column": 1,
+    "function": "arduino::PluggableUSBDevice::PluggableUSBDevice(USBPhy*, uint16_t, uint16_t)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 88,
+    "column": 6,
+    "function": "bool arduino::PluggableUSBDevice::plug(arduino::internal::PluggableUSBModule*)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 106,
+    "column": 6,
+    "function": "void arduino::PluggableUSBDevice::init()",
+    "bytes": 24,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 82,
+    "column": 6,
+    "function": "void arduino::PluggableUSBDevice::begin()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 305,
+    "column": 30,
+    "function": "arduino::PluggableUSBDevice\u0026 PluggableUSBD()",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 27,
+    "column": 6,
+    "function": "void arduino::internal::PluggableUSBModule::lock()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 31,
+    "column": 6,
+    "function": "void arduino::internal::PluggableUSBModule::unlock()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 35,
+    "column": 6,
+    "function": "void arduino::internal::PluggableUSBModule::assert_locked()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 39,
+    "column": 6,
+    "function": "void arduino::internal::PluggableUSBModule::endpoint_abort(usb_ep_t)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 43,
+    "column": 6,
+    "function": "void arduino::internal::PluggableUSBModule::endpoint_stall(usb_ep_t)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 47,
+    "column": 6,
+    "function": "bool arduino::internal::PluggableUSBModule::read_start(usb_ep_t, uint8_t*, uint32_t)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 51,
+    "column": 10,
+    "function": "uint32_t arduino::internal::PluggableUSBModule::read_finish(usb_ep_t)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 55,
+    "column": 6,
+    "function": "bool arduino::internal::PluggableUSBModule::write_start(usb_ep_t, uint8_t*, uint32_t)",
+    "bytes": 16,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.cpp",
+    "line": 59,
+    "column": 10,
+    "function": "uint32_t arduino::internal::PluggableUSBModule::write_finish(usb_ep_t)",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.h",
+    "line": 132,
+    "column": 10,
+    "function": "virtual void arduino::PluggableUSBDevice::lock()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.h",
+    "line": 139,
+    "column": 10,
+    "function": "virtual void arduino::PluggableUSBDevice::unlock()",
+    "bytes": 8,
+    "bounded": true
+  },
+  {
+    "file": "PluggableUSBDevice.h",
+    "line": 147,
+    "column": 10,
+    "function": "virtual void arduino::PluggableUSBDevice::assert_locked()",
+    "bytes": 8,
     "bounded": true
   },
   {
