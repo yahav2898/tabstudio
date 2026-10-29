@@ -31,6 +31,9 @@ public sealed partial class PeekDefinitionView : UserControl
         Editor.TextArea.TextView.CurrentLineBackground = ThemeBrushes.Get("Editor.PeekDefinitionLine");
         Editor.TextArea.TextView.CurrentLineBorder = null;
         Editor.TextArea.TextView.LineTransformers.Add(_colorizer);
+
+        // A gap after the line numbers, as the main editor has: "8{" touched its code.
+        Editor.TextArea.LeftMargins.Add(new Border { Width = GutterGap, Name = "PeekGutterGap" });
         TitleButton.Click += (_, _) => OpenRequested?.Invoke(this, EventArgs.Empty);
         CloseButton.Click += (_, _) => CloseRequested?.Invoke(this, EventArgs.Empty);
         PreviousButton.Click += (_, _) => _peek?.Previous();
@@ -89,10 +92,18 @@ public sealed partial class PeekDefinitionView : UserControl
         Editor.TextArea.Caret.Line = line;
         Editor.TextArea.Caret.Column = Math.Max(1, definition.Location.Column);
 
-        // Once laid out, scroll the definition into view with some context around it.
-        Avalonia.Threading.Dispatcher.UIThread.Post(() => Editor.ScrollTo(line, 1), Avalonia.Threading.DispatcherPriority.Background);
+        // Once laid out, the definition shows two lines from the top, at a whole line: centering it scrolled to any
+        // pixel and cut the first and last lines in half.
+        Avalonia.Threading.Dispatcher.UIThread.Post(() => Editor.ScrollToVerticalOffset(TopOffsetOf(line)), Avalonia.Threading.DispatcherPriority.Background);
         Editor.TextArea.TextView.Redraw();
     }
+
+    /// <summary>The space after the line numbers.</summary>
+    internal const double GutterGap = 8;
+
+    /// <summary>The vertical offset that puts a line two lines below the top of the view, on a line boundary.</summary>
+    /// <param name="line">The one-based line.</param>
+    internal double TopOffsetOf(int line) => Math.Max(0, line - 3) * Editor.TextArea.TextView.DefaultLineHeight;
 
     private void OnKeyDown(object? sender, KeyEventArgs e)
     {

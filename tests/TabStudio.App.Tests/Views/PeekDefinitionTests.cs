@@ -29,6 +29,14 @@ public sealed class PeekDefinitionTests
         Assert.Contains("public sealed class Greeter", view.PeekView!.Text, StringComparison.Ordinal);
         Assert.Contains("Greeter", view.PeekView.Text.Split('\n')[view.PeekView.MarkedLine - 1], StringComparison.Ordinal);
         Assert.Equal("Program.cs", fixture.Workspace.ActiveDocument?.FileName);
+
+        // It opens at a whole line, with a gap between the line numbers and the code.
+        var peekEditor = view.PeekView.FindControl<AvaloniaEdit.TextEditor>("Editor")!;
+        var expected = view.PeekView.TopOffsetOf(view.PeekView.MarkedLine);
+        await UiTestHelpers.WaitUntilAsync(
+            () => Math.Abs(peekEditor.VerticalOffset - Math.Min(expected, Math.Max(0, peekEditor.ExtentHeight - peekEditor.ViewportHeight))) < 0.5,
+            because: "the peek to scroll to its line");
+        Assert.Contains(peekEditor.TextArea.LeftMargins, margin => margin.Name == "PeekGutterGap" && margin.Width == PeekDefinitionView.GutterGap);
         UiTestHelpers.SaveScreenshot(window, "14-peek-definition");
 
         window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
