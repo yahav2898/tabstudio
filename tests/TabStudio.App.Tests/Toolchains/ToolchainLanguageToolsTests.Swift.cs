@@ -27,8 +27,26 @@ public sealed partial class ToolchainLanguageToolsTests
 
         var view = ActiveEditor(window);
         StartLineAfter(view.Editor, "let name = ");
-        Type(view.Editor, "name.cou");
-        await UiTestHelpers.WaitUntilAsync(() => view.Completion!.IsOpen && view.Completion.Items.Any(i => i.Entry.DisplayText.StartsWith("count", StringComparison.Ordinal)), TimeSpan.FromSeconds(60), because: "sourcekit-lsp's completion list");
+        Type(view.Editor, "name.co");
+        bool Listed() => view.Completion!.IsOpen && view.Completion.Items.Any(i => i.Entry.DisplayText.StartsWith("count", StringComparison.Ordinal));
+        for (var attempt = 0; attempt < 3 && !Listed(); attempt++)
+        {
+            // sourcekit-lsp may still be indexing the package after a rebuild: type the last letter again.
+            if (attempt > 0)
+            {
+                view.Editor.Document.Remove(view.Editor.CaretOffset - 1, 1);
+            }
+
+            Type(view.Editor, "u");
+            var end = DateTime.UtcNow.AddSeconds(30);
+            while (!Listed() && DateTime.UtcNow < end)
+            {
+                await Task.Delay(100);
+                Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            }
+        }
+
+        Assert.True(Listed(), "sourcekit-lsp's completion list did not open in the editor.");
         UiTestHelpers.SaveScreenshot(window, "toolchains-swift-completion");
         view.Completion!.Close();
         document.Document.Text = original;

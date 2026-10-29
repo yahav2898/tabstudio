@@ -22,7 +22,7 @@ public static class LaravelServices
         try
         {
             using var client = new System.Net.Sockets.TcpClient();
-            return client.ConnectAsync(host == "localhost" ? "127.0.0.1" : host, port).Wait(TimeSpan.FromMilliseconds(300)) && client.Connected;
+            return client.ConnectAsync(host == "localhost" ? "127.0.0.1" : host, port).Wait(TimeSpan.FromSeconds(2)) && client.Connected;
         }
         catch (Exception ex) when (ex is AggregateException or System.Net.Sockets.SocketException or ArgumentException)
         {
