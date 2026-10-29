@@ -1275,7 +1275,18 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     private DebugStackFrame ToStackFrame(DapStackFrame frame)
     {
         // A file only the adapter's environment has, such as Python's library on Android, is read where the device keeps it.
-        var path = frame.FilePath is { } reported && !File.Exists(reported) ? _languageServerServices.Launcher.ToLocalPath(reported) ?? reported : frame.FilePath;
+        var path = frame.FilePath is { } uri && uri.StartsWith("file:", StringComparison.Ordinal) && Uri.TryCreate(uri, UriKind.Absolute, out var address)
+            ? address.LocalPath
+            : frame.FilePath;
+        path = path is { } reported && !File.Exists(reported) ? _languageServerServices.Launcher.ToLocalPath(reported) ?? reported : path;
+        if (path is { } relative && !Path.IsPathRooted(relative) && (relative.EndsWith(".kt", StringComparison.Ordinal) || relative.EndsWith(".kts", StringComparison.Ordinal))
+            && Workspace?.RootDirectory is { } root)
+        {
+            // Java's debugger names a Kotlin file by its package path when it finds it in no source folder of JDT's.
+            var suffix = Path.DirectorySeparatorChar + relative.Replace('/', Path.DirectorySeparatorChar);
+            path = Directory.EnumerateFiles(root, Path.GetFileName(relative), new EnumerationOptions { RecurseSubdirectories = true, IgnoreInaccessible = true, MaxRecursionDepth = 10 })
+                .FirstOrDefault(f => f.EndsWith(suffix, StringComparison.Ordinal) && !f.Contains($"{Path.DirectorySeparatorChar}build{Path.DirectorySeparatorChar}", StringComparison.Ordinal)) ?? relative;
+        }
         if (path is null || ReadText(path) is not { } text)
         {
             return new DebugStackFrame(frame.Name, null);

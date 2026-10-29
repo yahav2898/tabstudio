@@ -65,6 +65,7 @@ public sealed partial class ToolchainLanguageToolsTests
         Assert.Contains(workspace.Locals.Tree.Rows, r => r.Name == "answer" && r.Value.Contains("42", StringComparison.Ordinal));
         Assert.Contains(workspace.CallStack.Frames, f => f.MethodName.Contains("greet", StringComparison.Ordinal));
         Assert.EndsWith("Main.kt", workspace.ActiveDocument?.FilePath, StringComparison.Ordinal);
+        Assert.Contains(workspace.CallStack.Frames, f => f.LocationText == $"Main.kt, line {line}");
         UiTestHelpers.SaveScreenshot(window, "toolchains-kotlin-breakpoint");
         workspace.StartDebuggingCommand.Execute(null);
         await UiTestHelpers.WaitUntilAsync(() => !workspace.IsDebugging, TimeSpan.FromSeconds(60), because: "Kotlin exit");
