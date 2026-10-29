@@ -14,9 +14,6 @@ public sealed partial class ErrorListView : UserControl
     public static readonly StyledProperty<bool> IsCompactProperty =
         AvaloniaProperty.Register<ErrorListView, bool>(nameof(IsCompact));
 
-    /// <summary>Below this width the rows show the code, the description and the line.</summary>
-    private const double CompactWidth = 640;
-
     /// <inheritdoc cref="IsCompactProperty"/>
     public bool IsCompact
     {
@@ -28,7 +25,7 @@ public sealed partial class ErrorListView : UserControl
     protected override void OnSizeChanged(SizeChangedEventArgs e)
     {
         base.OnSizeChanged(e);
-        IsCompact = e.NewSize.Width < CompactWidth;
+        IsCompact = e.NewSize.Width < TabStudio.App.Controls.ResponsiveColumns.CompactWidth;
     }
 
     /// <summary>Creates the view.</summary>

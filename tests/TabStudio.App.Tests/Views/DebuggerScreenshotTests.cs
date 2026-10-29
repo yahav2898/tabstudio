@@ -115,7 +115,10 @@ public sealed class DebuggerScreenshotTests : IDisposable
         var press = textView.TranslatePoint(visual, textArea) ?? throw new InvalidOperationException("The text is not in view.");
         textArea.RaiseEvent(new HoldingRoutedEventArgs(HoldingState.Started, press, PointerType.Touch));
         await UiTestHelpers.WaitUntilAsync(() => editor.IsDataTipOpen, because: "the DataTip");
+        await UiTestHelpers.WaitUntilAsync(() => true);
 
+        // The same press raises the context menu; on a value it stays closed and the DataTip shows alone.
+        Assert.False(editor.Editor.ContextMenu?.IsOpen ?? false, "The context menu opened over the DataTip.");
         UiTestHelpers.SaveScreenshot(window, "debug-03-datatip");
 
         await StopAsync(workspace);

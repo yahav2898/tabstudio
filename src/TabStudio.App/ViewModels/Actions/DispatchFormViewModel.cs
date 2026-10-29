@@ -29,8 +29,45 @@ public sealed partial class DispatchInputViewModel : ObservableObject
     /// <summary>Its name, as the workflow reads it.</summary>
     public string Name => Input.Name;
 
+    /// <summary>
+    /// Its name as a label, as GitHub's own form does not but a person reads it: <c>dry-run</c> is "Dry run",
+    /// <c>node_version</c> "Node version" and <c>releaseChannel</c> "Release channel". The name is its tooltip.
+    /// </summary>
+    public string Label => ToLabel(Input.Name);
+
     /// <summary>What it is for, if the file says.</summary>
     public string? Description => Input.Description;
+
+    /// <summary>A workflow input's name as words: separators become spaces, camel case splits, the first letter is capital.</summary>
+    /// <param name="name">The name, such as <c>dry-run</c>.</param>
+    public static string ToLabel(string name)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        var words = new System.Text.StringBuilder(name.Length + 4);
+        for (var i = 0; i < name.Length; i++)
+        {
+            var c = name[i];
+            if (c is '-' or '_' or '.')
+            {
+                if (words.Length > 0 && words[^1] != ' ')
+                {
+                    words.Append(' ');
+                }
+
+                continue;
+            }
+
+            if (char.IsUpper(c) && i > 0 && char.IsLower(name[i - 1]) && words.Length > 0 && words[^1] != ' ')
+            {
+                words.Append(' ');
+            }
+
+            words.Append(words.Length == 0 ? char.ToUpperInvariant(c) : char.IsUpper(c) && i + 1 < name.Length && char.IsLower(name[i + 1]) ? char.ToLowerInvariant(c) : c);
+        }
+
+        var label = words.ToString().Trim();
+        return label.Length == 0 ? name : label;
+    }
 
     /// <summary>Whether it has a description to show.</summary>
     public bool HasDescription => Input.Description is not null;

@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data.Converters;
 
 namespace TabStudio.App.Controls;
 
@@ -21,6 +22,12 @@ public sealed class ResponsiveColumns
     /// <summary>Whether the grid uses its compact columns.</summary>
     public static readonly AttachedProperty<bool> IsCompactProperty =
         AvaloniaProperty.RegisterAttached<Grid, bool>("IsCompact", typeof(ResponsiveColumns));
+
+    /// <summary>The width below which a panel is compact, as a phone's is.</summary>
+    public const double CompactWidth = 640;
+
+    /// <summary>Whether a width is a compact panel's: bind <see cref="IsCompactProperty"/> to a view's <c>Bounds.Width</c> with it.</summary>
+    public static IValueConverter IsNarrow { get; } = new FuncValueConverter<double, bool>(width => width is > 0 and < CompactWidth);
 
     static ResponsiveColumns()
     {

@@ -48,6 +48,12 @@ public sealed partial class CodeEditorView
 
     private void OnContextMenuOpening(object? sender, CancelEventArgs e)
     {
+        if (IsDataTipHold)
+        {
+            e.Cancel = true;
+            return;
+        }
+
         var hasSelection = _editor.SelectionLength > 0;
         _cutItem!.IsEnabled = hasSelection;
         _copyItem!.IsEnabled = hasSelection;
