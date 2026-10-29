@@ -308,7 +308,7 @@ public sealed class AdaptiveBar : Panel
     /// The length of each trimming child left at its shortest: that, and as much of the room the bar has left as it
     /// still wants, in the bar's order; <see langword="null"/> for every other child.
     /// </summary>
-    private double?[] TrimmedLengths(IReadOnlyList<AdaptiveSlot> slots, AdaptiveMode[] modes, double room)
+    private double?[] TrimmedLengths(List<AdaptiveSlot> slots, AdaptiveMode[] modes, double room)
     {
         var lengths = new double?[slots.Count];
         for (var i = 0; i < slots.Count && i < _slotted.Count; i++)
