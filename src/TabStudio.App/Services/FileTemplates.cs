@@ -8,15 +8,15 @@ namespace TabStudio.App.Services;
 public static partial class FileTemplates
 {
     /// <summary>
-    /// The name to create: the typed name, with <c>.cs</c> added when the folder belongs to a C# project and no
-    /// extension was typed, as Visual Studio's Add Class does.
+    /// The name to create: the typed name, with <c>.cs</c> added when the folder belongs to a C# project (<c>.vb</c> for
+    /// a Visual Basic one) and no extension was typed, as Visual Studio's Add Class does.
     /// </summary>
     /// <param name="typedName">What the user typed.</param>
     /// <param name="project">The project the new file belongs to, if any.</param>
     public static string FileNameFor(string typedName, ProjectInfo? project)
     {
         var name = typedName.Trim();
-        return Path.HasExtension(name) || project?.Language != ProjectLanguage.CSharp ? name : name + ".cs";
+        return Path.HasExtension(name) || project is not { IsRoslynLanguage: true } ? name : name + (project.IsVisualBasic ? ".vb" : ".cs");
     }
 
     /// <summary>The content of a new file.</summary>
@@ -28,6 +28,7 @@ public static partial class FileTemplates
         return Path.GetExtension(filePath).ToLowerInvariant() switch
         {
             ".cs" when project is not null => CSharpType(filePath, project, name),
+            ".vb" when project is not null => VisualBasicType(name),
             ".json" => "{\n}\n",
             ".md" => $"# {name}\n",
             ".ipynb" or ".dib" => NotebookFiles.ContentFor(filePath),
@@ -48,6 +49,17 @@ public static partial class FileTemplates
             }
 
             """;
+    }
+
+    /// <summary>
+    /// A new Visual Basic class or interface, as Visual Studio's Add Class writes it: no namespace, because Visual Basic
+    /// puts every type in the project's root namespace.
+    /// </summary>
+    private static string VisualBasicType(string name)
+    {
+        var typeName = IdentifierPattern().IsMatch(name) ? name : "NewClass";
+        var keyword = typeName.Length > 1 && typeName[0] == 'I' && char.IsUpper(typeName[1]) ? "Interface" : "Class";
+        return $"Public {keyword} {typeName}\n\nEnd {keyword}\n";
     }
 
     /// <summary>The namespace Visual Studio would give a type in a folder: the root namespace plus the folders.</summary>

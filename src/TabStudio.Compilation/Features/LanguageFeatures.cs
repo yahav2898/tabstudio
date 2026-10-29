@@ -2,7 +2,8 @@ namespace TabStudio.Compilation.Features;
 
 /// <summary>
 /// IntelliSense for the editor: completion, Quick Info, signature help, navigation, rename, code actions,
-/// document symbols and highlights, all answered by Roslyn from the live model in a <see cref="RoslynWorkspaceHost"/>.
+/// document symbols and highlights, all answered by Roslyn from the live model in a <see cref="RoslynWorkspaceHost"/>,
+/// for C# and Visual Basic files alike. Each query works in the language of the file it is asked about.
 /// </summary>
 /// <remarks>
 /// <para>

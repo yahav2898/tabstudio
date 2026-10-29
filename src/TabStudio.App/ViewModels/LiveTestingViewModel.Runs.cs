@@ -64,7 +64,7 @@ public sealed partial class LiveTestingViewModel
     public void OnDocumentSaved(DocumentViewModel document)
     {
         ArgumentNullException.ThrowIfNull(document);
-        if (IsActive && document.FileType.IsCSharp)
+        if (IsActive && document.FileType.IsRoslyn)
         {
             RunAfter(TimeSpan.FromMilliseconds(100));
         }

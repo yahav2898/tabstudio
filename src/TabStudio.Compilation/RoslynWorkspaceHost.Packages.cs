@@ -134,9 +134,10 @@ public sealed partial class RoslynWorkspaceHost
         var packages = _packageReferences.TryGetValue(project.FilePath, out var restored) ? restored : [];
         var skeletons = SkeletonReferencesFor(project).ToList();
         var forms = WindowsFormsReferencesFor(project);
-        return packages.Count == 0 && skeletons.Count == 0 && forms.Count == 0
+        var basic = VisualBasicReferencesFor(project);
+        return packages.Count == 0 && skeletons.Count == 0 && forms.Count == 0 && basic.Count == 0
             ? _frameworkReferences
-            : [.. _frameworkReferences, .. forms, .. packages, .. skeletons];
+            : [.. _frameworkReferences, .. forms, .. basic, .. packages, .. skeletons];
     }
 
     /// <summary>Pushes a project's current references into the loaded solution. The caller holds the gate.</summary>

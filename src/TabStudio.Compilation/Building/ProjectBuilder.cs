@@ -122,12 +122,12 @@ public sealed class ProjectBuilder
             return new BuildResult(project.Name, [needsWindows], null, [], stopwatch.Elapsed);
         }
 
-        if (project.Language != ProjectLanguage.CSharp || _host.FindProject(project.FilePath) is null)
+        if (!project.IsRoslynLanguage || _host.FindProject(project.FilePath) is null)
         {
             var diagnostic = new BuildDiagnostic(
                 UnsupportedLanguageId,
                 DiagnosticSeverityLevel.Error,
-                $"'{project.Name}' cannot be built on this device: only C# projects are compiled by TabStudio.",
+                $"'{project.Name}' cannot be built on this device: only C# and Visual Basic projects are compiled by TabStudio.",
                 null,
                 project.Name);
             return new BuildResult(project.Name, [diagnostic], null, [], stopwatch.Elapsed);

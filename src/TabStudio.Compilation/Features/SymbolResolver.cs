@@ -60,9 +60,20 @@ internal static class SymbolResolver
             MethodKind: MethodKind.PropertyGet or MethodKind.PropertySet or MethodKind.EventAdd or MethodKind.EventRemove or MethodKind.EventRaise,
         };
 
+    /// <summary>
+    /// How a definition names its symbol: qualified, with parameter types, such as <c>Lib.Greeter.Greet(string)</c>.
+    /// </summary>
+    /// <remarks>
+    /// The options of a display format are the same for every language; each language's symbols render them in its
+    /// own syntax. So a Visual Basic symbol shows as <c>Lib.Greeter.Greet(String)</c> and a generic one as
+    /// <c>List(Of T)</c>. <see cref="SymbolDisplayFormat.VisualBasicErrorMessageFormat"/> is not used for Visual
+    /// Basic: it leaves out the containing type and adds accessibility and modifiers.
+    /// </remarks>
+    private static readonly SymbolDisplayFormat DefinitionFormat = SymbolDisplayFormat.CSharpErrorMessageFormat;
+
     /// <summary>Describes where a symbol is defined.</summary>
     public static DefinitionResult ToDefinition(ISymbol symbol) => new(
-        symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat),
+        symbol.ToDisplayString(DefinitionFormat),
         GlyphMapper.FromSymbol(symbol),
         SourceLocationsOf(symbol),
         symbol.ContainingAssembly?.Name);

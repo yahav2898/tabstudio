@@ -1,10 +1,13 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.VisualBasic;
 using TabStudio.Compilation;
 using TabStudio.Compilation.Running;
+using TabStudio.Compilation.VisualBasic;
 using TabStudio.LiveTesting.Coverage;
 using TabStudio.LiveTesting.Instrumentation;
+using RoslynCompilation = Microsoft.CodeAnalysis.Compilation;
 
 namespace TabStudio.LiveTesting.Tests;
 
@@ -14,6 +17,9 @@ internal static class CoveredProgram
     /// <summary>The path the program's source is compiled under; stack traces point here.</summary>
     public static readonly string FilePath = Path.Combine(Path.GetTempPath(), "tabstudio-coverage", "Program.cs");
 
+    /// <summary>The path a Visual Basic program's source is compiled under.</summary>
+    public static readonly string VisualBasicFilePath = Path.Combine(Path.GetTempPath(), "tabstudio-coverage", "Program.vb");
+
     public static CSharpCompilation Compilation(string source) =>
         new CSharpCompiler().CreateCompilation(new CompilationRequest
         {
@@ -21,18 +27,33 @@ internal static class CoveredProgram
             Documents = [new SourceDocument(FilePath, source)],
         });
 
-    /// <summary>Instruments and emits a program; the compilation must succeed.</summary>
-    public static (CompiledAssembly Assembly, CoverageModule Module, string Text) Instrument(string source)
+    /// <summary>
+    /// A Visual Basic program or library, compiled as TabStudio compiles a Visual Basic project, with a root namespace.
+    /// </summary>
+    public static VisualBasicCompilation VisualBasicCompilation(string source, string rootNamespace = "", AssemblyKind kind = AssemblyKind.ConsoleApplication, params SourceDocument[] others)
     {
-        var compilation = Compilation(source);
-        Assert.Empty(compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error));
-        var (instrumented, module) = CoverageInstrumenter.Instrument(compilation, "/projects/" + compilation.AssemblyName + ".csproj", CancellationToken.None);
-        var text = instrumented.SyntaxTrees.First(t => t.FilePath == FilePath).ToString();
-        return (Emit(instrumented), module, text);
+        var compilation = VisualBasicCompiler.CreateCompilation(new CompilationRequest
+        {
+            AssemblyName = "Covered" + Guid.NewGuid().ToString("N")[..8],
+            Kind = kind,
+            Documents = [new SourceDocument(VisualBasicFilePath, source), .. others],
+        });
+        return compilation.WithOptions(compilation.Options.WithRootNamespace(rootNamespace));
     }
+
+    /// <summary>Instruments and emits a program; the compilation must succeed.</summary>
+    public static (CompiledAssembly Assembly, CoverageModule Module, string Text) Instrument(string source) =>
+        Instrument(Compilation(source), FilePath);
+
+    /// <summary>Instruments and emits a Visual Basic program; the compilation must succeed.</summary>
+    public static (CompiledAssembly Assembly, CoverageModule Module, string Text) InstrumentVisualBasic(string source) =>
+        Instrument(VisualBasicCompilation(source), VisualBasicFilePath);
 
     /// <summary>Emits a program as it is.</summary>
     public static CompiledAssembly Plain(string source) => Emit(Compilation(source));
+
+    /// <summary>Emits a Visual Basic program as it is.</summary>
+    public static CompiledAssembly PlainVisualBasic(string source) => Emit(VisualBasicCompilation(source));
 
     /// <summary>Runs a program and returns its output and outcome, recording coverage into a table when one is given.</summary>
     public static async Task<(RunResult Result, string Output)> RunAsync(CompiledAssembly assembly, bool[][]? table = null)
@@ -74,7 +95,15 @@ internal static class CoveredProgram
         return source[..index].Count(c => c == '\n') + 1;
     }
 
-    private static CompiledAssembly Emit(CSharpCompilation compilation)
+    private static (CompiledAssembly Assembly, CoverageModule Module, string Text) Instrument(RoslynCompilation compilation, string filePath)
+    {
+        Assert.Empty(compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error));
+        var (instrumented, module) = CoverageInstrumenter.Instrument(compilation, "/projects/" + compilation.AssemblyName + ".csproj", CancellationToken.None);
+        var text = instrumented.SyntaxTrees.First(t => t.FilePath == filePath).ToString();
+        return (Emit(instrumented), module, text);
+    }
+
+    private static CompiledAssembly Emit(RoslynCompilation compilation)
     {
         using var image = new MemoryStream();
         using var symbols = new MemoryStream();

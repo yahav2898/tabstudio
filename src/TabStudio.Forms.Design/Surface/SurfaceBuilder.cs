@@ -1,8 +1,6 @@
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows.Forms;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TabStudio.Forms.Design.Catalog;
 using TabStudio.Forms.Design.Code;
 using TabStudio.Forms.Design.Model;
@@ -36,7 +34,7 @@ internal static class SurfaceBuilder
             component.Instance = Create(component, problems);
         }
 
-        var evaluator = new ExpressionEvaluator(name => name == "this" ? document.Root.Instance : document.Find(name)?.Instance);
+        var evaluator = DesignCode.Evaluator(document.Style, name => name == "this" ? document.Root.Instance : document.Find(name)?.Instance);
         var root = (Control)document.Root.Instance;
         root.SuspendLayout();
         foreach (var component in document.Components.Append(document.Root))
@@ -117,7 +115,7 @@ internal static class SurfaceBuilder
     }
 
     /// <summary>Sets up a component as its section in InitializeComponent does: its properties, then what joins its collections.</summary>
-    private static void Apply(DesignComponent component, ExpressionEvaluator evaluator, List<string> problems)
+    private static void Apply(DesignComponent component, IValueEvaluator evaluator, List<string> problems)
     {
         if (component.Instance is not { } instance)
         {
@@ -133,7 +131,7 @@ internal static class SurfaceBuilder
                 continue;
             }
 
-            if (!evaluator.TryEvaluate(SyntaxFactory.ParseExpression(property.Code), out var value))
+            if (!evaluator.TryEvaluate(property.Code, out var value))
             {
                 problems.Add($"{component.Name}.{property.Path} = {property.Code} is not shown on the design surface.");
                 continue;
@@ -155,7 +153,7 @@ internal static class SurfaceBuilder
         }
     }
 
-    private static void AddItems(DesignComponent component, object instance, DesignCollectionAdd add, ExpressionEvaluator evaluator, List<string> problems)
+    private static void AddItems(DesignComponent component, object instance, DesignCollectionAdd add, IValueEvaluator evaluator, List<string> problems)
     {
         var collection = GetValue(instance, add.Collection);
         if (collection is null)
@@ -166,7 +164,7 @@ internal static class SurfaceBuilder
 
         foreach (var item in add.Items)
         {
-            if (!TryEvaluateArguments(item, evaluator, out var arguments) || arguments.Length == 0 || arguments[0] is null)
+            if (!evaluator.TryEvaluateArguments(item, out var arguments) || arguments.Length == 0 || arguments[0] is null)
             {
                 problems.Add($"{component.Name}.{add.Collection}: {item} is not shown on the design surface.");
                 continue;
@@ -184,21 +182,6 @@ internal static class SurfaceBuilder
                 problems.Add($"{component.Name}.{add.Collection}: {item} could not be added: {(ex.InnerException ?? ex).Message}");
             }
         }
-    }
-
-    private static bool TryEvaluateArguments(string item, ExpressionEvaluator evaluator, out object?[] arguments)
-    {
-        var list = SyntaxFactory.ParseArgumentList("(" + item + ")");
-        arguments = new object?[list.Arguments.Count];
-        for (var i = 0; i < arguments.Length; i++)
-        {
-            if (!evaluator.TryEvaluate(list.Arguments[i].Expression, out arguments[i]))
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
 

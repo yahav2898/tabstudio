@@ -87,6 +87,12 @@ public interface IEditorBreakpointOptions
 public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 {
     private readonly Dictionary<string, List<DapSourceBreakpoint>> _sentBreakpoints = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// Where the next adapter session reads breakpoints from when not from their own files, such as the Java sources
+    /// that put a Kotlin file's breakpoints in its classes; set before <see cref="LaunchAdapterAsync"/>.
+    /// </summary>
+    private Func<string, IReadOnlyList<DapSourceBreakpoint>, IReadOnlyList<DapBreakpointSource>?>? _pendingBreakpointSources;
     private readonly List<DebugAdapterSession> _adapterChildren = [];
     private DebugAdapterSession? _adapter;
     private DebugAdapterSession? _adapterRoot;
@@ -186,7 +192,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     /// <summary>Whether a file's breakpoints go to a debug adapter: its language has one, and Roslyn does not debug it.</summary>
     private bool UsesAdapterBreakpoints(string filePath) =>
-        !FileTypes.For(filePath).IsCSharp
+        !FileTypes.For(filePath).IsRoslyn
         && _languageServers?.Configuration.Registry is { } registry
         && registry.FindLanguage(filePath) is { } language
         && registry.FindAdaptersForLanguage(language.Id).Any();
@@ -286,6 +292,8 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         _adapterRoot = session;
         _adapterExitCode = null;
         _adapterTarget = target;
+        session.BreakpointSources = _pendingBreakpointSources;
+        _pendingBreakpointSources = null;
         _adapterLaunched = false;
         _sentBreakpoints.Clear();
         WireAdapterEvents(session);
@@ -505,7 +513,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     private bool IsAdapterFile(DebugAdapterSession session, string file)
     {
-        if (FileTypes.For(file).IsCSharp)
+        if (FileTypes.For(file).IsRoslyn)
         {
             return IsWindowsBridgeSession(session);
         }
@@ -1264,12 +1272,40 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         _languageServers?.Configuration.Registry.FindAdapter(target.Configuration.Type);
 
     /// <summary>A frame of the adapter as the Call Stack shows it, with its statement as a span of the file.</summary>
+    private readonly HashSet<string> _unresolvedFrameSources = new(StringComparer.Ordinal);
+
     private DebugStackFrame ToStackFrame(DapStackFrame frame)
     {
         // A file only the adapter's environment has, such as Python's library on Android, is read where the device keeps it.
-        var path = frame.FilePath is { } reported && !File.Exists(reported) ? _languageServerServices.Launcher.ToLocalPath(reported) ?? reported : frame.FilePath;
+        var path = frame.FilePath is { } uri && uri.StartsWith("file:", StringComparison.Ordinal) && Uri.TryCreate(uri, UriKind.Absolute, out var address)
+            ? address.LocalPath
+            : frame.FilePath;
+        path = path is { } reported && !File.Exists(reported) ? _languageServerServices.Launcher.ToLocalPath(reported) ?? reported : path;
+        path = path is null ? KotlinFileOfFrame(frame.Name) : KotlinSourceOf(path);
+        // Java's debugger may name a Kotlin frame's source only by the file the class records (Main.kt), or by a path
+        // that is not a file here: the workspace's file of that name, under the package's folders.
+        if ((path is null || !File.Exists(path)) && frame.SourceName is { } sourceName
+            && (sourceName.EndsWith(".kt", StringComparison.Ordinal) || sourceName.EndsWith(".kts", StringComparison.Ordinal)))
+        {
+            path = path is { } named && !named.Contains("://", StringComparison.Ordinal) && named.EndsWith(sourceName, StringComparison.Ordinal) ? named : sourceName;
+        }
+
+        if (path is { } relative && !Path.IsPathRooted(relative) && (relative.EndsWith(".kt", StringComparison.Ordinal) || relative.EndsWith(".kts", StringComparison.Ordinal))
+            && Workspace?.RootDirectory is { } root)
+        {
+            // Java's debugger names a Kotlin file by its package path when it finds it in no source folder of JDT's.
+            var suffix = Path.DirectorySeparatorChar + relative.Replace('/', Path.DirectorySeparatorChar);
+            path = Directory.EnumerateFiles(root, Path.GetFileName(relative), new EnumerationOptions { RecurseSubdirectories = true, IgnoreInaccessible = true, MaxRecursionDepth = 10 })
+                .FirstOrDefault(f => f.EndsWith(suffix, StringComparison.Ordinal) && !f.Contains($"{Path.DirectorySeparatorChar}build{Path.DirectorySeparatorChar}", StringComparison.Ordinal)) ?? relative;
+        }
         if (path is null || ReadText(path) is not { } text)
         {
+            // Once per source, so a frame shown as external code says why in the Debug Adapters output.
+            if (_unresolvedFrameSources.Add(frame.FilePath ?? frame.SourceName ?? frame.Name))
+            {
+                DebugAdapterOutput.WriteLine($"{frame.Name}: its source ({frame.FilePath ?? "no path"}, {frame.SourceName ?? "no name"}) is not a file in this workspace.", OutputKind.Info);
+            }
+
             return new DebugStackFrame(frame.Name, null);
         }
 

@@ -82,6 +82,83 @@ public sealed class FileChangeTests
         Assert.True(FileChange.Compare(Path, SourceText.From(Cart), null)!.IsStructural);
     }
 
+    private const string VisualBasicPath = "/projects/Shop/Cart.vb";
+
+    private const string VisualBasicCart = """
+        Imports System.Collections.Generic
+
+        Namespace Shop
+            Public Class Cart
+                Private ReadOnly _items As New List(Of Integer)()
+
+                Public ReadOnly Property Count As Integer
+                    Get
+                        Return _items.Count
+                    End Get
+                End Property
+
+                Public Sub Add(item As Integer)
+                    _items.Add(item)
+                End Sub
+
+                Public Function Total() As Integer
+                    Dim sum = 0
+                    For Each item In _items : sum += item : Next
+                    Return sum
+                End Function
+            End Class
+        End Namespace
+        """;
+
+    [Fact]
+    public void Visual_basic_whitespace_comments_and_line_joins_are_not_changes()
+    {
+        var edited = "' The shopping cart.\n" + VisualBasicCart
+            .Replace("_items.Add(item)", "_items.Add(item)   ' keep order", StringComparison.Ordinal)
+            .Replace("Dim sum = 0\n            For Each", "Dim sum = 0 : For Each", StringComparison.Ordinal);
+
+        Assert.Null(CompareVisualBasic(VisualBasicCart, edited));
+    }
+
+    [Fact]
+    public void A_visual_basic_body_edit_changes_only_its_member_named_with_the_root_namespace()
+    {
+        var change = CompareVisualBasic(VisualBasicCart, VisualBasicCart.Replace("Dim sum = 0", "Dim sum = 1", StringComparison.Ordinal));
+
+        Assert.NotNull(change);
+        Assert.False(change.IsStructural);
+        var member = Assert.Single(change.Members);
+        Assert.Equal(("Root.Shop.Cart.Total()", "Root.Shop.Cart", "Total", MemberChangeKind.Changed), (member.Key, member.TypeName, member.Name, member.Kind));
+    }
+
+    [Fact]
+    public void Visual_basic_members_added_and_removed_are_reported()
+    {
+        var count = "        Public ReadOnly Property Count As Integer\n            Get\n                Return _items.Count\n            End Get\n        End Property\n\n";
+        var edited = VisualBasicCart
+            .Replace(count, string.Empty, StringComparison.Ordinal)
+            .Replace("        Public Sub Add(item As Integer)", "        Public Sub Clear()\n            _items.Clear()\n        End Sub\n\n        Public Sub Add(item As Integer)", StringComparison.Ordinal);
+
+        var change = CompareVisualBasic(VisualBasicCart, edited);
+
+        Assert.NotNull(change);
+        Assert.False(change.IsStructural);
+        Assert.Equal(
+            new[] { ("Root.Shop.Cart.Count", MemberChangeKind.Removed), ("Root.Shop.Cart.Clear()", MemberChangeKind.Added) },
+            change.Members.Select(m => (m.Key, m.Kind)));
+    }
+
+    [Fact]
+    public void Visual_basic_fields_imports_and_type_modifiers_are_structural()
+    {
+        Assert.True(CompareVisualBasic(VisualBasicCart, VisualBasicCart.Replace("New List(Of Integer)()", "New List(Of Integer) From {1}", StringComparison.Ordinal))!.IsStructural);
+        Assert.True(CompareVisualBasic(VisualBasicCart, "Imports System\n" + VisualBasicCart)!.IsStructural);
+        Assert.True(CompareVisualBasic(VisualBasicCart, VisualBasicCart.Replace("Public Class Cart", "Public NotInheritable Class Cart", StringComparison.Ordinal))!.IsStructural);
+    }
+
     private static FileChange? Compare(string before, string after) =>
         FileChange.Compare(Path, SourceText.From(before), SourceText.From(after));
+
+    private static FileChange? CompareVisualBasic(string before, string after) =>
+        FileChange.Compare(VisualBasicPath, SourceText.From(before), SourceText.From(after), "Root");
 }

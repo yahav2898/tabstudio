@@ -162,7 +162,7 @@ public sealed partial class WorkspaceViewModel
 
         if (Workspace is { } workspace)
         {
-            var csharp = workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp).ToList();
+            var csharp = workspace.Projects.Where(p => p.IsRoslynLanguage).ToList();
             var skipped = csharp.Where(IsNotBuiltHere).ToList();
             AddProjectsThatReferenceSkipped(csharp, skipped);
             await BuildProjectsAsync(InDependencyOrder(csharp.Except(skipped).ToList()), showOutput: true, skipped: skipped);
@@ -170,6 +170,12 @@ public sealed partial class WorkspaceViewModel
             {
                 await RunToolchainProjectAsync(item.Info);
                 if (State == IdeState.Failed) break;
+            }
+
+            // After the solution's own projects, unless they failed: a state left from an earlier build does not count.
+            if (csharp.Count == 0 || State != IdeState.Failed)
+            {
+                await BuildToolchainProjectsAsync(clearOutput: csharp.Count == 0);
             }
         }
 

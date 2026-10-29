@@ -56,7 +56,7 @@ public sealed partial class WorkspaceViewModel
     {
         // A project that needs a platform workload, such as a mobile platform head, restores for its platform, which
         // only that workload provides.
-        if (project.Language != ProjectLanguage.CSharp || ProjectClassifier.NeedsPlatformWorkload(project))
+        if (!project.IsRoslynLanguage || ProjectClassifier.NeedsPlatformWorkload(project))
         {
             return false;
         }

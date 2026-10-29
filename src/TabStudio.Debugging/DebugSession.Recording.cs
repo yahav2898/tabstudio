@@ -1,4 +1,6 @@
+using TabStudio.Core.Workspaces;
 using TabStudio.Debugging.Building;
+using TabStudio.Debugging.Inspection;
 using TabStudio.Debugging.Recording;
 
 namespace TabStudio.Debugging;
@@ -15,6 +17,20 @@ public sealed partial class DebugSession
 
     /// <summary>The recording, retained after exit and disposal, or null when recording was not requested.</summary>
     public DebugRecording? Recording => _engine.Recording;
+
+    /// <summary>What <see cref="RecordingLimitation"/> says for a program with Visual Basic code.</summary>
+    public const string VisualBasicRecordingLimitation =
+        "Recording is available for C# programs. In Visual Basic code it records each step and the values of the locals, " +
+        "but not each write to a variable, so Jump to Last Write and the cause of an exception are not found there.";
+
+    /// <summary>
+    /// What recording cannot do for this program, for the IDE to show, or <see langword="null"/> when it records
+    /// everything. Recording a program with Visual Basic code works, with <see cref="VisualBasicRecordingLimitation"/>.
+    /// </summary>
+    public string? RecordingLimitation =>
+        Language == ProjectLanguage.VisualBasic || DebugInfo.Statements.Any(s => SourceLanguage.IsVisualBasic(s.Location.FilePath))
+            ? VisualBasicRecordingLimitation
+            : null;
 
     /// <summary>The selected historical snapshot. It does not replace or resume the engine's live pause.</summary>
     public DebugPausedEventArgs? HistoricalPause { get; private set; }

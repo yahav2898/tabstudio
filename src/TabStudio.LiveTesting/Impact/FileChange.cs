@@ -1,6 +1,8 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.VisualBasic;
 using TabStudio.Compilation;
+using TabStudio.Compilation.VisualBasic;
 using TabStudio.LiveTesting.Instrumentation;
 
 namespace TabStudio.LiveTesting.Impact;
@@ -37,22 +39,36 @@ public sealed record MemberChange(string TypeName, string Name, string Key, Memb
 /// <param name="Members">The members that changed, were added or were removed.</param>
 public sealed record FileChange(string FilePath, bool IsStructural, IReadOnlyList<MemberChange> Members)
 {
-    /// <summary>Compares two versions of a file. Whitespace and comments are ignored.</summary>
-    /// <param name="filePath">Full path of the file.</param>
+    /// <summary>Compares two versions of a C# or Visual Basic file. Whitespace and comments are ignored.</summary>
+    /// <param name="filePath">Full path of the file; a <c>.vb</c> file is Visual Basic.</param>
     /// <param name="before">The earlier text, or <see langword="null"/> when the file is new.</param>
     /// <param name="after">The later text, or <see langword="null"/> when the file was deleted.</param>
     /// <param name="cancellationToken">Cancels the comparison.</param>
     /// <returns>The change, or <see langword="null"/> when the two versions have the same code.</returns>
-    public static FileChange? Compare(string filePath, SourceText? before, SourceText? after, CancellationToken cancellationToken = default)
+    public static FileChange? Compare(string filePath, SourceText? before, SourceText? after, CancellationToken cancellationToken = default) =>
+        Compare(filePath, before, after, string.Empty, cancellationToken);
+
+    /// <summary>
+    /// Compares two versions of a file of a project with a root namespace, which Visual Basic puts in front of the
+    /// type names of members, as the instrumented build does. Whitespace, line breaks and comments are ignored.
+    /// </summary>
+    /// <param name="filePath">Full path of the file; a <c>.vb</c> file is Visual Basic.</param>
+    /// <param name="before">The earlier text, or <see langword="null"/> when the file is new.</param>
+    /// <param name="after">The later text, or <see langword="null"/> when the file was deleted.</param>
+    /// <param name="rootNamespace">The Visual Basic project's root namespace, or an empty string. C# ignores it.</param>
+    /// <param name="cancellationToken">Cancels the comparison.</param>
+    /// <returns>The change, or <see langword="null"/> when the two versions have the same code.</returns>
+    public static FileChange? Compare(string filePath, SourceText? before, SourceText? after, string rootNamespace, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(filePath);
+        ArgumentNullException.ThrowIfNull(rootNamespace);
         if (before is not null && after is not null && (ReferenceEquals(before, after) || before.ContentEquals(after)))
         {
             return null;
         }
 
-        var (oldMembers, oldSkeleton) = Read(before, filePath, cancellationToken);
-        var (newMembers, newSkeleton) = Read(after, filePath, cancellationToken);
+        var (oldMembers, oldSkeleton) = Read(before, filePath, rootNamespace, cancellationToken);
+        var (newMembers, newSkeleton) = Read(after, filePath, rootNamespace, cancellationToken);
         var changes = new List<MemberChange>();
         foreach (var (key, old) in oldMembers)
         {
@@ -78,15 +94,23 @@ public sealed record FileChange(string FilePath, bool IsStructural, IReadOnlyLis
         return structural || changes.Count > 0 ? new FileChange(filePath, structural, changes) : null;
     }
 
-    private static (Dictionary<string, MemberText> Members, string Skeleton) Read(SourceText? text, string filePath, CancellationToken cancellationToken)
+    private static (Dictionary<string, MemberText> Members, string Skeleton) Read(SourceText? text, string filePath, string rootNamespace, CancellationToken cancellationToken)
     {
         if (text is null)
         {
             return (new Dictionary<string, MemberText>(StringComparer.Ordinal), string.Empty);
         }
 
+        if (VisualBasicCompiler.IsSource(filePath))
+        {
+            var visualBasicRoot = VisualBasicSyntaxTree.ParseText(text, VisualBasicCompiler.CreateParseOptions(), filePath, cancellationToken).GetRoot(cancellationToken);
+            return (ByKey(VisualBasicMemberKeys.Collect(visualBasicRoot, rootNamespace)), VisualBasicMemberKeys.Skeleton(visualBasicRoot));
+        }
+
         var root = CSharpSyntaxTree.ParseText(text, CSharpCompiler.CreateParseOptions(), filePath, cancellationToken).GetRoot(cancellationToken);
-        var members = MemberKeys.Collect(root).ToDictionary(m => m.Key, StringComparer.Ordinal);
-        return (members, MemberKeys.Skeleton(root));
+        return (ByKey(MemberKeys.Collect(root)), MemberKeys.Skeleton(root));
     }
+
+    private static Dictionary<string, MemberText> ByKey(IReadOnlyList<MemberText> members) =>
+        members.ToDictionary(m => m.Key, StringComparer.Ordinal);
 }

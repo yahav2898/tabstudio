@@ -27,12 +27,17 @@ internal sealed class DebuggedProgram : IDisposable
     }
 
     public DebuggedProgram(DebugBuild build, params int[] breakpointLines)
+        : this(build, FilePath, breakpointLines)
+    {
+    }
+
+    public DebuggedProgram(DebugBuild build, string breakpointFile, params int[] breakpointLines)
     {
         Build = build;
         Session = new DebugSession(build);
         foreach (var line in breakpointLines)
         {
-            Session.SetBreakpoint(FilePath, line);
+            Session.SetBreakpoint(breakpointFile, line);
         }
 
         Session.Paused += (_, pause) => _pauses.Writer.TryWrite(pause);

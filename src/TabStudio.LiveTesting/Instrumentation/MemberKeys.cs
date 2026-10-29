@@ -18,6 +18,7 @@ internal sealed record MemberText(string TypeName, string Name, string Key, stri
 /// and in every version of its file while it is edited.
 /// </summary>
 /// <remarks>
+/// This is C#; <see cref="VisualBasicMemberKeys"/> keys Visual Basic members the same way.
 /// A tracked member is a function body that runs: a method, constructor, operator or conversion with a body, a
 /// property, indexer or event with an accessor body or an expression body, or a file's top-level statements. Local
 /// functions and lambdas belong to the member they are written in. Everything else in a file (fields,
@@ -199,7 +200,8 @@ internal static class MemberKeys
     }
 
     /// <summary>A node's text without any whitespace, so formatting does not change a key.</summary>
-    private static string Compact(SyntaxNode node)
+    /// <param name="node">The node.</param>
+    internal static string Compact(SyntaxNode node)
     {
         var text = node.ToString();
         var builder = new StringBuilder(text.Length);
@@ -214,7 +216,9 @@ internal static class MemberKeys
         return builder.ToString();
     }
 
-    private static string TokensOf(IEnumerable<SyntaxNode> nodes)
+    /// <summary>The tokens of nodes without trivia, so whitespace and comments do not change the text.</summary>
+    /// <param name="nodes">The nodes.</param>
+    internal static string TokensOf(IEnumerable<SyntaxNode> nodes)
     {
         var builder = new StringBuilder();
         foreach (var node in nodes)

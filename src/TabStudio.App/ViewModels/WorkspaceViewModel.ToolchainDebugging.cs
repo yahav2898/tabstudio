@@ -154,9 +154,39 @@ public sealed partial class WorkspaceViewModel
         }
 
         configuration = withInput;
+        if (type == "php")
+        {
+            // The database its migrations need starts first, as it does for Ctrl+F5.
+            if (!await PrepareServicesAsync(project.Directory))
+            {
+                return;
+            }
+
+            using (var migrating = new CancellationTokenSource())
+            {
+                _run = migrating;
+                try
+                {
+                    if (await PrepareLaravelDatabaseAsync(project, migrating.Token) is { } failed)
+                    {
+                        ReportToolchainRun(project, plan.ProgramName, failed);
+                        return;
+                    }
+                }
+                finally
+                {
+                    _run = null;
+                }
+            }
+
+            configuration = PreparePhpDebug(project, configuration);
+        }
+
         if (type == "java")
         {
-            var prepared = await PrepareJavaDebugAsync(project, configuration);
+            var prepared = toolchain.Id == "kotlin"
+                ? await PrepareKotlinDebugAsync(project, configuration)
+                : await PrepareJavaDebugAsync(project, configuration);
             if (prepared is null)
             {
                 return;

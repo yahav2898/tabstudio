@@ -60,6 +60,7 @@ public sealed partial class ProjectTemplates
         new(AvaloniaId, "Avalonia App", "A cross-platform app with a view and a view model, rendered natively beside the code.", ["C#", "Avalonia", "MVVM"]),
         WpfTemplate,
         WindowsFormsTemplate,
+        .. VisualBasicTemplates,
         new(UnoTemplates.UnoAppId, "Uno Platform App", "A cross-platform WinUI app, rendered natively beside the code by Uno Platform.", ["C#", "Uno", "WinUI"]),
         new(UnoTemplates.WinUIAppId, "WinUI 3 Blank App", "A WinUI 3 app built on the tablet and run in the app preview through Uno Platform.", ["C#", "WinUI", "XAML"]),
         new(LibraryId, "Class Library", "Reusable code for other projects to reference.", ["C#", "Library"]),
@@ -128,6 +129,9 @@ public sealed partial class ProjectTemplates
             _ when WebTemplates.IsTemplate(templateId) => [.. WebTemplates.Create(templateId, root, name)],
             _ when UnoTemplates.IsTemplate(templateId) => [UnoTemplates.Create(templateId, root, name)],
             WindowsFormsId => [WriteWindowsForms(root, name)],
+            VisualBasicConsoleId => [WriteVisualBasicConsole(root, name)],
+            VisualBasicWindowsFormsId => [WriteVisualBasicWindowsForms(root, name)],
+            VisualBasicLibraryId => [WriteVisualBasicLibrary(root, name)],
             _ => throw new ArgumentException($"Unknown template '{templateId}'.", nameof(templateId)),
         };
 

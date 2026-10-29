@@ -219,6 +219,16 @@ public sealed partial class WorkspaceViewModel
                 }
             }
 
+            // A Laravel app's .env, application key and SQLite file, once its packages are there.
+            foreach (var project in projects.Where(p => p.Toolchain.Id == "php" && _toolchains.Manager.IsReady("php")))
+            {
+                token.ThrowIfCancellationRequested();
+                if (await SetUpLaravelAsync(project, token))
+                {
+                    installed.Add(project.Name);
+                }
+            }
+
             if (installed.Count > 0 && State is IdeState.Ready or IdeState.Failed)
             {
                 StatusText = $"Set up: {string.Join(", ", installed)}";

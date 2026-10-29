@@ -1,6 +1,8 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.VisualBasic;
 using TabStudio.Compilation;
+using TabStudio.Compilation.VisualBasic;
 using TabStudio.Core.Workspaces;
 using TabStudio.TestRunner;
 
@@ -13,7 +15,9 @@ namespace TabStudio.App.Services;
 /// <remarks>
 /// Attributes are matched by their written names (<c>[Fact]</c>, <c>[Test]</c>, <c>[TestMethod]</c>…), which needs
 /// neither the project's references nor its NuGet packages. Tests the source cannot show, such as rows of
-/// <c>[MemberData]</c> or test methods inherited from a base class, appear once the project is built.
+/// <c>[MemberData]</c> or test methods inherited from a base class, appear once the project is built. A Visual Basic
+/// project's <c>.vb</c> files are read with its preprocessor symbols, and its root namespace is put in front of the
+/// names, as the compiler does.
 /// </remarks>
 public static class SourceTestScanner
 {
@@ -32,9 +36,13 @@ public static class SourceTestScanner
         ArgumentNullException.ThrowIfNull(otherProjectDirectories);
         ArgumentNullException.ThrowIfNull(sources);
 
-        var parseOptions = CSharpCompiler.CreateParseOptions();
+        var isVisualBasic = project.IsVisualBasic;
+        var csharpOptions = isVisualBasic ? null : CSharpCompiler.CreateParseOptions();
+        var visualBasicOptions = isVisualBasic ? VisualBasicCompiler.CreateParseOptions(project) : null;
+        var rootNamespace = isVisualBasic ? VisualBasicCompiler.RootNamespaceOf(project) : string.Empty;
+        var extension = isVisualBasic ? VisualBasicCompiler.SourceExtension : ".cs";
         var classes = new List<SourceTestClass>();
-        foreach (var file in ProjectSourceFiles.Enumerate(project, otherProjectDirectories))
+        foreach (var file in ProjectSourceFiles.Enumerate(project, otherProjectDirectories, extension))
         {
             cancellationToken.ThrowIfCancellationRequested();
             string text;
@@ -48,8 +56,10 @@ public static class SourceTestScanner
                 continue;
             }
 
-            var tree = CSharpSyntaxTree.ParseText(SourceText.From(text), parseOptions, file, cancellationToken);
-            classes.AddRange(SourceTestDiscoverer.Discover(tree, cancellationToken));
+            var tree = visualBasicOptions is not null
+                ? VisualBasicSyntaxTree.ParseText(SourceText.From(text), visualBasicOptions, file, cancellationToken)
+                : CSharpSyntaxTree.ParseText(SourceText.From(text), csharpOptions, file, cancellationToken);
+            classes.AddRange(SourceTestDiscoverer.Discover(tree, rootNamespace, cancellationToken));
         }
 
         return classes

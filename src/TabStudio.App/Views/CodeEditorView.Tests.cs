@@ -31,7 +31,7 @@ public sealed partial class CodeEditorView
     /// </summary>
     private void InstallTestCommands()
     {
-        if (!_document.FileType.IsCSharp)
+        if (!_document.FileType.IsRoslyn)
         {
             return;
         }

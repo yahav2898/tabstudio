@@ -117,6 +117,18 @@ public static class ToolchainProjectDetector
                     continue;
                 }
 
+                // A Gradle or Maven build that compiles Kotlin is Kotlin's project, one that does not is Java's, and
+                // an Android app is the Android SDK's; loose .kt and .java files go by their extension.
+                if (toolchain.Id is "java" or "kotlin" && IsJvmBuild(files) && KotlinProject.IsKotlinBuild(folder) != (toolchain.Id == "kotlin"))
+                {
+                    continue;
+                }
+
+                if (toolchain.Id == "kotlin" && (mobileRoot || insideMobile))
+                {
+                    continue;
+                }
+
                 var marker = toolchain.ProjectFiles.FirstOrDefault(f => files.Contains(f, StringComparer.OrdinalIgnoreCase)
                     || (f.Contains('/') && File.Exists(Path.Combine(folder, f))));
                 if (marker is not null && !marker.Contains('/'))
@@ -161,6 +173,7 @@ public static class ToolchainProjectDetector
             }
 
             PreferLanguageManifests(result, folder);
+            PreferPhpApps(result, folder);
 
             if (depth >= maxDepth)
             {
@@ -179,6 +192,10 @@ public static class ToolchainProjectDetector
 
         return result;
     }
+
+    /// <summary>Whether a folder's files include a Gradle or Maven build file.</summary>
+    private static bool IsJvmBuild(IEnumerable<string> files) =>
+        files.Any(f => f is "pom.xml" or "build.gradle" or "build.gradle.kts" or "settings.gradle" or "settings.gradle.kts");
 
     /// <summary>Whether a project file is a Makefile, rather than a language's own manifest or CMakeLists.txt.</summary>
     /// <param name="marker">The project file's name.</param>
@@ -242,6 +259,30 @@ public static class ToolchainProjectDetector
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Text.Json.JsonException)
         {
             return false;
+        }
+    }
+
+    /// <summary>
+    /// In one folder, a PHP app comes before the Node.js package beside it, which builds its assets, as a Laravel
+    /// app's <c>package.json</c> runs Vite: the app is what F5 serves.
+    /// </summary>
+    private static void PreferPhpApps(List<ToolchainProject> result, string folder)
+    {
+        // A Laravel app's package.json builds its assets; a Swift package's CMakeLists.txt is its second build.
+        Prefer(result, folder, "php", "node");
+        Prefer(result, folder, "swift", "cpp");
+    }
+
+    /// <summary>Puts a folder's project of one toolchain before its project of another, as the folder's main build.</summary>
+    private static void Prefer(List<ToolchainProject> result, string folder, string first, string second)
+    {
+        var preferred = result.FindIndex(p => p.Directory == folder && p.Toolchain.Id == first);
+        var other = result.FindIndex(p => p.Directory == folder && p.Toolchain.Id == second);
+        if (preferred > other && other >= 0)
+        {
+            var project = result[preferred];
+            result.RemoveAt(preferred);
+            result.Insert(other, project);
         }
     }
 

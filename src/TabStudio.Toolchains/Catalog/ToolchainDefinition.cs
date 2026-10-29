@@ -45,6 +45,18 @@ public sealed record ToolchainDefinition
     /// <summary>The Alpine Linux packages to install. Their dependencies are installed with them.</summary>
     public IReadOnlyList<string> Packages { get; init; } = [];
 
+    /// <summary>
+    /// The toolchains this one builds on, installed first, such as Java's for Kotlin, whose programs Java's debugger
+    /// debugs.
+    /// </summary>
+    public IReadOnlyList<string> Requires { get; init; } = [];
+
+    /// <summary>
+    /// What the toolchain installs in TabStudio's Ubuntu environment, for tools built for glibc rather than Alpine's
+    /// musl, such as Swift or JetBrains' Kotlin language server; <see langword="null"/> when it needs none.
+    /// </summary>
+    public GlibcEnvironmentDefinition? Glibc { get; init; }
+
     /// <summary>The package whose version is the toolchain's version, such as <c>python3</c>.</summary>
     public string? VersionPackage { get; init; }
 
@@ -350,6 +362,49 @@ public sealed record ArchiveDefinition
 
     /// <summary>The folder to unpack it into, as programs in the environment see it.</summary>
     public required string Destination { get; init; }
+
+    /// <summary>
+    /// How many leading folders of each entry to drop when unpacking, as <c>tar --strip-components</c> does, for an
+    /// archive whose files are all inside one top folder named after its version.
+    /// </summary>
+    public int StripComponents { get; init; }
+}
+
+/// <summary>
+/// The part of a toolchain that lives in TabStudio's Ubuntu (glibc) environment, beside Alpine: Ubuntu packages,
+/// pinned downloads, and the commands and programs that run there.
+/// </summary>
+public sealed record GlibcEnvironmentDefinition
+{
+    /// <summary>The Ubuntu packages to install with <c>apt-get</c>, from Ubuntu's signed archive.</summary>
+    public IReadOnlyList<string> Packages { get; init; } = [];
+
+    /// <summary>What to install after the packages: archives pinned by their hash, and files.</summary>
+    public IReadOnlyList<SetupStepDefinition> Setup { get; init; } = [];
+
+    /// <summary>The commands that run in the Ubuntu environment rather than in Alpine, such as <c>swift</c>.</summary>
+    public IReadOnlyList<string> Commands { get; init; } = [];
+
+    /// <summary>
+    /// Programs that run in the Ubuntu environment by their path: a path that starts with one of these, or, for one
+    /// that starts and ends with <c>/</c>, such as <c>/.build/</c>, contains it, as the programs SwiftPM builds do.
+    /// </summary>
+    public IReadOnlyList<string> ProgramPaths { get; init; } = [];
+
+    /// <summary>Whether a program, by name or path, runs in the Ubuntu environment.</summary>
+    /// <param name="program">The program, such as <c>swift</c> or <c>/work/app/.build/debug/app</c>.</param>
+    public bool Runs(string program)
+    {
+        ArgumentNullException.ThrowIfNull(program);
+        if (Commands.Contains(program, StringComparer.Ordinal))
+        {
+            return true;
+        }
+
+        return ProgramPaths.Any(path => program.StartsWith(path, StringComparison.Ordinal)
+            || (path.Length > 2 && path[0] == '/' && path[^1] == '/' && !path.StartsWith("/opt/", StringComparison.Ordinal)
+                && program.Contains(path, StringComparison.Ordinal)));
+    }
 }
 
 /// <summary>A program the IDE starts to serve an editor or a debugger, such as a language server.</summary>

@@ -1,5 +1,8 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.VisualBasic;
 using TabStudio.Compilation;
+using TabStudio.Compilation.VisualBasic;
 using TabStudio.Core.Diagnostics;
 
 namespace TabStudio.TestRunner.Tests;
@@ -9,6 +12,9 @@ internal static class UserProject
 {
     /// <summary>The path the user's source file is compiled under; stack traces and locations point here.</summary>
     public static readonly string FilePath = Path.Combine(Path.GetTempPath(), "tabstudio-user-tests", "UserTests.cs");
+
+    /// <summary>The path a Visual Basic test file is compiled under.</summary>
+    public static readonly string VisualBasicFilePath = Path.Combine(Path.GetTempPath(), "tabstudio-user-tests", "UserTests.vb");
 
     /// <summary>xUnit v2's assemblies, from this test project's own package references.</summary>
     public static IReadOnlyList<string> XunitAssemblies { get; } =
@@ -57,6 +63,33 @@ internal static class UserProject
     {
         using var session = Load(source, frameworkAssemblies, options);
         return await session.RunAllAsync();
+    }
+
+    /// <summary>
+    /// The compilation of a Visual Basic test project, as TabStudio builds one, with a root namespace that the compiler
+    /// puts in front of every namespace.
+    /// </summary>
+    public static VisualBasicCompilation CreateVisualBasicCompilation(string source, IReadOnlyList<string> frameworkAssemblies, string rootNamespace)
+    {
+        var compilation = VisualBasicCompiler.CreateCompilation(Request(source, frameworkAssemblies) with
+        {
+            Documents = [new SourceDocument(VisualBasicFilePath, source)],
+        });
+        return compilation.WithOptions(compilation.Options.WithRootNamespace(rootNamespace));
+    }
+
+    /// <summary>Compiles a Visual Basic test project in memory and loads it into a session.</summary>
+    public static TestSession LoadVisualBasic(string source, IReadOnlyList<string> frameworkAssemblies, string rootNamespace)
+    {
+        var compilation = CreateVisualBasicCompilation(source, frameworkAssemblies, rootNamespace);
+        using var image = new MemoryStream();
+        using var symbols = new MemoryStream();
+        var emit = compilation.Emit(image, symbols, options: new EmitOptions(debugInformationFormat: DebugInformationFormat.PortablePdb));
+        Assert.True(emit.Success, string.Join('\n', emit.Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error)));
+
+        var session = TestSession.Load([new CompiledAssembly(compilation.AssemblyName!, image.ToArray(), symbols.ToArray())], frameworkAssemblies);
+        Assert.Empty(session.DiscoveryMessages);
+        return session;
     }
 
     /// <summary>The result of the one test with this display name.</summary>

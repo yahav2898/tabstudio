@@ -172,6 +172,32 @@ public sealed class FormsDesignerTests
     }
 
     [AvaloniaFact]
+    public async Task A_Visual_Basic_form_is_designed_by_touch_and_a_double_tap_writes_a_Handles_handler()
+    {
+        using var fixture = new WorkspaceFixture();
+        var designed = await DesignedForm.OpenAsync(fixture, visualBasic: true);
+        var designer = designed.Designer;
+        designed.Tap(designed.Center(designed.ToolButton("Button")));
+        designed.Tap(designed.OnForm(new DrawingPoint(24, 24)));
+        Assert.Equal("Button1", designer.SelectionTitle);
+        Assert.Contains("Friend WithEvents Button1 As Button", designed.DesignerText, StringComparison.Ordinal);
+        UiTestHelpers.SaveScreenshot(designed.Window, "winforms-designer-05-visual-basic");
+
+        // A double-tap writes the handler as Visual Studio does in Visual Basic: with a Handles clause.
+        var center = designed.CenterOf("Button1");
+        designed.Tap(center);
+        designed.Tap(center);
+        Assert.True(designer.IsCode);
+        Assert.Contains("Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click", designed.Document.Document.Text, StringComparison.Ordinal);
+        UiTestHelpers.SaveScreenshot(designed.Window, "winforms-designer-06-visual-basic-handler");
+
+        await designed.Workspace.BuildCommand.ExecuteAsync(null);
+        var problems = designed.Workspace.ErrorList.Items.Where(i => i.Diagnostic.Severity >= DiagnosticSeverityLevel.Error).Select(i => i.Diagnostic.ToString()).ToList();
+        Assert.True(problems.Count == 0, string.Join('\n', problems));
+        designed.Window.Close();
+    }
+
+    [AvaloniaFact]
     public async Task A_menu_strip_gets_its_menus_typed_in_the_Properties_and_a_menu_item_gets_its_Click_handler()
     {
         using var fixture = new WorkspaceFixture();
@@ -233,11 +259,12 @@ public sealed class FormsDesignerTests
 
         public string DesignerText => File.ReadAllText(designerPath);
 
-        public static async Task<DesignedForm> OpenAsync(WorkspaceFixture fixture, string? designer = null, string? code = null)
+        public static async Task<DesignedForm> OpenAsync(WorkspaceFixture fixture, string? designer = null, string? code = null, bool visualBasic = false)
         {
-            var solution = new ProjectTemplates(fixture.Paths).Create(ProjectTemplates.WindowsFormsId, ProjectName);
+            var extension = visualBasic ? ".vb" : ".cs";
+            var solution = new ProjectTemplates(fixture.Paths).Create(visualBasic ? ProjectTemplates.VisualBasicWindowsFormsId : ProjectTemplates.WindowsFormsId, ProjectName);
             var project = Path.Combine(Path.GetDirectoryName(solution)!, ProjectName);
-            var designerPath = Path.Combine(project, "Form1.Designer.cs");
+            var designerPath = Path.Combine(project, "Form1.Designer" + extension);
             if (designer is not null)
             {
                 File.WriteAllText(designerPath, designer);
@@ -245,14 +272,14 @@ public sealed class FormsDesignerTests
 
             if (code is not null)
             {
-                File.WriteAllText(Path.Combine(project, "Form1.cs"), code);
+                File.WriteAllText(Path.Combine(project, "Form1" + extension), code);
             }
 
             var workspace = fixture.Workspace;
             await workspace.LoadAsync(solution);
             var window = new Window { Width = 1600, Height = 1000, Content = new WorkspaceView { DataContext = workspace } };
             window.Show();
-            var document = await workspace.OpenDocumentAsync(Path.Combine(project, "Form1.cs"));
+            var document = await workspace.OpenDocumentAsync(Path.Combine(project, "Form1" + extension));
             Assert.NotNull(document);
             Assert.NotNull(document.FormsDesigner);
             var designed = new DesignedForm(workspace, window, document, designerPath);

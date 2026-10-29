@@ -26,7 +26,7 @@ public sealed class DebugValue
         Name = name;
         Object = value;
         _value = new Lazy<string>(() => inspector.FormatValue(value));
-        _type = new Lazy<string>(() => ValueInspector.FormatType(value, declaredType));
+        _type = new Lazy<string>(() => ValueInspector.FormatType(value, declaredType, inspector.IsVisualBasic));
         _hasChildren = new Lazy<bool>(() => ValueInspector.HasChildren(value));
         _children = new Lazy<IReadOnlyList<DebugValue>>(() => inspector.GetChildren(value));
     }
@@ -45,19 +45,23 @@ public sealed class DebugValue
     /// <summary>Whether this is an immutable recorded value rather than a live object.</summary>
     public bool IsHistorical { get; }
 
-    /// <summary>The name: a variable name, <c>this</c>, a member name or an index such as <c>[0]</c>.</summary>
+    /// <summary>
+    /// The name: a variable name, <c>this</c>, a member name or an index such as <c>[0]</c>; in Visual Basic code
+    /// <c>Me</c> and indexes such as <c>(0)</c>.
+    /// </summary>
     public string Name { get; }
 
     /// <summary>
-    /// The type as C# writes it. When the runtime type is more specific than the declared one, it follows in braces,
-    /// as in <c>object {string}</c>.
+    /// The type as C# writes it, or as Visual Basic does for a value of Visual Basic code. When the runtime type is more
+    /// specific than the declared one, it follows in braces, as in <c>object {string}</c> or <c>Object {String}</c>.
     /// </summary>
     public string Type => _type.Value;
 
     /// <summary>
     /// The value: strings and characters as C# literals, numbers and dates in the invariant culture, <c>null</c>,
     /// enum member names, <c>Count = n</c> for collections, <c>Length = n</c> for arrays, otherwise the
-    /// <c>ToString</c> override or the type name in braces.
+    /// <c>ToString</c> override or the type name in braces. A value of Visual Basic code reads as Visual Basic:
+    /// <c>Nothing</c>, <c>True</c>, <c>"x"c</c>.
     /// </summary>
     public string Value => _value.Value;
 

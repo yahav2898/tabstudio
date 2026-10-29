@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.Text;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using TabStudio.Forms.Design.Model;
 
@@ -10,7 +9,7 @@ namespace TabStudio.Forms.Design.Code;
 /// Writes a designed form back into its designer file as Visual Studio does: InitializeComponent with the components'
 /// creations, the layout calls, a commented section of properties, collections and events per component in
 /// alphabetical order, the form's section last; and the components' fields after <c>#endregion</c>. The rest of the
-/// file is left as it is.
+/// file is left as it is. A Visual Basic file is written by <see cref="VisualBasicDesignerWriter"/>.
 /// </summary>
 internal static class DesignerWriter
 {
@@ -21,20 +20,24 @@ internal static class DesignerWriter
     {
         ArgumentNullException.ThrowIfNull(file);
         ArgumentNullException.ThrowIfNull(document);
+        if (file.Language == DesignerLanguage.VisualBasic)
+        {
+            return VisualBasicDesignerWriter.Write(file, document);
+        }
+
         var text = file.Text;
         var style = document.Style;
         var edits = new List<(int Start, int End, string Text)>();
 
         // The method's body, from its brace to its brace.
-        var body = file.InitializeComponent.Body!;
         var methodIndent = style.Indent.Length >= 4 ? style.Indent[..^4] : string.Empty;
-        edits.Add((body.SpanStart, body.Span.End, WriteBody(document, methodIndent)));
+        edits.Add((file.Body.Start, file.Body.End, WriteBody(document, methodIndent)));
 
         // The fields: where the old ones were, or after #endregion, or at the end of the class.
         var fields = WriteFields(document, methodIndent);
         if (file.ComponentFields.Count > 0)
         {
-            var lines = file.ComponentFields.Select(f => LineSpan(text, f.Span)).OrderBy(l => l.Start).ToList();
+            var lines = file.ComponentFields.Select(f => TextLines.LineSpan(text, f)).OrderBy(l => l.Start).ToList();
             for (var i = 0; i < lines.Count; i++)
             {
                 edits.Add((lines[i].Start, lines[i].End, i == 0 ? fields : string.Empty));
@@ -42,7 +45,7 @@ internal static class DesignerWriter
         }
         else if (document.Components.Count > 0)
         {
-            edits.Add((FieldsInsertionPoint(file), FieldsInsertionPoint(file), style.NewLine + fields));
+            edits.Add((file.FieldsInsertionPoint, file.FieldsInsertionPoint, style.NewLine + fields));
         }
 
         var builder = new StringBuilder(text);
@@ -202,14 +205,17 @@ internal static class DesignerWriter
             ? $"((System.ComponentModel.ISupportInitialize)({style.Member(component.Name)}))"
             : $"((System.ComponentModel.ISupportInitialize){component.Name})";
 
-    private static bool SupportsInitialize(DesignComponent component) =>
+    /// <summary>Whether InitializeComponent calls a component's BeginInit and EndInit, as it does a picture box's.</summary>
+    /// <param name="component">The component.</param>
+    internal static bool SupportsInitialize(DesignComponent component) =>
         component.Type is { } type && typeof(ISupportInitialize).IsAssignableFrom(type);
 
     /// <summary>
     /// The parts of a component whose layout InitializeComponent suspends while it adds their children: the component
     /// itself when it has controls or strip items, and a split container's panels that have controls.
     /// </summary>
-    private static IEnumerable<string> SuspendedParts(DesignComponent component)
+    /// <param name="component">The component.</param>
+    internal static IEnumerable<string> SuspendedParts(DesignComponent component)
     {
         foreach (var add in component.Adds.Where(a => a.Items.Count > 0 && a.Collection.EndsWith(".Controls", StringComparison.Ordinal)).OrderBy(a => a.Collection, StringComparer.Ordinal))
         {
@@ -227,7 +233,10 @@ internal static class DesignerWriter
     /// Whether a container is laid out again after its layout resumes, as Visual Studio has it: a strip always, and
     /// any container with a strip or a control that sizes itself.
     /// </summary>
-    private static bool NeedsLayout(DesignDocument document, DesignComponent component, string part)
+    /// <param name="document">The form.</param>
+    /// <param name="component">The container.</param>
+    /// <param name="part">The part of it, such as <c>Panel1.</c>, or empty for the container itself.</param>
+    internal static bool NeedsLayout(DesignDocument document, DesignComponent component, string part)
     {
         if (component.Type is { } type && typeof(System.Windows.Forms.ToolStrip).IsAssignableFrom(type) && part.Length == 0)
         {
@@ -237,7 +246,7 @@ internal static class DesignerWriter
         var collection = part.Length == 0 ? "Controls" : part + "Controls";
         var children = component.Adds.Where(a => a.Collection == collection).SelectMany(a => a.Items).Select(i => document.Find(i.Split(',')[0].Trim()));
         return children.Any(child => child is not null
-            && ((child.Type is { } childType && typeof(System.Windows.Forms.ToolStrip).IsAssignableFrom(childType)) || child.GetCode("AutoSize") == "true"));
+            && ((child.Type is { } childType && typeof(System.Windows.Forms.ToolStrip).IsAssignableFrom(childType)) || string.Equals(child.GetCode("AutoSize"), "true", StringComparison.OrdinalIgnoreCase)));
     }
 
     private static string? EventType(DesignComponent component, string eventName) =>
@@ -252,26 +261,5 @@ internal static class DesignerWriter
         }
 
         return builder.ToString();
-    }
-
-    /// <summary>Where new fields go: after the <c>#endregion</c> that follows InitializeComponent, or before the class's closing brace.</summary>
-    private static int FieldsInsertionPoint(DesignerFile file)
-    {
-        var region = file.Class.DescendantTrivia().FirstOrDefault(t => t.IsKind(SyntaxKind.EndRegionDirectiveTrivia) && t.SpanStart > file.InitializeComponent.Span.End);
-        if (region != default)
-        {
-            var end = file.Text.IndexOf('\n', region.Span.End);
-            return end < 0 ? file.Text.Length : end + 1;
-        }
-
-        return LineSpan(file.Text, file.Class.CloseBraceToken.Span).Start;
-    }
-
-    /// <summary>The whole lines a span is on, line break included.</summary>
-    private static (int Start, int End) LineSpan(string text, Microsoft.CodeAnalysis.Text.TextSpan span)
-    {
-        var start = text.LastIndexOf('\n', Math.Max(0, span.Start - 1)) + 1;
-        var end = text.IndexOf('\n', span.End);
-        return (start, end < 0 ? text.Length : end + 1);
     }
 }

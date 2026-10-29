@@ -1,7 +1,5 @@
 using System.Globalization;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TabStudio.TestRunner.Naming;
 
 namespace TabStudio.TestRunner.Source;
@@ -10,24 +8,31 @@ namespace TabStudio.TestRunner.Source;
 /// An attribute in source, read with the semantic model when its type resolves, and by its written name when
 /// it does not, for example before the project's packages are restored.
 /// </summary>
+/// <remarks>
+/// Written names are compared the way the attribute's language binds them: exactly in C#, ignoring case in Visual
+/// Basic, where <c>&lt;fact&gt;</c> is a <c>&lt;Fact&gt;</c>.
+/// </remarks>
 internal sealed class SourceAttribute
 {
     private const string AttributeSuffix = "Attribute";
 
     private readonly AttributeData? _data;
-    private readonly AttributeSyntax? _syntax;
+    private readonly SyntaxNode? _syntax;
+    private readonly SourceLanguage _language;
     private readonly HashSet<string> _typeNames;
 
-    private SourceAttribute(AttributeData? data, AttributeSyntax? syntax)
+    private SourceAttribute(AttributeData? data, SyntaxNode? syntax, SourceLanguage language)
     {
         _data = data;
         _syntax = syntax;
+        _language = language;
         _typeNames = data?.AttributeClass is { TypeKind: not TypeKind.Error } attributeClass
             ? TypeAndBaseNames(attributeClass)
             : [];
 
-        var name = _typeNames.Count > 0 ? data!.AttributeClass!.Name : syntax is null ? string.Empty : WrittenName(syntax.Name);
-        ShortName = name.EndsWith(AttributeSuffix, StringComparison.Ordinal) && name.Length > AttributeSuffix.Length
+        var name = _typeNames.Count > 0 ? data!.AttributeClass!.Name : syntax is null ? string.Empty : language.AttributeName(syntax);
+        ShortName = name.EndsWith(AttributeSuffix, language.NameComparison)
+            && name.Length > AttributeSuffix.Length
             ? name[..^AttributeSuffix.Length]
             : name;
     }
@@ -40,20 +45,18 @@ internal sealed class SourceAttribute
 
     /// <summary>Reads the attributes of a symbol with the semantic model.</summary>
     /// <param name="attributes">The symbol's attributes.</param>
+    /// <param name="language">The language of the source being searched.</param>
     /// <param name="cancellationToken">Cancels reading.</param>
-    public static List<SourceAttribute> FromSymbol(IEnumerable<AttributeData> attributes, CancellationToken cancellationToken) =>
+    public static List<SourceAttribute> FromSymbol(IEnumerable<AttributeData> attributes, SourceLanguage language, CancellationToken cancellationToken) =>
         attributes
-            .Select(a => new SourceAttribute(a, a.ApplicationSyntaxReference?.GetSyntax(cancellationToken) as AttributeSyntax))
+            .Select(a => new SourceAttribute(a, a.ApplicationSyntaxReference?.GetSyntax(cancellationToken), language))
             .ToList();
 
     /// <summary>Reads attributes by their written names only.</summary>
-    /// <param name="lists">The attribute lists of a declaration.</param>
-    public static List<SourceAttribute> FromSyntax(SyntaxList<AttributeListSyntax> lists) =>
-        lists
-            .Where(l => l.Target is null || l.Target.Identifier.IsKind(SyntaxKind.TypeKeyword) || l.Target.Identifier.IsKind(SyntaxKind.MethodKeyword))
-            .SelectMany(l => l.Attributes)
-            .Select(a => new SourceAttribute(null, a))
-            .ToList();
+    /// <param name="attributes">The attribute nodes of a declaration, as its <see cref="SourceLanguage"/> lists them.</param>
+    /// <param name="language">Their language.</param>
+    public static List<SourceAttribute> FromSyntax(IEnumerable<SyntaxNode> attributes, SourceLanguage language) =>
+        attributes.Select(a => new SourceAttribute(null, a, language)).ToList();
 
     /// <summary>
     /// Whether this is the given attribute: by full name, including base classes, when its type resolved; by
@@ -65,7 +68,11 @@ internal sealed class SourceAttribute
     public bool Is(string fullName, string shortName, string? otherShortName = null) =>
         _typeNames.Count > 0
             ? _typeNames.Contains(fullName)
-            : ShortName == shortName || (otherShortName is not null && ShortName == otherShortName);
+            : HasShortName(shortName) || (otherShortName is not null && HasShortName(otherShortName));
+
+    /// <summary>Whether the attribute's name, without the <c>Attribute</c> suffix, is the given one.</summary>
+    /// <param name="shortName">A name such as <c>DynamicData</c>.</param>
+    public bool HasShortName(string shortName) => _language.NamesEqual(ShortName, shortName);
 
     /// <summary>The positional arguments as values, with a <c>params</c> array spread into its elements.</summary>
     public List<object?> PositionalValues()
@@ -98,11 +105,11 @@ internal sealed class SourceAttribute
             return values;
         }
 
-        foreach (var argument in Arguments())
+        foreach (var (name, expression) in Arguments())
         {
-            if (argument.NameEquals is null)
+            if (name is null)
             {
-                values.Add(Evaluate(argument.Expression));
+                values.Add(_language.Evaluate(expression));
             }
         }
 
@@ -120,7 +127,7 @@ internal sealed class SourceAttribute
         {
             foreach (var (key, value) in _data.NamedArguments)
             {
-                if (key == name)
+                if (_language.NamesEqual(key, name))
                 {
                     return Value(value);
                 }
@@ -129,11 +136,11 @@ internal sealed class SourceAttribute
             return null;
         }
 
-        foreach (var argument in Arguments())
+        foreach (var (argumentName, expression) in Arguments())
         {
-            if (argument.NameEquals?.Name.Identifier.ValueText == name)
+            if (argumentName is not null && _language.NamesEqual(argumentName, name))
             {
-                return Evaluate(argument.Expression);
+                return _language.Evaluate(expression);
             }
         }
 
@@ -146,8 +153,8 @@ internal sealed class SourceAttribute
         _data?.AttributeClass is { } attributeClass &&
         attributeClass.AllInterfaces.Any(i => SymbolNames.MetadataFullName(i) == interfaceFullName);
 
-    private SeparatedSyntaxList<AttributeArgumentSyntax> Arguments() =>
-        _syntax?.ArgumentList?.Arguments ?? default;
+    private IReadOnlyList<(string? Name, SyntaxNode Expression)> Arguments() =>
+        _syntax is null ? [] : _language.AttributeArguments(_syntax);
 
     private static HashSet<string> TypeAndBaseNames(INamedTypeSymbol type)
     {
@@ -159,14 +166,6 @@ internal sealed class SourceAttribute
 
         return names;
     }
-
-    private static string WrittenName(NameSyntax name) => name switch
-    {
-        QualifiedNameSyntax qualified => qualified.Right.Identifier.ValueText,
-        AliasQualifiedNameSyntax alias => alias.Name.Identifier.ValueText,
-        SimpleNameSyntax simple => simple.Identifier.ValueText,
-        _ => name.ToString(),
-    };
 
     /// <summary>Turns a constant from the semantic model into the value reflection would see.</summary>
     private static object? Value(TypedConstant constant)
@@ -190,55 +189,4 @@ internal sealed class SourceAttribute
         (constant.Type as INamedTypeSymbol)?.GetMembers()
             .OfType<IFieldSymbol>()
             .FirstOrDefault(f => f.HasConstantValue && Equals(f.ConstantValue, constant.Value))?.Name;
-
-    /// <summary>Evaluates an argument as written, when there is no semantic model to ask.</summary>
-    private static object? Evaluate(ExpressionSyntax expression) => expression switch
-    {
-        LiteralExpressionSyntax literal => literal.Token.Value,
-        PrefixUnaryExpressionSyntax { RawKind: (int)SyntaxKind.UnaryMinusExpression, Operand: LiteralExpressionSyntax literal } => Negate(literal.Token.Value),
-        TypeOfExpressionSyntax typeOf => new FormattedValue("typeof(" + RightmostName(typeOf.Type) + ")"),
-        MemberAccessExpressionSyntax member => new FormattedValue(member.Name.Identifier.ValueText),
-        ImplicitArrayCreationExpressionSyntax array => array.Initializer.Expressions.Select(Evaluate).ToArray(),
-        ArrayCreationExpressionSyntax { Initializer: { } initializer } => initializer.Expressions.Select(Evaluate).ToArray(),
-        CollectionExpressionSyntax collection => collection.Elements.OfType<ExpressionElementSyntax>().Select(e => Evaluate(e.Expression)).ToArray(),
-        CastExpressionSyntax cast => Evaluate(cast.Expression),
-        ParenthesizedExpressionSyntax parenthesized => Evaluate(parenthesized.Expression),
-        _ => new FormattedValue(expression.ToString()),
-    };
-
-    private static object? Negate(object? value) => value switch
-    {
-        int number => -number,
-        long number => -number,
-        float number => -number,
-        double number => -number,
-        decimal number => -number,
-        uint number => -(long)number,
-        _ => value,
-    };
-
-    private static string RightmostName(TypeSyntax type) => type switch
-    {
-        QualifiedNameSyntax qualified => qualified.Right.Identifier.ValueText,
-        SimpleNameSyntax simple => simple.Identifier.ValueText,
-        PredefinedTypeSyntax predefined => PredefinedName(predefined.Keyword.Kind()),
-        _ => type.ToString(),
-    };
-
-    /// <summary>The runtime name of a C# keyword type, as <c>Type.Name</c> prints it.</summary>
-    private static string PredefinedName(SyntaxKind keyword) => keyword switch
-    {
-        SyntaxKind.IntKeyword => "Int32",
-        SyntaxKind.LongKeyword => "Int64",
-        SyntaxKind.StringKeyword => "String",
-        SyntaxKind.BoolKeyword => "Boolean",
-        SyntaxKind.DoubleKeyword => "Double",
-        SyntaxKind.FloatKeyword => "Single",
-        SyntaxKind.DecimalKeyword => "Decimal",
-        SyntaxKind.CharKeyword => "Char",
-        SyntaxKind.ObjectKeyword => "Object",
-        SyntaxKind.ByteKeyword => "Byte",
-        SyntaxKind.ShortKeyword => "Int16",
-        _ => keyword.ToString(),
-    };
 }

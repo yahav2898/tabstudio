@@ -166,6 +166,21 @@ public sealed record ProjectInfo
     /// <summary>The namespaces <c>&lt;Using Remove="..." /&gt;</c> items take away from the implicit global usings.</summary>
     public IReadOnlyList<string> RemovedUsings { get; init; } = [];
 
+    /// <summary>
+    /// The namespaces a Visual Basic project imports into every file, from its <c>&lt;Import Include="..." /&gt;</c>
+    /// items, as Visual Studio writes them (<c>System.Data</c>, <c>System.Drawing</c>), in order.
+    /// </summary>
+    public IReadOnlyList<string> Imports { get; init; } = [];
+
+    /// <summary>The namespaces <c>&lt;Import Remove="..." /&gt;</c> items take away from the Visual Basic SDK's default imports.</summary>
+    public IReadOnlyList<string> RemovedImports { get; init; } = [];
+
+    /// <summary>Whether the project is written in Visual Basic.</summary>
+    public bool IsVisualBasic => Language == ProjectLanguage.VisualBasic;
+
+    /// <summary>Whether TabStudio compiles the project with Roslyn in the app: a C# or a Visual Basic project.</summary>
+    public bool IsRoslynLanguage => Language is ProjectLanguage.CSharp or ProjectLanguage.VisualBasic;
+
     /// <summary>Patterns from <c>&lt;Compile Include="..." /&gt;</c> items, relative to the project directory.</summary>
     public IReadOnlyList<string> CompileIncludes { get; init; } = [];
 

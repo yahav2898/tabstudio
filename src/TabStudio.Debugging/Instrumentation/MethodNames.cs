@@ -2,7 +2,10 @@ using Microsoft.CodeAnalysis;
 
 namespace TabStudio.Debugging.Instrumentation;
 
-/// <summary>Names functions the way the Call Stack panel shows them, for example <c>Calculator.Add(int, int)</c>.</summary>
+/// <summary>
+/// Names functions the way the Call Stack panel shows them, for example <c>Calculator.Add(int, int)</c>, or in Visual
+/// Basic <c>Calculator.Add(Integer, Integer)</c>, as the symbol's own language displays types.
+/// </summary>
 internal static class MethodNames
 {
     /// <summary>What the Call Stack shows for a program's top-level statements.</summary>
@@ -35,6 +38,8 @@ internal static class MethodNames
         IMethodSymbol { MethodKind: MethodKind.LocalFunction } local => Nested(local.ContainingSymbol, local.Name),
         IMethodSymbol { AssociatedSymbol: { } owner } accessor when AccessorName(accessor) is { } kind =>
             TypeOf(accessor) + "." + MemberName(owner) + "." + kind,
+        IMethodSymbol { MethodKind: MethodKind.Constructor } constructor when IsVisualBasic(constructor) => TypeOf(constructor) + ".New",
+        IMethodSymbol { MethodKind: MethodKind.StaticConstructor } constructor when IsVisualBasic(constructor) => TypeOf(constructor) + ".Shared New",
         IMethodSymbol { MethodKind: MethodKind.Constructor } constructor => TypeOf(constructor) + "." + constructor.ContainingType.Name,
         IMethodSymbol { MethodKind: MethodKind.StaticConstructor } constructor => TypeOf(constructor) + ".static " + constructor.ContainingType.Name,
         ITypeSymbol type => type.ToDisplayString(TypeFormat),
@@ -47,14 +52,30 @@ internal static class MethodNames
 
     private static string TypeOf(ISymbol symbol) => symbol.ContainingType?.ToDisplayString(TypeFormat) ?? string.Empty;
 
-    private static string MemberName(ISymbol owner) => owner is IPropertySymbol { IsIndexer: true } ? "this[]" : owner.Name;
+    private static string MemberName(ISymbol owner) =>
+        owner is IPropertySymbol { IsIndexer: true } && !IsVisualBasic(owner) ? "this[]" : owner.Name;
 
-    private static string? AccessorName(IMethodSymbol accessor) => accessor.MethodKind switch
+    private static bool IsVisualBasic(ISymbol symbol) => symbol.Language == LanguageNames.VisualBasic;
+
+    private static string? AccessorName(IMethodSymbol accessor) =>
+        IsVisualBasic(accessor) ? VisualBasicAccessorName(accessor) : CSharpAccessorName(accessor);
+
+    private static string? CSharpAccessorName(IMethodSymbol accessor) => accessor.MethodKind switch
     {
         MethodKind.PropertyGet => "get",
         MethodKind.PropertySet => accessor.IsInitOnly ? "init" : "set",
         MethodKind.EventAdd => "add",
         MethodKind.EventRemove => "remove",
+        _ => null,
+    };
+
+    private static string? VisualBasicAccessorName(IMethodSymbol accessor) => accessor.MethodKind switch
+    {
+        MethodKind.PropertyGet => "Get",
+        MethodKind.PropertySet => "Set",
+        MethodKind.EventAdd => "AddHandler",
+        MethodKind.EventRemove => "RemoveHandler",
+        MethodKind.EventRaise => "RaiseEvent",
         _ => null,
     };
 }

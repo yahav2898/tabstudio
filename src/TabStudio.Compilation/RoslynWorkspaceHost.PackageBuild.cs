@@ -91,7 +91,7 @@ public sealed partial class RoslynWorkspaceHost
         }
 
         var usingsPath = Path.Combine(project.DirectoryPath, "obj", $"{project.Name}.GlobalUsings.g.cs");
-        var usings = CSharpCompiler.CreateGlobalUsingsSource(project);
+        var usings = project.IsVisualBasic ? null : CSharpCompiler.CreateGlobalUsingsSource(project);
         var existingUsings = roslyn.Documents.FirstOrDefault(d => string.Equals(d.FilePath, usingsPath, StringComparison.Ordinal));
         if (existingUsings is not null && usings is not null)
         {

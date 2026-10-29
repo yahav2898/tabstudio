@@ -139,7 +139,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         // platform workload, such as a .NET MAUI app or the Android or iOS head of a cross-platform app, which only that
         // workload builds.
         var csharpProjects = workspace.Projects
-            .Where(p => p.Language == ProjectLanguage.CSharp && p.Kind is not (ProjectKind.Unknown or ProjectKind.AspireAppHost))
+            .Where(p => p.IsRoslynLanguage && p.Kind is not (ProjectKind.Unknown or ProjectKind.AspireAppHost))
             .Where(p => !NetFrameworkCompatibility.NeedsWindows(p) && !ProjectClassifier.NeedsPlatformWorkload(p))
             .ToList();
 
@@ -185,7 +185,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             projectInfos));
     }
 
-    /// <summary>Whether a file is a source file of a loaded project: a C# file, or a Razor component, view or page.</summary>
+    /// <summary>Whether a file is a source file of a loaded project: a C# or Visual Basic file, or a Razor component, view or page.</summary>
     /// <param name="filePath">Full path of the file.</param>
     public bool ContainsDocument(string filePath)
     {
@@ -269,7 +269,8 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
                 .Select(p => p.Key)
                 .FirstOrDefault();
 
-            if (owner is null)
+            // A Visual Basic project compiles .vb files, and a C# project never does.
+            if (owner is null || _projects[owner].IsVisualBasic != VisualBasic.VisualBasicCompiler.IsSource(filePath))
             {
                 return false;
             }
@@ -470,8 +471,16 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
                 if (project.CompilationOptions is { } options)
                 {
                     var parseOptions = ParseOptionsFor(_projects.GetValueOrDefault(project.Id), optimize);
+                    var optimized = options.WithOptimizationLevel(level);
+                    if (optimized is Microsoft.CodeAnalysis.VisualBasic.VisualBasicCompilationOptions basicOptions
+                        && parseOptions is Microsoft.CodeAnalysis.VisualBasic.VisualBasicParseOptions basicParseOptions)
+                    {
+                        // Visual Basic's My template is parsed with the compilation's own parse options.
+                        optimized = basicOptions.WithParseOptions(basicParseOptions);
+                    }
+
                     solution = solution
-                        .WithProjectCompilationOptions(project.Id, options.WithOptimizationLevel(level))
+                        .WithProjectCompilationOptions(project.Id, optimized)
                         .WithProjectParseOptions(project.Id, parseOptions);
                 }
             }
@@ -543,6 +552,8 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             .Append(typeof(Classifier).Assembly)
             .Append(Assembly.Load("Microsoft.CodeAnalysis.Features"))
             .Append(Assembly.Load("Microsoft.CodeAnalysis.CSharp.Features"))
+            .Append(Assembly.Load("Microsoft.CodeAnalysis.VisualBasic.Workspaces"))
+            .Append(Assembly.Load("Microsoft.CodeAnalysis.VisualBasic.Features"))
             .Distinct();
 
         return MefHostServices.Create(assemblies);
@@ -568,6 +579,11 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
     private RoslynProjectInfo CreateProjectInfo(TsProject project, IReadOnlyList<string> allProjectDirectories, ISourceTextProvider sources)
     {
+        if (project.IsVisualBasic)
+        {
+            return CreateVisualBasicProjectInfo(project, allProjectDirectories, sources);
+        }
+
         var id = _projectIds[project.FilePath];
         var documents = new List<DocumentInfo>();
 
