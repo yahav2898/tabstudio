@@ -53,6 +53,7 @@ public sealed class DebugBuilder
         var stopwatch = Stopwatch.StartNew();
         var info = new DebugInfoBuilder();
         var diagnostics = new List<BuildDiagnostic>();
+        var language = project.IsVisualBasic ? ProjectLanguage.VisualBasic : ProjectLanguage.CSharp;
         if (ProjectClassifier.PlatformWorkloadReason(project) is { } workload)
         {
             diagnostics.Add(new BuildDiagnostic(
@@ -61,10 +62,9 @@ public sealed class DebugBuilder
                 $"'{project.Name}' cannot be debugged on this device: it {workload}.",
                 null,
                 project.Name));
-            return Finish(project.Name, diagnostics, null, [], stopwatch, info);
+            return Finish(project.Name, diagnostics, null, [], stopwatch, info, language);
         }
 
-        var language = project.IsVisualBasic ? ProjectLanguage.VisualBasic : ProjectLanguage.CSharp;
         if (!project.IsRoslynLanguage || _host.FindProject(project.FilePath) is null)
         {
             diagnostics.Add(new BuildDiagnostic(
