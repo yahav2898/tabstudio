@@ -217,10 +217,10 @@ Store** כדי להוסיף שפה. כל גרסה מותקנת כעדכון מע
   List. ‏Build Solution בונה לפי סדר התלויות ומדווח כל שגיאה פעם אחת.
 - **כנה לגבי מה שלא יכול לרוץ כאן.** ‏Aspire AppHost מוסבר ב-Compatibility Doctor ומדולג ב-Build עם הסיבה: הוא מפעיל
   את הפרויקטים והקונטיינרים של האפליקציה על מחשב.
-- **נבדק על מאגרי קוד אמיתיים.** ה-CI פותח 25 מאגרים ציבוריים, נעולים לקומיט, בונה ומריץ אותם בתוך סביבת הפיתוח,
+- **נבדק על מאגרי קוד אמיתיים.** ה-CI פותח 33 מאגרים ציבוריים, נעולים לקומיט, בונה ומריץ אותם בתוך סביבת הפיתוח,
   ומחזיק כל אחד לרף שגיאות שיכול רק לרדת: פתרונות .NET כמו MediatR, ‏CleanArchitecture, ‏Polly, ‏eShopOnWeb,
-  ‏SimplCommerce, ‏Conduit ו-Avalonia.Samples, מדריכי Windows Forms ו-WPF קלאסיים, ופרויקטי Node, ‏Python, ‏Java ו-Rust. תהליך ה-embedded עושה אותו
-  דבר לפרויקטי PlatformIO, ‏Arduino, ‏STM32Cube, ‏Pico SDK ו-Rust embedded.
+  ‏SimplCommerce, ‏Conduit ו-Avalonia.Samples, מדריכי Windows Forms ו-WPF קלאסיים, ופרויקטי Node, ‏Python, ‏Java, ‏Go, ‏Rust ו-C כמו אפליקציות Next.js, ‏Spring ו-Gin. תהליך ה-embedded עושה אותו
+  דבר ל-11 פרויקטי PlatformIO, ‏Arduino, ‏STM32Cube, ‏ESP-IDF, ‏Zephyr, ‏Pico SDK ו-Rust embedded, ביניהם Marlin.
 
 ### שירותים ומסדי נתונים
 
