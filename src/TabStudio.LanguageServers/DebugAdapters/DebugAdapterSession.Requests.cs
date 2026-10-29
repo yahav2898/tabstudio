@@ -156,7 +156,10 @@ public sealed partial class DebugAdapterSession
                 Math.Max(1, f.Column),
                 f.EndLine,
                 f.EndColumn,
-                f.PresentationHint is "subtle" or "label" || f.Source?.PresentationHint == "deemphasize"))
+                f.PresentationHint is "subtle" or "label" || f.Source?.PresentationHint == "deemphasize")
+            {
+                SourceName = f.Source?.Name,
+            })
             .ToList();
     }
 

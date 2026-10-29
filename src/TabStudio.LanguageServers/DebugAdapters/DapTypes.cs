@@ -99,7 +99,11 @@ public sealed record DapThread(int Id, string Name);
 /// <param name="EndLine">One-based end line, if known.</param>
 /// <param name="EndColumn">One-based end column, if known.</param>
 /// <param name="IsSubtle">Whether the adapter marks it as less important, such as library code.</param>
-public sealed record DapStackFrame(int Id, string Name, string? FilePath, int Line, int Column, int? EndLine, int? EndColumn, bool IsSubtle);
+public sealed record DapStackFrame(int Id, string Name, string? FilePath, int Line, int Column, int? EndLine, int? EndColumn, bool IsSubtle)
+{
+    /// <summary>The source's name, such as <c>Main.kt</c>, which a JVM class records even when the adapter has no path for it.</summary>
+    public string? SourceName { get; init; }
+}
 
 /// <summary>A scope of a frame, such as its locals or the globals.</summary>
 /// <param name="Name">Its name, such as <c>Locals</c>.</param>

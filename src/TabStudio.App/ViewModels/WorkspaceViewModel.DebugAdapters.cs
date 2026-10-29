@@ -1279,6 +1279,15 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             ? address.LocalPath
             : frame.FilePath;
         path = path is { } reported && !File.Exists(reported) ? _languageServerServices.Launcher.ToLocalPath(reported) ?? reported : path;
+        path = path is null ? null : KotlinSourceOf(path);
+        // Java's debugger may name a Kotlin frame's source only by the file the class records (Main.kt), or by a path
+        // that is not a file here: the workspace's file of that name, under the package's folders.
+        if ((path is null || !File.Exists(path)) && frame.SourceName is { } sourceName
+            && (sourceName.EndsWith(".kt", StringComparison.Ordinal) || sourceName.EndsWith(".kts", StringComparison.Ordinal)))
+        {
+            path = path is { } named && !named.Contains("://", StringComparison.Ordinal) && named.EndsWith(sourceName, StringComparison.Ordinal) ? named : sourceName;
+        }
+
         if (path is { } relative && !Path.IsPathRooted(relative) && (relative.EndsWith(".kt", StringComparison.Ordinal) || relative.EndsWith(".kts", StringComparison.Ordinal))
             && Workspace?.RootDirectory is { } root)
         {

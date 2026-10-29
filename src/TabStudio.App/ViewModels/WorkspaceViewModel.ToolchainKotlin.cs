@@ -16,6 +16,12 @@ public sealed partial class WorkspaceViewModel
 {
     private LanguageServerDocument? _kotlinDebugDocument;
 
+    /// <summary>The Kotlin file each breakpoint stub stands for, so a frame Java's debugger reports in a stub shows the Kotlin file.</summary>
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, string> _kotlinStubs = new(StringComparer.Ordinal);
+
+    /// <summary>The Kotlin file a breakpoint stub stands for, or the path itself.</summary>
+    private string KotlinSourceOf(string path) => _kotlinStubs.TryGetValue(path, out var kotlin) ? kotlin : path;
+
     private async Task<LaunchConfiguration?> PrepareKotlinDebugAsync(ToolchainProject project, LaunchConfiguration configuration)
     {
         var stubs = Path.Combine(project.Directory, ".tabstudio", "kotlin-debug");
@@ -52,7 +58,7 @@ public sealed partial class WorkspaceViewModel
             }
 
             properties["sourcePaths"] = sourcePaths;
-            _pendingBreakpointSources = (file, breakpoints) => KotlinBreakpointSources(file, breakpoints, stubs);
+            _pendingBreakpointSources = (file, breakpoints) => KotlinBreakpointSources(file, breakpoints, stubs, _kotlinStubs);
             return configuration with { Properties = properties };
         }
         catch (Exception ex) when (ex is JsonRpcException or InvalidOperationException or OperationCanceledException)
@@ -66,7 +72,7 @@ public sealed partial class WorkspaceViewModel
     }
 
     /// <summary>The Java sources a Kotlin file's breakpoints are sent for, one per class; <see langword="null"/> for any other file.</summary>
-    private static IReadOnlyList<DapBreakpointSource>? KotlinBreakpointSources(string file, IReadOnlyList<DapSourceBreakpoint> breakpoints, string stubs)
+    private static IReadOnlyList<DapBreakpointSource>? KotlinBreakpointSources(string file, IReadOnlyList<DapSourceBreakpoint> breakpoints, string stubs, System.Collections.Concurrent.ConcurrentDictionary<string, string> sourcesOfStubs)
     {
         if (!file.EndsWith(".kt", StringComparison.OrdinalIgnoreCase) || !File.Exists(file))
         {
@@ -75,6 +81,11 @@ public sealed partial class WorkspaceViewModel
 
         var lines = breakpoints.Select(b => b.Line).Distinct().ToList();
         var sources = KotlinProject.WriteBreakpointStubs(file, File.ReadAllText(file), lines, stubs);
+        foreach (var source in sources)
+        {
+            sourcesOfStubs[source.StubFile] = file;
+        }
+
         return [.. sources.Select(source => new DapBreakpointSource(
             source.StubFile,
             [.. breakpoints.Select((breakpoint, index) => (breakpoint, index)).Where(p => source.Lines.Contains(p.breakpoint.Line)).Select(p => p.index)]))];
