@@ -59,7 +59,8 @@
               <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="16" />
             </Button>
           </Grid>
-          <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+          <!-- The tabs wrap onto a second row on a phone, rather than cutting off "Windows PC" and "Join a swarm". -->
+          <WrapPanel x:Name="LinkTabs" Orientation="Horizontal" Margin="0,12,0,0">
             <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsConnectTab}" MinHeight="40"
                     Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:LinkTab.Connect}">
               <StackPanel Orientation="Horizontal" Spacing="7">
@@ -97,14 +98,17 @@
                 </Border>
               </StackPanel>
             </Button>
-          </StackPanel>
+          </WrapPanel>
         </StackPanel>
         <Border DockPanel.Dock="Top" Height="1" Background="{DynamicResource Brush.Divider}" />
 
         <!-- This device, and Done -->
         <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="22,10,16,12">
-          <TextBlock Classes="muted small" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"><Run
-            Text="{Binding DeviceText}" /><Run Text="  ·  " /><Run Text="{Binding FingerprintText}" /></TextBlock>
+          <!-- The fingerprint is how both ends are compared before a link is trusted: it wraps, never trims. -->
+          <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+            <TextBlock Classes="muted small" Text="{Binding DeviceText}" TextTrimming="CharacterEllipsis" />
+            <TextBlock x:Name="FingerprintLine" Classes="muted small" Text="{Binding FingerprintText}" TextWrapping="Wrap" FontFamily="{DynamicResource CodeFont}" />
+          </StackPanel>
           <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Height="40" Padding="20,0" Content="Done" Command="{Binding CloseCommand}" />
         </Grid>
         <Border DockPanel.Dock="Bottom" Height="1" Background="{DynamicResource Brush.Divider}" />
