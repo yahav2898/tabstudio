@@ -1,214 +1,166 @@
 == Output
-Running Greeter with Swift 6.4.1
-> swift build --product Greeter
-Building for debugging...
-[Planning deferred tasks]
-error: SwiftCompile normal x86_64 failed with a nonzero exit code. Command line:     cd /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects
-    
-/tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Sources/Greeter/main.swift:7:8: error: reference to var 'stdout' is not concurrency-safe because it involves shared mutable state
- 5 | 
- 6 | print("What is your name? ", terminator: "")
- 7 | fflush(stdout)
-   |        `- error: reference to var 'stdout' is not concurrency-safe because it involves shared mutable state
- 8 | let name = readLine()?.trimmingCharacters(in: .whitespaces) ?? ""
- 9 | print(greet(name.isEmpty ? "world" : name))
-
-/usr/include/stdio.h:150:14: note: var declared here
-148 | /* Standard streams.  */
-149 | extern FILE *stdin;		/* Standard input stream.  */
-150 | extern FILE *stdout;		/* Standard output stream.  */
-    |              `- note: var declared here
-151 | extern FILE *stderr;		/* Standard error output stream.  */
-152 | /* C89/C99 say they're macros.  Make them happy.  */
-Failed frontend command:
-/home/runner/work/_temp/swift/usr/bin/swift-frontend -frontend -emit-module -experimental-skip-non-inlinable-function-bodies-without-types /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Sources/Greeter/main.swift -target x86_64-unknown-linux-gnu -disable-objc-interop -I /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/out/Products/Debug-linux-x86_64 -module-cache-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D Xcode -serialize-debugging-options -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /home/runner/work/_temp/swift/usr/lib/swift/host/plugins/testing\#/home/runner/work/_temp/swift/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -Xcc -I/tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/out/Products/Debug-linux-x86_64/include -Xcc -I/tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/out/Intermediates.noindex/Greeter.build/Debug-linux-x86_64/Greeter-p.build/DerivedSources-normal/x86_64 -Xcc -I/tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/out/Intermediates.noindex/Greeter.build/Debug-linux-x86_64/Greeter-p.build/DerivedSources/x86_64 -Xcc -I/tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/out/Intermediates.noindex/Greeter.build/Debug-linux-x86_64/Greeter-p.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\=1 -no-auto-bridging-header-chaining -module-name Greeter -package-name greeter -const-gather-protocols-file /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/out/Intermediates.noindex/Greeter.build/Debug-linux-x86_64/Greeter-p.build/Objects-normal/x86_64/Greeter_const_extract_protocols.json -in-process-plugin-server-path /home/runner/work/_temp/swift/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /home/runner/work/_temp/swift/usr/lib/swift/host/plugins -plugin-path /home/runner/work/_temp/swift/usr/local/lib/swift/host/plugins -emit-module-doc-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/out/Intermediates.noindex/Greeter.build/Debug-linux-x86_64/Greeter-p.build/Objects-normal/x86_64/Modules/Greeter.swiftdoc -emit-module-source-info-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/out/Intermediates.noindex/Greeter.build/Debug-linux-x86_64/Greeter-p.build/Objects-normal/x86_64/Modules/Greeter.swiftsourceinfo -serialize-diagnostics-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/out/Intermediates.noindex/Greeter.build/Debug-linux-x86_64/Greeter-p.build/Objects-normal/x86_64/Greeter-primary-emit-module.dia -emit-dependencies-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/out/Intermediates.noindex/Greeter.build/Debug-linux-x86_64/Greeter-p.build/Objects-normal/x86_64/Greeter-primary-emit-module.d -o /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/out/Intermediates.noindex/Greeter.build/Debug-linux-x86_64/Greeter-p.build/Objects-normal/x86_64/Modules/Greeter.swiftmodule
-error: Build failed
-
-The program 'Greeter' has exited with code 1 (0x1).
+------ Setting up Greeter: swift package resolve ------
+> swift package resolve
+========== swift package resolve: succeeded ==========
 
 == State
-Failed: The program stopped with an error
+Ready: Set up: Greeter
 == Diagnostics
-Reference to var 'stdout' is not concurrency-safe because it involves shared mutable state
+Circular reference
 == Locals
 
 == Call Stack
 
 == Language Servers
-23:56:18 [SourceKit-LSP] Starting SourceKit-LSP for /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter: /home/runner/work/_temp/swift/usr/bin/sourcekit-lsp 
-23:56:18 [SourceKit-LSP] Sending request 'initialize - (1)'.
-23:56:18 [SourceKit-LSP] [org.swift.sourcekit-lsp:default] default 2026-10-28 23:56:18.6070 +0000
-23:56:18 [SourceKit-LSP] sourcekit-lsp launched from <private>
-23:56:18 [SourceKit-LSP] ---
-23:56:18 [SourceKit-LSP] Received response 'initialize - (1)' in 291ms.
-23:56:18 [SourceKit-LSP] Sending notification 'initialized'.
-23:56:18 [SourceKit-LSP] Sending notification 'workspace/didChangeConfiguration'.
-23:56:18 [SourceKit-LSP] Sending notification 'textDocument/didOpen'.
-23:56:18 [SourceKit-LSP] SourceKit-LSP is running.
-23:56:18 [SourceKit-LSP] Sending request 'textDocument/semanticTokens/full - (2)'.
-23:56:19 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:19 [SourceKit-LSP] 🟫🟥🟨 SwiftPM log for /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter
-23:56:19 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:19 [SourceKit-LSP] 🟫🟥🟨 [debug]: resolving and updating 'Package.resolved'
-23:56:19 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:19 [SourceKit-LSP] 🟫🟥🟨 [debug]: evaluating manifest for 'greeter' v. unknown
-23:56:19 [SourceKit-LSP] Received response 'textDocument/semanticTokens/full - (2)' in 512ms.
-23:56:19 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
-23:56:19 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:19 [SourceKit-LSP] 🟨⬜️🟨 Preparing Greeter
-🟨⬜️🟨 /home/runner/work/_temp/swift/usr/bin/swift build --build-system native --package-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter --scratch-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build --disable-index-store --target Greeter --experimental-prepare-for-indexing
-23:56:19 [SourceKit-LSP] Sending request 'textDocument/completion - (3)'.
-23:56:19 [SourceKit-LSP] Sending request 'textDocument/semanticTokens/full - (4)'.
-23:56:19 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:19 [SourceKit-LSP] 🟨⬜️🟨 Building for debugging...
-23:56:19 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:19 [SourceKit-LSP] 🟨⬜️🟨 [0/3] Write sources
-23:56:19 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:19 [SourceKit-LSP] 🟨⬜️🟨 [2/3] Write swift-version--471FFB26EA0528F1.txt
-23:56:19 [SourceKit-LSP] Received request 'window/workDoneProgress/create - ("sk-0")'.
-23:56:19 [SourceKit-LSP] Received notification '$/progress'.
-23:56:20 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:20 [SourceKit-LSP] 🟨⬜️🟨 [4/5] Compiling GreeterCore Greeting.swift
-23:56:20 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:20 [SourceKit-LSP] 🟨⬜️🟨 [5/5] Emitting module GreeterCore
-23:56:20 [SourceKit-LSP] /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Sources/Greeter/main.swift:4:8: error: no such module 'GreeterCore'
-23:56:20 [SourceKit-LSP] import GreeterCore
-23:56:20 [SourceKit-LSP]        ^
-23:56:20 [SourceKit-LSP] Received response 'textDocument/semanticTokens/full - (4)' in 973ms.
-23:56:20 [SourceKit-LSP] Received notification 'textDocument/publishDiagnostics'.
-23:56:20 [SourceKit-LSP] Sending request 'textDocument/inlayHint - (5)'.
-23:56:20 [SourceKit-LSP] Received response 'textDocument/inlayHint - (5)' in 4ms.
-23:56:20 [SourceKit-LSP] Sending request 'textDocument/foldingRange - (6)'.
-23:56:20 [SourceKit-LSP] Received response 'textDocument/foldingRange - (6)' in 6ms.
-23:56:20 [SourceKit-LSP] Received response 'textDocument/completion - (3)' in 1250ms.
-23:56:20 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
-23:56:20 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:20 [SourceKit-LSP] 🟨⬜️🟨 [7/8] Emitting module Greeter
-23:56:20 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:20 [SourceKit-LSP] 🟨⬜️🟨 [8/8] Compiling Greeter main.swift
-23:56:20 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
-23:56:20 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
-23:56:20 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
-23:56:20 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
-23:56:20 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
-23:56:20 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
-23:56:20 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
-23:56:20 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
-23:56:20 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
-23:56:20 [SourceKit-LSP] Sending request 'textDocument/completion - (7)'.
-23:56:20 [SourceKit-LSP] Received response 'textDocument/completion - (7)' in 20ms.
-23:56:20 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:20 [SourceKit-LSP] 🟨⬜️🟨 Build of target: 'Greeter' complete! (1.15s)
-23:56:20 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:20 [SourceKit-LSP] 🟨⬜️🟨 warning: '--build-system native' has been deprecated and will be removed in a future release; please report an issue at https://github.com/swiftlang/swift-package-manager/issues if you are unable to adopt the default build system.
-23:56:20 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:20 [SourceKit-LSP] 🟨⬜️🟨 Finished with exit code 0 in 1.385467435 seconds
-23:56:20 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:20 [SourceKit-LSP] 🟨⬜️⬜️ Preparing GreeterCore
-🟨⬜️⬜️ /home/runner/work/_temp/swift/usr/bin/swift build --build-system native --package-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter --scratch-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build --disable-index-store --target GreeterCore --experimental-prepare-for-indexing
-23:56:20 [SourceKit-LSP] Sending request 'completionItem/resolve - (8)'.
-23:56:20 [SourceKit-LSP] Received response 'completionItem/resolve - (8)' in 2ms.
-23:56:20 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
-23:56:20 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
-23:56:20 [SourceKit-LSP] Sending notification 'textDocument/didSave'.
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟨⬜️⬜️ [0/1] Planning build
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟨⬜️⬜️ Building for debugging...
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟨⬜️⬜️ [0/1] Write swift-version--471FFB26EA0528F1.txt
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟨⬜️⬜️ Build of target: 'GreeterCore' complete! (0.08s)
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟨⬜️⬜️ warning: '--build-system native' has been deprecated and will be removed in a future release; please report an issue at https://github.com/swiftlang/swift-package-manager/issues if you are unable to adopt the default build system.
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟨⬜️⬜️ Finished with exit code 0 in 0.303179392 seconds
-23:56:21 [SourceKit-LSP] Received notification '$/progress'.
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟪⬜️🟫 Preparing GreeterCoreTests
-🟪⬜️🟫 /home/runner/work/_temp/swift/usr/bin/swift build --build-system native --package-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter --scratch-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build --disable-index-store --target GreeterCoreTests --experimental-prepare-for-indexing
-23:56:21 [SourceKit-LSP] Sending request 'textDocument/documentHighlight - (9)'.
-23:56:21 [SourceKit-LSP] Sending request 'textDocument/semanticTokens/full - (10)'.
-23:56:21 [SourceKit-LSP] Received response 'textDocument/documentHighlight - (9)' in 3ms.
-23:56:21 [SourceKit-LSP] Received response 'textDocument/semanticTokens/full - (10)' in 3ms.
-23:56:21 [SourceKit-LSP] Sending request 'textDocument/documentSymbol - (11)'.
-23:56:21 [SourceKit-LSP] Sending request 'textDocument/inlayHint - (12)'.
-23:56:21 [SourceKit-LSP] Received response 'textDocument/documentSymbol - (11)' in 3ms.
-23:56:21 [SourceKit-LSP] Received response 'textDocument/inlayHint - (12)' in 9ms.
-23:56:21 [SourceKit-LSP] Sending request 'textDocument/foldingRange - (13)'.
-23:56:21 [SourceKit-LSP] Received response 'textDocument/foldingRange - (13)' in 2ms.
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟪⬜️🟫 Building for debugging...
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟪⬜️🟫 [0/2] Write sources
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟪⬜️🟫 [1/2] Write swift-version--471FFB26EA0528F1.txt
-23:56:21 [SourceKit-LSP] Sending request 'textDocument/codeAction - (14)'.
-23:56:21 [SourceKit-LSP] Received response 'textDocument/codeAction - (14)' in 66ms.
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟪⬜️🟫 [3/4] Emitting module GreeterCoreTests
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟪⬜️🟫 [4/4] Compiling GreeterCoreTests GreetingTests.swift
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟪⬜️🟫 Build of target: 'GreeterCoreTests' complete! (0.48s)
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟪⬜️🟫 warning: '--build-system native' has been deprecated and will be removed in a future release; please report an issue at https://github.com/swiftlang/swift-package-manager/issues if you are unable to adopt the default build system.
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟪⬜️🟫 Finished with exit code 0 in 0.70801595 seconds
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] ⬜️🟪⬛️ Indexing /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Sources/GreeterCore/Greeting.swift
-⬜️🟪⬛️ /home/runner/work/_temp/swift/usr/bin/swiftc -module-name GreeterCore -package-name greeter /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Sources/GreeterCore/Greeting.swift -I /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/Modules -target x86_64-unknown-linux-gnu -enable-batch-mode -index-store-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/index/store -Onone -enable-testing -j4 -DSWIFT_PACKAGE -DDEBUG -DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -module-cache-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/ModuleCache -parse-as-library -swift-version 6 -Xfrontend -experimental-allow-module-with-compiler-errors -Xfrontend -empty-abi-descriptor -g -Xcc -fPIC -Xcc -g -package-name greeter -Xcc -fno-omit-frame-pointer -Xfrontend -empty-abi-descriptor -Xcc -fretain-comments-from-system-headers -Xcc -Xclang -Xcc -detailed-preprocessing-record -Xcc -Xclang -Xcc -fmodule-format=raw -Xcc -Xclang -Xcc -fallow-pch-with-compiler-errors -Xcc -Xclang -Xcc -fallow-pcm-with-compiler-errors -Xcc -Wno-non-modular-include-in-framework-module -Xcc -Wno-incomplete-umbrella -index-file -disable-batch-mode -output-file-map /tmp/sourcekit-lsp-output-file-map-9AD4E805-0277-4BF8-97D0-0AC4A34BC36D.json -index-file-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Sources/GreeterCore/Greeting.swift
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪 Indexing /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Sources/Greeter/main.swift
-🟩🟩🟪 /home/runner/work/_temp/swift/usr/bin/swiftc -module-name Greeter -package-name greeter /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Sources/Greeter/main.swift -I /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/Modules -target x86_64-unknown-linux-gnu -enable-batch-mode -index-store-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/index/store -Onone -enable-testing -j4 -DSWIFT_PACKAGE -DDEBUG -DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -module-cache-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/ModuleCache -swift-version 6 -Xfrontend -experimental-allow-module-with-compiler-errors -Xfrontend -empty-abi-descriptor -g -Xcc -fPIC -Xcc -g -package-name greeter -Xcc -fno-omit-frame-pointer -Xfrontend -empty-abi-descriptor -Xcc -fretain-comments-from-system-headers -Xcc -Xclang -Xcc -detailed-preprocessing-record -Xcc -Xclang -Xcc -fmodule-format=raw -Xcc -Xclang -Xcc -fallow-pch-with-compiler-errors -Xcc -Xclang -Xcc -fallow-pcm-with-compiler-errors -Xcc -Wno-non-modular-include-in-framework-module -Xcc -Wno-incomplete-umbrella -index-file -disable-batch-mode -output-file-map /tmp/sourcekit-lsp-output-file-map-A1BEC9A0-E3BA-4568-8BC8-0523CC6F0E3C.json -index-file-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Sources/Greeter/main.swift
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟦⬛️🟦 Indexing /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Tests/GreeterCoreTests/GreetingTests.swift
-🟦⬛️🟦 /home/runner/work/_temp/swift/usr/bin/swiftc -module-name GreeterCoreTests -package-name greeter /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Tests/GreeterCoreTests/GreetingTests.swift -I /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/Modules -target x86_64-unknown-linux-gnu -enable-batch-mode -index-store-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/index/store -Onone -enable-testing -Xfrontend -enable-cross-import-overlays -j4 -DSWIFT_PACKAGE -DDEBUG -DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -module-cache-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/ModuleCache -parse-as-library -swift-version 6 -Xfrontend -experimental-allow-module-with-compiler-errors -Xfrontend -empty-abi-descriptor -g -Xcc -fPIC -Xcc -g -package-name greeter -Xcc -fno-omit-frame-pointer -Xfrontend -empty-abi-descriptor -Xcc -fretain-comments-from-system-headers -Xcc -Xclang -Xcc -detailed-preprocessing-record -Xcc -Xclang -Xcc -fmodule-format=raw -Xcc -Xclang -Xcc -fallow-pch-with-compiler-errors -Xcc -Xclang -Xcc -fallow-pcm-with-compiler-errors -Xcc -Wno-non-modular-include-in-framework-module -Xcc -Wno-incomplete-umbrella -index-file -disable-batch-mode -output-file-map /tmp/sourcekit-lsp-output-file-map-57E3B2AC-28EF-426B-9F65-5C84706B4826.json -index-file-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Tests/GreeterCoreTests/GreetingTests.swift
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪 /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Sources/Greeter/main.swift:7:8: error: reference to var 'stdout' is not concurrency-safe because it involves shared mutable state
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪  5 | 
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪  6 | print("What is your name? ", terminator: "")
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪  7 | fflush(stdout)
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪    |        `- error: reference to var 'stdout' is not concurrency-safe because it involves shared mutable state
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪  8 | let name = readLine()?.trimmingCharacters(in: .whitespaces) ?? ""
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪  9 | print(undefined_name(name.isEmpty ? "world" : name))
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪 
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪 /usr/include/stdio.h:150:14: note: var declared here
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪 148 | /* Standard streams.  */
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪 149 | extern FILE *stdin;		/* Standard input stream.  */
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪 150 | extern FILE *stdout;		/* Standard output stream.  */
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪     |              `- note: var declared here
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪 151 | extern FILE *stderr;		/* Standard error output stream.  */
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪 152 | /* C89/C99 say they're macros.  Make them happy.  */
-23:56:21 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:21 [SourceKit-LSP] 🟩🟩🟪 
-23:56:22 [SourceKit-LSP] Received notification 'textDocument/publishDiagnostics'.
-23:56:23 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
-23:56:23 [SourceKit-LSP] Sending notification 'textDocument/didSave'.
-23:56:23 [SourceKit-LSP] Sending request 'textDocument/semanticTokens/full - (15)'.
-23:56:23 [SourceKit-LSP] Received response 'textDocument/semanticTokens/full - (15)' in 4ms.
-23:56:23 [SourceKit-LSP] Sending request 'textDocument/inlayHint - (16)'.
-23:56:23 [SourceKit-LSP] Received response 'textDocument/inlayHint - (16)' in 2ms.
-23:56:23 [SourceKit-LSP] Sending request 'textDocument/foldingRange - (17)'.
-23:56:23 [SourceKit-LSP] Received response 'textDocument/foldingRange - (17)' in 1ms.
-23:56:23 [SourceKit-LSP] Received notification 'window/logMessage'.
-23:56:23 [SourceKit-LSP] 🟦⬛️🟦 Finished with exit code 0 in 2.126557853 seconds
-23:56:23 [SourceKit-LSP] Received notification '$/progress'.
-23:56:24 [SourceKit-LSP] Received notification 'textDocument/publishDiagnostics'.
+00:20:33 [SourceKit-LSP] Starting SourceKit-LSP for /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter: /home/runner/work/_temp/swift/usr/bin/sourcekit-lsp 
+00:20:33 [SourceKit-LSP] Sending request 'initialize - (1)'.
+00:20:34 [SourceKit-LSP] Received response 'initialize - (1)' in 625ms.
+00:20:34 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:34 [SourceKit-LSP] 🟩🟥🟥 SwiftPM log for /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter
+00:20:34 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:34 [SourceKit-LSP] 🟩🟥🟥 [debug]: resolving and updating 'Package.resolved'
+00:20:34 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:34 [SourceKit-LSP] 🟩🟥🟥 [debug]: evaluating manifest for 'greeter' v. unknown
+00:20:34 [SourceKit-LSP] Sending notification 'initialized'.
+00:20:34 [SourceKit-LSP] Sending notification 'workspace/didChangeConfiguration'.
+00:20:34 [SourceKit-LSP] Sending notification 'textDocument/didOpen'.
+00:20:34 [SourceKit-LSP] SourceKit-LSP is running.
+00:20:34 [SourceKit-LSP] Sending request 'textDocument/semanticTokens/full - (2)'.
+00:20:34 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
+00:20:34 [SourceKit-LSP] Sending notification '$/cancelRequest'.
+00:20:34 [SourceKit-LSP] Sending request 'textDocument/completion - (3)'.
+00:20:34 [SourceKit-LSP] Sending request 'textDocument/semanticTokens/full - (4)'.
+00:20:34 [SourceKit-LSP] Received response 'textDocument/semanticTokens/full - (4)' in 2ms.
+00:20:34 [SourceKit-LSP] Sending request 'textDocument/inlayHint - (5)'.
+00:20:34 [SourceKit-LSP] Received response 'textDocument/inlayHint - (5)' in 3ms.
+00:20:34 [SourceKit-LSP] Sending request 'textDocument/foldingRange - (6)'.
+00:20:34 [SourceKit-LSP] Received response 'textDocument/foldingRange - (6)' in 11ms.
+00:20:34 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:34 [SourceKit-LSP] 🟦⬜️⬛️ Preparing GreeterCore
+🟦⬜️⬛️ /home/runner/work/_temp/swift/usr/bin/swift build --build-system native --package-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter --scratch-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/.build/index-build --disable-index-store --target GreeterCore --experimental-prepare-for-indexing
+00:20:34 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:34 [SourceKit-LSP] 🟦⬜️⬛️ Building for debugging...
+00:20:34 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:34 [SourceKit-LSP] 🟦⬜️⬛️ [0/2] Write sources
+00:20:35 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:35 [SourceKit-LSP] 🟦⬜️⬛️ [1/2] Write swift-version--471FFB26EA0528F1.txt
+00:20:35 [SourceKit-LSP] Received request 'window/workDoneProgress/create - ("sk-0")'.
+00:20:35 [SourceKit-LSP] Received notification '$/progress'.
+00:20:35 [SourceKit-LSP] /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/Sources/Greeter/main.swift:4:8: error: no such module 'GreeterCore'
+00:20:35 [SourceKit-LSP] import GreeterCore
+00:20:35 [SourceKit-LSP]        ^
+00:20:35 [SourceKit-LSP] Received request 'workspace/inlayHint/refresh - ("sk-1")'.
+00:20:35 [SourceKit-LSP] Sending request 'textDocument/semanticTokens/full - (7)'.
+00:20:35 [SourceKit-LSP] Received response 'textDocument/completion - (3)' in 1729ms.
+00:20:36 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:36 [SourceKit-LSP] 🟦⬜️⬛️ Finished with signal 2 in 1.354765675 seconds
+00:20:36 [SourceKit-LSP] Received notification '$/progress'.
+00:20:36 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:36 [SourceKit-LSP] ⬛️⬜️⬛️ Preparing Greeter
+⬛️⬜️⬛️ /home/runner/work/_temp/swift/usr/bin/swift build --build-system native --package-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter --scratch-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/.build/index-build --disable-index-store --target Greeter --experimental-prepare-for-indexing
+00:20:36 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
+00:20:36 [SourceKit-LSP] Sending notification '$/cancelRequest'.
+00:20:36 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
+00:20:36 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
+00:20:36 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
+00:20:36 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
+00:20:36 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
+00:20:36 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
+00:20:36 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
+00:20:36 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
+00:20:36 [SourceKit-LSP] Sending notification 'textDocument/didChange'.
+00:20:36 [SourceKit-LSP] Sending request 'textDocument/completion - (8)'.
+00:20:36 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:36 [SourceKit-LSP] ⬛️⬜️⬛️ [0/1] Planning build
+00:20:36 [SourceKit-LSP] Sending request 'textDocument/documentHighlight - (9)'.
+00:20:36 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:36 [SourceKit-LSP] ⬛️⬜️⬛️ Building for debugging...
+00:20:36 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:36 [SourceKit-LSP] ⬛️⬜️⬛️ [0/3] Write sources
+00:20:36 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:36 [SourceKit-LSP] ⬛️⬜️⬛️ [2/3] Write swift-version--471FFB26EA0528F1.txt
+00:20:36 [SourceKit-LSP] Sending request 'textDocument/semanticTokens/full - (10)'.
+00:20:37 [SourceKit-LSP] Received response 'textDocument/documentHighlight - (9)' in 25ms.
+00:20:37 [SourceKit-LSP] Received response 'textDocument/semanticTokens/full - (10)' in 24ms.
+00:20:37 [SourceKit-LSP] /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/Sources/Greeter/main.swift:4:8: error: no such module 'GreeterCore'
+00:20:37 [SourceKit-LSP] import GreeterCore
+00:20:37 [SourceKit-LSP]        ^
+00:20:37 [SourceKit-LSP] Sending request 'textDocument/documentSymbol - (11)'.
+00:20:37 [SourceKit-LSP] Received response 'textDocument/documentSymbol - (11)' in 4ms.
+00:20:37 [SourceKit-LSP] Sending request 'textDocument/inlayHint - (12)'.
+00:20:37 [SourceKit-LSP] Received response 'textDocument/inlayHint - (12)' in 2ms.
+00:20:37 [SourceKit-LSP] Received response 'textDocument/completion - (8)' in 921ms.
+00:20:37 [SourceKit-LSP] Sending request 'textDocument/foldingRange - (13)'.
+00:20:37 [SourceKit-LSP] Received response 'textDocument/foldingRange - (13)' in 1ms.
+00:20:37 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:37 [SourceKit-LSP] ⬛️⬜️⬛️ [4/5] Compiling GreeterCore Greeting.swift
+00:20:37 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:37 [SourceKit-LSP] ⬛️⬜️⬛️ [5/5] Emitting module GreeterCore
+00:20:37 [SourceKit-LSP] Sending request 'textDocument/codeAction - (14)'.
+00:20:37 [SourceKit-LSP] Received response 'textDocument/codeAction - (14)' in 25ms.
+00:20:37 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:37 [SourceKit-LSP] ⬛️⬜️⬛️ [7/8] Compiling Greeter main.swift
+00:20:37 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:37 [SourceKit-LSP] ⬛️⬜️⬛️ [8/8] Emitting module Greeter
+00:20:37 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:37 [SourceKit-LSP] ⬛️⬜️⬛️ Build of target: 'Greeter' complete! (1.21s)
+00:20:37 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:37 [SourceKit-LSP] ⬛️⬜️⬛️ warning: '--build-system native' has been deprecated and will be removed in a future release; please report an issue at https://github.com/swiftlang/swift-package-manager/issues if you are unable to adopt the default build system.
+00:20:37 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:37 [SourceKit-LSP] ⬛️⬜️⬛️ Finished with exit code 0 in 1.479552502 seconds
+00:20:37 [SourceKit-LSP] Received notification '$/progress'.
+00:20:37 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:37 [SourceKit-LSP] 🟩🟦⬜️ Preparing GreeterCoreTests
+🟩🟦⬜️ /home/runner/work/_temp/swift/usr/bin/swift build --build-system native --package-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter --scratch-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/.build/index-build --disable-index-store --target GreeterCoreTests --experimental-prepare-for-indexing
+00:20:37 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:37 [SourceKit-LSP] 🟩🟦⬜️ Building for debugging...
+00:20:37 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:37 [SourceKit-LSP] 🟩🟦⬜️ [0/2] Write sources
+00:20:37 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:37 [SourceKit-LSP] 🟩🟦⬜️ [1/2] Write swift-version--471FFB26EA0528F1.txt
+00:20:37 [SourceKit-LSP] Received notification 'textDocument/publishDiagnostics'.
+00:20:38 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:38 [SourceKit-LSP] 🟩🟦⬜️ [3/4] Compiling GreeterCoreTests GreetingTests.swift
+00:20:38 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:38 [SourceKit-LSP] 🟩🟦⬜️ [4/4] Emitting module GreeterCoreTests
+00:20:38 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:38 [SourceKit-LSP] 🟩🟦⬜️ Build of target: 'GreeterCoreTests' complete! (0.52s)
+00:20:38 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:38 [SourceKit-LSP] 🟩🟦⬜️ warning: '--build-system native' has been deprecated and will be removed in a future release; please report an issue at https://github.com/swiftlang/swift-package-manager/issues if you are unable to adopt the default build system.
+00:20:38 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:38 [SourceKit-LSP] 🟩🟦⬜️ Finished with exit code 0 in 0.766942537 seconds
+00:20:38 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:38 [SourceKit-LSP] 🟥⬛️⬜️ Preparing GreeterCore
+🟥⬛️⬜️ /home/runner/work/_temp/swift/usr/bin/swift build --build-system native --package-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter --scratch-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/.build/index-build --disable-index-store --target GreeterCore --experimental-prepare-for-indexing
+00:20:38 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:38 [SourceKit-LSP] 🟦🟪⬜️ Indexing /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/Sources/Greeter/main.swift
+🟦🟪⬜️ /home/runner/work/_temp/swift/usr/bin/swiftc -module-name Greeter -package-name greeter /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/Sources/Greeter/main.swift -I /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/Modules -target x86_64-unknown-linux-gnu -enable-batch-mode -index-store-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/index/store -Onone -enable-testing -j4 -DSWIFT_PACKAGE -DDEBUG -DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -module-cache-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/ModuleCache -swift-version 6 -Xfrontend -experimental-allow-module-with-compiler-errors -Xfrontend -empty-abi-descriptor -g -Xcc -fPIC -Xcc -g -package-name greeter -Xcc -fno-omit-frame-pointer -Xfrontend -empty-abi-descriptor -Xcc -fretain-comments-from-system-headers -Xcc -Xclang -Xcc -detailed-preprocessing-record -Xcc -Xclang -Xcc -fmodule-format=raw -Xcc -Xclang -Xcc -fallow-pch-with-compiler-errors -Xcc -Xclang -Xcc -fallow-pcm-with-compiler-errors -Xcc -Wno-non-modular-include-in-framework-module -Xcc -Wno-incomplete-umbrella -index-file -disable-batch-mode -output-file-map /tmp/sourcekit-lsp-output-file-map-2BFDB4C6-C43F-4D3E-8894-988D8F582A9B.json -index-file-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/Sources/Greeter/main.swift
+00:20:38 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:38 [SourceKit-LSP] 🟪🟦🟫 Indexing /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/Tests/GreeterCoreTests/GreetingTests.swift
+🟪🟦🟫 /home/runner/work/_temp/swift/usr/bin/swiftc -module-name GreeterCoreTests -package-name greeter /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/Tests/GreeterCoreTests/GreetingTests.swift -I /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/Modules -target x86_64-unknown-linux-gnu -enable-batch-mode -index-store-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/index/store -Onone -enable-testing -Xfrontend -enable-cross-import-overlays -j4 -DSWIFT_PACKAGE -DDEBUG -DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -module-cache-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/ModuleCache -parse-as-library -swift-version 6 -Xfrontend -experimental-allow-module-with-compiler-errors -Xfrontend -empty-abi-descriptor -g -Xcc -fPIC -Xcc -g -package-name greeter -Xcc -fno-omit-frame-pointer -Xfrontend -empty-abi-descriptor -Xcc -fretain-comments-from-system-headers -Xcc -Xclang -Xcc -detailed-preprocessing-record -Xcc -Xclang -Xcc -fmodule-format=raw -Xcc -Xclang -Xcc -fallow-pch-with-compiler-errors -Xcc -Xclang -Xcc -fallow-pcm-with-compiler-errors -Xcc -Wno-non-modular-include-in-framework-module -Xcc -Wno-incomplete-umbrella -index-file -disable-batch-mode -output-file-map /tmp/sourcekit-lsp-output-file-map-0986FEB6-7F41-4634-9CBD-7C25649DFB42.json -index-file-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/Tests/GreeterCoreTests/GreetingTests.swift
+00:20:38 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:38 [SourceKit-LSP] 🟥⬛️⬜️ Building for debugging...
+00:20:38 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:38 [SourceKit-LSP] 🟥⬛️⬜️ [0/1] Write swift-version--471FFB26EA0528F1.txt
+00:20:38 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:38 [SourceKit-LSP] 🟥⬛️⬜️ Build of target: 'GreeterCore' complete! (0.13s)
+00:20:38 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:38 [SourceKit-LSP] 🟥⬛️⬜️ warning: '--build-system native' has been deprecated and will be removed in a future release; please report an issue at https://github.com/swiftlang/swift-package-manager/issues if you are unable to adopt the default build system.
+00:20:38 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:38 [SourceKit-LSP] 🟥⬛️⬜️ Finished with exit code 0 in 0.471697526 seconds
+00:20:38 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:38 [SourceKit-LSP] 🟦⬜️🟦 Indexing /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/Sources/GreeterCore/Greeting.swift
+🟦⬜️🟦 /home/runner/work/_temp/swift/usr/bin/swiftc -module-name GreeterCore -package-name greeter /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/Sources/GreeterCore/Greeting.swift -I /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/Modules -target x86_64-unknown-linux-gnu -enable-batch-mode -index-store-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/index/store -Onone -enable-testing -j4 -DSWIFT_PACKAGE -DDEBUG -DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -module-cache-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/ModuleCache -parse-as-library -swift-version 6 -Xfrontend -experimental-allow-module-with-compiler-errors -Xfrontend -empty-abi-descriptor -g -Xcc -fPIC -Xcc -g -package-name greeter -Xcc -fno-omit-frame-pointer -Xfrontend -empty-abi-descriptor -Xcc -fretain-comments-from-system-headers -Xcc -Xclang -Xcc -detailed-preprocessing-record -Xcc -Xclang -Xcc -fmodule-format=raw -Xcc -Xclang -Xcc -fallow-pch-with-compiler-errors -Xcc -Xclang -Xcc -fallow-pcm-with-compiler-errors -Xcc -Wno-non-modular-include-in-framework-module -Xcc -Wno-incomplete-umbrella -index-file -disable-batch-mode -output-file-map /tmp/sourcekit-lsp-output-file-map-724A6B7B-8D2A-4559-841D-94D7A8A6EA02.json -index-file-path /tmp/tabstudio-tests/bac5b78760b745c280537f3afabec763/app/Projects/Greeter/Sources/GreeterCore/Greeting.swift
+00:20:39 [SourceKit-LSP] Received notification 'textDocument/publishDiagnostics'.
+00:20:40 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:40 [SourceKit-LSP] 🟪🟦🟫 Finished with exit code 0 in 2.484756258 seconds
+00:20:40 [SourceKit-LSP] Received notification '$/progress'.
+00:20:41 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:41 [SourceKit-LSP] 🟦⬜️🟦 Finished with exit code 0 in 2.971170875 seconds
+00:20:41 [SourceKit-LSP] Received notification '$/progress'.
+00:20:41 [SourceKit-LSP] Received notification 'window/logMessage'.
+00:20:41 [SourceKit-LSP] 🟦🟪⬜️ Finished with exit code 0 in 3.460152448 seconds
+00:20:41 [SourceKit-LSP] Received notification '$/progress'.
 
 == Debug Adapters
 
@@ -216,172 +168,174 @@ Reference to var 'stdout' is not concurrency-safe because it involves shared mut
 /home/runner/work/_temp/js-debug/bin:/home/runner/go/bin:/home/runner/work/_temp/swift/usr/bin:/home/runner/work/_temp/kotlin-lsp/bin:/home/runner/work/_temp/kotlinc/bin:/home/runner/work/_temp/php-tools/bin:/opt/hostedtoolcache/setup-php/tools:/home/runner/.composer/vendor/bin:/home/runner/work/_temp/jdtls/bin:/home/runner/work/_temp/gradle-8.14.4/bin:/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.13-9/x64/bin:/home/runner/work/_temp/cpp-bin:/opt/hostedtoolcache/go/1.26.10/x64/bin:/opt/hostedtoolcache/Python/3.12.15/x64/bin:/opt/hostedtoolcache/Python/3.12.15/x64:/opt/hostedtoolcache/node/22.23.4/x64/bin:/usr/share/dotnet:/snap/bin:/home/runner/.local/bin:/opt/pipx_bin:/home/runner/.cargo/bin:/home/runner/.config/composer/vendor/bin:/usr/local/.ghcup/bin:/home/runner/.dotnet/tools:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 == Processes
     PID    PPID    PGID STAT     ELAPSED COMMAND
-      2       0       0 S          08:07 [kthreadd]
-      3       2       0 S          08:07  \_ [pool_workqueue_release]
-      4       2       0 I<         08:07  \_ [kworker/R-rcu_gp]
-      5       2       0 I<         08:07  \_ [kworker/R-sync_wq]
-      6       2       0 I<         08:07  \_ [kworker/R-kvfree_rcu_reclaim]
-      7       2       0 I<         08:07  \_ [kworker/R-slub_flushwq]
-      8       2       0 I<         08:07  \_ [kworker/R-netns]
-     10       2       0 I<         08:07  \_ [kworker/0:0H-kblockd]
-     12       2       0 I          08:07  \_ [kworker/u16:0-events_unbound]
-     13       2       0 I<         08:07  \_ [kworker/R-mm_percpu_wq]
-     14       2       0 S          08:07  \_ [ksoftirqd/0]
-     15       2       0 S<         08:07  \_ [pr/ttyS0]
-     16       2       0 I          08:07  \_ [rcu_sched]
-     17       2       0 S          08:07  \_ [rcu_exp_par_gp_kthread_worker/0]
-     18       2       0 S          08:07  \_ [rcu_exp_gp_kthread_worker]
-     19       2       0 S          08:07  \_ [migration/0]
-     20       2       0 S          08:07  \_ [kprobe-optimizer]
-     21       2       0 S          08:07  \_ [idle_inject/0]
-     22       2       0 S          08:07  \_ [cpuhp/0]
-     23       2       0 S          08:07  \_ [cpuhp/2]
-     24       2       0 S          08:07  \_ [idle_inject/2]
-     25       2       0 S          08:07  \_ [migration/2]
-     26       2       0 S          08:07  \_ [ksoftirqd/2]
-     27       2       0 I          08:07  \_ [kworker/2:0-events]
-     28       2       0 I<         08:07  \_ [kworker/2:0H-kblockd]
-     29       2       0 S          08:07  \_ [cpuhp/1]
-     30       2       0 S          08:07  \_ [idle_inject/1]
-     31       2       0 S          08:07  \_ [migration/1]
-     32       2       0 S          08:07  \_ [ksoftirqd/1]
-     34       2       0 I<         08:07  \_ [kworker/1:0H-kblockd]
-     35       2       0 S          08:07  \_ [cpuhp/3]
-     36       2       0 S          08:07  \_ [idle_inject/3]
-     37       2       0 S          08:07  \_ [migration/3]
-     38       2       0 S          08:07  \_ [ksoftirqd/3]
-     40       2       0 I<         08:07  \_ [kworker/3:0H-kblockd]
-     41       2       0 S          08:07  \_ [kdevtmpfs]
-     42       2       0 I<         08:07  \_ [kworker/R-inet_frag_wq]
-     43       2       0 I          08:07  \_ [rcu_tasks_kthread]
-     44       2       0 I          08:07  \_ [rcu_tasks_rude_kthread]
-     45       2       0 S          08:07  \_ [kauditd]
-     46       2       0 S          08:07  \_ [khungtaskd]
-     47       2       0 I          08:07  \_ [kworker/u16:1-events_unbound]
-     48       2       0 S          08:07  \_ [oom_reaper]
-     49       2       0 I          08:07  \_ [kworker/u16:2-events_power_efficient]
-     50       2       0 I          08:07  \_ [kworker/1:1-events]
-     51       2       0 I<         08:07  \_ [kworker/R-writeback]
-     52       2       0 S          08:07  \_ [kcompactd0]
-     53       2       0 SN         08:07  \_ [ksmd]
-     54       2       0 SN         08:07  \_ [khugepaged]
-     55       2       0 I<         08:07  \_ [kworker/R-kblockd]
-     56       2       0 I<         08:07  \_ [kworker/R-blkcg_punt_bio]
-     57       2       0 I<         08:07  \_ [kworker/R-kintegrityd]
-     58       2       0 S          08:07  \_ [irq/9-acpi]
-     59       2       0 I          08:07  \_ [kworker/3:1-events]
-     60       2       0 I          08:07  \_ [kworker/2:1-mm_percpu_wq]
-     61       2       0 I<         08:07  \_ [kworker/R-tpm_dev_wq]
-     62       2       0 I<         08:07  \_ [kworker/R-ata_sff]
-     63       2       0 I<         08:07  \_ [kworker/R-md_bitmap]
-     64       2       0 I<         08:07  \_ [kworker/R-md_llbitmap_io]
-     65       2       0 I<         08:07  \_ [kworker/R-md_llbitmap_unplug]
-     66       2       0 I<         08:07  \_ [kworker/R-edac-poller]
-     67       2       0 I<         08:07  \_ [kworker/R-hv_vmbus_con]
-     68       2       0 I<         08:07  \_ [kworker/R-hv_vmbus_rescind]
-     69       2       0 I<         08:07  \_ [kworker/R-hv_pri_chan]
-     70       2       0 I<         08:07  \_ [kworker/R-hv_sub_chan]
-     71       2       0 I<         08:07  \_ [kworker/R-devfreq_wq]
-     72       2       0 S          08:07  \_ [watchdogd]
-     73       2       0 I<         08:07  \_ [kworker/R-quota_events_unbound]
-     74       2       0 S          08:07  \_ [kswapd0]
-     75       2       0 S          08:07  \_ [ecryptfs-kthread]
-     76       2       0 I<         08:07  \_ [kworker/R-kthrotld]
-     77       2       0 I<         08:07  \_ [kworker/R-acpi_thermal_pm]
-     78       2       0 I<         08:07  \_ [kworker/R-nfit]
-     79       2       0 I<         08:07  \_ [kworker/R-nvme-wq]
-     80       2       0 I<         08:07  \_ [kworker/R-nvme-reset-wq]
-     81       2       0 S          08:07  \_ [scsi_eh_0]
-     82       2       0 I<         08:07  \_ [kworker/R-nvme-delete-wq]
-     83       2       0 I<         08:07  \_ [kworker/R-scsi_tmf_0]
-     84       2       0 I<         08:07  \_ [kworker/R-nvme-auth-wq]
-     85       2       0 I          08:06  \_ [kworker/0:2-events]
-     86       2       0 I          08:06  \_ [kworker/2:2-events]
-     87       2       0 I          08:06  \_ [kworker/u16:3-flush-259:0]
-     88       2       0 I          08:06  \_ [kworker/u16:4-events_power_efficient]
-     90       2       0 S          08:06  \_ [hv_balloon]
-     91       2       0 I<         08:06  \_ [kworker/R-mld]
-     92       2       0 I<         08:06  \_ [kworker/R-ipv6_addrconf]
-     93       2       0 I<         08:06  \_ [kworker/R-kstrp]
-     95       2       0 I<         08:06  \_ [kworker/u17:0]
-    106       2       0 I<         08:06  \_ [kworker/R-charger_manager]
-    107       2       0 S          08:06  \_ [jbd2/nvme0n1p1-8]
-    108       2       0 I<         08:06  \_ [kworker/R-ext4-rsv-conversion]
-    143       2       0 I<         08:06  \_ [kworker/3:1H-kblockd]
-    181       2       0 I<         08:06  \_ [kworker/1:1H-kblockd]
-    182       2       0 I          08:06  \_ [kworker/1:2-events]
-    183       2       0 I<         08:06  \_ [kworker/R-kmpathd]
-    184       2       0 I<         08:06  \_ [kworker/R-kmpath_handlerd]
-    185       2       0 I          08:06  \_ [kworker/3:3-events]
-    240       2       0 S          08:06  \_ [psimon]
-    297       2       0 S          08:06  \_ [card1-crtc0]
-    306       2       0 I<         08:05  \_ [kworker/2:1H-kblockd]
-    316       2       0 I          08:05  \_ [kworker/0:3-inode_switch_wbs]
-    323       2       0 I<         08:05  \_ [kworker/R-mana_per_port_queue_reset_wq]
-    326       2       0 I<         08:05  \_ [kworker/R-ib-comp-wq]
-    327       2       0 I<         08:05  \_ [kworker/R-ib-comp-unb-wq]
-    328       2       0 I<         08:05  \_ [kworker/R-ib_mcast]
-    329       2       0 I<         08:05  \_ [kworker/R-ib_nl_sa_wq]
-    330       2       0 I<         08:05  \_ [kworker/R-ib_mad1]
-    349       2       0 S          08:05  \_ [jbd2/nvme0n1p16-8]
-    350       2       0 I<         08:05  \_ [kworker/R-ext4-rsv-conversion]
-    565       2       0 I<         08:05  \_ [kworker/R-cfg80211]
-    587       2       0 I<         08:03  \_ [kworker/0:1H-kblockd]
-   1136       2       0 I<         07:59  \_ [kworker/R-tls-strp]
-   4091       2       0 S          06:52  \_ [psimon]
-  13474       2       0 I          02:32  \_ [kworker/0:0-events]
-  13609       2       0 I          02:17  \_ [kworker/1:0-events]
-  13735       2       0 I          02:05  \_ [kworker/3:0-mm_percpu_wq]
-  14130       2       0 I          01:55  \_ [kworker/0:1]
-      1       0       1 Ss         08:07 /sbin/init
-    160       1     160 S<s        08:06 /usr/lib/systemd/systemd-journald
-    222       1     222 SLsl       08:06 /sbin/multipathd -d -s
-    228       1     228 Ss         08:06 /usr/lib/systemd/systemd-udevd
-    305       1     305 Ss         08:05 /usr/lib/linux-tools/7.0.0-1017-azure/hv_kvp_daemon -n
-    482       1     482 Ss         08:05 /usr/lib/systemd/systemd-resolved
-    505       1     505 Ss         08:05 /usr/sbin/haveged --Foreground --verbose=1
-    649       1     649 Ss         08:03 /usr/lib/systemd/systemd-networkd
-    803       1     803 Ss         07:59 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
-    808       1     808 Ss         07:59 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
-    810       1     810 Ss         07:59 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
-   1113     810     810 S          07:59  \_ php-fpm: pool www
-   1115     810     810 S          07:59  \_ php-fpm: pool www
-    815       1     815 Ssl        07:59 /usr/lib/polkit-1/polkitd --no-debug
-    822       1     822 Ss         07:59 /usr/lib/systemd/systemd-logind
-    824       1     824 Ssl        07:59 /usr/libexec/udisks2/udisksd
-    826       1     826 Ss         07:59 /usr/bin/python3 -u /usr/sbin/waagent -daemon
-   1195     826     826 Sl         07:59  \_ /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.2-py3.12.egg -run-exthandlers
-    862       1     862 Ss         07:59 /usr/sbin/cron -f -P
-    887       1     887 Ss+        07:59 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
-    893       1     893 Ssl        07:59 /usr/bin/containerd
-    915       1     915 Ss+        07:59 /sbin/agetty -o -p -- \u --noclear - linux
-    946       1     946 Ssl        07:59 /usr/sbin/rsyslogd -n -iNONE
-    947       1     944 S          07:59 /usr/sbin/chronyd -F 1
-    956     947     944 S          07:59  \_ /usr/sbin/chronyd -F 1
-    991       1     991 Ssl        07:59 /usr/sbin/ModemManager
-   1014       1    1014 Ss         07:59 /usr/lib/systemd/systemd --user
-   1037    1014    1014 S          07:59  \_ (sd-pam)
-   1061       1    1061 Ssl        07:59 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
-   1841       1    1841 Ssl        07:57 /opt/hca/hosted-compute-agent
-   1854    1841    1841 S          07:56  \_ sudo -n PROVJOBD_E2E=1 /tmp/provjobd2820512841
-   1857    1854    1841 Sl         07:56  |   \_ /tmp/provjobd2820512841
-   1894    1841    1841 Sl         07:54  \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
-   1921    1894    1841 Sl         07:53      \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
-  15771    1921    1841 S          00:14          \_ /usr/bin/bash -e /home/runner/work/_temp/3b3cc3b0-b7f9-4a74-a3e2-21051bad19bb.sh
-  15773   15771    1841 Sl         00:14              \_ dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none --filter FullyQualifiedName~ToolchainLanguageToolsTests.A_Swift_package_template --logger console;verbosity=normal
-  15793   15773    1841 Sl         00:14                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
-  15794   15773    1841 Sl         00:14                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
-  15902   15794    1841 Sl         00:12                  |   \_ dotnet exec --runtimeconfig /home/runner/work/tabstudio/tabstudio/.nuget/packages/avalonia.buildservices/11.3.2/tools/netstandard2.0/runtimeconfig.json /home/runner/work/tabstudio/tabstudio/.nuget/packages/avalonia.buildservices/11.3.2/tools/netstandard2.0/Avalonia.BuildServices.Collector.dll
-  15795   15773    1841 Sl         00:14                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
-  15950   15795    1841 Sl         00:11                      \_ /usr/share/dotnet/dotnet exec /usr/share/dotnet/sdk/10.0.403/vstest.console.dll --framework:.NETCoreApp,Version=v10.0 --testCaseFilter:FullyQualifiedName~ToolchainLanguageToolsTests.A_Swift_package_template --logger:console;verbosity=normal /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll --Blame:CollectHangDump;HangDumpType=none;TestTimeout=10m --nologo --artifactsProcessingMode-collect --testSessionCorrelationId:15773_43e16985-c9f6-4f16-ba4d-d3f31c744691
-  15963   15950    1841 Sl         00:10                          \_ /usr/share/dotnet/dotnet exec --runtimeconfig /usr/share/dotnet/sdk/10.0.403/datacollector.runtimeconfig.json --depsfile /usr/share/dotnet/sdk/10.0.403/datacollector.deps.json /usr/share/dotnet/sdk/10.0.403/datacollector.dll --port 35411 --parentprocessid 15950
-  15978   15950    1841 Sl         00:10                          \_ /usr/share/dotnet/dotnet exec --runtimeconfig /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.runtimeconfig.json --depsfile /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.deps.json /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/testhost.dll --port 43531 --endpoint 127.0.0.1:043531 --role client --parentprocessid 15950 --datacollectionport 37321 --telemetryoptedin false
-  16091   15978   16091 Sl         00:06                              \_ /home/runner/work/_temp/swift/usr/bin/sourcekit-lsp
-  16521   16091   16521 SNl        00:02                              |   \_ /home/runner/work/_temp/swift/usr/bin/swift-frontend -frontend -typecheck -primary-file /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Sources/GreeterCore/Greeting.swift -target x86_64-unknown-linux-gnu -disable-objc-interop -I /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/Modules -module-cache-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/ModuleCache -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format=dwarf -dwarf-version=4 -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -experimental-allow-module-with-compiler-errors -empty-abi-descriptor -empty-abi-descriptor -empty-abi-descriptor -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter -Xcc -fPIC -Xcc -g -Xcc -fno-omit-frame-pointer -Xcc -fretain-comments-from-system-headers -Xcc -Xclang -Xcc -detailed-preprocessing-record -Xcc -Xclang -Xcc -fmodule-format=raw -Xcc -Xclang -Xcc -fallow-pch-with-compiler-errors -Xcc -Xclang -Xcc -fallow-pcm-with-compiler-errors -Xcc -Wno-non-modular-include-in-framework-module -Xcc -Wno-incomplete-umbrella -no-auto-bridging-header-chaining -module-name GreeterCore -package-name greeter -in-process-plugin-server-path /home/runner/work/_temp/swift/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /home/runner/work/_temp/swift/usr/lib/swift/host/plugins -plugin-path /home/runner/work/_temp/swift/usr/local/lib/swift/host/plugins -parse-as-library -o GreeterCore.indexData -index-unit-output-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Sources/GreeterCore/Greeting.swift.o -disable-typo-correction -index-store-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/index/store -index-system-modules
-  16522   16091   16522 RN         00:02                              |   \_ /home/runner/work/_temp/swift/usr/bin/swift-frontend -frontend -typecheck -primary-file /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Sources/Greeter/main.swift -target x86_64-unknown-linux-gnu -disable-objc-interop -I /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/Modules -module-cache-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/ModuleCache -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format=dwarf -dwarf-version=4 -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -experimental-allow-module-with-compiler-errors -empty-abi-descriptor -empty-abi-descriptor -empty-abi-descriptor -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter -Xcc -fPIC -Xcc -g -Xcc -fno-omit-frame-pointer -Xcc -fretain-comments-from-system-headers -Xcc -Xclang -Xcc -detailed-preprocessing-record -Xcc -Xclang -Xcc -fmodule-format=raw -Xcc -Xclang -Xcc -fallow-pch-with-compiler-errors -Xcc -Xclang -Xcc -fallow-pcm-with-compiler-errors -Xcc -Wno-non-modular-include-in-framework-module -Xcc -Wno-incomplete-umbrella -no-auto-bridging-header-chaining -module-name Greeter -package-name greeter -in-process-plugin-server-path /home/runner/work/_temp/swift/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /home/runner/work/_temp/swift/usr/lib/swift/host/plugins -plugin-path /home/runner/work/_temp/swift/usr/local/lib/swift/host/plugins -o Greeter.indexData -index-unit-output-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/Sources/Greeter/main.swift.o -disable-typo-correction -index-store-path /tmp/tabstudio-tests/c47e260a72a24a9392719e29b225c548/app/Projects/Greeter/.build/index-build/x86_64-unknown-linux-gnu/debug/index/store -index-system-modules
-  16642   15978    1841 R          00:00                              \_ ps -eo pid,ppid,pgid,stat,etime,args --forest
-   4094       1    4094 Ss         06:52 php-fpm: master process (/etc/php/8.5/fpm/php-fpm.conf)
-   4095    4094    4094 S          06:52  \_ php-fpm: pool www
-   4096    4094    4094 S          06:52  \_ php-fpm: pool www
-   9414       1    1841 Sl         05:22 /usr/share/dotnet/sdk/10.0.403/Roslyn/bincore/VBCSCompiler -pipename:WAcWTViZvzcVAI0ZQWygl6OMzaUe49Dabl4RIF3MlGs
-  16546       1   16546 Ss         00:02 /usr/sbin/uuidd --socket-activation
+      2       0       0 S          11:35 [kthreadd]
+      3       2       0 S          11:35  \_ [pool_workqueue_release]
+      4       2       0 I<         11:35  \_ [kworker/R-rcu_gp]
+      5       2       0 I<         11:35  \_ [kworker/R-sync_wq]
+      6       2       0 I<         11:35  \_ [kworker/R-kvfree_rcu_reclaim]
+      7       2       0 I<         11:35  \_ [kworker/R-slub_flushwq]
+      8       2       0 I<         11:35  \_ [kworker/R-netns]
+     10       2       0 I<         11:35  \_ [kworker/0:0H-kblockd]
+     12       2       0 I          11:35  \_ [kworker/u16:0-events_power_efficient]
+     13       2       0 I<         11:35  \_ [kworker/R-mm_percpu_wq]
+     14       2       0 S          11:35  \_ [ksoftirqd/0]
+     15       2       0 S<         11:35  \_ [pr/ttyS0]
+     16       2       0 I          11:35  \_ [rcu_sched]
+     17       2       0 S          11:35  \_ [rcu_exp_par_gp_kthread_worker/0]
+     18       2       0 S          11:35  \_ [rcu_exp_gp_kthread_worker]
+     19       2       0 S          11:35  \_ [migration/0]
+     20       2       0 S          11:35  \_ [kprobe-optimizer]
+     21       2       0 S          11:35  \_ [idle_inject/0]
+     22       2       0 S          11:35  \_ [cpuhp/0]
+     23       2       0 S          11:35  \_ [cpuhp/2]
+     24       2       0 S          11:35  \_ [idle_inject/2]
+     25       2       0 S          11:35  \_ [migration/2]
+     26       2       0 S          11:35  \_ [ksoftirqd/2]
+     28       2       0 I<         11:35  \_ [kworker/2:0H-kblockd]
+     29       2       0 S          11:35  \_ [cpuhp/1]
+     30       2       0 S          11:35  \_ [idle_inject/1]
+     31       2       0 S          11:35  \_ [migration/1]
+     32       2       0 S          11:35  \_ [ksoftirqd/1]
+     34       2       0 I<         11:35  \_ [kworker/1:0H-kblockd]
+     35       2       0 S          11:35  \_ [cpuhp/3]
+     36       2       0 S          11:35  \_ [idle_inject/3]
+     37       2       0 S          11:35  \_ [migration/3]
+     38       2       0 S          11:35  \_ [ksoftirqd/3]
+     40       2       0 I<         11:35  \_ [kworker/3:0H-kblockd]
+     41       2       0 S          11:35  \_ [kdevtmpfs]
+     42       2       0 I<         11:35  \_ [kworker/R-inet_frag_wq]
+     43       2       0 I          11:35  \_ [rcu_tasks_kthread]
+     44       2       0 I          11:35  \_ [rcu_tasks_rude_kthread]
+     45       2       0 S          11:35  \_ [kauditd]
+     46       2       0 S          11:35  \_ [khungtaskd]
+     47       2       0 S          11:35  \_ [oom_reaper]
+     50       2       0 I          11:35  \_ [kworker/3:1-events]
+     51       2       0 I<         11:35  \_ [kworker/R-writeback]
+     52       2       0 S          11:35  \_ [kcompactd0]
+     53       2       0 SN         11:35  \_ [ksmd]
+     54       2       0 SN         11:35  \_ [khugepaged]
+     55       2       0 I<         11:35  \_ [kworker/R-kblockd]
+     56       2       0 I<         11:35  \_ [kworker/R-blkcg_punt_bio]
+     57       2       0 I<         11:35  \_ [kworker/R-kintegrityd]
+     59       2       0 S          11:35  \_ [irq/9-acpi]
+     61       2       0 I<         11:35  \_ [kworker/R-tpm_dev_wq]
+     62       2       0 I<         11:35  \_ [kworker/R-ata_sff]
+     63       2       0 I<         11:35  \_ [kworker/R-md_bitmap]
+     64       2       0 I<         11:35  \_ [kworker/R-md_llbitmap_io]
+     65       2       0 I<         11:35  \_ [kworker/R-md_llbitmap_unplug]
+     66       2       0 I<         11:35  \_ [kworker/R-edac-poller]
+     67       2       0 I<         11:35  \_ [kworker/R-hv_vmbus_con]
+     68       2       0 I<         11:35  \_ [kworker/R-hv_vmbus_rescind]
+     69       2       0 I<         11:35  \_ [kworker/R-hv_pri_chan]
+     70       2       0 I<         11:35  \_ [kworker/R-hv_sub_chan]
+     71       2       0 I<         11:35  \_ [kworker/R-devfreq_wq]
+     72       2       0 S          11:35  \_ [watchdogd]
+     73       2       0 I<         11:35  \_ [kworker/R-quota_events_unbound]
+     74       2       0 S          11:35  \_ [kswapd0]
+     75       2       0 S          11:35  \_ [ecryptfs-kthread]
+     76       2       0 I<         11:35  \_ [kworker/R-kthrotld]
+     77       2       0 I<         11:35  \_ [kworker/R-acpi_thermal_pm]
+     78       2       0 I<         11:35  \_ [kworker/R-nfit]
+     79       2       0 S          11:35  \_ [scsi_eh_0]
+     80       2       0 I<         11:35  \_ [kworker/R-nvme-wq]
+     81       2       0 I<         11:35  \_ [kworker/R-scsi_tmf_0]
+     82       2       0 I<         11:35  \_ [kworker/R-nvme-reset-wq]
+     83       2       0 I<         11:35  \_ [kworker/R-nvme-delete-wq]
+     84       2       0 I<         11:35  \_ [kworker/R-nvme-auth-wq]
+     87       2       0 D          11:35  \_ [kworker/0:3+events]
+     88       2       0 I          11:35  \_ [kworker/u16:3-events_power_efficient]
+     89       2       0 I          11:35  \_ [kworker/u16:4-events_power_efficient]
+     91       2       0 I          11:35  \_ [kworker/u16:6-events_power_efficient]
+     93       2       0 S          11:35  \_ [hv_balloon]
+     94       2       0 I<         11:35  \_ [kworker/R-mld]
+     95       2       0 I<         11:35  \_ [kworker/R-ipv6_addrconf]
+     96       2       0 I<         11:35  \_ [kworker/R-kstrp]
+     98       2       0 I<         11:35  \_ [kworker/u17:0]
+    109       2       0 I<         11:35  \_ [kworker/R-charger_manager]
+    110       2       0 S          11:34  \_ [jbd2/nvme0n1p1-8]
+    111       2       0 I<         11:34  \_ [kworker/R-ext4-rsv-conversion]
+    144       2       0 I<         11:34  \_ [kworker/3:1H-kblockd]
+    208       2       0 I<         11:33  \_ [kworker/R-kmpathd]
+    209       2       0 I<         11:33  \_ [kworker/R-kmpath_handlerd]
+    213       2       0 I          11:33  \_ [kworker/1:3-events]
+    214       2       0 I          11:33  \_ [kworker/2:3-mm_percpu_wq]
+    232       2       0 I<         11:33  \_ [kworker/1:1H-kblockd]
+    244       2       0 S          11:33  \_ [psimon]
+    301       2       0 I<         11:33  \_ [kworker/R-tls-strp]
+    302       2       0 S          11:33  \_ [card1-crtc0]
+    307       2       0 I<         11:33  \_ [kworker/0:1H-kblockd]
+    320       2       0 S          11:33  \_ [jbd2/nvme0n1p16-8]
+    321       2       0 I<         11:33  \_ [kworker/R-ext4-rsv-conversion]
+    333       2       0 I<         11:32  \_ [kworker/R-mlx5_cmd_4c52:00:02.0]
+    334       2       0 I<         11:32  \_ [kworker/R-mlx5_health4c52:00:02.0]
+    335       2       0 I<         11:32  \_ [kworker/R-mlx5_page_allocator]
+    336       2       0 I<         11:32  \_ [kworker/R-mlx5_events]
+    337       2       0 S          11:32  \_ [ptp1]
+    338       2       0 I<         11:32  \_ [kworker/R-mlx5_fc]
+    339       2       0 I<         11:32  \_ [kworker/R-mlx5_hv_vhca]
+    340       2       0 I<         11:32  \_ [kworker/R-mlx5e]
+    341       2       0 I<         11:32  \_ [kworker/R-mlx5e_arfs]
+    346       2       0 I<         11:32  \_ [kworker/R-ib-comp-wq]
+    347       2       0 I<         11:32  \_ [kworker/R-ib-comp-unb-wq]
+    348       2       0 I<         11:32  \_ [kworker/R-ib_mcast]
+    349       2       0 I<         11:32  \_ [kworker/R-ib_nl_sa_wq]
+    358       2       0 I<         11:32  \_ [kworker/R-mkey_cache]
+    574       2       0 I<         11:30  \_ [kworker/R-cfg80211]
+    673       2       0 I<         11:27  \_ [kworker/2:1H-kblockd]
+    756       2       0 S          11:24  \_ [ext4lazyinit]
+   4112       2       0 S          10:03  \_ [psimon]
+  10941       2       0 I          06:02  \_ [kworker/0:1-events]
+  11036       2       0 I          05:57  \_ [kworker/2:0-events]
+  11247       2       0 I          05:55  \_ [kworker/1:0-events]
+  11953       2       0 I          05:28  \_ [kworker/3:0-events]
+  16721       2       0 I          00:31  \_ [kworker/2:1-mm_percpu_wq]
+  16727       2       0 I          00:18  \_ [kworker/3:2]
+      1       0       1 Ss         11:35 /sbin/init
+    162       1     162 S<s        11:33 /usr/lib/systemd/systemd-journald
+    224       1     224 SLsl       11:33 /sbin/multipathd -d -s
+    230       1     230 Ss         11:33 /usr/lib/systemd/systemd-udevd
+    319       1     319 Ss         11:33 /usr/lib/linux-tools/7.0.0-1017-azure/hv_kvp_daemon -n
+    426       1     426 Ss         11:31 /usr/lib/systemd/systemd-resolved
+    515       1     515 Ss         11:31 /usr/sbin/haveged --Foreground --verbose=1
+    655       1     655 Ss         11:29 /usr/lib/systemd/systemd-networkd
+    824       1     824 Ss         11:23 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+    829       1     829 Ss         11:23 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+    832       1     832 Ss         11:23 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
+   1152     832     832 S          11:22  \_ php-fpm: pool www
+   1153     832     832 S          11:22  \_ php-fpm: pool www
+    836       1     836 Ssl        11:23 /usr/lib/polkit-1/polkitd --no-debug
+    861       1     861 Ss         11:23 /usr/lib/systemd/systemd-logind
+    866       1     866 Ssl        11:23 /usr/libexec/udisks2/udisksd
+    867       1     867 Ss         11:23 /usr/bin/python3 -u /usr/sbin/waagent -daemon
+   1229     867     867 Sl         11:21  \_ /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.2-py3.12.egg -run-exthandlers
+    879       1     879 Ss         11:23 /usr/sbin/cron -f -P
+    881       1     881 Ssl        11:23 /usr/sbin/rsyslogd -n -iNONE
+    891       1     891 Ssl        11:23 /usr/bin/containerd
+    931       1     928 S          11:23 /usr/sbin/chronyd -F 1
+    940     931     928 S          11:23  \_ /usr/sbin/chronyd -F 1
+    967       1     967 Ssl        11:23 /usr/sbin/ModemManager
+    999       1     999 Ss+        11:22 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
+   1062       1    1062 Ss+        11:22 /sbin/agetty -o -p -- \u --noclear - linux
+   1066       1    1066 Ss         11:22 /usr/lib/systemd/systemd --user
+   1089    1066    1066 S          11:22  \_ (sd-pam)
+   1137       1    1137 Ssl        11:22 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+   1870       1    1870 Ssl        11:18 /opt/hca/hosted-compute-agent
+   1884    1870    1870 S          11:18  \_ sudo -n PROVJOBD_E2E=1 /tmp/provjobd295806776
+   1886    1884    1870 Sl         11:18  |   \_ /tmp/provjobd295806776
+   1925    1870    1870 Sl         11:16  \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
+   1944    1925    1870 Sl         11:14      \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
+  15925    1944    1870 S          01:16          \_ /usr/bin/bash -e /home/runner/work/_temp/b37d4aba-e425-41e5-a9d6-6bdc2864eb26.sh
+  15927   15925    1870 Sl         01:16              \_ dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none --filter FullyQualifiedName~ToolchainLanguageToolsTests.A_Swift_package_template --logger console;verbosity=normal
+  15948   15927    1870 Sl         01:15                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+  15949   15927    1870 Sl         01:15                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+  15950   15927    1870 Sl         01:15                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+  16104   15950    1870 Sl         01:10                      \_ /usr/share/dotnet/dotnet exec /usr/share/dotnet/sdk/10.0.403/vstest.console.dll --framework:.NETCoreApp,Version=v10.0 --testCaseFilter:FullyQualifiedName~ToolchainLanguageToolsTests.A_Swift_package_template --logger:console;verbosity=normal /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll --Blame:CollectHangDump;HangDumpType=none;TestTimeout=10m --nologo --artifactsProcessingMode-collect --testSessionCorrelationId:15927_1f4c8dfe-d654-4759-bfe7-8b3b2ba55304
+  16117   16104    1870 Sl         01:10                          \_ /usr/share/dotnet/dotnet exec --runtimeconfig /usr/share/dotnet/sdk/10.0.403/datacollector.runtimeconfig.json --depsfile /usr/share/dotnet/sdk/10.0.403/datacollector.deps.json /usr/share/dotnet/sdk/10.0.403/datacollector.dll --port 34701 --parentprocessid 16104
+  16133   16104    1870 Sl         01:09                          \_ /usr/share/dotnet/dotnet exec --runtimeconfig /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.runtimeconfig.json --depsfile /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.deps.json /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/testhost.dll --port 38259 --endpoint 127.0.0.1:038259 --role client --parentprocessid 16104 --datacollectionport 36413 --telemetryoptedin false
+  16261   16133   16261 Sl         01:02                              \_ /home/runner/work/_temp/swift/usr/bin/sourcekit-lsp
+  16739   16133    1870 R          00:00                              \_ ps -eo pid,ppid,pgid,stat,etime,args --forest
+   4115       1    4115 Ss         10:03 php-fpm: master process (/etc/php/8.5/fpm/php-fpm.conf)
+   4116    4115    4115 S          10:03  \_ php-fpm: pool www
+   4117    4115    4115 S          10:03  \_ php-fpm: pool www
+   9445       1    1870 Sl         08:11 /usr/share/dotnet/sdk/10.0.403/Roslyn/bincore/VBCSCompiler -pipename:WAcWTViZvzcVAI0ZQWygl6OMzaUe49Dabl4RIF3MlGs
+  16670       1   16670 Ss         00:57 /usr/sbin/uuidd --socket-activation
