@@ -1272,6 +1272,8 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         _languageServers?.Configuration.Registry.FindAdapter(target.Configuration.Type);
 
     /// <summary>A frame of the adapter as the Call Stack shows it, with its statement as a span of the file.</summary>
+    private readonly HashSet<string> _unresolvedFrameSources = new(StringComparer.Ordinal);
+
     private DebugStackFrame ToStackFrame(DapStackFrame frame)
     {
         // A file only the adapter's environment has, such as Python's library on Android, is read where the device keeps it.
@@ -1298,6 +1300,12 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
         if (path is null || ReadText(path) is not { } text)
         {
+            // Once per source, so a frame shown as external code says why in the Debug Adapters output.
+            if (_unresolvedFrameSources.Add(frame.FilePath ?? frame.SourceName ?? frame.Name))
+            {
+                DebugAdapterOutput.WriteLine($"{frame.Name}: its source ({frame.FilePath ?? "no path"}, {frame.SourceName ?? "no name"}) is not a file in this workspace.", OutputKind.Info);
+            }
+
             return new DebugStackFrame(frame.Name, null);
         }
 
