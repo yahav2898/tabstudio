@@ -1,3 +1,4 @@
+using TabStudio.App.Editing;
 using TabStudio.App.Services;
 using TabStudio.App.ViewModels;
 using TabStudio.LanguageServers.Hosting;
@@ -28,27 +29,21 @@ public sealed partial class ToolchainLanguageToolsTests
         var view = ActiveEditor(window);
         StartLineAfter(view.Editor, "let name = ");
         bool Listed() => view.Completion!.IsOpen && view.Completion.Items.Any(i => i.Entry.DisplayText.StartsWith("count", StringComparison.Ordinal));
-        for (var attempt = 0; attempt < 4 && !Listed(); attempt++)
+        Type(view.Editor, "name.cou");
+        var end = DateTime.UtcNow.AddSeconds(90);
+        var next = DateTime.UtcNow.AddSeconds(5);
+        while (!Listed() && DateTime.UtcNow < end)
         {
-            // sourcekit-lsp may still be reading the document's latest version: retype the member access, so the
-            // "." trigger asks it again rather than filtering an empty list.
-            if (attempt > 0)
+            if (DateTime.UtcNow > next)
             {
-                view.Completion!.Close();
-                view.Editor.Document.Remove(view.Editor.CaretOffset - "name.cou".Length, "name.cou".Length);
-                await Task.Delay(1000);
+                // sourcekit-lsp can answer the "." trigger before it has the document's latest text (its list is then
+                // empty); ask again with List Members, as someone would.
+                document.RequestAction(EditorAction.ListMembers);
+                next = DateTime.UtcNow.AddSeconds(5);
             }
 
-            Type(view.Editor, "name.");
-            await Task.Delay(300);
+            await Task.Delay(100);
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-            Type(view.Editor, "cou");
-            var end = DateTime.UtcNow.AddSeconds(25);
-            while (!Listed() && DateTime.UtcNow < end)
-            {
-                await Task.Delay(100);
-                Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-            }
         }
 
         Assert.True(Listed(), "sourcekit-lsp's completion list did not open in the editor.");
