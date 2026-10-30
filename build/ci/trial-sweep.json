@@ -1,0 +1,491 @@
+{
+ "comment": "Trial for .NET fidelity (trial/fidelity-* branches only): each solution is opened in TabStudio and built with the .NET 10 SDK, to compare the errors.",
+ "repositories": [
+  {
+   "name": "GuardClauses",
+   "area": "a",
+   "url": "https://github.com/ardalis/GuardClauses",
+   "sha": "f96b823e4228252b2927cce3effa550c16b558a5",
+   "open": "GuardClauses.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "MediatR",
+   "area": "a",
+   "url": "https://github.com/jbogard/MediatR",
+   "sha": "e839be360f118a84c2cba2a5901189f7c058d0a2",
+   "open": "MediatR.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "CleanArchitecture",
+   "area": "a",
+   "url": "https://github.com/ardalis/CleanArchitecture",
+   "sha": "e7c79be54ba0b001a5b332c1efe935f520b9db4b",
+   "open": "Clean.Architecture.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "FluentValidation",
+   "area": "a",
+   "url": "https://github.com/FluentValidation/FluentValidation",
+   "sha": "f95dbd5c8166a10e38f7a8bca4d752abd641a453",
+   "open": "FluentValidation.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "AutoMapper",
+   "area": "a",
+   "url": "https://github.com/AutoMapper/AutoMapper",
+   "sha": "f0ecba7a97d1403973825fb3cbe2733e6216ff9a",
+   "open": "AutoMapper.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "Serilog",
+   "area": "a",
+   "url": "https://github.com/serilog/serilog",
+   "sha": "43105b35095337d77f022561a8f2d3db2f9a7937",
+   "open": "Serilog.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "eShopOnWeb",
+   "area": "a",
+   "url": "https://github.com/dotnet-architecture/eShopOnWeb",
+   "sha": "4da8212117e87d808d4bbc7da6286fd2147ce606",
+   "open": "eShopOnWeb.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "Polly",
+   "area": "a",
+   "url": "https://github.com/App-vNext/Polly",
+   "sha": "87a2e4a0074f01b4b9a430d2f67b28f39f01274d",
+   "open": "Polly.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "Humanizer",
+   "area": "a",
+   "url": "https://github.com/Humanizr/Humanizer",
+   "sha": "4574b93883bf48e3f0f3bca73297054537317ab2",
+   "open": "Humanizer.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "BlazingPizza",
+   "area": "a",
+   "url": "https://github.com/dotnet-presentations/blazor-workshop",
+   "sha": "e0f5968e7c4699209dc7b5b0b2edc86162287792",
+   "open": "src/BlazingPizza.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "WpfCalculatorTutorial",
+   "area": "a",
+   "url": "https://github.com/mooict/WPF-Calculator-App",
+   "sha": "d8e456c1907fc9970b9b2de9c61e67ec6ef9518d",
+   "open": "Calculator App MOO ICT.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "WpfSimpleCalculator",
+   "area": "a",
+   "url": "https://github.com/afzaal-ahmad-zeeshan/Simple-Calculator-CSharp",
+   "sha": "9146bf6b4365f3c22a371e2525ce65ce32cb16ee",
+   "open": "Simple Calculator.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "WpfTicTacToe",
+   "area": "a",
+   "url": "https://github.com/TheDJ42/TTTcs",
+   "sha": "837fba85c5ed33ef8829bf58bfd3600f56aadb03",
+   "open": "TTTcs.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "WinFormsToDoList",
+   "area": "a",
+   "url": "https://github.com/leighDEV/simple-todolist-winforms",
+   "sha": "97fb69d9cd0b31521f121f440d954ba00d612990",
+   "open": "simple-toDoList-winforms/simple-toDoList-winforms.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "SimplePaint",
+   "area": "a",
+   "url": "https://github.com/TienNHM/SimplePaint",
+   "sha": "09b1cadb04e99c8be951af682a8c9ec1e2d0eb94",
+   "open": "Paint.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "SimpleDrawingApp",
+   "area": "a",
+   "url": "https://github.com/L0RD3N/Simple-Drawing-App",
+   "sha": "cfe9f5cdf413bbf66db000e27b1b0aa95ba24121",
+   "open": "Drawing app 2/Paint-v2/Paint-v2.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "WinFormsSnakeGame",
+   "area": "a",
+   "url": "https://github.com/mooict/Windows-Form-Snakes-Game-Tutorial-with-c-sharp-Updated",
+   "sha": "b79c3f0b7e60471ba3a17e83dc78c1e56f80f170",
+   "open": "Classic Snakes Game Tutorial - MOO ICT.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "VbPong",
+   "area": "a",
+   "url": "https://github.com/joelumbley/pong",
+   "sha": "f546e3787861280c877d434c26048f311ac9e12c",
+   "open": "Pong.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "VbConsoleExample",
+   "area": "a",
+   "url": "https://github.com/debug-sharp/example-console-visualbasic",
+   "sha": "2905dd38a7fae890e9e58bfdc76f2a2c9762becf",
+   "open": "ExampleConsoleVb.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "SimplCommerce",
+   "area": "b",
+   "url": "https://github.com/simplcommerce/SimplCommerce",
+   "sha": "3472ba02a6f2d9b6bdca7f7fb84957176aa799dc",
+   "open": "SimplCommerce.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "Conduit",
+   "area": "b",
+   "url": "https://github.com/gothinkster/aspnetcore-realworld-example-app",
+   "sha": "8aa617abed5dd645f8f9d99578a3e07b4e2e52e7",
+   "open": "Conduit.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "AvaloniaSamples",
+   "area": "b",
+   "url": "https://github.com/AvaloniaUI/Avalonia.Samples",
+   "sha": "e1904914cb00ea034870babdc01bfef797562e4c",
+   "open": "src/Avalonia.Samples/Avalonia.Samples.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "AvaloniaAdvancedToDoList",
+   "area": "b",
+   "url": "https://github.com/AvaloniaUI/Avalonia.Samples",
+   "sha": "e1904914cb00ea034870babdc01bfef797562e4c",
+   "open": "src/Avalonia.Samples/CompleteApps/AdvancedToDoList/AdvancedToDoList.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "blazor-samples",
+   "area": "b",
+   "url": "https://github.com/dotnet/blazor-samples",
+   "sha": "9729f03106b6e146863ff9198e9d751e113d78c5",
+   "open": "10.0/BlazorSample_BlazorWebApp/BlazorSample.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "refit-Refit-slnx",
+   "area": "c",
+   "url": "https://github.com/reactiveui/refit",
+   "sha": "92ae878250798dc103a01304704a99bb8033ed77",
+   "open": "src/Refit.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "Mediator-Mediator-slnx",
+   "area": "c",
+   "url": "https://github.com/martinothamar/Mediator",
+   "sha": "8b87a0ed74747b7e4be907db220b930a50fbeb98",
+   "open": "Mediator.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "StronglyTypedId-StronglyTypedId-sln",
+   "area": "c",
+   "url": "https://github.com/andrewlock/StronglyTypedId",
+   "sha": "6bd17db4a4b700eaad9e209baf41478cc3f0bbe9",
+   "open": "StronglyTypedId.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "spectre-console-Spectre-Console-slnx",
+   "area": "c",
+   "url": "https://github.com/spectreconsole/spectre.console",
+   "sha": "e8045f7c53c3c217a7f93f362f5256f1fadc0020",
+   "open": "src/Spectre.Console.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "MVVM-Samples-samples",
+   "area": "b",
+   "url": "https://github.com/CommunityToolkit/MVVM-Samples",
+   "sha": "7d67102cd25e918f7a687427225dfbabe9ec9deb",
+   "open": "samples",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "TodoApi-TodoApp-sln",
+   "area": "b",
+   "url": "https://github.com/davidfowl/TodoApi",
+   "sha": "307a1eadbbd77a3004c318f2377e4818bc400af6",
+   "open": "TodoApp.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "ContosoUniversityDotNetCore-Pages-ContosoUniversity-sln",
+   "area": "b",
+   "url": "https://github.com/jbogard/ContosoUniversityDotNetCore-Pages",
+   "sha": "abb4c08bd4fbc14fc2ea6c56b31c3381d83ea9ab",
+   "open": "ContosoUniversity.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "MudBlazor-MudBlazor-slnx",
+   "area": "d",
+   "url": "https://github.com/MudBlazor/MudBlazor",
+   "sha": "ed6b3e023a4780c29c7951da580751733227892a",
+   "open": "src/MudBlazor.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "eShop-eShop-slnx",
+   "area": "d",
+   "url": "https://github.com/dotnet/eShop",
+   "sha": "913acea66708a59595351174cee9b29f37179d29",
+   "open": "eShop.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "maui-samples-TodoSQLite",
+   "area": "b",
+   "url": "https://github.com/dotnet/maui-samples",
+   "sha": "e78b47511ac706bb179abc4a09f182355ae75178",
+   "open": "10.0/Data/TodoSQLite",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "Dock-Dock-slnx",
+   "area": "d",
+   "url": "https://github.com/wieslawsoltes/Dock",
+   "sha": "4b12dc1ef877d9950e5d1c620a9261d820afef72",
+   "open": "Dock.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "Terminal-Gui-Terminal-slnx",
+   "area": "c",
+   "url": "https://github.com/gui-cs/Terminal.Gui",
+   "sha": "f210f00f638f3968654c31d93ecbbcb814902a71",
+   "open": "Terminal.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "AvaloniaXplat",
+   "area": "b",
+   "url": "template:avalonia.xplat",
+   "sha": "Avalonia.Templates",
+   "open": "XplatApp",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "Dapper",
+   "area": "e",
+   "url": "https://github.com/DapperLib/Dapper",
+   "sha": "eb47546a408bbf6c178bda4f04dc205bc51ffbfe",
+   "open": "Dapper.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "CsvHelper",
+   "area": "e",
+   "url": "https://github.com/JoshClose/CsvHelper",
+   "sha": "dffe5e9a634e1894d334b6a69599d8b489c4fc78",
+   "open": "CsvHelper.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "Scrutor",
+   "area": "e",
+   "url": "https://github.com/khellang/Scrutor",
+   "sha": "7f315dab5b0f7134a6be58941db1da8c904507e2",
+   "open": "Scrutor.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "markdig",
+   "area": "e",
+   "url": "https://github.com/xoofx/markdig",
+   "sha": "bbf197eaf3c96b9a6ada6532ec970b59751ca9c6",
+   "open": "src/markdig.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "scriban",
+   "area": "e",
+   "url": "https://github.com/scriban/scriban",
+   "sha": "466aeb2f0cf66cc67e8c0c30461839e0a082eaf8",
+   "open": "src/scriban.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "NSubstitute",
+   "area": "e",
+   "url": "https://github.com/nsubstitute/NSubstitute",
+   "sha": "f2b623d762fc28fc1a2fe3932b3b360d113c734d",
+   "open": "NSubstitute.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "moq",
+   "area": "e",
+   "url": "https://github.com/devlooped/moq",
+   "sha": "bdf16e758e8022c40cef2bfd025181f845bbd2a9",
+   "open": "Moq.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "Mapster",
+   "area": "e",
+   "url": "https://github.com/MapsterMapper/Mapster",
+   "sha": "cbc1e5f04e6e003744b04f83d4705670a85e459b",
+   "open": "src/Mapster.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "RestSharp",
+   "area": "e",
+   "url": "https://github.com/restsharp/RestSharp",
+   "sha": "466e5f8782bd52f98df829f63a83b45fdb8472ae",
+   "open": "RestSharp.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "Ocelot",
+   "area": "f",
+   "url": "https://github.com/ThreeMammals/Ocelot",
+   "sha": "80268bc9a950cd4544e70d9582374ca55fc6029f",
+   "open": "Ocelot.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "NodaTime",
+   "area": "f",
+   "url": "https://github.com/nodatime/nodatime",
+   "sha": "3d290520894faa6f16c80eebac8c5ebbf9df136a",
+   "open": "src/NodaTime.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "CommunityToolkit",
+   "area": "f",
+   "url": "https://github.com/CommunityToolkit/dotnet",
+   "sha": "b135626dd54d33b8f05f2ff31591592c004aa848",
+   "open": "dotnet.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "CleanArchitectureTemplate",
+   "area": "f",
+   "url": "https://github.com/jasontaylordev/CleanArchitecture",
+   "sha": "345e7fe7612fdaf0cb5da58826a7c57d42e1fdd8",
+   "open": "CleanArchitecture.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "Specification",
+   "area": "f",
+   "url": "https://github.com/ardalis/Specification",
+   "sha": "fc2670ac94d3ac427b232cc15ee0e1a7d2748a1b",
+   "open": "Ardalis.Specification.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "AutoFixture",
+   "area": "f",
+   "url": "https://github.com/AutoFixture/AutoFixture",
+   "sha": "7f5cc7e71d1641aba7fe7d06c548027974c68caf",
+   "open": "AutoFixture.slnx",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "YamlDotNet",
+   "area": "f",
+   "url": "https://github.com/aaubry/YamlDotNet",
+   "sha": "4f7e6e346649ec2a402607a3c1ea352c6fb5ecd3",
+   "open": "YamlDotNet.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  },
+  {
+   "name": "Bogus",
+   "area": "f",
+   "url": "https://github.com/bchavez/Bogus",
+   "sha": "6ece18c5c22648ab4606e45a0aaf2f07fc5259e4",
+   "open": "Source/Bogus.sln",
+   "kind": "dotnet",
+   "expect": "build"
+  }
+ ]
+}
