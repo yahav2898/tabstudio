@@ -89,7 +89,12 @@ public sealed partial class RoslynWorkspaceHost
     /// </summary>
     private IReadOnlyList<AnalyzerReference> GetAnalyzerReferences(TsProject project)
     {
-        var analyzers = WithoutDuplicateFiles(_frameworkAnalyzers.Concat(_packageAnalyzers.GetValueOrDefault(project.FilePath) ?? []))
+        var all = WithoutDuplicateFiles(_frameworkAnalyzers.Concat(_packageAnalyzers.GetValueOrDefault(project.FilePath) ?? []));
+        var removed = TabStudio.Core.Workspaces.TargetItems.RemovedAnalyzers(
+            project,
+            [.. all.Where(a => a.FullPath is not null).Select(a => new TabStudio.Core.Workspaces.AnalyzerItem(a.FullPath!, PackageIdOf(a.FullPath!)))]);
+        var analyzers = all
+            .Where(a => a.FullPath is null || !removed.Contains(a.FullPath, StringComparer.Ordinal))
             .Where(a => SdkGenerators.IsEnabled(project, a.FullPath))
             .Concat(GeneratorProjectReferences(project));
         if (Razor.RazorProjects.UsesRazor(project))
@@ -106,6 +111,17 @@ public sealed partial class RoslynWorkspaceHost
 
         analyzers = analyzers.Where(a => !string.Equals(Path.GetFileName(a.FullPath), "Avalonia.Generators.dll", StringComparison.OrdinalIgnoreCase));
         return [.. analyzers, Xaml.GeneratorReference.AvaloniaXaml];
+    }
+
+    /// <summary>
+    /// The package an analyzer comes from, by its folder in the packages folder (<c>{id}/{version}/analyzers/...</c>), as
+    /// the <c>NuGetPackageId</c> metadata packages' targets match analyzers by; <see langword="null"/> for one elsewhere.
+    /// </summary>
+    private static string? PackageIdOf(string path)
+    {
+        var parts = path.Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries);
+        var analyzers = Array.FindLastIndex(parts, p => p.Equals("analyzers", StringComparison.OrdinalIgnoreCase));
+        return analyzers >= 2 ? parts[analyzers - 2] : null;
     }
 
     /// <summary>
