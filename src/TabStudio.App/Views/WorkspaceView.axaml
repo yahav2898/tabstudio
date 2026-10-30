@@ -426,7 +426,7 @@
         </Button>
 
         <!-- The solution's name, which trims when the menu bar is short of room. -->
-        <Border x:Name="SolutionChip" Grid.Column="4" Height="28" Padding="10,0" Margin="10,0,0,0" CornerRadius="8" Background="{DynamicResource Brush.Panel}"
+        <Border x:Name="SolutionChip" Grid.Column="4" MinHeight="28" Padding="10,0" Margin="10,0,0,0" CornerRadius="8" Background="{DynamicResource Brush.Panel}"
                 HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip.Tip="{Binding Title}">
           <Grid ColumnDefinitions="Auto,*">
             <controls:StrokeIcon Data="{StaticResource Icon.Solution}" Size="14" Margin="0,0,6,0" Foreground="{DynamicResource Brush.TextSecondary}" />
@@ -808,7 +808,7 @@
                            TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding RecordingLabel}" />
               </StackPanel>
             </Border>
-            <Grid DockPanel.Dock="Top" Height="34" ColumnDefinitions="*,Auto" Margin="6,0">
+            <Grid DockPanel.Dock="Top" MinHeight="34" ColumnDefinitions="*,Auto" Margin="6,0">
               <!-- The tabs scroll sideways when the debugger's tabs leave too little room beside the Output's source. -->
               <ScrollViewer x:Name="BottomTabsScroller" Margin="0,0,10,0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
               <StackPanel x:Name="BottomTabs" Orientation="Horizontal">

@@ -45,7 +45,7 @@
 
   <DockPanel>
     <!-- Title and the swarm's commands -->
-    <Border DockPanel.Dock="Top" Height="36" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Border DockPanel.Dock="Top" MinHeight="36" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="*,Auto" Margin="12,0,2,0">
         <StackPanel Orientation="Horizontal" Spacing="8">
           <TextBlock Classes="header" Text="Swarm" />
@@ -180,7 +180,7 @@
           <StackPanel>
             <Grid ColumnDefinitions="*,Auto" Margin="0,6">
               <StackPanel Spacing="2" VerticalAlignment="Center">
-                <TextBlock Text="Mirror input" Foreground="{DynamicResource Brush.TextBright}" />
+                <TextBlock Text="Mirror input" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}" />
                 <TextBlock Classes="muted small" TextWrapping="Wrap" Text="A tap, scroll or key on any screen happens on every screen." />
               </StackPanel>
               <ToggleSwitch Grid.Column="1" IsChecked="{Binding MirrorInput}" OnContent="" OffContent="" Margin="12,0,0,0" />
@@ -188,7 +188,7 @@
             <Border Height="1" Background="{DynamicResource Brush.Divider}" />
             <Grid ColumnDefinitions="*,Auto" Margin="0,6">
               <StackPanel Spacing="2" VerticalAlignment="Center">
-                <TextBlock Text="Pause all on a breakpoint" Foreground="{DynamicResource Brush.TextBright}" />
+                <TextBlock Text="Pause all on a breakpoint" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}" />
                 <TextBlock Classes="muted small" TextWrapping="Wrap" Text="A breakpoint on one device pauses every device, until they continue together." />
               </StackPanel>
               <ToggleSwitch Grid.Column="1" IsChecked="{Binding PauseAllOnBreakpoint}" OnContent="" OffContent="" Margin="12,0,0,0" />

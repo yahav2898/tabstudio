@@ -84,7 +84,7 @@
                 <TextBlock Text="Uninstall" VerticalAlignment="Center" />
               </StackPanel>
             </Button>
-            <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding Item.IsBusy}" VerticalAlignment="Center" Height="38">
+            <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding Item.IsBusy}" VerticalAlignment="Center" MinHeight="38">
               <ProgressBar Width="160" Height="6" MinHeight="6" Minimum="0" Maximum="1" Value="{Binding Item.Progress}" VerticalAlignment="Center" />
               <TextBlock Classes="muted small" Text="Installing…" VerticalAlignment="Center" />
             </StackPanel>

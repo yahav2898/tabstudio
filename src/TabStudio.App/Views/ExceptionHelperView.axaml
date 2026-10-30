@@ -10,7 +10,7 @@
           CornerRadius="8" ClipToBounds="True" BoxShadow="{DynamicResource Shadow.Dialog}">
     <DockPanel>
       <!-- Header -->
-      <Border DockPanel.Dock="Top" Height="38" Background="{DynamicResource Brush.ExceptionHeader}" Padding="12,0,4,0">
+      <Border DockPanel.Dock="Top" MinHeight="38" Background="{DynamicResource Brush.ExceptionHeader}" Padding="12,0,4,0">
         <Grid ColumnDefinitions="Auto,*,Auto">
           <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="17" Foreground="{DynamicResource Brush.Error}" />
           <TextBlock Grid.Column="1" Classes="h2" Text="Exception Unhandled" Margin="9,0,0,0" VerticalAlignment="Center" />

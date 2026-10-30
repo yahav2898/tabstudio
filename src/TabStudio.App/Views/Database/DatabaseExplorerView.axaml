@@ -73,7 +73,7 @@
     </controls:PanelHeader>
 
     <!-- Connections and EF Core, as the bottom dock's tabs. -->
-    <Border DockPanel.Dock="Top" Height="40" Padding="4,0" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Border DockPanel.Dock="Top" MinHeight="40" Padding="4,0" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <StackPanel Orientation="Horizontal">
         <Button x:Name="ConnectionsTab" Theme="{StaticResource PanelTabButton}" Content="Connections"
                 Classes.selected="{Binding !IsEfCoreSelected}" Command="{Binding ShowConnectionsCommand}" />

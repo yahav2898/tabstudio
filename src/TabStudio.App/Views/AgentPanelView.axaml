@@ -194,7 +194,7 @@
       <Border DockPanel.Dock="Bottom" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0"
               IsVisible="{Binding HasChanges}" MaxHeight="320">
         <DockPanel>
-          <Grid DockPanel.Dock="Top" Height="38" Margin="12,0,8,0" ColumnDefinitions="*,Auto,Auto">
+          <Grid DockPanel.Dock="Top" MinHeight="38" Margin="12,0,8,0" ColumnDefinitions="*,Auto,Auto">
             <TextBlock Classes="h2" Text="{Binding ChangesTitle}" VerticalAlignment="Center" />
             <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Content="Undo all" Command="{Binding UndoAllCommand}" Margin="0,0,6,0" />
             <Button Grid.Column="2" Theme="{StaticResource AccentButton}" Content="Keep all" Command="{Binding KeepAllCommand}" />

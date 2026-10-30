@@ -190,12 +190,17 @@
                                Text="Type an item's text and add it, or - for a separator. Tap an item to change it or to add to its menu." />
                   </StackPanel>
 
-                  <ItemsControl ItemsSource="{Binding Properties}">
+                  <!-- The labels' column is as wide as the widest label, at least 96, so a larger text size never cuts a name. -->
+                  <ItemsControl ItemsSource="{Binding Properties}" Grid.IsSharedSizeScope="True">
                     <ItemsControl.DataTemplates>
                       <DataTemplate x:DataType="vm:TextPropertyViewModel">
                         <StackPanel>
                           <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
-                          <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" MinWidth="96" SharedSizeGroup="PropertyLabel" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
                             <TextBox Grid.Column="1" Text="{Binding Text, UpdateSourceTrigger=LostFocus}" AcceptsReturn="{Binding IsMultiline}" NewLine="&#13;&#10;"
                                      TextWrapping="Wrap" MaxHeight="96" />
@@ -205,7 +210,11 @@
                       <DataTemplate x:DataType="vm:BooleanPropertyViewModel">
                         <StackPanel>
                           <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
-                          <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" MinWidth="96" SharedSizeGroup="PropertyLabel" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
                             <CheckBox Grid.Column="1" IsChecked="{Binding IsChecked}" Content="{Binding IsChecked}" />
                           </Grid>
@@ -214,7 +223,11 @@
                       <DataTemplate x:DataType="vm:NumberPropertyViewModel">
                         <StackPanel>
                           <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
-                          <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" MinWidth="96" SharedSizeGroup="PropertyLabel" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
                             <NumericUpDown Grid.Column="1" Value="{Binding Value}" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}"
                                            Increment="{Binding Increment}" FormatString="{Binding Format}" />
@@ -224,7 +237,11 @@
                       <DataTemplate x:DataType="vm:ChoicePropertyViewModel">
                         <StackPanel>
                           <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
-                          <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" MinWidth="96" SharedSizeGroup="PropertyLabel" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
                             <ComboBox Grid.Column="1" ItemsSource="{Binding Options}" SelectedItem="{Binding Selected}" HorizontalAlignment="Stretch" />
                           </Grid>
@@ -233,7 +250,11 @@
                       <DataTemplate x:DataType="vm:FontFamilyPropertyViewModel">
                         <StackPanel>
                           <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
-                          <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" MinWidth="96" SharedSizeGroup="PropertyLabel" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
                             <ComboBox Grid.Column="1" ItemsSource="{Binding Options}" SelectedItem="{Binding Selected}" HorizontalAlignment="Stretch" />
                           </Grid>
@@ -254,7 +275,11 @@
                       <DataTemplate x:DataType="vm:AnchorPropertyViewModel">
                         <StackPanel>
                           <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
-                          <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" MinWidth="96" SharedSizeGroup="PropertyLabel" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <StackPanel VerticalAlignment="Center" Spacing="2">
                               <TextBlock Classes="label" Text="{Binding Label}" />
                               <TextBlock Classes="small muted" Text="{Binding Summary}" TextWrapping="Wrap" />
@@ -280,7 +305,11 @@
                       <DataTemplate x:DataType="vm:ColorPropertyViewModel">
                         <StackPanel>
                           <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
-                          <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" MinWidth="96" SharedSizeGroup="PropertyLabel" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
                             <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="8,0">
                               <StackPanel Orientation="Horizontal" Spacing="8">

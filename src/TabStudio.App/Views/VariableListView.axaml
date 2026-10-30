@@ -29,7 +29,7 @@
     <TextBlock DockPanel.Dock="Top" Text="Historical · recorded values" IsVisible="{Binding IsHistorical}"
                Classes="muted small" Margin="12,4" />
     <!-- Column headers -->
-    <Border DockPanel.Dock="Top" Height="26" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Border DockPanel.Dock="Top" MinHeight="26" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="2*,3*,2*,34" Margin="12,0,0,0" VerticalAlignment="Center">
         <TextBlock Classes="muted small" Text="Name" />
         <TextBlock Grid.Column="1" Classes="muted small" Text="Value" />

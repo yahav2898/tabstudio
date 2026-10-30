@@ -81,7 +81,7 @@
     </Grid>
 
     <!-- Column headers -->
-    <Border DockPanel.Dock="Top" Height="26" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1">
+    <Border DockPanel.Dock="Top" MinHeight="26" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1">
       <!-- A phone's panel keeps Code short and drops Project and File for the Description; a tap still opens the file. -->
       <Grid x:Name="HeaderColumns" controls:ResponsiveColumns.Wide="34,150,*,130,160,50,40" controls:ResponsiveColumns.Compact="28,72,*,0,0,40,32"
             controls:ResponsiveColumns.IsCompact="{Binding $parent[views:ErrorListView].IsCompact}" Margin="12,0" VerticalAlignment="Center">

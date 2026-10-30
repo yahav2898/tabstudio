@@ -251,7 +251,7 @@
 
               <!-- Sample -->
               <StackPanel Spacing="12" IsVisible="{Binding IsSampleSelected}">
-                <TextBlock Classes="h2" Text="HelloTablet, the sample solution" />
+                <TextBlock Classes="h2" Text="HelloTablet, the sample solution" TextWrapping="Wrap" />
                 <TextBlock Classes="muted" TextWrapping="Wrap"
                            Text="A console app and a class library it references. Press F5 to build both and run the app right here: it asks for your name in the Output panel. Then misspell something and watch the Error List update as you type." />
                 <Button Theme="{StaticResource AccentButton}" HorizontalAlignment="Left"
