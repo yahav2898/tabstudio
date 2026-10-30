@@ -1,0 +1,16 @@
+eShop-eShop-slnx: dotnet build eShop.slnx exited 1 in 2 s, 1 distinct errors
+  [ClientApp.UnitTests] Microsoft.NET.Sdk.ImportWorkloads.targets(38): NETSDK1147: To build this project, the following workloads must be installed: maui-tizen
+
+Last 300 lines of the build:
+  Determining projects to restore...
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: maui-tizen [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/ClientApp.UnitTests/ClientApp.UnitTests.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/ClientApp.UnitTests/ClientApp.UnitTests.csproj]
+
+Build FAILED.
+
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: maui-tizen [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/ClientApp.UnitTests/ClientApp.UnitTests.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/ClientApp.UnitTests/ClientApp.UnitTests.csproj]
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:01.67
