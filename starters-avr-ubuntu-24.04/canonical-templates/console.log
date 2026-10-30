@@ -56,7 +56,6 @@ In file included from ./path/glue.c:31:
   131 |                 SUBSTITUTE(cwd, known_tracee->fs->cwd);
       |                 ^~~~~~~~~~
   CC	path/temp.o
-  CC	syscall/syscall.o
 ./path/temp.c: In function ‘get_temp_directory’:
 ./path/temp.c:37:9: warning: ‘talloc_autofree_context’ is deprecated [-Wdeprecated-declarations]
    37 |         temp_directory = talloc_strdup(talloc_autofree_context(), tmp);
@@ -72,6 +71,7 @@ In file included from ./path/temp.c:9:
 /usr/include/talloc.h:1071:7: note: declared here
  1071 | void *talloc_autofree_context(void) _DEPRECATED_;
       |       ^~~~~~~~~~~~~~~~~~~~~~~
+  CC	syscall/syscall.o
   CC	syscall/chain.o
   CC	syscall/enter.o
   CC	syscall/wch_guard.o
@@ -268,7 +268,6 @@ In file included from ./extension/fake_id0/exec.c:7:
   145 | void mod_port(Tracee *tracee, bool is_socketcall, bool is_bind, bool is_udp, struct sockaddr_storage *my_sockaddr, long socketcall_arg2[]) {
       |                                                                                                                    ~~~~~^~~~~~~~~~~~~~~~~
   CC	extension/sysvipc/sysvipc.o
-  CC	extension/sysvipc/sysvipc_msg.o
 ./extension/sysvipc/sysvipc.c: In function ‘sysvipc_callback’:
 ./extension/sysvipc/sysvipc.c:216:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
   216 |         {
@@ -289,12 +288,14 @@ In file included from ./extension/fake_id0/exec.c:7:
 ./extension/sysvipc/sysvipc.c:62:9: note: here
    62 |         case PR_semop:
       |         ^~~~
+  CC	extension/sysvipc/sysvipc_msg.o
   CC	extension/sysvipc/sysvipc_sem.o
 ./extension/sysvipc/sysvipc_sem.c: In function ‘sysvipc_semop’:
 ./extension/sysvipc/sysvipc_sem.c:149:37: warning: comparison is always false due to limited range of data type [-Wtype-limits]
   149 |                 if (sops[i].sem_num < 0 || sops[i].sem_num >= semaphore->nsems) {
       |                                     ^
   CC	extension/sysvipc/sysvipc_shm.o
+  CC	extension/link2symlink/link2symlink.o
 ./extension/sysvipc/sysvipc_shm.c: In function ‘sysvipc_shm_send_helper_request’:
 ./extension/sysvipc/sysvipc_shm.c:188:9: warning: ignoring return value of ‘write’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
   188 |         write(proot2helper, request, sizeof(*request));
@@ -306,7 +307,6 @@ In file included from ./extension/fake_id0/exec.c:7:
 ./extension/sysvipc/sysvipc_shm.c:877:25: warning: ignoring return value of ‘write’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
   877 |                         write(1, &fd, sizeof(int));
       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-  CC	extension/link2symlink/link2symlink.o
 ./extension/sysvipc/sysvipc_shm.c:837:17: warning: ‘__builtin_strncpy’ specified bound 108 equals destination size [-Wstringop-truncation]
   837 |                 strncpy(addr.sun_path, path, sizeof(addr.sun_path));
       |                 ^
@@ -319,6 +319,7 @@ In file included from ./extension/fake_id0/exec.c:7:
   851 |                         if (strlen(PREFIX) + strlen(original) + 5 >= PATH_MAX)
       |                                              ^~~~~~~~~~~~~~~~
   CC	loader/loader.o
+  CC	loader/assembly.o
 In file included from ./loader/loader.c:31:
 ./loader/loader.c: In function ‘_start’:
 ./loader/assembly-x86_64.h:32:9: warning: listing the stack pointer register ‘rsp’ in a clobber list is deprecated [-Wdeprecated]
@@ -333,7 +334,6 @@ In file included from ./loader/loader.c:31:
 ./loader/loader.c:253:33: note: in expansion of macro ‘BRANCH’
   253 |                                 BRANCH(stmt->start.stack_pointer, stmt->start.entry_point);
       |                                 ^~~~~~
-  CC	loader/assembly.o
   LD	loader/loader
 make: 'loader/loader' is up to date.
   GEN	build.h
@@ -2220,12 +2220,12 @@ Configuring: Get:17 http://archive.ubuntu.com/ubuntu noble/restricted amd64 Pack
 Configuring: Get:18 http://archive.ubuntu.com/ubuntu noble/restricted Translation-en [18.7 kB]
 Configuring: Get:19 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 Packages [269 kB]
 Configuring: Get:20 http://archive.ubuntu.com/ubuntu noble/multiverse Translation-en [118 kB]
-Configuring: Get:21 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1406 kB]
-Configuring: Get:22 http://archive.ubuntu.com/ubuntu noble-updates/main Translation-en [310 kB]
-Configuring: Get:23 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1707 kB]
+Configuring: Get:21 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1408 kB]
+Configuring: Get:22 http://archive.ubuntu.com/ubuntu noble-updates/main Translation-en [311 kB]
+Configuring: Get:23 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1708 kB]
 Configuring: Get:24 http://archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [343 kB]
-Configuring: Get:25 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1809 kB]
-Configuring: Get:26 http://archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [411 kB]
+Configuring: Get:25 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1813 kB]
+Configuring: Get:26 http://archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [412 kB]
 Configuring: Get:27 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [50.7 kB]
 Configuring: Get:28 http://archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [14.3 kB]
 Configuring: Get:29 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [40.6 kB]
@@ -2234,7 +2234,7 @@ Configuring: Get:31 http://archive.ubuntu.com/ubuntu noble-backports/universe am
 Configuring: Get:32 http://archive.ubuntu.com/ubuntu noble-backports/universe Translation-en [18.6 kB]
 Configuring: Get:33 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Packages [748 B]
 Configuring: Get:34 http://archive.ubuntu.com/ubuntu noble-backports/multiverse Translation-en [340 B]
-Configuring: Fetched 35.2 MB in 4s (8011 kB/s)
+Configuring: Fetched 35.2 MB in 4s (8748 kB/s)
 Configuring: Reading package lists...
 Configuring: apt-get install -y --no-install-recommends ca-certificates curl git python3 python3-venv python3-pip build-essential cmake ninja-build xz-utils libusb-1.0-0-dev libhidapi-dev clangd
 Configuring: Reading package lists...
@@ -2450,7 +2450,7 @@ Configuring: Get:134 http://archive.ubuntu.com/ubuntu noble/universe amd64 libhi
 Configuring: Get:135 http://archive.ubuntu.com/ubuntu noble/universe amd64 libhidapi-hidraw0 amd64 0.14.0-1build1 [13.2 kB]
 Configuring: Get:136 http://archive.ubuntu.com/ubuntu noble/universe amd64 libhidapi-dev amd64 0.14.0-1build1 [28.2 kB]
 Configuring: debconf: delaying package configuration, since apt-utils is not installed
-Configuring: Fetched 189 MB in 2s (107 MB/s)
+Configuring: Fetched 189 MB in 5s (36.2 MB/s)
 Configuring: (Reading database ...
 Configuring: (Reading database ... 5%
 Configuring: (Reading database ... 10%
@@ -3180,8 +3180,8 @@ Configuring: Setting up libsasl2-modules-db:amd64 (2.1.28+dfsg1-5ubuntu3.1) ...
 Configuring: Setting up tzdata (2026e-0ubuntu0.24.04.1) ...
 Configuring: 
 Configuring: Current default time zone: 'Etc/UTC'
-Configuring: Local time is now:      Thu Oct 29 13:37:10 UTC 2026.
-Configuring: Universal Time is now:  Thu Oct 29 13:37:10 UTC 2026.
+Configuring: Local time is now:      Fri Oct 30 15:30:42 UTC 2026.
+Configuring: Universal Time is now:  Fri Oct 30 15:30:42 UTC 2026.
 Configuring: Run 'dpkg-reconfigure tzdata' if you wish to change it.
 Configuring: 
 Configuring: Setting up rpcsvc-proto (1.4.2-0ubuntu7) ...
@@ -3307,7 +3307,7 @@ Configuring: Setting up Bounded native build /opt/tabstudio/embedded/build-bin/m
 Configuring: cc -std=gnu17 -O2 -Wall -Wextra -Werror -shared -fPIC /opt/tabstudio/embedded/usb_fd.c -o /opt/tabstudio/embedded/libusb-fd.so -lusb-1.0 -ldl -pthread
 Configuring: cc -std=gnu17 -O2 -Wall -Wextra -Werror -shared -fPIC /opt/tabstudio/embedded/serial_posix.c -o /opt/tabstudio/embedded/serial-posix.so -ldl -pthread
 Configuring: cc -std=gnu17 -O2 -Wall -Wextra -Werror -shared -fPIC /opt/tabstudio/embedded/usbfs_fd.c -o /opt/tabstudio/embedded/usbfs-fd.so -ldl -pthread
-Configuring: python3 /opt/tabstudio/embedded/serial_bridge.py --virtual --shim /opt/tabstudio/embedded/serial-posix.so --port /tmp/tabstudio-bridge-test-2054abfe082c4946ad0fb5ddbf190cca -- python3 -c 'import array,fcntl,os,select,sys,termios,time,tty
+Configuring: python3 /opt/tabstudio/embedded/serial_bridge.py --virtual --shim /opt/tabstudio/embedded/serial-posix.so --port /tmp/tabstudio-bridge-test-57cea1c519a944258db3e9b7e1c50871 -- python3 -c 'import array,fcntl,os,select,sys,termios,time,tty
 fd=os.open(sys.argv[1],os.O_RDWR|os.O_NOCTTY)
 tty.setraw(fd)
 config=termios.tcgetattr(fd)
@@ -3339,60 +3339,60 @@ Configuring: Collecting ajsonrpc==1.2.0 (from -r /opt/tabstudio/platformio.requi
 Configuring:   Downloading ajsonrpc-1.2.0-py3-none-any.whl (22 kB)
 Configuring: Collecting anyio==4.15.1 (from -r /opt/tabstudio/platformio.requirements.txt (line 2))
 Configuring:   Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 132.1/132.1 kB 10.8 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 132.1/132.1 kB 7.2 MB/s eta 0:00:00
 Configuring: Collecting bottle==0.13.4 (from -r /opt/tabstudio/platformio.requirements.txt (line 3))
 Configuring:   Downloading bottle-0.13.4-py2.py3-none-any.whl (103 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.8/103.8 kB 19.2 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.8/103.8 kB 20.8 MB/s eta 0:00:00
 Configuring: Collecting certifi==2026.10.23 (from -r /opt/tabstudio/platformio.requirements.txt (line 4))
 Configuring:   Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 24.5 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 26.3 MB/s eta 0:00:00
 Configuring: Collecting charset-normalizer==3.5.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 5))
 Configuring:   Downloading charset_normalizer-3.5.2-py3-none-any.whl (68 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 68.9/68.9 kB 12.7 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 68.9/68.9 kB 16.0 MB/s eta 0:00:00
 Configuring: Collecting click==8.5.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 6))
 Configuring:   Downloading click-8.5.0-py3-none-any.whl (125 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 125.3/125.3 kB 23.0 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 125.3/125.3 kB 9.1 MB/s eta 0:00:00
 Configuring: Collecting colorama==0.4.6 (from -r /opt/tabstudio/platformio.requirements.txt (line 7))
 Configuring:   Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
 Configuring: Collecting h11==0.16.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 8))
 Configuring:   Downloading h11-0.16.0-py3-none-any.whl (37 kB)
 Configuring: Collecting idna==3.20 (from -r /opt/tabstudio/platformio.requirements.txt (line 9))
 Configuring:   Downloading idna-3.20-py3-none-any.whl (69 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 13.8 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 16.4 MB/s eta 0:00:00
 Configuring: Collecting marshmallow==4.3.1 (from -r /opt/tabstudio/platformio.requirements.txt (line 10))
 Configuring:   Downloading marshmallow-4.3.1-py3-none-any.whl (49 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 49.2/49.2 kB 9.6 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 49.2/49.2 kB 3.3 MB/s eta 0:00:00
 Configuring: Collecting pip==26.2.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 11))
 Configuring:   Downloading pip-26.2.2-py3-none-any.whl (1.8 MB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 103.2 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 50.2 MB/s eta 0:00:00
 Configuring: Collecting platformio==6.2.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 12))
 Configuring:   Downloading platformio-6.2.0-py3-none-any.whl (418 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 418.6/418.6 kB 66.9 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 418.6/418.6 kB 65.9 MB/s eta 0:00:00
 Configuring: Collecting pyelftools==0.33 (from -r /opt/tabstudio/platformio.requirements.txt (line 13))
 Configuring:   Downloading pyelftools-0.33-py3-none-any.whl (201 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 201.2/201.2 kB 34.8 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 201.2/201.2 kB 35.8 MB/s eta 0:00:00
 Configuring: Collecting pyserial==3.5 (from -r /opt/tabstudio/platformio.requirements.txt (line 14))
 Configuring:   Downloading pyserial-3.5-py2.py3-none-any.whl (90 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.6/90.6 kB 16.8 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.6/90.6 kB 22.6 MB/s eta 0:00:00
 Configuring: Collecting requests==2.34.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 15))
 Configuring:   Downloading requests-2.34.2-py3-none-any.whl (73 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 13.6 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 16.8 MB/s eta 0:00:00
 Configuring: Collecting semantic-version==2.10.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 16))
 Configuring:   Downloading semantic_version-2.10.0-py2.py3-none-any.whl (15 kB)
 Configuring: Collecting starlette==1.10.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 17))
 Configuring:   Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.6/80.6 kB 15.1 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.6/80.6 kB 12.0 MB/s eta 0:00:00
 Configuring: Collecting tabulate==0.10.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 18))
 Configuring:   Downloading tabulate-0.10.0-py3-none-any.whl (39 kB)
 Configuring: Collecting typing_extensions==4.16.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 19))
 Configuring:   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 7.8 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 9.7 MB/s eta 0:00:00
 Configuring: Collecting urllib3==2.8.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 20))
 Configuring:   Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 25.4 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 25.2 MB/s eta 0:00:00
 Configuring: Collecting uvicorn==0.54.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 21))
 Configuring:   Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.4/87.4 kB 17.0 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.4/87.4 kB 25.5 MB/s eta 0:00:00
 Configuring: Collecting wsproto==1.3.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 22))
 Configuring:   Downloading wsproto-1.3.2-py3-none-any.whl (24 kB)
 Configuring: Installing collected packages: pyserial, bottle, urllib3, typing_extensions, tabulate, semantic-version, pyelftools, pip, marshmallow, idna, h11, colorama, click, charset-normalizer, certifi, ajsonrpc, wsproto, uvicorn, requests, anyio, starlette, platformio
@@ -3481,7 +3481,7 @@ Completed: PlatformIO Core is installed in the embedded glibc environment
 [uno] RAM:   [=         ]  10.2% (used 208 bytes from 2048 bytes)
 [uno] Flash: [=         ]   6.0% (used 1938 bytes from 32256 bytes)
 [uno] Building .pio/build/uno/firmware.hex
-[uno] ========================= [SUCCESS] Took 30.60 seconds =========================
+[uno] ========================= [SUCCESS] Took 24.09 seconds =========================
 [uno] Processing uno (platform: atmelavr@5.3.0; board: uno; framework: arduino)
 [uno] --------------------------------------------------------------------------------
 [uno] Verbose mode can be enabled via `-v, --verbose` option
@@ -3499,7 +3499,7 @@ Completed: PlatformIO Core is installed in the embedded glibc environment
 [uno] No dependencies
 [uno] Building in release mode
 [uno] Building compilation database compile_commands.json
-[uno] ========================= [SUCCESS] Took 1.68 seconds =========================
+[uno] ========================= [SUCCESS] Took 1.01 seconds =========================
 CANONICAL_TEMPLATE_BUILT uno x86_64
 [nano] ********************************************************************************
 [nano] If you like PlatformIO, please:
@@ -3572,7 +3572,7 @@ CANONICAL_TEMPLATE_BUILT uno x86_64
 [nano] RAM:   [=         ]  10.2% (used 208 bytes from 2048 bytes)
 [nano] Flash: [=         ]   6.3% (used 1938 bytes from 30720 bytes)
 [nano] Building .pio/build/nano/firmware.hex
-[nano] ========================= [SUCCESS] Took 22.28 seconds =========================
+[nano] ========================= [SUCCESS] Took 14.51 seconds =========================
 [nano] Processing nano (platform: atmelavr@5.3.0; board: nanoatmega328new; framework: arduino)
 [nano] --------------------------------------------------------------------------------
 [nano] Verbose mode can be enabled via `-v, --verbose` option
@@ -3590,7 +3590,7 @@ CANONICAL_TEMPLATE_BUILT uno x86_64
 [nano] No dependencies
 [nano] Building in release mode
 [nano] Building compilation database compile_commands.json
-[nano] ========================= [SUCCESS] Took 1.66 seconds =========================
+[nano] ========================= [SUCCESS] Took 1.15 seconds =========================
 CANONICAL_TEMPLATE_BUILT nano x86_64
 [mega] ********************************************************************************
 [mega] If you like PlatformIO, please:
@@ -3663,7 +3663,7 @@ CANONICAL_TEMPLATE_BUILT nano x86_64
 [mega] RAM:   [          ]   2.5% (used 208 bytes from 8192 bytes)
 [mega] Flash: [          ]   0.9% (used 2296 bytes from 253952 bytes)
 [mega] Building .pio/build/mega/firmware.hex
-[mega] ========================= [SUCCESS] Took 22.10 seconds =========================
+[mega] ========================= [SUCCESS] Took 15.18 seconds =========================
 [mega] Processing mega (platform: atmelavr@5.3.0; board: megaatmega2560; framework: arduino)
 [mega] --------------------------------------------------------------------------------
 [mega] Verbose mode can be enabled via `-v, --verbose` option
@@ -3681,7 +3681,7 @@ CANONICAL_TEMPLATE_BUILT nano x86_64
 [mega] No dependencies
 [mega] Building in release mode
 [mega] Building compilation database compile_commands.json
-[mega] ========================= [SUCCESS] Took 1.70 seconds =========================
+[mega] ========================= [SUCCESS] Took 1.06 seconds =========================
 CANONICAL_TEMPLATE_BUILT mega x86_64
 [leonardo] ********************************************************************************
 [leonardo] If you like PlatformIO, please:
@@ -3754,7 +3754,7 @@ CANONICAL_TEMPLATE_BUILT mega x86_64
 [leonardo] RAM:   [=         ]   6.8% (used 174 bytes from 2560 bytes)
 [leonardo] Flash: [=         ]  14.4% (used 4118 bytes from 28672 bytes)
 [leonardo] Building .pio/build/leonardo/firmware.hex
-[leonardo] ========================= [SUCCESS] Took 22.33 seconds =========================
+[leonardo] ========================= [SUCCESS] Took 14.90 seconds =========================
 [leonardo] Processing leonardo (platform: atmelavr@5.3.0; board: leonardo; framework: arduino)
 [leonardo] --------------------------------------------------------------------------------
 [leonardo] Verbose mode can be enabled via `-v, --verbose` option
@@ -3772,7 +3772,7 @@ CANONICAL_TEMPLATE_BUILT mega x86_64
 [leonardo] No dependencies
 [leonardo] Building in release mode
 [leonardo] Building compilation database compile_commands.json
-[leonardo] ========================= [SUCCESS] Took 1.60 seconds =========================
+[leonardo] ========================= [SUCCESS] Took 1.11 seconds =========================
 CANONICAL_TEMPLATE_BUILT leonardo x86_64
 [micro] ********************************************************************************
 [micro] If you like PlatformIO, please:
@@ -3845,7 +3845,7 @@ CANONICAL_TEMPLATE_BUILT leonardo x86_64
 [micro] RAM:   [=         ]   6.8% (used 174 bytes from 2560 bytes)
 [micro] Flash: [=         ]  14.4% (used 4118 bytes from 28672 bytes)
 [micro] Building .pio/build/micro/firmware.hex
-[micro] ========================= [SUCCESS] Took 22.35 seconds =========================
+[micro] ========================= [SUCCESS] Took 14.58 seconds =========================
 [micro] Processing micro (platform: atmelavr@5.3.0; board: micro; framework: arduino)
 [micro] --------------------------------------------------------------------------------
 [micro] Verbose mode can be enabled via `-v, --verbose` option
@@ -3863,6 +3863,6 @@ CANONICAL_TEMPLATE_BUILT leonardo x86_64
 [micro] No dependencies
 [micro] Building in release mode
 [micro] Building compilation database compile_commands.json
-[micro] ========================= [SUCCESS] Took 1.66 seconds =========================
+[micro] ========================= [SUCCESS] Took 1.18 seconds =========================
 CANONICAL_TEMPLATE_BUILT micro x86_64
 CANONICAL_TEMPLATE_GROUP_PASSED avr x86_64
