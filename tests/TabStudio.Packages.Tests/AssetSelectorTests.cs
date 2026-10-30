@@ -38,6 +38,47 @@ public sealed class AssetSelectorTests
     }
 
     [Fact]
+    public void The_CSharp_sources_of_contentFiles_come_from_the_nearest_framework_folder()
+    {
+        // Spectre.Console's Wcwidth.Sources is a source-only package: NuGet compiles its contentFiles into the project.
+        string[] files =
+        [
+            "contentFiles/cs/netstandard2.0/Wcwidth/UnicodeCalculator.cs",
+            "contentFiles/cs/net8.0/Wcwidth/UnicodeCalculator.cs",
+            "contentFiles/cs/net8.0/Wcwidth/readme.txt",
+            "contentFiles/vb/net8.0/Wcwidth/UnicodeCalculator.vb",
+            "contentFiles/any/any/Shared.cs",
+            "lib/net8.0/_._",
+        ];
+
+        Assert.Equal(new[] { "contentFiles/cs/net8.0/Wcwidth/UnicodeCalculator.cs" }, AssetSelector.SelectContentSources(files, Net10, Fallback, AssetFlags.ContentFiles));
+        Assert.Equal(new[] { "contentFiles/any/any/Shared.cs" }, AssetSelector.SelectContentSources(["contentFiles/any/any/Shared.cs"], Net10, Fallback, AssetFlags.ContentFiles));
+        Assert.Empty(AssetSelector.SelectContentSources(files, Net10, Fallback, AssetFlags.Compile | AssetFlags.Runtime));
+    }
+
+    [Fact]
+    public void A_package_s_framework_references_are_read_for_the_nearest_framework()
+    {
+        // Microsoft.AspNetCore.Mvc.NewtonsoftJson brings ASP.NET Core to Ocelot's library, which has no FrameworkReference.
+        const string nuspec = """
+            <?xml version="1.0" encoding="utf-8"?>
+            <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+              <metadata>
+                <id>Microsoft.AspNetCore.Mvc.NewtonsoftJson</id>
+                <version>10.0.0</version>
+                <frameworkReferences>
+                  <group targetFramework="net10.0"><frameworkReference name="Microsoft.AspNetCore.App" /></group>
+                  <group targetFramework="netstandard2.0" />
+                </frameworkReferences>
+              </metadata>
+            </package>
+            """;
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(nuspec));
+
+        Assert.Equal(new[] { "Microsoft.AspNetCore.App" }, TabStudio.Packages.Manifests.NuspecReader.ReadFrameworkReferences(stream, Net10, Fallback));
+    }
+
+    [Fact]
     public void A_placeholder_folder_is_compatible_but_contributes_nothing()
     {
         var assets = Select("lib/net10.0/_._", "lib/netstandard2.0/Lib.dll");

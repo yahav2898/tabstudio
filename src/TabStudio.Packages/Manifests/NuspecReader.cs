@@ -55,6 +55,45 @@ internal static class NuspecReader
         return new PackageManifest(id, version, ReadDependencyGroups(metadata));
     }
 
+    /// <summary>
+    /// The shared frameworks a package declares for the framework nearest to the project's
+    /// (<c>&lt;frameworkReferences&gt;&lt;group targetFramework="net8.0"&gt;&lt;frameworkReference name="Microsoft.AspNetCore.App" /&gt;</c>),
+    /// which the SDK adds to every project that gets the package, as it reads them from the assets file.
+    /// </summary>
+    /// <param name="stream">The <c>.nuspec</c> contents.</param>
+    /// <param name="target">The project's framework.</param>
+    /// <param name="fallback">The <c>AssetTargetFallback</c> frameworks.</param>
+    /// <returns>The frameworks' names; none when the manifest declares none or is not valid XML.</returns>
+    public static IReadOnlyList<string> ReadFrameworkReferences(Stream stream, NuGetFramework target, IReadOnlyList<NuGetFramework> fallback)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+        XDocument document;
+        try
+        {
+            using var reader = XmlReader.Create(stream, Settings);
+            document = XDocument.Load(reader);
+        }
+        catch (XmlException)
+        {
+            return [];
+        }
+
+        var groups = (document.Root?.Elements().FirstOrDefault(e => e.Name.LocalName == "metadata")?.Elements() ?? [])
+            .Where(e => e.Name.LocalName == "frameworkReferences")
+            .SelectMany(e => e.Elements().Where(g => g.Name.LocalName == "group"))
+            .GroupBy(g => ParseFramework(g.Attribute("targetFramework")?.Value))
+            .ToDictionary(
+                g => g.Key,
+                g => g.SelectMany(group => group.Elements().Where(r => r.Name.LocalName == "frameworkReference"))
+                    .Select(r => r.Attribute("name")?.Value.Trim())
+                    .OfType<string>()
+                    .Where(name => name.Length > 0)
+                    .ToList());
+        return groups.Count > 0 && FrameworkSelection.GetNearest(target, fallback, groups.Keys, out _) is { } nearest
+            ? groups[nearest]
+            : [];
+    }
+
     private static string? ChildValue(XElement parent, string localName) =>
         parent.Elements().FirstOrDefault(e => e.Name.LocalName == localName)?.Value.Trim();
 
