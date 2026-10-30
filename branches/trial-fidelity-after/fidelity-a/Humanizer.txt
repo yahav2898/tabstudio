@@ -1,0 +1,465 @@
+Humanizer at 4574b93883bf48e3f0f3bca73297054537317ab2, opening /home/runner/work/_temp/repos/Humanizer/Humanizer.slnx
+Opened in 0.4 s: Humanizer, solution /home/runner/work/_temp/repos/Humanizer/Humanizer.slnx
+  project Benchmarks [CSharp] /home/runner/work/_temp/repos/Humanizer/src/Benchmarks/Benchmarks.csproj
+  project Humanizer.Analyzers.Roslyn38 [CSharp] /home/runner/work/_temp/repos/Humanizer/src/Humanizer.Analyzers/Humanizer.Analyzers.Roslyn38.csproj
+  project Humanizer.Analyzers.Roslyn48 [CSharp] /home/runner/work/_temp/repos/Humanizer/src/Humanizer.Analyzers/Humanizer.Analyzers.Roslyn48.csproj
+  project Humanizer.Analyzers.Roslyn414 [CSharp] /home/runner/work/_temp/repos/Humanizer/src/Humanizer.Analyzers/Humanizer.Analyzers.Roslyn414.csproj
+  project Humanizer.SourceGenerators [CSharp] /home/runner/work/_temp/repos/Humanizer/src/Humanizer.SourceGenerators/Humanizer.SourceGenerators.csproj
+  project Humanizer [CSharp] /home/runner/work/_temp/repos/Humanizer/src/Humanizer/Humanizer.csproj
+  project Humanizer.Analyzers.Tests.Roslyn38 [CSharp] /home/runner/work/_temp/repos/Humanizer/tests/Humanizer.Analyzers.Tests/Humanizer.Analyzers.Tests.Roslyn38.csproj
+  project Humanizer.Analyzers.Tests.Roslyn48 [CSharp] /home/runner/work/_temp/repos/Humanizer/tests/Humanizer.Analyzers.Tests/Humanizer.Analyzers.Tests.Roslyn48.csproj
+  project Humanizer.Analyzers.Tests.Roslyn414 [CSharp] /home/runner/work/_temp/repos/Humanizer/tests/Humanizer.Analyzers.Tests/Humanizer.Analyzers.Tests.Roslyn414.csproj
+  project Humanizer.SourceGenerators.Tests [CSharp] /home/runner/work/_temp/repos/Humanizer/tests/Humanizer.SourceGenerators.Tests/Humanizer.SourceGenerators.Tests.csproj
+  project Humanizer.Tests [CSharp] /home/runner/work/_temp/repos/Humanizer/tests/Humanizer.Tests/Humanizer.Tests.csproj
+  project Humanizer.UnicodeDataGenerator [CSharp] /home/runner/work/_temp/repos/Humanizer/tools/Humanizer.UnicodeDataGenerator/Humanizer.UnicodeDataGenerator.csproj
+  project Humanizer.Docs.LanguageCoverage [CSharp] /home/runner/work/_temp/repos/Humanizer/tools/docs/language-coverage/Humanizer.Docs.LanguageCoverage.csproj
+  toolchain project node: /home/runner/work/_temp/repos/Humanizer/website/package.json
+Compatibility Doctor:
+  Benchmarks: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
+  Humanizer.Analyzers.Roslyn38: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Humanizer.Analyzers.Roslyn48: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Humanizer.Analyzers.Roslyn414: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Humanizer.SourceGenerators: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Humanizer: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Humanizer.Analyzers.Tests.Roslyn38: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Humanizer.Analyzers.Tests.Roslyn48: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Humanizer.Analyzers.Tests.Roslyn414: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Humanizer.SourceGenerators.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Humanizer.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Humanizer.UnicodeDataGenerator: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  Humanizer.Docs.LanguageCoverage: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  website: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+F5 startup project: Humanizer.UnicodeDataGenerator /home/runner/work/_temp/repos/Humanizer/tools/Humanizer.UnicodeDataGenerator/Humanizer.UnicodeDataGenerator.csproj
+Error List after analysis: 3 errors, 6 warnings
+  2 x CS1061
+      [Humanizer.Analyzers.Tests.Roslyn414] WordsToNumberMigrationCodeFixTests.cs(286,21): error CS1061: 'AnalysisContext' does not contain a definition for 'EnableConcurrentExecution' and no accessible extension method 'EnableConcurrentExecution' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+      [Humanizer.Analyzers.Tests.Roslyn414] WordsToNumberMigrationCodeFixTests.cs(287,21): error CS1061: 'AnalysisContext' does not contain a definition for 'ConfigureGeneratedCodeAnalysis' and no accessible extension method 'ConfigureGeneratedCodeAnalysis' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+  1 x CS0103
+      [Humanizer.Analyzers.Tests.Roslyn414] WordsToNumberMigrationCodeFixTests.cs(287,52): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
+Error List after the build: 9 errors, 6 warnings
+  6 x CS1705
+      [Humanizer.Analyzers.Tests.Roslyn38] error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+      [Humanizer.Analyzers.Tests.Roslyn38] error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+      [Humanizer.Analyzers.Tests.Roslyn48] error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=4.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+      [Humanizer.Analyzers.Tests.Roslyn48] error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=4.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+      [Humanizer.Analyzers.Tests.Roslyn414] error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=4.14.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+      [Humanizer.Analyzers.Tests.Roslyn414] error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=4.14.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+  2 x CS1061
+      [Humanizer.Analyzers.Tests.Roslyn38] WordsToNumberMigrationCodeFixTests.cs(286,21): error CS1061: 'AnalysisContext' does not contain a definition for 'EnableConcurrentExecution' and no accessible extension method 'EnableConcurrentExecution' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+      [Humanizer.Analyzers.Tests.Roslyn38] WordsToNumberMigrationCodeFixTests.cs(287,21): error CS1061: 'AnalysisContext' does not contain a definition for 'ConfigureGeneratedCodeAnalysis' and no accessible extension method 'ConfigureGeneratedCodeAnalysis' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+  1 x CS0103
+      [Humanizer.Analyzers.Tests.Roslyn38] WordsToNumberMigrationCodeFixTests.cs(287,52): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.2 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring NuGet packages 0/12 projects
+  Analyzing: Analyzing 0/13 projects
+  Analyzing: Analyzing 1/13 projects
+  Analyzing: Analyzing 2/13 projects
+  Analyzing: Analyzing 3/13 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/23
+  Analyzing: Analyzing 4/13 projects
+  Restoring NuGet packages: Downloading NuGet packages 2/23
+  Restoring NuGet packages: Downloading NuGet packages 3/23
+  Restoring NuGet packages: Downloading NuGet packages 4/23
+  Analyzing: Analyzing 5/13 projects
+  Restoring NuGet packages: Downloading NuGet packages 5/23
+  Analyzing: Analyzing 6/13 projects
+  Restoring NuGet packages: Downloading NuGet packages 6/23
+  Restoring NuGet packages: Downloading NuGet packages 7/23
+  Restoring NuGet packages: Downloading NuGet packages 8/23
+  Restoring NuGet packages: Downloading NuGet packages 9/23
+  Restoring NuGet packages: Downloading NuGet packages 10/23
+  Restoring NuGet packages: Downloading NuGet packages 11/23
+  Restoring NuGet packages: Downloading NuGet packages 12/23
+  Restoring NuGet packages: Downloading NuGet packages 13/23
+  Restoring NuGet packages: Downloading NuGet packages 14/23
+  Restoring NuGet packages: Downloading NuGet packages 15/23
+  Restoring NuGet packages: Downloading NuGet packages 16/23
+  Restoring NuGet packages: Downloading NuGet packages 17/23
+  Restoring NuGet packages: Downloading NuGet packages 18/23
+  Restoring NuGet packages: Downloading NuGet packages 19/23
+  Restoring NuGet packages: Downloading NuGet packages 20/23
+  Restoring NuGet packages: Downloading NuGet packages 21/23
+  Restoring NuGet packages: Downloading NuGet packages 22/23
+  Restoring NuGet packages: Downloading NuGet packages 23/23
+  Restoring NuGet packages: Restoring NuGet packages 1/12 projects
+  Analyzing: Analyzing 7/13 projects
+  Analyzing: Analyzing 8/13 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/13
+  Restoring NuGet packages: Downloading NuGet packages 2/13
+  Restoring NuGet packages: Downloading NuGet packages 3/13
+  Analyzing: Analyzing 9/13 projects
+  Restoring NuGet packages: Downloading NuGet packages 4/13
+  Analyzing: Analyzing 10/13 projects
+  Restoring NuGet packages: Downloading NuGet packages 5/13
+  Restoring NuGet packages: Downloading NuGet packages 6/13
+  Restoring NuGet packages: Downloading NuGet packages 7/13
+  Restoring NuGet packages: Downloading NuGet packages 8/13
+  Restoring NuGet packages: Downloading NuGet packages 9/13
+  Restoring NuGet packages: Downloading NuGet packages 10/13
+  Restoring NuGet packages: Downloading NuGet packages 11/13
+  Restoring NuGet packages: Downloading NuGet packages 12/13
+  Restoring NuGet packages: Downloading NuGet packages 13/13
+  Restoring NuGet packages: Restoring NuGet packages 2/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/13
+  Restoring NuGet packages: Downloading NuGet packages 2/13
+  Restoring NuGet packages: Downloading NuGet packages 3/13
+  Analyzing: Analyzing 11/13 projects
+  Setting up projects: Setting up website: npm install
+  Installing website's packages: Installing packages: npm install
+  Restoring NuGet packages: Downloading NuGet packages 4/13
+  Restoring NuGet packages: Downloading NuGet packages 5/13
+  Restoring NuGet packages: Downloading NuGet packages 6/13
+  Restoring NuGet packages: Downloading NuGet packages 7/13
+  Restoring NuGet packages: Downloading NuGet packages 8/13
+  Restoring NuGet packages: Downloading NuGet packages 9/13
+  Restoring NuGet packages: Downloading NuGet packages 10/13
+  Restoring NuGet packages: Downloading NuGet packages 11/13
+  Restoring NuGet packages: Downloading NuGet packages 12/13
+  Restoring NuGet packages: Downloading NuGet packages 13/13
+  Restoring NuGet packages: Restoring NuGet packages 3/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/12
+  Restoring NuGet packages: Downloading NuGet packages 2/12
+  Restoring NuGet packages: Downloading NuGet packages 3/12
+  Restoring NuGet packages: Downloading NuGet packages 4/12
+  Restoring NuGet packages: Downloading NuGet packages 5/12
+  Restoring NuGet packages: Downloading NuGet packages 6/12
+  Restoring NuGet packages: Downloading NuGet packages 7/12
+  Restoring NuGet packages: Downloading NuGet packages 8/12
+  Analyzing: Analyzing 12/13 projects
+  Restoring NuGet packages: Downloading NuGet packages 9/12
+  Restoring NuGet packages: Downloading NuGet packages 10/12
+  Restoring NuGet packages: Downloading NuGet packages 11/12
+  Analyzing: Analyzing 13/13 projects
+  Analyzing: Succeeded after 6.2 s
+  Restoring NuGet packages: Downloading NuGet packages 12/12
+  Restoring NuGet packages: Restoring NuGet packages 4/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/13
+  Restoring NuGet packages: Downloading NuGet packages 2/13
+  Restoring NuGet packages: Downloading NuGet packages 3/13
+  Restoring NuGet packages: Downloading NuGet packages 4/13
+  Restoring NuGet packages: Downloading NuGet packages 5/13
+  Restoring NuGet packages: Downloading NuGet packages 6/13
+  Restoring NuGet packages: Downloading NuGet packages 7/13
+  Restoring NuGet packages: Downloading NuGet packages 8/13
+  Restoring NuGet packages: Downloading NuGet packages 9/13
+  Restoring NuGet packages: Downloading NuGet packages 10/13
+  Restoring NuGet packages: Downloading NuGet packages 11/13
+  Restoring NuGet packages: Downloading NuGet packages 12/13
+  Restoring NuGet packages: Downloading NuGet packages 13/13
+  Restoring NuGet packages: Restoring NuGet packages 5/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/2
+  Restoring NuGet packages: Downloading NuGet packages 2/2
+  Restoring NuGet packages: Restoring NuGet packages 6/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/51
+  Restoring NuGet packages: Downloading NuGet packages 2/51
+  Restoring NuGet packages: Downloading NuGet packages 3/51
+  Restoring NuGet packages: Downloading NuGet packages 4/51
+  Restoring NuGet packages: Downloading NuGet packages 5/51
+  Restoring NuGet packages: Downloading NuGet packages 6/51
+  Restoring NuGet packages: Downloading NuGet packages 7/51
+  Restoring NuGet packages: Downloading NuGet packages 8/51
+  Restoring NuGet packages: Downloading NuGet packages 9/51
+  Restoring NuGet packages: Downloading NuGet packages 10/51
+  Restoring NuGet packages: Downloading NuGet packages 11/51
+  Restoring NuGet packages: Downloading NuGet packages 12/51
+  Restoring NuGet packages: Downloading NuGet packages 13/51
+  Restoring NuGet packages: Downloading NuGet packages 14/51
+  Restoring NuGet packages: Downloading NuGet packages 15/51
+  Restoring NuGet packages: Downloading NuGet packages 16/51
+  Restoring NuGet packages: Downloading NuGet packages 17/51
+  Restoring NuGet packages: Downloading NuGet packages 18/51
+  Restoring NuGet packages: Downloading NuGet packages 19/51
+  Restoring NuGet packages: Downloading NuGet packages 20/51
+  Restoring NuGet packages: Downloading NuGet packages 21/51
+  Restoring NuGet packages: Downloading NuGet packages 22/51
+  Restoring NuGet packages: Downloading NuGet packages 23/51
+  Restoring NuGet packages: Downloading NuGet packages 24/51
+  Restoring NuGet packages: Downloading NuGet packages 25/51
+  Restoring NuGet packages: Downloading NuGet packages 26/51
+  Restoring NuGet packages: Downloading NuGet packages 27/51
+  Restoring NuGet packages: Downloading NuGet packages 28/51
+  Restoring NuGet packages: Downloading NuGet packages 29/51
+  Restoring NuGet packages: Downloading NuGet packages 30/51
+  Restoring NuGet packages: Downloading NuGet packages 31/51
+  Restoring NuGet packages: Downloading NuGet packages 32/51
+  Restoring NuGet packages: Downloading NuGet packages 33/51
+  Restoring NuGet packages: Downloading NuGet packages 34/51
+  Restoring NuGet packages: Downloading NuGet packages 35/51
+  Restoring NuGet packages: Downloading NuGet packages 36/51
+  Restoring NuGet packages: Downloading NuGet packages 37/51
+  Restoring NuGet packages: Downloading NuGet packages 38/51
+  Restoring NuGet packages: Downloading NuGet packages 39/51
+  Restoring NuGet packages: Downloading NuGet packages 40/51
+  Restoring NuGet packages: Downloading NuGet packages 41/51
+  Restoring NuGet packages: Downloading NuGet packages 42/51
+  Restoring NuGet packages: Downloading NuGet packages 43/51
+  Restoring NuGet packages: Downloading NuGet packages 44/51
+  Restoring NuGet packages: Downloading NuGet packages 45/51
+  Restoring NuGet packages: Downloading NuGet packages 46/51
+  Restoring NuGet packages: Downloading NuGet packages 47/51
+  Restoring NuGet packages: Downloading NuGet packages 48/51
+  Restoring NuGet packages: Downloading NuGet packages 49/51
+  Restoring NuGet packages: Downloading NuGet packages 50/51
+  Restoring NuGet packages: Downloading NuGet packages 51/51
+  Restoring NuGet packages: Restoring NuGet packages 7/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/51
+  Restoring NuGet packages: Downloading NuGet packages 2/51
+  Restoring NuGet packages: Downloading NuGet packages 3/51
+  Restoring NuGet packages: Downloading NuGet packages 4/51
+  Restoring NuGet packages: Downloading NuGet packages 5/51
+  Restoring NuGet packages: Downloading NuGet packages 6/51
+  Restoring NuGet packages: Downloading NuGet packages 7/51
+  Restoring NuGet packages: Downloading NuGet packages 8/51
+  Restoring NuGet packages: Downloading NuGet packages 9/51
+  Restoring NuGet packages: Downloading NuGet packages 10/51
+  Restoring NuGet packages: Downloading NuGet packages 11/51
+  Restoring NuGet packages: Downloading NuGet packages 12/51
+  Restoring NuGet packages: Downloading NuGet packages 13/51
+  Restoring NuGet packages: Downloading NuGet packages 14/51
+  Restoring NuGet packages: Downloading NuGet packages 15/51
+  Restoring NuGet packages: Downloading NuGet packages 16/51
+  Restoring NuGet packages: Downloading NuGet packages 17/51
+  Restoring NuGet packages: Downloading NuGet packages 18/51
+  Restoring NuGet packages: Downloading NuGet packages 19/51
+  Restoring NuGet packages: Downloading NuGet packages 20/51
+  Restoring NuGet packages: Downloading NuGet packages 21/51
+  Restoring NuGet packages: Downloading NuGet packages 22/51
+  Restoring NuGet packages: Downloading NuGet packages 23/51
+  Restoring NuGet packages: Downloading NuGet packages 24/51
+  Restoring NuGet packages: Downloading NuGet packages 25/51
+  Restoring NuGet packages: Downloading NuGet packages 26/51
+  Restoring NuGet packages: Downloading NuGet packages 27/51
+  Restoring NuGet packages: Downloading NuGet packages 28/51
+  Restoring NuGet packages: Downloading NuGet packages 29/51
+  Restoring NuGet packages: Downloading NuGet packages 30/51
+  Restoring NuGet packages: Downloading NuGet packages 31/51
+  Restoring NuGet packages: Downloading NuGet packages 32/51
+  Restoring NuGet packages: Downloading NuGet packages 33/51
+  Restoring NuGet packages: Downloading NuGet packages 34/51
+  Restoring NuGet packages: Downloading NuGet packages 35/51
+  Restoring NuGet packages: Downloading NuGet packages 36/51
+  Restoring NuGet packages: Downloading NuGet packages 37/51
+  Restoring NuGet packages: Downloading NuGet packages 38/51
+  Restoring NuGet packages: Downloading NuGet packages 39/51
+  Restoring NuGet packages: Downloading NuGet packages 40/51
+  Restoring NuGet packages: Downloading NuGet packages 41/51
+  Restoring NuGet packages: Downloading NuGet packages 42/51
+  Restoring NuGet packages: Downloading NuGet packages 43/51
+  Restoring NuGet packages: Downloading NuGet packages 44/51
+  Restoring NuGet packages: Downloading NuGet packages 45/51
+  Restoring NuGet packages: Downloading NuGet packages 46/51
+  Restoring NuGet packages: Downloading NuGet packages 47/51
+  Restoring NuGet packages: Downloading NuGet packages 48/51
+  Restoring NuGet packages: Downloading NuGet packages 49/51
+  Restoring NuGet packages: Downloading NuGet packages 50/51
+  Restoring NuGet packages: Downloading NuGet packages 51/51
+  Restoring NuGet packages: Restoring NuGet packages 8/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/51
+  Restoring NuGet packages: Downloading NuGet packages 2/51
+  Restoring NuGet packages: Downloading NuGet packages 3/51
+  Restoring NuGet packages: Downloading NuGet packages 4/51
+  Restoring NuGet packages: Downloading NuGet packages 5/51
+  Restoring NuGet packages: Downloading NuGet packages 6/51
+  Restoring NuGet packages: Downloading NuGet packages 7/51
+  Restoring NuGet packages: Downloading NuGet packages 8/51
+  Restoring NuGet packages: Downloading NuGet packages 9/51
+  Restoring NuGet packages: Downloading NuGet packages 10/51
+  Restoring NuGet packages: Downloading NuGet packages 11/51
+  Restoring NuGet packages: Downloading NuGet packages 12/51
+  Restoring NuGet packages: Downloading NuGet packages 13/51
+  Restoring NuGet packages: Downloading NuGet packages 14/51
+  Restoring NuGet packages: Downloading NuGet packages 15/51
+  Restoring NuGet packages: Downloading NuGet packages 16/51
+  Restoring NuGet packages: Downloading NuGet packages 17/51
+  Restoring NuGet packages: Downloading NuGet packages 18/51
+  Restoring NuGet packages: Downloading NuGet packages 19/51
+  Restoring NuGet packages: Downloading NuGet packages 20/51
+  Restoring NuGet packages: Downloading NuGet packages 21/51
+  Restoring NuGet packages: Downloading NuGet packages 22/51
+  Restoring NuGet packages: Downloading NuGet packages 23/51
+  Restoring NuGet packages: Downloading NuGet packages 24/51
+  Restoring NuGet packages: Downloading NuGet packages 25/51
+  Restoring NuGet packages: Downloading NuGet packages 26/51
+  Restoring NuGet packages: Downloading NuGet packages 27/51
+  Restoring NuGet packages: Downloading NuGet packages 28/51
+  Restoring NuGet packages: Downloading NuGet packages 29/51
+  Restoring NuGet packages: Downloading NuGet packages 30/51
+  Restoring NuGet packages: Downloading NuGet packages 31/51
+  Restoring NuGet packages: Downloading NuGet packages 32/51
+  Restoring NuGet packages: Downloading NuGet packages 33/51
+  Restoring NuGet packages: Downloading NuGet packages 34/51
+  Restoring NuGet packages: Downloading NuGet packages 35/51
+  Restoring NuGet packages: Downloading NuGet packages 36/51
+  Restoring NuGet packages: Downloading NuGet packages 37/51
+  Restoring NuGet packages: Downloading NuGet packages 38/51
+  Restoring NuGet packages: Downloading NuGet packages 39/51
+  Restoring NuGet packages: Downloading NuGet packages 40/51
+  Restoring NuGet packages: Downloading NuGet packages 41/51
+  Restoring NuGet packages: Downloading NuGet packages 42/51
+  Restoring NuGet packages: Downloading NuGet packages 43/51
+  Restoring NuGet packages: Downloading NuGet packages 44/51
+  Restoring NuGet packages: Downloading NuGet packages 45/51
+  Restoring NuGet packages: Downloading NuGet packages 46/51
+  Restoring NuGet packages: Downloading NuGet packages 47/51
+  Restoring NuGet packages: Downloading NuGet packages 48/51
+  Restoring NuGet packages: Downloading NuGet packages 49/51
+  Restoring NuGet packages: Downloading NuGet packages 50/51
+  Restoring NuGet packages: Downloading NuGet packages 51/51
+  Restoring NuGet packages: Restoring NuGet packages 9/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/31
+  Restoring NuGet packages: Downloading NuGet packages 2/31
+  Restoring NuGet packages: Downloading NuGet packages 3/31
+  Restoring NuGet packages: Downloading NuGet packages 4/31
+  Restoring NuGet packages: Downloading NuGet packages 5/31
+  Restoring NuGet packages: Downloading NuGet packages 6/31
+  Restoring NuGet packages: Downloading NuGet packages 7/31
+  Restoring NuGet packages: Downloading NuGet packages 8/31
+  Restoring NuGet packages: Downloading NuGet packages 9/31
+  Restoring NuGet packages: Downloading NuGet packages 10/31
+  Restoring NuGet packages: Downloading NuGet packages 11/31
+  Restoring NuGet packages: Downloading NuGet packages 12/31
+  Restoring NuGet packages: Downloading NuGet packages 13/31
+  Restoring NuGet packages: Downloading NuGet packages 14/31
+  Restoring NuGet packages: Downloading NuGet packages 15/31
+  Restoring NuGet packages: Downloading NuGet packages 16/31
+  Restoring NuGet packages: Downloading NuGet packages 17/31
+  Restoring NuGet packages: Downloading NuGet packages 18/31
+  Restoring NuGet packages: Downloading NuGet packages 19/31
+  Restoring NuGet packages: Downloading NuGet packages 20/31
+  Restoring NuGet packages: Downloading NuGet packages 21/31
+  Restoring NuGet packages: Downloading NuGet packages 22/31
+  Restoring NuGet packages: Downloading NuGet packages 23/31
+  Restoring NuGet packages: Downloading NuGet packages 24/31
+  Restoring NuGet packages: Downloading NuGet packages 25/31
+  Restoring NuGet packages: Downloading NuGet packages 26/31
+  Restoring NuGet packages: Downloading NuGet packages 27/31
+  Restoring NuGet packages: Downloading NuGet packages 28/31
+  Restoring NuGet packages: Downloading NuGet packages 29/31
+  Restoring NuGet packages: Downloading NuGet packages 30/31
+  Restoring NuGet packages: Downloading NuGet packages 31/31
+  Restoring NuGet packages: Restoring NuGet packages 10/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/30
+  Restoring NuGet packages: Downloading NuGet packages 2/30
+  Restoring NuGet packages: Downloading NuGet packages 3/30
+  Restoring NuGet packages: Downloading NuGet packages 4/30
+  Restoring NuGet packages: Downloading NuGet packages 5/30
+  Restoring NuGet packages: Downloading NuGet packages 6/30
+  Restoring NuGet packages: Downloading NuGet packages 7/30
+  Restoring NuGet packages: Downloading NuGet packages 8/30
+  Restoring NuGet packages: Downloading NuGet packages 9/30
+  Restoring NuGet packages: Downloading NuGet packages 10/30
+  Restoring NuGet packages: Downloading NuGet packages 11/30
+  Restoring NuGet packages: Downloading NuGet packages 12/30
+  Restoring NuGet packages: Downloading NuGet packages 13/30
+  Restoring NuGet packages: Downloading NuGet packages 14/30
+  Restoring NuGet packages: Downloading NuGet packages 15/30
+  Restoring NuGet packages: Downloading NuGet packages 16/30
+  Restoring NuGet packages: Downloading NuGet packages 17/30
+  Restoring NuGet packages: Downloading NuGet packages 18/30
+  Restoring NuGet packages: Downloading NuGet packages 19/30
+  Restoring NuGet packages: Downloading NuGet packages 20/30
+  Restoring NuGet packages: Downloading NuGet packages 21/30
+  Restoring NuGet packages: Downloading NuGet packages 22/30
+  Restoring NuGet packages: Downloading NuGet packages 23/30
+  Restoring NuGet packages: Downloading NuGet packages 24/30
+  Restoring NuGet packages: Downloading NuGet packages 25/30
+  Restoring NuGet packages: Downloading NuGet packages 26/30
+  Restoring NuGet packages: Downloading NuGet packages 27/30
+  Restoring NuGet packages: Downloading NuGet packages 28/30
+  Restoring NuGet packages: Downloading NuGet packages 29/30
+  Restoring NuGet packages: Downloading NuGet packages 30/30
+  Restoring NuGet packages: Restoring NuGet packages 11/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/13
+  Restoring NuGet packages: Downloading NuGet packages 2/13
+  Restoring NuGet packages: Downloading NuGet packages 3/13
+  Restoring NuGet packages: Downloading NuGet packages 4/13
+  Restoring NuGet packages: Downloading NuGet packages 5/13
+  Restoring NuGet packages: Downloading NuGet packages 6/13
+  Restoring NuGet packages: Downloading NuGet packages 7/13
+  Restoring NuGet packages: Downloading NuGet packages 8/13
+  Restoring NuGet packages: Downloading NuGet packages 9/13
+  Restoring NuGet packages: Downloading NuGet packages 10/13
+  Restoring NuGet packages: Downloading NuGet packages 11/13
+  Restoring NuGet packages: Downloading NuGet packages 12/13
+  Restoring NuGet packages: Downloading NuGet packages 13/13
+  Restoring NuGet packages: Succeeded after 15.6 s
+  Analyzing: Analyzing 0/13 projects
+  Analyzing: Analyzing 1/13 projects
+  Analyzing: Analyzing 2/13 projects
+  Analyzing: Analyzing 3/13 projects
+  Analyzing: Analyzing 4/13 projects
+  Analyzing: Analyzing 5/13 projects
+  Analyzing: Analyzing 6/13 projects
+  Analyzing: Analyzing 7/13 projects
+  Analyzing: Analyzing 8/13 projects
+  Analyzing: Analyzing 9/13 projects
+  Analyzing: Analyzing 10/13 projects
+  Analyzing: Analyzing 11/13 projects
+  Analyzing: Analyzing 12/13 projects
+  Analyzing: Analyzing 13/13 projects
+  Analyzing: Succeeded after 12.0 s
+  Installing website's packages: Succeeded after 41.0 s
+  Setting up projects: Succeeded after 45.5 s
+  Building: Building
+  Building: Building 0/13 projects
+  Building: Building 1/13 projects
+  Building: Building 2/13 projects
+  Building: Building 3/13 projects
+  Building: Building 4/13 projects
+  Building: Building 5/13 projects
+  Building: Building 6/13 projects
+  Building: Building 7/13 projects
+  Building: Building 8/13 projects
+  Building: Building 9/13 projects
+  Building: Building 10/13 projects
+  Building: Building 11/13 projects
+  Building: Building 12/13 projects
+  Building: Failed after 19.5 s
+Project setup:
+
+Output:
+Build started at 17:33:02...
+1>------ Build started: Project: Humanizer.Analyzers.Roslyn38, Configuration: Debug ------
+1>Humanizer.Analyzers.Roslyn38 -> compiled in memory (20 KB, 34 ms)
+2>------ Build started: Project: Humanizer.Analyzers.Roslyn48, Configuration: Debug ------
+2>Humanizer.Analyzers.Roslyn48 -> compiled in memory (20 KB, 14 ms)
+3>------ Build started: Project: Humanizer.Analyzers.Roslyn414, Configuration: Debug ------
+3>Humanizer.Analyzers.Roslyn414 -> compiled in memory (20 KB, 12 ms)
+4>------ Build started: Project: Humanizer.SourceGenerators, Configuration: Debug ------
+4>Humanizer.SourceGenerators -> compiled in memory (519 KB, 463 ms)
+5>------ Build started: Project: Humanizer, Configuration: Debug ------
+5>Humanizer -> compiled in memory (4294.5 KB, 2520 ms)
+6>------ Build started: Project: Benchmarks, Configuration: Debug ------
+6>Benchmarks -> compiled in memory (35.5 KB, 2517 ms)
+7>------ Build started: Project: Humanizer.Analyzers.Tests.Roslyn38, Configuration: Debug ------
+7>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+7>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+7>WordsToNumberMigrationCodeFixTests.cs(286,21): error CS1061: 'AnalysisContext' does not contain a definition for 'EnableConcurrentExecution' and no accessible extension method 'EnableConcurrentExecution' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+7>WordsToNumberMigrationCodeFixTests.cs(287,21): error CS1061: 'AnalysisContext' does not contain a definition for 'ConfigureGeneratedCodeAnalysis' and no accessible extension method 'ConfigureGeneratedCodeAnalysis' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+7>WordsToNumberMigrationCodeFixTests.cs(287,52): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
+8>------ Build started: Project: Humanizer.Analyzers.Tests.Roslyn48, Configuration: Debug ------
+8>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=4.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+8>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=4.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+8>WordsToNumberMigrationCodeFixTests.cs(286,21): error CS1061: 'AnalysisContext' does not contain a definition for 'EnableConcurrentExecution' and no accessible extension method 'EnableConcurrentExecution' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+8>WordsToNumberMigrationCodeFixTests.cs(287,21): error CS1061: 'AnalysisContext' does not contain a definition for 'ConfigureGeneratedCodeAnalysis' and no accessible extension method 'ConfigureGeneratedCodeAnalysis' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+8>WordsToNumberMigrationCodeFixTests.cs(287,52): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
+9>------ Build started: Project: Humanizer.Analyzers.Tests.Roslyn414, Configuration: Debug ------
+9>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=4.14.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+9>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=4.14.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+9>WordsToNumberMigrationCodeFixTests.cs(286,21): error CS1061: 'AnalysisContext' does not contain a definition for 'EnableConcurrentExecution' and no accessible extension method 'EnableConcurrentExecution' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+9>WordsToNumberMigrationCodeFixTests.cs(287,21): error CS1061: 'AnalysisContext' does not contain a definition for 'ConfigureGeneratedCodeAnalysis' and no accessible extension method 'ConfigureGeneratedCodeAnalysis' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+9>WordsToNumberMigrationCodeFixTests.cs(287,52): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
+10>------ Build started: Project: Humanizer.SourceGenerators.Tests, Configuration: Debug ------
+10>Humanizer.SourceGenerators.Tests -> compiled in memory (358.5 KB, 2817 ms)
+11>------ Build started: Project: Humanizer.Tests, Configuration: Debug ------
+11>Humanizer.Tests -> compiled in memory (2826 KB, 4172 ms)
+12>------ Build started: Project: Humanizer.UnicodeDataGenerator, Configuration: Debug ------
+12>Humanizer.UnicodeDataGenerator -> compiled in memory (35.5 KB, 58 ms)
+13>------ Build started: Project: Humanizer.Docs.LanguageCoverage, Configuration: Debug ------
+13>Humanizer.Docs.LanguageCoverage -> compiled in memory (14.5 KB, 478 ms)
+========== Build: 10 succeeded, 3 failed ==========
+
