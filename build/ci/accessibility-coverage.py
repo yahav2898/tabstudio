@@ -45,19 +45,34 @@ def exempt():
     return result
 
 
+def views_shown(folder):
+    """The (screenshot, view) pairs a run's audit saw."""
+    path = folder / "accessibility" / "views.tsv"
+    if not path.exists():
+        return []
+    rows = []
+    for row in path.read_text(encoding="utf-8").splitlines():
+        parts = row.split("\t")
+        if len(parts) == 2:
+            rows.append((parts[0], parts[1]))
+    return rows
+
+
 def main(folders):
     all_views = views_of_the_ide()
     exemptions = exempt()
     failed = False
     lines = ["# Accessibility audit", ""]
+    shown = {pathlib.Path(f): views_shown(pathlib.Path(f)) for f in folders}
     for folder in map(pathlib.Path, folders):
         report = folder / "accessibility"
-        seen = set()
-        if (report / "views.tsv").exists():
-            for row in (report / "views.tsv").read_text(encoding="utf-8").splitlines():
-                parts = row.split("\t")
-                if len(parts) == 2:
-                    seen.add(parts[1])
+        # A test can show a view in both themes itself (the panel audit's "-dark" and "-light" screenshots): those
+        # count for the run of that theme whichever folder they were saved in.
+        theme = "light" if folder.name == "light" else "dark"
+        seen = {view for _, view in shown[folder]}
+        for other, rows in shown.items():
+            if other != folder:
+                seen |= {view for shot, view in rows if shot.endswith(f"-{theme}")}
         findings = collections.Counter()
         controls = collections.defaultdict(set)
         if (report / "findings.tsv").exists():

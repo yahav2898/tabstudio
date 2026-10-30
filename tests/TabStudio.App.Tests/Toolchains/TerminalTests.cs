@@ -76,7 +76,7 @@ public sealed class TerminalTests
 
         // A taller dock, as a user drags the splitter up to work in the Terminal.
         var editorArea = window.GetVisualDescendants().OfType<Avalonia.Controls.Grid>().Single(g => g.Name == "EditorArea");
-        editorArea.RowDefinitions[4].Height = new Avalonia.Controls.GridLength(330);
+        editorArea.RowDefinitions[4].Height = new Avalonia.Controls.GridLength(400);
         workspace.ShowTerminalCommand.Execute(null);
         var terminal = workspace.Terminal;
         await UiTestHelpers.WaitUntilAsync(() => terminal.IsRunning, because: "the shell");

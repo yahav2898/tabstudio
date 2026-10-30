@@ -125,7 +125,7 @@
                   <Border Classes="storeRow" Classes.highlighted="{Binding IsHighlighted}">
                     <!-- The tile on the left, the actions on the right, and the text wrapping in the space between. -->
                     <DockPanel>
-                      <Border DockPanel.Dock="Left" Width="46" Height="46" CornerRadius="11" Background="{Binding BadgeBrush}" VerticalAlignment="Top" Margin="0,2,14,0">
+                      <Border DockPanel.Dock="Left" MinWidth="46" MinHeight="46" Padding="3,0" CornerRadius="11" Background="{Binding BadgeBrush}" VerticalAlignment="Top" Margin="0,2,14,0">
                         <TextBlock Text="{Binding Badge}" FontWeight="Bold" FontSize="{DynamicResource Type.Heading}" Foreground="{DynamicResource Brush.OnAccent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                       </Border>
                       <StackPanel Classes="storeActions" Orientation="Horizontal" Spacing="8">
@@ -146,18 +146,19 @@
                         <Button Theme="{StaticResource SecondaryButton}" Padding="14,0" Content="Cancel" IsVisible="{Binding ShowsCancel}" Command="{Binding CancelCommand}" />
                       </StackPanel>
                       <StackPanel Spacing="4" VerticalAlignment="Center">
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                          <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="{DynamicResource Type.Subtitle}" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
-                          <TextBlock Text="{Binding VersionText}" Classes="mono muted" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
-                          <Border Classes="pill" Classes.success="{Binding IsInstalled}" Classes.warning="{Binding HasUpdate}" Classes.ready="{Binding IsBusy}">
+                        <!-- Name, version and state wrap onto a second line on a phone or at a large text size. -->
+                        <WrapPanel>
+                          <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="{DynamicResource Type.Subtitle}" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" Margin="0,0,10,0" />
+                          <TextBlock Text="{Binding VersionText}" Classes="mono muted" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" Margin="0,0,10,0" />
+                          <Border Classes="pill" Classes.success="{Binding IsInstalled}" Classes.warning="{Binding HasUpdate}" Classes.ready="{Binding IsBusy}" VerticalAlignment="Center">
                             <TextBlock Text="{Binding StateText}" />
                           </Border>
-                        </StackPanel>
+                        </WrapPanel>
                         <TextBlock Text="{Binding Description}" Classes="muted" FontSize="{DynamicResource Type.Body}" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis"
                                    ToolTip.Tip="{Binding Description}" />
                         <TextBlock FontSize="{DynamicResource Type.Small}" Foreground="{DynamicResource Brush.TextLabel}" TextWrapping="Wrap">
                           <Run Text="{Binding Languages}" />
-                          <Run Text="  ·  " Foreground="{DynamicResource Brush.TextDisabled}" />
+                          <Run Text="  ·  " Foreground="{DynamicResource Brush.TextMuted}" />
                           <Run Text="{Binding SizeText}" />
                         </TextBlock>
                         <StackPanel Spacing="5" Margin="0,6,0,0" IsVisible="{Binding HasProgress}">
