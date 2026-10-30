@@ -73,7 +73,10 @@ public sealed class AdaptiveBarTests
         Assert.Equal(AdaptiveMode.Full, bar.ModeOf(caret));
         Assert.True(caret.Bounds.Right <= 300.5, $"The caret position ends at {caret.Bounds.Right}, outside the bar's 300 pixels.");
         Assert.True(status.Bounds.Width >= 48);
-        Assert.True(message.Bounds.Width < message.DesiredSize.Width + 0.5 && message.Bounds.Right <= status.Bounds.Width + 0.5, "The message trims inside its room.");
+        // Trimmed text is as wide as what it shows, which can be a little less than its room.
+        Assert.True(
+            message.DesiredSize.Width <= message.Bounds.Width + 0.5 && message.Bounds.Right <= status.Bounds.Width + 0.5,
+            $"The message wants {message.DesiredSize.Width} pixels and is given {message.Bounds}, in a status of {status.Bounds.Width}.");
         Assert.True(status.Bounds.Width < 300 - caret.Bounds.Width);
 
         // With room, the whole message shows again.

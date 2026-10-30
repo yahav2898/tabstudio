@@ -39,6 +39,9 @@ public sealed partial class PeekDefinitionView : UserControl
         PreviousButton.Click += (_, _) => _peek?.Previous();
         NextButton.Click += (_, _) => _peek?.Next();
         AddHandler(KeyDownEvent, OnKeyDown, RoutingStrategies.Tunnel);
+        Editor.LayoutUpdated += (_, _) => ScrollToPeekLine();
+        Editor.AddHandler(PointerPressedEvent, (_, _) => _scrollLine = null, RoutingStrategies.Tunnel, handledEventsToo: true);
+        Editor.AddHandler(PointerWheelChangedEvent, (_, _) => _scrollLine = null, RoutingStrategies.Tunnel, handledEventsToo: true);
         DataContextChanged += OnDataContextChanged;
     }
 
@@ -93,9 +96,27 @@ public sealed partial class PeekDefinitionView : UserControl
         Editor.TextArea.Caret.Column = Math.Max(1, definition.Location.Column);
 
         // Once laid out, the definition shows two lines from the top, at a whole line: centering it scrolled to any
-        // pixel and cut the first and last lines in half.
-        Avalonia.Threading.Dispatcher.UIThread.Post(() => Editor.ScrollToVerticalOffset(TopOffsetOf(line)), Avalonia.Threading.DispatcherPriority.Background);
+        // pixel and cut the first and last lines in half. Each layout scrolls there again until the user scrolls,
+        // since the editor's own bring-the-caret-into-view comes after the first layout and moved it.
+        _scrollLine = line;
+        ScrollToPeekLine();
         Editor.TextArea.TextView.Redraw();
+    }
+
+    private int? _scrollLine;
+
+    private void ScrollToPeekLine()
+    {
+        if (_scrollLine is not { } line || Editor.ExtentHeight <= 0 || Editor.ViewportHeight <= 0)
+        {
+            return;
+        }
+
+        var target = Math.Min(TopOffsetOf(line), Math.Max(0, Editor.ExtentHeight - Editor.ViewportHeight));
+        if (Math.Abs(Editor.VerticalOffset - target) >= 0.5)
+        {
+            Editor.ScrollToVerticalOffset(target);
+        }
     }
 
     /// <summary>The space after the line numbers.</summary>
@@ -107,6 +128,7 @@ public sealed partial class PeekDefinitionView : UserControl
 
     private void OnKeyDown(object? sender, KeyEventArgs e)
     {
+        _scrollLine = null;
         if (e.Key == Key.Escape)
         {
             CloseRequested?.Invoke(this, EventArgs.Empty);
