@@ -33,160 +33,59 @@ Compatibility Doctor:
   RestSharp.Extensions.DependencyInjection: Library via Built with its users - A library is compiled together with the projects that reference it.
   RestSharp: Library via Built with its users - A library is compiled together with the projects that reference it.
   docs: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
-F5 startup project: docs (node) /home/runner/work/_temp/repos/RestSharp/docs/package.json
-Error List after analysis: 515 errors, 16 warnings
-  254 x CS0246
-      [RestSharp.Tests.Integrated] CookieTests.cs(176,54): error CS0246: The type or namespace name 'CookieOptions' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Integrated] CookieTests.cs(185,41): error CS0246: The type or namespace name 'CookieOptions' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Integrated] CookieTests.cs(186,32): error CS0246: The type or namespace name 'SetCookieHeaderValue' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Integrated] CookieTests.cs(186,54): error CS0246: The type or namespace name 'StringSegment' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Integrated] CookieTests.cs(186,75): error CS0246: The type or namespace name 'StringSegment' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Integrated] CookieTests.cs(187,25): error CS0246: The type or namespace name 'StringSegment' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Integrated] CookieTests.cs(188,25): error CS0246: The type or namespace name 'StringSegment' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Serializers.Csv] CsvHelperTests.cs(15,30): error CS0246: The type or namespace name 'CsvHelperSerializer' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Serializers.Csv] CsvHelperTests.cs(70,30): error CS0246: The type or namespace name 'CsvHelperSerializer' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Serializers.Csv] CsvHelperTests.cs(81,30): error CS0246: The type or namespace name 'CsvHelperSerializer' could not be found (are you missing a using directive or an assembly reference?)
-  101 x CS1061
-      [RestSharp.Extensions.DependencyInjection] ServiceCollectionExtensions.cs(76,72): error CS1061: 'RestClientOptions' does not contain a definition for 'CopyFrom' and no accessible extension method 'CopyFrom' accepting a first argument of type 'RestClientOptions' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Extensions.DependencyInjection] ServiceCollectionExtensions.cs(103,49): error CS1061: 'RestClientOptions' does not contain a definition for 'CopyFrom' and no accessible extension method 'CopyFrom' accepting a first argument of type 'RestClientOptions' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Serializers.Xml] SerializeAsAttribute.cs(69,42): error CS1061: 'string' does not contain a definition for 'ToCamelCase' and no accessible extension method 'ToCamelCase' accepting a first argument of type 'string' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Serializers.Xml] SerializeAsAttribute.cs(70,42): error CS1061: 'string' does not contain a definition for 'ToPascalCase' and no accessible extension method 'ToPascalCase' accepting a first argument of type 'string' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Serializers.Xml] XmlDeserializer.cs(55,23): error CS1061: 'string' does not contain a definition for 'IsEmpty' and no accessible extension method 'IsEmpty' accepting a first argument of type 'string' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Serializers.Xml] XmlDeserializer.cs(182,44): error CS1061: 'object' does not contain a definition for 'ChangeType' and no accessible extension method 'ChangeType' accepting a first argument of type 'object' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Serializers.Xml] XmlDeserializer.cs(206,36): error CS1061: 'string' does not contain a definition for 'IsNotEmpty' and no accessible extension method 'IsNotEmpty' accepting a first argument of type 'string' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Serializers.Xml] XmlDeserializer.cs(392,42): error CS1061: 'string' does not contain a definition for 'ToCamelCase' and no accessible extension method 'ToCamelCase' accepting a first argument of type 'string' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Serializers.Xml] XmlDeserializer.cs(398,50): error CS1061: 'string' does not contain a definition for 'RemoveUnderscoresAndDashes' and no accessible extension method 'RemoveUnderscoresAndDashes' accepting a first argument of type 'string' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Serializers.Xml] XmlDeserializer.cs(405,50): error CS1061: 'string' does not contain a definition for 'RemoveUnderscoresAndDashes' and no accessible extension method 'RemoveUnderscoresAndDashes' accepting a first argument of type 'string' could be found (are you missing a using directive or an assembly reference?)
-  69 x CS8754
-      [RestSharp.Tests.Serializers.Json] IntegratedSimpleTests.cs(22,56): error CS8754: There is no target type for 'new(RestSharp.RestRequest)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(187,22): error CS8754: There is no target type for 'new(int, int, int, int, int, int)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(192,22): error CS8754: There is no target type for 'new(string)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(193,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(194,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(208,22): error CS8754: There is no target type for 'new(int, int, int, int, int, int)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(213,22): error CS8754: There is no target type for 'new(string)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(214,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(215,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(231,22): error CS8754: There is no target type for 'new(int, int, int, int, int, int)'
-  40 x CS0281
-      [RestSharp.Extensions.DependencyInjection] ServiceCollectionExtensions.cs(20,13): error CS0281: Friend access was granted by 'RestSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
-      [RestSharp.Extensions.DependencyInjection] ServiceCollectionExtensions.cs(21,13): error CS0281: Friend access was granted by 'RestSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
-      [RestSharp.Extensions.DependencyInjection] ServiceCollectionExtensions.cs(31,36): error CS0281: Friend access was granted by 'RestSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
-      [RestSharp.Extensions.DependencyInjection] ServiceCollectionExtensions.cs(75,13): error CS0281: Friend access was granted by 'RestSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
-      [RestSharp.Extensions.DependencyInjection] ServiceCollectionExtensions.cs(85,13): error CS0281: Friend access was granted by 'RestSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
-      [RestSharp.Extensions.DependencyInjection] ServiceCollectionExtensions.cs(102,13): error CS0281: Friend access was granted by 'RestSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
-      [RestSharp.Tests] OAuth1AuthTests.cs(143,46): error CS0281: Friend access was granted by 'RestSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
-      [RestSharp.Tests] OAuth1SignatureTests.cs(7,14): error CS0281: Friend access was granted by 'RestSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
-      [RestSharp.Tests] OAuth1SignatureTests.cs(27,29): error CS0281: Friend access was granted by 'RestSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
-      [RestSharp.Tests] OAuth1SignatureTests.cs(38,37): error CS0281: Friend access was granted by 'RestSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
-  21 x CS0234
-      [RestSharp.Tests.Integrated] CookieTests.cs(1,17): error CS0234: The type or namespace name 'AspNetCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-      [RestSharp.Tests.Integrated] CookieTests.cs(2,28): error CS0234: The type or namespace name 'Primitives' does not exist in the namespace 'Microsoft.Extensions' (are you missing an assembly reference?)
-      [RestSharp.Tests.Integrated] CookieTests.cs(3,17): error CS0234: The type or namespace name 'Net' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-      [RestSharp.Tests.Integrated] CookieTests.cs(193,35): error CS0234: The type or namespace name 'Net' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Csv] CsvHelperTests.cs(1,29): error CS0234: The type or namespace name 'CsvHelper' does not exist in the namespace 'RestSharp.Serializers' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Json] IntegratedSimpleTests.cs(1,29): error CS0234: The type or namespace name 'NewtonsoftJson' does not exist in the namespace 'RestSharp.Serializers' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Json] IntegratedTests.cs(3,29): error CS0234: The type or namespace name 'NewtonsoftJson' does not exist in the namespace 'RestSharp.Serializers' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Json] SerializationTests.cs(3,29): error CS0234: The type or namespace name 'NewtonsoftJson' does not exist in the namespace 'RestSharp.Serializers' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(2,17): error CS0234: The type or namespace name 'Serializers' does not exist in the namespace 'RestSharp' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] BearerToken.cs(1,17): error CS0234: The type or namespace name 'Serializers' does not exist in the namespace 'RestSharp' (are you missing an assembly reference?)
-  15 x CS0122
-      [RestSharp.Tests] OAuth1SignatureTests.cs(41,19): error CS0122: 'OAuthWorkflow.RequestUrl' is inaccessible due to its protection level
-      [RestSharp.Tests] OAuth1SignatureTests.cs(42,41): error CS0122: 'OAuthWorkflow.BuildProtectedResourceSignature(string, WebPairCollection)' is inaccessible due to its protection level
-      [RestSharp.Tests] OAuth1SignatureTests.cs(43,25): error CS0122: 'OAuthWorkflow.OAuthParameters.Parameters' is inaccessible due to its protection level
-      [RestSharp.Tests] OAuth1SignatureTests.cs(45,96): error CS0122: 'OAuthWorkflow.OAuthParameters.Parameters' is inaccessible due to its protection level
-      [RestSharp.Tests] OAuth1SignatureTests.cs(63,19): error CS0122: 'OAuthWorkflow.RequestUrl' is inaccessible due to its protection level
-      [RestSharp.Tests] OAuth1SignatureTests.cs(64,41): error CS0122: 'OAuthWorkflow.BuildProtectedResourceSignature(string, WebPairCollection)' is inaccessible due to its protection level
-      [RestSharp.Tests] OAuth1SignatureTests.cs(66,96): error CS0122: 'OAuthWorkflow.OAuthParameters.Parameters' is inaccessible due to its protection level
-      [RestSharp.Tests] OAuth1SignatureTests.cs(87,19): error CS0122: 'OAuthWorkflow.RequestUrl' is inaccessible due to its protection level
-      [RestSharp.Tests] OAuth1SignatureTests.cs(88,41): error CS0122: 'OAuthWorkflow.BuildProtectedResourceSignature(string, WebPairCollection)' is inaccessible due to its protection level
-      [RestSharp.Tests] OAuth1SignatureTests.cs(90,96): error CS0122: 'OAuthWorkflow.OAuthParameters.Parameters' is inaccessible due to its protection level
-  4 x CS1503
-      [RestSharp] RequestContent.cs(86,102): error CS1503: Argument 3: cannot convert from 'string' to 'System.Net.Http.Headers.MediaTypeHeaderValue?'
-      [RestSharp] RequestContent.cs(111,72): error CS1503: Argument 3: cannot convert from 'string' to 'System.Net.Http.Headers.MediaTypeHeaderValue?'
-      [RestSharp] RequestContent.cs(168,113): error CS1503: Argument 3: cannot convert from 'string' to 'System.Net.Http.Headers.MediaTypeHeaderValue?'
-      [RestSharp] RequestContent.cs(175,109): error CS1503: Argument 3: cannot convert from 'string' to 'System.Net.Http.Headers.MediaTypeHeaderValue?'
-  3 x CS0103
-      [RestSharp.Tests.Serializers.Json] IntegratedTests.cs(15,60): error CS0103: The name 'JsonNetSerializer' does not exist in the current context
-      [RestSharp.Tests.Serializers.Xml] XmlSerializerTests.cs(206,57): error CS0103: The name 'DateFormat' does not exist in the current context
-      [RestSharp.Tests.Serializers.Xml] XmlSerializerTests.cs(237,57): error CS0103: The name 'DateFormat' does not exist in the current context
-  3 x CS0619
-      [RestSharp.Tests.Serializers.Xml] XmlDeserializerTests.cs(657,9): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-      [RestSharp.Tests.Serializers.Xml] XmlDeserializerTests.cs(1057,9): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-      [RestSharp.Tests.Serializers.Xml] XmlSerializerTests.cs(253,9): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-  2 x CS1729
-      [RestSharp] RestClient.cs(77,29): error CS1729: 'ReadOnlyRestClientOptions' does not contain a constructor that takes 1 arguments
-      [RestSharp] RestClient.cs(186,29): error CS1729: 'ReadOnlyRestClientOptions' does not contain a constructor that takes 1 arguments
-  1 x CS0759
-      [RestSharp] ReadOnlyRestClientOptions.cs(24,18): error CS0759: No defining declaration found for implementing declaration of partial method 'ReadOnlyRestClientOptions.CopyAdditionalProperties(RestClientOptions)'
-  1 x CS0117
-      [RestSharp] RestSerializers.cs(36,40): error CS0117: 'RestResponse<T>' does not contain a definition for 'FromResponse'
+F5 startup project: none 
+Error List after analysis: 104 errors, 46 warnings
+  73 x CS0246
+      [RestSharp.Tests.Shared] JsonSchemaTypeExtensions.cs(7,21): error CS0246: The type or namespace name 'JsonSchemaType' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] JsonSchemaTypeExtensions.cs(7,53): error CS0246: The type or namespace name 'JsonSchemaType' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(14,13): error CS0246: The type or namespace name 'OpenApiComponents' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(14,82): error CS0246: The type or namespace name 'OpenApiSpecVersion' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(21,30): error CS0246: The type or namespace name 'OpenApiComponents' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(23,46): error CS0246: The type or namespace name 'IOpenApiSchema' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(46,46): error CS0246: The type or namespace name 'OpenApiSchema' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(69,61): error CS0246: The type or namespace name 'OpenApiSchema' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(88,32): error CS0246: The type or namespace name 'IOpenApiSchema' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(88,134): error CS0246: The type or namespace name 'OpenApiSpecVersion' could not be found (are you missing a using directive or an assembly reference?)
+  29 x CS0103
+      [RestSharp.Tests.Shared] JsonSchemaTypeExtensions.cs(14,33): error CS0103: The name 'JsonSchemaType' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(48,40): error CS0103: The name 'JsonSchemaType' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(71,40): error CS0103: The name 'JsonSchemaType' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(151,28): error CS0103: The name 'JsonSchemaType' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Parameters.cs(20,86): error CS0103: The name 'ParameterLocation' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Parameters.cs(21,84): error CS0103: The name 'ParameterLocation' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Parameters.cs(22,78): error CS0103: The name 'ParameterLocation' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Parameters.cs(74,44): error CS0103: The name 'OpenApiConstants' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Parameters.cs(75,44): error CS0103: The name 'OpenApiConstants' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Parameters.cs(76,43): error CS0103: The name 'OpenApiConstants' does not exist in the current context
   1 x CS8805
       [RestSharp.InteractiveTests] Program.cs(4,1): error CS8805: Program using top-level statements must be an executable.
-Error List after the build: 370 errors, 2 warnings
-  240 x CS0246
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(173,26): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(174,69): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(182,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(183,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(203,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(204,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(226,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(227,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(249,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(250,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-  68 x CS8754
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(187,22): error CS8754: There is no target type for 'new(int, int, int, int, int, int)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(192,22): error CS8754: There is no target type for 'new(string)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(193,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(194,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(208,22): error CS8754: There is no target type for 'new(int, int, int, int, int, int)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(213,22): error CS8754: There is no target type for 'new(string)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(214,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(215,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(231,22): error CS8754: There is no target type for 'new(int, int, int, int, int, int)'
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(236,22): error CS8754: There is no target type for 'new(string)'
-  36 x CS1061
-      [RestSharp] BuildUriExtensions.cs(53,50): error CS1061: 'ReadOnlyRestClientOptions' does not contain a definition for 'BaseUrl' and no accessible extension method 'BaseUrl' accepting a first argument of type 'ReadOnlyRestClientOptions' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp] BuildUriExtensions.cs(55,32): error CS1061: 'ReadOnlyRestClientOptions' does not contain a definition for 'Encode' and no accessible extension method 'Encode' accepting a first argument of type 'ReadOnlyRestClientOptions' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp] BuildUriExtensions.cs(84,40): error CS1061: 'ReadOnlyRestClientOptions' does not contain a definition for 'EncodeQuery' and no accessible extension method 'EncodeQuery' accepting a first argument of type 'ReadOnlyRestClientOptions' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp] BuildUriExtensions.cs(84,84): error CS1061: 'ReadOnlyRestClientOptions' does not contain a definition for 'Encoding' and no accessible extension method 'Encoding' accepting a first argument of type 'ReadOnlyRestClientOptions' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp] BuildUriExtensions.cs(86,45): error CS1061: 'ReadOnlyRestClientOptions' does not contain a definition for 'EncodeQuery' and no accessible extension method 'EncodeQuery' accepting a first argument of type 'ReadOnlyRestClientOptions' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp] BuildUriExtensions.cs(86,75): error CS1061: 'ReadOnlyRestClientOptions' does not contain a definition for 'Encoding' and no accessible extension method 'Encoding' accepting a first argument of type 'ReadOnlyRestClientOptions' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp] BuildUriExtensions.cs(92,28): error CS1061: 'ReadOnlyRestClientOptions' does not contain a definition for 'BaseUrl' and no accessible extension method 'BaseUrl' accepting a first argument of type 'ReadOnlyRestClientOptions' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp] DefaultParameters.cs(33,22): error CS1061: 'ReadOnlyRestClientOptions' does not contain a definition for 'AllowMultipleDefaultParametersWithSameName' and no accessible extension method 'AllowMultipleDefaultParametersWithSameName' accepting a first argument of type 'ReadOnlyRestClientOptions' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp] RequestContent.cs(86,92): error CS1061: 'ReadOnlyRestClientOptions' does not contain a definition for 'Encoding' and no accessible extension method 'Encoding' accepting a first argument of type 'ReadOnlyRestClientOptions' could be found (are you missing a using directive or an assembly reference?)
-      [RestSharp] RequestContent.cs(111,62): error CS1061: 'ReadOnlyRestClientOptions' does not contain a definition for 'Encoding' and no accessible extension method 'Encoding' accepting a first argument of type 'ReadOnlyRestClientOptions' could be found (are you missing a using directive or an assembly reference?)
-  13 x CS0234
-      [RestSharp.Tests.Serializers.Xml] NamespacedXmlTests.cs(2,17): error CS0234: The type or namespace name 'Serializers' does not exist in the namespace 'RestSharp' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] BearerToken.cs(1,17): error CS0234: The type or namespace name 'Serializers' does not exist in the namespace 'RestSharp' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] ColorWithValue.cs(1,17): error CS0234: The type or namespace name 'Serializers' does not exist in the namespace 'RestSharp' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] misc.cs(1,17): error CS0234: The type or namespace name 'Serializers' does not exist in the namespace 'RestSharp' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] GoogleWeatherWithAttributes.cs(1,17): error CS0234: The type or namespace name 'Serializers' does not exist in the namespace 'RestSharp' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] HeaderAndRows.cs(1,17): error CS0234: The type or namespace name 'Serializers' does not exist in the namespace 'RestSharp' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] Oddball.cs(1,17): error CS0234: The type or namespace name 'Serializers' does not exist in the namespace 'RestSharp' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] misc.cs(1,17): error CS0234: The type or namespace name 'Serializers' does not exist in the namespace 'RestSharp' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] twitter.cs(1,17): error CS0234: The type or namespace name 'Serializers' does not exist in the namespace 'RestSharp' (are you missing an assembly reference?)
-      [RestSharp.Tests.Serializers.Xml] XmlAttributeDeserializerTests.cs(3,17): error CS0234: The type or namespace name 'Serializers' does not exist in the namespace 'RestSharp' (are you missing an assembly reference?)
-  4 x CS1503
-      [RestSharp] RequestContent.cs(86,102): error CS1503: Argument 3: cannot convert from 'string' to 'System.Net.Http.Headers.MediaTypeHeaderValue?'
-      [RestSharp] RequestContent.cs(111,72): error CS1503: Argument 3: cannot convert from 'string' to 'System.Net.Http.Headers.MediaTypeHeaderValue?'
-      [RestSharp] RequestContent.cs(168,113): error CS1503: Argument 3: cannot convert from 'string' to 'System.Net.Http.Headers.MediaTypeHeaderValue?'
-      [RestSharp] RequestContent.cs(175,109): error CS1503: Argument 3: cannot convert from 'string' to 'System.Net.Http.Headers.MediaTypeHeaderValue?'
-  3 x CS0619
-      [RestSharp.Tests.Serializers.Xml] XmlDeserializerTests.cs(657,9): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-      [RestSharp.Tests.Serializers.Xml] XmlDeserializerTests.cs(1057,9): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-      [RestSharp.Tests.Serializers.Xml] XmlSerializerTests.cs(253,9): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-  2 x CS1729
-      [RestSharp] RestClient.cs(77,29): error CS1729: 'ReadOnlyRestClientOptions' does not contain a constructor that takes 1 arguments
-      [RestSharp] RestClient.cs(186,29): error CS1729: 'ReadOnlyRestClientOptions' does not contain a constructor that takes 1 arguments
-  2 x CS0103
-      [RestSharp.Tests.Serializers.Xml] XmlSerializerTests.cs(206,57): error CS0103: The name 'DateFormat' does not exist in the current context
-      [RestSharp.Tests.Serializers.Xml] XmlSerializerTests.cs(237,57): error CS0103: The name 'DateFormat' does not exist in the current context
-  1 x CS0759
-      [RestSharp] ReadOnlyRestClientOptions.cs(24,18): error CS0759: No defining declaration found for implementing declaration of partial method 'ReadOnlyRestClientOptions.CopyAdditionalProperties(RestClientOptions)'
-  1 x CS0117
-      [RestSharp] RestSerializers.cs(36,40): error CS0117: 'RestResponse<T>' does not contain a definition for 'FromResponse'
+  1 x CS1503
+      [RestSharp.Tests.Shared] RamlConverter.Paths.cs(81,23): error CS1503: Argument 1: cannot convert from '(OpenApiPathItem, string)' to '(IOpenApiPathItem Item, string AdjustedPath)'
+Error List after the build: 103 errors, 42 warnings
+  73 x CS0246
+      [RestSharp.Tests.Shared] JsonSchemaTypeExtensions.cs(7,21): error CS0246: The type or namespace name 'JsonSchemaType' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] JsonSchemaTypeExtensions.cs(7,53): error CS0246: The type or namespace name 'JsonSchemaType' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(14,13): error CS0246: The type or namespace name 'OpenApiComponents' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(14,82): error CS0246: The type or namespace name 'OpenApiSpecVersion' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(21,30): error CS0246: The type or namespace name 'OpenApiComponents' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(23,46): error CS0246: The type or namespace name 'IOpenApiSchema' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(46,46): error CS0246: The type or namespace name 'OpenApiSchema' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(69,61): error CS0246: The type or namespace name 'OpenApiSchema' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(88,32): error CS0246: The type or namespace name 'IOpenApiSchema' could not be found (are you missing a using directive or an assembly reference?)
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(88,134): error CS0246: The type or namespace name 'OpenApiSpecVersion' could not be found (are you missing a using directive or an assembly reference?)
+  29 x CS0103
+      [RestSharp.Tests.Shared] JsonSchemaTypeExtensions.cs(14,33): error CS0103: The name 'JsonSchemaType' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(48,40): error CS0103: The name 'JsonSchemaType' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(71,40): error CS0103: The name 'JsonSchemaType' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Components.cs(151,28): error CS0103: The name 'JsonSchemaType' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Parameters.cs(20,86): error CS0103: The name 'ParameterLocation' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Parameters.cs(21,84): error CS0103: The name 'ParameterLocation' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Parameters.cs(22,78): error CS0103: The name 'ParameterLocation' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Parameters.cs(74,44): error CS0103: The name 'OpenApiConstants' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Parameters.cs(75,44): error CS0103: The name 'OpenApiConstants' does not exist in the current context
+      [RestSharp.Tests.Shared] RamlConverter.Parameters.cs(76,43): error CS0103: The name 'OpenApiConstants' does not exist in the current context
+  1 x CS1503
+      [RestSharp.Tests.Shared] RamlConverter.Paths.cs(81,23): error CS1503: Argument 1: cannot convert from '(OpenApiPathItem, string)' to '(IOpenApiPathItem Item, string AdjustedPath)'
 Long-operation progress:
   Setting up projects: Checking project setup
   Loading C#: Loading C#
@@ -209,7 +108,7 @@ Long-operation progress:
   Analyzing: Analyzing 13/15 projects
   Analyzing: Analyzing 14/15 projects
   Analyzing: Analyzing 15/15 projects
-  Analyzing: Succeeded after 1.4 s
+  Analyzing: Succeeded after 1.6 s
   Restoring NuGet packages: Downloading NuGet packages 1/137
   Restoring NuGet packages: Downloading NuGet packages 2/137
   Restoring NuGet packages: Downloading NuGet packages 3/137
@@ -497,8 +396,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 3/137
   Restoring NuGet packages: Downloading NuGet packages 4/137
   Restoring NuGet packages: Downloading NuGet packages 5/137
-  Restoring NuGet packages: Downloading NuGet packages 6/137
   Restoring NuGet packages: Downloading NuGet packages 7/137
+  Restoring NuGet packages: Downloading NuGet packages 6/137
   Restoring NuGet packages: Downloading NuGet packages 8/137
   Restoring NuGet packages: Downloading NuGet packages 9/137
   Restoring NuGet packages: Downloading NuGet packages 10/137
@@ -561,10 +460,10 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 67/137
   Restoring NuGet packages: Downloading NuGet packages 68/137
   Restoring NuGet packages: Downloading NuGet packages 69/137
-  Restoring NuGet packages: Downloading NuGet packages 70/137
   Restoring NuGet packages: Downloading NuGet packages 71/137
-  Restoring NuGet packages: Downloading NuGet packages 72/137
+  Restoring NuGet packages: Downloading NuGet packages 70/137
   Restoring NuGet packages: Downloading NuGet packages 73/137
+  Restoring NuGet packages: Downloading NuGet packages 72/137
   Restoring NuGet packages: Downloading NuGet packages 74/137
   Restoring NuGet packages: Downloading NuGet packages 75/137
   Restoring NuGet packages: Downloading NuGet packages 76/137
@@ -709,8 +608,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 77/130
   Restoring NuGet packages: Downloading NuGet packages 78/130
   Restoring NuGet packages: Downloading NuGet packages 79/130
-  Restoring NuGet packages: Downloading NuGet packages 81/130
   Restoring NuGet packages: Downloading NuGet packages 80/130
+  Restoring NuGet packages: Downloading NuGet packages 81/130
   Restoring NuGet packages: Downloading NuGet packages 82/130
   Restoring NuGet packages: Downloading NuGet packages 83/130
   Restoring NuGet packages: Downloading NuGet packages 84/130
@@ -761,131 +660,132 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 129/130
   Restoring NuGet packages: Downloading NuGet packages 130/130
   Restoring NuGet packages: Restoring NuGet packages 8/15 projects
-  Restoring NuGet packages: Downloading NuGet packages 1/125
-  Restoring NuGet packages: Downloading NuGet packages 2/125
-  Restoring NuGet packages: Downloading NuGet packages 3/125
-  Restoring NuGet packages: Downloading NuGet packages 4/125
-  Restoring NuGet packages: Downloading NuGet packages 5/125
-  Restoring NuGet packages: Downloading NuGet packages 6/125
-  Restoring NuGet packages: Downloading NuGet packages 7/125
-  Restoring NuGet packages: Downloading NuGet packages 8/125
-  Restoring NuGet packages: Downloading NuGet packages 9/125
-  Restoring NuGet packages: Downloading NuGet packages 10/125
-  Restoring NuGet packages: Downloading NuGet packages 11/125
-  Restoring NuGet packages: Downloading NuGet packages 12/125
-  Restoring NuGet packages: Downloading NuGet packages 13/125
-  Restoring NuGet packages: Downloading NuGet packages 14/125
-  Restoring NuGet packages: Downloading NuGet packages 15/125
-  Restoring NuGet packages: Downloading NuGet packages 16/125
-  Restoring NuGet packages: Downloading NuGet packages 17/125
-  Restoring NuGet packages: Downloading NuGet packages 18/125
-  Restoring NuGet packages: Downloading NuGet packages 19/125
-  Restoring NuGet packages: Downloading NuGet packages 20/125
-  Restoring NuGet packages: Downloading NuGet packages 21/125
-  Restoring NuGet packages: Downloading NuGet packages 22/125
-  Restoring NuGet packages: Downloading NuGet packages 23/125
-  Restoring NuGet packages: Downloading NuGet packages 24/125
-  Restoring NuGet packages: Downloading NuGet packages 25/125
-  Restoring NuGet packages: Downloading NuGet packages 26/125
-  Restoring NuGet packages: Downloading NuGet packages 27/125
-  Restoring NuGet packages: Downloading NuGet packages 28/125
-  Restoring NuGet packages: Downloading NuGet packages 29/125
-  Restoring NuGet packages: Downloading NuGet packages 30/125
-  Restoring NuGet packages: Downloading NuGet packages 31/125
-  Restoring NuGet packages: Downloading NuGet packages 32/125
-  Restoring NuGet packages: Downloading NuGet packages 33/125
-  Restoring NuGet packages: Downloading NuGet packages 34/125
-  Restoring NuGet packages: Downloading NuGet packages 35/125
-  Restoring NuGet packages: Downloading NuGet packages 36/125
-  Restoring NuGet packages: Downloading NuGet packages 37/125
-  Restoring NuGet packages: Downloading NuGet packages 38/125
-  Restoring NuGet packages: Downloading NuGet packages 39/125
-  Restoring NuGet packages: Downloading NuGet packages 40/125
-  Restoring NuGet packages: Downloading NuGet packages 41/125
-  Restoring NuGet packages: Downloading NuGet packages 42/125
-  Restoring NuGet packages: Downloading NuGet packages 43/125
-  Restoring NuGet packages: Downloading NuGet packages 44/125
-  Restoring NuGet packages: Downloading NuGet packages 45/125
-  Restoring NuGet packages: Downloading NuGet packages 46/125
-  Restoring NuGet packages: Downloading NuGet packages 47/125
-  Restoring NuGet packages: Downloading NuGet packages 48/125
-  Restoring NuGet packages: Downloading NuGet packages 49/125
-  Restoring NuGet packages: Downloading NuGet packages 50/125
-  Restoring NuGet packages: Downloading NuGet packages 51/125
-  Restoring NuGet packages: Downloading NuGet packages 52/125
-  Restoring NuGet packages: Downloading NuGet packages 53/125
-  Restoring NuGet packages: Downloading NuGet packages 54/125
-  Restoring NuGet packages: Downloading NuGet packages 55/125
-  Restoring NuGet packages: Downloading NuGet packages 56/125
-  Restoring NuGet packages: Downloading NuGet packages 57/125
-  Restoring NuGet packages: Downloading NuGet packages 58/125
-  Restoring NuGet packages: Downloading NuGet packages 59/125
-  Restoring NuGet packages: Downloading NuGet packages 60/125
-  Restoring NuGet packages: Downloading NuGet packages 61/125
-  Restoring NuGet packages: Downloading NuGet packages 62/125
-  Restoring NuGet packages: Downloading NuGet packages 64/125
-  Restoring NuGet packages: Downloading NuGet packages 63/125
-  Restoring NuGet packages: Downloading NuGet packages 65/125
-  Restoring NuGet packages: Downloading NuGet packages 66/125
-  Restoring NuGet packages: Downloading NuGet packages 67/125
-  Restoring NuGet packages: Downloading NuGet packages 68/125
-  Restoring NuGet packages: Downloading NuGet packages 69/125
-  Restoring NuGet packages: Downloading NuGet packages 70/125
-  Restoring NuGet packages: Downloading NuGet packages 71/125
-  Restoring NuGet packages: Downloading NuGet packages 72/125
-  Restoring NuGet packages: Downloading NuGet packages 73/125
-  Restoring NuGet packages: Downloading NuGet packages 74/125
-  Restoring NuGet packages: Downloading NuGet packages 75/125
-  Restoring NuGet packages: Downloading NuGet packages 76/125
-  Restoring NuGet packages: Downloading NuGet packages 77/125
-  Restoring NuGet packages: Downloading NuGet packages 78/125
-  Restoring NuGet packages: Downloading NuGet packages 79/125
-  Restoring NuGet packages: Downloading NuGet packages 80/125
-  Restoring NuGet packages: Downloading NuGet packages 81/125
-  Restoring NuGet packages: Downloading NuGet packages 82/125
-  Restoring NuGet packages: Downloading NuGet packages 83/125
-  Restoring NuGet packages: Downloading NuGet packages 84/125
-  Restoring NuGet packages: Downloading NuGet packages 85/125
-  Restoring NuGet packages: Downloading NuGet packages 86/125
-  Restoring NuGet packages: Downloading NuGet packages 87/125
-  Restoring NuGet packages: Downloading NuGet packages 88/125
-  Restoring NuGet packages: Downloading NuGet packages 89/125
-  Restoring NuGet packages: Downloading NuGet packages 90/125
-  Restoring NuGet packages: Downloading NuGet packages 91/125
-  Restoring NuGet packages: Downloading NuGet packages 92/125
-  Restoring NuGet packages: Downloading NuGet packages 93/125
-  Restoring NuGet packages: Downloading NuGet packages 94/125
-  Restoring NuGet packages: Downloading NuGet packages 95/125
-  Restoring NuGet packages: Downloading NuGet packages 96/125
-  Restoring NuGet packages: Downloading NuGet packages 97/125
-  Restoring NuGet packages: Downloading NuGet packages 98/125
-  Restoring NuGet packages: Downloading NuGet packages 100/125
-  Restoring NuGet packages: Downloading NuGet packages 99/125
-  Restoring NuGet packages: Downloading NuGet packages 101/125
-  Restoring NuGet packages: Downloading NuGet packages 102/125
-  Restoring NuGet packages: Downloading NuGet packages 103/125
-  Restoring NuGet packages: Downloading NuGet packages 104/125
-  Restoring NuGet packages: Downloading NuGet packages 105/125
-  Restoring NuGet packages: Downloading NuGet packages 106/125
-  Restoring NuGet packages: Downloading NuGet packages 107/125
-  Restoring NuGet packages: Downloading NuGet packages 108/125
-  Restoring NuGet packages: Downloading NuGet packages 109/125
-  Restoring NuGet packages: Downloading NuGet packages 110/125
-  Restoring NuGet packages: Downloading NuGet packages 111/125
-  Restoring NuGet packages: Downloading NuGet packages 112/125
-  Restoring NuGet packages: Downloading NuGet packages 113/125
-  Restoring NuGet packages: Downloading NuGet packages 114/125
-  Restoring NuGet packages: Downloading NuGet packages 115/125
-  Restoring NuGet packages: Downloading NuGet packages 116/125
-  Restoring NuGet packages: Downloading NuGet packages 117/125
-  Restoring NuGet packages: Downloading NuGet packages 118/125
-  Restoring NuGet packages: Downloading NuGet packages 119/125
-  Restoring NuGet packages: Downloading NuGet packages 120/125
-  Restoring NuGet packages: Downloading NuGet packages 121/125
-  Restoring NuGet packages: Downloading NuGet packages 122/125
-  Restoring NuGet packages: Downloading NuGet packages 123/125
-  Restoring NuGet packages: Downloading NuGet packages 124/125
-  Restoring NuGet packages: Downloading NuGet packages 125/125
+  Restoring NuGet packages: Downloading NuGet packages 1/126
+  Restoring NuGet packages: Downloading NuGet packages 2/126
+  Restoring NuGet packages: Downloading NuGet packages 3/126
+  Restoring NuGet packages: Downloading NuGet packages 4/126
+  Restoring NuGet packages: Downloading NuGet packages 5/126
+  Restoring NuGet packages: Downloading NuGet packages 7/126
+  Restoring NuGet packages: Downloading NuGet packages 6/126
+  Restoring NuGet packages: Downloading NuGet packages 8/126
+  Restoring NuGet packages: Downloading NuGet packages 9/126
+  Restoring NuGet packages: Downloading NuGet packages 10/126
+  Restoring NuGet packages: Downloading NuGet packages 11/126
+  Restoring NuGet packages: Downloading NuGet packages 12/126
+  Restoring NuGet packages: Downloading NuGet packages 13/126
+  Restoring NuGet packages: Downloading NuGet packages 14/126
+  Restoring NuGet packages: Downloading NuGet packages 15/126
+  Restoring NuGet packages: Downloading NuGet packages 16/126
+  Restoring NuGet packages: Downloading NuGet packages 17/126
+  Restoring NuGet packages: Downloading NuGet packages 18/126
+  Restoring NuGet packages: Downloading NuGet packages 19/126
+  Restoring NuGet packages: Downloading NuGet packages 20/126
+  Restoring NuGet packages: Downloading NuGet packages 21/126
+  Restoring NuGet packages: Downloading NuGet packages 22/126
+  Restoring NuGet packages: Downloading NuGet packages 23/126
+  Restoring NuGet packages: Downloading NuGet packages 24/126
+  Restoring NuGet packages: Downloading NuGet packages 25/126
+  Restoring NuGet packages: Downloading NuGet packages 27/126
+  Restoring NuGet packages: Downloading NuGet packages 26/126
+  Restoring NuGet packages: Downloading NuGet packages 28/126
+  Restoring NuGet packages: Downloading NuGet packages 29/126
+  Restoring NuGet packages: Downloading NuGet packages 30/126
+  Restoring NuGet packages: Downloading NuGet packages 31/126
+  Restoring NuGet packages: Downloading NuGet packages 32/126
+  Restoring NuGet packages: Downloading NuGet packages 33/126
+  Restoring NuGet packages: Downloading NuGet packages 34/126
+  Restoring NuGet packages: Downloading NuGet packages 35/126
+  Restoring NuGet packages: Downloading NuGet packages 36/126
+  Restoring NuGet packages: Downloading NuGet packages 37/126
+  Restoring NuGet packages: Downloading NuGet packages 38/126
+  Restoring NuGet packages: Downloading NuGet packages 39/126
+  Restoring NuGet packages: Downloading NuGet packages 40/126
+  Restoring NuGet packages: Downloading NuGet packages 41/126
+  Restoring NuGet packages: Downloading NuGet packages 43/126
+  Restoring NuGet packages: Downloading NuGet packages 42/126
+  Restoring NuGet packages: Downloading NuGet packages 44/126
+  Restoring NuGet packages: Downloading NuGet packages 45/126
+  Restoring NuGet packages: Downloading NuGet packages 46/126
+  Restoring NuGet packages: Downloading NuGet packages 47/126
+  Restoring NuGet packages: Downloading NuGet packages 48/126
+  Restoring NuGet packages: Downloading NuGet packages 49/126
+  Restoring NuGet packages: Downloading NuGet packages 50/126
+  Restoring NuGet packages: Downloading NuGet packages 51/126
+  Restoring NuGet packages: Downloading NuGet packages 52/126
+  Restoring NuGet packages: Downloading NuGet packages 53/126
+  Restoring NuGet packages: Downloading NuGet packages 54/126
+  Restoring NuGet packages: Downloading NuGet packages 55/126
+  Restoring NuGet packages: Downloading NuGet packages 56/126
+  Restoring NuGet packages: Downloading NuGet packages 57/126
+  Restoring NuGet packages: Downloading NuGet packages 58/126
+  Restoring NuGet packages: Downloading NuGet packages 59/126
+  Restoring NuGet packages: Downloading NuGet packages 60/126
+  Restoring NuGet packages: Downloading NuGet packages 61/126
+  Restoring NuGet packages: Downloading NuGet packages 62/126
+  Restoring NuGet packages: Downloading NuGet packages 63/126
+  Restoring NuGet packages: Downloading NuGet packages 64/126
+  Restoring NuGet packages: Downloading NuGet packages 65/126
+  Restoring NuGet packages: Downloading NuGet packages 66/126
+  Restoring NuGet packages: Downloading NuGet packages 67/126
+  Restoring NuGet packages: Downloading NuGet packages 68/126
+  Restoring NuGet packages: Downloading NuGet packages 69/126
+  Restoring NuGet packages: Downloading NuGet packages 70/126
+  Restoring NuGet packages: Downloading NuGet packages 71/126
+  Restoring NuGet packages: Downloading NuGet packages 72/126
+  Restoring NuGet packages: Downloading NuGet packages 73/126
+  Restoring NuGet packages: Downloading NuGet packages 74/126
+  Restoring NuGet packages: Downloading NuGet packages 75/126
+  Restoring NuGet packages: Downloading NuGet packages 76/126
+  Restoring NuGet packages: Downloading NuGet packages 77/126
+  Restoring NuGet packages: Downloading NuGet packages 78/126
+  Restoring NuGet packages: Downloading NuGet packages 79/126
+  Restoring NuGet packages: Downloading NuGet packages 80/126
+  Restoring NuGet packages: Downloading NuGet packages 81/126
+  Restoring NuGet packages: Downloading NuGet packages 82/126
+  Restoring NuGet packages: Downloading NuGet packages 83/126
+  Restoring NuGet packages: Downloading NuGet packages 84/126
+  Restoring NuGet packages: Downloading NuGet packages 85/126
+  Restoring NuGet packages: Downloading NuGet packages 87/126
+  Restoring NuGet packages: Downloading NuGet packages 86/126
+  Restoring NuGet packages: Downloading NuGet packages 88/126
+  Restoring NuGet packages: Downloading NuGet packages 89/126
+  Restoring NuGet packages: Downloading NuGet packages 90/126
+  Restoring NuGet packages: Downloading NuGet packages 91/126
+  Restoring NuGet packages: Downloading NuGet packages 92/126
+  Restoring NuGet packages: Downloading NuGet packages 93/126
+  Restoring NuGet packages: Downloading NuGet packages 94/126
+  Restoring NuGet packages: Downloading NuGet packages 95/126
+  Restoring NuGet packages: Downloading NuGet packages 96/126
+  Restoring NuGet packages: Downloading NuGet packages 97/126
+  Restoring NuGet packages: Downloading NuGet packages 98/126
+  Restoring NuGet packages: Downloading NuGet packages 99/126
+  Restoring NuGet packages: Downloading NuGet packages 100/126
+  Restoring NuGet packages: Downloading NuGet packages 101/126
+  Restoring NuGet packages: Downloading NuGet packages 102/126
+  Restoring NuGet packages: Downloading NuGet packages 103/126
+  Restoring NuGet packages: Downloading NuGet packages 104/126
+  Restoring NuGet packages: Downloading NuGet packages 105/126
+  Restoring NuGet packages: Downloading NuGet packages 106/126
+  Restoring NuGet packages: Downloading NuGet packages 107/126
+  Restoring NuGet packages: Downloading NuGet packages 108/126
+  Restoring NuGet packages: Downloading NuGet packages 109/126
+  Restoring NuGet packages: Downloading NuGet packages 110/126
+  Restoring NuGet packages: Downloading NuGet packages 111/126
+  Restoring NuGet packages: Downloading NuGet packages 113/126
+  Restoring NuGet packages: Downloading NuGet packages 112/126
+  Restoring NuGet packages: Downloading NuGet packages 114/126
+  Restoring NuGet packages: Downloading NuGet packages 115/126
+  Restoring NuGet packages: Downloading NuGet packages 116/126
+  Restoring NuGet packages: Downloading NuGet packages 117/126
+  Restoring NuGet packages: Downloading NuGet packages 118/126
+  Restoring NuGet packages: Downloading NuGet packages 119/126
+  Restoring NuGet packages: Downloading NuGet packages 120/126
+  Restoring NuGet packages: Downloading NuGet packages 121/126
+  Restoring NuGet packages: Downloading NuGet packages 122/126
+  Restoring NuGet packages: Downloading NuGet packages 123/126
+  Restoring NuGet packages: Downloading NuGet packages 124/126
+  Restoring NuGet packages: Downloading NuGet packages 125/126
+  Restoring NuGet packages: Downloading NuGet packages 126/126
   Restoring NuGet packages: Restoring NuGet packages 9/15 projects
   Restoring NuGet packages: Downloading NuGet packages 1/125
   Restoring NuGet packages: Downloading NuGet packages 2/125
@@ -900,8 +800,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 11/125
   Restoring NuGet packages: Downloading NuGet packages 12/125
   Restoring NuGet packages: Downloading NuGet packages 13/125
-  Restoring NuGet packages: Downloading NuGet packages 14/125
   Restoring NuGet packages: Downloading NuGet packages 15/125
+  Restoring NuGet packages: Downloading NuGet packages 14/125
   Restoring NuGet packages: Downloading NuGet packages 16/125
   Restoring NuGet packages: Downloading NuGet packages 17/125
   Restoring NuGet packages: Downloading NuGet packages 18/125
@@ -921,8 +821,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 32/125
   Restoring NuGet packages: Downloading NuGet packages 33/125
   Restoring NuGet packages: Downloading NuGet packages 34/125
-  Restoring NuGet packages: Downloading NuGet packages 35/125
   Restoring NuGet packages: Downloading NuGet packages 36/125
+  Restoring NuGet packages: Downloading NuGet packages 35/125
   Restoring NuGet packages: Downloading NuGet packages 37/125
   Restoring NuGet packages: Downloading NuGet packages 38/125
   Restoring NuGet packages: Downloading NuGet packages 39/125
@@ -958,8 +858,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 69/125
   Restoring NuGet packages: Downloading NuGet packages 70/125
   Restoring NuGet packages: Downloading NuGet packages 71/125
-  Restoring NuGet packages: Downloading NuGet packages 73/125
   Restoring NuGet packages: Downloading NuGet packages 72/125
+  Restoring NuGet packages: Downloading NuGet packages 73/125
   Restoring NuGet packages: Downloading NuGet packages 74/125
   Restoring NuGet packages: Downloading NuGet packages 75/125
   Restoring NuGet packages: Downloading NuGet packages 76/125
@@ -975,9 +875,9 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 86/125
   Restoring NuGet packages: Downloading NuGet packages 87/125
   Restoring NuGet packages: Downloading NuGet packages 88/125
+  Restoring NuGet packages: Downloading NuGet packages 89/125
   Restoring NuGet packages: Downloading NuGet packages 90/125
   Restoring NuGet packages: Downloading NuGet packages 91/125
-  Restoring NuGet packages: Downloading NuGet packages 89/125
   Restoring NuGet packages: Downloading NuGet packages 92/125
   Restoring NuGet packages: Downloading NuGet packages 93/125
   Restoring NuGet packages: Downloading NuGet packages 94/125
@@ -999,8 +899,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 110/125
   Restoring NuGet packages: Downloading NuGet packages 111/125
   Restoring NuGet packages: Downloading NuGet packages 112/125
-  Restoring NuGet packages: Downloading NuGet packages 114/125
   Restoring NuGet packages: Downloading NuGet packages 113/125
+  Restoring NuGet packages: Downloading NuGet packages 114/125
   Restoring NuGet packages: Downloading NuGet packages 115/125
   Restoring NuGet packages: Downloading NuGet packages 116/125
   Restoring NuGet packages: Downloading NuGet packages 117/125
@@ -1013,8 +913,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 124/125
   Restoring NuGet packages: Downloading NuGet packages 125/125
   Restoring NuGet packages: Restoring NuGet packages 10/15 projects
-  Restoring NuGet packages: Downloading NuGet packages 1/17
   Restoring NuGet packages: Downloading NuGet packages 2/17
+  Restoring NuGet packages: Downloading NuGet packages 1/17
   Restoring NuGet packages: Downloading NuGet packages 3/17
   Restoring NuGet packages: Downloading NuGet packages 4/17
   Restoring NuGet packages: Downloading NuGet packages 5/17
@@ -1040,8 +940,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 7/119
   Restoring NuGet packages: Downloading NuGet packages 8/119
   Restoring NuGet packages: Downloading NuGet packages 9/119
-  Restoring NuGet packages: Downloading NuGet packages 10/119
   Restoring NuGet packages: Downloading NuGet packages 11/119
+  Restoring NuGet packages: Downloading NuGet packages 10/119
   Restoring NuGet packages: Downloading NuGet packages 12/119
   Restoring NuGet packages: Downloading NuGet packages 13/119
   Restoring NuGet packages: Downloading NuGet packages 14/119
@@ -1153,8 +1053,8 @@ Long-operation progress:
   Restoring NuGet packages: Restoring NuGet packages 12/15 projects
   Restoring NuGet packages: Downloading NuGet packages 1/130
   Restoring NuGet packages: Downloading NuGet packages 2/130
-  Restoring NuGet packages: Downloading NuGet packages 4/130
   Restoring NuGet packages: Downloading NuGet packages 3/130
+  Restoring NuGet packages: Downloading NuGet packages 4/130
   Restoring NuGet packages: Downloading NuGet packages 5/130
   Restoring NuGet packages: Downloading NuGet packages 6/130
   Restoring NuGet packages: Downloading NuGet packages 7/130
@@ -1306,7 +1206,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 3/5
   Restoring NuGet packages: Downloading NuGet packages 4/5
   Restoring NuGet packages: Downloading NuGet packages 5/5
-  Restoring NuGet packages: Succeeded after 6.4 s
+  Restoring NuGet packages: Succeeded after 8.0 s
   Analyzing: Analyzing 0/15 projects
   Analyzing: Analyzing 1/15 projects
   Analyzing: Analyzing 2/15 projects
@@ -1323,11 +1223,11 @@ Long-operation progress:
   Analyzing: Analyzing 13/15 projects
   Analyzing: Analyzing 14/15 projects
   Analyzing: Analyzing 15/15 projects
-  Analyzing: Succeeded after 1.8 s
+  Analyzing: Succeeded after 2.0 s
   Setting up projects: Setting up docs: npm install
   Installing docs's packages: Installing packages: npm install
-  Installing docs's packages: Succeeded after 32.0 s
-  Setting up projects: Succeeded after 40.6 s
+  Installing docs's packages: Succeeded after 41.9 s
+  Setting up projects: Succeeded after 53.2 s
   Building: Building
   Building: Building 0/15 projects
   Building: Building 1/15 projects
@@ -1344,134 +1244,107 @@ Long-operation progress:
   Building: Building 12/15 projects
   Building: Building 13/15 projects
   Building: Building 14/15 projects
-  Building: Failed after 2.6 s
+  Building: Failed after 7.3 s
 Project setup:
 
 Output:
-ould not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(655,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(657,9): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-14>XmlDeserializerTests.cs(665,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(666,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(676,26): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(687,26): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(699,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(700,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(714,27): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(725,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(726,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(730,22): error CS8754: There is no target type for 'new(int, int, int, int, int, int)'
-14>XmlDeserializerTests.cs(735,22): error CS8754: There is no target type for 'new(string)'
-14>XmlDeserializerTests.cs(736,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-14>XmlDeserializerTests.cs(737,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-14>XmlDeserializerTests.cs(751,26): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(762,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(763,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(767,22): error CS8754: There is no target type for 'new(int, int, int, int, int, int)'
-14>XmlDeserializerTests.cs(772,22): error CS8754: There is no target type for 'new(string)'
-14>XmlDeserializerTests.cs(773,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-14>XmlDeserializerTests.cs(774,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-14>XmlDeserializerTests.cs(788,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(789,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(793,22): error CS8754: There is no target type for 'new(int, int, int, int, int, int)'
-14>XmlDeserializerTests.cs(798,22): error CS8754: There is no target type for 'new(string)'
-14>XmlDeserializerTests.cs(799,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-14>XmlDeserializerTests.cs(800,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-14>XmlDeserializerTests.cs(814,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(815,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(819,22): error CS8754: There is no target type for 'new(int, int, int, int, int, int)'
-14>XmlDeserializerTests.cs(824,22): error CS8754: There is no target type for 'new(string)'
-14>XmlDeserializerTests.cs(825,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-14>XmlDeserializerTests.cs(826,22): error CS8754: There is no target type for 'new(string, System.UriKind)'
-14>XmlDeserializerTests.cs(841,31): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(851,31): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(860,26): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(871,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(872,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(887,26): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(898,31): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(908,31): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(918,31): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(927,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(928,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(953,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(957,27): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(960,22): error CS8754: There is no target type for 'new(int)'
-14>XmlDeserializerTests.cs(961,22): error CS8754: There is no target type for 'new(int, int, int, int, int)'
-14>XmlDeserializerTests.cs(962,22): error CS8754: There is no target type for 'new(int, int, int)'
-14>XmlDeserializerTests.cs(963,22): error CS8754: There is no target type for 'new(int, int, int)'
-14>XmlDeserializerTests.cs(964,22): error CS8754: There is no target type for 'new(int, int, int)'
-14>XmlDeserializerTests.cs(967,22): error CS8754: There is no target type for 'new(int, int, int)'
-14>XmlDeserializerTests.cs(974,31): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(985,31): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(995,31): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1005,26): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1017,26): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1030,31): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1042,26): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1054,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1055,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1057,9): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-14>XmlDeserializerTests.cs(1063,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1064,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1073,28): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1074,28): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1097,32): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1098,66): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1125,32): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1129,57): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1153,32): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1154,66): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1174,32): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1175,65): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1199,32): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1200,66): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1230,32): error CS0246: The type or namespace name 'XmlDeserializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlDeserializerTests.cs(1231,66): error CS0246: The type or namespace name 'RestResponse' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(3,17): error CS0234: The type or namespace name 'Serializers' does not exist in the namespace 'RestSharp' (are you missing an assembly reference?)
-14>XmlSerializerTests.cs(4,17): error CS0234: The type or namespace name 'Serializers' does not exist in the namespace 'RestSharp' (are you missing an assembly reference?)
-14>XmlSerializerTests.cs(32,28): error CS0246: The type or namespace name 'XmlSerializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(69,28): error CS0246: The type or namespace name 'XmlSerializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(102,28): error CS0246: The type or namespace name 'XmlSerializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(117,23): error CS0246: The type or namespace name 'XmlSerializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(129,29): error CS0246: The type or namespace name 'XmlSerializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(153,28): error CS0246: The type or namespace name 'XmlSerializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(168,28): error CS0246: The type or namespace name 'XmlSerializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(191,28): error CS0246: The type or namespace name 'XmlSerializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(206,28): error CS0246: The type or namespace name 'XmlSerializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(206,57): error CS0103: The name 'DateFormat' does not exist in the current context
-14>XmlSerializerTests.cs(221,28): error CS0246: The type or namespace name 'XmlSerializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(237,28): error CS0246: The type or namespace name 'XmlSerializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(237,57): error CS0103: The name 'DateFormat' does not exist in the current context
-14>XmlSerializerTests.cs(251,23): error CS0246: The type or namespace name 'XmlSerializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(253,9): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-14>XmlSerializerTests.cs(263,28): error CS0246: The type or namespace name 'XmlSerializer' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(300,6): error CS0246: The type or namespace name 'SerializeAsAttribute' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(300,6): error CS0246: The type or namespace name 'SerializeAs' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(302,10): error CS0246: The type or namespace name 'SerializeAsAttribute' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(302,10): error CS0246: The type or namespace name 'SerializeAs' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(307,10): error CS0246: The type or namespace name 'SerializeAsAttribute' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(307,10): error CS0246: The type or namespace name 'SerializeAs' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(310,10): error CS0246: The type or namespace name 'SerializeAsAttribute' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(310,10): error CS0246: The type or namespace name 'SerializeAs' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(313,10): error CS0246: The type or namespace name 'SerializeAsAttribute' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(313,10): error CS0246: The type or namespace name 'SerializeAs' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(318,10): error CS0246: The type or namespace name 'SerializeAsAttribute' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(318,10): error CS0246: The type or namespace name 'SerializeAs' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(322,6): error CS0246: The type or namespace name 'SerializeAsAttribute' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(322,6): error CS0246: The type or namespace name 'SerializeAs' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(324,10): error CS0246: The type or namespace name 'SerializeAsAttribute' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(324,10): error CS0246: The type or namespace name 'SerializeAs' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(328,6): error CS0246: The type or namespace name 'SerializeAsAttribute' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(328,6): error CS0246: The type or namespace name 'SerializeAs' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(332,10): error CS0246: The type or namespace name 'SerializeAsAttribute' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(332,10): error CS0246: The type or namespace name 'SerializeAs' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(336,6): error CS0246: The type or namespace name 'SerializeAsAttribute' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(336,6): error CS0246: The type or namespace name 'SerializeAs' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(338,10): error CS0246: The type or namespace name 'SerializeAsAttribute' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(338,10): error CS0246: The type or namespace name 'SerializeAs' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(341,10): error CS0246: The type or namespace name 'SerializeAsAttribute' could not be found (are you missing a using directive or an assembly reference?)
-14>XmlSerializerTests.cs(341,10): error CS0246: The type or namespace name 'SerializeAs' could not be found (are you missing a using directive or an assembly reference?)
+: error CS0246: The type or namespace name 'OpenApiOperation' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(76,34): error CS0246: The type or namespace name 'OpenApiPathItem' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(81,23): error CS1503: Argument 1: cannot convert from '(OpenApiPathItem, string)' to '(IOpenApiPathItem Item, string AdjustedPath)'
+4>RamlConverter.Paths.cs(96,13): error CS0246: The type or namespace name 'OpenApiOperation' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(96,79): error CS0246: The type or namespace name 'OpenApiSpecVersion' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(98,20): error CS0246: The type or namespace name 'OpenApiOperation' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(107,13): error CS0246: The type or namespace name 'OpenApiResponses' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(107,81): error CS0246: The type or namespace name 'OpenApiSpecVersion' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(109,36): error CS0246: The type or namespace name 'OpenApiResponses' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(126,47): error CS0246: The type or namespace name 'OpenApiResponse' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(135,51): error CS0246: The type or namespace name 'OpenApiResponse' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(146,13): error CS0246: The type or namespace name 'OpenApiRequestBody' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(146,81): error CS0246: The type or namespace name 'OpenApiSpecVersion' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(153,31): error CS0246: The type or namespace name 'OpenApiRequestBody' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(161,32): error CS0246: The type or namespace name 'OpenApiMediaType' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(161,100): error CS0246: The type or namespace name 'OpenApiSpecVersion' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(168,46): error CS0246: The type or namespace name 'OpenApiMediaType' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(180,17): error CS0246: The type or namespace name 'IOpenApiSchema' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(190,44): error CS0246: The type or namespace name 'OpenApiMediaType' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(208,13): error CS0246: The type or namespace name 'IOpenApiSchema' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(208,61): error CS0246: The type or namespace name 'OpenApiSpecVersion' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(226,20): error CS0246: The type or namespace name 'OpenApiSchema' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(232,20): error CS0246: The type or namespace name 'IOpenApiSchema' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Paths.cs(234,29): error CS0246: The type or namespace name 'OpenApiSchemaReference' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Schema.cs(13,13): error CS0246: The type or namespace name 'IOpenApiSchema' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Schema.cs(13,82): error CS0246: The type or namespace name 'OpenApiSpecVersion' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Schema.cs(19,20): error CS0246: The type or namespace name 'OpenApiSchema' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Schema.cs(21,20): error CS0103: The name 'JsonSchemaType' does not exist in the current context
+4>RamlConverter.Servers.cs(9,25): error CS0246: The type or namespace name 'OpenApiServer' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.Servers.cs(19,17): error CS0246: The type or namespace name 'OpenApiServer' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.cs(19,13): error CS0246: The type or namespace name 'OpenApiDocument' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.cs(27,152): error CS0103: The name 'OpenApiConstants' does not exist in the current context
+4>RamlConverter.cs(32,9): error CS0246: The type or namespace name 'IOpenApiWriter' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.cs(32,50): error CS0103: The name 'OpenApiConstants' does not exist in the current context
+4>RamlConverter.cs(32,78): error CS0246: The type or namespace name 'OpenApiJsonWriter' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.cs(32,116): error CS0246: The type or namespace name 'OpenApiYamlWriter' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.cs(34,31): error CS0246: The type or namespace name 'OpenApiSpecVersion' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.cs(46,175): error CS0103: The name 'OpenApiConstants' does not exist in the current context
+4>RamlConverter.cs(58,12): error CS0246: The type or namespace name 'OpenApiDocument' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.cs(60,28): error CS0246: The type or namespace name 'OpenApiSpecVersion' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.cs(96,20): error CS0246: The type or namespace name 'OpenApiDocument' could not be found (are you missing a using directive or an assembly reference?)
+4>RamlConverter.cs(109,43): error CS0246: The type or namespace name 'OpenApiJsonWriter' could not be found (are you missing a using directive or an assembly reference?)
+4>IncludeNodeDeserializerBuilder.cs(12,50): warning CS0436: The type 'YamlIncludeNodeDeserializerOptions' in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/Yaml/YamlIncludeNodeDeserializerOptions.cs' conflicts with the imported type 'YamlIncludeNodeDeserializerOptions' in 'WireMock.Net.OpenApiParser, Version=1.16.0.0, Culture=neutral, PublicKeyToken=c8d65537854e1f03'. Using the type defined in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/Yaml/YamlIncludeNodeDeserializerOptions.cs'.
+4>IncludeNodeDeserializerBuilder.cs(17,43): warning CS0436: The type 'YamlIncludeNodeDeserializer' in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/Yaml/YamlIncludeNodeDeserializer.cs' conflicts with the imported type 'YamlIncludeNodeDeserializer' in 'WireMock.Net.OpenApiParser, Version=1.16.0.0, Culture=neutral, PublicKeyToken=c8d65537854e1f03'. Using the type defined in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/Yaml/YamlIncludeNodeDeserializer.cs'.
+4>DictionaryExtensions.cs(8,25): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>DictionaryExtensions.cs(28,46): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>DictionaryExtensions.cs(54,38): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>DictionaryExtensions.cs(64,25): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Components.cs(14,73): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Components.cs(55,27): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Components.cs(88,89): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Components.cs(88,122): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Components.cs(137,19): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Parameters.cs(27,78): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Parameters.cs(74,41): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Parameters.cs(75,41): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Paths.cs(107,71): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Paths.cs(146,71): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Paths.cs(161,49): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Paths.cs(161,90): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Paths.cs(203,28): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Paths.cs(232,110): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.Servers.cs(9,39): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>RamlConverter.cs(27,45): warning CS0436: The type 'OpenApiSpecificationVersion' in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/OpenApiSpecificationVersion.cs' conflicts with the imported type 'OpenApiSpecificationVersion' in 'WireMock.Net.OpenApiParser, Version=1.16.0.0, Culture=neutral, PublicKeyToken=c8d65537854e1f03'. Using the type defined in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/OpenApiSpecificationVersion.cs'.
+4>RamlConverter.cs(27,96): warning CS0436: The type 'OpenApiSpecificationVersion' in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/OpenApiSpecificationVersion.cs' conflicts with the imported type 'OpenApiSpecificationVersion' in 'WireMock.Net.OpenApiParser, Version=1.16.0.0, Culture=neutral, PublicKeyToken=c8d65537854e1f03'. Using the type defined in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/OpenApiSpecificationVersion.cs'.
+4>RamlConverter.cs(46,68): warning CS0436: The type 'OpenApiSpecificationVersion' in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/OpenApiSpecificationVersion.cs' conflicts with the imported type 'OpenApiSpecificationVersion' in 'WireMock.Net.OpenApiParser, Version=1.16.0.0, Culture=neutral, PublicKeyToken=c8d65537854e1f03'. Using the type defined in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/OpenApiSpecificationVersion.cs'.
+4>RamlConverter.cs(46,119): warning CS0436: The type 'OpenApiSpecificationVersion' in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/OpenApiSpecificationVersion.cs' conflicts with the imported type 'OpenApiSpecificationVersion' in 'WireMock.Net.OpenApiParser, Version=1.16.0.0, Culture=neutral, PublicKeyToken=c8d65537854e1f03'. Using the type defined in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/OpenApiSpecificationVersion.cs'.
+4>RamlConverter.cs(58,71): warning CS0436: The type 'OpenApiSpecificationVersion' in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/OpenApiSpecificationVersion.cs' conflicts with the imported type 'OpenApiSpecificationVersion' in 'WireMock.Net.OpenApiParser, Version=1.16.0.0, Culture=neutral, PublicKeyToken=c8d65537854e1f03'. Using the type defined in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/OpenApiSpecificationVersion.cs'.
+4>RamlConverter.cs(58,122): warning CS0436: The type 'OpenApiSpecificationVersion' in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/OpenApiSpecificationVersion.cs' conflicts with the imported type 'OpenApiSpecificationVersion' in 'WireMock.Net.OpenApiParser, Version=1.16.0.0, Culture=neutral, PublicKeyToken=c8d65537854e1f03'. Using the type defined in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/OpenApiSpecificationVersion.cs'.
+4>IncludeRef.cs(7,18): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>YamlIncludeNodeDeserializer.cs(16,22): warning CS0436: The type 'YamlIncludeNodeDeserializerOptions' in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/Yaml/YamlIncludeNodeDeserializerOptions.cs' conflicts with the imported type 'YamlIncludeNodeDeserializerOptions' in 'WireMock.Net.OpenApiParser, Version=1.16.0.0, Culture=neutral, PublicKeyToken=c8d65537854e1f03'. Using the type defined in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/Yaml/YamlIncludeNodeDeserializerOptions.cs'.
+4>YamlIncludeNodeDeserializer.cs(18,40): warning CS0436: The type 'YamlIncludeNodeDeserializerOptions' in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/Yaml/YamlIncludeNodeDeserializerOptions.cs' conflicts with the imported type 'YamlIncludeNodeDeserializerOptions' in 'WireMock.Net.OpenApiParser, Version=1.16.0.0, Culture=neutral, PublicKeyToken=c8d65537854e1f03'. Using the type defined in '/tmp/tabstudio-tests/e71ab60eb20a46cf982ea3981cbf2238/Packages/ramltoopenapiconverter.sourceonly/0.8.0/contentFiles/cs/any/RamlToOpenApiConverter/Yaml/YamlIncludeNodeDeserializerOptions.cs'.
+4>YamlIncludeNodeDeserializer.cs(23,101): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>YamlIncludeNodeDeserializer.cs(23,140): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+4>YamlIncludeNodeDeserializer.cs(43,26): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+5>------ Build started: Project: RestSharp.Benchmarks, Configuration: Debug ------
+6>------ Build started: Project: RestSharp.Serializers.CsvHelper, Configuration: Debug ------
+6>RestSharp.Serializers.CsvHelper -> compiled in memory (7 KB, 320 ms)
+7>------ Build started: Project: RestSharp.Serializers.Xml, Configuration: Debug ------
+7>XmlDeserializer.cs(193,61): warning CS8604: Possible null reference argument for parameter 'value' in 'object? ReflectionExtensions.FindEnumValue(Type type, string value, CultureInfo culture)'.
+7>XmlDeserializer.cs(198,35): warning CS8604: Possible null reference argument for parameter 'uriString' in 'Uri.Uri(string uriString, UriKind uriKind)'.
+7>XmlDeserializer.cs(207,43): warning CS8604: Possible null reference argument for parameter 's' in 'DateTime DateTime.ParseExact(string s, string format, IFormatProvider? provider)'.
+7>XmlDeserializer.cs(208,38): warning CS8604: Possible null reference argument for parameter 's' in 'DateTime DateTime.Parse(string s, IFormatProvider? provider)'.
+7>XmlDeserializer.cs(235,39): warning CS8604: Possible null reference argument for parameter 's' in 'decimal decimal.Parse(string s, IFormatProvider? provider)'.
+7>XmlDeserializer.cs(241,70): warning CS8604: Possible null reference argument for parameter 'g' in 'Guid.Guid(string g)'.
+7>XmlDeserializer.cs(246,54): warning CS8604: Possible null reference argument for parameter 's' in 'TimeSpan XmlConvert.ToTimeSpan(string s)'.
+7>XmlDeserializer.cs(288,38): warning CS8604: Possible null reference argument for parameter 'inputString' in 'bool XmlDeserializer.TryGetFromString(string inputString, out object? result, Type type)'.
+7>RestSharp.Serializers.Xml -> compiled in memory (24 KB, 367 ms)
+8>------ Build started: Project: RestSharp.InteractiveTests, Configuration: Debug ------
+9>------ Build started: Project: RestSharp.Extensions.DependencyInjection, Configuration: Debug ------
+9>RestSharp.Extensions.DependencyInjection -> compiled in memory (8 KB, 271 ms)
+10>------ Build started: Project: RestSharp.Tests.DependencyInjection, Configuration: Debug ------
+11>------ Build started: Project: RestSharp.Tests.Integrated, Configuration: Debug ------
+12>------ Build started: Project: RestSharp.Tests.Serializers.Csv, Configuration: Debug ------
+13>------ Build started: Project: RestSharp.Tests.Serializers.Json, Configuration: Debug ------
+14>------ Build started: Project: RestSharp.Tests.Serializers.Xml, Configuration: Debug ------
+14>RestSharp.Tests.Serializers.Xml -> compiled in memory (114 KB, 425 ms)
 15>------ Build started: Project: RestSharp.Tests, Configuration: Debug ------
-========== Build: 1 succeeded, 14 failed ==========
+========== Build: 7 succeeded, 8 failed ==========
 

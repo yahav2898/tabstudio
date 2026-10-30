@@ -1,5 +1,5 @@
 markdig at bbf197eaf3c96b9a6ada6532ec970b59751ca9c6, opening /home/runner/work/_temp/repos/markdig/src/markdig.slnx
-Opened in 0.3 s: markdig, solution /home/runner/work/_temp/repos/markdig/src/markdig.slnx
+Opened in 0.2 s: markdig, solution /home/runner/work/_temp/repos/markdig/src/markdig.slnx
   project Markdig.AotTests [CSharp] /home/runner/work/_temp/repos/markdig/src/Markdig.AotTests/Markdig.AotTests.csproj
   project Markdig.Benchmarks [CSharp] /home/runner/work/_temp/repos/markdig/src/Markdig.Benchmarks/Markdig.Benchmarks.csproj
   project Markdig.Fuzzing [CSharp] /home/runner/work/_temp/repos/markdig/src/Markdig.Fuzzing/Markdig.Fuzzing.csproj
@@ -20,25 +20,20 @@ Compatibility Doctor:
   SpecFileGen: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   UnicodeNormDApp: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
 F5 startup project: Markdig.WebApp /home/runner/work/_temp/repos/markdig/src/Markdig.WebApp/Markdig.WebApp.csproj
-Error List after analysis: 7 errors, 0 warnings
+Error List after analysis: 5 errors, 2 warnings
   5 x CS0103
       [Markdig] UnicodeUtility.cs(44,9): error CS0103: The name 'UnicodeDebug' does not exist in the current context
       [Markdig] UnicodeUtility.cs(54,9): error CS0103: The name 'UnicodeDebug' does not exist in the current context
       [Markdig] UnicodeUtility.cs(55,9): error CS0103: The name 'UnicodeDebug' does not exist in the current context
       [Markdig] UnicodeUtility.cs(115,9): error CS0103: The name 'UnicodeDebug' does not exist in the current context
       [Markdig] UnicodeUtility.cs(128,9): error CS0103: The name 'UnicodeDebug' does not exist in the current context
-  2 x TS1001
-      [SpecFileGen] Program.cs(157,13): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. In a Windows Forms app call Application.Exit() or the form's Close(); in a console app return the exit code from Main.
-      [mdtoc] Program.cs(20,9): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. In a Windows Forms app call Application.Exit() or the form's Close(); in a console app return the exit code from Main.
-Error List after the build: 6 errors, 0 warnings
+Error List after the build: 5 errors, 0 warnings
   5 x CS0103
       [Markdig] UnicodeUtility.cs(44,9): error CS0103: The name 'UnicodeDebug' does not exist in the current context
       [Markdig] UnicodeUtility.cs(54,9): error CS0103: The name 'UnicodeDebug' does not exist in the current context
       [Markdig] UnicodeUtility.cs(55,9): error CS0103: The name 'UnicodeDebug' does not exist in the current context
       [Markdig] UnicodeUtility.cs(115,9): error CS0103: The name 'UnicodeDebug' does not exist in the current context
       [Markdig] UnicodeUtility.cs(128,9): error CS0103: The name 'UnicodeDebug' does not exist in the current context
-  1 x TS1001
-      [SpecFileGen] Program.cs(157,13): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. In a Windows Forms app call Application.Exit() or the form's Close(); in a console app return the exit code from Main.
 Long-operation progress:
   Loading C#: Loading C#
   Loading C#: Succeeded after 0.1 s
@@ -47,19 +42,13 @@ Long-operation progress:
   Analyzing: Analyzing 0/9 projects
   Restoring NuGet packages: Restoring NuGet packages 1/7 projects
   Analyzing: Analyzing 1/9 projects
-  Analyzing: Analyzing 2/9 projects
-  Analyzing: Analyzing 3/9 projects
-  Analyzing: Analyzing 4/9 projects
-  Analyzing: Analyzing 5/9 projects
-  Analyzing: Analyzing 6/9 projects
-  Analyzing: Analyzing 7/9 projects
-  Analyzing: Analyzing 8/9 projects
   Restoring NuGet packages: Downloading NuGet packages 1/39
-  Analyzing: Analyzing 9/9 projects
-  Analyzing: Succeeded after 1.8 s
+  Analyzing: Analyzing 2/9 projects
   Restoring NuGet packages: Downloading NuGet packages 2/39
   Restoring NuGet packages: Downloading NuGet packages 3/39
+  Analyzing: Analyzing 3/9 projects
   Restoring NuGet packages: Downloading NuGet packages 4/39
+  Analyzing: Analyzing 4/9 projects
   Restoring NuGet packages: Downloading NuGet packages 5/39
   Restoring NuGet packages: Downloading NuGet packages 6/39
   Restoring NuGet packages: Downloading NuGet packages 7/39
@@ -87,6 +76,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 29/39
   Restoring NuGet packages: Downloading NuGet packages 30/39
   Restoring NuGet packages: Downloading NuGet packages 31/39
+  Analyzing: Analyzing 5/9 projects
   Restoring NuGet packages: Downloading NuGet packages 32/39
   Restoring NuGet packages: Downloading NuGet packages 33/39
   Restoring NuGet packages: Downloading NuGet packages 34/39
@@ -100,6 +90,11 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 2/3
   Restoring NuGet packages: Downloading NuGet packages 3/3
   Restoring NuGet packages: Restoring NuGet packages 3/7 projects
+  Analyzing: Analyzing 6/9 projects
+  Analyzing: Analyzing 7/9 projects
+  Analyzing: Analyzing 8/9 projects
+  Analyzing: Analyzing 9/9 projects
+  Analyzing: Succeeded after 2.3 s
   Restoring NuGet packages: Downloading NuGet packages 1/13
   Restoring NuGet packages: Downloading NuGet packages 2/13
   Restoring NuGet packages: Downloading NuGet packages 3/13
@@ -151,7 +146,7 @@ Long-operation progress:
   Restoring NuGet packages: Restoring NuGet packages 5/7 projects
   Restoring NuGet packages: Downloading NuGet packages 1/1
   Restoring NuGet packages: Restoring NuGet packages 6/7 projects
-  Restoring NuGet packages: Succeeded after 5.8 s
+  Restoring NuGet packages: Succeeded after 3.8 s
   Analyzing: Analyzing 0/9 projects
   Analyzing: Analyzing 1/9 projects
   Analyzing: Analyzing 2/9 projects
@@ -173,11 +168,11 @@ Long-operation progress:
   Building: Building 6/9 projects
   Building: Building 7/9 projects
   Building: Building 8/9 projects
-  Building: Failed after 3.4 s
+  Building: Failed after 4.5 s
 Project setup:
 
 Output:
-Build started at 17:29:50...
+Build started at 18:12:38...
 1>------ Build started: Project: Markdig, Configuration: Debug ------
 1>UnicodeUtility.cs(44,9): error CS0103: The name 'UnicodeDebug' does not exist in the current context
 1>UnicodeUtility.cs(54,9): error CS0103: The name 'UnicodeDebug' does not exist in the current context
@@ -188,11 +183,11 @@ Build started at 17:29:50...
 3>------ Build started: Project: Markdig.Benchmarks, Configuration: Debug ------
 4>------ Build started: Project: Markdig.Fuzzing, Configuration: Debug ------
 5>------ Build started: Project: SpecFileGen, Configuration: Debug ------
-5>Program.cs(157,13): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. In a Windows Forms app call Application.Exit() or the form's Close(); in a console app return the exit code from Main.
+5>SpecFileGen -> compiled in memory (15.5 KB, 27 ms)
 6>------ Build started: Project: Markdig.Tests, Configuration: Debug ------
 7>------ Build started: Project: Markdig.WebApp, Configuration: Debug ------
 8>------ Build started: Project: mdtoc, Configuration: Debug ------
 9>------ Build started: Project: UnicodeNormDApp, Configuration: Debug ------
-9>UnicodeNormDApp -> compiled in memory (7 KB, 10 ms)
-========== Build: 1 succeeded, 8 failed ==========
+9>UnicodeNormDApp -> compiled in memory (7 KB, 17 ms)
+========== Build: 2 succeeded, 7 failed ==========
 

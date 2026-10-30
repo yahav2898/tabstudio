@@ -1,5 +1,5 @@
 moq at bdf16e758e8022c40cef2bfd025181f845bbd2a9, opening /home/runner/work/_temp/repos/moq/Moq.slnx
-Opened in 0.2 s: Moq, solution /home/runner/work/_temp/repos/moq/Moq.slnx
+Opened in 0.1 s: Moq, solution /home/runner/work/_temp/repos/moq/Moq.slnx
   project Moq.CodeAnalysis.UnitTests [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.CodeAnalysis.UnitTests/Moq.CodeAnalysis.UnitTests.csproj
   project Moq.CodeAnalysis [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.CodeAnalysis/Moq.CodeAnalysis.csproj
   project Moq.CodeFixes.UnitTests [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.CodeFixes.UnitTests/Moq.CodeFixes.UnitTests.csproj
@@ -26,11 +26,8 @@ Compatibility Doctor:
   Moq.Vsix: Library via Built with its users - A library is compiled together with the projects that reference it.
   Moq: Library via Built with its users - A library is compiled together with the projects that reference it.
 F5 startup project: none 
-Error List after analysis: 327 errors, 106 warnings
-  162 x CS0246
-      [Moq.Sdk.Tests] MockBehaviorTests.cs(3,7): error CS0246: The type or namespace name 'Sample' could not be found (are you missing a using directive or an assembly reference?)
-      [Moq.Sdk.Tests] MockBehaviorTests.cs(77,20): error CS0246: The type or namespace name 'CalculatorMode' could not be found (are you missing a using directive or an assembly reference?)
-      [Moq.Sdk.Tests] MockBehaviorTests.cs(77,60): error CS0246: The type or namespace name 'CalculatorMode' could not be found (are you missing a using directive or an assembly reference?)
+Error List after analysis: 72 errors, 107 warnings
+  37 x CS0246
       [Moq.Sdk] IMockSetup.cs(9,59): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
       [Moq.StaticProxy.UnitTests] MockOfT.cs(33,13): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
       [Moq.StaticProxy.UnitTests] MockOfT.cs(33,50): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
@@ -38,39 +35,9 @@ Error List after analysis: 327 errors, 106 warnings
       [Moq.StaticProxy.UnitTests] RecursiveMethods.cs(13,54): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
       [Moq.StaticProxy.UnitTests] RecursiveProperties.cs(13,13): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
       [Moq.StaticProxy.UnitTests] RecursiveProperties.cs(13,44): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
-  58 x CS1061
-      [Moq.Sdk] AnyMatcher.cs(59,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
-      [Moq.Sdk] AnyMatcher`1.cs(55,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
-      [Moq.Sdk] ConditionalMatcher.cs(62,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
-      [Moq.Sdk] MockSetup.cs(79,51): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
-      [Moq.Sdk] MockSetup.cs(122,41): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
-      [Moq.Tests] CallBaseTests.cs(34,18): error CS1061: 'Mock<Calculator>' does not contain a definition for 'TurnOn' and no accessible extension method 'TurnOn' accepting a first argument of type 'Mock<Calculator>' could be found (are you missing a using directive or an assembly reference?)
-      [Moq.Tests] CallBaseTests.cs(56,18): error CS1061: 'Mock<Calculator>' does not contain a definition for 'TurnOn' and no accessible extension method 'TurnOn' accepting a first argument of type 'Mock<Calculator>' could be found (are you missing a using directive or an assembly reference?)
-      [Moq.Tests] CallBaseTests.cs(72,18): error CS1061: 'Mock<Calculator>' does not contain a definition for 'TurnOn' and no accessible extension method 'TurnOn' accepting a first argument of type 'Mock<Calculator>' could be found (are you missing a using directive or an assembly reference?)
-      [Moq.Tests] MockTests.cs(19,24): error CS1061: 'Mock<ICalculator>' does not contain a definition for 'Add' and no accessible extension method 'Add' accepting a first argument of type 'Mock<ICalculator>' could be found (are you missing a using directive or an assembly reference?)
-      [Moq.Tests] MockTests.cs(30,24): error CS1061: 'Mock<ICalculator>' does not contain a definition for 'Add' and no accessible extension method 'Add' accepting a first argument of type 'Mock<ICalculator>' could be found (are you missing a using directive or an assembly reference?)
-  39 x CS0619
-      [Moq.Tests] CallBaseTests.cs(47,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-      [Moq.Tests] CallBaseTests.cs(63,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-      [Moq.Tests] CallBaseTests.cs(79,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-      [Moq.Tests] MockTests.cs(34,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-      [Moq.Tests] MoqTests.cs(315,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-      [Moq.Tests] MoqTests.cs(325,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-      [Moq.Tests] MoqTests.cs(336,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-      [Moq.Tests] MoqTests.cs(347,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-      [Moq.Tests] MoqTests.cs(348,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-      [Moq.Tests] MoqTests.cs(358,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
-  35 x CS0103
-      [Moq.Sdk.Tests] MockBehaviorTests.cs(64,66): error CS0103: The name 'CalculatorMode' does not exist in the current context
-      [Moq.Sdk.Tests] MockBehaviorTests.cs(71,26): error CS0103: The name 'CalculatorMode' does not exist in the current context
-      [Moq.Tests] MoqTests.cs(69,37): error CS0103: The name 'CalculatorMode' does not exist in the current context
-      [Moq.Tests] MoqTests.cs(71,26): error CS0103: The name 'CalculatorMode' does not exist in the current context
-      [Moq.Tests] MoqTests.cs(79,38): error CS0103: The name 'CalculatorMode' does not exist in the current context
-      [Moq.Tests] MoqTests.cs(81,26): error CS0103: The name 'CalculatorMode' does not exist in the current context
-      [Moq.Tests] MoqTests.cs(89,37): error CS0103: The name 'CalculatorMode' does not exist in the current context
-      [Moq.Tests] MoqTests.cs(90,37): error CS0103: The name 'CalculatorMode' does not exist in the current context
-      [Moq.Tests] MoqTests.cs(92,26): error CS0103: The name 'CalculatorMode' does not exist in the current context
-      [Moq.Tests] MoqTests.cs(333,37): error CS0103: The name 'CalculatorMode' does not exist in the current context
+      [Moq.StaticProxy.UnitTests] RecursiveSetupMethods.cs(13,13): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
+      [Moq.StaticProxy.UnitTests] RecursiveSetupMethods.cs(13,54): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
+      [Moq.StaticProxy.UnitTests] RecursiveSetupProperties.cs(13,13): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
   28 x CS0117
       [Moq.CodeFixes] CustomDelegateCodeFix.cs(162,66): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'CustomDelegateCodeFix'
       [Moq.CodeFixes] CustomDelegateCompletion.cs(25,112): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'CustomDelegateCompletion'
@@ -82,14 +49,15 @@ Error List after analysis: 327 errors, 106 warnings
       [Moq.CodeFixes] SimplifySetupCodeFix.cs(33,49): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'SimplifySetup'
       [Moq.Sdk] CallContext.cs(99,73): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'UnexpectedNullContextState'
       [Moq.Sdk] DefaultMockRuntime.cs(88,82): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'DuplicateContextBehavior'
+  5 x CS1061
+      [Moq.Sdk] AnyMatcher.cs(59,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk] AnyMatcher`1.cs(55,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk] ConditionalMatcher.cs(62,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk] MockSetup.cs(79,51): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk] MockSetup.cs(122,41): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
   2 x CS1503
       [Moq.Sdk] MockRuntime.cs(19,126): error CS1503: Argument 2: cannot convert from 'string' to 'System.Exception?'
       [Moq.Sdk] PropertyBehavior.cs(36,122): error CS1503: Argument 2: cannot convert from 'string' to 'System.Exception?'
-  2 x CS1501
-      [Moq.Tests] RefOutTests.cs(18,18): error CS1501: No overload for method 'TryAdd' takes 3 arguments
-      [Moq.Tests] RefOutTests.cs(30,18): error CS1501: No overload for method 'TryAdd' takes 3 arguments
-  1 x CS9286
-      [Moq.Tests] TypedSetupTests.cs(28,26): error CS9286: '?' does not contain a definition for 'Sdk' and no accessible extension member 'Sdk' for receiver of type '?' could be found (are you missing a using directive or an assembly reference?)
 Error List after the build: 16 errors, 41 warnings
   8 x CS0117
       [Moq.Sdk] CallContext.cs(99,73): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'UnexpectedNullContextState'
@@ -126,10 +94,6 @@ Long-operation progress:
   Analyzing: Analyzing 7/12 projects
   Analyzing: Analyzing 8/12 projects
   Analyzing: Analyzing 9/12 projects
-  Analyzing: Analyzing 10/12 projects
-  Analyzing: Analyzing 11/12 projects
-  Analyzing: Analyzing 12/12 projects
-  Analyzing: Succeeded after 0.8 s
   Restoring NuGet packages: Downloading NuGet packages 1/35
   Restoring NuGet packages: Downloading NuGet packages 2/35
   Restoring NuGet packages: Downloading NuGet packages 3/35
@@ -139,9 +103,13 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 7/35
   Restoring NuGet packages: Downloading NuGet packages 8/35
   Restoring NuGet packages: Downloading NuGet packages 9/35
+  Analyzing: Analyzing 10/12 projects
+  Analyzing: Analyzing 11/12 projects
   Restoring NuGet packages: Downloading NuGet packages 10/35
   Restoring NuGet packages: Downloading NuGet packages 11/35
   Restoring NuGet packages: Downloading NuGet packages 12/35
+  Analyzing: Analyzing 12/12 projects
+  Analyzing: Succeeded after 1.3 s
   Restoring NuGet packages: Downloading NuGet packages 13/35
   Restoring NuGet packages: Downloading NuGet packages 14/35
   Restoring NuGet packages: Downloading NuGet packages 15/35
@@ -263,8 +231,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 22/40
   Restoring NuGet packages: Downloading NuGet packages 23/40
   Restoring NuGet packages: Downloading NuGet packages 24/40
-  Restoring NuGet packages: Downloading NuGet packages 26/40
   Restoring NuGet packages: Downloading NuGet packages 25/40
+  Restoring NuGet packages: Downloading NuGet packages 26/40
   Restoring NuGet packages: Downloading NuGet packages 27/40
   Restoring NuGet packages: Downloading NuGet packages 28/40
   Restoring NuGet packages: Downloading NuGet packages 29/40
@@ -440,8 +408,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 11/36
   Restoring NuGet packages: Downloading NuGet packages 12/36
   Restoring NuGet packages: Downloading NuGet packages 13/36
-  Restoring NuGet packages: Downloading NuGet packages 15/36
   Restoring NuGet packages: Downloading NuGet packages 14/36
+  Restoring NuGet packages: Downloading NuGet packages 15/36
   Restoring NuGet packages: Downloading NuGet packages 16/36
   Restoring NuGet packages: Downloading NuGet packages 17/36
   Restoring NuGet packages: Downloading NuGet packages 18/36
@@ -532,8 +500,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 66/141
   Restoring NuGet packages: Downloading NuGet packages 67/141
   Restoring NuGet packages: Downloading NuGet packages 68/141
-  Restoring NuGet packages: Downloading NuGet packages 70/141
   Restoring NuGet packages: Downloading NuGet packages 69/141
+  Restoring NuGet packages: Downloading NuGet packages 70/141
   Restoring NuGet packages: Downloading NuGet packages 71/141
   Restoring NuGet packages: Downloading NuGet packages 72/141
   Restoring NuGet packages: Downloading NuGet packages 73/141
@@ -623,11 +591,11 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 15/21
   Restoring NuGet packages: Downloading NuGet packages 16/21
   Restoring NuGet packages: Downloading NuGet packages 17/21
-  Restoring NuGet packages: Downloading NuGet packages 19/21
   Restoring NuGet packages: Downloading NuGet packages 18/21
+  Restoring NuGet packages: Downloading NuGet packages 19/21
   Restoring NuGet packages: Downloading NuGet packages 20/21
   Restoring NuGet packages: Downloading NuGet packages 21/21
-  Restoring NuGet packages: Succeeded after 7.7 s
+  Restoring NuGet packages: Succeeded after 8.3 s
   Analyzing: Analyzing 0/12 projects
   Analyzing: Analyzing 1/12 projects
   Analyzing: Analyzing 2/12 projects
@@ -641,7 +609,7 @@ Long-operation progress:
   Analyzing: Analyzing 10/12 projects
   Analyzing: Analyzing 11/12 projects
   Analyzing: Analyzing 12/12 projects
-  Analyzing: Succeeded after 1.3 s
+  Analyzing: Succeeded after 1.6 s
   Building: Building
   Building: Building 0/12 projects
   Building: Building 1/12 projects
@@ -655,13 +623,13 @@ Long-operation progress:
   Building: Building 9/12 projects
   Building: Building 10/12 projects
   Building: Building 11/12 projects
-  Building: Failed after 0.6 s
+  Building: Failed after 0.7 s
 Project setup:
 
 Output:
-Build started at 17:30:44...
+Build started at 18:13:32...
 1>------ Build started: Project: Moq.CodeAnalysis, Configuration: Debug ------
-1>Moq.CodeAnalysis -> compiled in memory (41.5 KB, 104 ms)
+1>Moq.CodeAnalysis -> compiled in memory (41.5 KB, 113 ms)
 2>------ Build started: Project: Moq.Sdk, Configuration: Debug ------
 2>AnyMatcher.cs(59,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
 2>AnyMatcher`1.cs(55,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
