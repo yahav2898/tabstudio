@@ -91,6 +91,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         }
 
         _search = SearchPanel.Install(_editor);
+        UseRegexReplace();
         Content = _editor;
 
         document.Document.Changed += OnTextChanged;
