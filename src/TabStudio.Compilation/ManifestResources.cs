@@ -15,7 +15,7 @@ namespace TabStudio.Compilation;
 /// other types, such as images, are left out and read as <see langword="null"/>. A <c>.resx</c> beside the code file of
 /// a class, such as <c>Form1.resx</c> beside <c>Form1.cs</c>, is named after the class. Culture-specific <c>.resx</c>
 /// files, which build satellite assemblies, are not compiled. An item's <c>LogicalName</c> names its resource as it is;
-/// a <c>Link</c> is not read, and the resource is named after its path.
+/// a <c>Link</c> names it by the path it gives, as the SDK does for a file from outside the project.
 /// </remarks>
 public static class ManifestResources
 {
@@ -60,6 +60,22 @@ public static class ManifestResources
         return resources;
     }
 
+    /// <summary>
+    /// The <c>Link</c> the project's items give a resource file, with <c>%(Filename)</c>, <c>%(Extension)</c> and
+    /// <c>%(RecursiveDir)</c> filled in, the last one winning; <see langword="null"/> when none does.
+    /// </summary>
+    private static string? LinkOf(TsProject project, string path)
+    {
+        var link = project.EmbeddedResourceItems
+            .Where(item => item.Metadata.TryGetValue("Link", out var value) && value.Length > 0 && new GlobPattern(project.DirectoryPath, item.Include).IsMatch(path))
+            .Select(item => item.Metadata["Link"])
+            .LastOrDefault();
+        return link?
+            .Replace("%(Filename)", Path.GetFileNameWithoutExtension(path), StringComparison.OrdinalIgnoreCase)
+            .Replace("%(Extension)", Path.GetExtension(path), StringComparison.OrdinalIgnoreCase)
+            .Replace("%(RecursiveDir)", string.Empty, StringComparison.OrdinalIgnoreCase);
+    }
+
     /// <summary>The <c>LogicalName</c> the project's items give a resource file, the last one winning; <see langword="null"/> when none does.</summary>
     private static string? LogicalNameOf(TsProject project, string path) =>
         project.EmbeddedResourceItems
@@ -80,7 +96,10 @@ public static class ManifestResources
         ArgumentNullException.ThrowIfNull(path);
 
         var rootNamespace = project.GetProperty("RootNamespace") ?? project.Name;
-        var relative = Path.GetRelativePath(project.DirectoryPath, path).Replace('\\', '/');
+
+        // A file outside the project is named after its Link, as StronglyTypedId's generator embeds its templates:
+        // <EmbeddedResource Include="..\Templates\guid-full.typedid" Link="Templates\%(Filename)%(Extension)" />.
+        var relative = (LinkOf(project, path) ?? Path.GetRelativePath(project.DirectoryPath, path)).Replace('\\', '/');
         var parts = relative.Split('/');
         var name = new StringBuilder(rootNamespace);
         for (var i = 0; i < parts.Length; i++)
