@@ -207,6 +207,28 @@ public sealed class SessionTests
     }
 
     [Fact]
+    public async Task A_guest_away_longer_than_the_grace_comes_back_as_itself_with_its_offline_edits()
+    {
+        // Forgotten after five minutes, a tablet that slept for six was refused when it woke, and its IDE closed the
+        // copy of the workspace with the edits it had not sent.
+        await using var live = await LiveLoopback.StartAsync(reconnectGrace: TimeSpan.FromMilliseconds(200));
+        var hostDocument = await live.ShareAsync("Program.cs");
+        var dana = await live.JoinAsync("Dana", reconnectDelays: [TimeSpan.FromSeconds(2)]);
+        var document = await dana.OpenAsync("Program.cs");
+        var danaId = await dana.On(() => dana.Session.SelfId);
+
+        await live.On(() => live.Host.DropConnection(danaId));
+        await LiveLoopback.UntilAsync(() => dana.On(() => dana.Session.State == LiveGuestState.Reconnecting), "Dana to notice");
+        Assert.True(await dana.On(() => document.Edit(0, string.Empty, "// offline\n")));
+        await LiveLoopback.UntilAsync(() => live.On(() => live.Host.Participants.All(p => p.Id != danaId)), "Dana to leave the list after the grace");
+
+        await LiveLoopback.UntilAsync(() => dana.On(() => dana.Session.State == LiveGuestState.Joined), "Dana to reconnect");
+        await LiveLoopback.UntilAsync(() => live.On(() => hostDocument.Text.ToString().StartsWith("// offline\n", StringComparison.Ordinal)), "the host to get Dana's offline edit");
+        Assert.Equal(danaId, await dana.On(() => dana.Session.SelfId));
+        Assert.Contains(await live.On(() => live.Host.Participants.ToList()), p => p.Id == danaId && p.IsConnected);
+    }
+
+    [Fact]
     public async Task A_class_of_thirty_joins_from_one_code_follows_the_presenter_and_raises_hands()
     {
         await using var live = await LiveLoopback.StartAsync(classroom: true);

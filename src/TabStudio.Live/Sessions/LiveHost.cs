@@ -36,6 +36,9 @@ public sealed partial class LiveHost : LiveSession, IAsyncDisposable
     private readonly LiveWorkspaceFiles _files;
     private readonly Dictionary<string, LiveFileEntry> _shared = new(StringComparer.Ordinal);
     private readonly Dictionary<LinkFingerprint, Guest> _guests = [];
+
+    /// <summary>Guests whose connection dropped longer ago than the reconnect grace: off the list, but still known.</summary>
+    private readonly Dictionary<LinkFingerprint, Guest> _away = [];
     private readonly HashSet<LinkFingerprint> _removed = [];
     private readonly LinkTrustStore _trust = new(null);
     private readonly CancellationTokenSource _stopping = new();
