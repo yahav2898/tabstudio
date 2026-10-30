@@ -40,6 +40,25 @@ public sealed class SessionTests
     }
 
     [Fact]
+    public async Task A_guests_copy_has_every_file_when_they_add_up_to_more_than_one_answer()
+    {
+        // An answer stops at 32 MB; the files after that came back empty and were missing from the guest's copy.
+        var asset = new string('x', 7 * 1024 * 1024);
+        var files = Enumerable.Range(1, 6).ToDictionary(i => $"Assets/texture{i}.txt", _ => asset);
+        files["Program.cs"] = "class Program\n{\n}\n";
+        await using var live = await LiveLoopback.StartAsync(files);
+        var dana = await live.JoinAsync("Dana");
+
+        var root = await dana.On(() => dana.Session.WorkspaceRoot!);
+        foreach (var name in files.Keys)
+        {
+            var copy = Directory.EnumerateFiles(root, Path.GetFileName(name), SearchOption.AllDirectories).SingleOrDefault();
+            Assert.True(copy is not null, $"{name} is missing from the copy");
+            Assert.Equal(files[name].Length, new FileInfo(copy!).Length);
+        }
+    }
+
+    [Fact]
     public async Task Concurrent_typing_on_three_devices_converges_everywhere()
     {
         await using var live = await LiveLoopback.StartAsync();
