@@ -58,6 +58,43 @@ public sealed class FileOperationsTests
     }
 
     [AvaloniaFact]
+    public async Task Renaming_keeps_unsaved_edits_when_they_cannot_be_saved_and_a_read_only_folder_says_so()
+    {
+        // The rename closed the tab whatever the save said, then the move threw: the edits were gone and the app ended.
+        // (A read-only folder does not stop root.)
+        if (OperatingSystem.IsWindows() || Environment.UserName == "root")
+        {
+            return;
+        }
+
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var greeter = Node(fixture, n => n.Name == "Greeter.cs");
+        var folder = Path.GetDirectoryName(greeter.FullPath!)!;
+        var document = (await fixture.Workspace.OpenDocumentAsync(greeter.FullPath!))!;
+        document.Document.Insert(0, "// unsaved\n");
+        var mode = File.GetUnixFileMode(folder);
+        File.SetUnixFileMode(folder, UnixFileMode.UserRead | UnixFileMode.UserExecute);
+        try
+        {
+            await AnswerAsync(fixture, ((IExplorerActions)fixture.Workspace).RenameAsync(greeter), "Welcomer.cs");
+
+            Assert.True(File.Exists(greeter.FullPath));
+            Assert.Contains(document, fixture.Workspace.Documents);
+            Assert.True(document.IsDirty);
+            Assert.StartsWith("// unsaved", document.Document.Text, StringComparison.Ordinal);
+            Assert.Contains("was not renamed", fixture.Workspace.StatusText, StringComparison.Ordinal);
+
+            await AnswerAsync(fixture, ((IExplorerActions)fixture.Workspace).NewFileAsync(Node(fixture, n => n.Name == "Greetings" && n.Kind == WorkspaceNodeKind.Project)), "Farewell");
+            Assert.StartsWith("Could not create Farewell.cs", fixture.Workspace.StatusText, StringComparison.Ordinal);
+        }
+        finally
+        {
+            File.SetUnixFileMode(folder, mode);
+        }
+    }
+
+    [AvaloniaFact]
     public async Task Deleting_moves_the_file_to_the_trash()
     {
         using var fixture = new WorkspaceFixture();

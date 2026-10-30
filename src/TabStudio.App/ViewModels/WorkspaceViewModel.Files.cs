@@ -43,7 +43,17 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
-        await File.WriteAllTextAsync(path, FileTemplates.ContentFor(path, project));
+        try
+        {
+            await File.WriteAllTextAsync(path, FileTemplates.ContentFor(path, project));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Storage full or a read-only folder: said in the status bar instead of ending the app.
+            StatusText = $"Could not create {Path.GetFileName(path)}: {ex.Message.TrimEnd('.')}.";
+            return;
+        }
+
         await ReloadWorkspaceAsync();
         await OpenDocumentAsync(path);
         Explorer.Reveal(path);
@@ -73,7 +83,16 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
-        Directory.CreateDirectory(path);
+        try
+        {
+            Directory.CreateDirectory(path);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            StatusText = $"Could not create the folder {typed}: {ex.Message.TrimEnd('.')}.";
+            return;
+        }
+
         await ReloadWorkspaceAsync();
         StatusText = $"Created folder {typed}";
     }
@@ -106,15 +125,38 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
-        // Open documents inside what is renamed are saved and reopened at their new location.
-        var affected = await CloseDocumentsUnderAsync(path, save: true);
-        if (node.Kind == WorkspaceNodeKind.Folder)
+        // Open documents inside what is renamed are saved and reopened at their new location. One that cannot be
+        // saved stops the rename: it was closed anyway, and its edits were lost.
+        foreach (var dirty in DocumentsUnder(path).Where(d => d.IsDirty))
         {
-            Directory.Move(path, target);
+            if (!await SaveDocumentAsync(dirty))
+            {
+                StatusText = $"'{node.Name}' was not renamed, because {dirty.FileName} could not be saved.";
+                return;
+            }
         }
-        else
+
+        var affected = await CloseDocumentsUnderAsync(path, save: false);
+        try
         {
-            File.Move(path, target);
+            if (node.Kind == WorkspaceNodeKind.Folder)
+            {
+                Directory.Move(path, target);
+            }
+            else
+            {
+                File.Move(path, target);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            foreach (var document in affected)
+            {
+                await OpenDocumentAsync(document);
+            }
+
+            StatusText = $"Could not rename '{node.Name}': {ex.Message.TrimEnd('.')}.";
+            return;
         }
 
         await ReloadWorkspaceAsync();
@@ -146,16 +188,25 @@ public sealed partial class WorkspaceViewModel
         }
 
         await CloseDocumentsUnderAsync(path, save: false);
-        var trash = Path.Combine(_paths.Trash, DateTime.Now.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture));
-        Directory.CreateDirectory(trash);
-        var destination = Path.Combine(trash, node.Name);
-        if (node.Kind == WorkspaceNodeKind.Folder)
+        try
         {
-            MoveDirectory(path, destination);
+            var trash = Path.Combine(_paths.Trash, DateTime.Now.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture));
+            Directory.CreateDirectory(trash);
+            var destination = Path.Combine(trash, node.Name);
+            if (node.Kind == WorkspaceNodeKind.Folder)
+            {
+                MoveDirectory(path, destination);
+            }
+            else
+            {
+                File.Move(path, destination);
+            }
         }
-        else
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            File.Move(path, destination);
+            await ReloadWorkspaceAsync();
+            StatusText = $"Could not delete {node.Name}: {ex.Message.TrimEnd('.')}.";
+            return;
         }
 
         await ReloadWorkspaceAsync();
@@ -214,12 +265,15 @@ public sealed partial class WorkspaceViewModel
         }
     }
 
-    private async Task<List<string>> CloseDocumentsUnderAsync(string path, bool save)
+    private List<DocumentViewModel> DocumentsUnder(string path)
     {
         var prefix = path.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-        var affected = Documents
-            .Where(d => d.FilePath == path || d.FilePath.StartsWith(prefix, StringComparison.Ordinal))
-            .ToList();
+        return [.. Documents.Where(d => d.FilePath == path || d.FilePath.StartsWith(prefix, StringComparison.Ordinal))];
+    }
+
+    private async Task<List<string>> CloseDocumentsUnderAsync(string path, bool save)
+    {
+        var affected = DocumentsUnder(path);
 
         foreach (var document in affected)
         {
