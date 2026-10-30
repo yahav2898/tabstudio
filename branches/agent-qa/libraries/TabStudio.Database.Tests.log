@@ -1,6 +1,6 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Database.Tests/TabStudio.Database.Tests.csproj (in 259 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Database/TabStudio.Database.csproj (in 259 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Database.Tests/TabStudio.Database.Tests.csproj (in 321 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Database/TabStudio.Database.csproj (in 322 ms).
   1 of 3 projects are up-to-date for restore.
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Database -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Database/bin/Release/net10.0/TabStudio.Database.dll
@@ -8,24 +8,24 @@
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Database.Tests/bin/Release/net10.0/TabStudio.Database.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.10]   Discovering: TabStudio.Database.Tests
-[xUnit.net 00:00:00.17]   Discovered:  TabStudio.Database.Tests
-[xUnit.net 00:00:00.20]   Starting:    TabStudio.Database.Tests
-  Passed TabStudio.Database.Tests.ConnectionsTests.Completions_follow_aliases_and_do_not_crash_on_repeated_aliases [34 ms]
+[xUnit.net 00:00:00.09]   Discovering: TabStudio.Database.Tests
+[xUnit.net 00:00:00.14]   Discovered:  TabStudio.Database.Tests
+[xUnit.net 00:00:00.17]   Starting:    TabStudio.Database.Tests
+  Passed TabStudio.Database.Tests.ConnectionsTests.Completions_follow_aliases_and_do_not_crash_on_repeated_aliases [52 ms]
   Passed TabStudio.Database.Tests.ConnectionsTests.Identifier_quoting_never_emits_an_unescaped_delimiter(provider: SQLite, name: "a\"b", expected: "\"a\"\"b\"") [< 1 ms]
   Passed TabStudio.Database.Tests.ConnectionsTests.Identifier_quoting_never_emits_an_unescaped_delimiter(provider: PostgreSql, name: "a\"b", expected: "\"a\"\"b\"") [< 1 ms]
   Passed TabStudio.Database.Tests.ConnectionsTests.Identifier_quoting_never_emits_an_unescaped_delimiter(provider: SqlServer, name: "a]b", expected: "[a]]b]") [< 1 ms]
-  Passed TabStudio.Database.Tests.SqliteTests.Csv_and_json_preserve_quotes_newlines_and_nulls [258 ms]
-  Passed TabStudio.Database.Tests.ConnectionsTests.Saved_metadata_contains_no_connection_string_or_password_and_removal_forgets_secret [99 ms]
-  Passed TabStudio.Database.Tests.SqliteTests.Query_preserves_multiple_sets_null_duplicate_names_and_display_limits [75 ms]
-[xUnit.net 00:00:01.03]   Finished:    TabStudio.Database.Tests
-  Passed TabStudio.Database.Tests.ConnectionsTests.Discovery_reads_nested_projects_configuration_and_secrets_without_leaking_in_labels [38 ms]
-  Passed TabStudio.Database.Tests.SqliteTests.Table_paging_updates_parameters_and_rejects_stale_rows [76 ms]
-  Passed TabStudio.Database.Tests.SqliteTests.Cancellation_interrupts_a_running_sqlite_statement [155 ms]
-  Passed TabStudio.Database.Tests.SqliteTests.Schema_reads_views_composite_keys_generated_columns_and_indexes [11 ms]
-  Passed TabStudio.Database.Tests.PostgreSqlTests.Live_postgres_schema_queries_paging_editing_and_cancel [776 ms]
+  Passed TabStudio.Database.Tests.SqliteTests.Csv_and_json_preserve_quotes_newlines_and_nulls [190 ms]
+  Passed TabStudio.Database.Tests.ConnectionsTests.Saved_metadata_contains_no_connection_string_or_password_and_removal_forgets_secret [120 ms]
+  Passed TabStudio.Database.Tests.SqliteTests.Query_preserves_multiple_sets_null_duplicate_names_and_display_limits [123 ms]
+[xUnit.net 00:00:01.06]   Finished:    TabStudio.Database.Tests
+  Passed TabStudio.Database.Tests.ConnectionsTests.Discovery_reads_nested_projects_configuration_and_secrets_without_leaking_in_labels [51 ms]
+  Passed TabStudio.Database.Tests.SqliteTests.Table_paging_updates_parameters_and_rejects_stale_rows [102 ms]
+  Passed TabStudio.Database.Tests.SqliteTests.Cancellation_interrupts_a_running_sqlite_statement [159 ms]
+  Passed TabStudio.Database.Tests.SqliteTests.Schema_reads_views_composite_keys_generated_columns_and_indexes [22 ms]
+  Passed TabStudio.Database.Tests.PostgreSqlTests.Live_postgres_schema_queries_paging_editing_and_cancel [838 ms]
 
 Test Run Successful.
 Total tests: 12
      Passed: 12
- Total time: 1.5996 Seconds
+ Total time: 1.7569 Seconds
