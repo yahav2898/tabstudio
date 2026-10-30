@@ -47,12 +47,13 @@ public sealed class PostgreSqlTests
         var name = "db_" + Guid.NewGuid().ToString("N"); var sql = new SqlExecutor();
         try
         {
-            await sql.ExecuteAsync(connection, $"""
-                CREATE SCHEMA {name};
-                CREATE TYPE {name}.mood AS ENUM ('sad', 'happy');
-                CREATE TABLE {name}.things(id integer PRIMARY KEY, doc json, bin jsonb, x xml, p point, m {name}.mood,
+            // Two dollars: the JSON's braces are the SQL's, not interpolations.
+            await sql.ExecuteAsync(connection, $$"""
+                CREATE SCHEMA {{name}};
+                CREATE TYPE {{name}}.mood AS ENUM ('sad', 'happy');
+                CREATE TABLE {{name}}.things(id integer PRIMARY KEY, doc json, bin jsonb, x xml, p point, m {{name}}.mood,
                     d date, ts timestamp, n numeric(10,2), v varchar(20));
-                INSERT INTO {name}.things VALUES (1, '{"a": 1}', '{"b": 2}', '<r>1</r>', '(1,2)', 'sad', NULL, NULL, 1.50, 'hi');
+                INSERT INTO {{name}}.things VALUES (1, '{"a": 1}', '{"b": 2}', '<r>1</r>', '(1,2)', 'sad', NULL, NULL, 1.50, 'hi');
                 """);
             var table = Assert.Single((await new SchemaReader().ReadAsync(connection)).Tables, t => t.Schema == name && t.Name == "things");
             Assert.Equal($"{name}.mood", table.Columns.Single(c => c.Name == "m").SqlType);
