@@ -444,7 +444,14 @@ public sealed partial class WorkspaceViewModel
     /// Typing keeps the session's copy of unsaved text current, at most every two seconds: it was saved only when a
     /// document first became dirty, so after Android ended the app the restored text was that first moment's.
     /// </summary>
-    private void OnDocumentTextChanged(object? sender, EventArgs e) => ScheduleSessionSave(throttle: true);
+    private void OnDocumentTextChanged(object? sender, EventArgs e)
+    {
+        ScheduleSessionSave(throttle: true);
+        if (sender is AvaloniaEdit.Document.TextDocument text && Documents.FirstOrDefault(d => ReferenceEquals(d.Document, text)) is { } document)
+        {
+            CancelProjectAnalysis(document);
+        }
+    }
 
     private void ScheduleSessionSave(bool throttle = false)
     {

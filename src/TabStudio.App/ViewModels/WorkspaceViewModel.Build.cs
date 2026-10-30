@@ -429,6 +429,26 @@ public sealed partial class WorkspaceViewModel
         _ = AnalyzeProjectLaterAsync(language, project, cancellation.Token);
     }
 
+    /// <summary>
+    /// Typing stops the project's background analysis: it compiled the whole project on every core two seconds after
+    /// each pause and kept going when typing resumed. The edit's own analysis schedules a fresh one.
+    /// </summary>
+    private void CancelProjectAnalysis(DocumentViewModel document)
+    {
+        if (_projectAnalysis.Count == 0 || Workspace?.FindProjectForFile(document.FilePath) is not { } project
+            || !_projectAnalysis.Remove(project.FilePath, out var running))
+        {
+            return;
+        }
+
+        running.Cancel();
+        running.Dispose();
+    }
+
+    /// <summary>Whether a project's background analysis is waiting or running, for tests.</summary>
+    /// <param name="projectPath">The project file.</param>
+    internal bool IsProjectAnalysisPending(string projectPath) => _projectAnalysis.ContainsKey(projectPath);
+
     private async Task AnalyzeProjectLaterAsync(ILanguageService language, ProjectInfo project, CancellationToken cancellationToken)
     {
         try

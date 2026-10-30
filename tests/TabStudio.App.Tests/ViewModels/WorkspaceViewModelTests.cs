@@ -177,6 +177,22 @@ public sealed class WorkspaceViewModelTests
     }
 
     [AvaloniaFact]
+    public async Task Typing_stops_the_projects_background_analysis()
+    {
+        // Two seconds after each pause the whole project compiled on every core, and went on while typing resumed.
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var document = fixture.Workspace.ActiveDocument!;
+        var project = fixture.Workspace.Workspace!.FindProjectForFile(document.FilePath)!.FilePath;
+        document.Document.Insert(0, "// a\n");
+        await UiTestHelpers.WaitUntilAsync(() => fixture.Workspace.IsProjectAnalysisPending(project), because: "the project's analysis after the edit");
+
+        document.Document.Insert(0, "// b\n");
+
+        Assert.False(fixture.Workspace.IsProjectAnalysisPending(project));
+    }
+
+    [AvaloniaFact]
     public async Task A_warm_device_builds_on_one_thread_and_says_so()
     {
         using var fixture = new WorkspaceFixture();
