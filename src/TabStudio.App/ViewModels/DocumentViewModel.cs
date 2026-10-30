@@ -211,12 +211,24 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
             return;
         }
 
+        // The text being written is the saved state from now on: typing while it is written makes the document
+        // dirty again. Marked after the write, the late keystrokes were marked saved and never written.
         var text = Document.Text;
-        await TextFile.WriteAsync(FilePath, text, _file.Encoding, cancellationToken);
-        if (SaveExternalAsync is { } saveExternal) { await saveExternal(cancellationToken); }
-        if (SaveExternalAsync is not null && Document.Text != text) { return; }
-        Document.UndoStack.MarkAsOriginalFile();
-        IsDirty = false;
+        var undo = Document.UndoStack;
+        undo.MarkAsOriginalFile();
+        try
+        {
+            await TextFile.WriteAsync(FilePath, text, _file.Encoding, cancellationToken);
+            if (SaveExternalAsync is { } saveExternal) { await saveExternal(cancellationToken); }
+        }
+        catch
+        {
+            undo.DiscardOriginalFileMarker();
+            IsDirty = true;
+            throw;
+        }
+
+        IsDirty = !undo.IsOriginalFile || Document.Text != text;
     }
 
     /// <summary>
