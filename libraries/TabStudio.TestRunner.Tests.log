@@ -1,0 +1,50 @@
+  Determining projects to restore...
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.TestRunner.Tests/TabStudio.TestRunner.Tests.csproj (in 294 ms).
+  4 of 5 projects are up-to-date for restore.
+  TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+  TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
+  TabStudio.TestRunner.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.TestRunner.Tests/bin/Release/net10.0/TabStudio.TestRunner.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.TestRunner.Tests/bin/Release/net10.0/TabStudio.TestRunner.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.13]   Discovering: TabStudio.TestRunner.Tests
+[xUnit.net 00:00:00.19]   Discovered:  TabStudio.TestRunner.Tests
+[xUnit.net 00:00:00.23]   Starting:    TabStudio.TestRunner.Tests
+  Passed TabStudio.TestRunner.Tests.SharedRuntimeAssembliesTests.Sessions_with_their_own_copy_of_xunit_each_get_an_output_helper_of_their_own [1 s]
+  Passed TabStudio.TestRunner.Tests.SharedRuntimeAssembliesTests.Sessions_that_share_runtime_assemblies_load_the_framework_once [71 ms]
+  Passed TabStudio.TestRunner.Tests.MSTestRunnerTests.Discovers_test_methods_data_rows_and_dynamic_data [207 ms]
+  Passed TabStudio.TestRunner.Tests.MSTestRunnerTests.Runs_tests_with_initializers_and_mstest_outcomes [60 ms]
+  Passed TabStudio.TestRunner.Tests.NUnitRunnerTests.Setups_and_teardowns_run_around_each_test_base_class_first [289 ms]
+  Passed TabStudio.TestRunner.Tests.NUnitRunnerTests.Runs_tests_with_expected_results_and_framework_outcomes [94 ms]
+  Passed TabStudio.TestRunner.Tests.NUnitRunnerTests.Discovers_tests_test_cases_and_sources [99 ms]
+  Passed TabStudio.TestRunner.Tests.NUnitRunnerTests.Test_case_sources_take_argument_arrays_single_values_and_source_types [122 ms]
+  Passed TabStudio.TestRunner.Tests.NUnitRunnerTests.A_failing_one_time_setup_errors_every_test_of_the_fixture [14 ms]
+  Passed TabStudio.TestRunner.Tests.XunitRunnerTests.Class_fixtures_async_lifetime_and_output_helpers_follow_xunit_rules [61 ms]
+  Passed TabStudio.TestRunner.Tests.XunitRunnerTests.Theories_run_every_row_of_inline_member_and_class_data [53 ms]
+  Passed TabStudio.TestRunner.Tests.XunitRunnerTests.A_test_that_runs_past_its_timeout_is_abandoned_and_reported_as_errored [315 ms]
+  Passed TabStudio.TestRunner.Tests.XunitRunnerTests.Classes_can_run_in_parallel_with_output_kept_per_test [87 ms]
+  Passed TabStudio.TestRunner.Tests.XunitRunnerTests.Stopping_a_run_reports_the_running_test_as_not_run [117 ms]
+  Passed TabStudio.TestRunner.Tests.XunitRunnerTests.Reports_passed_failed_skipped_and_errored_tests [58 ms]
+  Passed TabStudio.TestRunner.Tests.XunitRunnerTests.Events_report_every_test_and_the_run [57 ms]
+  Passed TabStudio.TestRunner.Tests.XunitRunnerTests.Discovers_facts_with_names_traits_and_locations [33 ms]
+  Passed TabStudio.TestRunner.Tests.XunitRunnerTests.The_console_is_restored_after_a_run [56 ms]
+  Passed TabStudio.TestRunner.Tests.XunitRunnerTests.Run_selected_and_run_failed_run_only_those_tests [66 ms]
+  Passed TabStudio.TestRunner.Tests.XunitRunnerTests.Stack_traces_are_trimmed_to_user_code_and_point_at_the_failing_line [56 ms]
+  Passed TabStudio.TestRunner.Tests.XunitDataAndFixtureTests.A_data_source_that_throws_is_reported_on_its_theory [19 ms]
+  Passed TabStudio.TestRunner.Tests.XunitDataAndFixtureTests.Theories_take_member_types_value_tasks_params_and_generic_arguments [125 ms]
+  Passed TabStudio.TestRunner.Tests.XunitDataAndFixtureTests.Collection_fixtures_are_shared_by_every_class_of_the_collection [56 ms]
+  Passed TabStudio.TestRunner.Tests.SourceTestDiscovererTests.Source_names_match_the_tests_the_runner_finds [67 ms]
+  Passed TabStudio.TestRunner.Tests.SourceTestDiscovererTests.Finds_nunit_and_mstest_tests_from_syntax_alone [10 ms]
+[xUnit.net 00:00:05.01]   Finished:    TabStudio.TestRunner.Tests
+  Passed TabStudio.TestRunner.Tests.SourceTestDiscovererTests.Finds_visual_basic_xunit_tests_with_the_semantic_model_and_its_root_namespace [465 ms]
+  Passed TabStudio.TestRunner.Tests.SourceTestDiscovererTests.Runs_nunit_tests_of_a_visual_basic_module [198 ms]
+  Passed TabStudio.TestRunner.Tests.SourceTestDiscovererTests.Finds_xunit_tests_with_the_semantic_model_at_the_right_positions [10 ms]
+  Passed TabStudio.TestRunner.Tests.SourceTestDiscovererTests.Visual_basic_source_names_match_the_tests_the_runner_finds [62 ms]
+  Passed TabStudio.TestRunner.Tests.SourceTestDiscovererTests.Finds_visual_basic_nunit_and_mstest_tests_from_syntax_alone [2 ms]
+
+Test Run Successful.
+Total tests: 30
+     Passed: 30
+ Total time: 5.7109 Seconds
