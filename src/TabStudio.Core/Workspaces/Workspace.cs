@@ -29,8 +29,9 @@ public sealed class Workspace
     /// <see cref="ProjectClassifier.StartupRank"/>), with programs in folders such as <c>docs</c>, <c>scripts</c> or
     /// <c>tests</c> after all the others (see <see cref="ProjectClassifier.IsInAuxiliaryFolder"/>), and the solution's
     /// order between equals, except that a console app another console app references comes before it, as Terminal.Gui's
-    /// UICatalog before the ScenarioRunner that runs its scenarios. Libraries, tests, build scripts, benchmarks, Aspire
-    /// AppHosts, projects that need a platform workload and the WebAssembly client of a Blazor Web App are never chosen;
+    /// UICatalog before the ScenarioRunner that runs its scenarios, and a desktop head before a browser head. Libraries,
+    /// tests, build scripts, benchmarks, Aspire AppHosts, projects that need a platform workload, the WebAssembly client of
+    /// a Blazor Web App and a Blazor WebAssembly app a web app of the solution serves are never chosen;
     /// <see langword="null"/> when nothing else is left.
     /// </summary>
     public ProjectInfo? DefaultStartupProject => StartupCandidates is [var first, ..] ? first : null;
@@ -55,9 +56,20 @@ public sealed class Workspace
             .SelectMany(p => p.Project.ProjectReferences)
             .ToHashSet(StringComparer.Ordinal);
 
+        // A Blazor WebAssembly app that a web app of the solution references is that app's client, which it serves, as
+        // eShopOnWeb's Web serves BlazorAdmin: the server is what a person starts.
+        var hostedClients = Projects
+            .Where(p => p.IsExecutable && p.Kind is ProjectKind.AspNetCore or ProjectKind.BlazorWebApp)
+            .SelectMany(p => p.ProjectReferences)
+            .ToHashSet(StringComparer.Ordinal);
+        candidates.RemoveAll(p => p.Project.Kind == ProjectKind.BlazorWebAssembly && hostedClients.Contains(p.Project.FilePath));
+
+        // Of a cross-platform app's heads, the desktop one runs here as it does on a computer; its browser head, which
+        // runs the same app in a browser, comes after it, as Avalonia's template has Desktop as the one to start.
         return candidates
             .OrderBy(p => ProjectClassifier.IsInAuxiliaryFolder(p.Project, RootDirectory))
             .ThenBy(p => p.Rank)
+            .ThenBy(p => ProjectClassifier.IsBrowserHead(p.Project))
             .ThenBy(p => !(p.Project.Kind == ProjectKind.ConsoleApp && runByAnother.Contains(p.Project.FilePath)))
             .ThenBy(p => p.Index)
             .Select(p => p.Project)

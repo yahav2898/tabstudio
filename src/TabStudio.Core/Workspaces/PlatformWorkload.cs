@@ -23,4 +23,16 @@ public enum PlatformWorkload
 
     /// <summary>A Universal Windows Platform app, which Visual Studio's UWP tools build, on Windows.</summary>
     Uwp,
+
+    /// <summary>
+    /// The browser head of a cross-platform app compiled ahead of time or with native code to WebAssembly
+    /// (<c>RunAOTCompilation</c>, <c>WasmBuildNative</c>), which .NET's <c>wasm-tools</c> workload builds.
+    /// </summary>
+    WebAssemblyTools,
+
+    /// <summary>
+    /// A project only for a .NET newer than the .NET 10 TabStudio compiles with, such as <c>net11.0</c>, which needs that
+    /// .NET's SDK, as the .NET 10 SDK reports with <c>NETSDK1045</c>.
+    /// </summary>
+    NewerDotNet,
 }

@@ -116,10 +116,12 @@ public static class ProjectClassifier
             return PlatformWorkload.MobilePlatform;
         }
 
+        // Xamarin.Forms generates its pages' InitializeComponent with its own MSBuild task, from Xamarin's tools.
         var projectTypes = project.GetProperty("ProjectTypeGuids") ?? string.Empty;
         if (XamarinProjectTypeGuids.Any(guid => projectTypes.Contains(guid, StringComparison.OrdinalIgnoreCase))
             || project.ImportPaths.Any(IsXamarinTargets)
-            || IsTrue(project.GetProperty("AndroidApplication")))
+            || IsTrue(project.GetProperty("AndroidApplication"))
+            || project.HasPackage("Xamarin.Forms"))
         {
             return PlatformWorkload.Xamarin;
         }
@@ -128,6 +130,17 @@ public static class ProjectClassifier
             || string.Equals(project.OutputType, "AppContainerExe", StringComparison.OrdinalIgnoreCase))
         {
             return PlatformWorkload.Uwp;
+        }
+
+        if (IsBrowserHead(project) && (IsTrue(project.GetProperty("RunAOTCompilation")) || IsTrue(project.GetProperty("WasmBuildNative"))))
+        {
+            return PlatformWorkload.WebAssemblyTools;
+        }
+
+        // The .NET 10 SDK cannot target a newer .NET (NETSDK1045); a project with an older framework beside it is compiled for that one.
+        if (project.TargetFrameworks.Count > 0 && project.TargetFrameworks.All(tf => DotNetMajor(tf) is > CompiledDotNetMajor))
+        {
+            return PlatformWorkload.NewerDotNet;
         }
 
         return PlatformWorkload.None;
@@ -155,8 +168,47 @@ public static class ProjectClassifier
             PlatformWorkload.MobilePlatform => $"targets {string.Join(", ", project.TargetFrameworks)}, which only .NET's mobile workloads build, on a computer",
             PlatformWorkload.Xamarin => "is a Xamarin project, which only Xamarin's tools in Visual Studio build, on a computer",
             PlatformWorkload.Uwp => "is a UWP project, which only Visual Studio's Universal Windows Platform tools build, on Windows",
+            PlatformWorkload.WebAssemblyTools => "is a browser head compiled ahead of time to WebAssembly, which only .NET's wasm-tools workload builds, on a computer",
+            PlatformWorkload.NewerDotNet => $"targets {string.Join(", ", project.TargetFrameworks)}, which only the .NET {NewestDotNet(project)} SDK builds; TabStudio compiles with .NET {CompiledDotNetMajor}",
             _ => null,
         };
+    }
+
+    /// <summary>The major version of the .NET TabStudio compiles with (<see cref="ProjectParser.CompiledTargetFramework"/>).</summary>
+    private const int CompiledDotNetMajor = 10;
+
+    /// <summary>
+    /// Whether a project is the browser head of a cross-platform app, such as Avalonia's: it targets the browser
+    /// (<c>net10.0-browser</c>, <c>browser-wasm</c>) or builds with the WebAssembly SDK, and is not a Blazor app.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public static bool IsBrowserHead(ProjectInfo project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        return project.Kind != ProjectKind.BlazorWebAssembly
+            && (project.UsesSdk("Microsoft.NET.Sdk.WebAssembly")
+                || project.TargetFrameworks.Any(tf => tf.EndsWith("-browser", StringComparison.OrdinalIgnoreCase))
+                || string.Equals(project.GetProperty("RuntimeIdentifier")?.Trim(), "browser-wasm", StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <summary>The major version of the newest .NET (5 and later) a project targets; <see langword="null"/> when it targets none.</summary>
+    private static int? NewestDotNet(ProjectInfo project) =>
+        project.TargetFrameworks.Select(DotNetMajor).Where(major => major is not null).Max();
+
+    /// <summary>The major version of a .NET 5 or later framework, such as 11 for <c>net11.0</c> or <c>net11.0-android</c>.</summary>
+    private static int? DotNetMajor(string targetFramework)
+    {
+        var name = targetFramework.Trim();
+        if (!name.StartsWith("net", StringComparison.OrdinalIgnoreCase) || name.StartsWith("netstandard", StringComparison.OrdinalIgnoreCase)
+            || name.StartsWith("netcoreapp", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        var dot = name.IndexOf('.', StringComparison.Ordinal);
+        return dot > 3 && int.TryParse(name.AsSpan(3, dot - 3), System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var major) && major >= 5
+            ? major
+            : null;
     }
 
     /// <summary>

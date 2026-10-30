@@ -160,8 +160,10 @@ public sealed partial class WorkspaceViewModel
         {
             StartupProject = remembered.Info;
         }
-        else if (StartupProject is null && _toolchainProjects.Count > 0)
+        else if (StartupProject is null && _toolchainProjects.Count > 0 && workspace.Projects.Count == 0)
         {
+            // In a .NET solution, F5 starts one of its projects, as in Visual Studio: a docs site or a script folder
+            // beside it, such as RestSharp's docs, is there to pick, not the default.
             StartupProject = _toolchainProjects[0].Info;
         }
 

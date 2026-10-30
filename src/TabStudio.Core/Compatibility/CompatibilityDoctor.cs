@@ -83,6 +83,15 @@ public static class CompatibilityDoctor
             project, RunHost.None, CompatibilityStatus.Unsupported, "UWP, on Windows",
             "Not supported: a UWP project is built by Visual Studio's Universal Windows Platform tools, on Windows. TabStudio leaves it out of builds."),
 
+        PlatformWorkload.WebAssemblyTools => Report(
+            project, RunHost.None, CompatibilityStatus.Unsupported, "Browser head, on a computer",
+            "The browser head of a cross-platform app, compiled ahead of time to WebAssembly: it builds only with .NET's wasm-tools workload, on a computer. "
+            + "TabStudio leaves it out of builds; the app's shared project and its desktop head run here."),
+
+        PlatformWorkload.NewerDotNet => Report(
+            project, RunHost.None, CompatibilityStatus.Unsupported, "A newer .NET SDK, on a computer",
+            $"Not supported yet: it {ProjectClassifier.PlatformWorkloadReason(project)}. TabStudio leaves it out of builds."),
+
         _ => null,
     };
 
