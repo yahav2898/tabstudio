@@ -167,12 +167,13 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         // full compilations are never kept; images not made yet are compiled from the first in the background.
         if (CreateSkeletons(csharpProjects))
         {
-            var texts = new SnapshotTextProvider(CurrentTexts());
+            // The same texts as the first solution: that solution's documents load their text lazily, so reading it
+            // back from them lost unsaved edits of every file nothing had read yet, and the disk's text came instead.
             _workspace.ClearSolution();
             _documents.Clear();
             _additionalDocuments.Clear();
             _razorDocuments.Clear();
-            AddSolution(workspace, csharpProjects, allProjectDirectories, texts);
+            AddSolution(workspace, csharpProjects, allProjectDirectories, sources);
         }
     }
 
@@ -684,17 +685,19 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         var texts = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var (path, id) in _documents)
         {
-            if (solution.GetDocument(id) is { } document && document.TryGetText(out var text))
+            // A document's text loads lazily; one nothing has read yet holds what its loader was given, which is
+            // the current text too, so it is read rather than left to the disk.
+            if (solution.GetDocument(id) is { } document)
             {
-                texts[path] = text.ToString();
+                texts[path] = (document.TryGetText(out var text) ? text : document.GetTextAsync().GetAwaiter().GetResult()).ToString();
             }
         }
 
         foreach (var (path, id) in _additionalDocuments)
         {
-            if (solution.GetAdditionalDocument(id) is { } document && document.TryGetText(out var text))
+            if (solution.GetAdditionalDocument(id) is { } document)
             {
-                texts[path] = text.ToString();
+                texts[path] = (document.TryGetText(out var text) ? text : document.GetTextAsync().GetAwaiter().GetResult()).ToString();
             }
         }
 
