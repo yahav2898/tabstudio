@@ -320,6 +320,76 @@ public sealed class GitChangesTests
     }
 
     [AvaloniaFact]
+    public async Task Edits_typed_while_a_pull_runs_are_kept_and_merged_with_it()
+    {
+        using var fixture = new GitWorkspaceFixture();
+        await fixture.OpenLinkedSampleAsync();
+        var git = fixture.Git;
+        var program = fixture.Workspace.Documents.Single(d => d.FileName == "Program.cs");
+        var original = program.Document.Text;
+        var theirs = original.Replace("What's your name? ", "Who are you? ", StringComparison.Ordinal);
+        fixture.GitHub.Push(GitWorkspaceFixture.Repository, "main", "Ask differently", new Dictionary<string, string?> { [Program] = theirs });
+        const string Typed = "// Typed while the pull ran\n";
+
+        await TypeWhileItRunsAsync(fixture, () => git.PullCommand.ExecuteAsync(null), () => program.Document.Insert(program.Document.TextLength, Typed));
+
+        Assert.Null(git.ErrorText);
+        Assert.Equal(theirs + Typed, program.Document.Text);
+        Assert.True(program.IsDirty);
+        Assert.Equal(theirs, await File.ReadAllTextAsync(fixture.PathOf(Program)));
+
+        // One Undo goes back to exactly what the pull wrote, which is the saved state.
+        program.Document.UndoStack.Undo();
+        Assert.Equal(theirs, program.Document.Text);
+        Assert.False(program.IsDirty);
+    }
+
+    [AvaloniaFact]
+    public async Task Edits_typed_while_switching_branches_are_kept_even_where_they_conflict()
+    {
+        using var fixture = new GitWorkspaceFixture();
+        await fixture.OpenLinkedSampleAsync();
+        var git = fixture.Git;
+        var head = fixture.GitHub.Head(GitWorkspaceFixture.Repository, "main");
+        await fixture.GitHub.CreateClient().CreateBranchAsync(FakeGitHub.Login, GitWorkspaceFixture.Repository, "experiment", head);
+        fixture.GitHub.Push(GitWorkspaceFixture.Repository, "experiment", "Try something", new Dictionary<string, string?> { [Program] = "Console.WriteLine(\"Experiment\");\n" });
+        await git.OpenBranchPickerCommand.ExecuteAsync(null);
+        var program = fixture.Workspace.Documents.Single(d => d.FileName == "Program.cs");
+        var question = program.Document.Text.IndexOf("What's your name? ", StringComparison.Ordinal);
+
+        await TypeWhileItRunsAsync(fixture, () => git.SwitchBranchCommand.ExecuteAsync(git.Branches[1]), () => program.Document.Replace(question, "What's your name? ".Length, "Your name, please? "));
+
+        Assert.Null(git.ErrorText);
+        Assert.Equal("experiment", git.BranchName);
+        Assert.Contains(fixture.Workspace.Documents, d => d == program);
+        Assert.Contains("Your name, please? ", program.Document.Text, StringComparison.Ordinal);
+        Assert.Contains("Console.WriteLine(\"Experiment\");", program.Document.Text, StringComparison.Ordinal);
+        Assert.Contains("<<<<<<< Yours", program.Document.Text, StringComparison.Ordinal);
+        Assert.True(program.IsDirty);
+        Assert.Contains("look for <<<<<<< Yours", git.InfoText, StringComparison.Ordinal);
+        Assert.Equal("Console.WriteLine(\"Experiment\");\n", await File.ReadAllTextAsync(fixture.PathOf(Program)));
+    }
+
+    /// <summary>Starts a Git operation, holds it at its first request to GitHub, types, then lets it finish.</summary>
+    private static async Task TypeWhileItRunsAsync(GitWorkspaceFixture fixture, Func<Task> operation, Action type)
+    {
+        var reached = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var resume = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        fixture.GitHub.BeforeRequest = () =>
+        {
+            fixture.GitHub.BeforeRequest = null;
+            reached.TrySetResult();
+            return resume.Task;
+        };
+
+        var running = operation();
+        await reached.Task.WaitAsync(TimeSpan.FromSeconds(30));
+        type();
+        resume.SetResult();
+        await running.WaitAsync(TimeSpan.FromSeconds(60));
+    }
+
+    [AvaloniaFact]
     public async Task History_lists_the_branch_newest_first_and_opens_commits_on_GitHub()
     {
         using var fixture = new GitWorkspaceFixture();

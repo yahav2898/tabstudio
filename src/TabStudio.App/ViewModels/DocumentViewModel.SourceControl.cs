@@ -68,26 +68,48 @@ public sealed partial class DocumentViewModel
     public void ReloadFromDisk(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
-        var current = Document.Text;
-        if (!string.Equals(current, text, StringComparison.Ordinal))
-        {
-            var prefix = 0;
-            var shorter = Math.Min(current.Length, text.Length);
-            while (prefix < shorter && current[prefix] == text[prefix])
-            {
-                prefix++;
-            }
-
-            var suffix = 0;
-            while (suffix < shorter - prefix && current[current.Length - 1 - suffix] == text[text.Length - 1 - suffix])
-            {
-                suffix++;
-            }
-
-            Document.Replace(prefix, current.Length - prefix - suffix, text.Substring(prefix, text.Length - prefix - suffix));
-        }
-
+        ReplaceChangedPart(text);
         Document.UndoStack.MarkAsOriginalFile();
         RecordDiskStamp();
+    }
+
+    /// <summary>
+    /// Takes the file's new content from disk when the user typed while source control rewrote it: the new file
+    /// becomes the saved state, and the typed edits are applied on top of it as a second edit, so the document stays
+    /// unsaved and one Undo goes back to exactly what is on disk.
+    /// </summary>
+    /// <param name="text">The file's text on disk.</param>
+    /// <param name="merged">The file's text with the edits typed meanwhile merged in.</param>
+    internal void MergeFromDisk(string text, string merged)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        ArgumentNullException.ThrowIfNull(merged);
+        ReloadFromDisk(text);
+        ReplaceChangedPart(merged);
+    }
+
+    /// <summary>Replaces only the part of the text that differs, so the caret and scroll position stay where they were.</summary>
+    private void ReplaceChangedPart(string text)
+    {
+        var current = Document.Text;
+        if (string.Equals(current, text, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        var prefix = 0;
+        var shorter = Math.Min(current.Length, text.Length);
+        while (prefix < shorter && current[prefix] == text[prefix])
+        {
+            prefix++;
+        }
+
+        var suffix = 0;
+        while (suffix < shorter - prefix && current[current.Length - 1 - suffix] == text[text.Length - 1 - suffix])
+        {
+            suffix++;
+        }
+
+        Document.Replace(prefix, current.Length - prefix - suffix, text.Substring(prefix, text.Length - prefix - suffix));
     }
 }

@@ -564,8 +564,14 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
     private void OnMemoryPressure(object? sender, MemoryPressure pressure) => _ui.Post(() =>
     {
-        // Roslyn's cached compilations are by far the largest thing TabStudio can rebuild on demand.
-        _language?.TrimMemory();
-        GC.Collect(2, pressure == MemoryPressure.Critical ? GCCollectionMode.Aggressive : GCCollectionMode.Forced, blocking: true, compacting: true);
+        // Roslyn's cached compilations are by far the largest thing TabStudio can rebuild on demand. They are let go
+        // by a reload on a background thread, not here: on a 3 GB tablet a reload and its skeleton compile on the UI
+        // thread froze the IDE. The collection runs once they are let go, which is what makes it free them.
+        var released = _language?.TrimMemoryAsync() ?? Task.CompletedTask;
+        _ = released.ContinueWith(
+            _ => GC.Collect(2, pressure == MemoryPressure.Critical ? GCCollectionMode.Aggressive : GCCollectionMode.Forced, blocking: true, compacting: true),
+            CancellationToken.None,
+            TaskContinuationOptions.None,
+            TaskScheduler.Default);
     });
 }

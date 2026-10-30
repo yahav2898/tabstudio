@@ -34,6 +34,19 @@ internal sealed class FakeNotifications : INotifications
     /// <inheritdoc />
     public void Show(SystemNotification notification) => Shown.Add(notification);
 
+    /// <inheritdoc />
+    /// <remarks>False unless a test says otherwise, as on a platform without a foreground service.</remarks>
+    public bool KeepsRunning { get; set; }
+
+    /// <summary>What <see cref="KeepRunning"/> was called with, in order; <see langword="null"/> where it let the app go.</summary>
+    public List<SystemNotification?> Kept { get; } = [];
+
+    /// <summary>Whether the app is kept running now.</summary>
+    public bool IsKeptRunning => Kept.Count > 0 && Kept[^1] is not null;
+
+    /// <inheritdoc />
+    public void KeepRunning(SystemNotification? progress) => Kept.Add(progress);
+
     /// <summary>Taps a notification, as the user would in the notification shade.</summary>
     public void Tap(SystemNotification notification) => Opened?.Invoke(this, notification.Tag);
 }

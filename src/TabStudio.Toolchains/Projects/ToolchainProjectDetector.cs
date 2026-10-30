@@ -12,7 +12,10 @@ namespace TabStudio.Toolchains.Projects;
 /// Only the Store's listed toolchains count, since only they run. Explicit manifests identify separate projects,
 /// including nested packages in a monorepo. Source folders inside a project (a Python package, say) belong to it,
 /// and dependency and build folders
-/// (<c>node_modules</c>, <c>.venv</c>, <c>bin</c>, <c>obj</c>, dot folders) are never searched.
+/// (<c>node_modules</c>, <c>.venv</c>, <c>bin</c>, <c>obj</c>, dot folders) are never searched. Below the workspace
+/// folder, documentation (<c>docs</c>) and a web app's static files (<c>wwwroot</c>) are not searched either: a
+/// Sphinx <c>Makefile</c> and <c>conf.py</c>, or a docs site's <c>package.json</c>, build documentation, and the
+/// files under <c>wwwroot</c> are what the app around them serves.
 /// </remarks>
 public static class ToolchainProjectDetector
 {
@@ -21,6 +24,16 @@ public static class ToolchainProjectDetector
     private static readonly HashSet<string> IgnoredFolders = new(StringComparer.OrdinalIgnoreCase)
     {
         "node_modules", "bin", "obj", "dist", "build", "out", "target", "__pycache__", "venv", "env", "site-packages", "vendor",
+    };
+
+    /// <summary>
+    /// Folders that hold documentation or a web app's static files. Their build files are not projects of the
+    /// workspace: setting one up ran <c>npm ci</c> for a docs site, and a Sphinx Makefile became a C/C++ project.
+    /// Opened as the workspace folder itself, such a folder is searched as usual.
+    /// </summary>
+    private static readonly HashSet<string> ContentFolders = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "docs", "doc", "documentation", "wwwroot",
     };
 
     /// <summary>Finds the projects under a folder, nearest the root first.</summary>
@@ -183,7 +196,7 @@ public static class ToolchainProjectDetector
             foreach (var child in folders)
             {
                 var name = Path.GetFileName(child);
-                if (!name.StartsWith('.') && !IgnoredFolders.Contains(name) && (File.GetAttributes(child) & FileAttributes.ReparsePoint) == 0)
+                if (!name.StartsWith('.') && !IgnoredFolders.Contains(name) && !ContentFolders.Contains(name) && (File.GetAttributes(child) & FileAttributes.ReparsePoint) == 0)
                 {
                     queue.Enqueue((child, depth + 1));
                 }

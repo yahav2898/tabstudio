@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
 using TabStudio.Core.Workspaces;
+using TabStudio.SourceControl.Merging;
 
 namespace TabStudio.App.ViewModels;
 
@@ -39,14 +40,52 @@ public sealed partial class WorkspaceViewModel : ISourceControlHost
     }
 
     /// <inheritdoc />
-    async Task ISourceControlHost.ReloadDocumentsAsync(IReadOnlyCollection<string> paths)
+    async Task<IReadOnlyDictionary<string, string>> ISourceControlHost.CaptureDocumentsAsync()
+    {
+        // What is on disk, not what the editor shows: a keystroke that lands while the save before the operation
+        // finishes is not in the file, so it is one of the edits to keep, not part of the ancestor.
+        var texts = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var document in Documents.Where(d => !d.IsComparison).ToList())
+        {
+            var path = Path.GetFullPath(document.FilePath);
+            if (texts.ContainsKey(path) || !File.Exists(path))
+            {
+                continue;
+            }
+
+            try
+            {
+                texts[path] = (await TextFile.ReadAsync(path)).Text;
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // Not text the editor can show; such a tab is left as it is afterwards too.
+            }
+        }
+
+        return texts;
+    }
+
+    /// <inheritdoc />
+    async Task<int> ISourceControlHost.ReloadDocumentsAsync(IReadOnlyCollection<string> paths, IReadOnlyDictionary<string, string>? before)
     {
         ArgumentNullException.ThrowIfNull(paths);
         var changed = paths.Select(Path.GetFullPath).ToHashSet(StringComparer.Ordinal);
+        var conflicts = 0;
         foreach (var document in Documents.Where(d => !d.IsComparison && changed.Contains(Path.GetFullPath(d.FilePath))).ToList())
         {
+            // Edits typed while the operation ran are in the editor only: the files were saved before it started.
+            var path = Path.GetFullPath(document.FilePath);
+            var ancestor = before is not null && before.TryGetValue(path, out var text) ? text : null;
             if (!File.Exists(document.FilePath))
             {
+                if (EditedSince(document, ancestor))
+                {
+                    // The file is gone on this branch, but the tab holds work that exists nowhere else: it stays
+                    // open and unsaved, and saving it brings the file back.
+                    continue;
+                }
+
                 Documents.Remove(document);
                 Detach(document);
                 document.Dispose();
@@ -56,7 +95,18 @@ public sealed partial class WorkspaceViewModel : ISourceControlHost
             try
             {
                 var file = await TextFile.ReadAsync(document.FilePath);
-                document.ReloadFromDisk(file.Text);
+
+                // Decided only now, after the last await, so a keystroke typed while the file was read counts.
+                if (EditedSince(document, ancestor))
+                {
+                    var merge = TextMerge.Merge(ancestor!, document.Document.Text, file.Text);
+                    document.MergeFromDisk(file.Text, merge.Text);
+                    conflicts += merge.IsClean ? 0 : 1;
+                }
+                else
+                {
+                    document.ReloadFromDisk(file.Text);
+                }
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
@@ -68,7 +118,12 @@ public sealed partial class WorkspaceViewModel : ISourceControlHost
         {
             ActiveDocument = Documents.FirstOrDefault();
         }
+
+        return conflicts;
     }
+
+    private static bool EditedSince(DocumentViewModel document, string? ancestor) =>
+        ancestor is not null && !string.Equals(document.Document.Text, ancestor, StringComparison.Ordinal);
 
     /// <inheritdoc />
     void ISourceControlHost.ShowSourceControlStatus(IReadOnlyDictionary<string, GitFileStatus> files) => Explorer.SetSourceControlStatus(files);

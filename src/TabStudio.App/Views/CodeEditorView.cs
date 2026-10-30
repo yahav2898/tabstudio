@@ -121,6 +121,9 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
     /// <summary>The editor control, for tests and keyboard focus.</summary>
     public TextEditor Editor => _editor;
 
+    /// <summary>The Roslyn coloring, for C# and Visual Basic; <see langword="null"/> for other files.</summary>
+    internal ClassificationColorizer? Colorizer => _colorizer;
+
     /// <inheritdoc />
     public void Dispose()
     {
