@@ -1,25 +1,40 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Uno.Tests/TabStudio.Uno.Tests.csproj (in 303 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Uno/TabStudio.Uno.csproj (in 303 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Uno/TabStudio.Uno.csproj (in 291 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Uno.Tests/TabStudio.Uno.Tests.csproj (in 291 ms).
   4 of 6 projects are up-to-date for restore.
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
-  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
   TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
   TabStudio.Uno -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Uno/bin/Release/net10.0/TabStudio.Uno.dll
   TabStudio.Uno.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Uno.Tests/bin/Release/net10.0/TabStudio.Uno.Tests.dll
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Uno.Tests/bin/Release/net10.0/TabStudio.Uno.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.14]   Discovering: TabStudio.Uno.Tests
-[xUnit.net 00:00:00.25]   Discovered:  TabStudio.Uno.Tests
-[xUnit.net 00:00:00.32]   Starting:    TabStudio.Uno.Tests
-  Passed TabStudio.Uno.Tests.UnoTemplateTests.The_Uno_Platform_App_is_the_blank_preset_of_dotnet_new_unoapp [281 ms]
-  Passed TabStudio.Uno.Tests.UnoTemplateTests.The_WinUI_3_Blank_App_is_dotnet_new_winui_with_its_packages [47 ms]
-  Passed TabStudio.Uno.Tests.UnoTemplateTests.Names_that_are_not_identifiers_become_safe_namespaces [9 ms]
-  Passed TabStudio.Uno.Tests.WinUIAppTests.Uno_Platforms_packages_replace_the_Windows_App_SDKs [4 s]
-  Passed TabStudio.Uno.Tests.WinUIAppTests.A_Windows_only_API_is_reported_as_Windows_only_instead_of_missing [2 s]
-  Passed TabStudio.Uno.Tests.WinUIAppTests.It_builds_and_its_XAML_says_where_Uno_does_not_implement_WinUI [7 s]
-  Passed TabStudio.Uno.Tests.UnoXamlBuildTests.The_template_builds_with_Unos_XAML_generator [4 s]
+[xUnit.net 00:00:00.24]   Discovering: TabStudio.Uno.Tests
+[xUnit.net 00:00:00.35]   Discovered:  TabStudio.Uno.Tests
+[xUnit.net 00:00:00.42]   Starting:    TabStudio.Uno.Tests
+  Passed TabStudio.Uno.Tests.UnoTemplateTests.The_Uno_Platform_App_is_the_blank_preset_of_dotnet_new_unoapp [193 ms]
+  Passed TabStudio.Uno.Tests.UnoTemplateTests.The_WinUI_3_Blank_App_is_dotnet_new_winui_with_its_packages [45 ms]
+  Passed TabStudio.Uno.Tests.UnoTemplateTests.Names_that_are_not_identifiers_become_safe_namespaces [14 ms]
+  Passed TabStudio.Uno.Tests.WinUIAppTests.Uno_Platforms_packages_replace_the_Windows_App_SDKs [12 s]
+  Passed TabStudio.Uno.Tests.WinUIAppTests.A_Windows_only_API_is_reported_as_Windows_only_instead_of_missing [3 s]
+  Passed TabStudio.Uno.Tests.WinUIAppTests.It_builds_and_its_XAML_says_where_Uno_does_not_implement_WinUI [4 s]
+  Passed TabStudio.Uno.Tests.UnoXamlBuildTests.The_template_builds_with_Unos_XAML_generator [11 s]
   Passed TabStudio.Uno.Tests.UnoXamlBuildTests.A_CSharp_error_in_the_generated_code_points_to_its_element_in_the_XAML [2 s]
-  Passed TabStudio.Uno.Tests.UnoXamlBuildTests.An_x_Name_is_a_field_of_the_page_and_a_Click_handler_compiles [3 s]
+  Passed TabStudio.Uno.Tests.UnoXamlBuildTests.An_x_Name_is_a_field_of_the_page_and_a_Click_handler_compiles [2 s]
+  Passed TabStudio.Uno.Tests.UnoXamlBuildTests.A_XAML_error_is_on_its_line_of_the_XAML_file_live_and_in_the_build [3 s]
+  Passed TabStudio.Uno.Tests.UnoRuntimeTests.A_click_changes_the_text_and_a_saved_change_shows_after_a_restart [4 s]
+  Passed TabStudio.Uno.Tests.UnoRuntimeTests.Typing_goes_to_the_focused_text_box [2 s]
+  Passed TabStudio.Uno.Tests.UnoRuntimeTests.A_WinUI_3_app_runs_with_its_window_title_and_page [2 s]
+  Passed TabStudio.Uno.Tests.UnoRuntimeTests.An_exception_in_an_input_handler_reaches_the_log_with_its_stack_and_the_app_keeps_running [1 s]
+  Passed TabStudio.Uno.Tests.UnoRuntimeTests.The_Uno_Platform_App_shows_its_text_in_the_preview [1 s]
+[xUnit.net 00:00:53.68]   Finished:    TabStudio.Uno.Tests
+  Passed TabStudio.Uno.Tests.UnoHostCompilerTests.The_host_compiles_against_the_restored_Uno_Platform_once_per_version [301 ms]
+  Passed TabStudio.Uno.Tests.UnoHostCompilerTests.The_pinned_Roslyn_still_binds_without_accessibility_checks [10 ms]
+  Passed TabStudio.Uno.Tests.UnoHostCompilerTests.Uno_SkiaSharp_HarfBuzz_and_the_host_are_shared_and_an_apps_own_libraries_are_not [< 1 ms]
+
+Test Run Successful.
+Total tests: 18
+     Passed: 18
+ Total time: 54.8994 Seconds
