@@ -8,9 +8,7 @@ Compatibility Doctor:
   Serilog.ApprovalTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   AotTestApp: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
 Startup project: AotTestApp
-Built in 4.3 s: 1 errors, 5 warnings
-  1 x CS1501
-      [Serilog.Tests] LogContextTests.cs(303,32): error CS1501: No overload for method 'CreateDomain' takes 3 arguments
+Built in 3.5 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   emptyfiles 4.4.0
       build/EmptyFiles.targets
@@ -757,23 +755,18 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Output:
-Build started at 01:26:57...
+Build started at 02:39:56...
 1>------ Build started: Project: Serilog, Configuration: Debug ------
-1>Serilog -> compiled in memory (158 KB, 250 ms)
+1>Serilog -> compiled in memory (158 KB, 164 ms)
 2>------ Build started: Project: TestDummies, Configuration: Debug ------
-2>TestDummies -> compiled in memory (8 KB, 203 ms)
+2>TestDummies -> compiled in memory (8 KB, 218 ms)
 3>------ Build started: Project: Serilog.Tests, Configuration: Debug ------
-3>LogContextTests.cs(303,32): error CS1501: No overload for method 'CreateDomain' takes 3 arguments
-3>LogContextTests.cs(306,28): warning CS8600: Converting null literal or possible null value to non-nullable type.
-3>LogContextTests.cs(306,77): warning CS8604: Possible null reference argument for parameter 'assemblyName' in 'object? AppDomain.CreateInstanceAndUnwrap(string assemblyName, string typeName)'.
-3>LogContextTests.cs(306,121): warning CS8604: Possible null reference argument for parameter 'typeName' in 'object? AppDomain.CreateInstanceAndUnwrap(string assemblyName, string typeName)'.
-3>LogContextTests.cs(310,29): warning CS8602: Dereference of a possibly null reference.
-3>LogContextTests.cs(315,17): warning SYSLIB0024: 'AppDomain.Unload(AppDomain)' is obsolete: 'Creating and unloading AppDomains is not supported and throws an exception.'
+3>Serilog.Tests -> compiled in memory (254.5 KB, 422 ms)
 4>------ Build started: Project: Serilog.PerformanceTests, Configuration: Debug ------
-4>Serilog.PerformanceTests -> compiled in memory (33 KB, 255 ms)
+4>Serilog.PerformanceTests -> compiled in memory (33 KB, 227 ms)
 5>------ Build started: Project: Serilog.ApprovalTests, Configuration: Debug ------
-5>Serilog.ApprovalTests -> compiled in memory (4.5 KB, 224 ms)
+5>Serilog.ApprovalTests -> compiled in memory (4.5 KB, 150 ms)
 6>------ Build started: Project: AotTestApp, Configuration: Debug ------
-6>AotTestApp -> compiled in memory (2.5 KB, 197 ms)
-========== Build: 5 succeeded, 1 failed ==========
+6>AotTestApp -> compiled in memory (2.5 KB, 151 ms)
+========== Build: 6 succeeded, 0 failed ==========
 

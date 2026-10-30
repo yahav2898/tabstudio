@@ -10,11 +10,7 @@ Compatibility Doctor:
   docs: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
   docs: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
 Startup project: Benchmark
-Built in 8.9 s: 3 errors, 0 warnings
-  3 x CS0712
-      [AutoMapper.IntegrationTests] ProjectToAbstractType.cs(187,40): error CS0712: Cannot create an instance of the static class 'ArgumentNullException'
-      [AutoMapper.IntegrationTests] ProjectToAbstractType.cs(188,42): error CS0712: Cannot create an instance of the static class 'ArgumentNullException'
-      [AutoMapper.IntegrationTests] ProjectToAbstractType.cs(233,23): error CS0712: Cannot create an instance of the static class 'ArgumentNullException'
+Built in 7.7 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   emptyfiles 4.4.0
       build/EmptyFiles.targets
@@ -234,21 +230,19 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Output:
-Build started at 01:26:48...
+Build started at 02:39:49...
 1>------ Build started: Project: AutoMapper, Configuration: Debug ------
-1>AutoMapper -> compiled in memory (307.5 KB, 342 ms)
+1>AutoMapper -> compiled in memory (303.5 KB, 276 ms)
 2>------ Build started: Project: AutoMapper.DI.Tests, Configuration: Debug ------
-2>AutoMapper.DI.Tests -> compiled in memory (26.5 KB, 347 ms)
+2>AutoMapper.DI.Tests -> compiled in memory (26.5 KB, 274 ms)
 3>------ Build started: Project: Benchmark, Configuration: Debug ------
-3>Benchmark -> compiled in memory (24 KB, 424 ms)
+3>Benchmark -> compiled in memory (24 KB, 329 ms)
 4>------ Build started: Project: AutoMapper.IntegrationTests, Configuration: Debug ------
-4>ProjectToAbstractType.cs(187,40): error CS0712: Cannot create an instance of the static class 'ArgumentNullException'
-4>ProjectToAbstractType.cs(188,42): error CS0712: Cannot create an instance of the static class 'ArgumentNullException'
-4>ProjectToAbstractType.cs(233,23): error CS0712: Cannot create an instance of the static class 'ArgumentNullException'
+4>AutoMapper.IntegrationTests -> compiled in memory (572.5 KB, 772 ms)
 5>------ Build started: Project: TestApp, Configuration: Debug ------
-5>TestApp -> compiled in memory (7 KB, 316 ms)
-6>------ Build started: Project: AutoMapper.UnitTests, Configuration: Debug ------
 > /home/runner/work/_temp/real-repos/AutoMapper/docs/.venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
-6>AutoMapper.UnitTests -> compiled in memory (1773 KB, 2578 ms)
-========== Build: 5 succeeded, 1 failed ==========
+5>TestApp -> compiled in memory (7 KB, 235 ms)
+6>------ Build started: Project: AutoMapper.UnitTests, Configuration: Debug ------
+6>AutoMapper.UnitTests -> compiled in memory (1773 KB, 1715 ms)
+========== Build: 6 succeeded, 0 failed ==========
 
