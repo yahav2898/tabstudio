@@ -155,12 +155,15 @@ jobs:
 
   app:
     name: Build and test the IDE
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # A healthy run takes about 27 minutes: setup (apt alone may take its full 10), the tool tests, and about 20
     # minutes of IDE tests in both themes. The one retry below repeats the whole dark-theme run, and a hung first
     # attempt only ends at its 12-minute hang timeout, so the budget holds both attempts and the log publishing.
     timeout-minutes: 80
     steps:
+      - name: Runner image
+        run: echo "::notice title=Runner::$(. /etc/os-release; echo $PRETTY_NAME) image $ImageOS $ImageVersion; $(ldd --version | head -1); fontconfig $(dpkg-query -W -f='${Version}' libfontconfig1 2>/dev/null); freetype $(dpkg-query -W -f='${Version}' libfreetype6 2>/dev/null)"
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-dotnet@v4
@@ -550,6 +553,9 @@ jobs:
     env:
       TABSTUDIO_SQLSERVER: Server=tcp:127.0.0.1,1433;Database=SimplCommerce;User ID=sa;Password=TabStudio-ci-1433;TrustServerCertificate=True;MultipleActiveResultSets=true
     steps:
+      - name: Runner image
+        run: echo "::notice title=Runner::$(. /etc/os-release; echo $PRETTY_NAME) image $ImageOS $ImageVersion; $(ldd --version | head -1); fontconfig $(dpkg-query -W -f='${Version}' libfontconfig1 2>/dev/null); freetype $(dpkg-query -W -f='${Version}' libfreetype6 2>/dev/null)"
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-dotnet@v4
