@@ -86,6 +86,24 @@ public sealed class CSharpCompilerTests
         Assert.True(result.Success, string.Join('\n', result.Diagnostics));
     }
 
+    [Theory]
+    [InlineData("Environment.Exit(3);", 3)]
+    [InlineData("System.Environment.FailFast(\"bye\");", unchecked((int)0x80131623))]
+    public void A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(string statement, int expected)
+    {
+        // Visual Studio builds markdig's and Simple Drawing App's calls of Environment.Exit; built to run in a workspace,
+        // they are redirected so that the program ends, with its code, and TabStudio does not.
+        var compilation = InProcessExit.Redirect(_compiler.CreateCompilation(Request("System.Console.WriteLine(1);\n" + statement)));
+
+        var result = CSharpCompiler.Emit(compilation, checkInProcessSafety: true, null, "Hello", null, null, CancellationToken.None);
+
+        Assert.True(result.Success, string.Join('\n', result.Diagnostics));
+        var assembly = System.Reflection.Assembly.Load(result.Assembly!.Image);
+        var exception = Assert.ThrowsAny<Exception>(() => assembly.EntryPoint!.Invoke(null, [Array.Empty<string>()]));
+        Assert.True(InProcessExit.TryGetExitCode(exception, out var code));
+        Assert.Equal(expected, code);
+    }
+
     [Fact]
     public void Libraries_are_not_checked_for_in_process_safety()
     {
