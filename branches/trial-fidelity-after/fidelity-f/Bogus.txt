@@ -1,5 +1,5 @@
 Bogus at 6ece18c5c22648ab4606e45a0aaf2f07fc5259e4, opening /home/runner/work/_temp/repos/Bogus/Source/Bogus.sln
-Opened in 0.3 s: Bogus, solution /home/runner/work/_temp/repos/Bogus/Source/Bogus.sln
+Opened in 0.4 s: Bogus, solution /home/runner/work/_temp/repos/Bogus/Source/Bogus.sln
   project Bogus [CSharp] /home/runner/work/_temp/repos/Bogus/Source/Bogus/Bogus.csproj
   project Bogus.Tests [CSharp] /home/runner/work/_temp/repos/Bogus/Source/Bogus.Tests/Bogus.Tests.csproj
   project Benchmark [CSharp] /home/runner/work/_temp/repos/Bogus/Source/Benchmark/Benchmark.csproj
@@ -9,11 +9,11 @@ Compatibility Doctor:
   Bogus: Library via Built with its users - A library is compiled together with the projects that reference it.
   Bogus.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   Benchmark: Library via Built with its users - A library is compiled together with the projects that reference it.
-  Builder: Not supported via Build script, on a computer - The repository's build script (on Nuke.Common): it builds, tests and publishes the other projects by starting dotnet and other tools as processes, which a program cannot do on a tablet. TabStudio builds it with the solution but never starts it; build and run the other projects here, or run the script on a computer with the .NET SDK.
+  Builder: Library via Not in the solution's build - The solution's Debug configuration does not build it, so TabStudio leaves it out of builds, as Visual Studio does.
   Builder: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
 F5 startup project: none 
-Error List after analysis: 0 errors, 19 warnings
-Error List after the build: 0 errors, 19 warnings
+Error List after analysis: 0 errors, 18 warnings
+Error List after the build: 0 errors, 18 warnings
 Long-operation progress:
   Setting up projects: Checking project setup
   Loading C#: Loading C#
@@ -22,17 +22,17 @@ Long-operation progress:
   Restoring NuGet packages: Restoring NuGet packages 0/4 projects
   Analyzing: Analyzing 0/4 projects
   Restoring NuGet packages: Downloading NuGet packages 1/6
+  Analyzing: Analyzing 1/4 projects
   Restoring NuGet packages: Downloading NuGet packages 2/6
   Restoring NuGet packages: Downloading NuGet packages 3/6
   Restoring NuGet packages: Downloading NuGet packages 4/6
   Restoring NuGet packages: Downloading NuGet packages 5/6
-  Analyzing: Analyzing 1/4 projects
-  Restoring NuGet packages: Downloading NuGet packages 6/6
   Analyzing: Analyzing 2/4 projects
-  Restoring NuGet packages: Restoring NuGet packages 1/4 projects
   Analyzing: Analyzing 3/4 projects
   Analyzing: Analyzing 4/4 projects
-  Analyzing: Succeeded after 1.9 s
+  Analyzing: Succeeded after 0.9 s
+  Restoring NuGet packages: Downloading NuGet packages 6/6
+  Restoring NuGet packages: Restoring NuGet packages 1/4 projects
   Restoring NuGet packages: Downloading NuGet packages 1/34
   Restoring NuGet packages: Downloading NuGet packages 2/34
   Restoring NuGet packages: Downloading NuGet packages 3/34
@@ -159,32 +159,31 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 71/73
   Restoring NuGet packages: Downloading NuGet packages 72/73
   Restoring NuGet packages: Downloading NuGet packages 73/73
-  Restoring NuGet packages: Succeeded after 4.6 s
+  Restoring NuGet packages: Succeeded after 5.1 s
   Analyzing: Analyzing 0/4 projects
   Analyzing: Analyzing 1/4 projects
   Analyzing: Analyzing 2/4 projects
   Analyzing: Analyzing 3/4 projects
   Analyzing: Analyzing 4/4 projects
-  Analyzing: Succeeded after 0.8 s
+  Analyzing: Succeeded after 0.5 s
   Installing Builder's packages: Succeeded after 8.0 s
   Setting up projects: Succeeded after 11.7 s
   Building: Building
-  Building: Building 0/4 projects
-  Building: Building 1/4 projects
-  Building: Building 2/4 projects
-  Building: Building 3/4 projects
-  Building: Succeeded after 1.2 s
+  Building: Building 0/3 projects
+  Building: Building 1/3 projects
+  Building: Building 2/3 projects
+  Building: Succeeded after 1.0 s
 Project setup:
 
 Output:
-Build started at 18:14:37...
+Build started at 18:52:34...
 1>------ Build started: Project: Bogus, Configuration: Debug ------
 1>BArray.cs(38,24): warning CS0114: 'BArray.Contains(BValue)' hides inherited member 'BValue.Contains(BValue)'. To make the current member override that implementation, add the override keyword. Otherwise add the new keyword.
 1>BValue.cs(12,14): warning CS0660: 'BValue' defines operator == or operator != but does not override Object.Equals(object o)
 1>BValue.cs(12,14): warning CS0661: 'BValue' defines operator == or operator != but does not override Object.GetHashCode()
 1>Date.cs(47,84): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
 1>Images.cs(130,21): warning SYSLIB0013: 'Uri.EscapeUriString(string)' is obsolete: 'Uri.EscapeUriString can corrupt the Uri string in some cases. Consider using Uri.EscapeDataString for query string components instead.'
-1>Bogus -> compiled in memory (2386 KB, 214 ms)
+1>Bogus -> compiled in memory (2386 KB, 180 ms)
 2>------ Build started: Project: Bogus.Tests, Configuration: Debug ------
 2>DateTest.cs(410,7): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
 2>DateTest.cs(424,7): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
@@ -196,12 +195,10 @@ Build started at 18:14:37...
 2>PersonTest.cs(251,7): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
 2>PersonTest.cs(276,7): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
 2>Question66444118.cs(62,47): warning SYSLIB0050: 'FormatterServices' is obsolete: 'Formatter-based serialization is obsolete and should not be used.'
-2>Bogus.Tests -> compiled in memory (325.5 KB, 660 ms)
+2>Bogus.Tests -> compiled in memory (325.5 KB, 655 ms)
 3>------ Build started: Project: Benchmark, Configuration: Debug ------
 3>PR300_BenchDecimal.cs(50,31): warning CS0108: 'CustomRandomizer.localSeed' hides inherited member 'Randomizer.localSeed'. Use the new keyword if hiding was intended.
-3>Benchmark -> compiled in memory (15.5 KB, 199 ms)
-4>------ Build started: Project: Builder, Configuration: Debug ------
-4>Build.cs(27,14): warning CS0105: The using directive for 'PathConstruction' appeared previously in this namespace
-4>Builder -> compiled in memory (20 KB, 107 ms)
-========== Build: 4 succeeded, 0 failed ==========
+3>Benchmark -> compiled in memory (15.5 KB, 182 ms)
+4>------ Skipped: Project: Builder: the solution's Debug configuration does not build it ------
+========== Build: 3 succeeded, 0 failed, 1 skipped ==========
 

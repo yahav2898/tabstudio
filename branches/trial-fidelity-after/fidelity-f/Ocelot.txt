@@ -1,5 +1,5 @@
 Ocelot at 80268bc9a950cd4544e70d9582374ca55fc6029f, opening /home/runner/work/_temp/repos/Ocelot/Ocelot.slnx
-Opened in 4.5 s: Ocelot, solution /home/runner/work/_temp/repos/Ocelot/Ocelot.slnx
+Opened in 4.3 s: Ocelot, solution /home/runner/work/_temp/repos/Ocelot/Ocelot.slnx
   project Ocelot [CSharp] /home/runner/work/_temp/repos/Ocelot/src/Ocelot.csproj
   project Ocelot.Acceptance [CSharp] /home/runner/work/_temp/repos/Ocelot/acceptance/Ocelot.Acceptance.csproj
   project Ocelot.Benchmarks [CSharp] /home/runner/work/_temp/repos/Ocelot/benchmark/Ocelot.Benchmarks.csproj
@@ -18,36 +18,12 @@ Compatibility Doctor:
   docs: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
   docs: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
 F5 startup project: Ocelot.ManualTest /home/runner/work/_temp/repos/Ocelot/manual/Ocelot.ManualTest.csproj
-Error List after analysis: 10 errors, 3093 warnings
-  9 x CS0121
-      [Ocelot.UnitTests] CollectionAsserts.cs(152,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(192,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(265,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(284,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(317,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(375,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(412,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(444,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker(System.Collections.IEnumerable)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker(System.Collections.IEnumerable?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(679,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-  1 x CS0104
-      [Ocelot.UnitTests] ExceptionUtility.cs(71,17): error CS0104: 'Match' is an ambiguous reference between 'Moq.Match' and 'System.Text.RegularExpressions.Match'
-Error List after the build: 10 errors, 3092 warnings
-  9 x CS0121
-      [Ocelot.UnitTests] CollectionAsserts.cs(152,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(192,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(265,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(284,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(317,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(375,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(412,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(444,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker(System.Collections.IEnumerable)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker(System.Collections.IEnumerable?)'
-      [Ocelot.UnitTests] CollectionAsserts.cs(679,36): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>)' and 'Xunit.Sdk.CollectionTrackerExtensions.AsTracker<T>(System.Collections.Generic.IEnumerable<T>?)'
-  1 x CS0104
-      [Ocelot.UnitTests] ExceptionUtility.cs(71,17): error CS0104: 'Match' is an ambiguous reference between 'Moq.Match' and 'System.Text.RegularExpressions.Match'
+Error List after analysis: 0 errors, 68 warnings
+Error List after the build: 0 errors, 67 warnings
 Long-operation progress:
   Setting up projects: Checking project setup
   Loading C#: Loading C#
-  Loading C#: Succeeded after 2.3 s
+  Loading C#: Succeeded after 2.0 s
   Restoring NuGet packages: Restoring NuGet packages
   Restoring NuGet packages: Restoring NuGet packages 0/6 projects
   Analyzing: Analyzing 0/6 projects
@@ -110,6 +86,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 45/78
   Restoring NuGet packages: Downloading NuGet packages 46/78
   Restoring NuGet packages: Downloading NuGet packages 47/78
+  Analyzing: Analyzing 3/6 projects
   Restoring NuGet packages: Downloading NuGet packages 48/78
   Restoring NuGet packages: Downloading NuGet packages 49/78
   Restoring NuGet packages: Downloading NuGet packages 50/78
@@ -141,9 +118,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 76/78
   Restoring NuGet packages: Downloading NuGet packages 77/78
   Restoring NuGet packages: Downloading NuGet packages 78/78
-  Analyzing: Analyzing 3/6 projects
-  Restoring NuGet packages: Restoring NuGet packages 2/6 projects
   Analyzing: Analyzing 4/6 projects
+  Restoring NuGet packages: Restoring NuGet packages 2/6 projects
   Analyzing: Analyzing 5/6 projects
   Restoring NuGet packages: Downloading NuGet packages 1/63
   Restoring NuGet packages: Downloading NuGet packages 2/63
@@ -242,14 +218,14 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 1/29
   Restoring NuGet packages: Downloading NuGet packages 2/29
   Restoring NuGet packages: Downloading NuGet packages 3/29
-  Restoring NuGet packages: Downloading NuGet packages 5/29
   Restoring NuGet packages: Downloading NuGet packages 4/29
-  Restoring NuGet packages: Downloading NuGet packages 7/29
+  Restoring NuGet packages: Downloading NuGet packages 5/29
   Restoring NuGet packages: Downloading NuGet packages 6/29
+  Restoring NuGet packages: Downloading NuGet packages 7/29
   Restoring NuGet packages: Downloading NuGet packages 8/29
   Restoring NuGet packages: Downloading NuGet packages 9/29
-  Restoring NuGet packages: Downloading NuGet packages 10/29
   Restoring NuGet packages: Downloading NuGet packages 11/29
+  Restoring NuGet packages: Downloading NuGet packages 10/29
   Restoring NuGet packages: Downloading NuGet packages 12/29
   Restoring NuGet packages: Downloading NuGet packages 13/29
   Restoring NuGet packages: Downloading NuGet packages 14/29
@@ -270,7 +246,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 29/29
   Restoring NuGet packages: Restoring NuGet packages 5/6 projects
   Analyzing: Analyzing 6/6 projects
-  Analyzing: Succeeded after 15.9 s
+  Analyzing: Succeeded after 15.6 s
   Restoring NuGet packages: Downloading NuGet packages 1/75
   Restoring NuGet packages: Downloading NuGet packages 2/75
   Restoring NuGet packages: Downloading NuGet packages 3/75
@@ -345,20 +321,20 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 72/75
   Restoring NuGet packages: Downloading NuGet packages 73/75
   Restoring NuGet packages: Downloading NuGet packages 74/75
-  Restoring NuGet packages: Downloading NuGet packages 75/75
-  Restoring NuGet packages: Succeeded after 16.3 s
-  Analyzing: Analyzing 0/6 projects
-  Analyzing: Analyzing 1/6 projects
   Setting up projects: Setting up docs: pip install -r requirements.txt
   Installing docs's packages: Installing packages: pip install -r requirements.txt
+  Restoring NuGet packages: Downloading NuGet packages 75/75
+  Restoring NuGet packages: Succeeded after 16.8 s
+  Analyzing: Analyzing 0/6 projects
+  Analyzing: Analyzing 1/6 projects
   Analyzing: Analyzing 2/6 projects
   Analyzing: Analyzing 3/6 projects
   Analyzing: Analyzing 4/6 projects
   Analyzing: Analyzing 5/6 projects
   Analyzing: Analyzing 6/6 projects
-  Analyzing: Succeeded after 12.0 s
-  Installing docs's packages: Succeeded after 14.9 s
-  Setting up projects: Succeeded after 35.8 s
+  Analyzing: Succeeded after 9.7 s
+  Installing docs's packages: Succeeded after 13.1 s
+  Setting up projects: Succeeded after 33.2 s
   Building: Building
   Building: Building 0/6 projects
   Building: Building 1/6 projects
@@ -366,7 +342,7 @@ Long-operation progress:
   Building: Building 3/6 projects
   Building: Building 4/6 projects
   Building: Building 5/6 projects
-  Building: Failed after 10.0 s
+  Building: Succeeded after 12.6 s
 Project setup:
 ------ docs: pip install -r requirements.txt ------
 Reading which Python versions the 3 pinned packages have wheels for, from PyPI.
@@ -412,7 +388,7 @@ Collecting MarkupSafe>=2.0 (from Jinja2>=3.1->sphinx==9.1.0->-r requirements.txt
   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
 Collecting charset_normalizer<4,>=2 (from requests>=2.30.0->sphinx==9.1.0->-r requirements.txt (line 2))
   Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.4/46.4 kB 2.4 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.4/46.4 kB 7.1 MB/s eta 0:00:00
 Collecting idna<4,>=2.5 (from requests>=2.30.0->sphinx==9.1.0->-r requirements.txt (line 2))
   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
 Collecting urllib3<3,>=1.26 (from requests>=2.30.0->sphinx==9.1.0->-r requirements.txt (line 2))
@@ -420,84 +396,128 @@ Collecting urllib3<3,>=1.26 (from requests>=2.30.0->sphinx==9.1.0->-r requiremen
 Collecting certifi>=2023.5.7 (from requests>=2.30.0->sphinx==9.1.0->-r requirements.txt (line 2))
   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
 Downloading sphinx-9.1.0-py3-none-any.whl (3.9 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.9/3.9 MB 56.8 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.9/3.9 MB 47.6 MB/s eta 0:00:00
 Downloading alabaster-1.0.0-py3-none-any.whl (13 kB)
 Downloading sphinx_copybutton-0.5.2-py3-none-any.whl (13 kB)
 Downloading babel-2.18.0-py3-none-any.whl (10.2 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 140.5 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 41.3 MB/s eta 0:00:00
 Downloading docutils-0.22.4-py3-none-any.whl (633 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 633.2/633.2 kB 89.1 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 633.2/633.2 kB 18.2 MB/s eta 0:00:00
 Downloading imagesize-2.0.1-py3-none-any.whl (14 kB)
 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 37.7 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 7.3 MB/s eta 0:00:00
 Downloading packaging-26.3-py3-none-any.whl (129 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 37.7 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 8.8 MB/s eta 0:00:00
 Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 130.4 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 157.3 MB/s eta 0:00:00
 Downloading requests-2.34.2-py3-none-any.whl (73 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 28.0 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 10.4 MB/s eta 0:00:00
 Downloading roman_numerals-4.1.0-py3-none-any.whl (7.7 kB)
 Downloading snowballstemmer-3.1.1-py3-none-any.whl (104 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 104.2/104.2 kB 38.7 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 104.2/104.2 kB 3.3 MB/s eta 0:00:00
 Downloading sphinxcontrib_applehelp-2.0.0-py3-none-any.whl (119 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 119.3/119.3 kB 42.9 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 119.3/119.3 kB 7.2 MB/s eta 0:00:00
 Downloading sphinxcontrib_devhelp-2.0.0-py3-none-any.whl (82 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 82.5/82.5 kB 25.9 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 82.5/82.5 kB 4.2 MB/s eta 0:00:00
 Downloading sphinxcontrib_htmlhelp-2.1.0-py3-none-any.whl (98 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98.7/98.7 kB 37.6 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98.7/98.7 kB 8.8 MB/s eta 0:00:00
 Downloading sphinxcontrib_jsmath-2.0.0-py3-none-any.whl (78 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.1/78.1 kB 30.4 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.1/78.1 kB 11.2 MB/s eta 0:00:00
 Downloading sphinxcontrib_qthelp-2.0.0-py3-none-any.whl (88 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.7/88.7 kB 24.0 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.7/88.7 kB 7.6 MB/s eta 0:00:00
 Downloading sphinxcontrib_serializinghtml-2.0.0-py3-none-any.whl (92 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 92.1/92.1 kB 8.1 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 92.1/92.1 kB 9.0 MB/s eta 0:00:00
 Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 34.9 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 50.3 MB/s eta 0:00:00
 Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (257 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 257.6/257.6 kB 63.8 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 257.6/257.6 kB 59.8 MB/s eta 0:00:00
 Downloading idna-3.20-py3-none-any.whl (69 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 21.8 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 13.1 MB/s eta 0:00:00
 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
 Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 34.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 40.6 MB/s eta 0:00:00
 Installing collected packages: urllib3, sphinxcontrib-serializinghtml, sphinxcontrib-qthelp, sphinxcontrib-jsmath, sphinxcontrib-htmlhelp, sphinxcontrib-devhelp, sphinxcontrib-applehelp, snowballstemmer, roman-numerals, Pygments, packaging, MarkupSafe, imagesize, idna, docutils, charset_normalizer, certifi, babel, alabaster, requests, Jinja2, sphinx, sphinx_copybutton
 Successfully installed Jinja2-3.1.6 MarkupSafe-3.0.4 Pygments-2.21.0 alabaster-1.0.0 babel-2.18.0 certifi-2026.10.23 charset_normalizer-3.5.2 docutils-0.22.4 idna-3.20 imagesize-2.0.1 packaging-26.3 requests-2.34.2 roman-numerals-4.1.0 snowballstemmer-3.1.1 sphinx-9.1.0 sphinx_copybutton-0.5.2 sphinxcontrib-applehelp-2.0.0 sphinxcontrib-devhelp-2.0.0 sphinxcontrib-htmlhelp-2.1.0 sphinxcontrib-jsmath-2.0.0 sphinxcontrib-qthelp-2.0.0 sphinxcontrib-serializinghtml-2.0.0 urllib3-2.8.0
 
 Output:
- in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/CollectionTracker.cs'.
-6>SpanAsserts.cs(126,27): warning CS0436: The type 'CollectionTracker<T>' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/CollectionTracker.cs' conflicts with the imported type 'CollectionTracker<T>' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/CollectionTracker.cs'.
-6>SpanAsserts.cs(128,11): warning CS0436: The type 'DoesNotContainException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/DoesNotContainException.cs' conflicts with the imported type 'DoesNotContainException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/DoesNotContainException.cs'.
-6>StringAsserts.cs(56,11): warning CS0436: The type 'ContainsException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/ContainsException.cs' conflicts with the imported type 'ContainsException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/ContainsException.cs'.
-6>StringAsserts.cs(211,11): warning CS0436: The type 'ContainsException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/ContainsException.cs' conflicts with the imported type 'ContainsException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/ContainsException.cs'.
-6>StringAsserts.cs(298,12): warning CS0436: The type 'DoesNotContainException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/DoesNotContainException.cs' conflicts with the imported type 'DoesNotContainException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/DoesNotContainException.cs'.
-6>StringAsserts.cs(455,11): warning CS0436: The type 'DoesNotContainException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/DoesNotContainException.cs' conflicts with the imported type 'DoesNotContainException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/DoesNotContainException.cs'.
-6>StringAsserts.cs(524,30): warning CS0436: The type 'AssertHelper' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/AssertHelper.cs' conflicts with the imported type 'AssertHelper' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/AssertHelper.cs'.
-6>StringAsserts.cs(525,28): warning CS0436: The type 'AssertHelper' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/AssertHelper.cs' conflicts with the imported type 'AssertHelper' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/AssertHelper.cs'.
-6>StringAsserts.cs(527,12): warning CS0436: The type 'DoesNotMatchException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/DoesNotMatchException.cs' conflicts with the imported type 'DoesNotMatchException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/DoesNotMatchException.cs'.
-6>StringAsserts.cs(553,30): warning CS0436: The type 'AssertHelper' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/AssertHelper.cs' conflicts with the imported type 'AssertHelper' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/AssertHelper.cs'.
-6>StringAsserts.cs(554,28): warning CS0436: The type 'AssertHelper' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/AssertHelper.cs' conflicts with the imported type 'AssertHelper' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/AssertHelper.cs'.
-6>StringAsserts.cs(556,12): warning CS0436: The type 'DoesNotMatchException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/DoesNotMatchException.cs' conflicts with the imported type 'DoesNotMatchException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/DoesNotMatchException.cs'.
-6>StringAsserts.cs(572,11): warning CS0436: The type 'EmptyException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/EmptyException.cs' conflicts with the imported type 'EmptyException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/EmptyException.cs'.
-6>StringAsserts.cs(609,11): warning CS0436: The type 'EndsWithException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/EndsWithException.cs' conflicts with the imported type 'EndsWithException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/EndsWithException.cs'.
-6>StringAsserts.cs(808,11): warning CS0436: The type 'EndsWithException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/EndsWithException.cs' conflicts with the imported type 'EndsWithException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/EndsWithException.cs'.
-6>StringAsserts.cs(873,17): warning CS0436: The type 'StringAssertEqualityComparer' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/StringAssertEqualityComparer.cs' conflicts with the imported type 'StringAssertEqualityComparer' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/StringAssertEqualityComparer.cs'.
-6>StringAsserts.cs(875,11): warning CS0436: The type 'EqualException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/EqualException.cs' conflicts with the imported type 'EqualException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/EqualException.cs'.
-6>StringAsserts.cs(1352,11): warning CS0436: The type 'EqualException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/EqualException.cs' conflicts with the imported type 'EqualException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/EqualException.cs'.
-6>StringAsserts.cs(1375,11): warning CS0436: The type 'MatchesException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/MatchesException.cs' conflicts with the imported type 'MatchesException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/MatchesException.cs'.
-6>StringAsserts.cs(1395,11): warning CS0436: The type 'MatchesException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/MatchesException.cs' conflicts with the imported type 'MatchesException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/MatchesException.cs'.
-6>StringAsserts.cs(1432,11): warning CS0436: The type 'StartsWithException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/StartsWithException.cs' conflicts with the imported type 'StartsWithException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/StartsWithException.cs'.
-6>StringAsserts.cs(1631,11): warning CS0436: The type 'StartsWithException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/StartsWithException.cs' conflicts with the imported type 'StartsWithException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/StartsWithException.cs'.
-6>TypeAsserts.cs(60,11): warning CS0436: The type 'IsAssignableFromException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsAssignableFromException.cs' conflicts with the imported type 'IsAssignableFromException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsAssignableFromException.cs'.
-6>TypeAsserts.cs(94,11): warning CS0436: The type 'IsNotAssignableFromException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsNotAssignableFromException.cs' conflicts with the imported type 'IsNotAssignableFromException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsNotAssignableFromException.cs'.
-6>TypeAsserts.cs(169,12): warning CS0436: The type 'IsNotTypeException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsNotTypeException.cs' conflicts with the imported type 'IsNotTypeException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsNotTypeException.cs'.
-6>TypeAsserts.cs(176,12): warning CS0436: The type 'IsNotTypeException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsNotTypeException.cs' conflicts with the imported type 'IsNotTypeException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsNotTypeException.cs'.
-6>TypeAsserts.cs(262,12): warning CS0436: The type 'IsTypeException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsTypeException.cs' conflicts with the imported type 'IsTypeException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsTypeException.cs'.
-6>TypeAsserts.cs(262,46): warning CS0436: The type 'ArgumentFormatter' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/ArgumentFormatter.cs' conflicts with the imported type 'ArgumentFormatter' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/ArgumentFormatter.cs'.
-6>TypeAsserts.cs(264,12): warning CS0436: The type 'IsTypeException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsTypeException.cs' conflicts with the imported type 'IsTypeException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsTypeException.cs'.
-6>TypeAsserts.cs(264,48): warning CS0436: The type 'ArgumentFormatter' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/ArgumentFormatter.cs' conflicts with the imported type 'ArgumentFormatter' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/ArgumentFormatter.cs'.
-6>TypeAsserts.cs(275,28): warning CS0436: The type 'ArgumentFormatter' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/ArgumentFormatter.cs' conflicts with the imported type 'ArgumentFormatter' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/ArgumentFormatter.cs'.
-6>TypeAsserts.cs(276,26): warning CS0436: The type 'ArgumentFormatter' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/ArgumentFormatter.cs' conflicts with the imported type 'ArgumentFormatter' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/ArgumentFormatter.cs'.
-6>TypeAsserts.cs(285,12): warning CS0436: The type 'IsTypeException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsTypeException.cs' conflicts with the imported type 'IsTypeException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsTypeException.cs'.
-6>TypeAsserts.cs(287,12): warning CS0436: The type 'IsTypeException' in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsTypeException.cs' conflicts with the imported type 'IsTypeException' in 'xunit.v3.assert, Version=4.0.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c'. Using the type defined in '/tmp/tabstudio-tests/d81a76a087fc41fc8f4b919ee6246f15/Packages/xunit.v3.assert.source/3.2.2/contentFiles/cs/netstandard2.0/Asserts/Sdk/Exceptions/IsTypeException.cs'.
-========== Build: 5 succeeded, 1 failed ==========
+Build started at 18:49:39...
+1>------ Build started: Project: Ocelot, Configuration: Debug ------
+1>AuthenticationOptions.cs(19,44): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>AuthenticationOptionsCreator.cs(55,9): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>AuthenticationOptionsCreator.cs(55,45): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>AuthenticationOptionsCreator.cs(55,87): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>CacheOptionsCreator.cs(15,30): warning CS0618: 'FileRoute.FileCacheOptions' is obsolete: 'Use CacheOptions instead of FileCacheOptions! Note that FileCacheOptions will be removed in version 25.0!'
+1>DynamicRoutesCreator.cs(62,13): warning CS0618: 'FileDynamicRoute.RateLimitRule' is obsolete: 'Use RateLimitOptions instead of RateLimitRule! Note that RateLimitRule will be removed in version 25.0!'
+1>DynamicRoutesCreator.cs(64,45): warning CS0618: 'FileDynamicRoute.RateLimitRule' is obsolete: 'Use RateLimitOptions instead of RateLimitRule! Note that RateLimitRule will be removed in version 25.0!'
+1>QoSOptionsCreator.cs(54,9): warning CS0618: 'FileQoSOptions.DurationOfBreak' is obsolete: 'Use BreakDuration instead of DurationOfBreak! Note that DurationOfBreak will be removed in version 25.0!'
+1>QoSOptionsCreator.cs(54,37): warning CS0618: 'FileQoSOptions.DurationOfBreak' is obsolete: 'Use BreakDuration instead of DurationOfBreak! Note that DurationOfBreak will be removed in version 25.0!'
+1>QoSOptionsCreator.cs(56,9): warning CS0618: 'FileQoSOptions.ExceptionsAllowedBeforeBreaking' is obsolete: 'Use MinimumThroughput instead of ExceptionsAllowedBeforeBreaking! Note that ExceptionsAllowedBeforeBreaking will be removed in version 25.0!'
+1>QoSOptionsCreator.cs(56,53): warning CS0618: 'FileQoSOptions.ExceptionsAllowedBeforeBreaking' is obsolete: 'Use MinimumThroughput instead of ExceptionsAllowedBeforeBreaking! Note that ExceptionsAllowedBeforeBreaking will be removed in version 25.0!'
+1>QoSOptionsCreator.cs(60,9): warning CS0618: 'FileQoSOptions.TimeoutValue' is obsolete: 'Use Timeout instead of TimeoutValue! Note that TimeoutValue will be removed in version 25.0!'
+1>QoSOptionsCreator.cs(60,34): warning CS0618: 'FileQoSOptions.TimeoutValue' is obsolete: 'Use Timeout instead of TimeoutValue! Note that TimeoutValue will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(64,9): warning CS0618: 'FileRateLimitByHeaderRule.DisableRateLimitHeaders' is obsolete: 'Use EnableHeaders instead of DisableRateLimitHeaders! Note that DisableRateLimitHeaders will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(64,42): warning CS0618: 'FileRateLimitByHeaderRule.DisableRateLimitHeaders' is obsolete: 'Use EnableHeaders instead of DisableRateLimitHeaders! Note that DisableRateLimitHeaders will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(70,9): warning CS0618: 'FileRateLimitByHeaderRule.HttpStatusCode' is obsolete: 'Use StatusCode instead of HttpStatusCode! Note that HttpStatusCode will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(70,33): warning CS0618: 'FileRateLimitByHeaderRule.HttpStatusCode' is obsolete: 'Use StatusCode instead of HttpStatusCode! Note that HttpStatusCode will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(74,9): warning CS0618: 'FileRateLimitByHeaderRule.QuotaExceededMessage' is obsolete: 'Use QuotaMessage instead of QuotaExceededMessage! Note that QuotaExceededMessage will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(74,37): warning CS0618: 'FileRateLimitByHeaderRule.QuotaExceededMessage' is obsolete: 'Use QuotaMessage instead of QuotaExceededMessage! Note that QuotaExceededMessage will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(74,71): warning CS0618: 'FileRateLimitByHeaderRule.QuotaExceededMessage' is obsolete: 'Use QuotaMessage instead of QuotaExceededMessage! Note that QuotaExceededMessage will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(78,9): warning CS0618: 'FileRateLimitByHeaderRule.RateLimitCounterPrefix' is obsolete: 'Use KeyPrefix instead of RateLimitCounterPrefix! Note that RateLimitCounterPrefix will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(78,39): warning CS0618: 'FileRateLimitByHeaderRule.RateLimitCounterPrefix' is obsolete: 'Use KeyPrefix instead of RateLimitCounterPrefix! Note that RateLimitCounterPrefix will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(78,75): warning CS0618: 'FileRateLimitByHeaderRule.RateLimitCounterPrefix' is obsolete: 'Use KeyPrefix instead of RateLimitCounterPrefix! Note that RateLimitCounterPrefix will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(84,9): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(84,33): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>FileAuthenticationOptions.cs(18,9): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>FileAuthenticationOptions.cs(18,37): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>FileAuthenticationOptions.cs(36,30): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>FileAuthenticationOptions.cs(43,27): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>FileAuthenticationOptions.cs(43,57): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>FileQoSOptions.cs(14,9): warning CS0618: 'FileQoSOptions.DurationOfBreak' is obsolete: 'Use BreakDuration instead of DurationOfBreak! Note that DurationOfBreak will be removed in version 25.0!'
+1>FileQoSOptions.cs(14,27): warning CS0618: 'FileQoSOptions.DurationOfBreak' is obsolete: 'Use BreakDuration instead of DurationOfBreak! Note that DurationOfBreak will be removed in version 25.0!'
+1>FileQoSOptions.cs(16,9): warning CS0618: 'FileQoSOptions.ExceptionsAllowedBeforeBreaking' is obsolete: 'Use MinimumThroughput instead of ExceptionsAllowedBeforeBreaking! Note that ExceptionsAllowedBeforeBreaking will be removed in version 25.0!'
+1>FileQoSOptions.cs(16,43): warning CS0618: 'FileQoSOptions.ExceptionsAllowedBeforeBreaking' is obsolete: 'Use MinimumThroughput instead of ExceptionsAllowedBeforeBreaking! Note that ExceptionsAllowedBeforeBreaking will be removed in version 25.0!'
+1>FileQoSOptions.cs(20,9): warning CS0618: 'FileQoSOptions.TimeoutValue' is obsolete: 'Use Timeout instead of TimeoutValue! Note that TimeoutValue will be removed in version 25.0!'
+1>FileQoSOptions.cs(20,24): warning CS0618: 'FileQoSOptions.TimeoutValue' is obsolete: 'Use Timeout instead of TimeoutValue! Note that TimeoutValue will be removed in version 25.0!'
+1>FileQoSOptions.cs(26,9): warning CS0618: 'FileQoSOptions.DurationOfBreak' is obsolete: 'Use BreakDuration instead of DurationOfBreak! Note that DurationOfBreak will be removed in version 25.0!'
+1>FileQoSOptions.cs(28,9): warning CS0618: 'FileQoSOptions.ExceptionsAllowedBeforeBreaking' is obsolete: 'Use MinimumThroughput instead of ExceptionsAllowedBeforeBreaking! Note that ExceptionsAllowedBeforeBreaking will be removed in version 25.0!'
+1>FileQoSOptions.cs(32,9): warning CS0618: 'FileQoSOptions.TimeoutValue' is obsolete: 'Use Timeout instead of TimeoutValue! Note that TimeoutValue will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(22,9): warning CS0618: 'FileRateLimitByHeaderRule.DisableRateLimitHeaders' is obsolete: 'Use EnableHeaders instead of DisableRateLimitHeaders! Note that DisableRateLimitHeaders will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(22,35): warning CS0618: 'FileRateLimitByHeaderRule.DisableRateLimitHeaders' is obsolete: 'Use EnableHeaders instead of DisableRateLimitHeaders! Note that DisableRateLimitHeaders will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(23,9): warning CS0618: 'FileRateLimitByHeaderRule.HttpStatusCode' is obsolete: 'Use StatusCode instead of HttpStatusCode! Note that HttpStatusCode will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(23,26): warning CS0618: 'FileRateLimitByHeaderRule.HttpStatusCode' is obsolete: 'Use StatusCode instead of HttpStatusCode! Note that HttpStatusCode will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(24,9): warning CS0618: 'FileRateLimitByHeaderRule.QuotaExceededMessage' is obsolete: 'Use QuotaMessage instead of QuotaExceededMessage! Note that QuotaExceededMessage will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(24,32): warning CS0618: 'FileRateLimitByHeaderRule.QuotaExceededMessage' is obsolete: 'Use QuotaMessage instead of QuotaExceededMessage! Note that QuotaExceededMessage will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(25,9): warning CS0618: 'FileRateLimitByHeaderRule.RateLimitCounterPrefix' is obsolete: 'Use KeyPrefix instead of RateLimitCounterPrefix! Note that RateLimitCounterPrefix will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(25,34): warning CS0618: 'FileRateLimitByHeaderRule.RateLimitCounterPrefix' is obsolete: 'Use KeyPrefix instead of RateLimitCounterPrefix! Note that RateLimitCounterPrefix will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(61,13): warning CS0618: 'FileRateLimitByHeaderRule.DisableRateLimitHeaders' is obsolete: 'Use EnableHeaders instead of DisableRateLimitHeaders! Note that DisableRateLimitHeaders will be removed in version 25.0!'
+1>FileRateLimitRule.cs(20,9): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>FileRateLimitRule.cs(20,26): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>FileRateLimitRule.cs(90,29): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>FileRateLimitRule.cs(90,55): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>FileRoute.cs(81,9): warning CS0618: 'FileRoute.FileCacheOptions' is obsolete: 'Use CacheOptions instead of FileCacheOptions! Note that FileCacheOptions will be removed in version 25.0!'
+1>FileRoute.cs(81,35): warning CS0618: 'FileRoute.FileCacheOptions' is obsolete: 'Use CacheOptions instead of FileCacheOptions! Note that FileCacheOptions will be removed in version 25.0!'
+1>QoSOptions.cs(32,25): warning CS0618: 'FileQoSOptions.DurationOfBreak' is obsolete: 'Use BreakDuration instead of DurationOfBreak! Note that DurationOfBreak will be removed in version 25.0!'
+1>QoSOptions.cs(33,29): warning CS0618: 'FileQoSOptions.ExceptionsAllowedBeforeBreaking' is obsolete: 'Use MinimumThroughput instead of ExceptionsAllowedBeforeBreaking! Note that ExceptionsAllowedBeforeBreaking will be removed in version 25.0!'
+1>QoSOptions.cs(36,19): warning CS0618: 'FileQoSOptions.TimeoutValue' is obsolete: 'Use Timeout instead of TimeoutValue! Note that TimeoutValue will be removed in version 25.0!'
+1>RateLimitOptions.cs(56,25): warning CS0618: 'FileRateLimitByHeaderRule.DisableRateLimitHeaders' is obsolete: 'Use EnableHeaders instead of DisableRateLimitHeaders! Note that DisableRateLimitHeaders will be removed in version 25.0!'
+1>RateLimitOptions.cs(56,70): warning CS0618: 'FileRateLimitByHeaderRule.DisableRateLimitHeaders' is obsolete: 'Use EnableHeaders instead of DisableRateLimitHeaders! Note that DisableRateLimitHeaders will be removed in version 25.0!'
+1>RateLimitOptions.cs(59,22): warning CS0618: 'FileRateLimitByHeaderRule.HttpStatusCode' is obsolete: 'Use StatusCode instead of HttpStatusCode! Note that HttpStatusCode will be removed in version 25.0!'
+1>RateLimitOptions.cs(60,24): warning CS0618: 'FileRateLimitByHeaderRule.QuotaExceededMessage' is obsolete: 'Use QuotaMessage instead of QuotaExceededMessage! Note that QuotaExceededMessage will be removed in version 25.0!'
+1>RateLimitOptions.cs(61,21): warning CS0618: 'FileRateLimitByHeaderRule.RateLimitCounterPrefix' is obsolete: 'Use KeyPrefix instead of RateLimitCounterPrefix! Note that RateLimitCounterPrefix will be removed in version 25.0!'
+1>RateLimitOptions.cs(64,13): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>RateLimitOptions.cs(64,51): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>FileAuthenticationOptionsValidator.cs(24,13): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>FileAuthenticationOptionsValidator.cs(31,23): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>Ocelot -> compiled in memory (432.5 KB, 2311 ms)
+2>------ Build started: Project: Ocelot.Testing, Configuration: Debug ------
+2>Ocelot.Testing -> compiled in memory (119.5 KB, 1910 ms)
+3>------ Build started: Project: Ocelot.Acceptance, Configuration: Debug ------
+3>Ocelot.Acceptance -> compiled in memory (739 KB, 2704 ms)
+4>------ Build started: Project: Ocelot.Benchmarks, Configuration: Debug ------
+4>Ocelot.Benchmarks -> compiled in memory (46 KB, 1371 ms)
+5>------ Build started: Project: Ocelot.ManualTest, Configuration: Debug ------
+5>Ocelot.ManualTest -> compiled in memory (11.5 KB, 1188 ms)
+6>------ Build started: Project: Ocelot.UnitTests, Configuration: Debug ------
+6>Ocelot.UnitTests -> compiled in memory (1298.5 KB, 3116 ms)
+========== Build: 6 succeeded, 0 failed ==========
 
