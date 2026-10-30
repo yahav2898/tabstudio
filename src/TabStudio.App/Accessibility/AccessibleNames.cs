@@ -242,8 +242,13 @@ public static class AccessibleNames
         }
 
         var child = field;
-        for (var level = 0; level < 3 && child.Parent is Control parent; level++, child = parent)
+        for (var level = 0; level < 3; level++)
         {
+            if (child.Parent is not Control parent)
+            {
+                return null;
+            }
+
             if (parent is Panel panel)
             {
                 var index = panel.Children.IndexOf(child);
@@ -272,6 +277,8 @@ public static class AccessibleNames
             {
                 return header;
             }
+
+            child = parent;
         }
 
         return null;

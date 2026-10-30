@@ -20,7 +20,7 @@ public enum IdeTheme
 /// <summary>The user's choices for how the IDE looks.</summary>
 /// <param name="Theme">The IDE's theme.</param>
 /// <param name="TextSize">The IDE's text size; by default Android's font size.</param>
-public sealed record AppearanceSettings(IdeTheme Theme, TextSize TextSize = TextSize.System)
+public sealed record AppearanceSettings(IdeTheme Theme, TextSize TextSize = Accessibility.TextSize.System)
 {
     /// <summary>
     /// The settings before the user changed anything: the dark theme TabStudio has always had, and the system's text

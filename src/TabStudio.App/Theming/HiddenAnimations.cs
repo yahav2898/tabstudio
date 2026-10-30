@@ -78,7 +78,7 @@ public static class HiddenAnimations
         Control.LoadedEvent.AddClassHandler<StrokeIcon>((icon, _) => Watch(icon));
         Control.UnloadedEvent.AddClassHandler<StrokeIcon>((icon, _) => Looping.Remove(icon));
         Visual.IsVisibleProperty.Changed.AddClassHandler<Visual>((visual, _) => Refresh(visual));
-        Control.LoadedEvent.AddClassHandler<Control>((control, _) =>
+        Control.LoadedEvent.AddClassHandler<Control>((control, e) =>
         {
             if (control.Transitions is { Count: > 0 } || Removed.TryGetValue(control, out _))
             {
