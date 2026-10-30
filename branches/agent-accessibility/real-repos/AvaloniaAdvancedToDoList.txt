@@ -1,5 +1,5 @@
 AvaloniaAdvancedToDoList at e1904914cb00ea034870babdc01bfef797562e4c
-Opened /home/runner/work/_temp/real-repos/AvaloniaAdvancedToDoList/src/Avalonia.Samples/CompleteApps/AdvancedToDoList/AdvancedToDoList.slnx in 0.2 s
+Opened /home/runner/work/_temp/real-repos/AvaloniaAdvancedToDoList/src/Avalonia.Samples/CompleteApps/AdvancedToDoList/AdvancedToDoList.slnx in 1.1 s
 Compatibility Doctor:
   AdvancedToDoListTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   SharedControlsTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
@@ -11,7 +11,7 @@ Compatibility Doctor:
   SharedControls: Library via Built with its users - A library is compiled together with the projects that reference it.
   wwwroot: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
 Startup project: AdvancedToDoList.Browser
-Built in 11.3 s: 0 errors, 1 warnings
+Built in 9.8 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   avalonia.browser 12.1.4
       build/Avalonia.Browser.props
@@ -302,24 +302,21 @@ Packages with analyzers or MSBuild files:
       buildTransitive/xunit.v3.core.mtp-v1.props
       buildTransitive/xunit.v3.core.mtp-v1.targets
 Output:
-Build started at 19:35:37...
+Build started at 20:23:00...
 1>------ Build started: Project: SharedControls, Configuration: Debug ------
 1>DialogCommand.cs(111,32): warning CS0067: The event 'DialogCommand.CanExecuteChanged' is never used
-1>SharedControls -> compiled in memory (109 KB, 200 ms)
+1>SharedControls -> compiled in memory (109 KB, 271 ms)
 2>------ Build started: Project: AdvancedToDoList, Configuration: Debug ------
-2>AdvancedToDoList -> compiled in memory (1013 KB, 327 ms)
+2>AdvancedToDoList -> compiled in memory (1013 KB, 361 ms)
 3>------ Build started: Project: AdvancedToDoListTests, Configuration: Debug ------
-3>AdvancedToDoListTests -> compiled in memory (53 KB, 273 ms)
+3>AdvancedToDoListTests -> compiled in memory (53 KB, 364 ms)
 4>------ Build started: Project: SharedControlsTests, Configuration: Debug ------
-4>SharedControlsTests -> compiled in memory (7.5 KB, 34 ms)
+4>SharedControlsTests -> compiled in memory (7.5 KB, 58 ms)
 5>------ Build started: Project: AdvancedToDoList.Browser, Configuration: Debug ------
-5>AdvancedToDoList.Browser -> compiled in memory (11.5 KB, 123 ms)
+5>AdvancedToDoList.Browser -> compiled in memory (11.5 KB, 320 ms)
 6>------ Build started: Project: AdvancedToDoList.Desktop, Configuration: Debug ------
-6>AdvancedToDoList.Desktop -> compiled in memory (7 KB, 153 ms)
+6>AdvancedToDoList.Desktop -> compiled in memory (7 KB, 274 ms)
 7>------ Skipped: Project: AdvancedToDoList.Android: it targets net10.0-android, which only .NET's mobile workloads build, on a computer ------
 8>------ Skipped: Project: AdvancedToDoList.iOS: it targets net10.0-ios, which only .NET's mobile workloads build, on a computer ------
 ========== Build: 6 succeeded, 0 failed, 2 skipped ==========
-
-added 4 packages in 9s
-========== npm ci: succeeded ==========
 
