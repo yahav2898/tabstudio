@@ -29,6 +29,9 @@ jobs:
           path: .nuget/packages
           key: nuget-dev-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
           restore-keys: nuget-dev-
+      - name: Dump package build files
+        if: hashFiles('build/ci/dev-dump.sh') != ''
+        run: bash build/ci/dev-dump.sh || true
       - name: Build and test
         run: |
           mkdir -p ci-out
