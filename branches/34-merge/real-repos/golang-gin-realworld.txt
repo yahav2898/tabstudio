@@ -2,10 +2,10 @@ golang-gin-realworld at 626c372d259472148d93303f74aa9b9a1cdcef24
 Toolchain projects:
   go: /home/runner/work/_temp/real-repos/golang-gin-realworld/go.mod
 Startup project: go /home/runner/work/_temp/real-repos/golang-gin-realworld/go.mod
-Set up in 3.5 s
+Set up in 2.2 s
 Web preview: http://127.0.0.1:8080/
 GET http://127.0.0.1:8080/api/tags: 200 OK, 11 characters
-Ran in 63.6 s
+Ran in 37.4 s
 Project setup:
 
 Output:
@@ -13,24 +13,24 @@ Running golang-gin-realworld with Go 1.27.3
 > go build '-gcflags=all=-N -l' -o .tabstudio/bin/app .
 go: downloading github.com/gin-gonic/gin v1.10.0
 go: downloading gorm.io/gorm v1.25.12
-go: downloading github.com/golang-jwt/jwt/v5 v5.2.1
-go: downloading golang.org/x/crypto v0.32.0
 go: downloading github.com/go-playground/validator/v10 v10.24.0
+go: downloading github.com/golang-jwt/jwt/v5 v5.2.1
 go: downloading gorm.io/driver/sqlite v1.5.7
+go: downloading golang.org/x/crypto v0.32.0
 go: downloading github.com/gosimple/slug v1.15.0
 go: downloading github.com/jinzhu/now v1.1.5
-go: downloading github.com/gin-contrib/sse v0.1.0
-go: downloading github.com/mattn/go-isatty v0.0.20
-go: downloading golang.org/x/net v0.34.0
-go: downloading github.com/pelletier/go-toml/v2 v2.2.2
-go: downloading github.com/ugorji/go/codec v1.2.12
-go: downloading google.golang.org/protobuf v1.34.1
-go: downloading gopkg.in/yaml.v3 v3.0.1
-go: downloading github.com/mattn/go-sqlite3 v1.14.22
 go: downloading github.com/gabriel-vasile/mimetype v1.4.8
 go: downloading github.com/go-playground/universal-translator v0.18.1
 go: downloading github.com/leodido/go-urn v1.4.0
 go: downloading golang.org/x/text v0.21.0
+go: downloading github.com/pelletier/go-toml/v2 v2.2.2
+go: downloading github.com/ugorji/go/codec v1.2.12
+go: downloading google.golang.org/protobuf v1.34.1
+go: downloading gopkg.in/yaml.v3 v3.0.1
+go: downloading github.com/gin-contrib/sse v0.1.0
+go: downloading github.com/mattn/go-isatty v0.0.20
+go: downloading golang.org/x/net v0.34.0
+go: downloading github.com/mattn/go-sqlite3 v1.14.22
 go: downloading github.com/gosimple/unidecode v1.0.1
 go: downloading github.com/jinzhu/inflection v1.0.0
 go: downloading golang.org/x/sys v0.29.0
@@ -71,7 +71,7 @@ go: downloading github.com/go-playground/locales v0.14.1
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8080
-[GIN] 2026/10/30 - 18:19:10 | 200 |     372.064µs |       127.0.0.1 | GET      "/api/tags"
+[GIN] 2026/10/30 - 18:37:35 | 200 |     385.582µs |       127.0.0.1 | GET      "/api/tags"
 
 The program 'golang-gin-realworld' was stopped.
 
