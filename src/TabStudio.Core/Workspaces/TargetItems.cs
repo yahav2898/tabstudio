@@ -35,6 +35,8 @@ public static partial class TargetItems
         "GenerateMSBuildEditorConfigFileShouldRun", "GenerateMSBuildEditorConfigFileCore", "BeforeCompile", "CoreCompile",
         "Compile", "PrepareForBuild", "BeforeBuild", "PrepareResources", "PrepareResourceNames", "AssignTargetPaths",
         "ResolveReferences", "CompileDesignTime", "_GenerateCompileInputs", "CoreGenerateAssemblyInfo",
+        "ResolvePackageDependenciesForBuild", "ResolveNuGetPackageAssets", "ResolvePackageAssets", "ResolveTargetingPackAssets",
+        "RemoveDuplicateAnalyzers",
     };
 
     /// <summary>The item types whose items the compiler or its generators get, which are kept from what targets add.</summary>
@@ -100,6 +102,60 @@ public static partial class TargetItems
         {
             ["EmbeddedResource"] = EmbeddedResources(project, properties),
         };
+        var added = Run(project, properties, items);
+
+        return [.. added
+            .Where(i => CompilerItemTypes.Contains(i.Type) && items.GetValueOrDefault(i.Type)?.Contains(i) == true)
+            .DistinctBy(i => i.FullPath, StringComparer.Ordinal)
+            .Select(i => new AdditionalFileItem(Path.GetRelativePath(project.DirectoryPath, i.FullPath), project.DirectoryPath, i.Metadata)
+            {
+                ItemTypes = [.. i.Types],
+            })];
+    }
+
+    /// <summary>
+    /// The analyzer assemblies a project's targets remove before the compiler runs, as a package that replaces another's
+    /// generator does: Microsoft.Extensions.Telemetry.Abstractions sets <c>DisableMicrosoftExtensionsLoggingSourceGenerator</c>
+    /// and removes the <c>Analyzer</c> items of Microsoft.Extensions.Logging's, whose <c>[LoggerMessage]</c> code its own
+    /// generator writes instead; with both, every logging method would be implemented twice (CS0757).
+    /// </summary>
+    /// <param name="project">The project, with its <see cref="ProjectInfo.CompilerTargets"/> and its properties.</param>
+    /// <param name="analyzers">The analyzers it gets from .NET and its packages, with the package each comes from.</param>
+    /// <returns>The full paths of the analyzers that are removed.</returns>
+    public static IReadOnlyList<string> RemovedAnalyzers(ProjectInfo project, IReadOnlyList<AnalyzerItem> analyzers)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        ArgumentNullException.ThrowIfNull(analyzers);
+        if (analyzers.Count == 0 || !project.CompilerTargets.Any(t => t.ToString().Contains("Analyzer", StringComparison.Ordinal)))
+        {
+            return [];
+        }
+
+        // The SDK picks a package's analyzers for the compiler's Roslyn version itself, which packages' targets check.
+        var properties = new Dictionary<string, string>(project.Properties, StringComparer.OrdinalIgnoreCase);
+        properties.TryAdd("SupportsRoslynComponentVersioning", "true");
+        var seeds = analyzers.Select(a =>
+        {
+            var metadata = WellKnownMetadata(project, a.FullPath);
+            metadata["Identity"] = a.FullPath;
+            metadata["AssemblyName"] = Path.GetFileNameWithoutExtension(a.FullPath);
+            metadata["NuGetPackageId"] = a.PackageId ?? string.Empty;
+            return new Item("Analyzer", a.FullPath, metadata, []);
+        }).ToList();
+        var items = new Dictionary<string, List<Item>>(StringComparer.OrdinalIgnoreCase) { ["Analyzer"] = [.. seeds] };
+        if (project.CompilerTargets.Any(t => t.ToString().Contains("EmbeddedResource", StringComparison.Ordinal)))
+        {
+            items["EmbeddedResource"] = EmbeddedResources(project, properties);
+        }
+
+        Run(project, properties, items);
+        var remaining = items["Analyzer"].Select(i => i.FullPath).ToHashSet(StringComparer.Ordinal);
+        return [.. seeds.Select(s => s.FullPath).Where(path => !remaining.Contains(path)).Distinct(StringComparer.Ordinal)];
+    }
+
+    /// <summary>Runs the item groups of a project's compiler targets, in order, over some items; returns the items they add.</summary>
+    private static List<Item> Run(ProjectInfo project, IReadOnlyDictionary<string, string> properties, Dictionary<string, List<Item>> items)
+    {
         var added = new List<Item>();
         foreach (var target in project.CompilerTargets)
         {
@@ -122,13 +178,7 @@ public static partial class TargetItems
             }
         }
 
-        return [.. added
-            .Where(i => CompilerItemTypes.Contains(i.Type) && items.GetValueOrDefault(i.Type)?.Contains(i) == true)
-            .DistinctBy(i => i.FullPath, StringComparer.Ordinal)
-            .Select(i => new AdditionalFileItem(Path.GetRelativePath(project.DirectoryPath, i.FullPath), project.DirectoryPath, i.Metadata)
-            {
-                ItemTypes = [.. i.Types],
-            })];
+        return added;
     }
 
     /// <summary>One item: its file, its metadata, and the item types it was created as, the last one its own.</summary>
@@ -157,7 +207,8 @@ public static partial class TargetItems
 
         if (remove is not null)
         {
-            var removed = Sources(remove, items, project, properties);
+            // A condition with metadata is checked for each item removed.
+            var removed = Sources(remove, items, project, properties).Where(r => Condition(condition, properties, r, project) != false).ToList();
             own.RemoveAll(i => removed.Any(r => string.Equals(r.FullPath, i.FullPath, StringComparison.Ordinal)));
             return;
         }
@@ -420,3 +471,8 @@ public static partial class TargetItems
     [GeneratedRegex("^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8}){0,2}$", RegexOptions.CultureInvariant, 100)]
     private static partial Regex CultureName();
 }
+
+/// <summary>An analyzer assembly a project gets, as an <c>Analyzer</c> item that packages' targets can remove.</summary>
+/// <param name="FullPath">The assembly's full path.</param>
+/// <param name="PackageId">The package it comes from (its <c>NuGetPackageId</c> metadata), or <see langword="null"/>.</param>
+public sealed record AnalyzerItem(string FullPath, string? PackageId);

@@ -88,7 +88,16 @@ public sealed partial class RoslynWorkspaceHost
 
     /// <summary>The skeleton images a project references in place of project references.</summary>
     private IEnumerable<MetadataReference> SkeletonReferencesFor(TsProject project) =>
-        CompileReferencesOf(project).Where(_skeletons.ContainsKey).Select(r => _skeletons[r]);
+        CompileReferencesOf(project).Where(_skeletons.ContainsKey).Select(r => ReferenceAliases(project, r) is { IsDefaultOrEmpty: false } aliases ? _skeletons[r].WithAliases(aliases) : _skeletons[r]);
+
+    /// <summary>
+    /// The extern aliases a project gives a project it references, from its own <c>ProjectReference</c>'s <c>Aliases</c>;
+    /// a project it only gets through another is in the global namespace, as the SDK passes it.
+    /// </summary>
+    private static System.Collections.Immutable.ImmutableArray<string> ReferenceAliases(TsProject project, string referencePath) =>
+        project.ProjectReferenceItems.FirstOrDefault(r => string.Equals(r.Path, referencePath, StringComparison.Ordinal)) is { Aliases.Count: > 0 } reference
+            ? [.. reference.Aliases]
+            : default;
 
     /// <summary>
     /// Creates skeletons for the referenced projects nobody is editing, from the solution just loaded with full

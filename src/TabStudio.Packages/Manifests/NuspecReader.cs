@@ -94,6 +94,35 @@ internal static class NuspecReader
             : [];
     }
 
+    /// <summary>
+    /// The <c>&lt;contentFiles&gt;&lt;files include="..." exclude="..." buildAction="..." /&gt;</c> entries of a manifest, in
+    /// order, which NuGet applies to the files under <c>contentFiles/</c>: the last entry that matches a file sets its
+    /// build action.
+    /// </summary>
+    /// <param name="stream">The <c>.nuspec</c> contents.</param>
+    /// <returns>The entries; none when the manifest has none or is not valid XML.</returns>
+    public static IReadOnlyList<ContentFileEntry> ReadContentFileEntries(Stream stream)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+        XDocument document;
+        try
+        {
+            using var reader = XmlReader.Create(stream, Settings);
+            document = XDocument.Load(reader);
+        }
+        catch (XmlException)
+        {
+            return [];
+        }
+
+        return [.. (document.Root?.Elements().FirstOrDefault(e => e.Name.LocalName == "metadata")?.Elements() ?? [])
+            .Where(e => e.Name.LocalName == "contentFiles")
+            .SelectMany(e => e.Elements().Where(f => f.Name.LocalName == "files"))
+            .Select(f => (Include: f.Attribute("include")?.Value.Trim(), Exclude: f.Attribute("exclude")?.Value.Trim(), BuildAction: f.Attribute("buildAction")?.Value.Trim()))
+            .Where(f => !string.IsNullOrEmpty(f.Include))
+            .Select(f => new ContentFileEntry(f.Include!, string.IsNullOrEmpty(f.Exclude) ? null : f.Exclude, string.IsNullOrEmpty(f.BuildAction) ? null : f.BuildAction))];
+    }
+
     private static string? ChildValue(XElement parent, string localName) =>
         parent.Elements().FirstOrDefault(e => e.Name.LocalName == localName)?.Value.Trim();
 
@@ -132,7 +161,7 @@ internal static class NuspecReader
             .Where(e => e.Name.LocalName == "dependency")
             .Select(e => (Id: e.Attribute("id")?.Value.Trim(), Version: e.Attribute("version")?.Value, Include: e.Attribute("include")?.Value, Exclude: e.Attribute("exclude")?.Value))
             .Where(d => !string.IsNullOrEmpty(d.Id))
-            .Select(d => new PackageDependency(d.Id!, ParseRange(d.Version)) { Excluded = AssetFlagNames.Excluded(d.Include, d.Exclude) })
+            .Select(d => new PackageDependency(d.Id!, ParseRange(d.Version)) { Excluded = AssetFlagNames.NuspecExcluded(d.Include, d.Exclude) })
             .DistinctBy(d => d.Id, StringComparer.OrdinalIgnoreCase)
             .ToList();
 

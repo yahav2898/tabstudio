@@ -47,9 +47,12 @@ public static class ProjectSourceFiles
             }
         }
 
-        foreach (var include in project.CompileIncludes)
+        // Avalonia's XAML: the .axaml files in the folder, and the project's own AvaloniaXaml items from elsewhere.
+        var axaml = string.Equals(extension, ".axaml", StringComparison.OrdinalIgnoreCase);
+        var includes = axaml ? project.CompileIncludes.Concat(project.AvaloniaXamlIncludes) : project.CompileIncludes;
+        foreach (var include in includes)
         {
-            var exclusions = project.CompileIncludeExcludes.TryGetValue(include, out var excludes)
+            var exclusions = (project.CompileIncludeExcludes.TryGetValue(include, out var excludes) || (axaml && project.AvaloniaXamlIncludeExcludes.TryGetValue(include, out excludes)))
                 ? excludes.Select(e => new GlobPattern(project.DirectoryPath, e)).ToList()
                 : [];
             var pattern = new GlobPattern(project.DirectoryPath, include);
@@ -74,7 +77,7 @@ public static class ProjectSourceFiles
             }
         }
 
-        var removals = project.CompileRemoves.Select(r => new GlobPattern(project.DirectoryPath, r)).ToList();
+        var removals = (axaml ? project.CompileRemoves.Concat(project.AvaloniaXamlRemoves) : project.CompileRemoves).Select(r => new GlobPattern(project.DirectoryPath, r)).ToList();
         return files.Where(f => !removals.Any(r => r.IsMatch(f))).ToList();
     }
 

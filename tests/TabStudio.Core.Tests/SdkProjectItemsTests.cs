@@ -178,6 +178,48 @@ public sealed class SdkProjectItemsTests
     }
 
     [Fact]
+    public void A_package_s_targets_remove_the_generator_it_replaces()
+    {
+        // eShop's Ordering.API: Microsoft.Extensions.Telemetry.Abstractions writes [LoggerMessage] code itself and removes
+        // Microsoft.Extensions.Logging's generator, from ASP.NET Core and from its package, or every method is
+        // implemented twice (CS0757). Its other target, for compilers without component versioning, does not run.
+        using var temp = new TempDirectory();
+        var path = temp.Write("Api/Api.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.Web">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        var props = temp.Write("packages/telemetry/buildTransitive/net8.0/Microsoft.Extensions.Telemetry.Abstractions.props", """
+            <Project><PropertyGroup><DisableMicrosoftExtensionsLoggingSourceGenerator>true</DisableMicrosoftExtensionsLoggingSourceGenerator></PropertyGroup></Project>
+            """);
+        var targets = temp.Write("packages/telemetry/buildTransitive/net8.0/Microsoft.Extensions.Telemetry.Abstractions.targets", """
+            <Project>
+              <Target Name="_Microsoft_Extensions_Logging_AbstractionsRemoveAnalyzers"
+                      Condition="'$(DisableMicrosoftExtensionsLoggingSourceGenerator)' == 'true'" AfterTargets="ResolveReferences">
+                <ItemGroup>
+                  <_Logging Include="@(Analyzer)" Condition="'%(Analyzer.AssemblyName)' == 'Microsoft.Extensions.Logging.Generators' Or '%(Analyzer.NuGetPackageId)' == 'Microsoft.Extensions.Logging.Abstractions'" />
+                </ItemGroup>
+                <ItemGroup><Analyzer Remove="@(_Logging)" /></ItemGroup>
+              </Target>
+              <Target Name="_OptionsAnalyzerMultiTargeting" Condition="'$(SupportsRoslynComponentVersioning)' != 'true'" AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets">
+                <ItemGroup><Analyzer Remove="@(Analyzer)" /></ItemGroup>
+              </Target>
+            </Project>
+            """);
+        var project = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(path), [props, targets]);
+        var framework = Path.Combine(temp.Path, "packs", "microsoft.aspnetcore.app.ref", "10.0.0", "analyzers", "dotnet", "cs", "Microsoft.Extensions.Logging.Generators.dll");
+        var package = Path.Combine(temp.Path, "packages", "microsoft.extensions.logging.abstractions", "10.0.0", "analyzers", "dotnet", "roslyn4.4", "cs", "Microsoft.Extensions.Logging.Generators.dll");
+        var telemetry = Path.Combine(temp.Path, "packages", "microsoft.extensions.telemetry.abstractions", "10.0.0", "analyzers", "dotnet", "roslyn4.4", "cs", "Microsoft.Gen.Logging.dll");
+
+        var removed = TargetItems.RemovedAnalyzers(project, [
+            new AnalyzerItem(framework, "microsoft.aspnetcore.app.ref"),
+            new AnalyzerItem(package, "microsoft.extensions.logging.abstractions"),
+            new AnalyzerItem(telemetry, "microsoft.extensions.telemetry.abstractions")]);
+
+        Assert.Equal(new[] { framework, package }, removed);
+    }
+
+    [Fact]
     public void Project_references_keep_their_metadata_and_packages_their_PrivateAssets()
     {
         var project = ProjectParser.Parse(ProjectPath, """

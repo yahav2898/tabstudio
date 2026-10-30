@@ -57,6 +57,26 @@ public sealed class AssetSelectorTests
     }
 
     [Fact]
+    public void Content_files_whose_nuspec_build_action_is_not_Compile_are_not_compiled()
+    {
+        var nuspec = """
+            <package><metadata><id>Source</id><version>1.0.0</version>
+              <contentFiles>
+                <files include="cs/**/*.cs" buildAction="Compile" />
+                <files include="cs/net8.0/Tools/*.cs" exclude="cs/net8.0/Tools/Kept.cs" buildAction="None" />
+              </contentFiles>
+            </metadata></package>
+            """;
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(nuspec));
+        var entries = Manifests.NuspecReader.ReadContentFileEntries(stream);
+        string[] files = ["contentFiles/cs/net8.0/Main.cs", "contentFiles/cs/net8.0/Tools/Kept.cs", "contentFiles/cs/net8.0/Tools/Left.cs"];
+
+        Assert.Equal(
+            new[] { "contentFiles/cs/net8.0/Main.cs", "contentFiles/cs/net8.0/Tools/Kept.cs" },
+            AssetSelector.SelectContentSources(files, Net10, Fallback, AssetFlags.ContentFiles, entries));
+    }
+
+    [Fact]
     public void A_package_s_framework_references_are_read_for_the_nearest_framework()
     {
         // Microsoft.AspNetCore.Mvc.NewtonsoftJson brings ASP.NET Core to Ocelot's library, which has no FrameworkReference.

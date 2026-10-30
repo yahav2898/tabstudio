@@ -138,9 +138,13 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         // compiled against .NET, its errors would only say that it is the wrong framework. Nor is a project that needs a
         // platform workload, such as a .NET MAUI app or the Android or iOS head of a cross-platform app, which only that
         // workload builds.
+        // Nor is a project that compiles against one of those, as the build leaves it out too: its errors would only
+        // say that the project it needs is missing, and the Compatibility Doctor names that project instead. Nor is one
+        // the solution's Debug configuration does not build, unless a project that is built references it.
+        var dependents = BuildExclusions.Of(workspace.Projects);
         var csharpProjects = workspace.Projects
             .Where(p => p.IsRoslynLanguage && p.Kind is not (ProjectKind.Unknown or ProjectKind.AspireAppHost))
-            .Where(p => !NetFrameworkCompatibility.NeedsWindows(p) && !ProjectClassifier.NeedsPlatformWorkload(p))
+            .Where(p => !NetFrameworkCompatibility.NeedsWindows(p) && !ProjectClassifier.NeedsPlatformWorkload(p) && !dependents.ContainsKey(p.FilePath))
             .ToList();
 
         // Projects whose packages were restored before get what their packages' props and targets add.
@@ -637,7 +641,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         documents.AddRange(WindowsFormsDocuments(id, project));
-        documents.AddRange(PackageContentDocuments(id, project.FilePath));
+        documents.AddRange(PackageContentDocuments(id, project));
         if (DesktopSettings.Applies(project, documents.Where(d => !d.IsGenerated).Select(d => d.FilePath ?? string.Empty)))
         {
             var path = Path.Combine(project.DirectoryPath, "obj", "TabStudio", "System.Configuration.Settings.g.cs");
@@ -646,7 +650,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
         var projectReferences = CompileReferencesOf(project)
             .Where(reference => _projectIds.ContainsKey(reference) && !_skeletons.ContainsKey(reference))
-            .Select(reference => new ProjectReference(_projectIds[reference]));
+            .Select(reference => new ProjectReference(_projectIds[reference], ReferenceAliases(project, reference)));
 
         // An Uno or WinUI 3 app has no Main of its own here: TabStudio's host starts it, as each platform's head does.
         // Nor has a test project, even an executable one such as xUnit v3's, whose Main its package's targets generate:

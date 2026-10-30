@@ -72,7 +72,7 @@ public sealed partial class RoslynWorkspaceHost
 
         var projectReferences = CompileReferencesOf(project)
             .Where(reference => _projectIds.ContainsKey(reference) && !_skeletons.ContainsKey(reference))
-            .Select(reference => new ProjectReference(_projectIds[reference]));
+            .Select(reference => new ProjectReference(_projectIds[reference], ReferenceAliases(project, reference)));
 
         // A test project, even an executable one, is loaded as a library by TabStudio's test runner.
         var kind = project.IsExecutable && !project.IsTestProject ? AssemblyKind.ConsoleApplication : AssemblyKind.Library;

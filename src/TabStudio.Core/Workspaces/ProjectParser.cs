@@ -194,6 +194,9 @@ public static partial class ProjectParser
             EmbeddedResourceRemoves = ReadItemPatterns(items, "EmbeddedResource", "Remove", properties),
             AvaloniaResourceIncludes = ReadItemPatterns(items, "AvaloniaResource", "Include", properties),
             AvaloniaResourceRemoves = ReadItemPatterns(items, "AvaloniaResource", "Remove", properties),
+            AvaloniaXamlIncludes = ReadItemPatterns(items, "AvaloniaXaml", "Include", properties),
+            AvaloniaXamlIncludeExcludes = ReadIncludeExcludes(items, "AvaloniaXaml", properties),
+            AvaloniaXamlRemoves = ReadItemPatterns(items, "AvaloniaXaml", "Remove", properties),
             AssemblyReferences = assemblyReferences,
             ComReferences = ReadComReferences(items),
             ImportPaths = ReadImportPaths(root),
@@ -210,6 +213,7 @@ public static partial class ProjectParser
         {
             CompilerTargets = TargetItems.CompilerTargetsOf([evaluation.Targets]),
             EmbeddedResourceItems = ReadItemMetadata(items, "EmbeddedResource"),
+            ProtobufIncludes = ReadItemPatterns(items, "Protobuf", "Include", properties),
         };
         if (info.CompilerTargets.Count > 0)
         {
@@ -588,7 +592,10 @@ public static partial class ProjectParser
                 PathUtilities.ResolveRelative(projectDirectory, r.Include!),
                 ReferenceOutputAssembly: !string.Equals(Metadata(r.Item, "ReferenceOutputAssembly")?.Trim(), "false", StringComparison.OrdinalIgnoreCase),
                 IsPrivate: AssemblyAttributeItems.IncludesAll(Metadata(r.Item, "PrivateAssets")),
-                OutputItemType: Metadata(r.Item, "OutputItemType")?.Trim() is { Length: > 0 } type ? type : null))
+                OutputItemType: Metadata(r.Item, "OutputItemType")?.Trim() is { Length: > 0 } type ? type : null)
+            {
+                Aliases = (Metadata(r.Item, "Aliases") ?? string.Empty).Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
+            })
             .DistinctBy(r => r.Path, StringComparer.Ordinal)
             .ToList();
 

@@ -586,5 +586,65 @@ public sealed class StartupProjectTests : IDisposable
             workspace.NoStartupProjectReason);
     }
 
+    /// <summary>
+    /// RestSharp's interactive tests: a console program sets IsTestProject to false under a folder whose
+    /// Directory.Build.props sets it to true and gives every project xUnit. It is a program, as the SDK builds it.
+    /// </summary>
+    [Fact]
+    public void A_program_that_says_it_is_not_a_test_project_is_not_one()
+    {
+        _temp.Write("test/Directory.Build.props", """
+            <Project>
+              <PropertyGroup><IsTestProject>true</IsTestProject></PropertyGroup>
+              <ItemGroup Condition="$(IsTestProject) == 'true'"><PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" /></ItemGroup>
+              <ItemGroup><PackageReference Include="xunit" Version="2.9.2" /></ItemGroup>
+            </Project>
+            """);
+        var path = _temp.Write("test/Interactive/Interactive.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <IsTestProject>false</IsTestProject>
+                <TargetFramework>net10.0</TargetFramework>
+              </PropertyGroup>
+            </Project>
+            """);
+
+        var project = ProjectParser.Load(path);
+
+        Assert.False(project.IsTestProject);
+        Assert.DoesNotContain(project.PackageReferences, p => p.Name == "Microsoft.NET.Test.Sdk");
+        Assert.Equal("Interactive", WorkspaceLoader.Load(path).DefaultStartupProject?.Name);
+    }
+
+    /// <summary>
+    /// eShop's Basket.FunctionalTests: a project that compiles against one TabStudio leaves out of builds (Basket.API
+    /// needs protoc) is left out with it, and the Doctor names the project it needs instead of its missing types.
+    /// </summary>
+    [Fact]
+    public void A_project_that_needs_a_project_left_out_of_builds_is_explained_by_it()
+    {
+        _temp.Write("Api/Api.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.Web">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup><Protobuf Include="Proto\basket.proto" GrpcServices="Server" /></ItemGroup>
+            </Project>
+            """);
+        _temp.Write("Api/Proto/basket.proto", "syntax = \"proto3\";");
+        _temp.Write("Tests/Tests.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup><ProjectReference Include="..\Api\Api.csproj" /></ItemGroup>
+            </Project>
+            """);
+        var workspace = WorkspaceLoader.Load(_temp.Path);
+
+        var reports = CompatibilityDoctor.Diagnose(workspace.Projects).ToDictionary(r => r.ProjectName);
+
+        Assert.Equal(CompatibilityStatus.Unsupported, reports["Api"].Status);
+        Assert.Equal(CompatibilityStatus.Unsupported, reports["Tests"].Status);
+        Assert.StartsWith("Not supported here: it compiles against Api, which generates its gRPC and Protocol Buffers code with protoc", reports["Tests"].Explanation, StringComparison.Ordinal);
+    }
+
     public void Dispose() => _temp.Dispose();
 }

@@ -49,6 +49,11 @@ public sealed class Workspace
             .Where(p => p.Rank is not null)
             .ToList();
 
+        // A program that is left out of builds, such as one that compiles against a project that needs a computer or one
+        // the solution's Debug configuration does not build, does not start either.
+        var excluded = Compatibility.BuildExclusions.Of(Projects);
+        candidates.RemoveAll(p => excluded.ContainsKey(p.Project.FilePath));
+
         // A console program that references another one runs it, as a scenario or benchmark runner does: the referenced
         // one is the app.
         var runByAnother = candidates
