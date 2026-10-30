@@ -399,21 +399,38 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
             progress?.Report(new InstallProgress(InstallStage.Configuring, $"Setting up {step.Name}", fraction));
             if (step.Archive is { } archive)
             {
-                var destination = GuestToDevice(archive.Destination);
+                // Unpacked beside the installed copy, which is replaced only once the new one is complete: an
+                // update that was cancelled or failed while unpacking left the toolchain without its debugger while
+                // the Store still called it ready.
+                var destination = GuestToDevice(archive.Destination).TrimEnd(Path.DirectorySeparatorChar);
+                var unpacked = destination + ".tabstudio-new";
+                if (Directory.Exists(unpacked))
+                {
+                    Directory.Delete(unpacked, recursive: true);
+                }
+
+                try
+                {
+                    await ArchiveExtractor.ExtractAsync(ArchivePath(archive), unpacked, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception ex) when (ex is InvalidDataException or IOException or OperationCanceledException)
+                {
+                    TryDeleteDirectory(unpacked);
+                    if (ex is InvalidDataException)
+                    {
+                        File.Delete(ArchivePath(archive));
+                        throw new ToolchainInstallException(InstallFailure.IntegrityFailed, ex.Message, innerException: ex);
+                    }
+
+                    throw;
+                }
+
                 if (Directory.Exists(destination))
                 {
                     Directory.Delete(destination, recursive: true);
                 }
 
-                try
-                {
-                    await ArchiveExtractor.ExtractAsync(ArchivePath(archive), destination, cancellationToken).ConfigureAwait(false);
-                }
-                catch (InvalidDataException ex)
-                {
-                    File.Delete(ArchivePath(archive));
-                    throw new ToolchainInstallException(InstallFailure.IntegrityFailed, ex.Message, innerException: ex);
-                }
+                Directory.Move(unpacked, destination);
             }
 
             if (step.File is { } file)
@@ -450,6 +467,21 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
         }
 
         return done;
+    }
+
+    private static void TryDeleteDirectory(string path)
+    {
+        try
+        {
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, recursive: true);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // What is left is replaced by the next attempt.
+        }
     }
 
     /// <summary>The paths a toolchain's setup steps put files at, in the environment.</summary>
