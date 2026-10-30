@@ -177,11 +177,9 @@ public sealed partial class RoslynWorkspaceHost
             solution = solution.RemoveDocument(existingUsings.Id);
         }
 
-        foreach (var path in AdditionalFilePaths(project).Where(path => !_additionalDocuments.ContainsKey(path)))
+        foreach (var path in AdditionalFilePaths(project).Where(path => !roslyn.AdditionalDocuments.Any(d => d.FilePath == path)))
         {
-            var documentId = DocumentId.CreateNewId(id, path);
-            solution = solution.AddAdditionalDocument(CreateDocumentInfo(documentId, path, ReadFileOrEmpty(path), isGenerated: false));
-            _additionalDocuments[path] = documentId;
+            solution = solution.AddAdditionalDocument(CreateDocumentInfo(AdditionalFileDocumentId(id, path), path, ReadFileOrEmpty(path), isGenerated: false));
         }
 
         solution = solution.WithProjectAnalyzerReferences(id, GetAnalyzerReferences(project));
