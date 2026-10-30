@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
@@ -81,7 +82,8 @@ internal static partial class AccessibilityAudit
 
             if (NameProblem(control) is { } problem)
             {
-                found.Add(new("name", PathOf(window, control), $"{Label(control)} {problem}."));
+                found.Add(new("name", PathOf(window, control),
+                    $"{Label(control)} {problem} (its data is {control.DataContext?.GetType().Name ?? "none"}; named \"{AutomationProperties.GetName(control)}\")."));
             }
         }
 
@@ -125,7 +127,7 @@ internal static partial class AccessibilityAudit
                 }
 
                 // A card between an editor's lines that is wholly out of view has scrolled away with them.
-                if (WhollyHidden().IsMatch(message) && element.Visual.GetVisualAncestors().Any(a => a is AvaloniaEdit.Rendering.TextView))
+                if (WhollyHidden().IsMatch(message) && element.Visual.GetVisualAncestors().Any(a => a is AvaloniaEdit.Rendering.TextView or AvaloniaEdit.TextEditor))
                 {
                     continue;
                 }
@@ -136,7 +138,10 @@ internal static partial class AccessibilityAudit
                     continue;
                 }
 
-                found.Add(new("clipped", PathOf(window, element.Visual), message));
+                var within = WhollyHidden().IsMatch(message)
+                    ? " (inside " + string.Join(" < ", element.Visual.GetVisualAncestors().Take(8).Select(a => a.GetType().Name)) + ")"
+                    : string.Empty;
+                found.Add(new("clipped", PathOf(window, element.Visual), message + within));
             }
         }
 

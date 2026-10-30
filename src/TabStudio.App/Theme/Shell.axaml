@@ -46,7 +46,7 @@
                                  Foreground="{DynamicResource Brush.TextSecondary}"
                                  IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" />
             <ContentPresenter DockPanel.Dock="Right" Content="{TemplateBinding Actions}" VerticalAlignment="Center" Margin="8,0,0,0" />
-            <TextBlock DockPanel.Dock="Left" Text="{TemplateBinding Title}" FontSize="{DynamicResource Type.Body}" FontWeight="SemiBold"
+            <TextBlock DockPanel.Dock="Left" Text="{TemplateBinding Title}" FontSize="{DynamicResource Type.Body}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
                        Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
             <TextBlock Text="{TemplateBinding Subtitle}" FontSize="{DynamicResource Type.Small}" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}"
                        VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip.Tip="{TemplateBinding Subtitle}" />

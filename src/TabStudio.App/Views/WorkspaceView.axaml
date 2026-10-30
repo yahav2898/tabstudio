@@ -599,7 +599,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                       <DataTemplate DataType="liveVm:LiveAvatarViewModel">
-                        <Border Width="18" Height="18" CornerRadius="9" Background="{Binding Background}" BorderBrush="{DynamicResource Brush.Toolbar}" BorderThickness="1"
+                        <Border MinWidth="18" MinHeight="18" Padding="3,0" CornerRadius="9" Background="{Binding Background}" BorderBrush="{DynamicResource Brush.Toolbar}" BorderThickness="1"
                                 ToolTip.Tip="{Binding Name}">
                           <TextBlock Text="{Binding Initials}" FontSize="{DynamicResource Type.Badge}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.OnAccent}"
                                      HorizontalAlignment="Center" VerticalAlignment="Center" />

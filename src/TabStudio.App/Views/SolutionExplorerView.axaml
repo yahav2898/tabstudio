@@ -79,9 +79,10 @@
               <Run Text="{Binding Location}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="{DynamicResource Type.Fine}" />
             </TextBlock>
 
-            <Border Grid.Column="4" Classes="pill" Classes.ready="{Binding IsPillReady}" Margin="6,0,10,0"
+            <!-- The name keeps most of a narrow row: a long pill trims, and shows whole in its tooltip. -->
+            <Border Grid.Column="4" Classes="pill" Classes.ready="{Binding IsPillReady}" Margin="6,0,10,0" MaxWidth="150"
                     IsVisible="{Binding Pill, Converter={x:Static ObjectConverters.IsNotNull}}">
-              <TextBlock Text="{Binding Pill}" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding Pill}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
             </Border>
 
             <!-- Source control: a colored letter on changed files, a dot on folders with changes inside. -->

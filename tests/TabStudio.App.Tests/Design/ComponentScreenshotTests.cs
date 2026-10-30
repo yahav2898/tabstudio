@@ -181,7 +181,7 @@ public sealed class ComponentScreenshotTests : IDisposable
         list.Children.Add(new LoadingState { IsInline = true, Message = "Loading history…" });
         grid.Children.Add(Panel(3, "Git Changes", "main", "Icon.Branch", list));
 
-        var window = Show(grid, 1280, 460);
+        var window = Show(grid, 1280, 600);
         Shoot(window, "design-08-panel-states");
 
         Assert.Equal(4, grid.Children.Count);

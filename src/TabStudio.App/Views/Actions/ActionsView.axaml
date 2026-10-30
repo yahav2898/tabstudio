@@ -151,10 +151,10 @@
                           ToolTip.Tip="Which branches">
                   <ComboBox.ItemTemplate>
                     <DataTemplate DataType="actions:RunBranchFilter">
-                      <StackPanel Orientation="Horizontal" Spacing="6">
-                        <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" />
-                        <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                      </StackPanel>
+                      <Grid ColumnDefinitions="Auto,*">
+                        <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" Margin="0,0,6,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding Label}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                      </Grid>
                     </DataTemplate>
                   </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -162,10 +162,10 @@
                           ToolTip.Tip="Which workflows">
                   <ComboBox.ItemTemplate>
                     <DataTemplate DataType="actions:RunWorkflowFilter">
-                      <StackPanel Orientation="Horizontal" Spacing="6">
-                        <controls:StrokeIcon Data="{StaticResource Icon.Workflow}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" />
-                        <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                      </StackPanel>
+                      <Grid ColumnDefinitions="Auto,*">
+                        <controls:StrokeIcon Data="{StaticResource Icon.Workflow}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" Margin="0,0,6,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding Label}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                      </Grid>
                     </DataTemplate>
                   </ComboBox.ItemTemplate>
                 </ComboBox>
