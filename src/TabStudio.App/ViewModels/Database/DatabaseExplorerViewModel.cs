@@ -193,8 +193,8 @@ public sealed partial class DatabaseExplorerViewModel : ObservableObject, IDispo
         using var operation = CancellationTokenSource.CreateLinkedTokenSource(_lifetime.Token); _operation = operation; IsBusy = true;
         try { await work(operation.Token); }
         catch (OperationCanceledException) { Status = "Cancelled."; }
-        // Provider errors can echo credentials or SQL; do not put raw exceptions in persistent UI state.
-        catch (Exception ex) when (ex is not OutOfMemoryException) { Status = $"{ex.GetType().Name}: connection or schema operation failed. Check the provider, connection details and permissions."; }
+        // Provider errors can echo credentials or SQL; only the server's reason is shown, not the raw exception.
+        catch (Exception ex) when (ex is not OutOfMemoryException) { Status = DatabaseError.Message(ex); }
         finally { _operation = null; IsBusy = false; _workGate.Release(); }
     }
     public void Dispose() { _lifetime.Cancel(); _operation?.Cancel(); _lifetime.Dispose(); EfCore.Dispose(); }

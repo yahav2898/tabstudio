@@ -21,9 +21,18 @@ internal sealed class FakeApkTool(string rootfs) : IApkTool
     /// <summary>Makes the next install fail with this output.</summary>
     public string? FailNextAdd { get; set; }
 
+    /// <summary>Makes the next install throw this, as storage filling up while apk writes does.</summary>
+    public Exception? ThrowNextAdd { get; set; }
+
     public Task<ApkResult> AddAsync(IReadOnlyList<string> packages, IReadOnlyList<string> repositories, bool upgrade, Action<string> line, CancellationToken cancellationToken)
     {
         Calls.Add($"add{(upgrade ? " --upgrade" : string.Empty)} {string.Join(',', repositories.Select(Path.GetFileName))} {string.Join(' ', packages)}");
+        if (ThrowNextAdd is { } exception)
+        {
+            ThrowNextAdd = null;
+            throw exception;
+        }
+
         if (FailNextAdd is { } failure)
         {
             FailNextAdd = null;

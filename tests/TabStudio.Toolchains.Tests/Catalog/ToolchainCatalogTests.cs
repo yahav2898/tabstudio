@@ -153,6 +153,24 @@ public sealed class ToolchainCatalogTests
     }
 
     [Fact]
+    public void An_archive_is_unpacked_into_its_own_folder_never_over_another_toolchains()
+    {
+        // Kotlin's compiler was unpacked into /opt/tabstudio itself, which the installer empties first: installing
+        // Kotlin deleted debugpy, js-debug, java-debug, Phpactor and the Android SDK, and removing it did the same.
+        var destinations = Catalog.Toolchains
+            .SelectMany(t => t.Setup.Concat(t.Glibc?.Setup ?? []).Select(s => s.Archive).OfType<ArchiveDefinition>().Select(a => (Toolchain: t.Id, Folder: a.Destination.TrimEnd('/'))))
+            .Distinct()
+            .ToList();
+
+        Assert.All(destinations, d => Assert.True(d.Folder.Split('/', StringSplitOptions.RemoveEmptyEntries).Length >= 3, $"{d.Toolchain} unpacks into {d.Folder}"));
+        foreach (var (toolchain, folder) in destinations)
+        {
+            Assert.DoesNotContain(destinations, other => other.Toolchain != toolchain
+                && (other.Folder == folder || other.Folder.StartsWith(folder + "/", StringComparison.Ordinal)));
+        }
+    }
+
+    [Fact]
     public void Pins_alpine_linux_for_every_android_architecture()
     {
         var linux = Catalog.Linux;

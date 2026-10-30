@@ -29,6 +29,10 @@ public sealed class ProjectTemplatesTests : IDisposable
     [InlineData("My App")]
     [InlineData("App.")]
     [InlineData("a-b")]
+    [InlineData("class")]
+    [InlineData("My.event")]
+    [InlineData("Console")]
+    [InlineData("System.Tools")]
     public void Rejects_names_that_are_not_namespaces(string name) => Assert.NotNull(ProjectTemplates.Validate(name));
 
     [Theory]

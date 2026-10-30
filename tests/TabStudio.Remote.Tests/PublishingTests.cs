@@ -34,6 +34,17 @@ public sealed class PublishingTests
         Assert.Equal(fail ? previous : release, new DirectoryInfo(Path.Combine(root, "current")).LinkTarget);
     }
 
+    [Theory]
+    [InlineData(UnixFileMode.UserRead | UnixFileMode.UserWrite, 644)]
+    [InlineData(UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.GroupRead | UnixFileMode.OtherRead, 644)]
+    [InlineData(UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute, 755)]
+    [InlineData(UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.OtherRead, 664)]
+    public void A_published_file_is_readable_by_the_service_and_its_mode_is_written_as_SSH_NET_reads_it(UnixFileMode local, int expected)
+    {
+        // Android creates files 0600, which threw; 0644 became 0420. SSH.NET reads the digits of the number as octal.
+        Assert.Equal((short)expected, ServerPublisher.PublishedMode(local));
+    }
+
     [SshFact]
     public async Task Upload_stages_publish_output_and_failed_activation_preserves_the_current_release()
     {

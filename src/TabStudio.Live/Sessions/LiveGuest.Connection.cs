@@ -61,17 +61,31 @@ public sealed partial class LiveGuest
             ReportCopy(done, missing.Count);
             foreach (var batch in missing.Chunk(FilesPerRequest))
             {
-                var answer = await connection.RequestAsync(
-                    LiveMethods.Files,
-                    LiveJson.Body(new LiveFilesRequest([.. batch.Select(f => f.Path)]), LiveJsonContext.Default.LiveFilesRequest),
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
-                var response = answer.Read(LiveJsonContext.Default.LiveFilesResponse);
-                for (var i = 0; i < response.Files.Count && i < answer.Attachments.Count; i++)
+                // An answer stops at 32 MB and leaves the rest of the batch empty: those are asked for again, until
+                // an answer brings none of them (a file the host cannot read). Skipped, they were missing from the
+                // copy until the next reconnection.
+                var pending = batch.Select(f => f.Path).ToList();
+                while (pending.Count > 0)
                 {
-                    if (response.Files[i] is { } entry)
+                    var answer = await connection.RequestAsync(
+                        LiveMethods.Files,
+                        LiveJson.Body(new LiveFilesRequest(pending), LiveJsonContext.Default.LiveFilesRequest),
+                        cancellationToken: cancellationToken).ConfigureAwait(false);
+                    var response = answer.Read(LiveJsonContext.Default.LiveFilesResponse);
+                    var left = new List<string>();
+                    for (var i = 0; i < pending.Count; i++)
                     {
-                        mirror.Write(entry, answer.Attachments[i]);
+                        if (i < response.Files.Count && i < answer.Attachments.Count && response.Files[i] is { } entry)
+                        {
+                            mirror.Write(entry, answer.Attachments[i]);
+                        }
+                        else
+                        {
+                            left.Add(pending[i]);
+                        }
                     }
+
+                    pending = left.Count < pending.Count ? left : [];
                 }
 
                 done += batch.Length;

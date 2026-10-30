@@ -68,7 +68,13 @@ public static partial class SshConfig
                 if (identity.StartsWith("~/", StringComparison.Ordinal)) { identity = Path.Combine(home, identity[2..]); }
                 if (!Path.IsPathRooted(identity)) { identity = Path.Combine(home, identity); }
             }
-            var port = options.TryGetValue("port", out var portValue) ? int.Parse(portValue, System.Globalization.CultureInfo.InvariantCulture) : 22;
+            var port = 22;
+            if (options.TryGetValue("port", out var portValue)
+                && (!int.TryParse(portValue, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out port) || port is < 1 or > 65535))
+            {
+                throw new FormatException($"Host {alias} in the SSH config has Port {portValue}, which is not a port between 1 and 65535.");
+            }
+
             var host = new SshHost(alias, hostName, user, port, identity);
             host.Validate();
             hosts.Add(host);
@@ -123,6 +129,20 @@ public sealed class SshHostStore(string directory)
         pins[key] = fingerprint;
         Directory.CreateDirectory(directory);
         AtomicWrite(Path.Combine(directory, "known-hosts.json"), JsonSerializer.Serialize(pins, JsonOptions));
+    }
+    /// <summary>
+    /// Forgets a host's saved server key, so the next connection asks the user to verify the new one: after a server
+    /// was reinstalled, every connection was refused for good, with no way but clearing the app's data.
+    /// </summary>
+    public void Forget(SshHost host)
+    {
+        ArgumentNullException.ThrowIfNull(host);
+        var pins = Pins();
+        if (pins.Remove($"{host.HostName.ToLowerInvariant()}:{host.Port}"))
+        {
+            Directory.CreateDirectory(directory);
+            AtomicWrite(Path.Combine(directory, "known-hosts.json"), JsonSerializer.Serialize(pins, JsonOptions));
+        }
     }
     private Dictionary<string, string> Pins() => File.Exists(Path.Combine(directory, "known-hosts.json")) ? JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(Path.Combine(directory, "known-hosts.json"))) ?? [] : [];
     internal static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };

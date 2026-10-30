@@ -1,4 +1,5 @@
 using System.Globalization;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.VisualTree;
@@ -68,6 +69,10 @@ public sealed class LinkScreenshotTests : IDisposable
         UiTestHelpers.SaveScreenshot(window, "link-05-host-qr");
 
         Assert.Equal("Waiting for a tablet", link.HostTitle);
+
+        // A cool device says only its cores: the design keeps quiet about what is fine ("Thermal OK" was shown).
+        Assert.DoesNotContain("Thermal", link.HostDeviceText, StringComparison.Ordinal);
+        Assert.EndsWith("cores", link.HostDeviceText, StringComparison.Ordinal);
         Assert.Matches("^[0-9A-Z]{4}-[0-9A-Z]{4}$", link.PairingCodeText);
 
         var tablet = Tablet("Galaxy Tab S9");
@@ -92,6 +97,18 @@ public sealed class LinkScreenshotTests : IDisposable
         UiTestHelpers.SaveScreenshot(phone, "link-07-host-phone");
 
         Assert.Equal(1, Grid.GetRow(Named<StackPanel>(phone, "HostCodeText")));
+
+        // Every tab is on the phone's screen, and the fingerprint shows whole.
+        foreach (var tab in Named<WrapPanel>(phone, "LinkTabs").Children.Where(tab => tab.IsVisible))
+        {
+            var left = tab.TranslatePoint(default, phone)!.Value.X;
+            Assert.True(left >= 0 && left + tab.Bounds.Width <= phone.Bounds.Width + 0.5, $"A tab is at {left}, outside the phone's {phone.Bounds.Width} pixels.");
+        }
+
+        var fingerprint = Named<TextBlock>(phone, "FingerprintLine");
+        Assert.False(string.IsNullOrEmpty(fingerprint.Text));
+        Assert.Equal(Avalonia.Media.TextWrapping.Wrap, fingerprint.TextWrapping);
+        Assert.Equal(Avalonia.Media.TextTrimming.None, fingerprint.TextTrimming);
 
         link.SelectTabCommand.Execute(LinkTab.Connect);
         await UiTestHelpers.WaitUntilAsync(() => Grid.GetRow(Named<TextBox>(phone, "CodeBox")) == 3, because: "the code under the address");

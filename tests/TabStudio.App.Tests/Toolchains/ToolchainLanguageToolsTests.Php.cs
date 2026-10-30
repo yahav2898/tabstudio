@@ -76,6 +76,15 @@ public sealed partial class ToolchainLanguageToolsTests
         workspace.StartDebuggingCommand.Execute(null);
         await UiTestHelpers.WaitUntilAsync(() => !workspace.IsDebugging, TimeSpan.FromSeconds(60), because: "PHP exit");
         Assert.Contains("Hello, Ada! This is PHP", workspace.Output.Text, StringComparison.Ordinal);
+
+        // F5 reports the script's own exit code, which php-debug always reported as 0.
+        workspace.Breakpoints.Toggle(greeter, line);
+        document.Document.Text = original.TrimEnd() + "\nexit(3);\n";
+        AnswerInput(workspace, "Ada");
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await UiTestHelpers.WaitUntilAsync(() => !workspace.IsDebugging, TimeSpan.FromSeconds(60), because: "PHP exit(3)");
+        Assert.Contains("has exited with code 3", workspace.Output.Text, StringComparison.Ordinal);
+        document.Document.Text = original;
         trace.Passed = true;
     }
 }

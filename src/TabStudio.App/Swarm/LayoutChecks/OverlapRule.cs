@@ -31,7 +31,10 @@ internal static class OverlapRule
             for (var j = i + 1; j < targets.Count; j++)
             {
                 var (a, b) = (targets[i], targets[j]);
-                if (a.ScrollDepth != b.ScrollDepth || a.Visual.IsVisualAncestorOf(b.Visual) || b.Visual.IsVisualAncestorOf(a.Visual))
+                // Content of one scroll viewer scrolls out from under a control in another, as a document's
+                // content does from under the bottom panel's tab strip, which scrolls on its own.
+                if (a.ScrollDepth != b.ScrollDepth || !ReferenceEquals(ScrollOwner(a.Visual), ScrollOwner(b.Visual))
+                    || a.Visual.IsVisualAncestorOf(b.Visual) || b.Visual.IsVisualAncestorOf(a.Visual))
                 {
                     continue;
                 }
@@ -64,4 +67,8 @@ internal static class OverlapRule
     }
 
     private static double Area(Rect rect) => rect.Width * rect.Height;
+
+    /// <summary>The scroll viewer a control scrolls in, if any.</summary>
+    private static Avalonia.Controls.ScrollViewer? ScrollOwner(Visual visual) =>
+        visual.GetVisualAncestors().OfType<Avalonia.Controls.ScrollViewer>().FirstOrDefault();
 }

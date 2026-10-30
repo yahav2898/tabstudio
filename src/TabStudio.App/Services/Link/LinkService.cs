@@ -106,7 +106,7 @@ public sealed partial class LinkService : IAsyncDisposable, IDisposable
     private static string Describe(Exception error) => error switch
     {
         TimeoutException => "The other device did not answer in time. Check that both devices are on the same Wi-Fi.",
-        OperationCanceledException => "Canceled.",
+        OperationCanceledException => "Cancelled.",
         _ => error.Message,
     };
 }

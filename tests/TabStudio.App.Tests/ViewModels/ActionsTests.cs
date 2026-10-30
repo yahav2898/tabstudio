@@ -12,6 +12,18 @@ namespace TabStudio.App.Tests.ViewModels;
 /// </summary>
 public sealed class ActionsTests
 {
+    [Theory]
+    [InlineData("dry-run", "Dry run")]
+    [InlineData("node_version", "Node version")]
+    [InlineData("releaseChannel", "Release channel")]
+    [InlineData("version", "Version")]
+    [InlineData("CI", "CI")]
+    public void The_Run_workflow_form_labels_inputs_in_words(string name, string label)
+    {
+        // The form showed the raw names, "dry-run", in code font, and its switch said "true".
+        Assert.Equal(label, DispatchInputViewModel.ToLabel(name));
+    }
+
     private const string Repository = GitWorkspaceFixture.Repository;
     private const string Program = "src/HelloTablet/Program.cs";
 

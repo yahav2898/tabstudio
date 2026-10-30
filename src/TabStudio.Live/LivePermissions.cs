@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace TabStudio.Live;
 
 /// <summary>
@@ -5,7 +7,7 @@ namespace TabStudio.Live;
 /// a guest's IDE uses the same rules to show only what it may do. A guest's own device is never trusted to enforce
 /// them: the host refuses what they forbid.
 /// </summary>
-public static class LivePermissions
+public static partial class LivePermissions
 {
     /// <summary>Whether a participant may change the shared documents: the host, and guests the host made editors.</summary>
     /// <param name="participant">The participant.</param>
@@ -32,6 +34,21 @@ public static class LivePermissions
     {
         ArgumentNullException.ThrowIfNull(participant);
         return participant.Role == LiveRole.Host || participant.CanStep;
+    }
+
+    /// <summary>
+    /// Whether a participant may evaluate an expression in the paused program: anyone may read a variable, such as
+    /// <c>order.Lines[0].Price</c>, and whoever may control the debugger may evaluate anything. A debug adapter's
+    /// evaluation runs code (debugpy's is Python's <c>eval</c>), so a viewer's Watch could otherwise run any program
+    /// on the host.
+    /// </summary>
+    /// <param name="participant">The participant.</param>
+    /// <param name="expression">The Watch or DataTip expression.</param>
+    public static bool CanEvaluate(LiveParticipant participant, string expression)
+    {
+        ArgumentNullException.ThrowIfNull(participant);
+        ArgumentNullException.ThrowIfNull(expression);
+        return CanControlDebugger(participant) || VariablePath().IsMatch(expression.Trim());
     }
 
     /// <summary>Whether a participant may type in the host's Terminal: the host, and guests the host allowed to.</summary>
@@ -71,4 +88,7 @@ public static class LivePermissions
         ArgumentNullException.ThrowIfNull(isShared);
         return participant.IsConnected && Files.LiveWorkspacePaths.Normalize(relativePath) is { } path && isShared(path);
     }
+
+    [GeneratedRegex(@"^[\p{L}_$][\p{L}\p{Nd}_$]*(?:\.[\p{L}_$][\p{L}\p{Nd}_$]*|\[\d{1,9}\])*$", RegexOptions.CultureInvariant)]
+    private static partial Regex VariablePath();
 }

@@ -65,7 +65,14 @@ public sealed class SqlServerAdviceTests
         try
         {
             workspace.SelectPanelCommand.Execute(BottomPanel.Compatibility);
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
             UiTestHelpers.SaveScreenshot(window, "compatibility-sql-server");
+
+            // The project's name sits at the top of its row, beside the start of the explanation, not centered
+            // against all of it below the panel's fold.
+            var cell = Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(window).OfType<TextBlock>()
+                .Single(t => t.Name == "ProjectCell" && t.Text == "ShopWeb");
+            Assert.True(cell.Bounds.Y < 4, $"The project's name is {cell.Bounds.Y} pixels down its row.");
         }
         finally
         {

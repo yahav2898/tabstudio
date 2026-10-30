@@ -10,7 +10,7 @@ namespace TabStudio.App.ViewModels;
 
 /// <summary>How a program run in the Output panel ended.</summary>
 /// <param name="Exit">How it exited, or <see langword="null"/> when it could not start.</param>
-/// <param name="Lines">The last lines it printed, standard output and error together, for finding the error it ended with.</param>
+/// <param name="Lines">The first and last lines it printed, standard output and error together, for finding its errors and the one it ended with.</param>
 /// <param name="StartError">Why it could not start, when it could not.</param>
 public sealed record OutputProcessResult(ProcessExit? Exit, IReadOnlyList<string> Lines, string? StartError = null)
 {
@@ -39,7 +39,12 @@ public sealed record OutputProcessResult(ProcessExit? Exit, IReadOnlyList<string
 /// </remarks>
 internal static class OutputProcess
 {
-    private const int KeptLines = 400;
+    /// <summary>
+    /// The lines kept from the start of a program's output and from its end. The errors of a build are usually
+    /// first and the error a program ended with last; keeping only the last 400 lost a C or Rust build's first errors
+    /// behind its warnings.
+    /// </summary>
+    internal const int KeptLines = 1000;
     private static readonly TimeSpan PromptQuiet = TimeSpan.FromMilliseconds(300);
     private static readonly TimeSpan DrainTime = TimeSpan.FromSeconds(3);
 
@@ -194,10 +199,11 @@ internal static class OutputProcess
         }
     }
 
-    /// <summary>The last lines a program printed, each stream's lines kept whole.</summary>
-    private sealed class LineCollector
+    /// <summary>The first and last lines a program printed, <see cref="KeptLines"/> of each, each stream's lines kept whole.</summary>
+    internal sealed class LineCollector
     {
         private readonly Lock _gate = new();
+        private readonly List<string> _head = [];
         private readonly Queue<string> _lines = new();
         private readonly Dictionary<OutputKind, StringBuilder> _partial = new();
 
@@ -242,12 +248,18 @@ internal static class OutputProcess
                 }
 
                 _partial.Clear();
-                return [.. _lines];
+                return [.. _head, .. _lines];
             }
         }
 
         private void Keep(string line)
         {
+            if (_head.Count < KeptLines)
+            {
+                _head.Add(line);
+                return;
+            }
+
             _lines.Enqueue(line);
             if (_lines.Count > KeptLines)
             {

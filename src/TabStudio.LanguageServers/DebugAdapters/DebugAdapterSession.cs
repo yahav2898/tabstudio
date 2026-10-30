@@ -503,7 +503,9 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
         {
             if (body.ValueKind == JsonValueKind.Object && body.TryGetProperty("capabilities", out var capabilities))
             {
-                Capabilities = ToCapabilities(capabilities);
+                // The event carries only the capabilities that changed (lldb-dap sends supportsRestartRequest after
+                // every launch): the others keep what initialize said.
+                Capabilities = ToCapabilities(capabilities, Capabilities);
             }
         });
         _connection.AddRequestHandler("runInTerminal", async (arguments, cancellationToken) =>
@@ -605,31 +607,33 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
         }
     }
 
-    private static DapCapabilities ToCapabilities(JsonElement body)
+    private static DapCapabilities ToCapabilities(JsonElement body, DapCapabilities? before = null)
     {
+        before ??= new DapCapabilities();
         if (Read(body, DapJsonContext.Default.CapabilitiesDto) is not { } dto)
         {
-            return new DapCapabilities();
+            return before;
         }
 
         return new DapCapabilities
         {
-            ConfigurationDone = dto.SupportsConfigurationDoneRequest == true,
-            ConditionalBreakpoints = dto.SupportsConditionalBreakpoints == true,
-            HitConditionalBreakpoints = dto.SupportsHitConditionalBreakpoints == true,
-            LogPoints = dto.SupportsLogPoints == true,
-            EvaluateForHovers = dto.SupportsEvaluateForHovers == true,
-            SetVariable = dto.SupportsSetVariable == true,
-            SetExpression = dto.SupportsSetExpression == true,
-            ReadMemory = dto.SupportsReadMemoryRequest == true,
-            WriteMemory = dto.SupportsWriteMemoryRequest == true,
-            Disassemble = dto.SupportsDisassembleRequest == true,
-            ExceptionInfo = dto.SupportsExceptionInfoRequest == true,
-            Terminate = dto.SupportsTerminateRequest == true,
-            ExceptionFilters = (dto.ExceptionBreakpointFilters ?? [])
-                .Where(f => !string.IsNullOrEmpty(f.Filter))
-                .Select(f => new DapExceptionFilter(f.Filter, f.Label ?? f.Filter, f.Description, f.Default == true))
-                .ToList(),
+            ConfigurationDone = dto.SupportsConfigurationDoneRequest ?? before.ConfigurationDone,
+            ConditionalBreakpoints = dto.SupportsConditionalBreakpoints ?? before.ConditionalBreakpoints,
+            HitConditionalBreakpoints = dto.SupportsHitConditionalBreakpoints ?? before.HitConditionalBreakpoints,
+            LogPoints = dto.SupportsLogPoints ?? before.LogPoints,
+            EvaluateForHovers = dto.SupportsEvaluateForHovers ?? before.EvaluateForHovers,
+            SetVariable = dto.SupportsSetVariable ?? before.SetVariable,
+            SetExpression = dto.SupportsSetExpression ?? before.SetExpression,
+            ReadMemory = dto.SupportsReadMemoryRequest ?? before.ReadMemory,
+            WriteMemory = dto.SupportsWriteMemoryRequest ?? before.WriteMemory,
+            Disassemble = dto.SupportsDisassembleRequest ?? before.Disassemble,
+            ExceptionInfo = dto.SupportsExceptionInfoRequest ?? before.ExceptionInfo,
+            Terminate = dto.SupportsTerminateRequest ?? before.Terminate,
+            ExceptionFilters = dto.ExceptionBreakpointFilters is { } filters
+                ? [.. filters
+                    .Where(f => !string.IsNullOrEmpty(f.Filter))
+                    .Select(f => new DapExceptionFilter(f.Filter, f.Label ?? f.Filter, f.Description, f.Default == true))]
+                : before.ExceptionFilters,
         };
     }
 

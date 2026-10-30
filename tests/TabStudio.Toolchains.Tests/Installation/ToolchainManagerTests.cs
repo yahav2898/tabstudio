@@ -42,6 +42,30 @@ public sealed class ToolchainManagerTests : IDisposable
     }
 
     [Fact]
+    public async Task An_update_whose_archive_fails_to_unpack_keeps_the_installed_copy()
+    {
+        // The installed debugger was deleted before the new one was unpacked: a failed or cancelled update left the
+        // toolchain without it while the Store still called it ready.
+        await Manager.InstallAsync("hello");
+        var adapter = _device.Rootfs("/opt/tabstudio/hello/hello-debugger/adapter.js");
+        Assert.True(File.Exists(adapter));
+
+        byte[] broken = [.. "not an archive at all"u8];
+        var address = new Uri("https://downloads.example.org/hello-debugger-2.0.tar.gz");
+        _device.Mirror.Server.Add(address, broken);
+        var step = _device.Hello.Setup[0];
+        var update = _device.Hello with
+        {
+            Setup = [step with { Archive = step.Archive! with { Url = address, Sha256 = Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(broken)), Size = broken.Length } }],
+        };
+
+        await Assert.ThrowsAsync<ToolchainInstallException>(() => _device.Installer.InstallAsync(update, null, CancellationToken.None));
+
+        Assert.True(File.Exists(adapter));
+        Assert.False(Directory.Exists(_device.Rootfs("/opt/tabstudio/hello.tabstudio-new")));
+    }
+
+    [Fact]
     public async Task Before_the_first_install_estimates_and_says_linux_will_be_set_up()
     {
         await Manager.RefreshAsync();
@@ -167,6 +191,27 @@ public sealed class ToolchainManagerTests : IDisposable
         Assert.Equal(InstallFailure.NotEnoughSpace, error.Failure);
         Assert.Contains("10 MB free", error.Message, StringComparison.Ordinal);
         Assert.DoesNotContain(_device.Mirror.Server.Requests, r => r.Contains(".apk", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task Storage_filling_up_during_an_install_says_so_and_leaves_the_toolchain_ready_to_install_again()
+    {
+        // An IOException the steps did not describe left the toolchain "Installing" until a restart, and reached
+        // the Store's button as an error that ended the app.
+        await PrepareAsync();
+        _device.Apk.ThrowNextAdd = new IOException("No space left on device", 28);
+
+        var error = await Assert.ThrowsAsync<ToolchainInstallException>(() => Manager.InstallAsync("hello"));
+
+        Assert.Equal(InstallFailure.NotEnoughSpace, error.Failure);
+        Assert.Contains("storage filled up", error.Message, StringComparison.Ordinal);
+        var status = Manager.Status("hello");
+        Assert.False(status.IsBusy);
+        Assert.Equal(ToolchainState.NotInstalled, status.State);
+        Assert.Equal(error.Message, status.Error);
+
+        await Manager.InstallAsync("hello");
+        Assert.Equal(ToolchainState.Installed, Manager.Status("hello").State);
     }
 
     [Fact]

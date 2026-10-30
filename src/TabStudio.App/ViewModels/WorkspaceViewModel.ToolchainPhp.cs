@@ -38,11 +38,15 @@ public sealed partial class WorkspaceViewModel
 
         if (File.Exists(settings) && string.IsNullOrEmpty(PhpProject.EnvValue(settings, "APP_KEY")))
         {
-            ShowSetupOutput();
             Output.WriteLine($"------ Setting up {project.Name}: php artisan key:generate ------", OutputKind.Info);
             ProjectSetupText = $"Setting up {project.Name}: application key";
             var key = await OutputProcess.RunAsync(_toolchains.Runtime, Artisan(project, "key:generate", "--force", "--no-interaction"), Output, null, cancellationToken, toolchain: "php");
             Output.WriteLine($"========== php artisan key:generate: {(key.Succeeded ? "succeeded" : "failed")} ==========", key.Succeeded ? OutputKind.Success : OutputKind.Failure);
+            if (!key.Succeeded)
+            {
+                ShowSetupOutput();
+            }
+
             changed = true;
         }
 

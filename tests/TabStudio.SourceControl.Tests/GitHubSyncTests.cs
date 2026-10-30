@@ -164,6 +164,23 @@ public sealed class GitHubSyncTests : IDisposable
     }
 
     [Fact]
+    public async Task A_protected_branch_says_so_instead_of_asking_for_a_pull()
+    {
+        // GitHub refuses an update to a protected branch as it refuses one that is behind, and "pull first" was
+        // answered by "up to date", round and round.
+        var sync = await CloneAsync();
+        _github.ProtectedBranches.Add("main");
+        Write("README.md", "# Mine\n");
+
+        var error = await Assert.ThrowsAsync<SyncException>(() => sync.CommitAsync("Mine"));
+
+        Assert.NotEqual(SyncFailure.BehindRemote, error.Failure);
+        Assert.Contains("Protected branch update failed", error.Message, StringComparison.Ordinal);
+        Assert.Contains("open a pull request", error.Message, StringComparison.Ordinal);
+        Assert.Equal(new[] { new FileChange("README.md", ChangeKind.Modified) }, (await sync.GetStatusAsync()).Changes);
+    }
+
+    [Fact]
     public async Task A_push_that_races_another_one_is_refused_and_nothing_is_lost()
     {
         var sync = await CloneAsync();

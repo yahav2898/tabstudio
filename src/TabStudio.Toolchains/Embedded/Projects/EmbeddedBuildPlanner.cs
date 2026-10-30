@@ -271,7 +271,7 @@ public static class EmbeddedBuildPlanner
                 var target = options.Target ?? project.Target;
                 var selection = target is null ? Array.Empty<string>() : new[] { "--target", target };
                 var locked = File.Exists(Path.Combine(project.Directory, "Cargo.lock")) ? new[] { "--locked" } : Array.Empty<string>();
-                build.Add(Command("cargo", ["build", .. locked, .. selection, "--message-format=json-render-diagnostics", "--jobs", jobs]));
+                build.Add(Command("cargo", ["build", .. locked, .. selection, "--message-format=json", "--jobs", jobs]));
                 if (options.Chip is not null && options.Firmware is not null && options.Port is not null)
                 {
                     upload.Add(Command("probe-rs", "download", "--chip", options.Chip, FirmwarePath(project.Directory, options.Firmware)));

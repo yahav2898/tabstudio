@@ -60,7 +60,16 @@ public sealed class ProblemMatcher
                     var message = match.Groups["message"] is { Success: true } m ? m.Value : null;
                     if (!result.Any(r => r.Start < match.Index + match.Length && match.Index < r.Start + r.Length))
                     {
-                        result.Add(new OutputLocation(file.Value, number, column, match.Index, match.Length, message, match.Groups["severity"].Success ? match.Groups["severity"].Value : null));
+                        // A file:// URL, as Node.js prints an ES module's frames, escapes spaces and other characters (%20).
+                        var path = match.Groups["url"].Success ? Uri.UnescapeDataString(file.Value) : file.Value;
+
+                        // A JVM stack frame names its file without its folder, which its class's package gives:
+                        // "at com.example.Main.run(Main.java:5)" is com/example/Main.java in a source folder.
+                        if (match.Groups["package"] is { Success: true, Length: > 0 } package)
+                        {
+                            path = package.Value.TrimEnd('.').Replace('.', '/') + "/" + path;
+                        }
+                        result.Add(new OutputLocation(path, number, column, match.Index, match.Length, message, match.Groups["severity"].Success ? match.Groups["severity"].Value : null));
                     }
                 }
             }
@@ -83,7 +92,10 @@ public sealed class ProblemMatcher
         ArgumentNullException.ThrowIfNull(isUserFile);
         var errors = lines.SelectMany(Match)
             .Where(l => l.Message is { Length: > 0 } && l.Severity?.ToLowerInvariant() is null or "error" or "e" or "fatal error" or "parse error" && isUserFile(l.File))
-            .Select(l => new RunError(l.Message!, l)).Distinct().ToList();
+            .Select(l => new RunError(l.Message!, l))
+            // One error printed twice, as PHP's "PHP Parse error:" and "Parse error:" lines, is listed once.
+            .DistinctBy(e => (e.Message, e.Location?.File, e.Location?.Line, e.Location?.Column))
+            .ToList();
         if (errors.Count == 0 && FindError(lines, isUserFile) is { } runtime)
         {
             errors.Add(runtime);
@@ -126,7 +138,15 @@ public sealed class ProblemMatcher
             }
 
             var message = match.Groups["message"].Value.Trim();
-            OutputLocation? location = null;
+
+            // A message that ends with a colon goes on on the next line, as a Rust panic's does since Rust 1.73.
+            if (message.EndsWith(':') && i + 1 < lines.Count && lines[i + 1].Trim() is { Length: > 0 } rest)
+            {
+                message = $"{message} {rest}";
+            }
+
+            // The location can be on the message's own line, as a panic's is ("panicked at src/main.rs:2:5:").
+            var location = Match(lines[i]).FirstOrDefault(l => isUserFile(l.File));
             for (var j = i + 1; j < Math.Min(lines.Count, i + 30) && location is null; j++)
             {
                 location = Match(lines[j]).FirstOrDefault(l => isUserFile(l.File));

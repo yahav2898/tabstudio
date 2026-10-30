@@ -93,6 +93,22 @@ public sealed class ToolchainServerInstallTests : IDisposable
     }
 
     [AvaloniaFact]
+    public async Task Installing_from_the_Store_clears_the_status_bar_message_that_the_server_is_missing()
+    {
+        // The message stayed after Python was installed from Tools > Toolchain Store, next to "Pyright ready".
+        Show();
+        var (workspace, document) = await OpenPythonAppAsync(CreatePythonApp("StoreGreeter"));
+        await UiTestHelpers.WaitUntilAsync(() => workspace.ServerInstallOffer is not null, because: "the status bar's offer");
+        await UiTestHelpers.WaitUntilAsync(() => workspace.StatusText.Contains("which is not installed", StringComparison.Ordinal), because: "the status bar to say Pyright is missing");
+
+        await workspace.ToolchainStore.InstallAsync("python");
+        await UiTestHelpers.WaitUntilAsync(() => document.LanguageServer?.ServerState == LanguageServerState.Running, because: "Pyright to start by itself");
+
+        Assert.DoesNotContain("not installed", workspace.StatusText, StringComparison.Ordinal);
+        Assert.Equal("Pyright ready", workspace.LanguageServerText);
+    }
+
+    [AvaloniaFact]
     public async Task F5_offers_to_install_the_toolchain_of_a_missing_debug_adapter_and_then_starts_it()
     {
         var window = Show();

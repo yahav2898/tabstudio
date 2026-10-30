@@ -216,8 +216,11 @@ public sealed partial class SwarmMember
 
         var fault = result.Exception is { } exception ? SwarmFault.From(exception) : null;
         var state = result.Outcome == RunOutcome.Crashed ? SwarmDeviceState.Crashed : SwarmDeviceState.Exited;
-        SetAppState(local.Id, state, local.Name, fault?.Message, local.Kind);
+
+        // The exit, with the exception and its stack trace, reaches the tablet before the state that says it crashed,
+        // so a device shown as crashed always has its fault to show.
         await NotifyTabletAsync(SwarmMethods.Exited, SwarmJson.Body(new SwarmExitNotice(local.Id, result.Outcome, result.ExitCode, fault), SwarmJsonContext.Default.SwarmExitNotice)).ConfigureAwait(false);
+        SetAppState(local.Id, state, local.Name, fault?.Message, local.Kind);
     }
 
     private async Task<ISwarmAppRun> StartAsync(LocalRun local, SwarmRunRequest request, CompiledAssembly entry, List<CompiledAssembly> dependencies, List<string> packages, DebugSession? session)

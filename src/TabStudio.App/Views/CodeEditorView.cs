@@ -51,8 +51,9 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
             LineNumbersMargin = new Thickness(18, 0, 16, 0),
             Padding = new Thickness(0, 4, 0, 0),
         };
-        _editor.Options.ConvertTabsToSpaces = true;
-        _editor.Options.IndentationSize = 4;
+        var indentation = IndentationStyle.For(document.FilePath, document.Document.Text);
+        _editor.Options.ConvertTabsToSpaces = !indentation.UsesTabs;
+        _editor.Options.IndentationSize = indentation.Size;
         _editor.Options.HighlightCurrentLine = true;
         _editor.Options.EnableHyperlinks = false;
         _editor.Options.EnableEmailHyperlinks = false;
@@ -91,6 +92,8 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         }
 
         _search = SearchPanel.Install(_editor);
+        UseRegexReplace();
+        _editor.TextArea.TextView.ElementGenerators.Add(new BidiControlGenerator());
         Content = _editor;
 
         document.Document.Changed += OnTextChanged;

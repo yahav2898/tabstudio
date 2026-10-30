@@ -75,7 +75,8 @@ public sealed class LegacyFrameworkProjectTests : IDisposable
     public void A_legacy_console_app_runs_in_process()
     {
         _temp.Write("Tool/Program.cs", "class Program { static void Main() { System.Console.WriteLine(1); } }");
-        var path = _temp.Write("Tool/Tool.csproj", Legacy("Exe", """<Reference Include="System" /><Reference Include="System.Core" />""", """<Compile Include="Program.cs" />"""));
+        // A package install adds System.Web to console apps that never use it, as in example-console-visualbasic.
+        var path = _temp.Write("Tool/Tool.csproj", Legacy("Exe", """<Reference Include="System" /><Reference Include="System.Core" /><Reference Include="System.Web" />""", """<Compile Include="Program.cs" />"""));
 
         var report = CompatibilityDoctor.Diagnose(ProjectParser.Load(path));
 

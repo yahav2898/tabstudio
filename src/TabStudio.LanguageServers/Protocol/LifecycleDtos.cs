@@ -1,11 +1,12 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace TabStudio.LanguageServers.Protocol;
 
 /// <summary>The parameters of <c>initialize</c>.</summary>
 internal sealed record InitializeParamsDto(
-    int ProcessId,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.Never)] int? ProcessId,
     ClientInfoDto ClientInfo,
     string Locale,
     string? RootPath,

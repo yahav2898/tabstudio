@@ -14,7 +14,7 @@ public sealed record ToolchainTestPlan(ToolchainTestFramework Framework, Process
 /// <summary>
 /// Runs a toolchain project's tests with its standard runner, as its own documentation does, and reads their results
 /// from the JUnit XML reports the runner writes: <c>vendor/bin/phpunit --log-junit</c> (or Pest), Gradle's
-/// <c>test</c> tasks, Maven's Surefire, and <c>swift test --xunit-output</c>.
+/// <c>test</c> tasks, Maven's Surefire, <c>swift test --xunit-output</c> and <c>pytest --junitxml</c>.
 /// </summary>
 public static class ToolchainTestPlanner
 {
@@ -34,12 +34,24 @@ public static class ToolchainTestPlanner
         }
         """;
 
+    /// <summary>
+    /// Runs pytest with the project's Python, installing it first when the project names it only among its
+    /// development requirements, which the project's own install leaves out.
+    /// </summary>
+    internal const string PytestScript =
+        "if ! \"$0\" -c 'import pytest' 2> /dev/null; then echo 'Installing pytest, which the tests need'; "
+        + "\"$0\" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec \"$0\" -m pytest \"$@\"";
+
     private static readonly string[] SkippedFolders = [".git", ".gradle", ".idea", ".tabstudio", "node_modules", "vendor", ".build"];
+
+    /// <summary>The files that name pytest in a Python project: its requirements, its build file and its test settings.</summary>
+    private static readonly string[] PythonTestSettings =
+        ["pyproject.toml", "setup.cfg", "setup.py", "tox.ini", "Pipfile", "requirements.txt", "requirements-dev.txt", "requirements-test.txt", "dev-requirements.txt", "test-requirements.txt", "requirements/dev.txt", "requirements/test.txt", "requirements/testing.txt"];
 
     /// <summary>
     /// The runner of a project's tests, or <see langword="null"/> when it has none TabStudio runs: PHPUnit or Pest
-    /// in a Composer project that requires it, JUnit tests in a Gradle or Maven build with <c>src/test</c>, and a
-    /// Swift package with test targets.
+    /// in a Composer project that requires it, JUnit tests in a Gradle or Maven build with <c>src/test</c>, a
+    /// Swift package with test targets, and a Python project that uses pytest.
     /// </summary>
     /// <param name="project">The project.</param>
     public static ToolchainTestFramework? Detect(ToolchainProject project)
@@ -71,6 +83,10 @@ public static class ToolchainTestPlanner
                     : File.Exists(Path.Combine(directory, "pom.xml")) ? ToolchainTestFramework.Maven : null;
             case "swift":
                 return SwiftProject.HasTests(directory) ? ToolchainTestFramework.SwiftPM : null;
+            case "python":
+                return File.Exists(Path.Combine(directory, "pytest.ini")) || File.Exists(Path.Combine(directory, "conftest.py"))
+                    || PythonTestSettings.Any(file => ReadSmall(Path.Combine(directory, file)).Contains("pytest", StringComparison.OrdinalIgnoreCase))
+                    ? ToolchainTestFramework.Pytest : null;
             default:
                 return null;
         }
@@ -123,6 +139,14 @@ public static class ToolchainTestPlanner
                 if (selected is not null)
                 {
                     command.AddRange(["--filter", SwiftFilter(selected)]);
+                }
+
+                break;
+            case ToolchainTestFramework.Pytest:
+                command = ["sh", "-c", PytestScript, "{python}", "--color=no", "--junitxml=" + Path.Combine(reportDirectory, "pytest.xml")];
+                if (selected is not null)
+                {
+                    command.AddRange(PytestNodeIds(project.Directory, selected));
                 }
 
                 break;
@@ -197,6 +221,30 @@ public static class ToolchainTestPlanner
     {
         var alternatives = selection.Select(s => QuoteRegex(s.ClassName) + (s.MethodName is null ? "(?:[./]|$)" : "[./]" + QuoteRegex(s.MethodName) + @"(?:\(|$)"));
         return string.Join('|', alternatives.Distinct(StringComparer.Ordinal));
+    }
+
+    /// <summary>
+    /// pytest's node ids for tests: <c>tests/test_math.py::TestDivide::test_divides</c>. pytest reports a test's
+    /// class as its file's path with dots, then its class, so the file is the longest such path that exists.
+    /// </summary>
+    internal static IEnumerable<string> PytestNodeIds(string directory, IReadOnlyList<ToolchainTestSelector> selection)
+    {
+        foreach (var selector in selection)
+        {
+            var parts = selector.ClassName.Split('.');
+            var id = selector.ClassName.Replace('.', '/') + ".py";
+            for (var length = parts.Length; length > 0; length--)
+            {
+                var file = string.Join('/', parts[..length]) + ".py";
+                if (File.Exists(Path.Combine(directory, file)))
+                {
+                    id = string.Join("::", parts[length..].Prepend(file));
+                    break;
+                }
+            }
+
+            yield return selector.MethodName is null ? id : id + "::" + selector.MethodName;
+        }
     }
 
     private static string QuotePcre(string text)

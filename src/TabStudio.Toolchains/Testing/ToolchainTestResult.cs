@@ -17,6 +17,9 @@ public enum ToolchainTestFramework
 
     /// <summary>XCTest and Swift Testing tests of a Swift package, run by <c>swift test</c>.</summary>
     SwiftPM,
+
+    /// <summary>pytest's tests of a Python project, and the <c>unittest</c> tests pytest runs too.</summary>
+    Pytest,
 }
 
 /// <summary>How a toolchain project's test ended.</summary>

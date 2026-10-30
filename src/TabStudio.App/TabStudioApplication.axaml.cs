@@ -53,6 +53,8 @@ public sealed partial class TabStudioApplication : Application
         ThemeSync.Start(this);
         // Hidden spinners and progress bars stop animating, so an idle IDE draws no frames.
         HiddenAnimations.Start();
+        // A long press on a button names it, as a hover does with a mouse.
+        Controls.TouchToolTips.Start();
         if (ApplicationLifetime is not null)
         {
             Services.GetRequiredService<AppearanceService>().Apply();
@@ -80,10 +82,24 @@ public sealed partial class TabStudioApplication : Application
 
         if (ApplicationLifetime is not null)
         {
+            // An error nothing handled ends the app: the session, with the unsaved text, is saved first.
+            Avalonia.Threading.Dispatcher.UIThread.UnhandledException += (_, _) => SaveSessionBeforeCrash();
             _ = Main.StartAsync();
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void SaveSessionBeforeCrash()
+    {
+        try
+        {
+            Main?.SaveSession();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            // The crash's own error is what gets reported.
+        }
     }
 }
 

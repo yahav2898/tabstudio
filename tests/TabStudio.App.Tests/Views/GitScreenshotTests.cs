@@ -1,3 +1,5 @@
+using Avalonia;
+using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
@@ -112,6 +114,17 @@ public sealed class GitScreenshotTests : IDisposable
         UiTestHelpers.SaveScreenshot(window, "13-git-history");
         Assert.Equal(2, git.History.Count);
         Assert.True(git.HasPullRequest);
+
+        // Escape closes a dialog, wherever the keyboard focus was left, and so does a tap on the scrim beside it.
+        window.KeyPressQwerty(Avalonia.Input.PhysicalKey.Escape, Avalonia.Input.RawInputModifiers.None);
+        Assert.False(git.IsHistoryOpen);
+        await git.OpenBranchPickerCommand.ExecuteAsync(null);
+        await UiTestHelpers.WaitUntilAsync(() => true);
+        var scrim = window.GetVisualDescendants().OfType<Avalonia.Controls.Panel>().Single(p => p.Name == "BranchPickerScrim");
+        var corner = scrim.TranslatePoint(new Avalonia.Point(8, 8), window)!.Value;
+        window.MouseDown(corner, Avalonia.Input.MouseButton.Left);
+        window.MouseUp(corner, Avalonia.Input.MouseButton.Left);
+        Assert.False(git.IsBranchPickerOpen);
     }
 
     [AvaloniaFact]

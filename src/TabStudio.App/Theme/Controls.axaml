@@ -129,6 +129,14 @@
     <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
   </Style>
 
+  <!--
+    Fluent draws the placeholder at half opacity, which takes the theme's placeholder colors below WCAG AA (3.5:1 on
+    white). These selectors cover every state, and a selector with a pseudo-class outranks the template's own value.
+  -->
+  <Style Selector="TextBox:focus /template/ TextBlock#PART_Watermark, TextBox:not(:focus) /template/ TextBlock#PART_Watermark">
+    <Setter Property="Opacity" Value="1" />
+  </Style>
+
   <!-- Menus -->
   <Style Selector="Menu">
     <Setter Property="Height" Value="40" />

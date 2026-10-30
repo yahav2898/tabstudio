@@ -84,11 +84,18 @@ public sealed partial class MainViewModel : ObservableObject
         }
     }
 
-    /// <summary>Opens a workspace, closing the current one.</summary>
+    /// <summary>Opens a workspace, closing the current one once its unsaved documents are saved.</summary>
     /// <param name="path">A solution, project or folder.</param>
     /// <param name="session">A session to restore, if any.</param>
-    public async Task OpenWorkspaceAsync(string path, SessionState? session = null)
+    /// <returns><see langword="false"/> when the open workspace stays because a document could not be saved.</returns>
+    public async Task<bool> OpenWorkspaceAsync(string path, SessionState? session = null)
     {
+        // Closing disposes the documents without saving: joining a Live session from an open workspace lost its edits.
+        if (CurrentPage is WorkspaceViewModel { IsLiveGuest: false } current && !await current.SaveAllCoreAsync())
+        {
+            return false;
+        }
+
         CloseCurrentWorkspace();
 
         var workspace = _createWorkspace();
@@ -119,6 +126,8 @@ public sealed partial class MainViewModel : ObservableObject
             CurrentPage = Start;
             OnPropertyChanged(nameof(Workspace));
         }
+
+        return true;
     }
 
     /// <summary>This device joined a Live session: the IDE opens the copy of the shared workspace.</summary>
@@ -130,7 +139,11 @@ public sealed partial class MainViewModel : ObservableObject
         }
 
         var entry = guest.EntryPath is { } relative && guest.FullPathOf(relative) is { } full && File.Exists(full) ? full : root;
-        await OpenWorkspaceAsync(entry);
+        if (!await OpenWorkspaceAsync(entry))
+        {
+            // The open workspace's edits could not be saved, and it says why: it stays, and the session is left.
+            await guest.LeaveAsync();
+        }
     }
 
     /// <summary>The session this device joined ended: its copy of the workspace closes and is deleted.</summary>

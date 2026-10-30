@@ -5,13 +5,18 @@ namespace TabStudio.Toolchains.Testing;
 /// <summary>
 /// Finds a toolchain project's tests in its source before they run, as Test Explorer lists C# tests: PHPUnit's
 /// <c>test*</c> methods and <c>#[Test]</c>, JUnit's <c>@Test</c> functions in Kotlin and Java, and XCTest's
-/// <c>test*</c> methods and Swift Testing's <c>@Test</c> functions. Their names are those the runners report, so a
-/// result replaces the test found in source.
+/// <c>test*</c> methods and Swift Testing's <c>@Test</c> functions, and pytest's <c>test*</c> functions and methods.
+/// Their names are those the runners report, so a result replaces the test found in source.
 /// </summary>
 public static partial class ToolchainTestDiscoverer
 {
     private const int MaxFiles = 2000;
     private const long MaxFileSize = 512 * 1024;
+
+    private static readonly HashSet<string> PythonSkippedFolders = new(StringComparer.Ordinal)
+    {
+        "node_modules", "venv", "env", "site-packages", "__pycache__", "build", "dist",
+    };
 
     /// <summary>The tests in a project's source.</summary>
     /// <param name="directory">The project folder.</param>
@@ -43,6 +48,7 @@ public static partial class ToolchainTestDiscoverer
             {
                 ToolchainTestFramework.PhpUnit or ToolchainTestFramework.Pest => Php(file, text),
                 ToolchainTestFramework.SwiftPM => Swift(directory, file, text),
+                ToolchainTestFramework.Pytest => Python(directory, file, text),
                 _ => Jvm(file, text),
             });
         }
@@ -114,8 +120,62 @@ public static partial class ToolchainTestDiscoverer
         }
     }
 
+    /// <summary>
+    /// pytest's tests in a test file: <c>test*</c> functions, and <c>test*</c> methods of <c>Test*</c> classes and of
+    /// <c>unittest.TestCase</c> classes, reported in the class named by the file's path with dots, as pytest does.
+    /// </summary>
+    internal static IEnumerable<ToolchainTestCase> Python(string directory, string file, string text)
+    {
+        var module = Path.ChangeExtension(Path.GetRelativePath(directory, file), null).Replace(Path.DirectorySeparatorChar, '.');
+        (string Name, int Line, bool IsTest)? owner = null;
+        int? bodyIndent = null;
+        var lines = text.Split('\n');
+        for (var i = 0; i < lines.Length; i++)
+        {
+            var line = lines[i].TrimEnd('\r');
+            if (line.Length == 0 || line[0] is '#' or '@' or ')' || char.IsWhiteSpace(line[0]))
+            {
+                // A method is at the indentation of the class's first statement; a function nested in one is not a test.
+                var indent = line.Length - line.TrimStart().Length;
+                if (owner is { } type && line.Trim().Length > 0 && !line.TrimStart().StartsWith('#'))
+                {
+                    bodyIndent ??= indent;
+                    if (type.IsTest && indent == bodyIndent && PythonMethod().Match(line) is { Success: true } method)
+                    {
+                        yield return new ToolchainTestCase(module + "." + type.Name, method.Groups["name"].Value, file, i + 1, type.Line);
+                    }
+                }
+
+                continue;
+            }
+
+            // A statement at the top of the file ends the class before it.
+            owner = null;
+            bodyIndent = null;
+            if (PythonClass().Match(line) is { Success: true } declared)
+            {
+                var name = declared.Groups["name"].Value;
+                owner = (name, i + 1, name.StartsWith("Test", StringComparison.Ordinal) || declared.Groups["bases"].Value.Contains("TestCase", StringComparison.Ordinal));
+            }
+            else if (PythonFunction().Match(line) is { Success: true } function)
+            {
+                yield return new ToolchainTestCase(module, function.Groups["name"].Value, file, i + 1, 1);
+            }
+        }
+    }
+
     private static IEnumerable<string> SourceFiles(string directory, ToolchainTestFramework framework)
     {
+        if (framework == ToolchainTestFramework.Pytest)
+        {
+            foreach (var file in PythonTestFiles(directory))
+            {
+                yield return file;
+            }
+
+            yield break;
+        }
+
         (string[] Roots, string Pattern) sources = framework switch
         {
             ToolchainTestFramework.PhpUnit or ToolchainTestFramework.Pest => (["tests", "test", "Tests"], "*.php"),
@@ -148,6 +208,39 @@ public static partial class ToolchainTestDiscoverer
                 yield return file;
             }
         }
+    }
+
+    /// <summary>pytest's test files: <c>test_*.py</c> and <c>*_test.py</c>, outside virtual environments and packages.</summary>
+    private static List<string> PythonTestFiles(string directory)
+    {
+        var found = new List<string>();
+        var pending = new Stack<(string Folder, int Depth)>([(directory, 0)]);
+        while (pending.TryPop(out var next) && found.Count < MaxFiles)
+        {
+            try
+            {
+                found.AddRange(Directory.EnumerateFiles(next.Folder, "*.py")
+                    .Where(f => Path.GetFileName(f) is var name && (name.StartsWith("test_", StringComparison.Ordinal) || name.EndsWith("_test.py", StringComparison.Ordinal))));
+                if (next.Depth < 8)
+                {
+                    foreach (var child in Directory.EnumerateDirectories(next.Folder).Order(StringComparer.Ordinal).Reverse())
+                    {
+                        var name = Path.GetFileName(child);
+                        if (!name.StartsWith('.') && !PythonSkippedFolders.Contains(name) && !File.Exists(Path.Combine(child, "pyvenv.cfg")))
+                        {
+                            pending.Push((child, next.Depth + 1));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // A folder removed or unreadable while the tests are looked for.
+            }
+        }
+
+        found.Sort(StringComparer.Ordinal);
+        return found;
     }
 
     private static string[] JvmTestRoots(string directory)
@@ -222,6 +315,15 @@ public static partial class ToolchainTestDiscoverer
 
     [GeneratedRegex(@"(?<attributes>(?:#\[[^\]]*\]\s*|/\*\*(?:(?!\*/)[\s\S])*\*/\s*)*)public\s+(?:static\s+)?function\s+(?<name>\w+)\s*\(", RegexOptions.CultureInvariant)]
     private static partial Regex PhpMethod();
+
+    [GeneratedRegex(@"^class\s+(?<name>\w+)\s*(?:\((?<bases>[^)]*)\))?\s*:", RegexOptions.CultureInvariant)]
+    private static partial Regex PythonClass();
+
+    [GeneratedRegex(@"^(?:async\s+)?def\s+(?<name>test\w*)\s*\(", RegexOptions.CultureInvariant)]
+    private static partial Regex PythonFunction();
+
+    [GeneratedRegex(@"^[ \t]+(?:async\s+)?def\s+(?<name>test\w*)\s*\(", RegexOptions.CultureInvariant)]
+    private static partial Regex PythonMethod();
 
     [GeneratedRegex(@"^[ \t]*package\s+(?<name>[\w.]+)", RegexOptions.Multiline | RegexOptions.CultureInvariant)]
     private static partial Regex JvmPackage();

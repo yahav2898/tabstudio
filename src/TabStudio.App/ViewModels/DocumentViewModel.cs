@@ -22,7 +22,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
 {
     private readonly ILanguageService? _language;
     private readonly DeviceProfile _profile;
-    private readonly TextFileContent _file;
+    private TextFileContent _file;
     private CancellationTokenSource? _analysis;
     private Task? _analysisTask;
     private int _analysisEdits = -1;
@@ -52,6 +52,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
         Document.UndoStack.MarkAsOriginalFile();
         Document.Changed += OnDocumentChanged;
         Document.UndoStack.PropertyChanged += OnUndoStackChanged;
+        RecordDiskStamp();
     }
 
     /// <summary>Full path of the file.</summary>
@@ -211,12 +212,30 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
             return;
         }
 
+        // The text being written is the saved state from now on: typing while it is written makes the document
+        // dirty again. Marked after the write, the late keystrokes were marked saved and never written.
         var text = Document.Text;
-        await TextFile.WriteAsync(FilePath, text, _file.Encoding, cancellationToken);
-        if (SaveExternalAsync is { } saveExternal) { await saveExternal(cancellationToken); }
-        if (SaveExternalAsync is not null && Document.Text != text) { return; }
-        Document.UndoStack.MarkAsOriginalFile();
-        IsDirty = false;
+        var undo = Document.UndoStack;
+        undo.MarkAsOriginalFile();
+        IsSaving = true;
+        try
+        {
+            await TextFile.WriteAsync(FilePath, text, _file.Encoding, cancellationToken);
+            if (SaveExternalAsync is { } saveExternal) { await saveExternal(cancellationToken); }
+        }
+        catch
+        {
+            undo.DiscardOriginalFileMarker();
+            IsDirty = true;
+            throw;
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+
+        RecordDiskStamp();
+        IsDirty = !undo.IsOriginalFile || Document.Text != text;
     }
 
     /// <summary>

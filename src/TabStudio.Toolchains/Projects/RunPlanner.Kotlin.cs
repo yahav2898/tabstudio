@@ -20,7 +20,7 @@ public static partial class RunPlanner
 
             var classpath = Path.Combine(directory, "target", "classes") + Path.PathSeparator + Path.Combine(directory, "target", "dependency", "*");
             return new RunPlan(
-                Spec(project, ["mvn", "-B", "-Dstyle.color=never", "-DskipTests", "package", "org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies", "-DincludeScope=runtime"], variables),
+                Spec(project, [.. MavenPackage, "org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies", "-DincludeScope=runtime"], variables),
                 Spec(project, ["java", "-cp", classpath, mavenMain], variables), "pom.xml")
             { ProgramName = SimpleName(mavenMain) };
         }

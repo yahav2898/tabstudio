@@ -56,7 +56,15 @@ public sealed class DesktopModeTests : IDisposable
         _display.Connect();
         await UiTestHelpers.WaitUntilAsync(() => true);
         Assert.True(Desktop.IsOfferVisible);
-        Assert.True(tablet.GetVisualDescendants().OfType<DesktopModeOfferView>().Single().IsEffectivelyVisible);
+        var offer = tablet.GetVisualDescendants().OfType<DesktopModeOfferView>().Single();
+        Assert.True(offer.IsEffectivelyVisible);
+
+        // It keeps clear of the bottom panel, where the Error List and the program's output are.
+        var card = offer.GetVisualDescendants().OfType<Border>().Single(b => b.Name == "OfferCard");
+        var dock = ide.GetVisualDescendants().OfType<Border>().Single(b => b.Name == "BottomDock");
+        var cardBottom = card.TranslatePoint(new Point(0, card.Bounds.Height), tablet)!.Value.Y;
+        var dockTop = dock.TranslatePoint(default, tablet)!.Value.Y;
+        Assert.True(cardBottom <= dockTop, $"The offer ends at {cardBottom}, over the bottom panel at {dockTop}.");
         UiTestHelpers.SaveScreenshot(tablet, "desktop-01-offer");
 
         Desktop.EnterCommand.Execute(null);

@@ -71,6 +71,9 @@ public sealed class ThemePaletteTests
         ("Brush.TextMuted", "Brush.Overlay", 4.5),
         ("Brush.Info", "Brush.Overlay", 3),
         ("Brush.Swarm.Highlight", "Brush.Panel", 3),
+        ("TextControlPlaceholderForeground", "TextControlBackground", 4.5),
+        ("TextControlPlaceholderForegroundPointerOver", "TextControlBackground", 4.5),
+        ("TextControlPlaceholderForegroundFocused", "TextControlBackground", 4.5),
     ];
 
     private static readonly string[] SyntaxTokens =
@@ -109,6 +112,24 @@ public sealed class ThemePaletteTests
             .ToList();
 
         Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures));
+    }
+
+    [AvaloniaFact]
+    public void A_placeholder_is_drawn_at_full_strength_so_its_color_keeps_its_contrast()
+    {
+        // Fluent's template draws it at half opacity: the light placeholder measured 3.5:1 on white.
+        var box = new TextBox { Watermark = "Search Solution Explorer", Width = 300 };
+        var window = new Window { Width = 400, Height = 100, Content = box };
+        window.Show();
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        var watermark = Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(box).OfType<TextBlock>().Single(t => t.Name == "PART_Watermark");
+        Assert.True(watermark.IsEffectivelyVisible);
+        Assert.Equal(1, watermark.Opacity);
+
+        box.Focus();
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        Assert.Equal(1, watermark.Opacity);
+        window.Close();
     }
 
     [AvaloniaFact]

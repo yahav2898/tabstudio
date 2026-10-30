@@ -567,6 +567,18 @@ public static partial class ProjectParser
                 var value = property.Value.Trim();
                 var isConditional = groupIsConditional || property.Attribute("Condition") is not null;
 
+                // Compilation symbols decide which code compiles: a value whose condition is not known to hold, such
+                // as Serilog's FEATURE_REMOTING for net48, compiled code for another framework into errors.
+                if (isConditional && name.Equals("DefineConstants", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (Holds(group.Attribute("Condition")?.Value, unconditional) && Holds(property.Attribute("Condition")?.Value, unconditional))
+                    {
+                        unconditional[name] = value;
+                    }
+
+                    continue;
+                }
+
                 if (isConditional)
                 {
                     conditional.TryAdd(name, value);
@@ -585,6 +597,10 @@ public static partial class ProjectParser
 
         return unconditional;
     }
+
+    /// <summary>Whether a condition is known to hold with the properties read so far; no condition always holds.</summary>
+    private static bool Holds(string? condition, IReadOnlyDictionary<string, string> properties) =>
+        condition is null || MsBuildConditions.Evaluate(condition, properties, string.Empty) == true;
 
     /// <summary>Replaces <c>$(Name)</c> references with the values of other known properties.</summary>
     private static void ExpandPropertyReferences(Dictionary<string, string> properties)

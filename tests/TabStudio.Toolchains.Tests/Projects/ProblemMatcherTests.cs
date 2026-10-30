@@ -83,6 +83,113 @@ public sealed class ProblemMatcherTests
     }
 
     [Fact]
+    public void An_ES_modules_error_is_found_at_its_file_URL_with_spaces_decoded()
+    {
+        // The Node.js template is an ES module ("type": "module"): its frames are file:// URLs, which no pattern took.
+        string[] output =
+        [
+            "file:///storage/emulated/0/Projects/web/lib%20dir/helper.js:2",
+            "  return undefinedThing + 1;",
+            "  ^",
+            string.Empty,
+            "ReferenceError: undefinedThing is not defined",
+            "    at boom (file:///storage/emulated/0/Projects/web/lib%20dir/helper.js:2:3)",
+            "    at file:///storage/emulated/0/Projects/web/index.js:2:13",
+            "    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)",
+        ];
+
+        var error = Node.FindError(output, file => file.StartsWith("/storage/", StringComparison.Ordinal))!;
+
+        Assert.Equal("ReferenceError: undefinedThing is not defined", error.Message);
+        Assert.Equal(("/storage/emulated/0/Projects/web/lib dir/helper.js", 2, 3), (error.Location!.File, error.Location.Line, error.Location.Column));
+        Assert.Equal(("/storage/emulated/0/Projects/web/index.js", 2, 13), (Assert.Single(Node.Match(output[6])).File, 2, 13));
+        Assert.Equal("/storage/emulated/0/Projects/web/lib dir/helper.js", Assert.Single(Node.Match(output[0])).File);
+    }
+
+    [Fact]
+    public void A_Rust_panic_is_listed_at_its_line_with_its_message()
+    {
+        // The panic's location is on its own line and its message on the next; nothing reached the Error List.
+        string[] output =
+        [
+            "thread 'main' (29844) panicked at src/main.rs:3:21:",
+            "index out of bounds: the len is 0 but the index is 3",
+            "note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+        ];
+
+        var error = Assert.Single(new ProblemMatcher(ToolchainCatalog.Default.Find("rust")!).FindErrors(output, _ => true));
+
+        Assert.Equal("thread 'main' (29844) panicked at src/main.rs:3:21: index out of bounds: the len is 0 but the index is 3", error.Message);
+        Assert.Equal(("src/main.rs", 3, (int?)21), (error.Location!.File, error.Location.Line, error.Location.Column));
+    }
+
+    [Fact]
+    public void TypeScript_compiler_errors_are_listed_with_their_code()
+    {
+        // tsc writes file(line,column): the TypeScript template's and Capacitor's build errors were never listed.
+        string[] output =
+        [
+            "> tsc && node dist/index.js",
+            string.Empty,
+            "src/index.ts(1,7): error TS2322: Type 'string' is not assignable to type 'number'.",
+            "src/util/math.ts(4,10): error TS2304: Cannot find name 'nmae'.",
+        ];
+
+        var errors = Node.FindErrors(output, _ => true);
+
+        Assert.Equal(
+            [
+                ("src/index.ts", 1, (int?)7, "TS2322: Type 'string' is not assignable to type 'number'."),
+                ("src/util/math.ts", 4, 10, "TS2304: Cannot find name 'nmae'."),
+            ],
+            errors.Select(e => (e.Location!.File, e.Location.Line, e.Location.Column, e.Message)));
+    }
+
+    [Fact]
+    public void C_link_and_CMake_errors_are_listed_where_gcc_lld_and_CMake_print_them()
+    {
+        // A failed link printed no compiler error, so the Error List stayed empty after "collect2: error".
+        var cpp = new ProblemMatcher(ToolchainCatalog.Default.Find("cpp")!);
+        var debug = Assert.Single(cpp.FindErrors(
+            ["/usr/bin/ld: /tmp/cci8dxnk.o: in function `main':", "/src/app/main.c:3:(.text+0x9): undefined reference to `foo'", "collect2: error: ld returned 1 exit status"],
+            _ => true));
+        Assert.Equal(("undefined reference to `foo'", "/src/app/main.c", 3), (debug.Message, debug.Location?.File, debug.Location?.Line));
+
+        var release = Assert.Single(cpp.FindErrors(["/usr/bin/ld: /tmp/cc2u4NbD.o: in function `main':", "main.c:(.text+0x9): undefined reference to `foo'", "collect2: error: ld returned 1 exit status"], _ => true));
+        Assert.Equal("main.c:(.text+0x9): undefined reference to `foo'", release.Message);
+
+        var lld = Assert.Single(cpp.FindErrors(["ld.lld: error: undefined symbol: foo", ">>> referenced by main.c:3 (/src/main.c:3)", "clang: error: linker command failed with exit code 1 (use -v to see invocation)"], _ => true));
+        Assert.Equal(("ld.lld: error: undefined symbol: foo", "main.c", 3), (lld.Message, lld.Location?.File, lld.Location?.Line));
+
+        Assert.Equal("/usr/bin/ld: cannot find -lnotthere: No such file or directory",
+            Assert.Single(cpp.FindErrors(["/usr/bin/ld: cannot find -lnotthere: No such file or directory", "collect2: error: ld returned 1 exit status"], _ => true)).Message);
+
+        var cmake = Assert.Single(cpp.FindErrors(["-- Configuring done (0.1s)", "CMake Error at CMakeLists.txt:3 (add_executable):", "  No SOURCES given to target: app", "", "", "CMake Generate step failed.  Build files cannot be regenerated correctly."], _ => true));
+        Assert.Equal(("CMake Error at CMakeLists.txt:3 (add_executable): No SOURCES given to target: app", "CMakeLists.txt", 3), (cmake.Message, cmake.Location?.File, cmake.Location?.Line));
+    }
+
+    [Fact]
+    public void An_uncaught_Java_or_Kotlin_exception_is_listed_at_its_first_frame_in_the_users_code()
+    {
+        // A Java program's crash listed nothing: Java had no error pattern, and neither language linked its frames.
+        string[] output =
+        [
+            "Exception in thread \"main\" java.lang.ArithmeticException: / by zero",
+            "\tat java.base/java.lang.Math.floorDiv(Math.java:1)",
+            "\tat com.example.shop.Cart.total(Cart.java:42)",
+            "\tat com.example.shop.Main.main(Main.java:7)",
+        ];
+        var java = new ProblemMatcher(ToolchainCatalog.Default.Find("java")!);
+        var error = Assert.Single(java.FindErrors(output, file => file.StartsWith("com/", StringComparison.Ordinal)));
+        Assert.Equal(("java.lang.ArithmeticException: / by zero", "com/example/shop/Cart.java", 42), (error.Message, error.Location?.File, error.Location?.Line));
+
+        var kotlin = new ProblemMatcher(ToolchainCatalog.Default.Find("kotlin")!);
+        var frame = Assert.Single(kotlin.Match("    at MainKt.main(Main.kt:3)"));
+        Assert.Equal(("Main.kt", 3), (frame.File, frame.Line));
+        Assert.Equal("demo/app/Main.kt", Assert.Single(kotlin.Match("\tat demo.app.MainKt$run$1.invoke(Main.kt:12)")).File);
+    }
+
+    [Fact]
     public void An_error_outside_the_users_code_has_no_location()
     {
         var error = Python.FindError(["Traceback (most recent call last):", "  File \"<stdin>\", line 1, in <module>", "KeyboardInterrupt"], _ => false)!;

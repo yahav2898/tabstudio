@@ -9,8 +9,8 @@
   <Panel>
 
     <!-- Switch branch -->
-    <Panel Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding IsBranchPickerOpen}">
-      <Border Width="440" MaxHeight="560" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" CornerRadius="12"
+    <Panel x:Name="BranchPickerScrim" Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding IsBranchPickerOpen}">
+      <Border MaxWidth="440" Margin="16" MaxHeight="560" HorizontalAlignment="Stretch" VerticalAlignment="Center" Padding="20" CornerRadius="12"
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
               BoxShadow="{DynamicResource Shadow.Dialog}">
         <DockPanel>
@@ -61,8 +61,8 @@
     </Panel>
 
     <!-- Create a pull request -->
-    <Panel Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding IsPullRequestFormOpen}">
-      <Border Width="480" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="22" CornerRadius="12"
+    <Panel x:Name="PullRequestFormScrim" Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding IsPullRequestFormOpen}">
+      <Border MaxWidth="480" Margin="16" HorizontalAlignment="Stretch" VerticalAlignment="Center" Padding="22" CornerRadius="12"
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
               BoxShadow="{DynamicResource Shadow.Dialog}">
         <StackPanel Spacing="10">
@@ -94,8 +94,8 @@
     </Panel>
 
     <!-- History -->
-    <Panel Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding IsHistoryOpen}">
-      <Border Width="560" MaxHeight="600" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" CornerRadius="12"
+    <Panel x:Name="HistoryScrim" Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding IsHistoryOpen}">
+      <Border MaxWidth="560" Margin="16" MaxHeight="600" HorizontalAlignment="Stretch" VerticalAlignment="Center" Padding="20" CornerRadius="12"
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
               BoxShadow="{DynamicResource Shadow.Dialog}">
         <DockPanel>

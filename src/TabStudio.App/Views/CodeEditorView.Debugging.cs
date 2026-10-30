@@ -30,6 +30,7 @@ public sealed partial class CodeEditorView
     private readonly ExceptionHelperView _exceptionView = new();
     private readonly Popup _exceptionPopup = new() { Placement = PlacementMode.BottomEdgeAlignedLeft, ShouldUseOverlayLayer = true };
     private readonly DispatcherTimer _dataTipCloseTimer = new() { Interval = TimeSpan.FromMilliseconds(400) };
+    private DateTime _dataTipHoldAt = DateTime.MinValue;
     private BreakpointMargin _breakpointMargin;
     private DebugLineRenderer _debugLines;
     private ExecutionPoint? _shownCurrent;
@@ -230,9 +231,19 @@ public sealed partial class CodeEditorView
             && e.Source is Visual source and not BreakpointMargin
             && source.TranslatePoint(e.Position, _editor) is { } point)
         {
+            // On a value it is the DataTip's gesture: the context menu the same press raised does not open over it.
+            if (_editor.GetPositionFromPoint(point) is { } position && HasDataTipAt(_editor.Document.GetOffset(position.Location)))
+            {
+                _dataTipHoldAt = DateTime.UtcNow;
+                _editor.ContextMenu?.Close();
+            }
+
             _ = ShowDataTipAsync(point);
         }
     }
+
+    /// <summary>Whether a long press that shows a DataTip just happened, so its context menu stays closed.</summary>
+    private bool IsDataTipHold => DateTime.UtcNow - _dataTipHoldAt < TimeSpan.FromSeconds(1);
 
     private async Task ShowDataTipAsync(Point point)
     {

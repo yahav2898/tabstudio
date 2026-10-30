@@ -42,6 +42,14 @@ public sealed class AdaptiveBar : Panel
     public static readonly AttachedProperty<Geometry?> MenuIconProperty =
         AvaloniaProperty.RegisterAttached<AdaptiveBar, Control, Geometry?>("MenuIcon");
 
+    /// <summary>
+    /// The shortest a child that is not an <see cref="AdaptiveBarItem"/> may become, for one whose text trims, such as
+    /// the status bar's message: it stays in the bar, shrinks before the items after it are pushed out of the bar, and
+    /// takes the room they leave, up to its full length. Unset (<see cref="double.NaN"/>), a child keeps its length.
+    /// </summary>
+    public static readonly AttachedProperty<double> MinLengthProperty =
+        AvaloniaProperty.RegisterAttached<AdaptiveBar, Control, double>("MinLength", double.NaN);
+
     /// <summary>The space between two items.</summary>
     public static readonly StyledProperty<double> SpacingProperty =
         AvaloniaProperty.Register<AdaptiveBar, double>(nameof(Spacing), 2);
@@ -54,10 +62,14 @@ public sealed class AdaptiveBar : Panel
     private AdaptiveMode[] _modes = [];
     private List<Control> _slotted = [];
 
+    // The children's lengths as they measured with all the room they want, before a trimming child was measured
+    // again at the length it gets.
+    private List<AdaptiveSlot> _slots = [];
+
     static AdaptiveBar()
     {
         AffectsMeasure<AdaptiveBar>(SpacingProperty);
-        AffectsParentMeasure<AdaptiveBar>(PriorityProperty, IsPinnedProperty);
+        AffectsParentMeasure<AdaptiveBar>(PriorityProperty, IsPinnedProperty, MinLengthProperty);
     }
 
     /// <summary>Creates the bar, with its More button.</summary>
@@ -130,6 +142,15 @@ public sealed class AdaptiveBar : Panel
     /// <param name="control">The child.</param>
     /// <param name="value">Whether it does.</param>
     public static void SetIsPinned(Control control, bool value) => control.SetValue(IsPinnedProperty, value);
+
+    /// <summary>Gets the shortest a trimming child may become.</summary>
+    /// <param name="control">The child.</param>
+    public static double GetMinLength(Control control) => control.GetValue(MinLengthProperty);
+
+    /// <summary>Sets the shortest a trimming child may become.</summary>
+    /// <param name="control">The child.</param>
+    /// <param name="value">Its shortest length, such as its icon and a few letters.</param>
+    public static void SetMinLength(Control control, double value) => control.SetValue(MinLengthProperty, value);
 
     /// <summary>Gets what the More menu calls a child.</summary>
     /// <param name="control">The child.</param>
@@ -221,18 +242,36 @@ public sealed class AdaptiveBar : Panel
             slots.Add(SlotOf(child));
         }
 
+        _slots = slots;
         _modes = AdaptiveLayout.Fit(slots, availableSize.Width, Spacing, _more.DesiredSize.Width);
-        return new Size(AdaptiveLayout.Length(slots, _modes, Spacing, _more.DesiredSize.Width), height);
+        var length = AdaptiveLayout.Length(slots, _modes, Spacing, _more.DesiredSize.Width);
+        if (!double.IsInfinity(availableSize.Width))
+        {
+            // A trimming child measures again at the length it gets, so its text trims rather than overflowing it.
+            var trimmed = TrimmedLengths(slots, _modes, Math.Max(0, availableSize.Width - length));
+            for (var i = 0; i < _slotted.Count; i++)
+            {
+                if (trimmed[i] is { } trim)
+                {
+                    _slotted[i].Measure(new Size(trim, availableSize.Height));
+                    length += trim - slots[i].Compact;
+                }
+            }
+        }
+
+        return new Size(length, height);
     }
 
     /// <inheritdoc />
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var slots = _slotted.Select(SlotOf).ToList();
+        var slots = _slots.Count == _slotted.Count ? _slots : _slotted.Select(SlotOf).ToList();
         _modes = AdaptiveLayout.Fit(slots, finalSize.Width, Spacing, _more.DesiredSize.Width);
         var overflows = _slotted.Where((child, i) => _modes[i] == AdaptiveMode.Overflow && child is not AdaptiveBarSeparator).Any();
         var spacers = _slotted.Count(child => child is AdaptiveBarSpacer);
         var room = Math.Max(0, finalSize.Width - AdaptiveLayout.Length(slots, _modes, Spacing, _more.DesiredSize.Width));
+        var trimmed = TrimmedLengths(slots, _modes, room);
+        room = Math.Max(0, room - trimmed.Select((trim, i) => trim is { } length ? length - slots[i].Compact : 0).Sum());
         var x = 0.0;
         for (var i = 0; i < _slotted.Count; i++)
         {
@@ -243,7 +282,8 @@ public sealed class AdaptiveBar : Panel
                 continue;
             }
 
-            var width = child is AdaptiveBarSpacer ? room / spacers : _modes[i] == AdaptiveMode.Compact ? slots[i].Compact : slots[i].Full;
+            var width = child is AdaptiveBarSpacer ? room / spacers
+                : trimmed[i] ?? (_modes[i] == AdaptiveMode.Compact ? slots[i].Compact : slots[i].Full);
             child.Arrange(new Rect(x, 0, width, finalSize.Height));
             x += width + Spacing;
         }
@@ -258,8 +298,31 @@ public sealed class AdaptiveBar : Panel
         AdaptiveBarSeparator separator => new AdaptiveSlot(separator.DesiredSize.Width, separator.DesiredSize.Width, int.MaxValue, IsSeparator: true),
         AdaptiveBarSpacer => new AdaptiveSlot(0, 0, int.MaxValue, IsPinned: true),
         AdaptiveBarItem item => new AdaptiveSlot(item.DesiredSize.Width, item.CanCompact ? Math.Min(item.DesiredSize.Width, item.CompactWidth) : item.DesiredSize.Width, item.Priority, item.IsPinned),
+        _ when Trims(child) => new AdaptiveSlot(child.DesiredSize.Width, Math.Min(child.DesiredSize.Width, GetMinLength(child)), GetPriority(child), GetIsPinned(child)),
         _ => new AdaptiveSlot(child.DesiredSize.Width, child.DesiredSize.Width, GetPriority(child), GetIsPinned(child)),
     };
+
+    private static bool Trims(Control child) => child is not AdaptiveBarItem && !double.IsNaN(GetMinLength(child));
+
+    /// <summary>
+    /// The length of each trimming child left at its shortest: that, and as much of the room the bar has left as it
+    /// still wants, in the bar's order; <see langword="null"/> for every other child.
+    /// </summary>
+    private double?[] TrimmedLengths(List<AdaptiveSlot> slots, AdaptiveMode[] modes, double room)
+    {
+        var lengths = new double?[slots.Count];
+        for (var i = 0; i < slots.Count && i < _slotted.Count; i++)
+        {
+            if (modes[i] == AdaptiveMode.Compact && Trims(_slotted[i]))
+            {
+                var extra = Math.Min(room, slots[i].Full - slots[i].Compact);
+                lengths[i] = slots[i].Compact + extra;
+                room -= extra;
+            }
+        }
+
+        return lengths;
+    }
 
     private void ApplyItemTheme(IEnumerable<Control> controls)
     {

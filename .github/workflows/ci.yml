@@ -155,7 +155,11 @@ jobs:
 
   app:
     name: Build and test the IDE
-    runs-on: ubuntu-latest
+    # Ubuntu 24.04, not ubuntu-latest: the tools installed below (Swift's toolchain, LLVM and the PHP and Java
+    # packages) are the ones published for 24.04, and since ubuntu-latest became Ubuntu 26.04 the IDE's test host
+    # aborted at its first test there ("free(): invalid pointer"). The IDE's own code passes on 26.04 with only
+    # Node.js, Python and Go installed.
+    runs-on: ubuntu-24.04
     # A healthy run takes about 27 minutes: setup (apt alone may take its full 10), the tool tests, and about 20
     # minutes of IDE tests in both themes. The one retry below repeats the whole dark-theme run, and a hung first
     # attempt only ends at its 12-minute hang timeout, so the budget holds both attempts and the log publishing.
@@ -515,7 +519,11 @@ jobs:
   # published.
   real-repos:
     name: Real repositories
-    runs-on: ubuntu-latest
+    # Ubuntu 24.04, not ubuntu-latest: the tools installed below (Swift's toolchain, LLVM and the PHP and Java
+    # packages) are the ones published for 24.04, and since ubuntu-latest became Ubuntu 26.04 the IDE's test host
+    # aborted at its first test there ("free(): invalid pointer"). The IDE's own code passes on 26.04 with only
+    # Node.js, Python and Go installed.
+    runs-on: ubuntu-24.04
     timeout-minutes: 140
     # SimplCommerce's first page needs its SQL Server database. SQL Server has no ARM64 Linux engine, so a tablet
     # connects to one on the network; here that is this x64 container, reached through TABSTUDIO_SQLSERVER.

@@ -63,6 +63,19 @@ public sealed class AgentSettingsStore(AppPaths paths)
             JsonSerializer.Serialize(stream, settings, AgentSettingsJson.Default.AgentSettings);
         }
 
+        // The file holds the Claude API key and MCP tokens: readable by its owner only, as the GitHub account's is.
+        if (!OperatingSystem.IsWindows())
+        {
+            try
+            {
+                File.SetUnixFileMode(temporary, UnixFileMode.UserRead | UnixFileMode.UserWrite);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or PlatformNotSupportedException)
+            {
+                // The State folder is private to the app on Android.
+            }
+        }
+
         File.Move(temporary, FilePath, overwrite: true);
     }
 }

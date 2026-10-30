@@ -117,7 +117,8 @@ public sealed partial class LinkViewModel
                 : Join(_link.ServedWorkspace is { } workspace ? $"{workspace} is loaded" : "Connected", $"{_link.ServedRequests.ToString(CultureInfo.InvariantCulture)} requests answered", tablet.Security);
 
         var cores = $"{Environment.ProcessorCount.ToString(CultureInfo.InvariantCulture)} cores";
-        HostDeviceText = Join(_link.HostThermalNote ?? "Thermal OK", cores) ?? cores;
+        // A device that is not hot says nothing about it (docs/design: calm by default).
+        HostDeviceText = Join(_link.HostThermalNote, cores) ?? cores;
         HostError ??= _link.HostError;
 
         var served = tablet?.Fingerprint;

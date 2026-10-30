@@ -328,6 +328,14 @@ public sealed class ToolchainManager : IDisposable
             Publish(before with { Error = null, Progress = null });
             throw;
         }
+        catch (Exception ex) when (ex is not OperationCanceledException and not ToolchainInstallException and not OutOfMemoryException)
+        {
+            // Anything else left the toolchain "Installing" until the app restarted, with Install hidden and Cancel
+            // doing nothing, and reached the Store's button as an error that ended the app.
+            var failure = ToolchainInstallException.FromUnexpected(toolchain.Name, ex);
+            Publish(before with { Error = failure.Message, Progress = null });
+            throw failure;
+        }
         finally
         {
             _operations.Release();

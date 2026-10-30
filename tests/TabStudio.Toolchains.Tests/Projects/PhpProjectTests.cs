@@ -117,5 +117,33 @@ public sealed class PhpProjectTests : IDisposable
         Assert.StartsWith("syntax error", error.Message, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void A_syntax_error_is_listed_once_also_in_a_folder_with_spaces()
+    {
+        // php.ini's log_errors printed each error twice ("PHP Parse error:" and "Parse error:"), and a path with a
+        // space, as "My App", was not matched at all.
+        var errors = new ProblemMatcher(Php).FindErrors(
+            [
+                "PHP Parse error:  Unclosed '(' on line 1 in /work/My App/sub dir/Bad.php on line 2",
+                "Parse error: Unclosed '(' on line 1 in /work/My App/sub dir/Bad.php on line 2",
+            ],
+            _ => true);
+
+        var error = Assert.Single(errors);
+        Assert.Equal(("/work/My App/sub dir/Bad.php", 2), (error.Location!.File, error.Location.Line));
+        Assert.Equal("Unclosed '(' on line 1", error.Message);
+    }
+
+    [Fact]
+    public void The_build_checks_every_file_even_after_a_syntax_error()
+    {
+        // php -l exits with 255 on an error, which made xargs stop before the next 64 files were checked.
+        var build = RunPlanner.PlanBuild(new ToolchainProject(Php, _folder.Path, null))!;
+        var script = build.Arguments[^1];
+
+        Assert.Contains("|| exit 1", script, StringComparison.Ordinal);
+        Assert.Contains("-d log_errors=0", script, StringComparison.Ordinal);
+    }
+
     public void Dispose() => _folder.Dispose();
 }

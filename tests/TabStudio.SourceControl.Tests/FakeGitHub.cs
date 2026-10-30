@@ -41,6 +41,9 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
     /// <summary>Called before a branch moves; lets a test push a competing commit at the worst moment.</summary>
     public Action? BeforeBranchUpdate { get; set; }
 
+    /// <summary>Branches GitHub refuses updates to, as a protected branch or a ruleset does.</summary>
+    public HashSet<string> ProtectedBranches { get; } = new(StringComparer.Ordinal);
+
     /// <summary>A client of this fake, signed in or not.</summary>
     public GitHub.GitHubClient CreateClient(bool signedIn = true) =>
         new(new HttpClient(this, disposeHandler: false), signedIn ? "test-token" : null, new Uri("https://api.github.test/"));
@@ -223,6 +226,11 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
         if (!repo.Branches.TryGetValue(branch, out var current))
         {
             return Error(HttpStatusCode.UnprocessableEntity, "Reference does not exist");
+        }
+
+        if (ProtectedBranches.Contains(branch))
+        {
+            return Error(HttpStatusCode.UnprocessableEntity, $"Protected branch update failed for refs/heads/{branch}.");
         }
 
         var sha = body["sha"]!.GetValue<string>();

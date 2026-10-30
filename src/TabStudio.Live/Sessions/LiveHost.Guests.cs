@@ -107,6 +107,11 @@ public sealed partial class LiveHost
             throw new LinkRemoteException(LinkErrorCodes.NotPaired, $"{HostName} removed this device from the session, so it cannot join it again.");
         }
 
+        if (!_guests.ContainsKey(fingerprint) && _away.Remove(fingerprint, out var returning))
+        {
+            _guests[fingerprint] = returning;
+        }
+
         var isNew = !_guests.TryGetValue(fingerprint, out var known);
         Guest guest;
         if (known is null)
@@ -198,7 +203,11 @@ public sealed partial class LiveHost
         }
     }
 
-    /// <summary>Forgets a guest that did not reconnect in time; it can join again with the code.</summary>
+    /// <summary>
+    /// Takes a guest that did not reconnect in time off the list. Its device stays known: forgotten, a tablet that
+    /// slept for six minutes was refused when it woke, and the guest's IDE closed the copy with its unsent edits.
+    /// When it reconnects it comes back as itself.
+    /// </summary>
     private async Task ForgetLaterAsync(Guest guest)
     {
         try
@@ -215,7 +224,7 @@ public sealed partial class LiveHost
             if (guest.Connection is null && _guests.TryGetValue(guest.Fingerprint, out var current) && ReferenceEquals(current, guest))
             {
                 _guests.Remove(guest.Fingerprint);
-                _trust.Forget(guest.Fingerprint);
+                _away[guest.Fingerprint] = guest;
                 PublishParticipants();
             }
         });

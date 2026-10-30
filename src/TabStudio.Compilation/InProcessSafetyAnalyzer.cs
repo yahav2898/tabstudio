@@ -65,7 +65,7 @@ public static class InProcessSafetyAnalyzer
                 results.Add(new BuildDiagnostic(
                     ExitId,
                     DiagnosticSeverityLevel.Error,
-                    "End would close TabStudio, because programs run inside the IDE. Return from Sub Main, or close the main form, instead.",
+                    "End would close TabStudio, because programs run inside the IDE. In a Windows Forms app call Application.Exit() or the form's Close(); in a console app return from Sub Main.",
                     new DiagnosticLocation(tree.FilePath, location.SourceSpan.Start, location.SourceSpan.Length, lineSpan.Line + 1, lineSpan.Character + 1),
                     projectName));
             }
@@ -93,7 +93,7 @@ public static class InProcessSafetyAnalyzer
                 isExit ? ExitId : FailFastId,
                 DiagnosticSeverityLevel.Error,
                 isExit
-                    ? $"Environment.Exit would close TabStudio, because programs run inside the IDE. Return the exit code from {(root.Language == LanguageNames.VisualBasic ? "Sub Main" : "Main")} instead."
+                    ? $"Environment.Exit would close TabStudio, because programs run inside the IDE. In a Windows Forms app call Application.Exit() or the form's Close(); in a console app return the exit code from {(root.Language == LanguageNames.VisualBasic ? "Sub Main" : "Main")}."
                     : "Environment.FailFast would close TabStudio, because programs run inside the IDE. Throw an exception instead.",
                 new DiagnosticLocation(tree.FilePath, location.SourceSpan.Start, location.SourceSpan.Length, lineSpan.Line + 1, lineSpan.Character + 1),
                 projectName));

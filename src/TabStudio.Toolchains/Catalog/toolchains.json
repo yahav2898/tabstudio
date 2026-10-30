@@ -768,13 +768,16 @@
       },
       "problemPatterns": [
         {
-          "pattern": "\\((?<file>/[^()]+?):(?<line>\\d+):(?<column>\\d+)\\)"
+          "pattern": "\\((?<url>file://)?(?<file>/[^()]+?):(?<line>\\d+):(?<column>\\d+)\\)"
         },
         {
-          "pattern": "at (?<file>/[^\\s()]+?):(?<line>\\d+):(?<column>\\d+)"
+          "pattern": "at (?<url>file://)?(?<file>/[^\\s()]+?):(?<line>\\d+):(?<column>\\d+)"
         },
         {
-          "pattern": "^(?<file>/[^\\s:]+\\.(?:js|mjs|cjs|ts|mts|cts)):(?<line>\\d+)$"
+          "pattern": "^(?<url>file://)?(?<file>/[^\\s:]+\\.(?:js|mjs|cjs|ts|mts|cts)):(?<line>\\d+)$"
+        },
+        {
+          "pattern": "^(?<file>[^\\s(][^(]*?\\.(?:ts|tsx|mts|cts|js|jsx|mjs|cjs))\\((?<line>\\d+),(?<column>\\d+)\\): (?<severity>error|warning) (?<message>TS\\d+: .*)$"
         }
       ],
       "errorPattern": "^(?<message>(?:Uncaught )?(?:[A-Z]\\w*)?Error(?: \\[[A-Z_]+\\])?: .*)$"
@@ -884,8 +887,18 @@
       "problemPatterns": [
         {
           "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+): (?<severity>fatal error|error|warning|note): (?<message>.*)$"
+        },
+        {
+          "pattern": "^(?<file>[^\\s:][^:]*?):(?<line>\\d+):\\(\\.[^)]*\\): (?<message>(?:undefined reference to|multiple definition of) .*)$"
+        },
+        {
+          "pattern": "^>>> referenced by (?<file>[^\\s:()]+):(?<line>\\d+)"
+        },
+        {
+          "pattern": "^CMake Error at (?<file>.+?):(?<line>\\d+) \\("
         }
-      ]
+      ],
+      "errorPattern": "^(?<message>\\S+: (?:undefined reference to|multiple definition of) .*|\\S*ld(?:\\.lld)?: (?:error: )?(?:undefined symbol: |cannot find ).*|CMake Error.*)$"
     },
     {
       "id": "rust",
@@ -938,7 +951,7 @@
             "build": [
               "cargo",
               "build",
-              "--message-format=json-render-diagnostics"
+              "--message-format=json"
             ],
             "command": [
               "cargo",
@@ -981,7 +994,7 @@
           "pattern": "panicked at (?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)"
         }
       ],
-      "errorPattern": "^error(?:\\[[^\\]]+\\])?: (?<message>.*)$"
+      "errorPattern": "^(?:error(?:\\[[^\\]]+\\])?: (?<message>.*)|(?<message>thread '[^']*'(?: \\(\\d+\\))? panicked at .*))$"
     },
     {
       "id": "go",
@@ -1227,8 +1240,12 @@
         },
         {
           "pattern": "^\\[(?<severity>ERROR|WARNING)\\] (?<file>.+?\\.java):\\[(?<line>\\d+),(?<column>\\d+)\\] (?<message>.*)$"
+        },
+        {
+          "pattern": "^\\s*at (?:[\\w$.-]+/)?(?<package>(?:[a-z_][\\w$]*\\.)*)[A-Z][\\w$]*\\.[\\w$<>-]+\\((?<file>[\\w$]+\\.(?:java|kt|kts)):(?<line>\\d+)\\)"
         }
-      ]
+      ],
+      "errorPattern": "^(?:Exception in thread \"[^\"]+\" )?(?<message>(?:[a-z][\\w$]*\\.)+[A-Z][\\w$]*(?:Exception|Error)(?::.*)?)$"
     },
     {
       "id": "php",
@@ -1416,10 +1433,10 @@
       },
       "problemPatterns": [
         {
-          "pattern": "^(?:PHP )?(?<severity>Parse error|Fatal error|Warning|Notice|Deprecated): +(?<message>.+?) in (?<file>/[^\\s]+?\\.php)(?: on line |:)(?<line>\\d+)"
+          "pattern": "^(?:PHP )?(?<severity>Parse error|Fatal error|Warning|Notice|Deprecated): +(?<message>.+?) in (?<file>/.+?\\.php)(?: on line |:)(?<line>\\d+)"
         },
         {
-          "pattern": "^\\s*thrown in (?<file>/[^\\s]+?\\.php) on line (?<line>\\d+)"
+          "pattern": "^\\s*thrown in (?<file>/.+?\\.php) on line (?<line>\\d+)"
         },
         {
           "pattern": "^#\\d+ (?<file>/[^(\\s]+?\\.php)\\((?<line>\\d+)\\)"
@@ -1537,15 +1554,18 @@
             "url": "https://github.com/JetBrains/kotlin/releases/download/v2.4.21/kotlin-compiler-2.4.21.zip",
             "sha256": "7cc140e76daf416a0424a5557f99afd7ca89ebd463ea1101261e3e01c33e75cd",
             "size": 89733618,
-            "destination": "/opt/tabstudio"
-          }
+            "destination": "/opt/tabstudio/kotlin"
+          },
+          "removes": [
+            "/opt/tabstudio/kotlinc"
+          ]
         },
         {
           "name": "kotlinc command",
           "description": "Starts the Kotlin compiler by its usual command name.",
           "file": {
             "path": "/usr/local/bin/kotlinc",
-            "content": "#!/bin/sh\nexec /opt/tabstudio/kotlinc/bin/kotlinc \"$@\"\n",
+            "content": "#!/bin/sh\n# 0.20.0 unpacked the compiler into /opt/tabstudio itself, where installs before this one keep it.\nfor home in /opt/tabstudio/kotlin/kotlinc /opt/tabstudio/kotlinc; do\n  [ -x \"$home/bin/kotlinc\" ] && exec \"$home/bin/kotlinc\" \"$@\"\ndone\necho 'kotlinc is missing: remove Kotlin in Tools > Toolchain Store and install it again.' >&2\nexit 127\n",
             "executable": true
           }
         }
@@ -1631,6 +1651,9 @@
         },
         {
           "pattern": "^\\[(?<severity>ERROR|WARNING)\\] (?:file://)?(?<file>/[^:\\s]+?\\.kt):(?:\\[)?(?<line>\\d+)[,:](?<column>\\d+)\\]? (?<message>.*)$"
+        },
+        {
+          "pattern": "^\\s*at (?:[\\w$.-]+/)?(?<package>(?:[a-z_][\\w$]*\\.)*)[A-Z][\\w$]*\\.[\\w$<>-]+\\((?<file>[\\w$]+\\.(?:java|kt|kts)):(?<line>\\d+)\\)"
         }
       ],
       "errorPattern": "^(?:Exception in thread \"[^\"]+\" )?(?<message>(?:[a-z][\\w$]*\\.)+[A-Z][\\w$]*(?:Exception|Error)(?::.*)?)$"
@@ -3480,7 +3503,7 @@
           "pattern": "panicked at (?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)"
         }
       ],
-      "errorPattern": "^error(?:\\[[^\\]]+\\])?: (?<message>.*)$",
+      "errorPattern": "^(?:error(?:\\[[^\\]]+\\])?: (?<message>.*)|(?<message>thread '[^']*'(?: \\(\\d+\\))? panicked at .*))$",
       "sourceFolderIsProject": false
     },
     {

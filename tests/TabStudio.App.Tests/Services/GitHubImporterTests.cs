@@ -65,6 +65,17 @@ public sealed class GitHubImporterTests : IDisposable
         Assert.Empty(Directory.EnumerateDirectories(_paths.Projects));
     }
 
+    [Fact]
+    public async Task A_folder_address_opens_its_branch()
+    {
+        // github.com/owner/repo/tree/main/src: "main/src" is no branch, so the import failed.
+        var folder = await new GitHubImporter(_account, _paths).ImportAsync(new GitHubRepository(FakeGitHub.Login, "demo", "main/src"));
+
+        Assert.Equal("class App;\n", await File.ReadAllTextAsync(Path.Combine(folder, "src", "App.cs")));
+        Assert.Equal("main", GitHubSync.Open(_account.CreateClient(), folder)?.Link.Branch);
+        Assert.Single(Directory.EnumerateDirectories(_paths.Projects));
+    }
+
     public void Dispose()
     {
         _github.Dispose();

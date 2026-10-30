@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Cloud backup and device-to-device transfer (Android 12 and later) leave out TabStudio's state, which holds the
+  GitHub token, the Claude API key and MCP tokens.
+-->
+<data-extraction-rules>
+  <cloud-backup>
+    <exclude domain="file" path="TabStudio/State/" />
+  </cloud-backup>
+  <device-transfer>
+    <exclude domain="file" path="TabStudio/State/" />
+  </device-transfer>
+</data-extraction-rules>

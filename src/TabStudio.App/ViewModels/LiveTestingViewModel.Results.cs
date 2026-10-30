@@ -37,11 +37,11 @@ public sealed partial class LiveTestingViewModel
         }
 
         var projects = _host.TestProjects.Select(p => p.FilePath).ToHashSet(StringComparer.Ordinal);
-        var included = engine.Index.Tests
-            .Where(t => projects.Contains(t.Key.ProjectFilePath) && Inclusion.IsIncluded(t.Key.ProjectFilePath, t.Test))
-            .ToList();
+        var tests = engine.Index.Tests.Where(t => projects.Contains(t.Key.ProjectFilePath)).ToList();
+        var included = tests.Where(t => Inclusion.IsIncluded(t.Key.ProjectFilePath, t.Test)).ToList();
         PassedCount = included.Count(t => t.Result?.Outcome == TestOutcome.Passed);
         FailedCount = included.Count(t => t.Result?.Outcome is TestOutcome.Failed or TestOutcome.Errored);
+        ExcludedCount = tests.Count - included.Count;
     }
 
     /// <inheritdoc />

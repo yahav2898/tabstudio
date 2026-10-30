@@ -119,6 +119,37 @@ public sealed class DebugAdapterSessionTests
     }
 
     [Fact]
+    public async Task A_capabilities_event_changes_only_what_it_names()
+    {
+        // lldb-dap 21 sends {"supportsRestartRequest": true} after every launch: replacing every capability with it
+        // turned conditional breakpoints into plain ones and dropped the exception filters.
+        var launcher = new FakeDebugAdapter.Launcher();
+        await using var session = await StartAsync(launcher);
+        await LaunchAsync(session, new DapSourceBreakpoint(3));
+        var before = session.Capabilities;
+
+        await launcher.Started[0].Connection.SendEventAsync("capabilities", new JsonObject
+        {
+            ["capabilities"] = new JsonObject { ["supportsRestartRequest"] = true, ["supportsSetVariable"] = false },
+        });
+        var deadline = DateTime.UtcNow + TimeSpan.FromSeconds(10);
+        while (ReferenceEquals(session.Capabilities, before) && DateTime.UtcNow < deadline)
+        {
+            await Task.Delay(10);
+        }
+
+        var after = session.Capabilities;
+        Assert.NotSame(before, after);
+        Assert.True(after.ConditionalBreakpoints && after.HitConditionalBreakpoints && after.LogPoints && after.ExceptionInfo);
+        Assert.False(after.SetVariable);
+        Assert.Equal(["raised", "uncaught"], after.ExceptionFilters.Select(f => f.Filter));
+
+        await session.SetBreakpointsAsync(Program, [new DapSourceBreakpoint(3, "x > 1")], CancellationToken.None);
+        var request = launcher.Started[0].Requests.Last(r => r.Command == "setBreakpoints").Arguments.GetProperty("breakpoints");
+        Assert.Equal("x > 1", request[0].GetProperty("condition").GetString());
+    }
+
+    [Fact]
     public async Task Logpoints_are_sent_when_the_adapter_supports_them()
     {
         var launcher = new FakeDebugAdapter.Launcher();

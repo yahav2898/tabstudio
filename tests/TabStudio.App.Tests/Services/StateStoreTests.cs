@@ -14,6 +14,21 @@ public sealed class StateStoreTests : IDisposable
     }
 
     [Fact]
+    public void An_unreadable_session_is_kept_aside_instead_of_being_overwritten()
+    {
+        // The session holds the only copy of unsaved text after Android ended the app; a damaged one was replaced by
+        // the next save without a trace.
+        Directory.CreateDirectory(Path.GetDirectoryName(_paths.SessionFile)!);
+        File.WriteAllText(_paths.SessionFile, "{ \"WorkspacePath\": \"/w\", \"Documents\": [ { \"Path\": \"a.cs\", \"UnsavedText\": \"mine");
+
+        Assert.Null(new SessionStore(_paths).Load());
+
+        var kept = Assert.Single(Directory.EnumerateFiles(Path.GetDirectoryName(_paths.SessionFile)!, "session.unreadable-*.json"));
+        Assert.Contains("mine", File.ReadAllText(kept), StringComparison.Ordinal);
+        Assert.False(File.Exists(_paths.SessionFile));
+    }
+
+    [Fact]
     public void Recent_workspaces_are_newest_first_and_survive_a_restart()
     {
         var first = _temp.Write("one/One.slnx", "<Solution />");

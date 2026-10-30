@@ -16,5 +16,6 @@ public sealed partial class ToolchainOverlaysView : UserControl
     {
         InitializeComponent();
         Store.SizeChanged += (_, e) => Store.Classes.Set("narrow", e.NewSize.Width < NarrowStoreWidth);
+        TabStudio.App.Controls.DialogDismiss.Attach(this, StoreScrim, () => (DataContext as TabStudio.App.ViewModels.WorkspaceViewModel)?.ToolchainStore.CloseCommand.Execute(null));
     }
 }

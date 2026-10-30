@@ -59,7 +59,7 @@ public static class WorkspaceLoader
             throw new ProjectLoadException(fullPath, "the path does not exist.", null);
         }
 
-        var solution = FindSolution(fullPath);
+        var solution = FindSolution(fullPath) ?? FindNestedSolution(fullPath);
         if (solution is not null)
         {
             return LoadSolution(SolutionParser.Load(solution), options);
@@ -104,6 +104,64 @@ public static class WorkspaceLoader
 
         return null;
     }
+
+    /// <summary>
+    /// The solution of a repository that keeps it in a folder, as blazor-workshop does in src/ beside eight copies
+    /// of the app in save-points/, and Avalonia.Samples in src/Avalonia.Samples/: opened as a folder, its copies were
+    /// loose projects with clashing names and the wrong one started. Only for a folder with nothing of its own to
+    /// open (no project, and no other language's project file at its top), from the shallowest folder that has one,
+    /// within two levels and outside samples, examples, docs, tests and benchmarks.
+    /// </summary>
+    /// <param name="directory">The folder to look in.</param>
+    /// <returns>The solution path, or <see langword="null"/> when there is none or the folder has its own projects.</returns>
+    public static string? FindNestedSolution(string directory)
+    {
+        try
+        {
+            if (Directory.EnumerateFiles(directory).Any(f => ProjectParser.IsProjectFile(f) || OtherProjectMarkers.Contains(Path.GetFileName(f))))
+            {
+                return null;
+            }
+
+            var level = new List<string> { directory };
+            for (var depth = 1; depth <= 2 && level.Count > 0; depth++)
+            {
+                level = [.. level.SelectMany(SubfoldersToSearch)];
+                var found = level.Select(FindSolution).OfType<string>().ToList();
+                if (found.Count > 0)
+                {
+                    var folderName = new DirectoryInfo(directory).Name;
+                    return found.FirstOrDefault(f => string.Equals(Path.GetFileNameWithoutExtension(f), folderName, StringComparison.OrdinalIgnoreCase))
+                        ?? found.OrderByDescending(CountProjects).ThenBy(f => f, StringComparer.OrdinalIgnoreCase).First();
+                }
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // An unreadable folder opens as it is.
+        }
+
+        return null;
+
+        static IEnumerable<string> SubfoldersToSearch(string folder) =>
+            Directory.EnumerateDirectories(folder)
+                .Where(d => !PathUtilities.IsIgnoredDirectory(Path.GetFileName(d)) && !SecondarySolutionFolders.Contains(Path.GetFileName(d)))
+                .Order(StringComparer.OrdinalIgnoreCase);
+    }
+
+    /// <summary>Files that make a folder another language's project, which a nested .NET solution must not hide.</summary>
+    private static readonly HashSet<string> OtherProjectMarkers = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "package.json", "pyproject.toml", "requirements.txt", "setup.py", "go.mod", "Cargo.toml", "CMakeLists.txt", "Makefile",
+        "pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts", "composer.json", "Package.swift",
+        "pubspec.yaml", "platformio.ini", "index.html",
+    };
+
+    /// <summary>Folders whose solutions are a repository's extras rather than its main one.</summary>
+    private static readonly HashSet<string> SecondarySolutionFolders = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "samples", "sample", "examples", "example", "docs", "doc", "test", "tests", "benchmarks", "benchmark", "tools", "build",
+    };
 
     /// <summary>The number of projects in a solution, or 0 when it cannot be read.</summary>
     private static int CountProjects(string solutionPath)

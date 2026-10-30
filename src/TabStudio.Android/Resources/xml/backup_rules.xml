@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android's Auto Backup (Android 9 to 11) copies the app's files to the user's cloud account. TabStudio's state
+  holds the GitHub token, the Claude API key and MCP tokens: it stays on the device.
+-->
+<full-backup-content>
+  <exclude domain="file" path="TabStudio/State/" />
+</full-backup-content>

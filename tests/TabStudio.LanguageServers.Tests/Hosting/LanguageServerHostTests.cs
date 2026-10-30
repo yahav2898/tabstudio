@@ -50,6 +50,45 @@ public sealed class LanguageServerHostTests
     }
 
     [Fact]
+    public async Task Eclipse_JDT_is_told_no_client_process_so_its_watchdog_watches_its_own_parent()
+    {
+        // JDT exits by itself when, idle for 30 seconds, it cannot see the processId of initialize; under PRoot on
+        // Android that killed it during builds (exit code 0, "stopped unexpectedly") and Java debugging with it.
+        await using var workspace = new FakeWorkspace();
+
+        var (_, python) = await workspace.OpenAsync("main.py", "pass\n");
+        var (_, java) = await workspace.OpenAsync("src/main/java/App.java", "class App {}\n");
+
+        var pythonInitialize = await python.WaitForRequestAsync("initialize");
+        Assert.Equal(Environment.ProcessId, pythonInitialize.GetProperty("processId").GetInt32());
+        var javaInitialize = await java.WaitForRequestAsync("initialize");
+        Assert.Equal("/fake/bin/jdtls", workspace.Launcher.StartInfos[^1].FileName);
+        Assert.True(javaInitialize.TryGetProperty("processId", out var processId), "processId is required by LSP, as null when there is none.");
+        Assert.Equal(JsonValueKind.Null, processId.ValueKind);
+    }
+
+    [Fact]
+    public async Task Servers_hear_about_files_created_and_deleted_outside_their_documents()
+    {
+        // Pyright kept "Import 'helper' could not be resolved" after helper.py was created, until the workspace reopened.
+        await using var workspace = new FakeWorkspace();
+        var (_, server) = await workspace.OpenAsync("main.py", "import helper\n");
+        var initialize = await server.WaitForRequestAsync("initialize");
+        Assert.True(initialize.GetProperty("capabilities").GetProperty("workspace").GetProperty("didChangeWatchedFiles").GetProperty("dynamicRegistration").GetBoolean());
+        await server.WaitForNotificationAsync("textDocument/didOpen");
+
+        var helper = Path.Combine(workspace.Root, "helper.py");
+        await workspace.Host.NotifyFilesChangedAsync([(helper, FileChangeKind.Created), (Path.Combine(workspace.Root, "old.py"), FileChangeKind.Deleted)]);
+
+        var notification = await server.WaitForNotificationAsync("workspace/didChangeWatchedFiles", _ => true);
+        var changes = notification.GetProperty("changes").EnumerateArray().ToList();
+        Assert.Equal(2, changes.Count);
+        Assert.Equal(DocumentUri.FromPath(helper), changes[0].GetProperty("uri").GetString());
+        Assert.Equal(1, changes[0].GetProperty("type").GetInt32());
+        Assert.Equal(3, changes[1].GetProperty("type").GetInt32());
+    }
+
+    [Fact]
     public async Task Edits_go_to_the_server_as_incremental_changes_with_increasing_versions()
     {
         await using var workspace = new FakeWorkspace();

@@ -102,7 +102,7 @@
             <!-- This commit's checks -->
             <StackPanel Spacing="6" IsVisible="{Binding IsWorkspaceScope}">
               <Grid ColumnDefinitions="*,Auto">
-                <TextBlock Classes="section" Text="THIS COMMIT" />
+                <TextBlock Classes="section" Text="This commit" />
                 <TextBlock Grid.Column="1" Classes="muted small" FontFamily="{DynamicResource CodeFont}" Text="{Binding ChecksHeader}" VerticalAlignment="Center" />
               </Grid>
               <Border Padding="10,8" CornerRadius="8" Background="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.StateSoftBrush}}">
@@ -145,7 +145,7 @@
 
             <!-- Runs -->
             <StackPanel Spacing="6" IsVisible="{Binding HasScope}">
-              <TextBlock Classes="section" Text="RUNS" />
+              <TextBlock Classes="section" Text="Runs" />
               <Grid ColumnDefinitions="*,6,*">
                 <ComboBox x:Name="BranchFilterBox" HorizontalAlignment="Stretch" ItemsSource="{Binding BranchFilters}" SelectedItem="{Binding BranchFilter}"
                           ToolTip.Tip="Which branches">
@@ -202,7 +202,7 @@
 
             <!-- Workflows, with Run workflow... for those that can be run by hand -->
             <StackPanel Spacing="6" IsVisible="{Binding HasWorkflows}">
-              <TextBlock Classes="section" Text="WORKFLOWS" />
+              <TextBlock Classes="section" Text="Workflows" />
               <TextBlock Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding WorkflowsErrorText}"
                          IsVisible="{Binding WorkflowsErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
               <ItemsControl ItemsSource="{Binding Workflows}">
@@ -234,7 +234,7 @@
 
             <!-- Watched repositories -->
             <StackPanel Spacing="6">
-              <TextBlock Classes="section" Text="WATCHED REPOSITORIES" />
+              <TextBlock Classes="section" Text="Watched repositories" />
               <TextBlock Classes="muted small" TextWrapping="Wrap" IsVisible="{Binding !HasWatched}"
                          Text="Follow other repositories' CI here, such as your team's: add one by owner/name or its GitHub address." />
               <ItemsControl ItemsSource="{Binding Watched}">
@@ -279,7 +279,7 @@
 
             <!-- Notifications -->
             <StackPanel Spacing="8">
-              <TextBlock Classes="section" Text="NOTIFICATIONS" />
+              <TextBlock Classes="section" Text="Notifications" />
               <CheckBox IsChecked="{Binding NotifyWhenRunsFinish}">
                 <StackPanel Spacing="2">
                   <TextBlock Text="Tell me when a run finishes" />

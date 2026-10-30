@@ -130,6 +130,9 @@ public sealed class VisualBasicWorkspaceHostTests : IDisposable
 
         var exit = Assert.Single(diagnostics, d => d.Id == InProcessSafetyAnalyzer.ExitId);
         Assert.Equal(3, exit.Location?.Line);
+
+        // The advice can be followed in a click handler too, where there is no Main to return from.
+        Assert.Contains("Application.Exit()", exit.Message, StringComparison.Ordinal);
     }
 
     [Fact]

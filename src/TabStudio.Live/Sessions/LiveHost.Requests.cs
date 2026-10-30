@@ -108,13 +108,17 @@ public sealed partial class LiveHost
         return LiveJson.Reply(new LiveVariablesResponse(variables), LiveJsonContext.Default.LiveVariablesResponse);
     }
 
-    /// <summary>A guest's Watch or DataTip expression; everyone may look.</summary>
+    /// <summary>A guest's Watch or DataTip expression: a variable for everyone, anything for whoever may step.</summary>
     private async Task<LinkReply> EvaluateAsync(Guest guest, LiveEvaluateRequest request, CancellationToken cancellationToken)
     {
-        _ = guest;
         if (request.Expression.Length > 1024)
         {
             throw new LinkRemoteException(LinkErrorCodes.InvalidRequest, "The expression is too long.");
+        }
+
+        if (!LivePermissions.CanEvaluate(guest.Participant, request.Expression))
+        {
+            throw new LinkRemoteException(LinkErrorCodes.Failed, $"{HostName} lets you read variables, such as order.Total or items[0], not run code in the program.");
         }
 
         var value = await Dispatcher.InvokeAsync(() => _workspace.EvaluateAsync(request.Pause, request.Expression, cancellationToken)).ConfigureAwait(false);

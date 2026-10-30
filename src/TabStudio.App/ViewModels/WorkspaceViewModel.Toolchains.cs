@@ -998,13 +998,33 @@ public sealed partial class WorkspaceViewModel
         return matcher;
     }
 
-    /// <summary>A printed path as a full path: relative ones are relative to the folder the program ran in.</summary>
+    /// <summary>The source folders of Gradle and Maven projects, where a JVM stack frame's package path is.</summary>
+    private static readonly string[] JvmSourceFolders =
+        ["src/main/java", "src/main/kotlin", "src/test/java", "src/test/kotlin", "app/src/main/java", "app/src/main/kotlin", "src"];
+
+    /// <summary>
+    /// A printed path as a full path: relative ones are relative to the folder the program ran in, or, for a JVM
+    /// stack frame, to one of its source folders.
+    /// </summary>
     private string? ResolveOutputPath(string file)
     {
         try
         {
             if (IsRemoteWorkspace && _remoteWorkspace is { } remote) { return remote.ToLocalPath(file); }
-            return Path.IsPathRooted(file) ? Path.GetFullPath(file) : _runDirectory is { } folder ? Path.GetFullPath(Path.Combine(folder, file)) : null;
+            if (Path.IsPathRooted(file))
+            {
+                return Path.GetFullPath(file);
+            }
+
+            if (_runDirectory is not { } folder)
+            {
+                return null;
+            }
+
+            // A JVM stack frame's file is relative to a source folder, not to where the program ran.
+            var path = Path.GetFullPath(Path.Combine(folder, file));
+            return File.Exists(path) ? path
+                : JvmSourceFolders.Select(source => Path.GetFullPath(Path.Combine(folder, source, file))).FirstOrDefault(File.Exists) ?? path;
         }
         catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException)
         {
