@@ -1,5 +1,5 @@
 Specification at fc2670ac94d3ac427b232cc15ee0e1a7d2748a1b, opening /home/runner/work/_temp/repos/Specification/Ardalis.Specification.sln
-Opened in 0.2 s: Ardalis.Specification, solution /home/runner/work/_temp/repos/Specification/Ardalis.Specification.sln
+Opened in 0.3 s: Ardalis.Specification, solution /home/runner/work/_temp/repos/Specification/Ardalis.Specification.sln
   project Ardalis.Specification [CSharp] /home/runner/work/_temp/repos/Specification/src/Ardalis.Specification/Ardalis.Specification.csproj
   project Ardalis.Specification.Tests [CSharp] /home/runner/work/_temp/repos/Specification/tests/Ardalis.Specification.Tests/Ardalis.Specification.Tests.csproj
   project Ardalis.Specification.EntityFrameworkCore [CSharp] /home/runner/work/_temp/repos/Specification/src/Ardalis.Specification.EntityFrameworkCore/Ardalis.Specification.EntityFrameworkCore.csproj
@@ -24,11 +24,11 @@ Compatibility Doctor:
   Ardalis.Sample.App3: Needs a database via Local server + WebView - Ardalis.Sample.App3 uses SQL Server, which has no engine for ARM64 Linux, so it cannot run on this tablet, and 'DbConnection' in appsettings.json uses (localdb)\mssqllocaldb, which exists only on Windows. Connect to a SQL Server on your network or in the cloud with a SQL login (Windows sign-in is not available here).
   Ardalis.Sample.App2: Needs a database via Local server + WebView - Ardalis.Sample.App2 uses SQL Server, which has no engine for ARM64 Linux, so it cannot run on this tablet, and 'DbConnection' in appsettings.json uses (localdb)\mssqllocaldb, which exists only on Windows. Connect to a SQL Server on your network or in the cloud with a SQL login (Windows sign-in is not available here).
 F5 startup project: Ardalis.Sample.App1 /home/runner/work/_temp/repos/Specification/samples/Ardalis.Sample.App1/Ardalis.Sample.App1.csproj
-Error List after analysis: 0 errors, 3 warnings
-Error List after the build: 0 errors, 3 warnings
+Error List after analysis: 0 errors, 4 warnings
+Error List after the build: 0 errors, 4 warnings
 Long-operation progress:
   Loading C#: Loading C#
-  Loading C#: Succeeded after 0.0 s
+  Loading C#: Succeeded after 0.1 s
   Restoring NuGet packages: Restoring NuGet packages
   Restoring NuGet packages: Restoring NuGet packages 0/9 projects
   Analyzing: Analyzing 0/11 projects
@@ -43,7 +43,7 @@ Long-operation progress:
   Analyzing: Analyzing 9/11 projects
   Analyzing: Analyzing 10/11 projects
   Analyzing: Analyzing 11/11 projects
-  Analyzing: Succeeded after 1.2 s
+  Analyzing: Succeeded after 1.4 s
   Restoring NuGet packages: Downloading NuGet packages 1/28
   Restoring NuGet packages: Downloading NuGet packages 2/28
   Restoring NuGet packages: Downloading NuGet packages 3/28
@@ -277,8 +277,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 38/53
   Restoring NuGet packages: Downloading NuGet packages 39/53
   Restoring NuGet packages: Downloading NuGet packages 40/53
-  Restoring NuGet packages: Downloading NuGet packages 42/53
   Restoring NuGet packages: Downloading NuGet packages 41/53
+  Restoring NuGet packages: Downloading NuGet packages 42/53
   Restoring NuGet packages: Downloading NuGet packages 43/53
   Restoring NuGet packages: Downloading NuGet packages 44/53
   Restoring NuGet packages: Downloading NuGet packages 45/53
@@ -431,7 +431,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 44/46
   Restoring NuGet packages: Downloading NuGet packages 45/46
   Restoring NuGet packages: Downloading NuGet packages 46/46
-  Restoring NuGet packages: Succeeded after 11.2 s
+  Restoring NuGet packages: Succeeded after 6.1 s
   Analyzing: Analyzing 0/11 projects
   Analyzing: Analyzing 1/11 projects
   Analyzing: Analyzing 2/11 projects
@@ -444,7 +444,7 @@ Long-operation progress:
   Analyzing: Analyzing 9/11 projects
   Analyzing: Analyzing 10/11 projects
   Analyzing: Analyzing 11/11 projects
-  Analyzing: Succeeded after 1.3 s
+  Analyzing: Succeeded after 1.8 s
   Building: Building
   Building: Building 0/11 projects
   Building: Building 1/11 projects
@@ -457,33 +457,34 @@ Long-operation progress:
   Building: Building 8/11 projects
   Building: Building 9/11 projects
   Building: Building 10/11 projects
-  Building: Succeeded after 2.5 s
+  Building: Succeeded after 4.6 s
 Project setup:
 
 Output:
-Build started at 17:30:38...
+Build started at 18:13:41...
 1>------ Build started: Project: Ardalis.Specification, Configuration: Debug ------
-1>Ardalis.Specification -> compiled in memory (49 KB, 69 ms)
+1>Ardalis.Specification -> compiled in memory (49 KB, 102 ms)
 2>------ Build started: Project: Ardalis.Specification.Tests, Configuration: Debug ------
-2>Ardalis.Specification.Tests -> compiled in memory (196.5 KB, 368 ms)
+2>SpecificationSizeTests.cs(31,47): warning CS0436: The type 'CallerArgumentExpressionAttribute' in '/tmp/tabstudio-tests/11d9523f43af45d98b7a2d4d4c0d3996/Packages/polyfill/8.8.0/contentFiles/cs/netstandard2.0/Polyfill/CallerArgumentExpressionAttribute.cs' conflicts with the imported type 'CallerArgumentExpressionAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/11d9523f43af45d98b7a2d4d4c0d3996/Packages/polyfill/8.8.0/contentFiles/cs/netstandard2.0/Polyfill/CallerArgumentExpressionAttribute.cs'.
+2>Ardalis.Specification.Tests -> compiled in memory (219.5 KB, 911 ms)
 3>------ Build started: Project: Ardalis.Specification.EntityFrameworkCore, Configuration: Debug ------
-3>Ardalis.Specification.EntityFrameworkCore -> compiled in memory (69 KB, 93 ms)
+3>Ardalis.Specification.EntityFrameworkCore -> compiled in memory (69 KB, 135 ms)
 4>------ Build started: Project: Ardalis.Specification.EntityFrameworkCore.Tests, Configuration: Debug ------
-4>Ardalis.Specification.EntityFrameworkCore.Tests -> compiled in memory (171 KB, 685 ms)
+4>Ardalis.Specification.EntityFrameworkCore.Tests -> compiled in memory (171 KB, 1307 ms)
 5>------ Build started: Project: Ardalis.Specification.EntityFramework6, Configuration: Debug ------
-5>Ardalis.Specification.EntityFramework6 -> compiled in memory (36.5 KB, 61 ms)
+5>Ardalis.Specification.EntityFramework6 -> compiled in memory (36.5 KB, 117 ms)
 6>------ Build started: Project: Ardalis.Specification.EntityFramework6.Tests, Configuration: Debug ------
-6>Ardalis.Specification.EntityFramework6.Tests -> compiled in memory (102 KB, 531 ms)
+6>Ardalis.Specification.EntityFramework6.Tests -> compiled in memory (125 KB, 747 ms)
 7>------ Build started: Project: Ardalis.Specification.Benchmarks, Configuration: Debug ------
 7>BenchmarkDbContext.cs(5,25): warning CS8618: Non-nullable property 'Stores' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-7>Ardalis.Specification.Benchmarks -> compiled in memory (39.5 KB, 113 ms)
+7>Ardalis.Specification.Benchmarks -> compiled in memory (39.5 KB, 327 ms)
 8>------ Build started: Project: Ardalis.Sample.Domain, Configuration: Debug ------
-8>Ardalis.Sample.Domain -> compiled in memory (13.5 KB, 54 ms)
+8>Ardalis.Sample.Domain -> compiled in memory (13.5 KB, 126 ms)
 9>------ Build started: Project: Ardalis.Sample.App1, Configuration: Debug ------
-9>Ardalis.Sample.App1 -> compiled in memory (22.5 KB, 119 ms)
+9>Ardalis.Sample.App1 -> compiled in memory (22.5 KB, 271 ms)
 10>------ Build started: Project: Ardalis.Sample.App3, Configuration: Debug ------
-10>Ardalis.Sample.App3 -> compiled in memory (49 KB, 239 ms)
+10>Ardalis.Sample.App3 -> compiled in memory (49 KB, 267 ms)
 11>------ Build started: Project: Ardalis.Sample.App2, Configuration: Debug ------
-11>Ardalis.Sample.App2 -> compiled in memory (23 KB, 150 ms)
+11>Ardalis.Sample.App2 -> compiled in memory (23 KB, 261 ms)
 ========== Build: 11 succeeded, 0 failed ==========
 

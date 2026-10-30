@@ -1,5 +1,5 @@
 CleanArchitectureTemplate at 345e7fe7612fdaf0cb5da58826a7c57d42e1fdd8, opening /home/runner/work/_temp/repos/CleanArchitectureTemplate/CleanArchitecture.slnx
-Opened in 0.1 s: CleanArchitecture, solution /home/runner/work/_temp/repos/CleanArchitectureTemplate/CleanArchitecture.slnx
+Opened in 0.2 s: CleanArchitecture, solution /home/runner/work/_temp/repos/CleanArchitectureTemplate/CleanArchitecture.slnx
   project AppHost [CSharp] /home/runner/work/_temp/repos/CleanArchitectureTemplate/src/AppHost/AppHost.csproj
   project ServiceDefaults [CSharp] /home/runner/work/_temp/repos/CleanArchitectureTemplate/src/ServiceDefaults/ServiceDefaults.csproj
   project Application [CSharp] /home/runner/work/_temp/repos/CleanArchitectureTemplate/src/Application/Application.csproj
@@ -32,33 +32,14 @@ Compatibility Doctor:
   ClientApp: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
   ClientApp-React: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
 F5 startup project: Web /home/runner/work/_temp/repos/CleanArchitectureTemplate/src/Web/Web.csproj
-Error List after analysis: 10 errors, 0 warnings
-  6 x CS0246
-      [Infrastructure] ApplicationDbContextInitialiser.cs(14,59): error CS0246: The type or namespace name 'WebApplication' could not be found (are you missing a using directive or an assembly reference?)
-      [Infrastructure] IdentityService.cs(13,22): error CS0246: The type or namespace name 'IAuthorizationService' could not be found (are you missing a using directive or an assembly reference?)
-      [Infrastructure] IdentityService.cs(18,9): error CS0246: The type or namespace name 'IAuthorizationService' could not be found (are you missing a using directive or an assembly reference?)
-      [Web] Program.cs(19,11): error CS0246: The type or namespace name 'WebApplication' could not be found (are you missing a using directive or an assembly reference?)
+Error List after analysis: 2 errors, 0 warnings
+  2 x CS0246
       [Application.FunctionalTests] FunctionalTestSetup.cs(21,26): error CS0246: The type or namespace name 'Projects' could not be found (are you missing a using directive or an assembly reference?)
       [Web.AcceptanceTests] AspireSetup.cs(20,27): error CS0246: The type or namespace name 'Projects' could not be found (are you missing a using directive or an assembly reference?)
-  3 x CS1061
-      [Infrastructure] DependencyInjection.cs(58,26): error CS1061: 'IServiceCollection' does not contain a definition for 'AddAuthentication' and no accessible extension method 'AddAuthentication' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
-      [Infrastructure] DependencyInjection.cs(65,26): error CS1061: 'IServiceCollection' does not contain a definition for 'AddAuthorizationBuilder' and no accessible extension method 'AddAuthorizationBuilder' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
-      [Infrastructure] DependencyInjection.cs(71,14): error CS1061: 'IdentityBuilder' does not contain a definition for 'AddSignInManager' and no accessible extension method 'AddSignInManager' accepting a first argument of type 'IdentityBuilder' could be found (are you missing a using directive or an assembly reference?)
-  1 x CS0234
-      [Infrastructure] IdentityService.cs(3,28): error CS0234: The type or namespace name 'Authorization' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
-Error List after the build: 9 errors, 0 warnings
-  5 x CS0246
-      [Infrastructure] ApplicationDbContextInitialiser.cs(14,59): error CS0246: The type or namespace name 'WebApplication' could not be found (are you missing a using directive or an assembly reference?)
-      [Infrastructure] IdentityService.cs(13,22): error CS0246: The type or namespace name 'IAuthorizationService' could not be found (are you missing a using directive or an assembly reference?)
-      [Infrastructure] IdentityService.cs(18,9): error CS0246: The type or namespace name 'IAuthorizationService' could not be found (are you missing a using directive or an assembly reference?)
+Error List after the build: 2 errors, 0 warnings
+  2 x CS0246
       [Application.FunctionalTests] FunctionalTestSetup.cs(21,26): error CS0246: The type or namespace name 'Projects' could not be found (are you missing a using directive or an assembly reference?)
       [Web.AcceptanceTests] AspireSetup.cs(20,27): error CS0246: The type or namespace name 'Projects' could not be found (are you missing a using directive or an assembly reference?)
-  3 x CS1061
-      [Infrastructure] DependencyInjection.cs(58,26): error CS1061: 'IServiceCollection' does not contain a definition for 'AddAuthentication' and no accessible extension method 'AddAuthentication' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
-      [Infrastructure] DependencyInjection.cs(65,26): error CS1061: 'IServiceCollection' does not contain a definition for 'AddAuthorizationBuilder' and no accessible extension method 'AddAuthorizationBuilder' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
-      [Infrastructure] DependencyInjection.cs(71,14): error CS1061: 'IdentityBuilder' does not contain a definition for 'AddSignInManager' and no accessible extension method 'AddSignInManager' accepting a first argument of type 'IdentityBuilder' could be found (are you missing a using directive or an assembly reference?)
-  1 x CS0234
-      [Infrastructure] IdentityService.cs(3,28): error CS0234: The type or namespace name 'Authorization' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
 Long-operation progress:
   Setting up projects: Checking project setup
   Loading C#: Loading C#
@@ -79,7 +60,7 @@ Long-operation progress:
   Analyzing: Analyzing 11/13 projects
   Analyzing: Analyzing 12/13 projects
   Analyzing: Analyzing 13/13 projects
-  Analyzing: Succeeded after 0.4 s
+  Analyzing: Succeeded after 0.6 s
   Restoring NuGet packages: Downloading NuGet packages 1/191
   Restoring NuGet packages: Downloading NuGet packages 2/191
   Restoring NuGet packages: Downloading NuGet packages 3/191
@@ -132,6 +113,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 50/191
   Restoring NuGet packages: Downloading NuGet packages 51/191
   Restoring NuGet packages: Downloading NuGet packages 52/191
+  Setting up projects: Setting up ClientApp: npm ci
+  Installing ClientApp's packages: Installing packages: npm ci
   Restoring NuGet packages: Downloading NuGet packages 53/191
   Restoring NuGet packages: Downloading NuGet packages 54/191
   Restoring NuGet packages: Downloading NuGet packages 55/191
@@ -150,8 +133,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 68/191
   Restoring NuGet packages: Downloading NuGet packages 69/191
   Restoring NuGet packages: Downloading NuGet packages 70/191
-  Setting up projects: Setting up ClientApp: npm ci
-  Installing ClientApp's packages: Installing packages: npm ci
   Restoring NuGet packages: Downloading NuGet packages 71/191
   Restoring NuGet packages: Downloading NuGet packages 72/191
   Restoring NuGet packages: Downloading NuGet packages 73/191
@@ -320,10 +301,10 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 1/43
   Restoring NuGet packages: Downloading NuGet packages 2/43
   Restoring NuGet packages: Downloading NuGet packages 3/43
-  Restoring NuGet packages: Downloading NuGet packages 5/43
   Restoring NuGet packages: Downloading NuGet packages 4/43
-  Restoring NuGet packages: Downloading NuGet packages 6/43
+  Restoring NuGet packages: Downloading NuGet packages 5/43
   Restoring NuGet packages: Downloading NuGet packages 7/43
+  Restoring NuGet packages: Downloading NuGet packages 6/43
   Restoring NuGet packages: Downloading NuGet packages 8/43
   Restoring NuGet packages: Downloading NuGet packages 9/43
   Restoring NuGet packages: Downloading NuGet packages 10/43
@@ -377,16 +358,16 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 12/95
   Restoring NuGet packages: Downloading NuGet packages 13/95
   Restoring NuGet packages: Downloading NuGet packages 14/95
-  Restoring NuGet packages: Downloading NuGet packages 15/95
   Restoring NuGet packages: Downloading NuGet packages 16/95
+  Restoring NuGet packages: Downloading NuGet packages 15/95
   Restoring NuGet packages: Downloading NuGet packages 17/95
   Restoring NuGet packages: Downloading NuGet packages 18/95
   Restoring NuGet packages: Downloading NuGet packages 19/95
   Restoring NuGet packages: Downloading NuGet packages 20/95
   Restoring NuGet packages: Downloading NuGet packages 21/95
   Restoring NuGet packages: Downloading NuGet packages 22/95
-  Restoring NuGet packages: Downloading NuGet packages 23/95
   Restoring NuGet packages: Downloading NuGet packages 24/95
+  Restoring NuGet packages: Downloading NuGet packages 23/95
   Restoring NuGet packages: Downloading NuGet packages 25/95
   Restoring NuGet packages: Downloading NuGet packages 26/95
   Restoring NuGet packages: Downloading NuGet packages 27/95
@@ -425,8 +406,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 60/95
   Restoring NuGet packages: Downloading NuGet packages 61/95
   Restoring NuGet packages: Downloading NuGet packages 62/95
-  Restoring NuGet packages: Downloading NuGet packages 63/95
   Restoring NuGet packages: Downloading NuGet packages 64/95
+  Restoring NuGet packages: Downloading NuGet packages 63/95
   Restoring NuGet packages: Downloading NuGet packages 65/95
   Restoring NuGet packages: Downloading NuGet packages 66/95
   Restoring NuGet packages: Downloading NuGet packages 67/95
@@ -671,9 +652,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 67/210
   Restoring NuGet packages: Downloading NuGet packages 68/210
   Restoring NuGet packages: Downloading NuGet packages 69/210
-  Installing ClientApp's packages: Succeeded after 9.1 s
-  Setting up projects: Setting up ClientApp-React: npm ci
-  Installing ClientApp-React's packages: Installing packages: npm ci
   Restoring NuGet packages: Downloading NuGet packages 70/210
   Restoring NuGet packages: Downloading NuGet packages 71/210
   Restoring NuGet packages: Downloading NuGet packages 72/210
@@ -729,8 +707,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 122/210
   Restoring NuGet packages: Downloading NuGet packages 123/210
   Restoring NuGet packages: Downloading NuGet packages 124/210
-  Restoring NuGet packages: Downloading NuGet packages 125/210
   Restoring NuGet packages: Downloading NuGet packages 126/210
+  Restoring NuGet packages: Downloading NuGet packages 125/210
   Restoring NuGet packages: Downloading NuGet packages 127/210
   Restoring NuGet packages: Downloading NuGet packages 128/210
   Restoring NuGet packages: Downloading NuGet packages 129/210
@@ -739,8 +717,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 132/210
   Restoring NuGet packages: Downloading NuGet packages 133/210
   Restoring NuGet packages: Downloading NuGet packages 134/210
-  Restoring NuGet packages: Downloading NuGet packages 135/210
   Restoring NuGet packages: Downloading NuGet packages 136/210
+  Restoring NuGet packages: Downloading NuGet packages 135/210
   Restoring NuGet packages: Downloading NuGet packages 137/210
   Restoring NuGet packages: Downloading NuGet packages 138/210
   Restoring NuGet packages: Downloading NuGet packages 139/210
@@ -878,8 +856,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 60/125
   Restoring NuGet packages: Downloading NuGet packages 61/125
   Restoring NuGet packages: Downloading NuGet packages 62/125
-  Restoring NuGet packages: Downloading NuGet packages 64/125
   Restoring NuGet packages: Downloading NuGet packages 63/125
+  Restoring NuGet packages: Downloading NuGet packages 64/125
   Restoring NuGet packages: Downloading NuGet packages 65/125
   Restoring NuGet packages: Downloading NuGet packages 66/125
   Restoring NuGet packages: Downloading NuGet packages 67/125
@@ -975,8 +953,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 31/117
   Restoring NuGet packages: Downloading NuGet packages 32/117
   Restoring NuGet packages: Downloading NuGet packages 33/117
-  Restoring NuGet packages: Downloading NuGet packages 34/117
   Restoring NuGet packages: Downloading NuGet packages 35/117
+  Restoring NuGet packages: Downloading NuGet packages 34/117
   Restoring NuGet packages: Downloading NuGet packages 36/117
   Restoring NuGet packages: Downloading NuGet packages 37/117
   Restoring NuGet packages: Downloading NuGet packages 38/117
@@ -988,14 +966,14 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 44/117
   Restoring NuGet packages: Downloading NuGet packages 45/117
   Restoring NuGet packages: Downloading NuGet packages 46/117
-  Restoring NuGet packages: Downloading NuGet packages 47/117
   Restoring NuGet packages: Downloading NuGet packages 48/117
+  Restoring NuGet packages: Downloading NuGet packages 47/117
   Restoring NuGet packages: Downloading NuGet packages 49/117
   Restoring NuGet packages: Downloading NuGet packages 50/117
   Restoring NuGet packages: Downloading NuGet packages 51/117
   Restoring NuGet packages: Downloading NuGet packages 52/117
-  Restoring NuGet packages: Downloading NuGet packages 53/117
   Restoring NuGet packages: Downloading NuGet packages 54/117
+  Restoring NuGet packages: Downloading NuGet packages 53/117
   Restoring NuGet packages: Downloading NuGet packages 55/117
   Restoring NuGet packages: Downloading NuGet packages 56/117
   Restoring NuGet packages: Downloading NuGet packages 57/117
@@ -1037,17 +1015,17 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 93/117
   Restoring NuGet packages: Downloading NuGet packages 94/117
   Restoring NuGet packages: Downloading NuGet packages 95/117
-  Restoring NuGet packages: Downloading NuGet packages 96/117
   Restoring NuGet packages: Downloading NuGet packages 97/117
+  Restoring NuGet packages: Downloading NuGet packages 96/117
   Restoring NuGet packages: Downloading NuGet packages 98/117
-  Restoring NuGet packages: Downloading NuGet packages 99/117
   Restoring NuGet packages: Downloading NuGet packages 100/117
+  Restoring NuGet packages: Downloading NuGet packages 99/117
   Restoring NuGet packages: Downloading NuGet packages 101/117
   Restoring NuGet packages: Downloading NuGet packages 102/117
   Restoring NuGet packages: Downloading NuGet packages 103/117
   Restoring NuGet packages: Downloading NuGet packages 104/117
-  Restoring NuGet packages: Downloading NuGet packages 105/117
   Restoring NuGet packages: Downloading NuGet packages 106/117
+  Restoring NuGet packages: Downloading NuGet packages 105/117
   Restoring NuGet packages: Downloading NuGet packages 107/117
   Restoring NuGet packages: Downloading NuGet packages 108/117
   Restoring NuGet packages: Downloading NuGet packages 109/117
@@ -1100,13 +1078,11 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 15/16
   Restoring NuGet packages: Downloading NuGet packages 16/16
   Restoring NuGet packages: Restoring NuGet packages 11/12 projects
-  Installing ClientApp-React's packages: Succeeded after 3.7 s
-  Setting up projects: Succeeded after 25.4 s
   Restoring NuGet packages: Downloading NuGet packages 1/219
   Restoring NuGet packages: Downloading NuGet packages 2/219
-  Restoring NuGet packages: Downloading NuGet packages 3/219
   Restoring NuGet packages: Downloading NuGet packages 4/219
   Restoring NuGet packages: Downloading NuGet packages 5/219
+  Restoring NuGet packages: Downloading NuGet packages 3/219
   Restoring NuGet packages: Downloading NuGet packages 6/219
   Restoring NuGet packages: Downloading NuGet packages 7/219
   Restoring NuGet packages: Downloading NuGet packages 8/219
@@ -1320,8 +1296,11 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 216/219
   Restoring NuGet packages: Downloading NuGet packages 217/219
   Restoring NuGet packages: Downloading NuGet packages 218/219
+  Installing ClientApp's packages: Succeeded after 13.8 s
+  Setting up projects: Setting up ClientApp-React: npm ci
+  Installing ClientApp-React's packages: Installing packages: npm ci
   Restoring NuGet packages: Downloading NuGet packages 219/219
-  Restoring NuGet packages: Succeeded after 36.5 s
+  Restoring NuGet packages: Succeeded after 20.9 s
   Analyzing: Analyzing 0/13 projects
   Analyzing: Analyzing 1/13 projects
   Analyzing: Analyzing 2/13 projects
@@ -1336,7 +1315,9 @@ Long-operation progress:
   Analyzing: Analyzing 11/13 projects
   Analyzing: Analyzing 12/13 projects
   Analyzing: Analyzing 13/13 projects
-  Analyzing: Succeeded after 0.8 s
+  Analyzing: Succeeded after 1.5 s
+  Installing ClientApp-React's packages: Succeeded after 5.7 s
+  Setting up projects: Succeeded after 24.2 s
   Building: Building
   Building: Building 0/9 projects
   Building: Building 1/9 projects
@@ -1347,36 +1328,32 @@ Long-operation progress:
   Building: Building 6/9 projects
   Building: Building 7/9 projects
   Building: Building 8/9 projects
-  Building: Failed after 0.3 s
+  Building: Succeeded after 0.6 s
 Project setup:
 
 Output:
-Build started at 17:30:19...
+Build started at 18:13:26...
 1>------ Build started: Project: ServiceDefaults, Configuration: Debug ------
-1>ServiceDefaults -> compiled in memory (13.5 KB, 9 ms)
+1>ServiceDefaults -> compiled in memory (13.5 KB, 12 ms)
 2>------ Build started: Project: Domain, Configuration: Debug ------
-2>Domain -> compiled in memory (11.5 KB, 5 ms)
+2>Domain -> compiled in memory (11.5 KB, 21 ms)
 3>------ Build started: Project: Application, Configuration: Debug ------
-3>Application -> compiled in memory (57.5 KB, 42 ms)
+3>Application -> compiled in memory (57.5 KB, 56 ms)
 4>------ Build started: Project: Shared, Configuration: Debug ------
-4>Shared -> compiled in memory (2.5 KB, 1 ms)
+4>Shared -> compiled in memory (2.5 KB, 4 ms)
 5>------ Build started: Project: Infrastructure, Configuration: Debug ------
-5>ApplicationDbContextInitialiser.cs(14,59): error CS0246: The type or namespace name 'WebApplication' could not be found (are you missing a using directive or an assembly reference?)
-5>DependencyInjection.cs(58,26): error CS1061: 'IServiceCollection' does not contain a definition for 'AddAuthentication' and no accessible extension method 'AddAuthentication' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
-5>DependencyInjection.cs(65,26): error CS1061: 'IServiceCollection' does not contain a definition for 'AddAuthorizationBuilder' and no accessible extension method 'AddAuthorizationBuilder' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
-5>DependencyInjection.cs(71,14): error CS1061: 'IdentityBuilder' does not contain a definition for 'AddSignInManager' and no accessible extension method 'AddSignInManager' accepting a first argument of type 'IdentityBuilder' could be found (are you missing a using directive or an assembly reference?)
-5>IdentityService.cs(3,28): error CS0234: The type or namespace name 'Authorization' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
-5>IdentityService.cs(13,22): error CS0246: The type or namespace name 'IAuthorizationService' could not be found (are you missing a using directive or an assembly reference?)
-5>IdentityService.cs(18,9): error CS0246: The type or namespace name 'IAuthorizationService' could not be found (are you missing a using directive or an assembly reference?)
+5>Infrastructure -> compiled in memory (30.5 KB, 127 ms)
 6>------ Build started: Project: Web, Configuration: Debug ------
+6>Web -> compiled in memory (63.5 KB, 204 ms)
 7>------ Build started: Project: Application.UnitTests, Configuration: Debug ------
+7>Application.UnitTests -> compiled in memory (12 KB, 110 ms)
 8>------ Build started: Project: Domain.UnitTests, Configuration: Debug ------
-8>Domain.UnitTests -> compiled in memory (4 KB, 16 ms)
+8>Domain.UnitTests -> compiled in memory (4 KB, 13 ms)
 9>------ Build started: Project: Infrastructure.IntegrationTests, Configuration: Debug ------
-9>Infrastructure.IntegrationTests -> compiled in memory (2.5 KB, 2 ms)
+9>Infrastructure.IntegrationTests -> compiled in memory (2.5 KB, 9 ms)
 10>------ Skipped: Project: AppHost: an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers ------
 11>------ Skipped: Project: TestAppHost: an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers ------
 12>------ Skipped: Project: Application.FunctionalTests: it references TestAppHost, which is not built on this device ------
 13>------ Skipped: Project: Web.AcceptanceTests: it references AppHost, which is not built on this device ------
-========== Build: 6 succeeded, 3 failed, 4 skipped ==========
+========== Build: 9 succeeded, 0 failed, 4 skipped ==========
 
