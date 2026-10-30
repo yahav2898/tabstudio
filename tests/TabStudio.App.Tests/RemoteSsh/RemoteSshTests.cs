@@ -33,6 +33,20 @@ public sealed class RemoteSshTests
         model.PreviewPort = "invalid";
         Assert.Throws<ArgumentException>(() => model.ReadRunProfile());
         Assert.False(model.IsBusy);
+
+        // A port typo is explained and a long number no longer crashes the app (an OverflowException nobody caught).
+        model.HostName = "192.0.2.10";
+        model.User = "deploy";
+        foreach (var port in new[] { "", "22a", "99999999999", "70000" })
+        {
+            model.Port = port;
+            model.SaveHostCommand.Execute(null);
+            Assert.Equal("Enter a port between 1 and 65535; SSH usually listens on 22.", model.Status);
+        }
+
+        model.ConfigText = "Host broken\n HostName 192.0.2.11\n Port 99999999999";
+        await model.ImportConfigCommand.ExecuteAsync(null);
+        Assert.Equal("Host broken in the SSH config has Port 99999999999, which is not a port between 1 and 65535.", model.Status);
     }
 
     [AvaloniaFact]

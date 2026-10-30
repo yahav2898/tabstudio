@@ -9,5 +9,9 @@ namespace TabStudio.App.Views.Actions;
 public sealed partial class ActionsDialogsView : UserControl
 {
     /// <summary>Creates the view.</summary>
-    public ActionsDialogsView() => InitializeComponent();
+    public ActionsDialogsView()
+    {
+        InitializeComponent();
+        TabStudio.App.Controls.DialogDismiss.Attach(this, DispatchScrim, () => (DataContext as TabStudio.App.ViewModels.Actions.ActionsViewModel)?.CloseDispatchFormCommand.Execute(null));
+    }
 }

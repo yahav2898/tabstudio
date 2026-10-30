@@ -518,7 +518,7 @@
 
     <!-- Finish Review, over the page -->
     <Border x:Name="FinishReviewPanel" Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding IsFinishReviewOpen}">
-      <Border Classes="card" Width="600" MaxWidth="600" Margin="16" Padding="20,18" HorizontalAlignment="Center" VerticalAlignment="Center"
+      <Border Classes="card" MaxWidth="600" Margin="16" Padding="20,18" HorizontalAlignment="Stretch" VerticalAlignment="Center"
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BoxShadow="{DynamicResource Shadow.Dialog}">
         <StackPanel Spacing="12">
           <Grid ColumnDefinitions="*,Auto">

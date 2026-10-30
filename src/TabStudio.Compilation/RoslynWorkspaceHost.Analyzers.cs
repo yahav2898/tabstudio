@@ -210,10 +210,10 @@ public sealed partial class RoslynWorkspaceHost
         var (id, message) = e.ErrorCode switch
         {
             AnalyzerLoadFailureEventArgs.FailureErrorCode.UnableToCreateAnalyzer =>
-                ("CS8032", $"An instance of analyzer {e.TypeName} cannot be created from {file}: {e.Message}. Its generated code is missing."),
+                ("CS8032", $"An instance of analyzer {e.TypeName} cannot be created from {file}: {e.Message.TrimEnd('.')}. Its generated code is missing."),
             AnalyzerLoadFailureEventArgs.FailureErrorCode.ReferencesNewerCompiler =>
                 ("CS9057", $"The analyzer assembly {file} references a newer version of the compiler than the one in TabStudio. Its generated code is missing."),
-            _ => ("CS8034", $"Unable to load analyzer assembly {file}: {e.Message}. Its generated code is missing."),
+            _ => ("CS8034", $"Unable to load analyzer assembly {file}: {e.Message.TrimEnd('.')}. Its generated code is missing."),
         };
         lock (_failureGate)
         {

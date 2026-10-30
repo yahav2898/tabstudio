@@ -68,7 +68,13 @@ public static partial class SshConfig
                 if (identity.StartsWith("~/", StringComparison.Ordinal)) { identity = Path.Combine(home, identity[2..]); }
                 if (!Path.IsPathRooted(identity)) { identity = Path.Combine(home, identity); }
             }
-            var port = options.TryGetValue("port", out var portValue) ? int.Parse(portValue, System.Globalization.CultureInfo.InvariantCulture) : 22;
+            var port = 22;
+            if (options.TryGetValue("port", out var portValue)
+                && (!int.TryParse(portValue, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out port) || port is < 1 or > 65535))
+            {
+                throw new FormatException($"Host {alias} in the SSH config has Port {portValue}, which is not a port between 1 and 65535.");
+            }
+
             var host = new SshHost(alias, hostName, user, port, identity);
             host.Validate();
             hosts.Add(host);

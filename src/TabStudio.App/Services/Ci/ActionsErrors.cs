@@ -29,7 +29,7 @@ public static class ActionsErrors
                 $"Your GitHub token is missing a permission. {PermissionsHint}",
             GitHubApiException { StatusCode: HttpStatusCode.Forbidden } api => $"GitHub refused: {api.Message}",
             GitHubApiException api => api.Message,
-            OperationCanceledException => "Canceled.",
+            OperationCanceledException => "Cancelled.",
             _ => exception.Message,
         };
     }

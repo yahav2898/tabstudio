@@ -112,7 +112,7 @@ public sealed partial class WorkspaceViewModel
         catch (Exception ex) when (ex is JsonRpcException or InvalidOperationException or OperationCanceledException)
         {
             var detail = server.ServerMessage is { Length: > 0 } message ? $" {server.ServerName}: {message}" : string.Empty;
-            Output.WriteLine($"Kotlin debugging could not start Java's debugger: {ex.Message}.{detail} Install or update Java from the Toolchain Store. See Language Servers output for details.", OutputKind.Failure);
+            Output.WriteLine($"Kotlin debugging could not start Java's debugger: {ex.Message.TrimEnd('.')}. If it keeps happening, update Java in Tools > Toolchain Store and press F5 again.{detail} Language Servers output has the details.", OutputKind.Failure);
             State = IdeState.Failed;
             StatusText = "Java debugger did not start";
             return null;

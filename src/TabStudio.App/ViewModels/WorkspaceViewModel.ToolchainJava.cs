@@ -54,7 +54,7 @@ public sealed partial class WorkspaceViewModel
         if (source is null || await OpenDocumentAsync(source) is not { LanguageServer: { } server })
         {
             State = IdeState.Failed;
-            StatusText = "Java debugging needs Eclipse JDT and the Java debugger from the Toolchain Store";
+            StatusText = "Java debugging needs Java from Tools > Toolchain Store";
             return null;
         }
 
@@ -74,7 +74,8 @@ public sealed partial class WorkspaceViewModel
         catch (Exception ex) when (ex is JsonRpcException or InvalidOperationException or OperationCanceledException)
         {
             var detail = server.ServerMessage is { Length: > 0 } message ? $" {server.ServerName}: {message}" : string.Empty;
-            Output.WriteLine($"Java debugging could not start: {ex.Message}.{detail} Server state: {server.ServerState}. Install or update Java from the Toolchain Store to load java-debug into JDT. See Language Servers output for details.", OutputKind.Failure);
+            // ex.Message ends with its own period ("The connection closed.."); the next step comes before the details.
+            Output.WriteLine($"Java debugging could not start: {ex.Message.TrimEnd('.')}. If it keeps happening, update Java in Tools > Toolchain Store and press F5 again.{detail} Language Servers output has the details.", OutputKind.Failure);
             State = IdeState.Failed;
             StatusText = "Java debugger did not start";
             return null;

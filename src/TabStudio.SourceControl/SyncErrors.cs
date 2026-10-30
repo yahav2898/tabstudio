@@ -19,7 +19,7 @@ public static class SyncErrors
             GitHubApiException { IsNotFound: true } => "GitHub could not find the repository or branch, or your account cannot see it.",
             GitHubApiException { StatusCode: System.Net.HttpStatusCode.Forbidden } api => $"GitHub refused: {api.Message}",
             GitHubApiException api => api.Message,
-            OperationCanceledException => "Canceled.",
+            OperationCanceledException => "Cancelled.",
             IOException io => $"A file could not be read or written: {io.Message}",
             UnauthorizedAccessException access => $"A file could not be read or written: {access.Message}",
             _ => exception.Message,

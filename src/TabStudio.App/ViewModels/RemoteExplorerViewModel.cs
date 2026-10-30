@@ -139,7 +139,13 @@ public sealed partial class RemoteExplorerViewModel : ObservableObject, IDisposa
     }
     private SshHost ReadHost()
     {
-        var host = new SshHost(string.IsNullOrWhiteSpace(Alias) ? HostName.Trim() : Alias.Trim(), HostName.Trim(), User.Trim(), int.Parse(Port, System.Globalization.CultureInfo.InvariantCulture), string.IsNullOrWhiteSpace(IdentityFile) ? null : IdentityFile);
+        // A typo said "The input string '' was not in a correct format.", and a long number crashed the app.
+        if (!int.TryParse(Port.Trim(), System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var port) || port is < 1 or > 65535)
+        {
+            throw new ArgumentException("Enter a port between 1 and 65535; SSH usually listens on 22.");
+        }
+
+        var host = new SshHost(string.IsNullOrWhiteSpace(Alias) ? HostName.Trim() : Alias.Trim(), HostName.Trim(), User.Trim(), port, string.IsNullOrWhiteSpace(IdentityFile) ? null : IdentityFile);
         host.Validate(); return host;
     }
     private async Task OperateAsync(Func<CancellationToken, Task> action)

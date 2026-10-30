@@ -63,7 +63,7 @@ public sealed partial class WorkspaceViewModel
                 State = IdeState.Failed; StatusText = reason;
 
                 // In the Output too, where F5's result is looked for: without it F5 seemed to do nothing.
-                Output.WriteLine($"The app was not started because its backing services did not start: {reason}. They are in the Services panel.", OutputKind.Failure);
+                Output.WriteLine($"The app was not started because its backing services did not start: {reason.TrimEnd('.')}. They are in the Services panel.", OutputKind.Failure);
                 SelectSideBarPanel(SideBarPanel.Services);
                 return false;
             }

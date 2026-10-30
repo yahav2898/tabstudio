@@ -220,7 +220,7 @@ public sealed partial class SwarmMember : IAsyncDisposable
     private static string Describe(Exception error) => error switch
     {
         TimeoutException => "The tablet did not answer in time. Check that both devices are on the same Wi-Fi.",
-        OperationCanceledException => "Canceled.",
+        OperationCanceledException => "Cancelled.",
         LinkRemoteException { Code: LinkErrorCodes.UnknownMethod } => "That device is not a TabStudio Swarm. On the tablet, open the Swarm window and tap Add a device.",
         _ => error.Message,
     };
