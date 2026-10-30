@@ -1,6 +1,6 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Database.Tests/TabStudio.Database.Tests.csproj (in 327 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Database/TabStudio.Database.csproj (in 327 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Database.Tests/TabStudio.Database.Tests.csproj (in 321 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Database/TabStudio.Database.csproj (in 321 ms).
   1 of 3 projects are up-to-date for restore.
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Database -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Database/bin/Release/net10.0/TabStudio.Database.dll
@@ -8,70 +8,80 @@
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Database.Tests/bin/Release/net10.0/TabStudio.Database.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.09]   Discovering: TabStudio.Database.Tests
-[xUnit.net 00:00:00.15]   Discovered:  TabStudio.Database.Tests
-[xUnit.net 00:00:00.18]   Starting:    TabStudio.Database.Tests
-  Passed TabStudio.Database.Tests.ConnectionsTests.Completions_follow_aliases_and_do_not_crash_on_repeated_aliases [43 ms]
+[xUnit.net 00:00:00.13]   Discovering: TabStudio.Database.Tests
+[xUnit.net 00:00:00.28]   Discovered:  TabStudio.Database.Tests
+[xUnit.net 00:00:00.36]   Starting:    TabStudio.Database.Tests
+  Passed TabStudio.Database.Tests.ConnectionsTests.Completions_follow_aliases_and_do_not_crash_on_repeated_aliases [73 ms]
   Passed TabStudio.Database.Tests.ConnectionsTests.Identifier_quoting_never_emits_an_unescaped_delimiter(provider: SQLite, name: "a\"b", expected: "\"a\"\"b\"") [< 1 ms]
-  Passed TabStudio.Database.Tests.ConnectionsTests.Identifier_quoting_never_emits_an_unescaped_delimiter(provider: PostgreSql, name: "a\"b", expected: "\"a\"\"b\"") [< 1 ms]
+  Passed TabStudio.Database.Tests.ConnectionsTests.Identifier_quoting_never_emits_an_unescaped_delimiter(provider: PostgreSql, name: "a\"b", expected: "\"a\"\"b\"") [2 ms]
   Passed TabStudio.Database.Tests.ConnectionsTests.Identifier_quoting_never_emits_an_unescaped_delimiter(provider: SqlServer, name: "a]b", expected: "[a]]b]") [< 1 ms]
-  Passed TabStudio.Database.Tests.SqliteTests.Csv_and_json_preserve_quotes_newlines_and_nulls [80 ms]
-  Passed TabStudio.Database.Tests.ConnectionsTests.Saved_metadata_contains_no_connection_string_or_password_and_removal_forgets_secret [164 ms]
-  Passed TabStudio.Database.Tests.ConnectionsTests.Discovery_reads_nested_projects_configuration_and_secrets_without_leaking_in_labels [59 ms]
-  Passed TabStudio.Database.Tests.SqliteTests.Query_preserves_multiple_sets_null_duplicate_names_and_display_limits [82 ms]
-[xUnit.net 00:00:00.65]     TabStudio.Database.Tests.PostgreSqlTests.Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled [FAIL]
-[xUnit.net 00:00:00.65]       Npgsql.PostgresException : 22P02: invalid input syntax for type json
-[xUnit.net 00:00:00.65]       
-[xUnit.net 00:00:00.65]       POSITION: 67
-[xUnit.net 00:00:00.65]       DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
-[xUnit.net 00:00:00.65]       Stack Trace:
-[xUnit.net 00:00:00.65]            at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
-[xUnit.net 00:00:00.65]            at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
-[xUnit.net 00:00:00.65]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
-[xUnit.net 00:00:00.65]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
-[xUnit.net 00:00:00.65]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
-[xUnit.net 00:00:00.65]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
-[xUnit.net 00:00:00.65]            at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
-[xUnit.net 00:00:00.65]         /_/src/TabStudio.Database/SqlExecutor.cs(32,0): at TabStudio.Database.SqlExecutor.<>c__DisplayClass3_0.<<ExecuteAsync>b__0>d.MoveNext()
-[xUnit.net 00:00:00.65]         --- End of stack trace from previous location ---
-[xUnit.net 00:00:00.65]         /_/src/TabStudio.Database/SqlExecutor.cs(55,0): at TabStudio.Database.SqlExecutor.<>c__DisplayClass3_0.<<ExecuteAsync>b__0>d.MoveNext()
-[xUnit.net 00:00:00.65]         --- End of stack trace from previous location ---
-[xUnit.net 00:00:00.65]         /_/src/TabStudio.Database/SqlExecutor.cs(55,0): at TabStudio.Database.SqlExecutor.<>c__DisplayClass3_0.<<ExecuteAsync>b__0>d.MoveNext()
-[xUnit.net 00:00:00.65]         --- End of stack trace from previous location ---
-[xUnit.net 00:00:00.65]         /_/tests/TabStudio.Database.Tests/PostgreSqlTests.cs(50,0): at TabStudio.Database.Tests.PostgreSqlTests.Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled()
-[xUnit.net 00:00:00.66]         /_/tests/TabStudio.Database.Tests/PostgreSqlTests.cs(88,0): at TabStudio.Database.Tests.PostgreSqlTests.Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled()
-[xUnit.net 00:00:00.66]         --- End of stack trace from previous location ---
-[xUnit.net 00:00:01.07]   Finished:    TabStudio.Database.Tests
-  Passed TabStudio.Database.Tests.SqliteTests.Table_paging_updates_parameters_and_rejects_stale_rows [96 ms]
-  Failed TabStudio.Database.Tests.PostgreSqlTests.Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled [412 ms]
+  Passed TabStudio.Database.Tests.SqliteTests.Csv_and_json_preserve_quotes_newlines_and_nulls [267 ms]
+  Passed TabStudio.Database.Tests.ConnectionsTests.Saved_metadata_contains_no_connection_string_or_password_and_removal_forgets_secret [222 ms]
+  Passed TabStudio.Database.Tests.ConnectionsTests.Discovery_reads_nested_projects_configuration_and_secrets_without_leaking_in_labels [88 ms]
+  Passed TabStudio.Database.Tests.SqliteTests.Query_preserves_multiple_sets_null_duplicate_names_and_display_limits [125 ms]
+[xUnit.net 00:00:01.41]     TabStudio.Database.Tests.PostgreSqlTests.Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled [FAIL]
+[xUnit.net 00:00:01.41]       System.InvalidCastException : Reading as 'System.Object' is not supported for fields having DataTypeName '-.-'
+[xUnit.net 00:00:01.41]       Stack Trace:
+[xUnit.net 00:00:01.42]            at Npgsql.Internal.AdoSerializerHelpers.<GetTypeInfoForReading>g__ThrowReadingNotSupported|0_0(Type type, PgSerializerOptions options, PgTypeId pgTypeId, Exception inner)
+[xUnit.net 00:00:01.42]            at Npgsql.Internal.AdoSerializerHelpers.GetTypeInfoForReading(Type type, PgTypeId pgTypeId, PgSerializerOptions options)
+[xUnit.net 00:00:01.42]            at Npgsql.BackendMessages.FieldDescription.<GetInfoCore>g__GetInfoSlow|51_0(Type type, ColumnInfo& lastColumnInfo)
+[xUnit.net 00:00:01.42]            at Npgsql.BackendMessages.FieldDescription.GetInfoCore(Type type, ColumnInfo& lastColumnInfo)
+[xUnit.net 00:00:01.42]            at Npgsql.BackendMessages.FieldDescription.get_ObjectInfo()
+[xUnit.net 00:00:01.42]            at Npgsql.BackendMessages.FieldDescription.get_FieldType()
+[xUnit.net 00:00:01.42]            at Npgsql.NpgsqlDataReader.GetFieldType(Int32 ordinal)
+[xUnit.net 00:00:01.42]         /_/src/TabStudio.Database/SqlExecutor.cs(41,0): at TabStudio.Database.SqlExecutor.<>c__DisplayClass3_1.<ExecuteAsync>b__1(Int32 i)
+[xUnit.net 00:00:01.42]            at System.Linq.Enumerable.RangeSelectIterator`2.Fill(Span`1 results, T start, Func`2 func)
+[xUnit.net 00:00:01.42]            at System.Linq.Enumerable.RangeSelectIterator`2.ToArray()
+[xUnit.net 00:00:01.42]         /_/src/TabStudio.Database/SqlExecutor.cs(40,0): at TabStudio.Database.SqlExecutor.<>c__DisplayClass3_0.<<ExecuteAsync>b__0>d.MoveNext()
+[xUnit.net 00:00:01.42]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.42]         /_/src/TabStudio.Database/SqlExecutor.cs(55,0): at TabStudio.Database.SqlExecutor.<>c__DisplayClass3_0.<<ExecuteAsync>b__0>d.MoveNext()
+[xUnit.net 00:00:01.42]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.42]         /_/src/TabStudio.Database/SqlExecutor.cs(55,0): at TabStudio.Database.SqlExecutor.<>c__DisplayClass3_0.<<ExecuteAsync>b__0>d.MoveNext()
+[xUnit.net 00:00:01.42]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.42]         /_/src/TabStudio.Database/SqlExecutor.cs(55,0): at TabStudio.Database.SqlExecutor.<>c__DisplayClass3_0.<<ExecuteAsync>b__0>d.MoveNext()
+[xUnit.net 00:00:01.42]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.42]         /_/src/TabStudio.Database/TableEditor.cs(20,0): at TabStudio.Database.TableEditor.ReadAsync(DatabaseConnection connection, DatabaseTable table, Int32 page, Int32 pageSize, CancellationToken token)
+[xUnit.net 00:00:01.42]         /_/tests/TabStudio.Database.Tests/PostgreSqlTests.cs(66,0): at TabStudio.Database.Tests.PostgreSqlTests.<>c__DisplayClass1_1.<<Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled>g__EditAsync|2>d.MoveNext()
+[xUnit.net 00:00:01.42]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.42]         /_/tests/TabStudio.Database.Tests/PostgreSqlTests.cs(71,0): at TabStudio.Database.Tests.PostgreSqlTests.Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled()
+[xUnit.net 00:00:01.42]         /_/tests/TabStudio.Database.Tests/PostgreSqlTests.cs(89,0): at TabStudio.Database.Tests.PostgreSqlTests.Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled()
+[xUnit.net 00:00:01.42]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.78]   Finished:    TabStudio.Database.Tests
+  Passed TabStudio.Database.Tests.SqliteTests.Table_paging_updates_parameters_and_rejects_stale_rows [74 ms]
+  Passed TabStudio.Database.Tests.SqliteTests.Cancellation_interrupts_a_running_sqlite_statement [190 ms]
+  Passed TabStudio.Database.Tests.SqliteTests.Schema_reads_views_composite_keys_generated_columns_and_indexes [64 ms]
+  Failed TabStudio.Database.Tests.PostgreSqlTests.Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled [919 ms]
   Error Message:
-   Npgsql.PostgresException : 22P02: invalid input syntax for type json
-
-POSITION: 67
-DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   System.InvalidCastException : Reading as 'System.Object' is not supported for fields having DataTypeName '-.-'
   Stack Trace:
-     at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
-   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
-   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
-   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
-   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
-   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
-   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
-   at TabStudio.Database.SqlExecutor.<>c__DisplayClass3_0.<<ExecuteAsync>b__0>d.MoveNext() in /_/src/TabStudio.Database/SqlExecutor.cs:line 32
+     at Npgsql.Internal.AdoSerializerHelpers.<GetTypeInfoForReading>g__ThrowReadingNotSupported|0_0(Type type, PgSerializerOptions options, PgTypeId pgTypeId, Exception inner)
+   at Npgsql.Internal.AdoSerializerHelpers.GetTypeInfoForReading(Type type, PgTypeId pgTypeId, PgSerializerOptions options)
+   at Npgsql.BackendMessages.FieldDescription.<GetInfoCore>g__GetInfoSlow|51_0(Type type, ColumnInfo& lastColumnInfo)
+   at Npgsql.BackendMessages.FieldDescription.GetInfoCore(Type type, ColumnInfo& lastColumnInfo)
+   at Npgsql.BackendMessages.FieldDescription.get_ObjectInfo()
+   at Npgsql.BackendMessages.FieldDescription.get_FieldType()
+   at Npgsql.NpgsqlDataReader.GetFieldType(Int32 ordinal)
+   at TabStudio.Database.SqlExecutor.<>c__DisplayClass3_1.<ExecuteAsync>b__1(Int32 i) in /_/src/TabStudio.Database/SqlExecutor.cs:line 41
+   at System.Linq.Enumerable.RangeSelectIterator`2.Fill(Span`1 results, T start, Func`2 func)
+   at System.Linq.Enumerable.RangeSelectIterator`2.ToArray()
+   at TabStudio.Database.SqlExecutor.<>c__DisplayClass3_0.<<ExecuteAsync>b__0>d.MoveNext() in /_/src/TabStudio.Database/SqlExecutor.cs:line 40
 --- End of stack trace from previous location ---
    at TabStudio.Database.SqlExecutor.<>c__DisplayClass3_0.<<ExecuteAsync>b__0>d.MoveNext() in /_/src/TabStudio.Database/SqlExecutor.cs:line 55
 --- End of stack trace from previous location ---
    at TabStudio.Database.SqlExecutor.<>c__DisplayClass3_0.<<ExecuteAsync>b__0>d.MoveNext() in /_/src/TabStudio.Database/SqlExecutor.cs:line 55
 --- End of stack trace from previous location ---
-   at TabStudio.Database.Tests.PostgreSqlTests.Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled() in /_/tests/TabStudio.Database.Tests/PostgreSqlTests.cs:line 50
-   at TabStudio.Database.Tests.PostgreSqlTests.Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled() in /_/tests/TabStudio.Database.Tests/PostgreSqlTests.cs:line 88
+   at TabStudio.Database.SqlExecutor.<>c__DisplayClass3_0.<<ExecuteAsync>b__0>d.MoveNext() in /_/src/TabStudio.Database/SqlExecutor.cs:line 55
 --- End of stack trace from previous location ---
-  Passed TabStudio.Database.Tests.SqliteTests.Cancellation_interrupts_a_running_sqlite_statement [158 ms]
-  Passed TabStudio.Database.Tests.SqliteTests.Schema_reads_views_composite_keys_generated_columns_and_indexes [18 ms]
-  Passed TabStudio.Database.Tests.PostgreSqlTests.Live_postgres_schema_queries_paging_editing_and_cancel [421 ms]
+   at TabStudio.Database.TableEditor.ReadAsync(DatabaseConnection connection, DatabaseTable table, Int32 page, Int32 pageSize, CancellationToken token) in /_/src/TabStudio.Database/TableEditor.cs:line 20
+   at TabStudio.Database.Tests.PostgreSqlTests.<>c__DisplayClass1_1.<<Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled>g__EditAsync|2>d.MoveNext() in /_/tests/TabStudio.Database.Tests/PostgreSqlTests.cs:line 66
+--- End of stack trace from previous location ---
+   at TabStudio.Database.Tests.PostgreSqlTests.Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled() in /_/tests/TabStudio.Database.Tests/PostgreSqlTests.cs:line 71
+   at TabStudio.Database.Tests.PostgreSqlTests.Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled() in /_/tests/TabStudio.Database.Tests/PostgreSqlTests.cs:line 89
+--- End of stack trace from previous location ---
+  Passed TabStudio.Database.Tests.PostgreSqlTests.Live_postgres_schema_queries_paging_editing_and_cancel [366 ms]
 
 Test Run Failed.
 Total tests: 13
      Passed: 12
      Failed: 1
- Total time: 1.6926 Seconds
+ Total time: 2.5572 Seconds
