@@ -1,0 +1,110 @@
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.18]   Discovering: TabStudio.App.Tests
+[xUnit.net 00:00:00.55]   Discovered:  TabStudio.App.Tests
+[xUnit.net 00:00:00.59]   Starting:    TabStudio.App.Tests
+[xUnit.net 00:00:13.06]     TabStudio.App.Tests.Accessibility.KeyboardTests.Tab_goes_through_the_shell_in_order_to_visible_controls_that_show_their_focus(width: 1280, height: 800) [FAIL]
+[xUnit.net 00:00:13.07]       Keyboard focus problems:
+[xUnit.net 00:00:13.07]       Tab 14: AdaptiveBarItem#MoreButton "More" has the focus off screen, at -100014, -99982, 44, 44.
+[xUnit.net 00:00:13.07]       Stack Trace:
+[xUnit.net 00:00:13.07]         /_/tests/TabStudio.App.Tests/Accessibility/KeyboardTests.cs(68,0): at TabStudio.App.Tests.Accessibility.KeyboardTests.Tab_goes_through_the_shell_in_order_to_visible_controls_that_show_their_focus(Double width, Double height)
+[xUnit.net 00:00:13.07]         --- End of stack trace from previous location ---
+  Failed TabStudio.App.Tests.Accessibility.KeyboardTests.Tab_goes_through_the_shell_in_order_to_visible_controls_that_show_their_focus(width: 1280, height: 800) [11 s]
+  Error Message:
+   Keyboard focus problems:
+Tab 14: AdaptiveBarItem#MoreButton "More" has the focus off screen, at -100014, -99982, 44, 44.
+  Stack Trace:
+     at TabStudio.App.Tests.Accessibility.KeyboardTests.Tab_goes_through_the_shell_in_order_to_visible_controls_that_show_their_focus(Double width, Double height) in /_/tests/TabStudio.App.Tests/Accessibility/KeyboardTests.cs:line 68
+--- End of stack trace from previous location ---
+  Passed TabStudio.App.Tests.Views.ShellScreenshotTests.Ctrl_Q_searches_files_commands_and_symbols_over_the_IDE [2 s]
+[xUnit.net 00:00:16.35]     TabStudio.App.Tests.Accessibility.ScreenReaderTests.The_editor_reads_its_line_and_the_Solution_Explorer_its_files [FAIL]
+[xUnit.net 00:00:16.35]       Assert.NotEmpty() Failure: Collection was empty
+[xUnit.net 00:00:16.35]       Stack Trace:
+[xUnit.net 00:00:16.35]         /_/tests/TabStudio.App.Tests/Accessibility/ScreenReaderTests.cs(97,0): at TabStudio.App.Tests.Accessibility.ScreenReaderTests.The_editor_reads_its_line_and_the_Solution_Explorer_its_files()
+[xUnit.net 00:00:16.35]         --- End of stack trace from previous location ---
+  Failed TabStudio.App.Tests.Accessibility.ScreenReaderTests.The_editor_reads_its_line_and_the_Solution_Explorer_its_files [676 ms]
+  Error Message:
+   Assert.NotEmpty() Failure: Collection was empty
+  Stack Trace:
+     at TabStudio.App.Tests.Accessibility.ScreenReaderTests.The_editor_reads_its_line_and_the_Solution_Explorer_its_files() in /_/tests/TabStudio.App.Tests/Accessibility/ScreenReaderTests.cs:line 97
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:22.14]     TabStudio.App.Tests.Accessibility.KeyboardTests.Tab_goes_through_the_shell_in_order_to_visible_controls_that_show_their_focus(width: 800, height: 1280) [FAIL]
+[xUnit.net 00:00:22.14]       Keyboard focus problems:
+[xUnit.net 00:00:22.14]       Tab 2: AdaptiveBarItem "Navigate Backward (Alt+Left)" has the focus off screen, at -100014, -99982, 44, 44.
+[xUnit.net 00:00:22.14]       Tab 3: AdaptiveBarItem "Navigate Forward (Alt+Right)" has the focus off screen, at -100014, -99982, 44, 44.
+[xUnit.net 00:00:22.14]       Tab 5: AdaptiveBarItem "Save All (Ctrl+Shift+S)" has the focus off screen, at -100014, -99982, 44, 44.
+[xUnit.net 00:00:22.14]       Tab 11: AdaptiveBarItem "Toggle Line Comment (Ctrl+/)" has the focus off screen, at -100014, -99982, 44, 44.
+[xUnit.net 00:00:22.14]       Tab 12: AdaptiveBarItem "Format Document (Shift+Alt+F)" has the focus off screen, at -100014, -99982, 44, 44.
+[xUnit.net 00:00:22.14]       Stack Trace:
+[xUnit.net 00:00:22.14]         /_/tests/TabStudio.App.Tests/Accessibility/KeyboardTests.cs(68,0): at TabStudio.App.Tests.Accessibility.KeyboardTests.Tab_goes_through_the_shell_in_order_to_visible_controls_that_show_their_focus(Double width, Double height)
+[xUnit.net 00:00:22.14]         --- End of stack trace from previous location ---
+  Failed TabStudio.App.Tests.Accessibility.KeyboardTests.Tab_goes_through_the_shell_in_order_to_visible_controls_that_show_their_focus(width: 800, height: 1280) [5 s]
+  Error Message:
+   Keyboard focus problems:
+Tab 2: AdaptiveBarItem "Navigate Backward (Alt+Left)" has the focus off screen, at -100014, -99982, 44, 44.
+Tab 3: AdaptiveBarItem "Navigate Forward (Alt+Right)" has the focus off screen, at -100014, -99982, 44, 44.
+Tab 5: AdaptiveBarItem "Save All (Ctrl+Shift+S)" has the focus off screen, at -100014, -99982, 44, 44.
+Tab 11: AdaptiveBarItem "Toggle Line Comment (Ctrl+/)" has the focus off screen, at -100014, -99982, 44, 44.
+Tab 12: AdaptiveBarItem "Format Document (Shift+Alt+F)" has the focus off screen, at -100014, -99982, 44, 44.
+  Stack Trace:
+     at TabStudio.App.Tests.Accessibility.KeyboardTests.Tab_goes_through_the_shell_in_order_to_visible_controls_that_show_their_focus(Double width, Double height) in /_/tests/TabStudio.App.Tests/Accessibility/KeyboardTests.cs:line 68
+--- End of stack trace from previous location ---
+  Passed TabStudio.App.Tests.Views.ShellScreenshotTests.Portrait_opens_the_side_bar_as_a_drawer_over_the_editor [2 s]
+[xUnit.net 00:00:24.73]     TabStudio.App.Tests.Accessibility.KeyboardTests.Tab_goes_through_the_shell_in_order_to_visible_controls_that_show_their_focus(width: 412, height: 915) [FAIL]
+[xUnit.net 00:00:24.73]       System.InvalidOperationException : Sequence contains no matching element
+[xUnit.net 00:00:24.73]       Stack Trace:
+[xUnit.net 00:00:24.73]            at System.Linq.ThrowHelper.ThrowNoMatchException()
+[xUnit.net 00:00:24.73]            at System.Linq.Enumerable.First[TSource](IEnumerable`1 source, Func`2 predicate)
+[xUnit.net 00:00:24.73]         /_/tests/TabStudio.App.Tests/Accessibility/KeyboardTests.cs(37,0): at TabStudio.App.Tests.Accessibility.KeyboardTests.Tab_goes_through_the_shell_in_order_to_visible_controls_that_show_their_focus(Double width, Double height)
+[xUnit.net 00:00:24.73]         --- End of stack trace from previous location ---
+  Passed TabStudio.App.Tests.Accessibility.ScreenReaderTests.Controls_are_named_by_their_text_their_tooltip_their_placeholder_or_their_label [22 ms]
+  Failed TabStudio.App.Tests.Accessibility.KeyboardTests.Tab_goes_through_the_shell_in_order_to_visible_controls_that_show_their_focus(width: 412, height: 915) [483 ms]
+  Error Message:
+   System.InvalidOperationException : Sequence contains no matching element
+  Stack Trace:
+     at System.Linq.ThrowHelper.ThrowNoMatchException()
+   at System.Linq.Enumerable.First[TSource](IEnumerable`1 source, Func`2 predicate)
+   at TabStudio.App.Tests.Accessibility.KeyboardTests.Tab_goes_through_the_shell_in_order_to_visible_controls_that_show_their_focus(Double width, Double height) in /_/tests/TabStudio.App.Tests/Accessibility/KeyboardTests.cs:line 37
+--- End of stack trace from previous location ---
+  Passed TabStudio.App.Tests.Views.ShellScreenshotTests.The_touch_bar_keeps_clear_of_the_caret_and_fades_while_a_keyboard_types [1 s]
+  Passed TabStudio.App.Tests.Views.ShellScreenshotTests.Properties_fold_into_their_header_and_keep_paths_on_one_line [1 s]
+  Passed TabStudio.App.Tests.Views.ShellScreenshotTests.A_phone_folds_the_menus_and_the_bars_and_clips_nothing [1 s]
+  Passed TabStudio.App.Tests.Views.ShellScreenshotTests.Debugging_on_a_tablet_in_both_orientations_and_on_a_phone [2 s]
+  Passed TabStudio.App.Tests.Views.ShellScreenshotTests.Landscape_with_the_activity_bar_and_each_tool_window [4 s]
+  Passed TabStudio.App.Tests.Accessibility.TextSizeTests.Every_font_size_a_view_once_wrote_has_a_token [2 ms]
+  Passed TabStudio.App.Tests.Accessibility.TextSizeTests.The_system_font_size_is_followed_until_a_size_is_chosen_and_the_choice_is_remembered [20 ms]
+  Passed TabStudio.App.Tests.Accessibility.TextSizeTests.Tools_Text_Size_changes_the_whole_IDE_and_the_editor_at_once [1 s]
+  Passed TabStudio.App.Tests.Accessibility.TextSizeTests.No_view_writes_a_font_size_as_a_number [21 ms]
+  Passed TabStudio.App.Tests.Accessibility.TextSizeTests.Sizes_go_from_85_to_150_percent_and_the_system_size_is_clamped_to_them [1 ms]
+[xUnit.net 00:00:38.93]     TabStudio.App.Tests.Accessibility.MotionAndDirectionTests.A_right_to_left_layout_mirrors_the_shell_and_keeps_code_left_to_right(width: 412, height: 915) [FAIL]
+[xUnit.net 00:00:38.93]       The mirrored layout is broken:
+[xUnit.net 00:00:38.94]       TextBox is outside the screen (64 dips past the left edge), so it cannot be seen or tapped.
+[xUnit.net 00:00:38.94]       Stack Trace:
+[xUnit.net 00:00:38.94]         /_/tests/TabStudio.App.Tests/Accessibility/MotionAndDirectionTests.cs(99,0): at TabStudio.App.Tests.Accessibility.MotionAndDirectionTests.A_right_to_left_layout_mirrors_the_shell_and_keeps_code_left_to_right(Double width, Double height)
+[xUnit.net 00:00:38.94]         --- End of stack trace from previous location ---
+  Passed TabStudio.App.Tests.Accessibility.MotionAndDirectionTests.A_right_to_left_layout_mirrors_the_shell_and_keeps_code_left_to_right(width: 800, height: 1280) [811 ms]
+  Failed TabStudio.App.Tests.Accessibility.MotionAndDirectionTests.A_right_to_left_layout_mirrors_the_shell_and_keeps_code_left_to_right(width: 412, height: 915) [605 ms]
+  Error Message:
+   The mirrored layout is broken:
+TextBox is outside the screen (64 dips past the left edge), so it cannot be seen or tapped.
+  Stack Trace:
+     at TabStudio.App.Tests.Accessibility.MotionAndDirectionTests.A_right_to_left_layout_mirrors_the_shell_and_keeps_code_left_to_right(Double width, Double height) in /_/tests/TabStudio.App.Tests/Accessibility/MotionAndDirectionTests.cs:line 99
+--- End of stack trace from previous location ---
+  Passed TabStudio.App.Tests.Accessibility.MotionAndDirectionTests.A_right_to_left_layout_mirrors_the_shell_and_keeps_code_left_to_right(width: 1280, height: 800) [854 ms]
+  Passed TabStudio.App.Tests.Accessibility.MotionAndDirectionTests.Spinners_stand_still_and_transitions_are_skipped_while_animations_are_off [6 ms]
+  Passed TabStudio.App.Tests.Design.ComponentScreenshotTests.The_search_shows_commands_with_their_key_gestures [354 ms]
+  Passed TabStudio.App.Tests.Design.ComponentScreenshotTests.The_toolbar_shrinks_to_icons_and_then_into_More [246 ms]
+  Passed TabStudio.App.Tests.Design.ComponentScreenshotTests.A_short_activity_bar_moves_what_does_not_fit_into_More [80 ms]
+  Passed TabStudio.App.Tests.Design.ComponentScreenshotTests.Every_panel_has_the_same_header_and_states [243 ms]
+[xUnit.net 00:00:41.49]   Finished:    TabStudio.App.Tests
+  Passed TabStudio.App.Tests.Design.ComponentScreenshotTests.The_search_finds_everything_and_shows_the_best_match_first [253 ms]
+  Passed TabStudio.App.Tests.Design.ComponentScreenshotTests.The_search_says_when_nothing_matches [176 ms]
+  Passed TabStudio.App.Tests.Design.ComponentScreenshotTests.The_status_bar_keeps_the_state_and_folds_the_rest [107 ms]
+  Passed TabStudio.App.Tests.Design.ComponentScreenshotTests.The_activity_bar_beside_its_side_bar [124 ms]
+
+Test Run Failed.
+Total tests: 29
+     Passed: 24
+     Failed: 5
+ Total time: 42.0683 Seconds
