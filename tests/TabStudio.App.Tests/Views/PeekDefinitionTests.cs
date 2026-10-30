@@ -31,11 +31,22 @@ public sealed class PeekDefinitionTests
         Assert.Equal("Program.cs", fixture.Workspace.ActiveDocument?.FileName);
 
         // It opens at a whole line, with a gap between the line numbers and the code.
-        var peekEditor = view.PeekView.FindControl<AvaloniaEdit.TextEditor>("Editor")!;
-        var expected = view.PeekView.TopOffsetOf(view.PeekView.MarkedLine);
-        await UiTestHelpers.WaitUntilAsync(
-            () => Math.Abs(peekEditor.VerticalOffset - Math.Min(expected, Math.Max(0, peekEditor.ExtentHeight - peekEditor.ViewportHeight))) < 0.5,
-            because: "the peek to scroll to its line");
+        AvaloniaEdit.TextEditor peekEditor = view.PeekView.FindControl<AvaloniaEdit.TextEditor>("Editor")!;
+        // The marked line is in view, and the view starts at a line's top rather than halfway through one.
+        var lineHeight = peekEditor.TextArea.TextView.DefaultLineHeight;
+        PeekDefinitionView peekView = view.PeekView;
+        bool AtWholeLine() => peekEditor.ViewportHeight > 0
+            && Math.Abs(peekEditor.VerticalOffset / lineHeight - Math.Round(peekEditor.VerticalOffset / lineHeight)) < 0.05
+            && (peekView.MarkedLine - 1) * lineHeight >= peekEditor.VerticalOffset - 0.5
+            && peekView.MarkedLine * lineHeight <= peekEditor.VerticalOffset + peekEditor.ViewportHeight + 0.5;
+        var deadline = DateTime.UtcNow + TimeSpan.FromSeconds(10);
+        while (!AtWholeLine() && DateTime.UtcNow < deadline)
+        {
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            await Task.Delay(25);
+        }
+
+        Assert.True(AtWholeLine(), $"Offset {peekEditor.VerticalOffset}, line height {lineHeight}, viewport {peekEditor.ViewportHeight}, extent {peekEditor.ExtentHeight}, marked line {peekView.MarkedLine}.");
         Assert.Contains(peekEditor.TextArea.LeftMargins, margin => margin.Name == "PeekGutterGap" && margin.Width == PeekDefinitionView.GutterGap);
         UiTestHelpers.SaveScreenshot(window, "14-peek-definition");
 
