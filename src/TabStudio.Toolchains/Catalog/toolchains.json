@@ -768,13 +768,16 @@
       },
       "problemPatterns": [
         {
-          "pattern": "\\((?<file>/[^()]+?):(?<line>\\d+):(?<column>\\d+)\\)"
+          "pattern": "\\((?<url>file://)?(?<file>/[^()]+?):(?<line>\\d+):(?<column>\\d+)\\)"
         },
         {
-          "pattern": "at (?<file>/[^\\s()]+?):(?<line>\\d+):(?<column>\\d+)"
+          "pattern": "at (?<url>file://)?(?<file>/[^\\s()]+?):(?<line>\\d+):(?<column>\\d+)"
         },
         {
-          "pattern": "^(?<file>/[^\\s:]+\\.(?:js|mjs|cjs|ts|mts|cts)):(?<line>\\d+)$"
+          "pattern": "^(?<url>file://)?(?<file>/[^\\s:]+\\.(?:js|mjs|cjs|ts|mts|cts)):(?<line>\\d+)$"
+        },
+        {
+          "pattern": "^(?<file>[^\\s(][^(]*?\\.(?:ts|tsx|mts|cts|js|jsx|mjs|cjs))\\((?<line>\\d+),(?<column>\\d+)\\): (?<severity>error|warning) (?<message>TS\\d+: .*)$"
         }
       ],
       "errorPattern": "^(?<message>(?:Uncaught )?(?:[A-Z]\\w*)?Error(?: \\[[A-Z_]+\\])?: .*)$"
@@ -938,7 +941,7 @@
             "build": [
               "cargo",
               "build",
-              "--message-format=json-render-diagnostics"
+              "--message-format=json"
             ],
             "command": [
               "cargo",
@@ -981,7 +984,7 @@
           "pattern": "panicked at (?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)"
         }
       ],
-      "errorPattern": "^error(?:\\[[^\\]]+\\])?: (?<message>.*)$"
+      "errorPattern": "^(?:error(?:\\[[^\\]]+\\])?: (?<message>.*)|(?<message>thread '[^']*'(?: \\(\\d+\\))? panicked at .*))$"
     },
     {
       "id": "go",
@@ -1416,10 +1419,10 @@
       },
       "problemPatterns": [
         {
-          "pattern": "^(?:PHP )?(?<severity>Parse error|Fatal error|Warning|Notice|Deprecated): +(?<message>.+?) in (?<file>/[^\\s]+?\\.php)(?: on line |:)(?<line>\\d+)"
+          "pattern": "^(?:PHP )?(?<severity>Parse error|Fatal error|Warning|Notice|Deprecated): +(?<message>.+?) in (?<file>/.+?\\.php)(?: on line |:)(?<line>\\d+)"
         },
         {
-          "pattern": "^\\s*thrown in (?<file>/[^\\s]+?\\.php) on line (?<line>\\d+)"
+          "pattern": "^\\s*thrown in (?<file>/.+?\\.php) on line (?<line>\\d+)"
         },
         {
           "pattern": "^#\\d+ (?<file>/[^(\\s]+?\\.php)\\((?<line>\\d+)\\)"
@@ -3480,7 +3483,7 @@
           "pattern": "panicked at (?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)"
         }
       ],
-      "errorPattern": "^error(?:\\[[^\\]]+\\])?: (?<message>.*)$",
+      "errorPattern": "^(?:error(?:\\[[^\\]]+\\])?: (?<message>.*)|(?<message>thread '[^']*'(?: \\(\\d+\\))? panicked at .*))$",
       "sourceFolderIsProject": false
     },
     {

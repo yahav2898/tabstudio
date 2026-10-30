@@ -41,6 +41,19 @@ public sealed class OutputClassifierTests
     }
 
     [Fact]
+    public void A_panic_with_the_thread_id_newer_Rust_prints_is_an_error_too()
+    {
+        var kinds = Classify("rust", """
+            thread 'main' (29844) panicked at src/main.rs:3:21:
+            index out of bounds: the len is 0 but the index is 3
+            done
+            """);
+
+        Assert.Equal(OutputLineKind.Error, kinds["thread 'main' (29844) panicked at src/main.rs:3:21:"]);
+        Assert.Equal(OutputLineKind.Error, kinds["index out of bounds: the len is 0 but the index is 3"]);
+    }
+
+    [Fact]
     public void A_Rust_panic_is_an_error_up_to_its_backtrace_note()
     {
         var kinds = Classify("rust", """

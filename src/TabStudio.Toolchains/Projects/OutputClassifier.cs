@@ -254,8 +254,11 @@ public sealed partial class OutputClassifier
     [GeneratedRegex(@"^\s+File "".+"", line \d+", RegexOptions.CultureInvariant)]
     private static partial Regex PythonFrame();
 
-    /// <summary>Rust's panic message, such as <c>thread 'main' panicked at src/main.rs:2:5:</c>.</summary>
-    [GeneratedRegex(@"^thread '.*' panicked at ", RegexOptions.CultureInvariant)]
+    /// <summary>
+    /// Rust's panic message, such as <c>thread 'main' panicked at src/main.rs:2:5:</c>, with the thread's id that newer
+    /// Rust versions add: <c>thread 'main' (29844) panicked at …</c>.
+    /// </summary>
+    [GeneratedRegex(@"^thread '[^']*'(?: \(\d+\))? panicked at ", RegexOptions.CultureInvariant)]
     private static partial Regex RustPanic();
 
     /// <summary>A JVM exception: <c>Exception in thread "main" java.lang.IllegalStateException: …</c>.</summary>

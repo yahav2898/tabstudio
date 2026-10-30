@@ -62,14 +62,39 @@ public static class CargoBuildOutput
                 continue;
             }
 
+            var manifest = root.TryGetProperty("manifest_path", out var path) && path.ValueKind == JsonValueKind.String ? path.GetString() : null;
             foreach (var span in spans.EnumerateArray().Where(s => s.GetProperty("is_primary").GetBoolean()))
             {
+                var file = Resolve(span.GetProperty("file_name").GetString()!, manifest);
                 result.Add(string.Create(CultureInfo.InvariantCulture,
-                    $"{span.GetProperty("file_name").GetString()}:{span.GetProperty("line_start").GetInt32()}:{span.GetProperty("column_start").GetInt32()}: {message.GetProperty("level").GetString()}: {message.GetProperty("message").GetString()}"));
+                    $"{file}:{span.GetProperty("line_start").GetInt32()}:{span.GetProperty("column_start").GetInt32()}: {message.GetProperty("level").GetString()}: {message.GetProperty("message").GetString()}"));
             }
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// A diagnostic's file. rustc names it relative to the workspace's root, which for a member such as crates/app is
+    /// a folder above the package's own: the folder above the manifest where the file is.
+    /// </summary>
+    private static string Resolve(string file, string? manifest)
+    {
+        if (Path.IsPathRooted(file) || manifest is null)
+        {
+            return file;
+        }
+
+        for (var folder = Path.GetDirectoryName(manifest); !string.IsNullOrEmpty(folder); folder = Path.GetDirectoryName(folder))
+        {
+            var candidate = Path.Combine(folder, file);
+            if (File.Exists(candidate))
+            {
+                return candidate;
+            }
+        }
+
+        return file;
     }
 
     private static JsonDocument? Read(string line)

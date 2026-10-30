@@ -83,6 +83,69 @@ public sealed class ProblemMatcherTests
     }
 
     [Fact]
+    public void An_ES_modules_error_is_found_at_its_file_URL_with_spaces_decoded()
+    {
+        // The Node.js template is an ES module ("type": "module"): its frames are file:// URLs, which no pattern took.
+        string[] output =
+        [
+            "file:///storage/emulated/0/Projects/web/lib%20dir/helper.js:2",
+            "  return undefinedThing + 1;",
+            "  ^",
+            string.Empty,
+            "ReferenceError: undefinedThing is not defined",
+            "    at boom (file:///storage/emulated/0/Projects/web/lib%20dir/helper.js:2:3)",
+            "    at file:///storage/emulated/0/Projects/web/index.js:2:13",
+            "    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)",
+        ];
+
+        var error = Node.FindError(output, file => file.StartsWith("/storage/", StringComparison.Ordinal))!;
+
+        Assert.Equal("ReferenceError: undefinedThing is not defined", error.Message);
+        Assert.Equal(("/storage/emulated/0/Projects/web/lib dir/helper.js", 2, 3), (error.Location!.File, error.Location.Line, error.Location.Column));
+        Assert.Equal(("/storage/emulated/0/Projects/web/index.js", 2, 13), (Assert.Single(Node.Match(output[6])).File, 2, 13));
+        Assert.Equal("/storage/emulated/0/Projects/web/lib dir/helper.js", Assert.Single(Node.Match(output[0])).File);
+    }
+
+    [Fact]
+    public void A_Rust_panic_is_listed_at_its_line_with_its_message()
+    {
+        // The panic's location is on its own line and its message on the next; nothing reached the Error List.
+        string[] output =
+        [
+            "thread 'main' (29844) panicked at src/main.rs:3:21:",
+            "index out of bounds: the len is 0 but the index is 3",
+            "note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+        ];
+
+        var error = Assert.Single(new ProblemMatcher(ToolchainCatalog.Default.Find("rust")!).FindErrors(output, _ => true));
+
+        Assert.Equal("thread 'main' (29844) panicked at src/main.rs:3:21: index out of bounds: the len is 0 but the index is 3", error.Message);
+        Assert.Equal(("src/main.rs", 3, (int?)21), (error.Location!.File, error.Location.Line, error.Location.Column));
+    }
+
+    [Fact]
+    public void TypeScript_compiler_errors_are_listed_with_their_code()
+    {
+        // tsc writes file(line,column): the TypeScript template's and Capacitor's build errors were never listed.
+        string[] output =
+        [
+            "> tsc && node dist/index.js",
+            string.Empty,
+            "src/index.ts(1,7): error TS2322: Type 'string' is not assignable to type 'number'.",
+            "src/util/math.ts(4,10): error TS2304: Cannot find name 'nmae'.",
+        ];
+
+        var errors = Node.FindErrors(output, _ => true);
+
+        Assert.Equal(
+            [
+                ("src/index.ts", 1, (int?)7, "TS2322: Type 'string' is not assignable to type 'number'."),
+                ("src/util/math.ts", 4, 10, "TS2304: Cannot find name 'nmae'."),
+            ],
+            errors.Select(e => (e.Location!.File, e.Location.Line, e.Location.Column, e.Message)));
+    }
+
+    [Fact]
     public void An_error_outside_the_users_code_has_no_location()
     {
         var error = Python.FindError(["Traceback (most recent call last):", "  File \"<stdin>\", line 1, in <module>", "KeyboardInterrupt"], _ => false)!;
