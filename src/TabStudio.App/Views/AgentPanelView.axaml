@@ -208,14 +208,14 @@
                 <DataTemplate DataType="agent:PendingChangeViewModel">
                   <StackPanel>
                     <Grid ColumnDefinitions="*,Auto,Auto,Auto" Margin="12,2,8,2" MinHeight="36">
-                      <Button Theme="{StaticResource ToolButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                      <Button Theme="{StaticResource ToolButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                               Command="{Binding $parent[ItemsControl].((agent:AgentPanelViewModel)DataContext).ToggleDiffCommand}" CommandParameter="{Binding}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                          <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" IsVisible="{Binding !IsExpanded}" />
-                          <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="12" IsVisible="{Binding IsExpanded}" />
-                          <TextBlock Text="{Binding Path}" FontSize="{DynamicResource Type.Body}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                          <TextBlock Classes="muted small" Text="{Binding KindLabel}" VerticalAlignment="Center" />
-                        </StackPanel>
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                          <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" IsVisible="{Binding !IsExpanded}" Margin="0,0,8,0" />
+                          <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="12" IsVisible="{Binding IsExpanded}" Margin="0,0,8,0" />
+                          <TextBlock Grid.Column="1" Text="{Binding Path}" FontSize="{DynamicResource Type.Body}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                          <TextBlock Grid.Column="2" Classes="muted small" Text="{Binding KindLabel}" VerticalAlignment="Center" Margin="8,0,0,0" />
+                        </Grid>
                       </Button>
                       <TextBlock Grid.Column="1" Classes="mono small" Text="{Binding Stats}" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center" Margin="6,0" />
                       <Button Grid.Column="2" Theme="{StaticResource ToolButton}" ToolTip.Tip="Undo this change"

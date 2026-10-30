@@ -331,7 +331,7 @@ public sealed partial class ProjectTemplates
               <StackPanel Margin="24" Spacing="16" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="{Binding Greeting}" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" />
                 <TextBlock Text="Edit Views/MainView.axaml and save: the app restarts with your change." TextWrapping="Wrap" TextAlignment="Center" Opacity="0.7" />
-                <Button x:Name="CountButton" Content="Count" Command="{Binding CountCommand}" MinWidth="120" MinHeight="48" HorizontalAlignment="Center" />
+                <Button x:Name="CountButton" Content="Count" Command="{Binding CountCommand}" HorizontalAlignment="Center" />
                 <TextBlock Text="{Binding Clicks, StringFormat='Clicked {0} times'}" HorizontalAlignment="Center" />
               </StackPanel>
             </UserControl>
