@@ -61,6 +61,79 @@ public static class TrackedRanges
     }
 
     /// <summary>
+    /// Moves sorted, disjoint ranges through one document change where they are, as <see cref="Apply{T}"/> does but
+    /// without copying them: ranges before the change are not touched, the few the change reaches grow, shrink or are
+    /// dropped, and the ones after it shift. A colorizer holds a range per token, about 17,000 for a 2,500-line file;
+    /// copying them on every keystroke allocated 0.6 MB per edit, and over 1 GB for a Format Document.
+    /// </summary>
+    /// <typeparam name="T">The data attached to the ranges.</typeparam>
+    /// <param name="ranges">The ranges, sorted by start, disjoint and not empty; the first <paramref name="count"/> are used.</param>
+    /// <param name="count">How many of <paramref name="ranges"/> are in use.</param>
+    /// <param name="offset">Where the change starts.</param>
+    /// <param name="removalLength">How many characters it removed.</param>
+    /// <param name="insertionLength">How many characters it inserted.</param>
+    /// <returns>How many ranges are in use afterwards.</returns>
+    public static int ApplyInPlace<T>(TrackedRange<T>[] ranges, int count, int offset, int removalLength, int insertionLength)
+    {
+        ArgumentNullException.ThrowIfNull(ranges);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(count, ranges.Length);
+        var removedEnd = offset + removalLength;
+        var delta = insertionLength - removalLength;
+
+        // Every range before this one ends at or before the change and stays as it is.
+        var read = FirstEndingAfterIn(new ReadOnlySpan<TrackedRange<T>>(ranges, 0, count), offset);
+        var write = read;
+
+        // The ranges the change reaches: one that holds all of it grows or shrinks, one it cuts through is dropped.
+        for (; read < count && ranges[read].Start < removedEnd; read++)
+        {
+            var range = ranges[read];
+            if (range.Start <= offset && range.End >= removedEnd && range.Length + delta > 0)
+            {
+                ranges[write++] = range with { Length = range.Length + delta };
+            }
+        }
+
+        // An insertion right where a range starts moves it, as Apply does.
+        for (; read < count; read++)
+        {
+            var range = ranges[read];
+            ranges[write++] = range with { Start = range.Start + delta };
+        }
+
+        // Dropped ranges leave stale entries at the end; clear them so their values can be collected.
+        Array.Clear(ranges, write, count - write);
+        return write;
+    }
+
+    /// <summary>
+    /// Finds the first range that ends after an offset, by binary search. The ranges must be sorted by start
+    /// and must not overlap.
+    /// </summary>
+    /// <typeparam name="T">The data attached to the ranges.</typeparam>
+    /// <param name="ranges">Sorted, disjoint ranges.</param>
+    /// <param name="offset">A document offset.</param>
+    /// <returns>The index of that range, or the number of ranges when there is none.</returns>
+    public static int FirstEndingAfterIn<T>(ReadOnlySpan<TrackedRange<T>> ranges, int offset)
+    {
+        int low = 0, high = ranges.Length;
+        while (low < high)
+        {
+            var mid = (low + high) / 2;
+            if (ranges[mid].End <= offset)
+            {
+                low = mid + 1;
+            }
+            else
+            {
+                high = mid;
+            }
+        }
+
+        return low;
+    }
+
+    /// <summary>
     /// Finds the first range that ends after an offset, by binary search. The ranges must be sorted by start
     /// and must not overlap.
     /// </summary>

@@ -11,20 +11,33 @@ namespace TabStudio.App.ViewModels.LongOperations;
 /// The long operations running now, for the status bar and the small panel over it: downloading an SDK, installing
 /// packages, restoring NuGet packages, configuring CMake, building, analyzing. The status bar shows the newest with its
 /// stage, numbers and time left; the panel lists them all, each with Cancel where cancelling is safe and its raw log
-/// behind "Show details". One that runs for 30 seconds while TabStudio is in the background gets a system notification
-/// with its progress, which says how it ended.
+/// behind "Show details". While any runs, the platform keeps TabStudio running in the background with the newest one's
+/// progress in an ongoing notification (Android's foreground service); where it cannot, one that runs for 30 seconds in
+/// the background gets a notification of its own. Each that ran in the background says how it ended.
 /// </summary>
 public sealed partial class OperationsViewModel : ObservableObject, IDisposable
 {
     /// <summary>How often the time left and the background check are refreshed while operations run.</summary>
     private static readonly TimeSpan RefreshInterval = TimeSpan.FromSeconds(2);
 
+    /// <summary>
+    /// The least time between two changes of the ongoing notification: Android drops a notification updated more than
+    /// a few times a second, and a download reports every few kilobytes.
+    /// </summary>
+    private static readonly TimeSpan KeepRunningInterval = TimeSpan.FromSeconds(1);
+
+    /// <summary>The tag of the ongoing notification that keeps TabStudio running.</summary>
+    internal const string RunningTag = "operations";
+
     private readonly IUiDispatcher _ui;
     private readonly INotifications _notifications;
     private readonly IAppActivity? _activity;
     private readonly ITimer _timer;
+    private readonly TimeProvider _time;
     private bool _refreshing;
     private bool _disposed;
+    private SystemNotification? _kept;
+    private long _keptAt;
 
     /// <summary>Creates the operations.</summary>
     /// <param name="ui">The UI thread, where operations are begun and reported.</param>
@@ -38,6 +51,7 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
         _notifications = notifications ?? new NoSystemNotifications();
         _activity = activity;
         time ??= TimeProvider.System;
+        _time = time;
         Tracker = new OperationTracker(time) { IsInBackground = activity?.IsInBackground == true };
         Tracker.Changed += OnChanged;
         Tracker.Logged += OnLogged;
@@ -55,6 +69,12 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
 
     /// <summary>The operations and their state, which tests and the integrations use.</summary>
     public OperationTracker Tracker { get; }
+
+    /// <summary>
+    /// Which operations keep TabStudio running in the background: by default all. Work that only the open IDE needs,
+    /// such as analyzing the solution again, can wait for the user to come back.
+    /// </summary>
+    public Func<TrackedOperation, bool> KeepsAppRunning { get; init; } = _ => true;
 
     /// <summary>The operations running now, oldest first.</summary>
     public ObservableCollection<OperationItemViewModel> Items { get; } = [];
@@ -128,6 +148,46 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(Current));
         OnPropertyChanged(nameof(HasOperations));
         OnPropertyChanged(nameof(StatusText));
+        UpdateKeepRunning(force: operation.IsCompleted || item is null);
+    }
+
+    /// <summary>
+    /// Keeps the app running while operations that need it run, with the newest one's progress, and lets it go when
+    /// the last one ends.
+    /// </summary>
+    /// <param name="force">Whether to pass a change on at once: one began or ended.</param>
+    private void UpdateKeepRunning(bool force)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        var running = Items.Where(i => KeepsAppRunning(i.Operation)).ToList();
+        if (running.Count == 0)
+        {
+            if (_kept is not null)
+            {
+                _kept = null;
+                _notifications.KeepRunning(null);
+            }
+
+            return;
+        }
+
+        var newest = running[^1].Operation;
+        var title = running.Count > 1 ? $"{newest.Title} (+{running.Count - 1} more)" : newest.Title;
+        var percent = newest.Progress.Fraction is { } fraction ? (int)Math.Round(fraction * 100) : (int?)null;
+        var progress = new SystemNotification(RunningTag, title, newest.Text, IsFailure: false) { IsProgress = true, ProgressPercent = percent };
+        if (progress == _kept || (!force && _kept is not null && _time.GetElapsedTime(_keptAt) < KeepRunningInterval))
+        {
+            // The two-second refresh passes on what was held back.
+            return;
+        }
+
+        _kept = progress;
+        _keptAt = _time.GetTimestamp();
+        _notifications.KeepRunning(progress);
     }
 
     private void OnLogged(object? sender, TrackedOperation operation) =>
@@ -146,6 +206,7 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
         }
 
         OnPropertyChanged(nameof(StatusText));
+        UpdateKeepRunning(force: false);
         Tracker.Poll();
     }
 
@@ -153,6 +214,12 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
 
     private void OnNotificationDue(object? sender, TrackedOperation operation)
     {
+        // The ongoing notification that keeps TabStudio running already shows the progress.
+        if (_notifications.KeepsRunning)
+        {
+            return;
+        }
+
         var percent = operation.Progress.Fraction is { } fraction ? (int)Math.Round(fraction * 100) : (int?)null;
         _notifications.Show(new SystemNotification(Tag(operation), operation.Title, operation.Text, IsFailure: false)
         {
@@ -163,6 +230,12 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
 
     private void OnNotificationEnded(object? sender, TrackedOperation operation)
     {
+        // Work that waits for the user to come back, such as analysis, does not report how it ended.
+        if (_notifications.KeepsRunning && !KeepsAppRunning(operation))
+        {
+            return;
+        }
+
         var (title, text) = operation.Outcome switch
         {
             OperationOutcome.Failed => ($"{operation.Title} failed", "Open TabStudio for the details."),
@@ -195,6 +268,12 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
         if (_disposed)
         {
             return;
+        }
+
+        if (_kept is not null)
+        {
+            _kept = null;
+            _notifications.KeepRunning(null);
         }
 
         _disposed = true;

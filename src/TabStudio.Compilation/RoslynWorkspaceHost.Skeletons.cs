@@ -15,6 +15,14 @@ public sealed partial class RoslynWorkspaceHost
     private HashSet<string> _activeProjects = new(StringComparer.Ordinal);
     private string? _skeletonDirectory;
 
+    /// <summary>Skeleton images that could not be compiled, by path: their projects keep full compilations until their code changes.</summary>
+    private readonly HashSet<string> _failedSkeletons = new(StringComparer.Ordinal);
+
+    private bool _reloadRequested;
+    private bool _reloading;
+    private bool _disposed;
+    private TaskCompletionSource _reloaded = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
     /// <summary>
     /// Turns skeleton references on: a project that nobody is editing is compiled once into a metadata-only
     /// image (its public and internal signatures, no method bodies), and the projects that reference it compile
@@ -36,7 +44,7 @@ public sealed partial class RoslynWorkspaceHost
                 Directory.CreateDirectory(cacheDirectory);
             }
 
-            ReloadKeepingTexts();
+            RequestReloadUnderGate();
         }
     }
 
@@ -71,7 +79,7 @@ public sealed partial class RoslynWorkspaceHost
             _activeProjects = active;
             if (_skeletonDirectory is not null)
             {
-                ReloadKeepingTexts();
+                RequestReloadUnderGate();
             }
         }
     }
@@ -100,9 +108,13 @@ public sealed partial class RoslynWorkspaceHost
             : default;
 
     /// <summary>
-    /// Creates skeletons for the referenced projects nobody is editing, from the solution just loaded with full
-    /// project references. Returns whether any were created, in which case the caller loads the solution again.
+    /// References the images of the referenced projects nobody is editing, from the solution just loaded with full
+    /// project references. Returns whether any were found, in which case the caller loads the solution again.
     /// </summary>
+    /// <remarks>
+    /// Nothing is compiled here, under the gate every keystroke waits for: a project whose image is not on disk yet
+    /// keeps its full compilation, and the background reload (<see cref="ReloadPending"/>) compiles the image.
+    /// </remarks>
     private bool CreateSkeletons(IReadOnlyList<TsProject> projects)
     {
         _skeletons.Clear();
@@ -111,32 +123,76 @@ public sealed partial class RoslynWorkspaceHost
             return false;
         }
 
-        var referenced = projects.SelectMany(CompileReferencesOf).ToHashSet(StringComparer.Ordinal);
+        var inputs = SkeletonInputsUnderGate();
         var keys = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var project in projects.Where(p => referenced.Contains(p.FilePath) && !_activeProjects.Contains(p.FilePath)))
+        foreach (var project in SkeletonCandidates(projects))
         {
-            var key = SkeletonKey(project, keys);
-            var path = Path.Combine(_skeletonDirectory, $"{project.Name}-{key}.dll");
-            if (!File.Exists(path) && !TryEmitSkeleton(project, path))
+            var path = SkeletonPath(inputs.Directory, project, SkeletonKey(project, keys, inputs));
+            if (File.Exists(path))
             {
-                continue;
+                _skeletons[project.FilePath] = CreateMappedReference(path);
             }
-
-            _skeletons[project.FilePath] = CreateMappedReference(path);
+            else if (!HasFailed(path))
+            {
+                // An image that could not be compiled is not asked for again until the project's code changes.
+                RequestReloadUnderGate();
+            }
         }
 
         return _skeletons.Count > 0;
     }
 
-    private bool TryEmitSkeleton(TsProject project, string path)
+    /// <summary>The projects that become skeletons: those another project references and nobody is editing.</summary>
+    private IEnumerable<TsProject> SkeletonCandidates(IReadOnlyList<TsProject> projects)
     {
-        if (_workspace.CurrentSolution.GetProject(_projectIds[project.FilePath]) is not { } roslynProject
+        var referenced = projects.SelectMany(CompileReferencesOf).ToHashSet(StringComparer.Ordinal);
+        return projects.Where(p => referenced.Contains(p.FilePath) && !_activeProjects.Contains(p.FilePath));
+    }
+
+    private static string SkeletonPath(string directory, TsProject project, string key) => Path.Combine(directory, $"{project.Name}-{key}.dll");
+
+    /// <summary>What making skeleton keys and images reads, captured under the gate so the work can run outside it.</summary>
+    private SkeletonInputs SkeletonInputsUnderGate() => new(
+        _skeletonDirectory ?? string.Empty,
+        _workspace.CurrentSolution,
+        new Dictionary<string, ProjectId>(_projectIds, StringComparer.Ordinal),
+        [.. _projects.Values],
+        new Dictionary<string, IReadOnlyList<MetadataReference>>(_packageReferences, StringComparer.Ordinal),
+        _optimize);
+
+    /// <summary>Compiles a project's metadata-only image; a failure is remembered, so it is not tried again for the same content.</summary>
+    private bool TryEmitSkeleton(TsProject project, string path, SkeletonInputs inputs)
+    {
+        var emitted = TryEmitSkeletonImage(project, path, inputs);
+        if (!emitted)
+        {
+            lock (_failedSkeletons)
+            {
+                _failedSkeletons.Add(path);
+            }
+        }
+
+        return emitted;
+    }
+
+    private bool HasFailed(string path)
+    {
+        lock (_failedSkeletons)
+        {
+            return _failedSkeletons.Contains(path);
+        }
+    }
+
+    private static bool TryEmitSkeletonImage(TsProject project, string path, SkeletonInputs inputs)
+    {
+        if (!inputs.ProjectIds.TryGetValue(project.FilePath, out var id)
+            || inputs.Solution.GetProject(id) is not { } roslynProject
             || roslynProject.GetCompilationAsync().GetAwaiter().GetResult() is not { } compilation)
         {
             return false;
         }
 
-        var temporary = path + ".tmp";
+        var temporary = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
         try
         {
             using (var stream = File.Create(temporary))
@@ -166,7 +222,7 @@ public sealed partial class RoslynWorkspaceHost
     /// A hash of everything a project's skeleton depends on: its sources, options, packages and the keys of the
     /// projects it references.
     /// </summary>
-    private string SkeletonKey(TsProject project, Dictionary<string, string> keys)
+    private static string SkeletonKey(TsProject project, Dictionary<string, string> keys, SkeletonInputs inputs)
     {
         if (keys.TryGetValue(project.FilePath, out var known))
         {
@@ -177,11 +233,11 @@ public sealed partial class RoslynWorkspaceHost
         using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
         void Add(string value) => hash.AppendData(Encoding.UTF8.GetBytes(value + "\n"));
 
-        var roslynProject = _workspace.CurrentSolution.GetProject(_projectIds[project.FilePath])!;
+        var roslynProject = inputs.Solution.GetProject(inputs.ProjectIds[project.FilePath])!;
         Add(roslynProject.AssemblyName);
         Add(project.NullableEnabled.ToString(CultureInfo.InvariantCulture));
         Add(project.GetProperty("AllowUnsafeBlocks") ?? string.Empty);
-        Add(_optimize.ToString(CultureInfo.InvariantCulture));
+        Add(inputs.Optimize.ToString(CultureInfo.InvariantCulture));
         Add(StrongNameKeyFile(project) is { } keyFile ? keyFile + "\n" + Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(keyFile))) : string.Empty);
         Add(CreateAssemblyAttributesSource(project) ?? string.Empty);
         foreach (var document in roslynProject.Documents.OrderBy(d => d.FilePath, StringComparer.Ordinal))
@@ -190,7 +246,7 @@ public sealed partial class RoslynWorkspaceHost
             Add(document.GetTextAsync().GetAwaiter().GetResult().ToString());
         }
 
-        if (_packageReferences.TryGetValue(project.FilePath, out var packages))
+        if (inputs.PackageReferences.TryGetValue(project.FilePath, out var packages))
         {
             foreach (var package in packages.Select(p => (p as PortableExecutableReference)?.FilePath ?? p.Display ?? string.Empty).Order(StringComparer.Ordinal))
             {
@@ -198,9 +254,9 @@ public sealed partial class RoslynWorkspaceHost
             }
         }
 
-        foreach (var reference in project.ProjectReferences.Where(_projects.Values.Select(p => p.FilePath).Contains))
+        foreach (var reference in project.ProjectReferences.Where(inputs.Projects.Select(p => p.FilePath).Contains))
         {
-            Add(SkeletonKey(_projects.Values.First(p => p.FilePath == reference), keys));
+            Add(SkeletonKey(inputs.Projects.First(p => p.FilePath == reference), keys, inputs));
         }
 
         var key = Convert.ToHexStringLower(hash.GetHashAndReset())[..16];
@@ -208,7 +264,7 @@ public sealed partial class RoslynWorkspaceHost
         return key;
     }
 
-    /// <summary>Loads the same workspace again with the current text of every document.</summary>
+    /// <summary>Loads the same workspace again with the current text of every document, without compiling any image.</summary>
     private void ReloadKeepingTexts()
     {
         if (_loaded is null)
@@ -218,4 +274,120 @@ public sealed partial class RoslynWorkspaceHost
 
         LoadUnderGate(_loaded, new SnapshotTextProvider(CurrentTexts()));
     }
+
+    /// <summary>
+    /// Asks for the solution to be loaded again, on a background thread, as an edit to a skeleton's project, a change
+    /// of the edited projects or memory pressure need. Call under the gate. These come from the UI thread: an edit to
+    /// another project's file during a Rename, a callback from Android. Reloading there froze the IDE for a whole
+    /// reload and a skeleton compile, and a reload on another thread held the gate every keystroke waits for.
+    /// </summary>
+    private void RequestReloadUnderGate()
+    {
+        _reloadRequested = true;
+        if (_reloading || _disposed)
+        {
+            return;
+        }
+
+        _reloading = true;
+        _reloaded = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        _ = Task.Run(ReloadPending);
+    }
+
+    /// <summary>
+    /// Completes when no reload asked for by <see cref="TrimMemory"/>, <see cref="SetActiveProjects"/>,
+    /// <see cref="UseSkeletonReferences"/> or an edit to a skeleton's project is pending any more.
+    /// </summary>
+    public Task WhenReloadedAsync()
+    {
+        lock (_gate)
+        {
+            return _reloading ? _reloaded.Task : Task.CompletedTask;
+        }
+    }
+
+    /// <summary>
+    /// Reloads until nothing is pending. The slow part, compiling the images of projects whose code changed, runs
+    /// outside the gate from an immutable snapshot of the solution; the reload under the gate then only builds the
+    /// solution again from texts in memory and images on disk, which takes milliseconds.
+    /// </summary>
+    private void ReloadPending()
+    {
+        try
+        {
+            while (true)
+            {
+                SkeletonInputs? inputs = null;
+                List<TsProject>? candidates = null;
+                lock (_gate)
+                {
+                    if (!_reloadRequested || _disposed || _loaded is null)
+                    {
+                        _reloadRequested = false;
+                        _reloading = false;
+                        _reloaded.TrySetResult();
+                        return;
+                    }
+
+                    _reloadRequested = false;
+                    if (_skeletonDirectory is not null)
+                    {
+                        inputs = SkeletonInputsUnderGate();
+                        candidates = [.. SkeletonCandidates(inputs.Projects)];
+                    }
+                }
+
+                var made = 0;
+                if (inputs is not null && candidates is not null)
+                {
+                    BeforeSkeletonImages?.Invoke();
+                    var keys = new Dictionary<string, string>(StringComparer.Ordinal);
+                    foreach (var project in candidates)
+                    {
+                        var image = SkeletonPath(inputs.Directory, project, SkeletonKey(project, keys, inputs));
+                        if (!HasFailed(image) && !File.Exists(image) && TryEmitSkeleton(project, image, inputs))
+                        {
+                            made++;
+                        }
+                    }
+                }
+
+                lock (_gate)
+                {
+                    if (!_disposed)
+                    {
+                        // Asked for while the images were compiled: an edit, a change of the edited projects.
+                        var askedMeanwhile = _reloadRequested;
+                        _reloadRequested = false;
+                        ReloadKeepingTexts();
+
+                        // The reload asks again when it misses an image. When nothing changed and this pass had
+                        // nothing to make, another pass would make nothing either: stop instead of going round.
+                        _reloadRequested = askedMeanwhile || (_reloadRequested && made > 0);
+                    }
+                }
+            }
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            // A reload that failed leaves the solution as it was, which still answers; the next request tries again.
+            lock (_gate)
+            {
+                _reloading = false;
+                _reloaded.TrySetResult();
+            }
+        }
+    }
+
+    /// <summary>Called on the background thread before it compiles skeleton images; lets tests hold a reload there.</summary>
+    internal Action? BeforeSkeletonImages { get; set; }
+
+    /// <summary>What making skeleton keys and images reads: an immutable solution and copies of the host's tables.</summary>
+    private sealed record SkeletonInputs(
+        string Directory,
+        Solution Solution,
+        IReadOnlyDictionary<string, ProjectId> ProjectIds,
+        IReadOnlyList<TsProject> Projects,
+        IReadOnlyDictionary<string, IReadOnlyList<MetadataReference>> PackageReferences,
+        bool Optimize);
 }

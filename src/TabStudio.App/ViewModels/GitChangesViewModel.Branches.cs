@@ -76,13 +76,14 @@ public sealed partial class GitChangesViewModel
         await RunAsync(async (sync, progress, token) =>
         {
             var before = sync.Metadata.Files.Keys.ToList();
+            var documents = await _host.CaptureDocumentsAsync();
             var result = await sync.SwitchBranchAsync(branch.Name, progress, token);
             PullRequest = null;
             CanCreatePullRequest = false;
             IncomingCommits = 0;
-            await _host.ReloadDocumentsAsync(FullPaths(before.Concat(result.Updated)));
+            var conflicts = await _host.ReloadDocumentsAsync(FullPaths(before.Concat(result.Updated)), documents);
             await _host.ReloadWorkspaceAsync();
-            return $"Switched to {branch.Name}.";
+            return $"Switched to {branch.Name}." + TypedEditsNote(conflicts);
         });
     }
 

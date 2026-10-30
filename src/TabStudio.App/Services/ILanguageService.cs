@@ -83,8 +83,12 @@ public interface ILanguageService : IDisposable
     /// <param name="projectFilePaths">The project files.</param>
     void SetActiveProjects(IEnumerable<string> projectFilePaths);
 
-    /// <summary>Releases cached compilations under memory pressure.</summary>
-    void TrimMemory();
+    /// <summary>
+    /// Releases cached compilations under memory pressure. Returns at once, as Android's callback arrives on the UI
+    /// thread: the reload that releases them runs in the background.
+    /// </summary>
+    /// <returns>A task that completes when the compilations were released, after which a collection frees them.</returns>
+    Task TrimMemoryAsync();
 
     /// <summary>
     /// Restores a project's NuGet packages, then gives IntelliSense and builds their reference assemblies.

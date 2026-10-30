@@ -12,10 +12,22 @@ public static class DatabaseConnections
     public static DbConnection Create(DatabaseConnection connection) => connection.Provider switch
     {
         DatabaseProvider.SQLite => new SqliteConnection(connection.ConnectionString),
-        DatabaseProvider.PostgreSql => new NpgsqlConnection(connection.ConnectionString),
+        DatabaseProvider.PostgreSql => PostgreSqlSources.GetOrAdd(connection.ConnectionString, CreatePostgreSqlSource).CreateConnection(),
         DatabaseProvider.SqlServer => new SqlConnection(connection.ConnectionString),
         _ => throw new ArgumentOutOfRangeException(nameof(connection)),
     };
+
+    // One data source per connection string, as each owns its connection pool. Unmapped types are enabled so that a
+    // table with an enum, a range or a composite column can be read at all: without them Npgsql cannot read such a value
+    // as an object, and the Explorer failed on the whole page. Enums then read and write as their labels.
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, NpgsqlDataSource> PostgreSqlSources = new(StringComparer.Ordinal);
+
+    private static NpgsqlDataSource CreatePostgreSqlSource(string connectionString)
+    {
+        var builder = new NpgsqlDataSourceBuilder(connectionString);
+        builder.EnableUnmappedTypes();
+        return builder.Build();
+    }
 
     public static DatabaseConnection WithDatabase(DatabaseConnection connection, string database)
     {

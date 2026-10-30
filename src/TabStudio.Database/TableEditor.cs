@@ -33,6 +33,7 @@ public sealed class TableEditor
         await using var transaction = await db.BeginTransactionAsync(token).ConfigureAwait(false);
         await using var cmd = db.CreateCommand(); cmd.Transaction = transaction;
         string Q(string name) => DatabaseConnections.Quote(connection.Provider, name);
+        var pg = connection.Provider == DatabaseProvider.PostgreSql;
         var predicates = new List<string>();
         for (var i = 0; i < original.Count; i++)
         {
@@ -40,16 +41,27 @@ public sealed class TableEditor
             // SQL Server text/ntext/image/xml are not equality comparable; keys still identify the row.
             if (connection.Provider == DatabaseProvider.SqlServer && c.Type is "text" or "ntext" or "image" or "xml") continue;
             var name = $"@o{i}";
-            predicates.Add(original[i] is null ? $"{Q(c.Name)} IS NULL" : $"{Q(c.Name)} = {name}");
+            predicates.Add(original[i] is null ? $"{Q(c.Name)} IS NULL"
+                // json, xml and the geometric types have no = operator: their text forms are compared instead.
+                : pg && c.SqlType is { } type && !HasEquality(type) ? $"CAST({Q(c.Name)} AS text) = CAST({Typed(name, type)} AS text)"
+                : $"{Q(c.Name)} = {Typed(name, c.SqlType)}");
             if (original[i] is not null) Add(cmd, name, original[i]);
         }
         Add(cmd, "@value", value);
-        cmd.CommandText = $"UPDATE {DatabaseConnections.Qualified(connection.Provider, table)} SET {Q(table.Columns[column].Name)} = @value WHERE " + string.Join(" AND ", predicates);
+        cmd.CommandText = $"UPDATE {DatabaseConnections.Qualified(connection.Provider, table)} SET {Q(table.Columns[column].Name)} = {Typed("@value", table.Columns[column].SqlType)} WHERE " + string.Join(" AND ", predicates);
+
+        // PostgreSQL does not turn a text parameter into a json, xml, enum, point or date value by itself; a cast to
+        // the column's own type parses it as PostgreSQL parses a literal, and converts a typed value as assignment does.
+        string Typed(string parameter, string? type) => pg && !string.IsNullOrEmpty(type) ? $"CAST({parameter} AS {type})" : parameter;
         using var registration = SqlExecutor.RegisterCancel(cmd, token);
         if (await cmd.ExecuteNonQueryAsync(token).ConfigureAwait(false) != 1)
             throw new InvalidOperationException("The row changed or was deleted. Refresh the page before editing it again.");
         await transaction.CommitAsync(token).ConfigureAwait(false);
     }, token);
+
+    // PostgreSQL's built-in types without an equality operator, by format_type's spelling (arrays of them neither).
+    private static bool HasEquality(string type) =>
+        type.TrimEnd('[', ']') is not ("json" or "xml" or "point" or "line" or "lseg" or "box" or "path" or "polygon" or "circle");
 
     private static void Add(DbCommand cmd, string name, object? value)
     {

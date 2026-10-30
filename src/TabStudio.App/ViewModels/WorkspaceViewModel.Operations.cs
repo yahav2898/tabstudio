@@ -33,7 +33,12 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Creates the operations. Called once by the constructor, after the Actions window made the app's activity.</summary>
     private void InitializeOperations(INotifications? notifications, IAppActivity? appActivity)
     {
-        Operations = new OperationsViewModel(_ui, notifications, appActivity ?? _ownAppActivity);
+        // Analysis and loading C# only matter to the open IDE; installs, builds, setup and downloads must finish in the
+        // background, and keep TabStudio running while they do.
+        Operations = new OperationsViewModel(_ui, notifications, appActivity ?? _ownAppActivity)
+        {
+            KeepsAppRunning = operation => operation.Key is not (LanguageOperation or AnalysisOperation),
+        };
         Operations.Tracker.Changed += OnOperationChanged;
         _diskChangesActivity = appActivity ?? _ownAppActivity;
         if (_diskChangesActivity is not null)
