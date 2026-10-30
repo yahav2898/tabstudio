@@ -92,6 +92,16 @@ public sealed class ChangeSet
         Changed?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>The pending change to a file, if there is one.</summary>
+    /// <param name="fullPath">The file.</param>
+    public ProposedChange? Find(string fullPath)
+    {
+        lock (_gate)
+        {
+            return _changes.GetValueOrDefault(fullPath);
+        }
+    }
+
     /// <summary>Removes a change after it was applied or rejected.</summary>
     /// <param name="fullPath">The file.</param>
     /// <returns>The change, or null when there was none.</returns>
