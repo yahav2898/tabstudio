@@ -1,0 +1,80 @@
+  Determining projects to restore...
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/TabStudio.TestRunner.csproj (in 194 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.LiveTesting/TabStudio.LiveTesting.csproj (in 194 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Link.Tests/TabStudio.Link.Tests.csproj (in 193 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Link/TabStudio.Link.csproj (in 223 ms).
+  4 of 8 projects are up-to-date for restore.
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+  TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+  TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
+  TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
+  TabStudio.LiveTesting -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.LiveTesting/bin/Release/net10.0/TabStudio.LiveTesting.dll
+  TabStudio.Link -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Link/bin/Release/net10.0/TabStudio.Link.dll
+  TabStudio.Link.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Link.Tests/bin/Release/net10.0/TabStudio.Link.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Link.Tests/bin/Release/net10.0/TabStudio.Link.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.09]   Discovering: TabStudio.Link.Tests
+[xUnit.net 00:00:00.15]   Discovered:  TabStudio.Link.Tests
+[xUnit.net 00:00:00.19]   Starting:    TabStudio.Link.Tests
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Addresses_are_read_with_or_without_a_port(typed: "fe80::1", host: "fe80::1", port: 47811) [13 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Addresses_are_read_with_or_without_a_port(typed: "[fe80::1]:47900", host: "fe80::1", port: 47900) [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Addresses_are_read_with_or_without_a_port(typed: "pixel-9.local", host: "pixel-9.local", port: 47811) [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Addresses_are_read_with_or_without_a_port(typed: "192.168.1.23", host: "192.168.1.23", port: 47811) [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Addresses_are_read_with_or_without_a_port(typed: "192.168.1.23:52817", host: "192.168.1.23", port: 52817) [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Other_QR_codes_are_not_invitations(text: "https://example.com") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Other_QR_codes_are_not_invitations(text: "tabstudio-link://pair?v=1&n=x&a=&p=47811&f=AAAA&c="···) [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Other_QR_codes_are_not_invitations(text: "tabstudio-link://pair?v=1&n=x&a=1.2.3.4&p=47811") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Other_QR_codes_are_not_invitations(text: "tabstudio-link://pair?v=1&n=x&a=1.2.3.4&p=0&f=AAAA"···) [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Codes_are_read_the_way_people_type_them(typed: " 7K3QM9XA ", expected: "7K3QM9XA") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Codes_are_read_the_way_people_type_them(typed: "OIL0-1234", expected: "0110-1234") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Codes_are_read_the_way_people_type_them(typed: "7k3q m9xa", expected: "7K3QM9XA") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Codes_are_read_the_way_people_type_them(typed: "7K3Q-M9XA", expected: "7K3QM9XA") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Anything_else_is_not_an_address(typed: "[fe80::1") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Anything_else_is_not_an_address(typed: "192.168.1.23:") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Anything_else_is_not_an_address(typed: "") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Anything_else_is_not_an_address(typed: "192.168.1.23:99999") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Anything_else_is_not_an_address(typed: "192.168 1.23") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.An_address_reads_back_the_way_it_is_shown [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Anything_else_is_not_a_code(typed: "7K3Q-M9XAB") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Anything_else_is_not_a_code(typed: "") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Anything_else_is_not_a_code(typed: "7K3Q-M9X") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Anything_else_is_not_a_code(typed: "hello!!!") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Anything_else_is_not_a_code(typed: "7K3Q-M9XU") [< 1 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.New_codes_are_random_and_valid [6 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Paired_devices_are_remembered_in_their_file [250 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.An_identity_is_kept_across_restarts [52 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.Fingerprints_identify_a_key_and_read_back [40 ms]
+  Passed TabStudio.Link.Tests.PairingFormatsTests.An_invitation_survives_its_URI [17 ms]
+  Passed TabStudio.Link.Tests.FramingTests.A_header_cut_short_is_a_protocol_error [8 ms]
+  Passed TabStudio.Link.Tests.FramingTests.A_frame_larger_than_allowed_is_refused_before_it_is_read [2 ms]
+  Passed TabStudio.Link.Tests.FramingTests.Writing_a_payload_larger_than_a_frame_is_refused [3 ms]
+  Passed TabStudio.Link.Tests.FramingTests.Attachment_chunks_round_trip [1 ms]
+  Passed TabStudio.Link.Tests.FramingTests.An_unknown_frame_type_is_refused [1 ms]
+  Passed TabStudio.Link.Tests.FramingTests.A_stream_that_ends_inside_a_frame_is_a_protocol_error [2 ms]
+  Passed TabStudio.Link.Tests.FramingTests.Frames_round_trip_with_their_type_and_payload [24 ms]
+  Passed TabStudio.Link.Tests.FramingTests.A_malformed_chunk_is_refused [< 1 ms]
+  Passed TabStudio.Link.Tests.QrCodeTests.Codes_decode_to_their_text(length: 1) [40 ms]
+  Passed TabStudio.Link.Tests.QrCodeTests.Codes_decode_to_their_text(length: 100) [30 ms]
+  Passed TabStudio.Link.Tests.QrCodeTests.Codes_decode_to_their_text(length: 660) [54 ms]
+  Passed TabStudio.Link.Tests.QrCodeTests.Codes_decode_to_their_text(length: 15) [4 ms]
+  Passed TabStudio.Link.Tests.QrCodeTests.Codes_decode_to_their_text(length: 150) [10 ms]
+  Passed TabStudio.Link.Tests.QrCodeTests.Codes_decode_to_their_text(length: 14) [1 ms]
+  Passed TabStudio.Link.Tests.QrCodeTests.Codes_decode_to_their_text(length: 300) [18 ms]
+  Passed TabStudio.Link.Tests.DiscoveryTests.A_host_answers_requests_for_any_host_or_for_itself(request: "TABSTUDIO-LINK/1 DISCOVER *", answers: True) [20 ms]
+  Passed TabStudio.Link.Tests.DiscoveryTests.A_host_answers_requests_for_any_host_or_for_itself(request: "TABSTUDIO-LINK/1 DISCOVER someone-else", answers: False) [19 ms]
+  Passed TabStudio.Link.Tests.DiscoveryTests.A_host_answers_requests_for_any_host_or_for_itself(request: "TABSTUDIO-LINK/1 DISCOVER {0}", answers: True) [14 ms]
+  Passed TabStudio.Link.Tests.DiscoveryTests.A_host_answers_requests_for_any_host_or_for_itself(request: "TABSTUDIO-LINK/1 HELLO *", answers: False) [14 ms]
+  Passed TabStudio.Link.Tests.DiscoveryTests.A_host_answers_requests_for_any_host_or_for_itself(request: "M-SEARCH * HTTP/1.1", answers: False) [14 ms]
+  Passed TabStudio.Link.Tests.DiscoveryTests.Answers_that_are_not_from_a_host_are_ignored(answer: "TABSTUDIO-LINK/1 HOST {0} 0 Pixel") [15 ms]
+  Passed TabStudio.Link.Tests.DiscoveryTests.Answers_that_are_not_from_a_host_are_ignored(answer: "TABSTUDIO-LINK/2 HOST {0} 50517 Pixel") [15 ms]
+  Passed TabStudio.Link.Tests.DiscoveryTests.Answers_that_are_not_from_a_host_are_ignored(answer: "TABSTUDIO-LINK/1 HOST nope 50517 Pixel") [15 ms]
+  Passed TabStudio.Link.Tests.DiscoveryTests.Answers_that_are_not_from_a_host_are_ignored(answer: "TABSTUDIO-LINK/1 HOST") [20 ms]
+  Passed TabStudio.Link.Tests.DiscoveryTests.Answers_that_are_not_from_a_host_are_ignored(answer: "TABSTUDIO-LINK/1 HOST {0} 70000 Pixel") [15 ms]
+  Passed TabStudio.Link.Tests.DiscoveryTests.Answers_that_are_not_from_a_host_are_ignored(answer: "HTTP/1.1 200 OK") [14 ms]
+  Passed TabStudio.Link.Tests.HandshakeTests.A_device_that_never_paired_is_refused [111 ms]
+  Passed TabStudio.Link.Tests.QrCodeTests.Every_mask_can_be_chosen_and_decodes [668 ms]
+  Passed TabStudio.Link.Tests.QrCodeTests.Text_that_does_not_fit_is_refused [< 1 ms]
+  Passed TabStudio.Link.Tests.QrCodeTests.A_code_with_a_finder_like_run_in_its_data_decodes [13 ms]
+  Passed TabStudio.Link.Tests.QrCodeTests.The_smallest_version_that_fits_is_used [4 ms]

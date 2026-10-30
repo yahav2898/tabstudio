@@ -1,0 +1,16 @@
+  Determining projects to restore...
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/TabStudio.Toolchains.csproj (in 74 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Services/TabStudio.Services.csproj (in 97 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Containers/TabStudio.Containers.csproj (in 124 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Containers.Tests/TabStudio.Containers.Tests.csproj (in 127 ms).
+  2 of 6 projects are up-to-date for restore.
+  TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+  TabStudio.Toolchains -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/bin/Release/net10.0/TabStudio.Toolchains.dll
+  TabStudio.Services -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Services/bin/Release/net10.0/TabStudio.Services.dll
+  TabStudio.Containers -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Containers/bin/Release/net10.0/TabStudio.Containers.dll
+/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Containers.Tests/LayerTests.cs(37,22): error CA1416: This call site is reachable on all platforms. 'File.GetUnixFileMode(string)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Containers.Tests/TabStudio.Containers.Tests.csproj]
+/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Containers.Tests/LayerTests.cs(94,29): error CA1859: Change return type of method 'Hard' from 'System.Formats.Tar.TarEntry' to 'System.Formats.Tar.PaxTarEntry' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Containers.Tests/TabStudio.Containers.Tests.csproj]
+/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Containers.Tests/LayerTests.cs(91,29): error CA1859: Change return type of method 'File' from 'System.Formats.Tar.TarEntry' to 'System.Formats.Tar.PaxTarEntry' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Containers.Tests/TabStudio.Containers.Tests.csproj]
+/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Containers.Tests/LayerTests.cs(90,29): error CA1859: Change return type of method 'Dir' from 'System.Formats.Tar.TarEntry' to 'System.Formats.Tar.PaxTarEntry' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Containers.Tests/TabStudio.Containers.Tests.csproj]
+/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Containers.Tests/LayerTests.cs(93,29): error CA1859: Change return type of method 'Link' from 'System.Formats.Tar.TarEntry' to 'System.Formats.Tar.PaxTarEntry' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Containers.Tests/TabStudio.Containers.Tests.csproj]
