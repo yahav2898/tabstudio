@@ -1,0 +1,45 @@
+Terminal-Gui-Terminal-slnx: dotnet build Terminal.slnx exited 1 in 6 s, 1 distinct errors
+  [Terminal.Gui] GitVersion.MsBuild.targets(32): MSB3073: The command "dotnet --roll-forward Major "/home/runner/work/tabstudio/tabstudio/.nuget/packages/gitversion.msbuild/6.8.2/tools/net8.0/gitversion.dll" "/home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Terminal.Gui"  -output file -outputfile "obj/gitversion.json"" exited with code 1.
+
+Last 300 lines of the build:
+  Determining projects to restore...
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/TestAssets/ConfigPropertyTypeLoad/ConsumerLib/ConsumerLib.csproj (in 227 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/Benchmarks/Benchmarks.csproj (in 1.48 sec).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/UnitTests.Legacy/UnitTests.Legacy.csproj (in 1.89 sec).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/UnitTests.NonParallelizable/UnitTests.NonParallelizable.csproj (in 1.89 sec).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/IntegrationTests/IntegrationTests.csproj (in 1.89 sec).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Terminal.Gui.Analyzers.Internal/Terminal.Gui.Analyzers.Internal.csproj (in 22 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Examples/UICatalog/UICatalog.csproj (in 21 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Examples/ScenarioRunner/ScenarioRunner.csproj (in 14 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/UnitTestsParallelizable/UnitTests.Parallelizable.csproj (in 18 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/TestAssets/ConfigPropertyTypeLoad/AttrProviderMissing/AttrProviderMissing.csproj (in 1 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/TestAssets/ConfigPropertyTypeLoad/AttrProviderFull/AttrProviderFull.csproj (in 1 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/StressTests/StressTests.csproj (in 10 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/PerformanceTests/PerformanceTests.csproj (in 10 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/NativeAotSmoke/NativeAotSmoke.csproj (in 46 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/AppTestHelpers/AppTestHelpers.csproj (in 48 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/docfx/scripts/OutputView/OutputView.csproj (in 289 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/AppTestHelpers.XunitHelpers.Generator/AppTestHelpers.XunitHelpers.Generator.csproj (in 2 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/AppTestHelpers.XunitHelpers/AppTestHelpers.XunitHelpers.csproj (in 462 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Terminal.Gui.Interop.Spectre/Terminal.Gui.Interop.Spectre.csproj (in 991 ms).
+  Restored /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Terminal.Gui/Terminal.Gui.csproj (in 1.15 sec).
+  AppTestHelpers.XunitHelpers.Generator -> /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Tests/AppTestHelpers.XunitHelpers.Generator/bin/Debug/netstandard2.0/AppTestHelpers.XunitHelpers.Generator.dll
+  Terminal.Gui.Analyzers.Internal -> /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Terminal.Gui.Analyzers.Internal/bin/Debug/netstandard2.0/Terminal.Gui.Analyzers.Internal.dll
+  INFO [26-10-30 17:05:00:02] Applicable build agent found: 'GitHubActions'.
+  INFO [26-10-30 17:05:00:07] Working directory: /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Terminal.Gui
+  INFO [26-10-30 17:05:00:09] Project root is: /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/
+  INFO [26-10-30 17:05:00:09] DotGit directory is: /home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/.git
+  INFO [26-10-30 17:05:00:09] Branch from build environment: refs/heads/trial/fidelity-before
+  INFO [26-10-30 17:05:00:09] -< Begin: Normalizing git directory for branch 'refs/heads/trial/fidelity-before' >-
+  INFO [26-10-30 17:05:00:12] -< End: Normalizing git directory for branch 'refs/heads/trial/fidelity-before' (Took: 24.19ms) >-
+  WARN [26-10-30 17:05:00:12] An error occurred:
+  0 remote(s) have been detected. When being run on a build server, the Git repository is expected to bear one (and no more than one) remote.
+/home/runner/work/tabstudio/tabstudio/.nuget/packages/gitversion.msbuild/6.8.2/tools/GitVersion.MsBuild.targets(32,9): error MSB3073: The command "dotnet --roll-forward Major "/home/runner/work/tabstudio/tabstudio/.nuget/packages/gitversion.msbuild/6.8.2/tools/net8.0/gitversion.dll" "/home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Terminal.Gui"  -output file -outputfile "obj/gitversion.json"" exited with code 1. [/home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Terminal.Gui/Terminal.Gui.csproj]
+
+Build FAILED.
+
+/home/runner/work/tabstudio/tabstudio/.nuget/packages/gitversion.msbuild/6.8.2/tools/GitVersion.MsBuild.targets(32,9): error MSB3073: The command "dotnet --roll-forward Major "/home/runner/work/tabstudio/tabstudio/.nuget/packages/gitversion.msbuild/6.8.2/tools/net8.0/gitversion.dll" "/home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Terminal.Gui"  -output file -outputfile "obj/gitversion.json"" exited with code 1. [/home/runner/work/_temp/sdk-copies/Terminal-Gui-Terminal-slnx/Terminal.Gui/Terminal.Gui.csproj]
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:05.49
