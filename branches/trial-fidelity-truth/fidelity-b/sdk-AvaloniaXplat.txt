@@ -1,0 +1,63 @@
+AvaloniaXplat: dotnet build XplatApp exited 0 in 10 s, 2 distinct errors
+  [XplatApp.Android] Microsoft.NET.Sdk.ImportWorkloads.targets(38): NETSDK1147: To build this project, the following workloads must be installed: android
+  [XplatApp.iOS] Microsoft.NET.Sdk.ImportWorkloads.targets(38): NETSDK1147: To build this project, the following workloads must be installed: wasm-tools
+
+Last 300 lines of the build:
+  Determining projects to restore...
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: android [/home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp.Android/XplatApp.Android.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp.Android/XplatApp.Android.csproj]
+
+Build FAILED.
+
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: android [/home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp.Android/XplatApp.Android.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp.Android/XplatApp.Android.csproj]
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.56
+  Determining projects to restore...
+  Restored /home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp/XplatApp.csproj (in 207 ms).
+  Restored /home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp.Browser/XplatApp.Browser.csproj (in 1.03 sec).
+  XplatApp -> /home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp/bin/Debug/net10.0/XplatApp.dll
+  XplatApp.Browser -> /home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp.Browser/bin/Debug/net10.0-browser/XplatApp.Browser.dll
+/usr/share/dotnet/sdk-manifests/10.0.100/microsoft.net.workload.mono.toolchain.current/10.0.114/WorkloadManifest.targets(124,5): warning : @(NativeFileReference) is not empty, but the native references won't be linked in, because neither $(WasmBuildNative), nor $(RunAOTCompilation) are 'true'. NativeFileReference=/home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp.nativeassets.webassembly/3.119.4/buildTransitive/netstandard1.0/libSkiaSharp.a/3.1.56/st/libSkiaSharp.a;/home/runner/work/tabstudio/tabstudio/.nuget/packages/harfbuzzsharp.nativeassets.webassembly/8.3.1.3/buildTransitive/netstandard1.0/libHarfBuzzSharp.a/3.1.56/st/libHarfBuzzSharp.a;/home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp.nativeassets.webassembly/3.119.4/buildTransitive/netstandard1.0/libSkiaSharp.a/3.1.56/st/libSkiaSharp.a;/home/runner/work/tabstudio/tabstudio/.nuget/packages/harfbuzzsharp.nativeassets.webassembly/8.3.1.3/buildTransitive/netstandard1.0/libHarfBuzzSharp.a/3.1.56/st/libHarfBuzzSharp.a [/home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp.Browser/XplatApp.Browser.csproj]
+
+Build succeeded.
+
+/usr/share/dotnet/sdk-manifests/10.0.100/microsoft.net.workload.mono.toolchain.current/10.0.114/WorkloadManifest.targets(124,5): warning : @(NativeFileReference) is not empty, but the native references won't be linked in, because neither $(WasmBuildNative), nor $(RunAOTCompilation) are 'true'. NativeFileReference=/home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp.nativeassets.webassembly/3.119.4/buildTransitive/netstandard1.0/libSkiaSharp.a/3.1.56/st/libSkiaSharp.a;/home/runner/work/tabstudio/tabstudio/.nuget/packages/harfbuzzsharp.nativeassets.webassembly/8.3.1.3/buildTransitive/netstandard1.0/libHarfBuzzSharp.a/3.1.56/st/libHarfBuzzSharp.a;/home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp.nativeassets.webassembly/3.119.4/buildTransitive/netstandard1.0/libSkiaSharp.a/3.1.56/st/libSkiaSharp.a;/home/runner/work/tabstudio/tabstudio/.nuget/packages/harfbuzzsharp.nativeassets.webassembly/8.3.1.3/buildTransitive/netstandard1.0/libHarfBuzzSharp.a/3.1.56/st/libHarfBuzzSharp.a [/home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp.Browser/XplatApp.Browser.csproj]
+    1 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:04.99
+  Determining projects to restore...
+  Restored /home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp.Desktop/XplatApp.Desktop.csproj (in 216 ms).
+  1 of 2 projects are up-to-date for restore.
+  XplatApp -> /home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp/bin/Debug/net10.0/XplatApp.dll
+  XplatApp.Desktop -> /home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp.Desktop/bin/Debug/net10.0/XplatApp.Desktop.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.29
+  Determining projects to restore...
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: wasm-tools [/home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp.iOS/XplatApp.iOS.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp.iOS/XplatApp.iOS.csproj]
+
+Build FAILED.
+
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: wasm-tools [/home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp.iOS/XplatApp.iOS.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp.iOS/XplatApp.iOS.csproj]
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.57
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  XplatApp -> /home/runner/work/_temp/sdk-copies/AvaloniaXplat/XplatApp/XplatApp/bin/Debug/net10.0/XplatApp.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.07

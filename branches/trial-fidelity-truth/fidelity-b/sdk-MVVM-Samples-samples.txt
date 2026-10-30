@@ -1,0 +1,69 @@
+MVVM-Samples-samples: dotnet build samples exited 1 in 8 s, 5 distinct errors
+  [] MvvmSampleUwp.csproj(566): MSB4019: The imported project "/usr/share/dotnet/sdk/10.0.403/Microsoft/WindowsXaml/v18.0/Microsoft.Windows.UI.Xaml.CSharp.targets" was not found. Confirm that the expression in the Import declaration "$(MSBuildExtensionsPath)/Microsoft/WindowsXaml/v$(VisualStudioVersion)/Microsoft.Windows.UI.Xaml.CSharp.targets", which evaluated to "/usr/share/dotnet/sdk/10.0.403//Microsoft/WindowsXaml/v18.0/Microsoft.Windows.UI.Xaml.CSharp.targets", is correct, and that the file exists on disk.
+  [] MvvmSampleXF.Android.csproj(144): MSB4019: The imported project "/usr/share/dotnet/sdk/10.0.403/Xamarin/Android/Xamarin.Android.CSharp.targets" was not found. Confirm that the expression in the Import declaration "$(MSBuildExtensionsPath)/Xamarin/Android/Xamarin.Android.CSharp.targets", which evaluated to "/usr/share/dotnet/sdk/10.0.403//Xamarin/Android/Xamarin.Android.CSharp.targets", is correct, and that the file exists on disk.
+  [] MvvmSampleXF.iOS.csproj(149): MSB4019: The imported project "/usr/share/dotnet/sdk/10.0.403/Xamarin/iOS/Xamarin.iOS.CSharp.targets" was not found. Confirm that the expression in the Import declaration "$(MSBuildExtensionsPath)/Xamarin/iOS/Xamarin.iOS.CSharp.targets", which evaluated to "/usr/share/dotnet/sdk/10.0.403//Xamarin/iOS/Xamarin.iOS.CSharp.targets", is correct, and that the file exists on disk.
+  [MvvmSampleMAUI.csproj::TargetFramework=net9] Microsoft.NET.Sdk.ImportWorkloads.targets(38): NETSDK1147: To build this project, the following workloads must be installed: maui-android
+  [MvvmSampleXF] CSC(None): CS1566: Error reading resource 'MvvmSampleXF.Assets.docs.AsyncRelayCommand.md' -- 'Could not find a part of the path '/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/msdocs-communitytoolkit/docs/mvvm/AsyncRelayCommand.md'.'
+
+Last 300 lines of the build:
+  Determining projects to restore...
+  Restored /home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSample.Core/MvvmSample.Core.csproj (in 942 ms).
+  MvvmSample.Core -> /home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSample.Core/bin/Debug/netstandard2.0/MvvmSample.Core.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.31
+  Determining projects to restore...
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: maui-android [/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSampleMAUI/MvvmSampleMAUI.csproj::TargetFramework=net9.0-android]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSampleMAUI/MvvmSampleMAUI.csproj::TargetFramework=net9.0-android]
+
+Build FAILED.
+
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: maui-android [/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSampleMAUI/MvvmSampleMAUI.csproj::TargetFramework=net9.0-android]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSampleMAUI/MvvmSampleMAUI.csproj::TargetFramework=net9.0-android]
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.75
+/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSampleUwp/MvvmSampleUwp.csproj(566,3): error MSB4019: The imported project "/usr/share/dotnet/sdk/10.0.403/Microsoft/WindowsXaml/v18.0/Microsoft.Windows.UI.Xaml.CSharp.targets" was not found. Confirm that the expression in the Import declaration "$(MSBuildExtensionsPath)/Microsoft/WindowsXaml/v$(VisualStudioVersion)/Microsoft.Windows.UI.Xaml.CSharp.targets", which evaluated to "/usr/share/dotnet/sdk/10.0.403//Microsoft/WindowsXaml/v18.0/Microsoft.Windows.UI.Xaml.CSharp.targets", is correct, and that the file exists on disk.
+
+Build FAILED.
+
+/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSampleUwp/MvvmSampleUwp.csproj(566,3): error MSB4019: The imported project "/usr/share/dotnet/sdk/10.0.403/Microsoft/WindowsXaml/v18.0/Microsoft.Windows.UI.Xaml.CSharp.targets" was not found. Confirm that the expression in the Import declaration "$(MSBuildExtensionsPath)/Microsoft/WindowsXaml/v$(VisualStudioVersion)/Microsoft.Windows.UI.Xaml.CSharp.targets", which evaluated to "/usr/share/dotnet/sdk/10.0.403//Microsoft/WindowsXaml/v18.0/Microsoft.Windows.UI.Xaml.CSharp.targets", is correct, and that the file exists on disk.
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.13
+/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSampleXF/MvvmSampleXF.Android/MvvmSampleXF.Android.csproj(144,3): error MSB4019: The imported project "/usr/share/dotnet/sdk/10.0.403/Xamarin/Android/Xamarin.Android.CSharp.targets" was not found. Confirm that the expression in the Import declaration "$(MSBuildExtensionsPath)/Xamarin/Android/Xamarin.Android.CSharp.targets", which evaluated to "/usr/share/dotnet/sdk/10.0.403//Xamarin/Android/Xamarin.Android.CSharp.targets", is correct, and that the file exists on disk.
+
+Build FAILED.
+
+/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSampleXF/MvvmSampleXF.Android/MvvmSampleXF.Android.csproj(144,3): error MSB4019: The imported project "/usr/share/dotnet/sdk/10.0.403/Xamarin/Android/Xamarin.Android.CSharp.targets" was not found. Confirm that the expression in the Import declaration "$(MSBuildExtensionsPath)/Xamarin/Android/Xamarin.Android.CSharp.targets", which evaluated to "/usr/share/dotnet/sdk/10.0.403//Xamarin/Android/Xamarin.Android.CSharp.targets", is correct, and that the file exists on disk.
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.10
+/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSampleXF/MvvmSampleXF.iOS/MvvmSampleXF.iOS.csproj(149,3): error MSB4019: The imported project "/usr/share/dotnet/sdk/10.0.403/Xamarin/iOS/Xamarin.iOS.CSharp.targets" was not found. Confirm that the expression in the Import declaration "$(MSBuildExtensionsPath)/Xamarin/iOS/Xamarin.iOS.CSharp.targets", which evaluated to "/usr/share/dotnet/sdk/10.0.403//Xamarin/iOS/Xamarin.iOS.CSharp.targets", is correct, and that the file exists on disk.
+
+Build FAILED.
+
+/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSampleXF/MvvmSampleXF.iOS/MvvmSampleXF.iOS.csproj(149,3): error MSB4019: The imported project "/usr/share/dotnet/sdk/10.0.403/Xamarin/iOS/Xamarin.iOS.CSharp.targets" was not found. Confirm that the expression in the Import declaration "$(MSBuildExtensionsPath)/Xamarin/iOS/Xamarin.iOS.CSharp.targets", which evaluated to "/usr/share/dotnet/sdk/10.0.403//Xamarin/iOS/Xamarin.iOS.CSharp.targets", is correct, and that the file exists on disk.
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.11
+  Determining projects to restore...
+  Restored /home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSampleXF/MvvmSampleXF/MvvmSampleXF.csproj (in 1.45 sec).
+  1 of 2 projects are up-to-date for restore.
+  MvvmSample.Core -> /home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSample.Core/bin/Debug/netstandard2.0/MvvmSample.Core.dll
+CSC : error CS1566: Error reading resource 'MvvmSampleXF.Assets.docs.AsyncRelayCommand.md' -- 'Could not find a part of the path '/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/msdocs-communitytoolkit/docs/mvvm/AsyncRelayCommand.md'.' [/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSampleXF/MvvmSampleXF/MvvmSampleXF.csproj]
+
+Build FAILED.
+
+CSC : error CS1566: Error reading resource 'MvvmSampleXF.Assets.docs.AsyncRelayCommand.md' -- 'Could not find a part of the path '/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/msdocs-communitytoolkit/docs/mvvm/AsyncRelayCommand.md'.' [/home/runner/work/_temp/sdk-copies/MVVM-Samples-samples/samples/MvvmSampleXF/MvvmSampleXF/MvvmSampleXF.csproj]
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:03.23
