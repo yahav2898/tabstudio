@@ -22,7 +22,7 @@ namespace TabStudio.Packages.Caching;
 internal static class RestoreCache
 {
     /// <summary>The current layout of the file.</summary>
-    public const int FormatVersion = 6;
+    public const int FormatVersion = 7;
 
     /// <summary>Hashes the inputs of a restore.</summary>
     /// <param name="graph">The project's references and those of the projects it references.</param>

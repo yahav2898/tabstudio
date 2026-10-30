@@ -27,3 +27,13 @@ internal sealed record PackageDependencyGroup(NuGetFramework TargetFramework, IR
 /// <param name="Version">The package version.</param>
 /// <param name="DependencyGroups">The dependency groups, one per target framework.</param>
 internal sealed record PackageManifest(string Id, NuGetVersion Version, IReadOnlyList<PackageDependencyGroup> DependencyGroups);
+
+/// <summary>
+/// One <c>&lt;files&gt;</c> entry of a manifest's <c>&lt;contentFiles&gt;</c>: globs relative to the <c>contentFiles/</c>
+/// folder, separated by semicolons, and the build action of the files they match (<see langword="null"/> to keep the
+/// one an earlier entry or NuGet's default, <c>Compile</c>, gives).
+/// </summary>
+/// <param name="Include">The files the entry applies to.</param>
+/// <param name="Exclude">Files it leaves out, or <see langword="null"/>.</param>
+/// <param name="BuildAction">Their build action, such as <c>Compile</c> or <c>None</c>, or <see langword="null"/>.</param>
+internal sealed record ContentFileEntry(string Include, string? Exclude, string? BuildAction);

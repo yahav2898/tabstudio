@@ -233,6 +233,25 @@ public sealed partial class PackageRestorer
         }
     }
 
+    /// <summary>The <c>&lt;contentFiles&gt;</c> entries of an installed package's manifest.</summary>
+    private static IReadOnlyList<Manifests.ContentFileEntry> ContentFileEntries(string directory)
+    {
+        try
+        {
+            if (Directory.EnumerateFiles(directory, "*.nuspec").FirstOrDefault() is not { } nuspec)
+            {
+                return [];
+            }
+
+            using var stream = File.OpenRead(nuspec);
+            return Manifests.NuspecReader.ReadContentFileEntries(stream);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return [];
+        }
+    }
+
     /// <summary>The shared frameworks one restored package declares, from its manifest in the packages folder.</summary>
     private IReadOnlyList<string> PackageFrameworkReferences(RestoredPackage package)
     {
@@ -373,6 +392,10 @@ public sealed partial class PackageRestorer
         var assets = AssetSelector.Select(files, _framework, _fallback, Options.CompilerVersion, runtimeIdentifiers);
         var buildFiles = AssetSelector.SelectBuildFiles(files, match.Id, _framework, _fallback, package.Assets);
         var contentSources = AssetSelector.SelectContentSources(files, _framework, _fallback, package.Assets);
+        if (contentSources.Count > 0)
+        {
+            contentSources = AssetSelector.SelectContentSources(files, _framework, _fallback, package.Assets, ContentFileEntries(directory));
+        }
 
         if (!assets.IsCompatible)
         {
