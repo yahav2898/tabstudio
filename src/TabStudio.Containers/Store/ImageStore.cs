@@ -64,7 +64,7 @@ public sealed record DiskUsage(long Images, long Blobs, long Containers, long Vo
 /// images are downloaded and kept once; each image's layers unpacked once into its own root file system; and an
 /// index of names. Nothing is used until its digest was checked.
 /// </summary>
-public sealed class ImageStore
+public sealed class ImageStore : IDisposable
 {
     private static readonly JsonSerializerOptions IndexJson = new() { WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
     private readonly SemaphoreSlim _index = new(1, 1);
@@ -425,6 +425,13 @@ public sealed class ImageStore
         }
     }
 
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        _index.Dispose();
+        foreach (var gate in _pulls.Values) gate.Dispose();
+    }
+
     private List<StoredImage> Load()
     {
         if (_images is not null) return _images;
@@ -456,3 +463,4 @@ public sealed class ImageStore
         public void Report(T value) => report(value);
     }
 }
+

@@ -427,6 +427,11 @@ public sealed class ContainerEngine : IAsyncDisposable
         {
             foreach (var subscriber in _subscribers) subscriber.Writer.TryComplete();
         }
+
+        foreach (var instance in _instances.Values) instance.Log.Dispose();
+        Store.Dispose();
+        _gate.Dispose();
+        _lifetime.Dispose();
     }
 
     private async Task LaunchAsync(Instance instance, CancellationToken cancellationToken)
@@ -470,8 +475,8 @@ public sealed class ContainerEngine : IAsyncDisposable
                 .Select(e => e.Value).OrderByDescending(v => v.Length).ToList();
             instance.Log.SetRedaction(text => secrets.Aggregate(text, (current, secret) => current.Replace(secret, "***", StringComparison.Ordinal)));
             var readers = Task.WhenAll(
-                instance.Log.PumpAsync(process.Output, 1, process.IsTerminal),
-                process.Error is { } error ? instance.Log.PumpAsync(error, 2, false) : Task.CompletedTask);
+                instance.Log.PumpAsync(process.Output, 1, process.IsTerminal, CancellationToken.None),
+                process.Error is { } error ? instance.Log.PumpAsync(error, 2, false, CancellationToken.None) : Task.CompletedTask);
             instance.Info = info with
             {
                 Status = ContainerStatus.Running,
@@ -537,7 +542,7 @@ public sealed class ContainerEngine : IAsyncDisposable
         {
             if (instance.Info.Spec.AutoRemove && !instance.Removed)
             {
-                _ = Task.Run(() => RemoveAsync(instance.Info.Id, force: true));
+                _ = Task.Run(() => RemoveAsync(instance.Info.Id, force: true, cancellationToken: CancellationToken.None), CancellationToken.None);
             }
 
             return;
@@ -956,3 +961,4 @@ public sealed class ContainerEngine : IAsyncDisposable
         }
     }
 }
+

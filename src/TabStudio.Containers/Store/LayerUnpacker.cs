@@ -138,7 +138,7 @@ public static class LayerUnpacker
                         if (!UnixFiles.TryHardLink(target, path))
                         {
                             File.Copy(target, path);
-                            File.SetUnixFileMode(path, File.GetUnixFileMode(target));
+                            if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(path, File.GetUnixFileMode(target));
                         }
 
                         break;
@@ -312,3 +312,4 @@ public static class LayerUnpacker
         public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 }
+

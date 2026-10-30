@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 
 namespace TabStudio.Containers.Images;
@@ -13,6 +14,7 @@ namespace TabStudio.Containers.Images;
 /// <param name="Digest">The pinned manifest digest, if any.</param>
 public sealed record ImageReference(string Registry, string Repository, string? Tag, string? Digest)
 {
+    private static readonly SearchValues<char> DigestCharacters = SearchValues.Create("0123456789abcdef");
     /// <summary>The registry name Docker uses for Docker Hub.</summary>
     public const string DockerHub = "docker.io";
 
@@ -122,5 +124,6 @@ public sealed record ImageReference(string Registry, string Repository, string? 
 
     /// <summary>Whether a string is a SHA-256 content digest.</summary>
     public static bool IsDigest(string? text) =>
-        text is { Length: 71 } && text.StartsWith("sha256:", StringComparison.Ordinal) && text.AsSpan(7).ContainsAnyExcept("0123456789abcdef") is false;
+        text is { Length: 71 } && text.StartsWith("sha256:", StringComparison.Ordinal) && text.AsSpan(7).ContainsAnyExcept(DigestCharacters) is false;
 }
+

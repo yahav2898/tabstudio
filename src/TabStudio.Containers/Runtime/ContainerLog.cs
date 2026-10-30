@@ -8,7 +8,7 @@ namespace TabStudio.Containers.Runtime;
 /// A container's output: the most recent lines in memory for the Containers window and <c>docker logs</c>, the rest
 /// in a file next to the container (bounded, like Docker's json-file driver with a size limit), and live followers.
 /// </summary>
-public sealed class ContainerLog
+public sealed class ContainerLog : IDisposable
 {
     private const int MemoryLines = 2000;
     private const long FileLimit = 8 * 1024 * 1024;
@@ -120,6 +120,9 @@ public sealed class ContainerLog
         }
     }
 
+    /// <inheritdoc />
+    public void Dispose() => Complete();
+
     /// <summary>Reads a stream into the log line by line (or chunk by chunk for a terminal).</summary>
     public async Task PumpAsync(Stream stream, int number, bool terminal, CancellationToken cancellationToken = default)
     {
@@ -151,3 +154,4 @@ public sealed class ContainerLog
         }
     }
 }
+
