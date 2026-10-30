@@ -1,0 +1,68 @@
+  Determining projects to restore...
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/TabStudio.Compilation.Tests.csproj (in 329 ms).
+  3 of 4 projects are up-to-date for restore.
+  TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+  TabStudio.Compilation.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/bin/Release/net10.0/TabStudio.Compilation.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/bin/Release/net10.0/TabStudio.Compilation.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.15]   Discovering: TabStudio.Compilation.Tests
+[xUnit.net 00:00:00.28]   Discovered:  TabStudio.Compilation.Tests
+[xUnit.net 00:00:00.34]   Starting:    TabStudio.Compilation.Tests
+[xUnit.net 00:00:02.70]     TabStudio.Compilation.Tests.CSharpCompilerTests.A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(statement: "Environment.Exit(3);", expected: 3) [FAIL]
+[xUnit.net 00:00:02.71]       TabStudio.Runtime.ProgramExit.g.cs(3,1): error CS8055: Cannot emit debug information for a source text without encoding.
+[xUnit.net 00:00:02.71]       Stack Trace:
+[xUnit.net 00:00:02.71]         /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs(100,0): at TabStudio.Compilation.Tests.CSharpCompilerTests.A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(String statement, Int32 expected)
+[xUnit.net 00:00:02.71]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.71]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.71]     TabStudio.Compilation.Tests.CSharpCompilerTests.A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(statement: "System.Environment.FailFast(\"bye\");", expected: -2146232797) [FAIL]
+[xUnit.net 00:00:02.71]       TabStudio.Runtime.ProgramExit.g.cs(3,1): error CS8055: Cannot emit debug information for a source text without encoding.
+[xUnit.net 00:00:02.71]       Stack Trace:
+[xUnit.net 00:00:02.71]         /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs(100,0): at TabStudio.Compilation.Tests.CSharpCompilerTests.A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(String statement, Int32 expected)
+[xUnit.net 00:00:02.71]            at InvokeStub_CSharpCompilerTests.A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(Object, Span`1)
+[xUnit.net 00:00:02.71]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.A_method_named_exit_on_another_type_is_fine [2 s]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Libraries_are_not_checked_for_in_process_safety [27 ms]
+  Failed TabStudio.Compilation.Tests.CSharpCompilerTests.A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(statement: "Environment.Exit(3);", expected: 3) [150 ms]
+  Error Message:
+   TabStudio.Runtime.ProgramExit.g.cs(3,1): error CS8055: Cannot emit debug information for a source text without encoding.
+  Stack Trace:
+     at TabStudio.Compilation.Tests.CSharpCompilerTests.A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(String statement, Int32 expected) in /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs:line 100
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed TabStudio.Compilation.Tests.CSharpCompilerTests.A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(statement: "System.Environment.FailFast(\"bye\");", expected: -2146232797) [13 ms]
+  Error Message:
+   TabStudio.Runtime.ProgramExit.g.cs(3,1): error CS8055: Cannot emit debug information for a source text without encoding.
+  Stack Trace:
+     at TabStudio.Compilation.Tests.CSharpCompilerTests.A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(String statement, Int32 expected) in /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs:line 100
+   at InvokeStub_CSharpCompilerTests.A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "System.Environment.FailFast(\"bye\");", expectedId: "TS1002") [21 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "Environment.Exit(1);", expectedId: "TS1001") [8 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Reports_errors_with_one_based_positions_in_the_right_file [77 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Assembly_version_unification_is_not_a_warning_as_in_the_SDK [3 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Edits_show_up_in_live_diagnostics [2 s]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Project_diagnostics_cover_every_file [44 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Builds_still_work_with_concurrent_compilation_turned_off [62 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Loads_every_csharp_source_file [5 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Release_configuration_defines_the_release_symbol [27 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Builds_and_runs_a_project_with_a_project_reference [51 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Live_diagnostics_include_the_in_process_safety_check [16 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_new_file_joins_the_project_that_contains_it [34 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Compiles_top_level_statements_with_implicit_usings [290 ms]
+[xUnit.net 00:00:03.83]   Finished:    TabStudio.Compilation.Tests
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Warnings_do_not_stop_a_build [25 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Format_document_produces_edits_that_fix_the_layout [412 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Classifies_keywords_types_and_strings [111 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Build_order_puts_dependencies_first [11 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Memory_mapped_references_compile_the_same_code [142 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_clean_file_has_no_errors [24 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Trimming_memory_keeps_unsaved_edits [28 ms]
+
+Test Run Failed.
+Total tests: 24
+     Passed: 22
+     Failed: 2
+ Total time: 4.6276 Seconds
