@@ -24,7 +24,7 @@ internal static class AccessibilityReport
     private static readonly Lock Gate = new();
 
     /// <summary>Whether a finding fails the test, rather than only being reported.</summary>
-    public static bool Enforced => false;
+    public static bool Enforced => true;
 
     /// <summary>The folder of the reports, under the screenshots' folder.</summary>
     public static string FolderIn(string screenshots) => Directory.CreateDirectory(Path.Combine(screenshots, "accessibility")).FullName;

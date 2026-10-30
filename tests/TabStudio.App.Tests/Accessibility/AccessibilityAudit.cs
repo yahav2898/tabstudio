@@ -126,8 +126,15 @@ internal static partial class AccessibilityAudit
                     continue;
                 }
 
+                // A preview kept to a few lines (MaxLines) trims its last one; its whole text is in its tooltip.
+                if (element.Visual is TextBlock { MaxLines: > 0 } preview && preview.TextTrimming != TextTrimming.None && HasToolTip(preview)
+                    && message.Contains("cut off at the bottom", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
                 // A card between an editor's lines that is wholly out of view has scrolled away with them.
-                if (WhollyHidden().IsMatch(message) && element.Visual.GetVisualAncestors().Any(a => a is AvaloniaEdit.Rendering.TextView or AvaloniaEdit.TextEditor))
+                if (WhollyHidden().IsMatch(message) && element.Visual.GetVisualAncestors().Any(a => a is AvaloniaEdit.Rendering.TextView or AvaloniaEdit.TextEditor or TabStudio.App.Views.PullRequests.ReviewAnchorView))
                 {
                     continue;
                 }
