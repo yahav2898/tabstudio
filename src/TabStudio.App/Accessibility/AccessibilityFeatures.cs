@@ -67,6 +67,39 @@ public static class AccessibilityFeatures
         });
     }
 
+    /// <summary>
+    /// Puts Fluent's own sizes back in an app's resources, for the app preview and the designer: the IDE's text size
+    /// and touch targets change Fluent's font sizes and minimum heights for the IDE, and an app's views must look as
+    /// they do on a device. A size the app's own resources set is kept.
+    /// </summary>
+    /// <param name="resources">The resources around an app's views.</param>
+    public static void RestoreFluentDefaults(IResourceDictionary resources)
+    {
+        ArgumentNullException.ThrowIfNull(resources);
+        foreach (var (key, value) in FluentDefaults)
+        {
+            if (!resources.ContainsKey(key))
+            {
+                resources[key] = value;
+            }
+        }
+    }
+
+    /// <summary>The Fluent theme's values (Avalonia 11.3) of the resources the IDE changes.</summary>
+    private static readonly (string Key, double Value)[] FluentDefaults =
+    [
+        ("ControlContentThemeFontSize", 14),
+        ("ToolTipContentThemeFontSize", 12),
+        ("TextControlThemeMinHeight", 32),
+        ("ComboBoxMinHeight", 32),
+        ("CheckBoxMinHeight", 32),
+        ("RadioButtonMinHeight", 32),
+        ("SplitButtonMinHeight", 32),
+        ("TreeViewItemMinHeight", 32),
+        ("MenuFlyoutThemeMinHeight", 32),
+        ("CalendarDatePickerMinHeight", 32),
+    ];
+
     private static FlowDirection DirectionOf(SystemAccessibility system) =>
         system.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
 }

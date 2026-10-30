@@ -14,8 +14,10 @@
   <Style Selector="Button, DropDownButton, ToggleSwitch, ListBoxItem, ComboBoxItem, TabItem">
     <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
   </Style>
+  <!-- A button taller than its text keeps the text centered in it (docs/design/README.md, "Type"). -->
   <Style Selector="Button, DropDownButton">
     <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
   </Style>
   <Style Selector="TreeViewItem">
     <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />

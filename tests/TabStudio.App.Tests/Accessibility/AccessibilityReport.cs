@@ -51,7 +51,9 @@ internal static class AccessibilityReport
                 var largest = Directory.CreateDirectory(Path.Combine(screenshots, "largest")).FullName;
                 AvaloniaHeadlessPlatform.ForceRenderTimerTick();
                 using var frame = window.CaptureRenderedFrame() ?? throw new InvalidOperationException("Nothing was rendered.");
-                frame.Save(Path.Combine(largest, screenshot + ".png"));
+                var file = Path.Combine(largest, screenshot + ".png");
+                Directory.CreateDirectory(Path.GetDirectoryName(file)!);
+                frame.Save(file);
             }
             finally
             {

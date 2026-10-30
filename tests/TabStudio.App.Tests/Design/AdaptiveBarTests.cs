@@ -36,18 +36,24 @@ public sealed class AdaptiveBarTests
     {
         // Folded tool buttons were packed 36 pixels apart while ToolButton draws them 40 wide, so a tap near the edge
         // of one landed on the next.
+        // At every width from a phone's to a tablet's, whatever is folded to its icon.
         var bar = DesignSamples.Toolbar();
-        var window = new Window { Width = 520, Height = 60, Content = bar };
+        var window = new Window { Width = 1280, Height = 60, Content = bar };
         window.Show();
-        Dispatcher.UIThread.RunJobs();
-
-        var shown = bar.Children.OfType<AdaptiveBarItem>().Where(item => bar.ModeOf(item) is AdaptiveMode.Full or AdaptiveMode.Compact).OrderBy(item => item.Bounds.X).ToList();
-        Assert.Contains(shown, item => bar.ModeOf(item) == AdaptiveMode.Compact);
-        for (var i = 1; i < shown.Count; i++)
+        var folded = false;
+        for (var width = 1280; width >= 320; width -= 20)
         {
-            Assert.True(shown[i - 1].Bounds.Right <= shown[i].Bounds.X + 0.5, $"{shown[i - 1].Label} ends at {shown[i - 1].Bounds.Right}, over {shown[i].Label} at {shown[i].Bounds.X}.");
+            window.Width = width;
+            Dispatcher.UIThread.RunJobs();
+            var shown = bar.Children.OfType<AdaptiveBarItem>().Where(item => bar.ModeOf(item) is AdaptiveMode.Full or AdaptiveMode.Compact).OrderBy(item => item.Bounds.X).ToList();
+            folded |= shown.Any(item => bar.ModeOf(item) == AdaptiveMode.Compact);
+            for (var i = 1; i < shown.Count; i++)
+            {
+                Assert.True(shown[i - 1].Bounds.Right <= shown[i].Bounds.X + 0.5, $"At {width}: {shown[i - 1].Label} ends at {shown[i - 1].Bounds.Right}, over {shown[i].Label} at {shown[i].Bounds.X}.");
+            }
         }
 
+        Assert.True(folded, "No width folded an item to its icon.");
         window.Close();
     }
 

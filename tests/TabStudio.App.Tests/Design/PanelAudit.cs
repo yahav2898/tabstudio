@@ -89,6 +89,12 @@ internal static partial class PanelAudit
                     await SettleAsync();
                     var shot = $"{name}-{screen.Name}-{(dark ? "dark" : "light")}";
                     UiTestHelpers.SaveFrame(window, Path.Combine(Folder, shot + ".png"));
+                    var root = Environment.GetEnvironmentVariable("TABSTUDIO_SCREENSHOTS") ?? Path.Combine(AppContext.BaseDirectory, "screenshots");
+                    var accessible = Accessibility.AccessibilityReport.Check(window, root, "audit/" + shot);
+                    if (Accessibility.AccessibilityReport.Enforced)
+                    {
+                        problems.AddRange(accessible.Select(f => $"{shot}: accessibility {f.Kind}: {f.Path}: {f.Text}"));
+                    }
                     foreach (var (isProblem, text) in Check(window, panel(), screen, dark))
                     {
                         (isProblem ? problems : notes).Add($"{shot}: {text}");
