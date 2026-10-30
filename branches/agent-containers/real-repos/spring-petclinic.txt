@@ -1,0 +1,194 @@
+spring-petclinic at 500158f732419217507c7656904b8e6aa1bcc0d6
+Toolchain projects:
+  java: /home/runner/work/_temp/real-repos/spring-petclinic/pom.xml
+Startup project: java /home/runner/work/_temp/real-repos/spring-petclinic/pom.xml
+Set up in 3.2 s
+Web preview: http://127.0.0.1:8080/
+GET http://127.0.0.1:8080/: 200 , 2658 characters
+Ran in 24.2 s
+Project setup:
+
+Output:
+Running spring-petclinic with Java 21.0.13
+> mvn -B -Dstyle.color=never -Daether.connector.http.retryHandler.count=5 -DskipTests package org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies -DincludeScope=runtime
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------< org.springframework.samples:spring-petclinic >------------
+[INFO] Building petclinic 4.0.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-enforcer-plugin:3.6.3:enforce (enforce-java) @ spring-petclinic ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+[INFO] 
+[INFO] --- spring-javaformat-maven-plugin:0.0.47:validate (default) @ spring-petclinic ---
+[INFO] 
+[INFO] --- maven-checkstyle-plugin:3.6.0:check (nohttp-checkstyle-validation) @ spring-petclinic ---
+[INFO] You have 0 Checkstyle violations.
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.8.15:prepare-agent (default) @ spring-petclinic ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.15/org.jacoco.agent-0.8.15-runtime.jar=destfile=/home/runner/work/_temp/real-repos/spring-petclinic/target/jacoco.exec
+[INFO] 
+[INFO] --- git-commit-id-maven-plugin:9.2.0:revision (default) @ spring-petclinic ---
+[INFO] dotGitDirectory '/home/runner/work/_temp/real-repos/spring-petclinic/.git'
+[INFO] Collected git.build.user.name with value 
+[INFO] Collected git.build.user.email with value 
+[INFO] Using environment variable based branch name. GITHUB_REF = refs/heads/agent/containers (branch = agent/containers)
+[INFO] Collected git.branch with value agent/containers
+[INFO] Collected git.commit.id.describe with value 500158f
+[INFO] Collected git.commit.id.describe-short with value 500158f
+[INFO] Collected git.commit.id with value 500158f732419217507c7656904b8e6aa1bcc0d6
+[INFO] Collected git.commit.id.abbrev with value 500158f
+[INFO] Collected git.dirty with value false
+[INFO] Collected git.commit.user.name with value Pedro Arthur Hartmann
+[INFO] Collected git.commit.user.email with value pedroaphartmann@gmail.com
+[INFO] Collected git.commit.message.full with value added redirection to the page when the user types a page that is out of bounds
+
+Signed-off-by: Pedro Arthur Hartmann <pedroaphartmann@gmail.com>
+[INFO] Collected git.commit.message.short with value added redirection to the page when the user types a page that is out of bounds
+[INFO] Collected git.commit.time with value 2026-09-29T15:37:54Z
+[INFO] Collected git.commit.author.time with value 2026-09-29T14:36:27Z
+[INFO] Collected git.commit.committer.time with value 2026-09-29T15:37:54Z
+[INFO] Collected git.remote.origin.url with value null
+[INFO] Collected git.tags with value 
+[INFO] Collected git.tag with value 
+[INFO] Collected git.closest.tag.name with value 
+[INFO] Collected git.closest.tag.commit.count with value 
+[INFO] Collected git.total.commit.count with value 1
+[INFO] Collected git.local.branch.ahead with value NO_REMOTE
+[INFO] Collected git.local.branch.behind with value NO_REMOTE
+[INFO] Collected git.build.time with value 2024-11-28T14:37:52Z
+[INFO] Collected git.build.version with value 4.0.0-SNAPSHOT
+[INFO] Collected git.build.host with value runnervm48cm3
+[INFO] Collected git.build.number with value 991.1
+[INFO] Collected git.build.number.unique with value 41115717557.991.1
+[INFO] including property 'git.tags' in results
+[INFO] including property 'git.build.version' in results
+[INFO] including property 'git.branch' in results
+[INFO] including property 'git.build.host' in results
+[INFO] including property 'git.build.number' in results
+[INFO] including property 'git.commit.id' in results
+[INFO] including property 'git.commit.user.email' in results
+[INFO] including property 'git.build.number.unique' in results
+[INFO] including property 'git.local.branch.behind' in results
+[INFO] including property 'git.commit.author.time' in results
+[INFO] including property 'git.build.user.name' in results
+[INFO] including property 'git.dirty' in results
+[INFO] including property 'git.closest.tag.commit.count' in results
+[INFO] including property 'git.commit.user.name' in results
+[INFO] including property 'git.commit.id.abbrev' in results
+[INFO] including property 'git.commit.id.describe-short' in results
+[INFO] including property 'git.total.commit.count' in results
+[INFO] including property 'git.commit.id.describe' in results
+[INFO] including property 'git.build.user.email' in results
+[INFO] including property 'git.commit.message.short' in results
+[INFO] including property 'git.commit.committer.time' in results
+[INFO] including property 'git.tag' in results
+[INFO] including property 'git.closest.tag.name' in results
+[INFO] including property 'git.local.branch.ahead' in results
+[INFO] including property 'git.commit.time' in results
+[INFO] including property 'git.build.time' in results
+[INFO] including property 'git.commit.message.full' in results
+[INFO] including property 'git.remote.origin.url' in results
+[INFO] Writing properties file [/home/runner/work/_temp/real-repos/spring-petclinic/target/classes/git.properties] (for project petclinic)...
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:4.1.0:build-info (default) @ spring-petclinic ---
+[INFO] 
+[INFO] --- cyclonedx-maven-plugin:2.9.1:makeAggregateBom (default) @ spring-petclinic ---
+[INFO] CycloneDX: Resolving Dependencies
+[INFO] CycloneDX: Creating BOM version 1.6 with 106 component(s)
+[INFO] CycloneDX: Writing and validating BOM (JSON): /home/runner/work/_temp/real-repos/spring-petclinic/target/classes/META-INF/sbom/application.cdx.json
+[WARNING] Unknown keyword meta:enum - you should define your own Meta Schema. If the keyword is irrelevant for validation, just use a NonValidationKeyword or if it should generate annotations AnnotationKeyword
+[WARNING] Unknown keyword deprecated - you should define your own Meta Schema. If the keyword is irrelevant for validation, just use a NonValidationKeyword or if it should generate annotations AnnotationKeyword
+[INFO]            attaching as spring-petclinic-4.0.0-SNAPSHOT-cyclonedx.json
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:resources (default-resources) @ spring-petclinic ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 47 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:compile (default-compile) @ spring-petclinic ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 30 source files with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:testResources (default-testResources) @ spring-petclinic ---
+[INFO] skip non existing resourceDirectory /home/runner/work/_temp/real-repos/spring-petclinic/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:testCompile (default-testCompile) @ spring-petclinic ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 20 source files with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.5.6:test (default-test) @ spring-petclinic ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.8.15:report (report) @ spring-petclinic ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] --- maven-jar-plugin:3.5.0:jar (default-jar) @ spring-petclinic ---
+[INFO] Building jar: /home/runner/work/_temp/real-repos/spring-petclinic/target/spring-petclinic-4.0.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:4.1.0:repackage (repackage) @ spring-petclinic ---
+[INFO] Replacing main artifact /home/runner/work/_temp/real-repos/spring-petclinic/target/spring-petclinic-4.0.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /home/runner/work/_temp/real-repos/spring-petclinic/target/spring-petclinic-4.0.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.8.1:copy-dependencies (default-cli) @ spring-petclinic ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  14.783 s
+[INFO] Finished at: 2026-10-30T19:46:44Z
+[INFO] ------------------------------------------------------------------------
+
+
+              |\      _,,,--,,_
+             /,`.-'`'   ._  \-;;,_
+  _______ __|,4-  ) )_   .;.(__`'-'__     ___ __    _ ___ _______
+ |       | '---''(_/._)-'(_\_)   |   |   |   |  |  | |   |       |
+ |    _  |    ___|_     _|       |   |   |   |   |_| |   |       | __ _ _
+ |   |_| |   |___  |   | |       |   |   |   |       |   |       | \ \ \ \
+ |    ___|    ___| |   | |      _|   |___|   |  _    |   |      _|  \ \ \ \
+ |   |   |   |___  |   | |     |_|       |   | | |   |   |     |_    ) ) ) )
+ |___|   |_______| |___| |_______|_______|___|_|  |__|___|_______|  / / / /
+ ==================================================================/_/_/_/
+
+:: Built with Spring Boot :: 4.1.0
+
+
+2026-10-30T19:46:45.598Z  INFO 11709 --- [  restartedMain] o.s.s.petclinic.PetClinicApplication     : Starting PetClinicApplication using Java 21.0.13 with PID 11709 (/home/runner/work/_temp/real-repos/spring-petclinic/target/classes started by runner in /home/runner/work/_temp/real-repos/spring-petclinic)
+2026-10-30T19:46:45.602Z  INFO 11709 --- [  restartedMain] o.s.s.petclinic.PetClinicApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-10-30T19:46:45.694Z  INFO 11709 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-10-30T19:46:45.694Z  INFO 11709 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-10-30T19:46:46.693Z  INFO 11709 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-30T19:46:46.780Z  INFO 11709 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 75 ms. Found 3 JPA repository interfaces.
+2026-10-30T19:46:47.720Z  INFO 11709 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-10-30T19:46:47.773Z  INFO 11709 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-30T19:46:47.776Z  INFO 11709 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-30T19:46:47.837Z  INFO 11709 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2141 ms
+2026-10-30T19:46:48.136Z  INFO 11709 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-30T19:46:48.311Z  INFO 11709 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:596ba674-e515-4153-9eb0-51c8bea2b4ed user=SA
+2026-10-30T19:46:48.312Z  INFO 11709 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-30T19:46:48.476Z  INFO 11709 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-30T19:46:48.524Z  INFO 11709 --- [  restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.1.Final
+2026-10-30T19:46:48.911Z  INFO 11709 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-30T19:46:49.000Z  INFO 11709 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:596ba674-e515-4153-9eb0-51c8bea2b4ed]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: 596BA674-E515-4153-9EB0-51C8BEA2B4ED/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-30T19:46:49.878Z  INFO 11709 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-30T19:46:49.884Z  INFO 11709 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-30T19:46:49.990Z  INFO 11709 --- [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-30T19:46:51.393Z  INFO 11709 --- [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 13 endpoints beneath base path '/actuator'
+2026-10-30T19:46:51.540Z  INFO 11709 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-10-30T19:46:51.554Z  INFO 11709 --- [  restartedMain] o.s.s.petclinic.PetClinicApplication     : Started PetClinicApplication in 6.521 seconds (process running for 7.051)
+2026-10-30T19:46:51.959Z  INFO 11709 --- [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-30T19:46:51.959Z  INFO 11709 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-30T19:46:51.961Z  INFO 11709 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+
+The program 'spring-petclinic' was stopped.
+
