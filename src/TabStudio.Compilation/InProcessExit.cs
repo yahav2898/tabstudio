@@ -1,7 +1,9 @@
 using System.Reflection;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 
 namespace TabStudio.Compilation;
 
@@ -101,7 +103,9 @@ public static class InProcessExit
                 var name = ((MemberAccessExpressionSyntax)original).Name.Identifier.ValueText;
                 return SyntaxFactory.ParseExpression("global::TabStudio.Runtime.ProgramExit." + name).WithTriviaFrom(original);
             });
-            result = result.ReplaceSyntaxTree(tree, tree.WithRootAndOptions(rewritten, tree.Options));
+            // Parsed again from text with the original's encoding, which the PDB needs to embed the source.
+            var text = SourceText.From(rewritten.ToFullString(), tree.Encoding ?? Encoding.UTF8);
+            result = result.ReplaceSyntaxTree(tree, CSharpSyntaxTree.ParseText(text, (CSharpParseOptions)tree.Options, tree.FilePath, cancellationToken));
             changed = true;
         }
 
@@ -111,7 +115,7 @@ public static class InProcessExit
         }
 
         var options = (CSharpParseOptions)(csharp.SyntaxTrees.FirstOrDefault()?.Options ?? CSharpParseOptions.Default);
-        return result.AddSyntaxTrees(CSharpSyntaxTree.ParseText(Shim, options, ShimPath, cancellationToken: cancellationToken));
+        return result.AddSyntaxTrees(CSharpSyntaxTree.ParseText(SourceText.From(Shim, Encoding.UTF8), options, ShimPath, cancellationToken));
     }
 
     /// <summary>

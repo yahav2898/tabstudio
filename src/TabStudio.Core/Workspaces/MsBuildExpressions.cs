@@ -732,6 +732,7 @@ internal static class MsBuildExpressions
             string text => text,
             bool flag => flag ? "True" : "False",
             string[] parts => string.Join(';', parts),
+            DirectoryInfo directory => directory.FullName,
             IFormattable formattable => formattable.ToString(null, CultureInfo.InvariantCulture),
             _ => value.ToString() ?? string.Empty,
         };
@@ -758,6 +759,8 @@ internal static class MsBuildExpressions
                 "IO.DIRECTORY" => member.ToUpperInvariant() switch
                 {
                     "EXISTS" when args.Count == 1 => Directory.Exists(context.FullPath(args[0])),
+                    "GETPARENT" when args.Count == 1 => (object?)Directory.GetParent(context.FullPath(args[0])) ?? string.Empty,
+                    "GETCURRENTDIRECTORY" => context.Directory,
                     _ => null,
                 },
                 "STRING" => member.ToUpperInvariant() switch
@@ -841,6 +844,16 @@ internal static class MsBuildExpressions
                     return upper == "TOSTRING" ? ToText(value) : null;
                 case string[] parts:
                     return upper == "LENGTH" ? parts.Length : null;
+                case DirectoryInfo directory:
+                    return upper switch
+                    {
+                        "PARENT" => (object?)directory.Parent ?? string.Empty,
+                        "FULLNAME" => directory.FullName,
+                        "NAME" => directory.Name,
+                        "EXISTS" => directory.Exists,
+                        "TOSTRING" => directory.FullName,
+                        _ => null,
+                    };
             }
 
             var text = ToText(value);
