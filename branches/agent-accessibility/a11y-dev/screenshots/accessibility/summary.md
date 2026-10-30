@@ -2,24 +2,19 @@
 
 ## ci-out/screenshots
 
-Views audited: 69 of 78 (0 exempt).
+Views audited: 74 of 78 (0 exempt).
 
 | Rule | Findings | Distinct controls |
 | --- | --- | --- |
-| target | 477 | 59 |
-| name | 86 | 19 |
-| contrast | 6 | 3 |
-| icon-contrast | 38 | 13 |
-| clipped | 491 | 40 |
+| target | 843 | 67 |
+| name | 152 | 22 |
+| contrast | 5 | 3 |
+| icon-contrast | 89 | 14 |
+| clipped | 786 | 51 |
 
 Views never audited:
 - TabStudio.App.Views.EmbeddedPeripheralsView
 - TabStudio.App.Views.Live.LiveJoinView
-- TabStudio.App.Views.RemoteExplorerView
-- TabStudio.App.Views.ServicesView
-- TabStudio.App.Views.Swarm.UiTestRecorderView
-- TabStudio.App.Views.Toolchains.SerialMonitorView
 - TabStudio.App.Views.Toolchains.TerminalPanelView
 - TabStudio.App.Views.WatchView
-- TabStudio.App.Views.XamlDesignerView
 
