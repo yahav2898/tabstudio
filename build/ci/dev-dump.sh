@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
-# Trial only: prints the build files of a few packages, to read what their targets do.
+# Trial only: asks the real MSBuild which AdditionalFiles a few projects give their generators.
 set -u
-out=ci-out/dump.txt
-mkdir -p ci-out /tmp/dump && cd /tmp/dump
-dotnet new console -o app --force > /dev/null 2>&1
-cd app
-for p in "Microsoft.CodeAnalysis.ResxSourceGenerator 3.11.0-beta1.26226.5" "ThisAssembly.Strings 2.1.6" "ThisAssembly.Resources 2.1.6" "MSTest.TestFramework 3.6.4" "MSTest.TestFramework 2.2.10" "Wcwidth.Sources 2.0.0" "ManualStunts 1.0.0-beta.3" "Stunts 1.0.0-beta.3"; do
-  set -- $p
-  dotnet add package "$1" --version "$2" > /dev/null 2>&1 || echo "could not add $1 $2" >> "$GITHUB_WORKSPACE/$out"
-done
-cd "$GITHUB_WORKSPACE"
-for dir in "$NUGET_PACKAGES"/microsoft.codeanalysis.resxsourcegenerator "$NUGET_PACKAGES"/thisassembly.strings "$NUGET_PACKAGES"/thisassembly.resources "$NUGET_PACKAGES"/mstest.testframework "$NUGET_PACKAGES"/wcwidth.sources "$NUGET_PACKAGES"/manualstunts "$NUGET_PACKAGES"/stunts; do
-  echo "=================== $dir" >> "$out"
-  find "$dir" -type f | sed "s|$NUGET_PACKAGES/||" | head -80 >> "$out"
-  find "$dir" -type f \( -name '*.props' -o -name '*.targets' -o -name '*.nuspec' \) | while read -r f; do echo "----- $f" >> "$out"; head -c 6000 "$f" >> "$out"; echo >> "$out"; done
-done
+out="$GITHUB_WORKSPACE/ci-out/dump.txt"
+mkdir -p "$GITHUB_WORKSPACE/ci-out"
+probe() { # name url sha project framework
+  dir="/tmp/probe/$1"; git init -q "$dir"; git -C "$dir" fetch -q --depth 1 "$2" "$3"; git -C "$dir" -c advice.detachedHead=false checkout -q FETCH_HEAD
+  for g in $(find "$dir" -name global.json); do python3 -c "import json,sys;p=sys.argv[1];d=json.load(open(p,encoding='utf-8-sig'));d.pop('sdk',None);json.dump(d,open(p,'w'))" "$g"; done
+  echo "=================== $1 $4" >> "$out"
+  ( cd "$dir" && dotnet restore "$4" -p:EnableWindowsTargeting=true > /tmp/probe/$1.restore.log 2>&1; tail -3 /tmp/probe/$1.restore.log >> "$out"
+    dotnet msbuild "$4" -t:GenerateMSBuildEditorConfigFileShouldRun -p:TargetFramework=$5 -getItem:AdditionalFiles -getItem:EmbeddedResource -getProperty:RootNamespace >> "$out" 2>&1 )
+}
+probe MudBlazor https://github.com/MudBlazor/MudBlazor ed6b3e023a4780c29c7951da580751733227892a src/MudBlazor/MudBlazor.csproj net10.0
+probe moq https://github.com/devlooped/moq bdf16e758e8022c40cef2bfd025181f845bbd2a9 src/Moq.Sdk/Moq.Sdk.csproj netstandard2.0
+find "$NUGET_PACKAGES" -maxdepth 1 -iname 'microsoft.codeanalysis.analyzers' -exec find {} -name '*.targets' \; | head -3 | while read -r f; do echo "----- $f" >> "$out"; grep -n -i -B2 -A12 "resx" "$f" | head -60 >> "$out"; done
