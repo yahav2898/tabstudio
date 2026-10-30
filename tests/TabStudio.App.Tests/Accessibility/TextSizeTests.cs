@@ -110,6 +110,36 @@ public sealed class TextSizeTests : IDisposable
     }
 
     [AvaloniaFact]
+    public async Task Text_that_takes_its_size_from_its_button_grows_with_it()
+    {
+        // A tab's string content inherits its size from the button's theme (PanelTabButton): it must be laid out again,
+        // not only drawn larger in its old box.
+        var tab = new Button { Content = "Error List", Theme = (Avalonia.Styling.ControlTheme)Application.Current!.FindResource("PanelTabButton")! };
+        var card = new Button { Theme = (Avalonia.Styling.ControlTheme)Application.Current!.FindResource("CardButton")!, Content = new TextBlock { Text = "Open from GitHub" } };
+        var window = new Window { Width = 800, Height = 300, Content = new StackPanel { Children = { new ScrollViewer { HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Hidden, Content = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Children = { tab } } }, card } } };
+        window.Show();
+        try
+        {
+            await UiTestHelpers.WaitUntilAsync(() => true);
+            var text = tab.GetVisualDescendants().OfType<TextBlock>().First();
+            var cardText = (TextBlock)card.Content!;
+            var before = (text.Bounds.Width, cardText.Bounds.Width);
+
+            TypeScale.Apply(TextSizes.Largest);
+            await UiTestHelpers.WaitUntilAsync(() => true);
+
+            var detail = $"tab text {text.FontSize} at {text.Bounds.Width} (desired {text.DesiredSize.Width}, was {before.Item1}); card text {cardText.FontSize} at {cardText.Bounds.Width} (desired {cardText.DesiredSize.Width}, was {before.Item2})";
+            Assert.True(text.Bounds.Width > before.Item1 * 1.3, detail);
+            Assert.True(cardText.Bounds.Width > before.Item2 * 1.3, detail);
+        }
+        finally
+        {
+            TypeScale.Apply(1);
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public async Task Tools_Text_Size_changes_the_whole_IDE_and_the_editor_at_once()
     {
         using var services = AppServices.Create(new AppPaths(_temp.Path));

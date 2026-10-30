@@ -59,22 +59,6 @@ internal static class AccessibilityReport
             {
                 TypeScale.Apply(factor);
                 Settle(window);
-
-                // The text size is the app's: the other tests' windows changed too, and are laid out again before
-                // their tests go on, as they would be by the next frame.
-                foreach (var other in TabStudio.App.Accessibility.AccessibilityFeatures.LiveWindows().Append(window).Distinct())
-                {
-                    if (other.IsVisible)
-                    {
-                        other.UpdateLayout();
-
-                        // An editor builds its lines again when its font changes; it does so now, not on a later job.
-                        foreach (var view in other.GetVisualDescendants().OfType<AvaloniaEdit.Rendering.TextView>())
-                        {
-                            view.EnsureVisualLines();
-                        }
-                    }
-                }
             }
         }
 
@@ -102,17 +86,33 @@ internal static class AccessibilityReport
     }
 
     /// <summary>
-    /// Lays the window out again after the text size changed, as the next frames would: layout and the work layout
-    /// posts (a bar folding its items), but not the other tests' work, which runs at a lower priority.
+    /// Lays the windows out again after the text size changed, as the next frames would: every window the app shows,
+    /// since the text size is the app's, with their editors' lines; then the work layout posts (a bar folding its
+    /// items), but not the other tests' work, which runs at a lower priority.
     /// </summary>
     private static void Settle(Window window)
     {
+        var windows = TabStudio.App.Accessibility.AccessibilityFeatures.LiveWindows().Append(window).Distinct().ToList();
         for (var i = 0; i < 3; i++)
         {
-            window.UpdateLayout();
+            foreach (var shown in windows)
+            {
+                shown.UpdateLayout();
+                foreach (var view in shown.GetVisualDescendants().OfType<AvaloniaEdit.Rendering.TextView>())
+                {
+                    if (view.IsEffectivelyVisible)
+                    {
+                        view.EnsureVisualLines();
+                    }
+                }
+            }
+
             Dispatcher.UIThread.RunJobs(DispatcherPriority.Loaded);
         }
 
-        window.UpdateLayout();
+        foreach (var shown in windows)
+        {
+            shown.UpdateLayout();
+        }
     }
 }

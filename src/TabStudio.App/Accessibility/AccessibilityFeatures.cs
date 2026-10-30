@@ -17,6 +17,10 @@ namespace TabStudio.App.Accessibility;
 public static class AccessibilityFeatures
 {
     private static readonly List<WeakReference<TopLevel>> Windows = [];
+
+    /// <summary>TextBlock's own way to drop its laid-out text, when the platform keeps it.</summary>
+    private static readonly System.Reflection.MethodInfo? InvalidateTextLayout =
+        typeof(TextBlock).GetMethod("InvalidateTextLayout", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public, Type.EmptyTypes);
     private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<TopLevel, object> Known = new();
     private static SystemAccessibility? _system;
 
@@ -87,6 +91,12 @@ public static class AccessibilityFeatures
             window.InvalidateMeasure();
             foreach (var element in window.GetVisualDescendants().OfType<Layoutable>())
             {
+                if (element is TextBlock text)
+                {
+                    // Text whose size it takes from a control around it keeps its old layout otherwise.
+                    InvalidateTextLayout?.Invoke(text, null);
+                }
+
                 element.InvalidateMeasure();
             }
         }
