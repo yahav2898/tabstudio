@@ -58,7 +58,7 @@
   </Style>
 
   <!-- What sits only in a column a responsive layout gives no width is hidden, not squeezed to nothing (Controls/ResponsiveColumns.cs). -->
-  <Style Selector=".columnFolded">
+  <Style Selector=":is(Control).columnFolded">
     <Setter Property="IsVisible" Value="False" />
   </Style>
 
