@@ -265,14 +265,19 @@ public sealed partial class RoslynWorkspaceHost
             properties[key] = value;
         }
 
+        // The SDK's defaults for what the project does not set, which generators read through CompilerVisibleProperty:
+        // ResxSourceGenerator names MudBlazor's LanguageResource class from RootNamespace.
+        properties.TryAdd("RootNamespace", project.Name);
+        properties.TryAdd("AssemblyName", project.Name);
+
         // The SDK writes every compiler-visible property, empty when nothing sets it.
         foreach (var name in project.CompilerVisibleProperties)
         {
             properties.TryAdd(name, string.Empty);
         }
 
-        properties["TargetFramework"] = project.TargetFrameworks.Count > 0 ? project.TargetFrameworks[0] : ReferenceAssemblies.TargetFramework;
-        properties.TryAdd("RootNamespace", project.Name);
+        // The inner build's framework, as the SDK compiles the project for it (see ProjectParser.EvaluationTargetFramework).
+        properties["TargetFramework"] = ProjectParser.EvaluationTargetFramework(project.TargetFrameworks) ?? ReferenceAssemblies.TargetFramework;
         properties["ProjectDir"] = project.DirectoryPath.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
         properties["MSBuildProjectDirectory"] = project.DirectoryPath;
         properties["MSBuildProjectName"] = project.Name;
