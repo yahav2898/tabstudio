@@ -1,0 +1,38 @@
+BlazingPizza: dotnet build src/BlazingPizza.sln exited 0 in 6 s, 0 distinct errors
+
+Last 300 lines of the build:
+  Determining projects to restore...
+  Restored /home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.ComponentsLibrary/BlazingPizza.ComponentsLibrary.csproj (in 193 ms).
+  Restored /home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Shared/BlazingPizza.Shared.csproj (in 193 ms).
+  Restored /home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/BlazingPizza.Client.csproj (in 193 ms).
+  Restored /home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/BlazingPizza.csproj (in 2.36 sec).
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.ComponentsLibrary/TemplatedList.razor(17,6): warning CS8602: Dereference of a possibly null reference. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.ComponentsLibrary/BlazingPizza.ComponentsLibrary.csproj]
+  BlazingPizza.ComponentsLibrary -> /home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.ComponentsLibrary/bin/Debug/net8.0/BlazingPizza.ComponentsLibrary.dll
+  BlazingPizza.Shared -> /home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Shared/bin/Debug/net8.0/BlazingPizza.Shared.dll
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/OrderState.cs(48,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/BlazingPizza.Client.csproj]
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/OrderState.cs(55,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/BlazingPizza.Client.csproj]
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/OrderState.cs(70,11): warning CS8602: Dereference of a possibly null reference. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/BlazingPizza.Client.csproj]
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/OrderState.cs(17,20): warning CS8618: Non-nullable property 'JSRuntime' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/BlazingPizza.Client.csproj]
+  BlazingPizza.Client -> /home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/bin/Debug/net8.0/BlazingPizza.Client.dll
+  BlazingPizza.Client (Blazor output) -> /home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/bin/Debug/net8.0/wwwroot
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/Components/LoginDisplay.razor(12,60): warning CS8602: Dereference of a possibly null reference. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/BlazingPizza.csproj]
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/Components/Pages/OrderDetails.razor(56,15): warning CS8618: Non-nullable field 'pollingTask' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/BlazingPizza.csproj]
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/Components/Pages/MyOrders.razor(46,54): warning CS8604: Possible null reference argument for parameter 'userId' in 'Task<List<OrderWithStatus>> IRepository.GetOrdersAsync(string userId)'. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/BlazingPizza.csproj]
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/Components/Pages/MyOrders.razor(36,32): warning CS0169: The field 'MyOrders.ordersWithStatus' is never used [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/BlazingPizza.csproj]
+  BlazingPizza -> /home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/bin/Debug/net8.0/BlazingPizza.dll
+
+Build succeeded.
+
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.ComponentsLibrary/TemplatedList.razor(17,6): warning CS8602: Dereference of a possibly null reference. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.ComponentsLibrary/BlazingPizza.ComponentsLibrary.csproj]
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/OrderState.cs(48,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/BlazingPizza.Client.csproj]
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/OrderState.cs(55,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/BlazingPizza.Client.csproj]
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/OrderState.cs(70,11): warning CS8602: Dereference of a possibly null reference. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/BlazingPizza.Client.csproj]
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/OrderState.cs(17,20): warning CS8618: Non-nullable property 'JSRuntime' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza.Client/BlazingPizza.Client.csproj]
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/Components/LoginDisplay.razor(12,60): warning CS8602: Dereference of a possibly null reference. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/BlazingPizza.csproj]
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/Components/Pages/OrderDetails.razor(56,15): warning CS8618: Non-nullable field 'pollingTask' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/BlazingPizza.csproj]
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/Components/Pages/MyOrders.razor(46,54): warning CS8604: Possible null reference argument for parameter 'userId' in 'Task<List<OrderWithStatus>> IRepository.GetOrdersAsync(string userId)'. [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/BlazingPizza.csproj]
+/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/Components/Pages/MyOrders.razor(36,32): warning CS0169: The field 'MyOrders.ordersWithStatus' is never used [/home/runner/work/_temp/sdk-copies/BlazingPizza/src/BlazingPizza/BlazingPizza.csproj]
+    9 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:06.27

@@ -1,0 +1,20 @@
+Humanizer: dotnet build Humanizer.slnx exited 1 in 1 s, 3 distinct errors
+  [Humanizer.Analyzers.Tests.Roslyn38] Microsoft.NET.TargetFrameworkInference.targets(184): NETSDK1045: The current .NET SDK does not support targeting .NET 11.0.  Either target .NET 10.0 or lower, or use a version of the .NET SDK that supports .NET 11.0. Download the .NET SDK from https://aka.ms/dotnet/download
+  [Humanizer.Analyzers.Tests.Roslyn414] Microsoft.NET.TargetFrameworkInference.targets(184): NETSDK1045: The current .NET SDK does not support targeting .NET 11.0.  Either target .NET 10.0 or lower, or use a version of the .NET SDK that supports .NET 11.0. Download the .NET SDK from https://aka.ms/dotnet/download
+  [Humanizer.Analyzers.Tests.Roslyn48] Microsoft.NET.TargetFrameworkInference.targets(184): NETSDK1045: The current .NET SDK does not support targeting .NET 11.0.  Either target .NET 10.0 or lower, or use a version of the .NET SDK that supports .NET 11.0. Download the .NET SDK from https://aka.ms/dotnet/download
+
+Last 300 lines of the build:
+  Determining projects to restore...
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.TargetFrameworkInference.targets(184,5): error NETSDK1045: The current .NET SDK does not support targeting .NET 11.0.  Either target .NET 10.0 or lower, or use a version of the .NET SDK that supports .NET 11.0. Download the .NET SDK from https://aka.ms/dotnet/download [/home/runner/work/_temp/sdk-copies/Humanizer/tests/Humanizer.Analyzers.Tests/Humanizer.Analyzers.Tests.Roslyn414.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.TargetFrameworkInference.targets(184,5): error NETSDK1045: The current .NET SDK does not support targeting .NET 11.0.  Either target .NET 10.0 or lower, or use a version of the .NET SDK that supports .NET 11.0. Download the .NET SDK from https://aka.ms/dotnet/download [/home/runner/work/_temp/sdk-copies/Humanizer/tests/Humanizer.Analyzers.Tests/Humanizer.Analyzers.Tests.Roslyn38.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.TargetFrameworkInference.targets(184,5): error NETSDK1045: The current .NET SDK does not support targeting .NET 11.0.  Either target .NET 10.0 or lower, or use a version of the .NET SDK that supports .NET 11.0. Download the .NET SDK from https://aka.ms/dotnet/download [/home/runner/work/_temp/sdk-copies/Humanizer/tests/Humanizer.Analyzers.Tests/Humanizer.Analyzers.Tests.Roslyn48.csproj]
+
+Build FAILED.
+
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.TargetFrameworkInference.targets(184,5): error NETSDK1045: The current .NET SDK does not support targeting .NET 11.0.  Either target .NET 10.0 or lower, or use a version of the .NET SDK that supports .NET 11.0. Download the .NET SDK from https://aka.ms/dotnet/download [/home/runner/work/_temp/sdk-copies/Humanizer/tests/Humanizer.Analyzers.Tests/Humanizer.Analyzers.Tests.Roslyn414.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.TargetFrameworkInference.targets(184,5): error NETSDK1045: The current .NET SDK does not support targeting .NET 11.0.  Either target .NET 10.0 or lower, or use a version of the .NET SDK that supports .NET 11.0. Download the .NET SDK from https://aka.ms/dotnet/download [/home/runner/work/_temp/sdk-copies/Humanizer/tests/Humanizer.Analyzers.Tests/Humanizer.Analyzers.Tests.Roslyn38.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.TargetFrameworkInference.targets(184,5): error NETSDK1045: The current .NET SDK does not support targeting .NET 11.0.  Either target .NET 10.0 or lower, or use a version of the .NET SDK that supports .NET 11.0. Download the .NET SDK from https://aka.ms/dotnet/download [/home/runner/work/_temp/sdk-copies/Humanizer/tests/Humanizer.Analyzers.Tests/Humanizer.Analyzers.Tests.Roslyn48.csproj]
+    0 Warning(s)
+    3 Error(s)
+
+Time Elapsed 00:00:00.58
