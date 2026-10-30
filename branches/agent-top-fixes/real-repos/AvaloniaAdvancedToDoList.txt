@@ -10,7 +10,7 @@ Compatibility Doctor:
   AdvancedToDoList: Library via Built with its users - A library is compiled together with the projects that reference it.
   SharedControls: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: AdvancedToDoList.Browser
-Built in 10.1 s: 0 errors, 1 warnings
+Built in 9.7 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   avalonia.browser 12.1.4
       build/Avalonia.Browser.props
@@ -301,20 +301,20 @@ Packages with analyzers or MSBuild files:
       buildTransitive/xunit.v3.core.mtp-v1.props
       buildTransitive/xunit.v3.core.mtp-v1.targets
 Output:
-Build started at 17:51:47...
+Build started at 18:19:16...
 1>------ Build started: Project: SharedControls, Configuration: Debug ------
 1>DialogCommand.cs(111,32): warning CS0067: The event 'DialogCommand.CanExecuteChanged' is never used
-1>SharedControls -> compiled in memory (109 KB, 228 ms)
+1>SharedControls -> compiled in memory (109 KB, 172 ms)
 2>------ Build started: Project: AdvancedToDoList, Configuration: Debug ------
-2>AdvancedToDoList -> compiled in memory (1013 KB, 282 ms)
+2>AdvancedToDoList -> compiled in memory (1013 KB, 190 ms)
 3>------ Build started: Project: AdvancedToDoListTests, Configuration: Debug ------
-3>AdvancedToDoListTests -> compiled in memory (53 KB, 183 ms)
+3>AdvancedToDoListTests -> compiled in memory (53 KB, 137 ms)
 4>------ Build started: Project: SharedControlsTests, Configuration: Debug ------
-4>SharedControlsTests -> compiled in memory (7.5 KB, 37 ms)
+4>SharedControlsTests -> compiled in memory (7.5 KB, 42 ms)
 5>------ Build started: Project: AdvancedToDoList.Browser, Configuration: Debug ------
-5>AdvancedToDoList.Browser -> compiled in memory (11.5 KB, 146 ms)
+5>AdvancedToDoList.Browser -> compiled in memory (11.5 KB, 107 ms)
 6>------ Build started: Project: AdvancedToDoList.Desktop, Configuration: Debug ------
-6>AdvancedToDoList.Desktop -> compiled in memory (7 KB, 160 ms)
+6>AdvancedToDoList.Desktop -> compiled in memory (7 KB, 106 ms)
 7>------ Skipped: Project: AdvancedToDoList.Android: it targets net10.0-android, which only .NET's mobile workloads build, on a computer ------
 8>------ Skipped: Project: AdvancedToDoList.iOS: it targets net10.0-ios, which only .NET's mobile workloads build, on a computer ------
 ========== Build: 6 succeeded, 0 failed, 2 skipped ==========
