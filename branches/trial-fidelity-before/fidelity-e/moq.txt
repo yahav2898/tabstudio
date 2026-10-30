@@ -1,0 +1,615 @@
+moq at bdf16e758e8022c40cef2bfd025181f845bbd2a9, opening /home/runner/work/_temp/repos/moq/Moq.slnx
+Opened in 0.2 s: Moq, solution /home/runner/work/_temp/repos/moq/Moq.slnx
+  project Moq.CodeAnalysis.UnitTests [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.CodeAnalysis.UnitTests/Moq.CodeAnalysis.UnitTests.csproj
+  project Moq.CodeAnalysis [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.CodeAnalysis/Moq.CodeAnalysis.csproj
+  project Moq.CodeFixes.UnitTests [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.CodeFixes.UnitTests/Moq.CodeFixes.UnitTests.csproj
+  project Moq.CodeFixes [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.CodeFixes/Moq.CodeFixes.csproj
+  project Moq.DynamicProxy [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.DynamicProxy/Moq.DynamicProxy.csproj
+  project Moq.Sdk.Tests [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.Sdk.Tests/Moq.Sdk.Tests.csproj
+  project Moq.Sdk [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.Sdk/Moq.Sdk.csproj
+  project Moq.StaticProxy.UnitTests [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.StaticProxy.UnitTests/Moq.StaticProxy.UnitTests.csproj
+  project Moq.StaticProxy [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.StaticProxy/Moq.StaticProxy.csproj
+  project Moq.Tests [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.Tests/Moq.Tests.csproj
+  project Moq.Vsix [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.Vsix/Moq.Vsix.csproj
+  project Moq [CSharp] /home/runner/work/_temp/repos/moq/src/Moq/Moq.csproj
+Compatibility Doctor:
+  Moq.CodeAnalysis.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Moq.CodeAnalysis: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Moq.CodeFixes.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Moq.CodeFixes: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Moq.DynamicProxy: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Moq.Sdk.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Moq.Sdk: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Moq.StaticProxy.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Moq.StaticProxy: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Moq.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Moq.Vsix: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Moq: Library via Built with its users - A library is compiled together with the projects that reference it.
+F5 startup project: none 
+Error List after analysis: 327 errors, 92 warnings
+  162 x CS0246
+      [Moq.Sdk.Tests] MockBehaviorTests.cs(3,7): error CS0246: The type or namespace name 'Sample' could not be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk.Tests] MockBehaviorTests.cs(77,20): error CS0246: The type or namespace name 'CalculatorMode' could not be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk.Tests] MockBehaviorTests.cs(77,60): error CS0246: The type or namespace name 'CalculatorMode' could not be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk] IMockSetup.cs(9,59): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
+      [Moq.StaticProxy.UnitTests] MockOfT.cs(33,13): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
+      [Moq.StaticProxy.UnitTests] MockOfT.cs(33,50): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
+      [Moq.StaticProxy.UnitTests] RecursiveMethods.cs(13,13): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
+      [Moq.StaticProxy.UnitTests] RecursiveMethods.cs(13,54): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
+      [Moq.StaticProxy.UnitTests] RecursiveProperties.cs(13,13): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
+      [Moq.StaticProxy.UnitTests] RecursiveProperties.cs(13,44): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
+  58 x CS1061
+      [Moq.Sdk] AnyMatcher.cs(59,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk] AnyMatcher`1.cs(55,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk] ConditionalMatcher.cs(62,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk] MockSetup.cs(79,51): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk] MockSetup.cs(122,41): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Tests] CallBaseTests.cs(34,18): error CS1061: 'Mock<Calculator>' does not contain a definition for 'TurnOn' and no accessible extension method 'TurnOn' accepting a first argument of type 'Mock<Calculator>' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Tests] CallBaseTests.cs(56,18): error CS1061: 'Mock<Calculator>' does not contain a definition for 'TurnOn' and no accessible extension method 'TurnOn' accepting a first argument of type 'Mock<Calculator>' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Tests] CallBaseTests.cs(72,18): error CS1061: 'Mock<Calculator>' does not contain a definition for 'TurnOn' and no accessible extension method 'TurnOn' accepting a first argument of type 'Mock<Calculator>' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Tests] MockTests.cs(19,24): error CS1061: 'Mock<ICalculator>' does not contain a definition for 'Add' and no accessible extension method 'Add' accepting a first argument of type 'Mock<ICalculator>' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Tests] MockTests.cs(30,24): error CS1061: 'Mock<ICalculator>' does not contain a definition for 'Add' and no accessible extension method 'Add' accepting a first argument of type 'Mock<ICalculator>' could be found (are you missing a using directive or an assembly reference?)
+  39 x CS0619
+      [Moq.Tests] CallBaseTests.cs(47,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
+      [Moq.Tests] CallBaseTests.cs(63,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
+      [Moq.Tests] CallBaseTests.cs(79,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
+      [Moq.Tests] MockTests.cs(34,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
+      [Moq.Tests] MoqTests.cs(315,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
+      [Moq.Tests] MoqTests.cs(325,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
+      [Moq.Tests] MoqTests.cs(336,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
+      [Moq.Tests] MoqTests.cs(347,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
+      [Moq.Tests] MoqTests.cs(348,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
+      [Moq.Tests] MoqTests.cs(358,13): error CS0619: 'Assert.Throws<T>(Func<Task>)' is obsolete: 'You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.'
+  35 x CS0103
+      [Moq.Sdk.Tests] MockBehaviorTests.cs(64,66): error CS0103: The name 'CalculatorMode' does not exist in the current context
+      [Moq.Sdk.Tests] MockBehaviorTests.cs(71,26): error CS0103: The name 'CalculatorMode' does not exist in the current context
+      [Moq.Tests] MoqTests.cs(69,37): error CS0103: The name 'CalculatorMode' does not exist in the current context
+      [Moq.Tests] MoqTests.cs(71,26): error CS0103: The name 'CalculatorMode' does not exist in the current context
+      [Moq.Tests] MoqTests.cs(79,38): error CS0103: The name 'CalculatorMode' does not exist in the current context
+      [Moq.Tests] MoqTests.cs(81,26): error CS0103: The name 'CalculatorMode' does not exist in the current context
+      [Moq.Tests] MoqTests.cs(89,37): error CS0103: The name 'CalculatorMode' does not exist in the current context
+      [Moq.Tests] MoqTests.cs(90,37): error CS0103: The name 'CalculatorMode' does not exist in the current context
+      [Moq.Tests] MoqTests.cs(92,26): error CS0103: The name 'CalculatorMode' does not exist in the current context
+      [Moq.Tests] MoqTests.cs(333,37): error CS0103: The name 'CalculatorMode' does not exist in the current context
+  28 x CS0117
+      [Moq.CodeFixes] CustomDelegateCodeFix.cs(162,66): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'CustomDelegateCodeFix'
+      [Moq.CodeFixes] CustomDelegateCompletion.cs(25,112): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'CustomDelegateCompletion'
+      [Moq.CodeFixes] HiddenMemberCodeFix.cs(55,49): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'HiddenMemberCodeFix'
+      [Moq.CodeFixes] MockDiagnostics.cs(9,34): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'SimplifySetup'
+      [Moq.CodeFixes] MockDiagnostics.cs(14,34): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'SimplifySetup'
+      [Moq.CodeFixes] MockDiagnostics.cs(18,34): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'HiddenMember'
+      [Moq.CodeFixes] MockDiagnostics.cs(23,34): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'HiddenMember'
+      [Moq.CodeFixes] SimplifySetupCodeFix.cs(33,49): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'SimplifySetup'
+      [Moq.Sdk] CallContext.cs(99,73): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'UnexpectedNullContextState'
+      [Moq.Sdk] DefaultMockRuntime.cs(88,82): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'DuplicateContextBehavior'
+  2 x CS1503
+      [Moq.Sdk] MockRuntime.cs(19,126): error CS1503: Argument 2: cannot convert from 'string' to 'System.Exception?'
+      [Moq.Sdk] PropertyBehavior.cs(36,122): error CS1503: Argument 2: cannot convert from 'string' to 'System.Exception?'
+  2 x CS1501
+      [Moq.Tests] RefOutTests.cs(18,18): error CS1501: No overload for method 'TryAdd' takes 3 arguments
+      [Moq.Tests] RefOutTests.cs(30,18): error CS1501: No overload for method 'TryAdd' takes 3 arguments
+  1 x CS9286
+      [Moq.Tests] TypedSetupTests.cs(28,26): error CS9286: '?' does not contain a definition for 'Sdk' and no accessible extension member 'Sdk' for receiver of type '?' could be found (are you missing a using directive or an assembly reference?)
+Error List after the build: 16 errors, 27 warnings
+  8 x CS0117
+      [Moq.Sdk] CallContext.cs(99,73): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'UnexpectedNullContextState'
+      [Moq.Sdk] DefaultMockRuntime.cs(88,82): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'DuplicateContextBehavior'
+      [Moq.Sdk] DefaultMockRuntime.cs(91,82): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'DuplicateRecordingBehavior'
+      [Moq.Sdk] MockBehaviorPipeline.cs(40,116): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'TargetNotMock'
+      [Moq.Sdk] MockFactory.cs(32,71): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'MockFactoryNotImplemented'
+      [Moq.Sdk] MockRuntime.cs(19,111): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'TargetNotMock'
+      [Moq.Sdk] MockSetup.Static.cs(52,77): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'UnexpectedNullContextState'
+      [Moq.Sdk] PropertyBehavior.cs(36,107): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'TargetNotMock'
+  5 x CS1061
+      [Moq.Sdk] AnyMatcher.cs(59,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk] AnyMatcher`1.cs(55,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk] ConditionalMatcher.cs(62,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk] MockSetup.cs(79,51): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+      [Moq.Sdk] MockSetup.cs(122,41): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+  2 x CS1503
+      [Moq.Sdk] MockRuntime.cs(19,126): error CS1503: Argument 2: cannot convert from 'string' to 'System.Exception?'
+      [Moq.Sdk] PropertyBehavior.cs(36,122): error CS1503: Argument 2: cannot convert from 'string' to 'System.Exception?'
+  1 x CS0246
+      [Moq.Sdk] IMockSetup.cs(9,59): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring NuGet packages 0/12 projects
+  Analyzing: Analyzing 0/12 projects
+  Analyzing: Analyzing 1/12 projects
+  Analyzing: Analyzing 2/12 projects
+  Analyzing: Analyzing 3/12 projects
+  Analyzing: Analyzing 4/12 projects
+  Analyzing: Analyzing 5/12 projects
+  Analyzing: Analyzing 6/12 projects
+  Analyzing: Analyzing 7/12 projects
+  Analyzing: Analyzing 8/12 projects
+  Analyzing: Analyzing 9/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/35
+  Analyzing: Analyzing 10/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 2/35
+  Analyzing: Analyzing 11/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 3/35
+  Analyzing: Analyzing 12/12 projects
+  Analyzing: Succeeded after 0.9 s
+  Restoring NuGet packages: Downloading NuGet packages 4/35
+  Restoring NuGet packages: Downloading NuGet packages 5/35
+  Restoring NuGet packages: Downloading NuGet packages 6/35
+  Restoring NuGet packages: Downloading NuGet packages 7/35
+  Restoring NuGet packages: Downloading NuGet packages 8/35
+  Restoring NuGet packages: Downloading NuGet packages 9/35
+  Restoring NuGet packages: Downloading NuGet packages 10/35
+  Restoring NuGet packages: Downloading NuGet packages 11/35
+  Restoring NuGet packages: Downloading NuGet packages 12/35
+  Restoring NuGet packages: Downloading NuGet packages 13/35
+  Restoring NuGet packages: Downloading NuGet packages 14/35
+  Restoring NuGet packages: Downloading NuGet packages 15/35
+  Restoring NuGet packages: Downloading NuGet packages 16/35
+  Restoring NuGet packages: Downloading NuGet packages 17/35
+  Restoring NuGet packages: Downloading NuGet packages 18/35
+  Restoring NuGet packages: Downloading NuGet packages 19/35
+  Restoring NuGet packages: Downloading NuGet packages 20/35
+  Restoring NuGet packages: Downloading NuGet packages 21/35
+  Restoring NuGet packages: Downloading NuGet packages 22/35
+  Restoring NuGet packages: Downloading NuGet packages 23/35
+  Restoring NuGet packages: Downloading NuGet packages 24/35
+  Restoring NuGet packages: Downloading NuGet packages 26/35
+  Restoring NuGet packages: Downloading NuGet packages 25/35
+  Restoring NuGet packages: Downloading NuGet packages 27/35
+  Restoring NuGet packages: Downloading NuGet packages 28/35
+  Restoring NuGet packages: Downloading NuGet packages 29/35
+  Restoring NuGet packages: Downloading NuGet packages 30/35
+  Restoring NuGet packages: Downloading NuGet packages 31/35
+  Restoring NuGet packages: Downloading NuGet packages 32/35
+  Restoring NuGet packages: Downloading NuGet packages 33/35
+  Restoring NuGet packages: Downloading NuGet packages 34/35
+  Restoring NuGet packages: Downloading NuGet packages 35/35
+  Restoring NuGet packages: Restoring NuGet packages 1/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/15
+  Restoring NuGet packages: Downloading NuGet packages 2/15
+  Restoring NuGet packages: Downloading NuGet packages 3/15
+  Restoring NuGet packages: Downloading NuGet packages 4/15
+  Restoring NuGet packages: Downloading NuGet packages 5/15
+  Restoring NuGet packages: Downloading NuGet packages 6/15
+  Restoring NuGet packages: Downloading NuGet packages 7/15
+  Restoring NuGet packages: Downloading NuGet packages 8/15
+  Restoring NuGet packages: Downloading NuGet packages 10/15
+  Restoring NuGet packages: Downloading NuGet packages 9/15
+  Restoring NuGet packages: Downloading NuGet packages 11/15
+  Restoring NuGet packages: Downloading NuGet packages 12/15
+  Restoring NuGet packages: Downloading NuGet packages 13/15
+  Restoring NuGet packages: Downloading NuGet packages 14/15
+  Restoring NuGet packages: Downloading NuGet packages 15/15
+  Restoring NuGet packages: Restoring NuGet packages 2/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/56
+  Restoring NuGet packages: Downloading NuGet packages 3/56
+  Restoring NuGet packages: Downloading NuGet packages 4/56
+  Restoring NuGet packages: Downloading NuGet packages 5/56
+  Restoring NuGet packages: Downloading NuGet packages 6/56
+  Restoring NuGet packages: Downloading NuGet packages 7/56
+  Restoring NuGet packages: Downloading NuGet packages 2/56
+  Restoring NuGet packages: Downloading NuGet packages 8/56
+  Restoring NuGet packages: Downloading NuGet packages 9/56
+  Restoring NuGet packages: Downloading NuGet packages 10/56
+  Restoring NuGet packages: Downloading NuGet packages 11/56
+  Restoring NuGet packages: Downloading NuGet packages 12/56
+  Restoring NuGet packages: Downloading NuGet packages 13/56
+  Restoring NuGet packages: Downloading NuGet packages 14/56
+  Restoring NuGet packages: Downloading NuGet packages 15/56
+  Restoring NuGet packages: Downloading NuGet packages 16/56
+  Restoring NuGet packages: Downloading NuGet packages 17/56
+  Restoring NuGet packages: Downloading NuGet packages 18/56
+  Restoring NuGet packages: Downloading NuGet packages 19/56
+  Restoring NuGet packages: Downloading NuGet packages 20/56
+  Restoring NuGet packages: Downloading NuGet packages 21/56
+  Restoring NuGet packages: Downloading NuGet packages 22/56
+  Restoring NuGet packages: Downloading NuGet packages 23/56
+  Restoring NuGet packages: Downloading NuGet packages 24/56
+  Restoring NuGet packages: Downloading NuGet packages 25/56
+  Restoring NuGet packages: Downloading NuGet packages 26/56
+  Restoring NuGet packages: Downloading NuGet packages 27/56
+  Restoring NuGet packages: Downloading NuGet packages 28/56
+  Restoring NuGet packages: Downloading NuGet packages 29/56
+  Restoring NuGet packages: Downloading NuGet packages 30/56
+  Restoring NuGet packages: Downloading NuGet packages 31/56
+  Restoring NuGet packages: Downloading NuGet packages 32/56
+  Restoring NuGet packages: Downloading NuGet packages 33/56
+  Restoring NuGet packages: Downloading NuGet packages 34/56
+  Restoring NuGet packages: Downloading NuGet packages 35/56
+  Restoring NuGet packages: Downloading NuGet packages 36/56
+  Restoring NuGet packages: Downloading NuGet packages 37/56
+  Restoring NuGet packages: Downloading NuGet packages 38/56
+  Restoring NuGet packages: Downloading NuGet packages 39/56
+  Restoring NuGet packages: Downloading NuGet packages 40/56
+  Restoring NuGet packages: Downloading NuGet packages 41/56
+  Restoring NuGet packages: Downloading NuGet packages 42/56
+  Restoring NuGet packages: Downloading NuGet packages 43/56
+  Restoring NuGet packages: Downloading NuGet packages 44/56
+  Restoring NuGet packages: Downloading NuGet packages 45/56
+  Restoring NuGet packages: Downloading NuGet packages 46/56
+  Restoring NuGet packages: Downloading NuGet packages 47/56
+  Restoring NuGet packages: Downloading NuGet packages 48/56
+  Restoring NuGet packages: Downloading NuGet packages 49/56
+  Restoring NuGet packages: Downloading NuGet packages 50/56
+  Restoring NuGet packages: Downloading NuGet packages 51/56
+  Restoring NuGet packages: Downloading NuGet packages 52/56
+  Restoring NuGet packages: Downloading NuGet packages 53/56
+  Restoring NuGet packages: Downloading NuGet packages 54/56
+  Restoring NuGet packages: Downloading NuGet packages 55/56
+  Restoring NuGet packages: Downloading NuGet packages 56/56
+  Restoring NuGet packages: Restoring NuGet packages 3/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/40
+  Restoring NuGet packages: Downloading NuGet packages 2/40
+  Restoring NuGet packages: Downloading NuGet packages 3/40
+  Restoring NuGet packages: Downloading NuGet packages 5/40
+  Restoring NuGet packages: Downloading NuGet packages 4/40
+  Restoring NuGet packages: Downloading NuGet packages 6/40
+  Restoring NuGet packages: Downloading NuGet packages 7/40
+  Restoring NuGet packages: Downloading NuGet packages 8/40
+  Restoring NuGet packages: Downloading NuGet packages 9/40
+  Restoring NuGet packages: Downloading NuGet packages 10/40
+  Restoring NuGet packages: Downloading NuGet packages 11/40
+  Restoring NuGet packages: Downloading NuGet packages 12/40
+  Restoring NuGet packages: Downloading NuGet packages 13/40
+  Restoring NuGet packages: Downloading NuGet packages 14/40
+  Restoring NuGet packages: Downloading NuGet packages 15/40
+  Restoring NuGet packages: Downloading NuGet packages 16/40
+  Restoring NuGet packages: Downloading NuGet packages 17/40
+  Restoring NuGet packages: Downloading NuGet packages 18/40
+  Restoring NuGet packages: Downloading NuGet packages 19/40
+  Restoring NuGet packages: Downloading NuGet packages 20/40
+  Restoring NuGet packages: Downloading NuGet packages 21/40
+  Restoring NuGet packages: Downloading NuGet packages 22/40
+  Restoring NuGet packages: Downloading NuGet packages 23/40
+  Restoring NuGet packages: Downloading NuGet packages 24/40
+  Restoring NuGet packages: Downloading NuGet packages 25/40
+  Restoring NuGet packages: Downloading NuGet packages 26/40
+  Restoring NuGet packages: Downloading NuGet packages 27/40
+  Restoring NuGet packages: Downloading NuGet packages 28/40
+  Restoring NuGet packages: Downloading NuGet packages 29/40
+  Restoring NuGet packages: Downloading NuGet packages 30/40
+  Restoring NuGet packages: Downloading NuGet packages 31/40
+  Restoring NuGet packages: Downloading NuGet packages 32/40
+  Restoring NuGet packages: Downloading NuGet packages 33/40
+  Restoring NuGet packages: Downloading NuGet packages 34/40
+  Restoring NuGet packages: Downloading NuGet packages 35/40
+  Restoring NuGet packages: Downloading NuGet packages 36/40
+  Restoring NuGet packages: Downloading NuGet packages 37/40
+  Restoring NuGet packages: Downloading NuGet packages 38/40
+  Restoring NuGet packages: Downloading NuGet packages 39/40
+  Restoring NuGet packages: Downloading NuGet packages 40/40
+  Restoring NuGet packages: Restoring NuGet packages 4/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/19
+  Restoring NuGet packages: Downloading NuGet packages 2/19
+  Restoring NuGet packages: Downloading NuGet packages 3/19
+  Restoring NuGet packages: Downloading NuGet packages 4/19
+  Restoring NuGet packages: Downloading NuGet packages 5/19
+  Restoring NuGet packages: Downloading NuGet packages 6/19
+  Restoring NuGet packages: Downloading NuGet packages 7/19
+  Restoring NuGet packages: Downloading NuGet packages 8/19
+  Restoring NuGet packages: Downloading NuGet packages 9/19
+  Restoring NuGet packages: Downloading NuGet packages 10/19
+  Restoring NuGet packages: Downloading NuGet packages 11/19
+  Restoring NuGet packages: Downloading NuGet packages 12/19
+  Restoring NuGet packages: Downloading NuGet packages 13/19
+  Restoring NuGet packages: Downloading NuGet packages 14/19
+  Restoring NuGet packages: Downloading NuGet packages 15/19
+  Restoring NuGet packages: Downloading NuGet packages 16/19
+  Restoring NuGet packages: Downloading NuGet packages 17/19
+  Restoring NuGet packages: Downloading NuGet packages 18/19
+  Restoring NuGet packages: Downloading NuGet packages 19/19
+  Restoring NuGet packages: Restoring NuGet packages 5/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/29
+  Restoring NuGet packages: Downloading NuGet packages 2/29
+  Restoring NuGet packages: Downloading NuGet packages 3/29
+  Restoring NuGet packages: Downloading NuGet packages 4/29
+  Restoring NuGet packages: Downloading NuGet packages 5/29
+  Restoring NuGet packages: Downloading NuGet packages 6/29
+  Restoring NuGet packages: Downloading NuGet packages 7/29
+  Restoring NuGet packages: Downloading NuGet packages 8/29
+  Restoring NuGet packages: Downloading NuGet packages 9/29
+  Restoring NuGet packages: Downloading NuGet packages 10/29
+  Restoring NuGet packages: Downloading NuGet packages 11/29
+  Restoring NuGet packages: Downloading NuGet packages 12/29
+  Restoring NuGet packages: Downloading NuGet packages 13/29
+  Restoring NuGet packages: Downloading NuGet packages 14/29
+  Restoring NuGet packages: Downloading NuGet packages 15/29
+  Restoring NuGet packages: Downloading NuGet packages 16/29
+  Restoring NuGet packages: Downloading NuGet packages 17/29
+  Restoring NuGet packages: Downloading NuGet packages 18/29
+  Restoring NuGet packages: Downloading NuGet packages 19/29
+  Restoring NuGet packages: Downloading NuGet packages 20/29
+  Restoring NuGet packages: Downloading NuGet packages 21/29
+  Restoring NuGet packages: Downloading NuGet packages 22/29
+  Restoring NuGet packages: Downloading NuGet packages 23/29
+  Restoring NuGet packages: Downloading NuGet packages 24/29
+  Restoring NuGet packages: Downloading NuGet packages 25/29
+  Restoring NuGet packages: Downloading NuGet packages 26/29
+  Restoring NuGet packages: Downloading NuGet packages 27/29
+  Restoring NuGet packages: Downloading NuGet packages 28/29
+  Restoring NuGet packages: Downloading NuGet packages 29/29
+  Restoring NuGet packages: Restoring NuGet packages 6/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/18
+  Restoring NuGet packages: Downloading NuGet packages 2/18
+  Restoring NuGet packages: Downloading NuGet packages 3/18
+  Restoring NuGet packages: Downloading NuGet packages 4/18
+  Restoring NuGet packages: Downloading NuGet packages 5/18
+  Restoring NuGet packages: Downloading NuGet packages 6/18
+  Restoring NuGet packages: Downloading NuGet packages 7/18
+  Restoring NuGet packages: Downloading NuGet packages 8/18
+  Restoring NuGet packages: Downloading NuGet packages 9/18
+  Restoring NuGet packages: Downloading NuGet packages 10/18
+  Restoring NuGet packages: Downloading NuGet packages 11/18
+  Restoring NuGet packages: Downloading NuGet packages 12/18
+  Restoring NuGet packages: Downloading NuGet packages 13/18
+  Restoring NuGet packages: Downloading NuGet packages 14/18
+  Restoring NuGet packages: Downloading NuGet packages 15/18
+  Restoring NuGet packages: Downloading NuGet packages 16/18
+  Restoring NuGet packages: Downloading NuGet packages 17/18
+  Restoring NuGet packages: Downloading NuGet packages 18/18
+  Restoring NuGet packages: Restoring NuGet packages 7/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 2/54
+  Restoring NuGet packages: Downloading NuGet packages 1/54
+  Restoring NuGet packages: Downloading NuGet packages 3/54
+  Restoring NuGet packages: Downloading NuGet packages 4/54
+  Restoring NuGet packages: Downloading NuGet packages 5/54
+  Restoring NuGet packages: Downloading NuGet packages 6/54
+  Restoring NuGet packages: Downloading NuGet packages 7/54
+  Restoring NuGet packages: Downloading NuGet packages 8/54
+  Restoring NuGet packages: Downloading NuGet packages 9/54
+  Restoring NuGet packages: Downloading NuGet packages 10/54
+  Restoring NuGet packages: Downloading NuGet packages 11/54
+  Restoring NuGet packages: Downloading NuGet packages 12/54
+  Restoring NuGet packages: Downloading NuGet packages 13/54
+  Restoring NuGet packages: Downloading NuGet packages 14/54
+  Restoring NuGet packages: Downloading NuGet packages 15/54
+  Restoring NuGet packages: Downloading NuGet packages 16/54
+  Restoring NuGet packages: Downloading NuGet packages 17/54
+  Restoring NuGet packages: Downloading NuGet packages 18/54
+  Restoring NuGet packages: Downloading NuGet packages 19/54
+  Restoring NuGet packages: Downloading NuGet packages 20/54
+  Restoring NuGet packages: Downloading NuGet packages 21/54
+  Restoring NuGet packages: Downloading NuGet packages 22/54
+  Restoring NuGet packages: Downloading NuGet packages 23/54
+  Restoring NuGet packages: Downloading NuGet packages 24/54
+  Restoring NuGet packages: Downloading NuGet packages 25/54
+  Restoring NuGet packages: Downloading NuGet packages 26/54
+  Restoring NuGet packages: Downloading NuGet packages 27/54
+  Restoring NuGet packages: Downloading NuGet packages 28/54
+  Restoring NuGet packages: Downloading NuGet packages 29/54
+  Restoring NuGet packages: Downloading NuGet packages 30/54
+  Restoring NuGet packages: Downloading NuGet packages 31/54
+  Restoring NuGet packages: Downloading NuGet packages 32/54
+  Restoring NuGet packages: Downloading NuGet packages 33/54
+  Restoring NuGet packages: Downloading NuGet packages 34/54
+  Restoring NuGet packages: Downloading NuGet packages 35/54
+  Restoring NuGet packages: Downloading NuGet packages 36/54
+  Restoring NuGet packages: Downloading NuGet packages 37/54
+  Restoring NuGet packages: Downloading NuGet packages 38/54
+  Restoring NuGet packages: Downloading NuGet packages 39/54
+  Restoring NuGet packages: Downloading NuGet packages 40/54
+  Restoring NuGet packages: Downloading NuGet packages 41/54
+  Restoring NuGet packages: Downloading NuGet packages 42/54
+  Restoring NuGet packages: Downloading NuGet packages 43/54
+  Restoring NuGet packages: Downloading NuGet packages 44/54
+  Restoring NuGet packages: Downloading NuGet packages 45/54
+  Restoring NuGet packages: Downloading NuGet packages 46/54
+  Restoring NuGet packages: Downloading NuGet packages 47/54
+  Restoring NuGet packages: Downloading NuGet packages 48/54
+  Restoring NuGet packages: Downloading NuGet packages 49/54
+  Restoring NuGet packages: Downloading NuGet packages 50/54
+  Restoring NuGet packages: Downloading NuGet packages 51/54
+  Restoring NuGet packages: Downloading NuGet packages 52/54
+  Restoring NuGet packages: Downloading NuGet packages 53/54
+  Restoring NuGet packages: Downloading NuGet packages 54/54
+  Restoring NuGet packages: Restoring NuGet packages 8/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/22
+  Restoring NuGet packages: Downloading NuGet packages 2/22
+  Restoring NuGet packages: Downloading NuGet packages 3/22
+  Restoring NuGet packages: Downloading NuGet packages 4/22
+  Restoring NuGet packages: Downloading NuGet packages 5/22
+  Restoring NuGet packages: Downloading NuGet packages 6/22
+  Restoring NuGet packages: Downloading NuGet packages 7/22
+  Restoring NuGet packages: Downloading NuGet packages 8/22
+  Restoring NuGet packages: Downloading NuGet packages 9/22
+  Restoring NuGet packages: Downloading NuGet packages 10/22
+  Restoring NuGet packages: Downloading NuGet packages 11/22
+  Restoring NuGet packages: Downloading NuGet packages 12/22
+  Restoring NuGet packages: Downloading NuGet packages 13/22
+  Restoring NuGet packages: Downloading NuGet packages 14/22
+  Restoring NuGet packages: Downloading NuGet packages 15/22
+  Restoring NuGet packages: Downloading NuGet packages 16/22
+  Restoring NuGet packages: Downloading NuGet packages 17/22
+  Restoring NuGet packages: Downloading NuGet packages 18/22
+  Restoring NuGet packages: Downloading NuGet packages 19/22
+  Restoring NuGet packages: Downloading NuGet packages 20/22
+  Restoring NuGet packages: Downloading NuGet packages 21/22
+  Restoring NuGet packages: Downloading NuGet packages 22/22
+  Restoring NuGet packages: Restoring NuGet packages 9/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/36
+  Restoring NuGet packages: Downloading NuGet packages 2/36
+  Restoring NuGet packages: Downloading NuGet packages 3/36
+  Restoring NuGet packages: Downloading NuGet packages 4/36
+  Restoring NuGet packages: Downloading NuGet packages 5/36
+  Restoring NuGet packages: Downloading NuGet packages 6/36
+  Restoring NuGet packages: Downloading NuGet packages 7/36
+  Restoring NuGet packages: Downloading NuGet packages 8/36
+  Restoring NuGet packages: Downloading NuGet packages 9/36
+  Restoring NuGet packages: Downloading NuGet packages 10/36
+  Restoring NuGet packages: Downloading NuGet packages 11/36
+  Restoring NuGet packages: Downloading NuGet packages 12/36
+  Restoring NuGet packages: Downloading NuGet packages 13/36
+  Restoring NuGet packages: Downloading NuGet packages 14/36
+  Restoring NuGet packages: Downloading NuGet packages 15/36
+  Restoring NuGet packages: Downloading NuGet packages 16/36
+  Restoring NuGet packages: Downloading NuGet packages 17/36
+  Restoring NuGet packages: Downloading NuGet packages 18/36
+  Restoring NuGet packages: Downloading NuGet packages 19/36
+  Restoring NuGet packages: Downloading NuGet packages 20/36
+  Restoring NuGet packages: Downloading NuGet packages 21/36
+  Restoring NuGet packages: Downloading NuGet packages 22/36
+  Restoring NuGet packages: Downloading NuGet packages 23/36
+  Restoring NuGet packages: Downloading NuGet packages 24/36
+  Restoring NuGet packages: Downloading NuGet packages 25/36
+  Restoring NuGet packages: Downloading NuGet packages 27/36
+  Restoring NuGet packages: Downloading NuGet packages 26/36
+  Restoring NuGet packages: Downloading NuGet packages 28/36
+  Restoring NuGet packages: Downloading NuGet packages 29/36
+  Restoring NuGet packages: Downloading NuGet packages 30/36
+  Restoring NuGet packages: Downloading NuGet packages 31/36
+  Restoring NuGet packages: Downloading NuGet packages 32/36
+  Restoring NuGet packages: Downloading NuGet packages 33/36
+  Restoring NuGet packages: Downloading NuGet packages 34/36
+  Restoring NuGet packages: Downloading NuGet packages 35/36
+  Restoring NuGet packages: Downloading NuGet packages 36/36
+  Restoring NuGet packages: Restoring NuGet packages 10/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/37
+  Restoring NuGet packages: Downloading NuGet packages 2/37
+  Restoring NuGet packages: Downloading NuGet packages 3/37
+  Restoring NuGet packages: Downloading NuGet packages 4/37
+  Restoring NuGet packages: Downloading NuGet packages 5/37
+  Restoring NuGet packages: Downloading NuGet packages 6/37
+  Restoring NuGet packages: Downloading NuGet packages 7/37
+  Restoring NuGet packages: Downloading NuGet packages 8/37
+  Restoring NuGet packages: Downloading NuGet packages 9/37
+  Restoring NuGet packages: Downloading NuGet packages 10/37
+  Restoring NuGet packages: Downloading NuGet packages 11/37
+  Restoring NuGet packages: Downloading NuGet packages 12/37
+  Restoring NuGet packages: Downloading NuGet packages 13/37
+  Restoring NuGet packages: Downloading NuGet packages 14/37
+  Restoring NuGet packages: Downloading NuGet packages 15/37
+  Restoring NuGet packages: Downloading NuGet packages 16/37
+  Restoring NuGet packages: Downloading NuGet packages 17/37
+  Restoring NuGet packages: Downloading NuGet packages 18/37
+  Restoring NuGet packages: Downloading NuGet packages 19/37
+  Restoring NuGet packages: Downloading NuGet packages 20/37
+  Restoring NuGet packages: Downloading NuGet packages 21/37
+  Restoring NuGet packages: Downloading NuGet packages 22/37
+  Restoring NuGet packages: Downloading NuGet packages 23/37
+  Restoring NuGet packages: Downloading NuGet packages 24/37
+  Restoring NuGet packages: Downloading NuGet packages 26/37
+  Restoring NuGet packages: Downloading NuGet packages 25/37
+  Restoring NuGet packages: Downloading NuGet packages 27/37
+  Restoring NuGet packages: Downloading NuGet packages 28/37
+  Restoring NuGet packages: Downloading NuGet packages 30/37
+  Restoring NuGet packages: Downloading NuGet packages 29/37
+  Restoring NuGet packages: Downloading NuGet packages 31/37
+  Restoring NuGet packages: Downloading NuGet packages 32/37
+  Restoring NuGet packages: Downloading NuGet packages 33/37
+  Restoring NuGet packages: Downloading NuGet packages 34/37
+  Restoring NuGet packages: Downloading NuGet packages 35/37
+  Restoring NuGet packages: Downloading NuGet packages 36/37
+  Restoring NuGet packages: Downloading NuGet packages 37/37
+  Restoring NuGet packages: Restoring NuGet packages 11/12 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/21
+  Restoring NuGet packages: Downloading NuGet packages 2/21
+  Restoring NuGet packages: Downloading NuGet packages 3/21
+  Restoring NuGet packages: Downloading NuGet packages 4/21
+  Restoring NuGet packages: Downloading NuGet packages 5/21
+  Restoring NuGet packages: Downloading NuGet packages 6/21
+  Restoring NuGet packages: Downloading NuGet packages 7/21
+  Restoring NuGet packages: Downloading NuGet packages 8/21
+  Restoring NuGet packages: Downloading NuGet packages 9/21
+  Restoring NuGet packages: Downloading NuGet packages 10/21
+  Restoring NuGet packages: Downloading NuGet packages 11/21
+  Restoring NuGet packages: Downloading NuGet packages 12/21
+  Restoring NuGet packages: Downloading NuGet packages 13/21
+  Restoring NuGet packages: Downloading NuGet packages 14/21
+  Restoring NuGet packages: Downloading NuGet packages 15/21
+  Restoring NuGet packages: Downloading NuGet packages 16/21
+  Restoring NuGet packages: Downloading NuGet packages 17/21
+  Restoring NuGet packages: Downloading NuGet packages 18/21
+  Restoring NuGet packages: Downloading NuGet packages 19/21
+  Restoring NuGet packages: Downloading NuGet packages 20/21
+  Restoring NuGet packages: Downloading NuGet packages 21/21
+  Restoring NuGet packages: Succeeded after 5.7 s
+  Analyzing: Analyzing 0/12 projects
+  Analyzing: Analyzing 1/12 projects
+  Analyzing: Analyzing 2/12 projects
+  Analyzing: Analyzing 3/12 projects
+  Analyzing: Analyzing 4/12 projects
+  Analyzing: Analyzing 5/12 projects
+  Analyzing: Analyzing 6/12 projects
+  Analyzing: Analyzing 7/12 projects
+  Analyzing: Analyzing 8/12 projects
+  Analyzing: Analyzing 9/12 projects
+  Analyzing: Analyzing 10/12 projects
+  Analyzing: Analyzing 11/12 projects
+  Analyzing: Analyzing 12/12 projects
+  Analyzing: Succeeded after 1.2 s
+  Building: Building
+  Building: Building 0/12 projects
+  Building: Building 1/12 projects
+  Building: Building 2/12 projects
+  Building: Building 3/12 projects
+  Building: Building 4/12 projects
+  Building: Building 5/12 projects
+  Building: Building 6/12 projects
+  Building: Building 7/12 projects
+  Building: Building 8/12 projects
+  Building: Building 9/12 projects
+  Building: Building 10/12 projects
+  Building: Building 11/12 projects
+  Building: Failed after 0.7 s
+Project setup:
+
+Output:
+Build started at 17:00:51...
+1>------ Build started: Project: Moq.CodeAnalysis, Configuration: Debug ------
+1>Moq.CodeAnalysis -> compiled in memory (41 KB, 86 ms)
+2>------ Build started: Project: Moq.Sdk, Configuration: Debug ------
+2>AnyMatcher.cs(59,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+2>AnyMatcher`1.cs(55,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+2>CallContext.cs(99,73): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'UnexpectedNullContextState'
+2>ConditionalMatcher.cs(62,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+2>DefaultMockRuntime.cs(88,82): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'DuplicateContextBehavior'
+2>DefaultMockRuntime.cs(91,82): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'DuplicateRecordingBehavior'
+2>IMockSetup.cs(9,59): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
+2>MockBehaviorPipeline.cs(40,116): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'TargetNotMock'
+2>MockFactory.cs(32,71): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'MockFactoryNotImplemented'
+2>MockRuntime.cs(19,111): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'TargetNotMock'
+2>MockRuntime.cs(19,126): error CS1503: Argument 2: cannot convert from 'string' to 'System.Exception?'
+2>MockSetup.Static.cs(52,77): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'UnexpectedNullContextState'
+2>MockSetup.cs(79,51): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+2>MockSetup.cs(122,41): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+2>PropertyBehavior.cs(36,107): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'TargetNotMock'
+2>PropertyBehavior.cs(36,122): error CS1503: Argument 2: cannot convert from 'string' to 'System.Exception?'
+2>AnyMatcher.cs(64,21): warning CS8767: Nullability of reference types in type of parameter 'other' of 'bool AnyMatcher.Equals(AnyMatcher other)' doesn't match implicitly implemented member 'bool IEquatable<AnyMatcher>.Equals(AnyMatcher? other)' (possibly because of nullability attributes).
+2>AnyMatcher.cs(67,30): warning CS8765: Nullability of type of parameter 'other' doesn't match overridden member (possibly because of nullability attributes).
+2>AnyMatcher`1.cs(65,21): warning CS8767: Nullability of reference types in type of parameter 'other' of 'bool AnyMatcher<T>.Equals(AnyMatcher<T> other)' doesn't match implicitly implemented member 'bool IEquatable<AnyMatcher<T>>.Equals(AnyMatcher<T>? other)' (possibly because of nullability attributes).
+2>AnyMatcher`1.cs(74,30): warning CS8765: Nullability of type of parameter 'other' doesn't match overridden member (possibly because of nullability attributes).
+2>CallContext.cs(13,46): warning CS8601: Possible null reference assignment.
+2>ConditionalMatcher.cs(69,21): warning CS8767: Nullability of reference types in type of parameter 'other' of 'bool ConditionalMatcher<T>.Equals(ConditionalMatcher<T> other)' doesn't match implicitly implemented member 'bool IEquatable<ConditionalMatcher<T>>.Equals(ConditionalMatcher<T>? other)' (possibly because of nullability attributes).
+2>ConditionalMatcher.cs(75,30): warning CS8765: Nullability of type of parameter 'other' doesn't match overridden member (possibly because of nullability attributes).
+2>DefaultMockRuntime.cs(39,45): warning CS8622: Nullability of reference types in type of parameter 'sender' of 'void DefaultMockRuntime.OnBehaviorsChanged(object sender, NotifyCollectionChangedEventArgs e)' doesn't match the target delegate 'NotifyCollectionChangedEventHandler' (possibly because of nullability attributes).
+2>DefaultMockRuntime.cs(93,46): warning CS8604: Possible null reference argument for parameter 'source' in 'IEnumerable<IMockBehaviorPipeline> Enumerable.OfType<IMockBehaviorPipeline>(IEnumerable source)'.
+2>DefaultMockRuntime.cs(98,46): warning CS8604: Possible null reference argument for parameter 'source' in 'IEnumerable<IMockBehaviorPipeline> Enumerable.OfType<IMockBehaviorPipeline>(IEnumerable source)'.
+2>DefaultMockRuntime.cs(103,46): warning CS8604: Possible null reference argument for parameter 'source' in 'IEnumerable<IMockBehaviorPipeline> Enumerable.OfType<IMockBehaviorPipeline>(IEnumerable source)'.
+2>DefaultMockRuntime.cs(105,46): warning CS8604: Possible null reference argument for parameter 'source' in 'IEnumerable<IMockBehaviorPipeline> Enumerable.OfType<IMockBehaviorPipeline>(IEnumerable source)'.
+2>EventBehavior.cs(28,24): warning CS8604: Possible null reference argument for parameter 'type' in 'EventInfo? RuntimeReflectionExtensions.GetRuntimeEvent(Type type, string name)'.
+2>MockRuntime.cs(44,26): warning CS8600: Converting null literal or possible null value to non-nullable type.
+2>MockRuntime.cs(44,26): warning CS8602: Dereference of a possibly null reference.
+2>MockSetup.cs(140,21): warning CS8767: Nullability of reference types in type of parameter 'other' of 'bool MockSetup.Equals(MockSetup other)' doesn't match implicitly implemented member 'bool IEquatable<MockSetup>.Equals(MockSetup? other)' (possibly because of nullability attributes).
+2>MockSetup.cs(144,30): warning CS8765: Nullability of type of parameter 'obj' doesn't match overridden member (possibly because of nullability attributes).
+2>NotMatcher.cs(46,21): warning CS8767: Nullability of reference types in type of parameter 'other' of 'bool NotMatcher<T>.Equals(NotMatcher<T> other)' doesn't match implicitly implemented member 'bool IEquatable<NotMatcher<T>>.Equals(NotMatcher<T>? other)' (possibly because of nullability attributes).
+2>NotMatcher.cs(49,30): warning CS8765: Nullability of type of parameter 'obj' doesn't match overridden member (possibly because of nullability attributes).
+2>StackTraceExtensions.cs(25,100): warning CS8602: Dereference of a possibly null reference.
+2>StaticMockFactory.cs(29,20): warning CS8603: Possible null reference return.
+2>StaticMockFactory.cs(29,45): warning CS8604: Possible null reference argument for parameter 'type' in 'object? Activator.CreateInstance(Type type, params object?[]? args)'.
+2>Times.cs(150,30): warning CS8765: Nullability of type of parameter 'obj' doesn't match overridden member (possibly because of nullability attributes).
+2>TypeExtensions.cs(16,17): warning CS8604: Possible null reference argument for parameter 'type' in 'TypeInfo IntrospectionExtensions.GetTypeInfo(Type type)'.
+2>ValueMatcher.cs(56,21): warning CS8767: Nullability of reference types in type of parameter 'other' of 'bool ValueMatcher.Equals(ValueMatcher other)' doesn't match implicitly implemented member 'bool IEquatable<ValueMatcher>.Equals(ValueMatcher? other)' (possibly because of nullability attributes).
+2>ValueMatcher.cs(59,30): warning CS8765: Nullability of type of parameter 'obj' doesn't match overridden member (possibly because of nullability attributes).
+3>------ Build started: Project: Moq.DynamicProxy, Configuration: Debug ------
+4>------ Build started: Project: Moq, Configuration: Debug ------
+5>------ Build started: Project: Moq.CodeAnalysis.UnitTests, Configuration: Debug ------
+6>------ Build started: Project: Moq.CodeFixes, Configuration: Debug ------
+7>------ Build started: Project: Moq.CodeFixes.UnitTests, Configuration: Debug ------
+8>------ Build started: Project: Moq.Sdk.Tests, Configuration: Debug ------
+9>------ Build started: Project: Moq.StaticProxy, Configuration: Debug ------
+10>------ Build started: Project: Moq.StaticProxy.UnitTests, Configuration: Debug ------
+11>------ Build started: Project: Moq.Tests, Configuration: Debug ------
+12>------ Build started: Project: Moq.Vsix, Configuration: Debug ------
+========== Build: 1 succeeded, 11 failed ==========
+
