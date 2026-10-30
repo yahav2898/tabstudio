@@ -132,6 +132,51 @@ public sealed class OperationsTests
         }
     }
 
+    [Fact]
+    public void The_refresh_runs_only_while_an_operation_does()
+    {
+        // An idle IDE woke the UI thread every two seconds to refresh an empty list.
+        var clock = new TimerClock();
+        using var operations = new OperationsViewModel(new Immediate(), time: clock);
+        var timer = Assert.Single(clock.Timers);
+        Assert.Equal(Timeout.InfiniteTimeSpan, timer.Due);
+
+        var restore = operations.Begin("restore", "Restoring packages");
+        Assert.Equal(TimeSpan.FromSeconds(2), timer.Due);
+
+        restore.Complete();
+        Assert.Equal(Timeout.InfiniteTimeSpan, timer.Due);
+    }
+
+    private sealed class TimerClock : TimeProvider
+    {
+        public List<RecordedTimer> Timers { get; } = [];
+
+        public override ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period)
+        {
+            var timer = new RecordedTimer { Due = dueTime };
+            Timers.Add(timer);
+            return timer;
+        }
+    }
+
+    private sealed class RecordedTimer : ITimer
+    {
+        public TimeSpan Due { get; set; }
+
+        public bool Change(TimeSpan dueTime, TimeSpan period)
+        {
+            Due = dueTime;
+            return true;
+        }
+
+        public void Dispose()
+        {
+        }
+
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    }
+
     private sealed class Immediate : IUiDispatcher
     {
         public bool CheckAccess() => true;

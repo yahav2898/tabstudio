@@ -23,6 +23,7 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
     private readonly INotifications _notifications;
     private readonly IAppActivity? _activity;
     private readonly ITimer _timer;
+    private bool _refreshing;
     private bool _disposed;
 
     /// <summary>Creates the operations.</summary>
@@ -48,7 +49,8 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
         }
 
         _notifications.Opened += OnNotificationOpened;
-        _timer = time.CreateTimer(_ => _ui.Post(Refresh), null, RefreshInterval, RefreshInterval);
+        // The refresh runs only while an operation does: an idle IDE woke up every two seconds for nothing.
+        _timer = time.CreateTimer(_ => _ui.Post(Refresh), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
     }
 
     /// <summary>The operations and their state, which tests and the integrations use.</summary>
@@ -115,6 +117,12 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
         if (!HasOperations)
         {
             IsPanelOpen = false;
+        }
+
+        if (!_disposed && HasOperations != _refreshing)
+        {
+            _refreshing = HasOperations;
+            _timer.Change(_refreshing ? RefreshInterval : Timeout.InfiniteTimeSpan, _refreshing ? RefreshInterval : Timeout.InfiniteTimeSpan);
         }
 
         OnPropertyChanged(nameof(Current));
