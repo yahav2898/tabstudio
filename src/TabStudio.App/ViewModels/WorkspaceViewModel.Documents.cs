@@ -237,6 +237,7 @@ public sealed partial class WorkspaceViewModel
         }
 
         ScheduleSessionSave();
+        _ = FollowDiskChangesAsync();
     }
 
     private async Task<bool> SaveDocumentAsync(DocumentViewModel document)
@@ -255,8 +256,10 @@ public sealed partial class WorkspaceViewModel
 
         try
         {
+            var other = KeepOtherVersionBeforeSaving(document);
             await document.SaveAsync();
-            StatusText = $"Saved {document.FileName}";
+            StatusText = other is null ? $"Saved {document.FileName}"
+                : $"Saved {document.FileName} over a change another program made; that version is in TabStudio's trash.";
             OnDocumentSavedForTests(document);
             if (!await TryHotReloadOnSaveAsync(document)) OnDocumentSavedForLiveApp(document);
             OnDocumentSavedForSwarm(document);

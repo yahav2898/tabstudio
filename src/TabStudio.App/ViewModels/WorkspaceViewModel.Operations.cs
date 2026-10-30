@@ -35,13 +35,25 @@ public sealed partial class WorkspaceViewModel
     {
         Operations = new OperationsViewModel(_ui, notifications, appActivity ?? _ownAppActivity);
         Operations.Tracker.Changed += OnOperationChanged;
+        _diskChangesActivity = appActivity ?? _ownAppActivity;
+        if (_diskChangesActivity is not null)
+        {
+            _diskChangesActivity.Changed += OnAppActivityChangedForDiskChanges;
+        }
     }
+
+    private Platform.IAppActivity? _diskChangesActivity;
 
     /// <summary>Follows the Toolchain Store's installs. Called once, after the toolchains are created.</summary>
     private void InitializeToolchainOperations() => _toolchains.Manager.StatusChanged += OnToolchainOperationStatus;
 
     private void DisposeOperations()
     {
+        if (_diskChangesActivity is not null)
+        {
+            _diskChangesActivity.Changed -= OnAppActivityChangedForDiskChanges;
+        }
+
         _toolchains.Manager.StatusChanged -= OnToolchainOperationStatus;
         Operations.Tracker.Changed -= OnOperationChanged;
         Operations.Dispose();

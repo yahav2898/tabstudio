@@ -193,6 +193,38 @@ public sealed class WorkspaceViewModelTests
     }
 
     [AvaloniaFact]
+    public async Task Open_documents_follow_changes_other_programs_make_and_saving_keeps_both_versions()
+    {
+        // A formatter or git in the Terminal changed a file the editor had open, and the editor's old text went back
+        // over it at the next save.
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var document = fixture.Workspace.ActiveDocument!;
+        var formatted = document.Document.Text + "// formatted by a tool\n";
+        await File.WriteAllTextAsync(document.FilePath, formatted);
+        Assert.True(document.ChangedOnDisk);
+
+        await fixture.Workspace.FollowDiskChangesAsync();
+        Assert.Equal(formatted, document.Document.Text);
+        Assert.False(document.IsDirty);
+        Assert.False(document.ChangedOnDisk);
+
+        // With unsaved edits, the edits stay; saving keeps the other program's version in the trash.
+        document.Document.Insert(0, "// mine\n");
+        var theirs = formatted + "// and changed again\n";
+        await File.WriteAllTextAsync(document.FilePath, theirs);
+        await fixture.Workspace.FollowDiskChangesAsync();
+        Assert.StartsWith("// mine", document.Document.Text, StringComparison.Ordinal);
+        Assert.Contains("changed on disk", fixture.Workspace.StatusText, StringComparison.Ordinal);
+
+        Assert.True(await fixture.Workspace.SaveAllCoreAsync());
+        Assert.StartsWith("// mine", await File.ReadAllTextAsync(document.FilePath), StringComparison.Ordinal);
+        var kept = Assert.Single(Directory.EnumerateFiles(fixture.Paths.Trash, document.FileName, SearchOption.AllDirectories));
+        Assert.Equal(theirs, await File.ReadAllTextAsync(kept));
+        Assert.Contains("trash", fixture.Workspace.StatusText, StringComparison.Ordinal);
+    }
+
+    [AvaloniaFact]
     public async Task A_warm_device_builds_on_one_thread_and_says_so()
     {
         using var fixture = new WorkspaceFixture();

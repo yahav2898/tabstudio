@@ -52,6 +52,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
         Document.UndoStack.MarkAsOriginalFile();
         Document.Changed += OnDocumentChanged;
         Document.UndoStack.PropertyChanged += OnUndoStackChanged;
+        RecordDiskStamp();
     }
 
     /// <summary>Full path of the file.</summary>
@@ -228,6 +229,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
             throw;
         }
 
+        RecordDiskStamp();
         IsDirty = !undo.IsOriginalFile || Document.Text != text;
     }
 

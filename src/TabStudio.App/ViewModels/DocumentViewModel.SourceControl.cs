@@ -88,5 +88,6 @@ public sealed partial class DocumentViewModel
         }
 
         Document.UndoStack.MarkAsOriginalFile();
+        RecordDiskStamp();
     }
 }
