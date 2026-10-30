@@ -40,6 +40,10 @@ public sealed class AccessibilityTourTests : IDisposable
                 window.Width = width;
                 window.Height = height;
                 await UiTestHelpers.WaitUntilAsync(() => true);
+                Diagnose(window, name + " before");
+                TabStudio.App.Accessibility.AccessibilityFeatures.RemeasureWindows();
+                window.UpdateLayout();
+                Diagnose(window, name + " after");
                 UiTestHelpers.SaveScreenshot(window, $"a11y-very-large-{name}");
 
                 workspace.SelectPanelCommand.Execute(BottomPanel.Watch);
@@ -80,4 +84,16 @@ public sealed class AccessibilityTourTests : IDisposable
     }
 
     public void Dispose() => _temp.Dispose();
+
+    /// <summary>Writes how the bottom panel's first tab is laid out, to tell a stale layout from a clipped one.</summary>
+    private static void Diagnose(Window window, string when)
+    {
+        var folder = Environment.GetEnvironmentVariable("TABSTUDIO_SCREENSHOTS") ?? Path.Combine(AppContext.BaseDirectory, "screenshots");
+        Directory.CreateDirectory(folder);
+        var tab = Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(window).OfType<Button>().FirstOrDefault(b => b.Content as string == "Error List");
+        var text = tab is null ? null : Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(tab).OfType<TextBlock>().FirstOrDefault();
+        var line = tab is null || text is null ? $"{when}: no tab" :
+            $"{when}: tab {tab.Bounds} desired {tab.DesiredSize} valid {tab.IsMeasureValid}/{tab.IsArrangeValid} font {tab.FontSize}; text {text.Bounds} desired {text.DesiredSize} valid {text.IsMeasureValid} font {text.FontSize}; parent {(tab.Parent as Control)?.Bounds} desired {(tab.Parent as Control)?.DesiredSize}";
+        File.AppendAllLines(Path.Combine(folder, "a11y-diagnostics.txt"), [line]);
+    }
 }

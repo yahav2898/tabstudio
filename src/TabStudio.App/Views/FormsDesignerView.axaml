@@ -103,7 +103,7 @@
                       <ItemsControl ItemsSource="{Binding Items}">
                         <ItemsControl.ItemTemplate>
                           <DataTemplate x:DataType="vm:FormsToolboxItemViewModel">
-                            <Button Classes="tool" Theme="{StaticResource ToolButton}" Classes.selected="{Binding IsArmed}" Command="{Binding ArmCommand}"
+                            <Button Classes="tool" Theme="{StaticResource ToolButton}" Classes.selected="{Binding IsArmed}" Command="{Binding ArmCommand}" AutomationProperties.Name="{Binding Name}"
                                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="10,0">
                               <StackPanel Orientation="Horizontal" Spacing="10">
                                 <controls:StrokeIcon Data="{Binding Icon}" Size="16" Foreground="{DynamicResource Brush.AccentText}" />

@@ -49,7 +49,7 @@ internal static class AccessibilityReport
                 Settle(window);
                 found.AddRange(AccessibilityAudit.In(window, dark, clipping: true).Where(f => f.Kind == "clipped"));
                 var largest = Directory.CreateDirectory(Path.Combine(screenshots, "largest")).FullName;
-                AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+                RenderFrame();
                 using var frame = window.CaptureRenderedFrame() ?? throw new InvalidOperationException("Nothing was rendered.");
                 var file = Path.Combine(largest, screenshot + ".png");
                 Directory.CreateDirectory(Path.GetDirectoryName(file)!);
@@ -85,6 +85,18 @@ internal static class AccessibilityReport
             + string.Join("\n", found.Take(80).Select(f => $"{f.Kind}: {f.Path}: {f.Text}")));
     }
 
+    private static void RenderFrame()
+    {
+        try
+        {
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+        }
+        catch (AvaloniaEdit.Rendering.VisualLinesInvalidException)
+        {
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+        }
+    }
+
     /// <summary>
     /// Lays the windows out again after the text size changed, as the next frames would: every window the app shows,
     /// since the text size is the app's, with their editors' lines; then the work layout posts (a bar folding its
@@ -100,14 +112,25 @@ internal static class AccessibilityReport
                 shown.UpdateLayout();
                 foreach (var view in shown.GetVisualDescendants().OfType<AvaloniaEdit.Rendering.TextView>())
                 {
-                    if (view.IsEffectivelyVisible)
+                    try
                     {
                         view.EnsureVisualLines();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // A text view that was never laid out has no lines to build.
                     }
                 }
             }
 
-            Dispatcher.UIThread.RunJobs(DispatcherPriority.Loaded);
+            try
+            {
+                Dispatcher.UIThread.RunJobs(DispatcherPriority.Loaded);
+            }
+            catch (AvaloniaEdit.Rendering.VisualLinesInvalidException)
+            {
+                // An editor drew before its new lines were built: the next pass builds them and draws again.
+            }
         }
 
         foreach (var shown in windows)
