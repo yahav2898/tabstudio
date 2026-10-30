@@ -28,6 +28,7 @@ internal static class ClientCapabilities
             ["configuration"] = true,
             ["workspaceFolders"] = true,
             ["didChangeConfiguration"] = new JsonObject { ["dynamicRegistration"] = false },
+            ["didChangeWatchedFiles"] = new JsonObject { ["dynamicRegistration"] = true, ["relativePatternSupport"] = false },
             ["symbol"] = new JsonObject { ["symbolKind"] = ValueSet(1, 26) },
             ["executeCommand"] = new JsonObject { ["dynamicRegistration"] = false },
             ["semanticTokens"] = new JsonObject { ["refreshSupport"] = true },

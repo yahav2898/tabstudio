@@ -1,6 +1,7 @@
 using TabStudio.App.Services;
 using TabStudio.Compilation;
 using TabStudio.Core.Workspaces;
+using TabStudio.LanguageServers.Hosting;
 
 namespace TabStudio.App.ViewModels;
 
@@ -54,6 +55,7 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        NotifyLanguageServersOfFiles((path, FileChangeKind.Created));
         await ReloadWorkspaceAsync();
         await OpenDocumentAsync(path);
         Explorer.Reveal(path);
@@ -159,6 +161,7 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        NotifyLanguageServersOfFiles((path, FileChangeKind.Deleted), (target, FileChangeKind.Created));
         await ReloadWorkspaceAsync();
         foreach (var document in affected)
         {
@@ -209,6 +212,7 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        NotifyLanguageServersOfFiles((path, FileChangeKind.Deleted));
         await ReloadWorkspaceAsync();
         StatusText = $"Moved {node.Name} to TabStudio's trash";
     }

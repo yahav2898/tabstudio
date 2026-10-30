@@ -68,6 +68,27 @@ public sealed class LanguageServerHostTests
     }
 
     [Fact]
+    public async Task Servers_hear_about_files_created_and_deleted_outside_their_documents()
+    {
+        // Pyright kept "Import 'helper' could not be resolved" after helper.py was created, until the workspace reopened.
+        await using var workspace = new FakeWorkspace();
+        var (_, server) = await workspace.OpenAsync("main.py", "import helper\n");
+        var initialize = await server.WaitForRequestAsync("initialize");
+        Assert.True(initialize.GetProperty("capabilities").GetProperty("workspace").GetProperty("didChangeWatchedFiles").GetProperty("dynamicRegistration").GetBoolean());
+        await server.WaitForNotificationAsync("textDocument/didOpen");
+
+        var helper = Path.Combine(workspace.Root, "helper.py");
+        await workspace.Host.NotifyFilesChangedAsync([(helper, FileChangeKind.Created), (Path.Combine(workspace.Root, "old.py"), FileChangeKind.Deleted)]);
+
+        var notification = await server.WaitForNotificationAsync("workspace/didChangeWatchedFiles", _ => true);
+        var changes = notification.GetProperty("changes").EnumerateArray().ToList();
+        Assert.Equal(2, changes.Count);
+        Assert.Equal(DocumentUri.FromPath(helper), changes[0].GetProperty("uri").GetString());
+        Assert.Equal(1, changes[0].GetProperty("type").GetInt32());
+        Assert.Equal(3, changes[1].GetProperty("type").GetInt32());
+    }
+
+    [Fact]
     public async Task Edits_go_to_the_server_as_incremental_changes_with_increasing_versions()
     {
         await using var workspace = new FakeWorkspace();

@@ -178,6 +178,35 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Tells the server that files were created, changed or deleted outside its open documents: without it, Pyright
+    /// kept "Import 'helper' could not be resolved" after helper.py was created, until the workspace was reopened.
+    /// </summary>
+    /// <param name="changes">Each file's full path and what happened to it.</param>
+    public async Task NotifyFilesChangedAsync(IReadOnlyList<(string FilePath, FileChangeKind Kind)> changes)
+    {
+        ArgumentNullException.ThrowIfNull(changes);
+        if (changes.Count == 0 || _connection is not { IsClosed: false } connection || State != LanguageServerState.Running)
+        {
+            return;
+        }
+
+        var events = new JsonArray();
+        foreach (var (filePath, kind) in changes)
+        {
+            events.Add(new JsonObject { ["uri"] = DocumentUri.FromPath(filePath), ["type"] = (int)kind });
+        }
+
+        try
+        {
+            await connection.SendNotificationAsync("workspace/didChangeWatchedFiles", new JsonObject { ["changes"] = events }).ConfigureAwait(false);
+        }
+        catch (JsonRpcException)
+        {
+            // The server stopped; it reads the files again when it restarts.
+        }
+    }
+
     /// <summary>Logs a request the server answered with an error, other than the ones that only mean "too late".</summary>
     /// <param name="method">The request's method.</param>
     /// <param name="error">The error.</param>

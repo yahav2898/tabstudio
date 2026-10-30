@@ -65,6 +65,16 @@ public sealed partial class WorkspaceViewModel
     /// <summary>The workspace's language servers, once a workspace is open.</summary>
     internal LanguageServerHost? LanguageServers => _languageServers;
 
+    /// <summary>Tells the language servers about files the Solution Explorer created, renamed or deleted.</summary>
+    /// <param name="changes">Each file or folder and what happened to it.</param>
+    private void NotifyLanguageServersOfFiles(params (string FilePath, FileChangeKind Kind)[] changes)
+    {
+        if (_languageServers is { } host)
+        {
+            _ = host.NotifyFilesChangedAsync(changes);
+        }
+    }
+
     /// <summary>Shows the language servers' log in the Output panel, as tapping the status bar item does.</summary>
     [RelayCommand]
     private void ShowLanguageServerLog() => ShowOutputSource(LanguageServerOutput);
