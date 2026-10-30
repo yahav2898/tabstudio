@@ -67,8 +67,17 @@ public sealed partial class GitHubSync
         }
         catch (GitHubApiException ex) when (ex.IsRejected)
         {
-            // Someone pushed between the check above and now.
-            throw BehindRemote(branch);
+            // Someone pushed between the check above and now, or the branch is protected: then it has not moved, and
+            // "pull first" sent the user round in circles, since a pull finds nothing new.
+            var now = await _client.GetBranchHeadAsync(Link.Owner, Link.Repository, branch, CancellationToken.None).ConfigureAwait(false);
+            if (now != Link.BaseCommit)
+            {
+                throw BehindRemote(branch);
+            }
+
+            throw new SyncException(
+                SyncFailure.Other,
+                $"GitHub did not let this commit onto {branch}: {ex.Message.TrimEnd('.')}. If {branch} is protected, switch to a new branch, commit there and open a pull request.");
         }
 
         var files = new Dictionary<string, TrackedFile>(Metadata.Files, StringComparer.Ordinal);
