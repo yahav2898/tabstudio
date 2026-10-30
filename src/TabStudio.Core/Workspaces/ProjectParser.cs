@@ -190,7 +190,7 @@ public static partial class ProjectParser
             CompileIncludes = ReadItemPatterns(items, "Compile", "Include", properties),
             CompileIncludeExcludes = ReadIncludeExcludes(items, "Compile", properties),
             CompileRemoves = ReadItemPatterns(items, "Compile", "Remove", properties),
-            EmbeddedResourceIncludes = ReadItemPatterns(items, "EmbeddedResource", "Include", properties),
+            EmbeddedResourceIncludes = [.. DefaultEmbeddedResources(sdk, evaluation.Properties), .. ReadItemPatterns(items, "EmbeddedResource", "Include", properties)],
             EmbeddedResourceRemoves = ReadItemPatterns(items, "EmbeddedResource", "Remove", properties),
             AvaloniaResourceIncludes = ReadItemPatterns(items, "AvaloniaResource", "Include", properties),
             AvaloniaResourceRemoves = ReadItemPatterns(items, "AvaloniaResource", "Remove", properties),
@@ -219,6 +219,17 @@ public static partial class ProjectParser
         var (kind, isTest) = ProjectClassifier.Classify(info);
         return info with { Kind = kind, IsTestProject = isTest };
     }
+
+    /// <summary>
+    /// The <c>EmbeddedResource</c> items the SDK includes by default: every <c>.resx</c> file of an SDK-style project,
+    /// unless <c>EnableDefaultItems</c> or <c>EnableDefaultEmbeddedResourceItems</c> is <c>false</c>.
+    /// </summary>
+    private static string[] DefaultEmbeddedResources(string? sdk, Dictionary<string, string> properties) =>
+        sdk is not null
+        && !string.Equals(properties.GetValueOrDefault("EnableDefaultItems")?.Trim(), "false", StringComparison.OrdinalIgnoreCase)
+        && !string.Equals(properties.GetValueOrDefault("EnableDefaultEmbeddedResourceItems")?.Trim(), "false", StringComparison.OrdinalIgnoreCase)
+            ? ["**/*.resx"]
+            : [];
 
     /// <summary>The metadata of an item type's items that include or update files, in order.</summary>
     private static List<ItemMetadataInfo> ReadItemMetadata(XElement items, string itemType)
