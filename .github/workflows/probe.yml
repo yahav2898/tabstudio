@@ -5,36 +5,64 @@ on:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-dotnet@v4
         with:
           global-json-file: global.json
-      - name: Build the IDE tests
-        run: dotnet build tests/TabStudio.App.Tests -c Release > build.log 2>&1 || { tail -50 build.log; exit 1; }
-      - name: Plain test
+
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-app-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: nuget-app-
+
+      # The editor and debugger tests for Python files use real Pyright and debugpy.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.10'
+          cache: false
+
+      - name: Install language servers and debug adapters
         run: |
-          dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Go_template" > plain.log 2>&1 && r=ok || r=fail
-          echo "::notice title=Plain::$r $(grep -E 'Passed!|Failed!|crashed|invalid' plain.log | head -3 | tr '\n' ' ')"
-      - name: Avalonia test
-        run: |
-          dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName~WorkspaceSwitchTests" > ava.log 2>&1 && r=ok || r=fail
-          echo "::notice title=Avalonia::$r $(grep -E 'Passed!|Failed!|crashed|invalid' ava.log | head -3 | tr '\n' ' ')"
-      - name: Backtrace
+          npm install -g pyright typescript-language-server typescript@5 vscode-langservers-extracted@4.10.0
+          python -m pip install debugpy
+          go install golang.org/x/tools/gopls@v0.21.1
+          go install github.com/go-delve/delve/cmd/dlv@v1.26.2
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+          # vscode-js-debug's adapter, under the command name the Toolchain Store gives it on a tablet.
+          mkdir -p "$RUNNER_TEMP/js-debug/bin"
+          curl -fsSL https://github.com/microsoft/vscode-js-debug/releases/download/v1.140.0/js-debug-dap-v1.140.0.tar.gz | tar -xz -C "$RUNNER_TEMP/js-debug"
+          printf '#!/bin/sh\nexec node "%s/js-debug/src/dapDebugServer.js" "$@"\n' "$RUNNER_TEMP/js-debug" > "$RUNNER_TEMP/js-debug/bin/js-debug-adapter"
+          chmod +x "$RUNNER_TEMP/js-debug/bin/js-debug-adapter"
+          echo "$RUNNER_TEMP/js-debug/bin" >> "$GITHUB_PATH"
+          echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
+
+      - name: Backtrace of the Go tools test
         run: |
           sudo apt-get install -y -qq gdb > /dev/null 2>&1 || true
           sudo sysctl -w kernel.core_pattern=/tmp/core.%e.%p
           ulimit -c unlimited
-          export DOTNET_DbgEnableMiniDump=0
+          dotnet build tests/TabStudio.App.Tests -c Release > build.log 2>&1 || { tail -50 build.log; exit 1; }
           dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Go_template" > bt.log 2>&1 || true
+          echo "::notice title=result::$(grep -E 'Passed!|Failed!|Skipped|crashed|invalid' bt.log | head -4 | tr '\n' ' ')"
           ls -la /tmp/core.* || true
           for core in /tmp/core.*; do
             [ -f "$core" ] || continue
-            exe=$(gdb -batch -ex "info proc" -c "$core" 2>/dev/null | grep -o "exe = '[^']*'" | head -1)
-            gdb -batch -ex "thread apply all bt 25" "$(command -v dotnet)" "$core" > gdb.txt 2>&1 || true
-            grep -B3 -A22 "abort" gdb.txt | grep -E "^#|^Thread" | head -60 > bt.txt; tail -c 3000 bt.log | tr "\n" " " | sed "s/^/::notice title=btlog::/"
-            i=0; while IFS= read -r line; do i=$((i+1)); echo "::notice title=bt$i::$line"; done < <(head -45 bt.txt)
+            gdb -batch -ex "bt 40" "$(command -v dotnet)" "$core" > gdb.txt 2>&1 || true
+            grep -E "^#" gdb.txt | head -40 > bt.txt
+            i=0; while IFS= read -r line; do i=$((i+1)); echo "::notice title=bt$i::$line"; done < bt.txt
+            gdb -batch -ex "thread apply all bt 30" "$(command -v dotnet)" "$core" > all.txt 2>&1 || true
+            grep -B2 -A30 "abort" all.txt | grep -E "^#|^Thread" | head -45 > abt.txt
+            i=0; while IFS= read -r line; do i=$((i+1)); echo "::notice title=abt$i::$line"; done < abt.txt
           done
-          for lib in $(find tests/TabStudio.App.Tests/bin/Release -name "*.so" | head -40); do echo "$lib"; done > libs.txt
-          echo "::notice title=libs::$(tr '\n' ' ' < libs.txt | cut -c1-3000)"
