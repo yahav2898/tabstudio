@@ -1,5 +1,5 @@
 moq at bdf16e758e8022c40cef2bfd025181f845bbd2a9, opening /home/runner/work/_temp/repos/moq/Moq.slnx
-Opened in 0.1 s: Moq, solution /home/runner/work/_temp/repos/moq/Moq.slnx
+Opened in 0.2 s: Moq, solution /home/runner/work/_temp/repos/moq/Moq.slnx
   project Moq.CodeAnalysis.UnitTests [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.CodeAnalysis.UnitTests/Moq.CodeAnalysis.UnitTests.csproj
   project Moq.CodeAnalysis [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.CodeAnalysis/Moq.CodeAnalysis.csproj
   project Moq.CodeFixes.UnitTests [CSharp] /home/runner/work/_temp/repos/moq/src/Moq.CodeFixes.UnitTests/Moq.CodeFixes.UnitTests.csproj
@@ -26,7 +26,7 @@ Compatibility Doctor:
   Moq.Vsix: Library via Built with its users - A library is compiled together with the projects that reference it.
   Moq: Library via Built with its users - A library is compiled together with the projects that reference it.
 F5 startup project: none 
-Error List after analysis: 72 errors, 107 warnings
+Error List after analysis: 72 errors, 106 warnings
   37 x CS0246
       [Moq.Sdk] IMockSetup.cs(9,59): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
       [Moq.StaticProxy.UnitTests] MockOfT.cs(33,13): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
@@ -94,6 +94,10 @@ Long-operation progress:
   Analyzing: Analyzing 7/12 projects
   Analyzing: Analyzing 8/12 projects
   Analyzing: Analyzing 9/12 projects
+  Analyzing: Analyzing 10/12 projects
+  Analyzing: Analyzing 11/12 projects
+  Analyzing: Analyzing 12/12 projects
+  Analyzing: Succeeded after 1.2 s
   Restoring NuGet packages: Downloading NuGet packages 1/35
   Restoring NuGet packages: Downloading NuGet packages 2/35
   Restoring NuGet packages: Downloading NuGet packages 3/35
@@ -103,13 +107,9 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 7/35
   Restoring NuGet packages: Downloading NuGet packages 8/35
   Restoring NuGet packages: Downloading NuGet packages 9/35
-  Analyzing: Analyzing 10/12 projects
-  Analyzing: Analyzing 11/12 projects
   Restoring NuGet packages: Downloading NuGet packages 10/35
   Restoring NuGet packages: Downloading NuGet packages 11/35
   Restoring NuGet packages: Downloading NuGet packages 12/35
-  Analyzing: Analyzing 12/12 projects
-  Analyzing: Succeeded after 1.3 s
   Restoring NuGet packages: Downloading NuGet packages 13/35
   Restoring NuGet packages: Downloading NuGet packages 14/35
   Restoring NuGet packages: Downloading NuGet packages 15/35
@@ -252,8 +252,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 2/19
   Restoring NuGet packages: Downloading NuGet packages 3/19
   Restoring NuGet packages: Downloading NuGet packages 4/19
-  Restoring NuGet packages: Downloading NuGet packages 5/19
   Restoring NuGet packages: Downloading NuGet packages 6/19
+  Restoring NuGet packages: Downloading NuGet packages 5/19
   Restoring NuGet packages: Downloading NuGet packages 7/19
   Restoring NuGet packages: Downloading NuGet packages 8/19
   Restoring NuGet packages: Downloading NuGet packages 9/19
@@ -265,8 +265,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 15/19
   Restoring NuGet packages: Downloading NuGet packages 16/19
   Restoring NuGet packages: Downloading NuGet packages 17/19
-  Restoring NuGet packages: Downloading NuGet packages 18/19
   Restoring NuGet packages: Downloading NuGet packages 19/19
+  Restoring NuGet packages: Downloading NuGet packages 18/19
   Restoring NuGet packages: Restoring NuGet packages 5/12 projects
   Restoring NuGet packages: Downloading NuGet packages 1/29
   Restoring NuGet packages: Downloading NuGet packages 2/29
@@ -311,8 +311,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 11/18
   Restoring NuGet packages: Downloading NuGet packages 12/18
   Restoring NuGet packages: Downloading NuGet packages 13/18
-  Restoring NuGet packages: Downloading NuGet packages 14/18
   Restoring NuGet packages: Downloading NuGet packages 15/18
+  Restoring NuGet packages: Downloading NuGet packages 14/18
   Restoring NuGet packages: Downloading NuGet packages 16/18
   Restoring NuGet packages: Downloading NuGet packages 17/18
   Restoring NuGet packages: Downloading NuGet packages 18/18
@@ -595,7 +595,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 19/21
   Restoring NuGet packages: Downloading NuGet packages 20/21
   Restoring NuGet packages: Downloading NuGet packages 21/21
-  Restoring NuGet packages: Succeeded after 8.3 s
+  Restoring NuGet packages: Succeeded after 12.8 s
   Analyzing: Analyzing 0/12 projects
   Analyzing: Analyzing 1/12 projects
   Analyzing: Analyzing 2/12 projects
@@ -609,7 +609,7 @@ Long-operation progress:
   Analyzing: Analyzing 10/12 projects
   Analyzing: Analyzing 11/12 projects
   Analyzing: Analyzing 12/12 projects
-  Analyzing: Succeeded after 1.6 s
+  Analyzing: Succeeded after 1.7 s
   Building: Building
   Building: Building 0/12 projects
   Building: Building 1/12 projects
@@ -627,9 +627,9 @@ Long-operation progress:
 Project setup:
 
 Output:
-Build started at 18:13:32...
+Build started at 18:51:56...
 1>------ Build started: Project: Moq.CodeAnalysis, Configuration: Debug ------
-1>Moq.CodeAnalysis -> compiled in memory (41.5 KB, 113 ms)
+1>Moq.CodeAnalysis -> compiled in memory (41.5 KB, 90 ms)
 2>------ Build started: Project: Moq.Sdk, Configuration: Debug ------
 2>AnyMatcher.cs(59,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
 2>AnyMatcher`1.cs(55,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
