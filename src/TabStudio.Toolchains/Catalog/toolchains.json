@@ -1240,8 +1240,12 @@
         },
         {
           "pattern": "^\\[(?<severity>ERROR|WARNING)\\] (?<file>.+?\\.java):\\[(?<line>\\d+),(?<column>\\d+)\\] (?<message>.*)$"
+        },
+        {
+          "pattern": "^\\s*at (?:[\\w$.-]+/)?(?<package>(?:[a-z_][\\w$]*\\.)*)[A-Z][\\w$]*\\.[\\w$<>-]+\\((?<file>[\\w$]+\\.(?:java|kt|kts)):(?<line>\\d+)\\)"
         }
-      ]
+      ],
+      "errorPattern": "^(?:Exception in thread \"[^\"]+\" )?(?<message>(?:[a-z][\\w$]*\\.)+[A-Z][\\w$]*(?:Exception|Error)(?::.*)?)$"
     },
     {
       "id": "php",
@@ -1644,6 +1648,9 @@
         },
         {
           "pattern": "^\\[(?<severity>ERROR|WARNING)\\] (?:file://)?(?<file>/[^:\\s]+?\\.kt):(?:\\[)?(?<line>\\d+)[,:](?<column>\\d+)\\]? (?<message>.*)$"
+        },
+        {
+          "pattern": "^\\s*at (?:[\\w$.-]+/)?(?<package>(?:[a-z_][\\w$]*\\.)*)[A-Z][\\w$]*\\.[\\w$<>-]+\\((?<file>[\\w$]+\\.(?:java|kt|kts)):(?<line>\\d+)\\)"
         }
       ],
       "errorPattern": "^(?:Exception in thread \"[^\"]+\" )?(?<message>(?:[a-z][\\w$]*\\.)+[A-Z][\\w$]*(?:Exception|Error)(?::.*)?)$"

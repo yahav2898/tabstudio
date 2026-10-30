@@ -62,6 +62,13 @@ public sealed class ProblemMatcher
                     {
                         // A file:// URL, as Node.js prints an ES module's frames, escapes spaces and other characters (%20).
                         var path = match.Groups["url"].Success ? Uri.UnescapeDataString(file.Value) : file.Value;
+
+                        // A JVM stack frame names its file without its folder, which its class's package gives:
+                        // "at com.example.Main.run(Main.java:5)" is com/example/Main.java in a source folder.
+                        if (match.Groups["package"] is { Success: true, Length: > 0 } package)
+                        {
+                            path = package.Value.TrimEnd('.').Replace('.', '/') + "/" + path;
+                        }
                         result.Add(new OutputLocation(path, number, column, match.Index, match.Length, message, match.Groups["severity"].Success ? match.Groups["severity"].Value : null));
                     }
                 }

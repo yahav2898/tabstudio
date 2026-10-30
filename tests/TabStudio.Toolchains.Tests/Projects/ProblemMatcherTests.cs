@@ -169,6 +169,27 @@ public sealed class ProblemMatcherTests
     }
 
     [Fact]
+    public void An_uncaught_Java_or_Kotlin_exception_is_listed_at_its_first_frame_in_the_users_code()
+    {
+        // A Java program's crash listed nothing: Java had no error pattern, and neither language linked its frames.
+        string[] output =
+        [
+            "Exception in thread \"main\" java.lang.ArithmeticException: / by zero",
+            "\tat java.base/java.lang.Math.floorDiv(Math.java:1)",
+            "\tat com.example.shop.Cart.total(Cart.java:42)",
+            "\tat com.example.shop.Main.main(Main.java:7)",
+        ];
+        var java = new ProblemMatcher(ToolchainCatalog.Default.Find("java")!);
+        var error = Assert.Single(java.FindErrors(output, file => file.StartsWith("com/", StringComparison.Ordinal)));
+        Assert.Equal(("java.lang.ArithmeticException: / by zero", "com/example/shop/Cart.java", 42), (error.Message, error.Location?.File, error.Location?.Line));
+
+        var kotlin = new ProblemMatcher(ToolchainCatalog.Default.Find("kotlin")!);
+        var frame = Assert.Single(kotlin.Match("    at MainKt.main(Main.kt:3)"));
+        Assert.Equal(("Main.kt", 3), (frame.File, frame.Line));
+        Assert.Equal("demo/app/Main.kt", Assert.Single(kotlin.Match("\tat demo.app.MainKt$run$1.invoke(Main.kt:12)")).File);
+    }
+
+    [Fact]
     public void An_error_outside_the_users_code_has_no_location()
     {
         var error = Python.FindError(["Traceback (most recent call last):", "  File \"<stdin>\", line 1, in <module>", "KeyboardInterrupt"], _ => false)!;
