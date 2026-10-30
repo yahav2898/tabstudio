@@ -27,6 +27,13 @@ activity="com.tabstudio.ide.MainActivity"
 
 mkdir -p "$out"
 adb wait-for-device
+# boot_completed can come before system_server has published its services, or while it restarts on a slow runner:
+# adb install then fails with "Can't find service: package" and am exits 20, with nothing logged to say why.
+for _ in $(seq 1 180); do
+  services="$(adb shell 'getprop sys.boot_completed; service check package; service check activity' 2> /dev/null | tr -d '\r' || true)"
+  [ "$(printf '%s\n' "$services" | grep -cE '^1$|: found$' || true)" -ge 3 ] && break
+  sleep 1
+done
 # Headless CI asks Android not to show error dialogs so a background system app's ANR cannot consume the injected
 # input. Chromium's emulator setup uses the same setting; manual device runs leave the device policy alone. Some
 # images ignore it (the Pixel Launcher's "isn't responding" dialog covered the app on the overlay display), so
@@ -118,7 +125,8 @@ system_dialogs() {
   done <<< "$windows"
 }
 
-adb install -r "$apk"
+# One retry: an install that races the package manager's own start-up fails without anything being wrong.
+adb install -r "$apk" || { sleep 10; adb install -r "$apk"; }
 adb logcat -c
 started=$(date +%s)
 if [ "$shard" = flutter ]; then
