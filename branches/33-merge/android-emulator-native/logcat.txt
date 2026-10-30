@@ -1,0 +1,984 @@
+10-30 04:10:35.566  3115  3115 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-30 04:10:35.604  3115  3115 I AndroidRuntime: Using default boot image
+10-30 04:10:35.604  3115  3115 I AndroidRuntime: Leaving lock profiling enabled
+10-30 04:10:36.047  3115  3115 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-30 04:10:36.457  3115  3115 I AndroidRuntime: VM exiting with result code 0.
+10-30 04:10:37.123  3158  3158 D nativeloader: Load /data/app/~~ICZ0RX5ZfRB7et7m4Ts64g==/com.tabstudio.ide-inHxW7S5_kcYnUDJ_sIKog==/lib/x86_64/libmonosgen-2.0.so using ns clns-7 from class loader (caller=/data/app/~~ICZ0RX5ZfRB7et7m4Ts64g==/com.tabstudio.ide-inHxW7S5_kcYnUDJ_sIKog==/base.apk): ok
+10-30 04:10:37.182  3158  3158 D nativeloader: Load /data/app/~~ICZ0RX5ZfRB7et7m4Ts64g==/com.tabstudio.ide-inHxW7S5_kcYnUDJ_sIKog==/lib/x86_64/libmonodroid.so using ns clns-7 from class loader (caller=/data/app/~~ICZ0RX5ZfRB7et7m4Ts64g==/com.tabstudio.ide-inHxW7S5_kcYnUDJ_sIKog==/base.apk): ok
+10-30 04:10:38.084  3158  3158 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
+10-30 04:10:38.084  3158  3158 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
+10-30 04:10:48.231  3544  3569 I cr_LibraryLoader: Loading monochrome_64 from within /data/app/~~JCDkq3-Pp_1J4SfUC1kKUw==/com.android.chrome--RU66Sxm6ITBnQki4HtNgg==/Chrome.apk
+10-30 04:10:48.259  3544  3569 I cr_Linker: loadLibraryImplLocked: monochrome_64, relroMode=1
+10-30 04:10:48.805  3544  3569 D nativeloader: Load /data/app/~~tDVgbMIs4BHuAmffDrIWTQ==/com.google.android.trichromelibrary_636771938-8AspfnrQXMco84bhWLcM_w==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~JCDkq3-Pp_1J4SfUC1kKUw==/com.android.chrome--RU66Sxm6ITBnQki4HtNgg==/Chrome.apk): ok
+10-30 04:10:56.959  3158  3158 I TabStudio: TABSTUDIO_SELFTEST_START shard=native
+10-30 04:11:09.108  3158  3377 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
+10-30 04:11:22.004  3158  4001 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'pipe2' may fail
+10-30 04:11:22.004  3158  4267 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'pipe2' may fail
+10-30 04:11:22.004  3158  3678 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'pipe2' may fail
+10-30 04:11:22.013  3158  4241 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'pipe2' may fail
+10-30 04:11:22.065  3158  4001 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'fcntl' may fail
+10-30 04:11:22.066  3158  4001 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_init' may fail
+10-30 04:11:22.066  3158  4001 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_init' may fail
+10-30 04:11:22.066  3158  4001 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_adddup2' may fail
+10-30 04:11:22.079  3158  4267 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setflags' may fail
+10-30 04:11:22.080  3158  4267 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setpgroup' may fail
+10-30 04:11:22.080  3158  4267 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'sigemptyset' may fail
+10-30 04:11:22.080  3158  4267 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'sigaddset' may fail
+10-30 04:11:22.080  3158  4267 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setsigdefault' may fail
+10-30 04:11:22.081  3158  4267 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setsigmask' may fail
+10-30 04:11:22.083  3158  4241 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setflags' may fail
+10-30 04:11:22.084  3158  4001 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setflags' may fail
+10-30 04:11:22.085  3158  3678 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setflags' may fail
+10-30 04:11:22.246  3158  4241 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn' may fail
+10-30 04:11:22.246  3158  4267 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn' may fail
+10-30 04:11:23.354  3158  4001 W monodroid-assembly: Shared library 'liblog' not loaded, p/invoke '__android_log_print' may fail
+10-30 04:11:23.368  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4322; stored .
+10-30 04:11:23.368  3158  4001 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_destroy' may fail
+10-30 04:11:23.369  3158  4001 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_destroy' may fail
+10-30 04:11:23.369  3158  4001 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'close' may fail
+10-30 04:11:23.370  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4319; stored .
+10-30 04:11:23.370  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4314; stored .
+10-30 04:11:23.370  3158  3678 I DOTNET  : TabStudio process trace: spawn: PID 4317; stored .
+10-30 04:11:23.392  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4322; stored 4322.
+10-30 04:11:23.394  3158  3678 I DOTNET  : TabStudio process trace: handle: PID 4317; stored 4317.
+10-30 04:11:23.394  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4314; stored 4314.
+10-30 04:11:23.394  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4319; stored 4319.
+10-30 04:11:23.424  3158  4342 I DOTNET  : TabStudio process trace: wait: PID 4319; stored .
+10-30 04:11:23.469  3158  4343 I DOTNET  : TabStudio process trace: wait: PID 4314; stored .
+10-30 04:11:23.479  3158  4343 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'waitpid' may fail
+10-30 04:11:23.489  3158  4341 I DOTNET  : TabStudio process trace: wait: PID 4317; stored .
+10-30 04:11:23.491  3158  4340 I DOTNET  : TabStudio process trace: wait: PID 4322; stored .
+10-30 04:11:23.634  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4345; stored .
+10-30 04:11:23.634  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4345; stored 4345.
+10-30 04:11:23.684  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4346; stored .
+10-30 04:11:23.723  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4346; stored 4346.
+10-30 04:11:23.793  3158  4347 I DOTNET  : TabStudio process trace: wait: PID 4345; stored .
+10-30 04:11:23.800  3158  3678 I DOTNET  : TabStudio process trace: spawn: PID 4349; stored .
+10-30 04:11:23.800  3158  3678 I DOTNET  : TabStudio process trace: handle: PID 4349; stored 4349.
+10-30 04:11:23.800  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4348; stored .
+10-30 04:11:23.802  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4348; stored 4348.
+10-30 04:11:23.805  3158  4350 I DOTNET  : TabStudio process trace: wait: PID 4346; stored .
+10-30 04:11:23.805  3158  4351 I DOTNET  : TabStudio process trace: wait: PID 4349; stored .
+10-30 04:11:23.902  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4353; stored .
+10-30 04:11:23.939  3158  4352 I DOTNET  : TabStudio process trace: wait: PID 4348; stored .
+10-30 04:11:23.940  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4355; stored .
+10-30 04:11:24.052  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4353; stored 4353.
+10-30 04:11:24.052  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4355; stored 4355.
+10-30 04:11:24.053  3158  3678 I DOTNET  : TabStudio process trace: spawn: PID 4356; stored .
+10-30 04:11:24.056  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4354; stored .
+10-30 04:11:24.056  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4354; stored 4354.
+10-30 04:11:24.072  3158  4358 I DOTNET  : TabStudio process trace: wait: PID 4353; stored .
+10-30 04:11:24.144  3158  4361 I DOTNET  : TabStudio process trace: wait: PID 4355; stored .
+10-30 04:11:24.196  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4362; stored .
+10-30 04:11:24.204  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4363; stored .
+10-30 04:11:24.205  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4363; stored 4363.
+10-30 04:11:24.210  3158  3678 I DOTNET  : TabStudio process trace: handle: PID 4356; stored 4356.
+10-30 04:11:24.212  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4362; stored 4362.
+10-30 04:11:24.212  3158  4365 I DOTNET  : TabStudio process trace: wait: PID 4356; stored .
+10-30 04:11:24.341  3158  3678 I DOTNET  : TabStudio process trace: spawn: PID 4367; stored .
+10-30 04:11:24.342  3158  3678 I DOTNET  : TabStudio process trace: handle: PID 4367; stored 4367.
+10-30 04:11:24.351  3158  4357 I DOTNET  : TabStudio process trace: wait: PID 4354; stored .
+10-30 04:11:24.362  3158  4364 I DOTNET  : TabStudio process trace: wait: PID 4363; stored .
+10-30 04:11:24.472  3158  4366 I DOTNET  : TabStudio process trace: wait: PID 4362; stored .
+10-30 04:11:24.480  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4372; stored .
+10-30 04:11:24.480  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4372; stored 4372.
+10-30 04:11:24.602  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4373; stored .
+10-30 04:11:24.692  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4373; stored 4373.
+10-30 04:11:24.692  3158  4368 I DOTNET  : TabStudio process trace: wait: PID 4367; stored .
+10-30 04:11:24.695  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4377; stored .
+10-30 04:11:24.767  3158  3678 I DOTNET  : TabStudio process trace: spawn: PID 4378; stored .
+10-30 04:11:24.772  3158  3678 I DOTNET  : TabStudio process trace: handle: PID 4378; stored 4378.
+10-30 04:11:24.782  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4377; stored 4377.
+10-30 04:11:24.783  3158  4381 I DOTNET  : TabStudio process trace: wait: PID 4373; stored .
+10-30 04:11:24.798  3158  4379 I DOTNET  : TabStudio process trace: wait: PID 4378; stored .
+10-30 04:11:25.090  3158  3678 I DOTNET  : TabStudio process trace: spawn: PID 4392; stored .
+10-30 04:11:25.176  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4403; stored .
+10-30 04:11:25.176  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4403; stored 4403.
+10-30 04:11:25.214  3158  3678 I DOTNET  : TabStudio process trace: handle: PID 4392; stored 4392.
+10-30 04:11:25.347  3158  4382 I DOTNET  : TabStudio process trace: wait: PID 4377; stored .
+10-30 04:11:25.463  3158  4407 I DOTNET  : TabStudio process trace: wait: PID 4392; stored .
+10-30 04:11:25.463  3158  4380 I DOTNET  : TabStudio process trace: wait: PID 4372; stored .
+10-30 04:11:25.465  3158  3678 I DOTNET  : TabStudio process trace: spawn: PID 4408; stored .
+10-30 04:11:25.526  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4410; stored .
+10-30 04:11:25.671  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4410; stored 4410.
+10-30 04:11:25.671  3158  3678 I DOTNET  : TabStudio process trace: handle: PID 4408; stored 4408.
+10-30 04:11:25.671  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4412; stored .
+10-30 04:11:25.671  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4412; stored 4412.
+10-30 04:11:25.784  3158  4409 I DOTNET  : TabStudio process trace: wait: PID 4403; stored .
+10-30 04:11:25.865  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4418; stored .
+10-30 04:11:25.865  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4418; stored 4418.
+10-30 04:11:25.926  3158  4420 I DOTNET  : TabStudio process trace: wait: PID 4418; stored .
+10-30 04:11:26.044  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4421; stored .
+10-30 04:11:26.044  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4421; stored 4421.
+10-30 04:11:26.050  3158  4423 I DOTNET  : TabStudio process trace: wait: PID 4408; stored .
+10-30 04:11:26.245  3158  4422 I DOTNET  : TabStudio process trace: wait: PID 4412; stored .
+10-30 04:11:26.246  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4427; stored .
+10-30 04:11:26.246  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4427; stored 4427.
+10-30 04:11:26.401  3158  3678 I DOTNET  : TabStudio process trace: spawn: PID 4431; stored .
+10-30 04:11:26.401  3158  3678 I DOTNET  : TabStudio process trace: handle: PID 4431; stored 4431.
+10-30 04:11:26.595  3158  4434 I DOTNET  : TabStudio process trace: wait: PID 4431; stored .
+10-30 04:11:26.723  3158  4429 I DOTNET  : TabStudio process trace: wait: PID 4410; stored .
+10-30 04:11:26.724  3158  3678 I DOTNET  : TabStudio process trace: spawn: PID 4435; stored .
+10-30 04:11:26.725  3158  3678 I DOTNET  : TabStudio process trace: handle: PID 4435; stored 4435.
+10-30 04:11:26.798  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4436; stored .
+10-30 04:11:26.798  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4436; stored 4436.
+10-30 04:11:26.807  3158  4428 I DOTNET  : TabStudio process trace: wait: PID 4421; stored .
+10-30 04:11:26.882  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4440; stored .
+10-30 04:11:26.883  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4440; stored 4440.
+10-30 04:11:26.903  3158  4437 I DOTNET  : TabStudio process trace: wait: PID 4427; stored .
+10-30 04:11:27.001  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4441; stored .
+10-30 04:11:27.001  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4441; stored 4441.
+10-30 04:11:27.001  3158  4442 I DOTNET  : TabStudio process trace: wait: PID 4440; stored .
+10-30 04:11:27.080  3158  4438 I DOTNET  : TabStudio process trace: wait: PID 4435; stored .
+10-30 04:11:27.083  3158  4439 I DOTNET  : TabStudio process trace: wait: PID 4436; stored .
+10-30 04:11:27.084  3158  3678 I DOTNET  : TabStudio process trace: spawn: PID 4444; stored .
+10-30 04:11:27.305  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4448; stored .
+10-30 04:11:27.305  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4448; stored 4448.
+10-30 04:11:27.308  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4445; stored .
+10-30 04:11:27.308  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4445; stored 4445.
+10-30 04:11:27.309  3158  3678 I DOTNET  : TabStudio process trace: handle: PID 4444; stored 4444.
+10-30 04:11:27.450  3158  4443 I DOTNET  : TabStudio process trace: wait: PID 4441; stored .
+10-30 04:11:27.564  3158  4450 I DOTNET  : TabStudio process trace: wait: PID 4445; stored .
+10-30 04:11:27.580  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4452; stored .
+10-30 04:11:27.647  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4452; stored 4452.
+10-30 04:11:27.651  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4454; stored .
+10-30 04:11:27.651  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4454; stored 4454.
+10-30 04:11:27.711  3158  4453 I DOTNET  : TabStudio process trace: wait: PID 4444; stored .
+10-30 04:11:27.711  3158  4451 I DOTNET  : TabStudio process trace: wait: PID 4448; stored .
+10-30 04:11:27.874  3158  3678 I DOTNET  : TabStudio process trace: spawn: PID 4460; stored .
+10-30 04:11:27.918  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4464; stored .
+10-30 04:11:27.918  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4464; stored 4464.
+10-30 04:11:27.918  3158  3678 I DOTNET  : TabStudio process trace: handle: PID 4460; stored 4460.
+10-30 04:11:27.922  3158  4457 I DOTNET  : TabStudio process trace: wait: PID 4454; stored .
+10-30 04:11:27.937  3158  4455 I DOTNET  : TabStudio process trace: wait: PID 4452; stored .
+10-30 04:11:28.006  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4465; stored .
+10-30 04:11:28.007  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4465; stored 4465.
+10-30 04:11:28.037  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4466; stored .
+10-30 04:11:28.037  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4466; stored 4466.
+10-30 04:11:28.136  3158  4469 I DOTNET  : TabStudio process trace: wait: PID 4460; stored .
+10-30 04:11:28.169  3158  4467 I DOTNET  : TabStudio process trace: wait: PID 4465; stored .
+10-30 04:11:28.205  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4477; stored .
+10-30 04:11:28.205  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4477; stored 4477.
+10-30 04:11:28.278  3158  4468 I DOTNET  : TabStudio process trace: wait: PID 4464; stored .
+10-30 04:11:28.278  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4479; stored .
+10-30 04:11:28.279  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4479; stored 4479.
+10-30 04:11:28.346  3158  4470 I DOTNET  : TabStudio process trace: wait: PID 4466; stored .
+10-30 04:11:28.361  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4480; stored .
+10-30 04:11:28.412  3158  4481 I DOTNET  : TabStudio process trace: wait: PID 4477; stored .
+10-30 04:11:28.468  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4484; stored .
+10-30 04:11:28.470  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4484; stored 4484.
+10-30 04:11:28.477  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4483; stored .
+10-30 04:11:28.477  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4483; stored 4483.
+10-30 04:11:28.491  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4480; stored 4480.
+10-30 04:11:28.536  3158  4482 I DOTNET  : TabStudio process trace: wait: PID 4479; stored .
+10-30 04:11:28.614  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4485; stored .
+10-30 04:11:28.615  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4485; stored 4485.
+10-30 04:11:28.621  3158  4488 I DOTNET  : TabStudio process trace: wait: PID 4480; stored .
+10-30 04:11:28.707  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4489; stored .
+10-30 04:11:28.713  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4489; stored 4489.
+10-30 04:11:28.716  3158  4486 I DOTNET  : TabStudio process trace: wait: PID 4484; stored .
+10-30 04:11:28.805  3158  4490 I DOTNET  : TabStudio process trace: wait: PID 4489; stored .
+10-30 04:11:28.809  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4491; stored .
+10-30 04:11:28.809  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4491; stored 4491.
+10-30 04:11:29.088  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4496; stored .
+10-30 04:11:29.088  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4496; stored 4496.
+10-30 04:11:29.096  3158  4497 I DOTNET  : TabStudio process trace: wait: PID 4491; stored .
+10-30 04:11:29.146  3158  4487 I DOTNET  : TabStudio process trace: wait: PID 4485; stored .
+10-30 04:11:29.279  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4498; stored .
+10-30 04:11:29.284  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4498; stored 4498.
+10-30 04:11:29.291  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4504; stored .
+10-30 04:11:29.291  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4504; stored 4504.
+10-30 04:11:29.453  3158  4492 I DOTNET  : TabStudio process trace: wait: PID 4483; stored .
+10-30 04:11:29.580  3158  4507 I DOTNET  : TabStudio process trace: wait: PID 4504; stored .
+10-30 04:11:29.581  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4510; stored .
+10-30 04:11:29.581  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4510; stored 4510.
+10-30 04:11:29.686  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4516; stored .
+10-30 04:11:29.686  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4516; stored 4516.
+10-30 04:11:29.742  3158  4506 I DOTNET  : TabStudio process trace: wait: PID 4496; stored .
+10-30 04:11:29.760  3158  4517 I DOTNET  : TabStudio process trace: wait: PID 4510; stored .
+10-30 04:11:29.853  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4522; stored .
+10-30 04:11:29.853  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4522; stored 4522.
+10-30 04:11:30.006  3158  4509 I DOTNET  : TabStudio process trace: wait: PID 4498; stored .
+10-30 04:11:30.105  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4524; stored .
+10-30 04:11:30.110  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4526; stored .
+10-30 04:11:30.110  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4526; stored 4526.
+10-30 04:11:30.112  3158  4527 I DOTNET  : TabStudio process trace: wait: PID 4526; stored .
+10-30 04:11:30.118  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4524; stored 4524.
+10-30 04:11:30.120  3158  4528 I DOTNET  : TabStudio process trace: wait: PID 4522; stored .
+10-30 04:11:30.240  3158  4518 I DOTNET  : TabStudio process trace: wait: PID 4516; stored .
+10-30 04:11:30.299  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4530; stored .
+10-30 04:11:30.305  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4537; stored .
+10-30 04:11:30.307  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4537; stored 4537.
+10-30 04:11:30.487  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4539; stored .
+10-30 04:11:30.487  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4539; stored 4539.
+10-30 04:11:30.487  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4530; stored 4530.
+10-30 04:11:30.519  3158  4529 I DOTNET  : TabStudio process trace: wait: PID 4524; stored .
+10-30 04:11:30.519  3158  4544 I DOTNET  : TabStudio process trace: wait: PID 4530; stored .
+10-30 04:11:30.519  3158  4543 I DOTNET  : TabStudio process trace: wait: PID 4539; stored .
+10-30 04:11:30.569  3158  4545 I DOTNET  : TabStudio process trace: wait: PID 4537; stored .
+10-30 04:11:30.607  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4547; stored .
+10-30 04:11:30.618  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4550; stored .
+10-30 04:11:30.689  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4552; stored .
+10-30 04:11:30.689  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4552; stored 4552.
+10-30 04:11:30.705  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4550; stored 4550.
+10-30 04:11:30.855  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4547; stored 4547.
+10-30 04:11:30.855  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4553; stored .
+10-30 04:11:30.855  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4553; stored 4553.
+10-30 04:11:30.857  3158  4556 I DOTNET  : TabStudio process trace: wait: PID 4550; stored .
+10-30 04:11:30.887  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4557; stored .
+10-30 04:11:30.887  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4557; stored 4557.
+10-30 04:11:30.931  3158  4554 I DOTNET  : TabStudio process trace: wait: PID 4552; stored .
+10-30 04:11:30.951  3158  4558 I DOTNET  : TabStudio process trace: wait: PID 4547; stored .
+10-30 04:11:31.006  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4560; stored .
+10-30 04:11:31.202  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4561; stored .
+10-30 04:11:31.203  3158  4559 I DOTNET  : TabStudio process trace: wait: PID 4557; stored .
+10-30 04:11:31.212  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4560; stored 4560.
+10-30 04:11:31.212  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4561; stored 4561.
+10-30 04:11:31.375  3158  4562 I DOTNET  : TabStudio process trace: wait: PID 4553; stored .
+10-30 04:11:31.437  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4563; stored .
+10-30 04:11:31.437  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4564; stored .
+10-30 04:11:31.437  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4564; stored 4564.
+10-30 04:11:31.438  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4563; stored 4563.
+10-30 04:11:31.454  3158  4565 I DOTNET  : TabStudio process trace: wait: PID 4561; stored .
+10-30 04:11:31.458  3158  4566 I DOTNET  : TabStudio process trace: wait: PID 4560; stored .
+10-30 04:11:31.536  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4570; stored .
+10-30 04:11:31.536  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4570; stored 4570.
+10-30 04:11:31.537  3158  4571 I DOTNET  : TabStudio process trace: wait: PID 4570; stored .
+10-30 04:11:31.801  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4576; stored .
+10-30 04:11:31.801  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4576; stored 4576.
+10-30 04:11:31.874  3158  4569 I DOTNET  : TabStudio process trace: wait: PID 4563; stored .
+10-30 04:11:31.875  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4577; stored .
+10-30 04:11:31.876  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4577; stored 4577.
+10-30 04:11:32.039  3158  4568 I DOTNET  : TabStudio process trace: wait: PID 4564; stored .
+10-30 04:11:32.039  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4579; stored .
+10-30 04:11:32.039  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4579; stored 4579.
+10-30 04:11:32.039  3158  4578 I DOTNET  : TabStudio process trace: wait: PID 4576; stored .
+10-30 04:11:32.079  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4582; stored .
+10-30 04:11:32.080  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4582; stored 4582.
+10-30 04:11:32.184  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4583; stored .
+10-30 04:11:32.185  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4583; stored 4583.
+10-30 04:11:32.237  3158  4586 I DOTNET  : TabStudio process trace: wait: PID 4583; stored .
+10-30 04:11:32.254  3158  4584 I DOTNET  : TabStudio process trace: wait: PID 4577; stored .
+10-30 04:11:32.469  3158  4585 I DOTNET  : TabStudio process trace: wait: PID 4579; stored .
+10-30 04:11:32.470  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4590; stored .
+10-30 04:11:32.645  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4590; stored 4590.
+10-30 04:11:32.646  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4591; stored .
+10-30 04:11:32.648  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4591; stored 4591.
+10-30 04:11:32.648  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4596; stored .
+10-30 04:11:32.648  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4596; stored 4596.
+10-30 04:11:32.650  3158  4587 I DOTNET  : TabStudio process trace: wait: PID 4582; stored .
+10-30 04:11:32.794  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4597; stored .
+10-30 04:11:32.794  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4597; stored 4597.
+10-30 04:11:32.801  3158  4600 I DOTNET  : TabStudio process trace: wait: PID 4596; stored .
+10-30 04:11:32.813  3158  4598 I DOTNET  : TabStudio process trace: wait: PID 4590; stored .
+10-30 04:11:32.816  3158  4601 I DOTNET  : TabStudio process trace: wait: PID 4597; stored .
+10-30 04:11:32.931  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4602; stored .
+10-30 04:11:33.105  3158  4599 I DOTNET  : TabStudio process trace: wait: PID 4591; stored .
+10-30 04:11:33.106  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4605; stored .
+10-30 04:11:33.107  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4605; stored 4605.
+10-30 04:11:33.107  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4602; stored 4602.
+10-30 04:11:33.197  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4607; stored .
+10-30 04:11:33.258  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4608; stored .
+10-30 04:11:33.320  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4607; stored 4607.
+10-30 04:11:33.320  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4608; stored 4608.
+10-30 04:11:33.412  3158  4610 I DOTNET  : TabStudio process trace: wait: PID 4605; stored .
+10-30 04:11:33.419  3158  4609 I DOTNET  : TabStudio process trace: wait: PID 4602; stored .
+10-30 04:11:33.444  3158  4614 I DOTNET  : TabStudio process trace: wait: PID 4608; stored .
+10-30 04:11:33.543  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4618; stored .
+10-30 04:11:33.543  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4618; stored 4618.
+10-30 04:11:33.623  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4619; stored .
+10-30 04:11:33.692  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4624; stored .
+10-30 04:11:33.694  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4624; stored 4624.
+10-30 04:11:33.696  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4619; stored 4619.
+10-30 04:11:33.741  3158  4627 I DOTNET  : TabStudio process trace: wait: PID 4618; stored .
+10-30 04:11:33.741  3158  4626 I DOTNET  : TabStudio process trace: wait: PID 4619; stored .
+10-30 04:11:33.778  3158  4613 I DOTNET  : TabStudio process trace: wait: PID 4607; stored .
+10-30 04:11:33.786  3158  4628 I DOTNET  : TabStudio process trace: wait: PID 4624; stored .
+10-30 04:11:33.901  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4630; stored .
+10-30 04:11:33.901  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4630; stored 4630.
+10-30 04:11:33.964  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4629; stored .
+10-30 04:11:33.965  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4631; stored .
+10-30 04:11:33.966  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4634; stored .
+10-30 04:11:33.973  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4631; stored 4631.
+10-30 04:11:33.973  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4629; stored 4629.
+10-30 04:11:33.973  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4634; stored 4634.
+10-30 04:11:34.125  3158  4636 I DOTNET  : TabStudio process trace: wait: PID 4629; stored .
+10-30 04:11:34.125  3158  4635 I DOTNET  : TabStudio process trace: wait: PID 4631; stored .
+10-30 04:11:34.165  3158  4638 I DOTNET  : TabStudio process trace: wait: PID 4634; stored .
+10-30 04:11:34.166  3158  4637 I DOTNET  : TabStudio process trace: wait: PID 4630; stored .
+10-30 04:11:34.176  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4639; stored .
+10-30 04:11:34.304  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4640; stored .
+10-30 04:11:34.304  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4640; stored 4640.
+10-30 04:11:34.304  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4642; stored .
+10-30 04:11:34.305  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4642; stored 4642.
+10-30 04:11:34.314  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4641; stored .
+10-30 04:11:34.314  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4641; stored 4641.
+10-30 04:11:34.314  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4639; stored 4639.
+10-30 04:11:34.322  3158  4644 I DOTNET  : TabStudio process trace: wait: PID 4641; stored .
+10-30 04:11:34.344  3158  4643 I DOTNET  : TabStudio process trace: wait: PID 4640; stored .
+10-30 04:11:34.345  3158  4645 I DOTNET  : TabStudio process trace: wait: PID 4639; stored .
+10-30 04:11:34.349  3158  4646 I DOTNET  : TabStudio process trace: wait: PID 4642; stored .
+10-30 04:11:34.503  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4650; stored .
+10-30 04:11:34.504  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4650; stored 4650.
+10-30 04:11:34.628  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4651; stored .
+10-30 04:11:34.747  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4656; stored .
+10-30 04:11:34.747  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4656; stored 4656.
+10-30 04:11:34.800  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4651; stored 4651.
+10-30 04:11:34.894  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4652; stored .
+10-30 04:11:34.900  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4652; stored 4652.
+10-30 04:11:34.951  3158  4657 I DOTNET  : TabStudio process trace: wait: PID 4656; stored .
+10-30 04:11:34.952  3158  4658 I DOTNET  : TabStudio process trace: wait: PID 4651; stored .
+10-30 04:11:35.044  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4664; stored .
+10-30 04:11:35.044  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4664; stored 4664.
+10-30 04:11:35.163  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4671; stored .
+10-30 04:11:35.235  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4671; stored 4671.
+10-30 04:11:35.281  3158  4665 I DOTNET  : TabStudio process trace: wait: PID 4664; stored .
+10-30 04:11:35.369  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4672; stored .
+10-30 04:11:35.369  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4672; stored 4672.
+10-30 04:11:35.369  3158  4659 I DOTNET  : TabStudio process trace: wait: PID 4650; stored .
+10-30 04:11:35.448  3158  4660 I DOTNET  : TabStudio process trace: wait: PID 4652; stored .
+10-30 04:11:35.449  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4675; stored .
+10-30 04:11:35.449  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4675; stored 4675.
+10-30 04:11:35.518  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4676; stored .
+10-30 04:11:35.518  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4676; stored 4676.
+10-30 04:11:35.672  3158  4679 I DOTNET  : TabStudio process trace: wait: PID 4676; stored .
+10-30 04:11:35.717  3158  4678 I DOTNET  : TabStudio process trace: wait: PID 4672; stored .
+10-30 04:11:35.758  3158  4680 I DOTNET  : TabStudio process trace: wait: PID 4671; stored .
+10-30 04:11:35.949  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4685; stored .
+10-30 04:11:35.949  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4685; stored 4685.
+10-30 04:11:36.131  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4686; stored .
+10-30 04:11:36.131  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4686; stored 4686.
+10-30 04:11:36.384  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4689; stored .
+10-30 04:11:36.384  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4689; stored 4689.
+10-30 04:11:36.387  3158  4681 I DOTNET  : TabStudio process trace: wait: PID 4675; stored .
+10-30 04:11:36.498  3158  4693 I DOTNET  : TabStudio process trace: wait: PID 4686; stored .
+10-30 04:11:36.498  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4694; stored .
+10-30 04:11:36.498  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4694; stored 4694.
+10-30 04:11:36.544  3158  4692 I DOTNET  : TabStudio process trace: wait: PID 4685; stored .
+10-30 04:11:36.644  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4703; stored .
+10-30 04:11:36.829  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4706; stored .
+10-30 04:11:36.829  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4706; stored 4706.
+10-30 04:11:36.846  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4703; stored 4703.
+10-30 04:11:36.876  3158  4697 I DOTNET  : TabStudio process trace: wait: PID 4694; stored .
+10-30 04:11:36.918  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 4707; stored .
+10-30 04:11:36.918  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 4707; stored 4707.
+10-30 04:11:36.998  3158  4708 I DOTNET  : TabStudio process trace: wait: PID 4707; stored .
+10-30 04:11:37.009  3158  4710 I DOTNET  : TabStudio process trace: wait: PID 4706; stored .
+10-30 04:11:37.152  3158  4709 I DOTNET  : TabStudio process trace: wait: PID 4689; stored .
+10-30 04:11:37.152  3158  4711 I DOTNET  : TabStudio process trace: wait: PID 4703; stored .
+10-30 04:11:37.152  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4712; stored .
+10-30 04:11:37.152  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4712; stored 4712.
+10-30 04:11:37.232  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4714; stored .
+10-30 04:11:37.514  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4715; stored .
+10-30 04:11:37.514  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4715; stored 4715.
+10-30 04:11:37.514  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4717; stored .
+10-30 04:11:37.514  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4717; stored 4717.
+10-30 04:11:37.515  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4714; stored 4714.
+10-30 04:11:37.552  3158  4713 I DOTNET  : TabStudio process trace: wait: PID 4712; stored .
+10-30 04:11:37.741  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4722; stored .
+10-30 04:11:37.742  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4722; stored 4722.
+10-30 04:11:37.835  3158  4718 I DOTNET  : TabStudio process trace: wait: PID 4715; stored .
+10-30 04:11:37.863  3158  4724 I DOTNET  : TabStudio process trace: wait: PID 4717; stored .
+10-30 04:11:37.865  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4726; stored .
+10-30 04:11:37.866  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4726; stored 4726.
+10-30 04:11:37.874  3158  4723 I DOTNET  : TabStudio process trace: wait: PID 4714; stored .
+10-30 04:11:37.953  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4729; stored .
+10-30 04:11:38.134  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4729; stored 4729.
+10-30 04:11:38.135  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4730; stored .
+10-30 04:11:38.135  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4730; stored 4730.
+10-30 04:11:38.144  3158  4725 I DOTNET  : TabStudio process trace: wait: PID 4722; stored .
+10-30 04:11:38.209  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4734; stored .
+10-30 04:11:38.209  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4734; stored 4734.
+10-30 04:11:38.271  3158  4731 I DOTNET  : TabStudio process trace: wait: PID 4729; stored .
+10-30 04:11:38.305  3158  4733 I DOTNET  : TabStudio process trace: wait: PID 4726; stored .
+10-30 04:11:38.319  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4736; stored .
+10-30 04:11:38.319  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4736; stored 4736.
+10-30 04:11:38.405  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4737; stored .
+10-30 04:11:38.405  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4737; stored 4737.
+10-30 04:11:38.406  3158  4735 I DOTNET  : TabStudio process trace: wait: PID 4734; stored .
+10-30 04:11:38.594  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4738; stored .
+10-30 04:11:38.598  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4738; stored 4738.
+10-30 04:11:38.779  3158  4744 I DOTNET  : TabStudio process trace: wait: PID 4737; stored .
+10-30 04:11:38.879  3158  4745 I DOTNET  : TabStudio process trace: wait: PID 4736; stored .
+10-30 04:11:38.880  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4747; stored .
+10-30 04:11:38.880  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4747; stored 4747.
+10-30 04:11:38.942  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4750; stored .
+10-30 04:11:38.942  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4750; stored 4750.
+10-30 04:11:38.971  3158  4732 I DOTNET  : TabStudio process trace: wait: PID 4730; stored .
+10-30 04:11:39.045  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4751; stored .
+10-30 04:11:39.047  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4751; stored 4751.
+10-30 04:11:39.053  3158  4746 I DOTNET  : TabStudio process trace: wait: PID 4738; stored .
+10-30 04:11:39.185  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4757; stored .
+10-30 04:11:39.186  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4757; stored 4757.
+10-30 04:11:39.422  3158  4758 I DOTNET  : TabStudio process trace: wait: PID 4757; stored .
+10-30 04:11:39.466  3158  4752 I DOTNET  : TabStudio process trace: wait: PID 4750; stored .
+10-30 04:11:39.468  3158  4761 I DOTNET  : TabStudio process trace: wait: PID 4751; stored .
+10-30 04:11:39.472  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4764; stored .
+10-30 04:11:39.597  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4765; stored .
+10-30 04:11:39.600  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4765; stored 4765.
+10-30 04:11:39.714  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4764; stored 4764.
+10-30 04:11:39.714  3158  4753 I DOTNET  : TabStudio process trace: wait: PID 4747; stored .
+10-30 04:11:39.714  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4766; stored .
+10-30 04:11:39.841  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4766; stored 4766.
+10-30 04:11:39.894  3158  4767 I DOTNET  : TabStudio process trace: wait: PID 4765; stored .
+10-30 04:11:39.894  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4771; stored .
+10-30 04:11:39.895  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4771; stored 4771.
+10-30 04:11:40.030  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4772; stored .
+10-30 04:11:40.030  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4772; stored 4772.
+10-30 04:11:40.069  3158  4773 I DOTNET  : TabStudio process trace: wait: PID 4766; stored .
+10-30 04:11:40.171  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4782; stored .
+10-30 04:11:40.171  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4782; stored 4782.
+10-30 04:11:40.191  3158  4774 I DOTNET  : TabStudio process trace: wait: PID 4764; stored .
+10-30 04:11:40.355  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4788; stored .
+10-30 04:11:40.374  3158  4775 I DOTNET  : TabStudio process trace: wait: PID 4772; stored .
+10-30 04:11:40.458  3158  4785 I DOTNET  : TabStudio process trace: wait: PID 4771; stored .
+10-30 04:11:40.459  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4793; stored .
+10-30 04:11:40.459  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4793; stored 4793.
+10-30 04:11:40.459  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4788; stored 4788.
+10-30 04:11:40.462  3158  4789 I DOTNET  : TabStudio process trace: wait: PID 4782; stored .
+10-30 04:11:40.657  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4795; stored .
+10-30 04:11:40.657  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4795; stored 4795.
+10-30 04:11:40.699  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4799; stored .
+10-30 04:11:40.699  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4799; stored 4799.
+10-30 04:11:40.728  3158  4798 I DOTNET  : TabStudio process trace: wait: PID 4793; stored .
+10-30 04:11:40.795  3158  4801 I DOTNET  : TabStudio process trace: wait: PID 4795; stored .
+10-30 04:11:40.816  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4805; stored .
+10-30 04:11:40.816  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4805; stored 4805.
+10-30 04:11:40.817  3158  4800 I DOTNET  : TabStudio process trace: wait: PID 4799; stored .
+10-30 04:11:40.817  3158  4797 I DOTNET  : TabStudio process trace: wait: PID 4788; stored .
+10-30 04:11:40.898  3158  4806 I DOTNET  : TabStudio process trace: wait: PID 4805; stored .
+10-30 04:11:40.906  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4818; stored .
+10-30 04:11:40.942  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4818; stored 4818.
+10-30 04:11:40.948  3158  4820 I DOTNET  : TabStudio process trace: wait: PID 4818; stored .
+10-30 04:11:40.951  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4819; stored .
+10-30 04:11:40.951  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4819; stored 4819.
+10-30 04:11:40.951  3158  4821 I DOTNET  : TabStudio process trace: wait: PID 4819; stored .
+10-30 04:11:41.040  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4824; stored .
+10-30 04:11:41.040  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4824; stored 4824.
+10-30 04:11:41.108  3158  4825 I DOTNET  : TabStudio process trace: wait: PID 4824; stored .
+10-30 04:11:41.154  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4826; stored .
+10-30 04:11:41.162  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4826; stored 4826.
+10-30 04:11:41.166  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4827; stored .
+10-30 04:11:41.166  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4827; stored 4827.
+10-30 04:11:41.295  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4830; stored .
+10-30 04:11:41.353  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4831; stored .
+10-30 04:11:41.364  3158  4829 I DOTNET  : TabStudio process trace: wait: PID 4827; stored .
+10-30 04:11:41.364  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4831; stored 4831.
+10-30 04:11:41.447  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4830; stored 4830.
+10-30 04:11:41.448  3158  4828 I DOTNET  : TabStudio process trace: wait: PID 4826; stored .
+10-30 04:11:41.448  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4833; stored .
+10-30 04:11:41.503  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4834; stored .
+10-30 04:11:41.580  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4833; stored 4833.
+10-30 04:11:41.600  3158  4832 I DOTNET  : TabStudio process trace: wait: PID 4831; stored .
+10-30 04:11:41.674  3158  4835 I DOTNET  : TabStudio process trace: wait: PID 4833; stored .
+10-30 04:11:41.674  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4834; stored 4834.
+10-30 04:11:41.674  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4837; stored .
+10-30 04:11:41.674  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4837; stored 4837.
+10-30 04:11:41.713  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4838; stored .
+10-30 04:11:41.734  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4838; stored 4838.
+10-30 04:11:41.738  3158  4841 I DOTNET  : TabStudio process trace: wait: PID 4838; stored .
+10-30 04:11:41.738  3158  4836 I DOTNET  : TabStudio process trace: wait: PID 4830; stored .
+10-30 04:11:41.800  3158  4840 I DOTNET  : TabStudio process trace: wait: PID 4837; stored .
+10-30 04:11:41.801  3158  4839 I DOTNET  : TabStudio process trace: wait: PID 4834; stored .
+10-30 04:11:41.883  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4842; stored .
+10-30 04:11:41.885  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4845; stored .
+10-30 04:11:42.395  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4853; stored .
+10-30 04:11:42.395  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4853; stored 4853.
+10-30 04:11:42.397  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4845; stored 4845.
+10-30 04:11:42.397  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4852; stored .
+10-30 04:11:42.397  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4852; stored 4852.
+10-30 04:11:42.405  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4842; stored 4842.
+10-30 04:11:42.423  3158  4854 I DOTNET  : TabStudio process trace: wait: PID 4842; stored .
+10-30 04:11:42.558  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4857; stored .
+10-30 04:11:42.562  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4857; stored 4857.
+10-30 04:11:42.615  3158  4859 I DOTNET  : TabStudio process trace: wait: PID 4845; stored .
+10-30 04:11:42.839  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4862; stored .
+10-30 04:11:42.839  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4862; stored 4862.
+10-30 04:11:42.844  3158  4861 I DOTNET  : TabStudio process trace: wait: PID 4852; stored .
+10-30 04:11:42.984  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4865; stored .
+10-30 04:11:42.984  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4865; stored 4865.
+10-30 04:11:43.066  3158  4864 I DOTNET  : TabStudio process trace: wait: PID 4857; stored .
+10-30 04:11:43.120  3158  4863 I DOTNET  : TabStudio process trace: wait: PID 4853; stored .
+10-30 04:11:43.129  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4866; stored .
+10-30 04:11:43.129  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4866; stored 4866.
+10-30 04:11:43.235  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4870; stored .
+10-30 04:11:43.235  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4870; stored 4870.
+10-30 04:11:43.236  3158  4868 I DOTNET  : TabStudio process trace: wait: PID 4862; stored .
+10-30 04:11:43.360  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4874; stored .
+10-30 04:11:43.366  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4874; stored 4874.
+10-30 04:11:43.368  3158  4873 I DOTNET  : TabStudio process trace: wait: PID 4866; stored .
+10-30 04:11:43.488  3158  4871 I DOTNET  : TabStudio process trace: wait: PID 4865; stored .
+10-30 04:11:43.491  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4876; stored .
+10-30 04:11:43.495  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4876; stored 4876.
+10-30 04:11:43.497  3158  4872 I DOTNET  : TabStudio process trace: wait: PID 4870; stored .
+10-30 04:11:43.500  3158  4878 I DOTNET  : TabStudio process trace: wait: PID 4874; stored .
+10-30 04:11:43.669  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4879; stored .
+10-30 04:11:43.669  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4879; stored 4879.
+10-30 04:11:43.877  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4884; stored .
+10-30 04:11:43.984  3158  4877 I DOTNET  : TabStudio process trace: wait: PID 4876; stored .
+10-30 04:11:43.999  3158  4880 I DOTNET  : TabStudio process trace: wait: PID 4879; stored .
+10-30 04:11:43.999  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4885; stored .
+10-30 04:11:43.999  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4885; stored 4885.
+10-30 04:11:44.007  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4884; stored 4884.
+10-30 04:11:44.254  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4890; stored .
+10-30 04:11:44.254  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4890; stored 4890.
+10-30 04:11:44.309  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4892; stored .
+10-30 04:11:44.309  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4892; stored 4892.
+10-30 04:11:44.366  3158  4886 I DOTNET  : TabStudio process trace: wait: PID 4885; stored .
+10-30 04:11:44.508  3158  4887 I DOTNET  : TabStudio process trace: wait: PID 4884; stored .
+10-30 04:11:44.542  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4896; stored .
+10-30 04:11:44.543  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4896; stored 4896.
+10-30 04:11:44.560  3158  4893 I DOTNET  : TabStudio process trace: wait: PID 4890; stored .
+10-30 04:11:44.567  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4895; stored .
+10-30 04:11:44.804  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4895; stored 4895.
+10-30 04:11:44.805  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4898; stored .
+10-30 04:11:44.805  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4898; stored 4898.
+10-30 04:11:44.805  3158  4894 I DOTNET  : TabStudio process trace: wait: PID 4892; stored .
+10-30 04:11:44.909  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4903; stored .
+10-30 04:11:44.909  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4903; stored 4903.
+10-30 04:11:45.053  3158  4904 I DOTNET  : TabStudio process trace: wait: PID 4896; stored .
+10-30 04:11:45.053  3158  4906 I DOTNET  : TabStudio process trace: wait: PID 4903; stored .
+10-30 04:11:45.054  3158  4905 I DOTNET  : TabStudio process trace: wait: PID 4895; stored .
+10-30 04:11:45.165  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4908; stored .
+10-30 04:11:45.193  3158  4907 I DOTNET  : TabStudio process trace: wait: PID 4898; stored .
+10-30 04:11:45.194  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4908; stored 4908.
+10-30 04:11:45.350  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4909; stored .
+10-30 04:11:45.350  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4912; stored .
+10-30 04:11:45.350  3158  4910 I DOTNET  : TabStudio process trace: wait: PID 4908; stored .
+10-30 04:11:45.351  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4912; stored 4912.
+10-30 04:11:45.351  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4911; stored .
+10-30 04:11:45.351  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4911; stored 4911.
+10-30 04:11:45.351  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4909; stored 4909.
+10-30 04:11:45.466  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4913; stored .
+10-30 04:11:45.469  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4913; stored 4913.
+10-30 04:11:45.470  3158  4915 I DOTNET  : TabStudio process trace: wait: PID 4912; stored .
+10-30 04:11:45.474  3158  4914 I DOTNET  : TabStudio process trace: wait: PID 4911; stored .
+10-30 04:11:45.475  3158  4917 I DOTNET  : TabStudio process trace: wait: PID 4913; stored .
+10-30 04:11:45.479  3158  4916 I DOTNET  : TabStudio process trace: wait: PID 4909; stored .
+10-30 04:11:45.641  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4918; stored .
+10-30 04:11:45.641  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4918; stored 4918.
+10-30 04:11:45.735  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4919; stored .
+10-30 04:11:45.735  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4919; stored 4919.
+10-30 04:11:45.761  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4920; stored .
+10-30 04:11:45.761  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4920; stored 4920.
+10-30 04:11:45.888  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4924; stored .
+10-30 04:11:45.888  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4924; stored 4924.
+10-30 04:11:45.925  3158  4923 I DOTNET  : TabStudio process trace: wait: PID 4918; stored .
+10-30 04:11:46.005  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 4928; stored .
+10-30 04:11:46.015  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 4928; stored 4928.
+10-30 04:11:46.072  3158  4930 I DOTNET  : TabStudio process trace: wait: PID 4920; stored .
+10-30 04:11:46.191  3158  4929 I DOTNET  : TabStudio process trace: wait: PID 4924; stored .
+10-30 04:11:46.231  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4932; stored .
+10-30 04:11:46.260  3158  4927 I DOTNET  : TabStudio process trace: wait: PID 4919; stored .
+10-30 04:11:46.261  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4932; stored 4932.
+10-30 04:11:46.265  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4933; stored .
+10-30 04:11:46.314  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4936; stored .
+10-30 04:11:46.314  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4936; stored 4936.
+10-30 04:11:46.317  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4933; stored 4933.
+10-30 04:11:46.360  3158  4931 I DOTNET  : TabStudio process trace: wait: PID 4928; stored .
+10-30 04:11:46.446  3158  4937 I DOTNET  : TabStudio process trace: wait: PID 4932; stored .
+10-30 04:11:46.447  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4940; stored .
+10-30 04:11:46.447  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4940; stored 4940.
+10-30 04:11:46.472  3158  4938 I DOTNET  : TabStudio process trace: wait: PID 4936; stored .
+10-30 04:11:46.472  3158  4939 I DOTNET  : TabStudio process trace: wait: PID 4933; stored .
+10-30 04:11:46.480  3158  4941 I DOTNET  : TabStudio process trace: wait: PID 4940; stored .
+10-30 04:11:46.782  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4942; stored .
+10-30 04:11:46.950  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4942; stored 4942.
+10-30 04:11:46.950  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4946; stored .
+10-30 04:11:46.950  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4946; stored 4946.
+10-30 04:11:47.012  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4953; stored .
+10-30 04:11:47.012  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4953; stored 4953.
+10-30 04:11:47.052  3158  4955 I DOTNET  : TabStudio process trace: wait: PID 4942; stored .
+10-30 04:11:47.094  3158  4954 I DOTNET  : TabStudio process trace: wait: PID 4946; stored .
+10-30 04:11:47.123  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4958; stored .
+10-30 04:11:47.123  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4958; stored 4958.
+10-30 04:11:47.131  3158  4956 I DOTNET  : TabStudio process trace: wait: PID 4953; stored .
+10-30 04:11:47.275  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4960; stored .
+10-30 04:11:47.276  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4960; stored 4960.
+10-30 04:11:47.316  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4962; stored .
+10-30 04:11:47.316  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4962; stored 4962.
+10-30 04:11:47.381  3158  4964 I DOTNET  : TabStudio process trace: wait: PID 4960; stored .
+10-30 04:11:47.382  3158  4963 I DOTNET  : TabStudio process trace: wait: PID 4958; stored .
+10-30 04:11:47.531  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4969; stored .
+10-30 04:11:47.532  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4969; stored 4969.
+10-30 04:11:47.653  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4971; stored .
+10-30 04:11:47.653  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4971; stored 4971.
+10-30 04:11:47.670  3158  4970 I DOTNET  : TabStudio process trace: wait: PID 4962; stored .
+10-30 04:11:47.865  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4978; stored .
+10-30 04:11:47.865  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4978; stored 4978.
+10-30 04:11:47.880  3158  4975 I DOTNET  : TabStudio process trace: wait: PID 4969; stored .
+10-30 04:11:47.903  3158  4980 I DOTNET  : TabStudio process trace: wait: PID 4978; stored .
+10-30 04:11:48.027  3158  4979 I DOTNET  : TabStudio process trace: wait: PID 4971; stored .
+10-30 04:11:48.349  3158  4267 I DOTNET  : TabStudio process trace: spawn: PID 4982; stored .
+10-30 04:11:48.350  3158  4267 I DOTNET  : TabStudio process trace: handle: PID 4982; stored 4982.
+10-30 04:11:48.388  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4981; stored .
+10-30 04:11:48.739  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4984; stored .
+10-30 04:11:48.739  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4984; stored 4984.
+10-30 04:11:48.740  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4981; stored 4981.
+10-30 04:11:49.048  3158  4991 I DOTNET  : TabStudio process trace: wait: PID 4981; stored .
+10-30 04:11:49.234  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 4993; stored .
+10-30 04:11:49.234  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 4993; stored 4993.
+10-30 04:11:49.447  3158  4989 I DOTNET  : TabStudio process trace: wait: PID 4982; stored .
+10-30 04:11:49.449  3158  4990 I DOTNET  : TabStudio process trace: wait: PID 4984; stored .
+10-30 04:11:49.643  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 4998; stored .
+10-30 04:11:49.662  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 5001; stored .
+10-30 04:11:49.663  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 5001; stored 5001.
+10-30 04:11:49.663  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 4998; stored 4998.
+10-30 04:11:49.665  3158  4994 I DOTNET  : TabStudio process trace: wait: PID 4993; stored .
+10-30 04:11:49.778  3158  5003 I DOTNET  : TabStudio process trace: wait: PID 5001; stored .
+10-30 04:11:49.869  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 5004; stored .
+10-30 04:11:49.881  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 5004; stored 5004.
+10-30 04:11:49.881  3158  5002 I DOTNET  : TabStudio process trace: wait: PID 4998; stored .
+10-30 04:11:49.963  3158  4241 I DOTNET  : TabStudio process trace: spawn: PID 5017; stored .
+10-30 04:11:49.963  3158  4241 I DOTNET  : TabStudio process trace: handle: PID 5017; stored 5017.
+10-30 04:11:50.008  3158  5006 I DOTNET  : TabStudio process trace: wait: PID 5004; stored .
+10-30 04:11:50.069  3158  3407 I DOTNET  : TabStudio process trace: spawn: PID 5049; stored .
+10-30 04:11:50.070  3158  3407 I DOTNET  : TabStudio process trace: handle: PID 5049; stored 5049.
+10-30 04:11:50.095  3158  5050 I DOTNET  : TabStudio process trace: wait: PID 5017; stored .
+10-30 04:11:50.179  3158  5051 I DOTNET  : TabStudio process trace: wait: PID 5049; stored .
+10-30 04:11:53.264  3158  4267 I TabStudio: Toolchain preparation: flutter NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: python NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: node NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: cpp NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: rust NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: go NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: java NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: php NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: kotlin NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: swift NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: android NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: xc8 NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: xc32 NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: embedded-arm NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: embedded-riscv NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: embedded-avr NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: embedded-support NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: platformio NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: arduino NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: esp-idf NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: zephyr NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: pico-sdk NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: micropython NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: embedded-import NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: embedded-debug NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: probe-rs NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: embedded-esptool NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: embedded-picotool NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: embedded-bossac NotInstalled at 54.7 s
+10-30 04:11:53.265  3158  4267 I TabStudio: Toolchain preparation: embedded-teensy NotInstalled at 54.7 s
+10-30 04:11:53.266  3158  4267 I TabStudio: Toolchain preparation: embedded-wchisp NotInstalled at 54.7 s
+10-30 04:11:53.266  3158  4267 I TabStudio: Toolchain preparation: embedded-mspdebug NotInstalled at 54.7 s
+10-30 04:11:53.266  3158  4267 I TabStudio: Toolchain preparation: embedded-rust NotInstalled at 54.7 s
+10-30 04:11:53.266  3158  4267 I TabStudio: Toolchain preparation: embedded-ch32fun NotInstalled at 54.7 s
+10-30 04:11:53.266  3158  4267 I TabStudio: Toolchain preparation: embedded-nrfutil NotInstalled at 54.7 s
+10-30 04:11:53.266  3158  4267 I TabStudio: Toolchain preparation: embedded-wlink NotInstalled at 54.7 s
+10-30 04:11:53.356  3158  4267 I TabStudio: Toolchain preparation: python Preparing at 54.8 s
+10-30 04:11:53.464  3158  4267 I TabStudio: Toolchain preparation: python SettingUpLinux at 54.9 s
+10-30 04:12:02.738  3158  5113 I TabStudio: Toolchain preparation: python Resolving at 64.2 s
+10-30 04:12:13.872  3158  5072 I TabStudio: Toolchain preparation: python Downloading at 75.3 s
+10-30 04:12:34.685  3158  3398 I TabStudio: Toolchain preparation: python Installing at 96.1 s
+10-30 04:12:34.724  3158  3158 W com.tabstudio.ide: type=1400 audit(0.0:54): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/main/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=507964 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:12:34.724  3158  3158 W com.tabstudio.ide: type=1400 audit(0.0:55): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/community/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=507984 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:12:35.156  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 5352; stored .
+10-30 04:12:35.158  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 5352; stored 5352.
+10-30 04:12:35.205  3158  5353 I DOTNET  : TabStudio process trace: wait: PID 5352; stored .
+10-30 04:12:35.226  3158  5113 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'read' may fail
+10-30 04:12:37.712  5364  5364 W libproot-loader: type=1400 audit(0.0:93): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:12:37.712  5364  5364 W libproot-loader: type=1400 audit(0.0:94): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:12:48.240  5411  5411 W libproot-loader: type=1400 audit(0.0:105): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:12:48.240  5411  5411 W libproot-loader: type=1400 audit(0.0:106): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:12:49.405  3158  5113 I TabStudio: Toolchain preparation: python Configuring at 110.9 s
+10-30 04:12:50.082  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 5421; stored .
+10-30 04:12:50.082  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 5421; stored 5421.
+10-30 04:12:50.144  3158  5422 I DOTNET  : TabStudio process trace: wait: PID 5421; stored .
+10-30 04:12:50.501  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 5428; stored .
+10-30 04:12:50.501  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 5428; stored 5428.
+10-30 04:12:50.522  3158  5429 I DOTNET  : TabStudio process trace: wait: PID 5428; stored .
+10-30 04:14:19.953  3158  5113 I TabStudio: Toolchain preparation: python Completed at 201.4 s
+10-30 04:14:20.729  3158  5113 I TabStudio: Toolchain preparation: python Installed at 202.2 s
+10-30 04:14:20.733  3158  5113 I TabStudio: Toolchain preparation: node Preparing at 202.2 s
+10-30 04:14:20.739  3158  5113 I TabStudio: Toolchain preparation: node Resolving at 202.2 s
+10-30 04:14:21.615  3158  5113 I TabStudio: Toolchain preparation: node Downloading at 203.1 s
+10-30 04:14:23.561  3158  5113 I TabStudio: Toolchain preparation: node Installing at 205.0 s
+10-30 04:14:23.552  3158  3158 W com.tabstudio.ide: type=1400 audit(0.0:292): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/main/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=507937 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:14:23.572  3158  3158 W com.tabstudio.ide: type=1400 audit(0.0:293): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/community/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=507942 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:14:23.706  3158  5113 I DOTNET  : TabStudio process trace: spawn: PID 5785; stored .
+10-30 04:14:23.707  3158  5113 I DOTNET  : TabStudio process trace: handle: PID 5785; stored 5785.
+10-30 04:14:23.779  3158  5786 I DOTNET  : TabStudio process trace: wait: PID 5785; stored .
+10-30 04:14:25.145  3158  5704 I TabStudio: Toolchain preparation: node Configuring at 206.6 s
+10-30 04:14:25.216  3158  5704 I DOTNET  : TabStudio process trace: spawn: PID 5792; stored .
+10-30 04:14:25.216  3158  5704 I DOTNET  : TabStudio process trace: handle: PID 5792; stored 5792.
+10-30 04:14:25.345  3158  5793 I DOTNET  : TabStudio process trace: wait: PID 5792; stored .
+10-30 04:14:37.483  3158  5113 I DOTNET  : TabStudio process trace: spawn: PID 5854; stored .
+10-30 04:14:37.494  3158  5113 I DOTNET  : TabStudio process trace: handle: PID 5854; stored 5854.
+10-30 04:14:37.500  3158  5855 I DOTNET  : TabStudio process trace: wait: PID 5854; stored .
+10-30 04:15:29.216  6090  6090 W libproot-loader: type=1400 audit(0.0:546): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:15:29.216  6090  6090 W libproot-loader: type=1400 audit(0.0:547): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:15:29.999  3158  3398 I TabStudio: Toolchain preparation: node Completed at 271.5 s
+10-30 04:15:30.560  3158  3398 I TabStudio: Toolchain preparation: node Installed at 272.0 s
+10-30 04:15:30.561  3158  3398 I TabStudio: Toolchain preparation: cpp Preparing at 272.0 s
+10-30 04:15:30.568  3158  3398 I TabStudio: Toolchain preparation: cpp Resolving at 272.0 s
+10-30 04:15:32.222  3158  5113 I TabStudio: Toolchain preparation: cpp Downloading at 273.7 s
+10-30 04:17:03.911  3158  5073 I TabStudio: Toolchain preparation: cpp Installing at 365.4 s
+10-30 04:17:03.908  3158  3158 W com.tabstudio.ide: type=1400 audit(0.0:599): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/main/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=507936 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:17:03.920  3158  3158 W com.tabstudio.ide: type=1400 audit(0.0:600): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/community/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=507945 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:17:04.004  3158  5073 I DOTNET  : TabStudio process trace: spawn: PID 6440; stored .
+10-30 04:17:04.004  3158  5073 I DOTNET  : TabStudio process trace: handle: PID 6440; stored 6440.
+10-30 04:17:04.092  3158  6441 I DOTNET  : TabStudio process trace: wait: PID 6440; stored .
+10-30 04:17:33.080  6543  6543 W libproot-loader: type=1400 audit(0.0:636): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:17:33.080  6543  6543 W libproot-loader: type=1400 audit(0.0:637): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:17:33.124  6544  6544 W libproot-loader: type=1400 audit(0.0:640): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:17:33.604  3158  5073 I TabStudio: Toolchain preparation: cpp Completed at 395.1 s
+10-30 04:17:34.288  3158  5073 I TabStudio: Toolchain preparation: cpp Installed at 395.7 s
+10-30 04:17:34.288  3158  5073 I TabStudio: Toolchain preparation: java Preparing at 395.8 s
+10-30 04:17:34.374  3158  5073 I TabStudio: Toolchain preparation: java Resolving at 395.8 s
+10-30 04:17:35.339  3158  5073 I TabStudio: Toolchain preparation: java Downloading at 396.8 s
+10-30 04:18:48.389  3158  4001 I TabStudio: Toolchain preparation: java Installing at 469.9 s
+10-30 04:18:48.392  3158  3158 W com.tabstudio.ide: type=1400 audit(0.0:676): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/main/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=507936 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:18:48.444  3158  3158 W com.tabstudio.ide: type=1400 audit(0.0:677): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/community/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=507944 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:18:48.545  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 6789; stored .
+10-30 04:18:48.545  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 6789; stored 6789.
+10-30 04:18:48.855  3158  6790 I DOTNET  : TabStudio process trace: wait: PID 6789; stored .
+10-30 04:19:00.752  6831  6831 W libproot-loader: type=1400 audit(0.0:713): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:00.752  6831  6831 W libproot-loader: type=1400 audit(0.0:714): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:01.768  6870  6870 W libproot-loader: type=1400 audit(0.0:857): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:01.768  6870  6870 W libproot-loader: type=1400 audit(0.0:858): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:02.780  6884  6884 W libproot-loader: type=1400 audit(0.0:918): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:03.576  3158  6123 I TabStudio: Toolchain preparation: java Configuring at 485.0 s
+10-30 04:19:03.700  3158  6123 I TabStudio: Toolchain preparation: java Completed at 485.2 s
+10-30 04:19:04.528  3158  6123 I TabStudio: Toolchain preparation: java Installed at 486.0 s
+10-30 04:19:07.518  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 6900; stored .
+10-30 04:19:07.518  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 6900; stored 6900.
+10-30 04:19:07.577  3158  6901 I DOTNET  : TabStudio process trace: wait: PID 6900; stored .
+10-30 04:19:08.173  3158  5704 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'write' may fail
+10-30 04:19:10.616  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 6924; stored .
+10-30 04:19:10.617  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 6924; stored 6924.
+10-30 04:19:10.664  3158  6925 I DOTNET  : TabStudio process trace: wait: PID 6924; stored .
+10-30 04:19:11.936  6936  6936 W libproot-loader: type=1400 audit(0.0:1096): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/bin/python3.14" dev="dm-46" ino=501353 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:11.936  6936  6936 W libproot-loader: type=1400 audit(0.0:1097): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:11.936  6936  6936 W python3 : type=1400 audit(0.0:1098): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libpython3.14.so.1.0" dev="dm-46" ino=501354 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:12.955  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 6946; stored .
+10-30 04:19:12.960  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 6946; stored 6946.
+10-30 04:19:12.961  3158  6947 I DOTNET  : TabStudio process trace: wait: PID 6946; stored .
+10-30 04:19:20.488  3158  3158 W com.tabstudio.ide: type=1400 audit(0.0:1172): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/main/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=507956 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:19:20.492  3158  3158 W com.tabstudio.ide: type=1400 audit(0.0:1173): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/community/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=507971 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:19:20.641  3158  6123 I DOTNET  : TabStudio process trace: spawn: PID 7050; stored .
+10-30 04:19:20.642  3158  6123 I DOTNET  : TabStudio process trace: handle: PID 7050; stored 7050.
+10-30 04:19:20.671  3158  7054 I DOTNET  : TabStudio process trace: wait: PID 7050; stored .
+10-30 04:19:22.170  3158  6114 I DOTNET  : TabStudio process trace: spawn: PID 7064; stored .
+10-30 04:19:22.171  3158  6114 I DOTNET  : TabStudio process trace: handle: PID 7064; stored 7064.
+10-30 04:19:22.176  3158  7065 I DOTNET  : TabStudio process trace: wait: PID 7064; stored .
+10-30 04:19:22.996  7068  7068 W cc1     : type=1400 audit(0.0:1277): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/tmp/ccbjeFeN.s" dev="dm-46" ino=501598 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:19:24.252  7077  7077 W libproot-loader: type=1400 audit(0.0:1281): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/bin/.l2s..apk.09d09f063efae006b1b5cb569f8130cf7621ebb8e569b2ee0001.0002" dev="dm-46" ino=501611 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:24.252  7077  7077 W libproot-loader: type=1400 audit(0.0:1282): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:24.268  7077  7077 W as      : type=1400 audit(0.0:1283): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libbfd-2.45.1.so" dev="dm-46" ino=501628 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:24.268  7077  7077 W as      : type=1400 audit(0.0:1284): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libz.so.1.3.2" dev="dm-46" ino=500747 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:24.276  7077  7077 W as      : type=1400 audit(0.0:1285): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libzstd.so.1.5.7" dev="dm-46" ino=501321 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:24.312  7077  7077 W as      : type=1400 audit(0.0:1286): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libsframe.so.2.0.0" dev="dm-46" ino=501635 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:24.833  3158  6123 I DOTNET  : TabStudio process trace: spawn: PID 7082; stored .
+10-30 04:19:24.834  3158  6123 I DOTNET  : TabStudio process trace: handle: PID 7082; stored 7082.
+10-30 04:19:24.837  3158  7083 I DOTNET  : TabStudio process trace: wait: PID 7082; stored .
+10-30 04:19:26.548  7092  7092 W libproot-loader: type=1400 audit(0.0:1351): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/bin/.l2s..apk.09d09f063efae006b1b5cb569f8130cf7621ebb8e569b2ee0001.0002" dev="dm-46" ino=501611 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:26.548  7092  7092 W libproot-loader: type=1400 audit(0.0:1352): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:27.013  3158  6123 I DOTNET  : TabStudio process trace: spawn: PID 7098; stored .
+10-30 04:19:27.014  3158  6123 I DOTNET  : TabStudio process trace: handle: PID 7098; stored 7098.
+10-30 04:19:27.052  3158  7099 I DOTNET  : TabStudio process trace: wait: PID 7098; stored .
+10-30 04:19:27.660  7105  7105 W libproot-loader: type=1400 audit(0.0:1421): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/bin/.l2s..apk.09d09f063efae006b1b5cb569f8130cf7621ebb8e569b2ee0001.0002" dev="dm-46" ino=501611 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:27.660  7105  7105 W libproot-loader: type=1400 audit(0.0:1422): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:27.845  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 7108; stored .
+10-30 04:19:27.846  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 7108; stored 7108.
+10-30 04:19:27.858  3158  7109 I DOTNET  : TabStudio process trace: wait: PID 7108; stored .
+10-30 04:19:28.716  7111  7111 W python3 : type=1400 audit(0.0:1497): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/zlib.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516437 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:28.752  7111  7111 W python3 : type=1400 audit(0.0:1498): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libz.so.1.3.2" dev="dm-46" ino=500747 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:28.816  7111  7111 W python3 : type=1400 audit(0.0:1499): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/_bz2.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516368 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:28.848  7111  7111 W python3 : type=1400 audit(0.0:1500): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libbz2.so.1.0.8" dev="dm-46" ino=501329 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:28.888  7111  7111 W python3 : type=1400 audit(0.0:1501): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/_lzma.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516391 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:37.072  3158  3158 W com.tabstudio.ide: type=1400 audit(0.0:1547): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/main/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=123421 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:19:37.076  3158  3158 W com.tabstudio.ide: type=1400 audit(0.0:1548): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/community/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=123432 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:19:37.132  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 7152; stored .
+10-30 04:19:37.132  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 7152; stored 7152.
+10-30 04:19:37.148  3158  7153 I DOTNET  : TabStudio process trace: wait: PID 7152; stored .
+10-30 04:19:39.760  7167  7167 W libproot-loader: type=1400 audit(0.0:1610): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:40.768  7222  7222 W libproot-loader: type=1400 audit(0.0:1811): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:40.768  7222  7222 W libproot-loader: type=1400 audit(0.0:1812): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:41.764  7316  7316 W libproot-loader: type=1400 audit(0.0:2175): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:41.788  7316  7316 W libproot-loader: type=1400 audit(0.0:2176): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:41.856  7317  7317 W libproot-loader: type=1400 audit(0.0:2179): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:42.784  7351  7351 W libproot-loader: type=1400 audit(0.0:2308): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:42.784  7351  7351 W libproot-loader: type=1400 audit(0.0:2309): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:43.788  7399  7399 W libproot-loader: type=1400 audit(0.0:2480): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:43.792  7399  7399 W libproot-loader: type=1400 audit(0.0:2481): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:43.844  7400  7400 W libproot-loader: type=1400 audit(0.0:2484): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:44.840  7441  7441 W libproot-loader: type=1400 audit(0.0:2629): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:44.840  7441  7441 W libproot-loader: type=1400 audit(0.0:2630): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:45.840  7500  7500 W libproot-loader: type=1400 audit(0.0:2857): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:45.840  7500  7500 W libproot-loader: type=1400 audit(0.0:2858): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:46.860  7576  7576 W libproot-loader: type=1400 audit(0.0:3141): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:46.860  7576  7576 W libproot-loader: type=1400 audit(0.0:3142): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:47.880  7635  7635 W libproot-loader: type=1400 audit(0.0:3358): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:47.880  7635  7635 W libproot-loader: type=1400 audit(0.0:3359): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:48.884  7689  7689 W libproot-loader: type=1400 audit(0.0:3563): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:48.912  7690  7690 W libproot-loader: type=1400 audit(0.0:3566): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:48.912  7690  7690 W libproot-loader: type=1400 audit(0.0:3567): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:19:52.408  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 7747; stored .
+10-30 04:19:52.408  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 7747; stored 7747.
+10-30 04:19:52.410  3158  7748 I DOTNET  : TabStudio process trace: wait: PID 7747; stored .
+10-30 04:19:52.956  7759  7759 W libproot-loader: type=1400 audit(0.0:3890): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:52.956  7759  7759 W libproot-loader: type=1400 audit(0.0:3891): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:19:54.216  7754  7754 W initdb  : type=1400 audit(0.0:3913): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Services/a78fd6f55cfdd8bdc445/volumes/data/postgresql.conf" dev="dm-46" ino=90149 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:19:54.220  7754  7754 W initdb  : type=1400 audit(0.0:3914): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Services/a78fd6f55cfdd8bdc445/volumes/data/postgresql.auto.conf" dev="dm-46" ino=90150 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:19:54.236  7754  7754 W initdb  : type=1400 audit(0.0:3915): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Services/a78fd6f55cfdd8bdc445/volumes/data/pg_hba.conf" dev="dm-46" ino=90151 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:19:54.244  7754  7754 W initdb  : type=1400 audit(0.0:3916): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Services/a78fd6f55cfdd8bdc445/volumes/data/pg_ident.conf" dev="dm-46" ino=90152 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:19:59.280  7765  7765 W postgres: type=1400 audit(0.0:15147): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Services/a78fd6f55cfdd8bdc445/volumes/data/pg_stat/pgstat.tmp" dev="dm-46" ino=123704 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:19:59.324  7754  7754 W initdb  : type=1400 audit(0.0:15148): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Services/a78fd6f55cfdd8bdc445/volumes/data/base/1/PG_VERSION" dev="dm-46" ino=123705 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:20:01.740  7786  7786 W postgres: type=1400 audit(0.0:15177): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/postgresql18/dict_snowball.so" dev="dm-46" ino=510463 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:02.408  7786  7786 W postgres: type=1400 audit(0.0:15178): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/postgresql18/plpgsql.so" dev="dm-46" ino=510473 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:04.544  7786  7786 W postgres: type=1400 audit(0.0:15179): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Services/a78fd6f55cfdd8bdc445/volumes/data/pg_stat/pgstat.tmp" dev="dm-46" ino=124379 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:20:07.104  7819  7819 W libproot-loader: type=1400 audit(0.0:15182): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:20:07.104  7819  7819 W libproot-loader: type=1400 audit(0.0:15183): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:20:07.104  7820  7820 W libproot-loader: type=1400 audit(0.0:15186): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/libexec/postgresql18/pg_ctl" dev="dm-46" ino=123460 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:09.304  7844  7844 W libproot-loader: type=1400 audit(0.0:15257): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/libexec/postgresql18/psql" dev="dm-46" ino=123450 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:09.304  7844  7844 W libproot-loader: type=1400 audit(0.0:15258): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:09.324  7844  7844 W psql    : type=1400 audit(0.0:15259): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libpq.so.5.18" dev="dm-46" ino=502006 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:10.304  7852  7852 W postgres: type=1400 audit(0.0:15294): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libcrypto.so.3" dev="dm-46" ino=500758 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:10.308  7852  7852 W postgres: type=1400 audit(0.0:15295): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libz.so.1.3.2" dev="dm-46" ino=500747 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:10.308  7852  7852 W postgres: type=1400 audit(0.0:15296): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libldap.so.2.0.200" dev="dm-46" ino=502012 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:10.308  7852  7852 W postgres: type=1400 audit(0.0:15297): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libicui18n.so.78.1" dev="dm-46" ino=501306 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:10.308  7852  7852 W postgres: type=1400 audit(0.0:15298): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libicuuc.so.78.1" dev="dm-46" ino=501310 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:11.411  3158  4001 I DOTNET  : TabStudio process trace: spawn: PID 7865; stored .
+10-30 04:20:11.411  3158  4001 I DOTNET  : TabStudio process trace: handle: PID 7865; stored 7865.
+10-30 04:20:11.442  3158  7866 I DOTNET  : TabStudio process trace: wait: PID 7865; stored .
+10-30 04:20:11.781  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 7872; stored .
+10-30 04:20:11.782  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 7872; stored 7872.
+10-30 04:20:11.783  3158  7873 I DOTNET  : TabStudio process trace: wait: PID 7872; stored .
+10-30 04:20:12.152  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 7880; stored .
+10-30 04:20:12.189  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 7880; stored 7880.
+10-30 04:20:12.196  3158  7881 I DOTNET  : TabStudio process trace: wait: PID 7880; stored .
+10-30 04:20:13.173  3158  5704 I DOTNET  : TabStudio process trace: spawn: PID 7886; stored .
+10-30 04:20:13.184  3158  5704 I DOTNET  : TabStudio process trace: handle: PID 7886; stored 7886.
+10-30 04:20:13.257  3158  7887 I DOTNET  : TabStudio process trace: wait: PID 7886; stored .
+10-30 04:20:14.320  7904  7904 W libproot-loader: type=1400 audit(0.0:15457): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/bin/python3.14" dev="dm-46" ino=501353 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:14.320  7904  7904 W libproot-loader: type=1400 audit(0.0:15458): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:14.320  7904  7904 W python3 : type=1400 audit(0.0:15459): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libpython3.14.so.1.0" dev="dm-46" ino=501354 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:19.269  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 7923; stored .
+10-30 04:20:19.269  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 7923; stored 7923.
+10-30 04:20:19.294  3158  7924 I DOTNET  : TabStudio process trace: wait: PID 7923; stored .
+10-30 04:20:20.416  7928  7928 W python3 : type=1400 audit(0.0:15536): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/_lzma.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516391 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:20.416  7928  7928 W python3 : type=1400 audit(0.0:15537): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/liblzma.so.5.8.4" dev="dm-46" ino=501337 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:20.456  7928  7928 W python3 : type=1400 audit(0.0:15538): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/_struct.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516408 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:20.800  7928  7928 W python3 : type=1400 audit(0.0:15539): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/_posixsubprocess.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516397 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:20.800  7928  7928 W python3 : type=1400 audit(0.0:15540): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/select.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516430 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:22.340  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 7949; stored .
+10-30 04:20:22.341  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 7949; stored 7949.
+10-30 04:20:22.352  3158  7950 I DOTNET  : TabStudio process trace: wait: PID 7949; stored .
+10-30 04:20:23.448  7954  7954 W python3 : type=1400 audit(0.0:15595): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/_posixsubprocess.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516397 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:23.460  7954  7954 W python3 : type=1400 audit(0.0:15596): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/select.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516430 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:23.468  7954  7954 W python3 : type=1400 audit(0.0:15597): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/math.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516425 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:24.548  7964  7964 W python3 : type=1400 audit(0.0:15653): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/_json.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516389 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:24.708  7964  7964 W python3 : type=1400 audit(0.0:15656): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/_struct.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516408 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:24.752  7964  7964 W python3 : type=1400 audit(0.0:15657): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/unicodedata.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516433 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:25.608  7964  7964 W python3 : type=1400 audit(0.0:15675): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/_bz2.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516368 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:25.612  7964  7964 W python3 : type=1400 audit(0.0:15676): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libbz2.so.1.0.8" dev="dm-46" ino=501329 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:25.636  7964  7964 W python3 : type=1400 audit(0.0:15677): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/_lzma.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516391 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:25.636  7964  7964 W python3 : type=1400 audit(0.0:15678): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/liblzma.so.5.8.4" dev="dm-46" ino=501337 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:25.800  7964  7964 W python3 : type=1400 audit(0.0:15679): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/fcntl.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516423 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:27.000  7964  7964 W python3 : type=1400 audit(0.0:15704): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/_bisect.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516366 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:27.208  7964  7964 W python3 : type=1400 audit(0.0:15705): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/grp.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516424 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:28.264  7964  7964 W python3 : type=1400 audit(0.0:15708): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/python3.14/lib-dynload/_posixsubprocess.cpython-314-x86_64-linux-musl.so" dev="dm-46" ino=516397 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:34.147  3158  3398 I DOTNET  : TabStudio process trace: spawn: PID 8040; stored .
+10-30 04:20:34.181  3158  3398 I DOTNET  : TabStudio process trace: handle: PID 8040; stored 8040.
+10-30 04:20:34.260  3158  8041 I DOTNET  : TabStudio process trace: wait: PID 8040; stored .
+10-30 04:20:34.627  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 8052; stored .
+10-30 04:20:34.628  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 8052; stored 8052.
+10-30 04:20:34.712  3158  8053 I DOTNET  : TabStudio process trace: wait: PID 8052; stored .
+10-30 04:20:34.747  3158  3398 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'kill' may fail
+10-30 04:20:35.248  8071  8071 W node    : type=1400 audit(0.0:15890): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libbrotlicommon.so.1.2.1" dev="dm-46" ino=501296 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:35.320  8072  8072 W libproot-loader: type=1400 audit(0.0:15893): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/bin/node" dev="dm-46" ino=501322 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:35.320  8072  8072 W libproot-loader: type=1400 audit(0.0:15894): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/bin/node" dev="dm-46" ino=501322 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:37.568  8110  8110 W libproot-loader: type=1400 audit(0.0:16032): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:37.568  8110  8110 W libproot-loader: type=1400 audit(0.0:16033): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:39.224  3158  3158 D nativeloader: Load /data/app/~~tDVgbMIs4BHuAmffDrIWTQ==/com.google.android.trichromelibrary_636771938-8AspfnrQXMco84bhWLcM_w==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-9 from class loader (caller=/data/app/~~SVeGsy936E7EUm0X7DeZpw==/com.google.android.webview-9pPFvI4uxK83Xs5JVk4rjA==/WebViewGoogle.apk): ok
+10-30 04:20:40.402  8181  8181 D nativeloader: Load /data/app/~~tDVgbMIs4BHuAmffDrIWTQ==/com.google.android.trichromelibrary_636771938-8AspfnrQXMco84bhWLcM_w==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~SVeGsy936E7EUm0X7DeZpw==/com.google.android.webview-9pPFvI4uxK83Xs5JVk4rjA==/WebViewGoogle.apk): ok
+10-30 04:20:41.984  3158  6114 I DOTNET  : TabStudio process trace: spawn: PID 8232; stored .
+10-30 04:20:41.989  3158  6114 I DOTNET  : TabStudio process trace: handle: PID 8232; stored 8232.
+10-30 04:20:42.125  3158  8233 I DOTNET  : TabStudio process trace: wait: PID 8232; stored .
+10-30 04:20:42.280  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 8239; stored .
+10-30 04:20:42.282  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 8239; stored 8239.
+10-30 04:20:42.305  3158  8240 I DOTNET  : TabStudio process trace: wait: PID 8239; stored .
+10-30 04:20:46.444  8244  8244 W cmake   : type=1400 audit(0.0:16883): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Projects/SelfTestCpp/.tabstudio/cmake/CMakeFiles/CMakeScratch/TryCompile-njAoma/cmTC_d9e8a_loc.tmp5ca90" dev="dm-46" ino=124896 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:20:46.456  8244  8244 W cmake   : type=1400 audit(0.0:16884): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Projects/SelfTestCpp/.tabstudio/cmake/CMakeFiles/CMakeScratch/TryCompile-njAoma/CMakeFiles/cmTC_d9e8a.dir/build.make.tmp2446e" dev="dm-46" ino=124898 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:20:46.456  8244  8244 W cmake   : type=1400 audit(0.0:16885): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Projects/SelfTestCpp/.tabstudio/cmake/CMakeFiles/CMakeScratch/TryCompile-njAoma/CMakeFiles/cmTC_d9e8a.dir/compiler_depend.make.tmpfd737" dev="dm-46" ino=124899 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:20:48.232  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 8304; stored .
+10-30 04:20:48.236  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 8304; stored 8304.
+10-30 04:20:48.250  3158  8305 I DOTNET  : TabStudio process trace: wait: PID 8304; stored .
+10-30 04:20:48.496  8312  8312 W cmake   : type=1400 audit(0.0:17606): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libuv.so.1.0.0" dev="dm-46" ino=501810 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:48.524  8312  8312 W cmake   : type=1400 audit(0.0:17607): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libz.so.1.3.2" dev="dm-46" ino=500747 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:48.524  8312  8312 W cmake   : type=1400 audit(0.0:17608): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libstdc++.so.6.0.34" dev="dm-46" ino=501292 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:48.524  8312  8312 W cmake   : type=1400 audit(0.0:17609): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libgcc_s.so.1" dev="dm-46" ino=501290 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:48.524  8312  8312 W cmake   : type=1400 audit(0.0:17610): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libacl.so.1.1.2302" dev="dm-46" ino=501802 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:20:52.640  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 8345; stored .
+10-30 04:20:52.731  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 8345; stored 8345.
+10-30 04:20:52.750  3158  8346 I DOTNET  : TabStudio process trace: wait: PID 8345; stored .
+10-30 04:20:53.328  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 8351; stored .
+10-30 04:20:53.333  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 8351; stored 8351.
+10-30 04:20:53.361  3158  8352 I DOTNET  : TabStudio process trace: wait: PID 8351; stored .
+10-30 04:20:53.756  8359  8359 W cmake   : type=1400 audit(0.0:19324): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Projects/SelfTestCpp/.tabstudio/cmake/CMakeFiles/greeter.dir/build.make.tmp4c2f3" dev="dm-46" ino=124889 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:20:53.756  8359  8359 W cmake   : type=1400 audit(0.0:19325): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Projects/SelfTestCpp/.tabstudio/cmake/CMakeFiles/greeter.dir/compiler_depend.make.tmpe3cc1" dev="dm-46" ino=124918 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:20:53.756  8359  8359 W cmake   : type=1400 audit(0.0:19326): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Projects/SelfTestCpp/.tabstudio/cmake/CMakeFiles/greeter.dir/depend.make.tmp4aa6e" dev="dm-46" ino=124894 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:20:53.768  8359  8359 W cmake   : type=1400 audit(0.0:19327): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Projects/SelfTestCpp/.tabstudio/cmake/CMakeFiles/greeter.dir/flags.make.tmpaa417" dev="dm-46" ino=124896 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:20:53.768  8359  8359 W cmake   : type=1400 audit(0.0:19328): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Projects/SelfTestCpp/.tabstudio/cmake/compile_commands.json.tmp75970" dev="dm-46" ino=124919 ioctlcmd=0x5413 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+10-30 04:20:53.934  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 8363; stored .
+10-30 04:20:53.934  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 8363; stored 8363.
+10-30 04:20:53.965  3158  8364 I DOTNET  : TabStudio process trace: wait: PID 8363; stored .
+10-30 04:20:54.664  3158  3158 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'mkfifo' may fail
+10-30 04:20:54.734  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 8380; stored .
+10-30 04:20:54.735  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 8380; stored 8380.
+10-30 04:20:54.780  3158  8381 I DOTNET  : TabStudio process trace: wait: PID 8380; stored .
+10-30 04:21:00.087  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 8431; stored .
+10-30 04:21:00.087  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 8431; stored 8431.
+10-30 04:21:00.127  3158  8432 I DOTNET  : TabStudio process trace: wait: PID 8431; stored .
+10-30 04:21:00.316  3158  6176 I DOTNET  : TabStudio process trace: spawn: PID 8437; stored .
+10-30 04:21:00.316  3158  6176 I DOTNET  : TabStudio process trace: handle: PID 8437; stored 8437.
+10-30 04:21:00.352  3158  8438 I DOTNET  : TabStudio process trace: wait: PID 8437; stored .
+10-30 04:21:01.190  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 8464; stored .
+10-30 04:21:01.190  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 8464; stored 8464.
+10-30 04:21:01.217  3158  8465 I DOTNET  : TabStudio process trace: wait: PID 8464; stored .
+10-30 04:21:02.384  8490  8490 W java    : type=1400 audit(0.0:20837): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libjimage.so" dev="dm-46" ino=123306 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:03.440  8457  8457 W -Declipse.application=org.eclipse.jdt.ls.core.id1: type=1400 audit(0.0:20943): avc:  granted  { execute } for  comm=433220436F6D70696C657254687265 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libjsvml.so" dev="dm-46" ino=123309 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:03.728  8457  8457 W java    : type=1400 audit(0.0:20944): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libnio.so" dev="dm-46" ino=123316 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:03.736  8457  8457 W java    : type=1400 audit(0.0:20945): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libnet.so" dev="dm-46" ino=123315 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:03.736  8457  8457 W java    : type=1400 audit(0.0:20946): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libzip.so" dev="dm-46" ino=123323 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:08.836  8544  8544 W libproot-loader: type=1400 audit(0.0:20965): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:09.292  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 8546; stored .
+10-30 04:21:09.321  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 8546; stored 8546.
+10-30 04:21:09.341  3158  8547 I DOTNET  : TabStudio process trace: wait: PID 8546; stored .
+10-30 04:21:09.828  8557  8557 W libproot-loader: type=1400 audit(0.0:21037): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501148 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:21:09.828  8557  8557 W libproot-loader: type=1400 audit(0.0:21038): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+10-30 04:21:10.964  8554  8554 W /usr/bin/java: type=1400 audit(0.0:21197): avc:  granted  { execute } for  comm=433220436F6D70696C657254687265 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libjsvml.so" dev="dm-46" ino=123309 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:11.032  8554  8554 W java    : type=1400 audit(0.0:21198): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libnio.so" dev="dm-46" ino=123316 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:11.032  8554  8554 W java    : type=1400 audit(0.0:21199): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libnet.so" dev="dm-46" ino=123315 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:12.204  8554  8554 W java    : type=1400 audit(0.0:21214): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/tmp/jansi-2.4.3-1159bedf90fd05f6-libjansi.so" dev="dm-46" ino=502060 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:12.336  8554  8554 W java    : type=1400 audit(0.0:21217): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libverify.so" dev="dm-46" ino=123322 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:14.408  8457  8457 W java    : type=1400 audit(0.0:21220): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/share/jdtls/configuration/org.eclipse.equinox.launcher/org.eclipse.equinox.launcher.gtk.linux.x86_64_1.2.1500.v20250801-0854/eclipse_11916.so" dev="dm-46" ino=221190 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:21.224  8457  8457 W -Declipse.application=org.eclipse.jdt.ls.core.id1: type=1400 audit(0.0:21221): avc:  granted  { execute } for  comm=5374617274204C6576656C3A204571 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libmanagement.so" dev="dm-46" ino=123311 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:21.232  8457  8457 W -Declipse.application=org.eclipse.jdt.ls.core.id1: type=1400 audit(0.0:21222): avc:  granted  { execute } for  comm=5374617274204C6576656C3A204571 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libmanagement_ext.so" dev="dm-46" ino=123313 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:22.448  8457  8457 W -Declipse.application=org.eclipse.jdt.ls.core.id1: type=1400 audit(0.0:21223): avc:  granted  { execute } for  comm=5374617274204C6576656C3A204571 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libverify.so" dev="dm-46" ino=123322 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:29.272  8554  8554 W java    : type=1400 audit(0.0:21224): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libextnet.so" dev="dm-46" ino=123298 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:21:34.676  8457  8457 W -Declipse.application=org.eclipse.jdt.ls.core.id1: type=1400 audit(0.0:21251): avc:  granted  { execute } for  comm=576F726B65722D333A204C6F616469 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libextnet.so" dev="dm-46" ino=123298 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:22:07.743  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 8889; stored .
+10-30 04:22:07.769  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 8889; stored 8889.
+10-30 04:22:07.819  3158  8890 I DOTNET  : TabStudio process trace: wait: PID 8889; stored .
+10-30 04:22:09.037  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 8918; stored .
+10-30 04:22:09.038  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 8918; stored 8918.
+10-30 04:22:09.094  3158  8919 I DOTNET  : TabStudio process trace: wait: PID 8918; stored .
+10-30 04:22:10.312  8953  8953 W /usr/bin/java: type=1400 audit(0.0:21469): avc:  granted  { execute } for  comm=433220436F6D70696C657254687265 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libjsvml.so" dev="dm-46" ino=123309 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:22:10.624  8926  8926 W libproot-loader: type=1400 audit(0.0:21472): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/bin/java" dev="dm-46" ino=518602 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:22:10.624  8926  8926 W libproot-loader: type=1400 audit(0.0:21473): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501160 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:22:12.356  8926  8926 W java    : type=1400 audit(0.0:21556): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/tmp/jansi-2.4.3-e2db36dbc33180e7-libjansi.so" dev="dm-46" ino=502060 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:22:12.492  8926  8926 W java    : type=1400 audit(0.0:21559): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libverify.so" dev="dm-46" ino=123322 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:22:29.802  3158  3158 I DOTNET  : TabStudio process trace: spawn: PID 9070; stored .
+10-30 04:22:29.802  3158  3158 I DOTNET  : TabStudio process trace: handle: PID 9070; stored 9070.
+10-30 04:22:29.893  3158  9071 I DOTNET  : TabStudio process trace: wait: PID 9070; stored .
+10-30 04:22:31.332  9076  9076 W java    : type=1400 audit(0.0:21657): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libnio.so" dev="dm-46" ino=123316 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:22:31.356  9076  9076 W java    : type=1400 audit(0.0:21658): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libnet.so" dev="dm-46" ino=123315 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+10-30 04:22:33.880  3158  3158 I TabStudio: TABSTUDIO_SELFTEST_OK 695.2 s: Shard: native | Hot Reload: local Android updates deferred in 0.15; JIT runtime, restart to apply edits. MetadataUpdater.IsSupported=False; AndroidMono=True; startup environment=unset; Mono interpreter options=default; feature switch=True; local Android Hot Reload deferred; the IDE uses the JIT | Processes: started 200 programs in 30.8 s while 289 minor and 1 major collections ran | Toolchains: installed in 1 s, Hello, Tablet! This is Python 3.14.10 on TabStudio. | node v24.22.1 says 42 | 8 s in all | Embedded bridge: native PTY byte transport, baud, modem lines and hangup passed with virtual USB; no hardware claim. | Services: PostgreSQL in PRoot on port 35707, init script and SELECT verified in 42.0 s | Python tools: Pyright ready in 1 s, squiggled undefined_name (reportUndefinedVariable) | debugpy: Paused at a breakpoint · main.py, line 11, name = 'Tablet', in 14 s | Listening port: 44507, preview passed | C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting | Java debugging: stopped at 10, answer = 42, console input and completed greeting
