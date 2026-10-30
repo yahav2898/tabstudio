@@ -206,8 +206,50 @@ public static partial class ProjectParser
             AdditionalFiles = generatorInputs.Files,
         };
 
+        info = info with
+        {
+            CompilerTargets = TargetItems.CompilerTargetsOf([evaluation.Targets]),
+            EmbeddedResourceItems = ReadItemMetadata(items, "EmbeddedResource"),
+        };
+        if (info.CompilerTargets.Count > 0)
+        {
+            info = info with { AdditionalFiles = [.. info.AdditionalFiles, .. TargetItems.AdditionalFiles(info, evaluation.Properties)] };
+        }
+
         var (kind, isTest) = ProjectClassifier.Classify(info);
         return info with { Kind = kind, IsTestProject = isTest };
+    }
+
+    /// <summary>The metadata of an item type's items that include or update files, in order.</summary>
+    private static List<ItemMetadataInfo> ReadItemMetadata(XElement items, string itemType)
+    {
+        var result = new List<ItemMetadataInfo>();
+        foreach (var item in items.Descendants().Where(e => e.Name.LocalName == itemType))
+        {
+            var metadata = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var attribute in item.Attributes().Where(a => !ItemAttributes.Contains(a.Name.LocalName) && !a.IsNamespaceDeclaration))
+            {
+                metadata[attribute.Name.LocalName] = attribute.Value.Trim();
+            }
+
+            foreach (var child in item.Elements())
+            {
+                metadata[child.Name.LocalName] = child.Value.Trim();
+            }
+
+            var patterns = item.Attribute("Include")?.Value ?? item.Attribute("Update")?.Value;
+            if (metadata.Count == 0 || string.IsNullOrWhiteSpace(patterns))
+            {
+                continue;
+            }
+
+            foreach (var pattern in patterns.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Where(p => !p.Contains("$(", StringComparison.Ordinal) && !p.Contains("@(", StringComparison.Ordinal)))
+            {
+                result.Add(new ItemMetadataInfo(pattern, metadata));
+            }
+        }
+
+        return result;
     }
 
     /// <summary>

@@ -185,37 +185,43 @@ public sealed partial class RoslynWorkspaceHost
     /// <param name="skip">Files with sections of their own, such as Razor files.</param>
     private static string AdditionalFileSections(TsProject project, IReadOnlyCollection<string> skip)
     {
+        // The metadata of AdditionalFiles items, and of the other item types a target made them from, such as
+        // ThisAssembly.Strings' ResxCode: the SDK writes each as build_metadata.{ItemType}.{MetadataName}.
         var visible = project.CompilerVisibleItemMetadata
-            .Where(m => string.Equals(m.ItemType, "AdditionalFiles", StringComparison.OrdinalIgnoreCase))
-            .Select(m => m.MetadataName)
-            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .DistinctBy(m => (m.ItemType.ToUpperInvariant(), m.MetadataName.ToUpperInvariant()))
             .ToList();
         if (visible.Count == 0)
         {
             return string.Empty;
         }
 
-        var items = new List<(string Path, IReadOnlyDictionary<string, string> Metadata)>();
+        var items = new List<(string Path, IReadOnlyDictionary<string, string> Metadata, IReadOnlyList<string> Types)>();
         foreach (var path in AdditionalFilePaths(project))
         {
             var item = project.AdditionalFiles.LastOrDefault(i => new GlobPattern(i.BaseDirectory, i.Include).IsMatch(path));
-            items.Add((path, item?.Metadata ?? new Dictionary<string, string>()));
+            items.Add((path, item?.Metadata ?? new Dictionary<string, string>(), item?.ItemTypes ?? ["AdditionalFiles"]));
         }
 
         if (UsesAvaloniaXaml(project))
         {
             var xaml = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { ["SourceItemGroup"] = "AvaloniaXaml" };
-            items.AddRange(ProjectSourceFiles.Enumerate(project, extension: ".axaml").Select(path => (path, (IReadOnlyDictionary<string, string>)xaml)));
+            items.AddRange(ProjectSourceFiles.Enumerate(project, extension: ".axaml").Select(path => (path, (IReadOnlyDictionary<string, string>)xaml, (IReadOnlyList<string>)["AdditionalFiles"])));
         }
 
         var text = new StringBuilder();
-        foreach (var (path, metadata) in items.Where(i => !skip.Contains(i.Path)).DistinctBy(i => i.Path, StringComparer.Ordinal))
+        foreach (var (path, metadata, types) in items.Where(i => !skip.Contains(i.Path)).DistinctBy(i => i.Path, StringComparer.Ordinal))
         {
-            text.Append(CultureInfo.InvariantCulture, $"\n[{path.Replace('\\', '/')}]\n");
-            foreach (var name in visible)
+            var lines = visible.Where(m => types.Contains(m.ItemType, StringComparer.OrdinalIgnoreCase)).ToList();
+            if (lines.Count == 0)
             {
-                var value = metadata.GetValueOrDefault(name) ?? string.Empty;
-                text.Append(CultureInfo.InvariantCulture, $"build_metadata.AdditionalFiles.{name} = {value.ReplaceLineEndings(" ")}\n");
+                continue;
+            }
+
+            text.Append(CultureInfo.InvariantCulture, $"\n[{path.Replace('\\', '/')}]\n");
+            foreach (var line in lines)
+            {
+                var value = metadata.GetValueOrDefault(line.MetadataName) ?? string.Empty;
+                text.Append(CultureInfo.InvariantCulture, $"build_metadata.{line.ItemType}.{line.MetadataName} = {value.ReplaceLineEndings(" ")}\n");
             }
         }
 

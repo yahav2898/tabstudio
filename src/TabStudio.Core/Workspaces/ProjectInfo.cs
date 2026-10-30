@@ -91,7 +91,24 @@ public sealed record AssemblyReferenceInfo(string Name, string? HintPath = null)
 /// <param name="Include">The file, or a pattern of files, relative to <paramref name="BaseDirectory"/>.</param>
 /// <param name="BaseDirectory">The folder the pattern is relative to: the project's, as MSBuild evaluates items.</param>
 /// <param name="Metadata">The item's metadata, such as Avalonia's <c>SourceItemGroup</c>. Keys are case-insensitive.</param>
-public sealed record AdditionalFileItem(string Include, string BaseDirectory, IReadOnlyDictionary<string, string> Metadata);
+public sealed record AdditionalFileItem(string Include, string BaseDirectory, IReadOnlyDictionary<string, string> Metadata)
+{
+    /// <summary>
+    /// For an item a target added before the compiler ran (see <see cref="TargetItems"/>), every item type it was on the
+    /// way, such as <c>ResxCode</c> then <c>AdditionalFiles</c> for ThisAssembly.Strings, whose generators read the
+    /// metadata of each (<c>build_metadata.ResxCode.ManifestResourceName</c>); <see langword="null"/> for an
+    /// <c>AdditionalFiles</c> item of a project file.
+    /// </summary>
+    public IReadOnlyList<string>? ItemTypes { get; init; }
+}
+
+/// <summary>
+/// The metadata an item of a project file gives the files it includes or updates, such as MudBlazor's
+/// <c>&lt;EmbeddedResource Update="Resources\LanguageResource.resx"&gt;&lt;AsConstants&gt;true&lt;/AsConstants&gt;</c>.
+/// </summary>
+/// <param name="Include">The pattern of its <c>Include</c> or <c>Update</c>, relative to the project's folder.</param>
+/// <param name="Metadata">The metadata. Keys are case-insensitive.</param>
+public sealed record ItemMetadataInfo(string Include, IReadOnlyDictionary<string, string> Metadata);
 
 /// <summary>
 /// A <c>&lt;CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="..." /&gt;</c> item: metadata of an item
@@ -256,6 +273,15 @@ public sealed record ProjectInfo
 
     /// <summary>The <c>&lt;AdditionalFiles&gt;</c> items generators read, such as a generator's settings file.</summary>
     public IReadOnlyList<AdditionalFileItem> AdditionalFiles { get; init; } = [];
+
+    /// <summary>
+    /// The targets of the project's files and its packages' that run before the compiler, whose items
+    /// <see cref="TargetItems"/> carries out, in the order they run.
+    /// </summary>
+    public IReadOnlyList<System.Xml.Linq.XElement> CompilerTargets { get; init; } = [];
+
+    /// <summary>The metadata the project's <c>EmbeddedResource</c> items give the files they include or update, in order.</summary>
+    public IReadOnlyList<ItemMetadataInfo> EmbeddedResourceItems { get; init; } = [];
 
     /// <summary>
     /// The props and targets of the project's packages that have been read into it (see
