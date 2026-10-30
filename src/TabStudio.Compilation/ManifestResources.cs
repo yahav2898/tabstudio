@@ -14,8 +14,8 @@ namespace TabStudio.Compilation;
 /// does, so <c>Properties.Resources</c> and a form's <c>ComponentResourceManager</c> find their resources; entries of
 /// other types, such as images, are left out and read as <see langword="null"/>. A <c>.resx</c> beside the code file of
 /// a class, such as <c>Form1.resx</c> beside <c>Form1.cs</c>, is named after the class. Culture-specific <c>.resx</c>
-/// files, which build satellite assemblies, are not compiled. A <c>LogicalName</c> or <c>Link</c> on an item is not
-/// read; the resource is named after its path.
+/// files, which build satellite assemblies, are not compiled. An item's <c>LogicalName</c> names its resource as it is;
+/// a <c>Link</c> is not read, and the resource is named after its path.
 /// </remarks>
 public static class ManifestResources
 {
@@ -35,15 +35,19 @@ public static class ManifestResources
         foreach (var path in ProjectSourceFiles.EnumerateItems(project, project.EmbeddedResourceIncludes, project.EmbeddedResourceRemoves))
         {
             var file = path;
+
+            // An item's LogicalName is the resource's name as it is, as CommunityToolkit.Mvvm's generators embed the
+            // sources they read: <EmbeddedResource Include="...\ObservableObject.cs"><LogicalName>ObservableObject.cs</LogicalName>.
+            var logicalName = LogicalNameOf(project, path);
             if (!string.Equals(Path.GetExtension(path), ".resx", StringComparison.OrdinalIgnoreCase))
             {
-                resources.Add(new ResourceDescription(EmbeddedResourceName(project, path), () => File.OpenRead(file), isPublic: true));
+                resources.Add(new ResourceDescription(logicalName ?? EmbeddedResourceName(project, path), () => File.OpenRead(file), isPublic: true));
             }
             else if (!IsCultureSpecific(path))
             {
                 // A Windows Forms .resx file holding images, icons or image lists compiles for the Forms layer's reader.
                 var forms = WindowsForms.WindowsFormsProject.UsesWindowsForms(project);
-                resources.Add(new ResourceDescription(ResxResourceName(project, path), () => (forms ? WindowsForms.WindowsFormsResources.TryCompile(file) : null) ?? CompileResx(file), isPublic: true));
+                resources.Add(new ResourceDescription(logicalName ?? ResxResourceName(project, path), () => (forms ? WindowsForms.WindowsFormsResources.TryCompile(file) : null) ?? CompileResx(file), isPublic: true));
             }
         }
 
@@ -55,6 +59,14 @@ public static class ManifestResources
 
         return resources;
     }
+
+    /// <summary>The <c>LogicalName</c> the project's items give a resource file, the last one winning; <see langword="null"/> when none does.</summary>
+    private static string? LogicalNameOf(TsProject project, string path) =>
+        project.EmbeddedResourceItems
+            .Where(item => item.Metadata.TryGetValue("LogicalName", out var name) && name.Length > 0 && !name.Contains("%(", StringComparison.Ordinal)
+                && new GlobPattern(project.DirectoryPath, item.Include).IsMatch(path))
+            .Select(item => item.Metadata["LogicalName"])
+            .LastOrDefault();
 
     /// <summary>
     /// The SDK's name for an embedded resource: the root namespace, then the folders, each made a valid identifier,
