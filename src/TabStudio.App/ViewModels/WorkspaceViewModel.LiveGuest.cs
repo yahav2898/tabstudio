@@ -385,6 +385,11 @@ public sealed partial class WorkspaceViewModel
                 ? new VariableSource(expression, expression, null) { Variable = new LiveDebugVariable(guest, pauseId, value) }
                 : new VariableSource(expression, expression, null, result.Error ?? "There is no such value.");
         }
+        catch (LinkRemoteException ex)
+        {
+            // The host answered with a refusal, such as code a viewer may not run.
+            return new VariableSource(expression, expression, null, ex.Message);
+        }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
             return new VariableSource(expression, expression, null, $"{guest.HostName} did not answer: {ex.Message}");

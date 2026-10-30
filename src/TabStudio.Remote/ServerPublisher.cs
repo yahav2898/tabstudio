@@ -32,8 +32,7 @@ public static class ServerPublisher
                 connection.Sftp.UploadFile(input, target, canOverride: false);
                 if (!OperatingSystem.IsWindows())
                 {
-                    var mode = File.GetUnixFileMode(file);
-                    connection.Sftp.ChangePermissions(target, (short)((int)mode & 0x1ff));
+                    connection.Sftp.ChangePermissions(target, PublishedMode(File.GetUnixFileMode(file)));
                 }
             }
         }, cancellationToken).ConfigureAwait(false);
@@ -45,6 +44,24 @@ public static class ServerPublisher
         await command.ExecuteAsync(cancellationToken).ConfigureAwait(false);
         if (command.ExitStatus != 0) { throw new IOException("The service did not restart. The previous current link was restored. " + command.Error); }
         progress?.Report("Published " + release);
+    }
+
+    /// <summary>
+    /// The permissions a published file gets, as <c>SftpClient.ChangePermissions</c> takes them: an octal mode
+    /// written in decimal digits (644 for rw-r--r--). The bits themselves were passed before, so 0644 was applied
+    /// as 0420 and Android's 0600 and an executable's 0755 threw. Every file is readable by the service's user,
+    /// which is often not the one that logs in, and a program the owner can run anyone can.
+    /// </summary>
+    /// <param name="local">The local file's mode.</param>
+    public static short PublishedMode(UnixFileMode local)
+    {
+        var bits = ((int)local & 0x1ff) | 0x1a4;
+        if ((bits & 0x40) != 0)
+        {
+            bits |= 0x49;
+        }
+
+        return (short)(((bits >> 6) * 100) + (((bits >> 3) & 7) * 10) + (bits & 7));
     }
 
     public static string ActivationScript(string root, string release, string service)

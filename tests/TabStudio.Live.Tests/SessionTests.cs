@@ -267,6 +267,10 @@ public sealed class SessionTests
         var children = await dana.On(() => dana.Session.GetVariablesAsync(7, "args"));
         Assert.Equal("args.Count", Assert.Single(children).Path);
         Assert.Equal("42", (await dana.On(() => dana.Session.EvaluateAsync(7, "answer"))).Value!.Value);
+        Assert.Equal("42", (await dana.On(() => dana.Session.EvaluateAsync(7, "order.Lines[0].Price"))).Value!.Value);
+
+        // A viewer reads variables but cannot run code on the host: a debug adapter's evaluation is Python's eval.
+        await Assert.ThrowsAsync<LinkRemoteException>(() => dana.On(() => dana.Session.EvaluateAsync(7, "__import__('os').system('rm -rf ~')")));
 
         // Stepping is the host's to allow.
         await Assert.ThrowsAsync<LinkRemoteException>(() => dana.On(() => dana.Session.ControlDebuggerAsync(LiveDebugCommand.StepOver)));
@@ -274,6 +278,7 @@ public sealed class SessionTests
         await LiveLoopback.UntilAsync(() => dana.On(() => dana.Session.Self?.CanStep == true), "Dana to be allowed");
         await dana.On(() => dana.Session.ControlDebuggerAsync(LiveDebugCommand.StepOver));
         Assert.Equal((LiveDebugCommand.StepOver, "Dana"), await live.On(() => live.Workspace.DebugCommands.Single()));
+        Assert.Equal("42", (await dana.On(() => dana.Session.EvaluateAsync(7, "Total(order)"))).Value!.Value);
 
         // An editor sets a breakpoint through the host.
         await dana.On(() => dana.Session.SetBreakpointAsync("Program.cs", 3, null, remove: false));
