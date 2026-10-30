@@ -53,6 +53,111 @@ public sealed class StartupProjectTests : IDisposable
         Assert.Equal("Conduit", workspace.DefaultStartupProject?.Name);
     }
 
+    /// <summary>eShopOnWeb: Web serves the Blazor WebAssembly admin it references; a person starts Web (DOT-07).</summary>
+    [Fact]
+    public void A_web_app_that_serves_a_Blazor_WebAssembly_app_is_started_rather_than_its_client()
+    {
+        _temp.Write("src/BlazorAdmin/BlazorAdmin.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        _temp.Write("src/Web/Web.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.Web">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup><ProjectReference Include="..\BlazorAdmin\BlazorAdmin.csproj" /></ItemGroup>
+            </Project>
+            """);
+        var solution = _temp.Write("eShopOnWeb.slnx", """
+            <Solution>
+              <Project Path="src/BlazorAdmin/BlazorAdmin.csproj" />
+              <Project Path="src/Web/Web.csproj" />
+            </Solution>
+            """);
+
+        var workspace = WorkspaceLoader.Load(solution);
+
+        Assert.Equal("Web", workspace.DefaultStartupProject?.Name);
+        Assert.DoesNotContain(workspace.StartupCandidates, p => p.Name == "BlazorAdmin");
+    }
+
+    /// <summary>
+    /// Avalonia's cross-platform template and Avalonia.Samples' AdvancedToDoList: the Desktop head is started, the
+    /// Browser head comes after it, and a Browser head compiled ahead of time is explained (DOT-06).
+    /// </summary>
+    [Fact]
+    public void The_desktop_head_of_a_cross_platform_app_is_started_and_an_ahead_of_time_browser_head_is_explained()
+    {
+        _temp.Write("App/App.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup><PackageReference Include="Avalonia" Version="11.3.0" /></ItemGroup>
+            </Project>
+            """);
+        _temp.Write("App.Browser/App.Browser.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.WebAssembly">
+              <PropertyGroup><TargetFramework>net10.0-browser</TargetFramework></PropertyGroup>
+              <ItemGroup>
+                <PackageReference Include="Avalonia.Browser" Version="11.3.0" />
+                <ProjectReference Include="..\App\App.csproj" />
+              </ItemGroup>
+            </Project>
+            """);
+        _temp.Write("App.Desktop/App.Desktop.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup>
+                <PackageReference Include="Avalonia.Desktop" Version="11.3.0" />
+                <ProjectReference Include="..\App\App.csproj" />
+              </ItemGroup>
+            </Project>
+            """);
+        var solution = _temp.Write("App.slnx", """
+            <Solution>
+              <Project Path="App.Browser/App.Browser.csproj" />
+              <Project Path="App.Desktop/App.Desktop.csproj" />
+              <Project Path="App/App.csproj" />
+            </Solution>
+            """);
+
+        var workspace = WorkspaceLoader.Load(solution);
+
+        var browser = workspace.FindProject("App.Browser")!;
+        Assert.True(browser.IsExecutable);
+        Assert.True(ProjectClassifier.IsBrowserHead(browser));
+        Assert.Equal("App.Desktop", workspace.DefaultStartupProject?.Name);
+
+        var aot = ProjectParser.Parse(browser.FilePath, File.ReadAllText(browser.FilePath).Replace(
+            "<TargetFramework>net10.0-browser</TargetFramework>",
+            "<TargetFramework>net10.0-browser</TargetFramework><RunAOTCompilation>true</RunAOTCompilation>",
+            StringComparison.Ordinal));
+        Assert.Equal(PlatformWorkload.WebAssemblyTools, ProjectClassifier.RequiredWorkload(aot));
+        Assert.Contains("wasm-tools", CompatibilityDoctor.Diagnose(aot).Explanation, StringComparison.Ordinal);
+    }
+
+    /// <summary>Refit's samples for .NET 11 only: the .NET 10 SDK cannot build them, which one line says (NETSDK1045).</summary>
+    [Fact]
+    public void A_project_only_for_a_newer_dotnet_is_explained_and_one_with_net10_beside_it_is_compiled_for_net10()
+    {
+        var newer = ProjectParser.Parse(_temp.Resolve("Compression/Compression.csproj"), """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net11.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        var both = ProjectParser.Parse(_temp.Resolve("Refit/Refit.csproj"), """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFrameworks>net10.0;net11.0</TargetFrameworks></PropertyGroup>
+            </Project>
+            """);
+
+        Assert.Equal(PlatformWorkload.NewerDotNet, ProjectClassifier.RequiredWorkload(newer));
+        Assert.Null(ProjectClassifier.StartupRank(newer));
+        Assert.Equal(
+            "Not supported yet: it targets net11.0, which only the .NET 11 SDK builds; TabStudio compiles with .NET 10. TabStudio leaves it out of builds.",
+            CompatibilityDoctor.Diagnose(newer).Explanation);
+        Assert.Equal(PlatformWorkload.None, ProjectClassifier.RequiredWorkload(both));
+    }
+
     [Fact]
     public void The_Compatibility_Doctor_says_a_build_script_runs_on_a_computer_not_in_process()
     {
@@ -479,6 +584,66 @@ public sealed class StartupProjectTests : IDisposable
         Assert.Equal(
             "Nothing in this solution starts on this tablet: TodoSQLite is a .NET MAUI project, which only .NET's MAUI workload builds, on a computer.",
             workspace.NoStartupProjectReason);
+    }
+
+    /// <summary>
+    /// RestSharp's interactive tests: a console program sets IsTestProject to false under a folder whose
+    /// Directory.Build.props sets it to true and gives every project xUnit. It is a program, as the SDK builds it.
+    /// </summary>
+    [Fact]
+    public void A_program_that_says_it_is_not_a_test_project_is_not_one()
+    {
+        _temp.Write("test/Directory.Build.props", """
+            <Project>
+              <PropertyGroup><IsTestProject>true</IsTestProject></PropertyGroup>
+              <ItemGroup Condition="$(IsTestProject) == 'true'"><PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" /></ItemGroup>
+              <ItemGroup><PackageReference Include="xunit" Version="2.9.2" /></ItemGroup>
+            </Project>
+            """);
+        var path = _temp.Write("test/Interactive/Interactive.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <IsTestProject>false</IsTestProject>
+                <TargetFramework>net10.0</TargetFramework>
+              </PropertyGroup>
+            </Project>
+            """);
+
+        var project = ProjectParser.Load(path);
+
+        Assert.False(project.IsTestProject);
+        Assert.DoesNotContain(project.PackageReferences, p => p.Name == "Microsoft.NET.Test.Sdk");
+        Assert.Equal("Interactive", WorkspaceLoader.Load(path).DefaultStartupProject?.Name);
+    }
+
+    /// <summary>
+    /// eShop's Basket.FunctionalTests: a project that compiles against one TabStudio leaves out of builds (Basket.API
+    /// needs protoc) is left out with it, and the Doctor names the project it needs instead of its missing types.
+    /// </summary>
+    [Fact]
+    public void A_project_that_needs_a_project_left_out_of_builds_is_explained_by_it()
+    {
+        _temp.Write("Api/Api.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.Web">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup><Protobuf Include="Proto\basket.proto" GrpcServices="Server" /></ItemGroup>
+            </Project>
+            """);
+        _temp.Write("Api/Proto/basket.proto", "syntax = \"proto3\";");
+        _temp.Write("Tests/Tests.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup><ProjectReference Include="..\Api\Api.csproj" /></ItemGroup>
+            </Project>
+            """);
+        var workspace = WorkspaceLoader.Load(_temp.Path);
+
+        var reports = CompatibilityDoctor.Diagnose(workspace.Projects).ToDictionary(r => r.ProjectName);
+
+        Assert.Equal(CompatibilityStatus.Unsupported, reports["Api"].Status);
+        Assert.Equal(CompatibilityStatus.Unsupported, reports["Tests"].Status);
+        Assert.StartsWith("Not supported here: it compiles against Api, which generates its gRPC and Protocol Buffers code with protoc", reports["Tests"].Explanation, StringComparison.Ordinal);
     }
 
     public void Dispose() => _temp.Dispose();

@@ -115,6 +115,7 @@ public sealed partial class PackageRestorer
         {
             progress?.Report(new RestoreProgress(RestoreStage.Completed, $"The packages of {project.Name} are up to date", cached.Packages.Count, cached.Packages.Count));
             var fromCache = cached with { UnrestoredReferences = FindUnrestoredReferences(project, cached.Packages) };
+            await AddPackageFrameworksAsync(project, fromCache.Packages, frameworks, frameworkDiagnostics, cancellationToken).ConfigureAwait(false);
             return WithFrameworks(fromCache, frameworks, frameworkDiagnostics) with { Duration = stopwatch.Elapsed };
         }
 
@@ -130,7 +131,7 @@ public sealed partial class PackageRestorer
         {
             progress?.Report(new RestoreProgress(RestoreStage.Resolving, $"Resolving the packages of {project.Name}", 0, 0));
             var finder = new PackageFinder(CreateFeeds(), _packages, _framework, _fallback, _frameworkPackages, graph.Projects, progress);
-            var resolution = await new DependencyResolver(finder).ResolveAsync(project.Name, graph.Dependencies, cancellationToken).ConfigureAwait(false);
+            var resolution = await new DependencyResolver(finder).ResolveAsync(project.Name, graph.Dependencies, graph.Pins ?? [], cancellationToken).ConfigureAwait(false);
             diagnostics.AddRange(resolution.Diagnostics);
 
             foreach (var node in resolution.Unresolved)
@@ -166,6 +167,7 @@ public sealed partial class PackageRestorer
         }
 
         progress?.Report(new RestoreProgress(RestoreStage.Completed, $"Restored {packages.Count} packages for {project.Name}", packages.Count, packages.Count));
+        await AddPackageFrameworksAsync(project, packages, frameworks, frameworkDiagnostics, cancellationToken).ConfigureAwait(false);
         return WithFrameworks(result, frameworks, frameworkDiagnostics);
     }
 
@@ -198,6 +200,76 @@ public sealed partial class PackageRestorer
         }
 
         return frameworks;
+    }
+
+    /// <summary>
+    /// Restores the shared frameworks the project's packages declare (see <see cref="Manifests.NuspecReader.ReadFrameworkReferences"/>)
+    /// that it does not have yet, as the SDK adds them from the assets file: Ocelot's library gets ASP.NET Core from
+    /// Microsoft.AspNetCore.Mvc.NewtonsoftJson, and Clean Architecture's Infrastructure from
+    /// Microsoft.AspNetCore.Identity.EntityFrameworkCore, without a <c>FrameworkReference</c> of their own. A framework
+    /// that does not run here, such as Windows Desktop's, is left to the project's own references.
+    /// </summary>
+    private async Task AddPackageFrameworksAsync(
+        ProjectInfo project,
+        IReadOnlyList<RestoredPackage> packages,
+        List<SharedFrameworkAssets> frameworks,
+        List<BuildDiagnostic> diagnostics,
+        CancellationToken cancellationToken)
+    {
+        var names = packages.SelectMany(PackageFrameworkReferences).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        foreach (var name in names)
+        {
+            if (!SharedFrameworks.IsRestorable(name)
+                || string.Equals(name, SharedFrameworks.NetCoreFramework, StringComparison.OrdinalIgnoreCase)
+                || frameworks.Any(f => string.Equals(f.Name, name, StringComparison.OrdinalIgnoreCase)))
+            {
+                continue;
+            }
+
+            if (await _sharedFrameworks.RestoreAsync(name, project.Name, diagnostics, cancellationToken).ConfigureAwait(false) is { } framework)
+            {
+                frameworks.Add(framework);
+            }
+        }
+    }
+
+    /// <summary>The <c>&lt;contentFiles&gt;</c> entries of an installed package's manifest.</summary>
+    private static IReadOnlyList<Manifests.ContentFileEntry> ContentFileEntries(string directory)
+    {
+        try
+        {
+            if (Directory.EnumerateFiles(directory, "*.nuspec").FirstOrDefault() is not { } nuspec)
+            {
+                return [];
+            }
+
+            using var stream = File.OpenRead(nuspec);
+            return Manifests.NuspecReader.ReadContentFileEntries(stream);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return [];
+        }
+    }
+
+    /// <summary>The shared frameworks one restored package declares, from its manifest in the packages folder.</summary>
+    private IReadOnlyList<string> PackageFrameworkReferences(RestoredPackage package)
+    {
+        try
+        {
+            if (!Directory.Exists(package.DirectoryPath)
+                || Directory.EnumerateFiles(package.DirectoryPath, "*.nuspec").FirstOrDefault() is not { } nuspec)
+            {
+                return [];
+            }
+
+            using var stream = File.OpenRead(nuspec);
+            return Manifests.NuspecReader.ReadFrameworkReferences(stream, _framework, _fallback);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return [];
+        }
     }
 
     /// <summary>
@@ -319,6 +391,11 @@ public sealed partial class PackageRestorer
             .ToList();
         var assets = AssetSelector.Select(files, _framework, _fallback, Options.CompilerVersion, runtimeIdentifiers);
         var buildFiles = AssetSelector.SelectBuildFiles(files, match.Id, _framework, _fallback, package.Assets);
+        var contentSources = AssetSelector.SelectContentSources(files, _framework, _fallback, package.Assets);
+        if (contentSources.Count > 0)
+        {
+            contentSources = AssetSelector.SelectContentSources(files, _framework, _fallback, package.Assets, ContentFileEntries(directory));
+        }
 
         if (!assets.IsCompatible)
         {
@@ -355,6 +432,7 @@ public sealed partial class PackageRestorer
             FlowsAnalyzers = package.FlowsAnalyzers,
             NativeLibraries = native,
             BuildFiles = [.. buildFiles.Select(path => Path.Combine(directory, path.Replace('/', Path.DirectorySeparatorChar)))],
+            ContentSources = [.. contentSources.Select(path => Path.Combine(directory, path.Replace('/', Path.DirectorySeparatorChar)))],
             Depth = package.Depth,
         };
     }

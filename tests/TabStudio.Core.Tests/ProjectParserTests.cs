@@ -169,7 +169,7 @@ public sealed class ProjectParserTests
     }
 
     [Fact]
-    public void An_unconditional_property_wins_over_a_conditional_one()
+    public void A_property_group_for_another_configuration_does_not_apply()
     {
         const string xml = """
             <Project Sdk="Microsoft.NET.Sdk">
@@ -185,8 +185,92 @@ public sealed class ProjectParserTests
 
         var project = ProjectParser.Parse(ProjectPath, xml);
 
+        // Visual Studio evaluates the Debug configuration, as MSBuild does without one: the Release group is not read.
         Assert.Equal("Exe", project.OutputType);
-        Assert.Equal("true", project.GetProperty("Optimize"));
+        Assert.Null(project.GetProperty("Optimize"));
+    }
+
+    [Fact]
+    public void Properties_are_evaluated_in_order_with_their_conditions()
+    {
+        // The first conditional value used to win whatever its condition; MSBuild sets each value where its condition
+        // holds, with the properties set before it.
+        const string xml = """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <TargetFrameworks>net48;net10.0</TargetFrameworks>
+                <Flavor Condition="'$(Configuration)' == 'Release'">release</Flavor>
+                <Flavor Condition="'$(Configuration)' == 'Debug'">debug</Flavor>
+                <DefineConstants>$(DefineConstants);COMMON</DefineConstants>
+              </PropertyGroup>
+              <Choose>
+                <When Condition="$(TargetFramework.StartsWith('net4')) == 'false'">
+                  <PropertyGroup><DefineConstants>$(DefineConstants);MODERN</DefineConstants></PropertyGroup>
+                </When>
+                <Otherwise>
+                  <PropertyGroup><DefineConstants>$(DefineConstants);LEGACY</DefineConstants></PropertyGroup>
+                </Otherwise>
+              </Choose>
+              <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+                <LangVersion>7.3</LangVersion>
+              </PropertyGroup>
+              <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+                <PackageReference Include="Modern.Only" Version="1.0.0" />
+              </ItemGroup>
+              <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+                <PackageReference Include="Framework.Only" Version="1.0.0" />
+              </ItemGroup>
+            </Project>
+            """;
+
+        var project = ProjectParser.Parse(ProjectPath, xml);
+
+        Assert.Equal("debug", project.GetProperty("Flavor"));
+        Assert.Equal(";COMMON;MODERN", project.GetProperty("DefineConstants"));
+        Assert.Null(project.GetProperty("LangVersion"));
+        Assert.Equal(new[] { "Modern.Only" }, project.PackageReferences.Select(p => p.Name));
+        Assert.Equal(new[] { "net48", "net10.0" }, project.TargetFrameworks);
+    }
+
+    [Fact]
+    public void Items_of_imported_files_are_read_with_the_project_s_own()
+    {
+        // Humanizer's tests get the library's project reference from a props file, Ocelot's libraries ASP.NET Core from
+        // Directory.Build.props, and a condition on the framework there sees the inner build's framework.
+        using var temp = new TempDirectory();
+        temp.Write("Directory.Build.props", """
+            <Project>
+              <PropertyGroup><Shared>$(MSBuildThisFileDirectory)shared</Shared></PropertyGroup>
+              <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+                <FrameworkReference Include="Microsoft.AspNetCore.App" />
+              </ItemGroup>
+              <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+                <Reference Include="System.Web" />
+              </ItemGroup>
+            </Project>
+            """);
+        temp.Write("tests/Tests.props", """
+            <Project>
+              <ItemGroup>
+                <ProjectReference Include="$(MSBuildThisFileDirectory)../src/Lib/Lib.csproj" />
+                <Compile Include="$(Shared)/*.cs" />
+              </ItemGroup>
+            </Project>
+            """);
+        var path = temp.Write("tests/App.Tests/App.Tests.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFrameworks>net48;net10.0</TargetFrameworks></PropertyGroup>
+              <Import Project="../Tests.props" />
+            </Project>
+            """);
+
+        var project = ProjectParser.Load(path);
+
+        Assert.Equal(new[] { temp.Resolve("src/Lib/Lib.csproj") }, project.ProjectReferences);
+        Assert.Contains(ProjectParser.AspNetCoreFramework, project.FrameworkReferences);
+        Assert.DoesNotContain(project.AssemblyReferences, r => r.Name == "System.Web");
+        Assert.Contains(project.CompileIncludes, p => p.Replace('\\', '/').EndsWith("shared/*.cs", StringComparison.Ordinal));
+        Assert.Null(project.GetProperty("TargetFramework"));
     }
 
     [Fact]

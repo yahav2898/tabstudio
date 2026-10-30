@@ -105,6 +105,9 @@ internal sealed partial class FormsRuntime : IDisposable
     /// <summary>The exception that ended the app, if one did.</summary>
     public Exception? Crash { get; private set; }
 
+    /// <summary>The exception TabStudio compiles a program's Environment.Exit into, which ends the run rather than crashing it.</summary>
+    private const string ProgramExitExceptionName = "TabStudio.Runtime.ProgramExitException";
+
     /// <summary>The Application.ThreadException handlers.</summary>
     public System.Threading.ThreadExceptionEventHandler? ThreadException { get; set; }
 
@@ -260,6 +263,15 @@ internal sealed partial class FormsRuntime : IDisposable
     public void HandleException(Exception exception)
     {
         ArgumentNullException.ThrowIfNull(exception);
+
+        // Environment.Exit in a handler, which TabStudio compiles as this exception (TabStudio.Runtime.ProgramExitException):
+        // the app ends, as its process would, rather than crashing.
+        if (exception.GetType().FullName == ProgramExitExceptionName)
+        {
+            Stop();
+            return;
+        }
+
         if (ThreadException is { } handler && !_stopping)
         {
             try
@@ -395,6 +407,13 @@ internal sealed partial class FormsRuntime : IDisposable
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
             error = ex is System.Reflection.TargetInvocationException { InnerException: { } inner } ? inner : ex;
+        }
+
+        // Environment.Exit in Main ends the app with its code (see HandleException).
+        if (error is not null && error.GetType().FullName == ProgramExitExceptionName && error.GetType().GetProperty("ExitCode")?.GetValue(error) is int code)
+        {
+            exitCode = code;
+            error = null;
         }
 
         try

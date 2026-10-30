@@ -57,6 +57,12 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
     /// <summary>Files that are not C# but that generators read, such as Avalonia's <c>.axaml</c> files.</summary>
     private readonly Dictionary<string, DocumentId> _additionalDocuments = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// The copies of an AdditionalFiles file that more projects than the first one list, as StronglyTypedId's test
+    /// projects share its templates: the SDK gives each project the file, so each has a document of its own.
+    /// </summary>
+    private readonly Dictionary<string, List<DocumentId>> _sharedAdditionalDocuments = new(StringComparer.Ordinal);
     private readonly Dictionary<string, ProjectId> _projectIds = new(StringComparer.Ordinal);
     private readonly Dictionary<ProjectId, TsProject> _projects = [];
     private TsWorkspace? _loaded;
@@ -128,6 +134,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         _workspace.ClearSolution();
         _documents.Clear();
         _additionalDocuments.Clear();
+        _sharedAdditionalDocuments.Clear();
         _razorDocuments.Clear();
         _razorFiles.Clear();
         _unoGeneratorInputs.Clear();
@@ -142,9 +149,13 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         // compiled against .NET, its errors would only say that it is the wrong framework. Nor is a project that needs a
         // platform workload, such as a .NET MAUI app or the Android or iOS head of a cross-platform app, which only that
         // workload builds.
+        // Nor is a project that compiles against one of those, as the build leaves it out too: its errors would only
+        // say that the project it needs is missing, and the Compatibility Doctor names that project instead. Nor is one
+        // the solution's Debug configuration does not build, unless a project that is built references it.
+        var dependents = BuildExclusions.Of(workspace.Projects);
         var csharpProjects = workspace.Projects
             .Where(p => p.IsRoslynLanguage && p.Kind is not (ProjectKind.Unknown or ProjectKind.AspireAppHost))
-            .Where(p => !NetFrameworkCompatibility.NeedsWindows(p) && !ProjectClassifier.NeedsPlatformWorkload(p))
+            .Where(p => !NetFrameworkCompatibility.NeedsWindows(p) && !ProjectClassifier.NeedsPlatformWorkload(p) && !dependents.ContainsKey(p.FilePath))
             .ToList();
 
         // Projects whose packages were restored before get what their packages' props and targets add.
@@ -172,6 +183,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             _workspace.ClearSolution();
             _documents.Clear();
             _additionalDocuments.Clear();
+            _sharedAdditionalDocuments.Clear();
             _razorDocuments.Clear();
             AddSolution(workspace, csharpProjects, allProjectDirectories, sources);
         }
@@ -223,7 +235,14 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         {
             if (_additionalDocuments.TryGetValue(filePath, out var additional))
             {
-                return _workspace.TryApplyChanges(_workspace.CurrentSolution.WithAdditionalDocumentText(additional, SourceText.From(text, Encoding.UTF8)));
+                var source = SourceText.From(text, Encoding.UTF8);
+                var withText = _workspace.CurrentSolution.WithAdditionalDocumentText(additional, source);
+                foreach (var copy in _sharedAdditionalDocuments.GetValueOrDefault(filePath) ?? [])
+                {
+                    withText = withText.WithAdditionalDocumentText(copy, source);
+                }
+
+                return _workspace.TryApplyChanges(withText);
             }
 
             if (!_documents.TryGetValue(filePath, out var id) || !ReplaceText(id, text))
@@ -346,7 +365,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
         if (project.IsExecutable)
         {
-            diagnostics.AddRange(InProcessSafetyAnalyzer.AnalyzeTree(model.Compilation, model.SyntaxTree, project.Name, cancellationToken));
+            diagnostics.AddRange(InProcessSafetyAnalyzer.AnalyzeTree(model.Compilation, model.SyntaxTree, project.Name, redirected: true, cancellationToken));
         }
 
         diagnostics.AddRange(Uno.UnoCompatibility.AnalyzeTree(model, project, cancellationToken));
@@ -411,7 +430,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
         if (info.IsExecutable)
         {
-            diagnostics.AddRange(InProcessSafetyAnalyzer.Analyze(compilation, info.Name, cancellationToken));
+            diagnostics.AddRange(InProcessSafetyAnalyzer.Analyze(compilation, info.Name, redirected: true, cancellationToken));
         }
 
         return diagnostics;
@@ -541,6 +560,12 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             return wpf;
         }
 
+        // A program about to run gets its Environment.Exit calls redirected, so that it ends and TabStudio does not.
+        if (checkInProcessSafety)
+        {
+            compilation = InProcessExit.Redirect(compilation, cancellationToken);
+        }
+
         var result = await Razor.RazorCompilations.EmitAsync(project, info, compilation, checkInProcessSafety, stopwatch, cancellationToken).ConfigureAwait(false);
         List<BuildDiagnostic> failures = [.. AnalyzerFailuresFor(info, project.AnalyzerReferences.Select(r => r.FullPath)), .. GeneratorProjectFailures(info, project.AnalyzerReferences)];
         return failures.Count > 0
@@ -591,6 +616,27 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
     }
 
+    /// <summary>
+    /// A new document id for one project's copy of an AdditionalFiles file: the first project's is the one edits go to
+    /// first, and the others are kept with it so every copy follows the text. The caller holds the gate.
+    /// </summary>
+    private DocumentId AdditionalFileDocumentId(ProjectId project, string path)
+    {
+        var documentId = DocumentId.CreateNewId(project, path);
+        if (!_additionalDocuments.TryAdd(path, documentId))
+        {
+            if (!_sharedAdditionalDocuments.TryGetValue(path, out var copies))
+            {
+                copies = [];
+                _sharedAdditionalDocuments[path] = copies;
+            }
+
+            copies.Add(documentId);
+        }
+
+        return documentId;
+    }
+
     private RoslynProjectInfo CreateProjectInfo(TsProject project, IReadOnlyList<string> allProjectDirectories, ISourceTextProvider sources)
     {
         if (project.IsVisualBasic)
@@ -620,11 +666,9 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         // The project's and its packages' AdditionalFiles items, which generators read through AdditionalTextsProvider.
-        foreach (var path in AdditionalFilePaths(project).Where(path => !_additionalDocuments.ContainsKey(path)))
+        foreach (var path in AdditionalFilePaths(project).Where(path => !additionalDocuments.Any(d => d.FilePath == path)))
         {
-            var documentId = DocumentId.CreateNewId(id, path);
-            additionalDocuments.Add(CreateDocumentInfo(documentId, path, ReadSource(sources, path), isGenerated: false));
-            _additionalDocuments[path] = documentId;
+            additionalDocuments.Add(CreateDocumentInfo(AdditionalFileDocumentId(id, path), path, ReadSource(sources, path), isGenerated: false));
         }
 
         AddRazorDocuments(project, id, allProjectDirectories, sources, documents, additionalDocuments);
@@ -645,6 +689,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         documents.AddRange(WindowsFormsDocuments(id, project));
+        documents.AddRange(PackageContentDocuments(id, project));
         if (DesktopSettings.Applies(project, documents.Where(d => !d.IsGenerated).Select(d => d.FilePath ?? string.Empty)))
         {
             var path = Path.Combine(project.DirectoryPath, "obj", "TabStudio", "System.Configuration.Settings.g.cs");
@@ -653,7 +698,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
         var projectReferences = CompileReferencesOf(project)
             .Where(reference => _projectIds.ContainsKey(reference) && !_skeletons.ContainsKey(reference))
-            .Select(reference => new ProjectReference(_projectIds[reference]));
+            .Select(reference => new ProjectReference(_projectIds[reference], ReferenceAliases(project, reference)));
 
         // An Uno or WinUI 3 app has no Main of its own here: TabStudio's host starts it, as each platform's head does.
         // Nor has a test project, even an executable one such as xUnit v3's, whose Main its package's targets generate:

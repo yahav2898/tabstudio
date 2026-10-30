@@ -103,6 +103,33 @@ public sealed class PackageRestorerTests : IDisposable
         Assert.Equal(result.BuildFiles, cached.BuildFiles);
     }
 
+    /// <summary>
+    /// A source-only package compiles its contentFiles into the projects that reference it, but not into those that get
+    /// it through another package, unless that package's dependency includes them: NuGet's default for a package's
+    /// dependencies is everything but content files. WireMock.Net brings RamlToOpenApiConverter.SourceOnly this way,
+    /// and its sources need a package WireMock.Net merges into itself.
+    /// </summary>
+    [Fact]
+    public async Task Content_files_flow_only_from_packages_the_project_references_or_includes()
+    {
+        static TestPackage Source(string id) => new TestPackage(id, "1.0.0").WithAssembly("lib/net8.0").WithFile($"contentFiles/cs/net8.0/{id}.cs", "class C { }");
+        _fixture.Add(
+            Source("Direct"),
+            Source("Transitive"),
+            Source("Included"),
+            new TestPackage("Parent", "1.0.0").WithAssembly("lib/net8.0")
+                .DependsOn("Transitive", "1.0.0")
+                .DependsOn("Included", "1.0.0", include: "all", exclude: null));
+        var project = _fixture.Project(("Direct", "1.0.0"), ("Parent", "1.0.0"));
+
+        var result = await _fixture.CreateRestorer().RestoreAsync(project);
+
+        Assert.True(result.Success, Describe(result));
+        Assert.Equal(
+            new[] { "Direct.cs", "Included.cs" },
+            result.ContentSources.Select(Path.GetFileName).Order(StringComparer.Ordinal));
+    }
+
     [Fact]
     public async Task A_reference_s_ExcludeAssets_build_keeps_only_its_buildTransitive_files()
     {

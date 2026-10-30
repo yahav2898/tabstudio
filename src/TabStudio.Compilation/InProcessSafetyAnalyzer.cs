@@ -27,12 +27,23 @@ public static class InProcessSafetyAnalyzer
     /// <param name="compilation">The compilation to check.</param>
     /// <param name="projectName">The project name to attach to diagnostics.</param>
     /// <param name="cancellationToken">Cancels the analysis.</param>
-    public static IReadOnlyList<BuildDiagnostic> Analyze(RoslynCompilation compilation, string? projectName, CancellationToken cancellationToken = default)
+    public static IReadOnlyList<BuildDiagnostic> Analyze(RoslynCompilation compilation, string? projectName, CancellationToken cancellationToken = default) =>
+        Analyze(compilation, projectName, redirected: false, cancellationToken);
+
+    /// <summary>Analyzes every syntax tree of a compilation.</summary>
+    /// <param name="compilation">The compilation to check.</param>
+    /// <param name="projectName">The project name to attach to diagnostics.</param>
+    /// <param name="redirected">
+    /// Whether the program's C# calls are redirected when it is built to run (see <see cref="InProcessExit"/>), as a
+    /// workspace's are: they are then warnings that say what happens, and only what cannot be redirected is an error.
+    /// </param>
+    /// <param name="cancellationToken">Cancels the analysis.</param>
+    public static IReadOnlyList<BuildDiagnostic> Analyze(RoslynCompilation compilation, string? projectName, bool redirected, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(compilation);
 
         return compilation.SyntaxTrees
-            .SelectMany(tree => AnalyzeTree(compilation, tree, projectName, cancellationToken))
+            .SelectMany(tree => AnalyzeTree(compilation, tree, projectName, redirected, cancellationToken))
             .ToList();
     }
 
@@ -41,7 +52,16 @@ public static class InProcessSafetyAnalyzer
     /// <param name="tree">The tree to check.</param>
     /// <param name="projectName">The project name to attach to diagnostics.</param>
     /// <param name="cancellationToken">Cancels the analysis.</param>
-    public static IReadOnlyList<BuildDiagnostic> AnalyzeTree(RoslynCompilation compilation, SyntaxTree tree, string? projectName, CancellationToken cancellationToken = default)
+    public static IReadOnlyList<BuildDiagnostic> AnalyzeTree(RoslynCompilation compilation, SyntaxTree tree, string? projectName, CancellationToken cancellationToken = default) =>
+        AnalyzeTree(compilation, tree, projectName, redirected: false, cancellationToken);
+
+    /// <summary>Analyzes one syntax tree. Used for live diagnostics in the editor.</summary>
+    /// <param name="compilation">The compilation that contains the tree.</param>
+    /// <param name="tree">The tree to check.</param>
+    /// <param name="projectName">The project name to attach to diagnostics.</param>
+    /// <param name="redirected">Whether C# calls are redirected when the program runs (see <see cref="Analyze(RoslynCompilation, string?, bool, CancellationToken)"/>).</param>
+    /// <param name="cancellationToken">Cancels the analysis.</param>
+    public static IReadOnlyList<BuildDiagnostic> AnalyzeTree(RoslynCompilation compilation, SyntaxTree tree, string? projectName, bool redirected, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(compilation);
         ArgumentNullException.ThrowIfNull(tree);
@@ -88,6 +108,18 @@ public static class InProcessSafetyAnalyzer
             var isExit = method.Name == "Exit";
             var location = invocation.GetLocation();
             var lineSpan = location.GetLineSpan().StartLinePosition;
+
+            // A C# program's call is redirected when it runs: the program ends with its exit code, and TabStudio stays.
+            if (redirected && root.Language == LanguageNames.CSharp)
+            {
+                results.Add(new BuildDiagnostic(
+                    isExit ? ExitId : FailFastId,
+                    DiagnosticSeverityLevel.Warning,
+                    $"Environment.{method.Name} ends this program, which runs inside TabStudio, with its exit code; TabStudio keeps running. A catch block around it that catches every exception would keep the program running.",
+                    new DiagnosticLocation(tree.FilePath, location.SourceSpan.Start, location.SourceSpan.Length, lineSpan.Line + 1, lineSpan.Character + 1),
+                    projectName));
+                continue;
+            }
 
             results.Add(new BuildDiagnostic(
                 isExit ? ExitId : FailFastId,

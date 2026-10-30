@@ -51,11 +51,9 @@ public sealed partial class RoslynWorkspaceHost
         }
 
         var additionalDocuments = new List<DocumentInfo>();
-        foreach (var path in AdditionalFilePaths(project).Where(path => !_additionalDocuments.ContainsKey(path)))
+        foreach (var path in AdditionalFilePaths(project))
         {
-            var documentId = DocumentId.CreateNewId(id, path);
-            additionalDocuments.Add(CreateDocumentInfo(documentId, path, ReadSource(sources, path), isGenerated: false));
-            _additionalDocuments[path] = documentId;
+            additionalDocuments.Add(CreateDocumentInfo(AdditionalFileDocumentId(id, path), path, ReadSource(sources, path), isGenerated: false));
         }
 
         if (VisualBasicCompiler.CreateAssemblyAttributesSource(project) is { } assemblyInfo)
@@ -72,7 +70,7 @@ public sealed partial class RoslynWorkspaceHost
 
         var projectReferences = CompileReferencesOf(project)
             .Where(reference => _projectIds.ContainsKey(reference) && !_skeletons.ContainsKey(reference))
-            .Select(reference => new ProjectReference(_projectIds[reference]));
+            .Select(reference => new ProjectReference(_projectIds[reference], ReferenceAliases(project, reference)));
 
         // A test project, even an executable one, is loaded as a library by TabStudio's test runner.
         var kind = project.IsExecutable && !project.IsTestProject ? AssemblyKind.ConsoleApplication : AssemblyKind.Library;

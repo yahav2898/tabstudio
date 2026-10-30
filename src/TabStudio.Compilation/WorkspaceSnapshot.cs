@@ -58,6 +58,13 @@ public sealed class WorkspaceSnapshot : IBuildSource
 
         var compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false)
             ?? throw new InvalidOperationException($"Roslyn could not create a compilation for '{_projects[id].Name}'.");
+
+        // As in RoslynWorkspaceHost: a program about to run gets its Environment.Exit calls redirected.
+        if (checkInProcessSafety)
+        {
+            compilation = InProcessExit.Redirect(compilation, cancellationToken);
+        }
+
         return await Razor.RazorCompilations.EmitAsync(project, _projects[id], compilation, checkInProcessSafety, stopwatch, cancellationToken).ConfigureAwait(false);
     }
 
@@ -76,7 +83,7 @@ public sealed class WorkspaceSnapshot : IBuildSource
             diagnostics.AddRange(await Razor.RazorCompilations.MapAsync(project, info, compilation.GetDiagnostics(cancellationToken), cancellationToken).ConfigureAwait(false));
             if (info.IsExecutable)
             {
-                diagnostics.AddRange(InProcessSafetyAnalyzer.Analyze(compilation, info.Name, cancellationToken));
+                diagnostics.AddRange(InProcessSafetyAnalyzer.Analyze(compilation, info.Name, redirected: true, cancellationToken));
             }
         }
 

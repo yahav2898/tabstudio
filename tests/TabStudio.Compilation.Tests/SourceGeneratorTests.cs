@@ -162,6 +162,39 @@ public sealed class SourceGeneratorTests : IDisposable
         Assert.StartsWith("mode=mine ", again.Output, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// StronglyTypedId's test projects all list its templates as AdditionalFiles: each project's generator gets them,
+    /// not only the first project's.
+    /// </summary>
+    [Fact]
+    public async Task Projects_that_share_an_additional_file_each_get_it()
+    {
+        _temp.Write("Templates/probe.txt", "shared");
+        foreach (var name in new[] { "First", "Second" })
+        {
+            _temp.Write($"{name}/{name}.csproj", """
+                <Project Sdk="Microsoft.NET.Sdk">
+                  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings></PropertyGroup>
+                  <ItemGroup><AdditionalFiles Include="$(MSBuildThisFileDirectory)..\Templates\*.txt" /></ItemGroup>
+                </Project>
+                """);
+            _temp.Write($"{name}/Program.cs", "Console.WriteLine(Probe.Runtime.Seen.Text);");
+        }
+
+        var generator = CompileGenerator("packages/probe.generator/1.0.0/analyzers/dotnet/cs/Probe.Generator.dll", ProbeGenerator);
+        _host.Load(WorkspaceLoader.Load(_temp.Path), FileSystemTextProvider.Instance);
+        foreach (var name in new[] { "First", "Second" })
+        {
+            var path = _temp.Resolve($"{name}/{name}.csproj");
+            _host.SetAnalyzers(path, [generator]);
+            var build = await new ProjectBuilder(_host).BuildAsync(_host.FindProject(path)!);
+            Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+            var console = new CapturingConsole();
+            await new ProgramRunner().RunAsync(build.EntryAssembly!, build.Dependencies, [], console);
+            Assert.EndsWith("files=probe.txt::shared\n", console.Output, StringComparison.Ordinal);
+        }
+    }
+
     /// <summary>A generator that reports what the analyzer configuration and additional files gave it.</summary>
     private const string ProbeGenerator = """
         using System.Linq;

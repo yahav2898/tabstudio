@@ -21,7 +21,15 @@ public enum SolutionFormat
 /// <param name="AbsolutePath">Full path of the project file.</param>
 /// <param name="RelativePath">Path of the project file as written in the solution, with platform separators.</param>
 /// <param name="FolderPath">The solution folder the project sits in, such as <c>src/Libraries</c>, or <see langword="null"/> at the root.</param>
-public sealed record SolutionProjectEntry(string Name, string AbsolutePath, string RelativePath, string? FolderPath);
+public sealed record SolutionProjectEntry(string Name, string AbsolutePath, string RelativePath, string? FolderPath)
+{
+    /// <summary>
+    /// Whether the solution's Debug configuration builds the project, as Visual Studio and <c>dotnet build</c> do: a
+    /// <c>.sln</c> project mapped to it without <c>Build.0</c>, or a <c>.slnx</c> project with
+    /// <c>&lt;Build Project="false" /&gt;</c>, is in the solution but not built.
+    /// </summary>
+    public bool IsBuilt { get; init; } = true;
+}
 
 /// <summary>
 /// A parsed solution file.
@@ -93,6 +101,10 @@ public static partial class SolutionParser
         var entries = new List<(string Id, string TypeId, string Name, string Path)>();
         var parents = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         var inNestedProjects = false;
+        var solutionConfigurations = new List<string>();
+        var mapped = new HashSet<(string Id, string Configuration)>();
+        var built = new HashSet<(string Id, string Configuration)>();
+        string? section = null;
 
         foreach (var rawLine in text.Split('\n'))
         {
@@ -107,6 +119,38 @@ public static partial class SolutionParser
                     project.Groups["name"].Value,
                     project.Groups["path"].Value));
                 continue;
+            }
+
+            if (line.StartsWith("GlobalSection(", StringComparison.OrdinalIgnoreCase))
+            {
+                section = line;
+            }
+            else if (line.StartsWith("EndGlobalSection", StringComparison.OrdinalIgnoreCase))
+            {
+                section = null;
+            }
+            else if (section is not null && line.Contains('=', StringComparison.Ordinal))
+            {
+                var key = line[..line.IndexOf('=', StringComparison.Ordinal)].Trim();
+                if (section.StartsWith("GlobalSection(SolutionConfigurationPlatforms)", StringComparison.OrdinalIgnoreCase))
+                {
+                    solutionConfigurations.Add(key);
+                }
+                else if (section.StartsWith("GlobalSection(ProjectConfigurationPlatforms)", StringComparison.OrdinalIgnoreCase)
+                    && key.IndexOf('.', StringComparison.Ordinal) is > 0 and var dot)
+                {
+                    // {id}.Debug|Any CPU.ActiveCfg, and {id}.Debug|Any CPU.Build.0 when the configuration builds it.
+                    var id = key[..dot].Trim('{', '}');
+                    var rest = key[(dot + 1)..];
+                    if (rest.EndsWith(".ActiveCfg", StringComparison.OrdinalIgnoreCase))
+                    {
+                        mapped.Add((id, rest[..^".ActiveCfg".Length]));
+                    }
+                    else if (rest.EndsWith(".Build.0", StringComparison.OrdinalIgnoreCase))
+                    {
+                        built.Add((id, rest[..^".Build.0".Length]));
+                    }
+                }
             }
 
             if (line.StartsWith("GlobalSection(NestedProjects)", StringComparison.OrdinalIgnoreCase))
@@ -135,13 +179,28 @@ public static partial class SolutionParser
             .Where(e => string.Equals(e.TypeId, SolutionFolderTypeId, StringComparison.OrdinalIgnoreCase))
             .ToDictionary(e => e.Id, e => e.Name, StringComparer.OrdinalIgnoreCase);
 
+        // The configuration Visual Studio opens a solution in: Debug|Any CPU, else its first Debug one, else its first.
+        var configuration = solutionConfigurations.FirstOrDefault(c => c.Equals("Debug|Any CPU", StringComparison.OrdinalIgnoreCase))
+            ?? solutionConfigurations.FirstOrDefault(c => c.StartsWith("Debug|", StringComparison.OrdinalIgnoreCase))
+            ?? solutionConfigurations.FirstOrDefault();
+        bool IsBuilt(string id)
+        {
+            var key = id.Trim('{', '}');
+            return configuration is null
+                || !mapped.Contains((key, configuration))
+                || built.Contains((key, configuration));
+        }
+
         return entries
             .Where(e => !folderNames.ContainsKey(e.Id) && ProjectParser.IsProjectFile(e.Path))
             .Select(e => new SolutionProjectEntry(
                 e.Name,
                 PathUtilities.ResolveRelative(directory, e.Path),
                 PathUtilities.NormalizeSeparators(e.Path),
-                BuildFolderPath(e.Id, parents, folderNames)))
+                BuildFolderPath(e.Id, parents, folderNames))
+            {
+                IsBuilt = IsBuilt(e.Id),
+            })
             .ToList();
     }
 
@@ -187,12 +246,21 @@ public static partial class SolutionParser
                 .Attribute("Name")?.Value
                 .Trim('/');
 
+            // <Build Project="false" />, for every configuration or for the Debug ones (Solution="Debug|*").
+            var notBuilt = project.Elements().Any(e => e.Name.LocalName == "Build"
+                && string.Equals(e.Attribute("Project")?.Value.Trim(), "false", StringComparison.OrdinalIgnoreCase)
+                && (e.Attribute("Solution")?.Value.Trim() is not { Length: > 0 } solution
+                    || solution.StartsWith("Debug|", StringComparison.OrdinalIgnoreCase)
+                    || solution.StartsWith("*|", StringComparison.Ordinal)));
             var normalized = PathUtilities.NormalizeSeparators(path);
             result.Add(new SolutionProjectEntry(
                 project.Attribute("DisplayName")?.Value ?? Path.GetFileNameWithoutExtension(normalized),
                 PathUtilities.ResolveRelative(directory, path),
                 normalized,
-                string.IsNullOrEmpty(folder) ? null : folder));
+                string.IsNullOrEmpty(folder) ? null : folder)
+            {
+                IsBuilt = !notBuilt,
+            });
         }
 
         return result;
