@@ -1,0 +1,232 @@
+spectre-console-Spectre-Console-slnx at e8045f7c53c3c217a7f93f362f5256f1fadc0020, opening /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.slnx
+Opened in 0.2 s: Spectre.Console, solution /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.slnx
+  project Spectre.Console.ImageSharp [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Extensions/Spectre.Console.ImageSharp/Spectre.Console.ImageSharp.csproj
+  project Spectre.Console.Json [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Extensions/Spectre.Console.Json/Spectre.Console.Json.csproj
+  project Benchmarks [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Benchmarks/Benchmarks.csproj
+  project Spectre.Console.Ansi.Tests [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi.Tests/Spectre.Console.Ansi.Tests.csproj
+  project Spectre.Console.Ansi [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Ansi/Spectre.Console.Ansi.csproj
+  project Spectre.Console.SourceGenerator [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.SourceGenerator/Spectre.Console.SourceGenerator.csproj
+  project Spectre.Console.Testing [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Testing/Spectre.Console.Testing.csproj
+  project Spectre.Console.Tests [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console.Tests/Spectre.Console.Tests.csproj
+  project Spectre.Console [CSharp] /home/runner/work/_temp/repos/spectre-console-Spectre-Console-slnx/src/Spectre.Console/Spectre.Console.csproj
+Compatibility Doctor:
+  Spectre.Console.ImageSharp: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Spectre.Console.Json: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Benchmarks: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
+  Spectre.Console.Ansi.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Spectre.Console.Ansi: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Spectre.Console.SourceGenerator: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Spectre.Console.Testing: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Spectre.Console.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Spectre.Console: Library via Built with its users - A library is compiled together with the projects that reference it.
+F5 startup project: none 
+Error List after analysis: 5 errors, 1 warnings
+  4 x CS0103
+      [Spectre.Console] AnsiConsoleExtensions.Input.cs(79,29): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+      [Spectre.Console] AnsiConsoleExtensions.Input.cs(83,34): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+      [Spectre.Console] Cell.cs(29,16): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+      [Spectre.Console] Cell.cs(60,28): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+  1 x CS0246
+      [Spectre.Console] Usings.cs(18,14): error CS0246: The type or namespace name 'Wcwidth' could not be found (are you missing a using directive or an assembly reference?)
+Error List after the build: 5 errors, 1 warnings
+  4 x CS0103
+      [Spectre.Console] AnsiConsoleExtensions.Input.cs(79,29): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+      [Spectre.Console] AnsiConsoleExtensions.Input.cs(83,34): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+      [Spectre.Console] Cell.cs(29,16): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+      [Spectre.Console] Cell.cs(60,28): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+  1 x CS0246
+      [Spectre.Console] Usings.cs(18,14): error CS0246: The type or namespace name 'Wcwidth' could not be found (are you missing a using directive or an assembly reference?)
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring NuGet packages 0/9 projects
+  Analyzing: Analyzing 0/9 projects
+  Analyzing: Analyzing 1/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/7
+  Analyzing: Analyzing 2/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 2/7
+  Restoring NuGet packages: Downloading NuGet packages 3/7
+  Analyzing: Analyzing 3/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 4/7
+  Restoring NuGet packages: Downloading NuGet packages 5/7
+  Restoring NuGet packages: Downloading NuGet packages 6/7
+  Analyzing: Analyzing 4/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 7/7
+  Restoring NuGet packages: Restoring NuGet packages 1/9 projects
+  Analyzing: Analyzing 5/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/6
+  Restoring NuGet packages: Downloading NuGet packages 2/6
+  Restoring NuGet packages: Downloading NuGet packages 3/6
+  Restoring NuGet packages: Downloading NuGet packages 4/6
+  Restoring NuGet packages: Downloading NuGet packages 5/6
+  Restoring NuGet packages: Downloading NuGet packages 6/6
+  Analyzing: Analyzing 6/9 projects
+  Restoring NuGet packages: Restoring NuGet packages 2/9 projects
+  Analyzing: Analyzing 7/9 projects
+  Analyzing: Analyzing 8/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/28
+  Analyzing: Analyzing 9/9 projects
+  Analyzing: Succeeded after 1.0 s
+  Restoring NuGet packages: Downloading NuGet packages 2/28
+  Restoring NuGet packages: Downloading NuGet packages 3/28
+  Restoring NuGet packages: Downloading NuGet packages 4/28
+  Restoring NuGet packages: Downloading NuGet packages 5/28
+  Restoring NuGet packages: Downloading NuGet packages 6/28
+  Restoring NuGet packages: Downloading NuGet packages 7/28
+  Restoring NuGet packages: Downloading NuGet packages 8/28
+  Restoring NuGet packages: Downloading NuGet packages 9/28
+  Restoring NuGet packages: Downloading NuGet packages 10/28
+  Restoring NuGet packages: Downloading NuGet packages 11/28
+  Restoring NuGet packages: Downloading NuGet packages 12/28
+  Restoring NuGet packages: Downloading NuGet packages 13/28
+  Restoring NuGet packages: Downloading NuGet packages 14/28
+  Restoring NuGet packages: Downloading NuGet packages 15/28
+  Restoring NuGet packages: Downloading NuGet packages 16/28
+  Restoring NuGet packages: Downloading NuGet packages 17/28
+  Restoring NuGet packages: Downloading NuGet packages 18/28
+  Restoring NuGet packages: Downloading NuGet packages 19/28
+  Restoring NuGet packages: Downloading NuGet packages 20/28
+  Restoring NuGet packages: Downloading NuGet packages 21/28
+  Restoring NuGet packages: Downloading NuGet packages 22/28
+  Restoring NuGet packages: Downloading NuGet packages 23/28
+  Restoring NuGet packages: Downloading NuGet packages 24/28
+  Restoring NuGet packages: Downloading NuGet packages 25/28
+  Restoring NuGet packages: Downloading NuGet packages 26/28
+  Restoring NuGet packages: Downloading NuGet packages 27/28
+  Restoring NuGet packages: Downloading NuGet packages 28/28
+  Restoring NuGet packages: Restoring NuGet packages 3/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/23
+  Restoring NuGet packages: Downloading NuGet packages 2/23
+  Restoring NuGet packages: Downloading NuGet packages 3/23
+  Restoring NuGet packages: Downloading NuGet packages 4/23
+  Restoring NuGet packages: Downloading NuGet packages 5/23
+  Restoring NuGet packages: Downloading NuGet packages 6/23
+  Restoring NuGet packages: Downloading NuGet packages 7/23
+  Restoring NuGet packages: Downloading NuGet packages 8/23
+  Restoring NuGet packages: Downloading NuGet packages 9/23
+  Restoring NuGet packages: Downloading NuGet packages 10/23
+  Restoring NuGet packages: Downloading NuGet packages 11/23
+  Restoring NuGet packages: Downloading NuGet packages 12/23
+  Restoring NuGet packages: Downloading NuGet packages 13/23
+  Restoring NuGet packages: Downloading NuGet packages 14/23
+  Restoring NuGet packages: Downloading NuGet packages 15/23
+  Restoring NuGet packages: Downloading NuGet packages 16/23
+  Restoring NuGet packages: Downloading NuGet packages 17/23
+  Restoring NuGet packages: Downloading NuGet packages 18/23
+  Restoring NuGet packages: Downloading NuGet packages 19/23
+  Restoring NuGet packages: Downloading NuGet packages 20/23
+  Restoring NuGet packages: Downloading NuGet packages 21/23
+  Restoring NuGet packages: Downloading NuGet packages 22/23
+  Restoring NuGet packages: Downloading NuGet packages 23/23
+  Restoring NuGet packages: Restoring NuGet packages 4/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 2/7
+  Restoring NuGet packages: Downloading NuGet packages 1/7
+  Restoring NuGet packages: Downloading NuGet packages 3/7
+  Restoring NuGet packages: Downloading NuGet packages 4/7
+  Restoring NuGet packages: Downloading NuGet packages 5/7
+  Restoring NuGet packages: Downloading NuGet packages 6/7
+  Restoring NuGet packages: Downloading NuGet packages 7/7
+  Restoring NuGet packages: Restoring NuGet packages 5/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/11
+  Restoring NuGet packages: Downloading NuGet packages 2/11
+  Restoring NuGet packages: Downloading NuGet packages 3/11
+  Restoring NuGet packages: Downloading NuGet packages 4/11
+  Restoring NuGet packages: Downloading NuGet packages 5/11
+  Restoring NuGet packages: Downloading NuGet packages 6/11
+  Restoring NuGet packages: Downloading NuGet packages 7/11
+  Restoring NuGet packages: Downloading NuGet packages 8/11
+  Restoring NuGet packages: Downloading NuGet packages 9/11
+  Restoring NuGet packages: Downloading NuGet packages 10/11
+  Restoring NuGet packages: Downloading NuGet packages 11/11
+  Restoring NuGet packages: Restoring NuGet packages 6/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/6
+  Restoring NuGet packages: Downloading NuGet packages 2/6
+  Restoring NuGet packages: Downloading NuGet packages 3/6
+  Restoring NuGet packages: Downloading NuGet packages 4/6
+  Restoring NuGet packages: Downloading NuGet packages 5/6
+  Restoring NuGet packages: Downloading NuGet packages 6/6
+  Restoring NuGet packages: Restoring NuGet packages 7/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/29
+  Restoring NuGet packages: Downloading NuGet packages 2/29
+  Restoring NuGet packages: Downloading NuGet packages 3/29
+  Restoring NuGet packages: Downloading NuGet packages 4/29
+  Restoring NuGet packages: Downloading NuGet packages 5/29
+  Restoring NuGet packages: Downloading NuGet packages 6/29
+  Restoring NuGet packages: Downloading NuGet packages 7/29
+  Restoring NuGet packages: Downloading NuGet packages 8/29
+  Restoring NuGet packages: Downloading NuGet packages 9/29
+  Restoring NuGet packages: Downloading NuGet packages 10/29
+  Restoring NuGet packages: Downloading NuGet packages 11/29
+  Restoring NuGet packages: Downloading NuGet packages 12/29
+  Restoring NuGet packages: Downloading NuGet packages 13/29
+  Restoring NuGet packages: Downloading NuGet packages 14/29
+  Restoring NuGet packages: Downloading NuGet packages 15/29
+  Restoring NuGet packages: Downloading NuGet packages 16/29
+  Restoring NuGet packages: Downloading NuGet packages 17/29
+  Restoring NuGet packages: Downloading NuGet packages 18/29
+  Restoring NuGet packages: Downloading NuGet packages 19/29
+  Restoring NuGet packages: Downloading NuGet packages 20/29
+  Restoring NuGet packages: Downloading NuGet packages 21/29
+  Restoring NuGet packages: Downloading NuGet packages 22/29
+  Restoring NuGet packages: Downloading NuGet packages 23/29
+  Restoring NuGet packages: Downloading NuGet packages 24/29
+  Restoring NuGet packages: Downloading NuGet packages 25/29
+  Restoring NuGet packages: Downloading NuGet packages 26/29
+  Restoring NuGet packages: Downloading NuGet packages 27/29
+  Restoring NuGet packages: Downloading NuGet packages 28/29
+  Restoring NuGet packages: Downloading NuGet packages 29/29
+  Restoring NuGet packages: Restoring NuGet packages 8/9 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/7
+  Restoring NuGet packages: Downloading NuGet packages 2/7
+  Restoring NuGet packages: Downloading NuGet packages 3/7
+  Restoring NuGet packages: Downloading NuGet packages 4/7
+  Restoring NuGet packages: Downloading NuGet packages 5/7
+  Restoring NuGet packages: Downloading NuGet packages 6/7
+  Restoring NuGet packages: Downloading NuGet packages 7/7
+  Restoring NuGet packages: Succeeded after 4.0 s
+  Analyzing: Analyzing 0/9 projects
+  Analyzing: Analyzing 1/9 projects
+  Analyzing: Analyzing 2/9 projects
+  Analyzing: Analyzing 3/9 projects
+  Analyzing: Analyzing 4/9 projects
+  Analyzing: Analyzing 5/9 projects
+  Analyzing: Analyzing 6/9 projects
+  Analyzing: Analyzing 7/9 projects
+  Analyzing: Analyzing 8/9 projects
+  Analyzing: Analyzing 9/9 projects
+  Analyzing: Succeeded after 0.8 s
+  Building: Building
+  Building: Building 0/9 projects
+  Building: Building 1/9 projects
+  Building: Building 2/9 projects
+  Building: Building 3/9 projects
+  Building: Building 4/9 projects
+  Building: Building 5/9 projects
+  Building: Building 6/9 projects
+  Building: Building 7/9 projects
+  Building: Building 8/9 projects
+  Building: Failed after 1.7 s
+Project setup:
+
+Output:
+Build started at 17:30:21...
+1>------ Build started: Project: Spectre.Console.SourceGenerator, Configuration: Debug ------
+1>Spectre.Console.SourceGenerator -> compiled in memory (42.5 KB, 55 ms)
+2>------ Build started: Project: Spectre.Console.Ansi, Configuration: Debug ------
+2>Spectre.Console.Ansi -> compiled in memory (101 KB, 96 ms)
+3>------ Build started: Project: Spectre.Console, Configuration: Debug ------
+3>AnsiConsoleExtensions.Input.cs(79,29): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+3>AnsiConsoleExtensions.Input.cs(83,34): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+3>Cell.cs(29,16): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+3>Cell.cs(60,28): error CS0103: The name 'UnicodeCalculator' does not exist in the current context
+3>Usings.cs(18,14): error CS0246: The type or namespace name 'Wcwidth' could not be found (are you missing a using directive or an assembly reference?)
+4>------ Build started: Project: Spectre.Console.ImageSharp, Configuration: Debug ------
+5>------ Build started: Project: Spectre.Console.Json, Configuration: Debug ------
+6>------ Build started: Project: Benchmarks, Configuration: Debug ------
+7>------ Build started: Project: Spectre.Console.Ansi.Tests, Configuration: Debug ------
+7>Spectre.Console.Ansi.Tests -> compiled in memory (38.5 KB, 98 ms)
+8>------ Build started: Project: Spectre.Console.Testing, Configuration: Debug ------
+9>------ Build started: Project: Spectre.Console.Tests, Configuration: Debug ------
+========== Build: 3 succeeded, 6 failed ==========
+
