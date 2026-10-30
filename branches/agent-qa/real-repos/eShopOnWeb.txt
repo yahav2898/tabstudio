@@ -12,7 +12,7 @@ Compatibility Doctor:
   BlazorShared: Library via Built with its users - A library is compiled together with the projects that reference it.
   PublicApiIntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: BlazorAdmin
-Built in 14.4 s: 1 errors, 27 warnings
+Built in 20.9 s: 1 errors, 27 warnings
   1 x CS0246
       [PublicApiIntegrationTests] ProgramTest.cs(21,43): error CS0246: The type or namespace name 'TestContext' could not be found (are you missing a using directive or an assembly reference?)
 Packages with analyzers or MSBuild files:
@@ -1077,22 +1077,22 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Output:
-Build started at 00:15:20...
+Build started at 02:14:36...
 1>------ Build started: Project: BlazorShared, Configuration: Debug ------
-1>BlazorShared -> compiled in memory (13.5 KB, 7 ms)
+1>BlazorShared -> compiled in memory (13.5 KB, 14 ms)
 2>------ Build started: Project: ApplicationCore, Configuration: Debug ------
 2>EmptyBasketOnCheckoutException.cs(12,154): warning SYSLIB0051: 'Exception.Exception(SerializationInfo, StreamingContext)' is obsolete: 'This API supports obsolete formatter-based serialization. It should not be called or extended by application code.'
-2>ApplicationCore -> compiled in memory (33 KB, 27 ms)
+2>ApplicationCore -> compiled in memory (33 KB, 68 ms)
 3>------ Build started: Project: BlazorAdmin, Configuration: Debug ------
-3>BlazorAdmin -> compiled in memory (103 KB, 224 ms)
+3>BlazorAdmin -> compiled in memory (103 KB, 310 ms)
 4>------ Build started: Project: Infrastructure, Configuration: Debug ------
-4>Infrastructure -> compiled in memory (106.5 KB, 156 ms)
+4>Infrastructure -> compiled in memory (106.5 KB, 257 ms)
 5>------ Build started: Project: Web, Configuration: Debug ------
-5>Web -> compiled in memory (562.5 KB, 731 ms)
+5>Web -> compiled in memory (562.5 KB, 1301 ms)
 6>------ Build started: Project: UnitTests, Configuration: Debug ------
-6>UnitTests -> compiled in memory (33.5 KB, 472 ms)
+6>UnitTests -> compiled in memory (33.5 KB, 679 ms)
 7>------ Build started: Project: IntegrationTests, Configuration: Debug ------
-7>IntegrationTests -> compiled in memory (11.5 KB, 375 ms)
+7>IntegrationTests -> compiled in memory (11.5 KB, 787 ms)
 8>------ Build started: Project: PublicApi, Configuration: Debug ------
 8>AuthenticateEndpoint.AuthenticateRequest.cs(5,19): warning CS8618: Non-nullable property 'Username' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 8>AuthenticateEndpoint.AuthenticateRequest.cs(6,19): warning CS8618: Non-nullable property 'Password' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
@@ -1117,9 +1117,9 @@ Build started at 00:15:20...
 8>UpdateCatalogItemEndpoint.UpdateCatalogItemResponse.cs(7,12): warning CS8618: Non-nullable property 'CatalogItem' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 8>UpdateCatalogItemEndpoint.UpdateCatalogItemResponse.cs(11,12): warning CS8618: Non-nullable property 'CatalogItem' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 8>CatalogTypeDto.cs(6,19): warning CS8618: Non-nullable property 'Name' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-8>PublicApi -> compiled in memory (52 KB, 201 ms)
+8>PublicApi -> compiled in memory (52 KB, 248 ms)
 9>------ Build started: Project: FunctionalTests, Configuration: Debug ------
-9>FunctionalTests -> compiled in memory (32.5 KB, 386 ms)
+9>FunctionalTests -> compiled in memory (32.5 KB, 718 ms)
 10>------ Build started: Project: PublicApiIntegrationTests, Configuration: Debug ------
 10>ProgramTest.cs(21,43): error CS0246: The type or namespace name 'TestContext' could not be found (are you missing a using directive or an assembly reference?)
 ========== Build: 9 succeeded, 1 failed ==========

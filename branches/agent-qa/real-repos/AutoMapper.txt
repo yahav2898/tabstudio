@@ -1,5 +1,5 @@
 AutoMapper at f0ecba7a97d1403973825fb3cbe2733e6216ff9a
-Opened /home/runner/work/_temp/real-repos/AutoMapper/AutoMapper.slnx in 0.3 s
+Opened /home/runner/work/_temp/real-repos/AutoMapper/AutoMapper.slnx in 0.4 s
 Compatibility Doctor:
   AutoMapper.DI.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   AutoMapper: Library via Built with its users - A library is compiled together with the projects that reference it.
@@ -10,7 +10,7 @@ Compatibility Doctor:
   docs: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
   docs: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
 Startup project: Benchmark
-Built in 8.5 s: 0 errors, 49 warnings
+Built in 12.1 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   emptyfiles 4.4.0
       build/EmptyFiles.targets
@@ -230,67 +230,19 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Output:
-Build started at 00:15:00...
+Build started at 02:14:10...
 1>------ Build started: Project: AutoMapper, Configuration: Debug ------
-1>AutoMapper -> compiled in memory (303.5 KB, 360 ms)
+1>AutoMapper -> compiled in memory (303.5 KB, 436 ms)
 2>------ Build started: Project: AutoMapper.DI.Tests, Configuration: Debug ------
-2>AutoMapper.DI.Tests -> compiled in memory (26.5 KB, 212 ms)
+> /home/runner/work/_temp/real-repos/AutoMapper/docs/.venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
+2>AutoMapper.DI.Tests -> compiled in memory (26.5 KB, 429 ms)
 3>------ Build started: Project: Benchmark, Configuration: Debug ------
-3>Benchmark -> compiled in memory (24 KB, 277 ms)
+3>Benchmark -> compiled in memory (24 KB, 305 ms)
 4>------ Build started: Project: AutoMapper.IntegrationTests, Configuration: Debug ------
-4>IntegrationTest.cs(26,27): warning CS0618: 'MsSqlBuilder.MsSqlBuilder()' is obsolete: 'This parameterless constructor is obsolete and will be removed. Use the constructor with the image parameter instead: https://github.com/testcontainers/testcontainers-dotnet/discussions/1470#discussioncomment-15185721.'
-4>AutoMapper.IntegrationTests -> compiled in memory (572.5 KB, 646 ms)
+4>AutoMapper.IntegrationTests -> compiled in memory (572.5 KB, 1203 ms)
 5>------ Build started: Project: TestApp, Configuration: Debug ------
-5>TestApp -> compiled in memory (7 KB, 322 ms)
+5>TestApp -> compiled in memory (7 KB, 415 ms)
 6>------ Build started: Project: AutoMapper.UnitTests, Configuration: Debug ------
-6>BidirectionalRelationshipsWithoutPR.cs(23,39): warning CS0649: Field 'CyclesWithInheritance.FlowSwitch<T>.Connections' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(27,32): warning CS0649: Field 'CyclesWithInheritance.FlowChartModel.Nodes' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(31,29): warning CS0649: Field 'CyclesWithInheritance.FlowNodeModel.Connections' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(35,30): warning CS0649: Field 'CyclesWithInheritance.Connection.Node' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(119,28): warning CS0649: Field 'When_the_same_map_is_used_again.Source.Inner' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(120,33): warning CS0649: Field 'When_the_same_map_is_used_again.Source.OtherInner' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(121,21): warning CS0649: Field 'When_the_same_map_is_used_again.Source.Value1' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(122,21): warning CS0649: Field 'When_the_same_map_is_used_again.Source.Value2' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(127,21): warning CS0649: Field 'When_the_same_map_is_used_again.InnerSource.Value' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(132,21): warning CS0649: Field 'When_the_same_map_is_used_again.OtherInnerSource.Value' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(137,21): warning CS0649: Field 'When_the_same_map_is_used_again.InnerDestination.Value' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(142,21): warning CS0649: Field 'When_the_same_map_is_used_again.OtherInnerDestination.Value' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(147,33): warning CS0649: Field 'When_the_same_map_is_used_again.Destination.Inner' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(148,38): warning CS0649: Field 'When_the_same_map_is_used_again.Destination.OtherInner' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(149,21): warning CS0649: Field 'When_the_same_map_is_used_again.Destination.Value1' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(150,21): warning CS0649: Field 'When_the_same_map_is_used_again.Destination.Value2' is never assigned to, and will always have its default value null
-6>BidirectionalRelationshipsWithoutPR.cs(155,20): warning CS0649: Field 'When_the_same_map_is_used_again.Item.Value' is never assigned to, and will always have its default value 0
-6>UseDestinationValue.cs(6,21): warning CS0649: Field 'UseDestinationValueNullable.Source.Value' is never assigned to, and will always have its default value 
-6>Constructors.cs(971,30): warning CS0649: Field 'When_mapping_constructor_argument_fails.Dest._foo' is never assigned to, and will always have its default value 0
-6>ExtensionMethods.cs(274,23): warning CS0649: Field 'When_a_static_method_has_first_parameter_null.FullName.Name' is never assigned to, and will always have its default value null
-6>IncludeBaseWithNonGenericUsage.cs(13,18): warning CS0649: Field 'IncludeBaseWithNonGenericUsage.SourceBase<T>.Id' is never assigned to, and will always have its default value 
-6>IncludeBaseWithNonGenericUsage.cs(14,23): warning CS0649: Field 'IncludeBaseWithNonGenericUsage.SourceBase<T>.Timestamp' is never assigned to, and will always have its default value null
-6>IncludeBaseWithNonGenericUsage.cs(19,18): warning CS0649: Field 'IncludeBaseWithNonGenericUsage.DestinationBase<T>.Id' is never assigned to, and will always have its default value 
-6>IncludeBaseWithNonGenericUsage.cs(20,23): warning CS0649: Field 'IncludeBaseWithNonGenericUsage.DestinationBase<T>.Time' is never assigned to, and will always have its default value null
-6>IncludeBaseWithNonGenericUsage.cs(44,18): warning CS0649: Field 'IncludeBaseWithGenericUsage.SourceBase<T>.Id' is never assigned to, and will always have its default value 
-6>IncludeBaseWithNonGenericUsage.cs(45,23): warning CS0649: Field 'IncludeBaseWithGenericUsage.SourceBase<T>.Timestamp' is never assigned to, and will always have its default value null
-6>IncludeBaseWithNonGenericUsage.cs(50,18): warning CS0649: Field 'IncludeBaseWithGenericUsage.DestinationBase<T>.Id' is never assigned to, and will always have its default value 
-6>IncludeBaseWithNonGenericUsage.cs(51,23): warning CS0649: Field 'IncludeBaseWithGenericUsage.DestinationBase<T>.Time' is never assigned to, and will always have its default value null
-6>OpenGenerics.cs(14,20): warning CS0649: Field 'ForPathGenericsSource.Destination.InnerId' is never assigned to, and will always have its default value 0
-6>OpenGenerics.cs(32,20): warning CS0649: Field 'ForPathGenerics.Destination<T>.InnerId' is never assigned to, and will always have its default value 0
-6>OpenGenerics.cs(54,20): warning CS0649: Field 'ReadonlyPropertiesGenerics.InnerDestination.Value' is never assigned to, and will always have its default value 0
-6>OpenGenerics.cs(137,18): warning CS0649: Field 'GenericMapsAsNonGeneric.Destination<T>.Value' is never assigned to, and will always have its default value 
-6>OpenGenerics.cs(158,18): warning CS0649: Field 'GenericMapsPriority.Destination<T>.Value' is never assigned to, and will always have its default value 
-6>OpenGenerics.cs(178,18): warning CS0649: Field 'GenericMapWithUntypedMap.Source<T>.Value' is never assigned to, and will always have its default value 
-6>OpenGenerics.cs(182,18): warning CS0649: Field 'GenericMapWithUntypedMap.Destination<T>.Value' is never assigned to, and will always have its default value 
-6>OpenGenerics.cs(193,18): warning CS0649: Field 'GenericValueResolverTypeMismatch.Source<T>.Value' is never assigned to, and will always have its default value 
-6>OpenGenerics.cs(197,23): warning CS0649: Field 'GenericValueResolverTypeMismatch.Destination.Value' is never assigned to, and will always have its default value null
-6>OpenGenerics.cs(212,23): warning CS0649: Field 'GenericValueResolver.Destination.MyKey' is never assigned to, and will always have its default value null
-6>OpenGenerics.cs(213,23): warning CS0649: Field 'GenericValueResolver.Destination.MyValue' is never assigned to, and will always have its default value null
-6>OpenGenerics.cs(217,21): warning CS0649: Field 'GenericValueResolver.Destination<TKey, TValue>.MyKey' is never assigned to, and will always have its default value 
-6>OpenGenerics.cs(218,23): warning CS0649: Field 'GenericValueResolver.Destination<TKey, TValue>.MyValue' is never assigned to, and will always have its default value 
-6>OpenGenerics.cs(233,31): warning CS0649: Field 'GenericValueResolver.Destination<T>.MyValues' is never assigned to, and will always have its default value null
-6>OpenGenerics.cs(328,23): warning CS0649: Field 'GenericMemberValueResolver.Destination.MyKey' is never assigned to, and will always have its default value null
-6>OpenGenerics.cs(329,23): warning CS0649: Field 'GenericMemberValueResolver.Destination.MyValue' is never assigned to, and will always have its default value null
-6>OpenGenerics.cs(333,21): warning CS0649: Field 'GenericMemberValueResolver.Destination<TKey, TValue>.MyKey' is never assigned to, and will always have its default value 
-6>OpenGenerics.cs(334,23): warning CS0649: Field 'GenericMemberValueResolver.Destination<TKey, TValue>.MyValue' is never assigned to, and will always have its default value 
-6>MoreExplanatoryExceptionTests.cs(22,25): warning CS0649: Field 'MoreExplanatoryExceptionTests.EntitySource.NotSupported' is never assigned to, and will always have its default value 
-6>ShouldMapMethod.cs(27,21): warning CS0649: Field 'ShouldMapMethodInstanceMethods.Source._anotherValue' is never assigned to, and will always have its default value 0
-6>AutoMapper.UnitTests -> compiled in memory (1773 KB, 1685 ms)
+6>AutoMapper.UnitTests -> compiled in memory (1773 KB, 2383 ms)
 ========== Build: 6 succeeded, 0 failed ==========
 

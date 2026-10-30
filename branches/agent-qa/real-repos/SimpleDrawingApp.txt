@@ -5,10 +5,10 @@ Compatibility Doctor:
 Startup project: Paint-v2
 Built in 0.0 s: 1 errors, 0 warnings
   1 x TS1001
-      [Paint-v2] Form1.cs(93,4): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. Return the exit code from Main instead.
+      [Paint-v2] Form1.cs(93,4): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. In a Windows Forms app call Application.Exit() or the form's Close(); in a console app return the exit code from Main.
 Output:
-Build started at 00:16:10...
+Build started at 02:15:47...
 1>------ Build started: Project: Paint-v2, Configuration: Debug ------
-1>Form1.cs(93,4): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. Return the exit code from Main instead.
+1>Form1.cs(93,4): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. In a Windows Forms app call Application.Exit() or the form's Close(); in a console app return the exit code from Main.
 ========== Build: 0 succeeded, 1 failed ==========
 
