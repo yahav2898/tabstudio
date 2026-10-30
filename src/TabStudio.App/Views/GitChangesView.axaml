@@ -205,13 +205,19 @@
                     <Grid ColumnDefinitions="*,*,*">
                       <Button Theme="{StaticResource SecondaryButton}" Padding="4,0" Margin="0,0,3,0" FontSize="{DynamicResource Type.Small}"
                               HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                              ToolTip.Tip="Keep your version, as it was before the pull" Content="Keep Mine" Command="{Binding KeepMineCommand}" />
+                              ToolTip.Tip="Keep your version, as it was before the pull" Command="{Binding KeepMineCommand}">
+                        <TextBlock Text="Keep Mine" TextTrimming="CharacterEllipsis" />
+                      </Button>
                       <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Padding="4,0" Margin="3,0" FontSize="{DynamicResource Type.Small}"
                               HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                              ToolTip.Tip="Use the version on GitHub and drop your changes" Content="Take GitHub's" Command="{Binding TakeTheirsCommand}" />
+                              ToolTip.Tip="Use the version on GitHub and drop your changes" Command="{Binding TakeTheirsCommand}">
+                        <TextBlock Text="Take GitHub's" TextTrimming="CharacterEllipsis" />
+                      </Button>
                       <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Padding="4,0" Margin="3,0,0,0" FontSize="{DynamicResource Type.Small}"
                               HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                              ToolTip.Tip="The file is fixed: keep it as it is now" Content="Mark Resolved" Command="{Binding MarkResolvedCommand}" />
+                              ToolTip.Tip="The file is fixed: keep it as it is now" Command="{Binding MarkResolvedCommand}">
+                        <TextBlock Text="Mark Resolved" TextTrimming="CharacterEllipsis" />
+                      </Button>
                     </Grid>
                   </StackPanel>
                 </Border>

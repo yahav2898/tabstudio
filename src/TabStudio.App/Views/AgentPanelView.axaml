@@ -96,7 +96,10 @@
             <TextBlock Text="{Binding Status}" TextWrapping="Wrap" Classes="small"
                        IsVisible="{Binding Status, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
             <CheckBox Content="Inline completions: Tab accepts" IsChecked="{Binding InlineEnabled}" />
-            <Expander Header="The model's license" HorizontalAlignment="Stretch">
+            <Expander HorizontalAlignment="Stretch">
+          <Expander.Header>
+            <TextBlock Text="The model's license" TextWrapping="Wrap" />
+          </Expander.Header>
               <ScrollViewer MaxHeight="260">
                 <TextBlock Text="{Binding LicenseText}" TextWrapping="Wrap" Classes="small" />
               </ScrollViewer>
