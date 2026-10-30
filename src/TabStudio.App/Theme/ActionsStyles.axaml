@@ -30,10 +30,8 @@
 
   <!-- A square icon button of the window's tool rows. -->
   <Style Selector="Button.iconButton">
-    <Setter Property="Width" Value="36" />
-    <Setter Property="Height" Value="36" />
-    <Setter Property="MinWidth" Value="36" />
-    <Setter Property="MinHeight" Value="36" />
+    <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
     <Setter Property="Padding" Value="0" />
   </Style>
 

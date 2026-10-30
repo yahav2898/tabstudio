@@ -214,8 +214,6 @@ internal static class DesignSamples
         var run = new Button
         {
             Theme = Theme("AccentButton"),
-            Height = 36,
-            MinHeight = 36,
             Padding = new Thickness(12, 0),
             CornerRadius = new CornerRadius(8, 0, 0, 8),
             Content = new StackPanel
@@ -228,15 +226,12 @@ internal static class DesignSamples
         var chooser = new Button
         {
             Theme = Theme("AccentButton"),
-            Height = 36,
-            MinHeight = 36,
-            Width = 30,
-            MinWidth = 30,
             Padding = default,
             CornerRadius = new CornerRadius(0, 8, 8, 0),
             BorderThickness = new Thickness(1, 0, 0, 0),
             Content = new StrokeIcon { Data = Icon("Icon.ChevronDown"), Size = 14 },
         };
+        ToolTip.SetTip(chooser, "Choose Startup Project");
         chooser.Bind(Button.BorderBrushProperty, chooser.GetResourceObservable("Brush.OnAccent.Divider"));
         var split = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(8, 0, 4, 0), Children = { run, chooser } };
         AdaptiveBar.SetIsPinned(split, true);

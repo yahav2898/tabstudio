@@ -13,17 +13,15 @@
   -->
   <UserControl.Styles>
     <Style Selector="TextBox">
-      <Setter Property="MinHeight" Value="36" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
     </Style>
     <Style Selector="Button.icon">
-      <Setter Property="Width" Value="36" />
-      <Setter Property="MinWidth" Value="36" />
-      <Setter Property="Height" Value="36" />
-      <Setter Property="MinHeight" Value="36" />
+      <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="0" />
     </Style>
     <Style Selector="Button.action">
-      <Setter Property="MinHeight" Value="36" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="14,0" />
     </Style>
     <Style Selector="Expander">

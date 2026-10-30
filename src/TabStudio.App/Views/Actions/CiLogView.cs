@@ -55,6 +55,7 @@ public sealed class CiLogView : UserControl, IDisposable
             Padding = new Thickness(0, 4, 0, 0),
         };
         TypeScale.SetBaseFontSize(_editor, 13);
+        Avalonia.Automation.AutomationProperties.SetName(_editor, "Log");
         _editor.Options.EnableHyperlinks = false;
         _editor.Options.EnableEmailHyperlinks = false;
         _editor.Options.HighlightCurrentLine = true;

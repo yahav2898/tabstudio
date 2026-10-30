@@ -71,20 +71,17 @@
       <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
     <Style Selector="Button.action">
-      <Setter Property="Height" Value="38" />
-      <Setter Property="MinHeight" Value="38" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="14,0" />
       <Setter Property="Margin" Value="0,0,8,8" />
       <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
     </Style>
     <Style Selector="Button.compact">
-      <Setter Property="Height" Value="36" />
-      <Setter Property="MinHeight" Value="36" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="14,0" />
       <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
     </Style>
     <Style Selector="Button.tab">
-      <Setter Property="Height" Value="40" />
       <Setter Property="Padding" Value="14,0" />
       <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
     </Style>
@@ -452,7 +449,7 @@
               <ItemsControl x:Name="FileList" ItemsSource="{Binding Files}">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate DataType="pr:PullRequestFileViewModel">
-                    <Button Theme="{StaticResource ToolButton}" Height="44" MinHeight="44" Padding="10,0" CornerRadius="6"
+                    <Button Theme="{StaticResource ToolButton}" Padding="10,0" CornerRadius="6"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" ToolTip.Tip="{Binding Path}" Command="{Binding OpenCommand}">
                       <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
                         <Border Classes="badge" Margin="0,0,10,0" Background="{Binding BadgeKind, Converter={x:Static conv:AppConverters.BadgeBackground}}">
@@ -497,7 +494,7 @@
             <ItemsControl ItemsSource="{Binding Commits}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="pr:PullRequestCommitItemViewModel">
-                  <Button Theme="{StaticResource ToolButton}" Height="44" MinHeight="44" Padding="10,0" CornerRadius="6"
+                  <Button Theme="{StaticResource ToolButton}" Padding="10,0" CornerRadius="6"
                           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" ToolTip.Tip="Open on GitHub"
                           Command="{Binding Open}" CommandParameter="{Binding}">
                     <Grid ColumnDefinitions="Auto,*,Auto,Auto">

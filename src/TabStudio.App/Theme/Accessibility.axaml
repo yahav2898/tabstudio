@@ -25,6 +25,18 @@
   <Style Selector="MenuItem">
     <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
   </Style>
+  <Style Selector="Menu > MenuItem">
+    <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
+  </Style>
+  <!-- A check box without a label, as in a row of Git Changes, is still a whole target. -->
+  <Style Selector="CheckBox, RadioButton">
+    <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
+  </Style>
+  <!-- The few toggle buttons a view draws itself, such as the anchor editor's sides. -->
+  <Style Selector="ToggleButton.target">
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+    <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
+  </Style>
   <Style Selector="TextBox, ComboBox, NumericUpDown, AutoCompleteBox, CheckBox, RadioButton">
     <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
   </Style>

@@ -18,7 +18,7 @@
       <Setter Property="BorderThickness" Value="1" />
     </Style>
     <Style Selector="ComboBox">
-      <Setter Property="MinHeight" Value="36" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     </Style>
   </UserControl.Styles>

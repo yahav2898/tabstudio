@@ -34,10 +34,8 @@
       <Setter Property="BoxShadow" Value="{DynamicResource Shadow.Popup}" />
     </Style>
     <Style Selector="Border.cellToolbar Button">
-      <Setter Property="Width" Value="34" />
-      <Setter Property="Height" Value="34" />
-      <Setter Property="MinWidth" Value="34" />
-      <Setter Property="MinHeight" Value="34" />
+      <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="0" />
       <Setter Property="CornerRadius" Value="6" />
     </Style>

@@ -9,8 +9,7 @@
   <UserControl.Styles>
     <!-- The run's actions wrap two to a row in the narrow side bar. -->
     <Style Selector="WrapPanel.runActions > Button">
-      <Setter Property="Height" Value="38" />
-      <Setter Property="MinHeight" Value="38" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="10,0" />
       <Setter Property="Margin" Value="0,0,6,6" />
       <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />

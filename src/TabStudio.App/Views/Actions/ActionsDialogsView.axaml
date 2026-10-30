@@ -69,9 +69,9 @@
                     <TextBlock Classes="label"><Run Text="{Binding Label}" /><Run
                       Text="{Binding RequiredMark}" Foreground="{DynamicResource Brush.Error}" /></TextBlock>
                     <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding Description}" IsVisible="{Binding HasDescription}" />
-                    <TextBox Text="{Binding Text}" Watermark="{Binding Watermark}" IsVisible="{Binding IsText}" />
-                    <ToggleSwitch IsChecked="{Binding IsOn}" OnContent="Yes" OffContent="No" IsVisible="{Binding IsBoolean}" ToolTip.Tip="{Binding Name}" />
-                    <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding Options}" SelectedItem="{Binding SelectedOption}"
+                    <TextBox Text="{Binding Text}" Watermark="{Binding Watermark}" IsVisible="{Binding IsText}" AutomationProperties.Name="{Binding Label}" />
+                    <ToggleSwitch IsChecked="{Binding IsOn}" OnContent="Yes" OffContent="No" IsVisible="{Binding IsBoolean}" ToolTip.Tip="{Binding Name}" AutomationProperties.Name="{Binding Label}" />
+                    <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding Options}" SelectedItem="{Binding SelectedOption}" AutomationProperties.Name="{Binding Label}"
                               IsVisible="{Binding IsChoice}" />
                     <TextBlock Classes="small" Foreground="{DynamicResource Brush.Error}" Text="{Binding ErrorText}"
                                IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />

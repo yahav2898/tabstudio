@@ -34,8 +34,9 @@
   <Style Selector="Button, DropDownButton, ToggleSwitch, ListBoxItem, ComboBoxItem, TabItem, TreeViewItem, ComboBox, NumericUpDown, AutoCompleteBox, CheckBox, RadioButton, DataGridRow">
     <Setter Property="MinHeight" Value="0" />
   </Style>
+  <Style Selector="Button, DropDownButton, CheckBox, RadioButton, Menu > MenuItem">
+  </Style>
   <Style Selector="Button, DropDownButton">
-    <Setter Property="MinWidth" Value="0" />
     <Setter Property="VerticalContentAlignment" Value="Stretch" />
   </Style>
   <Style Selector="ComboBox">

@@ -48,6 +48,7 @@ public sealed class DiffView : UserControl, IDisposable
             Padding = new Thickness(0, 4, 0, 0),
         };
         _editor.Options.EnableHyperlinks = false;
+        Avalonia.Automation.AutomationProperties.SetName(_editor, "Changes in " + document.FileName);
         _editor.Options.EnableEmailHyperlinks = false;
         _editor.Options.HighlightCurrentLine = false;
 

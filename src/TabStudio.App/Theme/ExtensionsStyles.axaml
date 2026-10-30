@@ -19,8 +19,7 @@
 
   <!-- A category chip of Browse, filled when selected. -->
   <Style Selector="Button.categoryChip">
-    <Setter Property="MinHeight" Value="34" />
-    <Setter Property="Height" Value="34" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
     <Setter Property="Padding" Value="14,0" />
     <Setter Property="CornerRadius" Value="17" />
     <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
@@ -37,8 +36,7 @@
 
   <!-- The Install button of a list row: smaller than the page's, still a comfortable touch target. -->
   <Style Selector="Button.rowAction">
-    <Setter Property="MinHeight" Value="34" />
-    <Setter Property="Height" Value="34" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
     <Setter Property="Padding" Value="12,0" />
     <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     <Setter Property="CornerRadius" Value="7" />
@@ -46,8 +44,7 @@
 
   <!-- The page's action buttons. -->
   <Style Selector="Button.pageAction">
-    <Setter Property="MinHeight" Value="38" />
-    <Setter Property="Height" Value="38" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
     <Setter Property="Padding" Value="16,0" />
     <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
   </Style>
@@ -108,7 +105,7 @@
 
   <!-- A row of the quick pick. -->
   <Style Selector="ListBox.quickPick ListBoxItem">
-    <Setter Property="MinHeight" Value="40" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
   </Style>
 
 </Styles>

@@ -54,13 +54,13 @@
     <ScrollViewer x:Name="Settings" IsVisible="{Binding IsSettingsOpen}" HorizontalScrollBarVisibility="Disabled">
       <ScrollViewer.Styles>
         <Style Selector="TextBox, ComboBox">
-          <Setter Property="MinHeight" Value="36" />
+          <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
         </Style>
         <Style Selector="CheckBox">
-          <Setter Property="MinHeight" Value="36" />
+          <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
         </Style>
         <Style Selector="Button.action">
-          <Setter Property="MinHeight" Value="36" />
+          <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
           <Setter Property="Padding" Value="14,0" />
         </Style>
       </ScrollViewer.Styles>
@@ -173,15 +173,15 @@
             </Grid>
           </Border>
           <Grid ColumnDefinitions="*,Auto">
-            <TextBox x:Name="Input" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="44" MaxHeight="160"
+            <TextBox x:Name="Input" AcceptsReturn="True" TextWrapping="Wrap" MaxHeight="160"
                      Watermark="Ask the agent to change, explain or fix your code"
                      Text="{Binding InputText}" />
             <Panel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Bottom">
-              <Button Theme="{StaticResource AccentButton}" MinWidth="44" Height="44" ToolTip.Tip="Send (Ctrl+Enter)"
+              <Button Theme="{StaticResource AccentButton}" ToolTip.Tip="Send (Ctrl+Enter)"
                       Command="{Binding SendCommand}" IsVisible="{Binding !IsBusy}">
                 <controls:StrokeIcon Data="{StaticResource Icon.Play}" Size="16" />
               </Button>
-              <Button Theme="{StaticResource SecondaryButton}" MinWidth="44" Height="44" ToolTip.Tip="Stop"
+              <Button Theme="{StaticResource SecondaryButton}" ToolTip.Tip="Stop"
                       Command="{Binding StopCommand}" IsVisible="{Binding IsBusy}">
                 <controls:StrokeIcon Data="{StaticResource Icon.Stop}" Size="16" />
               </Button>

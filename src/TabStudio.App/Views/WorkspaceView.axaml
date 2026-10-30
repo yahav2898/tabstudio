@@ -69,7 +69,7 @@
     <!-- The Search button's key cap, as the search shows key gestures. -->
     <Style Selector="Border.keycap">
       <Setter Property="MinWidth" Value="22" />
-      <Setter Property="Height" Value="20" />
+      <Setter Property="MinHeight" Value="20" />
       <Setter Property="Padding" Value="6,0" />
       <Setter Property="CornerRadius" Value="{StaticResource Radius.Small}" />
       <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
@@ -83,7 +83,6 @@
       <Setter Property="Width" Value="240" />
     </Style>
     <Style Selector="Button#SearchButton.compact">
-      <Setter Property="Width" Value="40" />
       <Setter Property="Padding" Value="0" />
       <Setter Property="HorizontalContentAlignment" Value="Center" />
     </Style>
@@ -95,15 +94,13 @@
     </Style>
     <!-- The status bar's items: 24 pixels high, small text, white on teal. -->
     <Style Selector="Button.status">
-      <Setter Property="Height" Value="24" />
-      <Setter Property="MinHeight" Value="24" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="FontSize" Value="{DynamicResource Type.Small}" />
     </Style>
     <!-- The floating touch bar's buttons: 44-pixel touch targets. -->
     <Style Selector="Button.touch">
-      <Setter Property="Height" Value="44" />
-      <Setter Property="MinHeight" Value="44" />
-      <Setter Property="MinWidth" Value="44" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+      <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
       <Setter Property="CornerRadius" Value="{StaticResource Radius.Card}" />
       <Setter Property="Padding" Value="12,0" />
     </Style>
@@ -631,7 +628,7 @@
                 <DataTemplate DataType="sys:String">
                   <StackPanel Orientation="Horizontal" Spacing="6">
                     <TextBlock Text="{Binding}" Classes="muted" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
-                    <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" Foreground="{DynamicResource Brush.TextDisabled}" />
+                    <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" Foreground="{DynamicResource Brush.TextMuted}" />
                   </StackPanel>
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
@@ -668,7 +665,7 @@
                         </MenuFlyout>
                       </Button.Flyout>
                     </Button>
-                    <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" Foreground="{DynamicResource Brush.TextDisabled}" />
+                    <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" Foreground="{DynamicResource Brush.TextMuted}" />
                   </StackPanel>
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
@@ -728,7 +725,7 @@
                   <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
                 </Transitions>
               </Panel.Transitions>
-              <Button x:Name="UnfoldTouchBarButton" Theme="{StaticResource ToolButton}" Width="44" Height="44" CornerRadius="14" Padding="0"
+              <Button x:Name="UnfoldTouchBarButton" Theme="{StaticResource ToolButton}" CornerRadius="14" Padding="0"
                       Background="{DynamicResource Brush.Hover}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
                       Command="{Binding ToggleTouchBarCommand}" IsVisible="{Binding IsTouchBarCollapsed}" ToolTip.Tip="Show the touch buttons">
                 <controls:StrokeIcon Data="{StaticResource Icon.ChevronLeft}" Size="18" />
@@ -739,7 +736,7 @@
                         Background="{DynamicResource Brush.Hover}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
                         BoxShadow="{DynamicResource Shadow.Popup}" IsVisible="{Binding ShowsEditorTouchBar}">
                   <DockPanel>
-                    <Button x:Name="FoldTouchBarButton" DockPanel.Dock="Left" Theme="{StaticResource ToolButton}" Height="44"
+                    <Button x:Name="FoldTouchBarButton" DockPanel.Dock="Left" Theme="{StaticResource ToolButton}"
                             CornerRadius="{StaticResource Radius.Card}" Padding="0" Margin="0,0,2,0"
                             Command="{Binding ToggleTouchBarCommand}" ToolTip.Tip="Fold the touch buttons away">
                       <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="16" Foreground="{DynamicResource Brush.TextSecondary}" />
@@ -843,7 +840,7 @@
                   <TextBlock Classes="muted small" Text="Show output from:" VerticalAlignment="Center" Margin="0,0,8,0"
                              IsVisible="{Binding IsOutputSelected}" />
                 </Panel>
-                <ComboBox x:Name="OutputSourceBox" MinWidth="170" Margin="0,0,6,0" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center"
+                <ComboBox x:Name="OutputSourceBox" AutomationProperties.Name="Show output from" MinWidth="170" Margin="0,0,6,0" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center"
                           ItemsSource="{Binding OutputSources}" SelectedItem="{Binding SelectedOutputSource}" IsVisible="{Binding IsOutputSelected}">
                   <ComboBox.ItemTemplate>
                     <DataTemplate DataType="vm:OutputSourceOption">
@@ -1162,7 +1159,7 @@
                      ItemContainerTheme="{StaticResource ListRow}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
               <ListBox.Styles>
                 <Style Selector="ListBoxItem">
-                  <Setter Property="MinHeight" Value="40" />
+                  <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
                   <Setter Property="Padding" Value="12,0" />
                 </Style>
               </ListBox.Styles>

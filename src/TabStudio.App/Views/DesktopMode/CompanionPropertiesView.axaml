@@ -54,7 +54,7 @@
       <!-- Nothing selected -->
       <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10" Margin="32" MaxWidth="380"
                   IsVisible="{Binding Title, Converter={x:Static StringConverters.IsNullOrEmpty}}">
-        <controls:StrokeIcon Data="{StaticResource Icon.Properties}" Size="40" Foreground="{DynamicResource Brush.TextDisabled}" HorizontalAlignment="Center" />
+        <controls:StrokeIcon Data="{StaticResource Icon.Properties}" Size="40" Foreground="{DynamicResource Brush.TextMuted}" HorizontalAlignment="Center" />
         <TextBlock Classes="h2" Text="Nothing selected" HorizontalAlignment="Center" />
         <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center"
                    Text="Select a file, project or package in Solution Explorer on the big screen to see its properties." />

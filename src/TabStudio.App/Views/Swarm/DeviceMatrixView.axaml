@@ -58,7 +58,7 @@
     <Style Selector="Button.preset">
       <Setter Property="HorizontalAlignment" Value="Stretch" />
       <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-      <Setter Property="MinHeight" Value="40" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
     </Style>
   </UserControl.Styles>
 

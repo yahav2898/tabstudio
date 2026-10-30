@@ -55,6 +55,7 @@ public static class AccessibleNames
         HeaderedSelectingItemsControl.HeaderProperty.Changed.AddClassHandler<HeaderedSelectingItemsControl>((control, _) => Schedule(control));
         StyledElement.DataContextProperty.Changed.AddClassHandler<Control>((control, _) => Schedule(control));
         TextBox.WatermarkProperty.Changed.AddClassHandler<TextBox>((control, _) => Schedule(control));
+        TemplatedControl.TemplateAppliedEvent.AddClassHandler<TemplatedControl>((control, _) => Schedule(control));
         TextBlock.TextProperty.Changed.AddClassHandler<TextBlock>((text, _) => ScheduleOwner(text));
         Visual.IsVisibleProperty.Changed.AddClassHandler<TextBlock>((text, _) => ScheduleOwner(text));
     }
@@ -85,6 +86,7 @@ public static class AccessibleNames
             MenuItem item => First(HeaderOf(item.Header), TextIn(item), tip),
             TreeViewItem item => First(HeaderOf(item.Header), TextIn(item), tip),
             TabItem tab => First(HeaderOf(tab.Header), tip),
+            AvaloniaEdit.Editing.TextArea area => First(EditorNameOf(area), tip, "Text editor"),
             ToggleSwitch toggle => First(HeaderOf(toggle.Content), TextIn(toggle), LabelOf(toggle), tip),
             ContentControl content => First(HeaderOf(content.Content), TextIn(content), tip),
             _ => First(TextIn(control), tip),
@@ -190,11 +192,32 @@ public static class AccessibleNames
     /// The text a control shows, its text blocks in order, joined by commas; not the text of controls inside it that
     /// take taps of their own (a row's buttons), nor of what is hidden.
     /// </summary>
+    /// <summary>An editor's text is named as its editor is: "Output", "SQL query", or the label beside it.</summary>
+    private static string? EditorNameOf(AvaloniaEdit.Editing.TextArea area) =>
+        area.GetVisualAncestors().OfType<AvaloniaEdit.TextEditor>().FirstOrDefault() is { } editor
+            ? First(AutomationProperties.GetName(editor), TipOf(editor), LabelOf(editor))
+            : null;
+
     private static string? TextIn(Control control)
     {
         var text = new List<string>();
         var states = new List<string>();
-        Collect(control, control, text, states);
+
+        // A control's content is read before its template shows it, as in a panel that is not open yet.
+        if (control is ContentControl { Content: Control content } && control.GetVisualChildren().FirstOrDefault() is null)
+        {
+            if (content is TextBlock block && TextOf(block) is { } shown)
+            {
+                return Clean(shown);
+            }
+
+            Collect(content, control, text, states);
+        }
+        else
+        {
+            Collect(control, control, text, states);
+        }
+
         var all = text.Concat(states).ToList();
         return all.Count == 0 ? null : string.Join(", ", all);
     }
@@ -266,10 +289,10 @@ public static class AccessibleNames
                 {
                     var row = Grid.GetRow(child);
                     var column = Grid.GetColumn(child);
-                    var label = panel.Children.OfType<TextBlock>()
-                        .Where(t => t.IsVisible && Grid.GetRow(t) == row && Grid.GetColumn(t) < column)
+                    var label = panel.Children
+                        .Where(c => c.IsVisible && !ReferenceEquals(c, child) && Grid.GetRow(c) == row && Grid.GetColumn(c) < column && LabelText(c) is not null)
                         .MaxBy(Grid.GetColumn);
-                    if (label?.Text is { Length: > 0 } text)
+                    if (label is not null && LabelText(label) is { } text)
                     {
                         return text;
                     }
@@ -277,7 +300,7 @@ public static class AccessibleNames
 
                 for (var i = index - 1; i >= 0 && i >= index - 2; i--)
                 {
-                    if (panel.Children[i] is TextBlock { IsVisible: true, Text: { Length: > 0 } text })
+                    if (panel.Children[i] is TextBlock { IsVisible: true } block && TextOf(block) is { Length: > 0 } text)
                     {
                         return text;
                     }
@@ -293,6 +316,14 @@ public static class AccessibleNames
 
         return null;
     }
+
+    /// <summary>The text of a label: a text block's, or the first text block's in a panel (a title above its detail).</summary>
+    private static string? LabelText(Control label) => label switch
+    {
+        TextBlock block => TextOf(block) is { Length: > 0 } text ? text : null,
+        Panel panel => panel.Children.OfType<TextBlock>().Select(TextOf).FirstOrDefault(t => !string.IsNullOrWhiteSpace(t)),
+        _ => null,
+    };
 
     private static string? First(params string?[] candidates) => candidates.FirstOrDefault(c => !string.IsNullOrWhiteSpace(c));
 

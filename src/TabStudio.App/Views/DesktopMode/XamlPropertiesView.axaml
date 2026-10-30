@@ -54,7 +54,7 @@
       <Grid ColumnDefinitions="*,*,Auto">
         <TextBox x:Name="NewNameBox" Classes="large mono" Watermark="Property" Text="{Binding NewName}" />
         <TextBox x:Name="NewValueBox" Grid.Column="1" Classes="large mono" Margin="8,0" Watermark="Value" Text="{Binding NewValue}" />
-        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Focusable="False" Height="44" Padding="14,0" Command="{Binding AddPropertyCommand}">
+        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Focusable="False" Padding="14,0" Command="{Binding AddPropertyCommand}">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="14" />
             <TextBlock Text="Add" VerticalAlignment="Center" />
@@ -99,9 +99,9 @@
                                      IsVisible="{Binding ShowsTypeName}" />
                           </StackPanel>
                           <TextBox Grid.Column="1" Classes="large mono" Watermark="Not set" Text="{Binding Value}" IsVisible="{Binding UsesText}" />
-                          <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" MinHeight="44" PlaceholderText="Not set"
+                          <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" PlaceholderText="Not set"
                                     ItemsSource="{Binding Choices}" SelectedItem="{Binding SelectedChoice}" IsVisible="{Binding UsesChoices}" />
-                          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Focusable="False" Width="44" Height="44" HorizontalAlignment="Right"
+                          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Focusable="False" HorizontalAlignment="Right"
                                   Command="{Binding ResetCommand}" IsVisible="{Binding IsSet}" ToolTip.Tip="Reset: take it out of the XAML">
                             <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="13" />
                           </Button>
@@ -117,7 +117,7 @@
       </ScrollViewer>
 
       <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10" Margin="32" MaxWidth="380" IsVisible="{Binding !HasElement}">
-        <controls:StrokeIcon Data="{StaticResource Icon.Properties}" Size="40" Foreground="{DynamicResource Brush.TextDisabled}" HorizontalAlignment="Center" />
+        <controls:StrokeIcon Data="{StaticResource Icon.Properties}" Size="40" Foreground="{DynamicResource Brush.TextMuted}" HorizontalAlignment="Center" />
         <TextBlock Classes="h2" Text="No element at the caret" HorizontalAlignment="Center" />
         <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center"
                    Text="Put the caret in an element of the XAML on the big screen to see and change its properties here." />

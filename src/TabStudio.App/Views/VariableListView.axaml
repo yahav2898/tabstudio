@@ -8,7 +8,8 @@
   <UserControl.Styles>
     <!-- While the program runs, the values shown may be out of date. -->
     <Style Selector="ListBox.stale">
-      <Setter Property="Opacity" Value="0.55" />
+      <!-- Muted, not faded: the values stay readable (WCAG AA), docs/design/README.md "Contrast". -->
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextMuted}" />
     </Style>
     <Style Selector="TextBlock.value">
       <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />

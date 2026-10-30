@@ -10,8 +10,7 @@
     <Style Selector="Button.key">
       <Setter Property="Focusable" Value="False" />
       <Setter Property="MinWidth" Value="46" />
-      <Setter Property="Height" Value="34" />
-      <Setter Property="MinHeight" Value="34" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="10,0" />
       <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
       <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />

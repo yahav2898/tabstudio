@@ -13,16 +13,13 @@
     </Style>
     <!-- Toolbar buttons: compact, but still a comfortable touch target. -->
     <Style Selector="Button.tool">
-      <Setter Property="Width" Value="36" />
-      <Setter Property="MinWidth" Value="36" />
-      <Setter Property="Height" Value="34" />
-      <Setter Property="MinHeight" Value="34" />
+      <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="0" />
     </Style>
     <Style Selector="Button.count">
-      <Setter Property="Height" Value="32" />
-      <Setter Property="MinHeight" Value="32" />
-      <Setter Property="MinWidth" Value="34" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+      <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="7,0" />
       <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     </Style>

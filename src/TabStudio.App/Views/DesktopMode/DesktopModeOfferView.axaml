@@ -27,11 +27,11 @@
                    Text="Move the IDE to the display, and use this tablet as a touch Toolbox and Properties panel. A keyboard and mouse work on the display as on a PC." />
       </StackPanel>
       <WrapPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Margin="14,14,0,0">
-        <Button Theme="{StaticResource SecondaryButton}" Height="44" Padding="18,0" Margin="0,0,10,0" Content="Not now"
+        <Button Theme="{StaticResource SecondaryButton}" Padding="18,0" Margin="0,0,10,0" Content="Not now"
                 Command="{Binding DismissOfferCommand}" />
-        <Button Theme="{StaticResource SecondaryButton}" Height="44" Padding="18,0" Margin="0,0,10,0" Content="Always"
+        <Button Theme="{StaticResource SecondaryButton}" Padding="18,0" Margin="0,0,10,0" Content="Always"
                 ToolTip.Tip="Move the IDE to a display whenever one is connected" Command="{Binding UseAlwaysCommand}" />
-        <Button Theme="{StaticResource AccentButton}" Height="44" Padding="18,0" Command="{Binding EnterCommand}">
+        <Button Theme="{StaticResource AccentButton}" Padding="18,0" Command="{Binding EnterCommand}">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <controls:StrokeIcon Data="{StaticResource Icon.Monitor}" Size="16" />
             <TextBlock Text="Use desktop mode" VerticalAlignment="Center" />

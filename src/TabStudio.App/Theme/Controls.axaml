@@ -46,7 +46,7 @@
 
   <!-- Pills and badges -->
   <Style Selector="Border.pill">
-    <Setter Property="Height" Value="20" />
+    <Setter Property="MinHeight" Value="20" />
     <Setter Property="Padding" Value="7,0" />
     <Setter Property="CornerRadius" Value="10" />
     <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
@@ -76,7 +76,7 @@
     <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Warning}" />
   </Style>
   <Style Selector="Border.chip">
-    <Setter Property="Height" Value="28" />
+    <Setter Property="MinHeight" Value="28" />
     <Setter Property="Padding" Value="10,0" />
     <Setter Property="CornerRadius" Value="14" />
     <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
@@ -114,13 +114,13 @@
 
   <!-- Text boxes: compact, with an optional search icon on the left. -->
   <Style Selector="TextBox">
-    <Setter Property="MinHeight" Value="30" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
     <Setter Property="CornerRadius" Value="6" />
     <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
   </Style>
   <Style Selector="TextBox.large">
-    <Setter Property="MinHeight" Value="44" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
     <Setter Property="CornerRadius" Value="8" />
     <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
     <Setter Property="Padding" Value="12,0" />
@@ -142,13 +142,12 @@
     <Setter Property="MinHeight" Value="40" />
   </Style>
   <Style Selector="Menu > MenuItem">
-    <Setter Property="Height" Value="34" />
     <Setter Property="Padding" Value="8,0" />
     <Setter Property="CornerRadius" Value="6" />
     <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
   </Style>
   <Style Selector="MenuItem">
-    <Setter Property="MinHeight" Value="36" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
   </Style>
 
   <!-- Splitters are thin lines with a wider touch area. -->

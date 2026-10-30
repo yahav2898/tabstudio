@@ -40,7 +40,7 @@
                        IsVisible="{Binding Error, Converter={x:Static ObjectConverters.IsNotNull}}" />
             <TextBlock Classes="muted" TextWrapping="Wrap"
                        Text="On the other device, choose File > Share Session. Both devices must be on the same Wi-Fi." />
-            <Button Theme="{StaticResource AccentButton}" Height="44" Padding="18,0" HorizontalAlignment="Left"
+            <Button Theme="{StaticResource AccentButton}" Padding="18,0" HorizontalAlignment="Left"
                     Command="{Binding ScanCommand}" IsVisible="{Binding CanScan}">
               <StackPanel Orientation="Horizontal" Spacing="8">
                 <controls:StrokeIcon Data="{StaticResource Icon.Camera}" Size="16" />
@@ -54,7 +54,7 @@
               <TextBlock x:Name="CodeLabel" Grid.Column="2" Classes="label" Text="Code" Margin="2,0,0,6" />
               <TextBox x:Name="AddressBox" Grid.Row="1" Classes="large mono" Watermark="192.168.1.23" Text="{Binding AddressText}" />
               <TextBox x:Name="CodeBox" Grid.Row="1" Grid.Column="2" Classes="large mono" Watermark="XXXX-XXXX" MaxLength="10" Text="{Binding CodeText}" />
-              <Button x:Name="JoinButton" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,12,0,0" Theme="{StaticResource AccentButton}" Height="44" Padding="22,0" HorizontalAlignment="Left" Command="{Binding JoinCommand}">
+              <Button x:Name="JoinButton" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,12,0,0" Theme="{StaticResource AccentButton}" Padding="22,0" HorizontalAlignment="Left" Command="{Binding JoinCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                   <controls:StrokeIcon Data="{StaticResource Icon.Live}" Size="16" />
                   <TextBlock Text="Join the session" VerticalAlignment="Center" />

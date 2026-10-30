@@ -15,7 +15,7 @@
       <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,6">
         <Panel Width="18" Margin="0,1,10,0" VerticalAlignment="Top">
           <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="15" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsAvailable}" />
-          <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="13" Foreground="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding !IsAvailable}" />
+          <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding !IsAvailable}" />
         </Panel>
         <TextBlock Grid.Column="1" TextWrapping="Wrap"><Run Text="{Binding Name}" Foreground="{DynamicResource Brush.TextBright}" /><Run Text="  " /><Run Text="{Binding Detail}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="{DynamicResource Type.Small}" /></TextBlock>
       </Grid>
@@ -81,7 +81,7 @@
           <TextBlock Classes="h2" Text="Pair a Windows PC" />
           <TextBlock Classes="muted" TextWrapping="Wrap"
                      Text="On the PC, open TabStudio for Windows, choose File > TabStudio Link > Be a Windows Bridge, and start the bridge. Both devices must be on the same Wi-Fi." />
-          <Button Theme="{StaticResource AccentButton}" Height="44" Padding="18,0" HorizontalAlignment="Left" Command="{Binding ScanCommand}" IsVisible="{Binding CanScan}">
+          <Button Theme="{StaticResource AccentButton}" Padding="18,0" HorizontalAlignment="Left" Command="{Binding ScanCommand}" IsVisible="{Binding CanScan}">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <controls:StrokeIcon Data="{StaticResource Icon.Camera}" Size="16" />
               <TextBlock Text="Scan its QR code" VerticalAlignment="Center" />
@@ -93,7 +93,7 @@
             <TextBlock Grid.Column="2" Classes="label" Text="Code" Margin="2,0,0,5" />
             <TextBox Grid.Row="1" x:Name="AddressBox" Classes="large mono" Watermark="192.168.1.40:47813" Text="{Binding AddressText}" />
             <TextBox Grid.Row="1" Grid.Column="2" x:Name="CodeBox" Classes="large mono" Watermark="XXXX-XXXX" MaxLength="10" Text="{Binding CodeText}" />
-            <Button Grid.Row="1" Grid.Column="4" Theme="{StaticResource AccentButton}" Height="44" Padding="22,0" Content="Pair" Command="{Binding PairCommand}" />
+            <Button Grid.Row="1" Grid.Column="4" Theme="{StaticResource AccentButton}" Padding="22,0" Content="Pair" Command="{Binding PairCommand}" />
           </Grid>
           <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding IsBusy}">
             <ProgressBar IsIndeterminate="True" Width="120" VerticalAlignment="Center" />
@@ -127,7 +127,7 @@
                          Text="Building and running the tablet's code runs it on this PC, so pair only tablets you own." />
             </StackPanel>
           </StackPanel>
-          <Button Theme="{StaticResource AccentButton}" Height="44" Padding="20,0" HorizontalAlignment="Left" Command="{Binding StartBridgeCommand}">
+          <Button Theme="{StaticResource AccentButton}" Padding="20,0" HorizontalAlignment="Left" Command="{Binding StartBridgeCommand}">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
               <TextBlock Text="Start the Windows Bridge" VerticalAlignment="Center" />

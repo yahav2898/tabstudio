@@ -131,8 +131,8 @@
                     <Grid ColumnDefinitions="Auto,*,Auto">
                       <Panel Width="22" Margin="0,1,10,0" VerticalAlignment="Top">
                         <controls:StrokeIcon Data="{StaticResource Icon.Feature}" Size="17" StrokeThickness="2" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsActive}" />
-                        <controls:StrokeIcon Data="{StaticResource Icon.Feature}" Size="17" StrokeThickness="2" Foreground="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding IsInactive}" />
-                        <controls:StrokeIcon Data="{StaticResource Icon.FeatureOff}" Size="17" StrokeThickness="2" Foreground="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding IsUnavailable}" />
+                        <controls:StrokeIcon Data="{StaticResource Icon.Feature}" Size="17" StrokeThickness="2" Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsInactive}" />
+                        <controls:StrokeIcon Data="{StaticResource Icon.FeatureOff}" Size="17" StrokeThickness="2" Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsUnavailable}" />
                       </Panel>
                       <StackPanel Grid.Column="1" Spacing="2">
                         <TextBlock Text="{Binding Title}" FontWeight="Medium" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />

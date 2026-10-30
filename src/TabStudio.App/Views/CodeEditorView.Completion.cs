@@ -23,7 +23,7 @@ public sealed partial class CodeEditorView
 {
     // The list moves left by its padding and icon column, so the items' text lines up with the typed word.
     private const double CompletionTextIndent = 39;
-    private const double CompletionRowHeight = 34;
+    private const double CompletionRowMinimum = 34;
     private const int CompletionVisibleRows = 8;
 
     private readonly StringBuilder _typedWhileCommitting = new();
@@ -327,9 +327,20 @@ public sealed partial class CodeEditorView
         PlaceCompletionPopup();
     }
 
+    /// <summary>A completion row's height: the window's touch target (docs/design/README.md, "Touch targets").</summary>
+    private double CompletionRowHeight => this.FindResource("Target.Size") is double target ? Math.Max(CompletionRowMinimum, target) : CompletionRowMinimum;
+
     /// <summary>The height of the list as shown now.</summary>
-    private double CompletionHeight() =>
-        (Math.Min(_completion?.Items.Count ?? 0, CompletionVisibleRows) * CompletionRowHeight) + 10;
+    private double CompletionHeight()
+    {
+        if (_completionView is not null)
+        {
+            // The list shows eight rows at most, as tall as the touch target and the text make them.
+            _completionView.ItemList.MaxHeight = CompletionVisibleRows * CompletionRowHeight * Math.Max(1, Accessibility.TypeScale.Factor);
+        }
+
+        return (Math.Min(_completion?.Items.Count ?? 0, CompletionVisibleRows) * CompletionRowHeight * Math.Max(1, Accessibility.TypeScale.Factor)) + 10;
+    }
 
     /// <summary>Whether something this tall fits between a line and the bottom of the window, or does not fit above it either.</summary>
     private bool FitsBelow(Rect line, double height)

@@ -22,7 +22,7 @@
     </Style>
     <Style Selector="Border.keycap">
       <Setter Property="MinWidth" Value="22" />
-      <Setter Property="Height" Value="22" />
+      <Setter Property="MinHeight" Value="22" />
       <Setter Property="Padding" Value="6,0" />
       <Setter Property="CornerRadius" Value="5" />
       <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
@@ -35,8 +35,7 @@
       <Setter Property="Opacity" Value="0.5" />
     </Style>
     <Style Selector="Button.scopeChip">
-      <Setter Property="MinHeight" Value="34" />
-      <Setter Property="Height" Value="34" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="14,0" />
       <Setter Property="CornerRadius" Value="17" />
       <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
@@ -75,7 +74,7 @@
               </Panel>
             </TextBox.InnerRightContent>
           </TextBox>
-          <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Width="44" Height="44" Margin="4,0,0,0" Command="{Binding CloseCommand}"
+          <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Margin="4,0,0,0" Command="{Binding CloseCommand}"
                   ToolTip.Tip="Close (Esc)">
             <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="16" />
           </Button>

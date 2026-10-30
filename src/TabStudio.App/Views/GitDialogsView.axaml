@@ -22,7 +22,7 @@
           <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
             <Button Theme="{StaticResource SecondaryButton}" Padding="18,0" Content="Cancel" Command="{Binding CloseBranchPickerCommand}" />
           </StackPanel>
-          <Button DockPanel.Dock="Top" Theme="{StaticResource ToolButton}" Height="44" Padding="10,0"
+          <Button DockPanel.Dock="Top" Theme="{StaticResource ToolButton}" Padding="10,0"
                   HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding NewBranchCommand}">
             <StackPanel Orientation="Horizontal" Spacing="10">
               <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="16" Foreground="{DynamicResource Brush.AccentText}" />
@@ -39,7 +39,7 @@
               <ItemsControl ItemsSource="{Binding Branches}">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate DataType="vm:GitBranchItemViewModel">
-                    <Button Theme="{StaticResource ToolButton}" Height="44" Padding="10,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                    <Button Theme="{StaticResource ToolButton}" Padding="10,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                             Classes.selected="{Binding IsCurrent}" Command="{Binding Select}" CommandParameter="{Binding}">
                       <Grid ColumnDefinitions="Auto,*,Auto,Auto">
                         <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="15" Margin="0,0,10,0" />

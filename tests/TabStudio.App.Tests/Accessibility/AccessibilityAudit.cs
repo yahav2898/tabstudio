@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -86,23 +87,25 @@ internal static partial class AccessibilityAudit
 
         foreach (var (element, _, message) in ContrastRule.Find(scan))
         {
-            if (!IsContent(element.Visual))
+            if (!IsContent(element.Visual) && !IsFading(element.Visual))
             {
-                found.Add(new("contrast", PathOf(window, element.Visual), message));
+                var colors = element.Visual is Control text && TextElement.GetForeground(text) is ISolidColorBrush fg && ContrastRule.Background(text, profile) is { } bg
+                    ? $" ({fg.Color} on {bg})" : string.Empty;
+                found.Add(new("contrast", PathOf(window, element.Visual), message + colors));
             }
         }
 
         foreach (var element in scan.Elements)
         {
             if (element.Visual is StrokeIcon { Foreground: ISolidColorBrush brush } icon && !IsContent(icon) && icon.IsEffectivelyEnabled
-                && !IsDisabledInside(icon) && ContrastRule.Background(icon, profile) is { } background)
+                && !IsDisabledInside(icon) && !IsFading(icon) && ContrastRule.Background(icon, profile) is { } background)
             {
                 var color = ContrastMath.WithOpacity(brush.Color, brush.Opacity * element.Opacity);
                 var ratio = ContrastMath.Ratio(ContrastMath.Over(color, background), background);
                 if (ratio < IconMinimum - 0.005)
                 {
                     found.Add(new("icon-contrast", PathOf(window, icon), string.Create(CultureInfo.InvariantCulture,
-                        $"An icon has a contrast of {ratio:0.0}:1 with its background; icons need {IconMinimum}:1.")));
+                        $"An icon has a contrast of {ratio:0.0}:1 with its background; icons need {IconMinimum}:1 ({brush.Color} at {element.Opacity:0.##} on {background}).")));
                 }
             }
         }
@@ -148,8 +151,24 @@ internal static partial class AccessibilityAudit
             return "has no accessible name";
         }
 
-        return TypeName().IsMatch(name.Trim()) ? $"is read as its class, \"{name.Trim()}\"" : null;
+        // A dotted name, such as a project's ("ContactBook.Avalonia"), is a class's only when a class has that name.
+        name = name.Trim();
+        return TypeName().IsMatch(name) && IsTypeName(name) ? $"is read as its class, \"{name}\"" : null;
     }
+
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, bool> Types = new(StringComparer.Ordinal);
+
+    /// <summary>Whether a loaded assembly has a type of that full name.</summary>
+    private static bool IsTypeName(string name) => Types.GetOrAdd(name, n => AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetType(n, throwOnError: false) is not null));
+
+    /// <summary>
+    /// Whether an element is fading in or out, or shown as inactive: inside a control whose opacity is changing (a
+    /// transition) or set below one to show that what it holds is unavailable. WCAG leaves out inactive and
+    /// disappearing content; the IDE never dims readable text by opacity (docs/design/README.md, "Contrast").
+    /// </summary>
+    private static bool IsFading(Visual visual) =>
+        visual.GetVisualAncestors().Prepend(visual).OfType<Control>().Any(c => c.Opacity < 1
+            && (c.Transitions?.Any(t => t is Avalonia.Animation.DoubleTransition { Property.Name: "Opacity" }) == true || c.Classes.Contains("disabled")));
 
     /// <summary>
     /// Whether an element is the user's content rather than the IDE: a running app, a web page, a designed form, a
