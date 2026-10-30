@@ -117,6 +117,12 @@ internal static partial class AccessibilityAudit
             foreach (var (element, severity, message) in ClippedTextRule.Find(scan, offScreen))
             {
                 // Trimming with an ellipsis is the layout's choice when the whole text is in a tooltip.
+                // A hint that trims has folded away when a layout gives it no room; its whole text is in its tooltip.
+                if (element.Visual is TextBlock { Bounds.Width: < 1 } trimmed && trimmed.TextTrimming != TextTrimming.None && HasToolTip(trimmed))
+                {
+                    continue;
+                }
+
                 if (IsContent(element.Visual) || IsFolded(element.Visual) || InDataGrid(element.Visual)
                     || (severity == LayoutIssueSeverity.Warning && HasToolTip(element.Visual)) || RoundingOnly().IsMatch(message))
                 {

@@ -106,10 +106,11 @@
     </ScrollViewer>
 
     <!-- What the IDE is doing, as its status bar says. -->
-    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" Margin="12,0,4,0" VerticalAlignment="Center" MaxWidth="360">
+    <!-- A grid, not a stack panel, so a long status trims (with its whole text in a tooltip) instead of running off. -->
+    <Grid Grid.Column="1" ColumnDefinitions="Auto,*" Margin="12,0,4,0" VerticalAlignment="Center" MaxWidth="360">
       <controls:StrokeIcon Size="15" Data="{Binding Workspace.State, Converter={x:Static conv:AppConverters.StateIcon}, FallbackValue={x:Null}}"
-                           Foreground="{DynamicResource Brush.TextMuted}" />
-      <TextBlock Classes="muted" Text="{Binding Workspace.StatusText, FallbackValue={x:Null}}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-    </StackPanel>
+                           Foreground="{DynamicResource Brush.TextMuted}" Margin="0,0,8,0" />
+      <TextBlock Grid.Column="1" Classes="muted" Text="{Binding Workspace.StatusText, FallbackValue={x:Null}}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+    </Grid>
   </Grid>
 </UserControl>
