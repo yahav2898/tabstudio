@@ -1,5 +1,5 @@
-BACKEND pid=3984 scenario=protected synthetic=true
-SYNTHETIC_DESCRIPTOR_REWIND tracee=3987 fd=4
+BACKEND pid=4097 scenario=unknown-read synthetic=true
+SYNTHETIC_DESCRIPTOR_REWIND tracee=4100 fd=4
 OUT endpoint=01 length=4 data=810d0101
 IN endpoint=81 length=7 data=820d0402160200
 OUT endpoint=01 length=5 data=810c020901
@@ -9,5 +9,5 @@ IN endpoint=81 length=8 data=820d050900300500
 OUT endpoint=01 length=4 data=81110106
 IN endpoint=81 length=20 data=ffff0010aabbccdd12345678ffffffff00300500
 OUT endpoint=01 length=4 data=81060101
-IN endpoint=81 length=4 data=82060101
+IN endpoint=81 length=4 data=8206017f
 SUMMARY wireOut=5 violations=0 loaderBytes=0 programBytes=0
