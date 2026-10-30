@@ -1,0 +1,87 @@
+eShop-eShop-slnx: dotnet build eShop.slnx exited 0 in 25 s, 3 distinct errors
+  set aside (needs a workload or a newer SDK): tests/ClientApp.UnitTests/ClientApp.UnitTests.csproj
+  set aside (needs a workload or a newer SDK): src/ClientApp/ClientApp.csproj
+  set aside (needs a workload or a newer SDK): src/HybridApp/HybridApp.csproj
+  [ClientApp.UnitTests] Microsoft.NET.Sdk.ImportWorkloads.targets(38): NETSDK1147: To build this project, the following workloads must be installed: maui-tizen
+  [ClientApp.csproj::TargetFramework=net10] Microsoft.NET.Sdk.ImportWorkloads.targets(38): NETSDK1147: To build this project, the following workloads must be installed: maui-android
+  [HybridApp.csproj::TargetFramework=net10] Microsoft.NET.Sdk.ImportWorkloads.targets(38): NETSDK1147: To build this project, the following workloads must be installed: maui-android
+
+Last 300 lines of the build:
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: maui-tizen [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/ClientApp.UnitTests/ClientApp.UnitTests.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/ClientApp.UnitTests/ClientApp.UnitTests.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: maui-tizen [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/ClientApp.UnitTests/ClientApp.UnitTests.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/ClientApp.UnitTests/ClientApp.UnitTests.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: maui-android [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/HybridApp/HybridApp.csproj::TargetFramework=net10.0-android]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/HybridApp/HybridApp.csproj::TargetFramework=net10.0-android]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: maui-android [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/ClientApp/ClientApp.csproj::TargetFramework=net10.0-android]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/ClientApp/ClientApp.csproj::TargetFramework=net10.0-android]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: maui-android [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/HybridApp/HybridApp.csproj::TargetFramework=net10.0-android]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/HybridApp/HybridApp.csproj::TargetFramework=net10.0-android]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: maui-android [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/ClientApp/ClientApp.csproj::TargetFramework=net10.0-android]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/ClientApp/ClientApp.csproj::TargetFramework=net10.0-android]
+  Determining projects to restore...
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/OrderProcessor/OrderProcessor.csproj (in 3.08 sec).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/WebApp/WebApp.csproj (in 3.08 sec).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/PaymentProcessor/PaymentProcessor.csproj (in 8 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/Basket.FunctionalTests/Basket.FunctionalTests.csproj (in 3.64 sec).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/Ordering.Domain/Ordering.Domain.csproj (in 381 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/eShop.AppHost.UnitTests/eShop.AppHost.UnitTests.csproj (in 3.9 sec).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/Ordering.Infrastructure/Ordering.Infrastructure.csproj (in 765 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/IntegrationEventLogEF/IntegrationEventLogEF.csproj (in 226 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/EventBusRabbitMQ/EventBusRabbitMQ.csproj (in 6 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/EventBus/EventBus.csproj (in 2 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/Basket.API/Basket.API.csproj (in 11 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/Webhooks.FunctionalTests/Webhooks.FunctionalTests.csproj (in 179 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/Identity.API/Identity.API.csproj (in 546 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/Ordering.API/Ordering.API.csproj (in 752 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/Ordering.UnitTests/Ordering.UnitTests.csproj (in 69 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/Ordering.FunctionalTests/Ordering.FunctionalTests.csproj (in 20 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/Catalog.FunctionalTests/Catalog.FunctionalTests.csproj (in 96 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/eShop.ServiceDefaults/eShop.ServiceDefaults.csproj (in 7 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/Catalog.API/Catalog.API.csproj (in 439 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/Webhooks.API/Webhooks.API.csproj (in 9 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/eShop.AppHost/eShop.AppHost.csproj (in 19 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/Basket.UnitTests/Basket.UnitTests.csproj (in 167 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/WebhookClient/WebhookClient.csproj (in 12 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/WebAppComponents/WebAppComponents.csproj (in 36 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/Application.UnitTests/Application.UnitTests.csproj (in 189 ms).
+  EventBus -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/EventBus/debug/EventBus.dll
+  eShop.ServiceDefaults -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/eShop.ServiceDefaults/debug/eShop.ServiceDefaults.dll
+  EventBusRabbitMQ -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/EventBusRabbitMQ/debug/EventBusRabbitMQ.dll
+  IntegrationEventLogEF -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/IntegrationEventLogEF/debug/IntegrationEventLogEF.dll
+  Ordering.Domain -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/Ordering.Domain/debug/Ordering.Domain.dll
+  WebAppComponents -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/WebAppComponents/debug/WebAppComponents.dll
+  Ordering.Infrastructure -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/Ordering.Infrastructure/debug/Ordering.Infrastructure.dll
+  Identity.API -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/Identity.API/debug/Identity.API.dll
+  WebhookClient -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/WebhookClient/debug/WebhookClient.dll
+  OrderProcessor -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/OrderProcessor/debug/OrderProcessor.dll
+  Catalog.API -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/Catalog.API/debug/Catalog.API.dll
+  
+  GenerateOpenApiDocuments:
+    dotnet "/home/runner/work/tabstudio/tabstudio/.nuget/packages/microsoft.extensions.apidescription.server/10.0.12/build/../tools/dotnet-getdocument.dll" --assembly "/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/Catalog.API/debug/Catalog.API.dll" --file-list "/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/obj/Catalog.API/Catalog.API.OpenApiFiles.cache" --framework ".NETCoreApp,Version=v10.0" --output "/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/Catalog.API" --project "Catalog.API" --assets-file "/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/obj/Catalog.API/project.assets.json" --platform "AnyCPU" 
+  eShop.AppHost -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/eShop.AppHost/debug/eShop.AppHost.dll
+  Generating document named 'v1'.
+  Using discovered `GenerateAsync` overload with version parameter.
+  Writing document named 'v1' to '/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/Catalog.API/Catalog.API.json'.
+  Generating document named 'v2'.
+  Using discovered `GenerateAsync` overload with version parameter.
+  Writing document named 'v2' to '/home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/src/Catalog.API/Catalog.API_v2.json'.
+  Catalog.FunctionalTests -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/Catalog.FunctionalTests/bin/Debug/net10.0/Catalog.FunctionalTests.dll
+  eShop.AppHost.UnitTests -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/eShop.AppHost.UnitTests/bin/Debug/net10.0/eShop.AppHost.UnitTests.dll
+  PaymentProcessor -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/PaymentProcessor/debug/PaymentProcessor.dll
+  Basket.API -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/Basket.API/debug/Basket.API.dll
+  WebApp -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/WebApp/debug/WebApp.dll
+  Webhooks.API -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/Webhooks.API/debug/Webhooks.API.dll
+  Ordering.API -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/artifacts/bin/Ordering.API/debug/Ordering.API.dll
+  Ordering.UnitTests -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/Ordering.UnitTests/bin/Debug/net10.0/Ordering.UnitTests.dll
+  Ordering.FunctionalTests -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/Ordering.FunctionalTests/bin/Debug/net10.0/Ordering.FunctionalTests.dll
+  Webhooks.FunctionalTests -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/Webhooks.FunctionalTests/bin/Debug/net10.0/Webhooks.FunctionalTests.dll
+  Application.UnitTests -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/Application.UnitTests/bin/Debug/net10.0/Application.UnitTests.dll
+  Basket.FunctionalTests -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/Basket.FunctionalTests/bin/Debug/net10.0/Basket.FunctionalTests.dll
+  Basket.UnitTests -> /home/runner/work/_temp/sdk-copies/eShop-eShop-slnx/tests/Basket.UnitTests/bin/Debug/net10.0/Basket.UnitTests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:21.17
