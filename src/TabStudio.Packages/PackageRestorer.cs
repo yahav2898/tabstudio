@@ -130,7 +130,7 @@ public sealed partial class PackageRestorer
         {
             progress?.Report(new RestoreProgress(RestoreStage.Resolving, $"Resolving the packages of {project.Name}", 0, 0));
             var finder = new PackageFinder(CreateFeeds(), _packages, _framework, _fallback, _frameworkPackages, graph.Projects, progress);
-            var resolution = await new DependencyResolver(finder).ResolveAsync(project.Name, graph.Dependencies, cancellationToken).ConfigureAwait(false);
+            var resolution = await new DependencyResolver(finder).ResolveAsync(project.Name, graph.Dependencies, graph.Pins ?? [], cancellationToken).ConfigureAwait(false);
             diagnostics.AddRange(resolution.Diagnostics);
 
             foreach (var node in resolution.Unresolved)
@@ -319,6 +319,7 @@ public sealed partial class PackageRestorer
             .ToList();
         var assets = AssetSelector.Select(files, _framework, _fallback, Options.CompilerVersion, runtimeIdentifiers);
         var buildFiles = AssetSelector.SelectBuildFiles(files, match.Id, _framework, _fallback, package.Assets);
+        var contentSources = AssetSelector.SelectContentSources(files, _framework, _fallback, package.Assets);
 
         if (!assets.IsCompatible)
         {
@@ -355,6 +356,7 @@ public sealed partial class PackageRestorer
             FlowsAnalyzers = package.FlowsAnalyzers,
             NativeLibraries = native,
             BuildFiles = [.. buildFiles.Select(path => Path.Combine(directory, path.Replace('/', Path.DirectorySeparatorChar)))],
+            ContentSources = [.. contentSources.Select(path => Path.Combine(directory, path.Replace('/', Path.DirectorySeparatorChar)))],
             Depth = package.Depth,
         };
     }

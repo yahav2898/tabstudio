@@ -18,6 +18,9 @@ public sealed partial class RoslynWorkspaceHost
 {
     private readonly Dictionary<string, IReadOnlyList<string>> _packageBuildFiles = new(StringComparer.Ordinal);
 
+    /// <summary>The C# sources each project compiles from its packages' <c>contentFiles/</c>, keyed by project file path.</summary>
+    private readonly Dictionary<string, IReadOnlyList<string>> _packageContentSources = new(StringComparer.Ordinal);
+
     /// <summary>The projects as read from their files, before their packages' props and targets were read into them.</summary>
     private readonly Dictionary<ProjectId, TsProject> _projectsAsRead = [];
 
@@ -51,6 +54,53 @@ public sealed partial class RoslynWorkspaceHost
             InvalidateGenerators(projectFilePath);
         }
     }
+
+    /// <summary>
+    /// Sets the C# sources a project compiles from its packages' <c>contentFiles/</c>, such as
+    /// <c>RestoreResult.ContentSources</c>, as NuGet adds them to its <c>Compile</c> items: a source-only package such as
+    /// Spectre.Console's Wcwidth.Sources is nothing else. They are kept by project file path, so they survive a reload.
+    /// </summary>
+    /// <param name="projectFilePath">Full path of the project file. The project does not have to be loaded yet.</param>
+    /// <param name="files">Full paths of the sources.</param>
+    public void SetPackageContentSources(string projectFilePath, IReadOnlyList<string> files)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(projectFilePath);
+        ArgumentNullException.ThrowIfNull(files);
+
+        lock (_gate)
+        {
+            var known = _packageContentSources.GetValueOrDefault(projectFilePath) ?? [];
+            if (known.SequenceEqual(files, StringComparer.Ordinal))
+            {
+                return;
+            }
+
+            _packageContentSources[projectFilePath] = [.. files];
+            if (!_projectIds.TryGetValue(projectFilePath, out var id) || _workspace.CurrentSolution.GetProject(id) is not { } roslyn)
+            {
+                return;
+            }
+
+            var solution = _workspace.CurrentSolution;
+            foreach (var document in roslyn.Documents.Where(d => d.FilePath is { } path && known.Contains(path, StringComparer.Ordinal)).ToList())
+            {
+                solution = solution.RemoveDocument(document.Id);
+            }
+
+            foreach (var document in PackageContentDocuments(id, projectFilePath))
+            {
+                solution = solution.AddDocument(document);
+            }
+
+            _workspace.TryApplyChanges(solution);
+        }
+    }
+
+    /// <summary>The documents of a project's package content sources that exist. The caller holds the gate.</summary>
+    private IEnumerable<DocumentInfo> PackageContentDocuments(ProjectId id, string projectFilePath) =>
+        (_packageContentSources.GetValueOrDefault(projectFilePath) ?? [])
+            .Where(File.Exists)
+            .Select(path => CreateDocumentInfo(DocumentId.CreateNewId(id, path), path, ReadFileOrEmpty(path), isGenerated: true));
 
     /// <summary>The props and targets a project imports from its packages, as last set. For tests.</summary>
     /// <param name="projectFilePath">Full path of the project file.</param>

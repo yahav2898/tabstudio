@@ -448,8 +448,10 @@ public static partial class ProjectParser
     /// <c>Version</c>; with it off, NuGet ignores <c>VersionOverride</c>, which then counts only for a reference without
     /// a <c>Version</c>.
     /// </summary>
-    private static List<PackageReferenceInfo> ReadPackageReferences(IEnumerable<XElement> roots, bool centralVersions) =>
-        roots.SelectMany((root, index) => index == 0 ? root.Descendants() : root.Descendants().Where(e => !e.Ancestors().Any(a => a.Name.LocalName == "Target")))
+    private static List<PackageReferenceInfo> ReadPackageReferences(IEnumerable<XElement> roots, bool centralVersions)
+    {
+        var items = roots.SelectMany((root, index) => index == 0 ? root.Descendants() : root.Descendants().Where(e => !e.Ancestors().Any(a => a.Name.LocalName == "Target"))).ToList();
+        var references = items
             .Where(e => e.Name.LocalName == "PackageReference")
             .Select(e => (Name: e.Attribute("Include")?.Value, Element: e))
             .Where(p => !string.IsNullOrWhiteSpace(p.Name))
@@ -460,9 +462,19 @@ public static partial class ProjectParser
             {
                 IncludeAssets = Metadata(p.Element, "IncludeAssets")?.Trim(),
                 ExcludeAssets = Metadata(p.Element, "ExcludeAssets")?.Trim(),
-            })
-            .DistinctBy(p => p.Name, StringComparer.OrdinalIgnoreCase)
-            .ToList();
+            });
+
+        // With central package management, NuGet's targets add each GlobalPackageReference of Directory.Packages.props to
+        // every project, with only the assets a development dependency has, all private (DOT-04).
+        var global = centralVersions
+            ? items.Where(e => e.Name.LocalName == "GlobalPackageReference" && !string.IsNullOrWhiteSpace(e.Attribute("Include")?.Value))
+                .Select(e => new PackageReferenceInfo(e.Attribute("Include")!.Value.Trim(), Metadata(e, "Version")?.Trim(), "All")
+                {
+                    IncludeAssets = "Runtime;Build;Native;contentFiles;Analyzers",
+                })
+            : [];
+        return [.. references.Concat(global).DistinctBy(p => p.Name, StringComparer.OrdinalIgnoreCase)];
+    }
 
     /// <summary>A package reference's version (see <see cref="ReadPackageReferences"/>); <see langword="null"/> when it states none.</summary>
     private static string? ReferenceVersion(XElement reference, bool centralVersions)

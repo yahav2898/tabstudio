@@ -62,6 +62,9 @@ public sealed record RestoreResult
         .. ImportOrder().SelectMany(p => p.BuildFiles).Where(f => !f.EndsWith(".props", StringComparison.OrdinalIgnoreCase)),
     ];
 
+    /// <summary>Full paths of the C# sources the project compiles from its packages' <c>contentFiles/</c>, in package order.</summary>
+    public IReadOnlyList<string> ContentSources => [.. Packages.SelectMany(p => p.ContentSources).Distinct(StringComparer.Ordinal)];
+
     /// <summary>Errors and warnings, with NuGet's ids where NuGet has one (such as NU1101), most severe first.</summary>
     public IReadOnlyList<BuildDiagnostic> Diagnostics { get; init; } = [];
 

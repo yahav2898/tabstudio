@@ -66,6 +66,9 @@ internal sealed class CachedPackage
     /// <summary>See <see cref="RestoredPackage.BuildFiles"/>.</summary>
     public List<string> BuildFiles { get; set; } = [];
 
+    /// <summary>See <see cref="RestoredPackage.ContentSources"/>.</summary>
+    public List<string> ContentSources { get; set; } = [];
+
     /// <summary>See <see cref="RestoredPackage.Depth"/>.</summary>
     public int Depth { get; set; } = 1;
 }
