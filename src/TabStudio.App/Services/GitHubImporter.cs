@@ -68,8 +68,22 @@ public sealed class GitHubImporter
         var syncProgress = progress is null ? null : new ProgressAdapter(progress);
         try
         {
-            await GitHubSync.CloneAsync(_account.CreateClient(), repository.Owner, repository.Name, repository.Reference, target, syncProgress, cancellationToken);
-            return target;
+            // A /tree/ address goes on with a folder after its branch (/tree/main/src/libraries), and a branch may
+            // have slashes (release/9.0): the longest start of it that names a branch, tag or commit is used.
+            var reference = repository.Reference;
+            while (true)
+            {
+                try
+                {
+                    await GitHubSync.CloneAsync(_account.CreateClient(), repository.Owner, repository.Name, reference, target, syncProgress, cancellationToken);
+                    return target;
+                }
+                catch (GitHubApiException ex) when ((ex.IsNotFound || ex.IsRejected) && reference?.LastIndexOf('/') is > 0 and var cut)
+                {
+                    TryDelete(target);
+                    reference = reference[..cut];
+                }
+            }
         }
         catch (OperationCanceledException)
         {
