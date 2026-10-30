@@ -21,7 +21,7 @@ public sealed record FileChange(string Path, ChangeKind Kind);
 /// <summary>Compares the files in a folder with the files of the last synced commit.</summary>
 public static class WorkingTree
 {
-    /// <summary>Folders that are never part of a commit, whatever the <c>.gitignore</c> says.</summary>
+    /// <summary>Folders whose untracked files are never part of a commit, whatever the <c>.gitignore</c> says.</summary>
     private static readonly HashSet<string> AlwaysIgnored = new(StringComparer.Ordinal) { ".git", SyncMetadata.FolderName };
 
     /// <summary>Lists the files of a folder that a commit would include, respecting <c>.gitignore</c> files.</summary>
@@ -88,7 +88,7 @@ public static class WorkingTree
             : throw new InvalidOperationException($"The path '{relativePath}' is outside the repository.");
     }
 
-    private static void Walk(string root, string relativeFolder, GitIgnore ignore, IReadOnlyDictionary<string, TrackedFile>? tracked, List<string> files)
+    private static void Walk(string root, string relativeFolder, GitIgnore ignore, IReadOnlyDictionary<string, TrackedFile>? tracked, List<string> files, bool trackedOnly = false)
     {
         var folder = relativeFolder.Length == 0 ? root : FullPath(root, relativeFolder);
         var gitignore = Path.Combine(folder, ".gitignore");
@@ -100,7 +100,7 @@ public static class WorkingTree
         foreach (var file in Directory.EnumerateFiles(folder))
         {
             var relative = Combine(relativeFolder, Path.GetFileName(file));
-            if (tracked?.ContainsKey(relative) == true || !ignore.IsIgnored(relative, isDirectory: false))
+            if (tracked?.ContainsKey(relative) == true || (!trackedOnly && !ignore.IsIgnored(relative, isDirectory: false)))
             {
                 files.Add(relative);
             }
@@ -110,19 +110,32 @@ public static class WorkingTree
         {
             var name = Path.GetFileName(directory);
             var relative = Combine(relativeFolder, name);
-            if (AlwaysIgnored.Contains(name) || IsSymbolicLink(directory))
+            if (IsSymbolicLink(directory))
             {
+                continue;
+            }
+
+            // TabStudio's own folder holds its sync state beside files a repository shares, such as launch.json:
+            // the files the last commit tracks there are listed, so they are neither reported deleted nor deleted
+            // on GitHub by a commit of everything, and the rest is never committed.
+            var holdsTracked = tracked?.Keys.Any(k => k.StartsWith(relative + "/", StringComparison.Ordinal)) == true;
+            if (AlwaysIgnored.Contains(name))
+            {
+                if (holdsTracked)
+                {
+                    Walk(root, relative, ignore, tracked, files, trackedOnly: true);
+                }
+
                 continue;
             }
 
             // An ignored folder is still visited when it holds tracked files.
-            if (ignore.IsIgnored(relative, isDirectory: true)
-                && tracked?.Keys.Any(k => k.StartsWith(relative + "/", StringComparison.Ordinal)) != true)
+            if ((trackedOnly || ignore.IsIgnored(relative, isDirectory: true)) && !holdsTracked)
             {
                 continue;
             }
 
-            Walk(root, relative, ignore, tracked, files);
+            Walk(root, relative, ignore, tracked, files, trackedOnly);
         }
     }
 

@@ -27,6 +27,28 @@ public sealed class WorkingTreeTests : IDisposable
     }
 
     [Fact]
+    public void A_repositorys_own_tabstudio_files_are_neither_deleted_nor_mixed_with_the_sync_state()
+    {
+        // A repository that commits .tabstudio/launch.json saw it as deleted right after Open from GitHub, and a
+        // commit of every change deleted it on GitHub.
+        _temp.Write("Program.cs", "return 0;");
+        _temp.Write(".tabstudio/launch.json", "{ \"configurations\": [] }");
+        _temp.Write(".tabstudio/sync.json", "{}");
+        _temp.Write(".tabstudio/conflicts/Program.cs", "x");
+        var tracked = new Dictionary<string, TrackedFile>
+        {
+            ["Program.cs"] = new(WorkingTree.HashFile(_temp.Path, "Program.cs"), GitObjects.RegularFileMode),
+            [".tabstudio/launch.json"] = new(WorkingTree.HashFile(_temp.Path, ".tabstudio/launch.json"), GitObjects.RegularFileMode),
+        };
+
+        Assert.Equal(new[] { ".tabstudio/launch.json", "Program.cs" }, WorkingTree.EnumerateFiles(_temp.Path, tracked));
+        Assert.Empty(WorkingTree.GetChanges(_temp.Path, tracked));
+
+        _temp.Write(".tabstudio/launch.json", "{ \"configurations\": [{}] }");
+        Assert.Equal(new FileChange(".tabstudio/launch.json", ChangeKind.Modified), Assert.Single(WorkingTree.GetChanges(_temp.Path, tracked)));
+    }
+
+    [Fact]
     public void Tracked_files_are_listed_even_when_ignored()
     {
         _temp.Write(".gitignore", "*.dll\nlibs/\n");
