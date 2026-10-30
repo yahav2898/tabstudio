@@ -146,6 +146,29 @@ public sealed class ProblemMatcherTests
     }
 
     [Fact]
+    public void C_link_and_CMake_errors_are_listed_where_gcc_lld_and_CMake_print_them()
+    {
+        // A failed link printed no compiler error, so the Error List stayed empty after "collect2: error".
+        var cpp = new ProblemMatcher(ToolchainCatalog.Default.Find("cpp")!);
+        var debug = Assert.Single(cpp.FindErrors(
+            ["/usr/bin/ld: /tmp/cci8dxnk.o: in function `main':", "/src/app/main.c:3:(.text+0x9): undefined reference to `foo'", "collect2: error: ld returned 1 exit status"],
+            _ => true));
+        Assert.Equal(("undefined reference to `foo'", "/src/app/main.c", 3), (debug.Message, debug.Location?.File, debug.Location?.Line));
+
+        var release = Assert.Single(cpp.FindErrors(["/usr/bin/ld: /tmp/cc2u4NbD.o: in function `main':", "main.c:(.text+0x9): undefined reference to `foo'", "collect2: error: ld returned 1 exit status"], _ => true));
+        Assert.Equal("main.c:(.text+0x9): undefined reference to `foo'", release.Message);
+
+        var lld = Assert.Single(cpp.FindErrors(["ld.lld: error: undefined symbol: foo", ">>> referenced by main.c:3 (/src/main.c:3)", "clang: error: linker command failed with exit code 1 (use -v to see invocation)"], _ => true));
+        Assert.Equal(("ld.lld: error: undefined symbol: foo", "main.c", 3), (lld.Message, lld.Location?.File, lld.Location?.Line));
+
+        Assert.Equal("/usr/bin/ld: cannot find -lnotthere: No such file or directory",
+            Assert.Single(cpp.FindErrors(["/usr/bin/ld: cannot find -lnotthere: No such file or directory", "collect2: error: ld returned 1 exit status"], _ => true)).Message);
+
+        var cmake = Assert.Single(cpp.FindErrors(["-- Configuring done (0.1s)", "CMake Error at CMakeLists.txt:3 (add_executable):", "  No SOURCES given to target: app", "", "", "CMake Generate step failed.  Build files cannot be regenerated correctly."], _ => true));
+        Assert.Equal(("CMake Error at CMakeLists.txt:3 (add_executable): No SOURCES given to target: app", "CMakeLists.txt", 3), (cmake.Message, cmake.Location?.File, cmake.Location?.Line));
+    }
+
+    [Fact]
     public void An_error_outside_the_users_code_has_no_location()
     {
         var error = Python.FindError(["Traceback (most recent call last):", "  File \"<stdin>\", line 1, in <module>", "KeyboardInterrupt"], _ => false)!;

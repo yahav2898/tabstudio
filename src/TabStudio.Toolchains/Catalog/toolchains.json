@@ -887,8 +887,18 @@
       "problemPatterns": [
         {
           "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+): (?<severity>fatal error|error|warning|note): (?<message>.*)$"
+        },
+        {
+          "pattern": "^(?<file>[^\\s:][^:]*?):(?<line>\\d+):\\(\\.[^)]*\\): (?<message>(?:undefined reference to|multiple definition of) .*)$"
+        },
+        {
+          "pattern": "^>>> referenced by (?<file>[^\\s:()]+):(?<line>\\d+)"
+        },
+        {
+          "pattern": "^CMake Error at (?<file>.+?):(?<line>\\d+) \\("
         }
-      ]
+      ],
+      "errorPattern": "^(?<message>\\S+: (?:undefined reference to|multiple definition of) .*|\\S*ld(?:\\.lld)?: (?:error: )?(?:undefined symbol: |cannot find ).*|CMake Error.*)$"
     },
     {
       "id": "rust",
