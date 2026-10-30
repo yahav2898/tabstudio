@@ -1,0 +1,53 @@
+name: .NET fidelity dev loop
+
+# Trial only (trial/fidelity-dev branch): builds and runs the test projects listed in build/ci/dev-loop.txt (one per
+# line: <test project> [filter]) and publishes the logs to ci-logs under branches/trial-fidelity-dev/dev/.
+on:
+  push:
+    branches: ['trial/fidelity-dev']
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+
+jobs:
+  dev:
+    name: Dev loop
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-dev-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: nuget-dev-
+      - name: Build and test
+        run: |
+          mkdir -p ci-out
+          status=0
+          while read -r project filter; do
+            [ -z "$project" ] && continue
+            name=$(basename "$project")
+            args=()
+            [ -n "$filter" ] && args=(--filter "$filter")
+            if ! dotnet test "$project" -c Release -p:TreatWarningsAsErrors=true "${args[@]}" --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
+              status=1
+            fi
+            grep -E "error |Failed |Passed!|Failed!|Total tests" "ci-out/$name.log" | head -60 > "ci-out/$name.summary.txt" || true
+            cat "ci-out/$name.summary.txt"
+          done < build/ci/dev-loop.txt
+          echo "status=$status" > ci-out/RESULT
+          exit $status
+      - name: Publish logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh dev ${{ job.status }}
