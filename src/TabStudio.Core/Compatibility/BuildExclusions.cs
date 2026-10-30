@@ -11,14 +11,16 @@ namespace TabStudio.Core.Compatibility;
 public static class BuildExclusions
 {
     /// <summary>
-    /// Whether a project cannot be built on this device: an Aspire AppHost, a .NET Framework program that needs Windows,
-    /// or a project that needs a platform workload, protoc or a newer .NET SDK.
+    /// Whether a project cannot be built on this device: an Aspire AppHost or another project built with its SDK (eShop's
+    /// functional tests), a .NET Framework program that needs Windows, or a project that needs a platform workload,
+    /// protoc or a newer .NET SDK.
     /// </summary>
     /// <param name="project">The project.</param>
     public static bool IsNotBuiltHere(ProjectInfo project)
     {
         ArgumentNullException.ThrowIfNull(project);
         return project.Kind == ProjectKind.AspireAppHost
+            || ProjectClassifier.IsAspireAppHost(project)
             || NetFrameworkCompatibility.NeedsWindows(project)
             || ProjectClassifier.NeedsPlatformWorkload(project);
     }
@@ -88,7 +90,9 @@ public static class BuildExclusions
         ArgumentNullException.ThrowIfNull(project);
         return project.Kind == ProjectKind.AspireAppHost
             ? "is an Aspire AppHost, which runs on a computer, where Aspire's developer control plane starts the app's projects and containers"
-            : ProjectClassifier.PlatformWorkloadReason(project) is { } workload
+            : ProjectClassifier.IsAspireAppHost(project)
+                ? "is built with the Aspire AppHost SDK, which generates the Projects classes it compiles against for the projects it references, on a computer"
+                : ProjectClassifier.PlatformWorkloadReason(project) is { } workload
                 ? workload
                 : NetFrameworkCompatibility.NeedsWindows(project)
                     ? $"is a .NET Framework project that needs Windows: it {NetFrameworkCompatibility.WhyWindows(project)}"
