@@ -26,6 +26,14 @@ public sealed class SchemaReader
     {
         await using var db = DatabaseConnections.Create(connection);
         await db.OpenAsync(token).ConfigureAwait(false);
+
+        // Npgsql learns the database's types once per data source; an enum created since (by a migration, or in a
+        // query tab) could not be read until it learned them again, so reading the schema refreshes them.
+        if (db is Npgsql.NpgsqlConnection npgsql)
+        {
+            await npgsql.ReloadTypesAsync().ConfigureAwait(false);
+        }
+
         return connection.Provider == DatabaseProvider.SQLite
             ? await ReadSqliteAsync(db, token).ConfigureAwait(false)
             : await ReadServerAsync(db, connection.Provider, token).ConfigureAwait(false);
