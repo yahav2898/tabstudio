@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.Input;
 using Avalonia.LogicalTree;
 using TabStudio.App.Controls;
 using TabStudio.App.Tests.ViewModels;
@@ -31,6 +32,15 @@ public sealed class HotReloadButtonTests
 
             Assert.Equal(HotReloadSession.IsSupported, button.IsVisible);
             Assert.Equal("Hot Reload (Alt+F10)", ToolTip.GetTip(button));
+
+            // The bottom panel's splitter answers a finger 5 pixels off its line: 12 pixels of touch area, as the design asks.
+            var splitter = window.GetLogicalDescendants().OfType<GridSplitter>().Single(s => s.Name == "BottomSplitter");
+            var line = splitter.TranslatePoint(new Avalonia.Point(splitter.Bounds.Width / 2, splitter.Bounds.Height / 2), window)!.Value;
+            foreach (var offset in new[] { -5.0, 0, 5 })
+            {
+                var hit = window.InputHitTest(new Avalonia.Point(line.X, line.Y + offset)) as Avalonia.Visual;
+                Assert.True(hit is not null && (ReferenceEquals(hit, splitter) || Avalonia.VisualTree.VisualExtensions.IsVisualAncestorOf(splitter, hit)), $"{offset} pixels off the line hit {hit?.GetType().Name ?? "nothing"}.");
+            }
 
             foreach (var name in new[] { "StatusMessageText", "OperationsText" })
             {

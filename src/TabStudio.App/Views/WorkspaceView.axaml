@@ -741,7 +741,7 @@
           <actionViews:RunNoticeView x:Name="RunNotice" DataContext="{Binding Actions}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="16,12" />
         </Panel>
 
-        <GridSplitter Grid.Row="3" x:Name="BottomSplitter" Height="6" ResizeDirection="Rows" Background="Transparent">
+        <GridSplitter Grid.Row="3" x:Name="BottomSplitter" Height="12" Margin="0,-3" ZIndex="10" ResizeDirection="Rows" Background="Transparent">
           <GridSplitter.Template>
             <ControlTemplate>
               <Border Background="Transparent">
@@ -868,7 +868,7 @@
         </Border>
       </Grid>
 
-      <GridSplitter Grid.Column="1" x:Name="SideSplitter" Width="6" ResizeDirection="Columns" Background="Transparent">
+      <GridSplitter Grid.Column="1" x:Name="SideSplitter" Width="12" Margin="-3,0" ZIndex="10" ResizeDirection="Columns" Background="Transparent">
         <GridSplitter.Template>
           <ControlTemplate>
             <Border Background="Transparent">
@@ -891,7 +891,7 @@
           <Panel Grid.RowSpan="3" ZIndex="20" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsRemoteExplorerSelected}">
             <views:RemoteExplorerView DataContext="{Binding RemoteExplorer}" />
           </Panel>
-          <GridSplitter Grid.Row="1" x:Name="PropertiesSplitter" Height="6" ResizeDirection="Rows" Background="Transparent" IsVisible="False">
+          <GridSplitter Grid.Row="1" x:Name="PropertiesSplitter" Height="12" Margin="0,-3" ZIndex="10" ResizeDirection="Rows" Background="Transparent" IsVisible="False">
             <GridSplitter.Template>
               <ControlTemplate>
                 <Border Background="Transparent">
