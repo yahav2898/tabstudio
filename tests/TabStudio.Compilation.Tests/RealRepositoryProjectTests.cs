@@ -39,8 +39,12 @@ public sealed class RealRepositoryProjectTests : IDisposable
     {
         // Humanizer's tests define SYSTEM_COLLECTIONS_IMMUTABLE_MAJOR_VERSION_LE_7 and #error otherwise: C# projects
         // never got their DefineConstants, so the build stopped at the #error.
-        _temp.Write("App/App.csproj", Project(exe: true, properties: "<DefineConstants>$(DefineConstants);FEATURE_X, LEGACY_API</DefineConstants>"));
+        // A symbol for another framework stays out, as Serilog's FEATURE_REMOTING for net48 does on .NET 10.
+        _temp.Write("App/App.csproj", Project(exe: true, properties: "<DefineConstants>$(DefineConstants);FEATURE_X, LEGACY_API</DefineConstants></PropertyGroup><PropertyGroup Condition=\"'$(TargetFramework)' == 'net48'\"><DefineConstants>$(DefineConstants);FEATURE_REMOTING</DefineConstants>"));
         _temp.Write("App/Program.cs", """
+            #if FEATURE_REMOTING
+            #error A symbol of another framework was defined.
+            #endif
             #if FEATURE_X && LEGACY_API && DEBUG
             System.Console.WriteLine("feature");
             #else
