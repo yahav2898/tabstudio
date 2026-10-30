@@ -1,8 +1,8 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 117 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/TabStudio.Agent.csproj (in 124 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/TabStudio.Testing.csproj (in 299 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Agent.Tests/TabStudio.Agent.Tests.csproj (in 305 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 113 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/TabStudio.Agent.csproj (in 123 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/TabStudio.Testing.csproj (in 289 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Agent.Tests/TabStudio.Agent.Tests.csproj (in 293 ms).
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
@@ -10,62 +10,62 @@
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Agent.Tests/bin/Release/net10.0/TabStudio.Agent.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.13]   Discovering: TabStudio.Agent.Tests
-[xUnit.net 00:00:00.22]   Discovered:  TabStudio.Agent.Tests
-[xUnit.net 00:00:00.27]   Starting:    TabStudio.Agent.Tests
-  Passed TabStudio.Agent.Tests.LocalAITests.Fim_uses_the_model_tokens_and_unsaved_neighbors_for_every_language(path: "test.cs") [12 ms]
-  Passed TabStudio.Agent.Tests.LocalAITests.Fim_uses_the_model_tokens_and_unsaved_neighbors_for_every_language(path: "test.py") [< 1 ms]
+[xUnit.net 00:00:00.15]   Discovering: TabStudio.Agent.Tests
+[xUnit.net 00:00:00.23]   Discovered:  TabStudio.Agent.Tests
+[xUnit.net 00:00:00.28]   Starting:    TabStudio.Agent.Tests
+[xUnit.net 00:00:00.34]     TabStudio.Agent.Tests.LocalNativeTests.Tiny_GGUF_generates_real_tokens_and_can_be_canceled_and_reused [SKIP]
+[xUnit.net 00:00:00.34]       Set TABSTUDIO_LOCAL_AI_MODEL and TABSTUDIO_LOCAL_AI_LIBRARY to run real inference.
+  Skipped TabStudio.Agent.Tests.LocalNativeTests.Tiny_GGUF_generates_real_tokens_and_can_be_canceled_and_reused [1 ms]
+  Passed TabStudio.Agent.Tests.SketchToXamlTests.Answers_are_parsed(answer: "<Grid />", xaml: "<Grid />", notes: "") [10 ms]
+  Passed TabStudio.Agent.Tests.SketchToXamlTests.Answers_are_parsed(answer: "Here it is:\n```xaml\n<Grid/>\n```", xaml: "<Grid/>", notes: "Here it is:") [1 ms]
+  Passed TabStudio.Agent.Tests.SketchToXamlTests.An_answer_without_xaml_is_an_error [2 ms]
+  Passed TabStudio.Agent.Tests.McpClientTests.Errors_are_explained [30 ms]
+  Passed TabStudio.Agent.Tests.McpClientTests.Tools_are_offered_to_the_agent_with_the_server_name_in_front [18 ms]
+  Passed TabStudio.Agent.Tests.SketchToXamlTests.Sends_the_sketch_as_an_image_and_returns_the_xaml_and_notes [36 ms]
+  Passed TabStudio.Agent.Tests.McpClientTests.Connects_lists_tools_over_event_streams_and_calls_them_in_a_session [21 ms]
+  Passed TabStudio.Agent.Tests.LocalAITests.Fim_uses_the_model_tokens_and_unsaved_neighbors_for_every_language(path: "test.cs") [11 ms]
+  Passed TabStudio.Agent.Tests.LocalAITests.Fim_uses_the_model_tokens_and_unsaved_neighbors_for_every_language(path: "test.py") [1 ms]
   Passed TabStudio.Agent.Tests.LocalAITests.Fim_uses_the_model_tokens_and_unsaved_neighbors_for_every_language(path: "test.html") [< 1 ms]
   Passed TabStudio.Agent.Tests.LocalAITests.Fim_uses_the_model_tokens_and_unsaved_neighbors_for_every_language(path: "test.rs") [< 1 ms]
   Passed TabStudio.Agent.Tests.LocalAITests.Fim_uses_the_model_tokens_and_unsaved_neighbors_for_every_language(path: "test.unknown") [< 1 ms]
-  Passed TabStudio.Agent.Tests.WorkspaceToolsTests.Edits_must_match_exactly_once [24 ms]
-  Passed TabStudio.Agent.Tests.WorkspaceToolsTests.Reads_files_with_line_numbers_and_ranges [4 ms]
+  Passed TabStudio.Agent.Tests.McpClientTests.Qualified_names_are_limited_to_what_the_API_accepts [4 ms]
   Passed TabStudio.Agent.Tests.LocalAITests.Fim_bounds_Unicode_context_without_splitting_surrogate_pairs_and_keeps_the_caret_surroundings [11 ms]
-  Passed TabStudio.Agent.Tests.WorkspaceToolsTests.Searches_with_regular_expressions [10 ms]
-  Passed TabStudio.Agent.Tests.WorkspaceToolsTests.Diagnostics_and_tests_see_the_pending_changes [9 ms]
-  Passed TabStudio.Agent.Tests.WorkspaceToolsTests.Lists_files_by_folder_and_pattern [4 ms]
-  Passed TabStudio.Agent.Tests.WorkspaceToolsTests.Edits_are_pending_until_approved_and_are_read_back [4 ms]
+  Passed TabStudio.Agent.Tests.WorkspaceToolsTests.Edits_must_match_exactly_once [30 ms]
+  Passed TabStudio.Agent.Tests.PullRequestReviewerTests.Sends_the_numbered_diff_and_returns_the_findings_on_its_lines [53 ms]
+  Passed TabStudio.Agent.Tests.PullRequestReviewerTests.An_answer_without_the_tool_becomes_the_summary [< 1 ms]
+  Passed TabStudio.Agent.Tests.WorkspaceToolsTests.Reads_files_with_line_numbers_and_ranges [8 ms]
+  Passed TabStudio.Agent.Tests.LocalAITests.Local_agent_rejects_unavailable_tools_and_images_without_executing_them [34 ms]
+  Passed TabStudio.Agent.Tests.WorkspaceToolsTests.Searches_with_regular_expressions [16 ms]
+  Passed TabStudio.Agent.Tests.AgentSessionTests.Rejected_changes_are_mentioned_on_the_next_request [15 ms]
+  Passed TabStudio.Agent.Tests.WorkspaceToolsTests.Diagnostics_and_tests_see_the_pending_changes [13 ms]
+  Passed TabStudio.Agent.Tests.WorkspaceToolsTests.Lists_files_by_folder_and_pattern [8 ms]
+  Passed TabStudio.Agent.Tests.WorkspaceToolsTests.Edits_are_pending_until_approved_and_are_read_back [9 ms]
+  Passed TabStudio.Agent.Tests.AgentSessionTests.The_agent_reads_edits_checks_and_summarizes_and_nothing_changes_until_approved [30 ms]
   Passed TabStudio.Agent.Tests.WorkspaceToolsTests.Edits_to_files_with_windows_line_endings_apply [2 ms]
-  Passed TabStudio.Agent.Tests.WorkspaceToolsTests.New_and_deleted_files_show_up_in_listings [6 ms]
-  Passed TabStudio.Agent.Tests.LocalAITests.Local_agent_rejects_unavailable_tools_and_images_without_executing_them [50 ms]
-  Passed TabStudio.Agent.Tests.AnthropicClientTests.A_stream_that_ends_early_is_an_error [46 ms]
-[xUnit.net 00:00:00.47]     TabStudio.Agent.Tests.LocalNativeTests.Tiny_GGUF_generates_real_tokens_and_can_be_canceled_and_reused [SKIP]
-[xUnit.net 00:00:00.47]       Set TABSTUDIO_LOCAL_AI_MODEL and TABSTUDIO_LOCAL_AI_LIBRARY to run real inference.
-  Skipped TabStudio.Agent.Tests.LocalNativeTests.Tiny_GGUF_generates_real_tokens_and_can_be_canceled_and_reused [1 ms]
-  Passed TabStudio.Agent.Tests.AnthropicClientTests.Streams_text_and_returns_the_whole_message_with_usage [25 ms]
-  Passed TabStudio.Agent.Tests.AnthropicClientTests.Errors_are_explained [7 ms]
-  Passed TabStudio.Agent.Tests.AnthropicClientTests.Requests_are_streamed_and_cache_the_tools_the_system_prompt_and_the_conversation [2 ms]
-  Passed TabStudio.Agent.Tests.AgentSessionImageTests.Pictures_go_to_Claude_before_the_request_s_text [26 ms]
-  Passed TabStudio.Agent.Tests.AnthropicClientTests.Overloaded_requests_are_retried [7 ms]
-  Passed TabStudio.Agent.Tests.AnthropicClientTests.Assembles_tool_calls_from_partial_json [6 ms]
+  Passed TabStudio.Agent.Tests.AgentSessionImageTests.Pictures_go_to_Claude_before_the_request_s_text [2 ms]
+  Passed TabStudio.Agent.Tests.AgentSessionTests.Keeping_a_change_never_undoes_edits_made_since_it_was_proposed [7 ms]
+  Passed TabStudio.Agent.Tests.AnthropicClientTests.A_stream_that_ends_early_is_an_error [1 ms]
+  Passed TabStudio.Agent.Tests.AgentSessionTests.Unknown_tools_and_round_limits_are_handled [3 ms]
+  Passed TabStudio.Agent.Tests.WorkspaceToolsTests.New_and_deleted_files_show_up_in_listings [9 ms]
+  Passed TabStudio.Agent.Tests.AnthropicClientTests.Streams_text_and_returns_the_whole_message_with_usage [4 ms]
+  Passed TabStudio.Agent.Tests.AnthropicClientTests.Errors_are_explained [2 ms]
+  Passed TabStudio.Agent.Tests.AnthropicClientTests.Requests_are_streamed_and_cache_the_tools_the_system_prompt_and_the_conversation [1 ms]
+  Passed TabStudio.Agent.Tests.AnthropicClientTests.Overloaded_requests_are_retried [2 ms]
+  Passed TabStudio.Agent.Tests.AnthropicClientTests.Assembles_tool_calls_from_partial_json [5 ms]
   Passed TabStudio.Agent.Tests.LocalAITests.Cancellation_discards_partial_models [63 ms]
-  Passed TabStudio.Agent.Tests.AgentSessionTests.Rejected_changes_are_mentioned_on_the_next_request [11 ms]
-  Passed TabStudio.Agent.Tests.McpClientTests.Errors_are_explained [24 ms]
-  Passed TabStudio.Agent.Tests.LocalAITests.Completion_pauses_when_hot_or_on_low_battery(hot: False, battery: -1, charging: False, paused: False) [18 ms]
+[xUnit.net 00:00:00.61]   Finished:    TabStudio.Agent.Tests
+  Passed TabStudio.Agent.Tests.LocalAITests.Completion_pauses_when_hot_or_on_low_battery(hot: False, battery: -1, charging: False, paused: False) [3 ms]
   Passed TabStudio.Agent.Tests.LocalAITests.Completion_pauses_when_hot_or_on_low_battery(hot: False, battery: 15, charging: False, paused: True) [< 1 ms]
   Passed TabStudio.Agent.Tests.LocalAITests.Completion_pauses_when_hot_or_on_low_battery(hot: False, battery: 16, charging: False, paused: False) [< 1 ms]
   Passed TabStudio.Agent.Tests.LocalAITests.Completion_pauses_when_hot_or_on_low_battery(hot: False, battery: 5, charging: True, paused: False) [< 1 ms]
   Passed TabStudio.Agent.Tests.LocalAITests.Completion_pauses_when_hot_or_on_low_battery(hot: True, battery: 100, charging: True, paused: True) [< 1 ms]
-  Passed TabStudio.Agent.Tests.PullRequestReviewerTests.Sends_the_numbered_diff_and_returns_the_findings_on_its_lines [78 ms]
-  Passed TabStudio.Agent.Tests.PullRequestReviewerTests.An_answer_without_the_tool_becomes_the_summary [< 1 ms]
-  Passed TabStudio.Agent.Tests.McpClientTests.Tools_are_offered_to_the_agent_with_the_server_name_in_front [16 ms]
-  Passed TabStudio.Agent.Tests.SketchToXamlTests.Answers_are_parsed(answer: "<Grid />", xaml: "<Grid />", notes: "") [8 ms]
-  Passed TabStudio.Agent.Tests.SketchToXamlTests.Answers_are_parsed(answer: "Here it is:\n```xaml\n<Grid/>\n```", xaml: "<Grid/>", notes: "Here it is:") [2 ms]
-  Passed TabStudio.Agent.Tests.SketchToXamlTests.An_answer_without_xaml_is_an_error [< 1 ms]
-  Passed TabStudio.Agent.Tests.McpClientTests.Connects_lists_tools_over_event_streams_and_calls_them_in_a_session [7 ms]
-  Passed TabStudio.Agent.Tests.McpClientTests.Qualified_names_are_limited_to_what_the_API_accepts [< 1 ms]
-  Passed TabStudio.Agent.Tests.SketchToXamlTests.Sends_the_sketch_as_an_image_and_returns_the_xaml_and_notes [8 ms]
-  Passed TabStudio.Agent.Tests.AgentSessionTests.The_agent_reads_edits_checks_and_summarizes_and_nothing_changes_until_approved [44 ms]
-  Passed TabStudio.Agent.Tests.AgentSessionTests.Keeping_a_change_never_undoes_edits_made_since_it_was_proposed [4 ms]
-  Passed TabStudio.Agent.Tests.AgentSessionTests.Unknown_tools_and_round_limits_are_handled [4 ms]
-  Passed TabStudio.Agent.Tests.LocalAITests.Completion_protocol_is_compatible_with_a_fake_llama_server [54 ms]
-  Passed TabStudio.Agent.Tests.LocalAITests.Catalog_pins_hashes_versions_sizes_and_the_correct_individual_licenses [24 ms]
-  Passed TabStudio.Agent.Tests.LocalAITests.Local_agent_changes_use_the_existing_proposal_approval_flow_with_no_cloud_or_MCP [4 ms]
-[xUnit.net 00:00:00.63]   Finished:    TabStudio.Agent.Tests
-  Passed TabStudio.Agent.Tests.LocalAITests.Models_require_license_acceptance_and_are_only_installed_after_size_and_hash_match [19 ms]
+  Passed TabStudio.Agent.Tests.LocalAITests.Completion_protocol_is_compatible_with_a_fake_llama_server [29 ms]
+  Passed TabStudio.Agent.Tests.LocalAITests.Catalog_pins_hashes_versions_sizes_and_the_correct_individual_licenses [16 ms]
+  Passed TabStudio.Agent.Tests.LocalAITests.Local_agent_changes_use_the_existing_proposal_approval_flow_with_no_cloud_or_MCP [3 ms]
+  Passed TabStudio.Agent.Tests.LocalAITests.Models_require_license_acceptance_and_are_only_installed_after_size_and_hash_match [13 ms]
 
 Test Run Successful.
 Total tests: 47
      Passed: 46
     Skipped: 1
- Total time: 1.3006 Seconds
+ Total time: 1.2535 Seconds

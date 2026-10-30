@@ -1,14 +1,14 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.WindowsBridge.Windows/TabStudio.WindowsBridge.Windows.csproj (in 337 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.WindowsBridge.Windows.Tests/TabStudio.WindowsBridge.Windows.Tests.csproj (in 298 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.WindowsBridge.Windows.Tests/TabStudio.WindowsBridge.Windows.Tests.csproj (in 280 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.WindowsBridge.Windows/TabStudio.WindowsBridge.Windows.csproj (in 329 ms).
   10 of 12 projects are up-to-date for restore.
+  TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.LanguageServers -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.LanguageServers/bin/Release/net10.0/TabStudio.LanguageServers.dll
-  TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
-  TabStudio.Toolchains -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/bin/Release/net10.0/TabStudio.Toolchains.dll
   TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
-  TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
+  TabStudio.Toolchains -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/bin/Release/net10.0/TabStudio.Toolchains.dll
   TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
+  TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
   TabStudio.LiveTesting -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.LiveTesting/bin/Release/net10.0/TabStudio.LiveTesting.dll
   TabStudio.Link -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Link/bin/Release/net10.0/TabStudio.Link.dll
   TabStudio.WindowsBridge -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.WindowsBridge/bin/Release/net10.0/TabStudio.WindowsBridge.dll
@@ -17,26 +17,26 @@
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.WindowsBridge.Windows.Tests/bin/Release/net10.0/TabStudio.WindowsBridge.Windows.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.15]   Discovering: TabStudio.WindowsBridge.Windows.Tests
-[xUnit.net 00:00:00.27]   Discovered:  TabStudio.WindowsBridge.Windows.Tests
+[xUnit.net 00:00:00.14]   Discovering: TabStudio.WindowsBridge.Windows.Tests
+[xUnit.net 00:00:00.26]   Discovered:  TabStudio.WindowsBridge.Windows.Tests
 [xUnit.net 00:00:00.35]   Starting:    TabStudio.WindowsBridge.Windows.Tests
 [xUnit.net 00:00:00.43]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.A_WPF_app_builds_runs_and_a_tap_on_its_button_shows_in_the_next_frames [SKIP]
 [xUnit.net 00:00:00.43]       Needs Windows: the Windows CI job runs it.
-[xUnit.net 00:00:00.45]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.Input_reaches_a_Windows_Forms_app_without_taking_the_PCs_mouse [SKIP]
-[xUnit.net 00:00:00.45]       Needs Windows: the Windows CI job runs it.
-[xUnit.net 00:00:00.45]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.A_Windows_Forms_app_builds_runs_and_a_tap_on_its_button_shows_in_the_next_frames [SKIP]
-[xUnit.net 00:00:00.45]       Needs Windows: the Windows CI job runs it.
-[xUnit.net 00:00:00.45]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.Clipboard_text_goes_both_ways [SKIP]
-[xUnit.net 00:00:00.45]       Needs Windows: the Windows CI job runs it.
-[xUnit.net 00:00:00.45]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.The_bridge_finds_this_PCs_build_tools [SKIP]
-[xUnit.net 00:00:00.45]       Needs Windows: the Windows CI job runs it.
-[xUnit.net 00:00:00.45]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.A_Visual_Cpp_project_builds_with_MSBuild_and_its_error_lands_on_the_tablets_file [SKIP]
-[xUnit.net 00:00:00.45]       Needs Windows: the Windows CI job runs it.
-[xUnit.net 00:00:00.45]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.The_WPF_app_is_debugged_to_a_breakpoint_with_netcoredbg_through_the_tunnel [SKIP]
-[xUnit.net 00:00:00.45]       Needs Windows: the Windows CI job runs it.
-[xUnit.net 00:00:00.45]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.A_NET_Framework_program_builds_with_MSBuild_and_runs [SKIP]
-[xUnit.net 00:00:00.45]       Needs Windows: the Windows CI job runs it.
-[xUnit.net 00:00:00.46]   Finished:    TabStudio.WindowsBridge.Windows.Tests
+[xUnit.net 00:00:00.46]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.Input_reaches_a_Windows_Forms_app_without_taking_the_PCs_mouse [SKIP]
+[xUnit.net 00:00:00.46]       Needs Windows: the Windows CI job runs it.
+[xUnit.net 00:00:00.46]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.A_Windows_Forms_app_builds_runs_and_a_tap_on_its_button_shows_in_the_next_frames [SKIP]
+[xUnit.net 00:00:00.46]       Needs Windows: the Windows CI job runs it.
+[xUnit.net 00:00:00.46]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.Clipboard_text_goes_both_ways [SKIP]
+[xUnit.net 00:00:00.46]       Needs Windows: the Windows CI job runs it.
+[xUnit.net 00:00:00.46]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.The_bridge_finds_this_PCs_build_tools [SKIP]
+[xUnit.net 00:00:00.46]       Needs Windows: the Windows CI job runs it.
+[xUnit.net 00:00:00.46]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.A_Visual_Cpp_project_builds_with_MSBuild_and_its_error_lands_on_the_tablets_file [SKIP]
+[xUnit.net 00:00:00.46]       Needs Windows: the Windows CI job runs it.
+[xUnit.net 00:00:00.46]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.The_WPF_app_is_debugged_to_a_breakpoint_with_netcoredbg_through_the_tunnel [SKIP]
+[xUnit.net 00:00:00.46]       Needs Windows: the Windows CI job runs it.
+[xUnit.net 00:00:00.46]     TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.A_NET_Framework_program_builds_with_MSBuild_and_runs [SKIP]
+[xUnit.net 00:00:00.46]       Needs Windows: the Windows CI job runs it.
+[xUnit.net 00:00:00.47]   Finished:    TabStudio.WindowsBridge.Windows.Tests
   Skipped TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.A_WPF_app_builds_runs_and_a_tap_on_its_button_shows_in_the_next_frames [1 ms]
   Skipped TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.Input_reaches_a_Windows_Forms_app_without_taking_the_PCs_mouse [1 ms]
   Skipped TabStudio.WindowsBridge.Windows.Tests.WindowsBridgeTests.A_Windows_Forms_app_builds_runs_and_a_tap_on_its_button_shows_in_the_next_frames [1 ms]
@@ -49,4 +49,4 @@ A total of 1 test files matched the specified pattern.
 Test Run Successful.
 Total tests: 8
     Skipped: 8
- Total time: 1.7437 Seconds
+ Total time: 1.7847 Seconds
