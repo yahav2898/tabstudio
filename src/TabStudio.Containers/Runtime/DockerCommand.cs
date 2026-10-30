@@ -3,6 +3,7 @@ using System.Text;
 using TabStudio.Containers.Registry;
 using TabStudio.Containers.Store;
 using TabStudio.Services;
+using TabStudio.Services.Compose;
 using TabStudio.Toolchains.Processes;
 
 namespace TabStudio.Containers.Runtime;

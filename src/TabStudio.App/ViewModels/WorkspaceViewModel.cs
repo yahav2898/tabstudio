@@ -163,6 +163,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeToolchains(toolchains);
         InitializeToolchainOperations();
         InitializeRemoteSsh(remoteSsh);
+        InitializeContainers();
         InitializeServices(serviceDatabases);
         InitializeSwarmScreens(swarm?.Registry);
         InitializeSwarm(swarm);
@@ -412,6 +413,12 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     }
 
     /// <inheritdoc />
+    private async Task DisposeServicesAndContainersAsync()
+    {
+        await Services.DisposeAsync();
+        await Containers.DisposeAsync();
+    }
+
     public void Dispose()
     {
         if (_disposed)
@@ -455,7 +462,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _language = null;
         DisposeActions();
         DisposePullRequests();
-        _ = Services.DisposeAsync().AsTask();
+        _ = DisposeServicesAndContainersAsync();
         DisposeOperations();
         DisposeToolchains();
         if (_ownsLocalAI) LocalAI.Dispose();
@@ -575,3 +582,4 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
             TaskScheduler.Default);
     });
 }
+

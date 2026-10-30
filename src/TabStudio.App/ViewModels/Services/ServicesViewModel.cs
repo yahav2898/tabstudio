@@ -37,6 +37,7 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
     {
         _toolchains = toolchains; _paths = paths; _ui = ui; _preview = preview; _remoteHost = remoteHost; _databases = databases;
     }
+    public IServiceImages? Images { get; init; }
     public ObservableCollection<ServiceItemViewModel> Items { get; } = [];
     public ServiceManager? Manager => _manager;
     public bool HasServices => Items.Count > 0;
@@ -109,7 +110,7 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
             var project = await Task.Run(() => Discover(_root));
             _configuration = JsonSerializer.Serialize(project);
             if (project is null) { Summary = "Add compose.yaml to the repository, and its databases, caches and queues run here, without Docker."; return; }
-            _manager = new ServiceManager(project, _toolchains.Runtime, new ServicePackages(_toolchains), new ServiceStorage(_paths.Root, _root));
+            _manager = new ServiceManager(project, _toolchains.Runtime, new ServicePackages(_toolchains), new ServiceStorage(_paths.Root, _root), images: Images);
             _manager.Changed += OnChanged; _manager.Logged += OnLogged;
             foreach (var status in _manager.Statuses) Items.Add(new ServiceItemViewModel(this, status));
             SelectedItem = Items.FirstOrDefault();
@@ -272,3 +273,4 @@ public sealed partial class ServiceItemViewModel : ObservableObject
         foreach (var property in new[] { nameof(State), nameof(StateText), nameof(IsGood), nameof(IsBad), nameof(IsChanging), nameof(IsWarning), nameof(Detail), nameof(HasDetail), nameof(IsUnsupported), nameof(CanStart), nameof(CanStop), nameof(CanOpenDatabase), nameof(Ports) }) OnPropertyChanged(property);
     }
 }
+

@@ -49,7 +49,7 @@ public sealed class DockerCommandBridge : IAsyncDisposable
           [ "$interactive" = 0 ] || exec cat
         ) > "$dir/in" &
         writer=$!
-        nc 127.0.0.1 {{((IPEndPoint)_listener.LocalEndpoint).Port}} < "$dir/in" > "$dir/out" &
+        busybox nc 127.0.0.1 {{((IPEndPoint)_listener.LocalEndpoint).Port}} < "$dir/in" > "$dir/out" &
         client=$!
         while IFS= read -r record; do
           case "$record" in

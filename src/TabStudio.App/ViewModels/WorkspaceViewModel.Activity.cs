@@ -34,6 +34,7 @@ public sealed partial class WorkspaceViewModel
         AddActivity(SideBarPanel.Swarm, "Swarm", "Icon.Swarm");
         AddActivity(SideBarPanel.Live, "Live Share", "Icon.Live");
         AddActivity(SideBarPanel.Services, "Services", "Icon.Server");
+        AddActivity(SideBarPanel.Containers, "Containers", "Icon.Package");
         AddActivity(SideBarPanel.Database, "Database Explorer", "Icon.Database");
         AddActivity(SideBarPanel.WindowsBridge, "Windows Bridge", "Icon.Computer");
         AddActivity(SideBarPanel.RemoteExplorer, "Remote Explorer (SSH)", "Icon.Remote");
@@ -213,3 +214,4 @@ public sealed partial class WorkspaceViewModel
         }
     }
 }
+

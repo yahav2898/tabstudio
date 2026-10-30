@@ -31,6 +31,9 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           global-json-file: global.json
+      - name: Build the shared IDE
+        if: matrix.arch == 'x64'
+        run: dotnet build src/TabStudio.App -c Release -warnaserror
       - name: Build the same patched PRoot as Android
         run: bash build/ci/containers-proot.sh "$RUNNER_TEMP/containers-proot"
       - name: Registry, layers, Compose and real image processes

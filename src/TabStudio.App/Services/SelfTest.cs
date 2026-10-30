@@ -20,6 +20,8 @@ public enum SelfTestShard
     Ui,
     /// <summary>Python/Node, C/C++/Java, native backing services and native process integrity.</summary>
     Native,
+    /// <summary>OCI image PostgreSQL, Redis, nginx preview and the docker terminal command.</summary>
+    Containers,
     /// <summary>Opt-in paired-runtime latency measurements; not a functional CI shard.</summary>
     Performance,
 }
@@ -45,6 +47,7 @@ public static partial class SelfTest
             "managed" => SelfTestShard.Managed,
             "ui" => SelfTestShard.Ui,
             "native" => SelfTestShard.Native,
+            "containers" => SelfTestShard.Containers,
             "performance" => SelfTestShard.Performance,
             _ => (SelfTestShard)(-1),
         };
@@ -80,6 +83,11 @@ public static partial class SelfTest
         ArgumentNullException.ThrowIfNull(samples);
         ArgumentOutOfRangeException.ThrowIfNegative((int)shard);
         ArgumentOutOfRangeException.ThrowIfGreaterThan((int)shard, (int)SelfTestShard.Performance);
+        if (shard == SelfTestShard.Containers)
+        {
+            return templates is null ? new(false, "Containers: templates are required", TimeSpan.Zero)
+                : await RunContainersAsync(main, templates, screenshots, cancellationToken);
+        }
         if (shard == SelfTestShard.Performance)
         {
             return await RunPerformanceAsync(main, samples, screenshots, cancellationToken);
@@ -286,3 +294,4 @@ public static partial class SelfTest
         }
     }
 }
+

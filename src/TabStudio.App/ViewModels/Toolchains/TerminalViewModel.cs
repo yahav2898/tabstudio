@@ -44,6 +44,9 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
     /// <summary>Starts a remote PTY when an SSH folder is open, instead of the local shell.</summary>
     public Func<TerminalSize, Task<ToolchainProcess>>? RemoteShellFactory { get; set; }
 
+    /// <summary>Prepares local terminal commands after the Linux runtime is ready.</summary>
+    public Action? BeforeLocalShell { get; set; }
+
     /// <summary>Closes the current shell when changing workspaces or disconnecting SSH.</summary>
     public void StopShell()
     {
@@ -447,6 +450,7 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
         var folder = _workingDirectory();
         try
         {
+            BeforeLocalShell?.Invoke();
             _toolchains.ShareFolder(folder);
             var spec = _toolchains.Runtime.Shell(Directory.Exists(folder) ? folder : Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), _size);
             _process = _toolchains.Runtime.Start(spec);
@@ -596,3 +600,4 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
         }
     }
 }
+

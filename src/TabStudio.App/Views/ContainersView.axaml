@@ -1,0 +1,107 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls" xmlns:vm="using:TabStudio.App.ViewModels"
+             xmlns:runtime="using:TabStudio.Containers.Runtime" xmlns:store="using:TabStudio.Containers.Store"
+             xmlns:terminal="using:TabStudio.App.Views.Toolchains"
+             x:Class="TabStudio.App.Views.ContainersView" x:DataType="vm:ContainersViewModel"
+             Background="{DynamicResource Brush.Panel}">
+  <DockPanel>
+    <controls:PanelHeader DockPanel.Dock="Top" Title="Containers" Subtitle="OCI images · no root">
+      <controls:PanelHeader.Actions>
+        <Button Theme="{StaticResource ToolButton}" MinHeight="36" MinWidth="36" Command="{Binding RefreshCommand}" ToolTip.Tip="Refresh images and containers">
+          <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="16" />
+        </Button>
+      </controls:PanelHeader.Actions>
+    </controls:PanelHeader>
+    <StackPanel DockPanel.Dock="Top" Margin="12" Spacing="8">
+      <TextBox Text="{Binding ImageName}" Watermark="Image, for example postgres:17-alpine" MinHeight="36" />
+      <TextBox Text="{Binding PortMappings}" Watermark="Ports, for example 15432:5432" MinHeight="36" />
+      <WrapPanel>
+        <Button Content="Pull image" Command="{Binding PullCommand}" MinHeight="36" Margin="0,0,8,0" />
+        <Button Content="Run image" Command="{Binding RunCommand}" MinHeight="36" />
+        <Button Content="Cancel" Command="{Binding CancelCommand}" MinHeight="36" IsVisible="{Binding IsBusy}" Margin="8,0,0,0" />
+      </WrapPanel>
+      <SelectableTextBlock Text="{Binding Error}" IsVisible="{Binding HasError}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" />
+    </StackPanel>
+    <TabControl>
+      <TabItem Header="Containers">
+        <Grid RowDefinitions="2*,Auto,Auto,3*" Margin="8">
+          <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" MinHeight="80">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="runtime:ContainerInfo">
+                <StackPanel Spacing="3" Margin="4,6">
+                  <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                  <TextBlock Text="{Binding ImageName}" Classes="small" TextWrapping="Wrap" />
+                  <TextBlock Text="{Binding Status}" Classes="small" />
+                  <TextBlock Text="{Binding Error}" Foreground="{DynamicResource Brush.Error}" TextWrapping="Wrap" />
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <WrapPanel Grid.Row="1" Margin="0,8,0,0">
+            <Button Content="Start" Command="{Binding StartCommand}" MinHeight="36" Margin="0,0,6,6" />
+            <Button Content="Stop" Command="{Binding StopCommand}" MinHeight="36" Margin="0,0,6,6" />
+            <Button Content="Restart" Command="{Binding RestartCommand}" MinHeight="36" Margin="0,0,6,6" />
+            <Button Content="Remove" Command="{Binding RemoveCommand}" MinHeight="36" Margin="0,0,6,6" />
+            <Button Content="Terminal" Command="{Binding OpenTerminalCommand}" MinHeight="36" Margin="0,0,6,6" />
+          </WrapPanel>
+          <ItemsControl Grid.Row="2" ItemsSource="{Binding SelectedItem.Ports}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="runtime:PublishedPort">
+                <Button Command="{Binding $parent[UserControl].((vm:ContainersViewModel)DataContext).OpenPortCommand}"
+                        CommandParameter="{Binding}" MinHeight="36" Margin="0,0,0,4" HorizontalAlignment="Stretch">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="Open port" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding HostPort}" VerticalAlignment="Center" />
+                    <TextBlock Text="→" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding ContainerPort}" VerticalAlignment="Center" />
+                  </StackPanel>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <Grid Grid.Row="3">
+            <ScrollViewer IsVisible="{Binding !ShowsTerminal}">
+              <SelectableTextBlock Text="{Binding Logs}" FontFamily="{DynamicResource CodeFont}" TextWrapping="Wrap" Margin="4,8" />
+            </ScrollViewer>
+            <DockPanel IsVisible="{Binding ShowsTerminal}">
+              <CheckBox DockPanel.Dock="Top" Content="Show terminal" IsChecked="{Binding ShowsTerminal}" Margin="4" />
+              <terminal:TerminalPanelView DataContext="{Binding Terminal}" />
+            </DockPanel>
+          </Grid>
+        </Grid>
+      </TabItem>
+      <TabItem Header="Images">
+        <DockPanel Margin="8">
+          <Button DockPanel.Dock="Bottom" Content="Remove selected image" Command="{Binding RemoveImageCommand}" MinHeight="36" Margin="0,8,0,0" />
+          <ListBox ItemsSource="{Binding Images}" SelectedItem="{Binding SelectedImage}">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="store:StoredImage">
+                <StackPanel Spacing="4" Margin="4,8">
+                  <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                  <TextBlock Text="{Binding ShortId}" Classes="small" />
+                  <TextBlock Text="{Binding Platform}" Classes="small" />
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </TabItem>
+      <TabItem Header="Details">
+        <ScrollViewer Margin="12">
+          <StackPanel Spacing="12">
+            <TextBlock Text="{Binding RuntimeProblem}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding Limits}" TextWrapping="Wrap" />
+            <Expander Header="Registry sign-in (this session)">
+              <StackPanel Spacing="8">
+                <TextBox Text="{Binding RegistryHost}" Watermark="Registry host" MinHeight="36" />
+                <TextBox Text="{Binding RegistryUser}" Watermark="User name" MinHeight="36" />
+                <TextBox Text="{Binding RegistrySecret}" Watermark="Password or access token" PasswordChar="●" MinHeight="36" />
+                <Button Content="Use sign-in" Command="{Binding SignInCommand}" MinHeight="36" />
+              </StackPanel>
+            </Expander>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</UserControl>
