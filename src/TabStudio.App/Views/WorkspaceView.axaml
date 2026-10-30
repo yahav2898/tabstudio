@@ -109,17 +109,17 @@
     </Style>
   </UserControl.Styles>
 
-  <Grid RowDefinitions="40,46,*,28">
+  <Grid RowDefinitions="Auto,Auto,*,Auto">
 
     <!-- Menu bar: the logo, the menus (one Menu button on a phone), the Search button and the solution's name. -->
-    <Border Grid.Row="0" Background="{DynamicResource Brush.MenuBar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Border Grid.Row="0" MinHeight="40" Background="{DynamicResource Brush.MenuBar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid x:Name="MenuBar" ColumnDefinitions="Auto,Auto,Auto,Auto,*" Margin="8,0">
         <Border Width="26" Height="26" CornerRadius="7" Background="{DynamicResource Brush.Accent}" Margin="0,0,6,0">
           <controls:StrokeIcon Data="{StaticResource Icon.Logo}" Size="16" StrokeThickness="2.6" Foreground="{DynamicResource Brush.OnAccent}" HorizontalAlignment="Center" />
         </Border>
 
         <!-- On a phone the menus fold into this button: WorkspaceView.Layout.cs moves them between it and the menu bar. -->
-        <Button x:Name="MenuButton" Grid.Column="1" Theme="{StaticResource ToolButton}" Width="40" Height="36" MinHeight="36" Padding="0"
+        <Button x:Name="MenuButton" Grid.Column="1" Theme="{StaticResource ToolButton}" Padding="0"
                 IsVisible="False" ToolTip.Tip="Menu">
           <controls:StrokeIcon Data="{StaticResource Icon.Menu}" Size="18" />
           <Button.Flyout>
@@ -411,7 +411,7 @@
         </Menu>
 
         <!-- One search for everything: files, commands, settings, symbols, templates and recent solutions (Ctrl+Q). -->
-        <Button x:Name="SearchButton" Grid.Column="3" Theme="{StaticResource SecondaryButton}" Height="32" MinHeight="32"
+        <Button x:Name="SearchButton" Grid.Column="3" Theme="{StaticResource SecondaryButton}"
                 Margin="10,0,0,0" Padding="10,0,6,0" HorizontalContentAlignment="Stretch" VerticalAlignment="Center"
                 Command="{Binding Search.OpenCommand}" ToolTip.Tip="Search (Ctrl+Q)">
           <Grid ColumnDefinitions="Auto,*,Auto">
@@ -440,7 +440,7 @@
       Standard toolbar: an adaptive bar that never scrolls or clips. When it runs out of room the least used commands
       fold to their icons and then into More, by priority (docs/design/stage-2.md, 2.4); Run and Stop always stay.
     -->
-    <Border Grid.Row="1" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Border Grid.Row="1" MinHeight="46" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid Margin="8,0" ColumnDefinitions="*,Auto">
         <controls:AdaptiveBar x:Name="Toolbar" Spacing="2" VerticalAlignment="Center">
           <controls:AdaptiveBarItem Icon="{StaticResource Icon.Back}" Label="Navigate Backward" Gesture="Alt+Left" ShowsLabel="False" IconSize="16"
@@ -473,14 +473,14 @@
 
           <!-- Run: the startup project, with a menu to choose another one. Both halves are enabled together. -->
           <StackPanel x:Name="RunSplit" Orientation="Horizontal" Margin="8,0,4,0" controls:AdaptiveBar.IsPinned="True">
-            <Button x:Name="RunButton" Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" CornerRadius="8,0,0,8" Padding="12,0"
+            <Button x:Name="RunButton" Theme="{StaticResource AccentButton}" CornerRadius="8,0,0,8" Padding="12,0"
                     ToolTip.Tip="{Binding StartDebuggingToolTip}" Command="{Binding StartDebuggingCommand}">
               <StackPanel Orientation="Horizontal" Spacing="8">
                 <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
                 <TextBlock Text="{Binding StartDebuggingLabel}" VerticalAlignment="Center" MaxWidth="200" TextTrimming="CharacterEllipsis" />
               </StackPanel>
             </Button>
-            <Button x:Name="RunTargetButton" Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Width="30" MinWidth="30" Padding="0"
+            <Button x:Name="RunTargetButton" Theme="{StaticResource AccentButton}" Padding="0"
                     CornerRadius="0,8,8,0" BorderBrush="{DynamicResource Brush.OnAccent.Divider}" BorderThickness="1,0,0,0"
                     IsEnabled="{Binding #RunButton.IsEffectivelyEnabled}" ToolTip.Tip="Choose Startup Project or Launch Configuration">
               <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
@@ -569,10 +569,10 @@
       a narrow or portrait screen the side bar is a drawer over the editor (WorkspaceView.Layout.cs).
     -->
     <Grid Grid.Row="2" x:Name="MainArea" ColumnDefinitions="*,Auto,330,48">
-      <Grid x:Name="EditorArea" RowDefinitions="38,30,*,Auto,200">
+      <Grid x:Name="EditorArea" RowDefinitions="Auto,Auto,*,Auto,200">
 
         <!-- Document tabs -->
-        <Border Grid.Row="0" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" MinHeight="38" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
           <ListBox ItemsSource="{Binding Documents}" SelectedItem="{Binding ActiveDocument}"
                    ItemContainerTheme="{StaticResource DocumentTab}"
                    ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
@@ -606,7 +606,7 @@
                       </DataTemplate>
                     </ItemsControl.ItemTemplate>
                   </ItemsControl>
-                  <Button Theme="{StaticResource ToolButton}" Width="26" Height="26" MinWidth="26" MinHeight="26" Padding="0" CornerRadius="5"
+                  <Button Theme="{StaticResource ToolButton}" Padding="0" CornerRadius="5"
                           ToolTip.Tip="Close (Ctrl+F4)"
                           Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).CloseDocumentCommand}"
                           CommandParameter="{Binding}">
@@ -619,7 +619,7 @@
         </Border>
 
         <!-- Breadcrumb -->
-        <Border Grid.Row="1" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="12,0">
+        <Border Grid.Row="1" MinHeight="30" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="12,0">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <ItemsControl ItemsSource="{Binding Breadcrumb}" VerticalAlignment="Center">
               <ItemsControl.ItemsPanel>
@@ -647,7 +647,7 @@
               <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="vm:SymbolCrumbViewModel">
                   <StackPanel Orientation="Horizontal" Spacing="2">
-                    <Button Theme="{StaticResource ToolButton}" Height="28" MinHeight="28" MinWidth="0" Padding="6,0" CornerRadius="6">
+                    <Button Theme="{StaticResource ToolButton}" Padding="6,0" CornerRadius="6">
                       <StackPanel Orientation="Horizontal" Spacing="6">
                         <controls:SymbolGlyphIcon Kind="{Binding Kind}" Size="14" />
                         <TextBlock Text="{Binding Name}" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
@@ -690,12 +690,12 @@
                 <TextBlock Grid.Column="1" Text="{Binding NetFrameworkBannerText}" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="{DynamicResource Type.Body}"
                            Foreground="{DynamicResource Brush.Text}" />
                 <Button x:Name="RunOnWindowsBridgeBannerButton" Grid.Column="2" Theme="{StaticResource SecondaryButton}" Margin="12,0,0,0" Padding="10,0"
-                        Height="32" MinHeight="32" Command="{Binding RunNetFrameworkProjectOnWindowsBridgeCommand}"
+                        Command="{Binding RunNetFrameworkProjectOnWindowsBridgeCommand}"
                         ToolTip.Tip="Build and run it on your Windows PC">
                   <TextBlock Text="Run on Windows Bridge" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
                 </Button>
                 <Button x:Name="UpgradeProjectBannerButton" Grid.Column="3" Theme="{StaticResource SecondaryButton}" Margin="8,0,0,0" Padding="10,0"
-                        Height="32" MinHeight="32" Command="{Binding UpgradeProjectCommand}" CommandParameter="{x:Null}"
+                        Command="{Binding UpgradeProjectCommand}" CommandParameter="{x:Null}"
                         ToolTip.Tip="Convert it to an SDK-style .NET project, and review the change">
                   <TextBlock Text="Upgrade project" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
                 </Button>
@@ -739,7 +739,7 @@
                         Background="{DynamicResource Brush.Hover}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
                         BoxShadow="{DynamicResource Shadow.Popup}" IsVisible="{Binding ShowsEditorTouchBar}">
                   <DockPanel>
-                    <Button x:Name="FoldTouchBarButton" DockPanel.Dock="Left" Theme="{StaticResource ToolButton}" Width="32" Height="44" MinWidth="32"
+                    <Button x:Name="FoldTouchBarButton" DockPanel.Dock="Left" Theme="{StaticResource ToolButton}" Height="44"
                             CornerRadius="{StaticResource Radius.Card}" Padding="0" Margin="0,0,2,0"
                             Command="{Binding ToggleTouchBarCommand}" ToolTip.Tip="Fold the touch buttons away">
                       <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="16" Foreground="{DynamicResource Brush.TextSecondary}" />
@@ -843,7 +843,7 @@
                   <TextBlock Classes="muted small" Text="Show output from:" VerticalAlignment="Center" Margin="0,0,8,0"
                              IsVisible="{Binding IsOutputSelected}" />
                 </Panel>
-                <ComboBox x:Name="OutputSourceBox" MinWidth="170" Height="30" MinHeight="30" Margin="0,0,6,0" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center"
+                <ComboBox x:Name="OutputSourceBox" MinWidth="170" Margin="0,0,6,0" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center"
                           ItemsSource="{Binding OutputSources}" SelectedItem="{Binding SelectedOutputSource}" IsVisible="{Binding IsOutputSelected}">
                   <ComboBox.ItemTemplate>
                     <DataTemplate DataType="vm:OutputSourceOption">
@@ -851,13 +851,13 @@
                     </DataTemplate>
                   </ComboBox.ItemTemplate>
                 </ComboBox>
-                <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="{DynamicResource Type.Body}" Content="Clear"
+                <Button Theme="{StaticResource ToolButton}" FontSize="{DynamicResource Type.Body}" Content="Clear"
                         Command="{Binding ShownOutput.ClearCommand}" IsVisible="{Binding IsOutputSelected}" />
-                <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="{DynamicResource Type.Body}" Content="Clear"
+                <Button Theme="{StaticResource ToolButton}" FontSize="{DynamicResource Type.Body}" Content="Clear"
                         Command="{Binding Terminal.ClearCommand}" IsVisible="{Binding IsTerminalSelected}" />
-                <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="{DynamicResource Type.Body}" Content="Restart"
+                <Button Theme="{StaticResource ToolButton}" FontSize="{DynamicResource Type.Body}" Content="Restart"
                         Command="{Binding Terminal.RestartCommand}" IsVisible="{Binding IsTerminalSelected}" />
-                <Button x:Name="HideBottomPanelButton" Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0"
+                <Button x:Name="HideBottomPanelButton" Theme="{StaticResource ToolButton}" Padding="0"
                         ToolTip.Tip="Hide" Command="{Binding ToggleBottomPanelCommand}">
                   <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
                 </Button>
@@ -1007,7 +1007,7 @@
       menu at the right end (docs/design/stage-2.md, 2.5). It stays quiet about what is fine: a language service that is
       ready, a device that is not throttling, a device that is not linked.
     -->
-    <Border Grid.Row="3" Background="{Binding IsDebugging, Converter={x:Static conv:DebugConverters.StatusBarBackground}}">
+    <Border Grid.Row="3" MinHeight="28" Background="{Binding IsDebugging, Converter={x:Static conv:DebugConverters.StatusBarBackground}}">
       <controls:AdaptiveBar x:Name="StatusBar" Spacing="6" Margin="6,0" ItemTheme="{StaticResource StatusBarButton}" MorePlacement="TopEdgeAlignedRight"
                             VerticalAlignment="Center" TextElement.Foreground="{DynamicResource Brush.OnAccent}" TextElement.FontSize="{DynamicResource Type.Small}">
         <!-- What the IDE is doing; long messages trim, with the whole message in the tooltip. -->
@@ -1025,7 +1025,7 @@
         -->
         <Panel controls:AdaptiveBar.Priority="100" IsVisible="{Binding Operations.HasOperations}" controls:AdaptiveBar.MinLength="120"
                controls:AdaptiveBar.MenuHeader="{Binding Operations.StatusText}" controls:AdaptiveBar.MenuCommand="{Binding Operations.TogglePanelCommand}">
-          <Button x:Name="OperationsButton" Theme="{StaticResource StatusBarButton}" Height="24" Command="{Binding Operations.TogglePanelCommand}"
+          <Button x:Name="OperationsButton" Theme="{StaticResource StatusBarButton}" Command="{Binding Operations.TogglePanelCommand}"
                   HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" ToolTip.Tip="{Binding Operations.StatusText}">
             <Grid ColumnDefinitions="Auto,*,Auto">
               <controls:StrokeIcon Classes.spinning="{Binding Operations.HasOperations}" Data="{StaticResource Icon.Spinner}" Size="13" VerticalAlignment="Center" Foreground="{DynamicResource Brush.OnAccent}" />
@@ -1175,8 +1175,8 @@
           </Border>
           <TextBox x:Name="PromptBox" Classes="large mono" Text="{Binding Prompt.Text}" PasswordChar="{Binding Prompt.PasswordCharacter}" IsVisible="{Binding Prompt.HasInput}" />
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
-            <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Cancel" Command="{Binding Prompt.CancelCommand}" />
-            <Button Theme="{StaticResource AccentButton}" Height="40" Padding="18,0" Content="{Binding Prompt.ConfirmText}"
+            <Button Theme="{StaticResource SecondaryButton}" Padding="18,0" Content="Cancel" Command="{Binding Prompt.CancelCommand}" />
+            <Button Theme="{StaticResource AccentButton}" Padding="18,0" Content="{Binding Prompt.ConfirmText}"
                     Classes.destructive="{Binding Prompt.IsDestructive}" Command="{Binding Prompt.ConfirmCommand}" />
           </StackPanel>
         </StackPanel>

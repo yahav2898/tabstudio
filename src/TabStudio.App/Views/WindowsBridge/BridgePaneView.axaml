@@ -44,7 +44,7 @@
     <!-- The program and its window or dialog, and what to do with the window. -->
     <Border DockPanel.Dock="Top" Padding="8,6" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" IsVisible="{Binding HasSelectedApp}">
       <Grid ColumnDefinitions="*,6,*" RowDefinitions="Auto,Auto" RowSpacing="4">
-        <ComboBox ItemsSource="{Binding Apps}" SelectedItem="{Binding SelectedApp}" HorizontalAlignment="Stretch" MinHeight="36" ToolTip.Tip="Program on the PC">
+        <ComboBox ItemsSource="{Binding Apps}" SelectedItem="{Binding SelectedApp}" HorizontalAlignment="Stretch" ToolTip.Tip="Program on the PC">
           <ComboBox.ItemTemplate>
             <DataTemplate x:DataType="wb:BridgeAppViewModel">
               <TextBlock Text="{Binding Display}" TextTrimming="CharacterEllipsis" />
@@ -52,7 +52,7 @@
           </ComboBox.ItemTemplate>
         </ComboBox>
         <ComboBox Grid.Column="2" ItemsSource="{Binding SelectedApp.Windows, FallbackValue={x:Null}}" SelectedItem="{Binding SelectedWindow}"
-                  HorizontalAlignment="Stretch" MinHeight="36" ToolTip.Tip="Window or dialog">
+                  HorizontalAlignment="Stretch" ToolTip.Tip="Window or dialog">
           <ComboBox.ItemTemplate>
             <DataTemplate x:DataType="wb:BridgeWindowOption">
               <TextBlock TextTrimming="CharacterEllipsis"><Run Text="{Binding Display}" /><Run Text="  " /><Run Text="{Binding SizeText}" Foreground="{DynamicResource Brush.TextMuted}" /></TextBlock>

@@ -70,7 +70,7 @@
             <DataTemplate DataType="dm:XamlPropertyGroupViewModel">
               <StackPanel IsVisible="{Binding IsVisible}">
                 <Button Theme="{StaticResource ToolButton}" Focusable="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        MinHeight="40" CornerRadius="0" Padding="12,0" Background="{DynamicResource Brush.Toolbar}"
+                        CornerRadius="0" Padding="12,0" Background="{DynamicResource Brush.Toolbar}"
                         Command="{Binding ToggleExpandedCommand}">
                   <StackPanel Orientation="Horizontal" Spacing="8">
                     <Panel Width="14">

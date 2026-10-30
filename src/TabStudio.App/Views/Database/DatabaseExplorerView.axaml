@@ -77,9 +77,9 @@
     <!-- Connections and EF Core, as the bottom dock's tabs. -->
     <Border DockPanel.Dock="Top" Height="40" Padding="4,0" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <StackPanel Orientation="Horizontal">
-        <Button x:Name="ConnectionsTab" Theme="{StaticResource PanelTabButton}" MinHeight="40" Content="Connections"
+        <Button x:Name="ConnectionsTab" Theme="{StaticResource PanelTabButton}" Content="Connections"
                 Classes.selected="{Binding !IsEfCoreSelected}" Command="{Binding ShowConnectionsCommand}" />
-        <Button x:Name="EfCoreTab" Theme="{StaticResource PanelTabButton}" MinHeight="40" Content="EF Core"
+        <Button x:Name="EfCoreTab" Theme="{StaticResource PanelTabButton}" Content="EF Core"
                 Classes.selected="{Binding IsEfCoreSelected}" Command="{Binding ShowEfCoreCommand}" />
       </StackPanel>
     </Border>

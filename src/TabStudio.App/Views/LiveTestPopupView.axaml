@@ -24,7 +24,7 @@
       <!-- Run all the tests of the line -->
       <Border DockPanel.Dock="Bottom" Padding="8,4" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0"
               IsVisible="{Binding CanRunAll}">
-        <Button Theme="{StaticResource ToolButton}" MinHeight="34" Height="34" Padding="8,0" HorizontalAlignment="Left"
+        <Button Theme="{StaticResource ToolButton}" Padding="8,0" HorizontalAlignment="Left"
                 Command="{Binding RunAllCommand}">
           <StackPanel Orientation="Horizontal" Spacing="7">
             <controls:StrokeIcon Data="{StaticResource Icon.RunAll}" IsFilled="True" Size="13" Foreground="{DynamicResource Brush.Success}" />
@@ -43,7 +43,7 @@
             <ItemsControl.ItemTemplate>
               <DataTemplate DataType="vm:CoveringTestViewModel">
                 <Grid ColumnDefinitions="*,Auto" MinHeight="44" Margin="0,1">
-                  <Button Theme="{StaticResource ToolButton}" MinHeight="42" Padding="8,5" CornerRadius="6"
+                  <Button Theme="{StaticResource ToolButton}" Padding="8,5" CornerRadius="6"
                           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch"
                           ToolTip.Tip="{Binding Description}" Command="{Binding GoToCommand}">
                     <Grid ColumnDefinitions="Auto,*,Auto">
@@ -62,7 +62,7 @@
                                  Text="{Binding DurationText}" />
                     </Grid>
                   </Button>
-                  <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Width="40" Height="40" MinWidth="40" MinHeight="40" Padding="0"
+                  <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Padding="0"
                           VerticalAlignment="Top" Margin="2,1,0,0"
                           ToolTip.Tip="Run Test" Command="{Binding RunCommand}">
                     <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="12" Foreground="{DynamicResource Brush.Success}" />

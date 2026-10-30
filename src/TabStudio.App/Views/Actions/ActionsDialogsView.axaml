@@ -27,9 +27,9 @@
           </Grid>
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
             <ProgressBar IsIndeterminate="True" Width="56" MinWidth="56" VerticalAlignment="Center" IsVisible="{Binding IsBusy}" />
-            <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Cancel"
+            <Button Theme="{StaticResource SecondaryButton}" Padding="18,0" Content="Cancel"
                     Command="{Binding $parent[UserControl].((actions:ActionsViewModel)DataContext).CloseDispatchFormCommand}" />
-            <Button x:Name="RunButton" Theme="{StaticResource AccentButton}" Height="40" Padding="18,0" Command="{Binding RunCommand}">
+            <Button x:Name="RunButton" Theme="{StaticResource AccentButton}" Padding="18,0" Command="{Binding RunCommand}">
               <StackPanel Orientation="Horizontal" Spacing="8">
                 <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="12" />
                 <TextBlock Text="Run workflow" VerticalAlignment="Center" />
@@ -42,7 +42,7 @@
           <StackPanel Spacing="14" Margin="0,0,6,0">
             <StackPanel Spacing="6">
               <TextBlock Classes="label" Text="Use workflow from" />
-              <ComboBox x:Name="BranchBox" HorizontalAlignment="Stretch" MinHeight="40" ItemsSource="{Binding Branches}" SelectedItem="{Binding Branch}">
+              <ComboBox x:Name="BranchBox" HorizontalAlignment="Stretch" ItemsSource="{Binding Branches}" SelectedItem="{Binding Branch}">
                 <ComboBox.ItemTemplate>
                   <DataTemplate x:DataType="sys:String">
                     <StackPanel Orientation="Horizontal" Spacing="8">
@@ -69,9 +69,9 @@
                     <TextBlock Classes="label"><Run Text="{Binding Label}" /><Run
                       Text="{Binding RequiredMark}" Foreground="{DynamicResource Brush.Error}" /></TextBlock>
                     <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding Description}" IsVisible="{Binding HasDescription}" />
-                    <TextBox MinHeight="38" Text="{Binding Text}" Watermark="{Binding Watermark}" IsVisible="{Binding IsText}" />
+                    <TextBox Text="{Binding Text}" Watermark="{Binding Watermark}" IsVisible="{Binding IsText}" />
                     <ToggleSwitch IsChecked="{Binding IsOn}" OnContent="Yes" OffContent="No" IsVisible="{Binding IsBoolean}" ToolTip.Tip="{Binding Name}" />
-                    <ComboBox HorizontalAlignment="Stretch" MinHeight="38" ItemsSource="{Binding Options}" SelectedItem="{Binding SelectedOption}"
+                    <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding Options}" SelectedItem="{Binding SelectedOption}"
                               IsVisible="{Binding IsChoice}" />
                     <TextBlock Classes="small" Foreground="{DynamicResource Brush.Error}" Text="{Binding ErrorText}"
                                IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />

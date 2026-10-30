@@ -34,7 +34,8 @@ public sealed class KeyboardTests
         try
         {
             await UiTestHelpers.WaitUntilAsync(() => true);
-            var menu = window.GetVisualDescendants().OfType<Menu>().First(m => m.IsEffectivelyVisible);
+            // On a phone the menus fold into the Menu button.
+            var menu = window.GetVisualDescendants().OfType<Menu>().FirstOrDefault(m => m.IsEffectivelyVisible);
             var first = KeyboardNavigationHandler.GetNext(window, NavigationDirection.Next) as Control;
             Assert.NotNull(first);
             first!.Focus(NavigationMethod.Tab);
@@ -72,14 +73,14 @@ public sealed class KeyboardTests
             var toolbar = window.GetVisualDescendants().OfType<Control>().First(c => c.Name == "Toolbar");
             var status = window.GetVisualDescendants().OfType<Control>().First(c => c.Name == "StatusBar");
             int IndexIn(Control region) => stops.FindIndex(s => ReferenceEquals(s, region) || region.IsVisualAncestorOf(s));
-            var inMenu = IndexIn(menu);
+            var inMenu = menu is null ? -1 : IndexIn(menu);
             var inToolbar = IndexIn(toolbar);
             var inStatus = IndexIn(status);
             var inEditor = stops.FindIndex(s => s.GetVisualAncestors().OfType<CodeEditorView>().Any() || s is AvaloniaEdit.Editing.TextArea);
             Assert.True(inToolbar >= 0, "Tab never reaches the toolbar.");
             Assert.True(inStatus >= 0, "Tab never reaches the status bar.");
             Assert.True(inMenu < 0 || inMenu < inToolbar, "The menus come after the toolbar.");
-            Assert.True(inEditor < 0 || inToolbar < inEditor, "The toolbar comes after the editor.");
+            Assert.True(inEditor < 0 || inToolbar < inEditor, "The editor comes before the toolbar.");
             Assert.True(inStatus > inToolbar, "The status bar comes before the toolbar.");
         }
         finally

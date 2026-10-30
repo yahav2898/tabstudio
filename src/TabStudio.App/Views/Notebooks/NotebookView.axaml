@@ -148,15 +148,15 @@
           </TextBox.InnerLeftContent>
         </TextBox>
         <TextBlock Text="{Binding FindStatus}" Classes="muted" FontSize="{DynamicResource Type.Small}" MinWidth="70" VerticalAlignment="Center" />
-        <Button Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+        <Button Theme="{StaticResource ToolButton}" Padding="0"
                 ToolTip.Tip="Previous Match (Shift+Enter)" Command="{Binding FindPreviousCommand}">
           <controls:StrokeIcon Data="{StaticResource Icon.ArrowUp}" Size="15" />
         </Button>
-        <Button Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+        <Button Theme="{StaticResource ToolButton}" Padding="0"
                 ToolTip.Tip="Next Match (Enter)" Command="{Binding FindNextCommand}">
           <controls:StrokeIcon Data="{StaticResource Icon.ArrowDown}" Size="15" />
         </Button>
-        <Button Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+        <Button Theme="{StaticResource ToolButton}" Padding="0"
                 ToolTip.Tip="Close (Escape)" Command="{Binding CloseFindCommand}">
           <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="13" />
         </Button>
@@ -179,13 +179,13 @@
 
         <!-- Add a cell at the end -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" Margin="0,14,0,0">
-          <Button Theme="{StaticResource SecondaryButton}" Height="38" Padding="14,0" Command="{Binding AppendCodeCellCommand}">
+          <Button Theme="{StaticResource SecondaryButton}" Padding="14,0" Command="{Binding AppendCodeCellCommand}">
             <StackPanel Orientation="Horizontal" Spacing="7">
               <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="14" />
               <TextBlock Text="Code" VerticalAlignment="Center" FontSize="{DynamicResource Type.Body}" />
             </StackPanel>
           </Button>
-          <Button Theme="{StaticResource SecondaryButton}" Height="38" Padding="14,0" Command="{Binding AppendMarkdownCellCommand}">
+          <Button Theme="{StaticResource SecondaryButton}" Padding="14,0" Command="{Binding AppendMarkdownCellCommand}">
             <StackPanel Orientation="Horizontal" Spacing="7">
               <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="14" />
               <TextBlock Text="Markdown" VerticalAlignment="Center" FontSize="{DynamicResource Type.Body}" />

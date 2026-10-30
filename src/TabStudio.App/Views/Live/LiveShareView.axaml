@@ -30,7 +30,7 @@
 
         <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="22,10,16,12">
           <TextBlock Classes="muted small" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding Subtitle}" />
-          <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Height="40" Padding="20,0" Content="Done" Command="{Binding CloseShareCommand}" />
+          <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Padding="20,0" Content="Done" Command="{Binding CloseShareCommand}" />
         </Grid>
         <Border DockPanel.Dock="Bottom" Height="1" Background="{DynamicResource Brush.Divider}" />
 
@@ -54,7 +54,7 @@
                   <TextBlock Grid.Row="2" Classes="label" Text="Code" VerticalAlignment="Center" />
                   <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Spacing="10">
                     <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Display}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="{Binding CodeText}" VerticalAlignment="Center" />
-                    <Button Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="10,0" Command="{Binding NewCodeCommand}" ToolTip.Tip="Draw a new code; the shown one stops working for devices that have not joined">
+                    <Button Theme="{StaticResource ToolButton}" Padding="10,0" Command="{Binding NewCodeCommand}" ToolTip.Tip="Draw a new code; the shown one stops working for devices that have not joined">
                       <StackPanel Orientation="Horizontal" Spacing="6">
                         <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="14" />
                         <TextBlock Text="New code" VerticalAlignment="Center" />
@@ -76,8 +76,8 @@
 
             <!-- What guests may do, chosen before they join. -->
             <WrapPanel Orientation="Horizontal">
-              <CheckBox MinHeight="40" Margin="0,0,16,0" Content="Guests can edit" IsChecked="{Binding GuestsCanEdit}" />
-              <CheckBox MinHeight="40" Content="Classroom: everyone follows me" IsChecked="{Binding IsClassroom}" />
+              <CheckBox Margin="0,0,16,0" Content="Guests can edit" IsChecked="{Binding GuestsCanEdit}" />
+              <CheckBox Content="Classroom: everyone follows me" IsChecked="{Binding IsClassroom}" />
             </WrapPanel>
 
             <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,8,Auto">

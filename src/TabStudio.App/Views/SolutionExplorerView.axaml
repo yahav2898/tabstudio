@@ -10,7 +10,7 @@
       <Grid ColumnDefinitions="*,Auto" Margin="12,0,4,0">
         <TextBlock Classes="header" Text="Solution Explorer" />
         <StackPanel Grid.Column="1" Orientation="Horizontal">
-          <Button Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+          <Button Theme="{StaticResource ToolButton}" Padding="0"
                   ToolTip.Tip="Collapse All" Command="{Binding CollapseAllCommand}">
             <controls:StrokeIcon Data="{StaticResource Icon.Collapse}" Size="15" />
           </Button>
@@ -32,7 +32,7 @@
              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
       <ListBox.ItemTemplate>
         <DataTemplate DataType="vm:ExplorerItemViewModel">
-          <Grid ColumnDefinitions="Auto,18,Auto,*,Auto,Auto" Height="30" Background="Transparent">
+          <Grid ColumnDefinitions="Auto,18,Auto,*,Auto,Auto" MinHeight="30" Background="Transparent">
             <!-- Long-press on touch, right-click with a mouse. -->
             <Grid.ContextFlyout>
               <MenuFlyout>
@@ -53,9 +53,9 @@
 
             <!-- Expand chevron -->
             <Panel Grid.Column="1" IsVisible="{Binding IsExpandable}">
-              <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="14"
+              <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="14" AutomationProperties.Name="collapsed"
                                    Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding !IsExpanded}" />
-              <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14"
+              <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" AutomationProperties.Name="expanded"
                                    Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsExpanded}" />
             </Panel>
 

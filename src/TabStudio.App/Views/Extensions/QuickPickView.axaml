@@ -15,7 +15,7 @@
       <DockPanel>
         <StackPanel DockPanel.Dock="Top" Margin="8,6,8,8" Spacing="8">
           <TextBlock Classes="h2" FontSize="{DynamicResource Type.Large}" Text="{Binding Title}" />
-          <TextBox x:Name="FilterBox" Height="40" Text="{Binding FilterText}" Watermark="{Binding Placeholder}" />
+          <TextBox x:Name="FilterBox" Text="{Binding FilterText}" Watermark="{Binding Placeholder}" />
         </StackPanel>
         <TextBlock DockPanel.Dock="Bottom" Classes="muted" Margin="12,8,12,12" Text="Nothing matches." IsVisible="{Binding IsEmpty}" />
         <ListBox x:Name="ItemList" Classes="quickPick" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}"

@@ -144,27 +144,27 @@ public sealed class ActivityBar : Control
             if (_modes[i] == AdaptiveMode.Overflow)
             {
                 overflows = true;
-                top[i].Arrange(AdaptiveLayout.Parked);
+                AdaptiveLayout.Place(top[i], AdaptiveLayout.Parked);
                 continue;
             }
 
-            top[i].Arrange(new Rect(0, y, ItemSize, ItemSize));
+            AdaptiveLayout.Place(top[i], new Rect(0, y, ItemSize, ItemSize));
             y += ItemSize;
         }
 
         ShowsMore = overflows;
-        _more.Arrange(overflows ? new Rect(0, y, ItemSize, ItemSize) : AdaptiveLayout.Parked);
+        AdaptiveLayout.Place(_more, overflows ? new Rect(0, y, ItemSize, ItemSize) : AdaptiveLayout.Parked);
 
         var bottomY = finalSize.Height - (bottom.Count * ItemSize);
         foreach (var button in bottom)
         {
-            button.Arrange(new Rect(0, bottomY, ItemSize, ItemSize));
+            AdaptiveLayout.Place(button, new Rect(0, bottomY, ItemSize, ItemSize));
             bottomY += ItemSize;
         }
 
         foreach (var hidden in _buttons.Where(button => !button.Item!.IsAvailable))
         {
-            hidden.Arrange(AdaptiveLayout.Parked);
+            AdaptiveLayout.Place(hidden, AdaptiveLayout.Parked);
         }
 
         return finalSize;

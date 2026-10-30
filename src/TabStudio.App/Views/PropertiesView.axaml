@@ -11,7 +11,7 @@
     with the whole path in the tooltip.
   -->
   <DockPanel>
-    <Button x:Name="HeaderButton" DockPanel.Dock="Top" Theme="{StaticResource ToolButton}" CornerRadius="0" Padding="0" MinHeight="40"
+    <Button x:Name="HeaderButton" DockPanel.Dock="Top" Theme="{StaticResource ToolButton}" CornerRadius="0" Padding="0"
             HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Command="{Binding ToggleExpandedCommand}"
             ToolTip.Tip="Show or hide Properties">
       <controls:PanelHeader Title="Properties" Subtitle="{Binding Title}" Icon="{StaticResource Icon.Properties}" BorderThickness="0,1,0,0">

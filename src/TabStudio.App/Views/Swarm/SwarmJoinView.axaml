@@ -19,7 +19,7 @@
           <TextBlock Classes="muted small" TextWrapping="Wrap"
                      Text="In a swarm, this device shows the app a tablet builds, full screen: every save on the tablet updates it, and the tablet's debugger stops it at breakpoints." />
         </StackPanel>
-        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="40" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"
+        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"
                 Content="Leave" Command="{Binding LeaveCommand}" IsVisible="{Binding IsInSwarm}" />
       </Grid>
     </Border>
@@ -48,9 +48,9 @@
                   </StackPanel>
                   <TextBlock Classes="muted small" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
                 </StackPanel>
-                <Button Grid.Column="2" Theme="{StaticResource AccentButton}" Height="38" MinHeight="38" Padding="16,0" Margin="8,0,0,0"
+                <Button Grid.Column="2" Theme="{StaticResource AccentButton}" Padding="16,0" Margin="8,0,0,0"
                         Content="Join" Command="{Binding ConnectCommand}" IsVisible="{Binding CanConnect}" />
-                <Button Grid.Column="3" Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="12,0" Margin="4,0,0,0"
+                <Button Grid.Column="3" Theme="{StaticResource ToolButton}" Padding="12,0" Margin="4,0,0,0"
                         Content="Forget" Command="{Binding ForgetCommand}" ToolTip.Tip="Forget this swarm; this device has to pair again" />
               </Grid>
             </Border>

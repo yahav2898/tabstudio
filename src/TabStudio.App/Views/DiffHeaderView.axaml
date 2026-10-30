@@ -22,11 +22,11 @@
                    Foreground="{DynamicResource Brush.Error}" />
       </StackPanel>
       <StackPanel Grid.Column="3" Orientation="Horizontal">
-        <Button Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+        <Button Theme="{StaticResource ToolButton}" Padding="0"
                 ToolTip.Tip="Previous Change (Shift+F8)" Click="OnPreviousClick">
           <controls:StrokeIcon Data="{StaticResource Icon.ChevronUp}" Size="15" />
         </Button>
-        <Button Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+        <Button Theme="{StaticResource ToolButton}" Padding="0"
                 ToolTip.Tip="Next Change (F8)" Click="OnNextClick">
           <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="15" />
         </Button>

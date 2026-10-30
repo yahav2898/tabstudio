@@ -8,7 +8,7 @@
              IsVisible="{Binding IsCiVisible}">
 
   <!-- The workspace commit's CI, next to the branch: tap to open GitHub Actions on this commit. -->
-  <Button x:Name="CiButton" Theme="{StaticResource StatusBarButton}" Height="24"
+  <Button x:Name="CiButton" Theme="{StaticResource StatusBarButton}"
           Command="{Binding ShowCommitChecksCommand}" ToolTip.Tip="{Binding CiToolTip}">
     <StackPanel Orientation="Horizontal" Spacing="6">
       <!-- A dark disc keeps green, red and amber readable on the accent-colored status bar. -->

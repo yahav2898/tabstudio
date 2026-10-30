@@ -14,7 +14,7 @@
         <Grid ColumnDefinitions="Auto,*,Auto">
           <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="17" Foreground="{DynamicResource Brush.Error}" />
           <TextBlock Grid.Column="1" Classes="h2" Text="Exception Unhandled" Margin="9,0,0,0" VerticalAlignment="Center" />
-          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Padding="0"
                   ToolTip.Tip="Close" Command="{Binding CloseCommand}">
             <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="12" />
           </Button>
@@ -24,15 +24,15 @@
       <!-- Actions -->
       <Border DockPanel.Dock="Bottom" Padding="12,8" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
         <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto">
-          <Button Theme="{StaticResource ToolButton}" MinHeight="34" Height="34" Padding="8,0" Command="{Binding ToggleDetailsCommand}">
+          <Button Theme="{StaticResource ToolButton}" Padding="8,0" Command="{Binding ToggleDetailsCommand}">
             <TextBlock Classes="link" FontSize="{DynamicResource Type.Body}" Text="View Details" />
           </Button>
-          <Button x:Name="CopyDetails" Grid.Column="1" Theme="{StaticResource ToolButton}" MinHeight="34" Height="34" Padding="8,0">
+          <Button x:Name="CopyDetails" Grid.Column="1" Theme="{StaticResource ToolButton}" Padding="8,0">
             <TextBlock Classes="link" FontSize="{DynamicResource Type.Body}" Text="Copy Details" />
           </Button>
-          <Button Grid.Column="3" Theme="{StaticResource SecondaryButton}" Height="34" Padding="14,0" Margin="0,0,8,0"
+          <Button Grid.Column="3" Theme="{StaticResource SecondaryButton}" Padding="14,0" Margin="0,0,8,0"
                   Content="Stop Debugging" Command="{Binding StopCommand}" />
-          <Button Grid.Column="4" Theme="{StaticResource AccentButton}" Height="34" MinHeight="34" Padding="14,0"
+          <Button Grid.Column="4" Theme="{StaticResource AccentButton}" Padding="14,0"
                   Content="Continue" ToolTip.Tip="Continue (F5): the program ends with this exception"
                   Command="{Binding ContinueCommand}" />
         </Grid>

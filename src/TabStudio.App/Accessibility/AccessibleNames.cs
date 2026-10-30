@@ -1,4 +1,3 @@
-using System.Text;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -193,16 +192,22 @@ public static class AccessibleNames
     /// </summary>
     private static string? TextIn(Control control)
     {
-        var builder = new StringBuilder();
-        Collect(control, control, builder);
-        return builder.Length == 0 ? null : builder.ToString();
+        var text = new List<string>();
+        var states = new List<string>();
+        Collect(control, control, text, states);
+        var all = text.Concat(states).ToList();
+        return all.Count == 0 ? null : string.Join(", ", all);
     }
 
-    private static void Collect(Visual visual, Control owner, StringBuilder builder)
+    /// <summary>
+    /// Collects the text a control shows, in order, and the names of the icons in it that mean something (an error's
+    /// glyph, a folder's chevron), which are read after the text: "Program.cs, C#", then "Error" or "expanded".
+    /// </summary>
+    private static void Collect(Visual visual, Control owner, List<string> text, List<string> states)
     {
         foreach (var child in visual.GetVisualChildren())
         {
-            if (!child.IsVisible || builder.Length > MaxLength)
+            if (!child.IsVisible || text.Sum(t => t.Length + 2) > MaxLength)
             {
                 continue;
             }
@@ -212,18 +217,23 @@ public static class AccessibleNames
                 continue;
             }
 
-            if (child is TextBlock block && TextOf(block) is { } text && !string.IsNullOrWhiteSpace(text))
+            if (child is TextBlock block)
             {
-                if (builder.Length > 0)
+                if (TextOf(block) is { } shown && !string.IsNullOrWhiteSpace(shown))
                 {
-                    builder.Append(", ");
+                    text.Add(shown.Trim());
                 }
 
-                builder.Append(text.Trim());
                 continue;
             }
 
-            Collect(child, owner, builder);
+            if (child is Control part && AutomationProperties.GetName(part) is { } named && !string.IsNullOrWhiteSpace(named))
+            {
+                states.Add(named.Trim());
+                continue;
+            }
+
+            Collect(child, owner, text, states);
         }
     }
 

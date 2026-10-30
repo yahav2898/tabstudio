@@ -271,7 +271,7 @@
                                Text="The code changed after this run. Run the tests again to update the result." />
                   </Border>
 
-                  <Button Theme="{StaticResource ToolButton}" MinHeight="32" Height="32" Padding="6,0" Margin="-6,0,0,0"
+                  <Button Theme="{StaticResource ToolButton}" Padding="6,0" Margin="-6,0,0,0"
                           HorizontalAlignment="Left" Command="{Binding GoToSourceCommand}"
                           IsVisible="{Binding SourceText, Converter={x:Static ObjectConverters.IsNotNull}}">
                     <TextBlock FontSize="{DynamicResource Type.Body}">
@@ -301,7 +301,7 @@
                   <ItemsControl ItemsSource="{Binding StackFrames}" IsVisible="{Binding HasStackFrames}">
                     <ItemsControl.ItemTemplate>
                       <DataTemplate DataType="vm:TestStackFrameViewModel">
-                        <Button Theme="{StaticResource ToolButton}" MinHeight="32" Padding="6,3" Margin="-6,0,0,0" CornerRadius="6"
+                        <Button Theme="{StaticResource ToolButton}" Padding="6,3" Margin="-6,0,0,0" CornerRadius="6"
                                 HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
                                 Opacity="{Binding Opacity}" Command="{Binding OpenCommand}" IsEnabled="{Binding CanOpen}">
                           <StackPanel>

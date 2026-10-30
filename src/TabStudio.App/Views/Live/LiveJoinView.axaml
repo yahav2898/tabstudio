@@ -30,7 +30,7 @@
 
         <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="22,10,16,12">
           <TextBlock Classes="muted small" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding DeviceText}" />
-          <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Height="40" Padding="20,0" Content="Cancel" Command="{Binding CancelCommand}" />
+          <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Padding="20,0" Content="Cancel" Command="{Binding CancelCommand}" />
         </Grid>
         <Border DockPanel.Dock="Bottom" Height="1" Background="{DynamicResource Brush.Divider}" />
 

@@ -42,7 +42,7 @@
         <TextBlock Classes="header" Text="Pull Requests" />
         <TextBlock Grid.Column="1" Classes="muted small" Margin="8,0,4,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
                    Text="{Binding RepositoryName}" />
-        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Padding="0"
                 ToolTip.Tip="Refresh" Command="{Binding RefreshCommand}" IsVisible="{Binding IsLinked}">
           <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="15" />
         </Button>
@@ -87,7 +87,7 @@
         </Grid>
         <StackPanel Margin="6,8,6,0" Spacing="10" IsVisible="{Binding NeedsSignIn}">
           <TextBlock Classes="muted" TextWrapping="Wrap" Text="Sign in to GitHub to see the pull requests you opened or are asked to review." />
-          <Button Theme="{StaticResource AccentButton}" Height="38" HorizontalAlignment="Left" Padding="16,0" Content="Sign in to GitHub"
+          <Button Theme="{StaticResource AccentButton}" HorizontalAlignment="Left" Padding="16,0" Content="Sign in to GitHub"
                   Command="{Binding SignInCommand}" />
         </StackPanel>
         <TextBlock Classes="muted" Margin="6,8,6,0" TextWrapping="Wrap" Text="{Binding EmptyText}" IsVisible="{Binding IsEmpty}" />

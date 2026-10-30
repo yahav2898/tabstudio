@@ -50,13 +50,13 @@
         </Border>
         <TextBlock Grid.Column="1" Text="{Binding Title}" FontWeight="SemiBold" FontSize="{DynamicResource Type.Large}" Foreground="{DynamicResource Brush.TextBright}"
                    TextWrapping="Wrap" VerticalAlignment="Center" />
-        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Width="36" Height="36" MinWidth="36" MinHeight="36" Padding="0" Margin="6,-2,0,0"
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Padding="0" Margin="6,-2,0,0"
                 VerticalAlignment="Top" ToolTip.Tip="Dismiss" Command="{Binding Dismiss}">
           <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="14" />
         </Button>
         <WrapPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,10,0,0">
-          <Button Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Padding="14,0" Margin="0,0,8,0" Content="Open in Preview" Command="{Binding OpenPreview}" />
-          <Button Theme="{StaticResource SecondaryButton}" Height="36" MinHeight="36" Padding="14,0" Content="Open in Browser" Command="{Binding OpenBrowser}" />
+          <Button Theme="{StaticResource AccentButton}" Padding="14,0" Margin="0,0,8,0" Content="Open in Preview" Command="{Binding OpenPreview}" />
+          <Button Theme="{StaticResource SecondaryButton}" Padding="14,0" Content="Open in Browser" Command="{Binding OpenBrowser}" />
         </WrapPanel>
       </Grid>
     </Border>
@@ -70,14 +70,14 @@
         </Border>
         <TextBlock Grid.Column="1" Text="{Binding Title}" FontWeight="SemiBold" FontSize="{DynamicResource Type.Large}" Foreground="{DynamicResource Brush.TextBright}"
                    TextWrapping="Wrap" VerticalAlignment="Center" />
-        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0" Margin="6,-4,-6,0"
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Padding="0" Margin="6,-4,-6,0"
                 VerticalAlignment="Top" ToolTip.Tip="Not now" Command="{Binding Dismiss}">
           <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="13" />
         </Button>
         <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Classes="muted" FontSize="{DynamicResource Type.Body}" Margin="0,4,0,0" TextWrapping="Wrap" Text="{Binding Message}" />
         <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="8" Margin="0,12,0,0">
-          <Button Theme="{StaticResource AccentButton}" Height="34" MinHeight="34" Padding="14,0" Content="{Binding ActionText}" Command="{Binding Action}" />
-          <Button Theme="{StaticResource SecondaryButton}" Height="34" MinHeight="34" Padding="14,0" Content="Not now" Command="{Binding Dismiss}" />
+          <Button Theme="{StaticResource AccentButton}" Padding="14,0" Content="{Binding ActionText}" Command="{Binding Action}" />
+          <Button Theme="{StaticResource SecondaryButton}" Padding="14,0" Content="Not now" Command="{Binding Dismiss}" />
         </StackPanel>
       </Grid>
     </Border>
@@ -99,7 +99,7 @@
               <TextBlock Classes="h2" FontSize="{DynamicResource Type.Title}" Text="Toolchain Store" />
               <TextBlock Classes="muted" FontSize="{DynamicResource Type.Body}" Text="{Binding Subtitle}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Subtitle}" />
             </StackPanel>
-            <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Width="36" Height="36" MinWidth="36" MinHeight="36" Padding="0"
+            <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Padding="0"
                     VerticalAlignment="Top" ToolTip.Tip="Close" Command="{Binding CloseCommand}">
               <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="15" />
             </Button>
@@ -129,21 +129,21 @@
                         <TextBlock Text="{Binding Badge}" FontWeight="Bold" FontSize="{DynamicResource Type.Heading}" Foreground="{DynamicResource Brush.OnAccent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                       </Border>
                       <StackPanel Classes="storeActions" Orientation="Horizontal" Spacing="8">
-                        <Button Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Padding="16,0" IsVisible="{Binding ShowsPrimaryInstall}" Command="{Binding InstallCommand}">
+                        <Button Theme="{StaticResource AccentButton}" Padding="16,0" IsVisible="{Binding ShowsPrimaryInstall}" Command="{Binding InstallCommand}">
                           <StackPanel Orientation="Horizontal" Spacing="7">
                             <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="14" Foreground="{DynamicResource Brush.OnAccent}" />
                             <TextBlock Text="Install" VerticalAlignment="Center" />
                           </StackPanel>
                         </Button>
-                        <Button Theme="{StaticResource SecondaryButton}" Height="36" MinHeight="36" Padding="16,0" IsVisible="{Binding ShowsSecondaryInstall}" Command="{Binding InstallCommand}">
+                        <Button Theme="{StaticResource SecondaryButton}" Padding="16,0" IsVisible="{Binding ShowsSecondaryInstall}" Command="{Binding InstallCommand}">
                           <StackPanel Orientation="Horizontal" Spacing="7">
                             <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="14" />
                             <TextBlock Text="Install" VerticalAlignment="Center" />
                           </StackPanel>
                         </Button>
-                        <Button Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Padding="16,0" Content="Update" IsVisible="{Binding ShowsUpdate}" Command="{Binding UpdateCommand}" />
-                        <Button Theme="{StaticResource SecondaryButton}" Height="36" MinHeight="36" Padding="14,0" Content="Remove" IsVisible="{Binding ShowsRemove}" Command="{Binding RemoveCommand}" />
-                        <Button Theme="{StaticResource SecondaryButton}" Height="36" MinHeight="36" Padding="14,0" Content="Cancel" IsVisible="{Binding ShowsCancel}" Command="{Binding CancelCommand}" />
+                        <Button Theme="{StaticResource AccentButton}" Padding="16,0" Content="Update" IsVisible="{Binding ShowsUpdate}" Command="{Binding UpdateCommand}" />
+                        <Button Theme="{StaticResource SecondaryButton}" Padding="14,0" Content="Remove" IsVisible="{Binding ShowsRemove}" Command="{Binding RemoveCommand}" />
+                        <Button Theme="{StaticResource SecondaryButton}" Padding="14,0" Content="Cancel" IsVisible="{Binding ShowsCancel}" Command="{Binding CancelCommand}" />
                       </StackPanel>
                       <StackPanel Spacing="4" VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal" Spacing="10">
@@ -186,7 +186,7 @@
                 <Run Text="   " />
                 <Run Text="{Binding FreeSpaceText}" Foreground="{DynamicResource Brush.TextMuted}" />
               </TextBlock>
-              <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="34" MinHeight="34" Padding="12,0" Command="{Binding CheckForUpdatesCommand}"
+              <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Padding="12,0" Command="{Binding CheckForUpdatesCommand}"
                       IsVisible="{Binding CanInstallHere}">
                 <StackPanel Orientation="Horizontal" Spacing="7">
                   <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="13" />

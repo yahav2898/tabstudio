@@ -104,7 +104,7 @@
                         <ItemsControl.ItemTemplate>
                           <DataTemplate x:DataType="vm:FormsToolboxItemViewModel">
                             <Button Classes="tool" Theme="{StaticResource ToolButton}" Classes.selected="{Binding IsArmed}" Command="{Binding ArmCommand}"
-                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" MinHeight="36" Padding="10,0">
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="10,0">
                               <StackPanel Orientation="Horizontal" Spacing="10">
                                 <controls:StrokeIcon Data="{Binding Icon}" Size="16" Foreground="{DynamicResource Brush.Accent}" />
                                 <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
@@ -172,7 +172,7 @@
                       <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="vm:StripItemViewModel">
                           <Button Theme="{StaticResource ToolButton}" Command="{Binding SelectCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                                  MinHeight="34" Padding="8,0">
+                                  Padding="8,0">
                             <Grid ColumnDefinitions="*,Auto">
                               <TextBlock Text="{Binding Text}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                               <TextBlock Grid.Column="1" Classes="small muted" Text="{Binding Name}" VerticalAlignment="Center" Margin="8,0,0,0" />
@@ -260,17 +260,17 @@
                               <TextBlock Classes="small muted" Text="{Binding Summary}" TextWrapping="Wrap" />
                             </StackPanel>
                             <Grid Grid.Column="1" HorizontalAlignment="Left" ColumnDefinitions="36,40,36" RowDefinitions="30,30,30">
-                              <ToggleButton Grid.Column="1" Grid.Row="0" IsChecked="{Binding Top}" ToolTip.Tip="Top" HorizontalAlignment="Stretch" MinHeight="0" Padding="0">
+                              <ToggleButton Grid.Column="1" Grid.Row="0" IsChecked="{Binding Top}" ToolTip.Tip="Top" HorizontalAlignment="Stretch" Padding="0">
                                 <Border Width="4" Height="16" Background="{DynamicResource Brush.Text}" CornerRadius="2" />
                               </ToggleButton>
-                              <ToggleButton Grid.Column="0" Grid.Row="1" IsChecked="{Binding Left}" ToolTip.Tip="Left" HorizontalAlignment="Stretch" MinHeight="0" Padding="0">
+                              <ToggleButton Grid.Column="0" Grid.Row="1" IsChecked="{Binding Left}" ToolTip.Tip="Left" HorizontalAlignment="Stretch" Padding="0">
                                 <Border Width="16" Height="4" Background="{DynamicResource Brush.Text}" CornerRadius="2" />
                               </ToggleButton>
                               <Border Grid.Column="1" Grid.Row="1" Margin="4" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" CornerRadius="3" />
-                              <ToggleButton Grid.Column="2" Grid.Row="1" IsChecked="{Binding Right}" ToolTip.Tip="Right" HorizontalAlignment="Stretch" MinHeight="0" Padding="0">
+                              <ToggleButton Grid.Column="2" Grid.Row="1" IsChecked="{Binding Right}" ToolTip.Tip="Right" HorizontalAlignment="Stretch" Padding="0">
                                 <Border Width="16" Height="4" Background="{DynamicResource Brush.Text}" CornerRadius="2" />
                               </ToggleButton>
-                              <ToggleButton Grid.Column="1" Grid.Row="2" IsChecked="{Binding Bottom}" ToolTip.Tip="Bottom" HorizontalAlignment="Stretch" MinHeight="0" Padding="0">
+                              <ToggleButton Grid.Column="1" Grid.Row="2" IsChecked="{Binding Bottom}" ToolTip.Tip="Bottom" HorizontalAlignment="Stretch" Padding="0">
                                 <Border Width="4" Height="16" Background="{DynamicResource Brush.Text}" CornerRadius="2" />
                               </ToggleButton>
                             </Grid>
@@ -297,7 +297,7 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                       <DataTemplate x:DataType="vm:ColorChoiceViewModel">
-                                        <Button Command="{Binding PickCommand}" ToolTip.Tip="{Binding Name}" Width="30" Height="30" MinWidth="0" MinHeight="0" Padding="0" Margin="1"
+                                        <Button Command="{Binding PickCommand}" ToolTip.Tip="{Binding Name}" Padding="0" Margin="1"
                                                 Background="Transparent" BorderThickness="0">
                                           <Border Width="24" Height="24" CornerRadius="5" Background="{Binding Swatch}" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" />
                                         </Button>
@@ -324,7 +324,7 @@
                         <Grid ColumnDefinitions="110,*,Auto" Margin="0,2" Background="Transparent" DoubleTapped="OnEventDoubleTapped">
                           <TextBlock Classes="label" Text="{Binding Name}" VerticalAlignment="Center" />
                           <TextBox Grid.Column="1" Text="{Binding Handler, UpdateSourceTrigger=LostFocus}" Watermark="(none)" />
-                          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Command="{Binding OpenCommand}" ToolTip.Tip="Write the handler, or go to it" MinWidth="36" Padding="6,0">
+                          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Command="{Binding OpenCommand}" ToolTip.Tip="Write the handler, or go to it" Padding="6,0">
                             <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="13" />
                           </Button>
                         </Grid>

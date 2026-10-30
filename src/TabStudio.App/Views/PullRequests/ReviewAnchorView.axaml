@@ -138,7 +138,7 @@
                               <TextBlock Text="Pending" VerticalAlignment="Center" />
                             </Border>
                           </StackPanel>
-                          <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0"
+                          <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Padding="0"
                                   ToolTip.Tip="Delete this pending comment" Command="{Binding DeleteCommand}" IsVisible="{Binding IsPending}">
                             <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="12" />
                           </Button>
@@ -151,7 +151,7 @@
               </ItemsControl>
 
               <StackPanel IsVisible="{Binding CanReply}" Spacing="8">
-                <Button Theme="{StaticResource SecondaryButton}" Height="36" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                <Button Theme="{StaticResource SecondaryButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
                         Padding="12,0" Command="{Binding StartReplyCommand}" IsVisible="{Binding !IsReplying}">
                   <TextBlock Text="Reply…" Foreground="{DynamicResource Brush.TextMuted}" />
                 </Button>

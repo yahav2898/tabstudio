@@ -25,8 +25,10 @@
   </UserControl.Styles>
   <DockPanel>
     <!-- Filters -->
-    <Grid DockPanel.Dock="Top" Height="38" ColumnDefinitions="Auto,Auto,Auto,Auto,*,220" Margin="12,0">
-      <Button Theme="{StaticResource SecondaryButton}" Height="30" MinHeight="30" Padding="10,0" FontSize="{DynamicResource Type.Body}"
+    <!-- The filters wrap, and on a narrow panel the search goes below them, rather than running off the screen. -->
+    <Grid x:Name="FilterBar" DockPanel.Dock="Top" MinHeight="38" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" Margin="12,0">
+      <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+      <Button Theme="{StaticResource SecondaryButton}" Padding="10,0" FontSize="{DynamicResource Type.Body}"
               Command="{Binding ToggleScopeCommand}">
         <StackPanel Orientation="Horizontal" Spacing="6">
           <TextBlock Text="Entire Solution" IsVisible="{Binding !CurrentDocumentOnly}" VerticalAlignment="Center" />
@@ -34,28 +36,28 @@
           <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="13" />
         </StackPanel>
       </Button>
-      <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Height="30" MinHeight="30" Margin="8,0,0,0" FontSize="{DynamicResource Type.Body}"
+      <Button Theme="{StaticResource ToolButton}" Margin="8,0,0,0" FontSize="{DynamicResource Type.Body}"
               Classes.selected="{Binding ShowErrors}" Command="{Binding ToggleErrorsCommand}">
         <StackPanel Orientation="Horizontal" Spacing="6">
           <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="14" Foreground="{DynamicResource Brush.Error}" />
           <TextBlock Text="{Binding ErrorsLabel}" VerticalAlignment="Center" />
         </StackPanel>
       </Button>
-      <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Height="30" MinHeight="30" Margin="4,0,0,0" FontSize="{DynamicResource Type.Body}"
+      <Button Theme="{StaticResource ToolButton}" Margin="4,0,0,0" FontSize="{DynamicResource Type.Body}"
               Classes.selected="{Binding ShowWarnings}" Command="{Binding ToggleWarningsCommand}">
         <StackPanel Orientation="Horizontal" Spacing="6">
           <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="14" Foreground="{DynamicResource Brush.Warning}" />
           <TextBlock Text="{Binding WarningsLabel}" VerticalAlignment="Center" />
         </StackPanel>
       </Button>
-      <Button Grid.Column="3" Theme="{StaticResource ToolButton}" Height="30" MinHeight="30" Margin="4,0,0,0" FontSize="{DynamicResource Type.Body}"
+      <Button Theme="{StaticResource ToolButton}" Margin="4,0,0,0" FontSize="{DynamicResource Type.Body}"
               Classes.selected="{Binding ShowMessages}" Command="{Binding ToggleMessagesCommand}">
         <StackPanel Orientation="Horizontal" Spacing="6">
           <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="14" Foreground="{DynamicResource Brush.Info}" />
           <TextBlock Text="{Binding MessagesLabel}" VerticalAlignment="Center" />
         </StackPanel>
       </Button>
-      <Button Grid.Column="4" x:Name="CiFilterButton" Theme="{StaticResource ToolButton}" Height="30" MinHeight="30" Margin="4,0,0,0" FontSize="{DynamicResource Type.Body}"
+      <Button x:Name="CiFilterButton" Theme="{StaticResource ToolButton}" Margin="4,0,0,0" FontSize="{DynamicResource Type.Body}"
               HorizontalAlignment="Left" ToolTip.Tip="Show the errors and warnings CI reported for this commit"
               Classes.selected="{Binding ShowCi}" Command="{Binding ToggleCiCommand}" IsVisible="{Binding HasCiDiagnostics}">
         <StackPanel Orientation="Horizontal" Spacing="6">
@@ -64,12 +66,13 @@
         </StackPanel>
       </Button>
       <!-- While packages restore or the solution is analyzed, the list is about to change. -->
-      <StackPanel Grid.Column="4" x:Name="PendingStatus" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right" VerticalAlignment="Center"
+      <StackPanel x:Name="PendingStatus" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right" VerticalAlignment="Center"
                   Margin="8,0" IsVisible="{Binding IsPending}">
         <controls:StrokeIcon Classes.spinning="{Binding IsPending}" Data="{StaticResource Icon.Spinner}" Size="13" StrokeThickness="2.2" Foreground="{DynamicResource Brush.TextMuted}" />
         <TextBlock Text="{Binding PendingText}" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" Foreground="{DynamicResource Brush.TextMuted}" />
       </StackPanel>
-      <TextBox Grid.Column="5" Watermark="Search Error List" Text="{Binding SearchText}" VerticalAlignment="Center">
+      </WrapPanel>
+      <TextBox x:Name="SearchBox" Grid.Column="1" Width="220" Watermark="Search Error List" Text="{Binding SearchText}" VerticalAlignment="Center">
         <TextBox.InnerLeftContent>
           <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="13" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}" />
         </TextBox.InnerLeftContent>
@@ -101,9 +104,9 @@
                   controls:ResponsiveColumns.IsCompact="{Binding $parent[views:ErrorListView].IsCompact}" Height="28" Margin="12,0" Background="Transparent"
                   ToolTip.Tip="{Binding Description}">
               <Panel>
-                <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="14" Foreground="{DynamicResource Brush.Error}" IsVisible="{Binding IsError}" HorizontalAlignment="Left" />
-                <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="14" Foreground="{DynamicResource Brush.Warning}" IsVisible="{Binding IsWarning}" HorizontalAlignment="Left" />
-                <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="14" Foreground="{DynamicResource Brush.Info}" IsVisible="{Binding IsMessage}" HorizontalAlignment="Left" />
+                <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="14" Foreground="{DynamicResource Brush.Error}" IsVisible="{Binding IsError}" HorizontalAlignment="Left" AutomationProperties.Name="Error" />
+                <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="14" Foreground="{DynamicResource Brush.Warning}" IsVisible="{Binding IsWarning}" HorizontalAlignment="Left" AutomationProperties.Name="Warning" />
+                <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="14" Foreground="{DynamicResource Brush.Info}" IsVisible="{Binding IsMessage}" HorizontalAlignment="Left" AutomationProperties.Name="Message" />
               </Panel>
               <TextBlock Grid.Column="1" Classes="link" Classes.helpLink="{Binding HasHelpLink}" FontSize="{DynamicResource Type.Body}" Text="{Binding Code}"
                          VerticalAlignment="Center" Tag="code" ToolTip.Tip="{Binding HelpLinkToolTip}" TextTrimming="CharacterEllipsis" Margin="0,0,6,0" />
@@ -171,7 +174,7 @@
               <TextBlock Grid.Column="3" FontSize="{DynamicResource Type.Body}" Text="{Binding Project}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
               <TextBlock Grid.Column="4" FontSize="{DynamicResource Type.Body}" Text="{Binding File}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
               <TextBlock Grid.Column="5" FontSize="{DynamicResource Type.Body}" Text="{Binding Line}" VerticalAlignment="Center" />
-              <Button Grid.Column="6" Theme="{StaticResource ToolButton}" Width="32" Height="26" MinWidth="32" MinHeight="26" Padding="0"
+              <Button Grid.Column="6" Theme="{StaticResource ToolButton}" Padding="0"
                       ToolTip.Tip="Fix with Agent" IsVisible="{Binding CanFixWithAgent}"
                       Command="{Binding $parent[ListBox].((vm:ErrorListViewModel)DataContext).FixWithAgentCommand}" CommandParameter="{Binding}">
                 <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="14" Foreground="{DynamicResource Brush.Accent}" />

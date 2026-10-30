@@ -103,11 +103,11 @@
       <!-- Details, Features, Changelog -->
       <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
         <StackPanel Orientation="Horizontal">
-          <Button Theme="{StaticResource PanelTabButton}" MinHeight="40" Content="Details" Classes.selected="{Binding IsReadmeSelected}"
+          <Button Theme="{StaticResource PanelTabButton}" Content="Details" Classes.selected="{Binding IsReadmeSelected}"
                   Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:ExtensionDetailsTab.Details}" />
-          <Button x:Name="FeaturesTab" Theme="{StaticResource PanelTabButton}" MinHeight="40" Content="Features" Classes.selected="{Binding IsFeaturesSelected}"
+          <Button x:Name="FeaturesTab" Theme="{StaticResource PanelTabButton}" Content="Features" Classes.selected="{Binding IsFeaturesSelected}"
                   Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:ExtensionDetailsTab.Features}" />
-          <Button Theme="{StaticResource PanelTabButton}" MinHeight="40" Content="Changelog" Classes.selected="{Binding IsChangelogSelected}"
+          <Button Theme="{StaticResource PanelTabButton}" Content="Changelog" Classes.selected="{Binding IsChangelogSelected}"
                   Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:ExtensionDetailsTab.Changelog}" IsVisible="{Binding HasChangelog}" />
         </StackPanel>
       </Border>
@@ -166,21 +166,21 @@
               </ItemsControl.ItemTemplate>
             </ItemsControl>
             <StackPanel Spacing="2">
-              <Button Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="0" HorizontalAlignment="Left"
+              <Button Theme="{StaticResource ToolButton}" Padding="0" HorizontalAlignment="Left"
                       Command="{Binding OpenLinkCommand}" CommandParameter="{Binding Repository}" IsVisible="{Binding HasRepository}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                   <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="13" Foreground="{DynamicResource Brush.Link}" />
                   <TextBlock Text="Repository" Classes="link small" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>
-              <Button Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="0" HorizontalAlignment="Left"
+              <Button Theme="{StaticResource ToolButton}" Padding="0" HorizontalAlignment="Left"
                       Command="{Binding OpenLinkCommand}" CommandParameter="{Binding Homepage}" IsVisible="{Binding HasHomepage}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                   <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="13" Foreground="{DynamicResource Brush.Link}" />
                   <TextBlock Text="Home page" Classes="link small" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>
-              <Button Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="0" HorizontalAlignment="Left"
+              <Button Theme="{StaticResource ToolButton}" Padding="0" HorizontalAlignment="Left"
                       Command="{Binding OpenLinkCommand}" CommandParameter="{Binding RegistryPage}" IsVisible="{Binding HasRegistryPage}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                   <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="13" Foreground="{DynamicResource Brush.Link}" />

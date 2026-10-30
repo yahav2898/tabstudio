@@ -23,7 +23,7 @@
   <Border Padding="4" CornerRadius="{StaticResource Radius.Dialog}" Background="{DynamicResource Brush.Hover}"
           BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="{DynamicResource Shadow.Popup}">
     <DockPanel>
-      <Button DockPanel.Dock="Left" Theme="{StaticResource ToolButton}" Width="32" Height="44" MinWidth="32" CornerRadius="{StaticResource Radius.Card}"
+      <Button DockPanel.Dock="Left" Theme="{StaticResource ToolButton}" Height="44" CornerRadius="{StaticResource Radius.Card}"
               Padding="0" Margin="0,0,2,0" Command="{Binding ToggleTouchBarCommand}" ToolTip.Tip="Fold the touch buttons away">
         <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="16" Foreground="{DynamicResource Brush.TextSecondary}" />
       </Button>

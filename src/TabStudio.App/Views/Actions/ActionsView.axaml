@@ -48,7 +48,7 @@
         <controls:StrokeIcon Data="{StaticResource Icon.User}" Size="15" Margin="0,0,8,0" Foreground="{DynamicResource Brush.TextMuted}" />
         <TextBlock Grid.Column="1" Classes="muted small" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
                    Text="{Binding Account.StatusText}" />
-        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" FontSize="{DynamicResource Type.Body}" Content="Sign in"
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" FontSize="{DynamicResource Type.Body}" Content="Sign in"
                 Foreground="{DynamicResource Brush.Link}" Command="{Binding Account.OpenCommand}" IsVisible="{Binding !Account.IsSignedIn}" />
       </Grid>
     </Border>
@@ -60,7 +60,7 @@
           <StackPanel Margin="12,10,12,16" Spacing="18">
 
             <!-- A watched repository: the way back to the workspace's -->
-            <Button Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" Padding="8,0" HorizontalAlignment="Left"
+            <Button Theme="{StaticResource ToolButton}" Padding="8,0" HorizontalAlignment="Left"
                     Command="{Binding BackToWorkspaceCommand}" IsVisible="{Binding IsWatchedScope}"
                     ToolTip.Tip="Back to this workspace's repository">
               <StackPanel Orientation="Horizontal" Spacing="6">
@@ -217,7 +217,7 @@
                           <TextBlock Classes="muted small" Text="{Binding Note}" TextTrimming="CharacterEllipsis"
                                      IsVisible="{Binding Note, Converter={x:Static ObjectConverters.IsNotNull}}" />
                         </StackPanel>
-                        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="36" Padding="10,0" Margin="8,0,0,0" FontSize="{DynamicResource Type.Body}"
+                        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Padding="10,0" Margin="8,0,0,0" FontSize="{DynamicResource Type.Body}"
                                 VerticalAlignment="Center" ToolTip.Tip="Run workflow..." Command="{Binding Run}" CommandParameter="{Binding}"
                                 IsVisible="{Binding CanDispatch}">
                           <StackPanel Orientation="Horizontal" Spacing="6">
@@ -264,8 +264,8 @@
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
               <Grid ColumnDefinitions="*,Auto">
-                <TextBox x:Name="WatchBox" Text="{Binding WatchText}" MinHeight="36" Watermark="owner/name or GitHub address" />
-                <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Height="36" Padding="12,0" Margin="6,0,0,0" FontSize="{DynamicResource Type.Body}"
+                <TextBox x:Name="WatchBox" Text="{Binding WatchText}" Watermark="owner/name or GitHub address" />
+                <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Padding="12,0" Margin="6,0,0,0" FontSize="{DynamicResource Type.Body}"
                         Command="{Binding AddWatchedCommand}" ToolTip.Tip="Watch this repository's runs">
                   <StackPanel Orientation="Horizontal" Spacing="6">
                     <controls:StrokeIcon Data="{StaticResource Icon.Watch}" Size="14" />

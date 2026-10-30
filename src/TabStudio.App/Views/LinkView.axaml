@@ -27,9 +27,9 @@
             </StackPanel>
             <TextBlock Classes="muted small" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
           </StackPanel>
-          <Button Grid.Column="2" Theme="{StaticResource AccentButton}" Height="38" MinHeight="38" Padding="16,0" Margin="8,0,0,0"
+          <Button Grid.Column="2" Theme="{StaticResource AccentButton}" Padding="16,0" Margin="8,0,0,0"
                   Content="Connect" Command="{Binding ConnectCommand}" IsVisible="{Binding CanConnect}" />
-          <Button Grid.Column="3" Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="12,0" Margin="4,0,0,0"
+          <Button Grid.Column="3" Theme="{StaticResource ToolButton}" Padding="12,0" Margin="4,0,0,0"
                   Content="Forget" Command="{Binding ForgetCommand}" ToolTip.Tip="Forget this device; it has to pair again" />
         </Grid>
       </Border>
@@ -61,14 +61,14 @@
           </Grid>
           <!-- The tabs wrap onto a second row on a phone, rather than cutting off "Windows PC" and "Join a swarm". -->
           <WrapPanel x:Name="LinkTabs" Orientation="Horizontal" Margin="0,12,0,0">
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsConnectTab}" MinHeight="40"
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsConnectTab}"
                     Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:LinkTab.Connect}">
               <StackPanel Orientation="Horizontal" Spacing="7">
                 <controls:StrokeIcon Data="{StaticResource Icon.Tablet}" Size="14" />
                 <TextBlock Text="Link to a host" VerticalAlignment="Center" />
               </StackPanel>
             </Button>
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsHostTab}" MinHeight="40"
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsHostTab}"
                     Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:LinkTab.Host}">
               <StackPanel Orientation="Horizontal" Spacing="7">
                 <controls:StrokeIcon Data="{StaticResource Icon.Phone}" Size="14" />
@@ -78,7 +78,7 @@
                 </Border>
               </StackPanel>
             </Button>
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsBridgeTab}" MinHeight="40" IsVisible="{Binding HasBridge}"
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsBridgeTab}" IsVisible="{Binding HasBridge}"
                     Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:LinkTab.Bridge}">
               <StackPanel Orientation="Horizontal" Spacing="7">
                 <controls:StrokeIcon Data="{StaticResource Icon.Computer}" Size="14" />
@@ -88,7 +88,7 @@
                 </Border>
               </StackPanel>
             </Button>
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSwarmTab}" MinHeight="40" IsVisible="{Binding HasSwarm}"
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSwarmTab}" IsVisible="{Binding HasSwarm}"
                     Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:LinkTab.Swarm}">
               <StackPanel Orientation="Horizontal" Spacing="7">
                 <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="14" />
@@ -109,7 +109,7 @@
             <TextBlock Classes="muted small" Text="{Binding DeviceText}" TextTrimming="CharacterEllipsis" />
             <TextBlock x:Name="FingerprintLine" Classes="muted small" Text="{Binding FingerprintText}" TextWrapping="Wrap" FontFamily="{DynamicResource CodeFont}" />
           </StackPanel>
-          <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Height="40" Padding="20,0" Content="Done" Command="{Binding CloseCommand}" />
+          <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Padding="20,0" Content="Done" Command="{Binding CloseCommand}" />
         </Grid>
         <Border DockPanel.Dock="Bottom" Height="1" Background="{DynamicResource Brush.Divider}" />
 
@@ -131,7 +131,7 @@
                     <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding ClientDetail}"
                                IsVisible="{Binding ClientDetail, Converter={x:Static ObjectConverters.IsNotNull}}" />
                   </StackPanel>
-                  <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="40" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"
+                  <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"
                           Content="Disconnect" Command="{Binding DisconnectCommand}" IsVisible="{Binding CanDisconnect}" />
                 </Grid>
               </Border>
@@ -234,7 +234,7 @@
                       <TextBlock Grid.Row="2" Classes="label" Text="Code" VerticalAlignment="Center" />
                       <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Spacing="10">
                         <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Display}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="{Binding PairingCodeText}" VerticalAlignment="Center" />
-                        <Button Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="10,0" Command="{Binding NewCodeCommand}" ToolTip.Tip="Draw a new code; the shown one stops working">
+                        <Button Theme="{StaticResource ToolButton}" Padding="10,0" Command="{Binding NewCodeCommand}" ToolTip.Tip="Draw a new code; the shown one stops working">
                           <StackPanel Orientation="Horizontal" Spacing="6">
                             <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="14" />
                             <TextBlock Text="New code" VerticalAlignment="Center" />
@@ -269,7 +269,7 @@
                         <TextBlock Classes="muted small" Text="{Binding HostDeviceText}" VerticalAlignment="Center" />
                       </StackPanel>
                     </StackPanel>
-                    <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="40" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"
+                    <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"
                             Content="Disconnect" Command="{Binding DisconnectTabletCommand}" IsVisible="{Binding IsServing}" />
                   </Grid>
                 </Border>
@@ -279,7 +279,7 @@
                   <ItemsControl ItemsSource="{Binding PairedTablets}" />
                 </StackPanel>
 
-                <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" HorizontalAlignment="Left"
+                <Button Theme="{StaticResource SecondaryButton}" Padding="18,0" HorizontalAlignment="Left"
                         Content="Stop hosting" Command="{Binding StopHostingCommand}" />
               </StackPanel>
             </StackPanel>

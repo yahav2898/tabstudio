@@ -74,11 +74,11 @@
                      IsVisible="{TemplateBinding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
           <Panel Margin="0,10,0,0" HorizontalAlignment="Center"
                  IsVisible="{TemplateBinding ActionText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-            <Button Name="PART_Action" Theme="{DynamicResource SecondaryButton}" MinHeight="40" Padding="16,0"
+            <Button Name="PART_Action" Theme="{DynamicResource SecondaryButton}" Padding="16,0"
                     Content="{TemplateBinding ActionText}" Command="{TemplateBinding ActionCommand}"
                     CommandParameter="{TemplateBinding ActionCommandParameter}"
                     IsVisible="{TemplateBinding IsActionPrimary, Converter={x:Static BoolConverters.Not}}" />
-            <Button Name="PART_PrimaryAction" Theme="{DynamicResource AccentButton}" MinHeight="40" Padding="16,0"
+            <Button Name="PART_PrimaryAction" Theme="{DynamicResource AccentButton}" Padding="16,0"
                     Content="{TemplateBinding ActionText}" Command="{TemplateBinding ActionCommand}"
                     CommandParameter="{TemplateBinding ActionCommandParameter}" IsVisible="{TemplateBinding IsActionPrimary}" />
           </Panel>
@@ -157,10 +157,10 @@
                                  MaxLines="6" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.Text}" />
           </Border>
           <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10,0,0" HorizontalAlignment="Center">
-            <Button Theme="{DynamicResource SecondaryButton}" MinHeight="40" Padding="16,0" Content="{TemplateBinding RetryText}"
+            <Button Theme="{DynamicResource SecondaryButton}" Padding="16,0" Content="{TemplateBinding RetryText}"
                     Command="{TemplateBinding RetryCommand}"
                     IsVisible="{TemplateBinding RetryCommand, Converter={x:Static ObjectConverters.IsNotNull}}" />
-            <Button Theme="{DynamicResource SecondaryButton}" MinHeight="40" Padding="16,0" Content="{TemplateBinding FixText}"
+            <Button Theme="{DynamicResource SecondaryButton}" Padding="16,0" Content="{TemplateBinding FixText}"
                     Command="{TemplateBinding FixCommand}"
                     IsVisible="{TemplateBinding FixText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
           </StackPanel>

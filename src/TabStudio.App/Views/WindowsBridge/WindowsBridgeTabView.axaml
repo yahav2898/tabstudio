@@ -37,7 +37,7 @@
             <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
             <TextBlock Classes="muted small" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
           </StackPanel>
-          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="12,0" Content="Stop" Command="{Binding Stop}" />
+          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Padding="12,0" Content="Stop" Command="{Binding Stop}" />
         </Grid>
       </Border>
     </DataTemplate>
@@ -59,7 +59,7 @@
             <TextBlock Text="{Binding Title}" FontSize="{DynamicResource Type.Large}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
             <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding Detail}" IsVisible="{Binding Detail, Converter={x:Static ObjectConverters.IsNotNull}}" />
           </StackPanel>
-          <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="40" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"
+          <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"
                   Content="Disconnect" Command="{Binding DisconnectCommand}" IsVisible="{Binding CanDisconnect}" />
         </Grid>
       </Border>
@@ -155,7 +155,7 @@
               <TextBlock Grid.Row="2" Classes="label" Text="Code" VerticalAlignment="Center" />
               <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Spacing="10">
                 <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Display}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="{Binding BridgeCodeText}" VerticalAlignment="Center" />
-                <Button Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="10,0" Command="{Binding NewBridgeCodeCommand}" ToolTip.Tip="Draw a new code; the shown one stops working">
+                <Button Theme="{StaticResource ToolButton}" Padding="10,0" Command="{Binding NewBridgeCodeCommand}" ToolTip.Tip="Draw a new code; the shown one stops working">
                   <StackPanel Orientation="Horizontal" Spacing="6">
                     <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="14" />
                     <TextBlock Text="New code" VerticalAlignment="Center" />
@@ -184,7 +184,7 @@
               <TextBlock Text="{Binding BridgeTitle}" FontSize="{DynamicResource Type.Large}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
               <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding BridgeDetail}" IsVisible="{Binding BridgeDetail, Converter={x:Static ObjectConverters.IsNotNull}}" />
             </StackPanel>
-            <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="40" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"
+            <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"
                     Content="Disconnect" Command="{Binding DisconnectBridgeTabletCommand}" IsVisible="{Binding IsServing}" />
           </Grid>
         </Border>
@@ -199,7 +199,7 @@
             <TextBlock Classes="label" FontWeight="SemiBold" Text="What this PC builds" />
             <ItemsControl ItemsSource="{Binding PcCapabilities}" />
             <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding CanInstallDebugger}">
-              <Button Theme="{StaticResource SecondaryButton}" Height="38" Padding="14,0" Command="{Binding InstallDebuggerCommand}" Content="Install netcoredbg" />
+              <Button Theme="{StaticResource SecondaryButton}" Padding="14,0" Command="{Binding InstallDebuggerCommand}" Content="Install netcoredbg" />
               <TextBlock Classes="muted small" Text="MIT licensed, from Samsung's GitHub" VerticalAlignment="Center" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding IsInstallingDebugger}">
@@ -211,7 +211,7 @@
           <StackPanel Grid.Column="2" Spacing="8">
             <Grid ColumnDefinitions="*,Auto">
               <TextBlock Classes="label" FontWeight="SemiBold" Text="Found on this PC" VerticalAlignment="Center" />
-              <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Height="32" MinHeight="32" Padding="8,0" Command="{Binding RefreshToolchainsCommand}" ToolTip.Tip="Look again, after installing tools">
+              <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Padding="8,0" Command="{Binding RefreshToolchainsCommand}" ToolTip.Tip="Look again, after installing tools">
                 <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="13" />
               </Button>
             </Grid>
@@ -221,7 +221,7 @@
 
         <StackPanel Spacing="8">
           <TextBlock Classes="label" FontWeight="SemiBold" Text="The tablet's taps and keys" />
-          <ComboBox ItemsSource="{x:Static wb:BridgeInputPolicyOption.All}" SelectedItem="{Binding InputPolicy}" MinHeight="38" HorizontalAlignment="Left" MinWidth="360">
+          <ComboBox ItemsSource="{x:Static wb:BridgeInputPolicyOption.All}" SelectedItem="{Binding InputPolicy}" HorizontalAlignment="Left" MinWidth="360">
             <ComboBox.ItemTemplate>
               <DataTemplate x:DataType="wb:BridgeInputPolicyOption">
                 <TextBlock Text="{Binding Name}" />
@@ -237,7 +237,7 @@
           <ItemsControl ItemsSource="{Binding BridgeTablets}" />
         </StackPanel>
 
-        <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" HorizontalAlignment="Left" Content="Stop the Windows Bridge" Command="{Binding StopBridgeCommand}" />
+        <Button Theme="{StaticResource SecondaryButton}" Padding="18,0" HorizontalAlignment="Left" Content="Stop the Windows Bridge" Command="{Binding StopBridgeCommand}" />
       </StackPanel>
     </StackPanel>
   </Panel>

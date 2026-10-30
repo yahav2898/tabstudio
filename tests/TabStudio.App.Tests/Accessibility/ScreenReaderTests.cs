@@ -93,10 +93,12 @@ public sealed class ScreenReaderTests
 
             // Every row of the Solution Explorer is read by its name, never by its class.
             await UiTestHelpers.WaitUntilAsync(() => true);
-            var rows = window.GetVisualDescendants().OfType<TreeViewItem>().Where(r => r.IsEffectivelyVisible).ToList();
+            var explorer = window.GetVisualDescendants().OfType<SolutionExplorerView>().First(v => v.IsEffectivelyVisible);
+            var rows = explorer.GetVisualDescendants().OfType<ListBoxItem>().Where(r => r.IsEffectivelyVisible).ToList();
             Assert.NotEmpty(rows);
             Assert.All(rows, row => Assert.Null(AccessibilityAudit.NameProblem(row)));
             Assert.Contains(rows, row => NameOf(row)?.Contains("Program.cs", StringComparison.Ordinal) == true);
+            Assert.Contains(rows, row => NameOf(row)?.EndsWith(", expanded", StringComparison.Ordinal) == true);
 
             // And so is every control of the shell.
             var unnamed = window.GetVisualDescendants().OfType<Control>()
