@@ -13,31 +13,21 @@ Compatibility Doctor:
   AdvancedToDoListTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   SharedControlsTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   AdvancedToDoList.Android: Not supported via Android head, on a computer - The Android head of a cross-platform app: it builds only with .NET's Android workload, on a computer. TabStudio leaves it out of builds; the app's shared project and its desktop head run here.
-  AdvancedToDoList.Browser: Ready via Native view in the app preview - Rendered natively beside the code by TabStudio's own Avalonia. Saving a file restarts it.
+  AdvancedToDoList.Browser: Not supported via Browser head, on a computer - The browser head of a cross-platform app, compiled ahead of time to WebAssembly: it builds only with .NET's wasm-tools workload, on a computer. TabStudio leaves it out of builds; the app's shared project and its desktop head run here.
   AdvancedToDoList.Desktop: Ready via Native view in the app preview - Rendered natively beside the code by TabStudio's own Avalonia. Saving a file restarts it.
   AdvancedToDoList.iOS: Not supported via iOS head, on a computer - The iOS head of a cross-platform app: it builds only with .NET's iOS workload, on a computer. TabStudio leaves it out of builds; the app's shared project and its desktop head run here.
   AdvancedToDoList: Library via Built with its users - A library is compiled together with the projects that reference it.
   SharedControls: Library via Built with its users - A library is compiled together with the projects that reference it.
   wwwroot: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
-F5 startup project: AdvancedToDoList.Browser /home/runner/work/_temp/repos/AvaloniaAdvancedToDoList/src/Avalonia.Samples/CompleteApps/AdvancedToDoList/AdvancedToDoList.Browser/AdvancedToDoList.Browser.csproj
-Error List after analysis: 7 errors, 1 warnings
-  4 x CS0117
-      [AdvancedToDoList] DatabaseHelper.cs(268,82): error CS0117: 'JsonContextHelper' does not contain a definition for 'Default'
-      [AdvancedToDoList] Settings.cs(92,73): error CS0117: 'JsonContextHelper' does not contain a definition for 'Default'
-      [AdvancedToDoList] Settings.cs(121,94): error CS0117: 'JsonContextHelper' does not contain a definition for 'Default'
-      [AdvancedToDoList] SettingsViewModel.cs(111,39): error CS0117: 'JsonContextHelper' does not contain a definition for 'Default'
-  2 x CS0534
-      [AdvancedToDoList] JsonContextHelper.cs(26,22): error CS0534: 'JsonContextHelper' does not implement inherited abstract member 'JsonSerializerContext.GetTypeInfo(Type)'
-      [AdvancedToDoList] JsonContextHelper.cs(26,22): error CS0534: 'JsonContextHelper' does not implement inherited abstract member 'JsonSerializerContext.GeneratedSerializerOptions.get'
-  1 x CS7036
-      [AdvancedToDoList] JsonContextHelper.cs(26,22): error CS7036: There is no argument given that corresponds to the required parameter 'options' of 'JsonSerializerContext.JsonSerializerContext(JsonSerializerOptions?)'
+F5 startup project: AdvancedToDoList.Desktop /home/runner/work/_temp/repos/AvaloniaAdvancedToDoList/src/Avalonia.Samples/CompleteApps/AdvancedToDoList/AdvancedToDoList.Desktop/AdvancedToDoList.Desktop.csproj
+Error List after analysis: 0 errors, 1 warnings
 Error List after the build: 0 errors, 1 warnings
 Long-operation progress:
   Setting up projects: Checking project setup
   Loading C#: Loading C#
-  Loading C#: Succeeded after 0.1 s
+  Loading C#: Succeeded after 0.0 s
   Restoring NuGet packages: Restoring NuGet packages
-  Restoring NuGet packages: Restoring NuGet packages 0/6 projects
+  Restoring NuGet packages: Restoring NuGet packages 0/5 projects
   Analyzing: Analyzing 0/8 projects
   Analyzing: Analyzing 1/8 projects
   Analyzing: Analyzing 2/8 projects
@@ -47,7 +37,7 @@ Long-operation progress:
   Analyzing: Analyzing 6/8 projects
   Analyzing: Analyzing 7/8 projects
   Analyzing: Analyzing 8/8 projects
-  Analyzing: Succeeded after 1.4 s
+  Analyzing: Succeeded after 0.4 s
   Restoring NuGet packages: Downloading NuGet packages 1/51
   Restoring NuGet packages: Downloading NuGet packages 2/51
   Restoring NuGet packages: Downloading NuGet packages 3/51
@@ -99,12 +89,12 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 49/51
   Restoring NuGet packages: Downloading NuGet packages 50/51
   Restoring NuGet packages: Downloading NuGet packages 51/51
-  Restoring NuGet packages: Restoring NuGet packages 1/6 projects
+  Restoring NuGet packages: Restoring NuGet packages 1/5 projects
   Restoring NuGet packages: Downloading NuGet packages 1/34
   Restoring NuGet packages: Downloading NuGet packages 2/34
   Restoring NuGet packages: Downloading NuGet packages 3/34
-  Restoring NuGet packages: Downloading NuGet packages 4/34
   Restoring NuGet packages: Downloading NuGet packages 5/34
+  Restoring NuGet packages: Downloading NuGet packages 4/34
   Restoring NuGet packages: Downloading NuGet packages 6/34
   Restoring NuGet packages: Downloading NuGet packages 7/34
   Restoring NuGet packages: Downloading NuGet packages 8/34
@@ -116,8 +106,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 14/34
   Restoring NuGet packages: Downloading NuGet packages 15/34
   Restoring NuGet packages: Downloading NuGet packages 16/34
-  Restoring NuGet packages: Downloading NuGet packages 18/34
   Restoring NuGet packages: Downloading NuGet packages 17/34
+  Restoring NuGet packages: Downloading NuGet packages 18/34
   Restoring NuGet packages: Downloading NuGet packages 19/34
   Restoring NuGet packages: Downloading NuGet packages 20/34
   Restoring NuGet packages: Downloading NuGet packages 21/34
@@ -134,44 +124,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 32/34
   Restoring NuGet packages: Downloading NuGet packages 33/34
   Restoring NuGet packages: Downloading NuGet packages 34/34
-  Restoring NuGet packages: Restoring NuGet packages 2/6 projects
-  Restoring NuGet packages: Downloading NuGet packages 1/36
-  Restoring NuGet packages: Downloading NuGet packages 2/36
-  Restoring NuGet packages: Downloading NuGet packages 3/36
-  Restoring NuGet packages: Downloading NuGet packages 4/36
-  Restoring NuGet packages: Downloading NuGet packages 5/36
-  Restoring NuGet packages: Downloading NuGet packages 6/36
-  Restoring NuGet packages: Downloading NuGet packages 7/36
-  Restoring NuGet packages: Downloading NuGet packages 8/36
-  Restoring NuGet packages: Downloading NuGet packages 9/36
-  Restoring NuGet packages: Downloading NuGet packages 10/36
-  Restoring NuGet packages: Downloading NuGet packages 11/36
-  Restoring NuGet packages: Downloading NuGet packages 12/36
-  Restoring NuGet packages: Downloading NuGet packages 13/36
-  Restoring NuGet packages: Downloading NuGet packages 14/36
-  Restoring NuGet packages: Downloading NuGet packages 15/36
-  Restoring NuGet packages: Downloading NuGet packages 16/36
-  Restoring NuGet packages: Downloading NuGet packages 17/36
-  Restoring NuGet packages: Downloading NuGet packages 18/36
-  Restoring NuGet packages: Downloading NuGet packages 19/36
-  Restoring NuGet packages: Downloading NuGet packages 20/36
-  Restoring NuGet packages: Downloading NuGet packages 21/36
-  Restoring NuGet packages: Downloading NuGet packages 22/36
-  Restoring NuGet packages: Downloading NuGet packages 23/36
-  Restoring NuGet packages: Downloading NuGet packages 24/36
-  Restoring NuGet packages: Downloading NuGet packages 25/36
-  Restoring NuGet packages: Downloading NuGet packages 26/36
-  Restoring NuGet packages: Downloading NuGet packages 27/36
-  Restoring NuGet packages: Downloading NuGet packages 28/36
-  Restoring NuGet packages: Downloading NuGet packages 29/36
-  Restoring NuGet packages: Downloading NuGet packages 30/36
-  Restoring NuGet packages: Downloading NuGet packages 31/36
-  Restoring NuGet packages: Downloading NuGet packages 32/36
-  Restoring NuGet packages: Downloading NuGet packages 33/36
-  Restoring NuGet packages: Downloading NuGet packages 34/36
-  Restoring NuGet packages: Downloading NuGet packages 35/36
-  Restoring NuGet packages: Downloading NuGet packages 36/36
-  Restoring NuGet packages: Restoring NuGet packages 3/6 projects
+  Restoring NuGet packages: Restoring NuGet packages 2/5 projects
   Restoring NuGet packages: Downloading NuGet packages 1/46
   Restoring NuGet packages: Downloading NuGet packages 2/46
   Restoring NuGet packages: Downloading NuGet packages 3/46
@@ -218,7 +171,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 44/46
   Restoring NuGet packages: Downloading NuGet packages 45/46
   Restoring NuGet packages: Downloading NuGet packages 46/46
-  Restoring NuGet packages: Restoring NuGet packages 4/6 projects
+  Restoring NuGet packages: Restoring NuGet packages 3/5 projects
   Restoring NuGet packages: Downloading NuGet packages 1/23
   Restoring NuGet packages: Downloading NuGet packages 2/23
   Restoring NuGet packages: Downloading NuGet packages 3/23
@@ -242,13 +195,13 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 21/23
   Restoring NuGet packages: Downloading NuGet packages 22/23
   Restoring NuGet packages: Downloading NuGet packages 23/23
-  Restoring NuGet packages: Restoring NuGet packages 5/6 projects
-  Restoring NuGet packages: Downloading NuGet packages 1/5
+  Restoring NuGet packages: Restoring NuGet packages 4/5 projects
   Restoring NuGet packages: Downloading NuGet packages 2/5
+  Restoring NuGet packages: Downloading NuGet packages 1/5
   Restoring NuGet packages: Downloading NuGet packages 3/5
   Restoring NuGet packages: Downloading NuGet packages 4/5
   Restoring NuGet packages: Downloading NuGet packages 5/5
-  Restoring NuGet packages: Succeeded after 9.4 s
+  Restoring NuGet packages: Succeeded after 5.1 s
   Analyzing: Analyzing 0/8 projects
   Analyzing: Analyzing 1/8 projects
   Analyzing: Analyzing 2/8 projects
@@ -258,37 +211,35 @@ Long-operation progress:
   Analyzing: Analyzing 6/8 projects
   Analyzing: Analyzing 7/8 projects
   Analyzing: Analyzing 8/8 projects
-  Analyzing: Succeeded after 1.0 s
+  Analyzing: Succeeded after 1.1 s
   Setting up projects: Setting up wwwroot: npm ci
   Installing wwwroot's packages: Installing packages: npm ci
-  Installing wwwroot's packages: Succeeded after 6.1 s
-  Setting up projects: Succeeded after 23.2 s
+  Installing wwwroot's packages: Succeeded after 8.0 s
+  Setting up projects: Succeeded after 31.7 s
   Building: Building
-  Building: Building 0/6 projects
-  Building: Building 1/6 projects
-  Building: Building 2/6 projects
-  Building: Building 3/6 projects
-  Building: Building 4/6 projects
-  Building: Building 5/6 projects
+  Building: Building 0/5 projects
+  Building: Building 1/5 projects
+  Building: Building 2/5 projects
+  Building: Building 3/5 projects
+  Building: Building 4/5 projects
   Building: Succeeded after 1.0 s
 Project setup:
 
 Output:
-Build started at 17:31:47...
+Build started at 18:14:00...
 1>------ Build started: Project: SharedControls, Configuration: Debug ------
 1>DialogCommand.cs(111,32): warning CS0067: The event 'DialogCommand.CanExecuteChanged' is never used
-1>SharedControls -> compiled in memory (109 KB, 54 ms)
+1>SharedControls -> compiled in memory (109 KB, 72 ms)
 2>------ Build started: Project: AdvancedToDoList, Configuration: Debug ------
-2>AdvancedToDoList -> compiled in memory (1013 KB, 265 ms)
+2>AdvancedToDoList -> compiled in memory (1013 KB, 312 ms)
 3>------ Build started: Project: AdvancedToDoListTests, Configuration: Debug ------
-3>AdvancedToDoListTests -> compiled in memory (53 KB, 236 ms)
+3>AdvancedToDoListTests -> compiled in memory (53 KB, 262 ms)
 4>------ Build started: Project: SharedControlsTests, Configuration: Debug ------
 4>SharedControlsTests -> compiled in memory (7.5 KB, 53 ms)
-5>------ Build started: Project: AdvancedToDoList.Browser, Configuration: Debug ------
-5>AdvancedToDoList.Browser -> compiled in memory (11.5 KB, 189 ms)
-6>------ Build started: Project: AdvancedToDoList.Desktop, Configuration: Debug ------
-6>AdvancedToDoList.Desktop -> compiled in memory (7 KB, 195 ms)
-7>------ Skipped: Project: AdvancedToDoList.Android: it targets net10.0-android, which only .NET's mobile workloads build, on a computer ------
+5>------ Build started: Project: AdvancedToDoList.Desktop, Configuration: Debug ------
+5>AdvancedToDoList.Desktop -> compiled in memory (7 KB, 269 ms)
+6>------ Skipped: Project: AdvancedToDoList.Android: it targets net10.0-android, which only .NET's mobile workloads build, on a computer ------
+7>------ Skipped: Project: AdvancedToDoList.Browser: it is a browser head compiled ahead of time to WebAssembly, which only .NET's wasm-tools workload builds, on a computer ------
 8>------ Skipped: Project: AdvancedToDoList.iOS: it targets net10.0-ios, which only .NET's mobile workloads build, on a computer ------
-========== Build: 6 succeeded, 0 failed, 2 skipped ==========
+========== Build: 5 succeeded, 0 failed, 3 skipped ==========
 

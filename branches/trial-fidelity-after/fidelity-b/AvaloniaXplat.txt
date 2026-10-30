@@ -1,5 +1,5 @@
 AvaloniaXplat at Avalonia.Templates, opening /home/runner/work/_temp/repos/AvaloniaXplat/XplatApp
-Opened in 0.1 s: XplatApp, solution /home/runner/work/_temp/repos/AvaloniaXplat/XplatApp/XplatApp.slnx
+Opened in 0.2 s: XplatApp, solution /home/runner/work/_temp/repos/AvaloniaXplat/XplatApp/XplatApp.slnx
   project XplatApp.Android [CSharp] /home/runner/work/_temp/repos/AvaloniaXplat/XplatApp/XplatApp.Android/XplatApp.Android.csproj
   project XplatApp.Browser [CSharp] /home/runner/work/_temp/repos/AvaloniaXplat/XplatApp/XplatApp.Browser/XplatApp.Browser.csproj
   project XplatApp.Desktop [CSharp] /home/runner/work/_temp/repos/AvaloniaXplat/XplatApp/XplatApp.Desktop/XplatApp.Desktop.csproj
@@ -7,7 +7,7 @@ Opened in 0.1 s: XplatApp, solution /home/runner/work/_temp/repos/AvaloniaXplat/
   project XplatApp [CSharp] /home/runner/work/_temp/repos/AvaloniaXplat/XplatApp/XplatApp/XplatApp.csproj
 Compatibility Doctor:
   XplatApp.Android: Not supported via Android head, on a computer - The Android head of a cross-platform app: it builds only with .NET's Android workload, on a computer. TabStudio leaves it out of builds; the app's shared project and its desktop head run here.
-  XplatApp.Browser: Library via Built with its users - A library is compiled together with the projects that reference it.
+  XplatApp.Browser: Ready via Native view in the app preview - Rendered natively beside the code by TabStudio's own Avalonia. Saving a file restarts it.
   XplatApp.Desktop: Ready via Native view in the app preview - Rendered natively beside the code by TabStudio's own Avalonia. Saving a file restarts it.
   XplatApp.iOS: Not supported via iOS head, on a computer - The iOS head of a cross-platform app: it builds only with .NET's iOS workload, on a computer. TabStudio leaves it out of builds; the app's shared project and its desktop head run here.
   XplatApp: Library via Built with its users - A library is compiled together with the projects that reference it.
@@ -94,7 +94,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 9/11
   Restoring NuGet packages: Downloading NuGet packages 10/11
   Restoring NuGet packages: Downloading NuGet packages 11/11
-  Restoring NuGet packages: Succeeded after 5.9 s
+  Restoring NuGet packages: Succeeded after 3.4 s
   Analyzing: Analyzing 0/5 projects
   Analyzing: Analyzing 1/5 projects
   Analyzing: Analyzing 2/5 projects
@@ -110,13 +110,13 @@ Long-operation progress:
 Project setup:
 
 Output:
-Build started at 17:33:12...
+Build started at 18:15:00...
 1>------ Build started: Project: XplatApp, Configuration: Debug ------
-1>XplatApp -> compiled in memory (196 KB, 10 ms)
+1>XplatApp -> compiled in memory (196 KB, 38 ms)
 2>------ Build started: Project: XplatApp.Browser, Configuration: Debug ------
-2>XplatApp.Browser -> compiled in memory (3.5 KB, 17 ms)
+2>XplatApp.Browser -> compiled in memory (3.5 KB, 15 ms)
 3>------ Build started: Project: XplatApp.Desktop, Configuration: Debug ------
-3>XplatApp.Desktop -> compiled in memory (3 KB, 32 ms)
+3>XplatApp.Desktop -> compiled in memory (3 KB, 8 ms)
 4>------ Skipped: Project: XplatApp.Android: it targets net10.0-android, which only .NET's mobile workloads build, on a computer ------
 5>------ Skipped: Project: XplatApp.iOS: it targets net10.0-ios, which only .NET's mobile workloads build, on a computer ------
 ========== Build: 3 succeeded, 0 failed, 2 skipped ==========
