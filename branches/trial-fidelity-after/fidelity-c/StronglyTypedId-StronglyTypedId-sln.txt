@@ -1,5 +1,5 @@
 StronglyTypedId-StronglyTypedId-sln at 6bd17db4a4b700eaad9e209baf41478cc3f0bbe9, opening /home/runner/work/_temp/repos/StronglyTypedId-StronglyTypedId-sln/StronglyTypedId.sln
-Opened in 0.4 s: StronglyTypedId, solution /home/runner/work/_temp/repos/StronglyTypedId-StronglyTypedId-sln/StronglyTypedId.sln
+Opened in 0.3 s: StronglyTypedId, solution /home/runner/work/_temp/repos/StronglyTypedId-StronglyTypedId-sln/StronglyTypedId.sln
   project StronglyTypedIds [CSharp] /home/runner/work/_temp/repos/StronglyTypedId-StronglyTypedId-sln/src/StronglyTypedIds/StronglyTypedIds.csproj
   project StronglyTypedIds.Tests [CSharp] /home/runner/work/_temp/repos/StronglyTypedId-StronglyTypedId-sln/test/StronglyTypedIds.Tests/StronglyTypedIds.Tests.csproj
   project StronglyTypedIds.IntegrationTests [CSharp] /home/runner/work/_temp/repos/StronglyTypedId-StronglyTypedId-sln/test/StronglyTypedIds.IntegrationTests/StronglyTypedIds.IntegrationTests.csproj
@@ -22,30 +22,19 @@ Compatibility Doctor:
   StronglyTypedIds.IntegrationTests.Types: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   StronglyTypedIds.IntegrationTests.ExternalIds: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 F5 startup project: none 
-Error List after analysis: 343 errors, 31 warnings
-  147 x CS1729
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DefaultIdTests.cs(19,28): error CS1729: 'DefaultId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DefaultIdTests.cs(20,28): error CS1729: 'DefaultId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DefaultIdTests.cs(44,29): error CS1729: 'DefaultId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DefaultIdTests.cs(45,29): error CS1729: 'DefaultId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DefaultIdTests.cs(81,30): error CS1729: 'DefaultId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(24,28): error CS1729: 'GuidId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(25,28): error CS1729: 'GuidId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(49,29): error CS1729: 'GuidId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(50,29): error CS1729: 'GuidId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(140,27): error CS1729: 'GuidId1' does not contain a constructor that takes 1 arguments
-  87 x CS0117
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DefaultIdTests.cs(28,37): error CS0117: 'DefaultId1' does not contain a definition for 'Empty'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DefaultIdTests.cs(34,35): error CS0117: 'DefaultId1' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DefaultIdTests.cs(35,35): error CS0117: 'DefaultId1' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DefaultIdTests.cs(46,40): error CS0117: 'DefaultId1' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DefaultIdTests.cs(57,34): error CS0117: 'DefaultId2' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DefaultIdTests.cs(58,34): error CS0117: 'DefaultId1' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(33,34): error CS0117: 'GuidId1' does not contain a definition for 'Empty'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(39,32): error CS0117: 'GuidId1' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(40,32): error CS0117: 'GuidId1' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(51,37): error CS0117: 'GuidId1' does not contain a definition for 'New'
-  44 x CS0426
+Error List after analysis: 199 errors, 31 warnings
+  95 x CS1729
+      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(317,27): error CS1729: 'ConvertersGuidId' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(385,37): error CS1729: 'ConvertersGuidId' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(420,27): error CS1729: 'ConvertersGuidId2' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(488,37): error CS1729: 'ConvertersGuidId2' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(206,23): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(217,23): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(229,23): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(241,23): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(259,49): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(284,26): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
+  42 x CS0426
       [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(12,59): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersGuidId'
       [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(13,60): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersGuidId2'
       [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(14,58): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersIntId'
@@ -56,115 +45,88 @@ Error List after analysis: 343 errors, 31 warnings
       [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(19,62): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersStringId2'
       [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(20,59): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'NullableStringId'
       [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(21,51): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'NewIdId1'
-  24 x CS1061
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(78,24): error CS1061: 'IntId' does not contain a definition for 'TryFormat' and no accessible extension method 'TryFormat' accepting a first argument of type 'IntId' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(140,33): error CS1061: 'IntId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'IntId' could be found (are you missing a using directive or an assembly reference?)
+  30 x CS0117
+      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(340,40): error CS0117: 'ConvertersGuidId' does not contain a definition for 'New'
+      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(366,60): error CS0117: 'ConvertersGuidId' does not contain a definition for 'New'
+      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(403,60): error CS0117: 'ConvertersGuidId' does not contain a definition for 'New'
+      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(443,41): error CS0117: 'ConvertersGuidId2' does not contain a definition for 'New'
+      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(469,62): error CS0117: 'ConvertersGuidId2' does not contain a definition for 'New'
+      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(506,62): error CS0117: 'ConvertersGuidId2' does not contain a definition for 'New'
+      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(33,35): error CS0117: 'NewIdId1' does not contain a definition for 'Empty'
+      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(40,33): error CS0117: 'NewIdId1' does not contain a definition for 'New'
+      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(41,33): error CS0117: 'NewIdId1' does not contain a definition for 'New'
+      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(52,38): error CS0117: 'NewIdId1' does not contain a definition for 'New'
+  20 x CS1061
       [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(209,74): error CS1061: 'ConvertersIntId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId' could be found (are you missing a using directive or an assembly reference?)
       [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(220,68): error CS1061: 'ConvertersIntId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId' could be found (are you missing a using directive or an assembly reference?)
       [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(358,74): error CS1061: 'ConvertersIntId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId2' could be found (are you missing a using directive or an assembly reference?)
       [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(369,68): error CS1061: 'ConvertersIntId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId2' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(77,28): error CS1061: 'LongId' does not contain a definition for 'TryFormat' and no accessible extension method 'TryFormat' accepting a first argument of type 'LongId' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(139,37): error CS1061: 'LongId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'LongId' could be found (are you missing a using directive or an assembly reference?)
       [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(221,79): error CS1061: 'ConvertersLongId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersLongId' could be found (are you missing a using directive or an assembly reference?)
       [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(232,73): error CS1061: 'ConvertersLongId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersLongId' could be found (are you missing a using directive or an assembly reference?)
-  22 x CS0019
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DefaultIdTests.cs(48,25): error CS0019: Operator '==' cannot be applied to operands of type 'DefaultId1' and 'DefaultId1'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DefaultIdTests.cs(50,26): error CS0019: Operator '!=' cannot be applied to operands of type 'DefaultId1' and 'DefaultId1'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(53,25): error CS0019: Operator '==' cannot be applied to operands of type 'GuidId1' and 'GuidId1'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(55,26): error CS0019: Operator '!=' cannot be applied to operands of type 'GuidId1' and 'GuidId1'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(55,21): error CS0019: Operator '==' cannot be applied to operands of type 'IntId' and 'IntId'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(56,22): error CS0019: Operator '==' cannot be applied to operands of type 'IntId' and 'IntId'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(57,22): error CS0019: Operator '!=' cannot be applied to operands of type 'IntId' and 'IntId'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(58,21): error CS0019: Operator '!=' cannot be applied to operands of type 'IntId' and 'IntId'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(54,25): error CS0019: Operator '==' cannot be applied to operands of type 'LongId' and 'LongId'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(55,26): error CS0019: Operator '==' cannot be applied to operands of type 'LongId' and 'LongId'
-  12 x CS0315
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(299,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.GuidId1' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.GuidId1' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.GuidId1>'.
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(300,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.GuidId1' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.GuidId1' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.GuidId1>'.
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(187,9): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.IntId' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.IntId' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.IntId>'.
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(188,9): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.IntId' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.IntId' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.IntId>'.
-      [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(199,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.LongId' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.LongId' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.LongId>'.
-      [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(200,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.LongId' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.LongId' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.LongId>'.
+      [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(355,79): error CS1061: 'ConvertersLongId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersLongId2' could be found (are you missing a using directive or an assembly reference?)
+      [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(366,73): error CS1061: 'ConvertersLongId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersLongId2' could be found (are you missing a using directive or an assembly reference?)
+      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(24,30): error CS1061: 'NullableStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'NullableStringId' could be found (are you missing a using directive or an assembly reference?)
+      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(83,81): error CS1061: 'NullableStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'NullableStringId' could be found (are you missing a using directive or an assembly reference?)
+  6 x CS0019
+      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(54,25): error CS0019: Operator '==' cannot be applied to operands of type 'NewIdId1' and 'NewIdId1'
+      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(56,26): error CS0019: Operator '!=' cannot be applied to operands of type 'NewIdId1' and 'NewIdId1'
+      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(61,25): error CS0019: Operator '==' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
+      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(62,26): error CS0019: Operator '==' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
+      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(63,26): error CS0019: Operator '!=' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
+      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(64,25): error CS0019: Operator '!=' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
+  4 x CS0315
       [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(252,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.NewIdId1>'.
       [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(253,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.NewIdId1>'.
       [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(277,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>'.
       [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(278,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>'.
-  6 x CS0039
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(274,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.GuidId1' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.GuidId1>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(162,24): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.IntId' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.IntId>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
-      [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(175,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.LongId' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.LongId>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
+  2 x CS0039
       [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(228,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.NewIdId1>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
       [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(253,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
-      [StronglyTypedIds.IntegrationTests.ExternalIds] StringIdTests.cs(186,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.StringId' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.StringId>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
-  1 x CS1929
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(84,22): error CS1929: 'GuidId1' does not contain a definition for 'Parse' and the best extension method overload 'SqlMapper.Parse(IDataReader, Type)' requires a receiver of type 'System.Data.IDataReader'
-Error List after the build: 354 errors, 32 warnings
-  147 x CS1729
-      [StronglyTypedIds.IntegrationTests] DefaultIdTests.cs(19,28): error CS1729: 'DefaultId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests] DefaultIdTests.cs(20,28): error CS1729: 'DefaultId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests] DefaultIdTests.cs(44,29): error CS1729: 'DefaultId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests] DefaultIdTests.cs(45,29): error CS1729: 'DefaultId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests] DefaultIdTests.cs(81,30): error CS1729: 'DefaultId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(24,28): error CS1729: 'GuidId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(25,28): error CS1729: 'GuidId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(49,29): error CS1729: 'GuidId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(50,29): error CS1729: 'GuidId1' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(140,27): error CS1729: 'GuidId1' does not contain a constructor that takes 1 arguments
-  87 x CS0117
-      [StronglyTypedIds.IntegrationTests] DefaultIdTests.cs(28,37): error CS0117: 'DefaultId1' does not contain a definition for 'Empty'
-      [StronglyTypedIds.IntegrationTests] DefaultIdTests.cs(34,35): error CS0117: 'DefaultId1' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests] DefaultIdTests.cs(35,35): error CS0117: 'DefaultId1' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests] DefaultIdTests.cs(46,40): error CS0117: 'DefaultId1' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests] DefaultIdTests.cs(57,34): error CS0117: 'DefaultId2' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests] DefaultIdTests.cs(58,34): error CS0117: 'DefaultId1' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(33,34): error CS0117: 'GuidId1' does not contain a definition for 'Empty'
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(39,32): error CS0117: 'GuidId1' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(40,32): error CS0117: 'GuidId1' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(51,37): error CS0117: 'GuidId1' does not contain a definition for 'New'
-  44 x CS0426
-      [StronglyTypedIds.IntegrationTests] DapperTypeHandlers.cs(12,59): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersGuidId'
-      [StronglyTypedIds.IntegrationTests] DapperTypeHandlers.cs(13,60): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersGuidId2'
-      [StronglyTypedIds.IntegrationTests] DapperTypeHandlers.cs(14,58): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersIntId'
-      [StronglyTypedIds.IntegrationTests] DapperTypeHandlers.cs(15,59): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersIntId2'
-      [StronglyTypedIds.IntegrationTests] DapperTypeHandlers.cs(16,59): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersLongId'
-      [StronglyTypedIds.IntegrationTests] DapperTypeHandlers.cs(17,60): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersLongId2'
-      [StronglyTypedIds.IntegrationTests] DapperTypeHandlers.cs(18,61): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersStringId'
-      [StronglyTypedIds.IntegrationTests] DapperTypeHandlers.cs(19,62): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersStringId2'
-      [StronglyTypedIds.IntegrationTests] DapperTypeHandlers.cs(20,59): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'NullableStringId'
-      [StronglyTypedIds.IntegrationTests] DapperTypeHandlers.cs(21,51): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'NewIdId1'
-  24 x CS1061
-      [StronglyTypedIds.IntegrationTests] IntIdTests.cs(78,24): error CS1061: 'IntId' does not contain a definition for 'TryFormat' and no accessible extension method 'TryFormat' accepting a first argument of type 'IntId' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests] IntIdTests.cs(140,33): error CS1061: 'IntId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'IntId' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests] IntIdTests.cs(209,74): error CS1061: 'ConvertersIntId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests] IntIdTests.cs(220,68): error CS1061: 'ConvertersIntId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests] IntIdTests.cs(358,74): error CS1061: 'ConvertersIntId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId2' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests] IntIdTests.cs(369,68): error CS1061: 'ConvertersIntId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId2' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests] LongIdTests.cs(77,28): error CS1061: 'LongId' does not contain a definition for 'TryFormat' and no accessible extension method 'TryFormat' accepting a first argument of type 'LongId' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests] LongIdTests.cs(139,37): error CS1061: 'LongId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'LongId' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests] LongIdTests.cs(221,79): error CS1061: 'ConvertersLongId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersLongId' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests] LongIdTests.cs(232,73): error CS1061: 'ConvertersLongId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersLongId' could be found (are you missing a using directive or an assembly reference?)
-  22 x CS0019
-      [StronglyTypedIds.IntegrationTests] DefaultIdTests.cs(48,25): error CS0019: Operator '==' cannot be applied to operands of type 'DefaultId1' and 'DefaultId1'
-      [StronglyTypedIds.IntegrationTests] DefaultIdTests.cs(50,26): error CS0019: Operator '!=' cannot be applied to operands of type 'DefaultId1' and 'DefaultId1'
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(53,25): error CS0019: Operator '==' cannot be applied to operands of type 'GuidId1' and 'GuidId1'
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(55,26): error CS0019: Operator '!=' cannot be applied to operands of type 'GuidId1' and 'GuidId1'
-      [StronglyTypedIds.IntegrationTests] IntIdTests.cs(55,21): error CS0019: Operator '==' cannot be applied to operands of type 'IntId' and 'IntId'
-      [StronglyTypedIds.IntegrationTests] IntIdTests.cs(56,22): error CS0019: Operator '==' cannot be applied to operands of type 'IntId' and 'IntId'
-      [StronglyTypedIds.IntegrationTests] IntIdTests.cs(57,22): error CS0019: Operator '!=' cannot be applied to operands of type 'IntId' and 'IntId'
-      [StronglyTypedIds.IntegrationTests] IntIdTests.cs(58,21): error CS0019: Operator '!=' cannot be applied to operands of type 'IntId' and 'IntId'
-      [StronglyTypedIds.IntegrationTests] LongIdTests.cs(54,25): error CS0019: Operator '==' cannot be applied to operands of type 'LongId' and 'LongId'
-      [StronglyTypedIds.IntegrationTests] LongIdTests.cs(55,26): error CS0019: Operator '==' cannot be applied to operands of type 'LongId' and 'LongId'
-  12 x CS0315
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(299,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.GuidId1' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.GuidId1' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.GuidId1>'.
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(300,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.GuidId1' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.GuidId1' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.GuidId1>'.
-      [StronglyTypedIds.IntegrationTests] IntIdTests.cs(187,9): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.IntId' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.IntId' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.IntId>'.
-      [StronglyTypedIds.IntegrationTests] IntIdTests.cs(188,9): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.IntId' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.IntId' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.IntId>'.
-      [StronglyTypedIds.IntegrationTests] LongIdTests.cs(199,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.LongId' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.LongId' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.LongId>'.
-      [StronglyTypedIds.IntegrationTests] LongIdTests.cs(200,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.LongId' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.LongId' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.LongId>'.
-      [StronglyTypedIds.IntegrationTests] MassTransitNewIdTests.cs(252,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.NewIdId1>'.
-      [StronglyTypedIds.IntegrationTests] MassTransitNewIdTests.cs(253,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.NewIdId1>'.
-      [StronglyTypedIds.IntegrationTests] NullableStringIdTests.cs(277,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>'.
-      [StronglyTypedIds.IntegrationTests] NullableStringIdTests.cs(278,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>'.
+Error List after the build: 214 errors, 31 warnings
+  99 x CS1729
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] GuidIdTests.cs(317,27): error CS1729: 'ConvertersGuidId' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] GuidIdTests.cs(385,37): error CS1729: 'ConvertersGuidId' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] GuidIdTests.cs(420,27): error CS1729: 'ConvertersGuidId2' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] GuidIdTests.cs(488,37): error CS1729: 'ConvertersGuidId2' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] IntIdTests.cs(206,23): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] IntIdTests.cs(217,23): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] IntIdTests.cs(229,23): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] IntIdTests.cs(241,23): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] IntIdTests.cs(259,49): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] IntIdTests.cs(284,26): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
+  42 x CS0426
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] DapperTypeHandlers.cs(12,59): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersGuidId'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] DapperTypeHandlers.cs(13,60): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersGuidId2'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] DapperTypeHandlers.cs(14,58): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersIntId'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] DapperTypeHandlers.cs(15,59): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersIntId2'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] DapperTypeHandlers.cs(16,59): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersLongId'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] DapperTypeHandlers.cs(17,60): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersLongId2'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] DapperTypeHandlers.cs(18,61): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersStringId'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] DapperTypeHandlers.cs(19,62): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersStringId2'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] DapperTypeHandlers.cs(20,59): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'NullableStringId'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] DapperTypeHandlers.cs(21,51): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'NewIdId1'
+  30 x CS0117
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] GuidIdTests.cs(340,40): error CS0117: 'ConvertersGuidId' does not contain a definition for 'New'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] GuidIdTests.cs(366,60): error CS0117: 'ConvertersGuidId' does not contain a definition for 'New'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] GuidIdTests.cs(403,60): error CS0117: 'ConvertersGuidId' does not contain a definition for 'New'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] GuidIdTests.cs(443,41): error CS0117: 'ConvertersGuidId2' does not contain a definition for 'New'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] GuidIdTests.cs(469,62): error CS0117: 'ConvertersGuidId2' does not contain a definition for 'New'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] GuidIdTests.cs(506,62): error CS0117: 'ConvertersGuidId2' does not contain a definition for 'New'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] MassTransitNewIdTests.cs(33,35): error CS0117: 'NewIdId1' does not contain a definition for 'Empty'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] MassTransitNewIdTests.cs(40,33): error CS0117: 'NewIdId1' does not contain a definition for 'New'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] MassTransitNewIdTests.cs(41,33): error CS0117: 'NewIdId1' does not contain a definition for 'New'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] MassTransitNewIdTests.cs(52,38): error CS0117: 'NewIdId1' does not contain a definition for 'New'
+  20 x CS1061
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] IntIdTests.cs(209,74): error CS1061: 'ConvertersIntId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId' could be found (are you missing a using directive or an assembly reference?)
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] IntIdTests.cs(220,68): error CS1061: 'ConvertersIntId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId' could be found (are you missing a using directive or an assembly reference?)
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] IntIdTests.cs(358,74): error CS1061: 'ConvertersIntId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId2' could be found (are you missing a using directive or an assembly reference?)
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] IntIdTests.cs(369,68): error CS1061: 'ConvertersIntId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId2' could be found (are you missing a using directive or an assembly reference?)
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] LongIdTests.cs(221,79): error CS1061: 'ConvertersLongId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersLongId' could be found (are you missing a using directive or an assembly reference?)
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] LongIdTests.cs(232,73): error CS1061: 'ConvertersLongId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersLongId' could be found (are you missing a using directive or an assembly reference?)
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] LongIdTests.cs(355,79): error CS1061: 'ConvertersLongId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersLongId2' could be found (are you missing a using directive or an assembly reference?)
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] LongIdTests.cs(366,73): error CS1061: 'ConvertersLongId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersLongId2' could be found (are you missing a using directive or an assembly reference?)
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] NullableStringIdTests.cs(24,30): error CS1061: 'NullableStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'NullableStringId' could be found (are you missing a using directive or an assembly reference?)
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] NullableStringIdTests.cs(83,81): error CS1061: 'NullableStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'NullableStringId' could be found (are you missing a using directive or an assembly reference?)
   11 x STRONGID002
       [StronglyTypedIds.Nuget.IntegrationTests] error STRONGID002: Could not find 'simple.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
       [StronglyTypedIds.Nuget.Attributes.IntegrationTests] error STRONGID002: Could not find 'guid-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
@@ -176,42 +138,48 @@ Error List after the build: 354 errors, 32 warnings
       [StronglyTypedIds.Nuget.Attributes.IntegrationTests] error STRONGID002: Could not find 'newid-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
       [StronglyTypedIds.Nuget.Attributes.IntegrationTests] error STRONGID002: Could not find 'string-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
       [StronglyTypedIds.Nuget.Attributes.IntegrationTests] error STRONGID002: Could not find 'string-efcore.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-  6 x CS0039
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(274,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.GuidId1' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.GuidId1>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
-      [StronglyTypedIds.IntegrationTests] IntIdTests.cs(162,24): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.IntId' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.IntId>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
-      [StronglyTypedIds.IntegrationTests] LongIdTests.cs(175,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.LongId' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.LongId>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
-      [StronglyTypedIds.IntegrationTests] MassTransitNewIdTests.cs(228,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.NewIdId1>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
-      [StronglyTypedIds.IntegrationTests] NullableStringIdTests.cs(253,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
-      [StronglyTypedIds.IntegrationTests] StringIdTests.cs(186,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.StringId' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.StringId>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
-  1 x CS1929
-      [StronglyTypedIds.IntegrationTests] GuidIdTests.cs(84,22): error CS1929: 'GuidId1' does not contain a definition for 'Parse' and the best extension method overload 'SqlMapper.Parse(IDataReader, Type)' requires a receiver of type 'System.Data.IDataReader'
+  6 x CS0019
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] MassTransitNewIdTests.cs(54,25): error CS0019: Operator '==' cannot be applied to operands of type 'NewIdId1' and 'NewIdId1'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] MassTransitNewIdTests.cs(56,26): error CS0019: Operator '!=' cannot be applied to operands of type 'NewIdId1' and 'NewIdId1'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] NullableStringIdTests.cs(61,25): error CS0019: Operator '==' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] NullableStringIdTests.cs(62,26): error CS0019: Operator '==' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] NullableStringIdTests.cs(63,26): error CS0019: Operator '!=' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] NullableStringIdTests.cs(64,25): error CS0019: Operator '!=' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
+  4 x CS0315
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] MassTransitNewIdTests.cs(252,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.NewIdId1>'.
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] MassTransitNewIdTests.cs(253,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.NewIdId1>'.
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] NullableStringIdTests.cs(277,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>'.
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] NullableStringIdTests.cs(278,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>'.
+  2 x CS0039
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] MassTransitNewIdTests.cs(228,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.NewIdId1>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
+      [StronglyTypedIds.Nuget.Attributes.IntegrationTests] NullableStringIdTests.cs(253,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
 Long-operation progress:
   Loading C#: Loading C#
-  Loading C#: Succeeded after 0.1 s
+  Loading C#: Succeeded after 0.0 s
   Restoring NuGet packages: Restoring NuGet packages
   Restoring NuGet packages: Restoring NuGet packages 0/10 projects
   Analyzing: Analyzing 0/10 projects
   Analyzing: Analyzing 1/10 projects
   Analyzing: Analyzing 2/10 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/17
+  Restoring NuGet packages: Downloading NuGet packages 2/17
+  Restoring NuGet packages: Downloading NuGet packages 3/17
   Analyzing: Analyzing 3/10 projects
   Analyzing: Analyzing 4/10 projects
   Analyzing: Analyzing 5/10 projects
-  Restoring NuGet packages: Downloading NuGet packages 1/17
-  Analyzing: Analyzing 6/10 projects
-  Restoring NuGet packages: Downloading NuGet packages 2/17
-  Restoring NuGet packages: Downloading NuGet packages 3/17
   Restoring NuGet packages: Downloading NuGet packages 4/17
   Restoring NuGet packages: Downloading NuGet packages 5/17
-  Analyzing: Analyzing 7/10 projects
-  Analyzing: Analyzing 8/10 projects
   Restoring NuGet packages: Downloading NuGet packages 6/17
-  Analyzing: Analyzing 9/10 projects
+  Analyzing: Analyzing 6/10 projects
+  Analyzing: Analyzing 7/10 projects
   Restoring NuGet packages: Downloading NuGet packages 7/17
   Restoring NuGet packages: Downloading NuGet packages 8/17
+  Analyzing: Analyzing 8/10 projects
+  Analyzing: Analyzing 9/10 projects
   Restoring NuGet packages: Downloading NuGet packages 9/17
-  Analyzing: Analyzing 10/10 projects
-  Analyzing: Succeeded after 0.6 s
   Restoring NuGet packages: Downloading NuGet packages 10/17
+  Analyzing: Analyzing 10/10 projects
+  Analyzing: Succeeded after 0.7 s
   Restoring NuGet packages: Downloading NuGet packages 11/17
   Restoring NuGet packages: Downloading NuGet packages 12/17
   Restoring NuGet packages: Downloading NuGet packages 13/17
@@ -242,8 +210,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 20/29
   Restoring NuGet packages: Downloading NuGet packages 21/29
   Restoring NuGet packages: Downloading NuGet packages 22/29
-  Restoring NuGet packages: Downloading NuGet packages 23/29
   Restoring NuGet packages: Downloading NuGet packages 24/29
+  Restoring NuGet packages: Downloading NuGet packages 23/29
   Restoring NuGet packages: Downloading NuGet packages 25/29
   Restoring NuGet packages: Downloading NuGet packages 26/29
   Restoring NuGet packages: Downloading NuGet packages 27/29
@@ -311,8 +279,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 12/59
   Restoring NuGet packages: Downloading NuGet packages 13/59
   Restoring NuGet packages: Downloading NuGet packages 14/59
-  Restoring NuGet packages: Downloading NuGet packages 15/59
   Restoring NuGet packages: Downloading NuGet packages 16/59
+  Restoring NuGet packages: Downloading NuGet packages 15/59
   Restoring NuGet packages: Downloading NuGet packages 17/59
   Restoring NuGet packages: Downloading NuGet packages 18/59
   Restoring NuGet packages: Downloading NuGet packages 19/59
@@ -363,6 +331,7 @@ Long-operation progress:
   Restoring NuGet packages: Restoring NuGet packages 5/10 projects
   Restoring NuGet packages: Downloading NuGet packages 1/48
   Restoring NuGet packages: Downloading NuGet packages 2/48
+  Restoring NuGet packages: Downloading NuGet packages 3/48
   Restoring NuGet packages: Downloading NuGet packages 4/48
   Restoring NuGet packages: Downloading NuGet packages 5/48
   Restoring NuGet packages: Downloading NuGet packages 6/48
@@ -385,8 +354,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 23/48
   Restoring NuGet packages: Downloading NuGet packages 24/48
   Restoring NuGet packages: Downloading NuGet packages 25/48
-  Restoring NuGet packages: Downloading NuGet packages 26/48
   Restoring NuGet packages: Downloading NuGet packages 27/48
+  Restoring NuGet packages: Downloading NuGet packages 26/48
   Restoring NuGet packages: Downloading NuGet packages 28/48
   Restoring NuGet packages: Downloading NuGet packages 29/48
   Restoring NuGet packages: Downloading NuGet packages 30/48
@@ -406,7 +375,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 44/48
   Restoring NuGet packages: Downloading NuGet packages 45/48
   Restoring NuGet packages: Downloading NuGet packages 46/48
-  Restoring NuGet packages: Downloading NuGet packages 3/48
   Restoring NuGet packages: Downloading NuGet packages 47/48
   Restoring NuGet packages: Downloading NuGet packages 48/48
   Restoring NuGet packages: Restoring NuGet packages 6/10 projects
@@ -426,11 +394,11 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 14/48
   Restoring NuGet packages: Downloading NuGet packages 15/48
   Restoring NuGet packages: Downloading NuGet packages 16/48
-  Restoring NuGet packages: Downloading NuGet packages 17/48
   Restoring NuGet packages: Downloading NuGet packages 18/48
-  Restoring NuGet packages: Downloading NuGet packages 19/48
+  Restoring NuGet packages: Downloading NuGet packages 17/48
   Restoring NuGet packages: Downloading NuGet packages 20/48
   Restoring NuGet packages: Downloading NuGet packages 21/48
+  Restoring NuGet packages: Downloading NuGet packages 19/48
   Restoring NuGet packages: Downloading NuGet packages 22/48
   Restoring NuGet packages: Downloading NuGet packages 23/48
   Restoring NuGet packages: Downloading NuGet packages 24/48
@@ -440,8 +408,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 28/48
   Restoring NuGet packages: Downloading NuGet packages 29/48
   Restoring NuGet packages: Downloading NuGet packages 30/48
-  Restoring NuGet packages: Downloading NuGet packages 31/48
   Restoring NuGet packages: Downloading NuGet packages 32/48
+  Restoring NuGet packages: Downloading NuGet packages 31/48
   Restoring NuGet packages: Downloading NuGet packages 33/48
   Restoring NuGet packages: Downloading NuGet packages 34/48
   Restoring NuGet packages: Downloading NuGet packages 35/48
@@ -469,18 +437,18 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 4/46
   Restoring NuGet packages: Downloading NuGet packages 5/46
   Restoring NuGet packages: Downloading NuGet packages 6/46
-  Restoring NuGet packages: Downloading NuGet packages 7/46
   Restoring NuGet packages: Downloading NuGet packages 8/46
+  Restoring NuGet packages: Downloading NuGet packages 7/46
   Restoring NuGet packages: Downloading NuGet packages 9/46
   Restoring NuGet packages: Downloading NuGet packages 10/46
   Restoring NuGet packages: Downloading NuGet packages 11/46
   Restoring NuGet packages: Downloading NuGet packages 12/46
   Restoring NuGet packages: Downloading NuGet packages 13/46
   Restoring NuGet packages: Downloading NuGet packages 14/46
-  Restoring NuGet packages: Downloading NuGet packages 15/46
   Restoring NuGet packages: Downloading NuGet packages 16/46
-  Restoring NuGet packages: Downloading NuGet packages 17/46
+  Restoring NuGet packages: Downloading NuGet packages 15/46
   Restoring NuGet packages: Downloading NuGet packages 18/46
+  Restoring NuGet packages: Downloading NuGet packages 17/46
   Restoring NuGet packages: Downloading NuGet packages 19/46
   Restoring NuGet packages: Downloading NuGet packages 20/46
   Restoring NuGet packages: Downloading NuGet packages 21/46
@@ -498,11 +466,11 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 33/46
   Restoring NuGet packages: Downloading NuGet packages 34/46
   Restoring NuGet packages: Downloading NuGet packages 35/46
-  Restoring NuGet packages: Downloading NuGet packages 36/46
   Restoring NuGet packages: Downloading NuGet packages 37/46
+  Restoring NuGet packages: Downloading NuGet packages 36/46
   Restoring NuGet packages: Downloading NuGet packages 38/46
-  Restoring NuGet packages: Downloading NuGet packages 39/46
   Restoring NuGet packages: Downloading NuGet packages 40/46
+  Restoring NuGet packages: Downloading NuGet packages 39/46
   Restoring NuGet packages: Downloading NuGet packages 41/46
   Restoring NuGet packages: Downloading NuGet packages 42/46
   Restoring NuGet packages: Downloading NuGet packages 43/46
@@ -525,15 +493,15 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 13/46
   Restoring NuGet packages: Downloading NuGet packages 14/46
   Restoring NuGet packages: Downloading NuGet packages 15/46
-  Restoring NuGet packages: Downloading NuGet packages 16/46
   Restoring NuGet packages: Downloading NuGet packages 17/46
-  Restoring NuGet packages: Downloading NuGet packages 18/46
+  Restoring NuGet packages: Downloading NuGet packages 16/46
   Restoring NuGet packages: Downloading NuGet packages 19/46
+  Restoring NuGet packages: Downloading NuGet packages 18/46
   Restoring NuGet packages: Downloading NuGet packages 20/46
   Restoring NuGet packages: Downloading NuGet packages 21/46
   Restoring NuGet packages: Downloading NuGet packages 22/46
-  Restoring NuGet packages: Downloading NuGet packages 23/46
   Restoring NuGet packages: Downloading NuGet packages 24/46
+  Restoring NuGet packages: Downloading NuGet packages 23/46
   Restoring NuGet packages: Downloading NuGet packages 25/46
   Restoring NuGet packages: Downloading NuGet packages 26/46
   Restoring NuGet packages: Downloading NuGet packages 27/46
@@ -547,16 +515,16 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 35/46
   Restoring NuGet packages: Downloading NuGet packages 36/46
   Restoring NuGet packages: Downloading NuGet packages 37/46
-  Restoring NuGet packages: Downloading NuGet packages 38/46
   Restoring NuGet packages: Downloading NuGet packages 39/46
+  Restoring NuGet packages: Downloading NuGet packages 38/46
   Restoring NuGet packages: Downloading NuGet packages 40/46
   Restoring NuGet packages: Downloading NuGet packages 41/46
-  Restoring NuGet packages: Downloading NuGet packages 43/46
   Restoring NuGet packages: Downloading NuGet packages 42/46
+  Restoring NuGet packages: Downloading NuGet packages 43/46
   Restoring NuGet packages: Downloading NuGet packages 44/46
   Restoring NuGet packages: Downloading NuGet packages 45/46
   Restoring NuGet packages: Downloading NuGet packages 46/46
-  Restoring NuGet packages: Succeeded after 4.6 s
+  Restoring NuGet packages: Succeeded after 4.1 s
   Analyzing: Analyzing 0/10 projects
   Analyzing: Analyzing 1/10 projects
   Analyzing: Analyzing 2/10 projects
@@ -584,137 +552,85 @@ Long-operation progress:
 Project setup:
 
 Output:
-assTransitNewIdTests.cs(242,34): error CS0117: 'NewIdId1' does not contain a definition for 'Empty'
-10>MassTransitNewIdTests.cs(243,34): error CS0117: 'NewIdId1' does not contain a definition for 'Empty'
-10>MassTransitNewIdTests.cs(248,64): error CS0117: 'NewIdId1' does not contain a definition for 'Empty'
-10>MassTransitNewIdTests.cs(252,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.NewIdId1>'.
-10>MassTransitNewIdTests.cs(253,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.NewIdId1>'.
-10>MassTransitNewIdTests.cs(281,52): error CS0117: 'NewIdId1' does not contain a definition for 'New'
-10>MassTransitNewIdTests.cs(303,46): error CS0426: The type name 'EfCoreValueConverter' does not exist in the type 'NewIdId1'
-10>MassTransitNewIdTests.cs(334,57): error CS0426: The type name 'EfCoreValueConverter' does not exist in the type 'NewIdId1'
-10>NestedIdTests.cs(11,84): error CS0117: 'SomeType<object>.NestedType<string, int>.MoreNesting.VeryNestedId' does not contain a definition for 'New'
-10>NullableStringIdTests.cs(22,28): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(24,30): error CS1061: 'NullableStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'NullableStringId' could be found (are you missing a using directive or an assembly reference?)
-10>NullableStringIdTests.cs(31,28): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(32,28): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(40,43): error CS0117: 'NullableStringId' does not contain a definition for 'Empty'
-10>NullableStringIdTests.cs(47,28): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(48,28): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(57,29): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(58,29): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(59,33): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(61,25): error CS0019: Operator '==' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
-10>NullableStringIdTests.cs(62,26): error CS0019: Operator '==' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
-10>NullableStringIdTests.cs(63,26): error CS0019: Operator '!=' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
-10>NullableStringIdTests.cs(64,25): error CS0019: Operator '!=' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
-10>NullableStringIdTests.cs(70,31): error CS0117: 'GuidId2' does not contain a definition for 'New'
-10>NullableStringIdTests.cs(71,27): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(80,27): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(83,81): error CS1061: 'NullableStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'NullableStringId' could be found (are you missing a using directive or an assembly reference?)
-10>NullableStringIdTests.cs(99,46): error CS1061: 'NullableStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'NullableStringId' could be found (are you missing a using directive or an assembly reference?)
-10>NullableStringIdTests.cs(105,27): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(108,75): error CS1061: 'NullableStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'NullableStringId' could be found (are you missing a using directive or an assembly reference?)
-10>NullableStringIdTests.cs(122,27): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(151,27): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(163,27): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(174,27): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(178,39): error CS1061: 'NullableStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'NullableStringId' could be found (are you missing a using directive or an assembly reference?)
-10>NullableStringIdTests.cs(193,77): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(219,37): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(230,30): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(240,42): error CS0117: 'NullableStringId' does not contain a definition for 'Empty'
-10>NullableStringIdTests.cs(251,42): error CS0117: 'NullableStringId' does not contain a definition for 'Empty'
-10>NullableStringIdTests.cs(253,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
-10>NullableStringIdTests.cs(262,84): error CS0117: 'NullableStringId' does not contain a definition for 'Empty'
-10>NullableStringIdTests.cs(263,85): error CS0117: 'NullableStringId' does not contain a definition for 'Empty'
-10>NullableStringIdTests.cs(267,42): error CS0117: 'NullableStringId' does not contain a definition for 'Empty'
-10>NullableStringIdTests.cs(268,42): error CS0117: 'NullableStringId' does not contain a definition for 'Empty'
-10>NullableStringIdTests.cs(273,72): error CS0117: 'NullableStringId' does not contain a definition for 'Empty'
-10>NullableStringIdTests.cs(277,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>'.
-10>NullableStringIdTests.cs(278,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>'.
-10>NullableStringIdTests.cs(295,29): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(296,31): error CS1061: 'NullableStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'NullableStringId' could be found (are you missing a using directive or an assembly reference?)
-10>NullableStringIdTests.cs(302,30): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(303,30): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(304,30): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(317,30): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(318,30): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(319,30): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(320,30): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(331,29): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(345,30): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(362,77): error CS1729: 'NullableStringId' does not contain a constructor that takes 1 arguments
-10>NullableStringIdTests.cs(391,54): error CS0426: The type name 'EfCoreValueConverter' does not exist in the type 'NullableStringId'
-10>NullableStringIdTests.cs(422,65): error CS0426: The type name 'EfCoreValueConverter' does not exist in the type 'NullableStringId'
-10>SimpleCustomIdTests.cs(12,24): error CS1729: 'SimpleCustomId' does not contain a constructor that takes 1 arguments
-10>SimpleCustomIdTests.cs(13,24): error CS1729: 'SimpleCustomId' does not contain a constructor that takes 1 arguments
-10>SimpleCustomIdTests.cs(21,24): error CS1729: 'SimpleCustomId' does not contain a constructor that takes 1 arguments
-10>SimpleCustomIdTests.cs(22,24): error CS1729: 'SimpleCustomId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(23,87): error CS1729: 'StringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(30,28): error CS1729: 'StringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(31,28): error CS1729: 'StringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(39,35): error CS0117: 'StringId' does not contain a definition for 'Empty'
-10>StringIdTests.cs(45,28): error CS1729: 'StringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(46,28): error CS1729: 'StringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(55,29): error CS1729: 'StringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(56,29): error CS1729: 'StringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(57,33): error CS1729: 'StringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(59,25): error CS0019: Operator '==' cannot be applied to operands of type 'StringId' and 'StringId'
-10>StringIdTests.cs(60,26): error CS0019: Operator '==' cannot be applied to operands of type 'StringId' and 'StringId'
-10>StringIdTests.cs(61,26): error CS0019: Operator '!=' cannot be applied to operands of type 'StringId' and 'StringId'
-10>StringIdTests.cs(62,25): error CS0019: Operator '!=' cannot be applied to operands of type 'StringId' and 'StringId'
-10>StringIdTests.cs(68,31): error CS0117: 'GuidId2' does not contain a definition for 'New'
-10>StringIdTests.cs(69,27): error CS1729: 'StringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(96,27): error CS1729: 'StringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(125,68): error CS0117: 'StringId' does not contain a definition for 'Empty'
-10>StringIdTests.cs(126,69): error CS0117: 'StringId' does not contain a definition for 'Empty'
-10>StringIdTests.cs(130,34): error CS0117: 'StringId' does not contain a definition for 'Empty'
-10>StringIdTests.cs(131,34): error CS0117: 'StringId' does not contain a definition for 'Empty'
-10>StringIdTests.cs(136,64): error CS0117: 'StringId' does not contain a definition for 'Empty'
-10>StringIdTests.cs(140,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.StringId' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.StringId' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.StringId>'.
-10>StringIdTests.cs(141,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.StringId' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.StringId' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.StringId>'.
-10>StringIdTests.cs(163,30): error CS1729: 'StringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(173,34): error CS0117: 'StringId' does not contain a definition for 'Empty'
-10>StringIdTests.cs(184,34): error CS0117: 'StringId' does not contain a definition for 'Empty'
-10>StringIdTests.cs(186,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.StringId' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.StringId>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
-10>StringIdTests.cs(196,27): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(199,81): error CS1061: 'ConvertersStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersStringId' could be found (are you missing a using directive or an assembly reference?)
-10>StringIdTests.cs(207,27): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(210,75): error CS1061: 'ConvertersStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersStringId' could be found (are you missing a using directive or an assembly reference?)
-10>StringIdTests.cs(221,26): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(239,27): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(251,27): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(262,27): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(266,39): error CS1061: 'ConvertersStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersStringId' could be found (are you missing a using directive or an assembly reference?)
-10>StringIdTests.cs(281,77): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(307,37): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(321,77): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(344,27): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(347,81): error CS1061: 'ConvertersStringId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersStringId2' could be found (are you missing a using directive or an assembly reference?)
-10>StringIdTests.cs(355,27): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(358,75): error CS1061: 'ConvertersStringId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersStringId2' could be found (are you missing a using directive or an assembly reference?)
-10>StringIdTests.cs(367,27): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(379,27): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(390,27): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(394,39): error CS1061: 'ConvertersStringId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersStringId2' could be found (are you missing a using directive or an assembly reference?)
-10>StringIdTests.cs(409,78): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(435,37): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(449,78): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
-10>StringIdTests.cs(482,56): error CS0426: The type name 'EfCoreValueConverter' does not exist in the type 'ConvertersStringId'
-10>StringIdTests.cs(485,57): error CS0426: The type name 'EfCoreValueConverter' does not exist in the type 'ConvertersStringId2'
-10>StringIdTests.cs(524,67): error CS0426: The type name 'EfCoreValueConverter' does not exist in the type 'ConvertersStringId'
-10>StringIdTests.cs(532,68): error CS0426: The type name 'EfCoreValueConverter' does not exist in the type 'ConvertersStringId2'
-10>SystemTextJsonSerializerContext.cs(23,29): error CS0426: The type name 'GuidId1SystemTextJsonConverter' does not exist in the type 'GuidId1'
-10>SystemTextJsonSerializerContext.cs(24,38): error CS0426: The type name 'ConvertersGuidIdSystemTextJsonConverter' does not exist in the type 'ConvertersGuidId'
-10>SystemTextJsonSerializerContext.cs(25,39): error CS0426: The type name 'ConvertersGuidId2SystemTextJsonConverter' does not exist in the type 'ConvertersGuidId2'
-10>SystemTextJsonSerializerContext.cs(26,37): error CS0426: The type name 'ConvertersIntIdSystemTextJsonConverter' does not exist in the type 'ConvertersIntId'
-10>SystemTextJsonSerializerContext.cs(27,38): error CS0426: The type name 'ConvertersLongIdSystemTextJsonConverter' does not exist in the type 'ConvertersLongId'
-10>SystemTextJsonSerializerContext.cs(28,40): error CS0426: The type name 'ConvertersStringIdSystemTextJsonConverter' does not exist in the type 'ConvertersStringId'
-10>SystemTextJsonSerializerContext.cs(39,29): error CS0426: The type name 'GuidId1SystemTextJsonConverter' does not exist in the type 'GuidId1'
-10>SystemTextJsonSerializerContext.cs(40,38): error CS0426: The type name 'ConvertersGuidIdSystemTextJsonConverter' does not exist in the type 'ConvertersGuidId'
-10>SystemTextJsonSerializerContext.cs(41,39): error CS0426: The type name 'ConvertersGuidId2SystemTextJsonConverter' does not exist in the type 'ConvertersGuidId2'
-10>SystemTextJsonSerializerContext.cs(42,37): error CS0426: The type name 'ConvertersIntIdSystemTextJsonConverter' does not exist in the type 'ConvertersIntId'
-10>SystemTextJsonSerializerContext.cs(43,38): error CS0426: The type name 'ConvertersLongIdSystemTextJsonConverter' does not exist in the type 'ConvertersLongId'
-10>SystemTextJsonSerializerContext.cs(44,40): error CS0426: The type name 'ConvertersStringIdSystemTextJsonConverter' does not exist in the type 'ConvertersStringId'
+nts
+7>StringIdTests.cs(210,75): error CS1061: 'ConvertersStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersStringId' could be found (are you missing a using directive or an assembly reference?)
+7>StringIdTests.cs(221,26): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(239,27): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(251,27): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(262,27): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(266,39): error CS1061: 'ConvertersStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersStringId' could be found (are you missing a using directive or an assembly reference?)
+7>StringIdTests.cs(281,77): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(307,37): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(321,77): error CS1729: 'ConvertersStringId' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(344,27): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(347,81): error CS1061: 'ConvertersStringId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersStringId2' could be found (are you missing a using directive or an assembly reference?)
+7>StringIdTests.cs(355,27): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(358,75): error CS1061: 'ConvertersStringId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersStringId2' could be found (are you missing a using directive or an assembly reference?)
+7>StringIdTests.cs(367,27): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(379,27): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(390,27): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(394,39): error CS1061: 'ConvertersStringId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersStringId2' could be found (are you missing a using directive or an assembly reference?)
+7>StringIdTests.cs(409,78): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(435,37): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(449,78): error CS1729: 'ConvertersStringId2' does not contain a constructor that takes 1 arguments
+7>StringIdTests.cs(482,56): error CS0426: The type name 'EfCoreValueConverter' does not exist in the type 'ConvertersStringId'
+7>StringIdTests.cs(485,57): error CS0426: The type name 'EfCoreValueConverter' does not exist in the type 'ConvertersStringId2'
+7>StringIdTests.cs(524,67): error CS0426: The type name 'EfCoreValueConverter' does not exist in the type 'ConvertersStringId'
+7>StringIdTests.cs(532,68): error CS0426: The type name 'EfCoreValueConverter' does not exist in the type 'ConvertersStringId2'
+7>SystemTextJsonSerializerContext.cs(24,38): error CS0426: The type name 'ConvertersGuidIdSystemTextJsonConverter' does not exist in the type 'ConvertersGuidId'
+7>SystemTextJsonSerializerContext.cs(25,39): error CS0426: The type name 'ConvertersGuidId2SystemTextJsonConverter' does not exist in the type 'ConvertersGuidId2'
+7>SystemTextJsonSerializerContext.cs(26,37): error CS0426: The type name 'ConvertersIntIdSystemTextJsonConverter' does not exist in the type 'ConvertersIntId'
+7>SystemTextJsonSerializerContext.cs(27,38): error CS0426: The type name 'ConvertersLongIdSystemTextJsonConverter' does not exist in the type 'ConvertersLongId'
+7>SystemTextJsonSerializerContext.cs(28,40): error CS0426: The type name 'ConvertersStringIdSystemTextJsonConverter' does not exist in the type 'ConvertersStringId'
+7>SystemTextJsonSerializerContext.cs(40,38): error CS0426: The type name 'ConvertersGuidIdSystemTextJsonConverter' does not exist in the type 'ConvertersGuidId'
+7>SystemTextJsonSerializerContext.cs(41,39): error CS0426: The type name 'ConvertersGuidId2SystemTextJsonConverter' does not exist in the type 'ConvertersGuidId2'
+7>SystemTextJsonSerializerContext.cs(42,37): error CS0426: The type name 'ConvertersIntIdSystemTextJsonConverter' does not exist in the type 'ConvertersIntId'
+7>SystemTextJsonSerializerContext.cs(43,38): error CS0426: The type name 'ConvertersLongIdSystemTextJsonConverter' does not exist in the type 'ConvertersLongId'
+7>SystemTextJsonSerializerContext.cs(44,40): error CS0426: The type name 'ConvertersStringIdSystemTextJsonConverter' does not exist in the type 'ConvertersStringId'
+7>Enums.cs(7,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(10,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(13,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(13,18): warning CS0436: The type 'Template' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs' conflicts with the imported type 'Template' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs'.
+7>Enums.cs(16,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(19,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(19,18): warning CS0436: The type 'Template' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs' conflicts with the imported type 'Template' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs'.
+7>Enums.cs(22,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(22,18): warning CS0436: The type 'Template' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs' conflicts with the imported type 'Template' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs'.
+7>Enums.cs(25,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(25,18): warning CS0436: The type 'Template' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs' conflicts with the imported type 'Template' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs'.
+7>Enums.cs(28,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(31,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(31,18): warning CS0436: The type 'Template' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs' conflicts with the imported type 'Template' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs'.
+7>Enums.cs(34,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(34,18): warning CS0436: The type 'Template' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs' conflicts with the imported type 'Template' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs'.
+7>Enums.cs(37,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(40,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(40,18): warning CS0436: The type 'Template' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs' conflicts with the imported type 'Template' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs'.
+7>Enums.cs(43,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(46,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(49,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(49,18): warning CS0436: The type 'Template' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs' conflicts with the imported type 'Template' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs'.
+7>Enums.cs(52,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(55,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(55,18): warning CS0436: The type 'Template' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs' conflicts with the imported type 'Template' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs'.
+7>Enums.cs(58,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(61,2): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>Enums.cs(70,14): warning CS0436: The type 'StronglyTypedIdAttribute' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs' conflicts with the imported type 'StronglyTypedIdAttribute' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/StronglyTypedIdAttribute.g.cs'.
+7>StronglyTypedIdAttribute.g.cs(33,66): warning CS0436: The type 'Template' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs' conflicts with the imported type 'Template' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs'.
+7>StronglyTypedIdDefaultsAttribute.g.cs(34,74): warning CS0436: The type 'Template' in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs' conflicts with the imported type 'Template' in 'StronglyTypedIds.Attributes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in 'StronglyTypedIds/StronglyTypedIds.StronglyTypedIdGenerator/Template.g.cs'.
+8>------ Build started: Project: StronglyTypedIds.Templates, Configuration: Debug ------
+8>StronglyTypedIds.Templates -> compiled in memory (2 KB, 2 ms)
+9>------ Build started: Project: StronglyTypedIds.IntegrationTests.Types, Configuration: Debug ------
+9>error STRONGID002: Could not find 'guid-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
+9>error STRONGID002: Could not find 'guid-efcore.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
+9>error STRONGID002: Could not find 'int-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
+9>error STRONGID002: Could not find 'int-efcore.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
+9>error STRONGID002: Could not find 'long-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
+9>error STRONGID002: Could not find 'long-efcore.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
+9>error STRONGID002: Could not find 'newid-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
+9>error STRONGID002: Could not find 'string-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
+9>error STRONGID002: Could not find 'string-efcore.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
+9>error STRONGID002: Could not find 'nullablestring-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
+10>------ Build started: Project: StronglyTypedIds.IntegrationTests.ExternalIds, Configuration: Debug ------
 ========== Build: 6 succeeded, 4 failed ==========
 
