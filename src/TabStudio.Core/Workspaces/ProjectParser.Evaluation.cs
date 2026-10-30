@@ -86,6 +86,12 @@ public static partial class ProjectParser
     {
         private const int MaxImportDepth = 32;
 
+        /// <summary>The MSBuild SDK for MSTest projects, from NuGet.</summary>
+        private const string MSTestSdkName = "MSTest.Sdk";
+
+        /// <summary>The MSTest version for an MSTest.Sdk project whose SDK version is not named anywhere.</summary>
+        private const string MSTestDefaultVersion = "3.6.4";
+
         /// <summary>The common targets a project made before the SDK imports by their place in Visual Studio.</summary>
         private static readonly HashSet<string> CommonTargetsFiles = new(StringComparer.OrdinalIgnoreCase)
         {
@@ -104,6 +110,7 @@ public static partial class ProjectParser
         private readonly HashSet<string> _imported = new(StringComparer.Ordinal);
         private readonly List<string> _importedFiles = [];
         private bool _commonPropsDone;
+        private bool _mstestSdk;
         private bool _commonTargetsDone;
 
         public Evaluator(string projectPath, XElement root, Dictionary<string, string> globals, EvaluationOptions options)
@@ -406,6 +413,14 @@ public static partial class ProjectParser
         private void SdkProps(string sdk)
         {
             CommonProps();
+            if (sdk.Equals(MSTestSdkName, StringComparison.OrdinalIgnoreCase))
+            {
+                // MSTest.Sdk, from NuGet: a test project whose MSTest packages are of the SDK's own version.
+                Default("MSTestVersion", MsBuildSdkVersion(MSTestSdkName) ?? MSTestDefaultVersion);
+                Default("IsTestProject", "true");
+                _mstestSdk = true;
+            }
+
             Default("UsingMicrosoftNETSdk", "true");
             Default("Language", LanguageName());
             Default("DefaultLanguageSourceExtension", LanguageName() switch { "VB" => ".vb", "F#" => ".fs", _ => ".cs" });
@@ -577,6 +592,40 @@ public static partial class ProjectParser
             }
         }
 
+        /// <summary>
+        /// The version of an MSBuild SDK from NuGet: the one its <c>Sdk="Name/Version"</c> names, or else the nearest
+        /// <c>global.json</c>'s <c>msbuild-sdks</c>, as MSBuild's NuGet SDK resolver finds it.
+        /// </summary>
+        private string? MsBuildSdkVersion(string sdk)
+        {
+            var named = (_root.Attribute("Sdk")?.Value ?? string.Empty)
+                .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(s => s.Split('/', 2))
+                .FirstOrDefault(s => s.Length == 2 && s[0].Equals(sdk, StringComparison.OrdinalIgnoreCase));
+            if (named is not null)
+            {
+                return named[1];
+            }
+
+            var globalJson = MsBuildImports.GetPathOfFileAbove("global.json", _projectDirectory);
+            if (globalJson.Length == 0)
+            {
+                return null;
+            }
+
+            try
+            {
+                using var document = System.Text.Json.JsonDocument.Parse(File.ReadAllText(globalJson), new System.Text.Json.JsonDocumentOptions { CommentHandling = System.Text.Json.JsonCommentHandling.Skip, AllowTrailingCommas = true });
+                return document.RootElement.TryGetProperty("msbuild-sdks", out var sdks) && sdks.ValueKind == System.Text.Json.JsonValueKind.Object
+                    ? sdks.EnumerateObject().FirstOrDefault(p => p.Name.Equals(sdk, StringComparison.OrdinalIgnoreCase)).Value is { ValueKind: System.Text.Json.JsonValueKind.String } version ? version.GetString() : null
+                    : null;
+            }
+            catch (Exception ex) when (ex is System.Text.Json.JsonException or IOException or UnauthorizedAccessException)
+            {
+                return null;
+            }
+        }
+
         private string? Property(string name) => _properties.TryGetValue(name, out var value) ? value.Trim() : null;
 
         private bool IsFalse(string name) => string.Equals(Property(name), "false", StringComparison.OrdinalIgnoreCase);
@@ -591,6 +640,18 @@ public static partial class ProjectParser
         private XElement EvaluateItems()
         {
             var group = new XElement("ItemGroup");
+            if (_mstestSdk)
+            {
+                // What MSTest.Sdk's targets add: its framework and adapter, and, with implicit usings, MSTest's namespace.
+                var version = Property("MSTestVersion") ?? MSTestDefaultVersion;
+                group.Add(new XElement("PackageReference", new XAttribute("Include", "MSTest.TestFramework"), new XAttribute("Version", version)));
+                group.Add(new XElement("PackageReference", new XAttribute("Include", "MSTest.TestAdapter"), new XAttribute("Version", version)));
+                if (Property("ImplicitUsings") is { } implicitUsings && (implicitUsings.Equals("enable", StringComparison.OrdinalIgnoreCase) || implicitUsings.Equals("true", StringComparison.OrdinalIgnoreCase)))
+                {
+                    group.Add(new XElement("Using", new XAttribute("Include", "Microsoft.VisualStudio.TestTools.UnitTesting")));
+                }
+            }
+
             foreach (var (itemGroup, file) in _itemGroups)
             {
                 if (Condition(itemGroup, file, _projectDirectory) == false)
