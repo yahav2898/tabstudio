@@ -1,0 +1,75 @@
+name: .NET fidelity trial
+
+# Trial only (trial/fidelity-* branches): opens every solution of build/ci/trial-sweep.json in TabStudio, then builds it
+# with the real .NET 10 SDK, and publishes both reports to ci-logs under branches/<branch>/fidelity-<area>/.
+on:
+  push:
+    branches: ['trial/fidelity-*']
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+
+jobs:
+  trial:
+    name: Fidelity (${{ matrix.area }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      matrix:
+        area: [a, b, c, d, e, f]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Clone the repositories at their pinned commits
+        env:
+          AREA: ${{ matrix.area }}
+        run: |
+          jq -r --arg area "$AREA" '.repositories[] | select(.area == $area) | [.name, .url, .sha, .open] | @tsv' build/ci/trial-sweep.json |
+          while IFS=$'\t' read -r name url sha open; do
+            dir="$RUNNER_TEMP/repos/$name"
+            if [[ "$url" == template:* ]]; then
+              dotnet new install "$sha" > /dev/null
+              dotnet new "${url#template:}" -o "$dir/$open" -n "$open"
+              ( cd "$dir/$open" && ls -R | head -40 )
+              continue
+            fi
+            git init -q "$dir"
+            git -C "$dir" fetch -q --depth 1 "$url" "$sha"
+            git -C "$dir" -c advice.detachedHead=false checkout -q FETCH_HEAD
+            echo "$name: $sha"
+          done
+
+      - name: Open and build them in TabStudio
+        env:
+          TABSTUDIO_TRIAL_ROOT: ${{ runner.temp }}/repos
+          TABSTUDIO_TRIAL_AREA: ${{ matrix.area }}
+          TABSTUDIO_TRIAL_OUT: ${{ github.workspace }}/ci-out
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          dotnet test tests/TabStudio.App.Tests -c Release --filter "FullyQualifiedName~RepoTrialTests" --logger "console;verbosity=normal" > ci-out/test.log 2>&1 || true
+          tail -30 ci-out/test.log
+          if [ -f ci-out/summary.md ]; then cat ci-out/summary.md | tee -a "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Build them with the .NET SDK
+        run: python3 build/ci/sdk-truth.py "$RUNNER_TEMP/repos" "${{ matrix.area }}" ci-out | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish the reports
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh fidelity-${{ matrix.area }} ${{ job.status }}
