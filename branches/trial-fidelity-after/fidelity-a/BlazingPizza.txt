@@ -10,19 +10,11 @@ Compatibility Doctor:
   BlazingPizza.Shared: Library via Built with its users - A library is compiled together with the projects that reference it.
   BlazingPizza.ComponentsLibrary: Library via Built with its users - A library is compiled together with the projects that reference it.
 F5 startup project: BlazingPizza /home/runner/work/_temp/repos/BlazingPizza/src/BlazingPizza/BlazingPizza.csproj
-Error List after analysis: 6 errors, 14 warnings
-  4 x CS0534
-      [BlazingPizza.Shared] Order.cs(35,22): error CS0534: 'OrderContext' does not implement inherited abstract member 'JsonSerializerContext.GetTypeInfo(Type)'
-      [BlazingPizza.Shared] Order.cs(35,22): error CS0534: 'OrderContext' does not implement inherited abstract member 'JsonSerializerContext.GeneratedSerializerOptions.get'
-      [BlazingPizza.Shared] Pizza.cs(46,22): error CS0534: 'PizzaContext' does not implement inherited abstract member 'JsonSerializerContext.GetTypeInfo(Type)'
-      [BlazingPizza.Shared] Pizza.cs(46,22): error CS0534: 'PizzaContext' does not implement inherited abstract member 'JsonSerializerContext.GeneratedSerializerOptions.get'
-  2 x CS7036
-      [BlazingPizza.Shared] Order.cs(35,22): error CS7036: There is no argument given that corresponds to the required parameter 'options' of 'JsonSerializerContext.JsonSerializerContext(JsonSerializerOptions?)'
-      [BlazingPizza.Shared] Pizza.cs(46,22): error CS7036: There is no argument given that corresponds to the required parameter 'options' of 'JsonSerializerContext.JsonSerializerContext(JsonSerializerOptions?)'
+Error List after analysis: 0 errors, 14 warnings
 Error List after the build: 0 errors, 14 warnings
 Long-operation progress:
   Loading C#: Loading C#
-  Loading C#: Succeeded after 0.1 s
+  Loading C#: Succeeded after 0.0 s
   Restoring NuGet packages: Restoring NuGet packages
   Restoring NuGet packages: Restoring NuGet packages 0/4 projects
   Analyzing: Analyzing 0/4 projects
@@ -30,7 +22,7 @@ Long-operation progress:
   Analyzing: Analyzing 2/4 projects
   Analyzing: Analyzing 3/4 projects
   Analyzing: Analyzing 4/4 projects
-  Analyzing: Succeeded after 0.9 s
+  Analyzing: Succeeded after 0.8 s
   Restoring NuGet packages: Downloading NuGet packages 1/64
   Restoring NuGet packages: Downloading NuGet packages 2/64
   Restoring NuGet packages: Downloading NuGet packages 3/64
@@ -97,8 +89,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 64/64
   Restoring NuGet packages: Restoring NuGet packages 1/4 projects
   Restoring NuGet packages: Downloading NuGet packages 1/25
-  Restoring NuGet packages: Downloading NuGet packages 2/25
   Restoring NuGet packages: Downloading NuGet packages 3/25
+  Restoring NuGet packages: Downloading NuGet packages 2/25
   Restoring NuGet packages: Downloading NuGet packages 4/25
   Restoring NuGet packages: Downloading NuGet packages 5/25
   Restoring NuGet packages: Downloading NuGet packages 6/25
@@ -119,8 +111,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 21/25
   Restoring NuGet packages: Downloading NuGet packages 22/25
   Restoring NuGet packages: Downloading NuGet packages 23/25
-  Restoring NuGet packages: Downloading NuGet packages 24/25
   Restoring NuGet packages: Downloading NuGet packages 25/25
+  Restoring NuGet packages: Downloading NuGet packages 24/25
   Restoring NuGet packages: Restoring NuGet packages 2/4 projects
   Restoring NuGet packages: Downloading NuGet packages 1/12
   Restoring NuGet packages: Downloading NuGet packages 2/12
@@ -147,34 +139,34 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 10/12
   Restoring NuGet packages: Downloading NuGet packages 11/12
   Restoring NuGet packages: Downloading NuGet packages 12/12
-  Restoring NuGet packages: Succeeded after 3.8 s
+  Restoring NuGet packages: Succeeded after 3.6 s
   Analyzing: Analyzing 0/4 projects
   Analyzing: Analyzing 1/4 projects
   Analyzing: Analyzing 2/4 projects
   Analyzing: Analyzing 3/4 projects
   Analyzing: Analyzing 4/4 projects
-  Analyzing: Succeeded after 0.8 s
+  Analyzing: Succeeded after 1.1 s
   Building: Building
   Building: Building 0/4 projects
   Building: Building 1/4 projects
   Building: Building 2/4 projects
   Building: Building 3/4 projects
-  Building: Succeeded after 0.5 s
+  Building: Succeeded after 0.4 s
 Project setup:
 
 Output:
-Build started at 18:14:37...
+Build started at 18:51:42...
 1>------ Build started: Project: BlazingPizza.ComponentsLibrary, Configuration: Debug ------
 1>TemplatedList.razor(17,6): warning CS8602: Dereference of a possibly null reference.
 1>BlazingPizza.ComponentsLibrary -> compiled in memory (10.5 KB, 6 ms)
 2>------ Build started: Project: BlazingPizza.Shared, Configuration: Debug ------
-2>BlazingPizza.Shared -> compiled in memory (71.5 KB, 84 ms)
+2>BlazingPizza.Shared -> compiled in memory (71.5 KB, 56 ms)
 3>------ Build started: Project: BlazingPizza.Client, Configuration: Debug ------
 3>OrderState.cs(17,20): warning CS8618: Non-nullable property 'JSRuntime' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 3>OrderState.cs(48,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
 3>OrderState.cs(55,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
 3>OrderState.cs(70,11): warning CS8602: Dereference of a possibly null reference.
-3>BlazingPizza.Client -> compiled in memory (42 KB, 157 ms)
+3>BlazingPizza.Client -> compiled in memory (42 KB, 88 ms)
 4>------ Build started: Project: BlazingPizza, Configuration: Debug ------
 4>LoginDisplay.razor(12,60): warning CS8602: Dereference of a possibly null reference.
 4>MyOrders.razor(36,32): warning CS0169: The field 'MyOrders.ordersWithStatus' is never used
@@ -185,6 +177,6 @@ Build started at 18:14:37...
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Specials' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Toppings' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'NotificationSubscriptions' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-4>BlazingPizza -> compiled in memory (238.5 KB, 240 ms)
+4>BlazingPizza -> compiled in memory (238.5 KB, 250 ms)
 ========== Build: 4 succeeded, 0 failed ==========
 

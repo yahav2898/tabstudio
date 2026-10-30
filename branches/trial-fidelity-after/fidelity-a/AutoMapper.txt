@@ -11,13 +11,13 @@ Opened in 0.2 s: AutoMapper, solution /home/runner/work/_temp/repos/AutoMapper/A
 Compatibility Doctor:
   AutoMapper.DI.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   AutoMapper: Library via Built with its users - A library is compiled together with the projects that reference it.
-  Benchmark: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  Benchmark: Library via Not in the solution's build - The solution's Debug configuration does not build it, so TabStudio leaves it out of builds, as Visual Studio does.
   AutoMapper.IntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   TestApp: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   AutoMapper.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   docs: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
   docs: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
-F5 startup project: Benchmark /home/runner/work/_temp/repos/AutoMapper/src/Benchmark/Benchmark.csproj
+F5 startup project: TestApp /home/runner/work/_temp/repos/AutoMapper/src/TestApp/TestApp.csproj
 Error List after analysis: 0 errors, 0 warnings
 Error List after the build: 0 errors, 0 warnings
 Long-operation progress:
@@ -32,8 +32,6 @@ Long-operation progress:
   Analyzing: Analyzing 3/6 projects
   Analyzing: Analyzing 4/6 projects
   Analyzing: Analyzing 5/6 projects
-  Analyzing: Analyzing 6/6 projects
-  Analyzing: Succeeded after 2.7 s
   Restoring NuGet packages: Downloading NuGet packages 1/27
   Restoring NuGet packages: Downloading NuGet packages 2/27
   Restoring NuGet packages: Downloading NuGet packages 3/27
@@ -47,6 +45,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 11/27
   Restoring NuGet packages: Downloading NuGet packages 12/27
   Restoring NuGet packages: Downloading NuGet packages 13/27
+  Analyzing: Analyzing 6/6 projects
+  Analyzing: Succeeded after 2.2 s
   Restoring NuGet packages: Downloading NuGet packages 14/27
   Restoring NuGet packages: Downloading NuGet packages 15/27
   Restoring NuGet packages: Downloading NuGet packages 16/27
@@ -81,8 +81,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 7/8
   Restoring NuGet packages: Downloading NuGet packages 8/8
   Restoring NuGet packages: Restoring NuGet packages 3/6 projects
-  Setting up projects: Setting up docs: pip install -r requirements.txt
-  Installing docs's packages: Installing packages: pip install -r requirements.txt
   Restoring NuGet packages: Downloading NuGet packages 1/66
   Restoring NuGet packages: Downloading NuGet packages 2/66
   Restoring NuGet packages: Downloading NuGet packages 3/66
@@ -196,7 +194,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 34/36
   Restoring NuGet packages: Downloading NuGet packages 35/36
   Restoring NuGet packages: Downloading NuGet packages 36/36
-  Restoring NuGet packages: Succeeded after 6.3 s
+  Restoring NuGet packages: Succeeded after 4.4 s
   Analyzing: Analyzing 0/6 projects
   Analyzing: Analyzing 1/6 projects
   Analyzing: Analyzing 2/6 projects
@@ -205,16 +203,17 @@ Long-operation progress:
   Analyzing: Analyzing 5/6 projects
   Analyzing: Analyzing 6/6 projects
   Analyzing: Succeeded after 1.3 s
-  Installing docs's packages: Succeeded after 7.4 s
-  Setting up projects: Succeeded after 11.7 s
+  Setting up projects: Setting up docs: pip install -r requirements.txt
+  Installing docs's packages: Installing packages: pip install -r requirements.txt
+  Installing docs's packages: Succeeded after 5.6 s
+  Setting up projects: Succeeded after 11.5 s
   Building: Building
-  Building: Building 0/6 projects
-  Building: Building 1/6 projects
-  Building: Building 2/6 projects
-  Building: Building 3/6 projects
-  Building: Building 4/6 projects
-  Building: Building 5/6 projects
-  Building: Succeeded after 2.5 s
+  Building: Building 0/5 projects
+  Building: Building 1/5 projects
+  Building: Building 2/5 projects
+  Building: Building 3/5 projects
+  Building: Building 4/5 projects
+  Building: Succeeded after 2.1 s
 Project setup:
 ------ docs: pip install -r requirements.txt ------
 Reading which Python versions the 3 pinned packages have wheels for, from PyPI.
@@ -272,7 +271,7 @@ Collecting mdurl~=0.1 (from markdown-it-py~=3.0->myst_parser==2.0.0->-r requirem
   Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
 Collecting charset_normalizer<4,>=2 (from requests>=2.25.0->sphinx==7.1.2->-r requirements.txt (line 1))
   Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.4/46.4 kB 20.1 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.4/46.4 kB 4.3 MB/s eta 0:00:00
 Collecting idna<4,>=2.5 (from requests>=2.25.0->sphinx==7.1.2->-r requirements.txt (line 1))
   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
 Collecting urllib3<3,>=1.26 (from requests>=2.25.0->sphinx==7.1.2->-r requirements.txt (line 1))
@@ -280,73 +279,72 @@ Collecting urllib3<3,>=1.26 (from requests>=2.25.0->sphinx==7.1.2->-r requiremen
 Collecting certifi>=2023.5.7 (from requests>=2.25.0->sphinx==7.1.2->-r requirements.txt (line 1))
   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
 Downloading sphinx-7.1.2-py3-none-any.whl (3.2 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 54.6 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 56.5 MB/s eta 0:00:00
 Downloading sphinx_rtd_theme-1.3.0rc1-py2.py3-none-any.whl (2.8 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 214.9 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 159.9 MB/s eta 0:00:00
 Downloading myst_parser-2.0.0-py3-none-any.whl (77 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 77.2/77.2 kB 46.0 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 77.2/77.2 kB 49.2 MB/s eta 0:00:00
 Downloading alabaster-0.7.16-py3-none-any.whl (13 kB)
 Downloading babel-2.18.0-py3-none-any.whl (10.2 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 117.8 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 131.5 MB/s eta 0:00:00
 Downloading docutils-0.18.1-py2.py3-none-any.whl (570 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 570.0/570.0 kB 173.1 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 570.0/570.0 kB 206.9 MB/s eta 0:00:00
 Downloading imagesize-2.0.1-py3-none-any.whl (14 kB)
 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 19.6 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 84.8 MB/s eta 0:00:00
 Downloading markdown_it_py-3.0.0-py3-none-any.whl (87 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.5/87.5 kB 47.1 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.5/87.5 kB 55.8 MB/s eta 0:00:00
 Downloading mdit_py_plugins-0.6.1-py3-none-any.whl (66 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 66.7/66.7 kB 37.8 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 66.7/66.7 kB 44.4 MB/s eta 0:00:00
 Downloading packaging-26.3-py3-none-any.whl (129 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 71.8 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 85.1 MB/s eta 0:00:00
 Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 207.6 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 244.9 MB/s eta 0:00:00
 Downloading requests-2.34.2-py3-none-any.whl (73 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 45.5 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 44.4 MB/s eta 0:00:00
 Downloading snowballstemmer-3.1.1-py3-none-any.whl (104 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 104.2/104.2 kB 59.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 104.2/104.2 kB 72.9 MB/s eta 0:00:00
 Downloading sphinxcontrib_htmlhelp-2.1.0-py3-none-any.whl (98 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98.7/98.7 kB 56.0 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98.7/98.7 kB 58.9 MB/s eta 0:00:00
 Downloading sphinxcontrib_jquery-4.1-py2.py3-none-any.whl (121 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 121.1/121.1 kB 68.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 121.1/121.1 kB 80.3 MB/s eta 0:00:00
 Downloading sphinxcontrib_serializinghtml-2.0.0-py3-none-any.whl (92 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 92.1/92.1 kB 52.6 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 92.1/92.1 kB 57.6 MB/s eta 0:00:00
 Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 159.8 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 212.8 MB/s eta 0:00:00
 Downloading sphinxcontrib_applehelp-2.0.0-py3-none-any.whl (119 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 119.3/119.3 kB 63.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 119.3/119.3 kB 68.7 MB/s eta 0:00:00
 Downloading sphinxcontrib_devhelp-2.0.0-py3-none-any.whl (82 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 82.5/82.5 kB 47.5 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 82.5/82.5 kB 45.7 MB/s eta 0:00:00
 Downloading sphinxcontrib_jsmath-2.0.0-py3-none-any.whl (78 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.1/78.1 kB 43.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.1/78.1 kB 48.3 MB/s eta 0:00:00
 Downloading sphinxcontrib_qthelp-2.0.0-py3-none-any.whl (88 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.7/88.7 kB 48.6 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.7/88.7 kB 44.9 MB/s eta 0:00:00
 Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 74.1 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 58.2 MB/s eta 0:00:00
 Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (257 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 257.6/257.6 kB 120.7 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 257.6/257.6 kB 110.9 MB/s eta 0:00:00
 Downloading idna-3.20-py3-none-any.whl (69 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 1.7 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 37.8 MB/s eta 0:00:00
 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
 Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
 Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 65.1 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 75.6 MB/s eta 0:00:00
 Installing collected packages: urllib3, sphinxcontrib-serializinghtml, sphinxcontrib-qthelp, sphinxcontrib-jsmath, sphinxcontrib-htmlhelp, sphinxcontrib-devhelp, sphinxcontrib-applehelp, snowballstemmer, pyyaml, Pygments, packaging, mdurl, MarkupSafe, imagesize, idna, docutils, charset_normalizer, certifi, babel, alabaster, requests, markdown-it-py, Jinja2, sphinx, mdit-py-plugins, sphinxcontrib-jquery, myst_parser, sphinx-rtd-theme
 Successfully installed Jinja2-3.1.6 MarkupSafe-3.0.4 Pygments-2.21.0 alabaster-0.7.16 babel-2.18.0 certifi-2026.10.23 charset_normalizer-3.5.2 docutils-0.18.1 idna-3.20 imagesize-2.0.1 markdown-it-py-3.0.0 mdit-py-plugins-0.6.1 mdurl-0.1.2 myst_parser-2.0.0 packaging-26.3 pyyaml-6.0.3 requests-2.34.2 snowballstemmer-3.1.1 sphinx-7.1.2 sphinx-rtd-theme-1.3.0rc1 sphinxcontrib-applehelp-2.0.0 sphinxcontrib-devhelp-2.0.0 sphinxcontrib-htmlhelp-2.1.0 sphinxcontrib-jquery-4.1 sphinxcontrib-jsmath-2.0.0 sphinxcontrib-qthelp-2.0.0 sphinxcontrib-serializinghtml-2.0.0 urllib3-2.8.0
 
 Output:
-Build started at 18:12:18...
+Build started at 18:49:38...
 1>------ Build started: Project: AutoMapper, Configuration: Debug ------
-1>AutoMapper -> compiled in memory (303.5 KB, 164 ms)
+1>AutoMapper -> compiled in memory (303.5 KB, 177 ms)
 2>------ Build started: Project: AutoMapper.DI.Tests, Configuration: Debug ------
-2>AutoMapper.DI.Tests -> compiled in memory (26.5 KB, 235 ms)
-3>------ Build started: Project: Benchmark, Configuration: Debug ------
-3>Benchmark -> compiled in memory (24 KB, 222 ms)
-4>------ Build started: Project: AutoMapper.IntegrationTests, Configuration: Debug ------
-4>AutoMapper.IntegrationTests -> compiled in memory (572.5 KB, 482 ms)
-5>------ Build started: Project: TestApp, Configuration: Debug ------
-5>TestApp -> compiled in memory (7 KB, 190 ms)
-6>------ Build started: Project: AutoMapper.UnitTests, Configuration: Debug ------
-6>AutoMapper.UnitTests -> compiled in memory (1773 KB, 1249 ms)
-========== Build: 6 succeeded, 0 failed ==========
+2>AutoMapper.DI.Tests -> compiled in memory (26.5 KB, 238 ms)
+3>------ Build started: Project: AutoMapper.IntegrationTests, Configuration: Debug ------
+3>AutoMapper.IntegrationTests -> compiled in memory (572.5 KB, 418 ms)
+4>------ Build started: Project: TestApp, Configuration: Debug ------
+4>TestApp -> compiled in memory (7 KB, 164 ms)
+5>------ Build started: Project: AutoMapper.UnitTests, Configuration: Debug ------
+5>AutoMapper.UnitTests -> compiled in memory (1773 KB, 1072 ms)
+6>------ Skipped: Project: Benchmark: the solution's Debug configuration does not build it ------
+========== Build: 5 succeeded, 0 failed, 1 skipped ==========
 
