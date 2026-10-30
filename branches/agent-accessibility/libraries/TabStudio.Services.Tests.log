@@ -1,6 +1,6 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Services.Tests/TabStudio.Services.Tests.csproj (in 210 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Services/TabStudio.Services.csproj (in 248 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Services.Tests/TabStudio.Services.Tests.csproj (in 135 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Services/TabStudio.Services.csproj (in 113 ms).
   3 of 5 projects are up-to-date for restore.
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
@@ -8,3 +8,117 @@
   TabStudio.Services -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Services/bin/Release/net10.0/TabStudio.Services.dll
   TabStudio.Services.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Services.Tests/bin/Release/net10.0/TabStudio.Services.Tests.dll
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Services.Tests/bin/Release/net10.0/TabStudio.Services.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.07]   Discovering: TabStudio.Services.Tests
+[xUnit.net 00:00:00.13]   Discovered:  TabStudio.Services.Tests
+[xUnit.net 00:00:00.17]   Starting:    TabStudio.Services.Tests
+  Passed TabStudio.Services.Tests.ConnectionTests.Only_rewrites_host_fields_and_their_ports(input: "Server=db;Database=test", expected: "Server=127.0.0.1;Database=test;Port=15432") [7 ms]
+  Passed TabStudio.Services.Tests.ConnectionTests.Only_rewrites_host_fields_and_their_ports(input: "Password=\";Host=db;Port=5432;\";Host=elsewhere;Po"···, expected: "Password=\";Host=db;Port=5432;\";Host=elsewhere;Po"···) [< 1 ms]
+  Passed TabStudio.Services.Tests.ConnectionTests.Only_rewrites_host_fields_and_their_ports(input: "cache:6379,password=db", expected: "127.0.0.1:16379,password=db") [8 ms]
+  Passed TabStudio.Services.Tests.ConnectionTests.Only_rewrites_host_fields_and_their_ports(input: "postgres://owner:db@db:5432/app", expected: "postgres://owner:db@127.0.0.1:15432/app") [< 1 ms]
+  Passed TabStudio.Services.Tests.ConnectionTests.Only_rewrites_host_fields_and_their_ports(input: "Host=db;Port=5432;Password=db;Database=app", expected: "Host=127.0.0.1;Port=15432;Password=db;Database=app") [< 1 ms]
+  Passed TabStudio.Services.Tests.ConnectionTests.Only_rewrites_host_fields_and_their_ports(input: "Password=db;Host=elsewhere;Port=5432", expected: "Password=db;Host=elsewhere;Port=5432") [< 1 ms]
+  Passed TabStudio.Services.Tests.ConnectionTests.Only_rewrites_host_fields_and_their_ports(input: "db.example.com", expected: "db.example.com") [< 1 ms]
+  Passed TabStudio.Services.Tests.ConnectionTests.Compose_application_environment_wins_and_appsettings_are_overridden_without_editing_files [12 ms]
+  Passed TabStudio.Services.Tests.LaravelServicesTests.SQLite_and_a_database_on_the_network_are_the_apps_own(settings: "DB_CONNECTION=mysql\nDB_HOST=db.example.com\n") [15 ms]
+  Passed TabStudio.Services.Tests.LaravelServicesTests.SQLite_and_a_database_on_the_network_are_the_apps_own(settings: "DB_CONNECTION=sqlite\n") [1 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.An_invalid_service_setting_makes_only_that_service_unavailable(setting: "healthcheck: {interval: forever}", reason: "duration") [64 ms]
+  Passed TabStudio.Services.Tests.LaravelServicesTests.A_Sail_Compose_file_runs_only_the_database_the_env_names_and_points_the_app_at_it [16 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.An_invalid_service_setting_makes_only_that_service_unavailable(setting: "volumes: ['data:/../../outside']", reason: "volume target") [4 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.An_invalid_service_setting_makes_only_that_service_unavailable(setting: "ports: ['99999:5432']", reason: "port") [< 1 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.An_invalid_service_setting_makes_only_that_service_unavailable(setting: "volumes: [{type: tmpfs, target: /cache}]", reason: "tmpfs") [< 1 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Interpolation_matches_compose_unset_and_empty_semantics(input: "$$A", expected: "$A") [< 1 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Interpolation_matches_compose_unset_and_empty_semantics(input: "${EMPTY:-default}", expected: "default") [< 1 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Interpolation_matches_compose_unset_and_empty_semantics(input: "${A:-${B:-fallback}}", expected: "fallback") [< 1 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Interpolation_matches_compose_unset_and_empty_semantics(input: "${EMPTY:+set}", expected: "") [< 1 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Interpolation_matches_compose_unset_and_empty_semantics(input: "${EMPTY-default}", expected: "") [< 1 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Interpolation_matches_compose_unset_and_empty_semantics(input: "${EMPTY+set}", expected: "set") [< 1 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Interpolation_matches_compose_unset_and_empty_semantics(input: "${A+set}", expected: "") [< 1 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Dotenv_and_env_files_do_not_execute_code_and_environment_wins [2 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Reads_short_and_long_forms_environment_commands_dependencies_health_and_volumes [11 ms]
+  Passed TabStudio.Services.Tests.PrismaServicesTests.A_project_one_folder_down_is_found_and_SQLite_needs_no_service [9 ms]
+  Passed TabStudio.Services.Tests.PrismaServicesTests.A_PostgreSQL_schema_without_Compose_offers_PostgreSQL_and_points_the_run_at_it [1 ms]
+  Passed TabStudio.Services.Tests.LaravelServicesTests.A_MySQL_app_gets_MariaDB_with_its_own_user_and_the_run_points_at_it [24 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Devcontainer_jsonc_loads_ordered_overrides_relative_to_its_file [9 ms]
+  Passed TabStudio.Services.Tests.PrismaServicesTests.A_database_the_project_names_in_env_is_left_alone_and_TabStudio_s_own_URL_is_not [2 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Bind_volumes_create_a_missing_source_unless_the_long_syntax_says_not_to(setting: "volumes: ['./conf.d:/etc/mysql/conf.d:ro']", bind: True, create: True) [2 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Bind_volumes_create_a_missing_source_unless_the_long_syntax_says_not_to(setting: "volumes: [{type: bind, source: ./conf.d, target: /"···, bind: True, create: True) [< 1 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Bind_volumes_create_a_missing_source_unless_the_long_syntax_says_not_to(setting: "volumes: [{type: bind, source: ./conf.d, target: /"···, bind: True, create: False) [< 1 ms]
+[xUnit.net 00:00:00.30]     TabStudio.Services.Tests.AlpineIntegrationTests.Postgres_initializes_credentials_database_and_scripts_once_and_persists_on_restart [SKIP]
+[xUnit.net 00:00:00.30]       Set up Alpine with build/ci/services-alpine.sh to run native service integration tests.
+[xUnit.net 00:00:00.30]     TabStudio.Services.Tests.AlpineIntegrationTests.Redis_runs_natively_in_Alpine_and_saves_data_across_restart [SKIP]
+[xUnit.net 00:00:00.30]       Set up Alpine with build/ci/services-alpine.sh to run native service integration tests.
+  Skipped TabStudio.Services.Tests.AlpineIntegrationTests.Postgres_initializes_credentials_database_and_scripts_once_and_persists_on_restart [1 ms]
+  Skipped TabStudio.Services.Tests.AlpineIntegrationTests.Redis_runs_natively_in_Alpine_and_saves_data_across_restart [1 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Bind_volumes_create_a_missing_source_unless_the_long_syntax_says_not_to(setting: "volumes: [{type: bind, source: ./conf.d, target: /"···, bind: True, create: True) [2 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Required_variable_error_does_not_disclose_a_secret_default_message [< 1 ms]
+  Passed TabStudio.Services.Tests.ProcessIsolationTests.Ambiguous_mount_paths_are_rejected(source: "relative", target: "/data") [6 ms]
+  Passed TabStudio.Services.Tests.ProcessIsolationTests.Ambiguous_mount_paths_are_rejected(source: "/storage", target: "/../outside") [< 1 ms]
+  Passed TabStudio.Services.Tests.ProcessIsolationTests.Ambiguous_mount_paths_are_rejected(source: "/storage:other", target: "/data") [< 1 ms]
+  Passed TabStudio.Services.Tests.LaravelServicesTests.Reads_env_example_until_setup_creates_env_and_ignores_other_PHP_apps [17 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.Anchors_merge_and_escaped_dollars_are_expanded_once [4 ms]
+  Passed TabStudio.Services.Tests.ProcessIsolationTests.Per_service_mounts_and_user_do_not_leak_to_the_next_process [5 ms]
+  Passed TabStudio.Services.Tests.ComposeTests.A_required_variable_missing_for_one_service_leaves_the_others_readable [1 ms]
+  Passed TabStudio.Services.Tests.ServiceIsolationTests.A_long_syntax_bind_with_create_host_path_false_fails_that_service_with_its_name [3 ms]
+  Passed TabStudio.Services.Tests.ServiceIsolationTests.A_missing_bind_source_outside_the_workspace_is_never_created [1 ms]
+  Passed TabStudio.Services.Tests.LaravelServicesTests.Root_with_an_empty_password_is_allowed_explicitly_and_PostgreSQL_gets_a_password [49 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Redis_healthchecks_use_the_published_port(mode: "CMD") [7 ms]
+  Passed TabStudio.Services.Tests.LaravelServicesTests.A_database_already_answering_where_env_points_is_the_apps_own [6 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Redis_healthchecks_use_the_published_port(mode: "CMD-SHELL") [6 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.A_connection_string_or_URL_points_at_a_service_by_name_or_by_its_published_port(value: "Server=mysql;Database=app;User=app", expected: "mysql") [3 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.A_connection_string_or_URL_points_at_a_service_by_name_or_by_its_published_port(value: "Host=localhost;Port=5432;Database=app;Username=app", expected: "postgres") [3 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Maps_only_known_upstream_images(image: "docker.io/library/redis:7", kind: Redis, package: "redis") [3 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.A_connection_string_or_URL_points_at_a_service_by_name_or_by_its_published_port(value: "postgresql://app:secret@127.0.0.1:5432/app", expected: "postgres") [1 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.A_connection_string_or_URL_points_at_a_service_by_name_or_by_its_published_port(value: "https://localhost:5432/not-a-database-url", expected: "postgres") [1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Maps_only_known_upstream_images(image: "nginx:alpine", kind: Nginx, package: "nginx") [1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Maps_only_known_upstream_images(image: "quay.io/minio/minio:latest", kind: Minio, package: "minio") [< 1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Maps_only_known_upstream_images(image: "mariadb:11", kind: MariaDb, package: "mariadb") [< 1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Maps_only_known_upstream_images(image: "axllent/mailpit:latest", kind: Mailpit, package: "mailpit") [< 1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Maps_only_known_upstream_images(image: "mongo:7", kind: MongoDb, package: "mongodb") [< 1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Maps_only_known_upstream_images(image: "minio/minio:latest", kind: Minio, package: "minio") [< 1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Maps_only_known_upstream_images(image: "rabbitmq:4-management", kind: RabbitMq, package: "rabbitmq-server") [< 1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Maps_only_known_upstream_images(image: "mysql:8", kind: MariaDb, package: "mariadb") [< 1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Maps_only_known_upstream_images(image: "postgres:18-alpine", kind: Postgres, package: "postgresql18") [< 1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Maps_only_known_upstream_images(image: "valkey/valkey:8", kind: Valkey, package: "valkey") [< 1 ms]
+  Passed TabStudio.Services.Tests.ManagerTests.Dependencies_start_first_stop_last_and_logs_are_separate_and_redacted [61 ms]
+  Passed TabStudio.Services.Tests.ServiceIsolationTests.F5_starts_nothing_when_the_run_points_at_no_service_and_only_what_it_points_at_otherwise [60 ms]
+  Passed TabStudio.Services.Tests.ManagerTests.Cycles_and_unknown_required_dependencies_fail_before_starting_any_process [4 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.A_connection_string_or_URL_points_at_a_service_by_name_or_by_its_published_port(value: "mysql+pymysql://app@localhost/app", expected: "mysql") [9 ms]
+  Passed TabStudio.Services.Tests.ManagerTests.Unsupported_required_dependency_does_not_start_its_dependents [1 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.A_connection_string_or_URL_points_at_a_service_by_name_or_by_its_published_port(value: "12:30", expected: "") [2 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.A_connection_string_or_URL_points_at_a_service_by_name_or_by_its_published_port(value: "sqlite:///app.db", expected: "") [4 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.A_connection_string_or_URL_points_at_a_service_by_name_or_by_its_published_port(value: "Host=localhost;Port=6543", expected: "") [1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Native_plan_keeps_postgres_password_out_of_argv_and_honors_init_mount [17 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Unknown_images_and_digests_offer_remote_host(image: "elasticsearch:9") [< 1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Unknown_images_and_digests_offer_remote_host(image: "postgres@sha256:1234") [< 1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Unknown_images_and_digests_offer_remote_host(image: "registry.example/redis:7") [< 1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Unknown_images_and_digests_offer_remote_host(image: "my-company/postgres:18") [< 1 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.A_connection_string_or_URL_points_at_a_service_by_name_or_by_its_published_port(value: "postgres:5432", expected: "postgres") [2 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Volumes_persist_and_are_scoped_to_the_workspace_and_seed_never_changes [2 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Missing_mongodb_package_is_unsupported_instead_of_downloading_an_arbitrary_binary [1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Postgres_major_is_preserved_and_missing_versions_are_not_silently_replaced [< 1 ms]
+  Passed TabStudio.Services.Tests.MappingTests.Redis_can_use_the_packaged_valkey_with_an_explicit_explanation [< 1 ms]
+  Passed TabStudio.Services.Tests.ManagerTests.A_conflicting_explicit_port_fails_its_service_before_installing_and_the_other_starts [15 ms]
+  Passed TabStudio.Services.Tests.ServiceIsolationTests.A_dependency_that_fails_fails_its_dependents_and_names_it [18 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.An_active_Spring_profile_points_at_the_database_its_settings_use(profiles: "dev", expected: "") [8 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.An_active_Spring_profile_points_at_the_database_its_settings_use(profiles: "postgres", expected: "postgres") [2 ms]
+  Passed TabStudio.Services.Tests.ServiceIsolationTests.The_dependencies_of_the_service_built_from_the_project_still_start_for_it [4 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.An_active_Spring_profile_points_at_the_database_its_settings_use(profiles: "mysql,postgres", expected: "postgres") [1 ms]
+  Passed TabStudio.Services.Tests.ServiceIsolationTests.A_missing_short_syntax_bind_source_is_created_as_an_empty_folder [2 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.An_active_Spring_profile_points_at_the_database_its_settings_use(profiles: "mysql", expected: "mysql") [1 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.A_profile_set_in_application_properties_and_an_overridden_URL_are_followed [2 ms]
+  Passed TabStudio.Services.Tests.ManagerTests.Stopping_a_dependency_stops_its_dependents_and_leaves_unrelated_services [10 ms]
+[xUnit.net 00:00:00.44]   Finished:    TabStudio.Services.Tests
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.PetClinics_default_profile_runs_on_H2_and_points_at_no_service [1 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.Spring_YAML_settings_are_read_too [4 ms]
+  Passed TabStudio.Services.Tests.ServiceTargetsTests.Dot_env_files_and_appsettings_point_at_services [3 ms]
+  Passed TabStudio.Services.Tests.ServiceIsolationTests.A_service_that_fails_to_start_leaves_the_others_running [11 ms]
+  Passed TabStudio.Services.Tests.ManagerTests.An_existing_unhealthy_dependency_blocks_new_dependents [16 ms]
+  Passed TabStudio.Services.Tests.ManagerTests.Cancellation_rolls_back_only_new_services [5 ms]
+
+Test Run Successful.
+Total tests: 98
+     Passed: 96
+    Skipped: 2
+ Total time: 0.7919 Seconds
