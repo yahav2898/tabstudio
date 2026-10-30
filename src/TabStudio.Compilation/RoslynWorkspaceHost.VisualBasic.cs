@@ -51,11 +51,9 @@ public sealed partial class RoslynWorkspaceHost
         }
 
         var additionalDocuments = new List<DocumentInfo>();
-        foreach (var path in AdditionalFilePaths(project).Where(path => !_additionalDocuments.ContainsKey(path)))
+        foreach (var path in AdditionalFilePaths(project))
         {
-            var documentId = DocumentId.CreateNewId(id, path);
-            additionalDocuments.Add(CreateDocumentInfo(documentId, path, ReadSource(sources, path), isGenerated: false));
-            _additionalDocuments[path] = documentId;
+            additionalDocuments.Add(CreateDocumentInfo(AdditionalFileDocumentId(id, path), path, ReadSource(sources, path), isGenerated: false));
         }
 
         if (VisualBasicCompiler.CreateAssemblyAttributesSource(project) is { } assemblyInfo)

@@ -46,7 +46,10 @@ internal static class ProjectPackageReferences
         {
             // PrivateAssets="all" keeps a referenced project's package to that project, as NuGet does.
             var dependencies = Read(current, diagnostics, includePrivate: ReferenceEquals(current, project));
-            foreach (var path in current.ProjectReferences)
+
+            // So does it keep a project it references to itself, with that project's packages: MudBlazor's analyzer
+            // projects, and their Roslyn packages, do not reach the projects that reference MudBlazor.
+            foreach (var path in current.ProjectReferences.Where(p => ReferenceEquals(current, project) || !current.GetProjectReference(p).IsPrivate))
             {
                 if (names.TryGetValue(path, out var known))
                 {

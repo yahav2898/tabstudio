@@ -71,8 +71,19 @@ public static class CompatibilityDoctor
                 };
         }
 
-        return project.IsBuiltBySolution || BuildExclusions.IsNotBuiltHere(project)
-            ? report
+        if (report.Status is CompatibilityStatus.Unsupported or CompatibilityStatus.NeedsWindows)
+        {
+            return report;
+        }
+
+        return BuildExclusions.IsNotBuiltHere(project)
+            ? report with
+            {
+                Host = RunHost.None,
+                Status = CompatibilityStatus.Unsupported,
+                RunsVia = "On a computer",
+                Explanation = $"Not supported here: it {BuildExclusions.Reason(project)}. TabStudio leaves it out of builds.",
+            }
             : report with
             {
                 Host = RunHost.None,

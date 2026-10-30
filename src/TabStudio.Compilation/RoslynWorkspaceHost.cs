@@ -57,6 +57,12 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
     /// <summary>Files that are not C# but that generators read, such as Avalonia's <c>.axaml</c> files.</summary>
     private readonly Dictionary<string, DocumentId> _additionalDocuments = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// The copies of an AdditionalFiles file that more projects than the first one list, as StronglyTypedId's test
+    /// projects share its templates: the SDK gives each project the file, so each has a document of its own.
+    /// </summary>
+    private readonly Dictionary<string, List<DocumentId>> _sharedAdditionalDocuments = new(StringComparer.Ordinal);
     private readonly Dictionary<string, ProjectId> _projectIds = new(StringComparer.Ordinal);
     private readonly Dictionary<ProjectId, TsProject> _projects = [];
     private TsWorkspace? _loaded;
@@ -124,6 +130,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         _workspace.ClearSolution();
         _documents.Clear();
         _additionalDocuments.Clear();
+        _sharedAdditionalDocuments.Clear();
         _razorDocuments.Clear();
         _razorFiles.Clear();
         _unoGeneratorInputs.Clear();
@@ -171,6 +178,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             _workspace.ClearSolution();
             _documents.Clear();
             _additionalDocuments.Clear();
+            _sharedAdditionalDocuments.Clear();
             _razorDocuments.Clear();
             AddSolution(workspace, csharpProjects, allProjectDirectories, texts);
         }
@@ -222,7 +230,14 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         {
             if (_additionalDocuments.TryGetValue(filePath, out var additional))
             {
-                return _workspace.TryApplyChanges(_workspace.CurrentSolution.WithAdditionalDocumentText(additional, SourceText.From(text, Encoding.UTF8)));
+                var source = SourceText.From(text, Encoding.UTF8);
+                var withText = _workspace.CurrentSolution.WithAdditionalDocumentText(additional, source);
+                foreach (var copy in _sharedAdditionalDocuments.GetValueOrDefault(filePath) ?? [])
+                {
+                    withText = withText.WithAdditionalDocumentText(copy, source);
+                }
+
+                return _workspace.TryApplyChanges(withText);
             }
 
             if (!_documents.TryGetValue(filePath, out var id) || !ReplaceText(id, text))
@@ -587,6 +602,27 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
     }
 
+    /// <summary>
+    /// A new document id for one project's copy of an AdditionalFiles file: the first project's is the one edits go to
+    /// first, and the others are kept with it so every copy follows the text. The caller holds the gate.
+    /// </summary>
+    private DocumentId AdditionalFileDocumentId(ProjectId project, string path)
+    {
+        var documentId = DocumentId.CreateNewId(project, path);
+        if (!_additionalDocuments.TryAdd(path, documentId))
+        {
+            if (!_sharedAdditionalDocuments.TryGetValue(path, out var copies))
+            {
+                copies = [];
+                _sharedAdditionalDocuments[path] = copies;
+            }
+
+            copies.Add(documentId);
+        }
+
+        return documentId;
+    }
+
     private RoslynProjectInfo CreateProjectInfo(TsProject project, IReadOnlyList<string> allProjectDirectories, ISourceTextProvider sources)
     {
         if (project.IsVisualBasic)
@@ -616,11 +652,9 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         // The project's and its packages' AdditionalFiles items, which generators read through AdditionalTextsProvider.
-        foreach (var path in AdditionalFilePaths(project).Where(path => !_additionalDocuments.ContainsKey(path)))
+        foreach (var path in AdditionalFilePaths(project).Where(path => !additionalDocuments.Any(d => d.FilePath == path)))
         {
-            var documentId = DocumentId.CreateNewId(id, path);
-            additionalDocuments.Add(CreateDocumentInfo(documentId, path, ReadSource(sources, path), isGenerated: false));
-            _additionalDocuments[path] = documentId;
+            additionalDocuments.Add(CreateDocumentInfo(AdditionalFileDocumentId(id, path), path, ReadSource(sources, path), isGenerated: false));
         }
 
         AddRazorDocuments(project, id, allProjectDirectories, sources, documents, additionalDocuments);

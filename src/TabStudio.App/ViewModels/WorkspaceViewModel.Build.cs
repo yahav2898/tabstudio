@@ -275,8 +275,8 @@ public sealed partial class WorkspaceViewModel
                     ? $"a .NET Framework project that needs Windows: it {NetFrameworkCompatibility.WhyWindows(project)}"
                     : SkippedReference(project, skipped) is { } reference
                         ? $"it references {reference.Name}, which is not built on this device"
-                        : !project.IsBuiltBySolution
-                            ? "the solution's Debug configuration does not build it"
+                        : BuildExclusions.Reason(project) is { } reason
+                            ? $"it {reason}"
                             : "it is not built on this device";
 
     private bool CanRun() => !_preparingServices && (IsRemoteWorkspace ? _remoteWorkspace?.Connection.IsConnected == true : StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning && !IsLiveGuest;
