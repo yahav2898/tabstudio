@@ -10,7 +10,7 @@ Views audited: 76 of 78 (0 exempt).
 | name | 1 | 1 |
 | contrast | 0 | 0 |
 | icon-contrast | 0 | 0 |
-| clipped | 149 | 29 |
+| clipped | 144 | 29 |
 
 Views never audited:
 - TabStudio.App.Views.EmbeddedPeripheralsView
