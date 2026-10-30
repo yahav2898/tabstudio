@@ -187,7 +187,7 @@ public sealed class RegistryClient
         }
         catch (HttpRequestException ex)
         {
-            throw new RegistryException($"Could not reach {image.ApiHost}: {ex.Message}. Check that the tablet is online.", null, ex);
+            throw new RegistryException($"Could not reach {image.ApiHost}: {ex.Message.TrimEnd('.')}. Check that the tablet is online.", null, ex);
         }
 
         if (response.IsSuccessStatusCode)
@@ -411,3 +411,4 @@ public sealed class RegistryClient
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) => throw new NotSupportedException();
     }
 }
+

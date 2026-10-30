@@ -102,7 +102,13 @@ public sealed class ContainerEngine : IAsyncDisposable
     {
         var reference = ImageReference.Parse(image);
         var preference = platform is null ? _options.Preference : [OciPlatform.Parse(platform)];
-        var stored = await Store.PullAsync(_registry, reference, preference, progress, cancellationToken).ConfigureAwait(false);
+        StoredImage stored;
+        try { stored = await Store.PullAsync(_registry, reference, preference, progress, cancellationToken).ConfigureAwait(false); }
+        catch
+        {
+            progress?.Report(new PullProgress(image, cancellationToken.IsCancellationRequested ? "Cancelled" : "Failed", 0, 0, 0, 0));
+            throw;
+        }
         Publish("image", "pull", stored.Id, new Dictionary<string, string> { ["name"] = reference.Familiar });
         return stored;
     }

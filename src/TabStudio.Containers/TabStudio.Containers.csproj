@@ -1,10 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!--
-    Containers without root: an OCI registry client and a content-addressed image store, a container runtime over
-    PRoot (the Linux environment TabStudio already runs), Dockerfile builds, Compose services from their real images,
-    dev containers, and a Docker-compatible command line and Engine API subset on a unix socket. No UI.
-  -->
+  <!-- OCI images, PRoot processes, Compose services and a private terminal command transport. -->
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -22,3 +18,4 @@
   </ItemGroup>
 
 </Project>
+

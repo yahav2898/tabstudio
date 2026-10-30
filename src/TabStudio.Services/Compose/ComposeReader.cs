@@ -171,6 +171,10 @@ public static partial class ComposeReader
             Command = ReadCommand(Get(node, "command")),
             Entrypoint = ReadCommand(Get(node, "entrypoint")),
             BuildContext = Get(node, "build") is { } build ? Path.GetFullPath(Path.Combine(directory, build is YamlMappingNode b ? Text(Get(b, "context")) : Text(build))) : null,
+            WorkingDirectory = Get(node, "working_dir") is { } workdir ? Text(workdir) : null,
+            User = Get(node, "user") is { } user ? Text(user) : null,
+            Platform = Get(node, "platform") is { } platform ? Text(platform) : null,
+            Restart = Get(node, "restart") is { } restart ? Text(restart) : null,
             Profiles = SequenceOrOne(Get(node, "profiles")).Select(Text).ToArray(),
             Unsupported = unsupported,
             Healthcheck = health is null ? null : new ServiceHealthcheck(Get(health, "test") is YamlSequenceNode tests ? tests.Children.Select(Text).ToArray() : Get(health, "test") is { } shell ? ["CMD-SHELL", Text(shell)] : [])
@@ -355,3 +359,4 @@ public static partial class ComposeReader
     [GeneratedRegex("^[a-zA-Z0-9][a-zA-Z0-9_.-]*$")] private static partial Regex NamePattern();
     [GeneratedRegex("([0-9]+(?:\\.[0-9]+)?)(ms|us|ns|h|m|s)")] private static partial Regex DurationPattern();
 }
+

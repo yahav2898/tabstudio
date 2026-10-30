@@ -1,0 +1,50 @@
+name: OCI containers
+on:
+  push:
+    branches: [agent/containers]
+  pull_request:
+    paths:
+      - 'src/TabStudio.Containers/**'
+      - 'src/TabStudio.Services/**'
+      - 'tests/TabStudio.Containers.Tests/**'
+      - 'native/containers/**'
+      - 'build/ci/containers-proot.sh'
+      - '.github/workflows/containers.yml'
+permissions:
+  contents: read
+concurrency:
+  group: containers-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  containers:
+    name: OCI images (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: x64, runner: ubuntu-latest }
+          - { arch: arm64, runner: ubuntu-24.04-arm }
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Build the same patched PRoot as Android
+        run: bash build/ci/containers-proot.sh "$RUNNER_TEMP/containers-proot"
+      - name: Registry, layers, Compose and real image processes
+        env:
+          TABSTUDIO_CONTAINER_REQUIRED: '1'
+        run: |
+          mkdir -p ci-out
+          dotnet test tests/TabStudio.Containers.Tests -c Release -warnaserror --logger 'console;verbosity=normal' --logger 'trx;LogFileName=containers.trx' > ci-out/containers.log 2>&1 || { cat ci-out/containers.log; exit 1; }
+          cat ci-out/containers.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: containers-${{ github.event_name }}-${{ matrix.arch }}
+          path: |
+            ci-out/
+            tests/TabStudio.Containers.Tests/TestResults/
+            ${{ runner.temp }}/containers-proot/*log
