@@ -15,7 +15,7 @@
           <Ellipse Fill="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding !IsInSwarm}" />
         </Panel>
         <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
-          <TextBlock Text="{Binding StatusText}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding StatusText}" FontSize="{DynamicResource Type.Large}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
           <TextBlock Classes="muted small" TextWrapping="Wrap"
                      Text="In a swarm, this device shows the app a tablet builds, full screen: every save on the tablet updates it, and the tablet's debugger stops it at breakpoints." />
         </StackPanel>

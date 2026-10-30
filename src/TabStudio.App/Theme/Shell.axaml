@@ -46,9 +46,9 @@
                                  Foreground="{DynamicResource Brush.TextSecondary}"
                                  IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" />
             <ContentPresenter DockPanel.Dock="Right" Content="{TemplateBinding Actions}" VerticalAlignment="Center" Margin="8,0,0,0" />
-            <TextBlock DockPanel.Dock="Left" Text="{TemplateBinding Title}" FontSize="12.5" FontWeight="SemiBold"
+            <TextBlock DockPanel.Dock="Left" Text="{TemplateBinding Title}" FontSize="{DynamicResource Type.Body}" FontWeight="SemiBold"
                        Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
-            <TextBlock Text="{TemplateBinding Subtitle}" FontSize="12" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}"
+            <TextBlock Text="{TemplateBinding Subtitle}" FontSize="{DynamicResource Type.Small}" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}"
                        VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip.Tip="{TemplateBinding Subtitle}" />
           </DockPanel>
         </Border>
@@ -67,9 +67,9 @@
           <controls:StrokeIcon Name="PART_Icon" Data="{TemplateBinding Icon}" Size="40" StrokeThickness="1.4" HorizontalAlignment="Center"
                                Margin="0,0,0,6" Foreground="{DynamicResource Brush.TextMuted}"
                                IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" />
-          <TextBlock Name="PART_Title" Text="{TemplateBinding Title}" FontSize="14" FontWeight="SemiBold" TextAlignment="Center"
+          <TextBlock Name="PART_Title" Text="{TemplateBinding Title}" FontSize="{DynamicResource Type.Large}" FontWeight="SemiBold" TextAlignment="Center"
                      TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}" />
-          <TextBlock Text="{TemplateBinding Message}" FontSize="12.5" LineHeight="18" TextAlignment="Center" TextWrapping="Wrap"
+          <TextBlock Text="{TemplateBinding Message}" FontSize="{DynamicResource Type.Body}" LineHeight="{DynamicResource Type.Line.Body}" TextAlignment="Center" TextWrapping="Wrap"
                      Foreground="{DynamicResource Brush.TextMuted}"
                      IsVisible="{TemplateBinding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
           <Panel Margin="0,10,0,0" HorizontalAlignment="Center"
@@ -93,7 +93,7 @@
       <Setter Property="Margin" Value="0,0,0,2" />
     </Style>
     <Style Selector="^[IsCompact=True] /template/ TextBlock#PART_Title">
-      <Setter Property="FontSize" Value="13" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
     </Style>
   </ControlTheme>
 
@@ -108,9 +108,9 @@
           <controls:StrokeIcon Name="PART_Spinner" Classes="spinning" Data="{DynamicResource Icon.Spinner}" Size="28" StrokeThickness="2.4"
                                HorizontalAlignment="Center" Foreground="{DynamicResource Brush.AccentText}" />
           <StackPanel Name="PART_Text" Spacing="2" VerticalAlignment="Center">
-            <TextBlock Name="PART_Message" Text="{TemplateBinding Message}" FontSize="13" TextAlignment="Center" TextWrapping="Wrap"
+            <TextBlock Name="PART_Message" Text="{TemplateBinding Message}" FontSize="{DynamicResource Type.Section}" TextAlignment="Center" TextWrapping="Wrap"
                        Foreground="{DynamicResource Brush.TextSecondary}" />
-            <TextBlock Name="PART_Detail" Text="{TemplateBinding Detail}" FontSize="12" TextAlignment="Center" TextWrapping="Wrap"
+            <TextBlock Name="PART_Detail" Text="{TemplateBinding Detail}" FontSize="{DynamicResource Type.Small}" TextAlignment="Center" TextWrapping="Wrap"
                        Foreground="{DynamicResource Brush.TextMuted}"
                        IsVisible="{TemplateBinding Detail, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
           </StackPanel>
@@ -145,15 +145,15 @@
         <StackPanel Spacing="6" MaxWidth="380">
           <controls:StrokeIcon Name="PART_Icon" Data="{DynamicResource Icon.Error}" Size="36" StrokeThickness="1.6" HorizontalAlignment="Center"
                                Margin="0,0,0,6" Foreground="{DynamicResource Brush.Error}" />
-          <TextBlock Name="PART_Title" Text="{TemplateBinding Title}" FontSize="14" FontWeight="SemiBold" TextAlignment="Center"
+          <TextBlock Name="PART_Title" Text="{TemplateBinding Title}" FontSize="{DynamicResource Type.Large}" FontWeight="SemiBold" TextAlignment="Center"
                      TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}" />
-          <TextBlock Text="{TemplateBinding Message}" FontSize="12.5" LineHeight="18" TextAlignment="Center" TextWrapping="Wrap"
+          <TextBlock Text="{TemplateBinding Message}" FontSize="{DynamicResource Type.Body}" LineHeight="{DynamicResource Type.Line.Body}" TextAlignment="Center" TextWrapping="Wrap"
                      Foreground="{DynamicResource Brush.TextMuted}"
                      IsVisible="{TemplateBinding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
           <Border Margin="0,6,0,0" Padding="10,8" CornerRadius="7" Background="{DynamicResource Brush.Notice.Error}"
                   BorderBrush="{DynamicResource Brush.Notice.ErrorBorder}" BorderThickness="1"
                   IsVisible="{TemplateBinding Details, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-            <SelectableTextBlock Text="{TemplateBinding Details}" FontFamily="{DynamicResource CodeFont}" FontSize="11.5" TextWrapping="Wrap"
+            <SelectableTextBlock Text="{TemplateBinding Details}" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Fine}" TextWrapping="Wrap"
                                  MaxLines="6" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.Text}" />
           </Border>
           <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10,0,0" HorizontalAlignment="Center">
@@ -175,7 +175,7 @@
       <Setter Property="Margin" Value="0,0,0,2" />
     </Style>
     <Style Selector="^[IsCompact=True] /template/ TextBlock#PART_Title">
-      <Setter Property="FontSize" Value="13" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
     </Style>
   </ControlTheme>
 

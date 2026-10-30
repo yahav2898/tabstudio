@@ -115,6 +115,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         InitializeExtensions();
         InitializeTouchScrolling();
         InitializeLive();
+        InitializeAccessibility();
     }
 
     /// <summary>The editor control, for tests and keyboard focus.</summary>
@@ -123,6 +124,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
+        DisposeAccessibility();
         DisposeInlineCompletion();
         DisposeReviewThreads();
         DisposePeek();

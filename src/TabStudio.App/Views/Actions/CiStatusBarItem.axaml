@@ -18,7 +18,7 @@
                              Foreground="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.StatusBarStateBrush}}"
                              Classes.spinning="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
       </Border>
-      <TextBlock x:Name="CiLabel" Text="{Binding CiText}" FontSize="12" VerticalAlignment="Center" />
+      <TextBlock x:Name="CiLabel" Text="{Binding CiText}" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center" />
     </StackPanel>
   </Button>
 </UserControl>

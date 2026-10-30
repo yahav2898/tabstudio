@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using TabStudio.App.Accessibility;
 
 namespace TabStudio.App.Services.Appearance;
 
@@ -18,9 +19,13 @@ public enum IdeTheme
 
 /// <summary>The user's choices for how the IDE looks.</summary>
 /// <param name="Theme">The IDE's theme.</param>
-public sealed record AppearanceSettings(IdeTheme Theme)
+/// <param name="TextSize">The IDE's text size; by default Android's font size.</param>
+public sealed record AppearanceSettings(IdeTheme Theme, TextSize TextSize = TextSize.System)
 {
-    /// <summary>The settings before the user changed anything: the dark theme TabStudio has always had.</summary>
+    /// <summary>
+    /// The settings before the user changed anything: the dark theme TabStudio has always had, and the system's text
+    /// size.
+    /// </summary>
     public static AppearanceSettings Default { get; } = new(IdeTheme.Dark);
 }
 

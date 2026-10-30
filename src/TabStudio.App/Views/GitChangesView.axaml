@@ -33,9 +33,9 @@
         <controls:StrokeIcon Data="{StaticResource Icon.User}" Size="15" Margin="0,0,8,0" Foreground="{DynamicResource Brush.TextMuted}" />
         <TextBlock Grid.Column="1" Classes="muted small" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
                    Text="{Binding Account.StatusText}" />
-        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" FontSize="12.5" Content="Sign in"
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" FontSize="{DynamicResource Type.Body}" Content="Sign in"
                 Foreground="{DynamicResource Brush.Link}" Command="{Binding Account.OpenCommand}" IsVisible="{Binding !Account.IsSignedIn}" />
-        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" FontSize="12.5" Content="Sign out"
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" FontSize="{DynamicResource Type.Body}" Content="Sign out"
                 Command="{Binding Account.SignOutCommand}" IsVisible="{Binding Account.IsSignedIn}" />
       </Grid>
     </Border>
@@ -196,20 +196,20 @@
                         <TextBlock Grid.Column="1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
                           <Run Text="{Binding Name}" Foreground="{DynamicResource Brush.TextBright}" />
                           <Run Text=" " />
-                          <Run Text="{Binding Folder}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="11.5" />
+                          <Run Text="{Binding Folder}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="{DynamicResource Type.Fine}" />
                         </TextBlock>
-                        <TextBlock Grid.Column="2" Margin="8,0,2,0" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"
+                        <TextBlock Grid.Column="2" Margin="8,0,2,0" FontWeight="Bold" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center"
                                    Text="{Binding StatusLetter}" Foreground="{Binding Status, Converter={x:Static conv:SourceControlConverters.StatusBrush}}" />
                       </Grid>
                     </Button>
                     <Grid ColumnDefinitions="*,*,*">
-                      <Button Theme="{StaticResource SecondaryButton}" Height="34" Padding="4,0" Margin="0,0,3,0" FontSize="12"
+                      <Button Theme="{StaticResource SecondaryButton}" Height="34" Padding="4,0" Margin="0,0,3,0" FontSize="{DynamicResource Type.Small}"
                               HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                               ToolTip.Tip="Keep your version, as it was before the pull" Content="Keep Mine" Command="{Binding KeepMineCommand}" />
-                      <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Height="34" Padding="4,0" Margin="3,0" FontSize="12"
+                      <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Height="34" Padding="4,0" Margin="3,0" FontSize="{DynamicResource Type.Small}"
                               HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                               ToolTip.Tip="Use the version on GitHub and drop your changes" Content="Take GitHub's" Command="{Binding TakeTheirsCommand}" />
-                      <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="34" Padding="4,0" Margin="3,0,0,0" FontSize="12"
+                      <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="34" Padding="4,0" Margin="3,0,0,0" FontSize="{DynamicResource Type.Small}"
                               HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                               ToolTip.Tip="The file is fixed: keep it as it is now" Content="Mark Resolved" Command="{Binding MarkResolvedCommand}" />
                     </Grid>
@@ -250,9 +250,9 @@
                     <TextBlock Grid.Column="2" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
                       <Run Text="{Binding Name}" Foreground="{DynamicResource Brush.Text}" />
                       <Run Text=" " />
-                      <Run Text="{Binding Folder}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="11.5" />
+                      <Run Text="{Binding Folder}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="{DynamicResource Type.Fine}" />
                     </TextBlock>
-                    <TextBlock Grid.Column="3" Margin="8,0,2,0" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"
+                    <TextBlock Grid.Column="3" Margin="8,0,2,0" FontWeight="Bold" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center"
                                Text="{Binding StatusLetter}" ToolTip.Tip="{Binding StatusText}"
                                Foreground="{Binding Status, Converter={x:Static conv:SourceControlConverters.StatusBrush}}" />
                   </Grid>

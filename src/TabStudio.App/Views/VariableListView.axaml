@@ -12,7 +12,7 @@
     </Style>
     <Style Selector="TextBlock.value">
       <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
-      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     </Style>
     <!-- Values that changed since the last pause are red, as in Visual Studio. -->
     <Style Selector="TextBlock.value.changed">
@@ -66,13 +66,13 @@
                                        Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsExpanded}" />
                 </Panel>
               </Panel>
-              <TextBlock x:Name="NameText" Grid.Column="2" Text="{Binding Name}" FontFamily="{DynamicResource CodeFont}" FontSize="12.5"
+              <TextBlock x:Name="NameText" Grid.Column="2" Text="{Binding Name}" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Body}"
                          TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="2,0,8,0" />
             </Grid>
             <TextBlock Grid.Column="1" Classes="value" Classes.changed="{Binding HasChanged}" Classes.error="{Binding IsError}"
                        Text="{Binding Value}" ToolTip.Tip="{Binding Value}"
                        TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" />
-            <TextBlock Grid.Column="2" Classes="muted" FontSize="12.5" Text="{Binding Type}"
+            <TextBlock Grid.Column="2" Classes="muted" FontSize="{DynamicResource Type.Body}" Text="{Binding Type}"
                        TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
             <Button Grid.Column="3" Theme="{StaticResource ToolButton}" Width="30" Height="28" MinWidth="30" MinHeight="28" Padding="0"
                     ToolTip.Tip="Remove Watch" IsVisible="{Binding IsRemovable}"

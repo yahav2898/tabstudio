@@ -15,7 +15,7 @@
 
   <UserControl.Styles>
     <Style Selector="TextBlock.searchGroup">
-      <Setter Property="FontSize" Value="11.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Fine}" />
       <Setter Property="FontWeight" Value="SemiBold" />
       <Setter Property="Foreground" Value="{DynamicResource Brush.TextMuted}" />
       <Setter Property="Margin" Value="12,12,12,4" />
@@ -28,7 +28,7 @@
       <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
       <Setter Property="BorderBrush" Value="{DynamicResource Brush.BorderStrong}" />
       <Setter Property="BorderThickness" Value="1,1,1,2" />
-      <Setter Property="TextElement.FontSize" Value="11" />
+      <Setter Property="TextElement.FontSize" Value="{DynamicResource Type.Caption}" />
       <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
     </Style>
     <Style Selector="Grid.result.disabled">
@@ -39,7 +39,7 @@
       <Setter Property="Height" Value="34" />
       <Setter Property="Padding" Value="14,0" />
       <Setter Property="CornerRadius" Value="17" />
-      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
       <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
     </Style>
     <Style Selector="Button.scopeChip.selected /template/ ContentPresenter#PART_ContentPresenter">
@@ -95,7 +95,7 @@
                         Command="{Binding $parent[UserControl].((vm:UnifiedSearchViewModel)DataContext).ChooseScopeCommand}" CommandParameter="{Binding}">
                   <StackPanel Orientation="Horizontal" Spacing="6">
                     <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding CountText}" Classes="muted" FontSize="11.5" VerticalAlignment="Center"
+                    <TextBlock Text="{Binding CountText}" Classes="muted" FontSize="{DynamicResource Type.Fine}" VerticalAlignment="Center"
                                IsVisible="{Binding CountText, Converter={x:Static ObjectConverters.IsNotNull}}" />
                   </StackPanel>
                 </Button>
@@ -125,15 +125,15 @@
                       <controls:SymbolGlyphIcon Kind="{Binding Glyph}" Size="18" IsVisible="{Binding HasGlyph}" />
                     </Panel>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,7" Spacing="1">
-                      <controls:HighlightedText Text="{Binding Title}" Highlights="{Binding Highlights}" FontSize="13.5"
+                      <controls:HighlightedText Text="{Binding Title}" Highlights="{Binding Highlights}" FontSize="{DynamicResource Type.Lead}"
                                                 Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
-                      <TextBlock Text="{Binding Detail}" Classes="muted" FontSize="12" TextTrimming="CharacterEllipsis" IsVisible="{Binding HasDetail}" />
+                      <TextBlock Text="{Binding Detail}" Classes="muted" FontSize="{DynamicResource Type.Small}" TextTrimming="CharacterEllipsis" IsVisible="{Binding HasDetail}" />
                     </StackPanel>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center" Margin="10,0,0,0">
                       <Border Classes="pill ready" IsVisible="{Binding HasNote}">
                         <TextBlock Text="{Binding Item.Note}" VerticalAlignment="Center" />
                       </Border>
-                      <TextBlock Text="{Binding KindName}" Classes="muted" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,4,0"
+                      <TextBlock Text="{Binding KindName}" Classes="muted" FontSize="{DynamicResource Type.Fine}" VerticalAlignment="Center" Margin="0,0,4,0"
                                  IsVisible="{Binding IsBestMatch}" />
                       <ItemsControl ItemsSource="{Binding Keys}" IsVisible="{Binding HasKeys}" VerticalAlignment="Center">
                         <ItemsControl.ItemsPanel>
@@ -155,7 +155,7 @@
               </DataTemplate>
               <DataTemplate DataType="vm:SearchMoreRow">
                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="48,0,12,0" MinHeight="40" Background="Transparent">
-                  <TextBlock Text="{Binding Text}" Classes="link" FontSize="12.5" VerticalAlignment="Center" />
+                  <TextBlock Text="{Binding Text}" Classes="link" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
                   <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="14" Foreground="{DynamicResource Brush.Link}" />
                 </StackPanel>
               </DataTemplate>

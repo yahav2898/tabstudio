@@ -69,7 +69,7 @@
                              ToolTip.Tip="{Binding File}" VerticalAlignment="Center" />
                   <TextBlock Grid.Column="1" Text="{Binding Line, StringFormat='Line {0}'}" Classes="small muted" Margin="8,0,0,0" VerticalAlignment="Center" />
                 </Grid>
-                <TextBlock Text="{Binding What}" TextWrapping="Wrap" FontFamily="{DynamicResource CodeFont}" FontSize="12" />
+                <TextBlock Text="{Binding What}" TextWrapping="Wrap" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Small}" />
                 <TextBlock Text="{Binding Why}" TextWrapping="Wrap" Classes="small muted" />
               </StackPanel>
             </Button>

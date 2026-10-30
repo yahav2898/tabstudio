@@ -13,7 +13,7 @@
       <StackPanel Spacing="12">
         <Grid ColumnDefinitions="Auto,*">
           <controls:StrokeIcon Data="{StaticResource Icon.User}" Size="20" Margin="0,0,10,0" Foreground="{DynamicResource Brush.AccentText}" />
-          <TextBlock Grid.Column="1" Classes="h2" FontSize="15" Text="GitHub Account" VerticalAlignment="Center" />
+          <TextBlock Grid.Column="1" Classes="h2" FontSize="{DynamicResource Type.Subtitle}" Text="GitHub Account" VerticalAlignment="Center" />
         </Grid>
 
         <!-- Signed in -->

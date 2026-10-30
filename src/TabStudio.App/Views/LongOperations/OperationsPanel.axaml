@@ -33,14 +33,14 @@
                   <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Content="Cancel" Command="{Binding CancelCommand}"
                           IsVisible="{Binding CanCancel}" Margin="6,0,0,0" ToolTip.Tip="{Binding Title, StringFormat='Cancel {0}'}" />
                 </Grid>
-                <TextBlock Text="{Binding Stage}" Foreground="{DynamicResource Brush.TextSecondary}" FontSize="12.5" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding Stage}" Foreground="{DynamicResource Brush.TextSecondary}" FontSize="{DynamicResource Type.Body}" TextTrimming="CharacterEllipsis" />
                 <ProgressBar Height="4" MinHeight="4" Minimum="0" Maximum="100" Value="{Binding Percent}" IsIndeterminate="{Binding IsIndeterminate}" />
-                <TextBlock Text="{Binding RemainingText}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="12"
+                <TextBlock Text="{Binding RemainingText}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="{DynamicResource Type.Small}"
                            IsVisible="{Binding RemainingText, Converter={x:Static ObjectConverters.IsNotNull}}" />
                 <Border IsVisible="{Binding ShowDetails}" Background="{DynamicResource Brush.Window}" BorderBrush="{DynamicResource Brush.Border}"
                         BorderThickness="1" CornerRadius="4" Padding="6" Margin="0,4,0,0">
                   <ScrollViewer MaxHeight="180" HorizontalScrollBarVisibility="Auto">
-                    <SelectableTextBlock Text="{Binding Details}" FontFamily="{DynamicResource CodeFont}" FontSize="11.5" Foreground="{DynamicResource Brush.TextSecondary}" />
+                    <SelectableTextBlock Text="{Binding Details}" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Fine}" Foreground="{DynamicResource Brush.TextSecondary}" />
                   </ScrollViewer>
                 </Border>
               </StackPanel>

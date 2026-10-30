@@ -13,7 +13,7 @@
       <Setter Property="MinHeight" Value="38" />
       <Setter Property="Padding" Value="10,0" />
       <Setter Property="Margin" Value="0,0,6,6" />
-      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     </Style>
   </UserControl.Styles>
 
@@ -25,7 +25,7 @@
                 ToolTip.Tip="Back to the runs" Command="{Binding BackCommand}">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <controls:StrokeIcon Data="{StaticResource Icon.Back}" Size="15" />
-            <TextBlock Text="Runs" VerticalAlignment="Center" FontSize="12.5" />
+            <TextBlock Text="Runs" VerticalAlignment="Center" FontSize="{DynamicResource Type.Body}" />
           </StackPanel>
         </Button>
 
@@ -125,7 +125,7 @@
                                                Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
                                                Classes.spinning="{Binding Visual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
                           <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding Number}" VerticalAlignment="Center" />
-                          <TextBlock Grid.Column="2" FontSize="12.5" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Grid.Column="2" FontSize="{DynamicResource Type.Body}" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
                           <TextBlock Grid.Column="3" Classes="muted small" Text="{Binding DurationText}" Margin="8,0,0,0" VerticalAlignment="Center" />
                         </Grid>
                       </Button>

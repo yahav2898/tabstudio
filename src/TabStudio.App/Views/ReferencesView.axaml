@@ -9,8 +9,8 @@
     <Border DockPanel.Dock="Top" Height="34" Padding="12,0" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
         <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="14" Foreground="{DynamicResource Brush.TextMuted}" />
-        <TextBlock Text="{Binding Title}" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
-        <TextBlock Text="{Binding Summary}" Classes="muted" FontSize="12.5" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding Title}" FontSize="{DynamicResource Type.Body}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding Summary}" Classes="muted" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
       </StackPanel>
     </Border>
 
@@ -22,8 +22,8 @@
             <Border Classes="badge csharp">
               <TextBlock Text="C#" />
             </Border>
-            <TextBlock Text="{Binding FileName}" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
-            <TextBlock Text="{Binding Folder}" Classes="muted" FontSize="12" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding FileName}" FontSize="{DynamicResource Type.Body}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Folder}" Classes="muted" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center" />
             <Border Classes="pill">
               <TextBlock Text="{Binding CountText}" />
             </Border>
@@ -31,9 +31,9 @@
         </DataTemplate>
         <DataTemplate DataType="vm:ReferenceLineRow">
           <Grid ColumnDefinitions="56,*,Auto" Height="32" Margin="12,0" Background="Transparent">
-            <TextBlock Text="{Binding Line}" FontFamily="{DynamicResource CodeFont}" FontSize="12" HorizontalAlignment="Right"
+            <TextBlock Text="{Binding Line}" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Small}" HorizontalAlignment="Right"
                        Foreground="{DynamicResource Brush.LineNumber}" VerticalAlignment="Center" Margin="0,0,14,0" />
-            <controls:StyledTextBlock Grid.Column="1" Runs="{Binding Text}" FontFamily="{DynamicResource CodeFont}" FontSize="12.5"
+            <controls:StyledTextBlock Grid.Column="1" Runs="{Binding Text}" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Body}"
                                       Foreground="{DynamicResource Brush.TextLabel}" BoldForeground="{DynamicResource Brush.TextBright}"
                                       VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
             <Border Grid.Column="2" Classes="pill ready" Margin="10,0,0,0" IsVisible="{Binding IsDefinition}">

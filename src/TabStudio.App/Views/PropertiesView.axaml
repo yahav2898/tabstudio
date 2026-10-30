@@ -35,11 +35,11 @@
             <DataTemplate DataType="vm:PropertyRow">
               <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
                 <Grid ColumnDefinitions="130,*" MinHeight="28">
-                  <TextBlock Classes="label" FontSize="12.5" Text="{Binding Name}" Margin="12,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                  <TextBlock Classes="label" FontSize="{DynamicResource Type.Body}" Text="{Binding Name}" Margin="12,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
                   <Border Grid.Column="1" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1,0,0,0" Padding="10,4">
                     <Panel>
-                      <SelectableTextBlock FontSize="12.5" Text="{Binding Value}" TextWrapping="Wrap" VerticalAlignment="Center" IsVisible="{Binding IsText}" />
-                      <TextBlock FontSize="12.5" Text="{Binding Value}" TextTrimming="PathSegmentEllipsis" VerticalAlignment="Center"
+                      <SelectableTextBlock FontSize="{DynamicResource Type.Body}" Text="{Binding Value}" TextWrapping="Wrap" VerticalAlignment="Center" IsVisible="{Binding IsText}" />
+                      <TextBlock FontSize="{DynamicResource Type.Body}" Text="{Binding Value}" TextTrimming="PathSegmentEllipsis" VerticalAlignment="Center"
                                  ToolTip.Tip="{Binding Value}" IsVisible="{Binding IsPath}" />
                     </Panel>
                   </Border>

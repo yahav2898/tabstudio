@@ -25,7 +25,7 @@
         <Button Grid.Column="2" Theme="{StaticResource ToolButton}" ToolTip.Tip="Reload" Command="{Binding ReloadCommand}">
           <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="15" />
         </Button>
-        <TextBox x:Name="Address" Grid.Column="3" Margin="4,0" Classes="mono" FontSize="12" VerticalAlignment="Center"
+        <TextBox x:Name="Address" Grid.Column="3" Margin="4,0" Classes="mono" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center"
                  Text="{Binding AddressText}" Watermark="Address">
           <TextBox.InnerLeftContent>
             <controls:StrokeIcon Data="{StaticResource Icon.Globe}" Size="13" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}" />

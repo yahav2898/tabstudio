@@ -1,28 +1,41 @@
 using Avalonia;
 using Avalonia.Styling;
+using TabStudio.App.Accessibility;
 
 namespace TabStudio.App.Services.Appearance;
 
 /// <summary>
-/// The IDE's theme: Dark, Light or Follow the system, remembered across sessions and applied at once to the whole app
-/// (views through their dynamic resources, the editors and code-drawn colors through <see cref="Theming.ThemeSync"/>).
+/// The IDE's theme (Dark, Light or Follow the system) and text size (Small to Very large, or Android's font size),
+/// remembered across sessions and applied at once to the whole app: views through their dynamic resources, the editors
+/// and code-drawn colors through <see cref="Theming.ThemeSync"/>, text through <see cref="TypeScale"/>.
 /// </summary>
 /// <remarks>Call on the UI thread.</remarks>
 public sealed class AppearanceService
 {
     private readonly AppearanceSettingsStore _store;
 
+    private readonly SystemAccessibility _system;
+    private bool _followsSystem;
+
     /// <summary>Reads the saved settings.</summary>
     /// <param name="store">Where the settings are kept.</param>
-    public AppearanceService(AppearanceSettingsStore store)
+    /// <param name="system">The device's accessibility settings; <see cref="SystemAccessibility.Current"/> by default.</param>
+    public AppearanceService(AppearanceSettingsStore store, SystemAccessibility? system = null)
     {
         ArgumentNullException.ThrowIfNull(store);
         _store = store;
+        _system = system ?? SystemAccessibility.Current;
         Settings = store.Load();
     }
 
-    /// <summary>Raised after the theme changed.</summary>
+    /// <summary>Raised after the theme or the text size changed.</summary>
     public event EventHandler? Changed;
+
+    /// <summary>The chosen text size.</summary>
+    public TextSize TextSize => Settings.TextSize;
+
+    /// <summary>The text size's factor now: the chosen size's, or the system's font scale.</summary>
+    public double TextFactor => TextSizes.Factor(TextSize, _system.FontScale);
 
     /// <summary>The user's settings.</summary>
     public AppearanceSettings Settings { get; private set; }
@@ -51,8 +64,44 @@ public sealed class AppearanceService
         _ => ThemeVariant.Dark,
     };
 
-    /// <summary>Applies the saved theme, as the app starts.</summary>
-    public void Apply() => Show(Theme);
+    /// <summary>Applies the saved theme and text size, as the app starts, and follows the system's font scale from then on.</summary>
+    public void Apply()
+    {
+        Show(Theme);
+        TypeScale.Apply(TextFactor);
+        if (!_followsSystem)
+        {
+            _followsSystem = true;
+            _system.Changed += OnSystemChanged;
+        }
+    }
+
+    /// <summary>Uses a text size from now on, and remembers it. The whole IDE and its editors change at once.</summary>
+    /// <param name="size">The size.</param>
+    public void SetTextSize(TextSize size)
+    {
+        if (size != TextSize)
+        {
+            Settings = Settings with { TextSize = size };
+            _store.Save(Settings);
+        }
+
+        TypeScale.Apply(TextFactor);
+        Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>Steps the text size up or down from the one in use, as Make Text Larger and Smaller do.</summary>
+    /// <param name="larger">Whether to make the text larger.</param>
+    public void StepTextSize(bool larger) => SetTextSize(TextSizes.Step(TextFactor, larger));
+
+    private void OnSystemChanged(object? sender, EventArgs e)
+    {
+        if (TextSize == TextSize.System)
+        {
+            TypeScale.Apply(TextFactor);
+            Changed?.Invoke(this, EventArgs.Empty);
+        }
+    }
 
     /// <summary>Uses a theme from now on, and remembers it.</summary>
     /// <param name="theme">The theme.</param>

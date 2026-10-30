@@ -14,7 +14,7 @@
     <Border DockPanel.Dock="Top" Classes="paneHeader" Height="44" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="14,0">
       <StackPanel Orientation="Horizontal" Spacing="8">
         <controls:StrokeIcon Data="{StaticResource Icon.Properties}" Size="16" Foreground="{DynamicResource Brush.AccentText}" />
-        <TextBlock Classes="header" Text="Properties" FontSize="14" />
+        <TextBlock Classes="header" Text="Properties" FontSize="{DynamicResource Type.Large}" />
       </StackPanel>
     </Border>
 
@@ -25,8 +25,8 @@
           <Border Classes="badge markup" Background="{DynamicResource Brush.Control}" Height="18">
             <TextBlock Text="XAML" VerticalAlignment="Center" />
           </Border>
-          <TextBlock Text="{Binding ElementName}" FontSize="17" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
-          <TextBlock Text="{Binding ElementId}" FontSize="14" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center"
+          <TextBlock Text="{Binding ElementName}" FontSize="{DynamicResource Type.Heading}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding ElementId}" FontSize="{DynamicResource Type.Large}" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center"
                      IsVisible="{Binding ElementId, Converter={x:Static ObjectConverters.IsNotNull}}" />
         </StackPanel>
         <TextBlock Classes="small muted" Text="{Binding Location}" />
@@ -93,9 +93,9 @@
                             <StackPanel Orientation="Horizontal" Spacing="7">
                               <Border Width="7" Height="7" CornerRadius="2" Background="{DynamicResource Brush.Accent}" VerticalAlignment="Center"
                                       IsVisible="{Binding IsSet}" />
-                              <TextBlock Text="{Binding Name}" FontSize="13" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+                              <TextBlock Text="{Binding Name}" FontSize="{DynamicResource Type.Section}" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
                             </StackPanel>
-                            <TextBlock Text="{Binding TypeName}" FontSize="11" Foreground="{DynamicResource Brush.TextMuted}" TextTrimming="CharacterEllipsis"
+                            <TextBlock Text="{Binding TypeName}" FontSize="{DynamicResource Type.Caption}" Foreground="{DynamicResource Brush.TextMuted}" TextTrimming="CharacterEllipsis"
                                      IsVisible="{Binding ShowsTypeName}" />
                           </StackPanel>
                           <TextBox Grid.Column="1" Classes="large mono" Watermark="Not set" Text="{Binding Value}" IsVisible="{Binding UsesText}" />

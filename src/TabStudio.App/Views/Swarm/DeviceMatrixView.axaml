@@ -170,7 +170,7 @@
             <controls:StrokeIcon Data="{StaticResource Icon.ZoomOut}" Size="16" />
           </Button>
           <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Real size" Command="{Binding ResetZoomCommand}" MinWidth="58">
-            <TextBlock Text="{Binding ZoomText}" FontSize="12.5" />
+            <TextBlock Text="{Binding ZoomText}" FontSize="{DynamicResource Type.Body}" />
           </Button>
           <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Zoom in" Command="{Binding ZoomInCommand}">
             <controls:StrokeIcon Data="{StaticResource Icon.ZoomIn}" Size="16" />
@@ -187,7 +187,7 @@
             BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="Auto,*,Auto">
         <Border Width="12" Height="12" CornerRadius="3" BorderThickness="2" BorderBrush="{DynamicResource Brush.Swarm.Highlight}" VerticalAlignment="Center" />
-        <TextBlock Grid.Column="1" Margin="10,0" Text="{Binding ShownFindingText}" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="12.5" />
+        <TextBlock Grid.Column="1" Margin="10,0" Text="{Binding ShownFindingText}" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="{DynamicResource Type.Body}" />
         <Button Grid.Column="2" Theme="{StaticResource ToolButton}" ToolTip.Tip="Stop outlining" Command="{Binding ClearFindingCommand}">
           <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="13" />
         </Button>

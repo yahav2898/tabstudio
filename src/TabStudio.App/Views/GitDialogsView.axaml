@@ -15,7 +15,7 @@
               BoxShadow="{DynamicResource Shadow.Dialog}">
         <DockPanel>
           <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,10">
-            <TextBlock Classes="h2" FontSize="15" Text="Switch Branch" />
+            <TextBlock Classes="h2" FontSize="{DynamicResource Type.Subtitle}" Text="Switch Branch" />
             <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis"><Run
               Text="{Binding RepositoryName}" /><Run Text=" · on " /><Run Text="{Binding BranchName}" FontWeight="SemiBold" /></TextBlock>
           </StackPanel>
@@ -66,7 +66,7 @@
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
               BoxShadow="{DynamicResource Shadow.Dialog}">
         <StackPanel Spacing="10">
-          <TextBlock Classes="h2" FontSize="15" Text="Create a Pull Request" />
+          <TextBlock Classes="h2" FontSize="{DynamicResource Type.Subtitle}" Text="Create a Pull Request" />
           <TextBlock Classes="muted small" TextWrapping="Wrap"><Run
             Text="Asks to merge " /><Run Text="{Binding BranchName}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
             Text=" into the branch below. Reviewers see it on GitHub." /></TextBlock>
@@ -100,7 +100,7 @@
               BoxShadow="{DynamicResource Shadow.Dialog}">
         <DockPanel>
           <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,10">
-            <TextBlock Classes="h2" FontSize="15" Text="History" />
+            <TextBlock Classes="h2" FontSize="{DynamicResource Type.Subtitle}" Text="History" />
             <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis"><Run
               Text="{Binding RepositoryName}" /><Run Text=" · " /><Run Text="{Binding BranchName}" FontWeight="SemiBold" /><Run
               Text=" · newest first; tap a commit to see it on GitHub" /></TextBlock>

@@ -15,7 +15,7 @@
       <Setter Property="MinHeight" Value="32" />
       <Setter Property="Padding" Value="9,0" />
       <Setter Property="CornerRadius" Value="16" />
-      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Small}" />
       <Setter Property="Margin" Value="0,0,4,6" />
     </Style>
     <Style Selector="Border.tag">
@@ -24,7 +24,7 @@
       <Setter Property="CornerRadius" Value="9.5" />
       <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
       <Setter Property="VerticalAlignment" Value="Center" />
-      <Setter Property="TextElement.FontSize" Value="10.5" />
+      <Setter Property="TextElement.FontSize" Value="{DynamicResource Type.Micro}" />
       <Setter Property="TextElement.FontWeight" Value="SemiBold" />
       <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
     </Style>
@@ -103,7 +103,7 @@
                   <controls:StrokeIcon Data="{StaticResource Icon.PullRequest}" Size="16" Margin="0,1,10,0" VerticalAlignment="Top"
                                        Foreground="{Binding Converter={x:Static conv:ReviewConverters.ItemBrush}}" />
                   <StackPanel Grid.Column="1" Spacing="4">
-                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource Brush.TextBright}"
+                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="{DynamicResource Type.Section}" Foreground="{DynamicResource Brush.TextBright}"
                                TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
                     <Grid ColumnDefinitions="*,Auto">
                       <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis"><Run
@@ -117,7 +117,7 @@
                     <!-- The branch gives way to the tags when the window is narrow. -->
                     <Grid ColumnDefinitions="Auto,*,Auto,Auto">
                       <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="12" Margin="0,0,6,0" Foreground="{DynamicResource Brush.TextMuted}" />
-                      <TextBlock Grid.Column="1" Classes="small mono" FontSize="11.5" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center"
+                      <TextBlock Grid.Column="1" Classes="small mono" FontSize="{DynamicResource Type.Fine}" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center"
                                  TextTrimming="CharacterEllipsis" Text="{Binding BranchText}" />
                       <Border Grid.Column="2" Classes="tag" Margin="6,0,0,0" IsVisible="{Binding IsDraft}">
                         <TextBlock Text="Draft" VerticalAlignment="Center" />

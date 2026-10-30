@@ -20,7 +20,7 @@
                              HorizontalAlignment="Center" VerticalAlignment="Center" />
       </Border>
       <StackPanel Grid.Column="1" Margin="14,0,0,0" Spacing="4" VerticalAlignment="Center">
-        <TextBlock Classes="h2" FontSize="15">
+        <TextBlock Classes="h2" FontSize="{DynamicResource Type.Subtitle}">
           <Run Text="{Binding DisplayName}" /><Run Text=" is connected" />
         </TextBlock>
         <TextBlock Classes="muted" TextWrapping="Wrap"

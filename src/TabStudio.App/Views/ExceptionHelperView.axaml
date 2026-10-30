@@ -25,10 +25,10 @@
       <Border DockPanel.Dock="Bottom" Padding="12,8" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
         <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto">
           <Button Theme="{StaticResource ToolButton}" MinHeight="34" Height="34" Padding="8,0" Command="{Binding ToggleDetailsCommand}">
-            <TextBlock Classes="link" FontSize="12.5" Text="View Details" />
+            <TextBlock Classes="link" FontSize="{DynamicResource Type.Body}" Text="View Details" />
           </Button>
           <Button x:Name="CopyDetails" Grid.Column="1" Theme="{StaticResource ToolButton}" MinHeight="34" Height="34" Padding="8,0">
-            <TextBlock Classes="link" FontSize="12.5" Text="Copy Details" />
+            <TextBlock Classes="link" FontSize="{DynamicResource Type.Body}" Text="Copy Details" />
           </Button>
           <Button Grid.Column="3" Theme="{StaticResource SecondaryButton}" Height="34" Padding="14,0" Margin="0,0,8,0"
                   Content="Stop Debugging" Command="{Binding StopCommand}" />
@@ -45,7 +45,7 @@
         <Border IsVisible="{Binding IsDetailsVisible}" Margin="0,6,0,0" Padding="10,8" CornerRadius="6"
                 Background="{DynamicResource Brush.Window}">
           <ScrollViewer MaxHeight="180" HorizontalScrollBarVisibility="Disabled">
-            <SelectableTextBlock Text="{Binding Details}" FontFamily="{DynamicResource CodeFont}" FontSize="12"
+            <SelectableTextBlock Text="{Binding Details}" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Small}"
                                  TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}" />
           </ScrollViewer>
         </Border>

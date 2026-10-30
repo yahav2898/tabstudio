@@ -7,7 +7,7 @@
   -->
 
   <!-- A running run's, job's or check's icon turns, as on GitHub; not while it is hidden (Theming/HiddenAnimations). -->
-  <Style Selector="controls|StrokeIcon.spinning:not(.offscreen)">
+  <Style Selector="controls|StrokeIcon.spinning:not(.offscreen):not(.still)">
     <Style.Animations>
       <Animation Duration="0:0:1.1" IterationCount="INFINITE">
         <KeyFrame Cue="0%">
@@ -22,7 +22,7 @@
 
   <!-- A section of the GitHub Actions window: its heading, in sentence case as the design's Section role. -->
   <Style Selector="TextBlock.section">
-    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
     <Setter Property="FontWeight" Value="SemiBold" />
     <Setter Property="Foreground" Value="{DynamicResource Brush.TextLabel}" />
     <Setter Property="VerticalAlignment" Value="Center" />
@@ -46,7 +46,7 @@
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
   <Style Selector="Border.ciBadge TextBlock">
-    <Setter Property="FontSize" Value="11" />
+    <Setter Property="FontSize" Value="{DynamicResource Type.Caption}" />
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
 

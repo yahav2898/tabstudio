@@ -19,7 +19,7 @@
           <controls:StrokeIcon Data="{StaticResource Icon.Clock}" Size="17" IsVisible="{Binding IsQueued}" />
         </Panel>
       </Button>
-      <TextBlock Text="{Binding ExecutionLabel}" Classes="mono" FontSize="11.5" Foreground="{DynamicResource Brush.TextMuted}"
+      <TextBlock Text="{Binding ExecutionLabel}" Classes="mono" FontSize="{DynamicResource Type.Fine}" Foreground="{DynamicResource Brush.TextMuted}"
                  HorizontalAlignment="Center" />
     </StackPanel>
 
@@ -40,9 +40,9 @@
                 <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="13" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding HasSucceeded}" />
                 <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="13" Foreground="{DynamicResource Brush.Error}" IsVisible="{Binding HasFailed}" />
                 <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="10" Foreground="{DynamicResource Brush.Warning}" IsVisible="{Binding WasInterrupted}" />
-                <TextBlock Text="{Binding DurationText}" FontSize="11.5" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding DurationText}" FontSize="{DynamicResource Type.Fine}" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center" />
               </StackPanel>
-              <TextBlock Grid.Column="2" Text="{Binding LanguageName}" FontSize="11.5" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center" />
+              <TextBlock Grid.Column="2" Text="{Binding LanguageName}" FontSize="{DynamicResource Type.Fine}" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center" />
             </Grid>
           </StackPanel>
         </Border>
@@ -100,10 +100,10 @@
                   <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="15" Foreground="{DynamicResource Brush.Error}" IsVisible="{Binding IsError}" />
                   <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Foreground="{DynamicResource Brush.Warning}" IsVisible="{Binding IsWarning}" />
                 </Panel>
-                <TextBlock Grid.Column="1" Text="{Binding Code}" Classes="mono" FontSize="12" Foreground="{DynamicResource Brush.TextMuted}"
+                <TextBlock Grid.Column="1" Text="{Binding Code}" Classes="mono" FontSize="{DynamicResource Type.Small}" Foreground="{DynamicResource Brush.TextMuted}"
                            Margin="0,1,10,0" VerticalAlignment="Top" />
-                <TextBlock Grid.Column="2" Text="{Binding Message}" FontSize="12.5" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}" />
-                <TextBlock Grid.Column="3" Text="{Binding LocationText}" FontSize="12" Foreground="{DynamicResource Brush.TextMuted}"
+                <TextBlock Grid.Column="2" Text="{Binding Message}" FontSize="{DynamicResource Type.Body}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}" />
+                <TextBlock Grid.Column="3" Text="{Binding LocationText}" FontSize="{DynamicResource Type.Small}" Foreground="{DynamicResource Brush.TextMuted}"
                            Margin="12,1,0,0" VerticalAlignment="Top" />
               </Grid>
             </Button>
@@ -128,19 +128,19 @@
           <DataTemplate DataType="vm:TableOutputViewModel">
             <StackPanel Spacing="5">
               <nb:TableGrid Table="{Binding Table}" />
-              <TextBlock Text="{Binding RowCountText}" FontSize="11.5" Foreground="{DynamicResource Brush.TextMuted}" />
+              <TextBlock Text="{Binding RowCountText}" FontSize="{DynamicResource Type.Fine}" Foreground="{DynamicResource Brush.TextMuted}" />
             </StackPanel>
           </DataTemplate>
           <DataTemplate DataType="vm:ErrorOutputViewModel">
             <Border Background="{DynamicResource Brush.Notebook.ErrorBackground}" BorderBrush="{DynamicResource Brush.Error}"
                     BorderThickness="3,0,0,0" CornerRadius="0,6,6,0" Padding="12,9">
               <StackPanel Spacing="6">
-                <nb:OutputText Text="{Binding Title}" FontWeight="SemiBold" FontSize="13" TextWrapping="Wrap"
+                <nb:OutputText Text="{Binding Title}" FontWeight="SemiBold" FontSize="{DynamicResource Type.Section}" TextWrapping="Wrap"
                                      Foreground="{DynamicResource Brush.Error}" />
-                <nb:OutputText Classes="output" FontSize="12" Foreground="{DynamicResource Brush.TextSecondary}"
+                <nb:OutputText Classes="output" FontSize="{DynamicResource Type.Small}" Foreground="{DynamicResource Brush.TextSecondary}"
                                      Text="{Binding Details}" IsVisible="{Binding HasDetails}" />
                 <Button Theme="{StaticResource ToolButton}" HorizontalAlignment="Left" MinHeight="30" Height="30" Padding="8,0"
-                        FontSize="12" Content="{Binding ToggleText}" Command="{Binding ToggleCommand}" IsVisible="{Binding CanExpand}" />
+                        FontSize="{DynamicResource Type.Small}" Content="{Binding ToggleText}" Command="{Binding ToggleCommand}" IsVisible="{Binding CanExpand}" />
               </StackPanel>
             </Border>
           </DataTemplate>
@@ -150,7 +150,7 @@
                 <Border Classes="pill">
                   <TextBlock Text="HTML" />
                 </Border>
-                <Button Theme="{StaticResource ToolButton}" MinHeight="28" Height="28" Padding="8,0" FontSize="12"
+                <Button Theme="{StaticResource ToolButton}" MinHeight="28" Height="28" Padding="8,0" FontSize="{DynamicResource Type.Small}"
                         Content="{Binding ToggleText}" Command="{Binding ToggleSourceCommand}" />
               </StackPanel>
               <nb:OutputText Classes="output" Text="{Binding Text}" />
@@ -170,13 +170,13 @@
         <Button Theme="{StaticResource ToolButton}" MinHeight="32" Height="32" Padding="10,0" Command="{Binding InsertCodeBelowCommand}">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="13" />
-            <TextBlock Text="Code" FontSize="12" VerticalAlignment="Center" />
+            <TextBlock Text="Code" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center" />
           </StackPanel>
         </Button>
         <Button Theme="{StaticResource ToolButton}" MinHeight="32" Height="32" Padding="10,0" Command="{Binding InsertMarkdownBelowCommand}">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="13" />
-            <TextBlock Text="Markdown" FontSize="12" VerticalAlignment="Center" />
+            <TextBlock Text="Markdown" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center" />
           </StackPanel>
         </Button>
       </StackPanel>

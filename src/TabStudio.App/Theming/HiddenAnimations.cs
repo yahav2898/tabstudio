@@ -16,11 +16,50 @@ namespace TabStudio.App.Theming;
 /// (<c>Theme/ProgressBar.axaml</c>, <c>StrokeIcon.spinning</c> and <c>StrokeIcon.spinner</c>) do not match it.
 /// Visibility is followed through <see cref="Visual.IsVisibleProperty"/> rather than measured, because Avalonia does
 /// not measure a hidden control.
+/// <para>
+/// The same controls stop when the device asks apps not to animate (<see cref="ReduceMotion"/>): they then have the
+/// <see cref="StillClass"/> class, which the looping styles do not match either, and a spinner shows still. Transitions
+/// (a fade) are left out too, so a change shows at once.
+/// </para>
 /// </remarks>
 public static class HiddenAnimations
 {
     /// <summary>The class of a looping control that is hidden, itself or by a control around it.</summary>
     public const string HiddenClass = "offscreen";
+
+    /// <summary>The class of a looping control while animations are off.</summary>
+    public const string StillClass = "still";
+
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<Avalonia.Animation.Animatable, Avalonia.Animation.Transitions> Removed = new();
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<Avalonia.Animation.Animatable, object> Transitioning = new();
+    private static bool _reduceMotion;
+
+    /// <summary>
+    /// Whether animations are off, as Android's Remove animations setting asks: spinners and indeterminate progress
+    /// bars stand still and transitions are skipped. Set on the UI thread.
+    /// </summary>
+    public static bool ReduceMotion
+    {
+        get => _reduceMotion;
+        set
+        {
+            if (_reduceMotion == value)
+            {
+                return;
+            }
+
+            _reduceMotion = value;
+            foreach (var control in Looping.ToArray())
+            {
+                control.Classes.Set(StillClass, value);
+            }
+
+            foreach (var (animatable, _) in Transitioning.ToArray())
+            {
+                Still(animatable);
+            }
+        }
+    }
 
     private static readonly HashSet<Control> Looping = [];
     private static bool _started;
@@ -39,6 +78,29 @@ public static class HiddenAnimations
         Control.LoadedEvent.AddClassHandler<StrokeIcon>((icon, _) => Watch(icon));
         Control.UnloadedEvent.AddClassHandler<StrokeIcon>((icon, _) => Looping.Remove(icon));
         Visual.IsVisibleProperty.Changed.AddClassHandler<Visual>((visual, _) => Refresh(visual));
+        Control.LoadedEvent.AddClassHandler<Control>((control, _) =>
+        {
+            if (control.Transitions is { Count: > 0 } || Removed.TryGetValue(control, out _))
+            {
+                Transitioning.AddOrUpdate(control, Transitioning);
+                Still(control);
+            }
+        });
+    }
+
+    /// <summary>Takes a control's transitions away while animations are off, and gives them back after.</summary>
+    private static void Still(Avalonia.Animation.Animatable animatable)
+    {
+        if (_reduceMotion && animatable.Transitions is { Count: > 0 } transitions)
+        {
+            Removed.AddOrUpdate(animatable, transitions);
+            animatable.Transitions = null;
+        }
+        else if (!_reduceMotion && Removed.TryGetValue(animatable, out var removed))
+        {
+            Removed.Remove(animatable);
+            animatable.Transitions = removed;
+        }
     }
 
     /// <summary>Whether a control and every control around it are visible.</summary>
@@ -65,10 +127,12 @@ public static class HiddenAnimations
         {
             Looping.Add(control);
             control.Classes.Set(HiddenClass, !IsShown(control));
+            control.Classes.Set(StillClass, _reduceMotion);
         }
         else if (Looping.Remove(control))
         {
             control.Classes.Set(HiddenClass, false);
+            control.Classes.Set(StillClass, false);
         }
     }
 

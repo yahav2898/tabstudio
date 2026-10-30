@@ -19,7 +19,7 @@
     </Style>
     <Style Selector="ComboBox">
       <Setter Property="MinHeight" Value="36" />
-      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     </Style>
   </UserControl.Styles>
 
@@ -48,7 +48,7 @@
         <controls:StrokeIcon Data="{StaticResource Icon.User}" Size="15" Margin="0,0,8,0" Foreground="{DynamicResource Brush.TextMuted}" />
         <TextBlock Grid.Column="1" Classes="muted small" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
                    Text="{Binding Account.StatusText}" />
-        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" FontSize="12.5" Content="Sign in"
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" FontSize="{DynamicResource Type.Body}" Content="Sign in"
                 Foreground="{DynamicResource Brush.Link}" Command="{Binding Account.OpenCommand}" IsVisible="{Binding !Account.IsSignedIn}" />
       </Grid>
     </Border>
@@ -65,7 +65,7 @@
                     ToolTip.Tip="Back to this workspace's repository">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <controls:StrokeIcon Data="{StaticResource Icon.Back}" Size="15" />
-                <TextBlock Text="This workspace's repository" VerticalAlignment="Center" FontSize="12.5" />
+                <TextBlock Text="This workspace's repository" VerticalAlignment="Center" FontSize="{DynamicResource Type.Body}" />
               </StackPanel>
             </Button>
 
@@ -111,7 +111,7 @@
                                        Data="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.StateIcon}}"
                                        Foreground="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
                                        Classes.spinning="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
-                  <TextBlock Grid.Column="1" Text="{Binding ChecksSummary}" FontWeight="SemiBold" FontSize="12.5"
+                  <TextBlock Grid.Column="1" Text="{Binding ChecksSummary}" FontWeight="SemiBold" FontSize="{DynamicResource Type.Body}"
                              Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" VerticalAlignment="Center" />
                 </Grid>
               </Border>
@@ -129,7 +129,7 @@
                                              Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
                                              Classes.spinning="{Binding Visual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
-                          <TextBlock Text="{Binding Name}" FontSize="12.5" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Text="{Binding Name}" FontSize="{DynamicResource Type.Body}" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
                           <TextBlock Classes="muted small" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
                         </StackPanel>
                         <Panel Grid.Column="2" Margin="8,0,2,0">
@@ -186,7 +186,7 @@
                                              Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
                                              Classes.spinning="{Binding Visual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
                         <StackPanel Grid.Column="1" Spacing="2">
-                          <TextBlock Text="{Binding Title}" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Text="{Binding Title}" FontSize="{DynamicResource Type.Body}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
                           <TextBlock Classes="small" TextTrimming="CharacterEllipsis"><Run
                             Text="{Binding Workflow}" Foreground="{DynamicResource Brush.TextSecondary}" /><Run
                             Text=" · " Foreground="{DynamicResource Brush.TextMuted}" /><Run
@@ -212,12 +212,12 @@
                       <Grid ColumnDefinitions="Auto,*,Auto">
                         <controls:StrokeIcon Data="{StaticResource Icon.Workflow}" Size="16" Margin="0,2,10,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.TextMuted}" />
                         <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                          <TextBlock Text="{Binding Name}" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
-                          <TextBlock Classes="muted small" Text="{Binding Path}" FontFamily="{DynamicResource CodeFont}" FontSize="11" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Text="{Binding Name}" FontSize="{DynamicResource Type.Body}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Classes="muted small" Text="{Binding Path}" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Caption}" TextTrimming="CharacterEllipsis" />
                           <TextBlock Classes="muted small" Text="{Binding Note}" TextTrimming="CharacterEllipsis"
                                      IsVisible="{Binding Note, Converter={x:Static ObjectConverters.IsNotNull}}" />
                         </StackPanel>
-                        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="36" Padding="10,0" Margin="8,0,0,0" FontSize="12.5"
+                        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="36" Padding="10,0" Margin="8,0,0,0" FontSize="{DynamicResource Type.Body}"
                                 VerticalAlignment="Center" ToolTip.Tip="Run workflow..." Command="{Binding Run}" CommandParameter="{Binding}"
                                 IsVisible="{Binding CanDispatch}">
                           <StackPanel Orientation="Horizontal" Spacing="6">
@@ -250,7 +250,7 @@
                                                Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
                                                Classes.spinning="{Binding Visual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
                           <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
-                            <TextBlock Text="{Binding FullName}" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{Binding FullName}" FontSize="{DynamicResource Type.Body}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
                             <TextBlock Classes="muted small" Text="{Binding Summary}" TextTrimming="CharacterEllipsis" />
                           </StackPanel>
                         </Grid>
@@ -265,7 +265,7 @@
               </ItemsControl>
               <Grid ColumnDefinitions="*,Auto">
                 <TextBox x:Name="WatchBox" Text="{Binding WatchText}" MinHeight="36" Watermark="owner/name or GitHub address" />
-                <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Height="36" Padding="12,0" Margin="6,0,0,0" FontSize="12.5"
+                <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Height="36" Padding="12,0" Margin="6,0,0,0" FontSize="{DynamicResource Type.Body}"
                         Command="{Binding AddWatchedCommand}" ToolTip.Tip="Watch this repository's runs">
                   <StackPanel Orientation="Horizontal" Spacing="6">
                     <controls:StrokeIcon Data="{StaticResource Icon.Watch}" Size="14" />

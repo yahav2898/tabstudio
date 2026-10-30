@@ -11,6 +11,10 @@ namespace TabStudio.App.Controls;
 /// <remarks>
 /// All icons in TabStudio are simple stroke paths (see <c>Theme/Icons.axaml</c>), so they stay crisp at any
 /// size and take the color of the button or text around them, exactly like a font glyph would.
+/// <para>
+/// In a right-to-left layout only the icons that point a way (back, forward, the left and right arrows and chevrons,
+/// undo and redo) mirror, as Android's auto-mirrored icons do; Run's triangle, a check or a bug keep their drawing.
+/// </para>
 /// </remarks>
 public sealed class StrokeIcon : Control
 {
@@ -35,6 +39,12 @@ public sealed class StrokeIcon : Control
         AvaloniaProperty.Register<StrokeIcon, double>(nameof(Size), 18);
 
     private const double GridSize = 24;
+
+    /// <summary>The icons that point a way, and mirror with a right-to-left layout.</summary>
+    private static readonly string[] DirectionalKeys =
+        ["Icon.ArrowLeft", "Icon.ArrowRight", "Icon.Back", "Icon.Forward", "Icon.ChevronLeft", "Icon.ChevronRight", "Icon.Undo", "Icon.Redo"];
+
+    private static HashSet<Geometry>? _directional;
 
     static StrokeIcon()
     {
@@ -84,8 +94,66 @@ public sealed class StrokeIcon : Control
         set => SetValue(SizeProperty, value);
     }
 
+    /// <summary>Whether the icon points a way, and so mirrors in a right-to-left layout.</summary>
+    public bool IsDirectional => Data is { } data && Directional().Contains(data);
+
     /// <inheritdoc />
     protected override Size MeasureOverride(Size availableSize) => new(Size, Size);
+
+    /// <inheritdoc />
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == DataProperty)
+        {
+            UpdateMirroring();
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        UpdateMirroring();
+    }
+
+    /// <summary>
+    /// Keeps an icon that does not point a way drawn left to right, so it does not mirror with its layout; one that
+    /// does takes its layout's direction.
+    /// </summary>
+    private void UpdateMirroring()
+    {
+        if (IsDirectional)
+        {
+            ClearValue(FlowDirectionProperty);
+        }
+        else
+        {
+            FlowDirection = FlowDirection.LeftToRight;
+        }
+    }
+
+    private static HashSet<Geometry> Directional()
+    {
+        if (_directional is { Count: > 0 } known)
+        {
+            return known;
+        }
+
+        var found = new HashSet<Geometry>(ReferenceEqualityComparer.Instance);
+        if (Application.Current is { } application)
+        {
+            foreach (var key in DirectionalKeys)
+            {
+                if (application.TryGetResource(key, null, out var value) && value is Geometry geometry)
+                {
+                    found.Add(geometry);
+                }
+            }
+        }
+
+        return _directional = found;
+    }
 
     /// <inheritdoc />
     public override void Render(DrawingContext context)

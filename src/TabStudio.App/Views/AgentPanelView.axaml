@@ -14,7 +14,7 @@
   <UserControl.Styles>
     <Style Selector="TextBlock.diff">
       <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
-      <Setter Property="FontSize" Value="11.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Fine}" />
       <Setter Property="Padding" Value="8,1" />
       <Setter Property="TextWrapping" Value="NoWrap" />
     </Style>
@@ -153,7 +153,7 @@
       <!-- Input -->
       <Border DockPanel.Dock="Bottom" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0" Padding="10,8,10,10">
         <StackPanel Spacing="6">
-          <TextBlock Foreground="{DynamicResource Brush.Error}" FontSize="12" TextWrapping="Wrap" Text="{Binding ErrorText}"
+          <TextBlock Foreground="{DynamicResource Brush.Error}" FontSize="{DynamicResource Type.Small}" TextWrapping="Wrap" Text="{Binding ErrorText}"
                      IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
           <!-- The picture the next request sends, such as a screen from "Fix with Agent" on a layout problem. -->
           <Border IsVisible="{Binding HasAttachment}" Background="{DynamicResource Brush.Hover}" CornerRadius="8" Padding="6"
@@ -210,7 +210,7 @@
                         <StackPanel Orientation="Horizontal" Spacing="8">
                           <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" IsVisible="{Binding !IsExpanded}" />
                           <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="12" IsVisible="{Binding IsExpanded}" />
-                          <TextBlock Text="{Binding Path}" FontSize="12.5" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                          <TextBlock Text="{Binding Path}" FontSize="{DynamicResource Type.Body}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                           <TextBlock Classes="muted small" Text="{Binding KindLabel}" VerticalAlignment="Center" />
                         </StackPanel>
                       </Button>
@@ -278,7 +278,7 @@
                 </Border>
               </DataTemplate>
               <DataTemplate DataType="agent:AssistantMessageViewModel">
-                <SelectableTextBlock Text="{Binding Text}" TextWrapping="Wrap" Margin="2,6" LineHeight="20" />
+                <SelectableTextBlock Text="{Binding Text}" TextWrapping="Wrap" Margin="2,6" LineHeight="{DynamicResource Type.Line.Relaxed}" />
               </DataTemplate>
               <DataTemplate DataType="agent:ToolCallViewModel">
                 <StackPanel Margin="0,2">
@@ -292,7 +292,7 @@
                     </StackPanel>
                   </Button>
                   <Border IsVisible="{Binding IsExpanded}" Background="{DynamicResource Brush.Window}" CornerRadius="6" Padding="10,6" Margin="24,2,0,4">
-                    <SelectableTextBlock Classes="mono" FontSize="11.5" Text="{Binding Result}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}" />
+                    <SelectableTextBlock Classes="mono" FontSize="{DynamicResource Type.Fine}" Text="{Binding Result}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}" />
                   </Border>
                 </StackPanel>
               </DataTemplate>

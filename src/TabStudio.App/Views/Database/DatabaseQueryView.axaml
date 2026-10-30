@@ -121,7 +121,7 @@
       <Panel Grid.Row="2">
         <DataGrid x:Name="ResultsGrid" ItemsSource="{Binding Rows}" SelectedItem="{Binding SelectedRow}"
                   IsReadOnly="True" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserResizeColumns="True"
-                  GridLinesVisibility="Horizontal" HeadersVisibility="Column" RowHeight="34" FontSize="12.5" />
+                  GridLinesVisibility="Horizontal" HeadersVisibility="Column" RowHeight="34" FontSize="{DynamicResource Type.Body}" />
         <controls:EmptyState Icon="{StaticResource Icon.Database}" Title="No results yet" IsCompact="True"
                              Message="Write a query, then run it with Run or Ctrl+Enter. Ctrl+Space completes table and column names."
                              IsVisible="{Binding ShowsNoResults}" />

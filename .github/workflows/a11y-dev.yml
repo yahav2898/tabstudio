@@ -1,0 +1,56 @@
+name: Accessibility (dev loop)
+
+# Temporary: builds the IDE and runs its accessibility tests quickly while agent/accessibility is worked on. Removed
+# before the pull request.
+on:
+  push:
+    branches: ['agent/accessibility']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: a11y-dev-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  DOTNET_MODIFIABLE_ASSEMBLIES: debug
+
+jobs:
+  a11y:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-app-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: nuget-app-
+      - name: Build and run the accessibility tests
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots/light
+          status=0
+          dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true > ci-out/build.log 2>&1 || status=1
+          grep -E 'error|warning [A-Z]+[0-9]+' ci-out/build.log | sort -u | head -n 200 > ci-out/build-errors.txt || true
+          tail -n 30 ci-out/build.log
+          if [ $status -eq 0 ]; then
+            dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName~TabStudio.App.Tests.Accessibility|FullyQualifiedName~ShellScreenshotTests|FullyQualifiedName~Design.ComponentScreenshotTests" --logger "console;verbosity=normal" > ci-out/tests.log 2>&1 || status=1
+            TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName~TabStudio.App.Tests.Accessibility" --logger "console;verbosity=normal" > ci-out/tests-light.log 2>&1 || status=1
+            grep -E 'Failed |Passed!|Failed!|Total tests' ci-out/tests.log ci-out/tests-light.log | head -n 80
+          fi
+          exit $status
+      - name: Publish logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh a11y-dev ${{ job.status }}

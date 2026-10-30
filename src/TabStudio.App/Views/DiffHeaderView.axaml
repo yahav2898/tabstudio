@@ -10,15 +10,15 @@
     <Grid ColumnDefinitions="Auto,*,Auto,Auto">
       <controls:StrokeIcon Data="{StaticResource Icon.Commit}" Size="14" Margin="0,0,8,0" Foreground="{DynamicResource Brush.TextMuted}" />
       <!-- Runs on one line: whitespace between them would show as spaces. -->
-      <TextBlock Grid.Column="1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="12.5"><Run
+      <TextBlock Grid.Column="1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="{DynamicResource Type.Body}"><Run
         Text="{Binding RelativePath}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
         Text="{Binding BaseName, Mode=OneWay, StringFormat='    {0} ('}" Foreground="{DynamicResource Brush.TextMuted}" /><Run
         Text="{Binding BaseLabel}" Foreground="{DynamicResource Brush.TextSecondary}" /><Run
         Text="{Binding HeadName, Mode=OneWay, StringFormat=') vs. {0}'}" Foreground="{DynamicResource Brush.TextMuted}" /></TextBlock>
       <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" Margin="12,0,8,0">
-        <TextBlock Text="{Binding Diff.AddedCount, StringFormat='+{0}'}" FontSize="12.5" FontWeight="SemiBold" VerticalAlignment="Center"
+        <TextBlock Text="{Binding Diff.AddedCount, StringFormat='+{0}'}" FontSize="{DynamicResource Type.Body}" FontWeight="SemiBold" VerticalAlignment="Center"
                    Foreground="{DynamicResource Brush.Success}" />
-        <TextBlock Text="{Binding Diff.RemovedCount, StringFormat='−{0}'}" FontSize="12.5" FontWeight="SemiBold" VerticalAlignment="Center"
+        <TextBlock Text="{Binding Diff.RemovedCount, StringFormat='−{0}'}" FontSize="{DynamicResource Type.Body}" FontWeight="SemiBold" VerticalAlignment="Center"
                    Foreground="{DynamicResource Brush.Error}" />
       </StackPanel>
       <StackPanel Grid.Column="3" Orientation="Horizontal">

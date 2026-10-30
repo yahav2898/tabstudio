@@ -15,7 +15,7 @@
                              Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
                              Classes.spinning="{Binding Visual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
         <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
-          <TextBlock Text="{Binding JobName}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+          <TextBlock Text="{Binding JobName}" FontSize="{DynamicResource Type.Section}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
           <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis"><Run
             Text="{Binding RunText}" /><Run Text=" · " /><Run Text="{Binding StateText}" /></TextBlock>
         </StackPanel>
@@ -39,7 +39,7 @@
                     ToolTip.Tip="Next Error (F8)" IsEnabled="{Binding HasErrors}" Click="OnNextErrorClick">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <controls:StrokeIcon Data="{StaticResource Icon.NextError}" Size="16" />
-                <TextBlock Text="Next error" VerticalAlignment="Center" FontSize="12.5" />
+                <TextBlock Text="Next error" VerticalAlignment="Center" FontSize="{DynamicResource Type.Body}" />
               </StackPanel>
             </Button>
             <Border Classes="toolbarSeparator" />

@@ -49,7 +49,7 @@
       <Setter Property="CornerRadius" Value="10" />
       <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
       <Setter Property="VerticalAlignment" Value="Center" />
-      <Setter Property="TextElement.FontSize" Value="11" />
+      <Setter Property="TextElement.FontSize" Value="{DynamicResource Type.Caption}" />
       <Setter Property="TextElement.FontWeight" Value="SemiBold" />
       <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
     </Style>
@@ -72,7 +72,7 @@
       <Setter Property="VerticalAlignment" Value="Top" />
     </Style>
     <Style Selector="Border.avatar > TextBlock">
-      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Small}" />
       <Setter Property="FontWeight" Value="SemiBold" />
       <Setter Property="Foreground" Value="{DynamicResource Brush.OnAccent}" />
       <Setter Property="HorizontalAlignment" Value="Center" />
@@ -82,7 +82,7 @@
       <Setter Property="Height" Value="34" />
       <Setter Property="MinHeight" Value="34" />
       <Setter Property="Padding" Value="12,0" />
-      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     </Style>
   </UserControl.Styles>
 
@@ -132,7 +132,7 @@
                       <StackPanel Grid.Column="1" Margin="10,0,0,0" Spacing="4">
                         <Grid ColumnDefinitions="*,Auto" MinHeight="26">
                           <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding Author}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding Author}" FontWeight="SemiBold" FontSize="{DynamicResource Type.Section}" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
                             <TextBlock Classes="muted small" Text="{Binding When}" VerticalAlignment="Center" />
                             <Border Classes="tag pending" IsVisible="{Binding IsPending}" ToolTip.Tip="Only you see it until you finish your review">
                               <TextBlock Text="Pending" VerticalAlignment="Center" />
@@ -183,7 +183,7 @@
                   <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="14" Foreground="{DynamicResource Brush.Review.Claude}" HorizontalAlignment="Center" />
                 </Border>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" Margin="10,0,0,0" VerticalAlignment="Center">
-                  <TextBlock Text="Claude" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
+                  <TextBlock Text="Claude" FontWeight="SemiBold" FontSize="{DynamicResource Type.Section}" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
                   <Border Classes="tag">
                     <StackPanel Orientation="Horizontal" Spacing="5">
                       <controls:StrokeIcon Data="{Binding Severity, Converter={x:Static conv:ReviewConverters.SeverityIcon}}" Size="11"

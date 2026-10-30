@@ -18,7 +18,7 @@
                                  HorizontalAlignment="Center" VerticalAlignment="Center" />
           </Border>
           <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
-            <TextBlock Classes="h2" FontSize="16" Text="Add a device to the swarm" />
+            <TextBlock Classes="h2" FontSize="{DynamicResource Type.Heading}" Text="Add a device to the swarm" />
             <TextBlock Classes="muted small" TextWrapping="Wrap"
                        Text="A phone or tablet with TabStudio joins over Wi-Fi and runs the app this tablet builds. No cloud and no account; the connection is end-to-end encrypted." />
           </StackPanel>
@@ -51,10 +51,10 @@
                            Text="On the phone or tablet: File > TabStudio Link > Join a swarm, or Swarm on the start screen, then Scan the tablet's code. Without a camera, type these instead:" />
                 <Grid ColumnDefinitions="Auto,16,*" RowDefinitions="Auto,6,Auto" Margin="0,4,0,0">
                   <TextBlock Classes="label" Text="Address" VerticalAlignment="Center" />
-                  <SelectableTextBlock Grid.Column="2" FontFamily="{DynamicResource CodeFont}" FontSize="19" Foreground="{DynamicResource Brush.TextBright}" Text="{Binding AddressText}" VerticalAlignment="Center" />
+                  <SelectableTextBlock Grid.Column="2" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Title}" Foreground="{DynamicResource Brush.TextBright}" Text="{Binding AddressText}" VerticalAlignment="Center" />
                   <TextBlock Grid.Row="2" Classes="label" Text="Code" VerticalAlignment="Center" />
                   <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Spacing="10">
-                    <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="{Binding CodeText}" VerticalAlignment="Center" />
+                    <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Display}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="{Binding CodeText}" VerticalAlignment="Center" />
                     <Button Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="10,0" Command="{Binding NewCodeCommand}" ToolTip.Tip="Draw a new code; the shown one stops working">
                       <StackPanel Orientation="Horizontal" Spacing="6">
                         <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="14" />

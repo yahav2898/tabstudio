@@ -14,7 +14,7 @@
       <Setter Property="MinHeight" Value="34" />
       <Setter Property="Padding" Value="10,0" />
       <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
-      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     </Style>
     <Style Selector="Button.key.selected /template/ ContentPresenter#PART_ContentPresenter">
       <Setter Property="Background" Value="{DynamicResource Brush.Accent}" />
@@ -54,7 +54,7 @@
     </Border>
 
     <Panel>
-      <controls:TerminalView x:Name="Screen" Terminal="{Binding}" FontSize="13" Margin="10,6,2,0" />
+      <controls:TerminalView x:Name="Screen" Terminal="{Binding}" FontSize="{DynamicResource Type.Section}" Margin="10,6,2,0" />
 
       <!-- Instead of the shell: the first-time setup, or why the shell cannot start. -->
       <Border IsVisible="{Binding ShowsMessage}" Background="{DynamicResource Brush.Toolbar}">
@@ -63,8 +63,8 @@
             <controls:StrokeIcon Data="{StaticResource Icon.Terminal}" Size="21" Foreground="{DynamicResource Brush.AccentText}" HorizontalAlignment="Center" VerticalAlignment="Center" />
           </Border>
           <StackPanel Grid.Column="1" Spacing="10">
-            <TextBlock Classes="h2" FontSize="16" Text="Terminal" />
-            <TextBlock Classes="muted" FontSize="13" TextWrapping="Wrap" Text="{Binding Message}" />
+            <TextBlock Classes="h2" FontSize="{DynamicResource Type.Heading}" Text="Terminal" />
+            <TextBlock Classes="muted" FontSize="{DynamicResource Type.Section}" TextWrapping="Wrap" Text="{Binding Message}" />
             <StackPanel Spacing="6" IsVisible="{Binding IsSettingUp}">
               <ProgressBar Minimum="0" Maximum="100" Value="{Binding SetupProgress}" Height="5" MinHeight="5" CornerRadius="3"
                            Foreground="{DynamicResource Brush.Accent}" Background="{DynamicResource Brush.Control}" />

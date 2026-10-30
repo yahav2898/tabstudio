@@ -17,7 +17,7 @@
           <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="15" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsAvailable}" />
           <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="13" Foreground="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding !IsAvailable}" />
         </Panel>
-        <TextBlock Grid.Column="1" TextWrapping="Wrap"><Run Text="{Binding Name}" Foreground="{DynamicResource Brush.TextBright}" /><Run Text="  " /><Run Text="{Binding Detail}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="12" /></TextBlock>
+        <TextBlock Grid.Column="1" TextWrapping="Wrap"><Run Text="{Binding Name}" Foreground="{DynamicResource Brush.TextBright}" /><Run Text="  " /><Run Text="{Binding Detail}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="{DynamicResource Type.Small}" /></TextBlock>
       </Grid>
     </DataTemplate>
     <DataTemplate DataType="wb:BridgeToolchainRow">
@@ -56,7 +56,7 @@
             <Ellipse Fill="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding IsOff}" />
           </Panel>
           <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
-            <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding Title}" FontSize="{DynamicResource Type.Large}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
             <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding Detail}" IsVisible="{Binding Detail, Converter={x:Static ObjectConverters.IsNotNull}}" />
           </StackPanel>
           <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="40" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"
@@ -151,10 +151,10 @@
             <TextBlock Classes="muted" TextWrapping="Wrap" Text="On the tablet: File > TabStudio Link > Windows PC > Scan its QR code. Without a camera, type these instead:" />
             <Grid ColumnDefinitions="Auto,16,*" RowDefinitions="Auto,6,Auto" Margin="0,4,0,0">
               <TextBlock Classes="label" Text="Address" VerticalAlignment="Center" />
-              <SelectableTextBlock Grid.Column="2" FontFamily="{DynamicResource CodeFont}" FontSize="19" Foreground="{DynamicResource Brush.TextBright}" Text="{Binding BridgeAddressText}" VerticalAlignment="Center" />
+              <SelectableTextBlock Grid.Column="2" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Title}" Foreground="{DynamicResource Brush.TextBright}" Text="{Binding BridgeAddressText}" VerticalAlignment="Center" />
               <TextBlock Grid.Row="2" Classes="label" Text="Code" VerticalAlignment="Center" />
               <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Spacing="10">
-                <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="{Binding BridgeCodeText}" VerticalAlignment="Center" />
+                <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Display}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="{Binding BridgeCodeText}" VerticalAlignment="Center" />
                 <Button Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="10,0" Command="{Binding NewBridgeCodeCommand}" ToolTip.Tip="Draw a new code; the shown one stops working">
                   <StackPanel Orientation="Horizontal" Spacing="6">
                     <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="14" />
@@ -181,7 +181,7 @@
               <Ellipse Fill="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding !IsServing}" />
             </Panel>
             <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
-              <TextBlock Text="{Binding BridgeTitle}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding BridgeTitle}" FontSize="{DynamicResource Type.Large}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
               <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding BridgeDetail}" IsVisible="{Binding BridgeDetail, Converter={x:Static ObjectConverters.IsNotNull}}" />
             </StackPanel>
             <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="40" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"

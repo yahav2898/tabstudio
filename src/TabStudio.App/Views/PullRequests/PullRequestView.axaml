@@ -45,7 +45,7 @@
       <Setter Property="CornerRadius" Value="10" />
       <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
       <Setter Property="VerticalAlignment" Value="Center" />
-      <Setter Property="TextElement.FontSize" Value="11" />
+      <Setter Property="TextElement.FontSize" Value="{DynamicResource Type.Caption}" />
       <Setter Property="TextElement.FontWeight" Value="SemiBold" />
       <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
     </Style>
@@ -64,7 +64,7 @@
       <Setter Property="VerticalAlignment" Value="Top" />
     </Style>
     <Style Selector="Border.avatar > TextBlock">
-      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
       <Setter Property="FontWeight" Value="SemiBold" />
       <Setter Property="Foreground" Value="{DynamicResource Brush.OnAccent}" />
       <Setter Property="HorizontalAlignment" Value="Center" />
@@ -75,18 +75,18 @@
       <Setter Property="MinHeight" Value="38" />
       <Setter Property="Padding" Value="14,0" />
       <Setter Property="Margin" Value="0,0,8,8" />
-      <Setter Property="FontSize" Value="13" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
     </Style>
     <Style Selector="Button.compact">
       <Setter Property="Height" Value="36" />
       <Setter Property="MinHeight" Value="36" />
       <Setter Property="Padding" Value="14,0" />
-      <Setter Property="FontSize" Value="13" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
     </Style>
     <Style Selector="Button.tab">
       <Setter Property="Height" Value="40" />
       <Setter Property="Padding" Value="14,0" />
-      <Setter Property="FontSize" Value="13" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
     </Style>
   </UserControl.Styles>
 
@@ -97,14 +97,14 @@
       <Border DockPanel.Dock="Top" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1"
               Padding="20,16,20,0">
         <StackPanel Spacing="10" MaxWidth="1100" HorizontalAlignment="Stretch">
-          <TextBlock FontSize="20" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}"><Run
+          <TextBlock FontSize="{DynamicResource Type.Hero}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}"><Run
             Text="{Binding Title}" /><Run Text="  " /><Run Text="{Binding NumberText}" FontWeight="Normal" Foreground="{DynamicResource Brush.TextMuted}" /></TextBlock>
 
           <WrapPanel IsVisible="{Binding IsLoaded}">
             <Border Classes="state" Margin="0,0,10,6" Background="{Binding Badge, Converter={x:Static conv:ReviewConverters.BadgeBrush}}">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <controls:StrokeIcon Data="{Binding Badge, Converter={x:Static conv:ReviewConverters.BadgeIcon}}" Size="14" Foreground="{DynamicResource Brush.OnAccent}" />
-                <TextBlock Text="{Binding BadgeText}" Foreground="{DynamicResource Brush.OnAccent}" FontWeight="SemiBold" FontSize="12.5" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding BadgeText}" Foreground="{DynamicResource Brush.OnAccent}" FontWeight="SemiBold" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
               </StackPanel>
             </Border>
             <TextBlock Margin="0,0,12,6" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}" Text="{Binding SummaryText}" />
@@ -245,7 +245,7 @@
                     <TextBlock Text="{Binding Author, Converter={x:Static conv:ReviewConverters.Initial}}" />
                   </Border>
                   <TextBlock VerticalAlignment="Center"><Run Text="{Binding Author}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
-                    Text=" " /><Run Text="{Binding OpenedText}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="12" /></TextBlock>
+                    Text=" " /><Run Text="{Binding OpenedText}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="{DynamicResource Type.Small}" /></TextBlock>
                 </StackPanel>
                 <nb:MarkdownView Blocks="{Binding Description}" IsVisible="{Binding HasDescription}" />
                 <TextBlock Classes="muted" FontStyle="Italic" Text="No description provided." IsVisible="{Binding !HasDescription}" />
@@ -334,7 +334,7 @@
                              VerticalContentAlignment="Top" />
                   </StackPanel>
                   <CheckBox x:Name="DeleteBranchBox" IsChecked="{Binding DeleteBranchAfterMerge}" IsVisible="{Binding CanDeleteBranch}">
-                    <TextBlock><Run Text="Delete " /><Run Text="{Binding HeadBranch}" FontFamily="{DynamicResource CodeFont}" FontSize="12.5" /><Run
+                    <TextBlock><Run Text="Delete " /><Run Text="{Binding HeadBranch}" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Body}" /><Run
                       Text=" after merging" /></TextBlock>
                   </CheckBox>
                   <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding AutomaticDeleteNote}"
@@ -404,7 +404,7 @@
                                                Foreground="{Binding Kind, Converter={x:Static conv:ReviewConverters.TimelineBrush}}" />
                           <TextBlock VerticalAlignment="Center" TextWrapping="Wrap"><Run Text="{Binding Author}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
                             Text=" " /><Run Text="{Binding Action}" Foreground="{DynamicResource Brush.TextSecondary}" /><Run Text=" · " Foreground="{DynamicResource Brush.TextMuted}" /><Run
-                            Text="{Binding When}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="12" /></TextBlock>
+                            Text="{Binding When}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="{DynamicResource Type.Small}" /></TextBlock>
                         </StackPanel>
                         <nb:MarkdownView Blocks="{Binding Body}" IsVisible="{Binding HasBody}" />
                         <TextBlock Classes="muted small" Text="{Binding Note}" IsVisible="{Binding HasNote}" />
@@ -461,7 +461,7 @@
                         <TextBlock Grid.Column="1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
                           <Run Text="{Binding Name}" Foreground="{DynamicResource Brush.TextBright}" />
                           <Run Text=" " />
-                          <Run Text="{Binding Folder}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="11.5" />
+                          <Run Text="{Binding Folder}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="{DynamicResource Type.Fine}" />
                         </TextBlock>
                         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" Margin="8,0">
                           <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding HasThreads}" ToolTip.Tip="Conversations">
@@ -481,7 +481,7 @@
                         <TextBlock Grid.Column="3" Classes="small mono" VerticalAlignment="Center" Margin="4,0,10,0"><Run
                           Text="{Binding AdditionsText}" Foreground="{DynamicResource Brush.Success}" /><Run Text=" " /><Run
                           Text="{Binding DeletionsText}" Foreground="{DynamicResource Brush.Error}" /></TextBlock>
-                        <TextBlock Grid.Column="4" Width="14" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" TextAlignment="Center"
+                        <TextBlock Grid.Column="4" Width="14" FontWeight="Bold" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center" TextAlignment="Center"
                                    Text="{Binding StatusLetter}" Foreground="{Binding GitStatus, Converter={x:Static conv:SourceControlConverters.StatusBrush}}" />
                       </Grid>
                     </Button>

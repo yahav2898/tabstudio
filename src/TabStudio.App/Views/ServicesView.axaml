@@ -134,7 +134,7 @@
           <TextBlock Classes="h2" Text="Logs" VerticalAlignment="Center" />
         </Border>
         <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Auto" Background="{DynamicResource Brush.Terminal.Background}">
-          <SelectableTextBlock Text="{Binding Logs}" FontFamily="{DynamicResource CodeFont}" FontSize="12" Margin="12,8" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Terminal.Foreground}" />
+          <SelectableTextBlock Text="{Binding Logs}" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Small}" Margin="12,8" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Terminal.Foreground}" />
         </ScrollViewer>
       </Grid>
     </Panel>

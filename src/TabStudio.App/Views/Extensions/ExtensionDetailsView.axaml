@@ -34,29 +34,29 @@
       <Grid ColumnDefinitions="Auto,*">
         <Panel Width="84" Height="84" VerticalAlignment="Top" Margin="0,2,18,0">
           <Border Classes="extensionIcon" CornerRadius="14" Background="{Binding Item.IconTint}" IsVisible="{Binding !Item.HasIcon}">
-            <TextBlock Text="{Binding Item.Initials}" FontSize="28" />
+            <TextBlock Text="{Binding Item.Initials}" FontSize="{DynamicResource Type.Display}" />
           </Border>
           <Image Source="{Binding Item.Icon}" IsVisible="{Binding Item.HasIcon}" Stretch="Uniform" />
         </Panel>
         <StackPanel Grid.Column="1" Spacing="7">
-          <TextBlock Text="{Binding Item.DisplayName}" FontSize="21" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding Item.DisplayName}" FontSize="{DynamicResource Type.Hero}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
           <WrapPanel ItemSpacing="12" LineSpacing="4">
             <StackPanel Orientation="Horizontal" Spacing="5">
-              <TextBlock Text="{Binding Publisher}" Foreground="{DynamicResource Brush.Link}" FontSize="13" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding Publisher}" Foreground="{DynamicResource Brush.Link}" FontSize="{DynamicResource Type.Section}" VerticalAlignment="Center" />
               <controls:StrokeIcon Data="{StaticResource Icon.Verified}" Size="14" StrokeThickness="1.6" Foreground="{DynamicResource Brush.Extensions.Verified}"
                                    IsVisible="{Binding Item.IsVerified}" ToolTip.Tip="The registry verified this publisher" />
             </StackPanel>
-            <TextBlock Text="{Binding VersionText}" Classes="muted" FontSize="13" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding VersionText}" Classes="muted" FontSize="{DynamicResource Type.Section}" VerticalAlignment="Center" />
             <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding Item.DownloadsText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
               <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" />
-              <TextBlock Text="{Binding Item.DownloadsText}" Classes="muted" FontSize="13" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding Item.DownloadsText}" Classes="muted" FontSize="{DynamicResource Type.Section}" VerticalAlignment="Center" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding Item.HasRating}">
               <controls:StrokeIcon Data="{StaticResource Icon.Star}" Size="13" IsFilled="True" Foreground="{DynamicResource Brush.Extensions.Star}" />
-              <TextBlock Text="{Binding Item.RatingText}" Classes="muted" FontSize="13" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding Item.RatingText}" Classes="muted" FontSize="{DynamicResource Type.Section}" VerticalAlignment="Center" />
             </StackPanel>
           </WrapPanel>
-          <TextBlock Text="{Binding Item.Description}" Foreground="{DynamicResource Brush.TextSecondary}" FontSize="13.5" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding Item.Description}" Foreground="{DynamicResource Brush.TextSecondary}" FontSize="{DynamicResource Type.Lead}" TextWrapping="Wrap" />
           <WrapPanel ItemSpacing="8" LineSpacing="8" Margin="0,6,0,0">
             <Button x:Name="InstallButton" Theme="{StaticResource AccentButton}" Classes="pageAction" Content="Install"
                     Command="{Binding InstallCommand}" IsVisible="{Binding CanInstall}" />
@@ -159,7 +159,7 @@
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:ExtensionInfoRow">
                   <StackPanel Spacing="1" Margin="0,0,0,9">
-                    <TextBlock Text="{Binding Label}" Classes="muted" FontSize="11.5" />
+                    <TextBlock Text="{Binding Label}" Classes="muted" FontSize="{DynamicResource Type.Fine}" />
                     <TextBlock Text="{Binding Value}" Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}" />
                   </StackPanel>
                 </DataTemplate>

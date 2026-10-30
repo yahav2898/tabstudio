@@ -24,10 +24,10 @@
       <Setter Property="MinHeight" Value="32" />
       <Setter Property="MinWidth" Value="34" />
       <Setter Property="Padding" Value="7,0" />
-      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     </Style>
     <Style Selector="TextBlock.section">
-      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Small}" />
       <Setter Property="FontWeight" Value="SemiBold" />
       <Setter Property="Foreground" Value="{DynamicResource Brush.TextLabel}" />
       <Setter Property="Margin" Value="0,8,0,2" />
@@ -137,8 +137,8 @@
         <controls:StrokeIcon Data="{StaticResource Icon.LiveTesting}" Size="15" VerticalAlignment="Top" Margin="0,1,9,0"
                              Foreground="{DynamicResource Brush.AccentText}" />
         <StackPanel Grid.Column="1" Spacing="1">
-          <TextBlock FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="Live Unit Testing" />
-          <TextBlock FontSize="12" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}"
+          <TextBlock FontSize="{DynamicResource Type.Body}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="Live Unit Testing" />
+          <TextBlock FontSize="{DynamicResource Type.Small}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}"
                      Text="{Binding LiveTesting.DetailText, FallbackValue={x:Null}}" />
         </StackPanel>
         <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Top">
@@ -178,13 +178,13 @@
       <controls:StrokeIcon Size="13" VerticalAlignment="Top" Margin="0,2,7,0"
                            Data="{Binding RunStatusState, Converter={x:Static conv:TestConverters.StateIcon}}"
                            Foreground="{Binding RunStatusState, Converter={x:Static conv:TestConverters.StateBrush}}" />
-      <TextBlock Grid.Column="1" Classes="muted" FontSize="12" TextWrapping="Wrap" Text="{Binding RunStatusText}" />
+      <TextBlock Grid.Column="1" Classes="muted" FontSize="{DynamicResource Type.Small}" TextWrapping="Wrap" Text="{Binding RunStatusText}" />
     </Grid>
 
     <!-- The tree and the details pane -->
     <Grid RowDefinitions="5*,Auto,4*">
       <Panel>
-        <TextBlock Classes="muted" FontSize="12.5" TextWrapping="Wrap" TextAlignment="Center" Margin="24,0"
+        <TextBlock Classes="muted" FontSize="{DynamicResource Type.Body}" TextWrapping="Wrap" TextAlignment="Center" Margin="24,0"
                    HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding EmptyText}"
                    IsVisible="{Binding EmptyText, Converter={x:Static ObjectConverters.IsNotNull}}" />
         <ListBox x:Name="Tree" ItemsSource="{Binding Rows}" SelectedItem="{Binding SelectedNode}"
@@ -219,7 +219,7 @@
                                      Data="{Binding State, Converter={x:Static conv:TestConverters.StateIcon}}"
                                      Foreground="{Binding State, Converter={x:Static conv:TestConverters.StateBrush}}" />
 
-                <TextBlock Grid.Column="3" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="13">
+                <TextBlock Grid.Column="3" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="{DynamicResource Type.Section}">
                   <Run Text="{Binding Name}" />
                   <Run Text="{Binding CountText}" Foreground="{DynamicResource Brush.TextMuted}" />
                 </TextBlock>
@@ -229,7 +229,7 @@
                                      Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsExcludedFromLiveTesting}"
                                      ToolTip.Tip="Excluded from Live Unit Testing" />
 
-                <TextBlock Grid.Column="5" Classes="muted" FontSize="11.5" Margin="8,0,10,0" VerticalAlignment="Center"
+                <TextBlock Grid.Column="5" Classes="muted" FontSize="{DynamicResource Type.Fine}" Margin="8,0,10,0" VerticalAlignment="Center"
                            Text="{Binding DurationText}" />
               </Grid>
             </DataTemplate>
@@ -249,7 +249,7 @@
 
       <!-- Details of the selected test or group -->
       <Panel Grid.Row="2">
-        <TextBlock Classes="muted" FontSize="12.5" HorizontalAlignment="Center" VerticalAlignment="Center"
+        <TextBlock Classes="muted" FontSize="{DynamicResource Type.Body}" HorizontalAlignment="Center" VerticalAlignment="Center"
                    Text="Select a test to see its details."
                    IsVisible="{Binding Details, Converter={x:Static ObjectConverters.IsNull}}" />
         <ContentControl Content="{Binding Details}">
@@ -261,20 +261,20 @@
                     <controls:StrokeIcon Size="16" VerticalAlignment="Top" Margin="0,1,8,0"
                                          Data="{Binding State, Converter={x:Static conv:TestConverters.StateIcon}}"
                                          Foreground="{Binding State, Converter={x:Static conv:TestConverters.StateBrush}}" />
-                    <SelectableTextBlock Grid.Column="1" Text="{Binding Title}" FontWeight="SemiBold" FontSize="13"
+                    <SelectableTextBlock Grid.Column="1" Text="{Binding Title}" FontWeight="SemiBold" FontSize="{DynamicResource Type.Section}"
                                          TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}" />
                   </Grid>
-                  <TextBlock Classes="muted" FontSize="12" TextWrapping="Wrap" Text="{Binding Summary}" />
+                  <TextBlock Classes="muted" FontSize="{DynamicResource Type.Small}" TextWrapping="Wrap" Text="{Binding Summary}" />
 
                   <Border IsVisible="{Binding IsStale}" CornerRadius="6" Padding="8,5" Margin="0,4,0,0" Background="{DynamicResource Brush.Pill}">
-                    <TextBlock FontSize="12" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Warning}"
+                    <TextBlock FontSize="{DynamicResource Type.Small}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Warning}"
                                Text="The code changed after this run. Run the tests again to update the result." />
                   </Border>
 
                   <Button Theme="{StaticResource ToolButton}" MinHeight="32" Height="32" Padding="6,0" Margin="-6,0,0,0"
                           HorizontalAlignment="Left" Command="{Binding GoToSourceCommand}"
                           IsVisible="{Binding SourceText, Converter={x:Static ObjectConverters.IsNotNull}}">
-                    <TextBlock FontSize="12.5">
+                    <TextBlock FontSize="{DynamicResource Type.Body}">
                       <Run Text="Source: " Foreground="{DynamicResource Brush.TextMuted}" />
                       <Run Text="{Binding SourceText}" Foreground="{DynamicResource Brush.Link}" />
                     </TextBlock>
@@ -287,14 +287,14 @@
                           <controls:StrokeIcon Size="14"
                                                Data="{Binding State, Converter={x:Static conv:TestConverters.StateIcon}}"
                                                Foreground="{Binding State, Converter={x:Static conv:TestConverters.StateBrush}}" />
-                          <TextBlock FontSize="12.5" Text="{Binding Text}" VerticalAlignment="Center" />
+                          <TextBlock FontSize="{DynamicResource Type.Body}" Text="{Binding Text}" VerticalAlignment="Center" />
                         </StackPanel>
                       </DataTemplate>
                     </ItemsControl.ItemTemplate>
                   </ItemsControl>
 
                   <TextBlock Classes="section" Text="Message" IsVisible="{Binding HasMessage}" />
-                  <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="12" TextWrapping="Wrap"
+                  <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Small}" TextWrapping="Wrap"
                                        Foreground="{DynamicResource Brush.Text}" Text="{Binding Message}" IsVisible="{Binding HasMessage}" />
 
                   <TextBlock Classes="section" Text="Stack Trace" IsVisible="{Binding HasStackFrames}" />
@@ -305,8 +305,8 @@
                                 HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
                                 Opacity="{Binding Opacity}" Command="{Binding OpenCommand}" IsEnabled="{Binding CanOpen}">
                           <StackPanel>
-                            <TextBlock FontFamily="{DynamicResource CodeFont}" FontSize="11.5" TextWrapping="Wrap" Text="{Binding Method}" />
-                            <TextBlock FontSize="11.5" Text="{Binding Location}" Foreground="{DynamicResource Brush.Link}"
+                            <TextBlock FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Fine}" TextWrapping="Wrap" Text="{Binding Method}" />
+                            <TextBlock FontSize="{DynamicResource Type.Fine}" Text="{Binding Location}" Foreground="{DynamicResource Brush.Link}"
                                        IsVisible="{Binding Location, Converter={x:Static ObjectConverters.IsNotNull}}" />
                           </StackPanel>
                         </Button>
@@ -323,7 +323,7 @@
 
                   <TextBlock Classes="section" Text="Standard Output" IsVisible="{Binding HasOutput}" />
                   <Border CornerRadius="6" Padding="8,6" Background="{DynamicResource Brush.Window}" IsVisible="{Binding HasOutput}">
-                    <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="12" TextWrapping="Wrap" Text="{Binding Output}" />
+                    <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Small}" TextWrapping="Wrap" Text="{Binding Output}" />
                   </Border>
                 </StackPanel>
               </ScrollViewer>

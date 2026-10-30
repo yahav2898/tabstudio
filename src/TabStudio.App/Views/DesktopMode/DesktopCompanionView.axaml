@@ -30,7 +30,7 @@
                                HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Border>
         <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center" Spacing="2">
-          <TextBlock Classes="h1" FontSize="16" Text="Desktop mode" />
+          <TextBlock Classes="h1" FontSize="{DynamicResource Type.Heading}" Text="Desktop mode" />
           <TextBlock Classes="muted small" Text="{Binding DisplayDescription}" TextTrimming="CharacterEllipsis" />
         </StackPanel>
         <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Focusable="False" Height="44" Padding="14,0"
@@ -78,9 +78,9 @@
     <Border x:Name="PaneTabs" DockPanel.Dock="Top" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}"
             BorderThickness="0,0,0,1" IsVisible="False">
       <StackPanel Orientation="Horizontal" Margin="8,0">
-        <Button Theme="{StaticResource PanelTabButton}" Focusable="False" MinHeight="44" FontSize="14" Content="Toolbox"
+        <Button Theme="{StaticResource PanelTabButton}" Focusable="False" MinHeight="44" FontSize="{DynamicResource Type.Large}" Content="Toolbox"
                 Classes.selected="{Binding Companion.IsToolboxPane}" Command="{Binding Companion.ShowToolboxCommand}" />
-        <Button Theme="{StaticResource PanelTabButton}" Focusable="False" MinHeight="44" FontSize="14" Content="Properties"
+        <Button Theme="{StaticResource PanelTabButton}" Focusable="False" MinHeight="44" FontSize="{DynamicResource Type.Large}" Content="Properties"
                 Classes.selected="{Binding Companion.IsPropertiesPane}" Command="{Binding Companion.ShowPropertiesCommand}" />
       </StackPanel>
     </Border>

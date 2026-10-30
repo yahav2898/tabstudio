@@ -42,7 +42,7 @@
           <controls:StrokeIcon Data="{StaticResource Icon.ArrowRight}" Size="18" />
         </Button>
         <Button Classes="key" Theme="{StaticResource SecondaryButton}" Tag="{x:Static input:Key.Escape}" Click="OnKeyClick" ToolTip.Tip="Escape"
-                Width="56" Content="Esc" FontSize="13" />
+                Width="56" Content="Esc" FontSize="{DynamicResource Type.Section}" />
       </StackPanel>
     </Grid>
   </Border>

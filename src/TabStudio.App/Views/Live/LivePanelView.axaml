@@ -14,7 +14,7 @@
       <Setter Property="Padding" Value="0" />
     </Style>
     <Style Selector="TextBlock.section">
-      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Small}" />
       <Setter Property="FontWeight" Value="SemiBold" />
       <Setter Property="Foreground" Value="{DynamicResource Brush.TextLabel}" />
     </Style>
@@ -37,7 +37,7 @@
       <Setter Property="CornerRadius" Value="16" />
     </Style>
     <Style Selector="Border.avatar > TextBlock">
-      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Small}" />
       <Setter Property="FontWeight" Value="SemiBold" />
       <Setter Property="Foreground" Value="{DynamicResource Brush.OnAccent}" />
       <Setter Property="HorizontalAlignment" Value="Center" />

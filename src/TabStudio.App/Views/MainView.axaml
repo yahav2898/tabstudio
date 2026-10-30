@@ -10,13 +10,13 @@
              x:DataType="vm:MainViewModel"
              Background="{DynamicResource Brush.Window}"
              Foreground="{DynamicResource Brush.Text}"
-             FontSize="13">
+             FontSize="{DynamicResource Type.Section}">
   <Panel x:Name="Root">
     <!--
       The IDE: the start screen or a workspace, with the GitHub sign-in over it. In desktop mode it moves to the
       external display as it is, editors and all, and the companion takes its place here.
     -->
-    <Panel x:Name="Ide" TextElement.Foreground="{DynamicResource Brush.Text}" TextElement.FontSize="13">
+    <Panel x:Name="Ide" TextElement.Foreground="{DynamicResource Brush.Text}" TextElement.FontSize="{DynamicResource Type.Section}">
       <controls:PageHost Page="{Binding CurrentPage}">
         <controls:PageHost.DataTemplates>
           <DataTemplate DataType="vm:StartViewModel">

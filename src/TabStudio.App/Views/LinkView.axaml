@@ -51,7 +51,7 @@
                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
             </Border>
             <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
-              <TextBlock Classes="h2" FontSize="16" Text="TabStudio Link" />
+              <TextBlock Classes="h2" FontSize="{DynamicResource Type.Heading}" Text="TabStudio Link" />
               <TextBlock Classes="muted small" TextWrapping="Wrap"
                          Text="A phone or PC running TabStudio compiles for this device over Wi-Fi. No cloud and no account; the connection is end-to-end encrypted." />
             </StackPanel>
@@ -127,7 +127,7 @@
                     <Ellipse Fill="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding IsNotLinked}" />
                   </Panel>
                   <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding ClientTitle}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding ClientTitle}" FontSize="{DynamicResource Type.Large}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
                     <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding ClientDetail}"
                                IsVisible="{Binding ClientDetail, Converter={x:Static ObjectConverters.IsNotNull}}" />
                   </StackPanel>
@@ -230,10 +230,10 @@
                                Text="On the tablet: File > TabStudio Link > Scan its QR code. Without a camera, type these instead:" />
                     <Grid ColumnDefinitions="Auto,16,*" RowDefinitions="Auto,6,Auto" Margin="0,4,0,0">
                       <TextBlock Classes="label" Text="Address" VerticalAlignment="Center" />
-                      <SelectableTextBlock Grid.Column="2" FontFamily="{DynamicResource CodeFont}" FontSize="19" Foreground="{DynamicResource Brush.TextBright}" Text="{Binding HostAddressText}" VerticalAlignment="Center" />
+                      <SelectableTextBlock Grid.Column="2" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Title}" Foreground="{DynamicResource Brush.TextBright}" Text="{Binding HostAddressText}" VerticalAlignment="Center" />
                       <TextBlock Grid.Row="2" Classes="label" Text="Code" VerticalAlignment="Center" />
                       <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Spacing="10">
-                        <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="{Binding PairingCodeText}" VerticalAlignment="Center" />
+                        <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Display}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="{Binding PairingCodeText}" VerticalAlignment="Center" />
                         <Button Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="10,0" Command="{Binding NewCodeCommand}" ToolTip.Tip="Draw a new code; the shown one stops working">
                           <StackPanel Orientation="Horizontal" Spacing="6">
                             <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="14" />
@@ -261,7 +261,7 @@
                       <Ellipse Fill="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding !IsServing}" />
                     </Panel>
                     <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
-                      <TextBlock Text="{Binding HostTitle}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
+                      <TextBlock Text="{Binding HostTitle}" FontSize="{DynamicResource Type.Large}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
                       <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding HostDetail}"
                                  IsVisible="{Binding HostDetail, Converter={x:Static ObjectConverters.IsNotNull}}" />
                       <StackPanel Orientation="Horizontal" Spacing="6">

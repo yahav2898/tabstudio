@@ -37,7 +37,7 @@
       <Border Width="64" Height="64" CornerRadius="18" Background="{DynamicResource Brush.AccentSoft}" HorizontalAlignment="Center">
         <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="32" Foreground="{DynamicResource Brush.AccentText}" HorizontalAlignment="Center" VerticalAlignment="Center" />
       </Border>
-      <TextBlock Classes="h1" FontSize="18" TextAlignment="Center" TextWrapping="Wrap" Text="{Binding StateText}" />
+      <TextBlock Classes="h1" FontSize="{DynamicResource Type.Title}" TextAlignment="Center" TextWrapping="Wrap" Text="{Binding StateText}" />
       <TextBlock Classes="muted" TextAlignment="Center" TextWrapping="Wrap"
                  Text="On the tablet, choose Swarm in the Run button's menu and press F5. The app shows here full screen, and every save on the tablet updates it." />
       <TextBlock Classes="muted small" TextAlignment="Center" TextWrapping="Wrap" Text="{Binding DetailText}" />
@@ -49,7 +49,7 @@
         <StackPanel Spacing="10">
           <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
             <controls:StrokeIcon Data="{StaticResource Icon.Pause}" Size="18" StrokeThickness="2.6" Foreground="{DynamicResource Brush.Warning}" />
-            <TextBlock Classes="h2" FontSize="15" Text="Paused in the tablet's debugger" VerticalAlignment="Center" />
+            <TextBlock Classes="h2" FontSize="{DynamicResource Type.Subtitle}" Text="Paused in the tablet's debugger" VerticalAlignment="Center" />
           </StackPanel>
           <TextBlock Classes="muted" TextAlignment="Center" TextWrapping="Wrap"
                      Text="Step or continue on the tablet; the app continues here." />
@@ -80,7 +80,7 @@
               <Ellipse Fill="{DynamicResource Brush.Info}" IsVisible="{Binding IsWaiting}" />
             </Panel>
             <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="13" Foreground="{DynamicResource Brush.TextBright}" />
-            <TextBlock Text="{Binding CoordinatorName}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" MaxWidth="180" TextTrimming="CharacterEllipsis" />
+            <TextBlock Text="{Binding CoordinatorName}" FontSize="{DynamicResource Type.Small}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" MaxWidth="180" TextTrimming="CharacterEllipsis" />
             <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="11" Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding !IsExpanded}" />
             <controls:StrokeIcon Data="{StaticResource Icon.ChevronUp}" Size="11" Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsExpanded}" />
           </StackPanel>
@@ -91,7 +91,7 @@
         <StackPanel Spacing="10">
           <StackPanel Spacing="3">
             <TextBlock Text="{Binding StateText}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
-            <TextBlock FontSize="12" Foreground="{DynamicResource Brush.TextMuted}" TextWrapping="Wrap" Text="{Binding DetailText}" />
+            <TextBlock FontSize="{DynamicResource Type.Small}" Foreground="{DynamicResource Brush.TextMuted}" TextWrapping="Wrap" Text="{Binding DetailText}" />
           </StackPanel>
           <Button Theme="{StaticResource SecondaryButton}" Height="38" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                   Command="{Binding LeaveCommand}">

@@ -112,7 +112,7 @@
             <Border Padding="10,8" CornerRadius="{StaticResource Radius.Control}" Background="{DynamicResource Brush.Control}"
                     BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" IsVisible="{Binding HasPublicKey}">
               <Grid ColumnDefinitions="*,Auto">
-                <SelectableTextBlock Text="{Binding PublicKey}" TextWrapping="Wrap" FontFamily="{DynamicResource CodeFont}" FontSize="11"
+                <SelectableTextBlock Text="{Binding PublicKey}" TextWrapping="Wrap" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Caption}"
                                      MaxHeight="110" VerticalAlignment="Center" />
                 <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Classes="icon" ToolTip.Tip="Copy the public key" Click="CopyPublicKey"
                         VerticalAlignment="Top" Margin="8,0,0,0">

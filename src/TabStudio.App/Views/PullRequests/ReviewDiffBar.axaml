@@ -13,7 +13,7 @@
                 Command="{Binding ShowPullRequestCommand}">
           <StackPanel Orientation="Horizontal" Spacing="7">
             <controls:StrokeIcon Data="{StaticResource Icon.PullRequest}" Size="15" Foreground="{DynamicResource Brush.AccentText}" />
-            <TextBlock MaxWidth="300" TextTrimming="CharacterEllipsis" FontSize="12.5" VerticalAlignment="Center"><Run
+            <TextBlock MaxWidth="300" TextTrimming="CharacterEllipsis" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center"><Run
               Text="{Binding PullRequest.NumberText}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
               Text=" " /><Run Text="{Binding PullRequest.Title}" /></TextBlock>
           </StackPanel>
@@ -44,13 +44,13 @@
                 ToolTip.Tip="Comment on the line at the cursor, or the selected lines (Ctrl+Shift+Enter)">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="14" />
-            <TextBlock Text="Add Comment" VerticalAlignment="Center" FontSize="12.5" />
+            <TextBlock Text="Add Comment" VerticalAlignment="Center" FontSize="{DynamicResource Type.Body}" />
           </StackPanel>
         </Button>
         <Button Theme="{StaticResource AccentButton}" Height="34" Padding="12,0" Command="{Binding FinishReviewCommand}"
                 IsVisible="{Binding PullRequest.IsOpen}" ToolTip.Tip="Comment, approve or request changes, sending your pending comments">
           <StackPanel Orientation="Horizontal" Spacing="7">
-            <TextBlock Text="Finish Review" VerticalAlignment="Center" FontSize="12.5" />
+            <TextBlock Text="Finish Review" VerticalAlignment="Center" FontSize="{DynamicResource Type.Body}" />
             <Border Classes="pill" Background="{DynamicResource Brush.OnAccent.Pill}" IsVisible="{Binding PullRequest.HasPendingComments}">
               <TextBlock Text="{Binding PullRequest.PendingCount}" Foreground="{DynamicResource Brush.OnAccent}" VerticalAlignment="Center" />
             </Border>

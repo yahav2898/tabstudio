@@ -19,7 +19,7 @@
                 Content="Send" Command="{Binding SubmitInputCommand}" />
       </Grid>
     </Border>
-    <ae:TextEditor x:Name="Editor" IsReadOnly="True" ShowLineNumbers="False" WordWrap="True" FontSize="13"
+    <ae:TextEditor x:Name="Editor" IsReadOnly="True" ShowLineNumbers="False" WordWrap="True" FontSize="{DynamicResource Type.Section}"
                    Padding="12,6,12,6" />
   </DockPanel>
 </UserControl>
