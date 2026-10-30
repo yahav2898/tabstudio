@@ -88,6 +88,10 @@ public static class CompatibilityDoctor
             "The browser head of a cross-platform app, compiled ahead of time to WebAssembly: it builds only with .NET's wasm-tools workload, on a computer. "
             + "TabStudio leaves it out of builds; the app's shared project and its desktop head run here."),
 
+        PlatformWorkload.Protoc => Report(
+            project, RunHost.None, CompatibilityStatus.Unsupported, "protoc, on a computer",
+            $"Not supported here: it {ProjectClassifier.PlatformWorkloadReason(project)}. TabStudio leaves it out of builds."),
+
         PlatformWorkload.NewerDotNet => Report(
             project, RunHost.None, CompatibilityStatus.Unsupported, "A newer .NET SDK, on a computer",
             $"Not supported yet: it {ProjectClassifier.PlatformWorkloadReason(project)}. TabStudio leaves it out of builds."),

@@ -280,6 +280,9 @@ public sealed record ProjectInfo
     /// </summary>
     public IReadOnlyList<System.Xml.Linq.XElement> CompilerTargets { get; init; } = [];
 
+    /// <summary>The <c>.proto</c> files of the project's <c>&lt;Protobuf&gt;</c> items, which Grpc.Tools' <c>protoc</c> compiles.</summary>
+    public IReadOnlyList<string> ProtobufIncludes { get; init; } = [];
+
     /// <summary>The metadata the project's <c>EmbeddedResource</c> items give the files they include or update, in order.</summary>
     public IReadOnlyList<ItemMetadataInfo> EmbeddedResourceItems { get; init; } = [];
 

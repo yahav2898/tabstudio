@@ -143,6 +143,11 @@ public static class ProjectClassifier
             return PlatformWorkload.NewerDotNet;
         }
 
+        if (project.ProtobufIncludes.Count > 0)
+        {
+            return PlatformWorkload.Protoc;
+        }
+
         return PlatformWorkload.None;
     }
 
@@ -169,6 +174,7 @@ public static class ProjectClassifier
             PlatformWorkload.Xamarin => "is a Xamarin project, which only Xamarin's tools in Visual Studio build, on a computer",
             PlatformWorkload.Uwp => "is a UWP project, which only Visual Studio's Universal Windows Platform tools build, on Windows",
             PlatformWorkload.WebAssemblyTools => "is a browser head compiled ahead of time to WebAssembly, which only .NET's wasm-tools workload builds, on a computer",
+            PlatformWorkload.Protoc => "generates its gRPC and Protocol Buffers code with protoc, from Grpc.Tools, a native program that runs only on a computer",
             PlatformWorkload.NewerDotNet => $"targets {string.Join(", ", project.TargetFrameworks)}, which only the .NET {NewestDotNet(project)} SDK builds; TabStudio compiles with .NET {CompiledDotNetMajor}",
             _ => null,
         };

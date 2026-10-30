@@ -35,4 +35,10 @@ public enum PlatformWorkload
     /// .NET's SDK, as the .NET 10 SDK reports with <c>NETSDK1045</c>.
     /// </summary>
     NewerDotNet,
+
+    /// <summary>
+    /// A project that compiles <c>.proto</c> files (<c>&lt;Protobuf&gt;</c> items, from Grpc.Tools), whose gRPC and
+    /// Protocol Buffers code <c>protoc</c> generates, a native program that runs only on a computer.
+    /// </summary>
+    Protoc,
 }

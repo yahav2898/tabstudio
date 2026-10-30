@@ -210,6 +210,7 @@ public static partial class ProjectParser
         {
             CompilerTargets = TargetItems.CompilerTargetsOf([evaluation.Targets]),
             EmbeddedResourceItems = ReadItemMetadata(items, "EmbeddedResource"),
+            ProtobufIncludes = ReadItemPatterns(items, "Protobuf", "Include", properties),
         };
         if (info.CompilerTargets.Count > 0)
         {
