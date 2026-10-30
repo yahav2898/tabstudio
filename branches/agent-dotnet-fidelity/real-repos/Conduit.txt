@@ -1,11 +1,11 @@
 Conduit at 8aa617abed5dd645f8f9d99578a3e07b4e2e52e7
-Opened /home/runner/work/_temp/real-repos/Conduit/Conduit.slnx in 0.1 s
+Opened /home/runner/work/_temp/real-repos/Conduit/Conduit.slnx in 0.2 s
 Compatibility Doctor:
   build: Not supported via Build script, on a computer - The repository's build script (on Bullseye): it builds, tests and publishes the other projects by starting dotnet and other tools as processes, which a program cannot do on a tablet. TabStudio builds it with the solution but never starts it; build and run the other projects here, or run the script on a computer with the .NET SDK.
   Conduit: Ready via Local server + WebView - Served on this device and shown in the web preview beside the code. Saving a file restarts it.
   Conduit.IntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: Conduit
-Built in 7.3 s: 0 errors, 0 warnings
+Built in 8.2 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   mediator.sourcegenerator 3.0.2
       analyzers/dotnet/cs/Mediator.SourceGenerator.dll
@@ -1001,55 +1001,55 @@ Packages with analyzers or MSBuild files:
       build/net8.0/xunit.runner.visualstudio.testadapter.dll
 Serve: Jwt__SigningKey set for the run.
 Serve: ConnectionStrings__Conduit set for the run.
-Serve: GET /api/articles answered 200 in 1.7 s after F5, 33 characters; expected 200 with '"articlesCount"': OK
+Serve: GET /api/articles answered 200 in 2.0 s after F5, 33 characters; expected 200 with '"articlesCount"': OK
 Output:
-Build started at 19:45:43...
+Build started at 20:37:42...
 1>------ Build started: Project: Conduit, Configuration: Debug ------
-1>Conduit -> compiled in memory (267.5 KB, 211 ms)
+1>Conduit -> compiled in memory (267.5 KB, 244 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (40ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       PRAGMA journal_mode = 'wal';
-19:45:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("40"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""PRAGMA journal_mode = 'wal';"
+20:37:43 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("40"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""PRAGMA journal_mode = 'wal';"
 info: Microsoft.EntityFrameworkCore.Migrations[20411]
       Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
-19:45:44 [Information] Microsoft.EntityFrameworkCore.Migrations Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+20:37:43 [Information] Microsoft.EntityFrameworkCore.Migrations Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       SELECT COUNT(*) FROM "sqlite_master" WHERE "name" = '__EFMigrationsLock' AND "type" = 'table';
-19:45:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("4"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""SELECT COUNT(*) FROM \"sqlite_master\" WHERE \"name\" = '__EFMigrationsLock' AND \"type\" = 'table';"
+20:37:43 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("3"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""SELECT COUNT(*) FROM \"sqlite_master\" WHERE \"name\" = '__EFMigrationsLock' AND \"type\" = 'table';"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE IF NOT EXISTS "__EFMigrationsLock" (
           "Id" INTEGER NOT NULL CONSTRAINT "PK___EFMigrationsLock" PRIMARY KEY,
           "Timestamp" TEXT NOT NULL
       );
-19:45:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("2"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE IF NOT EXISTS \"__EFMigrationsLock\" (\r\n    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK___EFMigrationsLock\" PRIMARY KEY,\r\n    \"Timestamp\" TEXT NOT NULL\r\n);"
+20:37:43 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("2"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE IF NOT EXISTS \"__EFMigrationsLock\" (\r\n    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK___EFMigrationsLock\" PRIMARY KEY,\r\n    \"Timestamp\" TEXT NOT NULL\r\n);"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
-      INSERT OR IGNORE INTO "__EFMigrationsLock"("Id", "Timestamp") VALUES(1, '2026-10-30 19:45:44.9397641+00:00');
+      INSERT OR IGNORE INTO "__EFMigrationsLock"("Id", "Timestamp") VALUES(1, '2026-10-30 20:37:43.9244004+00:00');
       SELECT changes();
-19:45:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""INSERT OR IGNORE INTO \"__EFMigrationsLock\"(\"Id\", \"Timestamp\") VALUES(1, '2026-10-30 19:45:44.9397641+00:00');\r\nSELECT changes();"
+20:37:43 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""INSERT OR IGNORE INTO \"__EFMigrationsLock\"(\"Id\", \"Timestamp\") VALUES(1, '2026-10-30 20:37:43.9244004+00:00');\r\nSELECT changes();"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE IF NOT EXISTS "__EFMigrationsHistory" (
           "MigrationId" TEXT NOT NULL CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY,
           "ProductVersion" TEXT NOT NULL
       );
-19:45:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("2"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE IF NOT EXISTS \"__EFMigrationsHistory\" (\n    \"MigrationId\" TEXT NOT NULL CONSTRAINT \"PK___EFMigrationsHistory\" PRIMARY KEY,\n    \"ProductVersion\" TEXT NOT NULL\n);"
+20:37:43 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE IF NOT EXISTS \"__EFMigrationsHistory\" (\n    \"MigrationId\" TEXT NOT NULL CONSTRAINT \"PK___EFMigrationsHistory\" PRIMARY KEY,\n    \"ProductVersion\" TEXT NOT NULL\n);"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       SELECT COUNT(*) FROM "sqlite_master" WHERE "name" = '__EFMigrationsHistory' AND "type" = 'table';
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""SELECT COUNT(*) FROM \"sqlite_master\" WHERE \"name\" = '__EFMigrationsHistory' AND \"type\" = 'table';"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""SELECT COUNT(*) FROM \"sqlite_master\" WHERE \"name\" = '__EFMigrationsHistory' AND \"type\" = 'table';"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       SELECT "MigrationId", "ProductVersion"
       FROM "__EFMigrationsHistory"
       ORDER BY "MigrationId";
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""SELECT \"MigrationId\", \"ProductVersion\"\nFROM \"__EFMigrationsHistory\"\nORDER BY \"MigrationId\";"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""SELECT \"MigrationId\", \"ProductVersion\"\nFROM \"__EFMigrationsHistory\"\nORDER BY \"MigrationId\";"
 info: Microsoft.EntityFrameworkCore.Migrations[20402]
       Applying migration '20261006170650_InitialSchema'.
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Migrations Applying migration '"20261006170650_InitialSchema"'.
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Migrations Applying migration '"20261006170650_InitialSchema"'.
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE "Persons" (
@@ -1061,13 +1061,13 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           "Hash" BLOB NOT NULL,
           "Salt" BLOB NOT NULL
       );
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE \"Persons\" (\n    \"PersonId\" INTEGER NOT NULL CONSTRAINT \"PK_Persons\" PRIMARY KEY AUTOINCREMENT,\n    \"Username\" TEXT NULL,\n    \"Email\" TEXT NULL,\n    \"Bio\" TEXT NULL,\n    \"Image\" TEXT NULL,\n    \"Hash\" BLOB NOT NULL,\n    \"Salt\" BLOB NOT NULL\n);"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE \"Persons\" (\n    \"PersonId\" INTEGER NOT NULL CONSTRAINT \"PK_Persons\" PRIMARY KEY AUTOINCREMENT,\n    \"Username\" TEXT NULL,\n    \"Email\" TEXT NULL,\n    \"Bio\" TEXT NULL,\n    \"Image\" TEXT NULL,\n    \"Hash\" BLOB NOT NULL,\n    \"Salt\" BLOB NOT NULL\n);"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE "Tags" (
           "TagId" TEXT NOT NULL CONSTRAINT "PK_Tags" PRIMARY KEY
       );
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE \"Tags\" (\n    \"TagId\" TEXT NOT NULL CONSTRAINT \"PK_Tags\" PRIMARY KEY\n);"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE \"Tags\" (\n    \"TagId\" TEXT NOT NULL CONSTRAINT \"PK_Tags\" PRIMARY KEY\n);"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE "Articles" (
@@ -1081,7 +1081,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           "UpdatedAt" TEXT NOT NULL,
           CONSTRAINT "FK_Articles_Persons_AuthorPersonId" FOREIGN KEY ("AuthorPersonId") REFERENCES "Persons" ("PersonId")
       );
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE \"Articles\" (\n    \"ArticleId\" INTEGER NOT NULL CONSTRAINT \"PK_Articles\" PRIMARY KEY AUTOINCREMENT,\n    \"Slug\" TEXT NULL,\n    \"Title\" TEXT NULL,\n    \"Description\" TEXT NULL,\n    \"Body\" TEXT NULL,\n    \"AuthorPersonId\" INTEGER NULL,\n    \"CreatedAt\" TEXT NOT NULL,\n    \"UpdatedAt\" TEXT NOT NULL,\n    CONSTRAINT \"FK_Articles_Persons_AuthorPersonId\" FOREIGN KEY (\"AuthorPersonId\") REFERENCES \"Persons\" (\"PersonId\")\n);"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE \"Articles\" (\n    \"ArticleId\" INTEGER NOT NULL CONSTRAINT \"PK_Articles\" PRIMARY KEY AUTOINCREMENT,\n    \"Slug\" TEXT NULL,\n    \"Title\" TEXT NULL,\n    \"Description\" TEXT NULL,\n    \"Body\" TEXT NULL,\n    \"AuthorPersonId\" INTEGER NULL,\n    \"CreatedAt\" TEXT NOT NULL,\n    \"UpdatedAt\" TEXT NOT NULL,\n    CONSTRAINT \"FK_Articles_Persons_AuthorPersonId\" FOREIGN KEY (\"AuthorPersonId\") REFERENCES \"Persons\" (\"PersonId\")\n);"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE "FollowedPeople" (
@@ -1091,7 +1091,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT "FK_FollowedPeople_Persons_ObserverId" FOREIGN KEY ("ObserverId") REFERENCES "Persons" ("PersonId") ON DELETE RESTRICT,
           CONSTRAINT "FK_FollowedPeople_Persons_TargetId" FOREIGN KEY ("TargetId") REFERENCES "Persons" ("PersonId") ON DELETE RESTRICT
       );
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE \"FollowedPeople\" (\n    \"ObserverId\" INTEGER NOT NULL,\n    \"TargetId\" INTEGER NOT NULL,\n    CONSTRAINT \"PK_FollowedPeople\" PRIMARY KEY (\"ObserverId\", \"TargetId\"),\n    CONSTRAINT \"FK_FollowedPeople_Persons_ObserverId\" FOREIGN KEY (\"ObserverId\") REFERENCES \"Persons\" (\"PersonId\") ON DELETE RESTRICT,\n    CONSTRAINT \"FK_FollowedPeople_Persons_TargetId\" FOREIGN KEY (\"TargetId\") REFERENCES \"Persons\" (\"PersonId\") ON DELETE RESTRICT\n);"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE \"FollowedPeople\" (\n    \"ObserverId\" INTEGER NOT NULL,\n    \"TargetId\" INTEGER NOT NULL,\n    CONSTRAINT \"PK_FollowedPeople\" PRIMARY KEY (\"ObserverId\", \"TargetId\"),\n    CONSTRAINT \"FK_FollowedPeople_Persons_ObserverId\" FOREIGN KEY (\"ObserverId\") REFERENCES \"Persons\" (\"PersonId\") ON DELETE RESTRICT,\n    CONSTRAINT \"FK_FollowedPeople_Persons_TargetId\" FOREIGN KEY (\"TargetId\") REFERENCES \"Persons\" (\"PersonId\") ON DELETE RESTRICT\n);"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE "ArticleFavorites" (
@@ -1101,7 +1101,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT "FK_ArticleFavorites_Articles_ArticleId" FOREIGN KEY ("ArticleId") REFERENCES "Articles" ("ArticleId") ON DELETE CASCADE,
           CONSTRAINT "FK_ArticleFavorites_Persons_PersonId" FOREIGN KEY ("PersonId") REFERENCES "Persons" ("PersonId") ON DELETE CASCADE
       );
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE \"ArticleFavorites\" (\n    \"ArticleId\" INTEGER NOT NULL,\n    \"PersonId\" INTEGER NOT NULL,\n    CONSTRAINT \"PK_ArticleFavorites\" PRIMARY KEY (\"ArticleId\", \"PersonId\"),\n    CONSTRAINT \"FK_ArticleFavorites_Articles_ArticleId\" FOREIGN KEY (\"ArticleId\") REFERENCES \"Articles\" (\"ArticleId\") ON DELETE CASCADE,\n    CONSTRAINT \"FK_ArticleFavorites_Persons_PersonId\" FOREIGN KEY (\"PersonId\") REFERENCES \"Persons\" (\"PersonId\") ON DELETE CASCADE\n);"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE \"ArticleFavorites\" (\n    \"ArticleId\" INTEGER NOT NULL,\n    \"PersonId\" INTEGER NOT NULL,\n    CONSTRAINT \"PK_ArticleFavorites\" PRIMARY KEY (\"ArticleId\", \"PersonId\"),\n    CONSTRAINT \"FK_ArticleFavorites_Articles_ArticleId\" FOREIGN KEY (\"ArticleId\") REFERENCES \"Articles\" (\"ArticleId\") ON DELETE CASCADE,\n    CONSTRAINT \"FK_ArticleFavorites_Persons_PersonId\" FOREIGN KEY (\"PersonId\") REFERENCES \"Persons\" (\"PersonId\") ON DELETE CASCADE\n);"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE "ArticleTags" (
@@ -1111,7 +1111,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT "FK_ArticleTags_Articles_ArticleId" FOREIGN KEY ("ArticleId") REFERENCES "Articles" ("ArticleId") ON DELETE CASCADE,
           CONSTRAINT "FK_ArticleTags_Tags_TagId" FOREIGN KEY ("TagId") REFERENCES "Tags" ("TagId") ON DELETE CASCADE
       );
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE \"ArticleTags\" (\n    \"ArticleId\" INTEGER NOT NULL,\n    \"TagId\" TEXT NOT NULL,\n    CONSTRAINT \"PK_ArticleTags\" PRIMARY KEY (\"ArticleId\", \"TagId\"),\n    CONSTRAINT \"FK_ArticleTags_Articles_ArticleId\" FOREIGN KEY (\"ArticleId\") REFERENCES \"Articles\" (\"ArticleId\") ON DELETE CASCADE,\n    CONSTRAINT \"FK_ArticleTags_Tags_TagId\" FOREIGN KEY (\"TagId\") REFERENCES \"Tags\" (\"TagId\") ON DELETE CASCADE\n);"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE \"ArticleTags\" (\n    \"ArticleId\" INTEGER NOT NULL,\n    \"TagId\" TEXT NOT NULL,\n    CONSTRAINT \"PK_ArticleTags\" PRIMARY KEY (\"ArticleId\", \"TagId\"),\n    CONSTRAINT \"FK_ArticleTags_Articles_ArticleId\" FOREIGN KEY (\"ArticleId\") REFERENCES \"Articles\" (\"ArticleId\") ON DELETE CASCADE,\n    CONSTRAINT \"FK_ArticleTags_Tags_TagId\" FOREIGN KEY (\"TagId\") REFERENCES \"Tags\" (\"TagId\") ON DELETE CASCADE\n);"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE "Comments" (
@@ -1124,90 +1124,99 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT "FK_Comments_Articles_ArticleId" FOREIGN KEY ("ArticleId") REFERENCES "Articles" ("ArticleId") ON DELETE CASCADE,
           CONSTRAINT "FK_Comments_Persons_AuthorId" FOREIGN KEY ("AuthorId") REFERENCES "Persons" ("PersonId") ON DELETE CASCADE
       );
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE \"Comments\" (\n    \"CommentId\" INTEGER NOT NULL CONSTRAINT \"PK_Comments\" PRIMARY KEY AUTOINCREMENT,\n    \"Body\" TEXT NULL,\n    \"AuthorId\" INTEGER NOT NULL,\n    \"ArticleId\" INTEGER NOT NULL,\n    \"CreatedAt\" TEXT NOT NULL,\n    \"UpdatedAt\" TEXT NOT NULL,\n    CONSTRAINT \"FK_Comments_Articles_ArticleId\" FOREIGN KEY (\"ArticleId\") REFERENCES \"Articles\" (\"ArticleId\") ON DELETE CASCADE,\n    CONSTRAINT \"FK_Comments_Persons_AuthorId\" FOREIGN KEY (\"AuthorId\") REFERENCES \"Persons\" (\"PersonId\") ON DELETE CASCADE\n);"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE TABLE \"Comments\" (\n    \"CommentId\" INTEGER NOT NULL CONSTRAINT \"PK_Comments\" PRIMARY KEY AUTOINCREMENT,\n    \"Body\" TEXT NULL,\n    \"AuthorId\" INTEGER NOT NULL,\n    \"ArticleId\" INTEGER NOT NULL,\n    \"CreatedAt\" TEXT NOT NULL,\n    \"UpdatedAt\" TEXT NOT NULL,\n    CONSTRAINT \"FK_Comments_Articles_ArticleId\" FOREIGN KEY (\"ArticleId\") REFERENCES \"Articles\" (\"ArticleId\") ON DELETE CASCADE,\n    CONSTRAINT \"FK_Comments_Persons_AuthorId\" FOREIGN KEY (\"AuthorId\") REFERENCES \"Persons\" (\"PersonId\") ON DELETE CASCADE\n);"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE INDEX "IX_ArticleFavorites_PersonId" ON "ArticleFavorites" ("PersonId");
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE INDEX \"IX_ArticleFavorites_PersonId\" ON \"ArticleFavorites\" (\"PersonId\");"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE INDEX \"IX_ArticleFavorites_PersonId\" ON \"ArticleFavorites\" (\"PersonId\");"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE INDEX "IX_Articles_AuthorPersonId" ON "Articles" ("AuthorPersonId");
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE INDEX \"IX_Articles_AuthorPersonId\" ON \"Articles\" (\"AuthorPersonId\");"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE INDEX \"IX_Articles_AuthorPersonId\" ON \"Articles\" (\"AuthorPersonId\");"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE INDEX "IX_ArticleTags_TagId" ON "ArticleTags" ("TagId");
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE INDEX \"IX_ArticleTags_TagId\" ON \"ArticleTags\" (\"TagId\");"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE INDEX \"IX_ArticleTags_TagId\" ON \"ArticleTags\" (\"TagId\");"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE INDEX "IX_Comments_ArticleId" ON "Comments" ("ArticleId");
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE INDEX \"IX_Comments_ArticleId\" ON \"Comments\" (\"ArticleId\");"
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE INDEX \"IX_Comments_AuthorId\" ON \"Comments\" (\"AuthorId\");"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE INDEX \"IX_Comments_ArticleId\" ON \"Comments\" (\"ArticleId\");"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE INDEX "IX_Comments_AuthorId" ON "Comments" ("AuthorId");
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE INDEX \"IX_Comments_AuthorId\" ON \"Comments\" (\"AuthorId\");"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE INDEX "IX_FollowedPeople_TargetId" ON "FollowedPeople" ("TargetId");
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE INDEX \"IX_FollowedPeople_TargetId\" ON \"FollowedPeople\" (\"TargetId\");"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE INDEX \"IX_FollowedPeople_TargetId\" ON \"FollowedPeople\" (\"TargetId\");"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
       VALUES ('20261006170650_InitialSchema', '10.0.13');
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""INSERT INTO \"__EFMigrationsHistory\" (\"MigrationId\", \"ProductVersion\")\nVALUES ('20261006170650_InitialSchema', '10.0.13');"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""INSERT INTO \"__EFMigrationsHistory\" (\"MigrationId\", \"ProductVersion\")\nVALUES ('20261006170650_InitialSchema', '10.0.13');"
 info: Microsoft.EntityFrameworkCore.Migrations[20402]
       Applying migration '20261006170807_UniqueIdentities'.
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Migrations Applying migration '"20261006170807_UniqueIdentities"'.
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Migrations Applying migration '"20261006170807_UniqueIdentities"'.
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE UNIQUE INDEX "IX_Persons_Email" ON "Persons" ("Email");
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE UNIQUE INDEX \"IX_Persons_Email\" ON \"Persons\" (\"Email\");"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE UNIQUE INDEX \"IX_Persons_Email\" ON \"Persons\" (\"Email\");"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE UNIQUE INDEX "IX_Persons_Username" ON "Persons" ("Username");
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE UNIQUE INDEX \"IX_Persons_Username\" ON \"Persons\" (\"Username\");"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE UNIQUE INDEX \"IX_Persons_Username\" ON \"Persons\" (\"Username\");"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE UNIQUE INDEX "IX_Articles_Slug" ON "Articles" ("Slug");
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE UNIQUE INDEX \"IX_Articles_Slug\" ON \"Articles\" (\"Slug\");"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""CREATE UNIQUE INDEX \"IX_Articles_Slug\" ON \"Articles\" (\"Slug\");"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""INSERT INTO \"__EFMigrationsHistory\" (\"MigrationId\", \"ProductVersion\")\nVALUES ('20261006170807_UniqueIdentities', '10.0.13');"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
       VALUES ('20261006170807_UniqueIdentities', '10.0.13');
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""INSERT INTO \"__EFMigrationsHistory\" (\"MigrationId\", \"ProductVersion\")\nVALUES ('20261006170807_UniqueIdentities', '10.0.13');"
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DELETE FROM "__EFMigrationsLock";
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("4"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""DELETE FROM \"__EFMigrationsLock\";"
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""DELETE FROM \"__EFMigrationsLock\";"
 info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[62]
       User profile is available. Using '/home/runner/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
-19:45:45 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager User profile is available. Using '"/home/runner/.aspnet/DataProtection-Keys"' as key repository; keys will not be encrypted at rest.
+20:37:44 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager User profile is available. Using '"/home/runner/.aspnet/DataProtection-Keys"' as key repository; keys will not be encrypted at rest.
+info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[58]
+      Creating key {b336bda8-00c5-4e58-a649-251d72a1af33} with creation date 2026-10-30 20:37:44Z, activation date 2026-10-30 20:37:44Z, and expiration date 2027-01-28 20:37:44Z.
+20:37:44 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager Creating key {b336bda8-00c5-4e58-a649-251d72a1af33} with creation date 2026-10-30 20:37:44Z, activation date 2026-10-30 20:37:44Z, and expiration date 2027-01-28 20:37:44Z.
+warn: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[35]
+      No XML encryptor configured. Key {b336bda8-00c5-4e58-a649-251d72a1af33} may be persisted to storage in unencrypted form.
+20:37:44 [Warning] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager No XML encryptor configured. Key {b336bda8-00c5-4e58-a649-251d72a1af33} may be persisted to storage in unencrypted form.
+info: Microsoft.AspNetCore.DataProtection.Repositories.FileSystemXmlRepository[39]
+      Writing data to file '/home/runner/.aspnet/DataProtection-Keys/key-b336bda8-00c5-4e58-a649-251d72a1af33.xml'.
+20:37:44 [Information] Microsoft.AspNetCore.DataProtection.Repositories.FileSystemXmlRepository Writing data to file '"/home/runner/.aspnet/DataProtection-Keys/key-b336bda8-00c5-4e58-a649-251d72a1af33.xml"'.
 info: Microsoft.Hosting.Lifetime[14]
-      Now listening on: http://127.0.0.1:37937
-19:45:45 [Information] Microsoft.Hosting.Lifetime Now listening on: "http://127.0.0.1:37937"
+      Now listening on: http://127.0.0.1:44021
+20:37:44 [Information] Microsoft.Hosting.Lifetime Now listening on: "http://127.0.0.1:44021"
 info: Microsoft.Hosting.Lifetime[0]
       Application started. Press Ctrl+C to shut down.
-19:45:45 [Information] Microsoft.Hosting.Lifetime Application started. Press Ctrl+C to shut down.
+20:37:44 [Information] Microsoft.Hosting.Lifetime Application started. Press Ctrl+C to shut down.
 info: Microsoft.Hosting.Lifetime[0]
       Hosting environment: Development
-19:45:45 [Information] Microsoft.Hosting.Lifetime Hosting environment: "Development"
+20:37:44 [Information] Microsoft.Hosting.Lifetime Hosting environment: "Development"
+20:37:44 [Information] Microsoft.Hosting.Lifetime Content root path: "/home/runner/work/_temp/real-repos/Conduit/src/Conduit"
 info: Microsoft.Hosting.Lifetime[0]
       Content root path: /home/runner/work/_temp/real-repos/Conduit/src/Conduit
-19:45:45 [Information] Microsoft.Hosting.Lifetime Content root path: "/home/runner/work/_temp/real-repos/Conduit/src/Conduit"
-Conduit is listening on http://127.0.0.1:37937/
+Conduit is listening on http://127.0.0.1:44021/
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
-      Request starting HTTP/1.1 GET http://127.0.0.1:37937/api/articles - - -
-19:45:45 [Information] Microsoft.AspNetCore.Hosting.Diagnostics Request starting "HTTP/1.1" "GET" "http"://"127.0.0.1:37937""""/api/articles""" - null null
+      Request starting HTTP/1.1 GET http://127.0.0.1:44021/api/articles - - -
+20:37:44 [Information] Microsoft.AspNetCore.Hosting.Diagnostics Request starting "HTTP/1.1" "GET" "http"://"127.0.0.1:44021""""/api/articles""" - null null
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
       Executing endpoint 'Conduit.Features.Articles.ArticlesController.Get (Conduit)'
-19:45:45 [Information] Microsoft.AspNetCore.Routing.EndpointMiddleware Executing endpoint '"Conduit.Features.Articles.ArticlesController.Get (Conduit)"'
+20:37:44 [Information] Microsoft.AspNetCore.Routing.EndpointMiddleware Executing endpoint '"Conduit.Features.Articles.ArticlesController.Get (Conduit)"'
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
       Route matched with {action = "Get", controller = "Articles"}. Executing controller action with signature System.Threading.Tasks.ValueTask`1[Conduit.Features.Articles.ArticlesEnvelope] Get(System.String, System.String, System.String, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32], System.Threading.CancellationToken) on controller Conduit.Features.Articles.ArticlesController (Conduit).
-19:45:45 [Information] Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker Route matched with "{action = \"Get\", controller = \"Articles\"}". Executing controller action with signature "System.Threading.Tasks.ValueTask`1[Conduit.Features.Articles.ArticlesEnvelope] Get(System.String, System.String, System.String, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32], System.Threading.CancellationToken)" on controller "Conduit.Features.Articles.ArticlesController" ("Conduit").
+20:37:44 [Information] Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker Route matched with "{action = \"Get\", controller = \"Articles\"}". Executing controller action with signature "System.Threading.Tasks.ValueTask`1[Conduit.Features.Articles.ArticlesEnvelope] Get(System.String, System.String, System.String, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32], System.Threading.CancellationToken)" on controller "Conduit.Features.Articles.ArticlesController" ("Conduit").
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       SELECT COUNT(*)
       FROM "Articles" AS "a"
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""SELECT COUNT(*)\nFROM \"Articles\" AS \"a\""
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"\n""SELECT COUNT(*)\nFROM \"Articles\" AS \"a\""
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (2ms) [Parameters=[@p1='?' (DbType = Int32), @p='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
       SELECT "a0"."Slug", "a0"."Title", "a0"."Description", "a0"."CreatedAt", "a0"."UpdatedAt", "a0"."ArticleId", "p"."PersonId", "a1"."TagId", "a1"."ArticleId", (
@@ -1223,20 +1232,20 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       LEFT JOIN "Persons" AS "p" ON "a0"."AuthorPersonId" = "p"."PersonId"
       LEFT JOIN "ArticleTags" AS "a1" ON "a0"."ArticleId" = "a1"."ArticleId"
       ORDER BY "a0"."CreatedAt" DESC, "a0"."ArticleId" DESC, "p"."PersonId", "a1"."ArticleId"
-19:45:45 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("2"ms) [Parameters=["@p1='?' (DbType = Int32), @p='?' (DbType = Int32)"], CommandType='Text', CommandTimeout='30']"\n""SELECT \"a0\".\"Slug\", \"a0\".\"Title\", \"a0\".\"Description\", \"a0\".\"CreatedAt\", \"a0\".\"UpdatedAt\", \"a0\".\"ArticleId\", \"p\".\"PersonId\", \"a1\".\"TagId\", \"a1\".\"ArticleId\", (\n    SELECT COUNT(*)\n    FROM \"ArticleFavorites\" AS \"a2\"\n    WHERE \"a0\".\"ArticleId\" = \"a2\".\"ArticleId\"), \"p\".\"PersonId\" IS NULL, \"p\".\"Username\", \"p\".\"Bio\", \"p\".\"Image\"\nFROM (\n    SELECT \"a\".\"ArticleId\", \"a\".\"AuthorPersonId\", \"a\".\"CreatedAt\", \"a\".\"Description\", \"a\".\"Slug\", \"a\".\"Title\", \"a\".\"UpdatedAt\"\n    FROM \"Articles\" AS \"a\"\n    ORDER BY \"a\".\"CreatedAt\" DESC, \"a\".\"ArticleId\" DESC\n    LIMIT @p1 OFFSET @p\n) AS \"a0\"\nLEFT JOIN \"Persons\" AS \"p\" ON \"a0\".\"AuthorPersonId\" = \"p\".\"PersonId\"\nLEFT JOIN \"ArticleTags\" AS \"a1\" ON \"a0\".\"ArticleId\" = \"a1\".\"ArticleId\"\nORDER BY \"a0\".\"CreatedAt\" DESC, \"a0\".\"ArticleId\" DESC, \"p\".\"PersonId\", \"a1\".\"ArticleId\""
+20:37:44 [Information] Microsoft.EntityFrameworkCore.Database.Command Executed DbCommand ("2"ms) [Parameters=["@p1='?' (DbType = Int32), @p='?' (DbType = Int32)"], CommandType='Text', CommandTimeout='30']"\n""SELECT \"a0\".\"Slug\", \"a0\".\"Title\", \"a0\".\"Description\", \"a0\".\"CreatedAt\", \"a0\".\"UpdatedAt\", \"a0\".\"ArticleId\", \"p\".\"PersonId\", \"a1\".\"TagId\", \"a1\".\"ArticleId\", (\n    SELECT COUNT(*)\n    FROM \"ArticleFavorites\" AS \"a2\"\n    WHERE \"a0\".\"ArticleId\" = \"a2\".\"ArticleId\"), \"p\".\"PersonId\" IS NULL, \"p\".\"Username\", \"p\".\"Bio\", \"p\".\"Image\"\nFROM (\n    SELECT \"a\".\"ArticleId\", \"a\".\"AuthorPersonId\", \"a\".\"CreatedAt\", \"a\".\"Description\", \"a\".\"Slug\", \"a\".\"Title\", \"a\".\"UpdatedAt\"\n    FROM \"Articles\" AS \"a\"\n    ORDER BY \"a\".\"CreatedAt\" DESC, \"a\".\"ArticleId\" DESC\n    LIMIT @p1 OFFSET @p\n) AS \"a0\"\nLEFT JOIN \"Persons\" AS \"p\" ON \"a0\".\"AuthorPersonId\" = \"p\".\"PersonId\"\nLEFT JOIN \"ArticleTags\" AS \"a1\" ON \"a0\".\"ArticleId\" = \"a1\".\"ArticleId\"\nORDER BY \"a0\".\"CreatedAt\" DESC, \"a0\".\"ArticleId\" DESC, \"p\".\"PersonId\", \"a1\".\"ArticleId\""
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing ObjectResult, writing value of type 'Conduit.Features.Articles.ArticlesEnvelope'.
-19:45:45 [Information] Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor Executing "ObjectResult", writing value of type '"Conduit.Features.Articles.ArticlesEnvelope"'.
+20:37:44 [Information] Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor Executing "ObjectResult", writing value of type '"Conduit.Features.Articles.ArticlesEnvelope"'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action Conduit.Features.Articles.ArticlesController.Get (Conduit) in 270.0133ms
-19:45:45 [Information] Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker Executed action "Conduit.Features.Articles.ArticlesController.Get (Conduit)" in 270.0133ms
+      Executed action Conduit.Features.Articles.ArticlesController.Get (Conduit) in 328.4517ms
+20:37:44 [Information] Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker Executed action "Conduit.Features.Articles.ArticlesController.Get (Conduit)" in 328.4517ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'Conduit.Features.Articles.ArticlesController.Get (Conduit)'
-19:45:45 [Information] Microsoft.AspNetCore.Routing.EndpointMiddleware Executed endpoint '"Conduit.Features.Articles.ArticlesController.Get (Conduit)"'
+20:37:44 [Information] Microsoft.AspNetCore.Routing.EndpointMiddleware Executed endpoint '"Conduit.Features.Articles.ArticlesController.Get (Conduit)"'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 GET http://127.0.0.1:37937/api/articles - 200 - application/json;+charset=utf-8 336.6028ms
-19:45:45 [Information] Microsoft.AspNetCore.Hosting.Diagnostics Request finished "HTTP/1.1" "GET" "http"://"127.0.0.1:37937""""/api/articles""" - 200 null "application/json; charset=utf-8" 336.6028ms
-19:45:45 [Information] Microsoft.Hosting.Lifetime Application is shutting down...
+      Request finished HTTP/1.1 GET http://127.0.0.1:44021/api/articles - 200 - application/json;+charset=utf-8 405.5482ms
+20:37:44 [Information] Microsoft.AspNetCore.Hosting.Diagnostics Request finished "HTTP/1.1" "GET" "http"://"127.0.0.1:44021""""/api/articles""" - 200 null "application/json; charset=utf-8" 405.5482ms
+20:37:44 [Information] Microsoft.Hosting.Lifetime Application is shutting down...
 info: Microsoft.Hosting.Lifetime[0]
       Application is shutting down...
 
