@@ -74,11 +74,23 @@ public sealed class SessionStore
                     return null;
                 }
 
-                using var stream = File.OpenRead(_file);
-                var state = JsonSerializer.Deserialize(stream, StateJsonContext.Default.SessionState);
+                SessionState? state;
+                try
+                {
+                    using var stream = File.OpenRead(_file);
+                    state = JsonSerializer.Deserialize(stream, StateJsonContext.Default.SessionState);
+                }
+                catch (JsonException)
+                {
+                    // The only copy of unsaved text when Android ended the app: kept aside rather than overwritten by
+                    // the next save, which lost it silently.
+                    File.Move(_file, Path.Combine(Path.GetDirectoryName(_file)!, "session.unreadable-" + DateTime.Now.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture) + ".json"), overwrite: true);
+                    return null;
+                }
+
                 return state is not null && (File.Exists(state.WorkspacePath) || Directory.Exists(state.WorkspacePath)) ? state : null;
             }
-            catch (Exception ex) when (ex is IOException or JsonException or UnauthorizedAccessException)
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
                 return null;
             }
