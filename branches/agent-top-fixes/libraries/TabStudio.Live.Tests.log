@@ -1,0 +1,93 @@
+  Determining projects to restore...
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Swarm/TabStudio.Swarm.csproj (in 310 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Live/TabStudio.Live.csproj (in 263 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Live.Tests/TabStudio.Live.Tests.csproj (in 260 ms).
+  7 of 10 projects are up-to-date for restore.
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+  TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+  TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
+  TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
+  TabStudio.LiveTesting -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.LiveTesting/bin/Release/net10.0/TabStudio.LiveTesting.dll
+  TabStudio.Link -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Link/bin/Release/net10.0/TabStudio.Link.dll
+  TabStudio.Swarm -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Swarm/bin/Release/net10.0/TabStudio.Swarm.dll
+  TabStudio.Live -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Live/bin/Release/net10.0/TabStudio.Live.dll
+  TabStudio.Live.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Live.Tests/bin/Release/net10.0/TabStudio.Live.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Live.Tests/bin/Release/net10.0/TabStudio.Live.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.14]   Discovering: TabStudio.Live.Tests
+[xUnit.net 00:00:00.24]   Discovered:  TabStudio.Live.Tests
+[xUnit.net 00:00:00.31]   Starting:    TabStudio.Live.Tests
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: "a\0b.cs", expected: null) [7 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: "src\\Program.cs", expected: null) [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: ".git/config", expected: null) [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: ".editorconfig", expected: ".editorconfig") [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: "src/obj/project.assets.json", expected: null) [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: ".github/workflows/ci.yml", expected: ".github/workflows/ci.yml") [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: "src/../../secret.txt", expected: null) [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: "src/./Program.cs", expected: null) [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: "src//Program.cs", expected: null) [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: "src/App/MainWindow.axaml", expected: "src/App/MainWindow.axaml") [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: "", expected: null) [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: "Program.cs", expected: "Program.cs") [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: "/etc/passwd", expected: null) [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: "node_modules/left-pad/index.js", expected: null) [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: "bin/Debug/App.dll", expected: null) [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: "C:/Windows/win.ini", expected: null) [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Only_safe_paths_inside_a_workspace_are_accepted(path: "../secret.txt", expected: null) [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Avatars_show_initials(name: "pixel", initials: "P") [8 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Avatars_show_initials(name: "Dana's tablet", initials: "DT") [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Avatars_show_initials(name: "Galaxy-Tab S9", initials: "GT") [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Avatars_show_initials(name: "  ", initials: "?") [< 1 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.The_shared_files_leave_out_build_output_and_git [75 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.A_path_through_a_link_out_of_the_workspace_is_refused [9 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Roles_decide_who_edits_steps_types_in_the_Terminal_and_manages [2 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.A_guests_copy_writes_only_inside_its_folder_and_only_bytes_that_match [12 ms]
+  Passed TabStudio.Live.Tests.PathAndPermissionTests.Names_are_cleaned_and_shortened [5 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.Typing_a_character_at_a_time_keeps_runs_and_still_merges [10 ms]
+  Passed TabStudio.Live.Tests.UndoTests.Typing_without_a_pause_is_one_step_and_a_pause_starts_another [27 ms]
+  Passed TabStudio.Live.Tests.UndoTests.Undo_of_a_deletion_puts_the_text_back_where_it_was_after_others_edited [6 ms]
+  Passed TabStudio.Live.Tests.UndoTests.Undo_takes_back_only_this_participants_typing [12 ms]
+  Passed TabStudio.Live.Tests.UndoTests.A_group_is_one_step [< 1 ms]
+  Passed TabStudio.Live.Tests.UndoTests.Undo_skips_text_someone_else_already_deleted [< 1 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.A_device_that_edits_while_offline_catches_up_both_ways_when_it_reconnects(seed: 11) [49 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.A_device_that_edits_while_offline_catches_up_both_ways_when_it_reconnects(seed: 12) [39 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.A_device_that_edits_while_offline_catches_up_both_ways_when_it_reconnects(seed: 13) [10 ms]
+  Passed TabStudio.Live.Tests.ProtocolTests.A_session_invitation_is_a_live_link_URI_that_round_trips [91 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.Random_concurrent_edits_converge_on_every_device_in_any_delivery_order(seed: 8, devices: 3) [59 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.Random_concurrent_edits_converge_on_every_device_in_any_delivery_order(seed: 7, devices: 6) [116 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.Random_concurrent_edits_converge_on_every_device_in_any_delivery_order(seed: 6, devices: 4) [41 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.Random_concurrent_edits_converge_on_every_device_in_any_delivery_order(seed: 1, devices: 2) [20 ms]
+  Passed TabStudio.Live.Tests.ProtocolTests.Edits_presence_and_participants_survive_the_wire [206 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.Random_concurrent_edits_converge_on_every_device_in_any_delivery_order(seed: 3, devices: 5) [76 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.Random_concurrent_edits_converge_on_every_device_in_any_delivery_order(seed: 2, devices: 3) [58 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.Random_concurrent_edits_converge_on_every_device_in_any_delivery_order(seed: 4, devices: 5) [64 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.Random_concurrent_edits_converge_on_every_device_in_any_delivery_order(seed: 5, devices: 8) [98 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.Another_device_applies_the_operations_and_reports_the_changes_for_its_editor [< 1 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.Concurrent_inserts_at_the_same_place_merge_in_the_same_order_on_both_devices [< 1 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.Local_edits_change_the_text_where_they_are_made [< 1 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.Malformed_operations_are_refused [1 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.Operations_that_arrive_early_wait_and_repeated_ones_are_ignored [< 1 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.An_insert_and_a_delete_of_the_same_place_both_take_effect [< 1 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.A_late_device_builds_the_same_text_from_the_operations_so_far [3 ms]
+  Passed TabStudio.Live.Tests.SharedTextTests.A_position_stays_by_its_character_while_others_edit_around_it [8 ms]
+  Passed TabStudio.Live.Tests.SessionTests.A_guest_that_only_watches_cannot_edit_and_its_edits_are_refused_by_the_host [942 ms]
+  Passed TabStudio.Live.Tests.SessionTests.The_host_decides_who_steps_while_everyone_sees_the_pause_and_its_values [205 ms]
+  Passed TabStudio.Live.Tests.SessionTests.A_guest_away_longer_than_the_grace_comes_back_as_itself_with_its_offline_edits [3 s]
+  Passed TabStudio.Live.Tests.SessionTests.Guests_join_with_the_QR_code_copy_the_workspace_and_see_everyone [128 ms]
+  Passed TabStudio.Live.Tests.SessionTests.A_class_of_thirty_joins_from_one_code_follows_the_presenter_and_raises_hands [1 s]
+  Passed TabStudio.Live.Tests.SessionTests.A_guest_away_when_a_class_starts_comes_back_as_a_viewer [3 s]
+  Passed TabStudio.Live.Tests.SessionTests.The_host_removes_a_guest_which_cannot_come_back_with_the_same_code [109 ms]
+  Passed TabStudio.Live.Tests.SessionTests.A_guests_copy_has_every_file_when_they_add_up_to_more_than_one_answer [403 ms]
+  Passed TabStudio.Live.Tests.SessionTests.A_guest_saves_on_the_host_with_its_last_edits_and_cannot_open_files_that_are_not_shared [73 ms]
+  Passed TabStudio.Live.Tests.SessionTests.Output_the_Terminal_and_the_Error_List_reach_guests_and_a_late_guest_sees_the_last_of_them [383 ms]
+  Passed TabStudio.Live.Tests.SessionTests.Carets_and_selections_reach_the_others_and_stay_by_their_text [197 ms]
+  Passed TabStudio.Live.Tests.SessionTests.Concurrent_typing_on_three_devices_converges_everywhere [164 ms]
+[xUnit.net 00:00:13.15]   Finished:    TabStudio.Live.Tests
+  Passed TabStudio.Live.Tests.SessionTests.A_guest_whose_connection_drops_reconnects_and_its_offline_edits_merge [2 s]
+
+Test Run Successful.
+Total tests: 66
+     Passed: 66
+ Total time: 13.9106 Seconds
