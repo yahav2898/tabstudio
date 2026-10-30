@@ -77,12 +77,15 @@ public sealed class ToolchainInstallException : Exception
             : new ToolchainInstallException(InstallFailure.CommandFailed, $"Installing {toolchain} stopped: {exception.Message.TrimEnd('.')}. Install it again; if it keeps failing, restart TabStudio.", exception.ToString(), exception);
     }
 
-    /// <summary>Whether an error is the storage being full: ENOSPC on Linux and Android, ERROR_DISK_FULL on Windows.</summary>
+    /// <summary>
+    /// Whether an error is the storage being full: ENOSPC (28) on Linux and Android; ERROR_DISK_FULL (112) and
+    /// ERROR_HANDLE_DISK_FULL (39) on Windows, where 39 is not ENOTEMPTY as on Linux.
+    /// </summary>
     /// <param name="exception">The error.</param>
     public static bool IsDiskFull(IOException exception)
     {
         ArgumentNullException.ThrowIfNull(exception);
-        return (exception.HResult & 0xFFFF) is 28 or 112 or 39;
+        return OperatingSystem.IsWindows() ? (exception.HResult & 0xFFFF) is 112 or 39 : (exception.HResult & 0xFFFF) == 28;
     }
 
     /// <summary>Output of the command that failed, if any.</summary>

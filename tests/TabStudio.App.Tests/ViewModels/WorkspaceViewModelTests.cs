@@ -225,6 +225,22 @@ public sealed class WorkspaceViewModelTests
     }
 
     [AvaloniaFact]
+    public async Task A_reloaded_document_takes_the_encoding_its_file_has_now()
+    {
+        // Converted outside the editor, a reloaded tab kept saving in the old encoding and undid the conversion.
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var document = fixture.Workspace.ActiveDocument!;
+        Assert.Equal("UTF-8", document.EncodingLabel);
+        await File.WriteAllBytesAsync(document.FilePath, [.. "// caf"u8, 0xE9, (byte)'\n']);
+
+        await fixture.Workspace.FollowDiskChangesAsync();
+
+        Assert.Equal("// café\n", document.Document.Text);
+        Assert.Equal("ISO-8859-1", document.EncodingLabel);
+    }
+
+    [AvaloniaFact]
     public async Task A_warm_device_builds_on_one_thread_and_says_so()
     {
         using var fixture = new WorkspaceFixture();

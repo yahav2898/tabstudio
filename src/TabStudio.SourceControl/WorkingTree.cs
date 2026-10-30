@@ -118,10 +118,9 @@ public static class WorkingTree
             // TabStudio's own folder holds its sync state beside files a repository shares, such as launch.json:
             // the files the last commit tracks there are listed, so they are neither reported deleted nor deleted
             // on GitHub by a commit of everything, and the rest is never committed.
-            var holdsTracked = tracked?.Keys.Any(k => k.StartsWith(relative + "/", StringComparison.Ordinal)) == true;
             if (AlwaysIgnored.Contains(name))
             {
-                if (holdsTracked)
+                if (HoldsTracked(tracked, relative))
                 {
                     Walk(root, relative, ignore, tracked, files, trackedOnly: true);
                 }
@@ -130,13 +129,25 @@ public static class WorkingTree
             }
 
             // An ignored folder is still visited when it holds tracked files.
-            if ((trackedOnly || ignore.IsIgnored(relative, isDirectory: true)) && !holdsTracked)
+            if ((trackedOnly || ignore.IsIgnored(relative, isDirectory: true)) && !HoldsTracked(tracked, relative))
             {
                 continue;
             }
 
             Walk(root, relative, ignore, tracked, files, trackedOnly);
         }
+    }
+
+    /// <summary>Whether the last commit tracks a file inside a folder; asked only of folders that would be skipped.</summary>
+    private static bool HoldsTracked(IReadOnlyDictionary<string, TrackedFile>? tracked, string folder)
+    {
+        if (tracked is null || tracked.Count == 0)
+        {
+            return false;
+        }
+
+        var prefix = folder + "/";
+        return tracked.Keys.Any(k => k.StartsWith(prefix, StringComparison.Ordinal));
     }
 
     private static bool IsSymbolicLink(string path) => new DirectoryInfo(path).LinkTarget is not null;

@@ -69,7 +69,7 @@ internal sealed class FakeLanguageServer : IAsyncDisposable
             Connection.AddRequestHandler(method, (parameters, _) => Record(method, parameters, () => handler(parameters)));
         }
 
-        foreach (var method in new[] { "initialized", "textDocument/didOpen", "textDocument/didChange", "textDocument/didSave", "textDocument/didClose", "workspace/didChangeConfiguration", "$/cancelRequest" })
+        foreach (var method in new[] { "initialized", "textDocument/didOpen", "textDocument/didChange", "textDocument/didSave", "textDocument/didClose", "workspace/didChangeConfiguration", "workspace/didChangeWatchedFiles", "$/cancelRequest" })
         {
             Connection.AddNotificationHandler(method, parameters => Notify(method, parameters));
         }

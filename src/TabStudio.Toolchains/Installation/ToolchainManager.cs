@@ -1,5 +1,4 @@
 using TabStudio.Toolchains.Catalog;
-using TabStudio.Toolchains.Processes;
 using TabStudio.Toolchains.Runtimes;
 
 namespace TabStudio.Toolchains.Installation;
@@ -329,7 +328,7 @@ public sealed class ToolchainManager : IDisposable
             Publish(before with { Error = null, Progress = null });
             throw;
         }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ToolchainRuntimeException or InvalidDataException)
+        catch (Exception ex) when (ex is not OperationCanceledException and not ToolchainInstallException and not OutOfMemoryException)
         {
             // Anything else left the toolchain "Installing" until the app restarted, with Install hidden and Cancel
             // doing nothing, and reached the Store's button as an error that ended the app.

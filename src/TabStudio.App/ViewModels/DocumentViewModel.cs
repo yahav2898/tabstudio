@@ -22,7 +22,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
 {
     private readonly ILanguageService? _language;
     private readonly DeviceProfile _profile;
-    private readonly TextFileContent _file;
+    private TextFileContent _file;
     private CancellationTokenSource? _analysis;
     private Task? _analysisTask;
     private int _analysisEdits = -1;
@@ -217,6 +217,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
         var text = Document.Text;
         var undo = Document.UndoStack;
         undo.MarkAsOriginalFile();
+        IsSaving = true;
         try
         {
             await TextFile.WriteAsync(FilePath, text, _file.Encoding, cancellationToken);
@@ -227,6 +228,10 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
             undo.DiscardOriginalFileMarker();
             IsDirty = true;
             throw;
+        }
+        finally
+        {
+            IsSaving = false;
         }
 
         RecordDiskStamp();

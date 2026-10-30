@@ -26,7 +26,8 @@ public sealed partial class WorkspaceViewModel
         {
             foreach (var document in Documents.Where(FollowsItsFile).ToList())
             {
-                if (!document.ChangedOnDisk)
+                // A document being saved looks clean while its own write is under way.
+                if (document.IsSaving || !document.ChangedOnDisk)
                 {
                     continue;
                 }
@@ -40,9 +41,9 @@ public sealed partial class WorkspaceViewModel
                 try
                 {
                     var content = await TextFile.ReadAsync(document.FilePath);
-                    if (!document.IsDirty && Documents.Contains(document))
+                    if (!document.IsDirty && !document.IsSaving && Documents.Contains(document))
                     {
-                        document.ReloadFromDisk(content.Text);
+                        document.ReloadFromDisk(content);
                     }
                 }
                 catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
@@ -68,10 +69,21 @@ public sealed partial class WorkspaceViewModel
 
         try
         {
-            var folder = Path.Combine(_paths.Trash, DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture));
-            Directory.CreateDirectory(folder);
-            var copy = Path.Combine(folder, document.FileName);
-            File.Copy(document.FilePath, copy, overwrite: true);
+            // Under the file's path in the workspace, so two files of the same name saved together keep both versions.
+            var relative = Workspace is { } workspace ? Path.GetRelativePath(workspace.RootDirectory, document.FilePath) : document.FileName;
+            if (relative.StartsWith("..", StringComparison.Ordinal) || Path.IsPathRooted(relative))
+            {
+                relative = document.FileName;
+            }
+
+            var copy = Path.Combine(_paths.Trash, DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture), relative);
+            for (var i = 2; File.Exists(copy); i++)
+            {
+                copy = Path.Combine(Path.GetDirectoryName(copy)!, $"{Path.GetFileNameWithoutExtension(relative)} ({i}){Path.GetExtension(relative)}");
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(copy)!);
+            File.Copy(document.FilePath, copy);
             return copy;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)

@@ -248,6 +248,21 @@ public sealed class SessionTests
     }
 
     [Fact]
+    public async Task A_guest_away_when_a_class_starts_comes_back_as_a_viewer()
+    {
+        await using var live = await LiveLoopback.StartAsync(reconnectGrace: TimeSpan.FromMilliseconds(200));
+        var dana = await live.JoinAsync("Dana", reconnectDelays: [TimeSpan.FromSeconds(2)]);
+        var danaId = await dana.On(() => dana.Session.SelfId);
+
+        await live.On(() => live.Host.DropConnection(danaId));
+        await LiveLoopback.UntilAsync(() => live.On(() => live.Host.Participants.All(p => p.Id != danaId)), "Dana to leave the list after the grace");
+        await live.On(() => live.Host.SetClassroom(true));
+
+        await LiveLoopback.UntilAsync(() => dana.On(() => dana.Session.State == LiveGuestState.Joined), "Dana to reconnect");
+        Assert.Equal(LiveRole.Viewer, (await live.On(() => live.Host.Participants.Single(p => p.Id == danaId))).Role);
+    }
+
+    [Fact]
     public async Task A_class_of_thirty_joins_from_one_code_follows_the_presenter_and_raises_hands()
     {
         await using var live = await LiveLoopback.StartAsync(classroom: true);
