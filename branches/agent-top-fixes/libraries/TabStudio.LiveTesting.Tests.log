@@ -1,51 +1,51 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.LiveTesting.Tests/TabStudio.LiveTesting.Tests.csproj (in 329 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.LiveTesting.Tests/TabStudio.LiveTesting.Tests.csproj (in 279 ms).
   6 of 7 projects are up-to-date for restore.
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
-  TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
   TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
+  TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
   TabStudio.LiveTesting -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.LiveTesting/bin/Release/net10.0/TabStudio.LiveTesting.dll
   TabStudio.LiveTesting.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.LiveTesting.Tests/bin/Release/net10.0/TabStudio.LiveTesting.Tests.dll
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.LiveTesting.Tests/bin/Release/net10.0/TabStudio.LiveTesting.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.14]   Discovering: TabStudio.LiveTesting.Tests
-[xUnit.net 00:00:00.27]   Discovered:  TabStudio.LiveTesting.Tests
-[xUnit.net 00:00:00.35]   Starting:    TabStudio.LiveTesting.Tests
-  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.A_member_keeps_its_statements_when_lines_move [2 s]
-  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Instrumentation_keeps_the_line_numbers_of_stack_traces [122 ms]
-  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Members_are_keyed_by_type_name_and_parameters [29 ms]
-  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.An_instrumented_program_runs_normally_outside_a_test [628 ms]
-  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Every_construct_keeps_its_behavior_and_records_its_statements [135 ms]
-  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.More_constructs_keep_their_behavior [430 ms]
-  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Generated_files_are_not_instrumented [3 ms]
-  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Only_the_branches_that_run_are_recorded [22 ms]
-  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Visual_basic_instrumentation_keeps_the_line_numbers_of_stack_traces [718 ms]
-  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Generated_visual_basic_files_are_not_instrumented [2 ms]
-  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Visual_basic_constructs_keep_their_behavior_and_record_their_statements [376 ms]
-  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Visual_basic_members_are_keyed_by_root_namespace_type_name_and_parameters [25 ms]
-  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Only_the_visual_basic_branches_that_run_are_recorded [28 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.An_excluded_project_is_not_instrumented [1 s]
-  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.Editing_one_method_reruns_only_the_tests_that_covered_it [171 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.Tests_asked_for_run_whatever_changed [68 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.Lines_are_stale_while_their_tests_wait_to_run [57 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.A_change_outside_function_bodies_runs_every_test [80 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.A_build_error_stops_the_run_and_keeps_the_last_results [56 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.A_failing_test_marks_its_lines_failing_until_the_code_is_fixed [87 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.New_and_changed_tests_run_and_excluded_tests_never_do [101 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.Visual_basic_projects_get_coverage_and_rerun_only_the_tests_an_edit_affects [179 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.Comments_and_moved_lines_run_nothing_and_markers_follow_their_lines [90 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.Code_a_class_fixture_runs_counts_for_every_test_of_the_class [51 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.Coverage_is_attributed_per_test_and_per_line [48 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestInclusionTests.The_most_specific_entry_wins [< 1 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestInclusionTests.Including_a_container_again_clears_the_entries_inside_it [< 1 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestInclusionTests.Ancestors_go_from_the_data_row_to_the_project [< 1 ms]
-  Passed TabStudio.LiveTesting.Tests.LiveTestInclusionTests.Excluding_a_project_excludes_its_tests_and_is_listed [< 1 ms]
+[xUnit.net 00:00:00.15]   Discovering: TabStudio.LiveTesting.Tests
+[xUnit.net 00:00:00.26]   Discovered:  TabStudio.LiveTesting.Tests
+[xUnit.net 00:00:00.33]   Starting:    TabStudio.LiveTesting.Tests
+  Passed TabStudio.LiveTesting.Tests.LiveTestInclusionTests.The_most_specific_entry_wins [8 ms]
+  Passed TabStudio.LiveTesting.Tests.LiveTestInclusionTests.Including_a_container_again_clears_the_entries_inside_it [6 ms]
+  Passed TabStudio.LiveTesting.Tests.LiveTestInclusionTests.Ancestors_go_from_the_data_row_to_the_project [22 ms]
+  Passed TabStudio.LiveTesting.Tests.LiveTestInclusionTests.Excluding_a_project_excludes_its_tests_and_is_listed [5 ms]
   Passed TabStudio.LiveTesting.Tests.LiveTestInclusionTests.Everything_is_included_until_excluded [< 1 ms]
-  Passed TabStudio.LiveTesting.Tests.FileChangeTests.Added_and_removed_members_are_reported_with_their_type [6 ms]
-[xUnit.net 00:00:07.42]   Finished:    TabStudio.LiveTesting.Tests
+  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.An_excluded_project_is_not_instrumented [2 s]
+  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.Editing_one_method_reruns_only_the_tests_that_covered_it [453 ms]
+  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.Tests_asked_for_run_whatever_changed [54 ms]
+  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.Lines_are_stale_while_their_tests_wait_to_run [59 ms]
+  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.A_change_outside_function_bodies_runs_every_test [89 ms]
+  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.A_build_error_stops_the_run_and_keeps_the_last_results [67 ms]
+  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.A_failing_test_marks_its_lines_failing_until_the_code_is_fixed [102 ms]
+  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.New_and_changed_tests_run_and_excluded_tests_never_do [116 ms]
+  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.Visual_basic_projects_get_coverage_and_rerun_only_the_tests_an_edit_affects [700 ms]
+  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.Comments_and_moved_lines_run_nothing_and_markers_follow_their_lines [99 ms]
+  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.Code_a_class_fixture_runs_counts_for_every_test_of_the_class [138 ms]
+  Passed TabStudio.LiveTesting.Tests.LiveTestEngineTests.Coverage_is_attributed_per_test_and_per_line [51 ms]
+  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.A_member_keeps_its_statements_when_lines_move [78 ms]
+  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Instrumentation_keeps_the_line_numbers_of_stack_traces [102 ms]
+  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Members_are_keyed_by_type_name_and_parameters [20 ms]
+  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.An_instrumented_program_runs_normally_outside_a_test [486 ms]
+  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Every_construct_keeps_its_behavior_and_records_its_statements [98 ms]
+  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.More_constructs_keep_their_behavior [380 ms]
+  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Generated_files_are_not_instrumented [3 ms]
+  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Only_the_branches_that_run_are_recorded [23 ms]
+  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Visual_basic_instrumentation_keeps_the_line_numbers_of_stack_traces [88 ms]
+  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Generated_visual_basic_files_are_not_instrumented [1 ms]
+  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Visual_basic_constructs_keep_their_behavior_and_record_their_statements [332 ms]
+  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Visual_basic_members_are_keyed_by_root_namespace_type_name_and_parameters [22 ms]
+  Passed TabStudio.LiveTesting.Tests.CoverageInstrumentationTests.Only_the_visual_basic_branches_that_run_are_recorded [27 ms]
+  Passed TabStudio.LiveTesting.Tests.FileChangeTests.Added_and_removed_members_are_reported_with_their_type [7 ms]
+[xUnit.net 00:00:06.74]   Finished:    TabStudio.LiveTesting.Tests
   Passed TabStudio.LiveTesting.Tests.FileChangeTests.Visual_basic_fields_imports_and_type_modifiers_are_structural [3 ms]
   Passed TabStudio.LiveTesting.Tests.FileChangeTests.Visual_basic_members_added_and_removed_are_reported [1 ms]
   Passed TabStudio.LiveTesting.Tests.FileChangeTests.A_visual_basic_body_edit_changes_only_its_member_named_with_the_root_namespace [4 ms]
@@ -58,4 +58,4 @@ A total of 1 test files matched the specified pattern.
 Test Run Successful.
 Total tests: 39
      Passed: 39
- Total time: 8.5963 Seconds
+ Total time: 7.7236 Seconds

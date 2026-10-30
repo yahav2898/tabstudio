@@ -1,6 +1,6 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Wpf/TabStudio.Wpf.csproj (in 302 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/TabStudio.Wpf.Tests.csproj (in 339 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/TabStudio.Wpf.Tests.csproj (in 298 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Wpf/TabStudio.Wpf.csproj (in 253 ms).
   5 of 7 projects are up-to-date for restore.
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
@@ -12,45 +12,45 @@
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/bin/Release/net10.0/TabStudio.Wpf.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.24]   Discovering: TabStudio.Wpf.Tests
-[xUnit.net 00:00:00.39]   Discovered:  TabStudio.Wpf.Tests
-[xUnit.net 00:00:00.47]   Starting:    TabStudio.Wpf.Tests
-  Passed TabStudio.Wpf.Tests.WpfProjectTests.WPF_takes_System_IO_and_System_Net_Http_out_of_the_implicit_usings [138 ms]
-  Passed TabStudio.Wpf.Tests.WpfProjectTests.App_xaml_is_the_application_definition_and_every_other_xaml_file_is_a_page [104 ms]
-  Passed TabStudio.Wpf.Tests.WpfProjectTests.The_project_file_adds_and_removes_xaml_items [34 ms]
-  Passed TabStudio.Wpf.Tests.WpfProjectTests.Second_pass_files_lead_back_to_their_xaml [6 ms]
-  Passed TabStudio.Wpf.Tests.WpfProjectTests.WPF_projects_get_the_symbol_OpenSilver_defines [64 ms]
+[xUnit.net 00:00:00.13]   Discovering: TabStudio.Wpf.Tests
+[xUnit.net 00:00:00.31]   Discovered:  TabStudio.Wpf.Tests
+[xUnit.net 00:00:00.44]   Starting:    TabStudio.Wpf.Tests
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.WPF_takes_System_IO_and_System_Net_Http_out_of_the_implicit_usings [126 ms]
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.App_xaml_is_the_application_definition_and_every_other_xaml_file_is_a_page [66 ms]
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.The_project_file_adds_and_removes_xaml_items [25 ms]
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.Second_pass_files_lead_back_to_their_xaml [5 ms]
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.WPF_projects_get_the_symbol_OpenSilver_defines [43 ms]
   Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Completion_offers_enum_values_attached_properties_and_binding_paths [3 s]
-  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Button Click=\"Missing_Click\" />", name: "Missing_Click") [103 ms]
-  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Button HorizontalAlignment=\"Middle\" />", name: "Middle") [67 ms]
-  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Buton />", name: "Buton") [84 ms]
-  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Grid><Button x:Name=\"Go\" /><Button x:Name=\"Go\"···, name: "Go") [105 ms]
-  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Button Contnt=\"Go\" />", name: "Contnt") [51 ms]
-  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.The_light_bulb_adds_a_typed_handler_inside_the_class_and_removes_the_live_error(crlf: True, compact: False) [205 ms]
-  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.The_light_bulb_adds_a_typed_handler_inside_the_class_and_removes_the_live_error(crlf: False, compact: False) [90 ms]
-  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.The_light_bulb_adds_a_typed_handler_inside_the_class_and_removes_the_live_error(crlf: False, compact: True) [74 ms]
-  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.A_non_WPF_file_and_an_invalid_action_return_no_results [14 ms]
-  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Quick_info_and_definition_resolve_types_handlers_names_and_resources [490 ms]
-  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Element_completion_replaces_the_whole_word_and_describes_the_type [101 ms]
-  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Missing_WPF_API_is_named_with_the_Windows_Bridge_in_XAML_and_CSharp [506 ms]
-  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Attribute_completion_places_the_caret_inside_quotes_without_duplicating_existing_quotes [58 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.An_event_handler_the_class_does_not_have_is_reported_at_its_attribute [820 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Code_that_uses_what_OpenSilver_does_not_implement_gets_a_warning [82 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.The_Visual_Studio_template_builds_on_OpenSilver [194 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Window_settings_without_effect_in_the_web_preview_are_reported_and_left_out [190 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Named_elements_are_fields_of_their_types_in_the_code_behind [241 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.A_xaml_error_is_reported_in_its_file [149 ms]
-  Passed TabStudio.Wpf.Tests.WpfBrowserTests.A_new_build_is_served_at_the_same_address [4 s]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Button Click=\"Missing_Click\" />", name: "Missing_Click") [83 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Button HorizontalAlignment=\"Middle\" />", name: "Middle") [52 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Buton />", name: "Buton") [78 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Grid><Button x:Name=\"Go\" /><Button x:Name=\"Go\"···, name: "Go") [57 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Button Contnt=\"Go\" />", name: "Contnt") [54 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.The_light_bulb_adds_a_typed_handler_inside_the_class_and_removes_the_live_error(crlf: True, compact: False) [187 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.The_light_bulb_adds_a_typed_handler_inside_the_class_and_removes_the_live_error(crlf: False, compact: False) [98 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.The_light_bulb_adds_a_typed_handler_inside_the_class_and_removes_the_live_error(crlf: False, compact: True) [75 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.A_non_WPF_file_and_an_invalid_action_return_no_results [15 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Quick_info_and_definition_resolve_types_handlers_names_and_resources [454 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Element_completion_replaces_the_whole_word_and_describes_the_type [92 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Missing_WPF_API_is_named_with_the_Windows_Bridge_in_XAML_and_CSharp [433 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Attribute_completion_places_the_caret_inside_quotes_without_duplicating_existing_quotes [59 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.An_event_handler_the_class_does_not_have_is_reported_at_its_attribute [720 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Code_that_uses_what_OpenSilver_does_not_implement_gets_a_warning [75 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.The_Visual_Studio_template_builds_on_OpenSilver [225 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Window_settings_without_effect_in_the_web_preview_are_reported_and_left_out [139 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Named_elements_are_fields_of_their_types_in_the_code_behind [208 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.A_xaml_error_is_reported_in_its_file [126 ms]
+  Passed TabStudio.Wpf.Tests.WpfBrowserTests.A_new_build_is_served_at_the_same_address [5 s]
   Passed TabStudio.Wpf.Tests.WpfBrowserTests.In_Fit_a_phone_browser_zooms_the_whole_window_into_view_and_taps_still_reach_its_buttons [2 s]
   Passed TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack [2 s]
   Passed TabStudio.Wpf.Tests.WpfBrowserTests.Shows_the_window_full_size_under_its_title_and_handles_clicks [2 s]
-  Passed TabStudio.Wpf.Tests.WpfBrowserTests.Serves_the_app_with_OpenSilver_and_Blazor [319 ms]
+  Passed TabStudio.Wpf.Tests.WpfBrowserTests.Serves_the_app_with_OpenSilver_and_Blazor [283 ms]
   Passed TabStudio.Wpf.Tests.WpfApiCatalogTests.The_shipped_catalog_is_what_WPF_has_and_OpenSilver_does_not [1 s]
-  Passed TabStudio.Wpf.Tests.BusinessAppTests.The_business_app_builds_on_OpenSilver [559 ms]
+  Passed TabStudio.Wpf.Tests.BusinessAppTests.The_business_app_builds_on_OpenSilver [514 ms]
+[xUnit.net 00:00:25.89]   Finished:    TabStudio.Wpf.Tests
   Passed TabStudio.Wpf.Tests.BusinessAppTests.Lists_the_contacts_in_a_data_grid_and_adds_one_with_a_command [3 s]
-[xUnit.net 00:00:26.99]   Finished:    TabStudio.Wpf.Tests
 
 Test Run Successful.
 Total tests: 33
      Passed: 33
- Total time: 28.2129 Seconds
+ Total time: 26.7277 Seconds
