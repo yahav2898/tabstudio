@@ -230,7 +230,7 @@
                                Text="On the tablet: File > TabStudio Link > Scan its QR code. Without a camera, type these instead:" />
                     <Grid ColumnDefinitions="Auto,16,*" RowDefinitions="Auto,6,Auto" Margin="0,4,0,0">
                       <TextBlock Classes="label" Text="Address" VerticalAlignment="Center" />
-                      <SelectableTextBlock Grid.Column="2" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Title}" Foreground="{DynamicResource Brush.TextBright}" Text="{Binding HostAddressText}" VerticalAlignment="Center" />
+                      <SelectableTextBlock Grid.Column="2" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Title}" Foreground="{DynamicResource Brush.TextBright}" Text="{Binding HostAddressText}" VerticalAlignment="Center" TextWrapping="Wrap" />
                       <TextBlock Grid.Row="2" Classes="label" Text="Code" VerticalAlignment="Center" />
                       <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Spacing="10">
                         <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Display}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="{Binding PairingCodeText}" VerticalAlignment="Center" />

@@ -10,16 +10,17 @@
   <DockPanel>
 
     <!-- Header -->
-    <Border DockPanel.Dock="Top" Height="48" Background="{DynamicResource Brush.MenuBar}"
+    <Border DockPanel.Dock="Top" MinHeight="48" Background="{DynamicResource Brush.MenuBar}"
             BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="*,Auto" Margin="16,0,10,0">
-        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" ClipToBounds="True">
+        <Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center">
           <Border Width="28" Height="28" CornerRadius="8" Background="{DynamicResource Brush.Accent}">
             <controls:StrokeIcon Data="{StaticResource Icon.Logo}" Size="16" StrokeThickness="2.6"
                                  Foreground="{DynamicResource Brush.OnAccent}" HorizontalAlignment="Center" />
           </Border>
-          <TextBlock Text="TabStudio" FontSize="{DynamicResource Type.Subtitle}" FontWeight="Bold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
-        </StackPanel>
+          <TextBlock Grid.Column="1" Margin="10,0,0,0" Text="TabStudio" FontSize="{DynamicResource Type.Subtitle}" FontWeight="Bold" Foreground="{DynamicResource Brush.TextBright}"
+                     VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip.Tip="TabStudio" />
+        </Grid>
 
         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
           <!-- TabStudio Swarm: run the app a tablet builds, full screen, on this device. -->
@@ -56,10 +57,10 @@
     </Border>
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-      <Grid ColumnDefinitions="360,40,*" Margin="40,28,40,28">
+      <Grid x:Name="Columns" ColumnDefinitions="360,40,*" RowDefinitions="Auto,Auto,Auto" Margin="40,28,40,28">
 
         <!-- Open recent -->
-        <StackPanel Grid.Column="0" Spacing="6">
+        <StackPanel x:Name="RecentColumn" Grid.Column="0" Spacing="6">
           <TextBlock Classes="h1" Text="Open recent" Margin="0,0,0,8" />
           <TextBox Classes="large" Watermark="Search recent" Text="{Binding RecentSearch}">
             <TextBox.InnerLeftContent>
@@ -107,10 +108,10 @@
         </StackPanel>
 
         <!-- Get started -->
-        <StackPanel Grid.Column="2" Spacing="16">
+        <StackPanel x:Name="StartedColumn" Grid.Column="2" Spacing="16">
           <TextBlock Classes="h1" Text="Get started" />
 
-          <UniformGrid Rows="1" Columns="4">
+          <UniformGrid x:Name="ActionCards" Rows="1" Columns="4">
             <Button Theme="{StaticResource CardButton}" Margin="0,0,10,0" HorizontalAlignment="Stretch"
                     Classes.selected="{Binding IsGitHubSelected}"
                     Command="{Binding SelectCommand}" CommandParameter="{x:Static vm:StartAction.GitHub}">

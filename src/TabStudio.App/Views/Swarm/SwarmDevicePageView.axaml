@@ -48,10 +48,10 @@
     <Border Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding IsPaused}">
       <Border Classes="overlay" CornerRadius="14" Padding="22,18" MaxWidth="360" Margin="24" HorizontalAlignment="Center" VerticalAlignment="Center">
         <StackPanel Spacing="10">
-          <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-            <controls:StrokeIcon Data="{StaticResource Icon.Pause}" Size="18" StrokeThickness="2.6" Foreground="{DynamicResource Brush.Warning}" />
-            <TextBlock Classes="h2" FontSize="{DynamicResource Type.Subtitle}" Text="Paused in the tablet's debugger" VerticalAlignment="Center" />
-          </StackPanel>
+          <Grid ColumnDefinitions="Auto,*" HorizontalAlignment="Center">
+            <controls:StrokeIcon Data="{StaticResource Icon.Pause}" Size="18" StrokeThickness="2.6" Foreground="{DynamicResource Brush.Warning}" Margin="0,0,10,0" />
+            <TextBlock Grid.Column="1" Classes="h2" FontSize="{DynamicResource Type.Subtitle}" Text="Paused in the tablet's debugger" VerticalAlignment="Center" TextWrapping="Wrap" />
+          </Grid>
           <TextBlock Classes="muted" TextAlignment="Center" TextWrapping="Wrap"
                      Text="Step or continue on the tablet; the app continues here." />
         </StackPanel>

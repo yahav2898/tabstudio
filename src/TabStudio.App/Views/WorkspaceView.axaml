@@ -621,6 +621,8 @@
 
         <!-- Breadcrumb -->
         <Border Grid.Row="1" MinHeight="30" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="12,0">
+          <!-- A path longer than the pane scrolls sideways under a finger rather than running off the edge. -->
+          <ScrollViewer x:Name="BreadcrumbScroller" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <ItemsControl ItemsSource="{Binding Breadcrumb}" VerticalAlignment="Center">
               <ItemsControl.ItemsPanel>
@@ -675,6 +677,7 @@
               </ItemsControl.ItemTemplate>
             </ItemsControl>
           </StackPanel>
+          </ScrollViewer>
         </Border>
 
         <!-- Editors -->

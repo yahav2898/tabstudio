@@ -118,7 +118,14 @@ internal static partial class AccessibilityAudit
             {
                 // Trimming with an ellipsis is the layout's choice when the whole text is in a tooltip.
                 // A hint that trims has folded away when a layout gives it no room; its whole text is in its tooltip.
-                if (element.Visual is TextBlock { Bounds.Width: < 1 } trimmed && trimmed.TextTrimming != TextTrimming.None && HasToolTip(trimmed))
+                if (element.Visual is TextBlock trimmed && (trimmed.Bounds.Width < 1 || trimmed.Bounds.Height < 1)
+                    && trimmed.TextTrimming != TextTrimming.None && HasToolTip(trimmed))
+                {
+                    continue;
+                }
+
+                // A card between an editor's lines that is wholly out of view has scrolled away with them.
+                if (WhollyHidden().IsMatch(message) && element.Visual.GetVisualAncestors().Any(a => a is AvaloniaEdit.Rendering.TextView))
                 {
                     continue;
                 }
@@ -265,6 +272,9 @@ internal static partial class AccessibilityAudit
     /// <summary>A .NET type name, such as "TabStudio.App.Controls.StrokeIcon" or "Avalonia.Controls.TextBlock".</summary>
     [GeneratedRegex(@"^([A-Za-z_][A-Za-z0-9_]*\.){1,}[A-Z][A-Za-z0-9_`]*(\[.*\])?$")]
     private static partial Regex TypeName();
+
+    [GeneratedRegex(@"cut off by (its container|the edge of the screen): (\S+) × (\S+) of its \2 × \3 dips")]
+    private static partial Regex WhollyHidden();
 
     [GeneratedRegex(@"cut off by (its container|the edge of the screen): [01] × [01] of")]
     private static partial Regex RoundingOnly();

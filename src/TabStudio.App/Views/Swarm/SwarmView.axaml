@@ -88,10 +88,10 @@
         <Border Padding="16,14" CornerRadius="10" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1"
                 IsVisible="{Binding !IsOn}">
           <StackPanel Spacing="10">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="20" Foreground="{DynamicResource Brush.AccentText}" />
-              <TextBlock Classes="h2" Text="Every phone and tablet at once" VerticalAlignment="Center" />
-            </StackPanel>
+            <Grid ColumnDefinitions="Auto,*">
+              <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="20" Foreground="{DynamicResource Brush.AccentText}" Margin="0,0,10,0" />
+              <TextBlock Grid.Column="1" Classes="h2" Text="Every phone and tablet at once" VerticalAlignment="Center" TextWrapping="Wrap" />
+            </Grid>
             <TextBlock Classes="muted" TextWrapping="Wrap"
                        Text="Phones and tablets with TabStudio join this tablet's swarm. Run on the swarm, and the app runs on all of them; every save updates them all, and a breakpoint on any of them stops here." />
             <StackPanel Orientation="Horizontal" Spacing="8">

@@ -29,7 +29,7 @@
       </StackPanel>
 
       <StackPanel>
-        <Border Height="28" BorderBrush="{DynamicResource Brush.Divider}" BorderThickness="0,0,0,1">
+        <Border MinHeight="28" BorderBrush="{DynamicResource Brush.Divider}" BorderThickness="0,0,0,1">
           <!-- A phone's panel keeps Project, Status and Why; Type and Runs via need a tablet's width. -->
           <Grid controls:ResponsiveColumns.Wide="180,130,190,150,*" controls:ResponsiveColumns.Compact="110,0,0,96,*"
                 controls:ResponsiveColumns.IsCompact="{Binding $parent[UserControl].Bounds.Width, Converter={x:Static controls:ResponsiveColumns.IsNarrow}}"
@@ -52,11 +52,12 @@
                   <TextBlock x:Name="ProjectCell" Text="{Binding Project}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Top" Margin="0,0,8,0" />
                   <TextBlock Grid.Column="1" Classes="label" Text="{Binding Type}" VerticalAlignment="Top" />
                   <TextBlock Grid.Column="2" Text="{Binding RunsVia}" TextTrimming="CharacterEllipsis" VerticalAlignment="Top" />
-                  <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="6" VerticalAlignment="Top">
-                    <controls:StrokeIcon Size="14" Data="{StaticResource Icon.Check}" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsReady}" />
-                    <controls:StrokeIcon Size="14" Data="{StaticResource Icon.Info}" Foreground="{DynamicResource Brush.Info}" IsVisible="{Binding IsBlocked}" />
-                    <TextBlock Text="{Binding Status}" VerticalAlignment="Center" />
-                  </StackPanel>
+                  <!-- A status that does not fit its column wraps under itself rather than running into Why. -->
+                  <Grid Grid.Column="3" ColumnDefinitions="Auto,*" VerticalAlignment="Top" Margin="0,0,8,0">
+                    <controls:StrokeIcon Size="14" Data="{StaticResource Icon.Check}" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsReady}" VerticalAlignment="Top" Margin="0,3,6,0" />
+                    <controls:StrokeIcon Size="14" Data="{StaticResource Icon.Info}" Foreground="{DynamicResource Brush.Info}" IsVisible="{Binding IsBlocked}" VerticalAlignment="Top" Margin="0,3,6,0" />
+                    <TextBlock Grid.Column="1" Text="{Binding Status}" TextWrapping="Wrap" />
+                  </Grid>
                   <Grid Grid.Column="4" ColumnDefinitions="*,Auto,Auto,Auto,Auto">
                     <StackPanel Spacing="6" VerticalAlignment="Center">
                       <TextBlock Classes="muted small" Text="{Binding Explanation}" TextWrapping="Wrap" />
@@ -65,15 +66,15 @@
                         <Button Theme="{StaticResource SecondaryButton}" Margin="0,0,8,0" Padding="10,0"
                                 ToolTip.Tip="Connect to a SQL Server on your network or in the cloud; it is saved in the Database Explorer and the app runs with it"
                                 Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).ConnectSqlServerCommand}" CommandParameter="{Binding}">
-                          <StackPanel Orientation="Horizontal" Spacing="6">
-                            <controls:StrokeIcon Data="{StaticResource Icon.Database}" Size="13" Foreground="{DynamicResource Brush.AccentText}" />
-                            <TextBlock Text="Connect to SQL Server…" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
-                          </StackPanel>
+                          <Grid ColumnDefinitions="Auto,*">
+                            <controls:StrokeIcon Data="{StaticResource Icon.Database}" Size="13" Foreground="{DynamicResource Brush.AccentText}" Margin="0,0,6,0" />
+                            <TextBlock Grid.Column="1" Text="Connect to SQL Server…" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                          </Grid>
                         </Button>
                         <Button Theme="{StaticResource SecondaryButton}" Padding="10,0"
                                 IsVisible="{Binding CanSwitchDatabase}" ToolTip.Tip="Run the app with a database that runs on this tablet"
                                 Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).SwitchDatabaseCommand}" CommandParameter="{Binding}">
-                          <TextBlock Text="{Binding SwitchDatabaseText}" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
+                          <TextBlock Text="{Binding SwitchDatabaseText}" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" TextWrapping="Wrap" />
                         </Button>
                       </WrapPanel>
                     </StackPanel>

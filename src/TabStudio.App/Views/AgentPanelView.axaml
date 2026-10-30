@@ -198,7 +198,7 @@
               IsVisible="{Binding HasChanges}" MaxHeight="320">
         <DockPanel>
           <Grid DockPanel.Dock="Top" MinHeight="38" Margin="12,0,8,0" ColumnDefinitions="*,Auto,Auto">
-            <TextBlock Classes="h2" Text="{Binding ChangesTitle}" VerticalAlignment="Center" />
+            <TextBlock Classes="h2" Text="{Binding ChangesTitle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
             <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Content="Undo all" Command="{Binding UndoAllCommand}" Margin="0,0,6,0" />
             <Button Grid.Column="2" Theme="{StaticResource AccentButton}" Content="Keep all" Command="{Binding KeepAllCommand}" />
           </Grid>
@@ -238,7 +238,7 @@
                                 <Border Background="{DynamicResource Brush.Agent.DiffRemoved}" IsVisible="{Binding IsRemoved}" />
                                 <TextBlock Classes="diff" Text="⋯" Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsGap}" />
                                 <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsGap}">
-                                  <TextBlock Classes="diff" Width="22" Text="{Binding Kind}" Foreground="{DynamicResource Brush.TextMuted}" />
+                                  <TextBlock Classes="diff" MinWidth="22" Text="{Binding Kind}" Foreground="{DynamicResource Brush.TextMuted}" />
                                   <TextBlock Classes="diff" Padding="0,1,12,1" Text="{Binding Text}" />
                                 </StackPanel>
                               </Panel>

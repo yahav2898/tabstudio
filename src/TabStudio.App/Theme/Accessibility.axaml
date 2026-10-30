@@ -57,4 +57,9 @@
     <Setter Property="FlowDirection" Value="LeftToRight" />
   </Style>
 
+  <!-- What sits only in a column a responsive layout gives no width is hidden, not squeezed to nothing (Controls/ResponsiveColumns.cs). -->
+  <Style Selector=".columnFolded">
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+
 </Styles>

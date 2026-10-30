@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 
@@ -29,7 +30,11 @@ public static class TrimmedText
         }
 
         _started = true;
-        Control.LoadedEvent.AddClassHandler<TextBlock>((text, _) => Update(text));
+        Control.LoadedEvent.AddClassHandler<TextBlock>((text, _) =>
+        {
+            TrimInSelectionBox(text);
+            Update(text);
+        });
         TextBlock.TextProperty.Changed.AddClassHandler<TextBlock>((text, _) => Update(text));
         TextBlock.TextTrimmingProperty.Changed.AddClassHandler<TextBlock>((text, _) => Update(text));
     }
@@ -58,6 +63,20 @@ public static class TrimmedText
 
         ToolTip.SetTip(text, text.Text);
         text.SetValue(IsTippedHereProperty, true);
+    }
+
+    /// <summary>
+    /// A combo box shows its choice in a box only as wide as its column; at a large text size a long choice trims
+    /// rather than running past the box's edge, and its whole text is in the tooltip.
+    /// </summary>
+    private static void TrimInSelectionBox(TextBlock text)
+    {
+        if (text.TextTrimming == TextTrimming.None && text.TextWrapping == TextWrapping.NoWrap
+            && text.GetVisualParent() is ContentPresenter presenter
+            && presenter.GetVisualParent() is ContentControl { Name: "ContentPresenter", TemplatedParent: ComboBox } && !IsInContent(text))
+        {
+            text.SetCurrentValue(TextBlock.TextTrimmingProperty, TextTrimming.CharacterEllipsis);
+        }
     }
 
     /// <summary>Whether the text is the user's app's, which is left as the app made it.</summary>
