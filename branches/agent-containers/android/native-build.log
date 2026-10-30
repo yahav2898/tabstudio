@@ -18,27 +18,30 @@ patching file src/cli/proot.c
 patching file src/cli/proot.h
 patching file src/extension/extension.h
 /home/runner/work/tabstudio/tabstudio/artifacts/native/arm64-v8a/libproot-loader.so:  ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), statically linked, stripped
-/home/runner/work/tabstudio/tabstudio/artifacts/native/arm64-v8a/libproot.so:         ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /system/bin/linker64, stripped
-/home/runner/work/tabstudio/tabstudio/artifacts/native/arm64-v8a/libtabstudio-jvm.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), static-pie linked, not stripped
+/home/runner/work/tabstudio/tabstudio/artifacts/native/arm64-v8a/libproot.so:         ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /system/bin/linker64, for Android 28, built by NDK r27d (13750724), stripped
+/home/runner/work/tabstudio/tabstudio/artifacts/native/arm64-v8a/libtabstudio-jvm.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, not stripped
 
 Running kernel seems to be up-to-date.
 
-No services need to be restarted.
+Restarting services...
+
+Service restarts being deferred:
+ systemctl restart hosted-compute-agent.service
 
 No containers need to be restarted.
 
 No user sessions are running outdated binaries.
 
 No VM guests are running outdated hypervisor (qemu) binaries on this host.
-+ tar --no-same-owner -xzf /tmp/tabstudio-box64-7timv2z4/downloads/box64-source.tar.gz -C /tmp/tabstudio-box64-7timv2z4/box64-source
++ tar --no-same-owner -xzf /tmp/tabstudio-box64-5zm5icy6/downloads/box64-source.tar.gz -C /tmp/tabstudio-box64-5zm5icy6/box64-source
 
-+ patch -d /tmp/tabstudio-box64-7timv2z4/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -p1 -i /home/runner/work/tabstudio/tabstudio/build/pic/box64-static-clone.patch
++ patch -d /tmp/tabstudio-box64-5zm5icy6/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -p1 -i /home/runner/work/tabstudio/tabstudio/build/pic/box64-static-clone.patch
 patching file src/core.c
 patching file src/emu/x64syscall.c
 
-+ cmake -S /tmp/tabstudio-box64-7timv2z4/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -B /tmp/tabstudio-box64-7timv2z4/box64-build -DARM_DYNAREC=ON -DLD80BITS=OFF -DNOALIGN=OFF -DBAD_SIGNAL=ON -DCMAKE_BUILD_TYPE=Release -DNOGIT=1 -DCMAKE_EXE_LINKER_FLAGS=-Wl,-z,max-page-size=16384 -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_ASM_COMPILER=aarch64-linux-gnu-gcc
--- Found Python3: /usr/bin/python3.12 (found suitable version "3.12.3", minimum required is "3.7") found components: Interpreter
--- The C compiler identification is GNU 13.3.0
++ cmake -S /tmp/tabstudio-box64-5zm5icy6/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -B /tmp/tabstudio-box64-5zm5icy6/box64-build -DARM_DYNAREC=ON -DLD80BITS=OFF -DNOALIGN=OFF -DBAD_SIGNAL=ON -DCMAKE_BUILD_TYPE=Release -DNOGIT=1 -DCMAKE_EXE_LINKER_FLAGS=-Wl,-z,max-page-size=16384 -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_ASM_COMPILER=aarch64-linux-gnu-gcc
+-- Found Python3: /usr/bin/python3.14 (found suitable version "3.14.4", minimum required is "3.7") found components: Interpreter
+-- The C compiler identification is GNU 15.2.0
 -- The ASM compiler identification is GNU
 -- Found assembler: /usr/bin/aarch64-linux-gnu-gcc
 -- Detecting C compiler ABI info
@@ -47,12 +50,12 @@ patching file src/emu/x64syscall.c
 -- Detecting C compile features
 -- Detecting C compile features - done
 -- Performing Test HAS_FUSE_LD_GOLD
--- Performing Test HAS_FUSE_LD_GOLD - Success
--- Configuring done (0.4s)
+-- Performing Test HAS_FUSE_LD_GOLD - Failed
+-- Configuring done (1.2s)
 -- Generating done (0.1s)
--- Build files have been written to: /tmp/tabstudio-box64-7timv2z4/box64-build
+-- Build files have been written to: /tmp/tabstudio-box64-5zm5icy6/box64-build
 
-+ cmake --build /tmp/tabstudio-box64-7timv2z4/box64-build --parallel 4
++ cmake --build /tmp/tabstudio-box64-5zm5icy6/box64-build --parallel 4
 pped/wrappedsecret1.c.o
 [ 88%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsoftokn3.c.o
 [ 88%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsmpeg.c.o
@@ -102,8 +105,8 @@ pped/wrappedsecret1.c.o
 [ 95%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n68.c.o
 [ 96%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicuuc72.c.o
 [ 96%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n72.c.o
-[ 96%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n73.c.o
 [ 96%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicuuc73.c.o
+[ 96%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n73.c.o
 [ 96%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicuuc74.c.o
 [ 96%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n74.c.o
 [ 97%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicuuc75.c.o
@@ -149,5 +152,5 @@ patching file src/cli/proot.c
 patching file src/cli/proot.h
 patching file src/extension/extension.h
 /home/runner/work/tabstudio/tabstudio/artifacts/native/armeabi-v7a/libproot-loader.so:  ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), statically linked, stripped
-/home/runner/work/tabstudio/tabstudio/artifacts/native/armeabi-v7a/libproot.so:         ELF 32-bit LSB pie executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /system/bin/linker, stripped
-/home/runner/work/tabstudio/tabstudio/artifacts/native/armeabi-v7a/libtabstudio-jvm.so: ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), static-pie linked, not stripped
+/home/runner/work/tabstudio/tabstudio/artifacts/native/armeabi-v7a/libproot.so:         ELF 32-bit LSB pie executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /system/bin/linker, for Android 28, built by NDK r27d (13750724), stripped
+/home/runner/work/tabstudio/tabstudio/artifacts/native/armeabi-v7a/libtabstudio-jvm.so: ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, not stripped

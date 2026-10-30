@@ -1,14 +1,17 @@
 == file
-size: 134883391 bytes (129M)
-sha256: fe53a6e57cd1f3aa7a1fb4d4982f8ee819fb7be43ee33b1c07a479848110e4e2
+size: 140531924 bytes (135M)
+sha256: 36b97868334b570c3ded1677dd5e0ea9a9d493078c2ad9e808d7125c502df9d1
 
 == manifest
-package: name='com.tabstudio.ide' versionCode='433359' versionName='0.19.1' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+package: name='com.tabstudio.ide' versionCode='436070' versionName='0.20.2' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
 minSdkVersion:'28'
 targetSdkVersion:'36'
 uses-permission: name='android.permission.INTERNET'
 uses-permission: name='android.permission.ACCESS_NETWORK_STATE'
 uses-permission: name='android.permission.POST_NOTIFICATIONS'
+uses-permission: name='android.permission.FOREGROUND_SERVICE'
+uses-permission: name='android.permission.FOREGROUND_SERVICE_DATA_SYNC'
+uses-permission: name='android.permission.WAKE_LOCK'
 uses-permission: name='android.permission.REQUEST_INSTALL_PACKAGES'
 uses-permission: name='android.permission.CAMERA'
 uses-permission: name='com.tabstudio.ide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
@@ -21,15 +24,13 @@ native-code: 'arm64-v8a' 'armeabi-v7a'
      16 armeabi-v7a
 
 == largest entries
-sort: write failed: 'standard output': Broken pipe
-sort: write error
-  51384536 compressed   62543008 uncompressed  lib/arm64-v8a/libassembly-store.so
-  51375595 compressed   62492148 uncompressed  lib/armeabi-v7a/libassembly-store.so
-   7510041 compressed   29936120 uncompressed  lib/arm64-v8a/libtabstudio-ai.so
-   5572380 compressed   26061328 uncompressed  lib/arm64-v8a/libbox64.so
+  54103972 compressed   65800984 uncompressed  lib/arm64-v8a/libassembly-store.so
+  54092759 compressed   65750096 uncompressed  lib/armeabi-v7a/libassembly-store.so
+   7510030 compressed   29936120 uncompressed  lib/arm64-v8a/libtabstudio-ai.so
+   5782513 compressed   26225280 uncompressed  lib/arm64-v8a/libbox64.so
    3915516 compressed    9027560 uncompressed  lib/arm64-v8a/libSkiaSharp.so
    3282842 compressed    5957980 uncompressed  lib/armeabi-v7a/libSkiaSharp.so
-   2145822 compressed    6136200 uncompressed  classes.dex
+   2146230 compressed    6137152 uncompressed  classes.dex
    1351800 compressed    3123640 uncompressed  lib/arm64-v8a/libmonosgen-2.0.so
    1222042 compressed    2222252 uncompressed  lib/armeabi-v7a/libmonosgen-2.0.so
     933508 compressed    2778464 uncompressed  lib/arm64-v8a/libHarfBuzzSharp.so
