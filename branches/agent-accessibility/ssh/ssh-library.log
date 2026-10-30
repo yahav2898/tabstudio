@@ -1,9 +1,9 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 116 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/TabStudio.Toolchains.csproj (in 126 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/TabStudio.Testing.csproj (in 321 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Remote/TabStudio.Remote.csproj (in 321 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Remote.Tests/TabStudio.Remote.Tests.csproj (in 180 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/TabStudio.Toolchains.csproj (in 144 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 2 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Remote/TabStudio.Remote.csproj (in 328 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/TabStudio.Testing.csproj (in 328 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Remote.Tests/TabStudio.Remote.Tests.csproj (in 342 ms).
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Toolchains -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/bin/Release/net10.0/TabStudio.Toolchains.dll
@@ -13,37 +13,37 @@ Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Remote.Tests/
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
 [xUnit.net 00:00:00.14]   Discovering: TabStudio.Remote.Tests
-[xUnit.net 00:00:00.22]   Discovered:  TabStudio.Remote.Tests
-[xUnit.net 00:00:00.27]   Starting:    TabStudio.Remote.Tests
-  Passed TabStudio.Remote.Tests.PublishingTests.A_published_file_is_readable_by_the_service_and_its_mode_is_written_as_SSH_NET_reads_it(local: OtherRead | GroupRead | UserWrite | UserRead, expected: 644) [17 ms]
+[xUnit.net 00:00:00.23]   Discovered:  TabStudio.Remote.Tests
+[xUnit.net 00:00:00.28]   Starting:    TabStudio.Remote.Tests
+  Passed TabStudio.Remote.Tests.PublishingTests.A_published_file_is_readable_by_the_service_and_its_mode_is_written_as_SSH_NET_reads_it(local: OtherRead | GroupRead | UserWrite | UserRead, expected: 644) [23 ms]
   Passed TabStudio.Remote.Tests.PublishingTests.A_published_file_is_readable_by_the_service_and_its_mode_is_written_as_SSH_NET_reads_it(local: OtherRead | GroupWrite | GroupRead | UserWrite | UserRead, expected: 664) [< 1 ms]
   Passed TabStudio.Remote.Tests.PublishingTests.A_published_file_is_readable_by_the_service_and_its_mode_is_written_as_SSH_NET_reads_it(local: UserExecute | UserWrite | UserRead, expected: 755) [< 1 ms]
   Passed TabStudio.Remote.Tests.PublishingTests.A_published_file_is_readable_by_the_service_and_its_mode_is_written_as_SSH_NET_reads_it(local: UserWrite | UserRead, expected: 644) [< 1 ms]
-  Passed TabStudio.Remote.Tests.ConfigurationTests.Publish_rejects_unsafe_destinations_or_unit_names(directory: "/", service: "app.service") [4 ms]
+  Passed TabStudio.Remote.Tests.ConfigurationTests.Publish_rejects_unsafe_destinations_or_unit_names(directory: "/", service: "app.service") [9 ms]
   Passed TabStudio.Remote.Tests.ConfigurationTests.Publish_rejects_unsafe_destinations_or_unit_names(directory: "relative", service: "app.service") [< 1 ms]
   Passed TabStudio.Remote.Tests.ConfigurationTests.Publish_rejects_unsafe_destinations_or_unit_names(directory: "/srv/app", service: "app;touch /tmp/x") [7 ms]
   Passed TabStudio.Remote.Tests.ConfigurationTests.Publish_rejects_unsafe_destinations_or_unit_names(directory: "/srv/app", service: "-malicious") [< 1 ms]
-  Passed TabStudio.Remote.Tests.PublishingTests.Content_search_uses_literal_queries_skips_generated_folders_and_returns_navigable_locations [72 ms]
-  Passed TabStudio.Remote.Tests.PublishingTests.Activation_switches_atomically_and_restores_previous_release_after_restart_failure(fail: True) [80 ms]
-  Passed TabStudio.Remote.Tests.PublishingTests.Activation_switches_atomically_and_restores_previous_release_after_restart_failure(fail: False) [43 ms]
-  Passed TabStudio.Remote.Tests.ConfigurationTests.Device_keys_and_profiles_survive_reopening_and_no_credentials_enter_profiles [338 ms]
-  Passed TabStudio.Remote.Tests.ConfigurationTests.Platform_signer_produces_RSA_SHA2_authentication_without_exporting_a_private_key [463 ms]
-  Passed TabStudio.Remote.Tests.ConfigurationTests.Import_honors_aliases_quotes_first_values_wildcards_and_exclusions [29 ms]
+  Passed TabStudio.Remote.Tests.PublishingTests.Content_search_uses_literal_queries_skips_generated_folders_and_returns_navigable_locations [82 ms]
+  Passed TabStudio.Remote.Tests.ConfigurationTests.Device_keys_and_profiles_survive_reopening_and_no_credentials_enter_profiles [367 ms]
+  Passed TabStudio.Remote.Tests.PublishingTests.Activation_switches_atomically_and_restores_previous_release_after_restart_failure(fail: True) [495 ms]
+  Passed TabStudio.Remote.Tests.PublishingTests.Activation_switches_atomically_and_restores_previous_release_after_restart_failure(fail: False) [22 ms]
+  Passed TabStudio.Remote.Tests.ConfigurationTests.Platform_signer_produces_RSA_SHA2_authentication_without_exporting_a_private_key [282 ms]
+  Passed TabStudio.Remote.Tests.ConfigurationTests.Import_honors_aliases_quotes_first_values_wildcards_and_exclusions [9 ms]
   Passed TabStudio.Remote.Tests.ConfigurationTests.Shell_arguments_are_quoted_as_data [< 1 ms]
   Passed TabStudio.Remote.Tests.ConfigurationTests.Import_never_executes_proxy_commands_or_misrepresents_a_jump_host [< 1 ms]
-  Passed TabStudio.Remote.Tests.ConfigurationTests.Host_key_pins_cannot_be_silently_replaced [30 ms]
-  Passed TabStudio.Remote.Tests.PublishingTests.Upload_stages_publish_output_and_failed_activation_preserves_the_current_release [1 s]
+  Passed TabStudio.Remote.Tests.ConfigurationTests.Host_key_pins_cannot_be_silently_replaced [22 ms]
+  Passed TabStudio.Remote.Tests.PublishingTests.Upload_stages_publish_output_and_failed_activation_preserves_the_current_release [801 ms]
   Passed TabStudio.Remote.Tests.OpenSshTests.Device_generated_signer_authenticates_to_OpenSSH [1 s]
-  Passed TabStudio.Remote.Tests.OpenSshTests.Interactive_shell_supports_input_resizing_and_interrupts [410 ms]
-  Passed TabStudio.Remote.Tests.OpenSshTests.Unknown_and_changed_host_keys_are_rejected_before_authentication [230 ms]
+  Passed TabStudio.Remote.Tests.OpenSshTests.Interactive_shell_supports_input_resizing_and_interrupts [329 ms]
+  Passed TabStudio.Remote.Tests.OpenSshTests.Unknown_and_changed_host_keys_are_rejected_before_authentication [204 ms]
   Passed TabStudio.Remote.Tests.OpenSshTests.Commands_stream_before_completion_and_report_nonzero_exit [2 s]
-[xUnit.net 00:00:05.88]   Finished:    TabStudio.Remote.Tests
+[xUnit.net 00:00:05.79]   Finished:    TabStudio.Remote.Tests
 Data collector 'Blame' message: All tests finished running, Sequence file will not be generated.
-  Passed TabStudio.Remote.Tests.OpenSshTests.Local_forward_reaches_remote_loopback_HTTP_and_closes_when_disposed [454 ms]
-  Passed TabStudio.Remote.Tests.OpenSshTests.Commands_accept_stdin_EOF_and_closing_input_after_exit_is_idempotent [297 ms]
-  Passed TabStudio.Remote.Tests.OpenSshTests.Sftp_cache_edits_conflicts_symlinks_and_path_mapping_are_real [359 ms]
+  Passed TabStudio.Remote.Tests.OpenSshTests.Local_forward_reaches_remote_loopback_HTTP_and_closes_when_disposed [446 ms]
+  Passed TabStudio.Remote.Tests.OpenSshTests.Commands_accept_stdin_EOF_and_closing_input_after_exit_is_idempotent [305 ms]
+  Passed TabStudio.Remote.Tests.OpenSshTests.Sftp_cache_edits_conflicts_symlinks_and_path_mapping_are_real [334 ms]
 
 Test Run Successful.
 Total tests: 25
      Passed: 25
- Total time: 6.9414 Seconds
+ Total time: 6.7820 Seconds
