@@ -82,6 +82,30 @@ public sealed class WorkspaceLoaderTests
     }
 
     [Fact]
+    public void A_repository_with_its_solution_in_a_folder_opens_that_solution_not_every_copy_of_its_projects()
+    {
+        // blazor-workshop keeps BlazingPizza.sln in src/ beside eight copies of the app in save-points/*: opened as a
+        // folder they became 32 loose projects with clashing names, and the unfinished first copy started.
+        using var temp = new TempDirectory();
+        temp.Write("README.md", "# Workshop");
+        foreach (var folder in new[] { "src", "save-points/0-Start", "save-points/1-Home" })
+        {
+            temp.Write($"{folder}/App/App.csproj", ConsoleProject.Replace("""<ProjectReference Include="..\Lib\Lib.csproj" />""", string.Empty, StringComparison.Ordinal));
+            temp.Write($"{folder}/App/Program.cs", "Console.WriteLine();");
+            temp.Write($"{folder}/Workshop.slnx", """<Solution><Project Path="App/App.csproj" /></Solution>""");
+        }
+
+        Assert.Equal(temp.Resolve("src/Workshop.slnx"), WorkspaceLoader.FindNestedSolution(temp.Path));
+        var workspace = WorkspaceLoader.Load(temp.Path);
+        Assert.NotNull(workspace.Solution);
+        Assert.Equal(temp.Resolve("src/App/App.csproj"), Assert.Single(workspace.Projects).FilePath);
+
+        // A folder with its own project, or another language's, keeps opening as it is.
+        temp.Write("package.json", "{}");
+        Assert.Null(WorkspaceLoader.FindNestedSolution(temp.Path));
+    }
+
+    [Fact]
     public void A_plain_folder_opens_as_a_file_tree()
     {
         using var temp = new TempDirectory();
