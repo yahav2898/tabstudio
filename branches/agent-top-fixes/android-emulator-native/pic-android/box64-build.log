@@ -1,0 +1,266 @@
+[  0%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run.c.o
+[  0%] Built target functions_list
+[  0%] Built target WRAPPERS
+[  0%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run0f.c.o
+[  1%] Generating /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/git_head.h
+fatal: not a git repository (or any of the parent directories): .git
+[  1%] Built target generate_git_head_target
+[  1%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66.c.o
+[  1%] Built target generate_dynacache_hashes
+[  2%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run660f.c.o
+[  2%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66f20f.c.o
+[  2%] Building C object CMakeFiles/mainobj.dir/src/os/backtrace.c.o
+[  2%] Building C object CMakeFiles/mainobj.dir/src/os/emit_signals_linux.c.o
+[  3%] Building C object CMakeFiles/mainobj.dir/src/os/hostext_common.c.o
+[  3%] Building C object CMakeFiles/mainobj.dir/src/os/hostext_linux.c.o
+[  3%] Building C object CMakeFiles/mainobj.dir/src/os/freq_linux.c.o
+[  3%] Building C object CMakeFiles/mainobj.dir/src/os/os_linux.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/os_linux.c: In function ‘PrintfFtrace’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/os_linux.c:228:9: warning: ignoring return value of ‘write’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  228 |         write(trace_fd, tmp, strlen(tmp));
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/os_linux.c:235:5: warning: ignoring return value of ‘write’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  235 |     write(trace_fd, tmp, strlen(tmp));
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[  4%] Building C object CMakeFiles/mainobj.dir/src/os/perfmap.c.o
+[  4%] Building C object CMakeFiles/mainobj.dir/src/os/symbolfuncs_linux.c.o
+[  4%] Building C object CMakeFiles/mainobj.dir/src/os/random_linux.c.o
+[  4%] Building C object CMakeFiles/mainobj.dir/src/os/my_cpuid.c.o
+[  5%] Building C object CMakeFiles/mainobj.dir/src/os/sysinfo.c.o
+[  5%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66f30f.c.o
+In file included from /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:9:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c: In function ‘InitializeSystemInfo’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:34:19: warning: ‘%04lu’ directive output may be truncated writing 4 bytes into a region of size between 2 and 30 [-Wformat-truncation=]
+   34 | #define BOX64_STR "Box64"
+      |                   ^~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:42:5: note: in expansion of macro ‘BOX64_STR’
+   42 |     BOX64_STR                         \
+      |     ^~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:195:52: note: in expansion of macro ‘BOX64_BUILD_INFO_STRING_SHORT’
+  195 |             snprintf(branding, sizeof(branding)-1, BOX64_BUILD_INFO_STRING_SHORT " on %.*s @%04" PRIu64 " MHz", 28, box64_sysinfo.cpuname, box64_sysinfo.frequency / 1000000);
+      |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:34:19: note: directive argument in the range [0, 1]
+   34 | #define BOX64_STR "Box64"
+      |                   ^~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:42:5: note: in expansion of macro ‘BOX64_STR’
+   42 |     BOX64_STR                         \
+      |     ^~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:195:52: note: in expansion of macro ‘BOX64_BUILD_INFO_STRING_SHORT’
+  195 |             snprintf(branding, sizeof(branding)-1, BOX64_BUILD_INFO_STRING_SHORT " on %.*s @%04" PRIu64 " MHz", 28, box64_sysinfo.cpuname, box64_sysinfo.frequency / 1000000);
+      |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/stdio.h:974,
+                 from /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/include/sysinfo.h:3,
+                 from /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/include/debug.h:8,
+                 from /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:7:
+In function ‘snprintf’,
+    inlined from ‘InitializeSystemInfo’ at /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:195:13:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:68:10: note: ‘__builtin___snprintf_chk’ output between 27 and 55 bytes into a destination of size 48
+   68 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   69 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   70 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c: In function ‘InitializeSystemInfo’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:34:19: warning: ‘%1.2f’ directive output may be truncated writing between 3 and 313 bytes into a region of size between 2 and 30 [-Wformat-truncation=]
+   34 | #define BOX64_STR "Box64"
+      |                   ^~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:42:5: note: in expansion of macro ‘BOX64_STR’
+   42 |     BOX64_STR                         \
+      |     ^~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:193:52: note: in expansion of macro ‘BOX64_BUILD_INFO_STRING_SHORT’
+  193 |             snprintf(branding, sizeof(branding)-1, BOX64_BUILD_INFO_STRING_SHORT " on %.*s @%1.2f GHz", 28, box64_sysinfo.cpuname, box64_sysinfo.frequency / 1000000000.);
+      |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:34:19: note: assuming directive output of 4 bytes
+   34 | #define BOX64_STR "Box64"
+      |                   ^~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:42:5: note: in expansion of macro ‘BOX64_STR’
+   42 |     BOX64_STR                         \
+      |     ^~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:193:52: note: in expansion of macro ‘BOX64_BUILD_INFO_STRING_SHORT’
+  193 |             snprintf(branding, sizeof(branding)-1, BOX64_BUILD_INFO_STRING_SHORT " on %.*s @%1.2f GHz", 28, box64_sysinfo.cpuname, box64_sysinfo.frequency / 1000000000.);
+      |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function ‘snprintf’,
+    inlined from ‘InitializeSystemInfo’ at /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:193:13:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:68:10: note: ‘__builtin___snprintf_chk’ output between 26 and 364 bytes into a destination of size 48
+   68 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   69 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   70 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c: In function ‘InitializeSystemInfo’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:34:19: warning: ‘__builtin___snprintf_chk’ output may be truncated before the last format character [-Wformat-truncation=]
+   34 | #define BOX64_STR "Box64"
+      |                   ^~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:42:5: note: in expansion of macro ‘BOX64_STR’
+   42 |     BOX64_STR                         \
+      |     ^~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:190:48: note: in expansion of macro ‘BOX64_BUILD_INFO_STRING_SHORT’
+  190 |         snprintf(branding, sizeof(branding)-1, BOX64_BUILD_INFO_STRING_SHORT " on %.*s", 32, box64_sysinfo.cpuname);
+      |                                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function ‘snprintf’,
+    inlined from ‘InitializeSystemInfo’ at /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:190:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:68:10: note: ‘__builtin___snprintf_chk’ output between 17 and 49 bytes into a destination of size 48
+   68 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   69 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   70 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+[  5%] Building C object CMakeFiles/mainobj.dir/src/main.c.o
+[  5%] Building C object CMakeFiles/mainobj.dir/src/test.c.o
+[  5%] Building C object CMakeFiles/mainobj.dir/src/core.c.o
+[  5%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66d9.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c: In function ‘KillAllInstances’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c:385:73: warning: ‘ (deleted)’ directive output may be truncated writing 10 bytes into a region of size between 1 and 4096 [-Wformat-truncation=]
+  385 |     snprintf(self_name_with_deleted, sizeof(self_name_with_deleted), "%s (deleted)", self_name);
+      |                                                                         ^~~~~~~~~~
+In file included from /usr/include/stdio.h:974,
+                 from /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c:1:
+In function ‘snprintf’,
+    inlined from ‘KillAllInstances’ at /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c:385:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:68:10: note: ‘__builtin___snprintf_chk’ output between 11 and 4106 bytes into a destination of size 4096
+   68 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   69 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   70 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c: In function ‘KillAllInstances’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c:395:49: warning: ‘/exe’ directive output may be truncated writing 4 bytes into a region of size between 1 and 4096 [-Wformat-truncation=]
+  395 |         snprintf(exe_path, sizeof(exe_path), "%s/exe", proc_path);
+      |                                                 ^~~~
+In function ‘snprintf’,
+    inlined from ‘KillAllInstances’ at /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c:395:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:68:10: note: ‘__builtin___snprintf_chk’ output between 5 and 4100 bytes into a destination of size 4096
+   68 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   69 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   70 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+[  6%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66dd.c.o
+[  7%] Building C object CMakeFiles/mainobj.dir/src/box64context.c.o
+[  7%] Building C object CMakeFiles/mainobj.dir/src/build_info.c.o
+[  7%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66f0.c.o
+[  7%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rund8.c.o
+[  7%] Building C object CMakeFiles/mainobj.dir/src/custommem.c.o
+[  7%] Building C object CMakeFiles/mainobj.dir/src/custommmap.c.o
+[  7%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rund9.c.o
+[  8%] Building C object CMakeFiles/mainobj.dir/src/dynarec/dynarec.c.o
+[  9%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runda.c.o
+[  9%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rundb.c.o
+[  9%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rundc.c.o
+[  9%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rundd.c.o
+[ 10%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runde.c.o
+[ 10%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfloader.c.o
+[ 10%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfhacks.c.o
+[ 10%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rundf.c.o
+[ 10%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runf0.c.o
+[ 11%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfparser.c.o
+[ 11%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runf20f.c.o
+[ 12%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runf30f.c.o
+[ 12%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfhash.c.o
+[ 12%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx.c.o
+[ 12%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfload_dump.c.o
+[ 12%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx0f.c.o
+[ 12%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx0f38.c.o
+[ 12%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfdwarf_private.c.o
+[ 13%] Building C object CMakeFiles/mainobj.dir/src/emu/entrypoint.c.o
+[ 13%] Building C object CMakeFiles/mainobj.dir/src/emu/x64compstrings.c.o
+[ 14%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx660f.c.o
+[ 14%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf20f.c.o
+[ 14%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf30f.c.o
+[ 14%] Building C object CMakeFiles/mainobj.dir/src/emu/x64emu.c.o
+[ 15%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx660f38.c.o
+[ 15%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx660f3a.c.o
+[ 15%] Building C object CMakeFiles/mainobj.dir/src/emu/x64printer.c.o
+[ 15%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf20f38.c.o
+[ 15%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf30f38.c.o
+[ 16%] Building C object CMakeFiles/mainobj.dir/src/emu/x64int3.c.o
+[ 17%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf20f3a.c.o
+[ 17%] Building C object CMakeFiles/mainobj.dir/src/emu/x87emu_private.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/emu/x87emu_private.c: In function ‘PrintLD’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/emu/x87emu_private.c:262:46: warning: format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 6 has type ‘uint64_t’ {aka ‘long unsigned int’} [-Wformat=]
+  262 |     snprintf(buf, sizeof(buf), "%s%04x %016llx", prefix?prefix:"", val.b, val.f.q);
+      |                                        ~~~~~~^                            ~~~~~~~
+      |                                              |                                 |
+      |                                              long long unsigned int            uint64_t {aka long unsigned int}
+      |                                        %016lx
+[ 17%] Building C object CMakeFiles/mainobj.dir/src/emu/x64primop.c.o
+[ 17%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf30f3a.c.o
+[ 17%] Building C object CMakeFiles/mainobj.dir/src/emu/x64run_private.c.o
+[ 18%] Building C object CMakeFiles/mainobj.dir/src/emu/x64shaext.c.o
+[ 18%] Building C object CMakeFiles/mainobj.dir/src/emu/x64syscall.c.o
+[ 18%] Building C object CMakeFiles/mainobj.dir/src/emu/x64tls.c.o
+[ 18%] Building C object CMakeFiles/mainobj.dir/src/emu/x64trace.c.o
+[ 19%] Building C object CMakeFiles/mainobj.dir/src/librarian/librarian.c.o
+[ 19%] Building C object CMakeFiles/mainobj.dir/src/librarian/library.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/librarian/library.c: In function ‘Path2Name’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/librarian/library.c:86:15: warning: initialization discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+   86 |     char* p = strrchr(path, '/');
+      |               ^~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/librarian/library.c: In function ‘NbDot’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/librarian/library.c:101:15: warning: initialization discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+  101 |     char *p = strstr(name, ".so");
+      |               ^~~~~~
+[ 19%] Building C object CMakeFiles/mainobj.dir/src/librarian/dictionnary.c.o
+[ 19%] Building C object CMakeFiles/mainobj.dir/src/librarian/symbols.c.o
+[ 20%] Building C object CMakeFiles/mainobj.dir/src/libtools/auxval.c.o
+[ 20%] Building C object CMakeFiles/mainobj.dir/src/libtools/myalign.c.o
+[ 20%] Building C object CMakeFiles/mainobj.dir/src/libtools/signals.c.o
+[ 20%] Building C object CMakeFiles/mainobj.dir/src/libtools/sigtools.c.o
+[ 21%] Building C object CMakeFiles/mainobj.dir/src/libtools/syscall_user_dispatch.c.o
+[ 21%] Building C object CMakeFiles/mainobj.dir/src/libtools/decopcode.c.o
+[ 21%] Building C object CMakeFiles/mainobj.dir/src/libtools/threads.c.o
+[ 22%] Building C object CMakeFiles/mainobj.dir/src/tools/bitutils.c.o
+[ 22%] Building C object CMakeFiles/mainobj.dir/src/tools/box64stack.c.o
+[ 22%] Building C object CMakeFiles/mainobj.dir/src/tools/bridge.c.o
+[ 22%] Building C object CMakeFiles/mainobj.dir/src/tools/alternate.c.o
+[ 22%] Built target interpreter
+[ 23%] Building C object CMakeFiles/mainobj.dir/src/tools/callback.c.o
+[ 23%] Building C object CMakeFiles/mainobj.dir/src/tools/cleanup.c.o
+[ 23%] Building C object CMakeFiles/mainobj.dir/src/tools/cpumask.c.o
+[ 23%] Building C object CMakeFiles/mainobj.dir/src/tools/gdbjit.c.o
+[ 24%] Building C object CMakeFiles/mainobj.dir/src/tools/fileutils.c.o
+[ 24%] Building C object CMakeFiles/mainobj.dir/src/tools/pathcoll.c.o
+[ 24%] Building C object CMakeFiles/mainobj.dir/src/tools/rbtree.c.o
+[ 24%] Building C object CMakeFiles/mainobj.dir/src/tools/env.c.o
+[ 25%] Building C object CMakeFiles/mainobj.dir/src/tools/dynacache.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/tools/env.c:355:2: warning: #warning "Unknown architecture for ENV_ARCH" [-Wcpp]
+  355 | #warning "Unknown architecture for ENV_ARCH"
+      |  ^~~~~~~
+[ 25%] Building C object CMakeFiles/mainobj.dir/src/tools/wine_tools.c.o
+[ 25%] Building C object CMakeFiles/mainobj.dir/src/tools/pe_tools.c.o
+[ 25%] Building C object CMakeFiles/mainobj.dir/src/wrapped/generated/wrapper.c.o
+[ 26%] Building C object CMakeFiles/mainobj.dir/src/mallochook.c.o
+[ 26%] Building C object CMakeFiles/mainobj.dir/src/steam.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/steam.c: In function ‘create_lib_symlink’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/steam.c:35:5: warning: ignoring return value of ‘symlink’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   35 |     symlink(file, tmp);
+      |     ^~~~~~~~~~~~~~~~~~
+[ 26%] Building C object CMakeFiles/mainobj.dir/src/libtools/sdl1rwops.c.o
+[ 26%] Building C object CMakeFiles/mainobj.dir/src/libtools/sdl2rwops.c.o
+[ 27%] Building C object CMakeFiles/mainobj.dir/src/tools/gtkclass.c.o
+[ 27%] Building C object CMakeFiles/mainobj.dir/src/librarian/globalsymbols.c.o
+[ 27%] Building C object CMakeFiles/mainobj.dir/src/emu/x86syscall.c.o
+[ 27%] Building C object CMakeFiles/mainobj.dir/src/libtools/obstack.c.o
+[ 28%] Building C object CMakeFiles/mainobj.dir/src/libtools/libdl.c.o
+[ 28%] Building C object CMakeFiles/mainobj.dir/src/libtools/vulkanoverlay.c.o
+[ 28%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedalure.c.o
+[ 29%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedalut.c.o
+[ 29%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedatk.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/libtools/vulkanoverlay.c: In function ‘LoadVulkanOverlay’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/libtools/vulkanoverlay.c:926:23: warning: initialization discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+  926 |             char* p = strrchr(path, '/');
+      |                       ^~~~~~~
+[ 29%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedatkbridge.c.o
+[ 29%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedatomic.c.o
+[ 30%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedatspi.c.o
+[ 30%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedayatanaappindicator3.c.o
+[ 30%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedayatanaindicator3.c.o
+[ 30%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedayatanaido3.c.o
+[ 31%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedavahiclient.c.o
+[ 31%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedavahicommon.c.o
+[ 31%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedbz2.c.o
