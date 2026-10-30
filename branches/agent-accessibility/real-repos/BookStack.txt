@@ -5,10 +5,10 @@ Toolchain projects:
   php: /home/runner/work/_temp/real-repos/BookStack/composer.json
   node: /home/runner/work/_temp/real-repos/BookStack/package.json
 Startup project: php /home/runner/work/_temp/real-repos/BookStack/composer.json
-Set up in 10.7 s
-Web preview: http://127.0.0.1:42479/
-GET http://127.0.0.1:42479/: 200 OK, 9540 characters
-Ran in 4.9 s
+Set up in 9.0 s
+Web preview: http://127.0.0.1:42311/
+GET http://127.0.0.1:42311/: 200 OK, 9540 characters
+Ran in 5.5 s
 Project setup:
 
 Output:
@@ -17,122 +17,120 @@ Running artisan serve with PHP 8.5.12
 
    INFO  Preparing database.  
 
-  Creating migration table ...................................... 84.34ms DONE
+  Creating migration table ...................................... 46.70ms DONE
 
    INFO  Running migrations.  
 
-  2014_10_12_000000_create_users_table ......................... 257.57ms DONE
-  2014_10_12_100000_create_password_resets_table ................ 11.32ms DONE
-  2015_07_12_114933_create_books_table ........................... 4.45ms DONE
-  2015_07_12_190027_create_pages_table ........................... 4.57ms DONE
-  2015_07_13_172121_create_images_table .......................... 5.28ms DONE
-  2015_07_27_172342_create_chapters_table ........................ 5.18ms DONE
-  2015_08_08_200447_add_users_to_entities ....................... 62.97ms DONE
-  2015_08_09_093534_create_page_revisions_table .................. 4.18ms DONE
-  2015_08_16_142133_create_activities_table ...................... 6.02ms DONE
-  2015_08_29_105422_add_roles_and_permissions ................... 93.61ms DONE
-  2015_08_30_125859_create_settings_table ........................ 4.23ms DONE
+  2014_10_12_000000_create_users_table ......................... 547.89ms DONE
+  2014_10_12_100000_create_password_resets_table ................ 10.93ms DONE
+  2015_07_12_114933_create_books_table ........................... 4.56ms DONE
+  2015_07_12_190027_create_pages_table ........................... 4.20ms DONE
+  2015_07_13_172121_create_images_table .......................... 3.87ms DONE
+  2015_07_27_172342_create_chapters_table ........................ 4.19ms DONE
+  2015_08_08_200447_add_users_to_entities ....................... 57.76ms DONE
+  2015_08_09_093534_create_page_revisions_table .................. 3.89ms DONE
+  2015_08_16_142133_create_activities_table ...................... 4.41ms DONE
+  2015_08_29_105422_add_roles_and_permissions ................... 94.55ms DONE
+  2015_08_30_125859_create_settings_table ........................ 4.42ms DONE
   2015_08_31_175240_add_search_indexes ........................... 0.03ms DONE
-  2015_09_04_165821_create_social_accounts_table ................ 11.46ms DONE
-  2015_09_05_164707_add_email_confirmation_table ................ 15.20ms DONE
-  2015_11_21_145609_create_views_table ........................... 5.49ms DONE
-  2015_11_26_221857_add_entity_indexes .......................... 87.56ms DONE
+  2015_09_04_165821_create_social_accounts_table ................ 11.36ms DONE
+  2015_09_05_164707_add_email_confirmation_table ................ 14.90ms DONE
+  2015_11_21_145609_create_views_table ........................... 4.28ms DONE
+  2015_11_26_221857_add_entity_indexes .......................... 72.12ms DONE
   2015_12_05_145049_fulltext_weighting ........................... 0.04ms DONE
-  2015_12_07_195238_add_image_upload_types ...................... 24.25ms DONE
-  2015_12_09_195748_add_user_avatars ............................. 4.89ms DONE
-  2016_01_11_210908_add_external_auth_to_users .................. 14.03ms DONE
-  2016_02_25_184030_add_slug_to_revisions ....................... 27.02ms DONE
-  2016_02_27_120329_update_permissions_and_roles ................ 54.75ms DONE
-  2016_02_28_084200_add_entity_access_controls .................. 88.63ms DONE
-  2016_03_09_203143_add_page_revision_types ..................... 34.41ms DONE
-  2016_03_13_082138_add_page_drafts ............................ 152.51ms DONE
-  2016_03_25_123157_add_markdown_support ........................ 31.16ms DONE
-  2016_04_09_100730_add_view_permissions_to_roles ............... 39.45ms DONE
-  2016_04_20_192649_create_joint_permissions_table .............. 75.24ms DONE
-  2016_05_06_185215_create_tags_table ........................... 19.53ms DONE
-  2016_07_07_181521_add_summary_to_page_revisions ............... 11.31ms DONE
-  2016_09_29_101449_remove_hidden_roles ......................... 28.82ms DONE
-  2016_10_09_142037_create_attachments_table .................... 33.20ms DONE
-  2017_01_21_163556_create_cache_table .......................... 16.00ms DONE
-  2017_01_21_163602_create_sessions_table ....................... 11.58ms DONE
-  2017_03_19_091553_create_search_index_table ................... 22.35ms DONE
-  2017_04_20_185112_add_revision_counts ......................... 27.28ms DONE
-  2017_07_02_152834_update_db_encoding_to_ut8mb4 ................. 0.05ms DONE
-  2017_08_01_130541_create_comments_table ....................... 20.76ms DONE
-  2017_08_29_102650_add_cover_image_display ..................... 11.91ms DONE
-  2018_07_15_173514_add_role_external_auth_id ................... 14.84ms DONE
-  2018_08_04_115700_create_bookshelves_table .................... 97.73ms DONE
-  2019_07_07_112515_add_template_support ........................ 20.44ms DONE
-  2019_08_17_140214_add_user_invites_table ...................... 11.30ms DONE
-  2019_12_29_120917_add_api_auth ................................ 17.84ms DONE
-  2020_08_04_111754_drop_joint_permissions_id .................. 141.43ms DONE
-  2020_08_04_131052_remove_role_name_field ...................... 16.31ms DONE
-  2020_09_19_094251_add_activity_indexes ......................... 9.02ms DONE
-  2020_09_27_210059_add_entity_soft_deletes ..................... 52.83ms DONE
-  2020_09_27_210528_create_deletions_table ...................... 14.63ms DONE
-  2020_11_07_232321_simplify_activities_table ................... 84.44ms DONE
-  2020_12_30_173528_add_owned_by_field_to_entities .............. 74.94ms DONE
-  2021_01_30_225441_add_settings_type_column ..................... 6.76ms DONE
-  2021_03_08_215138_add_user_slug ............................... 21.03ms DONE
-  2021_05_15_173110_create_favourites_table ..................... 24.84ms DONE
-  2021_06_30_173111_create_mfa_values_table ..................... 10.44ms DONE
-  2021_07_03_085038_add_mfa_enforced_to_roles_table .............. 5.64ms DONE
-  2021_08_28_161743_add_export_role_permission ................... 2.26ms DONE
-  2021_09_26_044614_add_activities_ip_column ..................... 9.59ms DONE
-  2021_11_26_070438_add_index_for_user_ip ........................ 4.12ms DONE
-  2021_12_07_111343_create_webhooks_table ....................... 23.33ms DONE
-  2021_12_13_152024_create_jobs_table ............................ 8.73ms DONE
-  2021_12_13_152120_create_failed_jobs_table ..................... 7.06ms DONE
-  2022_01_03_154041_add_webhooks_timeout_error_columns .......... 31.72ms DONE
-  2022_04_17_101741_add_editor_change_field_and_permission ...... 15.73ms DONE
-  2022_04_25_140741_update_polymorphic_types .................... 14.67ms DONE
-  2022_07_16_170051_drop_joint_permission_type .................. 43.41ms DONE
-  2022_08_17_092941_create_references_table ..................... 17.15ms DONE
+  2015_12_07_195238_add_image_upload_types ...................... 24.84ms DONE
+  2015_12_09_195748_add_user_avatars ............................. 4.53ms DONE
+  2016_01_11_210908_add_external_auth_to_users .................. 12.31ms DONE
+  2016_02_25_184030_add_slug_to_revisions ....................... 25.02ms DONE
+  2016_02_27_120329_update_permissions_and_roles ................ 50.65ms DONE
+  2016_02_28_084200_add_entity_access_controls .................. 66.73ms DONE
+  2016_03_09_203143_add_page_revision_types ..................... 12.87ms DONE
+  2016_03_13_082138_add_page_drafts ............................. 16.23ms DONE
+  2016_03_25_123157_add_markdown_support ........................ 21.12ms DONE
+  2016_04_09_100730_add_view_permissions_to_roles ............... 15.70ms DONE
+  2016_04_20_192649_create_joint_permissions_table .............. 68.70ms DONE
+  2016_05_06_185215_create_tags_table ........................... 17.46ms DONE
+  2016_07_07_181521_add_summary_to_page_revisions ................ 9.66ms DONE
+  2016_09_29_101449_remove_hidden_roles ......................... 27.19ms DONE
+  2016_10_09_142037_create_attachments_table .................... 16.19ms DONE
+  2017_01_21_163556_create_cache_table .......................... 10.80ms DONE
+  2017_01_21_163602_create_sessions_table ....................... 10.83ms DONE
+  2017_03_19_091553_create_search_index_table ................... 19.95ms DONE
+  2017_04_20_185112_add_revision_counts ......................... 32.96ms DONE
+  2017_07_02_152834_update_db_encoding_to_ut8mb4 ................. 0.03ms DONE
+  2017_08_01_130541_create_comments_table ....................... 20.35ms DONE
+  2017_08_29_102650_add_cover_image_display ..................... 67.45ms DONE
+  2018_07_15_173514_add_role_external_auth_id ................... 12.34ms DONE
+  2018_08_04_115700_create_bookshelves_table .................... 97.18ms DONE
+  2019_07_07_112515_add_template_support ........................ 31.85ms DONE
+  2019_08_17_140214_add_user_invites_table ...................... 24.51ms DONE
+  2019_12_29_120917_add_api_auth ................................ 28.22ms DONE
+  2020_08_04_111754_drop_joint_permissions_id ................... 27.86ms DONE
+  2020_08_04_131052_remove_role_name_field ...................... 12.72ms DONE
+  2020_09_19_094251_add_activity_indexes ......................... 7.57ms DONE
+  2020_09_27_210059_add_entity_soft_deletes ..................... 47.37ms DONE
+  2020_09_27_210528_create_deletions_table ...................... 13.73ms DONE
+  2020_11_07_232321_simplify_activities_table ................... 38.96ms DONE
+  2020_12_30_173528_add_owned_by_field_to_entities .............. 76.53ms DONE
+  2021_01_30_225441_add_settings_type_column ..................... 7.64ms DONE
+  2021_03_08_215138_add_user_slug ............................... 15.39ms DONE
+  2021_05_15_173110_create_favourites_table ..................... 13.43ms DONE
+  2021_06_30_173111_create_mfa_values_table ..................... 11.69ms DONE
+  2021_07_03_085038_add_mfa_enforced_to_roles_table .............. 5.04ms DONE
+  2021_08_28_161743_add_export_role_permission ................... 2.41ms DONE
+  2021_09_26_044614_add_activities_ip_column .................... 11.52ms DONE
+  2021_11_26_070438_add_index_for_user_ip ........................ 3.77ms DONE
+  2021_12_07_111343_create_webhooks_table ....................... 21.02ms DONE
+  2021_12_13_152024_create_jobs_table ............................ 7.76ms DONE
+  2021_12_13_152120_create_failed_jobs_table ..................... 7.59ms DONE
+  2022_01_03_154041_add_webhooks_timeout_error_columns .......... 31.65ms DONE
+  2022_04_17_101741_add_editor_change_field_and_permission ...... 17.22ms DONE
+  2022_04_25_140741_update_polymorphic_types ..................... 7.54ms DONE
+  2022_07_16_170051_drop_joint_permission_type .................. 36.24ms DONE
+  2022_08_17_092941_create_references_table ..................... 17.54ms DONE
   2022_09_02_082910_fix_shelf_cover_image_types .................. 0.44ms DONE
-  2022_10_07_091406_flatten_entity_permissions_table ............ 22.70ms DONE
-  2022_10_08_104202_drop_entity_restricted_field ................ 48.45ms DONE
-  2023_01_24_104625_refactor_joint_permissions_storage .......... 41.69ms DONE
-  2023_01_28_141230_copy_color_settings_for_dark_mode ............ 1.48ms DONE
-  2023_02_20_093655_increase_attachments_path_length ............. 9.61ms DONE
-  2023_02_23_200227_add_updated_at_index_to_pages ................ 6.17ms DONE
-  2023_06_10_071823_remove_guest_user_secondary_roles ............ 1.40ms DONE
-  2023_06_25_181952_remove_bookshelf_create_entity_permissions ... 0.02ms DONE
-  2023_07_25_124945_add_receive_notifications_role_permissions ... 1.76ms DONE
-  2023_07_31_104430_create_watches_table ........................ 14.79ms DONE
-  2023_08_21_174248_increase_cache_size .......................... 8.13ms DONE
-  2023_12_02_104541_add_default_template_to_books ............... 10.91ms DONE
-  2023_12_17_140913_add_description_html_to_entities ............ 35.98ms DONE
-  2024_01_01_104542_add_default_template_to_chapters ............ 10.51ms DONE
-  2024_02_04_141358_add_views_updated_index ...................... 3.58ms DONE
-  2024_05_04_154409_rename_activity_relation_columns ............. 8.56ms DONE
-  2024_09_29_140340_ensure_editor_value_set ...................... 1.42ms DONE
-  2024_10_29_114420_add_import_role_permission ................... 2.24ms DONE
-  2024_11_02_160700_create_imports_table ......................... 7.74ms DONE
-  2024_11_27_171039_add_instance_id_setting ...................... 4.10ms DONE
-  2025_01_29_180933_create_sort_rules_table ...................... 4.15ms DONE
-  2025_02_05_150842_add_sort_rule_id_to_books ................... 19.77ms DONE
-  2025_04_18_215145_add_content_refs_and_archived_to_comments ... 20.00ms DONE
-  2025_09_02_111542_remove_unused_columns ....................... 18.41ms DONE
-  2025_09_15_132850_create_entities_table ....................... 53.88ms DONE
-  2025_09_15_134701_migrate_entity_data .......................... 5.97ms DONE
-  2025_09_15_134751_update_entity_relation_columns ............. 319.67ms DONE
-  2025_09_15_134813_drop_old_entity_tables ...................... 17.09ms DONE
-  2025_10_18_163331_clean_user_id_references ................... 130.17ms DONE
-  2025_10_22_134507_update_comments_relation_field_names ........ 10.45ms DONE
-  2025_11_23_161812_create_slug_history_table ................... 18.74ms DONE
-  2025_12_15_140219_create_mention_history_table ................ 10.58ms DONE
-  2025_12_19_103417_add_views_viewable_type_index ............... 12.38ms DONE
-  2026_04_19_141616_add_revision_view_all_permission ............. 2.55ms DONE
-  2026_07_27_201402_update_users_external_auth_id_collation ..... 14.76ms DONE
+  2022_10_07_091406_flatten_entity_permissions_table ............ 19.38ms DONE
+  2022_10_08_104202_drop_entity_restricted_field ................ 51.88ms DONE
+  2023_01_24_104625_refactor_joint_permissions_storage .......... 48.17ms DONE
+  2023_01_28_141230_copy_color_settings_for_dark_mode ............ 0.50ms DONE
+  2023_02_20_093655_increase_attachments_path_length ............. 9.54ms DONE
+  2023_02_23_200227_add_updated_at_index_to_pages ................ 5.21ms DONE
+  2023_06_10_071823_remove_guest_user_secondary_roles ............ 1.28ms DONE
+  2023_06_25_181952_remove_bookshelf_create_entity_permissions ... 0.03ms DONE
+  2023_07_25_124945_add_receive_notifications_role_permissions ... 1.80ms DONE
+  2023_07_31_104430_create_watches_table ........................ 14.50ms DONE
+  2023_08_21_174248_increase_cache_size .......................... 8.62ms DONE
+  2023_12_02_104541_add_default_template_to_books ............... 11.42ms DONE
+  2023_12_17_140913_add_description_html_to_entities ............ 32.10ms DONE
+  2024_01_01_104542_add_default_template_to_chapters ............ 11.34ms DONE
+  2024_02_04_141358_add_views_updated_index ...................... 3.79ms DONE
+  2024_05_04_154409_rename_activity_relation_columns ............. 8.27ms DONE
+  2024_09_29_140340_ensure_editor_value_set ...................... 1.24ms DONE
+  2024_10_29_114420_add_import_role_permission ................... 2.16ms DONE
+  2024_11_02_160700_create_imports_table ........................ 10.49ms DONE
+  2024_11_27_171039_add_instance_id_setting ..................... 15.27ms DONE
+  2025_01_29_180933_create_sort_rules_table ..................... 54.61ms DONE
+  2025_02_05_150842_add_sort_rule_id_to_books ................... 11.79ms DONE
+  2025_04_18_215145_add_content_refs_and_archived_to_comments ... 21.22ms DONE
+  2025_09_02_111542_remove_unused_columns ....................... 16.35ms DONE
+  2025_09_15_132850_create_entities_table ....................... 48.23ms DONE
+  2025_09_15_134701_migrate_entity_data .......................... 4.91ms DONE
+  2025_09_15_134751_update_entity_relation_columns ............. 224.47ms DONE
+  2025_09_15_134813_drop_old_entity_tables ...................... 14.15ms DONE
+  2025_10_18_163331_clean_user_id_references ................... 110.59ms DONE
+  2025_10_22_134507_update_comments_relation_field_names ......... 6.91ms DONE
+  2025_11_23_161812_create_slug_history_table ................... 17.39ms DONE
+  2025_12_15_140219_create_mention_history_table ................ 11.42ms DONE
+  2025_12_19_103417_add_views_viewable_type_index ................ 4.03ms DONE
+  2026_04_19_141616_add_revision_view_all_permission ............. 2.28ms DONE
+  2026_07_27_201402_update_users_external_auth_id_collation ..... 14.93ms DONE
 
 
-   INFO  Server running on [http://127.0.0.1:42479].  
+   INFO  Server running on [http://127.0.0.1:42311].  
 
   Press Ctrl+C to stop the server
 
-  2026-10-30 18:39:36 .............................................. ~ 0.09ms
-  2026-10-30 18:39:36 / ............................................ ~ 0.02ms
-  2026-10-30 18:39:37 /login ....................................... ~ 0.01ms
+  2026-10-30 19:03:00 .............................................. ~ 0.10ms
 
 The program 'artisan serve' was stopped.
 
