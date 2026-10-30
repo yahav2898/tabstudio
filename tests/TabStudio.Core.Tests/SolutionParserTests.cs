@@ -87,6 +87,46 @@ public sealed class SolutionParserTests
         Assert.Equal(Path.Combine(Root, "tests", "App.Tests", "App.Tests.csproj"), solution.Projects[1].AbsolutePath);
     }
 
+    /// <summary>
+    /// StronglyTypedId's NuGet integration tests: mapped to Debug|Any CPU without Build.0, they are in the solution but
+    /// Visual Studio and dotnet build leave them out; a .slnx says it with &lt;Build Project="false" /&gt;.
+    /// </summary>
+    [Fact]
+    public void Projects_the_Debug_configuration_does_not_build_are_marked()
+    {
+        var sln = """
+            Microsoft Visual Studio Solution File, Format Version 12.00
+            Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "App\App.csproj", "{33333333-3333-3333-3333-333333333333}"
+            EndProject
+            Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuget.Tests", "Nuget.Tests\Nuget.Tests.csproj", "{44444444-4444-4444-4444-444444444444}"
+            EndProject
+            Global
+            	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+            		Debug|Any CPU = Debug|Any CPU
+            		Release|Any CPU = Release|Any CPU
+            	EndGlobalSection
+            	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+            		{33333333-3333-3333-3333-333333333333}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+            		{33333333-3333-3333-3333-333333333333}.Debug|Any CPU.Build.0 = Debug|Any CPU
+            		{44444444-4444-4444-4444-444444444444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+            		{44444444-4444-4444-4444-444444444444}.Release|Any CPU.ActiveCfg = Release|Any CPU
+            		{44444444-4444-4444-4444-444444444444}.Release|Any CPU.Build.0 = Release|Any CPU
+            	EndGlobalSection
+            EndGlobal
+            """;
+        var slnx = """
+            <Solution>
+              <Project Path="App/App.csproj" />
+              <Project Path="Nuget.Tests/Nuget.Tests.csproj"><Build Project="false" /></Project>
+            </Solution>
+            """;
+
+        foreach (var solution in new[] { SolutionParser.Parse(Path.Combine(Root, "Shop.sln"), sln), SolutionParser.Parse(Path.Combine(Root, "Shop.slnx"), slnx) })
+        {
+            Assert.Equal(new[] { ("App", true), ("Nuget.Tests", false) }, solution.Projects.Select(p => (p.Name, p.IsBuilt)));
+        }
+    }
+
     [Fact]
     public void Invalid_slnx_throws_a_load_exception()
     {

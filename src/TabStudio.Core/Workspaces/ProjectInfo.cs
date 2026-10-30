@@ -51,6 +51,12 @@ public sealed record ProjectReferenceInfo(string Path, bool ReferenceOutputAssem
     /// runs inside the referencing project's compilation.
     /// </summary>
     public bool IsAnalyzer => string.Equals(OutputItemType, "Analyzer", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// The extern aliases of the reference, from its <c>Aliases</c> metadata (separated by commas), which the code
+    /// names with <c>extern alias</c>; none for the global namespace only. <c>global</c> among them keeps it there too.
+    /// </summary>
+    public IReadOnlyList<string> Aliases { get; init; } = [];
 }
 
 /// <summary>One argument of an assembly-level attribute the SDK generates.</summary>
@@ -91,7 +97,24 @@ public sealed record AssemblyReferenceInfo(string Name, string? HintPath = null)
 /// <param name="Include">The file, or a pattern of files, relative to <paramref name="BaseDirectory"/>.</param>
 /// <param name="BaseDirectory">The folder the pattern is relative to: the project's, as MSBuild evaluates items.</param>
 /// <param name="Metadata">The item's metadata, such as Avalonia's <c>SourceItemGroup</c>. Keys are case-insensitive.</param>
-public sealed record AdditionalFileItem(string Include, string BaseDirectory, IReadOnlyDictionary<string, string> Metadata);
+public sealed record AdditionalFileItem(string Include, string BaseDirectory, IReadOnlyDictionary<string, string> Metadata)
+{
+    /// <summary>
+    /// For an item a target added before the compiler ran (see <see cref="TargetItems"/>), every item type it was on the
+    /// way, such as <c>ResxCode</c> then <c>AdditionalFiles</c> for ThisAssembly.Strings, whose generators read the
+    /// metadata of each (<c>build_metadata.ResxCode.ManifestResourceName</c>); <see langword="null"/> for an
+    /// <c>AdditionalFiles</c> item of a project file.
+    /// </summary>
+    public IReadOnlyList<string>? ItemTypes { get; init; }
+}
+
+/// <summary>
+/// The metadata an item of a project file gives the files it includes or updates, such as MudBlazor's
+/// <c>&lt;EmbeddedResource Update="Resources\LanguageResource.resx"&gt;&lt;AsConstants&gt;true&lt;/AsConstants&gt;</c>.
+/// </summary>
+/// <param name="Include">The pattern of its <c>Include</c> or <c>Update</c>, relative to the project's folder.</param>
+/// <param name="Metadata">The metadata. Keys are case-insensitive.</param>
+public sealed record ItemMetadataInfo(string Include, IReadOnlyDictionary<string, string> Metadata);
 
 /// <summary>
 /// A <c>&lt;CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="..." /&gt;</c> item: metadata of an item
@@ -258,6 +281,31 @@ public sealed record ProjectInfo
     public IReadOnlyList<AdditionalFileItem> AdditionalFiles { get; init; } = [];
 
     /// <summary>
+    /// The targets of the project's files and its packages' that run before the compiler, whose items
+    /// <see cref="TargetItems"/> carries out, in the order they run.
+    /// </summary>
+    public IReadOnlyList<System.Xml.Linq.XElement> CompilerTargets { get; init; } = [];
+
+    /// <summary>
+    /// The patterns of the project's own <c>&lt;AvaloniaXaml Include="..." /&gt;</c> items, besides the <c>.axaml</c> files
+    /// in its folder, as Dock's projects for Avalonia 11 include the XAML of the projects they are built from.
+    /// </summary>
+    public IReadOnlyList<string> AvaloniaXamlIncludes { get; init; } = [];
+
+    /// <summary>The <c>Exclude</c> patterns of the <see cref="AvaloniaXamlIncludes"/>, keyed by include pattern.</summary>
+    public IReadOnlyDictionary<string, IReadOnlyList<string>> AvaloniaXamlIncludeExcludes { get; init; } =
+        new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal);
+
+    /// <summary>The <c>Remove</c> patterns of the project's <c>&lt;AvaloniaXaml&gt;</c> items.</summary>
+    public IReadOnlyList<string> AvaloniaXamlRemoves { get; init; } = [];
+
+    /// <summary>The <c>.proto</c> files of the project's <c>&lt;Protobuf&gt;</c> items, which Grpc.Tools' <c>protoc</c> compiles.</summary>
+    public IReadOnlyList<string> ProtobufIncludes { get; init; } = [];
+
+    /// <summary>The metadata the project's <c>EmbeddedResource</c> items give the files they include or update, in order.</summary>
+    public IReadOnlyList<ItemMetadataInfo> EmbeddedResourceItems { get; init; } = [];
+
+    /// <summary>
     /// The props and targets of the project's packages that have been read into it (see
     /// <see cref="ProjectParser.WithPackageBuildFiles"/>), in MSBuild's order; empty before its packages are restored.
     /// </summary>
@@ -268,6 +316,12 @@ public sealed record ProjectInfo
 
     /// <summary>Whether the project contains tests, regardless of <see cref="Kind"/>.</summary>
     public bool IsTestProject { get; init; }
+
+    /// <summary>
+    /// Whether the solution's Debug configuration builds the project (see <see cref="SolutionProjectEntry.IsBuilt"/>);
+    /// <see langword="false"/> leaves it out of builds, as Visual Studio does. A project opened without a solution is built.
+    /// </summary>
+    public bool IsBuiltBySolution { get; init; } = true;
 
     /// <summary>The directory that contains the project file.</summary>
     public string DirectoryPath => Path.GetDirectoryName(FilePath) ?? string.Empty;

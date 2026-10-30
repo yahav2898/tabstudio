@@ -46,6 +46,12 @@ public sealed record RestoredPackage(
     /// </summary>
     public IReadOnlyList<string> BuildFiles { get; init; } = [];
 
+    /// <summary>
+    /// Full paths of the C# sources of the package's <c>contentFiles/</c> that the project compiles, as a source-only
+    /// package such as Wcwidth.Sources gives them (see <c>AssetSelector.SelectContentSources</c>).
+    /// </summary>
+    public IReadOnlyList<string> ContentSources { get; init; } = [];
+
     /// <summary>How far the package is from the project along its shortest path: 1 for a direct reference.</summary>
     public int Depth { get; init; } = 1;
 }

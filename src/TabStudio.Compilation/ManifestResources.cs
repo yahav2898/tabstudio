@@ -14,8 +14,8 @@ namespace TabStudio.Compilation;
 /// does, so <c>Properties.Resources</c> and a form's <c>ComponentResourceManager</c> find their resources; entries of
 /// other types, such as images, are left out and read as <see langword="null"/>. A <c>.resx</c> beside the code file of
 /// a class, such as <c>Form1.resx</c> beside <c>Form1.cs</c>, is named after the class. Culture-specific <c>.resx</c>
-/// files, which build satellite assemblies, are not compiled. A <c>LogicalName</c> or <c>Link</c> on an item is not
-/// read; the resource is named after its path.
+/// files, which build satellite assemblies, are not compiled. An item's <c>LogicalName</c> names its resource as it is;
+/// a <c>Link</c> names it by the path it gives, as the SDK does for a file from outside the project.
 /// </remarks>
 public static class ManifestResources
 {
@@ -35,15 +35,19 @@ public static class ManifestResources
         foreach (var path in ProjectSourceFiles.EnumerateItems(project, project.EmbeddedResourceIncludes, project.EmbeddedResourceRemoves))
         {
             var file = path;
+
+            // An item's LogicalName is the resource's name as it is, as CommunityToolkit.Mvvm's generators embed the
+            // sources they read: <EmbeddedResource Include="...\ObservableObject.cs"><LogicalName>ObservableObject.cs</LogicalName>.
+            var logicalName = LogicalNameOf(project, path);
             if (!string.Equals(Path.GetExtension(path), ".resx", StringComparison.OrdinalIgnoreCase))
             {
-                resources.Add(new ResourceDescription(EmbeddedResourceName(project, path), () => File.OpenRead(file), isPublic: true));
+                resources.Add(new ResourceDescription(logicalName ?? EmbeddedResourceName(project, path), () => File.OpenRead(file), isPublic: true));
             }
             else if (!IsCultureSpecific(path))
             {
                 // A Windows Forms .resx file holding images, icons or image lists compiles for the Forms layer's reader.
                 var forms = WindowsForms.WindowsFormsProject.UsesWindowsForms(project);
-                resources.Add(new ResourceDescription(ResxResourceName(project, path), () => (forms ? WindowsForms.WindowsFormsResources.TryCompile(file) : null) ?? CompileResx(file), isPublic: true));
+                resources.Add(new ResourceDescription(logicalName ?? ResxResourceName(project, path), () => (forms ? WindowsForms.WindowsFormsResources.TryCompile(file) : null) ?? CompileResx(file), isPublic: true));
             }
         }
 
@@ -57,6 +61,30 @@ public static class ManifestResources
     }
 
     /// <summary>
+    /// The <c>Link</c> the project's items give a resource file, with <c>%(Filename)</c>, <c>%(Extension)</c> and
+    /// <c>%(RecursiveDir)</c> filled in, the last one winning; <see langword="null"/> when none does.
+    /// </summary>
+    private static string? LinkOf(TsProject project, string path)
+    {
+        var link = project.EmbeddedResourceItems
+            .Where(item => item.Metadata.TryGetValue("Link", out var value) && value.Length > 0 && new GlobPattern(project.DirectoryPath, item.Include).IsMatch(path))
+            .Select(item => item.Metadata["Link"])
+            .LastOrDefault();
+        return link?
+            .Replace("%(Filename)", Path.GetFileNameWithoutExtension(path), StringComparison.OrdinalIgnoreCase)
+            .Replace("%(Extension)", Path.GetExtension(path), StringComparison.OrdinalIgnoreCase)
+            .Replace("%(RecursiveDir)", string.Empty, StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>The <c>LogicalName</c> the project's items give a resource file, the last one winning; <see langword="null"/> when none does.</summary>
+    private static string? LogicalNameOf(TsProject project, string path) =>
+        project.EmbeddedResourceItems
+            .Where(item => item.Metadata.TryGetValue("LogicalName", out var name) && name.Length > 0 && !name.Contains("%(", StringComparison.Ordinal)
+                && new GlobPattern(project.DirectoryPath, item.Include).IsMatch(path))
+            .Select(item => item.Metadata["LogicalName"])
+            .LastOrDefault();
+
+    /// <summary>
     /// The SDK's name for an embedded resource: the root namespace, then the folders, each made a valid identifier,
     /// then the file name as it is, such as <c>App.Data.Sample_Files.notes.txt</c>.
     /// </summary>
@@ -68,7 +96,10 @@ public static class ManifestResources
         ArgumentNullException.ThrowIfNull(path);
 
         var rootNamespace = project.GetProperty("RootNamespace") ?? project.Name;
-        var relative = Path.GetRelativePath(project.DirectoryPath, path).Replace('\\', '/');
+
+        // A file outside the project is named after its Link, as StronglyTypedId's generator embeds its templates:
+        // <EmbeddedResource Include="..\Templates\guid-full.typedid" Link="Templates\%(Filename)%(Extension)" />.
+        var relative = (LinkOf(project, path) ?? Path.GetRelativePath(project.DirectoryPath, path)).Replace('\\', '/');
         var parts = relative.Split('/');
         var name = new StringBuilder(rootNamespace);
         for (var i = 0; i < parts.Length; i++)

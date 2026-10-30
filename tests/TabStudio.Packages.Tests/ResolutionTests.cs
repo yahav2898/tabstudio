@@ -313,6 +313,25 @@ public sealed class ResolutionTests : IDisposable
         Assert.DoesNotContain(result.Diagnostics, d => d.Id == PackageDiagnosticIds.Downgrade);
     }
 
+    /// <summary>
+    /// MudBlazor references its analyzer projects with PrivateAssets="all": their Roslyn packages stay with MudBlazor, so a
+    /// project that references MudBlazor and a newer Roslyn has no version conflict (NU1107).
+    /// </summary>
+    [Fact]
+    public async Task A_project_referenced_with_PrivateAssets_all_keeps_its_packages_from_further_projects()
+    {
+        _fixture.Add(Package("X", "1.0.0"), Package("X", "2.0.0"));
+        WriteProject("Analyzer", references: ["<PackageReference Include=\"X\" Version=\"[1.0.0]\" />"]);
+        WriteProject("Lib", references: ["<ProjectReference Include=\"..\\Analyzer\\Analyzer.csproj\" PrivateAssets=\"all\" ReferenceOutputAssembly=\"false\" OutputItemType=\"Analyzer\" />"]);
+        var app = WriteProject("Main", references: ["<ProjectReference Include=\"..\\Lib\\Lib.csproj\" />", "<PackageReference Include=\"X\" Version=\"[2.0.0]\" />"]);
+
+        var result = await _fixture.CreateRestorer().RestoreAsync(ProjectParser.Load(app));
+
+        Assert.True(result.Success, Describe(result));
+        Assert.Equal("2.0.0", Version(result, "X"));
+        Assert.DoesNotContain(result.Diagnostics, d => d.Severity == Core.Diagnostics.DiagnosticSeverityLevel.Error);
+    }
+
     [Fact]
     public async Task Changing_the_packages_of_a_referenced_project_restores_again()
     {

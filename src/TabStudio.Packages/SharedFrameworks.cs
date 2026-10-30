@@ -56,6 +56,10 @@ internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IRead
         }
     }
 
+    /// <summary>Whether a shared framework is one TabStudio restores, such as <c>Microsoft.AspNetCore.App</c>.</summary>
+    /// <param name="name">The framework's name.</param>
+    public static bool IsRestorable(string name) => PackPrefixes.ContainsKey(name);
+
     /// <summary>Restores one framework, using the newest version for the target framework's major version.</summary>
     /// <param name="name">The framework, such as <c>Microsoft.AspNetCore.App</c>.</param>
     /// <param name="projectName">The project, for diagnostics.</param>

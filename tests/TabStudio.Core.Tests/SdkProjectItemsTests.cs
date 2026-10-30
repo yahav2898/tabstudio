@@ -128,10 +128,95 @@ public sealed class SdkProjectItemsTests
         Assert.Equal("true", project.GetProperty("SignAssembly"));
         Assert.Equal(new[] { "net8.0" }, project.TargetFrameworks);
         Assert.Contains(project.PackageReferences, p => p.Name == "BenchmarkDotNet");
-        Assert.Contains(project.PackageReferences, p => p.Name == "Microsoft.CodeAnalysis.CSharp" && p.Version == "$(RoslynVersion).0");
+        // Items are expanded with the properties at the end of the evaluation, as MSBuild expands them.
+        Assert.Contains(project.PackageReferences, p => p.Name == "Microsoft.CodeAnalysis.CSharp" && p.Version == "3.8.0");
         Assert.Contains(project.Usings, u => u.Name == "System.Collections.Concurrent");
         Assert.Contains(project.Usings, u => u.Name == "BenchmarkDotNet.Attributes");
         Assert.Contains("System.Net.Http", project.RemovedUsings);
+    }
+
+    [Fact]
+    public void Generators_get_the_resx_files_a_target_adds_before_the_compiler_runs()
+    {
+        // MudBlazor's LanguageResource comes from ResxSourceGenerator, and Moq's strings from ThisAssembly.Strings: both
+        // packages hand the generator the project's .resx files from a target, which TabStudio does not run.
+        using var temp = new TempDirectory();
+        temp.Write("Lib/Resources/LanguageResource.resx", "<root />");
+        temp.Write("Lib/Resources/LanguageResource.de.resx", "<root />");
+        temp.Write("Lib/Strings.resx", "<root />");
+        var path = temp.Write("Lib/Lib.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup>
+                <EmbeddedResource Update="Resources\LanguageResource.resx"><AsConstants>true</AsConstants></EmbeddedResource>
+              </ItemGroup>
+            </Project>
+            """);
+        var package = temp.Write("packages/thisassembly.strings/build/ThisAssembly.Strings.targets", """
+            <Project>
+              <Target Name="_InjectResxAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="PrepareResourceNames">
+                <ItemGroup>
+                  <ResxCode Include="@(EmbeddedResource)" ThisAssemblyStrings="true"
+                            Condition="'%(EmbeddedResource.Type)' == 'Resx' And '%(EmbeddedResource.WithCulture)' != 'true' And '%(EmbeddedResource.ManifestResourceName)' != ''" />
+                  <AdditionalFiles Include="@(ResxCode)" />
+                </ItemGroup>
+              </Target>
+              <ItemGroup>
+                <CompilerVisibleItemMetadata Include="ResxCode" MetadataName="ManifestResourceName" />
+              </ItemGroup>
+            </Project>
+            """);
+
+        var project = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(path), [package]);
+
+        var files = project.AdditionalFiles.Where(f => f.ItemTypes is not null).OrderBy(f => f.Include, StringComparer.Ordinal).ToList();
+        Assert.Equal(new[] { Path.Combine("Resources", "LanguageResource.resx"), "Strings.resx" }, files.Select(f => f.Include));
+        Assert.Equal("Lib.Resources.LanguageResource", files[0].Metadata["ManifestResourceName"]);
+        Assert.Equal("true", files[0].Metadata["AsConstants"]);
+        Assert.Equal("true", files[0].Metadata["ThisAssemblyStrings"]);
+        Assert.Equal(new[] { "EmbeddedResource", "ResxCode", "AdditionalFiles" }, files[1].ItemTypes);
+    }
+
+    [Fact]
+    public void A_package_s_targets_remove_the_generator_it_replaces()
+    {
+        // eShop's Ordering.API: Microsoft.Extensions.Telemetry.Abstractions writes [LoggerMessage] code itself and removes
+        // Microsoft.Extensions.Logging's generator, from ASP.NET Core and from its package, or every method is
+        // implemented twice (CS0757). Its other target, for compilers without component versioning, does not run.
+        using var temp = new TempDirectory();
+        var path = temp.Write("Api/Api.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.Web">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        var props = temp.Write("packages/telemetry/buildTransitive/net8.0/Microsoft.Extensions.Telemetry.Abstractions.props", """
+            <Project><PropertyGroup><DisableMicrosoftExtensionsLoggingSourceGenerator>true</DisableMicrosoftExtensionsLoggingSourceGenerator></PropertyGroup></Project>
+            """);
+        var targets = temp.Write("packages/telemetry/buildTransitive/net8.0/Microsoft.Extensions.Telemetry.Abstractions.targets", """
+            <Project>
+              <Target Name="_Microsoft_Extensions_Logging_AbstractionsRemoveAnalyzers"
+                      Condition="'$(DisableMicrosoftExtensionsLoggingSourceGenerator)' == 'true'" AfterTargets="ResolveReferences">
+                <ItemGroup>
+                  <_Logging Include="@(Analyzer)" Condition="'%(Analyzer.AssemblyName)' == 'Microsoft.Extensions.Logging.Generators' Or '%(Analyzer.NuGetPackageId)' == 'Microsoft.Extensions.Logging.Abstractions'" />
+                </ItemGroup>
+                <ItemGroup><Analyzer Remove="@(_Logging)" /></ItemGroup>
+              </Target>
+              <Target Name="_OptionsAnalyzerMultiTargeting" Condition="'$(SupportsRoslynComponentVersioning)' != 'true'" AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets">
+                <ItemGroup><Analyzer Remove="@(Analyzer)" /></ItemGroup>
+              </Target>
+            </Project>
+            """);
+        var project = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(path), [props, targets]);
+        var framework = Path.Combine(temp.Path, "packs", "microsoft.aspnetcore.app.ref", "10.0.0", "analyzers", "dotnet", "cs", "Microsoft.Extensions.Logging.Generators.dll");
+        var package = Path.Combine(temp.Path, "packages", "microsoft.extensions.logging.abstractions", "10.0.0", "analyzers", "dotnet", "roslyn4.4", "cs", "Microsoft.Extensions.Logging.Generators.dll");
+        var telemetry = Path.Combine(temp.Path, "packages", "microsoft.extensions.telemetry.abstractions", "10.0.0", "analyzers", "dotnet", "roslyn4.4", "cs", "Microsoft.Gen.Logging.dll");
+
+        var removed = TargetItems.RemovedAnalyzers(project, [
+            new AnalyzerItem(framework, "microsoft.aspnetcore.app.ref"),
+            new AnalyzerItem(package, "microsoft.extensions.logging.abstractions"),
+            new AnalyzerItem(telemetry, "microsoft.extensions.telemetry.abstractions")]);
+
+        Assert.Equal(new[] { framework, package }, removed);
     }
 
     [Fact]

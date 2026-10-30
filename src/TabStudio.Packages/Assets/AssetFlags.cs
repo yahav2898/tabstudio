@@ -89,4 +89,14 @@ internal static class AssetFlagNames
     /// <param name="exclude">The excluded assets, or <see langword="null"/> for none.</param>
     public static AssetFlags Excluded(string? include, string? exclude) =>
         (AssetFlags.All & ~(Parse(include) ?? AssetFlags.All)) | (Parse(exclude) ?? AssetFlags.None);
+
+    /// <summary>
+    /// The assets that do not pass a <c>.nuspec</c> dependency: without an <c>include</c> attribute, NuGet includes
+    /// everything but content files, so a package's <c>contentFiles/</c> reach only the projects that reference it
+    /// themselves, not those that get it through another package.
+    /// </summary>
+    /// <param name="include">The dependency's <c>include</c> attribute, or <see langword="null"/>.</param>
+    /// <param name="exclude">The dependency's <c>exclude</c> attribute, or <see langword="null"/>.</param>
+    public static AssetFlags NuspecExcluded(string? include, string? exclude) =>
+        (AssetFlags.All & ~(Parse(include) ?? (AssetFlags.All & ~AssetFlags.ContentFiles))) | (Parse(exclude) ?? AssetFlags.None);
 }

@@ -229,6 +229,122 @@ internal static class AssetSelector
             .ThenBy(file => file, StringComparer.Ordinal)];
     }
 
+    /// <summary>
+    /// The C# sources of a package's <c>contentFiles/</c> a project compiles, as NuGet adds them to its <c>Compile</c>
+    /// items: the <c>.cs</c> files under <c>contentFiles/cs/</c> or <c>contentFiles/any/</c>, from the nearest framework
+    /// folder, or from <c>any/</c> when none is compatible, when the project gets the package's content files. A
+    /// source-only package such as <c>Wcwidth.Sources</c> is nothing else.
+    /// </summary>
+    /// <param name="relativePaths">Every file in the package, relative to its root, with forward slashes.</param>
+    /// <param name="target">The project's framework.</param>
+    /// <param name="fallback">The <c>AssetTargetFallback</c> frameworks.</param>
+    /// <param name="assets">The assets the project gets from the package.</param>
+    /// <param name="entries">
+    /// The manifest's <c>&lt;contentFiles&gt;</c> entries: a file whose last matching entry gives it a build action other
+    /// than <c>Compile</c> is left out, as NuGet leaves it out of <c>Compile</c>.
+    /// </param>
+    public static IReadOnlyList<string> SelectContentSources(
+        IEnumerable<string> relativePaths,
+        NuGetFramework target,
+        IReadOnlyList<NuGetFramework> fallback,
+        AssetFlags assets,
+        IReadOnlyList<Manifests.ContentFileEntry>? entries = null)
+    {
+        ArgumentNullException.ThrowIfNull(relativePaths);
+        if (!assets.HasFlag(AssetFlags.ContentFiles))
+        {
+            return [];
+        }
+
+        var any = new List<string>();
+        var byFramework = new Dictionary<NuGetFramework, List<string>>();
+        foreach (var path in relativePaths)
+        {
+            var parts = path.Split('/');
+            if (parts.Length < 4
+                || !parts[0].Equals("contentFiles", StringComparison.OrdinalIgnoreCase)
+                || !(parts[1].Equals("cs", StringComparison.OrdinalIgnoreCase) || parts[1].Equals("any", StringComparison.OrdinalIgnoreCase))
+                || !(parts[^1].EndsWith(".cs", StringComparison.OrdinalIgnoreCase) || parts[^1].EndsWith(".cs.pp", StringComparison.OrdinalIgnoreCase)))
+            {
+                continue;
+            }
+
+            if (parts[2].Equals("any", StringComparison.OrdinalIgnoreCase))
+            {
+                any.Add(path);
+                continue;
+            }
+
+            if (FrameworkSelection.ParseFolder(parts[2]) is not { } framework)
+            {
+                continue;
+            }
+
+            if (!byFramework.TryGetValue(framework, out var files))
+            {
+                files = [];
+                byFramework[framework] = files;
+            }
+
+            files.Add(path);
+        }
+
+        var chosen = byFramework.Count > 0 && FrameworkSelection.GetNearest(target, fallback, byFramework.Keys, out _) is { } nearest
+            ? byFramework[nearest]
+            : any;
+        return [.. chosen.Where(path => IsCompiled(path, entries ?? [])).Order(StringComparer.Ordinal)];
+    }
+
+    /// <summary>
+    /// Whether a content file's build action is <c>Compile</c>: NuGet's default, changed by every
+    /// <c>&lt;contentFiles&gt;</c> entry that matches the file, in order.
+    /// </summary>
+    private static bool IsCompiled(string path, IReadOnlyList<Manifests.ContentFileEntry> entries)
+    {
+        var relative = path["contentFiles/".Length..];
+        var action = "Compile";
+        foreach (var entry in entries)
+        {
+            if (entry.BuildAction is { } buildAction && Matches(relative, entry.Include) && (entry.Exclude is null || !Matches(relative, entry.Exclude)))
+            {
+                action = buildAction;
+            }
+        }
+
+        return action.Equals("Compile", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>Whether a path matches one of a list of globs separated by semicolons, as NuGet's matcher does.</summary>
+    private static bool Matches(string path, string globs) =>
+        globs.Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            .Any(glob => System.Text.RegularExpressions.Regex.IsMatch(path, GlobPattern(glob), System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.CultureInvariant));
+
+    private static string GlobPattern(string glob)
+    {
+        var pattern = new System.Text.StringBuilder("^");
+        var text = glob.Replace('\\', '/').TrimStart('/');
+        for (var i = 0; i < text.Length; i++)
+        {
+            if (text[i] == '*' && i + 1 < text.Length && text[i + 1] == '*')
+            {
+                var slash = i + 2 < text.Length && text[i + 2] == '/';
+                pattern.Append(slash ? "(?:.*/)?" : ".*");
+                i += slash ? 2 : 1;
+            }
+            else
+            {
+                pattern.Append(text[i] switch
+                {
+                    '*' => "[^/]*",
+                    '?' => "[^/]",
+                    _ => System.Text.RegularExpressions.Regex.Escape(text[i..(i + 1)]),
+                });
+            }
+        }
+
+        return pattern.Append('$').ToString();
+    }
+
     /// <summary>The <c>{id}.props</c> and <c>{id}.targets</c> of one build folder, for the nearest framework.</summary>
     private static List<string> BuildFolder(List<string> paths, string folder, string packageId, NuGetFramework target, IReadOnlyList<NuGetFramework> fallback)
     {
