@@ -9,20 +9,26 @@ namespace TabStudio.Core.Workspaces;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The parser reads the XML directly instead of evaluating it with MSBuild, so that opening a large
-/// solution takes milliseconds on a tablet. It understands what matters for an IDE:
+/// The parser evaluates the XML itself instead of running MSBuild, so that opening a large solution takes milliseconds
+/// on a tablet, and it evaluates it as MSBuild does for Visual Studio's Debug configuration on any CPU:
 /// </para>
 /// <list type="bullet">
-///   <item>Properties, where an unconditional value wins over a conditional one.</item>
-///   <item>The nearest <c>Directory.Build.props</c>, whose properties the project can override.</item>
-///   <item>The nearest <c>Directory.Build.targets</c>, whose properties override the project's, as MSBuild imports it last.</item>
-///   <item>Simple <c>$(Property)</c> references between those properties.</item>
+///   <item>
+///     Properties in order, through <c>Directory.Build.props</c>, the packages' props, <c>Directory.Packages.props</c>,
+///     the project and its imports, the SDK's framework properties, the packages' targets and <c>Directory.Build.targets</c>,
+///     each with its condition evaluated when it is reached and its value expanded then, property functions included
+///     (see <see cref="MsBuildExpressions"/>).
+///   </item>
+///   <item>
+///     A project with several target frameworks evaluated again for the one TabStudio compiles, with
+///     <c>TargetFramework</c> as a global property, as the SDK's inner build is.
+///   </item>
+///   <item>Items from every one of those files, after all properties, where their conditions hold.</item>
 ///   <item>The SDK, from the <c>Sdk</c> attribute, an <c>&lt;Sdk&gt;</c> element or an SDK import.</item>
-///   <item><c>PackageReference</c>, <c>ProjectReference</c> and <c>Using</c> items.</item>
 /// </list>
 /// <para>
-/// It does not run targets, evaluate conditions or follow arbitrary imports. When an exact answer is
-/// needed, the build engine evaluates the project properly.
+/// It does not run targets. What a target would add is read only where TabStudio knows the target, such as the friends
+/// a target adds before compiling.
 /// </para>
 /// </remarks>
 public static partial class ProjectParser
@@ -49,6 +55,12 @@ public static partial class ProjectParser
     /// <summary>Reads and parses a project file from disk.</summary>
     /// <param name="filePath">Path of the project file.</param>
     /// <exception cref="ProjectLoadException">The file does not exist or is not valid XML.</exception>
+    /// <remarks>
+    /// The project is evaluated as MSBuild evaluates it (see <see cref="Evaluate"/>): <c>Directory.Build.props</c> and
+    /// what it imports, <c>Directory.Packages.props</c>, the project with what it imports, then
+    /// <c>Directory.Build.targets</c>, each property set in order with its condition evaluated when it is reached, and
+    /// the items of every file after all properties.
+    /// </remarks>
     public static ProjectInfo Load(string filePath)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
@@ -59,125 +71,8 @@ public static partial class ProjectParser
             throw new ProjectLoadException(fullPath, "the file does not exist.", null);
         }
 
-        var directory = Path.GetDirectoryName(fullPath);
-        var projectXml = File.ReadAllText(fullPath);
-
-        // MSBuild's evaluation order: Directory.Build.props and what it imports, Directory.Packages.props, the
-        // project with what it imports, then Directory.Build.targets and what it imports. Later files win. MSBuild's
-        // reserved properties of the project are known from the start, as imports may use them.
-        var known = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["MSBuildProjectName"] = Path.GetFileNameWithoutExtension(fullPath),
-            ["MSBuildProjectDirectory"] = directory ?? string.Empty,
-        };
-        var before = new List<string>();
-        if (FindDirectoryBuildProps(directory) is { } directoryBuildProps)
-        {
-            CollectImports(directoryBuildProps, known, before, []);
-        }
-
-        if (FindNearest(directory, "Directory.Packages.props") is { } packagesProps)
-        {
-            CollectImports(packagesProps, known, before, []);
-        }
-
-        var inherited = Merge(before);
-        var after = new List<string>();
-        Dictionary<string, string> projectProperties;
-        XElement? projectRoot = null;
-        try
-        {
-            projectRoot = LoadXml(fullPath, projectXml);
-            projectProperties = WithThisFile(ReadProperties(projectRoot), fullPath);
-        }
-        catch (ProjectLoadException)
-        {
-            // Parse reports the broken project itself.
-            projectProperties = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        }
-
-        foreach (var (key, value) in projectProperties)
-        {
-            known[key] = value;
-        }
-
-        var visited = new HashSet<string>(before, StringComparer.Ordinal) { fullPath };
-        if (projectRoot is not null)
-        {
-            foreach (var import in ImportsOf(projectRoot, fullPath, known))
-            {
-                CollectImports(import, known, after, visited);
-            }
-        }
-
-        if (FindDirectoryBuildTargets(directory) is { } directoryBuildTargets)
-        {
-            CollectImports(directoryBuildTargets, known, after, visited);
-        }
-
-        var overriding = Merge(after);
-        return WithPlatformInvokeFiles(WithRazorComponents(Parse(fullPath, projectXml, inherited, overriding, [.. before, .. after])));
-    }
-
-    /// <summary>
-    /// Adds a props or targets file and the files it imports, imported files first, to a list. An import is followed
-    /// when its path, after <c>$(MSBuildThisFileDirectory)</c>, the properties known so far and the
-    /// <c>GetPathOfFileAbove</c> and <c>GetDirectoryNameOfFileAbove</c> property functions (see
-    /// <see cref="MsBuildImports"/>), names a file that exists, as in
-    /// <c>&lt;Import Project="$(MSBuildThisFileDirectory)eng/$(ProjectType).targets" /&gt;</c> or Refit's
-    /// <c>&lt;Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" /&gt;</c>;
-    /// SDK imports, other property functions and wildcards are not. An import of a file that does not exist is skipped,
-    /// as is one whose path comes out empty, as when <c>GetPathOfFileAbove</c> finds nothing.
-    /// </summary>
-    private static void CollectImports(string file, Dictionary<string, string> known, List<string> files, HashSet<string> visited, int depth = 0)
-    {
-        if (depth > 8 || !visited.Add(file) || !File.Exists(file))
-        {
-            return;
-        }
-
-        XElement root;
-        try
-        {
-            root = LoadXml(file, File.ReadAllText(file));
-        }
-        catch (Exception ex) when (ex is ProjectLoadException or IOException or UnauthorizedAccessException)
-        {
-            // A broken import should not stop the project from opening.
-            return;
-        }
-
-        foreach (var (key, value) in WithThisFile(ReadProperties(root), file))
-        {
-            known[key] = value;
-        }
-
-        foreach (var import in ImportsOf(root, file, known))
-        {
-            CollectImports(import, known, files, visited, depth + 1);
-        }
-
-        files.Add(file);
-    }
-
-    /// <summary>The files a project or props file imports whose paths can be worked out without evaluating MSBuild.</summary>
-    private static IEnumerable<string> ImportsOf(XElement root, string file, Dictionary<string, string> known)
-    {
-        var imports = root.Elements()
-            .SelectMany(e => e.Name.LocalName == "ImportGroup" ? e.Elements() : [e])
-            .Where(e => e.Name.LocalName == "Import" && e.Attribute("Sdk") is null);
-        foreach (var import in imports)
-        {
-            if (import.Attribute("Project")?.Value is not { Length: > 0 } project)
-            {
-                continue;
-            }
-
-            if (MsBuildImports.ResolvePath(project, file, known) is { } path && File.Exists(path))
-            {
-                yield return path;
-            }
-        }
+        var root = LoadXml(fullPath, File.ReadAllText(fullPath));
+        return WithPlatformInvokeFiles(WithRazorComponents(Build(fullPath, root, new EvaluationOptions(FromDisk: true, [], []))));
     }
 
     /// <summary>The <c>Project</c> of each <c>&lt;Import&gt;</c> a project file makes itself, as written; SDK imports are left out.</summary>
@@ -190,37 +85,14 @@ public static partial class ProjectParser
             .Select(path => path!)
             .ToList();
 
-    /// <summary>The properties of files in evaluation order, later ones winning; <see langword="null"/> when there are none.</summary>
-    private static Dictionary<string, string>? Merge(List<string> files)
-    {
-        if (files.Count == 0)
-        {
-            return null;
-        }
-
-        var merged = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var file in files)
-        {
-            foreach (var (key, value) in ReadPropertiesSafely(file) ?? new Dictionary<string, string>())
-            {
-                merged[key] = value;
-            }
-        }
-
-        return merged;
-    }
-
-    /// <summary>Parses project XML that has already been read.</summary>
+    /// <summary>Parses project XML that has already been read, without the files MSBuild finds beside it.</summary>
     /// <param name="filePath">The path the XML came from. Used for the project name and to resolve relative paths.</param>
     /// <param name="projectXml">The contents of the project file.</param>
-    /// <param name="inheritedProperties">Properties from <c>Directory.Build.props</c>, which the project may override.</param>
+    /// <param name="inheritedProperties">Properties as a <c>Directory.Build.props</c> would set them, which the project may override.</param>
     /// <param name="overridingProperties">
-    /// Properties from <c>Directory.Build.targets</c>, which MSBuild imports after the project, so they override its own.
+    /// Properties as a <c>Directory.Build.targets</c> would set them: MSBuild imports it after the project, so they override its own.
     /// </param>
-    /// <param name="importedFiles">
-    /// <c>Directory.Build.props</c> and <c>.targets</c>, whose <c>InternalsVisibleTo</c> and <c>AssemblyAttribute</c>
-    /// items the project gets too.
-    /// </param>
+    /// <param name="importedFiles">Files imported after the project, whose properties and items the project gets too.</param>
     /// <exception cref="ProjectLoadException">The text is not valid XML.</exception>
     public static ProjectInfo Parse(
         string filePath,
@@ -233,20 +105,24 @@ public static partial class ProjectParser
         ArgumentNullException.ThrowIfNull(projectXml);
 
         var root = LoadXml(filePath, projectXml);
+        return Build(filePath, root, new EvaluationOptions(FromDisk: false, [], [], inheritedProperties, overridingProperties, importedFiles));
+    }
+
+    /// <summary>Evaluates a project and reads what TabStudio needs from it.</summary>
+    private static ProjectInfo Build(string filePath, XElement root, EvaluationOptions options)
+    {
         var directory = Path.GetDirectoryName(filePath) ?? string.Empty;
+        var evaluation = Evaluate(filePath, root, options);
 
+        // The project's properties are those its files set; the SDK's defaults and the global properties were there for
+        // the conditions only.
         var properties = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        if (inheritedProperties is not null)
+        foreach (var name in evaluation.Defined)
         {
-            foreach (var (key, value) in inheritedProperties)
+            if (evaluation.Properties.TryGetValue(name, out var value))
             {
-                properties[key] = value;
+                properties[name] = value;
             }
-        }
-
-        foreach (var (key, value) in WithThisFile(ReadProperties(root), filePath))
-        {
-            properties[key] = value;
         }
 
         // MSBuild's reserved properties, which repositories use for paths such as a key file next to the project.
@@ -255,18 +131,12 @@ public static partial class ProjectParser
         properties.TryAdd("MSBuildProjectFile", Path.GetFileName(filePath));
         properties.TryAdd("MSBuildProjectFullPath", filePath);
 
-        if (overridingProperties is not null)
-        {
-            foreach (var (key, value) in overridingProperties)
-            {
-                properties[key] = value;
-            }
-        }
-
+        // A value with a function that cannot be evaluated here keeps its text; plain references in it still resolve.
         ExpandPropertyReferences(properties);
 
+        var items = evaluation.Items;
         var sdk = ReadSdk(root);
-        var assemblyReferences = ReadAssemblyReferences(root);
+        var assemblyReferences = ReadAssemblyReferences(items);
         var isLegacy = sdk is null
             && ReadSdks(root).Count == 0
             && LanguageFromExtension(Path.GetExtension(filePath)) is ProjectLanguage.CSharp or ProjectLanguage.VisualBasic or ProjectLanguage.FSharp
@@ -281,34 +151,23 @@ public static partial class ProjectParser
             ExpandPropertyReferences(properties);
         }
 
-        // Items, in the project and in imported files, keep only the groups their conditions allow, evaluated for the
-        // target framework TabStudio builds the project for (see EvaluationTargetFramework) and, as MSBuild defaults
-        // them, the Debug configuration on any CPU. Humanizer's benchmarks reference Humanizer's project, or its NuGet
-        // package when UseBaselinePackage is true: both made every type exist twice.
-        var evaluation = new Dictionary<string, string>(properties, StringComparer.OrdinalIgnoreCase);
-        if (EvaluationTargetFramework(ReadTargetFrameworks(properties)) is { } evaluationFramework)
-        {
-            evaluation["TargetFramework"] = evaluationFramework;
-            AddFrameworkProperties(evaluation, evaluationFramework);
-        }
-
-        evaluation.TryAdd("Configuration", "Debug");
-        evaluation.TryAdd("Platform", "AnyCPU");
-        MsBuildConditions.RemoveFalse(root, evaluation, directory);
-        List<XElement> allRoots = [root, .. ImportedRoots(importedFiles, evaluation)];
+        // Items come from every file the project imports, in MSBuild's order, kept only where their conditions hold for
+        // the inner build TabStudio compiles (see Evaluate): Humanizer's benchmarks reference Humanizer's project, or its
+        // NuGet package when UseBaselinePackage is true, and its tests get their project references from an imported props.
+        List<XElement> allRoots = [items, evaluation.Targets];
         var packages = ReadPackageReferences(
-            allRoots,
-            centralVersions: string.Equals(properties.GetValueOrDefault("ManagePackageVersionsCentrally")?.Trim(), "true", StringComparison.OrdinalIgnoreCase));
+            [items],
+            centralVersions: string.Equals(evaluation.Properties.GetValueOrDefault("ManagePackageVersionsCentrally")?.Trim(), "true", StringComparison.OrdinalIgnoreCase));
         if (isLegacy)
         {
             packages.AddRange(ReadPackagesConfig(directory).Where(p => !packages.Any(existing => string.Equals(existing.Name, p.Name, StringComparison.OrdinalIgnoreCase))));
         }
 
-        var projectReferenceItems = ReadProjectReferenceItems(root, directory);
+        var projectReferenceItems = ReadProjectReferenceItems(items, directory);
         var projectReferences = projectReferenceItems.Select(r => r.Path).ToList();
         var targetFrameworks = ReadTargetFrameworks(properties);
         var language = LanguageFromExtension(Path.GetExtension(filePath));
-        var generatorInputs = ReadGeneratorInputs(allRoots, properties, directory);
+        var generatorInputs = ReadGeneratorInputs([items], properties, directory);
 
         var info = new ProjectInfo
         {
@@ -327,21 +186,21 @@ public static partial class ProjectParser
                 allRoots,
                 properties,
                 Path.GetFileNameWithoutExtension(filePath)),
-            FrameworkReferences = ReadFrameworkReferences(root, sdk, properties),
-            CompileIncludes = ReadItemPatterns(root, "Compile", "Include", properties),
-            CompileIncludeExcludes = ReadIncludeExcludes(root, "Compile", properties),
-            CompileRemoves = ReadItemPatterns(root, "Compile", "Remove", properties),
-            EmbeddedResourceIncludes = ReadItemPatterns(root, "EmbeddedResource", "Include", properties),
-            EmbeddedResourceRemoves = ReadItemPatterns(root, "EmbeddedResource", "Remove", properties),
-            AvaloniaResourceIncludes = ReadItemPatterns(root, "AvaloniaResource", "Include", properties),
-            AvaloniaResourceRemoves = ReadItemPatterns(root, "AvaloniaResource", "Remove", properties),
+            FrameworkReferences = ReadFrameworkReferences(items, sdk, properties),
+            CompileIncludes = ReadItemPatterns(items, "Compile", "Include", properties),
+            CompileIncludeExcludes = ReadIncludeExcludes(items, "Compile", properties),
+            CompileRemoves = ReadItemPatterns(items, "Compile", "Remove", properties),
+            EmbeddedResourceIncludes = ReadItemPatterns(items, "EmbeddedResource", "Include", properties),
+            EmbeddedResourceRemoves = ReadItemPatterns(items, "EmbeddedResource", "Remove", properties),
+            AvaloniaResourceIncludes = ReadItemPatterns(items, "AvaloniaResource", "Include", properties),
+            AvaloniaResourceRemoves = ReadItemPatterns(items, "AvaloniaResource", "Remove", properties),
             AssemblyReferences = assemblyReferences,
-            ComReferences = ReadComReferences(root),
+            ComReferences = ReadComReferences(items),
             ImportPaths = ReadImportPaths(root),
-            Usings = [.. allRoots.SelectMany(r => ReadUsings(r)).Distinct()],
-            RemovedUsings = [.. allRoots.SelectMany(r => ReadItemPatterns(r, "Using", "Remove", properties)).Distinct(StringComparer.Ordinal)],
-            Imports = [.. allRoots.SelectMany(r => ReadItemPatterns(r, "Import", "Include", properties)).Distinct(StringComparer.Ordinal)],
-            RemovedImports = [.. allRoots.SelectMany(r => ReadItemPatterns(r, "Import", "Remove", properties)).Distinct(StringComparer.Ordinal)],
+            Usings = [.. ReadUsings(items).Distinct()],
+            RemovedUsings = [.. ReadItemPatterns(items, "Using", "Remove", properties).Distinct(StringComparer.Ordinal)],
+            Imports = [.. ReadItemPatterns(items, "Import", "Include", properties).Distinct(StringComparer.Ordinal)],
+            RemovedImports = [.. ReadItemPatterns(items, "Import", "Remove", properties).Distinct(StringComparer.Ordinal)],
             CompilerVisibleProperties = [.. generatorInputs.Properties.Distinct(StringComparer.OrdinalIgnoreCase)],
             CompilerVisibleItemMetadata = [.. generatorInputs.Metadata.Distinct()],
             AdditionalFiles = generatorInputs.Files,
@@ -500,42 +359,6 @@ public static partial class ProjectParser
         return null;
     }
 
-    private static Dictionary<string, string>? ReadPropertiesSafely(string propsPath)
-    {
-        try
-        {
-            return WithThisFile(ReadProperties(LoadXml(propsPath, File.ReadAllText(propsPath))), propsPath);
-        }
-        catch (ProjectLoadException)
-        {
-            // A broken Directory.Build.props or .targets should not stop the project from opening.
-            return null;
-        }
-        catch (IOException)
-        {
-            return null;
-        }
-    }
-
-    /// <summary>
-    /// Resolves <c>$(MSBuildThisFileDirectory)</c>, <c>$(MSBuildThisFileFullPath)</c> and <c>$(MSBuildThisFile)</c> in
-    /// one file's properties, which mean the file that sets them, such as
-    /// <c>$(MSBuildThisFileDirectory)assets/Serilog.snk</c> in a <c>Directory.Build.props</c>.
-    /// </summary>
-    private static Dictionary<string, string> WithThisFile(Dictionary<string, string> properties, string file)
-    {
-        var folder = (Path.GetDirectoryName(file) ?? string.Empty).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-        foreach (var key in properties.Keys.ToList())
-        {
-            properties[key] = properties[key]
-                .Replace("$(MSBuildThisFileDirectory)", folder, StringComparison.OrdinalIgnoreCase)
-                .Replace("$(MSBuildThisFileFullPath)", file, StringComparison.OrdinalIgnoreCase)
-                .Replace("$(MSBuildThisFile)", Path.GetFileName(file), StringComparison.OrdinalIgnoreCase);
-        }
-
-        return properties;
-    }
-
     private static XElement LoadXml(string filePath, string xml)
     {
         try
@@ -548,59 +371,6 @@ public static partial class ProjectParser
             throw new ProjectLoadException(filePath, $"the XML is not valid ({ex.Message}).", ex);
         }
     }
-
-    /// <summary>
-    /// Reads all properties. Unconditional values take precedence over conditional ones,
-    /// and a later unconditional value overrides an earlier one, as in MSBuild.
-    /// </summary>
-    private static Dictionary<string, string> ReadProperties(XElement root)
-    {
-        var unconditional = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        var conditional = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (var group in root.Elements().Where(e => e.Name.LocalName == "PropertyGroup"))
-        {
-            var groupIsConditional = group.Attribute("Condition") is not null;
-            foreach (var property in group.Elements())
-            {
-                var name = property.Name.LocalName;
-                var value = property.Value.Trim();
-                var isConditional = groupIsConditional || property.Attribute("Condition") is not null;
-
-                // Compilation symbols decide which code compiles: a value whose condition is not known to hold, such
-                // as Serilog's FEATURE_REMOTING for net48, compiled code for another framework into errors.
-                if (isConditional && name.Equals("DefineConstants", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (Holds(group.Attribute("Condition")?.Value, unconditional) && Holds(property.Attribute("Condition")?.Value, unconditional))
-                    {
-                        unconditional[name] = value;
-                    }
-
-                    continue;
-                }
-
-                if (isConditional)
-                {
-                    conditional.TryAdd(name, value);
-                }
-                else
-                {
-                    unconditional[name] = value;
-                }
-            }
-        }
-
-        foreach (var (name, value) in conditional)
-        {
-            unconditional.TryAdd(name, value);
-        }
-
-        return unconditional;
-    }
-
-    /// <summary>Whether a condition is known to hold with the properties read so far; no condition always holds.</summary>
-    private static bool Holds(string? condition, IReadOnlyDictionary<string, string> properties) =>
-        condition is null || MsBuildConditions.Evaluate(condition, properties, string.Empty) == true;
 
     /// <summary>Replaces <c>$(Name)</c> references with the values of other known properties.</summary>
     private static void ExpandPropertyReferences(Dictionary<string, string> properties)
@@ -756,29 +526,6 @@ public static partial class ProjectParser
             .DistinctBy(r => r.Path, StringComparer.Ordinal)
             .ToList();
 
-    /// <summary>The roots of <c>Directory.Build.props</c> and <c>.targets</c>; files that cannot be read are skipped.</summary>
-    private static IEnumerable<XElement> ImportedRoots(IReadOnlyList<string>? files, Dictionary<string, string> properties)
-    {
-        foreach (var file in files ?? [])
-        {
-            XElement? root = null;
-            try
-            {
-                root = LoadXml(file, File.ReadAllText(file));
-            }
-            catch (Exception ex) when (ex is ProjectLoadException or IOException or UnauthorizedAccessException)
-            {
-                // A broken Directory.Build.props or .targets should not stop the project from opening.
-            }
-
-            if (root is not null)
-            {
-                MsBuildConditions.RemoveFalse(root, properties, Path.GetDirectoryName(file) ?? string.Empty);
-                yield return root;
-            }
-        }
-    }
-
     /// <summary>
     /// Every SDK a project names: in the <c>Sdk</c> attribute (which may list several), in <c>&lt;Sdk Name="..."&gt;</c>
     /// elements and in SDK imports, without versions.
@@ -882,51 +629,19 @@ public static partial class ProjectParser
 
     private static string? ExpandPattern(string pattern, Dictionary<string, string> properties, string? directory)
     {
-        if (!pattern.Contains("$(", StringComparison.Ordinal))
+        var expanded = pattern;
+        if (pattern.Contains("$(", StringComparison.Ordinal))
         {
-            return pattern;
+            expanded = PropertyReference().Replace(pattern, match =>
+                properties.TryGetValue(match.Groups["name"].Value, out var value) ? value : match.Value);
+            if (expanded.Contains("$(", StringComparison.Ordinal) || expanded.Length == 0)
+            {
+                return null;
+            }
         }
 
-        var expanded = PropertyReference().Replace(pattern, match =>
-            properties.TryGetValue(match.Groups["name"].Value, out var value) ? value : match.Value);
-        if (expanded.Contains("$(", StringComparison.Ordinal) || expanded.Length == 0)
-        {
-            return null;
-        }
-
+        // A path from another file, such as $(MSBuildThisFileDirectory)shared/*.cs, is relative to the project as the others are.
         return !string.IsNullOrEmpty(directory) && Path.IsPathRooted(expanded) ? Path.GetRelativePath(directory, expanded) : expanded;
-    }
-
-    /// <summary>
-    /// The properties the SDK derives from a target framework, which conditions test as often as the framework itself:
-    /// <c>TargetFrameworkIdentifier</c> (<c>.NETCoreApp</c>, <c>.NETStandard</c>, <c>.NETFramework</c>),
-    /// <c>TargetFrameworkVersion</c> (<c>v10.0</c>) and, for a platform framework such as <c>net10.0-android</c>,
-    /// <c>TargetPlatformIdentifier</c>. A project that sets one keeps its own.
-    /// </summary>
-    private static void AddFrameworkProperties(Dictionary<string, string> evaluation, string targetFramework)
-    {
-        var dash = targetFramework.IndexOf('-', StringComparison.Ordinal);
-        var framework = (dash < 0 ? targetFramework : targetFramework[..dash]).ToLowerInvariant();
-        (string? identifier, string? version) =
-            framework.StartsWith("netstandard", StringComparison.Ordinal) ? (".NETStandard", framework["netstandard".Length..])
-            : framework.StartsWith("netcoreapp", StringComparison.Ordinal) ? (".NETCoreApp", framework["netcoreapp".Length..])
-            : framework.StartsWith("net", StringComparison.Ordinal) && framework.Contains('.', StringComparison.Ordinal) ? (".NETCoreApp", framework[3..])
-            : framework.StartsWith("net", StringComparison.Ordinal) && framework.Length > 3 && framework[3..].All(char.IsAsciiDigit)
-                ? (".NETFramework", string.Join('.', framework[3..].ToCharArray()))
-            : (null, null);
-        if (identifier is null)
-        {
-            return;
-        }
-
-        evaluation.TryAdd("TargetFrameworkIdentifier", identifier);
-        evaluation.TryAdd("TargetFrameworkVersion", "v" + version);
-        if (dash >= 0)
-        {
-            var platform = targetFramework[(dash + 1)..];
-            var digits = platform.AsSpan().IndexOfAnyInRange('0', '9');
-            evaluation.TryAdd("TargetPlatformIdentifier", digits < 0 ? platform : platform[..digits]);
-        }
     }
 
     private static List<string> ReadTargetFrameworks(Dictionary<string, string> properties)
