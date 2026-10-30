@@ -82,12 +82,13 @@ public sealed partial class RoslynWorkspaceHost
             }
 
             var solution = _workspace.CurrentSolution;
-            foreach (var document in roslyn.Documents.Where(d => d.FilePath is { } path && known.Contains(path, StringComparer.Ordinal)).ToList())
+            var documentPaths = known.Select(path => path.EndsWith(".pp", StringComparison.OrdinalIgnoreCase) ? path[..^3] : path).ToHashSet(StringComparer.Ordinal);
+            foreach (var document in roslyn.Documents.Where(d => d.FilePath is { } path && documentPaths.Contains(path)).ToList())
             {
                 solution = solution.RemoveDocument(document.Id);
             }
 
-            foreach (var document in PackageContentDocuments(id, projectFilePath))
+            foreach (var document in PackageContentDocuments(id, _projects[id]))
             {
                 solution = solution.AddDocument(document);
             }
@@ -96,11 +97,31 @@ public sealed partial class RoslynWorkspaceHost
         }
     }
 
-    /// <summary>The documents of a project's package content sources that exist. The caller holds the gate.</summary>
-    private IEnumerable<DocumentInfo> PackageContentDocuments(ProjectId id, string projectFilePath) =>
-        (_packageContentSources.GetValueOrDefault(projectFilePath) ?? [])
+    /// <summary>
+    /// The documents of a project's package content sources that exist. A <c>.cs.pp</c> source is preprocessed as NuGet
+    /// does: <c>$rootnamespace$</c> and the project's other properties named between dollar signs are replaced by their
+    /// values. The caller holds the gate.
+    /// </summary>
+    private IEnumerable<DocumentInfo> PackageContentDocuments(ProjectId id, TsProject project) =>
+        (_packageContentSources.GetValueOrDefault(project.FilePath) ?? [])
             .Where(File.Exists)
-            .Select(path => CreateDocumentInfo(DocumentId.CreateNewId(id, path), path, ReadFileOrEmpty(path), isGenerated: true));
+            .Select(path => path.EndsWith(".pp", StringComparison.OrdinalIgnoreCase)
+                ? CreateDocumentInfo(DocumentId.CreateNewId(id, path[..^3]), path[..^3], Preprocess(ReadFileOrEmpty(path), project), isGenerated: true)
+                : CreateDocumentInfo(DocumentId.CreateNewId(id, path), path, ReadFileOrEmpty(path), isGenerated: true));
+
+    /// <summary>NuGet's content preprocessing: each <c>$name$</c> that names one of the project's properties becomes its value.</summary>
+    private static string Preprocess(string text, TsProject project)
+    {
+        var properties = new Dictionary<string, string>(project.Properties, StringComparer.OrdinalIgnoreCase);
+        properties.TryAdd("rootnamespace", project.GetProperty("RootNamespace") ?? project.Name);
+        properties.TryAdd("assemblyname", project.GetProperty("AssemblyName") ?? project.Name);
+        return System.Text.RegularExpressions.Regex.Replace(
+            text,
+            @"\$(?<name>[A-Za-z_][A-Za-z0-9_.]*)\$",
+            match => properties.TryGetValue(match.Groups["name"].Value, out var value) ? value : match.Value,
+            System.Text.RegularExpressions.RegexOptions.CultureInvariant,
+            TimeSpan.FromSeconds(1));
+    }
 
     /// <summary>The props and targets a project imports from its packages, as last set. For tests.</summary>
     /// <param name="projectFilePath">Full path of the project file.</param>
