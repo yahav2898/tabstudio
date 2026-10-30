@@ -275,6 +275,8 @@ public sealed class ContainerEngine : IAsyncDisposable
             instance.Log.Complete();
             var folder = Path.Combine(Store.ContainersFolder, instance.Info.Id);
             await Task.Run(() => { if (Directory.Exists(folder)) LayerUnpacker.Delete(folder); }, CancellationToken.None).ConfigureAwait(false);
+            var run = RunDirectory(instance.Info.Id);
+            if (Directory.Exists(run)) LayerUnpacker.Delete(run);
             Publish("container", "destroy", instance.Info.Id, Attributes(instance.Info));
         }
         finally
@@ -786,8 +788,20 @@ public sealed class ContainerEngine : IAsyncDisposable
     private List<ProcessMount> Mounts(ContainerInfo info)
     {
         var mounts = new List<ProcessMount>();
+        // UNIX sockets have a 108-byte kernel path limit. A rootfs beneath an image's 64-digit ID exceeds it;
+        // use a short private host path shared by the main trace tree and independent exec/health trace trees.
+        var run = RunDirectory(info.Id);
+        Directory.CreateDirectory(run);
+        if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(run, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+        mounts.Add(new ProcessMount(run, "/run"));
+        var definitions = info.Spec.Mounts.ToList();
+        foreach (var target in Get(info.Id).Image?.Config.Config.Volumes?.Keys ?? Enumerable.Empty<string>())
+        {
+            if (definitions.All(m => m.Target.TrimEnd('/') != target.TrimEnd('/')))
+                definitions.Add(new ContainerMount("volume", info.ShortId + "-image-" + definitions.Count.ToString(System.Globalization.CultureInfo.InvariantCulture), target));
+        }
         var index = 0;
-        foreach (var mount in info.Spec.Mounts)
+        foreach (var mount in definitions)
         {
             string source;
             switch (mount.Type)
@@ -816,6 +830,8 @@ public sealed class ContainerEngine : IAsyncDisposable
 
         return mounts;
     }
+
+    private static string RunDirectory(string id) => Path.Combine(Path.GetTempPath(), "ts-run-" + id[..16]);
 
     /// <summary>An empty new volume starts with what the image has at its path, as Docker copies it.</summary>
     private void SeedVolume(ContainerInfo info, string target, string volume)

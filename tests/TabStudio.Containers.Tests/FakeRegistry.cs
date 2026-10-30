@@ -170,7 +170,6 @@ internal sealed class FakeRegistry : IDisposable
 
     private static void Write(HttpListenerResponse response, byte[] bytes, string mediaType)
     {
-        response.StatusCode = 200;
         response.ContentType = mediaType;
         response.ContentLength64 = bytes.Length;
         response.OutputStream.Write(bytes);

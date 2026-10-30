@@ -84,6 +84,25 @@ public sealed class RegistryTests
     }
 
     [Fact]
+    public async Task A_cached_layer_is_reverified_even_when_its_length_is_unchanged()
+    {
+        using var registry = new FakeRegistry();
+        registry.PublishImage("team/app", "1.0", "amd64");
+        using var folder = new TempDirectory();
+        using var store = new ImageStore(folder.Path);
+        using var http = new HttpClient();
+        var client = new RegistryClient(http, new SessionRegistryCredentialStore());
+        var reference = ImageReference.Parse($"{registry.Host}/team/app:1.0");
+        var image = await store.PullAsync(client, reference, [OciPlatform.Linux("amd64")]);
+        var path = store.BlobPath(Assert.Single(image.Layers).Digest);
+        var bytes = File.ReadAllBytes(path); bytes[0] ^= 0xFF; File.WriteAllBytes(path, bytes);
+        var requests = registry.BlobRequests;
+        await store.PullAsync(client, reference, [OciPlatform.Linux("amd64")]);
+        Assert.Equal(requests + 2, registry.BlobRequests);
+        Assert.Equal(image.Layers[0].Digest, RegistryClient.Digest(File.ReadAllBytes(path)));
+    }
+
+    [Fact]
     public async Task A_corrupted_layer_is_rejected_and_nothing_is_unpacked()
     {
         using var registry = new FakeRegistry { CorruptBlobs = true };

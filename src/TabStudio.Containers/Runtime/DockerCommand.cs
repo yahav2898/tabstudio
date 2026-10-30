@@ -86,7 +86,10 @@ public sealed class DockerCommand(ContainerEngine engine, Func<string, ServiceMa
                         await foreach (var entry in log.FollowAsync(tail, cancellationToken).ConfigureAwait(false))
                             await Print(entry.Text, entry.Stream == 2).ConfigureAwait(false);
                     }
-                    else foreach (var entry in log.Recent(tail)) await Print(entry.Text, entry.Stream == 2).ConfigureAwait(false);
+                    else
+                    {
+                        foreach (var entry in log.Recent(tail)) await Print(entry.Text, entry.Stream == 2).ConfigureAwait(false);
+                    }
                     return 0;
                 }
                 case "exec":

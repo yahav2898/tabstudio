@@ -158,8 +158,11 @@ public sealed partial class ContainersViewModel : ObservableObject, IAsyncDispos
     private void OnLog(object? sender, ContainerLogEntry e) => _ui.Post(RefreshLogs);
     private void RefreshLogs()
     {
-        if (!_disposed) Logs = _selectedLog is null ? "Select a container to see its logs."
-            : string.Join('\n', _selectedLog.Recent(500).Select(l => $"{l.Time.LocalDateTime:HH:mm:ss} {l.Text}"));
+        if (!_disposed)
+        {
+            Logs = _selectedLog is null ? "Select a container to see its logs."
+                : string.Join('\n', _selectedLog.Recent(500).Select(l => $"{l.Time.LocalDateTime:HH:mm:ss} {l.Text}"));
+        }
     }
     private void OnEngineChanged(object? sender, EngineEvent e) => _ui.Post(() => { if (!_disposed) _ = RefreshAsync(); });
     private async Task PrepareRuntimeAsync(CancellationToken token)

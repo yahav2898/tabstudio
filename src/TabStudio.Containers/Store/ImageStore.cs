@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using TabStudio.Containers.Images;
@@ -68,7 +67,8 @@ public sealed class ImageStore : IDisposable
 {
     private static readonly JsonSerializerOptions IndexJson = new() { WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
     private readonly SemaphoreSlim _index = new(1, 1);
-    private readonly ConcurrentDictionary<string, SemaphoreSlim> _pulls = new(StringComparer.Ordinal);
+    // Tags can resolve to the same image and layers; serialize commits and unpacking in this store.
+    private readonly SemaphoreSlim _pull = new(1, 1);
     private List<StoredImage>? _images;
 
     /// <summary>Opens or creates a store.</summary>
@@ -150,7 +150,7 @@ public sealed class ImageStore : IDisposable
     /// <param name="cancellationToken">Cancels the pull; what was downloaded is kept for the next try.</param>
     public async Task<StoredImage> PullAsync(RegistryClient registry, ImageReference reference, IReadOnlyList<OciPlatform> preference, IProgress<PullProgress>? progress = null, CancellationToken cancellationToken = default)
     {
-        var gate = _pulls.GetOrAdd(reference.Canonical, _ => new SemaphoreSlim(1, 1));
+        var gate = _pull;
         await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
@@ -180,9 +180,16 @@ public sealed class ImageStore : IDisposable
                 var path = BlobPath(layer.Digest);
                 if (File.Exists(path) && new FileInfo(path).Length == layer.Size)
                 {
-                    done += layer.Size;
-                    progress?.Report(new(reference.Familiar, "Downloading", i + 1, manifest.Layers.Count, done, total));
-                    continue;
+                    await using var existing = File.OpenRead(path);
+                    var digest = "sha256:" + Convert.ToHexStringLower(await System.Security.Cryptography.SHA256.HashDataAsync(existing, cancellationToken).ConfigureAwait(false));
+                    if (digest == layer.Digest)
+                    {
+                        done += layer.Size;
+                        progress?.Report(new(reference.Familiar, "Downloading", i + 1, manifest.Layers.Count, done, total));
+                        continue;
+                    }
+                    existing.Close();
+                    File.Delete(path);
                 }
 
                 var before = done;
@@ -429,7 +436,7 @@ public sealed class ImageStore : IDisposable
     public void Dispose()
     {
         _index.Dispose();
-        foreach (var gate in _pulls.Values) gate.Dispose();
+        _pull.Dispose();
     }
 
     private List<StoredImage> Load()
