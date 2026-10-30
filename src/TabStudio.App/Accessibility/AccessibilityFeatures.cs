@@ -17,6 +17,7 @@ namespace TabStudio.App.Accessibility;
 public static class AccessibilityFeatures
 {
     private static readonly List<WeakReference<TopLevel>> Windows = [];
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<TopLevel, object> Known = new();
     private static SystemAccessibility? _system;
 
     /// <summary>Starts them. Call once, on the UI thread, as the app starts and before its first window shows.</summary>
@@ -55,21 +56,13 @@ public static class AccessibilityFeatures
                 }
             }
         };
-        Control.LoadedEvent.AddClassHandler<TopLevel>((window, _) =>
-        {
-            if (window is PopupRoot)
-            {
-                return;
-            }
-
-            Windows.RemoveAll(r => !r.TryGetTarget(out var known) || ReferenceEquals(known, window));
-            Windows.Add(new WeakReference<TopLevel>(window));
-            if (system.IsRightToLeft)
-            {
-                window.FlowDirection = FlowDirection.RightToLeft;
-            }
-        });
+        // A window is never loaded itself; it is found through the first control loaded in it.
+        Control.LoadedEvent.AddClassHandler<Control>((control, _) => Track(TopLevel.GetTopLevel(control), system));
     }
+
+    /// <summary>The windows the IDE shows now (not popups); for tests.</summary>
+    internal static IReadOnlyList<TopLevel> LiveWindows() =>
+        [.. Windows.Select(r => r.TryGetTarget(out var window) ? window : null).OfType<TopLevel>().Where(w => w.IsVisible)];
 
     /// <summary>
     /// Lays every window out again after the text size changed. A font size change re-measures the text, but a panel
@@ -83,6 +76,11 @@ public static class AccessibilityFeatures
             if (!reference.TryGetTarget(out var window))
             {
                 Windows.Remove(reference);
+                continue;
+            }
+
+            if (!window.IsVisible)
+            {
                 continue;
             }
 
@@ -126,6 +124,22 @@ public static class AccessibilityFeatures
         ("MenuFlyoutThemeMinHeight", 32),
         ("CalendarDatePickerMinHeight", 32),
     ];
+
+    private static void Track(TopLevel? window, SystemAccessibility system)
+    {
+        if (window is null or PopupRoot || Known.TryGetValue(window, out _))
+        {
+            return;
+        }
+
+        Known.AddOrUpdate(window, Known);
+        Windows.RemoveAll(r => !r.TryGetTarget(out _));
+        Windows.Add(new WeakReference<TopLevel>(window));
+        if (system.IsRightToLeft)
+        {
+            window.FlowDirection = FlowDirection.RightToLeft;
+        }
+    }
 
     private static FlowDirection DirectionOf(SystemAccessibility system) =>
         system.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;

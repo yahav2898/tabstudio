@@ -145,23 +145,31 @@ public static class AccessibleNames
             return;
         }
 
-        var depth = 0;
+        // Up the visual tree; before its control's template shows it, a text block is only in the logical tree.
+        if (!ScheduleFirstTarget(text.GetVisualAncestors()))
+        {
+            ScheduleFirstTarget(text.GetLogicalAncestors());
+        }
+    }
 
-        // Before its control's template shows it, a text block is only in the logical tree.
-        IEnumerable<object> ancestors = text.GetVisualParent() is not null ? text.GetVisualAncestors() : text.GetLogicalAncestors();
+    private static bool ScheduleFirstTarget(IEnumerable<object> ancestors)
+    {
+        var depth = 0;
         foreach (var ancestor in ancestors)
         {
             if (++depth > TextDepth)
             {
-                return;
+                return false;
             }
 
             if (ancestor is Control control && IsTarget(control))
             {
                 Schedule(control);
-                return;
+                return true;
             }
         }
+
+        return false;
     }
 
     private static void Flush()

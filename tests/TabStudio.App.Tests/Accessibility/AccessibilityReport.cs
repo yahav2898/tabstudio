@@ -59,6 +59,22 @@ internal static class AccessibilityReport
             {
                 TypeScale.Apply(factor);
                 Settle(window);
+
+                // The text size is the app's: the other tests' windows changed too, and are laid out again before
+                // their tests go on, as they would be by the next frame.
+                foreach (var other in TabStudio.App.Accessibility.AccessibilityFeatures.LiveWindows().Append(window).Distinct())
+                {
+                    if (other.IsVisible)
+                    {
+                        other.UpdateLayout();
+
+                        // An editor builds its lines again when its font changes; it does so now, not on a later job.
+                        foreach (var view in other.GetVisualDescendants().OfType<AvaloniaEdit.Rendering.TextView>())
+                        {
+                            view.EnsureVisualLines();
+                        }
+                    }
+                }
             }
         }
 
