@@ -45,14 +45,14 @@ for entry in plan["repositories"]:
                     ["dotnet", "build", build_target, "-c", "Debug", "-nologo", "-p:TreatWarningsAsErrors=false", "-p:NuGetAudit=false",
                      "-p:EnableWindowsTargeting=true", "-clp:NoSummary;ForceNoAlign", "-v:m"],
                     cwd=os.path.dirname(build_target), capture_output=True, text=True, timeout=40 * 60)
-                out, code = proc.stdout + proc.stderr, proc.returncode
+                output, code = proc.stdout + proc.stderr, proc.returncode
             except subprocess.TimeoutExpired as ex:
-                out, code = (ex.stdout.decode() if isinstance(ex.stdout, bytes) else (ex.stdout or "")), "timeout"
-            blocked = sorted({m.group(1) for m in re.finditer(r"error (?:NETSDK1147|NETSDK1045|NETSDK1100)[^\[]*\[([^\]:]+?\.(?:cs|vb|fs)proj)", out)})
+                output, code = (ex.stdout.decode() if isinstance(ex.stdout, bytes) else (ex.stdout or "")), "timeout"
+            blocked = sorted({m.group(1) for m in re.finditer(r"error (?:NETSDK1147|NETSDK1045|NETSDK1100)[^\[]*\[([^\]:]+?\.(?:cs|vb|fs)proj)", output)})
             if attempt == 3 or not blocked or not build_target.endswith((".sln", ".slnx")):
-                text += out
+                text += output
                 break
-            text += "\n".join(l for l in out.splitlines() if re.search(r"error (NETSDK1147|NETSDK1045|NETSDK1100)", l)) + "\n"
+            text += "\n".join(l for l in output.splitlines() if re.search(r"error (NETSDK1147|NETSDK1045|NETSDK1100)", l)) + "\n"
             for project in blocked:
                 removed.append(os.path.relpath(project, copy))
                 subprocess.run(["dotnet", "sln", build_target, "remove", project], capture_output=True, text=True)
