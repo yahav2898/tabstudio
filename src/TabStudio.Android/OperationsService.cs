@@ -29,7 +29,7 @@ public sealed class OperationsService : Service
     private PowerManager.WakeLock? _wakeLock;
     private Handler? _handler;
 
-    /// <summary>The running service, if it has started. Used on the main thread only.</summary>
+    /// <summary>The running service, once it is in the foreground. Used on the main thread only.</summary>
     internal static OperationsService? Current { get; private set; }
 
     /// <inheritdoc />
@@ -39,7 +39,6 @@ public sealed class OperationsService : Service
     public override void OnCreate()
     {
         base.OnCreate();
-        Current = this;
         if (GetSystemService(PowerService) is PowerManager power)
         {
             _wakeLock = power.NewWakeLock(WakeLockFlags.Partial, "TabStudio:operations");
@@ -66,6 +65,11 @@ public sealed class OperationsService : Service
         {
             StartForeground(NotificationId, notification);
         }
+
+        // Only now may the operations stop it: stopping a service started with startForegroundService before it called
+        // startForeground is an error Android ends the app for, which the last operation ending right after the first
+        // began did under load (the emulator's self test).
+        Current = this;
 
         if (running is null)
         {
