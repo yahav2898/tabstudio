@@ -48,13 +48,30 @@ internal sealed class DependencyResolver
     /// its own references sit one level further from the project, as in NuGet.
     /// </param>
     /// <param name="cancellationToken">Cancels the walk.</param>
-    public async Task<ResolutionResult> ResolveAsync(string projectName, IReadOnlyList<PackageDependency> dependencies, CancellationToken cancellationToken)
+    public Task<ResolutionResult> ResolveAsync(string projectName, IReadOnlyList<PackageDependency> dependencies, CancellationToken cancellationToken) =>
+        ResolveAsync(projectName, dependencies, [], cancellationToken);
+
+    /// <summary>Walks and analyzes the dependency graph of a project, with central versions pinning transitive packages.</summary>
+    /// <param name="projectName">The project, which is the root of the graph.</param>
+    /// <param name="dependencies">The project's package references and project references.</param>
+    /// <param name="pins">
+    /// Central versions of packages the project does not reference (<c>CentralPackageTransitivePinningEnabled</c>): a
+    /// package among them that the graph reaches is resolved as if the project referenced it at that version, as NuGet
+    /// pins it, so the graph is walked again with it.
+    /// </param>
+    /// <param name="cancellationToken">Cancels the walk.</param>
+    public async Task<ResolutionResult> ResolveAsync(string projectName, IReadOnlyList<PackageDependency> dependencies, IReadOnlyList<PackageDependency> pins, CancellationToken cancellationToken)
     {
-        var root = new GraphNode(projectName, VersionRange.All, parent: null)
+        var root = await WalkRootAsync(projectName, dependencies, cancellationToken).ConfigureAwait(false);
+        if (pins.Count > 0)
         {
-            Match = new PackageMatch(projectName, new NuGetVersion(0, 0, 0), dependencies, Feed: null),
-        };
-        await WalkAsync(root, cancellationToken).ConfigureAwait(false);
+            var reached = GraphAnalyzer.BreadthFirst(root).Where(n => !n.IsRoot).Select(n => n.Id).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var pinned = pins.Where(p => reached.Contains(p.Id)).ToList();
+            if (pinned.Count > 0)
+            {
+                root = await WalkRootAsync(projectName, [.. dependencies, .. pinned], cancellationToken).ConfigureAwait(false);
+            }
+        }
 
         var cycles = new List<GraphNode>();
         var downgrades = GraphAnalyzer.RemoveCyclesAndDowngrades(root, cycles);
@@ -93,6 +110,16 @@ internal sealed class DependencyResolver
             .ToList();
 
         return new ResolutionResult(packages, unresolved, diagnostics);
+    }
+
+    private async Task<GraphNode> WalkRootAsync(string projectName, IReadOnlyList<PackageDependency> dependencies, CancellationToken cancellationToken)
+    {
+        var root = new GraphNode(projectName, VersionRange.All, parent: null)
+        {
+            Match = new PackageMatch(projectName, new NuGetVersion(0, 0, 0), dependencies, Feed: null),
+        };
+        await WalkAsync(root, cancellationToken).ConfigureAwait(false);
+        return root;
     }
 
     /// <summary>

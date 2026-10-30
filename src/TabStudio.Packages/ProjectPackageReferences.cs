@@ -10,9 +10,15 @@ namespace TabStudio.Packages;
 /// <summary>What a restore starts from: a project's references, and the projects it references with theirs.</summary>
 /// <param name="Dependencies">The project's own package references and project references.</param>
 /// <param name="Projects">Every project it references, directly or not, by name, with that project's own references.</param>
+/// <param name="Pins">
+/// With central package management's transitive pinning (<c>CentralPackageTransitivePinningEnabled</c>), the central
+/// versions of packages the project does not reference itself: one that the graph reaches is pinned to its central
+/// version, as if the project referenced it, as NuGet does.
+/// </param>
 internal sealed record ProjectDependencyGraph(
     IReadOnlyList<PackageDependency> Dependencies,
-    IReadOnlyDictionary<string, PackageMatch> Projects)
+    IReadOnlyDictionary<string, PackageMatch> Projects,
+    IReadOnlyList<PackageDependency>? Pins = null)
 {
     /// <summary>Whether any project in the graph references a package, so there is something to restore.</summary>
     public bool HasPackages =>
@@ -74,8 +80,36 @@ internal static class ProjectPackageReferences
             return dependencies;
         }
 
-        return new ProjectDependencyGraph(Collect(project), projects);
+        var dependencies = Collect(project);
+        return new ProjectDependencyGraph(dependencies, projects, ReadPins(project, dependencies));
     }
+
+    /// <summary>
+    /// The central versions that pin transitive packages, when the project manages versions centrally with
+    /// <c>CentralPackageTransitivePinningEnabled</c>: every <c>PackageVersion</c> of a package the project does not
+    /// reference itself. Versions that do not parse are left out; the project's own references report those.
+    /// </summary>
+    private static List<PackageDependency> ReadPins(ProjectInfo project, List<PackageDependency> dependencies)
+    {
+        if (!IsTrue(project.GetProperty("ManagePackageVersionsCentrally")) || !IsTrue(project.GetProperty("CentralPackageTransitivePinningEnabled")))
+        {
+            return [];
+        }
+
+        var direct = dependencies.Select(d => d.Id).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var pins = new List<PackageDependency>();
+        foreach (var (id, version) in CentralPackageVersions.Load(project).OrderBy(p => p.Key, StringComparer.OrdinalIgnoreCase))
+        {
+            if (!direct.Contains(id) && !version.Contains("$(", StringComparison.Ordinal) && VersionRange.TryParse(version.Trim(), out var range))
+            {
+                pins.Add(new PackageDependency(id, range));
+            }
+        }
+
+        return pins;
+    }
+
+    private static bool IsTrue(string? value) => string.Equals(value?.Trim(), "true", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
     /// The shared frameworks a project compiles against: its own <c>FrameworkReference</c> items and, as in the .NET SDK,

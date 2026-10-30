@@ -229,6 +229,67 @@ internal static class AssetSelector
             .ThenBy(file => file, StringComparer.Ordinal)];
     }
 
+    /// <summary>
+    /// The C# sources of a package's <c>contentFiles/</c> a project compiles, as NuGet adds them to its <c>Compile</c>
+    /// items: the <c>.cs</c> files under <c>contentFiles/cs/</c> or <c>contentFiles/any/</c>, from the nearest framework
+    /// folder, or from <c>any/</c> when none is compatible, when the project gets the package's content files. A
+    /// source-only package such as <c>Wcwidth.Sources</c> is nothing else.
+    /// </summary>
+    /// <param name="relativePaths">Every file in the package, relative to its root, with forward slashes.</param>
+    /// <param name="target">The project's framework.</param>
+    /// <param name="fallback">The <c>AssetTargetFallback</c> frameworks.</param>
+    /// <param name="assets">The assets the project gets from the package.</param>
+    public static IReadOnlyList<string> SelectContentSources(
+        IEnumerable<string> relativePaths,
+        NuGetFramework target,
+        IReadOnlyList<NuGetFramework> fallback,
+        AssetFlags assets)
+    {
+        ArgumentNullException.ThrowIfNull(relativePaths);
+        if (!assets.HasFlag(AssetFlags.ContentFiles))
+        {
+            return [];
+        }
+
+        var any = new List<string>();
+        var byFramework = new Dictionary<NuGetFramework, List<string>>();
+        foreach (var path in relativePaths)
+        {
+            var parts = path.Split('/');
+            if (parts.Length < 4
+                || !parts[0].Equals("contentFiles", StringComparison.OrdinalIgnoreCase)
+                || !(parts[1].Equals("cs", StringComparison.OrdinalIgnoreCase) || parts[1].Equals("any", StringComparison.OrdinalIgnoreCase))
+                || !parts[^1].EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            if (parts[2].Equals("any", StringComparison.OrdinalIgnoreCase))
+            {
+                any.Add(path);
+                continue;
+            }
+
+            if (FrameworkSelection.ParseFolder(parts[2]) is not { } framework)
+            {
+                continue;
+            }
+
+            if (!byFramework.TryGetValue(framework, out var files))
+            {
+                files = [];
+                byFramework[framework] = files;
+            }
+
+            files.Add(path);
+        }
+
+        var chosen = byFramework.Count > 0 && FrameworkSelection.GetNearest(target, fallback, byFramework.Keys, out _) is { } nearest
+            ? byFramework[nearest]
+            : any;
+        return [.. chosen.Order(StringComparer.Ordinal)];
+    }
+
     /// <summary>The <c>{id}.props</c> and <c>{id}.targets</c> of one build folder, for the nearest framework.</summary>
     private static List<string> BuildFolder(List<string> paths, string folder, string packageId, NuGetFramework target, IReadOnlyList<NuGetFramework> fallback)
     {

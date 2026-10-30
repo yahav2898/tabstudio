@@ -631,6 +631,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         documents.AddRange(WindowsFormsDocuments(id, project));
+        documents.AddRange(PackageContentDocuments(id, project.FilePath));
         if (DesktopSettings.Applies(project, documents.Where(d => !d.IsGenerated).Select(d => d.FilePath ?? string.Empty)))
         {
             var path = Path.Combine(project.DirectoryPath, "obj", "TabStudio", "System.Configuration.Settings.g.cs");
