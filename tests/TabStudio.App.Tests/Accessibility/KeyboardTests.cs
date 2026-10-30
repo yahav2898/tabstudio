@@ -62,8 +62,16 @@ public sealed class KeyboardTests
                     problems.Add($"Tab {i}: {Describe(focused)} {problem}");
                 }
 
-                window.KeyPressQwerty(PhysicalKey.Tab, RawInputModifiers.None);
+                // The editor keeps Tab for indenting: F6 goes on to the next pane, as it does from anywhere.
+                var keepsTab = focused is AvaloniaEdit.Editing.TextArea || focused.GetVisualAncestors().Any(a => a is AvaloniaEdit.TextEditor or TabStudio.App.Controls.TerminalView);
+                window.KeyPressQwerty(keepsTab ? PhysicalKey.F6 : PhysicalKey.Tab, RawInputModifiers.None);
                 Dispatcher.UIThread.RunJobs();
+                if (ReferenceEquals(window.FocusManager?.GetFocusedElement(), focused))
+                {
+                    problems.Add($"Tab {i}: {Describe(focused)} keeps the focus: the keyboard is trapped.");
+                    window.KeyPressQwerty(PhysicalKey.F6, RawInputModifiers.None);
+                    Dispatcher.UIThread.RunJobs();
+                }
             }
 
             Assert.True(problems.Count == 0, "Keyboard focus problems:\n" + string.Join("\n", problems.Take(60)));

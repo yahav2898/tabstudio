@@ -152,7 +152,7 @@
         </DockPanel>
       </Border>
 
-      <GridSplitter x:Name="Splitter" Background="{DynamicResource Brush.Border}" ResizeDirection="Auto" />
+      <GridSplitter x:Name="Splitter" AutomationProperties.Name="Resize the design and the XAML" Background="{DynamicResource Brush.Border}" ResizeDirection="Auto" />
 
       <ContentControl x:Name="EditorHost" />
     </Grid>

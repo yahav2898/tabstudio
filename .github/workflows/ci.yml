@@ -473,6 +473,10 @@ jobs:
             fi
             if [ -f ci-out/TabStudio.App.Tests.Light.retry.log ]; then tail -n 40 ci-out/TabStudio.App.Tests.Light.retry.log; fi
           fi
+          # Every view of the IDE was audited for accessibility (touch targets, names, contrast, and clipping at the
+          # largest text size) in both themes; the counts go to screenshots/accessibility/summary.md.
+          python3 build/ci/accessibility-coverage.py "$TABSTUDIO_SCREENSHOTS" "$TABSTUDIO_SCREENSHOTS/light" > ci-out/accessibility-coverage.log 2>&1 || status=1
+          tail -n 40 ci-out/accessibility-coverage.log
           if [ $first -ne 0 ] || [ $light -ne 0 ] || [ $status -ne 0 ]; then
             {
               echo "== Processes left running"; ps -eo pid,ppid,pgid,rss,etime,args --sort=-rss | head -n 40

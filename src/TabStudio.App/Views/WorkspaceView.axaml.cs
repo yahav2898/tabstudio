@@ -34,6 +34,7 @@ public sealed partial class WorkspaceView : UserControl
             _ => (Control)new CodeEditorView((DocumentViewModel)document),
         };
         PromptBox.KeyDown += OnPromptKeyDown;
+        InitializeKeyboard();
         PromptChoices.KeyDown += OnPromptKeyDown;
         PromptChoices.DoubleTapped += OnPromptChoiceDoubleTapped;
         InitializeKeyChords();
