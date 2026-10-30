@@ -1,5 +1,5 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/TabStudio.Compilation.Tests.csproj (in 332 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/TabStudio.Compilation.Tests.csproj (in 212 ms).
   3 of 4 projects are up-to-date for restore.
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
@@ -8,47 +8,46 @@
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/bin/Release/net10.0/TabStudio.Compilation.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.14]   Discovering: TabStudio.Compilation.Tests
-[xUnit.net 00:00:00.27]   Discovered:  TabStudio.Compilation.Tests
-[xUnit.net 00:00:00.32]   Starting:    TabStudio.Compilation.Tests
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_project_reference_s_aliases_are_extern_aliases [2 s]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Edits_show_up_in_live_diagnostics [359 ms]
+[xUnit.net 00:00:00.09]   Discovering: TabStudio.Compilation.Tests
+[xUnit.net 00:00:00.17]   Discovered:  TabStudio.Compilation.Tests
+[xUnit.net 00:00:00.19]   Starting:    TabStudio.Compilation.Tests
   Passed TabStudio.Compilation.Tests.CSharpCompilerTests.A_method_named_exit_on_another_type_is_fine [1 s]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Project_diagnostics_cover_every_file [28 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Libraries_are_not_checked_for_in_process_safety [17 ms]
-  Passed TabStudio.Compilation.Tests.SkeletonReferenceTests.A_project_nobody_edits_is_referenced_as_a_skeleton_and_everything_still_works [1 s]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Builds_still_work_with_concurrent_compilation_turned_off [38 ms]
-1
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Loads_every_csharp_source_file [11 ms]
-  Passed TabStudio.Compilation.Tests.SkeletonReferenceTests.Editing_a_project_makes_it_active_and_its_skeleton_is_cached_by_content [61 ms]
-  Passed TabStudio.Compilation.Tests.SkeletonReferenceTests.Turning_skeletons_off_restores_project_references [24 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Release_configuration_defines_the_release_symbol [83 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Builds_and_runs_a_project_with_a_project_reference [47 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Live_diagnostics_include_the_in_process_safety_check [19 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(statement: "Environment.Exit(3);", expected: 3) [254 ms]
-1
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_new_file_joins_the_project_that_contains_it [44 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(statement: "System.Environment.FailFast(\"bye\");", expected: -2146232797) [24 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "System.Environment.FailFast(\"bye\");", expectedId: "TS1002") [12 ms]
-  Passed TabStudio.Compilation.Tests.SkeletonReferenceTests.Go_to_definition_finds_the_source_behind_a_skeleton [170 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "Environment.Exit(1);", expectedId: "TS1001") [11 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Reports_errors_with_one_based_positions_in_the_right_file [19 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Libraries_are_not_checked_for_in_process_safety [15 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(statement: "Environment.Exit(3);", expected: 3) [150 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.A_workspace_program_s_exit_ends_the_program_with_its_code_and_not_the_ide(statement: "System.Environment.FailFast(\"bye\");", expected: -2146232797) [18 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "System.Environment.FailFast(\"bye\");", expectedId: "TS1002") [13 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "Environment.Exit(1);", expectedId: "TS1001") [8 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Reports_errors_with_one_based_positions_in_the_right_file [24 ms]
   Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Assembly_version_unification_is_not_a_warning_as_in_the_SDK [4 ms]
-  Passed TabStudio.Compilation.Tests.SourceGeneratorTests.A_generator_that_uses_its_package_s_own_Microsoft_CodeAnalysis_assembly_runs [2 s]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Compiles_top_level_statements_with_implicit_usings [257 ms]
-  Passed TabStudio.Compilation.Tests.SourceGeneratorTests.Framework_generators_reach_every_project_and_survive_a_reload [253 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Warnings_do_not_stop_a_build [29 ms]
-  Passed TabStudio.Compilation.Tests.SourceGeneratorTests.A_package_generator_adds_code_that_the_program_uses_and_reads_the_project_properties [83 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Format_document_produces_edits_that_fix_the_layout [535 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Classifies_keywords_types_and_strings [105 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Build_order_puts_dependencies_first [5 ms]
-  Passed TabStudio.Compilation.Tests.SourceGeneratorTests.A_package_s_props_and_targets_reach_its_generator_as_with_the_SDK [334 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Memory_mapped_references_compile_the_same_code [180 ms]
-[xUnit.net 00:00:04.04]   Finished:    TabStudio.Compilation.Tests
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_clean_file_has_no_errors [13 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Trimming_memory_keeps_unsaved_edits [24 ms]
+  Passed TabStudio.Compilation.Tests.SkeletonReferenceTests.A_project_nobody_edits_is_referenced_as_a_skeleton_and_everything_still_works [1 s]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_project_reference_s_aliases_are_extern_aliases [255 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Compiles_top_level_statements_with_implicit_usings [74 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Warnings_do_not_stop_a_build [15 ms]
+  Passed TabStudio.Compilation.Tests.SkeletonReferenceTests.Editing_a_project_makes_it_active_and_its_skeleton_is_cached_by_content [64 ms]
+  Passed TabStudio.Compilation.Tests.SkeletonReferenceTests.Turning_skeletons_off_restores_project_references [11 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Edits_show_up_in_live_diagnostics [122 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Project_diagnostics_cover_every_file [15 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Builds_still_work_with_concurrent_compilation_turned_off [35 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Loads_every_csharp_source_file [6 ms]
+  Passed TabStudio.Compilation.Tests.SkeletonReferenceTests.Go_to_definition_finds_the_source_behind_a_skeleton [123 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Release_configuration_defines_the_release_symbol [22 ms]
+  Passed TabStudio.Compilation.Tests.SourceGeneratorTests.Projects_that_share_an_additional_file_each_get_it [679 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Builds_and_runs_a_project_with_a_project_reference [21 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Live_diagnostics_include_the_in_process_safety_check [12 ms]
+  Passed TabStudio.Compilation.Tests.SourceGeneratorTests.A_generator_that_uses_its_package_s_own_Microsoft_CodeAnalysis_assembly_runs [45 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_new_file_joins_the_project_that_contains_it [27 ms]
+  Passed TabStudio.Compilation.Tests.SourceGeneratorTests.Framework_generators_reach_every_project_and_survive_a_reload [40 ms]
+[xUnit.net 00:00:02.48]   Finished:    TabStudio.Compilation.Tests
+  Passed TabStudio.Compilation.Tests.SourceGeneratorTests.A_package_generator_adds_code_that_the_program_uses_and_reads_the_project_properties [52 ms]
+  Passed TabStudio.Compilation.Tests.SourceGeneratorTests.A_package_s_props_and_targets_reach_its_generator_as_with_the_SDK [111 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Format_document_produces_edits_that_fix_the_layout [283 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Classifies_keywords_types_and_strings [78 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Build_order_puts_dependencies_first [4 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Memory_mapped_references_compile_the_same_code [120 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_clean_file_has_no_errors [56 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Trimming_memory_keeps_unsaved_edits [17 ms]
 
 Test Run Successful.
-Total tests: 33
-     Passed: 33
- Total time: 4.8605 Seconds
+Total tests: 34
+     Passed: 34
+ Total time: 3.0455 Seconds
