@@ -170,6 +170,27 @@ public sealed class ToolchainManagerTests : IDisposable
     }
 
     [Fact]
+    public async Task Storage_filling_up_during_an_install_says_so_and_leaves_the_toolchain_ready_to_install_again()
+    {
+        // An IOException the steps did not describe left the toolchain "Installing" until a restart, and reached
+        // the Store's button as an error that ended the app.
+        await PrepareAsync();
+        _device.Apk.ThrowNextAdd = new IOException("No space left on device", 28);
+
+        var error = await Assert.ThrowsAsync<ToolchainInstallException>(() => Manager.InstallAsync("hello"));
+
+        Assert.Equal(InstallFailure.NotEnoughSpace, error.Failure);
+        Assert.Contains("storage filled up", error.Message, StringComparison.Ordinal);
+        var status = Manager.Status("hello");
+        Assert.False(status.IsBusy);
+        Assert.Equal(ToolchainState.NotInstalled, status.State);
+        Assert.Equal(error.Message, status.Error);
+
+        await Manager.InstallAsync("hello");
+        Assert.Equal(ToolchainState.Installed, Manager.Status("hello").State);
+    }
+
+    [Fact]
     public async Task Says_which_package_the_distribution_lacks()
     {
         await PrepareAsync();

@@ -180,8 +180,10 @@ public static class ArchiveExtractor
                 files++;
             }
         }
-        catch (Exception ex) when (ex is InvalidDataException or IOException and not DirectoryNotFoundException)
+        catch (Exception ex) when (ex is InvalidDataException or IOException and not DirectoryNotFoundException
+            && !(ex is IOException io && Installation.ToolchainInstallException.IsDiskFull(io)))
         {
+            // Storage that fills up is not a damaged archive: called damaged, the verified download was deleted.
             throw new InvalidDataException($"The archive {Path.GetFileName(archive)} is damaged: {ex.Message}", ex);
         }
 

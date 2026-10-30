@@ -63,6 +63,28 @@ public sealed class ToolchainInstallException : Exception
     /// <summary>Why it failed.</summary>
     public InstallFailure Failure { get; } = InstallFailure.CommandFailed;
 
+    /// <summary>
+    /// An error a step did not describe, such as storage filling up while an archive is unpacked, in words the
+    /// Toolchain Store shows.
+    /// </summary>
+    /// <param name="toolchain">The toolchain's name.</param>
+    /// <param name="exception">The error.</param>
+    public static ToolchainInstallException FromUnexpected(string toolchain, Exception exception)
+    {
+        ArgumentNullException.ThrowIfNull(exception);
+        return exception is IOException io && IsDiskFull(io)
+            ? new ToolchainInstallException(InstallFailure.NotEnoughSpace, $"The tablet's storage filled up while installing {toolchain}. Free up space and install it again.", io.Message, io)
+            : new ToolchainInstallException(InstallFailure.CommandFailed, $"Installing {toolchain} stopped: {exception.Message.TrimEnd('.')}. Install it again; if it keeps failing, restart TabStudio.", exception.ToString(), exception);
+    }
+
+    /// <summary>Whether an error is the storage being full: ENOSPC on Linux and Android, ERROR_DISK_FULL on Windows.</summary>
+    /// <param name="exception">The error.</param>
+    public static bool IsDiskFull(IOException exception)
+    {
+        ArgumentNullException.ThrowIfNull(exception);
+        return (exception.HResult & 0xFFFF) is 28 or 112 or 39;
+    }
+
     /// <summary>Output of the command that failed, if any.</summary>
     public string? Details { get; }
 }
