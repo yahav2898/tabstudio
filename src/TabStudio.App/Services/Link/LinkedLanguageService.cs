@@ -262,11 +262,11 @@ public sealed class LinkedLanguageService : ILanguageService
     }
 
     /// <inheritdoc />
-    public void TrimMemory()
+    public Task TrimMemoryAsync()
     {
         lock (_gate)
         {
-            _local?.TrimMemory();
+            return _local?.TrimMemoryAsync() ?? Task.CompletedTask;
         }
     }
 

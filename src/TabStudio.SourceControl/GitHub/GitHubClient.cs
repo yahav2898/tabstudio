@@ -30,12 +30,17 @@ public sealed partial class GitHubClient
     /// <param name="http">The HTTP client to send requests with.</param>
     /// <param name="token">A personal access token or OAuth token, or <see langword="null"/> to stay signed out.</param>
     /// <param name="apiAddress">The API's address; GitHub's by default, or a GitHub Enterprise server's.</param>
-    public GitHubClient(HttpClient http, string? token = null, Uri? apiAddress = null)
+    /// <param name="rawAddress">
+    /// Where the server serves files of a commit as they are, outside the API: <see cref="DefaultRawAddress"/> for
+    /// GitHub's API, and none for any other unless given.
+    /// </param>
+    public GitHubClient(HttpClient http, string? token = null, Uri? apiAddress = null, Uri? rawAddress = null)
     {
         ArgumentNullException.ThrowIfNull(http);
         _http = http;
         _token = string.IsNullOrWhiteSpace(token) ? null : token.Trim();
         _apiAddress = apiAddress ?? DefaultApiAddress;
+        _rawAddress = rawAddress ?? (_apiAddress == DefaultApiAddress ? DefaultRawAddress : null);
     }
 
     /// <summary>Whether requests are made with a token.</summary>

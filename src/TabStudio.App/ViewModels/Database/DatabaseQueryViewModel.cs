@@ -100,7 +100,9 @@ public sealed partial class DatabaseQueryViewModel : ObservableObject, IDisposab
                 TimeSpan => TimeSpan.Parse(EditValue, CultureInfo.InvariantCulture),
                 DateOnly => DateOnly.Parse(EditValue, CultureInfo.InvariantCulture),
                 TimeOnly => TimeOnly.Parse(EditValue, CultureInfo.InvariantCulture),
-                _ => Convert.ChangeType(EditValue, original.GetType(), CultureInfo.InvariantCulture),
+                IConvertible => Convert.ChangeType(EditValue, original.GetType(), CultureInfo.InvariantCulture),
+                // A point, range or other provider type: the database parses the text, cast to the column's type.
+                _ => EditValue,
             };
             await new TableEditor().UpdateAsync(Connection, table, row.Values, index, value, token); updated = true;
         });

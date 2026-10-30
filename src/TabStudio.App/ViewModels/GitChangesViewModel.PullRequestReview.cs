@@ -38,13 +38,14 @@ public sealed partial class GitChangesViewModel
         var succeeded = await RunAsync(async (sync, progress, token) =>
         {
             var before = sync.Metadata.Files.Keys.ToList();
+            var documents = await _host.CaptureDocumentsAsync();
             var result = await sync.CheckOutPullRequestAsync(pullRequest, progress, token);
             PullRequest = null;
             CanCreatePullRequest = false;
             IncomingCommits = 0;
-            await _host.ReloadDocumentsAsync(FullPaths(before.Concat(result.Updated)));
+            var conflicts = await _host.ReloadDocumentsAsync(FullPaths(before.Concat(result.Updated)), documents);
             await _host.ReloadWorkspaceAsync();
-            return $"Checked out pull request #{number} on {pullRequest.Head.Name}.";
+            return $"Checked out pull request #{number} on {pullRequest.Head.Name}." + TypedEditsNote(conflicts);
         });
 
         if (!succeeded)

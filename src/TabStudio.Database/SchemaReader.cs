@@ -79,8 +79,12 @@ public sealed class SchemaReader
                 WHERE t.constraint_type='PRIMARY KEY' AND t.table_schema=@schema AND t.table_name=@name
                 """, token, args).ConfigureAwait(false);
             var columns = (await ReadAsync(db, pg ? """
-                SELECT column_name, data_type, is_nullable, is_generated, is_identity
-                FROM information_schema.columns WHERE table_schema=@schema AND table_name=@name ORDER BY ordinal_position
+                SELECT c.column_name, c.data_type, c.is_nullable, c.is_generated, c.is_identity, format_type(a.atttypid, a.atttypmod)
+                FROM information_schema.columns c
+                JOIN pg_catalog.pg_namespace n ON n.nspname=c.table_schema
+                JOIN pg_catalog.pg_class t ON t.relnamespace=n.oid AND t.relname=c.table_name
+                JOIN pg_catalog.pg_attribute a ON a.attrelid=t.oid AND a.attname=c.column_name AND NOT a.attisdropped
+                WHERE c.table_schema=@schema AND c.table_name=@name ORDER BY c.ordinal_position
                 """ : """
                 SELECT c.name, TYPE_NAME(c.user_type_id), c.is_nullable, c.is_computed, c.is_identity
                 FROM sys.columns c JOIN sys.objects o ON o.object_id=c.object_id JOIN sys.schemas s ON s.schema_id=o.schema_id
@@ -88,7 +92,8 @@ public sealed class SchemaReader
                 """, token, args).ConfigureAwait(false)).Select(c => new DatabaseColumn(Text(c[0]), Text(c[1]),
                     pg ? Text(c[2]) == "YES" : Convert.ToBoolean(c[2], CultureInfo.InvariantCulture),
                     pk.FirstOrDefault(k => Text(k[0]) == Text(c[0])) is { } key ? Number(key[1]) : 0,
-                    pg ? Text(c[3]) == "ALWAYS" || Text(c[4]) == "YES" : Convert.ToBoolean(c[3], CultureInfo.InvariantCulture) || Convert.ToBoolean(c[4], CultureInfo.InvariantCulture) || Text(c[1]) is "timestamp" or "rowversion")).ToArray();
+                    pg ? Text(c[3]) == "ALWAYS" || Text(c[4]) == "YES" : Convert.ToBoolean(c[3], CultureInfo.InvariantCulture) || Convert.ToBoolean(c[4], CultureInfo.InvariantCulture) || Text(c[1]) is "timestamp" or "rowversion",
+                    pg ? Text(c[5]) : null)).ToArray();
             var keys = (await ReadAsync(db, pg ? """
                 SELECT c.conname, pg_get_constraintdef(c.oid) FROM pg_constraint c
                 JOIN pg_class t ON t.oid=c.conrelid JOIN pg_namespace n ON n.oid=t.relnamespace

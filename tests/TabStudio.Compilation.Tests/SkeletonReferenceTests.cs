@@ -39,6 +39,7 @@ public sealed class SkeletonReferenceTests : IDisposable
         _host.Load(WorkspaceLoader.Load(_temp.Path), FileSystemTextProvider.Instance);
         _host.SetActiveProjects([AppProject]);
         _host.UseSkeletonReferences(_temp.Resolve("skeletons"));
+        _host.WhenReloadedAsync().WaitAsync(TimeSpan.FromMinutes(2)).GetAwaiter().GetResult();
     }
 
     private string AppProject => _temp.Resolve("App/App.csproj");
@@ -78,25 +79,64 @@ public sealed class SkeletonReferenceTests : IDisposable
     }
 
     [Fact]
-    public void Editing_a_project_makes_it_active_and_its_skeleton_is_cached_by_content()
+    public async Task Editing_a_project_makes_it_active_and_its_skeleton_is_cached_by_content()
     {
         _host.SetActiveProjects([AppProject, LibProject]);
+        await _host.WhenReloadedAsync();
         Assert.False(_host.IsSkeleton(LibProject));
 
         _host.SetActiveProjects([AppProject]);
+        await _host.WhenReloadedAsync();
         Assert.True(_host.IsSkeleton(LibProject));
         Assert.Single(Directory.GetFiles(_temp.Resolve("skeletons"), "*.dll"));
 
         // A change to the skeleton's project makes a new image.
         _host.UpdateText(_temp.Resolve("Lib/Greeter.cs"), File.ReadAllText(_temp.Resolve("Lib/Greeter.cs")) + "\n// changed\n");
+        await _host.WhenReloadedAsync();
         Assert.True(_host.IsSkeleton(LibProject));
         Assert.Equal(2, Directory.GetFiles(_temp.Resolve("skeletons"), "*.dll").Length);
     }
 
     [Fact]
-    public void Turning_skeletons_off_restores_project_references()
+    public async Task An_edit_to_a_skeleton_s_project_and_memory_pressure_never_wait_for_a_reload_or_a_compile()
+    {
+        // Rename across projects edits files of projects nobody has open, from the UI thread, and Android's memory
+        // callbacks arrive there too. Both reloaded the solution and compiled skeleton images before returning.
+        var greeter = _temp.Resolve("Lib/Greeter.cs");
+        var program = _temp.Resolve("App/Program.cs");
+        var compiling = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var release = new ManualResetEventSlim();
+        _host.BeforeSkeletonImages = () =>
+        {
+            compiling.TrySetResult();
+            release.Wait(TimeSpan.FromMinutes(1));
+        };
+        var images = Directory.GetFiles(_temp.Resolve("skeletons"), "*.dll").Length;
+
+        var renamed = File.ReadAllText(greeter).Replace("Greet(string name)", "Welcome(string name)", StringComparison.Ordinal);
+        Assert.True(await Task.Run(() => _host.UpdateText(greeter, renamed)).WaitAsync(TimeSpan.FromSeconds(10)));
+        await compiling.Task.WaitAsync(TimeSpan.FromSeconds(30));
+
+        // While the image compiles, nothing it does is in the way: typing in the open project, and trimming memory.
+        Assert.Equal(images, Directory.GetFiles(_temp.Resolve("skeletons"), "*.dll").Length);
+        Assert.True(await Task.Run(() => _host.UpdateText(program, "Console.WriteLine(Lib.Greeter.Welcome(\"skeleton\"));\n")).WaitAsync(TimeSpan.FromSeconds(10)));
+        await Task.Run(_host.TrimMemory).WaitAsync(TimeSpan.FromSeconds(10));
+        Assert.True(_host.IsSkeleton(LibProject));
+
+        release.Set();
+        await _host.WhenReloadedAsync().WaitAsync(TimeSpan.FromMinutes(2));
+
+        // Afterwards the open project sees the renamed method through the new image.
+        Assert.True(_host.IsSkeleton(LibProject));
+        Assert.Equal(images + 1, Directory.GetFiles(_temp.Resolve("skeletons"), "*.dll").Length);
+        Assert.DoesNotContain(await _host.GetDocumentDiagnosticsAsync(program), d => d.Severity == DiagnosticSeverityLevel.Error);
+    }
+
+    [Fact]
+    public async Task Turning_skeletons_off_restores_project_references()
     {
         _host.UseSkeletonReferences(null);
+        await _host.WhenReloadedAsync();
 
         Assert.False(_host.UsesSkeletonReferences);
         Assert.False(_host.IsSkeleton(LibProject));

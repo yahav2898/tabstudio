@@ -41,4 +41,50 @@ public sealed class PostgreSqlTests
         }
         finally { await sql.ExecuteAsync(connection, $"DROP SCHEMA IF EXISTS {name} CASCADE;"); }
     }
+    [PostgreSqlFact] public async Task Cells_of_json_xml_point_and_enum_columns_can_be_edited_and_empty_dates_filled()
+    {
+        var connection = new DatabaseConnection(Guid.NewGuid(), "CI PostgreSQL", DatabaseProvider.PostgreSql, Environment.GetEnvironmentVariable("TABSTUDIO_POSTGRES")!);
+        var name = "db_" + Guid.NewGuid().ToString("N"); var sql = new SqlExecutor();
+        try
+        {
+            await sql.ExecuteAsync(connection, $"""
+                CREATE SCHEMA {name};
+                CREATE TYPE {name}.mood AS ENUM ('sad', 'happy');
+                CREATE TABLE {name}.things(id integer PRIMARY KEY, doc json, bin jsonb, x xml, p point, m {name}.mood,
+                    d date, ts timestamp, n numeric(10,2), v varchar(20));
+                INSERT INTO {name}.things VALUES (1, '{"a": 1}', '{"b": 2}', '<r>1</r>', '(1,2)', 'sad', NULL, NULL, 1.50, 'hi');
+                """);
+            var table = Assert.Single((await new SchemaReader().ReadAsync(connection)).Tables, t => t.Schema == name && t.Name == "things");
+            Assert.Equal($"{name}.mood", table.Columns.Single(c => c.Name == "m").SqlType);
+            Assert.Equal("numeric(10,2)", table.Columns.Single(c => c.Name == "n").SqlType);
+            var editor = new TableEditor();
+
+            // Each edit is guarded by the whole row as it was read, so every column's value is compared too.
+            async Task<object?[]> EditAsync(string column, object? value)
+            {
+                var row = (await editor.ReadAsync(connection, table, 0)).Data.Rows[0];
+                await editor.UpdateAsync(connection, table, row, table.Columns.ToList().FindIndex(c => c.Name == column), value);
+                return (await editor.ReadAsync(connection, table, 0)).Data.Rows[0];
+            }
+
+            Assert.Equal(new DateOnly(2026, 10, 30), (await EditAsync("d", "2026-10-30"))[6] switch
+            {
+                DateTime dateTime => DateOnly.FromDateTime(dateTime),
+                var other => Assert.IsType<DateOnly>(other),
+            });
+            Assert.Equal("""{"z": [1, 2]}""", (await EditAsync("doc", """{"z": [1, 2]}"""))[1]);
+            Assert.Equal("""{"c": 3}""", (await EditAsync("bin", """{"c": 3}"""))[2]);
+            Assert.Equal("<r>2</r>", (await EditAsync("x", "<r>2</r>"))[3]);
+            Assert.Equal("(3,4)", SqlExecutor.Format((await EditAsync("p", "(3,4)"))[4]));
+            Assert.Equal("happy", (await EditAsync("m", "happy"))[5]);
+            Assert.Equal(new DateTime(2026, 1, 2, 3, 4, 5), (await EditAsync("ts", "2026-01-02 03:04:05"))[7]);
+            Assert.Equal("there", (await EditAsync("v", "there"))[9]);
+
+            // A stale row is still refused when the column that changed has no = operator.
+            var stale = (await editor.ReadAsync(connection, table, 0)).Data.Rows[0];
+            await EditAsync("doc", """{"other": true}""");
+            await Assert.ThrowsAsync<InvalidOperationException>(() => editor.UpdateAsync(connection, table, stale, 9, "stale"));
+        }
+        finally { await sql.ExecuteAsync(connection, $"DROP SCHEMA IF EXISTS {name} CASCADE;"); }
+    }
 }

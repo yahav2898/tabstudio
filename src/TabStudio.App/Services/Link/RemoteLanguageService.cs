@@ -219,9 +219,7 @@ public sealed class RemoteLanguageService : ILanguageService
 
     /// <inheritdoc />
     /// <remarks>The compilations are on the host; this device holds none.</remarks>
-    public void TrimMemory()
-    {
-    }
+    public Task TrimMemoryAsync() => Task.CompletedTask;
 
     /// <inheritdoc />
     /// <remarks>Restores on the host, which compiles against the packages. Progress is not reported.</remarks>
