@@ -1,5 +1,5 @@
 refit-Refit-slnx at 92ae878250798dc103a01304704a99bb8033ed77, opening /home/runner/work/_temp/repos/refit-Refit-slnx/src/Refit.slnx
-Opened in 2.0 s: Refit, solution /home/runner/work/_temp/repos/refit-Refit-slnx/src/Refit.slnx
+Opened in 3.6 s: Refit, solution /home/runner/work/_temp/repos/refit-Refit-slnx/src/Refit.slnx
   project index [CSharp] /home/runner/work/_temp/repos/refit-Refit-slnx/src/examples/Documentation/Pages/index/index.csproj
   project advanced-index [CSharp] /home/runner/work/_temp/repos/refit-Refit-slnx/src/examples/Documentation/Pages/advanced-index/advanced-index.csproj
   project advanced-method-metadata [CSharp] /home/runner/work/_temp/repos/refit-Refit-slnx/src/examples/Documentation/Pages/advanced-method-metadata/advanced-method-metadata.csproj
@@ -174,29 +174,7 @@ Compatibility Doctor:
   Refit.Xml: Library via Built with its users - A library is compiled together with the projects that reference it.
   Refit: Library via Built with its users - A library is compiled together with the projects that reference it.
 F5 startup project: RestApiForTest /home/runner/work/_temp/repos/refit-Refit-slnx/src/examples/SampleUsingLocalApi/RestApiforTest/RestApiForTest.csproj
-Error List after analysis: 400 errors, 9 warnings
-  297 x CS0433
-      [Refit.GeneratorTests] Fixture.cs(378,41): error CS0433: The type 'ReturnTypeAdapterParsing' exists in both 'InterfaceStubGeneratorV2, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null' and 'Refit.Analyzers, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null'
-      [Refit.GeneratorTests] Fixture.cs(379,33): error CS0433: The type 'ReturnTypeAdapterParsing' exists in both 'InterfaceStubGeneratorV2, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null' and 'Refit.Analyzers, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null'
-      [Refit.GeneratorTests] Fixture.cs(383,38): error CS0433: The type 'QueryParameterParsing' exists in both 'InterfaceStubGeneratorV2, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null' and 'Refit.Analyzers, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null'
-      [Refit.GeneratorTests] Fixture.cs(385,40): error CS0433: The type 'ReturnTypeAdapterParsing' exists in both 'InterfaceStubGeneratorV2, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null' and 'Refit.Analyzers, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null'
-      [Refit.GeneratorTests] Fixture.cs(386,32): error CS0433: The type 'ReturnTypeAdapterParsing' exists in both 'InterfaceStubGeneratorV2, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null' and 'Refit.Analyzers, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null'
-      [Refit.GeneratorTests] Fixture.cs(390,37): error CS0433: The type 'QueryParameterParsing' exists in both 'InterfaceStubGeneratorV2, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null' and 'Refit.Analyzers, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null'
-      [Refit.GeneratorTests] Fixture.cs(402,39): error CS0433: The type 'InlineRequestClassification' exists in both 'InterfaceStubGeneratorV2, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null' and 'Refit.Analyzers, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null'
-      [Refit.GeneratorTests] Fixture.cs(409,38): error CS0433: The type 'InlineRequestClassification' exists in both 'InterfaceStubGeneratorV2, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null' and 'Refit.Analyzers, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null'
-      [Refit.GeneratorTests] GeneratedRequestSupportTableTests.cs(185,51): error CS0433: The type 'RequestModel' exists in both 'InterfaceStubGeneratorV2, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null' and 'Refit.Analyzers, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null'
-      [Refit.GeneratorTests] GeneratedRequestSupportTableTests.cs(190,35): error CS0433: The type 'RequestParameterKind' exists in both 'InterfaceStubGeneratorV2, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null' and 'Refit.Analyzers, Version=14.0.0.0, Culture=neutral, PublicKeyToken=null'
-  48 x CS0234
-      [Tooling] AnalyzerSample.cs(11,49): error CS0234: The type or namespace name 'Refit' does not exist in the namespace 'AnalyzerTooling' (are you missing an assembly reference?)
-      [Tooling] GeneratorSample.cs(8,52): error CS0234: The type or namespace name 'Refit' does not exist in the namespace 'GeneratorTooling' (are you missing an assembly reference?)
-      [Tooling] NameSample.cs(8,45): error CS0234: The type or namespace name 'Refit' does not exist in the namespace 'GeneratorTooling' (are you missing an assembly reference?)
-      [Tooling] NameSample.cs(9,42): error CS0234: The type or namespace name 'Refit' does not exist in the namespace 'GeneratorTooling' (are you missing an assembly reference?)
-      [Tooling] PolyfillSample.cs(7,40): error CS0234: The type or namespace name 'System' does not exist in the namespace 'AnalyzerTooling' (are you missing an assembly reference?)
-      [Tooling] PolyfillSample.cs(8,40): error CS0234: The type or namespace name 'System' does not exist in the namespace 'AnalyzerTooling' (are you missing an assembly reference?)
-      [Tooling] PolyfillSample.cs(9,42): error CS0234: The type or namespace name 'System' does not exist in the namespace 'GeneratorTooling' (are you missing an assembly reference?)
-      [Tooling] PolyfillSample.cs(10,42): error CS0234: The type or namespace name 'System' does not exist in the namespace 'GeneratorTooling' (are you missing an assembly reference?)
-      [Refit.GeneratorTests] AnalyzerEmbeddedParserComponentTests.cs(8,60): error CS0234: The type or namespace name 'Refit' does not exist in the namespace 'RefitAnalyzers' (are you missing an assembly reference?)
-      [Refit.GeneratorTests] AnalyzerEmbeddedParserComponentTests.cs(9,48): error CS0234: The type or namespace name 'Refit' does not exist in the namespace 'RefitAnalyzers' (are you missing an assembly reference?)
+Error List after analysis: 39 errors, 4 warnings
   32 x CS0103
       [Refit.Analyzers.Roslyn48] InlineRequestClassification.cs(90,44): error CS0103: The name 'with' does not exist in the current context
       [Refit.Analyzers.Roslyn48] InlineRequestClassification.cs(90,84): error CS0103: The name 'with' does not exist in the current context
@@ -208,31 +186,15 @@ Error List after analysis: 400 errors, 9 warnings
       [InterfaceStubGenerator.Roslyn48] Parser.cs(199,84): error CS0103: The name 'with' does not exist in the current context
       [InterfaceStubGenerator.Roslyn48] Parser.cs(199,124): error CS0103: The name 'with' does not exist in the current context
       [InterfaceStubGenerator.Roslyn48] Parser.cs(222,73): error CS0103: The name 'with' does not exist in the current context
-  11 x CS0430
-      [Tooling] AnalyzerSample.cs(4,14): error CS0430: The extern alias 'AnalyzerTooling' was not specified in a /reference option
-      [Tooling] GeneratorSample.cs(4,14): error CS0430: The extern alias 'GeneratorTooling' was not specified in a /reference option
-      [Tooling] NameSample.cs(4,14): error CS0430: The extern alias 'GeneratorTooling' was not specified in a /reference option
-      [Tooling] PolyfillSample.cs(4,14): error CS0430: The extern alias 'GeneratorTooling' was not specified in a /reference option
-      [Tooling] PolyfillSample.cs(5,14): error CS0430: The extern alias 'AnalyzerTooling' was not specified in a /reference option
-      [Refit.GeneratorTests] AnalyzerEmbeddedParserComponentTests.cs(5,14): error CS0430: The extern alias 'RefitAnalyzers' was not specified in a /reference option
-      [Refit.GeneratorTests] Fixture.cs(4,14): error CS0430: The extern alias 'RefitAnalyzers' was not specified in a /reference option
-      [Refit.GeneratorTests] GeneratedRequestBuildingFallbackContractTests.cs(4,14): error CS0430: The extern alias 'RefitAnalyzers' was not specified in a /reference option
-      [Refit.GeneratorTests] GeneratedRequestBuildingFallbackReasonTests.cs(4,14): error CS0430: The extern alias 'RefitAnalyzers' was not specified in a /reference option
-      [Refit.GeneratorTests] GeneratedRequestSupportTableTests.cs(5,14): error CS0430: The extern alias 'RefitAnalyzers' was not specified in a /reference option
-  11 x CS0121
-      [Refit.GeneratorTests] GeneratorComponentTests.cs(157,39): error CS0121: The call is ambiguous between the following methods or properties: 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol)' and 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol)'
-      [Refit.GeneratorTests] GeneratorComponentTests.cs(167,39): error CS0121: The call is ambiguous between the following methods or properties: 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol)' and 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol)'
-      [Refit.GeneratorTests] GeneratorComponentTests.cs(179,69): error CS0121: The call is ambiguous between the following methods or properties: 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol)' and 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol)'
-      [Refit.GeneratorTests] GeneratorComponentTests.cs(191,59): error CS0121: The call is ambiguous between the following methods or properties: 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol)' and 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol)'
-      [Refit.GeneratorTests] GeneratorComponentTests.cs(205,37): error CS0121: The call is ambiguous between the following methods or properties: 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol, bool)' and 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol, bool)'
-      [Refit.GeneratorTests] GeneratorComponentTests.cs(206,37): error CS0121: The call is ambiguous between the following methods or properties: 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol, bool)' and 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol, bool)'
-      [Refit.GeneratorTests] ParserCoverageTests.cs(127,35): error CS0121: The call is ambiguous between the following methods or properties: 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol)' and 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol)'
-      [Refit.GeneratorTests] ParserCoverageTests.cs(128,35): error CS0121: The call is ambiguous between the following methods or properties: 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol, bool)' and 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol, bool)'
-      [Refit.GeneratorTests] ParserCoverageTests.cs(129,35): error CS0121: The call is ambiguous between the following methods or properties: 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol, bool)' and 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol, bool)'
-      [Refit.GeneratorTests] ParserCoverageTests.cs(130,35): error CS0121: The call is ambiguous between the following methods or properties: 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol, bool)' and 'Refit.Generator.ITypeSymbolExtensions.extension(Microsoft.CodeAnalysis.ITypeSymbol).InheritsFromOrEquals(Microsoft.CodeAnalysis.ITypeSymbol, bool)'
-  1 x CS8754
-      [Refit.GeneratorTests] GeneratorModelEqualityTests.cs(105,64): error CS8754: There is no target type for 'new(collection expression, collection expression)'
-Error List after the build: 27 errors, 9 warnings
+  7 x CS0234
+      [Tooling] PolyfillSample.cs(7,40): error CS0234: The type or namespace name 'System' does not exist in the namespace 'AnalyzerTooling' (are you missing an assembly reference?)
+      [Tooling] PolyfillSample.cs(8,40): error CS0234: The type or namespace name 'System' does not exist in the namespace 'AnalyzerTooling' (are you missing an assembly reference?)
+      [Tooling] PolyfillSample.cs(9,42): error CS0234: The type or namespace name 'System' does not exist in the namespace 'GeneratorTooling' (are you missing an assembly reference?)
+      [Tooling] PolyfillSample.cs(10,42): error CS0234: The type or namespace name 'System' does not exist in the namespace 'GeneratorTooling' (are you missing an assembly reference?)
+      [Refit.GeneratorTests] AnalyzerEmbeddedParserComponentTests.cs(294,95): error CS0234: The type or namespace name 'System' does not exist in the namespace 'RefitAnalyzers' (are you missing an assembly reference?)
+      [Refit.GeneratorTests] AnalyzerEmbeddedParserComponentTests.cs(295,94): error CS0234: The type or namespace name 'System' does not exist in the namespace 'RefitAnalyzers' (are you missing an assembly reference?)
+      [Refit.GeneratorTests] AnalyzerEmbeddedParserComponentTests.cs(364,92): error CS0234: The type or namespace name 'System' does not exist in the namespace 'RefitAnalyzers' (are you missing an assembly reference?)
+Error List after the build: 25 errors, 4 warnings
   25 x CS0103
       [InterfaceStubGenerator.Roslyn48] InlineRequestClassification.cs(90,44): error CS0103: The name 'with' does not exist in the current context
       [InterfaceStubGenerator.Roslyn48] InlineRequestClassification.cs(90,84): error CS0103: The name 'with' does not exist in the current context
@@ -244,16 +206,62 @@ Error List after the build: 27 errors, 9 warnings
       [InterfaceStubGenerator.Roslyn48] Parser.cs(199,84): error CS0103: The name 'with' does not exist in the current context
       [InterfaceStubGenerator.Roslyn48] Parser.cs(199,124): error CS0103: The name 'with' does not exist in the current context
       [InterfaceStubGenerator.Roslyn48] Parser.cs(222,73): error CS0103: The name 'with' does not exist in the current context
-  1 x CS0430
-      [Refit.HttpClientFactory.Tests] AuthenticatedHttpClientHandlerTests.cs(4,14): error CS0430: The extern alias 'RefitHttpClientFactory' was not specified in a /reference option
-  1 x CS0234
-      [Refit.HttpClientFactory.Tests] AuthenticatedHttpClientHandlerTests.cs(6,64): error CS0234: The type or namespace name 'Refit' does not exist in the namespace 'RefitHttpClientFactory' (are you missing an assembly reference?)
 Long-operation progress:
   Loading C#: Loading C#
-  Loading C#: Succeeded after 1.2 s
+  Loading C#: Succeeded after 1.9 s
   Restoring NuGet packages: Restoring NuGet packages
   Restoring NuGet packages: Restoring NuGet packages 0/84 projects
   Analyzing: Analyzing 0/86 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/49
+  Restoring NuGet packages: Downloading NuGet packages 2/49
+  Restoring NuGet packages: Downloading NuGet packages 3/49
+  Restoring NuGet packages: Downloading NuGet packages 4/49
+  Restoring NuGet packages: Downloading NuGet packages 5/49
+  Restoring NuGet packages: Downloading NuGet packages 6/49
+  Restoring NuGet packages: Downloading NuGet packages 7/49
+  Restoring NuGet packages: Downloading NuGet packages 8/49
+  Restoring NuGet packages: Downloading NuGet packages 9/49
+  Restoring NuGet packages: Downloading NuGet packages 10/49
+  Restoring NuGet packages: Downloading NuGet packages 11/49
+  Restoring NuGet packages: Downloading NuGet packages 12/49
+  Restoring NuGet packages: Downloading NuGet packages 13/49
+  Restoring NuGet packages: Downloading NuGet packages 14/49
+  Restoring NuGet packages: Downloading NuGet packages 15/49
+  Restoring NuGet packages: Downloading NuGet packages 16/49
+  Restoring NuGet packages: Downloading NuGet packages 17/49
+  Restoring NuGet packages: Downloading NuGet packages 18/49
+  Restoring NuGet packages: Downloading NuGet packages 19/49
+  Restoring NuGet packages: Downloading NuGet packages 20/49
+  Restoring NuGet packages: Downloading NuGet packages 21/49
+  Restoring NuGet packages: Downloading NuGet packages 22/49
+  Restoring NuGet packages: Downloading NuGet packages 23/49
+  Restoring NuGet packages: Downloading NuGet packages 24/49
+  Restoring NuGet packages: Downloading NuGet packages 25/49
+  Restoring NuGet packages: Downloading NuGet packages 26/49
+  Restoring NuGet packages: Downloading NuGet packages 27/49
+  Restoring NuGet packages: Downloading NuGet packages 28/49
+  Restoring NuGet packages: Downloading NuGet packages 29/49
+  Restoring NuGet packages: Downloading NuGet packages 30/49
+  Restoring NuGet packages: Downloading NuGet packages 31/49
+  Restoring NuGet packages: Downloading NuGet packages 32/49
+  Restoring NuGet packages: Downloading NuGet packages 33/49
+  Restoring NuGet packages: Downloading NuGet packages 34/49
+  Restoring NuGet packages: Downloading NuGet packages 35/49
+  Restoring NuGet packages: Downloading NuGet packages 36/49
+  Restoring NuGet packages: Downloading NuGet packages 37/49
+  Restoring NuGet packages: Downloading NuGet packages 38/49
+  Restoring NuGet packages: Downloading NuGet packages 39/49
+  Restoring NuGet packages: Downloading NuGet packages 40/49
+  Restoring NuGet packages: Downloading NuGet packages 41/49
+  Restoring NuGet packages: Downloading NuGet packages 42/49
+  Restoring NuGet packages: Downloading NuGet packages 43/49
+  Restoring NuGet packages: Downloading NuGet packages 44/49
+  Restoring NuGet packages: Downloading NuGet packages 45/49
+  Restoring NuGet packages: Downloading NuGet packages 46/49
+  Restoring NuGet packages: Downloading NuGet packages 47/49
+  Restoring NuGet packages: Downloading NuGet packages 48/49
+  Restoring NuGet packages: Downloading NuGet packages 49/49
+  Restoring NuGet packages: Restoring NuGet packages 1/84 projects
   Analyzing: Analyzing 1/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
@@ -300,67 +308,12 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 43/49
   Restoring NuGet packages: Downloading NuGet packages 44/49
   Restoring NuGet packages: Downloading NuGet packages 45/49
-  Analyzing: Analyzing 2/86 projects
-  Restoring NuGet packages: Downloading NuGet packages 46/49
-  Restoring NuGet packages: Downloading NuGet packages 47/49
-  Restoring NuGet packages: Downloading NuGet packages 48/49
-  Restoring NuGet packages: Downloading NuGet packages 49/49
-  Restoring NuGet packages: Restoring NuGet packages 1/84 projects
-  Analyzing: Analyzing 3/86 projects
-  Restoring NuGet packages: Downloading NuGet packages 1/49
-  Restoring NuGet packages: Downloading NuGet packages 2/49
-  Restoring NuGet packages: Downloading NuGet packages 3/49
-  Restoring NuGet packages: Downloading NuGet packages 4/49
-  Restoring NuGet packages: Downloading NuGet packages 5/49
-  Restoring NuGet packages: Downloading NuGet packages 6/49
-  Restoring NuGet packages: Downloading NuGet packages 7/49
-  Restoring NuGet packages: Downloading NuGet packages 8/49
-  Restoring NuGet packages: Downloading NuGet packages 9/49
-  Restoring NuGet packages: Downloading NuGet packages 10/49
-  Restoring NuGet packages: Downloading NuGet packages 11/49
-  Restoring NuGet packages: Downloading NuGet packages 12/49
-  Restoring NuGet packages: Downloading NuGet packages 13/49
-  Restoring NuGet packages: Downloading NuGet packages 14/49
-  Restoring NuGet packages: Downloading NuGet packages 15/49
-  Restoring NuGet packages: Downloading NuGet packages 16/49
-  Restoring NuGet packages: Downloading NuGet packages 17/49
-  Restoring NuGet packages: Downloading NuGet packages 18/49
-  Restoring NuGet packages: Downloading NuGet packages 19/49
-  Restoring NuGet packages: Downloading NuGet packages 20/49
-  Restoring NuGet packages: Downloading NuGet packages 21/49
-  Restoring NuGet packages: Downloading NuGet packages 22/49
-  Restoring NuGet packages: Downloading NuGet packages 23/49
-  Restoring NuGet packages: Downloading NuGet packages 24/49
-  Restoring NuGet packages: Downloading NuGet packages 25/49
-  Restoring NuGet packages: Downloading NuGet packages 26/49
-  Restoring NuGet packages: Downloading NuGet packages 27/49
-  Restoring NuGet packages: Downloading NuGet packages 28/49
-  Restoring NuGet packages: Downloading NuGet packages 29/49
-  Restoring NuGet packages: Downloading NuGet packages 31/49
-  Restoring NuGet packages: Downloading NuGet packages 30/49
-  Restoring NuGet packages: Downloading NuGet packages 32/49
-  Restoring NuGet packages: Downloading NuGet packages 33/49
-  Restoring NuGet packages: Downloading NuGet packages 34/49
-  Restoring NuGet packages: Downloading NuGet packages 35/49
-  Restoring NuGet packages: Downloading NuGet packages 36/49
-  Restoring NuGet packages: Downloading NuGet packages 37/49
-  Restoring NuGet packages: Downloading NuGet packages 38/49
-  Restoring NuGet packages: Downloading NuGet packages 39/49
-  Restoring NuGet packages: Downloading NuGet packages 40/49
-  Restoring NuGet packages: Downloading NuGet packages 41/49
-  Restoring NuGet packages: Downloading NuGet packages 42/49
-  Restoring NuGet packages: Downloading NuGet packages 43/49
-  Restoring NuGet packages: Downloading NuGet packages 44/49
-  Restoring NuGet packages: Downloading NuGet packages 45/49
   Restoring NuGet packages: Downloading NuGet packages 46/49
   Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 2/84 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
-  Restoring NuGet packages: Downloading NuGet packages 2/49
-  Restoring NuGet packages: Downloading NuGet packages 3/49
-  Restoring NuGet packages: Downloading NuGet packages 4/49
   Restoring NuGet packages: Downloading NuGet packages 5/49
   Restoring NuGet packages: Downloading NuGet packages 6/49
   Restoring NuGet packages: Downloading NuGet packages 7/49
@@ -406,8 +359,10 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
+  Restoring NuGet packages: Downloading NuGet packages 2/49
+  Restoring NuGet packages: Downloading NuGet packages 3/49
+  Restoring NuGet packages: Downloading NuGet packages 4/49
   Restoring NuGet packages: Restoring NuGet packages 3/84 projects
-  Analyzing: Analyzing 4/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -458,7 +413,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 4/84 projects
-  Analyzing: Analyzing 5/86 projects
+  Analyzing: Analyzing 2/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -509,7 +464,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 5/84 projects
-  Analyzing: Analyzing 6/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -560,9 +514,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 6/84 projects
-  Analyzing: Analyzing 7/86 projects
-  Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
+  Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
   Restoring NuGet packages: Downloading NuGet packages 4/49
   Restoring NuGet packages: Downloading NuGet packages 5/49
@@ -571,26 +524,26 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 8/49
   Restoring NuGet packages: Downloading NuGet packages 9/49
   Restoring NuGet packages: Downloading NuGet packages 10/49
-  Restoring NuGet packages: Downloading NuGet packages 11/49
   Restoring NuGet packages: Downloading NuGet packages 12/49
+  Restoring NuGet packages: Downloading NuGet packages 11/49
   Restoring NuGet packages: Downloading NuGet packages 13/49
   Restoring NuGet packages: Downloading NuGet packages 14/49
-  Restoring NuGet packages: Downloading NuGet packages 15/49
   Restoring NuGet packages: Downloading NuGet packages 16/49
-  Restoring NuGet packages: Downloading NuGet packages 17/49
+  Restoring NuGet packages: Downloading NuGet packages 15/49
   Restoring NuGet packages: Downloading NuGet packages 18/49
+  Restoring NuGet packages: Downloading NuGet packages 17/49
   Restoring NuGet packages: Downloading NuGet packages 19/49
   Restoring NuGet packages: Downloading NuGet packages 20/49
   Restoring NuGet packages: Downloading NuGet packages 21/49
   Restoring NuGet packages: Downloading NuGet packages 22/49
-  Restoring NuGet packages: Downloading NuGet packages 23/49
   Restoring NuGet packages: Downloading NuGet packages 24/49
+  Restoring NuGet packages: Downloading NuGet packages 23/49
   Restoring NuGet packages: Downloading NuGet packages 25/49
   Restoring NuGet packages: Downloading NuGet packages 26/49
   Restoring NuGet packages: Downloading NuGet packages 27/49
   Restoring NuGet packages: Downloading NuGet packages 28/49
-  Restoring NuGet packages: Downloading NuGet packages 29/49
   Restoring NuGet packages: Downloading NuGet packages 30/49
+  Restoring NuGet packages: Downloading NuGet packages 29/49
   Restoring NuGet packages: Downloading NuGet packages 31/49
   Restoring NuGet packages: Downloading NuGet packages 32/49
   Restoring NuGet packages: Downloading NuGet packages 33/49
@@ -610,12 +563,9 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
+  Analyzing: Analyzing 3/86 projects
   Restoring NuGet packages: Restoring NuGet packages 7/84 projects
-  Analyzing: Analyzing 8/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
-  Restoring NuGet packages: Downloading NuGet packages 2/49
-  Restoring NuGet packages: Downloading NuGet packages 3/49
-  Restoring NuGet packages: Downloading NuGet packages 4/49
   Restoring NuGet packages: Downloading NuGet packages 5/49
   Restoring NuGet packages: Downloading NuGet packages 6/49
   Restoring NuGet packages: Downloading NuGet packages 7/49
@@ -661,8 +611,10 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
+  Restoring NuGet packages: Downloading NuGet packages 2/49
+  Restoring NuGet packages: Downloading NuGet packages 3/49
+  Restoring NuGet packages: Downloading NuGet packages 4/49
   Restoring NuGet packages: Restoring NuGet packages 8/84 projects
-  Analyzing: Analyzing 9/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -712,6 +664,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
+  Analyzing: Analyzing 4/86 projects
   Restoring NuGet packages: Restoring NuGet packages 9/84 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
@@ -763,7 +716,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 10/84 projects
-  Analyzing: Analyzing 10/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -813,14 +765,15 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
+  Analyzing: Analyzing 5/86 projects
   Restoring NuGet packages: Restoring NuGet packages 11/84 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
-  Restoring NuGet packages: Downloading NuGet packages 3/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
+  Restoring NuGet packages: Downloading NuGet packages 3/49
   Restoring NuGet packages: Downloading NuGet packages 4/49
   Restoring NuGet packages: Downloading NuGet packages 5/49
-  Restoring NuGet packages: Downloading NuGet packages 7/49
   Restoring NuGet packages: Downloading NuGet packages 6/49
+  Restoring NuGet packages: Downloading NuGet packages 7/49
   Restoring NuGet packages: Downloading NuGet packages 8/49
   Restoring NuGet packages: Downloading NuGet packages 9/49
   Restoring NuGet packages: Downloading NuGet packages 10/49
@@ -833,12 +786,12 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 17/49
   Restoring NuGet packages: Downloading NuGet packages 18/49
   Restoring NuGet packages: Downloading NuGet packages 19/49
-  Restoring NuGet packages: Downloading NuGet packages 21/49
   Restoring NuGet packages: Downloading NuGet packages 20/49
+  Restoring NuGet packages: Downloading NuGet packages 21/49
   Restoring NuGet packages: Downloading NuGet packages 22/49
   Restoring NuGet packages: Downloading NuGet packages 23/49
-  Restoring NuGet packages: Downloading NuGet packages 25/49
   Restoring NuGet packages: Downloading NuGet packages 24/49
+  Restoring NuGet packages: Downloading NuGet packages 25/49
   Restoring NuGet packages: Downloading NuGet packages 26/49
   Restoring NuGet packages: Downloading NuGet packages 27/49
   Restoring NuGet packages: Downloading NuGet packages 28/49
@@ -849,8 +802,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 33/49
   Restoring NuGet packages: Downloading NuGet packages 34/49
   Restoring NuGet packages: Downloading NuGet packages 35/49
-  Restoring NuGet packages: Downloading NuGet packages 37/49
   Restoring NuGet packages: Downloading NuGet packages 36/49
+  Restoring NuGet packages: Downloading NuGet packages 37/49
   Restoring NuGet packages: Downloading NuGet packages 38/49
   Restoring NuGet packages: Downloading NuGet packages 39/49
   Restoring NuGet packages: Downloading NuGet packages 40/49
@@ -864,7 +817,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 12/84 projects
-  Analyzing: Analyzing 11/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -872,23 +824,24 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 5/49
   Restoring NuGet packages: Downloading NuGet packages 6/49
   Restoring NuGet packages: Downloading NuGet packages 7/49
-  Restoring NuGet packages: Downloading NuGet packages 9/49
   Restoring NuGet packages: Downloading NuGet packages 8/49
+  Restoring NuGet packages: Downloading NuGet packages 9/49
   Restoring NuGet packages: Downloading NuGet packages 10/49
   Restoring NuGet packages: Downloading NuGet packages 11/49
   Restoring NuGet packages: Downloading NuGet packages 12/49
   Restoring NuGet packages: Downloading NuGet packages 13/49
   Restoring NuGet packages: Downloading NuGet packages 14/49
-  Restoring NuGet packages: Downloading NuGet packages 16/49
   Restoring NuGet packages: Downloading NuGet packages 15/49
+  Restoring NuGet packages: Downloading NuGet packages 16/49
   Restoring NuGet packages: Downloading NuGet packages 17/49
   Restoring NuGet packages: Downloading NuGet packages 18/49
   Restoring NuGet packages: Downloading NuGet packages 19/49
   Restoring NuGet packages: Downloading NuGet packages 20/49
-  Restoring NuGet packages: Downloading NuGet packages 22/49
   Restoring NuGet packages: Downloading NuGet packages 21/49
-  Restoring NuGet packages: Downloading NuGet packages 25/49
+  Restoring NuGet packages: Downloading NuGet packages 22/49
   Restoring NuGet packages: Downloading NuGet packages 23/49
+  Restoring NuGet packages: Downloading NuGet packages 24/49
+  Restoring NuGet packages: Downloading NuGet packages 25/49
   Restoring NuGet packages: Downloading NuGet packages 26/49
   Restoring NuGet packages: Downloading NuGet packages 27/49
   Restoring NuGet packages: Downloading NuGet packages 28/49
@@ -900,8 +853,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 34/49
   Restoring NuGet packages: Downloading NuGet packages 35/49
   Restoring NuGet packages: Downloading NuGet packages 36/49
-  Restoring NuGet packages: Downloading NuGet packages 38/49
   Restoring NuGet packages: Downloading NuGet packages 37/49
+  Restoring NuGet packages: Downloading NuGet packages 38/49
   Restoring NuGet packages: Downloading NuGet packages 39/49
   Restoring NuGet packages: Downloading NuGet packages 40/49
   Restoring NuGet packages: Downloading NuGet packages 41/49
@@ -913,9 +866,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
-  Restoring NuGet packages: Downloading NuGet packages 24/49
   Restoring NuGet packages: Restoring NuGet packages 13/84 projects
-  Analyzing: Analyzing 12/86 projects
+  Analyzing: Analyzing 6/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -966,6 +918,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 14/84 projects
+  Analyzing: Analyzing 7/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -988,20 +941,20 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 20/49
   Restoring NuGet packages: Downloading NuGet packages 21/49
   Restoring NuGet packages: Downloading NuGet packages 22/49
-  Restoring NuGet packages: Downloading NuGet packages 24/49
   Restoring NuGet packages: Downloading NuGet packages 23/49
+  Restoring NuGet packages: Downloading NuGet packages 24/49
   Restoring NuGet packages: Downloading NuGet packages 25/49
   Restoring NuGet packages: Downloading NuGet packages 26/49
-  Restoring NuGet packages: Downloading NuGet packages 27/49
   Restoring NuGet packages: Downloading NuGet packages 28/49
+  Restoring NuGet packages: Downloading NuGet packages 27/49
   Restoring NuGet packages: Downloading NuGet packages 29/49
   Restoring NuGet packages: Downloading NuGet packages 30/49
   Restoring NuGet packages: Downloading NuGet packages 31/49
   Restoring NuGet packages: Downloading NuGet packages 32/49
-  Restoring NuGet packages: Downloading NuGet packages 33/49
   Restoring NuGet packages: Downloading NuGet packages 34/49
-  Restoring NuGet packages: Downloading NuGet packages 35/49
+  Restoring NuGet packages: Downloading NuGet packages 33/49
   Restoring NuGet packages: Downloading NuGet packages 36/49
+  Restoring NuGet packages: Downloading NuGet packages 35/49
   Restoring NuGet packages: Downloading NuGet packages 37/49
   Restoring NuGet packages: Downloading NuGet packages 38/49
   Restoring NuGet packages: Downloading NuGet packages 39/49
@@ -1015,7 +968,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
-  Analyzing: Analyzing 13/86 projects
   Restoring NuGet packages: Restoring NuGet packages 15/84 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
@@ -1067,7 +1019,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 16/84 projects
-  Analyzing: Analyzing 14/86 projects
+  Analyzing: Analyzing 8/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -1084,8 +1036,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 14/49
   Restoring NuGet packages: Downloading NuGet packages 15/49
   Restoring NuGet packages: Downloading NuGet packages 16/49
-  Restoring NuGet packages: Downloading NuGet packages 17/49
   Restoring NuGet packages: Downloading NuGet packages 18/49
+  Restoring NuGet packages: Downloading NuGet packages 17/49
   Restoring NuGet packages: Downloading NuGet packages 19/49
   Restoring NuGet packages: Downloading NuGet packages 20/49
   Restoring NuGet packages: Downloading NuGet packages 21/49
@@ -1168,7 +1120,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 18/84 projects
-  Analyzing: Analyzing 15/86 projects
+  Analyzing: Analyzing 9/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -1219,7 +1171,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 19/84 projects
-  Analyzing: Analyzing 16/86 projects
+  Analyzing: Analyzing 10/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -1270,18 +1222,18 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 20/84 projects
-  Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 1/49
-  Restoring NuGet packages: Downloading NuGet packages 4/49
+  Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
+  Restoring NuGet packages: Downloading NuGet packages 4/49
   Restoring NuGet packages: Downloading NuGet packages 5/49
   Restoring NuGet packages: Downloading NuGet packages 6/49
   Restoring NuGet packages: Downloading NuGet packages 7/49
   Restoring NuGet packages: Downloading NuGet packages 8/49
-  Restoring NuGet packages: Downloading NuGet packages 10/49
   Restoring NuGet packages: Downloading NuGet packages 9/49
-  Restoring NuGet packages: Downloading NuGet packages 12/49
+  Restoring NuGet packages: Downloading NuGet packages 10/49
   Restoring NuGet packages: Downloading NuGet packages 11/49
+  Restoring NuGet packages: Downloading NuGet packages 12/49
   Restoring NuGet packages: Downloading NuGet packages 13/49
   Restoring NuGet packages: Downloading NuGet packages 14/49
   Restoring NuGet packages: Downloading NuGet packages 15/49
@@ -1290,8 +1242,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 18/49
   Restoring NuGet packages: Downloading NuGet packages 19/49
   Restoring NuGet packages: Downloading NuGet packages 20/49
-  Restoring NuGet packages: Downloading NuGet packages 22/49
   Restoring NuGet packages: Downloading NuGet packages 21/49
+  Restoring NuGet packages: Downloading NuGet packages 22/49
   Restoring NuGet packages: Downloading NuGet packages 23/49
   Restoring NuGet packages: Downloading NuGet packages 24/49
   Restoring NuGet packages: Downloading NuGet packages 25/49
@@ -1320,6 +1272,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 21/84 projects
+  Analyzing: Analyzing 11/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -1369,7 +1322,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
-  Analyzing: Analyzing 17/86 projects
   Restoring NuGet packages: Restoring NuGet packages 22/84 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
@@ -1421,19 +1373,18 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 23/84 projects
-  Analyzing: Analyzing 18/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
-  Restoring NuGet packages: Downloading NuGet packages 4/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
+  Restoring NuGet packages: Downloading NuGet packages 4/49
   Restoring NuGet packages: Downloading NuGet packages 5/49
   Restoring NuGet packages: Downloading NuGet packages 6/49
-  Restoring NuGet packages: Downloading NuGet packages 8/49
   Restoring NuGet packages: Downloading NuGet packages 7/49
+  Restoring NuGet packages: Downloading NuGet packages 8/49
   Restoring NuGet packages: Downloading NuGet packages 9/49
   Restoring NuGet packages: Downloading NuGet packages 10/49
-  Restoring NuGet packages: Downloading NuGet packages 12/49
   Restoring NuGet packages: Downloading NuGet packages 11/49
+  Restoring NuGet packages: Downloading NuGet packages 12/49
   Restoring NuGet packages: Downloading NuGet packages 13/49
   Restoring NuGet packages: Downloading NuGet packages 14/49
   Restoring NuGet packages: Downloading NuGet packages 15/49
@@ -1456,14 +1407,14 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 32/49
   Restoring NuGet packages: Downloading NuGet packages 33/49
   Restoring NuGet packages: Downloading NuGet packages 34/49
-  Restoring NuGet packages: Downloading NuGet packages 36/49
   Restoring NuGet packages: Downloading NuGet packages 35/49
-  Restoring NuGet packages: Downloading NuGet packages 38/49
+  Restoring NuGet packages: Downloading NuGet packages 36/49
   Restoring NuGet packages: Downloading NuGet packages 37/49
+  Restoring NuGet packages: Downloading NuGet packages 38/49
   Restoring NuGet packages: Downloading NuGet packages 39/49
   Restoring NuGet packages: Downloading NuGet packages 40/49
-  Restoring NuGet packages: Downloading NuGet packages 42/49
   Restoring NuGet packages: Downloading NuGet packages 41/49
+  Restoring NuGet packages: Downloading NuGet packages 42/49
   Restoring NuGet packages: Downloading NuGet packages 43/49
   Restoring NuGet packages: Downloading NuGet packages 44/49
   Restoring NuGet packages: Downloading NuGet packages 45/49
@@ -1471,6 +1422,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
+  Analyzing: Analyzing 12/86 projects
   Restoring NuGet packages: Restoring NuGet packages 24/84 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
@@ -1522,7 +1474,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 25/84 projects
-  Analyzing: Analyzing 19/86 projects
+  Analyzing: Analyzing 13/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -1623,10 +1575,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 27/84 projects
-  Analyzing: Analyzing 20/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
-  Restoring NuGet packages: Downloading NuGet packages 2/49
-  Restoring NuGet packages: Downloading NuGet packages 3/49
   Restoring NuGet packages: Downloading NuGet packages 4/49
   Restoring NuGet packages: Downloading NuGet packages 5/49
   Restoring NuGet packages: Downloading NuGet packages 6/49
@@ -1673,6 +1622,9 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
+  Restoring NuGet packages: Downloading NuGet packages 2/49
+  Restoring NuGet packages: Downloading NuGet packages 3/49
+  Analyzing: Analyzing 14/86 projects
   Restoring NuGet packages: Restoring NuGet packages 28/84 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
@@ -1720,15 +1672,14 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 44/49
   Restoring NuGet packages: Downloading NuGet packages 45/49
   Restoring NuGet packages: Downloading NuGet packages 46/49
-  Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
+  Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 29/84 projects
-  Analyzing: Analyzing 21/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
-  Restoring NuGet packages: Downloading NuGet packages 3/49
   Restoring NuGet packages: Downloading NuGet packages 4/49
+  Restoring NuGet packages: Downloading NuGet packages 3/49
   Restoring NuGet packages: Downloading NuGet packages 5/49
   Restoring NuGet packages: Downloading NuGet packages 6/49
   Restoring NuGet packages: Downloading NuGet packages 7/49
@@ -1749,12 +1700,12 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 22/49
   Restoring NuGet packages: Downloading NuGet packages 23/49
   Restoring NuGet packages: Downloading NuGet packages 24/49
-  Restoring NuGet packages: Downloading NuGet packages 25/49
   Restoring NuGet packages: Downloading NuGet packages 26/49
+  Restoring NuGet packages: Downloading NuGet packages 25/49
   Restoring NuGet packages: Downloading NuGet packages 27/49
   Restoring NuGet packages: Downloading NuGet packages 28/49
-  Restoring NuGet packages: Downloading NuGet packages 29/49
   Restoring NuGet packages: Downloading NuGet packages 30/49
+  Restoring NuGet packages: Downloading NuGet packages 29/49
   Restoring NuGet packages: Downloading NuGet packages 31/49
   Restoring NuGet packages: Downloading NuGet packages 32/49
   Restoring NuGet packages: Downloading NuGet packages 33/49
@@ -1775,6 +1726,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 30/84 projects
+  Analyzing: Analyzing 15/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -1825,11 +1777,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 31/84 projects
-  Analyzing: Analyzing 22/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
-  Restoring NuGet packages: Downloading NuGet packages 2/49
-  Restoring NuGet packages: Downloading NuGet packages 3/49
-  Restoring NuGet packages: Downloading NuGet packages 4/49
   Restoring NuGet packages: Downloading NuGet packages 5/49
   Restoring NuGet packages: Downloading NuGet packages 6/49
   Restoring NuGet packages: Downloading NuGet packages 7/49
@@ -1875,7 +1823,11 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
+  Restoring NuGet packages: Downloading NuGet packages 2/49
+  Restoring NuGet packages: Downloading NuGet packages 3/49
+  Restoring NuGet packages: Downloading NuGet packages 4/49
   Restoring NuGet packages: Restoring NuGet packages 32/84 projects
+  Analyzing: Analyzing 16/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -1926,10 +1878,9 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 33/84 projects
-  Analyzing: Analyzing 23/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
-  Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
+  Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 4/49
   Restoring NuGet packages: Downloading NuGet packages 5/49
   Restoring NuGet packages: Downloading NuGet packages 6/49
@@ -1976,10 +1927,11 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
+  Analyzing: Analyzing 17/86 projects
   Restoring NuGet packages: Restoring NuGet packages 34/84 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
-  Restoring NuGet packages: Downloading NuGet packages 3/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
+  Restoring NuGet packages: Downloading NuGet packages 3/49
   Restoring NuGet packages: Downloading NuGet packages 4/49
   Restoring NuGet packages: Downloading NuGet packages 5/49
   Restoring NuGet packages: Downloading NuGet packages 6/49
@@ -2027,7 +1979,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 35/84 projects
-  Analyzing: Analyzing 24/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -2077,8 +2028,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/49
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
+  Analyzing: Analyzing 18/86 projects
   Restoring NuGet packages: Restoring NuGet packages 36/84 projects
-  Analyzing: Analyzing 25/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -2129,7 +2080,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 37/84 projects
-  Analyzing: Analyzing 26/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -2180,7 +2130,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 38/84 projects
-  Analyzing: Analyzing 27/86 projects
+  Analyzing: Analyzing 19/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -2213,8 +2163,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 30/49
   Restoring NuGet packages: Downloading NuGet packages 31/49
   Restoring NuGet packages: Downloading NuGet packages 32/49
-  Restoring NuGet packages: Downloading NuGet packages 33/49
   Restoring NuGet packages: Downloading NuGet packages 34/49
+  Restoring NuGet packages: Downloading NuGet packages 33/49
   Restoring NuGet packages: Downloading NuGet packages 35/49
   Restoring NuGet packages: Downloading NuGet packages 36/49
   Restoring NuGet packages: Downloading NuGet packages 37/49
@@ -2231,7 +2181,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 39/84 projects
-  Analyzing: Analyzing 28/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -2282,7 +2231,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 40/84 projects
-  Analyzing: Analyzing 29/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -2296,8 +2244,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 11/49
   Restoring NuGet packages: Downloading NuGet packages 12/49
   Restoring NuGet packages: Downloading NuGet packages 13/49
-  Restoring NuGet packages: Downloading NuGet packages 14/49
   Restoring NuGet packages: Downloading NuGet packages 15/49
+  Restoring NuGet packages: Downloading NuGet packages 14/49
   Restoring NuGet packages: Downloading NuGet packages 16/49
   Restoring NuGet packages: Downloading NuGet packages 17/49
   Restoring NuGet packages: Downloading NuGet packages 18/49
@@ -2333,7 +2281,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 41/84 projects
-  Analyzing: Analyzing 30/86 projects
+  Analyzing: Analyzing 20/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -2384,9 +2332,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 42/84 projects
-  Analyzing: Analyzing 31/86 projects
-  Analyzing: Analyzing 32/86 projects
-  Analyzing: Analyzing 33/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/48
   Restoring NuGet packages: Downloading NuGet packages 2/48
   Restoring NuGet packages: Downloading NuGet packages 3/48
@@ -2436,9 +2381,9 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/48
   Restoring NuGet packages: Downloading NuGet packages 48/48
   Restoring NuGet packages: Restoring NuGet packages 43/84 projects
-  Analyzing: Analyzing 34/86 projects
-  Restoring NuGet packages: Downloading NuGet packages 2/48
+  Analyzing: Analyzing 21/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/48
+  Restoring NuGet packages: Downloading NuGet packages 2/48
   Restoring NuGet packages: Downloading NuGet packages 3/48
   Restoring NuGet packages: Downloading NuGet packages 4/48
   Restoring NuGet packages: Downloading NuGet packages 5/48
@@ -2478,16 +2423,14 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 39/48
   Restoring NuGet packages: Downloading NuGet packages 40/48
   Restoring NuGet packages: Downloading NuGet packages 41/48
-  Restoring NuGet packages: Downloading NuGet packages 43/48
   Restoring NuGet packages: Downloading NuGet packages 42/48
+  Restoring NuGet packages: Downloading NuGet packages 43/48
   Restoring NuGet packages: Downloading NuGet packages 44/48
   Restoring NuGet packages: Downloading NuGet packages 45/48
   Restoring NuGet packages: Downloading NuGet packages 46/48
   Restoring NuGet packages: Downloading NuGet packages 47/48
   Restoring NuGet packages: Downloading NuGet packages 48/48
   Restoring NuGet packages: Restoring NuGet packages 44/84 projects
-  Analyzing: Analyzing 35/86 projects
-  Analyzing: Analyzing 36/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/49
   Restoring NuGet packages: Downloading NuGet packages 2/49
   Restoring NuGet packages: Downloading NuGet packages 3/49
@@ -2538,10 +2481,9 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 48/49
   Restoring NuGet packages: Downloading NuGet packages 49/49
   Restoring NuGet packages: Restoring NuGet packages 45/84 projects
-  Analyzing: Analyzing 37/86 projects
+  Analyzing: Analyzing 22/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/60
   Restoring NuGet packages: Downloading NuGet packages 2/60
-  Analyzing: Analyzing 38/86 projects
   Restoring NuGet packages: Downloading NuGet packages 3/60
   Restoring NuGet packages: Downloading NuGet packages 4/60
   Restoring NuGet packages: Downloading NuGet packages 5/60
@@ -2593,17 +2535,16 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 51/60
   Restoring NuGet packages: Downloading NuGet packages 52/60
   Restoring NuGet packages: Downloading NuGet packages 53/60
-  Analyzing: Analyzing 39/86 projects
   Restoring NuGet packages: Downloading NuGet packages 54/60
+  Analyzing: Analyzing 23/86 projects
   Restoring NuGet packages: Downloading NuGet packages 55/60
   Restoring NuGet packages: Downloading NuGet packages 56/60
   Restoring NuGet packages: Downloading NuGet packages 57/60
   Restoring NuGet packages: Downloading NuGet packages 58/60
-  Analyzing: Analyzing 40/86 projects
   Restoring NuGet packages: Downloading NuGet packages 59/60
   Restoring NuGet packages: Downloading NuGet packages 60/60
-  Analyzing: Analyzing 41/86 projects
   Restoring NuGet packages: Restoring NuGet packages 46/84 projects
+  Analyzing: Analyzing 24/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/48
   Restoring NuGet packages: Downloading NuGet packages 2/48
   Restoring NuGet packages: Downloading NuGet packages 3/48
@@ -2653,7 +2594,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/48
   Restoring NuGet packages: Downloading NuGet packages 48/48
   Restoring NuGet packages: Restoring NuGet packages 47/84 projects
-  Analyzing: Analyzing 42/86 projects
+  Analyzing: Analyzing 25/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/48
   Restoring NuGet packages: Downloading NuGet packages 2/48
   Restoring NuGet packages: Downloading NuGet packages 3/48
@@ -2703,8 +2644,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/48
   Restoring NuGet packages: Downloading NuGet packages 48/48
   Restoring NuGet packages: Restoring NuGet packages 48/84 projects
-  Analyzing: Analyzing 43/86 projects
-  Analyzing: Analyzing 44/86 projects
+  Analyzing: Analyzing 26/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/48
   Restoring NuGet packages: Downloading NuGet packages 2/48
   Restoring NuGet packages: Downloading NuGet packages 3/48
@@ -2754,21 +2694,19 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 47/48
   Restoring NuGet packages: Downloading NuGet packages 48/48
   Restoring NuGet packages: Restoring NuGet packages 49/84 projects
-  Analyzing: Analyzing 45/86 projects
-  Analyzing: Analyzing 46/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/48
   Restoring NuGet packages: Downloading NuGet packages 2/48
   Restoring NuGet packages: Downloading NuGet packages 3/48
   Restoring NuGet packages: Downloading NuGet packages 4/48
   Restoring NuGet packages: Downloading NuGet packages 5/48
-  Restoring NuGet packages: Downloading NuGet packages 7/48
   Restoring NuGet packages: Downloading NuGet packages 6/48
-  Restoring NuGet packages: Downloading NuGet packages 9/48
+  Restoring NuGet packages: Downloading NuGet packages 7/48
   Restoring NuGet packages: Downloading NuGet packages 8/48
+  Restoring NuGet packages: Downloading NuGet packages 9/48
   Restoring NuGet packages: Downloading NuGet packages 10/48
   Restoring NuGet packages: Downloading NuGet packages 11/48
-  Restoring NuGet packages: Downloading NuGet packages 13/48
   Restoring NuGet packages: Downloading NuGet packages 12/48
+  Restoring NuGet packages: Downloading NuGet packages 13/48
   Restoring NuGet packages: Downloading NuGet packages 14/48
   Restoring NuGet packages: Downloading NuGet packages 15/48
   Restoring NuGet packages: Downloading NuGet packages 16/48
@@ -2781,14 +2719,14 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 23/48
   Restoring NuGet packages: Downloading NuGet packages 24/48
   Restoring NuGet packages: Downloading NuGet packages 25/48
-  Restoring NuGet packages: Downloading NuGet packages 27/48
   Restoring NuGet packages: Downloading NuGet packages 26/48
+  Restoring NuGet packages: Downloading NuGet packages 27/48
   Restoring NuGet packages: Downloading NuGet packages 28/48
   Restoring NuGet packages: Downloading NuGet packages 29/48
   Restoring NuGet packages: Downloading NuGet packages 30/48
   Restoring NuGet packages: Downloading NuGet packages 31/48
-  Restoring NuGet packages: Downloading NuGet packages 33/48
   Restoring NuGet packages: Downloading NuGet packages 32/48
+  Restoring NuGet packages: Downloading NuGet packages 33/48
   Restoring NuGet packages: Downloading NuGet packages 34/48
   Restoring NuGet packages: Downloading NuGet packages 35/48
   Restoring NuGet packages: Downloading NuGet packages 36/48
@@ -2804,18 +2742,9 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 46/48
   Restoring NuGet packages: Downloading NuGet packages 47/48
   Restoring NuGet packages: Downloading NuGet packages 48/48
-  Analyzing: Analyzing 47/86 projects
   Restoring NuGet packages: Restoring NuGet packages 50/84 projects
-  Analyzing: Analyzing 48/86 projects
-  Analyzing: Analyzing 49/86 projects
-  Analyzing: Analyzing 50/86 projects
-  Analyzing: Analyzing 51/86 projects
-  Analyzing: Analyzing 52/86 projects
-  Analyzing: Analyzing 53/86 projects
-  Analyzing: Analyzing 54/86 projects
-  Analyzing: Analyzing 55/86 projects
-  Analyzing: Analyzing 56/86 projects
-  Analyzing: Analyzing 57/86 projects
+  Analyzing: Analyzing 27/86 projects
+  Analyzing: Analyzing 28/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/63
   Restoring NuGet packages: Downloading NuGet packages 2/63
   Restoring NuGet packages: Downloading NuGet packages 3/63
@@ -2846,13 +2775,9 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 28/63
   Restoring NuGet packages: Downloading NuGet packages 29/63
   Restoring NuGet packages: Downloading NuGet packages 30/63
-  Analyzing: Analyzing 58/86 projects
   Restoring NuGet packages: Downloading NuGet packages 31/63
   Restoring NuGet packages: Downloading NuGet packages 32/63
   Restoring NuGet packages: Downloading NuGet packages 33/63
-  Analyzing: Analyzing 59/86 projects
-  Analyzing: Analyzing 60/86 projects
-  Analyzing: Analyzing 61/86 projects
   Restoring NuGet packages: Downloading NuGet packages 34/63
   Restoring NuGet packages: Downloading NuGet packages 35/63
   Restoring NuGet packages: Downloading NuGet packages 36/63
@@ -2878,19 +2803,13 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 56/63
   Restoring NuGet packages: Downloading NuGet packages 57/63
   Restoring NuGet packages: Downloading NuGet packages 58/63
-  Analyzing: Analyzing 62/86 projects
   Restoring NuGet packages: Downloading NuGet packages 59/63
   Restoring NuGet packages: Downloading NuGet packages 60/63
-  Analyzing: Analyzing 63/86 projects
   Restoring NuGet packages: Downloading NuGet packages 61/63
   Restoring NuGet packages: Downloading NuGet packages 62/63
-  Analyzing: Analyzing 64/86 projects
-  Analyzing: Analyzing 65/86 projects
   Restoring NuGet packages: Downloading NuGet packages 63/63
-  Analyzing: Analyzing 66/86 projects
   Restoring NuGet packages: Restoring NuGet packages 51/84 projects
-  Analyzing: Analyzing 67/86 projects
-  Analyzing: Analyzing 68/86 projects
+  Analyzing: Analyzing 29/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/58
   Restoring NuGet packages: Downloading NuGet packages 2/58
   Restoring NuGet packages: Downloading NuGet packages 3/58
@@ -2929,8 +2848,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 36/58
   Restoring NuGet packages: Downloading NuGet packages 37/58
   Restoring NuGet packages: Downloading NuGet packages 38/58
-  Analyzing: Analyzing 69/86 projects
   Restoring NuGet packages: Downloading NuGet packages 39/58
+  Analyzing: Analyzing 30/86 projects
   Restoring NuGet packages: Downloading NuGet packages 40/58
   Restoring NuGet packages: Downloading NuGet packages 41/58
   Restoring NuGet packages: Downloading NuGet packages 42/58
@@ -2950,10 +2869,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 56/58
   Restoring NuGet packages: Downloading NuGet packages 57/58
   Restoring NuGet packages: Downloading NuGet packages 58/58
-  Analyzing: Analyzing 70/86 projects
   Restoring NuGet packages: Restoring NuGet packages 52/84 projects
-  Analyzing: Analyzing 71/86 projects
-  Analyzing: Analyzing 72/86 projects
+  Analyzing: Analyzing 31/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/57
   Restoring NuGet packages: Downloading NuGet packages 2/57
   Restoring NuGet packages: Downloading NuGet packages 3/57
@@ -2992,7 +2909,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 36/57
   Restoring NuGet packages: Downloading NuGet packages 37/57
   Restoring NuGet packages: Downloading NuGet packages 38/57
-  Analyzing: Analyzing 73/86 projects
   Restoring NuGet packages: Downloading NuGet packages 39/57
   Restoring NuGet packages: Downloading NuGet packages 40/57
   Restoring NuGet packages: Downloading NuGet packages 41/57
@@ -3011,9 +2927,11 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 54/57
   Restoring NuGet packages: Downloading NuGet packages 55/57
   Restoring NuGet packages: Downloading NuGet packages 56/57
+  Analyzing: Analyzing 32/86 projects
   Restoring NuGet packages: Downloading NuGet packages 57/57
-  Analyzing: Analyzing 74/86 projects
   Restoring NuGet packages: Restoring NuGet packages 53/84 projects
+  Analyzing: Analyzing 33/86 projects
+  Analyzing: Analyzing 34/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/58
   Restoring NuGet packages: Downloading NuGet packages 2/58
   Restoring NuGet packages: Downloading NuGet packages 3/58
@@ -3037,8 +2955,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 21/58
   Restoring NuGet packages: Downloading NuGet packages 22/58
   Restoring NuGet packages: Downloading NuGet packages 23/58
-  Restoring NuGet packages: Downloading NuGet packages 25/58
   Restoring NuGet packages: Downloading NuGet packages 24/58
+  Restoring NuGet packages: Downloading NuGet packages 25/58
   Restoring NuGet packages: Downloading NuGet packages 26/58
   Restoring NuGet packages: Downloading NuGet packages 27/58
   Restoring NuGet packages: Downloading NuGet packages 28/58
@@ -3068,19 +2986,13 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 52/58
   Restoring NuGet packages: Downloading NuGet packages 53/58
   Restoring NuGet packages: Downloading NuGet packages 54/58
-  Analyzing: Analyzing 75/86 projects
   Restoring NuGet packages: Downloading NuGet packages 55/58
-  Analyzing: Analyzing 76/86 projects
   Restoring NuGet packages: Downloading NuGet packages 56/58
   Restoring NuGet packages: Downloading NuGet packages 57/58
   Restoring NuGet packages: Downloading NuGet packages 58/58
   Restoring NuGet packages: Restoring NuGet packages 54/84 projects
-  Analyzing: Analyzing 77/86 projects
-  Analyzing: Analyzing 78/86 projects
-  Analyzing: Analyzing 79/86 projects
-  Analyzing: Analyzing 80/86 projects
-  Analyzing: Analyzing 81/86 projects
-  Analyzing: Analyzing 82/86 projects
+  Analyzing: Analyzing 35/86 projects
+  Analyzing: Analyzing 36/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/39
   Restoring NuGet packages: Downloading NuGet packages 2/39
   Restoring NuGet packages: Downloading NuGet packages 3/39
@@ -3097,7 +3009,6 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 14/39
   Restoring NuGet packages: Downloading NuGet packages 15/39
   Restoring NuGet packages: Downloading NuGet packages 16/39
-  Analyzing: Analyzing 83/86 projects
   Restoring NuGet packages: Downloading NuGet packages 17/39
   Restoring NuGet packages: Downloading NuGet packages 18/39
   Restoring NuGet packages: Downloading NuGet packages 19/39
@@ -3120,15 +3031,12 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 36/39
   Restoring NuGet packages: Downloading NuGet packages 37/39
   Restoring NuGet packages: Downloading NuGet packages 38/39
-  Analyzing: Analyzing 84/86 projects
-  Analyzing: Analyzing 85/86 projects
   Restoring NuGet packages: Downloading NuGet packages 39/39
+  Analyzing: Analyzing 37/86 projects
   Restoring NuGet packages: Restoring NuGet packages 55/84 projects
-  Analyzing: Analyzing 86/86 projects
-  Analyzing: Succeeded after 31.7 s
   Restoring NuGet packages: Downloading NuGet packages 1/14
-  Restoring NuGet packages: Downloading NuGet packages 3/14
   Restoring NuGet packages: Downloading NuGet packages 2/14
+  Restoring NuGet packages: Downloading NuGet packages 3/14
   Restoring NuGet packages: Downloading NuGet packages 4/14
   Restoring NuGet packages: Downloading NuGet packages 5/14
   Restoring NuGet packages: Downloading NuGet packages 6/14
@@ -3156,6 +3064,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 13/14
   Restoring NuGet packages: Downloading NuGet packages 14/14
   Restoring NuGet packages: Restoring NuGet packages 57/84 projects
+  Analyzing: Analyzing 38/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/12
   Restoring NuGet packages: Downloading NuGet packages 2/12
   Restoring NuGet packages: Downloading NuGet packages 3/12
@@ -3182,12 +3091,14 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 11/12
   Restoring NuGet packages: Downloading NuGet packages 12/12
   Restoring NuGet packages: Restoring NuGet packages 59/84 projects
+  Analyzing: Analyzing 39/86 projects
+  Analyzing: Analyzing 40/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/12
   Restoring NuGet packages: Downloading NuGet packages 2/12
   Restoring NuGet packages: Downloading NuGet packages 3/12
   Restoring NuGet packages: Downloading NuGet packages 4/12
-  Restoring NuGet packages: Downloading NuGet packages 6/12
   Restoring NuGet packages: Downloading NuGet packages 5/12
+  Restoring NuGet packages: Downloading NuGet packages 6/12
   Restoring NuGet packages: Downloading NuGet packages 7/12
   Restoring NuGet packages: Downloading NuGet packages 8/12
   Restoring NuGet packages: Downloading NuGet packages 9/12
@@ -3195,7 +3106,11 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 11/12
   Restoring NuGet packages: Downloading NuGet packages 12/12
   Restoring NuGet packages: Restoring NuGet packages 60/84 projects
+  Analyzing: Analyzing 41/86 projects
+  Analyzing: Analyzing 42/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/52
+  Analyzing: Analyzing 43/86 projects
+  Analyzing: Analyzing 44/86 projects
   Restoring NuGet packages: Downloading NuGet packages 2/52
   Restoring NuGet packages: Downloading NuGet packages 3/52
   Restoring NuGet packages: Downloading NuGet packages 4/52
@@ -3207,17 +3122,21 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 10/52
   Restoring NuGet packages: Downloading NuGet packages 11/52
   Restoring NuGet packages: Downloading NuGet packages 12/52
+  Analyzing: Analyzing 45/86 projects
   Restoring NuGet packages: Downloading NuGet packages 13/52
   Restoring NuGet packages: Downloading NuGet packages 14/52
   Restoring NuGet packages: Downloading NuGet packages 15/52
   Restoring NuGet packages: Downloading NuGet packages 16/52
+  Analyzing: Analyzing 46/86 projects
   Restoring NuGet packages: Downloading NuGet packages 17/52
+  Analyzing: Analyzing 47/86 projects
   Restoring NuGet packages: Downloading NuGet packages 18/52
   Restoring NuGet packages: Downloading NuGet packages 19/52
   Restoring NuGet packages: Downloading NuGet packages 20/52
   Restoring NuGet packages: Downloading NuGet packages 21/52
   Restoring NuGet packages: Downloading NuGet packages 22/52
   Restoring NuGet packages: Downloading NuGet packages 23/52
+  Analyzing: Analyzing 48/86 projects
   Restoring NuGet packages: Downloading NuGet packages 24/52
   Restoring NuGet packages: Downloading NuGet packages 25/52
   Restoring NuGet packages: Downloading NuGet packages 26/52
@@ -3226,8 +3145,10 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 29/52
   Restoring NuGet packages: Downloading NuGet packages 30/52
   Restoring NuGet packages: Downloading NuGet packages 31/52
+  Analyzing: Analyzing 49/86 projects
   Restoring NuGet packages: Downloading NuGet packages 32/52
   Restoring NuGet packages: Downloading NuGet packages 33/52
+  Analyzing: Analyzing 50/86 projects
   Restoring NuGet packages: Downloading NuGet packages 34/52
   Restoring NuGet packages: Downloading NuGet packages 35/52
   Restoring NuGet packages: Downloading NuGet packages 36/52
@@ -3240,6 +3161,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 43/52
   Restoring NuGet packages: Downloading NuGet packages 44/52
   Restoring NuGet packages: Downloading NuGet packages 45/52
+  Analyzing: Analyzing 51/86 projects
   Restoring NuGet packages: Downloading NuGet packages 46/52
   Restoring NuGet packages: Downloading NuGet packages 47/52
   Restoring NuGet packages: Downloading NuGet packages 48/52
@@ -3247,7 +3169,10 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 50/52
   Restoring NuGet packages: Downloading NuGet packages 51/52
   Restoring NuGet packages: Downloading NuGet packages 52/52
+  Analyzing: Analyzing 52/86 projects
   Restoring NuGet packages: Restoring NuGet packages 61/84 projects
+  Analyzing: Analyzing 53/86 projects
+  Analyzing: Analyzing 54/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/52
   Restoring NuGet packages: Downloading NuGet packages 2/52
   Restoring NuGet packages: Downloading NuGet packages 3/52
@@ -3272,8 +3197,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 22/52
   Restoring NuGet packages: Downloading NuGet packages 23/52
   Restoring NuGet packages: Downloading NuGet packages 24/52
-  Restoring NuGet packages: Downloading NuGet packages 26/52
   Restoring NuGet packages: Downloading NuGet packages 25/52
+  Restoring NuGet packages: Downloading NuGet packages 26/52
   Restoring NuGet packages: Downloading NuGet packages 27/52
   Restoring NuGet packages: Downloading NuGet packages 28/52
   Restoring NuGet packages: Downloading NuGet packages 29/52
@@ -3300,6 +3225,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 50/52
   Restoring NuGet packages: Downloading NuGet packages 51/52
   Restoring NuGet packages: Downloading NuGet packages 52/52
+  Analyzing: Analyzing 55/86 projects
   Restoring NuGet packages: Restoring NuGet packages 62/84 projects
   Restoring NuGet packages: Downloading NuGet packages 1/42
   Restoring NuGet packages: Downloading NuGet packages 2/42
@@ -3340,8 +3266,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 37/42
   Restoring NuGet packages: Downloading NuGet packages 38/42
   Restoring NuGet packages: Downloading NuGet packages 39/42
-  Restoring NuGet packages: Downloading NuGet packages 41/42
   Restoring NuGet packages: Downloading NuGet packages 40/42
+  Restoring NuGet packages: Downloading NuGet packages 41/42
   Restoring NuGet packages: Downloading NuGet packages 42/42
   Restoring NuGet packages: Restoring NuGet packages 63/84 projects
   Restoring NuGet packages: Downloading NuGet packages 1/33
@@ -3376,6 +3302,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 30/33
   Restoring NuGet packages: Downloading NuGet packages 31/33
   Restoring NuGet packages: Downloading NuGet packages 32/33
+  Analyzing: Analyzing 56/86 projects
   Restoring NuGet packages: Downloading NuGet packages 33/33
   Restoring NuGet packages: Restoring NuGet packages 64/84 projects
   Restoring NuGet packages: Downloading NuGet packages 1/30
@@ -3436,8 +3363,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 25/33
   Restoring NuGet packages: Downloading NuGet packages 26/33
   Restoring NuGet packages: Downloading NuGet packages 27/33
-  Restoring NuGet packages: Downloading NuGet packages 29/33
   Restoring NuGet packages: Downloading NuGet packages 28/33
+  Restoring NuGet packages: Downloading NuGet packages 29/33
   Restoring NuGet packages: Downloading NuGet packages 30/33
   Restoring NuGet packages: Downloading NuGet packages 31/33
   Restoring NuGet packages: Downloading NuGet packages 32/33
@@ -3455,13 +3382,23 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 10/11
   Restoring NuGet packages: Downloading NuGet packages 11/11
   Restoring NuGet packages: Restoring NuGet packages 67/84 projects
+  Analyzing: Analyzing 57/86 projects
+  Analyzing: Analyzing 58/86 projects
+  Analyzing: Analyzing 59/86 projects
+  Analyzing: Analyzing 60/86 projects
+  Analyzing: Analyzing 61/86 projects
+  Analyzing: Analyzing 62/86 projects
+  Analyzing: Analyzing 63/86 projects
+  Analyzing: Analyzing 64/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/55
   Restoring NuGet packages: Downloading NuGet packages 2/55
   Restoring NuGet packages: Downloading NuGet packages 3/55
   Restoring NuGet packages: Downloading NuGet packages 4/55
   Restoring NuGet packages: Downloading NuGet packages 5/55
-  Restoring NuGet packages: Downloading NuGet packages 7/55
+  Analyzing: Analyzing 65/86 projects
+  Analyzing: Analyzing 66/86 projects
   Restoring NuGet packages: Downloading NuGet packages 6/55
+  Restoring NuGet packages: Downloading NuGet packages 7/55
   Restoring NuGet packages: Downloading NuGet packages 8/55
   Restoring NuGet packages: Downloading NuGet packages 9/55
   Restoring NuGet packages: Downloading NuGet packages 10/55
@@ -3475,12 +3412,14 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 18/55
   Restoring NuGet packages: Downloading NuGet packages 19/55
   Restoring NuGet packages: Downloading NuGet packages 20/55
+  Analyzing: Analyzing 67/86 projects
   Restoring NuGet packages: Downloading NuGet packages 21/55
   Restoring NuGet packages: Downloading NuGet packages 22/55
   Restoring NuGet packages: Downloading NuGet packages 23/55
   Restoring NuGet packages: Downloading NuGet packages 24/55
   Restoring NuGet packages: Downloading NuGet packages 25/55
   Restoring NuGet packages: Downloading NuGet packages 26/55
+  Analyzing: Analyzing 68/86 projects
   Restoring NuGet packages: Downloading NuGet packages 27/55
   Restoring NuGet packages: Downloading NuGet packages 28/55
   Restoring NuGet packages: Downloading NuGet packages 29/55
@@ -3545,7 +3484,9 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 32/34
   Restoring NuGet packages: Downloading NuGet packages 33/34
   Restoring NuGet packages: Downloading NuGet packages 34/34
+  Analyzing: Analyzing 69/86 projects
   Restoring NuGet packages: Restoring NuGet packages 69/84 projects
+  Analyzing: Analyzing 70/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/21
   Restoring NuGet packages: Downloading NuGet packages 2/21
   Restoring NuGet packages: Downloading NuGet packages 3/21
@@ -3567,10 +3508,11 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 19/21
   Restoring NuGet packages: Downloading NuGet packages 20/21
   Restoring NuGet packages: Downloading NuGet packages 21/21
+  Analyzing: Analyzing 71/86 projects
   Restoring NuGet packages: Restoring NuGet packages 70/84 projects
   Restoring NuGet packages: Downloading NuGet packages 1/37
-  Restoring NuGet packages: Downloading NuGet packages 3/37
   Restoring NuGet packages: Downloading NuGet packages 2/37
+  Restoring NuGet packages: Downloading NuGet packages 3/37
   Restoring NuGet packages: Downloading NuGet packages 4/37
   Restoring NuGet packages: Downloading NuGet packages 5/37
   Restoring NuGet packages: Downloading NuGet packages 6/37
@@ -3627,14 +3569,15 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 19/21
   Restoring NuGet packages: Downloading NuGet packages 20/21
   Restoring NuGet packages: Downloading NuGet packages 21/21
+  Analyzing: Analyzing 72/86 projects
   Restoring NuGet packages: Restoring NuGet packages 72/84 projects
   Restoring NuGet packages: Downloading NuGet packages 1/22
   Restoring NuGet packages: Downloading NuGet packages 2/22
   Restoring NuGet packages: Downloading NuGet packages 3/22
   Restoring NuGet packages: Downloading NuGet packages 4/22
   Restoring NuGet packages: Downloading NuGet packages 5/22
-  Restoring NuGet packages: Downloading NuGet packages 7/22
   Restoring NuGet packages: Downloading NuGet packages 6/22
+  Restoring NuGet packages: Downloading NuGet packages 7/22
   Restoring NuGet packages: Downloading NuGet packages 8/22
   Restoring NuGet packages: Downloading NuGet packages 9/22
   Restoring NuGet packages: Downloading NuGet packages 10/22
@@ -3662,8 +3605,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 9/36
   Restoring NuGet packages: Downloading NuGet packages 10/36
   Restoring NuGet packages: Downloading NuGet packages 11/36
-  Restoring NuGet packages: Downloading NuGet packages 13/36
   Restoring NuGet packages: Downloading NuGet packages 12/36
+  Restoring NuGet packages: Downloading NuGet packages 13/36
   Restoring NuGet packages: Downloading NuGet packages 14/36
   Restoring NuGet packages: Downloading NuGet packages 15/36
   Restoring NuGet packages: Downloading NuGet packages 16/36
@@ -3697,7 +3640,9 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 7/11
   Restoring NuGet packages: Downloading NuGet packages 8/11
   Restoring NuGet packages: Downloading NuGet packages 9/11
+  Analyzing: Analyzing 73/86 projects
   Restoring NuGet packages: Downloading NuGet packages 10/11
+  Analyzing: Analyzing 74/86 projects
   Restoring NuGet packages: Downloading NuGet packages 11/11
   Restoring NuGet packages: Restoring NuGet packages 75/84 projects
   Restoring NuGet packages: Downloading NuGet packages 1/11
@@ -3748,8 +3693,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 12/25
   Restoring NuGet packages: Downloading NuGet packages 13/25
   Restoring NuGet packages: Downloading NuGet packages 14/25
-  Restoring NuGet packages: Downloading NuGet packages 16/25
   Restoring NuGet packages: Downloading NuGet packages 15/25
+  Restoring NuGet packages: Downloading NuGet packages 16/25
   Restoring NuGet packages: Downloading NuGet packages 17/25
   Restoring NuGet packages: Downloading NuGet packages 18/25
   Restoring NuGet packages: Downloading NuGet packages 19/25
@@ -3760,6 +3705,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 24/25
   Restoring NuGet packages: Downloading NuGet packages 25/25
   Restoring NuGet packages: Restoring NuGet packages 78/84 projects
+  Analyzing: Analyzing 75/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/26
   Restoring NuGet packages: Downloading NuGet packages 2/26
   Restoring NuGet packages: Downloading NuGet packages 3/26
@@ -3827,6 +3773,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 11/12
   Restoring NuGet packages: Downloading NuGet packages 12/12
   Restoring NuGet packages: Restoring NuGet packages 82/84 projects
+  Analyzing: Analyzing 76/86 projects
   Restoring NuGet packages: Downloading NuGet packages 1/12
   Restoring NuGet packages: Downloading NuGet packages 2/12
   Restoring NuGet packages: Downloading NuGet packages 3/12
@@ -3852,7 +3799,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 10/12
   Restoring NuGet packages: Downloading NuGet packages 11/12
   Restoring NuGet packages: Downloading NuGet packages 12/12
-  Restoring NuGet packages: Succeeded after 39.1 s
+  Restoring NuGet packages: Succeeded after 55.5 s
+  Analyzing: Cancelled after 55.4 s
   Analyzing: Analyzing 0/86 projects
   Analyzing: Analyzing 1/86 projects
   Analyzing: Analyzing 2/86 projects
@@ -3940,7 +3888,7 @@ Long-operation progress:
   Analyzing: Analyzing 84/86 projects
   Analyzing: Analyzing 85/86 projects
   Analyzing: Analyzing 86/86 projects
-  Analyzing: Succeeded after 17.8 s
+  Analyzing: Succeeded after 30.3 s
   Building: Building
   Building: Building 0/84 projects
   Building: Building 1/84 projects
@@ -4026,11 +3974,41 @@ Long-operation progress:
   Building: Building 81/84 projects
   Building: Building 82/84 projects
   Building: Building 83/84 projects
-  Building: Failed after 23.5 s
+  Building: Failed after 37.0 s
 Project setup:
 
 Output:
-1): error CS0103: The name 'with' does not exist in the current context
+Build started at 18:50:28...
+1>------ Build started: Project: Refit, Configuration: Debug ------
+1>Refit -> compiled in memory (267 KB, 772 ms)
+2>------ Build started: Project: Refit.HttpClientFactory, Configuration: Debug ------
+2>Refit.HttpClientFactory -> compiled in memory (34.5 KB, 634 ms)
+3>------ Build started: Project: Refit.Reflection, Configuration: Debug ------
+3>RequestBuilderImplementation.QueryAndHeaders.cs(482,37): error CS0103: The name 'with' does not exist in the current context
+4>------ Build started: Project: Refit.Testing, Configuration: Debug ------
+4>Refit.Testing -> compiled in memory (58.5 KB, 559 ms)
+5>------ Build started: Project: Refit.Newtonsoft.Json, Configuration: Debug ------
+5>Refit.Newtonsoft.Json -> compiled in memory (9 KB, 490 ms)
+6>------ Build started: Project: Refit.Xml, Configuration: Debug ------
+6>Refit.Xml -> compiled in memory (11.5 KB, 449 ms)
+7>------ Build started: Project: InterfaceStubGenerator.Roslyn48, Configuration: Debug ------
+7>InlineRequestClassification.cs(90,44): error CS0103: The name 'with' does not exist in the current context
+7>InlineRequestClassification.cs(90,84): error CS0103: The name 'with' does not exist in the current context
+7>InlineRequestClassification.cs(90,124): error CS0103: The name 'with' does not exist in the current context
+7>InterfaceSemanticParsing.cs(119,45): error CS0103: The name 'with' does not exist in the current context
+7>InterfaceSemanticParsing.cs(251,34): error CS0103: The name 'with' does not exist in the current context
+7>Parser.cs(70,77): error CS0103: The name 'with' does not exist in the current context
+7>Parser.cs(199,44): error CS0103: The name 'with' does not exist in the current context
+7>Parser.cs(199,84): error CS0103: The name 'with' does not exist in the current context
+7>Parser.cs(199,124): error CS0103: The name 'with' does not exist in the current context
+7>Parser.cs(222,73): error CS0103: The name 'with' does not exist in the current context
+7>Parser.cs(295,45): error CS0103: The name 'with' does not exist in the current context
+7>Parser.cs(528,48): error CS0103: The name 'with' does not exist in the current context
+7>Parser.cs(599,63): error CS0103: The name 'with' does not exist in the current context
+7>Parser.cs(632,68): error CS0103: The name 'with' does not exist in the current context
+7>Parser.cs(653,63): error CS0103: The name 'with' does not exist in the current context
+7>PathObjectParameterParsing.cs(32,47): error CS0103: The name 'with' does not exist in the current context
+7>PathObjectParameterParsing.cs(187,31): error CS0103: The name 'with' does not exist in the current context
 7>QueryObjectPropertyParsing.cs(146,14): error CS0103: The name 'with' does not exist in the current context
 7>QueryObjectPropertyParsing.cs(174,37): error CS0103: The name 'with' does not exist in the current context
 7>QueryParameterEmission.cs(646,68): error CS0103: The name 'with' does not exist in the current context
@@ -4039,11 +4017,7 @@ Output:
 7>RequestParameterParsing.cs(622,23): error CS0103: The name 'with' does not exist in the current context
 7>UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context
 7>QueryParameterEmission.cs(244,62): warning CS8604: Possible null reference argument for parameter 'providerField' in 'void QueryParameterEmission.AppendInlineQueryStatement(PooledStringBuilder sb, in RequestParameterModel parameter, QueryParameterModel query, string providerField, in InlineValueEmission emission)'.
-7>RequestParameterKindParsing.cs(343,10): warning CS0436: The type 'NotNullWhenAttribute' in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullWhenAttribute.cs' conflicts with the imported type 'NotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullWhenAttribute.cs'.
 7>RequestPathEmission.cs(172,95): warning CS8604: Possible null reference argument for parameter 'providerExpression' in 'string QueryObjectEmission.EmitFormatUrlParameter(string valueExpression, string providerExpression, string typeExpression, in InlineValueEmission emission)'.
-7>ArgumentExceptionHelper.cs(23,10): warning CS0436: The type 'NotNullAttribute' in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs' conflicts with the imported type 'NotNullAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs'.
-7>ArgumentExceptionHelper.cs(40,10): warning CS0436: The type 'NotNullAttribute' in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs' conflicts with the imported type 'NotNullAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs'.
-7>NotNullWhenAttribute.cs(15,75): warning CS0436: The type 'NotNullWhenAttribute' in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullWhenAttribute.cs' conflicts with the imported type 'NotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullWhenAttribute.cs'.
 8>------ Build started: Project: Refit.Analyzers.Roslyn48, Configuration: Debug ------
 8>InlineRequestClassification.cs(90,44): error CS0103: The name 'with' does not exist in the current context
 8>InlineRequestClassification.cs(90,84): error CS0103: The name 'with' does not exist in the current context
@@ -4055,10 +4029,6 @@ Output:
 8>RequestBodyParsing.cs(28,33): error CS0103: The name 'with' does not exist in the current context
 8>RequestParameterKindParsing.cs(690,31): error CS0103: The name 'with' does not exist in the current context
 8>RequestParameterParsing.cs(622,23): error CS0103: The name 'with' does not exist in the current context
-8>RequestParameterKindParsing.cs(343,10): warning CS0436: The type 'NotNullWhenAttribute' in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullWhenAttribute.cs' conflicts with the imported type 'NotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullWhenAttribute.cs'.
-8>ArgumentExceptionHelper.cs(23,10): warning CS0436: The type 'NotNullAttribute' in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs' conflicts with the imported type 'NotNullAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs'.
-8>ArgumentExceptionHelper.cs(40,10): warning CS0436: The type 'NotNullAttribute' in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs' conflicts with the imported type 'NotNullAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs'.
-8>NotNullWhenAttribute.cs(15,75): warning CS0436: The type 'NotNullWhenAttribute' in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullWhenAttribute.cs' conflicts with the imported type 'NotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullWhenAttribute.cs'.
 9>------ Build started: Project: index, Configuration: Debug ------
 10>------ Build started: Project: advanced-index, Configuration: Debug ------
 11>------ Build started: Project: advanced-method-metadata, Configuration: Debug ------
@@ -4103,52 +4073,50 @@ Output:
 50>------ Build started: Project: aot, Configuration: Debug ------
 51>------ Build started: Project: NativeClient, Configuration: Debug ------
 51>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-51>NativeClient -> compiled in memory (424.5 KB, 442 ms)
+51>NativeClient -> compiled in memory (424 KB, 695 ms)
 52>------ Build started: Project: Reflection, Configuration: Debug ------
 53>------ Build started: Project: Other, Configuration: Debug ------
-53>Other -> compiled in memory (16 KB, 183 ms)
+53>Other -> compiled in memory (16 KB, 382 ms)
 54>------ Build started: Project: Refit.CodeFixes.Roslyn48, Configuration: Debug ------
-54>ArgumentExceptionHelper.cs(23,10): warning CS0436: The type 'NotNullAttribute' in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs' conflicts with the imported type 'NotNullAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs'.
-54>ArgumentExceptionHelper.cs(40,10): warning CS0436: The type 'NotNullAttribute' in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs' conflicts with the imported type 'NotNullAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs'.
-54>Refit.CodeFixes.Roslyn48 -> compiled in memory (11.5 KB, 27 ms)
+54>Refit.CodeFixes.Roslyn48 -> compiled in memory (11.5 KB, 17 ms)
 55>------ Build started: Project: Tooling, Configuration: Debug ------
 56>------ Build started: Project: RuntimeHelpers, Configuration: Debug ------
 56>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-56>RuntimeHelpers -> compiled in memory (64.5 KB, 230 ms)
+56>RuntimeHelpers -> compiled in memory (64.5 KB, 292 ms)
 57>------ Build started: Project: Content, Configuration: Debug ------
 57>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-57>Content -> compiled in memory (42 KB, 347 ms)
+57>Content -> compiled in memory (42 KB, 381 ms)
 58>------ Build started: Project: Multipart, Configuration: Debug ------
 58>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-58>Multipart -> compiled in memory (38.5 KB, 229 ms)
+58>Multipart -> compiled in memory (38.5 KB, 297 ms)
 59>------ Build started: Project: Legacy, Configuration: Debug ------
 60>------ Build started: Project: XUnitTests, Configuration: Debug ------
 60>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-60>XUnitTests -> compiled in memory (30 KB, 229 ms)
+60>XUnitTests -> compiled in memory (30 KB, 347 ms)
 61>------ Build started: Project: NUnitTests, Configuration: Debug ------
 61>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-61>NUnitTests -> compiled in memory (30.5 KB, 224 ms)
+61>NUnitTests -> compiled in memory (30.5 KB, 338 ms)
 62>------ Build started: Project: MSTestTests, Configuration: Debug ------
 62>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-62>MSTestTests -> compiled in memory (31 KB, 217 ms)
+62>MSTestTests -> compiled in memory (31 KB, 337 ms)
 63>------ Build started: Project: TUnitTests, Configuration: Debug ------
 63>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-63>TUnitTests -> compiled in memory (47.5 KB, 224 ms)
+63>TUnitTests -> compiled in memory (47.5 KB, 384 ms)
 64>------ Build started: Project: BlazorWasmSample, Configuration: Debug ------
 64>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-64>BlazorWasmSample -> compiled in memory (20 KB, 165 ms)
+64>BlazorWasmSample -> compiled in memory (20 KB, 245 ms)
 65>------ Build started: Project: Meow.Common, Configuration: Debug ------
 65>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-65>Meow.Common -> compiled in memory (24.5 KB, 185 ms)
+65>Meow.Common -> compiled in memory (24.5 KB, 309 ms)
 66>------ Build started: Project: Meow, Configuration: Debug ------
-66>Meow -> compiled in memory (5.5 KB, 161 ms)
+66>Meow -> compiled in memory (5.5 KB, 343 ms)
 67>------ Build started: Project: LibraryWithSDKandRefitService, Configuration: Debug ------
 67>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-67>LibraryWithSDKandRefitService -> compiled in memory (3.5 KB, 163 ms)
+67>LibraryWithSDKandRefitService -> compiled in memory (3.5 KB, 361 ms)
 68>------ Build started: Project: ConsoleSampleUsingLocalApi, Configuration: Debug ------
-68>ConsoleSampleUsingLocalApi -> compiled in memory (6.5 KB, 156 ms)
+68>ConsoleSampleUsingLocalApi -> compiled in memory (6.5 KB, 252 ms)
 69>------ Build started: Project: RestApiForTest, Configuration: Debug ------
-69>RestApiForTest -> compiled in memory (6.5 KB, 165 ms)
+69>RestApiForTest -> compiled in memory (6.5 KB, 242 ms)
 70>------ Build started: Project: Refit.Benchmarks, Configuration: Debug ------
 71>------ Build started: Project: Refit.Generator.Benchmarks, Configuration: Debug ------
 72>------ Build started: Project: Refit.Reflection.Benchmarks, Configuration: Debug ------
@@ -4157,24 +4125,19 @@ Output:
 75>------ Build started: Project: Refit.CodeFixes.Tests, Configuration: Debug ------
 76>------ Build started: Project: Refit.GeneratedCode.TestModels, Configuration: Debug ------
 76>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-76>Refit.GeneratedCode.TestModels -> compiled in memory (7 KB, 150 ms)
+76>Refit.GeneratedCode.TestModels -> compiled in memory (7 KB, 256 ms)
 77>------ Build started: Project: Refit.GeneratorTests, Configuration: Debug ------
 78>------ Build started: Project: Refit.HttpClientFactory.Tests, Configuration: Debug ------
-78>AuthenticatedHttpClientHandlerTests.cs(4,14): error CS0430: The extern alias 'RefitHttpClientFactory' was not specified in a /reference option
-78>AuthenticatedHttpClientHandlerTests.cs(6,64): error CS0234: The type or namespace name 'Refit' does not exist in the namespace 'RefitHttpClientFactory' (are you missing an assembly reference?)
+78>Refit.HttpClientFactory.Tests -> compiled in memory (17 KB, 319 ms)
 79>------ Build started: Project: Refit.MockInterop.Tests, Configuration: Debug ------
 80>------ Build started: Project: Refit.Newtonsoft.Json.Tests, Configuration: Debug ------
 81>------ Build started: Project: Refit.Reflection.Tests, Configuration: Debug ------
 82>------ Build started: Project: Refit.Testing.Tests, Configuration: Debug ------
 83>------ Build started: Project: Refit.Tests, Configuration: Debug ------
 84>------ Build started: Project: Refit.NetFrameworkSmoke, Configuration: Debug ------
-84>ArgumentExceptionHelper.cs(23,10): warning CS0436: The type 'NotNullAttribute' in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs' conflicts with the imported type 'NotNullAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs'.
-84>ArgumentExceptionHelper.cs(40,10): warning CS0436: The type 'NotNullAttribute' in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs' conflicts with the imported type 'NotNullAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullAttribute.cs'.
-84>MaybeNullWhenAttribute.cs(15,77): warning CS0436: The type 'MaybeNullWhenAttribute' in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/MaybeNullWhenAttribute.cs' conflicts with the imported type 'MaybeNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/MaybeNullWhenAttribute.cs'.
-84>NotNullWhenAttribute.cs(15,75): warning CS0436: The type 'NotNullWhenAttribute' in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullWhenAttribute.cs' conflicts with the imported type 'NotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/repos/refit-Refit-slnx/src/Polyfills/NotNullWhenAttribute.cs'.
 84>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-84>Refit.NetFrameworkSmoke -> compiled in memory (14.5 KB, 156 ms)
+84>Refit.NetFrameworkSmoke -> compiled in memory (14 KB, 263 ms)
 85>------ Skipped: Project: Compression: it targets net11.0, which only the .NET 11 SDK builds; TabStudio compiles with .NET 10 ------
 86>------ Skipped: Project: Refit.NativeAotSmoke: it targets net11.0, which only the .NET 11 SDK builds; TabStudio compiles with .NET 10 ------
-========== Build: 23 succeeded, 61 failed, 2 skipped ==========
+========== Build: 24 succeeded, 60 failed, 2 skipped ==========
 
