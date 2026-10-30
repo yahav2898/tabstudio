@@ -32,14 +32,30 @@ for entry in plan["repositories"]:
                 print(f"{name}: could not rewrite {path}: {ex}")
     target = os.path.join(copy, entry["open"])
     start = time.time()
-    try:
-        proc = subprocess.run(
-            ["dotnet", "build", target, "-c", "Debug", "-nologo", "-p:TreatWarningsAsErrors=false", "-p:NuGetAudit=false",
-             "-p:RunAnalyzersDuringBuild=true", "-clp:NoSummary;ForceNoAlign", "-v:m"],
-            cwd=copy if os.path.isdir(target) else os.path.dirname(target), capture_output=True, text=True, timeout=40 * 60)
-        text, code = proc.stdout + proc.stderr, proc.returncode
-    except subprocess.TimeoutExpired as ex:
-        text, code = (ex.stdout or b"").decode() if isinstance(ex.stdout, bytes) else (ex.stdout or ""), "timeout"
+    # Visual Studio builds Windows-targeting projects; a project that needs a workload this runner lacks (NETSDK1147)
+    # or a newer SDK (NETSDK1045) fails its restore and stops the whole build, so it is set aside and reported, and the
+    # rest is built again, as Visual Studio builds the other projects of the solution.
+    targets = [target] if os.path.isfile(target) else sorted(
+        os.path.join(folder, f) for folder, _, files in os.walk(target) for f in files if f.endswith((".csproj", ".vbproj", ".fsproj")))
+    removed, text, code = [], "", 0
+    for build_target in targets:
+        for attempt in range(4):
+            try:
+                proc = subprocess.run(
+                    ["dotnet", "build", build_target, "-c", "Debug", "-nologo", "-p:TreatWarningsAsErrors=false", "-p:NuGetAudit=false",
+                     "-p:EnableWindowsTargeting=true", "-clp:NoSummary;ForceNoAlign", "-v:m"],
+                    cwd=os.path.dirname(build_target), capture_output=True, text=True, timeout=40 * 60)
+                out, code = proc.stdout + proc.stderr, proc.returncode
+            except subprocess.TimeoutExpired as ex:
+                out, code = (ex.stdout.decode() if isinstance(ex.stdout, bytes) else (ex.stdout or "")), "timeout"
+            blocked = sorted({m.group(1) for m in re.finditer(r"error (?:NETSDK1147|NETSDK1045|NETSDK1100)[^\[]*\[([^\]:]+?\.(?:cs|vb|fs)proj)", out)})
+            if attempt == 3 or not blocked or not build_target.endswith((".sln", ".slnx")):
+                text += out
+                break
+            text += "\n".join(l for l in out.splitlines() if re.search(r"error (NETSDK1147|NETSDK1045|NETSDK1100)", l)) + "\n"
+            for project in blocked:
+                removed.append(os.path.relpath(project, copy))
+                subprocess.run(["dotnet", "sln", build_target, "remove", project], capture_output=True, text=True)
     errors = {}
     for line in text.splitlines():
         m = pattern.match(line)
@@ -52,9 +68,11 @@ for entry in plan["repositories"]:
     by_code = {}
     for (_, _, _, c) in errors:
         by_code[c] = by_code.get(c, 0) + 1
-    results[name] = {"exit": code, "errors": len(errors), "codes": by_code, "seconds": round(time.time() - start)}
+    results[name] = {"exit": code, "errors": len(errors), "codes": by_code, "seconds": round(time.time() - start), "setAside": removed}
     with open(os.path.join(out, f"sdk-{name}.txt"), "w") as f:
         f.write(f"{name}: dotnet build {entry['open']} exited {code} in {results[name]['seconds']} s, {len(errors)} distinct errors\n")
+        for project in removed:
+            f.write(f"  set aside (needs a workload or a newer SDK): {project}\n")
         for (project, file, line, c), msg in sorted(errors.items()):
             f.write(f"  [{project}] {file}({line}): {c}: {msg}\n")
         f.write("\nLast 300 lines of the build:\n" + "\n".join(text.splitlines()[-300:]))

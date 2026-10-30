@@ -4,7 +4,7 @@ name: .NET fidelity trial
 # with the real .NET 10 SDK, and publishes both reports to ci-logs under branches/<branch>/fidelity-<area>/.
 on:
   push:
-    branches: ['trial/fidelity-*']
+    branches: ['trial/fidelity-*', '!trial/fidelity-dev']
 
 permissions:
   contents: write
@@ -54,6 +54,7 @@ jobs:
           done
 
       - name: Open and build them in TabStudio
+        if: ${{ !contains(github.ref_name, 'truth') }}
         env:
           TABSTUDIO_TRIAL_ROOT: ${{ runner.temp }}/repos
           TABSTUDIO_TRIAL_AREA: ${{ matrix.area }}
@@ -66,6 +67,7 @@ jobs:
           if [ -f ci-out/summary.md ]; then cat ci-out/summary.md | tee -a "$GITHUB_STEP_SUMMARY"; fi
 
       - name: Build them with the .NET SDK
+        if: contains(github.ref_name, 'truth')
         run: python3 build/ci/sdk-truth.py "$RUNNER_TEMP/repos" "${{ matrix.area }}" ci-out | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Publish the reports
