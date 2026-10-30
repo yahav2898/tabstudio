@@ -1,0 +1,700 @@
+Ocelot at 80268bc9a950cd4544e70d9582374ca55fc6029f, opening /home/runner/work/_temp/repos/Ocelot/Ocelot.slnx
+Opened in 4.4 s: Ocelot, solution /home/runner/work/_temp/repos/Ocelot/Ocelot.slnx
+  project Ocelot [CSharp] /home/runner/work/_temp/repos/Ocelot/src/Ocelot.csproj
+  project Ocelot.Acceptance [CSharp] /home/runner/work/_temp/repos/Ocelot/acceptance/Ocelot.Acceptance.csproj
+  project Ocelot.Benchmarks [CSharp] /home/runner/work/_temp/repos/Ocelot/benchmark/Ocelot.Benchmarks.csproj
+  project Ocelot.ManualTest [CSharp] /home/runner/work/_temp/repos/Ocelot/manual/Ocelot.ManualTest.csproj
+  project Ocelot.Testing [CSharp] /home/runner/work/_temp/repos/Ocelot/testing/Ocelot.Testing.csproj
+  project Ocelot.UnitTests [CSharp] /home/runner/work/_temp/repos/Ocelot/unit/Ocelot.UnitTests.csproj
+  toolchain project python: /home/runner/work/_temp/repos/Ocelot/docs/requirements.txt
+  toolchain project cpp: /home/runner/work/_temp/repos/Ocelot/docs/Makefile
+Compatibility Doctor:
+  Ocelot: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Ocelot.Acceptance: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Ocelot.Benchmarks: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Ocelot.ManualTest: Ready via Local server + WebView - Served on this device and shown in the web preview beside the code. Saving a file restarts it.
+  Ocelot.Testing: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Ocelot.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  docs: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  docs: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+F5 startup project: Ocelot.ManualTest /home/runner/work/_temp/repos/Ocelot/manual/Ocelot.ManualTest.csproj
+Error List after analysis: 2774 errors, 67 warnings
+  2062 x CS0246
+      [Ocelot.Acceptance] AdministrationSteps.cs(11,32): error CS0246: The type or namespace name 'WebApplication' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] CacheManagerTests.cs(41,26): error CS0246: The type or namespace name 'WebHostBuilderContext' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] CacheManagerTests.cs(83,9): error CS0246: The type or namespace name 'IConfigurationBuilder' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] OcelotBuilderExtensions.cs(42,57): error CS0246: The type or namespace name 'IApplicationBuilder' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] OcelotBuilderExtensions.cs(59,64): error CS0246: The type or namespace name 'IApplicationBuilder' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] OcelotBuilderExtensions.cs(69,19): error CS0246: The type or namespace name 'IApplicationBuilder' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] OcelotBuilderExtensions.cs(69,63): error CS0246: The type or namespace name 'IApplicationBuilder' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] AggregateTests.cs(373,48): error CS0246: The type or namespace name 'IFormCollection' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] AggregateTests.cs(399,9): error CS0246: The type or namespace name 'RequestDelegate' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] AggregateTests.cs(413,9): error CS0246: The type or namespace name 'RequestDelegate' could not be found (are you missing a using directive or an assembly reference?)
+  333 x CS0234
+      [Ocelot.Acceptance] OcelotBuilderExtensions.cs(2,28): error CS0234: The type or namespace name 'Builder' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+      [Ocelot.Acceptance] OcelotBuilderExtensions.cs(3,28): error CS0234: The type or namespace name 'DataProtection' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+      [Ocelot.Acceptance] AggregateTests.cs(5,28): error CS0234: The type or namespace name 'Authorization' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+      [Ocelot.Acceptance] AggregateTests.cs(6,28): error CS0234: The type or namespace name 'Builder' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+      [Ocelot.Acceptance] AggregateTests.cs(7,28): error CS0234: The type or namespace name 'Hosting' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+      [Ocelot.Acceptance] AggregateTests.cs(9,32): error CS0234: The type or namespace name 'Authorization' does not exist in the namespace 'Microsoft.AspNetCore.Mvc' (are you missing an assembly reference?)
+      [Ocelot.Acceptance] MultipleAuthSchemesFeatureTests.cs(4,17): error CS0234: The type or namespace name 'Net' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+      [Ocelot.Acceptance] WindowsAuthTests.cs(2,28): error CS0234: The type or namespace name 'Authorization' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+      [Ocelot.Acceptance] WindowsAuthTests.cs(3,28): error CS0234: The type or namespace name 'Builder' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+      [Ocelot.Acceptance] WindowsAuthTests.cs(4,28): error CS0234: The type or namespace name 'Hosting' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+  258 x CS0103
+      [Ocelot.Acceptance] CacheManagerTests.cs(69,31): error CS0103: The name 'HttpMethods' does not exist in the current context
+      [Ocelot.Acceptance] AuthenticationTests.cs(15,50): error CS0103: The name 'HttpMethods' does not exist in the current context
+      [Ocelot.Acceptance] AuthenticationTests.cs(76,50): error CS0103: The name 'HttpMethods' does not exist in the current context
+      [Ocelot.Acceptance] MultipleAuthSchemesFeatureTests.cs(84,66): error CS0103: The name 'HeaderNames' does not exist in the current context
+      [Ocelot.Acceptance] WindowsAuthTests.cs(326,52): error CS0103: The name 'StatusCodes' does not exist in the current context
+      [Ocelot.Acceptance] WindowsAuthTests.cs(326,82): error CS0103: The name 'StatusCodes' does not exist in the current context
+      [Ocelot.Acceptance] WindowsAuthTests.cs(359,35): error CS0103: The name 'StatusCodes' does not exist in the current context
+      [Ocelot.Acceptance] WindowsAuthTests.cs(363,31): error CS0103: The name 'StatusCodes' does not exist in the current context
+      [Ocelot.Acceptance] CachingTests.cs(110,83): error CS0103: The name 'HttpMethods' does not exist in the current context
+      [Ocelot.Acceptance] CachingTests.cs(147,83): error CS0103: The name 'HttpMethods' does not exist in the current context
+  63 x CS1503
+      [Ocelot.Acceptance] OcelotBuilderExtensions.cs(31,66): error CS1503: Argument 2: cannot convert from 'method group' to 'System.Func<System.IServiceProvider, Ocelot.Middleware.OcelotMiddlewareConfigurationDelegate>'
+      [Ocelot.Acceptance] ConfigurationMergeTests.cs(40,30): error CS1503: Argument 1: cannot convert from 'System.Action<WebHostBuilderContext, Microsoft.Extensions.Configuration.IConfigurationBuilder>' to 'System.Action<Microsoft.Extensions.DependencyInjection.IServiceCollection>'
+      [Ocelot.Acceptance] ConfigurationMergeTests.cs(160,30): error CS1503: Argument 1: cannot convert from 'method group' to 'System.Action<Microsoft.Extensions.DependencyInjection.IServiceCollection>'
+      [Ocelot.Acceptance] ClientHeaderRateLimitingTests.cs(292,46): error CS1503: Argument 2: cannot convert from 'string' to 'System.Net.HttpStatusCode'
+      [Ocelot.Acceptance] ClientHeaderRateLimitingTests.cs(292,71): error CS1503: Argument 3: cannot convert from 'method group' to 'string'
+      [Ocelot.Acceptance] RoutingTests.cs(672,45): error CS1503: Argument 2: cannot convert from 'string' to 'System.Net.HttpStatusCode'
+      [Ocelot.Acceptance] RoutingTests.cs(672,50): error CS1503: Argument 3: cannot convert from 'method group' to 'string'
+      [Ocelot.Acceptance] SecurityOptionsTests.cs(21,45): error CS1503: Argument 2: cannot convert from 'string' to 'System.Net.HttpStatusCode'
+      [Ocelot.Acceptance] SecurityOptionsTests.cs(21,75): error CS1503: Argument 3: cannot convert from 'method group' to 'string'
+      [Ocelot.Acceptance] SecurityOptionsTests.cs(23,30): error CS1503: Argument 1: cannot convert from 'method group' to 'System.Action<Microsoft.Extensions.DependencyInjection.IServiceCollection>'
+  23 x CS1061
+      [Ocelot.Acceptance] CacheManagerTests.cs(82,18): error CS1061: 'IServiceCollection' does not contain a definition for 'AddMvc' and no accessible extension method 'AddMvc' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] OcelotBuilderExtensions.cs(35,44): error CS1061: 'IServiceCollection' does not contain a definition for 'AddAuthentication' and no accessible extension method 'AddAuthentication' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] AuthenticationTests.cs(69,18): error CS1061: 'IServiceCollection' does not contain a definition for 'AddAuthentication' and no accessible extension method 'AddAuthentication' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] AuthenticationTests.cs(155,14): error CS1061: 'IServiceCollection' does not contain a definition for 'AddAuthentication' and no accessible extension method 'AddAuthentication' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] MultipleAuthSchemesFeatureTests.cs(102,11): error CS1061: 'JwtBearerOptions' does not contain a definition for 'ForwardDefaultSelector' and no accessible extension method 'ForwardDefaultSelector' accepting a first argument of type 'JwtBearerOptions' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] MultipleAuthSchemesFeatureTests.cs(124,33): error CS1061: 'IServiceCollection' does not contain a definition for 'AddAuthentication' and no accessible extension method 'AddAuthentication' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] WindowsAuthTests.cs(55,10): error CS1061: 'IServiceCollection' does not contain a definition for 'AddAuthentication' and no accessible extension method 'AddAuthentication' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] WindowsAuthTests.cs(108,18): error CS1061: 'IServiceCollection' does not contain a definition for 'AddAuthentication' and no accessible extension method 'AddAuthentication' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] WindowsAuthTests.cs(109,18): error CS1061: 'IServiceCollection' does not contain a definition for 'AddAuthorization' and no accessible extension method 'AddAuthorization' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot.Acceptance] WindowsAuthTests.cs(341,18): error CS1061: 'IServiceCollection' does not contain a definition for 'AddAuthentication' and no accessible extension method 'AddAuthentication' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+  16 x CS8795
+      [Ocelot] ClaimsAuthorizer.cs(22,34): error CS8795: Partial method 'ClaimsAuthorizer.RegexAuthorize()' must have an implementation part because it has accessibility modifiers.
+      [Ocelot] UpstreamHeaderTemplatePatternCreator.cs(16,34): error CS8795: Partial method 'UpstreamHeaderTemplatePatternCreator.RegexPlaceholders()' must have an implementation part because it has accessibility modifiers.
+      [Ocelot] ClaimToThingConfigurationParser.cs(14,34): error CS8795: Partial method 'ClaimToThingConfigurationParser.ClaimRegex()' must have an implementation part because it has accessibility modifiers.
+      [Ocelot] ClaimToThingConfigurationParser.cs(17,34): error CS8795: Partial method 'ClaimToThingConfigurationParser.IndexRegex()' must have an implementation part because it has accessibility modifiers.
+      [Ocelot] FileConfigurationFluentValidator.cs(104,34): error CS8795: Partial method 'FileConfigurationFluentValidator.PlaceholderRegex()' must have an implementation part because it has accessibility modifiers.
+      [Ocelot] RouteFluentValidator.cs(100,34): error CS8795: Partial method 'RouteFluentValidator.MilliSecondsRegex()' must have an implementation part because it has accessibility modifiers.
+      [Ocelot] RouteFluentValidator.cs(103,34): error CS8795: Partial method 'RouteFluentValidator.SecondsRegex()' must have an implementation part because it has accessibility modifiers.
+      [Ocelot] RouteFluentValidator.cs(106,34): error CS8795: Partial method 'RouteFluentValidator.MinutesRegex()' must have an implementation part because it has accessibility modifiers.
+      [Ocelot] RouteFluentValidator.cs(109,34): error CS8795: Partial method 'RouteFluentValidator.HoursRegex()' must have an implementation part because it has accessibility modifiers.
+      [Ocelot] RouteFluentValidator.cs(112,34): error CS8795: Partial method 'RouteFluentValidator.DaysRegex()' must have an implementation part because it has accessibility modifiers.
+  4 x CS0012
+      [Ocelot.Acceptance] OcelotBuilderExtensions.cs(37,15): error CS0012: The type 'AuthenticationBuilder' is defined in an assembly that is not referenced. You must add a reference to assembly 'Microsoft.AspNetCore.Authentication, Version=10.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'.
+      [Ocelot.Acceptance] OcelotBuilderExtensions.cs(38,15): error CS0012: The type 'AuthenticationBuilder' is defined in an assembly that is not referenced. You must add a reference to assembly 'Microsoft.AspNetCore.Authentication, Version=10.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'.
+      [Ocelot.Acceptance] MultipleAuthSchemesFeatureTests.cs(102,11): error CS0012: The type 'AuthenticationSchemeOptions' is defined in an assembly that is not referenced. You must add a reference to assembly 'Microsoft.AspNetCore.Authentication, Version=10.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'.
+      [Ocelot.Acceptance] MultipleAuthSchemesFeatureTests.cs(133,17): error CS0012: The type 'AuthenticationBuilder' is defined in an assembly that is not referenced. You must add a reference to assembly 'Microsoft.AspNetCore.Authentication, Version=10.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'.
+  3 x CS1593
+      [Ocelot.Acceptance] ConfigurationReloadTests.cs(93,48): error CS1593: Delegate 'Action<IServiceCollection>' does not take 2 arguments
+      [Ocelot.UnitTests] QualityOfServiceFactoryTests.cs(147,95): error CS1593: Delegate 'Func<IServiceProvider, QosDelegatingHandlerDelegate>' does not take 3 arguments
+      [Ocelot.UnitTests] QualityOfServiceFactoryTests.cs(196,95): error CS1593: Delegate 'Func<IServiceProvider, QosDelegatingHandlerDelegate>' does not take 3 arguments
+  2 x CS8781
+      [Ocelot.Acceptance] WindowsAuthTests.cs(326,49): error CS8781: Relational patterns may not be used for a value of type '?'.
+      [Ocelot.Acceptance] WindowsAuthTests.cs(326,80): error CS8781: Relational patterns may not be used for a value of type '?'.
+  2 x CS1955
+      [Ocelot.Acceptance] CustomMiddlewareTests.cs(251,19): error CS1955: Non-invocable member 'CustomMiddlewareTests.FakeMiddleware._next' cannot be used like a method.
+      [Ocelot] AuthenticationMiddleware.cs(29,19): error CS1955: Non-invocable member 'AuthenticationMiddleware._next' cannot be used like a method.
+  1 x CS1660
+      [Ocelot.Benchmarks] ResponseBenchmarks.cs(170,21): error CS1660: Cannot convert lambda expression to type 'int' because it is not a delegate type
+  1 x TS1001
+      [Ocelot.ManualTest] Program.cs(44,13): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. In a Windows Forms app call Application.Exit() or the form's Close(); in a console app return the exit code from Main.
+  1 x CS0616
+      [Ocelot] FileConfigurationController.cs(13,2): error CS0616: 'Route' is not an attribute class
+  1 x CS0311
+      [Ocelot] OcelotBuilder.cs(107,18): error CS0311: The type 'Ocelot.Configuration.ChangeTracking.OcelotConfigurationMonitor' cannot be used as type parameter 'TImplementation' in the generic type or method 'ServiceCollectionDescriptorExtensions.TryAddSingleton<TService, TImplementation>(IServiceCollection)'. There is no implicit reference conversion from 'Ocelot.Configuration.ChangeTracking.OcelotConfigurationMonitor' to 'IOptionsMonitor<Ocelot.Configuration.IInternalConfiguration>'.
+  1 x CS0815
+      [Ocelot] HttpContextRequestHeaderReplacer.cs(15,21): error CS0815: Cannot assign void to an implicitly-typed variable
+  1 x CS1729
+      [Ocelot.UnitTests] FileConfigurationFluentValidatorTests.cs(1198,111): error CS1729: 'AuthenticationHandler<FileConfigurationFluentValidatorTests.TestOptions>' does not contain a constructor that takes 3 arguments
+  1 x CS0540
+      [Ocelot.UnitTests] CookieStickySessionsTests.cs(189,17): error CS0540: 'FakeCookies.IEnumerable.GetEnumerator()': containing type does not implement interface 'IEnumerable'
+  1 x CS8754
+      [Ocelot.UnitTests] ErrorsToHttpStatusCodeMapperTests.cs(55,37): error CS8754: There is no target type for 'new()'
+Error List after the build: 647 errors, 67 warnings
+  389 x CS0246
+      [Ocelot] FileConfigurationController.cs(11,2): error CS0246: The type or namespace name 'ApiExplorerSettingsAttribute' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] FileConfigurationController.cs(11,2): error CS0246: The type or namespace name 'ApiExplorerSettings' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] FileConfigurationController.cs(12,2): error CS0246: The type or namespace name 'AuthorizeAttribute' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] FileConfigurationController.cs(12,2): error CS0246: The type or namespace name 'Authorize' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] FileConfigurationController.cs(14,44): error CS0246: The type or namespace name 'Controller' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] FileConfigurationController.cs(25,6): error CS0246: The type or namespace name 'HttpGetAttribute' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] FileConfigurationController.cs(25,6): error CS0246: The type or namespace name 'HttpGet' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] FileConfigurationController.cs(26,23): error CS0246: The type or namespace name 'ActionResult' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] FileConfigurationController.cs(43,6): error CS0246: The type or namespace name 'HttpPostAttribute' could not be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] FileConfigurationController.cs(43,6): error CS0246: The type or namespace name 'HttpPost' could not be found (are you missing a using directive or an assembly reference?)
+  157 x CS0234
+      [Ocelot] FileConfigurationController.cs(1,28): error CS0234: The type or namespace name 'Authorization' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+      [Ocelot] OutputCacheController.cs(1,28): error CS0234: The type or namespace name 'Authorization' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+      [Ocelot] AuthenticationMiddleware.cs(1,28): error CS0234: The type or namespace name 'Authentication' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+      [Ocelot] AuthenticationMiddleware.cs(2,28): error CS0234: The type or namespace name 'Http' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+      [Ocelot] AuthorizationMiddleware.cs(1,28): error CS0234: The type or namespace name 'Http' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+      [Ocelot] RouteClaimsRequirementPostConfigureOptions.cs(1,28): error CS0234: The type or namespace name 'Configuration' does not exist in the namespace 'Microsoft.Extensions' (are you missing an assembly reference?)
+      [Ocelot] RouteClaimsRequirementPostConfigureOptions.cs(2,28): error CS0234: The type or namespace name 'Options' does not exist in the namespace 'Microsoft.Extensions' (are you missing an assembly reference?)
+      [Ocelot] ScopeNotAuthorizedError.cs(1,28): error CS0234: The type or namespace name 'Http' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+      [Ocelot] UnauthorizedError.cs(1,28): error CS0234: The type or namespace name 'Http' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+      [Ocelot] UserDoesNotHaveClaimError.cs(1,28): error CS0234: The type or namespace name 'Http' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+  84 x CS0103
+      [Ocelot] FileConfigurationController.cs(35,20): error CS0103: The name 'BadRequest' does not exist in the current context
+      [Ocelot] FileConfigurationController.cs(39,15): error CS0103: The name 'BadRequest' does not exist in the current context
+      [Ocelot] FileConfigurationController.cs(40,15): error CS0103: The name 'Ok' does not exist in the current context
+      [Ocelot] FileConfigurationController.cs(49,20): error CS0103: The name 'Ok' does not exist in the current context
+      [Ocelot] FileConfigurationController.cs(53,20): error CS0103: The name 'BadRequest' does not exist in the current context
+      [Ocelot] AuthenticationMiddleware.cs(83,26): error CS0103: The name 'AuthenticateResult' does not exist in the current context
+      [Ocelot] RouteClaimsRequirementPostConfigureOptions.cs(54,37): error CS0103: The name 'ConfigurationPath' does not exist in the current context
+      [Ocelot] ScopeNotAuthorizedError.cs(9,66): error CS0103: The name 'StatusCodes' does not exist in the current context
+      [Ocelot] UnauthorizedError.cs(9,60): error CS0103: The name 'StatusCodes' does not exist in the current context
+      [Ocelot] UserDoesNotHaveClaimError.cs(9,68): error CS0103: The name 'StatusCodes' does not exist in the current context
+  8 x CS1061
+      [Ocelot] Features.cs(84,10): error CS1061: 'IServiceCollection' does not contain a definition for 'AddMemoryCache' and no accessible extension method 'AddMemoryCache' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] Features.cs(99,10): error CS1061: 'IServiceCollection' does not contain a definition for 'AddLogging' and no accessible extension method 'AddLogging' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] OcelotBuilder.cs(55,56): error CS1061: 'IServiceCollection' does not contain a definition for 'AddMvcCore' and no accessible extension method 'AddMvcCore' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] OcelotBuilder.cs(57,18): error CS1061: 'IServiceCollection' does not contain a definition for 'Configure' and no accessible extension method 'Configure' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] OcelotBuilder.cs(58,18): error CS1061: 'IServiceCollection' does not contain a definition for 'Configure' and no accessible extension method 'Configure' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] OcelotBuilder.cs(110,18): error CS1061: 'IServiceCollection' does not contain a definition for 'AddHttpContextAccessor' and no accessible extension method 'AddHttpContextAccessor' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] OcelotBuilder.cs(168,14): error CS1061: 'IServiceCollection' does not contain a definition for 'AddWebEncoders' and no accessible extension method 'AddWebEncoders' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+      [Ocelot] OcelotBuilder.cs(200,52): error CS1061: 'IServiceCollection' does not contain a definition for 'AddHostedService' and no accessible extension method 'AddHostedService' accepting a first argument of type 'IServiceCollection' could be found (are you missing a using directive or an assembly reference?)
+  5 x CS1503
+      [Ocelot] Features.cs(33,69): error CS1503: Argument 2: cannot convert from 'Ocelot.Authorization.RouteClaimsRequirementPostConfigureOptions' to 'System.Func<System.IServiceProvider, IPostConfigureOptions<Ocelot.Configuration.File.FileConfiguration>>'
+      [Ocelot] UnknownError.cs(16,16): error CS1503: Argument 1: cannot convert from 'System.Exception' to 'string'
+      [Ocelot] CannotAddDataError.cs(9,16): error CS1503: Argument 1: cannot convert from 'System.Exception' to 'string'
+      [Ocelot] AddQueriesToRequest.cs(40,57): error CS1503: Argument 2: cannot convert from 'string' to 'StringValues'
+      [Ocelot] BadRequestError.cs(13,16): error CS1503: Argument 1: cannot convert from 'System.Exception' to 'string'
+  1 x CS0616
+      [Ocelot] FileConfigurationController.cs(13,2): error CS0616: 'Route' is not an attribute class
+  1 x CS1955
+      [Ocelot] AuthenticationMiddleware.cs(29,19): error CS1955: Non-invocable member 'AuthenticationMiddleware._next' cannot be used like a method.
+  1 x CS0311
+      [Ocelot] OcelotBuilder.cs(107,18): error CS0311: The type 'Ocelot.Configuration.ChangeTracking.OcelotConfigurationMonitor' cannot be used as type parameter 'TImplementation' in the generic type or method 'ServiceCollectionDescriptorExtensions.TryAddSingleton<TService, TImplementation>(IServiceCollection)'. There is no implicit reference conversion from 'Ocelot.Configuration.ChangeTracking.OcelotConfigurationMonitor' to 'IOptionsMonitor<Ocelot.Configuration.IInternalConfiguration>'.
+  1 x CS0815
+      [Ocelot] HttpContextRequestHeaderReplacer.cs(15,21): error CS0815: Cannot assign void to an implicitly-typed variable
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 1.5 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring NuGet packages 0/6 projects
+  Analyzing: Analyzing 0/6 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/9
+  Restoring NuGet packages: Downloading NuGet packages 2/9
+  Restoring NuGet packages: Downloading NuGet packages 3/9
+  Restoring NuGet packages: Downloading NuGet packages 4/9
+  Restoring NuGet packages: Downloading NuGet packages 5/9
+  Restoring NuGet packages: Downloading NuGet packages 6/9
+  Restoring NuGet packages: Downloading NuGet packages 7/9
+  Restoring NuGet packages: Downloading NuGet packages 8/9
+  Restoring NuGet packages: Downloading NuGet packages 9/9
+  Restoring NuGet packages: Restoring NuGet packages 1/6 projects
+  Analyzing: Analyzing 1/6 projects
+  Analyzing: Analyzing 2/6 projects
+  Analyzing: Analyzing 3/6 projects
+  Analyzing: Analyzing 4/6 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/78
+  Restoring NuGet packages: Downloading NuGet packages 2/78
+  Restoring NuGet packages: Downloading NuGet packages 3/78
+  Restoring NuGet packages: Downloading NuGet packages 4/78
+  Restoring NuGet packages: Downloading NuGet packages 5/78
+  Restoring NuGet packages: Downloading NuGet packages 6/78
+  Restoring NuGet packages: Downloading NuGet packages 7/78
+  Restoring NuGet packages: Downloading NuGet packages 8/78
+  Restoring NuGet packages: Downloading NuGet packages 9/78
+  Restoring NuGet packages: Downloading NuGet packages 10/78
+  Restoring NuGet packages: Downloading NuGet packages 11/78
+  Restoring NuGet packages: Downloading NuGet packages 12/78
+  Restoring NuGet packages: Downloading NuGet packages 13/78
+  Analyzing: Analyzing 5/6 projects
+  Restoring NuGet packages: Downloading NuGet packages 14/78
+  Restoring NuGet packages: Downloading NuGet packages 15/78
+  Restoring NuGet packages: Downloading NuGet packages 16/78
+  Restoring NuGet packages: Downloading NuGet packages 17/78
+  Restoring NuGet packages: Downloading NuGet packages 18/78
+  Restoring NuGet packages: Downloading NuGet packages 19/78
+  Restoring NuGet packages: Downloading NuGet packages 20/78
+  Restoring NuGet packages: Downloading NuGet packages 21/78
+  Restoring NuGet packages: Downloading NuGet packages 22/78
+  Restoring NuGet packages: Downloading NuGet packages 23/78
+  Restoring NuGet packages: Downloading NuGet packages 24/78
+  Restoring NuGet packages: Downloading NuGet packages 25/78
+  Restoring NuGet packages: Downloading NuGet packages 26/78
+  Restoring NuGet packages: Downloading NuGet packages 27/78
+  Restoring NuGet packages: Downloading NuGet packages 28/78
+  Restoring NuGet packages: Downloading NuGet packages 29/78
+  Restoring NuGet packages: Downloading NuGet packages 30/78
+  Restoring NuGet packages: Downloading NuGet packages 31/78
+  Restoring NuGet packages: Downloading NuGet packages 32/78
+  Restoring NuGet packages: Downloading NuGet packages 33/78
+  Restoring NuGet packages: Downloading NuGet packages 34/78
+  Restoring NuGet packages: Downloading NuGet packages 35/78
+  Restoring NuGet packages: Downloading NuGet packages 36/78
+  Restoring NuGet packages: Downloading NuGet packages 37/78
+  Restoring NuGet packages: Downloading NuGet packages 38/78
+  Restoring NuGet packages: Downloading NuGet packages 39/78
+  Restoring NuGet packages: Downloading NuGet packages 40/78
+  Restoring NuGet packages: Downloading NuGet packages 41/78
+  Restoring NuGet packages: Downloading NuGet packages 42/78
+  Restoring NuGet packages: Downloading NuGet packages 43/78
+  Restoring NuGet packages: Downloading NuGet packages 44/78
+  Restoring NuGet packages: Downloading NuGet packages 45/78
+  Restoring NuGet packages: Downloading NuGet packages 46/78
+  Restoring NuGet packages: Downloading NuGet packages 47/78
+  Restoring NuGet packages: Downloading NuGet packages 48/78
+  Restoring NuGet packages: Downloading NuGet packages 49/78
+  Restoring NuGet packages: Downloading NuGet packages 50/78
+  Restoring NuGet packages: Downloading NuGet packages 51/78
+  Restoring NuGet packages: Downloading NuGet packages 52/78
+  Restoring NuGet packages: Downloading NuGet packages 53/78
+  Restoring NuGet packages: Downloading NuGet packages 54/78
+  Restoring NuGet packages: Downloading NuGet packages 55/78
+  Restoring NuGet packages: Downloading NuGet packages 56/78
+  Restoring NuGet packages: Downloading NuGet packages 57/78
+  Restoring NuGet packages: Downloading NuGet packages 58/78
+  Restoring NuGet packages: Downloading NuGet packages 59/78
+  Restoring NuGet packages: Downloading NuGet packages 60/78
+  Restoring NuGet packages: Downloading NuGet packages 61/78
+  Restoring NuGet packages: Downloading NuGet packages 62/78
+  Restoring NuGet packages: Downloading NuGet packages 63/78
+  Restoring NuGet packages: Downloading NuGet packages 64/78
+  Restoring NuGet packages: Downloading NuGet packages 65/78
+  Restoring NuGet packages: Downloading NuGet packages 66/78
+  Restoring NuGet packages: Downloading NuGet packages 67/78
+  Restoring NuGet packages: Downloading NuGet packages 68/78
+  Restoring NuGet packages: Downloading NuGet packages 69/78
+  Restoring NuGet packages: Downloading NuGet packages 70/78
+  Restoring NuGet packages: Downloading NuGet packages 71/78
+  Restoring NuGet packages: Downloading NuGet packages 72/78
+  Restoring NuGet packages: Downloading NuGet packages 73/78
+  Restoring NuGet packages: Downloading NuGet packages 74/78
+  Restoring NuGet packages: Downloading NuGet packages 75/78
+  Restoring NuGet packages: Downloading NuGet packages 76/78
+  Restoring NuGet packages: Downloading NuGet packages 77/78
+  Restoring NuGet packages: Downloading NuGet packages 78/78
+  Restoring NuGet packages: Restoring NuGet packages 2/6 projects
+  Analyzing: Analyzing 6/6 projects
+  Analyzing: Succeeded after 10.5 s
+  Restoring NuGet packages: Downloading NuGet packages 1/63
+  Restoring NuGet packages: Downloading NuGet packages 2/63
+  Restoring NuGet packages: Downloading NuGet packages 3/63
+  Restoring NuGet packages: Downloading NuGet packages 4/63
+  Restoring NuGet packages: Downloading NuGet packages 5/63
+  Restoring NuGet packages: Downloading NuGet packages 6/63
+  Restoring NuGet packages: Downloading NuGet packages 7/63
+  Restoring NuGet packages: Downloading NuGet packages 8/63
+  Restoring NuGet packages: Downloading NuGet packages 9/63
+  Restoring NuGet packages: Downloading NuGet packages 10/63
+  Restoring NuGet packages: Downloading NuGet packages 11/63
+  Restoring NuGet packages: Downloading NuGet packages 12/63
+  Restoring NuGet packages: Downloading NuGet packages 13/63
+  Restoring NuGet packages: Downloading NuGet packages 14/63
+  Restoring NuGet packages: Downloading NuGet packages 15/63
+  Restoring NuGet packages: Downloading NuGet packages 16/63
+  Restoring NuGet packages: Downloading NuGet packages 17/63
+  Restoring NuGet packages: Downloading NuGet packages 18/63
+  Restoring NuGet packages: Downloading NuGet packages 19/63
+  Restoring NuGet packages: Downloading NuGet packages 20/63
+  Restoring NuGet packages: Downloading NuGet packages 21/63
+  Restoring NuGet packages: Downloading NuGet packages 22/63
+  Restoring NuGet packages: Downloading NuGet packages 23/63
+  Restoring NuGet packages: Downloading NuGet packages 24/63
+  Restoring NuGet packages: Downloading NuGet packages 25/63
+  Restoring NuGet packages: Downloading NuGet packages 26/63
+  Restoring NuGet packages: Downloading NuGet packages 27/63
+  Restoring NuGet packages: Downloading NuGet packages 28/63
+  Restoring NuGet packages: Downloading NuGet packages 29/63
+  Restoring NuGet packages: Downloading NuGet packages 30/63
+  Restoring NuGet packages: Downloading NuGet packages 31/63
+  Restoring NuGet packages: Downloading NuGet packages 32/63
+  Restoring NuGet packages: Downloading NuGet packages 33/63
+  Restoring NuGet packages: Downloading NuGet packages 34/63
+  Restoring NuGet packages: Downloading NuGet packages 35/63
+  Restoring NuGet packages: Downloading NuGet packages 36/63
+  Restoring NuGet packages: Downloading NuGet packages 37/63
+  Restoring NuGet packages: Downloading NuGet packages 38/63
+  Restoring NuGet packages: Downloading NuGet packages 39/63
+  Restoring NuGet packages: Downloading NuGet packages 40/63
+  Restoring NuGet packages: Downloading NuGet packages 41/63
+  Restoring NuGet packages: Downloading NuGet packages 42/63
+  Restoring NuGet packages: Downloading NuGet packages 43/63
+  Restoring NuGet packages: Downloading NuGet packages 44/63
+  Restoring NuGet packages: Downloading NuGet packages 45/63
+  Restoring NuGet packages: Downloading NuGet packages 46/63
+  Restoring NuGet packages: Downloading NuGet packages 47/63
+  Restoring NuGet packages: Downloading NuGet packages 48/63
+  Restoring NuGet packages: Downloading NuGet packages 49/63
+  Restoring NuGet packages: Downloading NuGet packages 50/63
+  Restoring NuGet packages: Downloading NuGet packages 51/63
+  Restoring NuGet packages: Downloading NuGet packages 52/63
+  Restoring NuGet packages: Downloading NuGet packages 53/63
+  Restoring NuGet packages: Downloading NuGet packages 54/63
+  Restoring NuGet packages: Downloading NuGet packages 55/63
+  Restoring NuGet packages: Downloading NuGet packages 56/63
+  Restoring NuGet packages: Downloading NuGet packages 57/63
+  Restoring NuGet packages: Downloading NuGet packages 58/63
+  Restoring NuGet packages: Downloading NuGet packages 59/63
+  Restoring NuGet packages: Downloading NuGet packages 60/63
+  Restoring NuGet packages: Downloading NuGet packages 61/63
+  Restoring NuGet packages: Downloading NuGet packages 62/63
+  Restoring NuGet packages: Downloading NuGet packages 63/63
+  Restoring NuGet packages: Restoring NuGet packages 3/6 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/29
+  Restoring NuGet packages: Downloading NuGet packages 2/29
+  Restoring NuGet packages: Downloading NuGet packages 3/29
+  Restoring NuGet packages: Downloading NuGet packages 4/29
+  Restoring NuGet packages: Downloading NuGet packages 5/29
+  Restoring NuGet packages: Downloading NuGet packages 6/29
+  Restoring NuGet packages: Downloading NuGet packages 7/29
+  Restoring NuGet packages: Downloading NuGet packages 8/29
+  Restoring NuGet packages: Downloading NuGet packages 10/29
+  Restoring NuGet packages: Downloading NuGet packages 9/29
+  Restoring NuGet packages: Downloading NuGet packages 11/29
+  Restoring NuGet packages: Downloading NuGet packages 12/29
+  Restoring NuGet packages: Downloading NuGet packages 13/29
+  Restoring NuGet packages: Downloading NuGet packages 14/29
+  Restoring NuGet packages: Downloading NuGet packages 15/29
+  Restoring NuGet packages: Downloading NuGet packages 16/29
+  Restoring NuGet packages: Downloading NuGet packages 17/29
+  Restoring NuGet packages: Downloading NuGet packages 18/29
+  Restoring NuGet packages: Downloading NuGet packages 19/29
+  Restoring NuGet packages: Downloading NuGet packages 20/29
+  Restoring NuGet packages: Downloading NuGet packages 21/29
+  Restoring NuGet packages: Downloading NuGet packages 22/29
+  Restoring NuGet packages: Downloading NuGet packages 23/29
+  Restoring NuGet packages: Downloading NuGet packages 24/29
+  Restoring NuGet packages: Downloading NuGet packages 25/29
+  Restoring NuGet packages: Downloading NuGet packages 26/29
+  Restoring NuGet packages: Downloading NuGet packages 27/29
+  Restoring NuGet packages: Downloading NuGet packages 28/29
+  Restoring NuGet packages: Downloading NuGet packages 29/29
+  Restoring NuGet packages: Restoring NuGet packages 4/6 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/29
+  Restoring NuGet packages: Downloading NuGet packages 2/29
+  Restoring NuGet packages: Downloading NuGet packages 3/29
+  Restoring NuGet packages: Downloading NuGet packages 4/29
+  Restoring NuGet packages: Downloading NuGet packages 5/29
+  Restoring NuGet packages: Downloading NuGet packages 6/29
+  Restoring NuGet packages: Downloading NuGet packages 7/29
+  Restoring NuGet packages: Downloading NuGet packages 8/29
+  Restoring NuGet packages: Downloading NuGet packages 9/29
+  Restoring NuGet packages: Downloading NuGet packages 10/29
+  Restoring NuGet packages: Downloading NuGet packages 11/29
+  Restoring NuGet packages: Downloading NuGet packages 12/29
+  Restoring NuGet packages: Downloading NuGet packages 13/29
+  Restoring NuGet packages: Downloading NuGet packages 14/29
+  Restoring NuGet packages: Downloading NuGet packages 15/29
+  Restoring NuGet packages: Downloading NuGet packages 16/29
+  Restoring NuGet packages: Downloading NuGet packages 17/29
+  Restoring NuGet packages: Downloading NuGet packages 18/29
+  Restoring NuGet packages: Downloading NuGet packages 19/29
+  Restoring NuGet packages: Downloading NuGet packages 20/29
+  Restoring NuGet packages: Downloading NuGet packages 21/29
+  Restoring NuGet packages: Downloading NuGet packages 22/29
+  Restoring NuGet packages: Downloading NuGet packages 23/29
+  Restoring NuGet packages: Downloading NuGet packages 24/29
+  Restoring NuGet packages: Downloading NuGet packages 25/29
+  Restoring NuGet packages: Downloading NuGet packages 26/29
+  Restoring NuGet packages: Downloading NuGet packages 27/29
+  Restoring NuGet packages: Downloading NuGet packages 28/29
+  Restoring NuGet packages: Downloading NuGet packages 29/29
+  Restoring NuGet packages: Restoring NuGet packages 5/6 projects
+  Restoring NuGet packages: Downloading NuGet packages 2/75
+  Restoring NuGet packages: Downloading NuGet packages 1/75
+  Restoring NuGet packages: Downloading NuGet packages 4/75
+  Restoring NuGet packages: Downloading NuGet packages 3/75
+  Restoring NuGet packages: Downloading NuGet packages 5/75
+  Restoring NuGet packages: Downloading NuGet packages 6/75
+  Restoring NuGet packages: Downloading NuGet packages 7/75
+  Restoring NuGet packages: Downloading NuGet packages 8/75
+  Restoring NuGet packages: Downloading NuGet packages 9/75
+  Restoring NuGet packages: Downloading NuGet packages 10/75
+  Restoring NuGet packages: Downloading NuGet packages 11/75
+  Restoring NuGet packages: Downloading NuGet packages 12/75
+  Restoring NuGet packages: Downloading NuGet packages 13/75
+  Restoring NuGet packages: Downloading NuGet packages 14/75
+  Restoring NuGet packages: Downloading NuGet packages 15/75
+  Restoring NuGet packages: Downloading NuGet packages 16/75
+  Restoring NuGet packages: Downloading NuGet packages 17/75
+  Restoring NuGet packages: Downloading NuGet packages 18/75
+  Restoring NuGet packages: Downloading NuGet packages 19/75
+  Restoring NuGet packages: Downloading NuGet packages 20/75
+  Restoring NuGet packages: Downloading NuGet packages 21/75
+  Restoring NuGet packages: Downloading NuGet packages 22/75
+  Restoring NuGet packages: Downloading NuGet packages 23/75
+  Restoring NuGet packages: Downloading NuGet packages 24/75
+  Restoring NuGet packages: Downloading NuGet packages 25/75
+  Restoring NuGet packages: Downloading NuGet packages 26/75
+  Restoring NuGet packages: Downloading NuGet packages 27/75
+  Restoring NuGet packages: Downloading NuGet packages 28/75
+  Restoring NuGet packages: Downloading NuGet packages 29/75
+  Restoring NuGet packages: Downloading NuGet packages 30/75
+  Restoring NuGet packages: Downloading NuGet packages 32/75
+  Restoring NuGet packages: Downloading NuGet packages 31/75
+  Restoring NuGet packages: Downloading NuGet packages 33/75
+  Restoring NuGet packages: Downloading NuGet packages 34/75
+  Restoring NuGet packages: Downloading NuGet packages 35/75
+  Restoring NuGet packages: Downloading NuGet packages 36/75
+  Restoring NuGet packages: Downloading NuGet packages 37/75
+  Restoring NuGet packages: Downloading NuGet packages 38/75
+  Restoring NuGet packages: Downloading NuGet packages 39/75
+  Restoring NuGet packages: Downloading NuGet packages 40/75
+  Restoring NuGet packages: Downloading NuGet packages 41/75
+  Restoring NuGet packages: Downloading NuGet packages 42/75
+  Restoring NuGet packages: Downloading NuGet packages 43/75
+  Restoring NuGet packages: Downloading NuGet packages 44/75
+  Restoring NuGet packages: Downloading NuGet packages 45/75
+  Restoring NuGet packages: Downloading NuGet packages 46/75
+  Restoring NuGet packages: Downloading NuGet packages 47/75
+  Restoring NuGet packages: Downloading NuGet packages 48/75
+  Restoring NuGet packages: Downloading NuGet packages 49/75
+  Restoring NuGet packages: Downloading NuGet packages 50/75
+  Restoring NuGet packages: Downloading NuGet packages 51/75
+  Restoring NuGet packages: Downloading NuGet packages 52/75
+  Restoring NuGet packages: Downloading NuGet packages 53/75
+  Restoring NuGet packages: Downloading NuGet packages 54/75
+  Restoring NuGet packages: Downloading NuGet packages 55/75
+  Restoring NuGet packages: Downloading NuGet packages 56/75
+  Restoring NuGet packages: Downloading NuGet packages 57/75
+  Restoring NuGet packages: Downloading NuGet packages 58/75
+  Restoring NuGet packages: Downloading NuGet packages 59/75
+  Restoring NuGet packages: Downloading NuGet packages 60/75
+  Restoring NuGet packages: Downloading NuGet packages 61/75
+  Restoring NuGet packages: Downloading NuGet packages 62/75
+  Restoring NuGet packages: Downloading NuGet packages 63/75
+  Restoring NuGet packages: Downloading NuGet packages 64/75
+  Restoring NuGet packages: Downloading NuGet packages 65/75
+  Restoring NuGet packages: Downloading NuGet packages 66/75
+  Restoring NuGet packages: Downloading NuGet packages 67/75
+  Restoring NuGet packages: Downloading NuGet packages 68/75
+  Restoring NuGet packages: Downloading NuGet packages 69/75
+  Restoring NuGet packages: Downloading NuGet packages 70/75
+  Restoring NuGet packages: Downloading NuGet packages 71/75
+  Restoring NuGet packages: Downloading NuGet packages 72/75
+  Restoring NuGet packages: Downloading NuGet packages 73/75
+  Restoring NuGet packages: Downloading NuGet packages 74/75
+  Restoring NuGet packages: Downloading NuGet packages 75/75
+  Restoring NuGet packages: Succeeded after 15.0 s
+  Analyzing: Analyzing 0/6 projects
+  Analyzing: Analyzing 1/6 projects
+  Analyzing: Analyzing 2/6 projects
+  Analyzing: Analyzing 3/6 projects
+  Analyzing: Analyzing 4/6 projects
+  Analyzing: Analyzing 5/6 projects
+  Setting up projects: Setting up docs: pip install -r requirements.txt
+  Installing docs's packages: Installing packages: pip install -r requirements.txt
+  Analyzing: Analyzing 6/6 projects
+  Analyzing: Succeeded after 7.1 s
+  Installing docs's packages: Succeeded after 9.3 s
+  Setting up projects: Succeeded after 34.8 s
+  Building: Building
+  Building: Building 0/6 projects
+  Building: Building 1/6 projects
+  Building: Building 2/6 projects
+  Building: Building 3/6 projects
+  Building: Building 4/6 projects
+  Building: Building 5/6 projects
+  Building: Failed after 1.2 s
+Project setup:
+------ docs: pip install -r requirements.txt ------
+Reading which Python versions the 3 pinned packages have wheels for, from PyPI.
+> python3 -m venv .venv
+> /home/runner/work/_temp/repos/Ocelot/docs/.venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
+Collecting sphinx==9.1.0 (from -r requirements.txt (line 2))
+  Downloading sphinx-9.1.0-py3-none-any.whl.metadata (5.8 kB)
+Collecting alabaster==1.0.0 (from -r requirements.txt (line 3))
+  Downloading alabaster-1.0.0-py3-none-any.whl.metadata (2.8 kB)
+Collecting sphinx_copybutton==0.5.2 (from -r requirements.txt (line 4))
+  Downloading sphinx_copybutton-0.5.2-py3-none-any.whl.metadata (3.2 kB)
+Collecting sphinxcontrib-applehelp>=1.0.7 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading sphinxcontrib_applehelp-2.0.0-py3-none-any.whl.metadata (2.3 kB)
+Collecting sphinxcontrib-devhelp>=1.0.6 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading sphinxcontrib_devhelp-2.0.0-py3-none-any.whl.metadata (2.3 kB)
+Collecting sphinxcontrib-htmlhelp>=2.0.6 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading sphinxcontrib_htmlhelp-2.1.0-py3-none-any.whl.metadata (2.3 kB)
+Collecting sphinxcontrib-jsmath>=1.0.1 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading sphinxcontrib_jsmath-2.0.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting sphinxcontrib-qthelp>=1.0.6 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading sphinxcontrib_qthelp-2.0.0-py3-none-any.whl.metadata (2.3 kB)
+Collecting sphinxcontrib-serializinghtml>=1.1.9 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading sphinxcontrib_serializinghtml-2.0.0-py3-none-any.whl.metadata (2.4 kB)
+Collecting Jinja2>=3.1 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting Pygments>=2.17 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting docutils<0.23,>=0.21 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading docutils-0.22.4-py3-none-any.whl.metadata (15 kB)
+Collecting snowballstemmer>=2.2 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading snowballstemmer-3.1.1-py3-none-any.whl.metadata (7.9 kB)
+Collecting babel>=2.13 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading babel-2.18.0-py3-none-any.whl.metadata (2.2 kB)
+Collecting imagesize>=1.3 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading imagesize-2.0.1-py3-none-any.whl.metadata (7.0 kB)
+Collecting requests>=2.30.0 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting roman-numerals>=1.0.0 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading roman_numerals-4.1.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting packaging>=23.0 (from sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting MarkupSafe>=2.0 (from Jinja2>=3.1->sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting charset_normalizer<4,>=2 (from requests>=2.30.0->sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.4/46.4 kB 648.4 kB/s eta 0:00:00
+Collecting idna<4,>=2.5 (from requests>=2.30.0->sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting urllib3<3,>=1.26 (from requests>=2.30.0->sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting certifi>=2023.5.7 (from requests>=2.30.0->sphinx==9.1.0->-r requirements.txt (line 2))
+  Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+Downloading sphinx-9.1.0-py3-none-any.whl (3.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.9/3.9 MB 17.3 MB/s eta 0:00:00
+Downloading alabaster-1.0.0-py3-none-any.whl (13 kB)
+Downloading sphinx_copybutton-0.5.2-py3-none-any.whl (13 kB)
+Downloading babel-2.18.0-py3-none-any.whl (10.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 44.6 MB/s eta 0:00:00
+Downloading docutils-0.22.4-py3-none-any.whl (633 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 633.2/633.2 kB 107.4 MB/s eta 0:00:00
+Downloading imagesize-2.0.1-py3-none-any.whl (14 kB)
+Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 56.2 MB/s eta 0:00:00
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 63.1 MB/s eta 0:00:00
+Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 115.8 MB/s eta 0:00:00
+Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 34.8 MB/s eta 0:00:00
+Downloading roman_numerals-4.1.0-py3-none-any.whl (7.7 kB)
+Downloading snowballstemmer-3.1.1-py3-none-any.whl (104 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 104.2/104.2 kB 49.2 MB/s eta 0:00:00
+Downloading sphinxcontrib_applehelp-2.0.0-py3-none-any.whl (119 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 119.3/119.3 kB 55.8 MB/s eta 0:00:00
+Downloading sphinxcontrib_devhelp-2.0.0-py3-none-any.whl (82 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 82.5/82.5 kB 28.8 MB/s eta 0:00:00
+Downloading sphinxcontrib_htmlhelp-2.1.0-py3-none-any.whl (98 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98.7/98.7 kB 41.5 MB/s eta 0:00:00
+Downloading sphinxcontrib_jsmath-2.0.0-py3-none-any.whl (78 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.1/78.1 kB 38.0 MB/s eta 0:00:00
+Downloading sphinxcontrib_qthelp-2.0.0-py3-none-any.whl (88 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.7/88.7 kB 24.8 MB/s eta 0:00:00
+Downloading sphinxcontrib_serializinghtml-2.0.0-py3-none-any.whl (92 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 92.1/92.1 kB 37.5 MB/s eta 0:00:00
+Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 54.1 MB/s eta 0:00:00
+Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (257 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 257.6/257.6 kB 67.6 MB/s eta 0:00:00
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 27.8 MB/s eta 0:00:00
+Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 51.3 MB/s eta 0:00:00
+Installing collected packages: urllib3, sphinxcontrib-serializinghtml, sphinxcontrib-qthelp, sphinxcontrib-jsmath, sphinxcontrib-htmlhelp, sphinxcontrib-devhelp, sphinxcontrib-applehelp, snowballstemmer, roman-numerals, Pygments, packaging, MarkupSafe, imagesize, idna, docutils, charset_normalizer, certifi, babel, alabaster, requests, Jinja2, sphinx, sphinx_copybutton
+Successfully installed Jinja2-3.1.6 MarkupSafe-3.0.4 Pygments-2.21.0 alabaster-1.0.0 babel-2.18.0 certifi-2026.10.23 charset_normalizer-3.5.2 docutils-0.22.4 idna-3.20 imagesize-2.0.1 packaging-26.3 requests-2.34.2 roman-numerals-4.1.0 snowballstemmer-3.1.1 sphinx-9.1.0 sphinx_copybutton-0.5.2 sphinxcontrib-applehelp-2.0.0 sphinxcontrib-devhelp-2.0.0 sphinxcontrib-htmlhelp-2.1.0 sphinxcontrib-jsmath-2.0.0 sphinxcontrib-qthelp-2.0.0 sphinxcontrib-serializinghtml-2.0.0 urllib3-2.8.0
+
+Output:
+(14,22): error CS0246: The type or namespace name 'RequestDelegate' could not be found (are you missing a using directive or an assembly reference?)
+1>ResponderMiddleware.cs(18,32): error CS0246: The type or namespace name 'RequestDelegate' could not be found (are you missing a using directive or an assembly reference?)
+1>ResponderMiddleware.cs(29,30): error CS0246: The type or namespace name 'HttpContext' could not be found (are you missing a using directive or an assembly reference?)
+1>ResponderMiddleware.cs(54,41): error CS0246: The type or namespace name 'HttpContext' could not be found (are you missing a using directive or an assembly reference?)
+1>IPSecurityPolicy.cs(1,28): error CS0234: The type or namespace name 'Http' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+1>IPSecurityPolicy.cs(9,63): error CS0246: The type or namespace name 'HttpContext' could not be found (are you missing a using directive or an assembly reference?)
+1>IPSecurityPolicy.cs(31,74): error CS0246: The type or namespace name 'HttpContext' could not be found (are you missing a using directive or an assembly reference?)
+1>ISecurityPolicy.cs(1,28): error CS0234: The type or namespace name 'Http' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+1>ISecurityPolicy.cs(9,56): error CS0246: The type or namespace name 'HttpContext' could not be found (are you missing a using directive or an assembly reference?)
+1>ISecurityPolicy.cs(10,67): error CS0246: The type or namespace name 'HttpContext' could not be found (are you missing a using directive or an assembly reference?)
+1>SecurityError.cs(1,28): error CS0234: The type or namespace name 'Http' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+1>SecurityError.cs(9,56): error CS0103: The name 'StatusCodes' does not exist in the current context
+1>SecurityMiddleware.cs(1,28): error CS0234: The type or namespace name 'Http' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+1>SecurityMiddleware.cs(10,22): error CS0246: The type or namespace name 'RequestDelegate' could not be found (are you missing a using directive or an assembly reference?)
+1>SecurityMiddleware.cs(13,31): error CS0246: The type or namespace name 'RequestDelegate' could not be found (are you missing a using directive or an assembly reference?)
+1>SecurityMiddleware.cs(24,30): error CS0246: The type or namespace name 'HttpContext' could not be found (are you missing a using directive or an assembly reference?)
+1>SecurityMiddleware.cs(50,49): error CS0246: The type or namespace name 'HttpContext' could not be found (are you missing a using directive or an assembly reference?)
+1>SecurityMiddleware.cs(55,43): error CS0103: The name 'StatusCodes' does not exist in the current context
+1>WebSocketsProxyMiddleware.cs(5,28): error CS0234: The type or namespace name 'Http' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+1>WebSocketsProxyMiddleware.cs(6,17): error CS0234: The type or namespace name 'Net' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+1>WebSocketsProxyMiddleware.cs(19,9): error CS0103: The name 'HeaderNames' does not exist in the current context
+1>WebSocketsProxyMiddleware.cs(20,9): error CS0103: The name 'HeaderNames' does not exist in the current context
+1>WebSocketsProxyMiddleware.cs(21,9): error CS0103: The name 'HeaderNames' does not exist in the current context
+1>WebSocketsProxyMiddleware.cs(22,9): error CS0103: The name 'HeaderNames' does not exist in the current context
+1>WebSocketsProxyMiddleware.cs(23,9): error CS0103: The name 'HeaderNames' does not exist in the current context
+1>WebSocketsProxyMiddleware.cs(24,9): error CS0103: The name 'HeaderNames' does not exist in the current context
+1>WebSocketsProxyMiddleware.cs(25,9): error CS0103: The name 'HeaderNames' does not exist in the current context
+1>WebSocketsProxyMiddleware.cs(26,9): error CS0103: The name 'HeaderNames' does not exist in the current context
+1>WebSocketsProxyMiddleware.cs(32,22): error CS0246: The type or namespace name 'RequestDelegate' could not be found (are you missing a using directive or an assembly reference?)
+1>WebSocketsProxyMiddleware.cs(38,38): error CS0246: The type or namespace name 'RequestDelegate' could not be found (are you missing a using directive or an assembly reference?)
+1>WebSocketsProxyMiddleware.cs(45,30): error CS0246: The type or namespace name 'HttpContext' could not be found (are you missing a using directive or an assembly reference?)
+1>WebSocketsProxyMiddleware.cs(94,30): error CS0246: The type or namespace name 'HttpContext' could not be found (are you missing a using directive or an assembly reference?)
+1>AuthenticationOptions.cs(19,44): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>AuthenticationOptionsCreator.cs(55,9): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>AuthenticationOptionsCreator.cs(55,45): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>AuthenticationOptionsCreator.cs(55,87): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>CacheOptionsCreator.cs(15,30): warning CS0618: 'FileRoute.FileCacheOptions' is obsolete: 'Use CacheOptions instead of FileCacheOptions! Note that FileCacheOptions will be removed in version 25.0!'
+1>DynamicRoutesCreator.cs(62,13): warning CS0618: 'FileDynamicRoute.RateLimitRule' is obsolete: 'Use RateLimitOptions instead of RateLimitRule! Note that RateLimitRule will be removed in version 25.0!'
+1>DynamicRoutesCreator.cs(64,45): warning CS0618: 'FileDynamicRoute.RateLimitRule' is obsolete: 'Use RateLimitOptions instead of RateLimitRule! Note that RateLimitRule will be removed in version 25.0!'
+1>QoSOptionsCreator.cs(54,9): warning CS0618: 'FileQoSOptions.DurationOfBreak' is obsolete: 'Use BreakDuration instead of DurationOfBreak! Note that DurationOfBreak will be removed in version 25.0!'
+1>QoSOptionsCreator.cs(54,37): warning CS0618: 'FileQoSOptions.DurationOfBreak' is obsolete: 'Use BreakDuration instead of DurationOfBreak! Note that DurationOfBreak will be removed in version 25.0!'
+1>QoSOptionsCreator.cs(56,9): warning CS0618: 'FileQoSOptions.ExceptionsAllowedBeforeBreaking' is obsolete: 'Use MinimumThroughput instead of ExceptionsAllowedBeforeBreaking! Note that ExceptionsAllowedBeforeBreaking will be removed in version 25.0!'
+1>QoSOptionsCreator.cs(56,53): warning CS0618: 'FileQoSOptions.ExceptionsAllowedBeforeBreaking' is obsolete: 'Use MinimumThroughput instead of ExceptionsAllowedBeforeBreaking! Note that ExceptionsAllowedBeforeBreaking will be removed in version 25.0!'
+1>QoSOptionsCreator.cs(60,9): warning CS0618: 'FileQoSOptions.TimeoutValue' is obsolete: 'Use Timeout instead of TimeoutValue! Note that TimeoutValue will be removed in version 25.0!'
+1>QoSOptionsCreator.cs(60,34): warning CS0618: 'FileQoSOptions.TimeoutValue' is obsolete: 'Use Timeout instead of TimeoutValue! Note that TimeoutValue will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(64,9): warning CS0618: 'FileRateLimitByHeaderRule.DisableRateLimitHeaders' is obsolete: 'Use EnableHeaders instead of DisableRateLimitHeaders! Note that DisableRateLimitHeaders will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(64,42): warning CS0618: 'FileRateLimitByHeaderRule.DisableRateLimitHeaders' is obsolete: 'Use EnableHeaders instead of DisableRateLimitHeaders! Note that DisableRateLimitHeaders will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(70,9): warning CS0618: 'FileRateLimitByHeaderRule.HttpStatusCode' is obsolete: 'Use StatusCode instead of HttpStatusCode! Note that HttpStatusCode will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(70,33): warning CS0618: 'FileRateLimitByHeaderRule.HttpStatusCode' is obsolete: 'Use StatusCode instead of HttpStatusCode! Note that HttpStatusCode will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(74,9): warning CS0618: 'FileRateLimitByHeaderRule.QuotaExceededMessage' is obsolete: 'Use QuotaMessage instead of QuotaExceededMessage! Note that QuotaExceededMessage will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(74,37): warning CS0618: 'FileRateLimitByHeaderRule.QuotaExceededMessage' is obsolete: 'Use QuotaMessage instead of QuotaExceededMessage! Note that QuotaExceededMessage will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(74,71): warning CS0618: 'FileRateLimitByHeaderRule.QuotaExceededMessage' is obsolete: 'Use QuotaMessage instead of QuotaExceededMessage! Note that QuotaExceededMessage will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(78,9): warning CS0618: 'FileRateLimitByHeaderRule.RateLimitCounterPrefix' is obsolete: 'Use KeyPrefix instead of RateLimitCounterPrefix! Note that RateLimitCounterPrefix will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(78,39): warning CS0618: 'FileRateLimitByHeaderRule.RateLimitCounterPrefix' is obsolete: 'Use KeyPrefix instead of RateLimitCounterPrefix! Note that RateLimitCounterPrefix will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(78,75): warning CS0618: 'FileRateLimitByHeaderRule.RateLimitCounterPrefix' is obsolete: 'Use KeyPrefix instead of RateLimitCounterPrefix! Note that RateLimitCounterPrefix will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(84,9): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>RateLimitOptionsCreator.cs(84,33): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>FileAuthenticationOptions.cs(18,9): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>FileAuthenticationOptions.cs(18,37): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>FileAuthenticationOptions.cs(36,30): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>FileAuthenticationOptions.cs(43,27): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>FileAuthenticationOptions.cs(43,57): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>FileQoSOptions.cs(14,9): warning CS0618: 'FileQoSOptions.DurationOfBreak' is obsolete: 'Use BreakDuration instead of DurationOfBreak! Note that DurationOfBreak will be removed in version 25.0!'
+1>FileQoSOptions.cs(14,27): warning CS0618: 'FileQoSOptions.DurationOfBreak' is obsolete: 'Use BreakDuration instead of DurationOfBreak! Note that DurationOfBreak will be removed in version 25.0!'
+1>FileQoSOptions.cs(16,9): warning CS0618: 'FileQoSOptions.ExceptionsAllowedBeforeBreaking' is obsolete: 'Use MinimumThroughput instead of ExceptionsAllowedBeforeBreaking! Note that ExceptionsAllowedBeforeBreaking will be removed in version 25.0!'
+1>FileQoSOptions.cs(16,43): warning CS0618: 'FileQoSOptions.ExceptionsAllowedBeforeBreaking' is obsolete: 'Use MinimumThroughput instead of ExceptionsAllowedBeforeBreaking! Note that ExceptionsAllowedBeforeBreaking will be removed in version 25.0!'
+1>FileQoSOptions.cs(20,9): warning CS0618: 'FileQoSOptions.TimeoutValue' is obsolete: 'Use Timeout instead of TimeoutValue! Note that TimeoutValue will be removed in version 25.0!'
+1>FileQoSOptions.cs(20,24): warning CS0618: 'FileQoSOptions.TimeoutValue' is obsolete: 'Use Timeout instead of TimeoutValue! Note that TimeoutValue will be removed in version 25.0!'
+1>FileQoSOptions.cs(26,9): warning CS0618: 'FileQoSOptions.DurationOfBreak' is obsolete: 'Use BreakDuration instead of DurationOfBreak! Note that DurationOfBreak will be removed in version 25.0!'
+1>FileQoSOptions.cs(28,9): warning CS0618: 'FileQoSOptions.ExceptionsAllowedBeforeBreaking' is obsolete: 'Use MinimumThroughput instead of ExceptionsAllowedBeforeBreaking! Note that ExceptionsAllowedBeforeBreaking will be removed in version 25.0!'
+1>FileQoSOptions.cs(32,9): warning CS0618: 'FileQoSOptions.TimeoutValue' is obsolete: 'Use Timeout instead of TimeoutValue! Note that TimeoutValue will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(22,9): warning CS0618: 'FileRateLimitByHeaderRule.DisableRateLimitHeaders' is obsolete: 'Use EnableHeaders instead of DisableRateLimitHeaders! Note that DisableRateLimitHeaders will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(22,35): warning CS0618: 'FileRateLimitByHeaderRule.DisableRateLimitHeaders' is obsolete: 'Use EnableHeaders instead of DisableRateLimitHeaders! Note that DisableRateLimitHeaders will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(23,9): warning CS0618: 'FileRateLimitByHeaderRule.HttpStatusCode' is obsolete: 'Use StatusCode instead of HttpStatusCode! Note that HttpStatusCode will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(23,26): warning CS0618: 'FileRateLimitByHeaderRule.HttpStatusCode' is obsolete: 'Use StatusCode instead of HttpStatusCode! Note that HttpStatusCode will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(24,9): warning CS0618: 'FileRateLimitByHeaderRule.QuotaExceededMessage' is obsolete: 'Use QuotaMessage instead of QuotaExceededMessage! Note that QuotaExceededMessage will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(24,32): warning CS0618: 'FileRateLimitByHeaderRule.QuotaExceededMessage' is obsolete: 'Use QuotaMessage instead of QuotaExceededMessage! Note that QuotaExceededMessage will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(25,9): warning CS0618: 'FileRateLimitByHeaderRule.RateLimitCounterPrefix' is obsolete: 'Use KeyPrefix instead of RateLimitCounterPrefix! Note that RateLimitCounterPrefix will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(25,34): warning CS0618: 'FileRateLimitByHeaderRule.RateLimitCounterPrefix' is obsolete: 'Use KeyPrefix instead of RateLimitCounterPrefix! Note that RateLimitCounterPrefix will be removed in version 25.0!'
+1>FileRateLimitByHeaderRule.cs(61,13): warning CS0618: 'FileRateLimitByHeaderRule.DisableRateLimitHeaders' is obsolete: 'Use EnableHeaders instead of DisableRateLimitHeaders! Note that DisableRateLimitHeaders will be removed in version 25.0!'
+1>FileRateLimitRule.cs(20,9): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>FileRateLimitRule.cs(20,26): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>FileRateLimitRule.cs(90,29): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>FileRateLimitRule.cs(90,55): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>FileRoute.cs(81,9): warning CS0618: 'FileRoute.FileCacheOptions' is obsolete: 'Use CacheOptions instead of FileCacheOptions! Note that FileCacheOptions will be removed in version 25.0!'
+1>FileRoute.cs(81,35): warning CS0618: 'FileRoute.FileCacheOptions' is obsolete: 'Use CacheOptions instead of FileCacheOptions! Note that FileCacheOptions will be removed in version 25.0!'
+1>QoSOptions.cs(32,25): warning CS0618: 'FileQoSOptions.DurationOfBreak' is obsolete: 'Use BreakDuration instead of DurationOfBreak! Note that DurationOfBreak will be removed in version 25.0!'
+1>QoSOptions.cs(33,29): warning CS0618: 'FileQoSOptions.ExceptionsAllowedBeforeBreaking' is obsolete: 'Use MinimumThroughput instead of ExceptionsAllowedBeforeBreaking! Note that ExceptionsAllowedBeforeBreaking will be removed in version 25.0!'
+1>QoSOptions.cs(36,19): warning CS0618: 'FileQoSOptions.TimeoutValue' is obsolete: 'Use Timeout instead of TimeoutValue! Note that TimeoutValue will be removed in version 25.0!'
+1>RateLimitOptions.cs(56,25): warning CS0618: 'FileRateLimitByHeaderRule.DisableRateLimitHeaders' is obsolete: 'Use EnableHeaders instead of DisableRateLimitHeaders! Note that DisableRateLimitHeaders will be removed in version 25.0!'
+1>RateLimitOptions.cs(56,70): warning CS0618: 'FileRateLimitByHeaderRule.DisableRateLimitHeaders' is obsolete: 'Use EnableHeaders instead of DisableRateLimitHeaders! Note that DisableRateLimitHeaders will be removed in version 25.0!'
+1>RateLimitOptions.cs(59,22): warning CS0618: 'FileRateLimitByHeaderRule.HttpStatusCode' is obsolete: 'Use StatusCode instead of HttpStatusCode! Note that HttpStatusCode will be removed in version 25.0!'
+1>RateLimitOptions.cs(60,24): warning CS0618: 'FileRateLimitByHeaderRule.QuotaExceededMessage' is obsolete: 'Use QuotaMessage instead of QuotaExceededMessage! Note that QuotaExceededMessage will be removed in version 25.0!'
+1>RateLimitOptions.cs(61,21): warning CS0618: 'FileRateLimitByHeaderRule.RateLimitCounterPrefix' is obsolete: 'Use KeyPrefix instead of RateLimitCounterPrefix! Note that RateLimitCounterPrefix will be removed in version 25.0!'
+1>RateLimitOptions.cs(64,13): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>RateLimitOptions.cs(64,51): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
+1>FileAuthenticationOptionsValidator.cs(24,13): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+1>FileAuthenticationOptionsValidator.cs(31,23): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
+2>------ Build started: Project: Ocelot.Testing, Configuration: Debug ------
+3>------ Build started: Project: Ocelot.Acceptance, Configuration: Debug ------
+4>------ Build started: Project: Ocelot.Benchmarks, Configuration: Debug ------
+5>------ Build started: Project: Ocelot.ManualTest, Configuration: Debug ------
+6>------ Build started: Project: Ocelot.UnitTests, Configuration: Debug ------
+========== Build: 0 succeeded, 6 failed ==========
+

@@ -1,0 +1,435 @@
+NodaTime at 3d290520894faa6f16c80eebac8c5ebbf9df136a, opening /home/runner/work/_temp/repos/NodaTime/src/NodaTime.slnx
+Opened in 0.4 s: NodaTime, solution /home/runner/work/_temp/repos/NodaTime/src/NodaTime.slnx
+  project NodaTime.AotCompatibilityTestApp [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime.AotCompatibilityTestApp/NodaTime.AotCompatibilityTestApp.csproj
+  project NodaTime.Benchmarks.Custom [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime.Benchmarks.Custom/NodaTime.Benchmarks.Custom.csproj
+  project NodaTime.Benchmarks [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime.Benchmarks/NodaTime.Benchmarks.csproj
+  project NodaTime.Demo [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime.Demo/NodaTime.Demo.csproj
+  project NodaTime.NzdPrinter [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime.NzdPrinter/NodaTime.NzdPrinter.csproj
+  project NodaTime.Test [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime.Test/NodaTime.Test.csproj
+  project NodaTime.Testing [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime.Testing/NodaTime.Testing.csproj
+  project NodaTime.Tools.Common [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime.Tools.Common/NodaTime.Tools.Common.csproj
+  project NodaTime.Tools.DumpTimeZoneInfo [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime.Tools.DumpTimeZoneInfo/NodaTime.Tools.DumpTimeZoneInfo.csproj
+  project NodaTime.Tools.ValidateHistoricalNzd [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime.Tools.ValidateHistoricalNzd/NodaTime.Tools.ValidateHistoricalNzd.csproj
+  project NodaTime.TzdbCompiler.Test [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime.TzdbCompiler.Test/NodaTime.TzdbCompiler.Test.csproj
+  project NodaTime.TzdbCompiler [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime.TzdbCompiler/NodaTime.TzdbCompiler.csproj
+  project NodaTime.TzValidate.NodaDump [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime.TzValidate.NodaDump/NodaTime.TzValidate.NodaDump.csproj
+  project NodaTime.TzValidate.NzdCompatibility [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime.TzValidate.NzdCompatibility/NodaTime.TzValidate.NzdCompatibility.csproj
+  project NodaTime [CSharp] /home/runner/work/_temp/repos/NodaTime/src/NodaTime/NodaTime.csproj
+Compatibility Doctor:
+  NodaTime.AotCompatibilityTestApp: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  NodaTime.Benchmarks.Custom: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  NodaTime.Benchmarks: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
+  NodaTime.Demo: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  NodaTime.NzdPrinter: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  NodaTime.Test: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  NodaTime.Testing: Library via Built with its users - A library is compiled together with the projects that reference it.
+  NodaTime.Tools.Common: Library via Built with its users - A library is compiled together with the projects that reference it.
+  NodaTime.Tools.DumpTimeZoneInfo: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  NodaTime.Tools.ValidateHistoricalNzd: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  NodaTime.TzdbCompiler.Test: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  NodaTime.TzdbCompiler: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  NodaTime.TzValidate.NodaDump: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  NodaTime.TzValidate.NzdCompatibility: Needs Windows via Windows Bridge - .NET Framework apps run on Windows only. They build and run on your PC through the Windows Bridge.
+  NodaTime: Library via Built with its users - A library is compiled together with the projects that reference it.
+F5 startup project: NodaTime.TzdbCompiler /home/runner/work/_temp/repos/NodaTime/src/NodaTime.TzdbCompiler/NodaTime.TzdbCompiler.csproj
+Error List after analysis: 2582 errors, 15 warnings
+  1976 x CS0281
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(13,29): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(13,87): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(14,29): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(14,76): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(15,29): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(15,79): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(40,23): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(46,23): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(52,23): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(58,23): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+  517 x CS0122
+      [NodaTime.Benchmarks] DurationBenchmarks.cs(13,60): error CS0122: 'Duration.Duration(int, long)' is inaccessible due to its protection level
+      [NodaTime.Benchmarks] DurationBenchmarks.cs(14,60): error CS0122: 'Duration.Duration(int, long)' is inaccessible due to its protection level
+      [NodaTime.Benchmarks] Duration64Benchmarks.cs(11,65): error CS0122: 'Duration.Duration(int, long)' is inaccessible due to its protection level
+      [NodaTime.Benchmarks] LocalDateBenchmarks.cs(61,68): error CS0122: 'LocalDate.LocalDate(int, CalendarSystem)' is inaccessible due to its protection level
+      [NodaTime.Benchmarks] LocalDateBenchmarks.cs(66,13): error CS0122: 'LocalDate.LocalDate(int)' is inaccessible due to its protection level
+      [NodaTime.Benchmarks] StandardDaylightAlternatingMapBenchmarks.cs(36,64): error CS0122: 'StandardDaylightAlternatingMap.GetZoneInterval(Instant)' is inaccessible due to its protection level
+      [NodaTime.Benchmarks] StandardDaylightAlternatingMapBenchmarks.cs(39,64): error CS0122: 'StandardDaylightAlternatingMap.GetZoneInterval(Instant)' is inaccessible due to its protection level
+      [NodaTime.NzdPrinter] Program.cs(48,63): error CS0122: 'DateTimeZoneReader.ReadString()' is inaccessible due to its protection level
+      [NodaTime.NzdPrinter] Program.cs(74,28): error CS0122: 'DateTimeZoneReader.ReadCount()' is inaccessible due to its protection level
+      [NodaTime.NzdPrinter] Program.cs(79,36): error CS0122: 'DateTimeZoneReader.ReadString()' is inaccessible due to its protection level
+  37 x CS1503
+      [NodaTime.Test] InstantTest.Operators.cs(81,79): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] InstantTest.Operators.cs(82,59): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] InstantTest.Operators.cs(83,109): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] InstantTest.cs(439,57): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] InstantTest.cs(464,37): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] InstantTest.cs(484,37): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] LocalInstantTest.cs(73,37): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] LocalInstantTest.cs(93,37): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] SteppedPatternBuilderTest.cs(91,42): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'T'
+      [NodaTime.Test] PartialZoneIntervalMapTest.cs(73,52): error CS1503: Argument 1: cannot convert from 'NodaTime.DateTimeZone' to 'NodaTime.TimeZones.IZoneIntervalMap'
+  32 x CS0103
+      [NodaTime.NzdPrinter] Program.cs(41,22): error CS0103: The name 'StringPool' does not exist in the current context
+      [NodaTime.NzdPrinter] Program.cs(47,22): error CS0103: The name 'TzdbVersion' does not exist in the current context
+      [NodaTime.NzdPrinter] Program.cs(50,22): error CS0103: The name 'TzdbIdMap' does not exist in the current context
+      [NodaTime.NzdPrinter] Program.cs(53,22): error CS0103: The name 'CldrSupplementalWindowsZones' does not exist in the current context
+      [NodaTime.NzdPrinter] Program.cs(56,22): error CS0103: The name 'WindowsAdditionalStandardNameToIdMapping' does not exist in the current context
+      [NodaTime.NzdPrinter] Program.cs(59,22): error CS0103: The name 'ZoneLocations' does not exist in the current context
+      [NodaTime.NzdPrinter] Program.cs(62,22): error CS0103: The name 'Zone1970Locations' does not exist in the current context
+      [NodaTime.Test] PatternFieldsExtensionsTest.cs(16,25): error CS0103: The name 'Hours12' does not exist in the current context
+      [NodaTime.Test] PatternFieldsExtensionsTest.cs(16,35): error CS0103: The name 'Minutes' does not exist in the current context
+      [NodaTime.Test] PatternFieldsExtensionsTest.cs(16,51): error CS0103: The name 'Hours24' does not exist in the current context
+  6 x CS1061
+      [NodaTime.NzdPrinter] Program.cs(37,47): error CS1061: 'object' does not contain a definition for 'Id' and no accessible extension method 'Id' accepting a first argument of type 'object' could be found (are you missing a using directive or an assembly reference?)
+      [NodaTime.NzdPrinter] Program.cs(38,55): error CS1061: 'object' does not contain a definition for 'CreateStream' and no accessible extension method 'CreateStream' accepting a first argument of type 'object' could be found (are you missing a using directive or an assembly reference?)
+      [NodaTime.NzdPrinter] Program.cs(39,27): error CS1061: 'object' does not contain a definition for 'Id' and no accessible extension method 'Id' accepting a first argument of type 'object' could be found (are you missing a using directive or an assembly reference?)
+      [NodaTime.Test] InstantTest.cs(440,61): error CS1061: 'Instant' does not contain a definition for 'TimeSinceLocalEpoch' and no accessible extension method 'TimeSinceLocalEpoch' accepting a first argument of type 'Instant' could be found (are you missing a using directive or an assembly reference?)
+      [NodaTime.TzdbCompiler] ZoneRuleSet.cs(78,45): error CS1061: 'ZoneYearOffset?' does not contain a definition for 'GetOccurrenceForYear' and no accessible extension method 'GetOccurrenceForYear' accepting a first argument of type 'ZoneYearOffset?' could be found (are you missing a using directive or an assembly reference?)
+      [NodaTime.TzdbCompiler] ZoneRuleSet.cs(79,38): error CS1061: 'ZoneYearOffset?' does not contain a definition for 'GetRuleOffset' and no accessible extension method 'GetRuleOffset' accepting a first argument of type 'ZoneYearOffset?' could be found (are you missing a using directive or an assembly reference?)
+  5 x CS1501
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(28,34): error CS1501: No overload for method 'GetHashCode' takes 1 arguments
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(28,60): error CS1501: No overload for method 'GetHashCode' takes 1 arguments
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(29,37): error CS1501: No overload for method 'GetHashCode' takes 1 arguments
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(29,63): error CS1501: No overload for method 'GetHashCode' takes 1 arguments
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(30,37): error CS1501: No overload for method 'GetHashCode' takes 1 arguments
+  3 x CS0176
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(16,21): error CS0176: Member 'object.Equals(object?, object?)' cannot be accessed with an instance reference; qualify it with a type name instead
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(17,22): error CS0176: Member 'object.Equals(object?, object?)' cannot be accessed with an instance reference; qualify it with a type name instead
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(18,21): error CS0176: Member 'object.Equals(object?, object?)' cannot be accessed with an instance reference; qualify it with a type name instead
+  2 x CS0411
+      [NodaTime.Test] InstantTest.cs(399,20): error CS0411: The type arguments for method 'TestHelper.AssertOverflow<TArg1, TOut>(Func<TArg1, TOut>, TArg1)' cannot be inferred from the usage. Try specifying the type arguments explicitly.
+      [NodaTime.Test] InstantTest.cs(400,20): error CS0411: The type arguments for method 'TestHelper.AssertOverflow<TArg1, TOut>(Func<TArg1, TOut>, TArg1)' cannot be inferred from the usage. Try specifying the type arguments explicitly.
+  2 x CS1729
+      [NodaTime.Test] TzdbDateTimeZoneSourceTest.cs(484,26): error CS1729: 'TzdbDateTimeZoneSource' does not contain a constructor that takes 1 arguments
+      [NodaTime.Test] TzdbDateTimeZoneSourceTest.cs(627,26): error CS1729: 'TzdbDateTimeZoneSource' does not contain a constructor that takes 1 arguments
+  2 x CS0019
+      [NodaTime.TzdbCompiler] DateTimeZoneBuilder.cs(208,21): error CS0019: Operator '!=' cannot be applied to operands of type 'StandardDaylightAlternatingMap?' and '<null>'
+      [NodaTime.TzdbCompiler] ZoneRuleSet.cs(32,66): error CS0019: Operator '!=' cannot be applied to operands of type 'ZoneYearOffset?' and '<null>'
+Error List after the build: 2320 errors, 15 warnings
+  1935 x CS0281
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(13,29): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(13,87): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(14,29): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(14,76): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(15,29): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(15,79): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(40,23): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(46,23): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(52,23): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+      [NodaTime.Benchmarks] IsoCalendarBenchmarks.cs(58,23): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+  297 x CS0122
+      [NodaTime.Benchmarks] DurationBenchmarks.cs(13,60): error CS0122: 'Duration.Duration(int, long)' is inaccessible due to its protection level
+      [NodaTime.Benchmarks] DurationBenchmarks.cs(14,60): error CS0122: 'Duration.Duration(int, long)' is inaccessible due to its protection level
+      [NodaTime.Benchmarks] Duration64Benchmarks.cs(11,65): error CS0122: 'Duration.Duration(int, long)' is inaccessible due to its protection level
+      [NodaTime.Benchmarks] LocalDateBenchmarks.cs(61,68): error CS0122: 'LocalDate.LocalDate(int, CalendarSystem)' is inaccessible due to its protection level
+      [NodaTime.Benchmarks] LocalDateBenchmarks.cs(66,13): error CS0122: 'LocalDate.LocalDate(int)' is inaccessible due to its protection level
+      [NodaTime.Benchmarks] StandardDaylightAlternatingMapBenchmarks.cs(36,64): error CS0122: 'StandardDaylightAlternatingMap.GetZoneInterval(Instant)' is inaccessible due to its protection level
+      [NodaTime.Benchmarks] StandardDaylightAlternatingMapBenchmarks.cs(39,64): error CS0122: 'StandardDaylightAlternatingMap.GetZoneInterval(Instant)' is inaccessible due to its protection level
+      [NodaTime.NzdPrinter] Program.cs(48,63): error CS0122: 'DateTimeZoneReader.ReadString()' is inaccessible due to its protection level
+      [NodaTime.NzdPrinter] Program.cs(74,28): error CS0122: 'DateTimeZoneReader.ReadCount()' is inaccessible due to its protection level
+      [NodaTime.NzdPrinter] Program.cs(79,36): error CS0122: 'DateTimeZoneReader.ReadString()' is inaccessible due to its protection level
+  36 x CS1503
+      [NodaTime.Test] InstantTest.Operators.cs(81,79): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] InstantTest.Operators.cs(82,59): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] InstantTest.Operators.cs(83,109): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] InstantTest.cs(439,57): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] InstantTest.cs(464,37): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] InstantTest.cs(484,37): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] LocalInstantTest.cs(73,37): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] LocalInstantTest.cs(93,37): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'NodaTime.Duration'
+      [NodaTime.Test] SteppedPatternBuilderTest.cs(91,42): error CS1503: Argument 1: cannot convert from 'NodaTime.Offset' to 'T'
+      [NodaTime.Test] PartialZoneIntervalMapTest.cs(73,52): error CS1503: Argument 1: cannot convert from 'NodaTime.DateTimeZone' to 'NodaTime.TimeZones.IZoneIntervalMap'
+  32 x CS0103
+      [NodaTime.NzdPrinter] Program.cs(41,22): error CS0103: The name 'StringPool' does not exist in the current context
+      [NodaTime.NzdPrinter] Program.cs(47,22): error CS0103: The name 'TzdbVersion' does not exist in the current context
+      [NodaTime.NzdPrinter] Program.cs(50,22): error CS0103: The name 'TzdbIdMap' does not exist in the current context
+      [NodaTime.NzdPrinter] Program.cs(53,22): error CS0103: The name 'CldrSupplementalWindowsZones' does not exist in the current context
+      [NodaTime.NzdPrinter] Program.cs(56,22): error CS0103: The name 'WindowsAdditionalStandardNameToIdMapping' does not exist in the current context
+      [NodaTime.NzdPrinter] Program.cs(59,22): error CS0103: The name 'ZoneLocations' does not exist in the current context
+      [NodaTime.NzdPrinter] Program.cs(62,22): error CS0103: The name 'Zone1970Locations' does not exist in the current context
+      [NodaTime.Test] PatternFieldsExtensionsTest.cs(16,25): error CS0103: The name 'Hours12' does not exist in the current context
+      [NodaTime.Test] PatternFieldsExtensionsTest.cs(16,35): error CS0103: The name 'Minutes' does not exist in the current context
+      [NodaTime.Test] PatternFieldsExtensionsTest.cs(16,51): error CS0103: The name 'Hours24' does not exist in the current context
+  6 x CS1061
+      [NodaTime.NzdPrinter] Program.cs(37,47): error CS1061: 'object' does not contain a definition for 'Id' and no accessible extension method 'Id' accepting a first argument of type 'object' could be found (are you missing a using directive or an assembly reference?)
+      [NodaTime.NzdPrinter] Program.cs(38,55): error CS1061: 'object' does not contain a definition for 'CreateStream' and no accessible extension method 'CreateStream' accepting a first argument of type 'object' could be found (are you missing a using directive or an assembly reference?)
+      [NodaTime.NzdPrinter] Program.cs(39,27): error CS1061: 'object' does not contain a definition for 'Id' and no accessible extension method 'Id' accepting a first argument of type 'object' could be found (are you missing a using directive or an assembly reference?)
+      [NodaTime.Test] InstantTest.cs(440,61): error CS1061: 'Instant' does not contain a definition for 'TimeSinceLocalEpoch' and no accessible extension method 'TimeSinceLocalEpoch' accepting a first argument of type 'Instant' could be found (are you missing a using directive or an assembly reference?)
+      [NodaTime.TzdbCompiler] ZoneRuleSet.cs(78,45): error CS1061: 'ZoneYearOffset?' does not contain a definition for 'GetOccurrenceForYear' and no accessible extension method 'GetOccurrenceForYear' accepting a first argument of type 'ZoneYearOffset?' could be found (are you missing a using directive or an assembly reference?)
+      [NodaTime.TzdbCompiler] ZoneRuleSet.cs(79,38): error CS1061: 'ZoneYearOffset?' does not contain a definition for 'GetRuleOffset' and no accessible extension method 'GetRuleOffset' accepting a first argument of type 'ZoneYearOffset?' could be found (are you missing a using directive or an assembly reference?)
+  5 x CS1501
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(28,34): error CS1501: No overload for method 'GetHashCode' takes 1 arguments
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(28,60): error CS1501: No overload for method 'GetHashCode' takes 1 arguments
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(29,37): error CS1501: No overload for method 'GetHashCode' takes 1 arguments
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(29,63): error CS1501: No overload for method 'GetHashCode' takes 1 arguments
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(30,37): error CS1501: No overload for method 'GetHashCode' takes 1 arguments
+  3 x CS0176
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(16,21): error CS0176: Member 'object.Equals(object?, object?)' cannot be accessed with an instance reference; qualify it with a type name instead
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(17,22): error CS0176: Member 'object.Equals(object?, object?)' cannot be accessed with an instance reference; qualify it with a type name instead
+      [NodaTime.Test] ReferenceEqualityComparerTest.cs(18,21): error CS0176: Member 'object.Equals(object?, object?)' cannot be accessed with an instance reference; qualify it with a type name instead
+  2 x CS0411
+      [NodaTime.Test] InstantTest.cs(399,20): error CS0411: The type arguments for method 'TestHelper.AssertOverflow<TArg1, TOut>(Func<TArg1, TOut>, TArg1)' cannot be inferred from the usage. Try specifying the type arguments explicitly.
+      [NodaTime.Test] InstantTest.cs(400,20): error CS0411: The type arguments for method 'TestHelper.AssertOverflow<TArg1, TOut>(Func<TArg1, TOut>, TArg1)' cannot be inferred from the usage. Try specifying the type arguments explicitly.
+  2 x CS1729
+      [NodaTime.Test] TzdbDateTimeZoneSourceTest.cs(484,26): error CS1729: 'TzdbDateTimeZoneSource' does not contain a constructor that takes 1 arguments
+      [NodaTime.Test] TzdbDateTimeZoneSourceTest.cs(627,26): error CS1729: 'TzdbDateTimeZoneSource' does not contain a constructor that takes 1 arguments
+  2 x CS0019
+      [NodaTime.TzdbCompiler] DateTimeZoneBuilder.cs(208,21): error CS0019: Operator '!=' cannot be applied to operands of type 'StandardDaylightAlternatingMap?' and '<null>'
+      [NodaTime.TzdbCompiler] ZoneRuleSet.cs(32,66): error CS0019: Operator '!=' cannot be applied to operands of type 'ZoneYearOffset?' and '<null>'
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring NuGet packages 0/15 projects
+  Analyzing: Analyzing 0/15 projects
+  Analyzing: Analyzing 1/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Restoring NuGet packages 1/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Restoring NuGet packages 2/15 projects
+  Analyzing: Analyzing 2/15 projects
+  Analyzing: Analyzing 3/15 projects
+  Analyzing: Analyzing 4/15 projects
+  Analyzing: Analyzing 5/15 projects
+  Analyzing: Analyzing 6/15 projects
+  Analyzing: Analyzing 7/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/26
+  Analyzing: Analyzing 8/15 projects
+  Analyzing: Analyzing 9/15 projects
+  Analyzing: Analyzing 10/15 projects
+  Analyzing: Analyzing 11/15 projects
+  Analyzing: Analyzing 12/15 projects
+  Analyzing: Analyzing 13/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 3/26
+  Restoring NuGet packages: Downloading NuGet packages 2/26
+  Analyzing: Analyzing 14/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 4/26
+  Restoring NuGet packages: Downloading NuGet packages 5/26
+  Analyzing: Analyzing 15/15 projects
+  Analyzing: Succeeded after 2.1 s
+  Restoring NuGet packages: Downloading NuGet packages 6/26
+  Restoring NuGet packages: Downloading NuGet packages 7/26
+  Restoring NuGet packages: Downloading NuGet packages 8/26
+  Restoring NuGet packages: Downloading NuGet packages 9/26
+  Restoring NuGet packages: Downloading NuGet packages 10/26
+  Restoring NuGet packages: Downloading NuGet packages 11/26
+  Restoring NuGet packages: Downloading NuGet packages 12/26
+  Restoring NuGet packages: Downloading NuGet packages 13/26
+  Restoring NuGet packages: Downloading NuGet packages 14/26
+  Restoring NuGet packages: Downloading NuGet packages 15/26
+  Restoring NuGet packages: Downloading NuGet packages 16/26
+  Restoring NuGet packages: Downloading NuGet packages 17/26
+  Restoring NuGet packages: Downloading NuGet packages 18/26
+  Restoring NuGet packages: Downloading NuGet packages 19/26
+  Restoring NuGet packages: Downloading NuGet packages 20/26
+  Restoring NuGet packages: Downloading NuGet packages 21/26
+  Restoring NuGet packages: Downloading NuGet packages 22/26
+  Restoring NuGet packages: Downloading NuGet packages 23/26
+  Restoring NuGet packages: Downloading NuGet packages 24/26
+  Restoring NuGet packages: Downloading NuGet packages 25/26
+  Restoring NuGet packages: Downloading NuGet packages 26/26
+  Restoring NuGet packages: Restoring NuGet packages 3/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/19
+  Restoring NuGet packages: Downloading NuGet packages 2/19
+  Restoring NuGet packages: Downloading NuGet packages 3/19
+  Restoring NuGet packages: Downloading NuGet packages 4/19
+  Restoring NuGet packages: Downloading NuGet packages 5/19
+  Restoring NuGet packages: Downloading NuGet packages 6/19
+  Restoring NuGet packages: Downloading NuGet packages 7/19
+  Restoring NuGet packages: Downloading NuGet packages 8/19
+  Restoring NuGet packages: Downloading NuGet packages 9/19
+  Restoring NuGet packages: Downloading NuGet packages 10/19
+  Restoring NuGet packages: Downloading NuGet packages 11/19
+  Restoring NuGet packages: Downloading NuGet packages 12/19
+  Restoring NuGet packages: Downloading NuGet packages 13/19
+  Restoring NuGet packages: Downloading NuGet packages 14/19
+  Restoring NuGet packages: Downloading NuGet packages 15/19
+  Restoring NuGet packages: Downloading NuGet packages 16/19
+  Restoring NuGet packages: Downloading NuGet packages 17/19
+  Restoring NuGet packages: Downloading NuGet packages 18/19
+  Restoring NuGet packages: Downloading NuGet packages 19/19
+  Restoring NuGet packages: Restoring NuGet packages 4/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Restoring NuGet packages 5/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/29
+  Restoring NuGet packages: Downloading NuGet packages 2/29
+  Restoring NuGet packages: Downloading NuGet packages 3/29
+  Restoring NuGet packages: Downloading NuGet packages 4/29
+  Restoring NuGet packages: Downloading NuGet packages 5/29
+  Restoring NuGet packages: Downloading NuGet packages 6/29
+  Restoring NuGet packages: Downloading NuGet packages 7/29
+  Restoring NuGet packages: Downloading NuGet packages 8/29
+  Restoring NuGet packages: Downloading NuGet packages 9/29
+  Restoring NuGet packages: Downloading NuGet packages 10/29
+  Restoring NuGet packages: Downloading NuGet packages 11/29
+  Restoring NuGet packages: Downloading NuGet packages 12/29
+  Restoring NuGet packages: Downloading NuGet packages 13/29
+  Restoring NuGet packages: Downloading NuGet packages 14/29
+  Restoring NuGet packages: Downloading NuGet packages 15/29
+  Restoring NuGet packages: Downloading NuGet packages 16/29
+  Restoring NuGet packages: Downloading NuGet packages 17/29
+  Restoring NuGet packages: Downloading NuGet packages 18/29
+  Restoring NuGet packages: Downloading NuGet packages 19/29
+  Restoring NuGet packages: Downloading NuGet packages 20/29
+  Restoring NuGet packages: Downloading NuGet packages 21/29
+  Restoring NuGet packages: Downloading NuGet packages 22/29
+  Restoring NuGet packages: Downloading NuGet packages 23/29
+  Restoring NuGet packages: Downloading NuGet packages 24/29
+  Restoring NuGet packages: Downloading NuGet packages 25/29
+  Restoring NuGet packages: Downloading NuGet packages 26/29
+  Restoring NuGet packages: Downloading NuGet packages 27/29
+  Restoring NuGet packages: Downloading NuGet packages 28/29
+  Restoring NuGet packages: Downloading NuGet packages 29/29
+  Restoring NuGet packages: Restoring NuGet packages 6/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/2
+  Restoring NuGet packages: Downloading NuGet packages 2/2
+  Restoring NuGet packages: Restoring NuGet packages 7/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Restoring NuGet packages 8/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Restoring NuGet packages 9/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Restoring NuGet packages 10/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/14
+  Restoring NuGet packages: Downloading NuGet packages 2/14
+  Restoring NuGet packages: Downloading NuGet packages 3/14
+  Restoring NuGet packages: Downloading NuGet packages 4/14
+  Restoring NuGet packages: Downloading NuGet packages 5/14
+  Restoring NuGet packages: Downloading NuGet packages 6/14
+  Restoring NuGet packages: Downloading NuGet packages 7/14
+  Restoring NuGet packages: Downloading NuGet packages 8/14
+  Restoring NuGet packages: Downloading NuGet packages 9/14
+  Restoring NuGet packages: Downloading NuGet packages 10/14
+  Restoring NuGet packages: Downloading NuGet packages 11/14
+  Restoring NuGet packages: Downloading NuGet packages 12/14
+  Restoring NuGet packages: Downloading NuGet packages 13/14
+  Restoring NuGet packages: Downloading NuGet packages 14/14
+  Restoring NuGet packages: Restoring NuGet packages 11/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Restoring NuGet packages 12/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Restoring NuGet packages 13/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/2
+  Restoring NuGet packages: Downloading NuGet packages 2/2
+  Restoring NuGet packages: Restoring NuGet packages 14/15 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/2
+  Restoring NuGet packages: Downloading NuGet packages 2/2
+  Restoring NuGet packages: Succeeded after 5.5 s
+  Analyzing: Analyzing 0/15 projects
+  Analyzing: Analyzing 1/15 projects
+  Analyzing: Analyzing 2/15 projects
+  Analyzing: Analyzing 3/15 projects
+  Analyzing: Analyzing 4/15 projects
+  Analyzing: Analyzing 5/15 projects
+  Analyzing: Analyzing 6/15 projects
+  Analyzing: Analyzing 7/15 projects
+  Analyzing: Analyzing 8/15 projects
+  Analyzing: Analyzing 9/15 projects
+  Analyzing: Analyzing 10/15 projects
+  Analyzing: Analyzing 11/15 projects
+  Analyzing: Analyzing 12/15 projects
+  Analyzing: Analyzing 13/15 projects
+  Analyzing: Analyzing 14/15 projects
+  Analyzing: Analyzing 15/15 projects
+  Analyzing: Succeeded after 1.4 s
+  Building: Building
+  Building: Building 0/15 projects
+  Building: Building 1/15 projects
+  Building: Building 2/15 projects
+  Building: Building 3/15 projects
+  Building: Building 4/15 projects
+  Building: Building 5/15 projects
+  Building: Building 6/15 projects
+  Building: Building 7/15 projects
+  Building: Building 8/15 projects
+  Building: Building 9/15 projects
+  Building: Building 10/15 projects
+  Building: Building 11/15 projects
+  Building: Building 12/15 projects
+  Building: Building 13/15 projects
+  Building: Building 14/15 projects
+  Building: Failed after 12.4 s
+Project setup:
+
+Output:
+d by the InternalsVisibleTo attribute in the granting assembly.
+12>RuleLine.cs(112,42): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>Tokens.cs(80,9): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbDatabase.cs(69,17): error CS0122: 'WindowsZones.WindowsZones(string, string, string, IList<MapZone>)' is inaccessible due to its protection level
+12>TzdbStreamWriter.cs(48,45): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(52,25): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(66,25): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(69,26): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(69,48): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(72,25): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(79,41): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(80,26): error CS0122: 'IDateTimeZoneWriter.WriteCount(int)' is inaccessible due to its protection level
+12>TzdbStreamWriter.cs(83,30): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(91,41): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(92,26): error CS0122: 'IDateTimeZoneWriter.WriteCount(int)' is inaccessible due to its protection level
+12>TzdbStreamWriter.cs(95,30): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(99,47): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(100,32): error CS0122: 'IDateTimeZoneWriter.WriteCount(int)' is inaccessible due to its protection level
+12>TzdbStreamWriter.cs(103,36): error CS0122: 'IDateTimeZoneWriter.WriteString(string)' is inaccessible due to its protection level
+12>TzdbStreamWriter.cs(111,54): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(113,16): error CS0122: 'IDateTimeZoneWriter.WriteString(string)' is inaccessible due to its protection level
+12>TzdbStreamWriter.cs(115,34): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(118,31): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(120,33): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(123,20): error CS0122: 'IDateTimeZoneWriter.WriteByte(byte)' is inaccessible due to its protection level
+12>TzdbStreamWriter.cs(123,37): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(124,23): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(128,45): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(131,24): error CS0122: 'IDateTimeZoneWriter.WriteByte(byte)' is inaccessible due to its protection level
+12>TzdbStreamWriter.cs(131,41): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(132,35): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(155,29): error CS1503: Argument 2: cannot convert from 'NodaTime.TzdbCompiler.Tzdb.TzdbStreamWriter.StringPoolOptimizingFakeWriter' to 'NodaTime.TimeZones.IO.IDateTimeZoneWriter'
+12>TzdbStreamWriter.cs(161,26): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(168,26): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(171,26): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(180,52): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(218,28): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(222,31): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(225,18): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(226,18): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(233,17): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbStreamWriter.cs(242,37): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbZoneInfoParser.cs(21,30): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbZoneInfoParser.cs(21,73): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbZoneInfoParser.cs(21,88): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbZoneInfoParser.cs(143,14): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbZoneInfoParser.cs(145,42): error CS0122: 'ZoneYearOffset.Mode' is inaccessible due to its protection level
+12>TzdbZoneInfoParser.cs(146,47): error CS0122: 'ZoneYearOffset.TimeOfDay' is inaccessible due to its protection level
+12>TzdbZoneInfoParser.cs(225,20): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbZoneInfoParser.cs(343,9): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbZoneInfoParser.cs(403,30): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbZoneInfoParser.cs(437,20): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbZoneInfoParser.cs(443,24): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbZoneInfoParser.cs(450,24): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbZoneInfoParser.cs(452,24): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbZoneLocationParser.cs(22,9): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbZoneLocationParser.cs(34,9): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>TzdbZoneLocationParser.cs(50,9): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneLine.cs(29,94): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneLine.cs(39,14): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneLine.cs(116,20): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneRuleSet.cs(20,27): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneRuleSet.cs(20,60): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneRuleSet.cs(24,22): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneRuleSet.cs(27,63): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneRuleSet.cs(32,9): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneRuleSet.cs(32,66): error CS0019: Operator '!=' cannot be applied to operands of type 'ZoneYearOffset?' and '<null>'
+12>ZoneRuleSet.cs(37,31): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneRuleSet.cs(37,92): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneRuleSet.cs(43,93): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneRuleSet.cs(58,26): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneRuleSet.cs(62,9): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneRuleSet.cs(76,28): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneRuleSet.cs(78,45): error CS1061: 'ZoneYearOffset?' does not contain a definition for 'GetOccurrenceForYear' and no accessible extension method 'GetOccurrenceForYear' accepting a first argument of type 'ZoneYearOffset?' could be found (are you missing a using directive or an assembly reference?)
+12>ZoneRuleSet.cs(79,38): error CS1061: 'ZoneYearOffset?' does not contain a definition for 'GetRuleOffset' and no accessible extension method 'GetRuleOffset' accepting a first argument of type 'ZoneYearOffset?' could be found (are you missing a using directive or an assembly reference?)
+12>ZoneTransition.cs(35,9): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+12>ZoneTransition.cs(86,9): error CS0281: Friend access was granted by 'NodaTime, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null', but the public key of the output assembly ('') does not match that specified by the InternalsVisibleTo attribute in the granting assembly.
+13>------ Build started: Project: NodaTime.TzdbCompiler.Test, Configuration: Debug ------
+14>------ Build started: Project: NodaTime.TzValidate.NodaDump, Configuration: Debug ------
+15>------ Build started: Project: NodaTime.TzValidate.NzdCompatibility, Configuration: Debug ------
+15>NodaTime.TzValidate.NzdCompatibility -> compiled in memory (13.5 KB, 45 ms)
+========== Build: 9 succeeded, 6 failed ==========
+

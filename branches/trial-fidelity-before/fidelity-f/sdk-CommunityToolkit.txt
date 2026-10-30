@@ -1,0 +1,14 @@
+CommunityToolkit: dotnet build dotnet.slnx exited 1 in 2 s, 1 distinct errors
+  [CommunityToolkit.Mvvm.csproj::TargetFramework=net8.0-windows10.0.17763] Microsoft.NET.Sdk.FrameworkReferenceResolution.targets(120): NETSDK1100: To build a project targeting Windows on this operating system, set the EnableWindowsTargeting property to true.
+
+Last 300 lines of the build:
+  Determining projects to restore...
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.FrameworkReferenceResolution.targets(120,5): error NETSDK1100: To build a project targeting Windows on this operating system, set the EnableWindowsTargeting property to true. [/home/runner/work/_temp/sdk-copies/CommunityToolkit/src/CommunityToolkit.Mvvm/CommunityToolkit.Mvvm.csproj::TargetFramework=net8.0-windows10.0.17763.0]
+
+Build FAILED.
+
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.FrameworkReferenceResolution.targets(120,5): error NETSDK1100: To build a project targeting Windows on this operating system, set the EnableWindowsTargeting property to true. [/home/runner/work/_temp/sdk-copies/CommunityToolkit/src/CommunityToolkit.Mvvm/CommunityToolkit.Mvvm.csproj::TargetFramework=net8.0-windows10.0.17763.0]
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:02.02
