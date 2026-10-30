@@ -1,0 +1,48 @@
+eShopOnWeb: dotnet build eShopOnWeb.sln exited 0 in 22 s, 0 distinct errors
+
+Last 300 lines of the build:
+  Determining projects to restore...
+  Restored /home/runner/work/_temp/sdk-copies/eShopOnWeb/src/BlazorShared/BlazorShared.csproj (in 1.57 sec).
+  Restored /home/runner/work/_temp/sdk-copies/eShopOnWeb/src/ApplicationCore/ApplicationCore.csproj (in 1.96 sec).
+  Restored /home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/FunctionalTests/FunctionalTests.csproj (in 4.06 sec).
+  Restored /home/runner/work/_temp/sdk-copies/eShopOnWeb/src/Infrastructure/Infrastructure.csproj (in 2.23 sec).
+  Restored /home/runner/work/_temp/sdk-copies/eShopOnWeb/src/BlazorAdmin/BlazorAdmin.csproj (in 1.33 sec).
+  Restored /home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/UnitTests/UnitTests.csproj (in 3.4 sec).
+  Restored /home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/PublicApiIntegrationTests/PublicApiIntegrationTests.csproj (in 2.76 sec).
+  Restored /home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/IntegrationTests/IntegrationTests.csproj (in 8.26 sec).
+  Restored /home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/FunctionalTests/FunctionalTests.csproj (in 6.54 sec).
+  Restored /home/runner/work/_temp/sdk-copies/eShopOnWeb/src/PublicApi/PublicApi.csproj (in 464 ms).
+  Restored /home/runner/work/_temp/sdk-copies/eShopOnWeb/src/Web/Web.csproj (in 475 ms).
+  BlazorShared -> /home/runner/work/_temp/sdk-copies/eShopOnWeb/src/BlazorShared/bin/Debug/net8.0/BlazorShared.dll
+  
+  Restore operation started
+/home/runner/work/_temp/sdk-copies/eShopOnWeb/src/ApplicationCore/Exceptions/EmptyBasketOnCheckoutException.cs(12,154): warning SYSLIB0051: 'Exception.Exception(SerializationInfo, StreamingContext)' is obsolete: 'This API supports obsolete formatter-based serialization. It should not be called or extended by application code.' (https://aka.ms/dotnet-warnings/SYSLIB0051) [/home/runner/work/_temp/sdk-copies/eShopOnWeb/src/ApplicationCore/ApplicationCore.csproj]
+  ApplicationCore -> /home/runner/work/_temp/sdk-copies/eShopOnWeb/src/ApplicationCore/bin/Debug/net8.0/ApplicationCore.dll
+  Infrastructure -> /home/runner/work/_temp/sdk-copies/eShopOnWeb/src/Infrastructure/bin/Debug/net8.0/Infrastructure.dll
+  
+  6 libraries restored in 1.2 seconds
+  
+  BlazorAdmin -> /home/runner/work/_temp/sdk-copies/eShopOnWeb/src/BlazorAdmin/bin/Debug/net8.0/BlazorAdmin.dll
+  BlazorAdmin (Blazor output) -> /home/runner/work/_temp/sdk-copies/eShopOnWeb/src/BlazorAdmin/bin/Debug/net8.0/wwwroot
+  PublicApi -> /home/runner/work/_temp/sdk-copies/eShopOnWeb/src/PublicApi/bin/Debug/net8.0/PublicApi.dll
+  Web -> /home/runner/work/_temp/sdk-copies/eShopOnWeb/src/Web/bin/Debug/net8.0/Web.dll
+/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/UnitTests/ApplicationCore/Specifications/CustomerOrdersWithItemsSpecification.cs(22,9): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/UnitTests/UnitTests.csproj]
+/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/UnitTests/ApplicationCore/Specifications/CustomerOrdersWithItemsSpecification.cs(35,9): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/UnitTests/UnitTests.csproj]
+/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/UnitTests/ApplicationCore/Entities/BasketTests/BasketRemoveEmptyItems.cs(19,9): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/UnitTests/UnitTests.csproj]
+  UnitTests -> /home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/UnitTests/bin/Debug/net8.0/UnitTests.dll
+/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/IntegrationTests/Repositories/BasketRepositoryTests/SetQuantities.cs(38,9): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/IntegrationTests/IntegrationTests.csproj]
+  IntegrationTests -> /home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/IntegrationTests/bin/Debug/net8.0/IntegrationTests.dll
+  FunctionalTests -> /home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/FunctionalTests/bin/Debug/net8.0/FunctionalTests.dll
+  PublicApiIntegrationTests -> /home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/PublicApiIntegrationTests/bin/Debug/net8.0/PublicApiIntegrationTests.dll
+
+Build succeeded.
+
+/home/runner/work/_temp/sdk-copies/eShopOnWeb/src/ApplicationCore/Exceptions/EmptyBasketOnCheckoutException.cs(12,154): warning SYSLIB0051: 'Exception.Exception(SerializationInfo, StreamingContext)' is obsolete: 'This API supports obsolete formatter-based serialization. It should not be called or extended by application code.' (https://aka.ms/dotnet-warnings/SYSLIB0051) [/home/runner/work/_temp/sdk-copies/eShopOnWeb/src/ApplicationCore/ApplicationCore.csproj]
+/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/UnitTests/ApplicationCore/Specifications/CustomerOrdersWithItemsSpecification.cs(22,9): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/UnitTests/UnitTests.csproj]
+/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/UnitTests/ApplicationCore/Specifications/CustomerOrdersWithItemsSpecification.cs(35,9): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/UnitTests/UnitTests.csproj]
+/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/UnitTests/ApplicationCore/Entities/BasketTests/BasketRemoveEmptyItems.cs(19,9): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/UnitTests/UnitTests.csproj]
+/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/IntegrationTests/Repositories/BasketRepositoryTests/SetQuantities.cs(38,9): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [/home/runner/work/_temp/sdk-copies/eShopOnWeb/tests/IntegrationTests/IntegrationTests.csproj]
+    5 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:21.28
