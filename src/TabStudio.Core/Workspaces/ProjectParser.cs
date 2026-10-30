@@ -503,13 +503,14 @@ public static partial class ProjectParser
     }
 
     /// <summary>
-    /// The output type an SDK sets when the project does not: the Web, Worker and Blazor WebAssembly SDKs build apps,
-    /// the others libraries.
+    /// The output type an SDK sets when the project does not: the Web, Worker, Blazor WebAssembly and WebAssembly SDKs
+    /// build apps (the last one the browser head of a cross-platform app), the others libraries.
     /// </summary>
     private static string? DefaultOutputType(string? sdk) =>
         string.Equals(sdk, "Microsoft.NET.Sdk.Web", StringComparison.OrdinalIgnoreCase) ||
         string.Equals(sdk, "Microsoft.NET.Sdk.Worker", StringComparison.OrdinalIgnoreCase) ||
-        string.Equals(sdk, "Microsoft.NET.Sdk.BlazorWebAssembly", StringComparison.OrdinalIgnoreCase)
+        string.Equals(sdk, "Microsoft.NET.Sdk.BlazorWebAssembly", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(sdk, "Microsoft.NET.Sdk.WebAssembly", StringComparison.OrdinalIgnoreCase)
             ? "Exe"
             : null;
 

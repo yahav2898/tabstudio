@@ -59,6 +59,7 @@ public static partial class ProjectParser
             CompilerVisibleProperties = [.. project.CompilerVisibleProperties.Concat(state.VisibleProperties).Distinct(StringComparer.OrdinalIgnoreCase)],
             CompilerVisibleItemMetadata = [.. project.CompilerVisibleItemMetadata.Concat(state.VisibleMetadata).Distinct()],
             AdditionalFiles = [.. project.AdditionalFiles, .. state.AdditionalFiles],
+            AssemblyReferences = [.. project.AssemblyReferences.Concat(state.References).DistinctBy(r => r.Name, StringComparer.OrdinalIgnoreCase)],
             PackageBuildFiles = buildFiles,
         };
     }
@@ -99,6 +100,9 @@ public static partial class ProjectParser
         public List<CompilerVisibleItemMetadataInfo> VisibleMetadata { get; } = [];
 
         public List<AdditionalFileItem> AdditionalFiles { get; } = [];
+
+        /// <summary>The assemblies the files reference by <c>HintPath</c>, such as MSTest's TestFramework.Extensions.</summary>
+        public List<AssemblyReferenceInfo> References { get; } = [];
     }
 
     /// <summary>
@@ -261,8 +265,8 @@ public static partial class ProjectParser
     }
 
     /// <summary>
-    /// Reads one item a generator may see: a compiler-visible property or item metadata, an additional file, or a
-    /// global using.
+    /// Reads one item a generator or the compiler sees: a compiler-visible property or item metadata, an additional file,
+    /// a global using, or an assembly referenced by its path.
     /// </summary>
     private static void ReadGeneratorItem(XElement item, BuildFileState state, string file)
     {
@@ -281,6 +285,15 @@ public static partial class ProjectParser
                 foreach (var path in Split(include).Where(p => !p.Contains("@(", StringComparison.Ordinal) && !p.Contains("%(", StringComparison.Ordinal)))
                 {
                     state.AdditionalFiles.Add(new AdditionalFileItem(path, state.ProjectDirectory, ItemMetadata(item, value => Expand(value, state, file))));
+                }
+
+                break;
+            case "Reference" when Metadata(item, "HintPath") is { Length: > 0 } hint:
+                // A package's targets can reference an assembly of its own by path, as MSTest.TestFramework does for
+                // TestFramework.Extensions, where TestContext is: the SDK compiles against it.
+                foreach (var name in Split(include).Where(n => !n.Contains("$(", StringComparison.Ordinal)))
+                {
+                    state.References.Add(new AssemblyReferenceInfo(name.Split(',')[0].Trim(), Expand(hint.Trim(), state, file)));
                 }
 
                 break;

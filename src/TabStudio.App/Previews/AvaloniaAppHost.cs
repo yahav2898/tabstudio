@@ -134,11 +134,21 @@ public sealed partial class AvaloniaAppHost : IDisposable
             program.LoadAll();
             loaded?.Invoke(program.Assemblies);
 
+            // Avalonia's cross-platform template keeps App and its views in the shared project its heads reference.
             var types = LoadableTypes(program.EntryAssembly);
+            var appAssembly = program.EntryAssembly;
+            if (!types.Any(IsApplicationType)
+                && program.Assemblies.Where(a => dependencies.Any(d => string.Equals(d.Name, a.GetName().Name, StringComparison.Ordinal)))
+                    .FirstOrDefault(a => LoadableTypes(a).Any(IsApplicationType)) is { } shared)
+            {
+                appAssembly = shared;
+                types = [.. types, .. LoadableTypes(shared)];
+            }
+
             var app = StartApplication(types);
             string? note = null;
             var view = app.Lifetime.MainView
-                ?? FromMainWindow(program.EntryAssembly, types, out note)
+                ?? FromMainWindow(appAssembly, types, out note)
                 ?? throw new InvalidOperationException(
                     "The app has no main view to show. In App.axaml.cs, set MainView for ISingleViewApplicationLifetime, as Avalonia's cross-platform template does.");
             var theme = new AppTheme(app.Instance) { Content = view };
@@ -198,11 +208,15 @@ public sealed partial class AvaloniaAppHost : IDisposable
         });
     }
 
+    /// <summary>Whether a type is an app's <c>App</c>: an <see cref="Application"/> that can be created.</summary>
+    private static bool IsApplicationType(Type type) =>
+        typeof(Application).IsAssignableFrom(type) && !type.IsAbstract && type.GetConstructor(Type.EmptyTypes) is not null;
+
     /// <summary>Creates the app's <c>App</c> and starts it with a single-view lifetime, as on a phone.</summary>
     private static (Application? Instance, PreviewLifetime Lifetime) StartApplication(Type[] types)
     {
         var (lifetime, state) = PreviewLifetime.Create();
-        var appType = types.FirstOrDefault(t => typeof(Application).IsAssignableFrom(t) && !t.IsAbstract && t.GetConstructor(Type.EmptyTypes) is not null);
+        var appType = types.FirstOrDefault(IsApplicationType);
         if (appType is null)
         {
             return (null, state);

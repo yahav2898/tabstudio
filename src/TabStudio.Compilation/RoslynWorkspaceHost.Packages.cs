@@ -135,9 +135,54 @@ public sealed partial class RoslynWorkspaceHost
         var skeletons = SkeletonReferencesFor(project).ToList();
         var forms = WindowsFormsReferencesFor(project);
         var basic = VisualBasicReferencesFor(project);
-        return packages.Count == 0 && skeletons.Count == 0 && forms.Count == 0 && basic.Count == 0
+        var hinted = HintPathReferencesFor(project, packages);
+        return packages.Count == 0 && skeletons.Count == 0 && forms.Count == 0 && basic.Count == 0 && hinted.Count == 0
             ? _frameworkReferences
-            : [.. _frameworkReferences, .. forms, .. basic, .. packages, .. skeletons];
+            : [.. _frameworkReferences, .. forms, .. basic, .. packages, .. hinted, .. skeletons];
+    }
+
+    /// <summary>
+    /// The assemblies a project's <c>Reference</c> items name by <c>HintPath</c>, in its own files or its packages'
+    /// targets (see <see cref="TabStudio.Core.Workspaces.ProjectParser.WithPackageBuildFiles"/>), as a repository's <c>lib</c> folder or MSTest's
+    /// TestFramework.Extensions: the SDK compiles against each file that exists. One the framework or a package already
+    /// provides, by name, is left out. The caller holds the gate.
+    /// </summary>
+    private List<MetadataReference> HintPathReferencesFor(TsProject project, IReadOnlyList<MetadataReference> packages)
+    {
+        if (!project.AssemblyReferences.Any(r => !string.IsNullOrWhiteSpace(r.HintPath)))
+        {
+            return [];
+        }
+
+        var provided = _frameworkReferences.Concat(packages)
+            .OfType<PortableExecutableReference>()
+            .Select(r => Path.GetFileNameWithoutExtension(r.FilePath ?? r.Display ?? string.Empty))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var references = new List<MetadataReference>();
+        foreach (var reference in project.AssemblyReferences)
+        {
+            if (reference.HintPath is not { Length: > 0 } hint)
+            {
+                continue;
+            }
+
+            var path = TabStudio.Core.Workspaces.PathUtilities.ResolveRelative(project.DirectoryPath, hint);
+            if (!File.Exists(path) || !provided.Add(Path.GetFileNameWithoutExtension(path)))
+            {
+                continue;
+            }
+
+            try
+            {
+                references.Add(GetOrCreatePackageReference(path));
+            }
+            catch (Exception ex) when (ex is IOException or BadImageFormatException or UnauthorizedAccessException)
+            {
+                // A file that is not an assembly is what the SDK reports too; the code using it says the rest.
+            }
+        }
+
+        return references;
     }
 
     /// <summary>Pushes a project's current references into the loaded solution. The caller holds the gate.</summary>

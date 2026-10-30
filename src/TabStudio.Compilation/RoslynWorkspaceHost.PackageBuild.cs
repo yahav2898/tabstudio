@@ -114,6 +114,9 @@ public sealed partial class RoslynWorkspaceHost
         }
 
         solution = solution.WithProjectAnalyzerReferences(id, GetAnalyzerReferences(project));
+
+        // Assemblies the packages' targets reference by path, such as MSTest's TestFramework.Extensions.
+        solution = solution.WithProjectMetadataReferences(id, GetMetadataReferences(project));
         _workspace.TryApplyChanges(solution);
     }
 
