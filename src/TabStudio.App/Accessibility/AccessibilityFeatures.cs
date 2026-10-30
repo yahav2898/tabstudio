@@ -43,7 +43,14 @@ public static class AccessibilityFeatures
         TouchTargets.Start();
         AccessibleNames.Start();
         TrimmedText.Start();
-        TypeScale.Changed += (_, _) => RemeasureWindows();
+        TypeScale.Changed += (_, _) =>
+        {
+            RemeasureWindows();
+
+            // Once more after the first layout at the new size: a scroll viewer can keep its content's old arrangement
+            // when only that content's size changed (the bottom panel's tabs kept their old widths).
+            Avalonia.Threading.Dispatcher.UIThread.Post(RemeasureWindows, Avalonia.Threading.DispatcherPriority.Background);
+        };
         HiddenAnimations.ReduceMotion = system.ReduceMotion;
         system.Changed += (_, _) =>
         {
@@ -70,8 +77,8 @@ public static class AccessibilityFeatures
 
     /// <summary>
     /// Lays every window out again after the text size changed. A font size change re-measures the text, but a panel
-    /// that sized a column or a row to it before may keep the old size until something else changes; measuring
-    /// everything once makes every view take its new size at once.
+    /// that sized a column or a row to it before, or a scroll viewer around it, may keep the old arrangement until
+    /// something else changes; measuring and arranging everything again makes every view take its new size at once.
     /// </summary>
     public static void RemeasureWindows()
     {
@@ -98,6 +105,7 @@ public static class AccessibilityFeatures
                 }
 
                 element.InvalidateMeasure();
+                element.InvalidateArrange();
             }
         }
     }

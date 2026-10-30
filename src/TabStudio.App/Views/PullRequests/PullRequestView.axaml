@@ -478,7 +478,7 @@
                         <TextBlock Grid.Column="3" Classes="small mono" VerticalAlignment="Center" Margin="4,0,10,0"><Run
                           Text="{Binding AdditionsText}" Foreground="{DynamicResource Brush.Success}" /><Run Text=" " /><Run
                           Text="{Binding DeletionsText}" Foreground="{DynamicResource Brush.Error}" /></TextBlock>
-                        <TextBlock Grid.Column="4" Width="14" FontWeight="Bold" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center" TextAlignment="Center"
+                        <TextBlock Grid.Column="4" MinWidth="14" FontWeight="Bold" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center" TextAlignment="Center"
                                    Text="{Binding StatusLetter}" Foreground="{Binding GitStatus, Converter={x:Static conv:SourceControlConverters.StatusBrush}}" />
                       </Grid>
                     </Button>

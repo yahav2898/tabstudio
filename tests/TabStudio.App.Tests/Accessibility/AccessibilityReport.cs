@@ -131,6 +131,12 @@ internal static class AccessibilityReport
             {
                 // An editor drew before its new lines were built: the next pass builds them and draws again.
             }
+
+            // As the app does after its first layout at a new text size (AccessibilityFeatures).
+            if (i == 0)
+            {
+                TabStudio.App.Accessibility.AccessibilityFeatures.RemeasureWindows();
+            }
         }
 
         foreach (var shown in windows)

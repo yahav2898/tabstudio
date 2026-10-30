@@ -111,9 +111,10 @@
 
         <!-- On: the devices -->
         <StackPanel Spacing="8" IsVisible="{Binding IsOn}">
-          <Grid ColumnDefinitions="*,Auto">
+          <Grid ColumnDefinitions="Auto,*">
             <TextBlock Classes="section" Text="Devices" VerticalAlignment="Center" />
-            <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding ListeningText}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding ListeningText}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                       HorizontalAlignment="Right" Margin="12,0,0,0" />
           </Grid>
 
           <Border Padding="14,12" CornerRadius="9" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" IsVisible="{Binding !HasDevices}">
