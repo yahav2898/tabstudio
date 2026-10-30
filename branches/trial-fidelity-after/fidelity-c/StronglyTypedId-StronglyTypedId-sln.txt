@@ -1,5 +1,5 @@
 StronglyTypedId-StronglyTypedId-sln at 6bd17db4a4b700eaad9e209baf41478cc3f0bbe9, opening /home/runner/work/_temp/repos/StronglyTypedId-StronglyTypedId-sln/StronglyTypedId.sln
-Opened in 0.6 s: StronglyTypedId, solution /home/runner/work/_temp/repos/StronglyTypedId-StronglyTypedId-sln/StronglyTypedId.sln
+Opened in 0.5 s: StronglyTypedId, solution /home/runner/work/_temp/repos/StronglyTypedId-StronglyTypedId-sln/StronglyTypedId.sln
   project StronglyTypedIds [CSharp] /home/runner/work/_temp/repos/StronglyTypedId-StronglyTypedId-sln/src/StronglyTypedIds/StronglyTypedIds.csproj
   project StronglyTypedIds.Tests [CSharp] /home/runner/work/_temp/repos/StronglyTypedId-StronglyTypedId-sln/test/StronglyTypedIds.Tests/StronglyTypedIds.Tests.csproj
   project StronglyTypedIds.IntegrationTests [CSharp] /home/runner/work/_temp/repos/StronglyTypedId-StronglyTypedId-sln/test/StronglyTypedIds.IntegrationTests/StronglyTypedIds.IntegrationTests.csproj
@@ -14,7 +14,7 @@ Compatibility Doctor:
   StronglyTypedIds: Library via Built with its users - A library is compiled together with the projects that reference it.
   StronglyTypedIds.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   StronglyTypedIds.IntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
-  _build: Library via Not in the solution's build - The solution's Debug configuration does not build it, so TabStudio leaves it out of builds, as Visual Studio does.
+  _build: Not supported via Build script, on a computer - The repository's build script (on Nuke.Common): it builds, tests and publishes the other projects by starting dotnet and other tools as processes, which a program cannot do on a tablet. TabStudio builds it with the solution but never starts it; build and run the other projects here, or run the script on a computer with the .NET SDK.
   StronglyTypedIds.Attributes: Library via Built with its users - A library is compiled together with the projects that reference it.
   StronglyTypedIds.Nuget.IntegrationTests: Library via Not in the solution's build - The solution's Debug configuration does not build it, so TabStudio leaves it out of builds, as Visual Studio does.
   StronglyTypedIds.Nuget.Attributes.IntegrationTests: Library via Not in the solution's build - The solution's Debug configuration does not build it, so TabStudio leaves it out of builds, as Visual Studio does.
@@ -22,78 +22,8 @@ Compatibility Doctor:
   StronglyTypedIds.IntegrationTests.Types: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   StronglyTypedIds.IntegrationTests.ExternalIds: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 F5 startup project: none 
-Error List after analysis: 199 errors, 0 warnings
-  95 x CS1729
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(317,27): error CS1729: 'ConvertersGuidId' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(385,37): error CS1729: 'ConvertersGuidId' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(420,27): error CS1729: 'ConvertersGuidId2' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(488,37): error CS1729: 'ConvertersGuidId2' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(206,23): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(217,23): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(229,23): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(241,23): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(259,49): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(284,26): error CS1729: 'ConvertersIntId' does not contain a constructor that takes 1 arguments
-  42 x CS0426
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(12,59): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersGuidId'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(13,60): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersGuidId2'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(14,58): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersIntId'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(15,59): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersIntId2'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(16,59): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersLongId'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(17,60): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersLongId2'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(18,61): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersStringId'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(19,62): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'ConvertersStringId2'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(20,59): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'NullableStringId'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] DapperTypeHandlers.cs(21,51): error CS0426: The type name 'DapperTypeHandler' does not exist in the type 'NewIdId1'
-  30 x CS0117
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(340,40): error CS0117: 'ConvertersGuidId' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(366,60): error CS0117: 'ConvertersGuidId' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(403,60): error CS0117: 'ConvertersGuidId' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(443,41): error CS0117: 'ConvertersGuidId2' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(469,62): error CS0117: 'ConvertersGuidId2' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] GuidIdTests.cs(506,62): error CS0117: 'ConvertersGuidId2' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(33,35): error CS0117: 'NewIdId1' does not contain a definition for 'Empty'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(40,33): error CS0117: 'NewIdId1' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(41,33): error CS0117: 'NewIdId1' does not contain a definition for 'New'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(52,38): error CS0117: 'NewIdId1' does not contain a definition for 'New'
-  20 x CS1061
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(209,74): error CS1061: 'ConvertersIntId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(220,68): error CS1061: 'ConvertersIntId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(358,74): error CS1061: 'ConvertersIntId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId2' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests.ExternalIds] IntIdTests.cs(369,68): error CS1061: 'ConvertersIntId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersIntId2' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(221,79): error CS1061: 'ConvertersLongId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersLongId' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(232,73): error CS1061: 'ConvertersLongId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersLongId' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(355,79): error CS1061: 'ConvertersLongId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersLongId2' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests.ExternalIds] LongIdTests.cs(366,73): error CS1061: 'ConvertersLongId2' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'ConvertersLongId2' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(24,30): error CS1061: 'NullableStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'NullableStringId' could be found (are you missing a using directive or an assembly reference?)
-      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(83,81): error CS1061: 'NullableStringId' does not contain a definition for 'Value' and no accessible extension method 'Value' accepting a first argument of type 'NullableStringId' could be found (are you missing a using directive or an assembly reference?)
-  6 x CS0019
-      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(54,25): error CS0019: Operator '==' cannot be applied to operands of type 'NewIdId1' and 'NewIdId1'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(56,26): error CS0019: Operator '!=' cannot be applied to operands of type 'NewIdId1' and 'NewIdId1'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(61,25): error CS0019: Operator '==' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(62,26): error CS0019: Operator '==' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(63,26): error CS0019: Operator '!=' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
-      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(64,25): error CS0019: Operator '!=' cannot be applied to operands of type 'NullableStringId' and 'NullableStringId'
-  4 x CS0315
-      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(252,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.NewIdId1>'.
-      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(253,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.NewIdId1>'.
-      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(277,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' cannot be used as type parameter 'T' in the generic type or method 'ParseAs<T>(string)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.IParsable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>'.
-      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(278,13): error CS0315: The type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' cannot be used as type parameter 'T' in the generic type or method 'ParseSpan<T>(ReadOnlySpan<char>)'. There is no boxing conversion from 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.ISpanParsable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>'.
-  2 x CS0039
-      [StronglyTypedIds.IntegrationTests.ExternalIds] MassTransitNewIdTests.cs(228,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.NewIdId1' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.NewIdId1>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
-      [StronglyTypedIds.IntegrationTests.ExternalIds] NullableStringIdTests.cs(253,28): error CS0039: Cannot convert type 'StronglyTypedIds.IntegrationTests.Types.NullableStringId' to 'System.IEquatable<StronglyTypedIds.IntegrationTests.Types.NullableStringId>' via a reference conversion, boxing conversion, unboxing conversion, wrapping conversion, or null type conversion
-Error List after the build: 10 errors, 0 warnings
-  10 x STRONGID002
-      [StronglyTypedIds.IntegrationTests.Types] error STRONGID002: Could not find 'guid-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-      [StronglyTypedIds.IntegrationTests.Types] error STRONGID002: Could not find 'guid-efcore.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-      [StronglyTypedIds.IntegrationTests.Types] error STRONGID002: Could not find 'int-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-      [StronglyTypedIds.IntegrationTests.Types] error STRONGID002: Could not find 'int-efcore.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-      [StronglyTypedIds.IntegrationTests.Types] error STRONGID002: Could not find 'long-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-      [StronglyTypedIds.IntegrationTests.Types] error STRONGID002: Could not find 'long-efcore.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-      [StronglyTypedIds.IntegrationTests.Types] error STRONGID002: Could not find 'newid-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-      [StronglyTypedIds.IntegrationTests.Types] error STRONGID002: Could not find 'string-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-      [StronglyTypedIds.IntegrationTests.Types] error STRONGID002: Could not find 'string-efcore.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-      [StronglyTypedIds.IntegrationTests.Types] error STRONGID002: Could not find 'nullablestring-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
 Long-operation progress:
   Loading C#: Loading C#
   Loading C#: Succeeded after 0.1 s
@@ -102,6 +32,10 @@ Long-operation progress:
   Analyzing: Analyzing 0/10 projects
   Analyzing: Analyzing 1/10 projects
   Analyzing: Analyzing 2/10 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/17
+  Restoring NuGet packages: Downloading NuGet packages 2/17
+  Restoring NuGet packages: Downloading NuGet packages 3/17
+  Restoring NuGet packages: Downloading NuGet packages 4/17
   Analyzing: Analyzing 3/10 projects
   Analyzing: Analyzing 4/10 projects
   Analyzing: Analyzing 5/10 projects
@@ -109,12 +43,8 @@ Long-operation progress:
   Analyzing: Analyzing 7/10 projects
   Analyzing: Analyzing 8/10 projects
   Analyzing: Analyzing 9/10 projects
-  Restoring NuGet packages: Downloading NuGet packages 1/17
-  Restoring NuGet packages: Downloading NuGet packages 2/17
   Analyzing: Analyzing 10/10 projects
   Analyzing: Succeeded after 0.6 s
-  Restoring NuGet packages: Downloading NuGet packages 3/17
-  Restoring NuGet packages: Downloading NuGet packages 4/17
   Restoring NuGet packages: Downloading NuGet packages 5/17
   Restoring NuGet packages: Downloading NuGet packages 6/17
   Restoring NuGet packages: Downloading NuGet packages 7/17
@@ -297,11 +227,11 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 25/48
   Restoring NuGet packages: Downloading NuGet packages 26/48
   Restoring NuGet packages: Downloading NuGet packages 27/48
-  Restoring NuGet packages: Downloading NuGet packages 29/48
   Restoring NuGet packages: Downloading NuGet packages 28/48
+  Restoring NuGet packages: Downloading NuGet packages 29/48
   Restoring NuGet packages: Downloading NuGet packages 30/48
-  Restoring NuGet packages: Downloading NuGet packages 31/48
   Restoring NuGet packages: Downloading NuGet packages 32/48
+  Restoring NuGet packages: Downloading NuGet packages 31/48
   Restoring NuGet packages: Downloading NuGet packages 33/48
   Restoring NuGet packages: Downloading NuGet packages 34/48
   Restoring NuGet packages: Downloading NuGet packages 35/48
@@ -345,25 +275,25 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 24/48
   Restoring NuGet packages: Downloading NuGet packages 25/48
   Restoring NuGet packages: Downloading NuGet packages 26/48
-  Restoring NuGet packages: Downloading NuGet packages 28/48
   Restoring NuGet packages: Downloading NuGet packages 27/48
+  Restoring NuGet packages: Downloading NuGet packages 28/48
   Restoring NuGet packages: Downloading NuGet packages 29/48
-  Restoring NuGet packages: Downloading NuGet packages 31/48
   Restoring NuGet packages: Downloading NuGet packages 30/48
+  Restoring NuGet packages: Downloading NuGet packages 31/48
   Restoring NuGet packages: Downloading NuGet packages 32/48
-  Restoring NuGet packages: Downloading NuGet packages 33/48
   Restoring NuGet packages: Downloading NuGet packages 34/48
+  Restoring NuGet packages: Downloading NuGet packages 33/48
   Restoring NuGet packages: Downloading NuGet packages 35/48
-  Restoring NuGet packages: Downloading NuGet packages 37/48
   Restoring NuGet packages: Downloading NuGet packages 36/48
+  Restoring NuGet packages: Downloading NuGet packages 37/48
   Restoring NuGet packages: Downloading NuGet packages 38/48
   Restoring NuGet packages: Downloading NuGet packages 39/48
   Restoring NuGet packages: Downloading NuGet packages 40/48
   Restoring NuGet packages: Downloading NuGet packages 41/48
-  Restoring NuGet packages: Downloading NuGet packages 43/48
   Restoring NuGet packages: Downloading NuGet packages 42/48
-  Restoring NuGet packages: Downloading NuGet packages 45/48
+  Restoring NuGet packages: Downloading NuGet packages 43/48
   Restoring NuGet packages: Downloading NuGet packages 44/48
+  Restoring NuGet packages: Downloading NuGet packages 45/48
   Restoring NuGet packages: Downloading NuGet packages 46/48
   Restoring NuGet packages: Downloading NuGet packages 47/48
   Restoring NuGet packages: Downloading NuGet packages 48/48
@@ -400,11 +330,11 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 26/46
   Restoring NuGet packages: Downloading NuGet packages 27/46
   Restoring NuGet packages: Downloading NuGet packages 28/46
-  Restoring NuGet packages: Downloading NuGet packages 29/46
   Restoring NuGet packages: Downloading NuGet packages 30/46
   Restoring NuGet packages: Downloading NuGet packages 31/46
-  Restoring NuGet packages: Downloading NuGet packages 33/46
+  Restoring NuGet packages: Downloading NuGet packages 29/46
   Restoring NuGet packages: Downloading NuGet packages 32/46
+  Restoring NuGet packages: Downloading NuGet packages 33/46
   Restoring NuGet packages: Downloading NuGet packages 34/46
   Restoring NuGet packages: Downloading NuGet packages 35/46
   Restoring NuGet packages: Downloading NuGet packages 36/46
@@ -456,16 +386,16 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 35/46
   Restoring NuGet packages: Downloading NuGet packages 36/46
   Restoring NuGet packages: Downloading NuGet packages 37/46
-  Restoring NuGet packages: Downloading NuGet packages 38/46
   Restoring NuGet packages: Downloading NuGet packages 39/46
+  Restoring NuGet packages: Downloading NuGet packages 38/46
   Restoring NuGet packages: Downloading NuGet packages 40/46
   Restoring NuGet packages: Downloading NuGet packages 41/46
   Restoring NuGet packages: Downloading NuGet packages 42/46
   Restoring NuGet packages: Downloading NuGet packages 43/46
   Restoring NuGet packages: Downloading NuGet packages 44/46
-  Restoring NuGet packages: Downloading NuGet packages 45/46
   Restoring NuGet packages: Downloading NuGet packages 46/46
-  Restoring NuGet packages: Succeeded after 6.4 s
+  Restoring NuGet packages: Downloading NuGet packages 45/46
+  Restoring NuGet packages: Succeeded after 5.2 s
   Analyzing: Analyzing 0/10 projects
   Analyzing: Analyzing 1/10 projects
   Analyzing: Analyzing 2/10 projects
@@ -477,7 +407,7 @@ Long-operation progress:
   Analyzing: Analyzing 8/10 projects
   Analyzing: Analyzing 9/10 projects
   Analyzing: Analyzing 10/10 projects
-  Analyzing: Succeeded after 0.9 s
+  Analyzing: Succeeded after 1.0 s
   Building: Building
   Building: Building 0/7 projects
   Building: Building 1/7 projects
@@ -486,35 +416,27 @@ Long-operation progress:
   Building: Building 4/7 projects
   Building: Building 5/7 projects
   Building: Building 6/7 projects
-  Building: Failed after 0.5 s
+  Building: Succeeded after 0.9 s
 Project setup:
 
 Output:
-Build started at 18:51:54...
+Build started at 19:08:29...
 1>------ Build started: Project: StronglyTypedIds.Attributes, Configuration: Debug ------
-1>StronglyTypedIds.Attributes -> compiled in memory (3 KB, 3 ms)
+1>StronglyTypedIds.Attributes -> compiled in memory (3 KB, 27 ms)
 2>------ Build started: Project: StronglyTypedIds, Configuration: Debug ------
-2>StronglyTypedIds -> compiled in memory (266 KB, 92 ms)
+2>StronglyTypedIds -> compiled in memory (266 KB, 60 ms)
 3>------ Build started: Project: StronglyTypedIds.Tests, Configuration: Debug ------
-3>StronglyTypedIds.Tests -> compiled in memory (108.5 KB, 102 ms)
+3>StronglyTypedIds.Tests -> compiled in memory (108.5 KB, 98 ms)
 4>------ Build started: Project: StronglyTypedIds.IntegrationTests, Configuration: Debug ------
-4>StronglyTypedIds.IntegrationTests -> compiled in memory (178.5 KB, 234 ms)
+4>StronglyTypedIds.IntegrationTests -> compiled in memory (178.5 KB, 341 ms)
 5>------ Build started: Project: StronglyTypedIds.Templates, Configuration: Debug ------
-5>StronglyTypedIds.Templates -> compiled in memory (2 KB, 2 ms)
+5>StronglyTypedIds.Templates -> compiled in memory (2 KB, 3 ms)
 6>------ Build started: Project: StronglyTypedIds.IntegrationTests.Types, Configuration: Debug ------
-6>error STRONGID002: Could not find 'guid-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-6>error STRONGID002: Could not find 'guid-efcore.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-6>error STRONGID002: Could not find 'int-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-6>error STRONGID002: Could not find 'int-efcore.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-6>error STRONGID002: Could not find 'long-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-6>error STRONGID002: Could not find 'long-efcore.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-6>error STRONGID002: Could not find 'newid-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-6>error STRONGID002: Could not find 'string-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-6>error STRONGID002: Could not find 'string-efcore.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
-6>error STRONGID002: Could not find 'nullablestring-full.typedid' template. Ensure the template exists in the project and has a build action of 'Additional Files'.
+6>StronglyTypedIds.IntegrationTests.Types -> compiled in memory (77.5 KB, 101 ms)
 7>------ Build started: Project: StronglyTypedIds.IntegrationTests.ExternalIds, Configuration: Debug ------
-8>------ Skipped: Project: _build: the solution's Debug configuration does not build it ------
-9>------ Skipped: Project: StronglyTypedIds.Nuget.IntegrationTests: the solution's Debug configuration does not build it ------
-10>------ Skipped: Project: StronglyTypedIds.Nuget.Attributes.IntegrationTests: the solution's Debug configuration does not build it ------
-========== Build: 5 succeeded, 2 failed, 3 skipped ==========
+7>StronglyTypedIds.IntegrationTests.ExternalIds -> compiled in memory (104 KB, 225 ms)
+8>------ Skipped: Project: _build: it is not built by the solution's Debug configuration ------
+9>------ Skipped: Project: StronglyTypedIds.Nuget.IntegrationTests: it is not built by the solution's Debug configuration ------
+10>------ Skipped: Project: StronglyTypedIds.Nuget.Attributes.IntegrationTests: it is not built by the solution's Debug configuration ------
+========== Build: 7 succeeded, 0 failed, 3 skipped ==========
 
