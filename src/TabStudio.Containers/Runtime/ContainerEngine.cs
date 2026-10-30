@@ -599,6 +599,7 @@ public sealed class ContainerEngine : IAsyncDisposable
                 await Task.Delay(instance.Info.Health == HealthStatus.Starting ? Min(health.StartInterval, health.Interval) : health.Interval, stop).ConfigureAwait(false);
                 var (code, output) = await ExecCaptureAsync(instance.Info.Id, health.Command, health.Timeout, stop).ConfigureAwait(false);
                 var streak = code == 0 ? 0 : instance.Info.FailingStreak + 1;
+                if (code != 0 && (streak == 1 || streak == health.Retries)) instance.Log.Write(2, $"Health check exited {code}: {output.Trim()}");
                 var status = code == 0 ? HealthStatus.Healthy
                     : streak >= health.Retries && !inStart ? HealthStatus.Unhealthy
                     : instance.Info.Health;

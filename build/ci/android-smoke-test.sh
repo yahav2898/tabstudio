@@ -9,7 +9,7 @@
 # and asks this script in its log (TABSTUDIO_DESKTOP_STEP lines) to type on the keyboard and take screenshots,
 # which it does with adb. (The app clicks the display itself: adb's taps have no mouse button events.)
 #
-# Usage: build/ci/android-smoke-test.sh <apk> <output-folder> [timeout-seconds] [all|managed|ui|native|performance|flutter]
+# Usage: build/ci/android-smoke-test.sh <apk> <output-folder> [timeout-seconds] [all|managed|ui|native|containers|performance|flutter]
 #
 # The opt-in flutter mode runs only the experimental Flutter web self test (tabstudio.selftest.flutter).
 set -euo pipefail
@@ -19,7 +19,7 @@ out="${2:?output folder}"
 timeout="${3:-900}"
 shard="${4:-all}"
 case "$shard" in
-  all|managed|ui|native|performance|flutter) ;;
+  all|managed|ui|native|containers|performance|flutter) ;;
   *) echo "Unknown self-test shard: $shard" >&2; exit 2 ;;
 esac
 package="com.tabstudio.ide"
@@ -195,3 +195,4 @@ case "$verdict" in
     exit 1
     ;;
 esac
+

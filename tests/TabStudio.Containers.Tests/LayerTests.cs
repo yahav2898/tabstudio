@@ -34,7 +34,7 @@ public sealed class LayerTests
 
         Assert.Equal("usr/bin", new FileInfo(Path.Combine(root, "bin")).LinkTarget);
         Assert.Equal("#!/bin/sh\n", System.IO.File.ReadAllText(Path.Combine(root, "usr/bin/alias")));
-        Assert.True((System.IO.File.GetUnixFileMode(Path.Combine(root, "usr/bin/tool")) & UnixFileMode.OtherExecute) != 0);
+        if (!OperatingSystem.IsWindows()) Assert.True((System.IO.File.GetUnixFileMode(Path.Combine(root, "usr/bin/tool")) & UnixFileMode.OtherExecute) != 0);
         Assert.Equal(Registry.RegistryClient.Digest(tar), result.DiffId);
         await Assert.ThrowsAsync<InvalidDataException>(() => LayerUnpacker.ApplyAsync(new MemoryStream(tar), Images.MediaTypes.OciLayer, Path.Combine(folder.Path, "other"), "sha256:" + new string('0', 64)));
     }
@@ -87,11 +87,11 @@ public sealed class LayerTests
     private static Task<LayerResult> Apply(string root, byte[] tar) =>
         LayerUnpacker.ApplyAsync(new MemoryStream(FakeRegistry.Gzip(tar)), Images.MediaTypes.OciLayerGzip, root, null);
 
-    private static TarEntry Dir(string name) => new PaxTarEntry(TarEntryType.Directory, name) { Mode = (UnixFileMode)0b111_101_101 };
-    private static TarEntry File(string name, string content, int mode = 0b110_100_100) =>
+    private static PaxTarEntry Dir(string name) => new PaxTarEntry(TarEntryType.Directory, name) { Mode = (UnixFileMode)0b111_101_101 };
+    private static PaxTarEntry File(string name, string content, int mode = 0b110_100_100) =>
         new PaxTarEntry(TarEntryType.RegularFile, name) { DataStream = new MemoryStream(Encoding.UTF8.GetBytes(content)), Mode = (UnixFileMode)mode };
-    private static TarEntry Link(string name, string target) => new PaxTarEntry(TarEntryType.SymbolicLink, name) { LinkName = target };
-    private static TarEntry Hard(string name, string target) => new PaxTarEntry(TarEntryType.HardLink, name) { LinkName = target };
+    private static PaxTarEntry Link(string name, string target) => new PaxTarEntry(TarEntryType.SymbolicLink, name) { LinkName = target };
+    private static PaxTarEntry Hard(string name, string target) => new PaxTarEntry(TarEntryType.HardLink, name) { LinkName = target };
 
     private static byte[] Tar(params TarEntry[] entries)
     {
@@ -104,3 +104,4 @@ public sealed class LayerTests
         return stream.ToArray();
     }
 }
+

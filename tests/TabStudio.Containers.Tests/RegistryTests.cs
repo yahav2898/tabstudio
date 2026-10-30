@@ -24,6 +24,15 @@ public sealed class RegistryTests
     }
 
     [Fact]
+    public void Only_actual_loopback_registries_allow_plain_HTTP()
+    {
+        Assert.True(ImageReference.Parse("localhost:5000/app").IsInsecure);
+        Assert.True(ImageReference.Parse("127.0.0.1:5000/app").IsInsecure);
+        Assert.False(ImageReference.Parse("localhost.attacker.example/app").IsInsecure);
+        Assert.False(ImageReference.Parse("127.attacker.example/app").IsInsecure);
+    }
+
+    [Fact]
     public void Docker_Hub_is_served_from_its_registry_host_and_digests_pin()
     {
         var digest = "sha256:" + new string('a', 64);
@@ -130,3 +139,4 @@ public sealed class RegistryTests
         public void Report(PullProgress value) => report(value);
     }
 }
+

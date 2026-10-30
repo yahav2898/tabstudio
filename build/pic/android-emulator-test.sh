@@ -9,7 +9,7 @@ work=${3:?PIC working directory is required}
 probe_apk=${4:?Disposable PIC probe APK path is required}
 shard=${5:-all}
 case "$shard" in
-  all|managed|ui|native) ;;
+  all|managed|ui|native|containers) ;;
   *) echo "Unknown self-test shard: $shard" >&2; exit 2 ;;
 esac
 
@@ -30,3 +30,4 @@ adb shell am force-stop com.tabstudio.ide || true
 adb install -r "$probe_apk"
 python3 build/pic/android_spike.py run --work "$work" --output "$output/pic-android" || status=1
 exit "$status"
+

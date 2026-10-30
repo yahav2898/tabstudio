@@ -66,7 +66,7 @@ public sealed partial class ContainersViewModel : ObservableObject, IAsyncDispos
     [ObservableProperty] public partial string RegistryHost { get; set; } = "docker.io";
     [ObservableProperty] public partial string RegistryUser { get; set; } = "";
     [ObservableProperty] public partial string RegistrySecret { get; set; } = "";
-    public string Limits => string.Join("\n", ContainerEngine.Limits);
+    public string Limits { get; } = string.Join("\n", ContainerEngine.Limits);
     public string? RuntimeProblem => Engine.Options.Problem;
     public bool HasError => Error is not null;
     partial void OnErrorChanged(string? value) => OnPropertyChanged(nameof(HasError));
@@ -123,8 +123,15 @@ public sealed partial class ContainersViewModel : ObservableObject, IAsyncDispos
     [RelayCommand] private void Cancel() => _operation?.Cancel();
     [RelayCommand] private async Task SignInAsync()
     {
-        await _credentials.SetAsync(RegistryHost.Trim(), new RegistryCredential(RegistryUser, RegistrySecret));
-        RegistrySecret = "";
+        try
+        {
+            var credential = new RegistryCredential(RegistryUser, RegistrySecret);
+            await Engine.Registry.LoginAsync(RegistryHost.Trim(), credential);
+            await _credentials.SetAsync(RegistryHost.Trim(), credential);
+            Error = null;
+        }
+        catch (Exception ex) when (ex is RegistryException or HttpRequestException) { Error = ex.Message; }
+        finally { RegistrySecret = ""; }
     }
     [RelayCommand] private void OpenPort(PublishedPort? port)
     {

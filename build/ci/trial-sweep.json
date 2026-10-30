@@ -1,0 +1,13 @@
+{
+  "comment": "Container regression subset drawn from real-repos.json. trial-sweep.json was absent on main at the 0.21 merge. This entry adds a Compose fixture to an upstream repository that has no Compose file, reproduces its missing-database failure, then uses F5 to serve its first database-backed route. The upstream source stays pinned.",
+  "repositories": [
+    {
+      "name": "node-express-realworld",
+      "url": "https://github.com/gothinkster/node-express-realworld-example-app",
+      "sha": "30b68e1e881462b2f4164ea09ab4c4f5699c7b0b",
+      "compose": "build/ci/container-trial/compose.yaml",
+      "route": "/api/tags",
+      "expect": "\"tags\""
+    }
+  ]
+}

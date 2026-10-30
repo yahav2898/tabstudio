@@ -43,11 +43,30 @@ jobs:
           mkdir -p ci-out
           dotnet test tests/TabStudio.Containers.Tests -c Release -warnaserror --logger 'console;verbosity=normal' --logger 'trx;LogFileName=containers.trx' > ci-out/containers.log 2>&1 || { cat ci-out/containers.log; exit 1; }
           cat ci-out/containers.log
+      - uses: actions/setup-node@v4
+        if: matrix.arch == 'x64'
+        with:
+          node-version: '22'
+      - uses: actions/checkout@v4
+        if: matrix.arch == 'x64'
+        with:
+          repository: gothinkster/node-express-realworld-example-app
+          ref: 30b68e1e881462b2f4164ea09ab4c4f5699c7b0b
+          path: artifacts/container-trial
+      - name: Containers window and pinned repository first route through F5
+        if: matrix.arch == 'x64'
+        env:
+          TABSTUDIO_CONTAINER_TRIAL_REPO: ${{ github.workspace }}/artifacts/container-trial
+          NX_DAEMON: 'false'
+        run: |
+          dotnet test tests/TabStudio.App.Tests -c Release --filter 'FullyQualifiedName~BackingServices.ContainersTests|FullyQualifiedName~BackingServices.ContainerRepositoryTests' --logger 'console;verbosity=normal' > ci-out/containers-ide.log 2>&1 || { cat ci-out/containers-ide.log; exit 1; }
+          cat ci-out/containers-ide.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: containers-${{ github.event_name }}-${{ matrix.arch }}
           path: |
             ci-out/
+            screenshots/
             tests/TabStudio.Containers.Tests/TestResults/
             ${{ runner.temp }}/containers-proot/*log

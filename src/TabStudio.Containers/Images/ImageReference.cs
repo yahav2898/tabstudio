@@ -25,7 +25,7 @@ public sealed record ImageReference(string Registry, string Repository, string? 
     public string ManifestReference => Digest ?? Tag ?? "latest";
 
     /// <summary>Whether the registry is served over plain HTTP: a loopback registry, as Docker allows.</summary>
-    public bool IsInsecure => Registry.StartsWith("localhost", StringComparison.Ordinal) || Registry.StartsWith("127.", StringComparison.Ordinal);
+    public bool IsInsecure => Uri.TryCreate($"https://{Registry}", UriKind.Absolute, out var address) && address.IsLoopback;
 
     /// <summary>The fully qualified name, such as <c>docker.io/library/postgres:17-alpine</c>.</summary>
     public string Canonical => $"{Registry}/{Repository}{(Tag is null ? "" : ":" + Tag)}{(Digest is null ? "" : "@" + Digest)}";

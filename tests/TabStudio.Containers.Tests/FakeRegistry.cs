@@ -50,7 +50,7 @@ internal sealed class FakeRegistry : IDisposable
             var config = OciJson.Write(new ImageConfigFile
             {
                 Architecture = architecture,
-                Config = new ImageRunConfig { Cmd = ["/bin/hello"], Env = ["PATH=/bin"], ExposedPorts = new() { ["80/tcp"] = default } },
+                Config = new ImageRunConfig { Cmd = ["/bin/hello"], Env = ["PATH=/bin"], ExposedPorts = new() { ["80/tcp"] = System.Text.Json.JsonSerializer.SerializeToElement(new { }) } },
                 Rootfs = new ImageRootfs { DiffIds = [RegistryClient.Digest(tar)] },
             });
             var configDigest = RegistryClient.Digest(config);
@@ -189,3 +189,4 @@ internal sealed class FakeRegistry : IDisposable
         _listener.Close();
     }
 }
+

@@ -24,6 +24,7 @@ public sealed class ServiceManager : IAsyncDisposable
     private readonly Dictionary<string, Instance> _running = new(StringComparer.Ordinal);
     private readonly Dictionary<string, Queue<ServiceLogLine>> _logs = new(StringComparer.Ordinal);
     private readonly Dictionary<string, IReadOnlyList<ServicePort>> _endpoints = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string> _fallbackReasons = new(StringComparer.Ordinal);
     private readonly List<string> _startedOrder = [];
     private readonly List<string> _secrets;
     private bool _disposed;
@@ -252,7 +253,8 @@ public sealed class ServiceManager : IAsyncDisposable
                     throw new ComposeException($"{name}: {reason}");
                 }
                 Log(name, $"{name}: image could not run ({reason}); using native Alpine service.");
-                Update(name, ServiceState.Starting, $"Native fallback: {reason}");
+                _fallbackReasons[name] = $"Native fallback: {reason}";
+                Update(name, ServiceState.Starting, _fallbackReasons[name]);
             }
         }
         Update(name, ServiceState.Installing, "Preparing Alpine packages");
@@ -282,7 +284,7 @@ public sealed class ServiceManager : IAsyncDisposable
                 return;
             }
             await WaitUntilReadyAsync(name, instance, token).ConfigureAwait(false);
-            Update(name, definition.Healthcheck?.Disabled == true ? ServiceState.Running : ServiceState.Healthy, resolved.Mapping.Note);
+            Update(name, definition.Healthcheck?.Disabled == true ? ServiceState.Running : ServiceState.Healthy, NativeDetail(name));
             instance.Monitor = MonitorAsync(name, instance);
         }
         catch (OperationCanceledException) { Update(name, ServiceState.Stopped, "Start cancelled"); throw; }
@@ -354,7 +356,7 @@ public sealed class ServiceManager : IAsyncDisposable
                 await delay.ConfigureAwait(false);
                 var healthy = await ProbeAsync(instance, health, instance.Stop.Token).ConfigureAwait(false);
                 failures = healthy ? 0 : failures + 1;
-                if (healthy || failures >= (health?.Retries ?? 3)) Update(name, healthy ? health?.Disabled == true ? ServiceState.Running : ServiceState.Healthy : ServiceState.Unhealthy, healthy ? Get(name).Mapping?.Note : "Health check failed; see logs.");
+                if (healthy || failures >= (health?.Retries ?? 3)) Update(name, healthy ? health?.Disabled == true ? ServiceState.Running : ServiceState.Healthy : ServiceState.Unhealthy, healthy ? NativeDetail(name) : "Health check failed; see logs.");
             }
         }
         catch (OperationCanceledException) { }
@@ -395,9 +397,11 @@ public sealed class ServiceManager : IAsyncDisposable
             catch (TimeoutException) { /* A child may still hold a pipe; closing it below ends its reader. */ }
             finally { instance.Process?.Dispose(); }
             instance.Stop.Dispose();
-            Update(name, previous.State is ServiceState.Failed or ServiceState.Unsupported ? previous.State : ServiceState.Stopped, previous.State is ServiceState.Failed or ServiceState.Unsupported ? previous.Detail : Get(name).Mapping?.Note);
+            Update(name, previous.State is ServiceState.Failed or ServiceState.Unsupported ? previous.State : ServiceState.Stopped, previous.State is ServiceState.Failed or ServiceState.Unsupported ? previous.Detail : NativeDetail(name));
         }
     }
+
+    private string? NativeDetail(string name) => _fallbackReasons.TryGetValue(name, out var reason) ? reason : Get(name).Mapping?.Note;
 
     private void AllocatePorts(string name, ServiceMapping? mapping)
     {

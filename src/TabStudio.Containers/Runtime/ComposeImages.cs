@@ -79,7 +79,7 @@ public sealed class ComposeImages(ContainerEngine engine, IProgress<PullProgress
                     cancellationToken.ThrowIfCancellationRequested();
                     var state = engine.Find(container.Id)!;
                     if (!state.IsRunning) throw new ComposeException($"{service.Name}: image exited with code {state.ExitCode}; see service logs.");
-                    if (state.Health == HealthStatus.Unhealthy) throw new ComposeException($"{service.Name}: image health check failed; see service logs.");
+                    if (state.Health == HealthStatus.Unhealthy) throw new ComposeException($"{service.Name}: image health check failed: {state.HealthOutput?.Trim()}; see service logs.");
                     var listening = true;
                     foreach (var port in state.Ports)
                     {
