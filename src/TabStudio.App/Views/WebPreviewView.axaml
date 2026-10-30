@@ -1,4 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:a11y="using:TabStudio.App.Accessibility"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:vm="using:TabStudio.App.ViewModels"
@@ -45,7 +46,7 @@
 
     <Panel>
       <!-- The embedded browser goes here. -->
-      <Panel x:Name="BrowserHost" IsVisible="{Binding IsRunning}" />
+      <Panel x:Name="BrowserHost" a11y:A11y.IsContent="True" IsVisible="{Binding IsRunning}" />
 
       <!-- No embedded browser, or the app is not running. -->
       <StackPanel x:Name="Placeholder" Margin="24" Spacing="12" VerticalAlignment="Center" MaxWidth="360">

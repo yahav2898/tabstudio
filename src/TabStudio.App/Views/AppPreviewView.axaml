@@ -1,4 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:a11y="using:TabStudio.App.Accessibility"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:vm="using:TabStudio.App.ViewModels"
@@ -30,11 +31,11 @@
 
     <Panel>
       <!-- The app fills the pane, or sits in a device's frame scaled to fit. -->
-      <ContentControl x:Name="FillContent" IsVisible="{Binding IsFill}" />
+      <ContentControl x:Name="FillContent" a11y:A11y.IsContent="True" IsVisible="{Binding IsFill}" />
       <Viewbox IsVisible="{Binding !IsFill}" Stretch="Uniform" Margin="12">
         <Border Width="{Binding FrameWidth}" Height="{Binding FrameHeight}" CornerRadius="18" ClipToBounds="True"
                 BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="6">
-          <ContentControl x:Name="FramedContent" />
+          <ContentControl x:Name="FramedContent" a11y:A11y.IsContent="True" />
         </Border>
       </Viewbox>
 
