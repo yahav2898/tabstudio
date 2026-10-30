@@ -65,7 +65,7 @@ public static class InProcessSafetyAnalyzer
                 results.Add(new BuildDiagnostic(
                     ExitId,
                     DiagnosticSeverityLevel.Error,
-                    "End would close TabStudio, because programs run inside the IDE. Return from Sub Main, or close the main form, instead.",
+                    "End would close TabStudio, because programs run inside the IDE. In a Windows Forms app call Application.Exit() or the form's Close(); in a console app return from Sub Main.",
                     new DiagnosticLocation(tree.FilePath, location.SourceSpan.Start, location.SourceSpan.Length, lineSpan.Line + 1, lineSpan.Character + 1),
                     projectName));
             }
