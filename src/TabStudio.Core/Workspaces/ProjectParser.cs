@@ -190,7 +190,7 @@ public static partial class ProjectParser
             CompileIncludes = ReadItemPatterns(items, "Compile", "Include", properties),
             CompileIncludeExcludes = ReadIncludeExcludes(items, "Compile", properties),
             CompileRemoves = ReadItemPatterns(items, "Compile", "Remove", properties),
-            EmbeddedResourceIncludes = ReadItemPatterns(items, "EmbeddedResource", "Include", properties),
+            EmbeddedResourceIncludes = [.. DefaultEmbeddedResources(sdk, evaluation.Properties), .. ReadItemPatterns(items, "EmbeddedResource", "Include", properties)],
             EmbeddedResourceRemoves = ReadItemPatterns(items, "EmbeddedResource", "Remove", properties),
             AvaloniaResourceIncludes = ReadItemPatterns(items, "AvaloniaResource", "Include", properties),
             AvaloniaResourceRemoves = ReadItemPatterns(items, "AvaloniaResource", "Remove", properties),
@@ -206,8 +206,61 @@ public static partial class ProjectParser
             AdditionalFiles = generatorInputs.Files,
         };
 
+        info = info with
+        {
+            CompilerTargets = TargetItems.CompilerTargetsOf([evaluation.Targets]),
+            EmbeddedResourceItems = ReadItemMetadata(items, "EmbeddedResource"),
+        };
+        if (info.CompilerTargets.Count > 0)
+        {
+            info = info with { AdditionalFiles = [.. info.AdditionalFiles, .. TargetItems.AdditionalFiles(info, evaluation.Properties)] };
+        }
+
         var (kind, isTest) = ProjectClassifier.Classify(info);
         return info with { Kind = kind, IsTestProject = isTest };
+    }
+
+    /// <summary>
+    /// The <c>EmbeddedResource</c> items the SDK includes by default: every <c>.resx</c> file of an SDK-style project,
+    /// unless <c>EnableDefaultItems</c> or <c>EnableDefaultEmbeddedResourceItems</c> is <c>false</c>.
+    /// </summary>
+    private static string[] DefaultEmbeddedResources(string? sdk, Dictionary<string, string> properties) =>
+        sdk is not null
+        && !string.Equals(properties.GetValueOrDefault("EnableDefaultItems")?.Trim(), "false", StringComparison.OrdinalIgnoreCase)
+        && !string.Equals(properties.GetValueOrDefault("EnableDefaultEmbeddedResourceItems")?.Trim(), "false", StringComparison.OrdinalIgnoreCase)
+            ? ["**/*.resx"]
+            : [];
+
+    /// <summary>The metadata of an item type's items that include or update files, in order.</summary>
+    private static List<ItemMetadataInfo> ReadItemMetadata(XElement items, string itemType)
+    {
+        var result = new List<ItemMetadataInfo>();
+        foreach (var item in items.Descendants().Where(e => e.Name.LocalName == itemType))
+        {
+            var metadata = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var attribute in item.Attributes().Where(a => !ItemAttributes.Contains(a.Name.LocalName) && !a.IsNamespaceDeclaration))
+            {
+                metadata[attribute.Name.LocalName] = attribute.Value.Trim();
+            }
+
+            foreach (var child in item.Elements())
+            {
+                metadata[child.Name.LocalName] = child.Value.Trim();
+            }
+
+            var patterns = item.Attribute("Include")?.Value ?? item.Attribute("Update")?.Value;
+            if (metadata.Count == 0 || string.IsNullOrWhiteSpace(patterns))
+            {
+                continue;
+            }
+
+            foreach (var pattern in patterns.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Where(p => !p.Contains("$(", StringComparison.Ordinal) && !p.Contains("@(", StringComparison.Ordinal)))
+            {
+                result.Add(new ItemMetadataInfo(pattern, metadata));
+            }
+        }
+
+        return result;
     }
 
     /// <summary>

@@ -340,7 +340,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
         if (project.IsExecutable)
         {
-            diagnostics.AddRange(InProcessSafetyAnalyzer.AnalyzeTree(model.Compilation, model.SyntaxTree, project.Name, cancellationToken));
+            diagnostics.AddRange(InProcessSafetyAnalyzer.AnalyzeTree(model.Compilation, model.SyntaxTree, project.Name, redirected: true, cancellationToken));
         }
 
         diagnostics.AddRange(Uno.UnoCompatibility.AnalyzeTree(model, project, cancellationToken));
@@ -405,7 +405,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
         if (info.IsExecutable)
         {
-            diagnostics.AddRange(InProcessSafetyAnalyzer.Analyze(compilation, info.Name, cancellationToken));
+            diagnostics.AddRange(InProcessSafetyAnalyzer.Analyze(compilation, info.Name, redirected: true, cancellationToken));
         }
 
         return diagnostics;
@@ -533,6 +533,12 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         if (await EmitWpfAsync(info, compilation, stopwatch, cancellationToken).ConfigureAwait(false) is { } wpf)
         {
             return wpf;
+        }
+
+        // A program about to run gets its Environment.Exit calls redirected, so that it ends and TabStudio does not.
+        if (checkInProcessSafety)
+        {
+            compilation = InProcessExit.Redirect(compilation, cancellationToken);
         }
 
         var result = await Razor.RazorCompilations.EmitAsync(project, info, compilation, checkInProcessSafety, stopwatch, cancellationToken).ConfigureAwait(false);

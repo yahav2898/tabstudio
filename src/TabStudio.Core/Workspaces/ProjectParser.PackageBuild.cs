@@ -42,6 +42,13 @@ public static partial class ProjectParser
             ReadBuildFile(file, state, isProps, depth: 0, new HashSet<string>(StringComparer.Ordinal));
         }
 
+        // The items the project's and its packages' targets add just before the compiler runs, such as the .resx files
+        // ResxSourceGenerator and ThisAssembly.Strings generate code from, read with every property the files set.
+        var compilerTargets = TargetItems.CompilerTargetsOf([new XElement("Project", project.CompilerTargets.Concat(state.Targets).Select(t => new XElement(t)))]);
+        var targetFiles = compilerTargets.Count == 0
+            ? []
+            : TargetItems.AdditionalFiles(project with { CompilerTargets = compilerTargets }, state.Properties);
+
         // The SDK's own properties were there for conditions; unless a package changed one, the project keeps none.
         foreach (var (name, value) in state.SdkDefaults)
         {
@@ -58,7 +65,8 @@ public static partial class ProjectParser
             RemovedUsings = [.. project.RemovedUsings.Concat(state.RemovedUsings).Distinct(StringComparer.Ordinal)],
             CompilerVisibleProperties = [.. project.CompilerVisibleProperties.Concat(state.VisibleProperties).Distinct(StringComparer.OrdinalIgnoreCase)],
             CompilerVisibleItemMetadata = [.. project.CompilerVisibleItemMetadata.Concat(state.VisibleMetadata).Distinct()],
-            AdditionalFiles = [.. project.AdditionalFiles, .. state.AdditionalFiles],
+            AdditionalFiles = [.. project.AdditionalFiles.Where(i => i.ItemTypes is null), .. state.AdditionalFiles, .. targetFiles],
+            CompilerTargets = compilerTargets,
             AssemblyReferences = [.. project.AssemblyReferences.Concat(state.References).DistinctBy(r => r.Name, StringComparer.OrdinalIgnoreCase)],
             PackageBuildFiles = buildFiles,
         };
@@ -100,6 +108,9 @@ public static partial class ProjectParser
         public List<CompilerVisibleItemMetadataInfo> VisibleMetadata { get; } = [];
 
         public List<AdditionalFileItem> AdditionalFiles { get; } = [];
+
+        /// <summary>The files' targets, with <c>$(MSBuildThisFile…)</c> expanded, for <see cref="TargetItems"/>.</summary>
+        public List<XElement> Targets { get; } = [];
 
         /// <summary>The assemblies the files reference by <c>HintPath</c>, such as MSTest's TestFramework.Extensions.</summary>
         public List<AssemblyReferenceInfo> References { get; } = [];
@@ -196,6 +207,7 @@ public static partial class ProjectParser
                     break;
                 case "Target":
                     ReadInterceptorNamespaces(element, state, file);
+                    state.Targets.Add(WithThisFile(element, file));
                     break;
                 case "ImportGroup":
                     foreach (var import in element.Elements().Where(i => i.Name.LocalName == "Import" && IsTrueHere(i, state, file)))
@@ -206,6 +218,23 @@ public static partial class ProjectParser
                     break;
             }
         }
+    }
+
+    /// <summary>A copy of a target with <c>$(MSBuildThisFile…)</c> expanded in its attributes and texts, which mean the file it is in.</summary>
+    private static XElement WithThisFile(XElement target, string file)
+    {
+        var copy = new XElement(target);
+        foreach (var attribute in copy.DescendantsAndSelf().SelectMany(e => e.Attributes()).Where(a => a.Value.Contains("$(MSBuildThisFile", StringComparison.OrdinalIgnoreCase)))
+        {
+            attribute.Value = MsBuildImports.ExpandThisFile(attribute.Value, file);
+        }
+
+        foreach (var text in copy.DescendantNodes().OfType<XText>().Where(t => t.Value.Contains("$(MSBuildThisFile", StringComparison.OrdinalIgnoreCase)))
+        {
+            text.Value = MsBuildImports.ExpandThisFile(text.Value, file);
+        }
+
+        return copy;
     }
 
     /// <summary>The properties the compiler reads the namespaces generators may put interceptors in from.</summary>

@@ -136,6 +136,48 @@ public sealed class SdkProjectItemsTests
     }
 
     [Fact]
+    public void Generators_get_the_resx_files_a_target_adds_before_the_compiler_runs()
+    {
+        // MudBlazor's LanguageResource comes from ResxSourceGenerator, and Moq's strings from ThisAssembly.Strings: both
+        // packages hand the generator the project's .resx files from a target, which TabStudio does not run.
+        using var temp = new TempDirectory();
+        temp.Write("Lib/Resources/LanguageResource.resx", "<root />");
+        temp.Write("Lib/Resources/LanguageResource.de.resx", "<root />");
+        temp.Write("Lib/Strings.resx", "<root />");
+        var path = temp.Write("Lib/Lib.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup>
+                <EmbeddedResource Update="Resources\LanguageResource.resx"><AsConstants>true</AsConstants></EmbeddedResource>
+              </ItemGroup>
+            </Project>
+            """);
+        var package = temp.Write("packages/thisassembly.strings/build/ThisAssembly.Strings.targets", """
+            <Project>
+              <Target Name="_InjectResxAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="PrepareResourceNames">
+                <ItemGroup>
+                  <ResxCode Include="@(EmbeddedResource)" ThisAssemblyStrings="true"
+                            Condition="'%(EmbeddedResource.Type)' == 'Resx' And '%(EmbeddedResource.WithCulture)' != 'true' And '%(EmbeddedResource.ManifestResourceName)' != ''" />
+                  <AdditionalFiles Include="@(ResxCode)" />
+                </ItemGroup>
+              </Target>
+              <ItemGroup>
+                <CompilerVisibleItemMetadata Include="ResxCode" MetadataName="ManifestResourceName" />
+              </ItemGroup>
+            </Project>
+            """);
+
+        var project = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(path), [package]);
+
+        var files = project.AdditionalFiles.Where(f => f.ItemTypes is not null).OrderBy(f => f.Include, StringComparer.Ordinal).ToList();
+        Assert.Equal(new[] { Path.Combine("Resources", "LanguageResource.resx"), "Strings.resx" }, files.Select(f => f.Include));
+        Assert.Equal("Lib.Resources.LanguageResource", files[0].Metadata["ManifestResourceName"]);
+        Assert.Equal("true", files[0].Metadata["AsConstants"]);
+        Assert.Equal("true", files[0].Metadata["ThisAssemblyStrings"]);
+        Assert.Equal(new[] { "ResxCode", "AdditionalFiles" }, files[1].ItemTypes);
+    }
+
+    [Fact]
     public void Project_references_keep_their_metadata_and_packages_their_PrivateAssets()
     {
         var project = ProjectParser.Parse(ProjectPath, """
