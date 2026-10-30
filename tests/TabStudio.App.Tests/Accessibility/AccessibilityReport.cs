@@ -37,9 +37,9 @@ internal static class AccessibilityReport
     public static IReadOnlyList<AccessibilityFinding> Check(Window window, string screenshots, string screenshot)
     {
         var dark = Application.Current?.ActualThemeVariant != ThemeVariant.Light;
-        var found = new List<AccessibilityFinding>(AccessibilityAudit.In(window, dark));
-        var views = ViewsIn(window);
         var factor = TypeScale.Factor;
+        var found = new List<AccessibilityFinding>(AccessibilityAudit.In(window, dark, clipping: factor >= TextSizes.Largest));
+        var views = ViewsIn(window);
         if (factor < TextSizes.Largest)
         {
             // Nothing else runs while the text is larger: other tests' work waits on the dispatcher.
