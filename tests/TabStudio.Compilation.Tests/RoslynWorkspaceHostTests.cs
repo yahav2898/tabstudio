@@ -218,6 +218,42 @@ public sealed class RoslynWorkspaceHostTests : IDisposable
         Assert.True(Directory.EnumerateFiles(cache.Path, "System.Runtime.dll", SearchOption.AllDirectories).Any());
     }
 
+    /// <summary>
+    /// MudBlazor's analyzer tests and refit's HttpClientFactory tests: a ProjectReference's Aliases put the project
+    /// under an extern alias, so its namespaces, which repeat another project's, are named only through it.
+    /// </summary>
+    [Fact]
+    public async Task A_project_reference_s_aliases_are_extern_aliases()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("Lib/Lib.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        temp.Write("Lib/Greeter.cs", "namespace Shared; public static class Greeter { public static string Name => \"lib\"; }");
+        temp.Write("Tests/Tests.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup><ProjectReference Include="..\Lib\Lib.csproj"><Aliases>LibAlias</Aliases></ProjectReference></ItemGroup>
+            </Project>
+            """);
+        temp.Write("Tests/Greeter.cs", "namespace Shared; public static class Greeter { public static string Name => \"tests\"; }");
+        temp.Write("Tests/Uses.cs", """
+            extern alias LibAlias;
+            public static class Uses
+            {
+                public static string Both => Shared.Greeter.Name + LibAlias::Shared.Greeter.Name;
+            }
+            """);
+        using var host = new RoslynWorkspaceHost();
+        host.Load(WorkspaceLoader.Load(temp.Path), FileSystemTextProvider.Instance);
+
+        var diagnostics = await host.GetDocumentDiagnosticsAsync(temp.Resolve("Tests/Uses.cs"));
+
+        Assert.DoesNotContain(diagnostics, d => d.Severity == DiagnosticSeverityLevel.Error);
+    }
+
     public void Dispose()
     {
         _host.Dispose();

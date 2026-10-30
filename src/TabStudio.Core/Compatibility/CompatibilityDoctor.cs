@@ -39,12 +39,47 @@ public sealed record CompatibilityReport(
 /// </remarks>
 public static class CompatibilityDoctor
 {
-    /// <summary>Diagnoses every project.</summary>
+    /// <summary>
+    /// Diagnoses every project of a solution. A project that compiles against one TabStudio does not build here (see
+    /// <see cref="BuildExclusions"/>) is not built either, and its verdict names the project it needs and why.
+    /// </summary>
     /// <param name="projects">The projects to diagnose.</param>
     public static IReadOnlyList<CompatibilityReport> Diagnose(IEnumerable<ProjectInfo> projects)
     {
         ArgumentNullException.ThrowIfNull(projects);
-        return projects.Select(Diagnose).ToList();
+        var all = projects.ToList();
+        var excluded = BuildExclusions.Of(all);
+        return [.. all.Select(project => excluded.TryGetValue(project.FilePath, out var needed) ? Excluded(project, needed) : Diagnose(project))];
+    }
+
+    /// <summary>The verdict for a project that is left out of builds (see <see cref="BuildExclusions"/>).</summary>
+    /// <param name="project">The project.</param>
+    /// <param name="needed">The project it compiles against that is not built here, or <see langword="null"/> when it is left out for itself.</param>
+    private static CompatibilityReport Excluded(ProjectInfo project, ProjectInfo? needed)
+    {
+        var report = Diagnose(project);
+        if (needed is not null)
+        {
+            return report.Status == CompatibilityStatus.Unsupported
+                ? report
+                : report with
+                {
+                    Host = RunHost.None,
+                    Status = CompatibilityStatus.Unsupported,
+                    RunsVia = "Needs " + needed.Name,
+                    Explanation = $"Not supported here: it compiles against {needed.Name}, which {BuildExclusions.Reason(needed)}. TabStudio leaves both out of builds.",
+                };
+        }
+
+        return project.IsBuiltBySolution || BuildExclusions.IsNotBuiltHere(project)
+            ? report
+            : report with
+            {
+                Host = RunHost.None,
+                Status = CompatibilityStatus.NotRunnable,
+                RunsVia = "Not in the solution's build",
+                Explanation = "The solution's Debug configuration does not build it, so TabStudio leaves it out of builds, as Visual Studio does.",
+            };
     }
 
     /// <summary>Diagnoses one project.</summary>

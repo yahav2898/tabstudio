@@ -51,6 +51,12 @@ public sealed record ProjectReferenceInfo(string Path, bool ReferenceOutputAssem
     /// runs inside the referencing project's compilation.
     /// </summary>
     public bool IsAnalyzer => string.Equals(OutputItemType, "Analyzer", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// The extern aliases of the reference, from its <c>Aliases</c> metadata (separated by commas), which the code
+    /// names with <c>extern alias</c>; none for the global namespace only. <c>global</c> among them keeps it there too.
+    /// </summary>
+    public IReadOnlyList<string> Aliases { get; init; } = [];
 }
 
 /// <summary>One argument of an assembly-level attribute the SDK generates.</summary>
@@ -310,6 +316,12 @@ public sealed record ProjectInfo
 
     /// <summary>Whether the project contains tests, regardless of <see cref="Kind"/>.</summary>
     public bool IsTestProject { get; init; }
+
+    /// <summary>
+    /// Whether the solution's Debug configuration builds the project (see <see cref="SolutionProjectEntry.IsBuilt"/>);
+    /// <see langword="false"/> leaves it out of builds, as Visual Studio does. A project opened without a solution is built.
+    /// </summary>
+    public bool IsBuiltBySolution { get; init; } = true;
 
     /// <summary>The directory that contains the project file.</summary>
     public string DirectoryPath => Path.GetDirectoryName(FilePath) ?? string.Empty;

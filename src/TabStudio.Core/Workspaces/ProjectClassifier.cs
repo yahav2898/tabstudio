@@ -332,9 +332,14 @@ public static class ProjectClassifier
         }
 
         var sdk = project.Sdk ?? string.Empty;
-        var isTest = IsTrue(project.GetProperty("IsTestProject")) ||
+        // A project that sets IsTestProject to false is not a test project for the SDK or the Test Explorer, even with
+        // a test framework's package (RestSharp's interactive tests are a console program under a folder that gives
+        // every project xUnit), unless it references Microsoft.NET.Test.Sdk, whose props set it to true again.
+        var declaredFalse = string.Equals(project.GetProperty("IsTestProject"), "false", StringComparison.OrdinalIgnoreCase)
+            && !project.HasPackage("Microsoft.NET.Test.Sdk");
+        var isTest = !declaredFalse && (IsTrue(project.GetProperty("IsTestProject")) ||
                      project.UsesSdk(MSTestSdk) ||
-                     TestPackages.Any(project.HasPackage);
+                     TestPackages.Any(project.HasPackage));
 
         if (isTest)
         {

@@ -191,6 +191,11 @@ public static class WorkspaceLoader
         foreach (var entry in solution.Projects)
         {
             var project = TryLoadProject(entry.AbsolutePath, errors);
+            if (!entry.IsBuilt)
+            {
+                project = project with { IsBuiltBySolution = false };
+            }
+
             projects.Add(project);
 
             var parent = GetOrCreateSolutionFolder(root, folders, entry.FolderPath);
