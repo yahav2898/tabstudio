@@ -128,9 +128,9 @@ From there, try **New project** for a template in any language, **Open from GitH
   navigation, debugger, Hot Reload and Live Unit Testing. `Microsoft.VisualBasic` and the `My` namespace work in
   console and Windows Forms apps, including the Application Framework (`Application.myapp`, `My.Settings`,
   `My.Resources`). Templates: Console App, Windows Forms App and Class Library (Visual Basic).
-- **Test Explorer for every language with a standard runner.** Besides xUnit, NUnit and MSTest: PHPUnit and Pest,
-  JUnit through Gradle or Maven (Kotlin and Java), and XCTest and Swift Testing through `swift test`, found in source
-  and run with each project's own runner.
+- **Test Explorer beyond .NET.** Besides xUnit, NUnit and MSTest: pytest (Python), PHPUnit and Pest, JUnit through
+  Gradle or Maven (Kotlin and Java), and XCTest and Swift Testing through `swift test`, found in source and run with
+  each project's own runner. Go, Rust and JavaScript tests run from the terminal (`go test`, `cargo test`, `npm test`).
 - **C# Hot Reload and Edit and Continue (desktop build).** Tap **Hot Reload** or press **Alt+F10** to apply edits to
   a running console, Avalonia, ASP.NET Core or Blazor Server app without restarting, or let saving apply them. On
   Android, C# edits apply with a quick restart. See [Hot Reload](docs/ARCHITECTURE.md#hot-reload).

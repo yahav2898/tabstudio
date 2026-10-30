@@ -6,7 +6,7 @@ using TabStudio.Toolchains.Testing;
 namespace TabStudio.Toolchains.Tests.Testing;
 
 /// <summary>
-/// Test Explorer for PHP, Kotlin, Java and Swift: finding tests in source, running them with each project's own
+/// Test Explorer for PHP, Kotlin, Java, Swift and Python: finding tests in source, running them with each project's own
 /// runner, and reading the JUnit XML reports the runners write.
 /// </summary>
 public sealed class ToolchainTestTests : IDisposable
@@ -180,6 +180,74 @@ public sealed class ToolchainTestTests : IDisposable
         var tests = ToolchainTestDiscoverer.Discover(_folder.Path, ToolchainTestFramework.SwiftPM);
 
         Assert.Equal(["ToolTests.topLevel", "ToolTests.Arithmetic.adds", "ToolTests.ToolTests.testAdds"], tests.Select(t => t.Id));
+    }
+
+    [Fact]
+    public void Finds_pytest_tests_as_pytest_reports_them_and_runs_a_selection_by_node_id()
+    {
+        // As pytest 9 reports this file with --junitxml: "tests.unit.test_math" for its functions and
+        // "tests.unit.test_math.TestDivide" for a class's methods, and "test_squares[2]" for a parametrized test.
+        var file = _folder.Write("py/tests/unit/test_math.py", """
+            import pytest, unittest
+
+            def test_adds():
+                def test_helper():
+                    pass
+                assert 1 + 1 == 2
+
+            @pytest.mark.parametrize("x", [1, 2])
+            def test_squares(x):
+                assert x * x == x
+
+            class TestDivide:
+                # A comment first.
+                def test_divides(self):
+                    assert 4 / 2 == 2
+
+                async def test_awaits(self):
+                    pass
+
+                def helper(self):
+                    pass
+
+            class Legacy(unittest.TestCase):
+                def test_old(self):
+                    self.assertTrue(True)
+
+            class Helper:
+                def test_not_collected(self):
+                    pass
+
+            def helper():
+                pass
+            """);
+        _folder.Write("py/.venv/lib/site-packages/pkg/test_vendor.py", "def test_theirs(): pass");
+        _folder.Write("py/node_modules/x/test_x.py", "def test_theirs(): pass");
+        _folder.Write("py/requirements-dev.txt", "pytest==9.1.1\n");
+        var project = Project("python", "py");
+
+        Assert.Equal(ToolchainTestFramework.Pytest, ToolchainTestPlanner.Detect(project));
+        var tests = ToolchainTestDiscoverer.Discover(project.Directory, ToolchainTestFramework.Pytest);
+        Assert.Equal(
+            ["tests.unit.test_math.test_adds", "tests.unit.test_math.test_squares", "tests.unit.test_math.TestDivide.test_divides",
+             "tests.unit.test_math.TestDivide.test_awaits", "tests.unit.test_math.Legacy.test_old"],
+            tests.Select(t => t.Id));
+        Assert.Equal((file, 3), (tests[0].File, tests[0].Line));
+        Assert.Equal((14, 12), (tests[2].Line, tests[2].ClassLine));
+
+        var result = Assert.Single(JUnitReport.Parse("""<testsuite><testcase classname="tests.unit.test_math" name="test_squares[2]"><failure message="assert 4 == 2"/></testcase></testsuite>"""));
+        Assert.Equal(("tests.unit.test_math", "test_squares"), (result.ClassName, result.MethodName));
+
+        var plan = ToolchainTestPlanner.Plan(project, ToolchainTestFramework.Pytest,
+            [new("tests.unit.test_math", "test_squares"), new("tests.unit.test_math.TestDivide", null)], _folder.Resolve("reports"));
+        Assert.Equal(["tests/unit/test_math.py::test_squares", "tests/unit/test_math.py::TestDivide"], plan.Command.Arguments.TakeLast(2));
+        Assert.Equal(["-c", ToolchainTestPlanner.PytestScript, "python3"], plan.Command.Arguments.Take(3));
+        Assert.Contains("--junitxml=" + Path.Combine(_folder.Resolve("reports"), "pytest.xml"), plan.Command.Arguments);
+
+        // A project that does not use pytest has no tests to list.
+        _folder.Write("plain/main.py", "print('hi')");
+        _folder.Write("plain/requirements.txt", "requests\n");
+        Assert.Null(ToolchainTestPlanner.Detect(Project("python", "plain")));
     }
 
     [Fact]

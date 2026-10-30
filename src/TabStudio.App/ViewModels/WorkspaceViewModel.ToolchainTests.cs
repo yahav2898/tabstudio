@@ -9,7 +9,7 @@ namespace TabStudio.App.ViewModels;
 
 /// <summary>
 /// Test Explorer for toolchain projects: PHPUnit and Pest in PHP projects, JUnit in Gradle and Maven builds of Kotlin
-/// and Java, and XCTest and Swift Testing in Swift packages. Their tests are found in source when the workspace
+/// and Java, XCTest and Swift Testing in Swift packages, and pytest in Python projects. Their tests are found in source when the workspace
 /// opens, and a run starts the project's own runner, whose JUnit XML reports become the results.
 /// </summary>
 public sealed partial class WorkspaceViewModel
