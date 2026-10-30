@@ -66,7 +66,7 @@
                                 ToolTip.Tip="Connect to a SQL Server on your network or in the cloud; it is saved in the Database Explorer and the app runs with it"
                                 Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).ConnectSqlServerCommand}" CommandParameter="{Binding}">
                           <StackPanel Orientation="Horizontal" Spacing="6">
-                            <controls:StrokeIcon Data="{StaticResource Icon.Database}" Size="13" Foreground="{DynamicResource Brush.Accent}" />
+                            <controls:StrokeIcon Data="{StaticResource Icon.Database}" Size="13" Foreground="{DynamicResource Brush.AccentText}" />
                             <TextBlock Text="Connect to SQL Server…" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
                           </StackPanel>
                         </Button>
@@ -81,7 +81,7 @@
                             IsVisible="{Binding CanFixWithAgent}" ToolTip.Tip="Ask Claude to change the code so the project runs here"
                             Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).FixCompatibilityWithAgentCommand}" CommandParameter="{Binding}">
                       <StackPanel Orientation="Horizontal" Spacing="6">
-                        <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="13" Foreground="{DynamicResource Brush.Accent}" />
+                        <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="13" Foreground="{DynamicResource Brush.AccentText}" />
                         <TextBlock Text="Fix with Agent" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
                       </StackPanel>
                     </Button>
@@ -97,7 +97,7 @@
                             IsVisible="{Binding CanInstallToolchain}" ToolTip.Tip="Install the toolchain from the Toolchain Store"
                             Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).InstallToolchainCommand}" CommandParameter="{Binding}">
                       <StackPanel Orientation="Horizontal" Spacing="6">
-                        <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="13" Foreground="{DynamicResource Brush.Accent}" />
+                        <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="13" Foreground="{DynamicResource Brush.AccentText}" />
                         <TextBlock Text="{Binding InstallToolchainText}" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
                       </StackPanel>
                     </Button>

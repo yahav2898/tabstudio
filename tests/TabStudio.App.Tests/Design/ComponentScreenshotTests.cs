@@ -237,7 +237,7 @@ public sealed class ComponentScreenshotTests : IDisposable
         var actions = new AdaptiveBar { Spacing = 0 };
         foreach (var (icon, label) in new[] { ("Icon.Refresh", "Refresh"), ("Icon.Collapse", "Collapse All"), ("Icon.Gear", "Settings") })
         {
-            actions.Children.Add(new AdaptiveBarItem { Icon = DesignSamples.Icon(icon), Label = label, ShowsLabel = false, IconSize = 16, MinWidth = 36, MinHeight = 36, Command = DesignSamples.Nothing });
+            actions.Children.Add(new AdaptiveBarItem { Icon = DesignSamples.Icon(icon), Label = label, ShowsLabel = false, IconSize = 16, Command = DesignSamples.Nothing });
         }
 
         return actions;

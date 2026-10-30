@@ -1,7 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using TabStudio.App.Theming;
 
 namespace TabStudio.App.Accessibility;
@@ -35,6 +37,8 @@ public static class AccessibilityFeatures
 
         TouchTargets.Start();
         AccessibleNames.Start();
+        TrimmedText.Start();
+        TypeScale.Changed += (_, _) => RemeasureWindows();
         HiddenAnimations.ReduceMotion = system.ReduceMotion;
         system.Changed += (_, _) =>
         {
@@ -65,6 +69,29 @@ public static class AccessibilityFeatures
                 window.FlowDirection = FlowDirection.RightToLeft;
             }
         });
+    }
+
+    /// <summary>
+    /// Lays every window out again after the text size changed. A font size change re-measures the text, but a panel
+    /// that sized a column or a row to it before may keep the old size until something else changes; measuring
+    /// everything once makes every view take its new size at once.
+    /// </summary>
+    public static void RemeasureWindows()
+    {
+        foreach (var reference in Windows.ToArray())
+        {
+            if (!reference.TryGetTarget(out var window))
+            {
+                Windows.Remove(reference);
+                continue;
+            }
+
+            window.InvalidateMeasure();
+            foreach (var element in window.GetVisualDescendants().OfType<Layoutable>())
+            {
+                element.InvalidateMeasure();
+            }
+        }
     }
 
     /// <summary>

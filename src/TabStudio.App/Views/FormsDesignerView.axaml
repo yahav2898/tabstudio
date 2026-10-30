@@ -106,7 +106,7 @@
                             <Button Classes="tool" Theme="{StaticResource ToolButton}" Classes.selected="{Binding IsArmed}" Command="{Binding ArmCommand}"
                                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="10,0">
                               <StackPanel Orientation="Horizontal" Spacing="10">
-                                <controls:StrokeIcon Data="{Binding Icon}" Size="16" Foreground="{DynamicResource Brush.Accent}" />
+                                <controls:StrokeIcon Data="{Binding Icon}" Size="16" Foreground="{DynamicResource Brush.AccentText}" />
                                 <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
                               </StackPanel>
                             </Button>

@@ -34,7 +34,8 @@ public sealed class EditorLooksTheSameTests
         var path = Path.Combine(Path.GetDirectoryName(solution)!, "src", "Greetings", "Operations.cs");
         await File.WriteAllTextAsync(path, LongSampleCode.CSharp());
         await fixture.Workspace.LoadAsync(solution);
-        var window = fixture.Show(bottomPanel: false);
+        // Tall enough that the fold marker the pointer goes to is clear of the floating touch bar.
+        var window = fixture.Show(height: 960, bottomPanel: false);
         var document = await fixture.Workspace.OpenDocumentAsync(path) ?? throw new InvalidOperationException("The file did not open.");
         var view = ActiveEditor(window);
         await UiTestHelpers.WaitUntilAsync(

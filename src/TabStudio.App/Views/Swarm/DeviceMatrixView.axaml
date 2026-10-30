@@ -69,7 +69,7 @@
             BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="Auto,*,Auto">
         <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-          <controls:StrokeIcon Data="{StaticResource Icon.DeviceMatrix}" Size="18" Foreground="{DynamicResource Brush.Accent}" VerticalAlignment="Center" />
+          <controls:StrokeIcon Data="{StaticResource Icon.DeviceMatrix}" Size="18" Foreground="{DynamicResource Brush.AccentText}" VerticalAlignment="Center" />
           <StackPanel VerticalAlignment="Center" Spacing="1">
             <TextBlock Classes="header" Text="Device Matrix" />
             <TextBlock Classes="muted small" Text="{Binding SummaryText}" />
@@ -209,8 +209,8 @@
                   <!-- Header: the profile, and the layout issues found on it -->
                   <Grid ColumnDefinitions="Auto,*,Auto">
                     <Panel VerticalAlignment="Top" Margin="0,2,10,0">
-                      <controls:StrokeIcon Data="{StaticResource Icon.Phone}" Size="18" Foreground="{DynamicResource Brush.Accent}" IsVisible="{Binding IsPhoneSized}" />
-                      <controls:StrokeIcon Data="{StaticResource Icon.Tablet}" Size="18" Foreground="{DynamicResource Brush.Accent}" IsVisible="{Binding !IsPhoneSized}" />
+                      <controls:StrokeIcon Data="{StaticResource Icon.Phone}" Size="18" Foreground="{DynamicResource Brush.AccentText}" IsVisible="{Binding IsPhoneSized}" />
+                      <controls:StrokeIcon Data="{StaticResource Icon.Tablet}" Size="18" Foreground="{DynamicResource Brush.AccentText}" IsVisible="{Binding !IsPhoneSized}" />
                     </Panel>
                     <StackPanel Grid.Column="1" Spacing="1">
                       <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
@@ -281,8 +281,8 @@
                 BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
           <Grid ColumnDefinitions="Auto,*,Auto">
             <Panel VerticalAlignment="Center" Margin="0,0,10,0">
-              <controls:StrokeIcon Data="{StaticResource Icon.Phone}" Size="18" Foreground="{DynamicResource Brush.Accent}" IsVisible="{Binding FullSizeTile.IsPhoneSized, FallbackValue=False}" />
-              <controls:StrokeIcon Data="{StaticResource Icon.Tablet}" Size="18" Foreground="{DynamicResource Brush.Accent}" IsVisible="{Binding !FullSizeTile.IsPhoneSized, FallbackValue=False}" />
+              <controls:StrokeIcon Data="{StaticResource Icon.Phone}" Size="18" Foreground="{DynamicResource Brush.AccentText}" IsVisible="{Binding FullSizeTile.IsPhoneSized, FallbackValue=False}" />
+              <controls:StrokeIcon Data="{StaticResource Icon.Tablet}" Size="18" Foreground="{DynamicResource Brush.AccentText}" IsVisible="{Binding !FullSizeTile.IsPhoneSized, FallbackValue=False}" />
             </Panel>
             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
               <TextBlock Classes="header" Text="{Binding FullSizeTile.Title, FallbackValue={x:Null}}" />

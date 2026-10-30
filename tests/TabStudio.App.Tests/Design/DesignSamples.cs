@@ -187,8 +187,6 @@ internal static class DesignSamples
         Priority = priority,
         IsPinned = pinned,
         IconSize = 13,
-        MinHeight = 24,
-        Height = 24,
         FontSize = 12,
         Command = Nothing,
     };

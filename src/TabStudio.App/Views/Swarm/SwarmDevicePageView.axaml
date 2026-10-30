@@ -1,4 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:a11y="using:TabStudio.App.Accessibility"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:views="using:TabStudio.App.Views"
@@ -19,7 +20,7 @@
 
   <!-- The tablet's app, full screen, as it runs on this device while it is in the swarm. -->
   <Panel x:Name="Screen">
-    <ContentControl x:Name="AppContent" Content="{Binding Host.Preview.View}" IsVisible="{Binding ShowsApp}"
+    <ContentControl x:Name="AppContent" a11y:A11y.IsContent="True" Content="{Binding Host.Preview.View}" IsVisible="{Binding ShowsApp}"
                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
     <views:WebPreviewView DataContext="{Binding Host.Web}" IsVisible="{Binding $parent[UserControl].((swarm:SwarmDevicePageViewModel)DataContext).ShowsWeb, FallbackValue=False}" />
     <DockPanel IsVisible="{Binding ShowsConsole}">

@@ -255,7 +255,7 @@
       <!-- Messages -->
       <Panel>
         <StackPanel IsVisible="{Binding IsEmpty}" Margin="24" Spacing="10" VerticalAlignment="Center" MaxWidth="360">
-          <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="34" Foreground="{DynamicResource Brush.Accent}" HorizontalAlignment="Center" />
+          <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="34" Foreground="{DynamicResource Brush.AccentText}" HorizontalAlignment="Center" />
           <TextBlock Classes="h2" Text="Claude works on your solution" HorizontalAlignment="Center" />
           <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center"
                      Text="It reads and searches your code, makes changes, compiles them and runs your tests. Every change waits here as a diff until you keep it." />
@@ -285,7 +285,7 @@
                   <Button Theme="{StaticResource ToolButton}" HorizontalAlignment="Left"
                           Command="{Binding $parent[ItemsControl].((agent:AgentPanelViewModel)DataContext).ToggleResultCommand}" CommandParameter="{Binding}">
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                      <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="13" Foreground="{DynamicResource Brush.Accent}" IsVisible="{Binding IsRunning}" />
+                      <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="13" Foreground="{DynamicResource Brush.AccentText}" IsVisible="{Binding IsRunning}" />
                       <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="13" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsDone}" />
                       <TextBlock Classes="small" Text="{Binding Description}" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center" />
                       <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="13" Foreground="{DynamicResource Brush.Warning}" IsVisible="{Binding IsError}" />

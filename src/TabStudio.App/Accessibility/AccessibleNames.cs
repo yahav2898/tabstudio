@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 
@@ -145,7 +146,10 @@ public static class AccessibleNames
         }
 
         var depth = 0;
-        foreach (var ancestor in text.GetVisualAncestors())
+
+        // Before its control's template shows it, a text block is only in the logical tree.
+        IEnumerable<object> ancestors = text.GetVisualParent() is not null ? text.GetVisualAncestors() : text.GetLogicalAncestors();
+        foreach (var ancestor in ancestors)
         {
             if (++depth > TextDepth)
             {

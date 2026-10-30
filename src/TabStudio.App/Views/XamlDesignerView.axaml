@@ -93,7 +93,7 @@
         <Border VerticalAlignment="Bottom" Margin="10,10,10,64" IsVisible="{Binding HasSketchNotes}" Background="{DynamicResource Brush.Popup}"
                 BorderBrush="{DynamicResource Brush.Accent}" BorderThickness="1" CornerRadius="8" Padding="12,4,4,4">
           <Grid ColumnDefinitions="Auto,*,Auto">
-            <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="14" Foreground="{DynamicResource Brush.Accent}" VerticalAlignment="Center" Margin="0,0,8,0" />
+            <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="14" Foreground="{DynamicResource Brush.AccentText}" VerticalAlignment="Center" Margin="0,0,8,0" />
             <TextBlock Grid.Column="1" Classes="small" Text="{Binding SketchNotes}" TextWrapping="Wrap" VerticalAlignment="Center" />
             <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Command="{Binding DismissSketchNotesCommand}" ToolTip.Tip="Dismiss">
               <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="12" />

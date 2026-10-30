@@ -24,9 +24,10 @@
   </UserControl.Styles>
   <DockPanel>
     <!-- Filters -->
-    <!-- The filters wrap, and on a narrow panel the search goes below them, rather than running off the screen. -->
+    <!-- The filters scroll sideways, and on a narrow panel the search goes below them, rather than running off the screen. -->
     <Grid x:Name="FilterBar" DockPanel.Dock="Top" MinHeight="38" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" Margin="12,0">
-      <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+      <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" VerticalAlignment="Center">
+      <StackPanel Orientation="Horizontal">
       <Button Theme="{StaticResource SecondaryButton}" Padding="10,0" FontSize="{DynamicResource Type.Body}"
               Command="{Binding ToggleScopeCommand}">
         <StackPanel Orientation="Horizontal" Spacing="6">
@@ -70,7 +71,8 @@
         <controls:StrokeIcon Classes.spinning="{Binding IsPending}" Data="{StaticResource Icon.Spinner}" Size="13" StrokeThickness="2.2" Foreground="{DynamicResource Brush.TextMuted}" />
         <TextBlock Text="{Binding PendingText}" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" Foreground="{DynamicResource Brush.TextMuted}" />
       </StackPanel>
-      </WrapPanel>
+      </StackPanel>
+      </ScrollViewer>
       <TextBox x:Name="SearchBox" Grid.Column="1" Width="220" Watermark="Search Error List" Text="{Binding SearchText}" VerticalAlignment="Center">
         <TextBox.InnerLeftContent>
           <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="13" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}" />
@@ -176,7 +178,7 @@
               <Button Grid.Column="6" Theme="{StaticResource ToolButton}" Padding="0"
                       ToolTip.Tip="Fix with Agent" IsVisible="{Binding CanFixWithAgent}"
                       Command="{Binding $parent[ListBox].((vm:ErrorListViewModel)DataContext).FixWithAgentCommand}" CommandParameter="{Binding}">
-                <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="14" Foreground="{DynamicResource Brush.Accent}" />
+                <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="14" Foreground="{DynamicResource Brush.AccentText}" />
               </Button>
             </Grid>
           </DataTemplate>

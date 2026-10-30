@@ -92,7 +92,11 @@
     <Style Selector="Button#SearchButton.compact Border.keycap">
       <Setter Property="IsVisible" Value="False" />
     </Style>
-    <!-- The status bar's items: 24 pixels high, small text, white on teal. -->
+    <!-- Beside Locals with no room, the Call Stack is hidden rather than squeezed to nothing (WorkspaceView.Layout.cs). -->
+    <Style Selector="Border#CallStackBeside.folded > views|CallStackView">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <!-- The status bar's items: touch targets (Theme/Accessibility.axaml), small text, white on teal. -->
     <Style Selector="Button.status">
       <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="FontSize" Value="{DynamicResource Type.Small}" />

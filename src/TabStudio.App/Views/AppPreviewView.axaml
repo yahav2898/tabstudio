@@ -11,7 +11,7 @@
   <DockPanel>
     <Border DockPanel.Dock="Top" Padding="10,4,6,4" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="Auto,*,Auto,Auto">
-        <controls:StrokeIcon Data="{StaticResource Icon.Window}" Size="15" Foreground="{DynamicResource Brush.Accent}" VerticalAlignment="Center" />
+        <controls:StrokeIcon Data="{StaticResource Icon.Window}" Size="15" Foreground="{DynamicResource Brush.AccentText}" VerticalAlignment="Center" />
         <TextBlock Grid.Column="1" Classes="header" Text="{Binding Title}" Margin="8,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
         <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Margin="0,0,4,0" ToolTip.Tip="Device Matrix: the app on every screen"
                 Command="{Binding OpenDeviceMatrixCommand}" IsVisible="{Binding OpenDeviceMatrixCommand, Converter={x:Static ObjectConverters.IsNotNull}}">
@@ -40,7 +40,7 @@
       </Viewbox>
 
       <StackPanel IsVisible="{Binding !IsRunning}" Margin="24" Spacing="10" VerticalAlignment="Center" MaxWidth="360">
-        <controls:StrokeIcon Data="{StaticResource Icon.Window}" Size="34" Foreground="{DynamicResource Brush.Accent}" HorizontalAlignment="Center" />
+        <controls:StrokeIcon Data="{StaticResource Icon.Window}" Size="34" Foreground="{DynamicResource Brush.AccentText}" HorizontalAlignment="Center" />
         <TextBlock Classes="h2" Text="{Binding Title}" HorizontalAlignment="Center" />
         <TextBlock Classes="muted" Text="{Binding StatusText}" TextWrapping="Wrap" TextAlignment="Center" />
       </StackPanel>

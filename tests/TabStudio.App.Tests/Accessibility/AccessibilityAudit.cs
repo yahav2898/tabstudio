@@ -191,9 +191,30 @@ internal static partial class AccessibilityAudit
     private static bool IsDisabledInside(Visual visual) => visual.GetVisualAncestors().OfType<InputElement>().Any(a => !a.IsEnabled);
 
     /// <summary>Whether an element is an adaptive bar's item, or part of one, folded away into More or to its icon.</summary>
-    private static bool IsFolded(Visual visual) =>
-        visual.GetVisualAncestors().Prepend(visual).OfType<AdaptiveBarItem>().FirstOrDefault() is { } item
-        && (item.Bounds.X <= AdaptiveLayout.Parked.X + 1 || visual is TextBlock { Bounds.Width: < 1 });
+    private static bool IsFolded(Visual visual)
+    {
+        if (visual.GetVisualAncestors().Prepend(visual).OfType<AdaptiveBarItem>().FirstOrDefault() is { } item
+            && (item.Bounds.X <= AdaptiveLayout.Parked.X + 1 || visual is TextBlock { Bounds.Width: < 1 }))
+        {
+            return true;
+        }
+
+        // An adaptive bar trims what it holds to nothing, or parks it, before it would overflow.
+        if (visual is TextBlock { Bounds.Width: < 1 } && visual.GetVisualAncestors().Any(a => a is AdaptiveBar))
+        {
+            return true;
+        }
+
+        foreach (var ancestor in visual.GetVisualAncestors().Prepend(visual))
+        {
+            if (ancestor.GetVisualParent() is AdaptiveBar)
+            {
+                return ancestor.Bounds.X <= AdaptiveLayout.Parked.X + 1 || ancestor.Bounds.Width < 1;
+            }
+        }
+
+        return false;
+    }
 
     private static bool HasToolTip(Visual visual)
     {

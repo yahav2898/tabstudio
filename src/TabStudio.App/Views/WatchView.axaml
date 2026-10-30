@@ -20,7 +20,7 @@
     </Border>
     <Panel>
       <views:VariableListView DataContext="{Binding Tree}" />
-      <TextBlock Classes="muted" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,26,0,0"
+      <TextBlock Classes="muted" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="16,26,16,0" TextWrapping="Wrap" TextAlignment="Center"
                  Text="Watch a variable, member or item: type its path below."
                  IsVisible="{Binding !Tree.Rows.Count}" />
     </Panel>

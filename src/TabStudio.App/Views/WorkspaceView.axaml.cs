@@ -150,8 +150,11 @@ public sealed partial class WorkspaceView : UserControl
             _bottomPanelHeight = row.Height;
         }
 
+        // Larger text needs a taller panel to show the same rows (docs/design/README.md, "Text size").
+        var factor = Accessibility.TypeScale.Factor;
+        var least = Math.Max(factor > 1 ? BottomPanelHeight * factor : 0, _viewModel?.HasRecording == true ? 320 : 0);
         row.Height = visible
-            ? new GridLength(Math.Max(_bottomPanelHeight.Value, _viewModel?.HasRecording == true ? 320 : 0))
+            ? new GridLength(Math.Max(_bottomPanelHeight.Value, least))
             : new GridLength(0);
         BottomDock.IsVisible = visible;
         BottomSplitter.IsVisible = visible;
