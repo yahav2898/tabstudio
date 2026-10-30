@@ -78,6 +78,28 @@ public sealed partial class RemoteExplorerViewModel : ObservableObject, IDisposa
         catch (Exception ex) when (ex is ArgumentException or FormatException or IOException or UnauthorizedAccessException) { Status = ex.Message; }
     }
 
+    /// <summary>Removes the selected host and forgets its server's saved key; adding it again asks to verify the key.</summary>
+    [RelayCommand]
+    private void RemoveHost()
+    {
+        if (SelectedHost is not { } host)
+        {
+            Status = "Choose a host to remove.";
+            return;
+        }
+
+        try
+        {
+            var list = Hosts.Where(h => !ReferenceEquals(h, host)).ToList();
+            _services.Hosts.Save(list);
+            _services.Hosts.Forget(host);
+            Hosts.Clear(); foreach (var item in list) { Hosts.Add(item); }
+            SelectedHost = null;
+            Status = $"Removed {host.Name} and forgot its server key. Add it again to verify the server's new key.";
+        }
+        catch (Exception ex) when (ex is ArgumentException or FormatException or IOException or UnauthorizedAccessException) { Status = ex.Message; }
+    }
+
     [RelayCommand]
     private async Task GenerateKeyAsync() => await OperateAsync(async _ =>
     {

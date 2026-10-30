@@ -130,6 +130,20 @@ public sealed class SshHostStore(string directory)
         Directory.CreateDirectory(directory);
         AtomicWrite(Path.Combine(directory, "known-hosts.json"), JsonSerializer.Serialize(pins, JsonOptions));
     }
+    /// <summary>
+    /// Forgets a host's saved server key, so the next connection asks the user to verify the new one: after a server
+    /// was reinstalled, every connection was refused for good, with no way but clearing the app's data.
+    /// </summary>
+    public void Forget(SshHost host)
+    {
+        ArgumentNullException.ThrowIfNull(host);
+        var pins = Pins();
+        if (pins.Remove($"{host.HostName.ToLowerInvariant()}:{host.Port}"))
+        {
+            Directory.CreateDirectory(directory);
+            AtomicWrite(Path.Combine(directory, "known-hosts.json"), JsonSerializer.Serialize(pins, JsonOptions));
+        }
+    }
     private Dictionary<string, string> Pins() => File.Exists(Path.Combine(directory, "known-hosts.json")) ? JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(Path.Combine(directory, "known-hosts.json"))) ?? [] : [];
     internal static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
     internal static void AtomicWrite(string path, string text)

@@ -105,7 +105,9 @@
             <TextBox Text="{Binding IdentityFile}" Classes="mono" Watermark="~/.ssh/id_ed25519" AutomationProperties.Name="Identity file" />
             <WrapPanel>
               <Button Theme="{StaticResource SecondaryButton}" Classes="action" Content="Save Host" Command="{Binding SaveHostCommand}" Margin="0,0,8,8" />
-              <Button Theme="{StaticResource SecondaryButton}" Classes="action" Content="Make a Device Key" Command="{Binding GenerateKeyCommand}" Margin="0,0,0,8" />
+              <Button Theme="{StaticResource SecondaryButton}" Classes="action" Content="Make a Device Key" Command="{Binding GenerateKeyCommand}" Margin="0,0,8,8" />
+              <Button Theme="{StaticResource SecondaryButton}" Classes="action" Content="Remove Host" Command="{Binding RemoveHostCommand}" Margin="0,0,0,8"
+                      ToolTip.Tip="Removes the selected host and forgets its server key" />
             </WrapPanel>
             <Border Padding="10,8" CornerRadius="{StaticResource Radius.Control}" Background="{DynamicResource Brush.Control}"
                     BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" IsVisible="{Binding HasPublicKey}">
