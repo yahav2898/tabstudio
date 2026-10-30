@@ -1,0 +1,44 @@
+CleanArchitectureTemplate: dotnet build CleanArchitecture.slnx exited 0 in 29 s, 0 distinct errors
+
+Last 300 lines of the build:
+  Determining projects to restore...
+  Restored /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/src/Shared/Shared.csproj (in 145 ms).
+  Restored /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/src/ServiceDefaults/ServiceDefaults.csproj (in 4.36 sec).
+  Restored /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/src/Infrastructure/Infrastructure.csproj (in 6.53 sec).
+  Restored /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/tests/Application.UnitTests/Application.UnitTests.csproj (in 6.56 sec).
+  Restored /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/tests/Infrastructure.IntegrationTests/Infrastructure.IntegrationTests.csproj (in 5 ms).
+  Restored /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/tests/Domain.UnitTests/Domain.UnitTests.csproj (in 5 ms).
+  Restored /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/tests/TestAppHost/TestAppHost.csproj (in 391 ms).
+  Restored /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/tests/Application.FunctionalTests/Application.FunctionalTests.csproj (in 6.76 sec).
+  Restored /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/src/Domain/Domain.csproj (in 6 ms).
+  Restored /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/src/Application/Application.csproj (in 19 ms).
+  Restored /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/src/Web/Web.csproj (in 1.16 sec).
+  Restored /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/src/AppHost/AppHost.csproj (in 268 ms).
+  Restored /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/tests/Web.AcceptanceTests/Web.AcceptanceTests.csproj (in 5.32 sec).
+  Domain -> /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/bin/Domain/debug/CleanArchitecture.Domain.dll
+  ServiceDefaults -> /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/bin/ServiceDefaults/debug/CleanArchitecture.ServiceDefaults.dll
+  Shared -> /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/bin/Shared/debug/CleanArchitecture.Shared.dll
+  Infrastructure.IntegrationTests -> /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/bin/Infrastructure.IntegrationTests/debug/CleanArchitecture.Infrastructure.IntegrationTests.dll
+  Domain.UnitTests -> /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/bin/Domain.UnitTests/debug/CleanArchitecture.Domain.UnitTests.dll
+  Application -> /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/bin/Application/debug/CleanArchitecture.Application.dll
+  Infrastructure -> /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/bin/Infrastructure/debug/CleanArchitecture.Infrastructure.dll
+  TestAppHost -> /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/bin/TestAppHost/debug/CleanArchitecture.TestAppHost.dll
+  Web -> /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/bin/Web/debug/CleanArchitecture.Web.dll
+  
+  GenerateOpenApiDocuments:
+    dotnet "/home/runner/work/tabstudio/tabstudio/.nuget/packages/microsoft.extensions.apidescription.server/10.0.14/build/../tools/dotnet-getdocument.dll" --assembly "/home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/bin/Web/debug/CleanArchitecture.Web.dll" --file-list "/home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/obj/Web/Web.OpenApiFiles.cache" --framework ".NETCoreApp,Version=v10.0" --output "/home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/src/Web/wwwroot/openapi/" --project "Web" --assets-file "/home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/obj/Web/project.assets.json" --platform "AnyCPU" --file-name v1
+  Application.UnitTests -> /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/bin/Application.UnitTests/debug/CleanArchitecture.Application.UnitTests.dll
+  warn: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[35]
+        No XML encryptor configured. Key {9a038561-abca-4449-a71a-247028289308} may be persisted to storage in unencrypted form.
+  Generating document named 'v1'.
+  Using discovered `GenerateAsync` overload with version parameter.
+  Writing document named 'v1' to '/home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/src/Web/wwwroot/openapi/v1.json'.
+  AppHost -> /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/bin/AppHost/debug/CleanArchitecture.AppHost.dll
+  Application.FunctionalTests -> /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/bin/Application.FunctionalTests/debug/CleanArchitecture.Application.FunctionalTests.dll
+  Web.AcceptanceTests -> /home/runner/work/_temp/sdk-copies/CleanArchitectureTemplate/artifacts/bin/Web.AcceptanceTests/debug/CleanArchitecture.Web.AcceptanceTests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:28.44
