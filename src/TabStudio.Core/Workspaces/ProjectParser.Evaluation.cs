@@ -149,7 +149,7 @@ public static partial class ProjectParser
                 SdkProps(sdk);
             }
 
-            Walk(_root, file: null, depth: 0);
+            Walk(_root, _projectPath, depth: 0);
             if (sdks.Count > 0)
             {
                 SdkTargets();

@@ -128,7 +128,8 @@ public sealed class SdkProjectItemsTests
         Assert.Equal("true", project.GetProperty("SignAssembly"));
         Assert.Equal(new[] { "net8.0" }, project.TargetFrameworks);
         Assert.Contains(project.PackageReferences, p => p.Name == "BenchmarkDotNet");
-        Assert.Contains(project.PackageReferences, p => p.Name == "Microsoft.CodeAnalysis.CSharp" && p.Version == "$(RoslynVersion).0");
+        // Items are expanded with the properties at the end of the evaluation, as MSBuild expands them.
+        Assert.Contains(project.PackageReferences, p => p.Name == "Microsoft.CodeAnalysis.CSharp" && p.Version == "3.8.0");
         Assert.Contains(project.Usings, u => u.Name == "System.Collections.Concurrent");
         Assert.Contains(project.Usings, u => u.Name == "BenchmarkDotNet.Attributes");
         Assert.Contains("System.Net.Http", project.RemovedUsings);
