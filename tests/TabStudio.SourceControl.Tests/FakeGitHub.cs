@@ -21,10 +21,14 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
 {
     public const string Login = "tester";
 
+    /// <summary>The fake's raw file host, as raw.githubusercontent.com is GitHub's.</summary>
+    public const string RawHost = "raw.github.test";
+
     private readonly ConcurrentDictionary<string, Repo> _repos = new(StringComparer.OrdinalIgnoreCase);
     private readonly ConcurrentQueue<string> _requests = new();
     private readonly Lock _gate = new();
     private int _counter;
+    private int _signedOutRequests;
 
     /// <summary>Every request as "METHOD path?query", in order.</summary>
     public IReadOnlyList<string> Requests => [.. _requests];
@@ -44,9 +48,18 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
     /// <summary>Branches GitHub refuses updates to, as a protected branch or a ruleset does.</summary>
     public HashSet<string> ProtectedBranches { get; } = new(StringComparer.Ordinal);
 
+    /// <summary>
+    /// When set, how many API requests GitHub answers without a token before refusing with its rate-limit error, as
+    /// GitHub allows 60 an hour. The raw file host is not counted.
+    /// </summary>
+    public int? SignedOutRateLimit { get; set; }
+
+    /// <summary>Paths, as the raw host is asked for them, whose content it changes, to test that its answers are checked.</summary>
+    public Func<string, bool>? RawAlters { get; set; }
+
     /// <summary>A client of this fake, signed in or not.</summary>
     public GitHub.GitHubClient CreateClient(bool signedIn = true) =>
-        new(new HttpClient(this, disposeHandler: false), signedIn ? "test-token" : null, new Uri("https://api.github.test/"));
+        new(new HttpClient(this, disposeHandler: false), signedIn ? "test-token" : null, new Uri("https://api.github.test/"), new Uri($"https://{RawHost}/"));
 
     /// <summary>Creates a repository whose default branch holds the files.</summary>
     public FakeGitHub AddRepository(string name, IReadOnlyDictionary<string, string> files, string defaultBranch = "main", bool isPrivate = false)
@@ -129,8 +142,24 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
             return download;
         }
 
+        if (string.Equals(uri.Host, RawHost, StringComparison.OrdinalIgnoreCase))
+        {
+            lock (_gate)
+            {
+                return RawFile(path);
+            }
+        }
+
         var body = request.Content is null ? null : JsonNode.Parse(await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false));
         var signedIn = request.Headers.Authorization is not null;
+        if (!signedIn && SignedOutRateLimit is { } limit && Interlocked.Increment(ref _signedOutRequests) > limit)
+        {
+            var refused = Error(HttpStatusCode.Forbidden, "API rate limit exceeded for 203.0.113.7.");
+            refused.Headers.Add("x-ratelimit-limit", limit.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            refused.Headers.Add("x-ratelimit-remaining", "0");
+            refused.Headers.Add("x-ratelimit-reset", DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds().ToString(System.Globalization.CultureInfo.InvariantCulture));
+            return refused;
+        }
         HttpResponseMessage response;
         lock (_gate)
         {
@@ -380,6 +409,23 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
             _ => "diverged",
         };
         return Json(new JsonObject { ["status"] = status, ["ahead_by"] = ahead, ["behind_by"] = behind, ["merge_base_commit"] = new JsonObject { ["sha"] = MergeBase(repo, baseSha, headSha) } });
+    }
+
+    /// <summary>A file of a public repository's commit, at <c>owner/repository/commit/path</c>, as the raw host serves it.</summary>
+    private HttpResponseMessage RawFile(string path)
+    {
+        var parts = path.Split('/', 4);
+        if (parts.Length < 4
+            || !_repos.TryGetValue($"{parts[0]}/{parts[1]}", out var repo)
+            || repo.IsPrivate
+            || !repo.Commits.TryGetValue(parts[2], out var commit)
+            || !repo.Trees[commit.Tree].TryGetValue(parts[3], out var file))
+        {
+            return new HttpResponseMessage(HttpStatusCode.NotFound) { Content = new StringContent("404: Not Found") };
+        }
+
+        var content = repo.Blobs[file.Sha];
+        return new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(RawAlters?.Invoke(path) == true ? [.. content, .. "// changed\n"u8] : content) };
     }
 
     private HttpResponseMessage Archive(Repo repo, string reference)

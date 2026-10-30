@@ -8,7 +8,9 @@ public sealed record DatabaseConnection(Guid Id, string Name, DatabaseProvider P
     public override string ToString() => Name;
 }
 
-public sealed record DatabaseColumn(string Name, string Type, bool Nullable, int KeyOrder = 0, bool Generated = false);
+// SqlType is the column's type as SQL spells it for a cast, PostgreSQL's format_type (numeric(10,2), mood, point);
+// edits are cast to it, since a text parameter is not a json, enum or date value to PostgreSQL.
+public sealed record DatabaseColumn(string Name, string Type, bool Nullable, int KeyOrder = 0, bool Generated = false, string? SqlType = null);
 public sealed record DatabaseKey(string Name, string Definition);
 public sealed record DatabaseIndex(string Name, bool Unique, string Definition);
 public sealed record DatabaseTable(string Schema, string Name, bool IsView,

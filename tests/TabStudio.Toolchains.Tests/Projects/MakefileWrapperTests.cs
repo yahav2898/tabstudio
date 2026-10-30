@@ -41,6 +41,30 @@ public sealed class MakefileWrapperTests : IDisposable
         	install -Dm755 $(EXE) $(DESTDIR)$(bindir)/fd
         """;
 
+    /// <summary>The Makefile <c>sphinx-quickstart</c> writes: it only runs <c>$(SPHINXBUILD)</c>, which is sphinx-build.</summary>
+    private const string SphinxMakefile = """
+        # Minimal makefile for Sphinx documentation
+        #
+
+        # You can set these variables from the command line, and also
+        # from the environment for the first two.
+        SPHINXOPTS    ?=
+        SPHINXBUILD   ?= sphinx-build
+        SOURCEDIR     = source
+        BUILDDIR      = build
+
+        # Put it first so that "make" without argument is like "make help".
+        help:
+        	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+        .PHONY: help Makefile
+
+        # Catch-all target: route all unknown targets to Sphinx using the new
+        # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
+        %: Makefile
+        	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+        """;
+
     private readonly TempDirectory _folder = new();
 
     [Theory]
@@ -50,6 +74,8 @@ public sealed class MakefileWrapperTests : IDisposable
     [InlineData("run:\n\t@dotnet run --project src/App\n", "dotnet")]
     [InlineData("all:\n\tcd web && yarn build && cd .. && ./gradlew assemble\n", "yarn")]
     [InlineData("release:\n\tCARGO_TARGET_DIR=out \\\n\t  cargo build --release\n", "cargo")]
+    [InlineData(SphinxMakefile, "sphinx-build")]
+    [InlineData("MKDOCS = mkdocs\nserve:\n\t${MKDOCS} serve\n", "mkdocs")]
     [InlineData("build:\n\t$(WITH_LOCAL_JWT) docker compose build\nrun-local:\n\t$(WITH_LOCAL_JWT) ASPNETCORE_URLS=$(API_URL) dotnet run --project src/App\n", "docker")]
     public void A_Makefile_that_runs_another_build_tool_wraps_it(string makefile, string tool) =>
         Assert.Equal(tool, MakefileWrapper.WrappedToolOf(makefile));
@@ -65,6 +91,18 @@ public sealed class MakefileWrapperTests : IDisposable
     [InlineData("")]
     public void A_Makefile_that_builds_C_or_C_plus_plus_itself_wraps_nothing(string makefile) =>
         Assert.Null(MakefileWrapper.WrappedToolOf(makefile));
+
+    [Fact]
+    public void A_Sphinx_documentation_folder_opened_on_its_own_is_not_a_C_project()
+    {
+        _folder.Write("Makefile", SphinxMakefile);
+        _folder.Write("make.bat", "@ECHO OFF\n");
+        _folder.Write("source/index.rst", "Welcome\n=======\n");
+
+        var projects = ToolchainProjectDetector.Detect(_folder.Path, ToolchainCatalog.Default);
+
+        Assert.DoesNotContain(projects, p => p.Toolchain.Id == "cpp");
+    }
 
     [Fact]
     public void A_Cargo_repository_with_a_wrapper_Makefile_has_only_its_Cargo_project()

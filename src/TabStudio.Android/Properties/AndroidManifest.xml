@@ -9,6 +9,14 @@
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
   <!-- Notifications when a GitHub Actions run finishes; Android 13 and later ask the user the first time. -->
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+  <!--
+    Long operations (toolchain installs, builds, project setup, downloads) run in a data-sync foreground service, with
+    their progress in its notification, so they finish while TabStudio is in the background; a partial wake lock keeps
+    the processor on while the screen is off.
+  -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
   <!-- User-built APKs are installed through a session with Android's normal confirmation. -->
   <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
   <!-- Find the launch activity of a newly installed app under Android 11+ package visibility rules. -->

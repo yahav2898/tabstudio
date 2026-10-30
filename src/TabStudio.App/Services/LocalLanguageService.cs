@@ -86,13 +86,15 @@ public sealed class LocalLanguageService : ILanguageService
     public void SetConcurrentBuild(bool enabled) => _host.SetConcurrentBuild(enabled);
 
     /// <inheritdoc />
-    public void TrimMemory()
+    public Task TrimMemoryAsync()
     {
         _host.TrimMemory();
         if (_coverage.IsValueCreated)
         {
             _coverage.Value.Clear();
         }
+
+        return _host.WhenReloadedAsync();
     }
 
     /// <inheritdoc />

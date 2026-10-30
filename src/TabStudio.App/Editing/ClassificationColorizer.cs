@@ -12,7 +12,9 @@ public sealed class ClassificationColorizer : DocumentColorizingTransformer
 {
     // One coloring action per brush, so building a line allocates no closure per colored span.
     private readonly Dictionary<IBrush, Action<VisualLineElement>> _colorWith = new(ReferenceEqualityComparer.Instance);
+    // Sorted and disjoint; only the first _count are in use. Edits move them where they are (see ApplyInPlace).
     private TrackedRange<IBrush>[] _ranges = [];
+    private int _count;
 
     /// <summary>
     /// The colors of an installed color theme by classification, or <see langword="null"/> for TabStudio's own
@@ -31,16 +33,30 @@ public sealed class ClassificationColorizer : DocumentColorizingTransformer
             .OrderBy(r => r.Start)
             .Select(r => new TrackedRange<IBrush>(r.Start, r.Length, r.Brush!))
             .ToArray();
+        _count = _ranges.Length;
     }
 
-    /// <summary>Moves the colors through an edit. Call from the document's <c>Changed</c> event.</summary>
+    /// <summary>How many colored ranges there are now.</summary>
+    internal int Count => _count;
+
+    /// <summary>A copy of the colored ranges, for tests and measurements.</summary>
+    internal TrackedRange<IBrush>[] Snapshot() => _ranges[.._count];
+
+    /// <summary>
+    /// Moves the colors through an edit, in place: typing allocates nothing here, however long the file. Call from
+    /// the document's <c>Changed</c> event.
+    /// </summary>
     /// <param name="change">The edit.</param>
-    public void OnDocumentChanged(DocumentChangeEventArgs change) => _ranges = TrackedRanges.Apply(_ranges, change);
+    public void OnDocumentChanged(DocumentChangeEventArgs change)
+    {
+        ArgumentNullException.ThrowIfNull(change);
+        _count = TrackedRanges.ApplyInPlace(_ranges, _count, change.Offset, change.RemovalLength, change.InsertionLength);
+    }
 
     /// <inheritdoc />
     protected override void ColorizeLine(DocumentLine line)
     {
-        var ranges = _ranges;
+        var ranges = new ReadOnlySpan<TrackedRange<IBrush>>(_ranges, 0, _count);
         if (ranges.Length == 0)
         {
             return;
@@ -48,7 +64,7 @@ public sealed class ClassificationColorizer : DocumentColorizingTransformer
 
         var lineStart = line.Offset;
         var lineEnd = line.EndOffset;
-        for (var i = TrackedRanges.FirstEndingAfter(ranges, lineStart); i < ranges.Length && ranges[i].Start < lineEnd; i++)
+        for (var i = TrackedRanges.FirstEndingAfterIn(ranges, lineStart); i < ranges.Length && ranges[i].Start < lineEnd; i++)
         {
             var start = Math.Max(ranges[i].Start, lineStart);
             var end = Math.Min(ranges[i].End, lineEnd);

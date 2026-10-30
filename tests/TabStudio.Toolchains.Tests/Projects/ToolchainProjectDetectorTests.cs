@@ -56,6 +56,47 @@ public sealed class ToolchainProjectDetectorTests : IDisposable
             projects.Select(p => (p.Toolchain.Id, p.Directory)).OrderBy(p => p.Id, StringComparer.Ordinal));
     }
 
+    [Theory]
+    [InlineData("docs")]
+    [InlineData("doc")]
+    [InlineData("Documentation")]
+    public void Documentation_folders_are_not_projects_of_the_workspace(string folder)
+    {
+        _workspace.Write("app/package.json", """{ "name": "app", "scripts": { "start": "node index.js" } }""");
+        // A Sphinx project: its Makefile, conf.py and a docs site's package.json build documentation.
+        _workspace.Write($"{folder}/Makefile", "SPHINXBUILD ?= sphinx-build\nhtml:\n\t$(SPHINXBUILD) -M html . _build\n");
+        _workspace.Write($"{folder}/conf.py", "project = 'app'\n");
+        _workspace.Write($"{folder}/package.json", """{ "name": "docs", "scripts": { "start": "docusaurus start" } }""");
+        _workspace.Write($"{folder}/guide/extension.c", "int main(void) { return 0; }\n");
+
+        var projects = ToolchainProjectDetector.Detect(_workspace.Path, Catalog);
+
+        var project = Assert.Single(projects);
+        Assert.Equal(("node", _workspace.Resolve("app")), (project.Toolchain.Id, project.Directory));
+    }
+
+    [Fact]
+    public void A_web_app_s_wwwroot_is_not_a_project()
+    {
+        _workspace.Write("Web/Web.csproj", "<Project Sdk=\"Microsoft.NET.Sdk.Web\" />");
+        _workspace.Write("Web/wwwroot/package.json", """{ "name": "assets", "scripts": { "dev": "vite" } }""");
+        _workspace.Write("Web/wwwroot/js/site.js", "console.log('hi');\n");
+        _workspace.Write("Web/wwwroot/lib/jquery/package.json", """{ "name": "jquery", "main": "dist/jquery.js" }""");
+
+        Assert.Empty(ToolchainProjectDetector.Detect(_workspace.Path, Catalog));
+    }
+
+    [Fact]
+    public void A_documentation_folder_opened_as_the_workspace_is_still_searched()
+    {
+        var docs = _workspace.Resolve("docs");
+        _workspace.Write("docs/package.json", """{ "name": "docs", "scripts": { "start": "docusaurus start" } }""");
+
+        var project = Assert.Single(ToolchainProjectDetector.Detect(docs, Catalog));
+
+        Assert.Equal(("node", docs), (project.Toolchain.Id, project.Directory));
+    }
+
     [Fact]
     public void Lists_only_toolchains_the_store_offers()
     {

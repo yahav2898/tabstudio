@@ -16,6 +16,8 @@ public static partial class MakefileWrapper
         "python", "python3", "pip", "pip3", "uv", "poetry", "flutter", "dart", "deno",
         // Containers and API test runners, as gothinkster/aspnetcore-realworld-example-app's Makefile drives them.
         "docker", "docker-compose", "podman", "hurl",
+        // Documentation and site generators: Sphinx's generated Makefile runs $(SPHINXBUILD), which is sphinx-build.
+        "sphinx-build", "sphinx-autobuild", "mkdocs", "jekyll", "hugo", "doxygen", "asciidoctor", "pandoc",
     ];
 
     /// <summary>What a recipe or variable uses to compile or link C and C++.</summary>
@@ -54,7 +56,9 @@ public static partial class MakefileWrapper
     {
         ArgumentNullException.ThrowIfNull(text);
         string? wrapped = null;
-        foreach (var raw in JoinContinuations(text))
+        var lines = JoinContinuations(text).ToList();
+        var variables = Variables(lines);
+        foreach (var raw in lines)
         {
             var line = raw.Split('#', 2)[0];
             if (string.IsNullOrWhiteSpace(line))
@@ -69,7 +73,7 @@ public static partial class MakefileWrapper
             }
 
             var recipe = line.StartsWith('\t');
-            foreach (var command in Commands(recipe ? line : AssignedValue(line)))
+            foreach (var command in Commands(recipe ? Expand(line, variables) : AssignedValue(line)))
             {
                 if (NativeTools.Contains(command, StringComparer.Ordinal))
                 {
@@ -108,6 +112,32 @@ public static partial class MakefileWrapper
         }
     }
 
+    /// <summary>
+    /// The Makefile's variables whose value starts a command, such as <c>SPHINXBUILD ?= sphinx-build</c>. A value
+    /// that assigns environment variables (<c>WITH_JWT = JWT=x</c>) is left alone: it is a prefix, not the command.
+    /// </summary>
+    private static Dictionary<string, string> Variables(IEnumerable<string> lines)
+    {
+        var variables = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var line in lines)
+        {
+            if (!line.StartsWith('\t') && Assignment().Match(line.Split('#', 2)[0]) is { Success: true } match)
+            {
+                var value = match.Groups["value"].Value.Trim();
+                if (value.Length > 0 && !value.Contains('=', StringComparison.Ordinal) && !value.Contains('$', StringComparison.Ordinal))
+                {
+                    variables.TryAdd(match.Groups["name"].Value, value);
+                }
+            }
+        }
+
+        return variables;
+    }
+
+    /// <summary>A recipe line with the whole-word variables it starts commands with, <c>$(SPHINXBUILD)</c>, replaced by their values.</summary>
+    private static string Expand(string line, Dictionary<string, string> variables) =>
+        variables.Count == 0 ? line : MacroWord().Replace(line, m => variables.TryGetValue(m.Groups["name"].Value, out var value) ? value : m.Value);
+
     /// <summary>The value of a variable assignment, such as <c>BUILD = cargo build</c>; empty for other lines.</summary>
     private static string AssignedValue(string line) =>
         Assignment().Match(line) is { Success: true } match ? match.Groups["value"].Value : string.Empty;
@@ -139,8 +169,12 @@ public static partial class MakefileWrapper
     [GeneratedRegex(@"&&|\|\||;|\||\$\(shell\s", RegexOptions.CultureInvariant)]
     private static partial Regex Separators();
 
-    [GeneratedRegex(@"^[A-Za-z_][A-Za-z0-9_.-]*\s*(\?|:|::|\+|!)?=\s*(?<value>.*)$", RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"^(?<name>[A-Za-z_][A-Za-z0-9_.-]*)\s*(\?|:|::|\+|!)?=\s*(?<value>.*)$", RegexOptions.CultureInvariant)]
     private static partial Regex Assignment();
+
+    /// <summary>A make variable expanded as a whole word: <c>$(NAME)</c> or <c>${NAME}</c>.</summary>
+    [GeneratedRegex(@"(?<=^|[\s@+\-;&|])\$[({](?<name>[A-Za-z_][A-Za-z0-9_.-]*)[)}](?=\s|$)", RegexOptions.CultureInvariant)]
+    private static partial Regex MacroWord();
 
     /// <summary>A rule that makes object files, such as <c>%.o: %.c</c>, <c>.c.o:</c> or <c>main.o: main.c</c>.</summary>
     [GeneratedRegex(@"^[^\t=]*\.o\s*:|^\.(c|cc|cpp|cxx|s|S)\.o\s*:", RegexOptions.CultureInvariant)]

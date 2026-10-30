@@ -52,8 +52,21 @@ public sealed class SqlExecutor
                 sets.Add(new QueryResultSet(columns, rows, truncated));
             }
             while (await reader.NextResultAsync(cancellationToken).ConfigureAwait(false));
-            return new QueryResult(sets, reader.RecordsAffected, watch.Elapsed);
+            var result = new QueryResult(sets, reader.RecordsAffected, watch.Elapsed);
+
+            // A statement that made or changed a type: Npgsql learns types once per data source, and a later query
+            // could not read a column of the new type.
+            await reader.DisposeAsync().ConfigureAwait(false);
+            if (db is Npgsql.NpgsqlConnection npgsql && ChangesTypes(sql))
+            {
+                await npgsql.ReloadTypesAsync().ConfigureAwait(false);
+            }
+
+            return result;
         }, cancellationToken);
+
+    private static bool ChangesTypes(string sql) =>
+        sql.Contains("TYPE", StringComparison.OrdinalIgnoreCase) || sql.Contains("EXTENSION", StringComparison.OrdinalIgnoreCase);
 
     internal static CancellationTokenRegistration RegisterCancel(DbCommand cmd, CancellationToken token) => token.Register(() =>
     {

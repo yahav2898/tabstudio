@@ -580,6 +580,12 @@ talks to GitHub instead:
   committing and pushing in one step. A push that is not a fast-forward is refused, and you pull first.
 - **Pulling** applies GitHub's changes file by file. Files changed on both sides are merged with a three-way
   line merge (Myers' diff, as Git uses); conflicts get Git-style markers and can be settled by choosing a side.
+  Editors stay editable while a pull, a branch switch or a pull-request checkout runs: the workspace reads each open
+  file before it starts, and a document edited meanwhile gets the new file with those edits merged in (the same
+  three-way merge, markers where both changed a line), unsaved, one Undo away from what is on disk.
+- **Signed out**, GitHub's API answers 60 requests an hour. Files a commit's archive leaves out (`export-ignore`) or
+  changes (`export-subst`) are then read from `raw.githubusercontent.com`, which that limit does not count, and
+  checked against their blob hashes; only a mismatch falls back to the API.
 - **Branches, pull requests and publishing** a folder as a new repository are GitHub API calls.
 - **In the IDE**, the Git Changes window lists changes with checkboxes, commits and pushes them in one step,
   shows inline diffs, and settles conflicts by choosing a side. Signing in takes a personal access token,
@@ -691,6 +697,9 @@ adapter it brings.
 - **Processes.** Programs are children of TabStudio's process, started with pipes or a pseudo terminal, and are
   killed with their whole process tree when stopped, as Android 12 and later expect.
 - **Projects.** `ToolchainProjectDetector` finds projects from the catalog's manifests and source-file rules.
+  Below the workspace folder it does not search `docs`, `doc`, `documentation` or `wwwroot`, whose build files build
+  documentation or are what a web app serves, and a Makefile that only runs another tool (cargo, npm,
+  `$(SPHINXBUILD)`) is not a C/C++ project.
   F5 and Ctrl+F5 run them with their console in the Output panel; problem matchers turn tracebacks and compiler
   output into Error List entries and links.
 - **The terminal.** `TerminalEmulator` turns what programs write to a pseudo terminal into styled character cells,
@@ -1047,9 +1056,15 @@ design keeps the second part proportional to what you are actually editing:
 - **Skeleton references.** Only projects with open documents keep a full Roslyn compilation. The projects
   they depend on are referenced through compact metadata-only images, cached on disk by content and made
   again when their code changes. Go to Definition still finds the source behind an image, and builds always
-  compile every project in full.
+  compile every project in full. Images are compiled on a background thread from an immutable snapshot, never
+  under the lock keystrokes take: an edit to an image's project (a Rename across projects), a change of the edited
+  projects or memory pressure returns at once, and the solution is rebuilt from texts and images when they are ready.
 - **Memory pressure.** When Android reports memory pressure (`onTrimMemory`), TabStudio drops caches it can
-  rebuild: semantic models of closed files, syntax highlighting state and old output.
+  rebuild: semantic models of closed files, syntax highlighting state and old output. The reload that lets Roslyn's
+  compilations go runs in the background, and the collection follows it there.
+- **Long operations finish in the background.** While a toolchain install, build, project setup or download runs,
+  `OperationsService`, a data-sync foreground service with a partial wake lock, keeps the process from being frozen,
+  and its ongoing notification shows the newest operation's progress.
 - **Session restore.** The open documents, unsaved edits and layout are saved as you work, so if Android
   closes TabStudio in the background, it reopens where you left it.
 - **TabStudio Link.** The language service and build engine sit behind one interface, so they can also run on
@@ -1091,7 +1106,7 @@ service and the app's connection string, which Services runs on F5; never writte
 
 `SqlExecutor` opens and disposes an ADO.NET connection/command/reader per execution on a worker thread, including SQLite's synchronous implementation of its async API. Cancellation registers `DbCommand.Cancel`; SQLite uses `sqlite3_interrupt` because its command cancellation method does nothing. Readers consume every result set, storing at most 5,000 rows per set and 32 displayed sets. Each tab owns its cancellation lifetime. JSON exports preserve duplicate column names and SQL NULL as separate columns and row arrays; CSV uses invariant formatting and quotes/escapes every field.
 
-`TableEditor` issues ordered, dialect-specific pages with one extra row to determine whether Next exists. Primary keys order editable tables; views and keyless tables are read-only. Cell updates quote identifiers, parameterize values, and check the primary key plus the original comparable row values in a transaction. Zero or multiple affected rows roll back. SQL Server's text/ntext/image/xml columns cannot be compared and are excluded from the concurrency predicate. Paging is not a snapshot across concurrent inserts/deletes.
+`TableEditor` issues ordered, dialect-specific pages with one extra row to determine whether Next exists. On PostgreSQL, every edited value and every value in the concurrency predicate is cast to the column's own type (`format_type`, kept as `DatabaseColumn.SqlType`), so text typed into json, jsonb, xml, point, enum and date columns is parsed as PostgreSQL parses a literal; json, xml and the geometric types, which have no `=` operator, are compared by their text. Primary keys order editable tables; views and keyless tables are read-only. Cell updates quote identifiers, parameterize values, and check the primary key plus the original comparable row values in a transaction. Zero or multiple affected rows roll back. SQL Server's text/ntext/image/xml columns cannot be compared and are excluded from the concurrency predicate. Paging is not a snapshot across concurrent inserts/deletes.
 
 The app owns the Explorer and its EF Core pane; SQL and table pages use the normal document host and dispose with their tabs. Query text can be saved to the app's SQL query folder; passwords are never part of a query document or session state. `ConnectionStore` writes only ID/name/provider metadata. Its `IDatabaseSecretStore` holds the entire connection string. Android replaces the session-only desktop store with AES-GCM encryption using a non-exportable AndroidKeyStore key, authenticated per connection ID; ciphertext lives in `NoBackupFilesDir`. There is no plaintext fallback. Connection discovery is local and opt-in, skips build/dependency folders and directory symlinks, resolves SQLite paths beside configuration, and only reads user-secret IDs present in solution projects.
 

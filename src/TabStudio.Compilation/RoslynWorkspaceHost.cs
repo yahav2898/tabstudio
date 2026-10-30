@@ -103,19 +103,23 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         lock (_gate)
         {
             _loaded = workspace;
+
+            // Skeleton images that are not on disk yet are compiled in the background (see ReloadPending): until
+            // then their projects are referenced in full, and a keystroke never waits for a compile.
             LoadUnderGate(workspace, sources);
         }
     }
 
     /// <summary>
     /// Releases every compilation Roslyn has cached, keeping the current text of every file. The next query
-    /// recompiles only what it needs. Called when the device runs low on memory.
+    /// recompiles only what it needs. Called when the device runs low on memory, often on the UI thread: the reload
+    /// happens on a background thread, and <see cref="WhenReloadedAsync"/> completes when it has.
     /// </summary>
     public void TrimMemory()
     {
         lock (_gate)
         {
-            ReloadKeepingTexts();
+            RequestReloadUnderGate();
         }
     }
 
@@ -159,16 +163,17 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         var allProjectDirectories = workspace.Projects.Select(p => p.DirectoryPath).ToList();
         AddSolution(workspace, csharpProjects, allProjectDirectories, sources);
 
-        // With skeleton references, the first solution compiles the projects nobody edits once, into images;
-        // the second references those images, so their full compilations are never kept.
+        // With skeleton references, the second solution references the images of the projects nobody edits, so their
+        // full compilations are never kept; images not made yet are compiled from the first in the background.
         if (CreateSkeletons(csharpProjects))
         {
-            var texts = new SnapshotTextProvider(CurrentTexts());
+            // The same texts as the first solution: that solution's documents load their text lazily, so reading it
+            // back from them lost unsaved edits of every file nothing had read yet, and the disk's text came instead.
             _workspace.ClearSolution();
             _documents.Clear();
             _additionalDocuments.Clear();
             _razorDocuments.Clear();
-            AddSolution(workspace, csharpProjects, allProjectDirectories, texts);
+            AddSolution(workspace, csharpProjects, allProjectDirectories, sources);
         }
     }
 
@@ -226,10 +231,11 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
                 return false;
             }
 
-            // A project referenced as a skeleton image changed: its image no longer matches, so make it again.
+            // A project referenced as a skeleton image changed: its image no longer matches, so it is made again in
+            // the background. Until then the projects that use it see its declarations as they were.
             if (_skeletons.Count > 0 && _projects.TryGetValue(id.ProjectId, out var project) && _skeletons.ContainsKey(project.FilePath))
             {
-                ReloadKeepingTexts();
+                RequestReloadUnderGate();
             }
             else if (_projects.TryGetValue(id.ProjectId, out var edited))
             {
@@ -543,7 +549,15 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
     }
 
     /// <inheritdoc />
-    public void Dispose() => _workspace.Dispose();
+    public void Dispose()
+    {
+        lock (_gate)
+        {
+            _disposed = true;
+        }
+
+        _workspace.Dispose();
+    }
 
     /// <summary>Creates the MEF host Roslyn needs for workspace features such as classification and completion.</summary>
     public static HostServices CreateHostServices()
@@ -671,17 +685,19 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         var texts = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var (path, id) in _documents)
         {
-            if (solution.GetDocument(id) is { } document && document.TryGetText(out var text))
+            // A document's text loads lazily; one nothing has read yet holds what its loader was given, which is
+            // the current text too, so it is read rather than left to the disk.
+            if (solution.GetDocument(id) is { } document)
             {
-                texts[path] = text.ToString();
+                texts[path] = (document.TryGetText(out var text) ? text : document.GetTextAsync().GetAwaiter().GetResult()).ToString();
             }
         }
 
         foreach (var (path, id) in _additionalDocuments)
         {
-            if (solution.GetAdditionalDocument(id) is { } document && document.TryGetText(out var text))
+            if (solution.GetAdditionalDocument(id) is { } document)
             {
-                texts[path] = text.ToString();
+                texts[path] = (document.TryGetText(out var text) ? text : document.GetTextAsync().GetAwaiter().GetResult()).ToString();
             }
         }
 

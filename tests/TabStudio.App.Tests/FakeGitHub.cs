@@ -52,6 +52,9 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
     /// <summary>Called before a branch moves; lets a test push a competing commit at the worst moment.</summary>
     public Action? BeforeBranchUpdate { get; set; }
 
+    /// <summary>Awaited before each request is answered; lets a test act while an operation is half done.</summary>
+    public Func<Task>? BeforeRequest { get; set; }
+
     /// <summary>A client of this fake, signed in or not.</summary>
     public SourceControl.GitHub.GitHubClient CreateClient(bool signedIn = true) =>
         new(new HttpClient(this, disposeHandler: false), signedIn ? Token : null, ApiAddress);
@@ -132,6 +135,11 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
         var uri = request.RequestUri!;
         var path = string.Join('/', uri.AbsolutePath.Trim('/').Split('/').Select(Uri.UnescapeDataString));
         _requests.Enqueue($"{request.Method} {path}{uri.Query}");
+        if (BeforeRequest is { } beforeRequest)
+        {
+            await beforeRequest().ConfigureAwait(false);
+        }
+
         if (HandleDownload(request) is { } download)
         {
             return download;
