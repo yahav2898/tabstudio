@@ -1554,7 +1554,7 @@
             "url": "https://github.com/JetBrains/kotlin/releases/download/v2.4.21/kotlin-compiler-2.4.21.zip",
             "sha256": "7cc140e76daf416a0424a5557f99afd7ca89ebd463ea1101261e3e01c33e75cd",
             "size": 89733618,
-            "destination": "/opt/tabstudio"
+            "destination": "/opt/tabstudio/kotlin"
           }
         },
         {
@@ -1562,7 +1562,7 @@
           "description": "Starts the Kotlin compiler by its usual command name.",
           "file": {
             "path": "/usr/local/bin/kotlinc",
-            "content": "#!/bin/sh\nexec /opt/tabstudio/kotlinc/bin/kotlinc \"$@\"\n",
+            "content": "#!/bin/sh\n# 0.20.0 unpacked the compiler into /opt/tabstudio itself, where installs before this one keep it.\nfor home in /opt/tabstudio/kotlin/kotlinc /opt/tabstudio/kotlinc; do\n  [ -x \"$home/bin/kotlinc\" ] && exec \"$home/bin/kotlinc\" \"$@\"\ndone\necho 'kotlinc is missing: remove Kotlin in Tools > Toolchain Store and install it again.' >&2\nexit 127\n",
             "executable": true
           }
         }
