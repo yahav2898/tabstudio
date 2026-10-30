@@ -115,7 +115,7 @@ public sealed partial class PeekDefinitionView : UserControl
         var target = Math.Min(TopOffsetOf(line), Math.Max(0, Editor.ExtentHeight - Editor.ViewportHeight));
         if (Math.Abs(Editor.VerticalOffset - target) >= 0.5)
         {
-            Editor.ScrollToVerticalOffset(target);
+            Editor.ScrollVerticallyTo(target);
         }
     }
 
