@@ -20,7 +20,7 @@ namespace TabStudio.Packages.Resolution;
 ///   <item><b>Cousin dependencies.</b> Different versions reached through different paths settle on the lowest
 ///   version that satisfies them all; when no version can, that is a conflict (NU1107).</item>
 /// </list>
-/// <para>The walk is in <see cref="ResolveAsync"/>; the analysis that follows is in <see cref="GraphAnalyzer"/>.</para>
+/// <para>The walk is in <see cref="ResolveAsync(string, IReadOnlyList{PackageDependency}, IReadOnlyList{PackageDependency}, CancellationToken)"/>; the analysis that follows is in <see cref="GraphAnalyzer"/>.</para>
 /// </remarks>
 internal sealed class DependencyResolver
 {

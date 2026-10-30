@@ -174,7 +174,7 @@ public sealed class SdkProjectItemsTests
         Assert.Equal("Lib.Resources.LanguageResource", files[0].Metadata["ManifestResourceName"]);
         Assert.Equal("true", files[0].Metadata["AsConstants"]);
         Assert.Equal("true", files[0].Metadata["ThisAssemblyStrings"]);
-        Assert.Equal(new[] { "ResxCode", "AdditionalFiles" }, files[1].ItemTypes);
+        Assert.Equal(new[] { "EmbeddedResource", "ResxCode", "AdditionalFiles" }, files[1].ItemTypes);
     }
 
     [Fact]
