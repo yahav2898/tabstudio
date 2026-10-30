@@ -46,9 +46,9 @@ public sealed record OciPlatform
     /// <summary>The device's own platform.</summary>
     public static OciPlatform Host => RuntimeInformation.ProcessArchitecture switch
     {
-        Architecture.Arm64 => Linux("arm64"),
-        Architecture.Arm => Linux("arm", "v7"),
-        Architecture.X86 => Linux("386"),
+        System.Runtime.InteropServices.Architecture.Arm64 => Linux("arm64"),
+        System.Runtime.InteropServices.Architecture.Arm => Linux("arm", "v7"),
+        System.Runtime.InteropServices.Architecture.X86 => Linux("386"),
         _ => Linux("amd64"),
     };
 
