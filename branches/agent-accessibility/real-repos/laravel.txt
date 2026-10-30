@@ -3,10 +3,10 @@ Toolchain projects:
   php: /home/runner/work/_temp/real-repos/laravel/composer.json
   node: /home/runner/work/_temp/real-repos/laravel/package.json
 Startup project: php /home/runner/work/_temp/real-repos/laravel/composer.json
-Set up in 14.6 s
-Web preview: http://127.0.0.1:40321/
-GET http://127.0.0.1:40321/: 200 OK, 35728 characters
-Ran in 2.2 s
+Set up in 13.0 s
+Web preview: http://127.0.0.1:39661/
+GET http://127.0.0.1:39661/: 200 OK, 35728 characters
+Ran in 2.6 s
 Project setup:
 
 Output:
@@ -34,24 +34,26 @@ public/build/assets/fonts-C9MNnjVw.css                          2.35 kB │ gzip
 public/build/assets/app-DssUf-X9.css                           37.73 kB │ gzip: 9.42 kB
 public/build/assets/app-BvRk9kiK.js                             0.00 kB │ gzip: 0.02 kB
 
-✓ built in 521ms
+✓ built in 828ms
 > php artisan migrate --force --no-interaction
 
    INFO  Preparing database.  
 
-  Creating migration table ....................................... 3.64ms DONE
+  Creating migration table ...................................... 59.08ms DONE
 
    INFO  Running migrations.  
 
-  0001_01_01_000000_create_users_table ........................... 5.88ms DONE
-  0001_01_01_000001_create_cache_table ........................... 3.67ms DONE
-  0001_01_01_000002_create_jobs_table ............................ 5.54ms DONE
+  0001_01_01_000000_create_users_table .......................... 10.58ms DONE
+  0001_01_01_000001_create_cache_table ........................... 6.38ms DONE
+  0001_01_01_000002_create_jobs_table ........................... 10.00ms DONE
 
 
-   INFO  Server running on [http://127.0.0.1:40321].  
+   INFO  Server running on [http://127.0.0.1:39661].  
 
   Press Ctrl+C to stop the server
 
+  2026-10-30 19:25:48 .............................................. ~ 0.10ms
+  2026-10-30 19:25:48 / ............................................ ~ 0.02ms
 
 The program 'artisan serve' was stopped.
 
