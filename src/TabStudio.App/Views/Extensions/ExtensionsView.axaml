@@ -27,7 +27,7 @@
             <controls:StrokeIcon Data="{StaticResource Icon.Verified}" Size="13" StrokeThickness="1.6"
                                  Foreground="{DynamicResource Brush.Extensions.Verified}" IsVisible="{Binding IsVerified}"
                                  ToolTip.Tip="The registry verified this publisher" />
-            <Border Classes="pill" Height="18" IsVisible="{Binding IsDeprecated}">
+            <Border Classes="pill" MinHeight="18" IsVisible="{Binding IsDeprecated}">
               <TextBlock Text="Deprecated" FontSize="{DynamicResource Type.Micro}" />
             </Border>
           </StackPanel>
@@ -76,7 +76,7 @@
                     Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:ExtensionsTab.Installed}">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <TextBlock Text="Installed" VerticalAlignment="Center" />
-                <Border Classes="pill" Height="18" IsVisible="{Binding HasInstalled}">
+                <Border Classes="pill" MinHeight="18" IsVisible="{Binding HasInstalled}">
                   <TextBlock Text="{Binding InstalledCount}" FontSize="{DynamicResource Type.Micro}" />
                 </Border>
               </StackPanel>
@@ -85,7 +85,7 @@
                     Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:ExtensionsTab.Updates}">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <TextBlock Text="Updates" VerticalAlignment="Center" />
-                <Border Classes="pill ready" Height="18" IsVisible="{Binding HasUpdates}">
+                <Border Classes="pill ready" MinHeight="18" IsVisible="{Binding HasUpdates}">
                   <TextBlock Text="{Binding UpdateCount}" FontSize="{DynamicResource Type.Micro}" />
                 </Border>
               </StackPanel>

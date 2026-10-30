@@ -120,7 +120,7 @@
               <ItemsControl ItemsSource="{Binding Checks}" IsVisible="{Binding HasChecks}">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate DataType="actions:CiCheckItemViewModel">
-                    <Button Theme="{StaticResource ToolButton}" Height="46" MinHeight="46" Padding="6,0" CornerRadius="6"
+                    <Button Theme="{StaticResource ToolButton}" MinHeight="46" Padding="6,0" CornerRadius="6"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                             ToolTip.Tip="{Binding ToolTip}" Command="{Binding Open}" CommandParameter="{Binding}">
                       <Grid ColumnDefinitions="Auto,*,Auto">
@@ -241,7 +241,7 @@
                 <ItemsControl.ItemTemplate>
                   <DataTemplate DataType="actions:WatchedRepositoryItemViewModel">
                     <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,2">
-                      <Button Theme="{StaticResource ToolButton}" Height="48" MinHeight="48" Padding="6,0" CornerRadius="6"
+                      <Button Theme="{StaticResource ToolButton}" MinHeight="48" Padding="6,0" CornerRadius="6"
                               HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                               ToolTip.Tip="Show this repository's runs" Command="{Binding Open}" CommandParameter="{Binding}">
                         <Grid ColumnDefinitions="Auto,*">

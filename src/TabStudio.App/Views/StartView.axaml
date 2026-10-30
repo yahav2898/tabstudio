@@ -114,34 +114,34 @@
             <Button Theme="{StaticResource CardButton}" Margin="0,0,10,0" HorizontalAlignment="Stretch"
                     Classes.selected="{Binding IsGitHubSelected}"
                     Command="{Binding SelectCommand}" CommandParameter="{x:Static vm:StartAction.GitHub}">
-              <StackPanel Orientation="Horizontal" Spacing="10">
-                <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="20" />
-                <TextBlock Text="Open from GitHub" VerticalAlignment="Center" />
-              </StackPanel>
+              <Grid ColumnDefinitions="Auto,*">
+                <controls:StrokeIcon VerticalAlignment="Center" Data="{StaticResource Icon.Download}" Size="20" />
+                <TextBlock Grid.Column="1" Margin="10,0,0,0" Text="Open from GitHub" TextWrapping="Wrap" VerticalAlignment="Center" />
+              </Grid>
             </Button>
             <Button Theme="{StaticResource CardButton}" Margin="0,0,10,0" HorizontalAlignment="Stretch"
                     Classes.selected="{Binding IsFolderSelected}"
                     Command="{Binding SelectCommand}" CommandParameter="{x:Static vm:StartAction.Folder}">
-              <StackPanel Orientation="Horizontal" Spacing="10">
-                <controls:StrokeIcon Data="{StaticResource Icon.Folder}" Size="20" />
-                <TextBlock Text="Open a folder" VerticalAlignment="Center" />
-              </StackPanel>
+              <Grid ColumnDefinitions="Auto,*">
+                <controls:StrokeIcon VerticalAlignment="Center" Data="{StaticResource Icon.Folder}" Size="20" />
+                <TextBlock Grid.Column="1" Margin="10,0,0,0" Text="Open a folder" TextWrapping="Wrap" VerticalAlignment="Center" />
+              </Grid>
             </Button>
             <Button Theme="{StaticResource CardButton}" Margin="0,0,10,0" HorizontalAlignment="Stretch"
                     Classes.selected="{Binding IsNewProjectSelected}"
                     Command="{Binding SelectCommand}" CommandParameter="{x:Static vm:StartAction.NewProject}">
-              <StackPanel Orientation="Horizontal" Spacing="10">
-                <controls:StrokeIcon Data="{StaticResource Icon.NewFile}" Size="20" />
-                <TextBlock Text="New project" VerticalAlignment="Center" />
-              </StackPanel>
+              <Grid ColumnDefinitions="Auto,*">
+                <controls:StrokeIcon VerticalAlignment="Center" Data="{StaticResource Icon.NewFile}" Size="20" />
+                <TextBlock Grid.Column="1" Margin="10,0,0,0" Text="New project" TextWrapping="Wrap" VerticalAlignment="Center" />
+              </Grid>
             </Button>
             <Button Theme="{StaticResource CardButton}" HorizontalAlignment="Stretch"
                     Classes.selected="{Binding IsSampleSelected}"
                     Command="{Binding SelectCommand}" CommandParameter="{x:Static vm:StartAction.Sample}">
-              <StackPanel Orientation="Horizontal" Spacing="10">
-                <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="16" />
-                <TextBlock Text="Open the sample" VerticalAlignment="Center" />
-              </StackPanel>
+              <Grid ColumnDefinitions="Auto,*">
+                <controls:StrokeIcon VerticalAlignment="Center" Data="{StaticResource Icon.Play}" IsFilled="True" Size="16" />
+                <TextBlock Grid.Column="1" Margin="10,0,0,0" Text="Open the sample" TextWrapping="Wrap" VerticalAlignment="Center" />
+              </Grid>
             </Button>
           </UniformGrid>
 
