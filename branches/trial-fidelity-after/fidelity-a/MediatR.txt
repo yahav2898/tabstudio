@@ -30,8 +30,30 @@ Compatibility Doctor:
   MediatR.DependencyInjectionTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   MediatR.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 F5 startup project: MediatR.Examples.AspNetCore /home/runner/work/_temp/repos/MediatR/samples/MediatR.Examples.AspNetCore/MediatR.Examples.AspNetCore.csproj
-Error List after analysis: 0 errors, 1 warnings
-Error List after the build: 0 errors, 1 warnings
+Error List after analysis: 25 errors, 1025 warnings
+  25 x CS0121
+      [MediatR.DependencyInjectionTests] ImTools.cs(275,20): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.ToArrayOrSelf<T>(System.Collections.Generic.IEnumerable<T>)' and 'ImTools.ArrayTools.ToArrayOrSelf<T>(System.Collections.Generic.IEnumerable<T>)'
+      [MediatR.DependencyInjectionTests] ImTools.cs(275,49): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.ToArrayOrSelf<T>(System.Collections.Generic.IEnumerable<T>)' and 'ImTools.ArrayTools.ToArrayOrSelf<T>(System.Collections.Generic.IEnumerable<T>)'
+      [MediatR.DependencyInjectionTests] ImTools.cs(436,36): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.IndexOf<T>(T[], T)' and 'ImTools.ArrayTools.IndexOf<T>(T[], T)'
+      [MediatR.DependencyInjectionTests] ImTools.cs(466,49): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.FindFirst<T>(T[], System.Func<T, bool>)' and 'ImTools.ArrayTools.FindFirst<T>(T[], System.Func<T, bool>)'
+      [MediatR.DependencyInjectionTests] ImTools.cs(490,25): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.IsNullOrEmpty<T>(T[])' and 'ImTools.ArrayTools.IsNullOrEmpty<T>(T[])'
+      [MediatR.DependencyInjectionTests] ImTools.cs(980,37): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.Map<T, R>(T[], System.Func<T, R>)' and 'ImTools.ArrayTools.Map<T, R>(T[], System.Func<T, R>)'
+      [MediatR.DependencyInjectionTests] ImTools.cs(988,37): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.Match<T>(T[], System.Func<T, bool>)' and 'ImTools.ArrayTools.Match<T>(T[], System.Func<T, bool>)'
+      [MediatR.DependencyInjectionTests] ImTools.cs(997,37): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.Match<T, R>(T[], System.Func<T, bool>, System.Func<T, R>)' and 'ImTools.ArrayTools.Match<T, R>(T[], System.Func<T, bool>, System.Func<T, R>)'
+      [MediatR.DependencyInjectionTests] ImTools.cs(1342,27): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.Fun.To<T, R>(T, System.Func<T, R>)' and 'ImTools.Fun.To<T, R>(T, System.Func<T, R>)'
+      [MediatR.DependencyInjectionTests] ImTools.cs(1597,29): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ImList.ToImList<T>(System.Collections.Generic.IList<T>)' and 'ImTools.ImList.ToImList<T>(System.Collections.Generic.IList<T>)'
+Error List after the build: 25 errors, 1025 warnings
+  25 x CS0121
+      [MediatR.Examples.Lamar] ImTools.cs(275,20): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.ToArrayOrSelf<T>(System.Collections.Generic.IEnumerable<T>)' and 'ImTools.ArrayTools.ToArrayOrSelf<T>(System.Collections.Generic.IEnumerable<T>)'
+      [MediatR.Examples.Lamar] ImTools.cs(275,49): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.ToArrayOrSelf<T>(System.Collections.Generic.IEnumerable<T>)' and 'ImTools.ArrayTools.ToArrayOrSelf<T>(System.Collections.Generic.IEnumerable<T>)'
+      [MediatR.Examples.Lamar] ImTools.cs(436,36): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.IndexOf<T>(T[], T)' and 'ImTools.ArrayTools.IndexOf<T>(T[], T)'
+      [MediatR.Examples.Lamar] ImTools.cs(466,49): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.FindFirst<T>(T[], System.Func<T, bool>)' and 'ImTools.ArrayTools.FindFirst<T>(T[], System.Func<T, bool>)'
+      [MediatR.Examples.Lamar] ImTools.cs(490,25): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.IsNullOrEmpty<T>(T[])' and 'ImTools.ArrayTools.IsNullOrEmpty<T>(T[])'
+      [MediatR.Examples.Lamar] ImTools.cs(980,37): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.Map<T, R>(T[], System.Func<T, R>)' and 'ImTools.ArrayTools.Map<T, R>(T[], System.Func<T, R>)'
+      [MediatR.Examples.Lamar] ImTools.cs(988,37): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.Match<T>(T[], System.Func<T, bool>)' and 'ImTools.ArrayTools.Match<T>(T[], System.Func<T, bool>)'
+      [MediatR.Examples.Lamar] ImTools.cs(997,37): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ArrayTools.Match<T, R>(T[], System.Func<T, bool>, System.Func<T, R>)' and 'ImTools.ArrayTools.Match<T, R>(T[], System.Func<T, bool>, System.Func<T, R>)'
+      [MediatR.Examples.Lamar] ImTools.cs(1342,27): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.Fun.To<T, R>(T, System.Func<T, R>)' and 'ImTools.Fun.To<T, R>(T, System.Func<T, R>)'
+      [MediatR.Examples.Lamar] ImTools.cs(1597,29): error CS0121: The call is ambiguous between the following methods or properties: 'ImTools.ImList.ToImList<T>(System.Collections.Generic.IList<T>)' and 'ImTools.ImList.ToImList<T>(System.Collections.Generic.IList<T>)'
 Long-operation progress:
   Loading C#: Loading C#
   Loading C#: Succeeded after 0.1 s
@@ -43,14 +65,14 @@ Long-operation progress:
   Analyzing: Analyzing 3/14 projects
   Analyzing: Analyzing 4/14 projects
   Analyzing: Analyzing 5/14 projects
-  Analyzing: Analyzing 6/14 projects
-  Analyzing: Analyzing 7/14 projects
-  Analyzing: Analyzing 8/14 projects
   Restoring NuGet packages: Downloading NuGet packages 1/8
   Restoring NuGet packages: Downloading NuGet packages 2/8
   Restoring NuGet packages: Downloading NuGet packages 3/8
+  Analyzing: Analyzing 6/14 projects
   Restoring NuGet packages: Downloading NuGet packages 4/8
   Restoring NuGet packages: Downloading NuGet packages 5/8
+  Analyzing: Analyzing 7/14 projects
+  Analyzing: Analyzing 8/14 projects
   Restoring NuGet packages: Downloading NuGet packages 6/8
   Restoring NuGet packages: Downloading NuGet packages 7/8
   Restoring NuGet packages: Downloading NuGet packages 8/8
@@ -58,13 +80,13 @@ Long-operation progress:
   Analyzing: Analyzing 9/14 projects
   Analyzing: Analyzing 10/14 projects
   Restoring NuGet packages: Downloading NuGet packages 1/10
-  Restoring NuGet packages: Downloading NuGet packages 2/10
   Restoring NuGet packages: Downloading NuGet packages 3/10
   Restoring NuGet packages: Downloading NuGet packages 4/10
   Restoring NuGet packages: Downloading NuGet packages 5/10
   Restoring NuGet packages: Downloading NuGet packages 6/10
   Restoring NuGet packages: Downloading NuGet packages 7/10
   Restoring NuGet packages: Downloading NuGet packages 8/10
+  Restoring NuGet packages: Downloading NuGet packages 2/10
   Restoring NuGet packages: Downloading NuGet packages 9/10
   Restoring NuGet packages: Downloading NuGet packages 10/10
   Restoring NuGet packages: Restoring NuGet packages 2/14 projects
@@ -80,9 +102,9 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 7/10
   Restoring NuGet packages: Downloading NuGet packages 8/10
   Restoring NuGet packages: Downloading NuGet packages 9/10
-  Analyzing: Analyzing 14/14 projects
-  Analyzing: Succeeded after 1.9 s
   Restoring NuGet packages: Downloading NuGet packages 10/10
+  Analyzing: Analyzing 14/14 projects
+  Analyzing: Succeeded after 1.1 s
   Restoring NuGet packages: Restoring NuGet packages 3/14 projects
   Restoring NuGet packages: Downloading NuGet packages 1/42
   Restoring NuGet packages: Downloading NuGet packages 2/42
@@ -129,8 +151,8 @@ Long-operation progress:
   Restoring NuGet packages: Restoring NuGet packages 4/14 projects
   Restoring NuGet packages: Downloading NuGet packages 1/10
   Restoring NuGet packages: Downloading NuGet packages 2/10
-  Restoring NuGet packages: Downloading NuGet packages 4/10
   Restoring NuGet packages: Downloading NuGet packages 3/10
+  Restoring NuGet packages: Downloading NuGet packages 4/10
   Restoring NuGet packages: Downloading NuGet packages 5/10
   Restoring NuGet packages: Downloading NuGet packages 6/10
   Restoring NuGet packages: Downloading NuGet packages 7/10
@@ -176,8 +198,8 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 1/7
   Restoring NuGet packages: Downloading NuGet packages 2/7
   Restoring NuGet packages: Downloading NuGet packages 3/7
-  Restoring NuGet packages: Downloading NuGet packages 5/7
   Restoring NuGet packages: Downloading NuGet packages 4/7
+  Restoring NuGet packages: Downloading NuGet packages 5/7
   Restoring NuGet packages: Downloading NuGet packages 6/7
   Restoring NuGet packages: Downloading NuGet packages 7/7
   Restoring NuGet packages: Restoring NuGet packages 9/14 projects
@@ -309,12 +331,12 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 1/42
   Restoring NuGet packages: Downloading NuGet packages 2/42
   Restoring NuGet packages: Downloading NuGet packages 3/42
-  Restoring NuGet packages: Downloading NuGet packages 4/42
   Restoring NuGet packages: Downloading NuGet packages 5/42
+  Restoring NuGet packages: Downloading NuGet packages 4/42
   Restoring NuGet packages: Downloading NuGet packages 6/42
   Restoring NuGet packages: Downloading NuGet packages 7/42
-  Restoring NuGet packages: Downloading NuGet packages 9/42
   Restoring NuGet packages: Downloading NuGet packages 8/42
+  Restoring NuGet packages: Downloading NuGet packages 9/42
   Restoring NuGet packages: Downloading NuGet packages 10/42
   Restoring NuGet packages: Downloading NuGet packages 11/42
   Restoring NuGet packages: Downloading NuGet packages 12/42
@@ -348,7 +370,7 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 40/42
   Restoring NuGet packages: Downloading NuGet packages 41/42
   Restoring NuGet packages: Downloading NuGet packages 42/42
-  Restoring NuGet packages: Succeeded after 10.7 s
+  Restoring NuGet packages: Succeeded after 8.2 s
   Analyzing: Analyzing 0/14 projects
   Analyzing: Analyzing 1/14 projects
   Analyzing: Analyzing 2/14 projects
@@ -364,7 +386,7 @@ Long-operation progress:
   Analyzing: Analyzing 12/14 projects
   Analyzing: Analyzing 13/14 projects
   Analyzing: Analyzing 14/14 projects
-  Analyzing: Succeeded after 0.9 s
+  Analyzing: Succeeded after 1.1 s
   Building: Building
   Building: Building 0/14 projects
   Building: Building 1/14 projects
@@ -380,38 +402,54 @@ Long-operation progress:
   Building: Building 11/14 projects
   Building: Building 12/14 projects
   Building: Building 13/14 projects
-  Building: Succeeded after 3.8 s
+  Building: Failed after 3.2 s
 Project setup:
 
 Output:
-Build started at 17:29:25...
-1>------ Build started: Project: MediatR, Configuration: Debug ------
-1>MediatR -> compiled in memory (95 KB, 256 ms)
-2>------ Build started: Project: MediatR.Examples, Configuration: Debug ------
-2>MediatR.Examples -> compiled in memory (52 KB, 248 ms)
-3>------ Build started: Project: MediatR.Examples.AspNetCore, Configuration: Debug ------
-3>MediatR.Examples.AspNetCore -> compiled in memory (4.5 KB, 310 ms)
-4>------ Build started: Project: MediatR.Examples.Autofac, Configuration: Debug ------
-4>MediatR.Examples.Autofac -> compiled in memory (5.5 KB, 238 ms)
-5>------ Build started: Project: MediatR.Examples.DryIoc, Configuration: Debug ------
-5>MediatR.Examples.DryIoc -> compiled in memory (5 KB, 333 ms)
-6>------ Build started: Project: MediatR.Examples.Lamar, Configuration: Debug ------
-6>MediatR.Examples.Lamar -> compiled in memory (5 KB, 256 ms)
-7>------ Build started: Project: MediatR.Examples.LightInject, Configuration: Debug ------
-7>MediatR.Examples.LightInject -> compiled in memory (5.5 KB, 310 ms)
-8>------ Build started: Project: MediatR.Examples.PublishStrategies, Configuration: Debug ------
-8>MediatR.Examples.PublishStrategies -> compiled in memory (15.5 KB, 312 ms)
-9>------ Build started: Project: MediatR.Examples.SimpleInjector, Configuration: Debug ------
-9>MediatR.Examples.SimpleInjector -> compiled in memory (7.5 KB, 244 ms)
-10>------ Build started: Project: MediatR.Examples.Stashbox, Configuration: Debug ------
-10>MediatR.Examples.Stashbox -> compiled in memory (4 KB, 271 ms)
-11>------ Build started: Project: MediatR.Contracts, Configuration: Debug ------
-11>MediatR.Contracts -> compiled in memory (4 KB, 10 ms)
-12>------ Build started: Project: MediatR.Benchmarks, Configuration: Debug ------
-12>MediatR.Benchmarks -> compiled in memory (13 KB, 169 ms)
-13>------ Build started: Project: MediatR.DependencyInjectionTests, Configuration: Debug ------
-13>MediatR.DependencyInjectionTests -> compiled in memory (19 KB, 189 ms)
+ImTools/ImTools.cs'.
+13>ImTools.cs(6226,53): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6227,13): warning CS0436: The type 'Ref' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'Ref' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6231,49): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6239,56): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6240,13): warning CS0436: The type 'Ref' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'Ref' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6244,43): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6252,50): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6253,13): warning CS0436: The type 'Ref' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'Ref' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6257,55): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6260,51): warning CS0436: The type 'VEntry<V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'VEntry<V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6262,30): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6264,31): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6268,25): warning CS0436: The type 'VEntry<V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'VEntry<V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6268,48): warning CS0436: The type 'VEntry<V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'VEntry<V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6273,51): warning CS0436: The type 'VEntry<V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'VEntry<V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6275,22): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6278,21): warning CS0436: The type 'ImHashMap' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6279,21): warning CS0436: The type 'VEntry<V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'VEntry<V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6281,20): warning CS0436: The type 'VEntry<V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'VEntry<V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6293,34): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6320,61): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6323,54): warning CS0436: The type 'KVEntry<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'KVEntry<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6325,30): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6327,31): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6330,25): warning CS0436: The type 'KVEntry<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'KVEntry<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6330,52): warning CS0436: The type 'KVEntry<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'KVEntry<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6335,54): warning CS0436: The type 'KVEntry<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'KVEntry<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6337,22): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6340,21): warning CS0436: The type 'ImHashMap' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6341,21): warning CS0436: The type 'KVEntry<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'KVEntry<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6343,20): warning CS0436: The type 'KVEntry<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'KVEntry<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6355,34): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6383,44): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6383,87): warning CS0436: The type 'VEntry<V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'VEntry<V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6383,115): warning CS0436: The type 'MapParentStack' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'MapParentStack' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6386,31): warning CS0436: The type 'MapParentStack' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'MapParentStack' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6389,28): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6399,47): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6399,88): warning CS0436: The type 'ImHashMapEntry<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMapEntry<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6399,127): warning CS0436: The type 'MapParentStack' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'MapParentStack' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6402,31): warning CS0436: The type 'MapParentStack' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'MapParentStack' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
+13>ImTools.cs(6405,28): warning CS0436: The type 'ImHashMap<K, V>' in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs' conflicts with the imported type 'ImHashMap<K, V>' in 'JasperFx, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null'. Using the type defined in '/tmp/tabstudio-tests/87be2ab9ef194980ae188dfcd45ada1b/Packages/imtools/4.0.0/contentFiles/cs/netstandard2.0/ImTools/ImTools.cs'.
 14>------ Build started: Project: MediatR.Tests, Configuration: Debug ------
-14>MediatR.Tests -> compiled in memory (279.5 KB, 648 ms)
-========== Build: 14 succeeded, 0 failed ==========
+14>MediatR.Tests -> compiled in memory (279.5 KB, 604 ms)
+========== Build: 12 succeeded, 2 failed ==========
 

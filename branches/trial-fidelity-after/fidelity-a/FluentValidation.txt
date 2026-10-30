@@ -1,5 +1,5 @@
 FluentValidation at f95dbd5c8166a10e38f7a8bca4d752abd641a453, opening /home/runner/work/_temp/repos/FluentValidation/FluentValidation.sln
-Opened in 0.3 s: FluentValidation, solution /home/runner/work/_temp/repos/FluentValidation/FluentValidation.sln
+Opened in 0.5 s: FluentValidation, solution /home/runner/work/_temp/repos/FluentValidation/FluentValidation.sln
   project FluentValidation.Tests [CSharp] /home/runner/work/_temp/repos/FluentValidation/src/FluentValidation.Tests/FluentValidation.Tests.csproj
   project FluentValidation [CSharp] /home/runner/work/_temp/repos/FluentValidation/src/FluentValidation/FluentValidation.csproj
   project FluentValidation.DependencyInjectionExtensions [CSharp] /home/runner/work/_temp/repos/FluentValidation/src/FluentValidation.DependencyInjectionExtensions/FluentValidation.DependencyInjectionExtensions.csproj
@@ -13,30 +13,34 @@ Compatibility Doctor:
   FluentValidation.Tests.Benchmarks: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
   docs: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
   docs: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
-F5 startup project: docs (python) /home/runner/work/_temp/repos/FluentValidation/docs/requirements.txt
-Error List after analysis: 0 errors, 1 warnings
+F5 startup project: none 
+Error List after analysis: 3 errors, 1 warnings
+  3 x CS8795
+      [FluentValidation] MemberNameValidatorSelector.cs(35,31): error CS8795: Partial method 'MemberNameValidatorSelector.CollectionIndexNormalizer()' must have an implementation part because it has accessibility modifiers.
+      [FluentValidation] MessageFormatter.cs(30,31): error CS8795: Partial method 'MessageFormatter.KeyRegex()' must have an implementation part because it has accessibility modifiers.
+      [FluentValidation] EmailValidator.cs(47,31): error CS8795: Partial method 'EmailValidator<T>.LegacyEmailRegex()' must have an implementation part because it has accessibility modifiers.
 Error List after the build: 0 errors, 1 warnings
 Long-operation progress:
   Setting up projects: Checking project setup
   Loading C#: Loading C#
-  Loading C#: Succeeded after 0.1 s
+  Loading C#: Succeeded after 0.4 s
   Restoring NuGet packages: Restoring NuGet packages
   Restoring NuGet packages: Restoring NuGet packages 0/4 projects
   Analyzing: Analyzing 0/4 projects
   Analyzing: Analyzing 1/4 projects
+  Analyzing: Analyzing 2/4 projects
+  Analyzing: Analyzing 3/4 projects
+  Analyzing: Analyzing 4/4 projects
+  Analyzing: Succeeded after 4.0 s
   Restoring NuGet packages: Downloading NuGet packages 1/18
   Restoring NuGet packages: Downloading NuGet packages 2/18
   Restoring NuGet packages: Downloading NuGet packages 3/18
   Restoring NuGet packages: Downloading NuGet packages 4/18
-  Analyzing: Analyzing 2/4 projects
-  Analyzing: Analyzing 3/4 projects
   Restoring NuGet packages: Downloading NuGet packages 5/18
   Restoring NuGet packages: Downloading NuGet packages 6/18
   Restoring NuGet packages: Downloading NuGet packages 7/18
   Restoring NuGet packages: Downloading NuGet packages 8/18
   Restoring NuGet packages: Downloading NuGet packages 9/18
-  Analyzing: Analyzing 4/4 projects
-  Analyzing: Succeeded after 0.9 s
   Restoring NuGet packages: Downloading NuGet packages 10/18
   Restoring NuGet packages: Downloading NuGet packages 11/18
   Restoring NuGet packages: Downloading NuGet packages 12/18
@@ -67,23 +71,23 @@ Long-operation progress:
   Restoring NuGet packages: Downloading NuGet packages 13/15
   Restoring NuGet packages: Downloading NuGet packages 14/15
   Restoring NuGet packages: Downloading NuGet packages 15/15
-  Restoring NuGet packages: Succeeded after 2.8 s
+  Restoring NuGet packages: Succeeded after 7.2 s
   Analyzing: Analyzing 0/4 projects
   Analyzing: Analyzing 1/4 projects
   Analyzing: Analyzing 2/4 projects
   Analyzing: Analyzing 3/4 projects
   Analyzing: Analyzing 4/4 projects
-  Analyzing: Succeeded after 1.8 s
+  Analyzing: Succeeded after 2.0 s
   Setting up projects: Setting up docs: pip install -r requirements.txt
   Installing docs's packages: Installing packages: pip install -r requirements.txt
-  Installing docs's packages: Failed after 9.6 s
-  Setting up projects: Succeeded after 28.2 s
+  Installing docs's packages: Failed after 7.2 s
+  Setting up projects: Succeeded after 27.8 s
   Building: Building
   Building: Building 0/4 projects
   Building: Building 1/4 projects
   Building: Building 2/4 projects
   Building: Building 3/4 projects
-  Building: Succeeded after 3.8 s
+  Building: Succeeded after 2.7 s
 Project setup:
 ------ docs: pip install -r requirements.txt ------
 Reading which Python versions the 9 pinned packages have wheels for, from PyPI.
@@ -91,7 +95,7 @@ Reading which Python versions the 9 pinned packages have wheels for, from PyPI.
 > /home/runner/work/_temp/repos/FluentValidation/docs/.venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
 Collecting mock==1.0.1 (from -r requirements_rtd.txt (line 1))
   Downloading mock-1.0.1.zip (861 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 861.9/861.9 kB 15.7 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 861.9/861.9 kB 45.0 MB/s eta 0:00:00
   Installing build dependencies: started
   Installing build dependencies: finished with status 'done'
   Getting requirements to build wheel: started
@@ -142,7 +146,7 @@ Collecting sphinxcontrib-websupport (from sphinx==1.8.5->-r requirements_rtd.txt
   Downloading sphinxcontrib_websupport-2.0.0-py3-none-any.whl.metadata (2.4 kB)
 Collecting watchdog>=0.7.1 (from sphinx-autobuild==0.7.1->-r requirements.txt (line 2))
   Downloading watchdog-6.0.0-py3-none-manylinux2014_x86_64.whl.metadata (44 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.3/44.3 kB 15.7 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.3/44.3 kB 23.9 MB/s eta 0:00:00
 Collecting argh>=0.24.1 (from sphinx-autobuild==0.7.1->-r requirements.txt (line 2))
   Downloading argh-0.31.3-py3-none-any.whl.metadata (7.4 kB)
 Collecting pathtools>=0.1.2 (from sphinx-autobuild==0.7.1->-r requirements.txt (line 2))
@@ -165,14 +169,14 @@ Collecting pathtools>=0.1.2 (from sphinx-autobuild==0.7.1->-r requirements.txt (
         File "/home/runner/work/_temp/repos/FluentValidation/docs/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 118, in get_requires_for_build_wheel
           return hook(config_settings)
                  ^^^^^^^^^^^^^^^^^^^^^
-        File "/tmp/pip-build-env-q7fnchkp/overlay/lib/python3.12/site-packages/setuptools/build_meta.py", line 333, in get_requires_for_build_wheel
+        File "/tmp/pip-build-env-7eqxd_sm/overlay/lib/python3.12/site-packages/setuptools/build_meta.py", line 333, in get_requires_for_build_wheel
           return self._get_build_requires(config_settings, requirements=[])
                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "/tmp/pip-build-env-q7fnchkp/overlay/lib/python3.12/site-packages/setuptools/build_meta.py", line 301, in _get_build_requires
+        File "/tmp/pip-build-env-7eqxd_sm/overlay/lib/python3.12/site-packages/setuptools/build_meta.py", line 301, in _get_build_requires
           self.run_setup()
-        File "/tmp/pip-build-env-q7fnchkp/overlay/lib/python3.12/site-packages/setuptools/build_meta.py", line 520, in run_setup
+        File "/tmp/pip-build-env-7eqxd_sm/overlay/lib/python3.12/site-packages/setuptools/build_meta.py", line 520, in run_setup
           super().run_setup(setup_script=setup_script)
-        File "/tmp/pip-build-env-q7fnchkp/overlay/lib/python3.12/site-packages/setuptools/build_meta.py", line 317, in run_setup
+        File "/tmp/pip-build-env-7eqxd_sm/overlay/lib/python3.12/site-packages/setuptools/build_meta.py", line 317, in run_setup
           exec(code, locals())  # noqa: S102 # exec is intentional here
           ^^^^^^^^^^^^^^^^^^^^
         File "<string>", line 25, in <module>
@@ -190,5 +194,14 @@ note: This error originates from a subprocess, and is likely not a problem with 
 pathtools 0.1.2 could not be installed: it has no prebuilt wheel for Python 3.12 on this computer, so pip compiled it, and the build failed (ModuleNotFoundError: No module named 'imp'). Install what its build needs on this computer (a C compiler and Python's headers), then use Tools > Install Project Packages. A .python-version file naming the Python the project was written for, such as 3.11, lets pip use a prebuilt wheel, as does a pathtools release that ships one.
 
 Output:
-docs needs no build: Python runs it from its source. Press Ctrl+F5 to run it.
+Build started at 18:11:58...
+1>------ Build started: Project: FluentValidation, Configuration: Debug ------
+1>FluentValidation -> compiled in memory (500.5 KB, 1276 ms)
+2>------ Build started: Project: FluentValidation.DependencyInjectionExtensions, Configuration: Debug ------
+2>FluentValidation.DependencyInjectionExtensions -> compiled in memory (5.5 KB, 181 ms)
+3>------ Build started: Project: FluentValidation.Tests, Configuration: Debug ------
+3>FluentValidation.Tests -> compiled in memory (684 KB, 931 ms)
+4>------ Build started: Project: FluentValidation.Tests.Benchmarks, Configuration: Debug ------
+4>FluentValidation.Tests.Benchmarks -> compiled in memory (37 KB, 312 ms)
+========== Build: 4 succeeded, 0 failed ==========
 
