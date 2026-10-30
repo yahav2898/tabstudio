@@ -1,0 +1,40 @@
+name: Probe
+on:
+  push:
+    branches: ['agent/qa-check']
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Build the IDE tests
+        run: dotnet build tests/TabStudio.App.Tests -c Release > build.log 2>&1 || { tail -50 build.log; exit 1; }
+      - name: Plain test
+        run: |
+          dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName~RegexReplaceTests" > plain.log 2>&1 && r=ok || r=fail
+          echo "::notice title=Plain::$r $(grep -E 'Passed!|Failed!|crashed|invalid' plain.log | head -3 | tr '\n' ' ')"
+      - name: Avalonia test
+        run: |
+          dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName~TextEditorScrollingTests" > ava.log 2>&1 && r=ok || r=fail
+          echo "::notice title=Avalonia::$r $(grep -E 'Passed!|Failed!|crashed|invalid' ava.log | head -3 | tr '\n' ' ')"
+      - name: Backtrace
+        run: |
+          sudo apt-get install -y -qq gdb > /dev/null 2>&1 || true
+          sudo sysctl -w kernel.core_pattern=/tmp/core.%e.%p
+          ulimit -c unlimited
+          export DOTNET_DbgEnableMiniDump=0
+          dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName~TextEditorScrollingTests" > bt.log 2>&1 || true
+          ls -la /tmp/core.* || true
+          for core in /tmp/core.*; do
+            [ -f "$core" ] || continue
+            exe=$(gdb -batch -ex "info proc" -c "$core" 2>/dev/null | grep -o "exe = '[^']*'" | head -1)
+            gdb -batch -ex "thread apply all bt 25" "$(command -v dotnet)" "$core" > gdb.txt 2>&1 || true
+            grep -B2 -A25 "abort\|free\b\|__libc_free" gdb.txt | grep -E "^#|Thread" | head -60 > bt.txt
+            i=0; while IFS= read -r line; do i=$((i+1)); echo "::notice title=bt$i::$line"; done < <(head -45 bt.txt)
+          done
+          for lib in $(find tests/TabStudio.App.Tests/bin/Release -name "*.so" | head -40); do echo "$lib"; done > libs.txt
+          echo "::notice title=libs::$(tr '\n' ' ' < libs.txt | cut -c1-3000)"
