@@ -162,6 +162,21 @@ public sealed class WorkspaceViewModelTests
     }
 
     [AvaloniaFact]
+    public async Task The_sessions_unsaved_text_follows_typing()
+    {
+        // Saved only when a document first became dirty, the session restored that moment's text after Android
+        // ended the app, however much was typed after it.
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var document = fixture.Workspace.ActiveDocument!;
+        document.Document.Insert(0, "// first\n");
+        await UiTestHelpers.WaitUntilAsync(() => fixture.Sessions.Load()?.Documents.Any(d => d.UnsavedText?.StartsWith("// first", StringComparison.Ordinal) == true) == true, because: "the first edit in the session");
+
+        document.Document.Insert(0, "// second\n");
+        await UiTestHelpers.WaitUntilAsync(() => fixture.Sessions.Load()?.Documents.Any(d => d.UnsavedText?.StartsWith("// second\n// first", StringComparison.Ordinal) == true) == true, because: "typing to reach the session");
+    }
+
+    [AvaloniaFact]
     public async Task A_warm_device_builds_on_one_thread_and_says_so()
     {
         using var fixture = new WorkspaceFixture();

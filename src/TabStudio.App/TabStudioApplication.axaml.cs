@@ -82,10 +82,24 @@ public sealed partial class TabStudioApplication : Application
 
         if (ApplicationLifetime is not null)
         {
+            // An error nothing handled ends the app: the session, with the unsaved text, is saved first.
+            Avalonia.Threading.Dispatcher.UIThread.UnhandledException += (_, _) => SaveSessionBeforeCrash();
             _ = Main.StartAsync();
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void SaveSessionBeforeCrash()
+    {
+        try
+        {
+            Main?.SaveSession();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            // The crash's own error is what gets reported.
+        }
     }
 }
 
