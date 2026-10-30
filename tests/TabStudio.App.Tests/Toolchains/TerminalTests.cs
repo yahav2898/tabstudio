@@ -102,6 +102,17 @@ public sealed class TerminalTests
         var line = Enumerable.Range(0, terminal.Emulator.Rows).Select(terminal.Emulator.ScreenLine).First(l => l.Text.StartsWith("TabStudio terminal", StringComparison.Ordinal));
         Assert.Equal(TerminalColor.Indexed(6), line[0].Style.Foreground);
         Assert.True(line[0].Style.Has(TerminalAttributes.Bold));
+
+        // Ctrl+R, Ctrl+E and Ctrl+K are the shell's: the IDE's chords no longer swallow them and wait for a second key.
+        foreach (var key in new[] { PhysicalKey.R, PhysicalKey.E, PhysicalKey.K })
+        {
+            view.Focus();
+            window.KeyPressQwerty(key, RawInputModifiers.Control);
+            await UiTestHelpers.WaitUntilAsync(() => true);
+            Assert.DoesNotContain("Waiting for second key of chord", workspace.StatusText, StringComparison.Ordinal);
+            window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
+        }
+
         workspace.Dispose();
     }
 }

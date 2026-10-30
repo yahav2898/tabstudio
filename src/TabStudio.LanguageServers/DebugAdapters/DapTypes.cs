@@ -80,6 +80,11 @@ public sealed record DapSourceBreakpoint(int Line, string? Condition = null, str
 /// <param name="Message">Why it could not be set, or more about it.</param>
 public sealed record DapBreakpoint(int? Id, bool IsVerified, int? Line, string? Message);
 
+/// <summary>A file the adapter reads some of another file's breakpoints from (<see cref="DebugAdapterSession.BreakpointSources"/>).</summary>
+/// <param name="FilePath">The file to send the breakpoints for.</param>
+/// <param name="Indexes">The positions, in the other file's list, of the breakpoints this file gets.</param>
+public sealed record DapBreakpointSource(string FilePath, IReadOnlyList<int> Indexes);
+
 /// <summary>A thread of the debugged program.</summary>
 /// <param name="Id">Its identifier.</param>
 /// <param name="Name">Its name.</param>
@@ -94,7 +99,11 @@ public sealed record DapThread(int Id, string Name);
 /// <param name="EndLine">One-based end line, if known.</param>
 /// <param name="EndColumn">One-based end column, if known.</param>
 /// <param name="IsSubtle">Whether the adapter marks it as less important, such as library code.</param>
-public sealed record DapStackFrame(int Id, string Name, string? FilePath, int Line, int Column, int? EndLine, int? EndColumn, bool IsSubtle);
+public sealed record DapStackFrame(int Id, string Name, string? FilePath, int Line, int Column, int? EndLine, int? EndColumn, bool IsSubtle)
+{
+    /// <summary>The source's name, such as <c>Main.kt</c>, which a JVM class records even when the adapter has no path for it.</summary>
+    public string? SourceName { get; init; }
+}
 
 /// <summary>A scope of a frame, such as its locals or the globals.</summary>
 /// <param name="Name">Its name, such as <c>Locals</c>.</param>

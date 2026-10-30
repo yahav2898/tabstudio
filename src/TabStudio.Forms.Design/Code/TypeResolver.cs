@@ -27,6 +27,15 @@ internal static class TypeResolver
         ["decimal"] = typeof(decimal), ["string"] = typeof(string), ["object"] = typeof(object),
     };
 
+    /// <summary>Visual Basic's names of the types it has keywords for, which ignore case as Visual Basic does.</summary>
+    private static readonly Dictionary<string, Type> VisualBasicKeywords = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Boolean"] = typeof(bool), ["Byte"] = typeof(byte), ["SByte"] = typeof(sbyte), ["Char"] = typeof(char),
+        ["Short"] = typeof(short), ["UShort"] = typeof(ushort), ["Integer"] = typeof(int), ["UInteger"] = typeof(uint),
+        ["Long"] = typeof(long), ["ULong"] = typeof(ulong), ["Single"] = typeof(float), ["Double"] = typeof(double),
+        ["Decimal"] = typeof(decimal), ["String"] = typeof(string), ["Object"] = typeof(object), ["Date"] = typeof(DateTime),
+    };
+
     private static readonly System.Reflection.Assembly[] Assemblies =
     [
         typeof(Form).Assembly,
@@ -40,14 +49,22 @@ internal static class TypeResolver
     private static readonly ConcurrentDictionary<string, Type?> Cache = new(StringComparer.Ordinal);
 
     /// <summary>The type a name means, or <see langword="null"/> when it is not one the designer knows.</summary>
-    /// <param name="name">The name as the code writes it, with or without its namespace or <c>global::</c>.</param>
+    /// <param name="name">
+    /// The name as the code writes it, with or without its namespace or <c>global::</c> (Visual Basic's <c>Global.</c>);
+    /// a C# or Visual Basic keyword, such as <c>int</c> or <c>Integer</c>.
+    /// </param>
     public static Type? Resolve(string name)
     {
         ArgumentNullException.ThrowIfNull(name);
         return Cache.GetOrAdd(name, static written =>
         {
             var clean = written.Replace("global::", string.Empty, StringComparison.Ordinal).Replace(" ", string.Empty, StringComparison.Ordinal);
-            if (Keywords.TryGetValue(clean, out var keyword))
+            if (clean.StartsWith("Global.", StringComparison.OrdinalIgnoreCase))
+            {
+                clean = clean["Global.".Length..];
+            }
+
+            if (Keywords.TryGetValue(clean, out var keyword) || VisualBasicKeywords.TryGetValue(clean, out keyword))
             {
                 return keyword;
             }
@@ -91,6 +108,26 @@ internal static class TypeResolver
 
         // A project with implicit usings imports System, System.Drawing and System.Windows.Forms.
         return type.Namespace is "System" or "System.Drawing" or "System.Windows.Forms" ? name[(type.Namespace.Length + 1)..] : name;
+    }
+
+    /// <summary>
+    /// The name to write a type with in Visual Basic in a style: <c>Integer</c> for the types it has keywords for,
+    /// otherwise <c>Button</c> or <c>System.Windows.Forms.Button</c>.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <param name="fullNames">Whether types are written with their namespace.</param>
+    public static string VisualBasicNameOf(Type type, bool fullNames)
+    {
+        ArgumentNullException.ThrowIfNull(type);
+        foreach (var (keyword, keywordType) in VisualBasicKeywords)
+        {
+            if (keywordType == type)
+            {
+                return keyword;
+            }
+        }
+
+        return NameOf(type, fullNames);
     }
 
     private static Type? Find(string fullName)

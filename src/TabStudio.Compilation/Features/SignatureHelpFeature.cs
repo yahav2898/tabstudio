@@ -6,15 +6,21 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace TabStudio.Compilation.Features;
 
 /// <summary>
-/// Signature help: the parameter list of the method, constructor, indexer or attribute the caret is in, with the
-/// argument being typed highlighted.
+/// Signature help (Parameter Info): the parameter list of the method, constructor, indexer or attribute the caret is
+/// in, with the argument being typed highlighted.
 /// </summary>
 /// <remarks>
+/// <para>
 /// Roslyn's own signature help services are internal, so this works from the semantic model: it finds the
 /// innermost argument list around the caret, the overloads that can be called there, and the overload that best
 /// matches the arguments typed so far.
+/// </para>
+/// <para>
+/// C# and Visual Basic files are both served, each shown in its own syntax: <c>string Greeter.Greet(string name)</c>
+/// and <c>Greeter.Greet(name As String) As String</c>.
+/// </para>
 /// </remarks>
-public sealed class SignatureHelpFeature
+public sealed partial class SignatureHelpFeature
 {
     private const SymbolDisplayMiscellaneousOptions MiscellaneousOptions =
         SymbolDisplayMiscellaneousOptions.UseSpecialTypes
@@ -61,7 +67,8 @@ public sealed class SignatureHelpFeature
         }
 
         var caret = Math.Clamp(position, 0, root.FullSpan.End);
-        if (FindCallSite(root, caret) is not { } site)
+        var site = root.Language == LanguageNames.VisualBasic ? FindVisualBasicCallSite(root, caret) : FindCallSite(root, caret);
+        if (site is null)
         {
             return null;
         }
@@ -83,7 +90,9 @@ public sealed class SignatureHelpFeature
 
         var active = ChooseActive(ordered, resolved, site, model, cancellationToken);
         var items = ordered
-            .Select(c => CreateItem(c, model, caret, argumentIndex, argumentName, cancellationToken))
+            .Select(c => model.Language == LanguageNames.VisualBasic
+                ? CreateVisualBasicItem(c, model, caret, argumentIndex, argumentName, site.NameComparison, cancellationToken)
+                : CreateItem(c, model, caret, argumentIndex, argumentName, cancellationToken))
             .ToList();
 
         return new SignatureHelpResult(items, active, argumentIndex, argumentName, site.SpanStart, site.SpanLength);
@@ -195,7 +204,9 @@ public sealed class SignatureHelpFeature
             }
 
             default:
-                return ([], null);
+                return owner.Language == LanguageNames.VisualBasic
+                    ? GetVisualBasicCandidates(model, owner, position, cancellationToken)
+                    : ([], null);
         }
     }
 
@@ -263,7 +274,7 @@ public sealed class SignatureHelpFeature
         {
             var argument = site.Arguments[i];
             var parameter = argument.Name is { } name
-                ? parameters.FirstOrDefault(p => p.Name == name)
+                ? parameters.FirstOrDefault(p => string.Equals(p.Name, name, site.NameComparison))
                 : i < parameters.Length ? parameters[i] : isVariadic ? parameters[^1] : null;
             if (parameter is null)
             {
@@ -285,8 +296,8 @@ public sealed class SignatureHelpFeature
         return score;
     }
 
-    private static bool Fits(SemanticModel model, ExpressionSyntax expression, ITypeSymbol type) =>
-        model.ClassifyConversion(expression, type).IsImplicit;
+    private static bool Fits(SemanticModel model, SyntaxNode expression, ITypeSymbol type) =>
+        expression is ExpressionSyntax csharp ? model.ClassifyConversion(csharp, type).IsImplicit : FitsVisualBasic(model, expression, type);
 
     private static SignatureItem CreateItem(ISymbol symbol, SemanticModel model, int position, int argumentIndex, string? argumentName, CancellationToken cancellationToken)
     {
@@ -331,20 +342,20 @@ public sealed class SignatureHelpFeature
             parameterItems,
             [new TaggedRun(close, TaggedTextKind.Punctuation)],
             documentation.Summary,
-            ActiveParameterOf(parameters, argumentIndex, argumentName),
+            ActiveParameterOf(parameters, argumentIndex, argumentName, StringComparison.Ordinal),
             parameters.Length > 0 && parameters[^1].IsParams);
     }
 
     private static List<TaggedRun> Display(ISymbol symbol, SemanticModel model, int position, SymbolDisplayFormat format) =>
         TaggedTextMapper.Map(symbol.ToMinimalDisplayParts(model, position, format));
 
-    private static int ActiveParameterOf(ImmutableArray<IParameterSymbol> parameters, int argumentIndex, string? argumentName)
+    private static int ActiveParameterOf(ImmutableArray<IParameterSymbol> parameters, int argumentIndex, string? argumentName, StringComparison nameComparison)
     {
         if (argumentName is not null)
         {
             for (var i = 0; i < parameters.Length; i++)
             {
-                if (parameters[i].Name == argumentName)
+                if (string.Equals(parameters[i].Name, argumentName, nameComparison))
                 {
                     return i;
                 }
@@ -363,12 +374,18 @@ public sealed class SignatureHelpFeature
 
     /// <summary>An argument as typed so far.</summary>
     /// <param name="Name">Its name, for a named argument.</param>
-    /// <param name="Expression">Its expression, which is missing while the argument is still empty.</param>
-    private sealed record CallArgument(string? Name, ExpressionSyntax? Expression);
+    /// <param name="Expression">
+    /// Its expression, which is missing while the argument is still empty, or <see langword="null"/> for an argument
+    /// Visual Basic leaves out, such as the first in <c>Format(, 2)</c>.
+    /// </param>
+    private sealed record CallArgument(string? Name, SyntaxNode? Expression);
 
     /// <summary>An argument list and the invocation, creation, indexer access or attribute it belongs to.</summary>
     private sealed record CallSite(SyntaxNode Owner, List<CallArgument> Arguments, List<SyntaxToken> Separators, int SpanStart, int SpanLength)
     {
+        /// <summary>How argument names match parameter names: exactly in C#, ignoring case in Visual Basic.</summary>
+        public StringComparison NameComparison { get; init; } = StringComparison.Ordinal;
+
         public static CallSite Create(SyntaxNode owner, SyntaxToken open, SyntaxToken close, IEnumerable<SyntaxToken> separators, IEnumerable<CallArgument> arguments)
         {
             var start = open.Span.End;

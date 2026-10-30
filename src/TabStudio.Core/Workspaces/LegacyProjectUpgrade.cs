@@ -173,6 +173,9 @@ public static class LegacyProjectUpgrader
         private readonly List<XElement> _conditionalGroups = [];
         private readonly HashSet<string> _listed = new(StringComparer.OrdinalIgnoreCase);
         private readonly bool _usesWpf = IsTrue(project.GetProperty("UseWPF"));
+
+        /// <summary>The project's source files: <c>.vb</c> in a <c>.vbproj</c>, <c>.cs</c> otherwise.</summary>
+        private readonly string _sourceExtension = project.FilePath.EndsWith(".vbproj", StringComparison.OrdinalIgnoreCase) ? ".vb" : ".cs";
         private readonly bool _usesWindowsForms = IsTrue(project.GetProperty("UseWindowsForms"))
             || project.AssemblyReferences.Any(r => string.Equals(r.Name, "System.Windows.Forms", StringComparison.OrdinalIgnoreCase));
 
@@ -254,7 +257,7 @@ public static class LegacyProjectUpgrader
             if (HasAssemblyInfo())
             {
                 properties.Add(new XElement("GenerateAssemblyInfo", "false"));
-                _notes.Add("Properties/AssemblyInfo.cs stays, so the SDK does not generate the assembly attributes it already has (GenerateAssemblyInfo is false).");
+                _notes.Add((_sourceExtension == ".vb" ? "My Project/AssemblyInfo.vb" : "Properties/AssemblyInfo.cs") + " stays, so the SDK does not generate the assembly attributes it already has (GenerateAssemblyInfo is false).");
             }
 
             if (_customApplicationDefinition)
@@ -382,7 +385,7 @@ public static class LegacyProjectUpgrader
             var extension = Path.GetExtension(full);
             var isDefault = inFolder && !hasLink && !isWildcard && type switch
             {
-                "Compile" => string.Equals(extension, ".cs", StringComparison.OrdinalIgnoreCase),
+                "Compile" => string.Equals(extension, _sourceExtension, StringComparison.OrdinalIgnoreCase),
                 "EmbeddedResource" => string.Equals(extension, ".resx", StringComparison.OrdinalIgnoreCase),
                 "Page" => _usesWpf && string.Equals(extension, ".xaml", StringComparison.OrdinalIgnoreCase),
                 "ApplicationDefinition" => _usesWpf && string.Equals(Path.GetFileName(full), "App.xaml", StringComparison.OrdinalIgnoreCase)
@@ -431,7 +434,7 @@ public static class LegacyProjectUpgrader
                     .Select(p => Path.GetDirectoryName(p)! + Path.DirectorySeparatorChar)
                     .ToList()
                 : [];
-            var checks = new List<(string Type, string Extension)> { ("Compile", ".cs"), ("EmbeddedResource", ".resx") };
+            var checks = new List<(string Type, string Extension)> { ("Compile", _sourceExtension), ("EmbeddedResource", ".resx") };
             if (_usesWpf)
             {
                 checks.Add(("Page", ".xaml"));
@@ -474,7 +477,7 @@ public static class LegacyProjectUpgrader
         }
 
         private bool HasAssemblyInfo() =>
-            project.CompileIncludes.Any(c => string.Equals(Path.GetFileName(c.Replace('\\', '/')), "AssemblyInfo.cs", StringComparison.OrdinalIgnoreCase));
+            project.CompileIncludes.Any(c => string.Equals(Path.GetFileName(c.Replace('\\', '/')), "AssemblyInfo" + _sourceExtension, StringComparison.OrdinalIgnoreCase));
 
         /// <summary>Whether a property of a configuration's group is worth keeping: not one the SDK sets itself.</summary>
         private static bool KeepsConditionalProperty(XElement property)
@@ -519,11 +522,14 @@ public static class LegacyProjectUpgrader
         {
             var name = Path.GetFileName(file);
             var parent = Path.GetFileName(dependentUpon.Replace('\\', '/'));
-            var stem = name.EndsWith(".Designer.cs", StringComparison.OrdinalIgnoreCase) ? name[..^".Designer.cs".Length] : Path.GetFileNameWithoutExtension(name);
+            // Form1.Designer.vb under Form1.vb in a Visual Basic project, as Form1.Designer.cs under Form1.cs.
+            var source = name.EndsWith(".vb", StringComparison.OrdinalIgnoreCase) || parent.EndsWith(".vb", StringComparison.OrdinalIgnoreCase) ? ".vb" : ".cs";
+            var designer = ".Designer" + source;
+            var stem = name.EndsWith(designer, StringComparison.OrdinalIgnoreCase) ? name[..^designer.Length] : Path.GetFileNameWithoutExtension(name);
 
             // MainWindow.xaml.cs under MainWindow.xaml, as Visual Studio nests code-behind by its name.
-            return string.Equals(parent, stem + ".cs", StringComparison.OrdinalIgnoreCase)
-                || (name.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) && string.Equals(parent, name[..^3], StringComparison.OrdinalIgnoreCase));
+            return string.Equals(parent, stem + source, StringComparison.OrdinalIgnoreCase)
+                || (name.EndsWith(source, StringComparison.OrdinalIgnoreCase) && string.Equals(parent, name[..^3], StringComparison.OrdinalIgnoreCase));
         }
 
         private static XElement WithCondition(XElement item, string condition)

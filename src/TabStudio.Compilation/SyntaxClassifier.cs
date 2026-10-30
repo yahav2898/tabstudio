@@ -7,17 +7,49 @@ using Microsoft.CodeAnalysis.Text;
 namespace TabStudio.Compilation;
 
 /// <summary>
-/// Colors C# from its syntax alone: keywords, literals, comments and preprocessor directives.
+/// Colors C# and Visual Basic from their syntax alone: keywords, literals, comments and preprocessor directives.
 /// </summary>
 /// <remarks>
 /// Parsing takes a few milliseconds even for a large file, so the editor uses this to color a file the
 /// moment it opens. The semantic classification from <see cref="RoslynWorkspaceHost.GetClassificationsAsync"/>,
 /// which also knows which identifiers are types, methods or locals, replaces it as soon as it is ready.
-/// The classification names are Roslyn's, so both passes share one color table.
+/// The classification names are Roslyn's, so both passes share one color table. Use
+/// <see cref="ClassifyFile"/> when the language follows from the file name.
 /// </remarks>
-public static class SyntaxClassifier
+public static partial class SyntaxClassifier
 {
     private static readonly CSharpParseOptions ParseOptions = CSharpCompiler.CreateParseOptions();
+
+    /// <summary>
+    /// Classifies a whole source text by the language of its file: Visual Basic for a <c>.vb</c> file, C# for
+    /// anything else.
+    /// </summary>
+    /// <param name="filePath">The file's path or name; only its extension is read.</param>
+    /// <param name="text">The source text.</param>
+    /// <param name="cancellationToken">Cancels the work.</param>
+    /// <returns>Ranges in document order. Plain identifiers, operators and punctuation are not reported.</returns>
+    public static IReadOnlyList<ClassifiedRange> ClassifyFile(string filePath, string text, CancellationToken cancellationToken = default) =>
+        Classify(text, LanguageOf(filePath), cancellationToken);
+
+    /// <summary>Classifies a whole source text in a given language.</summary>
+    /// <param name="text">The source text.</param>
+    /// <param name="language">
+    /// <see cref="LanguageNames.CSharp"/> or <see cref="LanguageNames.VisualBasic"/>; any other value classifies as C#.
+    /// </param>
+    /// <param name="cancellationToken">Cancels the work.</param>
+    /// <returns>Ranges in document order. Plain identifiers, operators and punctuation are not reported.</returns>
+    public static IReadOnlyList<ClassifiedRange> Classify(string text, string language, CancellationToken cancellationToken = default) =>
+        string.Equals(language, LanguageNames.VisualBasic, StringComparison.Ordinal)
+            ? ClassifyVisualBasic(text, cancellationToken)
+            : Classify(text, cancellationToken);
+
+    /// <summary>The Roslyn language of a source file: <see cref="LanguageNames.VisualBasic"/> for <c>.vb</c>, else <see cref="LanguageNames.CSharp"/>.</summary>
+    /// <param name="filePath">The file's path or name.</param>
+    public static string LanguageOf(string filePath)
+    {
+        ArgumentNullException.ThrowIfNull(filePath);
+        return VisualBasic.VisualBasicCompiler.IsSource(filePath) ? LanguageNames.VisualBasic : LanguageNames.CSharp;
+    }
 
     /// <summary>Classifies a whole C# source text.</summary>
     /// <param name="text">The source text.</param>

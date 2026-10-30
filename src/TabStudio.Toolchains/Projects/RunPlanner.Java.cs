@@ -17,8 +17,11 @@ public static partial class RunPlanner
             // The program's runtime classpath, as Gradle's runtimeClasspath: test-scoped dependencies, such as
             // spring-boot-docker-compose in spring-petclinic, would change what the app does when it starts.
             var classpath = Path.Combine(project.Directory, "target", "classes") + Path.PathSeparator + Path.Combine(project.Directory, "target", "dependency", "*");
+            string[] build = JavaProject.MayHaveRuntimeDependencies(Path.Combine(project.Directory, "pom.xml"))
+                ? [.. MavenPackage, "org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies", "-DincludeScope=runtime"]
+                : [.. MavenPackage];
             return new(
-                Spec(project, ["mvn", "-B", "-Dstyle.color=never", "-DskipTests", "package", "org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies", "-DincludeScope=runtime"], variables),
+                Spec(project, build, variables),
                 Spec(project, ["java", "-cp", classpath, JavaProject.ClassName(source)], variables), "pom.xml");
         }
 
@@ -35,6 +38,13 @@ public static partial class RunPlanner
 
         return PlanJavaFile(project, source);
     }
+
+    /// <summary>
+    /// Maven's package build. A download Maven Central answers with 429 or 503, as it does to busy networks, is retried
+    /// with a back-off five times rather than the resolver's three, before the build gives up.
+    /// </summary>
+    private static readonly string[] MavenPackage =
+        ["mvn", "-B", "-Dstyle.color=never", "-Daether.connector.http.retryHandler.count=5", "-DskipTests", "package"];
 
     private static RunPlan PlanJavaFile(ToolchainProject project, string file)
     {

@@ -10,8 +10,9 @@ namespace TabStudio.Android;
 /// <summary>
 /// System notifications on Android, in a "GitHub Actions" channel: a run that finished while TabStudio was in the
 /// background. Tapping one brings TabStudio back and opens the run. Long operations, such as an SDK download that runs
-/// on in the background, have a quiet "Long operations" channel with a progress bar. On Android 13 and later the user is asked
-/// for the POST_NOTIFICATIONS permission the first time they turn notifications on.
+/// on in the background, have a quiet "Long operations" channel with a progress bar: the ongoing notification of the
+/// <see cref="OperationsService"/> that keeps TabStudio running while they do, and one that says how each ended. On
+/// Android 13 and later the user is asked for the POST_NOTIFICATIONS permission the first time they turn notifications on.
 /// </summary>
 internal sealed class AndroidNotifications : INotifications
 {
@@ -31,6 +32,9 @@ internal sealed class AndroidNotifications : INotifications
 
     private readonly Context _context;
     private readonly Func<Activity?> _activity;
+
+    /// <summary>The ongoing notification of the running operations, which <see cref="OperationsService"/> shows; none when nothing runs.</summary>
+    internal static Notification? Running { get; private set; }
 
     /// <summary>Creates the notifications and their channel.</summary>
     /// <param name="context">The application context.</param>
@@ -145,6 +149,66 @@ internal sealed class AndroidNotifications : INotifications
 
         var built = builder.Build();
         manager.Notify(notification.Tag, 1, built);
+    }
+
+    /// <inheritdoc />
+    public bool KeepsRunning => true;
+
+    /// <inheritdoc />
+    public void KeepRunning(SystemNotification? progress)
+    {
+        if (progress is null)
+        {
+            Running = null;
+            OperationsService.Current?.Stop();
+            return;
+        }
+
+        Running = BuildRunning(_context, progress.Title, progress.Text, progress.ProgressPercent);
+        if (OperationsService.Current is not null)
+        {
+            // The service's notification follows the progress; it shows without the permission's prompt as well.
+            (_context.GetSystemService(Context.NotificationService) as NotificationManager)?.Notify(OperationsService.NotificationId, Running);
+            return;
+        }
+
+        try
+        {
+            // Operations begin while the user is in TabStudio, which is when Android lets a foreground service start.
+            _context.StartForegroundService(new Intent(_context, typeof(OperationsService)));
+        }
+        catch (Java.Lang.IllegalStateException)
+        {
+            // Android 12 and later refuse to start one from the background (ForegroundServiceStartNotAllowedException):
+            // the operation runs as long as Android lets TabStudio run, as before.
+        }
+        catch (Java.Lang.SecurityException)
+        {
+            // The foreground service permissions are in the manifest; a device that refuses them runs as before.
+        }
+    }
+
+    /// <summary>The ongoing notification of running operations: quiet, with a progress bar, opening TabStudio's operations when tapped.</summary>
+    /// <param name="context">A context.</param>
+    /// <param name="title">The newest operation, such as "Installing Python (+1 more)".</param>
+    /// <param name="text">Its stage and numbers.</param>
+    /// <param name="percent">How much of it is done, or <see langword="null"/> for a bar without numbers.</param>
+    internal static Notification BuildRunning(Context context, string title, string text, int? percent)
+    {
+        var open = new Intent(context, typeof(MainActivity))
+            .SetFlags(ActivityFlags.SingleTop | ActivityFlags.ClearTop)
+            .PutExtra(TagExtra, "operation:running");
+        var pending = PendingIntent.GetActivity(context, OperationsService.NotificationId, open, PendingIntentFlags.Immutable | PendingIntentFlags.UpdateCurrent);
+        return new Notification.Builder(context, OperationsChannelId)
+            .SetSmallIcon(Resource.Drawable.ic_stat_tabstudio)
+            .SetContentTitle(title)
+            .SetContentText(text)
+            .SetCategory(Notification.CategoryProgress)
+            .SetContentIntent(pending)
+            .SetOngoing(true)
+            .SetOnlyAlertOnce(true)
+            .SetProgress(100, percent ?? 0, percent is null)
+            .Build()!;
     }
 
     /// <summary>Opens what a tapped notification is about, when the activity was started or brought back by one.</summary>

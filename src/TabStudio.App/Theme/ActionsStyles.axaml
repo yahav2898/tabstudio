@@ -6,8 +6,8 @@
     Styles of the GitHub Actions window, the CI status bar item and job logs.
   -->
 
-  <!-- A running run's, job's or check's icon turns, as on GitHub. -->
-  <Style Selector="controls|StrokeIcon.spinning">
+  <!-- A running run's, job's or check's icon turns, as on GitHub; not while it is hidden (Theming/HiddenAnimations). -->
+  <Style Selector="controls|StrokeIcon.spinning:not(.offscreen)">
     <Style.Animations>
       <Animation Duration="0:0:1.1" IterationCount="INFINITE">
         <KeyFrame Cue="0%">
@@ -20,12 +20,11 @@
     </Style.Animations>
   </Style>
 
-  <!-- A section of the GitHub Actions window: its heading. -->
+  <!-- A section of the GitHub Actions window: its heading, in sentence case as the design's Section role. -->
   <Style Selector="TextBlock.section">
-    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontSize" Value="13" />
     <Setter Property="FontWeight" Value="SemiBold" />
     <Setter Property="Foreground" Value="{DynamicResource Brush.TextLabel}" />
-    <Setter Property="LetterSpacing" Value="0.4" />
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
 

@@ -71,6 +71,25 @@ internal sealed class AnalyzerLoader : IAnalyzerAssemblyLoader
         return _contexts.GetOrAdd(folder, f => new FolderContext(this, f));
     }
 
+    /// <summary>
+    /// Whether an assembly is one an analyzer must share with TabStudio rather than load its own copy of: the compiler
+    /// and the libraries its API exposes, so that a generator runs inside the Roslyn that hosts it.
+    /// </summary>
+    /// <param name="name">The simple assembly name.</param>
+    internal static bool IsHostAssembly(string name) =>
+        name.StartsWith("Microsoft.CodeAnalysis", StringComparison.Ordinal) || IsCompilerAssembly(name);
+
+    /// <summary>
+    /// The compiler's own assemblies and the libraries in its API, which an analyzer must share with the compiler that
+    /// runs it. Another assembly named Microsoft.CodeAnalysis.*, such as Microsoft.CodeAnalysis.ResxSourceGenerator, may
+    /// be a package's own.
+    /// </summary>
+    /// <param name="name">The simple assembly name.</param>
+    internal static bool IsCompilerAssembly(string name) =>
+        name is "Microsoft.CodeAnalysis" or "Microsoft.CodeAnalysis.CSharp" or "Microsoft.CodeAnalysis.VisualBasic"
+            or "Microsoft.CodeAnalysis.Workspaces" or "Microsoft.CodeAnalysis.CSharp.Workspaces" or "Microsoft.CodeAnalysis.VisualBasic.Workspaces"
+            or "System.Collections.Immutable" or "System.Reflection.Metadata" or "netstandard";
+
     /// <summary>The analyzers of one folder, and the libraries next to them.</summary>
     private sealed class FolderContext(AnalyzerLoader owner, string folder) : AssemblyLoadContext($"TabStudio analyzers: {folder}")
     {
@@ -88,13 +107,20 @@ internal sealed class AnalyzerLoader : IAnalyzerAssemblyLoader
 
         protected override Assembly? Load(AssemblyName assemblyName)
         {
-            // The compiler and the libraries it shares with analyzers come from TabStudio itself.
-            if (assemblyName.Name is not { } name || IsHostAssembly(name))
+            if (assemblyName.Name is not { } name)
             {
                 return null;
             }
 
+            // The compiler and the libraries it shares with analyzers come from TabStudio itself. Another assembly
+            // named Microsoft.CodeAnalysis.*, such as Microsoft.CodeAnalysis.ResxSourceGenerator beside its C#
+            // generator, is the package's own and comes from its folder.
             var candidate = Path.Combine(folder, name + ".dll");
+            if (IsCompilerAssembly(name) || (IsHostAssembly(name) && !File.Exists(candidate)))
+            {
+                return null;
+            }
+
             if (File.Exists(candidate))
             {
                 return LoadFromAssemblyPath(candidate);
@@ -103,9 +129,5 @@ internal sealed class AnalyzerLoader : IAnalyzerAssemblyLoader
             // Loaded in its own folder's context, so every analyzer that uses it shares the same types.
             return owner.FindDependency(name, folder) is { } other ? owner.ContextFor(other).Load(other) : null;
         }
-
-        private static bool IsHostAssembly(string name) =>
-            name.StartsWith("Microsoft.CodeAnalysis", StringComparison.Ordinal)
-            || name is "System.Collections.Immutable" or "System.Reflection.Metadata" or "netstandard";
     }
 }

@@ -152,6 +152,7 @@ public sealed partial class GitChangesViewModel
     /// <summary>Pulls GitHub's commits into the folder and brings open documents and the workspace up to date.</summary>
     private Task<bool> PullCoreAsync() => RunAsync(async (sync, progress, token) =>
     {
+        var before = await _host.CaptureDocumentsAsync();
         var result = await sync.PullAsync(progress, token);
         IncomingCommits = 0;
         if (result.WasUpToDate)
@@ -159,16 +160,25 @@ public sealed partial class GitChangesViewModel
             return $"Already up to date with {sync.Link.Branch} on GitHub.";
         }
 
-        await _host.ReloadDocumentsAsync(FullPaths(result.Updated.Concat(result.Conflicts)));
+        var typedConflicts = await _host.ReloadDocumentsAsync(FullPaths(result.Updated.Concat(result.Conflicts)), before);
         await _host.ReloadWorkspaceAsync();
         var files = result.Updated.Count == 1 ? "1 file" : $"{result.Updated.Count.ToString(CultureInfo.CurrentCulture)} files";
-        return result.Conflicts.Count switch
+        var message = result.Conflicts.Count switch
         {
             0 => $"Pulled {sync.Link.Branch} from GitHub: {files} updated.",
             1 => $"Pulled {sync.Link.Branch} from GitHub. 1 file has conflicting changes: resolve it under Merge Conflicts.",
             var count => $"Pulled {sync.Link.Branch} from GitHub. {count.ToString(CultureInfo.CurrentCulture)} files have conflicting changes: resolve them under Merge Conflicts.",
         };
+        return message + TypedEditsNote(typedConflicts);
     });
+
+    /// <summary>The sentence a Git operation's message ends with when edits typed while it ran conflict with it.</summary>
+    private static string TypedEditsNote(int conflicts) => conflicts switch
+    {
+        0 => string.Empty,
+        1 => " What you typed meanwhile conflicts with it in 1 open document: look for <<<<<<< Yours, keep what you want and save.",
+        _ => $" What you typed meanwhile conflicts with it in {conflicts.ToString(CultureInfo.CurrentCulture)} open documents: look for <<<<<<< Yours, keep what you want and save.",
+    };
 
     private bool CanUseGitHub() => IsLinked && !IsBusy;
 

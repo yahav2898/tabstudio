@@ -39,7 +39,7 @@ public sealed class RealRepositoryTests
         var only = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_ONLY")?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         foreach (var repository in manifest["repositories"]!.AsArray().Where(r => only is null || only.Contains(r!["name"]!.GetValue<string>(), StringComparer.OrdinalIgnoreCase)))
         {
-            // Python, Java and Rust repositories run in the test below.
+            // Python, Java, Rust, Node.js, PHP, Kotlin and Swift repositories run in the test below.
             if (repository!["toolchain"] is not null)
             {
                 continue;
@@ -94,7 +94,7 @@ public sealed class RealRepositoryTests
     }
 
     /// <summary>
-    /// Opens the pinned Python, Java, Rust and Node.js repositories as a person would: the project setup installs their
+    /// Opens the pinned Python, Java, Rust, Node.js, PHP, Kotlin and Swift repositories as a person would: the project setup installs their
     /// toolchains' packages, and Ctrl+F5 builds and runs the startup project. A web app must answer its first page
     /// in the web preview; a command-line program must exit with code 0. Each repository's report has the setup
     /// log, the Output panel and screenshots.
@@ -127,18 +127,32 @@ public sealed class RealRepositoryTests
                 repository["web"]?.GetValue<string>(),
                 repository["expect"]?.GetValue<string>());
             var report = new StringBuilder().AppendLine(CultureInfo.InvariantCulture, $"{name} at {repository["sha"]!.GetValue<string>()}");
+
+            // The app's folder in the repository, such as next-learn's dashboard/final-example.
+            var folder = Path.Combine(clones, name, (repository["folder"]?.GetValue<string>() ?? ".").Replace('/', Path.DirectorySeparatorChar));
+            if (repository["services"]?.GetValue<string>() == "job")
+            {
+                // The job's service containers stand in for the repository's Compose services, which run natively on a
+                // tablet: its Compose file is set aside, so the run uses the .env below.
+                foreach (var compose in new[] { "docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml" }.Select(f => Path.Combine(folder, f)).Where(File.Exists))
+                {
+                    File.Move(compose, compose + ".job", overwrite: true);
+                    report.AppendLine(CultureInfo.InvariantCulture, $"Set aside {Path.GetFileName(compose)}: the job's containers serve its databases.");
+                }
+            }
+
             if (repository["dotenv"] is JsonObject dotenv)
             {
                 // The variables the repository's README asks a person to put in .env.
                 var lines = dotenv.Select(pair => $"{pair.Key}={pair.Value!.GetValue<string>()}");
-                await File.WriteAllLinesAsync(Path.Combine(clones, name, ".env"), lines);
+                await File.WriteAllLinesAsync(Path.Combine(folder, ".env"), lines);
                 report.AppendLine(CultureInfo.InvariantCulture, $".env: {string.Join(", ", dotenv.Select(pair => pair.Key))}");
             }
 
             RunOutcome outcome;
             try
             {
-                outcome = await OpenAndRunAsync(Path.Combine(clones, name), name, expected, report);
+                outcome = await OpenAndRunAsync(folder, name, expected, report);
             }
             catch (Exception ex) when (ex is not OutOfMemoryException)
             {
@@ -267,6 +281,9 @@ public sealed class RealRepositoryTests
                 report.AppendLine(CultureInfo.InvariantCulture, $"GET {address}: {(int)response.StatusCode} {response.ReasonPhrase}, {body.Length} characters");
                 if ((int)response.StatusCode >= 500)
                 {
+                    // The error page's title and start, such as a Laravel exception's message, for the report.
+                    var title = System.Text.RegularExpressions.Regex.Match(body, "<title>(.*?)</title>", System.Text.RegularExpressions.RegexOptions.Singleline).Groups[1].Value.Trim();
+                    report.AppendLine(CultureInfo.InvariantCulture, $"Error page: {title}\n{(body.Length > 2000 ? body[..2000] : body)}");
                     return $"{address} answered {(int)response.StatusCode}";
                 }
 

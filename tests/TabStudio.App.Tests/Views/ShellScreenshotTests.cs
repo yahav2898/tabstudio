@@ -146,6 +146,20 @@ public sealed class ShellScreenshotTests : IDisposable
         Assert.NotEqual(AdaptiveMode.Overflow, status.ModeOf(caret));
         AssertInWindow(window, caret);
 
+        // With Output selected, its picker leaves the tabs room: the selected tab and Hide stay on the screen.
+        workspace.SelectPanelCommand.Execute(BottomPanel.Output);
+        await UiTestHelpers.WaitUntilAsync(() => true);
+        var tabs = Named<StackPanel>(window, "BottomTabs");
+        var output = tabs.Children.OfType<Button>().Single(tab => tab.Classes.Contains("selected"));
+        Assert.Equal("Output", output.Content);
+        AssertInWindow(window, output, Named<Button>(window, "HideBottomPanelButton"));
+
+        // The Error List keeps its Description on a phone: its fixed columns used to leave it no width at all.
+        workspace.SelectPanelCommand.Execute(BottomPanel.ErrorList);
+        await UiTestHelpers.WaitUntilAsync(() => true);
+        var header = Named<Grid>(window, "HeaderColumns");
+        Assert.True(header.ColumnDefinitions[2].ActualWidth > 150, $"The Description column is {header.ColumnDefinitions[2].ActualWidth} pixels wide on a phone.");
+
         // The menus are all still there, in the Menu button, and the search still finds their commands.
         var menu = Assert.IsType<MenuFlyout>(Named<Button>(window, "MenuButton").Flyout);
         Assert.Contains(menu.Items.OfType<MenuItem>(), item => item.Header as string == "_Debug");
@@ -193,6 +207,11 @@ public sealed class ShellScreenshotTests : IDisposable
         UiTestHelpers.SaveScreenshot(window, "shell-32-debugging-phone");
         Assert.NotEqual(AdaptiveMode.Overflow, toolbar.ModeOf(stop));
         AssertInWindow(window, toolbar, Named<Button>(window, "RunButton"), stop);
+
+        // On a phone Locals has the panel's width: the Call Stack beside it took a fixed 380 pixels and left it none.
+        Assert.True(workspace.IsLocalsSelected);
+        var locals = window.GetVisualDescendants().OfType<LocalsView>().Single(view => view.IsEffectivelyVisible);
+        Assert.True(locals.Bounds.Width > 200, $"Locals is {locals.Bounds.Width} pixels wide on a phone.");
 
         workspace.StopDebuggingCommand.Execute(null);
         await DebuggingTests.WaitForExitAsync(workspace);

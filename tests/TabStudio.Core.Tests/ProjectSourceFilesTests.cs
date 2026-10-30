@@ -71,6 +71,92 @@ public sealed class ProjectSourceFilesTests
     }
 
     [Fact]
+    public void A_compile_item_s_properties_are_expanded_as_msbuild_expands_them()
+    {
+        // Spectre.Console keeps its generators' output in Generated/ and removes it from compilation by a property.
+        using var temp = new TempDirectory();
+        temp.Write("App/App.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+                <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+                <SharedFolder>$(MSBuildProjectDirectory)/../Shared</SharedFolder>
+              </PropertyGroup>
+              <ItemGroup>
+                <Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
+                <Compile Include="$(SharedFolder)/Helpers.cs" />
+                <Compile Remove="$(NotSetAnywhere)/**/*.cs" />
+              </ItemGroup>
+            </Project>
+            """);
+        temp.Write("App/Program.cs");
+        temp.Write("App/Generated/Gen/Color.g.cs");
+        temp.Write("Shared/Helpers.cs");
+        var project = ProjectParser.Load(temp.Resolve("App/App.csproj"));
+
+        var files = ProjectSourceFiles.Enumerate(project);
+
+        // A property nothing sets removes nothing, rather than every file.
+        Assert.Equal(new[] { temp.Resolve("App/Program.cs"), temp.Resolve("Shared/Helpers.cs") }, files);
+    }
+
+    [Fact]
+    public void An_explicit_include_into_another_project_s_folder_gets_its_nested_files_less_its_Exclude()
+    {
+        // Dock.Model.ReactiveUI.v11 compiles the sources of Dock.Model.ReactiveUI, a project of the same workspace.
+        using var temp = new TempDirectory();
+        temp.Write("src/Model/Model.csproj", "<Project Sdk=\"Microsoft.NET.Sdk\" />");
+        temp.Write("src/Model/Factory.cs");
+        temp.Write("src/Model/Controls/Tool.cs");
+        temp.Write("src/Model/Core/Deep/DockBase.cs");
+        temp.Write("src/Model/obj/Debug/Model.AssemblyInfo.cs");
+        temp.Write("src/Model/bin/Generated.cs");
+        temp.Write("src/Model/Legacy/Old.cs");
+        temp.Write("src/Model.v11/Model.v11.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <ItemGroup>
+                <Compile Include="..\Model\**\*.cs" Exclude="..\Model\Legacy\**">
+                  <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+                </Compile>
+              </ItemGroup>
+            </Project>
+            """);
+        temp.Write("src/Model.v11/Extra.cs");
+        var project = ProjectParser.Load(temp.Resolve("src/Model.v11/Model.v11.csproj"));
+
+        var files = ProjectSourceFiles.Enumerate(project, [temp.Resolve("src/Model"), temp.Resolve("src/Model.v11")]);
+
+        Assert.Equal(
+            new[]
+            {
+                temp.Resolve("src/Model.v11/Extra.cs"),
+                temp.Resolve("src/Model/Controls/Tool.cs"),
+                temp.Resolve("src/Model/Core/Deep/DockBase.cs"),
+                temp.Resolve("src/Model/Factory.cs"),
+            },
+            files);
+    }
+
+    [Fact]
+    public void The_default_items_still_leave_out_a_nested_project_s_folder()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("App/App.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk"><ItemGroup><Compile Include="..\Shared\*.cs" Exclude="..\Shared\Skip.cs" /></ItemGroup></Project>
+            """);
+        temp.Write("App/Program.cs");
+        temp.Write("App/Nested/Nested.csproj");
+        temp.Write("App/Nested/Inner.cs");
+        temp.Write("Shared/Helpers.cs");
+        temp.Write("Shared/Skip.cs");
+        var project = ProjectParser.Load(temp.Resolve("App/App.csproj"));
+
+        var files = ProjectSourceFiles.Enumerate(project, [temp.Resolve("App/Nested")]);
+
+        Assert.Equal(new[] { temp.Resolve("App/Program.cs"), temp.Resolve("Shared/Helpers.cs") }, files);
+    }
+
+    [Fact]
     public void Disabling_default_items_keeps_only_explicit_includes()
     {
         using var temp = new TempDirectory();

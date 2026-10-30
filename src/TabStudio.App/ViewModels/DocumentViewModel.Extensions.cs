@@ -96,7 +96,7 @@ public sealed partial class DocumentViewModel
         _fileIconRead = false;
         OnPropertyChanged(nameof(FileIcon));
         OnPropertyChanged(nameof(HasFileIcon));
-        if (IsExtensionsPage || IsCiLog || IsComparison || IsNotebook || FileType.IsCSharp)
+        if (IsExtensionsPage || IsCiLog || IsComparison || IsNotebook || FileType.IsRoslyn)
         {
             return;
         }

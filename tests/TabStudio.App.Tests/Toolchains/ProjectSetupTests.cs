@@ -85,7 +85,10 @@ public sealed class ProjectSetupTests
         var workspace = fixture.Workspace;
 
         await workspace.LoadAsync(repo.Path);
+        // The person looks at the Error List while the packages install in the background: setup leaves it there.
+        workspace.SelectPanelCommand.Execute(BottomPanel.ErrorList);
         await UiTestHelpers.WaitUntilAsync(() => workspace.ProjectSetupTask.IsCompleted, SetupTimeout, "npm install");
+        Assert.Equal(BottomPanel.ErrorList, workspace.SelectedPanel);
 
         Assert.Contains($"------ Setting up {Path.GetFileName(repo.Path)}: npm install ------", workspace.Output.Text, StringComparison.Ordinal);
         Assert.Contains("npm install: succeeded", workspace.Output.Text, StringComparison.Ordinal);

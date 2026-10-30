@@ -45,6 +45,12 @@ public sealed class ConfigurationTests
         Assert.Equal("SHA256:first", new SshHostStore(temp.Path).Fingerprint(host));
         Assert.Throws<IOException>(() => store.Trust(host, "SHA256:second"));
         Assert.Null(store.Fingerprint(host with { Port = 2200 }));
+
+        // A reinstalled server: forgetting its key on purpose lets the user verify and trust the new one.
+        store.Forget(host);
+        Assert.Null(new SshHostStore(temp.Path).Fingerprint(host));
+        store.Trust(host, "SHA256:second");
+        Assert.Equal("SHA256:second", store.Fingerprint(host));
     }
 
     [Fact]

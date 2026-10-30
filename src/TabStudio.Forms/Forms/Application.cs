@@ -90,6 +90,19 @@ public sealed class Application
     /// <summary>The app's high-DPI mode.</summary>
     public static HighDpiMode HighDpiMode => HighDpiMode.SystemAware;
 
+    /// <summary>The color mode set with <see cref="SetColorMode"/>; Classic until then, as on Windows.</summary>
+    public static SystemColorMode ColorMode { get; private set; } = SystemColorMode.Classic;
+
+    /// <summary>The system's color mode. TabStudio draws Windows Forms apps in their classic light colors.</summary>
+    public static SystemColorMode SystemColorMode => SystemColorMode.Classic;
+
+    /// <summary>Whether the app is drawn in dark mode: never, as <see cref="SystemColorMode"/> is Classic.</summary>
+    public static bool IsDarkModeEnabled => false;
+
+    /// <summary>Sets the color mode the app asks for (.NET 9 and later); controls keep their classic colors.</summary>
+    /// <param name="systemColorMode">The mode.</param>
+    public static void SetColorMode(SystemColorMode systemColorMode) => ColorMode = systemColorMode;
+
     /// <summary>Whether every form shows the wait cursor.</summary>
     public static bool UseWaitCursor { get; set; }
 

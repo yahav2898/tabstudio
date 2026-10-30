@@ -219,6 +219,16 @@ public sealed partial class WorkspaceViewModel
                 }
             }
 
+            // A Laravel app's .env, application key and SQLite file, once its packages are there.
+            foreach (var project in projects.Where(p => p.Toolchain.Id == "php" && _toolchains.Manager.IsReady("php")))
+            {
+                token.ThrowIfCancellationRequested();
+                if (await SetUpLaravelAsync(project, token))
+                {
+                    installed.Add(project.Name);
+                }
+            }
+
             if (installed.Count > 0 && State is IdeState.Ready or IdeState.Failed)
             {
                 StatusText = $"Set up: {string.Join(", ", installed)}";
@@ -235,7 +245,8 @@ public sealed partial class WorkspaceViewModel
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
-            Output.WriteLine($"Project setup failed: {ex.Message}. Use Tools > Install Project Packages to retry.", OutputKind.Failure);
+            Output.WriteLine($"Project setup failed: {ex.Message.TrimEnd('.')}. Use Tools > Install Project Packages to retry.", OutputKind.Failure);
+            ShowSetupOutput();
         }
         finally
         {
@@ -272,7 +283,6 @@ public sealed partial class WorkspaceViewModel
     {
         if (BlockLocalToolchainActionForRemote()) return false;
         var manager = _toolchains.Manager;
-        ShowSetupOutput();
         Output.WriteLine($"------ Installing {toolchain.Name} from the Toolchain Store ------", OutputKind.Info);
         ProjectSetupText = $"Installing {toolchain.Name}";
         _setupToolchain = toolchain.Id;
@@ -317,19 +327,20 @@ public sealed partial class WorkspaceViewModel
         }
 
         Output.WriteLine($"========== {toolchain.Name}: not installed ({status.Error ?? status.Note ?? "the Toolchain Store could not install it"}) ==========", OutputKind.Failure);
+        ShowSetupOutput();
         return false;
     }
 
     private async Task<bool> InstallPackagesForSetupAsync(ToolchainProject project, DependencyInstallDefinition dependency, CancellationToken cancellationToken)
     {
         if (BlockLocalToolchainActionForRemote()) return false;
-        ShowSetupOutput();
         Output.WriteLine($"------ Setting up {project.Name}: {dependency.Name} ------", OutputKind.Info);
         ProjectSetupText = $"Setting up {project.Name}: {dependency.Name}";
         if (await RunDependencyInstallAsync(project, dependency, cancellationToken) is { } result)
         {
             cancellationToken.ThrowIfCancellationRequested();
             Output.WriteLine($"========== {dependency.Name}: failed ({result.Exit?.Description ?? result.StartError}) ==========", OutputKind.Failure);
+            ShowSetupOutput();
             return false;
         }
 
@@ -337,6 +348,11 @@ public sealed partial class WorkspaceViewModel
         return true;
     }
 
+    /// <summary>
+    /// Shows the setup's log when a step failed. Setup runs in the background as a project opens, with its progress in
+    /// the status bar, so it no longer switches the bottom panel at every step: a person who had chosen Logcat or the
+    /// Error List was moved to Output, and on a phone could not get back.
+    /// </summary>
     private void ShowSetupOutput()
     {
         SelectedPanel = BottomPanel.Output;

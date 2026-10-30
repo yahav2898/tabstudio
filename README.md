@@ -56,7 +56,7 @@ root, no companion installs and no cloud account. Your code builds and runs on t
 | | |
 | --- | --- |
 | **Familiar** | The Visual Studio layout and shortcuts, rebuilt for touch: Solution Explorer, Properties, Error List, Output, a big Run button. |
-| **Real tools** | The real C# compiler (Roslyn) in the app, and the official toolchains for Python, Node.js, Go, Rust, C/C++, Java and Dart. |
+| **Real tools** | The real C# and Visual Basic compiler (Roslyn) in the app, and the official toolchains for Python, Node.js, Go, Rust, C/C++, Java, Kotlin, PHP, Swift and Dart. |
 | **Every workload** | Console, ASP.NET Core and Blazor, Avalonia, Windows Forms, WPF and WinUI, and firmware for most microcontrollers, all from the tablet. |
 | **Yours** | Works offline, keeps your code on the device, and is open source under Apache-2.0. |
 
@@ -116,10 +116,21 @@ From there, try **New project** for a template in any language, **Open from GitH
 | **Rust** | Cargo, with workspace members | rust-analyzer | LLDB |
 | **C / C++** | CMake, Make or plain sources, with clang | clangd, from CMake's compilation database | LLDB |
 | **Java** | Maven, Gradle or plain sources, OpenJDK | Eclipse JDT LS | java-debug |
+| **Visual Basic** | Roslyn in the app, as C#: console, Windows Forms with `My`, class libraries | Roslyn: completion, signature help, Quick Info, navigation, rename, quick fixes | The C# debugger, Hot Reload and Live Unit Testing |
+| **PHP** | PHP 8.5 and Composer; Laravel, Symfony, Slim and plain sites in the web preview | Phpactor | Xdebug, through PHP Debug |
+| **Kotlin** | Gradle (Kotlin DSL) or Maven on OpenJDK, `kotlinc` for files and `.kts` scripts | JetBrains' Kotlin LSP | java-debug |
+| **Swift** (experimental) | SwiftPM and `swiftc`, from the official toolchain | sourcekit-lsp | LLDB |
 
 - **C# on the tablet.** NuGet packages restore on the device, so real projects build as they are. Test Explorer runs
   xUnit, NUnit and MSTest, and **Live Unit Testing** marks every covered line with a pass, fail or not-covered glyph
   and reruns the affected tests as you type. C# notebooks run cells as you write them.
+- **Visual Basic, like C#.** `.vbproj` projects compile in the app with the same IntelliSense, quick fixes,
+  navigation, debugger, Hot Reload and Live Unit Testing. `Microsoft.VisualBasic` and the `My` namespace work in
+  console and Windows Forms apps, including the Application Framework (`Application.myapp`, `My.Settings`,
+  `My.Resources`). Templates: Console App, Windows Forms App and Class Library (Visual Basic).
+- **Test Explorer beyond .NET.** Besides xUnit, NUnit and MSTest: pytest (Python), PHPUnit and Pest, JUnit through
+  Gradle or Maven (Kotlin and Java), and XCTest and Swift Testing through `swift test`, found in source and run with
+  each project's own runner. Go, Rust and JavaScript tests run from the terminal (`go test`, `cargo test`, `npm test`).
 - **C# Hot Reload and Edit and Continue (desktop build).** Tap **Hot Reload** or press **Alt+F10** to apply edits to
   a running console, Avalonia, ASP.NET Core or Blazor Server app without restarting, or let saving apply them. On
   Android, C# edits apply with a quick restart. See [Hot Reload](docs/ARCHITECTURE.md#hot-reload).
@@ -134,6 +145,14 @@ From there, try **New project** for a template in any language, **Open from GitH
   server or debug adapter is missing, the status bar, the editor and F5 offer to install it.
 - **More languages through extensions.** VS Code extensions from Open VSX bring grammars, snippets, themes and
   language settings for anything else.
+- **PHP and Laravel.** Opening a Laravel app runs `composer install`, creates `.env` and its key, and F5 applies the
+  migrations, builds the Vite assets and serves `php artisan serve` in the web preview, with the database `.env` names
+  offered in Services and Xdebug stopping in your controllers. See [PHP and Laravel](docs/features/laravel.md).
+- **Kotlin beyond Android.** Ktor and Spring Boot servers open in the web preview, console apps read their input in
+  the Output panel, and Kotlin breakpoints stop through the Java debugger. JetBrains' Kotlin language server is
+  proprietary freeware, shown with its licence before it installs.
+- **Swift (experimental).** The official Swift toolchain runs in a glibc environment beside Alpine: SwiftPM packages
+  and Vapor apps build, run, test and debug. See [status and limits](docs/features/swift.md).
 - **Flutter and Dart (experimental).** The Flutter toolchain runs in its own Linux environment. `pubspec.yaml`
   projects get `flutter pub get`, Dart IntelliSense and debugging, and the templates run in the web preview with hot
   restart. Deploying Flutter apps to Android is not verified yet. See [status and limits](docs/features/flutter.md).
@@ -155,6 +174,8 @@ From there, try **New project** for a template in any language, **Open from GitH
   `Form1.cs` opens in a touch designer: tap a tool and then the form, drag and resize controls on a grid, edit them in
   Properties, and double-tap a button to write its Click handler. The designer writes `Form1.Designer.cs` exactly as
   Visual Studio does. See [what the Forms layer supports](src/TabStudio.Forms/README.md).
+  `Form1.vb` designs the same way: the designer writes `Form1.Designer.vb` as Visual Studio does, and double-tapping a
+  button writes a `Handles Button1.Click` handler. See [the Visual Basic designer](docs/features/vb-winforms-designer.md).
 - **WPF.** XAML compiles on OpenSilver and runs in the web preview; saving restarts the app. The XAML editor has
   completion, Quick Info, Go to Definition, live errors and a light bulb that adds a missing event handler
   ([completion](docs/images/wpf/xaml-completion.png), [event handler](docs/images/wpf/add-event-handler.png)).
@@ -208,9 +229,10 @@ From there, try **New project** for a template in any language, **Open from GitH
 
 - **Open from GitHub.** Paste a repository's address; TabStudio downloads it, detects what it is built with, opens its
   main solution and selects its build, run and debug plans.
-- **Automatic setup.** Opening a Python or Node.js repository installs its toolchain and packages once per manifest
-  change, with progress and cancel: the Python version the project asks for in a virtual environment, the system
-  libraries that packages need to compile, and `npm ci` when there is a lockfile. A failure is one clear message, with
+- **Automatic setup.** Opening a Python, Node.js, PHP, Kotlin or Swift repository installs its toolchain and packages
+  once per manifest change, with progress and cancel: the Python version the project asks for in a virtual
+  environment, the system libraries that packages need to compile, `npm ci` when there is a lockfile,
+  `composer install` and a Laravel app's `.env` and key, and `swift package resolve`. A failure is one clear message, with
   the full log a tap away. **Set projects up when they open** in Tools turns it off.
 - **Static web sites.** A folder with `index.html` opens as a site. F5 serves it in the web preview, saved HTML
   reloads and saved CSS applies without losing the page's state, with HTML, CSS and JSON IntelliSense.
@@ -224,18 +246,21 @@ From there, try **New project** for a template in any language, **Open from GitH
   Solution builds in dependency order and reports each error once.
 - **Honest about what cannot run here.** An Aspire AppHost is explained in the Compatibility Doctor and skipped by
   Build with the reason: it starts the app's projects and containers on a computer.
-- **Tested on real repositories.** CI opens 25 public repositories pinned to commits, builds and runs them in the
+- **Tested on real repositories.** CI opens 42 public repositories pinned to commits, builds and runs them in the
   IDE, and holds each to an error baseline that only goes down: .NET solutions such as MediatR, CleanArchitecture,
-  Polly, eShopOnWeb, SimplCommerce, Conduit and Avalonia.Samples, classic Windows Forms and WPF tutorials, and Node,
-  Python, Java and Rust projects.
-  The embedded workflow does the same for PlatformIO, Arduino, STM32Cube, Pico SDK and embedded Rust projects.
+  Polly, eShopOnWeb, SimplCommerce, Conduit and Avalonia.Samples, classic Windows Forms and WPF tutorials, Visual Basic
+  Windows Forms and console projects, and Node, Python, Java, Go, Rust and C projects such as Next.js, Spring and Gin
+  apps, PHP (Laravel, BookStack, Symfony), Kotlin (Ktor, Spring Boot) and Swift (Vapor, Swift Argument Parser) projects.
+  The embedded workflow does the same for 11 PlatformIO, Arduino, STM32Cube, ESP-IDF, Zephyr, Pico SDK and embedded
+  Rust projects, Marlin among them.
 
 ### Services and databases
 
 - **Backing services without Docker.** **View > Services** reads Compose files and devcontainer references and runs
   PostgreSQL, Redis and Valkey, MySQL (through MariaDB), RabbitMQ, nginx, Mailpit, MinIO and MongoDB as native processes
   on the tablet, with health, logs and preview links. A service starts when you start it or when the run configuration
-  points at it, and the app receives its connection settings. Each workspace keeps its own data. See
+  points at it, and the app receives its connection settings. A Laravel app's `.env` database is offered the same
+  way. Each workspace keeps its own data. See
   [the services guide](docs/features/services.md).
 - **Connect.** SQLite files, PostgreSQL and SQL Server. Connection strings are discovered in the solution's
   `appsettings*.json` and user secrets, and saved ones are encrypted with an Android Keystore key.

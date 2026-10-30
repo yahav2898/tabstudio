@@ -1,5 +1,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using VB = Microsoft.CodeAnalysis.VisualBasic;
+using VBSyntax = Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using TabStudio.Core.Diagnostics;
 using RoslynCompilation = Microsoft.CodeAnalysis.Compilation;
 
@@ -44,16 +46,36 @@ public static class InProcessSafetyAnalyzer
         ArgumentNullException.ThrowIfNull(compilation);
         ArgumentNullException.ThrowIfNull(tree);
 
-        var invocations = tree.GetRoot(cancellationToken).DescendantNodes().OfType<InvocationExpressionSyntax>()
-            .Where(i => i.Expression is MemberAccessExpressionSyntax { Name.Identifier.ValueText: "Exit" or "FailFast" })
-            .ToList();
+        var root = tree.GetRoot(cancellationToken);
+        List<SyntaxNode> invocations = root.Language == LanguageNames.VisualBasic
+            ? [.. root.DescendantNodes().OfType<VBSyntax.InvocationExpressionSyntax>()
+                .Where(i => i.Expression is VBSyntax.MemberAccessExpressionSyntax { Name.Identifier.ValueText: var name }
+                    && (string.Equals(name, "Exit", StringComparison.OrdinalIgnoreCase) || string.Equals(name, "FailFast", StringComparison.OrdinalIgnoreCase)))]
+            : [.. root.DescendantNodes().OfType<InvocationExpressionSyntax>()
+                .Where(i => i.Expression is MemberAccessExpressionSyntax { Name.Identifier.ValueText: "Exit" or "FailFast" })];
+        var results = new List<BuildDiagnostic>();
+
+        // Visual Basic's End statement ends the process through Environment.Exit, as the runtime implements it.
+        if (root.Language == LanguageNames.VisualBasic)
+        {
+            foreach (var end in root.DescendantNodes().OfType<VBSyntax.StopOrEndStatementSyntax>().Where(e => e.RawKind == (int)VB.SyntaxKind.EndStatement))
+            {
+                var location = end.GetLocation();
+                var lineSpan = location.GetLineSpan().StartLinePosition;
+                results.Add(new BuildDiagnostic(
+                    ExitId,
+                    DiagnosticSeverityLevel.Error,
+                    "End would close TabStudio, because programs run inside the IDE. In a Windows Forms app call Application.Exit() or the form's Close(); in a console app return from Sub Main.",
+                    new DiagnosticLocation(tree.FilePath, location.SourceSpan.Start, location.SourceSpan.Length, lineSpan.Line + 1, lineSpan.Character + 1),
+                    projectName));
+            }
+        }
 
         if (invocations.Count == 0)
         {
-            return [];
+            return results;
         }
 
-        var results = new List<BuildDiagnostic>();
         var model = compilation.GetSemanticModel(tree);
         foreach (var invocation in invocations)
         {
@@ -71,7 +93,7 @@ public static class InProcessSafetyAnalyzer
                 isExit ? ExitId : FailFastId,
                 DiagnosticSeverityLevel.Error,
                 isExit
-                    ? "Environment.Exit would close TabStudio, because programs run inside the IDE. Return the exit code from Main instead."
+                    ? $"Environment.Exit would close TabStudio, because programs run inside the IDE. In a Windows Forms app call Application.Exit() or the form's Close(); in a console app return the exit code from {(root.Language == LanguageNames.VisualBasic ? "Sub Main" : "Main")}."
                     : "Environment.FailFast would close TabStudio, because programs run inside the IDE. Throw an exception instead.",
                 new DiagnosticLocation(tree.FilePath, location.SourceSpan.Start, location.SourceSpan.Length, lineSpan.Line + 1, lineSpan.Character + 1),
                 projectName));

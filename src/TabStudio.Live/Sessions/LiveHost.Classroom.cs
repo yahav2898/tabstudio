@@ -15,7 +15,8 @@ public sealed partial class LiveHost
             return;
         }
 
-        foreach (var guest in _guests.Values)
+        // Guests away longer than the reconnect grace come back with the class's roles too.
+        foreach (var guest in _guests.Values.Concat(_away.Values))
         {
             if (isClassroom)
             {

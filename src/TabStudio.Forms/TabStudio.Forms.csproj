@@ -30,6 +30,10 @@
     <InternalsVisibleTo Include="TabStudio.Forms.Design.Tests" />
     <InternalsVisibleTo Include="TabStudio.App" />
     <InternalsVisibleTo Include="TabStudio.App.Tests" />
+    <!-- TabStudio's Microsoft.VisualBasic.Forms runs Visual Basic's application framework, MsgBox and InputBox on the
+         app's UI thread, which it finds through the runtime. -->
+    <InternalsVisibleTo Include="Microsoft.VisualBasic.Forms" />
+    <InternalsVisibleTo Include="TabStudio.VisualBasic.Forms.Tests" />
   </ItemGroup>
 
 </Project>

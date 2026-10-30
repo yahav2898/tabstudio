@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:vm="using:TabStudio.App.ViewModels"
+             xmlns:views="using:TabStudio.App.Views"
              x:Class="TabStudio.App.Views.ErrorListView"
              x:DataType="vm:ErrorListViewModel">
   <UserControl.Styles>
@@ -77,7 +78,9 @@
 
     <!-- Column headers -->
     <Border DockPanel.Dock="Top" Height="26" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1">
-      <Grid ColumnDefinitions="34,150,*,130,160,50,40" Margin="12,0" VerticalAlignment="Center">
+      <!-- A phone's panel keeps Code short and drops Project and File for the Description; a tap still opens the file. -->
+      <Grid x:Name="HeaderColumns" controls:ResponsiveColumns.Wide="34,150,*,130,160,50,40" controls:ResponsiveColumns.Compact="28,72,*,0,0,40,32"
+            controls:ResponsiveColumns.IsCompact="{Binding $parent[views:ErrorListView].IsCompact}" Margin="12,0" VerticalAlignment="Center">
         <TextBlock Grid.Column="1" Classes="muted small" Text="Code" />
         <TextBlock Grid.Column="2" Classes="muted small" Text="Description" />
         <TextBlock Grid.Column="3" Classes="muted small" Text="Project" />
@@ -94,7 +97,8 @@
                ScrollViewer.HorizontalScrollBarVisibility="Disabled">
         <ListBox.ItemTemplate>
           <DataTemplate DataType="vm:ErrorItemViewModel">
-            <Grid ColumnDefinitions="34,150,*,130,160,50,40" Height="28" Margin="12,0" Background="Transparent"
+            <Grid controls:ResponsiveColumns.Wide="34,150,*,130,160,50,40" controls:ResponsiveColumns.Compact="28,72,*,0,0,40,32"
+                  controls:ResponsiveColumns.IsCompact="{Binding $parent[views:ErrorListView].IsCompact}" Height="28" Margin="12,0" Background="Transparent"
                   ToolTip.Tip="{Binding Description}">
               <Panel>
                 <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="14" Foreground="{DynamicResource Brush.Error}" IsVisible="{Binding IsError}" HorizontalAlignment="Left" />

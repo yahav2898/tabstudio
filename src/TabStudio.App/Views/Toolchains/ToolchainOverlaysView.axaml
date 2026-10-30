@@ -84,7 +84,7 @@
     </StackPanel>
 
     <!-- The Toolchain Store. -->
-    <Panel Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding ToolchainStore.IsOpen}">
+    <Panel x:Name="StoreScrim" Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding ToolchainStore.IsOpen}">
       <Border x:Name="Store" Classes="store" MaxWidth="860" MaxHeight="680" Margin="28" HorizontalAlignment="Stretch" VerticalAlignment="Center"
               CornerRadius="{StaticResource Radius.Dialog}"
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"

@@ -100,7 +100,9 @@ public sealed partial class DatabaseQueryViewModel : ObservableObject, IDisposab
                 TimeSpan => TimeSpan.Parse(EditValue, CultureInfo.InvariantCulture),
                 DateOnly => DateOnly.Parse(EditValue, CultureInfo.InvariantCulture),
                 TimeOnly => TimeOnly.Parse(EditValue, CultureInfo.InvariantCulture),
-                _ => Convert.ChangeType(EditValue, original.GetType(), CultureInfo.InvariantCulture),
+                IConvertible => Convert.ChangeType(EditValue, original.GetType(), CultureInfo.InvariantCulture),
+                // A point, range or other provider type: the database parses the text, cast to the column's type.
+                _ => EditValue,
             };
             await new TableEditor().UpdateAsync(Connection, table, row.Values, index, value, token); updated = true;
         });
@@ -149,12 +151,19 @@ public sealed partial class DatabaseQueryViewModel : ObservableObject, IDisposab
 
 internal static class DatabaseError
 {
-    // Retain useful server diagnostics without echoing query text, literals or connection strings.
+    // Retain useful server diagnostics without echoing query text, literals or connection strings. The server's own
+    // reason comes first: "SQL Server error 208, line 1." left out "Invalid object name 'Users'", and every
+    // connection failure in Database Explorer read "connection or schema operation failed".
     public static string Message(Exception ex) => ex switch
     {
         Npgsql.PostgresException pg => $"PostgreSQL {pg.SqlState}: {pg.MessageText}",
-        Microsoft.Data.SqlClient.SqlException sql => $"SQL Server error {sql.Number}, line {sql.LineNumber}.",
+        Npgsql.NpgsqlException { InnerException: System.Net.Sockets.SocketException socket } => $"Cannot reach the PostgreSQL server: {socket.Message.TrimEnd('.')}. Check the host and port, and that the server is running.",
+        Npgsql.NpgsqlException { InnerException: TimeoutException } => "The PostgreSQL server did not answer in time. Check the host and port, and that the server is running.",
+        Microsoft.Data.SqlClient.SqlException sql => $"SQL Server error {sql.Number}, line {sql.LineNumber}: {(sql.Errors.Count > 0 ? sql.Errors[0].Message : sql.Message)}",
+        Microsoft.Data.Sqlite.SqliteException { SqliteErrorCode: 14 } => "SQLite cannot open the database file. Check that it exists and that its folder can be written to.",
         Microsoft.Data.Sqlite.SqliteException sqlite => $"SQLite {sqlite.SqliteErrorCode}: {sqlite.Message}",
+        System.Net.Sockets.SocketException socket => $"Cannot reach the server: {socket.Message.TrimEnd('.')}. Check the host and port, and that the server is running.",
+        TimeoutException => "The server did not answer in time. Check the host and port, and that the server is running.",
         InvalidOperationException invalid => invalid.Message,
         FormatException or OverflowException => "The value does not match the column's type.",
         _ => $"{ex.GetType().Name}: database operation failed. Check the connection and permissions.",

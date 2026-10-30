@@ -119,6 +119,19 @@ public sealed class CSharpCompiler
         .WithFeatures([new("InterceptorsNamespaces", string.Join(';', interceptorsNamespaces ?? DefaultInterceptorsNamespaces))]);
 
     /// <summary>
+    /// The symbols a project's <c>DefineConstants</c> adds, as csc reads it: separated by semicolons or commas, without
+    /// a part that still names an MSBuild property (<c>$(DefineConstants)</c>, which the SDK's own symbols stand for).
+    /// Without them a project's <c>#if</c> took the wrong branch: Humanizer's tests reached their <c>#error</c>.
+    /// </summary>
+    /// <param name="project">The project, or <see langword="null"/> for none.</param>
+    public static IReadOnlyList<string> DefinedSymbols(TsProject? project) =>
+        project?.GetProperty("DefineConstants") is { Length: > 0 } defines
+            ? [.. defines.Split([';', ','], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                .Where(symbol => !symbol.Contains("$(", StringComparison.Ordinal) && SyntaxFacts.IsValidIdentifier(symbol))
+                .Distinct(StringComparer.Ordinal)]
+            : [];
+
+    /// <summary>
     /// The C# version a project compiles with: <c>preview</c> when its <c>LangVersion</c> asks for it, otherwise the
     /// latest. Source generators check it, and some only generate for preview features. A lower version than the latest
     /// is not applied, because the code TabStudio generates for a project (XAML loaders, interceptors) uses current C#.
@@ -150,6 +163,43 @@ public sealed class CSharpCompiler
         deterministic: true,
         concurrentBuild: concurrentBuild,
         specificDiagnosticOptions: SdkNoWarn);
+
+    /// <summary>
+    /// Applies a project's <c>NoWarn</c>, <c>WarningsAsErrors</c> and <c>WarningsNotAsErrors</c>, as csc reads them:
+    /// codes separated by semicolons or commas, a bare number meaning that C# warning (<c>649</c> is CS0649). Without
+    /// them AutoMapper's tests showed 48 CS0649 warnings their project turns off. <c>TreatWarningsAsErrors</c> is left
+    /// out: a warning TabStudio reports that a computer's build does not would fail a build that passes there.
+    /// </summary>
+    /// <param name="options">The options.</param>
+    /// <param name="project">The project.</param>
+    public static CSharpCompilationOptions WithProjectWarnings(CSharpCompilationOptions options, TsProject project)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(project);
+        var specific = new Dictionary<string, ReportDiagnostic>(options.SpecificDiagnosticOptions, StringComparer.Ordinal);
+        foreach (var code in WarningCodes(project.GetProperty("WarningsAsErrors")))
+        {
+            specific[code] = ReportDiagnostic.Error;
+        }
+
+        foreach (var code in WarningCodes(project.GetProperty("WarningsNotAsErrors")))
+        {
+            specific[code] = ReportDiagnostic.Warn;
+        }
+
+        foreach (var code in WarningCodes(project.GetProperty("NoWarn")))
+        {
+            specific[code] = ReportDiagnostic.Suppress;
+        }
+
+        return options.WithSpecificDiagnosticOptions(specific);
+    }
+
+    /// <summary>The warning codes of a property such as <c>$(NoWarn);649;CS0618;NU1701</c>.</summary>
+    private static IEnumerable<string> WarningCodes(string? value) =>
+        (value ?? string.Empty).Split([';', ','], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            .Where(code => !code.Contains("$(", StringComparison.Ordinal) && code.All(char.IsAsciiLetterOrDigit))
+            .Select(code => code.All(char.IsAsciiDigit) ? "CS" + code.PadLeft(4, '0') : code.ToUpperInvariant());
 
     /// <summary>The source of the implicit global usings file, as the base SDK would generate it.</summary>
     public static string CreateGlobalUsingsSource()
@@ -306,8 +356,7 @@ public sealed class CSharpCompiler
         var succeeded = emit.Success && diagnostics.All(d => d.Severity != DiagnosticSeverityLevel.Error);
         var assembly = succeeded ? new CompiledAssembly(name, image.ToArray(), symbols.ToArray())
         {
-            HotReloadCompilation = compilation.Options.OptimizationLevel == OptimizationLevel.Debug
-                ? compilation as CSharpCompilation : null,
+            HotReloadCompilation = compilation.Options.OptimizationLevel == OptimizationLevel.Debug ? compilation : null,
         } : null;
         stopwatch.Stop();
 

@@ -55,9 +55,10 @@
               </MenuFlyout>
             </Grid.ContextFlyout>
 
-            <StackPanel Orientation="Horizontal" ToolTip.Tip="{Binding Path}">
+            <!-- A grid, not a stack, so a long name trims in its column instead of running into the value. -->
+            <Grid x:Name="NameCell" ColumnDefinitions="Auto,18,*" ToolTip.Tip="{Binding Path}">
               <Border Width="{Binding IndentWidth}" />
-              <Panel Width="18">
+              <Panel Grid.Column="1" Width="18">
                 <Panel IsVisible="{Binding IsExpandable}">
                   <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="13"
                                        Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding !IsExpanded}" />
@@ -65,9 +66,9 @@
                                        Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsExpanded}" />
                 </Panel>
               </Panel>
-              <TextBlock Text="{Binding Name}" FontFamily="{DynamicResource CodeFont}" FontSize="12.5"
+              <TextBlock x:Name="NameText" Grid.Column="2" Text="{Binding Name}" FontFamily="{DynamicResource CodeFont}" FontSize="12.5"
                          TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="2,0,8,0" />
-            </StackPanel>
+            </Grid>
             <TextBlock Grid.Column="1" Classes="value" Classes.changed="{Binding HasChanged}" Classes.error="{Binding IsError}"
                        Text="{Binding Value}" ToolTip.Tip="{Binding Value}"
                        TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" />

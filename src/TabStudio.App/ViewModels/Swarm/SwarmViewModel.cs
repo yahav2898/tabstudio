@@ -75,6 +75,9 @@ public sealed partial class SwarmViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     public partial bool HasDevices { get; private set; }
 
+    /// <summary><see cref="HasDevices"/>, for the refresh timer's thread.</summary>
+    private bool _anyDevices;
+
     /// <summary>The status bar's text, such as "Swarm: 3 devices".</summary>
     [ObservableProperty]
     public partial string StatusText { get; private set; } = "Swarm";
@@ -158,6 +161,7 @@ public sealed partial class SwarmViewModel : ObservableObject, IDisposable
         }
 
         HasDevices = Devices.Count > 0;
+        Volatile.Write(ref _anyDevices, HasDevices);
         var connected = _swarm.ConnectedCount;
         StatusText = connected == 1 ? "Swarm: 1 device" : string.Create(CultureInfo.CurrentCulture, $"Swarm: {connected} devices");
         StatusTip = Devices.Count == 0
@@ -239,6 +243,12 @@ public sealed partial class SwarmViewModel : ObservableObject, IDisposable
         {
             while (await timer.WaitForNextTickAsync(cancellationToken))
             {
+                // Without devices nothing needs refreshing: the UI thread is not woken every two seconds for nothing.
+                if (!Volatile.Read(ref _anyDevices))
+                {
+                    continue;
+                }
+
                 _ui.Post(() =>
                 {
                     if (!cancellationToken.IsCancellationRequested && HasDevices)

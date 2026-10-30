@@ -16,6 +16,7 @@ public sealed partial class WorkspaceViewModel
     private int _historyIndex = -1;
     private bool _navigatingHistory;
     private CancellationTokenSource? _sessionSave;
+    private bool _sessionSavePending;
 
     /// <summary>The open documents, in tab order.</summary>
     public ObservableCollection<DocumentViewModel> Documents { get; } = [];
@@ -236,6 +237,7 @@ public sealed partial class WorkspaceViewModel
         }
 
         ScheduleSessionSave();
+        _ = FollowDiskChangesAsync();
     }
 
     private async Task<bool> SaveDocumentAsync(DocumentViewModel document)
@@ -254,8 +256,10 @@ public sealed partial class WorkspaceViewModel
 
         try
         {
+            var other = KeepOtherVersionBeforeSaving(document);
             await document.SaveAsync();
-            StatusText = $"Saved {document.FileName}";
+            StatusText = other is null ? $"Saved {document.FileName}"
+                : $"Saved {document.FileName} over a change another program made; that version is in TabStudio's trash.";
             OnDocumentSavedForTests(document);
             if (!await TryHotReloadOnSaveAsync(document)) OnDocumentSavedForLiveApp(document);
             OnDocumentSavedForSwarm(document);
@@ -286,6 +290,7 @@ public sealed partial class WorkspaceViewModel
         document.LocalAINeighbors = () => Documents.Where(d => !ReferenceEquals(d, document) && !d.IsExtensionsPage).Select(d => new TabStudio.Agent.Local.OpenFileContext(d.FilePath, d.Document.Text)).ToList();
         document.DiagnosticsChanged += OnDocumentDiagnosticsChanged;
         document.PropertyChanged += OnDocumentPropertyChanged;
+        document.Document.TextChanged += OnDocumentTextChanged;
         AttachDebugging(document);
         AttachXamlDesigner(document);
         AttachWpfXaml(document);
@@ -299,6 +304,7 @@ public sealed partial class WorkspaceViewModel
         document.LocalAINeighbors = null;
         document.DiagnosticsChanged -= OnDocumentDiagnosticsChanged;
         document.PropertyChanged -= OnDocumentPropertyChanged;
+        document.Document.TextChanged -= OnDocumentTextChanged;
         DetachDebugging(document);
         DetachXamlDesigner(document);
         DetachFormsDesigner(document);
@@ -437,13 +443,27 @@ public sealed partial class WorkspaceViewModel
         }
     }
 
-    private void ScheduleSessionSave()
+    /// <summary>
+    /// Typing keeps the session's copy of unsaved text current, at most every two seconds: it was saved only when a
+    /// document first became dirty, so after Android ended the app the restored text was that first moment's.
+    /// </summary>
+    private void OnDocumentTextChanged(object? sender, EventArgs e)
     {
-        if (_disposed)
+        ScheduleSessionSave(throttle: true);
+        if (sender is AvaloniaEdit.Document.TextDocument text && Documents.FirstOrDefault(d => ReferenceEquals(d.Document, text)) is { } document)
+        {
+            CancelProjectAnalysis(document);
+        }
+    }
+
+    private void ScheduleSessionSave(bool throttle = false)
+    {
+        if (_disposed || (throttle && _sessionSavePending))
         {
             return;
         }
 
+        _sessionSavePending = true;
         _sessionSave?.Cancel();
         _sessionSave?.Dispose();
         _sessionSave = new CancellationTokenSource();
@@ -453,6 +473,7 @@ public sealed partial class WorkspaceViewModel
             {
                 if (!token.IsCancellationRequested && !_disposed)
                 {
+                    _sessionSavePending = false;
                     SaveSessionNow();
                 }
             }),

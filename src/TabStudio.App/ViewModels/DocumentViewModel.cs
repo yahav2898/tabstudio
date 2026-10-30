@@ -22,7 +22,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
 {
     private readonly ILanguageService? _language;
     private readonly DeviceProfile _profile;
-    private readonly TextFileContent _file;
+    private TextFileContent _file;
     private CancellationTokenSource? _analysis;
     private Task? _analysisTask;
     private int _analysisEdits = -1;
@@ -46,12 +46,13 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
         FileType = FileTypes.For(filePath);
         _file = file;
         _profile = profile;
-        _language = (FileType.IsCSharp || FileType.IsRazor) && language?.ContainsDocument(filePath) == true ? language : null;
+        _language = (FileType.IsRoslyn || FileType.IsRazor) && language?.ContainsDocument(filePath) == true ? language : null;
 
         Document = new TextDocument(file.Text) { FileName = filePath };
         Document.UndoStack.MarkAsOriginalFile();
         Document.Changed += OnDocumentChanged;
         Document.UndoStack.PropertyChanged += OnUndoStackChanged;
+        RecordDiskStamp();
     }
 
     /// <summary>Full path of the file.</summary>
@@ -70,7 +71,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
     /// Whether Roslyn colors this document. A Razor file's diagnostics come from Roslyn, and its colors from its
     /// TextMate grammar.
     /// </summary>
-    public bool UsesSemanticColoring => _language is not null && FileType.IsCSharp;
+    public bool UsesSemanticColoring => _language is not null && FileType.IsRoslyn;
 
     /// <summary>The text.</summary>
     public TextDocument Document { get; }
@@ -211,12 +212,30 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
             return;
         }
 
+        // The text being written is the saved state from now on: typing while it is written makes the document
+        // dirty again. Marked after the write, the late keystrokes were marked saved and never written.
         var text = Document.Text;
-        await TextFile.WriteAsync(FilePath, text, _file.Encoding, cancellationToken);
-        if (SaveExternalAsync is { } saveExternal) { await saveExternal(cancellationToken); }
-        if (SaveExternalAsync is not null && Document.Text != text) { return; }
-        Document.UndoStack.MarkAsOriginalFile();
-        IsDirty = false;
+        var undo = Document.UndoStack;
+        undo.MarkAsOriginalFile();
+        IsSaving = true;
+        try
+        {
+            await TextFile.WriteAsync(FilePath, text, _file.Encoding, cancellationToken);
+            if (SaveExternalAsync is { } saveExternal) { await saveExternal(cancellationToken); }
+        }
+        catch
+        {
+            undo.DiscardOriginalFileMarker();
+            IsDirty = true;
+            throw;
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+
+        RecordDiskStamp();
+        IsDirty = !undo.IsOriginalFile || Document.Text != text;
     }
 
     /// <summary>
@@ -240,7 +259,8 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
 
         var text = Document.Text;
         var edits = _edits;
-        var syntax = await Task.Run(() => SyntaxClassifier.Classify(text));
+        var path = FilePath;
+        var syntax = await Task.Run(() => SyntaxClassifier.ClassifyFile(path, text));
         if (edits == _edits && !_disposed && !_hasSemanticClassification)
         {
             Classifications = syntax;

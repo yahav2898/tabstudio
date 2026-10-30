@@ -45,7 +45,7 @@ public sealed partial class WorkspaceViewModel
     private async Task CheckDatabasesAsync(Workspace workspace)
     {
         var saved = await SavedConnectionNamesAsync();
-        var projects = workspace.Projects.Where(p => p.IsExecutable && p.Language == ProjectLanguage.CSharp && !p.IsTestProject).ToList();
+        var projects = workspace.Projects.Where(p => p.IsExecutable && p.IsRoslynLanguage && !p.IsTestProject).ToList();
         var advice = await Task.Run(async () =>
         {
             var composed = ComposeConnectionVariables(workspace.RootDirectory);

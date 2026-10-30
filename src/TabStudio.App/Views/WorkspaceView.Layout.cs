@@ -90,16 +90,50 @@ public sealed partial class WorkspaceView
     {
         DrawerDismiss.PointerPressed += OnDrawerDismissPressed;
         EditorArea.SizeChanged += (_, _) => UpdateEditorArea();
+        BottomDock.SizeChanged += (_, e) => UpdateBottomDock(e.NewSize.Width);
     }
+
+    /// <summary>
+    /// Fits the bottom panel's strip and debug layout to its width. On a phone the tabs had no room left beside
+    /// "Show output from:" and its 170-pixel picker, and Hide fell off the end; the Call Stack's fixed 380 pixels
+    /// beside Locals left Locals none.
+    /// </summary>
+    private void UpdateBottomDock(double width)
+    {
+        var wide = width >= 700;
+        OutputSourceLabelHost.IsVisible = wide;
+        OutputSourceBox.MinWidth = wide ? 170 : 110;
+        CallStackBeside.Width = width >= 760 ? 380 : width >= 600 ? Math.Floor(width * 0.45) : 0;
+        CallStackBeside.BorderThickness = new Thickness(CallStackBeside.Width > 0 ? 1 : 0, 0, 0, 0);
+        BringSelectedTabIntoView();
+    }
+
+    /// <summary>Scrolls the bottom panel's tabs so the selected one shows, as when Locals is chosen on a phone.</summary>
+    private void BringSelectedTabIntoView() => Avalonia.Threading.Dispatcher.UIThread.Post(
+        () => BottomTabs.Children.OfType<Button>().FirstOrDefault(tab => tab.IsVisible && tab.Classes.Contains("selected"))?.BringIntoView(),
+        Avalonia.Threading.DispatcherPriority.Loaded);
 
     private void AttachLayout(WorkspaceViewModel viewModel)
     {
         viewModel.Properties.PropertyChanged += OnPropertiesChanged;
+        viewModel.PropertyChanged += OnWorkspacePanelChanged;
         UpdateSideBar();
         UpdateProperties();
     }
 
-    private void DetachLayout(WorkspaceViewModel viewModel) => viewModel.Properties.PropertyChanged -= OnPropertiesChanged;
+    private void DetachLayout(WorkspaceViewModel viewModel)
+    {
+        viewModel.Properties.PropertyChanged -= OnPropertiesChanged;
+        viewModel.PropertyChanged -= OnWorkspacePanelChanged;
+    }
+
+    private void OnWorkspacePanelChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(WorkspaceViewModel.SelectedPanel))
+        {
+            BringSelectedTabIntoView();
+        }
+    }
 
     private void OnPropertiesChanged(object? sender, PropertyChangedEventArgs e)
     {

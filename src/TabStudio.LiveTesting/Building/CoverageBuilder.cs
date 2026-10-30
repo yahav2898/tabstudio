@@ -1,23 +1,22 @@
 using System.Diagnostics;
 using System.Globalization;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
 using TabStudio.Compilation;
 using TabStudio.Compilation.Building;
 using TabStudio.Core.Diagnostics;
-using TabStudio.Core.Workspaces;
-using TabStudio.Debugging.Instrumentation;
 using TabStudio.LiveTesting.Coverage;
 using TabStudio.LiveTesting.Instrumentation;
 using ProjectInfo = TabStudio.Core.Workspaces.ProjectInfo;
+using RoslynCompilation = Microsoft.CodeAnalysis.Compilation;
 
 namespace TabStudio.LiveTesting.Building;
 
 /// <summary>
 /// Builds a test project for Live Unit Testing: the test project as it is, and the projects it references
-/// instrumented, so every test records the lines it runs.
+/// instrumented, so every test records the lines it runs. C# and Visual Basic projects are built, and may reference
+/// each other.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -88,12 +87,12 @@ public sealed class CoverageBuilder
         var projects = new List<CoverageBuildProject>();
         var modules = new List<CoverageModule>();
         var dependencies = new List<CompiledAssembly>();
-        if (testProject.Language != ProjectLanguage.CSharp || _host.FindProject(testProject.FilePath) is null)
+        if (!testProject.IsRoslynLanguage || _host.FindProject(testProject.FilePath) is null)
         {
             diagnostics.Add(new BuildDiagnostic(
                 ProjectBuilder.UnsupportedLanguageId,
                 DiagnosticSeverityLevel.Error,
-                $"'{testProject.Name}' cannot be built on this device: only C# projects are compiled by TabStudio.",
+                $"'{testProject.Name}' cannot be built on this device: only C# and Visual Basic projects are compiled by TabStudio.",
                 null,
                 testProject.Name));
             return Finish(testProject, diagnostics, null, dependencies, projects, modules, stopwatch);
@@ -103,19 +102,18 @@ public sealed class CoverageBuilder
         foreach (var current in _host.GetBuildOrder(testProject.FilePath))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            if (!_host.ArePackagesRestored(current.FilePath))
-            {
-                diagnostics.AddRange(current.PackageReferences.Select(package => new BuildDiagnostic(
+            diagnostics.AddRange(current.PackageReferences
+                .Where(package => !_host.IsPackageRestored(current.FilePath, package.Name))
+                .Select(package => new BuildDiagnostic(
                     ProjectBuilder.UnrestoredPackageId,
                     DiagnosticSeverityLevel.Warning,
                     $"NuGet package '{package.Name}' is not restored on this device, so code that uses it will not compile.",
                     null,
                     current.Name)));
-            }
 
             var isEntry = string.Equals(current.FilePath, testProject.FilePath, StringComparison.Ordinal);
             var instrument = !isEntry && !current.IsTestProject && uninstrumented?.Contains(current.FilePath) != true;
-            if (await _host.GetCompilationAsync(current.FilePath, cancellationToken).ConfigureAwait(false) is not CSharpCompilation compilation
+            if (await _host.GetCompilationAsync(current.FilePath, cancellationToken).ConfigureAwait(false) is not { } compilation
                 || Compile(current, compilation, instrument, diagnostics, cancellationToken) is not { } built)
             {
                 return Finish(testProject, diagnostics, null, dependencies, projects, modules, stopwatch);
@@ -150,7 +148,7 @@ public sealed class CoverageBuilder
     }
 
     /// <summary>Compiles one project, or returns what was compiled from the same compilation before.</summary>
-    private BuiltProject? Compile(ProjectInfo project, CSharpCompilation compilation, bool instrument, List<BuildDiagnostic> diagnostics, CancellationToken cancellationToken)
+    private BuiltProject? Compile(ProjectInfo project, RoslynCompilation compilation, bool instrument, List<BuildDiagnostic> diagnostics, CancellationToken cancellationToken)
     {
         var slot = instrument ? _slots(project.FilePath) : -1;
         lock (_gate)
@@ -220,7 +218,7 @@ public sealed class CoverageBuilder
     /// <param name="errors">The errors, when emitting failed.</param>
     /// <param name="cancellationToken">Cancels emitting.</param>
     private static CompiledAssembly? Emit(
-        CSharpCompilation compilation,
+        RoslynCompilation compilation,
         string projectName,
         IReadOnlyList<ResourceDescription> resources,
         out List<Diagnostic> errors,
@@ -234,12 +232,12 @@ public sealed class CoverageBuilder
     }
 
     /// <summary>The text of every source file the user wrote, by full path.</summary>
-    private static Dictionary<string, SourceText> SourcesOf(CSharpCompilation compilation, CancellationToken cancellationToken)
+    private static Dictionary<string, SourceText> SourcesOf(RoslynCompilation compilation, CancellationToken cancellationToken)
     {
         var sources = new Dictionary<string, SourceText>(StringComparer.Ordinal);
         foreach (var tree in compilation.SyntaxTrees)
         {
-            if (tree.FilePath.Length > 0 && !GeneratedCode.IsGenerated(tree, cancellationToken))
+            if (!GeneratedSource.IsGenerated(tree, cancellationToken))
             {
                 sources[tree.FilePath] = tree.GetText(cancellationToken);
             }
@@ -271,7 +269,7 @@ public sealed class CoverageBuilder
     /// <param name="Module">Its coverage map, when instrumented.</param>
     /// <param name="Sources">Its source files.</param>
     private sealed record BuiltProject(
-        CSharpCompilation Compilation,
+        RoslynCompilation Compilation,
         bool IsInstrumented,
         CompiledAssembly Assembly,
         CoverageModule? Module,

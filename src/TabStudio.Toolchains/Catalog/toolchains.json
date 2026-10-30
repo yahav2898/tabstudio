@@ -212,10 +212,52 @@
           },
           {
             "file": "main.py",
+            "contains": [
+              "^\\s*(from\\s+(fastapi|starlette)(\\.\\w+)*\\s+import\\b|import\\s+(fastapi|starlette)\\b)",
+              "^app\\s*(:[^=\\n]+)?=\\s*[A-Za-z_][\\w.]*\\("
+            ],
+            "excludes": [
+              "^if\\s+__name__\\s*==\\s*[\"']__main__[\"']"
+            ],
+            "requires": [
+              "uvicorn"
+            ],
+            "name": "uvicorn main:app",
+            "command": [
+              "{python}",
+              "-u",
+              "-m",
+              "uvicorn",
+              "main:app"
+            ]
+          },
+          {
+            "file": "main.py",
             "command": [
               "{python}",
               "-u",
               "main.py"
+            ]
+          },
+          {
+            "file": "app.py",
+            "contains": [
+              "^\\s*(from\\s+(fastapi|starlette)(\\.\\w+)*\\s+import\\b|import\\s+(fastapi|starlette)\\b)",
+              "^app\\s*(:[^=\\n]+)?=\\s*[A-Za-z_][\\w.]*\\("
+            ],
+            "excludes": [
+              "^if\\s+__name__\\s*==\\s*[\"']__main__[\"']"
+            ],
+            "requires": [
+              "uvicorn"
+            ],
+            "name": "uvicorn app:app",
+            "command": [
+              "{python}",
+              "-u",
+              "-m",
+              "uvicorn",
+              "app:app"
             ]
           },
           {
@@ -235,6 +277,82 @@
               "{match}"
             ],
             "environment": {
+              "PYTHONPATH": "src"
+            }
+          },
+          {
+            "file": "*/main.py",
+            "contains": [
+              "^\\s*(from\\s+(fastapi|starlette)(\\.\\w+)*\\s+import\\b|import\\s+(fastapi|starlette)\\b)",
+              "^app\\s*(:[^=\\n]+)?=\\s*[A-Za-z_][\\w.]*\\("
+            ],
+            "requires": [
+              "uvicorn"
+            ],
+            "name": "uvicorn {match}.main:app",
+            "command": [
+              "{python}",
+              "-u",
+              "-m",
+              "uvicorn",
+              "{match}.main:app"
+            ]
+          },
+          {
+            "file": "src/*/main.py",
+            "contains": [
+              "^\\s*(from\\s+(fastapi|starlette)(\\.\\w+)*\\s+import\\b|import\\s+(fastapi|starlette)\\b)",
+              "^app\\s*(:[^=\\n]+)?=\\s*[A-Za-z_][\\w.]*\\("
+            ],
+            "requires": [
+              "uvicorn"
+            ],
+            "name": "uvicorn {match}.main:app",
+            "command": [
+              "{python}",
+              "-u",
+              "-m",
+              "uvicorn",
+              "{match}.main:app"
+            ],
+            "environment": {
+              "PYTHONPATH": "src"
+            }
+          },
+          {
+            "file": "*/__init__.py",
+            "contains": [
+              "^\\s*(from\\s+flask\\s+import\\b|import\\s+flask\\b)",
+              "^\\s*(def\\s+create_app\\s*\\(|\\w+\\s*(:[^=\\n]+)?=\\s*(flask\\.)?Flask\\s*\\()"
+            ],
+            "name": "flask run ({match})",
+            "command": [
+              "{python}",
+              "-u",
+              "-m",
+              "flask",
+              "run"
+            ],
+            "environment": {
+              "FLASK_APP": "{match}"
+            }
+          },
+          {
+            "file": "src/*/__init__.py",
+            "contains": [
+              "^\\s*(from\\s+flask\\s+import\\b|import\\s+flask\\b)",
+              "^\\s*(def\\s+create_app\\s*\\(|\\w+\\s*(:[^=\\n]+)?=\\s*(flask\\.)?Flask\\s*\\()"
+            ],
+            "name": "flask run ({match})",
+            "command": [
+              "{python}",
+              "-u",
+              "-m",
+              "flask",
+              "run"
+            ],
+            "environment": {
+              "FLASK_APP": "{match}",
               "PYTHONPATH": "src"
             }
           }
@@ -410,6 +528,7 @@
           {
             "file": "package.json",
             "json": "scripts.start",
+            "notMatching": "\\b(?:next|nuxt|nuxi) start\\b|\\b(?:vite|astro) preview\\b|\\b(?:remix|react-router)-serve\\b",
             "command": [
               "npm",
               "start"
@@ -431,6 +550,14 @@
               "npm",
               "run",
               "serve"
+            ]
+          },
+          {
+            "file": "package.json",
+            "json": "scripts.start",
+            "command": [
+              "npm",
+              "start"
             ]
           },
           {
@@ -641,13 +768,16 @@
       },
       "problemPatterns": [
         {
-          "pattern": "\\((?<file>/[^()]+?):(?<line>\\d+):(?<column>\\d+)\\)"
+          "pattern": "\\((?<url>file://)?(?<file>/[^()]+?):(?<line>\\d+):(?<column>\\d+)\\)"
         },
         {
-          "pattern": "at (?<file>/[^\\s()]+?):(?<line>\\d+):(?<column>\\d+)"
+          "pattern": "at (?<url>file://)?(?<file>/[^\\s()]+?):(?<line>\\d+):(?<column>\\d+)"
         },
         {
-          "pattern": "^(?<file>/[^\\s:]+\\.(?:js|mjs|cjs|ts|mts|cts)):(?<line>\\d+)$"
+          "pattern": "^(?<url>file://)?(?<file>/[^\\s:]+\\.(?:js|mjs|cjs|ts|mts|cts)):(?<line>\\d+)$"
+        },
+        {
+          "pattern": "^(?<file>[^\\s(][^(]*?\\.(?:ts|tsx|mts|cts|js|jsx|mjs|cjs))\\((?<line>\\d+),(?<column>\\d+)\\): (?<severity>error|warning) (?<message>TS\\d+: .*)$"
         }
       ],
       "errorPattern": "^(?<message>(?:Uncaught )?(?:[A-Z]\\w*)?Error(?: \\[[A-Z_]+\\])?: .*)$"
@@ -757,8 +887,18 @@
       "problemPatterns": [
         {
           "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+): (?<severity>fatal error|error|warning|note): (?<message>.*)$"
+        },
+        {
+          "pattern": "^(?<file>[^\\s:][^:]*?):(?<line>\\d+):\\(\\.[^)]*\\): (?<message>(?:undefined reference to|multiple definition of) .*)$"
+        },
+        {
+          "pattern": "^>>> referenced by (?<file>[^\\s:()]+):(?<line>\\d+)"
+        },
+        {
+          "pattern": "^CMake Error at (?<file>.+?):(?<line>\\d+) \\("
         }
-      ]
+      ],
+      "errorPattern": "^(?<message>\\S+: (?:undefined reference to|multiple definition of) .*|\\S*ld(?:\\.lld)?: (?:error: )?(?:undefined symbol: |cannot find ).*|CMake Error.*)$"
     },
     {
       "id": "rust",
@@ -811,7 +951,7 @@
             "build": [
               "cargo",
               "build",
-              "--message-format=json-render-diagnostics"
+              "--message-format=json"
             ],
             "command": [
               "cargo",
@@ -854,7 +994,7 @@
           "pattern": "panicked at (?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)"
         }
       ],
-      "errorPattern": "^error(?:\\[[^\\]]+\\])?: (?<message>.*)$"
+      "errorPattern": "^(?:error(?:\\[[^\\]]+\\])?: (?<message>.*)|(?<message>thread '[^']*'(?: \\(\\d+\\))? panicked at .*))$"
     },
     {
       "id": "go",
@@ -1100,26 +1240,234 @@
         },
         {
           "pattern": "^\\[(?<severity>ERROR|WARNING)\\] (?<file>.+?\\.java):\\[(?<line>\\d+),(?<column>\\d+)\\] (?<message>.*)$"
+        },
+        {
+          "pattern": "^\\s*at (?:[\\w$.-]+/)?(?<package>(?:[a-z_][\\w$]*\\.)*)[A-Z][\\w$]*\\.[\\w$<>-]+\\((?<file>[\\w$]+\\.(?:java|kt|kts)):(?<line>\\d+)\\)"
         }
-      ]
+      ],
+      "errorPattern": "^(?:Exception in thread \"[^\"]+\" )?(?<message>(?:[a-z][\\w$]*\\.)+[A-Z][\\w$]*(?:Exception|Error)(?::.*)?)$"
+    },
+    {
+      "id": "php",
+      "name": "PHP",
+      "description": "PHP 8.5 with Composer and Xdebug, the Phpactor language server and the PHP Debug adapter, which runs on Node.js.",
+      "languages": [
+        "PHP"
+      ],
+      "listed": true,
+      "homepage": "https://www.php.net",
+      "license": "PHP-3.01 AND MIT",
+      "packages": [
+        "php85",
+        "php85-phar",
+        "php85-mbstring",
+        "php85-tokenizer",
+        "php85-ctype",
+        "php85-dom",
+        "php85-xml",
+        "php85-xmlwriter",
+        "php85-xmlreader",
+        "php85-simplexml",
+        "php85-iconv",
+        "php85-openssl",
+        "php85-curl",
+        "php85-fileinfo",
+        "php85-session",
+        "php85-posix",
+        "php85-pdo",
+        "php85-pdo_sqlite",
+        "php85-pdo_mysql",
+        "php85-pdo_pgsql",
+        "php85-sqlite3",
+        "php85-bcmath",
+        "php85-intl",
+        "php85-zip",
+        "php85-sodium",
+        "php85-pcntl",
+        "php85-gd",
+        "php85-pecl-xdebug",
+        "composer",
+        "nodejs",
+        "npm"
+      ],
+      "versionPackage": "php85",
+      "estimatedDownloadSize": 52000000,
+      "estimatedInstalledSize": 190000000,
+      "host": {
+        "commands": [
+          "php"
+        ],
+        "versionArguments": [
+          "--version"
+        ],
+        "versionPattern": "PHP (?<version>\\d+\\.\\d+\\.\\d+)"
+      },
+      "fileExtensions": [
+        ".php"
+      ],
+      "projectFiles": [
+        "composer.json"
+      ],
+      "sourceFolderIsProject": true,
+      "run": {
+        "file": [
+          "php",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "artisan",
+            "name": "artisan serve",
+            "command": [
+              "php",
+              "artisan",
+              "serve"
+            ]
+          },
+          {
+            "file": "public/index.php",
+            "name": "php -S",
+            "command": [
+              "php",
+              "-S",
+              "127.0.0.1:8000",
+              "-t",
+              "public"
+            ]
+          },
+          {
+            "file": "index.php",
+            "name": "php -S",
+            "command": [
+              "php",
+              "-S",
+              "127.0.0.1:8000"
+            ]
+          }
+        ],
+        "environment": {
+          "COMPOSER_ALLOW_SUPERUSER": "1",
+          "COMPOSER_NO_INTERACTION": "1",
+          "COMPOSER_PROCESS_TIMEOUT": "0",
+          "COMPOSER_NO_AUDIT": "1"
+        }
+      },
+      "dependencies": [
+        {
+          "manifest": "composer.json",
+          "name": "composer install",
+          "description": "Installs the packages composer.json lists (the exact versions of composer.lock, when there is one) into vendor.",
+          "command": [
+            "composer",
+            "install",
+            "--no-interaction",
+            "--no-progress",
+            "--prefer-dist"
+          ],
+          "installed": "vendor/autoload.php",
+          "declares": [
+            "require",
+            "require-dev"
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "name": "Phpactor",
+          "description": "The language server for PHP, as its official PHP archive.",
+          "archive": {
+            "url": "https://github.com/phpactor/phpactor/releases/download/2026.10.07.0/phpactor.phar",
+            "sha256": "b28bf6166e016d539fc2f2aec18ef918b12590e436a6f1ccbdf30b5bbdbdb16b",
+            "size": 4815663,
+            "destination": "/opt/tabstudio/php/phpactor"
+          }
+        },
+        {
+          "name": "phpactor command",
+          "description": "Starts Phpactor by the command name editors use.",
+          "file": {
+            "path": "/usr/local/bin/phpactor",
+            "content": "#!/bin/sh\nexec php /opt/tabstudio/php/phpactor/phpactor.phar \"$@\"\n",
+            "executable": true
+          }
+        },
+        {
+          "name": "PHP Debug",
+          "description": "The Xdebug debug adapter of the PHP Debug extension.",
+          "archive": {
+            "url": "https://open-vsx.org/api/xdebug/php-debug/1.40.2/file/xdebug.php-debug-1.40.2.vsix",
+            "sha256": "17631993fe800083a2fc89a6782c8bf58a79603ad201ddff60d9b59ba2345d5f",
+            "size": 1797181,
+            "destination": "/opt/tabstudio/php/php-debug"
+          }
+        },
+        {
+          "name": "php-debug-adapter command",
+          "description": "Starts the PHP Debug adapter on Node.js by the command name TabStudio uses.",
+          "file": {
+            "path": "/usr/local/bin/php-debug-adapter",
+            "content": "#!/bin/sh\nexec node /opt/tabstudio/php/php-debug/extension/out/phpDebug.js \"$@\"\n",
+            "executable": true
+          }
+        }
+      ],
+      "languageServer": {
+        "id": "phpactor",
+        "command": [
+          "phpactor",
+          "language-server"
+        ],
+        "languages": [
+          "php"
+        ]
+      },
+      "debugAdapter": {
+        "id": "php-debug",
+        "command": [
+          "php-debug-adapter"
+        ],
+        "type": "php",
+        "languages": [
+          "php"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?:PHP )?(?<severity>Parse error|Fatal error|Warning|Notice|Deprecated): +(?<message>.+?) in (?<file>/.+?\\.php)(?: on line |:)(?<line>\\d+)"
+        },
+        {
+          "pattern": "^\\s*thrown in (?<file>/.+?\\.php) on line (?<line>\\d+)"
+        },
+        {
+          "pattern": "^#\\d+ (?<file>/[^(\\s]+?\\.php)\\((?<line>\\d+)\\)"
+        },
+        {
+          "pattern": "^(?<file>/[^\\s:]+?\\.php):(?<line>\\d+)$"
+        }
+      ],
+      "errorPattern": "^(?:PHP )?(?<message>(?:Fatal error|Parse error): .+?)(?: in /.*)?$"
     },
     {
       "id": "kotlin",
       "name": "Kotlin",
-      "description": "The Kotlin compiler on OpenJDK 21, with Gradle and the Kotlin language server.",
+      "description": "The Kotlin compiler on OpenJDK 21 with Gradle and Maven, JetBrains' Kotlin language server, and debugging through the Java toolchain's debugger.",
       "languages": [
         "Kotlin"
       ],
-      "listed": false,
+      "listed": true,
       "homepage": "https://kotlinlang.org",
       "license": "Apache-2.0",
+      "licenseAgreement": "Kotlin's language server is JetBrains' kotlin-lsp, which is free to use under the JetBrains Free Plugin License Agreement in its download's LICENSE.txt; it is not open source. Installing Kotlin accepts that agreement. The Kotlin compiler is Apache-2.0, and OpenJDK is GPL-2.0 with the Classpath Exception.",
+      "requires": [
+        "java"
+      ],
       "packages": [
-        "openjdk21-jdk",
-        "gradle"
+        "openjdk21-jdk"
       ],
       "versionPackage": "openjdk21-jdk",
-      "estimatedDownloadSize": 320000000,
-      "estimatedInstalledSize": 700000000,
+      "pinnedVersion": "2.4.21",
+      "estimatedDownloadSize": 560000000,
+      "estimatedInstalledSize": 1700000000,
       "host": {
         "commands": [
           "kotlinc"
@@ -1135,48 +1483,67 @@
       ],
       "projectFiles": [
         "build.gradle.kts",
-        "settings.gradle.kts"
+        "settings.gradle.kts",
+        "build.gradle",
+        "settings.gradle",
+        "pom.xml"
+      ],
+      "sourceFolderIsProject": true,
+      "allowNestedProjects": true,
+      "projectTools": [
+        {
+          "manifest": "pom.xml",
+          "command": "mvn",
+          "packages": [
+            "maven"
+          ]
+        },
+        {
+          "manifest": "build.gradle",
+          "command": "gradle",
+          "packages": [
+            "gradle"
+          ]
+        },
+        {
+          "manifest": "build.gradle.kts",
+          "command": "gradle",
+          "packages": [
+            "gradle"
+          ]
+        }
       ],
       "run": {
         "file": [
-          "sh",
-          "-c",
-          "kotlinc \"$0\" -include-runtime -d /tmp/tabstudio-run.jar && exec java -jar /tmp/tabstudio-run.jar",
+          "kotlinc",
           "{file}"
         ],
         "entries": [
           {
-            "file": "build.gradle.kts",
-            "build": [
-              "gradle",
-              "--console=plain",
-              "build"
-            ],
+            "file": "src/main/kotlin/Main.kt",
+            "name": "Main.kt",
             "command": [
-              "gradle",
-              "--console=plain",
-              "--quiet",
-              "run"
+              "kotlinc",
+              "{file}",
+              "-include-runtime",
+              "-d",
+              ".tabstudio/kotlin/Main.jar"
             ]
           },
           {
-            "file": "settings.gradle.kts",
-            "build": [
-              "gradle",
-              "--console=plain",
-              "build"
-            ],
+            "file": "Main.kt",
+            "name": "Main.kt",
             "command": [
-              "gradle",
-              "--console=plain",
-              "--quiet",
-              "run"
+              "kotlinc",
+              "{file}",
+              "-include-runtime",
+              "-d",
+              ".tabstudio/kotlin/Main.jar"
             ]
           }
         ],
         "environment": {
-          "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk",
-          "PATH": "/opt/tabstudio/kotlinc/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+          "NO_COLOR": "1"
         }
       },
       "setup": [
@@ -1187,28 +1554,90 @@
             "url": "https://github.com/JetBrains/kotlin/releases/download/v2.4.21/kotlin-compiler-2.4.21.zip",
             "sha256": "7cc140e76daf416a0424a5557f99afd7ca89ebd463ea1101261e3e01c33e75cd",
             "size": 89733618,
-            "destination": "/opt/tabstudio"
-          }
+            "destination": "/opt/tabstudio/kotlin"
+          },
+          "removes": [
+            "/opt/tabstudio/kotlinc"
+          ]
         },
         {
-          "name": "Kotlin language server",
-          "description": "fwcd's kotlin-language-server, which Alpine does not package.",
-          "archive": {
-            "url": "https://github.com/fwcd/kotlin-language-server/releases/download/1.3.13/server.zip",
-            "sha256": "4fe7d71d087b307c7869036171bd9d8c6a4284cd7c25b89098b0a24eb2d9b6d2",
-            "size": 87291855,
-            "destination": "/opt/tabstudio/kotlin-language-server"
+          "name": "kotlinc command",
+          "description": "Starts the Kotlin compiler by its usual command name.",
+          "file": {
+            "path": "/usr/local/bin/kotlinc",
+            "content": "#!/bin/sh\n# 0.20.0 unpacked the compiler into /opt/tabstudio itself, where installs before this one keep it.\nfor home in /opt/tabstudio/kotlin/kotlinc /opt/tabstudio/kotlinc; do\n  [ -x \"$home/bin/kotlinc\" ] && exec \"$home/bin/kotlinc\" \"$@\"\ndone\necho 'kotlinc is missing: remove Kotlin in Tools > Toolchain Store and install it again.' >&2\nexit 127\n",
+            "executable": true
           }
         }
       ],
-      "languageServer": {
-        "id": "kotlin-language-server",
-        "command": [
-          "/opt/tabstudio/kotlin-language-server/server/bin/kotlin-language-server"
+      "glibc": {
+        "packages": [
+          "ca-certificates",
+          "libstdc++6",
+          "zlib1g",
+          "libfreetype6",
+          "fontconfig-config"
         ],
-        "environment": {
-          "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk"
-        },
+        "commands": [
+          "kotlin-lsp"
+        ],
+        "programPaths": [
+          "/opt/tabstudio/kotlin-lsp/"
+        ],
+        "setup": [
+          {
+            "architectures": [
+              "aarch64"
+            ],
+            "name": "Kotlin language server",
+            "description": "JetBrains' kotlin-lsp for Linux ARM64, with its own Java runtime.",
+            "archive": {
+              "url": "https://download.jetbrains.com/language-server/kotlin-server/263.7084.0/kotlin-server-0.0.27-linux-aarch64.vsix",
+              "sha256": "4de2b5d4ab0ccb73f0bfbfdfe3b56b49a68889f198cd8342f5dfd98ff0647052",
+              "size": 370454970,
+              "destination": "/opt/tabstudio/kotlin-lsp"
+            }
+          },
+          {
+            "architectures": [
+              "x86_64"
+            ],
+            "name": "Kotlin language server",
+            "description": "JetBrains' kotlin-lsp for Linux x64, with its own Java runtime.",
+            "archive": {
+              "url": "https://download.jetbrains.com/language-server/kotlin-server/263.7084.0/kotlin-server-0.0.27-linux-amd64.vsix",
+              "sha256": "6787185abb0e7f3b527484bb6cc4a881ce42b2e39320626937e65839751075e9",
+              "size": 371341732,
+              "destination": "/opt/tabstudio/kotlin-lsp"
+            }
+          },
+          {
+            "name": "kotlin-lsp command",
+            "description": "Starts kotlin-lsp by the command name TabStudio uses.",
+            "file": {
+              "path": "/usr/local/bin/kotlin-lsp",
+              "content": "#!/bin/sh\nexec /opt/tabstudio/kotlin-lsp/extension/server/bin/intellij-server \"$@\"\n",
+              "executable": true
+            }
+          }
+        ]
+      },
+      "languageServer": {
+        "id": "kotlin-lsp",
+        "command": [
+          "kotlin-lsp",
+          "--stdio"
+        ],
+        "languages": [
+          "kotlin"
+        ]
+      },
+      "debugAdapter": {
+        "id": "java-debug",
+        "command": [
+          "jdtls"
+        ],
+        "type": "java",
         "languages": [
           "kotlin"
         ]
@@ -1216,8 +1645,178 @@
       "problemPatterns": [
         {
           "pattern": "^(?<severity>e|w): (?:file://)?(?<file>/[^:\\s]+\\.kts?):(?<line>\\d+):(?<column>\\d+) (?<message>.*)$"
+        },
+        {
+          "pattern": "^(?<file>/[^:\\s]+\\.kts?):(?<line>\\d+):(?<column>\\d+): (?<severity>error|warning): (?<message>.*)$"
+        },
+        {
+          "pattern": "^\\[(?<severity>ERROR|WARNING)\\] (?:file://)?(?<file>/[^:\\s]+?\\.kt):(?:\\[)?(?<line>\\d+)[,:](?<column>\\d+)\\]? (?<message>.*)$"
+        },
+        {
+          "pattern": "^\\s*at (?:[\\w$.-]+/)?(?<package>(?:[a-z_][\\w$]*\\.)*)[A-Z][\\w$]*\\.[\\w$<>-]+\\((?<file>[\\w$]+\\.(?:java|kt|kts)):(?<line>\\d+)\\)"
         }
-      ]
+      ],
+      "errorPattern": "^(?:Exception in thread \"[^\"]+\" )?(?<message>(?:[a-z][\\w$]*\\.)+[A-Z][\\w$]*(?:Exception|Error)(?::.*)?)$"
+    },
+    {
+      "id": "swift",
+      "name": "Swift",
+      "description": "The official Swift 6.4 toolchain for Linux with SwiftPM, sourcekit-lsp and LLDB, in TabStudio's Ubuntu glibc environment. Experimental.",
+      "languages": [
+        "Swift"
+      ],
+      "listed": true,
+      "homepage": "https://www.swift.org",
+      "license": "Apache-2.0 WITH Swift-exception",
+      "pinnedVersion": "6.4.1",
+      "estimatedDownloadSize": 1250000000,
+      "estimatedInstalledSize": 3600000000,
+      "host": {
+        "commands": [
+          "swift"
+        ],
+        "versionArguments": [
+          "--version"
+        ],
+        "versionPattern": "Swift version (?<version>\\d+\\.\\d+(?:\\.\\d+)?)"
+      },
+      "fileExtensions": [
+        ".swift"
+      ],
+      "projectFiles": [
+        "Package.swift"
+      ],
+      "sourceFolderIsProject": true,
+      "allowNestedProjects": true,
+      "run": {
+        "file": [
+          "swift",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "Sources/*/main.swift",
+            "name": "swift run",
+            "command": [
+              "swift",
+              "run",
+              "{match}"
+            ]
+          }
+        ],
+        "environment": {
+          "TERM": "dumb",
+          "NO_COLOR": "1"
+        }
+      },
+      "dependencies": [
+        {
+          "manifest": "Package.swift",
+          "name": "swift package resolve",
+          "description": "Downloads the packages Package.swift depends on, at the versions Package.resolved records.",
+          "command": [
+            "swift",
+            "package",
+            "resolve"
+          ],
+          "installed": ".build/workspace-state.json"
+        }
+      ],
+      "glibc": {
+        "packages": [
+          "binutils",
+          "git",
+          "gnupg2",
+          "libc6-dev",
+          "libcurl4-openssl-dev",
+          "libedit2",
+          "libgcc-13-dev",
+          "libncurses-dev",
+          "libpython3-dev",
+          "libsqlite3-0",
+          "libstdc++-13-dev",
+          "libxml2-dev",
+          "libz3-dev",
+          "pkg-config",
+          "tzdata",
+          "unzip",
+          "zlib1g-dev",
+          "ca-certificates"
+        ],
+        "commands": [
+          "swift",
+          "swiftc",
+          "sourcekit-lsp",
+          "lldb",
+          "lldb-dap",
+          "swift-build",
+          "swift-test",
+          "swift-run",
+          "swift-package"
+        ],
+        "programPaths": [
+          "/opt/tabstudio/swift/",
+          "/.build/"
+        ],
+        "setup": [
+          {
+            "architectures": [
+              "aarch64"
+            ],
+            "name": "Swift 6.4.1",
+            "description": "The official Swift toolchain for Ubuntu 24.04 on ARM64.",
+            "archive": {
+              "url": "https://download.swift.org/swift-6.4.1-release/ubuntu2404-aarch64/swift-6.4.1-RELEASE/swift-6.4.1-RELEASE-ubuntu24.04-aarch64.tar.gz",
+              "sha256": "b85dd70e204bc363ce62f1e35bd1887810d0e04487d13de8fd9d042635972f45",
+              "size": 1109527220,
+              "destination": "/opt/tabstudio/swift",
+              "stripComponents": 1
+            }
+          },
+          {
+            "architectures": [
+              "x86_64"
+            ],
+            "name": "Swift 6.4.1",
+            "description": "The official Swift toolchain for Ubuntu 24.04 on x64.",
+            "archive": {
+              "url": "https://download.swift.org/swift-6.4.1-release/ubuntu2404/swift-6.4.1-RELEASE/swift-6.4.1-RELEASE-ubuntu24.04.tar.gz",
+              "sha256": "7d246c7114077ad01dba4ad897628446ada4c489d6c7dbcf39ae3f25cbe17e8b",
+              "size": 1124788555,
+              "destination": "/opt/tabstudio/swift",
+              "stripComponents": 1
+            }
+          }
+        ]
+      },
+      "languageServer": {
+        "id": "sourcekit-lsp",
+        "command": [
+          "sourcekit-lsp"
+        ],
+        "languages": [
+          "swift"
+        ]
+      },
+      "debugAdapter": {
+        "id": "lldb-dap",
+        "command": [
+          "lldb-dap"
+        ],
+        "type": "lldb-dap",
+        "languages": [
+          "swift"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>/[^:\\s]+?\\.swift):(?<line>\\d+):(?<column>\\d+): (?<severity>error|warning|note): (?<message>.*)$"
+        },
+        {
+          "pattern": "^\\S+ at (?<file>/[^:\\s]+?\\.swift):(?<line>\\d+)(?::\\d+)?$"
+        }
+      ],
+      "errorPattern": "^(?<message>(?:Swift/[\\w.]+:\\d+: )?Fatal error:.*)$"
     },
     {
       "id": "android",
@@ -2904,7 +3503,7 @@
           "pattern": "panicked at (?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)"
         }
       ],
-      "errorPattern": "^error(?:\\[[^\\]]+\\])?: (?<message>.*)$",
+      "errorPattern": "^(?:error(?:\\[[^\\]]+\\])?: (?<message>.*)|(?<message>thread '[^']*'(?: \\(\\d+\\))? panicked at .*))$",
       "sourceFolderIsProject": false
     },
     {

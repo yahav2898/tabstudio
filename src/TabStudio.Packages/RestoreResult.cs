@@ -6,8 +6,15 @@ namespace TabStudio.Packages;
 /// The outcome of restoring the packages of one project.
 /// </summary>
 /// <remarks>
+/// <para>
 /// Pass <see cref="CompileAssemblies"/> and <see cref="Analyzers"/> to the language service so code that uses the
 /// packages compiles, and <see cref="RuntimeAssemblies"/> to the program runner so the program finds them when it runs.
+/// </para>
+/// <para>
+/// A restore with errors still carries every package it did restore, as NuGet's does: one package that cannot be
+/// found or whose versions conflict does not take the others away. <see cref="UnrestoredReferences"/> names the
+/// project's references that are missing, and <see cref="Diagnostics"/> says why.
+/// </para>
 /// </remarks>
 public sealed record RestoreResult
 {
@@ -58,6 +65,14 @@ public sealed record RestoreResult
     /// <summary>Errors and warnings, with NuGet's ids where NuGet has one (such as NU1101), most severe first.</summary>
     public IReadOnlyList<BuildDiagnostic> Diagnostics { get; init; } = [];
 
+    /// <summary>
+    /// The ids of the project's own package references that were not restored, as the project spells them: a package
+    /// no source has (NU1101), a version that does not parse (TS3003), a download that failed. Empty when every
+    /// reference was restored. A reference that was restored with problems, such as a version conflict (NU1107) or
+    /// no assemblies for the target framework (NU1202), is not listed: its package is in <see cref="Packages"/>.
+    /// </summary>
+    public IReadOnlyList<string> UnrestoredReferences { get; init; } = [];
+
     /// <summary>Whether the result was read from the project's restore cache, without contacting any source.</summary>
     public bool FromCache { get; init; }
 
@@ -68,6 +83,9 @@ public sealed record RestoreResult
     private IEnumerable<RestoredPackage> ImportOrder() =>
         Packages.OrderByDescending(p => p.Depth).ThenBy(p => p.Id, StringComparer.OrdinalIgnoreCase);
 
-    /// <summary>Whether every package was restored: there are no errors.</summary>
+    /// <summary>
+    /// Whether every package was restored: there are no errors. A result that is not successful still holds the
+    /// packages that were restored.
+    /// </summary>
     public bool Success => Diagnostics.All(d => d.Severity != DiagnosticSeverityLevel.Error);
 }

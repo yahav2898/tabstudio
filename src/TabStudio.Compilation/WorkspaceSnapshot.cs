@@ -45,6 +45,9 @@ public sealed class WorkspaceSnapshot : IBuildSource
     public bool ArePackagesRestored(string projectFilePath) => _host.ArePackagesRestored(projectFilePath);
 
     /// <inheritdoc />
+    public bool IsPackageRestored(string projectFilePath, string packageId) => _host.IsPackageRestored(projectFilePath, packageId);
+
+    /// <inheritdoc />
     public async Task<CompilationResult> EmitAsync(string projectFilePath, bool checkInProcessSafety, CancellationToken cancellationToken = default)
     {
         var stopwatch = Stopwatch.StartNew();

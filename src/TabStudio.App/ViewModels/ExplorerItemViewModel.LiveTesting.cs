@@ -17,7 +17,7 @@ public sealed partial class ExplorerItemViewModel
 {
     /// <summary>Whether the row is a C# project that can be included in or excluded from Live Unit Testing.</summary>
     public bool CanSetLiveTesting =>
-        _actions is ILiveTestingExplorerActions && Node.Kind == WorkspaceNodeKind.Project && Node.Project is { Language: ProjectLanguage.CSharp };
+        _actions is ILiveTestingExplorerActions && Node.Kind == WorkspaceNodeKind.Project && Node.Project is { IsRoslynLanguage: true };
 
     /// <summary>Includes the project in Live Unit Testing.</summary>
     [RelayCommand(CanExecute = nameof(CanSetLiveTesting))]

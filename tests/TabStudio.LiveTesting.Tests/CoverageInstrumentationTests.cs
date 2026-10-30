@@ -174,14 +174,162 @@ public sealed partial class CoverageInstrumentationTests
         Assert.Single(module.Statements);
     }
 
-    private static int[] StackLines(Exception? exception)
+    [Fact]
+    public async Task Visual_basic_constructs_keep_their_behavior_and_record_their_statements()
+    {
+        var source = VisualBasicCorpus.Constructs;
+        var plain = await CoveredProgram.RunAsync(CoveredProgram.PlainVisualBasic(source));
+        var (assembly, module, text) = CoveredProgram.InstrumentVisualBasic(source);
+        var table = CoveredProgram.TableFor(module);
+
+        var (result, output) = await CoveredProgram.RunAsync(assembly, table);
+
+        Assert.True(plain.Result.Outcome == RunOutcome.Completed, plain.Output + plain.Result.Exception);
+        Assert.True(result.Outcome == RunOutcome.Completed, output + result.Exception);
+        Assert.Equal(plain.Output, output);
+        Assert.Contains("Circle: 314", output, StringComparison.Ordinal);
+        Assert.Contains("recorded it", output, StringComparison.Ordinal);
+        Assert.Equal(source.Split('\n').Length, text.Split('\n').Length);
+
+        var hit = CoveredProgram.HitLines(module, table);
+        Assert.Contains(CoveredProgram.LineOf(source, "' property"), hit);
+        Assert.Contains(CoveredProgram.LineOf(source, "' iterator"), hit);
+        Assert.Contains(CoveredProgram.LineOf(source, "' lambda"), hit);
+        Assert.Contains(CoveredProgram.LineOf(source, "MyBase.New(\"Circle\")"), hit);
+        Assert.Contains(CoveredProgram.LineOf(source, "MyBase.New(\"Square\") : _side = side"), hit);
+        Assert.Contains(CoveredProgram.LineOf(source, "If i < 2 Then"), hit);
+        Assert.Contains(CoveredProgram.LineOf(source, "_handlers.Invoke()"), hit);
+        Assert.Contains(CoveredProgram.LineOf(source, "Console.WriteLine(\"recorded \""), hit);
+        Assert.Contains(CoveredProgram.LineOf(source, "Greeting = \"hello\""), hit);
+        Assert.Contains(CoveredProgram.LineOf(source, "c._value += amount"), hit);
+        Assert.Single(module.Members, m => m.Name == "OnRecorded");
+        Assert.True(hit.Count > 40, $"Only {hit.Count} lines were recorded.");
+    }
+
+    [Fact]
+    public async Task Visual_basic_instrumentation_keeps_the_line_numbers_of_stack_traces()
+    {
+        var plain = await CoveredProgram.RunAsync(CoveredProgram.PlainVisualBasic(VisualBasicCorpus.Throwing));
+        var (assembly, module, text) = CoveredProgram.InstrumentVisualBasic(VisualBasicCorpus.Throwing);
+
+        var covered = await CoveredProgram.RunAsync(assembly, CoveredProgram.TableFor(module));
+
+        Assert.Equal(new[] { 13, 8, 3 }, StackLines(plain.Result.Exception, VisualBasicLinePattern()));
+        Assert.Equal(StackLines(plain.Result.Exception, VisualBasicLinePattern()), StackLines(covered.Result.Exception, VisualBasicLinePattern()));
+        Assert.Equal(VisualBasicCorpus.Throwing.Split('\n').Length, text.Split('\n').Length);
+    }
+
+    [Fact]
+    public async Task Only_the_visual_basic_branches_that_run_are_recorded()
+    {
+        const string source = """
+            Module Program
+                Sub Main()
+                    Dim x = Read()
+                    If x > 5 Then
+                        Console.WriteLine("big")
+                    Else
+                        Console.WriteLine("small")
+                    End If
+                End Sub
+
+                Function Read() As Integer
+                    Return 3
+                End Function
+
+                Sub Unused()
+                    Console.WriteLine("never")
+                End Sub
+            End Module
+            """;
+        var (assembly, module, _) = CoveredProgram.InstrumentVisualBasic(source);
+        var table = CoveredProgram.TableFor(module);
+
+        await CoveredProgram.RunAsync(assembly, table);
+
+        Assert.Equal(new[] { 3, 4, 5, 7, 12, 16 }, module.Statements.Select(s => s.Line).Order());
+        Assert.Equal(new[] { 3, 4, 7, 12 }, CoveredProgram.HitLines(module, table).Order());
+    }
+
+    [Fact]
+    public void Visual_basic_members_are_keyed_by_root_namespace_type_name_and_parameters()
+    {
+        const string source = """
+            Namespace Shop
+                Public Class Cart(Of T)
+                    Private _count As Integer
+
+                    Public ReadOnly Property Count As Integer
+                        Get
+                            Return _count
+                        End Get
+                    End Property
+
+                    Public Sub Add(item As T, Optional quantity As Integer = 1)
+                        _count += quantity
+                    End Sub
+
+                    Default Public ReadOnly Property Item(index As Integer) As Integer
+                        Get
+                            Return index
+                        End Get
+                    End Property
+
+                    Public Shared Operator +(basket As Cart(Of T), item As T) As Cart(Of T)
+                        basket.Add(item)
+                        Return basket
+                    End Operator
+
+                    Public Class Line
+                        Public Sub New()
+                        End Sub
+                    End Class
+                End Class
+            End Namespace
+            """;
+        var compilation = CoveredProgram.VisualBasicCompilation(source, "Store", AssemblyKind.Library);
+        Assert.Empty(compilation.GetDiagnostics().Where(d => d.Severity == Microsoft.CodeAnalysis.DiagnosticSeverity.Error));
+
+        var (_, module) = CoverageInstrumenter.Instrument(compilation, "/projects/Shop.vbproj", CancellationToken.None);
+
+        Assert.Equal(
+            new[] { "Store.Shop.Cart`1.Count", "Store.Shop.Cart`1.Add(T,Integer)", "Store.Shop.Cart`1.Item(Integer)", "Store.Shop.Cart`1.operator +(Cart(OfT),T)", "Store.Shop.Cart`1+Line..ctor()" },
+            module.Members.Select(m => m.Key));
+        Assert.Equal(
+            new[] { "Public ReadOnly Property Count", "Public Sub Add", "Default Public", "Public Shared Operator", "Public Sub New" }.Select(text => CoveredProgram.LineOf(source, text)),
+            module.Members.Select(m => m.Line));
+        Assert.Equal("Store.Shop.Cart`1+Line", module.Members[^1].TypeName);
+    }
+
+    [Fact]
+    public void Generated_visual_basic_files_are_not_instrumented()
+    {
+        var compilation = CoveredProgram.VisualBasicCompilation(
+            "Module Program\n    Sub Main()\n        Console.WriteLine(Helper.Value() + Marked.Value())\n    End Sub\nEnd Module\n",
+            string.Empty,
+            AssemblyKind.ConsoleApplication,
+            new SourceDocument("obj/Helper.g.vb", "Module Helper\n    Function Value() As Integer\n        Return 1\n    End Function\nEnd Module\n"),
+            new SourceDocument("Marked.vb", "' <auto-generated/>\nModule Marked\n    Function Value() As Integer\n        Return 2\n    End Function\nEnd Module\n"));
+
+        var (_, module) = CoverageInstrumenter.Instrument(compilation, "/projects/Generated.vbproj", CancellationToken.None);
+
+        Assert.Equal(new[] { CoveredProgram.VisualBasicFilePath }, module.Files);
+        Assert.Single(module.Statements);
+    }
+
+    private static int[] StackLines(Exception? exception) => StackLines(exception, LinePattern());
+
+    private static int[] StackLines(Exception? exception, Regex pattern)
     {
         Assert.NotNull(exception);
-        return LinePattern().Matches(exception.StackTrace ?? string.Empty)
+        return pattern.Matches(exception.StackTrace ?? string.Empty)
             .Select(m => int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture))
             .ToArray();
     }
 
     [GeneratedRegex(@"Program\.cs:line (\d+)")]
     private static partial Regex LinePattern();
+
+    [GeneratedRegex(@"Program\.vb:line (\d+)")]
+    private static partial Regex VisualBasicLinePattern();
 }

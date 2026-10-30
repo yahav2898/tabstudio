@@ -22,7 +22,8 @@ class EmulatorShardTests(unittest.TestCase):
             arguments = ["/bin/bash", str(SCRIPT), "ide.apk", "results", "compiler-work", "probe.apk"]
             if shard is not None:
                 arguments.append(shard)
-            run = subprocess.run(arguments, env=environment, text=True, capture_output=True, check=False)
+            run = subprocess.run(arguments, env=environment, text=True, capture_output=True, check=False, cwd=folder)
+            self.kept_log = (folder / "results" / "emulator-test.log").exists()
             return run.returncode, log.read_text().splitlines() if log.exists() else []
 
     def test_native_and_manual_all_require_both_the_ide_and_compiler_probe(self):
@@ -34,6 +35,8 @@ class EmulatorShardTests(unittest.TestCase):
                 self.assertEqual("adb:shell am force-stop com.tabstudio.ide", calls[1])
                 self.assertEqual("adb:install -r probe.apk", calls[2])
                 self.assertEqual("probe:build/pic/android_spike.py run --work compiler-work --output results/pic-android", calls[3])
+                # The job's log cannot be read after the run, so the script keeps its own with the published files.
+                self.assertTrue(self.kept_log)
 
     def test_other_shards_keep_their_own_verdict_without_repeating_the_pic_probe(self):
         for shard in ["managed", "ui"]:

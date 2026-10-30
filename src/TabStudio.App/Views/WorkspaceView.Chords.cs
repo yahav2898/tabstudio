@@ -50,8 +50,19 @@ public sealed partial class WorkspaceView
         TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is Visual focused
         && (focused as CodeEditorView ?? focused.FindAncestorOfType<CodeEditorView>()) is not null;
 
+    private bool IsTerminalFocused() =>
+        TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is Visual focused
+        && (focused as TabStudio.App.Controls.TerminalView ?? focused.FindAncestorOfType<TabStudio.App.Controls.TerminalView>()) is not null;
+
     private void OnChordKeyDown(object? sender, KeyEventArgs e)
     {
+        // The shell's Ctrl+R, Ctrl+E and Ctrl+K are reverse search, end of line and kill line: the chords stay out of
+        // the terminal's way, as its own key handling promises.
+        if (!_chords.IsPending && IsTerminalFocused())
+        {
+            return;
+        }
+
         if (_chords.HandleKeyDown(e.Key, e.KeyModifiers))
         {
             e.Handled = true;

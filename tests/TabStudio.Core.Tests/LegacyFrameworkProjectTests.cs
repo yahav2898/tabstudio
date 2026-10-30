@@ -75,7 +75,8 @@ public sealed class LegacyFrameworkProjectTests : IDisposable
     public void A_legacy_console_app_runs_in_process()
     {
         _temp.Write("Tool/Program.cs", "class Program { static void Main() { System.Console.WriteLine(1); } }");
-        var path = _temp.Write("Tool/Tool.csproj", Legacy("Exe", """<Reference Include="System" /><Reference Include="System.Core" />""", """<Compile Include="Program.cs" />"""));
+        // A package install adds System.Web to console apps that never use it, as in example-console-visualbasic.
+        var path = _temp.Write("Tool/Tool.csproj", Legacy("Exe", """<Reference Include="System" /><Reference Include="System.Core" /><Reference Include="System.Web" />""", """<Compile Include="Program.cs" />"""));
 
         var report = CompatibilityDoctor.Diagnose(ProjectParser.Load(path));
 
@@ -175,6 +176,57 @@ public sealed class LegacyFrameworkProjectTests : IDisposable
         Assert.False(ProjectParser.IsLegacyFrameworkProject(project));
         Assert.Equal(CompatibilityStatus.NeedsWindows, CompatibilityDoctor.Diagnose(project).Status);
         Assert.False(CompatibilityDoctor.Diagnose(project).CanUpgradeProject);
+    }
+
+    [Fact]
+    public void Upgrade_writes_an_sdk_style_visual_basic_windows_forms_project()
+    {
+        _temp.Write("Pong/Pong.vbproj", """
+            <?xml version="1.0" encoding="utf-8"?>
+            <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+              <PropertyGroup>
+                <OutputType>WinExe</OutputType>
+                <StartupObject>Pong.My.MyApplication</StartupObject>
+                <RootNamespace>Pong</RootNamespace>
+                <AssemblyName>Pong</AssemblyName>
+                <MyType>WindowsForms</MyType>
+                <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+                <OptionStrict>On</OptionStrict>
+              </PropertyGroup>
+              <ItemGroup>
+                <Reference Include="System" />
+                <Reference Include="System.Drawing" />
+                <Reference Include="System.Windows.Forms" />
+              </ItemGroup>
+              <ItemGroup>
+                <Import Include="Microsoft.VisualBasic" />
+                <Import Include="System.Windows.Forms" />
+              </ItemGroup>
+              <ItemGroup>
+                <Compile Include="Form1.vb"><SubType>Form</SubType></Compile>
+                <Compile Include="Form1.Designer.vb"><DependentUpon>Form1.vb</DependentUpon></Compile>
+                <Compile Include="My Project\AssemblyInfo.vb" />
+                <EmbeddedResource Include="Form1.resx"><DependentUpon>Form1.vb</DependentUpon></EmbeddedResource>
+              </ItemGroup>
+              <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+            </Project>
+            """);
+        _temp.Write("Pong/Form1.vb", "Public Class Form1\nEnd Class\n");
+        _temp.Write("Pong/Form1.Designer.vb", "Partial Class Form1\nEnd Class\n");
+        _temp.Write("Pong/My Project/AssemblyInfo.vb", "");
+        _temp.Write("Pong/Form1.resx", "<root />");
+
+        var upgrade = LegacyProjectUpgrader.Plan(_temp.Resolve("Pong/Pong.vbproj"));
+        var project = XElement.Parse(upgrade.UpgradedXml);
+
+        Assert.Equal("Microsoft.NET.Sdk", project.Attribute("Sdk")?.Value);
+        Assert.Equal("WindowsForms", Property(project, "MyType"));
+        Assert.Equal("On", Property(project, "OptionStrict"));
+        Assert.Equal("false", Property(project, "GenerateAssemblyInfo"));
+        Assert.Contains(upgrade.Notes, n => n.Contains("My Project/AssemblyInfo.vb", StringComparison.Ordinal));
+        // The .vb files and the form's resources are the SDK's default items, nested by name.
+        Assert.DoesNotContain(project.Descendants(), e => e.Name.LocalName == "Compile" && e.Attribute("Include")?.Value.EndsWith(".vb", StringComparison.Ordinal) == true);
+        Assert.DoesNotContain(project.Descendants(), e => e.Name.LocalName == "DependentUpon");
     }
 
     [Fact]

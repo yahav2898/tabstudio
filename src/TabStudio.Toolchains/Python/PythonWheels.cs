@@ -47,8 +47,10 @@ public sealed record PythonRelease(string Name, string Version, string? Requires
 /// Which Python versions a project's pinned packages install on without compiling. A package that publishes
 /// wheels for this platform only for some Python versions (psycopg2-binary 2.9.9 up to 3.12, say) would be
 /// compiled on a newer Python, which needs compilers and libraries and often fails; an older Python that has the
-/// wheel installs it in seconds. Pure-Python packages, and packages without wheels for this platform, compile (or
-/// not) on any version alike, so they do not decide.
+/// wheel installs it in seconds. A package without wheels for this platform is compiled on every version, but its
+/// Linux wheels for other processors still name the Pythons its C code supports (asyncpg 0.26.0's stop at 3.10,
+/// and its source does not build on 3.12), so they decide as well. Pure-Python packages, and packages without
+/// Linux wheels, compile (or not) on any version alike, so they do not decide.
 /// </summary>
 public static class PythonWheels
 {
@@ -94,7 +96,7 @@ public static class PythonWheels
     /// <summary>
     /// Whether a release installs on Python 3.<paramref name="minor"/> without compiling, or at least no worse
     /// than on any other version: it allows that Python, and it has a wheel for it when it has wheels for this
-    /// platform at all.
+    /// platform at all, or else a Linux wheel for it for another processor when it has Linux wheels at all.
     /// </summary>
     /// <param name="release">The release.</param>
     /// <param name="minor">The minor version.</param>
@@ -114,10 +116,14 @@ public static class PythonWheels
             return true;
         }
 
-        // Without a wheel for this platform, pip builds the package on every Python alike.
+        // Without a wheel for this platform, pip builds the package. The Linux wheels it publishes for other
+        // processors or C libraries, as asyncpg 0.26.0 does for x86_64 alone up to 3.10, name the Pythons its C
+        // source was written for: on a newer one the build usually fails against CPython's changed C API. A
+        // release without Linux wheels at all builds on every Python alike.
         if (!wheels.Any(w => w.Platforms.Any(platform.IsNative)))
         {
-            return true;
+            var linux = wheels.Where(w => w.Platforms.Any(IsLinux)).ToList();
+            return linux.Count == 0 || linux.Any(w => w.Supports(minor));
         }
 
         return wheels.Any(w => w.Platforms.Any(platform.Accepts) && w.Supports(minor));
@@ -219,6 +225,10 @@ public static class PythonWheels
             return null;
         }
     }
+
+    /// <summary>Whether a platform tag is a Linux one, for any processor: <c>manylinux…</c>, <c>musllinux…</c> or <c>linux_…</c>.</summary>
+    private static bool IsLinux(string tag) =>
+        tag.StartsWith("manylinux", StringComparison.Ordinal) || tag.StartsWith("musllinux_", StringComparison.Ordinal) || tag.StartsWith("linux_", StringComparison.Ordinal);
 
     /// <summary>A wheel's compatibility tags, from its file name: <c>name-version(-build)-python-abi-platform.whl</c>.</summary>
     private sealed record WheelTags(string[] Pythons, string[] Abis, string[] Platforms)

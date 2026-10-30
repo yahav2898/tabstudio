@@ -155,7 +155,11 @@ jobs:
 
   app:
     name: Build and test the IDE
-    runs-on: ubuntu-latest
+    # Ubuntu 24.04, not ubuntu-latest: the tools installed below (Swift's toolchain, LLVM and the PHP and Java
+    # packages) are the ones published for 24.04, and since ubuntu-latest became Ubuntu 26.04 the IDE's test host
+    # aborted at its first test there ("free(): invalid pointer"). The IDE's own code passes on 26.04 with only
+    # Node.js, Python and Go installed.
+    runs-on: ubuntu-24.04
     # A healthy run takes about 27 minutes: setup (apt alone may take its full 10), the tool tests, and about 20
     # minutes of IDE tests in both themes. The one retry below repeats the whole dark-theme run, and a hung first
     # attempt only ends at its 12-minute hang timeout, so the budget holds both attempts and the log publishing.
@@ -235,6 +239,54 @@ jobs:
           echo "$RUNNER_TEMP/jdtls/bin" >> "$GITHUB_PATH"
           echo "TABSTUDIO_JAVA_DEBUG_BUNDLE=$RUNNER_TEMP/java-debug/extension/server/com.microsoft.java.debug.plugin-0.53.2.jar" >> "$GITHUB_ENV"
 
+      # PHP with Composer and Xdebug, which TabStudio loads itself for debug runs, as it does on a tablet.
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, intl, sqlite3, pdo_sqlite, xdebug
+          tools: composer
+          coverage: none
+
+      - name: Install PHP, Kotlin and Swift tools
+        timeout-minutes: 15
+        run: |
+          # Xdebug stays installed but off: the IDE's debug runs load it from an ini file of their own.
+          for ini in $(php --ini | grep -o '/[^, ]*xdebug[^, ]*\.ini'); do sudo rm -f "$ini"; done
+          php -m | grep -qi xdebug && { echo "Xdebug is still loaded"; exit 1; }
+          php -d zend_extension=xdebug.so -m | grep -qi xdebug
+          mkdir -p "$RUNNER_TEMP/php-tools/bin" "$RUNNER_TEMP/php-debug"
+          curl -fsSL https://github.com/phpactor/phpactor/releases/download/2026.10.07.0/phpactor.phar -o "$RUNNER_TEMP/php-tools/phpactor.phar"
+          echo "b28bf6166e016d539fc2f2aec18ef918b12590e436a6f1ccbdf30b5bbdbdb16b  $RUNNER_TEMP/php-tools/phpactor.phar" | sha256sum -c -
+          printf '#!/bin/sh\nexec php "%s/php-tools/phpactor.phar" "$@"\n' "$RUNNER_TEMP" > "$RUNNER_TEMP/php-tools/bin/phpactor"
+          curl -fsSL https://open-vsx.org/api/xdebug/php-debug/1.40.2/file/xdebug.php-debug-1.40.2.vsix -o "$RUNNER_TEMP/php-debug.vsix"
+          echo "17631993fe800083a2fc89a6782c8bf58a79603ad201ddff60d9b59ba2345d5f  $RUNNER_TEMP/php-debug.vsix" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/php-debug.vsix" -d "$RUNNER_TEMP/php-debug"
+          printf '#!/bin/sh\nexec node "%s/php-debug/extension/out/phpDebug.js" "$@"\n' "$RUNNER_TEMP" > "$RUNNER_TEMP/php-tools/bin/php-debug-adapter"
+          chmod +x "$RUNNER_TEMP/php-tools/bin/"*
+          echo "$RUNNER_TEMP/php-tools/bin" >> "$GITHUB_PATH"
+          # The Kotlin compiler and JetBrains' Kotlin language server, pinned as the Toolchain Store pins them.
+          curl -fsSL https://github.com/JetBrains/kotlin/releases/download/v2.4.21/kotlin-compiler-2.4.21.zip -o "$RUNNER_TEMP/kotlinc.zip"
+          echo "7cc140e76daf416a0424a5557f99afd7ca89ebd463ea1101261e3e01c33e75cd  $RUNNER_TEMP/kotlinc.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/kotlinc.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/kotlinc/bin" >> "$GITHUB_PATH"
+          mkdir -p "$RUNNER_TEMP/kotlin-lsp/bin"
+          curl -fsSL https://download.jetbrains.com/language-server/kotlin-server/263.7084.0/kotlin-server-0.0.27-linux-amd64.vsix -o "$RUNNER_TEMP/kotlin-lsp.vsix"
+          echo "6787185abb0e7f3b527484bb6cc4a881ce42b2e39320626937e65839751075e9  $RUNNER_TEMP/kotlin-lsp.vsix" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/kotlin-lsp.vsix" -d "$RUNNER_TEMP/kotlin-lsp"
+          rm "$RUNNER_TEMP/kotlin-lsp.vsix"
+          printf '#!/bin/sh\nexec "%s/kotlin-lsp/extension/server/bin/intellij-server" "$@"\n' "$RUNNER_TEMP" > "$RUNNER_TEMP/kotlin-lsp/bin/kotlin-lsp"
+          chmod +x "$RUNNER_TEMP/kotlin-lsp/bin/kotlin-lsp" "$RUNNER_TEMP/kotlin-lsp/extension/server/bin/intellij-server"
+          echo "$RUNNER_TEMP/kotlin-lsp/bin" >> "$GITHUB_PATH"
+          # Swift's official toolchain for Ubuntu 24.04, with the packages swift.org lists for it.
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq libz3-dev libncurses-dev libedit2 libpython3-dev > /dev/null
+          curl -fsSL https://download.swift.org/swift-6.4.1-release/ubuntu2404/swift-6.4.1-RELEASE/swift-6.4.1-RELEASE-ubuntu24.04.tar.gz -o "$RUNNER_TEMP/swift.tar.gz"
+          echo "7d246c7114077ad01dba4ad897628446ada4c489d6c7dbcf39ae3f25cbe17e8b  $RUNNER_TEMP/swift.tar.gz" | sha256sum -c -
+          mkdir -p "$RUNNER_TEMP/swift"
+          tar -xzf "$RUNNER_TEMP/swift.tar.gz" -C "$RUNNER_TEMP/swift" --strip-components=1
+          rm "$RUNNER_TEMP/swift.tar.gz"
+          echo "$RUNNER_TEMP/swift/usr/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/swift/usr/bin/swift" --version
+
       - name: Install language servers and debug adapters
         run: |
           npm install -g pyright typescript-language-server typescript@5 vscode-langservers-extracted@4.10.0
@@ -298,6 +350,43 @@ jobs:
           tail -n 80 ci-out/java-tools.log
           exit "$status"
 
+      - name: Test PHP tools
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          { echo "PATH=$PATH"; for t in php composer phpactor php-debug-adapter kotlinc gradle kotlin-lsp jdtls swift sourcekit-lsp lldb-dap; do printf '%s: ' "$t"; command -v "$t" || echo missing; done; ls -la "$RUNNER_TEMP/php-tools/bin" || true; phpactor --version || true; } > ci-out/tools-path.log 2>&1
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_PHP_template" --logger "console;verbosity=normal" \
+            > ci-out/php-tools.log 2>&1 || status=$?
+          tail -n 80 ci-out/php-tools.log
+          exit "$status"
+
+      - name: Test Kotlin tools
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template" --logger "console;verbosity=normal" \
+            > ci-out/kotlin-tools.log 2>&1 || status=$?
+          tail -n 80 ci-out/kotlin-tools.log
+          exit "$status"
+
+      - name: Test Swift tools
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Swift_package_template" --logger "console;verbosity=normal" \
+            > ci-out/swift-tools.log 2>&1 || status=$?
+          tail -n 80 ci-out/swift-tools.log
+          exit "$status"
+
       - name: Prepare native backing services in Alpine
         timeout-minutes: 15
         run: bash build/ci/services-alpine.sh "$RUNNER_TEMP/services-alpine"
@@ -344,7 +433,7 @@ jobs:
           # The 100-frame GC stress can take eleven minutes on hosted runners; do not abort a healthy run.
           run_ide_tests() {
             DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
-              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~ScreenshotLifetimeTests" --logger "console;verbosity=normal" > "$1" 2>&1
+              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~ScreenshotLifetimeTests&FullyQualifiedName!~ToolchainLanguageToolsTests.A_PHP_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Swift_package_template" --logger "console;verbosity=normal" > "$1" 2>&1
           }
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
@@ -363,10 +452,11 @@ jobs:
             if [ -f ci-out/TabStudio.App.Tests.retry.log ]; then tail -n 40 ci-out/TabStudio.App.Tests.retry.log; fi
           fi
           # The same tests in the light theme, for light screenshots (screenshots/light); the palette and design tests ran above in both.
+          # The PHP, Kotlin and Swift tool tests ran in their own steps above.
           mkdir -p ci-out/screenshots/light
           run_light_tests() {
             TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
-              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --no-build --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design&FullyQualifiedName!~ScreenshotLifetimeTests" \
+              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --no-build --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design&FullyQualifiedName!~ScreenshotLifetimeTests&FullyQualifiedName!~ToolchainLanguageToolsTests.A_PHP_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Swift_package_template" \
               --logger "console;verbosity=normal" > "$1" 2>&1
           }
           light=0
@@ -429,8 +519,12 @@ jobs:
   # published.
   real-repos:
     name: Real repositories
-    runs-on: ubuntu-latest
-    timeout-minutes: 110
+    # Ubuntu 24.04, not ubuntu-latest: the tools installed below (Swift's toolchain, LLVM and the PHP and Java
+    # packages) are the ones published for 24.04, and since ubuntu-latest became Ubuntu 26.04 the IDE's test host
+    # aborted at its first test there ("free(): invalid pointer"). The IDE's own code passes on 26.04 with only
+    # Node.js, Python and Go installed.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 140
     # SimplCommerce's first page needs its SQL Server database. SQL Server has no ARM64 Linux engine, so a tablet
     # connects to one on the network; here that is this x64 container, reached through TABSTUDIO_SQLSERVER.
     services:
@@ -444,6 +538,15 @@ jobs:
           --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P TabStudio-ci-1433 -Q 'SELECT 1' -b"
           --health-interval 10s --health-timeout 5s --health-retries 20
       # node-express-realworld's PostgreSQL, which its .env names (build/ci/real-repos.json); F5 applies its migrations.
+      # BookStack's MySQL, which its .env names; F5 applies its Laravel migrations.
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: tabstudio-ci
+          MYSQL_DATABASE: bookstack
+        ports: [3306:3306]
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1 -ptabstudio-ci" --health-interval 5s --health-timeout 5s --health-retries 30
       postgres:
         image: postgres:16
         env:
@@ -469,7 +572,7 @@ jobs:
 
       # The toolchains the Python, Java, Rust and Node.js repositories run with, as the Toolchain Store installs them on a
       # tablet: Python with uv (which installs the CPython a project's pins need), OpenJDK 21 with Maven, Rust with Cargo,
-      # and Node.js 22 with npm.
+      # Node.js 22 with npm, and Go (CMake and GCC are on the runner).
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -489,11 +592,45 @@ jobs:
         with:
           node-version: '22'
 
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: false
+
       - name: Install Maven
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y maven
-          mvn -v; cargo --version; uv --version; python3 --version; node --version
+          mvn -v; cargo --version; uv --version; python3 --version; node --version; go version; cmake --version | head -1
+
+      # PHP with Composer, the Kotlin compiler with Gradle, and Swift, for the PHP, Kotlin and Swift repositories, at the
+      # versions the Toolchain Store installs.
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, intl, bcmath, gd, pdo_mysql, pdo_pgsql, pdo_sqlite, sqlite3, zip
+          tools: composer
+          coverage: none
+
+      - name: Install Kotlin, Gradle and Swift
+        timeout-minutes: 15
+        run: |
+          curl -fsSL https://services.gradle.org/distributions/gradle-8.14.4-bin.zip -o "$RUNNER_TEMP/gradle.zip"
+          echo "f1771298a70f6db5a29daf62378c4e18a17fc33c9ba6b14362e0cdf40610380d  $RUNNER_TEMP/gradle.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/gradle-8.14.4/bin" >> "$GITHUB_PATH"
+          curl -fsSL https://github.com/JetBrains/kotlin/releases/download/v2.4.21/kotlin-compiler-2.4.21.zip -o "$RUNNER_TEMP/kotlinc.zip"
+          echo "7cc140e76daf416a0424a5557f99afd7ca89ebd463ea1101261e3e01c33e75cd  $RUNNER_TEMP/kotlinc.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/kotlinc.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/kotlinc/bin" >> "$GITHUB_PATH"
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq libz3-dev libncurses-dev libedit2 libpython3-dev > /dev/null
+          curl -fsSL https://download.swift.org/swift-6.4.1-release/ubuntu2404/swift-6.4.1-RELEASE/swift-6.4.1-RELEASE-ubuntu24.04.tar.gz -o "$RUNNER_TEMP/swift.tar.gz"
+          echo "7d246c7114077ad01dba4ad897628446ada4c489d6c7dbcf39ae3f25cbe17e8b  $RUNNER_TEMP/swift.tar.gz" | sha256sum -c -
+          mkdir -p "$RUNNER_TEMP/swift"
+          tar -xzf "$RUNNER_TEMP/swift.tar.gz" -C "$RUNNER_TEMP/swift" --strip-components=1
+          rm "$RUNNER_TEMP/swift.tar.gz"
+          echo "$RUNNER_TEMP/swift/usr/bin" >> "$GITHUB_PATH"
+          php --version; composer --version; "$RUNNER_TEMP/swift/usr/bin/swift" --version
 
       - uses: actions/cache@v4
         with:
@@ -503,6 +640,8 @@ jobs:
             ~/.cache/uv
             ~/.cache/pip
             ~/.npm
+            ~/.cache/composer
+            ~/.gradle/caches
           key: real-repos-tools-${{ hashFiles('build/ci/real-repos.json') }}
           restore-keys: real-repos-tools-
 
@@ -510,7 +649,8 @@ jobs:
         run: python3 build/ci/real-repos.py "$RUNNER_TEMP/real-repos"
 
       - name: Create the databases their first pages need
-        run: python3 build/ci/real-repos.py --migrate "$RUNNER_TEMP/real-repos" 2>&1 | tail -n 40
+        run: |
+          python3 build/ci/real-repos.py --migrate "$RUNNER_TEMP/real-repos" 2>&1 | tail -n 40
 
       - name: Open and build them in TabStudio
         env:
@@ -520,7 +660,7 @@ jobs:
         run: |
           mkdir -p ci-out/screenshots
           status=0
-          dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame-hang-timeout 45m --blame-hang-dump-type none \
+          dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame-hang-timeout 90m --blame-hang-dump-type none \
             --filter "FullyQualifiedName~RealRepositoryTests" --logger "console;verbosity=normal" > ci-out/test.log 2>&1 || status=$?
           tail -n 60 ci-out/test.log
           for summary in ci-out/summary.md ci-out/summary-polyglot.md; do

@@ -154,6 +154,11 @@ public sealed partial class PropertiesViewModel : ObservableObject
             return "C# compiler";
         }
 
+        if (string.Equals(extension, ".vb", StringComparison.OrdinalIgnoreCase) && project.IsVisualBasic)
+        {
+            return "Visual Basic compiler";
+        }
+
         return ProjectParser.IsProjectFile(path) ? "Project file" : "None";
     }
 

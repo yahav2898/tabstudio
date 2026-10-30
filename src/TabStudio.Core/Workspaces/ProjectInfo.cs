@@ -4,7 +4,11 @@ namespace TabStudio.Core.Workspaces;
 /// A NuGet package referenced by a project.
 /// </summary>
 /// <param name="Name">The package id, for example <c>Newtonsoft.Json</c>.</param>
-/// <param name="Version">The requested version, when the project states one.</param>
+/// <param name="Version">
+/// The requested version, when the project states one: with central package management, the reference's
+/// <c>VersionOverride</c>, which wins over the central version, or else its <c>Version</c>. <see langword="null"/> for
+/// a reference whose version comes from <c>Directory.Packages.props</c>.
+/// </param>
 /// <param name="PrivateAssets">
 /// The reference's <c>PrivateAssets</c> metadata, such as <c>all</c>, which keeps the package from flowing to projects
 /// that reference this one; <see langword="null"/> when it is not set.
@@ -34,9 +38,19 @@ public sealed record PackageReferenceInfo(string Name, string? Version, string? 
 /// <param name="OutputItemType">The <c>OutputItemType</c> metadata, such as <c>Analyzer</c> for an in-repo source generator.</param>
 public sealed record ProjectReferenceInfo(string Path, bool ReferenceOutputAssembly = true, bool IsPrivate = false, string? OutputItemType = null)
 {
-    /// <summary>Whether the referencing project compiles against this project's assembly, as a reference.</summary>
-    public bool IsCompiledAgainst =>
-        ReferenceOutputAssembly && !string.Equals(OutputItemType, "Analyzer", StringComparison.OrdinalIgnoreCase);
+    /// <summary>
+    /// Whether the referencing project compiles against this project's assembly, as a reference: what
+    /// <c>ReferenceOutputAssembly</c> says, whatever the <c>OutputItemType</c>. As in the SDK, a reference with
+    /// <c>OutputItemType="Analyzer"</c> and <c>ReferenceOutputAssembly</c> left at <c>true</c> gives the project both
+    /// ways, as an analyzer and as a reference (StronglyTypedId's attributes project).
+    /// </summary>
+    public bool IsCompiledAgainst => ReferenceOutputAssembly;
+
+    /// <summary>
+    /// Whether <c>OutputItemType</c> is <c>Analyzer</c>: the referenced project is a source generator or analyzer that
+    /// runs inside the referencing project's compilation.
+    /// </summary>
+    public bool IsAnalyzer => string.Equals(OutputItemType, "Analyzer", StringComparison.OrdinalIgnoreCase);
 }
 
 /// <summary>One argument of an assembly-level attribute the SDK generates.</summary>
@@ -152,8 +166,33 @@ public sealed record ProjectInfo
     /// <summary>The namespaces <c>&lt;Using Remove="..." /&gt;</c> items take away from the implicit global usings.</summary>
     public IReadOnlyList<string> RemovedUsings { get; init; } = [];
 
+    /// <summary>
+    /// The namespaces a Visual Basic project imports into every file, from its <c>&lt;Import Include="..." /&gt;</c>
+    /// items, as Visual Studio writes them (<c>System.Data</c>, <c>System.Drawing</c>), in order.
+    /// </summary>
+    public IReadOnlyList<string> Imports { get; init; } = [];
+
+    /// <summary>The namespaces <c>&lt;Import Remove="..." /&gt;</c> items take away from the Visual Basic SDK's default imports.</summary>
+    public IReadOnlyList<string> RemovedImports { get; init; } = [];
+
+    /// <summary>Whether the project is written in Visual Basic.</summary>
+    public bool IsVisualBasic => Language == ProjectLanguage.VisualBasic;
+
+    /// <summary>Whether TabStudio compiles the project with Roslyn in the app: a C# or a Visual Basic project.</summary>
+    public bool IsRoslynLanguage => Language is ProjectLanguage.CSharp or ProjectLanguage.VisualBasic;
+
     /// <summary>Patterns from <c>&lt;Compile Include="..." /&gt;</c> items, relative to the project directory.</summary>
     public IReadOnlyList<string> CompileIncludes { get; init; } = [];
+
+    /// <summary>
+    /// The <c>Exclude</c> patterns of <c>&lt;Compile Include="..." Exclude="..." /&gt;</c> items, keyed by their
+    /// <c>Include</c> pattern as it is in <see cref="CompileIncludes"/>: files the include leaves out, as Dock's
+    /// <c>Exclude="..\Dock.Model.ReactiveUI\bin\**;..\Dock.Model.ReactiveUI\obj\**"</c>. Unlike
+    /// <see cref="CompileRemoves"/>, they apply to that include only. An include without one is not here; of several
+    /// items with the same <c>Include</c>, the first counts.
+    /// </summary>
+    public IReadOnlyDictionary<string, IReadOnlyList<string>> CompileIncludeExcludes { get; init; } =
+        new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal);
 
     /// <summary>Patterns from <c>&lt;Compile Remove="..." /&gt;</c> items, relative to the project directory.</summary>
     public IReadOnlyList<string> CompileRemoves { get; init; } = [];
@@ -178,6 +217,20 @@ public sealed record ProjectInfo
     /// brings in Blazor's script. Set by <see cref="ProjectParser.Load"/>, which looks at the files.
     /// </summary>
     public bool HasRazorComponents { get; init; }
+
+    /// <summary>
+    /// Whether the project folder of an app on the Web SDK has Razor views or pages (<c>.cshtml</c> files), as an MVC or
+    /// Razor Pages app does, rather than only serving an API. Set by <see cref="ProjectParser.Load"/>, which looks at the
+    /// files, and looked for only in an app without Razor components (<see cref="HasRazorComponents"/>), which has a UI
+    /// either way.
+    /// </summary>
+    public bool HasRazorViews { get; init; }
+
+    /// <summary>
+    /// The <c>Project</c> of each <c>&lt;Import&gt;</c> in the project file itself, as written, such as
+    /// <c>$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets</c>; SDK imports are not included.
+    /// </summary>
+    public IReadOnlyList<string> ImportPaths { get; init; } = [];
 
     /// <summary>The project's <c>&lt;Reference&gt;</c> items, in order: assemblies it compiles against by name or by file.</summary>
     public IReadOnlyList<AssemblyReferenceInfo> AssemblyReferences { get; init; } = [];

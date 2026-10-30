@@ -53,8 +53,41 @@ public sealed class GitHubSyncTests : IDisposable
 
         Assert.All(files, f => Assert.Equal(f.Value, Read(f.Key)));
         Assert.Single(_github.Requests, r => r.Contains("/zipball/", StringComparison.Ordinal));
-        Assert.Equal(2, _github.Requests.Count(r => r.Contains("/git/blobs/", StringComparison.Ordinal)));
+
+        // Signed out, the two files the archive lacks or changes come from the raw host, not the rate-limited API.
+        Assert.DoesNotContain(_github.Requests, r => r.Contains("/git/blobs/", StringComparison.Ordinal));
+        Assert.Equal(2, _github.Requests.Count(r => r.StartsWith($"GET {FakeGitHub.Login}/big/", StringComparison.Ordinal)));
         Assert.Empty((await sync.GetStatusAsync()).Changes);
+    }
+
+    [Fact]
+    public async Task Clone_signed_out_of_a_repository_whose_archive_leaves_out_hundreds_of_files_stays_within_the_rate_limit()
+    {
+        // symfony/console: 427 files are export-ignore'd (tests and fixtures), each of which cost an API request.
+        var files = Enumerable.Range(0, 500).ToDictionary(i => i < 427 ? $"Tests/Fixtures/Fixture{i:000}.php" : $"src/File{i}.php", i => $"<?php // {i}\n");
+        _github.AddRepository("console", files);
+        _github.ArchiveOmits.UnionWith(files.Keys.Where(f => f.StartsWith("Tests/", StringComparison.Ordinal)));
+        _github.SignedOutRateLimit = 60;
+
+        var sync = await GitHubSync.CloneAsync(_github.CreateClient(signedIn: false), FakeGitHub.Login, "console", null, Folder);
+
+        Assert.All(files, f => Assert.Equal(f.Value, Read(f.Key)));
+        Assert.True(_github.Requests.Count(r => r.Contains("repos/", StringComparison.Ordinal)) < 10, string.Join('\n', _github.Requests));
+        Assert.Empty((await sync.GetStatusAsync()).Changes);
+    }
+
+    [Fact]
+    public async Task A_file_the_raw_host_serves_differently_is_read_from_the_API_instead()
+    {
+        var files = Enumerable.Range(0, 60).ToDictionary(i => $"src/File{i:00}.cs", i => $"class File{i};\n");
+        _github.AddRepository("big", files);
+        _github.ArchiveOmits.Add("src/File07.cs");
+        _github.RawAlters = path => path.EndsWith("src/File07.cs", StringComparison.Ordinal);
+
+        await GitHubSync.CloneAsync(_github.CreateClient(signedIn: false), FakeGitHub.Login, "big", null, Folder);
+
+        Assert.Equal("class File7;\n", Read("src/File07.cs"));
+        Assert.Single(_github.Requests, r => r.Contains("/git/blobs/", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -161,6 +194,23 @@ public sealed class GitHubSyncTests : IDisposable
 
         Assert.Equal(SyncFailure.BehindRemote, error.Failure);
         Assert.Equal(1, (await sync.GetStatusAsync(checkGitHub: true)).IncomingCommits);
+    }
+
+    [Fact]
+    public async Task A_protected_branch_says_so_instead_of_asking_for_a_pull()
+    {
+        // GitHub refuses an update to a protected branch as it refuses one that is behind, and "pull first" was
+        // answered by "up to date", round and round.
+        var sync = await CloneAsync();
+        _github.ProtectedBranches.Add("main");
+        Write("README.md", "# Mine\n");
+
+        var error = await Assert.ThrowsAsync<SyncException>(() => sync.CommitAsync("Mine"));
+
+        Assert.NotEqual(SyncFailure.BehindRemote, error.Failure);
+        Assert.Contains("Protected branch update failed", error.Message, StringComparison.Ordinal);
+        Assert.Contains("open a pull request", error.Message, StringComparison.Ordinal);
+        Assert.Equal(new[] { new FileChange("README.md", ChangeKind.Modified) }, (await sync.GetStatusAsync()).Changes);
     }
 
     [Fact]

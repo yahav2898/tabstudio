@@ -31,11 +31,17 @@ public sealed partial class PeekDefinitionView : UserControl
         Editor.TextArea.TextView.CurrentLineBackground = ThemeBrushes.Get("Editor.PeekDefinitionLine");
         Editor.TextArea.TextView.CurrentLineBorder = null;
         Editor.TextArea.TextView.LineTransformers.Add(_colorizer);
+
+        // A gap after the line numbers, as the main editor has: "8{" touched its code.
+        Editor.TextArea.LeftMargins.Add(new Border { Width = GutterGap, Name = "PeekGutterGap" });
         TitleButton.Click += (_, _) => OpenRequested?.Invoke(this, EventArgs.Empty);
         CloseButton.Click += (_, _) => CloseRequested?.Invoke(this, EventArgs.Empty);
         PreviousButton.Click += (_, _) => _peek?.Previous();
         NextButton.Click += (_, _) => _peek?.Next();
         AddHandler(KeyDownEvent, OnKeyDown, RoutingStrategies.Tunnel);
+        Editor.LayoutUpdated += (_, _) => ScrollToPeekLine();
+        Editor.AddHandler(PointerPressedEvent, (_, _) => _scrollLine = null, RoutingStrategies.Tunnel, handledEventsToo: true);
+        Editor.AddHandler(PointerWheelChangedEvent, (_, _) => _scrollLine = null, RoutingStrategies.Tunnel, handledEventsToo: true);
         DataContextChanged += OnDataContextChanged;
     }
 
@@ -89,13 +95,40 @@ public sealed partial class PeekDefinitionView : UserControl
         Editor.TextArea.Caret.Line = line;
         Editor.TextArea.Caret.Column = Math.Max(1, definition.Location.Column);
 
-        // Once laid out, scroll the definition into view with some context around it.
-        Avalonia.Threading.Dispatcher.UIThread.Post(() => Editor.ScrollTo(line, 1), Avalonia.Threading.DispatcherPriority.Background);
+        // Once laid out, the definition shows two lines from the top, at a whole line: centering it scrolled to any
+        // pixel and cut the first and last lines in half. Each layout scrolls there again until the user scrolls,
+        // since the editor's own bring-the-caret-into-view comes after the first layout and moved it.
+        _scrollLine = line;
+        ScrollToPeekLine();
         Editor.TextArea.TextView.Redraw();
     }
 
+    private int? _scrollLine;
+
+    private void ScrollToPeekLine()
+    {
+        if (_scrollLine is not { } line || Editor.ExtentHeight <= 0 || Editor.ViewportHeight <= 0)
+        {
+            return;
+        }
+
+        var target = Math.Min(TopOffsetOf(line), Math.Max(0, Editor.ExtentHeight - Editor.ViewportHeight));
+        if (Math.Abs(Editor.VerticalOffset - target) >= 0.5)
+        {
+            Editor.ScrollVerticallyTo(target);
+        }
+    }
+
+    /// <summary>The space after the line numbers.</summary>
+    internal const double GutterGap = 8;
+
+    /// <summary>The vertical offset that puts a line two lines below the top of the view, on a line boundary.</summary>
+    /// <param name="line">The one-based line.</param>
+    internal double TopOffsetOf(int line) => Math.Max(0, line - 3) * Editor.TextArea.TextView.DefaultLineHeight;
+
     private void OnKeyDown(object? sender, KeyEventArgs e)
     {
+        _scrollLine = null;
         if (e.Key == Key.Escape)
         {
             CloseRequested?.Invoke(this, EventArgs.Empty);

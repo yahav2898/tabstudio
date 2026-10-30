@@ -6,8 +6,12 @@
              x:DataType="dm:DesktopModeViewModel"
              IsVisible="{Binding IsOfferVisible, FallbackValue=False}">
 
-  <!-- Offered on the tablet when a display is connected: move the IDE to it now, always, or not now. -->
-  <Border HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="16,0,16,52" MaxWidth="700"
+  <!--
+    Offered on the tablet when a display is connected: move the IDE to it now, always, or not now. It sits under the
+    toolbar, over the top of the documents, as the IDE's other notices do: at the bottom it covered the Error List and
+    the program's output.
+  -->
+  <Border x:Name="OfferCard" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="16,100,16,0" MaxWidth="700"
           Padding="18,16" CornerRadius="14" Background="{DynamicResource Brush.Popup}"
           BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="{DynamicResource Shadow.Dialog}">
     <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">

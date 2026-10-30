@@ -31,7 +31,7 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
     public TestExplorerViewModel Tests => _tests ??= new TestExplorerViewModel(this, _ui);
 
     /// <inheritdoc />
-    bool ITestRunHost.CanStartTestRun => (_language is not null || _tests?.Entries.Any(e => e.Result?.Test.Framework == TestFramework.External) == true)
+    bool ITestRunHost.CanStartTestRun => (_language is not null || _toolchainTests.Count > 0 || _tests?.Entries.Any(e => e.Result?.Test.Framework == TestFramework.External) == true)
         && _testRun is null && (State is IdeState.Ready or IdeState.Failed || CanReplayUiTestsNow);
 
     /// <inheritdoc />
@@ -45,6 +45,7 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
         try
         {
             request = await RunEmbeddedTestSelectionsAsync(request);
+            request = await RunToolchainTestSelectionsAsync(request);
         }
         catch (OperationCanceledException)
         {
@@ -208,7 +209,7 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
             }
         }
 
-        Tests.SetProjects(projects);
+        Tests.SetProjects([.. projects, .. ToolchainTestProjects()]);
         QueueTestDiscovery(projects);
     }
 
@@ -219,7 +220,7 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
     /// <param name="document">The saved document.</param>
     private void OnDocumentSavedForTests(DocumentViewModel document)
     {
-        if (!document.FileType.IsCSharp || Workspace is not { } workspace || workspace.FindProjectForFile(document.FilePath) is not { } owner)
+        if (!document.FileType.IsRoslyn || Workspace is not { } workspace || workspace.FindProjectForFile(document.FilePath) is not { } owner)
         {
             return;
         }
@@ -232,8 +233,14 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
         }
     }
 
+    /// <summary>
+    /// The C# test projects whose tests Test Explorer finds and runs: those on xUnit, NUnit or MSTest, not TUnit, that
+    /// need no platform workload, such as a .NET MAUI app's tests.
+    /// </summary>
     private static List<ProjectInfo> TestProjectsOf(Workspace? workspace) =>
-        workspace?.Projects.Where(p => p.IsTestProject && p.Language == ProjectLanguage.CSharp).ToList() ?? [];
+        workspace?.Projects
+            .Where(p => p.IsTestProject && p.IsRoslynLanguage && !ProjectClassifier.UsesTUnit(p) && !ProjectClassifier.NeedsPlatformWorkload(p))
+            .ToList() ?? [];
 
     /// <summary>Whether a project is, or references directly or indirectly, another project.</summary>
     private static bool DependsOn(Workspace workspace, ProjectInfo project, ProjectInfo dependency)

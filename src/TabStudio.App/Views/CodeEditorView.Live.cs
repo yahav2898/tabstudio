@@ -151,7 +151,7 @@ public sealed partial class CodeEditorView
             area.Selection = anchor == head ? Selection.Create(area, head, head) : Selection.Create(area, anchor, head);
             area.Caret.Offset = head;
             var line = Math.Clamp(presence.TopLine, 1, document.LineCount);
-            _editor.ScrollToVerticalOffset(area.TextView.GetVisualTopByDocumentLine(line));
+            _editor.ScrollVerticallyTo(area.TextView.GetVisualTopByDocumentLine(line));
         }
         finally
         {

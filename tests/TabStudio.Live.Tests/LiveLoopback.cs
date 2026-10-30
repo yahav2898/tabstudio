@@ -17,7 +17,7 @@ internal sealed class LiveLoopback : IAsyncDisposable
     private readonly TempDirectory _temp = new();
     private readonly List<TestGuest> _guests = [];
 
-    private LiveLoopback(LiveRole defaultRole, bool classroom)
+    private LiveLoopback(LiveRole defaultRole, bool classroom, TimeSpan? reconnectGrace = null)
     {
         Root = Path.Combine(_temp.Path, "Workspace");
         Directory.CreateDirectory(Root);
@@ -33,6 +33,7 @@ internal sealed class LiveLoopback : IAsyncDisposable
                 LoopbackOnly = true,
                 DefaultRole = defaultRole,
                 IsClassroom = classroom,
+                ReconnectGrace = reconnectGrace ?? TimeSpan.FromMinutes(5),
             },
             Workspace,
             Dispatcher);
@@ -48,9 +49,9 @@ internal sealed class LiveLoopback : IAsyncDisposable
 
     public IReadOnlyList<TestGuest> Guests => _guests;
 
-    public static async Task<LiveLoopback> StartAsync(IReadOnlyDictionary<string, string>? files = null, LiveRole defaultRole = LiveRole.Editor, bool classroom = false)
+    public static async Task<LiveLoopback> StartAsync(IReadOnlyDictionary<string, string>? files = null, LiveRole defaultRole = LiveRole.Editor, bool classroom = false, TimeSpan? reconnectGrace = null)
     {
-        var loopback = new LiveLoopback(defaultRole, classroom);
+        var loopback = new LiveLoopback(defaultRole, classroom, reconnectGrace);
         foreach (var (path, content) in files ?? new Dictionary<string, string> { ["Program.cs"] = "class Program\n{\n}\n" })
         {
             var full = Path.Combine(loopback.Root, path.Replace('/', Path.DirectorySeparatorChar));

@@ -39,6 +39,21 @@ public interface INotifications
     /// <summary>Shows a notification, replacing one with the same tag.</summary>
     /// <param name="notification">What to show.</param>
     void Show(SystemNotification notification);
+
+    /// <summary>
+    /// Whether <see cref="KeepRunning"/> keeps TabStudio running in the background and shows the progress itself, as
+    /// Android's foreground service does; operations then need no progress notification of their own.
+    /// </summary>
+    bool KeepsRunning { get; }
+
+    /// <summary>
+    /// Keeps TabStudio running while long operations run, with the newest one's progress in an ongoing notification.
+    /// Without it Android freezes an app in the background, and an install or a build stopped where it was until the
+    /// user came back. Called on the UI thread, again as the progress changes, and with <see langword="null"/> when the
+    /// last operation ends.
+    /// </summary>
+    /// <param name="progress">What runs and how far it is, or <see langword="null"/> when nothing runs any more.</param>
+    void KeepRunning(SystemNotification? progress);
 }
 
 /// <summary>The notifications of a platform without system notifications, such as the desktop host.</summary>
@@ -64,5 +79,14 @@ public sealed class NoSystemNotifications : INotifications
     public void Show(SystemNotification notification)
     {
         // The in-app notice is all there is on this platform.
+    }
+
+    /// <inheritdoc />
+    public bool KeepsRunning => false;
+
+    /// <inheritdoc />
+    public void KeepRunning(SystemNotification? progress)
+    {
+        // A desktop process keeps running behind other windows.
     }
 }

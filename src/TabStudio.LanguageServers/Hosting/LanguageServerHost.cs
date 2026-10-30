@@ -202,6 +202,23 @@ public sealed class LanguageServerHost : IAsyncDisposable, ISnapshotSource
         }
     }
 
+    /// <summary>Tells every running server that files were created, changed or deleted.</summary>
+    /// <param name="changes">Each file's full path and what happened to it.</param>
+    public async Task NotifyFilesChangedAsync(IReadOnlyList<(string FilePath, FileChangeKind Kind)> changes)
+    {
+        ArgumentNullException.ThrowIfNull(changes);
+        List<LanguageServerInstance> servers;
+        lock (_gate)
+        {
+            servers = [.. _servers.Values];
+        }
+
+        foreach (var server in servers)
+        {
+            await server.NotifyFilesChangedAsync(changes).ConfigureAwait(false);
+        }
+    }
+
     /// <summary>Shuts every server down.</summary>
     public async ValueTask DisposeAsync()
     {

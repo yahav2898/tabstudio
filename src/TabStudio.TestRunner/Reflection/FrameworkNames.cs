@@ -69,6 +69,9 @@ internal static class FrameworkNames
     public const string MSTestAssertInconclusive = MSTestNamespace + "AssertInconclusiveException";
     public const string MSTestUnitTestAssert = MSTestNamespace + "UnitTestAssertException";
 
+    // Visual Basic: a Module compiles to a sealed class with this attribute, whose members are all Shared.
+    public const string VisualBasicStandardModule = "Microsoft.VisualBasic.CompilerServices.StandardModuleAttribute";
+
     /// <summary>The namespaces of the frameworks' own code, whose frames are trimmed from the top of stack traces.</summary>
     public static IReadOnlyList<string> FrameworkFramePrefixes { get; } =
     [

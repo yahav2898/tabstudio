@@ -48,6 +48,25 @@ public sealed class AgentSessionTests : IDisposable
     }
 
     [Fact]
+    public async Task Keeping_a_change_never_undoes_edits_made_since_it_was_proposed()
+    {
+        _temp.Write("a.txt", "one\n");
+        var claude = new FakeClaude()
+            .ToolCall("toolu_1", "create_file", new JsonObject { ["path"] = "a.txt", ["content"] = "two\n" })
+            .Text("Done.");
+        var session = new AgentSession(new AnthropicClient(new HttpClient(claude), "sk-test"), new FolderWorkspace(_temp));
+        await session.SendAsync("Change a.txt");
+
+        // The user fixed something in the file while reviewing the change.
+        _temp.Write("a.txt", "one, fixed\n");
+        var error = await Assert.ThrowsAsync<IOException>(() => session.ApproveAsync(_temp.Resolve("a.txt")));
+
+        Assert.Contains("changed since Claude proposed this", error.Message, StringComparison.Ordinal);
+        Assert.Equal("one, fixed\n", File.ReadAllText(_temp.Resolve("a.txt")));
+        Assert.Single(session.Changes.Pending);
+    }
+
+    [Fact]
     public async Task Rejected_changes_are_mentioned_on_the_next_request()
     {
         _temp.Write("a.txt", "one\n");

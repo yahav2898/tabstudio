@@ -74,4 +74,53 @@ public sealed class ListeningPortsTests
     [InlineData(new[] { "node", "--inspection-report" }, null, null)]
     public void The_Node_inspector_s_port_is_known(string[] arguments, string? nodeOptions, int? port) =>
         Assert.Equal(port, ListeningPorts.InspectorPort(arguments, nodeOptions));
+
+    [Fact]
+    public async Task A_server_on_IPv4_loopback_is_reached_at_127_0_0_1()
+    {
+        var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        try
+        {
+            var port = ((IPEndPoint)listener.LocalEndpoint).Port;
+            Assert.Equal(new Uri($"http://127.0.0.1:{port}/"), await ListeningPorts.LoopbackAddressAsync(port));
+        }
+        finally
+        {
+            listener.Stop();
+        }
+    }
+
+    [Fact]
+    public async Task A_server_bound_to_IPv6_loopback_alone_is_reached_at_its_IPv6_address()
+    {
+        // A dev server bound to "localhost" where localhost is ::1, as Vite and Next.js are on Node 17 and later.
+        if (!Socket.OSSupportsIPv6)
+        {
+            return;
+        }
+
+        var listener = new TcpListener(IPAddress.IPv6Loopback, 0);
+        listener.Server.DualMode = false;
+        listener.Start();
+        try
+        {
+            var port = ((IPEndPoint)listener.LocalEndpoint).Port;
+            Assert.Equal(new Uri($"http://[::1]:{port}/"), await ListeningPorts.LoopbackAddressAsync(port));
+        }
+        finally
+        {
+            listener.Stop();
+        }
+    }
+
+    [Fact]
+    public async Task A_port_nothing_listens_on_keeps_the_IPv4_address()
+    {
+        var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        var port = ((IPEndPoint)listener.LocalEndpoint).Port;
+        listener.Stop();
+        Assert.Equal(new Uri($"http://127.0.0.1:{port}/"), await ListeningPorts.LoopbackAddressAsync(port));
+    }
 }

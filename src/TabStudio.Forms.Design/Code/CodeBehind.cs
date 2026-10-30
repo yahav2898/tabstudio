@@ -3,22 +3,30 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using TabStudio.Forms.Design.Model;
 
 namespace TabStudio.Forms.Design.Code;
 
 /// <summary>
 /// What the designer changes in a form's own code file, such as Form1.cs: the event handlers a double-tap creates,
-/// and the names of renamed components. It also reads the form's base class from it.
+/// and the names of renamed components. It also reads the form's base class from it. A Visual Basic form's Form1.vb
+/// is <see cref="VisualBasicCodeBehind"/>'s.
 /// </summary>
 internal static class CodeBehind
 {
     /// <summary>The base type of the designed class, as the code file names it, such as <c>Form</c>.</summary>
     /// <param name="codeText">The code file's text.</param>
     /// <param name="className">The class's name.</param>
+    /// <param name="language">The code file's language.</param>
     /// <returns>The base type's name, or <see langword="null"/> when the file does not give one.</returns>
-    public static string? BaseTypeOf(string codeText, string className)
+    public static string? BaseTypeOf(string codeText, string className, DesignerLanguage language = DesignerLanguage.CSharp)
     {
         ArgumentNullException.ThrowIfNull(codeText);
+        if (language == DesignerLanguage.VisualBasic)
+        {
+            return VisualBasicCodeBehind.BaseTypeOf(codeText, className);
+        }
+
         return FindClass(CSharpSyntaxTree.ParseText(codeText).GetCompilationUnitRoot(), className)?.BaseList?.Types.FirstOrDefault()?.Type.ToString();
     }
 

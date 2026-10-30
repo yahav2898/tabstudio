@@ -57,6 +57,41 @@ public sealed class MobileWorkflowTests
     }
 
     [AvaloniaFact]
+    public async Task A_Node_dev_server_on_IPv6_loopback_alone_opens_in_the_web_preview()
+    {
+        // Vite and Next.js bind "localhost", which is ::1 alone on Android's Alpine environment and most Linux computers.
+        if (!System.Net.Sockets.Socket.OSSupportsIPv6)
+        {
+            return;
+        }
+
+        using var fixture = new WorkspaceFixture();
+        using var temp = new TempDirectory();
+        temp.Write("package.json", """{ "name": "server", "main": "index.js" }""");
+        temp.Write("index.js", """
+            const http = require('node:http');
+            const server = http.createServer((req, res) => res.end('hello over IPv6'));
+            server.listen(0, '::1', () => console.log(`Local: http://localhost:${server.address().port}/`));
+            """);
+        var workspace = fixture.Workspace;
+        await workspace.LoadAsync(temp.Path);
+        var run = workspace.RunCommand.ExecuteAsync(null);
+        try
+        {
+            await UiTestHelpers.WaitUntilAsync(() => workspace.ServerNotice is not null, because: "the server port notice");
+            workspace.ServerNotice!.OpenPreview.Execute(null);
+            Assert.Equal("[::1]", workspace.WebPreview.AppAddress!.Host);
+            using var http = new HttpClient();
+            Assert.Equal("hello over IPv6", await http.GetStringAsync(workspace.WebPreview.AppAddress));
+        }
+        finally
+        {
+            workspace.StopCommand.Execute(null);
+            await run;
+        }
+    }
+
+    [AvaloniaFact]
     public async Task A_Node_servers_port_is_offered_and_opens_in_the_existing_web_preview()
     {
         using var fixture = new WorkspaceFixture();

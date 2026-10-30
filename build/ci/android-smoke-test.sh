@@ -27,9 +27,17 @@ activity="com.tabstudio.ide.MainActivity"
 
 mkdir -p "$out"
 adb wait-for-device
-# Headless CI uses Android's standard error-dialog policy so a background system app's ANR cannot
-# consume the injected input. A successful app verdict, process liveness and the time limit stay required.
-# Chromium's emulator setup uses the same setting; manual device runs leave the device policy alone.
+# boot_completed can come before system_server has published its services, or while it restarts on a slow runner:
+# adb install then fails with "Can't find service: package" and am exits 20, with nothing logged to say why.
+for _ in $(seq 1 180); do
+  services="$(adb shell 'getprop sys.boot_completed; service check package; service check activity' 2> /dev/null | tr -d '\r' || true)"
+  [ "$(printf '%s\n' "$services" | grep -cE '^1$|: found$' || true)" -ge 3 ] && break
+  sleep 1
+done
+# Headless CI asks Android not to show error dialogs so a background system app's ANR cannot consume the injected
+# input. Chromium's emulator setup uses the same setting; manual device runs leave the device policy alone. Some
+# images ignore it (the Pixel Launcher's "isn't responding" dialog covered the app on the overlay display), so
+# system_dialogs below also answers the dialogs that are shown anyway.
 if [ "${GITHUB_ACTIONS:-false}" = true ]; then
   adb shell settings put global hide_error_dialogs 1
 fi
@@ -84,7 +92,41 @@ desktop_step() {
   esac
 }
 
-adb install -r "$apk"
+# Answers Android's "<app> isn't responding" dialogs. Another app's dialog (the launcher's, say) gets "Wait", as a
+# person would tap, so it stops covering TabStudio and swallowing the self test's input; each one is logged in
+# system-dialogs.txt with a screenshot. TabStudio's own dialog is never dismissed: it is a real failure, reported
+# as the verdict instead of a timeout (dialog_verdict).
+anr_count=0
+dialog_verdict=""
+system_dialogs() {
+  local windows app xml node bounds x1 y1 x2 y2
+  windows="$(adb shell dumpsys window windows 2> /dev/null | tr -d '\r' | grep -oE 'Application Not Responding: [^ }]+' | sort -u || true)"
+  [ -n "$windows" ] || return 0
+  while read -r _ _ _ app; do
+    [ -n "$app" ] || continue
+    anr_count=$((anr_count + 1))
+    adb exec-out screencap -p > "$out/system-dialog-$anr_count.png" 2> /dev/null || true
+    if [ "${app%%:*}" = "$package" ]; then
+      dialog_verdict="TABSTUDIO_SELFTEST_FAIL TabStudio is not responding: Android showed its ANR dialog (system-dialog-$anr_count.png)."
+      return 0
+    fi
+    xml="$(adb shell 'uiautomator dump /sdcard/tabstudio-dialog.xml > /dev/null 2>&1 && cat /sdcard/tabstudio-dialog.xml' 2> /dev/null | tr -d '\r' || true)"
+    node="$(printf '%s' "$xml" | grep -oE '<node [^>]*resource-id="android:id/aerr_wait"[^>]*>' | head -n 1 || true)"
+    [ -n "$node" ] || node="$(printf '%s' "$xml" | grep -oE '<node [^>]*text="Wait"[^>]*>' | head -n 1 || true)"
+    bounds="$(printf '%s' "$node" | grep -oE 'bounds="\[[0-9]+,[0-9]+\]\[[0-9]+,[0-9]+\]"' | grep -oE '[0-9]+' | tr '\n' ' ' || true)"
+    if read -r x1 y1 x2 y2 <<< "$bounds" && [ -n "${y2:-}" ]; then
+      adb shell input tap $(((x1 + x2) / 2)) $(((y1 + y2) / 2)) || true
+      echo "$(date -u +%T) $app isn't responding: tapped Wait (system-dialog-$anr_count.png)" | tee -a "$out/system-dialogs.txt"
+    else
+      # No Wait button to tap: stop the unresponsive app, which Android restarts if it is the launcher.
+      adb shell am force-stop "${app%%:*}" || true
+      echo "$(date -u +%T) $app isn't responding: no Wait button found, stopped it (system-dialog-$anr_count.png)" | tee -a "$out/system-dialogs.txt"
+    fi
+  done <<< "$windows"
+}
+
+# One retry: an install that races the package manager's own start-up fails without anything being wrong.
+adb install -r "$apk" || { sleep 10; adb install -r "$apk"; }
 adb logcat -c
 started=$(date +%s)
 if [ "$shard" = flutter ]; then
@@ -98,6 +140,7 @@ fi
 
 verdict=""
 handled=0
+polls=0
 while [ -z "$verdict" ] && [ $(($(date +%s) - started)) -lt "$timeout" ]; do
   # Desktop input/screenshot requests are handshakes with the app. Respond
   # promptly so polling latency does not consume its launch-to-verdict budget.
@@ -111,6 +154,12 @@ while [ -z "$verdict" ] && [ $(($(date +%s) - started)) -lt "$timeout" ]; do
   done
 
   verdict="$(printf '%s\n' "$log" | grep -m 1 -oE 'TABSTUDIO_SELFTEST_(OK|FAIL).*' || true)"
+  # Every few seconds, answer any "isn't responding" dialog before it swallows the next injected input.
+  if [ -z "$verdict" ] && [ $((polls % 5)) -eq 0 ]; then
+    system_dialogs
+    verdict="$dialog_verdict"
+  fi
+  polls=$((polls + 1))
   if [ -z "$verdict" ] && [ -z "$(adb shell pidof "$package" | tr -d '\r' || true)" ]; then
     verdict="TABSTUDIO_SELFTEST_FAIL TabStudio is not running: it crashed or was killed before the self test finished."
   fi

@@ -108,6 +108,42 @@ Source and licenses: https://github.com/eclipse-jdtls/eclipse.jdt.ls.
 The CI host downloads Gradle 8.14.4 (Apache-2.0) from
 https://services.gradle.org/distributions/gradle-8.14.4-bin.zip, pinned to SHA-256
 f1771298a70f6db5a29daf62378c4e18a17fc33c9ba6b14362e0cdf40610380d.
+## PHP language tools
+
+PHP 8.5, Composer, Xdebug and the PHP extensions are installed as verified Alpine packages (PHP-3.01, MIT,
+Xdebug-1.03). Phpactor 2026.10.07.0 (MIT) is downloaded from
+https://github.com/phpactor/phpactor/releases/download/2026.10.07.0/phpactor.phar and verified against SHA-256
+b28bf6166e016d539fc2f2aec18ef918b12590e436a6f1ccbdf30b5bbdbdb16b. Source: https://github.com/phpactor/phpactor.
+PHP Debug 1.40.2 (MIT) is downloaded from
+https://open-vsx.org/api/xdebug/php-debug/1.40.2/file/xdebug.php-debug-1.40.2.vsix and verified against SHA-256
+17631993fe800083a2fc89a6782c8bf58a79603ad201ddff60d9b59ba2345d5f. Source: https://github.com/xdebug/vscode-php-debug.
+
+## Kotlin language tools
+
+The Kotlin compiler 2.4.21 (Apache-2.0) is downloaded from
+https://github.com/JetBrains/kotlin/releases/download/v2.4.21/kotlin-compiler-2.4.21.zip and verified against SHA-256
+7cc140e76daf416a0424a5557f99afd7ca89ebd463ea1101261e3e01c33e75cd. JetBrains' Kotlin language server 263.7084.0 is
+proprietary freeware under the JetBrains Free Plugin License Agreement, which the Toolchain Store shows before it
+installs; it is downloaded from https://download.jetbrains.com/language-server/kotlin-server/263.7084.0/ as
+`kotlin-server-0.0.27-linux-aarch64.vsix` (SHA-256 4de2b5d4ab0ccb73f0bfbfdfe3b56b49a68889f198cd8342f5dfd98ff0647052)
+or `kotlin-server-0.0.27-linux-amd64.vsix` (SHA-256 6787185abb0e7f3b527484bb6cc4a881ce42b2e39320626937e65839751075e9),
+with its own runtime and notices. It is not included in TabStudio. Kotlin debugging uses the Java tools above.
+
+## Swift language tools (experimental)
+
+The Swift 6.4.1 toolchain for Ubuntu 24.04 (Apache-2.0 with the Runtime Library Exception), with SwiftPM,
+sourcekit-lsp, LLDB and lldb-dap, is downloaded from https://download.swift.org/swift-6.4.1-release/ and verified
+against SHA-256 b85dd70e204bc363ce62f1e35bd1887810d0e04487d13de8fd9d042635972f45 (aarch64) or
+7d246c7114077ad01dba4ad897628446ada4c489d6c7dbcf39ae3f25cbe17e8b (x86_64). It runs in the Ubuntu Base 24.04.3
+environment described under Flutter, with the system packages Swift.org lists, from Ubuntu's signed archive.
+Source: https://github.com/swiftlang.
+
+## Visual Basic
+
+The Visual Basic compiler, workspaces and features (Microsoft.CodeAnalysis.VisualBasic*, MIT) are NuGet packages
+inside the APK. `Microsoft.VisualBasic.Forms` in TabStudio is TabStudio's own implementation of that API, written
+from its public .NET 10 surface; it contains no code from Microsoft's assembly.
+
 ## Android SDK and mobile project tools (downloaded on request)
 
 - **Google Android SDK command-line tools 12, platform 35 and build-tools 35** — Google Android SDK License

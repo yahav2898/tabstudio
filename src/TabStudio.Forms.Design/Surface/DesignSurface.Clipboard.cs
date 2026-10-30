@@ -82,7 +82,12 @@ internal sealed partial class DesignSurface
             {
                 var name = item.Type is { } type ? doc.NewName(type) : doc.NewName(typeof(System.Windows.Forms.Control));
                 names[item.Name] = name;
-                doc.Components.Add(new DesignComponent(name, item.TypeName) { Type = item.Type, ConstructorArguments = item.ConstructorArguments });
+                doc.Components.Add(new DesignComponent(name, item.TypeName)
+                {
+                    Type = item.Type,
+                    ConstructorArguments = item.ConstructorArguments,
+                    FieldModifiers = DesignCode.FieldModifiers(doc.Style),
+                });
             }
 
             var offset = owner.Name == clip.Container ? PasteOffset : 0;
@@ -91,14 +96,14 @@ internal sealed partial class DesignSurface
                 var copy = doc.Find(names[item.Name])!;
                 foreach (var property in item.Properties)
                 {
-                    var code = property.Path == "Name" ? ValueWriter.Literal(copy.Name) : CodeTokens.Rename(property.Code, names);
+                    var code = property.Path == "Name" ? DesignCode.Literal(doc.Style, copy.Name) : DesignCode.Rename(doc.Style, property.Code, names);
                     copy.SetCode(property.Path, code);
                 }
 
                 if (clip.TopLevel.Contains(item.Name) && offset > 0 && item.Properties.FirstOrDefault(p => p.Path == "Location") is { } location
-                    && TryReadPoint(location.Code, out var original))
+                    && TryReadPoint(doc.Style, location.Code, out var original))
                 {
-                    copy.SetCode("Location", ValueWriter.Write(new Point(original.X + offset, original.Y + offset), doc.Style));
+                    copy.SetCode("Location", DesignCode.Write(doc.Style, new Point(original.X + offset, original.Y + offset)));
                 }
 
                 foreach (var (name, isRange, rangeType, adds) in item.Adds)
@@ -106,7 +111,7 @@ internal sealed partial class DesignSurface
                     var target = copy.Collection(name);
                     target.IsRange = isRange;
                     target.RangeType = rangeType;
-                    target.Items.AddRange(adds.Select(a => CodeTokens.Rename(a, names)));
+                    target.Items.AddRange(adds.Select(a => DesignCode.Rename(doc.Style, a, names)));
                 }
             }
 
@@ -120,10 +125,9 @@ internal sealed partial class DesignSurface
         return pasted;
     }
 
-    private static bool TryReadPoint(string code, out Point point)
+    private static bool TryReadPoint(CodeStyle style, string code, out Point point)
     {
-        var evaluator = new ExpressionEvaluator(_ => null);
-        if (evaluator.TryEvaluate(Microsoft.CodeAnalysis.CSharp.SyntaxFactory.ParseExpression(code), out var value) && value is Point read)
+        if (DesignCode.Evaluator(style, _ => null).TryEvaluate(code, out var value) && value is Point read)
         {
             point = read;
             return true;

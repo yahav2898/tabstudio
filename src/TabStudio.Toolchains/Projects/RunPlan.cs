@@ -1,9 +1,11 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using TabStudio.Toolchains.Catalog;
 using TabStudio.Toolchains.Embedded.Projects;
 using TabStudio.Toolchains.Processes;
+using TabStudio.Toolchains.Python;
 
 namespace TabStudio.Toolchains.Projects;
 
@@ -19,6 +21,7 @@ public sealed record RunPlan(ProcessStartSpec? Build, ProcessStartSpec Run, stri
     [
         "Makefile", "makefile", "GNUmakefile", "CMakeLists.txt", "pom.xml", "build.gradle", "build.gradle.kts",
         "settings.gradle", "settings.gradle.kts", "Cargo.toml", "go.mod", "package.json", "pyproject.toml",
+        "composer.json", "artisan", "Package.swift",
     ];
 
     /// <summary>
@@ -41,7 +44,7 @@ public sealed record RunPlan(ProcessStartSpec? Build, ProcessStartSpec Run, stri
         }
 
         var program = Path.GetFileNameWithoutExtension(Run.Program);
-        if (program.Length > 0 && program is not ("app" or "java" or "node" or "python" or "python3" or "npm" or "dotnet" or "make" or "mvn" or "gradle"))
+        if (program.Length > 0 && program is not ("app" or "java" or "node" or "python" or "python3" or "npm" or "dotnet" or "make" or "mvn" or "gradle" or "php" or "composer" or "swift" or "kotlinc"))
         {
             return program;
         }
@@ -60,12 +63,25 @@ public sealed record RunPlan(ProcessStartSpec? Build, ProcessStartSpec Run, stri
 /// <param name="Match">The folder name the rule's <c>*</c> matched, such as <c>greeter</c>, or <see langword="null"/>.</param>
 public sealed record EntryFile(string FullPath, string RelativePath, string? Match);
 
+/// <summary>An entry rule whose file the project has, but whose packages (<see cref="EntryRule.Requires"/>) it does not depend on.</summary>
+/// <param name="Entry">The file the rule found, such as <c>app/main.py</c>.</param>
+/// <param name="EntryPoint">What would run, such as <c>uvicorn app.main:app</c>.</param>
+/// <param name="Missing">The packages the project's dependencies do not list, such as <c>uvicorn</c>.</param>
+public sealed record UnmetEntry(EntryFile Entry, string EntryPoint, IReadOnlyList<string> Missing);
+
 /// <summary>
 /// Works out how to run a project or a file from its toolchain's catalog entry: the entry rules in order, the
 /// project's environment (Python's <c>.venv</c>), and the toolchain's run environment.
 /// </summary>
 public static partial class RunPlanner
 {
+    /// <summary>The largest file whose text an entry rule reads: larger files are data, not a program's entry point.</summary>
+    private const int MaxEntrySourceSize = 1024 * 1024;
+
+    private const RegexOptions EntryTextOptions = RegexOptions.Multiline | RegexOptions.CultureInvariant;
+
+    private static readonly TimeSpan EntryTextTimeout = TimeSpan.FromSeconds(1);
+
     /// <summary>Plans running a project's entry point, or <see langword="null"/> when none of its rules applies.</summary>
     /// <param name="project">The project.</param>
     public static RunPlan? PlanProject(ToolchainProject project)
@@ -96,43 +112,115 @@ public static partial class RunPlanner
             return FlutterProject.Plan(project.Directory);
         }
 
+        if (project.Toolchain.Id == "php")
+        {
+            return PlanPhpProject(project);
+        }
+
+        if (project.Toolchain.Id == "kotlin")
+        {
+            return PlanKotlinProject(project);
+        }
+
+        if (project.Toolchain.Id == "swift")
+        {
+            return PlanSwiftProject(project);
+        }
+
         var run = project.Toolchain.Run;
         if (run is null)
         {
             return null;
         }
 
+        IReadOnlySet<string>? dependencies = null;
         foreach (var rule in run.Entries)
         {
-            if (FindEntry(project.Directory, rule.File) is not { } entry)
+            if (Applicable(project, rule) is not { } applicable)
             {
                 continue;
             }
 
-            var file = entry.FullPath;
-            string? json = null;
-            if (rule.Json is { } jsonPath && (json = ReadJson(file, jsonPath)) is null)
+            if (rule.Requires.Count > 0)
             {
-                continue;
+                IReadOnlySet<string> names = dependencies ??= PythonDependencies.Names(project.Directory);
+                if (rule.Requires.Any(p => !names.Contains(PythonRequirements.Normalize(p))))
+                {
+                    continue;
+                }
             }
 
-            var variables = Variables(project, file: entry.RelativePath, json);
-            if (entry.Match is { } match)
-            {
-                variables["match"] = match;
-            }
-
-            var entryPoint = rule.Name is { } name ? name
-                : rule.Json is not null ? string.Join(' ', rule.Command.Select(a => Expand(a, variables)))
-                : project.Toolchain.Id == "rust" ? CargoEntryPoint(entry)
-                : entry.RelativePath;
             return new RunPlan(
-                rule.Build.Count > 0 ? Spec(project, rule.Build, variables, rule.Environment) : null,
-                Spec(project, rule.Command, variables, rule.Environment),
-                entryPoint);
+                rule.Build.Count > 0 ? Spec(project, rule.Build, applicable.Variables, rule.Environment) : null,
+                Spec(project, rule.Command, applicable.Variables, rule.Environment),
+                applicable.EntryPoint);
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// The first entry rule of a project that would run it but for packages its dependencies do not list, such as a
+    /// FastAPI app in <c>app/main.py</c> without <c>uvicorn</c>, so that the run can say what is missing; or
+    /// <see langword="null"/>.
+    /// </summary>
+    /// <param name="project">The project, for which <see cref="PlanProject"/> found nothing to run.</param>
+    public static UnmetEntry? UnmetEntryOf(ToolchainProject project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        IReadOnlySet<string>? dependencies = null;
+        foreach (var rule in project.Toolchain.Run?.Entries ?? [])
+        {
+            if (rule.Requires.Count == 0 || Applicable(project, rule) is not { } applicable)
+            {
+                continue;
+            }
+
+            IReadOnlySet<string> names = dependencies ??= PythonDependencies.Names(project.Directory);
+            var missing = rule.Requires.Where(p => !names.Contains(PythonRequirements.Normalize(p))).ToList();
+            if (missing.Count > 0)
+            {
+                return new UnmetEntry(applicable.Entry, applicable.EntryPoint, missing);
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Whether an entry rule's file is in the project, with the text and the JSON value it asks for: the file, the
+    /// placeholders' values, and what runs, for the Output panel; or <see langword="null"/>.
+    /// </summary>
+    private static (EntryFile Entry, Dictionary<string, string> Variables, string EntryPoint)? Applicable(ToolchainProject project, EntryRule rule)
+    {
+        if (FindEntry(project.Directory, rule) is not { } entry)
+        {
+            return null;
+        }
+
+        string? json = null;
+        if (rule.Json is { } jsonPath && (json = ReadJson(entry.FullPath, jsonPath)) is null)
+        {
+            return null;
+        }
+
+        if (rule.NotMatching is { } pattern && json is not null
+            && Regex.IsMatch(json, pattern, RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)))
+        {
+            return null;
+        }
+
+        var variables = Variables(project, file: entry.RelativePath, json);
+        if (entry.Match is { } match)
+        {
+            variables["match"] = match;
+        }
+
+        var entryPoint = rule.Name is { } name ? Expand(name, variables)
+            : rule.Json is not null ? string.Join(' ', rule.Command.Select(a => Expand(a, variables)))
+            : project.Toolchain.Id == "rust" ? CargoEntryPoint(entry)
+            : entry.RelativePath;
+        return (entry, variables, entryPoint);
     }
 
     /// <summary>Plans running one file of a project.</summary>
@@ -161,6 +249,16 @@ public static partial class RunPlanner
         if (project.Toolchain.Id == "java")
         {
             return PlanJavaFile(project, file);
+        }
+
+        if (project.Toolchain.Id == "kotlin")
+        {
+            return PlanKotlinFile(project, file) ?? throw new ArgumentException($"{Path.GetFileName(file)} is a build script, not a program.", nameof(file));
+        }
+
+        if (project.Toolchain.Id == "swift")
+        {
+            return PlanSwiftFile(project, file);
         }
 
         var relative = Path.GetRelativePath(project.Directory, file).Replace('\\', '/');
@@ -246,7 +344,64 @@ public static partial class RunPlanner
     /// <param name="directory">The project folder.</param>
     /// <param name="pattern">The rule's file (<see cref="EntryRule.File"/>), with <c>/</c> between folders.</param>
     /// <returns>The file, or <see langword="null"/> when the project has none.</returns>
-    public static EntryFile? FindEntry(string directory, string pattern)
+    public static EntryFile? FindEntry(string directory, string pattern) => FindEntry(directory, pattern, accepts: null);
+
+    /// <summary>
+    /// Finds an entry rule's file in a project folder, as <see cref="FindEntry(string, string)"/>, whose text also
+    /// matches the rule's <see cref="EntryRule.Contains"/> patterns and none of its <see cref="EntryRule.Excludes"/>:
+    /// with a <c>*</c> folder, the first folder in name order whose file does.
+    /// </summary>
+    /// <param name="directory">The project folder.</param>
+    /// <param name="rule">The rule.</param>
+    /// <returns>The file, or <see langword="null"/> when the project has none.</returns>
+    public static EntryFile? FindEntry(string directory, EntryRule rule)
+    {
+        ArgumentNullException.ThrowIfNull(directory);
+        ArgumentNullException.ThrowIfNull(rule);
+        return rule.Contains.Count == 0 && rule.Excludes.Count == 0
+            ? FindEntry(directory, rule.File)
+            : FindEntry(directory, rule.File, file => MatchesText(file, rule));
+    }
+
+    /// <summary>
+    /// Whether a file's text matches each of a rule's <see cref="EntryRule.Contains"/> patterns and none of its
+    /// <see cref="EntryRule.Excludes"/>, with <c>^</c> and <c>$</c> at line boundaries. A file that cannot be read,
+    /// or is larger than a source file, does not match.
+    /// </summary>
+    /// <param name="file">The file.</param>
+    /// <param name="rule">The rule.</param>
+    public static bool MatchesText(string file, EntryRule rule)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(rule);
+        string text;
+        try
+        {
+            var info = new FileInfo(file);
+            if (!info.Exists || info.Length > MaxEntrySourceSize)
+            {
+                return false;
+            }
+
+            text = File.ReadAllText(file);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return false;
+        }
+
+        try
+        {
+            return rule.Contains.All(p => Regex.IsMatch(text, p, EntryTextOptions, EntryTextTimeout))
+                && !rule.Excludes.Any(p => Regex.IsMatch(text, p, EntryTextOptions, EntryTextTimeout));
+        }
+        catch (RegexMatchTimeoutException)
+        {
+            return false;
+        }
+    }
+
+    private static EntryFile? FindEntry(string directory, string pattern, Func<string, bool>? accepts)
     {
         ArgumentNullException.ThrowIfNull(directory);
         ArgumentNullException.ThrowIfNull(pattern);
@@ -255,7 +410,7 @@ public static partial class RunPlanner
         if (star < 0)
         {
             var file = Path.Combine(directory, Path.Combine(parts));
-            return File.Exists(file) ? new EntryFile(file, pattern, null) : null;
+            return File.Exists(file) && (accepts is null || accepts(file)) ? new EntryFile(file, pattern, null) : null;
         }
 
         var parent = Path.Combine([directory, .. parts[..star]]);
@@ -272,7 +427,7 @@ public static partial class RunPlanner
         foreach (var folder in folders)
         {
             var file = Path.Combine([folder, .. parts[(star + 1)..]]);
-            if (File.Exists(file))
+            if (File.Exists(file) && (accepts is null || accepts(file)))
             {
                 var name = Path.GetFileName(folder);
                 return new EntryFile(file, string.Join('/', parts.Select((part, index) => index == star ? name : part)), name);
@@ -425,6 +580,12 @@ public static partial class RunPlanner
 
         return variables;
     }
+
+    /// <summary>A command run in a project's folder with its toolchain's environment, as its run plans' commands are.</summary>
+    /// <param name="project">The project.</param>
+    /// <param name="command">The program and its arguments.</param>
+    internal static ProcessStartSpec CommandSpec(ToolchainProject project, IReadOnlyList<string> command) =>
+        Spec(project, command, Variables(project, null, null));
 
     private static ProcessStartSpec Spec(ToolchainProject project, IReadOnlyList<string> command, Dictionary<string, string> variables, IReadOnlyDictionary<string, string>? entryEnvironment = null)
     {

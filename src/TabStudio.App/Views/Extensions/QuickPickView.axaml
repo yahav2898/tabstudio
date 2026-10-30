@@ -9,7 +9,7 @@
     <!-- Tapping outside cancels. -->
     <Border x:Name="Scrim" Background="{DynamicResource Brush.Extensions.Scrim}" />
 
-    <Border x:Name="Card" Width="580" MaxHeight="560" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="16,56,16,16" Padding="6"
+    <Border x:Name="Card" MaxWidth="580" MaxHeight="560" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="16,56,16,16" Padding="6"
             CornerRadius="10" Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
             BoxShadow="{DynamicResource Shadow.Dialog}">
       <DockPanel>

@@ -58,7 +58,7 @@ TabStudio הופך טאבלט אנדרואיד למכונת פיתוח שתרצ�
 | | |
 | --- | --- |
 | **מוכר** | המבנה והקיצורים של Visual Studio, בנויים מחדש למגע: Solution Explorer, Properties, Error List, Output וכפתור Run גדול. |
-| **כלים אמיתיים** | המהדר האמיתי של C# ‏(Roslyn) בתוך האפליקציה, וכלי הפיתוח הרשמיים של Python, ‏Node.js, ‏Go, ‏Rust, ‏C/C++‏, Java ו-Dart. |
+| **כלים אמיתיים** | המהדר האמיתי של C# ו-Visual Basic ‏(Roslyn) בתוך האפליקציה, וכלי הפיתוח הרשמיים של Python, ‏Node.js, ‏Go, ‏Rust, ‏C/C++‏, Java, ‏Kotlin, ‏PHP, ‏Swift ו-Dart. |
 | **כל עומסי העבודה** | Console, ‏ASP.NET Core ו-Blazor, ‏Avalonia, ‏Windows Forms, ‏WPF ו-WinUI, וקושחה לרוב המיקרו־בקרים, הכול מהטאבלט. |
 | **שלכם** | עובד בלי אינטרנט, שומר את הקוד על המכשיר, וקוד פתוח ברישיון Apache-2.0. |
 
@@ -117,6 +117,10 @@ Store** כדי להוסיף שפה. כל גרסה מותקנת כעדכון מע
 | **Rust** | ‏Cargo, כולל workspaces | ‏rust-analyzer | ‏LLDB |
 | **C / C++** | ‏CMake, ‏Make או קבצי מקור, עם clang | ‏clangd, ממסד הקומפילציה של CMake | ‏LLDB |
 | **Java** | ‏Maven, ‏Gradle או קבצי מקור, OpenJDK | ‏Eclipse JDT LS | ‏java-debug |
+| **Visual Basic** | ‏Roslyn בתוך האפליקציה, כמו C#‏: קונסול, Windows Forms עם `My`, ספריות מחלקות | ‏Roslyn: השלמה, עזרת חתימות, Quick Info, ניווט, שינוי שם, תיקונים מהירים | מנפה הבאגים של C#‏, Hot Reload ו-Live Unit Testing |
+| **PHP** | ‏PHP 8.5 ו-Composer; ‏Laravel, ‏Symfony, ‏Slim ואתרים פשוטים בתצוגת הווב | ‏Phpactor | ‏Xdebug, דרך PHP Debug |
+| **Kotlin** | ‏Gradle ‏(Kotlin DSL) או Maven על OpenJDK, ‏`kotlinc` לקבצים ולסקריפטי `.kts` | שרת השפה של JetBrains ל-Kotlin | ‏java-debug |
+| **Swift** (ניסיוני) | ‏SwiftPM ו-`swiftc` מהכלים הרשמיים | ‏sourcekit-lsp | ‏LLDB |
 
 - **C# על הטאבלט.** חבילות NuGet מותקנות על המכשיר, כך שפרויקטים אמיתיים נבנים כמו שהם. ‏Test Explorer מריץ xUnit,
   ‏NUnit ו-MSTest, ו-**Live Unit Testing** מסמן כל שורה מכוסה כעוברת, נכשלת או לא מכוסה, ומריץ מחדש את הבדיקות
@@ -133,6 +137,19 @@ Store** כדי להוסיף שפה. כל גרסה מותקנת כעדכון מע
 - **אותו דבר בכל שפה.** הפלט והקלט של התוכנית ב-Output, שגיאות מהדר ב-Error List עם קישור לשורה, **Ctrl+F5** מריץ
   בלי דיבאגר, ו-**Ctrl+`** פותח טרמינל. אם חסר שרת שפה או מתאם דיבאג, שורת המצב, העורך ו-F5 מציעים להתקין אותו.
 - **עוד שפות דרך הרחבות.** הרחבות VS Code מ-Open VSX מוסיפות דקדוק, קטעי קוד, ערכות נושא והגדרות שפה לכל השאר.
+- **‏Visual Basic, כמו C#.** פרויקטי `.vbproj` מקומפלים בתוך האפליקציה עם אותם IntelliSense, תיקונים מהירים, ניווט,
+  מנפה באגים, Hot Reload ו-Live Unit Testing. ‏`Microsoft.VisualBasic` ומרחב השמות `My` עובדים באפליקציות קונסול ו-Windows
+  Forms, כולל ה-Application Framework ‏(`Application.myapp`, ‏`My.Settings`, ‏`My.Resources`).
+- **‏Test Explorer לכל שפה עם מריץ בדיקות סטנדרטי.** מלבד xUnit, ‏NUnit ו-MSTest: ‏PHPUnit ו-Pest, ‏JUnit דרך Gradle או
+  Maven ‏(Kotlin ו-Java), ו-XCTest ו-Swift Testing דרך `swift test`.
+- **‏PHP ו-Laravel.** פתיחת אפליקציית Laravel מריצה `composer install`, יוצרת `.env` ומפתח, ו-F5 מריץ את המיגרציות,
+  בונה את נכסי Vite ומגיש `php artisan serve` בתצוגת הווב, עם מסד הנתונים ש-`.env` מציין ב-Services ו-Xdebug שעוצר
+  בקונטרולרים. ראו [PHP ו-Laravel](docs/features/laravel.md).
+- **‏Kotlin מעבר ל-Android.** שרתי Ktor ו-Spring Boot נפתחים בתצוגת הווב, אפליקציות קונסול קוראות קלט בחלון ה-Output,
+  ונקודות עצירה ב-Kotlin עוצרות דרך מנפה הבאגים של Java. שרת השפה של JetBrains הוא תוכנה חינמית קניינית, ורישיונו מוצג
+  לפני ההתקנה.
+- **‏Swift (ניסיוני).** הכלים הרשמיים של Swift רצים בסביבת glibc לצד Alpine: חבילות SwiftPM ואפליקציות Vapor נבנות,
+  רצות, נבדקות ומנופות. ראו [מצב ומגבלות](docs/features/swift.md).
 - **‏Flutter ו-Dart (ניסיוני).** כלי Flutter רצים בסביבת Linux נפרדת. פרויקטי `pubspec.yaml` מקבלים
   `flutter pub get`, ‏IntelliSense ודיבאג ל-Dart, והתבניות רצות בתצוגת הווב עם hot restart. הפצת אפליקציות Flutter
   לאנדרואיד עוד לא נבדקה. ראו [מצב ומגבלות](docs/features/flutter.md).
@@ -153,7 +170,9 @@ Store** כדי להוסיף שפה. כל גרסה מותקנת כעדכון מע
 - **‏Windows Forms.** אפליקציות רצות בחלון בסגנון Windows 10, עם דיאלוגים, תפריטים, טבלאות, data binding ותיבות
   הודעה, וגם ציור על תמונות. `Form1.cs` נפתח במעצב מגע: מקישים על כלי ואז על הטופס, גוררים ומשנים גודל של פקדים על
   רשת, עורכים ב-Properties, והקשה כפולה על כפתור כותבת את אירוע ה-Click שלו. המעצב כותב את `Form1.Designer.cs`
-  בדיוק כמו Visual Studio. ראו [מה שכבת ה-Forms תומכת](src/TabStudio.Forms/README.md).
+  בדיוק כמו Visual Studio. ראו [מה שכבת ה-Forms תומכת](src/TabStudio.Forms/README.md). ‏`Form1.vb` מעוצב באותה
+  דרך: המעצב כותב את `Form1.Designer.vb` כמו Visual Studio, והקשה כפולה על כפתור כותבת אירוע `Handles Button1.Click`.
+  ראו [מעצב Visual Basic](docs/features/vb-winforms-designer.md).
 - **‏WPF.** ה-XAML מקומפל עם OpenSilver ורץ בתצוגת הווב, וחלון גדול מתאים את עצמו לתצוגה. שמירה מפעילה את האפליקציה
   מחדש. לעורך ה-XAML יש השלמה, ‏Quick Info, ‏Go to Definition, שגיאות חיות ונורה שמוסיפה אירוע חסר
   ([השלמה](docs/images/wpf/xaml-completion.png), [אירוע](docs/images/wpf/add-event-handler.png)). ממשקי WPF שדורשים
@@ -203,9 +222,9 @@ Store** כדי להוסיף שפה. כל גרסה מותקנת כעדכון מע
 
 - **פתיחה מ-GitHub.** מדביקים כתובת של מאגר; TabStudio מוריד אותו, מזהה במה הוא נבנה, פותח את הפתרון הראשי ובוחר
   את תוכניות הבנייה, ההרצה והדיבאג.
-- **הגדרה אוטומטית.** פתיחת מאגר Python או Node.js מתקינה את הכלים והחבילות שלו, פעם אחת לכל שינוי במניפסט, עם
+- **הגדרה אוטומטית.** פתיחת מאגר Python, ‏Node.js, ‏PHP, ‏Kotlin או Swift מתקינה את הכלים והחבילות שלו, פעם אחת לכל שינוי במניפסט, עם
   התקדמות וביטול: גרסת ה-Python שהפרויקט מבקש בסביבה וירטואלית, ספריות המערכת שחבילות צריכות כדי להתקמפל, ו-`npm
-  ci` כשיש קובץ נעילה. כשל מוצג כהודעה אחת ברורה, עם הלוג המלא במרחק הקשה. **Set projects up when they open**
+  ci` כשיש קובץ נעילה, `composer install` עם `.env` ומפתח לאפליקציית Laravel, ו-`swift package resolve`. כשל מוצג כהודעה אחת ברורה, עם הלוג המלא במרחק הקשה. **Set projects up when they open**
   ב-Tools מכבה את זה.
 - **אתרים סטטיים.** תיקייה עם `index.html` נפתחת כאתר. ‏F5 מגיש אותו בתצוגת הווב, HTML שנשמר נטען מחדש ו-CSS שנשמר
   מוחל בלי לאבד את מצב הדף, עם IntelliSense ל-HTML, ‏CSS ו-JSON.
@@ -217,10 +236,10 @@ Store** כדי להוסיף שפה. כל גרסה מותקנת כעדכון מע
   List. ‏Build Solution בונה לפי סדר התלויות ומדווח כל שגיאה פעם אחת.
 - **כנה לגבי מה שלא יכול לרוץ כאן.** ‏Aspire AppHost מוסבר ב-Compatibility Doctor ומדולג ב-Build עם הסיבה: הוא מפעיל
   את הפרויקטים והקונטיינרים של האפליקציה על מחשב.
-- **נבדק על מאגרי קוד אמיתיים.** ה-CI פותח 25 מאגרים ציבוריים, נעולים לקומיט, בונה ומריץ אותם בתוך סביבת הפיתוח,
+- **נבדק על מאגרי קוד אמיתיים.** ה-CI פותח 42 מאגרים ציבוריים, נעולים לקומיט, בונה ומריץ אותם בתוך סביבת הפיתוח,
   ומחזיק כל אחד לרף שגיאות שיכול רק לרדת: פתרונות .NET כמו MediatR, ‏CleanArchitecture, ‏Polly, ‏eShopOnWeb,
-  ‏SimplCommerce, ‏Conduit ו-Avalonia.Samples, מדריכי Windows Forms ו-WPF קלאסיים, ופרויקטי Node, ‏Python, ‏Java ו-Rust. תהליך ה-embedded עושה אותו
-  דבר לפרויקטי PlatformIO, ‏Arduino, ‏STM32Cube, ‏Pico SDK ו-Rust embedded.
+  ‏SimplCommerce, ‏Conduit ו-Avalonia.Samples, מדריכי Windows Forms ו-WPF קלאסיים, פרויקטי Visual Basic, ופרויקטי Node, ‏Python, ‏Java, ‏Go, ‏Rust ו-C כמו אפליקציות Next.js, ‏Spring ו-Gin, ‏PHP ‏(Laravel, ‏BookStack, ‏Symfony), ‏Kotlin ‏(Ktor, ‏Spring Boot) ו-Swift ‏(Vapor, ‏Swift Argument Parser). תהליך ה-embedded עושה אותו
+  דבר ל-11 פרויקטי PlatformIO, ‏Arduino, ‏STM32Cube, ‏ESP-IDF, ‏Zephyr, ‏Pico SDK ו-Rust embedded, ביניהם Marlin.
 
 ### שירותים ומסדי נתונים
 

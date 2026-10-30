@@ -31,7 +31,7 @@ internal sealed class NUnitClassLifecycle : ClassLifecycle
     public NUnitClassLifecycle(Type fixtureType)
     {
         _fixtureType = fixtureType;
-        _isStatic = fixtureType.IsAbstract && fixtureType.IsSealed;
+        _isStatic = TypeMatching.IsStatic(fixtureType);
         var lifeCycle = AttributeReader.Of(fixtureType).Find(a => a.Is(FrameworkNames.NUnitFixtureLifeCycle));
         _instancePerTest = lifeCycle?.ConstructorArguments() is [Enum value] &&
             Convert.ToInt32(value, CultureInfo.InvariantCulture) == InstancePerTestCase;

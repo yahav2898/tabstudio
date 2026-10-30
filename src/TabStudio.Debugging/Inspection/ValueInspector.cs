@@ -12,9 +12,15 @@ namespace TabStudio.Debugging.Inspection;
 /// children it expands into.
 /// </summary>
 /// <remarks>
+/// <para>
 /// Base library values (numbers, strings, dates) are formatted directly, always with the invariant culture.
 /// Anything that runs the program's own code, such as a property getter, a <c>ToString</c> override or a
 /// collection's enumerator, goes through the <see cref="Evaluator"/> and its time limit.
+/// </para>
+/// <para>
+/// An inspector for Visual Basic code writes values and types as Visual Basic does: <c>Nothing</c>, <c>True</c>,
+/// <c>"x"c</c>, <c>Integer</c>, <c>List(Of String)</c>, and items as <c>(0)</c>.
+/// </para>
 /// </remarks>
 internal sealed class ValueInspector
 {
@@ -25,29 +31,40 @@ internal sealed class ValueInspector
 
     private readonly Evaluator _evaluator;
 
-    public ValueInspector(Evaluator evaluator)
+    /// <summary>Creates an inspector.</summary>
+    /// <param name="evaluator">Runs the program's code with a time limit.</param>
+    /// <param name="visualBasic">Whether to show values and types as Visual Basic writes them.</param>
+    public ValueInspector(Evaluator evaluator, bool visualBasic = false)
     {
         _evaluator = evaluator;
+        IsVisualBasic = visualBasic;
     }
+
+    /// <summary>Whether values and types read as Visual Basic.</summary>
+    public bool IsVisualBasic { get; }
+
+    /// <summary>An inspector with the same time limit that shows values as C# or as Visual Basic writes them.</summary>
+    /// <param name="visualBasic">Whether to show values and types as Visual Basic writes them.</param>
+    public ValueInspector ForLanguage(bool visualBasic) => visualBasic == IsVisualBasic ? this : new ValueInspector(_evaluator, visualBasic);
 
     /// <summary>The value as the Locals panel shows it.</summary>
     public string FormatValue(object? value)
     {
         if (value is null)
         {
-            return "null";
+            return IsVisualBasic ? "Nothing" : "null";
         }
 
         switch (value)
         {
             case string text:
-                return Quote(text);
+                return IsVisualBasic ? QuoteVisualBasic(text) : Quote(text);
             case char c:
-                return "'" + Escape(c, '\'') + "'";
+                return IsVisualBasic ? VisualBasicCharacter(c) : "'" + Escape(c, '\'') + "'";
             case bool flag:
-                return flag ? "true" : "false";
+                return IsVisualBasic ? (flag ? "True" : "False") : (flag ? "true" : "false");
             case Enum member:
-                return FormatEnum(member);
+                return FormatEnum(member, IsVisualBasic ? " Or " : " | ");
             case DateTime date:
                 return date.ToString("O", CultureInfo.InvariantCulture);
             case DateTimeOffset date:
@@ -59,7 +76,7 @@ internal sealed class ValueInspector
             case Array array:
                 return "Length = " + array.Length.ToString(CultureInfo.InvariantCulture);
             case Exception exception:
-                return "{" + TypeNames.Format(exception.GetType()) + ": " + exception.Message + "}";
+                return "{" + TypeNames.Format(exception.GetType(), IsVisualBasic) + ": " + exception.Message + "}";
             case IFormattable number when IsNumber(number.GetType()):
                 return number.ToString(null, CultureInfo.InvariantCulture);
             case ITuple tuple when tuple.GetType().Namespace == "System":
@@ -80,32 +97,40 @@ internal sealed class ValueInspector
         if (OverridesToString(type))
         {
             return _evaluator.TryRun(() => value.ToString(), out var text, out var failure)
-                ? "{" + (text ?? "null") + "}"
-                : "{" + TypeNames.Format(type) + "} (" + failure + ")";
+                ? "{" + (text ?? FormatValue(null)) + "}"
+                : "{" + TypeNames.Format(type, IsVisualBasic) + "} (" + failure + ")";
         }
 
-        return "{" + TypeNames.Format(type) + "}";
+        return "{" + TypeNames.Format(type, IsVisualBasic) + "}";
     }
 
     /// <summary>
     /// The type column: the declared type, followed by the runtime type in braces when it is more specific, as in
     /// <c>object {string}</c>.
     /// </summary>
-    public static string FormatType(object? value, string? declaredType)
+    public static string FormatType(object? value, string? declaredType) => FormatType(value, declaredType, visualBasic: false);
+
+    /// <summary>The type column, in C# or Visual Basic, as in <c>Object {String}</c>.</summary>
+    /// <param name="value">The value.</param>
+    /// <param name="declaredType">The declared type, in the same language, or <see langword="null"/>.</param>
+    /// <param name="visualBasic">Whether to write the runtime type as Visual Basic does.</param>
+    public static string FormatType(object? value, string? declaredType, bool visualBasic)
     {
         if (value is null)
         {
-            return declaredType ?? "object";
+            return declaredType ?? (visualBasic ? "Object" : "object");
         }
 
-        var runtime = TypeNames.Format(value.GetType());
+        var runtime = TypeNames.Format(value.GetType(), visualBasic);
         if (declaredType is null)
         {
             return runtime;
         }
 
-        // A nullable declaration boxes to its underlying type, and tuple names do not exist at run time.
-        return declaredType.TrimEnd('?') == runtime || declaredType.Contains('(', StringComparison.Ordinal)
+        // A nullable declaration boxes to its underlying type, and tuple names do not exist at run time. Visual Basic
+        // writes generic types with parentheses too, so only a leading one marks a tuple there.
+        var isTuple = visualBasic ? declaredType.StartsWith('(') : declaredType.Contains('(', StringComparison.Ordinal);
+        return declaredType.TrimEnd('?') == runtime || isTuple
             ? declaredType
             : declaredType + " {" + runtime + "}";
     }
@@ -170,7 +195,7 @@ internal sealed class ValueInspector
                 break;
             }
 
-            var child = new DebugValue("[" + index.ToString(CultureInfo.InvariantCulture) + "]", elementType, item, this);
+            var child = new DebugValue(IndexName(index.ToString(CultureInfo.InvariantCulture)), elementType, item, this);
             lock (gathered)
             {
                 gathered.Add(child);
@@ -193,7 +218,7 @@ internal sealed class ValueInspector
                 break;
             }
 
-            var child = new DebugValue("[" + FormatValue(entry.Key) + "]", valueType, entry.Value, this);
+            var child = new DebugValue(IndexName(FormatValue(entry.Key)), valueType, entry.Value, this);
             lock (gathered)
             {
                 gathered.Add(child);
@@ -229,7 +254,7 @@ internal sealed class ValueInspector
                 continue;
             }
 
-            var child = new DebugValue(member.Name, TypeNames.Format(memberType), memberValue, this);
+            var child = new DebugValue(member.Name, TypeNames.Format(memberType, IsVisualBasic), memberValue, this);
             lock (gathered)
             {
                 gathered.Add(child);
@@ -302,21 +327,24 @@ internal sealed class ValueInspector
         return null;
     }
 
-    private static string? ElementType(Type type)
+    /// <summary>The name of an item or entry: <c>[0]</c> in C#, <c>(0)</c> in Visual Basic.</summary>
+    private string IndexName(string index) => IsVisualBasic ? "(" + index + ")" : "[" + index + "]";
+
+    private string? ElementType(Type type)
     {
         if (type.IsArray)
         {
-            return TypeNames.Format(type.GetElementType()!);
+            return TypeNames.Format(type.GetElementType()!, IsVisualBasic);
         }
 
         var enumerable = type.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
-        return enumerable is null ? null : TypeNames.Format(enumerable.GetGenericArguments()[0]);
+        return enumerable is null ? null : TypeNames.Format(enumerable.GetGenericArguments()[0], IsVisualBasic);
     }
 
-    private static string? DictionaryValueType(Type type)
+    private string? DictionaryValueType(Type type)
     {
         var dictionary = type.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDictionary<,>));
-        return dictionary is null ? null : TypeNames.Format(dictionary.GetGenericArguments()[1]);
+        return dictionary is null ? null : TypeNames.Format(dictionary.GetGenericArguments()[1], IsVisualBasic);
     }
 
     private static bool OverridesToString(Type type) =>
@@ -333,10 +361,10 @@ internal sealed class ValueInspector
         (type.IsPrimitive && type != typeof(bool) && type != typeof(char)) ||
         type == typeof(decimal) || type == typeof(Half) || type == typeof(Int128) || type == typeof(UInt128) || type == typeof(BigInteger);
 
-    private static string FormatEnum(Enum member)
+    private static string FormatEnum(Enum member, string separator)
     {
         var text = Enum.Format(member.GetType(), member, "G");
-        return member.GetType().IsDefined(typeof(FlagsAttribute), inherit: false) ? text.Replace(", ", " | ", StringComparison.Ordinal) : text;
+        return member.GetType().IsDefined(typeof(FlagsAttribute), inherit: false) ? text.Replace(", ", separator, StringComparison.Ordinal) : text;
     }
 
     private string FormatTuple(ITuple tuple)
@@ -367,6 +395,89 @@ internal sealed class ValueInspector
 
         return builder.ToString();
     }
+
+    /// <summary>
+    /// A Visual Basic string literal for a string, cut off after <c>1000</c> characters. Visual Basic strings have no
+    /// escapes: quotes are doubled, and control characters are joined in as constants, as in <c>"a" &amp; vbLf &amp; "b"</c>.
+    /// </summary>
+    public static string QuoteVisualBasic(string text)
+    {
+        var shown = text.Length > MaxStringLength ? text[..MaxStringLength] : text;
+        var builder = new StringBuilder(shown.Length + 2);
+        var open = false;
+        for (var i = 0; i < shown.Length; i++)
+        {
+            var c = shown[i];
+            var isLineBreak = c == '\r' && i + 1 < shown.Length && shown[i + 1] == '\n';
+            var constant = isLineBreak ? "vbCrLf" : VisualBasicConstant(c);
+            if (constant is null)
+            {
+                if (!open)
+                {
+                    builder.Append(builder.Length > 0 ? " & \"" : "\"");
+                    open = true;
+                }
+
+                if (c == '"')
+                {
+                    builder.Append("\"\"");
+                }
+                else
+                {
+                    builder.Append(c);
+                }
+
+                continue;
+            }
+
+            if (open)
+            {
+                builder.Append('"');
+                open = false;
+            }
+
+            builder.Append(builder.Length > 0 ? " & " : string.Empty).Append(constant);
+            if (isLineBreak)
+            {
+                i++;
+            }
+        }
+
+        if (open)
+        {
+            builder.Append('"');
+        }
+
+        if (builder.Length == 0)
+        {
+            builder.Append("\"\"");
+        }
+
+        if (text.Length > MaxStringLength)
+        {
+            builder.Append("...");
+        }
+
+        return builder.ToString();
+    }
+
+    /// <summary>A Visual Basic character literal, such as <c>"x"c</c>, or the constant of a control character.</summary>
+    private static string VisualBasicCharacter(char c) =>
+        VisualBasicConstant(c) ?? (c == '"' ? "\"\"\"\"c" : "\"" + new string(c, 1) + "\"c");
+
+    /// <summary>The Visual Basic constant for a control character, such as <c>vbLf</c>, or <see langword="null"/> for others.</summary>
+    private static string? VisualBasicConstant(char c) => c switch
+    {
+        '\r' => "vbCr",
+        '\n' => "vbLf",
+        '\t' => "vbTab",
+        '\0' => "vbNullChar",
+        '\b' => "vbBack",
+        '\f' => "vbFormFeed",
+        '\v' => "vbVerticalTab",
+        _ when char.IsControl(c) => "ChrW(" + ((int)c).ToString(CultureInfo.InvariantCulture) + ")",
+        _ => null,
+    };
 
     private static string Escape(char c, char quote) => c switch
     {

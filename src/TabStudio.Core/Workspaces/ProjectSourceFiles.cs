@@ -7,15 +7,25 @@ namespace TabStudio.Core.Workspaces;
 /// <para>
 /// SDK-style projects include every source file under the project folder by default, except build output
 /// and the folders of other projects. On top of that, a project can add files with
-/// <c>&lt;Compile Include="..." /&gt;</c>, remove them with <c>&lt;Compile Remove="..." /&gt;</c>, or turn the
-/// defaults off with <c>EnableDefaultCompileItems</c>.
+/// <c>&lt;Compile Include="..." /&gt;</c> (less the files its <c>Exclude</c> names), remove them with
+/// <c>&lt;Compile Remove="..." /&gt;</c>, or turn the defaults off with <c>EnableDefaultCompileItems</c>.
+/// </para>
+/// <para>
+/// An explicit include is taken as written, as MSBuild takes it: a pattern such as Dock's
+/// <c>..\Dock.Model.ReactiveUI\**\*.cs</c> that points into another project's folder gets that folder's files,
+/// nested folders included. Only build output (<c>bin</c> and <c>obj</c>) is skipped under it, which such items
+/// usually exclude themselves. The default items also leave out other projects' folders and the tool and hidden
+/// folders <see cref="PathUtilities.IsIgnoredDirectory"/> names.
 /// </para>
 /// </remarks>
 public static class ProjectSourceFiles
 {
     /// <summary>Lists the source files of a project, sorted by path.</summary>
     /// <param name="project">The project.</param>
-    /// <param name="otherProjectDirectories">Folders of other projects in the workspace, which are never included.</param>
+    /// <param name="otherProjectDirectories">
+    /// Folders of other projects in the workspace, which the default items leave out; explicit
+    /// <c>&lt;Compile Include="..." /&gt;</c> items can still include their files.
+    /// </param>
     /// <param name="extension">The source file extension, <c>.cs</c> for C#.</param>
     public static IReadOnlyList<string> Enumerate(ProjectInfo project, IEnumerable<string>? otherProjectDirectories = null, string extension = ".cs")
     {
@@ -31,7 +41,7 @@ public static class ProjectSourceFiles
         var defaultsEnabled = !string.Equals(project.GetProperty("EnableDefaultCompileItems"), "false", StringComparison.OrdinalIgnoreCase);
         if (defaultsEnabled && Directory.Exists(project.DirectoryPath))
         {
-            foreach (var file in EnumerateDirectory(project.DirectoryPath, extension, excluded))
+            foreach (var file in EnumerateDirectory(project.DirectoryPath, extension, excluded, PathUtilities.IsIgnoredDirectory))
             {
                 files.Add(file);
             }
@@ -39,10 +49,13 @@ public static class ProjectSourceFiles
 
         foreach (var include in project.CompileIncludes)
         {
+            var exclusions = project.CompileIncludeExcludes.TryGetValue(include, out var excludes)
+                ? excludes.Select(e => new GlobPattern(project.DirectoryPath, e)).ToList()
+                : [];
             var pattern = new GlobPattern(project.DirectoryPath, include);
             if (!pattern.HasWildcards)
             {
-                if (PathUtilities.FindFile(pattern.FullPattern) is { } existing)
+                if (PathUtilities.FindFile(pattern.FullPattern) is { } existing && !exclusions.Any(e => e.IsMatch(existing)))
                 {
                     files.Add(existing);
                 }
@@ -52,7 +65,9 @@ public static class ProjectSourceFiles
 
             if (Directory.Exists(pattern.BaseDirectory))
             {
-                foreach (var file in EnumerateDirectory(pattern.BaseDirectory, extension, excluded).Where(pattern.IsMatch))
+                var matches = EnumerateDirectory(pattern.BaseDirectory, extension, [], IsBuildOutput)
+                    .Where(f => pattern.IsMatch(f) && !exclusions.Any(e => e.IsMatch(f)));
+                foreach (var file in matches)
                 {
                     files.Add(file);
                 }
@@ -92,7 +107,7 @@ public static class ProjectSourceFiles
 
             if (Directory.Exists(pattern.BaseDirectory))
             {
-                files.UnionWith(EnumerateDirectory(pattern.BaseDirectory, extension: null, []).Where(pattern.IsMatch));
+                files.UnionWith(EnumerateDirectory(pattern.BaseDirectory, extension: null, [], PathUtilities.IsIgnoredDirectory).Where(pattern.IsMatch));
             }
         }
 
@@ -100,8 +115,16 @@ public static class ProjectSourceFiles
         return files.Where(f => !removals.Any(r => r.IsMatch(f))).ToList();
     }
 
-    /// <summary>The files under a folder with an extension, or all of them, skipping build output and excluded folders.</summary>
-    private static IEnumerable<string> EnumerateDirectory(string directory, string? extension, List<string> excludedPrefixes)
+    /// <summary>Whether a folder holds build output, the only folders an explicit include leaves out under its pattern.</summary>
+    private static bool IsBuildOutput(string directoryName) =>
+        string.Equals(directoryName, "bin", StringComparison.OrdinalIgnoreCase) || string.Equals(directoryName, "obj", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// The files under a folder with an extension, or all of them, skipping excluded folders and the folders whose
+    /// names <paramref name="skip"/> picks, such as build output, tool folders and hidden ones
+    /// (<see cref="PathUtilities.IsIgnoredDirectory"/>).
+    /// </summary>
+    private static IEnumerable<string> EnumerateDirectory(string directory, string? extension, List<string> excludedPrefixes, Func<string, bool> skip)
     {
         var pending = new Stack<string>();
         pending.Push(directory);
@@ -132,7 +155,7 @@ public static class ProjectSourceFiles
             foreach (var subdirectory in subdirectories)
             {
                 var withSeparator = subdirectory + Path.DirectorySeparatorChar;
-                if (!PathUtilities.IsIgnoredDirectory(Path.GetFileName(subdirectory)) &&
+                if (!skip(Path.GetFileName(subdirectory)) &&
                     !excludedPrefixes.Any(p => withSeparator.StartsWith(p, StringComparison.Ordinal)))
                 {
                     pending.Push(subdirectory);

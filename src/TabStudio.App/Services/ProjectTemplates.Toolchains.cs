@@ -58,6 +58,9 @@ public sealed partial class ProjectTemplates
         new(CppId, "C++ Console App (CMake)", "A C++ console app with CMake, clangd IntelliSense and LLDB debugging.", ["C++", "CMake", "Console"]),
 
         new(JavaId, "Java Console App (Maven)", "A Java 21 Maven app with JDT IntelliSense and java-debug debugging.", ["Java", "Maven", "Console"]),
+        .. KotlinTemplates,
+        .. PhpTemplates,
+        .. SwiftTemplates,
         new(StaticSiteId, "Static Web Site", "An HTML page with a style sheet and a script, served on the tablet and previewed beside the code, reloading as you save.", ["HTML", "CSS", "JavaScript", "Web"]),
         new(AndroidId, "Android App (Kotlin)", "Build and install a Kotlin Android app directly on this tablet with the Android SDK from the Toolchain Store.", ["Kotlin", "Android"]),
         new(CapacitorId, "Capacitor App", "A Vite and TypeScript web app with a live web preview, Android builds on the tablet, and iOS builds through GitHub Actions.", ["TypeScript", "Android", "iOS", "Web"]),
@@ -170,6 +173,16 @@ public sealed partial class ProjectTemplates
 
             case JavaId:
                 return CreateJavaProject(root, name);
+            case KotlinId:
+                return CreateKotlinProject(root, name);
+            case KotlinScriptId:
+                return CreateKotlinScript(root, name);
+            case PhpId:
+                return CreatePhpProject(root, name);
+            case PhpSiteId:
+                return CreatePhpSite(root, name);
+            case SwiftId:
+                return CreateSwiftProject(root, name);
             case StaticSiteId:
                 WriteStaticSite(root, name);
                 return root;

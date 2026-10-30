@@ -172,7 +172,7 @@ public sealed class RemoteLanguageService : ILanguageService
         }
 
         var slots = new Dictionary<string, int>(StringComparer.Ordinal);
-        foreach (var project in projects.Where(p => p.Language == ProjectLanguage.CSharp))
+        foreach (var project in projects.Where(p => p.IsRoslynLanguage))
         {
             slots[project.FilePath] = CoverageBuilder.SlotOf(project.FilePath);
         }
@@ -219,9 +219,7 @@ public sealed class RemoteLanguageService : ILanguageService
 
     /// <inheritdoc />
     /// <remarks>The compilations are on the host; this device holds none.</remarks>
-    public void TrimMemory()
-    {
-    }
+    public Task TrimMemoryAsync() => Task.CompletedTask;
 
     /// <inheritdoc />
     /// <remarks>Restores on the host, which compiles against the packages. Progress is not reported.</remarks>
@@ -358,7 +356,7 @@ public sealed class RemoteLanguageService : ILanguageService
     /// <summary>Whether a new file is in a C# project's folder, as the host's language service decides. The caller holds the gate.</summary>
     private bool BelongsToProject(string filePath) =>
         _workspace is { } workspace
-        && workspace.Projects.Any(p => p.Language == ProjectLanguage.CSharp
+        && workspace.Projects.Any(p => p.IsRoslynLanguage
             && p.Kind != ProjectKind.Unknown
             && filePath.StartsWith(p.DirectoryPath + Path.DirectorySeparatorChar, StringComparison.Ordinal));
 }

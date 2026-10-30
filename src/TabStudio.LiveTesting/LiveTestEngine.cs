@@ -1,5 +1,6 @@
 using Microsoft.CodeAnalysis.Text;
 using TabStudio.Compilation;
+using TabStudio.Compilation.VisualBasic;
 using TabStudio.Core.Workspaces;
 using TabStudio.LiveTesting.Building;
 using TabStudio.LiveTesting.Coverage;
@@ -185,7 +186,7 @@ public sealed class LiveTestEngine : IDisposable
 
         var state = StateOf(project.FilePath);
         var sources = build.Sources;
-        var changes = await Task.Run(() => Compare(state.Sources, sources, cancellationToken), cancellationToken).ConfigureAwait(false);
+        var changes = await Task.Run(() => Compare(state.Sources, build, cancellationToken), cancellationToken).ConfigureAwait(false);
         var instrumented = build.Projects.Where(p => p.IsInstrumented).Select(p => p.Project.FilePath).ToHashSet(StringComparer.Ordinal);
         var instrumentationChanged = state.Instrumented is { } previous && !previous.SetEquals(instrumented);
         Index.ApplyBuild(build, changes);
@@ -272,8 +273,11 @@ public sealed class LiveTestEngine : IDisposable
         return session;
     }
 
-    /// <summary>Compares every file of two builds of a test project.</summary>
-    private static List<FileChange> Compare(IReadOnlyDictionary<string, SourceText>? before, IReadOnlyDictionary<string, SourceText> after, CancellationToken cancellationToken)
+    /// <summary>
+    /// Compares every file of two builds of a test project. Members of Visual Basic files are named with their
+    /// project's root namespace, as the instrumented build names them.
+    /// </summary>
+    private static List<FileChange> Compare(IReadOnlyDictionary<string, SourceText>? before, CoverageBuild build, CancellationToken cancellationToken)
     {
         var changes = new List<FileChange>();
         if (before is null)
@@ -281,10 +285,12 @@ public sealed class LiveTestEngine : IDisposable
             return changes;
         }
 
+        var after = build.Sources;
         foreach (var path in before.Keys.Union(after.Keys, StringComparer.Ordinal))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            if (FileChange.Compare(path, before.GetValueOrDefault(path), after.GetValueOrDefault(path), cancellationToken) is { } change)
+            var rootNamespace = build.ProjectOf(path)?.Project is { IsVisualBasic: true } project ? VisualBasicCompiler.RootNamespaceOf(project) : string.Empty;
+            if (FileChange.Compare(path, before.GetValueOrDefault(path), after.GetValueOrDefault(path), rootNamespace, cancellationToken) is { } change)
             {
                 changes.Add(change);
             }

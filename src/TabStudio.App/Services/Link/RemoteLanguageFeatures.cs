@@ -21,7 +21,7 @@ public sealed class RemoteLanguageFeatures : ILanguageFeatures
 
     /// <inheritdoc />
     public bool ShouldTriggerCompletion(string filePath, int position, char typedCharacter) =>
-        CompletionTriggers.ShouldTrigger(_service.LatestText(filePath), position, typedCharacter);
+        CompletionTriggers.ShouldTrigger(_service.LatestText(filePath), position, typedCharacter, filePath);
 
     /// <inheritdoc />
     public Task<CompletionCommit> GetCompletionChangeAsync(string filePath, CompletionEntry entry, char? commitCharacter, CancellationToken cancellationToken) =>

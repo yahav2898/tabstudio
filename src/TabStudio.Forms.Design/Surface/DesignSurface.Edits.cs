@@ -1,6 +1,5 @@
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.CodeAnalysis.CSharp;
 using TabStudio.Forms.Design.Catalog;
 using TabStudio.Forms.Design.Code;
 using TabStudio.Forms.Design.Model;
@@ -34,7 +33,7 @@ internal sealed partial class DesignSurface
         Edit(doc =>
         {
             var style = doc.Style;
-            var component = new DesignComponent(name, TypeResolver.NameOf(type, style.FullTypeNames)) { Type = type };
+            var component = new DesignComponent(name, DesignCode.TypeName(style, type)) { Type = type, FieldModifiers = DesignCode.FieldModifiers(style) };
             if (ComponentDefaults.JoinsContainer(type))
             {
                 component.ConstructorArguments = style.Member("components");
@@ -51,13 +50,13 @@ internal sealed partial class DesignSurface
             var prototype = (Control)Activator.CreateInstance(type)!;
             if (ComponentDefaults.SizesItself(type))
             {
-                component.SetCode("AutoSize", "true");
+                component.SetCode("AutoSize", DesignCode.BooleanLiteral(style, true));
                 prototype.AutoSize = true;
             }
 
             if (ComponentDefaults.ShowsNameAsText(type))
             {
-                component.SetCode("Text", ValueWriter.Literal(name));
+                component.SetCode("Text", DesignCode.Literal(style, name));
                 prototype.Text = name;
             }
 
@@ -65,18 +64,18 @@ internal sealed partial class DesignSurface
             var location = prototype.Dock == DockStyle.None
                 ? new Point(Snap(point.X - origin.X), Snap(point.Y - origin.Y))
                 : Point.Empty;
-            component.SetCode("Location", ValueWriter.Write(location, style));
-            component.SetCode("Name", ValueWriter.Literal(name));
-            component.SetCode("Size", ValueWriter.Write(size, style));
+            component.SetCode("Location", DesignCode.Write(style, location));
+            component.SetCode("Name", DesignCode.Literal(style, name));
+            component.SetCode("Size", DesignCode.Write(style, size));
             component.SetCode("TabIndex", target.Collection(collection).Items.Count.ToString(System.Globalization.CultureInfo.InvariantCulture));
             if (ComponentDefaults.UsesVisualStyleBackColor(type))
             {
-                component.SetCode("UseVisualStyleBackColor", "true");
+                component.SetCode("UseVisualStyleBackColor", DesignCode.BooleanLiteral(style, true));
             }
 
             if (prototype is GroupBox)
             {
-                component.SetCode("TabStop", "false");
+                component.SetCode("TabStop", DesignCode.BooleanLiteral(style, false));
             }
 
             // A new control goes to the front, which is the start of its container's controls.
@@ -108,24 +107,27 @@ internal sealed partial class DesignSurface
         Edit(doc =>
         {
             var style = doc.Style;
-            var component = new DesignComponent(name, TypeResolver.NameOf(type, style.FullTypeNames)) { Type = type };
+            var component = new DesignComponent(name, DesignCode.TypeName(style, type)) { Type = type, FieldModifiers = DesignCode.FieldModifiers(style) };
             doc.Components.Add(component);
-            component.SetCode("Name", ValueWriter.Literal(name));
+            component.SetCode("Name", DesignCode.Literal(style, name));
             if (type != typeof(ToolStripSeparator))
             {
-                component.SetCode("Text", ValueWriter.Literal(text.Length > 0 ? text : name));
+                component.SetCode("Text", DesignCode.Literal(style, text.Length > 0 ? text : name));
             }
 
             var target = doc.Find(owner.Name)!;
             var items = target.Collection(target.Type is { } ownerType && typeof(ToolStripDropDownItem).IsAssignableFrom(ownerType) ? "DropDownItems" : "Items");
             items.IsRange = true;
-            items.RangeType ??= TypeResolver.NameOf(typeof(ToolStripItem), style.FullTypeNames);
+            items.RangeType ??= DesignCode.TypeName(style, typeof(ToolStripItem));
             items.Items.Add(name);
         });
         return name;
     }
 
-    /// <summary>The name Visual Studio gives a new strip item: a menu item's comes from its text, as in <c>fileToolStripMenuItem</c>.</summary>
+    /// <summary>
+    /// The name Visual Studio gives a new strip item: a menu item's comes from its text, as in <c>fileToolStripMenuItem</c>,
+    /// or <c>FileToolStripMenuItem</c> in Visual Basic.
+    /// </summary>
     private static string ItemName(DesignDocument document, Type type, string text)
     {
         var letters = new string([.. text.Where(char.IsLetterOrDigit)]);
@@ -134,7 +136,8 @@ internal sealed partial class DesignSurface
             return document.NewName(type);
         }
 
-        var name = char.ToLowerInvariant(letters[0]) + letters[1..] + nameof(ToolStripMenuItem);
+        var first = document.Style.Language == DesignerLanguage.VisualBasic ? char.ToUpperInvariant(letters[0]) : char.ToLowerInvariant(letters[0]);
+        var name = first + letters[1..] + nameof(ToolStripMenuItem);
         var candidate = name;
         for (var number = 1; document.Find(candidate) is not null; number++)
         {
@@ -156,12 +159,12 @@ internal sealed partial class DesignSurface
                 var target = doc.Find(component.Name)!;
                 if (target.IsRoot)
                 {
-                    target.SetCode(target.Instance is Form || target.Type is { } t && typeof(Form).IsAssignableFrom(t) ? "ClientSize" : "Size", ValueWriter.Write(rectangle.Size, doc.Style));
+                    target.SetCode(target.Instance is Form || target.Type is { } t && typeof(Form).IsAssignableFrom(t) ? "ClientSize" : "Size", DesignCode.Write(doc.Style, rectangle.Size));
                     continue;
                 }
 
-                target.SetCode("Location", ValueWriter.Write(rectangle.Location, doc.Style));
-                target.SetCode("Size", ValueWriter.Write(rectangle.Size, doc.Style));
+                target.SetCode("Location", DesignCode.Write(doc.Style, rectangle.Location));
+                target.SetCode("Size", DesignCode.Write(doc.Style, rectangle.Size));
             }
         });
     }
@@ -180,7 +183,7 @@ internal sealed partial class DesignSurface
             RemoveReferences(doc, component.Name, keepAssignments: true);
             var target = doc.Find(owner.Name)!;
             target.Collection(collection).Items.Insert(0, component.Name);
-            doc.Find(component.Name)!.SetCode("Location", ValueWriter.Write(location, doc.Style));
+            doc.Find(component.Name)!.SetCode("Location", DesignCode.Write(doc.Style, location));
         });
     }
 
@@ -213,7 +216,7 @@ internal sealed partial class DesignSurface
     /// <param name="component">The component.</param>
     /// <param name="path">The property's path, such as <c>Text</c> or <c>Font</c>.</param>
     /// <param name="value">The value.</param>
-    /// <exception cref="ArgumentException">The value cannot be written as C#.</exception>
+    /// <exception cref="ArgumentException">The value cannot be written as code.</exception>
     public void SetProperty(DesignComponent component, string path, object? value)
     {
         ArgumentNullException.ThrowIfNull(component);
@@ -225,7 +228,7 @@ internal sealed partial class DesignSurface
         }
 
         var style = Document?.Style ?? CodeStyle.Simplified;
-        var code = ValueWriter.Write(value, style) ?? throw new ArgumentException($"{value} cannot be written in the designer file.", nameof(value));
+        var code = DesignCode.Write(style, value) ?? throw new ArgumentException($"{value} cannot be written in the designer file.", nameof(value));
         Edit(doc =>
         {
             var target = doc.Find(component.Name)!;
@@ -235,7 +238,7 @@ internal sealed partial class DesignSurface
             // As on Windows, a button given a back color stops drawing the visual style's face.
             if (path == nameof(Control.BackColor) && value is Color { IsEmpty: false } && type is not null && typeof(ButtonBase).IsAssignableFrom(type))
             {
-                target.SetCode(nameof(ButtonBase.UseVisualStyleBackColor), "false");
+                target.SetCode(nameof(ButtonBase.UseVisualStyleBackColor), DesignCode.BooleanLiteral(doc.Style, false));
             }
         });
     }
@@ -244,14 +247,14 @@ internal sealed partial class DesignSurface
     /// <param name="component">The component.</param>
     /// <param name="eventName">The event.</param>
     /// <param name="handler">The handler method's name, or <see langword="null"/> to remove it.</param>
-    /// <exception cref="ArgumentException">The name is not a C# identifier.</exception>
+    /// <exception cref="ArgumentException">The name is not an identifier of the file's language.</exception>
     public void SetHandler(DesignComponent component, string eventName, string? handler)
     {
         ArgumentNullException.ThrowIfNull(component);
         ArgumentNullException.ThrowIfNull(eventName);
-        if (handler is not null && (!SyntaxFacts.IsValidIdentifier(handler) || SyntaxFacts.GetKeywordKind(handler) != SyntaxKind.None))
+        if (handler is not null)
         {
-            throw new ArgumentException($"'{handler}' is not a valid method name: use letters, digits and underscores, starting with a letter.", nameof(handler));
+            ThrowIfNotMethodName(handler);
         }
 
         Edit(doc => doc.Find(component.Name)!.SetHandler(eventName, handler));
@@ -260,7 +263,7 @@ internal sealed partial class DesignSurface
     /// <summary>Renames a component: its field, its Name, and the designer code that names it.</summary>
     /// <param name="component">The component.</param>
     /// <param name="name">The new name.</param>
-    /// <exception cref="ArgumentException">The name is not a C# identifier, or another component has it.</exception>
+    /// <exception cref="ArgumentException">The name is not an identifier of the file's language, or another component has it.</exception>
     public void Rename(DesignComponent component, string name)
     {
         ArgumentNullException.ThrowIfNull(component);
@@ -270,7 +273,7 @@ internal sealed partial class DesignSurface
             throw new ArgumentException("The form's name is its class's name: rename the class in its code.", nameof(name));
         }
 
-        if (!SyntaxFacts.IsValidIdentifier(name) || SyntaxFacts.GetKeywordKind(name) != SyntaxKind.None)
+        if (!DesignCode.IsValidName(_language, name))
         {
             throw new ArgumentException($"'{name}' is not a valid name: use letters, digits and underscores, starting with a letter.", nameof(name));
         }
@@ -280,7 +283,8 @@ internal sealed partial class DesignSurface
             return;
         }
 
-        if (Document?.Find(name) is not null)
+        // In Visual Basic, whose names ignore case, Button1 can become BUTTON1.
+        if (Document?.Find(name) is { } other && !string.Equals(other.Name, component.Name, StringComparison.Ordinal))
         {
             throw new ArgumentException($"There is already a component named '{name}'.", nameof(name));
         }
@@ -290,25 +294,25 @@ internal sealed partial class DesignSurface
         {
             var target = doc.Find(old)!;
             target.Name = name;
-            target.SetCode("Name", ValueWriter.Literal(name));
+            target.SetCode("Name", DesignCode.Literal(doc.Style, name));
             foreach (var each in doc.All)
             {
                 foreach (var add in each.Adds)
                 {
                     for (var i = 0; i < add.Items.Count; i++)
                     {
-                        add.Items[i] = CodeTokens.Rename(add.Items[i], old, name);
+                        add.Items[i] = DesignCode.Rename(doc.Style, add.Items[i], old, name);
                     }
                 }
 
                 foreach (var property in each.Properties.ToList())
                 {
-                    each.SetCode(property.Path, CodeTokens.Rename(property.Code, old, name));
+                    each.SetCode(property.Path, DesignCode.Rename(doc.Style, property.Code, old, name));
                 }
 
                 for (var i = 0; i < each.OtherStatements.Count; i++)
                 {
-                    each.OtherStatements[i] = CodeTokens.Rename(each.OtherStatements[i], old, name);
+                    each.OtherStatements[i] = DesignCode.Rename(doc.Style, each.OtherStatements[i], old, name);
                 }
             }
         });
@@ -325,6 +329,7 @@ internal sealed partial class DesignSurface
             return;
         }
 
+        var before = Document?.Components.Select(c => c.Name).ToList() ?? [];
         Edit(doc =>
         {
             foreach (var name in names.SelectMany(n => WithDescendants(doc, n)).Distinct().ToList())
@@ -337,6 +342,12 @@ internal sealed partial class DesignSurface
                 RemoveReferences(doc, name, keepAssignments: false);
             }
         });
+
+        var deleted = before.Where(name => Document?.Find(name) is null).ToList();
+        if (deleted.Count > 0)
+        {
+            Deleted?.Invoke(this, deleted);
+        }
     }
 
     /// <summary>
@@ -360,12 +371,12 @@ internal sealed partial class DesignSurface
             var root = file.Document.Root;
             if (root.GetCode("Name") is null)
             {
-                root.SetCode("Name", ValueWriter.Literal(file.ClassName));
+                root.SetCode("Name", DesignCode.Literal(file.Document.Style, file.ClassName));
             }
 
             if (root.GetCode("AutoScaleMode")?.EndsWith("AutoScaleMode.Font", StringComparison.Ordinal) == true && root.GetCode("AutoScaleDimensions") is null)
             {
-                root.SetCode("AutoScaleDimensions", ValueWriter.Write(new SizeF(7F, 15F), file.Document.Style));
+                root.SetCode("AutoScaleDimensions", DesignCode.Write(file.Document.Style, new SizeF(7F, 15F)));
             }
 
             after = DesignerWriter.Write(file, file.Document);
@@ -430,12 +441,12 @@ internal sealed partial class DesignSurface
                 continue;
             }
 
-            foreach (var property in component.Properties.Where(p => CodeTokens.Mentions(p.Code, name)).ToList())
+            foreach (var property in component.Properties.Where(p => DesignCode.Mentions(document.Style, p.Code, name)).ToList())
             {
                 component.SetCode(property.Path, null);
             }
 
-            component.OtherStatements.RemoveAll(statement => CodeTokens.Mentions(statement, name));
+            component.OtherStatements.RemoveAll(statement => DesignCode.Mentions(document.Style, statement, name));
         }
     }
 }

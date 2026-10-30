@@ -52,7 +52,7 @@ public sealed partial class CodeEditorView
     /// <summary>Adds the Live Unit Testing margin to C# documents. Called once, by the constructor.</summary>
     private void InitializeLiveTesting()
     {
-        if (!_document.FileType.IsCSharp)
+        if (!_document.FileType.IsRoslyn)
         {
             return;
         }

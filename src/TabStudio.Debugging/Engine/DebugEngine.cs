@@ -37,6 +37,7 @@ internal sealed class DebugEngine
     private readonly ConditionalWeakTable<Exception, FaultOrigin> _faults = new();
     private volatile DebugInfoMap _map;
     private readonly ValueInspector _inspector;
+    private readonly ValueInspector _visualBasicInspector;
     private readonly Action<DebugPausedEventArgs> _onPaused;
     private readonly Action _onResumed;
 
@@ -63,7 +64,8 @@ internal sealed class DebugEngine
     public DebugEngine(DebugInfoMap map, ValueInspector inspector, Action<DebugPausedEventArgs> onPaused, Action onResumed)
     {
         _map = map;
-        _inspector = inspector;
+        _inspector = inspector.ForLanguage(visualBasic: false);
+        _visualBasicInspector = inspector.ForLanguage(visualBasic: true);
         _onPaused = onPaused;
         _onResumed = onResumed;
     }
@@ -339,7 +341,9 @@ internal sealed class DebugEngine
         }
 
         var frame = token as DebugFrame;
-        var slots = _map.GetStatement(statementId)?.Locals;
+        var statement = _map.GetStatement(statementId);
+        var slots = statement?.Locals;
+        var visualBasic = SourceLanguage.IsVisualBasic(statement?.Location.FilePath);
 
         // A condition can run property getters of the program, so it is evaluated before taking the gate.
         DebugValue[]? values = null;
@@ -347,8 +351,8 @@ internal sealed class DebugEngine
         var conditionMet = true;
         if (_breakpoints.Find(statementId)?.Condition is { } condition)
         {
-            values = CreateLocals(slots, locals);
-            conditionMet = BreakpointCondition.IsMet(condition, values, out conditionError);
+            values = CreateLocals(slots, locals, visualBasic);
+            conditionMet = BreakpointCondition.IsMet(condition, values, visualBasic, out conditionError);
         }
 
         DebugPausedEventArgs? pause = null;
@@ -362,7 +366,7 @@ internal sealed class DebugEngine
             {
                 var breakpoint = pauseReason == PauseReason.Breakpoint ? _breakpoints.Find(statementId) : null;
                 breakpoint?.RecordHit();
-                pause = BeginPause(pauseReason, frame, values ?? CreateLocals(slots, locals), breakpoint, exception: null, conditionError);
+                pause = BeginPause(pauseReason, frame, values ?? CreateLocals(slots, locals, visualBasic), breakpoint, exception: null, conditionError);
             }
         }
 
@@ -404,8 +408,9 @@ internal sealed class DebugEngine
 
         // Nothing has unwound yet, so the innermost frame of this flow is still the one that threw.
         var top = _current.Value ?? frame;
+        var method = _map.GetMethod(top.MethodId);
         var locals = ReferenceEquals(origin.Frame, top)
-            ? CreateLocals(_map.GetMethod(top.MethodId)?.Parameters, origin.Values)
+            ? CreateLocals(method?.Parameters, origin.Values, SourceLanguage.IsVisualBasic(method?.Location.FilePath))
             : Array.Empty<DebugValue>();
 
         DebugPausedEventArgs pause;
@@ -575,19 +580,21 @@ internal sealed class DebugEngine
         return frames;
     }
 
-    private DebugValue[] CreateLocals(IReadOnlyList<DebugLocalSlot>? slots, object?[]? values)
+    /// <summary>The values a hook passed, shown in the language of the code that paused.</summary>
+    private DebugValue[] CreateLocals(IReadOnlyList<DebugLocalSlot>? slots, object?[]? values, bool visualBasic)
     {
         if (slots is null || values is null)
         {
             return [];
         }
 
+        var inspector = visualBasic ? _visualBasicInspector : _inspector;
         var count = Math.Min(slots.Count, values.Length);
         var result = new List<DebugValue>(count);
         for (var i = 0; i < count; i++)
         {
             if (!slots[i].RecordingOnly || Recording is not null)
-                result.Add(new DebugValue(slots[i].Name, slots[i].Type, values[i], _inspector));
+                result.Add(new DebugValue(slots[i].Name, slots[i].Type, values[i], inspector));
         }
 
         return result.ToArray();

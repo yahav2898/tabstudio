@@ -28,6 +28,14 @@ internal static class BuildOrder
 
             foreach (var reference in project.ProjectReferences)
             {
+                // A project referenced only as a source generator runs inside the compiler, compiled by the host for
+                // the projects that use it (ProjectGeneratorReference); it is not part of the program.
+                var item = project.GetProjectReference(reference);
+                if (item.IsAnalyzer && !item.ReferenceOutputAssembly)
+                {
+                    continue;
+                }
+
                 if (loaded.TryGetValue(reference, out var dependency))
                 {
                     Visit(dependency);

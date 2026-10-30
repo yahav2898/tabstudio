@@ -44,8 +44,9 @@ public sealed class ProjectBuilder
     public const string UnsupportedLanguageId = "TS2002";
 
     /// <summary>
-    /// Reported for each package reference of a project whose packages have not been restored, that is, for which
-    /// <see cref="RoslynWorkspaceHost.SetPackageReferences"/> was never called.
+    /// Reported for each package reference of a project that is not restored: the project's packages have not been
+    /// restored, that is, <see cref="RoslynWorkspaceHost.SetPackageReferences"/> was never called for it, or its
+    /// restore could not restore that package.
     /// </summary>
     public const string UnrestoredPackageId = "TS2003";
 
@@ -54,6 +55,20 @@ public sealed class ProjectBuilder
     /// built on a PC through the Windows Bridge rather than compiled here against .NET.
     /// </summary>
     public const string NeedsWindowsId = "TS2004";
+
+    /// <summary>
+    /// Reported for a project that needs a platform workload TabStudio does not have, such as a .NET MAUI app or the
+    /// Android head of a cross-platform app (see <see cref="ProjectClassifier.RequiredWorkload"/>), which is built on a
+    /// computer rather than compiled here.
+    /// </summary>
+    public const string NeedsPlatformWorkloadId = "TS2005";
+
+    /// <summary>
+    /// Reported, as a warning, for a project that references a project of the workspace as a source generator
+    /// (<c>OutputItemType="Analyzer"</c>) when that project does not compile, cannot be loaded or references the project
+    /// back: the code its generators would add is missing, and the errors that follow say where.
+    /// </summary>
+    public const string GeneratorProjectFailedId = "TS2006";
 
     private readonly IBuildSource _host;
 
@@ -84,6 +99,18 @@ public sealed class ProjectBuilder
             return new BuildResult(project.Name, [appHost], null, [], stopwatch.Elapsed);
         }
 
+        // Before the .NET Framework check: a Xamarin project is in the same legacy format, but Upgrade project would not help.
+        if (ProjectClassifier.PlatformWorkloadReason(project) is { } workload)
+        {
+            var needsWorkload = new BuildDiagnostic(
+                NeedsPlatformWorkloadId,
+                DiagnosticSeverityLevel.Error,
+                $"'{project.Name}' cannot be built on this device: it {workload}. TabStudio leaves it out of builds.",
+                null,
+                project.Name);
+            return new BuildResult(project.Name, [needsWorkload], null, [], stopwatch.Elapsed);
+        }
+
         if (NetFrameworkCompatibility.NeedsWindows(project))
         {
             var needsWindows = new BuildDiagnostic(
@@ -95,12 +122,12 @@ public sealed class ProjectBuilder
             return new BuildResult(project.Name, [needsWindows], null, [], stopwatch.Elapsed);
         }
 
-        if (project.Language != ProjectLanguage.CSharp || _host.FindProject(project.FilePath) is null)
+        if (!project.IsRoslynLanguage || _host.FindProject(project.FilePath) is null)
         {
             var diagnostic = new BuildDiagnostic(
                 UnsupportedLanguageId,
                 DiagnosticSeverityLevel.Error,
-                $"'{project.Name}' cannot be built on this device: only C# projects are compiled by TabStudio.",
+                $"'{project.Name}' cannot be built on this device: only C# and Visual Basic projects are compiled by TabStudio.",
                 null,
                 project.Name);
             return new BuildResult(project.Name, [diagnostic], null, [], stopwatch.Elapsed);
@@ -114,15 +141,15 @@ public sealed class ProjectBuilder
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (!_host.ArePackagesRestored(current.FilePath))
-            {
-                diagnostics.AddRange(current.PackageReferences.Select(package => new BuildDiagnostic(
+            // Only the packages that really are missing: a restore with errors still referenced the others.
+            diagnostics.AddRange(current.PackageReferences
+                .Where(package => !_host.IsPackageRestored(current.FilePath, package.Name))
+                .Select(package => new BuildDiagnostic(
                     UnrestoredPackageId,
                     DiagnosticSeverityLevel.Warning,
                     $"NuGet package '{package.Name}' is not restored on this device, so code that uses it will not compile.",
                     null,
                     current.Name)));
-            }
 
             var isEntry = string.Equals(current.FilePath, project.FilePath, StringComparison.Ordinal);
             var result = await _host.EmitAsync(current.FilePath, checkInProcessSafety: isEntry && current.IsExecutable, cancellationToken).ConfigureAwait(false);

@@ -134,11 +134,16 @@ internal static class ProjectPackageReferences
             ? CentralPackageVersions.Load(project)
             : new Dictionary<string, string>();
 
+        // Items are evaluated after every property, so Version="$(Version)" gets the SDK's 1.0.0 when nothing sets one.
+        var properties = project.Properties.ContainsKey("Version")
+            ? project.Properties
+            : new Dictionary<string, string>(project.Properties, StringComparer.OrdinalIgnoreCase) { ["Version"] = ProjectParser.DefaultVersion };
+
         var dependencies = new List<PackageDependency>();
         foreach (var reference in project.PackageReferences.Where(r => includePrivate || !r.IsPrivate))
         {
             var text = reference.Version is { } own
-                ? CentralPackageVersions.ExpandProperties(own, project.Properties)
+                ? CentralPackageVersions.ExpandProperties(own, properties)
                 : central.GetValueOrDefault(reference.Name);
             if (string.IsNullOrWhiteSpace(text))
             {

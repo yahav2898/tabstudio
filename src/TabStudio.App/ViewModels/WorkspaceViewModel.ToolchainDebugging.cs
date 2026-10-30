@@ -154,9 +154,39 @@ public sealed partial class WorkspaceViewModel
         }
 
         configuration = withInput;
+        if (type == "php")
+        {
+            // The database its migrations need starts first, as it does for Ctrl+F5.
+            if (!await PrepareServicesAsync(project.Directory))
+            {
+                return;
+            }
+
+            using (var migrating = new CancellationTokenSource())
+            {
+                _run = migrating;
+                try
+                {
+                    if (await PrepareLaravelDatabaseAsync(project, migrating.Token) is { } failed)
+                    {
+                        ReportToolchainRun(project, plan.ProgramName, failed);
+                        return;
+                    }
+                }
+                finally
+                {
+                    _run = null;
+                }
+            }
+
+            configuration = PreparePhpDebug(project, configuration);
+        }
+
         if (type == "java")
         {
-            var prepared = await PrepareJavaDebugAsync(project, configuration);
+            var prepared = toolchain.Id == "kotlin"
+                ? await PrepareKotlinDebugAsync(project, configuration)
+                : await PrepareJavaDebugAsync(project, configuration);
             if (prepared is null)
             {
                 return;
@@ -288,7 +318,9 @@ public sealed partial class WorkspaceViewModel
             var result = await run.Completion;
             if (result.Exit is { WasStopped: false } exit)
             {
-                _adapterExitCode ??= exit.ExitCode;
+                // The program's own exit code wins over the adapter's: php-debug reports 0 for every program it
+                // asked TabStudio to start, so exit(3) and a fatal error (255) ended "with code 0".
+                _adapterExitCode = exit.ExitCode;
             }
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)

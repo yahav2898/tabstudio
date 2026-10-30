@@ -19,6 +19,61 @@ public sealed partial class DebugAdapterSession
     {
         ArgumentNullException.ThrowIfNull(filePath);
         ArgumentNullException.ThrowIfNull(breakpoints);
+        if (BreakpointSources?.Invoke(filePath, breakpoints) is { } sources)
+        {
+            return await SetMappedBreakpointsAsync(filePath, breakpoints, sources, cancellationToken).ConfigureAwait(false);
+        }
+
+        return await SendBreakpointsAsync(filePath, breakpoints, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Sends a file's breakpoints for the files <see cref="BreakpointSources"/> named, clearing those it named before
+    /// and not now, and puts the results back in the order of the file's breakpoints.
+    /// </summary>
+    private async Task<IReadOnlyList<DapBreakpoint>> SetMappedBreakpointsAsync(string filePath, IReadOnlyList<DapSourceBreakpoint> breakpoints,
+        IReadOnlyList<DapBreakpointSource> sources, CancellationToken cancellationToken)
+    {
+        var results = new DapBreakpoint?[breakpoints.Count];
+        var sent = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var source in sources)
+        {
+            var subset = source.Indexes.Select(i => breakpoints[i]).ToList();
+            var set = await SendBreakpointsAsync(source.FilePath, subset, cancellationToken).ConfigureAwait(false);
+            for (var i = 0; i < source.Indexes.Count && i < set.Count; i++)
+            {
+                // The adapter knows the line in its source; it is the same line of the file the breakpoint is in.
+                results[source.Indexes[i]] = set[i] with { Line = set[i].Line ?? breakpoints[source.Indexes[i]].Line };
+            }
+
+            sent.Add(source.FilePath);
+        }
+
+        lock (_mappedSources)
+        {
+            if (_mappedSources.TryGetValue(filePath, out var before))
+            {
+                before.ExceptWith(sent);
+                sent.UnionWith(before);
+            }
+        }
+
+        foreach (var stale in sent.Where(path => !sources.Any(s => string.Equals(s.FilePath, path, StringComparison.Ordinal))).ToList())
+        {
+            await SendBreakpointsAsync(stale, [], cancellationToken).ConfigureAwait(false);
+            sent.Remove(stale);
+        }
+
+        lock (_mappedSources)
+        {
+            _mappedSources[filePath] = sent;
+        }
+
+        return [.. results.Select((result, index) => result ?? new DapBreakpoint(null, false, breakpoints[index].Line, null))];
+    }
+
+    private async Task<IReadOnlyList<DapBreakpoint>> SendBreakpointsAsync(string filePath, IReadOnlyList<DapSourceBreakpoint> breakpoints, CancellationToken cancellationToken)
+    {
         var capabilities = Capabilities;
         var arguments = new SetBreakpointsArgumentsDto(
             new SourceDto(Path.GetFileName(filePath), filePath, null, null),
@@ -32,6 +87,16 @@ public sealed partial class DebugAdapterSession
         var body = await _connection.SendRequestAsync("setBreakpoints", arguments, DapJsonContext.Default.SetBreakpointsArgumentsDto, DapJsonContext.Default.SetBreakpointsBodyDto, cancellationToken).ConfigureAwait(false);
         return (body?.Breakpoints ?? []).Select(ToBreakpoint).ToList();
     }
+
+    /// <summary>
+    /// Where the adapter reads a source file's breakpoints from, when that is not the file itself: given a file and
+    /// its breakpoints, the files to send them for, each with the indexes of the breakpoints it gets, such as the Java
+    /// sources that tell Java's debugger which class each line of a Kotlin file compiles into. A <see langword="null"/>
+    /// answer sends them for the file itself.
+    /// </summary>
+    public Func<string, IReadOnlyList<DapSourceBreakpoint>, IReadOnlyList<DapBreakpointSource>?>? BreakpointSources { get; set; }
+
+    private readonly Dictionary<string, HashSet<string>> _mappedSources = new(StringComparer.Ordinal);
 
     /// <summary>Turns on the exception filters given, and off the others.</summary>
     /// <param name="filters">The filters, from <see cref="DapCapabilities.ExceptionFilters"/>.</param>
@@ -91,7 +156,10 @@ public sealed partial class DebugAdapterSession
                 Math.Max(1, f.Column),
                 f.EndLine,
                 f.EndColumn,
-                f.PresentationHint is "subtle" or "label" || f.Source?.PresentationHint == "deemphasize"))
+                f.PresentationHint is "subtle" or "label" || f.Source?.PresentationHint == "deemphasize")
+            {
+                SourceName = f.Source?.Name,
+            })
             .ToList();
     }
 

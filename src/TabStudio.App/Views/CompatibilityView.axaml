@@ -30,7 +30,10 @@
 
       <StackPanel>
         <Border Height="28" BorderBrush="{DynamicResource Brush.Divider}" BorderThickness="0,0,0,1">
-          <Grid ColumnDefinitions="180,130,190,150,*" VerticalAlignment="Center">
+          <!-- A phone's panel keeps Project, Status and Why; Type and Runs via need a tablet's width. -->
+          <Grid controls:ResponsiveColumns.Wide="180,130,190,150,*" controls:ResponsiveColumns.Compact="110,0,0,96,*"
+                controls:ResponsiveColumns.IsCompact="{Binding $parent[UserControl].Bounds.Width, Converter={x:Static controls:ResponsiveColumns.IsNarrow}}"
+                VerticalAlignment="Center">
             <TextBlock Classes="muted small" Text="Project" />
             <TextBlock Grid.Column="1" Classes="muted small" Text="Type" />
             <TextBlock Grid.Column="2" Classes="muted small" Text="Runs via" />
@@ -42,11 +45,14 @@
           <ItemsControl.ItemTemplate>
             <DataTemplate DataType="vm:CompatibilityRowViewModel">
               <Border MinHeight="40" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
-                <Grid ColumnDefinitions="180,130,190,150,*" Margin="0,6" VerticalAlignment="Center">
-                  <TextBlock Text="{Binding Project}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                  <TextBlock Grid.Column="1" Classes="label" Text="{Binding Type}" VerticalAlignment="Center" />
-                  <TextBlock Grid.Column="2" Text="{Binding RunsVia}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                  <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <!-- Cells align to the top: beside a long explanation, centered ones sat below the panel's fold. -->
+                <Grid controls:ResponsiveColumns.Wide="180,130,190,150,*" controls:ResponsiveColumns.Compact="110,0,0,96,*"
+                      controls:ResponsiveColumns.IsCompact="{Binding $parent[UserControl].Bounds.Width, Converter={x:Static controls:ResponsiveColumns.IsNarrow}}"
+                      Margin="0,6" VerticalAlignment="Center">
+                  <TextBlock x:Name="ProjectCell" Text="{Binding Project}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Top" Margin="0,0,8,0" />
+                  <TextBlock Grid.Column="1" Classes="label" Text="{Binding Type}" VerticalAlignment="Top" />
+                  <TextBlock Grid.Column="2" Text="{Binding RunsVia}" TextTrimming="CharacterEllipsis" VerticalAlignment="Top" />
+                  <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="6" VerticalAlignment="Top">
                     <controls:StrokeIcon Size="14" Data="{StaticResource Icon.Check}" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsReady}" />
                     <controls:StrokeIcon Size="14" Data="{StaticResource Icon.Info}" Foreground="{DynamicResource Brush.Info}" IsVisible="{Binding IsBlocked}" />
                     <TextBlock Text="{Binding Status}" VerticalAlignment="Center" />

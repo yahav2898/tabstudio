@@ -14,6 +14,12 @@ public sealed record ComposeProject(string Directory, IReadOnlyList<string> File
     /// </summary>
     public IReadOnlyDictionary<string, string?> RunEnvironment { get; init; } = new Dictionary<string, string?>();
 
+    /// <summary>
+    /// Variables every run gets set to a service's published port, by service name: a Laravel app's <c>DB_PORT</c>
+    /// for the database its Compose file and <c>.env</c> name.
+    /// </summary>
+    public IReadOnlyDictionary<string, string> RunPorts { get; init; } = new Dictionary<string, string>();
+
     /// <summary>Where the services come from when it is not a Compose file, such as "src/prisma/schema.prisma".</summary>
     public string? Origin { get; init; }
 }

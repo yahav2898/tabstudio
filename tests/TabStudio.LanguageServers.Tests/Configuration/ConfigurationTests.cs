@@ -20,7 +20,10 @@ public sealed class RegistryTests
     [InlineData("site.css", "css", "vscode-css-language-server")]
     [InlineData("theme.scss", "scss", "vscode-css-language-server")]
     [InlineData("tsconfig.json", "jsonc", "vscode-json-language-server")]
-    [InlineData("MainActivity.kt", "kotlin", "kotlin-language-server")]
+    // JetBrains' Kotlin LSP first, when the Kotlin toolchain brings it; kotlin-language-server serves Android projects without it.
+    [InlineData("MainActivity.kt", "kotlin", "kotlin-lsp")]
+    [InlineData("index.php", "php", "phpactor")]
+    [InlineData("main.swift", "swift", "sourcekit-lsp")]
     [InlineData("main.dart", "dart", "dart-analysis-server")]
     public void The_built_in_registry_knows_each_language_and_its_server(string file, string language, string server)
     {

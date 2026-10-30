@@ -60,6 +60,14 @@ internal static class TypeMatching
         return definition.FullName ?? definition.Name;
     }
 
+    /// <summary>
+    /// Whether a type cannot have instances: a C# <c>static</c> class (abstract and sealed in metadata) or a Visual
+    /// Basic <c>Module</c> (sealed, without constructors, marked with <c>StandardModuleAttribute</c>).
+    /// </summary>
+    /// <param name="type">The type.</param>
+    public static bool IsStatic(Type type) =>
+        type.IsSealed && (type.IsAbstract || AttributeReader.Of(type).Exists(a => a.Is(FrameworkNames.VisualBasicStandardModule)));
+
     /// <summary>The type hierarchy from the root base class (excluding <see cref="object"/>) down to the type itself.</summary>
     /// <param name="type">The most derived type.</param>
     public static List<Type> HierarchyFromBase(Type type)

@@ -103,19 +103,23 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         lock (_gate)
         {
             _loaded = workspace;
+
+            // Skeleton images that are not on disk yet are compiled in the background (see ReloadPending): until
+            // then their projects are referenced in full, and a keystroke never waits for a compile.
             LoadUnderGate(workspace, sources);
         }
     }
 
     /// <summary>
     /// Releases every compilation Roslyn has cached, keeping the current text of every file. The next query
-    /// recompiles only what it needs. Called when the device runs low on memory.
+    /// recompiles only what it needs. Called when the device runs low on memory, often on the UI thread: the reload
+    /// happens on a background thread, and <see cref="WhenReloadedAsync"/> completes when it has.
     /// </summary>
     public void TrimMemory()
     {
         lock (_gate)
         {
-            ReloadKeepingTexts();
+            RequestReloadUnderGate();
         }
     }
 
@@ -131,14 +135,16 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         _projects.Clear();
         _projectsAsRead.Clear();
         _skeletons.Clear();
+        _generatorProjects.Clear();
 
         // An Aspire AppHost compiles against code only its SDK generates, and runs only on a computer (see the
         // Compatibility Doctor), so it is not compiled here. Nor is a .NET Framework program that needs Windows:
-        // compiled against .NET, its errors would only say that it is the wrong framework. Nor is the Android or iOS
-        // head of a cross-platform app, which only that platform's workload builds.
+        // compiled against .NET, its errors would only say that it is the wrong framework. Nor is a project that needs a
+        // platform workload, such as a .NET MAUI app or the Android or iOS head of a cross-platform app, which only that
+        // workload builds.
         var csharpProjects = workspace.Projects
-            .Where(p => p.Language == ProjectLanguage.CSharp && p.Kind is not (ProjectKind.Unknown or ProjectKind.AspireAppHost))
-            .Where(p => !NetFrameworkCompatibility.NeedsWindows(p) && !ProjectClassifier.IsMobilePlatformHead(p))
+            .Where(p => p.IsRoslynLanguage && p.Kind is not (ProjectKind.Unknown or ProjectKind.AspireAppHost))
+            .Where(p => !NetFrameworkCompatibility.NeedsWindows(p) && !ProjectClassifier.NeedsPlatformWorkload(p))
             .ToList();
 
         // Projects whose packages were restored before get what their packages' props and targets add.
@@ -157,16 +163,17 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         var allProjectDirectories = workspace.Projects.Select(p => p.DirectoryPath).ToList();
         AddSolution(workspace, csharpProjects, allProjectDirectories, sources);
 
-        // With skeleton references, the first solution compiles the projects nobody edits once, into images;
-        // the second references those images, so their full compilations are never kept.
+        // With skeleton references, the second solution references the images of the projects nobody edits, so their
+        // full compilations are never kept; images not made yet are compiled from the first in the background.
         if (CreateSkeletons(csharpProjects))
         {
-            var texts = new SnapshotTextProvider(CurrentTexts());
+            // The same texts as the first solution: that solution's documents load their text lazily, so reading it
+            // back from them lost unsaved edits of every file nothing had read yet, and the disk's text came instead.
             _workspace.ClearSolution();
             _documents.Clear();
             _additionalDocuments.Clear();
             _razorDocuments.Clear();
-            AddSolution(workspace, csharpProjects, allProjectDirectories, texts);
+            AddSolution(workspace, csharpProjects, allProjectDirectories, sources);
         }
     }
 
@@ -183,7 +190,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             projectInfos));
     }
 
-    /// <summary>Whether a file is a source file of a loaded project: a C# file, or a Razor component, view or page.</summary>
+    /// <summary>Whether a file is a source file of a loaded project: a C# or Visual Basic file, or a Razor component, view or page.</summary>
     /// <param name="filePath">Full path of the file.</param>
     public bool ContainsDocument(string filePath)
     {
@@ -224,10 +231,16 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
                 return false;
             }
 
-            // A project referenced as a skeleton image changed: its image no longer matches, so make it again.
+            // A project referenced as a skeleton image changed: its image no longer matches, so it is made again in
+            // the background. Until then the projects that use it see its declarations as they were.
             if (_skeletons.Count > 0 && _projects.TryGetValue(id.ProjectId, out var project) && _skeletons.ContainsKey(project.FilePath))
             {
-                ReloadKeepingTexts();
+                RequestReloadUnderGate();
+            }
+            else if (_projects.TryGetValue(id.ProjectId, out var edited))
+            {
+                // A source generator built from this project is built again for the projects that use it.
+                InvalidateGenerators(edited.FilePath);
             }
 
             return true;
@@ -262,7 +275,8 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
                 .Select(p => p.Key)
                 .FirstOrDefault();
 
-            if (owner is null)
+            // A Visual Basic project compiles .vb files, and a C# project never does.
+            if (owner is null || _projects[owner].IsVisualBasic != VisualBasic.VisualBasicCompiler.IsSource(filePath))
             {
                 return false;
             }
@@ -275,6 +289,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             }
 
             _documents[filePath] = id;
+            InvalidateGenerators(_projects[owner].FilePath);
             return true;
         }
     }
@@ -288,6 +303,10 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             if (_documents.Remove(filePath, out var id))
             {
                 _workspace.TryApplyChanges(_workspace.CurrentSolution.RemoveDocument(id));
+                if (_projects.TryGetValue(id.ProjectId, out var project))
+                {
+                    InvalidateGenerators(project.FilePath);
+                }
             }
         }
     }
@@ -384,6 +403,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
         var diagnostics = await Razor.RazorCompilations.MapAsync(project, info, compilation.GetDiagnostics(cancellationToken), cancellationToken).ConfigureAwait(false);
         diagnostics.AddRange(AnalyzerFailuresFor(info, project.AnalyzerReferences.Select(r => r.FullPath)));
+        diagnostics.AddRange(GeneratorProjectFailures(info, project.AnalyzerReferences));
         if (WpfProject.UsesWpf(info))
         {
             return WpfDiagnostics.Explain(WpfDiagnostics.Map(compilation.GetDiagnostics(cancellationToken), info), compilation, info, cancellationToken);
@@ -457,8 +477,16 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
                 if (project.CompilationOptions is { } options)
                 {
                     var parseOptions = ParseOptionsFor(_projects.GetValueOrDefault(project.Id), optimize);
+                    var optimized = options.WithOptimizationLevel(level);
+                    if (optimized is Microsoft.CodeAnalysis.VisualBasic.VisualBasicCompilationOptions basicOptions
+                        && parseOptions is Microsoft.CodeAnalysis.VisualBasic.VisualBasicParseOptions basicParseOptions)
+                    {
+                        // Visual Basic's My template is parsed with the compilation's own parse options.
+                        optimized = basicOptions.WithParseOptions(basicParseOptions);
+                    }
+
                     solution = solution
-                        .WithProjectCompilationOptions(project.Id, options.WithOptimizationLevel(level))
+                        .WithProjectCompilationOptions(project.Id, optimized)
                         .WithProjectParseOptions(project.Id, parseOptions);
                 }
             }
@@ -514,13 +542,22 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         var result = await Razor.RazorCompilations.EmitAsync(project, info, compilation, checkInProcessSafety, stopwatch, cancellationToken).ConfigureAwait(false);
-        return AnalyzerFailuresFor(info, project.AnalyzerReferences.Select(r => r.FullPath)) is { Count: > 0 } failures
+        List<BuildDiagnostic> failures = [.. AnalyzerFailuresFor(info, project.AnalyzerReferences.Select(r => r.FullPath)), .. GeneratorProjectFailures(info, project.AnalyzerReferences)];
+        return failures.Count > 0
             ? result with { Diagnostics = [.. result.Diagnostics, .. failures] }
             : result;
     }
 
     /// <inheritdoc />
-    public void Dispose() => _workspace.Dispose();
+    public void Dispose()
+    {
+        lock (_gate)
+        {
+            _disposed = true;
+        }
+
+        _workspace.Dispose();
+    }
 
     /// <summary>Creates the MEF host Roslyn needs for workspace features such as classification and completion.</summary>
     public static HostServices CreateHostServices()
@@ -529,6 +566,8 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             .Append(typeof(Classifier).Assembly)
             .Append(Assembly.Load("Microsoft.CodeAnalysis.Features"))
             .Append(Assembly.Load("Microsoft.CodeAnalysis.CSharp.Features"))
+            .Append(Assembly.Load("Microsoft.CodeAnalysis.VisualBasic.Workspaces"))
+            .Append(Assembly.Load("Microsoft.CodeAnalysis.VisualBasic.Features"))
             .Distinct();
 
         return MefHostServices.Create(assemblies);
@@ -554,6 +593,11 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
     private RoslynProjectInfo CreateProjectInfo(TsProject project, IReadOnlyList<string> allProjectDirectories, ISourceTextProvider sources)
     {
+        if (project.IsVisualBasic)
+        {
+            return CreateVisualBasicProjectInfo(project, allProjectDirectories, sources);
+        }
+
         var id = _projectIds[project.FilePath];
         var documents = new List<DocumentInfo>();
 
@@ -624,7 +668,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             project.GetProperty("AssemblyName") ?? project.Name,
             LanguageNames.CSharp,
             filePath: project.FilePath,
-            compilationOptions: WithStrongName(WithPathMap(CSharpCompiler.CreateCompilationOptions(kind, project.NullableEnabled, _optimize, allowUnsafe, _concurrentBuild), project), project),
+            compilationOptions: WithStrongName(WithPathMap(CSharpCompiler.WithProjectWarnings(CSharpCompiler.CreateCompilationOptions(kind, project.NullableEnabled, _optimize, allowUnsafe, _concurrentBuild), project), project), project),
             parseOptions: ParseOptionsFor(project, _optimize),
             documents: documents,
             projectReferences: projectReferences,
@@ -641,17 +685,19 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         var texts = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var (path, id) in _documents)
         {
-            if (solution.GetDocument(id) is { } document && document.TryGetText(out var text))
+            // A document's text loads lazily; one nothing has read yet holds what its loader was given, which is
+            // the current text too, so it is read rather than left to the disk.
+            if (solution.GetDocument(id) is { } document)
             {
-                texts[path] = text.ToString();
+                texts[path] = (document.TryGetText(out var text) ? text : document.GetTextAsync().GetAwaiter().GetResult()).ToString();
             }
         }
 
         foreach (var (path, id) in _additionalDocuments)
         {
-            if (solution.GetAdditionalDocument(id) is { } document && document.TryGetText(out var text))
+            if (solution.GetAdditionalDocument(id) is { } document)
             {
-                texts[path] = text.ToString();
+                texts[path] = (document.TryGetText(out var text) ? text : document.GetTextAsync().GetAwaiter().GetResult()).ToString();
             }
         }
 

@@ -143,7 +143,7 @@ public sealed class Downloader
 
     private static bool IsDiskFull(IOException exception) =>
         // ENOSPC on Linux and Android; ERROR_DISK_FULL and ERROR_HANDLE_DISK_FULL on Windows.
-        (exception.HResult & 0xFFFF) is 28 or 112 or 39;
+        OperatingSystem.IsWindows() ? (exception.HResult & 0xFFFF) is 112 or 39 : (exception.HResult & 0xFFFF) == 28;
 
     private static DownloadException Describe(DownloadRequest request, Exception exception) => exception switch
     {

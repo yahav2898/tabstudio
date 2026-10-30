@@ -166,6 +166,22 @@ errors, builds and the debugger all see the code they generate.
   downloaded the first time code uses one of those attributes; ASP.NET Core's come with its targeting pack.
 - **Loading.** `AnalyzerLoader` gives each folder its own `AssemblyLoadContext`, with Roslyn and its
   dependencies shared from the app.
+- **One copy of each.** When .NET and a package both bring an analyzer assembly of the same file name, such as
+  `Microsoft.Extensions.Logging.Generators.dll` from ASP.NET Core and from Microsoft.Extensions.Logging.Abstractions,
+  only the one with the higher assembly version runs, .NET's on a tie, as the SDK's `ResolvePackageFileConflicts`
+  leaves it. Running both would generate every member twice (CS0102, CS0111, CS0229).
+- **Generators built from the repository.** A `ProjectReference` with `OutputItemType="Analyzer"`, as Mediator,
+  Terminal.Gui, Spectre.Console, Dock and StronglyTypedId reference their own generators, gives the project a
+  `ProjectGeneratorReference`. The first time Roslyn asks for its generators, the referenced project is compiled
+  from the workspace's own compilation of it (its sources as edited, its restored packages, its embedded resources)
+  together with the projects it compiles against, emitted into memory, and loaded into a `GeneratorLoadContext` of
+  its own: the project assemblies from their images, Roslyn shared with the app as `AnalyzerLoader` shares it, the
+  .NET libraries from the app's runtime, and anything else from the generator project's restored packages. An edit
+  to the generator project, or to a project it compiles against, gives the projects that use it a new reference, so
+  their next compilation runs the edited generator; a build is reused while what it was made from is unchanged.
+  `ReferenceOutputAssembly` alone decides whether the project is also compiled against: left at `true`, it is both,
+  as StronglyTypedId's attributes project is. A project referenced only as a generator is not part of the program
+  and is not in its build order.
 - **Packages' props and targets.** The restore records each package's `build` and `buildTransitive` files as
   NuGet imports them (`buildTransitive` in place of `build` for a package referenced through another, the nearest
   target framework's folder, props before the project and targets after it). `ProjectParser.WithPackageBuildFiles`
@@ -182,7 +198,9 @@ errors, builds and the debugger all see the code they generate.
   `AvaloniaXamlLoader.Load(this)` so that the XAML is loaded at run time. XAML that is not well-formed is an
   error naming the file; a class that is not `partial` gets no generated part, as with Avalonia's own generator.
 - **Failures.** A generator that throws is a warning that names it (CS8785), never a reason for the build to
-  stop; the code it would have generated is then missing, and the errors that follow say where.
+  stop; the code it would have generated is then missing, and the errors that follow say where. A generator
+  project that does not compile, or that references the project using it, is one warning for that project
+  (TS2006) that names the generator project and gives its first error.
 
 ## Web apps
 
@@ -562,6 +580,12 @@ talks to GitHub instead:
   committing and pushing in one step. A push that is not a fast-forward is refused, and you pull first.
 - **Pulling** applies GitHub's changes file by file. Files changed on both sides are merged with a three-way
   line merge (Myers' diff, as Git uses); conflicts get Git-style markers and can be settled by choosing a side.
+  Editors stay editable while a pull, a branch switch or a pull-request checkout runs: the workspace reads each open
+  file before it starts, and a document edited meanwhile gets the new file with those edits merged in (the same
+  three-way merge, markers where both changed a line), unsaved, one Undo away from what is on disk.
+- **Signed out**, GitHub's API answers 60 requests an hour. Files a commit's archive leaves out (`export-ignore`) or
+  changes (`export-subst`) are then read from `raw.githubusercontent.com`, which that limit does not count, and
+  checked against their blob hashes; only a mismatch falls back to the API.
 - **Branches, pull requests and publishing** a folder as a new repository are GitHub API calls.
 - **In the IDE**, the Git Changes window lists changes with checkboxes, commits and pushes them in one step,
   shows inline diffs, and settles conflicts by choosing a side. Signing in takes a personal access token,
@@ -673,6 +697,9 @@ adapter it brings.
 - **Processes.** Programs are children of TabStudio's process, started with pipes or a pseudo terminal, and are
   killed with their whole process tree when stopped, as Android 12 and later expect.
 - **Projects.** `ToolchainProjectDetector` finds projects from the catalog's manifests and source-file rules.
+  Below the workspace folder it does not search `docs`, `doc`, `documentation` or `wwwroot`, whose build files build
+  documentation or are what a web app serves, and a Makefile that only runs another tool (cargo, npm,
+  `$(SPHINXBUILD)`) is not a C/C++ project.
   F5 and Ctrl+F5 run them with their console in the Output panel; problem matchers turn tracebacks and compiler
   output into Error List entries and links.
 - **The terminal.** `TerminalEmulator` turns what programs write to a pseudo terminal into styled character cells,
@@ -769,9 +796,12 @@ excluded. `MakefileWrapper` reads a Makefile's recipes and variables: one that o
 project. In a folder with both, a language's own manifest comes before a Makefile, so it is the default startup
 project. Programs are named after their target or binary (`RunPlan.ProgramName`), never `Makefile` or `pom.xml`. Alpine installs Clang, build-base (including make), CMake, clangd and LLDB with lldb-dap; desktops use
 PATH. CMake configures a Debug build, exports `compile_commands.json` for clangd and reports executable artifacts
-through its codemodel file API. An active source selects among several targets. Makefile projects need no special
-run target: the unique executable at the root or in `bin`, `build` or `out` runs. Ambiguous outputs need a launch
-configuration. Standalone files use their language's compiler with debug information. Compiler locations become
+through its codemodel file API. Of several targets, the one a `.tabstudio/launch.json` configuration's `program`
+names runs, else the one the active source belongs to, else the only one the top-level `CMakeLists.txt` defines
+(cJSON's `cJSON_test`, not its tests and fuzzers). Makefile projects need no special run target: the unique
+executable at the root or in `bin`, `build` or `out` runs, else the one a launch configuration names, else the only
+one at the root. When no program can be chosen, the run ends with one line that names the executables and how to
+choose one, and reports no exit code. Standalone files use their language's compiler with debug information. Compiler locations become
 Error List links.
 
 F5 uses LLDB DAP. Desktop programs use `runInTerminal`; on Android, LLDB launches within the same PRoot trace tree
@@ -1026,9 +1056,15 @@ design keeps the second part proportional to what you are actually editing:
 - **Skeleton references.** Only projects with open documents keep a full Roslyn compilation. The projects
   they depend on are referenced through compact metadata-only images, cached on disk by content and made
   again when their code changes. Go to Definition still finds the source behind an image, and builds always
-  compile every project in full.
+  compile every project in full. Images are compiled on a background thread from an immutable snapshot, never
+  under the lock keystrokes take: an edit to an image's project (a Rename across projects), a change of the edited
+  projects or memory pressure returns at once, and the solution is rebuilt from texts and images when they are ready.
 - **Memory pressure.** When Android reports memory pressure (`onTrimMemory`), TabStudio drops caches it can
-  rebuild: semantic models of closed files, syntax highlighting state and old output.
+  rebuild: semantic models of closed files, syntax highlighting state and old output. The reload that lets Roslyn's
+  compilations go runs in the background, and the collection follows it there.
+- **Long operations finish in the background.** While a toolchain install, build, project setup or download runs,
+  `OperationsService`, a data-sync foreground service with a partial wake lock, keeps the process from being frozen,
+  and its ongoing notification shows the newest operation's progress.
 - **Session restore.** The open documents, unsaved edits and layout are saved as you work, so if Android
   closes TabStudio in the background, it reopens where you left it.
 - **TabStudio Link.** The language service and build engine sit behind one interface, so they can also run on
@@ -1070,7 +1106,7 @@ service and the app's connection string, which Services runs on F5; never writte
 
 `SqlExecutor` opens and disposes an ADO.NET connection/command/reader per execution on a worker thread, including SQLite's synchronous implementation of its async API. Cancellation registers `DbCommand.Cancel`; SQLite uses `sqlite3_interrupt` because its command cancellation method does nothing. Readers consume every result set, storing at most 5,000 rows per set and 32 displayed sets. Each tab owns its cancellation lifetime. JSON exports preserve duplicate column names and SQL NULL as separate columns and row arrays; CSV uses invariant formatting and quotes/escapes every field.
 
-`TableEditor` issues ordered, dialect-specific pages with one extra row to determine whether Next exists. Primary keys order editable tables; views and keyless tables are read-only. Cell updates quote identifiers, parameterize values, and check the primary key plus the original comparable row values in a transaction. Zero or multiple affected rows roll back. SQL Server's text/ntext/image/xml columns cannot be compared and are excluded from the concurrency predicate. Paging is not a snapshot across concurrent inserts/deletes.
+`TableEditor` issues ordered, dialect-specific pages with one extra row to determine whether Next exists. On PostgreSQL, every edited value and every value in the concurrency predicate is cast to the column's own type (`format_type`, kept as `DatabaseColumn.SqlType`), so text typed into json, jsonb, xml, point, enum and date columns is parsed as PostgreSQL parses a literal; json, xml and the geometric types, which have no `=` operator, are compared by their text. Primary keys order editable tables; views and keyless tables are read-only. Cell updates quote identifiers, parameterize values, and check the primary key plus the original comparable row values in a transaction. Zero or multiple affected rows roll back. SQL Server's text/ntext/image/xml columns cannot be compared and are excluded from the concurrency predicate. Paging is not a snapshot across concurrent inserts/deletes.
 
 The app owns the Explorer and its EF Core pane; SQL and table pages use the normal document host and dispose with their tabs. Query text can be saved to the app's SQL query folder; passwords are never part of a query document or session state. `ConnectionStore` writes only ID/name/provider metadata. Its `IDatabaseSecretStore` holds the entire connection string. Android replaces the session-only desktop store with AES-GCM encryption using a non-exportable AndroidKeyStore key, authenticated per connection ID; ciphertext lives in `NoBackupFilesDir`. There is no plaintext fallback. Connection discovery is local and opt-in, skips build/dependency folders and directory symlinks, resolves SQLite paths beside configuration, and only reads user-secret IDs present in solution projects.
 

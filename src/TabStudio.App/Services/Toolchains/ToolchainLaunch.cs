@@ -33,7 +33,7 @@ internal static partial class ToolchainLaunch
 
     /// <summary>Whether a configuration type is one this class writes configurations for.</summary>
     /// <param name="type">The debug adapter's type, from the toolchain catalog.</param>
-    public static bool Supports(string? type) => type is PythonType or NodeType or "go" or "lldb-dap" or "java" or "flutter" or "dart";
+    public static bool Supports(string? type) => type is PythonType or NodeType or PhpType or "go" or "lldb-dap" or "java" or "flutter" or "dart";
 
     /// <summary>The configuration that debugs a plan's program.</summary>
     /// <param name="type">The debug adapter's type: <see cref="PythonType"/> or <see cref="NodeType"/>.</param>
@@ -63,6 +63,8 @@ internal static partial class ToolchainLaunch
             "lldb-dap" => FillNative(properties, run),
 
             "java" => FillJava(properties, run),
+
+            PhpType => FillPhp(properties, run, folder),
 
             "flutter" or "dart" => FillDart(properties, run, folder),
             _ => false,

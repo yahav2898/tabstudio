@@ -139,12 +139,25 @@ public sealed class AgentSession
     /// <summary>Applies an approved change to the workspace.</summary>
     /// <param name="fullPath">The changed file.</param>
     /// <param name="cancellationToken">Cancels the write.</param>
+    /// <exception cref="IOException">
+    /// The file changed since the agent proposed the change, which keeping it would undo; the change stays pending.
+    /// </exception>
     public async Task ApproveAsync(string fullPath, CancellationToken cancellationToken = default)
     {
-        if (Changes.Take(fullPath) is { } change)
+        if (Changes.Find(fullPath) is not { } change)
         {
-            await _workspace.ApplyChangeAsync(change.FullPath, change.Proposed, cancellationToken).ConfigureAwait(false);
+            return;
         }
+
+        // Kept over edits made since, the change silently undid them; kept and failed, it was gone from the list.
+        var current = await _workspace.ReadFileAsync(change.FullPath, cancellationToken).ConfigureAwait(false);
+        if (!string.Equals(current, change.Original, StringComparison.Ordinal))
+        {
+            throw new IOException($"{change.RelativePath} changed since Claude proposed this, and keeping it would undo those edits. Ask Claude to make the change again, or Undo it.");
+        }
+
+        await _workspace.ApplyChangeAsync(change.FullPath, change.Proposed, cancellationToken).ConfigureAwait(false);
+        Changes.Take(fullPath);
     }
 
     /// <summary>Applies every pending change.</summary>

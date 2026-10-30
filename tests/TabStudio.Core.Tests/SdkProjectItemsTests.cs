@@ -142,6 +142,7 @@ public sealed class SdkProjectItemsTests
               <ItemGroup>
                 <ProjectReference Include="..\Core\Core.csproj" />
                 <ProjectReference Include="..\Gen\Gen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+                <ProjectReference Include="..\Attributes\Attributes.csproj" OutputItemType="Analyzer" />
                 <ProjectReference Include="..\Shared\Shared.csproj"><PrivateAssets>all</PrivateAssets></ProjectReference>
                 <PackageReference Include="Mediator.SourceGenerator" Version="3.0.2"><PrivateAssets>all</PrivateAssets></PackageReference>
                 <PackageReference Include="Vogen" Version="8.0.7" />
@@ -151,7 +152,13 @@ public sealed class SdkProjectItemsTests
 
         var references = project.ProjectReferenceItems.ToDictionary(r => Path.GetFileNameWithoutExtension(r.Path));
         Assert.True(references["Core"].IsCompiledAgainst);
+        Assert.False(references["Core"].IsAnalyzer);
         Assert.False(references["Gen"].IsCompiledAgainst);
+        Assert.True(references["Gen"].IsAnalyzer);
+
+        // As with the SDK, an analyzer reference that keeps ReferenceOutputAssembly is both: StronglyTypedId's attributes.
+        Assert.True(references["Attributes"].IsCompiledAgainst);
+        Assert.True(references["Attributes"].IsAnalyzer);
         Assert.True(references["Shared"].IsPrivate);
         Assert.True(project.PackageReferences.Single(p => p.Name == "Mediator.SourceGenerator").IsPrivate);
         Assert.False(project.PackageReferences.Single(p => p.Name == "Vogen").IsPrivate);

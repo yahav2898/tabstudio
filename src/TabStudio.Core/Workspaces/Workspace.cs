@@ -24,17 +24,104 @@ public sealed class Workspace
     public IReadOnlyList<string> LoadErrors { get; init; } = [];
 
     /// <summary>
-    /// The project F5 should run when the user has not picked one: the first web app, else the first app with a UI,
-    /// else the first console app, else any other program (see <see cref="ProjectClassifier.StartupRank"/>). Libraries,
-    /// tests, build scripts, Aspire AppHosts and the WebAssembly client of a Blazor Web App are never chosen.
+    /// The project F5 should run when the user has not picked one: the first web app with a UI, else the first app with
+    /// a UI, else the first web API, else the first console app, else any other program (see
+    /// <see cref="ProjectClassifier.StartupRank"/>), with programs in folders such as <c>docs</c>, <c>scripts</c> or
+    /// <c>tests</c> after all the others (see <see cref="ProjectClassifier.IsInAuxiliaryFolder"/>), and the solution's
+    /// order between equals, except that a console app another console app references comes before it, as Terminal.Gui's
+    /// UICatalog before the ScenarioRunner that runs its scenarios. Libraries, tests, build scripts, benchmarks, Aspire
+    /// AppHosts, projects that need a platform workload and the WebAssembly client of a Blazor Web App are never chosen;
+    /// <see langword="null"/> when nothing else is left.
     /// </summary>
-    public ProjectInfo? DefaultStartupProject =>
-        Projects.Select((project, index) => (Project: project, Index: index, Rank: ProjectClassifier.StartupRank(project)))
+    public ProjectInfo? DefaultStartupProject => StartupCandidates is [var first, ..] ? first : null;
+
+    /// <summary>
+    /// The projects F5 can start, best first, in the order <see cref="DefaultStartupProject"/> chooses from: the first is
+    /// the default. Libraries, tests and the other projects that are never startup projects are left out.
+    /// </summary>
+    public IReadOnlyList<ProjectInfo> StartupCandidates => OrderStartupCandidates();
+
+    private List<ProjectInfo> OrderStartupCandidates()
+    {
+        var candidates = Projects
+            .Select((project, index) => (Project: project, Index: index, Rank: ProjectClassifier.StartupRank(project)))
             .Where(p => p.Rank is not null)
-            .OrderBy(p => p.Rank)
+            .ToList();
+
+        // A console program that references another one runs it, as a scenario or benchmark runner does: the referenced
+        // one is the app.
+        var runByAnother = candidates
+            .Where(p => p.Project.Kind == ProjectKind.ConsoleApp)
+            .SelectMany(p => p.Project.ProjectReferences)
+            .ToHashSet(StringComparer.Ordinal);
+
+        return candidates
+            .OrderBy(p => ProjectClassifier.IsInAuxiliaryFolder(p.Project, RootDirectory))
+            .ThenBy(p => p.Rank)
+            .ThenBy(p => !(p.Project.Kind == ProjectKind.ConsoleApp && runByAnother.Contains(p.Project.FilePath)))
             .ThenBy(p => p.Index)
             .Select(p => p.Project)
-            .FirstOrDefault();
+            .ToList();
+    }
+
+    /// <summary>
+    /// Why the workspace has no startup project, in one sentence for the IDE, such as
+    /// <c>This solution has only libraries and tests: run the tests in Test Explorer.</c>; <see langword="null"/> when
+    /// it has one, or has projects other than .NET ones, such as a Visual C++ program the Windows Bridge starts.
+    /// </summary>
+    public string? NoStartupProjectReason
+    {
+        get
+        {
+            if (Projects.Count == 0 || Projects.Any(p => p.Language == ProjectLanguage.Cpp) || DefaultStartupProject is not null)
+            {
+                return null;
+            }
+
+            // An app that runs on a computer only is named; build scripts and benchmarks are the repository's tooling.
+            var hasTests = Projects.Any(p => p.IsTestProject);
+            var app = Projects
+                .Where(p => !p.IsTestProject)
+                .Select(p => (Project: p, Reason: ComputerOnlyReason(p)))
+                .FirstOrDefault(p => p.Reason is not null);
+            if (app.Reason is not null)
+            {
+                var tests = hasTests ? " Run the tests in Test Explorer." : string.Empty;
+                return $"Nothing in this solution starts on this tablet: {app.Project.Name} {app.Reason}.{tests}";
+            }
+
+            var parts = new List<string>();
+            if (Projects.Any(p => !p.IsTestProject && p.Kind is not (ProjectKind.Benchmark or ProjectKind.BuildScript)))
+            {
+                parts.Add("libraries");
+            }
+
+            if (hasTests)
+            {
+                parts.Add("tests");
+            }
+
+            if (Projects.Any(p => p.Kind == ProjectKind.Benchmark))
+            {
+                parts.Add("benchmarks");
+            }
+
+            if (Projects.Any(p => p.Kind == ProjectKind.BuildScript))
+            {
+                parts.Add("a build script");
+            }
+
+            var what = parts.Count == 1 ? parts[0] : string.Join(", ", parts.Take(parts.Count - 1)) + " and " + parts[^1];
+            return hasTests
+                ? $"This solution has only {what}: run the tests in Test Explorer."
+                : $"This solution has only {what}: nothing in it starts on its own.";
+        }
+    }
+
+    /// <summary>Why an app runs on a computer only, as a phrase after its name; <see langword="null"/> for any other project.</summary>
+    private static string? ComputerOnlyReason(ProjectInfo project) =>
+        ProjectClassifier.PlatformWorkloadReason(project)
+        ?? (project.Kind == ProjectKind.AspireAppHost ? "is an Aspire AppHost, which runs on a computer" : null);
 
     /// <summary>Finds the project that owns a file: the project whose directory most closely contains it.</summary>
     /// <param name="filePath">Full path of a file in the workspace.</param>

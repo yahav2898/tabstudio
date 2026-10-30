@@ -136,8 +136,44 @@ public sealed class ToolchainManager : IDisposable
     /// <param name="id">The toolchain's id.</param>
     /// <param name="cancellationToken">Stops the install; downloads are kept for the next attempt.</param>
     /// <exception cref="ToolchainInstallException">It failed; the status's <see cref="ToolchainStatus.Error"/> says why too.</exception>
-    public Task InstallAsync(string id, CancellationToken cancellationToken = default) =>
-        RunAsync(id, ToolchainState.Installing, (toolchain, progress) => _installer.InstallAsync(toolchain, progress, cancellationToken), cancellationToken);
+    public async Task InstallAsync(string id, CancellationToken cancellationToken = default)
+    {
+        // A toolchain that builds on others, as Kotlin builds on Java's debugger, gets them first.
+        foreach (var required in RequiredBy(id).Where(r => !Status(r).IsReady))
+        {
+            await RunAsync(required, ToolchainState.Installing, (toolchain, progress) => _installer.InstallAsync(toolchain, progress, cancellationToken), cancellationToken).ConfigureAwait(false);
+        }
+
+        await RunAsync(id, ToolchainState.Installing, (toolchain, progress) => _installer.InstallAsync(toolchain, progress, cancellationToken), cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// The toolchains a toolchain requires (<see cref="ToolchainDefinition.Requires"/>), those they require first, in
+    /// the order to install them.
+    /// </summary>
+    /// <param name="id">The toolchain's id.</param>
+    public IReadOnlyList<string> RequiredBy(string id)
+    {
+        var result = new List<string>();
+        void Add(string current, HashSet<string> path)
+        {
+            foreach (var required in Catalog.Find(current)?.Requires ?? [])
+            {
+                if (path.Add(required))
+                {
+                    Add(required, path);
+                    path.Remove(required);
+                    if (!result.Contains(required, StringComparer.Ordinal) && required != id)
+                    {
+                        result.Add(required);
+                    }
+                }
+            }
+        }
+
+        Add(id, new HashSet<string>(StringComparer.Ordinal) { id });
+        return result;
+    }
 
     /// <summary>Installs several toolchains serially, measuring the shared disk usage once at the end.</summary>
     /// <param name="ids">The toolchain ids; each distinct id is installed once.</param>
@@ -145,7 +181,7 @@ public sealed class ToolchainManager : IDisposable
     public async Task InstallManyAsync(IEnumerable<string> ids, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(ids);
-        var pending = ids.Distinct(StringComparer.Ordinal).ToList();
+        var pending = ids.SelectMany(id => RequiredBy(id).Where(r => !Status(r).IsReady).Append(id)).Distinct(StringComparer.Ordinal).ToList();
         foreach (var id in pending)
         {
             _ = Status(id); // Validate the complete request before changing any toolchain.
@@ -291,6 +327,14 @@ public sealed class ToolchainManager : IDisposable
         {
             Publish(before with { Error = null, Progress = null });
             throw;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException and not ToolchainInstallException and not OutOfMemoryException)
+        {
+            // Anything else left the toolchain "Installing" until the app restarted, with Install hidden and Cancel
+            // doing nothing, and reached the Store's button as an error that ended the app.
+            var failure = ToolchainInstallException.FromUnexpected(toolchain.Name, ex);
+            Publish(before with { Error = failure.Message, Progress = null });
+            throw failure;
         }
         finally
         {

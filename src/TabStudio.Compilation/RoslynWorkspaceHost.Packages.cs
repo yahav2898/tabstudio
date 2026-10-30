@@ -11,6 +11,12 @@ public sealed partial class RoslynWorkspaceHost
     private readonly Dictionary<string, IReadOnlyList<MetadataReference>> _packageReferences = new(StringComparer.Ordinal);
 
     /// <summary>
+    /// The package references each restored project's last restore could not restore, keyed by project file path;
+    /// a project whose restore restored everything has none.
+    /// </summary>
+    private readonly Dictionary<string, HashSet<string>> _unrestoredPackages = new(StringComparer.Ordinal);
+
+    /// <summary>
     /// One reference per assembly file, shared by every project, so Roslyn sees the same reference object across
     /// restores and can keep reusing its compilations.
     /// </summary>
@@ -23,14 +29,21 @@ public sealed partial class RoslynWorkspaceHost
     /// <remarks>
     /// The references are kept by project file path, so they survive <see cref="Load"/> (for a project with the
     /// same path) and <see cref="TrimMemory"/>. The project counts as restored from then on, even with no
-    /// assemblies, so builds stop reporting <c>TS2003</c> for its package references. The files are memory-mapped,
-    /// like the framework's reference assemblies, and must not change while TabStudio runs; the global packages
-    /// folder never changes a package once it is extracted.
+    /// assemblies, so builds stop reporting <c>TS2003</c> for its package references, except for those in
+    /// <paramref name="unrestoredPackages"/>. A restore with errors still gives the packages it restored, so one
+    /// missing package does not take the others away. The files are memory-mapped, like the framework's reference
+    /// assemblies, and must not change while TabStudio runs; the global packages folder never changes a package once
+    /// it is extracted.
     /// </remarks>
     /// <param name="projectFilePath">Full path of the project file. The project does not have to be loaded yet.</param>
     /// <param name="compileAssemblyPaths">Full paths of the package assemblies, such as <c>RestoreResult.CompileAssemblies</c>.</param>
+    /// <param name="unrestoredPackages">
+    /// The ids of the project's package references that the restore could not restore, such as
+    /// <c>RestoreResult.UnrestoredReferences</c>; builds report <c>TS2003</c> for them. <see langword="null"/> or empty
+    /// when every package was restored.
+    /// </param>
     /// <exception cref="FileNotFoundException">An assembly does not exist.</exception>
-    public void SetPackageReferences(string projectFilePath, IReadOnlyList<string> compileAssemblyPaths)
+    public void SetPackageReferences(string projectFilePath, IReadOnlyList<string> compileAssemblyPaths, IReadOnlyCollection<string>? unrestoredPackages = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(projectFilePath);
         ArgumentNullException.ThrowIfNull(compileAssemblyPaths);
@@ -43,7 +56,17 @@ public sealed partial class RoslynWorkspaceHost
                 .ToList();
 
             _packageReferences[projectFilePath] = references;
+            if (unrestoredPackages is { Count: > 0 })
+            {
+                _unrestoredPackages[projectFilePath] = new HashSet<string>(unrestoredPackages, StringComparer.OrdinalIgnoreCase);
+            }
+            else
+            {
+                _unrestoredPackages.Remove(projectFilePath);
+            }
+
             ApplyMetadataReferences(projectFilePath);
+            InvalidateGenerators(projectFilePath);
         }
     }
 
@@ -55,9 +78,11 @@ public sealed partial class RoslynWorkspaceHost
 
         lock (_gate)
         {
+            _unrestoredPackages.Remove(projectFilePath);
             if (_packageReferences.Remove(projectFilePath))
             {
                 ApplyMetadataReferences(projectFilePath);
+                InvalidateGenerators(projectFilePath);
             }
         }
     }
@@ -69,6 +94,21 @@ public sealed partial class RoslynWorkspaceHost
         lock (_gate)
         {
             return _packageReferences.ContainsKey(projectFilePath);
+        }
+    }
+
+    /// <summary>
+    /// Whether one package reference of a project is restored: <see cref="SetPackageReferences"/> was called for the
+    /// project and did not name the package as one the restore could not restore.
+    /// </summary>
+    /// <param name="projectFilePath">Full path of the project file.</param>
+    /// <param name="packageId">The id of the package, as the project references it. Ids are case-insensitive.</param>
+    public bool IsPackageRestored(string projectFilePath, string packageId)
+    {
+        lock (_gate)
+        {
+            return _packageReferences.ContainsKey(projectFilePath) &&
+                !(_unrestoredPackages.TryGetValue(projectFilePath, out var unrestored) && unrestored.Contains(packageId));
         }
     }
 
@@ -94,9 +134,10 @@ public sealed partial class RoslynWorkspaceHost
         var packages = _packageReferences.TryGetValue(project.FilePath, out var restored) ? restored : [];
         var skeletons = SkeletonReferencesFor(project).ToList();
         var forms = WindowsFormsReferencesFor(project);
-        return packages.Count == 0 && skeletons.Count == 0 && forms.Count == 0
+        var basic = VisualBasicReferencesFor(project);
+        return packages.Count == 0 && skeletons.Count == 0 && forms.Count == 0 && basic.Count == 0
             ? _frameworkReferences
-            : [.. _frameworkReferences, .. forms, .. packages, .. skeletons];
+            : [.. _frameworkReferences, .. forms, .. basic, .. packages, .. skeletons];
     }
 
     /// <summary>Pushes a project's current references into the loaded solution. The caller holds the gate.</summary>

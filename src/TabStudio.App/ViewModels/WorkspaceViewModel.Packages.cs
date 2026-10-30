@@ -16,6 +16,12 @@ public sealed partial class WorkspaceViewModel
 {
     private Task _restore = Task.CompletedTask;
 
+    /// <summary>
+    /// The projects, by file path, whose last restore reported errors. They compile against the packages that were
+    /// restored, and a build of one says in the Output panel that the others are missing.
+    /// </summary>
+    private readonly HashSet<string> _failedRestores = new(StringComparer.Ordinal);
+
     /// <summary>The package restore's progress, for the status bar; null when nothing is being restored.</summary>
     [ObservableProperty]
     public partial string? PackagesText { get; private set; }
@@ -25,6 +31,7 @@ public sealed partial class WorkspaceViewModel
     private void StartPackageRestore(Workspace workspace)
     {
         var projects = workspace.Projects.Where(p => NeedsRestore(workspace, p)).ToList();
+        _failedRestores.RemoveWhere(path => !projects.Exists(p => string.Equals(p.FilePath, path, StringComparison.Ordinal)));
         var previous = _restore;
         _restore = projects.Count == 0 ? previous : RestoreAfterAsync(previous, projects, _background?.Token ?? CancellationToken.None);
         StartFrameworkGenerators(workspace);
@@ -47,8 +54,9 @@ public sealed partial class WorkspaceViewModel
     /// </summary>
     private static bool NeedsRestore(Workspace workspace, ProjectInfo project)
     {
-        // A mobile platform head restores for its platform, which only that platform's workload provides.
-        if (project.Language != ProjectLanguage.CSharp || ProjectClassifier.IsMobilePlatformHead(project))
+        // A project that needs a platform workload, such as a mobile platform head, restores for its platform, which
+        // only that workload provides.
+        if (!project.IsRoslynLanguage || ProjectClassifier.NeedsPlatformWorkload(project))
         {
             return false;
         }
@@ -121,9 +129,16 @@ public sealed partial class WorkspaceViewModel
 
                 var result = await language.RestorePackagesAsync(project, progress, cancellationToken);
                 ErrorList.SetRestoreDiagnostics(project.FilePath, result.Diagnostics);
-                restoredAny |= result.Success;
-                if (!result.Success)
+
+                // A restore with errors still gives the project the packages it restored.
+                restoredAny = true;
+                if (result.Success)
                 {
+                    _failedRestores.Remove(project.FilePath);
+                }
+                else
+                {
+                    _failedRestores.Add(project.FilePath);
                     outcome = OperationOutcome.Failed;
                 }
                 if (!result.FromCache)
@@ -172,6 +187,10 @@ public sealed partial class WorkspaceViewModel
             }
         }
     }
+
+    /// <summary>Whether a project's last package restore reported errors, so some of its packages may be missing.</summary>
+    /// <param name="project">The project.</param>
+    private bool RestoreFailed(ProjectInfo project) => _failedRestores.Contains(project.FilePath);
 
     /// <summary>After a project or package-version file is saved, reloads the workspace and restores again.</summary>
     /// <param name="document">The saved document.</param>

@@ -120,6 +120,19 @@
         ".kt",
         ".kts"
       ]
+    },
+    "php": {
+      "name": "PHP",
+      "extensions": [
+        ".php",
+        ".phtml"
+      ]
+    },
+    "swift": {
+      "name": "Swift",
+      "extensions": [
+        ".swift"
+      ]
     }
   },
   "languageServers": {
@@ -271,6 +284,7 @@
         ]
       },
       "package": "jdtls",
+      "clientProcessId": false,
       "rootMarkers": [
         "pom.xml",
         "build.gradle",
@@ -357,6 +371,24 @@
         }
       }
     },
+    "kotlin-lsp": {
+      "name": "Kotlin by JetBrains",
+      "languages": [
+        "kotlin"
+      ],
+      "command": "kotlin-lsp",
+      "args": [
+        "--stdio"
+      ],
+      "package": "kotlin-lsp",
+      "rootMarkers": [
+        "settings.gradle.kts",
+        "settings.gradle",
+        "build.gradle.kts",
+        "build.gradle",
+        "pom.xml"
+      ]
+    },
     "kotlin-language-server": {
       "name": "Kotlin language server",
       "languages": [
@@ -370,13 +402,49 @@
         "build.gradle.kts",
         "build.gradle"
       ]
+    },
+    "phpactor": {
+      "name": "Phpactor",
+      "languages": [
+        "php"
+      ],
+      "command": "phpactor",
+      "args": [
+        "language-server"
+      ],
+      "package": "phpactor",
+      "rootMarkers": [
+        "composer.json"
+      ],
+      "initializationOptions": {
+        "language_server_phpstan.enabled": false,
+        "language_server_psalm.enabled": false,
+        "indexer.exclude_patterns": [
+          "/vendor/**/Tests/**/*",
+          "/vendor/**/tests/**/*",
+          "/node_modules/**/*",
+          "/storage/**/*"
+        ]
+      }
+    },
+    "sourcekit-lsp": {
+      "name": "SourceKit-LSP",
+      "languages": [
+        "swift"
+      ],
+      "command": "sourcekit-lsp",
+      "package": "sourcekit-lsp",
+      "rootMarkers": [
+        "Package.swift"
+      ]
     }
   },
   "debugAdapters": {
     "java": {
       "name": "Java (java-debug)",
       "languages": [
-        "java"
+        "java",
+        "kotlin"
       ],
       "command": "jdtls",
       "package": "java-debug",
@@ -443,7 +511,8 @@
       "languages": [
         "c",
         "cpp",
-        "rust"
+        "rust",
+        "swift"
       ],
       "command": "lldb-dap",
       "alternativeCommands": [
@@ -500,14 +569,20 @@
       "name": "On-chip probe-rs",
       "languages": [],
       "command": "probe-rs",
-      "args": [ "dap-server" ],
+      "args": [
+        "dap-server"
+      ],
       "package": "probe-rs"
     },
     "embedded-gdb": {
       "name": "On-chip GDB (OpenOCD)",
       "languages": [],
       "command": "gdb-multiarch",
-      "args": [ "--quiet", "--nx", "--interpreter=dap" ],
+      "args": [
+        "--quiet",
+        "--nx",
+        "--interpreter=dap"
+      ],
       "package": "embedded-debug"
     },
     "gpsim": {
@@ -523,6 +598,14 @@
       "defaults": {
         "stopOnEntry": true
       }
+    },
+    "php": {
+      "name": "PHP (Xdebug)",
+      "languages": [
+        "php"
+      ],
+      "command": "php-debug-adapter",
+      "package": "php-debug"
     }
   }
 }

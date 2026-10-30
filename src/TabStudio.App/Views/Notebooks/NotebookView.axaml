@@ -58,8 +58,8 @@
       <Setter Property="Foreground" Value="{DynamicResource Brush.Error}" />
     </Style>
 
-    <!-- The spinner of a running cell. -->
-    <Style Selector="controls|StrokeIcon.spinner">
+    <!-- The spinner of a running cell; not while it is hidden (Theming/HiddenAnimations). -->
+    <Style Selector="controls|StrokeIcon.spinner:not(.offscreen)">
       <Style.Animations>
         <Animation Duration="0:0:0.9" IterationCount="INFINITE">
           <KeyFrame Cue="0%">

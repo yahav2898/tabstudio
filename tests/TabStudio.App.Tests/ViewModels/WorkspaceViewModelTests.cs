@@ -162,6 +162,85 @@ public sealed class WorkspaceViewModelTests
     }
 
     [AvaloniaFact]
+    public async Task The_sessions_unsaved_text_follows_typing()
+    {
+        // Saved only when a document first became dirty, the session restored that moment's text after Android
+        // ended the app, however much was typed after it.
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var document = fixture.Workspace.ActiveDocument!;
+        document.Document.Insert(0, "// first\n");
+        await UiTestHelpers.WaitUntilAsync(() => fixture.Sessions.Load()?.Documents.Any(d => d.UnsavedText?.StartsWith("// first", StringComparison.Ordinal) == true) == true, because: "the first edit in the session");
+
+        document.Document.Insert(0, "// second\n");
+        await UiTestHelpers.WaitUntilAsync(() => fixture.Sessions.Load()?.Documents.Any(d => d.UnsavedText?.StartsWith("// second\n// first", StringComparison.Ordinal) == true) == true, because: "typing to reach the session");
+    }
+
+    [AvaloniaFact]
+    public async Task Typing_stops_the_projects_background_analysis()
+    {
+        // Two seconds after each pause the whole project compiled on every core, and went on while typing resumed.
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var document = fixture.Workspace.ActiveDocument!;
+        var project = fixture.Workspace.Workspace!.FindProjectForFile(document.FilePath)!.FilePath;
+        document.Document.Insert(0, "// a\n");
+        await UiTestHelpers.WaitUntilAsync(() => fixture.Workspace.IsProjectAnalysisPending(project), because: "the project's analysis after the edit");
+
+        document.Document.Insert(0, "// b\n");
+
+        Assert.False(fixture.Workspace.IsProjectAnalysisPending(project));
+    }
+
+    [AvaloniaFact]
+    public async Task Open_documents_follow_changes_other_programs_make_and_saving_keeps_both_versions()
+    {
+        // A formatter or git in the Terminal changed a file the editor had open, and the editor's old text went back
+        // over it at the next save.
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var document = fixture.Workspace.ActiveDocument!;
+        var formatted = document.Document.Text + "// formatted by a tool\n";
+        await File.WriteAllTextAsync(document.FilePath, formatted);
+        Assert.True(document.ChangedOnDisk);
+
+        await fixture.Workspace.FollowDiskChangesAsync();
+        Assert.Equal(formatted, document.Document.Text);
+        Assert.False(document.IsDirty);
+        Assert.False(document.ChangedOnDisk);
+
+        // With unsaved edits, the edits stay; saving keeps the other program's version in the trash.
+        document.Document.Insert(0, "// mine\n");
+        var theirs = formatted + "// and changed again\n";
+        await File.WriteAllTextAsync(document.FilePath, theirs);
+        await fixture.Workspace.FollowDiskChangesAsync();
+        Assert.StartsWith("// mine", document.Document.Text, StringComparison.Ordinal);
+        Assert.Contains("changed on disk", fixture.Workspace.StatusText, StringComparison.Ordinal);
+
+        Assert.True(await fixture.Workspace.SaveAllCoreAsync());
+        Assert.StartsWith("// mine", await File.ReadAllTextAsync(document.FilePath), StringComparison.Ordinal);
+        var kept = Assert.Single(Directory.EnumerateFiles(fixture.Paths.Trash, document.FileName, SearchOption.AllDirectories));
+        Assert.Equal(theirs, await File.ReadAllTextAsync(kept));
+        Assert.Contains("trash", fixture.Workspace.StatusText, StringComparison.Ordinal);
+    }
+
+    [AvaloniaFact]
+    public async Task A_reloaded_document_takes_the_encoding_its_file_has_now()
+    {
+        // Converted outside the editor, a reloaded tab kept saving in the old encoding and undid the conversion.
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var document = fixture.Workspace.ActiveDocument!;
+        Assert.Equal("UTF-8", document.EncodingLabel);
+        await File.WriteAllBytesAsync(document.FilePath, [.. "// caf"u8, 0xE9, (byte)'\n']);
+
+        await fixture.Workspace.FollowDiskChangesAsync();
+
+        Assert.Equal("// café\n", document.Document.Text);
+        Assert.Equal("ISO-8859-1", document.EncodingLabel);
+    }
+
+    [AvaloniaFact]
     public async Task A_warm_device_builds_on_one_thread_and_says_so()
     {
         using var fixture = new WorkspaceFixture();

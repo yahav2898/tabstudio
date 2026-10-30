@@ -60,6 +60,7 @@ public sealed partial class ProjectTemplates
         new(AvaloniaId, "Avalonia App", "A cross-platform app with a view and a view model, rendered natively beside the code.", ["C#", "Avalonia", "MVVM"]),
         WpfTemplate,
         WindowsFormsTemplate,
+        .. VisualBasicTemplates,
         new(UnoTemplates.UnoAppId, "Uno Platform App", "A cross-platform WinUI app, rendered natively beside the code by Uno Platform.", ["C#", "Uno", "WinUI"]),
         new(UnoTemplates.WinUIAppId, "WinUI 3 Blank App", "A WinUI 3 app built on the tablet and run in the app preview through Uno Platform.", ["C#", "WinUI", "XAML"]),
         new(LibraryId, "Class Library", "Reusable code for other projects to reference.", ["C#", "Library"]),
@@ -86,9 +87,27 @@ public sealed partial class ProjectTemplates
             return "Use a name of 64 characters or fewer.";
         }
 
-        return ProjectNamePattern().IsMatch(name)
-            ? null
-            : "Use letters, digits, dots and underscores, starting with a letter.";
+        if (!ProjectNamePattern().IsMatch(name))
+        {
+            return "Use letters, digits, dots and underscores, starting with a letter.";
+        }
+
+        // The name becomes the namespace: a keyword ("class") does not compile, and "Console" or "System" hide
+        // .NET's own, so the template's Console.WriteLine finds the namespace instead.
+        foreach (var part in name.Split('.'))
+        {
+            if (Microsoft.CodeAnalysis.CSharp.SyntaxFacts.GetKeywordKind(part) != Microsoft.CodeAnalysis.CSharp.SyntaxKind.None)
+            {
+                return $"\"{part}\" is a C# keyword. Choose another name.";
+            }
+
+            if (part is "System" or "Console")
+            {
+                return $"\"{part}\" would hide .NET's {part}. Choose another name, such as My{part}.";
+            }
+        }
+
+        return null;
     }
 
     /// <summary>Creates a new solution, or a notebook, from a template.</summary>
@@ -128,6 +147,9 @@ public sealed partial class ProjectTemplates
             _ when WebTemplates.IsTemplate(templateId) => [.. WebTemplates.Create(templateId, root, name)],
             _ when UnoTemplates.IsTemplate(templateId) => [UnoTemplates.Create(templateId, root, name)],
             WindowsFormsId => [WriteWindowsForms(root, name)],
+            VisualBasicConsoleId => [WriteVisualBasicConsole(root, name)],
+            VisualBasicWindowsFormsId => [WriteVisualBasicWindowsForms(root, name)],
+            VisualBasicLibraryId => [WriteVisualBasicLibrary(root, name)],
             _ => throw new ArgumentException($"Unknown template '{templateId}'.", nameof(templateId)),
         };
 

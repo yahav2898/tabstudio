@@ -282,6 +282,9 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <summary>Where the startup project runs, such as "In-process".</summary>
     public string RunHostText => IsRemoteWorkspace ? _remoteMarker! : StartupProject is { } project ? IsRunOnSwarm ? SwarmRunHostText : RunsViaFor(project) : LaunchTargetHost ?? "Nothing to run";
 
+    /// <summary>Whether there is somewhere to run: the toolbar shows no "Run on Nothing to run" without a startup project.</summary>
+    public bool HasRunHost => IsRemoteWorkspace || StartupProject is not null || LaunchTargetHost is not null;
+
     /// <summary>The build configuration, "Debug" or "Release".</summary>
     [ObservableProperty]
     public partial string Configuration { get; private set; } = "Debug";
@@ -346,7 +349,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         }
 
         State = IdeState.Ready;
-        StatusText = "Ready";
+        StatusText = NoStartupProjectStatus() ?? "Ready";
         OnLoadedForLive();
         UpdateActiveProjects();
         StartPackageRestore(preview.Workspace);
@@ -360,6 +363,14 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <summary>Makes a project the startup project.</summary>
     /// <param name="project">The project.</param>
     public void SetStartupProject(ProjectInfo? project) => StartupProject = project;
+
+    /// <summary>
+    /// Why F5 has nothing to start, for the status bar once the workspace is open, such as
+    /// <c>This solution has only libraries and tests: run the tests in Test Explorer.</c>; <see langword="null"/> when
+    /// there is a startup project or launch configuration.
+    /// </summary>
+    private string? NoStartupProjectStatus() =>
+        IsRemoteWorkspace || StartupProject is not null || UsesLaunchTarget ? null : Workspace?.NoStartupProjectReason;
 
     [RelayCommand]
     private void SelectPanel(BottomPanel panel)
@@ -458,13 +469,21 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     private void LoadStartupProjects(Workspace workspace, string? preferred)
     {
         StartupProjects.Clear();
-        foreach (var project in workspace.Projects.Where(p => (p.IsExecutable || IsWindowsBridgeStartupProject(p)) && !p.IsTestProject && p.Kind is not (ProjectKind.AspireAppHost or ProjectKind.BuildScript) && !ProjectClassifier.IsMobilePlatformHead(p)))
+        var choices = workspace.Projects
+            .Where(p => (p.IsExecutable || IsWindowsBridgeStartupProject(p)) && !p.IsTestProject && p.Kind is not (ProjectKind.AspireAppHost or ProjectKind.BuildScript) && !ProjectClassifier.NeedsPlatformWorkload(p))
+            .ToList();
+
+        // In the order F5 chooses from, the default first; the programs it never picks by itself, such as benchmarks,
+        // follow in solution order, for a person to choose.
+        var candidates = workspace.StartupCandidates.Where(choices.Contains).ToList();
+        foreach (var project in candidates.Concat(choices.Except(candidates)))
         {
             StartupProjects.Add(new StartupProjectOption(project, new RelayCommand(() => SetStartupProject(project))));
         }
 
-        // A build script remembered from an earlier version, which picked them, is not kept.
-        StartupProject = workspace.Projects.FirstOrDefault(p => p.FilePath == preferred && p.Kind != ProjectKind.BuildScript)
+        // A build script or a project that needs a platform workload, remembered from an earlier version, which picked
+        // them, is not kept.
+        StartupProject = workspace.Projects.FirstOrDefault(p => p.FilePath == preferred && p.Kind != ProjectKind.BuildScript && !ProjectClassifier.NeedsPlatformWorkload(p))
             ?? workspace.DefaultStartupProject;
     }
 
@@ -476,7 +495,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         }
 
         // The projects of open documents first: what is on screen gets its diagnostics before the rest.
-        var projects = InAnalysisOrder(workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp));
+        var projects = InAnalysisOrder(workspace.Projects.Where(p => p.IsRoslynLanguage));
         var operation = Operations.Begin(AnalysisOperation, "Analyzing", new OperationProgress("Analyzing", 0, projects.Count, ProgressUnit.Projects));
         try
         {
@@ -545,8 +564,14 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
     private void OnMemoryPressure(object? sender, MemoryPressure pressure) => _ui.Post(() =>
     {
-        // Roslyn's cached compilations are by far the largest thing TabStudio can rebuild on demand.
-        _language?.TrimMemory();
-        GC.Collect(2, pressure == MemoryPressure.Critical ? GCCollectionMode.Aggressive : GCCollectionMode.Forced, blocking: true, compacting: true);
+        // Roslyn's cached compilations are by far the largest thing TabStudio can rebuild on demand. They are let go
+        // by a reload on a background thread, not here: on a 3 GB tablet a reload and its skeleton compile on the UI
+        // thread froze the IDE. The collection runs once they are let go, which is what makes it free them.
+        var released = _language?.TrimMemoryAsync() ?? Task.CompletedTask;
+        _ = released.ContinueWith(
+            _ => GC.Collect(2, pressure == MemoryPressure.Critical ? GCCollectionMode.Aggressive : GCCollectionMode.Forced, blocking: true, compacting: true),
+            CancellationToken.None,
+            TaskContinuationOptions.None,
+            TaskScheduler.Default);
     });
 }

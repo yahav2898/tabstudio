@@ -1,0 +1,19 @@
+<Project>
+
+  <!--
+    Visual Basic projects compile against the reference assembly of TabStudio's Microsoft.VisualBasic.Forms (the base
+    classes of My.Application, My.Computer and My.User, and the Windows Forms application framework), and IntelliSense
+    reads its documentation. The app carries both as resources, because on Android its own assemblies are not files.
+  -->
+  <Target Name="EmbedVisualBasicReferenceAssembly" AfterTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <_TabStudioVisualBasic Include="@(ReferencePath)" Condition="'%(Filename)' == 'Microsoft.VisualBasic.Forms'" />
+      <_TabStudioVisualBasicReference Include="%(_TabStudioVisualBasic.ReferenceAssembly)" Condition="'%(_TabStudioVisualBasic.ReferenceAssembly)' != ''" />
+      <_TabStudioVisualBasicReference Include="@(_TabStudioVisualBasic)" Condition="'@(_TabStudioVisualBasicReference)' == ''" />
+      <_TabStudioVisualBasicDocumentation Include="@(_TabStudioVisualBasic->'%(RootDir)%(Directory)%(Filename).xml')" />
+      <EmbeddedResource Include="@(_TabStudioVisualBasicReference)" LogicalName="VisualBasic/Microsoft.VisualBasic.Forms.dll" WithCulture="false" Type="Non-Resx" />
+      <EmbeddedResource Include="@(_TabStudioVisualBasicDocumentation)" Condition="Exists('%(FullPath)')" LogicalName="VisualBasic/Microsoft.VisualBasic.Forms.xml" WithCulture="false" Type="Non-Resx" />
+    </ItemGroup>
+  </Target>
+
+</Project>

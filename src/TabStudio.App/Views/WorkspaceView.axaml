@@ -474,9 +474,10 @@
                                     IsPinned="True" IconBrush="{DynamicResource Brush.Error}" Command="{Binding StopCommand}" IsVisible="{Binding IsRunning}" />
 
           <!-- Debugging, as Visual Studio's Debug toolbar: Start Without Debugging, or while debugging Break All, Stop, Restart and the steps. -->
-          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Restart}" IconSize="16" Label="Hot Reload" Gesture="Alt+F10"
+          <!-- Only where the runtime can apply edits: on Android, C# edits apply with a restart (the item below). -->
+          <controls:AdaptiveBarItem x:Name="HotReloadButton" Icon="{StaticResource Icon.Restart}" IconSize="16" Label="Hot Reload" Gesture="Alt+F10"
                                     Priority="95" Command="{Binding ApplyHotReloadCommand}"
-                                    ToolTip.Tip="Available in the desktop host. On Android 0.15, restart to apply C# edits." />
+                                    IsVisible="{x:Static hotReload:HotReloadSession.IsSupported}" />
           <controls:AdaptiveBarItem Icon="{StaticResource Icon.Restart}" IconSize="16" Label="Restart to apply edits"
                                     IsPinned="True" IsVisible="{Binding HotReloadNeedsRestart}" Command="{Binding RestartForHotReloadCommand}" />
           <controls:AdaptiveBarItem Icon="{StaticResource Icon.PlayOutline}" IconSize="15" Label="Start Without Debugging" Gesture="Ctrl+F5" ShowsLabel="False"
@@ -501,7 +502,7 @@
 
           <!-- Where the startup project runs; a tap chooses another target, as the Run button's menu does. -->
           <controls:AdaptiveBarItem x:Name="RunHostItem" Icon="{StaticResource Icon.Computer}" IconSize="16"
-                                    Label="{Binding RunHostText, StringFormat='Run on {0}'}" Priority="35" />
+                                    Label="{Binding RunHostText, StringFormat='Run on {0}'}" Priority="35" IsVisible="{Binding HasRunHost}" />
           <controls:AdaptiveBarSeparator />
           <controls:AdaptiveBarItem Icon="{StaticResource Icon.Comment}" IconSize="16" Label="Toggle Line Comment" Gesture="Ctrl+/" ShowsLabel="False"
                                     Priority="15" Command="{Binding ToggleCommentCommand}" />
@@ -740,7 +741,7 @@
           <actionViews:RunNoticeView x:Name="RunNotice" DataContext="{Binding Actions}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="16,12" />
         </Panel>
 
-        <GridSplitter Grid.Row="3" x:Name="BottomSplitter" Height="6" ResizeDirection="Rows" Background="Transparent">
+        <GridSplitter Grid.Row="3" x:Name="BottomSplitter" Height="12" Margin="0,-3" ZIndex="10" ResizeDirection="Rows" Background="Transparent">
           <GridSplitter.Template>
             <ControlTemplate>
               <Border Background="Transparent">
@@ -781,8 +782,8 @@
             </Border>
             <Grid DockPanel.Dock="Top" Height="34" ColumnDefinitions="*,Auto" Margin="6,0">
               <!-- The tabs scroll sideways when the debugger's tabs leave too little room beside the Output's source. -->
-              <ScrollViewer Margin="0,0,10,0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
-              <StackPanel Orientation="Horizontal">
+              <ScrollViewer x:Name="BottomTabsScroller" Margin="0,0,10,0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+              <StackPanel x:Name="BottomTabs" Orientation="Horizontal">
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsErrorListSelected}"
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" Content="Error List" />
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsOutputSelected}"
@@ -810,8 +811,11 @@
               </StackPanel>
               </ScrollViewer>
               <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <TextBlock Classes="muted small" Text="Show output from:" VerticalAlignment="Center" Margin="0,0,8,0"
-                           IsVisible="{Binding IsOutputSelected}" />
+                <!-- On a narrow panel the label goes and the picker narrows, so the tabs and Hide keep their room. -->
+                <Panel x:Name="OutputSourceLabelHost" VerticalAlignment="Center">
+                  <TextBlock Classes="muted small" Text="Show output from:" VerticalAlignment="Center" Margin="0,0,8,0"
+                             IsVisible="{Binding IsOutputSelected}" />
+                </Panel>
                 <ComboBox x:Name="OutputSourceBox" MinWidth="170" Height="30" MinHeight="30" Margin="0,0,6,0" FontSize="12.5" VerticalAlignment="Center"
                           ItemsSource="{Binding OutputSources}" SelectedItem="{Binding SelectedOutputSource}" IsVisible="{Binding IsOutputSelected}">
                   <ComboBox.ItemTemplate>
@@ -826,14 +830,15 @@
                         Command="{Binding Terminal.ClearCommand}" IsVisible="{Binding IsTerminalSelected}" />
                 <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Restart"
                         Command="{Binding Terminal.RestartCommand}" IsVisible="{Binding IsTerminalSelected}" />
-                <Button Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0"
+                <Button x:Name="HideBottomPanelButton" Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0"
                         ToolTip.Tip="Hide" Command="{Binding ToggleBottomPanelCommand}">
                   <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
                 </Button>
               </StackPanel>
             </Grid>
             <!-- While debugging, the Call Stack stays in view beside Locals and Watch, as in Visual Studio's debug layout. -->
-            <Border DockPanel.Dock="Right" Width="380" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1,0,0,0"
+            <!-- Its width follows the panel's (WorkspaceView.Layout.cs): on a phone it gives Locals the room and keeps its tab. -->
+            <Border x:Name="CallStackBeside" DockPanel.Dock="Right" Width="380" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1,0,0,0"
                     IsVisible="{Binding ShowsCallStackBeside}">
               <views:CallStackView DataContext="{Binding CallStack}" />
             </Border>
@@ -863,7 +868,7 @@
         </Border>
       </Grid>
 
-      <GridSplitter Grid.Column="1" x:Name="SideSplitter" Width="6" ResizeDirection="Columns" Background="Transparent">
+      <GridSplitter Grid.Column="1" x:Name="SideSplitter" Width="12" Margin="-3,0" ZIndex="10" ResizeDirection="Columns" Background="Transparent">
         <GridSplitter.Template>
           <ControlTemplate>
             <Border Background="Transparent">
@@ -886,7 +891,7 @@
           <Panel Grid.RowSpan="3" ZIndex="20" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsRemoteExplorerSelected}">
             <views:RemoteExplorerView DataContext="{Binding RemoteExplorer}" />
           </Panel>
-          <GridSplitter Grid.Row="1" x:Name="PropertiesSplitter" Height="6" ResizeDirection="Rows" Background="Transparent" IsVisible="False">
+          <GridSplitter Grid.Row="1" x:Name="PropertiesSplitter" Height="12" Margin="0,-3" ZIndex="10" ResizeDirection="Rows" Background="Transparent" IsVisible="False">
             <GridSplitter.Template>
               <ControlTemplate>
                 <Border Background="Transparent">
@@ -979,26 +984,28 @@
       <controls:AdaptiveBar x:Name="StatusBar" Spacing="6" Margin="6,0" ItemTheme="{StaticResource StatusBarButton}" MorePlacement="TopEdgeAlignedRight"
                             VerticalAlignment="Center" TextElement.Foreground="{DynamicResource Brush.OnAccent}" TextElement.FontSize="12">
         <!-- What the IDE is doing; long messages trim, with the whole message in the tooltip. -->
-        <StackPanel x:Name="StatusMessage" Orientation="Horizontal" Spacing="6" Margin="6,0,4,0" Background="Transparent" ToolTip.Tip="{Binding StatusText}">
-          <controls:StrokeIcon Size="13" Data="{Binding State, Converter={x:Static conv:AppConverters.StateIcon}}" Foreground="{DynamicResource Brush.OnAccent}" />
-          <TextBlock x:Name="StatusMessageText" Text="{Binding StatusText}" FontSize="12" Foreground="{DynamicResource Brush.OnAccent}"
-                     VerticalAlignment="Center" MaxWidth="460" TextTrimming="CharacterEllipsis" />
-        </StackPanel>
+        <!-- It trims to the room the items after it leave, so on a phone it never pushes them out of the bar. -->
+        <Grid x:Name="StatusMessage" ColumnDefinitions="Auto,*" Margin="6,0,4,0" Background="Transparent" ToolTip.Tip="{Binding StatusText}"
+              controls:AdaptiveBar.MinLength="48">
+          <controls:StrokeIcon Size="13" VerticalAlignment="Center" Data="{Binding State, Converter={x:Static conv:AppConverters.StateIcon}}" Foreground="{DynamicResource Brush.OnAccent}" />
+          <TextBlock x:Name="StatusMessageText" Grid.Column="1" Margin="6,0,0,0" Text="{Binding StatusText}" FontSize="12" Foreground="{DynamicResource Brush.OnAccent}"
+                     VerticalAlignment="Center" MaxWidth="460" TextTrimming="WordEllipsis" />
+        </Grid>
 
         <!--
           Long operations: the newest with its stage, numbers and time left ("Downloading Pico SDK 120/340 MB · about 2 min
           left"); tap for all of them, with Cancel where it is safe and each one's raw log.
         -->
-        <Panel controls:AdaptiveBar.Priority="100" IsVisible="{Binding Operations.HasOperations}"
+        <Panel controls:AdaptiveBar.Priority="100" IsVisible="{Binding Operations.HasOperations}" controls:AdaptiveBar.MinLength="120"
                controls:AdaptiveBar.MenuHeader="{Binding Operations.StatusText}" controls:AdaptiveBar.MenuCommand="{Binding Operations.TogglePanelCommand}">
           <Button x:Name="OperationsButton" Theme="{StaticResource StatusBarButton}" Height="24" Command="{Binding Operations.TogglePanelCommand}"
-                  ToolTip.Tip="{Binding Operations.StatusText}">
-            <StackPanel Orientation="Horizontal" Spacing="6">
-              <controls:StrokeIcon Classes.spinning="{Binding Operations.HasOperations}" Data="{StaticResource Icon.Spinner}" Size="13" Foreground="{DynamicResource Brush.OnAccent}" />
-              <TextBlock x:Name="OperationsText" Text="{Binding Operations.StatusText}" FontSize="12" VerticalAlignment="Center" MaxWidth="380" TextTrimming="CharacterEllipsis" />
-              <ProgressBar Width="56" Height="4" MinHeight="4" Minimum="0" Maximum="100" VerticalAlignment="Center"
-                           Value="{Binding Operations.Current.Percent, FallbackValue=0}" IsIndeterminate="{Binding Operations.Current.IsIndeterminate, FallbackValue=True}" />
-            </StackPanel>
+                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" ToolTip.Tip="{Binding Operations.StatusText}">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+              <controls:StrokeIcon Classes.spinning="{Binding Operations.HasOperations}" Data="{StaticResource Icon.Spinner}" Size="13" VerticalAlignment="Center" Foreground="{DynamicResource Brush.OnAccent}" />
+              <TextBlock x:Name="OperationsText" Grid.Column="1" Margin="6,0" Text="{Binding Operations.StatusText}" FontSize="12" VerticalAlignment="Center" MaxWidth="380" TextTrimming="WordEllipsis" />
+              <ProgressBar Grid.Column="2" Width="56" Height="4" MinHeight="4" Minimum="0" Maximum="100" VerticalAlignment="Center"
+                           Value="{Binding Operations.Current.Percent, FallbackValue=0}" IsIndeterminate="{Binding Operations.Current.IsIndeterminate, FallbackValue=False}" />
+            </Grid>
           </Button>
         </Panel>
 

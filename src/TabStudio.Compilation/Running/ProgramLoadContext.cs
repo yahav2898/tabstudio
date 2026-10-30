@@ -81,7 +81,7 @@ internal sealed class ProgramLoadContext : AssemblyLoadContext
 
     protected override Assembly? Load(AssemblyName assemblyName)
     {
-        if (assemblyName.Name is not { } name || _sharedWithHost?.Invoke(name) == true)
+        if (assemblyName.Name is not { } name || _sharedWithHost?.Invoke(name) == true || IsProvidedByHost(name))
         {
             return null;
         }
@@ -101,6 +101,13 @@ internal sealed class ProgramLoadContext : AssemblyLoadContext
 
         return _packageAssemblies.TryGetValue(name, out var path) ? LoadFromAssemblyPath(path) : null;
     }
+
+    /// <summary>
+    /// Whether an assembly always comes from TabStudio, whatever the program's packages bring: its
+    /// <c>Microsoft.VisualBasic.Forms</c>, the runtime of Visual Basic's My namespace, which Microsoft.VisualBasic.Core
+    /// in the default context binds to as well, so the program and MsgBox share one copy.
+    /// </summary>
+    private static bool IsProvidedByHost(string name) => string.Equals(name, "Microsoft.VisualBasic.Forms", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>Finds a native library the program's packages bring, for its <c>[DllImport]</c>s and <c>NativeLibrary.Load</c> calls.</summary>
     protected override nint LoadUnmanagedDll(string unmanagedDllName) => _nativeLibraries.Load(unmanagedDllName);

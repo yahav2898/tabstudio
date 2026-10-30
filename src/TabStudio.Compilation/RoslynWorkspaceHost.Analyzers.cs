@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Reflection;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -11,8 +12,9 @@ namespace TabStudio.Compilation;
 
 /// <summary>
 /// Source generators: those of .NET itself, such as the ones behind <c>[GeneratedRegex]</c> and
-/// <c>[JsonSerializable]</c>, and those NuGet packages bring, such as CommunityToolkit.Mvvm's. Roslyn runs them as
-/// part of every compilation, so their code is there for IntelliSense, diagnostics and builds alike.
+/// <c>[JsonSerializable]</c>, those NuGet packages bring, such as CommunityToolkit.Mvvm's, and those of projects of the
+/// workspace referenced with <c>OutputItemType="Analyzer"</c> (see <see cref="ProjectGeneratorReference"/>). Roslyn runs
+/// them as part of every compilation, so their code is there for IntelliSense, diagnostics and builds alike.
 /// </summary>
 /// <remarks>
 /// Packages also bring diagnostic analyzers, which are loaded with the generators but not run: on a tablet the
@@ -22,6 +24,7 @@ public sealed partial class RoslynWorkspaceHost
 {
     private readonly Dictionary<string, IReadOnlyList<AnalyzerReference>> _packageAnalyzers = new(StringComparer.Ordinal);
     private readonly Dictionary<string, AnalyzerReference> _analyzerCache = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Version> _analyzerVersions = new(StringComparer.Ordinal);
     private IReadOnlyList<AnalyzerReference> _frameworkAnalyzers = [];
 
     /// <summary>
@@ -39,6 +42,7 @@ public sealed partial class RoslynWorkspaceHost
         {
             _packageAnalyzers[projectFilePath] = analyzerPaths.Distinct(StringComparer.Ordinal).Select(GetOrCreateAnalyzerReference).ToList();
             ApplyAnalyzerReferences(projectFilePath);
+            InvalidateGenerators(projectFilePath);
         }
     }
 
@@ -56,33 +60,38 @@ public sealed partial class RoslynWorkspaceHost
             foreach (var path in _projectIds.Keys.ToList())
             {
                 ApplyAnalyzerReferences(path);
+                InvalidateGenerators(path);
             }
         }
     }
 
-    /// <summary>The analyzer assemblies a project uses, from .NET and its packages.</summary>
+    /// <summary>
+    /// The analyzer assemblies a project uses, from .NET and its packages, one per file name (see
+    /// <see cref="WithoutDuplicateFiles"/>).
+    /// </summary>
     /// <param name="projectFilePath">Full path of the project file.</param>
     public IReadOnlyList<string> GetAnalyzerPaths(string projectFilePath)
     {
         lock (_gate)
         {
-            return _frameworkAnalyzers.Concat(_packageAnalyzers.GetValueOrDefault(projectFilePath) ?? [])
+            return WithoutDuplicateFiles(_frameworkAnalyzers.Concat(_packageAnalyzers.GetValueOrDefault(projectFilePath) ?? []))
                 .Select(reference => reference.FullPath ?? reference.Display ?? string.Empty)
                 .ToList();
         }
     }
 
     /// <summary>
-    /// The framework's and the project's analyzers, without the generators the SDK leaves off unless the project turns
-    /// them on (see <see cref="SdkGenerators"/>). A Razor project gets the Razor compiler TabStudio carries, in place of
-    /// any a package brings. An Avalonia project gets TabStudio's XAML generator in place of Avalonia's, which expects
-    /// XAML compiled after the C# compiler. The caller holds the gate.
+    /// The framework's and the project's analyzers, one per file name (see <see cref="WithoutDuplicateFiles"/>), without
+    /// the generators the SDK leaves off unless the project turns them on (see <see cref="SdkGenerators"/>), and the
+    /// generators of the projects it references with <c>OutputItemType="Analyzer"</c>. A Razor project gets the Razor
+    /// compiler TabStudio carries, in place of any a package brings. An Avalonia project gets TabStudio's XAML generator
+    /// in place of Avalonia's, which expects XAML compiled after the C# compiler. The caller holds the gate.
     /// </summary>
     private IReadOnlyList<AnalyzerReference> GetAnalyzerReferences(TsProject project)
     {
-        var analyzers = _frameworkAnalyzers
-            .Concat(_packageAnalyzers.GetValueOrDefault(project.FilePath) ?? [])
-            .Where(a => SdkGenerators.IsEnabled(project, a.FullPath));
+        var analyzers = WithoutDuplicateFiles(_frameworkAnalyzers.Concat(_packageAnalyzers.GetValueOrDefault(project.FilePath) ?? []))
+            .Where(a => SdkGenerators.IsEnabled(project, a.FullPath))
+            .Concat(GeneratorProjectReferences(project));
         if (Razor.RazorProjects.UsesRazor(project))
         {
             analyzers = analyzers
@@ -104,6 +113,58 @@ public sealed partial class RoslynWorkspaceHost
     /// Avalonia or a package that brings it, such as <c>Avalonia.Desktop</c> (see <see cref="ProjectClassifier.UsesAvalonia"/>).
     /// </summary>
     private static bool UsesAvaloniaXaml(TsProject project) => ProjectClassifier.UsesAvalonia(project);
+
+    /// <summary>
+    /// One analyzer assembly per file name, as the SDK's <c>ResolvePackageFileConflicts</c> leaves them: the one with the
+    /// highest assembly version, the first on a tie, so the framework's wins over a package's. A generator that both
+    /// ASP.NET Core and a package bring, such as <c>Microsoft.Extensions.Logging.Generators.dll</c>, would otherwise run
+    /// twice and generate every member twice (CS0102, CS0111). The caller holds the gate.
+    /// </summary>
+    /// <param name="analyzers">The analyzers, the framework's first.</param>
+    private List<AnalyzerReference> WithoutDuplicateFiles(IEnumerable<AnalyzerReference> analyzers)
+    {
+        var all = analyzers.ToList();
+        var winners = new Dictionary<string, AnalyzerReference>(StringComparer.OrdinalIgnoreCase);
+        foreach (var analyzer in all)
+        {
+            if (analyzer.FullPath is not { } path)
+            {
+                continue;
+            }
+
+            var file = Path.GetFileName(path);
+            if (!winners.TryGetValue(file, out var known) || AnalyzerVersion(path) > AnalyzerVersion(known.FullPath!))
+            {
+                winners[file] = analyzer;
+            }
+        }
+
+        // The same file listed twice, by the framework and by a package, is one shared reference: it is kept once.
+        return [.. all
+            .Where(a => a.FullPath is not { } path || ReferenceEquals(winners[Path.GetFileName(path)], a))
+            .Distinct<AnalyzerReference>(ReferenceEqualityComparer.Instance)];
+    }
+
+    /// <summary>The assembly version of an analyzer file, read once; 0.0 when it cannot be read. The caller holds the gate.</summary>
+    private Version AnalyzerVersion(string path)
+    {
+        if (!_analyzerVersions.TryGetValue(path, out var version))
+        {
+            try
+            {
+                version = AssemblyName.GetAssemblyName(path).Version ?? new Version(0, 0);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or BadImageFormatException or ArgumentException)
+            {
+                // Roslyn reports a file it cannot load (CS8034); here it only loses to any copy that can be read.
+                version = new Version(0, 0);
+            }
+
+            _analyzerVersions[path] = version;
+        }
+
+        return version;
+    }
 
     /// <summary>Pushes a project's analyzers into the loaded solution. The caller holds the gate.</summary>
     private void ApplyAnalyzerReferences(string projectFilePath)
@@ -149,10 +210,10 @@ public sealed partial class RoslynWorkspaceHost
         var (id, message) = e.ErrorCode switch
         {
             AnalyzerLoadFailureEventArgs.FailureErrorCode.UnableToCreateAnalyzer =>
-                ("CS8032", $"An instance of analyzer {e.TypeName} cannot be created from {file}: {e.Message}. Its generated code is missing."),
+                ("CS8032", $"An instance of analyzer {e.TypeName} cannot be created from {file}: {e.Message.TrimEnd('.')}. Its generated code is missing."),
             AnalyzerLoadFailureEventArgs.FailureErrorCode.ReferencesNewerCompiler =>
                 ("CS9057", $"The analyzer assembly {file} references a newer version of the compiler than the one in TabStudio. Its generated code is missing."),
-            _ => ("CS8034", $"Unable to load analyzer assembly {file}: {e.Message}. Its generated code is missing."),
+            _ => ("CS8034", $"Unable to load analyzer assembly {file}: {e.Message.TrimEnd('.')}. Its generated code is missing."),
         };
         lock (_failureGate)
         {

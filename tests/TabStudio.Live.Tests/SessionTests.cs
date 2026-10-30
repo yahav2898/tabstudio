@@ -40,6 +40,25 @@ public sealed class SessionTests
     }
 
     [Fact]
+    public async Task A_guests_copy_has_every_file_when_they_add_up_to_more_than_one_answer()
+    {
+        // An answer stops at 32 MB; the files after that came back empty and were missing from the guest's copy.
+        var asset = new string('x', 7 * 1024 * 1024);
+        var files = Enumerable.Range(1, 6).ToDictionary(i => $"Assets/texture{i}.txt", _ => asset);
+        files["Program.cs"] = "class Program\n{\n}\n";
+        await using var live = await LiveLoopback.StartAsync(files);
+        var dana = await live.JoinAsync("Dana");
+
+        var root = await dana.On(() => dana.Session.WorkspaceRoot!);
+        foreach (var name in files.Keys)
+        {
+            var copy = Directory.EnumerateFiles(root, Path.GetFileName(name), SearchOption.AllDirectories).SingleOrDefault();
+            Assert.True(copy is not null, $"{name} is missing from the copy");
+            Assert.Equal(files[name].Length, new FileInfo(copy!).Length);
+        }
+    }
+
+    [Fact]
     public async Task Concurrent_typing_on_three_devices_converges_everywhere()
     {
         await using var live = await LiveLoopback.StartAsync();
@@ -207,6 +226,43 @@ public sealed class SessionTests
     }
 
     [Fact]
+    public async Task A_guest_away_longer_than_the_grace_comes_back_as_itself_with_its_offline_edits()
+    {
+        // Forgotten after five minutes, a tablet that slept for six was refused when it woke, and its IDE closed the
+        // copy of the workspace with the edits it had not sent.
+        await using var live = await LiveLoopback.StartAsync(reconnectGrace: TimeSpan.FromMilliseconds(200));
+        var hostDocument = await live.ShareAsync("Program.cs");
+        var dana = await live.JoinAsync("Dana", reconnectDelays: [TimeSpan.FromSeconds(2)]);
+        var document = await dana.OpenAsync("Program.cs");
+        var danaId = await dana.On(() => dana.Session.SelfId);
+
+        await live.On(() => live.Host.DropConnection(danaId));
+        await LiveLoopback.UntilAsync(() => dana.On(() => dana.Session.State == LiveGuestState.Reconnecting), "Dana to notice");
+        Assert.True(await dana.On(() => document.Edit(0, string.Empty, "// offline\n")));
+        await LiveLoopback.UntilAsync(() => live.On(() => live.Host.Participants.All(p => p.Id != danaId)), "Dana to leave the list after the grace");
+
+        await LiveLoopback.UntilAsync(() => dana.On(() => dana.Session.State == LiveGuestState.Joined), "Dana to reconnect");
+        await LiveLoopback.UntilAsync(() => live.On(() => hostDocument.Text.ToString().StartsWith("// offline\n", StringComparison.Ordinal)), "the host to get Dana's offline edit");
+        Assert.Equal(danaId, await dana.On(() => dana.Session.SelfId));
+        Assert.Contains(await live.On(() => live.Host.Participants.ToList()), p => p.Id == danaId && p.IsConnected);
+    }
+
+    [Fact]
+    public async Task A_guest_away_when_a_class_starts_comes_back_as_a_viewer()
+    {
+        await using var live = await LiveLoopback.StartAsync(reconnectGrace: TimeSpan.FromMilliseconds(200));
+        var dana = await live.JoinAsync("Dana", reconnectDelays: [TimeSpan.FromSeconds(2)]);
+        var danaId = await dana.On(() => dana.Session.SelfId);
+
+        await live.On(() => live.Host.DropConnection(danaId));
+        await LiveLoopback.UntilAsync(() => live.On(() => live.Host.Participants.All(p => p.Id != danaId)), "Dana to leave the list after the grace");
+        await live.On(() => live.Host.SetClassroom(true));
+
+        await LiveLoopback.UntilAsync(() => dana.On(() => dana.Session.State == LiveGuestState.Joined), "Dana to reconnect");
+        Assert.Equal(LiveRole.Viewer, (await live.On(() => live.Host.Participants.Single(p => p.Id == danaId))).Role);
+    }
+
+    [Fact]
     public async Task A_class_of_thirty_joins_from_one_code_follows_the_presenter_and_raises_hands()
     {
         await using var live = await LiveLoopback.StartAsync(classroom: true);
@@ -260,10 +316,17 @@ public sealed class SessionTests
         });
         await LiveLoopback.UntilAsync(() => dana.On(() => dana.Session.Debug?.PauseId == 7), "Dana to see the pause");
         Assert.Equal(LiveRunPhase.Paused, await dana.On(() => dana.Session.RunState.Phase));
+
+        // The breakpoints are their own message, published after the pause, so they may land a moment later.
+        await LiveLoopback.UntilAsync(() => dana.On(() => dana.Session.Breakpoints.Count > 0), "Dana to see the breakpoints");
         Assert.Equal("Program.cs", (await dana.On(() => dana.Session.Breakpoints))[0].FilePath);
         var children = await dana.On(() => dana.Session.GetVariablesAsync(7, "args"));
         Assert.Equal("args.Count", Assert.Single(children).Path);
         Assert.Equal("42", (await dana.On(() => dana.Session.EvaluateAsync(7, "answer"))).Value!.Value);
+        Assert.Equal("42", (await dana.On(() => dana.Session.EvaluateAsync(7, "order.Lines[0].Price"))).Value!.Value);
+
+        // A viewer reads variables but cannot run code on the host: a debug adapter's evaluation is Python's eval.
+        await Assert.ThrowsAsync<LinkRemoteException>(() => dana.On(() => dana.Session.EvaluateAsync(7, "__import__('os').system('rm -rf ~')")));
 
         // Stepping is the host's to allow.
         await Assert.ThrowsAsync<LinkRemoteException>(() => dana.On(() => dana.Session.ControlDebuggerAsync(LiveDebugCommand.StepOver)));
@@ -271,6 +334,7 @@ public sealed class SessionTests
         await LiveLoopback.UntilAsync(() => dana.On(() => dana.Session.Self?.CanStep == true), "Dana to be allowed");
         await dana.On(() => dana.Session.ControlDebuggerAsync(LiveDebugCommand.StepOver));
         Assert.Equal((LiveDebugCommand.StepOver, "Dana"), await live.On(() => live.Workspace.DebugCommands.Single()));
+        Assert.Equal("42", (await dana.On(() => dana.Session.EvaluateAsync(7, "Total(order)"))).Value!.Value);
 
         // An editor sets a breakpoint through the host.
         await dana.On(() => dana.Session.SetBreakpointAsync("Program.cs", 3, null, remove: false));

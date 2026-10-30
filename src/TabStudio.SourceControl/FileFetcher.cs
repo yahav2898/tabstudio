@@ -6,7 +6,8 @@ namespace TabStudio.SourceControl;
 /// <summary>
 /// Writes files of a commit into a folder. A few files are downloaded one by one; many are taken from one zip
 /// archive of the commit, and any file the archive lacks or holds differently (GitHub applies
-/// <c>export-ignore</c> and <c>export-subst</c> attributes to archives) is then downloaded on its own.
+/// <c>export-ignore</c> and <c>export-subst</c> attributes to archives) is then downloaded on its own. Signed out,
+/// those come from the raw file host, since GitHub's API answers only 60 requests an hour without a token.
 /// </summary>
 internal sealed class FileFetcher(GitHubClient client, string owner, string repository)
 {
@@ -17,6 +18,9 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
     internal const long MaximumArchiveBytes = 1L << 30;
 
     private const int Parallelism = 4;
+
+    /// <summary>The largest file GitHub stores outside Git LFS: 100 MB.</summary>
+    private const long MaximumFileBytes = 100L << 20;
 
     /// <summary>Writes files of a commit.</summary>
     /// <param name="root">The folder to write into.</param>
@@ -42,7 +46,7 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
             ? await WriteFromArchiveAsync(root, commitSha, files, hashes, progress, cancellationToken).ConfigureAwait(false)
             : [.. files.Keys];
 
-        await WriteBlobsAsync(root, remaining, files, hashes, progress, cancellationToken).ConfigureAwait(false);
+        await WriteBlobsAsync(root, commitSha, remaining, files, hashes, progress, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Downloads one file's content.</summary>
@@ -116,6 +120,7 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
 
     private async Task WriteBlobsAsync(
         string root,
+        string commitSha,
         List<string> paths,
         IReadOnlyDictionary<string, TrackedFile> files,
         HashCache hashes,
@@ -133,7 +138,7 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
         var options = new ParallelOptions { MaxDegreeOfParallelism = Parallelism, CancellationToken = cancellationToken };
         await Parallel.ForEachAsync(paths, options, async (path, token) =>
         {
-            var content = await client.GetBlobAsync(owner, repository, files[path].Sha, token).ConfigureAwait(false);
+            var content = await ReadFileAsync(commitSha, path, files[path].Sha, token).ConfigureAwait(false);
             await WriteFileAsync(root, path, content, token).ConfigureAwait(false);
             lock (gate)
             {
@@ -142,6 +147,23 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
                 progress?.Report(new SyncProgress($"Downloading {paths.Count} files", done, paths.Count));
             }
         }).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Downloads one file of a commit: signed out from the raw file host, which does not use the API's 60 requests an
+    /// hour, and through the API when signed in, when there is no raw host, or when what it sent is not the blob.
+    /// </summary>
+    private async Task<byte[]> ReadFileAsync(string commitSha, string path, string sha, CancellationToken cancellationToken)
+    {
+        if (!client.IsSignedIn
+            && client.CanReadRawFiles
+            && await client.TryGetRawFileAsync(owner, repository, commitSha, path, MaximumFileBytes, cancellationToken).ConfigureAwait(false) is { } raw
+            && string.Equals(GitObjects.BlobHash(raw), sha, StringComparison.Ordinal))
+        {
+            return raw;
+        }
+
+        return await client.GetBlobAsync(owner, repository, sha, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Writes a file, creating its folder and replacing a read-only file.</summary>

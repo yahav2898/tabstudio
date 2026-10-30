@@ -46,6 +46,28 @@ public sealed class JavaProjectTests : IDisposable
     }
 
     [Theory]
+    [InlineData("", false)]
+    [InlineData("<dependencies><dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><version>5.11.0</version><scope>test</scope></dependency></dependencies>", false)]
+    [InlineData("<dependencies><dependency><groupId>com.google.code.gson</groupId><artifactId>gson</artifactId><version>2.11.0</version></dependency></dependencies>", true)]
+    [InlineData("<dependencies><dependency><groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.7.4</version><scope> runtime </scope></dependency></dependencies>", true)]
+    [InlineData("<parent><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-parent</artifactId><version>3.4.0</version></parent>", true)]
+    public void Maven_copies_runtime_libraries_only_when_the_project_may_have_some(string content, bool copies)
+    {
+        // The dependency plugin is dozens of downloads before a first build, and one more request a busy network
+        // can refuse (Maven Central's 429), for a project that has nothing to copy.
+        _folder.Write("pom.xml", $"<project xmlns=\"http://maven.apache.org/POM/4.0.0\"><modelVersion>4.0.0</modelVersion><groupId>com.example</groupId><artifactId>app</artifactId><version>1.0.0</version>{content}</project>");
+        _folder.Write("src/main/java/com/example/App.java", Main);
+
+        var plan = RunPlanner.PlanProject(new(Java, _folder.Path, "pom.xml"))!;
+
+        Assert.Equal(copies, plan.Build!.Arguments.Any(a => a.EndsWith(":copy-dependencies", StringComparison.Ordinal)));
+        Assert.Equal(copies, plan.Build.Arguments.Contains("-DincludeScope=runtime"));
+        Assert.Contains("package", plan.Build.Arguments);
+        Assert.Contains("-Daether.connector.http.retryHandler.count=5", plan.Build.Arguments);
+        Assert.Contains("target/dependency/*", plan.Run.Arguments[1], StringComparison.Ordinal);
+    }
+
+    [Theory]
     [InlineData("build.gradle")]
     [InlineData("build.gradle.kts")]
     public void Gradle_resolves_the_runtime_classpath_without_requiring_an_application_plugin(string marker)

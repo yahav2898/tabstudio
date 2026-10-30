@@ -121,7 +121,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: [platformio-avr, arduino-liquidcrystal, stm32-cubemx, esp-idf, pico-sdk, zephyr, rust-embassy]
+        project: [platformio-avr, arduino-liquidcrystal, stm32-cubemx, esp-idf, pico-sdk, zephyr, rust-embassy, arduino-servo, esp-idf-blink, marlin, zephyr-synchronization]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -132,10 +132,10 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends git cmake ninja-build build-essential python3-venv libusb-1.0-0 libffi-dev libssl-dev
       - name: Install Arm cross compiler from signed Ubuntu packages
-        if: matrix.project == 'stm32-cubemx' || matrix.project == 'pico-sdk' || matrix.project == 'zephyr'
+        if: matrix.project == 'stm32-cubemx' || matrix.project == 'pico-sdk' || matrix.project == 'zephyr' || matrix.project == 'zephyr-synchronization'
         run: sudo apt-get install -y --no-install-recommends gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
       - name: Install pinned build front ends
-        if: matrix.project == 'platformio-avr'
+        if: matrix.project == 'platformio-avr' || matrix.project == 'marlin'
         run: |
           python -m pip install --require-hashes --only-binary=:all: -r build/embedded/platformio.requirements.txt
       - name: Compile the pinned public repository with zero errors

@@ -14,15 +14,15 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void Describes_languages_flutter_and_the_separately_licensed_pic_compilers()
     {
-        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "kotlin", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "esp-idf", "zephyr", "pico-sdk", "micropython", "embedded-import", "embedded-debug", "probe-rs", "embedded-esptool", "embedded-picotool", "embedded-bossac", "embedded-teensy", "embedded-wchisp", "embedded-mspdebug", "embedded-rust", "embedded-ch32fun", "embedded-nrfutil", "embedded-wlink"], Catalog.Toolchains.Select(t => t.Id));
+        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "php", "kotlin", "swift", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "esp-idf", "zephyr", "pico-sdk", "micropython", "embedded-import", "embedded-debug", "probe-rs", "embedded-esptool", "embedded-picotool", "embedded-bossac", "embedded-teensy", "embedded-wchisp", "embedded-mspdebug", "embedded-rust", "embedded-ch32fun", "embedded-nrfutil", "embedded-wlink"], Catalog.Toolchains.Select(t => t.Id));
         var languages = Catalog.Toolchains.SelectMany(t => t.Languages).ToHashSet();
-        Assert.Superset(new HashSet<string> { "Python", "JavaScript", "TypeScript", "C", "C++", "Rust", "Go", "Java", "Kotlin", "Dart" }, languages);
+        Assert.Superset(new HashSet<string> { "Python", "JavaScript", "TypeScript", "C", "C++", "Rust", "Go", "Java", "Kotlin", "Dart", "PHP", "Swift" }, languages);
     }
 
     [Fact]
     public void The_store_lists_the_finished_toolchains()
     {
-        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "esp-idf", "zephyr", "pico-sdk", "micropython", "embedded-debug", "probe-rs", "embedded-esptool", "embedded-picotool", "embedded-bossac", "embedded-teensy", "embedded-wchisp", "embedded-mspdebug", "embedded-rust", "embedded-ch32fun", "embedded-nrfutil"], Catalog.Listed.Select(t => t.Id));
+        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "php", "kotlin", "swift", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "esp-idf", "zephyr", "pico-sdk", "micropython", "embedded-debug", "probe-rs", "embedded-esptool", "embedded-picotool", "embedded-bossac", "embedded-teensy", "embedded-wchisp", "embedded-mspdebug", "embedded-rust", "embedded-ch32fun", "embedded-nrfutil"], Catalog.Listed.Select(t => t.Id));
         Assert.Equal("jdtls", Catalog.Find("android")!.LanguageServer!.Id);
         Assert.Contains("kotlin-language-server", Catalog.Find("android")!.AdditionalToolIds);
     }
@@ -70,9 +70,9 @@ public sealed class ToolchainCatalogTests
                     Assert.Empty(toolchain.Run.Entries);
                 }
             }
-            else if (toolchain.Id != "flutter")
+            else if (toolchain.Id != "flutter" && !(toolchain.Glibc is { Packages.Count: > 0 } && toolchain.Packages.Count == 0))
             {
-                // Flutter installs into its own Ubuntu environment instead of from Alpine packages.
+                // Flutter, and Swift, install into their own Ubuntu environment instead of from Alpine packages.
                 Assert.NotEmpty(toolchain.Packages);
                 Assert.True(toolchain.PinnedVersion is not null || toolchain.Packages.Contains(toolchain.VersionPackage!));
             }
@@ -86,6 +86,7 @@ public sealed class ToolchainCatalogTests
                 Assert.Contains(toolchain.Run.File, a => a.Contains("{file}", StringComparison.Ordinal));
                 Assert.NotEmpty(toolchain.Run.Entries);
                 Assert.All(toolchain.Run.Entries, e => Assert.NotEmpty(e.Command));
+                Assert.All(toolchain.Run.Entries.SelectMany(e => e.Contains.Concat(e.Excludes)), pattern => _ = new Regex(pattern, RegexOptions.Multiline | RegexOptions.CultureInvariant));
             }
             Assert.NotNull(toolchain.Host);
             Assert.NotEmpty(toolchain.Host.Commands);
@@ -139,7 +140,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void Archives_are_pinned_by_their_hash()
     {
-        var archives = Catalog.Toolchains.SelectMany(t => t.Setup).Select(s => s.Archive).OfType<ArchiveDefinition>().ToList();
+        var archives = Catalog.Toolchains.SelectMany(t => t.Setup.Concat(t.Glibc?.Setup ?? [])).Select(s => s.Archive).OfType<ArchiveDefinition>().ToList();
 
         Assert.NotEmpty(archives);
         Assert.All(archives, a =>
@@ -149,6 +150,24 @@ public sealed class ToolchainCatalogTests
             Assert.True(a.Size > 0);
             Assert.StartsWith("/opt/tabstudio", a.Destination, StringComparison.Ordinal);
         });
+    }
+
+    [Fact]
+    public void An_archive_is_unpacked_into_its_own_folder_never_over_another_toolchains()
+    {
+        // Kotlin's compiler was unpacked into /opt/tabstudio itself, which the installer empties first: installing
+        // Kotlin deleted debugpy, js-debug, java-debug, Phpactor and the Android SDK, and removing it did the same.
+        var destinations = Catalog.Toolchains
+            .SelectMany(t => t.Setup.Concat(t.Glibc?.Setup ?? []).Select(s => s.Archive).OfType<ArchiveDefinition>().Select(a => (Toolchain: t.Id, Folder: a.Destination.TrimEnd('/'))))
+            .Distinct()
+            .ToList();
+
+        Assert.All(destinations, d => Assert.True(d.Folder.Split('/', StringSplitOptions.RemoveEmptyEntries).Length >= 3, $"{d.Toolchain} unpacks into {d.Folder}"));
+        foreach (var (toolchain, folder) in destinations)
+        {
+            Assert.DoesNotContain(destinations, other => other.Toolchain != toolchain
+                && (other.Folder == folder || other.Folder.StartsWith(folder + "/", StringComparison.Ordinal)));
+        }
     }
 
     [Fact]
@@ -184,6 +203,8 @@ public sealed class ToolchainCatalogTests
     [InlineData("main.go", "go")]
     [InlineData("Main.java", "java")]
     [InlineData("App.kt", "kotlin")]
+    [InlineData("index.php", "php")]
+    [InlineData("main.swift", "swift")]
     public void Finds_the_toolchain_for_a_file(string file, string id)
     {
         Assert.Equal(id, Catalog.ForFile(file)?.Id);
@@ -262,6 +283,10 @@ public sealed class ToolchainCatalogTests
     [InlineData("vscode-css-language-server", "node")]
     [InlineData("vscode-json-language-server", "node")]
     [InlineData("kotlin-language-server", "android")]
+    [InlineData("phpactor", "php")]
+    [InlineData("php-debug", "php")]
+    [InlineData("kotlin-lsp", "kotlin")]
+    [InlineData("sourcekit-lsp", "swift")]
     public void Finds_the_toolchain_that_installs_a_tool_by_the_id_its_clients_use(string tool, string toolchain)
     {
         Assert.Equal(toolchain, Catalog.ForTool(tool)?.Id);

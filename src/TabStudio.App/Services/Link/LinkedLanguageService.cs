@@ -262,11 +262,11 @@ public sealed class LinkedLanguageService : ILanguageService
     }
 
     /// <inheritdoc />
-    public void TrimMemory()
+    public Task TrimMemoryAsync()
     {
         lock (_gate)
         {
-            _local?.TrimMemory();
+            return _local?.TrimMemoryAsync() ?? Task.CompletedTask;
         }
     }
 
@@ -294,10 +294,8 @@ public sealed class LinkedLanguageService : ILanguageService
             result = await Task.Run(() => _compiler.Packages.RestoreAsync(project, progress, cancellationToken), cancellationToken).ConfigureAwait(false);
         }
 
-        if (result.Success)
-        {
-            _runtimeAssemblies[project.FilePath] = result.RuntimeFiles;
-        }
+        // A restore with errors still gives the packages it restored, as LocalLanguageService does.
+        _runtimeAssemblies[project.FilePath] = result.RuntimeFiles;
 
         if (remote is null)
         {
@@ -579,10 +577,7 @@ public sealed class LinkedLanguageService : ILanguageService
         {
             // From the restore cache, so this is quick; it gives IntelliSense the packages here too.
             var result = await local.RestorePackagesAsync(project, null, CancellationToken.None).ConfigureAwait(false);
-            if (result.Success)
-            {
-                _runtimeAssemblies[project.FilePath] = result.RuntimeFiles;
-            }
+            _runtimeAssemblies[project.FilePath] = result.RuntimeFiles;
         }
 
         if (generators)

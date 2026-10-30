@@ -71,6 +71,38 @@ public sealed partial class AvaloniaAppHost : IDisposable
     /// <summary>How the view differs from the app on a device, when it does, such as a window shown as its content.</summary>
     public string? Note { get; }
 
+    /// <summary>The Error List code of an app built for a newer Avalonia than TabStudio's.</summary>
+    public const string NewerAvaloniaId = "TS2101";
+
+    /// <summary>
+    /// When an app was built for a newer major version of Avalonia than the one TabStudio runs it on, the one line that
+    /// says so; otherwise <see langword="null"/>. Its controls and themes may use types that only that version has, as
+    /// Dock's samples for Avalonia 12 do, and then its XAML cannot load here.
+    /// </summary>
+    /// <param name="packageAssemblies">The app's package assemblies, including its own copy of Avalonia's.</param>
+    public static string? NewerAvaloniaNote(IReadOnlyList<string> packageAssemblies)
+    {
+        ArgumentNullException.ThrowIfNull(packageAssemblies);
+        if (packageAssemblies.FirstOrDefault(p => string.Equals(Path.GetFileName(p), "Avalonia.Base.dll", StringComparison.OrdinalIgnoreCase)) is not { } file)
+        {
+            return null;
+        }
+
+        Version? version;
+        try
+        {
+            version = AssemblyName.GetAssemblyName(file).Version;
+        }
+        catch (Exception ex) when (ex is IOException or BadImageFormatException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+
+        var host = typeof(AvaloniaObject).Assembly.GetName().Version;
+        return version is null || host is null || version.Major <= host.Major ? null
+            : $"This app is built for Avalonia {version.Major}.{version.Minor}, and TabStudio runs Avalonia apps on its own Avalonia {host.Major}.{host.Minor}: what needs Avalonia {version.Major} cannot load here.";
+    }
+
     /// <summary>Loads an app and creates its main view. UI thread only.</summary>
     /// <param name="entryAssembly">The app's assembly.</param>
     /// <param name="dependencies">The assemblies of the projects it references.</param>

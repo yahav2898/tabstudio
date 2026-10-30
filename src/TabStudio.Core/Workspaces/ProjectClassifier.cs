@@ -10,11 +10,29 @@ namespace TabStudio.Core.Workspaces;
 /// </remarks>
 public static class ProjectClassifier
 {
+    /// <summary>The packages of TUnit, whose tests Test Explorer does not run.</summary>
+    private static readonly string[] TUnitPackages = ["TUnit", "TUnit.Core", "TUnit.Engine"];
+
     private static readonly string[] TestPackages =
     [
         "Microsoft.NET.Test.Sdk", "xunit", "xunit.v3", "xunit.v3.mtp-v1", "xunit.v3.mtp-v2", "xunit.v3.mtp-off", "xunit.v3.core",
-        "NUnit", "MSTest.TestFramework", "MSTest",
+        "NUnit", "MSTest.TestFramework", "MSTest", .. TUnitPackages,
     ];
+
+    /// <summary>The SDK of MSTest projects, which makes a project a test project without any package.</summary>
+    private const string MSTestSdk = "MSTest.Sdk";
+
+    /// <summary>The package BenchmarkDotNet benchmarks are written with.</summary>
+    private const string BenchmarkDotNetPackage = "BenchmarkDotNet";
+
+    /// <summary>
+    /// The folders whose programs F5 picks only when nothing else can start: documentation, scripts, tools, the
+    /// repository's build, benchmarks and tests.
+    /// </summary>
+    private static readonly string[] AuxiliaryFolders = ["docs", "docfx", "scripts", "tools", "build", "eng", "benchmarks", "test", "tests"];
+
+    /// <summary>The characters that separate folders in a path, on every platform.</summary>
+    private static readonly char[] PathSeparators = ['/', '\\'];
 
     /// <summary>The packages build scripts are written with; a program that uses one is a build script.</summary>
     private static readonly string[] BuildScriptPackages =
@@ -52,7 +70,13 @@ public static class ProjectClassifier
     }
 
     /// <summary>The platforms of .NET's mobile workloads, which only build with those workloads installed.</summary>
-    private static readonly string[] MobilePlatforms = ["-android", "-ios", "-maccatalyst", "-tvos", "-macos"];
+    private static readonly string[] MobilePlatforms = ["-android", "-ios", "-maccatalyst", "-tvos", "-macos", "-tizen"];
+
+    /// <summary>
+    /// The project type GUIDs Visual Studio writes into <c>ProjectTypeGuids</c> for Xamarin.iOS and Xamarin.Android
+    /// projects, as in CommunityToolkit's <c>MvvmSampleXF.iOS</c> and <c>MvvmSampleXF.Android</c>.
+    /// </summary>
+    private static readonly string[] XamarinProjectTypeGuids = ["FEACFBD2-3405-455C-9665-78FE426C6842", "EFBA0AD7-5A72-4C68-AF49-83D382785DCF"];
 
     /// <summary>
     /// Whether a project uses Avalonia: it references Avalonia or one of its packages, such as <c>Avalonia.Desktop</c>
@@ -68,18 +92,135 @@ public static class ProjectClassifier
     }
 
     /// <summary>
-    /// Whether a project is the Android, iOS or Mac head of a cross-platform app, such as an Avalonia app's
-    /// <c>AdvancedToDoList.Android</c>: every framework it targets is a mobile platform (<c>net10.0-android</c>,
-    /// <c>net10.0-ios</c>), which only .NET's workload for that platform builds, on a computer. A .NET MAUI project, which
-    /// TabStudio treats as an app of its own, is not counted.
+    /// The platform workload a project needs to build, which TabStudio does not have: a .NET MAUI project
+    /// (<c>UseMaui</c>); the Android, iOS, Mac or Tizen head of a cross-platform app, such as an Avalonia app's
+    /// <c>AdvancedToDoList.Android</c>, every framework of which is such a platform (<c>net10.0-android</c>,
+    /// <c>net10.0-ios</c>) or Windows beside them (<c>net10.0-windows10.0.19041.0</c>); a Xamarin project (its project
+    /// type, its <c>Xamarin.*.CSharp.targets</c> import, or <c>AndroidApplication</c>); or a UWP project
+    /// (<c>TargetPlatformIdentifier</c> <c>UAP</c>, or an <c>AppContainerExe</c>). A project for Windows alone, such as
+    /// a WPF app on <c>net10.0-windows</c> or a WinUI 3 app on <c>net10.0-windows10.0.19041.0</c>, needs none.
     /// </summary>
     /// <param name="project">The project.</param>
-    public static bool IsMobilePlatformHead(ProjectInfo project)
+    public static PlatformWorkload RequiredWorkload(ProjectInfo project)
     {
         ArgumentNullException.ThrowIfNull(project);
-        return project.Kind != ProjectKind.Maui
-            && project.TargetFrameworks.Count > 0
-            && project.TargetFrameworks.All(tf => MobilePlatforms.Any(p => tf.Contains(p, StringComparison.OrdinalIgnoreCase)));
+
+        // An Uno.Sdk project is an Uno app whatever else it sets, as Classify decides; TabStudio builds it for Uno's desktop target.
+        if (IsTrue(project.GetProperty("UseMaui")) && project.Kind != ProjectKind.Uno)
+        {
+            return PlatformWorkload.Maui;
+        }
+
+        if (IsMobilePlatformHead(project))
+        {
+            return PlatformWorkload.MobilePlatform;
+        }
+
+        var projectTypes = project.GetProperty("ProjectTypeGuids") ?? string.Empty;
+        if (XamarinProjectTypeGuids.Any(guid => projectTypes.Contains(guid, StringComparison.OrdinalIgnoreCase))
+            || project.ImportPaths.Any(IsXamarinTargets)
+            || IsTrue(project.GetProperty("AndroidApplication")))
+        {
+            return PlatformWorkload.Xamarin;
+        }
+
+        if (string.Equals(project.GetProperty("TargetPlatformIdentifier")?.Trim(), "UAP", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(project.OutputType, "AppContainerExe", StringComparison.OrdinalIgnoreCase))
+        {
+            return PlatformWorkload.Uwp;
+        }
+
+        return PlatformWorkload.None;
+    }
+
+    /// <summary>
+    /// Whether a project needs a platform workload to build (see <see cref="RequiredWorkload"/>). TabStudio leaves such a
+    /// project out of builds and never starts it, and the Compatibility Doctor says it builds on a computer.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public static bool NeedsPlatformWorkload(ProjectInfo project) => RequiredWorkload(project) != PlatformWorkload.None;
+
+    /// <summary>
+    /// Why a project that needs a platform workload is not built here, as a phrase after "it", such as
+    /// <c>is a .NET MAUI project, which only .NET's MAUI workload builds, on a computer</c>; <see langword="null"/> for a
+    /// project that needs none.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public static string? PlatformWorkloadReason(ProjectInfo project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        return RequiredWorkload(project) switch
+        {
+            PlatformWorkload.Maui => "is a .NET MAUI project, which only .NET's MAUI workload builds, on a computer",
+            PlatformWorkload.MobilePlatform => $"targets {string.Join(", ", project.TargetFrameworks)}, which only .NET's mobile workloads build, on a computer",
+            PlatformWorkload.Xamarin => "is a Xamarin project, which only Xamarin's tools in Visual Studio build, on a computer",
+            PlatformWorkload.Uwp => "is a UWP project, which only Visual Studio's Universal Windows Platform tools build, on Windows",
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    /// Whether a project is the Android, iOS, Mac or Tizen head of a cross-platform app: every framework it targets is
+    /// such a platform, or Windows beside one. An Uno Platform or WinUI project, which TabStudio builds for Uno's desktop
+    /// target, counts only when every framework is a mobile platform, as before Windows was allowed.
+    /// </summary>
+    private static bool IsMobilePlatformHead(ProjectInfo project)
+    {
+        if (project.TargetFrameworks.Count == 0 || !project.TargetFrameworks.Any(IsMobilePlatform))
+        {
+            return false;
+        }
+
+        var windowsAllowed = project.Kind is not (ProjectKind.Uno or ProjectKind.WinUI);
+        return project.TargetFrameworks.All(tf => IsMobilePlatform(tf) || (windowsAllowed && tf.Contains("-windows", StringComparison.OrdinalIgnoreCase)));
+    }
+
+    /// <summary>Whether a target framework is one of a mobile workload, such as <c>net10.0-android</c>.</summary>
+    private static bool IsMobilePlatform(string targetFramework) =>
+        MobilePlatforms.Any(p => targetFramework.Contains(p, StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>Whether an import is one of Xamarin's, such as <c>$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets</c>.</summary>
+    private static bool IsXamarinTargets(string importPath)
+    {
+        var name = importPath[(importPath.LastIndexOfAny(PathSeparators) + 1)..];
+        return name.StartsWith("Xamarin.", StringComparison.OrdinalIgnoreCase)
+            && name.EndsWith(".CSharp.targets", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>Whether a project's tests are written with TUnit, which Test Explorer does not run.</summary>
+    /// <param name="project">The project.</param>
+    public static bool UsesTUnit(ProjectInfo project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        return TUnitPackages.Any(project.HasPackage);
+    }
+
+    /// <summary>
+    /// Whether a project is in a folder of documentation, scripts, tools, the repository's build, benchmarks or tests:
+    /// one named <c>docs</c>, <c>docfx</c>, <c>scripts</c>, <c>tools</c>, <c>build</c>, <c>eng</c>, <c>benchmarks</c>,
+    /// <c>test</c> or <c>tests</c>, in any letter case, at any depth below the workspace's folder, such as Terminal.Gui's
+    /// <c>docfx/scripts/OutputView</c>. F5 picks such a program only when no other can start.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    /// <param name="rootDirectory">The workspace's folder, which the folders are counted from.</param>
+    public static bool IsInAuxiliaryFolder(ProjectInfo project, string rootDirectory)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        ArgumentNullException.ThrowIfNull(rootDirectory);
+        if (rootDirectory.Length == 0 || project.DirectoryPath.Length == 0)
+        {
+            return false;
+        }
+
+        var relative = Path.GetRelativePath(rootDirectory, project.DirectoryPath);
+        var folders = relative.Split(PathSeparators, StringSplitOptions.RemoveEmptyEntries);
+        if (Path.IsPathRooted(relative) || folders is [".." or ".", ..])
+        {
+            // The workspace's own folder, or a project outside it, whose folders are not the workspace's.
+            return false;
+        }
+
+        return folders.Any(folder => AuxiliaryFolders.Contains(folder, StringComparer.OrdinalIgnoreCase));
     }
 
     /// <summary>The build-script library or SDK a project uses, such as <c>Bullseye</c>; <see langword="null"/> when it uses none.</summary>
@@ -91,27 +232,32 @@ public static class ProjectClassifier
     }
 
     /// <summary>
-    /// How good a project is as the one F5 starts when nobody has picked one, lower first: web apps, then apps with a
-    /// UI, then console apps, then other programs such as worker services; <see langword="null"/> for a project that
-    /// is never a startup project (a library, tests, a build script, an Aspire AppHost, the WebAssembly client of a
-    /// Blazor Web App).
+    /// How good a project is as the one F5 starts when nobody has picked one, lower first: web apps with a UI (Blazor
+    /// apps, then MVC or Razor Pages apps, which have <c>.cshtml</c> views, as eShop's Identity.API has for its sign-in
+    /// pages beside the Blazor WebApp), then apps with a UI, then web APIs, then console apps, then other programs such
+    /// as worker services; <see langword="null"/> for a project that is never a
+    /// startup project (a library, tests, a build script, benchmarks, an Aspire AppHost, a project that needs a platform
+    /// workload, the WebAssembly client of a Blazor Web App). <see cref="Workspace.DefaultStartupProject"/> also puts
+    /// programs in folders such as <c>docs</c> or <c>tests</c> last.
     /// </summary>
     /// <param name="project">The project.</param>
     public static int? StartupRank(ProjectInfo project)
     {
         ArgumentNullException.ThrowIfNull(project);
-        if (!project.IsExecutable || project.IsTestProject || IsBlazorWebAppClient(project) || IsMobilePlatformHead(project))
+        if (!project.IsExecutable || project.IsTestProject || IsBlazorWebAppClient(project) || NeedsPlatformWorkload(project))
         {
             return null;
         }
 
         return project.Kind switch
         {
-            ProjectKind.BuildScript or ProjectKind.AspireAppHost or ProjectKind.Test or ProjectKind.ClassLibrary => null,
-            ProjectKind.AspNetCore or ProjectKind.BlazorWebApp or ProjectKind.BlazorWebAssembly => 0,
-            ProjectKind.Avalonia or ProjectKind.WinForms or ProjectKind.Wpf or ProjectKind.Uno or ProjectKind.WinUI or ProjectKind.Maui => 1,
-            ProjectKind.ConsoleApp => 2,
-            _ => 3,
+            ProjectKind.BuildScript or ProjectKind.Benchmark or ProjectKind.AspireAppHost or ProjectKind.Test or ProjectKind.ClassLibrary => null,
+            ProjectKind.BlazorWebApp or ProjectKind.BlazorWebAssembly => 0,
+            ProjectKind.AspNetCore when project.HasRazorViews => 1,
+            ProjectKind.Avalonia or ProjectKind.WinForms or ProjectKind.Wpf or ProjectKind.Uno or ProjectKind.WinUI => 2,
+            ProjectKind.AspNetCore => 3,
+            ProjectKind.ConsoleApp => 4,
+            _ => 5,
         };
     }
 
@@ -129,7 +275,7 @@ public static class ProjectClassifier
 
         var sdk = project.Sdk ?? string.Empty;
         var isTest = IsTrue(project.GetProperty("IsTestProject")) ||
-                     sdk.Equals("MSTest.Sdk", StringComparison.OrdinalIgnoreCase) ||
+                     project.UsesSdk(MSTestSdk) ||
                      TestPackages.Any(project.HasPackage);
 
         if (isTest)
@@ -208,6 +354,12 @@ public static class ProjectClassifier
         if (project.IsExecutable && IsBuildScript(project))
         {
             return ProjectKind.BuildScript;
+        }
+
+        // So are benchmarks: BenchmarkDotNet builds every benchmark into a program of its own and starts it.
+        if (project.IsExecutable && project.HasPackage(BenchmarkDotNetPackage))
+        {
+            return ProjectKind.Benchmark;
         }
 
         if (project.IsExecutable && UsesAvalonia(project))

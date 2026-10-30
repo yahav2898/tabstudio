@@ -13,26 +13,50 @@ namespace TabStudio.Debugging.Inspection;
 /// <c>'c'</c>, <c>true</c>, <c>false</c>, <c>null</c>, an enum member name) or another path. A path alone must be
 /// a <see cref="bool"/>. Examples: <c>count == 3</c>, <c>name != null &amp;&amp; total &gt; 10.5</c>.
 /// </para>
-/// <para>This is not a C# evaluator: method calls and arithmetic are not supported.</para>
+/// <para>
+/// In Visual Basic code a condition is written as Visual Basic writes it: comparisons with <c>=</c>, <c>&lt;&gt;</c>,
+/// <c>Is</c> and <c>IsNot</c>, joined by <c>AndAlso</c>, <c>And</c>, <c>OrElse</c> or <c>Or</c>, each optionally
+/// preceded by <c>Not</c>, with the literals <c>Nothing</c>, <c>True</c>, <c>False</c>, <c>"string"</c> and <c>"c"c</c>,
+/// and names in any case. Examples: <c>count = 3</c>, <c>name IsNot Nothing AndAlso total &gt; 10.5</c>. The C# operators
+/// work there too.
+/// </para>
+/// <para>This is not a C# or Visual Basic evaluator: method calls and arithmetic are not supported.</para>
 /// </remarks>
 internal static class BreakpointCondition
 {
     private static readonly string[] Operators = ["==", "!=", "<=", ">=", "<", ">"];
 
-    /// <summary>Whether the condition holds.</summary>
+    /// <summary>Visual Basic's operators first, longest first, then the C# ones that are not also Visual Basic's.</summary>
+    private static readonly string[] VisualBasicOperators = ["<>", "<=", ">=", "==", "!=", "=", "<", ">"];
+
+    private static readonly string[] CSharpOr = ["||"];
+    private static readonly string[] CSharpAnd = ["&&"];
+    private static readonly string[] VisualBasicOr = ["OrElse", "Or", "||"];
+    private static readonly string[] VisualBasicAnd = ["AndAlso", "And", "&&"];
+
+    /// <summary>Whether a C# condition holds.</summary>
     /// <param name="condition">The condition.</param>
     /// <param name="locals">The locals of the statement.</param>
     /// <param name="error">Why the condition could not be evaluated, when it could not.</param>
     /// <returns>The result; <see langword="true"/> when it could not be evaluated, so the breakpoint still stops.</returns>
-    public static bool IsMet(string condition, IReadOnlyList<DebugValue> locals, out string? error)
+    public static bool IsMet(string condition, IReadOnlyList<DebugValue> locals, out string? error) =>
+        IsMet(condition, locals, visualBasic: false, out error);
+
+    /// <summary>Whether a condition holds, written in C# or in Visual Basic.</summary>
+    /// <param name="condition">The condition.</param>
+    /// <param name="locals">The locals of the statement.</param>
+    /// <param name="visualBasic">Whether the statement is Visual Basic, so the condition is too.</param>
+    /// <param name="error">Why the condition could not be evaluated, when it could not.</param>
+    /// <returns>The result; <see langword="true"/> when it could not be evaluated, so the breakpoint still stops.</returns>
+    public static bool IsMet(string condition, IReadOnlyList<DebugValue> locals, bool visualBasic, out string? error)
     {
         error = null;
-        foreach (var alternative in SplitOutsideQuotes(condition, "||"))
+        foreach (var alternative in SplitOutsideQuotes(condition, visualBasic ? VisualBasicOr : CSharpOr))
         {
             var all = true;
-            foreach (var comparison in SplitOutsideQuotes(alternative, "&&"))
+            foreach (var comparison in SplitOutsideQuotes(alternative, visualBasic ? VisualBasicAnd : CSharpAnd))
             {
-                if (!TryCompare(comparison.Trim(), locals, out var result, out error))
+                if (!TryCompare(comparison.Trim(), locals, visualBasic, out var result, out error))
                 {
                     return true;
                 }
@@ -49,12 +73,30 @@ internal static class BreakpointCondition
         return false;
     }
 
-    private static bool TryCompare(string comparison, IReadOnlyList<DebugValue> locals, out bool result, out string? error)
+    private static bool TryCompare(string comparison, IReadOnlyList<DebugValue> locals, bool visualBasic, out bool result, out string? error)
+    {
+        // Not binds looser than a comparison in Visual Basic: Not x = 3 is Not (x = 3).
+        var negate = visualBasic && StartsWithWord(comparison, "Not");
+        if (negate)
+        {
+            comparison = comparison[3..].Trim();
+        }
+
+        if (!TryCompareOperands(comparison, locals, visualBasic, out result, out error))
+        {
+            return false;
+        }
+
+        result ^= negate;
+        return true;
+    }
+
+    private static bool TryCompareOperands(string comparison, IReadOnlyList<DebugValue> locals, bool visualBasic, out bool result, out string? error)
     {
         result = false;
         error = null;
-        var (left, op, right) = SplitComparison(comparison);
-        if (!TryResolve(left, locals, out var leftValue, out error))
+        var (left, op, right) = SplitComparison(comparison, visualBasic);
+        if (!TryResolve(left, locals, visualBasic, out var leftValue, out error))
         {
             return false;
         }
@@ -67,11 +109,11 @@ internal static class BreakpointCondition
                 return true;
             }
 
-            error = $"'{left}' is not a bool.";
+            error = $"'{left}' is not a {(visualBasic ? "Boolean" : "bool")}.";
             return false;
         }
 
-        if (!TryResolve(right!, locals, out var rightValue, out error, leftValue))
+        if (!TryResolve(right!, locals, visualBasic, out var rightValue, out error, leftValue))
         {
             return false;
         }
@@ -135,11 +177,41 @@ internal static class BreakpointCondition
         value is byte or sbyte or short or ushort or int or uint or long or ulong or float or double or decimal;
 
     /// <summary>Resolves a literal or a path. An enum member name resolves against the type of the other side.</summary>
-    private static bool TryResolve(string text, IReadOnlyList<DebugValue> locals, out object? value, out string? error, object? other = null)
+    private static bool TryResolve(string text, IReadOnlyList<DebugValue> locals, bool visualBasic, out object? value, out string? error, object? other = null)
     {
         error = null;
         value = null;
         text = text.Trim();
+        if (visualBasic ? TryResolveVisualBasicLiteral(text, out value) : TryResolveCSharpLiteral(text, out value))
+        {
+            return true;
+        }
+
+        if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var number))
+        {
+            value = number;
+            return true;
+        }
+
+        if (other is Enum && Enum.TryParse(other.GetType(), text.Split('.')[^1], visualBasic, out var member))
+        {
+            value = member;
+            return true;
+        }
+
+        if (ValuePath.Find(locals, text, visualBasic) is { } found)
+        {
+            value = found.Object;
+            return true;
+        }
+
+        error = $"'{text}' is not a variable in scope.";
+        return false;
+    }
+
+    private static bool TryResolveCSharpLiteral(string text, out object? value)
+    {
+        value = null;
         switch (text)
         {
             case "null":
@@ -164,29 +236,44 @@ internal static class BreakpointCondition
             return true;
         }
 
-        if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var number))
-        {
-            value = number;
-            return true;
-        }
-
-        if (other is Enum && Enum.TryParse(other.GetType(), text.Split('.')[^1], out var member))
-        {
-            value = member;
-            return true;
-        }
-
-        if (ValuePath.Find(locals, text) is { } found)
-        {
-            value = found.Object;
-            return true;
-        }
-
-        error = $"'{text}' is not a variable in scope.";
         return false;
     }
 
-    private static (string Left, string? Operator, string? Right) SplitComparison(string comparison)
+    /// <summary>Visual Basic's <c>Nothing</c>, <c>True</c>, <c>False</c>, <c>"string"</c> and <c>"c"c</c>, in any case.</summary>
+    private static bool TryResolveVisualBasicLiteral(string text, out object? value)
+    {
+        value = null;
+        if (string.Equals(text, "Nothing", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (string.Equals(text, "True", StringComparison.OrdinalIgnoreCase) || string.Equals(text, "False", StringComparison.OrdinalIgnoreCase))
+        {
+            value = string.Equals(text, "True", StringComparison.OrdinalIgnoreCase);
+            return true;
+        }
+
+        if (text.Length >= 4 && text[0] == '"' && text[^2] == '"' && (text[^1] == 'c' || text[^1] == 'C'))
+        {
+            var character = text[1..^2].Replace("\"\"", "\"", StringComparison.Ordinal);
+            if (character.Length == 1)
+            {
+                value = character[0];
+                return true;
+            }
+        }
+
+        if (text.Length >= 2 && text[0] == '"' && text[^1] == '"')
+        {
+            value = text[1..^1].Replace("\"\"", "\"", StringComparison.Ordinal);
+            return true;
+        }
+
+        return false;
+    }
+
+    private static (string Left, string? Operator, string? Right) SplitComparison(string comparison, bool visualBasic)
     {
         var quoted = false;
         for (var i = 0; i < comparison.Length; i++)
@@ -201,19 +288,35 @@ internal static class BreakpointCondition
                 continue;
             }
 
-            foreach (var op in Operators)
+            foreach (var op in visualBasic ? VisualBasicOperators : Operators)
             {
                 if (string.CompareOrdinal(comparison, i, op, 0, op.Length) == 0)
                 {
-                    return (comparison[..i], op, comparison[(i + op.Length)..]);
+                    var canonical = op switch
+                    {
+                        "<>" => "!=",
+                        "=" => "==",
+                        _ => op,
+                    };
+                    return (comparison[..i], canonical, comparison[(i + op.Length)..]);
                 }
+            }
+
+            if (visualBasic && IsWordAt(comparison, i, "IsNot"))
+            {
+                return (comparison[..i], "!=", comparison[(i + "IsNot".Length)..]);
+            }
+
+            if (visualBasic && IsWordAt(comparison, i, "Is"))
+            {
+                return (comparison[..i], "==", comparison[(i + "Is".Length)..]);
             }
         }
 
         return (comparison, null, null);
     }
 
-    private static List<string> SplitOutsideQuotes(string text, string separator)
+    private static List<string> SplitOutsideQuotes(string text, string[] separators)
     {
         var parts = new List<string>();
         var quoted = false;
@@ -223,16 +326,39 @@ internal static class BreakpointCondition
             if (text[i] == '"')
             {
                 quoted = !quoted;
+                continue;
             }
-            else if (!quoted && string.CompareOrdinal(text, i, separator, 0, separator.Length) == 0)
+
+            if (quoted)
             {
-                parts.Add(text[start..i]);
-                start = i + separator.Length;
-                i += separator.Length - 1;
+                continue;
+            }
+
+            foreach (var separator in separators)
+            {
+                var isWord = char.IsLetter(separator[0]);
+                if (isWord ? IsWordAt(text, i, separator) : string.CompareOrdinal(text, i, separator, 0, separator.Length) == 0)
+                {
+                    parts.Add(text[start..i]);
+                    start = i + separator.Length;
+                    i += separator.Length - 1;
+                    break;
+                }
             }
         }
 
         parts.Add(text[start..]);
         return parts;
     }
+
+    private static bool StartsWithWord(string text, string word) => IsWordAt(text, 0, word);
+
+    /// <summary>Whether a Visual Basic keyword, in any case, stands on its own at a position of the text.</summary>
+    private static bool IsWordAt(string text, int index, string word) =>
+        string.Compare(text, index, word, 0, word.Length, StringComparison.OrdinalIgnoreCase) == 0 &&
+        index + word.Length <= text.Length &&
+        (index == 0 || !IsIdentifierCharacter(text[index - 1])) &&
+        (index + word.Length == text.Length || !IsIdentifierCharacter(text[index + word.Length]));
+
+    private static bool IsIdentifierCharacter(char c) => char.IsLetterOrDigit(c) || c == '_';
 }

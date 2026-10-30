@@ -282,7 +282,7 @@ public sealed partial class LiveGuest : LiveSession, IAsyncDisposable
     private static string Describe(Exception error) => error switch
     {
         TimeoutException => "The host did not answer in time. Check that both devices are on the same Wi-Fi.",
-        OperationCanceledException => "Canceled.",
+        OperationCanceledException => "Cancelled.",
         LinkRemoteException { Code: LinkErrorCodes.UnknownMethod } => "That device does not share a TabStudio Live session.",
         _ => error.Message,
     };

@@ -53,6 +53,66 @@ public sealed class SampleAndFilesTests : IDisposable
     }
 
     [Fact]
+    public async Task A_file_that_is_not_UTF_8_keeps_every_byte_when_saved()
+    {
+        // "// הערה" in Windows-1255: read as UTF-8 it became replacement characters, and the first save wrote those.
+        var path = _temp.Resolve("legacy.cs");
+        byte[] hebrew = [0x2F, 0x2F, 0x20, 0xE4, 0xF2, 0xF8, 0xE4, 0x0D, 0x0A];
+        await File.WriteAllBytesAsync(path, [.. hebrew, .. Encoding.ASCII.GetBytes("class C {}")]);
+
+        var content = await TextFile.ReadAsync(path);
+        Assert.Equal("ISO-8859-1", content.EncodingLabel);
+        Assert.DoesNotContain('\uFFFD', content.Text);
+        await TextFile.WriteAsync(path, content.Text + " // edited", content.Encoding);
+
+        byte[] expected = [.. hebrew, .. Encoding.ASCII.GetBytes("class C {} // edited")];
+        Assert.Equal(expected, await File.ReadAllBytesAsync(path));
+
+        // A character the file's encoding cannot store is refused, not replaced, so the save says why and keeps the edit.
+        var error = await Assert.ThrowsAsync<IOException>(() => TextFile.WriteAsync(path, content.Text + " שלום", content.Encoding));
+        Assert.Contains("convert the file to UTF-8", error.Message, StringComparison.Ordinal);
+        Assert.Equal(expected, await File.ReadAllBytesAsync(path));
+    }
+
+    [Fact]
+    public async Task Saving_keeps_a_scripts_execute_bit_writes_through_a_link_and_leaves_no_copy_behind()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        // A saved gradlew lost its execute bit, a saved link became a copy, and a failed save left a .tabstudio-save
+        // file in the repository.
+        var script = _temp.Write("tools/gradlew", "#!/bin/sh\n");
+        File.SetUnixFileMode(script, File.GetUnixFileMode(script) | UnixFileMode.UserExecute);
+        await TextFile.WriteAsync(script, "#!/bin/sh\nexec java\n", new UTF8Encoding(false));
+        Assert.True(File.GetUnixFileMode(script).HasFlag(UnixFileMode.UserExecute));
+
+        var real = _temp.Write("tools/config.json", "{}");
+        var link = _temp.Resolve("tools/linked.json");
+        File.CreateSymbolicLink(link, real);
+        await TextFile.WriteAsync(link, "{ \"a\": 1 }", new UTF8Encoding(false));
+        Assert.NotNull(new FileInfo(link).LinkTarget);
+        Assert.Equal("{ \"a\": 1 }", await File.ReadAllTextAsync(real));
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => TextFile.WriteAsync(real, "{}", new UTF8Encoding(false), new CancellationToken(canceled: true)));
+        string[] left = ["config.json", "gradlew", "linked.json"];
+        Assert.Equal(left, Directory.EnumerateFileSystemEntries(_temp.Resolve("tools")).Select(f => Path.GetFileName(f)).Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task A_UTF_32_file_is_not_read_as_UTF_16()
+    {
+        var path = _temp.Resolve("wide.txt");
+        await File.WriteAllBytesAsync(path, [.. new UTF32Encoding(false, true).GetPreamble(), .. new UTF32Encoding(false, false).GetBytes("hi")]);
+
+        var content = await TextFile.ReadAsync(path);
+
+        Assert.Equal(("hi", "UTF-32 LE"), (content.Text, content.EncodingLabel));
+    }
+
+    [Fact]
     public async Task Binary_files_are_not_opened_as_text()
     {
         var path = _temp.Resolve("image.png");

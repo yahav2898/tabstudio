@@ -81,6 +81,54 @@ public sealed class OperationsTests
     }
 
     [Fact]
+    public void Installs_builds_and_setup_keep_the_app_running_in_the_background_with_their_progress()
+    {
+        // Android freezes an app in the background unless a foreground service runs: a toolchain install or a build
+        // stopped where it was until the user came back.
+        var clock = new ManualClock();
+        var notifications = new FakeNotifications { KeepsRunning = true };
+        var activity = new FakeAppActivity();
+        using var operations = new OperationsViewModel(new Immediate(), notifications, activity, clock)
+        {
+            KeepsAppRunning = operation => operation.Key != "analysis",
+        };
+
+        var analysis = operations.Begin("analysis", "Analyzing", new OperationProgress("Analyzing", 1, 4, ProgressUnit.Projects));
+        Assert.False(notifications.IsKeptRunning);
+
+        var sdk = operations.Begin("toolchain:pico-sdk", "Installing Pico SDK", new OperationProgress("Downloading Pico SDK", 30, 100, ProgressUnit.Percent));
+        Assert.True(notifications.IsKeptRunning);
+        var kept = notifications.Kept[^1]!;
+        Assert.Equal(("Installing Pico SDK", 30, true), (kept.Title, kept.ProgressPercent, kept.IsProgress));
+        Assert.StartsWith("Downloading Pico SDK", kept.Text, StringComparison.Ordinal);
+
+        // Progress reaches the ongoing notification, at most once a second.
+        activity.Set(inBackground: true);
+        clock.Advance(TimeSpan.FromSeconds(2));
+        sdk.Report(new OperationProgress("Downloading Pico SDK", 60, 100, ProgressUnit.Percent));
+        Assert.Equal(60, notifications.Kept[^1]!.ProgressPercent);
+        sdk.Report(new OperationProgress("Downloading Pico SDK", 61, 100, ProgressUnit.Percent));
+        Assert.Equal(60, notifications.Kept[^1]!.ProgressPercent);
+
+        var build = operations.Begin("build", "Building blink", new OperationProgress("Building blink"));
+        Assert.Equal("Building blink (+1 more)", notifications.Kept[^1]!.Title);
+
+        // It runs on long enough for an operation's own notification, which the ongoing one makes unnecessary.
+        clock.Advance(TimeSpan.FromSeconds(40));
+        sdk.Report(new OperationProgress("Downloading Pico SDK", 90, 100, ProgressUnit.Percent));
+        Assert.DoesNotContain(notifications.Shown, n => n.IsProgress);
+
+        build.Complete();
+        Assert.True(notifications.IsKeptRunning);
+        sdk.Complete();
+        Assert.False(notifications.IsKeptRunning);
+        Assert.Contains(notifications.Shown, n => n.Title == "Installing Pico SDK finished" && !n.IsProgress);
+        analysis.Complete();
+        Assert.Null(notifications.Kept[^1]);
+        Assert.DoesNotContain(notifications.Shown, n => n.Title.StartsWith("Analyzing", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void A_toolchain_install_s_download_and_package_counts_become_the_operation_s_numbers()
     {
         var toolchain = ToolchainCatalog.Default.Find("pico-sdk")!;
@@ -130,6 +178,51 @@ public sealed class OperationsTests
         {
             window.Close();
         }
+    }
+
+    [Fact]
+    public void The_refresh_runs_only_while_an_operation_does()
+    {
+        // An idle IDE woke the UI thread every two seconds to refresh an empty list.
+        var clock = new TimerClock();
+        using var operations = new OperationsViewModel(new Immediate(), time: clock);
+        var timer = Assert.Single(clock.Timers);
+        Assert.Equal(Timeout.InfiniteTimeSpan, timer.Due);
+
+        var restore = operations.Begin("restore", "Restoring packages");
+        Assert.Equal(TimeSpan.FromSeconds(2), timer.Due);
+
+        restore.Complete();
+        Assert.Equal(Timeout.InfiniteTimeSpan, timer.Due);
+    }
+
+    private sealed class TimerClock : TimeProvider
+    {
+        public List<RecordedTimer> Timers { get; } = [];
+
+        public override ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period)
+        {
+            var timer = new RecordedTimer { Due = dueTime };
+            Timers.Add(timer);
+            return timer;
+        }
+    }
+
+    private sealed class RecordedTimer : ITimer
+    {
+        public TimeSpan Due { get; set; }
+
+        public bool Change(TimeSpan dueTime, TimeSpan period)
+        {
+            Due = dueTime;
+            return true;
+        }
+
+        public void Dispose()
+        {
+        }
+
+        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 
     private sealed class Immediate : IUiDispatcher

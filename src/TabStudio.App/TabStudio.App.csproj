@@ -82,12 +82,15 @@
 
     <ProjectReference Include="..\TabStudio.Uno\TabStudio.Uno.csproj" />
     <ProjectReference Include="..\TabStudio.Forms\TabStudio.Forms.csproj" />
+    <!-- Microsoft.VisualBasic.Forms: Visual Basic programs, and Microsoft.VisualBasic.Core's MsgBox and InputBox, bind to it. -->
+    <ProjectReference Include="..\TabStudio.VisualBasic.Forms\TabStudio.VisualBasic.Forms.csproj" />
     <ProjectReference Include="..\TabStudio.Forms.Design\TabStudio.Forms.Design.csproj" />
     <ProjectReference Include="..\TabStudio.WindowsBridge\TabStudio.WindowsBridge.csproj" />
     <ProjectReference Include="..\TabStudio.Remote\TabStudio.Remote.csproj" />
   </ItemGroup>
 
   <Import Project="TabStudio.App.WindowsForms.targets" />
+  <Import Project="TabStudio.App.VisualBasic.targets" />
 
   <!-- Automatically bridge to the optional agent/database feature when combined. -->
   <ItemGroup>

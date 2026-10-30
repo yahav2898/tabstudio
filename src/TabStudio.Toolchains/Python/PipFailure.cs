@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace TabStudio.Toolchains.Python;
@@ -38,8 +39,16 @@ public enum PipFailureKind
 /// <param name="LastError">The last error line pip or the build printed, for a cause it does not recognize.</param>
 public sealed partial record PipFailure(PipFailureKind Kind, string? Package, string? Version, string? Reason, IReadOnlyList<string> MissingHeaders, string? LastError)
 {
+    /// <summary>
+    /// Whether the build failed because the package's C code uses parts of CPython's C API that this Python changed
+    /// or removed, such as <c>has no member named 'ob_digit'</c> (3.12), <c>_PyLong_AsByteArray</c> (3.13),
+    /// <c>Py_UNICODE</c> (3.12) or <c>longintrepr.h</c> (3.11), often in code Cython generated for an older Python.
+    /// This release of the package does not support this Python; compilers and libraries do not help.
+    /// </summary>
+    public bool UnsupportedPython { get; init; }
+
     /// <summary>Whether installing build tools and libraries may fix it: a build that failed for want of them.</summary>
-    public bool NeedsBuildTools => Kind == PipFailureKind.Build && (Reason is not null || MissingHeaders.Count > 0 || Package is not null);
+    public bool NeedsBuildTools => Kind == PipFailureKind.Build && !UnsupportedPython && (Reason is not null || MissingHeaders.Count > 0 || Package is not null);
 
     /// <summary>The package and version, such as <c>psycopg2 2.9.9</c>, or "A package".</summary>
     public string PackageText => Package is null ? "A package" : Version is null ? Package : $"{Package} {Version}";
@@ -57,6 +66,7 @@ public sealed partial record PipFailure(PipFailureKind Kind, string? Package, st
         string? lastError = null;
         var headers = new List<string>();
         var kind = PipFailureKind.Unknown;
+        var unsupported = false;
         foreach (var raw in lines)
         {
             var line = raw.TrimEnd();
@@ -95,7 +105,11 @@ public sealed partial record PipFailure(PipFailureKind Kind, string? Package, st
                 }
             }
 
-            if (MissingHeader().Match(text) is { Success: true } header)
+            if (IsCPythonApiError(text))
+            {
+                unsupported = true;
+            }
+            else if (MissingHeader().Match(text) is { Success: true } header)
             {
                 headers.Add(header.Groups["header"].Value);
                 reason ??= header.Groups["header"].Value == "Python.h" ? "Python's headers were missing" : $"the C header {header.Groups["header"].Value} was missing";
@@ -142,8 +156,55 @@ public sealed partial record PipFailure(PipFailureKind Kind, string? Package, st
             }
         }
 
-        return new PipFailure(kind, failed, failedVersion, kind == PipFailureKind.Build ? reason : null, headers.Distinct(StringComparer.Ordinal).ToList(), lastError);
+        return new PipFailure(kind, failed, failedVersion, kind == PipFailureKind.Build ? reason : null, headers.Distinct(StringComparer.Ordinal).ToList(), lastError)
+        {
+            UnsupportedPython = kind == PipFailureKind.Build && unsupported,
+        };
     }
+
+    /// <summary>
+    /// What to do when this release of the package does not support the Python that failed
+    /// (<see cref="UnsupportedPython"/>): an older Python, never the one that failed, or a newer release of the
+    /// package; <see langword="null"/> for other failures.
+    /// </summary>
+    /// <param name="python">The Python that failed, such as <c>3.12</c>.</param>
+    public string? UnsupportedPythonAdvice(string python)
+    {
+        ArgumentNullException.ThrowIfNull(python);
+        if (!UnsupportedPython)
+        {
+            return null;
+        }
+
+        var older = OlderPython(python) is { } version ? $"an older Python, such as {version}" : "an older Python";
+        return $"Add a .python-version file naming {older}, or use a newer {Package ?? "package"} release that supports Python {python}.";
+    }
+
+    /// <summary>
+    /// A Python older than the one that failed, to suggest in a <c>.python-version</c> file: 3.12, the newest most
+    /// packages' wheels cover, for a newer Python; the one before for 3.12 or older; never the one that failed.
+    /// </summary>
+    /// <param name="python">The Python that failed, such as <c>3.12</c>.</param>
+    /// <returns>A version, such as <c>3.11</c>, or <see langword="null"/> when there is no older Python 3 to suggest or the version cannot be read.</returns>
+    public static string? OlderPython(string python)
+    {
+        ArgumentNullException.ThrowIfNull(python);
+        if (MinorOf().Match(python) is not { Success: true } match
+            || !int.TryParse(match.Groups["minor"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var minor))
+        {
+            return null;
+        }
+
+        var older = minor > 12 ? 12 : minor - 1;
+        return older >= 8 ? "3." + older.ToString(CultureInfo.InvariantCulture) : null;
+    }
+
+    /// <summary>
+    /// Whether a line of a failed build is a compiler error about CPython's C API, as in the C code an old Cython
+    /// generated: a member, function, type or header that this Python removed or changed. Warnings about deprecated
+    /// API are not, and neither are Cython's own errors, which a newer Cython causes as often as a newer Python.
+    /// </summary>
+    private static bool IsCPythonApiError(string text) => CompilerError().IsMatch(text) && CPythonApi().IsMatch(text);
 
     /// <summary>
     /// The first sentence of the message: which package failed and why, such as "psycopg2 2.9.9 could not be
@@ -158,6 +219,7 @@ public sealed partial record PipFailure(PipFailureKind Kind, string? Package, st
         ArgumentNullException.ThrowIfNull(where);
         return Kind switch
         {
+            PipFailureKind.Build when UnsupportedPython => $"{PackageText} could not be installed: this release of it does not support Python {python}, whose C API its code was not written for.",
             PipFailureKind.Build => $"{PackageText} could not be installed: it has no prebuilt wheel for Python {python} {where}, so pip compiled it, and {Reason ?? "the build failed" + (LastError is null ? string.Empty : $" ({LastError})")}.",
             PipFailureKind.NoMatchingVersion => $"{PackageText} could not be installed: PyPI has no release of it that installs on Python {python}{(LastError is null ? string.Empty : $" ({LastError})")}.",
             PipFailureKind.Conflict => "The project's packages could not be installed: the versions it pins conflict with each other.",
@@ -166,6 +228,21 @@ public sealed partial record PipFailure(PipFailureKind Kind, string? Package, st
             _ => $"The project's packages could not be installed{(LastError is null ? "." : $": {LastError}")}",
         };
     }
+
+    [GeneratedRegex(@"^3\.(?<minor>\d+)", RegexOptions.CultureInvariant)]
+    private static partial Regex MinorOf();
+
+    /// <summary>A compiler's error line, as GCC and Clang print them, rather than a warning or a note.</summary>
+    [GeneratedRegex(@"(^|:\s*)(fatal )?error:", RegexOptions.CultureInvariant)]
+    private static partial Regex CompilerError();
+
+    /// <summary>
+    /// CPython C API that newer Pythons removed or changed: <c>PyLongObject</c>'s <c>ob_digit</c> (3.12),
+    /// <c>PyThreadState</c>'s and frames' fields (3.11, 3.12), private <c>_Py…</c> functions (3.13), <c>Py_UNICODE</c>
+    /// and the old Unicode API (3.12), and the internal headers moved out of <c>Include</c> (3.11).
+    /// </summary>
+    [GeneratedRegex(@"has no member named '(ob_digit|ob_size|tp_print|recursion_depth|recursion_remaining|cframe|use_tracing|exc_type|exc_value|exc_traceback|curexc_type|f_lasti|f_code|f_back)'|\b_Py[A-Z][A-Za-z]*_?\w*|\bPy_UNICODE\b|\bPyUnicode_(AS_UNICODE|AS_DATA|AsUnicode|AsUnicodeAndSize|GET_SIZE|GET_DATA_SIZE|FromUnicode|EncodeDecimal)\b|\bPyFrameObject\b|\blongintrepr\.h\b|\bPyCode_New\b|\bPyEval_(CallObject|CallFunction|InitThreads)\b", RegexOptions.CultureInvariant)]
+    private static partial Regex CPythonApi();
 
     [GeneratedRegex(@"^Collecting (?<name>[A-Za-z0-9][A-Za-z0-9._-]*)(\[[^\]]*\])?(\s*==\s*(?<version>[A-Za-z0-9._+!-]+))?", RegexOptions.CultureInvariant)]
     private static partial Regex Collecting();

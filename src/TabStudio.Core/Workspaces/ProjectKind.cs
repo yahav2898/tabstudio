@@ -94,6 +94,21 @@ public enum ProjectKind
     /// processes, so it is never an app to run.
     /// </summary>
     BuildScript,
+
+    /// <summary>A PHP project: a <c>composer.json</c>, a Laravel, Symfony or Slim app, a PHP site or PHP scripts.</summary>
+    Php,
+
+    /// <summary>A Kotlin program on the JVM: a Gradle or Maven build that compiles Kotlin, or <c>.kt</c> and <c>.kts</c> files.</summary>
+    Kotlin,
+
+    /// <summary>A Swift package (<c>Package.swift</c>) or Swift files.</summary>
+    Swift,
+
+    /// <summary>
+    /// Benchmarks written with BenchmarkDotNet: a program that builds each benchmark into a separate program with the
+    /// .NET SDK and starts it as a process, so it is never an app to run on a tablet.
+    /// </summary>
+    Benchmark,
 }
 
 /// <summary>

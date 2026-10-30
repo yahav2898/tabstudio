@@ -32,8 +32,14 @@ internal sealed class DesignComponent
     /// <summary>The arguments it is created with, as C#, such as <c>components</c> for a timer.</summary>
     public string ConstructorArguments { get; set; } = string.Empty;
 
-    /// <summary>The modifiers of the component's field, such as <c>private</c>, kept as the file had them.</summary>
+    /// <summary>The modifiers of the component's field, such as <c>private</c> or <c>Friend WithEvents</c>, kept as the file had them.</summary>
     public string FieldModifiers { get; set; } = "private";
+
+    /// <summary>
+    /// Where the component's field is among the designer file's fields, which a Visual Basic file keeps; <see langword="null"/>
+    /// for a component without a field there, such as a new one, whose field goes last.
+    /// </summary>
+    public int? FieldIndex { get; set; }
 
     /// <summary>The properties set, by property path, such as <c>Location</c> or <c>FlatAppearance.BorderSize</c>, with their values as C#.</summary>
     public List<DesignAssignment> Properties { get; } = [];
@@ -116,10 +122,17 @@ internal sealed class DesignComponent
 /// <param name="Code">The value as C#.</param>
 internal sealed record DesignAssignment(string Path, string Code);
 
-/// <summary>An event handled in InitializeComponent.</summary>
+/// <summary>An event handled in InitializeComponent, or by a Visual Basic handler's <c>Handles</c> clause.</summary>
 /// <param name="Event">The event, such as <c>Click</c>.</param>
 /// <param name="Handler">The method, such as <c>button1_Click</c>.</param>
-internal sealed record DesignEvent(string Event, string Handler);
+internal sealed record DesignEvent(string Event, string Handler)
+{
+    /// <summary>
+    /// Whether the handler is wired by a <c>Handles</c> clause in the Visual Basic code file, such as
+    /// <c>Handles Button1.Click</c>, rather than in the designer file, which then does not name it.
+    /// </summary>
+    public bool IsHandlesClause { get; init; }
+}
 
 /// <summary>
 /// What InitializeComponent adds to a collection of a component, such as <c>groupBox1.Controls.Add(button1)</c> or

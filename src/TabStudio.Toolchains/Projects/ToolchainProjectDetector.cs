@@ -12,7 +12,10 @@ namespace TabStudio.Toolchains.Projects;
 /// Only the Store's listed toolchains count, since only they run. Explicit manifests identify separate projects,
 /// including nested packages in a monorepo. Source folders inside a project (a Python package, say) belong to it,
 /// and dependency and build folders
-/// (<c>node_modules</c>, <c>.venv</c>, <c>bin</c>, <c>obj</c>, dot folders) are never searched.
+/// (<c>node_modules</c>, <c>.venv</c>, <c>bin</c>, <c>obj</c>, dot folders) are never searched. Below the workspace
+/// folder, documentation (<c>docs</c>) and a web app's static files (<c>wwwroot</c>) are not searched either: a
+/// Sphinx <c>Makefile</c> and <c>conf.py</c>, or a docs site's <c>package.json</c>, build documentation, and the
+/// files under <c>wwwroot</c> are what the app around them serves.
 /// </remarks>
 public static class ToolchainProjectDetector
 {
@@ -21,6 +24,16 @@ public static class ToolchainProjectDetector
     private static readonly HashSet<string> IgnoredFolders = new(StringComparer.OrdinalIgnoreCase)
     {
         "node_modules", "bin", "obj", "dist", "build", "out", "target", "__pycache__", "venv", "env", "site-packages", "vendor",
+    };
+
+    /// <summary>
+    /// Folders that hold documentation or a web app's static files. Their build files are not projects of the
+    /// workspace: setting one up ran <c>npm ci</c> for a docs site, and a Sphinx Makefile became a C/C++ project.
+    /// Opened as the workspace folder itself, such a folder is searched as usual.
+    /// </summary>
+    private static readonly HashSet<string> ContentFolders = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "docs", "doc", "documentation", "wwwroot",
     };
 
     /// <summary>Finds the projects under a folder, nearest the root first.</summary>
@@ -117,6 +130,18 @@ public static class ToolchainProjectDetector
                     continue;
                 }
 
+                // A Gradle or Maven build that compiles Kotlin is Kotlin's project, one that does not is Java's, and
+                // an Android app is the Android SDK's; loose .kt and .java files go by their extension.
+                if (toolchain.Id is "java" or "kotlin" && IsJvmBuild(files) && KotlinProject.IsKotlinBuild(folder) != (toolchain.Id == "kotlin"))
+                {
+                    continue;
+                }
+
+                if (toolchain.Id == "kotlin" && (mobileRoot || insideMobile))
+                {
+                    continue;
+                }
+
                 var marker = toolchain.ProjectFiles.FirstOrDefault(f => files.Contains(f, StringComparer.OrdinalIgnoreCase)
                     || (f.Contains('/') && File.Exists(Path.Combine(folder, f))));
                 if (marker is not null && !marker.Contains('/'))
@@ -161,6 +186,7 @@ public static class ToolchainProjectDetector
             }
 
             PreferLanguageManifests(result, folder);
+            PreferPhpApps(result, folder);
 
             if (depth >= maxDepth)
             {
@@ -170,7 +196,7 @@ public static class ToolchainProjectDetector
             foreach (var child in folders)
             {
                 var name = Path.GetFileName(child);
-                if (!name.StartsWith('.') && !IgnoredFolders.Contains(name) && (File.GetAttributes(child) & FileAttributes.ReparsePoint) == 0)
+                if (!name.StartsWith('.') && !IgnoredFolders.Contains(name) && !ContentFolders.Contains(name) && (File.GetAttributes(child) & FileAttributes.ReparsePoint) == 0)
                 {
                     queue.Enqueue((child, depth + 1));
                 }
@@ -180,14 +206,20 @@ public static class ToolchainProjectDetector
         return result;
     }
 
+    /// <summary>Whether a folder's files include a Gradle or Maven build file.</summary>
+    private static bool IsJvmBuild(IEnumerable<string> files) =>
+        files.Any(f => f is "pom.xml" or "build.gradle" or "build.gradle.kts" or "settings.gradle" or "settings.gradle.kts");
+
     /// <summary>Whether a project file is a Makefile, rather than a language's own manifest or CMakeLists.txt.</summary>
     /// <param name="marker">The project file's name.</param>
     public static bool IsMakefile(string marker) => marker is "Makefile" or "makefile" or "GNUmakefile";
 
     /// <summary>
-    /// In one folder, a language's own manifest (<c>Cargo.toml</c>, <c>go.mod</c>, <c>package.json</c>,
-    /// <c>pom.xml</c>) comes before a Makefile, so that the folder's first project, the default startup project,
-    /// is the one the Makefile usually drives.
+    /// In one folder, the project a person means to run comes first, so that it is the default startup project: a
+    /// language's own manifest (<c>Cargo.toml</c>, <c>go.mod</c>, <c>package.json</c>, <c>pom.xml</c>) before a
+    /// <c>package.json</c> that only holds tooling (linters, formatters: nothing to start, no <c>main</c> or
+    /// <c>bin</c>), as mdBook's beside its <c>Cargo.toml</c>, and both before a Makefile, which usually drives the
+    /// folder's real project.
     /// </summary>
     private static void PreferLanguageManifests(List<ToolchainProject> result, string folder)
     {
@@ -198,13 +230,73 @@ public static class ToolchainProjectDetector
         }
 
         var inFolder = result.Skip(first).ToList();
-        if (inFolder.Count < 2 || !inFolder.Any(p => p.Toolchain.Id == "cpp" && p.Marker is { } m && IsMakefile(m)))
+        if (inFolder.Count < 2)
+        {
+            return;
+        }
+
+        var ranks = inFolder.ToDictionary(p => p, Rank);
+        if (ranks.Values.All(r => r == 0))
         {
             return;
         }
 
         result.RemoveRange(first, inFolder.Count);
-        result.AddRange(inFolder.OrderBy(p => p.Toolchain.Id == "cpp" && p.Marker is { } marker && IsMakefile(marker) ? 1 : 0));
+        result.AddRange(inFolder.OrderBy(p => ranks[p]));
+    }
+
+    private static int Rank(ToolchainProject project) =>
+        project.Toolchain.Id == "cpp" && project.Marker is { } marker && IsMakefile(marker) ? 2
+        : project.Toolchain.Id == "node" && project.Marker == "package.json" && IsToolingOnly(Path.Combine(project.Directory, "package.json")) ? 1
+        : 0;
+
+    /// <summary>
+    /// Whether a <c>package.json</c> only holds tooling: no <c>start</c>, <c>dev</c> or <c>serve</c> script, and no
+    /// <c>main</c> or <c>bin</c> to run.
+    /// </summary>
+    /// <param name="packageJson">The file.</param>
+    public static bool IsToolingOnly(string packageJson)
+    {
+        try
+        {
+            using var document = System.Text.Json.JsonDocument.Parse(File.ReadAllText(packageJson));
+            var root = document.RootElement;
+            if (root.ValueKind != System.Text.Json.JsonValueKind.Object || root.TryGetProperty("main", out _) || root.TryGetProperty("bin", out _))
+            {
+                return false;
+            }
+
+            return !root.TryGetProperty("scripts", out var scripts) || scripts.ValueKind != System.Text.Json.JsonValueKind.Object
+                || !(scripts.TryGetProperty("start", out _) || scripts.TryGetProperty("dev", out _) || scripts.TryGetProperty("serve", out _));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Text.Json.JsonException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// In one folder, a PHP app comes before the Node.js package beside it, which builds its assets, as a Laravel
+    /// app's <c>package.json</c> runs Vite: the app is what F5 serves.
+    /// </summary>
+    private static void PreferPhpApps(List<ToolchainProject> result, string folder)
+    {
+        // A Laravel app's package.json builds its assets; a Swift package's CMakeLists.txt is its second build.
+        Prefer(result, folder, "php", "node");
+        Prefer(result, folder, "swift", "cpp");
+    }
+
+    /// <summary>Puts a folder's project of one toolchain before its project of another, as the folder's main build.</summary>
+    private static void Prefer(List<ToolchainProject> result, string folder, string first, string second)
+    {
+        var preferred = result.FindIndex(p => p.Directory == folder && p.Toolchain.Id == first);
+        var other = result.FindIndex(p => p.Directory == folder && p.Toolchain.Id == second);
+        if (preferred > other && other >= 0)
+        {
+            var project = result[preferred];
+            result.RemoveAt(preferred);
+            result.Insert(other, project);
+        }
     }
 
     private static bool IsInside(string folder, string ancestor) =>

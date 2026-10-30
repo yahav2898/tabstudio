@@ -59,7 +59,11 @@ public sealed partial class WorkspaceViewModel
             var environment = await Services.PrepareAsync(projectDirectory, profile.Environment ?? "Development", _run.Token);
             if (environment is null)
             {
-                State = IdeState.Failed; StatusText = Services.OperationError ?? Services.Error ?? "Services did not start";
+                var reason = Services.OperationError ?? Services.Error ?? "Services did not start";
+                State = IdeState.Failed; StatusText = reason;
+
+                // In the Output too, where F5's result is looked for: without it F5 seemed to do nothing.
+                Output.WriteLine($"The app was not started because its backing services did not start: {reason.TrimEnd('.')}. They are in the Services panel.", OutputKind.Failure);
                 SelectSideBarPanel(SideBarPanel.Services);
                 return false;
             }

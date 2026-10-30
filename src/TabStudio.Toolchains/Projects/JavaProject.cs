@@ -1,4 +1,6 @@
 using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace TabStudio.Toolchains.Projects;
 
@@ -13,6 +15,40 @@ public static partial class JavaProject
         var files = Directory.Exists(sources) ? Directory.EnumerateFiles(sources, "*.java", SearchOption.AllDirectories) : Directory.EnumerateFiles(directory, "*.java");
         var mains = files.Where(f => MainPattern().IsMatch(File.ReadAllText(f))).Take(2).ToList();
         return mains.Count == 1 ? mains[0] : null;
+    }
+
+    /// <summary>
+    /// Whether a Maven project may have libraries on its runtime classpath, which the build copies next to its
+    /// classes: a dependency in the compile or runtime scope, or a parent that may declare some. A project without them, as
+    /// the template and most first projects are, builds without the dependency plugin, which Maven would otherwise
+    /// download with its own dozens of artifacts before the first build. A file that cannot be read says yes.
+    /// </summary>
+    /// <param name="pom">The project's <c>pom.xml</c>.</param>
+    public static bool MayHaveRuntimeDependencies(string pom)
+    {
+        try
+        {
+            var project = XDocument.Load(pom).Root;
+            if (project is null)
+            {
+                return true;
+            }
+
+            var ns = project.Name.Namespace;
+            if (project.Element(ns + "parent") is not null)
+            {
+                return true;
+            }
+
+            // Profiles can add dependencies too; only the project's own list is read here.
+            return project.Elements(ns + "dependencies").Elements(ns + "dependency")
+                .Any(d => d.Element(ns + "scope")?.Value.Trim() is not ("test" or "provided" or "system"))
+                || project.Elements(ns + "profiles").Any();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or XmlException)
+        {
+            return true;
+        }
     }
 
     /// <summary>A source file's fully qualified class name, including its package.</summary>

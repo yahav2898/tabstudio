@@ -26,12 +26,15 @@ and run it on an Android tablet emulator, and each one installs as an update ove
 | [0.16](releases/0.16.0.md) | Real-world .NET repositories built as the SDK builds them, backing services from Compose files without Docker, and experimental Flutter and Dart. |
 | [0.17](releases/0.17.0.md) | Classic .NET Framework WPF and Windows Forms projects run on the tablet, with Upgrade project, and every panel of 0.15 and 0.16 redesigned to the design system. |
 | [0.18](releases/0.18.0.md) | TabStudio Live: several devices code together in real time with no cloud. Windows Forms apps draw on images, WPF windows fit the preview, packages with native libraries run, and real Python, Java and Rust repositories set up and run with one F5. |
-| [0.19](releases/0.19.0.md) | Every microcontroller, from the tablet: PlatformIO, Arduino, STM32Cube, ESP-IDF, Zephyr, Pico SDK and embedded Rust projects built, uploaded and debugged over USB, with crash, memory and stack analysis. [0.19.1](releases/0.19.1.md) runs source generators from NuGet as the SDK does and shows long operations with their progress. |
+| [0.19](releases/0.19.0.md) | Every microcontroller, from the tablet: PlatformIO, Arduino, STM32Cube, ESP-IDF, Zephyr, Pico SDK and embedded Rust projects built, uploaded and debugged over USB, with crash, memory and stack analysis. [0.19.1](releases/0.19.1.md) runs source generators from NuGet as the SDK does and shows long operations with their progress. [0.19.2](releases/0.19.2.md) runs source generators built from the repository too (projects referenced with `OutputItemType="Analyzer"`), reads MSBuild more as MSBuild does, and fixes what 34 more real repositories ran into. |
+| [0.20](releases/0.20.0.md) | PHP and Laravel, Kotlin beyond Android, Visual Basic compiled in the app like C# with its Windows Forms designer, experimental Swift, and Test Explorer for PHPUnit, JUnit and Swift tests. [0.20.1](releases/0.20.1.md) is a quality release from a full pass over the IDE: no lost work from encodings, saves, renames, Live joins or files changed outside the editor, Kotlin's install no longer deleting other toolchains, more errors in the Error List, pytest in Test Explorer, and phone and touch fixes. |
 
 ## Next
 
-- **Source generators built from the repository.** Projects referenced as analyzers (`OutputItemType="Analyzer"`),
-  compiled and run as generators, as Humanizer's are.
+- **Swift out of experimental:** build times and memory measured on physical ARM64 tablets, and the Terminal entering
+  the glibc environment.
+- **Kotlin Multiplatform** projects beyond the JVM target, and Kotlin Hot Swap through java-debug.
+- **PHP:** Laravel queues and schedules started beside `artisan serve`, and PHPStan in the Error List.
 - **Physical-board verification** of every embedded route, board by board, recorded in the embedded guide.
 - **Hot Reload on Android,** for the user's own code, without slowing the IDE.
 - **Windows Compatibility:** Windows-only apps run on the tablet itself through Wine, for when no PC is at hand.

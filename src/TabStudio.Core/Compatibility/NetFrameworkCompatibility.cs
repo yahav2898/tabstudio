@@ -36,6 +36,9 @@ public static class NetFrameworkCompatibility
         "System.IO.Compression", "System.IO.Compression.FileSystem", "System.Deployment", "System.Configuration",
         "System.Collections", "System.Collections.Immutable", "System.Linq", "System.Threading", "System.Threading.Tasks",
         "System.ValueTuple", "System.Memory", "System.Buffers", "System.Security", "System.Web.Extensions", "System.Json",
+
+        // .NET has System.Web's HttpUtility; package installs add the reference to console apps that never use it.
+        "System.Web",
     };
 
     /// <summary>What the WPF path, OpenSilver, provides besides the base.</summary>
@@ -75,9 +78,14 @@ public static class NetFrameworkCompatibility
             return ["targets the .NET Framework"];
         }
 
-        if (project.Language != ProjectLanguage.CSharp)
+        if (!project.IsRoslynLanguage)
         {
-            return [$"is written in {(project.Language == ProjectLanguage.VisualBasic ? "Visual Basic" : "F#")}, and TabStudio compiles C#"];
+            return [$"is written in {(project.Language == ProjectLanguage.FSharp ? "F#" : "a language TabStudio does not compile")}, and TabStudio compiles C# and Visual Basic"];
+        }
+
+        if (project.IsVisualBasic && project.Kind == ProjectKind.Wpf)
+        {
+            return ["is a WPF app in Visual Basic, and OpenSilver, which runs WPF here, compiles C#"];
         }
 
         var provided = project.Kind switch

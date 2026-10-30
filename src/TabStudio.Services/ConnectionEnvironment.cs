@@ -89,6 +89,10 @@ public static partial class ConnectionEnvironment
             };
             if (connection is not null) result.TryAdd("ConnectionStrings__" + name, connection);
         }
+        foreach (var (variable, service) in project.RunPorts)
+        {
+            if (endpoints.TryGetValue(service, out var published) && published.Count > 0) result[variable] = published[0].Published.ToString(CultureInfo.InvariantCulture);
+        }
         return result;
     }
 

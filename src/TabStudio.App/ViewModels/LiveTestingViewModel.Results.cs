@@ -16,7 +16,7 @@ public sealed partial class LiveTestingViewModel
     {
         ArgumentNullException.ThrowIfNull(document);
         document.LiveTesting = this;
-        if (_engine is { } engine && document.FileType.IsCSharp && !document.IsComparison)
+        if (_engine is { } engine && document.FileType.IsRoslyn && !document.IsComparison)
         {
             document.ShowLiveTestCoverage(engine.Index.GetFile(document.FilePath));
         }
@@ -31,17 +31,17 @@ public sealed partial class LiveTestingViewModel
             return;
         }
 
-        foreach (var document in _host.OpenDocuments.Where(d => d.FileType.IsCSharp && !d.IsComparison))
+        foreach (var document in _host.OpenDocuments.Where(d => d.FileType.IsRoslyn && !d.IsComparison))
         {
             document.ShowLiveTestCoverage(engine.Index.GetFile(document.FilePath));
         }
 
         var projects = _host.TestProjects.Select(p => p.FilePath).ToHashSet(StringComparer.Ordinal);
-        var included = engine.Index.Tests
-            .Where(t => projects.Contains(t.Key.ProjectFilePath) && Inclusion.IsIncluded(t.Key.ProjectFilePath, t.Test))
-            .ToList();
+        var tests = engine.Index.Tests.Where(t => projects.Contains(t.Key.ProjectFilePath)).ToList();
+        var included = tests.Where(t => Inclusion.IsIncluded(t.Key.ProjectFilePath, t.Test)).ToList();
         PassedCount = included.Count(t => t.Result?.Outcome == TestOutcome.Passed);
         FailedCount = included.Count(t => t.Result?.Outcome is TestOutcome.Failed or TestOutcome.Errored);
+        ExcludedCount = tests.Count - included.Count;
     }
 
     /// <inheritdoc />

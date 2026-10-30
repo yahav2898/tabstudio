@@ -25,19 +25,29 @@ public sealed class CompatibilityDoctorTests
     }
 
     [Theory]
-    [InlineData(ProjectKind.Test)]
     [InlineData(ProjectKind.AspNetCore)]
     [InlineData(ProjectKind.BlazorWebApp)]
     [InlineData(ProjectKind.BlazorWebAssembly)]
-    [InlineData(ProjectKind.WinForms)]
     [InlineData(ProjectKind.Uno)]
     [InlineData(ProjectKind.WinUI)]
-    public void Tests_and_apps_in_another_language_are_planned_not_ready(ProjectKind kind)
+    public void Apps_in_Visual_Basic_that_need_a_CSharp_only_framework_are_planned_not_ready(ProjectKind kind)
     {
         var report = CompatibilityDoctor.Diagnose(Project(kind, ProjectLanguage.VisualBasic));
 
         Assert.Equal(CompatibilityStatus.Planned, report.Status);
         Assert.Contains("Visual Basic", report.Explanation, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData(ProjectKind.ConsoleApp, RunHost.InProcess)]
+    [InlineData(ProjectKind.Test, RunHost.InProcess)]
+    [InlineData(ProjectKind.WinForms, RunHost.AndroidView)]
+    public void Visual_Basic_console_apps_tests_and_Windows_Forms_apps_are_ready_like_CSharp(ProjectKind kind, RunHost host)
+    {
+        var report = CompatibilityDoctor.Diagnose(Project(kind, ProjectLanguage.VisualBasic));
+
+        Assert.Equal(CompatibilityStatus.Ready, report.Status);
+        Assert.Equal(host, report.Host);
     }
 
     [Theory]
@@ -61,6 +71,22 @@ public sealed class CompatibilityDoctorTests
         Assert.Equal(host, report.Host);
         Assert.Equal(status, report.Status);
         Assert.False(string.IsNullOrWhiteSpace(report.Explanation));
+    }
+
+    /// <summary>
+    /// The Doctor says Planned only for what docs/ROADMAP.md commits to. It promised worker services and MAUI apps in an
+    /// update, which the roadmap does not; their rows now say what is true today.
+    /// </summary>
+    [Theory]
+    [InlineData(ProjectKind.Worker)]
+    [InlineData(ProjectKind.Maui)]
+    [InlineData(ProjectKind.Benchmark)]
+    public void Kinds_the_roadmap_does_not_commit_to_are_not_reported_planned(ProjectKind kind)
+    {
+        var report = CompatibilityDoctor.Diagnose(Project(kind));
+
+        Assert.Equal(CompatibilityStatus.Unsupported, report.Status);
+        Assert.DoesNotContain(" will ", report.Explanation, StringComparison.Ordinal);
     }
 
     [Fact]

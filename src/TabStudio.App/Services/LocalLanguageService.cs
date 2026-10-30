@@ -86,13 +86,15 @@ public sealed class LocalLanguageService : ILanguageService
     public void SetConcurrentBuild(bool enabled) => _host.SetConcurrentBuild(enabled);
 
     /// <inheritdoc />
-    public void TrimMemory()
+    public Task TrimMemoryAsync()
     {
         _host.TrimMemory();
         if (_coverage.IsValueCreated)
         {
             _coverage.Value.Clear();
         }
+
+        return _host.WhenReloadedAsync();
     }
 
     /// <inheritdoc />
@@ -107,14 +109,14 @@ public sealed class LocalLanguageService : ILanguageService
         // A WPF project compiles against OpenSilver, which TabStudio restores in place of the Windows Desktop pack.
         var restored = WpfProject.UsesWpf(project) ? OpenSilverPackages.WithOpenSilver(project) : project;
         var result = await Task.Run(() => _restorer.RestoreAsync(restored, progress, cancellationToken), cancellationToken).ConfigureAwait(false);
-        if (result.Success)
-        {
-            _host.SetPackageReferences(project.FilePath, result.CompileAssemblies);
-            _host.SetAnalyzers(project.FilePath, result.Analyzers);
-            _host.SetPackageBuildFiles(project.FilePath, result.BuildFiles);
-            _runtimeAssemblies[project.FilePath] = result.RuntimeFiles;
-        }
 
+        // As in NuGet and Visual Studio, a restore with errors keeps what it restored: one package that is missing or
+        // conflicts must not take the others away, or every use of them becomes an error. The restore's errors stay
+        // in its diagnostics, and builds report TS2003 only for the references that really are missing.
+        _host.SetPackageReferences(project.FilePath, result.CompileAssemblies, result.UnrestoredReferences);
+        _host.SetAnalyzers(project.FilePath, result.Analyzers);
+        _host.SetPackageBuildFiles(project.FilePath, result.BuildFiles);
+        _runtimeAssemblies[project.FilePath] = result.RuntimeFiles;
         return result;
     }
 

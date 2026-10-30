@@ -27,8 +27,11 @@ public sealed record ExtractionResult(int Files, int Folders, int Links, int Har
 /// </remarks>
 public static class ArchiveExtractor
 {
-    /// <summary>Unpacks an archive, choosing the format from the file name.</summary>
-    /// <param name="archive">A <c>.tar.gz</c>, <c>.tgz</c>, <c>.zip</c>, <c>.whl</c> or <c>.vsix</c> file.</param>
+    /// <summary>
+    /// Unpacks an archive, choosing the format from the file name. A program that is one file, such as a PHP archive
+    /// (<c>.phar</c>) or a Java archive (<c>.jar</c>), is not unpacked: it is copied into the folder as it is.
+    /// </summary>
+    /// <param name="archive">A <c>.tar.gz</c>, <c>.tgz</c>, <c>.zip</c>, <c>.whl</c>, <c>.vsix</c>, <c>.phar</c> or <c>.jar</c> file.</param>
     /// <param name="destination">The folder to unpack into; created when missing.</param>
     /// <param name="cancellationToken">Stops unpacking.</param>
     /// <exception cref="InvalidDataException">The archive is damaged, or an entry would land outside the folder.</exception>
@@ -36,9 +39,36 @@ public static class ArchiveExtractor
     {
         ArgumentNullException.ThrowIfNull(archive);
         var name = archive.ToUpperInvariant();
+        if (name.EndsWith(".PHAR", StringComparison.Ordinal) || name.EndsWith(".JAR", StringComparison.Ordinal))
+        {
+            return CopySingleFileAsync(archive, destination, cancellationToken);
+        }
+
         return name.EndsWith(".ZIP", StringComparison.Ordinal) || name.EndsWith(".WHL", StringComparison.Ordinal) || name.EndsWith(".VSIX", StringComparison.Ordinal)
             ? Task.Run(() => ExtractZip(archive, destination, cancellationToken), cancellationToken)
             : ExtractTarGzAsync(archive, destination, cancellationToken);
+    }
+
+    /// <summary>Copies a one-file program into a folder, keeping its name, as an executable file.</summary>
+    private static async Task<ExtractionResult> CopySingleFileAsync(string file, string destination, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(destination);
+        var root = Path.GetFullPath(destination);
+        Directory.CreateDirectory(root);
+        var target = Path.Combine(root, Path.GetFileName(file));
+        await using (var source = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read, 81920, useAsync: true))
+        await using (var copy = new FileStream(target, FileMode.Create, FileAccess.Write, FileShare.None, 81920, useAsync: true))
+        {
+            await source.CopyToAsync(copy, cancellationToken).ConfigureAwait(false);
+        }
+
+        if (!OperatingSystem.IsWindows())
+        {
+            File.SetUnixFileMode(target, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute
+                | UnixFileMode.GroupRead | UnixFileMode.GroupExecute | UnixFileMode.OtherRead | UnixFileMode.OtherExecute);
+        }
+
+        return new ExtractionResult(1, 0, 0, 0);
     }
 
     /// <summary>Unpacks a gzip-compressed tar archive.</summary>
@@ -150,8 +180,10 @@ public static class ArchiveExtractor
                 files++;
             }
         }
-        catch (Exception ex) when (ex is InvalidDataException or IOException and not DirectoryNotFoundException)
+        catch (Exception ex) when (ex is InvalidDataException or IOException and not DirectoryNotFoundException
+            && !(ex is IOException io && Installation.ToolchainInstallException.IsDiskFull(io)))
         {
+            // Storage that fills up is not a damaged archive: called damaged, the verified download was deleted.
             throw new InvalidDataException($"The archive {Path.GetFileName(archive)} is damaged: {ex.Message}", ex);
         }
 

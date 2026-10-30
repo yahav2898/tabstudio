@@ -39,6 +39,193 @@ public sealed class PythonPackagesTests : IDisposable
         Assert.Equal("ruamel-yaml-clib", PythonRequirements.Normalize("ruamel.yaml_clib"));
     }
 
+    /// <summary>nsidnev/fastapi-realworld-example-app's poetry.lock (Poetry 1.1), abridged.</summary>
+    private const string RealWorldPoetryLock = """
+        [[package]]
+        name = "asyncpg"
+        version = "0.26.0"
+        description = "An asyncio PostgreSQL driver"
+        category = "main"
+        optional = false
+        python-versions = ">=3.6.0"
+
+        [package.extras]
+        dev = ["Cython (>=0.29.24,<0.30.0)", "pytest (>=6.0)"]
+
+        [[package]]
+        name = "black"
+        version = "22.6.0"
+        description = "The uncompromising code formatter."
+        category = "dev"
+        optional = false
+        python-versions = ">=3.6.2"
+
+        [package.dependencies]
+        click = ">=8.0.0"
+
+        [[package]]
+        name = "Unidecode"
+        version = "1.3.4"
+        description = "ASCII transliterations of Unicode text"
+        category = "main"
+        optional = false
+        python-versions = ">=3.5"
+
+        [[package]]
+        name = "uvicorn"
+        version = "0.18.2"
+        description = "The lightning-fast ASGI server."
+        category = "main"
+        optional = false
+        python-versions = ">=3.7"
+
+        [package.dependencies]
+        click = ">=7.0"
+        h11 = ">=0.8"
+
+        [[package]]
+        name = "localdep"
+        version = "0.1.0"
+        description = ""
+        category = "main"
+        optional = false
+        python-versions = "*"
+        develop = true
+
+        [package.source]
+        type = "directory"
+        url = "../localdep"
+
+        [metadata]
+        lock-version = "1.1"
+        python-versions = "^3.9"
+        content-hash = "0123"
+
+        [metadata.files]
+        asyncpg = [
+            {file = "asyncpg-0.26.0-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:00"},
+        ]
+        """;
+
+    /// <summary>A uv.lock, abridged: the project itself, an index package and a Git one.</summary>
+    private const string UvLock = """
+        version = 1
+        requires-python = ">=3.10"
+
+        [[package]]
+        name = "my-api"
+        version = "0.1.0"
+        source = { editable = "." }
+        dependencies = [
+            { name = "fastapi" },
+        ]
+
+        [package.metadata]
+        requires-dist = [{ name = "fastapi", specifier = ">=0.110" }]
+
+        [[package]]
+        name = "pydantic-core"
+        version = "2.16.3"
+        source = { registry = "https://pypi.org/simple" }
+        sdist = { url = "https://files.pythonhosted.org/pydantic_core-2.16.3.tar.gz", hash = "sha256:00", size = 368930 }
+        wheels = [
+            { url = "https://files.pythonhosted.org/pydantic_core-2.16.3-cp312-none-musllinux_1_1_aarch64.whl", hash = "sha256:00", size = 2000000 },
+        ]
+
+        [[package]]
+        name = "forked"
+        version = "1.0.0"
+        source = { git = "https://example.org/forked.git?rev=main#0123" }
+        """;
+
+    [Fact]
+    public void Lock_files_pin_the_projects_index_packages_but_not_its_own_or_development_ones()
+    {
+        Assert.Equal(
+            ["asyncpg 0.26.0", "unidecode 1.3.4", "uvicorn 0.18.2"],
+            PythonDependencies.LockPinsOf(RealWorldPoetryLock).Select(p => $"{p.Name} {p.Version}"));
+        Assert.Equal(["pydantic-core 2.16.3"], PythonDependencies.LockPinsOf(UvLock).Select(p => $"{p.Name} {p.Version}"));
+        Assert.Empty(PythonDependencies.LockPinsOf("not toml at all\n"));
+    }
+
+    [Fact]
+    public void A_project_without_requirements_txt_is_pinned_by_its_lock_files()
+    {
+        _folder.Write("pyproject.toml", "[tool.poetry.dependencies]\npython = \"^3.9\"\nasyncpg = \"^0.26.0\"\n");
+        _folder.Write("poetry.lock", RealWorldPoetryLock);
+        _folder.Write("uv.lock", UvLock);
+
+        var pins = PythonDependencies.Pins(_folder.Path, _folder.Resolve("pyproject.toml"));
+
+        Assert.Equal(["asyncpg 0.26.0", "unidecode 1.3.4", "uvicorn 0.18.2", "pydantic-core 2.16.3"], pins.Select(p => $"{p.Name} {p.Version}"));
+
+        // A requirements manifest's own pins come first and keep their version.
+        _folder.Write("requirements.txt", "asyncpg==0.29.0\n");
+        Assert.Equal("0.29.0", PythonDependencies.Pins(_folder.Path, _folder.Resolve("requirements.txt")).Single(p => p.Name == "asyncpg").Version);
+    }
+
+    [Fact]
+    public void The_packages_a_project_depends_on_are_read_from_each_manifest()
+    {
+        Assert.Equal(
+            ["fastapi", "uvicorn", "pytest", "ruff", "httpx"],
+            PythonDependencies.PyProjectNamesOf("""
+                [project]
+                name = "api"
+                requires-python = ">=3.10"
+                dependencies = [
+                    "fastapi>=0.110",
+                    "uvicorn[standard]>=0.29; python_version >= '3.10'",
+                ]
+
+                [project.optional-dependencies]
+                test = ["pytest"]
+
+                [dependency-groups]
+                dev = ["ruff", "httpx>=0.27"]
+                """));
+        Assert.Equal(
+            ["uvicorn", "fastapi", "pydantic", "black"],
+            PythonDependencies.PyProjectNamesOf("""
+                [tool.poetry.dependencies]
+                python = "^3.9"
+                uvicorn = "^0.18.2"
+                fastapi = "^0.79.1"
+                pydantic = { version = "^1.9", extras = ["email", "dotenv"] }
+
+                [tool.poetry.group.dev.dependencies]
+                black = "^22.6.0"
+                """));
+        Assert.Equal(["flask", "gunicorn"], PythonDependencies.PipfileNamesOf("[packages]\nFlask = \"*\"\n\n[dev-packages]\ngunicorn = \"*\"\n\n[requires]\npython_version = \"3.11\"\n"));
+
+        _folder.Write("requirements/dev.txt", "Uvicorn[standard]>=0.29\n");
+        Assert.True(PythonDependencies.DependsOn(_folder.Path, "uvicorn"));
+        Assert.False(PythonDependencies.DependsOn(_folder.Path, "fastapi"));
+    }
+
+    [Fact]
+    public void A_release_with_Linux_wheels_only_for_another_processor_limits_the_version_to_them()
+    {
+        // asyncpg 0.26.0: musl and glibc wheels for x86_64 up to CPython 3.10, none for aarch64; its C source does
+        // not build on 3.12, so the tablet takes 3.10 and compiles it there.
+        var asyncpg = Release("asyncpg", "0.26.0", ">=3.6.0",
+            "asyncpg-0.26.0-cp310-cp310-macosx_10_9_x86_64.whl",
+            "asyncpg-0.26.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+            "asyncpg-0.26.0-cp310-cp310-musllinux_1_1_x86_64.whl",
+            "asyncpg-0.26.0-cp39-cp39-musllinux_1_1_x86_64.whl",
+            "asyncpg-0.26.0-cp310-cp310-win_amd64.whl",
+            "asyncpg-0.26.0.tar.gz");
+
+        Assert.True(PythonWheels.InstallsWithoutBuilding(asyncpg, 10, Tablet));
+        Assert.False(PythonWheels.InstallsWithoutBuilding(asyncpg, 12, Tablet));
+        var newest = PythonWheels.NewestSupported([asyncpg, Release("uvicorn", "0.18.2", ">=3.7", "uvicorn-0.18.2-py3-none-any.whl")], Tablet, [9, 10, 11, 12, 13, 14])!.Value;
+        Assert.Equal(10, newest.Minor);
+        Assert.Equal(["asyncpg"], newest.Limiting.Select(r => r.Name));
+
+        // Wheels for Windows and macOS alone say nothing about building on Linux.
+        Assert.True(PythonWheels.InstallsWithoutBuilding(Release("winonly", "1.0", null, "winonly-1.0-cp310-cp310-win_amd64.whl"), 12, Tablet));
+    }
+
     [Fact]
     public void A_release_with_wheels_for_this_platform_up_to_a_version_installs_from_a_wheel_only_there()
     {

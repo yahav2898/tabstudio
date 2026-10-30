@@ -126,12 +126,16 @@ class RealRepositoryManifestTests(unittest.TestCase):
             repository = root / "source"
             repository.mkdir()
             entry = next(e for e in RUNNER.entries() if e["kind"] == "esp-idf")
+            # The example's CMakeLists.txt names the firmware.
+            (repository / entry["project"]).mkdir(parents=True)
+            (repository / entry["project"] / "CMakeLists.txt").write_text("project(hello_world)\n", encoding="utf-8")
             runner = RUNNER.Runner(entry, root / "work", root / "out")
-            with patch.object(runner, "clone", return_value=repository), patch.object(runner, "run") as command, patch.object(runner, "require"), patch.dict(RUNNER.os.environ, {"PYTHONSAFEPATH": "1"}):
+            with patch.object(runner, "clone", return_value=repository), patch.object(runner, "run") as command, patch.object(runner, "require") as require, patch.dict(RUNNER.os.environ, {"PYTHONSAFEPATH": "1"}):
                 runner.build()
             self.assertEqual(2, command.call_count)
             for call in command.call_args_list:
                 self.assertNotIn("PYTHONSAFEPATH", call.args[2])
+            self.assertEqual("hello_world.elf", require.call_args.args[0].name)
 
     def test_every_child_receives_import_compatible_environment_without_telemetry(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -144,3 +148,24 @@ class RealRepositoryManifestTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FirmwareNameTests(unittest.TestCase):
+    """The firmware a build must produce is named after the project, never after one known example."""
+
+    def test_esp_idf_firmware_is_named_after_the_cmake_project(self):
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            for text, name in [
+                ("cmake_minimum_required(VERSION 3.16)\ninclude($ENV{IDF_PATH}/tools/cmake/project.cmake)\nproject(blink)\n", "blink"),
+                ("project(hello_world)\n", "hello_world"),
+                ("  PROJECT( led_strip_demo LANGUAGES C)\n", "led_strip_demo"),
+            ]:
+                (folder / "CMakeLists.txt").write_text(text, encoding="utf-8")
+                self.assertEqual(name, RUNNER.cmake_project_name(folder))
+
+    def test_a_cmake_file_without_a_project_is_an_error(self):
+        with tempfile.TemporaryDirectory() as directory:
+            (Path(directory) / "CMakeLists.txt").write_text("idf_component_register(SRCS main.c)\n", encoding="utf-8")
+            with self.assertRaises(RuntimeError):
+                RUNNER.cmake_project_name(Path(directory))

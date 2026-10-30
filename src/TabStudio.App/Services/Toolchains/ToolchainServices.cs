@@ -31,6 +31,7 @@ public sealed class ToolchainServices : IDisposable
     private readonly HttpClient? _http;
     private readonly AlpinePackageManager? _packages;
     private readonly EmbeddedGlibcToolchainInstaller? _embeddedInstaller;
+    private readonly GlibcToolchainInstaller? _glibcInstaller;
     private readonly Lock _gate = new();
     private HttpClient? _hostHttp;
     private Task? _firstRefresh;
@@ -56,8 +57,12 @@ public sealed class ToolchainServices : IDisposable
         var downloader = new Downloader(_http);
         Environment = new AlpineEnvironment(Path.Combine(paths.Root, "Toolchains", "linux"), catalog.Linux, Platform, downloader, [paths.Projects]);
         _packages = new AlpinePackageManager(Environment, _http, downloader, new ApkTool(Environment.Runtime));
+        // Swift and JetBrains' Kotlin language server are built for glibc: they run in a shared Ubuntu environment
+        // beside Alpine (Toolchains/glibc), as Flutter and the embedded SDKs run in their own.
+        _glibcInstaller = new GlibcToolchainInstaller(
+            new LinuxToolchainInstaller(Environment, _packages, downloader), Path.Combine(paths.Root, "Toolchains", "glibc"), Platform, downloader, [paths.Projects]);
         _embeddedInstaller = new EmbeddedGlibcToolchainInstaller(new FlutterToolchainInstaller(
-            new LinuxToolchainInstaller(Environment, _packages, downloader), Path.Combine(paths.Root, "Toolchains", "flutter"), Platform, downloader, [paths.Projects]),
+            _glibcInstaller, Path.Combine(paths.Root, "Toolchains", "flutter"), Platform, downloader, [paths.Projects]),
             Path.Combine(paths.Root, "Toolchains", "embedded-glibc"), Platform, downloader, [paths.Projects]);
         Manager = new ToolchainManager(catalog, _embeddedInstaller);
     }
@@ -345,6 +350,7 @@ public sealed class ToolchainServices : IDisposable
     {
         Manager.Dispose();
         _embeddedInstaller?.Dispose();
+        _glibcInstaller?.Dispose();
         _packages?.Dispose();
         _http?.Dispose();
         _hostHttp?.Dispose();

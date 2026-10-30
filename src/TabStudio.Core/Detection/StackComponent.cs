@@ -113,6 +113,27 @@ public enum StackKind
 
     /// <summary>Keil, IAR or Atmel vendor project requiring a reviewed GCC import.</summary>
     EmbeddedVendor,
+
+    /// <summary>PHP: a <c>composer.json</c> or <c>.php</c> files.</summary>
+    Php,
+
+    /// <summary>Laravel: <c>laravel/framework</c> in <c>composer.json</c>.</summary>
+    Laravel,
+
+    /// <summary>Symfony: <c>symfony/framework-bundle</c> in <c>composer.json</c>.</summary>
+    Symfony,
+
+    /// <summary>Slim: <c>slim/slim</c> in <c>composer.json</c>.</summary>
+    Slim,
+
+    /// <summary>Swift: a SwiftPM <c>Package.swift</c> or <c>.swift</c> files.</summary>
+    Swift,
+
+    /// <summary>Vapor: a Swift package that depends on <c>vapor/vapor</c>.</summary>
+    Vapor,
+
+    /// <summary>Visual Basic: a <c>.vbproj</c> project.</summary>
+    VisualBasic,
 }
 
 /// <summary>
