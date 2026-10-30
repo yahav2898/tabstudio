@@ -30,6 +30,11 @@ internal static class RazorCompiler
             optimize,
             project is null ? null : SdkGenerators.InterceptorsNamespaces(project),
             CSharpCompiler.LanguageVersionOf(project)));
+        if (CSharpCompiler.DefinedSymbols(project) is { Count: > 0 } defined)
+        {
+            options = options.WithPreprocessorSymbols(options.PreprocessorSymbolNames.Concat(defined).Distinct(StringComparer.Ordinal).ToArray());
+        }
+
         return project is not null && RazorProjects.UsesRazor(project)
             ? options.WithFeatures([.. options.Features, new(RoslynTokenizerFeature, "true")])
             : options;

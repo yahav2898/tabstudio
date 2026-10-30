@@ -35,6 +35,45 @@ public sealed class RealRepositoryProjectTests : IDisposable
     }
 
     [Fact]
+    public async Task A_projects_DefineConstants_choose_its_conditional_code()
+    {
+        // Humanizer's tests define SYSTEM_COLLECTIONS_IMMUTABLE_MAJOR_VERSION_LE_7 and #error otherwise: C# projects
+        // never got their DefineConstants, so the build stopped at the #error.
+        _temp.Write("App/App.csproj", Project(exe: true, properties: "<DefineConstants>$(DefineConstants);FEATURE_X, LEGACY_API</DefineConstants>"));
+        _temp.Write("App/Program.cs", """
+            #if FEATURE_X && LEGACY_API && DEBUG
+            System.Console.WriteLine("feature");
+            #else
+            #error The project's symbols are missing.
+            #endif
+            """);
+        Load("App/App.csproj");
+
+        var build = await BuildAsync("App/App.csproj");
+
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+    }
+
+    [Fact]
+    public async Task NoWarn_and_WarningsAsErrors_apply_as_csc_reads_them()
+    {
+        // AutoMapper's tests turn off 649 and 618; TabStudio showed their 48 CS0649 warnings all the same.
+        _temp.Write("App/App.csproj", Project(properties: "<NoWarn>$(NoWarn);649;CS0618</NoWarn><WarningsAsErrors>CS0168</WarningsAsErrors>"));
+        _temp.Write("App/Code.cs", """
+            namespace App;
+            public sealed class Holder { private int _never; public int Read() => _never; }
+            public static class Old { [System.Obsolete("old")] public static void Gone() { } public static void Call() { Gone(); int unused; } }
+            """);
+        Load("App/App.csproj");
+
+        var build = await BuildAsync("App/App.csproj");
+
+        Assert.DoesNotContain(build.Diagnostics, d => d.Id is "CS0649" or "CS0618");
+        Assert.Contains(build.Diagnostics, d => d.Id == "CS0168" && d.Severity == DiagnosticSeverityLevel.Error);
+        Assert.False(build.Success);
+    }
+
+    [Fact]
     public async Task Build_only_references_private_references_and_DisableTransitiveProjectReferences_are_not_compiled_against()
     {
         Library("Core", "namespace Core; public static class Answer { public const int Value = 42; }");

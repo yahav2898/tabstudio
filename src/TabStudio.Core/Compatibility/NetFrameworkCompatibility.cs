@@ -36,6 +36,9 @@ public static class NetFrameworkCompatibility
         "System.IO.Compression", "System.IO.Compression.FileSystem", "System.Deployment", "System.Configuration",
         "System.Collections", "System.Collections.Immutable", "System.Linq", "System.Threading", "System.Threading.Tasks",
         "System.ValueTuple", "System.Memory", "System.Buffers", "System.Security", "System.Web.Extensions", "System.Json",
+
+        // .NET has System.Web's HttpUtility; package installs add the reference to console apps that never use it.
+        "System.Web",
     };
 
     /// <summary>What the WPF path, OpenSilver, provides besides the base.</summary>

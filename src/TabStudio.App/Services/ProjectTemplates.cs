@@ -87,9 +87,27 @@ public sealed partial class ProjectTemplates
             return "Use a name of 64 characters or fewer.";
         }
 
-        return ProjectNamePattern().IsMatch(name)
-            ? null
-            : "Use letters, digits, dots and underscores, starting with a letter.";
+        if (!ProjectNamePattern().IsMatch(name))
+        {
+            return "Use letters, digits, dots and underscores, starting with a letter.";
+        }
+
+        // The name becomes the namespace: a keyword ("class") does not compile, and "Console" or "System" hide
+        // .NET's own, so the template's Console.WriteLine finds the namespace instead.
+        foreach (var part in name.Split('.'))
+        {
+            if (Microsoft.CodeAnalysis.CSharp.SyntaxFacts.GetKeywordKind(part) != Microsoft.CodeAnalysis.CSharp.SyntaxKind.None)
+            {
+                return $"\"{part}\" is a C# keyword. Choose another name.";
+            }
+
+            if (part is "System" or "Console")
+            {
+                return $"\"{part}\" would hide .NET's {part}. Choose another name, such as My{part}.";
+            }
+        }
+
+        return null;
     }
 
     /// <summary>Creates a new solution, or a notebook, from a template.</summary>
