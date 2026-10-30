@@ -53,6 +53,8 @@ public sealed partial class TabStudioApplication : Application
         ThemeSync.Start(this);
         // Hidden spinners and progress bars stop animating, so an idle IDE draws no frames.
         HiddenAnimations.Start();
+        // A long press on a button names it, as a hover does with a mouse.
+        Controls.TouchToolTips.Start();
         if (ApplicationLifetime is not null)
         {
             Services.GetRequiredService<AppearanceService>().Apply();
