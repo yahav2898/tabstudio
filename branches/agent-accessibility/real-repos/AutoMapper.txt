@@ -10,7 +10,7 @@ Compatibility Doctor:
   docs: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
   docs: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
 Startup project: Benchmark
-Built in 10.6 s: 0 errors, 0 warnings
+Built in 6.1 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   emptyfiles 4.4.0
       build/EmptyFiles.targets
@@ -230,19 +230,19 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Output:
-Build started at 18:25:13...
+Build started at 18:47:29...
 1>------ Build started: Project: AutoMapper, Configuration: Debug ------
-1>AutoMapper -> compiled in memory (303.5 KB, 391 ms)
+1>AutoMapper -> compiled in memory (303.5 KB, 282 ms)
 2>------ Build started: Project: AutoMapper.DI.Tests, Configuration: Debug ------
-2>AutoMapper.DI.Tests -> compiled in memory (26.5 KB, 424 ms)
+2>AutoMapper.DI.Tests -> compiled in memory (26.5 KB, 243 ms)
 3>------ Build started: Project: Benchmark, Configuration: Debug ------
-3>Benchmark -> compiled in memory (24 KB, 373 ms)
+3>Benchmark -> compiled in memory (24 KB, 328 ms)
 4>------ Build started: Project: AutoMapper.IntegrationTests, Configuration: Debug ------
-> /home/runner/work/_temp/real-repos/AutoMapper/docs/.venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
-4>AutoMapper.IntegrationTests -> compiled in memory (572.5 KB, 1107 ms)
+4>AutoMapper.IntegrationTests -> compiled in memory (572.5 KB, 790 ms)
 5>------ Build started: Project: TestApp, Configuration: Debug ------
-5>TestApp -> compiled in memory (7 KB, 414 ms)
+5>TestApp -> compiled in memory (7 KB, 244 ms)
 6>------ Build started: Project: AutoMapper.UnitTests, Configuration: Debug ------
-6>AutoMapper.UnitTests -> compiled in memory (1773 KB, 2455 ms)
+> /home/runner/work/_temp/real-repos/AutoMapper/docs/.venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
+6>AutoMapper.UnitTests -> compiled in memory (1773 KB, 1683 ms)
 ========== Build: 6 succeeded, 0 failed ==========
 

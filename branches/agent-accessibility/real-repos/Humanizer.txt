@@ -1,5 +1,5 @@
 Humanizer at 4574b93883bf48e3f0f3bca73297054537317ab2
-Opened /home/runner/work/_temp/real-repos/Humanizer/Humanizer.slnx in 0.7 s
+Opened /home/runner/work/_temp/real-repos/Humanizer/Humanizer.slnx in 1.1 s
 Compatibility Doctor:
   Benchmarks: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
   Humanizer.Analyzers.Roslyn38: Library via Built with its users - A library is compiled together with the projects that reference it.
@@ -16,7 +16,7 @@ Compatibility Doctor:
   Humanizer.Docs.LanguageCoverage: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   website: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
 Startup project: Humanizer.UnicodeDataGenerator
-Built in 28.6 s: 11 errors, 6 warnings
+Built in 22.3 s: 11 errors, 6 warnings
   6 x CS0234
       [Humanizer.Analyzers.Tests.Roslyn38] Verifiers.cs(23,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
       [Humanizer.Analyzers.Tests.Roslyn38] Verifiers.cs(47,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
@@ -835,19 +835,19 @@ Packages with analyzers or MSBuild files:
       buildTransitive/xunit.v3.core.mtp-v2.props
       buildTransitive/xunit.v3.core.mtp-v2.targets
 Output:
-Build started at 18:26:27...
+Build started at 18:48:26...
 1>------ Build started: Project: Humanizer.Analyzers.Roslyn38, Configuration: Debug ------
-1>Humanizer.Analyzers.Roslyn38 -> compiled in memory (20 KB, 395 ms)
+1>Humanizer.Analyzers.Roslyn38 -> compiled in memory (20 KB, 285 ms)
 2>------ Build started: Project: Humanizer.Analyzers.Roslyn48, Configuration: Debug ------
-2>Humanizer.Analyzers.Roslyn48 -> compiled in memory (20 KB, 84 ms)
+2>Humanizer.Analyzers.Roslyn48 -> compiled in memory (20 KB, 23 ms)
 3>------ Build started: Project: Humanizer.Analyzers.Roslyn414, Configuration: Debug ------
-3>Humanizer.Analyzers.Roslyn414 -> compiled in memory (20 KB, 57 ms)
+3>Humanizer.Analyzers.Roslyn414 -> compiled in memory (20 KB, 43 ms)
 4>------ Build started: Project: Humanizer.SourceGenerators, Configuration: Debug ------
-4>Humanizer.SourceGenerators -> compiled in memory (519 KB, 575 ms)
+4>Humanizer.SourceGenerators -> compiled in memory (519 KB, 481 ms)
 5>------ Build started: Project: Humanizer, Configuration: Debug ------
-5>Humanizer -> compiled in memory (4294.5 KB, 4344 ms)
+5>Humanizer -> compiled in memory (4294.5 KB, 3545 ms)
 6>------ Build started: Project: Benchmarks, Configuration: Debug ------
-6>Benchmarks -> compiled in memory (36 KB, 2586 ms)
+6>Benchmarks -> compiled in memory (36 KB, 1850 ms)
 7>------ Build started: Project: Humanizer.Analyzers.Tests.Roslyn38, Configuration: Debug ------
 7>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
 7>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
@@ -885,12 +885,12 @@ Build started at 18:26:27...
 9>WordsToNumberMigrationCodeFixTests.cs(287,21): error CS1061: 'AnalysisContext' does not contain a definition for 'ConfigureGeneratedCodeAnalysis' and no accessible extension method 'ConfigureGeneratedCodeAnalysis' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
 9>WordsToNumberMigrationCodeFixTests.cs(287,52): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
 10>------ Build started: Project: Humanizer.SourceGenerators.Tests, Configuration: Debug ------
-10>Humanizer.SourceGenerators.Tests -> compiled in memory (359.5 KB, 3480 ms)
+10>Humanizer.SourceGenerators.Tests -> compiled in memory (359.5 KB, 2636 ms)
 11>------ Build started: Project: Humanizer.Tests, Configuration: Debug ------
-11>Humanizer.Tests -> compiled in memory (2837.5 KB, 5425 ms)
+11>Humanizer.Tests -> compiled in memory (2837.5 KB, 4292 ms)
 12>------ Build started: Project: Humanizer.UnicodeDataGenerator, Configuration: Debug ------
-12>Humanizer.UnicodeDataGenerator -> compiled in memory (35.5 KB, 81 ms)
+12>Humanizer.UnicodeDataGenerator -> compiled in memory (35.5 KB, 93 ms)
 13>------ Build started: Project: Humanizer.Docs.LanguageCoverage, Configuration: Debug ------
-13>Humanizer.Docs.LanguageCoverage -> compiled in memory (14.5 KB, 538 ms)
+13>Humanizer.Docs.LanguageCoverage -> compiled in memory (14.5 KB, 463 ms)
 ========== Build: 10 succeeded, 3 failed ==========
 
