@@ -134,6 +134,16 @@ public sealed partial class WorkspaceViewModel
     }
 
     /// <summary>
+    /// Whether a toolchain project is the build of the folder opened as the workspace, not of a solution: at its root,
+    /// with no .NET project that F5 would start, or only one in a tests or tools folder (bat's tests/syntax-tests hold
+    /// a console.csproj to highlight).
+    /// </summary>
+    private static bool IsRootToolchainProjectOfFolder(Workspace workspace, ToolchainProject project) =>
+        workspace.Solution is null
+        && (workspace.DefaultStartupProject is not { } dotnet || ProjectClassifier.IsInAuxiliaryFolder(dotnet, workspace.RootDirectory))
+        && string.Equals(Path.GetFullPath(project.Directory).TrimEnd(Path.DirectorySeparatorChar), Path.GetFullPath(workspace.RootDirectory).TrimEnd(Path.DirectorySeparatorChar), StringComparison.Ordinal);
+
+    /// <summary>
     /// Finds the workspace's toolchain projects after it loads or changes: they join the toolbar's startup items and
     /// the Compatibility Doctor, and become visible to the toolchains' programs.
     /// </summary>
@@ -160,10 +170,13 @@ public sealed partial class WorkspaceViewModel
         {
             StartupProject = remembered.Info;
         }
-        else if (StartupProject is null && _toolchainProjects.Count > 0 && workspace.Projects.Count == 0)
+        else if (_toolchainProjects.Count > 0 && (StartupProject is null || StartupProject == workspace.DefaultStartupProject)
+            && (workspace.Projects.Count == 0 || IsRootToolchainProjectOfFolder(workspace, _toolchainProjects[0].Project)))
         {
             // In a .NET solution, F5 starts one of its projects, as in Visual Studio: a docs site or a script folder
-            // beside it, such as RestSharp's docs, is there to pick, not the default.
+            // beside it, such as RestSharp's docs, is there to pick, not the default. A folder whose own build is a
+            // toolchain's, with .NET projects that start nothing beside it (zlib's contrib/dotzlib, raylib's Visual
+            // Studio projects), starts that build.
             StartupProject = _toolchainProjects[0].Info;
         }
 
@@ -259,6 +272,40 @@ public sealed partial class WorkspaceViewModel
         else if (_toolchains.Manager.CanInstall)
         {
             installText = status.IsBusy ? $"Installing {toolchain.Name}" : $"Install {toolchain.Name}";
+        }
+
+        if (toolchain.Id == "flutter" && item.Info.Kind == ProjectKind.Unknown)
+        {
+            // Dart packages and Flutter apps have no project kind of their own: say what runs them, not "unknown".
+            var flutter = FlutterProject.UsesFlutter(item.Project.Directory);
+            report = report with
+            {
+                Status = status.IsReady ? CompatibilityStatus.Ready : CompatibilityStatus.NeedsToolchain,
+                Host = RunHost.Toolchain,
+                RunsVia = "Dart and Flutter toolchain (experimental)",
+                Explanation = flutter
+                    ? "A Flutter app: it runs in the web preview with flutter run, from the experimental Flutter SDK in the Toolchain Store, and its tests with flutter test."
+                    : "A Dart package: it runs with dart run and its tests with dart test, from the experimental Flutter SDK in the Toolchain Store.",
+            };
+        }
+
+        if (toolchain.Id == "swift" && SwiftProject.AppleFramework(item.Project.Directory) is { } apple)
+        {
+            report = report with
+            {
+                Status = CompatibilityStatus.Unsupported,
+                RunsVia = "Xcode, on a Mac",
+                Explanation = SwiftProject.AppleExplanation(item.Info.Name, apple),
+            };
+        }
+        else if (DesktopGui.Framework(item.Project) is { } framework)
+        {
+            report = report with
+            {
+                Status = CompatibilityStatus.Unsupported,
+                RunsVia = framework + ", on a computer",
+                Explanation = DesktopGui.Explanation(item.Info.Name, framework),
+            };
         }
 
         return new CompatibilityRowViewModel(report) { ToolchainId = toolchain.Id, InstallToolchainText = installText };
@@ -414,6 +461,21 @@ public sealed partial class WorkspaceViewModel
         }
 
         var project = item.Project;
+        if (item.Toolchain.Id == "swift" && SwiftProject.AppleFramework(project.Directory) is { } apple)
+        {
+            Output.WriteLine(SwiftProject.AppleExplanation(info.Name, apple), OutputKind.Failure);
+            StatusText = $"{info.Name} builds only with Xcode on a Mac";
+            return;
+        }
+
+        if (OperatingSystem.IsAndroid() && DesktopGui.Framework(project) is { } framework)
+        {
+            // Its window could not open on the tablet: the program would only fail.
+            Output.WriteLine(DesktopGui.Explanation(info.Name, framework), OutputKind.Failure);
+            StatusText = $"{info.Name} opens its window only on a computer";
+            return;
+        }
+
         if (TabStudio.Toolchains.Embedded.Projects.EmbeddedProjectDetector.Read(project.Directory) is { } embedded)
         {
             try

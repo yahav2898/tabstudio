@@ -104,6 +104,10 @@ public static class ProjectClassifier
     public static PlatformWorkload RequiredWorkload(ProjectInfo project)
     {
         ArgumentNullException.ThrowIfNull(project);
+        if (project.IsPreMsBuildFormat)
+        {
+            return PlatformWorkload.PreMsBuild;
+        }
 
         // An Uno.Sdk project is an Uno app whatever else it sets, as Classify decides; TabStudio builds it for Uno's desktop target.
         if (IsTrue(project.GetProperty("UseMaui")) && project.Kind != ProjectKind.Uno)
@@ -159,6 +163,14 @@ public static class ProjectClassifier
     public static bool NeedsPlatformWorkload(ProjectInfo project) => RequiredWorkload(project) != PlatformWorkload.None;
 
     /// <summary>
+    /// Whether all that keeps a project from building here is a code generator TabStudio cannot run here (protoc for its
+    /// <c>&lt;Protobuf&gt;</c> items), not what the project is: it is still the app a person starts, as eShop's WebApp
+    /// is, and F5 says in one line why it cannot build.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public static bool OnlyNeedsCodeGenerator(ProjectInfo project) => RequiredWorkload(project) == PlatformWorkload.Protoc;
+
+    /// <summary>
     /// Why a project that needs a platform workload is not built here, as a phrase after "it", such as
     /// <c>is a .NET MAUI project, which only .NET's MAUI workload builds, on a computer</c>; <see langword="null"/> for a
     /// project that needs none.
@@ -175,6 +187,7 @@ public static class ProjectClassifier
             PlatformWorkload.Uwp => "is a UWP project, which only Visual Studio's Universal Windows Platform tools build, on Windows",
             PlatformWorkload.WebAssemblyTools => "is a browser head compiled ahead of time to WebAssembly, which only .NET's wasm-tools workload builds, on a computer",
             PlatformWorkload.Protoc => "generates its gRPC and Protocol Buffers code with protoc, from Grpc.Tools, a native program that runs only on a computer",
+            PlatformWorkload.PreMsBuild => "is a Visual Studio .NET 2002 or 2003 project, in the format from before MSBuild, which a newer Visual Studio converts when it opens it, on a computer",
             PlatformWorkload.NewerDotNet => $"targets {string.Join(", ", project.TargetFrameworks)}, which only the .NET {NewestDotNet(project)} SDK builds; TabStudio compiles with .NET {CompiledDotNetMajor}",
             _ => null,
         };
@@ -295,14 +308,15 @@ public static class ProjectClassifier
     /// pages beside the Blazor WebApp), then apps with a UI, then web APIs, then console apps, then other programs such
     /// as worker services; <see langword="null"/> for a project that is never a
     /// startup project (a library, tests, a build script, benchmarks, an Aspire AppHost, a project that needs a platform
-    /// workload, the WebAssembly client of a Blazor Web App). <see cref="Workspace.DefaultStartupProject"/> also puts
+    /// workload other than a code generator (see <see cref="OnlyNeedsCodeGenerator"/>), the WebAssembly client of a Blazor
+    /// Web App). <see cref="Workspace.DefaultStartupProject"/> also puts
     /// programs in folders such as <c>docs</c> or <c>tests</c> last.
     /// </summary>
     /// <param name="project">The project.</param>
     public static int? StartupRank(ProjectInfo project)
     {
         ArgumentNullException.ThrowIfNull(project);
-        if (!project.IsExecutable || project.IsTestProject || IsBlazorWebAppClient(project) || NeedsPlatformWorkload(project))
+        if (!project.IsExecutable || project.IsTestProject || IsBlazorWebAppClient(project) || (NeedsPlatformWorkload(project) && !OnlyNeedsCodeGenerator(project)))
         {
             return null;
         }

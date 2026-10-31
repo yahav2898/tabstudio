@@ -1,6 +1,6 @@
 namespace TabStudio.Toolchains.Projects;
 
-/// <summary>CMake, Make and standalone C/C++ build plans, without shell quoting or binary name guesses.</summary>
+/// <summary>CMake, Make, Autotools and standalone C/C++ build plans, without shell quoting or binary name guesses.</summary>
 public static partial class RunPlanner
 {
     private static RunPlan? PlanCppProject(ToolchainProject project)
@@ -17,9 +17,20 @@ public static partial class RunPlanner
                 [Spec(project, ["cmake", "-S", project.Directory, "-B", build, "-DCMAKE_BUILD_TYPE=Debug", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], variables)]);
         }
 
-        var makefile = project.Toolchain.ProjectFiles.FirstOrDefault(f => f != "CMakeLists.txt" && File.Exists(Path.Combine(project.Directory, f)));
+        var makefile = project.Toolchain.ProjectFiles.FirstOrDefault(f => ToolchainProjectDetector.IsMakefile(f) && File.Exists(Path.Combine(project.Directory, f)));
+        if (makefile is null && project.Toolchain.ProjectFiles.FirstOrDefault(f => ToolchainProjectDetector.IsAutotools(f) && File.Exists(Path.Combine(project.Directory, f))) is { } autotools)
+        {
+            // An Autotools project is configured first, as its README says: autoreconf makes configure from
+            // configure.ac when the repository does not ship it, and configure writes the Makefile make builds.
+            return new(Spec(project, ["sh", "-c", AutotoolsBuild], variables), Spec(project, [executable], variables), autotools);
+        }
+
         return makefile is null ? null : new(Spec(project, ["make", "-f", makefile], variables), Spec(project, [executable], variables), makefile);
     }
+
+    /// <summary>The build of a GNU Autotools project: <c>autoreconf -fi</c> when there is no <c>configure</c>, <c>./configure</c> when there is no Makefile, then <c>make</c>.</summary>
+    internal const string AutotoolsBuild =
+        "if [ ! -x ./configure ]; then echo 'Running autoreconf -fi'; autoreconf -fi || exit 1; fi; if [ ! -f Makefile ]; then echo 'Running ./configure'; ./configure || exit 1; fi; exec make";
 
     private static RunPlan PlanCppFile(ToolchainProject project, string file)
     {

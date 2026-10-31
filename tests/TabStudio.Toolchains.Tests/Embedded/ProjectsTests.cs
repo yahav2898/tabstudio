@@ -97,6 +97,27 @@ public sealed class ProjectsTests
         Assert.Equal(kind, EmbeddedProjectDetector.Read(temp.Path)?.Kind);
     }
 
+    /// <summary>
+    /// anyhow and serde_json build without std (<c>#![no_std]</c> in lib.rs) for firmware that uses them, but are
+    /// libraries for computers too: 0.20.4 took them for embedded Rust firmware, so their tests did not run.
+    /// </summary>
+    [Fact]
+    public void A_no_std_library_is_not_firmware_but_a_no_std_program_or_a_memory_map_is()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("Cargo.toml", "[package]\nname = \"anyhow\"\n");
+        temp.Write("src/lib.rs", "#![no_std]\n#[cfg(feature = \"std\")]\nextern crate std;\n");
+        Assert.Null(EmbeddedProjectDetector.Read(temp.Path));
+
+        temp.Write("memory.x", "MEMORY { FLASH : ORIGIN = 0x08000000, LENGTH = 512K }");
+        Assert.Equal(EmbeddedProjectKind.Rust, EmbeddedProjectDetector.Read(temp.Path)?.Kind);
+
+        using var firmware = new TempDirectory();
+        firmware.Write("Cargo.toml", "[package]\nname = \"blinky\"\n");
+        firmware.Write("src/main.rs", "#![no_std]\n#![no_main]\n");
+        Assert.Equal(EmbeddedProjectKind.Rust, EmbeddedProjectDetector.Read(firmware.Path)?.Kind);
+    }
+
     [Fact]
     public void Embedded_roots_own_their_sources_in_the_existing_detector()
     {

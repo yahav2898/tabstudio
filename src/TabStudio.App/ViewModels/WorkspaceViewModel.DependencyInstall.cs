@@ -432,8 +432,10 @@ public sealed partial class WorkspaceViewModel
     /// bookkeeping lines (code, path, errno, syscall, the command it ran, where its log is), or another tool's first
     /// <c>error</c> line.
     /// </summary>
-    private static string FirstInstallError(OutputProcessResult result) =>
+    internal static string FirstInstallError(OutputProcessResult result) =>
         result.StartError
+        // pub ends with "Failed to update packages."; the reason is its "Because ..., version solving failed." line.
+        ?? result.Lines.Select(l => l.Trim()).FirstOrDefault(l => l.EndsWith("version solving failed.", StringComparison.Ordinal))
         ?? result.Lines.Select(l => l.Trim()).FirstOrDefault(l =>
             (l.StartsWith("npm error ", StringComparison.Ordinal) || l.StartsWith("npm ERR! ", StringComparison.Ordinal) || l.StartsWith("error", StringComparison.OrdinalIgnoreCase))
             && !NpmBookkeeping.Any(prefix => l[(l.IndexOf(' ', StringComparison.Ordinal) + 1)..].TrimStart().StartsWith(prefix, StringComparison.Ordinal))

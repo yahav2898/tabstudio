@@ -98,5 +98,27 @@ public sealed class WindowsFormsProjectTests : IDisposable
         Assert.Null(WindowsFormsProject.CreateApplicationConfigurationSource(project));
     }
 
+    /// <summary>
+    /// VBDev2Dev's Dots: its game library, a .NET Framework project, references System.Drawing to draw for its Windows
+    /// Forms app. It found no Graphics, Pen or Font (16 errors), as only Windows Forms projects got the Forms layer.
+    /// </summary>
+    [Fact]
+    public void A_NET_Framework_library_that_references_System_Drawing_compiles_against_the_Forms_layer()
+    {
+        const string Library = """
+            <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+              <PropertyGroup><OutputType>Library</OutputType><TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion></PropertyGroup>
+              <ItemGroup><Reference Include="System" /><Reference Include="System.Drawing" /></ItemGroup>
+              <ItemGroup><Import Include="System.Drawing" /></ItemGroup>
+            </Project>
+            """;
+        var drawing = ProjectParser.Parse(_temp.Resolve("DotsGame/DotsGame.vbproj"), Library);
+        var plain = ProjectParser.Parse(_temp.Resolve("Data/Data.vbproj"), Library.Replace("<Reference Include=\"System.Drawing\" />", string.Empty, StringComparison.Ordinal));
+
+        Assert.False(WindowsFormsProject.UsesWindowsForms(drawing));
+        Assert.True(WindowsFormsProject.UsesFormsLayer(drawing));
+        Assert.False(WindowsFormsProject.UsesFormsLayer(plain));
+    }
+
     public void Dispose() => _temp.Dispose();
 }

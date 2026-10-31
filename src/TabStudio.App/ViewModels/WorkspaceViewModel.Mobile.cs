@@ -115,8 +115,10 @@ public sealed partial class WorkspaceViewModel
             Output.WriteLine("> " + build.CommandLine, OutputKind.Info);
             var result = await CommandRunner.RunAsync(runtime, build, line => Output.WriteLine(line), _run.Token);
             var matcher = Matcher(android);
+            // Kotlin's "w:" lines (deprecations, unused variables) are warnings: sunflower, architecture-samples and
+            // JetNews built with them listed as errors.
             var diagnostics = result.Output.Split('\n').SelectMany(matcher.Match).Select(location => new BuildDiagnostic(
-                "Gradle", DiagnosticSeverityLevel.Error, location.Message ?? "Android build error",
+                "Gradle", AndroidSeverity(location.Severity), location.Message ?? "Android build error",
                 new DiagnosticLocation(location.File, OffsetOf(location.File, location.Line), 0, location.Line, location.Column ?? 1), Path.GetFileName(root))).ToList();
             if (!result.Succeeded && diagnostics.Count == 0)
             {
@@ -192,4 +194,9 @@ public sealed partial class WorkspaceViewModel
             }
         }
     }
+
+    /// <summary>The Error List severity of a message of an Android build: Kotlin's <c>w:</c> and javac's <c>warning:</c> are warnings.</summary>
+    /// <param name="severity">The severity the compiler printed, if any.</param>
+    internal static DiagnosticSeverityLevel AndroidSeverity(string? severity) =>
+        severity?.ToUpperInvariant() is "W" or "WARNING" ? DiagnosticSeverityLevel.Warning : DiagnosticSeverityLevel.Error;
 }

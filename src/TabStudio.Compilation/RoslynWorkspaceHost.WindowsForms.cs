@@ -23,16 +23,19 @@ public sealed partial class RoslynWorkspaceHost
         lock (_gate)
         {
             _windowsFormsReferences = references;
-            foreach (var project in _projects.Values.Where(WindowsFormsProject.UsesWindowsForms).ToList())
+            foreach (var project in _projects.Values.Where(WindowsFormsProject.UsesFormsLayer).ToList())
             {
                 ApplyMetadataReferences(project.FilePath);
             }
         }
     }
 
-    /// <summary>The Forms layer's references for a Windows Forms project, or none. The caller holds the gate.</summary>
+    /// <summary>
+    /// The Forms layer's references for a Windows Forms project, or a .NET Framework project that draws with
+    /// System.Drawing (see <see cref="WindowsFormsProject.UsesFormsLayer"/>), or none. The caller holds the gate.
+    /// </summary>
     private IReadOnlyList<MetadataReference> WindowsFormsReferencesFor(TsProject project) =>
-        WindowsFormsProject.UsesWindowsForms(project) ? _windowsFormsReferences : [];
+        WindowsFormsProject.UsesFormsLayer(project) ? _windowsFormsReferences : [];
 
     /// <summary>The generated documents of a Windows Forms app: its <c>ApplicationConfiguration</c> class.</summary>
     private static IEnumerable<DocumentInfo> WindowsFormsDocuments(ProjectId id, TsProject project)

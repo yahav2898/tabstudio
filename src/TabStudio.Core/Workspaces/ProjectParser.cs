@@ -174,6 +174,7 @@ public static partial class ProjectParser
             Name = Path.GetFileNameWithoutExtension(filePath),
             FilePath = filePath,
             Language = language,
+            IsPreMsBuildFormat = root.Name.LocalName == "VisualStudioProject",
             Sdk = sdk,
             TargetFrameworks = targetFrameworks,
             OutputType = properties.GetValueOrDefault("OutputType") ?? DefaultOutputType(sdk),

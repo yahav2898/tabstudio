@@ -26,6 +26,21 @@ public static class WindowsFormsProject
         return IsTrue(project.GetProperty("UseWindowsForms"));
     }
 
+    /// <summary>
+    /// Whether a project compiles against TabStudio's Forms layer: it uses Windows Forms, or it is a .NET Framework
+    /// project that references System.Drawing without Windows Forms, as a game's library that draws for its Windows
+    /// Forms app does (VBDev2Dev's Dots). On .NET 10 Graphics, Pen and Font are in no reference assembly, so such a
+    /// library found none of them.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public static bool UsesFormsLayer(TsProject project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        return UsesWindowsForms(project)
+            || (!IsTrue(project.GetProperty("UseWPF"))
+                && project.AssemblyReferences.Any(r => string.Equals(r.Name, "System.Drawing", StringComparison.OrdinalIgnoreCase)));
+    }
+
     /// <summary>The global usings the SDK adds to a project for Windows Forms: none unless it uses it with implicit usings.</summary>
     /// <param name="project">The project.</param>
     public static IEnumerable<string> ImplicitUsings(TsProject project) =>
