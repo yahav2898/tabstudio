@@ -1,0 +1,95 @@
+zlib at 71747d1d39168833e0cae8ed84b8ce77cb049699
+Toolchain projects:
+  cpp: /home/runner/work/_temp/real-repos/zlib/CMakeLists.txt
+Startup project: cpp /home/runner/work/_temp/real-repos/zlib/CMakeLists.txt
+Set up in 2.5 s
+Built in 3.8 s: 0 errors, state Ready
+Project setup:
+
+Output:
+Building zlib with C and C++ 13.3.0
+> cmake --build /home/runner/work/_temp/real-repos/zlib/.tabstudio/cmake --config Debug
+> cmake -S /home/runner/work/_temp/real-repos/zlib -B /home/runner/work/_temp/real-repos/zlib/.tabstudio/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-- The C compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
+-- Looking for stdint.h - found
+-- Looking for stddef.h
+-- Looking for stddef.h - found
+-- Check size of off64_t
+-- Check size of off64_t - done
+-- Looking for fseeko
+-- Looking for fseeko - found
+-- Looking for stdarg.h
+-- Looking for stdarg.h - found
+-- Looking for unistd.h
+-- Looking for unistd.h - found
+-- Performing Test HAVE___ATTR__VIS_HIDDEN
+-- Performing Test HAVE___ATTR__VIS_HIDDEN - Failed
+-- Configuring done (1.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/runner/work/_temp/real-repos/zlib/.tabstudio/cmake
+[  2%] Building C object CMakeFiles/zlib.dir/adler32.c.o
+[  4%] Building C object CMakeFiles/zlib.dir/compress.c.o
+[  6%] Building C object CMakeFiles/zlib.dir/crc32.c.o
+[  8%] Building C object CMakeFiles/zlib.dir/deflate.c.o
+[ 10%] Building C object CMakeFiles/zlib.dir/gzclose.c.o
+[ 13%] Building C object CMakeFiles/zlib.dir/gzlib.c.o
+[ 15%] Building C object CMakeFiles/zlib.dir/gzread.c.o
+[ 17%] Building C object CMakeFiles/zlib.dir/gzwrite.c.o
+[ 19%] Building C object CMakeFiles/zlib.dir/inflate.c.o
+[ 21%] Building C object CMakeFiles/zlib.dir/infback.c.o
+[ 23%] Building C object CMakeFiles/zlib.dir/inftrees.c.o
+[ 26%] Building C object CMakeFiles/zlib.dir/inffast.c.o
+[ 28%] Building C object CMakeFiles/zlib.dir/trees.c.o
+[ 30%] Building C object CMakeFiles/zlib.dir/uncompr.c.o
+[ 32%] Building C object CMakeFiles/zlib.dir/zutil.c.o
+[ 34%] Linking C shared library libz.so
+[ 34%] Built target zlib
+[ 36%] Building C object CMakeFiles/zlibstatic.dir/adler32.c.o
+[ 39%] Building C object CMakeFiles/zlibstatic.dir/compress.c.o
+[ 41%] Building C object CMakeFiles/zlibstatic.dir/crc32.c.o
+[ 43%] Building C object CMakeFiles/zlibstatic.dir/deflate.c.o
+[ 45%] Building C object CMakeFiles/zlibstatic.dir/gzclose.c.o
+[ 47%] Building C object CMakeFiles/zlibstatic.dir/gzlib.c.o
+[ 50%] Building C object CMakeFiles/zlibstatic.dir/gzread.c.o
+[ 52%] Building C object CMakeFiles/zlibstatic.dir/gzwrite.c.o
+[ 54%] Building C object CMakeFiles/zlibstatic.dir/inflate.c.o
+[ 56%] Building C object CMakeFiles/zlibstatic.dir/infback.c.o
+[ 58%] Building C object CMakeFiles/zlibstatic.dir/inftrees.c.o
+[ 60%] Building C object CMakeFiles/zlibstatic.dir/inffast.c.o
+[ 63%] Building C object CMakeFiles/zlibstatic.dir/trees.c.o
+[ 65%] Building C object CMakeFiles/zlibstatic.dir/uncompr.c.o
+[ 67%] Building C object CMakeFiles/zlibstatic.dir/zutil.c.o
+[ 69%] Linking C static library libz.a
+[ 69%] Built target zlibstatic
+[ 71%] Building C object test/CMakeFiles/zlib_example.dir/example.c.o
+[ 73%] Linking C executable zlib_example
+[ 73%] Built target zlib_example
+[ 76%] Building C object test/CMakeFiles/minigzip.dir/minigzip.c.o
+[ 78%] Linking C executable minigzip
+[ 78%] Built target minigzip
+[ 80%] Building C object test/CMakeFiles/zlib_example64.dir/example.c.o
+[ 82%] Linking C executable zlib_example64
+[ 82%] Built target zlib_example64
+[ 84%] Building C object test/CMakeFiles/zlib_examplestatic.dir/example.c.o
+[ 86%] Linking C executable zlib_examplestatic
+[ 86%] Built target zlib_examplestatic
+[ 89%] Building C object test/CMakeFiles/minigzipstatic.dir/minigzip.c.o
+[ 91%] Linking C executable minigzipstatic
+[ 91%] Built target minigzipstatic
+[ 93%] Building C object test/CMakeFiles/infcover.dir/infcover.c.o
+[ 95%] Linking C executable infcover
+[ 95%] Built target infcover
+[ 97%] Building C object test/CMakeFiles/zlib_example64static.dir/example.c.o
+[100%] Linking C executable zlib_example64static
+[100%] Built target zlib_example64static
+
+Build succeeded: 'zlib' is ready to run.
+

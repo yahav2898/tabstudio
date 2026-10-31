@@ -1,0 +1,1023 @@
+urfave-cli at 293b0229b99c460fa66283418569773681df010d
+Toolchain projects:
+  go: /home/runner/work/_temp/real-repos/urfave-cli/go.mod
+Startup project: go /home/runner/work/_temp/real-repos/urfave-cli/go.mod
+Set up in 2.6 s
+Tests: 649 passed, 0 failed, 2 skipped of 655: 651 tests run in 13.3 sec: 649 passed, 0 failed, 2 skipped.
+Project setup:
+
+Output:
+: 1, 2) [$isflag]
+   --help, -h                 show help
+=== RUN   TestFlagDefaultValueWithEnv/uintSlice
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --flag uint [ --flag uint ]  (default: 1, 2) [$uisflag]
+   --help, -h                   show help
+=== RUN   TestFlagDefaultValueWithEnv/string
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --flag string  (default: "default") [$uflag]
+   --help, -h     show help
+=== RUN   TestFlagDefaultValueWithEnv/bool
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --flag       [$uflag]
+   --help, -h  show help
+=== RUN   TestFlagDefaultValueWithEnv/bool#01
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --[no-]flag  (default: true) [$uflag]
+   --help, -h   show help
+=== RUN   TestFlagDefaultValueWithEnv/uint64
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --flag uint  (default: 1) [$uflag]
+   --help, -h   show help
+=== RUN   TestFlagDefaultValueWithEnv/uint
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --flag uint  (default: 1) [$uflag]
+   --help, -h   show help
+=== RUN   TestFlagDefaultValueWithEnv/int64
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --flag int  (default: 1) [$uflag]
+   --help, -h  show help
+=== RUN   TestFlagDefaultValueWithEnv/int
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --flag int  (default: 1) [$uflag]
+   --help, -h  show help
+=== RUN   TestFlagDefaultValueWithEnv/duration
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --flag duration  (default: 1s) [$uflag]
+   --help, -h       show help
+=== RUN   TestFlagDefaultValueWithEnv/timestamp
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --flag time  (default: 2005-01-02T15:04:05Z) [$tflag]
+   --help, -h   show help
+=== RUN   TestFlagDefaultValueWithEnv/stringMap
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --flag string=string [ --flag string=string ]  (default: default1="default2") [$ssflag]
+   --help, -h                                     show help
+--- PASS: TestFlagDefaultValueWithEnv (0.01s)
+    --- PASS: TestFlagDefaultValueWithEnv/stringSlice (0.00s)
+    --- PASS: TestFlagDefaultValueWithEnv/float64Slice (0.00s)
+    --- PASS: TestFlagDefaultValueWithEnv/intSlice (0.00s)
+    --- PASS: TestFlagDefaultValueWithEnv/uintSlice (0.00s)
+    --- PASS: TestFlagDefaultValueWithEnv/string (0.00s)
+    --- PASS: TestFlagDefaultValueWithEnv/bool (0.00s)
+    --- PASS: TestFlagDefaultValueWithEnv/bool#01 (0.00s)
+    --- PASS: TestFlagDefaultValueWithEnv/uint64 (0.00s)
+    --- PASS: TestFlagDefaultValueWithEnv/uint (0.00s)
+    --- PASS: TestFlagDefaultValueWithEnv/int64 (0.00s)
+    --- PASS: TestFlagDefaultValueWithEnv/int (0.00s)
+    --- PASS: TestFlagDefaultValueWithEnv/duration (0.00s)
+    --- PASS: TestFlagDefaultValueWithEnv/timestamp (0.00s)
+    --- PASS: TestFlagDefaultValueWithEnv/stringMap (0.00s)
+=== RUN   TestFlagValue
+--- SKIP: TestFlagValue (0.00s)
+=== RUN   TestTimestampFlagApply_WithDestination
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --time time, -t time  
+   --help, -h            show help
+--- PASS: TestTimestampFlagApply_WithDestination (0.00s)
+=== RUN   TestSliceShortOptionHandle
+--- PASS: TestSliceShortOptionHandle (0.00s)
+=== RUN   TestCustomizedSliceFlagSeparator
+--- PASS: TestCustomizedSliceFlagSeparator (0.00s)
+=== RUN   TestFlagSplitMultiValues_Disabled
+--- PASS: TestFlagSplitMultiValues_Disabled (0.00s)
+=== RUN   TestStringMapFlagHelpOutput
+--- PASS: TestStringMapFlagHelpOutput (0.00s)
+=== RUN   TestStringMapFlagWithEnvVarHelpOutput
+--- PASS: TestStringMapFlagWithEnvVarHelpOutput (0.00s)
+=== RUN   TestStringMapFlagApply_SetsAllNames
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --goat string=string, -G string=string, --gooots string=string [ --goat string=string, -G string=string, --gooots string=string ]  
+   --help, -h                                                                                                                         show help
+--- PASS: TestStringMapFlagApply_SetsAllNames (0.00s)
+=== RUN   TestStringMapFlagApply_UsesEnvValues_noDefault
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --goat string=string [ --goat string=string ]   [$MY_GOAT]
+   --help, -h                                     show help
+--- PASS: TestStringMapFlagApply_UsesEnvValues_noDefault (0.00s)
+=== RUN   TestStringMapFlagApply_UsesEnvValues_withDefault
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --goat string=string [ --goat string=string ]  (default: some default="values here") [$MY_GOAT]
+   --help, -h                                     show help
+--- PASS: TestStringMapFlagApply_UsesEnvValues_withDefault (0.00s)
+=== RUN   TestStringMapFlagApply_DefaultValueWithDestination
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --country string=string [ --country string=string ]  (default: UA="US")
+   --help, -h                                           show help
+--- PASS: TestStringMapFlagApply_DefaultValueWithDestination (0.00s)
+=== RUN   TestStringMapFlagValueFromCommand
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --myflag string=string [ --myflag string=string ]  
+   --help, -h                                         show help
+--- PASS: TestStringMapFlagValueFromCommand (0.00s)
+=== RUN   TestStringMapFlagApply_Error
+Incorrect Usage: invalid value "aaa" for flag -goat: item "aaa" is missing separator "="
+
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --goat string=string [ --goat string=string ]  
+   --help, -h                                     show help
+--- PASS: TestStringMapFlagApply_Error (0.00s)
+=== RUN   TestZeroValueMutexFlag
+--- PASS: TestZeroValueMutexFlag (0.00s)
+=== RUN   TestMutexFlagCategory
+--- PASS: TestMutexFlagCategory (0.00s)
+=== RUN   TestExtFlag
+--- PASS: TestExtFlag (0.00s)
+=== RUN   TestSliceValuesNil
+--- PASS: TestSliceValuesNil (0.00s)
+=== RUN   TestFileHint
+--- PASS: TestFileHint (0.00s)
+=== RUN   TestHasFlags
+--- PASS: TestHasFlags (0.00s)
+=== RUN   TestFlagsByName
+--- PASS: TestFlagsByName (0.00s)
+=== RUN   TestNonStringMap
+--- PASS: TestNonStringMap (0.00s)
+=== RUN   TestUnquoteUsage
+=== RUN   TestUnquoteUsage/unquote_0
+=== RUN   TestUnquoteUsage/unquote_1
+=== RUN   TestUnquoteUsage/unquote_2
+=== RUN   TestUnquoteUsage/unquote_3
+=== RUN   TestUnquoteUsage/unquote_4
+--- PASS: TestUnquoteUsage (0.00s)
+    --- PASS: TestUnquoteUsage/unquote_0 (0.00s)
+    --- PASS: TestUnquoteUsage/unquote_1 (0.00s)
+    --- PASS: TestUnquoteUsage/unquote_2 (0.00s)
+    --- PASS: TestUnquoteUsage/unquote_3 (0.00s)
+    --- PASS: TestUnquoteUsage/unquote_4 (0.00s)
+=== RUN   TestEnvHintWindows
+--- PASS: TestEnvHintWindows (0.00s)
+=== RUN   TestDocGetValue
+--- PASS: TestDocGetValue (0.00s)
+=== RUN   TestGenericFlag_SatisfiesFlagInterface
+--- PASS: TestGenericFlag_SatisfiesFlagInterface (0.00s)
+=== RUN   TestGenericValue_SatisfiesBoolInterface
+--- PASS: TestGenericValue_SatisfiesBoolInterface (0.00s)
+=== RUN   TestGenericFlag_SatisfiesFmtStringerInterface
+--- PASS: TestGenericFlag_SatisfiesFmtStringerInterface (0.00s)
+=== RUN   TestGenericFlag_SatisfiesRequiredFlagInterface
+--- PASS: TestGenericFlag_SatisfiesRequiredFlagInterface (0.00s)
+=== RUN   TestGenericFlag_SatisfiesVisibleFlagInterface
+--- PASS: TestGenericFlag_SatisfiesVisibleFlagInterface (0.00s)
+=== RUN   TestGenericFlag_SatisfiesDocFlagInterface
+--- PASS: TestGenericFlag_SatisfiesDocFlagInterface (0.00s)
+=== RUN   TestGenericValue
+--- PASS: TestGenericValue (0.00s)
+=== RUN   TestEndValue
+Incorrect Usage: flag needs an argument: -c
+
+Incorrect Usage: flag needs an argument: -c
+
+--- PASS: TestEndValue (0.00s)
+=== RUN   TestFlagBaseInterfaceValueType
+=== RUN   TestFlagBaseInterfaceValueType/SchemaItemsType
+=== RUN   TestFlagBaseInterfaceValueType/PostParse_with_empty_source_value
+=== RUN   TestFlagBaseInterfaceValueType/PostParse_with_non-empty_source_value
+--- PASS: TestFlagBaseInterfaceValueType (0.00s)
+    --- PASS: TestFlagBaseInterfaceValueType/SchemaItemsType (0.00s)
+    --- PASS: TestFlagBaseInterfaceValueType/PostParse_with_empty_source_value (0.00s)
+    --- PASS: TestFlagBaseInterfaceValueType/PostParse_with_non-empty_source_value (0.00s)
+=== RUN   TestStringMapFlagTrimsKeyLikeValue
+=== RUN   TestStringMapFlagTrimsKeyLikeValue/trim_disabled
+=== RUN   TestStringMapFlagTrimsKeyLikeValue/trim_enabled
+--- PASS: TestStringMapFlagTrimsKeyLikeValue (0.00s)
+    --- PASS: TestStringMapFlagTrimsKeyLikeValue/trim_disabled (0.00s)
+    --- PASS: TestStringMapFlagTrimsKeyLikeValue/trim_enabled (0.00s)
+=== RUN   TestTextFlagSetFromArg
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --level value  (default: WARN)
+   --help, -h     show help
+--- PASS: TestTextFlagSetFromArg (0.00s)
+=== RUN   TestTextFlagDefaultValue
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --level value  (default: ERROR)
+   --help, -h     show help
+--- PASS: TestTextFlagDefaultValue (0.00s)
+=== RUN   TestTextFlagDestination
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --level value  
+   --help, -h     show help
+--- PASS: TestTextFlagDestination (0.00s)
+=== RUN   TestTextFlagTrimSpace
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --level value  (default: INFO)
+   --help, -h     show help
+--- PASS: TestTextFlagTrimSpace (0.00s)
+=== RUN   TestTextFlagFromEnvSource
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --level value  (default: ERROR) [$LOG_LEVEL]
+   --help, -h     show help
+--- PASS: TestTextFlagFromEnvSource (0.00s)
+=== RUN   TestTextFlagInvalidValue
+Incorrect Usage: invalid value "NOPE" for flag -level: slog: level string "NOPE": unknown name
+
+NAME:
+   . - A new cli application
+
+USAGE:
+   . [global options]
+
+GLOBAL OPTIONS:
+   --level value  (default: INFO)
+   --help, -h     show help
+--- PASS: TestTextFlagInvalidValue (0.00s)
+=== RUN   TestTextFlagValueFromCommand
+--- PASS: TestTextFlagValueFromCommand (0.00s)
+=== RUN   TestTextFlagTextNotAvailable
+--- PASS: TestTextFlagTextNotAvailable (0.00s)
+=== RUN   TestTextValueToString
+--- PASS: TestTextValueToString (0.00s)
+=== RUN   TestTextValueSetNilDestination
+--- PASS: TestTextValueSetNilDestination (0.00s)
+=== RUN   TestTextValueString
+--- PASS: TestTextValueString (0.00s)
+=== RUN   TestCommand_UintSlice
+=== RUN   TestCommand_UintSlice/#00
+=== RUN   TestCommand_UintSlice/#01
+--- PASS: TestCommand_UintSlice (0.00s)
+    --- PASS: TestCommand_UintSlice/#00 (0.00s)
+    --- PASS: TestCommand_UintSlice/#01 (0.00s)
+=== RUN   TestCommand_Uint8Slice
+=== RUN   TestCommand_Uint8Slice/#00
+=== RUN   TestCommand_Uint8Slice/#01
+--- PASS: TestCommand_Uint8Slice (0.00s)
+    --- PASS: TestCommand_Uint8Slice/#00 (0.00s)
+    --- PASS: TestCommand_Uint8Slice/#01 (0.00s)
+=== RUN   TestCommand_Uint16Slice
+=== RUN   TestCommand_Uint16Slice/#00
+=== RUN   TestCommand_Uint16Slice/#01
+--- PASS: TestCommand_Uint16Slice (0.00s)
+    --- PASS: TestCommand_Uint16Slice/#00 (0.00s)
+    --- PASS: TestCommand_Uint16Slice/#01 (0.00s)
+=== RUN   TestCommand_Uint32Slice
+=== RUN   TestCommand_Uint32Slice/#00
+=== RUN   TestCommand_Uint32Slice/#01
+--- PASS: TestCommand_Uint32Slice (0.00s)
+    --- PASS: TestCommand_Uint32Slice/#00 (0.00s)
+    --- PASS: TestCommand_Uint32Slice/#01 (0.00s)
+=== RUN   TestCommand_Uint64Slice
+=== RUN   TestCommand_Uint64Slice/#00
+=== RUN   TestCommand_Uint64Slice/#01
+--- PASS: TestCommand_Uint64Slice (0.00s)
+    --- PASS: TestCommand_Uint64Slice/#00 (0.00s)
+    --- PASS: TestCommand_Uint64Slice/#01 (0.00s)
+=== RUN   TestUintFlag
+=== RUN   TestUintFlag/valid
+=== RUN   TestUintFlag/invalid
+--- PASS: TestUintFlag (0.00s)
+    --- PASS: TestUintFlag/valid (0.00s)
+    --- PASS: TestUintFlag/invalid (0.00s)
+=== RUN   TestUint8Flag
+=== RUN   TestUint8Flag/valid
+=== RUN   TestUint8Flag/invalid
+--- PASS: TestUint8Flag (0.00s)
+    --- PASS: TestUint8Flag/valid (0.00s)
+    --- PASS: TestUint8Flag/invalid (0.00s)
+=== RUN   TestUint16Flag
+=== RUN   TestUint16Flag/valid
+=== RUN   TestUint16Flag/invalid
+=== RUN   TestUint16Flag/out_of_range
+--- PASS: TestUint16Flag (0.00s)
+    --- PASS: TestUint16Flag/valid (0.00s)
+    --- PASS: TestUint16Flag/invalid (0.00s)
+    --- PASS: TestUint16Flag/out_of_range (0.00s)
+=== RUN   TestUint32Flag
+=== RUN   TestUint32Flag/valid
+=== RUN   TestUint32Flag/invalid
+=== RUN   TestUint32Flag/out_of_range
+--- PASS: TestUint32Flag (0.00s)
+    --- PASS: TestUint32Flag/valid (0.00s)
+    --- PASS: TestUint32Flag/invalid (0.00s)
+    --- PASS: TestUint32Flag/out_of_range (0.00s)
+=== RUN   TestUint64Flag
+=== RUN   TestUint64Flag/valid
+=== RUN   TestUint64Flag/invalid
+--- PASS: TestUint64Flag (0.00s)
+    --- PASS: TestUint64Flag/valid (0.00s)
+    --- PASS: TestUint64Flag/invalid (0.00s)
+=== RUN   TestUintFlagExt
+=== RUN   TestUintFlagExt/valid
+=== RUN   TestUintFlagExt/valid#01
+=== RUN   TestUintFlagExt/valid_hex
+=== RUN   TestUintFlagExt/invalid
+--- PASS: TestUintFlagExt (0.00s)
+    --- PASS: TestUintFlagExt/valid (0.00s)
+    --- PASS: TestUintFlagExt/valid#01 (0.00s)
+    --- PASS: TestUintFlagExt/valid_hex (0.00s)
+    --- PASS: TestUintFlagExt/invalid (0.00s)
+=== RUN   TestFlagDefaultValidation
+--- PASS: TestFlagDefaultValidation (0.00s)
+=== RUN   TestBoolInverseFlagDefaultValidation
+--- PASS: TestBoolInverseFlagDefaultValidation (0.00s)
+=== RUN   TestFlagValidation
+Incorrect Usage: invalid value "2" for flag -it: Value 2 not in range [3,10]U[20,24]
+
+NAME:
+   foo - A new cli application
+
+USAGE:
+   foo [global options]
+
+GLOBAL OPTIONS:
+   --it int    (default: 5)
+   --help, -h  show help
+NAME:
+   foo - A new cli application
+
+USAGE:
+   foo [global options]
+
+GLOBAL OPTIONS:
+   --it int    (default: 5)
+   --help, -h  show help
+NAME:
+   foo - A new cli application
+
+USAGE:
+   foo [global options]
+
+GLOBAL OPTIONS:
+   --it int    (default: 5)
+   --help, -h  show help
+NAME:
+   foo - A new cli application
+
+USAGE:
+   foo [global options]
+
+GLOBAL OPTIONS:
+   --it int    (default: 5)
+   --help, -h  show help
+Incorrect Usage: invalid value "15" for flag -it: Value 15 not in range [3,10]U[20,24]
+
+NAME:
+   foo - A new cli application
+
+USAGE:
+   foo [global options]
+
+GLOBAL OPTIONS:
+   --it int    (default: 5)
+   --help, -h  show help
+Incorrect Usage: invalid value "19" for flag -it: Value 19 not in range [3,10]U[20,24]
+
+NAME:
+   foo - A new cli application
+
+USAGE:
+   foo [global options]
+
+GLOBAL OPTIONS:
+   --it int    (default: 5)
+   --help, -h  show help
+NAME:
+   foo - A new cli application
+
+USAGE:
+   foo [global options]
+
+GLOBAL OPTIONS:
+   --it int    (default: 5)
+   --help, -h  show help
+NAME:
+   foo - A new cli application
+
+USAGE:
+   foo [global options]
+
+GLOBAL OPTIONS:
+   --it int    (default: 5)
+   --help, -h  show help
+NAME:
+   foo - A new cli application
+
+USAGE:
+   foo [global options]
+
+GLOBAL OPTIONS:
+   --it int    (default: 5)
+   --help, -h  show help
+Incorrect Usage: invalid value "27" for flag -it: Value 27 not in range [3,10]U[20,24]
+
+NAME:
+   foo - A new cli application
+
+USAGE:
+   foo [global options]
+
+GLOBAL OPTIONS:
+   --it int    (default: 5)
+   --help, -h  show help
+--- PASS: TestFlagValidation (0.00s)
+=== RUN   TestBoolInverseFlagValidation
+Incorrect Usage: invalid value "false" for flag -it: not valid
+
+NAME:
+   foo - A new cli application
+
+USAGE:
+   foo [global options]
+
+GLOBAL OPTIONS:
+   --[no-]it   (default: false)
+   --help, -h  show help
+--- PASS: TestBoolInverseFlagValidation (0.00s)
+=== RUN   TestHelpOutput
+=== RUN   TestHelpOutput/root
+=== RUN   TestHelpOutput/root_help_command
+=== RUN   TestHelpOutput/command
+=== RUN   TestHelpOutput/help_command
+=== RUN   TestHelpOutput/command_no_categories
+=== RUN   TestHelpOutput/command_args_usage
+=== RUN   TestHelpOutput/command_usage_text
+=== RUN   TestHelpOutput/subcommand
+=== RUN   TestHelpOutput/help_subcommand
+=== RUN   TestHelpOutput/subcommand_usage_text_and_category
+=== RUN   TestHelpOutput/sub-subcommand
+=== RUN   TestHelpOutput/root_wrapped
+=== RUN   TestHelpOutput/command_wrapped
+=== RUN   TestHelpOutput/subcommand_wrapped
+=== RUN   TestHelpOutput/minimal
+=== RUN   TestHelpOutput/usage_text
+=== RUN   TestHelpOutput/args_usage
+--- PASS: TestHelpOutput (0.01s)
+    --- PASS: TestHelpOutput/root (0.00s)
+    --- PASS: TestHelpOutput/root_help_command (0.00s)
+    --- PASS: TestHelpOutput/command (0.00s)
+    --- PASS: TestHelpOutput/help_command (0.00s)
+    --- PASS: TestHelpOutput/command_no_categories (0.00s)
+    --- PASS: TestHelpOutput/command_args_usage (0.00s)
+    --- PASS: TestHelpOutput/command_usage_text (0.00s)
+    --- PASS: TestHelpOutput/subcommand (0.00s)
+    --- PASS: TestHelpOutput/help_subcommand (0.00s)
+    --- PASS: TestHelpOutput/subcommand_usage_text_and_category (0.00s)
+    --- PASS: TestHelpOutput/sub-subcommand (0.00s)
+    --- PASS: TestHelpOutput/root_wrapped (0.00s)
+    --- PASS: TestHelpOutput/command_wrapped (0.00s)
+    --- PASS: TestHelpOutput/subcommand_wrapped (0.00s)
+    --- PASS: TestHelpOutput/minimal (0.00s)
+    --- PASS: TestHelpOutput/usage_text (0.00s)
+    --- PASS: TestHelpOutput/args_usage (0.00s)
+=== RUN   Test_ShowRootCommandHelp_NoAuthor
+--- PASS: Test_ShowRootCommandHelp_NoAuthor (0.00s)
+=== RUN   Test_ShowRootCommandHelp_NoVersion
+--- PASS: Test_ShowRootCommandHelp_NoVersion (0.00s)
+=== RUN   TestArgumentRequiredUsageInCommandHelp
+=== RUN   TestArgumentRequiredUsageInCommandHelp/optional
+=== RUN   TestArgumentRequiredUsageInCommandHelp/required
+--- PASS: TestArgumentRequiredUsageInCommandHelp (0.00s)
+    --- PASS: TestArgumentRequiredUsageInCommandHelp/optional (0.00s)
+    --- PASS: TestArgumentRequiredUsageInCommandHelp/required (0.00s)
+=== RUN   Test_ShowRootCommandHelp_HideVersion
+--- PASS: Test_ShowRootCommandHelp_HideVersion (0.00s)
+=== RUN   Test_ShowRootCommandHelp_MultiLineDescription
+--- PASS: Test_ShowRootCommandHelp_MultiLineDescription (0.00s)
+=== RUN   TestShowCommandHelpAndExit
+--- PASS: TestShowCommandHelpAndExit (0.00s)
+=== RUN   TestShowRootCommandHelpAndExit
+--- PASS: TestShowRootCommandHelpAndExit (0.00s)
+=== RUN   TestShowSubcommandHelpAndExit
+--- PASS: TestShowSubcommandHelpAndExit (0.00s)
+=== RUN   Test_HelpFlag_RequiredFlagsNoDefault
+--- PASS: Test_HelpFlag_RequiredFlagsNoDefault (0.00s)
+=== RUN   Test_HelpCommand_RequiredFlagsNoDefault
+--- PASS: Test_HelpCommand_RequiredFlagsNoDefault (0.00s)
+=== RUN   Test_HelpCommand_ParsesFlags
+--- PASS: Test_HelpCommand_ParsesFlags (0.00s)
+=== RUN   Test_Help_Custom_Flags
+--- PASS: Test_Help_Custom_Flags (0.00s)
+=== RUN   Test_Help_Nil_Flags
+--- PASS: Test_Help_Nil_Flags (0.00s)
+=== RUN   Test_Version_Custom_Flags
+--- PASS: Test_Version_Custom_Flags (0.00s)
+=== RUN   Test_helpCommand_Action_ErrorIfNoTopic
+--- PASS: Test_helpCommand_Action_ErrorIfNoTopic (0.00s)
+=== RUN   Test_helpCommand_InHelpOutput
+--- PASS: Test_helpCommand_InHelpOutput (0.00s)
+=== RUN   TestHelpCommand_FullName
+=== RUN   TestHelpCommand_FullName/app_help's_FullName
+=== RUN   TestHelpCommand_FullName/app_help's_FullName_via_flag
+=== RUN   TestHelpCommand_FullName/cmd_help's_FullName
+=== RUN   TestHelpCommand_FullName/cmd_help's_FullName_via_flag
+=== RUN   TestHelpCommand_FullName/subcmd_help's_FullName
+=== RUN   TestHelpCommand_FullName/subcmd_help's_FullName_via_flag
+--- PASS: TestHelpCommand_FullName (0.00s)
+    --- PASS: TestHelpCommand_FullName/app_help's_FullName (0.00s)
+    --- PASS: TestHelpCommand_FullName/app_help's_FullName_via_flag (0.00s)
+    --- SKIP: TestHelpCommand_FullName/cmd_help's_FullName (0.00s)
+    --- SKIP: TestHelpCommand_FullName/cmd_help's_FullName_via_flag (0.00s)
+    --- PASS: TestHelpCommand_FullName/subcmd_help's_FullName (0.00s)
+    --- PASS: TestHelpCommand_FullName/subcmd_help's_FullName_via_flag (0.00s)
+=== RUN   Test_helpCommand_HideHelpCommand
+--- PASS: Test_helpCommand_HideHelpCommand (0.00s)
+=== RUN   Test_helpCommand_HideHelpFlag
+Incorrect Usage: flag provided but not defined: -h
+
+--- PASS: Test_helpCommand_HideHelpFlag (0.00s)
+=== RUN   Test_helpSubcommand_Action_ErrorIfNoTopic
+--- PASS: Test_helpSubcommand_Action_ErrorIfNoTopic (0.00s)
+=== RUN   TestShowRootCommandHelp_CommandAliases
+--- PASS: TestShowRootCommandHelp_CommandAliases (0.00s)
+=== RUN   TestShowCommandHelp_AppendHelp
+=== RUN   TestShowCommandHelp_AppendHelp/with_HideHelp
+=== RUN   TestShowCommandHelp_AppendHelp/with_HideHelpCommand
+=== RUN   TestShowCommandHelp_AppendHelp/with_Subcommand
+=== RUN   TestShowCommandHelp_AppendHelp/without_Subcommand
+--- PASS: TestShowCommandHelp_AppendHelp (0.00s)
+    --- PASS: TestShowCommandHelp_AppendHelp/with_HideHelp (0.00s)
+    --- PASS: TestShowCommandHelp_AppendHelp/with_HideHelpCommand (0.00s)
+    --- PASS: TestShowCommandHelp_AppendHelp/with_Subcommand (0.00s)
+    --- PASS: TestShowCommandHelp_AppendHelp/without_Subcommand (0.00s)
+=== RUN   TestShowCommandHelp_HelpPrinter
+=== RUN   TestShowCommandHelp_HelpPrinter/no-command
+--- PASS: TestShowCommandHelp_HelpPrinter (0.00s)
+    --- PASS: TestShowCommandHelp_HelpPrinter/no-command (0.00s)
+=== RUN   TestShowCommandHelp_HelpPrinterCustom
+=== RUN   TestShowCommandHelp_HelpPrinterCustom/no_command
+    help_test.go:682: cmd.Run(ctx, [my-app help])
+=== RUN   TestShowCommandHelp_HelpPrinterCustom/standard_command
+    help_test.go:682: cmd.Run(ctx, [my-app help my-command])
+=== RUN   TestShowCommandHelp_HelpPrinterCustom/custom_template_command
+    help_test.go:682: cmd.Run(ctx, [my-app help my-command])
+--- PASS: TestShowCommandHelp_HelpPrinterCustom (0.00s)
+    --- PASS: TestShowCommandHelp_HelpPrinterCustom/no_command (0.00s)
+    --- PASS: TestShowCommandHelp_HelpPrinterCustom/standard_command (0.00s)
+    --- PASS: TestShowCommandHelp_HelpPrinterCustom/custom_template_command (0.00s)
+=== RUN   TestShowCommandHelp_CommandAliases
+--- PASS: TestShowCommandHelp_CommandAliases (0.00s)
+=== RUN   TestShowSubcommandHelp_CommandAliases
+--- PASS: TestShowSubcommandHelp_CommandAliases (0.00s)
+=== RUN   TestShowCommandHelp_Customtemplate
+--- PASS: TestShowCommandHelp_Customtemplate (0.00s)
+=== RUN   TestShowSubcommandHelp_CommandUsageText
+--- PASS: TestShowSubcommandHelp_CommandUsageText (0.00s)
+=== RUN   TestShowSubcommandHelp_MultiLine_CommandUsageText
+--- PASS: TestShowSubcommandHelp_MultiLine_CommandUsageText (0.00s)
+=== RUN   TestShowSubcommandHelp_GlobalOptions
+--- PASS: TestShowSubcommandHelp_GlobalOptions (0.00s)
+=== RUN   TestShowSubcommandHelp_GlobalOptions_HideHelpCommand
+--- PASS: TestShowSubcommandHelp_GlobalOptions_HideHelpCommand (0.00s)
+=== RUN   TestShowSubcommandHelp_InheritedPersistentOptions
+--- PASS: TestShowSubcommandHelp_InheritedPersistentOptions (0.00s)
+=== RUN   TestShowSubcommandHelp_SubcommandUsageText
+--- PASS: TestShowSubcommandHelp_SubcommandUsageText (0.00s)
+=== RUN   TestShowSubcommandHelp_MultiLine_SubcommandUsageText
+--- PASS: TestShowSubcommandHelp_MultiLine_SubcommandUsageText (0.00s)
+=== RUN   TestShowRootCommandHelp_HiddenCommand
+--- PASS: TestShowRootCommandHelp_HiddenCommand (0.00s)
+=== RUN   TestShowRootCommandHelp_HelpPrinter
+=== RUN   TestShowRootCommandHelp_HelpPrinter/standard-command
+=== RUN   TestShowRootCommandHelp_HelpPrinter/custom-template-command
+--- PASS: TestShowRootCommandHelp_HelpPrinter (0.00s)
+    --- PASS: TestShowRootCommandHelp_HelpPrinter/standard-command (0.00s)
+    --- PASS: TestShowRootCommandHelp_HelpPrinter/custom-template-command (0.00s)
+=== RUN   TestShowRootCommandHelp_HelpPrinterCustom
+=== RUN   TestShowRootCommandHelp_HelpPrinterCustom/standard-command
+=== RUN   TestShowRootCommandHelp_HelpPrinterCustom/custom-template-command
+--- PASS: TestShowRootCommandHelp_HelpPrinterCustom (0.00s)
+    --- PASS: TestShowRootCommandHelp_HelpPrinterCustom/standard-command (0.00s)
+    --- PASS: TestShowRootCommandHelp_HelpPrinterCustom/custom-template-command (0.00s)
+=== RUN   TestShowRootCommandHelp_CustomAppTemplate
+--- PASS: TestShowRootCommandHelp_CustomAppTemplate (0.00s)
+=== RUN   TestShowRootCommandHelp_UsageText
+--- PASS: TestShowRootCommandHelp_UsageText (0.00s)
+=== RUN   TestShowRootCommandHelp_MultiLine_UsageText
+--- PASS: TestShowRootCommandHelp_MultiLine_UsageText (0.00s)
+=== RUN   TestShowRootCommandHelp_CommandMultiLine_UsageText
+--- PASS: TestShowRootCommandHelp_CommandMultiLine_UsageText (0.00s)
+=== RUN   TestHideHelpCommand
+--- PASS: TestHideHelpCommand (0.00s)
+=== RUN   TestHideHelpCommand_False
+--- PASS: TestHideHelpCommand_False (0.00s)
+=== RUN   TestHideHelpCommand_WithHideHelp
+Incorrect Usage: flag provided but not defined: -help
+
+--- PASS: TestHideHelpCommand_WithHideHelp (0.00s)
+=== RUN   TestHideHelpCommand_WithSubcommands
+--- PASS: TestHideHelpCommand_WithSubcommands (0.00s)
+=== RUN   TestHideHelpCommand_SubcommandCannotOptBackIn
+--- PASS: TestHideHelpCommand_SubcommandCannotOptBackIn (0.00s)
+=== RUN   TestHideHelp_SubcommandCannotOptBackIn
+Incorrect Usage: flag provided but not defined: -help
+
+--- PASS: TestHideHelp_SubcommandCannotOptBackIn (0.00s)
+=== RUN   TestDefaultCompleteWithFlags
+=== RUN   TestDefaultCompleteWithFlags/empty
+=== RUN   TestDefaultCompleteWithFlags/persistent-flag-after-positional-argument
+=== RUN   TestDefaultCompleteWithFlags/typical-flag-suggestion
+=== RUN   TestDefaultCompleteWithFlags/shared-local-and-persistent-flag-is-suggested-once
+=== RUN   TestDefaultCompleteWithFlags/custom-flag-without-visible-flag-is-suggested
+=== RUN   TestDefaultCompleteWithFlags/mutually-exclusive-flags-are-suggested
+=== RUN   TestDefaultCompleteWithFlags/skip-flag-parsing-does-not-suggest-parent-flags
+=== RUN   TestDefaultCompleteWithFlags/typical-flag-suggestion-hidden-bool
+=== RUN   TestDefaultCompleteWithFlags/typical-flag-suggestion-hidden-non-bool
+=== RUN   TestDefaultCompleteWithFlags/typical-flag-suggestion-hidden-bool-with-inverse
+=== RUN   TestDefaultCompleteWithFlags/flag-suggestion-double-dash-shows-all-flags
+=== RUN   TestDefaultCompleteWithFlags/typical-command-suggestion
+=== RUN   TestDefaultCompleteWithFlags/autocomplete-with-spaces
+=== RUN   TestDefaultCompleteWithFlags/zsh-autocomplete-with-flag-descriptions
+=== RUN   TestDefaultCompleteWithFlags/zsh-autocomplete-with-empty-flag-descriptions
+--- PASS: TestDefaultCompleteWithFlags (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/empty (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/persistent-flag-after-positional-argument (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/typical-flag-suggestion (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/shared-local-and-persistent-flag-is-suggested-once (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/custom-flag-without-visible-flag-is-suggested (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/mutually-exclusive-flags-are-suggested (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/skip-flag-parsing-does-not-suggest-parent-flags (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/typical-flag-suggestion-hidden-bool (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/typical-flag-suggestion-hidden-non-bool (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/typical-flag-suggestion-hidden-bool-with-inverse (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/flag-suggestion-double-dash-shows-all-flags (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/typical-command-suggestion (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/autocomplete-with-spaces (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/zsh-autocomplete-with-flag-descriptions (0.00s)
+    --- PASS: TestDefaultCompleteWithFlags/zsh-autocomplete-with-empty-flag-descriptions (0.00s)
+=== RUN   TestMutuallyExclusiveFlags
+--- PASS: TestMutuallyExclusiveFlags (0.00s)
+=== RUN   TestMutuallyExclusiveFlags_StringerInHelpOutput
+--- PASS: TestMutuallyExclusiveFlags_StringerInHelpOutput (0.00s)
+=== RUN   TestWrap
+--- PASS: TestWrap (0.00s)
+=== RUN   TestWrappedHelp
+--- PASS: TestWrappedHelp (0.00s)
+=== RUN   TestWrappedCommandHelp
+--- PASS: TestWrappedCommandHelp (0.00s)
+=== RUN   TestWrappedSubcommandHelp
+--- PASS: TestWrappedSubcommandHelp (0.00s)
+=== RUN   TestWrappedHelpSubcommand
+--- PASS: TestWrappedHelpSubcommand (0.00s)
+=== RUN   TestCategorizedHelp
+--- PASS: TestCategorizedHelp (0.00s)
+=== RUN   Test_checkShellCompleteFlag
+=== PAUSE Test_checkShellCompleteFlag
+=== RUN   TestNIndent
+=== PAUSE TestNIndent
+=== RUN   TestTemplateError
+--- PASS: TestTemplateError (0.00s)
+=== RUN   TestCliArgContainsFlag
+--- PASS: TestCliArgContainsFlag (0.00s)
+=== RUN   TestCommandHelpSuggest
+--- PASS: TestCommandHelpSuggest (0.00s)
+=== RUN   TestCommandHelpSuggestHiddenCommand
+--- PASS: TestCommandHelpSuggestHiddenCommand (0.00s)
+=== RUN   TestWrapLine
+--- PASS: TestWrapLine (0.00s)
+=== RUN   TestPrintHelpCustomTemplateError
+--- PASS: TestPrintHelpCustomTemplateError (0.00s)
+=== RUN   TestCustomUsageCommandHelp
+--- PASS: TestCustomUsageCommandHelp (0.00s)
+=== RUN   TestCommandListAlignsNonASCIINames
+--- PASS: TestCommandListAlignsNonASCIINames (0.00s)
+=== RUN   TestLexicographicLess
+--- PASS: TestLexicographicLess (0.00s)
+=== RUN   TestJaroWinkler
+--- PASS: TestJaroWinkler (0.00s)
+=== RUN   TestSuggestFlag
+--- PASS: TestSuggestFlag (0.00s)
+=== RUN   TestSuggestFlagHideHelp
+--- PASS: TestSuggestFlagHideHelp (0.00s)
+=== RUN   TestSuggestFlagHiddenFlag
+--- PASS: TestSuggestFlagHiddenFlag (0.00s)
+=== RUN   TestSuggestFlagHiddenFlagFromRun
+--- PASS: TestSuggestFlagHiddenFlagFromRun (0.00s)
+=== RUN   TestSuggestFlagFromError
+--- PASS: TestSuggestFlagFromError (0.00s)
+=== RUN   TestSuggestFlagFromErrorAppliedFlags
+=== RUN   TestSuggestFlagFromErrorAppliedFlags/persistent_flag_of_parent
+=== RUN   TestSuggestFlagFromErrorAppliedFlags/mutually_exclusive_flag
+=== RUN   TestSuggestFlagFromErrorAppliedFlags/local_flag_of_parent
+--- PASS: TestSuggestFlagFromErrorAppliedFlags (0.00s)
+    --- PASS: TestSuggestFlagFromErrorAppliedFlags/persistent_flag_of_parent (0.00s)
+    --- PASS: TestSuggestFlagFromErrorAppliedFlags/mutually_exclusive_flag (0.00s)
+    --- PASS: TestSuggestFlagFromErrorAppliedFlags/local_flag_of_parent (0.00s)
+=== RUN   TestSuggestFlagFromErrorWrongError
+--- PASS: TestSuggestFlagFromErrorWrongError (0.00s)
+=== RUN   TestSuggestFlagFromErrorWrongCommand
+--- PASS: TestSuggestFlagFromErrorWrongCommand (0.00s)
+=== RUN   TestSuggestFlagFromErrorNoSuggestion
+--- PASS: TestSuggestFlagFromErrorNoSuggestion (0.00s)
+=== RUN   TestSuggestCommand
+--- PASS: TestSuggestCommand (0.00s)
+=== RUN   TestZeroValueSourceChain
+--- PASS: TestZeroValueSourceChain (0.00s)
+=== RUN   TestEnvVarValueSource
+=== RUN   TestEnvVarValueSource/implements_ValueSource
+=== RUN   TestEnvVarValueSource/implements_ValueSource/not_found
+=== RUN   TestEnvVarValueSource/implements_ValueSource/found
+=== RUN   TestEnvVarValueSource/implements_fmt.Stringer
+=== RUN   TestEnvVarValueSource/implements_fmt.GoStringer
+--- PASS: TestEnvVarValueSource (0.00s)
+    --- PASS: TestEnvVarValueSource/implements_ValueSource (0.00s)
+        --- PASS: TestEnvVarValueSource/implements_ValueSource/not_found (0.00s)
+        --- PASS: TestEnvVarValueSource/implements_ValueSource/found (0.00s)
+    --- PASS: TestEnvVarValueSource/implements_fmt.Stringer (0.00s)
+    --- PASS: TestEnvVarValueSource/implements_fmt.GoStringer (0.00s)
+=== RUN   TestEnvVars
+--- PASS: TestEnvVars (0.00s)
+=== RUN   TestFileValueSource
+=== RUN   TestFileValueSource/implements_ValueSource
+=== RUN   TestFileValueSource/implements_ValueSource/not_found
+=== RUN   TestFileValueSource/implements_ValueSource/found
+=== RUN   TestFileValueSource/implements_fmt.Stringer
+=== RUN   TestFileValueSource/implements_fmt.GoStringer
+--- PASS: TestFileValueSource (0.00s)
+    --- PASS: TestFileValueSource/implements_ValueSource (0.00s)
+        --- PASS: TestFileValueSource/implements_ValueSource/not_found (0.00s)
+        --- PASS: TestFileValueSource/implements_ValueSource/found (0.00s)
+    --- PASS: TestFileValueSource/implements_fmt.Stringer (0.00s)
+    --- PASS: TestFileValueSource/implements_fmt.GoStringer (0.00s)
+=== RUN   TestFilePaths
+--- PASS: TestFilePaths (0.00s)
+=== RUN   TestValueSourceChainEnvKeys
+--- PASS: TestValueSourceChainEnvKeys (0.00s)
+=== RUN   TestValueSourceChain
+=== RUN   TestValueSourceChain/implements_ValueSource
+=== RUN   TestValueSourceChain/implements_fmt.GoStringer
+=== RUN   TestValueSourceChain/implements_fmt.Stringer
+--- PASS: TestValueSourceChain (0.00s)
+    --- PASS: TestValueSourceChain/implements_ValueSource (0.00s)
+    --- PASS: TestValueSourceChain/implements_fmt.GoStringer (0.00s)
+    --- PASS: TestValueSourceChain/implements_fmt.Stringer (0.00s)
+=== RUN   TestMapValueSource
+=== RUN   TestMapValueSource/#00
+=== RUN   TestMapValueSource/foo
+=== RUN   TestMapValueSource/#01
+=== RUN   TestMapValueSource/foo#01
+=== RUN   TestMapValueSource/.foob
+=== RUN   TestMapValueSource/foobar
+=== RUN   TestMapValueSource/foo.bar
+=== RUN   TestMapValueSource/foo.bar1
+=== RUN   TestMapValueSource/foo.bar1#01
+=== RUN   TestMapValueSource/foo.bar.t
+=== RUN   TestMapValueSource/foo.bar.t#01
+=== RUN   TestMapValueSource/foo.bar.t#02
+=== RUN   TestMapValueSource/foo.bar.t.gh
+=== RUN   TestMapValueSource/foo.bar.t.gh#01
+--- PASS: TestMapValueSource (0.00s)
+    --- PASS: TestMapValueSource/#00 (0.00s)
+    --- PASS: TestMapValueSource/foo (0.00s)
+    --- PASS: TestMapValueSource/#01 (0.00s)
+    --- PASS: TestMapValueSource/foo#01 (0.00s)
+    --- PASS: TestMapValueSource/.foob (0.00s)
+    --- PASS: TestMapValueSource/foobar (0.00s)
+    --- PASS: TestMapValueSource/foo.bar (0.00s)
+    --- PASS: TestMapValueSource/foo.bar1 (0.00s)
+    --- PASS: TestMapValueSource/foo.bar1#01 (0.00s)
+    --- PASS: TestMapValueSource/foo.bar.t (0.00s)
+    --- PASS: TestMapValueSource/foo.bar.t#01 (0.00s)
+    --- PASS: TestMapValueSource/foo.bar.t#02 (0.00s)
+    --- PASS: TestMapValueSource/foo.bar.t.gh (0.00s)
+    --- PASS: TestMapValueSource/foo.bar.t.gh#01 (0.00s)
+=== RUN   TestMapValueSourceStringer
+--- PASS: TestMapValueSourceStringer (0.00s)
+=== CONT  TestCommand_ParallelRun
+=== RUN   TestCommand_ParallelRun/run_0
+=== PAUSE TestCommand_ParallelRun/run_0
+=== RUN   TestCommand_ParallelRun/run_1
+=== PAUSE TestCommand_ParallelRun/run_1
+=== RUN   TestCommand_ParallelRun/run_2
+=== PAUSE TestCommand_ParallelRun/run_2
+=== CONT  TestNIndent
+=== CONT  Test_checkShellCompleteFlag
+--- PASS: TestNIndent (0.00s)
+=== RUN   TestCommand_ParallelRun/run_3
+=== RUN   Test_checkShellCompleteFlag/disable-shell-completion
+=== PAUSE TestCommand_ParallelRun/run_3
+=== PAUSE Test_checkShellCompleteFlag/disable-shell-completion
+=== RUN   TestCommand_ParallelRun/run_4
+=== PAUSE TestCommand_ParallelRun/run_4
+=== RUN   Test_checkShellCompleteFlag/child-disable-shell-completion
+=== PAUSE Test_checkShellCompleteFlag/child-disable-shell-completion
+=== RUN   TestCommand_ParallelRun/run_5
+=== PAUSE TestCommand_ParallelRun/run_5
+=== RUN   Test_checkShellCompleteFlag/last_argument_isn't_--generate-shell-completion
+=== PAUSE Test_checkShellCompleteFlag/last_argument_isn't_--generate-shell-completion
+=== RUN   TestCommand_ParallelRun/run_6
+=== RUN   Test_checkShellCompleteFlag/arguments_include_double_dash
+=== PAUSE Test_checkShellCompleteFlag/arguments_include_double_dash
+=== RUN   Test_checkShellCompleteFlag/shell_completion
+=== PAUSE TestCommand_ParallelRun/run_6
+=== PAUSE Test_checkShellCompleteFlag/shell_completion
+=== RUN   TestCommand_ParallelRun/run_7
+=== RUN   Test_checkShellCompleteFlag/double_dash_is_the_token_being_completed
+=== PAUSE TestCommand_ParallelRun/run_7
+=== PAUSE Test_checkShellCompleteFlag/double_dash_is_the_token_being_completed
+=== RUN   TestCommand_ParallelRun/run_8
+=== RUN   Test_checkShellCompleteFlag/no_arguments_at_all
+=== PAUSE TestCommand_ParallelRun/run_8
+=== PAUSE Test_checkShellCompleteFlag/no_arguments_at_all
+=== RUN   TestCommand_ParallelRun/run_9
+=== CONT  Test_checkShellCompleteFlag/no_arguments_at_all
+=== PAUSE TestCommand_ParallelRun/run_9
+=== CONT  Test_checkShellCompleteFlag/shell_completion
+=== CONT  TestCommand_ParallelRun/run_0
+=== CONT  Test_checkShellCompleteFlag/arguments_include_double_dash
+=== CONT  Test_checkShellCompleteFlag/child-disable-shell-completion
+=== CONT  Test_checkShellCompleteFlag/disable-shell-completion
+=== CONT  TestCommand_ParallelRun/run_9
+=== CONT  TestCommand_ParallelRun/run_8
+=== CONT  TestCommand_ParallelRun/run_7
+=== CONT  TestCommand_ParallelRun/run_3
+=== CONT  TestCommand_ParallelRun/run_5
+=== CONT  TestCommand_ParallelRun/run_4
+=== CONT  TestCommand_ParallelRun/run_2
+=== CONT  TestCommand_ParallelRun/run_1
+=== CONT  Test_checkShellCompleteFlag/double_dash_is_the_token_being_completed
+=== CONT  TestCommand_ParallelRun/run_6
+--- PASS: TestCommand_ParallelRun (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_0 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_9 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_8 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_7 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_3 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_5 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_4 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_2 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_1 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_6 (0.00s)
+=== CONT  Test_checkShellCompleteFlag/last_argument_isn't_--generate-shell-completion
+--- PASS: Test_checkShellCompleteFlag (0.00s)
+    --- PASS: Test_checkShellCompleteFlag/no_arguments_at_all (0.00s)
+    --- PASS: Test_checkShellCompleteFlag/shell_completion (0.00s)
+    --- PASS: Test_checkShellCompleteFlag/arguments_include_double_dash (0.00s)
+    --- PASS: Test_checkShellCompleteFlag/child-disable-shell-completion (0.00s)
+    --- PASS: Test_checkShellCompleteFlag/disable-shell-completion (0.00s)
+    --- PASS: Test_checkShellCompleteFlag/double_dash_is_the_token_being_completed (0.00s)
+    --- PASS: Test_checkShellCompleteFlag/last_argument_isn't_--generate-shell-completion (0.00s)
+=== RUN   ExampleCommand_Suggest
+--- PASS: ExampleCommand_Suggest (0.00s)
+=== RUN   ExampleCommand_Run
+--- PASS: ExampleCommand_Run (0.00s)
+=== RUN   ExampleCommand_Run_subcommand
+--- PASS: ExampleCommand_Run_subcommand (0.00s)
+=== RUN   ExampleCommand_Run_appHelp
+--- PASS: ExampleCommand_Run_appHelp (0.00s)
+=== RUN   ExampleCommand_Run_commandHelp
+--- PASS: ExampleCommand_Run_commandHelp (0.00s)
+=== RUN   ExampleCommand_Run_noAction
+--- PASS: ExampleCommand_Run_noAction (0.00s)
+=== RUN   ExampleCommand_Run_subcommandNoAction
+--- PASS: ExampleCommand_Run_subcommandNoAction (0.00s)
+=== RUN   ExampleCommand_Run_shellComplete_bash_withShortFlag
+--- PASS: ExampleCommand_Run_shellComplete_bash_withShortFlag (0.00s)
+=== RUN   ExampleCommand_Run_shellComplete_bash_withLongFlag
+--- PASS: ExampleCommand_Run_shellComplete_bash_withLongFlag (0.00s)
+=== RUN   ExampleCommand_Run_shellComplete_bash_withMultipleLongFlag
+--- PASS: ExampleCommand_Run_shellComplete_bash_withMultipleLongFlag (0.00s)
+=== RUN   ExampleCommand_Run_shellComplete_bash
+--- PASS: ExampleCommand_Run_shellComplete_bash (0.00s)
+=== RUN   ExampleCommand_Run_sliceValues
+--- PASS: ExampleCommand_Run_sliceValues (0.00s)
+=== RUN   ExampleCommand_Run_mapValues
+--- PASS: ExampleCommand_Run_mapValues (0.00s)
+=== RUN   ExampleBoolWithInverseFlag
+--- PASS: ExampleBoolWithInverseFlag (0.00s)
+=== RUN   ExampleCommand_Suggest_command
+--- PASS: ExampleCommand_Suggest_command (0.00s)
+=== RUN   ExampleCommand_Walk_visibleTree
+--- PASS: ExampleCommand_Walk_visibleTree (0.00s)
+PASS
+ok  	github.com/urfave/cli/v3	2.000s
+?   	github.com/urfave/cli/v3/examples/example-cli	[no test files]
+?   	github.com/urfave/cli/v3/examples/example-hello-world	[no test files]
+?   	github.com/urfave/cli/v3/scripts	[no test files]
+
