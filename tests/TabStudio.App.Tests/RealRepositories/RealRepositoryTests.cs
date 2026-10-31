@@ -183,8 +183,8 @@ public sealed class RealRepositoryTests
 
     /// <summary>
     /// Whether a repository belongs to this run of the job: those with no <c>job</c> to the Real repositories job, and
-    /// those whose <c>job</c> is <c>TABSTUDIO_REAL_REPOS_JOB</c> to that job (<c>sweep</c>: the repositories of the
-    /// 0.20.5 sweep, in a job of their own so that neither job takes much longer).
+    /// those whose <c>job</c> is <c>TABSTUDIO_REAL_REPOS_JOB</c> to that job (<c>sweep-1</c> and <c>sweep-2</c>: the repositories of the
+    /// 0.20.5 sweep, in jobs of their own so that no job takes much longer).
     /// </summary>
     private static bool InThisJob(JsonNode repository) =>
         string.Equals(repository["job"]?.GetValue<string>(), Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_JOB") is { Length: > 0 } job ? job : null, StringComparison.Ordinal);
