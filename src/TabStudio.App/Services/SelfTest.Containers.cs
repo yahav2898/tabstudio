@@ -87,10 +87,20 @@ public static partial class SelfTest
             var cli = await CommandRunner.RunAsync(workspace.Toolchains.Runtime, new()
             { Program = "/bin/sh", Arguments = ["-c", "docker ps"], WorkingDirectory = root }, null, cancellationToken);
             if (!cli.Succeeded || !cli.Output.Contains("nginx:alpine", StringComparison.Ordinal)) throw new IOException("docker terminal command failed: " + cli.Output);
+            var stdin = await CommandRunner.RunAsync(workspace.Toolchains.Runtime, new()
+            {
+                Program = "/bin/sh", WorkingDirectory = root,
+                Arguments = ["-c", $$"""printf 'container-stdin\n' | docker exec -i {{db.Id}} sh -c 'cat; echo container-stderr >&2; exit 7'; code=$?; [ "$code" -eq 7 ]"""],
+            }, null, cancellationToken);
+            if (!stdin.Succeeded || !stdin.Output.Contains("container-stdin", StringComparison.Ordinal)
+                || !stdin.Output.Contains("container-stderr", StringComparison.Ordinal))
+            {
+                throw new IOException("docker exec stdin/output/exit status failed: " + stdin.Output);
+            }
             if (engine.Containers.Count(c => c.IsRunning) != 3) throw new IOException("An image fell back to a native service.");
             if (engine.Containers.Select(c => c.Address).Distinct().Count() != 3) throw new IOException("Containers shared a loopback address.");
             var images = await engine.Store.ListAsync(cancellationToken);
-            return new(true, $"Containers: PostgreSQL query=42 and TCP connected; Redis PING=PONG; nginx rendered in web preview; docker ps; {images.Count} verified images; {clock.Elapsed.TotalSeconds:0.0} s; {string.Join(", ", images.Select(i => i.DisplayName + "@" + i.ManifestDigest))}; {environment.Count} run variables", clock.Elapsed);
+            return new(true, $"Containers: PostgreSQL query=42 and TCP connected; Redis PING=PONG; nginx rendered in web preview; docker ps and exec stdin/output/exit; {images.Count} verified images; {clock.Elapsed.TotalSeconds:0.0} s; {string.Join(", ", images.Select(i => i.DisplayName + "@" + i.ManifestDigest))}; {environment.Count} run variables", clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {

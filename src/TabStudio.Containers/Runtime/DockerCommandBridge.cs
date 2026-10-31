@@ -30,34 +30,49 @@ public sealed class DockerCommandBridge : IAsyncDisposable
     /// <summary>A BusyBox-only client, including streamed output, exec stdin and shell exit codes.</summary>
     public string ShellScript => $$"""
         #!/bin/sh
+        if [ "$1" != '__tabstudio_socket_{{_token}}' ]; then
+          exec busybox nc 127.0.0.1 {{((IPEndPoint)_listener.LocalEndpoint).Port}} -e /bin/sh "$0" '__tabstudio_socket_{{_token}}' "$@" 3<&0 4>&1
+        fi
+        shift
         umask 077
         dir=$(mktemp -d "${TMPDIR:-/tmp}/tabstudio-docker.XXXXXX") || exit 1
-        writer= client=
-        cleanup() { [ -z "$writer" ] || kill "$writer" 2>/dev/null; [ -z "$client" ] || kill "$client" 2>/dev/null; rm -rf "$dir"; }
+        writer=
+        cleanup() { if [ -n "$writer" ]; then kill "$writer" 2>/dev/null; wait "$writer" 2>/dev/null; fi; rm -rf "$dir"; }
         trap cleanup EXIT
         trap 'exit 130' INT TERM
-        mkfifo "$dir/in" "$dir/out" || exit 1
         interactive=0
         if [ "$1" = exec ]; then
           for arg in "$@"; do case "$arg" in -i|-it|-ti) interactive=1;; esac; done
         fi
-        (
-          printf '%s\n' '{{_token}}'
-          printf '%s' "$PWD" | base64 | tr -d '\n'; printf '\n'
-          for arg in "$@"; do printf 'A'; printf '%s' "$arg" | base64 | tr -d '\n'; printf '\n'; done
-          printf '\n'
-          [ "$interactive" = 0 ] || exec cat
-        ) > "$dir/in" &
-        writer=$!
-        busybox nc 127.0.0.1 {{((IPEndPoint)_listener.LocalEndpoint).Port}} < "$dir/in" > "$dir/out" &
-        client=$!
+        printf '%s\n' '{{_token}}'
+        printf '%s' "$PWD" | base64 | tr -d '\n'; printf '\n'
+        for arg in "$@"; do printf 'A'; printf '%s' "$arg" | base64 | tr -d '\n'; printf '\n'; done
+        printf '\n'
+        if [ "$interactive" = 1 ]; then
+          (
+            reader=
+            trap '[ -z "$reader" ] || kill "$reader" 2>/dev/null; exit' TERM
+            while :; do
+              busybox dd bs=1024 count=1 <&3 > "$dir/input" 2>/dev/null &
+              reader=$!
+              wait "$reader" || break
+              reader=
+              [ -s "$dir/input" ] || break
+              printf 'I'; base64 < "$dir/input" | tr -d '\n'; printf '\n'
+            done
+            printf 'Z\n'
+          ) &
+          writer=$!
+        else
+          printf 'Z\n'
+        fi
         while IFS= read -r record; do
           case "$record" in
-            O*) printf '%s' "${record#O}" | base64 -d;;
+            O*) printf '%s' "${record#O}" | base64 -d >&4;;
             E*) printf '%s' "${record#E}" | base64 -d >&2;;
             X*) exit "${record#X}";;
           esac
-        done < "$dir/out"
+        done
         printf '%s\n' 'TabStudio command connection closed.' >&2
         exit 1
         """ + "\n";
@@ -116,7 +131,8 @@ public sealed class DockerCommandBridge : IAsyncDisposable
                     }
                     finally { writes.Release(); }
                 }
-                var code = await _command.ExecuteAsync(args, directory, stream, Write, stop.Token).ConfigureAwait(false);
+                using var input = new FramedInput(stream);
+                var code = await _command.ExecuteAsync(args, directory, input, Write, stop.Token).ConfigureAwait(false);
                 await stream.WriteAsync(Encoding.ASCII.GetBytes("X" + code.ToString(System.Globalization.CultureInfo.InvariantCulture) + "\n"), stop.Token).ConfigureAwait(false);
             }
             catch (Exception ex) when (ex is IOException or SocketException or OperationCanceledException or FormatException or ObjectDisposedException) { }
@@ -134,6 +150,46 @@ public sealed class DockerCommandBridge : IAsyncDisposable
             line.WriteByte(one[0]);
         }
         return null;
+    }
+
+    // Explicit EOF avoids needing mkfifo or a socket shutdown utility in the Android guest shell.
+    private sealed class FramedInput(Stream stream) : Stream
+    {
+        private byte[] _pending = [];
+        private int _offset;
+        private bool _ended;
+
+        public override bool CanRead => true;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+        public override void Flush() { }
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+        public override int Read(byte[] buffer, int offset, int count) => ReadAsync(buffer.AsMemory(offset, count)).AsTask().GetAwaiter().GetResult();
+        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
+            ReadAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
+
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            if (buffer.Length == 0) return 0;
+            while (_offset == _pending.Length)
+            {
+                if (_ended) return 0;
+                var line = await ReadLineAsync(stream, cancellationToken).ConfigureAwait(false);
+                if (line is null or "Z") { _ended = true; return 0; }
+                if (!line.StartsWith('I')) throw new IOException("Invalid stdin frame.");
+                _pending = Convert.FromBase64String(line[1..]);
+                _offset = 0;
+            }
+
+            var count = Math.Min(buffer.Length, _pending.Length - _offset);
+            _pending.AsMemory(_offset, count).CopyTo(buffer);
+            _offset += count;
+            return count;
+        }
     }
 
     /// <inheritdoc />

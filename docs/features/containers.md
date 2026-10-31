@@ -73,7 +73,8 @@ unsupported and visible rather than silently ignored.
 
 The local Alpine terminal receives a `docker` command when its shell starts. It talks to a private authenticated
 loopback command bridge in the IDE; this is not the Docker Engine API. Arguments use base64 framing and remain
-argument vectors. Output streams and shell exit codes are preserved. The supported subset is:
+argument vectors. The BusyBox socket client frames stdin and EOF without requiring named pipes, which Android's
+guest environment cannot create. Output streams and shell exit codes are preserved. The supported subset is:
 
 ```sh
 docker pull postgres:17-alpine

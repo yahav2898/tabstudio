@@ -93,6 +93,14 @@ public sealed class RuntimeTests(ITestOutputHelper output)
             Assert.True(cli.Succeeded, cli.Output);
             Assert.Contains("PONG", cli.Output, StringComparison.Ordinal);
             Assert.Contains("nginx:alpine", cli.Output, StringComparison.Ordinal);
+            var stdin = await CommandRunner.RunAsync(terminalRuntime, new()
+            {
+                Program = "/bin/sh", WorkingDirectory = "/",
+                Arguments = ["-c", $$"""printf 'stdin-from-shim\n' | docker exec -i {{cache.Name}} sh -c 'cat; echo shell-error >&2; exit 7'; code=$?; [ "$code" -eq 7 ]"""],
+            }, null, CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(30));
+            Assert.True(stdin.Succeeded, stdin.Output);
+            Assert.Contains("stdin-from-shim", stdin.Output, StringComparison.Ordinal);
+            Assert.Contains("shell-error", stdin.Output, StringComparison.Ordinal);
         }
         var second = await engine.CreateAsync(new ContainerSpec { Image = "redis:7-alpine", Name = "second-cache" });
         await engine.StartAsync(second.Id);
