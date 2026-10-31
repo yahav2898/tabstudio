@@ -1,5 +1,5 @@
 NSubstitute at f2b623d762fc28fc1a2fe3932b3b360d113c734d
-Opened /home/runner/work/_temp/real-repos/NSubstitute/NSubstitute.slnx in 0.4 s
+Opened /home/runner/work/_temp/real-repos/NSubstitute/NSubstitute.slnx in 0.5 s
 Compatibility Doctor:
   NSubstitute: Library via Built with its users - A library is compiled together with the projects that reference it.
   NSubstitute.Acceptance.Specs: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
@@ -7,7 +7,7 @@ Compatibility Doctor:
   NSubstitute.Documentation.Tests.Generator: Library via Built with its users - A library is compiled together with the projects that reference it.
   NSubstitute.Documentation.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: none
-Built in 3.2 s: 0 errors, 55 warnings
+Built in 4.5 s: 0 errors, 55 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -736,9 +736,9 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net8.0/_._
       buildTransitive/netcoreapp2.0/System.Management.targets
 Output:
-Build started at 01:05:21...
+Build started at 05:12:51...
 1>------ Build started: Project: NSubstitute, Configuration: Debug ------
-1>NSubstitute -> compiled in memory (177 KB, 220 ms)
+1>NSubstitute -> compiled in memory (177 KB, 185 ms)
 2>------ Build started: Project: NSubstitute.Acceptance.Specs, Configuration: Debug ------
 2>ArgumentMatchingCompat.cs(15,25): warning CS0618: 'Arg.Compat' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
 2>ArgumentMatchingCompat.cs(24,25): warning CS0618: 'Arg.Compat' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
@@ -783,11 +783,11 @@ Build started at 01:05:21...
 2>ArgumentMatchingCompat.cs(350,23): warning CS0618: 'Arg.Compat' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
 2>ArgumentMatchingCompat.cs(365,21): warning CS0618: 'Arg.Compat' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
 2>TestImplementation.cs(7,34): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-2>NSubstitute.Acceptance.Specs -> compiled in memory (404.5 KB, 463 ms)
+2>NSubstitute.Acceptance.Specs -> compiled in memory (404.5 KB, 1744 ms)
 3>------ Build started: Project: NSubstitute.Benchmarks, Configuration: Debug ------
-3>NSubstitute.Benchmarks -> compiled in memory (15.5 KB, 166 ms)
+3>NSubstitute.Benchmarks -> compiled in memory (15.5 KB, 209 ms)
 4>------ Build started: Project: NSubstitute.Documentation.Tests.Generator, Configuration: Debug ------
-4>NSubstitute.Documentation.Tests.Generator -> compiled in memory (7 KB, 12 ms)
+4>NSubstitute.Documentation.Tests.Generator -> compiled in memory (7 KB, 18 ms)
 5>------ Build started: Project: NSubstitute.Documentation.Tests, Configuration: Debug ------
 5>Tests_compat_args.g.cs(29,33): warning CS0618: 'CompatArg' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
 5>Tests_compat_args.g.cs(29,75): warning CS0618: 'CompatArg' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
@@ -801,6 +801,6 @@ Build started at 01:05:21...
 5>Tests_compat_args.g.cs(81,47): warning CS0618: 'Arg.Compat' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
 5>Tests_compat_args.g.cs(82,40): warning CS0618: 'Arg.Compat' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
 5>Tests_received_calls.g.cs(92,18): warning CS0169: The field 'Tests_received_calls.CommandWatcher.command' is never used
-5>NSubstitute.Documentation.Tests -> compiled in memory (47 KB, 239 ms)
+5>NSubstitute.Documentation.Tests -> compiled in memory (47 KB, 474 ms)
 ========== Build: 5 succeeded, 0 failed ==========
 

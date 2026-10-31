@@ -2,10 +2,10 @@ golang-gin-realworld at 626c372d259472148d93303f74aa9b9a1cdcef24
 Toolchain projects:
   go: /home/runner/work/_temp/real-repos/golang-gin-realworld/go.mod
 Startup project: go /home/runner/work/_temp/real-repos/golang-gin-realworld/go.mod
-Set up in 2.5 s
+Set up in 3.1 s
 Web preview: http://127.0.0.1:8080/
 GET http://127.0.0.1:8080/api/tags: 200 OK, 11 characters
-Ran in 45.7 s
+Ran in 56.7 s
 Project setup:
 
 Output:
@@ -16,8 +16,8 @@ go: downloading gorm.io/gorm v1.25.12
 go: downloading github.com/go-playground/validator/v10 v10.24.0
 go: downloading github.com/golang-jwt/jwt/v5 v5.2.1
 go: downloading gorm.io/driver/sqlite v1.5.7
-go: downloading github.com/gosimple/slug v1.15.0
 go: downloading golang.org/x/crypto v0.32.0
+go: downloading github.com/gosimple/slug v1.15.0
 go: downloading github.com/jinzhu/now v1.1.5
 go: downloading github.com/gin-contrib/sse v0.1.0
 go: downloading github.com/mattn/go-isatty v0.0.20
@@ -35,9 +35,6 @@ go: downloading github.com/gosimple/unidecode v1.0.1
 go: downloading github.com/jinzhu/inflection v1.0.0
 go: downloading golang.org/x/sys v0.29.0
 go: downloading github.com/go-playground/locales v0.14.1
-
-2026/10/31 00:54:28 /home/runner/work/_temp/real-repos/golang-gin-realworld/users/models.go:48 SLOW SQL >= 200ms
-[399.817ms] [rows:0] CREATE TABLE `user_models` (`id` integer PRIMARY KEY AUTOINCREMENT,`username` text,`email` text,`bio` text,`image` text,`password` text NOT NULL)
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
@@ -74,7 +71,7 @@ go: downloading github.com/go-playground/locales v0.14.1
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8080
-[GIN] 2026/10/31 - 00:54:28 | 200 |     235.869µs |       127.0.0.1 | GET      "/api/tags"
+[GIN] 2026/10/31 - 04:58:38 | 200 |     303.518µs |       127.0.0.1 | GET      "/api/tags"
 
 The program 'golang-gin-realworld' was stopped.
 

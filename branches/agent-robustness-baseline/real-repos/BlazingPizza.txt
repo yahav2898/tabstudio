@@ -1,12 +1,12 @@
 BlazingPizza at e0f5968e7c4699209dc7b5b0b2edc86162287792
-Opened /home/runner/work/_temp/real-repos/BlazingPizza/src/BlazingPizza.sln in 0.1 s
+Opened /home/runner/work/_temp/real-repos/BlazingPizza/src/BlazingPizza.sln in 0.2 s
 Compatibility Doctor:
   BlazingPizza: Ready via Local server + WebView - Served on this device and shown in the web preview. Interactive Server components run here over a live circuit; WebAssembly components run in the preview on .NET for WebAssembly, without the debugger. Saving a file restarts it.
   BlazingPizza.Client: Library via WebAssembly, in its web app - The WebAssembly part of a Blazor Web App: it is compiled for the browser and runs in the web preview when the app that references it runs.
   BlazingPizza.Shared: Library via Built with its users - A library is compiled together with the projects that reference it.
   BlazingPizza.ComponentsLibrary: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: BlazingPizza
-Built in 4.9 s: 0 errors, 14 warnings
+Built in 4.7 s: 0 errors, 14 warnings
 Packages with analyzers or MSBuild files:
   microsoft.aspnetcore.app.ref 10.0.14
       analyzers/dotnet/cs/Microsoft.AspNetCore.App.Analyzers.dll
@@ -315,18 +315,18 @@ Packages with analyzers or MSBuild files:
       buildTransitive/netcoreapp2.0/System.Composition.targets
       buildTransitive/netcoreapp3.1/_._
 Output:
-Build started at 00:56:38...
+Build started at 05:01:45...
 1>------ Build started: Project: BlazingPizza.ComponentsLibrary, Configuration: Debug ------
 1>TemplatedList.razor(17,6): warning CS8602: Dereference of a possibly null reference.
-1>BlazingPizza.ComponentsLibrary -> compiled in memory (10.5 KB, 230 ms)
+1>BlazingPizza.ComponentsLibrary -> compiled in memory (10.5 KB, 273 ms)
 2>------ Build started: Project: BlazingPizza.Shared, Configuration: Debug ------
-2>BlazingPizza.Shared -> compiled in memory (71.5 KB, 185 ms)
+2>BlazingPizza.Shared -> compiled in memory (71.5 KB, 301 ms)
 3>------ Build started: Project: BlazingPizza.Client, Configuration: Debug ------
 3>OrderState.cs(17,20): warning CS8618: Non-nullable property 'JSRuntime' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 3>OrderState.cs(48,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
 3>OrderState.cs(55,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
 3>OrderState.cs(70,11): warning CS8602: Dereference of a possibly null reference.
-3>BlazingPizza.Client -> compiled in memory (42 KB, 185 ms)
+3>BlazingPizza.Client -> compiled in memory (42 KB, 195 ms)
 4>------ Build started: Project: BlazingPizza, Configuration: Debug ------
 4>LoginDisplay.razor(12,60): warning CS8602: Dereference of a possibly null reference.
 4>MyOrders.razor(36,32): warning CS0169: The field 'MyOrders.ordersWithStatus' is never used
@@ -337,6 +337,6 @@ Build started at 00:56:38...
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Specials' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Toppings' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'NotificationSubscriptions' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-4>BlazingPizza -> compiled in memory (238.5 KB, 593 ms)
+4>BlazingPizza -> compiled in memory (238.5 KB, 841 ms)
 ========== Build: 4 succeeded, 0 failed ==========
 
