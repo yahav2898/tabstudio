@@ -283,7 +283,7 @@ public static partial class ToolchainTestDiscoverer
         }
     }
 
-    private static IEnumerable<string> RustModule(string file) =>
+    private static string[] RustModule(string file) =>
         file is "mod.rs" ? [] : [Path.GetFileNameWithoutExtension(file)];
 
     /// <summary>The folder of the Cargo package a file is in: the closest one above it with a Cargo.toml.</summary>
@@ -311,7 +311,7 @@ public static partial class ToolchainTestDiscoverer
         return name.Replace('-', '_');
     }
 
-    private static IEnumerable<string> FilesUnder(string directory, string pattern, string[] skipped)
+    private static List<string> FilesUnder(string directory, string pattern, string[] skipped)
     {
         var found = new List<string>();
         var pending = new Stack<(string Folder, int Depth)>([(directory, 0)]);

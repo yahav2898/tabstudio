@@ -299,7 +299,7 @@ public static partial class ToolchainTestPlanner
     /// leaves them out, so attrs, marshmallow, httpie, requests and rich failed to collect their tests.
     /// </summary>
     /// <param name="directory">The project folder.</param>
-    internal static IReadOnlyList<string> PythonTestRequirements(string directory)
+    internal static List<string> PythonTestRequirements(string directory)
     {
         var arguments = new List<string>();
         foreach (var file in PythonTestRequirementFiles.Where(f => File.Exists(Path.Combine(directory, f))))
