@@ -1,0 +1,526 @@
+axios at 9d11464a75ee5c644c0308d742f58755c0482594, opening /home/runner/work/_temp/repos/axios
+Opened in 2.4 s: axios, solution (none)
+  toolchain project node: /home/runner/work/_temp/repos/axios/package.json
+  toolchain project node: /home/runner/work/_temp/repos/axios/tests/module/cjs/package.json
+  toolchain project node: /home/runner/work/_temp/repos/axios/tests/module/esm/package.json
+  toolchain project node: /home/runner/work/_temp/repos/axios/tests/smoke/bun/package.json
+  toolchain project node: /home/runner/work/_temp/repos/axios/tests/smoke/cjs/package.json
+  toolchain project node: /home/runner/work/_temp/repos/axios/tests/smoke/esm/package.json
+Compatibility Doctor:
+  axios: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+  cjs: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+  esm: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+  bun: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+  cjs: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+  esm: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+F5 startup project: axios (node) /home/runner/work/_temp/repos/axios/package.json
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: 0 found; 1690 passed, 25 failed, 0 skipped, 0 not run - The build failed. Fix the errors in the Error List, then run the tests again. (110 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 1.2 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up axios: npm ci
+  Installing axios's packages: Installing packages: npm ci
+  Installing axios's packages: Succeeded after 6.7 s
+  Setting up projects: Setting up cjs: npm ci
+  Installing cjs's packages: Installing packages: npm ci
+  Installing cjs's packages: Succeeded after 1.8 s
+  Setting up projects: Setting up esm: npm ci
+  Installing esm's packages: Installing packages: npm ci
+  Installing esm's packages: Succeeded after 1.3 s
+  Setting up projects: Setting up bun: npm install
+  Installing bun's packages: Installing packages: npm install
+  Installing bun's packages: Succeeded after 2.2 s
+  Setting up projects: Setting up cjs: npm ci
+  Installing cjs's packages: Installing packages: npm ci
+  Installing cjs's packages: Succeeded after 1.2 s
+  Setting up projects: Setting up esm: npm ci
+  Installing esm's packages: Installing packages: npm ci
+  Installing esm's packages: Succeeded after 0.8 s
+  Setting up projects: Succeeded after 31.8 s
+  Testing axios: Running axios's tests
+  Testing axios: Failed after 89.9 s
+  Testing cjs: Running cjs's tests
+  Testing cjs: Failed after 0.5 s
+  Testing esm: Running esm's tests
+  Testing esm: Failed after 16.6 s
+  Testing cjs: Running cjs's tests
+  Testing cjs: Failed after 0.5 s
+  Testing esm: Running esm's tests
+  Testing esm: Failed after 2.2 s
+Project setup:
+
+Output:
+        ║
+╚════════════════════════════════════════════════════════════╝
+    at /home/runner/work/_temp/repos/axios/node_modules/@vitest/browser-playwright/dist/index.js:941:55 {
+  log: [],
+  name: 'Error'
+}
+========== Running cjs's tests with Mocha ==========
+> sh -c 'exec npx --no-install mocha "$@" ' mocha --reporter xunit --reporter-option output=/home/runner/work/_temp/repos/axios/tests/module/cjs/.tabstudio/test-results/d3b26a37353440e5bb71f5307c407eca/mocha.xml
+Error: No test files found: "test"
+cjs's tests did not run: the build or the test runner failed. See the Error List and the output above.
+========== Running esm's tests with Vitest ==========
+> npx --no-install vitest run --reporter=default --reporter=junit --outputFile.junit=/home/runner/work/_temp/repos/axios/tests/module/esm/.tabstudio/test-results/af3cf149c1214d59b17af98266673cfd/vitest.xml
+
+ RUN  v4.1.12 /home/runner/work/_temp/repos/axios/tests/module/esm
+
+ ✓  module  tests/fixture-cleanup.module.test.js (1 test) 5ms
+ ❯  module  tests/ts.module.test.js (3 tests | 3 failed) 10423ms
+     × compiles and executes import axios syntax 1606ms
+     × emits usable ESM declarations for forwarded request response generics 4339ms
+     × emits usable CommonJS declarations for forwarded request response generics 4474ms
+ ❯  module  tests/typings.module.test.js (5 tests | 4 failed) 15581ms
+     ✓ type-checks esm axios typings  4168ms
+     × type-checks additive esm public typings 4408ms
+     × type-checks fetch Response constructors with browser declarations 3449ms
+     × type-checks esm imports and Response constructors without DOM declarations 1770ms
+     × type-checks cjs imports and Response constructors without DOM declarations 1783ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL   module  tests/ts.module.test.js > module ts compatibility > compiles and executes import axios syntax
+Error: Command failed:
+  command: node index.js
+  cwd: /home/runner/work/_temp/repos/axios/tests/module/esm/.tmp-module-ts-l0QH0F
+  exitCode: 1
+  stdout:
+
+  stderr:
+node:internal/modules/cjs/loader:1433
+  throw err;
+  ^
+
+Error: Cannot find module 'axios'
+Require stack:
+- /home/runner/work/_temp/repos/axios/tests/module/esm/.tmp-module-ts-l0QH0F/index.js
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1430:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1040:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1045:22)
+    at Function._load (node:internal/modules/cjs/loader:1216:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)
+    at Module.require (node:internal/modules/cjs/loader:1527:12)
+    at require (node:internal/modules/helpers:147:16)
+    at Object.<anonymous> (/home/runner/work/_temp/repos/axios/tests/module/esm/.tmp-module-ts-l0QH0F/index.js:41:30)
+    at Module._compile (node:internal/modules/cjs/loader:1781:14)
+    at Object..js (node:internal/modules/cjs/loader:1913:10) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/runner/work/_temp/repos/axios/tests/module/esm/.tmp-module-ts-l0QH0F/index.js'
+  ]
+}
+
+Node.js v22.23.4
+
+ ❯ Object.<anonymous> .tmp-module-ts-l0QH0F/index.js:41:30
+ ❯ runCommand tests/helpers/run-command.js:22:11
+     20|
+     21|   if (output.code !== 0) {
+     22|     throw new Error(
+       |           ^
+     23|       [
+     24|         'Command failed:',
+
+ Test Files  2 failed | 1 passed (3)
+ ❯ tests/ts.module.test.js:54:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL   module  tests/ts.module.test.js > module ts compatibility > emits usable ESM declarations for forwarded request response generics
+Error: Command failed:
+  command: node /home/runner/work/_temp/repos/axios/tests/module/esm/node_modules/typescript/bin/tsc -p tsconfig.json
+  cwd: /home/runner/work/_temp/repos/axios/tests/module/esm/.tmp-module-declaration-emit-module-gnzTN3
+  exitCode: 2
+  stdout:
+index.ts(1,51): error TS2307: Cannot find module 'axios' or its corresponding type declarations.
+
+  stderr:
+
+ ❯ runCommand tests/helpers/run-command.js:22:11
+     20|
+     21|   if (output.code !== 0) {
+     22|     throw new Error(
+       |           ^
+     23|       [
+     24|         'Command failed:',
+ ❯ tests/ts.module.test.js:75:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL   module  tests/ts.module.test.js > module ts compatibility > emits usable CommonJS declarations for forwarded request response generics
+Error: Command failed:
+  command: node /home/runner/work/_temp/repos/axios/tests/module/esm/node_modules/typescript/bin/tsc -p tsconfig.json
+  cwd: /home/runner/work/_temp/repos/axios/tests/module/esm/.tmp-module-declaration-emit-commonjs-mAliQB
+  exitCode: 2
+  stdout:
+index.ts(1,51): error TS2307: Cannot find module 'axios' or its corresponding type declarations.
+
+  stderr:
+
+ ❯ runCommand tests/helpers/run-command.js:22:11
+     20|
+     21|   if (output.code !== 0) {
+     22|     throw new Error(
+       |           ^
+     23|       [
+     24|         'Command failed:',
+ ❯ tests/ts.module.test.js:75:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL   module  tests/typings.module.test.js > module esm typings compatibility > type-checks additive esm public typings
+Error: Command failed:
+  command: node /home/runner/work/_temp/repos/axios/tests/module/esm/node_modules/typescript/bin/tsc --noEmit -p tsconfig.json
+  cwd: /home/runner/work/_temp/repos/axios/tests/module/esm/.tmp-module-typings-esm-added-hjhtXd
+  exitCode: 2
+  stdout:
+index.ts(17,8): error TS2307: Cannot find module 'axios' or its corresponding type declarations.
+index.ts(28,5): error TS2578: Unused '@ts-expect-error' directive.
+index.ts(94,5): error TS2578: Unused '@ts-expect-error' directive.
+index.ts(116,1): error TS2578: Unused '@ts-expect-error' directive.
+index.ts(134,3): error TS2578: Unused '@ts-expect-error' directive.
+index.ts(136,3): error TS2578: Unused '@ts-expect-error' directive.
+index.ts(146,3): error TS2578: Unused '@ts-expect-error' directive.
+index.ts(152,3): error TS2578: Unused '@ts-expect-error' directive.
+index.ts(154,3): error TS2578: Unused '@ts-expect-error' directive.
+index.ts(165,55): error TS2339: Property 'config' does not exist on type 'unknown'.
+index.ts(166,59): error TS2339: Property 'config' does not exist on type 'unknown'.
+index.ts(181,5): error TS2578: Unused '@ts-expect-error' directive.
+index.ts(193,3): error TS2578: Unused '@ts-expect-error' directive.
+index.ts(198,3): error TS2578: Unused '@ts-expect-error' directive.
+
+  stderr:
+
+ ❯ runCommand tests/helpers/run-command.js:22:11
+     20|
+     21|   if (output.code !== 0) {
+     22|     throw new Error(
+       |           ^
+     23|       [
+     24|         'Command failed:',
+ ❯ tests/typings.module.test.js:39:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL   module  tests/typings.module.test.js > module esm typings compatibility > type-checks fetch Response constructors with browser declarations
+Error: Command failed:
+  command: node /home/runner/work/_temp/repos/axios/tests/module/esm/node_modules/typescript/bin/tsc --noEmit -p tsconfig.json
+  cwd: /home/runner/work/_temp/repos/axios/tests/module/esm/.tmp-module-fetch-types-browser-MKOiAV
+  exitCode: 2
+  stdout:
+index.ts(1,43): error TS2307: Cannot find module 'axios' or its corresponding type declarations.
+index.ts(51,1): error TS2578: Unused '@ts-expect-error' directive.
+index.ts(62,5): error TS2578: Unused '@ts-expect-error' directive.
+
+  stderr:
+
+ ❯ runCommand tests/helpers/run-command.js:22:11
+     20|
+     21|   if (output.code !== 0) {
+     22|     throw new Error(
+       |           ^
+     23|       [
+     24|         'Command failed:',
+ ❯ tests/typings.module.test.js:64:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL   module  tests/typings.module.test.js > module esm typings compatibility > type-checks esm imports and Response constructors without DOM declarations
+Error: Command failed:
+  command: node /home/runner/work/_temp/repos/axios/tests/module/esm/node_modules/typescript/bin/tsc --noEmit -p tsconfig.json
+  cwd: /home/runner/work/_temp/repos/axios/tests/module/esm/.tmp-module-fetch-types-node-esm-T4sb2y
+  exitCode: 2
+  stdout:
+index.ts(1,43): error TS2307: Cannot find module 'axios' or its corresponding type declarations.
+index.ts(51,1): error TS2578: Unused '@ts-expect-error' directive.
+index.ts(62,5): error TS2578: Unused '@ts-expect-error' directive.
+
+  stderr:
+
+ ❯ runCommand tests/helpers/run-command.js:22:11
+     20|
+     21|   if (output.code !== 0) {
+     22|     throw new Error(
+       |           ^
+     23|       [
+     24|         'Command failed:',
+ ❯ tests/typings.module.test.js:95:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL   module  tests/typings.module.test.js > module esm typings compatibility > type-checks cjs imports and Response constructors without DOM declarations
+Error: Command failed:
+  command: node /home/runner/work/_temp/repos/axios/tests/module/esm/node_modules/typescript/bin/tsc --noEmit -p tsconfig.json
+  cwd: /home/runner/work/_temp/repos/axios/tests/module/esm/.tmp-module-fetch-types-node-cjs-5uXqSh
+  exitCode: 2
+  stdout:
+index.ts(1,24): error TS2307: Cannot find module 'axios' or its corresponding type declarations.
+index.ts(51,1): error TS2578: Unused '@ts-expect-error' directive.
+index.ts(62,5): error TS2578: Unused '@ts-expect-error' directive.
+
+  stderr:
+
+ ❯ runCommand tests/helpers/run-command.js:22:11
+     20|
+     21|   if (output.code !== 0) {
+     22|     throw new Error(
+       |           ^
+     23|       [
+     24|         'Command failed:',
+ ❯ tests/typings.module.test.js:95:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+      Tests  7 failed | 2 passed (9)
+   Start at  01:30:44
+   Duration  15.83s (transform 68ms, setup 0ms, import 120ms, tests 26.01s, environment 0ms)
+
+JUNIT report written to /home/runner/work/_temp/repos/axios/tests/module/esm/.tabstudio/test-results/af3cf149c1214d59b17af98266673cfd/vitest.xml
+========== Running cjs's tests with Mocha ==========
+> sh -c 'exec npx --no-install mocha "$@" ' mocha --reporter xunit --reporter-option output=/home/runner/work/_temp/repos/axios/tests/smoke/cjs/.tabstudio/test-results/eb6b1cac7ccd4890a32195ab09555bb8/mocha.xml
+Error: No test files found: "test"
+cjs's tests did not run: the build or the test runner failed. See the Error List and the output above.
+========== Running esm's tests with Vitest ==========
+> npx --no-install vitest run --reporter=default --reporter=junit --outputFile.junit=/home/runner/work/_temp/repos/axios/tests/smoke/esm/.tabstudio/test-results/1801772bfb86416d868ad50500c25a93/vitest.xml
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vitest.config.js:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v4.1.12 /home/runner/work/_temp/repos/axios/tests/smoke/esm
+
+ ❯  smoke  tests/error.smoke.test.js (0 test)
+ ❯  smoke  tests/urlencode.smoke.test.js (0 test)
+ ❯  smoke  tests/interceptors.smoke.test.js (0 test)
+ ❯  smoke  tests/fetch.smoke.test.js (0 test)
+ ❯  smoke  tests/instance.smoke.test.js (0 test)
+ ❯  smoke  tests/files.smoke.test.js (0 test)
+ ❯  smoke  tests/basic.smoke.test.js (0 test)
+ ❯  smoke  tests/headers.smoke.test.js (0 test)
+ ❯  smoke  tests/auth.smoke.test.js (0 test)
+ ❯  smoke  tests/formData.smoke.test.js (0 test)
+ ❯  smoke  tests/timeout.smoke.test.js (0 test)
+ ❯  smoke  tests/progress.smoke.test.js (0 test)
+ ❯  smoke  tests/cancel.smoke.test.js (0 test)
+ ❯  smoke  tests/rateLimit.smoke.test.js (0 test)
+ ❯  smoke  tests/http2.smoke.test.js (0 test)
+ ❯  smoke  tests/header-buckets.smoke.test.js (0 test)
+ ❯  smoke  tests/import.smoke.test.js (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 17 ⎯⎯⎯⎯⎯⎯
+
+ FAIL   smoke  tests/auth.smoke.test.js [ tests/auth.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/auth.smoke.test.js
+ ❯ tests/auth.smoke.test.js:4:1
+      2|
+      3| import http from 'http';
+      4| import axios from 'axios';
+       | ^
+      5|
+      6| const startServer = (handler) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/17]⎯
+
+ FAIL   smoke  tests/basic.smoke.test.js [ tests/basic.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/basic.smoke.test.js
+ ❯ tests/basic.smoke.test.js:5:1
+      3| import { EventEmitter } from 'events';
+      4| import { PassThrough } from 'stream';
+      5| import axios from 'axios';
+       | ^
+      6|
+      7| const createTransportCapture = () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/17]⎯
+
+ FAIL   smoke  tests/cancel.smoke.test.js [ tests/cancel.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/cancel.smoke.test.js
+ ❯ tests/cancel.smoke.test.js:4:1
+      2|
+      3| import { EventEmitter } from 'events';
+      4| import axios from 'axios';
+       | ^
+      5|
+      6| const createPendingTransport = () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/17]⎯
+
+ FAIL   smoke  tests/error.smoke.test.js [ tests/error.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/error.smoke.test.js
+ ❯ tests/error.smoke.test.js:5:1
+      3| import { EventEmitter } from 'events';
+      4| import { PassThrough } from 'stream';
+      5| import axios from 'axios';
+       | ^
+      6|
+      7| const createTransport = (config) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/17]⎯
+
+ FAIL   smoke  tests/fetch.smoke.test.js [ tests/fetch.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/fetch.smoke.test.js
+ ❯ tests/fetch.smoke.test.js:3:1
+      1| import { describe, expect, it } from 'vitest';
+      2|
+      3| import axios from 'axios';
+       | ^
+      4|
+      5| const createFetchMock = (responseFactory) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/17]⎯
+
+ FAIL   smoke  tests/files.smoke.test.js [ tests/files.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/files.smoke.test.js
+ ❯ tests/files.smoke.test.js:4:1
+      2|
+      3| import { PassThrough, Readable, Writable } from 'stream';
+      4| import axios from 'axios';
+       | ^
+      5|
+      6| const createCaptureTransport = (buildResponse) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/17]⎯
+
+ FAIL   smoke  tests/formData.smoke.test.js [ tests/formData.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/formData.smoke.test.js
+ ❯ tests/formData.smoke.test.js:4:1
+      2|
+      3| import { Writable, PassThrough } from 'stream';
+      4| import axios from 'axios';
+       | ^
+      5|
+      6| const createCaptureTransport = (buildResponse) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/17]⎯
+
+ FAIL   smoke  tests/header-buckets.smoke.test.js [ tests/header-buckets.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/header-buckets.smoke.test.js
+ ❯ tests/header-buckets.smoke.test.js:3:1
+      1| import { createRequire } from 'node:module';
+      2| import { describe, it, expect } from 'vitest';
+      3| import axios from 'axios';
+       | ^
+      4| import { echoHeaders } from '../../../setup/adapters.js';
+      5|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/17]⎯
+
+ FAIL   smoke  tests/headers.smoke.test.js [ tests/headers.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/headers.smoke.test.js
+ ❯ tests/headers.smoke.test.js:5:1
+      3| import { EventEmitter } from 'events';
+      4| import { PassThrough } from 'stream';
+      5| import axios from 'axios';
+       | ^
+      6|
+      7| const normalizeHeaders = (headers) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/17]⎯
+
+ FAIL   smoke  tests/http2.smoke.test.js [ tests/http2.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/http2.smoke.test.js
+ ❯ tests/http2.smoke.test.js:3:1
+      1| import { describe, expect, it } from 'vitest';
+      2|
+      3| import axios from 'axios';
+       | ^
+      4|
+      5| describe('http2 compat (dist export only)', () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/17]⎯
+
+ FAIL   smoke  tests/import.smoke.test.js [ tests/import.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/import.smoke.test.js
+ ❯ tests/import.smoke.test.js:2:1
+      1| import { describe, expect, it } from 'vitest';
+      2| import axios, { CanceledError, AxiosError, AxiosHeaders } from 'axios';
+       | ^
+      3| import settle from 'axios/unsafe/core/settle.js';
+      4|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/17]⎯
+
+ FAIL   smoke  tests/instance.smoke.test.js [ tests/instance.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/instance.smoke.test.js
+ ❯ tests/instance.smoke.test.js:5:1
+      3| import { EventEmitter } from 'events';
+      4| import { PassThrough } from 'stream';
+      5| import axios from 'axios';
+       | ^
+      6|
+      7| const createTransportCapture = (responseBody) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/17]⎯
+
+ FAIL   smoke  tests/interceptors.smoke.test.js [ tests/interceptors.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/interceptors.smoke.test.js
+ ❯ tests/interceptors.smoke.test.js:5:1
+      3| import { EventEmitter } from 'events';
+      4| import { PassThrough } from 'stream';
+      5| import axios from 'axios';
+       | ^
+      6|
+      7| const createTransport = (responseBody) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/17]⎯
+
+ FAIL   smoke  tests/progress.smoke.test.js [ tests/progress.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/progress.smoke.test.js
+ ❯ tests/progress.smoke.test.js:4:1
+      2|
+      3| import { Readable, Writable, PassThrough } from 'stream';
+      4| import axios from 'axios';
+       | ^
+      5|
+      6| const createProgressTransport = (config) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/17]⎯
+
+ FAIL   smoke  tests/rateLimit.smoke.test.js [ tests/rateLimit.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/rateLimit.smoke.test.js
+ ❯ tests/rateLimit.smoke.test.js:5:1
+      3| import { EventEmitter } from 'events';
+      4| import { PassThrough } from 'stream';
+      5| import axios from 'axios';
+       | ^
+      6|
+      7| const createTransportCapture = () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/17]⎯
+
+ FAIL   smoke  tests/timeout.smoke.test.js [ tests/timeout.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/timeout.smoke.test.js
+ ❯ tests/timeout.smoke.test.js:5:1
+      3| import { EventEmitter } from 'events';
+      4| import { PassThrough } from 'stream';
+      5| import axios from 'axios';
+       | ^
+      6|
+      7| const createTransport = (config) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/17]⎯
+
+ FAIL   smoke  tests/urlencode.smoke.test.js [ tests/urlencode.smoke.test.js ]
+Error: Cannot find package 'axios' imported from /home/runner/work/_temp/repos/axios/tests/smoke/esm/tests/urlencode.smoke.test.js
+ ❯ tests/urlencode.smoke.test.js:5:1
+      3| import { EventEmitter } from 'events';
+      4| import { PassThrough } from 'stream';
+      5| import axios from 'axios';
+       | ^
+      6|
+      7| const createEchoTransport = () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/17]⎯
+
+
+ Test Files  17 failed (17)
+      Tests  no tests
+   Start at  01:31:01
+   Duration  1.42s (transform 276ms, setup 0ms, import 0ms, tests 0ms, environment 2ms)
+
+JUNIT report written to /home/runner/work/_temp/repos/axios/tests/smoke/esm/.tabstudio/test-results/1801772bfb86416d868ad50500c25a93/vitest.xml
+
