@@ -1,0 +1,30 @@
+Device: Android 15 (API 35), x86_64, screen 2560x1800
+Displays:
+Built-in Screen, displayId 0
+Performing Streamed Install
+Success
+Measurements:
+Startup to self test start: 9.95 s
+ Native Heap 363918 363908 4 2487 364900 399696 373779 21512
+ Dalvik Heap 2716 2700 0 133 3848 8232 4116 4116
+TABSTUDIO_SELFTEST_OK 491.7 s: Shard: native | Hot Reload: local Android updates deferred in 0.15; JIT runtime, restart to apply edits. MetadataUpdater.IsSupported=False; AndroidMono=True; startup environment=unset; Mono interpreter options=default; feature switch=True; local Android Hot Reload deferred; the IDE uses the JIT | Processes: started 200 programs in 18.2 s while 313 minor and 1 major collections ran | Toolchains: installed in 2 s, Hello, Tablet! This is Python 3.14.10 on TabStudio. | node v24.22.1 says 42 | 5 s in all | Embedded bridge: native PTY byte transport, baud, modem lines and hangup passed with virtual USB; no hardware claim. | Services: PostgreSQL in PRoot on port 38075, init script and SELECT verified in 26.1 s | Python tools: Pyright ready in 0 s, squiggled undefined_name (reportUndefinedVariable) | debugpy: Paused at a breakpoint · main.py, line 11, name = 'Tablet', in 10 s | Listening port: 37905, preview passed | C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting | Java debugging: stopped at 10, answer = 42, console input and completed greeting
+Shard: native
+Seconds from launch to verdict: 503
+Performing Streamed Install
+Success
++ adb shell run-as com.tabstudio.ide sh -c 'PROOT_LOADER='"'"'/data/app/~~0IisOikz4rLYsdiDLZI1mQ==/com.tabstudio.ide-yEEhYVSuA-FdlgnT5LnL9g==/lib/x86_64/libproot-loader.so'"'"' PROOT_TMP_DIR=/data/user/0/com.tabstudio.ide/files/pic-phase0/tmp PROOT_NO_SECCOMP=1 '"'"'/data/app/~~0IisOikz4rLYsdiDLZI1mQ==/com.tabstudio.ide-yEEhYVSuA-FdlgnT5LnL9g==/lib/x86_64/libproot.so'"'"' --kill-on-exit --link2symlink --sysvipc -L -0 -r /data/user/0/com.tabstudio.ide/files/pic-phase0/rootfs -b /dev -b /proc -b /sys -b /data/user/0/com.tabstudio.ide/files/pic-phase0/rootfs/tmp:/dev/shm -b /data/user/0/com.tabstudio.ide/files/pic-phase0/results:/results -w /work /usr/bin/env -i HOME=/root TMPDIR=/tmp PATH=/usr/bin:/bin LANG=C LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu BOX64_LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu BOX64_DYNAREC=0 BOX64_AVX=0 BOX64_LOG=0 BOX64_NOBANNER=1 BOX64_DYNACACHE=0 /bin/true'
+
++ adb shell run-as com.tabstudio.ide sh -c 'PROOT_LOADER='"'"'/data/app/~~0IisOikz4rLYsdiDLZI1mQ==/com.tabstudio.ide-yEEhYVSuA-FdlgnT5LnL9g==/lib/x86_64/libproot-loader.so'"'"' PROOT_TMP_DIR=/data/user/0/com.tabstudio.ide/files/pic-phase0/tmp PROOT_NO_SECCOMP=1 '"'"'/data/app/~~0IisOikz4rLYsdiDLZI1mQ==/com.tabstudio.ide-yEEhYVSuA-FdlgnT5LnL9g==/lib/x86_64/libproot.so'"'"' --kill-on-exit --link2symlink --sysvipc -L -0 -r /data/user/0/com.tabstudio.ide/files/pic-phase0/rootfs -b /dev -b /proc -b /sys -b /data/user/0/com.tabstudio.ide/files/pic-phase0/rootfs/tmp:/dev/shm -b /data/user/0/com.tabstudio.ide/files/pic-phase0/results:/results -w /work /usr/bin/env -i HOME=/root TMPDIR=/tmp PATH=/usr/bin:/bin LANG=C LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu BOX64_LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu BOX64_DYNAREC=0 BOX64_AVX=0 BOX64_LOG=0 BOX64_NOBANNER=1 BOX64_DYNACACHE=0 /usr/bin/box64 -v'
+/usr/bin/box64: /usr/lib/x86_64-linux-gnu/libm.so.6: version `GLIBC_2.43' not found (required by /usr/bin/box64)
+
+{
+  "emulatorAbi": "x86_64",
+  "androidApi": "35",
+  "box64Available": false,
+  "linkedFirmware": false,
+  "success": false,
+  "uid": "uid=10209(u0_a209) gid=10209(u0_a209) groups=10209(u0_a209),1004(input),1007(log),1011(adb),1015(sdcard_rw),1028(sdcard_r),1078(ext_data_rw),1079(ext_obb_rw),3001(net_bt_admin),3002(net_bt),3003(inet),3006(net_bw_stats),3009(readproc),3011(uhid),3012(readtracefs),50209(all_a209) context=u:r:runas_app:s0:c209,c256,c512,c768",
+  "nativeLibraryDirectory": "/data/app/~~0IisOikz4rLYsdiDLZI1mQ==/com.tabstudio.ide-yEEhYVSuA-FdlgnT5LnL9g==/lib/x86_64",
+  "prootNativeProbe": true,
+  "conditionalSkip": "box64 cannot execute on this emulator ABI; see Android probe log. ARM64 runner proof is separate."
+}
