@@ -1,0 +1,71 @@
+Solitaire at b61b42b86fc14c54cf2c8639a765234952579b5f, opening /home/runner/work/_temp/repos/Solitaire/Solitaire.sln
+Opened in 0.2 s: Solitaire, solution /home/runner/work/_temp/repos/Solitaire/Solitaire.sln
+  project Solitaire [VisualBasic] /home/runner/work/_temp/repos/Solitaire/Solitaire/Solitaire.vbproj
+Compatibility Doctor:
+  Solitaire: Ready via Cross-platform Forms layer in the app preview - Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
+F5 startup project: Solitaire /home/runner/work/_temp/repos/Solitaire/Solitaire/Solitaire.vbproj
+Error List after analysis: 10 errors, 0 warnings
+  4 x BC30002
+      [Solitaire] CardBackDialog.Designer.vb(40,24): error BC30002: Type 'HelpProvider' is not defined.
+      [Solitaire] CardBackDialog.Designer.vb(233,37): error BC30002: Type 'HelpProvider' is not defined.
+      [Solitaire] OptionsDialog.Designer.vb(39,24): error BC30002: Type 'HelpProvider' is not defined.
+      [Solitaire] OptionsDialog.Designer.vb(239,37): error BC30002: Type 'HelpProvider' is not defined.
+  4 x BC30451
+      [Solitaire] GameForm.vb(1795,5): error BC30451: 'Help' is not declared. It may be inaccessible due to its protection level.
+      [Solitaire] GameForm.vb(1802,5): error BC30451: 'Help' is not declared. It may be inaccessible due to its protection level.
+      [Solitaire] GameForm.vb(1809,5): error BC30451: 'Help' is not declared. It may be inaccessible due to its protection level.
+      [Solitaire] GameForm.vb(1809,34): error BC30451: 'HelpNavigator' is not declared. It may be inaccessible due to its protection level.
+  1 x BC30590
+      [Solitaire] GameForm.vb(112,103): error BC30590: Event 'Closing' cannot be found.
+  1 x BC30456
+      [Solitaire] GameForm.vb(1814,137): error BC30456: 'Handle' is not a member of 'Icon'.
+Error List after the build: 10 errors, 0 warnings
+  4 x BC30002
+      [Solitaire] CardBackDialog.Designer.vb(40,24): error BC30002: Type 'HelpProvider' is not defined.
+      [Solitaire] CardBackDialog.Designer.vb(233,37): error BC30002: Type 'HelpProvider' is not defined.
+      [Solitaire] OptionsDialog.Designer.vb(39,24): error BC30002: Type 'HelpProvider' is not defined.
+      [Solitaire] OptionsDialog.Designer.vb(239,37): error BC30002: Type 'HelpProvider' is not defined.
+  4 x BC30451
+      [Solitaire] GameForm.vb(1795,5): error BC30451: 'Help' is not declared. It may be inaccessible due to its protection level.
+      [Solitaire] GameForm.vb(1802,5): error BC30451: 'Help' is not declared. It may be inaccessible due to its protection level.
+      [Solitaire] GameForm.vb(1809,5): error BC30451: 'Help' is not declared. It may be inaccessible due to its protection level.
+      [Solitaire] GameForm.vb(1809,34): error BC30451: 'HelpNavigator' is not declared. It may be inaccessible due to its protection level.
+  1 x BC30590
+      [Solitaire] GameForm.vb(112,103): error BC30590: Event 'Closing' cannot be found.
+  1 x BC30456
+      [Solitaire] GameForm.vb(1814,137): error BC30456: 'Handle' is not a member of 'Icon'.
+Run: no window (0 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/Solitaire/Solitaire/GameForm.vb:4
+Debug: ended without stopping at GameForm.vb:4 (0 s)
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing 0/1 projects
+  Analyzing: Analyzing 1/1 projects
+  Analyzing: Succeeded after 0.4 s
+  Building: Building
+  Building: Building Solitaire
+  Building: Failed after 0.0 s
+  Building: Building
+  Building: Building Solitaire
+  Building: Failed after 0.0 s
+  Building: Building
+  Building: Building Solitaire
+  Building: Failed after 0.1 s
+Project setup:
+
+Output:
+Build started at 00:35:56...
+1>------ Build started: Project: Solitaire, Configuration: Debug ------
+1>CardBackDialog.Designer.vb(40,24): error BC30002: Type 'HelpProvider' is not defined.
+1>CardBackDialog.Designer.vb(233,37): error BC30002: Type 'HelpProvider' is not defined.
+1>GameForm.vb(112,103): error BC30590: Event 'Closing' cannot be found.
+1>GameForm.vb(1795,5): error BC30451: 'Help' is not declared. It may be inaccessible due to its protection level.
+1>GameForm.vb(1802,5): error BC30451: 'Help' is not declared. It may be inaccessible due to its protection level.
+1>GameForm.vb(1809,5): error BC30451: 'Help' is not declared. It may be inaccessible due to its protection level.
+1>GameForm.vb(1809,34): error BC30451: 'HelpNavigator' is not declared. It may be inaccessible due to its protection level.
+1>GameForm.vb(1814,137): error BC30456: 'Handle' is not a member of 'Icon'.
+1>OptionsDialog.Designer.vb(39,24): error BC30002: Type 'HelpProvider' is not defined.
+1>OptionsDialog.Designer.vb(239,37): error BC30002: Type 'HelpProvider' is not defined.
+========== Build: 0 succeeded, 1 failed ==========
+

@@ -1,0 +1,92 @@
+Community.VisualBasic at 20d2a51dfc9f342848ad134952ceaa8d79302559, opening /home/runner/work/_temp/repos/Community.VisualBasic/Community.VisualBasic.sln
+Opened in 0.3 s: Community.VisualBasic, solution /home/runner/work/_temp/repos/Community.VisualBasic/Community.VisualBasic.sln
+  project Community.VisualBasic [VisualBasic] /home/runner/work/_temp/repos/Community.VisualBasic/Community.VisualBasic/Community.VisualBasic.vbproj
+  project net5-console [VisualBasic] /home/runner/work/_temp/repos/Community.VisualBasic/ProjectTypeTests/net5-console/net5-console.vbproj
+  project net5-windows [VisualBasic] /home/runner/work/_temp/repos/Community.VisualBasic/ProjectTypeTests/net5-windows/net5-windows.vbproj
+  project netstandard2_0 [VisualBasic] /home/runner/work/_temp/repos/Community.VisualBasic/ProjectTypeTests/netstandard2_0/netstandard2_0.vbproj
+  project net4-console [VisualBasic] /home/runner/work/_temp/repos/Community.VisualBasic/ProjectTypeTests/net4-console/net4-console.vbproj
+  project Community.VisualBasic.Tests [VisualBasic] /home/runner/work/_temp/repos/Community.VisualBasic/Community.VisualBasic.Tests/Community.VisualBasic.Tests.vbproj
+Compatibility Doctor:
+  Community.VisualBasic: Library via Built with its users - A library is compiled together with the projects that reference it.
+  net5-console: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  net5-windows: Ready via Cross-platform Forms layer in the app preview - Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
+  netstandard2_0: Library via Built with its users - A library is compiled together with the projects that reference it.
+  net4-console: Ready via In-process - A .NET Framework project, run with .NET on this tablet. Compiled in memory and run right here, with its output in the Output panel.
+  Community.VisualBasic.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+F5 startup project: net5-windows /home/runner/work/_temp/repos/Community.VisualBasic/ProjectTypeTests/net5-windows/net5-windows.vbproj
+Error List after analysis: 0 errors, 9 warnings
+Error List after the build: 0 errors, 9 warnings
+Tests: 1130 found; 21743 passed, 470 failed, 0 skipped, 52 not run - 22213 tests run in 4.9 sec: 21743 passed, 470 failed, 0 skipped. (18 s)
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring NuGet packages 0/5 projects
+  Analyzing: Analyzing 0/6 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Restoring NuGet packages 1/5 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Restoring NuGet packages 2/5 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Restoring NuGet packages 3/5 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Restoring NuGet packages 4/5 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/18
+  Restoring NuGet packages: Downloading NuGet packages 2/18
+  Analyzing: Analyzing 1/6 projects
+  Restoring NuGet packages: Downloading NuGet packages 3/18
+  Restoring NuGet packages: Downloading NuGet packages 4/18
+  Restoring NuGet packages: Downloading NuGet packages 5/18
+  Restoring NuGet packages: Downloading NuGet packages 6/18
+  Analyzing: Analyzing 2/6 projects
+  Restoring NuGet packages: Downloading NuGet packages 7/18
+  Restoring NuGet packages: Downloading NuGet packages 8/18
+  Analyzing: Analyzing 3/6 projects
+  Restoring NuGet packages: Downloading NuGet packages 9/18
+  Restoring NuGet packages: Downloading NuGet packages 10/18
+  Restoring NuGet packages: Downloading NuGet packages 11/18
+  Restoring NuGet packages: Downloading NuGet packages 12/18
+  Restoring NuGet packages: Downloading NuGet packages 13/18
+  Restoring NuGet packages: Downloading NuGet packages 14/18
+  Restoring NuGet packages: Downloading NuGet packages 15/18
+  Restoring NuGet packages: Downloading NuGet packages 16/18
+  Restoring NuGet packages: Downloading NuGet packages 17/18
+  Restoring NuGet packages: Downloading NuGet packages 18/18
+  Analyzing: Analyzing 4/6 projects
+  Restoring NuGet packages: Succeeded after 1.1 s
+  Analyzing: Cancelled after 1.1 s
+  Analyzing: Analyzing 0/6 projects
+  Analyzing: Analyzing 1/6 projects
+  Analyzing: Analyzing 2/6 projects
+  Analyzing: Analyzing 3/6 projects
+  Analyzing: Analyzing 4/6 projects
+  Analyzing: Analyzing 5/6 projects
+  Analyzing: Analyzing 6/6 projects
+  Analyzing: Succeeded after 0.8 s
+  Building: Building
+  Building: Building 0/6 projects
+  Building: Building 1/6 projects
+  Building: Building 2/6 projects
+  Building: Building 3/6 projects
+  Building: Building 4/6 projects
+  Building: Building 5/6 projects
+  Building: Succeeded after 4.0 s
+  Building: Building
+  Building: Building Community.VisualBasic.Tests
+  Building: Succeeded after 1.2 s
+Project setup:
+
+Output:
+Build started at 00:36:07...
+1>------ Build started: Project: Community.VisualBasic.Tests, Configuration: Debug ------
+1>LateBinding.vb(931,31): warning BC40000: 'CurrencyWrapper' is obsolete: 'CurrencyWrapper and support for marshalling to the VARIANT type may be unavailable in future releases.'.
+1>Network.vb(808,16): warning BC41004: First statement of this 'Sub New' should be an explicit call to 'MyBase.New' or 'MyClass.New' because the 'Public Overloads Sub New()' in the base class 'WebClient' of 'WebClientExtended' is marked obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead.'
+1>MalformedLineException.vb(78,7): warning SYSLIB0051: 'Protected Overloads Sub New(info As SerializationInfo, context As StreamingContext)' is obsolete: 'This API supports obsolete formatter-based serialization. It should not be called or extended by application code.'.
+1>MalformedLineException.vb(114,7): warning SYSLIB0051: 'Public Overridable Overloads Sub GetObjectData(info As SerializationInfo, context As StreamingContext)' is obsolete: 'This API supports obsolete formatter-based serialization. It should not be called or extended by application code.'.
+1>PlatformDetection.vb(508,35): warning SYSLIB0039: 'Tls' is obsolete: 'TLS versions 1.0 and 1.1 have known vulnerabilities and are not recommended. Use a newer TLS version instead, or use SslProtocols.None to defer to OS defaults.'.
+1>PlatformDetection.vb(520,35): warning SYSLIB0039: 'Tls11' is obsolete: 'TLS versions 1.0 and 1.1 have known vulnerabilities and are not recommended. Use a newer TLS version instead, or use SslProtocols.None to defer to OS defaults.'.
+1>Community.VisualBasic.Tests -> compiled in memory (1113.5 KB, 1185 ms)
+========== Build: 1 succeeded, 0 failed ==========
+========== Starting test run ==========
+========== Test run finished: 22213 Tests (21743 Passed, 470 Failed, 0 Skipped) run in 4.9 sec ==========
+
