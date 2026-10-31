@@ -1,0 +1,92 @@
+marshmallow at b762ea2d59ca52fe5df76b90de14bed7e5ec5607, opening /home/runner/work/_temp/repos/marshmallow
+Opened in 0.1 s: marshmallow, solution (none)
+  toolchain project python: /home/runner/work/_temp/repos/marshmallow/pyproject.toml
+  toolchain project node: /home/runner/work/_temp/repos/marshmallow/examples/package.json
+Compatibility Doctor:
+  marshmallow: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  examples: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+F5 startup project: marshmallow (python) /home/runner/work/_temp/repos/marshmallow/pyproject.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: 647 found; 1192 passed, 0 failed, 0 skipped, 96 not run - 1192 tests run in 7.3 sec: 1192 passed, 0 failed, 0 skipped. (7 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up marshmallow: pip install -e .
+  Installing marshmallow's packages: Installing packages: pip install -e .
+  Installing marshmallow's packages: Succeeded after 4.4 s
+  Setting up projects: Setting up examples: npm install
+  Installing examples's packages: Installing packages: npm install
+  Installing examples's packages: Failed after 0.4 s
+  Setting up projects: Succeeded after 7.7 s
+  Testing marshmallow: Running marshmallow's tests
+  Testing marshmallow: Succeeded after 7.3 s
+Project setup:
+------ marshmallow: pip install -e . ------
+Reading which Python versions the 63 pinned packages have wheels for, from PyPI.
+> python3 -m venv .venv
+> /home/runner/work/_temp/repos/marshmallow/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/repos/marshmallow
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: marshmallow
+  Building editable for marshmallow (pyproject.toml): started
+  Building editable for marshmallow (pyproject.toml): finished with status 'done'
+  Created wheel for marshmallow: filename=marshmallow-4.3.1-py3-none-any.whl size=8824 sha256=1a1a682be8d4ad3e6832ca63d8d9e1c3a001b897cb73d1210f84821687c192a7
+  Stored in directory: /tmp/pip-ephem-wheel-cache-hnwifg5p/wheels/7c/a5/1a/811c8c69f8c67ef50acaaea7faeb97b669d2393035f47b06d7
+Successfully built marshmallow
+Installing collected packages: marshmallow
+Successfully installed marshmallow-4.3.1
+examples's packages were not installed: npm install --no-fund --no-audit failed (npm error notarget No matching version found for pest@^23.4.1.). Fix that, then use Tools > Install Project Packages.
+
+Output:
+marshmallow needs no build: Python runs it from its source. Press Ctrl+F5 to run it.
+========== Running marshmallow's tests with Pytest ==========
+> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''pytest'\'' '\''simplejson'\'' '\''tox'\'' '\''tox-uv'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/repos/marshmallow/.tabstudio/test-results/da06886d15b7453ca53cac865e6dfa9d/pytest.xml
+Installing what the tests need
+============================= test session starts ==============================
+platform linux -- Python 3.12.15, pytest-9.2.0, pluggy-1.7.0
+rootdir: /home/runner/work/_temp/repos/marshmallow
+configfile: pyproject.toml
+plugins: platformdirs-4.14.0
+collected 1192 items
+
+tests/test_context.py ............                                       [  1%]
+tests/test_decorators.py ............................................    [  4%]
+tests/test_deserialization.py .......................................... [  8%]
+........................................................................ [ 14%]
+........................................................................ [ 20%]
+........................................................................ [ 26%]
+........................................................................ [ 32%]
+..................................................................       [ 37%]
+tests/test_error_store.py ...............................                [ 40%]
+tests/test_exceptions.py .......                                         [ 41%]
+tests/test_fields.py ................................................... [ 45%]
+...........................................................              [ 50%]
+tests/test_options.py ..........                                         [ 51%]
+tests/test_registry.py ..........                                        [ 52%]
+tests/test_schema.py ................................................... [ 56%]
+........................................................................ [ 62%]
+........................................................................ [ 68%]
+........                                                                 [ 69%]
+tests/test_serialization.py ............................................ [ 72%]
+........................................................................ [ 78%]
+.............                                                            [ 79%]
+tests/test_utils.py ...................                                  [ 81%]
+tests/test_validate.py ................................................. [ 85%]
+........................................................................ [ 91%]
+........................................................................ [ 97%]
+............................                                             [100%]
+
+- generated xml file: /home/runner/work/_temp/repos/marshmallow/.tabstudio/test-results/da06886d15b7453ca53cac865e6dfa9d/pytest.xml -
+============================= 1192 passed in 2.77s =============================
+
