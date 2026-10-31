@@ -1,0 +1,371 @@
+gh-cli at 9490d204a2ba95434153dedce99898ce9f281426, opening /home/runner/work/_temp/repos/gh-cli
+Opened in 0.3 s: gh-cli, solution (none)
+  toolchain project go: /home/runner/work/_temp/repos/gh-cli/go.mod
+  toolchain project cpp: /home/runner/work/_temp/repos/gh-cli/Makefile
+Compatibility Doctor:
+  gh-cli: Needs a toolchain via Go toolchain - Runs with Go from the Toolchain Store, with console input and output in the Output panel. Install Go to run it.
+  gh-cli: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+F5 startup project: gh-cli (go) /home/runner/work/_temp/repos/gh-cli/go.mod
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Run: exited (0 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/gh-cli/cmd/gen-docs/main.go:23
+Debug: ended without stopping at main.go:23 (0 s)
+Tests: 1992 found; 1941 passed, 4 failed, 4 skipped, 51 not run - 1949 tests run in 10 min 43 sec: 1941 passed, 4 failed, 4 skipped. (643 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 1.9 s
+  Testing gh-cli: Running gh-cli's tests
+  Testing gh-cli: Failed after 643.3 s
+Project setup:
+
+Output:
+UN   TestCopyGuardedContent/text_with_escape_is_refused_when_piped
+=== RUN   TestCopyGuardedContent/binary_to_terminal_is_refused
+=== RUN   TestCopyGuardedContent/binary_when_piped_is_written_raw
+=== RUN   TestCopyGuardedContent/empty_content_writes_nothing
+=== RUN   TestCopyGuardedContent/text_with_escape_past_the_sniff_window_is_refused
+=== RUN   TestCopyGuardedContent/read_failure_unrelated_to_EOF_is_surfaced
+--- PASS: TestCopyGuardedContent (0.00s)
+    --- PASS: TestCopyGuardedContent/clean_text_is_written (0.00s)
+    --- PASS: TestCopyGuardedContent/text_with_escape_is_refused (0.00s)
+    --- PASS: TestCopyGuardedContent/text_with_escape_is_refused_when_piped (0.00s)
+    --- PASS: TestCopyGuardedContent/binary_to_terminal_is_refused (0.00s)
+    --- PASS: TestCopyGuardedContent/binary_when_piped_is_written_raw (0.00s)
+    --- PASS: TestCopyGuardedContent/empty_content_writes_nothing (0.00s)
+    --- PASS: TestCopyGuardedContent/text_with_escape_past_the_sniff_window_is_refused (0.00s)
+    --- PASS: TestCopyGuardedContent/read_failure_unrelated_to_EOF_is_surfaced (0.00s)
+=== RUN   TestStartProgressIndicatorWithLabel
+=== RUN   TestStartProgressIndicatorWithLabel/progress_indicator_respects_GH_SPINNER_DISABLED_is_true
+=== RUN   TestStartProgressIndicatorWithLabel/progress_indicator_respects_GH_SPINNER_DISABLED_is_false
+=== RUN   TestStartProgressIndicatorWithLabel/progress_indicator_with_GH_SPINNER_DISABLED_shows_label
+=== RUN   TestStartProgressIndicatorWithLabel/progress_indicator_shows_label_and_spinner
+=== RUN   TestStartProgressIndicatorWithLabel/multiple_calls_to_start_progress_indicator_with_GH_SPINNER_DISABLED_prints_additional_labels
+--- PASS: TestStartProgressIndicatorWithLabel (0.00s)
+    --- PASS: TestStartProgressIndicatorWithLabel/progress_indicator_respects_GH_SPINNER_DISABLED_is_true (0.00s)
+    --- PASS: TestStartProgressIndicatorWithLabel/progress_indicator_respects_GH_SPINNER_DISABLED_is_false (0.00s)
+    --- PASS: TestStartProgressIndicatorWithLabel/progress_indicator_with_GH_SPINNER_DISABLED_shows_label (0.00s)
+    --- PASS: TestStartProgressIndicatorWithLabel/progress_indicator_shows_label_and_spinner (0.00s)
+    --- PASS: TestStartProgressIndicatorWithLabel/multiple_calls_to_start_progress_indicator_with_GH_SPINNER_DISABLED_prints_additional_labels (0.00s)
+=== RUN   TestStopAlternateScreenBuffer
+--- PASS: TestStopAlternateScreenBuffer (0.00s)
+=== RUN   TestIOStreams_pager
+    iostreams_test.go:28: TODO: fix this test in race detection mode
+--- SKIP: TestIOStreams_pager (0.00s)
+=== RUN   TestHelperProcess
+--- PASS: TestHelperProcess (0.00s)
+=== RUN   TestUntrusted_String_sanitizes
+--- PASS: TestUntrusted_String_sanitizes (0.00s)
+=== RUN   TestUntrusted_fmt_paths_never_leak
+=== RUN   TestUntrusted_fmt_paths_never_leak/Sprint
+=== RUN   TestUntrusted_fmt_paths_never_leak/woven
+=== RUN   TestUntrusted_fmt_paths_never_leak/%s
+=== RUN   TestUntrusted_fmt_paths_never_leak/%v
+--- PASS: TestUntrusted_fmt_paths_never_leak (0.00s)
+    --- PASS: TestUntrusted_fmt_paths_never_leak/Sprint (0.00s)
+    --- PASS: TestUntrusted_fmt_paths_never_leak/woven (0.00s)
+    --- PASS: TestUntrusted_fmt_paths_never_leak/%s (0.00s)
+    --- PASS: TestUntrusted_fmt_paths_never_leak/%v (0.00s)
+=== RUN   TestUntrusted_Raw_returnsExactBytes
+--- PASS: TestUntrusted_Raw_returnsExactBytes (0.00s)
+=== RUN   TestUntrustedBytes_roundTrip
+--- PASS: TestUntrustedBytes_roundTrip (0.00s)
+=== RUN   TestStripControl_dropsC0KeepsWhitespace
+--- PASS: TestStripControl_dropsC0KeepsWhitespace (0.00s)
+=== RUN   TestUntrusted_survivesJSONDecode
+--- PASS: TestUntrusted_survivesJSONDecode (0.00s)
+=== RUN   TestUntrusted_jsonRoundTrip
+--- PASS: TestUntrusted_jsonRoundTrip (0.00s)
+=== RUN   TestUntrusted_Empty
+--- PASS: TestUntrusted_Empty (0.00s)
+PASS
+ok  	github.com/cli/cli/v2/pkg/iostreams	0.010s
+=== RUN   TestWrite
+=== RUN   TestWrite/blank
+=== RUN   TestWrite/empty_object
+=== RUN   TestWrite/nested_object
+=== RUN   TestWrite/string
+=== RUN   TestWrite/error
+--- PASS: TestWrite (0.00s)
+    --- PASS: TestWrite/blank (0.00s)
+    --- PASS: TestWrite/empty_object (0.00s)
+    --- PASS: TestWrite/nested_object (0.00s)
+    --- PASS: TestWrite/string (0.00s)
+    --- PASS: TestWrite/error (0.00s)
+PASS
+ok  	github.com/cli/cli/v2/pkg/jsoncolor	0.010s
+?   	github.com/cli/cli/v2/pkg/jsonfieldstest	[no test files]
+?   	github.com/cli/cli/v2/pkg/markdown	[no test files]
+=== RUN   TestSomeStringer
+--- PASS: TestSomeStringer (0.00s)
+=== RUN   TestNoneStringer
+--- PASS: TestNoneStringer (0.00s)
+=== RUN   TestSomeUnwrap
+--- PASS: TestSomeUnwrap (0.00s)
+=== RUN   TestNoneUnwrap
+--- PASS: TestNoneUnwrap (0.00s)
+=== RUN   TestSomeUnwrapOr
+--- PASS: TestSomeUnwrapOr (0.00s)
+=== RUN   TestNoneUnwrapOr
+--- PASS: TestNoneUnwrapOr (0.00s)
+=== RUN   TestSomeUnwrapOrElse
+--- PASS: TestSomeUnwrapOrElse (0.00s)
+=== RUN   TestNoneUnwrapOrElse
+--- PASS: TestNoneUnwrapOrElse (0.00s)
+=== RUN   TestSomeUnwrapOrZero
+--- PASS: TestSomeUnwrapOrZero (0.00s)
+=== RUN   TestNoneUnwrapOrZero
+--- PASS: TestNoneUnwrapOrZero (0.00s)
+=== RUN   TestIsSome
+--- PASS: TestIsSome (0.00s)
+=== RUN   TestIsNone
+--- PASS: TestIsNone (0.00s)
+=== RUN   TestSomeValue
+--- PASS: TestSomeValue (0.00s)
+=== RUN   TestNoneValue
+--- PASS: TestNoneValue (0.00s)
+=== RUN   TestSomeExpect
+--- PASS: TestSomeExpect (0.00s)
+=== RUN   TestNoneExpect
+--- PASS: TestNoneExpect (0.00s)
+=== RUN   TestMap
+--- PASS: TestMap (0.00s)
+=== RUN   ExampleOption_Unwrap
+--- PASS: ExampleOption_Unwrap (0.00s)
+=== RUN   ExampleOption_UnwrapOr
+--- PASS: ExampleOption_UnwrapOr (0.00s)
+=== RUN   ExampleOption_UnwrapOrElse
+--- PASS: ExampleOption_UnwrapOrElse (0.00s)
+=== RUN   ExampleOption_IsSome
+--- PASS: ExampleOption_IsSome (0.00s)
+=== RUN   ExampleOption_IsNone
+--- PASS: ExampleOption_IsNone (0.00s)
+=== RUN   ExampleOption_Value
+--- PASS: ExampleOption_Value (0.00s)
+=== RUN   ExampleOption_Expect
+--- PASS: ExampleOption_Expect (0.00s)
+=== RUN   ExampleMap
+--- PASS: ExampleMap (0.00s)
+PASS
+ok  	github.com/cli/cli/v2/pkg/option	0.012s
+=== RUN   TestStandardSearchString
+=== RUN   TestStandardSearchString/empty_query
+=== RUN   TestStandardSearchString/converts_query_to_string
+=== RUN   TestStandardSearchString/quotes_keywords
+=== RUN   TestStandardSearchString/quotes_keywords_that_are_qualifiers
+=== RUN   TestStandardSearchString/quotes_qualifiers
+=== RUN   TestStandardSearchString/respects_immutable_keywords
+=== RUN   TestStandardSearchString/respects_immutable_keywords,_with_qualifiers
+=== RUN   TestStandardSearchString/prioritises_immutable_keywords_over_keywords_slice
+--- PASS: TestStandardSearchString (0.00s)
+    --- PASS: TestStandardSearchString/empty_query (0.00s)
+    --- PASS: TestStandardSearchString/converts_query_to_string (0.00s)
+    --- PASS: TestStandardSearchString/quotes_keywords (0.00s)
+    --- PASS: TestStandardSearchString/quotes_keywords_that_are_qualifiers (0.00s)
+    --- PASS: TestStandardSearchString/quotes_qualifiers (0.00s)
+    --- PASS: TestStandardSearchString/respects_immutable_keywords (0.00s)
+    --- PASS: TestStandardSearchString/respects_immutable_keywords,_with_qualifiers (0.00s)
+    --- PASS: TestStandardSearchString/prioritises_immutable_keywords_over_keywords_slice (0.00s)
+=== RUN   TestAdvancedIssueSearchString
+=== RUN   TestAdvancedIssueSearchString/empty_query
+=== RUN   TestAdvancedIssueSearchString/quotes_keywords
+=== RUN   TestAdvancedIssueSearchString/quotes_keywords_that_are_qualifiers
+=== RUN   TestAdvancedIssueSearchString/quotes_qualifiers
+=== RUN   TestAdvancedIssueSearchString/respects_immutable_keywords
+=== RUN   TestAdvancedIssueSearchString/respects_immutable_keywords,_with_qualifiers
+=== RUN   TestAdvancedIssueSearchString/prioritises_immutable_keywords_over_keywords_slice
+=== RUN   TestAdvancedIssueSearchString/unused_qualifiers_should_not_appear_in_query
+=== RUN   TestAdvancedIssueSearchString/special_qualifiers_when_used_once
+=== RUN   TestAdvancedIssueSearchString/special_qualifiers_are_OR-ed_when_used_multiple_times
+=== RUN   TestAdvancedIssueSearchString/special_qualifiers_without_special_values
+=== RUN   TestAdvancedIssueSearchString/non-special_qualifiers_used_multiple_times
+--- PASS: TestAdvancedIssueSearchString (0.00s)
+    --- PASS: TestAdvancedIssueSearchString/empty_query (0.00s)
+    --- PASS: TestAdvancedIssueSearchString/quotes_keywords (0.00s)
+    --- PASS: TestAdvancedIssueSearchString/quotes_keywords_that_are_qualifiers (0.00s)
+    --- PASS: TestAdvancedIssueSearchString/quotes_qualifiers (0.00s)
+    --- PASS: TestAdvancedIssueSearchString/respects_immutable_keywords (0.00s)
+    --- PASS: TestAdvancedIssueSearchString/respects_immutable_keywords,_with_qualifiers (0.00s)
+    --- PASS: TestAdvancedIssueSearchString/prioritises_immutable_keywords_over_keywords_slice (0.00s)
+    --- PASS: TestAdvancedIssueSearchString/unused_qualifiers_should_not_appear_in_query (0.00s)
+    --- PASS: TestAdvancedIssueSearchString/special_qualifiers_when_used_once (0.00s)
+    --- PASS: TestAdvancedIssueSearchString/special_qualifiers_are_OR-ed_when_used_multiple_times (0.00s)
+    --- PASS: TestAdvancedIssueSearchString/special_qualifiers_without_special_values (0.00s)
+    --- PASS: TestAdvancedIssueSearchString/non-special_qualifiers_used_multiple_times (0.00s)
+=== RUN   TestQualifiersMap
+=== RUN   TestQualifiersMap/changes_qualifiers_to_map
+=== RUN   TestQualifiersMap/excludes_unset_qualifiers_from_map
+=== RUN   TestQualifiersMap/concatenates_fields_that_share_a_qualifier_key
+--- PASS: TestQualifiersMap (0.00s)
+    --- PASS: TestQualifiersMap/changes_qualifiers_to_map (0.00s)
+    --- PASS: TestQualifiersMap/excludes_unset_qualifiers_from_map (0.00s)
+    --- PASS: TestQualifiersMap/concatenates_fields_that_share_a_qualifier_key (0.00s)
+=== RUN   TestCamelToKebab
+=== RUN   TestCamelToKebab/single_lowercase_word
+=== RUN   TestCamelToKebab/multiple_mixed_words
+=== RUN   TestCamelToKebab/multiple_uppercase_words
+=== RUN   TestCamelToKebab/multiple_lowercase_words
+=== RUN   TestCamelToKebab/multiple_mixed_words_with_number
+=== RUN   TestCamelToKebab/multiple_lowercase_words_with_number
+=== RUN   TestCamelToKebab/multiple_lowercase_words_with_dash
+=== RUN   TestCamelToKebab/multiple_uppercase_words_with_dash
+--- PASS: TestCamelToKebab (0.00s)
+    --- PASS: TestCamelToKebab/single_lowercase_word (0.00s)
+    --- PASS: TestCamelToKebab/multiple_mixed_words (0.00s)
+    --- PASS: TestCamelToKebab/multiple_uppercase_words (0.00s)
+    --- PASS: TestCamelToKebab/multiple_lowercase_words (0.00s)
+    --- PASS: TestCamelToKebab/multiple_mixed_words_with_number (0.00s)
+    --- PASS: TestCamelToKebab/multiple_lowercase_words_with_number (0.00s)
+    --- PASS: TestCamelToKebab/multiple_lowercase_words_with_dash (0.00s)
+    --- PASS: TestCamelToKebab/multiple_uppercase_words_with_dash (0.00s)
+=== RUN   TestCodeExportData
+=== RUN   TestCodeExportData/exports_requested_fields
+--- PASS: TestCodeExportData (0.00s)
+    --- PASS: TestCodeExportData/exports_requested_fields (0.00s)
+=== RUN   TestCommitExportData
+=== RUN   TestCommitExportData/exports_requested_fields
+--- PASS: TestCommitExportData (0.00s)
+    --- PASS: TestCommitExportData/exports_requested_fields (0.00s)
+=== RUN   TestRepositoryExportData
+=== RUN   TestRepositoryExportData/exports_requested_fields
+--- PASS: TestRepositoryExportData (0.00s)
+    --- PASS: TestRepositoryExportData/exports_requested_fields (0.00s)
+=== RUN   TestIssueExportData
+=== RUN   TestIssueExportData/exports_requested_fields
+=== RUN   TestIssueExportData/state_when_issue
+=== RUN   TestIssueExportData/state_when_pull_request
+=== RUN   TestIssueExportData/isDraft_when_pull_request
+--- PASS: TestIssueExportData (0.00s)
+    --- PASS: TestIssueExportData/exports_requested_fields (0.00s)
+    --- PASS: TestIssueExportData/state_when_issue (0.00s)
+    --- PASS: TestIssueExportData/state_when_pull_request (0.00s)
+    --- PASS: TestIssueExportData/isDraft_when_pull_request (0.00s)
+=== RUN   TestSearcherCode
+=== RUN   TestSearcherCode/searches_code
+=== RUN   TestSearcherCode/searches_code_for_enterprise_host
+=== RUN   TestSearcherCode/paginates_results
+=== RUN   TestSearcherCode/paginates_results_with_quoted_multi-word_query_(#11228)
+=== RUN   TestSearcherCode/collect_full_and_partial_pages_under_total_number_of_matching_search_results
+=== RUN   TestSearcherCode/handles_search_errors
+--- PASS: TestSearcherCode (0.00s)
+    --- PASS: TestSearcherCode/searches_code (0.00s)
+    --- PASS: TestSearcherCode/searches_code_for_enterprise_host (0.00s)
+    --- PASS: TestSearcherCode/paginates_results (0.00s)
+    --- PASS: TestSearcherCode/paginates_results_with_quoted_multi-word_query_(#11228) (0.00s)
+    --- PASS: TestSearcherCode/collect_full_and_partial_pages_under_total_number_of_matching_search_results (0.00s)
+    --- PASS: TestSearcherCode/handles_search_errors (0.00s)
+=== RUN   TestSearcherCommits
+=== RUN   TestSearcherCommits/searches_commits
+=== RUN   TestSearcherCommits/searches_commits_for_enterprise_host
+=== RUN   TestSearcherCommits/paginates_results_with_quoted_multi-word_query_(#11228)
+=== RUN   TestSearcherCommits/paginates_results
+=== RUN   TestSearcherCommits/collect_full_and_partial_pages_under_total_number_of_matching_search_results
+=== RUN   TestSearcherCommits/handles_search_errors
+--- PASS: TestSearcherCommits (0.00s)
+    --- PASS: TestSearcherCommits/searches_commits (0.00s)
+    --- PASS: TestSearcherCommits/searches_commits_for_enterprise_host (0.00s)
+    --- PASS: TestSearcherCommits/paginates_results_with_quoted_multi-word_query_(#11228) (0.00s)
+    --- PASS: TestSearcherCommits/paginates_results (0.00s)
+    --- PASS: TestSearcherCommits/collect_full_and_partial_pages_under_total_number_of_matching_search_results (0.00s)
+    --- PASS: TestSearcherCommits/handles_search_errors (0.00s)
+=== RUN   TestSearcherRepositories
+=== RUN   TestSearcherRepositories/searches_repositories
+=== RUN   TestSearcherRepositories/searches_repositories_for_enterprise_host
+=== RUN   TestSearcherRepositories/paginates_results
+=== RUN   TestSearcherRepositories/paginates_results_with_quoted_multi-word_query_(#11228)
+=== RUN   TestSearcherRepositories/collect_full_and_partial_pages_under_total_number_of_matching_search_results
+=== RUN   TestSearcherRepositories/handles_search_errors
+--- PASS: TestSearcherRepositories (0.00s)
+    --- PASS: TestSearcherRepositories/searches_repositories (0.00s)
+    --- PASS: TestSearcherRepositories/searches_repositories_for_enterprise_host (0.00s)
+    --- PASS: TestSearcherRepositories/paginates_results (0.00s)
+    --- PASS: TestSearcherRepositories/paginates_results_with_quoted_multi-word_query_(#11228) (0.00s)
+    --- PASS: TestSearcherRepositories/collect_full_and_partial_pages_under_total_number_of_matching_search_results (0.00s)
+    --- PASS: TestSearcherRepositories/handles_search_errors (0.00s)
+=== RUN   TestSearcherIssues
+=== RUN   TestSearcherIssues/searches_issues
+=== RUN   TestSearcherIssues/searches_issues_for_enterprise_host
+=== RUN   TestSearcherIssues/paginates_results
+=== RUN   TestSearcherIssues/paginates_results_with_quoted_multi-word_query_(#11228)
+=== RUN   TestSearcherIssues/collect_full_and_partial_pages_under_total_number_of_matching_search_results
+=== RUN   TestSearcherIssues/handles_search_errors
+--- PASS: TestSearcherIssues (0.01s)
+    --- PASS: TestSearcherIssues/searches_issues (0.00s)
+    --- PASS: TestSearcherIssues/searches_issues_for_enterprise_host (0.00s)
+    --- PASS: TestSearcherIssues/paginates_results (0.00s)
+    --- PASS: TestSearcherIssues/paginates_results_with_quoted_multi-word_query_(#11228) (0.00s)
+    --- PASS: TestSearcherIssues/collect_full_and_partial_pages_under_total_number_of_matching_search_results (0.00s)
+    --- PASS: TestSearcherIssues/handles_search_errors (0.01s)
+=== RUN   TestSearcherIssuesAdvancedSyntax
+=== RUN   TestSearcherIssuesAdvancedSyntax/advanced_issue_search_not_supported
+=== RUN   TestSearcherIssuesAdvancedSyntax/advanced_issue_search_supported_as_an_opt-in_feature
+=== RUN   TestSearcherIssuesAdvancedSyntax/advanced_issue_search_supported_as_the_only_search_backend
+--- PASS: TestSearcherIssuesAdvancedSyntax (0.00s)
+    --- PASS: TestSearcherIssuesAdvancedSyntax/advanced_issue_search_not_supported (0.00s)
+    --- PASS: TestSearcherIssuesAdvancedSyntax/advanced_issue_search_supported_as_an_opt-in_feature (0.00s)
+    --- PASS: TestSearcherIssuesAdvancedSyntax/advanced_issue_search_supported_as_the_only_search_backend (0.00s)
+=== RUN   TestSearcherIssuesSemanticSearch
+=== RUN   TestSearcherIssuesSemanticSearch/semantic_search_sends_search_type=semantic
+=== RUN   TestSearcherIssuesSemanticSearch/hybrid_search_sends_search_type=hybrid
+=== RUN   TestSearcherIssuesSemanticSearch/lexical_search_sends_no_search_type_param
+=== RUN   TestSearcherIssuesSemanticSearch/semantic_search_not_supported_on_host
+=== RUN   TestSearcherIssuesSemanticSearch/hybrid_search_not_supported_on_host
+--- PASS: TestSearcherIssuesSemanticSearch (0.00s)
+    --- PASS: TestSearcherIssuesSemanticSearch/semantic_search_sends_search_type=semantic (0.00s)
+    --- PASS: TestSearcherIssuesSemanticSearch/hybrid_search_sends_search_type=hybrid (0.00s)
+    --- PASS: TestSearcherIssuesSemanticSearch/lexical_search_sends_no_search_type_param (0.00s)
+    --- PASS: TestSearcherIssuesSemanticSearch/semantic_search_not_supported_on_host (0.00s)
+    --- PASS: TestSearcherIssuesSemanticSearch/hybrid_search_not_supported_on_host (0.00s)
+=== RUN   TestSearcherIssuesSemanticSearchIsBoundedToSinglePage
+--- PASS: TestSearcherIssuesSemanticSearchIsBoundedToSinglePage (0.00s)
+=== RUN   TestSearcherURL
+=== RUN   TestSearcherURL/outputs_encoded_query_url
+=== RUN   TestSearcherURL/supports_enterprise_hosts
+=== RUN   TestSearcherURL/outputs_encoded_query_url_with_quoted_multi-word_keywords
+--- PASS: TestSearcherURL (0.00s)
+    --- PASS: TestSearcherURL/outputs_encoded_query_url (0.00s)
+    --- PASS: TestSearcherURL/supports_enterprise_hosts (0.00s)
+    --- PASS: TestSearcherURL/outputs_encoded_query_url_with_quoted_multi-word_keywords (0.00s)
+PASS
+ok  	github.com/cli/cli/v2/pkg/search	0.027s
+=== RUN   Test_StringSlice_ToSlice
+--- PASS: Test_StringSlice_ToSlice (0.00s)
+=== RUN   Test_StringSlice_Remove
+--- PASS: Test_StringSlice_Remove (0.00s)
+PASS
+ok  	github.com/cli/cli/v2/pkg/set	0.005s
+?   	github.com/cli/cli/v2/pkg/ssh	[no test files]
+=== RUN   TestHelperProcess
+--- PASS: TestHelperProcess (0.00s)
+=== RUN   Test_GhEditor_Prompt_skip
+--- PASS: Test_GhEditor_Prompt_skip (0.00s)
+=== RUN   Test_GhEditor_Prompt_editorAppend
+--- PASS: Test_GhEditor_Prompt_editorAppend (0.01s)
+=== RUN   Test_GhEditor_Prompt_editorTruncate
+--- PASS: Test_GhEditor_Prompt_editorTruncate (0.01s)
+PASS
+ok  	github.com/cli/cli/v2/pkg/surveyext	0.023s
+?   	github.com/cli/cli/v2/script	[no test files]
+=== RUN   TestGatewayForwardsRewritesAndRecords
+=== RUN   TestGatewayForwardsRewritesAndRecords/forwards_to_the_upstream_as_the_canonical_host
+=== RUN   TestGatewayForwardsRewritesAndRecords/rewrites_the_canonical_host_out_of_headers_and_body
+=== RUN   TestGatewayForwardsRewritesAndRecords/records_the_request_as_the_client_addressed_it
+--- PASS: TestGatewayForwardsRewritesAndRecords (0.00s)
+    --- PASS: TestGatewayForwardsRewritesAndRecords/forwards_to_the_upstream_as_the_canonical_host (0.00s)
+    --- PASS: TestGatewayForwardsRewritesAndRecords/rewrites_the_canonical_host_out_of_headers_and_body (0.00s)
+    --- PASS: TestGatewayForwardsRewritesAndRecords/records_the_request_as_the_client_addressed_it (0.00s)
+=== RUN   TestGatewayRecordsUpstreamFailures
+2026/10/31 01:31:12 gateway: upstream error for GET /user: dial tcp 127.0.0.1:1: connect: connection refused
+--- PASS: TestGatewayRecordsUpstreamFailures (0.00s)
+=== RUN   TestGeneratedServerCertificateChainsToTheCA
+--- PASS: TestGeneratedServerCertificateChainsToTheCA (0.00s)
+PASS
+ok  	github.com/cli/cli/v2/script/api-host-gateway/gateway	0.006s
+?   	github.com/cli/cli/v2/test	[no test files]
+?   	github.com/cli/cli/v2/utils	[no test files]
+FAIL
+

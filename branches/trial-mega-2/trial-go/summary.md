@@ -1,0 +1,10 @@
+| Repository | Opened | F5 startup | Setup | Analysis stable | Errors | Build | Run | Debug | Tests | Doctor |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| cobra | 1.8 s | cobra (go) | ok in 13 s | 18.2 s | 0 errors, 0 warnings | 0 errors in 0 s | not run: build only | - | 279 found; 279 passed, 0 failed, 0 skipped, 0 not run - 279 tests run in 3.2 sec: 279 passed, 0 failed, 0 skipped. | 1 Needs a toolchain |
+| urfave-cli | 0.2 s | urfave-cli (go) | ok in 2 s | 6.9 s | 0 errors, 0 warnings | 0 errors in 0 s | not run: build only | - | 639 found; 649 passed, 0 failed, 2 skipped, 4 not run - 651 tests run in 6.7 sec: 649 passed, 0 failed, 2 skipped. | 1 Needs a toolchain |
+| fzf | 0.3 s | fzf (go) | ok in 2 s | 6.8 s | 0 errors, 0 warnings | 0 errors in 5 s | not run: build only | - | 156 found; 147 passed, 0 failed, 2 skipped, 7 not run - 149 tests run in 7.2 sec: 147 passed, 0 failed, 2 skipped. | 1 Needs a toolchain |
+| echo | 0.2 s | echo (go) | ok in 2 s | 6.8 s | 0 errors, 0 warnings | 0 errors in 3 s | not run: build only | - | 726 found; 730 passed, 0 failed, 0 skipped, 0 not run - 730 tests run in 6.0 sec: 730 passed, 0 failed, 0 skipped. | 1 Needs a toolchain |
+| lazygit | 0.1 s | lazygit (go) | ok in 2 s | 6.8 s | 0 errors, 0 warnings | 0 errors in 8 s | not run: build only | - | - | 2 Needs a toolchain |
+| mux | 0.2 s | mux (go) | ok in 2 s | 6.7 s | 0 errors, 0 warnings | 0 errors in 0 s | not run: build only | - | 72 found; 76 passed, 0 failed, 0 skipped, 0 not run - 76 tests run in 606 ms: 76 passed, 0 failed, 0 skipped. | 1 Needs a toolchain |
+| gin-examples | 0.2 s | gin-examples (go) | ok in 2 s | 6.8 s | 0 errors, 0 warnings | 0 errors in 0 s | exited before listening | ended without stopping at main.go:27 | - | 8 Needs a toolchain |
+| gh-cli | 0.3 s | gh-cli (go) | ok in 2 s | 7.0 s | 0 errors, 0 warnings | 0 errors in 0 s | exited | ended without stopping at main.go:23 | 1992 found; 1941 passed, 4 failed, 4 skipped, 51 not run - 1949 tests run in 10 min 43 sec: 1941 passed, 4 failed, 4 skipped. | 2 Needs a toolchain |
