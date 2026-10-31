@@ -1,4 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:a11y="using:TabStudio.App.Accessibility"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:vm="using:TabStudio.App.ViewModels"
@@ -102,12 +103,12 @@
                       <ItemsControl ItemsSource="{Binding Items}">
                         <ItemsControl.ItemTemplate>
                           <DataTemplate x:DataType="vm:FormsToolboxItemViewModel">
-                            <Button Classes="tool" Theme="{StaticResource ToolButton}" Classes.selected="{Binding IsArmed}" Command="{Binding ArmCommand}"
-                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" MinHeight="36" Padding="10,0">
-                              <StackPanel Orientation="Horizontal" Spacing="10">
-                                <controls:StrokeIcon Data="{Binding Icon}" Size="16" Foreground="{DynamicResource Brush.Accent}" />
-                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
-                              </StackPanel>
+                            <Button Classes="tool" Theme="{StaticResource ToolButton}" Classes.selected="{Binding IsArmed}" Command="{Binding ArmCommand}" AutomationProperties.Name="{Binding Name}"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="10,0">
+                              <Grid ColumnDefinitions="Auto,*">
+                                <controls:StrokeIcon Data="{Binding Icon}" Size="16" Foreground="{DynamicResource Brush.AccentText}" Margin="0,0,10,0" />
+                                <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                              </Grid>
                             </Button>
                           </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -122,7 +123,7 @@
 
         <!-- The form being designed, scaled down when it is wider than the room it has. -->
         <Panel Grid.Column="1" Background="{DynamicResource Brush.Window}">
-          <ScrollViewer x:Name="CanvasScroller" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" />
+          <ScrollViewer x:Name="CanvasScroller" a11y:A11y.IsContent="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" />
           <Border IsVisible="{Binding HasLoadError}" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="460" Margin="24"
                   Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.Error}" BorderThickness="1" CornerRadius="8" Padding="16,12">
             <Grid ColumnDefinitions="Auto,*">
@@ -171,7 +172,7 @@
                       <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="vm:StripItemViewModel">
                           <Button Theme="{StaticResource ToolButton}" Command="{Binding SelectCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                                  MinHeight="34" Padding="8,0">
+                                  Padding="8,0">
                             <Grid ColumnDefinitions="*,Auto">
                               <TextBlock Text="{Binding Text}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                               <TextBlock Grid.Column="1" Classes="small muted" Text="{Binding Name}" VerticalAlignment="Center" Margin="8,0,0,0" />
@@ -189,12 +190,17 @@
                                Text="Type an item's text and add it, or - for a separator. Tap an item to change it or to add to its menu." />
                   </StackPanel>
 
-                  <ItemsControl ItemsSource="{Binding Properties}">
+                  <!-- The labels' column is as wide as the widest label, at least 96, so a larger text size never cuts a name. -->
+                  <ItemsControl ItemsSource="{Binding Properties}" Grid.IsSharedSizeScope="True">
                     <ItemsControl.DataTemplates>
                       <DataTemplate x:DataType="vm:TextPropertyViewModel">
                         <StackPanel>
                           <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
-                          <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" MinWidth="96" SharedSizeGroup="PropertyLabel" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
                             <TextBox Grid.Column="1" Text="{Binding Text, UpdateSourceTrigger=LostFocus}" AcceptsReturn="{Binding IsMultiline}" NewLine="&#13;&#10;"
                                      TextWrapping="Wrap" MaxHeight="96" />
@@ -204,7 +210,11 @@
                       <DataTemplate x:DataType="vm:BooleanPropertyViewModel">
                         <StackPanel>
                           <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
-                          <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" MinWidth="96" SharedSizeGroup="PropertyLabel" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
                             <CheckBox Grid.Column="1" IsChecked="{Binding IsChecked}" Content="{Binding IsChecked}" />
                           </Grid>
@@ -213,7 +223,11 @@
                       <DataTemplate x:DataType="vm:NumberPropertyViewModel">
                         <StackPanel>
                           <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
-                          <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" MinWidth="96" SharedSizeGroup="PropertyLabel" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
                             <NumericUpDown Grid.Column="1" Value="{Binding Value}" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}"
                                            Increment="{Binding Increment}" FormatString="{Binding Format}" />
@@ -223,7 +237,11 @@
                       <DataTemplate x:DataType="vm:ChoicePropertyViewModel">
                         <StackPanel>
                           <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
-                          <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" MinWidth="96" SharedSizeGroup="PropertyLabel" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
                             <ComboBox Grid.Column="1" ItemsSource="{Binding Options}" SelectedItem="{Binding Selected}" HorizontalAlignment="Stretch" />
                           </Grid>
@@ -232,7 +250,11 @@
                       <DataTemplate x:DataType="vm:FontFamilyPropertyViewModel">
                         <StackPanel>
                           <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
-                          <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" MinWidth="96" SharedSizeGroup="PropertyLabel" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
                             <ComboBox Grid.Column="1" ItemsSource="{Binding Options}" SelectedItem="{Binding Selected}" HorizontalAlignment="Stretch" />
                           </Grid>
@@ -253,23 +275,27 @@
                       <DataTemplate x:DataType="vm:AnchorPropertyViewModel">
                         <StackPanel>
                           <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
-                          <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" MinWidth="96" SharedSizeGroup="PropertyLabel" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <StackPanel VerticalAlignment="Center" Spacing="2">
                               <TextBlock Classes="label" Text="{Binding Label}" />
                               <TextBlock Classes="small muted" Text="{Binding Summary}" TextWrapping="Wrap" />
                             </StackPanel>
-                            <Grid Grid.Column="1" HorizontalAlignment="Left" ColumnDefinitions="36,40,36" RowDefinitions="30,30,30">
-                              <ToggleButton Grid.Column="1" Grid.Row="0" IsChecked="{Binding Top}" ToolTip.Tip="Top" HorizontalAlignment="Stretch" MinHeight="0" Padding="0">
+                            <Grid Grid.Column="1" HorizontalAlignment="Left" ColumnDefinitions="Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto">
+                              <ToggleButton Classes="target" Grid.Column="1" Grid.Row="0" IsChecked="{Binding Top}" ToolTip.Tip="Top" HorizontalAlignment="Stretch" Padding="0">
                                 <Border Width="4" Height="16" Background="{DynamicResource Brush.Text}" CornerRadius="2" />
                               </ToggleButton>
-                              <ToggleButton Grid.Column="0" Grid.Row="1" IsChecked="{Binding Left}" ToolTip.Tip="Left" HorizontalAlignment="Stretch" MinHeight="0" Padding="0">
+                              <ToggleButton Classes="target" Grid.Column="0" Grid.Row="1" IsChecked="{Binding Left}" ToolTip.Tip="Left" HorizontalAlignment="Stretch" Padding="0">
                                 <Border Width="16" Height="4" Background="{DynamicResource Brush.Text}" CornerRadius="2" />
                               </ToggleButton>
                               <Border Grid.Column="1" Grid.Row="1" Margin="4" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" CornerRadius="3" />
-                              <ToggleButton Grid.Column="2" Grid.Row="1" IsChecked="{Binding Right}" ToolTip.Tip="Right" HorizontalAlignment="Stretch" MinHeight="0" Padding="0">
+                              <ToggleButton Classes="target" Grid.Column="2" Grid.Row="1" IsChecked="{Binding Right}" ToolTip.Tip="Right" HorizontalAlignment="Stretch" Padding="0">
                                 <Border Width="16" Height="4" Background="{DynamicResource Brush.Text}" CornerRadius="2" />
                               </ToggleButton>
-                              <ToggleButton Grid.Column="1" Grid.Row="2" IsChecked="{Binding Bottom}" ToolTip.Tip="Bottom" HorizontalAlignment="Stretch" MinHeight="0" Padding="0">
+                              <ToggleButton Classes="target" Grid.Column="1" Grid.Row="2" IsChecked="{Binding Bottom}" ToolTip.Tip="Bottom" HorizontalAlignment="Stretch" Padding="0">
                                 <Border Width="4" Height="16" Background="{DynamicResource Brush.Text}" CornerRadius="2" />
                               </ToggleButton>
                             </Grid>
@@ -279,13 +305,23 @@
                       <DataTemplate x:DataType="vm:ColorPropertyViewModel">
                         <StackPanel>
                           <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
-                          <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" MinWidth="96" SharedSizeGroup="PropertyLabel" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
-                            <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="8,0">
-                              <StackPanel Orientation="Horizontal" Spacing="8">
-                                <Border Width="18" Height="18" CornerRadius="4" Background="{Binding Swatch}" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" />
-                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
-                              </StackPanel>
+                            <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Padding="8,0">
+                              <AutomationProperties.Name>
+                                <MultiBinding StringFormat="{}{0}, {1}">
+                                  <Binding Path="Label" />
+                                  <Binding Path="Name" />
+                                </MultiBinding>
+                              </AutomationProperties.Name>
+                              <Grid ColumnDefinitions="Auto,*">
+                                <Border Width="18" Height="18" CornerRadius="4" Margin="0,0,8,0" Background="{Binding Swatch}" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" />
+                                <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                              </Grid>
                               <Button.Flyout>
                                 <Flyout Placement="BottomEdgeAlignedLeft">
                                   <ItemsControl ItemsSource="{Binding Palette}" Width="248">
@@ -296,7 +332,7 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                       <DataTemplate x:DataType="vm:ColorChoiceViewModel">
-                                        <Button Command="{Binding PickCommand}" ToolTip.Tip="{Binding Name}" Width="30" Height="30" MinWidth="0" MinHeight="0" Padding="0" Margin="1"
+                                        <Button Command="{Binding PickCommand}" ToolTip.Tip="{Binding Name}" Padding="0" Margin="1"
                                                 Background="Transparent" BorderThickness="0">
                                           <Border Width="24" Height="24" CornerRadius="5" Background="{Binding Swatch}" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" />
                                         </Button>
@@ -323,7 +359,7 @@
                         <Grid ColumnDefinitions="110,*,Auto" Margin="0,2" Background="Transparent" DoubleTapped="OnEventDoubleTapped">
                           <TextBlock Classes="label" Text="{Binding Name}" VerticalAlignment="Center" />
                           <TextBox Grid.Column="1" Text="{Binding Handler, UpdateSourceTrigger=LostFocus}" Watermark="(none)" />
-                          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Command="{Binding OpenCommand}" ToolTip.Tip="Write the handler, or go to it" MinWidth="36" Padding="6,0">
+                          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Command="{Binding OpenCommand}" ToolTip.Tip="Write the handler, or go to it" Padding="6,0">
                             <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="13" />
                           </Button>
                         </Grid>

@@ -34,7 +34,8 @@ public sealed class EditorLooksTheSameTests
         var path = Path.Combine(Path.GetDirectoryName(solution)!, "src", "Greetings", "Operations.cs");
         await File.WriteAllTextAsync(path, LongSampleCode.CSharp());
         await fixture.Workspace.LoadAsync(solution);
-        var window = fixture.Show(bottomPanel: false);
+        // Tall enough that the fold marker the pointer goes to is clear of the floating touch bar.
+        var window = fixture.Show(height: 960, bottomPanel: false);
         var document = await fixture.Workspace.OpenDocumentAsync(path) ?? throw new InvalidOperationException("The file did not open.");
         var view = ActiveEditor(window);
         await UiTestHelpers.WaitUntilAsync(
@@ -82,7 +83,7 @@ public sealed class EditorLooksTheSameTests
     /// <summary>The pixels of an area of the window, as BGRA rows; the whole window is saved as a screenshot too.</summary>
     private static (byte[] Pixels, int Width, int Height) Capture(Window window, PixelRect area, string screenshot)
     {
-        UiTestHelpers.SaveScreenshot(window, screenshot);
+        // The pixels first: the screenshot's accessibility check lays the window out again at another text size.
         AvaloniaHeadlessPlatform.ForceRenderTimerTick();
         using var frame = window.CaptureRenderedFrame() ?? throw new InvalidOperationException("Nothing was rendered.");
         using var locked = frame.Lock();
@@ -93,6 +94,7 @@ public sealed class EditorLooksTheSameTests
             Marshal.Copy(locked.Address + ((area2.Y + y) * locked.RowBytes) + (area2.X * 4), pixels, y * area2.Width * 4, area2.Width * 4);
         }
 
+        UiTestHelpers.SaveScreenshot(window, screenshot);
         return (pixels, area2.Width, area2.Height);
     }
 

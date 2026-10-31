@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using TabStudio.App.Accessibility;
 using TabStudio.App.Services;
 using TabStudio.App.Services.Appearance;
 using TabStudio.App.Services.Search;
@@ -53,6 +54,7 @@ public sealed partial class WorkspaceViewModel
         if (_extensions is { Appearance: { } appearance } extensions)
         {
             providers.Add(new SettingSearchProvider(SettingSearchProvider.Appearance(appearance, extensions.UseTabStudioTheme)));
+            providers.Add(new SettingSearchProvider(SettingSearchProvider.TextSizes(appearance)));
             appearance.Changed += OnAppearanceChanged;
         }
 
@@ -104,6 +106,22 @@ public sealed partial class WorkspaceViewModel
 
     private bool CanUseTabStudioTheme() => _extensions?.Appearance is not null;
 
+    /// <summary>The IDE's text size, for Tools &gt; Text Size's check marks; <see langword="null"/> where the app has no setting.</summary>
+    public TextSize? CurrentTextSize => _extensions?.Appearance?.TextSize;
+
+    /// <summary>Tools &gt; Text Size: the text size of the whole IDE and its editors, or Android's font size.</summary>
+    /// <param name="size">The size.</param>
+    [RelayCommand(CanExecute = nameof(CanUseTabStudioTheme))]
+    private void UseTextSize(TextSize size) => _extensions?.Appearance?.SetTextSize(size);
+
+    /// <summary>Tools &gt; Text Size &gt; Make Text Larger (Ctrl+Shift+.), as Visual Studio's zoom in.</summary>
+    [RelayCommand(CanExecute = nameof(CanUseTabStudioTheme))]
+    private void MakeTextLarger() => _extensions?.Appearance?.StepTextSize(larger: true);
+
+    /// <summary>Tools &gt; Text Size &gt; Make Text Smaller (Ctrl+Shift+,), as Visual Studio's zoom out.</summary>
+    [RelayCommand(CanExecute = nameof(CanUseTabStudioTheme))]
+    private void MakeTextSmaller() => _extensions?.Appearance?.StepTextSize(larger: false);
+
     /// <summary>The files the search finds: those of the solution or folder that open in a tab, with their folders.</summary>
     private IEnumerable<SearchFile> SearchableFiles()
     {
@@ -150,6 +168,7 @@ public sealed partial class WorkspaceViewModel
     private void OnAppearanceChanged(object? sender, EventArgs e)
     {
         OnPropertyChanged(nameof(CurrentTheme));
+        OnPropertyChanged(nameof(CurrentTextSize));
         UseTabStudioThemeCommand.NotifyCanExecuteChanged();
     }
 

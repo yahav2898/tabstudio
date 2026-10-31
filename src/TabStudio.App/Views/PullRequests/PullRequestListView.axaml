@@ -11,11 +11,10 @@
 
   <UserControl.Styles>
     <Style Selector="Button.filter">
-      <Setter Property="Height" Value="32" />
-      <Setter Property="MinHeight" Value="32" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="9,0" />
       <Setter Property="CornerRadius" Value="16" />
-      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Small}" />
       <Setter Property="Margin" Value="0,0,4,6" />
     </Style>
     <Style Selector="Border.tag">
@@ -24,7 +23,7 @@
       <Setter Property="CornerRadius" Value="9.5" />
       <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
       <Setter Property="VerticalAlignment" Value="Center" />
-      <Setter Property="TextElement.FontSize" Value="10.5" />
+      <Setter Property="TextElement.FontSize" Value="{DynamicResource Type.Micro}" />
       <Setter Property="TextElement.FontWeight" Value="SemiBold" />
       <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
     </Style>
@@ -37,12 +36,12 @@
   <DockPanel>
 
     <!-- Title, with the repository and Refresh -->
-    <Border DockPanel.Dock="Top" Height="36" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Border DockPanel.Dock="Top" MinHeight="36" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0,4,0">
         <TextBlock Classes="header" Text="Pull Requests" />
         <TextBlock Grid.Column="1" Classes="muted small" Margin="8,0,4,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
                    Text="{Binding RepositoryName}" />
-        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Padding="0"
                 ToolTip.Tip="Refresh" Command="{Binding RefreshCommand}" IsVisible="{Binding IsLinked}">
           <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="15" />
         </Button>
@@ -87,7 +86,7 @@
         </Grid>
         <StackPanel Margin="6,8,6,0" Spacing="10" IsVisible="{Binding NeedsSignIn}">
           <TextBlock Classes="muted" TextWrapping="Wrap" Text="Sign in to GitHub to see the pull requests you opened or are asked to review." />
-          <Button Theme="{StaticResource AccentButton}" Height="38" HorizontalAlignment="Left" Padding="16,0" Content="Sign in to GitHub"
+          <Button Theme="{StaticResource AccentButton}" HorizontalAlignment="Left" Padding="16,0" Content="Sign in to GitHub"
                   Command="{Binding SignInCommand}" />
         </StackPanel>
         <TextBlock Classes="muted" Margin="6,8,6,0" TextWrapping="Wrap" Text="{Binding EmptyText}" IsVisible="{Binding IsEmpty}" />
@@ -103,7 +102,7 @@
                   <controls:StrokeIcon Data="{StaticResource Icon.PullRequest}" Size="16" Margin="0,1,10,0" VerticalAlignment="Top"
                                        Foreground="{Binding Converter={x:Static conv:ReviewConverters.ItemBrush}}" />
                   <StackPanel Grid.Column="1" Spacing="4">
-                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource Brush.TextBright}"
+                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="{DynamicResource Type.Section}" Foreground="{DynamicResource Brush.TextBright}"
                                TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
                     <Grid ColumnDefinitions="*,Auto">
                       <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis"><Run
@@ -117,7 +116,7 @@
                     <!-- The branch gives way to the tags when the window is narrow. -->
                     <Grid ColumnDefinitions="Auto,*,Auto,Auto">
                       <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="12" Margin="0,0,6,0" Foreground="{DynamicResource Brush.TextMuted}" />
-                      <TextBlock Grid.Column="1" Classes="small mono" FontSize="11.5" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center"
+                      <TextBlock Grid.Column="1" Classes="small mono" FontSize="{DynamicResource Type.Fine}" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center"
                                  TextTrimming="CharacterEllipsis" Text="{Binding BranchText}" />
                       <Border Grid.Column="2" Classes="tag" Margin="6,0,0,0" IsVisible="{Binding IsDraft}">
                         <TextBlock Text="Draft" VerticalAlignment="Center" />

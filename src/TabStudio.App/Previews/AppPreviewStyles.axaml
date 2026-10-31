@@ -27,6 +27,37 @@
     <Setter Property="MinHeight" Value="0" />
   </Style>
 
+  <!--
+    The IDE's touch targets (Theme/Accessibility.axaml): an app's controls keep the sizes Fluent gives them, and the
+    resources those sizes come from are Fluent's again inside an app's views (AppTheme.cs).
+  -->
+  <Style Selector="Button, DropDownButton, ToggleSwitch, ListBoxItem, ComboBoxItem, TabItem, TreeViewItem, ComboBox, NumericUpDown, AutoCompleteBox, CheckBox, RadioButton, DataGridRow">
+    <Setter Property="MinHeight" Value="0" />
+  </Style>
+  <Style Selector="Button, DropDownButton, CheckBox, RadioButton, Menu > MenuItem">
+  </Style>
+  <Style Selector="Button, DropDownButton">
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+  </Style>
+  <Style Selector="ComboBox">
+    <Setter Property="MinHeight" Value="{DynamicResource ComboBoxMinHeight}" />
+  </Style>
+  <Style Selector="CheckBox">
+    <Setter Property="MinHeight" Value="{DynamicResource CheckBoxMinHeight}" />
+  </Style>
+  <Style Selector="RadioButton">
+    <Setter Property="MinHeight" Value="{DynamicResource RadioButtonMinHeight}" />
+  </Style>
+  <Style Selector="TreeViewItem">
+    <Setter Property="MinHeight" Value="{DynamicResource TreeViewItemMinHeight}" />
+  </Style>
+  <Style Selector="TabItem">
+    <Setter Property="MinHeight" Value="{DynamicResource TabItemMinHeight}" />
+  </Style>
+  <Style Selector="NumericUpDown, AutoCompleteBox">
+    <Setter Property="MinHeight" Value="{DynamicResource TextControlThemeMinHeight}" />
+  </Style>
+
   <Style Selector="GridSplitter">
     <Setter Property="Background" Value="{DynamicResource SystemAltMediumLowColor}" />
   </Style>

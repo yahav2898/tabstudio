@@ -304,7 +304,9 @@ public sealed class IntelliSenseEditorTests
 
     private static Window Show(WorkspaceFixture fixture)
     {
-        var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = fixture.Workspace } };
+        // Tall enough that the line the pointer goes to is above the floating touch bar, whose 44-pixel targets and
+        // the shell's 44-pixel bars leave the editor less height than 800 pixels did.
+        var window = new Window { Width = 1280, Height = 960, Content = new WorkspaceView { DataContext = fixture.Workspace } };
         window.Show();
         return window;
     }

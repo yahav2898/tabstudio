@@ -29,7 +29,7 @@
       </StackPanel>
 
       <StackPanel>
-        <Border Height="28" BorderBrush="{DynamicResource Brush.Divider}" BorderThickness="0,0,0,1">
+        <Border MinHeight="28" BorderBrush="{DynamicResource Brush.Divider}" BorderThickness="0,0,0,1">
           <!-- A phone's panel keeps Project, Status and Why; Type and Runs via need a tablet's width. -->
           <Grid controls:ResponsiveColumns.Wide="180,130,190,150,*" controls:ResponsiveColumns.Compact="110,0,0,96,*"
                 controls:ResponsiveColumns.IsCompact="{Binding $parent[UserControl].Bounds.Width, Converter={x:Static controls:ResponsiveColumns.IsNarrow}}"
@@ -52,53 +52,54 @@
                   <TextBlock x:Name="ProjectCell" Text="{Binding Project}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Top" Margin="0,0,8,0" />
                   <TextBlock Grid.Column="1" Classes="label" Text="{Binding Type}" VerticalAlignment="Top" />
                   <TextBlock Grid.Column="2" Text="{Binding RunsVia}" TextTrimming="CharacterEllipsis" VerticalAlignment="Top" />
-                  <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="6" VerticalAlignment="Top">
-                    <controls:StrokeIcon Size="14" Data="{StaticResource Icon.Check}" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsReady}" />
-                    <controls:StrokeIcon Size="14" Data="{StaticResource Icon.Info}" Foreground="{DynamicResource Brush.Info}" IsVisible="{Binding IsBlocked}" />
-                    <TextBlock Text="{Binding Status}" VerticalAlignment="Center" />
-                  </StackPanel>
+                  <!-- A status that does not fit its column wraps under itself rather than running into Why. -->
+                  <Grid Grid.Column="3" ColumnDefinitions="Auto,*" VerticalAlignment="Top" Margin="0,0,8,0">
+                    <controls:StrokeIcon Size="14" Data="{StaticResource Icon.Check}" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsReady}" VerticalAlignment="Top" Margin="0,3,6,0" />
+                    <controls:StrokeIcon Size="14" Data="{StaticResource Icon.Info}" Foreground="{DynamicResource Brush.Info}" IsVisible="{Binding IsBlocked}" VerticalAlignment="Top" Margin="0,3,6,0" />
+                    <TextBlock Grid.Column="1" Text="{Binding Status}" TextWrapping="Wrap" />
+                  </Grid>
                   <Grid Grid.Column="4" ColumnDefinitions="*,Auto,Auto,Auto,Auto">
                     <StackPanel Spacing="6" VerticalAlignment="Center">
                       <TextBlock Classes="muted small" Text="{Binding Explanation}" TextWrapping="Wrap" />
                       <!-- A SQL Server that cannot run here: the choices sit under the message, which needs the width. -->
                       <WrapPanel IsVisible="{Binding CanConnectSqlServer}">
-                        <Button Theme="{StaticResource SecondaryButton}" Margin="0,0,8,0" Padding="10,0" Height="32" MinHeight="32"
+                        <Button Theme="{StaticResource SecondaryButton}" Margin="0,0,8,0" Padding="10,0"
                                 ToolTip.Tip="Connect to a SQL Server on your network or in the cloud; it is saved in the Database Explorer and the app runs with it"
                                 Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).ConnectSqlServerCommand}" CommandParameter="{Binding}">
-                          <StackPanel Orientation="Horizontal" Spacing="6">
-                            <controls:StrokeIcon Data="{StaticResource Icon.Database}" Size="13" Foreground="{DynamicResource Brush.Accent}" />
-                            <TextBlock Text="Connect to SQL Server…" FontSize="12.5" VerticalAlignment="Center" />
-                          </StackPanel>
+                          <Grid ColumnDefinitions="Auto,*">
+                            <controls:StrokeIcon Data="{StaticResource Icon.Database}" Size="13" Foreground="{DynamicResource Brush.AccentText}" Margin="0,0,6,0" />
+                            <TextBlock Grid.Column="1" Text="Connect to SQL Server…" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                          </Grid>
                         </Button>
-                        <Button Theme="{StaticResource SecondaryButton}" Padding="10,0" Height="32" MinHeight="32"
+                        <Button Theme="{StaticResource SecondaryButton}" Padding="10,0"
                                 IsVisible="{Binding CanSwitchDatabase}" ToolTip.Tip="Run the app with a database that runs on this tablet"
                                 Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).SwitchDatabaseCommand}" CommandParameter="{Binding}">
-                          <TextBlock Text="{Binding SwitchDatabaseText}" FontSize="12.5" VerticalAlignment="Center" />
+                          <TextBlock Text="{Binding SwitchDatabaseText}" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" TextWrapping="Wrap" />
                         </Button>
                       </WrapPanel>
                     </StackPanel>
-                    <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Margin="8,0,0,0" Padding="10,0" Height="32" MinHeight="32"
+                    <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Margin="8,0,0,0" Padding="10,0"
                             IsVisible="{Binding CanFixWithAgent}" ToolTip.Tip="Ask Claude to change the code so the project runs here"
                             Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).FixCompatibilityWithAgentCommand}" CommandParameter="{Binding}">
                       <StackPanel Orientation="Horizontal" Spacing="6">
-                        <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="13" Foreground="{DynamicResource Brush.Accent}" />
-                        <TextBlock Text="Fix with Agent" FontSize="12.5" VerticalAlignment="Center" />
+                        <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="13" Foreground="{DynamicResource Brush.AccentText}" />
+                        <TextBlock Text="Fix with Agent" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
                       </StackPanel>
                     </Button>
-                    <Button Grid.Column="4" Theme="{StaticResource SecondaryButton}" Margin="8,0,0,0" Padding="10,0" Height="32" MinHeight="32"
+                    <Button Grid.Column="4" Theme="{StaticResource SecondaryButton}" Margin="8,0,0,0" Padding="10,0"
                             IsVisible="{Binding CanUpgradeProject}" ToolTip.Tip="Convert the .NET Framework project to an SDK-style .NET project, and review the change"
                             Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).UpgradeProjectCommand}" CommandParameter="{Binding}">
-                      <TextBlock Text="Upgrade project" FontSize="12.5" VerticalAlignment="Center" />
+                      <TextBlock Text="Upgrade project" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
                     </Button>
                     <Button Grid.Column="3" Content="Port to Avalonia…" Margin="8,0,0,0"
                             IsVisible="{Binding CanPortToAvalonia}"
                             Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).PortToAvaloniaCommand}" CommandParameter="{Binding}" />
-                    <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Margin="8,0,0,0" Padding="10,0" Height="32" MinHeight="32"
+                    <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Margin="8,0,0,0" Padding="10,0"
                             IsVisible="{Binding CanInstallToolchain}" ToolTip.Tip="Install the toolchain from the Toolchain Store"
                             Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).InstallToolchainCommand}" CommandParameter="{Binding}">
                       <StackPanel Orientation="Horizontal" Spacing="6">
-                        <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="13" Foreground="{DynamicResource Brush.Accent}" />
-                        <TextBlock Text="{Binding InstallToolchainText}" FontSize="12.5" VerticalAlignment="Center" />
+                        <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="13" Foreground="{DynamicResource Brush.AccentText}" />
+                        <TextBlock Text="{Binding InstallToolchainText}" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
                       </StackPanel>
                     </Button>
                   </Grid>

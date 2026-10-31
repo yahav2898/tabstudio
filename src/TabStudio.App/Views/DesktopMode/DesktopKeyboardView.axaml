@@ -13,7 +13,6 @@
     <Style Selector="Button.key">
       <Setter Property="Focusable" Value="False" />
       <Setter Property="Width" Value="48" />
-      <Setter Property="Height" Value="44" />
       <Setter Property="Padding" Value="0" />
       <Setter Property="CornerRadius" Value="10" />
     </Style>
@@ -22,7 +21,7 @@
   <Border Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0" Padding="12,10">
     <Grid ColumnDefinitions="Auto,*,Auto">
       <controls:StrokeIcon Data="{StaticResource Icon.Keyboard}" Size="22" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center" />
-      <TextBox x:Name="Field" Grid.Column="1" Margin="10,0" MinHeight="44" VerticalContentAlignment="Center"
+      <TextBox x:Name="Field" Grid.Column="1" Margin="10,0" VerticalContentAlignment="Center"
                FontFamily="{DynamicResource CodeFont}" AcceptsReturn="False" AcceptsTab="False"
                Watermark="Type on the big screen" />
       <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6">
@@ -42,7 +41,7 @@
           <controls:StrokeIcon Data="{StaticResource Icon.ArrowRight}" Size="18" />
         </Button>
         <Button Classes="key" Theme="{StaticResource SecondaryButton}" Tag="{x:Static input:Key.Escape}" Click="OnKeyClick" ToolTip.Tip="Escape"
-                Width="56" Content="Esc" FontSize="13" />
+                Width="56" Content="Esc" FontSize="{DynamicResource Type.Section}" />
       </StackPanel>
     </Grid>
   </Border>

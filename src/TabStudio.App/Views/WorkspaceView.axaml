@@ -1,4 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:a11y="using:TabStudio.App.Accessibility"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:conv="using:TabStudio.App.Converters"
@@ -31,6 +32,8 @@
 
   <UserControl.KeyBindings>
     <KeyBinding Gesture="F5" Command="{Binding StartDebuggingCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+OemPeriod" Command="{Binding MakeTextLargerCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+OemComma" Command="{Binding MakeTextSmallerCommand}" />
     <KeyBinding Gesture="Ctrl+F5" Command="{Binding RunCommand}" />
     <KeyBinding Gesture="Shift+F5" Command="{Binding StopDebuggingCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+F5" Command="{Binding RestartCommand}" />
@@ -66,13 +69,13 @@
     <!-- The Search button's key cap, as the search shows key gestures. -->
     <Style Selector="Border.keycap">
       <Setter Property="MinWidth" Value="22" />
-      <Setter Property="Height" Value="20" />
+      <Setter Property="MinHeight" Value="20" />
       <Setter Property="Padding" Value="6,0" />
       <Setter Property="CornerRadius" Value="{StaticResource Radius.Small}" />
       <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
       <Setter Property="BorderBrush" Value="{DynamicResource Brush.BorderStrong}" />
       <Setter Property="BorderThickness" Value="1,1,1,2" />
-      <Setter Property="TextElement.FontSize" Value="11" />
+      <Setter Property="TextElement.FontSize" Value="{DynamicResource Type.Caption}" />
       <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
     </Style>
     <!-- The Search button: 240 pixels, or below 1000 pixels its icon alone (WorkspaceView.Layout.cs sets the class). -->
@@ -80,7 +83,6 @@
       <Setter Property="Width" Value="240" />
     </Style>
     <Style Selector="Button#SearchButton.compact">
-      <Setter Property="Width" Value="40" />
       <Setter Property="Padding" Value="0" />
       <Setter Property="HorizontalContentAlignment" Value="Center" />
     </Style>
@@ -90,33 +92,35 @@
     <Style Selector="Button#SearchButton.compact Border.keycap">
       <Setter Property="IsVisible" Value="False" />
     </Style>
-    <!-- The status bar's items: 24 pixels high, small text, white on teal. -->
+    <!-- Beside Locals with no room, the Call Stack is hidden rather than squeezed to nothing (WorkspaceView.Layout.cs). -->
+    <Style Selector="Border#CallStackBeside.folded > views|CallStackView">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <!-- The status bar's items: touch targets (Theme/Accessibility.axaml), small text, white on teal. -->
     <Style Selector="Button.status">
-      <Setter Property="Height" Value="24" />
-      <Setter Property="MinHeight" Value="24" />
-      <Setter Property="FontSize" Value="12" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Small}" />
     </Style>
     <!-- The floating touch bar's buttons: 44-pixel touch targets. -->
     <Style Selector="Button.touch">
-      <Setter Property="Height" Value="44" />
-      <Setter Property="MinHeight" Value="44" />
-      <Setter Property="MinWidth" Value="44" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+      <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
       <Setter Property="CornerRadius" Value="{StaticResource Radius.Card}" />
       <Setter Property="Padding" Value="12,0" />
     </Style>
   </UserControl.Styles>
 
-  <Grid RowDefinitions="40,46,*,28">
+  <Grid RowDefinitions="Auto,Auto,*,Auto">
 
     <!-- Menu bar: the logo, the menus (one Menu button on a phone), the Search button and the solution's name. -->
-    <Border Grid.Row="0" Background="{DynamicResource Brush.MenuBar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Border Grid.Row="0" MinHeight="40" Background="{DynamicResource Brush.MenuBar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid x:Name="MenuBar" ColumnDefinitions="Auto,Auto,Auto,Auto,*" Margin="8,0">
         <Border Width="26" Height="26" CornerRadius="7" Background="{DynamicResource Brush.Accent}" Margin="0,0,6,0">
           <controls:StrokeIcon Data="{StaticResource Icon.Logo}" Size="16" StrokeThickness="2.6" Foreground="{DynamicResource Brush.OnAccent}" HorizontalAlignment="Center" />
         </Border>
 
         <!-- On a phone the menus fold into this button: WorkspaceView.Layout.cs moves them between it and the menu bar. -->
-        <Button x:Name="MenuButton" Grid.Column="1" Theme="{StaticResource ToolButton}" Width="40" Height="36" MinHeight="36" Padding="0"
+        <Button x:Name="MenuButton" Grid.Column="1" Theme="{StaticResource ToolButton}" Padding="0"
                 IsVisible="False" ToolTip.Tip="Menu">
           <controls:StrokeIcon Data="{StaticResource Icon.Menu}" Size="18" />
           <Button.Flyout>
@@ -376,6 +380,30 @@
                         IsChecked="{Binding CurrentTheme, Mode=OneWay, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static appearance:IdeTheme.System}}"
                         Command="{Binding UseTabStudioThemeCommand}" CommandParameter="{x:Static appearance:IdeTheme.System}" />
             </MenuItem>
+            <!-- The text size of the whole IDE and its editors; by default Android's font size (Accessibility/TextSizes.cs). -->
+            <MenuItem Header="Te_xt Size">
+              <MenuItem Header="Make Text _Larger" InputGesture="Ctrl+Shift+OemPeriod" Command="{Binding MakeTextLargerCommand}" />
+              <MenuItem Header="Make Text S_maller" InputGesture="Ctrl+Shift+OemComma" Command="{Binding MakeTextSmallerCommand}" />
+              <Separator />
+              <MenuItem Header="Follow the S_ystem" ToggleType="Radio" GroupName="TextSize"
+                        IsChecked="{Binding CurrentTextSize, Mode=OneWay, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static a11y:TextSize.System}}"
+                        Command="{Binding UseTextSizeCommand}" CommandParameter="{x:Static a11y:TextSize.System}" />
+              <MenuItem Header="_Small" ToggleType="Radio" GroupName="TextSize"
+                        IsChecked="{Binding CurrentTextSize, Mode=OneWay, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static a11y:TextSize.Small}}"
+                        Command="{Binding UseTextSizeCommand}" CommandParameter="{x:Static a11y:TextSize.Small}" />
+              <MenuItem Header="_Default" ToggleType="Radio" GroupName="TextSize"
+                        IsChecked="{Binding CurrentTextSize, Mode=OneWay, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static a11y:TextSize.Default}}"
+                        Command="{Binding UseTextSizeCommand}" CommandParameter="{x:Static a11y:TextSize.Default}" />
+              <MenuItem Header="L_arge" ToggleType="Radio" GroupName="TextSize"
+                        IsChecked="{Binding CurrentTextSize, Mode=OneWay, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static a11y:TextSize.Large}}"
+                        Command="{Binding UseTextSizeCommand}" CommandParameter="{x:Static a11y:TextSize.Large}" />
+              <MenuItem Header="La_rger" ToggleType="Radio" GroupName="TextSize"
+                        IsChecked="{Binding CurrentTextSize, Mode=OneWay, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static a11y:TextSize.Larger}}"
+                        Command="{Binding UseTextSizeCommand}" CommandParameter="{x:Static a11y:TextSize.Larger}" />
+              <MenuItem Header="_Very Large" ToggleType="Radio" GroupName="TextSize"
+                        IsChecked="{Binding CurrentTextSize, Mode=OneWay, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static a11y:TextSize.VeryLarge}}"
+                        Command="{Binding UseTextSizeCommand}" CommandParameter="{x:Static a11y:TextSize.VeryLarge}" />
+            </MenuItem>
 
           </MenuItem>
           <MenuItem Header="_Window">
@@ -385,12 +413,12 @@
         </Menu>
 
         <!-- One search for everything: files, commands, settings, symbols, templates and recent solutions (Ctrl+Q). -->
-        <Button x:Name="SearchButton" Grid.Column="3" Theme="{StaticResource SecondaryButton}" Height="32" MinHeight="32"
+        <Button x:Name="SearchButton" Grid.Column="3" Theme="{StaticResource SecondaryButton}"
                 Margin="10,0,0,0" Padding="10,0,6,0" HorizontalContentAlignment="Stretch" VerticalAlignment="Center"
                 Command="{Binding Search.OpenCommand}" ToolTip.Tip="Search (Ctrl+Q)">
           <Grid ColumnDefinitions="Auto,*,Auto">
             <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="14" />
-            <TextBlock x:Name="SearchLabel" Grid.Column="1" Text="Search" Margin="8,0,0,0" FontSize="12.5" FontWeight="Normal"
+            <TextBlock x:Name="SearchLabel" Grid.Column="1" Text="Search" Margin="8,0,0,0" FontSize="{DynamicResource Type.Body}" FontWeight="Normal"
                        Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center" />
             <Border Grid.Column="2" Classes="keycap" VerticalAlignment="Center">
               <TextBlock Text="Ctrl+Q" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -399,11 +427,11 @@
         </Button>
 
         <!-- The solution's name, which trims when the menu bar is short of room. -->
-        <Border x:Name="SolutionChip" Grid.Column="4" Height="28" Padding="10,0" Margin="10,0,0,0" CornerRadius="8" Background="{DynamicResource Brush.Panel}"
+        <Border x:Name="SolutionChip" Grid.Column="4" MinHeight="28" Padding="10,0" Margin="10,0,0,0" CornerRadius="8" Background="{DynamicResource Brush.Panel}"
                 HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip.Tip="{Binding Title}">
           <Grid ColumnDefinitions="Auto,*">
             <controls:StrokeIcon Data="{StaticResource Icon.Solution}" Size="14" Margin="0,0,6,0" Foreground="{DynamicResource Brush.TextSecondary}" />
-            <TextBlock Grid.Column="1" Text="{Binding Title}" FontSize="12.5" FontWeight="Medium" Foreground="{DynamicResource Brush.TextSecondary}"
+            <TextBlock Grid.Column="1" Text="{Binding Title}" FontSize="{DynamicResource Type.Body}" FontWeight="Medium" Foreground="{DynamicResource Brush.TextSecondary}"
                        VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
           </Grid>
         </Border>
@@ -414,7 +442,7 @@
       Standard toolbar: an adaptive bar that never scrolls or clips. When it runs out of room the least used commands
       fold to their icons and then into More, by priority (docs/design/stage-2.md, 2.4); Run and Stop always stay.
     -->
-    <Border Grid.Row="1" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Border Grid.Row="1" MinHeight="46" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid Margin="8,0" ColumnDefinitions="*,Auto">
         <controls:AdaptiveBar x:Name="Toolbar" Spacing="2" VerticalAlignment="Center">
           <controls:AdaptiveBarItem Icon="{StaticResource Icon.Back}" Label="Navigate Backward" Gesture="Alt+Left" ShowsLabel="False" IconSize="16"
@@ -447,14 +475,14 @@
 
           <!-- Run: the startup project, with a menu to choose another one. Both halves are enabled together. -->
           <StackPanel x:Name="RunSplit" Orientation="Horizontal" Margin="8,0,4,0" controls:AdaptiveBar.IsPinned="True">
-            <Button x:Name="RunButton" Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" CornerRadius="8,0,0,8" Padding="12,0"
+            <Button x:Name="RunButton" Theme="{StaticResource AccentButton}" CornerRadius="8,0,0,8" Padding="12,0"
                     ToolTip.Tip="{Binding StartDebuggingToolTip}" Command="{Binding StartDebuggingCommand}">
               <StackPanel Orientation="Horizontal" Spacing="8">
                 <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
                 <TextBlock Text="{Binding StartDebuggingLabel}" VerticalAlignment="Center" MaxWidth="200" TextTrimming="CharacterEllipsis" />
               </StackPanel>
             </Button>
-            <Button x:Name="RunTargetButton" Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Width="30" MinWidth="30" Padding="0"
+            <Button x:Name="RunTargetButton" Theme="{StaticResource AccentButton}" Padding="0"
                     CornerRadius="0,8,8,0" BorderBrush="{DynamicResource Brush.OnAccent.Divider}" BorderThickness="1,0,0,0"
                     IsEnabled="{Binding #RunButton.IsEffectivelyEnabled}" ToolTip.Tip="Choose Startup Project or Launch Configuration">
               <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
@@ -543,10 +571,10 @@
       a narrow or portrait screen the side bar is a drawer over the editor (WorkspaceView.Layout.cs).
     -->
     <Grid Grid.Row="2" x:Name="MainArea" ColumnDefinitions="*,Auto,330,48">
-      <Grid x:Name="EditorArea" RowDefinitions="38,30,*,Auto,200">
+      <Grid x:Name="EditorArea" RowDefinitions="Auto,Auto,*,Auto,200">
 
         <!-- Document tabs -->
-        <Border Grid.Row="0" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" MinHeight="38" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
           <ListBox ItemsSource="{Binding Documents}" SelectedItem="{Binding ActiveDocument}"
                    ItemContainerTheme="{StaticResource DocumentTab}"
                    ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
@@ -572,15 +600,15 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                       <DataTemplate DataType="liveVm:LiveAvatarViewModel">
-                        <Border Width="18" Height="18" CornerRadius="9" Background="{Binding Background}" BorderBrush="{DynamicResource Brush.Toolbar}" BorderThickness="1"
+                        <Border MinWidth="18" MinHeight="18" Padding="3,0" CornerRadius="9" Background="{Binding Background}" BorderBrush="{DynamicResource Brush.Toolbar}" BorderThickness="1"
                                 ToolTip.Tip="{Binding Name}">
-                          <TextBlock Text="{Binding Initials}" FontSize="9.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.OnAccent}"
+                          <TextBlock Text="{Binding Initials}" FontSize="{DynamicResource Type.Badge}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.OnAccent}"
                                      HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                       </DataTemplate>
                     </ItemsControl.ItemTemplate>
                   </ItemsControl>
-                  <Button Theme="{StaticResource ToolButton}" Width="26" Height="26" MinWidth="26" MinHeight="26" Padding="0" CornerRadius="5"
+                  <Button Theme="{StaticResource ToolButton}" Padding="0" CornerRadius="5"
                           ToolTip.Tip="Close (Ctrl+F4)"
                           Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).CloseDocumentCommand}"
                           CommandParameter="{Binding}">
@@ -593,7 +621,9 @@
         </Border>
 
         <!-- Breadcrumb -->
-        <Border Grid.Row="1" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="12,0">
+        <Border Grid.Row="1" MinHeight="30" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="12,0">
+          <!-- A path longer than the pane scrolls sideways under a finger rather than running off the edge. -->
+          <ScrollViewer x:Name="BreadcrumbScroller" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <ItemsControl ItemsSource="{Binding Breadcrumb}" VerticalAlignment="Center">
               <ItemsControl.ItemsPanel>
@@ -604,8 +634,8 @@
               <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="sys:String">
                   <StackPanel Orientation="Horizontal" Spacing="6">
-                    <TextBlock Text="{Binding}" Classes="muted" FontSize="12.5" VerticalAlignment="Center" />
-                    <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" Foreground="{DynamicResource Brush.TextDisabled}" />
+                    <TextBlock Text="{Binding}" Classes="muted" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
+                    <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" Foreground="{DynamicResource Brush.TextMuted}" />
                   </StackPanel>
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
@@ -621,10 +651,10 @@
               <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="vm:SymbolCrumbViewModel">
                   <StackPanel Orientation="Horizontal" Spacing="2">
-                    <Button Theme="{StaticResource ToolButton}" Height="28" MinHeight="28" MinWidth="0" Padding="6,0" CornerRadius="6">
+                    <Button Theme="{StaticResource ToolButton}" Padding="6,0" CornerRadius="6">
                       <StackPanel Orientation="Horizontal" Spacing="6">
                         <controls:SymbolGlyphIcon Kind="{Binding Kind}" Size="14" />
-                        <TextBlock Text="{Binding Name}" FontSize="12.5" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Name}" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
                       </StackPanel>
                       <Button.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft" ItemsSource="{Binding Siblings}">
@@ -642,12 +672,13 @@
                         </MenuFlyout>
                       </Button.Flyout>
                     </Button>
-                    <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" Foreground="{DynamicResource Brush.TextDisabled}" />
+                    <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" Foreground="{DynamicResource Brush.TextMuted}" />
                   </StackPanel>
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>
           </StackPanel>
+          </ScrollViewer>
         </Border>
 
         <!-- Editors -->
@@ -661,17 +692,17 @@
                     Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="12,8">
               <Grid ColumnDefinitions="Auto,*,Auto,Auto">
                 <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Foreground="{DynamicResource Brush.Info}" VerticalAlignment="Center" Margin="0,0,10,0" />
-                <TextBlock Grid.Column="1" Text="{Binding NetFrameworkBannerText}" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="12.5"
+                <TextBlock Grid.Column="1" Text="{Binding NetFrameworkBannerText}" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="{DynamicResource Type.Body}"
                            Foreground="{DynamicResource Brush.Text}" />
                 <Button x:Name="RunOnWindowsBridgeBannerButton" Grid.Column="2" Theme="{StaticResource SecondaryButton}" Margin="12,0,0,0" Padding="10,0"
-                        Height="32" MinHeight="32" Command="{Binding RunNetFrameworkProjectOnWindowsBridgeCommand}"
+                        Command="{Binding RunNetFrameworkProjectOnWindowsBridgeCommand}"
                         ToolTip.Tip="Build and run it on your Windows PC">
-                  <TextBlock Text="Run on Windows Bridge" FontSize="12.5" VerticalAlignment="Center" />
+                  <TextBlock Text="Run on Windows Bridge" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
                 </Button>
                 <Button x:Name="UpgradeProjectBannerButton" Grid.Column="3" Theme="{StaticResource SecondaryButton}" Margin="8,0,0,0" Padding="10,0"
-                        Height="32" MinHeight="32" Command="{Binding UpgradeProjectCommand}" CommandParameter="{x:Null}"
+                        Command="{Binding UpgradeProjectCommand}" CommandParameter="{x:Null}"
                         ToolTip.Tip="Convert it to an SDK-style .NET project, and review the change">
-                  <TextBlock Text="Upgrade project" FontSize="12.5" VerticalAlignment="Center" />
+                  <TextBlock Text="Upgrade project" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
                 </Button>
               </Grid>
             </Border>
@@ -702,7 +733,7 @@
                   <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
                 </Transitions>
               </Panel.Transitions>
-              <Button x:Name="UnfoldTouchBarButton" Theme="{StaticResource ToolButton}" Width="44" Height="44" CornerRadius="14" Padding="0"
+              <Button x:Name="UnfoldTouchBarButton" Theme="{StaticResource ToolButton}" CornerRadius="14" Padding="0"
                       Background="{DynamicResource Brush.Hover}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
                       Command="{Binding ToggleTouchBarCommand}" IsVisible="{Binding IsTouchBarCollapsed}" ToolTip.Tip="Show the touch buttons">
                 <controls:StrokeIcon Data="{StaticResource Icon.ChevronLeft}" Size="18" />
@@ -713,7 +744,7 @@
                         Background="{DynamicResource Brush.Hover}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
                         BoxShadow="{DynamicResource Shadow.Popup}" IsVisible="{Binding ShowsEditorTouchBar}">
                   <DockPanel>
-                    <Button x:Name="FoldTouchBarButton" DockPanel.Dock="Left" Theme="{StaticResource ToolButton}" Width="32" Height="44" MinWidth="32"
+                    <Button x:Name="FoldTouchBarButton" DockPanel.Dock="Left" Theme="{StaticResource ToolButton}"
                             CornerRadius="{StaticResource Radius.Card}" Padding="0" Margin="0,0,2,0"
                             Command="{Binding ToggleTouchBarCommand}" ToolTip.Tip="Fold the touch buttons away">
                       <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="16" Foreground="{DynamicResource Brush.TextSecondary}" />
@@ -742,7 +773,7 @@
           <actionViews:RunNoticeView x:Name="RunNotice" DataContext="{Binding Actions}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="16,12" />
         </Panel>
 
-        <GridSplitter Grid.Row="3" x:Name="BottomSplitter" Height="12" Margin="0,-3" ZIndex="10" ResizeDirection="Rows" Background="Transparent">
+        <GridSplitter Grid.Row="3" x:Name="BottomSplitter" AutomationProperties.Name="Resize the bottom panel" Height="12" Margin="0,-3" ZIndex="10" ResizeDirection="Rows" Background="Transparent">
           <GridSplitter.Template>
             <ControlTemplate>
               <Border Background="Transparent">
@@ -781,7 +812,7 @@
                            TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding RecordingLabel}" />
               </StackPanel>
             </Border>
-            <Grid DockPanel.Dock="Top" Height="34" ColumnDefinitions="*,Auto" Margin="6,0">
+            <Grid DockPanel.Dock="Top" MinHeight="34" ColumnDefinitions="*,Auto" Margin="6,0">
               <!-- The tabs scroll sideways when the debugger's tabs leave too little room beside the Output's source. -->
               <ScrollViewer x:Name="BottomTabsScroller" Margin="0,0,10,0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
               <StackPanel x:Name="BottomTabs" Orientation="Horizontal">
@@ -817,7 +848,7 @@
                   <TextBlock Classes="muted small" Text="Show output from:" VerticalAlignment="Center" Margin="0,0,8,0"
                              IsVisible="{Binding IsOutputSelected}" />
                 </Panel>
-                <ComboBox x:Name="OutputSourceBox" MinWidth="170" Height="30" MinHeight="30" Margin="0,0,6,0" FontSize="12.5" VerticalAlignment="Center"
+                <ComboBox x:Name="OutputSourceBox" AutomationProperties.Name="Show output from" MinWidth="170" Margin="0,0,6,0" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center"
                           ItemsSource="{Binding OutputSources}" SelectedItem="{Binding SelectedOutputSource}" IsVisible="{Binding IsOutputSelected}">
                   <ComboBox.ItemTemplate>
                     <DataTemplate DataType="vm:OutputSourceOption">
@@ -825,13 +856,13 @@
                     </DataTemplate>
                   </ComboBox.ItemTemplate>
                 </ComboBox>
-                <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Clear"
+                <Button Theme="{StaticResource ToolButton}" FontSize="{DynamicResource Type.Body}" Content="Clear"
                         Command="{Binding ShownOutput.ClearCommand}" IsVisible="{Binding IsOutputSelected}" />
-                <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Clear"
+                <Button Theme="{StaticResource ToolButton}" FontSize="{DynamicResource Type.Body}" Content="Clear"
                         Command="{Binding Terminal.ClearCommand}" IsVisible="{Binding IsTerminalSelected}" />
-                <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Restart"
+                <Button Theme="{StaticResource ToolButton}" FontSize="{DynamicResource Type.Body}" Content="Restart"
                         Command="{Binding Terminal.RestartCommand}" IsVisible="{Binding IsTerminalSelected}" />
-                <Button x:Name="HideBottomPanelButton" Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0"
+                <Button x:Name="HideBottomPanelButton" Theme="{StaticResource ToolButton}" Padding="0"
                         ToolTip.Tip="Hide" Command="{Binding ToggleBottomPanelCommand}">
                   <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
                 </Button>
@@ -869,7 +900,7 @@
         </Border>
       </Grid>
 
-      <GridSplitter Grid.Column="1" x:Name="SideSplitter" Width="12" Margin="-3,0" ZIndex="10" ResizeDirection="Columns" Background="Transparent">
+      <GridSplitter Grid.Column="1" x:Name="SideSplitter" AutomationProperties.Name="Resize the side bar" Width="12" Margin="-3,0" ZIndex="10" ResizeDirection="Columns" Background="Transparent">
         <GridSplitter.Template>
           <ControlTemplate>
             <Border Background="Transparent">
@@ -892,7 +923,7 @@
           <Panel Grid.RowSpan="3" ZIndex="20" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsRemoteExplorerSelected}">
             <views:RemoteExplorerView DataContext="{Binding RemoteExplorer}" />
           </Panel>
-          <GridSplitter Grid.Row="1" x:Name="PropertiesSplitter" Height="12" Margin="0,-3" ZIndex="10" ResizeDirection="Rows" Background="Transparent" IsVisible="False">
+          <GridSplitter Grid.Row="1" x:Name="PropertiesSplitter" AutomationProperties.Name="Resize Properties" Height="12" Margin="0,-3" ZIndex="10" ResizeDirection="Rows" Background="Transparent" IsVisible="False">
             <GridSplitter.Template>
               <ControlTemplate>
                 <Border Background="Transparent">
@@ -985,15 +1016,15 @@
       menu at the right end (docs/design/stage-2.md, 2.5). It stays quiet about what is fine: a language service that is
       ready, a device that is not throttling, a device that is not linked.
     -->
-    <Border Grid.Row="3" Background="{Binding IsDebugging, Converter={x:Static conv:DebugConverters.StatusBarBackground}}">
+    <Border Grid.Row="3" MinHeight="28" Background="{Binding IsDebugging, Converter={x:Static conv:DebugConverters.StatusBarBackground}}">
       <controls:AdaptiveBar x:Name="StatusBar" Spacing="6" Margin="6,0" ItemTheme="{StaticResource StatusBarButton}" MorePlacement="TopEdgeAlignedRight"
-                            VerticalAlignment="Center" TextElement.Foreground="{DynamicResource Brush.OnAccent}" TextElement.FontSize="12">
+                            VerticalAlignment="Center" TextElement.Foreground="{DynamicResource Brush.OnAccent}" TextElement.FontSize="{DynamicResource Type.Small}">
         <!-- What the IDE is doing; long messages trim, with the whole message in the tooltip. -->
         <!-- It trims to the room the items after it leave, so on a phone it never pushes them out of the bar. -->
         <Grid x:Name="StatusMessage" ColumnDefinitions="Auto,*" Margin="6,0,4,0" Background="Transparent" ToolTip.Tip="{Binding StatusText}"
               controls:AdaptiveBar.MinLength="48">
           <controls:StrokeIcon Size="13" VerticalAlignment="Center" Data="{Binding State, Converter={x:Static conv:AppConverters.StateIcon}}" Foreground="{DynamicResource Brush.OnAccent}" />
-          <TextBlock x:Name="StatusMessageText" Grid.Column="1" Margin="6,0,0,0" Text="{Binding StatusText}" FontSize="12" Foreground="{DynamicResource Brush.OnAccent}"
+          <TextBlock x:Name="StatusMessageText" Grid.Column="1" Margin="6,0,0,0" Text="{Binding StatusText}" FontSize="{DynamicResource Type.Small}" Foreground="{DynamicResource Brush.OnAccent}"
                      VerticalAlignment="Center" MaxWidth="460" TextTrimming="WordEllipsis" />
         </Grid>
 
@@ -1003,11 +1034,11 @@
         -->
         <Panel controls:AdaptiveBar.Priority="100" IsVisible="{Binding Operations.HasOperations}" controls:AdaptiveBar.MinLength="120"
                controls:AdaptiveBar.MenuHeader="{Binding Operations.StatusText}" controls:AdaptiveBar.MenuCommand="{Binding Operations.TogglePanelCommand}">
-          <Button x:Name="OperationsButton" Theme="{StaticResource StatusBarButton}" Height="24" Command="{Binding Operations.TogglePanelCommand}"
+          <Button x:Name="OperationsButton" Theme="{StaticResource StatusBarButton}" Command="{Binding Operations.TogglePanelCommand}"
                   HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" ToolTip.Tip="{Binding Operations.StatusText}">
             <Grid ColumnDefinitions="Auto,*,Auto">
               <controls:StrokeIcon Classes.spinning="{Binding Operations.HasOperations}" Data="{StaticResource Icon.Spinner}" Size="13" VerticalAlignment="Center" Foreground="{DynamicResource Brush.OnAccent}" />
-              <TextBlock x:Name="OperationsText" Grid.Column="1" Margin="6,0" Text="{Binding Operations.StatusText}" FontSize="12" VerticalAlignment="Center" MaxWidth="380" TextTrimming="WordEllipsis" />
+              <TextBlock x:Name="OperationsText" Grid.Column="1" Margin="6,0" Text="{Binding Operations.StatusText}" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center" MaxWidth="380" TextTrimming="WordEllipsis" />
               <ProgressBar Grid.Column="2" Width="56" Height="4" MinHeight="4" Minimum="0" Maximum="100" VerticalAlignment="Center"
                            Value="{Binding Operations.Current.Percent, FallbackValue=0}" IsIndeterminate="{Binding Operations.Current.IsIndeterminate, FallbackValue=False}" />
             </Grid>
@@ -1129,7 +1160,7 @@
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
               BoxShadow="{DynamicResource Shadow.Dialog}">
         <StackPanel Spacing="14">
-          <TextBlock Classes="h2" FontSize="15" Text="{Binding Prompt.Title}" TextWrapping="Wrap" />
+          <TextBlock Classes="h2" FontSize="{DynamicResource Type.Subtitle}" Text="{Binding Prompt.Title}" TextWrapping="Wrap" />
           <ScrollViewer MaxHeight="360" HorizontalScrollBarVisibility="Disabled">
             <TextBlock Classes="muted" TextWrapping="Wrap" Text="{Binding Prompt.Message}" />
           </ScrollViewer>
@@ -1140,7 +1171,7 @@
                      ItemContainerTheme="{StaticResource ListRow}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
               <ListBox.Styles>
                 <Style Selector="ListBoxItem">
-                  <Setter Property="MinHeight" Value="40" />
+                  <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
                   <Setter Property="Padding" Value="12,0" />
                 </Style>
               </ListBox.Styles>
@@ -1153,8 +1184,8 @@
           </Border>
           <TextBox x:Name="PromptBox" Classes="large mono" Text="{Binding Prompt.Text}" PasswordChar="{Binding Prompt.PasswordCharacter}" IsVisible="{Binding Prompt.HasInput}" />
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
-            <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Cancel" Command="{Binding Prompt.CancelCommand}" />
-            <Button Theme="{StaticResource AccentButton}" Height="40" Padding="18,0" Content="{Binding Prompt.ConfirmText}"
+            <Button Theme="{StaticResource SecondaryButton}" Padding="18,0" Content="Cancel" Command="{Binding Prompt.CancelCommand}" />
+            <Button Theme="{StaticResource AccentButton}" Padding="18,0" Content="{Binding Prompt.ConfirmText}"
                     Classes.destructive="{Binding Prompt.IsDestructive}" Command="{Binding Prompt.ConfirmCommand}" />
           </StackPanel>
         </StackPanel>

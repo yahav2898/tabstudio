@@ -34,6 +34,13 @@ public sealed class ResponsiveColumns
         WideProperty.Changed.AddClassHandler<Grid>((grid, _) => Apply(grid));
         CompactProperty.Changed.AddClassHandler<Grid>((grid, _) => Apply(grid));
         IsCompactProperty.Changed.AddClassHandler<Grid>((grid, _) => Apply(grid));
+        Control.LoadedEvent.AddClassHandler<Grid>((grid, _) =>
+        {
+            if (grid.GetValue(WideProperty) is not null)
+            {
+                Fold(grid);
+            }
+        });
     }
 
     private ResponsiveColumns()
@@ -73,6 +80,31 @@ public sealed class ResponsiveColumns
         if (columns is not null)
         {
             grid.ColumnDefinitions = ColumnDefinitions.Parse(columns);
+        }
+
+        Fold(grid);
+    }
+
+    /// <summary>
+    /// The class of what sits only in columns a layout gives no width: it is hidden (Theme/Accessibility.axaml), so
+    /// a screen reader does not read it and nothing is drawn squeezed to nothing.
+    /// </summary>
+    public const string FoldedClass = "columnFolded";
+
+    private static void Fold(Grid grid)
+    {
+        var definitions = grid.ColumnDefinitions;
+        foreach (var child in grid.Children)
+        {
+            var first = Math.Min(Grid.GetColumn(child), Math.Max(0, definitions.Count - 1));
+            var span = Math.Max(1, Grid.GetColumnSpan(child));
+            var folded = definitions.Count > 0;
+            for (var i = first; i < Math.Min(definitions.Count, first + span); i++)
+            {
+                folded &= definitions[i].Width is { IsAbsolute: true, Value: 0 };
+            }
+
+            child.Classes.Set(FoldedClass, folded);
         }
     }
 }

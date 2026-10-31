@@ -94,9 +94,13 @@ From there, try **New project** for a template in any language, **Open from GitH
   toolbar and status bar fold their least used buttons into **More** instead of clipping.
 - **One search for everything.** **Ctrl+Q** finds files, menu commands with their shortcuts, settings, types and
   members, templates and recent solutions, ranked together.
-- **Sized for fingers, quiet for keyboards.** Targets are 34 to 48 pixels tall. A floating touch bar puts Rename,
-  Peek, Comment, Run to Cursor, Format and Run one tap away; it stays clear of the line you edit and fades while you
-  type on a hardware keyboard, where every Visual Studio shortcut works.
+- **Sized for fingers, quiet for keyboards.** Every control that takes a tap is a whole 44-pixel target (48 on a
+  phone). A floating touch bar puts Rename, Peek, Comment, Run to Cursor, Format and Run one tap away; it stays clear
+  of the line you edit and fades while you type on a hardware keyboard, where every Visual Studio shortcut works.
+- **For every hand and every eye.** **Tools > Text Size** goes from Small to Very large and follows Android's font
+  size by default. TalkBack names every control and reads the editor's line, the keyboard reaches everything (F6
+  moves between panes), every text and icon passes WCAG AA, Remove animations is honored, and right-to-left
+  languages mirror the layout.
 - **Scrolls like a native editor.** A drag follows your finger exactly and a flick glides on Android's own fling
   curve, at the display's full refresh rate, even in files of thousands of lines.
 - **Desktop mode.** Connect a monitor over USB-C or HDMI, or a wireless display, and the IDE moves to the big screen

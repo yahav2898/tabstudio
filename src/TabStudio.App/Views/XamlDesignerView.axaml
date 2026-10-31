@@ -1,4 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:a11y="using:TabStudio.App.Accessibility"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:vm="using:TabStudio.App.ViewModels"
@@ -64,7 +65,7 @@
     <Grid x:Name="Panes">
       <!-- The preview: the app's view on its own background, under the error and note banners. -->
       <Panel x:Name="DesignPane" Background="{DynamicResource Brush.Window}" ClipToBounds="True">
-        <ContentControl x:Name="Surface" />
+        <ContentControl x:Name="Surface" a11y:A11y.IsContent="True" />
 
         <StackPanel IsVisible="{Binding Preview, Converter={x:Static ObjectConverters.IsNull}}" VerticalAlignment="Center"
                     HorizontalAlignment="Center" Spacing="10" MaxWidth="360">
@@ -92,7 +93,7 @@
         <Border VerticalAlignment="Bottom" Margin="10,10,10,64" IsVisible="{Binding HasSketchNotes}" Background="{DynamicResource Brush.Popup}"
                 BorderBrush="{DynamicResource Brush.Accent}" BorderThickness="1" CornerRadius="8" Padding="12,4,4,4">
           <Grid ColumnDefinitions="Auto,*,Auto">
-            <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="14" Foreground="{DynamicResource Brush.Accent}" VerticalAlignment="Center" Margin="0,0,8,0" />
+            <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="14" Foreground="{DynamicResource Brush.AccentText}" VerticalAlignment="Center" Margin="0,0,8,0" />
             <TextBlock Grid.Column="1" Classes="small" Text="{Binding SketchNotes}" TextWrapping="Wrap" VerticalAlignment="Center" />
             <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Command="{Binding DismissSketchNotesCommand}" ToolTip.Tip="Dismiss">
               <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="12" />
@@ -151,7 +152,7 @@
         </DockPanel>
       </Border>
 
-      <GridSplitter x:Name="Splitter" Background="{DynamicResource Brush.Border}" ResizeDirection="Auto" />
+      <GridSplitter x:Name="Splitter" AutomationProperties.Name="Resize the design and the XAML" Background="{DynamicResource Brush.Border}" ResizeDirection="Auto" />
 
       <ContentControl x:Name="EditorHost" />
     </Grid>

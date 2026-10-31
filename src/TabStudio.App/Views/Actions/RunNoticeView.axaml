@@ -22,7 +22,7 @@
                                  Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}" />
           </Border>
           <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="{DynamicResource Type.Section}" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
             <TextBlock Classes="muted small" Text="{Binding Text}" TextTrimming="CharacterEllipsis" />
           </StackPanel>
         </Grid>

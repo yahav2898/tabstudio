@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 using TabStudio.Notebooks.Outputs;
+using TabStudio.App.Accessibility;
 
 namespace TabStudio.App.Views.Notebooks;
 
@@ -69,7 +70,6 @@ public sealed class TableGrid : Border
         var block = new TextBlock
         {
             Text = text.ReplaceLineEndings(" "),
-            FontSize = 12.5,
             MaxWidth = MaxColumnWidth,
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = VerticalAlignment.Center,
@@ -77,6 +77,7 @@ public sealed class TableGrid : Border
             Foreground = ThemeResources.Brush(isHeader ? "Brush.TextBright" : "Brush.Text"),
             FontWeight = isHeader ? FontWeight.SemiBold : FontWeight.Normal,
         };
+        TypeScale.SetBaseFontSize(block, 12.5);
 
         if (text.Length > 40)
         {

@@ -27,7 +27,7 @@ public static class ActionsConverters
         RunVisual.Failed => "Brush.Run.Failed",
         RunVisual.Running => "Brush.Run.Running",
         RunVisual.Queued => "Brush.Run.Queued",
-        RunVisual.Skipped => "Brush.TextDisabled",
+        RunVisual.Skipped => "Brush.TextMuted",
         _ => "Brush.Run.Muted",
     }));
 

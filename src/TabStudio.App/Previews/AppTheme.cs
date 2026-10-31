@@ -45,6 +45,9 @@ internal sealed class AppTheme
             Root.Resources = MoveResources(app.Resources);
         }
 
+        // The IDE's text size and touch targets are the IDE's: an app's views get Fluent's own sizes back.
+        Accessibility.AccessibilityFeatures.RestoreFluentDefaults(Root.Resources);
+
         // Apps expect a window behind their views; this panel plays that part in the app's own theme, with the
         // window's text color, so an app's light theme in TabStudio's dark window still has dark text.
         _background.Bind(Border.BackgroundProperty, _background.GetResourceObservable("SystemControlBackgroundAltHighBrush"));

@@ -9,17 +9,17 @@
   <DockPanel>
 
     <!-- Title, with the repository and its GitHub pages -->
-    <Border DockPanel.Dock="Top" Height="36" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Border DockPanel.Dock="Top" MinHeight="36" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0,4,0">
         <TextBlock Classes="header" Text="Git Changes" />
         <TextBlock Grid.Column="1" Classes="muted small" Margin="8,0,4,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
                    Text="{Binding RepositoryName}" />
         <StackPanel Grid.Column="2" Orientation="Horizontal" IsVisible="{Binding IsLinked}">
-          <Button Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+          <Button Theme="{StaticResource ToolButton}" Padding="0"
                   ToolTip.Tip="View History" Command="{Binding OpenHistoryCommand}">
             <controls:StrokeIcon Data="{StaticResource Icon.History}" Size="15" />
           </Button>
-          <Button Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+          <Button Theme="{StaticResource ToolButton}" Padding="0"
                   ToolTip.Tip="Open on GitHub" Command="{Binding OpenOnGitHubCommand}">
             <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="15" />
           </Button>
@@ -33,9 +33,9 @@
         <controls:StrokeIcon Data="{StaticResource Icon.User}" Size="15" Margin="0,0,8,0" Foreground="{DynamicResource Brush.TextMuted}" />
         <TextBlock Grid.Column="1" Classes="muted small" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
                    Text="{Binding Account.StatusText}" />
-        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" FontSize="12.5" Content="Sign in"
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" FontSize="{DynamicResource Type.Body}" Content="Sign in"
                 Foreground="{DynamicResource Brush.Link}" Command="{Binding Account.OpenCommand}" IsVisible="{Binding !Account.IsSignedIn}" />
-        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" FontSize="12.5" Content="Sign out"
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" FontSize="{DynamicResource Type.Body}" Content="Sign out"
                 Command="{Binding Account.SignOutCommand}" IsVisible="{Binding Account.IsSignedIn}" />
       </Grid>
     </Border>
@@ -46,7 +46,7 @@
         <!-- Branch, incoming and outgoing, commit -->
         <StackPanel IsVisible="{Binding IsLinked}">
           <Grid ColumnDefinitions="*,Auto">
-            <Button Theme="{StaticResource SecondaryButton}" Height="36" Padding="10,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+            <Button Theme="{StaticResource SecondaryButton}" Padding="10,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                     ToolTip.Tip="Switch or create a branch" Command="{Binding OpenBranchPickerCommand}">
               <Grid ColumnDefinitions="Auto,*,Auto">
                 <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="15" Margin="0,0,8,0" Foreground="{DynamicResource Brush.AccentText}" />
@@ -55,15 +55,15 @@
               </Grid>
             </Button>
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="2" Margin="6,0,0,0">
-              <Button Theme="{StaticResource ToolButton}" Width="36" Height="36" MinWidth="36" MinHeight="36" Padding="0"
+              <Button Theme="{StaticResource ToolButton}" Padding="0"
                       ToolTip.Tip="Fetch: check GitHub for new commits" Command="{Binding FetchCommand}">
                 <controls:StrokeIcon Data="{StaticResource Icon.Fetch}" Size="16" />
               </Button>
-              <Button Theme="{StaticResource ToolButton}" Width="36" Height="36" MinWidth="36" MinHeight="36" Padding="0"
+              <Button Theme="{StaticResource ToolButton}" Padding="0"
                       ToolTip.Tip="Pull: bring GitHub's new commits into this folder" Command="{Binding PullCommand}">
                 <controls:StrokeIcon Data="{StaticResource Icon.Pull}" Size="16" />
               </Button>
-              <Button Theme="{StaticResource ToolButton}" Width="36" Height="36" MinWidth="36" MinHeight="36" Padding="0"
+              <Button Theme="{StaticResource ToolButton}" Padding="0"
                       ToolTip.Tip="Sync: pull, then commit and push your changes" Command="{Binding SyncCommand}">
                 <controls:StrokeIcon Data="{StaticResource Icon.Sync}" Size="16" />
               </Button>
@@ -87,7 +87,7 @@
                    MinHeight="76" MaxHeight="160" Padding="10,8" VerticalContentAlignment="Top"
                    Watermark="Enter a message &lt;Required&gt;" />
 
-          <Button Theme="{StaticResource AccentButton}" Height="40" Margin="0,8,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+          <Button Theme="{StaticResource AccentButton}" Margin="0,8,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                   ToolTip.Tip="Creates the commit on GitHub, which also pushes it (Ctrl+Enter)" Command="{Binding CommitCommand}">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <controls:StrokeIcon Data="{StaticResource Icon.Commit}" Size="16" />
@@ -98,7 +98,7 @@
                      Text="This folder holds a tag or commit, not a branch. Create a branch from the branch button to commit." />
 
           <!-- After pushing a branch: its pull request, or a way to create one -->
-          <Button Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" Padding="6,0" Margin="0,6,0,0" HorizontalAlignment="Left"
+          <Button Theme="{StaticResource ToolButton}" Padding="6,0" Margin="0,6,0,0" HorizontalAlignment="Left"
                   Foreground="{DynamicResource Brush.Link}" Command="{Binding OpenPullRequestFormCommand}" IsVisible="{Binding CanCreatePullRequest}">
             <StackPanel Orientation="Horizontal" Spacing="7">
               <controls:StrokeIcon Data="{StaticResource Icon.PullRequest}" Size="15" />
@@ -106,14 +106,14 @@
             </StackPanel>
           </Button>
           <Grid ColumnDefinitions="*,Auto" Margin="0,6,0,0" IsVisible="{Binding HasPullRequest}">
-            <Button x:Name="ViewPullRequestButton" Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" Padding="6,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+            <Button x:Name="ViewPullRequestButton" Theme="{StaticResource ToolButton}" Padding="6,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
                     Foreground="{DynamicResource Brush.Link}" ToolTip.Tip="Review the pull request" Command="{Binding ViewPullRequestCommand}">
               <Grid ColumnDefinitions="Auto,*">
                 <controls:StrokeIcon Data="{StaticResource Icon.PullRequest}" Size="15" Margin="0,0,7,0" />
                 <TextBlock Grid.Column="1" Text="{Binding PullRequestText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
               </Grid>
             </Button>
-            <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Width="36" Height="36" MinWidth="36" MinHeight="36" Padding="0" Margin="4,0,0,0"
+            <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Padding="0" Margin="4,0,0,0"
                     ToolTip.Tip="Open on GitHub" Command="{Binding OpenPullRequestCommand}">
               <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="13" />
             </Button>
@@ -128,10 +128,10 @@
           </Grid>
           <TextBlock Classes="muted small" TextWrapping="Wrap"
                      Text="This folder is not on GitHub yet. Publish it as a new repository in your account; then commit, pull and create branches from here." />
-          <Button Theme="{StaticResource AccentButton}" Height="40" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+          <Button Theme="{StaticResource AccentButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                   Content="Sign in to GitHub" Command="{Binding Account.OpenCommand}" IsVisible="{Binding !Account.IsSignedIn}" />
           <TextBlock Classes="label" Text="Repository name" Margin="0,4,0,-4" />
-          <TextBox Classes="mono" MinHeight="38" Text="{Binding PublishName}" />
+          <TextBox Classes="mono" Text="{Binding PublishName}" />
           <CheckBox IsChecked="{Binding PublishPrivate}">
             <StackPanel Spacing="2">
               <TextBlock Text="Private repository" />
@@ -140,7 +140,7 @@
           </CheckBox>
           <TextBlock Classes="muted small" TextWrapping="Wrap"
                      Text="Files your .gitignore leaves out stay on this device. A folder without a .gitignore gets one that leaves out bin and obj." />
-          <Button Theme="{StaticResource AccentButton}" Height="40" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+          <Button Theme="{StaticResource AccentButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                   Command="{Binding PublishCommand}">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <controls:StrokeIcon Data="{StaticResource Icon.Upload}" Size="16" />
@@ -177,7 +177,7 @@
                 <Border Margin="0,4,0,0" Padding="6" CornerRadius="8" Background="{DynamicResource Brush.Control}"
                         BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1">
                   <StackPanel Spacing="4">
-                    <Button Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="6,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                    <Button Theme="{StaticResource ToolButton}" Padding="6,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                             ToolTip.Tip="Open the file" Command="{Binding OpenCommand}">
                       <Button.ContextFlyout>
                         <MenuFlyout>
@@ -196,22 +196,28 @@
                         <TextBlock Grid.Column="1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
                           <Run Text="{Binding Name}" Foreground="{DynamicResource Brush.TextBright}" />
                           <Run Text=" " />
-                          <Run Text="{Binding Folder}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="11.5" />
+                          <Run Text="{Binding Folder}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="{DynamicResource Type.Fine}" />
                         </TextBlock>
-                        <TextBlock Grid.Column="2" Margin="8,0,2,0" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"
+                        <TextBlock Grid.Column="2" Margin="8,0,2,0" FontWeight="Bold" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center"
                                    Text="{Binding StatusLetter}" Foreground="{Binding Status, Converter={x:Static conv:SourceControlConverters.StatusBrush}}" />
                       </Grid>
                     </Button>
                     <Grid ColumnDefinitions="*,*,*">
-                      <Button Theme="{StaticResource SecondaryButton}" Height="34" Padding="4,0" Margin="0,0,3,0" FontSize="12"
+                      <Button Theme="{StaticResource SecondaryButton}" Padding="4,0" Margin="0,0,3,0" FontSize="{DynamicResource Type.Small}"
                               HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                              ToolTip.Tip="Keep your version, as it was before the pull" Content="Keep Mine" Command="{Binding KeepMineCommand}" />
-                      <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Height="34" Padding="4,0" Margin="3,0" FontSize="12"
+                              ToolTip.Tip="Keep your version, as it was before the pull" Command="{Binding KeepMineCommand}">
+                        <TextBlock Text="Keep Mine" TextTrimming="CharacterEllipsis" />
+                      </Button>
+                      <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Padding="4,0" Margin="3,0" FontSize="{DynamicResource Type.Small}"
                               HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                              ToolTip.Tip="Use the version on GitHub and drop your changes" Content="Take GitHub's" Command="{Binding TakeTheirsCommand}" />
-                      <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="34" Padding="4,0" Margin="3,0,0,0" FontSize="12"
+                              ToolTip.Tip="Use the version on GitHub and drop your changes" Command="{Binding TakeTheirsCommand}">
+                        <TextBlock Text="Take GitHub's" TextTrimming="CharacterEllipsis" />
+                      </Button>
+                      <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Padding="4,0" Margin="3,0,0,0" FontSize="{DynamicResource Type.Small}"
                               HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                              ToolTip.Tip="The file is fixed: keep it as it is now" Content="Mark Resolved" Command="{Binding MarkResolvedCommand}" />
+                              ToolTip.Tip="The file is fixed: keep it as it is now" Command="{Binding MarkResolvedCommand}">
+                        <TextBlock Text="Mark Resolved" TextTrimming="CharacterEllipsis" />
+                      </Button>
                     </Grid>
                   </StackPanel>
                 </Border>
@@ -223,14 +229,14 @@
         <!-- Changes -->
         <StackPanel Margin="0,16,0,0" IsVisible="{Binding HasChanges}">
           <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,4">
-            <CheckBox IsChecked="{Binding AreAllSelected}" MinWidth="0" Margin="8,0,6,0" ToolTip.Tip="Select all" />
+            <CheckBox IsChecked="{Binding AreAllSelected}" Margin="8,0,6,0" ToolTip.Tip="Select all" />
             <TextBlock Grid.Column="1" Classes="h2" Text="{Binding ChangesHeader}" VerticalAlignment="Center" />
           </Grid>
           <ItemsControl ItemsSource="{Binding Changes}">
             <ItemsControl.ItemTemplate>
               <DataTemplate DataType="vm:GitChangeItemViewModel">
                 <!-- Tap to compare; long-press or right-click for more. -->
-                <Button Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" Padding="8,0" CornerRadius="6"
+                <Button Theme="{StaticResource ToolButton}" Padding="8,0" CornerRadius="6"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                         ToolTip.Tip="{Binding RelativePath}" Command="{Binding CompareCommand}">
                   <Button.ContextFlyout>
@@ -242,7 +248,7 @@
                     </MenuFlyout>
                   </Button.ContextFlyout>
                   <Grid ColumnDefinitions="Auto,Auto,*,Auto">
-                    <CheckBox IsChecked="{Binding IsSelected}" MinWidth="0" Margin="0,0,6,0" VerticalAlignment="Center"
+                    <CheckBox IsChecked="{Binding IsSelected}" Margin="0,0,6,0" VerticalAlignment="Center"
                               ToolTip.Tip="Include in the next commit" />
                     <Border Grid.Column="1" Classes="badge" Margin="0,0,8,0" Background="{Binding BadgeKind, Converter={x:Static conv:AppConverters.BadgeBackground}}">
                       <TextBlock Text="{Binding Badge}" Foreground="{Binding BadgeKind, Converter={x:Static conv:AppConverters.BadgeForeground}}" />
@@ -250,9 +256,9 @@
                     <TextBlock Grid.Column="2" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
                       <Run Text="{Binding Name}" Foreground="{DynamicResource Brush.Text}" />
                       <Run Text=" " />
-                      <Run Text="{Binding Folder}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="11.5" />
+                      <Run Text="{Binding Folder}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="{DynamicResource Type.Fine}" />
                     </TextBlock>
-                    <TextBlock Grid.Column="3" Margin="8,0,2,0" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"
+                    <TextBlock Grid.Column="3" Margin="8,0,2,0" FontWeight="Bold" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center"
                                Text="{Binding StatusLetter}" ToolTip.Tip="{Binding StatusText}"
                                Foreground="{Binding Status, Converter={x:Static conv:SourceControlConverters.StatusBrush}}" />
                   </Grid>
