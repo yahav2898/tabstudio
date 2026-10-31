@@ -33,13 +33,13 @@ No containers need to be restarted.
 No user sessions are running outdated binaries.
 
 No VM guests are running outdated hypervisor (qemu) binaries on this host.
-+ tar --no-same-owner -xzf /tmp/tabstudio-box64-darpsu43/downloads/box64-source.tar.gz -C /tmp/tabstudio-box64-darpsu43/box64-source
++ tar --no-same-owner -xzf /tmp/tabstudio-box64-snfn90ah/downloads/box64-source.tar.gz -C /tmp/tabstudio-box64-snfn90ah/box64-source
 
-+ patch -d /tmp/tabstudio-box64-darpsu43/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -p1 -i /home/runner/work/tabstudio/tabstudio/build/pic/box64-static-clone.patch
++ patch -d /tmp/tabstudio-box64-snfn90ah/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -p1 -i /home/runner/work/tabstudio/tabstudio/build/pic/box64-static-clone.patch
 patching file src/core.c
 patching file src/emu/x64syscall.c
 
-+ cmake -S /tmp/tabstudio-box64-darpsu43/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -B /tmp/tabstudio-box64-darpsu43/box64-build -DARM_DYNAREC=ON -DLD80BITS=OFF -DNOALIGN=OFF -DBAD_SIGNAL=ON -DCMAKE_BUILD_TYPE=Release -DNOGIT=1 -DCMAKE_EXE_LINKER_FLAGS=-Wl,-z,max-page-size=16384 -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_ASM_COMPILER=aarch64-linux-gnu-gcc
++ cmake -S /tmp/tabstudio-box64-snfn90ah/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -B /tmp/tabstudio-box64-snfn90ah/box64-build -DARM_DYNAREC=ON -DLD80BITS=OFF -DNOALIGN=OFF -DBAD_SIGNAL=ON -DCMAKE_BUILD_TYPE=Release -DNOGIT=1 -DCMAKE_EXE_LINKER_FLAGS=-Wl,-z,max-page-size=16384 -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_ASM_COMPILER=aarch64-linux-gnu-gcc
 -- Found Python3: /usr/bin/python3.14 (found suitable version "3.14.4", minimum required is "3.7") found components: Interpreter
 -- The C compiler identification is GNU 15.2.0
 -- The ASM compiler identification is GNU
@@ -53,9 +53,9 @@ patching file src/emu/x64syscall.c
 -- Performing Test HAS_FUSE_LD_GOLD - Failed
 -- Configuring done (0.9s)
 -- Generating done (0.1s)
--- Build files have been written to: /tmp/tabstudio-box64-darpsu43/box64-build
+-- Build files have been written to: /tmp/tabstudio-box64-snfn90ah/box64-build
 
-+ cmake --build /tmp/tabstudio-box64-darpsu43/box64-build --parallel 4
++ cmake --build /tmp/tabstudio-box64-snfn90ah/box64-build --parallel 4
 pped/wrappedsecret1.c.o
 [ 88%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsoftokn3.c.o
 [ 88%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsmpeg.c.o
@@ -115,8 +115,8 @@ pped/wrappedsecret1.c.o
 [ 97%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n76.c.o
 [ 97%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedidn2.c.o
 [ 97%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedanl.c.o
-[ 97%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibssh2.c.o
 [ 98%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpsl5.c.o
+[ 98%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibssh2.c.o
 [ 98%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedp11kit.c.o
 [ 98%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibtasn1.c.o
 [ 98%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibnettle8.c.o
@@ -136,3 +136,21 @@ pped/wrappedsecret1.c.o
 [100%] Built target box64
 
 == armeabi-v7a: building proot 5.1.107.101, talloc 2.5.0, API 28, 16 KB pages, waits b42a3ddf5fc7e777d08f91223e75974f264ebaa6c9c58910e597b2fcf13c65cf, USB FD 13abe4545b92e2d9fc2cd0a2e4007d03e844fb6f103cdb1936290717672ea852, WCH guard 9add29ced6c90fd6b0434074b895f02eaf46f760f30bec9eb2945592a1b49e5b, JVM mapping cd1f44f5efc04d6918d16c769c58b5daa8f8c78395e610732fd17343b55461c5, net map d5fbec2d6202f2efdc8f0932e76c63cb81167560e60cae068845d0e4a81dbb4b
+patching file src/tracee/tracee.c
+patching file src/tracee/tracee.h
+patching file src/ptrace/ptrace.c
+patching file src/ptrace/wait.c
+patching file src/tracee/event.c
+patching file src/cli/cli.c
+patching file src/syscall/enter.c
+patching file src/GNUmakefile
+patching file src/syscall/enter.c
+patching file src/syscall/seccomp.c
+patching file src/GNUmakefile
+Hunk #1 succeeded at 85 (offset 2 lines).
+patching file src/cli/proot.c
+patching file src/cli/proot.h
+patching file src/extension/extension.h
+/home/runner/work/tabstudio/tabstudio/artifacts/native/armeabi-v7a/libproot-loader.so:  ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), statically linked, stripped
+/home/runner/work/tabstudio/tabstudio/artifacts/native/armeabi-v7a/libproot.so:         ELF 32-bit LSB pie executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /system/bin/linker, for Android 28, built by NDK r27d (13750724), stripped
+/home/runner/work/tabstudio/tabstudio/artifacts/native/armeabi-v7a/libtabstudio-jvm.so: ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, not stripped
