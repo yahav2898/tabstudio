@@ -169,3 +169,39 @@ class FirmwareNameTests(unittest.TestCase):
             (Path(directory) / "CMakeLists.txt").write_text("idf_component_register(SRCS main.c)\n", encoding="utf-8")
             with self.assertRaises(RuntimeError):
                 RUNNER.cmake_project_name(Path(directory))
+
+
+class PlatformPinTests(unittest.TestCase):
+    """Every PlatformIO platform repository's examples build with the checked-out platform, not the registry's."""
+
+    def test_the_platform_named_in_platform_json_is_pinned_to_the_checkout(self):
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory)
+            (repository / "platform.json").write_text(json.dumps({"name": "espressif32"}), encoding="utf-8")
+            pinned = RUNNER.pin_platform("[env:a]\nplatform = espressif32\nboard = esp32doit-devkit-v1\n[env:b]\nplatform = ststm32\n", repository)
+            self.assertIn("platform = file://" + repository.as_posix() + "\n", pinned)
+            self.assertIn("platform = ststm32", pinned)
+
+    def test_without_platform_json_the_avr_platform_is_pinned(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pinned = RUNNER.pin_platform("platform = atmelavr\n", Path(directory))
+            self.assertEqual("platform = file://" + Path(directory).as_posix() + "\n", pinned)
+
+
+class RustExampleTests(unittest.TestCase):
+    """A HAL crate's firmware is an example built for the chip its features name."""
+
+    def test_an_example_is_built_with_its_features(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            entry = dict(next(e for e in RUNNER.entries() if e["kind"] == "rust"), example="blinky", features="stm32f411")
+            entry.pop("binary", None)
+            repository = root / "source"
+            (repository / entry["project"]).mkdir(parents=True)
+            runner = RUNNER.Runner(entry, root / "work", root / "out")
+            with patch.object(runner, "clone", return_value=repository), patch.object(runner, "run") as command, patch.object(runner, "require") as require:
+                runner.build()
+            cargo = command.call_args_list[-1].args[0]
+            self.assertEqual(["--example", "blinky"], cargo[cargo.index("--example"):cargo.index("--example") + 2])
+            self.assertEqual("stm32f411", cargo[cargo.index("--features") + 1])
+            self.assertEqual(Path("examples/blinky"), Path(*require.call_args.args[0].parts[-2:]))
