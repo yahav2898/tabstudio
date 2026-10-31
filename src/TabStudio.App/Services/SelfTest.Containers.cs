@@ -77,7 +77,9 @@ public static partial class SelfTest
             {
                 if (workspace.WebPreview.WebView is not IScriptableWebView preview
                     || await preview.CaptureAsync(ScreenCapture.MaxPixels, cancellationToken) is not { Length: > 0 } picture)
+                {
                     throw new IOException("The nginx preview could not be captured.");
+                }
                 Directory.CreateDirectory(screenshots);
                 await File.WriteAllBytesAsync(Path.Combine(screenshots, "containers-nginx.png"), picture, cancellationToken);
             }
