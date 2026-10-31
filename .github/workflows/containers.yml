@@ -1,15 +1,32 @@
 name: OCI containers
 on:
+  # main ran no container checks at all: the workflow ran only on agent/containers and on pull requests.
   push:
-    branches: [agent/containers]
+    branches: [main, 'agent/**']
+    paths:
+      - 'src/TabStudio.Containers/**'
+      - 'src/TabStudio.Services/**'
+      - 'src/TabStudio.App/ViewModels/Services/**'
+      - 'src/TabStudio.App/ViewModels/Containers*.cs'
+      - 'src/TabStudio.App/Views/ContainersView.axaml*'
+      - 'tests/TabStudio.Containers.Tests/**'
+      - 'tests/TabStudio.App.Tests/BackingServices/**'
+      - 'native/containers/**'
+      - 'build/ci/containers-proot.sh'
+      - '.github/workflows/containers.yml'
   pull_request:
     paths:
       - 'src/TabStudio.Containers/**'
       - 'src/TabStudio.Services/**'
+      - 'src/TabStudio.App/ViewModels/Services/**'
+      - 'src/TabStudio.App/ViewModels/Containers*.cs'
+      - 'src/TabStudio.App/Views/ContainersView.axaml*'
       - 'tests/TabStudio.Containers.Tests/**'
+      - 'tests/TabStudio.App.Tests/BackingServices/**'
       - 'native/containers/**'
       - 'build/ci/containers-proot.sh'
       - '.github/workflows/containers.yml'
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:
@@ -92,3 +109,41 @@ jobs:
             screenshots/
             tests/TabStudio.Containers.Tests/TestResults/
             ${{ runner.temp }}/containers-proot/*log
+
+  # The images people put in their Compose files, on both architectures: which start and answer under PRoot, and
+  # why the others do not. Only the images the release notes promise must pass; the table is the record.
+  compatibility:
+    name: Image compatibility (${{ matrix.arch }})
+    if: github.event_name != 'pull_request'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: x64, runner: ubuntu-24.04 }
+          - { arch: arm64, runner: ubuntu-24.04-arm }
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Build the same patched PRoot as Android
+        run: bash build/ci/containers-proot.sh "$RUNNER_TEMP/containers-proot"
+      - name: Start each common image and record whether it answers
+        env:
+          TABSTUDIO_CONTAINER_REQUIRED: '1'
+          TABSTUDIO_CONTAINER_COMPAT: '1'
+          TABSTUDIO_CONTAINER_COMPAT_OUT: ${{ github.workspace }}/ci-out/compatibility-${{ matrix.arch }}.md
+        run: |
+          mkdir -p ci-out
+          status=0
+          dotnet test tests/TabStudio.Containers.Tests -c Release -warnaserror --filter 'FullyQualifiedName~CompatibilityTests' --logger 'console;verbosity=detailed' > ci-out/compatibility.log 2>&1 || status=$?
+          grep 'COMPAT |' ci-out/compatibility.log || tail -n 60 ci-out/compatibility.log
+          if [ -f "$TABSTUDIO_CONTAINER_COMPAT_OUT" ]; then cat "$TABSTUDIO_CONTAINER_COMPAT_OUT" >> "$GITHUB_STEP_SUMMARY"; fi
+          exit $status
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compatibility-${{ matrix.arch }}
+          path: ci-out/
