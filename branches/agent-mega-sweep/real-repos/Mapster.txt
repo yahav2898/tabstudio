@@ -26,9 +26,7 @@ Compatibility Doctor:
   Mapster.Tool.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   Benchmark.Development: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
 Startup project: Sample.AspNetCore
-Built in 44.3 s: 1 errors, 218 warnings
-  1 x TS3001
-      [Sample.AspNetCore] error TS3001: Could not reach nuget.org (https://api.nuget.org/v3/index.json): An error occurred while sending the request. Check the device's internet connection; packages restored before keep working offline.
+Built in 14.8 s: 0 errors, 218 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -1595,7 +1593,7 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Output:
-Build started at 04:42:59...
+Build started at 05:40:25...
 1>------ Build started: Project: Mapster.Core, Configuration: Debug ------
 1>Enum.cs(13,128): warning CS8602: Dereference of a possibly null reference.
 1>Enum.cs(14,76): warning CS8619: Nullability of reference types in value of type 'Dictionary<TEnum, string?>' doesn't match target type 'Dictionary<TEnum, string>'.
@@ -1609,7 +1607,7 @@ Build started at 04:42:59...
 1>ProjectToTypeVisitors.cs(33,36): warning CS8765: Nullability of type of parameter 'node' doesn't match overridden member (possibly because of nullability attributes).
 1>ProjectToTypeVisitors.cs(36,24): warning CS8603: Possible null reference return.
 1>ReferenceTuple.cs(16,30): warning CS8765: Nullability of type of parameter 'obj' doesn't match overridden member (possibly because of nullability attributes).
-1>Mapster.Core -> compiled in memory (34 KB, 54 ms)
+1>Mapster.Core -> compiled in memory (34 KB, 49 ms)
 2>------ Build started: Project: Mapster, Configuration: Debug ------
 2>ArrayAdapter.cs(50,17): warning CS8604: Possible null reference argument for parameter 'bounds' in 'NewArrayExpression Expression.NewArrayBounds(Type type, params Expression[] bounds)'.
 2>BaseAdapter.cs(238,60): warning CS8604: Possible null reference argument for parameter 'right' in 'BinaryExpression Expression.Coalesce(Expression left, Expression right)'.
@@ -1667,7 +1665,7 @@ Build started at 04:42:59...
 2>ReflectionUtils.cs(403,24): warning CS8600: Converting null literal or possible null value to non-nullable type.
 2>ReflectionUtils.cs(420,46): warning CS8602: Dereference of a possibly null reference.
 2>ReflectionUtils.cs(423,29): warning CS8600: Converting null literal or possible null value to non-nullable type.
-2>Mapster -> compiled in memory (209.5 KB, 404 ms)
+2>Mapster -> compiled in memory (209.5 KB, 272 ms)
 3>------ Build started: Project: ExpressionTranslator, Configuration: Debug ------
 3>ExpressionTranslator.cs(493,55): warning CS8600: Converting null literal or possible null value to non-nullable type.
 3>ExpressionTranslator.cs(793,27): warning CS8602: Dereference of a possibly null reference.
@@ -1687,13 +1685,13 @@ Build started at 04:42:59...
 3>Extensions.cs(30,20): warning CS8603: Possible null reference return.
 3>PropertyDefinitions.cs(9,21): warning CS8618: Non-nullable property 'Type' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 3>PropertyDefinitions.cs(10,23): warning CS8618: Non-nullable property 'Name' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-3>ExpressionTranslator -> compiled in memory (48 KB, 104 ms)
+3>ExpressionTranslator -> compiled in memory (48 KB, 127 ms)
 4>------ Build started: Project: ExpressionDebugger, Configuration: Debug ------
 4>ExpressionCompiler.cs(35,44): warning CS8604: Possible null reference argument for parameter 'path1' in 'string Path.Combine(string path1, string path2)'.
 4>ExpressionCompiler.cs(50,51): warning CS8604: Possible null reference argument for parameter 'root' in 'SyntaxTree CSharpSyntaxTree.Create(CSharpSyntaxNode root, CSharpParseOptions? options = null, string? path = "", Encoding? encoding = null)'.
 4>ExpressionDebuggerExtensions.cs(49,41): warning CS8604: Possible null reference argument for parameter 'name' in 'Type? Assembly.GetType(string name)'.
 4>ExpressionDebuggerExtensions.cs(51,26): warning CS8602: Dereference of a possibly null reference.
-4>ExpressionDebugger -> compiled in memory (12 KB, 163 ms)
+4>ExpressionDebugger -> compiled in memory (12 KB, 92 ms)
 5>------ Build started: Project: Mapster.Tests, Configuration: Debug ------
 5>WhenAddCtorNullablePropagation.cs(32,53): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 5>WhenAddCtorNullablePropagation.cs(40,33): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
@@ -1740,40 +1738,39 @@ Build started at 04:42:59...
 5>WhenUseDestinatonValueMappingRegression.cs(125,35): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 5>WhenUseDestinatonValueMappingRegression.cs(126,35): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 5>WhenUseDestinatonValueMappingRegression.cs(127,35): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-5>Mapster.Tests -> compiled in memory (449.5 KB, 927 ms)
+5>Mapster.Tests -> compiled in memory (449.5 KB, 587 ms)
 6>------ Build started: Project: Benchmark, Configuration: Debug ------
 6>Mapster.Benchmark.Comparisons.CustomerFacetDto.g.cs(63,28): warning CS8602: Dereference of a possibly null reference.
 6>Mapster.Benchmark.Comparisons.CustomerFacetDto.g.cs(103,27): warning CS8602: Dereference of a possibly null reference.
-6>Benchmark -> compiled in memory (54.5 KB, 913 ms)
+6>Benchmark -> compiled in memory (54.5 KB, 756 ms)
 7>------ Build started: Project: Mapster.Async, Configuration: Debug ------
 7>TypeAdapterExtensions.cs(112,84): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 7>TypeAdapterExtensions.cs(125,84): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 7>TypeAdapterExtensions.cs(140,98): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-7>Mapster.Async -> compiled in memory (9.5 KB, 459 ms)
+7>Mapster.Async -> compiled in memory (9.5 KB, 263 ms)
 8>------ Build started: Project: Mapster.DependencyInjection, Configuration: Debug ------
-8>Mapster.DependencyInjection -> compiled in memory (5.5 KB, 558 ms)
+8>Mapster.DependencyInjection -> compiled in memory (5.5 KB, 412 ms)
 9>------ Build started: Project: Mapster.EFCore, Configuration: Debug ------
 9>EFCoreExtensions.cs(14,30): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-9>Mapster.EFCore -> compiled in memory (17.5 KB, 374 ms)
+9>Mapster.EFCore -> compiled in memory (17.5 KB, 306 ms)
 10>------ Build started: Project: Sample.AspNetCore, Configuration: Debug ------
-10>warning: The NuGet restore of Sample.AspNetCore reported errors, so it is built without the packages that could not be restored. The Error List shows the restore's errors.
-10>Sample.AspNetCore -> compiled in memory (24.5 KB, 517 ms)
+10>Sample.AspNetCore -> compiled in memory (24.5 KB, 243 ms)
 11>------ Build started: Project: Mapster.Async.Tests, Configuration: Debug ------
-11>Mapster.Async.Tests -> compiled in memory (19 KB, 568 ms)
+11>Mapster.Async.Tests -> compiled in memory (19 KB, 405 ms)
 12>------ Build started: Project: Mapster.DependencyInjection.Tests, Configuration: Debug ------
-12>Mapster.DependencyInjection.Tests -> compiled in memory (7 KB, 607 ms)
+12>Mapster.DependencyInjection.Tests -> compiled in memory (7 KB, 385 ms)
 13>------ Build started: Project: Mapster.EF6, Configuration: Debug ------
-13>Mapster.EF6 -> compiled in memory (9.5 KB, 357 ms)
+13>Mapster.EF6 -> compiled in memory (9.5 KB, 326 ms)
 14>------ Build started: Project: Mapster.JsonNet, Configuration: Debug ------
-14>Mapster.JsonNet -> compiled in memory (5 KB, 568 ms)
+14>Mapster.JsonNet -> compiled in memory (5 KB, 242 ms)
 15>------ Build started: Project: Mapster.JsonNet.Tests, Configuration: Debug ------
-15>Mapster.JsonNet.Tests -> compiled in memory (4.5 KB, 293 ms)
+15>Mapster.JsonNet.Tests -> compiled in memory (4.5 KB, 342 ms)
 16>------ Build started: Project: Mapster.EFCore.Tests, Configuration: Debug ------
-16>Mapster.EFCore.Tests -> compiled in memory (20.5 KB, 528 ms)
+16>Mapster.EFCore.Tests -> compiled in memory (20.5 KB, 373 ms)
 17>------ Build started: Project: Mapster.Immutable, Configuration: Debug ------
-17>Mapster.Immutable -> compiled in memory (6.5 KB, 321 ms)
+17>Mapster.Immutable -> compiled in memory (6.5 KB, 298 ms)
 18>------ Build started: Project: Mapster.Immutable.Tests, Configuration: Debug ------
-18>Mapster.Immutable.Tests -> compiled in memory (5.5 KB, 429 ms)
+18>Mapster.Immutable.Tests -> compiled in memory (5.5 KB, 231 ms)
 19>------ Build started: Project: Mapster.Tool, Configuration: Debug ------
 19>ExtensionOptions.cs(11,23): warning CS8618: Non-nullable property 'Assembly' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 19>ExtensionOptions.cs(14,23): warning CS8618: Non-nullable property 'Output' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
@@ -1781,7 +1778,7 @@ Build started at 04:42:59...
 19>MapperOptions.cs(14,23): warning CS8618: Non-nullable property 'Output' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 19>ModelOptions.cs(11,23): warning CS8618: Non-nullable property 'Assembly' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 19>ModelOptions.cs(14,23): warning CS8618: Non-nullable property 'Output' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-19>Mapster.Tool -> compiled in memory (39.5 KB, 601 ms)
+19>Mapster.Tool -> compiled in memory (39.5 KB, 497 ms)
 20>------ Build started: Project: Sample.CodeGen, Configuration: Debug ------
 20>Course.cs(11,23): warning CS8618: Non-nullable property 'Title' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 20>Course.cs(14,40): warning CS8618: Non-nullable property 'Enrollments' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
@@ -1798,9 +1795,9 @@ Build started at 04:42:59...
 20>StudentDto.g.cs(8,22): warning CS8669: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. Auto-generated code requires an explicit '#nullable' directive in source.
 20>StudentMerge.g.cs(7,22): warning CS8669: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. Auto-generated code requires an explicit '#nullable' directive in source.
 20>StudentUpdate.g.cs(7,22): warning CS8669: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. Auto-generated code requires an explicit '#nullable' directive in source.
-20>Sample.CodeGen -> compiled in memory (46.5 KB, 333 ms)
+20>Sample.CodeGen -> compiled in memory (46.5 KB, 271 ms)
 21>------ Build started: Project: Mapster.SourceGenerator, Configuration: Debug ------
-21>Mapster.SourceGenerator -> compiled in memory (2.5 KB, 55 ms)
+21>Mapster.SourceGenerator -> compiled in memory (2.5 KB, 51 ms)
 22>------ Build started: Project: TemplateTest, Configuration: Debug ------
 22>CreateMapExpressionTest.cs(72,23): warning CS8618: Non-nullable property 'Street' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 22>CreateMapExpressionTest.cs(73,23): warning CS8618: Non-nullable property 'City' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
@@ -1824,7 +1821,7 @@ Build started at 04:42:59...
 22>FooTest.cs(53,22): warning CS8618: Non-nullable property 'FooArr' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 22>FooTest.cs(55,22): warning CS8618: Non-nullable property 'IntArr' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 22>FooTest.cs(57,33): warning CS8618: Non-nullable property 'Ints' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-22>TemplateTest -> compiled in memory (9.5 KB, 581 ms)
+22>TemplateTest -> compiled in memory (9.5 KB, 332 ms)
 23>------ Build started: Project: Mapster.Tool.Tests, Configuration: Debug ------
 23>UserMapper.cs(17,20): warning CS8603: Possible null reference return.
 23>UserMapper.cs(27,24): warning CS8603: Possible null reference return.
@@ -1832,7 +1829,7 @@ Build started at 04:42:59...
 23>UserMapper.cs(32,13): warning CS8602: Dereference of a possibly null reference.
 23>WhenMappingWithExistingObjectAndInitProperties.cs(40,19): warning CS8618: Non-nullable property 'Name' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 23>WhenMappingWithExistingObjectAndInitProperties.cs(46,19): warning CS8618: Non-nullable property 'Name' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-23>Mapster.Tool.Tests -> compiled in memory (8 KB, 516 ms)
+23>Mapster.Tool.Tests -> compiled in memory (8 KB, 520 ms)
 24>------ Build started: Project: Benchmark.Development, Configuration: Debug ------
 24>TestAll.cs(8,21): warning CS8618: Non-nullable field '_fooInstance' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable.
 24>TestAll.cs(9,26): warning CS8618: Non-nullable field '_customerInstance' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable.
@@ -1860,6 +1857,6 @@ Build started at 04:42:59...
 24>Foo.cs(23,22): warning CS8618: Non-nullable property 'FooArr' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 24>Foo.cs(25,22): warning CS8618: Non-nullable property 'IntArr' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 24>Foo.cs(27,33): warning CS8618: Non-nullable property 'Ints' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-24>Benchmark.Development -> compiled in memory (15 KB, 16 ms)
+24>Benchmark.Development -> compiled in memory (15 KB, 13 ms)
 ========== Build: 24 succeeded, 0 failed ==========
 

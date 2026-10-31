@@ -1,5 +1,5 @@
 Specification at fc2670ac94d3ac427b232cc15ee0e1a7d2748a1b
-Opened /home/runner/work/_temp/real-repos/Specification/Ardalis.Specification.sln in 0.3 s
+Opened /home/runner/work/_temp/real-repos/Specification/Ardalis.Specification.sln in 0.2 s
 Compatibility Doctor:
   Ardalis.Specification: Library via Built with its users - A library is compiled together with the projects that reference it.
   Ardalis.Specification.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
@@ -13,7 +13,7 @@ Compatibility Doctor:
   Ardalis.Sample.App3: Needs a database via Local server + WebView - Ardalis.Sample.App3 uses SQL Server, which has no engine for ARM64 Linux, so it cannot run on this tablet, and 'DbConnection' in appsettings.json uses (localdb)\mssqllocaldb, which exists only on Windows. Connect to a SQL Server on your network or in the cloud with a SQL login (Windows sign-in is not available here).
   Ardalis.Sample.App2: Needs a database via Local server + WebView - Ardalis.Sample.App2 uses SQL Server, which has no engine for ARM64 Linux, so it cannot run on this tablet, and 'DbConnection' in appsettings.json uses (localdb)\mssqllocaldb, which exists only on Windows. Connect to a SQL Server on your network or in the cloud with a SQL login (Windows sign-in is not available here).
 Startup project: Ardalis.Sample.App1
-Built in 10.1 s: 0 errors, 3 warnings
+Built in 7.6 s: 0 errors, 3 warnings
 Packages with analyzers or MSBuild files:
   coverlet.collector 6.0.4
       build/netstandard2.0/Microsoft.Bcl.AsyncInterfaces.dll
@@ -926,29 +926,29 @@ Packages with analyzers or MSBuild files:
       build/net8.0/xunit.runner.visualstudio.props
       build/net8.0/xunit.runner.visualstudio.testadapter.dll
 Output:
-Build started at 04:44:50...
+Build started at 05:41:58...
 1>------ Build started: Project: Ardalis.Specification, Configuration: Debug ------
-1>Ardalis.Specification -> compiled in memory (49 KB, 78 ms)
+1>Ardalis.Specification -> compiled in memory (49 KB, 74 ms)
 2>------ Build started: Project: Ardalis.Specification.Tests, Configuration: Debug ------
-2>Ardalis.Specification.Tests -> compiled in memory (215 KB, 745 ms)
+2>Ardalis.Specification.Tests -> compiled in memory (215 KB, 389 ms)
 3>------ Build started: Project: Ardalis.Specification.EntityFrameworkCore, Configuration: Debug ------
-3>Ardalis.Specification.EntityFrameworkCore -> compiled in memory (69 KB, 126 ms)
+3>Ardalis.Specification.EntityFrameworkCore -> compiled in memory (69 KB, 154 ms)
 4>------ Build started: Project: Ardalis.Specification.EntityFrameworkCore.Tests, Configuration: Debug ------
-4>Ardalis.Specification.EntityFrameworkCore.Tests -> compiled in memory (171 KB, 1090 ms)
+4>Ardalis.Specification.EntityFrameworkCore.Tests -> compiled in memory (171 KB, 810 ms)
 5>------ Build started: Project: Ardalis.Specification.EntityFramework6, Configuration: Debug ------
-5>Ardalis.Specification.EntityFramework6 -> compiled in memory (36.5 KB, 151 ms)
+5>Ardalis.Specification.EntityFramework6 -> compiled in memory (36.5 KB, 69 ms)
 6>------ Build started: Project: Ardalis.Specification.EntityFramework6.Tests, Configuration: Debug ------
-6>Ardalis.Specification.EntityFramework6.Tests -> compiled in memory (120.5 KB, 782 ms)
+6>Ardalis.Specification.EntityFramework6.Tests -> compiled in memory (120.5 KB, 593 ms)
 7>------ Build started: Project: Ardalis.Specification.Benchmarks, Configuration: Debug ------
 7>BenchmarkDbContext.cs(5,25): warning CS8618: Non-nullable property 'Stores' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-7>Ardalis.Specification.Benchmarks -> compiled in memory (39.5 KB, 325 ms)
+7>Ardalis.Specification.Benchmarks -> compiled in memory (39.5 KB, 180 ms)
 8>------ Build started: Project: Ardalis.Sample.Domain, Configuration: Debug ------
 8>Ardalis.Sample.Domain -> compiled in memory (13.5 KB, 72 ms)
 9>------ Build started: Project: Ardalis.Sample.App1, Configuration: Debug ------
-9>Ardalis.Sample.App1 -> compiled in memory (22.5 KB, 199 ms)
+9>Ardalis.Sample.App1 -> compiled in memory (22.5 KB, 136 ms)
 10>------ Build started: Project: Ardalis.Sample.App3, Configuration: Debug ------
-10>Ardalis.Sample.App3 -> compiled in memory (49 KB, 226 ms)
+10>Ardalis.Sample.App3 -> compiled in memory (49 KB, 181 ms)
 11>------ Build started: Project: Ardalis.Sample.App2, Configuration: Debug ------
-11>Ardalis.Sample.App2 -> compiled in memory (23 KB, 168 ms)
+11>Ardalis.Sample.App2 -> compiled in memory (23 KB, 120 ms)
 ========== Build: 11 succeeded, 0 failed ==========
 

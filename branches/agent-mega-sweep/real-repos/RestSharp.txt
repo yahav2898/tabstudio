@@ -17,7 +17,7 @@ Compatibility Doctor:
   RestSharp.Extensions.DependencyInjection: Library via Built with its users - A library is compiled together with the projects that reference it.
   RestSharp: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: RestSharp.InteractiveTests
-Built in 13.8 s: 0 errors, 13 warnings
+Built in 10.9 s: 0 errors, 13 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -1414,19 +1414,19 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Output:
-Build started at 04:43:19...
+Build started at 05:40:42...
 1>------ Build started: Project: SourceGenerator, Configuration: Debug ------
-1>SourceGenerator -> compiled in memory (22 KB, 227 ms)
+1>SourceGenerator -> compiled in memory (22 KB, 148 ms)
 2>------ Build started: Project: RestSharp, Configuration: Debug ------
-2>RestSharp -> compiled in memory (263.5 KB, 422 ms)
+2>RestSharp -> compiled in memory (263.5 KB, 309 ms)
 3>------ Build started: Project: RestSharp.Serializers.NewtonsoftJson, Configuration: Debug ------
-3>RestSharp.Serializers.NewtonsoftJson -> compiled in memory (7 KB, 355 ms)
+3>RestSharp.Serializers.NewtonsoftJson -> compiled in memory (7 KB, 218 ms)
 4>------ Build started: Project: RestSharp.Tests.Shared, Configuration: Debug ------
-4>RestSharp.Tests.Shared -> compiled in memory (38.5 KB, 308 ms)
+4>RestSharp.Tests.Shared -> compiled in memory (38.5 KB, 203 ms)
 5>------ Build started: Project: RestSharp.Benchmarks, Configuration: Debug ------
-5>RestSharp.Benchmarks -> compiled in memory (10 KB, 495 ms)
+5>RestSharp.Benchmarks -> compiled in memory (10 KB, 317 ms)
 6>------ Build started: Project: RestSharp.Serializers.CsvHelper, Configuration: Debug ------
-6>RestSharp.Serializers.CsvHelper -> compiled in memory (7 KB, 352 ms)
+6>RestSharp.Serializers.CsvHelper -> compiled in memory (7 KB, 190 ms)
 7>------ Build started: Project: RestSharp.Serializers.Xml, Configuration: Debug ------
 7>XmlDeserializer.cs(193,61): warning CS8604: Possible null reference argument for parameter 'value' in 'object? ReflectionExtensions.FindEnumValue(Type type, string value, CultureInfo culture)'.
 7>XmlDeserializer.cs(198,35): warning CS8604: Possible null reference argument for parameter 'uriString' in 'Uri.Uri(string uriString, UriKind uriKind)'.
@@ -1436,26 +1436,26 @@ Build started at 04:43:19...
 7>XmlDeserializer.cs(241,70): warning CS8604: Possible null reference argument for parameter 'g' in 'Guid.Guid(string g)'.
 7>XmlDeserializer.cs(246,54): warning CS8604: Possible null reference argument for parameter 's' in 'TimeSpan XmlConvert.ToTimeSpan(string s)'.
 7>XmlDeserializer.cs(288,38): warning CS8604: Possible null reference argument for parameter 'inputString' in 'bool XmlDeserializer.TryGetFromString(string inputString, out object? result, Type type)'.
-7>RestSharp.Serializers.Xml -> compiled in memory (24 KB, 448 ms)
+7>RestSharp.Serializers.Xml -> compiled in memory (24 KB, 220 ms)
 8>------ Build started: Project: RestSharp.InteractiveTests, Configuration: Debug ------
-8>RestSharp.InteractiveTests -> compiled in memory (31 KB, 374 ms)
+8>RestSharp.InteractiveTests -> compiled in memory (31 KB, 235 ms)
 9>------ Build started: Project: RestSharp.Extensions.DependencyInjection, Configuration: Debug ------
-9>RestSharp.Extensions.DependencyInjection -> compiled in memory (8 KB, 394 ms)
+9>RestSharp.Extensions.DependencyInjection -> compiled in memory (8 KB, 196 ms)
 10>------ Build started: Project: RestSharp.Tests.DependencyInjection, Configuration: Debug ------
-10>RestSharp.Tests.DependencyInjection -> compiled in memory (4.5 KB, 360 ms)
+10>RestSharp.Tests.DependencyInjection -> compiled in memory (4.5 KB, 302 ms)
 11>------ Build started: Project: RestSharp.Tests.Integrated, Configuration: Debug ------
-11>RestSharp.Tests.Integrated -> compiled in memory (210.5 KB, 706 ms)
+11>RestSharp.Tests.Integrated -> compiled in memory (210.5 KB, 414 ms)
 12>------ Build started: Project: RestSharp.Tests.Serializers.Csv, Configuration: Debug ------
-12>RestSharp.Tests.Serializers.Csv -> compiled in memory (16 KB, 462 ms)
+12>RestSharp.Tests.Serializers.Csv -> compiled in memory (16 KB, 234 ms)
 13>------ Build started: Project: RestSharp.Tests.Serializers.Json, Configuration: Debug ------
-13>RestSharp.Tests.Serializers.Json -> compiled in memory (21.5 KB, 383 ms)
+13>RestSharp.Tests.Serializers.Json -> compiled in memory (21.5 KB, 240 ms)
 14>------ Build started: Project: RestSharp.Tests.Serializers.Xml, Configuration: Debug ------
-14>RestSharp.Tests.Serializers.Xml -> compiled in memory (114 KB, 469 ms)
+14>RestSharp.Tests.Serializers.Xml -> compiled in memory (114 KB, 329 ms)
 15>------ Build started: Project: RestSharp.Tests, Configuration: Debug ------
 15>RestClientTests.cs(88,22): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 15>RestClientTests.cs(88,40): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 15>RestClientTests.cs(89,22): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 15>RestClientTests.cs(90,17): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-15>RestSharp.Tests -> compiled in memory (151.5 KB, 508 ms)
+15>RestSharp.Tests -> compiled in memory (151.5 KB, 376 ms)
 ========== Build: 15 succeeded, 0 failed ==========
 
