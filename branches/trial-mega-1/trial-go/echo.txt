@@ -1,0 +1,26 @@
+echo at 7af8fac5354e53294c8d14fdd7dd4006dbaffd52, opening /home/runner/work/_temp/repos/echo
+Opened in 0.4 s: echo, solution (none)
+  toolchain project go: /home/runner/work/_temp/repos/echo/go.mod
+Compatibility Doctor:
+  echo: Needs a toolchain via Go toolchain - Runs with Go from the Toolchain Store, with console input and output in the Output panel. Install Go to run it.
+F5 startup project: echo (go) /home/runner/work/_temp/repos/echo/go.mod
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here. (120 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 3.0 s
+  Building echo: Running go
+  Building echo: Succeeded after 5.5 s
+Project setup:
+
+Output:
+Building echo with Go 1.27.3
+> go build '-gcflags=all=-N -l' -o .tabstudio/bin/app .
+
+Build succeeded: 'echo' is ready to run.
+
