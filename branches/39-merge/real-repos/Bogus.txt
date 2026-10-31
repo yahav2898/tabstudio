@@ -1,5 +1,5 @@
 Bogus at 6ece18c5c22648ab4606e45a0aaf2f07fc5259e4
-Opened /home/runner/work/_temp/real-repos/Bogus/Source/Bogus.sln in 2.2 s
+Opened /home/runner/work/_temp/real-repos/Bogus/Source/Bogus.sln in 0.4 s
 Compatibility Doctor:
   Bogus: Library via Built with its users - A library is compiled together with the projects that reference it.
   Bogus.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
@@ -7,7 +7,7 @@ Compatibility Doctor:
   Builder: Not supported via Build script, on a computer - The repository's build script (on Nuke.Common): it builds, tests and publishes the other projects by starting dotnet and other tools as processes, which a program cannot do on a tablet. TabStudio builds it with the solution but never starts it; build and run the other projects here, or run the script on a computer with the .NET SDK.
   Builder: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
 Startup project: none
-Built in 6.9 s: 0 errors, 18 warnings
+Built in 6.7 s: 0 errors, 18 warnings
 Packages with analyzers or MSBuild files:
   appveyor.testlogger 2.0.0
       build/_common/Microsoft.VisualStudio.TestPlatform.Extension.Appveyor.TestAdapter.dll
@@ -595,33 +595,14 @@ Packages with analyzers or MSBuild files:
       build/net46/XunitXml.TestLogger.props
       build/netstandard1.5/XunitXml.TestLogger.props
 Output:
-Build started at 04:48:46...
+Build started at 05:52:08...
 1>------ Build started: Project: Bogus, Configuration: Debug ------
-npm warn deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
-npm warn deprecated source-map-resolve@0.5.3: See https://github.com/lydell/source-map-resolve#deprecated
-npm warn deprecated resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
-npm warn deprecated path-dirname@1.0.2: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
-npm warn deprecated source-map-url@0.4.0: See https://github.com/lydell/source-map-url#deprecated
-npm warn deprecated is-data-descriptor@0.1.4: Please upgrade to v0.1.5
-npm warn deprecated is-accessor-descriptor@0.1.6: Please upgrade to v0.1.7
-npm warn deprecated default-resolution@2.0.0: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
-npm warn deprecated glob@7.1.6: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
-npm warn deprecated clone-buffer@1.0.0: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
-npm warn deprecated is-data-descriptor@1.0.0: Please upgrade to v1.0.1
-npm warn deprecated is-accessor-descriptor@1.0.0: Please upgrade to v1.0.1
-npm warn deprecated is-data-descriptor@1.0.0: Please upgrade to v1.0.1
-npm warn deprecated is-data-descriptor@1.0.0: Please upgrade to v1.0.1
-npm warn deprecated is-accessor-descriptor@1.0.0: Please upgrade to v1.0.1
-npm warn deprecated is-accessor-descriptor@1.0.0: Please upgrade to v1.0.1
-npm warn deprecated is-accessor-descriptor@1.0.0: Please upgrade to v1.0.1
-npm warn deprecated is-data-descriptor@1.0.0: Please upgrade to v1.0.1
-npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
 1>BArray.cs(38,24): warning CS0114: 'BArray.Contains(BValue)' hides inherited member 'BValue.Contains(BValue)'. To make the current member override that implementation, add the override keyword. Otherwise add the new keyword.
 1>BValue.cs(12,14): warning CS0660: 'BValue' defines operator == or operator != but does not override Object.Equals(object o)
 1>BValue.cs(12,14): warning CS0661: 'BValue' defines operator == or operator != but does not override Object.GetHashCode()
 1>Date.cs(47,84): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
 1>Images.cs(130,21): warning SYSLIB0013: 'Uri.EscapeUriString(string)' is obsolete: 'Uri.EscapeUriString can corrupt the Uri string in some cases. Consider using Uri.EscapeDataString for query string components instead.'
-1>Bogus -> compiled in memory (2386 KB, 1068 ms)
+1>Bogus -> compiled in memory (2386 KB, 240 ms)
 2>------ Build started: Project: Bogus.Tests, Configuration: Debug ------
 2>DateTest.cs(410,7): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
 2>DateTest.cs(424,7): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
@@ -633,13 +614,29 @@ npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memo
 2>PersonTest.cs(251,7): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
 2>PersonTest.cs(276,7): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
 2>Question66444118.cs(62,47): warning SYSLIB0050: 'FormatterServices' is obsolete: 'Formatter-based serialization is obsolete and should not be used.'
-2>Bogus.Tests -> compiled in memory (325.5 KB, 931 ms)
+2>Bogus.Tests -> compiled in memory (325.5 KB, 1251 ms)
 3>------ Build started: Project: Benchmark, Configuration: Debug ------
 3>PR300_BenchDecimal.cs(50,31): warning CS0108: 'CustomRandomizer.localSeed' hides inherited member 'Randomizer.localSeed'. Use the new keyword if hiding was intended.
-3>Benchmark -> compiled in memory (15.5 KB, 139 ms)
+3>Benchmark -> compiled in memory (15.5 KB, 390 ms)
 4>------ Skipped: Project: Builder: it is not built by the solution's Debug configuration ------
 ========== Build: 3 succeeded, 0 failed, 1 skipped ==========
-
-added 401 packages in 7s
-========== npm ci: succeeded ==========
+npm warn deprecated path-dirname@1.0.2: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+npm warn deprecated is-accessor-descriptor@0.1.6: Please upgrade to v0.1.7
+npm warn deprecated is-data-descriptor@0.1.4: Please upgrade to v0.1.5
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated clone-buffer@1.0.0: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+npm warn deprecated is-accessor-descriptor@1.0.0: Please upgrade to v1.0.1
+npm warn deprecated is-data-descriptor@1.0.0: Please upgrade to v1.0.1
+npm warn deprecated is-data-descriptor@1.0.0: Please upgrade to v1.0.1
+npm warn deprecated is-accessor-descriptor@1.0.0: Please upgrade to v1.0.1
+npm warn deprecated is-data-descriptor@1.0.0: Please upgrade to v1.0.1
+npm warn deprecated is-accessor-descriptor@1.0.0: Please upgrade to v1.0.1
+npm warn deprecated is-data-descriptor@1.0.0: Please upgrade to v1.0.1
+npm warn deprecated is-accessor-descriptor@1.0.0: Please upgrade to v1.0.1
+npm warn deprecated default-resolution@2.0.0: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+npm warn deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+npm warn deprecated resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+npm warn deprecated glob@7.1.6: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated source-map-url@0.4.0: See https://github.com/lydell/source-map-url#deprecated
+npm warn deprecated source-map-resolve@0.5.3: See https://github.com/lydell/source-map-resolve#deprecated
 

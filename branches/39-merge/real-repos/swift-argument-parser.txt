@@ -4,7 +4,7 @@ Toolchain projects:
   cpp: /home/runner/work/_temp/real-repos/swift-argument-parser/CMakeLists.txt
 Startup project: swift /home/runner/work/_temp/real-repos/swift-argument-parser/Package.swift
 Set up in 4.4 s
-Ran in 8.6 s
+Ran in 10.6 s
 Project setup:
 
 Output:
@@ -12,15 +12,22 @@ Running roll with Swift 6.4.1
 > swift build --product roll
 Building for debugging...
 [Pre-planning 1 / 94]
-[Creating build graph]
+[Planning deferred tasks]
 [30 / 48] ArgumentParserToolInfo
 [40 / 54] ArgumentParser
 [41 / 54] ArgumentParser
+/home/runner/work/_temp/real-repos/swift-argument-parser/Sources/ArgumentParser/Usage/DumpHelpGenerator.swift:208:15: warning: 'customDeprecated' is deprecated: Use custom instead. [#DeprecatedDeclaration]
+206 |       self = .customAsync
+207 |     case .customDeprecated(_):
+208 |       self = .customDeprecated
+    |               `- warning: 'customDeprecated' is deprecated: Use custom instead. [#DeprecatedDeclaration]
+209 |     }
+210 |   }
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
 [43 / 55] ArgumentParser
-[49 / 56] roll-product
+[49 / 55]
 [52 / 59] roll-product
-[53 / 59] roll-product
-[54 / 59]
 [54 / 59] roll-product
 [57 / 60] ArgumentParser
 /home/runner/work/_temp/real-repos/swift-argument-parser/Sources/ArgumentParser/Parsable Types/ParsableArguments.swift:76:8: warning: '_errorLabel' is deprecated: Use _errorPrefix instead. [#DeprecatedDeclaration]
@@ -32,18 +39,9 @@ Building for debugging...
  78 | }
 
 [#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
-/home/runner/work/_temp/real-repos/swift-argument-parser/Sources/ArgumentParser/Usage/DumpHelpGenerator.swift:208:15: warning: 'customDeprecated' is deprecated: Use custom instead. [#DeprecatedDeclaration]
-206 |       self = .customAsync
-207 |     case .customDeprecated(_):
-208 |       self = .customDeprecated
-    |               `- warning: 'customDeprecated' is deprecated: Use custom instead. [#DeprecatedDeclaration]
-209 |     }
-210 |   }
-
-[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
 [61 / 61] roll-product
-Build complete! (7.17 secs)
-3
+Build complete! (9.12 secs)
+2
 
 The program 'roll' has exited with code 0 (0x0).
 
