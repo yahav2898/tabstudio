@@ -1,0 +1,57 @@
+  Determining projects to restore...
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/TabStudio.Notebooks.csproj (in 272 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Notebooks.Tests/TabStudio.Notebooks.Tests.csproj (in 238 ms).
+  3 of 5 projects are up-to-date for restore.
+  TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+  TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
+  TabStudio.Notebooks.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Notebooks.Tests/bin/Release/net10.0/TabStudio.Notebooks.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Notebooks.Tests/bin/Release/net10.0/TabStudio.Notebooks.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.16]   Discovering: TabStudio.Notebooks.Tests
+[xUnit.net 00:00:00.31]   Discovered:  TabStudio.Notebooks.Tests
+[xUnit.net 00:00:00.39]   Starting:    TabStudio.Notebooks.Tests
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.Simple_values_are_plain_text_only(value: 1.5, expected: "1.5") [23 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.Simple_values_are_plain_text_only(value: True, expected: "True") [2 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.Simple_values_are_plain_text_only(value: "text as it is", expected: "text as it is") [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.Simple_values_are_plain_text_only(value: Friday, expected: "Friday") [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.Simple_values_are_plain_text_only(value: 'x', expected: "x") [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.Simple_values_are_plain_text_only(value: null, expected: "<null>") [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.Simple_values_are_plain_text_only(value: 42, expected: "42") [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.PolyglotNotebookFormatTests.The_dotnet_interactive_round_trip_file_saves_back_unchanged [38 ms]
+  Passed TabStudio.Notebooks.Tests.PolyglotNotebookFormatTests.Magic_commands_stay_in_their_cell_and_aliases_start_cells [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.PolyglotNotebookFormatTests.Saving_writes_canonical_kernel_names_and_keeps_the_metadata [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.PolyglotNotebookFormatTests.Empty_cells_are_not_written_and_an_empty_file_has_one_empty_cell [22 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.A_dictionary_becomes_a_key_value_table [55 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.Nested_collections_are_listed_inside_a_cell [24 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.Html_in_values_is_escaped [2 ms]
+  Passed TabStudio.Notebooks.Tests.PolyglotNotebookFormatTests.Converting_to_ipynb_and_back_keeps_cells_languages_and_kernels [60 ms]
+  Passed TabStudio.Notebooks.Tests.PolyglotNotebookFormatTests.Windows_line_endings_are_read_and_can_be_written [4 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.Only_the_first_hundred_rows_are_shown [17 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.Dates_and_decimals_use_the_invariant_culture [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.An_object_becomes_a_one_row_table_and_keeps_its_own_text [6 ms]
+  Passed TabStudio.Notebooks.Tests.PolyglotNotebookFormatTests.Reads_cells_in_every_language_and_the_kernel_list [13 ms]
+  Passed TabStudio.Notebooks.Tests.PolyglotNotebookFormatTests.A_file_without_metadata_starts_in_CSharp_and_saves_without_it [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.A_sequence_of_simple_values_has_one_value_column [2 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.A_property_that_throws_shows_the_error_in_its_cell [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.A_sequence_of_objects_becomes_a_table_with_a_column_per_property [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.LINQ_results_of_anonymous_types_and_tuples_become_tables [9 ms]
+  Passed TabStudio.Notebooks.Tests.ValueFormatterTests.Tasks_and_types_are_shown_as_text_without_reading_their_properties [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.JupyterNotebookFormatTests.A_new_notebook_is_written_with_the_dotnet_kernel_and_cell_ids [1 ms]
+  Passed TabStudio.Notebooks.Tests.JupyterNotebookFormatTests.A_kernel_name_on_the_first_line_sets_the_language [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.JupyterNotebookFormatTests.Editing_one_cell_keeps_everything_else_in_the_file [9 ms]
+  Passed TabStudio.Notebooks.Tests.NotebookDocumentTests.Editing_returns_a_new_document_and_leaves_the_old_one_alone [8 ms]
+  Passed TabStudio.Notebooks.Tests.NotebookDocumentTests.Language_names_and_aliases_are_normalized [3 ms]
+  Passed TabStudio.Notebooks.Tests.JupyterNotebookFormatTests.Kernel_outputs_are_saved_as_Jupyter_outputs [9 ms]
+  Passed TabStudio.Notebooks.Tests.JupyterNotebookFormatTests.Notebooks_from_before_format_4_5_do_not_gain_cell_ids [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.JupyterNotebookFormatTests.A_VS_Code_notebook_saves_back_byte_for_byte [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.JupyterNotebookFormatTests.Reads_attachments_raw_cells_JSON_results_and_escaped_text_from_a_Jupyter_notebook [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.JupyterNotebookFormatTests.Files_that_are_not_nbformat_4_notebooks_are_rejected(json: "{\"cells\": [{\"cell_type\": \"heading\", \"source"···) [2 ms]
+  Passed TabStudio.Notebooks.Tests.JupyterNotebookFormatTests.Files_that_are_not_nbformat_4_notebooks_are_rejected(json: "[]") [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.JupyterNotebookFormatTests.Files_that_are_not_nbformat_4_notebooks_are_rejected(json: "not json") [6 ms]
+  Passed TabStudio.Notebooks.Tests.JupyterNotebookFormatTests.Files_that_are_not_nbformat_4_notebooks_are_rejected(json: "{\"cells\": [], \"metadata\": {}, \"nbformat\": 3,"···) [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.JupyterNotebookFormatTests.Files_that_are_not_nbformat_4_notebooks_are_rejected(json: "{\"metadata\": {}, \"nbformat\": 4, \"nbformat_min"···) [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.JupyterNotebookFormatTests.Reads_cells_languages_and_outputs_from_a_VS_Code_notebook [< 1 ms]
+  Passed TabStudio.Notebooks.Tests.JupyterNotebookFormatTests.A_Jupyter_notebook_with_attachments_raw_cells_and_JSON_output_saves_back_byte_for_byte [< 1 ms]
