@@ -21,7 +21,7 @@ public sealed class Icon : MarshalByRefObject, ICloneable, IDisposable
         {
             if (_handle == IntPtr.Zero)
             {
-                _handle = (IntPtr)Interlocked.Increment(ref _nextHandle);
+                _handle = new IntPtr(Interlocked.Increment(ref _nextHandle));
                 Handles[_handle] = new WeakReference<Icon>(this);
             }
 
