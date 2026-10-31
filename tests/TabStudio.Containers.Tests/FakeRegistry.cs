@@ -31,6 +31,7 @@ internal sealed class FakeRegistry : IDisposable
     public int BlobRequests { get; private set; }
     public int TokenRequests { get; private set; }
     public string? RequiredBasic { get; set; }
+    public string? TokenRealm { get; set; }
     public bool CorruptBlobs { get; set; }
 
     public void Add(string path, byte[] bytes, string mediaType) => _content[path] = (bytes, mediaType);
@@ -137,7 +138,7 @@ internal sealed class FakeRegistry : IDisposable
         if (context.Request.Headers["Authorization"] != "Bearer secret-token")
         {
             response.StatusCode = 401;
-            response.Headers["WWW-Authenticate"] = $"Bearer realm=\"http://{Host}/token\",service=\"fake\"";
+            response.Headers["WWW-Authenticate"] = $"Bearer realm=\"{TokenRealm ?? $"http://{Host}/token"}\",service=\"fake\"";
             return;
         }
 

@@ -278,6 +278,11 @@ public sealed class RegistryClient
             throw new RegistryException("The registry asked for a token without saying where to get it.");
         }
 
+        if (realm.Scheme == "http" && !realm.IsLoopback)
+        {
+            throw new RegistryException("The registry's token service must use HTTPS except on loopback.");
+        }
+
         var query = new StringBuilder();
         if (challenge.Service is { } service) query.Append("service=").Append(Uri.EscapeDataString(service));
         if (challenge.Scope is { } scope)

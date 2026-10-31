@@ -153,6 +153,22 @@ public sealed class RegistryTests
         Assert.Equal("repository:library/a:pull,push", values["scope"]);
     }
 
+    [Theory]
+    [InlineData("http://tokens.example/token")]
+    [InlineData("http://localhost.attacker.example/token")]
+    public async Task A_registry_cannot_downgrade_its_token_service_to_remote_plain_HTTP(string realm)
+    {
+        using var registry = new FakeRegistry { TokenRealm = realm };
+        using var http = new HttpClient();
+        var credentials = new SessionRegistryCredentialStore();
+        await credentials.SetAsync(registry.Host, new RegistryCredential("me", "pat"));
+        var client = new RegistryClient(http, credentials);
+        var error = await Assert.ThrowsAsync<RegistryException>(() => client.ResolveAsync(
+            ImageReference.Parse($"{registry.Host}/private/app:1"), [OciPlatform.Linux("arm64")]));
+        Assert.Contains("must use HTTPS", error.Message, StringComparison.Ordinal);
+        Assert.Equal(0, registry.TokenRequests);
+    }
+
     private sealed class InlineProgress(Action<PullProgress> report) : IProgress<PullProgress>
     {
         public void Report(PullProgress value) => report(value);
