@@ -30,10 +30,10 @@
                                HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Border>
         <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center" Spacing="2">
-          <TextBlock Classes="h1" FontSize="16" Text="Desktop mode" />
+          <TextBlock Classes="h1" FontSize="{DynamicResource Type.Heading}" Text="Desktop mode" />
           <TextBlock Classes="muted small" Text="{Binding DisplayDescription}" TextTrimming="CharacterEllipsis" />
         </StackPanel>
-        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Focusable="False" Height="44" Padding="14,0"
+        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Focusable="False" Padding="14,0"
                 ToolTip.Tip="How big the IDE is on the display">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <controls:StrokeIcon Data="{StaticResource Icon.Scale}" Size="15" />
@@ -58,7 +58,7 @@
             </MenuFlyout>
           </Button.Flyout>
         </Button>
-        <Button Grid.Column="3" Theme="{StaticResource AccentButton}" Focusable="False" Height="44" Margin="10,0,0,0" Padding="16,0"
+        <Button Grid.Column="3" Theme="{StaticResource AccentButton}" Focusable="False" Margin="10,0,0,0" Padding="16,0"
                 Command="{Binding ExitCommand}" ToolTip.Tip="Bring the IDE back to the tablet">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <controls:StrokeIcon Data="{StaticResource Icon.Tablet}" Size="16" />
@@ -78,9 +78,9 @@
     <Border x:Name="PaneTabs" DockPanel.Dock="Top" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}"
             BorderThickness="0,0,0,1" IsVisible="False">
       <StackPanel Orientation="Horizontal" Margin="8,0">
-        <Button Theme="{StaticResource PanelTabButton}" Focusable="False" MinHeight="44" FontSize="14" Content="Toolbox"
+        <Button Theme="{StaticResource PanelTabButton}" Focusable="False" FontSize="{DynamicResource Type.Large}" Content="Toolbox"
                 Classes.selected="{Binding Companion.IsToolboxPane}" Command="{Binding Companion.ShowToolboxCommand}" />
-        <Button Theme="{StaticResource PanelTabButton}" Focusable="False" MinHeight="44" FontSize="14" Content="Properties"
+        <Button Theme="{StaticResource PanelTabButton}" Focusable="False" FontSize="{DynamicResource Type.Large}" Content="Properties"
                 Classes.selected="{Binding Companion.IsPropertiesPane}" Command="{Binding Companion.ShowPropertiesCommand}" />
       </StackPanel>
     </Border>
@@ -107,7 +107,7 @@
       <!-- The big screen shows the start screen. -->
       <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10" Margin="32" MaxWidth="420"
                   IsVisible="{Binding !Companion.HasWorkspace}">
-        <controls:StrokeIcon Data="{StaticResource Icon.Monitor}" Size="44" Foreground="{DynamicResource Brush.TextDisabled}" HorizontalAlignment="Center" />
+        <controls:StrokeIcon Data="{StaticResource Icon.Monitor}" Size="44" Foreground="{DynamicResource Brush.TextMuted}" HorizontalAlignment="Center" />
         <TextBlock Classes="h1" Text="Open a solution on the big screen" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
         <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center"
                    Text="The Toolbox, the Properties panel and the Run and debugger buttons appear here for the solution open on the display." />

@@ -1,0 +1,33 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!--
+    The type scale (docs/design/README.md, "Type"): every font size of the IDE, at the default text size.
+    Accessibility/TypeScale.cs sets the same keys in the app's resources for the text size in use, so views read them
+    with {DynamicResource Type.Body} and follow Tools > Text Size, and Android's font size, at once. Never a number.
+  -->
+
+  <x:Double x:Key="Type.Badge">9.5</x:Double>
+  <x:Double x:Key="Type.Micro">10.5</x:Double>
+  <x:Double x:Key="Type.Caption">11</x:Double>
+  <x:Double x:Key="Type.Fine">11.5</x:Double>
+  <x:Double x:Key="Type.Small">12</x:Double>
+  <x:Double x:Key="Type.Body">12.5</x:Double>
+  <x:Double x:Key="Type.Section">13</x:Double>
+  <x:Double x:Key="Type.Lead">13.5</x:Double>
+  <x:Double x:Key="Type.Large">14</x:Double>
+  <x:Double x:Key="Type.Code">14</x:Double>
+  <x:Double x:Key="Type.Subtitle">15</x:Double>
+  <x:Double x:Key="Type.Heading">16</x:Double>
+  <x:Double x:Key="Type.Title">18</x:Double>
+  <x:Double x:Key="Type.Hero">20</x:Double>
+  <x:Double x:Key="Type.Display">26</x:Double>
+  <x:Double x:Key="Type.Line.Body">18</x:Double>
+  <x:Double x:Key="Type.Line.Relaxed">20</x:Double>
+
+  <!-- Touch targets (Accessibility/TouchTargets.cs sets them per window: 48 on a phone, 44 on a tablet, 32 in desktop mode). -->
+  <x:Double x:Key="Target.Size">44</x:Double>
+  <x:Double x:Key="Target.Visual">40</x:Double>
+  <Thickness x:Key="Target.Inset">2</Thickness>
+
+</ResourceDictionary>

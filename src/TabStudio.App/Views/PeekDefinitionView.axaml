@@ -33,7 +33,7 @@
           </Button>
         </Grid>
       </Border>
-      <ae:TextEditor x:Name="Editor" IsReadOnly="True" ShowLineNumbers="True" FontFamily="{DynamicResource CodeFont}" FontSize="13"
+      <ae:TextEditor x:Name="Editor" AutomationProperties.Name="Peek Definition" IsReadOnly="True" ShowLineNumbers="True" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Section}"
                      HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Padding="0,4,0,0" />
     </DockPanel>
   </Border>

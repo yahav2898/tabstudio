@@ -12,14 +12,14 @@
       <Grid ColumnDefinitions="Auto,*,Auto">
         <controls:StrokeIcon Data="{StaticResource Icon.Terminal}" Size="16" Margin="2,0,10,0"
                              Foreground="{DynamicResource Brush.AccentText}" />
-        <TextBox x:Name="Input" Grid.Column="1" Classes="mono" MinHeight="36"
+        <TextBox x:Name="Input" Grid.Column="1" Classes="mono"
                  Watermark="Type input for the program and press Enter"
                  Text="{Binding InputText}" />
-        <Button Grid.Column="2" Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Margin="8,0,0,0"
+        <Button Grid.Column="2" Theme="{StaticResource AccentButton}" Margin="8,0,0,0"
                 Content="Send" Command="{Binding SubmitInputCommand}" />
       </Grid>
     </Border>
-    <ae:TextEditor x:Name="Editor" IsReadOnly="True" ShowLineNumbers="False" WordWrap="True" FontSize="13"
+    <ae:TextEditor x:Name="Editor" AutomationProperties.Name="Output" IsReadOnly="True" ShowLineNumbers="False" WordWrap="True" FontSize="{DynamicResource Type.Section}"
                    Padding="12,6,12,6" />
   </DockPanel>
 </UserControl>

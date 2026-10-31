@@ -10,11 +10,10 @@
     <Style Selector="Button.key">
       <Setter Property="Focusable" Value="False" />
       <Setter Property="MinWidth" Value="46" />
-      <Setter Property="Height" Value="34" />
-      <Setter Property="MinHeight" Value="34" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="10,0" />
       <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
-      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     </Style>
     <Style Selector="Button.key.selected /template/ ContentPresenter#PART_ContentPresenter">
       <Setter Property="Background" Value="{DynamicResource Brush.Accent}" />
@@ -54,7 +53,7 @@
     </Border>
 
     <Panel>
-      <controls:TerminalView x:Name="Screen" Terminal="{Binding}" FontSize="13" Margin="10,6,2,0" />
+      <controls:TerminalView x:Name="Screen" Terminal="{Binding}" FontSize="{DynamicResource Type.Section}" Margin="10,6,2,0" />
 
       <!-- Instead of the shell: the first-time setup, or why the shell cannot start. -->
       <Border IsVisible="{Binding ShowsMessage}" Background="{DynamicResource Brush.Toolbar}">
@@ -63,19 +62,19 @@
             <controls:StrokeIcon Data="{StaticResource Icon.Terminal}" Size="21" Foreground="{DynamicResource Brush.AccentText}" HorizontalAlignment="Center" VerticalAlignment="Center" />
           </Border>
           <StackPanel Grid.Column="1" Spacing="10">
-            <TextBlock Classes="h2" FontSize="16" Text="Terminal" />
-            <TextBlock Classes="muted" FontSize="13" TextWrapping="Wrap" Text="{Binding Message}" />
+            <TextBlock Classes="h2" FontSize="{DynamicResource Type.Heading}" Text="Terminal" />
+            <TextBlock Classes="muted" FontSize="{DynamicResource Type.Section}" TextWrapping="Wrap" Text="{Binding Message}" />
             <StackPanel Spacing="6" IsVisible="{Binding IsSettingUp}">
               <ProgressBar Minimum="0" Maximum="100" Value="{Binding SetupProgress}" Height="5" MinHeight="5" CornerRadius="3"
                            Foreground="{DynamicResource Brush.Accent}" Background="{DynamicResource Brush.Control}" />
               <TextBlock Classes="muted small" Text="{Binding SetupText}" TextTrimming="CharacterEllipsis" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
-              <Button Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Content="Set Up the Terminal"
+              <Button Theme="{StaticResource AccentButton}" Content="Set Up the Terminal"
                       IsVisible="{Binding NeedsSetup}" Command="{Binding SetUpCommand}" />
-              <Button Theme="{StaticResource SecondaryButton}" Height="36" MinHeight="36" Padding="14,0" Content="Try Again"
+              <Button Theme="{StaticResource SecondaryButton}" Padding="14,0" Content="Try Again"
                       IsVisible="{Binding !NeedsSetup}" Command="{Binding RestartCommand}" />
-              <Button Theme="{StaticResource SecondaryButton}" Height="36" MinHeight="36" Padding="14,0" Content="Toolchain Store"
+              <Button Theme="{StaticResource SecondaryButton}" Padding="14,0" Content="Toolchain Store"
                       Command="{Binding OpenStoreCommand}" />
             </StackPanel>
           </StackPanel>

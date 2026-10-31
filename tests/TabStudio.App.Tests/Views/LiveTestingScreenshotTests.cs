@@ -58,10 +58,11 @@ public sealed class LiveTestingScreenshotTests : IClassFixture<SharedToolchain>,
 
         pricing.Document.Replace(pricing.Document.Text.IndexOf("20;", StringComparison.Ordinal), 2, "17");
         Dispatcher.UIThread.RunJobs();
-        UiTestHelpers.SaveScreenshot(window, "live-03-editing");
 
+        // Stale as soon as the line changes; the screenshot's checks take long enough for the next run to finish.
         var rateLine = PricingSolution.LineOf("var rate = 20;");
         Assert.True(MarkerOn(pricing, rateLine).IsStale);
+        UiTestHelpers.SaveScreenshot(window, "live-03-editing");
         await UiTestHelpers.WaitUntilAsync(
             () => MarkerOn(pricing, rateLine) is { State: LineCoverageState.Covered, IsStale: false } && workspace.LiveTesting.State == LiveTestingState.UpToDate,
             RunTimeout,

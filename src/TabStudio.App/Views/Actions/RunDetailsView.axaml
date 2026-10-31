@@ -9,11 +9,10 @@
   <UserControl.Styles>
     <!-- The run's actions wrap two to a row in the narrow side bar. -->
     <Style Selector="WrapPanel.runActions > Button">
-      <Setter Property="Height" Value="38" />
-      <Setter Property="MinHeight" Value="38" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="10,0" />
       <Setter Property="Margin" Value="0,0,6,6" />
-      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     </Style>
   </UserControl.Styles>
 
@@ -21,11 +20,11 @@
   <DockPanel>
     <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="4,4,8,6">
       <StackPanel Spacing="6">
-        <Button Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" Padding="8,0" HorizontalAlignment="Left"
+        <Button Theme="{StaticResource ToolButton}" Padding="8,0" HorizontalAlignment="Left"
                 ToolTip.Tip="Back to the runs" Command="{Binding BackCommand}">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <controls:StrokeIcon Data="{StaticResource Icon.Back}" Size="15" />
-            <TextBlock Text="Runs" VerticalAlignment="Center" FontSize="12.5" />
+            <TextBlock Text="Runs" VerticalAlignment="Center" FontSize="{DynamicResource Type.Body}" />
           </StackPanel>
         </Button>
 
@@ -91,14 +90,14 @@
             <DataTemplate DataType="actions:JobItemViewModel">
               <StackPanel Margin="0,0,0,2">
                 <Grid ColumnDefinitions="30,*">
-                  <Button Theme="{StaticResource ToolButton}" Width="30" MinWidth="30" Height="42" MinHeight="42" Padding="0"
+                  <Button Theme="{StaticResource ToolButton}" Padding="0"
                           ToolTip.Tip="Show or hide the steps" Command="{Binding ToggleExpandedCommand}" IsVisible="{Binding HasSteps}">
                     <Panel>
                       <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" IsVisible="{Binding IsExpanded}" />
                       <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="14" IsVisible="{Binding !IsExpanded}" />
                     </Panel>
                   </Button>
-                  <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Height="42" MinHeight="42" Padding="6,0"
+                  <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Padding="6,0"
                           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                           ToolTip.Tip="Open the job's log" Command="{Binding OpenLogCommand}">
                     <Grid ColumnDefinitions="Auto,*,Auto,Auto">
@@ -116,7 +115,7 @@
                 <ItemsControl ItemsSource="{Binding Steps}" Margin="30,0,0,4" IsVisible="{Binding IsExpanded}">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="actions:StepItemViewModel">
-                      <Button Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="6,0"
+                      <Button Theme="{StaticResource ToolButton}" Padding="6,0"
                               HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                               ToolTip.Tip="Open the log at this step" Command="{Binding OpenLogCommand}">
                         <Grid ColumnDefinitions="Auto,26,*,Auto">
@@ -125,7 +124,7 @@
                                                Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
                                                Classes.spinning="{Binding Visual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
                           <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding Number}" VerticalAlignment="Center" />
-                          <TextBlock Grid.Column="2" FontSize="12.5" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Grid.Column="2" FontSize="{DynamicResource Type.Body}" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
                           <TextBlock Grid.Column="3" Classes="muted small" Text="{Binding DurationText}" Margin="8,0,0,0" VerticalAlignment="Center" />
                         </Grid>
                       </Button>

@@ -1,4 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:a11y="using:TabStudio.App.Accessibility"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:vm="using:TabStudio.App.ViewModels"
@@ -24,7 +25,7 @@
         <Button Grid.Column="2" Theme="{StaticResource ToolButton}" ToolTip.Tip="Reload" Command="{Binding ReloadCommand}">
           <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="15" />
         </Button>
-        <TextBox x:Name="Address" Grid.Column="3" Margin="4,0" Classes="mono" FontSize="12" VerticalAlignment="Center"
+        <TextBox x:Name="Address" Grid.Column="3" Margin="4,0" Classes="mono" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center"
                  Text="{Binding AddressText}" Watermark="Address">
           <TextBox.InnerLeftContent>
             <controls:StrokeIcon Data="{StaticResource Icon.Globe}" Size="13" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}" />
@@ -45,11 +46,11 @@
 
     <Panel>
       <!-- The embedded browser goes here. -->
-      <Panel x:Name="BrowserHost" IsVisible="{Binding IsRunning}" />
+      <Panel x:Name="BrowserHost" a11y:A11y.IsContent="True" IsVisible="{Binding IsRunning}" />
 
       <!-- No embedded browser, or the app is not running. -->
       <StackPanel x:Name="Placeholder" Margin="24" Spacing="12" VerticalAlignment="Center" MaxWidth="360">
-        <controls:StrokeIcon Data="{StaticResource Icon.Globe}" Size="34" Foreground="{DynamicResource Brush.Accent}" HorizontalAlignment="Center" />
+        <controls:StrokeIcon Data="{StaticResource Icon.Globe}" Size="34" Foreground="{DynamicResource Brush.AccentText}" HorizontalAlignment="Center" />
         <TextBlock Classes="h2" Text="{Binding Title}" HorizontalAlignment="Center" />
         <TextBlock Classes="muted" Text="{Binding StatusText}" TextWrapping="Wrap" TextAlignment="Center" />
         <Button Theme="{StaticResource AccentButton}" HorizontalAlignment="Center" Command="{Binding OpenInBrowserCommand}" IsVisible="{Binding IsRunning}">

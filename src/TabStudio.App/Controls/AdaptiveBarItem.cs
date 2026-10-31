@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using TabStudio.App.Accessibility;
 
 namespace TabStudio.App.Controls;
 
@@ -159,7 +160,15 @@ public class AdaptiveBarItem : Button
         else if (change.Property == FontSizeProperty)
         {
             // The label is body text unless the item or its theme sets a size, as the status bar's 12 does.
-            _face.Label.FontSize = IsSet(FontSizeProperty) ? FontSize : BodyFontSize;
+            if (IsSet(FontSizeProperty))
+            {
+                TypeScale.SetBaseFontSize(_face.Label, double.NaN);
+                _face.Label.FontSize = FontSize;
+            }
+            else
+            {
+                TypeScale.SetBaseFontSize(_face.Label, BodyFontSize);
+            }
         }
     }
 
@@ -230,11 +239,12 @@ public class AdaptiveBarItem : Button
         {
             Children.Add(Icon);
             Children.Add(Label);
+            TypeScale.SetBaseFontSize(Label, BodyFontSize);
         }
 
         public StrokeIcon Icon { get; } = new() { VerticalAlignment = VerticalAlignment.Center };
 
-        public TextBlock Label { get; } = new() { VerticalAlignment = VerticalAlignment.Center, FontSize = BodyFontSize };
+        public TextBlock Label { get; } = new() { VerticalAlignment = VerticalAlignment.Center };
 
         public double FullWidth { get; private set; }
 

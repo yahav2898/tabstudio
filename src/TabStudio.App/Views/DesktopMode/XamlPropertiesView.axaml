@@ -11,10 +11,10 @@
     is left; an empty value or the reset button takes the attribute out.
   -->
   <DockPanel>
-    <Border DockPanel.Dock="Top" Classes="paneHeader" Height="44" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="14,0">
+    <Border DockPanel.Dock="Top" Classes="paneHeader" MinHeight="44" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="14,0">
       <StackPanel Orientation="Horizontal" Spacing="8">
         <controls:StrokeIcon Data="{StaticResource Icon.Properties}" Size="16" Foreground="{DynamicResource Brush.AccentText}" />
-        <TextBlock Classes="header" Text="Properties" FontSize="14" />
+        <TextBlock Classes="header" Text="Properties" FontSize="{DynamicResource Type.Large}" />
       </StackPanel>
     </Border>
 
@@ -22,11 +22,11 @@
     <Border DockPanel.Dock="Top" Padding="14,10,14,6" IsVisible="{Binding HasElement}">
       <StackPanel Spacing="3">
         <StackPanel Orientation="Horizontal" Spacing="8">
-          <Border Classes="badge markup" Background="{DynamicResource Brush.Control}" Height="18">
+          <Border Classes="badge markup" Background="{DynamicResource Brush.Control}" MinHeight="18">
             <TextBlock Text="XAML" VerticalAlignment="Center" />
           </Border>
-          <TextBlock Text="{Binding ElementName}" FontSize="17" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
-          <TextBlock Text="{Binding ElementId}" FontSize="14" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center"
+          <TextBlock Text="{Binding ElementName}" FontSize="{DynamicResource Type.Heading}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding ElementId}" FontSize="{DynamicResource Type.Large}" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center"
                      IsVisible="{Binding ElementId, Converter={x:Static ObjectConverters.IsNotNull}}" />
         </StackPanel>
         <TextBlock Classes="small muted" Text="{Binding Location}" />
@@ -54,7 +54,7 @@
       <Grid ColumnDefinitions="*,*,Auto">
         <TextBox x:Name="NewNameBox" Classes="large mono" Watermark="Property" Text="{Binding NewName}" />
         <TextBox x:Name="NewValueBox" Grid.Column="1" Classes="large mono" Margin="8,0" Watermark="Value" Text="{Binding NewValue}" />
-        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Focusable="False" Height="44" Padding="14,0" Command="{Binding AddPropertyCommand}">
+        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Focusable="False" Padding="14,0" Command="{Binding AddPropertyCommand}">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="14" />
             <TextBlock Text="Add" VerticalAlignment="Center" />
@@ -70,7 +70,7 @@
             <DataTemplate DataType="dm:XamlPropertyGroupViewModel">
               <StackPanel IsVisible="{Binding IsVisible}">
                 <Button Theme="{StaticResource ToolButton}" Focusable="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        MinHeight="40" CornerRadius="0" Padding="12,0" Background="{DynamicResource Brush.Toolbar}"
+                        CornerRadius="0" Padding="12,0" Background="{DynamicResource Brush.Toolbar}"
                         Command="{Binding ToggleExpandedCommand}">
                   <StackPanel Orientation="Horizontal" Spacing="8">
                     <Panel Width="14">
@@ -93,15 +93,15 @@
                             <StackPanel Orientation="Horizontal" Spacing="7">
                               <Border Width="7" Height="7" CornerRadius="2" Background="{DynamicResource Brush.Accent}" VerticalAlignment="Center"
                                       IsVisible="{Binding IsSet}" />
-                              <TextBlock Text="{Binding Name}" FontSize="13" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+                              <TextBlock Text="{Binding Name}" FontSize="{DynamicResource Type.Section}" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
                             </StackPanel>
-                            <TextBlock Text="{Binding TypeName}" FontSize="11" Foreground="{DynamicResource Brush.TextMuted}" TextTrimming="CharacterEllipsis"
+                            <TextBlock Text="{Binding TypeName}" FontSize="{DynamicResource Type.Caption}" Foreground="{DynamicResource Brush.TextMuted}" TextTrimming="CharacterEllipsis"
                                      IsVisible="{Binding ShowsTypeName}" />
                           </StackPanel>
                           <TextBox Grid.Column="1" Classes="large mono" Watermark="Not set" Text="{Binding Value}" IsVisible="{Binding UsesText}" />
-                          <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" MinHeight="44" PlaceholderText="Not set"
+                          <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" PlaceholderText="Not set"
                                     ItemsSource="{Binding Choices}" SelectedItem="{Binding SelectedChoice}" IsVisible="{Binding UsesChoices}" />
-                          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Focusable="False" Width="44" Height="44" HorizontalAlignment="Right"
+                          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Focusable="False" HorizontalAlignment="Right"
                                   Command="{Binding ResetCommand}" IsVisible="{Binding IsSet}" ToolTip.Tip="Reset: take it out of the XAML">
                             <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="13" />
                           </Button>
@@ -117,7 +117,7 @@
       </ScrollViewer>
 
       <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10" Margin="32" MaxWidth="380" IsVisible="{Binding !HasElement}">
-        <controls:StrokeIcon Data="{StaticResource Icon.Properties}" Size="40" Foreground="{DynamicResource Brush.TextDisabled}" HorizontalAlignment="Center" />
+        <controls:StrokeIcon Data="{StaticResource Icon.Properties}" Size="40" Foreground="{DynamicResource Brush.TextMuted}" HorizontalAlignment="Center" />
         <TextBlock Classes="h2" Text="No element at the caret" HorizontalAlignment="Center" />
         <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center"
                    Text="Put the caret in an element of the XAML on the big screen to see and change its properties here." />

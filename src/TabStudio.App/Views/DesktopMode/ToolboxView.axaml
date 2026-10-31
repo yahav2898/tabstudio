@@ -12,7 +12,7 @@
       <Grid ColumnDefinitions="Auto,*">
         <StackPanel Orientation="Horizontal" Spacing="8">
           <controls:StrokeIcon Data="{StaticResource Icon.Toolbox}" Size="16" Foreground="{DynamicResource Brush.AccentText}" />
-          <TextBlock Classes="header" Text="Toolbox" FontSize="14" />
+          <TextBlock Classes="header" Text="Toolbox" FontSize="{DynamicResource Type.Large}" />
         </StackPanel>
         <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding Title}" HorizontalAlignment="Right" VerticalAlignment="Center"
                    IsVisible="{Binding IsAvailable}" />
@@ -42,7 +42,7 @@
             <DataTemplate DataType="dm:ToolboxCategoryViewModel">
               <StackPanel IsVisible="{Binding IsVisible}">
                 <Button Theme="{StaticResource ToolButton}" Focusable="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        MinHeight="44" Padding="6,0" Command="{Binding ToggleExpandedCommand}">
+                        Padding="6,0" Command="{Binding ToggleExpandedCommand}">
                   <StackPanel Orientation="Horizontal" Spacing="8">
                     <Panel Width="14">
                       <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" IsVisible="{Binding IsExpanded}" />
@@ -72,7 +72,7 @@
                           </Border>
                           <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" Spacing="2">
                             <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.TextBright}" />
-                            <TextBlock Text="{Binding Description}" FontSize="11.5" FontWeight="Normal" Foreground="{DynamicResource Brush.TextMuted}"
+                            <TextBlock Text="{Binding Description}" FontSize="{DynamicResource Type.Fine}" FontWeight="Normal" Foreground="{DynamicResource Brush.TextMuted}"
                                        TextTrimming="CharacterEllipsis" />
                           </StackPanel>
                         </Grid>
@@ -93,7 +93,7 @@
 
       <!-- Not a XAML file of a framework the Toolbox knows. -->
       <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10" Margin="32" MaxWidth="380" IsVisible="{Binding !IsAvailable}">
-        <controls:StrokeIcon Data="{StaticResource Icon.Toolbox}" Size="40" Foreground="{DynamicResource Brush.TextDisabled}" HorizontalAlignment="Center" />
+        <controls:StrokeIcon Data="{StaticResource Icon.Toolbox}" Size="40" Foreground="{DynamicResource Brush.TextMuted}" HorizontalAlignment="Center" />
         <TextBlock Classes="h2" Text="No controls for this file" HorizontalAlignment="Center" />
         <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center"
                    Text="The Toolbox fills in when an Avalonia XAML file (.axaml) is the active document on the big screen. Tap a control to put it at the caret." />

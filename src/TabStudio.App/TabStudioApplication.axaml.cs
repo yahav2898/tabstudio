@@ -56,6 +56,8 @@ public sealed partial class TabStudioApplication : Application
         HiddenAnimations.Start();
         // A long press on a button names it, as a hover does with a mouse.
         Controls.TouchToolTips.Start();
+        // Text size, touch targets, accessible names, no animations and a mirrored layout when the device asks.
+        Accessibility.AccessibilityFeatures.Start(Accessibility.SystemAccessibility.Current);
         if (ApplicationLifetime is not null)
         {
             Services.GetRequiredService<AppearanceService>().Apply();

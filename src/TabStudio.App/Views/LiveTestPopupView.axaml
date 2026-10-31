@@ -16,25 +16,25 @@
                              Data="{Binding State, Converter={x:Static conv:LiveTestingConverters.CoverageIcon}}"
                              Foreground="{Binding State, Converter={x:Static conv:LiveTestingConverters.CoverageBrush}}" />
         <StackPanel Grid.Column="1" Spacing="2">
-          <TextBlock Classes="h2" FontSize="13.5" Text="{Binding Title}" TextWrapping="Wrap" />
-          <TextBlock Classes="muted" FontSize="12" Text="{Binding Summary}" TextWrapping="Wrap" />
+          <TextBlock Classes="h2" FontSize="{DynamicResource Type.Lead}" Text="{Binding Title}" TextWrapping="Wrap" />
+          <TextBlock Classes="muted" FontSize="{DynamicResource Type.Small}" Text="{Binding Summary}" TextWrapping="Wrap" />
         </StackPanel>
       </Grid>
 
       <!-- Run all the tests of the line -->
       <Border DockPanel.Dock="Bottom" Padding="8,4" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0"
               IsVisible="{Binding CanRunAll}">
-        <Button Theme="{StaticResource ToolButton}" MinHeight="34" Height="34" Padding="8,0" HorizontalAlignment="Left"
+        <Button Theme="{StaticResource ToolButton}" Padding="8,0" HorizontalAlignment="Left"
                 Command="{Binding RunAllCommand}">
           <StackPanel Orientation="Horizontal" Spacing="7">
             <controls:StrokeIcon Data="{StaticResource Icon.RunAll}" IsFilled="True" Size="13" Foreground="{DynamicResource Brush.Success}" />
-            <TextBlock Classes="link" FontSize="12.5" Text="Run All Covering Tests" VerticalAlignment="Center" />
+            <TextBlock Classes="link" FontSize="{DynamicResource Type.Body}" Text="Run All Covering Tests" VerticalAlignment="Center" />
           </StackPanel>
         </Button>
       </Border>
 
       <Panel>
-        <TextBlock Classes="muted" FontSize="12.5" TextWrapping="Wrap" Margin="14,4,14,14" IsVisible="{Binding !HasTests}"
+        <TextBlock Classes="muted" FontSize="{DynamicResource Type.Body}" TextWrapping="Wrap" Margin="14,4,14,14" IsVisible="{Binding !HasTests}"
                    Text="Write a test that calls this code, or include the tests that do, and the marker turns green." />
 
         <!-- The tests: tap one to open it, or run it again -->
@@ -43,7 +43,7 @@
             <ItemsControl.ItemTemplate>
               <DataTemplate DataType="vm:CoveringTestViewModel">
                 <Grid ColumnDefinitions="*,Auto" MinHeight="44" Margin="0,1">
-                  <Button Theme="{StaticResource ToolButton}" MinHeight="42" Padding="8,5" CornerRadius="6"
+                  <Button Theme="{StaticResource ToolButton}" Padding="8,5" CornerRadius="6"
                           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch"
                           ToolTip.Tip="{Binding Description}" Command="{Binding GoToCommand}">
                     <Grid ColumnDefinitions="Auto,*,Auto">
@@ -51,18 +51,18 @@
                                            Data="{Binding State, Converter={x:Static conv:TestConverters.StateIcon}}"
                                            Foreground="{Binding State, Converter={x:Static conv:TestConverters.StateBrush}}" />
                       <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
-                        <TextBlock FontSize="13" Text="{Binding Name}" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.Text}" />
-                        <TextBlock Classes="muted" FontSize="11.5" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock FontSize="{DynamicResource Type.Section}" Text="{Binding Name}" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.Text}" />
+                        <TextBlock Classes="muted" FontSize="{DynamicResource Type.Fine}" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
                         <!-- Why it failed, as Test Explorer's details say it -->
-                        <TextBlock FontSize="11.5" Margin="0,2,0,0" Text="{Binding Failure}" IsVisible="{Binding HasFailure}"
+                        <TextBlock FontSize="{DynamicResource Type.Fine}" Margin="0,2,0,0" Text="{Binding Failure}" IsVisible="{Binding HasFailure}"
                                    TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis"
                                    Foreground="{DynamicResource Brush.Error}" />
                       </StackPanel>
-                      <TextBlock Grid.Column="2" Classes="muted" FontSize="11.5" Margin="8,1,2,0" VerticalAlignment="Top"
+                      <TextBlock Grid.Column="2" Classes="muted" FontSize="{DynamicResource Type.Fine}" Margin="8,1,2,0" VerticalAlignment="Top"
                                  Text="{Binding DurationText}" />
                     </Grid>
                   </Button>
-                  <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Width="40" Height="40" MinWidth="40" MinHeight="40" Padding="0"
+                  <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Padding="0"
                           VerticalAlignment="Top" Margin="2,1,0,0"
                           ToolTip.Tip="Run Test" Command="{Binding RunCommand}">
                     <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="12" Foreground="{DynamicResource Brush.Success}" />

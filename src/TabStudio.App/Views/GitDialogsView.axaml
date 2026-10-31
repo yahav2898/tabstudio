@@ -15,14 +15,14 @@
               BoxShadow="{DynamicResource Shadow.Dialog}">
         <DockPanel>
           <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,10">
-            <TextBlock Classes="h2" FontSize="15" Text="Switch Branch" />
+            <TextBlock Classes="h2" FontSize="{DynamicResource Type.Subtitle}" Text="Switch Branch" />
             <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis"><Run
               Text="{Binding RepositoryName}" /><Run Text=" · on " /><Run Text="{Binding BranchName}" FontWeight="SemiBold" /></TextBlock>
           </StackPanel>
           <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
-            <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Cancel" Command="{Binding CloseBranchPickerCommand}" />
+            <Button Theme="{StaticResource SecondaryButton}" Padding="18,0" Content="Cancel" Command="{Binding CloseBranchPickerCommand}" />
           </StackPanel>
-          <Button DockPanel.Dock="Top" Theme="{StaticResource ToolButton}" Height="44" Padding="10,0"
+          <Button DockPanel.Dock="Top" Theme="{StaticResource ToolButton}" Padding="10,0"
                   HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding NewBranchCommand}">
             <StackPanel Orientation="Horizontal" Spacing="10">
               <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="16" Foreground="{DynamicResource Brush.AccentText}" />
@@ -39,7 +39,7 @@
               <ItemsControl ItemsSource="{Binding Branches}">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate DataType="vm:GitBranchItemViewModel">
-                    <Button Theme="{StaticResource ToolButton}" Height="44" Padding="10,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                    <Button Theme="{StaticResource ToolButton}" Padding="10,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                             Classes.selected="{Binding IsCurrent}" Command="{Binding Select}" CommandParameter="{Binding}">
                       <Grid ColumnDefinitions="Auto,*,Auto,Auto">
                         <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="15" Margin="0,0,10,0" />
@@ -66,14 +66,14 @@
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
               BoxShadow="{DynamicResource Shadow.Dialog}">
         <StackPanel Spacing="10">
-          <TextBlock Classes="h2" FontSize="15" Text="Create a Pull Request" />
+          <TextBlock Classes="h2" FontSize="{DynamicResource Type.Subtitle}" Text="Create a Pull Request" />
           <TextBlock Classes="muted small" TextWrapping="Wrap"><Run
             Text="Asks to merge " /><Run Text="{Binding BranchName}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
             Text=" into the branch below. Reviewers see it on GitHub." /></TextBlock>
           <TextBlock Classes="label" Text="Into" />
-          <TextBox Classes="mono" MinHeight="38" Text="{Binding PullRequestBase}" />
+          <TextBox Classes="mono" Text="{Binding PullRequestBase}" />
           <TextBlock Classes="label" Text="Title" />
-          <TextBox MinHeight="38" Text="{Binding PullRequestTitle}" Watermark="What the changes do" />
+          <TextBox Text="{Binding PullRequestTitle}" Watermark="What the changes do" />
           <TextBlock Classes="label" Text="Description" />
           <TextBox Height="110" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" Padding="10,8"
                    Text="{Binding PullRequestDescription}" Watermark="Optional. Markdown works here." />
@@ -81,8 +81,8 @@
           <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding PullRequestErrorText}"
                      IsVisible="{Binding PullRequestErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,4,0,0">
-            <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Cancel" Command="{Binding ClosePullRequestFormCommand}" />
-            <Button Theme="{StaticResource AccentButton}" Height="40" Padding="18,0" Command="{Binding CreatePullRequestCommand}">
+            <Button Theme="{StaticResource SecondaryButton}" Padding="18,0" Content="Cancel" Command="{Binding ClosePullRequestFormCommand}" />
+            <Button Theme="{StaticResource AccentButton}" Padding="18,0" Command="{Binding CreatePullRequestCommand}">
               <StackPanel Orientation="Horizontal" Spacing="8">
                 <controls:StrokeIcon Data="{StaticResource Icon.PullRequest}" Size="15" />
                 <TextBlock Text="Create" VerticalAlignment="Center" />
@@ -100,13 +100,13 @@
               BoxShadow="{DynamicResource Shadow.Dialog}">
         <DockPanel>
           <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,10">
-            <TextBlock Classes="h2" FontSize="15" Text="History" />
+            <TextBlock Classes="h2" FontSize="{DynamicResource Type.Subtitle}" Text="History" />
             <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis"><Run
               Text="{Binding RepositoryName}" /><Run Text=" · " /><Run Text="{Binding BranchName}" FontWeight="SemiBold" /><Run
               Text=" · newest first; tap a commit to see it on GitHub" /></TextBlock>
           </StackPanel>
           <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
-            <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Close" Command="{Binding CloseHistoryCommand}" />
+            <Button Theme="{StaticResource SecondaryButton}" Padding="18,0" Content="Close" Command="{Binding CloseHistoryCommand}" />
           </StackPanel>
           <Panel>
             <ProgressBar IsIndeterminate="True" Width="120" Margin="0,14" VerticalAlignment="Top" HorizontalAlignment="Left"

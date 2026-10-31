@@ -89,6 +89,8 @@ public sealed partial class WorkspaceView
     private void InitializeLayout()
     {
         DrawerDismiss.PointerPressed += OnDrawerDismissPressed;
+        AttachedToVisualTree += (_, _) => Accessibility.TypeScale.Changed += OnTextSizeChanged;
+        DetachedFromVisualTree += (_, _) => Accessibility.TypeScale.Changed -= OnTextSizeChanged;
         EditorArea.SizeChanged += (_, _) => UpdateEditorArea();
         BottomDock.SizeChanged += (_, e) => UpdateBottomDock(e.NewSize.Width);
     }
@@ -105,6 +107,9 @@ public sealed partial class WorkspaceView
         OutputSourceBox.MinWidth = wide ? 170 : 110;
         CallStackBeside.Width = width >= 760 ? 380 : width >= 600 ? Math.Floor(width * 0.45) : 0;
         CallStackBeside.BorderThickness = new Thickness(CallStackBeside.Width > 0 ? 1 : 0, 0, 0, 0);
+        // With no room beside Locals the Call Stack is its own tab; hidden, not squeezed to nothing, so the keyboard
+        // and TalkBack do not reach a panel no one can see.
+        CallStackBeside.Classes.Set("folded", CallStackBeside.Width <= 0);
         BringSelectedTabIntoView();
     }
 
@@ -112,6 +117,9 @@ public sealed partial class WorkspaceView
     private void BringSelectedTabIntoView() => Avalonia.Threading.Dispatcher.UIThread.Post(
         () => BottomTabs.Children.OfType<Button>().FirstOrDefault(tab => tab.IsVisible && tab.Classes.Contains("selected"))?.BringIntoView(),
         Avalonia.Threading.DispatcherPriority.Loaded);
+
+    /// <summary>The text size changed: the bottom panel keeps room for its rows.</summary>
+    private void OnTextSizeChanged(object? sender, EventArgs e) => UpdateBottomPanel();
 
     private void AttachLayout(WorkspaceViewModel viewModel)
     {

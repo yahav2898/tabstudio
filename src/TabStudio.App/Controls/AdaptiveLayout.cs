@@ -1,4 +1,6 @@
 using Avalonia;
+using Avalonia.Input;
+using Avalonia.Layout;
 
 namespace TabStudio.App.Controls;
 
@@ -39,6 +41,22 @@ public static class AdaptiveLayout
     /// rectangle is not enough, because a button's minimum size would still draw it in the bar's corner.
     /// </summary>
     public static Rect Parked { get; } = new(-100_000, -100_000, 0, 0);
+
+    /// <summary>
+    /// Arranges a bar's item where it shows, or parks it when the rectangle is <see cref="Parked"/>. A parked item is
+    /// no tab stop, so the keyboard never moves the focus off screen; it is reached through More.
+    /// </summary>
+    /// <param name="item">The item.</param>
+    /// <param name="rect">Where it shows, or <see cref="Parked"/>.</param>
+    public static void Place(Layoutable item, Rect rect)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+        item.Arrange(rect);
+        if (item is InputElement input)
+        {
+            KeyboardNavigation.SetIsTabStop(input, rect != Parked);
+        }
+    }
 
     /// <summary>How each item is shown.</summary>
     /// <param name="slots">The items, in the bar's order.</param>
