@@ -1,0 +1,43 @@
+cakephp-app at 79c0a76f06697288ec168c44e3e43d0195c3c63e, opening /home/runner/work/_temp/repos/cakephp-app
+Opened in 0.3 s: cakephp-app, solution (none)
+  toolchain project php: /home/runner/work/_temp/repos/cakephp-app/composer.json
+Compatibility Doctor:
+  cakephp-app: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+F5 startup project: cakephp-app (php) /home/runner/work/_temp/repos/cakephp-app/composer.json
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+GET http://127.0.0.1:34971/: 500, 649 characters
+Error page: <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">    <title>
+        Error    </title>
+    <link href="/favicon.ico" type="image/x-icon" rel="icon">
+    
+	<link rel="stylesheet" href="/css/normalize.min.css">
+	<link rel="stylesheet" href="/css/milligram.min.css">
+	<link rel="stylesheet" href="/css/fonts.css">
+	<link rel="stylesheet" href="/css/cake.css">
+
+            </head>
+<body>
+    <div class="error-container">
+                <h2>An Internal Error Has Occurred.</h2>
+<p class="error">
+    <strong>Error: </strong>
+    An Internal Error Has Occurred.</p>
+        <a href="javascript:history.back()">Back</a>    </div>
+</body>
+</html>
+
+Run: GET / 500 (1 s after F5)
+Debug: no entry point found for a breakpoint (0 s)
+EXCEPTION: Xunit.Sdk.TrueException: trial-cakephp-app-5-debug does not meet the accessibility rules (docs/design/README.md, "Accessibility"):
+clipped: ContentPresenter#PART_ContentPresenter > Border#PART_HitArea > ContentPresenter#PART_ContentPresenter > TextBlock: "Open in browser" is cut off by its container: 11 × 0 of its 163 × 25 dips are hidden.
+   at Xunit.Assert.True(Nullable`1 condition, String userMessage) in /_/src/xunit.assert/Asserts/BooleanAsserts.cs:line 141
+   at Xunit.Assert.True(Boolean condition, String userMessage) in /_/src/xunit.assert/Asserts/BooleanAsserts.cs:line 123
+   at TabStudio.App.Tests.Accessibility.AccessibilityReport.AssertNone(IReadOnlyList`1 found, String what) in /_/tests/TabStudio.App.Tests/Accessibility/AccessibilityReport.cs:line 84
+   at TabStudio.App.Tests.UiTestHelpers.SaveScreenshot(Window window, String name) in /_/tests/TabStudio.App.Tests/UiTestHelpers.cs:line 46
+   at TabStudio.App.Tests.Trial.RepoTrialTests.TryAsync(String folder, String name, String expect, String route, Boolean tests, StringBuilder report, JsonObject result) in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 219
+   at TabStudio.App.Tests.Trial.RepoTrialTests.TryAsync(String folder, String name, String expect, String route, Boolean tests, StringBuilder report, JsonObject result) in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 259
+   at TabStudio.App.Tests.Trial.RepoTrialTests.Open_set_up_build_and_run_real_repositories() in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 72

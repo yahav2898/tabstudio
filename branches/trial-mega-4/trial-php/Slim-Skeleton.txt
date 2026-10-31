@@ -1,0 +1,28 @@
+Slim-Skeleton at 0ef01549870b3234a3a9f602904a39c3ed73f44c, opening /home/runner/work/_temp/repos/Slim-Skeleton
+Opened in 0.4 s: Slim-Skeleton, solution (none)
+  toolchain project php: /home/runner/work/_temp/repos/Slim-Skeleton/composer.json
+Compatibility Doctor:
+  Slim-Skeleton: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+F5 startup project: Slim-Skeleton (php) /home/runner/work/_temp/repos/Slim-Skeleton/composer.json
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+GET http://127.0.0.1:35707/: 500, 440 characters
+Error page: {
+    "statusCode": 500,
+    "error": {
+        "type": "SERVER_ERROR",
+        "description": "FATAL ERROR: DI\\Definition\\Resolver\\ParameterResolver::resolveParameters(): Implicitly marking parameter $method as nullable is deprecated, the explicit nullable type must be used instead. on line 40 in file \/home\/runner\/work\/_temp\/repos\/Slim-Skeleton\/vendor\/php-di\/php-di\/src\/Definition\/Resolver\/ParameterResolver.php."
+    }
+}
+Run: GET / 500 (0 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/Slim-Skeleton/public/index.php:16
+Debug: did not stop at index.php:16 within 10 min (600 s)
+EXCEPTION: Xunit.Sdk.TrueException: trial-Slim-Skeleton-5-debug does not meet the accessibility rules (docs/design/README.md, "Accessibility"):
+clipped: ContentPresenter#PART_ContentPresenter > Border#PART_HitArea > ContentPresenter#PART_ContentPresenter > TextBlock: "Open in browser" is cut off by its container: 11 × 0 of its 163 × 25 dips are hidden.
+   at Xunit.Assert.True(Nullable`1 condition, String userMessage) in /_/src/xunit.assert/Asserts/BooleanAsserts.cs:line 141
+   at Xunit.Assert.True(Boolean condition, String userMessage) in /_/src/xunit.assert/Asserts/BooleanAsserts.cs:line 123
+   at TabStudio.App.Tests.Accessibility.AccessibilityReport.AssertNone(IReadOnlyList`1 found, String what) in /_/tests/TabStudio.App.Tests/Accessibility/AccessibilityReport.cs:line 84
+   at TabStudio.App.Tests.UiTestHelpers.SaveScreenshot(Window window, String name) in /_/tests/TabStudio.App.Tests/UiTestHelpers.cs:line 46
+   at TabStudio.App.Tests.Trial.RepoTrialTests.TryAsync(String folder, String name, String expect, String route, Boolean tests, StringBuilder report, JsonObject result) in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 219
+   at TabStudio.App.Tests.Trial.RepoTrialTests.TryAsync(String folder, String name, String expect, String route, Boolean tests, StringBuilder report, JsonObject result) in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 259
+   at TabStudio.App.Tests.Trial.RepoTrialTests.Open_set_up_build_and_run_real_repositories() in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 72

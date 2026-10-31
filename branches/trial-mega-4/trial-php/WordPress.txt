@@ -1,0 +1,33 @@
+WordPress at 71cb962dbf0be359b95bf3373f3d2f37f9249e26, opening /home/runner/work/_temp/repos/WordPress
+Opened in 0.3 s: WordPress, solution (none)
+  toolchain project php: /home/runner/work/_temp/repos/WordPress
+  toolchain project php: /home/runner/work/_temp/repos/WordPress/wp-includes/sodium_compat/composer.json
+  toolchain project node: /home/runner/work/_temp/repos/WordPress/wp-content/themes/twentynineteen/package.json
+  toolchain project node: /home/runner/work/_temp/repos/WordPress/wp-content/themes/twentytwenty/package.json
+  toolchain project node: /home/runner/work/_temp/repos/WordPress/wp-content/themes/twentytwentyfive/package.json
+  toolchain project node: /home/runner/work/_temp/repos/WordPress/wp-content/themes/twentytwentyone/package.json
+  toolchain project node: /home/runner/work/_temp/repos/WordPress/wp-content/themes/twentytwentytwo/package.json
+Compatibility Doctor:
+  WordPress: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+  sodium_compat: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+  twentynineteen: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+  twentytwenty: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+  twentytwentyfive: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+  twentytwentyone: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+  twentytwentytwo: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+F5 startup project: WordPress (php) /home/runner/work/_temp/repos/WordPress/.php
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+GET http://127.0.0.1:42953/: 200, 12462 characters
+Run: GET / 200 (1 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/WordPress/index.php:14
+Debug: did not stop at index.php:14 within 10 min (600 s)
+EXCEPTION: Xunit.Sdk.TrueException: trial-WordPress-5-debug does not meet the accessibility rules (docs/design/README.md, "Accessibility"):
+clipped: ContentPresenter#PART_ContentPresenter > Border#PART_HitArea > ContentPresenter#PART_ContentPresenter > TextBlock: "Open in browser" is cut off by its container: 11 × 0 of its 163 × 25 dips are hidden.
+   at Xunit.Assert.True(Nullable`1 condition, String userMessage) in /_/src/xunit.assert/Asserts/BooleanAsserts.cs:line 141
+   at Xunit.Assert.True(Boolean condition, String userMessage) in /_/src/xunit.assert/Asserts/BooleanAsserts.cs:line 123
+   at TabStudio.App.Tests.Accessibility.AccessibilityReport.AssertNone(IReadOnlyList`1 found, String what) in /_/tests/TabStudio.App.Tests/Accessibility/AccessibilityReport.cs:line 84
+   at TabStudio.App.Tests.UiTestHelpers.SaveScreenshot(Window window, String name) in /_/tests/TabStudio.App.Tests/UiTestHelpers.cs:line 46
+   at TabStudio.App.Tests.Trial.RepoTrialTests.TryAsync(String folder, String name, String expect, String route, Boolean tests, StringBuilder report, JsonObject result) in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 218
+   at TabStudio.App.Tests.Trial.RepoTrialTests.TryAsync(String folder, String name, String expect, String route, Boolean tests, StringBuilder report, JsonObject result) in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 259
+   at TabStudio.App.Tests.Trial.RepoTrialTests.Open_set_up_build_and_run_real_repositories() in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 72
