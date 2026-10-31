@@ -10,7 +10,7 @@ Compatibility Doctor:
   AdvancedToDoList: Library via Built with its users - A library is compiled together with the projects that reference it.
   SharedControls: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: AdvancedToDoList.Desktop
-Built in 7.3 s: 0 errors, 1 warnings
+Built in 7.4 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   avalonia.buildservices 11.3.2
       build/Avalonia.BuildServices.targets
@@ -294,18 +294,18 @@ Packages with analyzers or MSBuild files:
       buildTransitive/xunit.v3.core.mtp-v1.props
       buildTransitive/xunit.v3.core.mtp-v1.targets
 Output:
-Build started at 02:36:13...
+Build started at 17:35:47...
 1>------ Build started: Project: SharedControls, Configuration: Debug ------
 1>DialogCommand.cs(111,32): warning CS0067: The event 'DialogCommand.CanExecuteChanged' is never used
-1>SharedControls -> compiled in memory (109 KB, 218 ms)
+1>SharedControls -> compiled in memory (109 KB, 240 ms)
 2>------ Build started: Project: AdvancedToDoList, Configuration: Debug ------
-2>AdvancedToDoList -> compiled in memory (1013 KB, 198 ms)
+2>AdvancedToDoList -> compiled in memory (1013 KB, 320 ms)
 3>------ Build started: Project: AdvancedToDoListTests, Configuration: Debug ------
-3>AdvancedToDoListTests -> compiled in memory (53 KB, 168 ms)
+3>AdvancedToDoListTests -> compiled in memory (53 KB, 243 ms)
 4>------ Build started: Project: SharedControlsTests, Configuration: Debug ------
-4>SharedControlsTests -> compiled in memory (7.5 KB, 44 ms)
+4>SharedControlsTests -> compiled in memory (7.5 KB, 64 ms)
 5>------ Build started: Project: AdvancedToDoList.Desktop, Configuration: Debug ------
-5>AdvancedToDoList.Desktop -> compiled in memory (7 KB, 160 ms)
+5>AdvancedToDoList.Desktop -> compiled in memory (7 KB, 165 ms)
 6>------ Skipped: Project: AdvancedToDoList.Android: it targets net10.0-android, which only .NET's mobile workloads build, on a computer ------
 7>------ Skipped: Project: AdvancedToDoList.Browser: it is a browser head compiled ahead of time to WebAssembly, which only .NET's wasm-tools workload builds, on a computer ------
 8>------ Skipped: Project: AdvancedToDoList.iOS: it targets net10.0-ios, which only .NET's mobile workloads build, on a computer ------
