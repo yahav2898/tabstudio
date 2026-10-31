@@ -2,11 +2,11 @@
 [  0%] Built target functions_list
 [  0%] Built target WRAPPERS
 [  0%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run0f.c.o
-[  0%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66.c.o
-[  0%] Built target generate_dynacache_hashes
 [  1%] Generating /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/git_head.h
 fatal: not a git repository (or any of the parent directories): .git
 [  1%] Built target generate_git_head_target
+[  1%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66.c.o
+[  1%] Built target generate_dynacache_hashes
 [  2%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run660f.c.o
 [  2%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66f20f.c.o
 [  2%] Building C object CMakeFiles/mainobj.dir/src/os/backtrace.c.o
@@ -26,6 +26,7 @@ fatal: not a git repository (or any of the parent directories): .git
 [  4%] Building C object CMakeFiles/mainobj.dir/src/os/symbolfuncs_linux.c.o
 [  4%] Building C object CMakeFiles/mainobj.dir/src/os/random_linux.c.o
 [  4%] Building C object CMakeFiles/mainobj.dir/src/os/my_cpuid.c.o
+[  4%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66f30f.c.o
 [  5%] Building C object CMakeFiles/mainobj.dir/src/os/sysinfo.c.o
 [  5%] Building C object CMakeFiles/mainobj.dir/src/main.c.o
 In file included from /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:9:
@@ -108,12 +109,12 @@ In function ‘snprintf’,
       |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    70 |                                    __va_arg_pack ());
       |                                    ~~~~~~~~~~~~~~~~~
-[  5%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66f30f.c.o
 [  5%] Building C object CMakeFiles/mainobj.dir/src/test.c.o
 [  5%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66d9.c.o
-[  6%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66dd.c.o
-[  6%] Building C object CMakeFiles/mainobj.dir/src/core.c.o
-[  7%] Building C object CMakeFiles/mainobj.dir/src/box64context.c.o
+[  5%] Building C object CMakeFiles/mainobj.dir/src/core.c.o
+[  6%] Building C object CMakeFiles/mainobj.dir/src/box64context.c.o
+[  6%] Building C object CMakeFiles/mainobj.dir/src/build_info.c.o
+[  7%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66dd.c.o
 /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c: In function ‘KillAllInstances’:
 /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c:385:73: warning: ‘ (deleted)’ directive output may be truncated writing 10 bytes into a region of size between 1 and 4096 [-Wformat-truncation=]
   385 |     snprintf(self_name_with_deleted, sizeof(self_name_with_deleted), "%s (deleted)", self_name);
@@ -144,42 +145,42 @@ In function ‘snprintf’,
       |                                    ~~~~~~~~~~~~~~~~~
 [  7%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66f0.c.o
 [  7%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rund8.c.o
-[  7%] Building C object CMakeFiles/mainobj.dir/src/build_info.c.o
 [  7%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rund9.c.o
+[  7%] Building C object CMakeFiles/mainobj.dir/src/custommem.c.o
+[  7%] Building C object CMakeFiles/mainobj.dir/src/custommmap.c.o
 [  8%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runda.c.o
-[  8%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rundc.c.o
 [  8%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rundb.c.o
-[  8%] Building C object CMakeFiles/mainobj.dir/src/custommem.c.o
-[  8%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rundd.c.o
-[  8%] Building C object CMakeFiles/mainobj.dir/src/custommmap.c.o
-[  9%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runde.c.o
-[ 10%] Building C object CMakeFiles/mainobj.dir/src/dynarec/dynarec.c.o
+[  8%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rundc.c.o
+[  9%] Building C object CMakeFiles/mainobj.dir/src/dynarec/dynarec.c.o
+[  9%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rundd.c.o
+[  9%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfloader.c.o
+[ 10%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runde.c.o
 [ 10%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rundf.c.o
-[ 10%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfloader.c.o
+[ 10%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfhacks.c.o
 [ 10%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runf0.c.o
 [ 10%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runf20f.c.o
 [ 11%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runf30f.c.o
 [ 11%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx.c.o
-[ 11%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfhacks.c.o
 [ 12%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfparser.c.o
+[ 12%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfhash.c.o
 [ 12%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx0f.c.o
 [ 12%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx0f38.c.o
-[ 12%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfhash.c.o
 [ 12%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfload_dump.c.o
 [ 13%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx660f.c.o
 [ 13%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf20f.c.o
 [ 13%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfdwarf_private.c.o
-[ 13%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf30f.c.o
 [ 14%] Building C object CMakeFiles/mainobj.dir/src/emu/entrypoint.c.o
+[ 14%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf30f.c.o
 [ 15%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx660f38.c.o
-[ 15%] Building C object CMakeFiles/mainobj.dir/src/emu/x64compstrings.c.o
 [ 15%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx660f3a.c.o
+[ 15%] Building C object CMakeFiles/mainobj.dir/src/emu/x64compstrings.c.o
 [ 15%] Building C object CMakeFiles/mainobj.dir/src/emu/x64emu.c.o
 [ 15%] Building C object CMakeFiles/mainobj.dir/src/emu/x64printer.c.o
 [ 15%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf20f38.c.o
 [ 16%] Building C object CMakeFiles/mainobj.dir/src/emu/x64int3.c.o
 [ 16%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf30f38.c.o
-[ 16%] Building C object CMakeFiles/mainobj.dir/src/emu/x87emu_private.c.o
+[ 17%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf20f3a.c.o
+[ 17%] Building C object CMakeFiles/mainobj.dir/src/emu/x87emu_private.c.o
 /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/emu/x87emu_private.c: In function ‘PrintLD’:
 /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/emu/x87emu_private.c:262:46: warning: format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 6 has type ‘uint64_t’ {aka ‘long unsigned int’} [-Wformat=]
   262 |     snprintf(buf, sizeof(buf), "%s%04x %016llx", prefix?prefix:"", val.b, val.f.q);
@@ -187,8 +188,7 @@ In function ‘snprintf’,
       |                                              |                                 |
       |                                              long long unsigned int            uint64_t {aka long unsigned int}
       |                                        %016lx
-[ 16%] Building C object CMakeFiles/mainobj.dir/src/emu/x64primop.c.o
-[ 17%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf20f3a.c.o
+[ 17%] Building C object CMakeFiles/mainobj.dir/src/emu/x64primop.c.o
 [ 17%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf30f3a.c.o
 [ 17%] Building C object CMakeFiles/mainobj.dir/src/emu/x64run_private.c.o
 [ 18%] Building C object CMakeFiles/mainobj.dir/src/emu/x64shaext.c.o
@@ -218,6 +218,7 @@ In function ‘snprintf’,
 [ 22%] Building C object CMakeFiles/mainobj.dir/src/tools/box64stack.c.o
 [ 22%] Building C object CMakeFiles/mainobj.dir/src/tools/bridge.c.o
 [ 22%] Building C object CMakeFiles/mainobj.dir/src/tools/alternate.c.o
+[ 22%] Built target interpreter
 [ 23%] Building C object CMakeFiles/mainobj.dir/src/tools/callback.c.o
 [ 23%] Building C object CMakeFiles/mainobj.dir/src/tools/cleanup.c.o
 [ 23%] Building C object CMakeFiles/mainobj.dir/src/tools/cpumask.c.o
@@ -226,11 +227,10 @@ In function ‘snprintf’,
 [ 24%] Building C object CMakeFiles/mainobj.dir/src/tools/pathcoll.c.o
 [ 24%] Building C object CMakeFiles/mainobj.dir/src/tools/rbtree.c.o
 [ 24%] Building C object CMakeFiles/mainobj.dir/src/tools/env.c.o
+[ 25%] Building C object CMakeFiles/mainobj.dir/src/tools/dynacache.c.o
 /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/tools/env.c:355:2: warning: #warning "Unknown architecture for ENV_ARCH" [-Wcpp]
   355 | #warning "Unknown architecture for ENV_ARCH"
       |  ^~~~~~~
-[ 24%] Built target interpreter
-[ 25%] Building C object CMakeFiles/mainobj.dir/src/tools/dynacache.c.o
 [ 25%] Building C object CMakeFiles/mainobj.dir/src/tools/wine_tools.c.o
 [ 25%] Building C object CMakeFiles/mainobj.dir/src/tools/pe_tools.c.o
 [ 25%] Building C object CMakeFiles/mainobj.dir/src/wrapped/generated/wrapper.c.o
@@ -469,14 +469,14 @@ In function ‘snprintf’,
 [ 74%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappednspr4.c.o
 [ 75%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappednss3.c.o
 [ 75%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappednssutil3.c.o
-[ 75%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappednvml.c.o
 [ 75%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedopenal.c.o
+[ 75%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappednvml.c.o
 [ 76%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedopencl.c.o
 [ 76%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpango.c.o
 [ 76%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpangocairo.c.o
 [ 76%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpangoft2.c.o
+[ 76%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpcap.c.o
 [ 77%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpam.c.o
-[ 77%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpcap.c.o
 [ 77%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedplc4.c.o
 [ 77%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedplds4.c.o
 [ 78%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpng16.c.o
