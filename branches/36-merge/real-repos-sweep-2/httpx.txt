@@ -1,0 +1,470 @@
+httpx at b5addb64f0161ff6bfe94c124ef76f6a1fba5254
+Toolchain projects:
+  python: /home/runner/work/_temp/real-repos/httpx/pyproject.toml
+Startup project: python /home/runner/work/_temp/real-repos/httpx/pyproject.toml
+Set up in 23.5 s
+Tests: 1416 passed, 1 failed, 1 skipped of 1569: 1418 tests run in 14.0 sec: 1416 passed, 1 failed, 1 skipped.
+Project setup:
+------ httpx: pip install -r requirements.txt ------
+Reading which Python versions the 15 pinned packages have wheels for, from PyPI.
+> python3 -m venv .venv
+> /home/runner/work/_temp/real-repos/httpx/.venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
+Obtaining file:///home/runner/work/_temp/real-repos/httpx
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Installing backend dependencies: started
+  Installing backend dependencies: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting chardet==5.2.0 (from -r requirements.txt (line 9))
+  Using cached chardet-5.2.0-py3-none-any.whl.metadata (3.4 kB)
+Collecting mkdocs==1.6.1 (from -r requirements.txt (line 12))
+  Using cached mkdocs-1.6.1-py3-none-any.whl.metadata (6.0 kB)
+Collecting mkautodoc==0.2.0 (from -r requirements.txt (line 13))
+  Using cached mkautodoc-0.2.0-py3-none-any.whl
+Collecting mkdocs-material==9.6.18 (from -r requirements.txt (line 14))
+  Using cached mkdocs_material-9.6.18-py3-none-any.whl.metadata (19 kB)
+Collecting build==1.3.0 (from -r requirements.txt (line 17))
+  Using cached build-1.3.0-py3-none-any.whl.metadata (5.6 kB)
+Collecting twine==6.1.0 (from -r requirements.txt (line 18))
+  Using cached twine-6.1.0-py3-none-any.whl.metadata (3.7 kB)
+Collecting coverage==7.10.6 (from coverage[toml]==7.10.6->-r requirements.txt (line 21))
+  Using cached coverage-7.10.6-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (8.9 kB)
+Collecting cryptography==45.0.7 (from -r requirements.txt (line 22))
+  Using cached cryptography-45.0.7-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
+Collecting mypy==1.17.1 (from -r requirements.txt (line 23))
+  Using cached mypy-1.17.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.2 kB)
+Collecting pytest==8.4.1 (from -r requirements.txt (line 24))
+  Using cached pytest-8.4.1-py3-none-any.whl.metadata (7.7 kB)
+Collecting ruff==0.12.11 (from -r requirements.txt (line 25))
+  Using cached ruff-0.12.11-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (25 kB)
+Collecting trio==0.31.0 (from -r requirements.txt (line 26))
+  Using cached trio-0.31.0-py3-none-any.whl.metadata (8.5 kB)
+Collecting trio-typing==0.10.0 (from -r requirements.txt (line 27))
+  Using cached trio_typing-0.10.0-py3-none-any.whl.metadata (10 kB)
+Collecting trustme==1.2.1 (from -r requirements.txt (line 28))
+  Using cached trustme-1.2.1-py3-none-any.whl.metadata (5.7 kB)
+Collecting uvicorn==0.35.0 (from -r requirements.txt (line 29))
+  Using cached uvicorn-0.35.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting click>=7.0 (from mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting ghp-import>=1.0 (from mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached ghp_import-2.1.0-py3-none-any.whl.metadata (7.2 kB)
+Collecting jinja2>=2.11.1 (from mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting markdown>=3.3.6 (from mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached markdown-3.11.2-py3-none-any.whl.metadata (5.1 kB)
+Collecting markupsafe>=2.0.1 (from mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting mergedeep>=1.3.4 (from mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached mergedeep-1.3.4-py3-none-any.whl.metadata (4.3 kB)
+Collecting mkdocs-get-deps>=0.2.0 (from mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached mkdocs_get_deps-0.2.2-py3-none-any.whl.metadata (4.0 kB)
+Collecting packaging>=20.5 (from mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pathspec>=0.11.1 (from mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached pathspec-1.1.1-py3-none-any.whl.metadata (14 kB)
+Collecting pyyaml-env-tag>=0.1 (from mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached pyyaml_env_tag-1.1-py3-none-any.whl.metadata (5.5 kB)
+Collecting pyyaml>=5.1 (from mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Collecting watchdog>=2.0 (from mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached watchdog-7.0.0-py3-none-manylinux_2_17_x86_64.whl.metadata (60 kB)
+Collecting babel~=2.10 (from mkdocs-material==9.6.18->-r requirements.txt (line 14))
+  Using cached babel-2.18.0-py3-none-any.whl.metadata (2.2 kB)
+Collecting backrefs~=5.7.post1 (from mkdocs-material==9.6.18->-r requirements.txt (line 14))
+  Using cached backrefs-5.9-py312-none-any.whl.metadata (3.2 kB)
+Collecting click>=7.0 (from mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached click-8.2.1-py3-none-any.whl.metadata (2.5 kB)
+Collecting colorama~=0.4 (from mkdocs-material==9.6.18->-r requirements.txt (line 14))
+  Using cached colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
+Collecting mkdocs-material-extensions~=1.3 (from mkdocs-material==9.6.18->-r requirements.txt (line 14))
+  Using cached mkdocs_material_extensions-1.3.1-py3-none-any.whl.metadata (6.9 kB)
+Collecting paginate~=0.5 (from mkdocs-material==9.6.18->-r requirements.txt (line 14))
+  Using cached paginate-0.5.7-py2.py3-none-any.whl.metadata (11 kB)
+Collecting pygments~=2.16 (from mkdocs-material==9.6.18->-r requirements.txt (line 14))
+  Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting pymdown-extensions~=10.2 (from mkdocs-material==9.6.18->-r requirements.txt (line 14))
+  Using cached pymdown_extensions-10.21.3-py3-none-any.whl.metadata (3.1 kB)
+Collecting requests~=2.26 (from mkdocs-material==9.6.18->-r requirements.txt (line 14))
+  Using cached requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting pyproject_hooks (from build==1.3.0->-r requirements.txt (line 17))
+  Using cached pyproject_hooks-1.3.3-py3-none-any.whl.metadata (1.3 kB)
+Collecting readme-renderer>=35.0 (from twine==6.1.0->-r requirements.txt (line 18))
+  Using cached readme_renderer-46.0-py3-none-any.whl.metadata (3.0 kB)
+Collecting requests-toolbelt!=0.9.0,>=0.8.0 (from twine==6.1.0->-r requirements.txt (line 18))
+  Using cached requests_toolbelt-1.0.0-py2.py3-none-any.whl.metadata (14 kB)
+Collecting urllib3>=1.26.0 (from twine==6.1.0->-r requirements.txt (line 18))
+  Using cached urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting keyring>=15.1 (from twine==6.1.0->-r requirements.txt (line 18))
+  Using cached keyring-25.7.0-py3-none-any.whl.metadata (21 kB)
+Collecting rfc3986>=1.4.0 (from twine==6.1.0->-r requirements.txt (line 18))
+  Using cached rfc3986-2.0.0-py2.py3-none-any.whl.metadata (6.6 kB)
+Collecting rich>=12.0.0 (from twine==6.1.0->-r requirements.txt (line 18))
+  Using cached rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+Collecting id (from twine==6.1.0->-r requirements.txt (line 18))
+  Using cached id-1.6.1-py3-none-any.whl.metadata (5.1 kB)
+Collecting cffi>=1.14 (from cryptography==45.0.7->-r requirements.txt (line 22))
+  Using cached cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+Collecting typing_extensions>=4.6.0 (from mypy==1.17.1->-r requirements.txt (line 23))
+  Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting mypy_extensions>=1.0.0 (from mypy==1.17.1->-r requirements.txt (line 23))
+  Using cached mypy_extensions-1.1.0-py3-none-any.whl.metadata (1.1 kB)
+Collecting iniconfig>=1 (from pytest==8.4.1->-r requirements.txt (line 24))
+  Using cached iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+Collecting pluggy<2,>=1.5 (from pytest==8.4.1->-r requirements.txt (line 24))
+  Using cached pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+Collecting attrs>=23.2.0 (from trio==0.31.0->-r requirements.txt (line 26))
+  Using cached attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+Collecting sortedcontainers (from trio==0.31.0->-r requirements.txt (line 26))
+  Using cached sortedcontainers-2.4.0-py2.py3-none-any.whl.metadata (10 kB)
+Collecting idna (from trio==0.31.0->-r requirements.txt (line 26))
+  Using cached idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting outcome (from trio==0.31.0->-r requirements.txt (line 26))
+  Using cached outcome-1.3.0.post0-py2.py3-none-any.whl.metadata (2.6 kB)
+Collecting sniffio>=1.3.0 (from trio==0.31.0->-r requirements.txt (line 26))
+  Using cached sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+Collecting async-generator (from trio-typing==0.10.0->-r requirements.txt (line 27))
+  Using cached async_generator-1.10-py3-none-any.whl.metadata (4.9 kB)
+Collecting importlib-metadata (from trio-typing==0.10.0->-r requirements.txt (line 27))
+  Using cached importlib_metadata-10.1.0-py3-none-any.whl.metadata (4.5 kB)
+Collecting h11>=0.8 (from uvicorn==0.35.0->-r requirements.txt (line 29))
+  Using cached h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting anyio (from httpx==0.28.1)
+  Using cached anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+Collecting certifi (from httpx==0.28.1)
+  Using cached certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+Collecting httpcore==1.* (from httpx==0.28.1)
+  Using cached httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting brotli (from httpx==0.28.1)
+  Using cached brotli-1.2.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.1 kB)
+Collecting rich>=12.0.0 (from twine==6.1.0->-r requirements.txt (line 18))
+  Using cached rich-14.3.4-py3-none-any.whl.metadata (18 kB)
+Collecting h2<5,>=3 (from httpx==0.28.1)
+  Using cached h2-4.4.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting socksio==1.* (from httpx==0.28.1)
+  Using cached socksio-1.0.0-py3-none-any.whl.metadata (6.1 kB)
+Collecting zstandard>=0.18.0 (from httpx==0.28.1)
+  Using cached zstandard-0.25.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.3 kB)
+Collecting pycparser (from cffi>=1.14->cryptography==45.0.7->-r requirements.txt (line 22))
+  Using cached pycparser-3.12-py3-none-any.whl.metadata (9.7 kB)
+Collecting python-dateutil>=2.8.1 (from ghp-import>=1.0->mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached python_dateutil-3.0.0-py2.py3-none-any.whl.metadata (8.2 kB)
+Collecting hyperframe<7,>=6.1 (from h2<5,>=3->httpx==0.28.1)
+  Using cached hyperframe-6.1.0-py3-none-any.whl.metadata (4.3 kB)
+Collecting hpack<5,>=4.2 (from h2<5,>=3->httpx==0.28.1)
+  Using cached hpack-4.2.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting SecretStorage>=3.2 (from keyring>=15.1->twine==6.1.0->-r requirements.txt (line 18))
+  Using cached secretstorage-3.5.0-py3-none-any.whl.metadata (4.0 kB)
+Collecting jeepney>=0.4.2 (from keyring>=15.1->twine==6.1.0->-r requirements.txt (line 18))
+  Using cached jeepney-0.9.0-py3-none-any.whl.metadata (1.2 kB)
+Collecting jaraco.classes (from keyring>=15.1->twine==6.1.0->-r requirements.txt (line 18))
+  Using cached jaraco.classes-3.4.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting jaraco.functools (from keyring>=15.1->twine==6.1.0->-r requirements.txt (line 18))
+  Using cached jaraco_functools-4.6.0-py3-none-any.whl.metadata (2.9 kB)
+Collecting jaraco.context (from keyring>=15.1->twine==6.1.0->-r requirements.txt (line 18))
+  Using cached jaraco_context-6.1.2-py3-none-any.whl.metadata (4.2 kB)
+Collecting platformdirs>=2.2.0 (from mkdocs-get-deps>=0.2.0->mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached platformdirs-4.14.2-py3-none-any.whl.metadata (5.4 kB)
+Collecting nh3>=0.2.14 (from readme-renderer>=35.0->twine==6.1.0->-r requirements.txt (line 18))
+  Using cached nh3-0.3.7-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.0 kB)
+Collecting docutils>=0.21.2 (from readme-renderer>=35.0->twine==6.1.0->-r requirements.txt (line 18))
+  Using cached docutils-0.23-py3-none-any.whl.metadata (15 kB)
+Collecting charset_normalizer<4,>=2 (from requests~=2.26->mkdocs-material==9.6.18->-r requirements.txt (line 14))
+  Using cached charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+Collecting markdown-it-py>=2.2.0 (from rich>=12.0.0->twine==6.1.0->-r requirements.txt (line 18))
+  Using cached markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting zipp>=3.20 (from importlib-metadata->trio-typing==0.10.0->-r requirements.txt (line 27))
+  Using cached zipp-4.1.2-py3-none-any.whl.metadata (3.6 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=12.0.0->twine==6.1.0->-r requirements.txt (line 18))
+  Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Collecting six>=1.6 (from python-dateutil>=2.8.1->ghp-import>=1.0->mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting tzdata (from python-dateutil>=2.8.1->ghp-import>=1.0->mkdocs==1.6.1->-r requirements.txt (line 12))
+  Using cached tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+Collecting more-itertools (from jaraco.classes->keyring>=15.1->twine==6.1.0->-r requirements.txt (line 18))
+  Using cached more_itertools-11.2.1-py3-none-any.whl.metadata (42 kB)
+Using cached chardet-5.2.0-py3-none-any.whl (199 kB)
+Using cached mkdocs-1.6.1-py3-none-any.whl (3.9 MB)
+Using cached mkdocs_material-9.6.18-py3-none-any.whl (9.2 MB)
+Using cached build-1.3.0-py3-none-any.whl (23 kB)
+Using cached twine-6.1.0-py3-none-any.whl (40 kB)
+Using cached coverage-7.10.6-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (251 kB)
+Using cached cryptography-45.0.7-cp311-abi3-manylinux_2_34_x86_64.whl (4.5 MB)
+Using cached mypy-1.17.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (12.7 MB)
+Using cached pytest-8.4.1-py3-none-any.whl (365 kB)
+Using cached ruff-0.12.11-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.2 MB)
+Using cached trio-0.31.0-py3-none-any.whl (512 kB)
+Using cached trio_typing-0.10.0-py3-none-any.whl (42 kB)
+Using cached trustme-1.2.1-py3-none-any.whl (16 kB)
+Using cached uvicorn-0.35.0-py3-none-any.whl (66 kB)
+Using cached httpcore-1.0.9-py3-none-any.whl (78 kB)
+Using cached click-8.2.1-py3-none-any.whl (102 kB)
+Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+Using cached socksio-1.0.0-py3-none-any.whl (12 kB)
+Using cached attrs-26.1.0-py3-none-any.whl (67 kB)
+Using cached babel-2.18.0-py3-none-any.whl (10.2 MB)
+Using cached backrefs-5.9-py312-none-any.whl (397 kB)
+Using cached cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+Using cached colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+Using cached ghp_import-2.1.0-py3-none-any.whl (11 kB)
+Using cached h11-0.16.0-py3-none-any.whl (37 kB)
+Using cached h2-4.4.1-py3-none-any.whl (62 kB)
+Using cached idna-3.20-py3-none-any.whl (69 kB)
+Using cached iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Using cached jinja2-3.1.6-py3-none-any.whl (134 kB)
+Using cached keyring-25.7.0-py3-none-any.whl (39 kB)
+Using cached markdown-3.11.2-py3-none-any.whl (114 kB)
+Using cached markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Using cached mergedeep-1.3.4-py3-none-any.whl (6.4 kB)
+Using cached mkdocs_get_deps-0.2.2-py3-none-any.whl (9.6 kB)
+Using cached mkdocs_material_extensions-1.3.1-py3-none-any.whl (8.7 kB)
+Using cached mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Using cached paginate-0.5.7-py2.py3-none-any.whl (13 kB)
+Using cached pathspec-1.1.1-py3-none-any.whl (57 kB)
+Using cached pluggy-1.7.0-py3-none-any.whl (27 kB)
+Using cached pymdown_extensions-10.21.3-py3-none-any.whl (269 kB)
+Using cached pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+Using cached pyyaml_env_tag-1.1-py3-none-any.whl (4.7 kB)
+Using cached readme_renderer-46.0-py3-none-any.whl (14 kB)
+Using cached requests-2.34.2-py3-none-any.whl (73 kB)
+Using cached certifi-2026.10.23-py3-none-any.whl (135 kB)
+Using cached requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
+Using cached rfc3986-2.0.0-py2.py3-none-any.whl (31 kB)
+Using cached rich-14.3.4-py3-none-any.whl (310 kB)
+Using cached sniffio-1.3.1-py3-none-any.whl (10 kB)
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Using cached urllib3-2.8.0-py3-none-any.whl (135 kB)
+Using cached watchdog-7.0.0-py3-none-manylinux_2_17_x86_64.whl (102 kB)
+Using cached zstandard-0.25.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.5 MB)
+Using cached anyio-4.15.1-py3-none-any.whl (132 kB)
+Using cached async_generator-1.10-py3-none-any.whl (18 kB)
+Using cached brotli-1.2.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.4 MB)
+Using cached id-1.6.1-py3-none-any.whl (14 kB)
+Using cached importlib_metadata-10.1.0-py3-none-any.whl (32 kB)
+Using cached outcome-1.3.0.post0-py2.py3-none-any.whl (10 kB)
+Using cached pyproject_hooks-1.3.3-py3-none-any.whl (10 kB)
+Using cached sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+Using cached charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (257 kB)
+Using cached docutils-0.23-py3-none-any.whl (634 kB)
+Using cached hpack-4.2.0-py3-none-any.whl (34 kB)
+Using cached hyperframe-6.1.0-py3-none-any.whl (13 kB)
+Using cached jeepney-0.9.0-py3-none-any.whl (49 kB)
+Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Using cached nh3-0.3.7-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (832 kB)
+Using cached platformdirs-4.14.2-py3-none-any.whl (35 kB)
+Using cached python_dateutil-3.0.0-py2.py3-none-any.whl (94 kB)
+Using cached secretstorage-3.5.0-py3-none-any.whl (15 kB)
+Using cached zipp-4.1.2-py3-none-any.whl (10 kB)
+Using cached jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB)
+Using cached jaraco_context-6.1.2-py3-none-any.whl (7.9 kB)
+Using cached jaraco_functools-4.6.0-py3-none-any.whl (11 kB)
+Using cached pycparser-3.12-py3-none-any.whl (62 kB)
+Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+Using cached more_itertools-11.2.1-py3-none-any.whl (74 kB)
+Using cached tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Building wheels for collected packages: httpx
+  Building editable for httpx (pyproject.toml): started
+  Building editable for httpx (pyproject.toml): finished with status 'done'
+  Created wheel for httpx: filename=httpx-0.28.1-py3-none-any.whl size=4864 sha256=079b96eded1e4059a2e860e53f82eed04f69480aabbf403785187b68a8d83fc9
+  Stored in directory: /tmp/pip-ephem-wheel-cache-fmm6stnk/wheels/4a/c1/9d/73e05d642a37d392d95b7088ebff5594bec63d6e6609bf2ff4
+Successfully built httpx
+Installing collected packages: sortedcontainers, paginate, brotli, zstandard, zipp, watchdog, urllib3, tzdata, typing_extensions, socksio, sniffio, six, ruff, rfc3986, pyyaml, pyproject_hooks, pygments, pycparser, pluggy, platformdirs, pathspec, packaging, nh3, mypy_extensions, more-itertools, mkdocs-material-extensions, mergedeep, mdurl, markupsafe, markdown, jeepney, jaraco.context, iniconfig, idna, hyperframe, hpack, h11, docutils, coverage, colorama, click, charset_normalizer, chardet, certifi, backrefs, babel, attrs, async-generator, uvicorn, requests, readme-renderer, pyyaml-env-tag, python-dateutil, pytest, pymdown-extensions, outcome, mypy, mkdocs-get-deps, mkautodoc, markdown-it-py, jinja2, jaraco.functools, jaraco.classes, importlib-metadata, id, httpcore, h2, cffi, build, anyio, trio, rich, requests-toolbelt, httpx, ghp-import, cryptography, trustme, trio-typing, SecretStorage, mkdocs, mkdocs-material, keyring, twine
+Successfully installed SecretStorage-3.5.0 anyio-4.15.1 async-generator-1.10 attrs-26.1.0 babel-2.18.0 backrefs-5.9 brotli-1.2.1 build-1.3.0 certifi-2026.10.23 cffi-2.1.1 chardet-5.2.0 charset_normalizer-3.5.2 click-8.2.1 colorama-0.4.6 coverage-7.10.6 cryptography-45.0.7 docutils-0.23 ghp-import-2.1.0 h11-0.16.0 h2-4.4.1 hpack-4.2.0 httpcore-1.0.9 httpx-0.28.1 hyperframe-6.1.0 id-1.6.1 idna-3.20 importlib-metadata-10.1.0 iniconfig-2.3.1 jaraco.classes-3.4.0 jaraco.context-6.1.2 jaraco.functools-4.6.0 jeepney-0.9.0 jinja2-3.1.6 keyring-25.7.0 markdown-3.11.2 markdown-it-py-4.2.0 markupsafe-3.0.4 mdurl-0.1.2 mergedeep-1.3.4 mkautodoc-0.2.0 mkdocs-1.6.1 mkdocs-get-deps-0.2.2 mkdocs-material-9.6.18 mkdocs-material-extensions-1.3.1 more-itertools-11.2.1 mypy-1.17.1 mypy_extensions-1.1.0 nh3-0.3.7 outcome-1.3.0.post0 packaging-26.3 paginate-0.5.7 pathspec-1.1.1 platformdirs-4.14.2 pluggy-1.7.0 pycparser-3.12 pygments-2.21.0 pymdown-extensions-10.21.3 pyproject_hooks-1.3.3 pytest-8.4.1 python-dateutil-3.0.0 pyyaml-6.0.3 pyyaml-env-tag-1.1 readme-renderer-46.0 requests-2.34.2 requests-toolbelt-1.0.0 rfc3986-2.0.0 rich-14.3.4 ruff-0.12.11 six-1.17.0 sniffio-1.3.1 socksio-1.0.0 sortedcontainers-2.4.0 trio-0.31.0 trio-typing-0.10.0 trustme-1.2.1 twine-6.1.0 typing_extensions-4.16.0 tzdata-2026.6 urllib3-2.8.0 uvicorn-0.35.0 watchdog-7.0.0 zipp-4.1.2 zstandard-0.25.0
+
+Output:
+------ Setting up httpx: pip install -r requirements.txt ------
+Python 3.12 for httpx: pyproject.toml allows Python >=3.9.
+> python3 -m venv .venv
+> /home/runner/work/_temp/real-repos/httpx/.venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
+Installed 83 packages into .venv with Python 3.12. The full log is in Output > Project Setup.
+========== pip install -r requirements.txt: succeeded ==========
+========== Running httpx's tests with Pytest ==========
+> sh -c 'if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/httpx/.tabstudio/test-results/4cc594c16f414cdab46396f9c00bf8ae/pytest.xml
+============================= test session starts ==============================
+platform linux -- Python 3.12.15, pytest-8.4.1, pluggy-1.7.0
+rootdir: /home/runner/work/_temp/real-repos/httpx
+configfile: pyproject.toml
+plugins: anyio-4.15.1, platformdirs-4.14.2
+collected 1418 items
+
+tests/client/test_async_client.py ...................................... [  2%]
+..............                                                           [  3%]
+tests/client/test_auth.py .............................................. [  6%]
+..........................s.......                                       [  9%]
+tests/client/test_client.py ...................................          [ 11%]
+tests/client/test_cookies.py .......                                     [ 12%]
+tests/client/test_event_hooks.py .........                               [ 12%]
+tests/client/test_headers.py .................                           [ 14%]
+tests/client/test_properties.py ........                                 [ 14%]
+tests/client/test_proxies.py ........................................... [ 17%]
+..........................                                               [ 19%]
+tests/client/test_queryparams.py ...                                     [ 19%]
+tests/client/test_redirects.py ...............................           [ 21%]
+tests/models/test_cookies.py .......                                     [ 22%]
+tests/models/test_headers.py ...........................                 [ 24%]
+tests/models/test_queryparams.py ..............                          [ 25%]
+tests/models/test_requests.py ........................                   [ 27%]
+tests/models/test_responses.py ......................................... [ 29%]
+.................................................................        [ 34%]
+tests/models/test_url.py ............................................... [ 37%]
+...........................................                              [ 40%]
+tests/models/test_whatwg.py ............................................ [ 43%]
+........................................................................ [ 49%]
+........................................................................ [ 54%]
+........................................................................ [ 59%]
+........................................................................ [ 64%]
+........................................................................ [ 69%]
+........................................................................ [ 74%]
+........................................................................ [ 79%]
+...............                                                          [ 80%]
+tests/test_api.py ............                                           [ 81%]
+tests/test_asgi.py ........................                              [ 83%]
+tests/test_auth.py ........                                              [ 83%]
+tests/test_config.py ............................                        [ 85%]
+tests/test_content.py ...........................................        [ 88%]
+tests/test_decoders.py ........................................          [ 91%]
+tests/test_exceptions.py ...                                             [ 91%]
+tests/test_exported_members.py .                                         [ 91%]
+tests/test_main.py ...........                                           [ 92%]
+tests/test_multipart.py ......................................           [ 95%]
+tests/test_status_codes.py ......                                        [ 95%]
+tests/test_timeouts.py ......F...                                        [ 96%]
+tests/test_utils.py ........................................             [ 99%]
+tests/test_wsgi.py ............                                          [100%]
+
+=================================== FAILURES ===================================
+___________________________ test_write_timeout[trio] ___________________________
+
+agen = <async_generator object ByteStream.__aiter__ at 0x7fa9c8ac5780>
+
+    @_core.enable_ki_protection
+    def finalizer(agen: AsyncGeneratorType[object, NoReturn]) -> None:
+        try:
+            self.foreign.remove(id(agen))
+        except KeyError:
+            is_ours = True
+        else:
+            is_ours = False
+    
+        agen_name = name_asyncgen(agen)
+        if is_ours:
+            runner.entry_queue.run_sync_soon(
+                finalize_in_trio_context,
+                agen,
+                agen_name,
+            )
+    
+            # Do this last, because it might raise an exception
+            # depending on the user's warnings filter. (That
+            # exception will be printed to the terminal and
+            # ignored, since we're running in GC context.)
+>           warnings.warn(
+                f"Async generator {agen_name!r} was garbage collected before it "
+                "had been exhausted. Surround its use in 'async with "
+                "aclosing(...):' to ensure that it gets cleaned up as soon as "
+                "you're done using it.",
+                ResourceWarning,
+                stacklevel=2,
+                source=agen,
+            )
+E           ResourceWarning: Async generator 'httpx._content.ByteStream.__aiter__' was garbage collected before it had been exhausted. Surround its use in 'async with aclosing(...):' to ensure that it gets cleaned up as soon as you're done using it.
+
+.venv/lib/python3.12/site-packages/trio/_core/_asyncgens.py:122: ResourceWarning
+
+The above exception was the direct cause of the following exception:
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x7fa9c89bba60>
+when = 'call'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.12/site-packages/_pytest/runner.py:344: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/_pytest/runner.py:246: in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/pluggy/_caller.py:197: in __call__
+    return self._hookexec(
+.venv/lib/python3.12/site-packages/pluggy/_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/_pytest/logging.py:850: in pytest_runtest_call
+    yield
+.venv/lib/python3.12/site-packages/_pytest/capture.py:900: in pytest_runtest_call
+    return (yield)
+            ^^^^^
+.venv/lib/python3.12/site-packages/_pytest/skipping.py:263: in pytest_runtest_call
+    return (yield)
+            ^^^^^
+.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py:158: in pytest_runtest_call
+    collect_unraisable(item.config)
+.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py:79: in collect_unraisable
+    raise errors[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+config = <_pytest.config.Config object at 0x7fa9ce5b10d0>
+
+    def collect_unraisable(config: Config) -> None:
+        pop_unraisable = config.stash[unraisable_exceptions].pop
+        errors: list[pytest.PytestUnraisableExceptionWarning | RuntimeError] = []
+        meta = None
+        hook_error = None
+        try:
+            while True:
+                try:
+                    meta = pop_unraisable()
+                except IndexError:
+                    break
+    
+                if isinstance(meta, BaseException):
+                    hook_error = RuntimeError("Failed to process unraisable exception")
+                    hook_error.__cause__ = meta
+                    errors.append(hook_error)
+                    continue
+    
+                msg = meta.msg
+                try:
+>                   warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+E                   pytest.PytestUnraisableExceptionWarning: Exception ignored in: <async_generator object ByteStream.__aiter__ at 0x7fa9c8ac5780>
+E                   Enable tracemalloc to get traceback where the object was allocated.
+E                   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py:67: PytestUnraisableExceptionWarning
+----------------------------- Captured stdout call -----------------------------
+INFO:     127.0.0.1:52038 - "PUT /slow_response HTTP/1.1" 200 OK
+- generated xml file: /home/runner/work/_temp/real-repos/httpx/.tabstudio/test-results/4cc594c16f414cdab46396f9c00bf8ae/pytest.xml -
+=========================== short test summary info ============================
+SKIPPED [1] tests/client/test_auth.py:273: netrc files without a password are valid from Python >= 3.11
+================== 1 failed, 1416 passed, 1 skipped in 12.53s ==================
+
