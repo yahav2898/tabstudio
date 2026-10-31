@@ -13,8 +13,18 @@ namespace TabStudio.Android;
 /// a partial wake lock keeps the processor on while the screen is off.
 /// </summary>
 /// <remarks>
+/// <para>
 /// Its type is "data sync": downloads and local file processing. Android 15 lets such a service run six hours a day,
 /// so it stops itself before then.
+/// </para>
+/// <para>
+/// It is started with <c>startService</c> while TabStudio is in front, and goes into the foreground itself. It was
+/// started with <c>startForegroundService</c>, which obliges the service to call <c>startForeground</c> within ten
+/// seconds and ends the app with an ANR when it does not, or when the service is stopped first ("Bringing down service
+/// while still waiting for start foreground"). Operations begin and end in quick succession, as the self test's
+/// toolchain installs do one after another, so a stop could land between a start and its <c>startForeground</c>, and
+/// Android ended TabStudio in the middle of an install. A plain start has no such deadline.
+/// </para>
 /// </remarks>
 // 1 is ForegroundService.TypeDataSync, written as a number: the constant is Android 10's, above the minimum version.
 [Service(Name = "com.tabstudio.ide.OperationsService", Exported = false, ForegroundServiceType = (ForegroundService)1)]
@@ -54,30 +64,36 @@ public sealed class OperationsService : Service
     /// <inheritdoc />
     public override StartCommandResult OnStartCommand(Intent? intent, StartCommandFlags flags, int startId)
     {
-        // Android requires startForeground soon after startForegroundService, even when the operations ended in
-        // between; the service then stops at once.
         _lastStartId = startId;
         var running = AndroidNotifications.Running;
-        var notification = running ?? AndroidNotifications.BuildRunning(this, "TabStudio", "Finishing", null);
-        if (OperatingSystem.IsAndroidVersionAtLeast(29))
-        {
-            StartForeground(NotificationId, notification, ForegroundService.TypeDataSync);
-        }
-        else
-        {
-            StartForeground(NotificationId, notification);
-        }
-
-        // Only now may the operations stop it: stopping a service started with startForegroundService before it called
-        // startForeground is an error Android ends the app for, which the last operation ending right after the first
-        // began did under load (the emulator's self test).
-        Current = this;
-
         if (running is null)
         {
-            Stop();
+            // The operations ended before the start arrived: there is nothing to keep running.
+            StopSelf(startId);
+            return StartCommandResult.NotSticky;
         }
 
+        try
+        {
+            if (OperatingSystem.IsAndroidVersionAtLeast(29))
+            {
+                StartForeground(NotificationId, running, ForegroundService.TypeDataSync);
+            }
+            else
+            {
+                StartForeground(NotificationId, running);
+            }
+        }
+        catch (Java.Lang.IllegalStateException)
+        {
+            // Android 12 and later refuse the foreground from the background (ForegroundServiceStartNotAllowedException)
+            // when the user left TabStudio between the start and now: the operation runs as long as Android lets
+            // TabStudio run, as it does when the start itself is refused.
+            StopSelf(startId);
+            return StartCommandResult.NotSticky;
+        }
+
+        Current = this;
         return StartCommandResult.NotSticky;
     }
 

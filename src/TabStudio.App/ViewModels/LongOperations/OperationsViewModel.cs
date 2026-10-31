@@ -38,6 +38,9 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
 
     private readonly IUiDispatcher _ui;
     private readonly INotifications _notifications;
+
+    /// <summary>The platform's notifications, which the self test drives directly to check the keep-running service.</summary>
+    internal INotifications Notifications => _notifications;
     private readonly IAppActivity? _activity;
     private readonly ITimer _timer;
     private readonly ITimer _release;

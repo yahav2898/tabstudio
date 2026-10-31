@@ -139,6 +139,34 @@ public sealed class MobileProjectTests
     }
 
     [Fact]
+    public void The_Capacitor_template_locks_every_package_it_installs()
+    {
+        // Without a lock file each new project took the newest rollup, and one published minutes earlier answered 404.
+        using var temp = new TempDirectory();
+        MobileTemplates.CreateCapacitor(temp.Path, "My.App");
+        using var manifest = System.Text.Json.JsonDocument.Parse(File.ReadAllText(temp.Resolve("package.json")));
+        using var lockFile = System.Text.Json.JsonDocument.Parse(File.ReadAllText(temp.Resolve("package-lock.json")));
+        var root = lockFile.RootElement.GetProperty("packages").GetProperty("");
+        Assert.Equal("my-app", lockFile.RootElement.GetProperty("name").GetString());
+        Assert.Equal("my-app", root.GetProperty("name").GetString());
+        foreach (var section in new[] { "dependencies", "devDependencies" })
+        {
+            var wanted = manifest.RootElement.GetProperty(section).EnumerateObject().ToDictionary(p => p.Name, p => p.Value.GetString());
+            var locked = root.GetProperty(section).EnumerateObject().ToDictionary(p => p.Name, p => p.Value.GetString());
+            Assert.Equal(wanted, locked);
+        }
+
+        var packages = lockFile.RootElement.GetProperty("packages").EnumerateObject().Where(p => p.Name.Length > 0).ToList();
+        Assert.Contains(packages, p => p.Name == "node_modules/rollup");
+        Assert.All(packages, p =>
+        {
+            Assert.StartsWith("https://registry.npmjs.org/", p.Value.GetProperty("resolved").GetString(), StringComparison.Ordinal);
+            Assert.StartsWith("sha512-", p.Value.GetProperty("integrity").GetString(), StringComparison.Ordinal);
+        });
+        Assert.Equal("npm ci", RunPlan.DependenciesOf(new ToolchainProject(ToolchainCatalog.Default.Find("node")!, temp.Path, null))!.Name);
+    }
+
+    [Fact]
     public async Task Logcat_accepts_only_this_builds_authenticated_loopback_stream()
     {
         using var temp = new TempDirectory();

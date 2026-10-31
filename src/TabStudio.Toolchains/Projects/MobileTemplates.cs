@@ -91,14 +91,32 @@ public static class MobileTemplates
         Write(directory, ".gitignore", ".gradle/\n**/build/\nlocal.properties\n*.jks\n");
     }
 
+    /// <summary>
+    /// The Capacitor template's <c>package-lock.json</c>, with the project's name. Without it every new project resolved
+    /// Vite's and Capacitor's own dependencies afresh, so a package published minutes earlier was chosen while npm's
+    /// registry still answered 404 for its download (rollup 4.67.3), and the template's first install failed. With the
+    /// lock file the template installs the same, tested packages every time, with <c>npm ci</c>.
+    /// </summary>
+    /// <param name="packageName">The name in its <c>package.json</c>.</param>
+    internal static string CapacitorLockFile(string packageName)
+    {
+        using var stream = typeof(MobileTemplates).Assembly.GetManifestResourceStream("TabStudio.Toolchains.Projects.capacitor-package-lock.json")
+            ?? throw new InvalidOperationException("The Capacitor template's lock file is missing from the assembly.");
+        var root = System.Text.Json.Nodes.JsonNode.Parse(stream)!.AsObject();
+        root["name"] = packageName;
+        root["packages"]![""]!["name"] = packageName;
+        return root.ToJsonString(JsonOptions) + "\n";
+    }
+
     /// <summary>Writes a Vite + TypeScript web app with Capacitor Android and iOS dependencies.</summary>
     public static void CreateCapacitor(string directory, string name)
     {
         ArgumentNullException.ThrowIfNull(directory);
         ArgumentNullException.ThrowIfNull(name);
+        var packageName = name.ToLowerInvariant().Replace('.', '-').Replace('_', '-');
         Write(directory, "package.json", JsonSerializer.Serialize(new
         {
-            name = name.ToLowerInvariant().Replace('.', '-').Replace('_', '-'),
+            name = packageName,
             version = "1.0.0",
             type = "module",
             scripts = new Dictionary<string, string>
@@ -111,6 +129,7 @@ public static class MobileTemplates
             dependencies = new Dictionary<string, string> { ["@capacitor/core"] = "6.2.1", ["@capacitor/android"] = "6.2.1", ["@capacitor/ios"] = "6.2.1" },
             devDependencies = new Dictionary<string, string> { ["@capacitor/cli"] = "6.2.1", ["typescript"] = "5.9.3", ["vite"] = "6.4.1" },
         }, JsonOptions) + "\n");
+        Write(directory, "package-lock.json", CapacitorLockFile(packageName));
         Write(directory, "capacitor.config.json", JsonSerializer.Serialize(new { appId = PackageName(name), appName = name, webDir = "dist" }, JsonOptions) + "\n");
         Write(directory, "tsconfig.json", """{ "compilerOptions": { "target": "ES2022", "module": "ESNext", "moduleResolution": "Bundler", "strict": true, "lib": ["ES2022", "DOM"], "noEmit": true }, "include": ["src"] }""");
         Write(directory, "index.html", """
