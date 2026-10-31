@@ -30,6 +30,7 @@ In file included from ./path/glue.c:31:
   CC	path/canon.o
   CC	path/f2fs-bug.o
   CC	path/proc.o
+  CC	path/temp.o
 ./path/proc.c: In function ‘readlink_proc’:
 ./path/proc.c:124:25: warning: ‘__builtin_strncpy’ specified bound depends on the length of the source argument [-Wstringop-truncation]
   124 |                         strncpy(result, string, status + 1);    \
@@ -55,8 +56,6 @@ In file included from ./path/glue.c:31:
 ./path/proc.c:131:17: note: in expansion of macro ‘SUBSTITUTE’
   131 |                 SUBSTITUTE(cwd, known_tracee->fs->cwd);
       |                 ^~~~~~~~~~
-  CC	path/temp.o
-  CC	syscall/syscall.o
 ./path/temp.c: In function ‘get_temp_directory’:
 ./path/temp.c:37:9: warning: ‘talloc_autofree_context’ is deprecated [-Wdeprecated-declarations]
    37 |         temp_directory = talloc_strdup(talloc_autofree_context(), tmp);
@@ -72,10 +71,10 @@ In file included from ./path/temp.c:9:
 /usr/include/talloc.h:1071:7: note: declared here
  1071 | void *talloc_autofree_context(void) _DEPRECATED_;
       |       ^~~~~~~~~~~~~~~~~~~~~~~
+  CC	syscall/syscall.o
   CC	syscall/chain.o
   CC	syscall/enter.o
   CC	syscall/wch_guard.o
-  CC	syscall/wch_usbfs.o
 ./syscall/enter.c: In function ‘emulate_pivot_root’:
 ./syscall/enter.c:376:24: warning: ‘get_binding’ reading 4096 bytes from a region of size 2 [-Wstringop-overread]
   376 |         root_binding = get_binding(tracee, GUEST, "/");
@@ -110,6 +109,7 @@ In file included from ./syscall/enter.c:67:
 ./syscall/syscall.h:53:12: note: in a call to function ‘set_sysarg_path’
    53 | extern int set_sysarg_path(Tracee *tracee, const char path[PATH_MAX], Reg reg);
       |            ^~~~~~~~~~~~~~~
+  CC	syscall/wch_usbfs.o
   CC	syscall/exit.o
 ./syscall/exit.c: In function ‘translate_syscall_exit’:
 ./syscall/exit.c:428:68: warning: comparison of unsigned expression in ‘< 0’ is always false [-Wtype-limits]
@@ -117,11 +117,11 @@ In file included from ./syscall/enter.c:67:
       |                                                                    ^
   CC	syscall/sysnum.o
   CC	syscall/socket.o
+  CC	syscall/heap.o
 ./syscall/socket.c: In function ‘push_sockaddr_un’:
 ./syscall/socket.c:105:9: warning: ‘__builtin_strncpy’ specified bound 108 equals destination size [-Wstringop-truncation]
   105 |         strncpy(sockaddr->sun_path, host_path, sizeof_path);
       |         ^
-  CC	syscall/heap.o
   CC	syscall/rlimit.o
 In file included from ./syscall/rlimit.c:31:
 ./syscall/rlimit.c: In function ‘translate_setrlimit_exit’:
@@ -160,6 +160,11 @@ In file included from ./syscall/rlimit.c:31:
   CC	extension/ashmem_memfd/ashmem_memfd.o
   CC	extension/kompat/kompat.o
   CC	extension/fake_id0/chown.o
+  CC	extension/fake_id0/chroot.o
+./extension/fake_id0/chroot.c: In function ‘handle_chroot_exit_end’:
+./extension/fake_id0/chroot.c:54:9: warning: ignoring return value of ‘realpath’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   54 |         realpath(path, path_host_absolute);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ./extension/kompat/kompat.c: In function ‘parse_utsname’:
 ./extension/kompat/kompat.c:939:17: warning: ‘__builtin_strncpy’ specified bound depends on the length of the source argument [-Wstringop-truncation]
   939 |                 strncpy(config->utsname.release, string, length);
@@ -168,11 +173,6 @@ In file included from ./extension/kompat/kompat.c:35:
 ./extension/kompat/kompat.c:938:30: note: length computed here
   938 |                 length = MIN(strlen(string), sizeof(config->utsname.release) - 1);
       |                              ^
-  CC	extension/fake_id0/chroot.o
-./extension/fake_id0/chroot.c: In function ‘handle_chroot_exit_end’:
-./extension/fake_id0/chroot.c:54:9: warning: ignoring return value of ‘realpath’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-   54 |         realpath(path, path_host_absolute);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   CC	extension/fake_id0/getsockopt.o
   CC	extension/fake_id0/sendmsg.o
   CC	extension/fake_id0/socket.o
@@ -242,7 +242,6 @@ In file included from ./extension/fake_id0/exec.c:7:
   184 |                         strncpy(path, new_path, PATH_MAX);
       |                         ^
   CC	extension/port_switch/port_switch.o
-  CC	extension/sysvipc/sysvipc.o
 ./extension/port_switch/port_switch.c: In function ‘mod_port’:
 ./extension/port_switch/port_switch.c:174:100: warning: ‘sizeof’ on array function parameter ‘socketcall_arg2’ will return size of ‘long int *’ [-Wsizeof-array-argument]
   174 |                     write_data(tracee, peek_reg(tracee, CURRENT, SYSARG_2), socketcall_arg2, sizeof(socketcall_arg2));
@@ -268,6 +267,8 @@ In file included from ./extension/fake_id0/exec.c:7:
 ./extension/port_switch/port_switch.c:145:121: note: declared here
   145 | void mod_port(Tracee *tracee, bool is_socketcall, bool is_bind, bool is_udp, struct sockaddr_storage *my_sockaddr, long socketcall_arg2[]) {
       |                                                                                                                    ~~~~~^~~~~~~~~~~~~~~~~
+  CC	extension/sysvipc/sysvipc.o
+  CC	extension/sysvipc/sysvipc_msg.o
 ./extension/sysvipc/sysvipc.c: In function ‘sysvipc_callback’:
 ./extension/sysvipc/sysvipc.c:216:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
   216 |         {
@@ -288,14 +289,12 @@ In file included from ./extension/fake_id0/exec.c:7:
 ./extension/sysvipc/sysvipc.c:62:9: note: here
    62 |         case PR_semop:
       |         ^~~~
-  CC	extension/sysvipc/sysvipc_msg.o
   CC	extension/sysvipc/sysvipc_sem.o
+  CC	extension/sysvipc/sysvipc_shm.o
 ./extension/sysvipc/sysvipc_sem.c: In function ‘sysvipc_semop’:
 ./extension/sysvipc/sysvipc_sem.c:149:37: warning: comparison is always false due to limited range of data type [-Wtype-limits]
   149 |                 if (sops[i].sem_num < 0 || sops[i].sem_num >= semaphore->nsems) {
       |                                     ^
-  CC	extension/sysvipc/sysvipc_shm.o
-  CC	extension/link2symlink/link2symlink.o
 ./extension/sysvipc/sysvipc_shm.c: In function ‘sysvipc_shm_send_helper_request’:
 ./extension/sysvipc/sysvipc_shm.c:188:9: warning: ignoring return value of ‘write’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
   188 |         write(proot2helper, request, sizeof(*request));
@@ -307,10 +306,12 @@ In file included from ./extension/fake_id0/exec.c:7:
 ./extension/sysvipc/sysvipc_shm.c:877:25: warning: ignoring return value of ‘write’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
   877 |                         write(1, &fd, sizeof(int));
       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+  CC	extension/link2symlink/link2symlink.o
 ./extension/sysvipc/sysvipc_shm.c:837:17: warning: ‘__builtin_strncpy’ specified bound 108 equals destination size [-Wstringop-truncation]
   837 |                 strncpy(addr.sun_path, path, sizeof(addr.sun_path));
       |                 ^
   CC	extension/fix_symlink_size/fix_symlink_size.o
+  CC	loader/loader.o
 ./extension/link2symlink/link2symlink.c: In function ‘move_and_symlink_path’:
 ./extension/link2symlink/link2symlink.c:854:25: warning: ‘__builtin___strncpy_chk’ specified bound depends on the length of the source argument [-Wstringop-truncation]
   854 |                         strncpy(intermediate, original, strlen(original) - strlen(name));
@@ -318,7 +319,6 @@ In file included from ./extension/fake_id0/exec.c:7:
 ./extension/link2symlink/link2symlink.c:851:46: note: length computed here
   851 |                         if (strlen(PREFIX) + strlen(original) + 5 >= PATH_MAX)
       |                                              ^~~~~~~~~~~~~~~~
-  CC	loader/loader.o
 In file included from ./loader/loader.c:31:
 ./loader/loader.c: In function ‘_start’:
 ./loader/assembly-x86_64.h:32:9: warning: listing the stack pointer register ‘rsp’ in a clobber list is deprecated [-Wdeprecated]
@@ -335,8 +335,8 @@ In file included from ./loader/loader.c:31:
       |                                 ^~~~~~
   CC	loader/assembly.o
   LD	loader/loader
-  GEN	build.h
 make: 'loader/loader' is up to date.
+  GEN	build.h
   CC	cli/cli.o
   CC	cli/proot.o
 ./cli/proot.c: In function ‘handle_option_V’:
@@ -2202,16 +2202,16 @@ Downloading: Ubuntu base
 Configuring: apt-get update
 Configuring: Get:1 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
 Configuring: Get:2 http://archive.ubuntu.com/ubuntu noble InRelease [256 kB]
-Configuring: Get:3 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1146 kB]
-Configuring: Get:4 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Configuring: Get:3 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Configuring: Get:4 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1146 kB]
 Configuring: Get:5 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
 Configuring: Get:6 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages [1401 kB]
 Configuring: Get:7 http://security.ubuntu.com/ubuntu noble-security/main Translation-en [231 kB]
 Configuring: Get:8 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1223 kB]
 Configuring: Get:9 http://archive.ubuntu.com/ubuntu noble/main Translation-en [513 kB]
 Configuring: Get:10 http://security.ubuntu.com/ubuntu noble-security/universe Translation-en [246 kB]
-Configuring: Get:11 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1713 kB]
-Configuring: Get:12 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [15.0 MB]
+Configuring: Get:11 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [15.0 MB]
+Configuring: Get:12 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1713 kB]
 Configuring: Get:13 http://security.ubuntu.com/ubuntu noble-security/restricted Translation-en [392 kB]
 Configuring: Get:14 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [45.4 kB]
 Configuring: Get:15 http://security.ubuntu.com/ubuntu noble-security/multiverse Translation-en [12.1 kB]
@@ -2222,7 +2222,7 @@ Configuring: Get:19 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 Pack
 Configuring: Get:20 http://archive.ubuntu.com/ubuntu noble/multiverse Translation-en [118 kB]
 Configuring: Get:21 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1408 kB]
 Configuring: Get:22 http://archive.ubuntu.com/ubuntu noble-updates/main Translation-en [311 kB]
-Configuring: Get:23 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1707 kB]
+Configuring: Get:23 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1708 kB]
 Configuring: Get:24 http://archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [343 kB]
 Configuring: Get:25 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1813 kB]
 Configuring: Get:26 http://archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [412 kB]
@@ -2234,7 +2234,7 @@ Configuring: Get:31 http://archive.ubuntu.com/ubuntu noble-backports/universe am
 Configuring: Get:32 http://archive.ubuntu.com/ubuntu noble-backports/universe Translation-en [18.6 kB]
 Configuring: Get:33 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Packages [748 B]
 Configuring: Get:34 http://archive.ubuntu.com/ubuntu noble-backports/multiverse Translation-en [340 B]
-Configuring: Fetched 35.2 MB in 5s (7727 kB/s)
+Configuring: Fetched 35.2 MB in 5s (7342 kB/s)
 Configuring: Reading package lists...
 Configuring: apt-get install -y --no-install-recommends ca-certificates curl git python3 python3-venv python3-pip build-essential cmake ninja-build xz-utils libusb-1.0-0-dev libhidapi-dev clangd
 Configuring: Reading package lists...
@@ -2450,7 +2450,7 @@ Configuring: Get:134 http://archive.ubuntu.com/ubuntu noble/universe amd64 libhi
 Configuring: Get:135 http://archive.ubuntu.com/ubuntu noble/universe amd64 libhidapi-hidraw0 amd64 0.14.0-1build1 [13.2 kB]
 Configuring: Get:136 http://archive.ubuntu.com/ubuntu noble/universe amd64 libhidapi-dev amd64 0.14.0-1build1 [28.2 kB]
 Configuring: debconf: delaying package configuration, since apt-utils is not installed
-Configuring: Fetched 189 MB in 7s (27.8 MB/s)
+Configuring: Fetched 189 MB in 14s (13.7 MB/s)
 Configuring: (Reading database ...
 Configuring: (Reading database ... 5%
 Configuring: (Reading database ... 10%
@@ -3180,8 +3180,8 @@ Configuring: Setting up libsasl2-modules-db:amd64 (2.1.28+dfsg1-5ubuntu3.1) ...
 Configuring: Setting up tzdata (2026e-0ubuntu0.24.04.1) ...
 Configuring: 
 Configuring: Current default time zone: 'Etc/UTC'
-Configuring: Local time is now:      Sat Oct 31 17:52:08 UTC 2026.
-Configuring: Universal Time is now:  Sat Oct 31 17:52:08 UTC 2026.
+Configuring: Local time is now:      Sat Oct 31 23:43:12 UTC 2026.
+Configuring: Universal Time is now:  Sat Oct 31 23:43:12 UTC 2026.
 Configuring: Run 'dpkg-reconfigure tzdata' if you wish to change it.
 Configuring: 
 Configuring: Setting up rpcsvc-proto (1.4.2-0ubuntu7) ...
@@ -3307,7 +3307,7 @@ Configuring: Setting up Bounded native build /opt/tabstudio/embedded/build-bin/m
 Configuring: cc -std=gnu17 -O2 -Wall -Wextra -Werror -shared -fPIC /opt/tabstudio/embedded/usb_fd.c -o /opt/tabstudio/embedded/libusb-fd.so -lusb-1.0 -ldl -pthread
 Configuring: cc -std=gnu17 -O2 -Wall -Wextra -Werror -shared -fPIC /opt/tabstudio/embedded/serial_posix.c -o /opt/tabstudio/embedded/serial-posix.so -ldl -pthread
 Configuring: cc -std=gnu17 -O2 -Wall -Wextra -Werror -shared -fPIC /opt/tabstudio/embedded/usbfs_fd.c -o /opt/tabstudio/embedded/usbfs-fd.so -ldl -pthread
-Configuring: python3 /opt/tabstudio/embedded/serial_bridge.py --virtual --shim /opt/tabstudio/embedded/serial-posix.so --port /tmp/tabstudio-bridge-test-68d77f48bf7444c8bef99fa26b298adc -- python3 -c 'import array,fcntl,os,select,sys,termios,time,tty
+Configuring: python3 /opt/tabstudio/embedded/serial_bridge.py --virtual --shim /opt/tabstudio/embedded/serial-posix.so --port /tmp/tabstudio-bridge-test-1781f634bccb49d1a3e9466525277c81 -- python3 -c 'import array,fcntl,os,select,sys,termios,time,tty
 fd=os.open(sys.argv[1],os.O_RDWR|os.O_NOCTTY)
 tty.setraw(fd)
 config=termios.tcgetattr(fd)
@@ -3339,60 +3339,60 @@ Configuring: Collecting ajsonrpc==1.2.0 (from -r /opt/tabstudio/platformio.requi
 Configuring:   Downloading ajsonrpc-1.2.0-py3-none-any.whl (22 kB)
 Configuring: Collecting anyio==4.15.1 (from -r /opt/tabstudio/platformio.requirements.txt (line 2))
 Configuring:   Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 132.1/132.1 kB 9.9 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 132.1/132.1 kB 14.2 MB/s eta 0:00:00
 Configuring: Collecting bottle==0.13.4 (from -r /opt/tabstudio/platformio.requirements.txt (line 3))
 Configuring:   Downloading bottle-0.13.4-py2.py3-none-any.whl (103 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.8/103.8 kB 28.7 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.8/103.8 kB 20.1 MB/s eta 0:00:00
 Configuring: Collecting certifi==2026.10.23 (from -r /opt/tabstudio/platformio.requirements.txt (line 4))
 Configuring:   Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 34.3 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 26.2 MB/s eta 0:00:00
 Configuring: Collecting charset-normalizer==3.5.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 5))
 Configuring:   Downloading charset_normalizer-3.5.2-py3-none-any.whl (68 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 68.9/68.9 kB 17.2 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 68.9/68.9 kB 12.9 MB/s eta 0:00:00
 Configuring: Collecting click==8.5.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 6))
 Configuring:   Downloading click-8.5.0-py3-none-any.whl (125 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 125.3/125.3 kB 34.1 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 125.3/125.3 kB 24.7 MB/s eta 0:00:00
 Configuring: Collecting colorama==0.4.6 (from -r /opt/tabstudio/platformio.requirements.txt (line 7))
 Configuring:   Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
 Configuring: Collecting h11==0.16.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 8))
 Configuring:   Downloading h11-0.16.0-py3-none-any.whl (37 kB)
 Configuring: Collecting idna==3.20 (from -r /opt/tabstudio/platformio.requirements.txt (line 9))
 Configuring:   Downloading idna-3.20-py3-none-any.whl (69 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 16.9 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 14.4 MB/s eta 0:00:00
 Configuring: Collecting marshmallow==4.3.1 (from -r /opt/tabstudio/platformio.requirements.txt (line 10))
 Configuring:   Downloading marshmallow-4.3.1-py3-none-any.whl (49 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 49.2/49.2 kB 11.8 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 49.2/49.2 kB 8.9 MB/s eta 0:00:00
 Configuring: Collecting pip==26.2.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 11))
 Configuring:   Downloading pip-26.2.2-py3-none-any.whl (1.8 MB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 102.7 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 135.4 MB/s eta 0:00:00
 Configuring: Collecting platformio==6.2.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 12))
 Configuring:   Downloading platformio-6.2.0-py3-none-any.whl (418 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 418.6/418.6 kB 101.0 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 418.6/418.6 kB 68.9 MB/s eta 0:00:00
 Configuring: Collecting pyelftools==0.33 (from -r /opt/tabstudio/platformio.requirements.txt (line 13))
 Configuring:   Downloading pyelftools-0.33-py3-none-any.whl (201 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 201.2/201.2 kB 49.1 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 201.2/201.2 kB 38.7 MB/s eta 0:00:00
 Configuring: Collecting pyserial==3.5 (from -r /opt/tabstudio/platformio.requirements.txt (line 14))
 Configuring:   Downloading pyserial-3.5-py2.py3-none-any.whl (90 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.6/90.6 kB 24.9 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.6/90.6 kB 18.3 MB/s eta 0:00:00
 Configuring: Collecting requests==2.34.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 15))
 Configuring:   Downloading requests-2.34.2-py3-none-any.whl (73 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 20.5 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 16.3 MB/s eta 0:00:00
 Configuring: Collecting semantic-version==2.10.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 16))
 Configuring:   Downloading semantic_version-2.10.0-py2.py3-none-any.whl (15 kB)
 Configuring: Collecting starlette==1.10.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 17))
 Configuring:   Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.6/80.6 kB 23.6 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.6/80.6 kB 15.9 MB/s eta 0:00:00
 Configuring: Collecting tabulate==0.10.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 18))
 Configuring:   Downloading tabulate-0.10.0-py3-none-any.whl (39 kB)
 Configuring: Collecting typing_extensions==4.16.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 19))
 Configuring:   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 12.3 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 8.7 MB/s eta 0:00:00
 Configuring: Collecting urllib3==2.8.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 20))
 Configuring:   Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 39.0 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 27.6 MB/s eta 0:00:00
 Configuring: Collecting uvicorn==0.54.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 21))
 Configuring:   Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.4/87.4 kB 23.3 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.4/87.4 kB 17.6 MB/s eta 0:00:00
 Configuring: Collecting wsproto==1.3.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 22))
 Configuring:   Downloading wsproto-1.3.2-py3-none-any.whl (24 kB)
 Configuring: Installing collected packages: pyserial, bottle, urllib3, typing_extensions, tabulate, semantic-version, pyelftools, pip, marshmallow, idna, h11, colorama, click, charset-normalizer, certifi, ajsonrpc, wsproto, uvicorn, requests, anyio, starlette, platformio
@@ -3422,152 +3422,152 @@ Completed: PlatformIO Core is installed in the embedded glibc environment
 [teensy40] Tool Manager: Installing platformio/toolchain-gccarmnoneeabi-teensy @ ~1.150201.0
 [teensy40] Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
 [teensy40] Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/bin/.l2s.arm-none-eabi-gstack0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/bin/.l2s.arm-none-eabi-gstack0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/bin/.l2s.arm-none-eabi-gstack0001.0002' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/bin/.l2s.arm-none-eabi-gstack0001.0002`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1/include/.l2s.syslimits.h0001.0003' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1/include/.l2s.syslimits.h0001.0003`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1/include' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1/include`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1/include-fixed/.l2s.README0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1/include-fixed/.l2s.README0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001.0006' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001.0006`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-cp15dmb.specs0001.0006' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-cp15dmb.specs0001.0006`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1/finclude/.l2s.ieee_arithmetic.mod0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1/finclude/.l2s.ieee_arithmetic.mod0001`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi/15.2.1`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc/arm-none-eabi`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib/gcc`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/lib`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/backward/.l2s.hash_map0001.0002' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/backward/.l2s.hash_map0001.0002`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/backward' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/backward`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdc++.h0001.0008' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdc++.h0001.0008`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.gthr-posix.h0001.0008' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.gthr-posix.h0001.0008`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.basic_file.h0001.0008' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.basic_file.h0001.0008`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.c++config.h0001.0002' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.c++config.h0001.0002`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdtr1c++.h0001.0008' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdtr1c++.h0001.0008`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.messages_members.h0001.0008' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.messages_members.h0001.0008`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.cpu_defines.h0001.0008' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.cpu_defines.h0001.0008`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.opt_random.h0001.0008' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.opt_random.h0001.0008`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits/.l2s.c++config.h0001.0004' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits/.l2s.c++config.h0001.0004`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001.0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001.0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1/arm-none-eabi`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++/15.2.1`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include/c++`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/include`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/bin/.l2s.nm0001.0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/bin/.l2s.nm0001.0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/bin/.l2s.as0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/bin/.l2s.as0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/bin/.l2s.as0001.0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/bin/.l2s.as0001.0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/bin/.l2s.readelf0001.0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/bin/.l2s.readelf0001.0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/bin/.l2s.objdump0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/bin/.l2s.objdump0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/bin/.l2s.readelf0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/bin/.l2s.readelf0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/bin/.l2s.nm0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/bin/.l2s.nm0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/ldscripts/.l2s.stamp0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/ldscripts/.l2s.stamp0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/ldscripts/.l2s.stamp0001.0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/ldscripts/.l2s.stamp0001.0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/.l2s.aprofile-validation-v2m.specs0001.0006' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/.l2s.aprofile-validation-v2m.specs0001.0006`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/.l2s.nano.specs0001.0006' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/.l2s.nano.specs0001.0006`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/.l2s.pid.specs0001.0006' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/.l2s.pid.specs0001.0006`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc_nano.a0001.0002' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc_nano.a0001.0002`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001.0002' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001.0002`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+fp/hard' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+fp/hard`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+fp' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+fp`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc_nano.a0001.0002' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc_nano.a0001.0002`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001.0002' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001.0002`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+dp/hard' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+dp/hard`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+dp' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m+dp`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001.0002' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001.0002`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc_nano.a0001.0002' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc_nano.a0001.0002`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001.0002' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001.0002`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v6-m/nofp' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v6-m/nofp`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v6-m' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v6-m`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001.0002' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001.0002`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/thumb`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/.l2s.rdpmon.specs0001.0006' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/.l2s.rdpmon.specs0001.0006`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/.l2s.rdimon.specs0001.0006' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/.l2s.rdimon.specs0001.0006`
-[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/.l2s.nosys.specs0001.0006' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib/.l2s.nosys.specs0001.0006`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi/lib`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn/arm-none-eabi`
-[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn' 
-[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-0ikbj5sn`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/bin/.l2s.arm-none-eabi-gstack0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/bin/.l2s.arm-none-eabi-gstack0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/bin/.l2s.arm-none-eabi-gstack0001.0002' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/bin/.l2s.arm-none-eabi-gstack0001.0002`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1/include/.l2s.syslimits.h0001.0003' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1/include/.l2s.syslimits.h0001.0003`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1/include' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1/include`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1/include-fixed/.l2s.README0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1/include-fixed/.l2s.README0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001.0006' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001.0006`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-cp15dmb.specs0001.0006' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-cp15dmb.specs0001.0006`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1/finclude/.l2s.ieee_arithmetic.mod0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1/finclude/.l2s.ieee_arithmetic.mod0001`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi/15.2.1`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc/arm-none-eabi`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib/gcc`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/lib`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/backward/.l2s.hash_map0001.0002' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/backward/.l2s.hash_map0001.0002`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/backward' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/backward`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdc++.h0001.0008' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdc++.h0001.0008`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.gthr-posix.h0001.0008' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.gthr-posix.h0001.0008`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.basic_file.h0001.0008' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.basic_file.h0001.0008`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.c++config.h0001.0002' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.c++config.h0001.0002`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdtr1c++.h0001.0008' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdtr1c++.h0001.0008`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.messages_members.h0001.0008' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.messages_members.h0001.0008`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.cpu_defines.h0001.0008' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.cpu_defines.h0001.0008`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.opt_random.h0001.0008' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.opt_random.h0001.0008`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits/.l2s.c++config.h0001.0004' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits/.l2s.c++config.h0001.0004`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001.0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001.0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1/arm-none-eabi`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++/15.2.1`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include/c++`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/include`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/bin/.l2s.nm0001.0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/bin/.l2s.nm0001.0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/bin/.l2s.as0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/bin/.l2s.as0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/bin/.l2s.as0001.0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/bin/.l2s.as0001.0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/bin/.l2s.readelf0001.0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/bin/.l2s.readelf0001.0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/bin/.l2s.objdump0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/bin/.l2s.objdump0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/bin/.l2s.readelf0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/bin/.l2s.readelf0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/bin/.l2s.nm0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/bin/.l2s.nm0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/ldscripts/.l2s.stamp0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/ldscripts/.l2s.stamp0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/ldscripts/.l2s.stamp0001.0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/ldscripts/.l2s.stamp0001.0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/.l2s.aprofile-validation-v2m.specs0001.0006' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/.l2s.aprofile-validation-v2m.specs0001.0006`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/.l2s.nano.specs0001.0006' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/.l2s.nano.specs0001.0006`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/.l2s.pid.specs0001.0006' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/.l2s.pid.specs0001.0006`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc_nano.a0001.0002' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc_nano.a0001.0002`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001.0002' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001.0002`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+fp/hard' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+fp/hard`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+fp' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+fp`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc_nano.a0001.0002' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc_nano.a0001.0002`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001.0002' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001.0002`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+dp/hard' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+dp/hard`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+dp' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m+dp`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001.0002' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001.0002`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc_nano.a0001.0002' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc_nano.a0001.0002`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001.0002' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001.0002`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v6-m/nofp' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v6-m/nofp`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v6-m' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v6-m`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001.0002' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001.0002`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/thumb`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/.l2s.rdpmon.specs0001.0006' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/.l2s.rdpmon.specs0001.0006`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/.l2s.rdimon.specs0001.0006' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/.l2s.rdimon.specs0001.0006`
+[teensy40] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/.l2s.nosys.specs0001.0006' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib/.l2s.nosys.specs0001.0006`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi/lib`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri/arm-none-eabi`
+[teensy40] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri' 
+[teensy40] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-1fliyqri`
 [teensy40] Tool Manager: toolchain-gccarmnoneeabi-teensy@1.150201.0 has been installed!
 [teensy40] Tool Manager: Installing platformio/framework-arduinoteensy @ ~1.162.0
 [teensy40] Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
@@ -3692,7 +3692,7 @@ Completed: PlatformIO Core is installed in the embedded glibc environment
 [teensy40] teensy_size:    RAM1: variables:2464, code:7440, padding:25328   free for local variables:489056
 [teensy40] teensy_size:    RAM2: variables:12416  free for malloc/new:511872
 [teensy40] Building .pio/build/teensy40/firmware.hex
-[teensy40] ========================= [SUCCESS] Took 66.58 seconds =========================
+[teensy40] ========================= [SUCCESS] Took 88.20 seconds =========================
 [teensy40] Processing teensy40 (platform: teensy@6.0.0; board: teensy40; framework: arduino)
 [teensy40] --------------------------------------------------------------------------------
 [teensy40] Verbose mode can be enabled via `-v, --verbose` option
@@ -3711,7 +3711,7 @@ Completed: PlatformIO Core is installed in the embedded glibc environment
 [teensy40] No dependencies
 [teensy40] Building in release mode
 [teensy40] Building compilation database compile_commands.json
-[teensy40] ========================= [SUCCESS] Took 2.55 seconds =========================
+[teensy40] ========================= [SUCCESS] Took 3.68 seconds =========================
 CANONICAL_TEMPLATE_BUILT teensy40 x86_64
 [teensy41] ********************************************************************************
 [teensy41] If you like PlatformIO, please:
@@ -3727,152 +3727,152 @@ CANONICAL_TEMPLATE_BUILT teensy40 x86_64
 [teensy41] Platform Manager: teensy@6.0.0 has been installed!
 [teensy41] Tool Manager: Installing platformio/toolchain-gccarmnoneeabi-teensy @ ~1.150201.0
 [teensy41] Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/bin/.l2s.arm-none-eabi-gstack0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/bin/.l2s.arm-none-eabi-gstack0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/bin/.l2s.arm-none-eabi-gstack0001.0002' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/bin/.l2s.arm-none-eabi-gstack0001.0002`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1/include/.l2s.syslimits.h0001.0003' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1/include/.l2s.syslimits.h0001.0003`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1/include' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1/include`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1/include-fixed/.l2s.README0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1/include-fixed/.l2s.README0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001.0006' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001.0006`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-cp15dmb.specs0001.0006' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-cp15dmb.specs0001.0006`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1/finclude/.l2s.ieee_arithmetic.mod0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1/finclude/.l2s.ieee_arithmetic.mod0001`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi/15.2.1`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc/arm-none-eabi`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib/gcc`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/lib`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/backward/.l2s.hash_map0001.0002' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/backward/.l2s.hash_map0001.0002`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/backward' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/backward`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdc++.h0001.0008' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdc++.h0001.0008`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.gthr-posix.h0001.0008' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.gthr-posix.h0001.0008`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.basic_file.h0001.0008' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.basic_file.h0001.0008`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.c++config.h0001.0002' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.c++config.h0001.0002`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdtr1c++.h0001.0008' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdtr1c++.h0001.0008`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.messages_members.h0001.0008' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.messages_members.h0001.0008`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.cpu_defines.h0001.0008' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.cpu_defines.h0001.0008`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.opt_random.h0001.0008' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.opt_random.h0001.0008`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits/.l2s.c++config.h0001.0004' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits/.l2s.c++config.h0001.0004`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001.0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001.0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1/arm-none-eabi`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++/15.2.1`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include/c++`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/include`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/bin/.l2s.nm0001.0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/bin/.l2s.nm0001.0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/bin/.l2s.as0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/bin/.l2s.as0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/bin/.l2s.as0001.0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/bin/.l2s.as0001.0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/bin/.l2s.readelf0001.0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/bin/.l2s.readelf0001.0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/bin/.l2s.objdump0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/bin/.l2s.objdump0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/bin/.l2s.readelf0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/bin/.l2s.readelf0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/bin/.l2s.nm0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/bin/.l2s.nm0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/ldscripts/.l2s.stamp0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/ldscripts/.l2s.stamp0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/ldscripts/.l2s.stamp0001.0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/ldscripts/.l2s.stamp0001.0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/.l2s.aprofile-validation-v2m.specs0001.0006' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/.l2s.aprofile-validation-v2m.specs0001.0006`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/.l2s.nano.specs0001.0006' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/.l2s.nano.specs0001.0006`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/.l2s.pid.specs0001.0006' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/.l2s.pid.specs0001.0006`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc_nano.a0001.0002' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc_nano.a0001.0002`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001.0002' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001.0002`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+fp/hard' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+fp/hard`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+fp' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+fp`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc_nano.a0001.0002' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc_nano.a0001.0002`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001.0002' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001.0002`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+dp/hard' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+dp/hard`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+dp' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m+dp`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001.0002' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001.0002`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc_nano.a0001.0002' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc_nano.a0001.0002`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001.0002' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001.0002`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v6-m/nofp' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v6-m/nofp`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v6-m' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v6-m`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001.0002' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001.0002`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/thumb`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/.l2s.rdpmon.specs0001.0006' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/.l2s.rdpmon.specs0001.0006`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/.l2s.rdimon.specs0001.0006' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/.l2s.rdimon.specs0001.0006`
-[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/.l2s.nosys.specs0001.0006' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib/.l2s.nosys.specs0001.0006`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi/lib`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt/arm-none-eabi`
-[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt' 
-[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-veenupjt`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/bin/.l2s.arm-none-eabi-gstack0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/bin/.l2s.arm-none-eabi-gstack0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/bin/.l2s.arm-none-eabi-gstack0001.0002' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/bin/.l2s.arm-none-eabi-gstack0001.0002`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1/include/.l2s.syslimits.h0001.0003' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1/include/.l2s.syslimits.h0001.0003`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1/include' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1/include`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1/include-fixed/.l2s.README0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1/include-fixed/.l2s.README0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001.0006' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001.0006`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-cp15dmb.specs0001.0006' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-cp15dmb.specs0001.0006`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1/.l2s.sync-dmb.specs0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1/finclude/.l2s.ieee_arithmetic.mod0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1/finclude/.l2s.ieee_arithmetic.mod0001`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi/15.2.1`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc/arm-none-eabi`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib/gcc`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/lib`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/backward/.l2s.hash_map0001.0002' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/backward/.l2s.hash_map0001.0002`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/backward' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/backward`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdc++.h0001.0008' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdc++.h0001.0008`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.gthr-posix.h0001.0008' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.gthr-posix.h0001.0008`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.basic_file.h0001.0008' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.basic_file.h0001.0008`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.c++config.h0001.0002' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.c++config.h0001.0002`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdtr1c++.h0001.0008' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.stdtr1c++.h0001.0008`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.messages_members.h0001.0008' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.messages_members.h0001.0008`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.cpu_defines.h0001.0008' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.cpu_defines.h0001.0008`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.opt_random.h0001.0008' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits/.l2s.opt_random.h0001.0008`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/bits`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits/.l2s.c++config.h0001.0004' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits/.l2s.c++config.h0001.0004`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard/bits`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp/hard`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb/v7e-m+dp`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/thumb`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001.0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001.0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi/ext/.l2s.opt_random.h0001`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1/arm-none-eabi`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++/15.2.1`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include/c++`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/include`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/bin/.l2s.nm0001.0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/bin/.l2s.nm0001.0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/bin/.l2s.as0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/bin/.l2s.as0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/bin/.l2s.as0001.0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/bin/.l2s.as0001.0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/bin/.l2s.readelf0001.0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/bin/.l2s.readelf0001.0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/bin/.l2s.objdump0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/bin/.l2s.objdump0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/bin/.l2s.readelf0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/bin/.l2s.readelf0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/bin/.l2s.nm0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/bin/.l2s.nm0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/ldscripts/.l2s.stamp0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/ldscripts/.l2s.stamp0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/ldscripts/.l2s.stamp0001.0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/ldscripts/.l2s.stamp0001.0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/.l2s.aprofile-validation-v2m.specs0001.0006' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/.l2s.aprofile-validation-v2m.specs0001.0006`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/.l2s.nano.specs0001.0006' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/.l2s.nano.specs0001.0006`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/.l2s.pid.specs0001.0006' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/.l2s.pid.specs0001.0006`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc_nano.a0001.0002' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc_nano.a0001.0002`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001.0002' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+fp/hard/.l2s.libc.a0001.0002`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+fp/hard' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+fp/hard`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+fp' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+fp`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc_nano.a0001.0002' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc_nano.a0001.0002`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001.0002' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+dp/hard/.l2s.libc.a0001.0002`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+dp/hard' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+dp/hard`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+dp' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m+dp`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001.0002' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v7e-m/nofp/.l2s.libc.a0001.0002`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc_nano.a0001.0002' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc_nano.a0001.0002`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001.0002' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v6-m/nofp/.l2s.libc.a0001.0002`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v6-m/nofp' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v6-m/nofp`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v6-m' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v6-m`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001.0002' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb/v8.1-m.main+pacbti+mve/bp/hard/.l2s.libc.a0001.0002`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/thumb`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/.l2s.rdpmon.specs0001.0006' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/.l2s.rdpmon.specs0001.0006`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/.l2s.rdimon.specs0001.0006' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/.l2s.rdimon.specs0001.0006`
+[teensy41] [Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/.l2s.nosys.specs0001.0006' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib/.l2s.nosys.specs0001.0006`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi/lib`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr/arm-none-eabi`
+[teensy41] [Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr' 
+[teensy41] Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-c48moesr`
 [teensy41] Tool Manager: toolchain-gccarmnoneeabi-teensy@1.150201.0 has been installed!
 [teensy41] Tool Manager: Installing platformio/framework-arduinoteensy @ ~1.162.0
 [teensy41] Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
@@ -3986,15 +3986,15 @@ CANONICAL_TEMPLATE_BUILT teensy40 x86_64
 [teensy41] Archiving .pio/build/teensy41/libFrameworkArduino.a
 [teensy41] Indexing .pio/build/teensy41/libFrameworkArduino.a
 [teensy41] Linking .pio/build/teensy41/firmware.elf
-[teensy41] Calculating size .pio/build/teensy41/firmware.elf
 [teensy41] Checking size .pio/build/teensy41/firmware.elf
 [teensy41] Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+[teensy41] Calculating size .pio/build/teensy41/firmware.elf
+[teensy41] Building .pio/build/teensy41/firmware.hex
 [teensy41] teensy_size: Memory Usage on Teensy 4.1:
 [teensy41] teensy_size:   FLASH: code:10212, data:3016, headers:8272   free for files:8104964
 [teensy41] teensy_size:    RAM1: variables:3808, code:7664, padding:25104   free for local variables:487712
 [teensy41] teensy_size:    RAM2: variables:12416  free for malloc/new:511872
-[teensy41] Building .pio/build/teensy41/firmware.hex
-[teensy41] ========================= [SUCCESS] Took 52.18 seconds =========================
+[teensy41] ========================= [SUCCESS] Took 73.67 seconds =========================
 [teensy41] Processing teensy41 (platform: teensy@6.0.0; board: teensy41; framework: arduino)
 [teensy41] --------------------------------------------------------------------------------
 [teensy41] Verbose mode can be enabled via `-v, --verbose` option
@@ -4013,7 +4013,7 @@ CANONICAL_TEMPLATE_BUILT teensy40 x86_64
 [teensy41] No dependencies
 [teensy41] Building in release mode
 [teensy41] Building compilation database compile_commands.json
-[teensy41] ========================= [SUCCESS] Took 2.50 seconds =========================
+[teensy41] ========================= [SUCCESS] Took 3.69 seconds =========================
 CANONICAL_TEMPLATE_BUILT teensy41 x86_64
 [pico] ********************************************************************************
 [pico] If you like PlatformIO, please:
@@ -4144,7 +4144,7 @@ CANONICAL_TEMPLATE_BUILT teensy41 x86_64
 [pico] RAM:   [==        ]  15.1% (used 40744 bytes from 270336 bytes)
 [pico] Flash: [          ]   0.2% (used 4034 bytes from 2097152 bytes)
 [pico] Building .pio/build/pico/firmware.bin
-[pico] ======================== [SUCCESS] Took 203.10 seconds ========================
+[pico] ======================== [SUCCESS] Took 268.54 seconds ========================
 [pico] Processing pico (platform: raspberrypi@1.20.0; board: pico; framework: arduino)
 [pico] --------------------------------------------------------------------------------
 [pico] Verbose mode can be enabled via `-v, --verbose` option
@@ -4163,6 +4163,6 @@ CANONICAL_TEMPLATE_BUILT teensy41 x86_64
 [pico] No dependencies
 [pico] Building in release mode
 [pico] Building compilation database compile_commands.json
-[pico] ========================= [SUCCESS] Took 3.16 seconds =========================
+[pico] ========================= [SUCCESS] Took 4.41 seconds =========================
 CANONICAL_TEMPLATE_BUILT pico x86_64
 CANONICAL_TEMPLATE_GROUP_PASSED teensy-pico x86_64
