@@ -1,5 +1,5 @@
 AutoFixture at 7f5cc7e71d1641aba7fe7d06c548027974c68caf
-Opened /home/runner/work/_temp/real-repos/AutoFixture/AutoFixture.slnx in 0.7 s
+Opened /home/runner/work/_temp/real-repos/AutoFixture/AutoFixture.slnx in 0.6 s
 Compatibility Doctor:
   AutoFixture.SeedExtensions: Library via Built with its users - A library is compiled together with the projects that reference it.
   AutoFixture: Library via Built with its users - A library is compiled together with the projects that reference it.
@@ -22,7 +22,7 @@ Compatibility Doctor:
   TestTypeFoundation: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   _build: Not supported via Build script, on a computer - The repository's build script (on Nuke.Common): it builds, tests and publishes the other projects by starting dotnet and other tools as processes, which a program cannot do on a tablet. TabStudio builds it with the solution but never starts it; build and run the other projects here, or run the script on a computer with the .NET SDK.
 Startup project: none
-Built in 7.7 s: 0 errors, 3 warnings
+Built in 18.6 s: 0 errors, 3 warnings
 Packages with analyzers or MSBuild files:
   coverlet.collector 6.0.2
       build/netstandard2.0/Microsoft.Bcl.AsyncInterfaces.dll
@@ -338,45 +338,45 @@ Packages with analyzers or MSBuild files:
       build/xunit.v3.core.props
       build/xunit.v3.core.targets
 Output:
-Build started at 03:02:10...
+Build started at 04:36:09...
 1>------ Build started: Project: AutoFixture, Configuration: Debug ------
-1>AutoFixture -> compiled in memory (196 KB, 136 ms)
+1>AutoFixture -> compiled in memory (196 KB, 215 ms)
 2>------ Build started: Project: AutoFixture.SeedExtensions, Configuration: Debug ------
-2>AutoFixture.SeedExtensions -> compiled in memory (4.5 KB, 143 ms)
+2>AutoFixture.SeedExtensions -> compiled in memory (4.5 KB, 141 ms)
 3>------ Build started: Project: Idioms, Configuration: Debug ------
-3>Idioms -> compiled in memory (74.5 KB, 251 ms)
+3>Idioms -> compiled in memory (74.5 KB, 206 ms)
 4>------ Build started: Project: AutoFakeItEasy, Configuration: Debug ------
-4>AutoFakeItEasy -> compiled in memory (16.5 KB, 125 ms)
+4>AutoFakeItEasy -> compiled in memory (16.5 KB, 150 ms)
 5>------ Build started: Project: AutoFixture.NUnit4, Configuration: Debug ------
-5>AutoFixture.NUnit4 -> compiled in memory (16 KB, 123 ms)
+5>AutoFixture.NUnit4 -> compiled in memory (16 KB, 173 ms)
 6>------ Build started: Project: AutoFixture.xUnit3, Configuration: Debug ------
-6>AutoFixture.xUnit3 -> compiled in memory (35.5 KB, 148 ms)
+6>AutoFixture.xUnit3 -> compiled in memory (35.5 KB, 168 ms)
 7>------ Build started: Project: AutoMoq, Configuration: Debug ------
-7>AutoMoq -> compiled in memory (19 KB, 140 ms)
+7>AutoMoq -> compiled in memory (19 KB, 188 ms)
 8>------ Build started: Project: AutoNSubstitute, Configuration: Debug ------
-8>AutoNSubstitute -> compiled in memory (20.5 KB, 135 ms)
+8>AutoNSubstitute -> compiled in memory (20.5 KB, 223 ms)
 9>------ Build started: Project: TestTypeFoundation, Configuration: Debug ------
-9>TestTypeFoundation -> compiled in memory (21 KB, 11 ms)
+9>TestTypeFoundation -> compiled in memory (21 KB, 27 ms)
 10>------ Build started: Project: AutoFakeItEasyUnitTest, Configuration: Debug ------
-10>AutoFakeItEasyUnitTest -> compiled in memory (38.5 KB, 213 ms)
+10>AutoFakeItEasyUnitTest -> compiled in memory (38.5 KB, 227 ms)
 11>------ Build started: Project: AutoFixture.NUnit4.UnitTest, Configuration: Debug ------
-11>AutoFixture.NUnit4.UnitTest -> compiled in memory (39 KB, 243 ms)
+11>AutoFixture.NUnit4.UnitTest -> compiled in memory (39 KB, 197 ms)
 12>------ Build started: Project: AutoFixture.SeedExtensions.UnitTest, Configuration: Debug ------
-12>AutoFixture.SeedExtensions.UnitTest -> compiled in memory (17 KB, 159 ms)
+12>AutoFixture.SeedExtensions.UnitTest -> compiled in memory (17 KB, 175 ms)
 13>------ Build started: Project: AutoFixture.xUnit3.UnitTest, Configuration: Debug ------
-13>AutoFixture.xUnit3.UnitTest -> compiled in memory (139 KB, 255 ms)
+13>AutoFixture.xUnit3.UnitTest -> compiled in memory (139 KB, 269 ms)
 14>------ Build started: Project: AutoFixtureDocumentationTest, Configuration: Debug ------
-14>AutoFixtureDocumentationTest -> compiled in memory (41.5 KB, 153 ms)
+14>AutoFixtureDocumentationTest -> compiled in memory (41.5 KB, 234 ms)
 15>------ Build started: Project: AutoFixtureUnitTest, Configuration: Debug ------
-15>AutoFixtureUnitTest -> compiled in memory (873 KB, 804 ms)
+15>AutoFixtureUnitTest -> compiled in memory (873 KB, 895 ms)
 16>------ Build started: Project: AutoMoqUnitTest, Configuration: Debug ------
-16>AutoMoqUnitTest -> compiled in memory (59.5 KB, 209 ms)
+16>AutoMoqUnitTest -> compiled in memory (59.5 KB, 245 ms)
 17>------ Build started: Project: AutoNSubstitute.UnitTest.v6, Configuration: Debug ------
-17>AutoNSubstitute.UnitTest.v6 -> compiled in memory (76.5 KB, 210 ms)
+17>AutoNSubstitute.UnitTest.v6 -> compiled in memory (76.5 KB, 308 ms)
 18>------ Build started: Project: AutoNSubstituteUnitTest, Configuration: Debug ------
-18>AutoNSubstituteUnitTest -> compiled in memory (76 KB, 217 ms)
+18>AutoNSubstituteUnitTest -> compiled in memory (76 KB, 274 ms)
 19>------ Build started: Project: IdiomsUnitTest, Configuration: Debug ------
-19>IdiomsUnitTest -> compiled in memory (204.5 KB, 325 ms)
+19>IdiomsUnitTest -> compiled in memory (204.5 KB, 399 ms)
 20>------ Skipped: Project: _build: it is not built by the solution's Debug configuration ------
 ========== Build: 19 succeeded, 0 failed, 1 skipped ==========
 
