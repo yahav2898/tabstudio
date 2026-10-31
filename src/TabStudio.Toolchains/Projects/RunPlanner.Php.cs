@@ -32,7 +32,7 @@ public static partial class RunPlanner
             return new RunPlan(null, Spec(project, ["php", main], Variables(project, main, null)), main);
         }
 
-        if (kind != PhpProjectKind.Scripts && !File.Exists(Path.Combine(directory, "public", "index.php"))
+        if (kind != PhpProjectKind.Scripts && PhpProject.DocumentRoot(directory) == "."
             && !File.Exists(Path.Combine(directory, "index.php")) && PhpProject.StartScript(directory) is { } script)
         {
             return new RunPlan(null, Spec(project, ["composer", script], variables), "composer " + script) { ProgramName = "composer " + script };
@@ -41,7 +41,7 @@ public static partial class RunPlanner
         if (kind is PhpProjectKind.Site or PhpProjectKind.Slim or PhpProjectKind.Symfony)
         {
             var port = FreeLoopbackPort().ToString(CultureInfo.InvariantCulture);
-            var documentRoot = File.Exists(Path.Combine(directory, "public", "index.php")) ? "public" : ".";
+            var documentRoot = PhpProject.DocumentRoot(directory);
             return new RunPlan(null, Spec(project, ["php", "-S", "127.0.0.1:" + port, "-t", documentRoot], variables), "php -S")
             {
                 ProgramName = "php -S",
