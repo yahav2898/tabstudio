@@ -10,7 +10,7 @@ Compatibility Doctor:
   AdvancedToDoList: Library via Built with its users - A library is compiled together with the projects that reference it.
   SharedControls: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: AdvancedToDoList.Desktop
-Built in 7.9 s: 0 errors, 1 warnings
+Built in 9.6 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   avalonia.buildservices 11.3.2
       build/Avalonia.BuildServices.targets
@@ -294,16 +294,16 @@ Packages with analyzers or MSBuild files:
       buildTransitive/xunit.v3.core.mtp-v1.props
       buildTransitive/xunit.v3.core.mtp-v1.targets
 Output:
-Build started at 01:11:59...
+Build started at 01:36:00...
 1>------ Build started: Project: SharedControls, Configuration: Debug ------
 1>DialogCommand.cs(111,32): warning CS0067: The event 'DialogCommand.CanExecuteChanged' is never used
-1>SharedControls -> compiled in memory (109 KB, 164 ms)
+1>SharedControls -> compiled in memory (109 KB, 168 ms)
 2>------ Build started: Project: AdvancedToDoList, Configuration: Debug ------
-2>AdvancedToDoList -> compiled in memory (1012.5 KB, 201 ms)
+2>AdvancedToDoList -> compiled in memory (1013 KB, 298 ms)
 3>------ Build started: Project: AdvancedToDoListTests, Configuration: Debug ------
-3>AdvancedToDoListTests -> compiled in memory (53 KB, 164 ms)
+3>AdvancedToDoListTests -> compiled in memory (53 KB, 250 ms)
 4>------ Build started: Project: SharedControlsTests, Configuration: Debug ------
-4>SharedControlsTests -> compiled in memory (7.5 KB, 59 ms)
+4>SharedControlsTests -> compiled in memory (7.5 KB, 101 ms)
 5>------ Build started: Project: AdvancedToDoList.Desktop, Configuration: Debug ------
 5>AdvancedToDoList.Desktop -> compiled in memory (7 KB, 229 ms)
 6>------ Skipped: Project: AdvancedToDoList.Android: it targets net10.0-android, which only .NET's mobile workloads build, on a computer ------
