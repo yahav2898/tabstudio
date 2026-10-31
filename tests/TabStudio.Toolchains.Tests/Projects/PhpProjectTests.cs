@@ -177,12 +177,12 @@ public sealed class PhpProjectTests : IDisposable
         var project = new ToolchainProject(Php, _folder.Path, "composer.json");
 
         Assert.Equal("3.x-dev", PhpProject.ComposerRootVersion(_folder.Path));
-        var install = RunPlanner.PlanDependencies(project, RunPlanner.DependenciesOf(project)!).Last();
+        var install = RunPlanner.PlanDependencies(project, RunPlanner.DependenciesOf(project)!)[^1];
         Assert.Equal("3.x-dev", install.Environment["COMPOSER_ROOT_VERSION"]);
 
         _folder.Write(".git/HEAD", "ref: refs/heads/main\n");
         Assert.Null(PhpProject.ComposerRootVersion(_folder.Path));
-        Assert.DoesNotContain("COMPOSER_ROOT_VERSION", RunPlanner.PlanDependencies(project, RunPlanner.DependenciesOf(project)!).Last().Environment.Keys);
+        Assert.DoesNotContain("COMPOSER_ROOT_VERSION", RunPlanner.PlanDependencies(project, RunPlanner.DependenciesOf(project)!)[^1].Environment.Keys);
     }
 
     public void Dispose() => _folder.Dispose();
