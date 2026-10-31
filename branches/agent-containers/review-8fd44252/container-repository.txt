@@ -1,0 +1,43 @@
+https://github.com/gothinkster/node-express-realworld-example-app@30b68e1e881462b2f4164ea09ab4c4f5699c7b0b
+Baseline: database unavailable
+Compose: real OCI postgres:17-alpine
+F5 route: /api/tags HTTP 200
+Running npm start with Node.js 22.23.4
+> npx --no-install prisma migrate deploy --schema src/prisma/schema.prisma
+Environment variables loaded from .env
+Prisma schema loaded from src/prisma/schema.prisma
+Datasource "db": PostgreSQL database "realworld", schema "public" at "127.0.0.1:42907"
+
+4 migrations found in prisma/migrations
+
+Applying migration `20210924225358_initial`
+Applying migration `20211001143221_implicit_tags`
+Applying migration `20211105153605_api_url`
+Applying migration `20211221184529_deprecated_preview`
+
+The following migrations have been applied:
+
+migrations/
+  └─ 20210924225358_initial/
+    └─ migration.sql
+  └─ 20211001143221_implicit_tags/
+    └─ migration.sql
+  └─ 20211105153605_api_url/
+    └─ migration.sql
+  └─ 20211221184529_deprecated_preview/
+    └─ migration.sql
+      
+All migrations have been successfully applied.
+
+> @api/source@0.0.0 start
+> nx serve
+
+
+> nx run api:serve:development
+
+[ watch ] build succeeded, watching for changes...
+Debugger listening on ws://localhost:9229/3d30fbfe-f71d-4f18-bffe-e457aaf7b205
+Debugger listening on ws://localhost:9229/3d30fbfe-f71d-4f18-bffe-e457aaf7b205
+For help, see: https://nodejs.org/learn/getting-started/debugging
+
+server up on port 3000

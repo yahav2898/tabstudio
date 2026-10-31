@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    from app.core.config import settings
+  File "/home/runner/work/tabstudio/tabstudio/artifacts/container-fastapi/backend/app/core/config.py", line 91, in <module>
+    settings = Settings()  # type: ignore # ty: ignore[unused-ignore-comment]
+  File "/home/runner/work/tabstudio/tabstudio/artifacts/container-fastapi/backend/.venv/lib/python3.14/site-packages/pydantic_settings/main.py", line 292, in __init__
+    super().__init__(**__pydantic_self__.__class__._settings_build_values(sources, init_kwargs))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/tabstudio/tabstudio/artifacts/container-fastapi/backend/.venv/lib/python3.14/site-packages/pydantic/main.py", line 280, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for Settings
+DATABASE_URL
+  Field required [type=missing, input_value={'SECRET_KEY': 'changethi... 'environment': 'local'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.14/v/missing
