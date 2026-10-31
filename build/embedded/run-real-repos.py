@@ -46,6 +46,17 @@ def cmake_project_name(folder: Path) -> str:
     return match.group(1)
 
 
+def pin_platform(configuration: str, repository: Path) -> str:
+    """A PlatformIO configuration whose platform is the checked-out platform repository instead of the registry's.
+
+    A platform repository (platform-atmelavr, platform-espressif32, platform-ststm32, ...) names itself in its
+    platform.json; its examples name that platform unversioned, which would install whatever the registry has now.
+    """
+    manifest = repository / "platform.json"
+    name = json.loads(manifest.read_text(encoding="utf-8"))["name"] if manifest.is_file() else "atmelavr"
+    return re.sub(r"(?m)^platform[ \t]*=[ \t]*" + re.escape(name) + r"[ \t]*$", "platform = file://" + repository.as_posix(), configuration)
+
+
 def entries(manifest: Path | None = None) -> list[dict]:
     """Read the shared Real repositories manifest, rejecting unpinned or unsafe entries."""
     path = manifest or ROOT / "build/ci/real-repos.json"
@@ -162,7 +173,7 @@ class Runner:
             # The upstream example names an unversioned registry platform. Use this exact checked-out
             # platform implementation instead; archive the explicit override and leave its sources intact.
             original = (project / "platformio.ini").read_text(encoding="utf-8")
-            pinned = re.sub(r"(?m)^platform\s*=\s*atmelavr\s*$", "platform = file://" + repo.as_posix(), original)
+            pinned = pin_platform(original, repo)
             configuration = project / "tabstudio-ci.ini"
             configuration.write_text(pinned, encoding="utf-8")
             (self.output / "platformio-effective.ini").write_text(pinned, encoding="utf-8")
@@ -210,8 +221,12 @@ class Runner:
         elif kind == "rust":
             self.run(["rustup", "toolchain", "install", e["rust"], "--profile", "minimal", "--component", "rust-src", "--target", e["target"]], repo)
             env.update(RUSTUP_TOOLCHAIN=e["rust"], CARGO_TARGET_DIR=str(build))
-            self.run(["cargo", "build", "--manifest-path", str(project / "Cargo.toml"), "--target", e["target"], "--bin", e["binary"], "--release"], project, env, count_errors=True)
-            self.require(build / e["target"] / "release" / e["binary"])
+            # A firmware crate builds a binary; a HAL crate's firmware is one of its examples, for the chip its
+            # features name.
+            target = ["--example", e["example"]] if "example" in e else ["--bin", e["binary"]]
+            features = ["--features", e["features"]] if "features" in e else []
+            self.run(["cargo", "build", "--manifest-path", str(project / "Cargo.toml"), "--target", e["target"], *target, *features, "--release"], project, env, count_errors=True)
+            self.require(build / e["target"] / "release" / ("examples/" + e["example"] if "example" in e else e["binary"]))
             for lock in [project / "Cargo.lock", repo / "Cargo.lock"]:
                 if lock.exists():
                     (self.output / "Cargo.lock").write_bytes(lock.read_bytes())

@@ -51,7 +51,7 @@
       <!-- No embedded browser, or the app is not running. -->
       <StackPanel x:Name="Placeholder" Margin="24" Spacing="12" VerticalAlignment="Center" MaxWidth="360">
         <controls:StrokeIcon Data="{StaticResource Icon.Globe}" Size="34" Foreground="{DynamicResource Brush.AccentText}" HorizontalAlignment="Center" />
-        <TextBlock Classes="h2" Text="{Binding Title}" HorizontalAlignment="Center" />
+        <TextBlock Classes="h2" Text="{Binding Title}" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" />
         <TextBlock Classes="muted" Text="{Binding StatusText}" TextWrapping="Wrap" TextAlignment="Center" />
         <Button Theme="{StaticResource AccentButton}" HorizontalAlignment="Center" Command="{Binding OpenInBrowserCommand}" IsVisible="{Binding IsRunning}">
           <StackPanel Orientation="Horizontal" Spacing="8">

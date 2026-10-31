@@ -19,6 +19,8 @@ public partial class Form : ContainerControl
     internal const int FrameTitle = 31;
 
     private static readonly object EventLoad = new();
+    private static readonly object EventClosing = new();
+    private static readonly object EventClosed = new();
     private static readonly object EventShown = new();
     private static readonly object EventActivated = new();
     private static readonly object EventDeactivate = new();
@@ -86,6 +88,23 @@ public partial class Form : ContainerControl
     {
         add => Events.AddHandler(EventFormClosing, value);
         remove => Events.RemoveHandler(EventFormClosing, value);
+    }
+
+    /// <summary>
+    /// Occurs before the form closes, before <see cref="FormClosing"/>; a handler can cancel the closing. The .NET
+    /// Framework's event, which Visual Basic apps still handle (DualBrain's Solitaire).
+    /// </summary>
+    public event CancelEventHandler? Closing
+    {
+        add => Events.AddHandler(EventClosing, value);
+        remove => Events.RemoveHandler(EventClosing, value);
+    }
+
+    /// <summary>Occurs after the form closes, after <see cref="FormClosed"/>. The .NET Framework's event.</summary>
+    public event EventHandler? Closed
+    {
+        add => Events.AddHandler(EventClosed, value);
+        remove => Events.RemoveHandler(EventClosed, value);
     }
 
     /// <summary>Occurs after the form closes.</summary>

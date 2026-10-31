@@ -241,7 +241,7 @@ public sealed class ToolchainTestTests : IDisposable
         var plan = ToolchainTestPlanner.Plan(project, ToolchainTestFramework.Pytest,
             [new("tests.unit.test_math", "test_squares"), new("tests.unit.test_math.TestDivide", null)], _folder.Resolve("reports"));
         Assert.Equal(["tests/unit/test_math.py::test_squares", "tests/unit/test_math.py::TestDivide"], plan.Command.Arguments.TakeLast(2));
-        Assert.Equal(["-c", ToolchainTestPlanner.PytestScript, "python3"], plan.Command.Arguments.Take(3));
+        Assert.Equal(["-c", ToolchainTestPlanner.PythonTestInstall(["-r", "requirements-dev.txt"]) + ToolchainTestPlanner.PytestScript, "python3"], plan.Command.Arguments.Take(3));
         Assert.Contains("--junitxml=" + Path.Combine(_folder.Resolve("reports"), "pytest.xml"), plan.Command.Arguments);
 
         // A project that does not use pytest has no tests to list.

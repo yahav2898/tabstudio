@@ -152,10 +152,11 @@ public static class EmbeddedProjectDetector
             }
 
             var target = ReadCargoTarget(config);
+            // A library that also builds without std (anyhow, serde_json) is a library for computers too: only
+            // firmware's program, its linker memory map or a bare-metal target make a Cargo package embedded.
             var embedded = File.Exists(Path.Combine(directory, "memory.x"))
                 || target?.Contains("none", StringComparison.Ordinal) == true
-                || Text(Path.Combine(directory, "src", "main.rs")).Contains("#![no_std]", StringComparison.Ordinal)
-                || Text(Path.Combine(directory, "src", "lib.rs")).Contains("#![no_std]", StringComparison.Ordinal);
+                || Text(Path.Combine(directory, "src", "main.rs")).Contains("#![no_std]", StringComparison.Ordinal);
             if (embedded)
             {
                 return Project(EmbeddedProjectKind.Rust, directory, "Cargo.toml", target: target,

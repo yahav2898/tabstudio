@@ -483,7 +483,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     {
         StartupProjects.Clear();
         var choices = workspace.Projects
-            .Where(p => (p.IsExecutable || IsWindowsBridgeStartupProject(p)) && !p.IsTestProject && p.Kind is not (ProjectKind.AspireAppHost or ProjectKind.BuildScript) && !ProjectClassifier.NeedsPlatformWorkload(p))
+            .Where(p => (p.IsExecutable || IsWindowsBridgeStartupProject(p)) && !p.IsTestProject && p.Kind is not (ProjectKind.AspireAppHost or ProjectKind.BuildScript) && IsStartable(p))
             .ToList();
 
         // In the order F5 chooses from, the default first; the programs it never picks by itself, such as benchmarks,
@@ -496,9 +496,16 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
         // A build script or a project that needs a platform workload, remembered from an earlier version, which picked
         // them, is not kept.
-        StartupProject = workspace.Projects.FirstOrDefault(p => p.FilePath == preferred && p.Kind != ProjectKind.BuildScript && !ProjectClassifier.NeedsPlatformWorkload(p))
+        StartupProject = workspace.Projects.FirstOrDefault(p => p.FilePath == preferred && p.Kind != ProjectKind.BuildScript && IsStartable(p))
             ?? workspace.DefaultStartupProject;
     }
+
+    /// <summary>
+    /// Whether a project can be chosen to start: not one that needs a platform workload, unless all it needs is a code
+    /// generator, so that F5 says why it cannot build (see <see cref="ProjectClassifier.OnlyNeedsCodeGenerator"/>).
+    /// </summary>
+    private static bool IsStartable(ProjectInfo project) =>
+        !ProjectClassifier.NeedsPlatformWorkload(project) || ProjectClassifier.OnlyNeedsCodeGenerator(project);
 
     private async Task AnalyzeSolutionAsync(CancellationToken cancellationToken)
     {

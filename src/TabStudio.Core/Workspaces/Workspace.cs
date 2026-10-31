@@ -30,8 +30,9 @@ public sealed class Workspace
     /// <c>tests</c> after all the others (see <see cref="ProjectClassifier.IsInAuxiliaryFolder"/>), and the solution's
     /// order between equals, except that a console app another console app references comes before it, as Terminal.Gui's
     /// UICatalog before the ScenarioRunner that runs its scenarios, and a desktop head before a browser head. Libraries,
-    /// tests, build scripts, benchmarks, Aspire AppHosts, projects that need a platform workload, the WebAssembly client of
-    /// a Blazor Web App and a Blazor WebAssembly app a web app of the solution serves are never chosen;
+    /// tests, build scripts, benchmarks, Aspire AppHosts, projects that need a platform workload (but not those that only
+    /// need a code generator, see <see cref="ProjectClassifier.OnlyNeedsCodeGenerator"/>), the WebAssembly client of a
+    /// Blazor Web App and a Blazor WebAssembly app a web app of the solution serves are never chosen;
     /// <see langword="null"/> when nothing else is left.
     /// </summary>
     public ProjectInfo? DefaultStartupProject => StartupCandidates is [var first, ..] ? first : null;
@@ -50,9 +51,13 @@ public sealed class Workspace
             .ToList();
 
         // A program that is left out of builds, such as one that compiles against a project that needs a computer or one
-        // the solution's Debug configuration does not build, does not start either.
+        // the solution's Debug configuration does not build, does not start either, unless all it lacks is a code
+        // generator: eShop's WebApp, whose gRPC client protoc generates, is still the app a person starts, and F5 says why
+        // it cannot build here (before 0.20.5, F5 started WebhookClient instead).
         var excluded = Compatibility.BuildExclusions.Of(Projects);
-        candidates.RemoveAll(p => excluded.ContainsKey(p.Project.FilePath));
+        candidates.RemoveAll(p => excluded.TryGetValue(p.Project.FilePath, out var needed)
+            && !(needed is null && p.Project.IsBuiltBySolution && ProjectClassifier.OnlyNeedsCodeGenerator(p.Project)
+                && !Compatibility.NetFrameworkCompatibility.NeedsWindows(p.Project)));
 
         // A console program that references another one runs it, as a scenario or benchmark runner does: the referenced
         // one is the app.

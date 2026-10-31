@@ -278,7 +278,7 @@ public static class VisualBasicCompiler
             checkOverflow: !IsTrue(project?.GetProperty("RemoveIntegerChecks")),
             specificDiagnosticOptions: noWarn,
             concurrentBuild: concurrentBuild,
-            deterministic: true);
+            deterministic: CSharpCompiler.IsDeterministic(project));
     }
 
     /// <summary>The project's <c>RootNamespace</c>; its assembly name or project name when it sets none, as the SDK defaults it.</summary>

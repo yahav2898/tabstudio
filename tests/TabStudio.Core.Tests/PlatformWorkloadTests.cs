@@ -221,5 +221,31 @@ public sealed class PlatformWorkloadTests : IDisposable
             workspace.NoStartupProjectReason);
     }
 
+    /// <summary>
+    /// zlib's contrib/dotzlib/DotZLib.csproj is a Visual Studio .NET 2003 project. The Doctor called it a project type it
+    /// did not recognize, and Build Solution failed on it, saying only C# and Visual Basic are compiled.
+    /// </summary>
+    [Fact]
+    public void A_Visual_Studio_2003_project_is_explained_and_left_out_of_builds()
+    {
+        var project = ProjectParser.Parse(ProjectPath, """
+            <VisualStudioProject>
+                <CSHARP ProjectType = "Local" ProductVersion = "7.10.3077" SchemaVersion = "2.0">
+                    <Build><Settings AssemblyName = "DotZLib" OutputType = "Library" /></Build>
+                </CSHARP>
+            </VisualStudioProject>
+            """);
+
+        var report = CompatibilityDoctor.Diagnose(project);
+
+        Assert.True(project.IsPreMsBuildFormat);
+        Assert.Equal(PlatformWorkload.PreMsBuild, ProjectClassifier.RequiredWorkload(project));
+        Assert.True(BuildExclusions.IsNotBuiltHere(project));
+        Assert.Null(ProjectClassifier.StartupRank(project));
+        Assert.Equal(CompatibilityStatus.Unsupported, report.Status);
+        Assert.Contains("Visual Studio .NET 2002 or 2003", report.Explanation, StringComparison.Ordinal);
+        Assert.False(ProjectParser.Parse(ProjectPath, """<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup></Project>""").IsPreMsBuildFormat);
+    }
+
     public void Dispose() => _temp.Dispose();
 }

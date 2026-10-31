@@ -106,5 +106,25 @@ public sealed class SwiftProjectTests : IDisposable
         Assert.Equal("cannot find 'prin' in scope", error.Message);
     }
 
+    /// <summary>
+    /// IceCubesApp's packages import SwiftUI, which only Apple's SDKs have: the Doctor said they need the Swift
+    /// toolchain, and the build listed "no such module 'SwiftUI'". Alamofire imports UIKit only inside #if canImport,
+    /// and builds on Linux.
+    /// </summary>
+    [Fact]
+    public void An_app_that_imports_SwiftUI_is_for_Xcode_but_a_conditional_import_is_not()
+    {
+        _folder.Write("app/Package.swift", Manifest);
+        _folder.Write("app/Sources/Account/AccountView.swift", "import Foundation\nimport SwiftUI\n\nstruct AccountView: View {}\n");
+        _folder.Write("lib/Package.swift", Manifest);
+        _folder.Write("lib/Sources/Alamofire/Session.swift", "import Foundation\n#if canImport(UIKit)\nimport UIKit\n#endif\n");
+
+        Assert.Equal("SwiftUI", SwiftProject.AppleFramework(_folder.Resolve("app")));
+        Assert.Null(SwiftProject.AppleFramework(_folder.Resolve("lib")));
+        _folder.Write("lib/Alamofire.xcodeproj/project.pbxproj", "// !$*UTF8*$!");
+        Assert.Null(SwiftProject.AppleFramework(_folder.Resolve("lib")));
+        Assert.StartsWith("Account is an Apple-platform app (SwiftUI), which builds only with Xcode", SwiftProject.AppleExplanation("Account", "SwiftUI"), StringComparison.Ordinal);
+    }
+
     public void Dispose() => _folder.Dispose();
 }

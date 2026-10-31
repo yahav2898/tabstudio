@@ -20,6 +20,30 @@ public enum ToolchainTestFramework
 
     /// <summary>pytest's tests of a Python project, and the <c>unittest</c> tests pytest runs too.</summary>
     Pytest,
+
+    /// <summary>The tests of a Go module, run by <c>go test -v ./...</c>.</summary>
+    GoTest,
+
+    /// <summary>The tests of a Rust package or workspace, run by <c>cargo test</c>.</summary>
+    Cargo,
+
+    /// <summary>The tests of a Dart package, run by <c>dart test</c>.</summary>
+    DartTest,
+
+    /// <summary>The tests of a Flutter app or package, run by <c>flutter test</c>.</summary>
+    FlutterTest,
+
+    /// <summary>Vitest's tests of a Node.js package, run by <c>vitest run</c>.</summary>
+    Vitest,
+
+    /// <summary>Jest's tests of a Node.js package, run by <c>jest</c>.</summary>
+    Jest,
+
+    /// <summary>Mocha's tests of a Node.js package, run by <c>mocha</c>.</summary>
+    Mocha,
+
+    /// <summary>The tests a Node.js package runs with Node's own test runner, <c>node --test</c>.</summary>
+    NodeTest,
 }
 
 /// <summary>How a toolchain project's test ended.</summary>

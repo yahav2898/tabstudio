@@ -203,8 +203,61 @@ public static class ToolchainProjectDetector
             }
         }
 
-        return result;
+        DropNestedNativeBuilds(result);
+        return OrderForStartup(result, Path.GetFullPath(root));
     }
+
+    /// <summary>
+    /// Folders whose programs serve the project rather than being it: scripts, tools, tests, examples, samples,
+    /// benchmarks and contributed extras. Their projects come after the others, so none of them is the default
+    /// startup project when the workspace has another (jq's <c>scripts</c> before its C program).
+    /// </summary>
+    private static readonly HashSet<string> AuxiliaryFolders = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "scripts", "script", "tools", "tool", "utils", "test", "tests", "testing", "example", "examples", "sample", "samples",
+        "benchmark", "benchmarks", "bench", "contrib", "extras", "ci", "misc",
+    };
+
+    /// <summary>
+    /// The projects in the order the default startup project is chosen from: those in auxiliary folders (see
+    /// <see cref="AuxiliaryFolders"/>) last, and in one folder, a folder of loose source files (a <c>setup.py</c>-less
+    /// Python script beside tinyxml2's CMakeLists.txt) after a project with a build file; otherwise nearest the root
+    /// first, as found.
+    /// </summary>
+    private static List<ToolchainProject> OrderForStartup(List<ToolchainProject> projects, string root)
+    {
+        var withBuildFile = projects.Where(p => p.Marker is not null).Select(p => p.Directory).ToHashSet(StringComparer.Ordinal);
+        return [.. projects
+            .Select((project, index) => (Project: project, Index: index))
+            .OrderBy(p => IsAuxiliary(p.Project.Directory, root))
+            .ThenBy(p => p.Project.Marker is null && withBuildFile.Contains(p.Project.Directory))
+            .ThenBy(p => p.Index)
+            .Select(p => p.Project)];
+    }
+
+    private static bool IsAuxiliary(string directory, string root) =>
+        directory.Length > root.Length && IsInside(directory, root)
+        && Path.GetRelativePath(root, directory).Split(Path.DirectorySeparatorChar).Any(AuxiliaryFolders.Contains);
+
+    /// <summary>
+    /// Removes C and C++ build files inside another C or C++ project: a <c>CMakeLists.txt</c> that its parent adds
+    /// with <c>add_subdirectory</c>, or the Makefiles of a Makefile project's sources and bundled dependencies (zlib's
+    /// <c>contrib</c>, redis's <c>deps</c>), are part of the build around them, not projects to build and start on
+    /// their own.
+    /// </summary>
+    private static void DropNestedNativeBuilds(List<ToolchainProject> projects)
+    {
+        var builds = projects.Where(p => p.Toolchain.Id == "cpp" && p.Marker is not null).ToList();
+        projects.RemoveAll(p => p.Toolchain.Id == "cpp" && p.Marker is not null
+            && builds.Exists(outer => !ReferenceEquals(outer, p) && IsInside(p.Directory, outer.Directory)));
+    }
+
+    /// <summary>
+    /// Whether a project file is a GNU Autotools build (<c>configure.ac</c>, or a generated <c>configure</c>), which
+    /// is configured and then built with make, as jq's README says.
+    /// </summary>
+    /// <param name="marker">The project file's name.</param>
+    public static bool IsAutotools(string marker) => marker is "configure.ac" or "configure";
 
     /// <summary>Whether a folder's files include a Gradle or Maven build file.</summary>
     private static bool IsJvmBuild(IEnumerable<string> files) =>
@@ -236,13 +289,37 @@ public static class ToolchainProjectDetector
         }
 
         var ranks = inFolder.ToDictionary(p => p, Rank);
-        if (ranks.Values.All(r => r == 0))
+        var named = inFolder.ToDictionary(p => p, p => NamesFolder(p, folder));
+        if (ranks.Values.All(r => r == 0) && named.Values.All(n => n == named[inFolder[0]]))
         {
             return;
         }
 
+        // Between equals, the package named after the folder is the folder's project: hyperfine's Cargo.toml, not the
+        // pyproject.toml of its plotting scripts (hyperfine-scripts).
         result.RemoveRange(first, inFolder.Count);
-        result.AddRange(inFolder.OrderBy(p => ranks[p]));
+        result.AddRange(inFolder.OrderBy(p => ranks[p]).ThenBy(p => !named[p]));
+    }
+
+    /// <summary>Whether a project's manifest names its package after its folder (<c>name = "hyperfine"</c> in hyperfine).</summary>
+    private static bool NamesFolder(ToolchainProject project, string folder)
+    {
+        if (project.MarkerPath is not { } manifest || Path.GetFileName(manifest) is not ("Cargo.toml" or "pyproject.toml" or "package.json"))
+        {
+            return false;
+        }
+
+        try
+        {
+            var text = new FileInfo(manifest).Length <= 256 * 1024 ? File.ReadAllText(manifest) : string.Empty;
+            var name = Path.GetFileName(folder.TrimEnd(Path.DirectorySeparatorChar));
+            return text.Contains("name = \"" + name + "\"", StringComparison.OrdinalIgnoreCase)
+                || text.Contains("\"name\": \"" + name + "\"", StringComparison.OrdinalIgnoreCase);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return false;
+        }
     }
 
     private static int Rank(ToolchainProject project) =>

@@ -12,7 +12,8 @@ check: its EF Core migrations are applied with the .NET SDK's dotnet-ef (the rep
 SDK), to the connection strings its connections entry reads from the environment. This prepares test data only; the
 build and the serve check themselves happen in TabStudio.
 
-TABSTUDIO_REAL_REPOS_ONLY (comma-separated names) limits both to some of the repositories, as it does the test.
+TABSTUDIO_REAL_REPOS_ONLY (comma-separated names) limits both to some of the repositories, as it does the test, and
+TABSTUDIO_REAL_REPOS_JOB to the repositories of one job (their "job"; unset, those that name none).
 """
 import json
 import os
@@ -69,6 +70,9 @@ def main() -> int:
     destination.mkdir(parents=True, exist_ok=True)
     manifest = json.loads((pathlib.Path(__file__).parent / "real-repos.json").read_text(encoding="utf-8"))
     repositories = manifest["repositories"]
+    # TABSTUDIO_REAL_REPOS_JOB names the job's repositories: those whose "job" it is, or, unset, those with none.
+    job = os.environ.get("TABSTUDIO_REAL_REPOS_JOB") or None
+    repositories = [r for r in repositories if r.get("job") == job]
     only = [n.strip().lower() for n in os.environ.get("TABSTUDIO_REAL_REPOS_ONLY", "").split(",") if n.strip()]
     if only:
         repositories = [r for r in repositories if r["name"].lower() in only]
