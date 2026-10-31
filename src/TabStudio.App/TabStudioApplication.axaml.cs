@@ -19,6 +19,7 @@ public sealed partial class TabStudioApplication : Application
 {
     private Action<IServiceCollection>? _configurePlatform;
     private string? _dataDirectory;
+    private CrashLog? _crashLog;
 
     /// <summary>The app's services, once the framework has initialized.</summary>
     public ServiceProvider? Services { get; private set; }
@@ -82,12 +83,50 @@ public sealed partial class TabStudioApplication : Application
 
         if (ApplicationLifetime is not null)
         {
-            // An error nothing handled ends the app: the session, with the unsaved text, is saved first.
-            Avalonia.Threading.Dispatcher.UIThread.UnhandledException += (_, _) => SaveSessionBeforeCrash();
+            // An error nothing handled ended the app, with every tool window, build and debug session in it, whatever
+            // the error was: a dropped connection in a log download, a folder the picker could not read. It is
+            // written to the crash log and shown in the IDE, which goes on; only the runtime's own failures still end
+            // it, after the session with the unsaved text is saved.
+            var crashLog = _crashLog = Services.GetRequiredService<CrashLog>();
+            Avalonia.Threading.Dispatcher.UIThread.UnhandledException += OnUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+            {
+                if (e.ExceptionObject is Exception exception)
+                {
+                    crashLog.Write(exception, "Background thread (the app ended)");
+                }
+
+                SaveSessionBeforeCrash();
+            };
             _ = Main.StartAsync();
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void OnUnhandledException(object? sender, Avalonia.Threading.DispatcherUnhandledExceptionEventArgs e)
+    {
+        var exception = e.Exception;
+        if (!CrashLog.IsRecoverable(exception))
+        {
+            _crashLog?.Write(exception, "UI thread (the app ended)");
+            SaveSessionBeforeCrash();
+            return;
+        }
+
+        e.Handled = true;
+
+        // After every handler had its turn: the preview's own handler takes the errors of the user's app.
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            if (CrashLog.Claimed.TryGetValue(exception, out _))
+            {
+                return;
+            }
+
+            var report = _crashLog?.Write(exception, "UI thread");
+            Main?.ReportUnexpectedError(exception, report);
+        });
     }
 
     private void SaveSessionBeforeCrash()

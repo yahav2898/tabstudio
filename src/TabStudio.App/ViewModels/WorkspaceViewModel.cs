@@ -101,6 +101,10 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     private CancellationTokenSource? _background = new();
     private bool _disposed;
 
+    // While a session is being restored the IDE has not reopened its documents yet: a save then (going to the
+    // background while C# loads, or a property's scheduled save) replaced the session with one without its unsaved text.
+    private bool _restoringSession;
+
     /// <summary>Creates the IDE. Call <see cref="LoadAsync"/> to open a workspace.</summary>
     /// <param name="gitHubAccount">The app's GitHub account; without it, the Git Changes window starts signed out.</param>
     /// <param name="browser">Opens web pages, such as GitHub's; the system browser when <see langword="null"/>.</param>
@@ -298,6 +302,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     public async Task LoadAsync(string path, SessionState? session = null)
     {
         ArgumentNullException.ThrowIfNull(path);
+        _restoringSession = session is not null;
         State = IdeState.Busy;
         StatusText = "Opening";
         LoadRemoteState(Directory.Exists(path) ? path : Path.GetDirectoryName(path)!);
@@ -342,7 +347,15 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
         RestoreDebuggingState(session);
         RestoreShellState(session);
-        await RestoreDocumentsAsync(preview.Workspace, session);
+        try
+        {
+            await RestoreDocumentsAsync(preview.Workspace, session);
+        }
+        finally
+        {
+            _restoringSession = false;
+        }
+
         if (notebook is not null)
         {
             await OpenDocumentAsync(notebook);

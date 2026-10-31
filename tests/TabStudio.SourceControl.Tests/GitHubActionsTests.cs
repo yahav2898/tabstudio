@@ -149,6 +149,23 @@ public sealed class GitHubActionsTests : IDisposable
     }
 
     [Fact]
+    public async Task A_log_whose_connection_breaks_fails_as_a_GitHub_error()
+    {
+        // The dropped connection came out as an IOException the CI log panel did not catch, which ended the app.
+        using var broken = new BrokenStream(Encoding.UTF8.GetBytes("line 1\nline 2\n"));
+
+        var error = await Assert.ThrowsAsync<GitHubApiException>(() => GitHubClient.ReadLogAsync(broken, new GitHubJobLogLimits(1000, 1000), CancellationToken.None));
+
+        Assert.IsType<IOException>(error.InnerException);
+    }
+
+    private sealed class BrokenStream(byte[] first) : MemoryStream(first)
+    {
+        public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) =>
+            Position < Length ? base.ReadAsync(buffer, cancellationToken) : throw new IOException("Connection reset by peer.");
+    }
+
+    [Fact]
     public async Task A_large_log_keeps_whole_lines_from_its_start_and_end()
     {
         var text = new StringBuilder();

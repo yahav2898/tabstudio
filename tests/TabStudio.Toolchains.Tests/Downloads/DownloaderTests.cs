@@ -139,6 +139,19 @@ public sealed class DownloaderTests : IDisposable
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => _downloader.DownloadAsync(Request(), null, cancellation.Token));
     }
 
+    [Fact]
+    public async Task A_server_that_never_answers_is_given_up_on_instead_of_waited_for()
+    {
+        // The stall limit covered the body only: a connection that never sent headers held the install forever.
+        _server.Latency = TimeSpan.FromMinutes(5);
+        var downloader = new Downloader(_client) { Retries = 0, StallTimeout = TimeSpan.FromMilliseconds(200) };
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+
+        await Assert.ThrowsAsync<DownloadException>(() => downloader.DownloadAsync(Request()));
+
+        Assert.True(clock.Elapsed < TimeSpan.FromSeconds(30), clock.Elapsed.ToString());
+    }
+
     public void Dispose()
     {
         _client.Dispose();

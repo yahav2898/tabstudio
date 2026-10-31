@@ -122,20 +122,52 @@ public sealed partial class WorkspaceViewModel
         return success;
     }
 
+    /// <summary>Shows an error TabStudio survived, in the Output and the status bar.</summary>
+    /// <param name="message">The full message, for the Output.</param>
+    /// <param name="status">A short form, for the status bar.</param>
+    internal void ShowUnexpectedError(string message, string status)
+    {
+        Output.WriteLine(message, OutputKind.Failure);
+        StatusText = status;
+    }
+
     /// <summary>Saves the session now, for example when Android sends the app to the background.</summary>
     public void SaveSessionNow()
     {
         // A guest's copy of another device's workspace keeps no session: it is deleted when the session ends.
-        if (Workspace is not { } workspace || IsLiveGuest)
+        if (Workspace is not { } workspace || IsLiveGuest || _restoringSession)
         {
             return;
         }
 
+        _sessions.Save(CaptureSession(workspace));
+    }
+
+    private SessionState CaptureSession(Workspace workspace)
+    {
         var documents = Documents
             .Select(d => new SessionDocument(d.FilePath, d.CaretOffset, d.IsDirty ? d.CurrentText : null))
             .ToList();
         var path = workspace.Solution?.FilePath ?? workspace.RootDirectory;
-        _sessions.Save(WithShellState(WithDebuggingState(new SessionState(path, documents, ActiveDocument?.FilePath, StartupProject?.FilePath))));
+        return WithShellState(WithDebuggingState(new SessionState(path, documents, ActiveDocument?.FilePath, StartupProject?.FilePath)));
+    }
+
+    /// <summary>
+    /// Saves the session from a background thread: the state is taken here, on the UI thread, and turned into JSON
+    /// and written there. Written here, every unsaved document was serialized every two seconds of typing, which made
+    /// typing in a large file stutter on a slow tablet.
+    /// </summary>
+    private void SaveSessionInBackground()
+    {
+        if (Workspace is not { } workspace || IsLiveGuest || _restoringSession)
+        {
+            return;
+        }
+
+        var sequence = _sessions.NextSequence();
+        var state = CaptureSession(workspace);
+        var sessions = _sessions;
+        _ = Task.Run(() => sessions.Save(state, sequence));
     }
 
     [RelayCommand]
@@ -351,6 +383,17 @@ public sealed partial class WorkspaceViewModel
     {
         if (session is not null)
         {
+            // Unsaved text of a file that is gone (deleted or moved by another app, or on storage that can no longer be
+            // read) had nowhere to go and was dropped by the next session save.
+            var orphans = session.Documents.Where(d => d.UnsavedText is not null && !File.Exists(d.Path)).ToList();
+            if (orphans.Count > 0 && _sessions.KeepUnsavedText(orphans) is { Count: > 0 } kept)
+            {
+                foreach (var file in kept)
+                {
+                    Output.WriteLine($"Unsaved changes to a file that is no longer there were kept in {file}.", OutputKind.Failure);
+                }
+            }
+
             foreach (var saved in session.Documents.Where(d => File.Exists(d.Path)))
             {
                 if (await OpenDocumentAsync(saved.Path) is { } document)
@@ -474,7 +517,7 @@ public sealed partial class WorkspaceViewModel
                 if (!token.IsCancellationRequested && !_disposed)
                 {
                     _sessionSavePending = false;
-                    SaveSessionNow();
+                    SaveSessionInBackground();
                 }
             }),
             token,

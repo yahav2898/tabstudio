@@ -320,8 +320,12 @@ public static class WorkspaceLoader
         return node;
     }
 
-    private static void AddFileSystemChildren(WorkspaceNode parent, string directory, HashSet<string> excludedDirectories, EntryBudget budget, string? excludedFile = null)
+    /// <summary>How deep the tree goes: a folder nested thousands of levels deep recursed once per level.</summary>
+    private const int MaximumTreeDepth = 128;
+
+    private static void AddFileSystemChildren(WorkspaceNode parent, string directory, HashSet<string> excludedDirectories, EntryBudget budget, string? excludedFile = null, HashSet<string>? visited = null, int depth = 0)
     {
+        visited ??= new HashSet<string>(StringComparer.Ordinal) { PathUtilities.RealDirectoryPath(directory) };
         IEnumerable<string> subdirectories;
         IEnumerable<string> files;
         try
@@ -343,7 +347,12 @@ public static class WorkspaceLoader
             }
 
             var folder = parent.Add(new WorkspaceNode(WorkspaceNodeKind.Folder, name, subdirectory));
-            AddFileSystemChildren(folder, subdirectory, excludedDirectories, budget);
+
+            // A link back to a folder above (self -> .) filled the tree's budget with copies, hiding real files.
+            if (depth < MaximumTreeDepth && PathUtilities.TryVisitDirectory(subdirectory, visited))
+            {
+                AddFileSystemChildren(folder, subdirectory, excludedDirectories, budget, visited: visited, depth: depth + 1);
+            }
         }
 
         foreach (var file in files)
@@ -360,6 +369,7 @@ public static class WorkspaceLoader
     private static List<string> FindProjects(string directory, int depth)
     {
         var result = new List<string>();
+        var visited = new HashSet<string>(StringComparer.Ordinal) { PathUtilities.RealDirectoryPath(directory) };
         Search(directory, depth);
         return result;
 
@@ -378,7 +388,7 @@ public static class WorkspaceLoader
 
                 foreach (var subdirectory in Directory.EnumerateDirectories(current).Order(StringComparer.OrdinalIgnoreCase))
                 {
-                    if (!PathUtilities.IsIgnoredDirectory(Path.GetFileName(subdirectory)))
+                    if (!PathUtilities.IsIgnoredDirectory(Path.GetFileName(subdirectory)) && PathUtilities.TryVisitDirectory(subdirectory, visited))
                     {
                         Search(subdirectory, remaining - 1);
                     }

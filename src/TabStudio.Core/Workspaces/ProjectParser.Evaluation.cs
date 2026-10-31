@@ -397,7 +397,7 @@ public static partial class ProjectParser
             XElement root;
             try
             {
-                root = LoadXml(path, File.ReadAllText(path));
+                root = LoadXml(path, PathUtilities.ReadAllTextBounded(path));
             }
             catch (Exception ex) when (ex is ProjectLoadException or IOException or UnauthorizedAccessException)
             {

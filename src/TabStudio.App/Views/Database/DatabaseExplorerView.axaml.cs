@@ -20,8 +20,21 @@ public sealed partial class DatabaseExplorerView : UserControl
         {
             // A content URI cannot be opened by SQLite. Import an app-private copy for read/write access.
             var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TabStudio", "Databases");
-            Directory.CreateDirectory(folder); path = Path.Combine(folder, Guid.NewGuid().ToString("N") + ".db");
-            await using var source = await file.OpenReadAsync(); await using var target = File.Create(path); await source.CopyToAsync(target);
+            path = Path.Combine(folder, Guid.NewGuid().ToString("N") + ".db");
+            try
+            {
+                Directory.CreateDirectory(folder);
+                await using var source = await file.OpenReadAsync();
+                await using var target = File.Create(path);
+                await source.CopyToAsync(target);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or NotSupportedException)
+            {
+                // A cloud file that would not stream, or a full disk, ended the app from this handler.
+                try { File.Delete(path); } catch (Exception cleanup) when (cleanup is IOException or UnauthorizedAccessException) { }
+                vm.Status = $"Could not copy '{file.Name}': {ex.Message}";
+                return;
+            }
         }
         vm.Provider = DatabaseProvider.SQLite; vm.ConnectionName = file.Name;
         vm.ConnectionString = new SqliteConnectionStringBuilder { DataSource = path, Mode = SqliteOpenMode.ReadWrite }.ConnectionString;
