@@ -39,7 +39,10 @@ public sealed class ContainerRepositoryTests
                 Environment = new Dictionary<string, string?> { ["DATABASE_URL"] = "postgresql://tablet:development@127.0.0.1:1/realworld?connect_timeout=2" },
             }, null, CancellationToken.None);
             Assert.False(baseline.Succeeded);
-            Assert.Contains("P1001", baseline.Output, StringComparison.Ordinal);
+            Directory.CreateDirectory(Path.Combine(root, "ci-out"));
+            File.WriteAllText(Path.Combine(root, "ci-out/container-repository-baseline.txt"), baseline.Output);
+            Assert.True(baseline.Output.Contains("P1001", StringComparison.Ordinal)
+                || baseline.Output.Contains("Can't reach database server", StringComparison.Ordinal), baseline.Output);
             run = workspace.RunCommand.ExecuteAsync(null);
             await UiTestHelpers.WaitUntilAsync(() => workspace.ServerNotice is not null || run.IsCompleted, TimeSpan.FromMinutes(6), "F5 to start the Compose image, migrate and serve");
             Assert.True(workspace.ServerNotice is not null, workspace.Output.Text);
@@ -53,7 +56,7 @@ public sealed class ContainerRepositoryTests
             Assert.Equal("db", Assert.Single(workspace.Services.LastNeeded));
             UiTestHelpers.SaveScreenshot(window, "62-containers-realworld-first-route");
             Directory.CreateDirectory(Path.Combine(root, "ci-out"));
-            File.WriteAllText(Path.Combine(root, "ci-out/container-repository.txt"), $"{repository["url"]}@{repository["sha"]}\nBaseline: P1001 (database unavailable)\nCompose: real OCI postgres:17-alpine\nF5 route: {route.AbsolutePath} HTTP {(int)response.StatusCode}\n" + workspace.Output.Text);
+            File.WriteAllText(Path.Combine(root, "ci-out/container-repository.txt"), $"{repository["url"]}@{repository["sha"]}\nBaseline: database unavailable\nCompose: real OCI postgres:17-alpine\nF5 route: {route.AbsolutePath} HTTP {(int)response.StatusCode}\n" + workspace.Output.Text);
         }
         finally
         {

@@ -1,5 +1,5 @@
 {
-  "comment": "Container regression subset drawn from real-repos.json. trial-sweep.json was absent on main at the 0.21 merge. This entry adds a Compose fixture to an upstream repository that has no Compose file, reproduces its missing-database failure, then uses F5 to serve its first database-backed route. The upstream source stays pinned.",
+  "comment": "Container regression subset drawn from real-repos.json. trial-sweep.json was absent on main at the 0.21 merge. This entry adds a Compose fixture to an upstream repository that has no Compose file, reproduces its missing-database connection failure, then uses F5 to serve its first database-backed route. The upstream source stays pinned.",
   "repositories": [
     {
       "name": "node-express-realworld",

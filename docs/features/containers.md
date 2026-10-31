@@ -121,7 +121,7 @@ depend on network/cache state; they are not a native-vs-PRoot performance compar
 The requested `build/ci/trial-sweep.json` was absent from main at the merge. The new regression subset is drawn
 from the existing `real-repos.json`: `gothinkster/node-express-realworld-example-app` at
 `30b68e1e881462b2f4164ea09ab4c4f5699c7b0b`. That upstream has no Compose file, so the test supplies the checked-in
-`build/ci/container-trial/compose.yaml` fixture. It reproduces Prisma P1001 without a database, then requires F5 to
+`build/ci/container-trial/compose.yaml` fixture. It reproduces Prisma's database-connection failure without a database, then requires F5 to
 start the real PostgreSQL image, run migrations, and receive HTTP 200 containing `"tags"` at `/api/tags`.
 The fixture provenance is explicit; it is not presented as an upstream Compose file or an old trial result.
 

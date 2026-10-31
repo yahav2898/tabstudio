@@ -22,7 +22,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { arch: x64, runner: ubuntu-latest }
+          - { arch: x64, runner: ubuntu-24.04 }
           - { arch: arm64, runner: ubuntu-24.04-arm }
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 20
@@ -57,6 +57,7 @@ jobs:
         if: matrix.arch == 'x64'
         env:
           TABSTUDIO_CONTAINER_TRIAL_REPO: ${{ github.workspace }}/artifacts/container-trial
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
           NX_DAEMON: 'false'
         run: |
           dotnet test tests/TabStudio.App.Tests -c Release --filter 'FullyQualifiedName~BackingServices.ContainersTests|FullyQualifiedName~BackingServices.ContainerRepositoryTests' --logger 'console;verbosity=normal' > ci-out/containers-ide.log 2>&1 || { cat ci-out/containers-ide.log; exit 1; }

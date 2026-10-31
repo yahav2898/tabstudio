@@ -7,6 +7,17 @@ namespace TabStudio.Containers.Tests;
 public sealed class ComposeTests
 {
     [Fact]
+    public void A_completed_image_without_ports_does_not_need_a_connection_endpoint()
+    {
+        using var temp = new TempDirectory();
+        var project = new ComposeProject(temp.Path, [], new Dictionary<string, ComposeService>
+        { ["migrate"] = new("migrate", "example/migrate:1") });
+        var environment = TabStudio.Services.ConnectionEnvironment.ForProject(project, temp.Path,
+            new Dictionary<string, IReadOnlyList<ServicePort>> { ["migrate"] = [] });
+        Assert.Empty(environment);
+    }
+
+    [Fact]
     public void Real_image_configuration_preserves_overrides_environment_health_and_workspace_volumes()
     {
         using var temp = new TempDirectory();
