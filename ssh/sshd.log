@@ -1,111 +1,111 @@
-CONTAINER ID   IMAGE               COMMAND                 CREATED         STATUS              PORTS                    NAMES
-c7f709522281   tabstudio-openssh   "bash /entrypoint.sh"   2 minutes ago   Up About a minute   127.0.0.1:2222->22/tcp   tabstudio-openssh
+CONTAINER ID   IMAGE               COMMAND                 CREATED         STATUS         PORTS                    NAMES
+9961e12318a0   tabstudio-openssh   "bash /entrypoint.sh"   2 minutes ago   Up 2 minutes   127.0.0.1:2222->22/tcp   tabstudio-openssh
 Server listening on 0.0.0.0 port 22.
 Server listening on :: port 22.
-Connection closed by 172.17.0.1 port 39626 [preauth]
+Connection closed by 172.17.0.1 port 45090 [preauth]
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 54680 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 54684 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 45866 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
+Accepted publickey for developer from 172.17.0.1 port 45864 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 54694 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
-Accepted publickey for developer from 172.17.0.1 port 54706 ssh2: RSA SHA256:GkrvYNSM8o64/i1z3dB7oGLIS4+s4d46jQ0Gju8VqpE
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 54728 ssh2: RSA SHA256:GkrvYNSM8o64/i1z3dB7oGLIS4+s4d46jQ0Gju8VqpE
-Accepted publickey for developer from 172.17.0.1 port 54720 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
-Received disconnect from 172.17.0.1 port 54706:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 54706
-Received disconnect from 172.17.0.1 port 54728:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 54728
-Received disconnect from 172.17.0.1 port 54680:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 54680
-Received disconnect from 172.17.0.1 port 54684:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 54684
+Accepted publickey for developer from 172.17.0.1 port 45882 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
+Accepted publickey for developer from 172.17.0.1 port 45890 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
+Accepted publickey for developer from 172.17.0.1 port 45892 ssh2: RSA SHA256:Ysb3+HZ0JookzICRkbKMNFWbm8EWrNWUEAg/XxkL66A
+Received disconnect from 172.17.0.1 port 45866:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45866
+Received disconnect from 172.17.0.1 port 45882:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45882
+Accepted publickey for developer from 172.17.0.1 port 45908 ssh2: RSA SHA256:Ysb3+HZ0JookzICRkbKMNFWbm8EWrNWUEAg/XxkL66A
+Received disconnect from 172.17.0.1 port 45892:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45892
+Received disconnect from 172.17.0.1 port 45908:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45908
+Received disconnect from 172.17.0.1 port 45864:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45864
+Received disconnect from 172.17.0.1 port 45890:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45890
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 54730 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 45910 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Received disconnect from 172.17.0.1 port 54694:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 54694
-Received disconnect from 172.17.0.1 port 54720:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 54720
-Accepted publickey for developer from 172.17.0.1 port 54738 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 45912 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 syslogin_perform_logout: logout() returned an error
-Received disconnect from 172.17.0.1 port 54730:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 54730
-Received disconnect from 172.17.0.1 port 54738:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 54738
-Connection closed by 172.17.0.1 port 54754 [preauth]
-Connection closed by 172.17.0.1 port 54766 [preauth]
+Received disconnect from 172.17.0.1 port 45910:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45910
+Received disconnect from 172.17.0.1 port 45912:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45912
+Connection closed by 172.17.0.1 port 45928 [preauth]
+Connection closed by 172.17.0.1 port 45934 [preauth]
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 54782 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 45942 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 54784 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
-Received disconnect from 172.17.0.1 port 54782:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 54782
-Received disconnect from 172.17.0.1 port 54784:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 54784
+Accepted publickey for developer from 172.17.0.1 port 45958 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
+Received disconnect from 172.17.0.1 port 45942:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45942
+Received disconnect from 172.17.0.1 port 45958:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45958
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 54800 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 45964 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 54814 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 45972 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 connect_to 127.0.0.1 port 38761: failed.
 connect_to 127.0.0.1 port 38761: failed.
 connect_to 127.0.0.1 port 38761: failed.
 connect_to 127.0.0.1 port 38761: failed.
-Received disconnect from 172.17.0.1 port 54800:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 54800
-Received disconnect from 172.17.0.1 port 54814:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 54814
+Received disconnect from 172.17.0.1 port 45964:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45964
+Received disconnect from 172.17.0.1 port 45972:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45972
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 43348 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 45986 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 43358 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
-Received disconnect from 172.17.0.1 port 43348:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 43348
-Received disconnect from 172.17.0.1 port 43358:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 43358
+Accepted publickey for developer from 172.17.0.1 port 45996 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
+Received disconnect from 172.17.0.1 port 45986:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45986
+Received disconnect from 172.17.0.1 port 45996:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45996
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 43362 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 45998 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 43374 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
-Received disconnect from 172.17.0.1 port 43362:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 43362
-Received disconnect from 172.17.0.1 port 43374:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 43374
+Accepted publickey for developer from 172.17.0.1 port 46002 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
+Received disconnect from 172.17.0.1 port 45998:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 45998
+Received disconnect from 172.17.0.1 port 46002:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 46002
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 53288 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 35204 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 53296 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 35214 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 53298 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 35224 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 53304 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 35226 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 syslogin_perform_logout: logout() returned an error
-Received disconnect from 172.17.0.1 port 53298:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 53298
-Received disconnect from 172.17.0.1 port 53304:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 53304
+Received disconnect from 172.17.0.1 port 35224:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 35224
+Received disconnect from 172.17.0.1 port 35226:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 35226
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 53314 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 35238 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 53322 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
-Received disconnect from 172.17.0.1 port 53288:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 53288
-Received disconnect from 172.17.0.1 port 53296:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 53296
+Accepted publickey for developer from 172.17.0.1 port 35248 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
+Received disconnect from 172.17.0.1 port 35204:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 35204
+Received disconnect from 172.17.0.1 port 35214:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 35214
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 53326 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 35256 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 53342 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 35272 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 53348 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
+Accepted publickey for developer from 172.17.0.1 port 35278 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
 userauth_pubkey: signature algorithm ssh-rsa not in PubkeyAcceptedAlgorithms [preauth]
-Accepted publickey for developer from 172.17.0.1 port 53362 ssh2: RSA SHA256:f+gPwhFkqX7ATpTUWxepZTgMiyFI58G9X87Llbt2MaI
-Received disconnect from 172.17.0.1 port 53348:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 53348
-Received disconnect from 172.17.0.1 port 53362:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 53362
-Received disconnect from 172.17.0.1 port 53326:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 53326
-Received disconnect from 172.17.0.1 port 53342:11: Connection terminated by the client.
-Disconnected from user developer 172.17.0.1 port 53342
+Accepted publickey for developer from 172.17.0.1 port 35282 ssh2: RSA SHA256:vBq4mB6U0w5st1Qh1GMEAeaM5ZK6rI/PbehynnDhR9c
+Received disconnect from 172.17.0.1 port 35278:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 35278
+Received disconnect from 172.17.0.1 port 35282:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 35282
+Received disconnect from 172.17.0.1 port 35256:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 35256
+Received disconnect from 172.17.0.1 port 35272:11: Connection terminated by the client.
+Disconnected from user developer 172.17.0.1 port 35272
