@@ -1,0 +1,95 @@
+{
+  "repository": {
+    "name": "platformio-stm32cube",
+    "url": "https://github.com/platformio/platform-ststm32",
+    "sha": "c7fe5b923c22b9d0bf3304cc1a1fdbe9963f822e",
+    "kind": "platformio",
+    "project": "examples/stm32cube-hal-blink",
+    "maxErrors": 0,
+    "environment": "nucleo_f103rb"
+  },
+  "seconds": 21.813,
+  "passed": true,
+  "error": null,
+  "compilerErrors": 0,
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "steps": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/platformio-stm32cube/source",
+      "log": "01-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "add",
+        "origin",
+        "https://github.com/platformio/platform-ststm32"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/platformio-stm32cube/source",
+      "log": "02-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "fetch",
+        "--depth",
+        "1",
+        "--no-tags",
+        "origin",
+        "c7fe5b923c22b9d0bf3304cc1a1fdbe9963f822e"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/platformio-stm32cube/source",
+      "log": "03-git.log",
+      "seconds": 2.319,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "FETCH_HEAD"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/platformio-stm32cube/source",
+      "log": "04-git.log",
+      "seconds": 0.465,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.12.15/x64/bin/python",
+        "-P",
+        "-m",
+        "platformio",
+        "run",
+        "--project-dir",
+        "/home/runner/work/_temp/embedded-repos/platformio-stm32cube/source/examples/stm32cube-hal-blink",
+        "--project-conf",
+        "/home/runner/work/_temp/embedded-repos/platformio-stm32cube/source/examples/stm32cube-hal-blink/tabstudio-ci.ini",
+        "--environment",
+        "nucleo_f103rb"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/platformio-stm32cube/source/examples/stm32cube-hal-blink",
+      "log": "05-python.log",
+      "seconds": 19.016,
+      "exitCode": 0,
+      "compilerErrors": 0
+    },
+    {
+      "firmware": "/home/runner/work/_temp/embedded-repos/platformio-stm32cube/source/examples/stm32cube-hal-blink/.pio/build/nucleo_f103rb/firmware.elf",
+      "bytes": 137180,
+      "sha256": "5b0da4bc1ed96a38086e133b2276cea29bfcba7215a1944346a238bba2faef52"
+    }
+  ]
+}

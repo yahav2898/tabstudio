@@ -1,0 +1,117 @@
+********************************************************************************
+If you like PlatformIO, please:
+- star it on GitHub > https://github.com/platformio/platformio-core
+- follow us on LinkedIn to stay up-to-date on the latest project news > https://www.linkedin.com/company/platformio/
+- try PlatformIO IDE for embedded development > https://platformio.org/platformio-ide
+********************************************************************************
+
+Processing nucleo_f103rb (platform: file:///home/runner/work/_temp/embedded-repos/platformio-stm32cube/source; framework: stm32cube; board: nucleo_f103rb)
+--------------------------------------------------------------------------------
+Platform Manager: Installing file:///home/runner/work/_temp/embedded-repos/platformio-stm32cube/source
+Platform Manager: ststm32@20.0.0 has been installed!
+Tool Manager: Installing platformio/toolchain-gccarmnoneeabi @ >=1.60301.0,<1.80000.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: toolchain-gccarmnoneeabi@1.70201.0 has been installed!
+Tool Manager: Installing platformio/framework-stm32cubef1 @ ~1.8.7
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-stm32cubef1@1.8.7 has been installed!
+Tool Manager: Installing platformio/tool-ldscripts-ststm32 @ ~0.3.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-ldscripts-ststm32@0.3.0 has been installed!
+Tool Manager: Installing platformio/tool-scons @ ~4.41101.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-scons@4.41101.0 has been installed!
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/ststm32/nucleo_f103rb.html
+PLATFORM: ST STM32 (20.0.0) > ST Nucleo F103RB
+HARDWARE: STM32F103RBT6 72MHz, 20KB RAM, 128KB Flash
+DEBUG: Current (stlink) On-board (stlink) External (blackmagic, cmsis-dap, jlink)
+PACKAGES: 
+ - framework-stm32cubef1 @ 1.8.7 
+ - tool-ldscripts-ststm32 @ 0.3.0 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 28 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_adc.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_adc_ex.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_can.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_cec.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_cortex.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_crc.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_dac.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_dac_ex.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_dma.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_eth.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_exti.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_flash.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_flash_ex.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_gpio.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_gpio_ex.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_hcd.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_i2c.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_i2s.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_irda.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_iwdg.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_mmc.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_nand.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_nor.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_pccard.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_pcd.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_pcd_ex.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_pwr.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_rcc.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_rcc_ex.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_rtc.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_rtc_ex.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_sd.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_smartcard.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_spi.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_sram.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_tim.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_tim_ex.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_uart.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_usart.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_hal_wwdg.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_adc.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_crc.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_dac.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_dma.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_exti.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_fsmc.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_gpio.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_i2c.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_pwr.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_rcc.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_rtc.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_sdmmc.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_spi.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_tim.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_usart.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_usb.o
+Compiling .pio/build/nucleo_f103rb/FrameworkHALDriver/Src/stm32f1xx_ll_utils.o
+Compiling .pio/build/nucleo_f103rb/src/main.o
+Compiling .pio/build/nucleo_f103rb/FrameworkCMSISDevice/gcc/startup_stm32f103xb.o
+Compiling .pio/build/nucleo_f103rb/FrameworkCMSISDevice/system_stm32f1xx.o
+Archiving .pio/build/nucleo_f103rb/libFrameworkCMSISDevice.a
+Indexing .pio/build/nucleo_f103rb/libFrameworkCMSISDevice.a
+Linking .pio/build/nucleo_f103rb/firmware.elf
+Checking size .pio/build/nucleo_f103rb/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [          ]   0.2% (used 44 bytes from 20480 bytes)
+Flash: [          ]   0.9% (used 1180 bytes from 131072 bytes)
+Building .pio/build/nucleo_f103rb/firmware.bin
+========================= [SUCCESS] Took 18.65 seconds =========================
+
+Environment    Status    Duration
+-------------  --------  ------------
+nucleo_f103rb  SUCCESS   00:00:18.649
+========================= 1 succeeded in 00:00:18.649 =========================
