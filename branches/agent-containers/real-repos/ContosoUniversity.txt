@@ -6,7 +6,7 @@ Compatibility Doctor:
   ContosoUniversity.AppHost: Not supported via Not on a tablet - An Aspire AppHost starts the app's projects and containers through Aspire's developer control plane, which runs on a computer, and it compiles against code its SDK generates for the projects it references. TabStudio leaves it out of builds; run the projects it starts on their own.
   ContosoUniversity.ServiceDefaults: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: ContosoUniversity
-Built in 8.6 s: 0 errors, 0 warnings
+Built in 5.1 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   aspire.hosting.apphost 13.0.1
       analyzers/dotnet/cs/Aspire.Hosting.Analyzers.dll
@@ -1140,13 +1140,13 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Output:
-Build started at 01:37:47...
+Build started at 02:59:04...
 1>------ Build started: Project: ContosoUniversity.ServiceDefaults, Configuration: Debug ------
-1>ContosoUniversity.ServiceDefaults -> compiled in memory (14.5 KB, 43 ms)
+1>ContosoUniversity.ServiceDefaults -> compiled in memory (14.5 KB, 22 ms)
 2>------ Build started: Project: ContosoUniversity, Configuration: Debug ------
-2>ContosoUniversity -> compiled in memory (437 KB, 477 ms)
+2>ContosoUniversity -> compiled in memory (437 KB, 314 ms)
 3>------ Build started: Project: ContosoUniversity.IntegrationTests, Configuration: Debug ------
-3>ContosoUniversity.IntegrationTests -> compiled in memory (81.5 KB, 326 ms)
+3>ContosoUniversity.IntegrationTests -> compiled in memory (81.5 KB, 409 ms)
 4>------ Skipped: Project: ContosoUniversity.AppHost: an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers ------
 ========== Build: 3 succeeded, 0 failed, 1 skipped ==========
 
