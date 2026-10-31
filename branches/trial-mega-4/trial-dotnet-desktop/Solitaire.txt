@@ -1,0 +1,56 @@
+Solitaire at b61b42b86fc14c54cf2c8639a765234952579b5f, opening /home/runner/work/_temp/repos/Solitaire/Solitaire.sln
+Opened in 0.1 s: Solitaire, solution /home/runner/work/_temp/repos/Solitaire/Solitaire.sln
+  project Solitaire [VisualBasic] /home/runner/work/_temp/repos/Solitaire/Solitaire/Solitaire.vbproj
+Compatibility Doctor:
+  Solitaire: Ready via Cross-platform Forms layer in the app preview - Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
+F5 startup project: Solitaire /home/runner/work/_temp/repos/Solitaire/Solitaire/Solitaire.vbproj
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Run: window shown: Solitaire (0 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/Solitaire/Solitaire/GameForm.vb:4
+Debug: ended without stopping at GameForm.vb:4 (0 s)
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing 0/1 projects
+  Analyzing: Analyzing 1/1 projects
+  Analyzing: Succeeded after 0.3 s
+  Building: Building
+  Building: Building Solitaire
+  Building: Succeeded after 0.2 s
+  Building: Building
+  Building: Building Solitaire
+  Building: Succeeded after 0.1 s
+  Building: Building
+  Building: Building Solitaire
+  Building: Succeeded after 0.1 s
+Project setup:
+
+Output:
+Build started at 02:55:14...
+1>------ Build started: Project: Solitaire, Configuration: Debug ------
+1>Solitaire -> compiled in memory (1652 KB, 75 ms)
+========== Build: 1 succeeded, 0 failed ==========
+Started without the debugger: a Windows Forms app runs its own message loop, which the debugger does not pause yet.
+Solitaire is running in the app preview.
+Unhandled exception. System.InvalidOperationException: Application-defined or object-defined error.
+ ---> System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at System.Windows.Forms.ImageList.ImageCollection.SetKeyName(Int32 index, String name) in /_/src/TabStudio.Forms/Forms/Components/ImageList.cs:line 292
+   at solitaire.GameForm.InitializeComponent() in /home/runner/work/_temp/repos/Solitaire/Solitaire/GameForm.Designer.vb:line 104
+   at solitaire.GameForm..ctor() in /home/runner/work/_temp/repos/Solitaire/Solitaire/GameForm.vb:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at solitaire.My.MyProject.MyForms.Create__Instance__[T](T Instance) in :line 192
+   at solitaire.My.MyProject.MyForms.get_GameForm()
+   at solitaire.My.MyApplication.OnCreateMainForm() in /home/runner/work/_temp/repos/Solitaire/Solitaire/My Project/Application.Designer.vb:line 36
+   at Microsoft.VisualBasic.ApplicationServices.WindowsFormsApplicationBase.OnRun() in /_/src/TabStudio.VisualBasic.Forms/ApplicationServices/WindowsFormsApplicationBase.cs:line 386
+   at Microsoft.VisualBasic.ApplicationServices.WindowsFormsApplicationBase.RunApplicationModel(StartupEventArgs eventArgs) in /_/src/TabStudio.VisualBasic.Forms/ApplicationServices/WindowsFormsApplicationBase.cs:line 527
+   at Microsoft.VisualBasic.ApplicationServices.WindowsFormsApplicationBase.DoApplicationModel() in /_/src/TabStudio.VisualBasic.Forms/ApplicationServices/WindowsFormsApplicationBase.cs:line 512
+   at Microsoft.VisualBasic.ApplicationServices.WindowsFormsApplicationBase.Run(String[] commandLine) in /_/src/TabStudio.VisualBasic.Forms/ApplicationServices/WindowsFormsApplicationBase.cs:line 252
+   at solitaire.My.MyApplication.Main(String[] Args) in :line 83
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+
+The program 'Solitaire' stopped because of an unhandled exception.
+

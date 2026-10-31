@@ -1,0 +1,64 @@
+WPF-ExpenseIt-cs at 811d01e95c8c929e68539d698d0a0609e94fd185, opening /home/runner/work/_temp/repos/WPF-ExpenseIt-cs/Getting Started/WalkthroughFirstWPFApp/csharp/ExpenseItIntro.sln
+Opened in 0.1 s: ExpenseItIntro, solution /home/runner/work/_temp/repos/WPF-ExpenseIt-cs/Getting Started/WalkthroughFirstWPFApp/csharp/ExpenseItIntro.sln
+  project ExpenseItIntro [CSharp] /home/runner/work/_temp/repos/WPF-ExpenseIt-cs/Getting Started/WalkthroughFirstWPFApp/csharp/ExpenseItIntro.csproj
+Compatibility Doctor:
+  ExpenseItIntro: Ready via OpenSilver in the web preview - Built on OpenSilver, which implements WPF's API, and run in the web preview. What OpenSilver lacks, such as 3D, Window.ShowDialog and some members, is named in the Error List; that code runs on your PC through the Windows Bridge.
+F5 startup project: ExpenseItIntro /home/runner/work/_temp/repos/WPF-ExpenseIt-cs/Getting Started/WalkthroughFirstWPFApp/csharp/ExpenseItIntro.csproj
+Error List after analysis: 6 errors, 0 warnings
+  5 x TS7004
+      [ExpenseItIntro] ExpenseItHome.xaml.cs(20,107): error TS7004: AutomationEvents.LiveRegionChanged is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+      [ExpenseItIntro] ExpenseReportPage.xaml.cs(30,107): error TS7004: AutomationEvents.LiveRegionChanged is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+      [ExpenseItIntro] ExpenseReportPage.xaml.cs(31,111): error TS7004: AutomationEvents.LiveRegionChanged is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+      [ExpenseItIntro] ExpenseReportPage.xaml.cs(32,117): error TS7004: AutomationEvents.LiveRegionChanged is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+      [ExpenseItIntro] MainWindow.xaml.cs(8,39): error TS7004: NavigationWindow is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+  1 x CS1503
+      [ExpenseItIntro] ExpenseItHome.xaml.cs(27,45): error CS1503: Argument 1: cannot convert from 'ExpenseIt.ExpenseReportPage' to 'System.Uri'
+Error List after the build: 6 errors, 0 warnings
+  5 x TS7004
+      [ExpenseItIntro] ExpenseItHome.xaml.cs(20,107): error TS7004: AutomationEvents.LiveRegionChanged is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+      [ExpenseItIntro] ExpenseReportPage.xaml.cs(30,107): error TS7004: AutomationEvents.LiveRegionChanged is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+      [ExpenseItIntro] ExpenseReportPage.xaml.cs(31,111): error TS7004: AutomationEvents.LiveRegionChanged is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+      [ExpenseItIntro] ExpenseReportPage.xaml.cs(32,117): error TS7004: AutomationEvents.LiveRegionChanged is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+      [ExpenseItIntro] MainWindow.xaml.cs(8,39): error TS7004: NavigationWindow is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+  1 x CS1503
+      [ExpenseItIntro] ExpenseItHome.xaml.cs(27,45): error CS1503: Argument 1: cannot convert from 'ExpenseIt.ExpenseReportPage' to 'System.Uri'
+Run: no window (0 s after F5)
+Debug: no entry point found for a breakpoint (0 s)
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring ExpenseItIntro
+  Analyzing: Analyzing 0/1 projects
+  Analyzing: Analyzing 1/1 projects
+  Analyzing: Succeeded after 0.2 s
+  Restoring NuGet packages: Downloading NuGet packages 1/7
+  Restoring NuGet packages: Downloading NuGet packages 2/7
+  Restoring NuGet packages: Downloading NuGet packages 3/7
+  Restoring NuGet packages: Downloading NuGet packages 4/7
+  Restoring NuGet packages: Downloading NuGet packages 5/7
+  Restoring NuGet packages: Downloading NuGet packages 6/7
+  Restoring NuGet packages: Downloading NuGet packages 7/7
+  Restoring NuGet packages: Succeeded after 0.5 s
+  Analyzing: Analyzing 0/1 projects
+  Analyzing: Analyzing 1/1 projects
+  Analyzing: Succeeded after 0.1 s
+  Building: Building
+  Building: Building ExpenseItIntro
+  Building: Failed after 0.0 s
+  Building: Building
+  Building: Building ExpenseItIntro
+  Building: Failed after 0.0 s
+Project setup:
+
+Output:
+Build started at 02:54:54...
+1>------ Build started: Project: ExpenseItIntro, Configuration: Debug ------
+1>ExpenseItHome.xaml.cs(20,107): error TS7004: AutomationEvents.LiveRegionChanged is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+1>ExpenseItHome.xaml.cs(27,45): error CS1503: Argument 1: cannot convert from 'ExpenseIt.ExpenseReportPage' to 'System.Uri'
+1>ExpenseReportPage.xaml.cs(30,107): error TS7004: AutomationEvents.LiveRegionChanged is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+1>ExpenseReportPage.xaml.cs(31,111): error TS7004: AutomationEvents.LiveRegionChanged is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+1>ExpenseReportPage.xaml.cs(32,117): error TS7004: AutomationEvents.LiveRegionChanged is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+1>MainWindow.xaml.cs(8,39): error TS7004: NavigationWindow is in WPF but not in OpenSilver, so it cannot run in the web preview. To use it, run the project on your PC through the Windows Bridge.
+========== Build: 0 succeeded, 1 failed ==========
+

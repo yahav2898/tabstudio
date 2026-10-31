@@ -1,0 +1,28 @@
+Community.VisualBasic at 20d2a51dfc9f342848ad134952ceaa8d79302559, opening /home/runner/work/_temp/repos/Community.VisualBasic/Community.VisualBasic.sln
+Opened in 0.2 s: Community.VisualBasic, solution /home/runner/work/_temp/repos/Community.VisualBasic/Community.VisualBasic.sln
+  project Community.VisualBasic [VisualBasic] /home/runner/work/_temp/repos/Community.VisualBasic/Community.VisualBasic/Community.VisualBasic.vbproj
+  project net5-console [VisualBasic] /home/runner/work/_temp/repos/Community.VisualBasic/ProjectTypeTests/net5-console/net5-console.vbproj
+  project net5-windows [VisualBasic] /home/runner/work/_temp/repos/Community.VisualBasic/ProjectTypeTests/net5-windows/net5-windows.vbproj
+  project netstandard2_0 [VisualBasic] /home/runner/work/_temp/repos/Community.VisualBasic/ProjectTypeTests/netstandard2_0/netstandard2_0.vbproj
+  project net4-console [VisualBasic] /home/runner/work/_temp/repos/Community.VisualBasic/ProjectTypeTests/net4-console/net4-console.vbproj
+  project Community.VisualBasic.Tests [VisualBasic] /home/runner/work/_temp/repos/Community.VisualBasic/Community.VisualBasic.Tests/Community.VisualBasic.Tests.vbproj
+Compatibility Doctor:
+  Community.VisualBasic: Library via Built with its users - A library is compiled together with the projects that reference it.
+  net5-console: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  net5-windows: Ready via Cross-platform Forms layer in the app preview - Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
+  netstandard2_0: Library via Built with its users - A library is compiled together with the projects that reference it.
+  net4-console: Ready via In-process - A .NET Framework project, run with .NET on this tablet. Compiled in memory and run right here, with its output in the Output panel.
+  Community.VisualBasic.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+F5 startup project: net5-windows /home/runner/work/_temp/repos/Community.VisualBasic/ProjectTypeTests/net5-windows/net5-windows.vbproj
+Error List after analysis: 0 errors, 9 warnings
+Error List after the build: 0 errors, 9 warnings
+Tests: 1130 found; 21743 passed, 470 failed, 0 skipped, 52 not run - 22213 tests run in 3.6 sec: 21743 passed, 470 failed, 0 skipped. (12 s)
+EXCEPTION: Xunit.Sdk.TrueException: trial-Community.VisualBasic-6-tests does not meet the accessibility rules (docs/design/README.md, "Accessibility"):
+clipped: ActivityBar#ActivityBarView > Border#PART_HitArea > ContentPresenter#PART_ContentPresenter > TextBlock: "99+" runs past its box: it needs 32 dips of width and has 29.
+   at Xunit.Assert.True(Nullable`1 condition, String userMessage) in /_/src/xunit.assert/Asserts/BooleanAsserts.cs:line 141
+   at Xunit.Assert.True(Boolean condition, String userMessage) in /_/src/xunit.assert/Asserts/BooleanAsserts.cs:line 123
+   at TabStudio.App.Tests.Accessibility.AccessibilityReport.AssertNone(IReadOnlyList`1 found, String what) in /_/tests/TabStudio.App.Tests/Accessibility/AccessibilityReport.cs:line 84
+   at TabStudio.App.Tests.UiTestHelpers.SaveScreenshot(Window window, String name) in /_/tests/TabStudio.App.Tests/UiTestHelpers.cs:line 46
+   at TabStudio.App.Tests.Trial.RepoTrialTests.TryAsync(String folder, String name, String expect, String route, Boolean tests, StringBuilder report, JsonObject result) in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 229
+   at TabStudio.App.Tests.Trial.RepoTrialTests.TryAsync(String folder, String name, String expect, String route, Boolean tests, StringBuilder report, JsonObject result) in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 259
+   at TabStudio.App.Tests.Trial.RepoTrialTests.Open_set_up_build_and_run_real_repositories() in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 72

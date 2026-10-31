@@ -1,0 +1,74 @@
+WPF-ExpenseIt-vb at 811d01e95c8c929e68539d698d0a0609e94fd185, opening /home/runner/work/_temp/repos/WPF-ExpenseIt-vb/Getting Started/WalkthroughFirstWPFApp/vb/ExpenseItIntro2.sln
+Opened in 0.3 s: ExpenseItIntro2, solution /home/runner/work/_temp/repos/WPF-ExpenseIt-vb/Getting Started/WalkthroughFirstWPFApp/vb/ExpenseItIntro2.sln
+  project ExpenseItIntro2 [VisualBasic] /home/runner/work/_temp/repos/WPF-ExpenseIt-vb/Getting Started/WalkthroughFirstWPFApp/vb/ExpenseItIntro2.vbproj
+Compatibility Doctor:
+  ExpenseItIntro2: Needs Windows via Windows Bridge - OpenSilver builds C# WPF projects. A WPF project in Visual Basic builds and runs on your PC through the Windows Bridge.
+F5 startup project: ExpenseItIntro2 /home/runner/work/_temp/repos/WPF-ExpenseIt-vb/Getting Started/WalkthroughFirstWPFApp/vb/ExpenseItIntro2.vbproj
+Error List after analysis: 6 errors, 0 warnings
+  3 x BC30451
+      [ExpenseItIntro2] ExpenseItHome.xaml.vb(11,13): error BC30451: 'InitializeComponent' is not declared. It may be inaccessible due to its protection level.
+      [ExpenseItIntro2] ExpenseReportPage.xaml.vb(11,13): error BC30451: 'InitializeComponent' is not declared. It may be inaccessible due to its protection level.
+      [ExpenseItIntro2] MainWindow.xaml.vb(10,13): error BC30451: 'InitializeComponent' is not declared. It may be inaccessible due to its protection level.
+  1 x BC30456
+      [ExpenseItIntro2] ExpenseItHome.xaml.vb(17,60): error BC30456: 'peopleListBox' is not a member of 'ExpenseItHome'.
+  1 x BC30311
+      [ExpenseItIntro2] ExpenseItHome.xaml.vb(18,43): error BC30311: Value of type 'ExpenseReportPage' cannot be converted to 'Uri'.
+  1 x BC30002
+      [ExpenseItIntro2] MainWindow.xaml.vb(8,18): error BC30002: Type 'NavigationWindow' is not defined.
+Error List after the build: 7 errors, 0 warnings
+  3 x BC30451
+      [ExpenseItIntro2] ExpenseItHome.xaml.vb(11,13): error BC30451: 'InitializeComponent' is not declared. It may be inaccessible due to its protection level.
+      [ExpenseItIntro2] ExpenseReportPage.xaml.vb(11,13): error BC30451: 'InitializeComponent' is not declared. It may be inaccessible due to its protection level.
+      [ExpenseItIntro2] MainWindow.xaml.vb(10,13): error BC30451: 'InitializeComponent' is not declared. It may be inaccessible due to its protection level.
+  1 x BC30420
+      [ExpenseItIntro2] error BC30420: 'Sub Main' was not found in 'ExpenseIt9'.
+  1 x BC30456
+      [ExpenseItIntro2] ExpenseItHome.xaml.vb(17,60): error BC30456: 'peopleListBox' is not a member of 'ExpenseItHome'.
+  1 x BC30311
+      [ExpenseItIntro2] ExpenseItHome.xaml.vb(18,43): error BC30311: Value of type 'ExpenseReportPage' cannot be converted to 'Uri'.
+  1 x BC30002
+      [ExpenseItIntro2] MainWindow.xaml.vb(8,18): error BC30002: Type 'NavigationWindow' is not defined.
+Run: no window (0 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/WPF-ExpenseIt-vb/Getting Started/WalkthroughFirstWPFApp/vb/ExpenseItHome.xaml.vb:11
+Debug: ended without stopping at ExpenseItHome.xaml.vb:11 (0 s)
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring ExpenseItIntro2
+  Analyzing: Analyzing 0/1 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/7
+  Restoring NuGet packages: Downloading NuGet packages 2/7
+  Restoring NuGet packages: Downloading NuGet packages 3/7
+  Restoring NuGet packages: Downloading NuGet packages 4/7
+  Restoring NuGet packages: Downloading NuGet packages 5/7
+  Restoring NuGet packages: Downloading NuGet packages 6/7
+  Restoring NuGet packages: Downloading NuGet packages 7/7
+  Restoring NuGet packages: Succeeded after 0.3 s
+  Analyzing: Cancelled after 0.3 s
+  Analyzing: Analyzing 0/1 projects
+  Analyzing: Analyzing 1/1 projects
+  Analyzing: Succeeded after 0.2 s
+  Building: Building
+  Building: Building ExpenseItIntro2
+  Building: Failed after 0.0 s
+  Building: Building
+  Building: Building ExpenseItIntro2
+  Building: Failed after 0.0 s
+  Building: Building
+  Building: Building ExpenseItIntro2
+  Building: Failed after 0.0 s
+Project setup:
+
+Output:
+Build started at 02:55:01...
+1>------ Build started: Project: ExpenseItIntro2, Configuration: Debug ------
+1>error BC30420: 'Sub Main' was not found in 'ExpenseIt9'.
+1>ExpenseItHome.xaml.vb(11,13): error BC30451: 'InitializeComponent' is not declared. It may be inaccessible due to its protection level.
+1>ExpenseItHome.xaml.vb(17,60): error BC30456: 'peopleListBox' is not a member of 'ExpenseItHome'.
+1>ExpenseItHome.xaml.vb(18,43): error BC30311: Value of type 'ExpenseReportPage' cannot be converted to 'Uri'.
+1>ExpenseReportPage.xaml.vb(11,13): error BC30451: 'InitializeComponent' is not declared. It may be inaccessible due to its protection level.
+1>MainWindow.xaml.vb(8,18): error BC30002: Type 'NavigationWindow' is not defined.
+1>MainWindow.xaml.vb(10,13): error BC30451: 'InitializeComponent' is not declared. It may be inaccessible due to its protection level.
+========== Build: 0 succeeded, 1 failed ==========
+
