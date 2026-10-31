@@ -20,10 +20,10 @@ test_existing_file_never_overwritten (test_bridges.NativeSerial.test_existing_fi
 test_unmodified_native_termios_and_ioctl_over_real_pty (test_bridges.NativeSerial.test_unmodified_native_termios_and_ioctl_over_real_pty) ... ok
 test_unrelated_posix_descriptors_are_untouched (test_bridges.NativeSerial.test_unrelated_posix_descriptors_are_untouched) ... ok
 test_both_esptool_aliases_point_at_same_verified_executable (test_flash_installers.NativeInstallerTests.test_both_esptool_aliases_point_at_same_verified_executable) ... esptool v5.6.0
-Installed native esptool from verified archive: /tmp/tmpwakbcgkb/esptool
+Installed native esptool from verified archive: /tmp/tmpvc8n2djz/esptool
 ok
 test_native_package_layout_is_discovered_without_guessing_subfolder (test_flash_installers.NativeInstallerTests.test_native_package_layout_is_discovered_without_guessing_subfolder) ... picotool v2.3.1
-Installed native picotool from verified archive: /tmp/tmpplaz9nck/arbitrary-official-layout/picotool
+Installed native picotool from verified archive: /tmp/tmpvmlero9n/arbitrary-official-layout/picotool
 ok
 test_two_executables_or_outside_symlink_are_not_arbitrarily_selected (test_flash_installers.NativeInstallerTests.test_two_executables_or_outside_symlink_are_not_arbitrarily_selected) ... ok
 test_wrong_version_creates_no_path_alias (test_flash_installers.NativeInstallerTests.test_wrong_version_creates_no_path_alias) ... ok
@@ -55,6 +55,8 @@ test_termination_is_forwarded_child_is_reaped_and_private_home_is_cleaned (test_
 test_unchanged_official_cli_ignores_hostile_automatic_preset_in_project_and_original_home (test_probe_presets.ProbePresetTests.test_unchanged_official_cli_ignores_hostile_automatic_preset_in_project_and_original_home) ... skipped 'Actual official probe-rs binary is exercised separately by native installer CI'
 test_a_cmake_file_without_a_project_is_an_error (test_real_repos.FirmwareNameTests.test_a_cmake_file_without_a_project_is_an_error) ... ok
 test_esp_idf_firmware_is_named_after_the_cmake_project (test_real_repos.FirmwareNameTests.test_esp_idf_firmware_is_named_after_the_cmake_project) ... ok
+test_the_platform_named_in_platform_json_is_pinned_to_the_checkout (test_real_repos.PlatformPinTests.test_the_platform_named_in_platform_json_is_pinned_to_the_checkout) ... ok
+test_without_platform_json_the_avr_platform_is_pinned (test_real_repos.PlatformPinTests.test_without_platform_json_the_avr_platform_is_pinned) ... ok
 test_all_seven_workflows_have_real_commit_pins_and_zero_error_baselines (test_real_repos.RealRepositoryManifestTests.test_all_seven_workflows_have_real_commit_pins_and_zero_error_baselines) ... ok
 test_branch_names_are_not_accepted_as_source_pins (test_real_repos.RealRepositoryManifestTests.test_branch_names_are_not_accepted_as_source_pins) ... ok
 test_cloned_repositories_register_authoritative_origin_before_submodules (test_real_repos.RealRepositoryManifestTests.test_cloned_repositories_register_authoritative_origin_before_submodules) ... ok
@@ -73,6 +75,7 @@ test_stm32_preserves_the_vendor_preset_but_never_uses_a_checked_in_build_cache (
 test_success_requires_a_nonempty_firmware_artifact (test_real_repos.RealRepositoryManifestTests.test_success_requires_a_nonempty_firmware_artifact) ... ok
 test_vendor_sdk_scripts_keep_their_required_sibling_module_imports (test_real_repos.RealRepositoryManifestTests.test_vendor_sdk_scripts_keep_their_required_sibling_module_imports) ... ok
 test_zephyr_cross_prefix_is_absolute_even_when_compiler_was_found_on_path (test_real_repos.RealRepositoryManifestTests.test_zephyr_cross_prefix_is_absolute_even_when_compiler_was_found_on_path) ... ok
+test_an_example_is_built_with_its_features (test_real_repos.RustExampleTests.test_an_example_is_built_with_its_features) ... ok
 test_all_existing_drivers_skip_explicit_modem_reset_and_handshake_requests_in_capture_mode (test_serial_unity.PreserveLinesDriverContracts.test_all_existing_drivers_skip_explicit_modem_reset_and_handshake_requests_in_capture_mode) ... ok
 test_actual_worker_disconnect_stops_the_reader_and_removes_its_private_alias (test_serial_unity.SerialUnityContracts.test_actual_worker_disconnect_stops_the_reader_and_removes_its_private_alias) ... ok
 test_arbitrary_firmware_baud_survives_hupcl_cleanup_configuration_without_named_rate_rounding (test_serial_unity.SerialUnityContracts.test_arbitrary_firmware_baud_survives_hupcl_cleanup_configuration_without_named_rate_rounding) ... ok
@@ -96,6 +99,6 @@ ok
 test_only_native_linux_host_triples_are_accepted (test_wlink_installer.WlinkInstallerTests.test_only_native_linux_host_triples_are_accepted) ... ok
 
 ----------------------------------------------------------------------
-Ran 74 tests in 6.961s
+Ran 77 tests in 8.939s
 
 OK (skipped=1)
