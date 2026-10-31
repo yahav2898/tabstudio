@@ -1,0 +1,116 @@
+{
+  "repository": {
+    "name": "rust-stm32f4xx-hal",
+    "url": "https://github.com/stm32-rs/stm32f4xx-hal",
+    "sha": "0eb673dd2fc657a052e824f2693dcbd4e1a1b83d",
+    "kind": "rust",
+    "project": ".",
+    "maxErrors": 0,
+    "target": "thumbv7em-none-eabihf",
+    "example": "blinky",
+    "features": "stm32f411",
+    "rust": "1.97.0"
+  },
+  "seconds": 33.239,
+  "passed": true,
+  "error": null,
+  "compilerErrors": 0,
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "steps": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/rust-stm32f4xx-hal/source",
+      "log": "01-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "add",
+        "origin",
+        "https://github.com/stm32-rs/stm32f4xx-hal"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/rust-stm32f4xx-hal/source",
+      "log": "02-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "fetch",
+        "--depth",
+        "1",
+        "--no-tags",
+        "origin",
+        "0eb673dd2fc657a052e824f2693dcbd4e1a1b83d"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/rust-stm32f4xx-hal/source",
+      "log": "03-git.log",
+      "seconds": 0.415,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "FETCH_HEAD"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/rust-stm32f4xx-hal/source",
+      "log": "04-git.log",
+      "seconds": 0.016,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "rustup",
+        "toolchain",
+        "install",
+        "1.97.0",
+        "--profile",
+        "minimal",
+        "--component",
+        "rust-src",
+        "--target",
+        "thumbv7em-none-eabihf"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/rust-stm32f4xx-hal/source",
+      "log": "05-rustup.log",
+      "seconds": 9.789,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "cargo",
+        "build",
+        "--manifest-path",
+        "/home/runner/work/_temp/embedded-repos/rust-stm32f4xx-hal/source/Cargo.toml",
+        "--target",
+        "thumbv7em-none-eabihf",
+        "--example",
+        "blinky",
+        "--features",
+        "stm32f411",
+        "--release"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/rust-stm32f4xx-hal/source",
+      "log": "06-cargo.log",
+      "seconds": 23.006,
+      "exitCode": 0,
+      "compilerErrors": 0
+    },
+    {
+      "firmware": "/home/runner/work/_temp/embedded-repos/rust-stm32f4xx-hal/build/thumbv7em-none-eabihf/release/examples/blinky",
+      "bytes": 525792,
+      "sha256": "783c0d898ec2708d870ec3055b94f515f9bde1f3db0c33533f1b7df57ce7f6a9"
+    }
+  ]
+}
