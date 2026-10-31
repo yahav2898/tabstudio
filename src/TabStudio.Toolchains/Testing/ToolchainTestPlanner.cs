@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using TabStudio.Toolchains.Processes;
 using TabStudio.Toolchains.Projects;
@@ -15,10 +16,10 @@ public sealed record ToolchainTestPlan(ToolchainTestFramework Framework, Process
 /// Runs a toolchain project's tests with its standard runner, as its own documentation does, and reads their results
 /// from the JUnit XML reports the runner writes: <c>vendor/bin/phpunit --log-junit</c> (or Pest), Gradle's
 /// <c>test</c> tasks, Maven's Surefire, <c>swift test --xunit-output</c> and <c>pytest --junitxml</c>, and from the
-/// output of <c>go test -v</c> and <c>cargo test</c> and the JSON report of <c>dart test</c> and <c>flutter test</c>
-/// (see <see cref="ToolchainTestOutput"/>).
+/// output of <c>go test -v</c> and <c>cargo test</c> and the JSON reports of <c>dart test</c>, <c>flutter test</c> and
+/// Jest (see <see cref="ToolchainTestOutput"/>); Vitest, Mocha and <c>node --test</c> write JUnit XML.
 /// </summary>
-public static class ToolchainTestPlanner
+public static partial class ToolchainTestPlanner
 {
     /// <summary>
     /// The Gradle init script of a test run: every <c>test</c> task runs, even when Gradle thinks it is up to date,
@@ -61,7 +62,8 @@ public static class ToolchainTestPlanner
     /// The runner of a project's tests, or <see langword="null"/> when it has none TabStudio runs: PHPUnit or Pest
     /// in a Composer project that requires it, JUnit tests in a Gradle or Maven build with <c>src/test</c>, a
     /// Swift package with test targets, a Python project that uses pytest, a Go module with <c>_test.go</c> files, a Rust
-    /// package with tests, and a Dart or Flutter package with a <c>test</c> folder.
+    /// package with tests, a Dart or Flutter package with a <c>test</c> folder, and a Node.js package tested with Vitest,
+    /// Jest, Mocha or <c>node --test</c>.
     /// </summary>
     /// <param name="project">The project.</param>
     public static ToolchainTestFramework? Detect(ToolchainProject project)
@@ -103,6 +105,8 @@ public static class ToolchainTestPlanner
                 return File.Exists(Path.Combine(directory, "Cargo.toml"))
                     && (Directory.Exists(Path.Combine(directory, "tests")) || HasFile(directory, "*.rs", text => text.Contains("#[test]", StringComparison.Ordinal) || text.Contains("#[cfg(test)]", StringComparison.Ordinal)))
                     ? ToolchainTestFramework.Cargo : null;
+            case "node":
+                return NodeFramework(directory);
             case "flutter":
                 return File.Exists(Path.Combine(directory, "pubspec.yaml")) && Directory.Exists(Path.Combine(directory, "test"))
                     ? FlutterProject.UsesFlutter(directory) ? ToolchainTestFramework.FlutterTest : ToolchainTestFramework.DartTest
@@ -189,6 +193,42 @@ public static class ToolchainTestPlanner
                 }
 
                 break;
+            case ToolchainTestFramework.Vitest:
+                command = ["npx", "--no-install", "vitest", "run", "--reporter=default", "--reporter=junit", "--outputFile.junit=" + Path.Combine(reportDirectory, "vitest.xml")];
+                if (selected is not null)
+                {
+                    command.AddRange(["-t", NodeNamePattern(selected)]);
+                }
+
+                break;
+            case ToolchainTestFramework.Jest:
+                command = ["npx", "--no-install", "jest", "--ci", "--json", "--outputFile=" + Path.Combine(reportDirectory, JestReport)];
+                if (selected is not null)
+                {
+                    command.AddRange(["-t", NodeNamePattern(selected)]);
+                }
+
+                break;
+            case ToolchainTestFramework.Mocha:
+                // The package's own mocha command (its files and --require), reporting to a JUnit file instead of the console.
+                command = ["sh", "-c", "exec npx --no-install mocha \"$@\" " + MochaArguments(TestScript(project.Directory)), "mocha",
+                    "--reporter", "xunit", "--reporter-option", "output=" + Path.Combine(reportDirectory, "mocha.xml")];
+                if (selected is not null)
+                {
+                    command.AddRange(["--grep", NodeNamePattern(selected)]);
+                }
+
+                break;
+            case ToolchainTestFramework.NodeTest:
+                // Node's test runner writes JUnit XML beside its console report; the files come from the package's script.
+                command = ["sh", "-c", "exec node --test \"$@\" " + NodeTestArguments(TestScript(project.Directory)), "node",
+                    "--test-reporter=spec", "--test-reporter-destination=stdout", "--test-reporter=junit", "--test-reporter-destination=" + Path.Combine(reportDirectory, "node.xml")];
+                if (selected is not null)
+                {
+                    command.AddRange(["--test-name-pattern", NodeNamePattern(selected)]);
+                }
+
+                break;
             case ToolchainTestFramework.DartTest or ToolchainTestFramework.FlutterTest:
                 command = [framework == ToolchainTestFramework.FlutterTest ? "flutter" : "dart", "test", "--file-reporter", "json:" + Path.Combine(reportDirectory, DartReport)];
                 if (selected is not null)
@@ -224,6 +264,8 @@ public static class ToolchainTestPlanner
                 return ToolchainTestOutput.ParseCargo(ReadReport(plan, CargoReport));
             case ToolchainTestFramework.DartTest or ToolchainTestFramework.FlutterTest:
                 return ToolchainTestOutput.ParseDart(ReadReport(plan, DartReport), project.Directory);
+            case ToolchainTestFramework.Jest:
+                return ToolchainTestOutput.ParseJest(ReadReport(plan, JestReport), project.Directory);
         }
 
         IEnumerable<string> reports = plan.Framework switch
@@ -252,6 +294,56 @@ public static class ToolchainTestPlanner
     private const string GoReport = "go-test.txt";
     private const string CargoReport = "cargo-test.txt";
     private const string DartReport = "dart-test.jsonl";
+    private const string JestReport = "jest.json";
+
+    /// <summary>
+    /// The runner of a Node.js package's tests, from its development dependencies and its <c>test</c> script: Vitest,
+    /// Jest or Mocha, or Node's own runner when the script runs <c>node --test</c>.
+    /// </summary>
+    private static ToolchainTestFramework? NodeFramework(string directory)
+    {
+        var manifest = Path.Combine(directory, "package.json");
+        if (!File.Exists(manifest))
+        {
+            return null;
+        }
+
+        var text = ReadSmall(manifest);
+        var script = TestScript(directory) ?? string.Empty;
+        bool Uses(string package) => text.Contains("\"" + package + "\":", StringComparison.Ordinal) || Regex.IsMatch(script, @"(?:^|[\s&;|])" + package + @"(?:\s|$)", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+        return Uses("vitest") ? ToolchainTestFramework.Vitest
+            : Uses("jest") ? ToolchainTestFramework.Jest
+            : Uses("mocha") ? ToolchainTestFramework.Mocha
+            : script.Contains("node --test", StringComparison.Ordinal) ? ToolchainTestFramework.NodeTest
+            : null;
+    }
+
+    private static string? TestScript(string directory) => RunPlanner.ReadJson(Path.Combine(directory, "package.json"), "scripts.test");
+
+    /// <summary>The arguments of the <c>mocha</c> command in a test script, without its reporter: its files and options.</summary>
+    internal static string MochaArguments(string? script) =>
+        ScriptArguments(script, "mocha") is { } arguments ? MochaReporter().Replace(arguments, string.Empty).Trim() : string.Empty;
+
+    /// <summary>The arguments of the <c>node --test</c> command in a test script: its test files.</summary>
+    internal static string NodeTestArguments(string? script) => ScriptArguments(script, "node --test") ?? string.Empty;
+
+    /// <summary>What follows a command in a script, up to the next command (<c>&amp;&amp;</c>, <c>;</c> or <c>|</c>).</summary>
+    private static string? ScriptArguments(string? script, string command)
+    {
+        if (script is null || Regex.Match(script, @"(?:^|[\s&;|])" + Regex.Escape(command) + @"(?<arguments>(?:\s[^&;|]*)?)", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1)) is not { Success: true } match)
+        {
+            return null;
+        }
+
+        return match.Groups["arguments"].Value.Trim();
+    }
+
+    /// <summary>A name pattern for Vitest's and Jest's <c>-t</c>, Mocha's <c>--grep</c> and Node's <c>--test-name-pattern</c>.</summary>
+    private static string NodeNamePattern(IReadOnlyList<ToolchainTestSelector> selection) =>
+        string.Join('|', selection.Select(s => QuoteRegex(s.MethodName ?? string.Empty)).Where(p => p.Length > 0).Distinct(StringComparer.Ordinal)) is { Length: > 0 } pattern ? pattern : ".*";
+
+    [GeneratedRegex(@"\s(?:--reporter|-R)(?:=|\s+)\S+", RegexOptions.CultureInvariant)]
+    private static partial Regex MochaReporter();
 
     private static string ReadReport(ToolchainTestPlan plan, string name)
     {

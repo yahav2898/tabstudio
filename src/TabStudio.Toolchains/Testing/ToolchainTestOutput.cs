@@ -285,6 +285,66 @@ public static partial class ToolchainTestOutput
         return results;
     }
 
+    /// <summary>
+    /// The results in Jest's <c>--json</c> report: every assertion of every test file, in the class of its file
+    /// (<c>src.app.spec</c>), named by its describe blocks and title, as Jest's <c>fullName</c>.
+    /// </summary>
+    /// <param name="report">The report.</param>
+    /// <param name="directory">The package folder, which the files' paths are made relative to.</param>
+    public static IReadOnlyList<ToolchainTestResult> ParseJest(string report, string directory)
+    {
+        ArgumentNullException.ThrowIfNull(report);
+        var results = new List<ToolchainTestResult>();
+        if (report.Trim().Length == 0)
+        {
+            return results;
+        }
+
+        JsonDocument document;
+        try
+        {
+            document = JsonDocument.Parse(report);
+        }
+        catch (JsonException)
+        {
+            return results;
+        }
+
+        using var owner = document;
+        if (!document.RootElement.TryGetProperty("testResults", out var files))
+        {
+            return results;
+        }
+
+        foreach (var file in files.EnumerateArray())
+        {
+            var path = file.TryGetProperty("name", out var name) ? name.GetString() ?? string.Empty : string.Empty;
+            var relative = Path.IsPathRooted(path) ? Path.GetRelativePath(directory, path) : path;
+            var className = Path.ChangeExtension(relative, null).Replace('\\', '/').Replace('/', '.');
+            if (!file.TryGetProperty("assertionResults", out var assertions))
+            {
+                continue;
+            }
+
+            foreach (var assertion in assertions.EnumerateArray())
+            {
+                var title = assertion.TryGetProperty("fullName", out var full) && full.GetString() is { Length: > 0 } fullName ? fullName : assertion.GetProperty("title").GetString() ?? string.Empty;
+                var outcome = assertion.GetProperty("status").GetString() switch
+                {
+                    "passed" => ToolchainTestOutcome.Passed,
+                    "failed" => ToolchainTestOutcome.Failed,
+                    _ => ToolchainTestOutcome.Skipped,
+                };
+                var failures = assertion.TryGetProperty("failureMessages", out var messages) ? string.Join('\n', messages.EnumerateArray().Select(m => m.GetString())) : string.Empty;
+                var duration = assertion.TryGetProperty("duration", out var d) && d.ValueKind == JsonValueKind.Number ? TimeSpan.FromMilliseconds(d.GetDouble()) : TimeSpan.Zero;
+                int? line = assertion.TryGetProperty("location", out var location) && location.ValueKind == JsonValueKind.Object ? location.GetProperty("line").GetInt32() : null;
+                results.Add(new ToolchainTestResult(className, title, title, outcome, duration, failures.Length > 0 ? failures : null, Path.IsPathRooted(path) ? path : Path.Combine(directory, path), line));
+            }
+        }
+
+        return results;
+    }
+
     [GeneratedRegex(@"^=== (?:RUN|CONT|PAUSE|NAME)\s+(?<name>\S+)", RegexOptions.CultureInvariant)]
     private static partial Regex GoControl();
 

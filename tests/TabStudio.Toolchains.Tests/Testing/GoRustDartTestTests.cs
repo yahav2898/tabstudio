@@ -6,10 +6,11 @@ using TabStudio.Toolchains.Testing;
 namespace TabStudio.Toolchains.Tests.Testing;
 
 /// <summary>
-/// Test Explorer for Go, Rust and Dart. Before 0.20.5 it found no tests in spf13/cobra, urfave/cli, labstack/echo,
-/// sharkdp/bat, dtolnay/anyhow, serde-rs/json or dart-lang/shelf: only JUnit XML reports were read. Their tests are now
-/// found in source and run with <c>go test -v</c>, <c>cargo test</c> and <c>dart test</c>, whose output and JSON report
-/// become the results, under the same names as the tests found in source.
+/// Test Explorer for Go, Rust, Dart and Node.js. Before 0.20.5 it found no tests in spf13/cobra, urfave/cli, labstack/echo,
+/// sharkdp/bat, dtolnay/anyhow, serde-rs/json, dart-lang/shelf, axios, chalk, expressjs/express or NestJS's starter: only
+/// JUnit XML reports were read. Go and Rust tests are now found in source and run with <c>go test -v</c> and
+/// <c>cargo test</c>, whose output becomes the results under the same names; Dart's come from <c>dart test</c>'s JSON
+/// report, and a Node.js package's from Vitest, Jest, Mocha or <c>node --test</c>.
 /// </summary>
 public sealed class GoRustDartTestTests : IDisposable
 {
@@ -168,6 +169,50 @@ public sealed class GoRustDartTestTests : IDisposable
         Assert.StartsWith("json:", plan.Arguments[2], StringComparison.Ordinal);
         _folder.Write("pubspec.yaml", "name: app\nenvironment:\n  sdk: ^3.3.0\ndependencies:\n  flutter:\n    sdk: flutter\n");
         Assert.Equal(ToolchainTestFramework.FlutterTest, ToolchainTestPlanner.Detect(project));
+    }
+
+    [Fact]
+    public void Runs_a_node_packages_tests_with_its_own_runner()
+    {
+        Assert.Equal(ToolchainTestFramework.Vitest, NodeRunner("""{ "scripts": { "test": "vitest run" }, "devDependencies": { "vitest": "^3.2.0" } }"""));
+        Assert.Equal(ToolchainTestFramework.Jest, NodeRunner("""{ "scripts": { "test": "jest" }, "devDependencies": { "jest": "^29.7.0" } }"""));
+        Assert.Equal(ToolchainTestFramework.Mocha, NodeRunner("""{ "scripts": { "test": "mocha --require test/support/env --reporter spec --check-leaks test/ test/acceptance/" }, "devDependencies": { "mocha": "10.8.2" } }"""));
+        Assert.Equal(ToolchainTestFramework.NodeTest, NodeRunner("""{ "scripts": { "test": "xo && c8 node --test 'test/[!_]*.js' && tsc --noEmit" }, "devDependencies": { "c8": "^10.1.0" } }"""));
+        Assert.Null(NodeRunner("""{ "scripts": { "test": "echo \"Error: no test specified\" && exit 1" } }"""));
+
+        _folder.Write("package.json", """{ "scripts": { "test": "mocha --require test/support/env --reporter spec --check-leaks test/ test/acceptance/" } }""");
+        var mocha = ToolchainTestPlanner.Plan(Project("node"), ToolchainTestFramework.Mocha, null, _folder.Resolve("reports")).Command;
+        Assert.Equal("exec npx --no-install mocha \"$@\" --require test/support/env --check-leaks test/ test/acceptance/", mocha.Arguments[1]);
+        Assert.Equal(["--reporter", "xunit", "--reporter-option"], mocha.Arguments.Skip(3).Take(3));
+        _folder.Write("package.json", """{ "scripts": { "test": "xo && c8 node --test 'test/[!_]*.js' && tsc --noEmit" } }""");
+        var node = ToolchainTestPlanner.Plan(Project("node"), ToolchainTestFramework.NodeTest, null, _folder.Resolve("reports")).Command;
+        Assert.Equal("exec node --test \"$@\" 'test/[!_]*.js'", node.Arguments[1]);
+        Assert.Contains("--test-reporter=junit", node.Arguments);
+    }
+
+    [Fact]
+    public void Reads_jests_json_report()
+    {
+        const string Report = """
+            {"numTotalTests":3,"testResults":[{"name":"/p/src/app.controller.spec.ts","assertionResults":[
+              {"ancestorTitles":["AppController","root"],"fullName":"AppController root should return \"Hello World!\"","status":"passed","title":"should return \"Hello World!\"","duration":12,"failureMessages":[],"location":null},
+              {"ancestorTitles":["AppController"],"fullName":"AppController fails","status":"failed","title":"fails","duration":3,"failureMessages":["Error: expect(received).toBe(expected)"]},
+              {"ancestorTitles":[],"fullName":"later","status":"pending","title":"later","failureMessages":[]}]}]}
+            """;
+
+        var results = ToolchainTestOutput.ParseJest(Report, "/p");
+
+        Assert.Equal(["src.app.controller.spec.AppController root should return \"Hello World!\"", "src.app.controller.spec.AppController fails", "src.app.controller.spec.later"], results.Select(r => r.Id));
+        Assert.Equal([ToolchainTestOutcome.Passed, ToolchainTestOutcome.Failed, ToolchainTestOutcome.Skipped], results.Select(r => r.Outcome));
+        Assert.Equal("Error: expect(received).toBe(expected)", results[1].Message);
+        Assert.Equal(TimeSpan.FromMilliseconds(12), results[0].Duration);
+        Assert.Empty(ToolchainTestOutput.ParseJest(string.Empty, "/p"));
+    }
+
+    private ToolchainTestFramework? NodeRunner(string manifest)
+    {
+        _folder.Write("package.json", manifest);
+        return ToolchainTestPlanner.Detect(Project("node"));
     }
 
     [Fact]

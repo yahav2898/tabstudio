@@ -32,6 +32,18 @@ public enum ToolchainTestFramework
 
     /// <summary>The tests of a Flutter app or package, run by <c>flutter test</c>.</summary>
     FlutterTest,
+
+    /// <summary>Vitest's tests of a Node.js package, run by <c>vitest run</c>.</summary>
+    Vitest,
+
+    /// <summary>Jest's tests of a Node.js package, run by <c>jest</c>.</summary>
+    Jest,
+
+    /// <summary>Mocha's tests of a Node.js package, run by <c>mocha</c>.</summary>
+    Mocha,
+
+    /// <summary>The tests a Node.js package runs with Node's own test runner, <c>node --test</c>.</summary>
+    NodeTest,
 }
 
 /// <summary>How a toolchain project's test ended.</summary>
