@@ -1,0 +1,68 @@
+diff --git a/src/GNUmakefile b/src/GNUmakefile
+index 5ade279..fc15a39 100644
+--- a/src/GNUmakefile
++++ b/src/GNUmakefile
+@@ -83,6 +83,7 @@ OBJECTS += \
+ 	extension/hidden_files/hidden_files.o \
+ 	extension/mountinfo/mountinfo.o \
+ 	extension/port_switch/port_switch.o \
++	extension/net_map/net_map.o \
+ 	extension/sysvipc/sysvipc.o \
+ 	extension/sysvipc/sysvipc_msg.o \
+ 	extension/sysvipc/sysvipc_sem.o \
+diff --git a/src/cli/proot.c b/src/cli/proot.c
+index 9e91e7c..e8470e8 100644
+--- a/src/cli/proot.c
++++ b/src/cli/proot.c
+@@ -337,6 +337,11 @@ static int handle_option_p(Tracee *tracee, const Cli *cli UNUSED, const char *va
+         return 0;
+ }
+ 
++static int handle_option_net_map(Tracee *tracee, const Cli *cli UNUSED, const char *value)
++{
++        return initialize_extension(tracee, net_map_callback, value) < 0 ? -1 : 0;
++}
++
+ /**
+  * Initialize @tracee->qemu.
+  */
+diff --git a/src/cli/proot.h b/src/cli/proot.h
+index 6ec5036..9538686 100644
+--- a/src/cli/proot.h
++++ b/src/cli/proot.h
+@@ -69,6 +69,7 @@ static int handle_option_kill_on_exit(Tracee *tracee, const Cli *cli, const char
+ static int handle_option_L(Tracee *tracee, const Cli *cli, const char *value);
+ static int handle_option_H(Tracee *tracee, const Cli *cli, const char *value);
+ static int handle_option_p(Tracee *tracee, const Cli *cli, const char *value);
++static int handle_option_net_map(Tracee *tracee, const Cli *cli, const char *value);
+ 
+ static int pre_initialize_bindings(Tracee *, const Cli *, size_t, char *const *, size_t);
+ static int post_initialize_exe(Tracee *, const Cli *, size_t, char *const *, size_t);
+@@ -280,6 +281,15 @@ Copyright (C) 2015 STMicroelectronics, licensed under GPL v2 or later.",
+           .description = "Modify bindings to protected ports to use a higher port number.",
+           .detail = "",
+         },
++        { .class = "Extension options",
++          .arguments = {
++                { .name = "--net-map", .separator = '=', .value = "rules" },
++                { .name = NULL, .separator = '\0', .value = NULL } },
++          .handler = handle_option_net_map,
++          .description = "Rewrite bound ports and connected addresses (TabStudio containers).",
++          .detail = "\tA<addr> is the container's address; P<port>=<host-port> publishes a port;\n\
++\tC<addr>:<port>=<addr>:<port> rewrites connect(2); @<file> adds rules from a file.",
++        },
+         { .class = "Extension options",
+           .arguments = {
+                 { .name = "-L", .separator = '\0', .value = NULL },
+diff --git a/src/extension/extension.h b/src/extension/extension.h
+index 7df1fa0..7eba755 100644
+--- a/src/extension/extension.h
++++ b/src/extension/extension.h
+@@ -229,6 +229,7 @@ extern int kompat_callback(Extension *extension, ExtensionEvent event, intptr_t
+ extern int fake_id0_callback(Extension *extension, ExtensionEvent event, intptr_t d1, intptr_t d2);
+ extern int hidden_files_callback(Extension *extension, ExtensionEvent event, intptr_t d1, intptr_t d2);
+ extern int port_switch_callback(Extension *extension, ExtensionEvent event, intptr_t d1, intptr_t d2);
++extern int net_map_callback(Extension *extension, ExtensionEvent event, intptr_t d1, intptr_t d2);
+ extern int link2symlink_callback(Extension *extension, ExtensionEvent event, intptr_t d1, intptr_t d2);
+ extern int fix_symlink_size_callback(Extension *extension, ExtensionEvent event, intptr_t d1, intptr_t d2);
+ #if defined(__ANDROID__) || defined(__BIONIC__)

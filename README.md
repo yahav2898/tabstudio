@@ -261,6 +261,10 @@ From there, try **New project** for a template in any language, **Open from GitH
 
 ### Services and databases
 
+- **Containers without root (0.21 candidate).** **View > Containers** pulls real Linux OCI images, runs their
+  entrypoints under PRoot, and shows ports, logs and an exec terminal. Services tries Compose images for F5 before
+  a named native fallback. The local terminal has a `docker` command subset. See
+  [compatibility, limits and verification](docs/features/containers.md).
 - **Backing services without Docker.** **View > Services** reads Compose files and devcontainer references and runs
   PostgreSQL, Redis and Valkey, MySQL (through MariaDB), RabbitMQ, nginx, Mailpit, MinIO and MongoDB as native processes
   on the tablet, with health, logs and preview links. A service starts when you start it or when the run configuration
@@ -476,3 +480,4 @@ under its own licence, is listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES
 
 TabStudio is an independent project. It is not affiliated with, endorsed by or sponsored by Microsoft. Visual Studio is
 a trademark of Microsoft Corporation, used here only to describe the kind of experience TabStudio offers.
+

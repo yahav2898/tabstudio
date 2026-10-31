@@ -191,6 +191,7 @@
             <MenuItem Header="Windows _Bridge" Command="{Binding ShowWindowsBridgePaneCommand}" IsVisible="{Binding HasWindowsBridge}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
+            <MenuItem Header="_Containers" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Containers}" />
             <MenuItem Header="_Services" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Services}" />
             <MenuItem Header="Ter_minal (Ctrl+`)" Command="{Binding ShowTerminalCommand}" />
             <MenuItem Header="_Serial Monitor" Command="{Binding ShowSerialMonitorCommand}" />
@@ -962,6 +963,10 @@
             <bridgeViews:BridgePaneView DataContext="{Binding WindowsBridgePane}" />
           </Panel>
 
+          <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsContainersSelected}">
+            <views:ContainersView DataContext="{Binding Containers}" />
+          </Panel>
+
           <!-- Native backing services from the repository's Compose files. -->
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsServicesSelected}">
             <views:ServicesView DataContext="{Binding Services}" />
@@ -1188,3 +1193,4 @@
     </Panel>
   </Grid>
 </UserControl>
+

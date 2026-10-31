@@ -24,6 +24,7 @@ Start with the [README](../README.md) for what TabStudio is and how to install i
 | [Port to Avalonia](features/porting.md) | Converting WPF and Windows Forms projects into Avalonia projects |
 | [Time-travel debugging](features/time-travel.md) | Recording a C# run and stepping back through its timeline |
 | [Layout checks](layout-checks.md) | SWRM001 to SWRM005: what Swarm checks on every screen, and how to fix each finding |
+| [Containers without root](features/containers.md) | Real OCI images under PRoot, Compose/F5, docker terminal commands, measurements and limits |
 | [Backing services](features/services.md) | PostgreSQL, Redis and other Compose services run natively, without Docker |
 | [PHP and Laravel](features/laravel.md) | Composer setup, Laravel's `.env`, migrations, Vite and databases, Xdebug, PHPUnit, Symfony, Slim and plain sites |
 | [Visual Basic Windows Forms designer](features/vb-winforms-designer.md) | Designing `Form1.vb` by touch, `Form1.Designer.vb` as Visual Studio writes it, `Handles` handlers and the Application Framework |
@@ -41,3 +42,4 @@ Start with the [README](../README.md) for what TabStudio is and how to install i
 | [Audit of 0.8 and 0.9](design/audit.md) | The design problems found before the redesign, and how each was fixed |
 
 Screenshots used by these pages live in [images/](images/), one folder per feature.
+

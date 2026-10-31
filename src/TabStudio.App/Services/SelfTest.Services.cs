@@ -44,7 +44,10 @@ public static partial class SelfTest
         await main.OpenWorkspaceAsync(solution);
         if (main.Workspace is not { } workspace) return new(false, "Services: the project did not open", clock.Elapsed);
         if (workspace.Toolchains.Runtime.Kind != RuntimeKind.Linux) return new(true, "Services: native Alpine integration runs in CI; no PRoot in this desktop head", clock.Elapsed);
-        if (workspace.Services.Manager is not { } manager) return new(false, "Services: compose.yaml was not read", clock.Elapsed);
+        var project = TabStudio.Services.Compose.ComposeReader.Discover(root);
+        if (project is null) return new(false, "Services: compose.yaml was not read", clock.Elapsed);
+        await using var manager = new TabStudio.Services.ServiceManager(project, workspace.Toolchains.Runtime,
+            new Toolchains.ServicePackages(workspace.Toolchains), new TabStudio.Services.Native.ServiceStorage(root, root));
         try
         {
             await manager.StartAllAsync(cancellationToken);
@@ -64,3 +67,4 @@ public static partial class SelfTest
         finally { await manager.StopAsync(cancellationToken: CancellationToken.None); }
     }
 }
+

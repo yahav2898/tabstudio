@@ -1,0 +1,94 @@
+name: OCI containers
+on:
+  push:
+    branches: [agent/containers]
+  pull_request:
+    paths:
+      - 'src/TabStudio.Containers/**'
+      - 'src/TabStudio.Services/**'
+      - 'tests/TabStudio.Containers.Tests/**'
+      - 'native/containers/**'
+      - 'build/ci/containers-proot.sh'
+      - '.github/workflows/containers.yml'
+permissions:
+  contents: read
+concurrency:
+  group: containers-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  containers:
+    name: OCI images (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: x64, runner: ubuntu-24.04 }
+          - { arch: arm64, runner: ubuntu-24.04-arm }
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Build the shared IDE
+        if: matrix.arch == 'x64'
+        run: dotnet build src/TabStudio.App -c Release -warnaserror
+      - name: Build the same patched PRoot as Android
+        run: bash build/ci/containers-proot.sh "$RUNNER_TEMP/containers-proot"
+      - name: Registry, layers, Compose and real image processes
+        env:
+          TABSTUDIO_CONTAINER_REQUIRED: '1'
+        run: |
+          mkdir -p ci-out
+          dotnet test tests/TabStudio.Containers.Tests -c Release -warnaserror --logger 'console;verbosity=detailed' --logger 'trx;LogFileName=containers.trx' > ci-out/containers.log 2>&1 || { cat ci-out/containers.log; exit 1; }
+          cat ci-out/containers.log
+      - uses: actions/setup-node@v4
+        if: matrix.arch == 'x64'
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        if: matrix.arch == 'x64'
+        with:
+          python-version: '3.14'
+      - uses: actions/checkout@v4
+        if: matrix.arch == 'x64'
+        with:
+          repository: fastapi/full-stack-fastapi-template
+          ref: f4bcfaba7c85be3c6332cc74a20819f586dcdbc6
+          path: artifacts/container-fastapi
+      - uses: oven-sh/setup-bun@v2
+        if: matrix.arch == 'x64'
+        with:
+          bun-version: '1'
+      - name: Build pinned FastAPI repository frontend as its development instructions require
+        if: matrix.arch == 'x64'
+        working-directory: artifacts/container-fastapi
+        run: |
+          bun install --frozen-lockfile
+          bun run --cwd frontend build
+      - uses: actions/checkout@v4
+        if: matrix.arch == 'x64'
+        with:
+          repository: gothinkster/node-express-realworld-example-app
+          ref: 30b68e1e881462b2f4164ea09ab4c4f5699c7b0b
+          path: artifacts/container-trial
+      - name: Containers window and pinned repository first route through F5
+        if: matrix.arch == 'x64'
+        env:
+          TABSTUDIO_CONTAINER_TRIAL_REPO: ${{ github.workspace }}/artifacts/container-trial
+          TABSTUDIO_CONTAINER_FASTAPI_REPO: ${{ github.workspace }}/artifacts/container-fastapi
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+          NX_DAEMON: 'false'
+        run: |
+          dotnet test tests/TabStudio.App.Tests -c Release --filter 'FullyQualifiedName~BackingServices.ContainersTests|FullyQualifiedName~BackingServices.ContainerRepositoryTests' --logger 'console;verbosity=normal' > ci-out/containers-ide.log 2>&1 || { cat ci-out/containers-ide.log; exit 1; }
+          cat ci-out/containers-ide.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: containers-${{ github.event_name }}-${{ matrix.arch }}
+          path: |
+            ci-out/
+            screenshots/
+            tests/TabStudio.Containers.Tests/TestResults/
+            ${{ runner.temp }}/containers-proot/*log

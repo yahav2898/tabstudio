@@ -11,6 +11,8 @@ namespace TabStudio.Services;
 /// <summary>One workspace's native processes, dependencies, health and bounded, redacted logs.</summary>
 public sealed class ServiceManager : IAsyncDisposable
 {
+    private readonly IServiceImages? _images;
+    private readonly Dictionary<string, IServiceImageProcess> _imageRunning = new(StringComparer.Ordinal);
     private readonly IToolchainRuntime _runtime;
     private readonly IServicePackages _packages;
     private readonly IServiceNetwork _network;
@@ -22,14 +24,16 @@ public sealed class ServiceManager : IAsyncDisposable
     private readonly Dictionary<string, Instance> _running = new(StringComparer.Ordinal);
     private readonly Dictionary<string, Queue<ServiceLogLine>> _logs = new(StringComparer.Ordinal);
     private readonly Dictionary<string, IReadOnlyList<ServicePort>> _endpoints = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string> _fallbackReasons = new(StringComparer.Ordinal);
     private readonly List<string> _startedOrder = [];
     private readonly List<string> _secrets;
     private bool _disposed;
 
     private static readonly string[] SecretNameParts = ["PASSWORD", "SECRET", "TOKEN", "KEY", "AUTH"];
 
-    public ServiceManager(ComposeProject project, IToolchainRuntime runtime, IServicePackages packages, ServiceStorage storage, IServiceNetwork? network = null)
+    public ServiceManager(ComposeProject project, IToolchainRuntime runtime, IServicePackages packages, ServiceStorage storage, IServiceNetwork? network = null, IServiceImages? images = null)
     {
+        _images = images;
         Project = project; _runtime = runtime; _packages = packages; _storage = storage; _network = network ?? new LocalServiceNetwork();
         _runtime.ShareFolder(storage.Root);
         _runtime.ShareFolder(project.Directory);
@@ -37,7 +41,7 @@ public sealed class ServiceManager : IAsyncDisposable
         foreach (var service in project.Services.Values)
         {
             var result = ServiceCatalog.Map(service);
-            _statuses[service.Name] = new(service, result.Supported ? ServiceState.Stopped : ServiceState.Unsupported, result.Mapping, [], result.UnsupportedReason ?? result.Mapping?.Note);
+            _statuses[service.Name] = new(service, (result.Supported || CanRunImage(service)) ? ServiceState.Stopped : ServiceState.Unsupported, result.Mapping, [], CanRunImage(service) ? "OCI image under PRoot" : result.UnsupportedReason ?? result.Mapping?.Note);
             _logs[service.Name] = new();
         }
     }
@@ -48,7 +52,7 @@ public sealed class ServiceManager : IAsyncDisposable
     public event EventHandler<ServiceLogLine>? Logged;
     public IReadOnlyList<ServiceLogLine> Logs(string name) { lock (_gate) return _logs.TryGetValue(name, out var lines) ? lines.ToArray() : []; }
 
-    public Task StartAllAsync(CancellationToken cancellationToken = default) => StartAsync(Project.Services.Values.Where(s => s.Profiles.Count == 0 && ServiceCatalog.Map(s).Supported).Select(s => s.Name), cancellationToken);
+    public Task StartAllAsync(CancellationToken cancellationToken = default) => StartAsync(Project.Services.Values.Where(s => s.Profiles.Count == 0 && (CanRunImage(s) || ServiceCatalog.Map(s).Supported)).Select(s => s.Name), cancellationToken);
 
     /// <summary>
     /// The services F5 starts for a project: the dependencies of the Compose service built from it (or of the
@@ -104,12 +108,12 @@ public sealed class ServiceManager : IAsyncDisposable
                         var status = Get(name);
                         if (status.IsRunning || planned.Contains(name)) continue;
                         var mapping = ServiceCatalog.Map(status.Definition);
-                        if (!mapping.Supported)
+                        if (!mapping.Supported && !CanRunImage(status.Definition))
                         {
                             Update(name, ServiceState.Unsupported, mapping.UnsupportedReason);
                             throw new ComposeException($"{name}: {mapping.UnsupportedReason}");
                         }
-                        AllocatePorts(name, mapping.Mapping!);
+                        AllocatePorts(name, mapping.Mapping);
                         planned.Add(name);
                     }
                     groups.Add(order);
@@ -131,6 +135,7 @@ public sealed class ServiceManager : IAsyncDisposable
                         starting = name;
                         token.ThrowIfCancellationRequested();
                         var current = Get(name);
+                        if (_imageRunning.TryGetValue(name, out var imageProcess) && imageProcess.IsRunning) continue;
                         if (current.IsRunning && _running.TryGetValue(name, out var existing) && existing.Process is { HasExited: false })
                         {
                             if (current.State is ServiceState.Unhealthy or ServiceState.Starting)
@@ -206,7 +211,7 @@ public sealed class ServiceManager : IAsyncDisposable
             foreach (var dependency in service.Dependencies)
             {
                 if (!dependency.Required && !Project.Services.ContainsKey(dependency.Name)) { Log(name, $"Optional dependency '{dependency.Name}' is absent."); continue; }
-                if (!dependency.Required && Project.Services.TryGetValue(dependency.Name, out var optional) && !ServiceCatalog.Map(optional).Supported)
+                if (!dependency.Required && Project.Services.TryGetValue(dependency.Name, out var optional) && !CanRunImage(optional) && !ServiceCatalog.Map(optional).Supported)
                 { Log(name, $"Optional dependency '{dependency.Name}' is unsupported locally."); continue; }
                 Visit(dependency.Name);
             }
@@ -216,9 +221,42 @@ public sealed class ServiceManager : IAsyncDisposable
         return result;
     }
 
+    private bool CanRunImage(ComposeService service) => _images?.CanRun(service) == true;
+
     private async Task StartOneAsync(string name, CancellationToken token)
     {
         var definition = Get(name).Definition;
+        if (CanRunImage(definition))
+        {
+            Update(name, ServiceState.Starting, "Pulling and starting OCI image");
+            try
+            {
+                var image = await _images!.StartAsync(Project, definition, Endpoints[name], text => Log(name, text),
+                    (state, detail) => Update(name, state, detail), token).ConfigureAwait(false);
+                lock (_gate)
+                {
+                    _imageRunning[name] = image;
+                    _startedOrder.Add(name);
+                    _endpoints[name] = image.Ports;
+                    _statuses[name] = _statuses[name] with { Ports = image.Ports };
+                }
+                Update(name, image.IsRunning ? ServiceState.Healthy : ServiceState.Completed, "OCI image under PRoot");
+                return;
+            }
+            catch (OperationCanceledException) { Update(name, ServiceState.Stopped, "Start cancelled"); throw; }
+            catch (Exception ex) when (ex is IOException or InvalidOperationException or NotSupportedException or TimeoutException or ComposeException)
+            {
+                var reason = Redact(ex.Message).Replace('\n', ' ');
+                if (!ServiceCatalog.Map(definition).Supported)
+                {
+                    Update(name, ServiceState.Failed, reason);
+                    throw new ComposeException($"{name}: {reason}");
+                }
+                Log(name, $"{name}: image could not run ({reason}); using native Alpine service.");
+                _fallbackReasons[name] = $"Native fallback: {reason}";
+                Update(name, ServiceState.Starting, _fallbackReasons[name]);
+            }
+        }
         Update(name, ServiceState.Installing, "Preparing Alpine packages");
         try
         {
@@ -246,7 +284,7 @@ public sealed class ServiceManager : IAsyncDisposable
                 return;
             }
             await WaitUntilReadyAsync(name, instance, token).ConfigureAwait(false);
-            Update(name, definition.Healthcheck?.Disabled == true ? ServiceState.Running : ServiceState.Healthy, resolved.Mapping.Note);
+            Update(name, definition.Healthcheck?.Disabled == true ? ServiceState.Running : ServiceState.Healthy, NativeDetail(name));
             instance.Monitor = MonitorAsync(name, instance);
         }
         catch (OperationCanceledException) { Update(name, ServiceState.Stopped, "Start cancelled"); throw; }
@@ -318,7 +356,7 @@ public sealed class ServiceManager : IAsyncDisposable
                 await delay.ConfigureAwait(false);
                 var healthy = await ProbeAsync(instance, health, instance.Stop.Token).ConfigureAwait(false);
                 failures = healthy ? 0 : failures + 1;
-                if (healthy || failures >= (health?.Retries ?? 3)) Update(name, healthy ? health?.Disabled == true ? ServiceState.Running : ServiceState.Healthy : ServiceState.Unhealthy, healthy ? Get(name).Mapping?.Note : "Health check failed; see logs.");
+                if (healthy || failures >= (health?.Retries ?? 3)) Update(name, healthy ? health?.Disabled == true ? ServiceState.Running : ServiceState.Healthy : ServiceState.Unhealthy, healthy ? NativeDetail(name) : "Health check failed; see logs.");
             }
         }
         catch (OperationCanceledException) { }
@@ -327,6 +365,14 @@ public sealed class ServiceManager : IAsyncDisposable
 
     private async Task StopOneAsync(string name)
     {
+        if (_imageRunning.Remove(name, out var image))
+        {
+            _startedOrder.Remove(name);
+            Update(name, ServiceState.Stopping, "Stopping OCI image");
+            await image.StopAsync(CancellationToken.None).ConfigureAwait(false);
+            Update(name, ServiceState.Stopped, "OCI image under PRoot");
+            return;
+        }
         Instance? instance;
         lock (_gate) { _running.Remove(name, out instance); _startedOrder.Remove(name); }
         if (instance is null) return;
@@ -351,17 +397,22 @@ public sealed class ServiceManager : IAsyncDisposable
             catch (TimeoutException) { /* A child may still hold a pipe; closing it below ends its reader. */ }
             finally { instance.Process?.Dispose(); }
             instance.Stop.Dispose();
-            Update(name, previous.State is ServiceState.Failed or ServiceState.Unsupported ? previous.State : ServiceState.Stopped, previous.State is ServiceState.Failed or ServiceState.Unsupported ? previous.Detail : Get(name).Mapping?.Note);
+            Update(name, previous.State is ServiceState.Failed or ServiceState.Unsupported ? previous.State : ServiceState.Stopped, previous.State is ServiceState.Failed or ServiceState.Unsupported ? previous.Detail : NativeDetail(name));
         }
     }
 
-    private void AllocatePorts(string name, ServiceMapping mapping)
+    private string? NativeDetail(string name) => _fallbackReasons.TryGetValue(name, out var reason) ? reason : Get(name).Mapping?.Note;
+
+    private void AllocatePorts(string name, ServiceMapping? mapping)
     {
         lock (_gate)
         {
             var used = _endpoints.Where(e => e.Key != name).SelectMany(e => e.Value).Select(p => p.Published).ToHashSet();
             var ports = new List<ServicePort>();
-            foreach (var target in mapping.Ports)
+            var targets = CanRunImage(Project.Services[name])
+                ? Project.Services[name].Ports.Select(p => p.Target).Concat(mapping?.Ports ?? []).Distinct()
+                : mapping?.Ports ?? [];
+            foreach (var target in targets)
             {
                 var requested = Project.Services[name].Ports.Where(p => p.Target == target).ToArray();
                 if (requested.Length > 1) throw new ComposeException($"{name}: publishing a target port more than once requires a remote host.");
@@ -416,3 +467,4 @@ public sealed class ServiceManager : IAsyncDisposable
         public Task? Monitor { get; set; }
     }
 }
+

@@ -61,6 +61,12 @@ public sealed record ProcessStartSpec
     /// <summary>A simulated non-root identity in PRoot, for servers such as PostgreSQL that reject root.</summary>
     public int? UserId { get; init; }
 
+    /// <summary>
+    /// The group of a simulated non-root identity, with <see cref="UserId"/>; <see langword="null"/> for the
+    /// user's own number, as before.
+    /// </summary>
+    public int? GroupId { get; init; }
+
     /// <summary>The program and its arguments as one line, quoted where needed, for logs and the Output panel.</summary>
     public string CommandLine => string.Join(' ', new[] { Program }.Concat(Arguments).Select(Quote));
 

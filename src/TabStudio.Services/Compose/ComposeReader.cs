@@ -34,12 +34,18 @@ public static partial class ComposeReader
         }
         if (files.Count == 0)
         {
-            var file = ComposeFileNames
-                .Select(name => Path.Combine(directory, name)).FirstOrDefault(File.Exists);
+            // A backend opened below the repository root uses the repository's Compose file, just as
+            // `docker compose` does. A nested repository must never inherit its parent's services.
+            string? file = null;
+            for (var folder = new DirectoryInfo(directory); folder is not null; folder = folder.Parent)
+            {
+                file = ComposeFileNames.Select(name => Path.Combine(folder.FullName, name)).FirstOrDefault(File.Exists);
+                if (file is not null || Path.Exists(Path.Combine(folder.FullName, ".git"))) break;
+            }
             if (file is null) return null;
             files.Add(file);
             var extension = Path.GetExtension(file);
-            var over = Path.Combine(directory, Path.GetFileNameWithoutExtension(file) + ".override" + extension);
+            var over = Path.Combine(Path.GetDirectoryName(file)!, Path.GetFileNameWithoutExtension(file) + ".override" + extension);
             if (File.Exists(over)) files.Add(over);
         }
         return Read(files, environment) with { DevelopmentService = developmentService, RunServices = runServices };
@@ -171,6 +177,10 @@ public static partial class ComposeReader
             Command = ReadCommand(Get(node, "command")),
             Entrypoint = ReadCommand(Get(node, "entrypoint")),
             BuildContext = Get(node, "build") is { } build ? Path.GetFullPath(Path.Combine(directory, build is YamlMappingNode b ? Text(Get(b, "context")) : Text(build))) : null,
+            WorkingDirectory = Get(node, "working_dir") is { } workdir ? Text(workdir) : null,
+            User = Get(node, "user") is { } user ? Text(user) : null,
+            Platform = Get(node, "platform") is { } platform ? Text(platform) : null,
+            Restart = Get(node, "restart") is { } restart ? Text(restart) : null,
             Profiles = SequenceOrOne(Get(node, "profiles")).Select(Text).ToArray(),
             Unsupported = unsupported,
             Healthcheck = health is null ? null : new ServiceHealthcheck(Get(health, "test") is YamlSequenceNode tests ? tests.Children.Select(Text).ToArray() : Get(health, "test") is { } shell ? ["CMD-SHELL", Text(shell)] : [])
@@ -355,3 +365,4 @@ public static partial class ComposeReader
     [GeneratedRegex("^[a-zA-Z0-9][a-zA-Z0-9_.-]*$")] private static partial Regex NamePattern();
     [GeneratedRegex("([0-9]+(?:\\.[0-9]+)?)(ms|us|ns|h|m|s)")] private static partial Regex DurationPattern();
 }
+

@@ -25,7 +25,7 @@ public sealed partial class WorkspaceViewModel
         {
             Output.WriteLine("This image needs a remote container host. Use TabStudio Link / Windows Bridge, or connect with Remote SSH when available, and run Compose there.", OutputKind.Info);
             SelectSideBarPanel(SideBarPanel.WindowsBridge);
-        }, databases);
+        }, databases) { Images = Containers.ImageBackend };
     }
 
     partial void ConfigureServiceDatabaseExplorer(ref IServiceDatabaseExplorer? databases);
@@ -106,3 +106,4 @@ public sealed partial class WorkspaceViewModel
         return spec with { Environment = environment };
     }
 }
+

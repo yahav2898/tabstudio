@@ -73,6 +73,7 @@ public static partial class ConnectionEnvironment
         }
         foreach (var (name, ports) in endpoints)
         {
+            if (ports.Count == 0) continue;
             var service = project.Services[name];
             var env = service.Environment;
             var key = name.Replace('-', '_').Replace('.', '_');
@@ -144,3 +145,4 @@ public static partial class ConnectionEnvironment
         else if (element.ValueKind == JsonValueKind.String) value(prefix, element.GetString()!);
     }
 }
+
