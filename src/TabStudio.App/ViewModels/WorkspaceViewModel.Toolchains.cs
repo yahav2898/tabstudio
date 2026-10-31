@@ -274,6 +274,21 @@ public sealed partial class WorkspaceViewModel
             installText = status.IsBusy ? $"Installing {toolchain.Name}" : $"Install {toolchain.Name}";
         }
 
+        if (toolchain.Id == "flutter" && item.Info.Kind == ProjectKind.Unknown)
+        {
+            // Dart packages and Flutter apps have no project kind of their own: say what runs them, not "unknown".
+            var flutter = FlutterProject.UsesFlutter(item.Project.Directory);
+            report = report with
+            {
+                Status = status.IsReady ? CompatibilityStatus.Ready : CompatibilityStatus.NeedsToolchain,
+                Host = RunHost.Toolchain,
+                RunsVia = "Dart and Flutter toolchain (experimental)",
+                Explanation = flutter
+                    ? "A Flutter app: it runs in the web preview with flutter run, from the experimental Flutter SDK in the Toolchain Store, and its tests with flutter test."
+                    : "A Dart package: it runs with dart run and its tests with dart test, from the experimental Flutter SDK in the Toolchain Store.",
+            };
+        }
+
         if (toolchain.Id == "swift" && SwiftProject.AppleFramework(item.Project.Directory) is { } apple)
         {
             report = report with

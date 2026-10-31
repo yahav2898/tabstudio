@@ -302,18 +302,25 @@ public static partial class ToolchainTestPlanner
     internal static List<string> PythonTestRequirements(string directory)
     {
         var arguments = new List<string>();
-        foreach (var file in PythonTestRequirementFiles.Where(f => File.Exists(Path.Combine(directory, f))))
+        foreach (var file in PythonTestRequirementFiles.Where(f => File.Exists(Path.Combine(directory, f))).Concat(OtherTestRequirementFiles(directory)).Distinct(StringComparer.Ordinal))
         {
             arguments.AddRange(["-r", file]);
         }
 
-        var pyproject = ReadSmall(Path.Combine(directory, "pyproject.toml"));
+        // Comment lines go first: an apostrophe in one ("doesn't") would start a string.
+        var pyproject = TomlComment().Replace(ReadSmall(Path.Combine(directory, "pyproject.toml")), string.Empty);
         var extras = TomlTable(pyproject, "project.optional-dependencies").Keys
             .Concat(SetupExtras(ReadSmall(Path.Combine(directory, "setup.cfg")) + "\n" + ReadSmall(Path.Combine(directory, "setup.py"))))
             .Where(IsTestGroup).Distinct(StringComparer.Ordinal).ToList();
         if (extras.Count > 0)
         {
             arguments.AddRange(["-e", ".[" + string.Join(',', extras) + "]"]);
+        }
+
+        // Poetry's development dependencies name packages with Poetry's version syntax, which pip does not read.
+        foreach (var table in new[] { "tool.poetry.dev-dependencies", "tool.poetry.group.dev.dependencies", "tool.poetry.group.test.dependencies", "tool.poetry.group.tests.dependencies" })
+        {
+            arguments.AddRange(TomlTable(pyproject, table).Keys.Where(name => name != "python" && !arguments.Contains(name)).ToList());
         }
 
         foreach (var (_, value) in TomlTable(pyproject, "dependency-groups").Where(g => IsTestGroup(g.Key)))
@@ -332,6 +339,32 @@ public static partial class ToolchainTestPlanner
         "test-requirements.txt", "test_requirements.txt", "dev-requirements.txt", "requirements/dev.txt", "requirements/test.txt",
         "requirements/tests.txt", "requirements/testing.txt", "tests/requirements.txt",
     ];
+
+    /// <summary>
+    /// Test requirement files elsewhere than the usual names: <c>*requirements*test*.txt</c> and
+    /// <c>*test*requirements*.txt</c> in the project folder or a folder of it, such as tqdm's
+    /// <c>.meta/requirements-test.txt</c>.
+    /// </summary>
+    private static List<string> OtherTestRequirementFiles(string directory)
+    {
+        var found = new List<string>();
+        try
+        {
+            foreach (var folder in Directory.EnumerateDirectories(directory).Where(d => !SkippedFolders.Contains(Path.GetFileName(d)) && Path.GetFileName(d) is not (".venv" or "venv" or ".git")).Prepend(directory).Take(64))
+            {
+                found.AddRange(Directory.EnumerateFiles(folder, "*.txt")
+                    .Where(f => Path.GetFileName(f) is var name && name.Contains("requirements", StringComparison.OrdinalIgnoreCase) && name.Contains("test", StringComparison.OrdinalIgnoreCase))
+                    .Select(f => Path.GetRelativePath(directory, f).Replace(Path.DirectorySeparatorChar, '/')));
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Only the usual files.
+        }
+
+        found.Sort(StringComparer.Ordinal);
+        return found;
+    }
 
     private static bool IsTestGroup(string name) =>
         name.Trim('"', '\'') is "test" or "tests" or "testing" or "dev" or "develop" or "development";
@@ -373,6 +406,9 @@ public static partial class ToolchainTestPlanner
 
     [GeneratedRegex(@"^\s*(?<key>""[^""]+""|'[^']+'|[\w.-]+)\s*=\s*(?<value>\[(?:""[^""]*""|'[^']*'|[^\]""'])*\]|[^\n]*)", RegexOptions.Multiline | RegexOptions.CultureInvariant)]
     private static partial Regex TomlEntry();
+
+    [GeneratedRegex(@"^[ \t]*#[^\n]*$", RegexOptions.Multiline | RegexOptions.CultureInvariant)]
+    private static partial Regex TomlComment();
 
     [GeneratedRegex(@"\{[^}]*\}", RegexOptions.CultureInvariant)]
     private static partial Regex TomlInlineTable();

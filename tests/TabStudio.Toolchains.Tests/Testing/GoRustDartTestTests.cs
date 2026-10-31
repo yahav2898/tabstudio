@@ -244,6 +244,32 @@ public sealed class GoRustDartTestTests : IDisposable
         Assert.Equal("'it'\\''s'", ToolchainTestPlanner.PythonTestInstall(["it's"]).Split(" -q ")[1].Split(" || ")[0]);
     }
 
+    /// <summary>
+    /// attrs' test group follows a comment with an apostrophe, rich lists its test packages as Poetry development
+    /// dependencies, and tqdm keeps its test requirements in .meta: none of them was installed.
+    /// </summary>
+    [Fact]
+    public void Test_requirements_after_comments_in_poetry_and_in_a_folder_are_installed()
+    {
+        _folder.Write("pyproject.toml", """
+            [tool.poetry.dev-dependencies]
+            pytest = "^7.0.0"
+            attrs = "^21.4.0"
+
+            [dependency-groups]
+            tests = [
+              # For regression test to ensure cloudpickle compat doesn't break.
+              'cloudpickle; platform_python_implementation == "CPython"',
+              "hypothesis",
+            ]
+            """);
+        _folder.Write(".meta/requirements-test.txt", "pytest-asyncio>=0.24\n");
+
+        Assert.Equal(
+            ["-r", ".meta/requirements-test.txt", "pytest", "attrs", "cloudpickle; platform_python_implementation == \"CPython\"", "hypothesis"],
+            ToolchainTestPlanner.PythonTestRequirements(_folder.Path));
+    }
+
     [Fact]
     public void A_setup_py_projects_test_extras_are_installed_with_it()
     {

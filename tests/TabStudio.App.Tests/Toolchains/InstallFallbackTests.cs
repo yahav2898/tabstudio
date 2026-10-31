@@ -60,4 +60,23 @@ public sealed class InstallFallbackTests
         Assert.Contains("asyncpg==0.26.0", requirements);
         Assert.Null(WorkspaceViewModel.LockedInstead(project, pip, new OutputProcessResult(new ProcessExit(1, null, false), ["ERROR: No matching distribution found for asyncpg"])));
     }
+
+    /// <summary>
+    /// dart_style and Best-Flutter-UI-Templates: flutter pub get failed and the notice said only "Failed to update
+    /// packages.", pub's last line. The reason is its version solving line.
+    /// </summary>
+    [Fact]
+    public void A_failed_pub_get_names_why_version_solving_failed()
+    {
+        var result = new OutputProcessResult(null,
+        [
+            "Resolving dependencies...",
+            "The current Dart SDK version is 3.10.0.",
+            "",
+            "Because dart_style requires SDK version ^3.11.0, version solving failed.",
+            "Failed to update packages.",
+        ]);
+
+        Assert.Equal("Because dart_style requires SDK version ^3.11.0, version solving failed.", WorkspaceViewModel.FirstInstallError(result));
+    }
 }
