@@ -1,5 +1,5 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Swarm.Tests/TabStudio.Swarm.Tests.csproj (in 282 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Swarm.Tests/TabStudio.Swarm.Tests.csproj (in 286 ms).
   8 of 9 projects are up-to-date for restore.
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
@@ -12,41 +12,41 @@
   TabStudio.Swarm.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Swarm.Tests/bin/Release/net10.0/TabStudio.Swarm.Tests.dll
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Swarm.Tests/bin/Release/net10.0/TabStudio.Swarm.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
-[xUnit.net 00:00:00.01] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.19]   Discovering: TabStudio.Swarm.Tests
-[xUnit.net 00:00:00.35]   Discovered:  TabStudio.Swarm.Tests
-[xUnit.net 00:00:00.43]   Starting:    TabStudio.Swarm.Tests
-  Passed TabStudio.Swarm.Tests.ConsoleTests.Console_output_streams_back_and_input_comes_from_the_tablet [2 s]
-  Passed TabStudio.Swarm.Tests.WebTunnelTests.Later_requests_need_the_cookie(header: " tabstudio-swarm=s3cre", accepted: False) [5 ms]
-  Passed TabStudio.Swarm.Tests.WebTunnelTests.Later_requests_need_the_cookie(header: " tabstudio-swarm-other=s3cret", accepted: False) [< 1 ms]
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.21]   Discovering: TabStudio.Swarm.Tests
+[xUnit.net 00:00:00.36]   Discovered:  TabStudio.Swarm.Tests
+[xUnit.net 00:00:00.45]   Starting:    TabStudio.Swarm.Tests
+  Passed TabStudio.Swarm.Tests.WebTunnelTests.Later_requests_need_the_cookie(header: " tabstudio-swarm=s3cre", accepted: False) [22 ms]
+  Passed TabStudio.Swarm.Tests.WebTunnelTests.Later_requests_need_the_cookie(header: " tabstudio-swarm-other=s3cret", accepted: False) [1 ms]
   Passed TabStudio.Swarm.Tests.WebTunnelTests.Later_requests_need_the_cookie(header: " theme=dark; tabstudio-swarm=s3cret", accepted: True) [< 1 ms]
-  Passed TabStudio.Swarm.Tests.WebTunnelTests.The_gateway_trades_the_secret_in_the_first_page_for_a_cookie(target: "/?tabstudio-swarm=s3cret", hasSecret: True, redirect: "/") [< 1 ms]
+  Passed TabStudio.Swarm.Tests.WebTunnelTests.The_gateway_trades_the_secret_in_the_first_page_for_a_cookie(target: "/?tabstudio-swarm=s3cret", hasSecret: True, redirect: "/") [1 ms]
   Passed TabStudio.Swarm.Tests.WebTunnelTests.The_gateway_trades_the_secret_in_the_first_page_for_a_cookie(target: "/todos?page=2", hasSecret: False, redirect: "/todos?page=2") [< 1 ms]
   Passed TabStudio.Swarm.Tests.WebTunnelTests.The_gateway_trades_the_secret_in_the_first_page_for_a_cookie(target: "/todos?tabstudio-swarm=wrong", hasSecret: False, redirect: "/todos") [< 1 ms]
   Passed TabStudio.Swarm.Tests.WebTunnelTests.The_gateway_trades_the_secret_in_the_first_page_for_a_cookie(target: "/todos?page=2&tabstudio-swarm=s3cret", hasSecret: True, redirect: "/todos?page=2") [< 1 ms]
-  Passed TabStudio.Swarm.Tests.WebTunnelTests.A_device_opens_the_tablet_web_app_through_the_tunnel_with_its_secret [198 ms]
-  Passed TabStudio.Swarm.Tests.JoiningTests.A_lost_device_reconnects_by_itself_when_the_tablet_is_back [1 s]
-  Passed TabStudio.Swarm.Tests.JoiningTests.A_device_joins_by_scanning_the_QR_code_and_the_tablet_lists_it [82 ms]
-  Passed TabStudio.Swarm.Tests.JoiningTests.Devices_join_one_after_another_and_each_code_works_once [180 ms]
-  Passed TabStudio.Swarm.Tests.JoiningTests.A_device_that_leaves_is_gone_and_the_others_stay [145 ms]
-  Passed TabStudio.Swarm.Tests.JoiningTests.A_TabStudio_Link_host_is_not_a_swarm_and_a_swarm_is_not_a_Link_host [68 ms]
-  Passed TabStudio.Swarm.Tests.JoiningTests.The_tablet_measures_the_latency_of_every_device [118 ms]
-  Passed TabStudio.Swarm.Tests.JoiningTests.A_device_joins_with_the_typed_address_and_code [68 ms]
-  Passed TabStudio.Swarm.Tests.JoiningTests.A_removed_device_leaves_and_has_to_pair_again [71 ms]
-  Passed TabStudio.Swarm.Tests.DeployTests.Screen_requests_reach_the_device_and_its_inputs_reach_the_tablet [199 ms]
-  Passed TabStudio.Swarm.Tests.DeployTests.A_device_that_joins_while_the_app_runs_gets_it [135 ms]
-  Passed TabStudio.Swarm.Tests.DeployTests.A_device_that_fails_never_stops_the_others [213 ms]
-  Passed TabStudio.Swarm.Tests.DeployTests.A_crash_on_a_device_reaches_the_tablet_with_its_stack_trace [80 ms]
-  Passed TabStudio.Swarm.Tests.DeployTests.Stopping_stops_the_app_on_every_device [155 ms]
-  Passed TabStudio.Swarm.Tests.DeployTests.A_build_runs_on_every_device_and_an_update_sends_only_what_changed [189 ms]
-  Passed TabStudio.Swarm.Tests.DeployTests.Restarting_on_one_device_starts_its_app_fresh_without_sending_files_or_touching_the_others [132 ms]
-  Passed TabStudio.Swarm.Tests.RemoteDebuggingTests.A_breakpoint_on_a_device_pauses_it_with_its_call_stack_and_locals_and_steps_from_there [726 ms]
-  Passed TabStudio.Swarm.Tests.RemoteDebuggingTests.The_members_and_items_of_a_paused_value_are_read_from_the_device [202 ms]
+  Passed TabStudio.Swarm.Tests.WebTunnelTests.A_device_opens_the_tablet_web_app_through_the_tunnel_with_its_secret [1 s]
+  Passed TabStudio.Swarm.Tests.RemoteDebuggingTests.A_breakpoint_on_a_device_pauses_it_with_its_call_stack_and_locals_and_steps_from_there [1 s]
+  Passed TabStudio.Swarm.Tests.RemoteDebuggingTests.The_members_and_items_of_a_paused_value_are_read_from_the_device [223 ms]
   Passed TabStudio.Swarm.Tests.RemoteDebuggingTests.With_pause_all_a_breakpoint_on_one_device_pauses_every_device_until_they_continue_together [2 s]
-[xUnit.net 00:00:11.44]   Finished:    TabStudio.Swarm.Tests
   Passed TabStudio.Swarm.Tests.RemoteDebuggingTests.Break_All_pauses_a_running_device_and_continuing_lets_it_finish [2 s]
+  Passed TabStudio.Swarm.Tests.JoiningTests.A_lost_device_reconnects_by_itself_when_the_tablet_is_back [1 s]
+  Passed TabStudio.Swarm.Tests.JoiningTests.A_device_joins_by_scanning_the_QR_code_and_the_tablet_lists_it [76 ms]
+  Passed TabStudio.Swarm.Tests.JoiningTests.Devices_join_one_after_another_and_each_code_works_once [166 ms]
+  Passed TabStudio.Swarm.Tests.JoiningTests.A_device_that_leaves_is_gone_and_the_others_stay [136 ms]
+  Passed TabStudio.Swarm.Tests.JoiningTests.A_TabStudio_Link_host_is_not_a_swarm_and_a_swarm_is_not_a_Link_host [75 ms]
+  Passed TabStudio.Swarm.Tests.JoiningTests.The_tablet_measures_the_latency_of_every_device [115 ms]
+  Passed TabStudio.Swarm.Tests.JoiningTests.A_device_joins_with_the_typed_address_and_code [64 ms]
+  Passed TabStudio.Swarm.Tests.JoiningTests.A_removed_device_leaves_and_has_to_pair_again [74 ms]
+  Passed TabStudio.Swarm.Tests.DeployTests.Screen_requests_reach_the_device_and_its_inputs_reach_the_tablet [180 ms]
+  Passed TabStudio.Swarm.Tests.DeployTests.A_device_that_joins_while_the_app_runs_gets_it [128 ms]
+  Passed TabStudio.Swarm.Tests.DeployTests.A_device_that_fails_never_stops_the_others [195 ms]
+  Passed TabStudio.Swarm.Tests.DeployTests.A_crash_on_a_device_reaches_the_tablet_with_its_stack_trace [76 ms]
+[xUnit.net 00:00:11.41]   Finished:    TabStudio.Swarm.Tests
+  Passed TabStudio.Swarm.Tests.DeployTests.Stopping_stops_the_app_on_every_device [143 ms]
+  Passed TabStudio.Swarm.Tests.DeployTests.A_build_runs_on_every_device_and_an_update_sends_only_what_changed [170 ms]
+  Passed TabStudio.Swarm.Tests.DeployTests.Restarting_on_one_device_starts_its_app_fresh_without_sending_files_or_touching_the_others [127 ms]
+  Passed TabStudio.Swarm.Tests.ConsoleTests.Console_output_streams_back_and_input_comes_from_the_tablet [231 ms]
 
 Test Run Successful.
 Total tests: 28
      Passed: 28
- Total time: 12.5139 Seconds
+ Total time: 12.5433 Seconds
