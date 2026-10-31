@@ -1,0 +1,161 @@
+architecture-samples at ee66e1526b84c026615df032c705842b7d2a521f, opening /home/runner/work/_temp/repos/architecture-samples
+Opened in 0.3 s: architecture-samples, solution (none)
+  toolchain project android: /home/runner/work/_temp/repos/architecture-samples/settings.gradle.kts
+Compatibility Doctor:
+  architecture-samples: Needs a toolchain via Android SDK toolchain - Builds with Gradle and the Android SDK on this tablet, installs with Android's confirmation, and streams its debug logcat.
+F5 startup project: architecture-samples (android) /home/runner/work/_temp/repos/architecture-samples/settings.gradle.kts
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 7 warnings
+Tests: Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here. (120 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 13.2 s
+Project setup:
+
+Output:
+> sh gradlew --no-daemon --console=plain --max-workers=2 assembleDebug
+Downloading https://services.gradle.org/distributions/gradle-8.11.1-bin.zip
+.............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%.............100%
+
+Welcome to Gradle 8.11.1!
+
+Here are the highlights of this release:
+ - Parallel load and store for Configuration Cache
+ - Java compilation errors at the end of the build output
+ - Consolidated report for warnings and deprecations
+
+For more details see https://docs.gradle.org/8.11.1/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Calculating task graph as no cached configuration is available for tasks: assembleDebug
+
+> Configure project :app
+w: file:///home/runner/work/_temp/repos/architecture-samples/app/build.gradle.kts:48:13: 'isTestCoverageEnabled: Boolean' is deprecated. Replaced with: enableUnitTestCoverage and or enableAndroidTestCoverage.
+w: file:///home/runner/work/_temp/repos/architecture-samples/app/build.gradle.kts:95:9: 'excludes: MutableSet<String>' is deprecated. This property is deprecated. Use resources.excludes or jniLibs.excludes instead. Use jniLibs.excludes for .so file patterns, and use resources.excludes for all other file patterns.
+w: file:///home/runner/work/_temp/repos/architecture-samples/app/build.gradle.kts:96:9: 'excludes: MutableSet<String>' is deprecated. This property is deprecated. Use resources.excludes or jniLibs.excludes instead. Use jniLibs.excludes for .so file patterns, and use resources.excludes for all other file patterns.
+w: file:///home/runner/work/_temp/repos/architecture-samples/app/build.gradle.kts:100:9: 'kotlinOptions(KotlinJvmOptionsDeprecated /* = KotlinJvmOptions */.() -> Unit): Unit' is deprecated. Please migrate to the compilerOptions DSL. More details are here: https://kotl.in/u1r8ln
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared-test:preBuild UP-TO-DATE
+> Task :shared-test:preDebugBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateDebugBuildConfig
+> Task :app:generateDebugResValues
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:checkDebugAarMetadata
+> Task :app:packageDebugResources
+> Task :app:mergeDebugResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :app:parseDebugLocalResources
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :app:javaPreCompileDebug
+> Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets
+> Task :app:processDebugResources
+> Task :app:desugarDebugFileDependencies
+> Task :app:generateDebugJacocoPropertiesFile
+> Task :app:checkDebugDuplicateClasses
+> Task :app:kspDebugKotlin
+w: Opt-in requirement marker kotlin.Experimental is unresolved. Please make sure it's present in the module dependencies
+
+> Task :app:mergeExtDexDebug
+
+> Task :app:compileDebugKotlin
+w: Opt-in requirement marker kotlin.Experimental is unresolved. Please make sure it's present in the module dependencies
+w: file:///home/runner/work/_temp/repos/architecture-samples/app/src/main/java/com/example/android/architecture/blueprints/todoapp/util/ComposeUtils.kt:49:9 'fun SwipeRefresh(state: SwipeRefreshState, onRefresh: () -> Unit, modifier: Modifier = ..., swipeEnabled: Boolean = ..., refreshTriggerDistance: Dp = ..., indicatorAlignment: Alignment = ..., indicatorPadding: PaddingValues = ..., indicator: @Composable() ComposableFunction2<@ParameterName(...) SwipeRefreshState, @ParameterName(...) Dp, Unit> = ..., clipIndicatorToPadding: Boolean = ..., content: @Composable() ComposableFunction0<Unit>): Unit' is deprecated. accompanist/swiperefresh is deprecated.
+ The androidx.compose equivalent of SwipeRefresh is Modifier.pullRefresh().
+ This is often migrated as:
+ Box(modifier = Modifier.pullRefresh(refreshState)) { 
+    ... 
+    PullRefreshIndicator(...) 
+ }
+ 
+ For more migration information, please visit https://google.github.io/accompanist/swiperefresh/#migration.
+w: file:///home/runner/work/_temp/repos/architecture-samples/app/src/main/java/com/example/android/architecture/blueprints/todoapp/util/ComposeUtils.kt:50:21 'fun rememberSwipeRefreshState(isRefreshing: Boolean): SwipeRefreshState' is deprecated. accompanist/swiperefresh is deprecated.
+     The androidx.compose equivalent of rememberSwipeRefreshState() is rememberPullRefreshState().
+     For more migration information, please visit https://google.github.io/accompanist/swiperefresh/#migration.
+w: file:///home/runner/work/_temp/repos/architecture-samples/app/src/main/java/com/example/android/architecture/blueprints/todoapp/util/TopAppBars.kt:166:35 'val Icons.Filled.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack.
+
+> Task :app:compileDebugJavaWithJavac
+
+> Task :app:hiltAggregateDepsDebug
+WARNING: [Processor] Library '/home/runner/.gradle/caches/8.11.1/transforms/f8e0dccbc2d569cc1c92f7f55b1ada0e/transformed/core-1.13.1-api.jar' contains references to both AndroidX and old support library. This seems like the library is partially migrated. Jetifier will try to rewrite the library anyway.
+ Example of androidX reference: 'androidx/core/util/Supplier'
+ Example of support library reference: 'android/support/v4/app/INotificationSideChannel$Default'
+
+> Task :app:mergeLibDexDebug
+> Task :app:mergeDebugJniLibFolders
+> Task :app:mergeDebugNativeLibs
+
+> Task :app:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so.
+
+> Task :app:validateSigningDebug
+> Task :app:writeDebugAppMetadata
+> Task :app:writeDebugSigningConfigVersions
+> Task :shared-test:mergeDebugJniLibFolders
+> Task :shared-test:mergeDebugNativeLibs NO-SOURCE
+> Task :shared-test:stripDebugDebugSymbols NO-SOURCE
+> Task :shared-test:copyDebugJniLibsProjectAndLocalJars
+> Task :shared-test:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared-test:generateDebugResValues
+> Task :shared-test:generateDebugResources
+> Task :shared-test:packageDebugResources
+> Task :shared-test:parseDebugLocalResources
+> Task :shared-test:generateDebugRFile
+> Task :shared-test:extractDeepLinksForAarDebug
+> Task :shared-test:javaPreCompileDebug
+> Task :shared-test:mergeDebugShaders
+> Task :shared-test:compileDebugShaders NO-SOURCE
+> Task :shared-test:generateDebugAssets UP-TO-DATE
+> Task :shared-test:packageDebugAssets
+> Task :shared-test:prepareDebugArtProfile
+> Task :shared-test:prepareLintJarForPublish
+> Task :shared-test:processDebugManifest
+> Task :shared-test:writeDebugAarMetadata
+> Task :app:hiltJavaCompileDebug
+> Task :app:processDebugJavaRes
+> Task :app:transformDebugClassesWithAsm
+> Task :app:jacocoDebug
+> Task :app:mergeDebugJavaResource
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:mergeProjectDexDebug
+> Task :shared-test:kspDebugKotlin
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :shared-test:compileDebugKotlin
+> Task :shared-test:compileDebugJavaWithJavac
+> Task :shared-test:transformDebugClassesWithAsm
+> Task :shared-test:mergeDebugGeneratedProguardFiles
+> Task :shared-test:mergeDebugConsumerProguardFiles
+> Task :shared-test:processDebugJavaRes
+> Task :shared-test:mergeDebugJavaResource
+> Task :shared-test:extractDebugAnnotations
+> Task :shared-test:syncDebugLibJars
+> Task :shared-test:bundleDebugAar
+> Task :shared-test:assembleDebug
+
+BUILD SUCCESSFUL in 4m 40s
+71 actionable tasks: 71 executed
+Configuration cache entry stored.
+APK: /home/runner/work/_temp/repos/architecture-samples/app/build/outputs/apk/debug/app-debug.apk
+Android build succeeded.
+

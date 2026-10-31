@@ -1,0 +1,21 @@
+gs-securing-web-kotlin at 38b43f1d209b880e234b1082f49973a9e97639b4, opening /home/runner/work/_temp/repos/gs-securing-web-kotlin/complete-kotlin
+Opened in 0.1 s: complete-kotlin, solution (none)
+  toolchain project kotlin: /home/runner/work/_temp/repos/gs-securing-web-kotlin/complete-kotlin/build.gradle.kts
+Compatibility Doctor:
+  complete-kotlin: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.
+F5 startup project: complete-kotlin (kotlin) /home/runner/work/_temp/repos/gs-securing-web-kotlin/complete-kotlin/build.gradle.kts
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+GET http://127.0.0.1:8080/: 200, 261 characters
+Run: GET / 200 (15 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/gs-securing-web-kotlin/complete-kotlin/src/main/kotlin/com/example/securingweb/SecuringWebApplication.kt:10
+Debug: stopped at SecuringWebApplication.kt:10 in SecuringWebApplicationKt.main(String[]), 1 frames, 0 locals (25 s)
+EXCEPTION: Xunit.Sdk.TrueException: trial-gs-securing-web-kotlin-5-debug does not meet the accessibility rules (docs/design/README.md, "Accessibility"):
+clipped: ContentPresenter#PART_ContentPresenter > Border#PART_HitArea > ContentPresenter#PART_ContentPresenter > TextBlock: "Open in browser" is cut off by its container: 11 × 0 of its 163 × 25 dips are hidden.
+   at Xunit.Assert.True(Nullable`1 condition, String userMessage) in /_/src/xunit.assert/Asserts/BooleanAsserts.cs:line 141
+   at Xunit.Assert.True(Boolean condition, String userMessage) in /_/src/xunit.assert/Asserts/BooleanAsserts.cs:line 123
+   at TabStudio.App.Tests.Accessibility.AccessibilityReport.AssertNone(IReadOnlyList`1 found, String what) in /_/tests/TabStudio.App.Tests/Accessibility/AccessibilityReport.cs:line 84
+   at TabStudio.App.Tests.UiTestHelpers.SaveScreenshot(Window window, String name) in /_/tests/TabStudio.App.Tests/UiTestHelpers.cs:line 46
+   at TabStudio.App.Tests.Trial.RepoTrialTests.TryAsync(String folder, String name, String expect, String route, Boolean tests, StringBuilder report, JsonObject result) in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 219
+   at TabStudio.App.Tests.Trial.RepoTrialTests.TryAsync(String folder, String name, String expect, String route, Boolean tests, StringBuilder report, JsonObject result) in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 259
+   at TabStudio.App.Tests.Trial.RepoTrialTests.Open_set_up_build_and_run_real_repositories() in /_/tests/TabStudio.App.Tests/Trial/RepoTrialTests.cs:line 72
