@@ -52,7 +52,7 @@ public sealed partial class WorkspaceViewModel
                     ? $"{project.Name} has no executable target to run. Add one with add_executable, or choose the program in .tabstudio/launch.json."
                     : $"{project.Name} has {targets.Count.ToString(CultureInfo.InvariantCulture)} executable targets ({NamesOf(targets.Select(t => t.Name))}). Open a source file of the one to run, or name it as the \"program\" of a configuration in .tabstudio/launch.json.";
             }
-            else if (project.Marker is { } marker && ToolchainProjectDetector.IsMakefile(marker))
+            else if (project.Marker is { } marker && (ToolchainProjectDetector.IsMakefile(marker) || ToolchainProjectDetector.IsAutotools(marker)))
             {
                 var binaries = NativePrograms.Find(project.Directory);
                 executable = NativePrograms.Choose(binaries, project.Directory, launchPrograms, root);

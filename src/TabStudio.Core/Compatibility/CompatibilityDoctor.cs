@@ -138,6 +138,10 @@ public static class CompatibilityDoctor
             project, RunHost.None, CompatibilityStatus.Unsupported, "protoc, on a computer",
             $"Not supported here: it {ProjectClassifier.PlatformWorkloadReason(project)}. TabStudio leaves it out of builds."),
 
+        PlatformWorkload.PreMsBuild => Report(
+            project, RunHost.None, CompatibilityStatus.Unsupported, "Visual Studio .NET 2003, on a computer",
+            $"Not supported: it {ProjectClassifier.PlatformWorkloadReason(project)}. TabStudio leaves it out of builds."),
+
         PlatformWorkload.NewerDotNet => Report(
             project, RunHost.None, CompatibilityStatus.Unsupported, "A newer .NET SDK, on a computer",
             $"Not supported yet: it {ProjectClassifier.PlatformWorkloadReason(project)}. TabStudio leaves it out of builds."),

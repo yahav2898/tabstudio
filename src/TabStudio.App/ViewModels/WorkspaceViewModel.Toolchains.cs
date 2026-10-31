@@ -134,6 +134,14 @@ public sealed partial class WorkspaceViewModel
     }
 
     /// <summary>
+    /// Whether a toolchain project is the build of the folder opened as the workspace, not of a solution: at its root,
+    /// with no .NET project that F5 would start.
+    /// </summary>
+    private static bool IsRootToolchainProjectOfFolder(Workspace workspace, ToolchainProject project) =>
+        workspace.Solution is null && workspace.DefaultStartupProject is null
+        && string.Equals(Path.GetFullPath(project.Directory).TrimEnd(Path.DirectorySeparatorChar), Path.GetFullPath(workspace.RootDirectory).TrimEnd(Path.DirectorySeparatorChar), StringComparison.Ordinal);
+
+    /// <summary>
     /// Finds the workspace's toolchain projects after it loads or changes: they join the toolbar's startup items and
     /// the Compatibility Doctor, and become visible to the toolchains' programs.
     /// </summary>
@@ -160,10 +168,13 @@ public sealed partial class WorkspaceViewModel
         {
             StartupProject = remembered.Info;
         }
-        else if (StartupProject is null && _toolchainProjects.Count > 0 && workspace.Projects.Count == 0)
+        else if (StartupProject is null && _toolchainProjects.Count > 0
+            && (workspace.Projects.Count == 0 || IsRootToolchainProjectOfFolder(workspace, _toolchainProjects[0].Project)))
         {
             // In a .NET solution, F5 starts one of its projects, as in Visual Studio: a docs site or a script folder
-            // beside it, such as RestSharp's docs, is there to pick, not the default.
+            // beside it, such as RestSharp's docs, is there to pick, not the default. A folder whose own build is a
+            // toolchain's, with .NET projects that start nothing beside it (zlib's contrib/dotzlib, raylib's Visual
+            // Studio projects), starts that build.
             StartupProject = _toolchainProjects[0].Info;
         }
 

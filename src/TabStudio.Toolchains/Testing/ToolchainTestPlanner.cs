@@ -167,7 +167,7 @@ public static partial class ToolchainTestPlanner
 
                 break;
             case ToolchainTestFramework.Pytest:
-                command = ["sh", "-c", PytestScript, "{python}", "--color=no", "--junitxml=" + Path.Combine(reportDirectory, "pytest.xml")];
+                command = ["sh", "-c", PythonTestInstall(PythonTestRequirements(project.Directory)) + PytestScript, "{python}", "--color=no", "--junitxml=" + Path.Combine(reportDirectory, "pytest.xml")];
                 if (selected is not null)
                 {
                     command.AddRange(PytestNodeIds(project.Directory, selected));
@@ -290,6 +290,98 @@ public static partial class ToolchainTestPlanner
 
         return results;
     }
+
+    /// <summary>
+    /// What a Python project's tests need besides the project, as it declares them: its test and development
+    /// requirement files (<c>-r requirements-dev.txt</c>), the test extras of its own package (<c>-e .[tests]</c>, from
+    /// <c>[project.optional-dependencies]</c>, <c>setup.cfg</c> or <c>setup.py</c>), and the requirements of its
+    /// <c>test</c> and <c>dev</c> dependency groups (<c>[dependency-groups]</c>, PEP 735). The project's own install
+    /// leaves them out, so attrs, marshmallow, httpie, requests and rich failed to collect their tests.
+    /// </summary>
+    /// <param name="directory">The project folder.</param>
+    internal static IReadOnlyList<string> PythonTestRequirements(string directory)
+    {
+        var arguments = new List<string>();
+        foreach (var file in PythonTestRequirementFiles.Where(f => File.Exists(Path.Combine(directory, f))))
+        {
+            arguments.AddRange(["-r", file]);
+        }
+
+        var pyproject = ReadSmall(Path.Combine(directory, "pyproject.toml"));
+        var extras = TomlTable(pyproject, "project.optional-dependencies").Keys
+            .Concat(SetupExtras(ReadSmall(Path.Combine(directory, "setup.cfg")) + "\n" + ReadSmall(Path.Combine(directory, "setup.py"))))
+            .Where(IsTestGroup).Distinct(StringComparer.Ordinal).ToList();
+        if (extras.Count > 0)
+        {
+            arguments.AddRange(["-e", ".[" + string.Join(',', extras) + "]"]);
+        }
+
+        foreach (var (_, value) in TomlTable(pyproject, "dependency-groups").Where(g => IsTestGroup(g.Key)))
+        {
+            // A group's {include-group = "..."} entries name other groups, not packages.
+            var requirements = TomlStrings().Matches(TomlInlineTable().Replace(value, string.Empty)).Select(m => m.Groups["value"].Value);
+            arguments.AddRange(requirements.Where(r => r.Length > 0 && !arguments.Contains(r)).ToList());
+        }
+
+        return arguments;
+    }
+
+    private static readonly string[] PythonTestRequirementFiles =
+    [
+        "requirements-dev.txt", "requirements-test.txt", "requirements-tests.txt", "requirements_dev.txt", "requirements_test.txt",
+        "test-requirements.txt", "test_requirements.txt", "dev-requirements.txt", "requirements/dev.txt", "requirements/test.txt",
+        "requirements/tests.txt", "requirements/testing.txt", "tests/requirements.txt",
+    ];
+
+    private static bool IsTestGroup(string name) =>
+        name.Trim('"', '\'') is "test" or "tests" or "testing" or "dev" or "develop" or "development";
+
+    /// <summary>The <c>pip install</c> of a project's test requirements before pytest runs; nothing when it has none.</summary>
+    internal static string PythonTestInstall(IReadOnlyList<string> requirements) =>
+        requirements.Count == 0 ? string.Empty
+        : "echo 'Installing what the tests need'; \"$0\" -m pip install --disable-pip-version-check -q "
+            + string.Join(' ', requirements.Select(r => "'" + r.Replace("'", "'\\''", StringComparison.Ordinal) + "'"))
+            + " || echo 'Some of what the tests need could not be installed'; ";
+
+    /// <summary>The keys and values of a TOML table, such as <c>[project.optional-dependencies]</c>, each value as written.</summary>
+    private static Dictionary<string, string> TomlTable(string toml, string table)
+    {
+        var result = new Dictionary<string, string>(StringComparer.Ordinal);
+        var start = toml.IndexOf("[" + table + "]", StringComparison.Ordinal);
+        if (start < 0)
+        {
+            return result;
+        }
+
+        var body = toml[(start + table.Length + 2)..];
+        var next = TomlTableHeader().Match(body);
+        body = next.Success ? body[..next.Index] : body;
+        foreach (Match entry in TomlEntry().Matches(body))
+        {
+            result[entry.Groups["key"].Value.Trim('"', '\'')] = entry.Groups["value"].Value;
+        }
+
+        return result;
+    }
+
+    /// <summary>The extras of a <c>setup.cfg</c> (<c>[options.extras_require]</c>) or <c>setup.py</c> (<c>extras_require</c>).</summary>
+    private static IEnumerable<string> SetupExtras(string text) =>
+        SetupExtra().Matches(text).Select(m => m.Groups["name"].Value);
+
+    [GeneratedRegex(@"^\s*\[", RegexOptions.Multiline | RegexOptions.CultureInvariant)]
+    private static partial Regex TomlTableHeader();
+
+    [GeneratedRegex(@"^\s*(?<key>""[^""]+""|'[^']+'|[\w.-]+)\s*=\s*(?<value>\[(?:""[^""]*""|'[^']*'|[^\]""'])*\]|[^\n]*)", RegexOptions.Multiline | RegexOptions.CultureInvariant)]
+    private static partial Regex TomlEntry();
+
+    [GeneratedRegex(@"\{[^}]*\}", RegexOptions.CultureInvariant)]
+    private static partial Regex TomlInlineTable();
+
+    [GeneratedRegex(@"""(?<value>[^""]*)""|'(?<value>[^']*)'", RegexOptions.CultureInvariant)]
+    private static partial Regex TomlStrings();
+
+    [GeneratedRegex(@"(?:^|[\s{,])['""]?(?<name>tests?|testing|dev|develop|development)['""]?\s*[:=]", RegexOptions.Multiline | RegexOptions.CultureInvariant)]
+    private static partial Regex SetupExtra();
 
     private const string GoReport = "go-test.txt";
     private const string CargoReport = "cargo-test.txt";

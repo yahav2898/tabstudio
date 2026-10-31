@@ -209,6 +209,50 @@ public sealed class GoRustDartTestTests : IDisposable
         Assert.Empty(ToolchainTestOutput.ParseJest(string.Empty, "/p"));
     }
 
+    /// <summary>
+    /// attrs, marshmallow, httpie, requests and rich declare what their tests need beside the package, which the project's
+    /// install leaves out, so pytest failed to import their conftest.py. The run installs it first.
+    /// </summary>
+    [Fact]
+    public void A_python_projects_test_requirements_are_installed_before_pytest()
+    {
+        _folder.Write("pyproject.toml", """
+            [project]
+            name = "attrs"
+            dependencies = []
+
+            [project.optional-dependencies]
+            tests = ["pytest", "simplejson"]
+            docs = ["sphinx"]
+
+            [dependency-groups]
+            tests = [
+                {include-group = "cov"},
+                "hypothesis",
+                "pytest-xdist[psutil]",
+            ]
+            cov = ["coverage"]
+            """);
+        _folder.Write("requirements-dev.txt", "pytest-httpbin
+");
+
+        var requirements = ToolchainTestPlanner.PythonTestRequirements(_folder.Path);
+
+        Assert.Equal(["-r", "requirements-dev.txt", "-e", ".[tests]", "hypothesis", "pytest-xdist[psutil]"], requirements);
+        var plan = ToolchainTestPlanner.Plan(Project("python"), ToolchainTestFramework.Pytest, null, _folder.Resolve("reports")).Command;
+        Assert.StartsWith("echo 'Installing what the tests need'; \"$0\" -m pip install --disable-pip-version-check -q '-r' 'requirements-dev.txt' '-e' '.[tests]' 'hypothesis' 'pytest-xdist[psutil]' || ", plan.Arguments[1], StringComparison.Ordinal);
+        Assert.Equal(string.Empty, ToolchainTestPlanner.PythonTestInstall([]));
+        Assert.Equal("'it'\\''s'", ToolchainTestPlanner.PythonTestInstall(["it's"]).Split(" -q ")[1].Split(" || ")[0]);
+    }
+
+    [Fact]
+    public void A_setup_py_projects_test_extras_are_installed_with_it()
+    {
+        _folder.Write("setup.py", "setup(name='httpie', extras_require={'dev': dev_require, 'test': tests_require})\n");
+
+        Assert.Equal(["-e", ".[dev,test]"], ToolchainTestPlanner.PythonTestRequirements(_folder.Path));
+    }
+
     private ToolchainTestFramework? NodeRunner(string manifest)
     {
         _folder.Write("package.json", manifest);

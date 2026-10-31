@@ -21,7 +21,7 @@ public sealed record RunPlan(ProcessStartSpec? Build, ProcessStartSpec Run, stri
     [
         "Makefile", "makefile", "GNUmakefile", "CMakeLists.txt", "pom.xml", "build.gradle", "build.gradle.kts",
         "settings.gradle", "settings.gradle.kts", "Cargo.toml", "go.mod", "package.json", "pyproject.toml",
-        "composer.json", "artisan", "Package.swift",
+        "composer.json", "artisan", "Package.swift", "configure.ac", "configure",
     ];
 
     /// <summary>

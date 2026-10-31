@@ -32,6 +32,7 @@ public sealed class CppProjectTests : IDisposable
     [InlineData("Makefile")]
     [InlineData("makefile")]
     [InlineData("GNUmakefile")]
+    [InlineData("configure.ac")]
     [InlineData("main.c")]
     [InlineData("main.cpp")]
     public void Detects_supported_native_project_layouts(string marker)
