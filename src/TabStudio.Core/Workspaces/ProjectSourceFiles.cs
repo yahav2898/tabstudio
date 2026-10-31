@@ -123,16 +123,16 @@ public static class ProjectSourceFiles
         string.Equals(directoryName, "bin", StringComparison.OrdinalIgnoreCase) || string.Equals(directoryName, "obj", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
-    /// The files under a folder with an extension, or all of them, skipping excluded folders and the folders whose
-    /// names <paramref name="skip"/> picks, such as build output, tool folders and hidden ones
-    /// (<see cref="PathUtilities.IsIgnoredDirectory"/>).
-    /// </summary>
-    /// <summary>
     /// How many folders one walk goes through at most: a pattern such as <c>/**/*.cs</c>, or a link to <c>/</c>, otherwise
     /// walked the whole device.
     /// </summary>
     private const int MaximumDirectories = 20_000;
 
+    /// <summary>
+    /// The files under a folder with an extension, or all of them, skipping excluded folders and the folders whose
+    /// names <paramref name="skip"/> picks, such as build output, tool folders and hidden ones
+    /// (<see cref="PathUtilities.IsIgnoredDirectory"/>).
+    /// </summary>
     private static IEnumerable<string> EnumerateDirectory(string directory, string? extension, List<string> excludedPrefixes, Func<string, bool> skip)
     {
         var pending = new Stack<string>();

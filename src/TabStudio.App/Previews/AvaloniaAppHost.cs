@@ -342,7 +342,7 @@ public sealed partial class AvaloniaAppHost : IDisposable
         if (e.Exception.ToString().Contains(_assemblyName, StringComparison.Ordinal))
         {
             e.Handled = true;
-            Services.CrashLog.Claimed.AddOrUpdate(e.Exception, this);
+            global::TabStudio.App.Services.CrashLog.Claimed.AddOrUpdate(e.Exception, this);
             Crashed?.Invoke(this, e.Exception);
         }
     }

@@ -72,7 +72,7 @@ public sealed class CrashLog
     /// Errors another handler took as its own, such as those of the user's Avalonia app running in the preview: they
     /// end that app, not TabStudio, and are not TabStudio's to report.
     /// </summary>
-    public static System.Runtime.CompilerServices.ConditionalWeakTable<Exception, object> Claimed { get; } = [];
+    public static System.Runtime.CompilerServices.ConditionalWeakTable<Exception, object> Claimed { get; } = new();
 
     /// <summary>The reports, newest first.</summary>
     public IReadOnlyList<string> GetReports()
