@@ -1,0 +1,81 @@
+spring-boot-realworld-example-app at ee17e31aafe733d98c4853c8b9a74d7f2f6c924a, opening /home/runner/work/_temp/repos/spring-boot-realworld-example-app
+Opened in 0.2 s: spring-boot-realworld-example-app, solution (none)
+  toolchain project java: /home/runner/work/_temp/repos/spring-boot-realworld-example-app/build.gradle
+Compatibility Doctor:
+  spring-boot-realworld-example-app: Needs a toolchain via Java toolchain - Runs with Java from the Toolchain Store, with console input and output in the Output panel. Install Java to run it.
+F5 startup project: spring-boot-realworld-example-app (java) /home/runner/work/_temp/repos/spring-boot-realworld-example-app/build.gradle
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Run: exited before listening with code 1 (4 s after F5)
+Debug: no entry point found for a breakpoint (0 s)
+Tests: 68 found; 0 passed, 0 failed, 0 skipped, 68 not run - The build failed. Fix the errors in the Error List, then run the tests again. (4 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 2.4 s
+  Building spring-boot-realworld-example-app: Building spring-boot-realworld-example-app
+  Building spring-boot-realworld-example-app: Failed after 19.2 s
+  Building spring-boot-realworld-example-app: Building spring-boot-realworld-example-app
+  Building spring-boot-realworld-example-app: Failed after 4.2 s
+  Testing spring-boot-realworld-example-app: Running spring-boot-realworld-example-app's tests
+  Testing spring-boot-realworld-example-app: Failed after 4.3 s
+Project setup:
+
+Output:
+Running spring-boot-realworld-example-app with Java 21.0.13
+> gradle --no-daemon --console=plain --init-script /home/runner/work/_temp/repos/spring-boot-realworld-example-app/.tabstudio/java-runtime.init.gradle tabstudioResolveRuntime
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.4/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+'void org.gradle.api.internal.artifacts.dsl.LazyPublishArtifact.<init>(org.gradle.api.provider.Provider)'
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+[Incubating] Problems report is available at: file:///home/runner/work/_temp/repos/spring-boot-realworld-example-app/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.4/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 4s
+
+The program 'spring-boot-realworld-example-app' has exited with code 1 (0x1).
+========== Running spring-boot-realworld-example-app's tests with Gradle ==========
+> gradle --no-daemon --console=plain --continue --init-script /home/runner/work/_temp/repos/spring-boot-realworld-example-app/.tabstudio/test-results/b2ce3e6992f84b46b98713685687970e/tabstudio-tests.init.gradle test
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.4/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+'void org.gradle.api.internal.artifacts.dsl.LazyPublishArtifact.<init>(org.gradle.api.provider.Provider)'
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 4s
+[Incubating] Problems report is available at: file:///home/runner/work/_temp/repos/spring-boot-realworld-example-app/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.4/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+spring-boot-realworld-example-app's tests did not run: the build or the test runner failed. See the Error List and the output above.
+

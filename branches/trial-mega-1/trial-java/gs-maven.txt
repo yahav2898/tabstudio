@@ -1,0 +1,85 @@
+gs-maven at c65883f80b35bac86bb2580944de9146e2c6a55a, opening /home/runner/work/_temp/repos/gs-maven/complete
+Opened in 0.0 s: complete, solution (none)
+  toolchain project java: /home/runner/work/_temp/repos/gs-maven/complete/pom.xml
+Compatibility Doctor:
+  complete: Needs a toolchain via Java toolchain - Runs with Java from the Toolchain Store, with console input and output in the Output panel. Install Java to run it.
+F5 startup project: complete (java) /home/runner/work/_temp/repos/gs-maven/complete/pom.xml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Run: exited with code 0 (3 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/gs-maven/complete/src/main/java/hello/HelloWorld.java:7
+Debug: ended without stopping at HelloWorld.java:7 (2 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 1.9 s
+  Building complete: Building complete
+  Building complete: Succeeded after 14.1 s
+  Building complete: Building complete
+  Building complete: Succeeded after 2.1 s
+Project setup:
+
+Output:
+> mvn -B -Dstyle.color=never -Daether.connector.http.retryHandler.count=5 -DskipTests package org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies -DincludeScope=runtime
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< org.springframework:gs-maven >--------------------
+[INFO] Building gs-maven 0.1.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ gs-maven ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/runner/work/_temp/repos/gs-maven/complete/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ gs-maven ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ gs-maven ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/runner/work/_temp/repos/gs-maven/complete/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ gs-maven ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ gs-maven ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ gs-maven ---
+[INFO] 
+[INFO] --- maven-shade-plugin:3.2.4:shade (default) @ gs-maven ---
+[INFO] Including joda-time:joda-time:jar:2.9.2 in the shaded jar.
+[WARNING] gs-maven-0.1.0.jar, joda-time-2.9.2.jar define 723 overlapping classes and resources: 
+[WARNING]   - META-INF/LICENSE.txt
+[WARNING]   - META-INF/MANIFEST.MF
+[WARNING]   - META-INF/NOTICE.txt
+[WARNING]   - META-INF/maven/joda-time/joda-time/pom.properties
+[WARNING]   - META-INF/maven/joda-time/joda-time/pom.xml
+[WARNING]   - org.joda.time.Chronology
+[WARNING]   - org.joda.time.DateMidnight
+[WARNING]   - org.joda.time.DateMidnight$Property
+[WARNING]   - org.joda.time.DateTime
+[WARNING]   - org.joda.time.DateTime$Property
+[WARNING]   - 713 more...
+[WARNING] maven-shade-plugin has detected that some class files are
+[WARNING] present in two or more JARs. When this happens, only one
+[WARNING] single version of the class is copied to the uber jar.
+[WARNING] Usually this is not harmful and you can skip these warnings,
+[WARNING] otherwise try to manually exclude artifacts based on
+[WARNING] mvn dependency:tree -Ddetail=true and the above output.
+[WARNING] See http://maven.apache.org/plugins/maven-shade-plugin/
+[INFO] Replacing original artifact with shaded artifact.
+[INFO] Replacing /home/runner/work/_temp/repos/gs-maven/complete/target/gs-maven-0.1.0.jar with /home/runner/work/_temp/repos/gs-maven/complete/target/gs-maven-0.1.0-shaded.jar
+[INFO] Dependency-reduced POM written at: /home/runner/work/_temp/repos/gs-maven/complete/dependency-reduced-pom.xml
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.8.1:copy-dependencies (default-cli) @ gs-maven ---
+[INFO] joda-time:joda-time:jar:2.9.2 already exists in destination.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.950 s
+[INFO] Finished at: 2026-10-31T00:40:02Z
+[INFO] ------------------------------------------------------------------------
+
