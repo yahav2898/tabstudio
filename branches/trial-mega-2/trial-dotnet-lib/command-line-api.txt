@@ -1,0 +1,237 @@
+command-line-api at eef106df3e5e74fae30236e1449cc3f4e955207a, opening /home/runner/work/_temp/repos/command-line-api/System.CommandLine.slnx
+Opened in 0.3 s: System.CommandLine, solution /home/runner/work/_temp/repos/command-line-api/System.CommandLine.slnx
+  project System.CommandLine.ApiCompatibility.Tests [CSharp] /home/runner/work/_temp/repos/command-line-api/src/System.CommandLine.ApiCompatibility.Tests/System.CommandLine.ApiCompatibility.Tests.csproj
+  project System.CommandLine.StaticCompletions.Tests [CSharp] /home/runner/work/_temp/repos/command-line-api/src/System.CommandLine.StaticCompletions.Tests/System.CommandLine.StaticCompletions.Tests.csproj
+  project System.CommandLine.StaticCompletions [CSharp] /home/runner/work/_temp/repos/command-line-api/src/System.CommandLine.StaticCompletions/System.CommandLine.StaticCompletions.csproj
+  project dotnet-suggest.Tests [CSharp] /home/runner/work/_temp/repos/command-line-api/src/System.CommandLine.Suggest.Tests/dotnet-suggest.Tests.csproj
+  project dotnet-suggest [CSharp] /home/runner/work/_temp/repos/command-line-api/src/System.CommandLine.Suggest/dotnet-suggest.csproj
+  project System.CommandLine.Tests [CSharp] /home/runner/work/_temp/repos/command-line-api/src/System.CommandLine.Tests/System.CommandLine.Tests.csproj
+  project System.CommandLine [CSharp] /home/runner/work/_temp/repos/command-line-api/src/System.CommandLine/System.CommandLine.csproj
+  toolchain project python: /home/runner/work/_temp/repos/command-line-api/eng/common/cross
+Compatibility Doctor:
+  System.CommandLine.ApiCompatibility.Tests: Library via Built with its users - A library is compiled together with the projects that reference it.
+  System.CommandLine.StaticCompletions.Tests: Library via Built with its users - A library is compiled together with the projects that reference it.
+  System.CommandLine.StaticCompletions: Library via Built with its users - A library is compiled together with the projects that reference it.
+  dotnet-suggest.Tests: Library via Built with its users - A library is compiled together with the projects that reference it.
+  dotnet-suggest: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  System.CommandLine.Tests: Library via Built with its users - A library is compiled together with the projects that reference it.
+  System.CommandLine: Library via Built with its users - A library is compiled together with the projects that reference it.
+  cross: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+F5 startup project: dotnet-suggest /home/runner/work/_temp/repos/command-line-api/src/System.CommandLine.Suggest/dotnet-suggest.csproj
+Error List after analysis: 2234 errors, 1 warnings
+  2157 x CS0246
+      [System.CommandLine.ApiCompatibility.Tests] ApiCompatibilityApprovalTests.cs(6,7): error CS0246: The type or namespace name 'Xunit' could not be found (are you missing a using directive or an assembly reference?)
+      [System.CommandLine.ApiCompatibility.Tests] ApiCompatibilityApprovalTests.cs(12,6): error CS0246: The type or namespace name 'FactAttribute' could not be found (are you missing a using directive or an assembly reference?)
+      [System.CommandLine.ApiCompatibility.Tests] ApiCompatibilityApprovalTests.cs(12,6): error CS0246: The type or namespace name 'Fact' could not be found (are you missing a using directive or an assembly reference?)
+      [dotnet-suggest.Tests] DotnetSuggestEndToEndTests.cs(9,7): error CS0246: The type or namespace name 'Xunit' could not be found (are you missing a using directive or an assembly reference?)
+      [dotnet-suggest.Tests] DotnetSuggestEndToEndTests.cs(17,26): error CS0246: The type or namespace name 'ITestOutputHelper' could not be found (are you missing a using directive or an assembly reference?)
+      [dotnet-suggest.Tests] DotnetSuggestEndToEndTests.cs(24,43): error CS0246: The type or namespace name 'ITestOutputHelper' could not be found (are you missing a using directive or an assembly reference?)
+      [dotnet-suggest.Tests] FileEnumeratorTests.cs(6,7): error CS0246: The type or namespace name 'Xunit' could not be found (are you missing a using directive or an assembly reference?)
+      [dotnet-suggest.Tests] FileEnumeratorTests.cs(12,10): error CS0246: The type or namespace name 'FactAttribute' could not be found (are you missing a using directive or an assembly reference?)
+      [dotnet-suggest.Tests] FileEnumeratorTests.cs(12,10): error CS0246: The type or namespace name 'Fact' could not be found (are you missing a using directive or an assembly reference?)
+      [dotnet-suggest.Tests] FileEnumeratorTests.cs(18,10): error CS0246: The type or namespace name 'FactAttribute' could not be found (are you missing a using directive or an assembly reference?)
+  57 x CS0103
+      [System.CommandLine.StaticCompletions] CompletionsCommandDefinition.cs(12,23): error CS0103: The name 'Strings' does not exist in the current context
+      [System.CommandLine.StaticCompletions] CompletionsCommandDefinition.cs(20,31): error CS0103: The name 'Strings' does not exist in the current context
+      [System.CommandLine.StaticCompletions] CompletionsCommandDefinition.cs(34,55): error CS0103: The name 'Strings' does not exist in the current context
+      [System.CommandLine.StaticCompletions] CompletionsGenerateScriptCommandDefinition.cs(13,25): error CS0103: The name 'Strings' does not exist in the current context
+      [System.CommandLine.StaticCompletions] ShellName.cs(32,108): error CS0103: The name 'Strings' does not exist in the current context
+      [System.CommandLine.StaticCompletions] ShellName.cs(40,59): error CS0103: The name 'Strings' does not exist in the current context
+      [System.CommandLine.StaticCompletions] BashShellProvider.cs(16,38): error CS0103: The name 'Strings' does not exist in the current context
+      [System.CommandLine.StaticCompletions] FishShellProvider.cs(16,38): error CS0103: The name 'Strings' does not exist in the current context
+      [System.CommandLine.StaticCompletions] NuShellShellProvider.cs(14,38): error CS0103: The name 'Strings' does not exist in the current context
+      [System.CommandLine.StaticCompletions] PowershellShellProvider.cs(17,38): error CS0103: The name 'Strings' does not exist in the current context
+  12 x CS0234
+      [System.CommandLine.StaticCompletions] CompletionsCommandDefinition.cs(4,44): error CS0234: The type or namespace name 'Resources' does not exist in the namespace 'System.CommandLine.StaticCompletions' (are you missing an assembly reference?)
+      [System.CommandLine.StaticCompletions] CompletionsCommandParser.cs(47,62): error CS0234: The type or namespace name 'Strings' does not exist in the namespace 'System.Resources' (are you missing an assembly reference?)
+      [System.CommandLine.StaticCompletions] CompletionsGenerateScriptCommandDefinition.cs(4,44): error CS0234: The type or namespace name 'Resources' does not exist in the namespace 'System.CommandLine.StaticCompletions' (are you missing an assembly reference?)
+      [System.CommandLine.StaticCompletions] ShellName.cs(4,44): error CS0234: The type or namespace name 'Resources' does not exist in the namespace 'System.CommandLine.StaticCompletions' (are you missing an assembly reference?)
+      [System.CommandLine.StaticCompletions] BashShellProvider.cs(6,44): error CS0234: The type or namespace name 'Resources' does not exist in the namespace 'System.CommandLine.StaticCompletions' (are you missing an assembly reference?)
+      [System.CommandLine.StaticCompletions] FishShellProvider.cs(6,44): error CS0234: The type or namespace name 'Resources' does not exist in the namespace 'System.CommandLine.StaticCompletions' (are you missing an assembly reference?)
+      [System.CommandLine.StaticCompletions] NuShellShellProvider.cs(4,44): error CS0234: The type or namespace name 'Resources' does not exist in the namespace 'System.CommandLine.StaticCompletions' (are you missing an assembly reference?)
+      [System.CommandLine.StaticCompletions] PowershellShellProvider.cs(9,44): error CS0234: The type or namespace name 'Resources' does not exist in the namespace 'System.CommandLine.StaticCompletions' (are you missing an assembly reference?)
+      [System.CommandLine.StaticCompletions] ZshShellProvider.cs(5,44): error CS0234: The type or namespace name 'Resources' does not exist in the namespace 'System.CommandLine.StaticCompletions' (are you missing an assembly reference?)
+      [System.CommandLine.Tests] HelpBuilderTests.Customization.cs(5,17): error CS0234: The type or namespace name 'VisualStudio' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+  6 x CS0616
+      [dotnet-suggest.Tests] DotnetSuggestEndToEndTests.cs(74,10): error CS0616: 'ReleaseBuildOnlyFactAttribute' is not an attribute class
+      [dotnet-suggest.Tests] DotnetSuggestEndToEndTests.cs(90,10): error CS0616: 'ReleaseBuildOnlyFactAttribute' is not an attribute class
+      [dotnet-suggest.Tests] DotnetSuggestEndToEndTests.cs(125,10): error CS0616: 'ReleaseBuildOnlyFactAttribute' is not an attribute class
+      [System.CommandLine.Tests] CompilationTests.cs(31,6): error CS0616: 'ReleaseBuildOnlyTheoryAttribute' is not an attribute class
+      [System.CommandLine.Tests] CompilationTests.cs(37,6): error CS0616: 'ReleaseBuildOnlyFactAttribute' is not an attribute class
+      [System.CommandLine.Tests] CompilationTests.cs(47,6): error CS0616: 'ReleaseBuildOnlyFactAttribute' is not an attribute class
+  1 x CS0260
+      [System.CommandLine.Tests] Program.cs(5,14): error CS0260: Missing partial modifier on declaration of type 'Program'; another partial declaration of this type exists
+  1 x CS8805
+      [System.CommandLine.Tests] Program.cs(4,1): error CS8805: Program using top-level statements must be an executable.
+Error List after the build: 36 errors, 1 warnings
+  36 x CS0103
+      [System.CommandLine] LocalizationResources.cs(20,34): error CS0103: The name 'Properties' does not exist in the current context
+      [System.CommandLine] LocalizationResources.cs(26,31): error CS0103: The name 'Properties' does not exist in the current context
+      [System.CommandLine] LocalizationResources.cs(32,31): error CS0103: The name 'Properties' does not exist in the current context
+      [System.CommandLine] LocalizationResources.cs(38,31): error CS0103: The name 'Properties' does not exist in the current context
+      [System.CommandLine] LocalizationResources.cs(44,31): error CS0103: The name 'Properties' does not exist in the current context
+      [System.CommandLine] LocalizationResources.cs(50,31): error CS0103: The name 'Properties' does not exist in the current context
+      [System.CommandLine] LocalizationResources.cs(57,37): error CS0103: The name 'Properties' does not exist in the current context
+      [System.CommandLine] LocalizationResources.cs(66,31): error CS0103: The name 'Properties' does not exist in the current context
+      [System.CommandLine] LocalizationResources.cs(72,31): error CS0103: The name 'Properties' does not exist in the current context
+      [System.CommandLine] LocalizationResources.cs(78,31): error CS0103: The name 'Properties' does not exist in the current context
+Tests: Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here. (120 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring NuGet packages 0/7 projects
+  Analyzing: Analyzing 0/7 projects
+  Analyzing: Analyzing 1/7 projects
+  Analyzing: Analyzing 2/7 projects
+  Analyzing: Analyzing 3/7 projects
+  Analyzing: Analyzing 4/7 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/14
+  Restoring NuGet packages: Downloading NuGet packages 2/14
+  Restoring NuGet packages: Downloading NuGet packages 3/14
+  Restoring NuGet packages: Downloading NuGet packages 4/14
+  Analyzing: Analyzing 5/7 projects
+  Restoring NuGet packages: Downloading NuGet packages 5/14
+  Restoring NuGet packages: Downloading NuGet packages 6/14
+  Restoring NuGet packages: Downloading NuGet packages 7/14
+  Restoring NuGet packages: Downloading NuGet packages 8/14
+  Restoring NuGet packages: Downloading NuGet packages 9/14
+  Restoring NuGet packages: Downloading NuGet packages 10/14
+  Restoring NuGet packages: Downloading NuGet packages 11/14
+  Restoring NuGet packages: Downloading NuGet packages 12/14
+  Restoring NuGet packages: Downloading NuGet packages 13/14
+  Restoring NuGet packages: Downloading NuGet packages 14/14
+  Restoring NuGet packages: Restoring NuGet packages 1/7 projects
+  Analyzing: Analyzing 6/7 projects
+  Analyzing: Analyzing 7/7 projects
+  Analyzing: Succeeded after 1.8 s
+  Restoring NuGet packages: Downloading NuGet packages 1/16
+  Restoring NuGet packages: Downloading NuGet packages 2/16
+  Restoring NuGet packages: Downloading NuGet packages 3/16
+  Restoring NuGet packages: Downloading NuGet packages 4/16
+  Restoring NuGet packages: Downloading NuGet packages 5/16
+  Restoring NuGet packages: Downloading NuGet packages 6/16
+  Restoring NuGet packages: Downloading NuGet packages 7/16
+  Restoring NuGet packages: Downloading NuGet packages 8/16
+  Restoring NuGet packages: Downloading NuGet packages 9/16
+  Restoring NuGet packages: Downloading NuGet packages 10/16
+  Restoring NuGet packages: Downloading NuGet packages 11/16
+  Restoring NuGet packages: Downloading NuGet packages 12/16
+  Restoring NuGet packages: Downloading NuGet packages 13/16
+  Restoring NuGet packages: Downloading NuGet packages 14/16
+  Restoring NuGet packages: Downloading NuGet packages 15/16
+  Restoring NuGet packages: Downloading NuGet packages 16/16
+  Restoring NuGet packages: Restoring NuGet packages 2/7 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Restoring NuGet packages 3/7 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/18
+  Restoring NuGet packages: Downloading NuGet packages 3/18
+  Restoring NuGet packages: Downloading NuGet packages 2/18
+  Restoring NuGet packages: Downloading NuGet packages 4/18
+  Restoring NuGet packages: Downloading NuGet packages 5/18
+  Restoring NuGet packages: Downloading NuGet packages 6/18
+  Restoring NuGet packages: Downloading NuGet packages 7/18
+  Restoring NuGet packages: Downloading NuGet packages 8/18
+  Restoring NuGet packages: Downloading NuGet packages 9/18
+  Restoring NuGet packages: Downloading NuGet packages 10/18
+  Restoring NuGet packages: Downloading NuGet packages 11/18
+  Restoring NuGet packages: Downloading NuGet packages 12/18
+  Restoring NuGet packages: Downloading NuGet packages 13/18
+  Restoring NuGet packages: Downloading NuGet packages 14/18
+  Restoring NuGet packages: Downloading NuGet packages 15/18
+  Restoring NuGet packages: Downloading NuGet packages 16/18
+  Restoring NuGet packages: Downloading NuGet packages 17/18
+  Restoring NuGet packages: Downloading NuGet packages 18/18
+  Restoring NuGet packages: Restoring NuGet packages 4/7 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Restoring NuGet packages 5/7 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/18
+  Restoring NuGet packages: Downloading NuGet packages 2/18
+  Restoring NuGet packages: Downloading NuGet packages 3/18
+  Restoring NuGet packages: Downloading NuGet packages 4/18
+  Restoring NuGet packages: Downloading NuGet packages 5/18
+  Restoring NuGet packages: Downloading NuGet packages 6/18
+  Restoring NuGet packages: Downloading NuGet packages 7/18
+  Restoring NuGet packages: Downloading NuGet packages 8/18
+  Restoring NuGet packages: Downloading NuGet packages 9/18
+  Restoring NuGet packages: Downloading NuGet packages 10/18
+  Restoring NuGet packages: Downloading NuGet packages 11/18
+  Restoring NuGet packages: Downloading NuGet packages 12/18
+  Restoring NuGet packages: Downloading NuGet packages 13/18
+  Restoring NuGet packages: Downloading NuGet packages 14/18
+  Restoring NuGet packages: Downloading NuGet packages 15/18
+  Restoring NuGet packages: Downloading NuGet packages 16/18
+  Restoring NuGet packages: Downloading NuGet packages 17/18
+  Restoring NuGet packages: Downloading NuGet packages 18/18
+  Restoring NuGet packages: Restoring NuGet packages 6/7 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/1
+  Restoring NuGet packages: Succeeded after 3.3 s
+  Analyzing: Analyzing 0/7 projects
+  Analyzing: Analyzing 1/7 projects
+  Analyzing: Analyzing 2/7 projects
+  Analyzing: Analyzing 3/7 projects
+  Analyzing: Analyzing 4/7 projects
+  Analyzing: Analyzing 5/7 projects
+  Analyzing: Analyzing 6/7 projects
+  Analyzing: Analyzing 7/7 projects
+  Analyzing: Succeeded after 1.4 s
+  Setting up projects: Succeeded after 17.8 s
+  Building: Building
+  Building: Building 0/7 projects
+  Building: Building 1/7 projects
+  Building: Building 2/7 projects
+  Building: Building 3/7 projects
+  Building: Building 4/7 projects
+  Building: Building 5/7 projects
+  Building: Building 6/7 projects
+  Building: Failed after 2.4 s
+Project setup:
+
+Output:
+Build started at 01:30:50...
+1>------ Build started: Project: System.CommandLine, Configuration: Debug ------
+1>LocalizationResources.cs(20,34): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(26,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(32,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(38,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(44,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(50,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(57,37): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(66,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(72,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(78,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(84,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(90,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(96,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(102,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(108,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(114,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(120,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(126,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(132,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(138,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(144,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(150,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(156,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(162,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(168,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(174,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(180,31): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(186,34): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(192,34): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(198,34): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(204,34): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(210,34): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(216,34): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(222,34): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(229,34): error CS0103: The name 'Properties' does not exist in the current context
+1>LocalizationResources.cs(235,34): error CS0103: The name 'Properties' does not exist in the current context
+2>------ Build started: Project: System.CommandLine.ApiCompatibility.Tests, Configuration: Debug ------
+3>------ Build started: Project: System.CommandLine.StaticCompletions, Configuration: Debug ------
+4>------ Build started: Project: System.CommandLine.StaticCompletions.Tests, Configuration: Debug ------
+5>------ Build started: Project: dotnet-suggest, Configuration: Debug ------
+6>------ Build started: Project: System.CommandLine.Tests, Configuration: Debug ------
+7>------ Build started: Project: dotnet-suggest.Tests, Configuration: Debug ------
+========== Build: 0 succeeded, 7 failed ==========
+
