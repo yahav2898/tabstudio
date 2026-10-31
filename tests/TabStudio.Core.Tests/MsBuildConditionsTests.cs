@@ -20,7 +20,25 @@ public sealed class MsBuildConditionsTests
     [InlineData("'$(TargetFramework)' != 'net462' and '$(ProjectType)' == 'Benchmark'", true)]
     [InlineData("'$(TargetFramework)' == 'net462' or '$(ProjectType)' == 'Library'", false)]
     [InlineData("!Exists('missing.props')", true)]
-    [InlineData("$([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net9.0'))", null)]
-    public void Simple_conditions_are_evaluated_and_others_are_not(string condition, bool? expected) =>
+    public void Simple_conditions_are_evaluated(string condition, bool? expected) =>
+        Assert.Equal(expected, MsBuildConditions.Evaluate(condition, Properties, Path.GetTempPath()));
+
+    [Theory]
+    [InlineData("$([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net9.0'))", false)]
+    [InlineData("$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard2.0'))", true)]
+    [InlineData("$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0'))", true)]
+    [InlineData("$(TargetFramework.StartsWith('net4')) == 'false'", true)]
+    [InlineData(" $(TargetFramework.StartsWith('net4')) ", false)]
+    [InlineData("'$([MSBuild]::GetTargetFrameworkIdentifier($(TargetFramework)))' == '.NETCoreApp'", true)]
+    [InlineData("$([MSBuild]::VersionGreaterThanOrEquals($([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')), '7.0'))", true)]
+    [InlineData("('$(ProjectType)' == 'Library' or '$(ProjectType)' == 'Benchmark') and !('$(TargetFramework)' == 'net462')", true)]
+    [InlineData("'$(TargetFramework)' == 'net462' and $([Unknown]::Call())", false)]
+    [InlineData("'$(TargetFramework)' == 'net8.0' and $([Unknown]::Call())", null)]
+    [InlineData("$([System.String]::Copy('$(ProjectType)').Contains('Bench'))", true)]
+    [InlineData("'$(ProjectType.ToLowerInvariant())' == 'benchmark'", true)]
+    [InlineData("$([System.Version]::Parse('10.2.3').Major) >= 10", true)]
+    [InlineData("'8.0' < '10.0'", true)]
+    [InlineData("'$(IncludePollyUsings)'", true)]
+    public void Property_functions_parentheses_and_comparisons_are_evaluated_as_MSBuild_does(string condition, bool? expected) =>
         Assert.Equal(expected, MsBuildConditions.Evaluate(condition, Properties, Path.GetTempPath()));
 }

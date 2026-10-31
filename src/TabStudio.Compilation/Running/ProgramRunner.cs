@@ -170,6 +170,12 @@ public sealed class ProgramRunner
             Console.Out.Flush();
             return new RunResult(RunOutcome.Completed, exitCode, TimeSpan.Zero);
         }
+        catch (Exception ex) when (InProcessExit.TryGetExitCode(ex, out var exitCode))
+        {
+            // Environment.Exit, redirected (see InProcessExit): the program ends with its code, as its process would.
+            Console.Out.Flush();
+            return new RunResult(RunOutcome.Completed, exitCode, TimeSpan.Zero);
+        }
         catch (TargetInvocationException ex) when (ex.InnerException is not null)
         {
             return Crashed(ex.InnerException, error);

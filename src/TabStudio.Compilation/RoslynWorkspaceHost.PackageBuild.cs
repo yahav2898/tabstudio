@@ -18,6 +18,9 @@ public sealed partial class RoslynWorkspaceHost
 {
     private readonly Dictionary<string, IReadOnlyList<string>> _packageBuildFiles = new(StringComparer.Ordinal);
 
+    /// <summary>The C# sources each project compiles from its packages' <c>contentFiles/</c>, keyed by project file path.</summary>
+    private readonly Dictionary<string, IReadOnlyList<string>> _packageContentSources = new(StringComparer.Ordinal);
+
     /// <summary>The projects as read from their files, before their packages' props and targets were read into them.</summary>
     private readonly Dictionary<ProjectId, TsProject> _projectsAsRead = [];
 
@@ -50,6 +53,74 @@ public sealed partial class RoslynWorkspaceHost
             ApplyPackageBuildUnderGate(id, project);
             InvalidateGenerators(projectFilePath);
         }
+    }
+
+    /// <summary>
+    /// Sets the C# sources a project compiles from its packages' <c>contentFiles/</c>, such as
+    /// <c>RestoreResult.ContentSources</c>, as NuGet adds them to its <c>Compile</c> items: a source-only package such as
+    /// Spectre.Console's Wcwidth.Sources is nothing else. They are kept by project file path, so they survive a reload.
+    /// </summary>
+    /// <param name="projectFilePath">Full path of the project file. The project does not have to be loaded yet.</param>
+    /// <param name="files">Full paths of the sources.</param>
+    public void SetPackageContentSources(string projectFilePath, IReadOnlyList<string> files)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(projectFilePath);
+        ArgumentNullException.ThrowIfNull(files);
+
+        lock (_gate)
+        {
+            var known = _packageContentSources.GetValueOrDefault(projectFilePath) ?? [];
+            if (known.SequenceEqual(files, StringComparer.Ordinal))
+            {
+                return;
+            }
+
+            _packageContentSources[projectFilePath] = [.. files];
+            if (!_projectIds.TryGetValue(projectFilePath, out var id) || _workspace.CurrentSolution.GetProject(id) is not { } roslyn)
+            {
+                return;
+            }
+
+            var solution = _workspace.CurrentSolution;
+            var documentPaths = known.Select(path => path.EndsWith(".pp", StringComparison.OrdinalIgnoreCase) ? path[..^3] : path).ToHashSet(StringComparer.Ordinal);
+            foreach (var document in roslyn.Documents.Where(d => d.FilePath is { } path && documentPaths.Contains(path)).ToList())
+            {
+                solution = solution.RemoveDocument(document.Id);
+            }
+
+            foreach (var document in PackageContentDocuments(id, _projects[id]))
+            {
+                solution = solution.AddDocument(document);
+            }
+
+            _workspace.TryApplyChanges(solution);
+        }
+    }
+
+    /// <summary>
+    /// The documents of a project's package content sources that exist. A <c>.cs.pp</c> source is preprocessed as NuGet
+    /// does: <c>$rootnamespace$</c> and the project's other properties named between dollar signs are replaced by their
+    /// values. The caller holds the gate.
+    /// </summary>
+    private IEnumerable<DocumentInfo> PackageContentDocuments(ProjectId id, TsProject project) =>
+        (_packageContentSources.GetValueOrDefault(project.FilePath) ?? [])
+            .Where(File.Exists)
+            .Select(path => path.EndsWith(".pp", StringComparison.OrdinalIgnoreCase)
+                ? CreateDocumentInfo(DocumentId.CreateNewId(id, path[..^3]), path[..^3], Preprocess(ReadFileOrEmpty(path), project), isGenerated: true)
+                : CreateDocumentInfo(DocumentId.CreateNewId(id, path), path, ReadFileOrEmpty(path), isGenerated: true));
+
+    /// <summary>NuGet's content preprocessing: each <c>$name$</c> that names one of the project's properties becomes its value.</summary>
+    private static string Preprocess(string text, TsProject project)
+    {
+        var properties = new Dictionary<string, string>(project.Properties, StringComparer.OrdinalIgnoreCase);
+        properties.TryAdd("rootnamespace", project.GetProperty("RootNamespace") ?? project.Name);
+        properties.TryAdd("assemblyname", project.GetProperty("AssemblyName") ?? project.Name);
+        return System.Text.RegularExpressions.Regex.Replace(
+            text,
+            @"\$(?<name>[A-Za-z_][A-Za-z0-9_.]*)\$",
+            match => properties.TryGetValue(match.Groups["name"].Value, out var value) ? value : match.Value,
+            System.Text.RegularExpressions.RegexOptions.CultureInvariant,
+            TimeSpan.FromSeconds(1));
     }
 
     /// <summary>The props and targets a project imports from its packages, as last set. For tests.</summary>
@@ -106,14 +177,15 @@ public sealed partial class RoslynWorkspaceHost
             solution = solution.RemoveDocument(existingUsings.Id);
         }
 
-        foreach (var path in AdditionalFilePaths(project).Where(path => !_additionalDocuments.ContainsKey(path)))
+        foreach (var path in AdditionalFilePaths(project).Where(path => !roslyn.AdditionalDocuments.Any(d => d.FilePath == path)))
         {
-            var documentId = DocumentId.CreateNewId(id, path);
-            solution = solution.AddAdditionalDocument(CreateDocumentInfo(documentId, path, ReadFileOrEmpty(path), isGenerated: false));
-            _additionalDocuments[path] = documentId;
+            solution = solution.AddAdditionalDocument(CreateDocumentInfo(AdditionalFileDocumentId(id, path), path, ReadFileOrEmpty(path), isGenerated: false));
         }
 
         solution = solution.WithProjectAnalyzerReferences(id, GetAnalyzerReferences(project));
+
+        // Assemblies the packages' targets reference by path, such as MSTest's TestFramework.Extensions.
+        solution = solution.WithProjectMetadataReferences(id, GetMetadataReferences(project));
         _workspace.TryApplyChanges(solution);
     }
 
@@ -132,37 +204,43 @@ public sealed partial class RoslynWorkspaceHost
     /// <param name="skip">Files with sections of their own, such as Razor files.</param>
     private static string AdditionalFileSections(TsProject project, IReadOnlyCollection<string> skip)
     {
+        // The metadata of AdditionalFiles items, and of the other item types a target made them from, such as
+        // ThisAssembly.Strings' ResxCode: the SDK writes each as build_metadata.{ItemType}.{MetadataName}.
         var visible = project.CompilerVisibleItemMetadata
-            .Where(m => string.Equals(m.ItemType, "AdditionalFiles", StringComparison.OrdinalIgnoreCase))
-            .Select(m => m.MetadataName)
-            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .DistinctBy(m => (m.ItemType.ToUpperInvariant(), m.MetadataName.ToUpperInvariant()))
             .ToList();
         if (visible.Count == 0)
         {
             return string.Empty;
         }
 
-        var items = new List<(string Path, IReadOnlyDictionary<string, string> Metadata)>();
+        var items = new List<(string Path, IReadOnlyDictionary<string, string> Metadata, IReadOnlyList<string> Types)>();
         foreach (var path in AdditionalFilePaths(project))
         {
             var item = project.AdditionalFiles.LastOrDefault(i => new GlobPattern(i.BaseDirectory, i.Include).IsMatch(path));
-            items.Add((path, item?.Metadata ?? new Dictionary<string, string>()));
+            items.Add((path, item?.Metadata ?? new Dictionary<string, string>(), item?.ItemTypes ?? ["AdditionalFiles"]));
         }
 
         if (UsesAvaloniaXaml(project))
         {
             var xaml = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { ["SourceItemGroup"] = "AvaloniaXaml" };
-            items.AddRange(ProjectSourceFiles.Enumerate(project, extension: ".axaml").Select(path => (path, (IReadOnlyDictionary<string, string>)xaml)));
+            items.AddRange(ProjectSourceFiles.Enumerate(project, extension: ".axaml").Select(path => (path, (IReadOnlyDictionary<string, string>)xaml, (IReadOnlyList<string>)["AdditionalFiles"])));
         }
 
         var text = new StringBuilder();
-        foreach (var (path, metadata) in items.Where(i => !skip.Contains(i.Path)).DistinctBy(i => i.Path, StringComparer.Ordinal))
+        foreach (var (path, metadata, types) in items.Where(i => !skip.Contains(i.Path)).DistinctBy(i => i.Path, StringComparer.Ordinal))
         {
-            text.Append(CultureInfo.InvariantCulture, $"\n[{path.Replace('\\', '/')}]\n");
-            foreach (var name in visible)
+            var lines = visible.Where(m => types.Contains(m.ItemType, StringComparer.OrdinalIgnoreCase)).ToList();
+            if (lines.Count == 0)
             {
-                var value = metadata.GetValueOrDefault(name) ?? string.Empty;
-                text.Append(CultureInfo.InvariantCulture, $"build_metadata.AdditionalFiles.{name} = {value.ReplaceLineEndings(" ")}\n");
+                continue;
+            }
+
+            text.Append(CultureInfo.InvariantCulture, $"\n[{path.Replace('\\', '/')}]\n");
+            foreach (var line in lines)
+            {
+                var value = metadata.GetValueOrDefault(line.MetadataName) ?? string.Empty;
+                text.Append(CultureInfo.InvariantCulture, $"build_metadata.{line.ItemType}.{line.MetadataName} = {value.ReplaceLineEndings(" ")}\n");
             }
         }
 

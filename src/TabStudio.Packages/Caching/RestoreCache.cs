@@ -22,7 +22,7 @@ namespace TabStudio.Packages.Caching;
 internal static class RestoreCache
 {
     /// <summary>The current layout of the file.</summary>
-    public const int FormatVersion = 5;
+    public const int FormatVersion = 7;
 
     /// <summary>Hashes the inputs of a restore.</summary>
     /// <param name="graph">The project's references and those of the projects it references.</param>
@@ -58,6 +58,11 @@ internal static class RestoreCache
         }
 
         Dependencies(graph.Dependencies);
+        foreach (var pin in graph.Pins ?? [])
+        {
+            Line("pin", $"{NuGetNames.Lower(pin.Id)}|{pin.Range.ToNormalizedString()}");
+        }
+
         foreach (var (name, project) in graph.Projects.OrderBy(p => p.Key, StringComparer.OrdinalIgnoreCase))
         {
             Line("referencedProject", NuGetNames.Lower(name));
@@ -97,7 +102,7 @@ internal static class RestoreCache
 
         var stillInstalled = file.Packages.All(p => File.Exists(Path.Combine(p.DirectoryPath, GlobalPackagesFolder.CompletionMarkerName))) &&
             file.CompileAssemblies.Concat(file.RuntimeAssemblies).Concat(file.NativeLibraries).Concat(file.Analyzers)
-                .Concat(file.Packages.SelectMany(p => p.BuildFiles)).All(File.Exists);
+                .Concat(file.Packages.SelectMany(p => p.BuildFiles)).Concat(file.Packages.SelectMany(p => p.ContentSources)).All(File.Exists);
         if (!stillInstalled)
         {
             return null;
@@ -107,7 +112,7 @@ internal static class RestoreCache
         {
             ProjectName = projectName,
             Packages = file.Packages
-                .Select(p => new RestoredPackage(p.Id, p.Version, p.DirectoryPath, p.IsDirect, p.CompileAssemblies, p.RuntimeAssemblies, p.ProvidedByFramework) { Analyzers = p.Analyzers, FlowsAnalyzers = p.FlowsAnalyzers, NativeLibraries = p.NativeLibraries, BuildFiles = p.BuildFiles, Depth = p.Depth })
+                .Select(p => new RestoredPackage(p.Id, p.Version, p.DirectoryPath, p.IsDirect, p.CompileAssemblies, p.RuntimeAssemblies, p.ProvidedByFramework) { Analyzers = p.Analyzers, FlowsAnalyzers = p.FlowsAnalyzers, NativeLibraries = p.NativeLibraries, BuildFiles = p.BuildFiles, ContentSources = p.ContentSources, Depth = p.Depth })
                 .ToList(),
             CompileAssemblies = file.CompileAssemblies,
             RuntimeAssemblies = file.RuntimeAssemblies,
@@ -148,6 +153,7 @@ internal static class RestoreCache
                 FlowsAnalyzers = p.FlowsAnalyzers,
                 ProvidedByFramework = p.ProvidedByFramework,
                 BuildFiles = [.. p.BuildFiles],
+                ContentSources = [.. p.ContentSources],
                 Depth = p.Depth,
             }).ToList(),
             CompileAssemblies = [.. result.CompileAssemblies],

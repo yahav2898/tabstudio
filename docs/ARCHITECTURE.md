@@ -73,10 +73,17 @@ Avalonia's headless platform, including screenshots of the real views.
 
 1. **Loading.** `WorkspaceLoader` takes a solution file, a project file or a folder. A folder opens its
    top-level solution if it has one, otherwise every project under it, otherwise it opens as a plain folder.
-   `ProjectParser` evaluates the parts of MSBuild that matter for editing and building: properties (including
-   conditions and `$(Property)` expansion), `Directory.Build.props`, SDKs, target frameworks, package and
-   project references, and `Compile` items with globs. The result is an immutable `Workspace` with a tree for
-   the Solution Explorer.
+   `ProjectParser` evaluates a project in MSBuild's order: `Directory.Build.props`, the packages' props,
+   `Directory.Packages.props`, the project, the SDK's targets, the packages' targets and
+   `Directory.Build.targets`, with the global properties Visual Studio uses (`Debug`, `AnyCPU`) and, for a
+   multi-targeted project, the inner build of its first framework. `MsBuildExpressions` evaluates conditions
+   and property functions as MSBuild does (`$([MSBuild]::...)`, `System.IO.Path`, string and version members),
+   so every property gets the value the SDK gives it. Items come from every imported file, and
+   `TargetItems` runs the item groups of targets that run before the compiler (a package that turns `.resx`
+   files into `AdditionalFiles`, for example), so generators see what they see in a real build. The result is
+   an immutable `Workspace` with a tree for the Solution Explorer; the startup project is the one Visual
+   Studio users pick (a desktop head before a browser head, the server rather than its hosted Blazor
+   WebAssembly client).
 2. **Detection.** `StackDetector` reads marker files (`global.json`, `package.json`, `Cargo.toml`, `go.mod`,
    `CMakeLists.txt`, `foundry.toml`, `Move.toml` and more) to list every technology in the repository.
    `CompatibilityDoctor` turns each project's kind into a run host and an explanation.
