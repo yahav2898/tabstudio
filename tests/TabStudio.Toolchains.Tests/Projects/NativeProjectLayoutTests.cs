@@ -44,7 +44,7 @@ public sealed class NativeProjectLayoutTests : IDisposable
     {
         _folder.Write("CMakeLists.txt");
         _folder.Write("setup_docs.py");
-        _folder.Write("scripts/release.py");
+        _folder.Write("scripts/pyproject.toml", "[project]\nname = \"release-tools\"\n");
         _folder.Write("app/main.go");
         _folder.Write("app/go.mod", "module example.com/app\n");
 
