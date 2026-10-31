@@ -2,8 +2,8 @@ cobra at adbc8813901bba65827259daa8e22ff94ec1f30e
 Toolchain projects:
   go: /home/runner/work/_temp/real-repos/cobra/go.mod
 Startup project: go /home/runner/work/_temp/real-repos/cobra/go.mod
-Set up in 3.5 s
-Tests: 279 passed, 0 failed, 0 skipped of 279: 279 tests run in 13.4 sec: 279 passed, 0 failed, 0 skipped.
+Set up in 4.8 s
+Tests: 279 passed, 0 failed, 0 skipped of 279: 279 tests run in 18.2 sec: 279 passed, 0 failed, 0 skipped.
 Project setup:
 
 Output:
@@ -54,18 +54,15 @@ mand
 === RUN   TestUpdateName
 --- PASS: TestUpdateName (0.00s)
 === RUN   TestCalledAs
-=== RUN   TestCalledAs/find/part-alias
+=== RUN   TestCalledAs/find/no-args
+    command_test.go:2447: called: "parent"
+=== RUN   TestCalledAs/find/part-no-prefix
+=== RUN   TestCalledAs/traverse/real-name
     command_test.go:2447: called: "child1"
-=== RUN   TestCalledAs/find/conflict
 === RUN   TestCalledAs/traverse/full-alias
     command_test.go:2447: called: "child2"
 === RUN   TestCalledAs/traverse/part-alias
     command_test.go:2447: called: "child1"
-=== RUN   TestCalledAs/find/no-args
-    command_test.go:2447: called: "parent"
-=== RUN   TestCalledAs/traverse/real-name
-    command_test.go:2447: called: "child1"
-=== RUN   TestCalledAs/traverse/part-no-prefix
 === RUN   TestCalledAs/traverse/conflict
 === RUN   TestCalledAs/traverse/no-args
     command_test.go:2447: called: "parent"
@@ -73,20 +70,23 @@ mand
     command_test.go:2447: called: "child1"
 === RUN   TestCalledAs/find/full-alias
     command_test.go:2447: called: "child2"
-=== RUN   TestCalledAs/find/part-no-prefix
+=== RUN   TestCalledAs/find/part-alias
+    command_test.go:2447: called: "child1"
+=== RUN   TestCalledAs/find/conflict
+=== RUN   TestCalledAs/traverse/part-no-prefix
 --- PASS: TestCalledAs (0.00s)
-    --- PASS: TestCalledAs/find/part-alias (0.00s)
-    --- PASS: TestCalledAs/find/conflict (0.00s)
+    --- PASS: TestCalledAs/find/no-args (0.00s)
+    --- PASS: TestCalledAs/find/part-no-prefix (0.00s)
+    --- PASS: TestCalledAs/traverse/real-name (0.00s)
     --- PASS: TestCalledAs/traverse/full-alias (0.00s)
     --- PASS: TestCalledAs/traverse/part-alias (0.00s)
-    --- PASS: TestCalledAs/find/no-args (0.00s)
-    --- PASS: TestCalledAs/traverse/real-name (0.00s)
-    --- PASS: TestCalledAs/traverse/part-no-prefix (0.00s)
     --- PASS: TestCalledAs/traverse/conflict (0.00s)
     --- PASS: TestCalledAs/traverse/no-args (0.00s)
     --- PASS: TestCalledAs/find/real-name (0.00s)
     --- PASS: TestCalledAs/find/full-alias (0.00s)
-    --- PASS: TestCalledAs/find/part-no-prefix (0.00s)
+    --- PASS: TestCalledAs/find/part-alias (0.00s)
+    --- PASS: TestCalledAs/find/conflict (0.00s)
+    --- PASS: TestCalledAs/traverse/part-no-prefix (0.00s)
 === RUN   TestFParseErrWhitelistBackwardCompatibility
 --- PASS: TestFParseErrWhitelistBackwardCompatibility (0.00s)
 === RUN   TestFParseErrWhitelistSameCommand
@@ -769,7 +769,7 @@ Global Flags:
 === RUN   TestZshCompletionWithActiveHelp
 --- PASS: TestZshCompletionWithActiveHelp (0.00s)
 PASS
-ok  	github.com/spf13/cobra	1.439s
+ok  	github.com/spf13/cobra	1.849s
 === RUN   TestGenManDoc
 --- PASS: TestGenManDoc (0.00s)
 === RUN   TestGenManNoHiddenParents
@@ -809,5 +809,5 @@ ok  	github.com/spf13/cobra	1.439s
 === RUN   TestGenYamlDocRunnable
 --- PASS: TestGenYamlDocRunnable (0.00s)
 PASS
-ok  	github.com/spf13/cobra/doc	0.005s
+ok  	github.com/spf13/cobra/doc	0.008s
 
