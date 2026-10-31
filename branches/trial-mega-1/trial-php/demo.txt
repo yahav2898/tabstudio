@@ -1,0 +1,53 @@
+demo at 8d2e2ef75c3e18df173d8bf2379a14abb58c4c31, opening /home/runner/work/_temp/repos/demo
+Opened in 3.0 s: demo, solution (none)
+  toolchain project php: /home/runner/work/_temp/repos/demo/composer.json
+Compatibility Doctor:
+  demo: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+F5 startup project: demo (php) /home/runner/work/_temp/repos/demo/composer.json
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+GET http://127.0.0.1:46595/en/blog/: 200, 109609 characters
+Run: GET /en/blog/ 200 (1 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/demo/public/index.php:7
+Debug: ended without stopping at index.php:7 (0 s)
+Tests: 41 found; 53 passed, 0 failed, 0 skipped, 7 not run - 53 tests run in 2.8 sec: 53 passed, 0 failed, 0 skipped. (3 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 1.1 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up demo: composer install
+  Installing demo's packages: Installing packages: composer install
+  Installing demo's packages: Succeeded after 10.9 s
+  Setting up projects: Succeeded after 24.8 s
+  Building demo: Running sh
+  Building demo: Succeeded after 0.8 s
+  Testing demo: Running demo's tests
+  Testing demo: Succeeded after 2.8 s
+Project setup:
+
+Output:
+Running php -S with PHP 8.5.12
+[Sat Oct 31 00:45:50 2026] PHP 8.5.12 Development Server (http://127.0.0.1:46595) started
+[Sat Oct 31 00:45:50 2026] 127.0.0.1:55826 Accepted
+[Sat Oct 31 00:45:50 2026] 127.0.0.1:55826 Closed without sending a request; it was probably just an unused speculative preconnection
+[Sat Oct 31 00:45:50 2026] 127.0.0.1:55826 Closing
+[Sat Oct 31 00:45:50 2026] 127.0.0.1:55834 Accepted
+[Sat Oct 31 00:45:51 2026] 127.0.0.1:55834 [200]: GET /en/blog/
+[Sat Oct 31 00:45:51 2026] 127.0.0.1:55834 Closing
+
+The program 'php -S' was stopped.
+========== Running demo's tests with PhpUnit ==========
+> php vendor/bin/phpunit --colors=never --log-junit /home/runner/work/_temp/repos/demo/.tabstudio/test-results/442d082fe00b4dc48c788b927cf44e1c/phpunit.xml
+PHPUnit 11.5.55 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.12
+Configuration: /home/runner/work/_temp/repos/demo/phpunit.dist.xml
+
+.....................................................             53 / 53 (100%)
+
+Time: 00:02.652, Memory: 93.00 MB
+
+OK (53 tests, 120 assertions)
+

@@ -1,0 +1,53 @@
+Slim-Skeleton at 0ef01549870b3234a3a9f602904a39c3ed73f44c, opening /home/runner/work/_temp/repos/Slim-Skeleton
+Opened in 0.4 s: Slim-Skeleton, solution (none)
+  toolchain project php: /home/runner/work/_temp/repos/Slim-Skeleton/composer.json
+Compatibility Doctor:
+  Slim-Skeleton: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+F5 startup project: Slim-Skeleton (php) /home/runner/work/_temp/repos/Slim-Skeleton/composer.json
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+GET http://127.0.0.1:35761/: 500, 440 characters
+Run: GET / 500 (0 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/Slim-Skeleton/public/index.php:16
+Debug: ended without stopping at index.php:16 (0 s)
+Tests: 11 found; 19 passed, 0 failed, 0 skipped, 2 not run - 19 tests run in 130 ms: 19 passed, 0 failed, 0 skipped. (0 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up Slim-Skeleton: composer install
+  Installing Slim-Skeleton's packages: Installing packages: composer install
+  Installing Slim-Skeleton's packages: Succeeded after 3.8 s
+  Setting up projects: Succeeded after 7.0 s
+  Building Slim-Skeleton: Running sh
+  Building Slim-Skeleton: Succeeded after 0.1 s
+  Testing Slim-Skeleton: Running Slim-Skeleton's tests
+  Testing Slim-Skeleton: Succeeded after 0.1 s
+Project setup:
+
+Output:
+Running php -S with PHP 8.5.12
+[Sat Oct 31 00:46:07 2026] PHP 8.5.12 Development Server (http://127.0.0.1:35761) started
+[Sat Oct 31 00:46:07 2026] 127.0.0.1:33102 Accepted
+[Sat Oct 31 00:46:07 2026] 127.0.0.1:33102 Closed without sending a request; it was probably just an unused speculative preconnection
+[Sat Oct 31 00:46:07 2026] 127.0.0.1:33102 Closing
+[Sat Oct 31 00:46:07 2026] 127.0.0.1:33110 Accepted
+[Sat Oct 31 00:46:07 2026] 127.0.0.1:33110 [200]: GET /
+[Sat Oct 31 00:46:07 2026] 127.0.0.1:33110 Closing
+
+The program 'php -S' was stopped.
+========== Running Slim-Skeleton's tests with PhpUnit ==========
+> php vendor/bin/phpunit --colors=never --log-junit /home/runner/work/_temp/repos/Slim-Skeleton/.tabstudio/test-results/c967a0b5be3c4ab994898e113cab254e/phpunit.xml
+PHPUnit 9.6.38 by Sebastian Bergmann and contributors.
+
+Warning:       Your XML configuration validates against a deprecated schema.
+Suggestion:    Migrate your XML configuration using "--migrate-configuration"!
+
+...................                                               19 / 19 (100%)
+
+Time: 00:00.040, Memory: 10.00 MB
+
+OK (19 tests, 37 assertions)
+
