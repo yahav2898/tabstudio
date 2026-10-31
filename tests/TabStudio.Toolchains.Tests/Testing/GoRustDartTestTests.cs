@@ -233,8 +233,7 @@ public sealed class GoRustDartTestTests : IDisposable
             ]
             cov = ["coverage"]
             """);
-        _folder.Write("requirements-dev.txt", "pytest-httpbin
-");
+        _folder.Write("requirements-dev.txt", "pytest-httpbin\n");
 
         var requirements = ToolchainTestPlanner.PythonTestRequirements(_folder.Path);
 
