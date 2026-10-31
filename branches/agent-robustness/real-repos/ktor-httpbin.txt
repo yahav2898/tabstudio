@@ -1,0 +1,40 @@
+ktor-httpbin at 1c9df7cf102d638eadaf545fcce4c0ec5ccad334
+Toolchain projects:
+  kotlin: /home/runner/work/_temp/real-repos/ktor-httpbin/httpbin/build.gradle.kts
+Startup project: kotlin /home/runner/work/_temp/real-repos/ktor-httpbin/httpbin/build.gradle.kts
+Set up in 2.2 s
+Web preview: http://127.0.0.1:8080/
+GET http://127.0.0.1:8080/get: 200 OK, 128 characters
+Ran in 27.8 s
+Project setup:
+
+Output:
+Running ServerKt with Kotlin 2.4.21
+> gradle --no-daemon --console=plain --init-script /home/runner/work/_temp/real-repos/ktor-httpbin/httpbin/.tabstudio/java-runtime.init.gradle tabstudioResolveRuntime
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.4/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :processResources
+
+> Task :compileKotlin
+w: file:///home/runner/work/_temp/real-repos/ktor-httpbin/httpbin/src/main/kotlin/io/ktor/samples/httpbin/BasicAuth.kt:144:45 'fun String.decodeBase64Bytes(): ByteArray' is deprecated. Ambiguous and lenient. Use `Base64.Default.decode()` from the Kotlin standard library.
+w: file:///home/runner/work/_temp/real-repos/ktor-httpbin/httpbin/src/main/kotlin/io/ktor/samples/httpbin/DigestAuth.kt:88:44 'fun digestAuthChallenge(realm: String, nonce: String = ..., domain: List<String> = ..., opaque: String? = ..., stale: Boolean? = ..., algorithm: String = ...): HttpAuthHeader.Parameterized' is deprecated. Maintained for binary compatibility.
+w: file:///home/runner/work/_temp/real-repos/ktor-httpbin/httpbin/src/main/kotlin/io/ktor/samples/httpbin/DigestAuth.kt:265:9 'fun hex(s: String): ByteArray' is deprecated. prefer kotlin.text.hexToByteArray.
+w: file:///home/runner/work/_temp/real-repos/ktor-httpbin/httpbin/src/main/kotlin/io/ktor/samples/httpbin/DigestAuth.kt:291:17 'fun hex(bytes: ByteArray): String' is deprecated. prefer kotlin.text.toHexString.
+w: file:///home/runner/work/_temp/real-repos/ktor-httpbin/httpbin/src/main/kotlin/io/ktor/samples/httpbin/DigestAuth.kt:294:15 'fun hex(bytes: ByteArray): String' is deprecated. prefer kotlin.text.toHexString.
+w: file:///home/runner/work/_temp/real-repos/ktor-httpbin/httpbin/src/main/kotlin/io/ktor/samples/httpbin/Responses.kt:199:42 'val dispose: () -> Unit' is deprecated. Use release instead.
+
+> Task :compileJava NO-SOURCE
+> Task :classes
+> Task :tabstudioResolveRuntime
+
+[Incubating] Problems report is available at: file:///home/runner/work/_temp/real-repos/ktor-httpbin/httpbin/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 26s
+3 actionable tasks: 3 executed
+2026-10-31 02:45:49.926 [main] INFO  io.ktor.server.Application - Autoreload is disabled because the development mode is off.
+2026-10-31 02:45:50.118 [main] INFO  io.ktor.server.Application - Application started in 0.355 seconds.
+2026-10-31 02:45:50.239 [DefaultDispatcher-worker-1] INFO  io.ktor.server.Application - Responding at http://0.0.0.0:8080
+
+The program 'ServerKt' was stopped.
+
