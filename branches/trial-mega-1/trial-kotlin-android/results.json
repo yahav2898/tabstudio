@@ -1,0 +1,264 @@
+[
+  {
+    "name": "sunflower",
+    "area": "kotlin-android",
+    "sha": "2a357a31551bb53f3fe80382a9ce6d30bcc8b960",
+    "expect": "build",
+    "opened": "1.5 s",
+    "loadErrors": [],
+    "doctor": [
+      "sunflower: Needs a toolchain via Android SDK toolchain - Builds with Gradle and the Android SDK on this tablet, installs with Android\u0027s confirmation, and streams its debug logcat."
+    ],
+    "doctorSummary": "1 Needs a toolchain",
+    "startup": "sunflower (android)",
+    "setup": "ok in 12 s",
+    "analysis": "16.7 s",
+    "errors": "0 errors, 0 warnings",
+    "errorCodes": [],
+    "build": "3 errors in 131 s",
+    "buildErrorCodes": [
+      "3 x Gradle: build.gradle.kts(78,3): error Gradle: \u0027packagingOptions(Packaging.() -\u003E Unit): Unit\u0027 is deprecated. Renamed to packaging"
+    ],
+    "run": "not run: build only",
+    "testsFound": "no test projects",
+    "stages": [
+      "Setting up projects: Checking project setup",
+      "Loading C#: Loading C#",
+      "Loading C#: Succeeded after 0.8 s",
+      "Analyzing: Analyzing",
+      "Analyzing: Succeeded after 0.0 s",
+      "Setting up projects: Succeeded after 13.0 s"
+    ]
+  },
+  {
+    "name": "architecture-samples",
+    "area": "kotlin-android",
+    "sha": "ee66e1526b84c026615df032c705842b7d2a521f",
+    "expect": "build",
+    "opened": "0.3 s",
+    "loadErrors": [],
+    "doctor": [
+      "architecture-samples: Needs a toolchain via Android SDK toolchain - Builds with Gradle and the Android SDK on this tablet, installs with Android\u0027s confirmation, and streams its debug logcat."
+    ],
+    "doctorSummary": "1 Needs a toolchain",
+    "startup": "architecture-samples (android)",
+    "setup": "ok in 2 s",
+    "analysis": "6.8 s",
+    "errors": "0 errors, 0 warnings",
+    "errorCodes": [],
+    "build": "7 errors in 171 s",
+    "buildErrorCodes": [
+      "7 x Gradle: build.gradle.kts(48,13): error Gradle: \u0027isTestCoverageEnabled: Boolean\u0027 is deprecated. Replaced with: enableUnitTestCoverage and or enableAndroidTestCoverage."
+    ],
+    "run": "not run: build only",
+    "testsFound": "no test projects",
+    "tests": "Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here.",
+    "stages": [
+      "Setting up projects: Checking project setup",
+      "Loading C#: Loading C#",
+      "Loading C#: Succeeded after 0.1 s",
+      "Analyzing: Analyzing",
+      "Analyzing: Succeeded after 0.0 s",
+      "Setting up projects: Succeeded after 2.1 s"
+    ]
+  },
+  {
+    "name": "compose-samples-JetNews",
+    "area": "kotlin-android",
+    "sha": "25631e8f544a9a1e3f01e296eaf1b4c28428196c",
+    "expect": "build",
+    "opened": "0.2 s",
+    "loadErrors": [],
+    "doctor": [
+      "JetNews: Needs a toolchain via Android SDK toolchain - Builds with Gradle and the Android SDK on this tablet, installs with Android\u0027s confirmation, and streams its debug logcat."
+    ],
+    "doctorSummary": "1 Needs a toolchain",
+    "startup": "JetNews (android)",
+    "setup": "ok in 2 s",
+    "analysis": "7.0 s",
+    "errors": "0 errors, 0 warnings",
+    "errorCodes": [],
+    "build": "1 errors in 111 s",
+    "buildErrorCodes": [
+      "1 x Gradle: JetnewsApp.kt(54,27): error Gradle: \u0027fun currentWindowAdaptiveInfo(supportLargeAndXLargeWidth: Boolean = ...): WindowAdaptiveInfo\u0027 is deprecated. Please use V2 version of this function to support L and XL width size classes."
+    ],
+    "run": "not run: build only",
+    "testsFound": "no test projects",
+    "stages": [
+      "Setting up projects: Checking project setup",
+      "Loading C#: Loading C#",
+      "Loading C#: Succeeded after 0.0 s",
+      "Analyzing: Analyzing",
+      "Analyzing: Succeeded after 0.0 s",
+      "Setting up projects: Succeeded after 2.3 s"
+    ]
+  },
+  {
+    "name": "clikt",
+    "area": "kotlin-android",
+    "sha": "fa2e48c54995a88d492f05568a64889d99994877",
+    "expect": "build",
+    "opened": "0.4 s",
+    "loadErrors": [],
+    "doctor": [
+      "clikt: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "clikt: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "clikt-mordant: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "clikt-mordant-markdown: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "samples: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "test: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "aliases: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "copy: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "helpformat: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "json: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "plugins: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "repo: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "validation: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it."
+    ],
+    "doctorSummary": "13 Needs a toolchain",
+    "startup": "clikt (kotlin)",
+    "setup": "ok in 2 s",
+    "analysis": "6.5 s",
+    "errors": "0 errors, 0 warnings",
+    "errorCodes": [],
+    "build": "0 errors in 135 s",
+    "buildErrorCodes": [],
+    "run": "not run: build only",
+    "testsFound": "no test projects",
+    "tests": "Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here.",
+    "stages": [
+      "Setting up projects: Checking project setup",
+      "Loading C#: Loading C#",
+      "Loading C#: Succeeded after 0.1 s",
+      "Analyzing: Analyzing",
+      "Analyzing: Succeeded after 0.0 s",
+      "Setting up projects: Succeeded after 1.9 s",
+      "Building aliases: Building aliases",
+      "Building aliases: Succeeded after 60.7 s",
+      "Building copy: Building copy",
+      "Building copy: Succeeded after 11.7 s",
+      "Building helpformat: Building helpformat",
+      "Building helpformat: Succeeded after 11.8 s",
+      "Building json: Building json",
+      "Building json: Succeeded after 13.1 s",
+      "Building plugins: Building plugins",
+      "Building plugins: Succeeded after 13.5 s",
+      "Building repo: Building repo",
+      "Building repo: Succeeded after 12.3 s",
+      "Building validation: Building validation",
+      "Building validation: Succeeded after 12.0 s"
+    ]
+  },
+  {
+    "name": "kotlinx-datetime",
+    "area": "kotlin-android",
+    "sha": "00831dc5ab0aa9df7f383e9f92591339d9e55c28",
+    "expect": "build",
+    "opened": "0.3 s",
+    "loadErrors": [],
+    "doctor": [
+      "kotlinx-datetime: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "benchmarks: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "buildSrc: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "core: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "test-utils: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "jpms-test: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "jpms-zoneinfo-test: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "js-with-timezones: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "js-without-timezones: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "serialization: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "full: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.",
+      "java9: Needs a toolchain via Java toolchain - Runs with Java from the Toolchain Store, with console input and output in the Output panel. Install Java to run it."
+    ],
+    "doctorSummary": "12 Needs a toolchain",
+    "startup": "kotlinx-datetime (kotlin)",
+    "setup": "ok in 2 s",
+    "analysis": "6.7 s",
+    "errors": "0 errors, 0 warnings",
+    "errorCodes": [],
+    "build": "0 errors in 92 s",
+    "buildErrorCodes": [],
+    "run": "not run: build only",
+    "testsFound": "no test projects",
+    "tests": "Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here.",
+    "stages": [
+      "Setting up projects: Checking project setup",
+      "Loading C#: Loading C#",
+      "Loading C#: Succeeded after 0.1 s",
+      "Analyzing: Analyzing",
+      "Analyzing: Succeeded after 0.0 s",
+      "Setting up projects: Succeeded after 1.9 s",
+      "Building jpms-zoneinfo-test: Building jpms-zoneinfo-test",
+      "Building jpms-zoneinfo-test: Succeeded after 92.1 s"
+    ]
+  },
+  {
+    "name": "compose-multiplatform-template",
+    "area": "kotlin-android",
+    "sha": "7acca3fe58ae19c8f61d4b315f2998cb69be0dce",
+    "expect": "gui-window",
+    "opened": "0.2 s",
+    "loadErrors": [],
+    "doctor": [
+      "compose-multiplatform-template: Needs a toolchain via Android SDK toolchain - Builds with Gradle and the Android SDK on this tablet, installs with Android\u0027s confirmation, and streams its debug logcat.",
+      "iosApp: Needs a toolchain via Swift toolchain (experimental) - Builds with SwiftPM from the official Swift toolchain in the Toolchain Store, which runs in TabStudio\u0027s Ubuntu environment, and runs with console input and output in the Output panel; Vapor servers open in the web preview. Swift on a tablet is experimental. Install Swift to run it."
+    ],
+    "doctorSummary": "2 Needs a toolchain",
+    "startup": "compose-multiplatform-template (android)",
+    "setup": "ok in 2 s",
+    "analysis": "6.7 s",
+    "errors": "0 errors, 0 warnings",
+    "errorCodes": [],
+    "build": "5 errors in 106 s",
+    "buildErrorCodes": [
+      "5 x Gradle: build.gradle.kts(10,13): error Gradle: Variable \u0027androidMain\u0027 is never used"
+    ],
+    "run": "no window",
+    "debug": "ended without stopping at main.kt:5",
+    "testsFound": "no test projects",
+    "stages": [
+      "Setting up projects: Checking project setup",
+      "Loading C#: Loading C#",
+      "Loading C#: Succeeded after 0.1 s",
+      "Analyzing: Analyzing",
+      "Analyzing: Succeeded after 0.0 s",
+      "Setting up projects: Succeeded after 1.9 s"
+    ]
+  },
+  {
+    "name": "gs-securing-web-kotlin",
+    "area": "kotlin-android",
+    "sha": "38b43f1d209b880e234b1082f49973a9e97639b4",
+    "expect": "web-first-route",
+    "opened": "0.1 s",
+    "loadErrors": [],
+    "doctor": [
+      "complete-kotlin: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it."
+    ],
+    "doctorSummary": "1 Needs a toolchain",
+    "startup": "complete-kotlin (kotlin)",
+    "setup": "ok in 2 s",
+    "analysis": "6.8 s",
+    "errors": "0 errors, 0 warnings",
+    "errorCodes": [],
+    "build": "0 errors in 40 s",
+    "buildErrorCodes": [],
+    "run": "GET / 200",
+    "debug": "no entry point found for a breakpoint",
+    "testsFound": "5 tests",
+    "stages": [
+      "Setting up projects: Checking project setup",
+      "Loading C#: Loading C#",
+      "Loading C#: Succeeded after 0.1 s",
+      "Analyzing: Analyzing",
+      "Analyzing: Succeeded after 0.0 s",
+      "Setting up projects: Succeeded after 2.0 s",
+      "Building complete-kotlin: Building complete-kotlin",
+      "Building complete-kotlin: Succeeded after 33.3 s",
+      "Building SecuringWebApplicationKt: Building SecuringWebApplicationKt",
+      "Building SecuringWebApplicationKt: Succeeded after 6.4 s",
+      "Building SecuringWebApplicationKt: Building SecuringWebApplicationKt",
+      "Building SecuringWebApplicationKt: Succeeded after 6.2 s"
+    ]
+  }
+]

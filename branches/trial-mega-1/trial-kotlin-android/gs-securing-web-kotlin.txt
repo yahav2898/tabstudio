@@ -1,0 +1,65 @@
+gs-securing-web-kotlin at 38b43f1d209b880e234b1082f49973a9e97639b4, opening /home/runner/work/_temp/repos/gs-securing-web-kotlin/complete-kotlin
+Opened in 0.1 s: complete-kotlin, solution (none)
+  toolchain project kotlin: /home/runner/work/_temp/repos/gs-securing-web-kotlin/complete-kotlin/build.gradle.kts
+Compatibility Doctor:
+  complete-kotlin: Needs a toolchain via Kotlin toolchain - Builds with Gradle, Maven or the Kotlin compiler from the Toolchain Store and runs on the JVM with console input and output in the Output panel; servers such as Ktor and Spring Boot open in the web preview. Install Kotlin to run it.
+F5 startup project: complete-kotlin (kotlin) /home/runner/work/_temp/repos/gs-securing-web-kotlin/complete-kotlin/build.gradle.kts
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+GET http://127.0.0.1:8080/: 200, 261 characters
+Run: GET / 200 (9 s after F5)
+Debug: no entry point found for a breakpoint (0 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 2.0 s
+  Building complete-kotlin: Building complete-kotlin
+  Building complete-kotlin: Succeeded after 33.3 s
+  Building SecuringWebApplicationKt: Building SecuringWebApplicationKt
+  Building SecuringWebApplicationKt: Succeeded after 6.4 s
+  Building SecuringWebApplicationKt: Building SecuringWebApplicationKt
+  Building SecuringWebApplicationKt: Succeeded after 6.2 s
+Project setup:
+
+Output:
+Running SecuringWebApplicationKt with Kotlin 2.4.21
+> gradle --no-daemon --console=plain --init-script /home/runner/work/_temp/repos/gs-securing-web-kotlin/complete-kotlin/.tabstudio/java-runtime.init.gradle tabstudioResolveRuntime
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.4/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :compileKotlin UP-TO-DATE
+> Task :compileJava NO-SOURCE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :tabstudioResolveRuntime
+
+BUILD SUCCESSFUL in 5s
+3 actionable tasks: 1 executed, 2 up-to-date
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.0)
+
+2026-10-31T01:02:55.138Z  INFO 21267 --- [           main] c.e.s.SecuringWebApplicationKt           : Starting SecuringWebApplicationKt using Java 21.0.13 with PID 21267 (/home/runner/work/_temp/repos/gs-securing-web-kotlin/complete-kotlin/build/classes/kotlin/main started by runner in /home/runner/work/_temp/repos/gs-securing-web-kotlin/complete-kotlin)
+2026-10-31T01:02:55.144Z  INFO 21267 --- [           main] c.e.s.SecuringWebApplicationKt           : No active profile set, falling back to 1 default profile: "default"
+2026-10-31T01:02:55.993Z  INFO 21267 --- [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-10-31T01:02:56.001Z  INFO 21267 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-31T01:02:56.002Z  INFO 21267 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.14]
+2026-10-31T01:02:56.026Z  INFO 21267 --- [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 830 ms
+2026-10-31T01:02:56.205Z  INFO 21267 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsService
+2026-10-31T01:02:56.522Z  INFO 21267 --- [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-10-31T01:02:56.527Z  INFO 21267 --- [           main] c.e.s.SecuringWebApplicationKt           : Started SecuringWebApplicationKt in 1.654 seconds (process running for 1.873)
+2026-10-31T01:02:57.007Z  INFO 21267 --- [nio-8080-exec-3] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-31T01:02:57.008Z  INFO 21267 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-31T01:02:57.009Z  INFO 21267 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+
+The program 'SecuringWebApplicationKt' was stopped.
+
