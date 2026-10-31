@@ -1,0 +1,292 @@
+jq at ac35c7dcbb991fa0f3c3196dd00ca479211e9847, opening /home/runner/work/_temp/repos/jq
+Opened in 0.2 s: jq, solution (none)
+  toolchain project cpp: /home/runner/work/_temp/repos/jq/configure.ac
+  toolchain project python: /home/runner/work/_temp/repos/jq/scripts
+Compatibility Doctor:
+  jq: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+  scripts: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+F5 startup project: jq (cpp) /home/runner/work/_temp/repos/jq/configure.ac
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 3.1 s
+  Building jq: Running sh
+  Building jq: Succeeded after 33.7 s
+Project setup:
+
+Output:
+Building jq with C and C++ 13.3.0
+> sh -c 'if [ ! -x ./configure ]; then echo '\''Running autoreconf -fi'\''; autoreconf -fi || exit 1; fi; if [ ! -f Makefile ]; then echo '\''Running ./configure'\''; ./configure || exit 1; fi; exec make'
+Running autoreconf -fi
+libtoolize: putting auxiliary files in AC_CONFIG_AUX_DIR, 'config'.
+libtoolize: copying file 'config/ltmain.sh'
+libtoolize: putting macros in AC_CONFIG_MACRO_DIRS, 'config/m4'.
+libtoolize: copying file 'config/m4/libtool.m4'
+libtoolize: copying file 'config/m4/ltoptions.m4'
+libtoolize: copying file 'config/m4/ltsugar.m4'
+libtoolize: copying file 'config/m4/ltversion.m4'
+libtoolize: copying file 'config/m4/lt~obsolete.m4'
+configure.ac:17: installing 'config/ar-lib'
+configure.ac:8: installing 'config/compile'
+configure.ac:25: installing 'config/config.guess'
+configure.ac:25: installing 'config/config.sub'
+configure.ac:15: installing 'config/install-sh'
+configure.ac:15: installing 'config/missing'
+Makefile.am:45: warning: <D: non-POSIX variable name
+Makefile.am:46: warning: <D: non-POSIX variable name
+Makefile.am:46: warning: *F: non-POSIX variable name
+Makefile.am:50: warning: <D: non-POSIX variable name
+Makefile.am:51: warning: <D: non-POSIX variable name
+Makefile.am:51: warning: *F: non-POSIX variable name
+Makefile.am: installing 'config/depcomp'
+configure.ac: installing 'config/ylwrap'
+parallel-tests: installing 'config/test-driver'
+Running ./configure
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether the compiler supports GNU C... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to enable C11 features... none needed
+checking whether gcc understands -c and -o together... yes
+checking for stdio.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for strings.h... yes
+checking for sys/stat.h... yes
+checking for sys/types.h... yes
+checking for unistd.h... yes
+checking for wchar.h... yes
+checking for minix/config.h... no
+checking whether it is safe to define __EXTENSIONS__... yes
+checking whether _XOPEN_SOURCE should be defined... no
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a race-free mkdir -p... /usr/bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports the include directive... yes (GNU style)
+checking whether make supports nested variables... yes
+checking dependency style of gcc... gcc3
+checking whether make supports nested variables... (cached) yes
+checking for ar... ar
+checking the archiver (ar) interface... ar
+checking whether to enable maintainer-specific portions of Makefiles... no
+checking for gcc... (cached) gcc
+checking whether the compiler supports GNU C... (cached) yes
+checking whether gcc accepts -g... (cached) yes
+checking for gcc option to enable C11 features... (cached) none needed
+checking whether gcc understands -c and -o together... (cached) yes
+checking how to run the C preprocessor... gcc -E
+checking for bison... bison -y
+checking build system type... x86_64-pc-linux-gnu
+checking host system type... x86_64-pc-linux-gnu
+checking how to print strings... printf
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for fgrep... /usr/bin/grep -F
+checking for ld used by gcc... /usr/bin/ld
+checking if the linker (/usr/bin/ld) is GNU ld... yes
+checking for BSD- or MS-compatible name lister (nm)... /usr/bin/nm -B
+checking the name lister (/usr/bin/nm -B) interface... BSD nm
+checking whether ln -s works... yes
+checking the maximum length of command line arguments... 3145728
+checking how to convert x86_64-pc-linux-gnu file names to x86_64-pc-linux-gnu format... func_convert_file_noop
+checking how to convert x86_64-pc-linux-gnu file names to toolchain format... func_convert_file_noop
+checking for /usr/bin/ld option to reload object files... -r
+checking for file... file
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for dlltool... no
+checking how to associate runtime and link libraries... printf %s\n
+checking for archiver @FILE support... @
+checking for strip... strip
+checking for ranlib... ranlib
+checking command to parse /usr/bin/nm -B output from gcc object... ok
+checking for sysroot... no
+checking for a working dd... /usr/bin/dd
+checking how to truncate binary pipes... /usr/bin/dd bs=4096 count=1
+checking for mt... mt
+checking if mt is a manifest tool... no
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if gcc supports -fno-rtti -fno-exceptions... no
+checking for gcc option to produce PIC... -fPIC -DPIC
+checking if gcc PIC flag -fPIC -DPIC works... yes
+checking if gcc static flag -static works... yes
+checking if gcc supports -c -o file.o... yes
+checking if gcc supports -c -o file.o... (cached) yes
+checking whether the gcc linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking whether -lc should be explicitly linked in... no
+checking dynamic linker characteristics... GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... yes
+checking whether to build static libraries... yes
+checking for special C compiler options needed for large files... no
+checking for _FILE_OFFSET_BITS value needed for large files... no
+checking for memmem... yes
+checking for sys/cygwin.h... no
+checking for shlwapi.h... no
+checking for pipenv... configure: WARNING: Error checking python dependencies: 
+*****************************************************************
+*  Python dependencies for building jq documentation not found. *
+*  You can still build, install and hack on jq, but the manpage *
+*  will not be rebuilt and new manpage tests will not be run.   *
+*  See docs/README.md for how to install the docs dependencies. *
+*****************************************************************
+no
+checking for Python dependencies... no
+checking whether gcc is Clang... no
+checking whether pthreads work with "-pthread" and "-lpthread"... yes
+checking for joinable pthread attribute... PTHREAD_CREATE_JOINABLE
+checking whether more special flags are required for pthreads... no
+checking for PTHREAD_PRIO_INHERIT... yes
+checking for size_t... yes
+checking for working alloca.h... yes
+checking for alloca... yes
+checking for isatty... yes
+checking for _isatty... no
+checking for strptime... yes
+checking for strftime... yes
+checking for setenv... yes
+checking for timegm... yes
+checking for gmtime_r... yes
+checking for gmtime... yes
+checking for localtime_r... yes
+checking for localtime... yes
+checking for gettimeofday... yes
+checking for struct tm.tm_gmtoff... yes
+checking for struct tm.__tm_gmtoff... no
+checking for setlocale... yes
+checking for arc4random... yes
+checking for getentropy... yes
+checking for pthread_key_create... yes
+checking for pthread_once... yes
+checking for atexit... yes
+checking for acos in -lm... yes
+checking for acosh in -lm... yes
+checking for asin in -lm... yes
+checking for asinh in -lm... yes
+checking for atan2 in -lm... yes
+checking for atan in -lm... yes
+checking for atanh in -lm... yes
+checking for cbrt in -lm... yes
+checking for ceil in -lm... yes
+checking for copysign in -lm... yes
+checking for cos in -lm... yes
+checking for cosh in -lm... yes
+checking for drem in -lm... yes
+checking for erf in -lm... yes
+checking for erfc in -lm... yes
+checking for exp10 in -lm... yes
+checking for __exp10 in -lm... no
+checking for exp2 in -lm... yes
+checking for exp in -lm... yes
+checking for expm1 in -lm... yes
+checking for fabs in -lm... yes
+checking for fdim in -lm... yes
+checking for floor in -lm... yes
+checking for fma in -lm... yes
+checking for fmax in -lm... yes
+checking for fmin in -lm... yes
+checking for fmod in -lm... yes
+checking for frexp in -lm... yes
+checking for gamma in -lm... yes
+checking for hypot in -lm... yes
+checking for j0 in -lm... yes
+checking for j1 in -lm... yes
+checking for jn in -lm... yes
+checking for ldexp in -lm... yes
+checking for lgamma in -lm... yes
+checking for log10 in -lm... yes
+checking for log1p in -lm... yes
+checking for log2 in -lm... yes
+checking for log in -lm... yes
+checking for logb in -lm... yes
+checking for modf in -lm... yes
+checking for lgamma_r in -lm... yes
+checking for nearbyint in -lm... yes
+checking for nextafter in -lm... yes
+checking for nexttoward in -lm... yes
+checking for pow in -lm... yes
+checking for remainder in -lm... yes
+checking for rint in -lm... yes
+checking for round in -lm... yes
+checking for scalb in -lm... yes
+checking for scalbln in -lm... yes
+checking for significand in -lm... yes
+checking for scalbn in -lm... yes
+checking for ilogb in -lm... yes
+checking for sin in -lm... yes
+checking for sinh in -lm... yes
+checking for sqrt in -lm... yes
+checking for tan in -lm... yes
+checking for tanh in -lm... yes
+checking for tgamma in -lm... yes
+checking for trunc in -lm... yes
+checking for y0 in -lm... yes
+checking for y1 in -lm... yes
+checking for yn in -lm... yes
+checking for thread-local storage... yes
+checking whether byte ordering is bigendian... no
+checking for oniguruma.h... yes
+checking for onig_version in -lonig... yes
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating libjq.pc
+config.status: executing depfiles commands
+config.status: executing libtool commands
+mkdir -p src
+  GEN      src/builtin.inc
+mkdir -p src
+  GEN      src/config_opts.inc
+mkdir -p src
+  GEN      src/version.h
+make  all-recursive
+make[1]: Entering directory '/home/runner/work/_temp/repos/jq'
+make[2]: Entering directory '/home/runner/work/_temp/repos/jq'
+  CC       src/main.o
+  CC       src/builtin.lo
+  CC       src/bytecode.lo
+  CC       src/compile.lo
+  CC       src/execute.lo
+  CC       src/jq_test.lo
+  CC       src/jv.lo
+  CC       src/jv_alloc.lo
+  CC       src/jv_aux.lo
+  CC       src/jv_dtoa.lo
+  CC       src/jv_file.lo
+  CC       src/jv_parse.lo
+  CC       src/jv_print.lo
+  CC       src/jv_unicode.lo
+  CC       src/linker.lo
+  CC       src/locfile.lo
+  CC       src/util.lo
+  CC       src/iso8601.lo
+  CC       src/jv_dtoa_tsd.lo
+  CC       vendor/decNumber/decContext.lo
+  CC       vendor/decNumber/decNumber.lo
+  CC       src/lexer.lo
+  CC       src/parser.lo
+  CCLD     libjq.la
+  CCLD     jq
+  GEN      jq.1
+make[2]: Leaving directory '/home/runner/work/_temp/repos/jq'
+make[1]: Leaving directory '/home/runner/work/_temp/repos/jq'
+
+Build succeeded: 'jq' is ready to run.
+

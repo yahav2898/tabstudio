@@ -1,0 +1,111 @@
+zlib at 71747d1d39168833e0cae8ed84b8ce77cb049699, opening /home/runner/work/_temp/repos/zlib
+Opened in 0.5 s: zlib, solution (none)
+  project DotZLib [CSharp] /home/runner/work/_temp/repos/zlib/contrib/dotzlib/DotZLib/DotZLib.csproj
+  project nuget [CSharp] /home/runner/work/_temp/repos/zlib/contrib/nuget/nuget.csproj
+  toolchain project cpp: /home/runner/work/_temp/repos/zlib/CMakeLists.txt
+Compatibility Doctor:
+  DotZLib: Not supported via Visual Studio .NET 2003, on a computer - Not supported: it is a Visual Studio .NET 2002 or 2003 project, in the format from before MSBuild, which a newer Visual Studio converts when it opens it, on a computer. TabStudio leaves it out of builds.
+  nuget: Library via Built with its users - A library is compiled together with the projects that reference it.
+  zlib: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+F5 startup project: zlib (cpp) /home/runner/work/_temp/repos/zlib/CMakeLists.txt
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Run: exited (0 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/zlib/crc32.c:450
+Debug: ended without stopping at crc32.c:450 (0 s)
+Tests: Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here. (120 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.4 s
+  Analyzing: Analyzing 0/2 projects
+  Analyzing: Analyzing 1/2 projects
+  Analyzing: Analyzing 2/2 projects
+  Analyzing: Succeeded after 1.7 s
+  Setting up projects: Succeeded after 3.1 s
+  Building: Building
+  Building: Building nuget
+  Building: Succeeded after 0.2 s
+  Building zlib: Building zlib
+  Building zlib: Configuring CMake
+  Building zlib: Generating build files
+  Building zlib: Building 2%
+  Building zlib: Building 4%
+  Building zlib: Building 6%
+  Building zlib: Building 8%
+  Building zlib: Building 10%
+  Building zlib: Building 13%
+  Building zlib: Building 15%
+  Building zlib: Building 17%
+  Building zlib: Building 19%
+  Building zlib: Building 21%
+  Building zlib: Building 23%
+  Building zlib: Building 26%
+  Building zlib: Building 28%
+  Building zlib: Building 30%
+  Building zlib: Building 32%
+  Building zlib: Building 34%
+  Building zlib: Building 36%
+  Building zlib: Building 39%
+  Building zlib: Building 41%
+  Building zlib: Building 43%
+  Building zlib: Building 45%
+  Building zlib: Building 47%
+  Building zlib: Building 50%
+  Building zlib: Building 52%
+  Building zlib: Building 54%
+  Building zlib: Building 56%
+  Building zlib: Building 58%
+  Building zlib: Building 60%
+  Building zlib: Building 63%
+  Building zlib: Building 65%
+  Building zlib: Building 67%
+  Building zlib: Building 69%
+  Building zlib: Building 71%
+  Building zlib: Building 73%
+  Building zlib: Building 76%
+  Building zlib: Building 78%
+  Building zlib: Building 80%
+  Building zlib: Building 82%
+  Building zlib: Building 84%
+  Building zlib: Building 86%
+  Building zlib: Building 89%
+  Building zlib: Building 91%
+  Building zlib: Building 93%
+  Building zlib: Building 95%
+  Building zlib: Building 97%
+  Building zlib: Building 100%
+  Building zlib: Succeeded after 3.6 s
+  Building zlib: Building zlib
+  Building zlib: Configuring CMake
+  Building zlib: Generating build files
+  Building zlib: Building 34%
+  Building zlib: Building 69%
+  Building zlib: Building 73%
+  Building zlib: Building 78%
+  Building zlib: Building 82%
+  Building zlib: Building 86%
+  Building zlib: Building 91%
+  Building zlib: Building 95%
+  Building zlib: Building 100%
+  Building zlib: Succeeded after 0.2 s
+Project setup:
+
+Output:
+> cmake --build /home/runner/work/_temp/repos/zlib/.tabstudio/cmake --config Debug
+> cmake -S /home/runner/work/_temp/repos/zlib -B /home/runner/work/_temp/repos/zlib/.tabstudio/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/runner/work/_temp/repos/zlib/.tabstudio/cmake
+[ 34%] Built target zlib
+[ 69%] Built target zlibstatic
+[ 73%] Built target zlib_example
+[ 78%] Built target minigzip
+[ 82%] Built target zlib_example64
+[ 86%] Built target zlib_examplestatic
+[ 91%] Built target minigzipstatic
+[ 95%] Built target infcover
+[100%] Built target zlib_example64static
+
+zlib has 7 executable targets (infcover, minigzip, minigzipstatic, zlib_example, …). Open a source file of the one to run, or name it as the "program" of a configuration in .tabstudio/launch.json.
+
