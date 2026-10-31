@@ -1,0 +1,556 @@
+swift-log at d0f784af9ea2bc75e557c3d2bb628a68248605f3
+Toolchain projects:
+  swift: /home/runner/work/_temp/real-repos/swift-log/Package.swift
+  cpp: /home/runner/work/_temp/real-repos/swift-log/CMakeLists.txt
+  swift: /home/runner/work/_temp/real-repos/swift-log/Benchmarks/Package.swift
+  swift: /home/runner/work/_temp/real-repos/swift-log/Benchmarks/MaxLogLevelNone/Package.swift
+  swift: /home/runner/work/_temp/real-repos/swift-log/Benchmarks/MaxLogLevelWarning/Package.swift
+  swift: /home/runner/work/_temp/real-repos/swift-log/Benchmarks/NoTraits/Package.swift
+Startup project: swift /home/runner/work/_temp/real-repos/swift-log/Package.swift
+Set up in 13.0 s
+Tests: 176 passed, 0 failed, 0 skipped of 180: 176 tests run in 11.9 sec: 176 passed, 0 failed, 0 skipped.
+Project setup:
+
+Output:
+llOldLogHandlerWorks() started.
+◇ Test "Pre-built attributes accept a non-Sendable value" started.
+◇ Test "Non-Sendable class falls through to String(describing:) and compiles" started.
+◇ Test allLogLevelsWorkWithOldSchoolLogHandlerWorks() started.
+◇ Test swiftLog1CompatibilityMethodReachesASourceOnlyHandler() started.
+◇ Test "default segment mixed with plain segments" started.
+◇ Test swiftLog1CompatibilityMethodReachesAnEventOnlyHandler() started.
+◇ Suite MetadataProviderTest started.
+◇ Test "Double interpolates via TOS & CSC overload" started.
+◇ Test "Overloaded function returning String/Data/[UInt8] disambiguates to String" started.
+◇ Suite SendableTest started.
+◇ Test "non-nil optional of a CSC-only type interpolates via .description" started.
+◇ Test "Plain struct (no CSC, no TOS) falls through to String(describing:)" started.
+◇ Test "Empty attributes still produce an attributed result" started.
+◇ Test "Plain + attributed segments produce attributed result" started.
+◇ Test "Plain interpolation yields .string case" started.
+◇ Test "Array (CSC, not TOS) interpolates via .description" started.
+◇ Test "String interpolates via TOS & CSC overload" started.
+◇ Test "TOS-only type interpolates via the TOS overload" started.
+◇ Test "Closure attributes attach to a TOS & CSC value" started.
+◇ Test "nil optional of a TOS-only type uses the default" started.
+◇ Test "Pre-built attributes attach to a non-CSC value" started.
+◇ Test testLockMutualExclusion() started.
+◇ Test "Pre-built attributes attach to a TOS & CSC value" started.
+◇ Test "default accepts a Substring (some StringProtocol)" started.
+◇ Test "CSC-only type interpolates via .description" started.
+◇ Test "Two attributed segments merge their attributes" started.
+◇ Test "Substring interpolates via TOS & CSC overload" started.
+◇ Test "Attributed interpolation yields .stringConvertible case" started.
+◇ Test "Plain + plain segments concatenate without attributes" started.
+◇ Test "Conflicting attribute keys: later segment wins" started.
+◇ Test "Pre-built attributes attach to a CSC-only value" started.
+◇ Test "Closure-attributes and value-attributes segments merge" started.
+◇ Test "Custom TOS & CSC type uses the most-specific overload" started.
+◇ Test "Closure attributes attach to a TOS-only value" started.
+◇ Test "Closure attributes accept a non-Sendable value" started.
+◇ Test "Int interpolates via TOS & CSC overload" started.
+◇ Test traceAndAbove() started.
+◇ Test errorAndAbove() started.
+◇ Test "Foundation.Data (CSC) interpolates via .description" started.
+◇ Test "non-nil optional interpolates the wrapped value" started.
+◇ Test "Closure attributes attach to a CSC-only value" started.
+◇ Test "Closure attributes attach to a non-CSC, non-TOS value" started.
+◇ Test "default interpolation yields .string case" started.
+◇ Test "nil optional of a non-CSC, non-TOS type uses the default" started.
+◇ Test descriptionRendering() started.
+◇ Test descriptionOfNestedArraysGrowsLinearlyNotExponentially() started.
+◇ Test equatableCompareson() started.
+◇ Test equatableComparesNestedArrays() started.
+◇ Test bindReplacesAccumulatedMetadata() started.
+◇ Test libraryReadsCurrentWithoutLoggerParameter() started.
+◇ Test metadataEmptyDictWipesInherited() started.
+◇ Test metadataReplacesInherited() started.
+◇ Test bindLoggerAsyncReturning() started.
+◇ Test handlerSwapsForScope() started.
+◇ Test concurrentTasksHaveIndependentContext() started.
+◇ Test deeplyNestedScopes() started.
+◇ Test handlerSwapRespectsExplicitLogLevel(level:) started.
+◇ Test bindLogger() started.
+◇ Test fallbackUsesEmptyLabel() started.
+◇ Test overrideLogLevel() started.
+◇ Test innerMetadataOverridesOuter() started.
+◇ Test bindPropagatesThrow() started.
+◇ Test nestedMetadataAccumulates() started.
+◇ Test asyncLetInheritsContext() started.
+◇ Test childTaskInheritsContextDetachedDoesNot() started.
+◇ Test contextPreservedAcrossAwait() started.
+◇ Test stdioOutputStreamFlush() started.
+◇ Test streamLogHandlerWritesToAStream() started.
+◇ Test streamLogHandlerOutputFormatWithMetaData() started.
+◇ Test streamLogHandlerWritesIncludeMetadataProviderMetadata() started.
+◇ Test asyncHandlerSwapRespectsExplicitLogLevel(level:) started.
+◇ Test siblingScopesAreIsolated() started.
+◇ Test streamLogHandlerOutputFormatWithOrderedMetadata() started.
+◇ Test mergeMetadataCopiesHandlerOnce() started.
+◇ Test streamLogHandlerOutputFormat() started.
+◇ Test stdioOutputStreamWrite() started.
+◇ Test modifyAsyncPropagatesThrow() started.
+◇ Test mergeMetadata() started.
+◇ Test "Create attributed value with .attributed factory" started.
+◇ Test streamLogHandlerOutputFormatWithEmptyLabel() started.
+◇ Test initWithNoArguments() started.
+◇ Test metadataIgnoresMutations() started.
+◇ Test logLevelIgnoresMutations() started.
+◇ Test "Intermediate handler adds attributes before forwarding" started.
+◇ Test "Empty attributes" started.
+◇ Test "Array literal with single attribute" started.
+◇ Test initWithLabel() started.
+◇ Test metadataSubscriptAlwaysReturnsNil() started.
+◇ Test "Set attributes replaces existing attributes" started.
+◇ Test allLogLevelsDoNotCrash() started.
+◇ Test "Intermediate handler replaces attributes before forwarding" started.
+◇ Test "Attributed factory with multiple attributes" started.
+◇ Test logEventDoesNotCrash() started.
+◇ Test "Set and get multiple attributes" started.
+◇ Test "Update existing attribute" started.
+◇ Test "Update overflow attribute" started.
+◇ Test "Attributed factory produces same result as string interpolation" started.
+◇ Test "Set attributes on .string value" started.
+◇ Test "Array literal with duplicate key uses last value" started.
+◇ Test "Remove inline attribute" started.
+◇ Test "Remove inline promotes from overflow" started.
+◇ Test "Attributed factory with empty attributes" started.
+◇ Test "Set and get single attribute (inline)" started.
+◇ Test "Equality with same content" started.
+◇ Test "Remove overflow attribute" started.
+◇ Test "Equality is order-independent" started.
+◇ Test loggerIsJustHoldingASinglePointer() started.
+◇ Test allLogLevelsExceptCriticalCanBeBlocked() started.
+◇ Test autoClosuresAreNotForcedUnlessNeeded() started.
+◇ Test allLogLevelByFunctionRefWithoutSourceOrError() started.
+◇ Test multiplexLogHandlerMetadata_readingHandlerMetadata() started.
+◇ Test multiplexMetadataProviderMergesInSpecifiedOrder() started.
+◇ Test multiplex() started.
+◇ Test multiplexLogHandlerMetadataWithAttributes_settingAndReading() started.
+◇ Test multiplexerIsValue() started.
+◇ Test dictionaryMetadata() started.
+◇ Test stringConvertibleMetadata() started.
+◇ Test localMetadata() started.
+◇ Test allLogLevelsWork() started.
+◇ Test loggerMetadataWriteMutatesHandlerInPlace() started.
+◇ Test errorParameter() started.
+◇ Test multiplexMetadataProviderExtract() started.
+◇ Test loggerCopyOnWrite() started.
+◇ Test sourceIsDerivedFromFileWhenNotProvided() started.
+◇ Test multiplexLogHandlerNeedNotMaterializeValuesMultipleTimes() started.
+◇ Test listMetadata() started.
+◇ Test multiplexMetadataProviderSet() started.
+◇ Test defaultLogEventForwardsAllFieldsIncludingSourceLocation() started.
+◇ Test metadataValueCarriesAttributesThroughStringInterpolation() started.
+◇ Test metadataValueWithoutAttributesProducesString() started.
+◇ Test allLogLevelByFunctionRefWithSourceWithoutError() started.
+◇ Test logLevelCases() started.
+◇ Test loggerWithGlobalOverride() started.
+◇ Test sourceSetterOverridesLazyValue() started.
+◇ Test sourceUsesExplicitValueWhenProvided() started.
+◇ Test metadataValuesWithAttributesFlowThroughLogEvent() started.
+◇ Test overloadingError() started.
+◇ Test logLevelDescription(level:) started.
+◇ Test metadataValueAttributesAreEmptyForPlainValues() started.
+◇ Test loggerDerivedSourceMatchesModuleName() started.
+◇ Test multiplexLogHandlerWithVariousLogLevels() started.
+◇ Test sourceLazyDerivationDoesNotStoreComputedValue() started.
+◇ Test multiplexLogHandlerMetadata_settingMetadataThroughToUnderlyingHandlers() started.
+◇ Test "Five attributes" started.
+◇ Test "Setting nil on non-existent attribute is no-op" started.
+◇ Test "Array literal with multiple attributes" started.
+◇ Test customFactory() started.
+◇ Test metadataSetterStoresThroughComputedProperty() started.
+◇ Test metadataWithAttributes_flowsThroughHandler() started.
+◇ Test logsEmittedFromSubdirectoryGetCorrectModuleInNewerSwifts() started.
+◇ Test allLogLevelByFunctionRefWithSourceAndError() started.
+◇ Test loggingAString() started.
+◇ Test autoclosure() started.
+◇ Test logMessageWithStringInterpolation() started.
+◇ Test compileInitializeStandardStreamLogHandlersWithMetadataProviders() started.
+◇ Test logLevelOrdering() started.
+◇ Test multiplexLogHandlerMetadataWithAttributes_forwardsEventWithAttributes() started.
+◇ Test test() started.
+◇ Test traceAndAbove() started.
+2026-10-31T23:28:38+0000 info LocalLoggerTest::ContextLogger: [LoggingTests] Struct2::doSomething
+2026-10-31T23:28:38+0000 info LocalLoggerTest::ContextLogger: [LoggingTests] Struct2::doSomethingElse
+2026-10-31T23:28:38+0000 debug LocalLoggerTest::ContextLogger: [LoggingTests] Struct1::doSomething
+2026-10-31T23:28:38+0000 info LocalLoggerTest::ContextLogger: [LoggingTests] Struct2::doSomething
+2026-10-31T23:28:38+0000 info LocalLoggerTest::ContextLogger: [LoggingTests] Struct2::doSomethingElse
+2026-10-31T23:28:38+0000 error LocalLoggerTest::ContextLogger: bar=baz [LoggingTests] Struct3::doSomething
+2026-10-31T23:28:38+0000 error LocalLoggerTest::ContextLogger: bar=baz [LoggingTests] Struct3::doSomethingElse
+2026-10-31T23:28:38+0000 error LocalLoggerTest::ContextLogger: bar=baz [LoggingTests] Struct3::doSomething
+2026-10-31T23:28:38+0000 error LocalLoggerTest::ContextLogger: bar=baz [LoggingTests] Struct3::doSomethingElse
+2026-10-31T23:28:38+0000 info TestLibrary: [LoggingTests] TestLibrary::doSomething
+2026-10-31T23:28:38+0000 warning LocalLoggerTest::ContextLogger: bar=baz [LoggingTests] Struct3::doSomethingElseAsync
+2026-10-31T23:28:38+0000 info other: [LoggingTests] no request.id
+2026-10-31T23:28:38+0000 warning LocalLoggerTest::ContextLogger: bar=baz [LoggingTests] Struct3::doSomethingElseAsync
+2026-10-31T23:28:38+0000 info TestLibrary: [LoggingTests] TestLibrary::doSomething
+2026-10-31T23:28:38+0000 debug test: request.id=123 sql=SELECT 1 [LoggingTests] query
+2026-10-31T23:28:38+0000 info test: [LoggingTests] wiped
+2026-10-31T23:28:38+0000 info test: job.id=j1 [LoggingTests] background
+2026-10-31T23:28:38+0000 info captured: case=test [LoggingTests] emitted under inner handler
+2026-10-31T23:28:38+0000 info app: [LoggingTests] back under outer
+2026-10-31T23:28:38+0000 info test: d-1=1 d-10=10 d-11=11 d-12=12 d-13=13 d-14=14 d-15=15 d-16=16 d-17=17 d-18=18 d-19=19 d-2=2 d-20=20 d-3=3 d-4=4 d-5=5 d-6=6 d-7=7 d-8=8 d-9=9 [LoggingTests] bottom
+2026-10-31T23:28:38+0000 info test: [LoggingTests] bound
+◇ Test case passing 1 argument level → debug to handlerSwapRespectsExplicitLogLevel(level:) started.
+2026-10-31T23:28:38+0000 debug captured: [LoggingTests] emitted
+◇ Test case passing 1 argument level → warning to handlerSwapRespectsExplicitLogLevel(level:) started.
+2026-10-31T23:28:38+0000 warning captured: [LoggingTests] emitted
+2026-10-31T23:28:38+0000 warning test: [LoggingTests] emitted
+2026-10-31T23:28:38+0000 info test: key=inner [LoggingTests] test
+2026-10-31T23:28:38+0000 info test: level1=first level2=second [LoggingTests] inner
+2026-10-31T23:28:38+0000 info test: request=123 [LoggingTests] before await
+◇ Test case passing 1 argument level → debug to asyncHandlerSwapRespectsExplicitLogLevel(level:) started.
+◇ Test case passing 1 argument level → warning to asyncHandlerSwapRespectsExplicitLogLevel(level:) started.
+2026-10-31T23:28:38+0000 info test: key=value [LoggingTests] merged
+2026-10-31T23:28:38+0000 info test: a=1 [LoggingTests] first
+2026-10-31T23:28:38+0000 info test: b=2 [LoggingTests] second
+2026-10-31T23:28:38+0000 critical allLogLevelsExceptCriticalCanBeBlocked(): [LoggingTests] yes: critical
+2026-10-31T23:28:38+0000 debug allLogLevelByFunctionRefWithoutSourceOrError(): [LoggingTests] yes: debug
+2026-10-31T23:28:38+0000 info allLogLevelByFunctionRefWithoutSourceOrError(): [LoggingTests] yes: info
+2026-10-31T23:28:38+0000 notice allLogLevelByFunctionRefWithoutSourceOrError(): [LoggingTests] yes: notice
+2026-10-31T23:28:38+0000 warning allLogLevelByFunctionRefWithoutSourceOrError(): [LoggingTests] yes: warning
+2026-10-31T23:28:38+0000 error allLogLevelByFunctionRefWithoutSourceOrError(): [LoggingTests] yes: error
+2026-10-31T23:28:38+0000 critical allLogLevelByFunctionRefWithoutSourceOrError(): [LoggingTests] yes: critical
+2026-10-31T23:28:38+0000 info multiplexMetadataProviderMergesInSpecifiedOrder(): a=foo b=bar one-off=42 provider=b [LoggingTests] test
+2026-10-31T23:28:38+0000 warning test: foo=bar [LoggingTests] hello world!
+2026-10-31T23:28:38+0000 warning test: foo=bar [LoggingTests] hello world!
+new multi
+2026-10-31T23:28:38+0000 error x: only-on=first [LoggingTests] hey
+2026-10-31T23:28:38+0000 error y: only-on=first [LoggingTests] hey
+2026-10-31T23:28:38+0000 info dictionaryMetadata(): empty-dict=[:] foo=["bar": "buz"] nested-dict=["l1key": ["l2key": ["l3key": "l3value"]]] [LoggingTests] hello world!
+2026-10-31T23:28:38+0000 info stringConvertibleMetadata(): foo=raw-string lazy=rendered-at-first-use [LoggingTests] hello world!
+2026-10-31T23:28:38+0000 info localMetadata(): foo=bar [LoggingTests] hello world!
+2026-10-31T23:28:38+0000 warning localMetadata(): bar=baz baz=qux [LoggingTests] hello world!
+2026-10-31T23:28:38+0000 error localMetadata(): bar=baz baz=quc [LoggingTests] hello world!
+2026-10-31T23:28:38+0000 debug allLogLevelsWork(): [LoggingTests] yes: debug
+2026-10-31T23:28:38+0000 info allLogLevelsWork(): [LoggingTests] yes: info
+2026-10-31T23:28:38+0000 notice allLogLevelsWork(): [LoggingTests] yes: notice
+2026-10-31T23:28:38+0000 warning allLogLevelsWork(): [LoggingTests] yes: warning
+2026-10-31T23:28:38+0000 error allLogLevelsWork(): [LoggingTests] yes: error
+2026-10-31T23:28:38+0000 critical allLogLevelsWork(): [LoggingTests] yes: critical
+2026-10-31T23:28:38+0000 info errorParameter(): error.message=boom error.type=LoggingTests.LoggingTest.TestError [LoggingTests] hello world!
+2026-10-31T23:28:38+0000 info 1: [LoggingTests] info
+2026-10-31T23:28:38+0000 info 2: [LoggingTests] info
+2026-10-31T23:28:38+0000 info listMetadata(): empty-list=[] foo=["bar", "buz"] nested-list=["l1str", ["l2str1", "l2str2"]] [LoggingTests] hello world!
+2026-10-31T23:28:38+0000 debug allLogLevelByFunctionRefWithSourceWithoutError(): [foo] yes: debug
+2026-10-31T23:28:38+0000 info allLogLevelByFunctionRefWithSourceWithoutError(): [foo] yes: info
+2026-10-31T23:28:38+0000 notice allLogLevelByFunctionRefWithSourceWithoutError(): [foo] yes: notice
+2026-10-31T23:28:38+0000 warning allLogLevelByFunctionRefWithSourceWithoutError(): [foo] yes: warning
+2026-10-31T23:28:38+0000 error allLogLevelByFunctionRefWithSourceWithoutError(): [foo] yes: error
+2026-10-31T23:28:38+0000 critical allLogLevelByFunctionRefWithSourceWithoutError(): [foo] yes: critical
+◇ Test case passing 1 argument level → trace to logLevelDescription(level:) started.
+2026-10-31T23:28:38+0000 error test: [LoggingTests] errorDescription
+◇ Test case passing 1 argument level → debug to logLevelDescription(level:) started.
+◇ Test case passing 1 argument level → info to logLevelDescription(level:) started.
+◇ Test case passing 1 argument level → notice to logLevelDescription(level:) started.
+◇ Test case passing 1 argument level → warning to logLevelDescription(level:) started.
+◇ Test case passing 1 argument level → error to logLevelDescription(level:) started.
+◇ Test case passing 1 argument level → critical to logLevelDescription(level:) started.
+2026-10-31T23:28:38+0000 debug 2: [LoggingTests] debug
+2026-10-31T23:28:38+0000 info 1: [LoggingTests] info
+2026-10-31T23:28:38+0000 info 2: [LoggingTests] info
+2026-10-31T23:28:38+0000 warning 1: [LoggingTests] warning
+2026-10-31T23:28:38+0000 warning 2: [LoggingTests] warning
+2026-10-31T23:28:38+0000 info test: user-id=12345 [LoggingTests] attributed event
+2026-10-31T23:28:38+0000 debug logsEmittedFromSubdirectoryGetCorrectModuleInNewerSwifts(): [LoggingTests] hello
+2026-10-31T23:28:38+0000 info logsEmittedFromSubdirectoryGetCorrectModuleInNewerSwifts(): [LoggingTests] hello
+2026-10-31T23:28:38+0000 notice logsEmittedFromSubdirectoryGetCorrectModuleInNewerSwifts(): [LoggingTests] hello
+2026-10-31T23:28:38+0000 warning logsEmittedFromSubdirectoryGetCorrectModuleInNewerSwifts(): [LoggingTests] hello
+2026-10-31T23:28:38+0000 error logsEmittedFromSubdirectoryGetCorrectModuleInNewerSwifts(): [LoggingTests] hello
+2026-10-31T23:28:38+0000 critical logsEmittedFromSubdirectoryGetCorrectModuleInNewerSwifts(): [LoggingTests] hello
+2026-10-31T23:28:38+0000 debug allLogLevelByFunctionRefWithSourceAndError(): error.message=boom error.type=LoggingTests.LoggingTest.TestError [foo] yes: debug
+2026-10-31T23:28:38+0000 info allLogLevelByFunctionRefWithSourceAndError(): error.message=boom error.type=LoggingTests.LoggingTest.TestError [foo] yes: info
+2026-10-31T23:28:38+0000 notice allLogLevelByFunctionRefWithSourceAndError(): error.message=boom error.type=LoggingTests.LoggingTest.TestError [foo] yes: notice
+2026-10-31T23:28:38+0000 warning allLogLevelByFunctionRefWithSourceAndError(): error.message=boom error.type=LoggingTests.LoggingTest.TestError [foo] yes: warning
+2026-10-31T23:28:38+0000 error allLogLevelByFunctionRefWithSourceAndError(): error.message=boom error.type=LoggingTests.LoggingTest.TestError [foo] yes: error
+2026-10-31T23:28:38+0000 critical allLogLevelByFunctionRefWithSourceAndError(): error.message=boom error.type=LoggingTests.LoggingTest.TestError [foo] yes: critical
+2026-10-31T23:28:38+0000 debug loggingAString(): [LoggingTests] hello world!
+2026-10-31T23:28:38+0000 info test: [LoggingTests] info
+2026-10-31T23:28:38+0000 warning test: [LoggingTests] warning
+2026-10-31T23:28:38+0000 error test: [LoggingTests] error
+2026-10-31T23:28:38+0000 debug logMessageWithStringInterpolation(): [LoggingTests] My favourite number is 33 and not 32
+2026-10-31T23:28:38+0000 info test: request-id=abc123 [LoggingTests] hello
+2026-10-31T23:28:38+0000 info test: request-id=abc123 [LoggingTests] hello
+2026-10-31T23:28:38+0000 info 1: in=in-1 one=111 [LoggingTests] info
+2026-10-31T23:28:38+0000 info 2: in=in-2 two=222 [LoggingTests] info
+2026-10-31T23:28:38+0000 info 1: in=in-1 new=new one=111 [LoggingTests] info
+2026-10-31T23:28:38+0000 info 2: in=in-2 new=new two=222 [LoggingTests] info
+2026-10-31T23:28:38+0000 info 1: in=multi new=new one=111 [LoggingTests] info
+2026-10-31T23:28:38+0000 info 2: in=multi new=new two=222 [LoggingTests] info
+✔ Test allLogLevelsWorkWithNewerButStillOldLogHandlerWorks() passed after 0.019 seconds.
+2026-10-31T23:28:38+0000 debug GlobalLoggerTest::Struct1: [LoggingTests] Struct1::doSomething
+2026-10-31T23:28:38+0000 debug GlobalLoggerTest::Struct1: [LoggingTests] Struct1::doSomethingElse
+2026-10-31T23:28:38+0000 info GlobalLoggerTest::Struct2: [LoggingTests] Struct2::doSomething
+2026-10-31T23:28:38+0000 info GlobalLoggerTest::Struct2: [LoggingTests] Struct2::doSomethingElse
+2026-10-31T23:28:38+0000 error GlobalLoggerTest::Struct3: [LoggingTests] Struct3::doSomething
+2026-10-31T23:28:38+0000 error GlobalLoggerTest::Struct3: foo=bar [LoggingTests] Struct3::doSomethingElse
+2026-10-31T23:28:38+0000 warning GlobalLoggerTest::Struct3: foo=bar [LoggingTests] Struct3::doSomethingElseAsync
+2026-10-31T23:28:38+0000 info TestLibrary: foo=bar [LoggingTests] TestLibrary::doSomething
+2026-10-31T23:28:38+0000 info TestLibrary: [LoggingTests] TestLibrary::doSomethingAsync
+2026-10-31T23:28:38+0000 debug LocalLoggerTest::ContextLogger: bar=baz baz=qux [LoggingTests] Struct3::doSomethingElse::Local
+2026-10-31T23:28:38+0000 info TestLibrary: [LoggingTests] TestLibrary::doSomethingAsync
+2026-10-31T23:28:38+0000 debug LocalLoggerTest::ContextLogger: bar=baz baz=qux [LoggingTests] Struct3::doSomethingElse::Local
+2026-10-31T23:28:38+0000 debug LocalLoggerTest::ContextLogger: bar=baz [LoggingTests] Struct3::doSomethingElse::end
+2026-10-31T23:28:38+0000 debug LocalLoggerTest::ContextLogger: bar=baz [LoggingTests] Struct3::doSomethingElse::end
+2026-10-31T23:28:38+0000 debug LocalLoggerTest::ContextLogger: bar=baz [LoggingTests] Struct3::doSomething::end
+2026-10-31T23:28:38+0000 debug LocalLoggerTest::ContextLogger: bar=baz [LoggingTests] Struct3::doSomething::end
+2026-10-31T23:28:38+0000 debug LocalLoggerTest::ContextLogger: [LoggingTests] Struct2::doSomethingElse::end
+2026-10-31T23:28:38+0000 debug LocalLoggerTest::ContextLogger: [LoggingTests] Struct2::doSomethingElse::end
+2026-10-31T23:28:38+0000 debug LocalLoggerTest::ContextLogger: [LoggingTests] Struct1::doSomethingElse::end
+2026-10-31T23:28:38+0000 debug LocalLoggerTest::ContextLogger: [LoggingTests] Struct1::doSomething::end
+✔ Test allLogLevelsWorkWithOldSchoolLogHandlerWorks() passed after 0.105 seconds.
+✔ Test swiftLog1CompatibilityMethodReachesASourceOnlyHandler() passed after 0.105 seconds.
+✔ Test "default segment mixed with plain segments" passed after 0.105 seconds.
+◇ Test logHandlerThatDidNotImplementProvidersButSomeoneAttemptsToSetOneOnIt() started.
+✔ Test "Non-Sendable class falls through to String(describing:) and compiles" passed after 0.106 seconds.
+◇ Test logHandlerThatDidImplementProvidersButSomeoneAttemptsToSetOneOnIt() started.
+✔ Test "non-nil optional of a CSC-only type interpolates via .description" passed after 0.105 seconds.
+✔ Test "Empty attributes still produce an attributed result" passed after 0.105 seconds.
+◇ Test sendableLogger() started.
+✔ Test swiftLog1CompatibilityMethodReachesAnEventOnlyHandler() passed after 0.106 seconds.
+✔ Test "Plain + attributed segments produce attributed result" passed after 0.105 seconds.
+✔ Test "Plain interpolation yields .string case" passed after 0.105 seconds.
+✔ Test "Plain struct (no CSC, no TOS) falls through to String(describing:)" passed after 0.106 seconds.
+✔ Test "Array (CSC, not TOS) interpolates via .description" passed after 0.105 seconds.
+✔ Test "String interpolates via TOS & CSC overload" passed after 0.105 seconds.
+✔ Test "Closure attributes attach to a TOS & CSC value" passed after 0.105 seconds.
+✔ Test "TOS-only type interpolates via the TOS overload" passed after 0.105 seconds.
+✔ Test "nil optional of a TOS-only type uses the default" passed after 0.105 seconds.
+✔ Test "Pre-built attributes attach to a non-CSC value" passed after 0.105 seconds.
+✔ Test "Pre-built attributes attach to a TOS & CSC value" passed after 0.105 seconds.
+✔ Test "nil optional uses the default string" passed after 0.106 seconds.
+✔ Test "default accepts a Substring (some StringProtocol)" passed after 0.105 seconds.
+✔ Test "CSC-only type interpolates via .description" passed after 0.105 seconds.
+✔ Test "Two attributed segments merge their attributes" passed after 0.105 seconds.
+✔ Test "Substring interpolates via TOS & CSC overload" passed after 0.105 seconds.
+✔ Test "Attributed interpolation yields .stringConvertible case" passed after 0.105 seconds.
+✔ Test "Plain + plain segments concatenate without attributes" passed after 0.105 seconds.
+✔ Test "Conflicting attribute keys: later segment wins" passed after 0.105 seconds.
+✔ Test "Pre-built attributes attach to a CSC-only value" passed after 0.105 seconds.
+✔ Test "Closure-attributes and value-attributes segments merge" passed after 0.105 seconds.
+✔ Test "Custom TOS & CSC type uses the most-specific overload" passed after 0.105 seconds.
+✔ Test "Closure attributes attach to a TOS-only value" passed after 0.105 seconds.
+✔ Test "Closure attributes accept a non-Sendable value" passed after 0.105 seconds.
+✔ Test "Int interpolates via TOS & CSC overload" passed after 0.105 seconds.
+✔ Test "Pre-built attributes accept a non-Sendable value" passed after 0.106 seconds.
+✔ Test "Foundation.Data (CSC) interpolates via .description" passed after 0.105 seconds.
+✔ Test "non-nil optional interpolates the wrapped value" passed after 0.105 seconds.
+✔ Test "Closure attributes attach to a CSC-only value" passed after 0.105 seconds.
+✔ Test "Closure attributes attach to a non-CSC, non-TOS value" passed after 0.105 seconds.
+✔ Test "default interpolation yields .string case" passed after 0.105 seconds.
+✔ Test "nil optional of a non-CSC, non-TOS type uses the default" passed after 0.105 seconds.
+✔ Test descriptionRendering() passed after 0.105 seconds.
+✔ Test descriptionOfNestedArraysGrowsLinearlyNotExponentially() passed after 0.105 seconds.
+✔ Test equatableCompareson() passed after 0.105 seconds.
+✔ Test equatableComparesNestedArrays() passed after 0.105 seconds.
+✔ Test bindReplacesAccumulatedMetadata() passed after 0.105 seconds.
+✔ Test libraryReadsCurrentWithoutLoggerParameter() passed after 0.105 seconds.
+✔ Test metadataEmptyDictWipesInherited() passed after 0.105 seconds.
+✔ Test metadataReplacesInherited() passed after 0.105 seconds.
+✔ Test handlerSwapsForScope() passed after 0.105 seconds.
+✔ Test deeplyNestedScopes() passed after 0.105 seconds.
+✔ Test bindLogger() passed after 0.105 seconds.
+2026-10-31T23:28:38+0000 info test: context=parent task=1 [LoggingTests] task 1
+✔ Test fallbackUsesEmptyLabel() passed after 0.105 seconds.
+✔ Test handlerSwapRespectsExplicitLogLevel(level:) with 2 test cases passed after 0.105 seconds.
+✔ Test overrideLogLevel() passed after 0.105 seconds.
+✔ Test innerMetadataOverridesOuter() passed after 0.105 seconds.
+✔ Test bindPropagatesThrow() passed after 0.105 seconds.
+✔ Test nestedMetadataAccumulates() passed after 0.105 seconds.
+✔ Test stdioOutputStreamFlush() passed after 0.105 seconds.
+✔ Test streamLogHandlerWritesToAStream() passed after 0.105 seconds.
+✔ Test streamLogHandlerOutputFormatWithMetaData() passed after 0.105 seconds.
+✔ Test "Double interpolates via TOS & CSC overload" passed after 0.106 seconds.
+✔ Test "Overloaded function returning String/Data/[UInt8] disambiguates to String" passed after 0.106 seconds.
+✔ Test streamLogHandlerWritesIncludeMetadataProviderMetadata() passed after 0.105 seconds.
+✔ Test streamLogHandlerOutputFormatWithOrderedMetadata() passed after 0.105 seconds.
+✔ Test mergeMetadataCopiesHandlerOnce() passed after 0.105 seconds.
+✔ Test streamLogHandlerOutputFormat() passed after 0.105 seconds.
+✔ Test stdioOutputStreamWrite() passed after 0.105 seconds.
+✔ Test modifyAsyncPropagatesThrow() passed after 0.105 seconds.
+✔ Test mergeMetadata() passed after 0.105 seconds.
+✔ Test "Create attributed value with .attributed factory" passed after 0.105 seconds.
+✔ Test streamLogHandlerOutputFormatWithEmptyLabel() passed after 0.105 seconds.
+✔ Test initWithNoArguments() passed after 0.105 seconds.
+✔ Test siblingScopesAreIsolated() passed after 0.105 seconds.
+✔ Test logLevelIgnoresMutations() passed after 0.105 seconds.
+✔ Test "Empty attributes" passed after 0.105 seconds.
+✔ Test "Intermediate handler adds attributes before forwarding" passed after 0.105 seconds.
+✔ Test "Array literal with single attribute" passed after 0.105 seconds.
+✔ Test initWithLabel() passed after 0.105 seconds.
+✔ Test metadataSubscriptAlwaysReturnsNil() passed after 0.105 seconds.
+✔ Test "Set attributes replaces existing attributes" passed after 0.105 seconds.
+✔ Test allLogLevelsDoNotCrash() passed after 0.105 seconds.
+✔ Test "Intermediate handler replaces attributes before forwarding" passed after 0.105 seconds.
+✔ Test "Attributed factory with multiple attributes" passed after 0.105 seconds.
+✔ Test logEventDoesNotCrash() passed after 0.105 seconds.
+✔ Test "Set and get multiple attributes" passed after 0.105 seconds.
+✔ Test "Update existing attribute" passed after 0.105 seconds.
+✔ Test metadataIgnoresMutations() passed after 0.105 seconds.
+✔ Test "Update overflow attribute" passed after 0.105 seconds.
+✔ Test "Attributed factory produces same result as string interpolation" passed after 0.105 seconds.
+✔ Test "Set attributes on .string value" passed after 0.105 seconds.
+✔ Test "Array literal with duplicate key uses last value" passed after 0.105 seconds.
+✔ Test "Remove inline attribute" passed after 0.105 seconds.
+✔ Test "Remove inline promotes from overflow" passed after 0.105 seconds.
+✔ Test "Attributed factory with empty attributes" passed after 0.105 seconds.
+✔ Test "Set and get single attribute (inline)" passed after 0.105 seconds.
+✔ Test "Equality with same content" passed after 0.105 seconds.
+✔ Test "Remove overflow attribute" passed after 0.105 seconds.
+✔ Test "Equality is order-independent" passed after 0.105 seconds.
+✔ Test loggerIsJustHoldingASinglePointer() passed after 0.105 seconds.
+✔ Test allLogLevelsExceptCriticalCanBeBlocked() passed after 0.105 seconds.
+✔ Test autoClosuresAreNotForcedUnlessNeeded() passed after 0.105 seconds.
+✔ Test allLogLevelByFunctionRefWithoutSourceOrError() passed after 0.105 seconds.
+✔ Test multiplexLogHandlerMetadata_readingHandlerMetadata() passed after 0.105 seconds.
+✔ Test multiplexMetadataProviderMergesInSpecifiedOrder() passed after 0.105 seconds.
+✔ Test multiplex() passed after 0.105 seconds.
+✔ Test multiplexLogHandlerMetadataWithAttributes_settingAndReading() passed after 0.105 seconds.
+✔ Test multiplexerIsValue() passed after 0.105 seconds.
+✔ Test dictionaryMetadata() passed after 0.104 seconds.
+✔ Test stringConvertibleMetadata() passed after 0.104 seconds.
+✔ Test localMetadata() passed after 0.104 seconds.
+✔ Test allLogLevelsWork() passed after 0.104 seconds.
+✔ Test loggerMetadataWriteMutatesHandlerInPlace() passed after 0.104 seconds.
+✔ Test errorParameter() passed after 0.104 seconds.
+✔ Test multiplexMetadataProviderExtract() passed after 0.104 seconds.
+✔ Test loggerCopyOnWrite() passed after 0.104 seconds.
+✔ Test sourceIsDerivedFromFileWhenNotProvided() passed after 0.104 seconds.
+✔ Test multiplexLogHandlerNeedNotMaterializeValuesMultipleTimes() passed after 0.104 seconds.
+✔ Test listMetadata() passed after 0.104 seconds.
+✔ Test multiplexMetadataProviderSet() passed after 0.104 seconds.
+✔ Test defaultLogEventForwardsAllFieldsIncludingSourceLocation() passed after 0.104 seconds.
+✔ Test metadataValueCarriesAttributesThroughStringInterpolation() passed after 0.104 seconds.
+✔ Test metadataValueWithoutAttributesProducesString() passed after 0.104 seconds.
+✔ Test allLogLevelByFunctionRefWithSourceWithoutError() passed after 0.104 seconds.
+✔ Test logLevelCases() passed after 0.104 seconds.
+✔ Test loggerWithGlobalOverride() passed after 0.104 seconds.
+✔ Test sourceSetterOverridesLazyValue() passed after 0.104 seconds.
+✔ Test sourceUsesExplicitValueWhenProvided() passed after 0.104 seconds.
+✔ Test metadataValuesWithAttributesFlowThroughLogEvent() passed after 0.104 seconds.
+✔ Test overloadingError() passed after 0.104 seconds.
+2026-10-31T23:28:38+0000 info test: context=parent task=2 [LoggingTests] task 2
+2026-10-31T23:28:38+0000 info test: parent=value [LoggingTests] child
+2026-10-31T23:28:38+0000 warning fake: [Logging] Attempted to set metadataProvider on LogHandlerThatDidNotImplementMetadataProviders that did not implement support for them. Please contact the log handler maintainer to implement metadata provider support.
+2026-10-31T23:28:38+0000 info test: [LoggingTests] computing
+2026-10-31T23:28:38+0000 info test: request=123 [LoggingTests] after await
+2026-10-31T23:28:38+0000 debug captured: [LoggingTests] emitted
+2026-10-31T23:28:38+0000 warning captured: [LoggingTests] emitted
+✔ Test metadataValueAttributesAreEmptyForPlainValues() passed after 0.104 seconds.
+✔ Test loggerDerivedSourceMatchesModuleName() passed after 0.104 seconds.
+✔ Test multiplexLogHandlerWithVariousLogLevels() passed after 0.104 seconds.
+✔ Test sourceLazyDerivationDoesNotStoreComputedValue() passed after 0.104 seconds.
+✔ Test "Five attributes" passed after 0.104 seconds.
+✔ Test "Array literal with multiple attributes" passed after 0.106 seconds.
+✔ Test customFactory() passed after 0.104 seconds.
+✔ Test metadataSetterStoresThroughComputedProperty() passed after 0.104 seconds.
+✔ Test metadataWithAttributes_flowsThroughHandler() passed after 0.104 seconds.
+✔ Test logsEmittedFromSubdirectoryGetCorrectModuleInNewerSwifts() passed after 0.104 seconds.
+✔ Test allLogLevelByFunctionRefWithSourceAndError() passed after 0.104 seconds.
+✔ Test loggingAString() passed after 0.104 seconds.
+✔ Test autoclosure() passed after 0.104 seconds.
+✔ Test logMessageWithStringInterpolation() passed after 0.104 seconds.
+✔ Test compileInitializeStandardStreamLogHandlersWithMetadataProviders() passed after 0.104 seconds.
+✔ Test logLevelOrdering() passed after 0.104 seconds.
+✔ Test multiplexLogHandlerMetadataWithAttributes_forwardsEventWithAttributes() passed after 0.104 seconds.
+✔ Test test() passed after 0.104 seconds.
+✔ Test "Setting nil on non-existent attribute is no-op" passed after 0.104 seconds.
+✔ Test multiplexLogHandlerMetadata_settingMetadataThroughToUnderlyingHandlers() passed after 0.104 seconds.
+✔ Test testLockMutualExclusion() passed after 0.107 seconds.
+✔ Test errorAndAbove() passed after 0.107 seconds.
+✔ Test traceAndAbove() passed after 0.107 seconds.
+2026-10-31T23:28:38+0000 info test: [LoggingTests] info
+2026-10-31T23:28:38+0000 critical test: [LoggingTests] critical 1
+2026-10-31T23:28:38+0000 critical test: [LoggingTests] critical 2
+2026-10-31T23:28:38+0000 warning test: key=value [LoggingTests] warning
+2026-10-31T23:28:38+0000 warning test: error.message=LoggingTests.SendableTest.TestError error.type=LoggingTests.SendableTest.TestError [LoggingTests] error
+✔ Test logLevelDescription(level:) with 7 test cases passed after 0.105 seconds.
+✔ Suite CompatibilityTest passed after 0.109 seconds.
+✔ Suite "MetadataValue String Interpolation" passed after 0.109 seconds.
+✔ Test logHandlerThatDidImplementProvidersButSomeoneAttemptsToSetOneOnIt() passed after 0.002 seconds.
+✔ Test logHandlerThatDidNotImplementProvidersButSomeoneAttemptsToSetOneOnIt() passed after 0.002 seconds.
+✔ Suite MetadataValueTest passed after 0.109 seconds.
+✔ Test bindLoggerAsyncReturning() passed after 0.108 seconds.
+✔ Test concurrentTasksHaveIndependentContext() passed after 0.108 seconds.
+✔ Test asyncLetInheritsContext() passed after 0.107 seconds.
+2026-10-31T23:28:38+0000 info: [LoggingTests] detached
+✔ Suite StreamLogHandlerTest passed after 0.109 seconds.
+✔ Test contextPreservedAcrossAwait() passed after 0.107 seconds.
+✔ Test asyncHandlerSwapRespectsExplicitLogLevel(level:) with 2 test cases passed after 0.107 seconds.
+✔ Suite SwiftLogNoOpLogHandlerTest passed after 0.109 seconds.
+✔ Suite "MetadataValueAttributes Tests" passed after 0.109 seconds.
+✔ Suite LogEventTest passed after 0.109 seconds.
+✔ Suite MDCTest passed after 0.109 seconds.
+✔ Suite "Lock Test Suite" passed after 0.109 seconds.
+✔ Suite LocalLoggerTest passed after 0.109 seconds.
+✔ Suite MetadataProviderTest passed after 0.110 seconds.
+✔ Test sendableLogger() passed after 0.003 seconds.
+✔ Test childTaskInheritsContextDetachedDoesNot() passed after 0.108 seconds.
+✔ Suite SendableTest passed after 0.110 seconds.
+✔ Suite TaskLocalLoggerTest passed after 0.110 seconds.
+✔ Suite LoggingTest passed after 0.110 seconds.
+2026-10-31T23:28:38+0000 info TestLibrary: foo=bar [LoggingTests] TestLibrary::doSomethingAsync
+2026-10-31T23:28:38+0000 debug GlobalLoggerTest::Struct3: baz=qux [LoggingTests] Struct3::doSomethingElse::Local
+2026-10-31T23:28:38+0000 debug GlobalLoggerTest::Struct3: [LoggingTests] Struct3::doSomethingElse::end
+2026-10-31T23:28:38+0000 debug GlobalLoggerTest::Struct3: [LoggingTests] Struct3::doSomething::end
+2026-10-31T23:28:38+0000 debug GlobalLoggerTest::Struct2: [LoggingTests] Struct2::doSomethingElse::end
+2026-10-31T23:28:38+0000 debug GlobalLoggerTest::Struct2: [LoggingTests] Struct2::doSomething::end
+2026-10-31T23:28:38+0000 debug GlobalLoggerTest::Struct1: [LoggingTests] Struct1::doSomethingElse::end
+2026-10-31T23:28:38+0000 debug GlobalLoggerTest::Struct1: [LoggingTests] Struct1::doSomething::end
+✔ Test traceAndAbove() passed after 0.116 seconds.
+◇ Test errorAndAbove() started.
+2026-10-31T23:28:38+0000 error GlobalLoggerTest::Struct3: [LoggingTests] Struct3::doSomething
+2026-10-31T23:28:38+0000 error GlobalLoggerTest::Struct3: foo=bar [LoggingTests] Struct3::doSomethingElse
+✔ Test errorAndAbove() passed after 0.101 seconds.
+◇ Test warningAndAbove() started.
+2026-10-31T23:28:38+0000 info GlobalLoggerTest::Struct2: [LoggingTests] Struct2::doSomething
+2026-10-31T23:28:38+0000 info GlobalLoggerTest::Struct2: [LoggingTests] Struct2::doSomethingElse
+2026-10-31T23:28:38+0000 error GlobalLoggerTest::Struct3: [LoggingTests] Struct3::doSomething
+2026-10-31T23:28:38+0000 error GlobalLoggerTest::Struct3: foo=bar [LoggingTests] Struct3::doSomethingElse
+2026-10-31T23:28:38+0000 warning GlobalLoggerTest::Struct3: foo=bar [LoggingTests] Struct3::doSomethingElseAsync
+2026-10-31T23:28:38+0000 info TestLibrary: foo=bar [LoggingTests] TestLibrary::doSomething
+2026-10-31T23:28:38+0000 info TestLibrary: foo=bar [LoggingTests] TestLibrary::doSomethingAsync
+✔ Test warningAndAbove() passed after 0.100 seconds.
+◇ Test loggingMergesOneOffMetadataWithProvidedMetadataFromExplicitlyPassed() started.
+2026-10-31T23:28:38+0000 info loggingMergesOneOffMetadataWithProvidedMetadataFromExplicitlyPassed(): common=one-off one-off=42 provider=42 [LoggingTests] test
+✔ Test loggingMergesOneOffMetadataWithProvidedMetadataFromExplicitlyPassed() passed after 0.001 seconds.
+◇ Test loggerWithoutFactoryOverrideDefaultsToUsingLoggingSystemMetadataProvider() started.
+2026-10-31T23:28:38+0000 info loggerWithoutFactoryOverrideDefaultsToUsingLoggingSystemMetadataProvider(): one-off=42 provider=42 [LoggingTests] test
+✔ Test loggerWithoutFactoryOverrideDefaultsToUsingLoggingSystemMetadataProvider() passed after 0.001 seconds.
+◇ Test loggerWithPredefinedLibraryMetadataProvider() started.
+2026-10-31T23:28:38+0000 info loggerWithPredefinedLibraryMetadataProvider(): example=example-value one-off=42 [LoggingTests] test
+✔ Test loggerWithPredefinedLibraryMetadataProvider() passed after 0.001 seconds.
+◇ Test loggerWithFactoryOverrideDefaultsToUsingLoggingSystemMetadataProvider() started.
+2026-10-31T23:28:38+0000 info loggerWithFactoryOverrideDefaultsToUsingLoggingSystemMetadataProvider(): one-off=42 provider=42 [LoggingTests] test
+✔ Test loggerWithFactoryOverrideDefaultsToUsingLoggingSystemMetadataProvider() passed after 0.001 seconds.
+✔ Suite GlobalLoggerTest passed after 0.323 seconds.
+✔ Test run with 168 tests in 15 suites passed after 0.324 seconds.
+◇ Test run started.
+↳ Testing Library Version: 6.4.1 (804dc4530ef3666)
+↳ Target Platform: x86_64-unknown-linux-gnu
+◇ Suite InMemoryLogHandlerTests started.
+◇ Suite MultiplexProviderRegressionTests started.
+◇ Test moreSpecificMetadataOverridesGlobal() started.
+◇ Test metadataFromLoggerEndsUpInEntry() started.
+◇ Test clear() started.
+◇ Test errorEquality() started.
+◇ Test metadataWithAttributesIsPreservedInEntry() started.
+◇ Test collectsLogs() started.
+◇ Test constructorProviderReachesEverySink(handlerCount:) started.
+◇ Test constructorProviderLayersBetweenChildAndExplicitMetadata() started.
+◇ Test case passing 1 argument handlerCount → 1 to constructorProviderReachesEverySink(handlerCount:) started.
+◇ Test case passing 1 argument handlerCount → 2 to constructorProviderReachesEverySink(handlerCount:) started.
+✔ Test moreSpecificMetadataOverridesGlobal() passed after 0.001 seconds.
+✔ Test clear() passed after 0.001 seconds.
+✔ Test metadataWithAttributesIsPreservedInEntry() passed after 0.001 seconds.
+✔ Test constructorProviderLayersBetweenChildAndExplicitMetadata() passed after 0.001 seconds.
+✔ Test constructorProviderReachesEverySink(handlerCount:) with 2 test cases passed after 0.001 seconds.
+✔ Test errorEquality() passed after 0.001 seconds.
+✔ Suite MultiplexProviderRegressionTests passed after 0.001 seconds.
+✔ Test collectsLogs() passed after 0.001 seconds.
+✔ Test metadataFromLoggerEndsUpInEntry() passed after 0.001 seconds.
+✔ Suite InMemoryLogHandlerTests passed after 0.001 seconds.
+✔ Test run with 8 tests in 2 suites passed after 0.001 seconds.
+
