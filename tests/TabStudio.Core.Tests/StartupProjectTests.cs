@@ -322,12 +322,20 @@ public sealed class StartupProjectTests : IDisposable
             </Project>
             """);
         _temp.Write("src/Identity.API/Views/Account/Login.cshtml", "<h1>Sign in</h1>");
+        _temp.Write("src/Basket.API/Proto/basket.proto", "syntax = \"proto3\";");
         _temp.Write("src/WebApp/WebApp.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.Web">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup><Protobuf Include="..\Basket.API\Proto\basket.proto" GrpcServices="Client" /></ItemGroup>
+            </Project>
+            """);
+        _temp.Write("src/WebApp/Components/App.razor", "<Routes />");
+        _temp.Write("src/WebhookClient/WebhookClient.csproj", """
             <Project Sdk="Microsoft.NET.Sdk.Web">
               <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
             </Project>
             """);
-        _temp.Write("src/WebApp/Components/App.razor", "<Routes />");
+        _temp.Write("src/WebhookClient/Components/App.razor", "<Routes />");
         _temp.Write("src/ClientApp/ClientApp.csproj", """
             <Project Sdk="Microsoft.NET.Sdk">
               <PropertyGroup>
@@ -358,6 +366,7 @@ public sealed class StartupProjectTests : IDisposable
               <Project Path="src/Basket.API/Basket.API.csproj" />
               <Project Path="src/Identity.API/Identity.API.csproj" />
               <Project Path="src/WebApp/WebApp.csproj" />
+              <Project Path="src/WebhookClient/WebhookClient.csproj" />
               <Project Path="src/HybridApp/HybridApp.csproj" />
               <Project Path="src/ClientApp/ClientApp.csproj" />
               <Project Path="tests/eShop.AppHost.UnitTests/eShop.AppHost.UnitTests.csproj" />
@@ -371,7 +380,67 @@ public sealed class StartupProjectTests : IDisposable
         Assert.False(workspace.FindProject("Basket.API")!.HasRazorViews);
         Assert.True(workspace.FindProject("eShop.AppHost.UnitTests")!.IsTestProject);
         Assert.Equal("WebApp", workspace.DefaultStartupProject?.Name);
-        Assert.Equal(new[] { "WebApp", "Identity.API", "Basket.API" }, workspace.StartupCandidates.Select(p => p.Name));
+        Assert.Equal(new[] { "WebApp", "WebhookClient", "Identity.API", "Basket.API" }, workspace.StartupCandidates.Select(p => p.Name));
+    }
+
+    /// <summary>
+    /// dotnet/eShop's WebApp generates its gRPC client with protoc, which TabStudio cannot run here. 0.20.4 left it out of
+    /// the startup candidates with everything left out of builds, so F5 started WebhookClient. All it lacks is a code
+    /// generator: it is still the app, it stays out of builds, and starting it says why in one line.
+    /// </summary>
+    [Fact]
+    public void A_web_app_that_only_needs_protoc_is_still_the_startup_project_and_is_left_out_of_builds()
+    {
+        _temp.Write("Basket.API/Basket.API.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.Web">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup><Protobuf Include="Proto\basket.proto" GrpcServices="Server" /></ItemGroup>
+            </Project>
+            """);
+        _temp.Write("Basket.API/Proto/basket.proto", "syntax = \"proto3\";");
+        _temp.Write("WebhookClient/WebhookClient.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.Web">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        _temp.Write("WebhookClient/Components/App.razor", "<Routes />");
+        _temp.Write("WebApp/WebApp.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.Web">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup><Protobuf Include="..\Basket.API\Proto\basket.proto" GrpcServices="Client" /></ItemGroup>
+            </Project>
+            """);
+        _temp.Write("WebApp/Components/App.razor", "<Routes />");
+        var solution = _temp.Write("eShop.slnx", """
+            <Solution>
+              <Project Path="Basket.API/Basket.API.csproj" />
+              <Project Path="WebApp/WebApp.csproj" />
+              <Project Path="WebhookClient/WebhookClient.csproj" />
+            </Solution>
+            """);
+
+        var workspace = WorkspaceLoader.Load(solution);
+        var webApp = workspace.FindProject("WebApp")!;
+
+        Assert.True(ProjectClassifier.OnlyNeedsCodeGenerator(webApp));
+        Assert.Equal("WebApp", workspace.DefaultStartupProject?.Name);
+        Assert.True(BuildExclusions.IsNotBuiltHere(webApp));
+        Assert.Contains("protoc", ProjectClassifier.PlatformWorkloadReason(webApp), StringComparison.Ordinal);
+        Assert.Contains("protoc", CompatibilityDoctor.Diagnose(workspace.Projects).Single(r => r.ProjectName == "WebApp").Explanation, StringComparison.Ordinal);
+    }
+
+    /// <summary>A MAUI app still never starts: what it lacks is a platform, not a code generator.</summary>
+    [Fact]
+    public void Only_a_code_generator_keeps_a_program_left_out_of_builds_among_the_startup_candidates()
+    {
+        var maui = ProjectParser.Parse(Path.Combine(_temp.Path, "App", "App.csproj"), """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFrameworks>net10.0-android;net10.0-ios</TargetFrameworks><OutputType>Exe</OutputType><UseMaui>true</UseMaui></PropertyGroup>
+            </Project>
+            """);
+
+        Assert.False(ProjectClassifier.OnlyNeedsCodeGenerator(maui));
+        Assert.Null(ProjectClassifier.StartupRank(maui));
     }
 
     /// <summary>spectre.console: BenchmarkDotNet's benchmarks are a console program, but never the startup project.</summary>
