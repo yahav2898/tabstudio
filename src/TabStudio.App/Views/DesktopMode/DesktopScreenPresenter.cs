@@ -38,6 +38,9 @@ internal sealed class DesktopScreenPresenter : IDisposable
         _ide = ide;
         _desktop = desktop;
         _screen.MousePointer = desktop.Displays.Cursor;
+        // With a mouse and a keyboard the IDE is as dense as on a computer: 32-pixel targets (docs/design/README.md).
+        Accessibility.TouchTargets.UseDesktop(_screen);
+        _screen.Classes.Add("desktopMode");
         _desktop.PropertyChanged += OnDesktopPropertyChanged;
         _desktop.KeyboardFocusRequested += OnKeyboardFocusRequested;
         _desktop.Displays.PresentationEnded += OnPresentationEnded;

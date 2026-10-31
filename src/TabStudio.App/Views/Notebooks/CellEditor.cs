@@ -13,6 +13,7 @@ using TabStudio.App.Editing;
 using TabStudio.App.Theming;
 using TabStudio.App.ViewModels.Notebooks;
 using TabStudio.Notebooks;
+using TabStudio.App.Accessibility;
 
 namespace TabStudio.App.Views.Notebooks;
 
@@ -53,9 +54,11 @@ public sealed class CellEditor : UserControl, IDisposable
             Background = Brushes.Transparent,
             HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
             VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
-            FontSize = 13.5,
-            MinHeight = 20,
         };
+        TypeScale.SetBaseFontSize(_editor, 13.5);
+        Avalonia.Automation.AutomationProperties.SetName(_editor, "Cell");
+        // A one-line cell is still a whole touch target (docs/design/README.md, "Touch targets").
+        _editor.Bind(MinHeightProperty, _editor.GetResourceObservable("Target.Size"));
         _editor.Options.ConvertTabsToSpaces = true;
         _editor.Options.IndentationSize = 4;
         _editor.Options.HighlightCurrentLine = false;

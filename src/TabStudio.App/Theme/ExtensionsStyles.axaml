@@ -19,11 +19,10 @@
 
   <!-- A category chip of Browse, filled when selected. -->
   <Style Selector="Button.categoryChip">
-    <Setter Property="MinHeight" Value="34" />
-    <Setter Property="Height" Value="34" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
     <Setter Property="Padding" Value="14,0" />
     <Setter Property="CornerRadius" Value="17" />
-    <Setter Property="FontSize" Value="12.5" />
+    <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
   </Style>
   <Style Selector="Button.categoryChip.selected /template/ ContentPresenter#PART_ContentPresenter">
@@ -37,19 +36,17 @@
 
   <!-- The Install button of a list row: smaller than the page's, still a comfortable touch target. -->
   <Style Selector="Button.rowAction">
-    <Setter Property="MinHeight" Value="34" />
-    <Setter Property="Height" Value="34" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
     <Setter Property="Padding" Value="12,0" />
-    <Setter Property="FontSize" Value="12.5" />
+    <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     <Setter Property="CornerRadius" Value="7" />
   </Style>
 
   <!-- The page's action buttons. -->
   <Style Selector="Button.pageAction">
-    <Setter Property="MinHeight" Value="38" />
-    <Setter Property="Height" Value="38" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
     <Setter Property="Padding" Value="16,0" />
-    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
   </Style>
 
   <!-- The "Installed", "Disabled" or "Update" state of a list row. -->
@@ -59,7 +56,7 @@
     <Setter Property="CornerRadius" Value="11" />
     <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
     <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
-    <Setter Property="TextElement.FontSize" Value="11" />
+    <Setter Property="TextElement.FontSize" Value="{DynamicResource Type.Caption}" />
     <Setter Property="TextElement.FontWeight" Value="SemiBold" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="HorizontalAlignment" Value="Right" />
@@ -108,7 +105,7 @@
 
   <!-- A row of the quick pick. -->
   <Style Selector="ListBox.quickPick ListBoxItem">
-    <Setter Property="MinHeight" Value="40" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
   </Style>
 
 </Styles>

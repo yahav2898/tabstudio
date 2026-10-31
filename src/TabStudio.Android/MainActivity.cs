@@ -46,7 +46,7 @@ namespace TabStudio.Android;
     WindowSoftInputMode = SoftInput.AdjustResize,
     ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.SmallestScreenSize
         | ConfigChanges.ScreenLayout | ConfigChanges.UiMode | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden
-        | ConfigChanges.Navigation)]
+        | ConfigChanges.Navigation | ConfigChanges.FontScale | ConfigChanges.LayoutDirection)]
 public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplication>
 {
     /// <summary>The intent extra that runs the self test.</summary>

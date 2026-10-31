@@ -45,7 +45,7 @@
       <Setter Property="CornerRadius" Value="10" />
       <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
       <Setter Property="VerticalAlignment" Value="Center" />
-      <Setter Property="TextElement.FontSize" Value="11" />
+      <Setter Property="TextElement.FontSize" Value="{DynamicResource Type.Caption}" />
       <Setter Property="TextElement.FontWeight" Value="SemiBold" />
       <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
     </Style>
@@ -64,29 +64,26 @@
       <Setter Property="VerticalAlignment" Value="Top" />
     </Style>
     <Style Selector="Border.avatar > TextBlock">
-      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
       <Setter Property="FontWeight" Value="SemiBold" />
       <Setter Property="Foreground" Value="{DynamicResource Brush.OnAccent}" />
       <Setter Property="HorizontalAlignment" Value="Center" />
       <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
     <Style Selector="Button.action">
-      <Setter Property="Height" Value="38" />
-      <Setter Property="MinHeight" Value="38" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="14,0" />
       <Setter Property="Margin" Value="0,0,8,8" />
-      <Setter Property="FontSize" Value="13" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
     </Style>
     <Style Selector="Button.compact">
-      <Setter Property="Height" Value="36" />
-      <Setter Property="MinHeight" Value="36" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="14,0" />
-      <Setter Property="FontSize" Value="13" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
     </Style>
     <Style Selector="Button.tab">
-      <Setter Property="Height" Value="40" />
       <Setter Property="Padding" Value="14,0" />
-      <Setter Property="FontSize" Value="13" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
     </Style>
   </UserControl.Styles>
 
@@ -97,14 +94,14 @@
       <Border DockPanel.Dock="Top" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1"
               Padding="20,16,20,0">
         <StackPanel Spacing="10" MaxWidth="1100" HorizontalAlignment="Stretch">
-          <TextBlock FontSize="20" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}"><Run
+          <TextBlock FontSize="{DynamicResource Type.Hero}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}"><Run
             Text="{Binding Title}" /><Run Text="  " /><Run Text="{Binding NumberText}" FontWeight="Normal" Foreground="{DynamicResource Brush.TextMuted}" /></TextBlock>
 
           <WrapPanel IsVisible="{Binding IsLoaded}">
             <Border Classes="state" Margin="0,0,10,6" Background="{Binding Badge, Converter={x:Static conv:ReviewConverters.BadgeBrush}}">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <controls:StrokeIcon Data="{Binding Badge, Converter={x:Static conv:ReviewConverters.BadgeIcon}}" Size="14" Foreground="{DynamicResource Brush.OnAccent}" />
-                <TextBlock Text="{Binding BadgeText}" Foreground="{DynamicResource Brush.OnAccent}" FontWeight="SemiBold" FontSize="12.5" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding BadgeText}" Foreground="{DynamicResource Brush.OnAccent}" FontWeight="SemiBold" FontSize="{DynamicResource Type.Body}" VerticalAlignment="Center" />
               </StackPanel>
             </Border>
             <TextBlock Margin="0,0,12,6" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}" Text="{Binding SummaryText}" />
@@ -120,7 +117,7 @@
               <TextBlock Classes="small" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}" Text="{Binding MergeabilityText}" />
             </StackPanel>
             <!-- The head commit's checks, as the status bar's CI item shows them; the details are on GitHub's Checks tab. -->
-            <Button x:Name="ChecksButton" Theme="{StaticResource ToolButton}" Height="28" MinHeight="28" Padding="6,0" Margin="0,-4,18,0"
+            <Button x:Name="ChecksButton" Theme="{StaticResource ToolButton}" Padding="6,0" Margin="0,-4,18,0"
                     Command="{Binding OpenChecksCommand}" IsVisible="{Binding HasChecks}" ToolTip.Tip="Open the checks on GitHub">
               <StackPanel Orientation="Horizontal" Spacing="8">
                 <controls:StrokeIcon Size="15" StrokeThickness="2.2"
@@ -164,7 +161,7 @@
                 <TextBlock Text="Open on GitHub" VerticalAlignment="Center" />
               </StackPanel>
             </Button>
-            <Button Theme="{StaticResource ToolButton}" Classes="action" Width="38" Padding="0" Command="{Binding RefreshCommand}" ToolTip.Tip="Refresh">
+            <Button Theme="{StaticResource ToolButton}" Classes="action" Padding="0" Command="{Binding RefreshCommand}" ToolTip.Tip="Refresh">
               <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="15" />
             </Button>
           </WrapPanel>
@@ -205,7 +202,7 @@
                 </StackPanel>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" Margin="12,0,0,0" VerticalAlignment="Center">
                   <Button Theme="{StaticResource AccentButton}" Classes="compact" Content="Open Claude Settings" Command="{Binding OpenClaudeSettingsCommand}" />
-                  <Button Theme="{StaticResource ToolButton}" Width="36" Height="36" MinWidth="36" MinHeight="36" Padding="0" ToolTip.Tip="Close"
+                  <Button Theme="{StaticResource ToolButton}" Padding="0" ToolTip.Tip="Close"
                           Command="{Binding CloseClaudeNoticeCommand}">
                     <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="12" />
                   </Button>
@@ -245,7 +242,7 @@
                     <TextBlock Text="{Binding Author, Converter={x:Static conv:ReviewConverters.Initial}}" />
                   </Border>
                   <TextBlock VerticalAlignment="Center"><Run Text="{Binding Author}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
-                    Text=" " /><Run Text="{Binding OpenedText}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="12" /></TextBlock>
+                    Text=" " /><Run Text="{Binding OpenedText}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="{DynamicResource Type.Small}" /></TextBlock>
                 </StackPanel>
                 <nb:MarkdownView Blocks="{Binding Description}" IsVisible="{Binding HasDescription}" />
                 <TextBlock Classes="muted" FontStyle="Italic" Text="No description provided." IsVisible="{Binding !HasDescription}" />
@@ -312,7 +309,7 @@
                 <StackPanel Spacing="10" IsVisible="{Binding !IsDraft}">
                   <StackPanel Spacing="4">
                     <TextBlock Classes="label" Text="Merge method" />
-                    <ComboBox x:Name="MergeMethodBox" ItemsSource="{Binding MergeMethods}" SelectedItem="{Binding SelectedMergeMethod}" MinHeight="40"
+                    <ComboBox x:Name="MergeMethodBox" ItemsSource="{Binding MergeMethods}" SelectedItem="{Binding SelectedMergeMethod}"
                               HorizontalAlignment="Stretch">
                       <ComboBox.ItemTemplate>
                         <DataTemplate DataType="pr:MergeMethodOption">
@@ -326,7 +323,7 @@
                   </StackPanel>
                   <StackPanel Spacing="4" IsVisible="{Binding HasCommitMessage}">
                     <TextBlock Classes="label" Text="Commit title" />
-                    <TextBox x:Name="MergeTitleBox" Text="{Binding MergeTitle}" MinHeight="38" />
+                    <TextBox x:Name="MergeTitleBox" Text="{Binding MergeTitle}" />
                   </StackPanel>
                   <StackPanel Spacing="4" IsVisible="{Binding HasCommitMessage}">
                     <TextBlock Classes="label" Text="Commit message" />
@@ -334,7 +331,7 @@
                              VerticalContentAlignment="Top" />
                   </StackPanel>
                   <CheckBox x:Name="DeleteBranchBox" IsChecked="{Binding DeleteBranchAfterMerge}" IsVisible="{Binding CanDeleteBranch}">
-                    <TextBlock><Run Text="Delete " /><Run Text="{Binding HeadBranch}" FontFamily="{DynamicResource CodeFont}" FontSize="12.5" /><Run
+                    <TextBlock><Run Text="Delete " /><Run Text="{Binding HeadBranch}" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Body}" /><Run
                       Text=" after merging" /></TextBlock>
                   </CheckBox>
                   <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding AutomaticDeleteNote}"
@@ -404,7 +401,7 @@
                                                Foreground="{Binding Kind, Converter={x:Static conv:ReviewConverters.TimelineBrush}}" />
                           <TextBlock VerticalAlignment="Center" TextWrapping="Wrap"><Run Text="{Binding Author}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
                             Text=" " /><Run Text="{Binding Action}" Foreground="{DynamicResource Brush.TextSecondary}" /><Run Text=" · " Foreground="{DynamicResource Brush.TextMuted}" /><Run
-                            Text="{Binding When}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="12" /></TextBlock>
+                            Text="{Binding When}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="{DynamicResource Type.Small}" /></TextBlock>
                         </StackPanel>
                         <nb:MarkdownView Blocks="{Binding Body}" IsVisible="{Binding HasBody}" />
                         <TextBlock Classes="muted small" Text="{Binding Note}" IsVisible="{Binding HasNote}" />
@@ -441,7 +438,7 @@
                   <TextBlock Classes="muted small" TextWrapping="Wrap"
                              Text="Open a file to keep, edit or dismiss each draft. Kept drafts join your pending review; nothing is posted until you finish it." />
                 </StackPanel>
-                <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0" Margin="8,0,0,0"
+                <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Padding="0" Margin="8,0,0,0"
                         VerticalAlignment="Top" ToolTip.Tip="Close" Command="{Binding DismissClaudeSummaryCommand}">
                   <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="12" />
                 </Button>
@@ -452,7 +449,7 @@
               <ItemsControl x:Name="FileList" ItemsSource="{Binding Files}">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate DataType="pr:PullRequestFileViewModel">
-                    <Button Theme="{StaticResource ToolButton}" Height="44" MinHeight="44" Padding="10,0" CornerRadius="6"
+                    <Button Theme="{StaticResource ToolButton}" Padding="10,0" CornerRadius="6"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" ToolTip.Tip="{Binding Path}" Command="{Binding OpenCommand}">
                       <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
                         <Border Classes="badge" Margin="0,0,10,0" Background="{Binding BadgeKind, Converter={x:Static conv:AppConverters.BadgeBackground}}">
@@ -461,7 +458,7 @@
                         <TextBlock Grid.Column="1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
                           <Run Text="{Binding Name}" Foreground="{DynamicResource Brush.TextBright}" />
                           <Run Text=" " />
-                          <Run Text="{Binding Folder}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="11.5" />
+                          <Run Text="{Binding Folder}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="{DynamicResource Type.Fine}" />
                         </TextBlock>
                         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" Margin="8,0">
                           <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding HasThreads}" ToolTip.Tip="Conversations">
@@ -481,7 +478,7 @@
                         <TextBlock Grid.Column="3" Classes="small mono" VerticalAlignment="Center" Margin="4,0,10,0"><Run
                           Text="{Binding AdditionsText}" Foreground="{DynamicResource Brush.Success}" /><Run Text=" " /><Run
                           Text="{Binding DeletionsText}" Foreground="{DynamicResource Brush.Error}" /></TextBlock>
-                        <TextBlock Grid.Column="4" Width="14" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" TextAlignment="Center"
+                        <TextBlock Grid.Column="4" MinWidth="14" FontWeight="Bold" FontSize="{DynamicResource Type.Small}" VerticalAlignment="Center" TextAlignment="Center"
                                    Text="{Binding StatusLetter}" Foreground="{Binding GitStatus, Converter={x:Static conv:SourceControlConverters.StatusBrush}}" />
                       </Grid>
                     </Button>
@@ -497,7 +494,7 @@
             <ItemsControl ItemsSource="{Binding Commits}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="pr:PullRequestCommitItemViewModel">
-                  <Button Theme="{StaticResource ToolButton}" Height="44" MinHeight="44" Padding="10,0" CornerRadius="6"
+                  <Button Theme="{StaticResource ToolButton}" Padding="10,0" CornerRadius="6"
                           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" ToolTip.Tip="Open on GitHub"
                           Command="{Binding Open}" CommandParameter="{Binding}">
                     <Grid ColumnDefinitions="Auto,*,Auto,Auto">

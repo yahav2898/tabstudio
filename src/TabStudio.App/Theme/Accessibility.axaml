@@ -1,0 +1,65 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:TabStudio.App.Controls"
+        xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit">
+
+  <!--
+    The accessibility rules every view follows without saying so (docs/design/README.md, "Accessibility").
+    Touch targets: every control that takes a tap is at least Target.Size (48 on a phone, 44 on a tablet, 32 in desktop
+    mode; Accessibility/TouchTargets.cs). A style outranks a control theme, so these hold for TabStudio's own themes
+    (ToolButton, SecondaryButton, ListRow ...) too; a view never sets a smaller Height or MinHeight on such a control.
+    Fluent's own controls read the same size through their minimum-height resources.
+  -->
+
+  <Style Selector="Button, DropDownButton, ToggleSwitch, ListBoxItem, ComboBoxItem, TabItem">
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+  </Style>
+  <!-- A button taller than its text keeps the text centered in it (docs/design/README.md, "Type"). -->
+  <Style Selector="Button, DropDownButton">
+    <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="TreeViewItem">
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+  </Style>
+  <Style Selector="MenuItem">
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+  </Style>
+  <Style Selector="Menu > MenuItem">
+    <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
+  </Style>
+  <!-- A check box without a label, as in a row of Git Changes, is still a whole target. -->
+  <Style Selector="CheckBox, RadioButton">
+    <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
+  </Style>
+  <!-- The few toggle buttons a view draws itself, such as the anchor editor's sides. -->
+  <Style Selector="ToggleButton.target">
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+    <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
+  </Style>
+  <Style Selector="TextBox, ComboBox, NumericUpDown, AutoCompleteBox, CheckBox, RadioButton">
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+  </Style>
+
+  <!-- The terminal's text follows the text size, as the editor's does (Type.Code in Controls.axaml). -->
+  <Style Selector="controls|TerminalView">
+    <Setter Property="FontSize" Value="{DynamicResource Type.Section}" />
+  </Style>
+  <Style Selector="DataGridRow">
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+  </Style>
+
+  <!--
+    Code reads left to right in every language: in a right-to-left layout the editors, the terminal and code text keep
+    their direction while the IDE around them mirrors.
+  -->
+  <Style Selector="ae|TextEditor, controls|TerminalView, TextBlock.mono, SelectableTextBlock.mono, TextBox.mono">
+    <Setter Property="FlowDirection" Value="LeftToRight" />
+  </Style>
+
+  <!-- What sits only in a column a responsive layout gives no width is hidden, not squeezed to nothing (Controls/ResponsiveColumns.cs). -->
+  <Style Selector=":is(Control).columnFolded">
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+
+</Styles>

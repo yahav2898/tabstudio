@@ -26,6 +26,14 @@ public sealed partial class ErrorListView : UserControl
     {
         base.OnSizeChanged(e);
         IsCompact = e.NewSize.Width < TabStudio.App.Controls.ResponsiveColumns.CompactWidth;
+
+        // A narrow panel puts the search under the filters, the width of the panel.
+        var narrow = e.NewSize.Width < 640;
+        Grid.SetRow(SearchBox, narrow ? 1 : 0);
+        Grid.SetColumn(SearchBox, narrow ? 0 : 1);
+        Grid.SetColumnSpan(SearchBox, narrow ? 2 : 1);
+        SearchBox.Width = narrow ? double.NaN : 220;
+        SearchBox.Margin = narrow ? new Thickness(0, 0, 0, 6) : default;
     }
 
     /// <summary>Creates the view.</summary>

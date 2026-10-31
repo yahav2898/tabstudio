@@ -11,16 +11,16 @@
       <Grid ColumnDefinitions="Auto,*,Auto">
         <controls:StrokeIcon Data="{StaticResource Icon.Watch}" Size="16" Margin="2,0,10,0"
                              Foreground="{DynamicResource Brush.AccentText}" />
-        <TextBox x:Name="NewExpressionBox" Grid.Column="1" Classes="mono" MinHeight="34"
+        <TextBox x:Name="NewExpressionBox" Grid.Column="1" Classes="mono"
                  Watermark="Add item to watch, such as order.Items[0].Price"
                  Text="{Binding NewExpression}" />
-        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="34" Margin="8,0,0,0" Padding="14,0"
+        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Margin="8,0,0,0" Padding="14,0"
                 Content="Add" Command="{Binding AddNewExpressionCommand}" />
       </Grid>
     </Border>
     <Panel>
       <views:VariableListView DataContext="{Binding Tree}" />
-      <TextBlock Classes="muted" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,26,0,0"
+      <TextBlock Classes="muted" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="16,26,16,0" TextWrapping="Wrap" TextAlignment="Center"
                  Text="Watch a variable, member or item: type its path below."
                  IsVisible="{Binding !Tree.Rows.Count}" />
     </Panel>

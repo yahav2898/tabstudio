@@ -25,7 +25,7 @@
   <DockPanel>
     <Border DockPanel.Dock="Top" Padding="10,4,6,4" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="Auto,*,Auto">
-        <controls:StrokeIcon Data="{StaticResource Icon.Computer}" Size="15" Foreground="{DynamicResource Brush.Accent}" VerticalAlignment="Center" />
+        <controls:StrokeIcon Data="{StaticResource Icon.Computer}" Size="15" Foreground="{DynamicResource Brush.AccentText}" VerticalAlignment="Center" />
         <StackPanel Grid.Column="1" Margin="8,2" VerticalAlignment="Center" Spacing="1">
           <TextBlock Classes="header" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
           <TextBlock Classes="muted small" Text="{Binding StatusText}" TextTrimming="CharacterEllipsis" />
@@ -44,7 +44,7 @@
     <!-- The program and its window or dialog, and what to do with the window. -->
     <Border DockPanel.Dock="Top" Padding="8,6" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" IsVisible="{Binding HasSelectedApp}">
       <Grid ColumnDefinitions="*,6,*" RowDefinitions="Auto,Auto" RowSpacing="4">
-        <ComboBox ItemsSource="{Binding Apps}" SelectedItem="{Binding SelectedApp}" HorizontalAlignment="Stretch" MinHeight="36" ToolTip.Tip="Program on the PC">
+        <ComboBox ItemsSource="{Binding Apps}" SelectedItem="{Binding SelectedApp}" HorizontalAlignment="Stretch" ToolTip.Tip="Program on the PC">
           <ComboBox.ItemTemplate>
             <DataTemplate x:DataType="wb:BridgeAppViewModel">
               <TextBlock Text="{Binding Display}" TextTrimming="CharacterEllipsis" />
@@ -52,7 +52,7 @@
           </ComboBox.ItemTemplate>
         </ComboBox>
         <ComboBox Grid.Column="2" ItemsSource="{Binding SelectedApp.Windows, FallbackValue={x:Null}}" SelectedItem="{Binding SelectedWindow}"
-                  HorizontalAlignment="Stretch" MinHeight="36" ToolTip.Tip="Window or dialog">
+                  HorizontalAlignment="Stretch" ToolTip.Tip="Window or dialog">
           <ComboBox.ItemTemplate>
             <DataTemplate x:DataType="wb:BridgeWindowOption">
               <TextBlock TextTrimming="CharacterEllipsis"><Run Text="{Binding Display}" /><Run Text="  " /><Run Text="{Binding SizeText}" Foreground="{DynamicResource Brush.TextMuted}" /></TextBlock>
@@ -88,7 +88,7 @@
       <Border Classes="overlay" Classes.away="{Binding IsPcAway}" IsVisible="{Binding HasMessage}" IsHitTestVisible="False">
         <Border Classes="card" MaxWidth="400" Margin="24" Padding="20,18" CornerRadius="10" HorizontalAlignment="Center" VerticalAlignment="Center">
           <StackPanel Spacing="10">
-            <controls:StrokeIcon Data="{StaticResource Icon.Computer}" Size="34" Foreground="{DynamicResource Brush.Accent}" HorizontalAlignment="Center" />
+            <controls:StrokeIcon Data="{StaticResource Icon.Computer}" Size="34" Foreground="{DynamicResource Brush.AccentText}" HorizontalAlignment="Center" />
             <TextBlock Classes="h2" Text="{Binding MessageTitle}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
             <TextBlock Classes="muted" Text="{Binding Message}" TextWrapping="Wrap" TextAlignment="Center" />
           </StackPanel>

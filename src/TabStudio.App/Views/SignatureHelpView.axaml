@@ -11,22 +11,22 @@
     <StackPanel Spacing="4">
       <Grid ColumnDefinitions="Auto,*">
         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" IsVisible="{Binding HasOverloads}">
-          <Button Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0" CornerRadius="6"
+          <Button Theme="{StaticResource ToolButton}" Padding="0" CornerRadius="6"
                   Focusable="False" ToolTip.Tip="Previous overload (Up)" Command="{Binding PreviousOverloadCommand}">
             <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" RenderTransform="rotate(180deg)" />
           </Button>
-          <TextBlock Text="{Binding Counter}" FontSize="12" Classes="muted" VerticalAlignment="Center" Margin="2,0" />
-          <Button Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0" CornerRadius="6"
+          <TextBlock Text="{Binding Counter}" FontSize="{DynamicResource Type.Small}" Classes="muted" VerticalAlignment="Center" Margin="2,0" />
+          <Button Theme="{StaticResource ToolButton}" Padding="0" CornerRadius="6"
                   Focusable="False" ToolTip.Tip="Next overload (Down)" Command="{Binding NextOverloadCommand}">
             <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
           </Button>
         </StackPanel>
         <controls:StyledTextBlock Grid.Column="1" Runs="{Binding Signature}" TextWrapping="Wrap" Margin="6,6,0,0"
-                                  FontFamily="{DynamicResource CodeFont}" FontSize="12.5" Foreground="{DynamicResource Brush.Text}" />
+                                  FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Body}" Foreground="{DynamicResource Brush.Text}" />
       </Grid>
       <TextBlock Text="{Binding Documentation}" IsVisible="{Binding HasDocumentation}" TextWrapping="Wrap" Margin="6,0,0,0"
-                 FontSize="12.5" Foreground="{DynamicResource Brush.TextSecondary}" />
-      <TextBlock IsVisible="{Binding HasParameterDocumentation}" TextWrapping="Wrap" Margin="6,0,0,0" FontSize="12.5">
+                 FontSize="{DynamicResource Type.Body}" Foreground="{DynamicResource Brush.TextSecondary}" />
+      <TextBlock IsVisible="{Binding HasParameterDocumentation}" TextWrapping="Wrap" Margin="6,0,0,0" FontSize="{DynamicResource Type.Body}">
         <Run Text="{Binding ParameterName}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
              Text=": " Foreground="{DynamicResource Brush.TextSecondary}" /><Run
              Text="{Binding ParameterDocumentation}" Foreground="{DynamicResource Brush.TextSecondary}" />

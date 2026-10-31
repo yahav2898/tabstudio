@@ -12,7 +12,7 @@
       <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding HasSignature}">
         <controls:SymbolGlyphIcon Kind="{Binding Kind}" Size="16" Margin="0,1,8,0" VerticalAlignment="Top" />
         <controls:StyledTextBlock Grid.Column="1" Runs="{Binding Signature}" TextWrapping="Wrap"
-                                  FontFamily="{DynamicResource CodeFont}" FontSize="12.5" Foreground="{DynamicResource Brush.Text}" />
+                                  FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Body}" Foreground="{DynamicResource Brush.Text}" />
       </Grid>
 
       <ItemsControl ItemsSource="{Binding Sections}">
@@ -23,7 +23,7 @@
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
           <DataTemplate DataType="vm:QuickInfoSectionViewModel">
-            <controls:StyledTextBlock Runs="{Binding Runs}" TextWrapping="Wrap" FontSize="12.5" Foreground="{DynamicResource Brush.TextSecondary}" />
+            <controls:StyledTextBlock Runs="{Binding Runs}" TextWrapping="Wrap" FontSize="{DynamicResource Type.Body}" Foreground="{DynamicResource Brush.TextSecondary}" />
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
@@ -44,7 +44,7 @@
                 <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Foreground="{DynamicResource Brush.Warning}" IsVisible="{Binding IsWarning}" />
                 <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Foreground="{DynamicResource Brush.Info}" IsVisible="{Binding IsMessage}" />
               </Panel>
-              <TextBlock Grid.Column="1" TextWrapping="Wrap" FontSize="12.5" Foreground="{DynamicResource Brush.Text}">
+              <TextBlock Grid.Column="1" TextWrapping="Wrap" FontSize="{DynamicResource Type.Body}" Foreground="{DynamicResource Brush.Text}">
                 <Run Text="{Binding Code}" Foreground="{DynamicResource Brush.Link}" /><Run Text=": " /><Run Text="{Binding Message}" />
               </TextBlock>
             </Grid>
