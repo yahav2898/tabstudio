@@ -1,0 +1,33 @@
+MVVM-Samples at 7d67102cd25e918f7a687427225dfbabe9ec9deb
+Opened /home/runner/work/_temp/real-repos/MVVM-Samples/samples/MvvmSampleXF.sln in 0.1 s
+Compatibility Doctor:
+  MvvmSampleXF.Android: Not supported via Xamarin, on a computer - Not supported: a Xamarin project is built by Xamarin's tools in Visual Studio, on a computer. TabStudio leaves it out of builds.
+  MvvmSampleXF.iOS: Not supported via Xamarin, on a computer - Not supported: a Xamarin project is built by Xamarin's tools in Visual Studio, on a computer. TabStudio leaves it out of builds.
+  MvvmSampleXF: Not supported via Xamarin, on a computer - Not supported: a Xamarin project is built by Xamarin's tools in Visual Studio, on a computer. TabStudio leaves it out of builds.
+  MvvmSample.Core: Library via Built with its users - A library is compiled together with the projects that reference it.
+Startup project: none
+Built in 0.0 s: 0 errors, 2 warnings
+Packages with analyzers or MSBuild files:
+  communitytoolkit.mvvm 8.0.0-preview4
+      analyzers/dotnet/roslyn4.0/cs/CommunityToolkit.Mvvm.SourceGenerators.dll
+      build/netstandard2.0/CommunityToolkit.Mvvm.targets
+      build/netstandard2.1/CommunityToolkit.Mvvm.targets
+      buildTransitive/netstandard2.0/CommunityToolkit.Mvvm.targets
+      buildTransitive/netstandard2.1/CommunityToolkit.Mvvm.targets
+  refit 6.3.2
+      analyzers/dotnet/roslyn3.8/cs/InterfaceStubGeneratorV1.dll
+      analyzers/dotnet/roslyn4.0/cs/InterfaceStubGeneratorV2.dll
+      build/netstandard2.0/refit.targets
+      buildTransitive/netstandard2.0/refit.props
+      buildTransitive/netstandard2.0/refit.targets
+Output:
+Build started at 17:56:45...
+1>------ Build started: Project: MvvmSample.Core, Configuration: Debug ------
+1>SamplePageViewModel.cs(67,28): warning CS8600: Converting null literal or possible null value to non-nullable type.
+1>SamplePageViewModel.cs(69,54): warning CS8604: Possible null reference argument for parameter 'path3' in 'string Path.Combine(string path1, string path2, string path3, string path4)'.
+1>MvvmSample.Core -> compiled in memory (40.5 KB, 21 ms)
+2>------ Skipped: Project: MvvmSampleXF.Android: it is a Xamarin project, which only Xamarin's tools in Visual Studio build, on a computer ------
+3>------ Skipped: Project: MvvmSampleXF.iOS: it is a Xamarin project, which only Xamarin's tools in Visual Studio build, on a computer ------
+4>------ Skipped: Project: MvvmSampleXF: it is a Xamarin project, which only Xamarin's tools in Visual Studio build, on a computer ------
+========== Build: 1 succeeded, 0 failed, 3 skipped ==========
+
