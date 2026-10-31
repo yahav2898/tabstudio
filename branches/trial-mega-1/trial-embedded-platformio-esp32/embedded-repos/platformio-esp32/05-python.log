@@ -1,0 +1,148 @@
+********************************************************************************
+If you like PlatformIO, please:
+- star it on GitHub > https://github.com/platformio/platformio-core
+- follow us on LinkedIn to stay up-to-date on the latest project news > https://www.linkedin.com/company/platformio/
+- try PlatformIO IDE for embedded development > https://platformio.org/platformio-ide
+********************************************************************************
+
+Processing esp32doit-devkit-v1 (platform: file:///home/runner/work/_temp/embedded-repos/platformio-esp32/source; framework: arduino; board: esp32doit-devkit-v1)
+--------------------------------------------------------------------------------
+Platform Manager: Installing file:///home/runner/work/_temp/embedded-repos/platformio-esp32/source
+Platform Manager: espressif32@8.0.0 has been installed!
+Tool Manager: Installing platformio/toolchain-riscv32-esp @ 14.2.0+20260121
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: toolchain-riscv32-esp@14.2.0+20260121 has been installed!
+Tool Manager: Installing platformio/toolchain-xtensa-esp-elf @ 14.2.0+20260121
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: toolchain-xtensa-esp-elf@14.2.0+20260121 has been installed!
+Tool Manager: Installing espressif/tool-xtensa-esp-elf-gdb @ ~12.1.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-xtensa-esp-elf-gdb@12.1.0+20221002 has been installed!
+Tool Manager: Installing espressif/tool-riscv32-esp-elf-gdb @ ~12.1.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-riscv32-esp-elf-gdb@12.1.0+20221002 has been installed!
+Tool Manager: Installing platformio/framework-arduinoespressif32 @ ~4.30312.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduinoespressif32@4.30312.261024 has been installed!
+Tool Manager: Installing platformio/framework-arduinoespressif32-esp32-libs @ ~3.3.12
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduinoespressif32-esp32-libs@3.3.12 has been installed!
+Tool Manager: Installing platformio/tool-esptool @ ~2.50400.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70%
+Tool Manager: tool-esptool@2.50400.0 has been installed!
+Tool Manager: Installing platformio/tool-scons @ ~4.41101.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-scons@4.41101.0 has been installed!
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/esp32doit-devkit-v1.html
+PLATFORM: Espressif 32 (8.0.0) > DOIT ESP32 DEVKIT V1
+HARDWARE: ESP32 240MHz, 320KB RAM, 4MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 4.30312.261024 (3.3.12) 
+ - framework-arduinoespressif32-esp32-libs @ 3.3.12 
+ - tool-esptool @ 2.50400.0 (5.4.0) 
+ - tool-riscv32-esp-elf-gdb @ 12.1.0+20221002 
+ - tool-xtensa-esp-elf-gdb @ 12.1.0+20221002 
+ - toolchain-riscv32-esp @ 14.2.0+20260121 
+ - toolchain-xtensa-esp-elf @ 14.2.0+20260121
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 44 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Compiling .pio/build/esp32doit-devkit-v1/src/Blink.cpp.o
+Building .pio/build/esp32doit-devkit-v1/bootloader.bin
+Generating partitions .pio/build/esp32doit-devkit-v1/partitions.bin
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/ColorFormat.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/Esp.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/FirmwareMSC.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/FunctionalInterrupt.cpp.o
+esptool v5.4.0
+Creating ESP32 image...
+Merged 2 ELF sections.
+Successfully created ESP32 image.
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/HEXBuilder.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/HWCDC.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/HardwareSerial.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/HashBuilder.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/IPAddress.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/MD5Builder.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/MacAddress.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/Print.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/Stream.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/StreamString.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/StringUtils.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/Tone.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/USB.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/USBCDC.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/USBHost.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/USBMSC.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/WMath.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/WString.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/base64.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/cbuf.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/chip-debug-report.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-adc.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-bt.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-cpu.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-dac.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-gpio.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-hosted.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-i2c-ng.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-i2c-slave.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-i2c.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-ldo.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-ledc.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-log-wrapper.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-matrix.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-misc.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-periman.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-psram.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-rgb-led.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-rmt.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-sigmadelta.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-spi.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-time.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-timer.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-tinyusb.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-touch-ng.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-touch.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/esp32-hal-uart.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/firmware_msc_fat.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/freertos_stats.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/idf_openthread_mpool_wrapper.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/libb64/cdecode.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/libb64/cencode.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/main.cpp.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/stdlib_noniso.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/wiring_pulse.c.o
+Compiling .pio/build/esp32doit-devkit-v1/FrameworkArduino/wiring_shift.c.o
+Archiving .pio/build/esp32doit-devkit-v1/libFrameworkArduino.a
+Indexing .pio/build/esp32doit-devkit-v1/libFrameworkArduino.a
+Linking .pio/build/esp32doit-devkit-v1/firmware.elf
+Retrieving maximum program size .pio/build/esp32doit-devkit-v1/firmware.elf
+Checking size .pio/build/esp32doit-devkit-v1/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=         ]   6.7% (used 22100 bytes from 327680 bytes)
+Flash: [==        ]  20.8% (used 272140 bytes from 1310720 bytes)
+Building .pio/build/esp32doit-devkit-v1/firmware.bin
+esptool v5.4.0
+Creating ESP32 image...
+Merged 3 ELF sections.
+Successfully created ESP32 image.
+========================= [SUCCESS] Took 69.74 seconds =========================
+
+Environment          Status    Duration
+-------------------  --------  ------------
+esp32doit-devkit-v1  SUCCESS   00:01:09.737
+========================= 1 succeeded in 00:01:09.737 =========================

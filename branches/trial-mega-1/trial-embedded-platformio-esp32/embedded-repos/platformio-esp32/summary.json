@@ -1,0 +1,95 @@
+{
+  "repository": {
+    "name": "platformio-esp32",
+    "url": "https://github.com/platformio/platform-espressif32",
+    "sha": "7afb0a703a5f6492fd695a4c2ced9ad843745280",
+    "kind": "platformio",
+    "project": "examples/arduino-blink",
+    "maxErrors": 0,
+    "environment": "esp32doit-devkit-v1"
+  },
+  "seconds": 70.544,
+  "passed": true,
+  "error": null,
+  "compilerErrors": 0,
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "steps": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/platformio-esp32/source",
+      "log": "01-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "add",
+        "origin",
+        "https://github.com/platformio/platform-espressif32"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/platformio-esp32/source",
+      "log": "02-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "fetch",
+        "--depth",
+        "1",
+        "--no-tags",
+        "origin",
+        "7afb0a703a5f6492fd695a4c2ced9ad843745280"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/platformio-esp32/source",
+      "log": "03-git.log",
+      "seconds": 0.415,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "FETCH_HEAD"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/platformio-esp32/source",
+      "log": "04-git.log",
+      "seconds": 0.032,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.12.15/x64/bin/python",
+        "-P",
+        "-m",
+        "platformio",
+        "run",
+        "--project-dir",
+        "/home/runner/work/_temp/embedded-repos/platformio-esp32/source/examples/arduino-blink",
+        "--project-conf",
+        "/home/runner/work/_temp/embedded-repos/platformio-esp32/source/examples/arduino-blink/tabstudio-ci.ini",
+        "--environment",
+        "esp32doit-devkit-v1"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/platformio-esp32/source/examples/arduino-blink",
+      "log": "05-python.log",
+      "seconds": 70.077,
+      "exitCode": 0,
+      "compilerErrors": 0
+    },
+    {
+      "firmware": "/home/runner/work/_temp/embedded-repos/platformio-esp32/source/examples/arduino-blink/.pio/build/esp32doit-devkit-v1/firmware.elf",
+      "bytes": 5643996,
+      "sha256": "2da2ddbbc8937187201beeb09e8720750c744c25cc93319b1a94bd0d24cebe03"
+    }
+  ]
+}
