@@ -1,0 +1,9 @@
+BACKEND pid=4302 scenario=malformed-attach synthetic=true
+SYNTHETIC_DESCRIPTOR_REWIND tracee=4305 fd=4
+OUT endpoint=01 length=4 data=810d0101
+IN endpoint=81 length=7 data=820d0402160200
+OUT endpoint=01 length=5 data=810c020901
+IN endpoint=81 length=4 data=820c0101
+OUT endpoint=01 length=4 data=810d0102
+IN endpoint=81 length=8 data=820d040900300500
+SUMMARY wireOut=3 violations=0 loaderBytes=0 programBytes=0
