@@ -1,0 +1,61 @@
+attrs at c8bb9bfaa2843e7844b5bb13bed4370b51feec4f, opening /home/runner/work/_temp/repos/attrs
+Opened in 0.2 s: attrs, solution (none)
+  toolchain project python: /home/runner/work/_temp/repos/attrs/pyproject.toml
+Compatibility Doctor:
+  attrs: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+F5 startup project: attrs (python) /home/runner/work/_temp/repos/attrs/pyproject.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: 683 found; 0 passed, 0 failed, 0 skipped, 683 not run - The build failed. Fix the errors in the Error List, then run the tests again. (2 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up attrs: pip install -e .
+  Installing attrs's packages: Installing packages: pip install -e .
+  Installing attrs's packages: Succeeded after 2.9 s
+  Setting up projects: Succeeded after 6.0 s
+  Testing attrs: Running attrs's tests
+  Testing attrs: Failed after 1.7 s
+Project setup:
+------ attrs: pip install -e . ------
+Reading which Python versions the 86 pinned packages have wheels for, from PyPI.
+> uv venv --seed --python 3.14 .venv
+Using CPython 3.14.10
+Creating virtual environment with seed packages at: .venv
+ + pip==26.2.2
+Activate with: .venv/bin/activate
+> /home/runner/work/_temp/repos/attrs/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/repos/attrs
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Installing backend dependencies: started
+  Installing backend dependencies: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: attrs
+  Building editable for attrs (pyproject.toml): started
+  Building editable for attrs (pyproject.toml): finished with status 'done'
+  Created wheel for attrs: filename=attrs-0.1.dev1-py3-none-any.whl size=5272 sha256=04b54572b94cfcc9c8fff1dd7e5ee6e4bb4ebf924881c38504c8991daee5d95e
+  Stored in directory: /tmp/pip-ephem-wheel-cache-xy7m9pvz/wheels/1d/4b/ee/d74c9746dbc62a645274c33aad21b40384a452e645fb5f32aa
+Successfully built attrs
+Installing collected packages: attrs
+Successfully installed attrs-0.1.dev1
+
+Output:
+attrs needs no build: Python runs it from its source. Press Ctrl+F5 to run it.
+========== Running attrs's tests with Pytest ==========
+> sh -c 'if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/repos/attrs/.tabstudio/test-results/3d6d20e7140341c5bc3da2586394203b/pytest.xml
+Installing pytest, which the tests need
+ImportError while loading conftest '/home/runner/work/_temp/repos/attrs/tests/conftest.py'.
+tests/conftest.py:7: in <module>
+    from hypothesis import HealthCheck, settings
+E   ModuleNotFoundError: No module named 'hypothesis'
+attrs's tests did not run: the build or the test runner failed. See the Error List and the output above.
+
