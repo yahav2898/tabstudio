@@ -1,0 +1,419 @@
+clap at ccc89b83875474399e9d9d70841163f6319d1a41, opening /home/runner/work/_temp/repos/clap
+Opened in 0.4 s: clap, solution (none)
+  toolchain project rust: /home/runner/work/_temp/repos/clap/Cargo.toml
+  toolchain project rust: /home/runner/work/_temp/repos/clap/clap_bench/Cargo.toml
+  toolchain project rust: /home/runner/work/_temp/repos/clap/clap_builder/Cargo.toml
+  toolchain project rust: /home/runner/work/_temp/repos/clap/clap_complete/Cargo.toml
+  toolchain project rust: /home/runner/work/_temp/repos/clap/clap_complete_nushell/Cargo.toml
+  toolchain project rust: /home/runner/work/_temp/repos/clap/clap_derive/Cargo.toml
+  toolchain project rust: /home/runner/work/_temp/repos/clap/clap_lex/Cargo.toml
+  toolchain project rust: /home/runner/work/_temp/repos/clap/clap_mangen/Cargo.toml
+Compatibility Doctor:
+  clap: Needs a toolchain via Rust toolchain - Runs with Rust from the Toolchain Store, with console input and output in the Output panel. Install Rust to run it.
+  clap_bench: Needs a toolchain via Rust toolchain - Runs with Rust from the Toolchain Store, with console input and output in the Output panel. Install Rust to run it.
+  clap_builder: Needs a toolchain via Rust toolchain - Runs with Rust from the Toolchain Store, with console input and output in the Output panel. Install Rust to run it.
+  clap_complete: Needs a toolchain via Rust toolchain - Runs with Rust from the Toolchain Store, with console input and output in the Output panel. Install Rust to run it.
+  clap_complete_nushell: Needs a toolchain via Rust toolchain - Runs with Rust from the Toolchain Store, with console input and output in the Output panel. Install Rust to run it.
+  clap_derive: Needs a toolchain via Rust toolchain - Runs with Rust from the Toolchain Store, with console input and output in the Output panel. Install Rust to run it.
+  clap_lex: Needs a toolchain via Rust toolchain - Runs with Rust from the Toolchain Store, with console input and output in the Output panel. Install Rust to run it.
+  clap_mangen: Needs a toolchain via Rust toolchain - Runs with Rust from the Toolchain Store, with console input and output in the Output panel. Install Rust to run it.
+F5 startup project: clap (rust) /home/runner/work/_temp/repos/clap/Cargo.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: 1948 found; 2401 passed, 0 failed, 18 skipped, 303 not run - 2419 tests run in 1 min 31 sec: 2401 passed, 0 failed, 18 skipped. (92 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 3.0 s
+  Building clap: Building clap
+  Building clap: Succeeded after 3.7 s
+  Testing clap: Running clap's tests
+  Testing clap: Succeeded after 70.1 s
+  Testing clap_builder: Running clap_builder's tests
+  Testing clap_builder: Succeeded after 6.5 s
+  Testing clap_complete: Running clap_complete's tests
+  Testing clap_complete: Succeeded after 6.0 s
+  Testing clap_complete_nushell: Running clap_complete_nushell's tests
+  Testing clap_complete_nushell: Succeeded after 7.0 s
+  Testing clap_lex: Running clap_lex's tests
+  Testing clap_lex: Succeeded after 0.7 s
+  Testing clap_mangen: Running clap_mangen's tests
+  Testing clap_mangen: Succeeded after 1.0 s
+Project setup:
+
+Output:
+lder/src/error/kind.rs - error::kind::ErrorKind::TooManyValues (line 109) ... ok
+test clap_builder/src/error/kind.rs - error::kind::ErrorKind::TooFewValues (line 127) ... ok
+test clap_builder/src/error/kind.rs - error::kind::ErrorKind::WrongNumberOfValues (line 147) ... ok
+test clap_builder/src/error/mod.rs - error::Error<F>::print (line 254) - compile ... ok
+test clap_builder/src/error/mod.rs - error::Error<F>::render (line 285) - compile ... ok
+test clap_builder/src/error/kind.rs - error::kind::ErrorKind::ValueValidation (line 85) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches (line 28) - compile ... ok
+test clap_builder/src/error/mod.rs - error::Error<F>::apply (line 160) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::contains_id (line 508) ... ok
+test clap_builder/src/error/mod.rs - error::Error<F>::new (line 111) ... ok
+test clap_builder/src/macros.rs - macros::arg (line 513) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::args_present (line 562) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::get_count (line 130) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::get_many (line 206) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::get_flag (line 162) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::get_occurrences (line 248) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::get_one (line 100) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::get_raw_occurrences (line 334) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::get_raw (line 285) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::ids (line 531) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::index_of (line 647) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::index_of (line 688) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::index_of (line 718) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::indices_of (line 795) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::index_of (line 748) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::index_of (line 667) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::indices_of (line 837) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::remove_occurrences (line 470) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::remove_many (line 429) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::indices_of (line 813) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::remove_subcommand (line 934) - compile ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::subcommand (line 875) - compile ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::remove_one (line 393) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::subcommand_name (line 1036) - compile ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::subcommand (line 896) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::remove_subcommand (line 957) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::subcommand_matches (line 998) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::Indices (line 1824) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::IdsRef (line 1366) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ArgMatches::value_source (line 592) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::RawValues (line 1546) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::Values (line 1411) ... ok
+test clap_builder/src/parser/matches/arg_matches.rs - parser::matches::arg_matches::ValuesRef (line 1478) ... ok
+test clap_builder/src/util/color.rs - util::color::ColorChoice::Auto (line 17) ... ok
+test clap_builder/src/util/color.rs - util::color::ColorChoice::Always (line 33) ... ok
+test clap_builder/src/util/color.rs - util::color::ColorChoice::Never (line 48) ... ok
+
+test result: ok. 346 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 0.22s
+
+all doctests ran in 2.04s; merged doctests compilation took 1.82s
+========== Running clap_complete's tests with Cargo ==========
+> sh -c 'report="$0"; { "$@"; echo $? > "$report.status"; } 2>&1 | tee "$report"; exit "$(cat "$report.status" 2> /dev/null || echo 1)"' /home/runner/work/_temp/repos/clap/clap_complete/.tabstudio/test-results/abfb5ee82a73478db3b79551bb377164/cargo-test.txt cargo test --no-fail-fast
+   Compiling rustix v1.1.4
+   Compiling clap_builder v4.6.7 (/home/runner/work/_temp/repos/clap/clap_builder)
+   Compiling syn v2.0.119
+   Compiling clap v4.6.7 (/home/runner/work/_temp/repos/clap)
+   Compiling tempfile v3.27.0
+   Compiling snapbox v1.2.2
+   Compiling clap_complete v4.6.11 (/home/runner/work/_temp/repos/clap/clap_complete)
+   Compiling automod v1.0.17
+   Compiling trycmd v1.2.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.53s
+     Running unittests src/lib.rs (/home/runner/work/_temp/repos/clap/target/debug/deps/clap_complete-55bf38adeaec56d6)
+
+running 9 tests
+test aot::generator::utils::tests::test_all_subcommands ... ok
+test aot::generator::utils::tests::test_flag_subcommand ... ok
+test aot::generator::utils::tests::test_find_subcommand_with_path ... ok
+test aot::generator::utils::tests::test_flags ... ok
+test aot::generator::utils::tests::test_longs ... ok
+test aot::generator::utils::tests::test_shorts ... ok
+test aot::shells::zsh::tests::test_escape_value ... ok
+test aot::generator::utils::tests::test_subcommands ... ok
+test aot::shells::zsh::tests::test_escape_help ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/examples.rs (/home/runner/work/_temp/repos/clap/target/debug/deps/examples-9a010fb29348ba7c)
+
+running 1 test
+There are no trycmd tests enabled yet
+test example_tests ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/testsuite/main.rs (/home/runner/work/_temp/repos/clap/target/debug/deps/testsuite-7cdf92514df1b8b0)
+
+running 77 tests
+test bash::aliases ... ok
+test bash::basic ... ok
+test bash::external_subcommands ... ok
+test bash::custom_bin_name ... ok
+test bash::feature_sample ... ok
+test bash::multi_value_option ... ok
+test bash::optional_multi_value_option ... ok
+test bash::optional_value_option ... ok
+test bash::special_commands ... ok
+test bash::quoting ... ok
+test bash::subcommand_last ... ok
+test bash::sub_subcommands ... ok
+test bash::value_hint ... ok
+test bash::two_multi_valued_arguments ... ok
+test bash::value_terminator ... ok
+test elvish::aliases ... ok
+test elvish::basic ... ok
+test elvish::custom_bin_name ... ok
+test elvish::feature_sample ... ok
+test elvish::external_subcommands ... ok
+test bash::sources_under_posix_mode_bash ... ok
+test elvish::multi_value_option ... ok
+test elvish::optional_multi_value_option ... ok
+test elvish::optional_value_option ... ok
+test elvish::subcommand_last ... ok
+test elvish::quoting ... ok
+test elvish::two_multi_valued_arguments ... ok
+test elvish::special_commands ... ok
+test elvish::value_hint ... ok
+test elvish::sub_subcommands ... ok
+test elvish::value_terminator ... ok
+test fish::aliases ... ok
+test fish::basic ... ok
+test fish::custom_bin_name ... ok
+test fish::external_subcommands ... ok
+test fish::feature_sample ... ok
+test fish::optional_multi_value_option ... ok
+test fish::multi_value_option ... ok
+test fish::optional_value_option ... ok
+test fish::quoting ... ok
+test fish::two_multi_valued_arguments ... ok
+test fish::value_hint ... ok
+test fish::sub_subcommands ... ok
+test fish::special_commands ... ok
+test general::infer_value_hint_for_path_buf ... ok
+test fish::value_terminator ... ok
+test fish::subcommand_last ... ok
+test powershell::basic ... ok
+test powershell::aliases ... ok
+test powershell::external_subcommands ... ok
+test powershell::custom_bin_name ... ok
+test powershell::feature_sample ... ok
+test powershell::multi_value_option ... ok
+test powershell::optional_multi_value_option ... ok
+test powershell::optional_value_option ... ok
+test powershell::subcommand_last ... ok
+test powershell::special_commands ... ok
+test powershell::quoting ... ok
+test powershell::sub_subcommands ... ok
+test powershell::two_multi_valued_arguments ... ok
+test powershell::value_terminator ... ok
+test powershell::value_hint ... ok
+test zsh::aliases ... ok
+test zsh::basic ... ok
+test zsh::feature_sample ... ok
+test zsh::multi_value_option ... ok
+test zsh::custom_bin_name ... ok
+test zsh::optional_multi_value_option ... ok
+test zsh::optional_value_option ... ok
+test zsh::external_subcommands ... ok
+test zsh::quoting ... ok
+test zsh::special_commands ... ok
+test zsh::sub_subcommands ... ok
+test zsh::value_hint ... ok
+test zsh::two_multi_valued_arguments ... ok
+test zsh::value_terminator ... ok
+test zsh::subcommand_last ... ok
+
+test result: ok. 77 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+   Doc-tests clap_complete
+
+running 12 tests
+test clap_complete/src/aot/generator/mod.rs - aot::generator::generate (line 263) ... ignored
+test clap_complete/src/aot/generator/mod.rs - aot::generator::Generator::generate (line 51) ... ok
+test clap_complete/src/aot/generator/mod.rs - aot::generator::Generator::try_generate (line 80) ... ok
+test clap_complete/src/aot/generator/mod.rs - aot::generator::Generator::file_name (line 23) ... ok
+test clap_complete/src/aot/generator/mod.rs - aot::generator::generate_to (line 144) ... ignored
+test clap_complete/src/aot/generator/mod.rs - aot::generator::generate_to (line 170) ... ignored
+test clap_complete/src/aot/generator/mod.rs - aot::generator::generate_to (line 209) ... ignored
+test clap_complete/src/aot/mod.rs - aot (line 17) - compile ... ok
+test clap_complete/src/lib.rs - (line 18) - compile ... ok
+test clap_complete/src/aot/shells/shell.rs - aot::shells::shell::Shell::from_env (line 130) - compile ... ok
+test clap_complete/src/aot/generator/mod.rs - aot::generator::generate_to (line 124) ... ok
+test clap_complete/src/aot/shells/shell.rs - aot::shells::shell::Shell::from_shell_path (line 105) ... ok
+
+test result: ok. 8 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.27s; merged doctests compilation took 0.26s
+========== Running clap_complete_nushell's tests with Cargo ==========
+> sh -c 'report="$0"; { "$@"; echo $? > "$report.status"; } 2>&1 | tee "$report"; exit "$(cat "$report.status" 2> /dev/null || echo 1)"' /home/runner/work/_temp/repos/clap/clap_complete_nushell/.tabstudio/test-results/14f98d0155354d7ba8de9e02b8ae5081/cargo-test.txt cargo test --no-fail-fast
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling serde_core v1.0.229
+   Compiling clap v4.6.7 (/home/runner/work/_temp/repos/clap)
+   Compiling clap_complete v4.6.11 (/home/runner/work/_temp/repos/clap/clap_complete)
+   Compiling clap_complete_nushell v4.6.2 (/home/runner/work/_temp/repos/clap/clap_complete_nushell)
+   Compiling syn v3.0.2
+   Compiling serde_json v1.0.149
+   Compiling serde_derive v1.0.229
+   Compiling serde v1.0.229
+   Compiling escargot v0.5.15
+   Compiling snapbox v1.2.2
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.73s
+     Running unittests src/lib.rs (/home/runner/work/_temp/repos/clap/target/debug/deps/clap_complete_nushell-bcf7904d0f97c13f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/common.rs (/home/runner/work/_temp/repos/clap/target/debug/deps/common-c2b871f74c0a4a8d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/completion.rs (/home/runner/work/_temp/repos/clap/target/debug/deps/completion-c15a3d6ebbbff62d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/nushell.rs (/home/runner/work/_temp/repos/clap/target/debug/deps/nushell-7c4a24451601ef42)
+
+running 9 tests
+test aliases ... ok
+test feature_sample ... ok
+test basic ... ok
+test last_args ... ok
+test positional_index ... ok
+test special_commands ... ok
+test quoting ... ok
+test value_hint ... ok
+test sub_subcommands ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests clap_complete_nushell
+
+running 2 tests
+test clap_complete_nushell/src/../README.md - ReadmeDoctests (line 18) ... ok
+test clap_complete_nushell/src/lib.rs - (line 5) ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.22s; merged doctests compilation took 0.21s
+========== Running clap_lex's tests with Cargo ==========
+> sh -c 'report="$0"; { "$@"; echo $? > "$report.status"; } 2>&1 | tee "$report"; exit "$(cat "$report.status" 2> /dev/null || echo 1)"' /home/runner/work/_temp/repos/clap/clap_lex/.tabstudio/test-results/5e3022ab13794e5281a214f13c856041/cargo-test.txt cargo test --no-fail-fast
+   Compiling clap_lex v1.1.1 (/home/runner/work/_temp/repos/clap/clap_lex)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.35s
+     Running unittests src/lib.rs (/home/runner/work/_temp/repos/clap/target/debug/deps/clap_lex-2ba70cfdf10123c8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/testsuite/main.rs (/home/runner/work/_temp/repos/clap/target/debug/deps/testsuite-63fc05e3b1c7d244)
+
+running 31 tests
+test lexer::insert ... ok
+test parsed::is_escape ... ok
+test parsed::is_negative_number ... ok
+test lexer::zero_copy_parsing ... ok
+test parsed::is_not_number ... ok
+test parsed::is_positive_number ... ok
+test parsed::is_not_escape ... ok
+test parsed::is_not_stdio ... ok
+test parsed::is_stdio ... ok
+test parsed::to_long_no_escape ... ok
+test parsed::to_long_stdio ... ok
+test parsed::to_long_with_empty_value ... ok
+test parsed::to_long_with_value ... ok
+test parsed::to_short ... ok
+test parsed::to_long_no_value ... ok
+test parsed::to_short_escape ... ok
+test shorts::advance_by_nothing ... ok
+test parsed::to_short_long ... ok
+test shorts::advance_by_out_of_bounds ... ok
+test parsed::to_short_stdio ... ok
+test shorts::advance_by_something ... ok
+test shorts::is_negative_number ... ok
+test shorts::is_not_empty ... ok
+test shorts::is_not_negaitve_number ... ok
+test shorts::is_exhausted_empty ... ok
+test shorts::next_flag ... ok
+test shorts::is_partial_not_empty ... ok
+test shorts::next_flag_with_no_value ... ok
+test shorts::iter ... ok
+test shorts::next_flag_with_value ... ok
+test shorts::next_value_os ... ok
+
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests clap_lex
+
+running 18 tests
+test clap_lex/src/ext.rs - ext::OsStrExt::contains (line 17) ... ok
+test clap_lex/src/ext.rs - ext::OsStrExt::find (line 43) ... ok
+test clap_lex/src/ext.rs - ext::OsStrExt::find (line 32) ... ok
+test clap_lex/src/ext.rs - ext::OsStrExt::split (line 108) ... ok
+test clap_lex/src/ext.rs - ext::OsStrExt::split (line 140) - should panic ... ok
+test clap_lex/src/ext.rs - ext::OsStrExt::split (line 131) ... ok
+test clap_lex/src/ext.rs - ext::OsStrExt::split (line 161) ... ignored
+test clap_lex/src/ext.rs - ext::OsStrExt::split (line 150) ... ok
+test clap_lex/src/ext.rs - ext::OsStrExt::split (line 89) ... ok
+test clap_lex/src/ext.rs - ext::OsStrExt::split (line 119) ... ok
+test clap_lex/src/ext.rs - ext::OsStrExt::split_once (line 174) ... ok
+test clap_lex/src/ext.rs - ext::OsStrExt::starts_with (line 74) ... ok
+test clap_lex/src/lib.rs - RawArgs::cursor (line 179) - compile ... ok
+test clap_lex/src/lib.rs - RawArgs::from_args (line 144) - compile ... ok
+test clap_lex/src/lib.rs - RawArgs::new (line 161) - compile ... ok
+test clap_lex/src/lib.rs - RawArgs::remaining (line 218) - compile ... ok
+test clap_lex/src/lib.rs - (line 9) ... ok
+test clap_lex/src/ext.rs - ext::OsStrExt::strip_prefix (line 59) ... ok
+
+test result: ok. 17 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+all doctests ran in 0.25s; merged doctests compilation took 0.24s
+========== Running clap_mangen's tests with Cargo ==========
+> sh -c 'report="$0"; { "$@"; echo $? > "$report.status"; } 2>&1 | tee "$report"; exit "$(cat "$report.status" 2> /dev/null || echo 1)"' /home/runner/work/_temp/repos/clap/clap_mangen/.tabstudio/test-results/674d9ca34ba047aeb527027b6b36da42/cargo-test.txt cargo test --no-fail-fast
+   Compiling clap_mangen v0.3.3 (/home/runner/work/_temp/repos/clap/clap_mangen)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.79s
+     Running unittests src/lib.rs (/home/runner/work/_temp/repos/clap/target/debug/deps/clap_mangen-d7e903fe8174bd86)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/testsuite/main.rs (/home/runner/work/_temp/repos/clap/target/debug/deps/testsuite-17a1c279fdac3b81)
+
+running 30 tests
+test roff::boolean_required_group ... ok
+test roff::basic ... ok
+test roff::aliases ... ok
+test roff::configured_display_order_args ... ok
+test roff::count_required_group ... ok
+test roff::configured_subcmd_order ... ok
+test roff::feature_sample ... ok
+test roff::hidden_options ... ok
+test roff::default_subcmd_order ... ok
+test roff::help_headings ... ok
+test roff::hidden_positionals ... ok
+test roff::optional_group ... ok
+test roff::multiple_optional_values ... ok
+test roff::optional_value ... ok
+test roff::optional_value_with_required_equals ... ok
+test roff::override_usage_single_form ... ok
+test roff::positional_required_group ... ok
+test roff::override_usage ... ok
+test roff::possible_values ... ok
+test roff::required_group ... ok
+test roff::quoting ... ok
+test roff::required_group_with_required_option ... ok
+test roff::special_commands ... ok
+test roff::sub_subcommands ... ok
+test roff::sub_subcommands_help ... ok
+test roff::value_name_without_arg ... ok
+test roff::single_required_group ... ok
+test roff::value_hint ... ok
+test roff::variadic_values ... ok
+test roff::value_with_required_equals ... ok
+
+test result: ok. 30 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests clap_mangen
+
+running 2 tests
+test clap_mangen/src/../README.md - (line 34) - compile ... ok
+test clap_mangen/src/../README.md - ReadmeDoctests (line 34) - compile ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.19s; merged doctests compilation took 0.19s
+

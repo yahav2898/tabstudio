@@ -1,0 +1,550 @@
+realworld-axum-sqlx at f1b25654773228297e35c292f357d33b7121a101, opening /home/runner/work/_temp/repos/realworld-axum-sqlx
+Opened in 0.3 s: realworld-axum-sqlx, solution (none)
+  toolchain project rust: /home/runner/work/_temp/repos/realworld-axum-sqlx/Cargo.toml
+Compatibility Doctor:
+  realworld-axum-sqlx: Needs a toolchain via Rust toolchain - Runs with Rust from the Toolchain Store, with console input and output in the Output panel. Install Rust to run it.
+F5 startup project: realworld-axum-sqlx (rust) /home/runner/work/_temp/repos/realworld-axum-sqlx/Cargo.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 11 errors, 0 warnings
+  11 x Rust
+      [realworld-axum-sqlx] comments.rs(90,10): error Rust: no method named `ok_or` found for type `_` in the current scope
+      [realworld-axum-sqlx] comments.rs(157,6): error Rust: no method named `ok_or` found for type `_` in the current scope
+      [realworld-axum-sqlx] mod.rs(222,6): error Rust: no method named `ok_or` found for type `_` in the current scope
+      [realworld-axum-sqlx] mod.rs(388,10): error Rust: no method named `ok_or` found for type `_` in the current scope
+      [realworld-axum-sqlx] mod.rs(427,6): error Rust: no method named `ok_or` found for type `_` in the current scope
+      [realworld-axum-sqlx] mod.rs(462,6): error Rust: no method named `ok_or` found for type `_` in the current scope
+      [realworld-axum-sqlx] mod.rs(538,10): error Rust: no method named `ok_or` found for type `_` in the current scope
+      [realworld-axum-sqlx] profiles.rs(70,6): error Rust: no method named `ok_or` found for type `_` in the current scope
+      [realworld-axum-sqlx] profiles.rs(109,6): error Rust: no method named `ok_or` found for type `_` in the current scope
+      [realworld-axum-sqlx] profiles.rs(152,6): error Rust: no method named `ok_or` found for type `_` in the current scope
+Run: exited before listening with code 101 (2 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/realworld-axum-sqlx/src/main.rs:20
+Debug: ended without stopping at main.rs:20 with code 101 (2 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 3.8 s
+  Building realworld-axum-sqlx: Building realworld-axum-sqlx
+  Building realworld-axum-sqlx: Failed after 36.7 s
+  Building realworld-axum-sqlx: Building realworld-axum-sqlx
+  Building realworld-axum-sqlx: Failed after 1.9 s
+Project setup:
+
+Output:
+tes.
+217 | |         "select article_id, user_id from article where slug = $1 for update",
+218 | |         slug
+219 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "article" does not exist
+   --> src/http/articles/mod.rs:237:19
+    |
+237 |       let article = sqlx::query_as!(
+    |  ___________________^
+238 | |         ArticleFromQuery,
+239 | |         // language=PostgreSQL
+240 | |         r#"
+...   |
+281 | |         auth_user.user_id
+282 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query_as` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "article" does not exist
+   --> src/http/articles/mod.rs:305:18
+    |
+305 |       let result = sqlx::query!(
+    |  __________________^
+...   |
+331 | |         auth_user.user_id
+332 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "article" does not exist
+   --> src/http/articles/mod.rs:356:19
+    |
+356 |       let article = sqlx::query_as!(
+    |  ___________________^
+357 | |         ArticleFromQuery,
+358 | |         // language=PostgreSQL
+359 | |         r#"
+...   |
+384 | |         slug
+385 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query_as` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "article" does not exist
+   --> src/http/articles/mod.rs:408:22
+    |
+408 |       let article_id = sqlx::query_scalar!(
+    |  ______________________^
+409 | |         r#"
+410 | |             with selected_article as (
+411 | |                 select article_id from article where slug = $1
+...   |
+423 | |         auth_user.user_id
+424 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query_scalar` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "article" does not exist
+   --> src/http/articles/mod.rs:445:22
+    |
+445 |       let article_id = sqlx::query_scalar!(
+    |  ______________________^
+446 | |         r#"
+447 | |             with selected_article as (
+448 | |                 select article_id from article where slug = $1
+...   |
+458 | |         auth_user.user_id
+459 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query_scalar` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "article" does not exist
+   --> src/http/articles/mod.rs:481:16
+    |
+481 |       let tags = sqlx::query_scalar!(
+    |  ________________^
+482 | |         r#"
+483 | |             select distinct tag "tag!"
+484 | |             from article, unnest (article.tag_list) tags(tag)
+485 | |             order by tag
+486 | |         "#
+487 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query_scalar` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "article" does not exist
+   --> src/http/articles/mod.rs:506:19
+    |
+506 |       let article = sqlx::query_as!(
+    |  ___________________^
+507 | |         ArticleFromQuery,
+508 | |         // language=PostgreSQL
+509 | |         r#"
+...   |
+534 | |         article_id
+535 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query_as` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "user" does not exist
+  --> src/http/profiles.rs:51:19
+   |
+51 |       let profile = sqlx::query_as!(
+   |  ___________________^
+52 | |         Profile,
+53 | |         r#"
+54 | |             select
+...  |
+66 | |         maybe_auth_user.user_id()
+67 | |     )
+   | |_____^
+   |
+   = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query_as` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "user" does not exist
+   --> src/http/profiles.rs:103:16
+    |
+103 |       let user = sqlx::query!(
+    |  ________________^
+104 | |         r#"select user_id, username, bio, image from "user" where username = $1"#,
+105 | |         username
+106 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "follow" does not exist
+   --> src/http/profiles.rs:111:5
+    |
+111 | /     sqlx::query!(
+112 | |         "insert into follow(following_user_id, followed_user_id) values ($1, $2) \
+113 | |          on conflict do nothing", // If the row already exists, we don't need to do anything.
+114 | |         auth_user.user_id,
+115 | |         user.user_id
+116 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "user" does not exist
+   --> src/http/profiles.rs:146:16
+    |
+146 |       let user = sqlx::query!(
+    |  ________________^
+147 | |         r#"select user_id, username, bio, image from "user" where username = $1"#,
+148 | |         username
+149 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "follow" does not exist
+   --> src/http/profiles.rs:154:5
+    |
+154 | /     sqlx::query!(
+155 | |         "delete from follow where following_user_id = $1 and followed_user_id = $2",
+156 | |         auth_user.user_id,
+157 | |         user.user_id
+158 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "user" does not exist
+  --> src/http/users.rs:71:19
+   |
+71 |       let user_id = sqlx::query_scalar!(
+   |  ___________________^
+72 | |         // language=PostgreSQL
+73 | |         r#"insert into "user" (username, email, password_hash) values ($1, $2, $3) returning user_id"#,
+74 | |         req.user.username,
+75 | |         req.user.email,
+76 | |         password_hash
+77 | |     )
+   | |_____^
+   |
+   = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query_scalar` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "user" does not exist
+   --> src/http/users.rs:103:16
+    |
+103 |       let user = sqlx::query!(
+    |  ________________^
+104 | |         r#"
+105 | |             select user_id, email, username, bio, image, password_hash 
+106 | |             from "user" where email = $1
+107 | |         "#,
+108 | |         req.user.email,
+109 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "user" does not exist
+   --> src/http/users.rs:135:16
+    |
+135 |       let user = sqlx::query!(
+    |  ________________^
+136 | |         r#"select email, username, bio, image from "user" where user_id = $1"#,
+137 | |         auth_user.user_id
+138 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: error returned from database: relation "user" does not exist
+   --> src/http/users.rs:178:16
+    |
+178 |       let user = sqlx::query!(
+    |  ________________^
+179 | |         // This is how we do optional updates of fields without needing a separate query for each.
+180 | |         // language=PostgreSQL
+181 | |         r#"
+...   |
+196 | |         auth_user.user_id
+197 | |     )
+    | |_____^
+    |
+    = note: this error originates in the macro `$crate::sqlx_macros::expand_query` which comes from the expansion of the macro `sqlx::query` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning: unused import: `crate::http::types::Timestamptz`
+ --> src/http/articles/listing.rs:8:5
+  |
+8 | use crate::http::types::Timestamptz;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: method call on a diverging inference variable
+  --> src/http/articles/comments.rs:90:10
+   |
+90 |         .ok_or(Error::NotFound)?;
+   |          ^^^^^
+   |
+   = help: consider providing a type annotation
+   = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+   = note: for more information, see issue #156047 <https://github.com/rust-lang/rust/issues/156047>
+   = note: `#[warn(method_call_on_diverging_infer_var)]` (part of `#[warn(future_incompatible)]`) on by default
+
+error[E0599]: no method named `ok_or` found for type `_` in the current scope
+  --> src/http/articles/comments.rs:90:10
+   |
+87 |       let article_id = sqlx::query_scalar!("select article_id from article where slug = $1", slug)
+   |  ______________________-
+88 | |         .fetch_optional(&ctx.db)
+89 | |         .await?
+90 | |         .ok_or(Error::NotFound)?;
+   | |         -^^^^^ method not found in `_`
+   | |_________|
+   |
+
+warning: method call on a diverging inference variable
+   --> src/http/articles/comments.rs:157:6
+    |
+157 |     .ok_or(Error::NotFound)?
+    |      ^^^^^
+    |
+    = help: consider providing a type annotation
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #156047 <https://github.com/rust-lang/rust/issues/156047>
+
+error[E0599]: no method named `ok_or` found for type `_` in the current scope
+   --> src/http/articles/comments.rs:157:6
+    |
+127 |       let comment = sqlx::query_as!(
+    |  ___________________-
+128 | |         CommentFromQuery,
+129 | |         r#"
+130 | |             with inserted_comment as (
+...   |
+157 | |     .ok_or(Error::NotFound)?
+    | |     -^^^^^ method not found in `_`
+    | |_____|
+    |
+
+warning: method call on a diverging inference variable
+   --> src/http/articles/mod.rs:222:6
+    |
+222 |     .ok_or(Error::NotFound)?;
+    |      ^^^^^
+    |
+    = help: consider providing a type annotation
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #156047 <https://github.com/rust-lang/rust/issues/156047>
+
+error[E0599]: no method named `ok_or` found for type `_` in the current scope
+   --> src/http/articles/mod.rs:222:6
+    |
+214 |       let article_meta = sqlx::query!(
+    |  ________________________-
+215 | |         // This locks the `article` row for the duration of the transaction so we're
+216 | |         // not interleaving this with other possible updates.
+217 | |         "select article_id, user_id from article where slug = $1 for update",
+...   |
+221 | |     .await?
+222 | |     .ok_or(Error::NotFound)?;
+    | |     -^^^^^ method not found in `_`
+    | |_____|
+    |
+
+warning: method call on a diverging inference variable
+   --> src/http/articles/mod.rs:388:10
+    |
+388 |         .ok_or(Error::NotFound)?
+    |          ^^^^^
+    |
+    = help: consider providing a type annotation
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #156047 <https://github.com/rust-lang/rust/issues/156047>
+
+error[E0599]: no method named `ok_or` found for type `_` in the current scope
+   --> src/http/articles/mod.rs:388:10
+    |
+356 |       let article = sqlx::query_as!(
+    |  ___________________-
+357 | |         ArticleFromQuery,
+358 | |         // language=PostgreSQL
+359 | |         r#"
+...   |
+387 | |         .await?
+388 | |         .ok_or(Error::NotFound)?
+    | |         -^^^^^ method not found in `_`
+    | |_________|
+    |
+
+warning: method call on a diverging inference variable
+   --> src/http/articles/mod.rs:427:6
+    |
+427 |     .ok_or(Error::NotFound)?;
+    |      ^^^^^
+    |
+    = help: consider providing a type annotation
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #156047 <https://github.com/rust-lang/rust/issues/156047>
+
+error[E0599]: no method named `ok_or` found for type `_` in the current scope
+   --> src/http/articles/mod.rs:427:6
+    |
+408 |       let article_id = sqlx::query_scalar!(
+    |  ______________________-
+409 | |         r#"
+410 | |             with selected_article as (
+411 | |                 select article_id from article where slug = $1
+...   |
+426 | |     .await?
+427 | |     .ok_or(Error::NotFound)?;
+    | |     -^^^^^ method not found in `_`
+    | |_____|
+    |
+
+warning: method call on a diverging inference variable
+   --> src/http/articles/mod.rs:462:6
+    |
+462 |     .ok_or(Error::NotFound)?;
+    |      ^^^^^
+    |
+    = help: consider providing a type annotation
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #156047 <https://github.com/rust-lang/rust/issues/156047>
+
+error[E0599]: no method named `ok_or` found for type `_` in the current scope
+   --> src/http/articles/mod.rs:462:6
+    |
+445 |       let article_id = sqlx::query_scalar!(
+    |  ______________________-
+446 | |         r#"
+447 | |             with selected_article as (
+448 | |                 select article_id from article where slug = $1
+...   |
+461 | |     .await?
+462 | |     .ok_or(Error::NotFound)?;
+    | |     -^^^^^ method not found in `_`
+    | |_____|
+    |
+
+warning: method call on a diverging inference variable
+   --> src/http/articles/mod.rs:538:10
+    |
+538 |         .ok_or(Error::NotFound)?
+    |          ^^^^^
+    |
+    = help: consider providing a type annotation
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #156047 <https://github.com/rust-lang/rust/issues/156047>
+
+error[E0599]: no method named `ok_or` found for type `_` in the current scope
+   --> src/http/articles/mod.rs:538:10
+    |
+506 |       let article = sqlx::query_as!(
+    |  ___________________-
+507 | |         ArticleFromQuery,
+508 | |         // language=PostgreSQL
+509 | |         r#"
+...   |
+537 | |         .await?
+538 | |         .ok_or(Error::NotFound)?
+    | |         -^^^^^ method not found in `_`
+    | |_________|
+    |
+
+warning: method call on a diverging inference variable
+  --> src/http/profiles.rs:70:6
+   |
+70 |     .ok_or(Error::NotFound)?;
+   |      ^^^^^
+   |
+   = help: consider providing a type annotation
+   = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+   = note: for more information, see issue #156047 <https://github.com/rust-lang/rust/issues/156047>
+
+error[E0599]: no method named `ok_or` found for type `_` in the current scope
+  --> src/http/profiles.rs:70:6
+   |
+51 |       let profile = sqlx::query_as!(
+   |  ___________________-
+52 | |         Profile,
+53 | |         r#"
+54 | |             select
+...  |
+69 | |     .await?
+70 | |     .ok_or(Error::NotFound)?;
+   | |     -^^^^^ method not found in `_`
+   | |_____|
+   |
+
+warning: method call on a diverging inference variable
+   --> src/http/profiles.rs:109:6
+    |
+109 |     .ok_or(Error::NotFound)?;
+    |      ^^^^^
+    |
+    = help: consider providing a type annotation
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #156047 <https://github.com/rust-lang/rust/issues/156047>
+
+error[E0599]: no method named `ok_or` found for type `_` in the current scope
+   --> src/http/profiles.rs:109:6
+    |
+103 |       let user = sqlx::query!(
+    |  ________________-
+104 | |         r#"select user_id, username, bio, image from "user" where username = $1"#,
+105 | |         username
+...   |
+108 | |     .await?
+109 | |     .ok_or(Error::NotFound)?;
+    | |     -^^^^^ method not found in `_`
+    | |_____|
+    |
+
+warning: method call on a diverging inference variable
+   --> src/http/profiles.rs:152:6
+    |
+152 |     .ok_or(Error::NotFound)?;
+    |      ^^^^^
+    |
+    = help: consider providing a type annotation
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #156047 <https://github.com/rust-lang/rust/issues/156047>
+
+error[E0599]: no method named `ok_or` found for type `_` in the current scope
+   --> src/http/profiles.rs:152:6
+    |
+146 |       let user = sqlx::query!(
+    |  ________________-
+147 | |         r#"select user_id, username, bio, image from "user" where username = $1"#,
+148 | |         username
+...   |
+151 | |     .await?
+152 | |     .ok_or(Error::NotFound)?;
+    | |     -^^^^^ method not found in `_`
+    | |_____|
+    |
+
+warning: method call on a diverging inference variable
+   --> src/http/users.rs:112:6
+    |
+112 |     .ok_or(Error::unprocessable_entity([("email", "does not exist")]))?;
+    |      ^^^^^
+    |
+    = help: consider providing a type annotation
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #156047 <https://github.com/rust-lang/rust/issues/156047>
+
+error[E0599]: no method named `ok_or` found for type `_` in the current scope
+   --> src/http/users.rs:112:6
+    |
+103 |       let user = sqlx::query!(
+    |  ________________-
+104 | |         r#"
+105 | |             select user_id, email, username, bio, image, password_hash 
+106 | |             from "user" where email = $1
+...   |
+111 | |     .await?
+112 | |     .ok_or(Error::unprocessable_entity([("email", "does not exist")]))?;
+    | |     -^^^^^ method not found in `_`
+    | |_____|
+    |
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `realworld-axum-sqlx` (lib) due to 35 previous errors; 23 warnings emitted
+
+The program 'realworld-axum-sqlx' has exited with code 101 (0x65).
+
