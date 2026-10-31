@@ -1,0 +1,76 @@
+commandline at 1e3607b97af6141743edb3c434c06d5b492f6fb3, opening /home/runner/work/_temp/repos/commandline/CommandLine.sln
+Opened in 0.5 s: CommandLine, solution /home/runner/work/_temp/repos/commandline/CommandLine.sln
+  project CommandLine [CSharp] /home/runner/work/_temp/repos/commandline/src/CommandLine/CommandLine.csproj
+  project CommandLine.Tests [CSharp] /home/runner/work/_temp/repos/commandline/tests/CommandLine.Tests/CommandLine.Tests.csproj
+Compatibility Doctor:
+  CommandLine: Library via Built with its users - A library is compiled together with the projects that reference it.
+  CommandLine.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+F5 startup project: none 
+Error List after analysis: 1 errors, 0 warnings
+  1 x CS0104
+      [CommandLine] TokenPartitioner.cs(18,54): error CS0104: 'ReferenceEqualityComparer' is an ambiguous reference between 'CommandLine.Infrastructure.ReferenceEqualityComparer' and 'System.Collections.Generic.ReferenceEqualityComparer'
+Error List after the build: 1 errors, 0 warnings
+  1 x CS0104
+      [CommandLine] TokenPartitioner.cs(18,54): error CS0104: 'ReferenceEqualityComparer' is an ambiguous reference between 'CommandLine.Infrastructure.ReferenceEqualityComparer' and 'System.Collections.Generic.ReferenceEqualityComparer'
+Tests: 516 found; 0 passed, 0 failed, 0 skipped, 516 not run - The build failed. Fix the errors in the Error List, then run the tests again. (0 s)
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring NuGet packages 0/2 projects
+  Analyzing: Analyzing 0/2 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/5
+  Restoring NuGet packages: Downloading NuGet packages 2/5
+  Restoring NuGet packages: Downloading NuGet packages 3/5
+  Restoring NuGet packages: Downloading NuGet packages 4/5
+  Analyzing: Analyzing 1/2 projects
+  Analyzing: Analyzing 2/2 projects
+  Analyzing: Succeeded after 0.7 s
+  Restoring NuGet packages: Downloading NuGet packages 5/5
+  Restoring NuGet packages: Restoring NuGet packages 1/2 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/26
+  Restoring NuGet packages: Downloading NuGet packages 2/26
+  Restoring NuGet packages: Downloading NuGet packages 3/26
+  Restoring NuGet packages: Downloading NuGet packages 4/26
+  Restoring NuGet packages: Downloading NuGet packages 5/26
+  Restoring NuGet packages: Downloading NuGet packages 6/26
+  Restoring NuGet packages: Downloading NuGet packages 7/26
+  Restoring NuGet packages: Downloading NuGet packages 8/26
+  Restoring NuGet packages: Downloading NuGet packages 9/26
+  Restoring NuGet packages: Downloading NuGet packages 10/26
+  Restoring NuGet packages: Downloading NuGet packages 11/26
+  Restoring NuGet packages: Downloading NuGet packages 12/26
+  Restoring NuGet packages: Downloading NuGet packages 13/26
+  Restoring NuGet packages: Downloading NuGet packages 14/26
+  Restoring NuGet packages: Downloading NuGet packages 15/26
+  Restoring NuGet packages: Downloading NuGet packages 16/26
+  Restoring NuGet packages: Downloading NuGet packages 17/26
+  Restoring NuGet packages: Downloading NuGet packages 18/26
+  Restoring NuGet packages: Downloading NuGet packages 19/26
+  Restoring NuGet packages: Downloading NuGet packages 20/26
+  Restoring NuGet packages: Downloading NuGet packages 21/26
+  Restoring NuGet packages: Downloading NuGet packages 22/26
+  Restoring NuGet packages: Downloading NuGet packages 23/26
+  Restoring NuGet packages: Downloading NuGet packages 24/26
+  Restoring NuGet packages: Downloading NuGet packages 25/26
+  Restoring NuGet packages: Downloading NuGet packages 26/26
+  Restoring NuGet packages: Succeeded after 1.5 s
+  Analyzing: Analyzing 0/2 projects
+  Analyzing: Analyzing 1/2 projects
+  Analyzing: Analyzing 2/2 projects
+  Analyzing: Succeeded after 0.5 s
+  Building: Building
+  Building: Building 0/2 projects
+  Building: Building 1/2 projects
+  Building: Failed after 0.4 s
+  Building: Building
+  Building: Building CommandLine.Tests
+  Building: Failed after 0.2 s
+Project setup:
+
+Output:
+Build started at 02:11:49...
+1>------ Build started: Project: CommandLine.Tests, Configuration: Debug ------
+1>TokenPartitioner.cs(18,54): error CS0104: 'ReferenceEqualityComparer' is an ambiguous reference between 'CommandLine.Infrastructure.ReferenceEqualityComparer' and 'System.Collections.Generic.ReferenceEqualityComparer'
+========== Build: 0 succeeded, 1 failed ==========
+
