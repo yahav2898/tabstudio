@@ -65,7 +65,84 @@ public static partial class SwiftProject
 
     /// <summary>Whether the package is a Vapor app: it depends on <c>vapor/vapor</c>.</summary>
     /// <param name="directory">The package folder.</param>
-    public static bool IsVapor(string directory)
+    public static bool IsVapor(string directory) => IsVaporCore(directory);
+
+    /// <summary>
+    /// The Apple framework a Swift project's app is written with, which only Apple's SDKs in Xcode have, on a Mac:
+    /// <c>SwiftUI</c>, <c>UIKit</c> or <c>AppKit</c> imported by its sources, or an Xcode project (<c>.xcodeproj</c>) in its
+    /// folder or the folder above, as IceCubesApp's packages are; <see langword="null"/> for a package that builds on
+    /// Linux, which TabStudio's Swift toolchain is.
+    /// </summary>
+    /// <param name="directory">The package folder.</param>
+    public static string? AppleFramework(string directory)
+    {
+        ArgumentNullException.ThrowIfNull(directory);
+        var sources = Path.Combine(directory, "Sources");
+        var scanned = 0;
+        if (Directory.Exists(sources))
+        {
+            foreach (var file in Directory.EnumerateFiles(sources, "*.swift", new EnumerationOptions { RecurseSubdirectories = true, IgnoreInaccessible = true, MaxRecursionDepth = 8 }))
+            {
+                if (++scanned > 400)
+                {
+                    break;
+                }
+
+                string text;
+                try
+                {
+                    text = new FileInfo(file).Length <= 256 * 1024 ? File.ReadAllText(file) : string.Empty;
+                }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                {
+                    continue;
+                }
+
+                // An import inside #if canImport(UIKit) or #if os(iOS) is for Apple platforms only: the package builds
+                // on Linux without it, as Alamofire does.
+                if (AppleImport().Matches(text).FirstOrDefault(m => !IsConditional(text, m.Index)) is { } import)
+                {
+                    return import.Groups["framework"].Value;
+                }
+            }
+        }
+
+        try
+        {
+            var parent = Path.GetDirectoryName(Path.GetFullPath(directory).TrimEnd(Path.DirectorySeparatorChar));
+            return new[] { directory, parent }.OfType<string>().Any(folder => Directory.EnumerateDirectories(folder, "*.xcodeproj").Any()) ? "Xcode" : null;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>The sentence that says why an Apple-platform app does not build here.</summary>
+    /// <param name="name">The project's name.</param>
+    /// <param name="framework">Its framework, from <see cref="AppleFramework"/>.</param>
+    public static string AppleExplanation(string name, string framework) =>
+        $"{name} is an Apple-platform app ({framework}), which builds only with Xcode and Apple's SDKs on a Mac; TabStudio's Swift builds and runs Swift packages for Linux.";
+
+    /// <summary>Whether a position in a Swift file is inside an <c>#if</c> block.</summary>
+    private static bool IsConditional(string text, int index)
+    {
+        var depth = 0;
+        foreach (Match directive in CompilerDirective().Matches(text[..index]))
+        {
+            depth += directive.Groups["directive"].Value == "endif" ? -1 : directive.Groups["directive"].Value == "if" ? 1 : 0;
+        }
+
+        return depth > 0;
+    }
+
+    [GeneratedRegex(@"^\s*#(?<directive>if|endif)\b", RegexOptions.Multiline | RegexOptions.CultureInvariant)]
+    private static partial Regex CompilerDirective();
+
+    [GeneratedRegex(@"^\s*(?:@\w+\s+)*import\s+(?<framework>SwiftUI|UIKit|AppKit|WatchKit)\s*$", RegexOptions.Multiline | RegexOptions.CultureInvariant)]
+    private static partial Regex AppleImport();
+
+    private static bool IsVaporCore(string directory)
     {
         ArgumentNullException.ThrowIfNull(directory);
         var manifest = Path.Combine(directory, "Package.swift");

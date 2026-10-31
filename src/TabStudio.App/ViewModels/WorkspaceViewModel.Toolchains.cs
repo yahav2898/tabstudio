@@ -274,7 +274,16 @@ public sealed partial class WorkspaceViewModel
             installText = status.IsBusy ? $"Installing {toolchain.Name}" : $"Install {toolchain.Name}";
         }
 
-        if (DesktopGui.Framework(item.Project) is { } framework)
+        if (toolchain.Id == "swift" && SwiftProject.AppleFramework(item.Project.Directory) is { } apple)
+        {
+            report = report with
+            {
+                Status = CompatibilityStatus.Unsupported,
+                RunsVia = "Xcode, on a Mac",
+                Explanation = SwiftProject.AppleExplanation(item.Info.Name, apple),
+            };
+        }
+        else if (DesktopGui.Framework(item.Project) is { } framework)
         {
             report = report with
             {
@@ -437,6 +446,13 @@ public sealed partial class WorkspaceViewModel
         }
 
         var project = item.Project;
+        if (item.Toolchain.Id == "swift" && SwiftProject.AppleFramework(project.Directory) is { } apple)
+        {
+            Output.WriteLine(SwiftProject.AppleExplanation(info.Name, apple), OutputKind.Failure);
+            StatusText = $"{info.Name} builds only with Xcode on a Mac";
+            return;
+        }
+
         if (OperatingSystem.IsAndroid() && DesktopGui.Framework(project) is { } framework)
         {
             // Its window could not open on the tablet: the program would only fail.
