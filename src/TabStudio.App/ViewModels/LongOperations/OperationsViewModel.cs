@@ -26,6 +26,13 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
     /// </summary>
     private static readonly TimeSpan KeepRunningInterval = TimeSpan.FromSeconds(1);
 
+    /// <summary>
+    /// How long the app is still kept running after the last operation ended. Operations often follow one another (the
+    /// toolchains of a batch, a restore then a build): each one restarted Android's foreground service, which must reach
+    /// <c>startForeground</c> within seconds of every start, and under load a start that missed it ended the app.
+    /// </summary>
+    internal static readonly TimeSpan ReleaseDelay = TimeSpan.FromSeconds(10);
+
     /// <summary>The tag of the ongoing notification that keeps TabStudio running.</summary>
     internal const string RunningTag = "operations";
 
@@ -33,10 +40,12 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
     private readonly INotifications _notifications;
     private readonly IAppActivity? _activity;
     private readonly ITimer _timer;
+    private readonly ITimer _release;
     private readonly TimeProvider _time;
     private bool _refreshing;
     private bool _disposed;
     private SystemNotification? _kept;
+    private bool _releasing;
     private long _keptAt;
 
     /// <summary>Creates the operations.</summary>
@@ -65,6 +74,7 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
         _notifications.Opened += OnNotificationOpened;
         // The refresh runs only while an operation does: an idle IDE woke up every two seconds for nothing.
         _timer = time.CreateTimer(_ => _ui.Post(Refresh), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        _release = time.CreateTimer(_ => _ui.Post(Release), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
     }
 
     /// <summary>The operations and their state, which tests and the integrations use.</summary>
@@ -166,13 +176,20 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
         var running = Items.Where(i => KeepsAppRunning(i.Operation)).ToList();
         if (running.Count == 0)
         {
-            if (_kept is not null)
+            if (_kept is not null && !_releasing)
             {
-                _kept = null;
-                _notifications.KeepRunning(null);
+                // Let go a little later, so an operation that follows keeps the running service.
+                _releasing = true;
+                _release.Change(ReleaseDelay, Timeout.InfiniteTimeSpan);
             }
 
             return;
+        }
+
+        if (_releasing)
+        {
+            _releasing = false;
+            _release.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         }
 
         var newest = running[^1].Operation;
@@ -188,6 +205,19 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
         _kept = progress;
         _keptAt = _time.GetTimestamp();
         _notifications.KeepRunning(progress);
+    }
+
+    /// <summary>The grace period after the last operation passed with none begun: the app is let go.</summary>
+    private void Release()
+    {
+        _releasing = false;
+        if (_disposed || _kept is null || Items.Any(i => KeepsAppRunning(i.Operation)))
+        {
+            return;
+        }
+
+        _kept = null;
+        _notifications.KeepRunning(null);
     }
 
     private void OnLogged(object? sender, TrackedOperation operation) =>
@@ -278,6 +308,7 @@ public sealed partial class OperationsViewModel : ObservableObject, IDisposable
 
         _disposed = true;
         _timer.Dispose();
+        _release.Dispose();
         Tracker.Changed -= OnChanged;
         Tracker.Logged -= OnLogged;
         Tracker.NotificationDue -= OnNotificationDue;

@@ -312,7 +312,7 @@ public sealed partial class GitHubClient
         var buffer = new byte[81920];
         long received = 0;
         int read;
-        while ((read = await source.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0)
+        while ((read = await ReadBodyAsync(source, buffer, cancellationToken).ConfigureAwait(false)) > 0)
         {
             received += read;
             if (received > maximumBytes)
@@ -338,6 +338,32 @@ public sealed partial class GitHubClient
         catch (JsonException ex)
         {
             throw new GitHubApiException("GitHub sent an answer TabStudio could not read.", ex);
+        }
+    }
+
+    /// <summary>How long a download may go without a byte before it is given up on.</summary>
+    internal static TimeSpan BodyStallTimeout { get; set; } = TimeSpan.FromSeconds(60);
+
+    /// <summary>
+    /// Reads the next bytes of a response body as a <see cref="GitHubApiException"/> when the connection breaks or
+    /// stalls: a dropped connection came out as an <see cref="IOException"/> no caller expected, which ended the app
+    /// from the CI log panel, and a stalled one kept its spinner going for good.
+    /// </summary>
+    internal static async Task<int> ReadBodyAsync(Stream body, Memory<byte> buffer, CancellationToken cancellationToken)
+    {
+        using var stall = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        stall.CancelAfter(BodyStallTimeout);
+        try
+        {
+            return await body.ReadAsync(buffer, stall.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException ex) when (!cancellationToken.IsCancellationRequested)
+        {
+            throw new GitHubApiException("The connection to GitHub stopped sending data. Check the network and try again.", ex);
+        }
+        catch (Exception ex) when (ex is IOException or HttpRequestException)
+        {
+            throw new GitHubApiException("The connection to GitHub broke during the download. Check the network and try again.", ex);
         }
     }
 

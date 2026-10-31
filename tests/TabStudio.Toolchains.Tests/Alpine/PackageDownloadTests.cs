@@ -31,4 +31,23 @@ public sealed class PackageDownloadTests
             Assert.Null(ApkSignature.VerifyPackage(file, package));
         }
     }
+
+    [Fact]
+    public async Task A_sign_in_page_from_the_network_keeps_the_last_good_index()
+    {
+        // A captive portal answers every request with 200 and its HTML: written over the index before its check, it
+        // was then deleted, and the toolchains could no longer be installed offline either.
+        using var device = new FakeDevice();
+        device.Mirror.Add("main", "kept", "1.0-r0");
+        await device.Environment.SetUpAsync(null, CancellationToken.None);
+        await device.Packages.LoadIndexAsync(refresh: true, CancellationToken.None);
+        foreach (var repository in device.Environment.Distribution.Repositories)
+        {
+            device.Mirror.Server.Add(device.Mirror.IndexAddress(repository), System.Text.Encoding.UTF8.GetBytes("<html><body>Sign in to Cafe Wi-Fi</body></html>"));
+        }
+
+        var index = await device.Packages.LoadIndexAsync(refresh: true, CancellationToken.None);
+
+        Assert.NotEmpty(index.Candidates(ApkDependency.Parse("kept")));
+    }
 }

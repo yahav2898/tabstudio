@@ -52,7 +52,11 @@ public sealed record SessionState(
 public sealed class SessionStore
 {
     private readonly string _file;
+    private readonly string _restoring;
+    private readonly string _recovered;
     private readonly Lock _gate = new();
+    private long _sequence;
+    private long _saved;
 
     /// <summary>Creates the store over the session file in the app's state folder.</summary>
     /// <param name="paths">Where the app keeps its state.</param>
@@ -60,6 +64,125 @@ public sealed class SessionStore
     {
         ArgumentNullException.ThrowIfNull(paths);
         _file = paths.SessionFile;
+        _restoring = paths.SessionFile + ".restoring";
+        _recovered = Path.Combine(paths.State, "Recovered");
+    }
+
+    /// <summary>Where unsaved text that has no file left to go back to is kept, one file per document.</summary>
+    public string RecoveredFolder => _recovered;
+
+    /// <summary>
+    /// The unsaved documents that <see cref="Load"/> found in a session whose workspace is gone, written to
+    /// <see cref="RecoveredFolder"/>; empty when there were none.
+    /// </summary>
+    public IReadOnlyList<string> LastRecovered { get; private set; } = [];
+
+    /// <summary>
+    /// The workspace whose restore began and never finished, because the app ended while reopening it (out of memory,
+    /// a crash, or Android closing it); <see langword="null"/> when the last restore finished.
+    /// </summary>
+    /// <remarks>
+    /// Reopening it again at startup could end the app again, every time it starts: the start screen offers it
+    /// instead, and opening it from there still restores its session.
+    /// </remarks>
+    public string? InterruptedRestore
+    {
+        get
+        {
+            lock (_gate)
+            {
+                try
+                {
+                    return File.Exists(_restoring) ? File.ReadAllText(_restoring).Trim() : null;
+                }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                {
+                    return null;
+                }
+            }
+        }
+    }
+
+    /// <summary>Notes that a session is being restored, until <see cref="EndRestore"/>.</summary>
+    /// <param name="workspacePath">The workspace being reopened.</param>
+    public void BeginRestore(string workspacePath)
+    {
+        ArgumentNullException.ThrowIfNull(workspacePath);
+        lock (_gate)
+        {
+            try
+            {
+                File.WriteAllText(_restoring, workspacePath);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // Without the note a crash while reopening is retried at the next start, as before.
+            }
+        }
+    }
+
+    /// <summary>Notes that the restore begun by <see cref="BeginRestore"/> finished, or was given up on purpose.</summary>
+    public void EndRestore()
+    {
+        lock (_gate)
+        {
+            try
+            {
+                File.Delete(_restoring);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // A stale note only means the next start offers the workspace instead of reopening it.
+            }
+        }
+    }
+
+    /// <summary>
+    /// Writes unsaved text whose file can no longer be opened to <see cref="RecoveredFolder"/>, so it outlives the
+    /// session that held it.
+    /// </summary>
+    /// <param name="documents">The documents; those without unsaved text are skipped.</param>
+    /// <returns>The files written.</returns>
+    public IReadOnlyList<string> KeepUnsavedText(IEnumerable<SessionDocument> documents)
+    {
+        ArgumentNullException.ThrowIfNull(documents);
+        lock (_gate)
+        {
+            return KeepUnsavedTextCore(documents);
+        }
+    }
+
+    private List<string> KeepUnsavedTextCore(IEnumerable<SessionDocument> documents)
+    {
+        var written = new List<string>();
+        foreach (var document in documents)
+        {
+            if (document.UnsavedText is not { } text)
+            {
+                continue;
+            }
+
+            try
+            {
+                Directory.CreateDirectory(_recovered);
+                var name = Path.GetFileName(document.Path);
+                var stamp = DateTime.Now.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture);
+                var target = Path.Combine(_recovered, $"{Path.GetFileNameWithoutExtension(name)}.{stamp}{Path.GetExtension(name)}");
+                for (var i = 2; File.Exists(target); i++)
+                {
+                    target = Path.Combine(_recovered, $"{Path.GetFileNameWithoutExtension(name)}.{stamp}-{i}{Path.GetExtension(name)}");
+                }
+
+                File.WriteAllText(target, text);
+                written.Add(target);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // The session file still holds it until it is replaced.
+            }
+        }
+
+        return written;
     }
 
     /// <summary>The last saved session, or <see langword="null"/> when there is none or its workspace is gone.</summary>
@@ -88,7 +211,30 @@ public sealed class SessionStore
                     return null;
                 }
 
-                return state is not null && (File.Exists(state.WorkspacePath) || Directory.Exists(state.WorkspacePath)) ? state : null;
+                if (state is null || string.IsNullOrEmpty(state.WorkspacePath))
+                {
+                    return null;
+                }
+
+                // Sessions written by older versions, or damaged by hand, may lack the list.
+                state = state.Documents is null ? state with { Documents = [] } : state;
+                if (File.Exists(state.WorkspacePath) || Directory.Exists(state.WorkspacePath))
+                {
+                    return state;
+                }
+
+                // The workspace was deleted, moved, or is on storage TabStudio may no longer read (a permission revoked,
+                // a card removed). Its unsaved text was lost with the next save of another workspace's session.
+                if (state.Documents.Any(d => d.UnsavedText is not null))
+                {
+                    LastRecovered = KeepUnsavedTextCore(state.Documents);
+                    if (LastRecovered.Count == state.Documents.Count(d => d.UnsavedText is not null))
+                    {
+                        File.Delete(_file);
+                    }
+                }
+
+                return null;
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
@@ -97,13 +243,30 @@ public sealed class SessionStore
         }
     }
 
+    /// <summary>A number for a session about to be saved, larger than any taken before.</summary>
+    public long NextSequence() => Interlocked.Increment(ref _sequence);
+
     /// <summary>Saves a session, replacing the previous one atomically.</summary>
     /// <param name="state">The session.</param>
-    public void Save(SessionState state)
+    public void Save(SessionState state) => Save(state, NextSequence());
+
+    /// <summary>
+    /// Saves a session taken as <paramref name="sequence"/>, unless a later one was saved already: a save written in
+    /// the background may finish after the one written when the app went to the background.
+    /// </summary>
+    /// <param name="state">The session.</param>
+    /// <param name="sequence">From <see cref="NextSequence"/>, taken when the state was.</param>
+    public void Save(SessionState state, long sequence)
     {
         ArgumentNullException.ThrowIfNull(state);
         lock (_gate)
         {
+            if (sequence <= _saved)
+            {
+                return;
+            }
+
+            _saved = sequence;
             try
             {
                 var temporary = _file + ".tmp";
@@ -126,6 +289,8 @@ public sealed class SessionStore
     {
         lock (_gate)
         {
+            // A save still on its way from the background must not bring the session back.
+            _saved = NextSequence();
             try
             {
                 File.Delete(_file);

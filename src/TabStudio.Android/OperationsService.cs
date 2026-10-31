@@ -28,6 +28,7 @@ public sealed class OperationsService : Service
 
     private PowerManager.WakeLock? _wakeLock;
     private Handler? _handler;
+    private int _lastStartId;
 
     /// <summary>The running service, once it is in the foreground. Used on the main thread only.</summary>
     internal static OperationsService? Current { get; private set; }
@@ -55,6 +56,7 @@ public sealed class OperationsService : Service
     {
         // Android requires startForeground soon after startForegroundService, even when the operations ended in
         // between; the service then stops at once.
+        _lastStartId = startId;
         var running = AndroidNotifications.Running;
         var notification = running ?? AndroidNotifications.BuildRunning(this, "TabStudio", "Finishing", null);
         if (OperatingSystem.IsAndroidVersionAtLeast(29))
@@ -80,10 +82,22 @@ public sealed class OperationsService : Service
     }
 
     /// <summary>Takes the service and its notification away, when the last operation ended.</summary>
+    /// <remarks>
+    /// Stops with the id of the last start it handled, which Android ignores while a newer start is waiting. Without it
+    /// <c>StopSelf()</c> also took down the start Android was making for the next operation, before that start could
+    /// call <c>startForeground</c>, and Android ended the app ("did not then call Service.startForeground()"): an
+    /// operation that ended just after the next one began, as when one toolchain install follows another.
+    /// </remarks>
     internal void Stop()
     {
+        if (ReferenceEquals(Current, this))
+        {
+            // The next operation starts the service again rather than updating one on its way out.
+            Current = null;
+        }
+
         StopForeground(StopForegroundFlags.Remove);
-        StopSelf();
+        StopSelf(_lastStartId);
     }
 
     /// <inheritdoc />

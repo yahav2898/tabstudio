@@ -101,6 +101,9 @@ internal sealed class HttpPackageFeed : IPackageFeed
         return task.WaitAsync(cancellationToken);
     }
 
+    /// <summary>How long reading a source's service index may take.</summary>
+    internal static TimeSpan ServiceIndexTimeout { get; set; } = TimeSpan.FromSeconds(100);
+
     private async Task<Uri> ReadServiceIndexAsync()
     {
         if (!Uri.TryCreate(Source.Location, UriKind.Absolute, out var index))
@@ -108,8 +111,20 @@ internal sealed class HttpPackageFeed : IPackageFeed
             throw new PackageSourceException(Source, $"The address of {Source.Name} ('{Source.Location}') is not a valid URL.", isUnreachable: false);
         }
 
-        // Shared by every caller, so it does not take any one caller's cancellation token; HttpClient.Timeout bounds it.
-        var address = await GetAsync(index, ReadPackageBaseAddressAsync, CancellationToken.None).ConfigureAwait(false);
+        // Shared by every caller, so it does not take any one caller's cancellation token. HttpClient.Timeout does not
+        // bound a body read once the headers have come, so a stalled connection left this task pending for good, and
+        // every restore from the source waited on it until the app was restarted: it has a limit of its own.
+        using var timeout = new CancellationTokenSource(ServiceIndexTimeout);
+        Uri? address;
+        try
+        {
+            address = await GetAsync(index, ReadPackageBaseAddressAsync, timeout.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException ex) when (timeout.IsCancellationRequested)
+        {
+            throw Unreachable(ex);
+        }
+
         return address ?? throw new PackageSourceException(Source, $"{Source.Name} has no NuGet V3 service index at {Source.Location}.", isUnreachable: false);
     }
 

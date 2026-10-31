@@ -71,7 +71,7 @@ public static partial class ProjectParser
             throw new ProjectLoadException(fullPath, "the file does not exist.", null);
         }
 
-        var root = LoadXml(fullPath, File.ReadAllText(fullPath));
+        var root = LoadXml(fullPath, PathUtilities.ReadAllTextBounded(fullPath));
         return WithPlatformInvokeFiles(WithRazorComponents(Build(fullPath, root, new EvaluationOptions(FromDisk: true, [], []))));
     }
 

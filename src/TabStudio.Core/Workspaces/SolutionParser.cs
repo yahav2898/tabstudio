@@ -78,7 +78,7 @@ public static partial class SolutionParser
             throw new ProjectLoadException(fullPath, "the file does not exist.", null);
         }
 
-        return Parse(fullPath, File.ReadAllText(fullPath));
+        return Parse(fullPath, PathUtilities.ReadAllTextBounded(fullPath));
     }
 
     /// <summary>Parses solution text that has already been read.</summary>

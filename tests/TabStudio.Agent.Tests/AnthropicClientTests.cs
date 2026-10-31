@@ -112,4 +112,33 @@ public sealed class AnthropicClientTests
 
         await Assert.ThrowsAsync<AnthropicException>(() => client.SendAsync(Request()));
     }
+
+    [Fact]
+    public async Task A_stream_that_goes_quiet_ends_with_an_error_instead_of_waiting_forever()
+    {
+        // A dead connection mid-answer held the agent's spinner until the user pressed Stop.
+        using var quiet = new QuietStream("event: message_start\ndata: {\"type\":\"ping\"}\n\n"u8.ToArray());
+
+        var error = await Assert.ThrowsAsync<AnthropicException>(() => MessageStreamReader.ReadAsync(quiet, null, CancellationToken.None, TimeSpan.FromMilliseconds(200)));
+
+        Assert.Contains("quiet", error.Message, StringComparison.Ordinal);
+    }
+
+    /// <summary>Sends its bytes, then nothing, without closing.</summary>
+    private sealed class QuietStream(byte[] first) : MemoryStream(first)
+    {
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            if (Position < Length)
+            {
+                return await base.ReadAsync(buffer, cancellationToken);
+            }
+
+            await Task.Delay(Timeout.Infinite, cancellationToken);
+            return 0;
+        }
+
+        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
+            ReadAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
+    }
 }
