@@ -1,0 +1,78 @@
+spdlog at 6d9805df3f588402b17073dcd13eb569ceda864d, opening /home/runner/work/_temp/repos/spdlog
+Opened in 0.2 s: spdlog, solution (none)
+  toolchain project cpp: /home/runner/work/_temp/repos/spdlog/CMakeLists.txt
+  toolchain project cpp: /home/runner/work/_temp/repos/spdlog/bench/CMakeLists.txt
+  toolchain project cpp: /home/runner/work/_temp/repos/spdlog/example/CMakeLists.txt
+  toolchain project python: /home/runner/work/_temp/repos/spdlog/scripts
+  toolchain project cpp: /home/runner/work/_temp/repos/spdlog/tests/CMakeLists.txt
+  toolchain project cpp: /home/runner/work/_temp/repos/spdlog/tests/cmake/tweakme/CMakeLists.txt
+Compatibility Doctor:
+  spdlog: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+  bench: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+  example: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+  scripts: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  tests: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+  tweakme: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+F5 startup project: spdlog (cpp) /home/runner/work/_temp/repos/spdlog/CMakeLists.txt
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 3.8 s
+  Building spdlog: Building spdlog
+  Building spdlog: Configuring CMake
+  Building spdlog: Generating build files
+  Building spdlog: Building 10%
+  Building spdlog: Building 20%
+  Building spdlog: Building 30%
+  Building spdlog: Building 40%
+  Building spdlog: Building 50%
+  Building spdlog: Building 60%
+  Building spdlog: Building 70%
+  Building spdlog: Building 80%
+  Building spdlog: Building 90%
+  Building spdlog: Building 100%
+  Building spdlog: Succeeded after 9.8 s
+Project setup:
+
+Output:
+Building spdlog with C and C++ 13.3.0
+> cmake --build /home/runner/work/_temp/repos/spdlog/.tabstudio/cmake --config Debug
+> cmake -S /home/runner/work/_temp/repos/spdlog -B /home/runner/work/_temp/repos/spdlog/.tabstudio/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Build spdlog: 1.17.0
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Build type: Debug
+-- Looking for fwrite_unlocked
+-- Looking for fwrite_unlocked - found
+-- Generating example(s)
+-- Generating install
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/runner/work/_temp/repos/spdlog/.tabstudio/cmake
+[ 10%] Building CXX object CMakeFiles/spdlog.dir/src/spdlog.cpp.o
+[ 20%] Building CXX object CMakeFiles/spdlog.dir/src/stdout_sinks.cpp.o
+[ 30%] Building CXX object CMakeFiles/spdlog.dir/src/color_sinks.cpp.o
+[ 40%] Building CXX object CMakeFiles/spdlog.dir/src/file_sinks.cpp.o
+[ 50%] Building CXX object CMakeFiles/spdlog.dir/src/async.cpp.o
+[ 60%] Building CXX object CMakeFiles/spdlog.dir/src/cfg.cpp.o
+[ 70%] Building CXX object CMakeFiles/spdlog.dir/src/bundled_fmtlib_format.cpp.o
+[ 80%] Linking CXX static library libspdlogd.a
+[ 80%] Built target spdlog
+[ 90%] Building CXX object example/CMakeFiles/example.dir/example.cpp.o
+[100%] Linking CXX executable example
+[100%] Built target example
+
+Build succeeded: 'example' is ready to run.
+
