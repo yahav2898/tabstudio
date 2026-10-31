@@ -2,14 +2,34 @@ react-redux-realworld-example-app at ee72eba4056392c95a27bc48d385d3f54ba38a18
 Toolchain projects:
   node: /home/runner/work/_temp/real-repos/react-redux-realworld-example-app/package.json
 Startup project: node /home/runner/work/_temp/real-repos/react-redux-realworld-example-app/package.json
-Set up in 35.4 s
+Set up in 31.0 s
 Web preview: http://127.0.0.1:4100/
 GET http://127.0.0.1:4100/: 200 OK, 1574 characters
-EXCEPTION: Xunit.Sdk.TrueException: real-react-redux-realworld-example-app-2-running does not meet the accessibility rules (docs/design/README.md, "Accessibility"):
-clipped: WebPreviewView > ContentPresenter#PART_ContentPresenter > StackPanel#Placeholder > TextBlock: "react-redux-realworld-example-a…" runs past its box: it needs 342 dips of width and has 282.
-   at Xunit.Assert.True(Nullable`1 condition, String userMessage) in /_/src/xunit.assert/Asserts/BooleanAsserts.cs:line 141
-   at Xunit.Assert.True(Boolean condition, String userMessage) in /_/src/xunit.assert/Asserts/BooleanAsserts.cs:line 123
-   at TabStudio.App.Tests.Accessibility.AccessibilityReport.AssertNone(IReadOnlyList`1 found, String what) in /_/tests/TabStudio.App.Tests/Accessibility/AccessibilityReport.cs:line 84
-   at TabStudio.App.Tests.UiTestHelpers.SaveScreenshot(Window window, String name) in /_/tests/TabStudio.App.Tests/UiTestHelpers.cs:line 46
-   at TabStudio.App.Tests.RealRepositories.RealRepositoryTests.OpenAndRunAsync(String folder, String name, ProgramExpectation expected, StringBuilder report) in /_/tests/TabStudio.App.Tests/RealRepositories/RealRepositoryTests.cs:line 266
-   at TabStudio.App.Tests.RealRepositories.RealRepositoryTests.Pinned_Python_Java_Rust_and_Node_repositories_set_up_build_and_start_their_programs() in /_/tests/TabStudio.App.Tests/RealRepositories/RealRepositoryTests.cs:line 157
+Ran in 4.1 s
+Project setup:
+
+Output:
+Running npm start with Node.js 22.23.4
+
+> react-redux-realworld-example-app@0.1.0 start
+> cross-env PORT=4100 react-scripts start
+
+(node:15671) [DEP0111] DeprecationWarning: Access to process.binding('http_parser') is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:15671) [DEP0111] DeprecationWarning: Access to process.binding('http_parser') is deprecated.
+Starting the development server...
+
+(node:15671) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+Compiled successfully!
+
+You can now view react-redux-realworld-example-app in the browser.
+
+  Local:            http://localhost:4100/
+  On Your Network:  http://10.1.0.74:4100/
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+
+
+The program 'npm start' was stopped.
+

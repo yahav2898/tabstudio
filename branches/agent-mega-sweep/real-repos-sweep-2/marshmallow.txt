@@ -3,8 +3,8 @@ Toolchain projects:
   python: /home/runner/work/_temp/real-repos/marshmallow/pyproject.toml
   node: /home/runner/work/_temp/real-repos/marshmallow/examples/package.json
 Startup project: python /home/runner/work/_temp/real-repos/marshmallow/pyproject.toml
-Set up in 8.4 s
-Tests: 1192 passed, 0 failed, 0 skipped of 1288: 1192 tests run in 8.0 sec: 1192 passed, 0 failed, 0 skipped.
+Set up in 8.6 s
+Tests: 1192 passed, 0 failed, 0 skipped of 1288: 1192 tests run in 6.8 sec: 1192 passed, 0 failed, 0 skipped.
 Project setup:
 ------ marshmallow: pip install -e . ------
 Reading which Python versions the 63 pinned packages have wheels for, from PyPI.
@@ -22,8 +22,8 @@ Obtaining file:///home/runner/work/_temp/real-repos/marshmallow
 Building wheels for collected packages: marshmallow
   Building editable for marshmallow (pyproject.toml): started
   Building editable for marshmallow (pyproject.toml): finished with status 'done'
-  Created wheel for marshmallow: filename=marshmallow-4.3.1-py3-none-any.whl size=8828 sha256=7980fb901792e81a8650cb4249b0c7164fdd8e4d4c284143717ce4f58511171f
-  Stored in directory: /tmp/pip-ephem-wheel-cache-2k0ac9xw/wheels/08/c4/77/981bf58402b8d8300873f2aa42077442f3628813859c979450
+  Created wheel for marshmallow: filename=marshmallow-4.3.1-py3-none-any.whl size=8828 sha256=74f3d9716f0f59b04293c8c959743302786b4fe49e6a1023c96f7b2f285fec6d
+  Stored in directory: /tmp/pip-ephem-wheel-cache-48c99jfz/wheels/08/c4/77/981bf58402b8d8300873f2aa42077442f3628813859c979450
 Successfully built marshmallow
 Installing collected packages: marshmallow
 Successfully installed marshmallow-4.3.1
@@ -42,11 +42,11 @@ npm error code ETARGET
 npm error notarget No matching version found for pest@^23.4.1.
 npm error notarget In most cases you or one of your dependencies are requesting
 npm error notarget a package version that doesn't exist.
-npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2026-10-31T02_57_16_479Z-debug-0.log
+npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2026-10-31T04_16_48_451Z-debug-0.log
 examples's packages were not installed: npm install --no-fund --no-audit failed (npm error notarget No matching version found for pest@^23.4.1.). Fix that, then use Tools > Install Project Packages.
 ========== npm install: failed (exited with code 1) ==========
 ========== Running marshmallow's tests with Pytest ==========
-> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''pytest'\'' '\''simplejson'\'' '\''tox'\'' '\''tox-uv'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/marshmallow/.tabstudio/test-results/937bc8d3ac3746e6ae26e161c73869ee/pytest.xml
+> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''pytest'\'' '\''simplejson'\'' '\''tox'\'' '\''tox-uv'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/marshmallow/.tabstudio/test-results/0cdd3bcb50b6400399dfd4affac2ed74/pytest.xml
 Installing what the tests need
 ============================= test session starts ==============================
 platform linux -- Python 3.12.15, pytest-9.2.0, pluggy-1.7.0
@@ -82,6 +82,6 @@ tests/test_validate.py ................................................. [ 85%]
 ........................................................................ [ 97%]
 ............................                                             [100%]
 
-- generated xml file: /home/runner/work/_temp/real-repos/marshmallow/.tabstudio/test-results/937bc8d3ac3746e6ae26e161c73869ee/pytest.xml -
-============================= 1192 passed in 2.99s =============================
+- generated xml file: /home/runner/work/_temp/real-repos/marshmallow/.tabstudio/test-results/0cdd3bcb50b6400399dfd4affac2ed74/pytest.xml -
+============================= 1192 passed in 2.68s =============================
 
