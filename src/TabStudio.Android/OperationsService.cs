@@ -26,11 +26,29 @@ public sealed class OperationsService : Service
     /// <summary>The longest the service runs at a time, inside Android 15's six hours a day for data sync.</summary>
     private static readonly TimeSpan Longest = TimeSpan.FromHours(5.5);
 
+    private static bool _startPending;
+
     private PowerManager.WakeLock? _wakeLock;
     private Handler? _handler;
 
     /// <summary>The running service, once it is in the foreground. Used on the main thread only.</summary>
     internal static OperationsService? Current { get; private set; }
+
+    /// <summary>Requests one start on the main thread while progress arrives before Android creates the service.</summary>
+    internal static void EnsureStarted(Context context)
+    {
+        if (Current is not null || _startPending) return;
+        _startPending = true;
+        try
+        {
+            context.StartForegroundService(new Intent(context, typeof(OperationsService)));
+        }
+        catch (Exception ex) when (ex is Java.Lang.IllegalStateException or Java.Lang.SecurityException)
+        {
+            _startPending = false;
+            throw;
+        }
+    }
 
     /// <inheritdoc />
     public override IBinder? OnBind(Intent? intent) => null;
@@ -39,6 +57,8 @@ public sealed class OperationsService : Service
     public override void OnCreate()
     {
         base.OnCreate();
+        // Meet Android's foreground deadline before wake-lock/binder work or queued progress updates.
+        EnterForeground();
         if (GetSystemService(PowerService) is PowerManager power)
         {
             _wakeLock = power.NewWakeLock(WakeLockFlags.Partial, "TabStudio:operations");
@@ -55,6 +75,16 @@ public sealed class OperationsService : Service
     {
         // Android requires startForeground soon after startForegroundService, even when the operations ended in
         // between; the service then stops at once.
+        if (!EnterForeground())
+        {
+            Stop();
+        }
+
+        return StartCommandResult.NotSticky;
+    }
+
+    private bool EnterForeground()
+    {
         var running = AndroidNotifications.Running;
         var notification = running ?? AndroidNotifications.BuildRunning(this, "TabStudio", "Finishing", null);
         if (OperatingSystem.IsAndroidVersionAtLeast(29))
@@ -70,18 +100,15 @@ public sealed class OperationsService : Service
         // startForeground is an error Android ends the app for, which the last operation ending right after the first
         // began did under load (the emulator's self test).
         Current = this;
-
-        if (running is null)
-        {
-            Stop();
-        }
-
-        return StartCommandResult.NotSticky;
+        _startPending = false;
+        return running is not null;
     }
 
     /// <summary>Takes the service and its notification away, when the last operation ended.</summary>
     internal void Stop()
     {
+        // A following operation must request a start, not update an instance whose destruction is queued.
+        if (ReferenceEquals(Current, this)) Current = null;
         StopForeground(StopForegroundFlags.Remove);
         StopSelf();
     }
