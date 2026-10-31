@@ -1,0 +1,66 @@
+guzzle at 7d9b1f430bb65ac664e120af227bf9a795ad6333, opening /home/runner/work/_temp/repos/guzzle
+Opened in 0.4 s: guzzle, solution (none)
+  toolchain project php: /home/runner/work/_temp/repos/guzzle/composer.json
+  toolchain project php: /home/runner/work/_temp/repos/guzzle/vendor-bin/composer-normalize/composer.json
+  toolchain project php: /home/runner/work/_temp/repos/guzzle/vendor-bin/php-cs-fixer/composer.json
+  toolchain project php: /home/runner/work/_temp/repos/guzzle/vendor-bin/phpstan/composer.json
+Compatibility Doctor:
+  guzzle: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+  composer-normalize: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+  php-cs-fixer: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+  phpstan: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+F5 startup project: guzzle (php) /home/runner/work/_temp/repos/guzzle/composer.json
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: 1814 found; 0 passed, 0 failed, 0 skipped, 1814 not run - The build failed. Fix the errors in the Error List, then run the tests again. (1 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up guzzle: composer install
+  Installing guzzle's packages: Installing packages: composer install
+  Installing guzzle's packages: Failed after 1.3 s
+  Setting up projects: Setting up composer-normalize: composer install
+  Installing composer-normalize's packages: Installing packages: composer install
+  Installing composer-normalize's packages: Succeeded after 1.1 s
+  Setting up projects: Setting up php-cs-fixer: composer install
+  Installing php-cs-fixer's packages: Installing packages: composer install
+  Installing php-cs-fixer's packages: Failed after 0.5 s
+  Setting up projects: Setting up phpstan: composer install
+  Installing phpstan's packages: Installing packages: composer install
+  Installing phpstan's packages: Failed after 0.3 s
+  Setting up projects: Succeeded after 6.7 s
+  Building guzzle: Running sh
+  Building guzzle: Succeeded after 0.2 s
+  Building composer-normalize: Running sh
+  Building composer-normalize: Succeeded after 0.0 s
+  Building php-cs-fixer: Running sh
+  Building php-cs-fixer: Succeeded after 0.0 s
+  Building phpstan: Running sh
+  Building phpstan: Succeeded after 0.0 s
+  Installing guzzle's packages: Installing packages: composer install
+  Installing guzzle's packages: Failed after 0.7 s
+Project setup:
+guzzle's packages were not installed: composer install --no-interaction --no-progress --prefer-dist failed (::error ::Your requirements could not be resolved to an installable set of packages.%0A%0A  Problem 1%0A    - Root composer.json requires guzzlehttp/test-server ^1.1 -> satisfiable by guzzlehttp/test-server[1.1.0].%0A    - guzzlehttp/test-server 1.1.0 requires guzzlehttp/guzzle ^8.1 -> satisfiable by guzzlehttp/guzzle[8.1.0, ..., 8.4.x-dev] from composer repo (https://repo.packagist.org) but guzzlehttp/guzzle dev-7d9b1f430bb65ac664e120af227bf9a795ad6333 is the root package and cannot be modified. See https://getcomposer.org/dep-on-root for details and assistance.%0A). Fix that, then use Tools > Install Project Packages.
+php-cs-fixer's packages were not installed: composer install --no-interaction --no-progress --prefer-dist failed (::error ::Your requirements could not be resolved to an installable set of packages.%0A%0A  Problem 1%0A    - Root composer.json requires php ^7.4 but your php version (8.5.12) does not satisfy that requirement.%0A). Fix that, then use Tools > Install Project Packages.
+phpstan's packages were not installed: composer install --no-interaction --no-progress --prefer-dist failed (::error ::Your requirements could not be resolved to an installable set of packages.%0A%0A  Problem 1%0A    - Root composer.json requires php ^7.4 but your php version (8.5.12) does not satisfy that requirement.%0A). Fix that, then use Tools > Install Project Packages.
+guzzle's packages were not installed: composer install --no-interaction --no-progress --prefer-dist failed (::error ::Your requirements could not be resolved to an installable set of packages.%0A%0A  Problem 1%0A    - Root composer.json requires guzzlehttp/test-server ^1.1 -> satisfiable by guzzlehttp/test-server[1.1.0].%0A    - guzzlehttp/test-server 1.1.0 requires guzzlehttp/guzzle ^8.1 -> satisfiable by guzzlehttp/guzzle[8.1.0, ..., 8.4.x-dev] from composer repo (https://repo.packagist.org) but guzzlehttp/guzzle dev-7d9b1f430bb65ac664e120af227bf9a795ad6333 is the root package and cannot be modified. See https://getcomposer.org/dep-on-root for details and assistance.%0A). Fix that, then use Tools > Install Project Packages.
+
+Output:
+guzzle needs no build: PHP runs it from its source. Press Ctrl+F5 to run it.
+> composer install --no-interaction --no-progress --prefer-dist
+No composer.lock file present. Updating dependencies to latest instead of installing from lock file. See https://getcomposer.org/install for more information.
+Loading composer repositories with package information
+Updating dependencies
+Your requirements could not be resolved to an installable set of packages.
+
+  Problem 1
+    - Root composer.json requires guzzlehttp/test-server ^1.1 -> satisfiable by guzzlehttp/test-server[1.1.0].
+    - guzzlehttp/test-server 1.1.0 requires guzzlehttp/guzzle ^8.1 -> satisfiable by guzzlehttp/guzzle[8.1.0, ..., 8.4.x-dev] from composer repo (https://repo.packagist.org) but guzzlehttp/guzzle dev-7d9b1f430bb65ac664e120af227bf9a795ad6333 is the root package and cannot be modified. See https://getcomposer.org/dep-on-root for details and assistance.
+
+::error ::Your requirements could not be resolved to an installable set of packages.%0A%0A  Problem 1%0A    - Root composer.json requires guzzlehttp/test-server ^1.1 -> satisfiable by guzzlehttp/test-server[1.1.0].%0A    - guzzlehttp/test-server 1.1.0 requires guzzlehttp/guzzle ^8.1 -> satisfiable by guzzlehttp/guzzle[8.1.0, ..., 8.4.x-dev] from composer repo (https://repo.packagist.org) but guzzlehttp/guzzle dev-7d9b1f430bb65ac664e120af227bf9a795ad6333 is the root package and cannot be modified. See https://getcomposer.org/dep-on-root for details and assistance.%0A
+guzzle's packages were not installed: composer install --no-interaction --no-progress --prefer-dist failed (::error ::Your requirements could not be resolved to an installable set of packages.%0A%0A  Problem 1%0A    - Root composer.json requires guzzlehttp/test-server ^1.1 -> satisfiable by guzzlehttp/test-server[1.1.0].%0A    - guzzlehttp/test-server 1.1.0 requires guzzlehttp/guzzle ^8.1 -> satisfiable by guzzlehttp/guzzle[8.1.0, ..., 8.4.x-dev] from composer repo (https://repo.packagist.org) but guzzlehttp/guzzle dev-7d9b1f430bb65ac664e120af227bf9a795ad6333 is the root package and cannot be modified. See https://getcomposer.org/dep-on-root for details and assistance.%0A). Fix that, then use Tools > Install Project Packages.
+guzzle's packages could not be installed, so its tests cannot run: see the output above.
+

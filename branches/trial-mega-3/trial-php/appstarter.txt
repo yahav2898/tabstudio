@@ -1,0 +1,53 @@
+appstarter at 59112b3d9474b0ac8a9f217e8efb5ea2cd01ea88, opening /home/runner/work/_temp/repos/appstarter
+Opened in 0.2 s: appstarter, solution (none)
+  toolchain project php: /home/runner/work/_temp/repos/appstarter/composer.json
+Compatibility Doctor:
+  appstarter: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+F5 startup project: appstarter (php) /home/runner/work/_temp/repos/appstarter/composer.json
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+GET http://127.0.0.1:35689/: 200, 17243 characters
+Run: GET / 200 (0 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/appstarter/public/index.php:12
+Debug: did not stop at index.php:12 within 10 min (600 s)
+Tests: 5 found; 5 passed, 0 failed, 0 skipped, 0 not run - 5 tests run in 1.1 sec: 5 passed, 0 failed, 0 skipped. (1 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up appstarter: composer install
+  Installing appstarter's packages: Installing packages: composer install
+  Installing appstarter's packages: Succeeded after 2.0 s
+  Setting up projects: Succeeded after 5.1 s
+  Building appstarter: Running sh
+  Building appstarter: Succeeded after 0.1 s
+  Testing appstarter: Running appstarter's tests
+  Testing appstarter: Failed after 1.1 s
+Project setup:
+
+Output:
+Debugging php -S with PHP (Xdebug)...
+[Sat Oct 31 02:30:28 2026] PHP Warning:  JIT is incompatible with third party extensions that override zend_execute_ex(). JIT disabled. in Unknown on line 0
+[Sat Oct 31 02:30:28 2026] PHP 8.5.12 Development Server (http://127.0.0.1:46795) started
+
+The program 'php -S' has stopped.
+========== Running appstarter's tests with PhpUnit ==========
+> php vendor/bin/phpunit --colors=never --log-junit /home/runner/work/_temp/repos/appstarter/.tabstudio/test-results/c13a887d19064e9694b0c145bdb7d0a0/phpunit.xml
+PHPUnit 10.5.66 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.12
+Configuration: /home/runner/work/_temp/repos/appstarter/phpunit.dist.xml
+
+.....                                                               5 / 5 (100%)
+
+Time: 00:00.040, Memory: 14.00 MB
+
+There was 1 PHPUnit test runner warning:
+
+1) No code coverage driver available
+
+OK, but there were issues!
+Tests: 5, Assertions: 6, PHPUnit Warnings: 1.
+

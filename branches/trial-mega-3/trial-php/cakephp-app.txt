@@ -1,0 +1,60 @@
+cakephp-app at 79c0a76f06697288ec168c44e3e43d0195c3c63e, opening /home/runner/work/_temp/repos/cakephp-app
+Opened in 0.2 s: cakephp-app, solution (none)
+  toolchain project php: /home/runner/work/_temp/repos/cakephp-app/composer.json
+Compatibility Doctor:
+  cakephp-app: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+F5 startup project: cakephp-app (php) /home/runner/work/_temp/repos/cakephp-app/composer.json
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+GET http://127.0.0.1:46733/: 500, 649 characters
+Error page: <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">    <title>
+        Error    </title>
+    <link href="/favicon.ico" type="image/x-icon" rel="icon">
+    
+	<link rel="stylesheet" href="/css/normalize.min.css">
+	<link rel="stylesheet" href="/css/milligram.min.css">
+	<link rel="stylesheet" href="/css/fonts.css">
+	<link rel="stylesheet" href="/css/cake.css">
+
+            </head>
+<body>
+    <div class="error-container">
+                <h2>An Internal Error Has Occurred.</h2>
+<p class="error">
+    <strong>Error: </strong>
+    An Internal Error Has Occurred.</p>
+        <a href="javascript:history.back()">Back</a>    </div>
+</body>
+</html>
+
+Run: GET / 500 (0 s after F5)
+Debug: no entry point found for a breakpoint (0 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up cakephp-app: composer install
+  Installing cakephp-app's packages: Installing packages: composer install
+  Installing cakephp-app's packages: Succeeded after 34.6 s
+  Setting up projects: Succeeded after 37.7 s
+  Building cakephp-app: Running sh
+  Building cakephp-app: Succeeded after 0.1 s
+Project setup:
+
+Output:
+Running php -S with PHP 8.5.12
+[Sat Oct 31 02:30:16 2026] PHP 8.5.12 Development Server (http://127.0.0.1:46733) started
+[Sat Oct 31 02:30:16 2026] 127.0.0.1:60832 Accepted
+[Sat Oct 31 02:30:16 2026] 127.0.0.1:60832 Closed without sending a request; it was probably just an unused speculative preconnection
+[Sat Oct 31 02:30:16 2026] 127.0.0.1:60832 Closing
+[Sat Oct 31 02:30:16 2026] 127.0.0.1:60834 Accepted
+[Sat Oct 31 02:30:17 2026] 127.0.0.1:60834 [500]: GET /
+[Sat Oct 31 02:30:17 2026] 127.0.0.1:60834 Closing
+
+The program 'php -S' was stopped.
+
