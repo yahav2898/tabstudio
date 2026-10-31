@@ -5,7 +5,8 @@ namespace TabStudio.Toolchains.Testing;
 /// <summary>
 /// Finds a toolchain project's tests in its source before they run, as Test Explorer lists C# tests: PHPUnit's
 /// <c>test*</c> methods and <c>#[Test]</c>, JUnit's <c>@Test</c> functions in Kotlin and Java, and XCTest's
-/// <c>test*</c> methods and Swift Testing's <c>@Test</c> functions, and pytest's <c>test*</c> functions and methods.
+/// <c>test*</c> methods and Swift Testing's <c>@Test</c> functions, pytest's <c>test*</c> functions and methods, Go's
+/// <c>Test*</c> functions and Rust's <c>#[test]</c> functions.
 /// Their names are those the runners report, so a result replaces the test found in source.
 /// </summary>
 public static partial class ToolchainTestDiscoverer
@@ -26,6 +27,30 @@ public static partial class ToolchainTestDiscoverer
     {
         ArgumentNullException.ThrowIfNull(directory);
         var tests = new List<ToolchainTestCase>();
+        switch (framework)
+        {
+            case ToolchainTestFramework.DartTest or ToolchainTestFramework.FlutterTest:
+                // A Dart test's name joins its groups' descriptions, which are expressions: its results name them.
+                return tests;
+            case ToolchainTestFramework.GoTest:
+                var module = ToolchainTestOutput.GoModule(directory);
+                foreach (var file in FilesUnder(directory, "*_test.go", ["vendor", "testdata", "node_modules"]))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    tests.AddRange(Go(directory, module, file, ReadSmall(file)));
+                }
+
+                return tests;
+            case ToolchainTestFramework.Cargo:
+                foreach (var file in FilesUnder(directory, "*.rs", ["target", "vendor", "node_modules", "benches", "examples"]))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    tests.AddRange(Rust(directory, file, ReadSmall(file)));
+                }
+
+                return tests;
+        }
+
         foreach (var file in SourceFiles(directory, framework))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -161,6 +186,171 @@ public static partial class ToolchainTestDiscoverer
             {
                 yield return new ToolchainTestCase(module, function.Groups["name"].Value, file, i + 1, 1);
             }
+        }
+    }
+
+    /// <summary>
+    /// Go tests in a <c>_test.go</c> file: <c>Test*</c> functions taking a <c>*testing.T</c> and <c>Fuzz*</c> functions
+    /// taking a <c>*testing.F</c>, in the class of their package (see <see cref="ToolchainTestOutput.GoPackageClass"/>).
+    /// </summary>
+    internal static IEnumerable<ToolchainTestCase> Go(string directory, string? module, string file, string text)
+    {
+        var relative = Path.GetRelativePath(directory, Path.GetDirectoryName(file)!).Replace(Path.DirectorySeparatorChar, '/');
+        var package = module is null ? relative : relative == "." ? module : module + "/" + relative;
+        var className = ToolchainTestOutput.GoPackageClass(package, module);
+        var lines = LineStarts(text);
+        foreach (Match function in GoTestFunction().Matches(text))
+        {
+            yield return new ToolchainTestCase(className, function.Groups["name"].Value, file, LineOf(lines, function.Groups["name"].Index), 1);
+        }
+    }
+
+    /// <summary>
+    /// Rust tests in a file: functions marked <c>#[test]</c> (or a test attribute such as <c>#[tokio::test]</c>), in
+    /// the class <c>cargo test</c> reports them in: the target (the crate for <c>src</c>, the file for
+    /// <c>tests/*.rs</c>) and the module path, which follows the file's path and the <c>mod</c> blocks around the test.
+    /// </summary>
+    internal static IEnumerable<ToolchainTestCase> Rust(string directory, string file, string text)
+    {
+        var package = RustPackageDirectory(directory, file);
+        var relative = Path.GetRelativePath(package, file).Replace(Path.DirectorySeparatorChar, '/');
+        string target;
+        List<string> modules;
+        if (relative.StartsWith("tests/", StringComparison.Ordinal))
+        {
+            var parts = relative["tests/".Length..].Split('/');
+            target = Path.GetFileNameWithoutExtension(parts[0]);
+            modules = parts.Length > 1 && parts[^1] is not "main.rs" ? [.. parts[1..^1], .. RustModule(parts[^1])] : [];
+        }
+        else if (relative.StartsWith("src/", StringComparison.Ordinal))
+        {
+            target = RustCrateName(package, relative);
+            var parts = relative["src/".Length..].Split('/');
+            modules = parts[0] == "bin" || (parts.Length == 1 && parts[0] is "lib.rs" or "main.rs") ? [] : [.. parts[..^1], .. RustModule(parts[^1])];
+        }
+        else
+        {
+            yield break;
+        }
+
+        var lines = text.Split('\n');
+        var scopes = new Stack<(string Name, int Depth)>();
+        var depth = 0;
+        var marked = false;
+        for (var i = 0; i < lines.Length; i++)
+        {
+            var line = lines[i].Trim();
+            if (line.StartsWith("//", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            if (RustTestAttribute().IsMatch(line))
+            {
+                marked = true;
+            }
+            else if (marked && RustFunction().Match(line) is { Success: true } function)
+            {
+                var className = string.Join('.', new[] { target }.Concat(modules).Concat(scopes.Reverse().Select(s => s.Name)));
+                yield return new ToolchainTestCase(className, function.Groups["name"].Value, file, i + 1, 1);
+                marked = false;
+            }
+            else if (marked && line.Length > 0 && !line.StartsWith("#[", StringComparison.Ordinal))
+            {
+                marked = false;
+            }
+
+            if (RustModuleBlock().Match(line) is { Success: true } block)
+            {
+                scopes.Push((block.Groups["name"].Value, depth));
+            }
+
+            foreach (var c in line)
+            {
+                if (c == '{')
+                {
+                    depth++;
+                }
+                else if (c == '}')
+                {
+                    depth--;
+                    while (scopes.Count > 0 && scopes.Peek().Depth >= depth)
+                    {
+                        scopes.Pop();
+                    }
+                }
+            }
+        }
+    }
+
+    private static IEnumerable<string> RustModule(string file) =>
+        file is "mod.rs" ? [] : [Path.GetFileNameWithoutExtension(file)];
+
+    /// <summary>The folder of the Cargo package a file is in: the closest one above it with a Cargo.toml.</summary>
+    private static string RustPackageDirectory(string directory, string file)
+    {
+        for (var folder = Path.GetDirectoryName(file); folder is not null && folder.Length >= directory.Length; folder = Path.GetDirectoryName(folder))
+        {
+            if (File.Exists(Path.Combine(folder, "Cargo.toml")))
+            {
+                return folder;
+            }
+        }
+
+        return directory;
+    }
+
+    /// <summary>The crate a file in <c>src</c> belongs to, as its test binary is named: the package's name with underscores.</summary>
+    private static string RustCrateName(string package, string relative)
+    {
+        var manifest = ReadSmall(Path.Combine(package, "Cargo.toml"));
+        var section = relative.StartsWith("src/bin/", StringComparison.Ordinal) ? null : RustLibName().Match(manifest) is { Success: true } lib ? lib.Groups["name"].Value : null;
+        var name = relative.StartsWith("src/bin/", StringComparison.Ordinal)
+            ? Path.GetFileNameWithoutExtension(relative["src/bin/".Length..].Split('/')[0])
+            : section ?? (RustPackageName().Match(manifest) is { Success: true } package2 ? package2.Groups["name"].Value : Path.GetFileName(package));
+        return name.Replace('-', '_');
+    }
+
+    private static IEnumerable<string> FilesUnder(string directory, string pattern, string[] skipped)
+    {
+        var found = new List<string>();
+        var pending = new Stack<(string Folder, int Depth)>([(directory, 0)]);
+        while (pending.TryPop(out var next) && found.Count < MaxFiles)
+        {
+            try
+            {
+                found.AddRange(Directory.EnumerateFiles(next.Folder, pattern));
+                if (next.Depth < 10)
+                {
+                    foreach (var child in Directory.EnumerateDirectories(next.Folder))
+                    {
+                        var name = Path.GetFileName(child);
+                        if (!name.StartsWith('.') && !skipped.Contains(name, StringComparer.Ordinal))
+                        {
+                            pending.Push((child, next.Depth + 1));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // A folder removed or unreadable while the tests are looked for.
+            }
+        }
+
+        found.Sort(StringComparer.Ordinal);
+        return found;
+    }
+
+    private static string ReadSmall(string file)
+    {
+        try
+        {
+            return new FileInfo(file).Length <= MaxFileSize ? File.ReadAllText(file) : string.Empty;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return string.Empty;
         }
     }
 
@@ -306,6 +496,24 @@ public static partial class ToolchainTestDiscoverer
         var found = starts.BinarySearch(index);
         return (found >= 0 ? found : ~found - 1) + 1;
     }
+
+    [GeneratedRegex(@"^func\s+(?<name>(?:Test|Fuzz)(?:[A-Z0-9_]\w*)?)\s*\(\s*\w+\s+\*testing\.[TF]\s*\)", RegexOptions.Multiline | RegexOptions.CultureInvariant)]
+    private static partial Regex GoTestFunction();
+
+    [GeneratedRegex(@"^#\[(?:test|(?:\w+::)+test(?:\(.*\))?|rstest|test_case(?:\(.*\))?)\]", RegexOptions.CultureInvariant)]
+    private static partial Regex RustTestAttribute();
+
+    [GeneratedRegex(@"^(?:pub(?:\([^)]*\))?\s+)?(?:async\s+)?(?:unsafe\s+)?fn\s+(?<name>\w+)", RegexOptions.CultureInvariant)]
+    private static partial Regex RustFunction();
+
+    [GeneratedRegex(@"^(?:pub(?:\([^)]*\))?\s+)?mod\s+(?<name>\w+)\s*\{", RegexOptions.CultureInvariant)]
+    private static partial Regex RustModuleBlock();
+
+    [GeneratedRegex(@"\[lib\][^\[]*?^\s*name\s*=\s*""(?<name>[^""]+)""", RegexOptions.Multiline | RegexOptions.CultureInvariant)]
+    private static partial Regex RustLibName();
+
+    [GeneratedRegex(@"\[package\][^\[]*?^\s*name\s*=\s*""(?<name>[^""]+)""", RegexOptions.Multiline | RegexOptions.CultureInvariant)]
+    private static partial Regex RustPackageName();
 
     [GeneratedRegex(@"^[ \t]*namespace\s+(?<name>[\w\\]+)\s*[;{]", RegexOptions.Multiline | RegexOptions.CultureInvariant)]
     private static partial Regex PhpNamespace();

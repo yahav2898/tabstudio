@@ -14,7 +14,9 @@ public sealed record ToolchainTestPlan(ToolchainTestFramework Framework, Process
 /// <summary>
 /// Runs a toolchain project's tests with its standard runner, as its own documentation does, and reads their results
 /// from the JUnit XML reports the runner writes: <c>vendor/bin/phpunit --log-junit</c> (or Pest), Gradle's
-/// <c>test</c> tasks, Maven's Surefire, <c>swift test --xunit-output</c> and <c>pytest --junitxml</c>.
+/// <c>test</c> tasks, Maven's Surefire, <c>swift test --xunit-output</c> and <c>pytest --junitxml</c>, and from the
+/// output of <c>go test -v</c> and <c>cargo test</c> and the JSON report of <c>dart test</c> and <c>flutter test</c>
+/// (see <see cref="ToolchainTestOutput"/>).
 /// </summary>
 public static class ToolchainTestPlanner
 {
@@ -42,6 +44,13 @@ public static class ToolchainTestPlanner
         "if ! \"$0\" -c 'import pytest' 2> /dev/null; then echo 'Installing pytest, which the tests need'; "
         + "\"$0\" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec \"$0\" -m pytest \"$@\"";
 
+    /// <summary>
+    /// Runs a test runner that writes no report file of its own and keeps its output, as the Output panel shows it, in the
+    /// report file named first (<c>$0</c>), with the runner's exit code: <c>go test -v</c> and <c>cargo test</c>.
+    /// </summary>
+    internal const string TeeScript =
+        "report=\"$0\"; { \"$@\"; echo $? > \"$report.status\"; } 2>&1 | tee \"$report\"; exit \"$(cat \"$report.status\" 2> /dev/null || echo 1)\"";
+
     private static readonly string[] SkippedFolders = [".git", ".gradle", ".idea", ".tabstudio", "node_modules", "vendor", ".build"];
 
     /// <summary>The files that name pytest in a Python project: its requirements, its build file and its test settings.</summary>
@@ -51,7 +60,8 @@ public static class ToolchainTestPlanner
     /// <summary>
     /// The runner of a project's tests, or <see langword="null"/> when it has none TabStudio runs: PHPUnit or Pest
     /// in a Composer project that requires it, JUnit tests in a Gradle or Maven build with <c>src/test</c>, a
-    /// Swift package with test targets, and a Python project that uses pytest.
+    /// Swift package with test targets, a Python project that uses pytest, a Go module with <c>_test.go</c> files, a Rust
+    /// package with tests, and a Dart or Flutter package with a <c>test</c> folder.
     /// </summary>
     /// <param name="project">The project.</param>
     public static ToolchainTestFramework? Detect(ToolchainProject project)
@@ -87,6 +97,16 @@ public static class ToolchainTestPlanner
                 return File.Exists(Path.Combine(directory, "pytest.ini")) || File.Exists(Path.Combine(directory, "conftest.py"))
                     || PythonTestSettings.Any(file => ReadSmall(Path.Combine(directory, file)).Contains("pytest", StringComparison.OrdinalIgnoreCase))
                     ? ToolchainTestFramework.Pytest : null;
+            case "go":
+                return File.Exists(Path.Combine(directory, "go.mod")) && HasFile(directory, "*_test.go") ? ToolchainTestFramework.GoTest : null;
+            case "rust":
+                return File.Exists(Path.Combine(directory, "Cargo.toml"))
+                    && (Directory.Exists(Path.Combine(directory, "tests")) || HasFile(directory, "*.rs", text => text.Contains("#[test]", StringComparison.Ordinal) || text.Contains("#[cfg(test)]", StringComparison.Ordinal)))
+                    ? ToolchainTestFramework.Cargo : null;
+            case "flutter":
+                return File.Exists(Path.Combine(directory, "pubspec.yaml")) && Directory.Exists(Path.Combine(directory, "test"))
+                    ? FlutterProject.UsesFlutter(directory) ? ToolchainTestFramework.FlutterTest : ToolchainTestFramework.DartTest
+                    : null;
             default:
                 return null;
         }
@@ -150,6 +170,34 @@ public static class ToolchainTestPlanner
                 }
 
                 break;
+            case ToolchainTestFramework.GoTest:
+                command = ["sh", "-c", TeeScript, Path.Combine(reportDirectory, GoReport), "go", "test", "-v"];
+                command.AddRange(GoArguments(ToolchainTestOutput.GoModule(project.Directory), selected));
+                break;
+            case ToolchainTestFramework.Cargo:
+                command = ["sh", "-c", TeeScript, Path.Combine(reportDirectory, CargoReport), "cargo", "test", "--no-fail-fast"];
+                if (ReadSmall(Path.Combine(project.Directory, "Cargo.toml")).Contains("[workspace]", StringComparison.Ordinal))
+                {
+                    command.Add("--workspace");
+                }
+
+                if (selected is not null)
+                {
+                    // libtest runs the tests whose path contains any of the filters.
+                    command.Add("--");
+                    command.AddRange(selected.Select(CargoFilter).Distinct(StringComparer.Ordinal));
+                }
+
+                break;
+            case ToolchainTestFramework.DartTest or ToolchainTestFramework.FlutterTest:
+                command = [framework == ToolchainTestFramework.FlutterTest ? "flutter" : "dart", "test", "--file-reporter", "json:" + Path.Combine(reportDirectory, DartReport)];
+                if (selected is not null)
+                {
+                    command.AddRange(["--name", "^(?:" + string.Join('|', selected.Select(s => QuoteRegex(s.MethodName ?? string.Empty) + (s.MethodName is null ? string.Empty : "$")).Distinct(StringComparer.Ordinal)) + ")"]);
+                    command.AddRange(selected.Select(s => s.ClassName.Replace('.', '/') + ".dart").Distinct(StringComparer.Ordinal).Where(f => File.Exists(Path.Combine(project.Directory, f))));
+                }
+
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(framework), framework, null);
         }
@@ -168,6 +216,16 @@ public static class ToolchainTestPlanner
     {
         ArgumentNullException.ThrowIfNull(project);
         ArgumentNullException.ThrowIfNull(plan);
+        switch (plan.Framework)
+        {
+            case ToolchainTestFramework.GoTest:
+                return ToolchainTestOutput.ParseGo(ReadReport(plan, GoReport), ToolchainTestOutput.GoModule(project.Directory));
+            case ToolchainTestFramework.Cargo:
+                return ToolchainTestOutput.ParseCargo(ReadReport(plan, CargoReport));
+            case ToolchainTestFramework.DartTest or ToolchainTestFramework.FlutterTest:
+                return ToolchainTestOutput.ParseDart(ReadReport(plan, DartReport), project.Directory);
+        }
+
         IEnumerable<string> reports = plan.Framework switch
         {
             ToolchainTestFramework.Gradle => FindReports(project.Directory, path => path.Contains($"{Path.DirectorySeparatorChar}test-results{Path.DirectorySeparatorChar}", StringComparison.Ordinal), startedUtc),
@@ -189,6 +247,99 @@ public static class ToolchainTestPlanner
         }
 
         return results;
+    }
+
+    private const string GoReport = "go-test.txt";
+    private const string CargoReport = "cargo-test.txt";
+    private const string DartReport = "dart-test.jsonl";
+
+    private static string ReadReport(ToolchainTestPlan plan, string name)
+    {
+        try
+        {
+            var path = Path.Combine(plan.ReportDirectory, name);
+            return File.Exists(path) ? File.ReadAllText(path) : string.Empty;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return string.Empty;
+        }
+    }
+
+    /// <summary>
+    /// <c>go test</c>'s packages and <c>-run</c> for tests: every package (<c>./...</c>), or the packages of the selected
+    /// classes, and a pattern matching the selected functions.
+    /// </summary>
+    internal static IEnumerable<string> GoArguments(string? module, IReadOnlyList<ToolchainTestSelector>? selection)
+    {
+        if (selection is null)
+        {
+            yield return "./...";
+            yield break;
+        }
+
+        var name = module is null ? null : module[(module.LastIndexOf('/') + 1)..];
+        foreach (var package in selection.Select(s => s.ClassName).Distinct(StringComparer.Ordinal))
+        {
+            yield return name is not null && package == name ? "."
+                : name is not null && package.StartsWith(name + ".", StringComparison.Ordinal) ? "./" + package[(name.Length + 1)..].Replace('.', '/')
+                : package.Replace('.', '/');
+        }
+
+        var functions = selection.Where(s => s.MethodName is not null).Select(s => QuoteRegex(s.MethodName!)).Distinct(StringComparer.Ordinal).ToList();
+        if (functions.Count > 0 && selection.All(s => s.MethodName is not null))
+        {
+            yield return "-run";
+            yield return "^(?:" + string.Join('|', functions) + ")$";
+        }
+    }
+
+    /// <summary>A libtest filter for a Rust test: its module path and function, without its target.</summary>
+    internal static string CargoFilter(ToolchainTestSelector selector)
+    {
+        var parts = selector.ClassName.Split('.');
+        var modules = parts.Length > 1 ? string.Join("::", parts[1..]) : string.Empty;
+        return selector.MethodName is null ? modules + (modules.Length > 0 ? "::" : string.Empty)
+            : modules.Length > 0 ? modules + "::" + selector.MethodName : selector.MethodName;
+    }
+
+    /// <summary>Whether a folder, outside dependencies and build output, has a file matching a pattern (and a test of its text).</summary>
+    private static bool HasFile(string directory, string pattern, Func<string, bool>? matches = null)
+    {
+        var pending = new Stack<(string Folder, int Depth)>([(directory, 0)]);
+        var seen = 0;
+        while (pending.TryPop(out var next) && seen < 2000)
+        {
+            try
+            {
+                foreach (var file in Directory.EnumerateFiles(next.Folder, pattern))
+                {
+                    seen++;
+                    if (matches is null || matches(ReadSmall(file)))
+                    {
+                        return true;
+                    }
+                }
+
+                if (next.Depth < 6)
+                {
+                    foreach (var child in Directory.EnumerateDirectories(next.Folder))
+                    {
+                        var name = Path.GetFileName(child);
+                        if (!name.StartsWith('.') && !SkippedFolders.Contains(name) && name is not ("target" or "testdata"))
+                        {
+                            pending.Push((child, next.Depth + 1));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // A folder removed or unreadable while it is looked at.
+            }
+        }
+
+        return false;
     }
 
     /// <summary>PHPUnit's <c>--filter</c> for tests: a pattern matching <c>Class::method</c>, with any data set.</summary>
