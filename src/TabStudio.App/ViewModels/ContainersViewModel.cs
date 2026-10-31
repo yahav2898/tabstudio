@@ -42,6 +42,9 @@ public sealed partial class ContainersViewModel : ObservableObject, IAsyncDispos
             LoaderPath = toolchains.Platform.LoaderPath ?? Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_LOADER"),
             ProcStandInRoot = toolchains.Environment?.Rootfs,
             DnsServers = toolchains.Platform.DnsServers,
+            Emulator = TabStudio.Containers.Images.OciPlatform.Host.Architecture == "arm64" && toolchains.Platform.NativeLibraryDirectory is { } native
+                ? new Box64ContainerEmulator(() => new[] { toolchains.Environment?.Rootfs, Path.Combine(paths.Root, "Toolchains/embedded-glibc/rootfs") }
+                    .FirstOrDefault(r => r is not null && File.Exists(Path.Combine(r, "usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1"))), Path.Combine(native, "libbox64.so")) : null,
         }, new RegistryClient(_http, _credentials));
         _progress = new Progress<PullProgress>(ReportPull);
         ImageBackend = Engine.Options.Problem is null ? new PreparedImages(this) : null;

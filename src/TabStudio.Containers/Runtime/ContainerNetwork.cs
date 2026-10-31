@@ -56,6 +56,14 @@ public sealed class ContainerNetwork
     /// <exception cref="ContainerException">A port asked for is in use.</exception>
     public Lease Allocate(string id, string? preferredAddress, IReadOnlyList<string> names, IReadOnlyList<PortBinding> ports)
     {
+        foreach (var port in ports)
+        {
+            if (port.Protocol != "tcp") throw new ContainerException("This version publishes TCP ports only; UDP requires a remote container host.");
+            if (port.ContainerPort is < 1 or > 65535 || port.HostPort is < 0 or > 65535)
+                throw new ContainerException("Container ports must be 1–65535; a published port can also be 0 for automatic allocation.");
+            if (port.HostIp is not (null or "127.0.0.1" or "::1" or "0.0.0.0" or "::"))
+                throw new ContainerException("Publish on localhost or 0.0.0.0; binding a particular device interface is unavailable in this version.");
+        }
         lock (_gate)
         {
             _leases.Remove(id);
@@ -217,3 +225,4 @@ public sealed class ContainerNetwork
         return ((IPEndPoint)listener.LocalEndpoint).Port;
     }
 }
+

@@ -164,6 +164,9 @@ public sealed class ImageStore : IDisposable
 
             var configBytes = await registry.GetBlobAsync(reference, manifest.Config, cancellationToken).ConfigureAwait(false);
             var config = OciJson.Read<ImageConfigFile>(configBytes);
+            var platform = new OciPlatform { Os = config.Os, Architecture = config.Architecture, Variant = config.Variant };
+            if (!preference.Any(p => p.Matches(platform)) || (resolved.Platform is { } declared && !declared.Matches(platform)))
+                throw new RegistryException($"{reference} has configuration platform {platform}, which does not match the selected device platform.");
             var id = manifest.Config.Digest;
             await WriteBlobAsync(id, configBytes, cancellationToken).ConfigureAwait(false);
             await WriteBlobAsync(resolved.Digest, resolved.ManifestBytes, cancellationToken).ConfigureAwait(false);
@@ -199,7 +202,6 @@ public sealed class ImageStore : IDisposable
                 done += layer.Size;
             }
 
-            var platform = new OciPlatform { Os = config.Os, Architecture = config.Architecture, Variant = config.Variant };
             var size = await UnpackAsync(id, manifest.Layers, config.Rootfs.DiffIds, l => progress?.Report(new(reference.Familiar, "Unpacking", l, manifest.Layers.Count, total, total)), cancellationToken).ConfigureAwait(false);
             var image = await RecordAsync(new StoredImage
             {

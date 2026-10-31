@@ -145,6 +145,7 @@ public sealed class ContainerEngine : IAsyncDisposable
     {
         if (_options.Problem is { } problem) throw new ContainerException(problem);
         var image = await ImageAsync(spec.Image, pull: true, spec.Platform, progress, cancellationToken).ConfigureAwait(false);
+        if (image.Platform.Os != "linux") throw new ContainerException("Only Linux OCI images can run in TabStudio's PRoot runtime.");
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         string id;
         string name;
@@ -461,6 +462,8 @@ public sealed class ContainerEngine : IAsyncDisposable
             emulation = emulator.Description;
         }
 
+        info = info with { Emulation = emulation };
+        instance.Info = info;
         var user = ContainerUser.Resolve(rootfs, info.Spec.User ?? image.Config.Config.User);
         var environment = Environment(image, info, user);
         var ports = Publishing(image, info.Spec);
@@ -764,16 +767,13 @@ public sealed class ContainerEngine : IAsyncDisposable
         };
     }
 
-    /// <summary>The ports to give a container: those it publishes, and with <c>-P</c> every exposed one.</summary>
+    /// <summary>Maps declared TCP listeners as well as explicit ports, including IPv6-only listeners on shared loopback.</summary>
     internal static List<PortBinding> Publishing(StoredImage image, ContainerSpec spec)
     {
         var ports = new List<PortBinding>(spec.Ports);
-        if (spec.PublishAll)
+        foreach (var exposed in Exposed(image, spec).Where(p => ports.All(b => b.ContainerPort != p)))
         {
-            foreach (var exposed in Exposed(image, spec).Where(p => ports.All(b => b.ContainerPort != p)))
-            {
-                ports.Add(new PortBinding(exposed, "tcp", 0));
-            }
+            ports.Add(new PortBinding(exposed, "tcp", spec.PublishAll ? 0 : null));
         }
 
         return ports;
@@ -782,6 +782,7 @@ public sealed class ContainerEngine : IAsyncDisposable
     /// <summary>The ports an image and its container say they listen on.</summary>
     public static IReadOnlyList<int> Exposed(StoredImage image, ContainerSpec spec) =>
         [.. (image.Config.Config.ExposedPorts?.Keys ?? Enumerable.Empty<string>())
+            .Where(k => !k.Contains('/', StringComparison.Ordinal) || k.EndsWith("/tcp", StringComparison.Ordinal))
             .Select(k => int.TryParse(k.Split('/')[0], System.Globalization.CultureInfo.InvariantCulture, out var p) ? p : 0)
             .Where(p => p > 0).Concat(spec.Expose).Distinct().Order()];
 
@@ -792,6 +793,7 @@ public sealed class ContainerEngine : IAsyncDisposable
         // use a short private host path shared by the main trace tree and independent exec/health trace trees.
         var run = RunDirectory(info.Id);
         Directory.CreateDirectory(run);
+        SeedVolume(info, "/run", run);
         if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(run, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
         mounts.Add(new ProcessMount(run, "/run"));
         var definitions = info.Spec.Mounts.ToList();

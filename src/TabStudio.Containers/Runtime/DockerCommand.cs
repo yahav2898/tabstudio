@@ -54,7 +54,9 @@ public sealed class DockerCommand(ContainerEngine engine, Func<string, ServiceMa
                 case "run":
                 {
                     var (spec, detached) = ParseRun(args, directory);
-                    var c = await engine.CreateAsync(spec, progress, cancellationToken).ConfigureAwait(false);
+                    var removeAfterExit = spec.AutoRemove && !detached;
+                    var c = await engine.CreateAsync(removeAfterExit ? spec with { AutoRemove = false } : spec, progress, cancellationToken).ConfigureAwait(false);
+                    var log = engine.Log(c.Id);
                     await engine.StartAsync(c.Id, cancellationToken).ConfigureAwait(false);
                     if (detached) { await Print(c.Id).ConfigureAwait(false); return 0; }
                     using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -62,13 +64,18 @@ public sealed class DockerCommand(ContainerEngine engine, Func<string, ServiceMa
                     {
                         try
                         {
-                            await foreach (var entry in engine.Log(c.Id).FollowAsync(null, stop.Token).ConfigureAwait(false))
+                            await foreach (var entry in log.FollowAsync(null, stop.Token).ConfigureAwait(false))
                                 await Print(entry.Text, entry.Stream == 2).ConfigureAwait(false);
                         }
                         catch (OperationCanceledException) when (stop.IsCancellationRequested) { }
                     }, CancellationToken.None);
                     try { return await engine.WaitAsync(c.Id, cancellationToken).ConfigureAwait(false); }
-                    finally { await stop.CancelAsync().ConfigureAwait(false); await following.ConfigureAwait(false); }
+                    finally
+                    {
+                        await stop.CancelAsync().ConfigureAwait(false);
+                        await following.ConfigureAwait(false);
+                        if (removeAfterExit) await engine.RemoveAsync(c.Id, force: true, CancellationToken.None).ConfigureAwait(false);
+                    }
                 }
                 case "logs":
                 {

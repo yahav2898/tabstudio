@@ -86,8 +86,8 @@ public sealed record PortBinding(int ContainerPort, string Protocol = "tcp", int
         }
 
         var containerPorts = Range(container);
-        var hostPorts = string.IsNullOrEmpty(host) ? null : Range(host);
-        if (hostPorts is not null && hostPorts.Count != containerPorts.Count && hostPorts.Count != 1)
+        var hostPorts = string.IsNullOrEmpty(host) ? null : Range(host, allowZero: true);
+        if (hostPorts is not null && hostPorts.Count != containerPorts.Count)
         {
             throw new FormatException($"'{text}' maps ranges of different sizes.");
         }
@@ -101,12 +101,12 @@ public sealed record PortBinding(int ContainerPort, string Protocol = "tcp", int
         return [text[..(close + 1)], .. text[(close + 2)..].Split(':')];
     }
 
-    private static List<int> Range(string text)
+    private static List<int> Range(string text, bool allowZero = false)
     {
         var dash = text.IndexOf('-', StringComparison.Ordinal);
         var first = int.Parse(dash < 0 ? text : text[..dash], System.Globalization.CultureInfo.InvariantCulture);
         var last = dash < 0 ? first : int.Parse(text[(dash + 1)..], System.Globalization.CultureInfo.InvariantCulture);
-        if (first is < 1 or > 65535 || last < first || last > 65535)
+        if (first < (allowZero ? 0 : 1) || first > 65535 || last < first || last > 65535 || first == 0 && last != 0)
         {
             throw new FormatException($"'{text}' is not a port or port range.");
         }
@@ -324,3 +324,4 @@ public sealed record VolumeInfo(string Name, string Path, DateTimeOffset Created
 
 /// <summary>A one-line problem that keeps a container from running here, which callers show as it is.</summary>
 public sealed class ContainerException(string message, Exception? inner = null) : Exception(message, inner);
+

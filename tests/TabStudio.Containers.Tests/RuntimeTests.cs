@@ -7,6 +7,7 @@ using TabStudio.Services;
 using TabStudio.Services.Compose;
 using TabStudio.Services.Native;
 using TabStudio.Testing;
+using TabStudio.Toolchains.Processes;
 using TabStudio.Toolchains.Runtimes;
 using Xunit.Abstractions;
 
@@ -17,7 +18,10 @@ public sealed class ContainerRuntimeFactAttribute : FactAttribute
     public ContainerRuntimeFactAttribute()
     {
         if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_PROOT"))
-            && Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_REQUIRED") != "1") Skip = "Real PRoot image runtime is configured by containers.yml.";
+            && Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_REQUIRED") != "1")
+        {
+            Skip = "Real PRoot image runtime is configured by containers.yml.";
+        }
     }
 }
 
@@ -73,6 +77,29 @@ public sealed class RuntimeTests(ITestOutputHelper output)
         var cache = engine.Containers.Single(c => c.Label("com.docker.compose.service") == "cache");
         var ping = await engine.ExecCaptureAsync(cache.Id, ["redis-cli", "ping"], TimeSpan.FromSeconds(10));
         Assert.Equal(0, ping.ExitCode); Assert.Contains("PONG", ping.Output, StringComparison.Ordinal);
+        await using (var bridge = new DockerCommandBridge(new DockerCommand(engine, _ => manager)))
+        {
+            var rootfs = engine.RootfsOf(cache.Id);
+            var shim = Path.Combine(rootfs, "usr/local/bin/docker");
+            await File.WriteAllTextAsync(shim, bridge.ShellScript);
+            if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(shim, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+            var terminalRuntime = new ProotRuntime(new()
+            {
+                ProotPath = engine.Options.ProotPath!, LoaderPath = engine.Options.LoaderPath!, Rootfs = rootfs,
+                TemporaryDirectory = Path.Combine(temp.Path, "terminal-tmp"), ShareWorkingDirectory = false,
+            });
+            var cli = await CommandRunner.RunAsync(terminalRuntime, new()
+            { Program = "/bin/sh", Arguments = ["-c", "docker ps && docker exec " + cache.Name + " redis-cli ping"], WorkingDirectory = "/" }, null, CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(30));
+            Assert.True(cli.Succeeded, cli.Output);
+            Assert.Contains("PONG", cli.Output, StringComparison.Ordinal);
+            Assert.Contains("nginx:alpine", cli.Output, StringComparison.Ordinal);
+        }
+        var second = await engine.CreateAsync(new ContainerSpec { Image = "redis:7-alpine", Name = "second-cache" });
+        await engine.StartAsync(second.Id);
+        var secondPing = await engine.ExecCaptureAsync(second.Id, ["sh", "-c", "until redis-cli ping >/dev/null 2>&1; do sleep 1; done; redis-cli -h cache ping"], TimeSpan.FromSeconds(20));
+        Assert.Equal(0, secondPing.ExitCode); Assert.Contains("PONG", secondPing.Output, StringComparison.Ordinal);
+        Assert.NotEqual(engine.Find(second.Id)!.Ports[0].HostPort, engine.Find(cache.Id)!.Ports[0].HostPort);
+        await engine.RemoveAsync(second.Id, force: true);
         using var response = await http.GetAsync($"http://127.0.0.1:{manager.Endpoints["web"][0].Published}/");
         response.EnsureSuccessStatusCode();
         Assert.Contains("Welcome to nginx", await response.Content.ReadAsStringAsync(), StringComparison.Ordinal);

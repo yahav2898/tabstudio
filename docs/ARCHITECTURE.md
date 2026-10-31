@@ -1133,6 +1133,25 @@ Library tests cover SQLite schema details, quoting, multi-result queries, cancel
 
 `local-ai.yml` compares native/server inference on x64 and ARM64 Linux and the Android emulator, then runs the managed real-model tests. Fake-server tests cover the completion protocol; other tests cover FIM, model integrity, licenses, proposal confinement and ghost-text input. The main emulator APK bundles the verified 260K diagnostic model only with `TabStudioIncludeLocalAITestModel=true`; its in-app self-test loads the model through P/Invoke and must generate tokens. Regular APKs carry no model. See [the spike](features/local-ai.md) for measured results and limitations.
 
+## OCI containers
+
+`TabStudio.Containers` adds registry distribution/authentication, digest-verified content storage, safe OCI layer
+application and a PRoot process engine. Compressed blobs are shared by digest; image roots are immutable bases and
+container roots are independent copies. The native `--net-map` extension gives each process tree a loopback address
+and rewrites TCP publication/connect endpoints; a fake-root setgroups result never changes the app UID. A short
+private `/run` bind is shared across main and exec trees to respect Unix socket path limits.
+
+`IServiceImages` keeps Services independent of the container library. `ComposeImages` starts real image processes,
+forwards logs/state and readiness, and uses the existing Compose model, dependency planner and F5 environment
+rewriter. Services retains its native path and records a fallback reason. `ContainersViewModel` connects image
+progress to tracked operations and offers a themed tool window and an exec PTY. The Alpine docker shim sends framed
+argument vectors to an authenticated loopback `DockerCommandBridge`; it is deliberately not the Docker Engine API.
+
+The optional amd64 glibc adapter mounts the existing verified Box64/native glibc installation into the container;
+missing runtimes and incompatible images fail explicitly. Native ARM64 is the primary tested path. See
+[Containers](features/containers.md) for the verified matrix, fixture provenance, storage costs and honest limits.
+Dockerfile builds, development-container execution and the Engine API are deferred.
+
 ## Native backing services
 
 `TabStudio.Services` translates known Compose images to Alpine packages and foreground PRoot processes. It has no UI
@@ -1183,3 +1202,4 @@ PostgreSQL via the signed package manager, initializes it, runs a SQL script and
 `FlutterProject` distinguishes Flutter SDK dependencies from plain Dart packages. The ordinary dependency notice offers pub get. The analysis server runs as `dart language-server --protocol=lsp`; Flutter DAP runs as `flutter debug-adapter`, Dart DAP as `dart debug_adapter`. Flutter's forwarded web-launch event opens only a loopback HTTP(S) URL in the existing preview. Saves serialize/coalesce adapter hot-restart requests for web, or hot-reload requests for native VM targets. Explicit launch configurations can choose a native device once the mobile toolchain is available. Swarm web targets tunnel the same loopback server to phones.
 
 See [Flutter verification](features/flutter.md) for the experiment's measured results, pending SDK/PRoot/device checks and the dedicated emulator test entry point. Web preview is a no-debug DAP launch: a generic WebView does not implement Dart's browser-debug extension.
+

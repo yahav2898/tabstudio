@@ -41,7 +41,7 @@ jobs:
           TABSTUDIO_CONTAINER_REQUIRED: '1'
         run: |
           mkdir -p ci-out
-          dotnet test tests/TabStudio.Containers.Tests -c Release -warnaserror --logger 'console;verbosity=normal' --logger 'trx;LogFileName=containers.trx' > ci-out/containers.log 2>&1 || { cat ci-out/containers.log; exit 1; }
+          dotnet test tests/TabStudio.Containers.Tests -c Release -warnaserror --logger 'console;verbosity=detailed' --logger 'trx;LogFileName=containers.trx' > ci-out/containers.log 2>&1 || { cat ci-out/containers.log; exit 1; }
           cat ci-out/containers.log
       - uses: actions/setup-node@v4
         if: matrix.arch == 'x64'
