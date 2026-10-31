@@ -1,0 +1,102 @@
+Dots at 0e7c65aeb0081b791f3c30a351894f9874b5128c, opening /home/runner/work/_temp/repos/Dots/Dots.sln
+Opened in 0.2 s: Dots, solution /home/runner/work/_temp/repos/Dots/Dots.sln
+  project DotsGame [VisualBasic] /home/runner/work/_temp/repos/Dots/DotsGame/DotsGame.vbproj
+  project DotsTester [VisualBasic] /home/runner/work/_temp/repos/Dots/DotsTester/DotsTester.vbproj
+  project Dots [VisualBasic] /home/runner/work/_temp/repos/Dots/Dots/Dots.vbproj
+Compatibility Doctor:
+  DotsGame: Library via Built with its users - A library is compiled together with the projects that reference it.
+  DotsTester: Needs Windows via Windows Bridge - A .NET Framework project that needs Windows: it references System.Drawing, which is part of the .NET Framework on Windows only. It builds and runs on your PC through the Windows Bridge, and Upgrade project makes it an SDK-style .NET project.
+  Dots: Ready via Cross-platform Forms layer in the app preview - A .NET Framework project, run with .NET on this tablet. Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
+F5 startup project: Dots /home/runner/work/_temp/repos/Dots/Dots/Dots.vbproj
+Error List after analysis: 31 errors, 2 warnings
+  19 x BC30002
+      [Dots] frmBoard.vb(39,34): error BC30002: Type 'System.Windows.Forms.StatusBarPanel' is not defined.
+      [Dots] frmBoard.vb(40,34): error BC30002: Type 'System.Windows.Forms.StatusBarPanel' is not defined.
+      [Dots] frmBoard.vb(41,35): error BC30002: Type 'System.Windows.Forms.StatusBarPanel' is not defined.
+      [Dots] frmBoard.vb(42,31): error BC30002: Type 'System.Windows.Forms.StatusBar' is not defined.
+      [Dots] frmBoard.vb(48,23): error BC30002: Type 'System.Windows.Forms.StatusBar' is not defined.
+      [Dots] frmBoard.vb(49,26): error BC30002: Type 'System.Windows.Forms.StatusBarPanel' is not defined.
+      [Dots] frmBoard.vb(50,26): error BC30002: Type 'System.Windows.Forms.StatusBarPanel' is not defined.
+      [Dots] frmBoard.vb(51,27): error BC30002: Type 'System.Windows.Forms.StatusBarPanel' is not defined.
+      [Dots] frmBoard.vb(64,37): error BC30002: Type 'System.Windows.Forms.StatusBarPanel' is not defined.
+      [Dots] frmBoard.vb(142,9): error BC30002: Type 'Graphics' is not defined.
+  6 x BC30451
+      [DotsGame] BoardUI.vb(75,33): error BC30451: 'Pens' is not declared. It may be inaccessible due to its protection level.
+      [DotsGame] BoardUI.vb(76,33): error BC30451: 'Brushes' is not declared. It may be inaccessible due to its protection level.
+      [DotsGame] BoardUI.vb(97,44): error BC30451: 'Brushes' is not declared. It may be inaccessible due to its protection level.
+      [DotsGame] BoardUI.vb(107,44): error BC30451: 'Brushes' is not declared. It may be inaccessible due to its protection level.
+      [DotsGame] BoardUI.vb(153,30): error BC30451: 'StringAlignment' is not declared. It may be inaccessible due to its protection level.
+      [DotsGame] BoardUI.vb(154,34): error BC30451: 'StringAlignment' is not declared. It may be inaccessible due to its protection level.
+  4 x BC30456
+      [Dots] frmBoard.vb(72,31): error BC30456: 'StatusBarPanelAutoSize' is not a member of 'System.Windows.Forms'.
+      [Dots] frmBoard.vb(77,31): error BC30456: 'StatusBarPanelAutoSize' is not a member of 'System.Windows.Forms'.
+      [Dots] frmBoard.vb(82,32): error BC30456: 'StatusBarPanelAutoSize' is not a member of 'System.Windows.Forms'.
+      [Dots] frmBoard.vb(117,9): error BC30456: 'AutoScaleBaseSize' is not a member of 'frmBoard'.
+  2 x BC37330
+      [Dots] AssemblyInfo.vb(32,28): error BC37330: The specified version string contains wildcards, which are not compatible with determinism. Either remove wildcards from the version string, or disable determinism for this compilation
+      [DotsGame] AssemblyInfo.vb(32,28): error BC37330: The specified version string contains wildcards, which are not compatible with determinism. Either remove wildcards from the version string, or disable determinism for this compilation
+Error List after the build: 16 errors, 1 warnings
+  9 x BC30002
+      [DotsGame] BoardUI.vb(71,38): error BC30002: Type 'Graphics' is not defined.
+      [DotsGame] BoardUI.vb(88,39): error BC30002: Type 'Graphics' is not defined.
+      [DotsGame] BoardUI.vb(89,25): error BC30002: Type 'Font' is not defined.
+      [DotsGame] BoardUI.vb(111,39): error BC30002: Type 'Graphics' is not defined.
+      [DotsGame] BoardUI.vb(125,26): error BC30002: Type 'Pen' is not defined.
+      [DotsGame] BoardUI.vb(141,39): error BC30002: Type 'Graphics' is not defined.
+      [DotsGame] BoardUI.vb(142,24): error BC30002: Type 'Font' is not defined.
+      [DotsGame] BoardUI.vb(144,29): error BC30002: Type 'SolidBrush' is not defined.
+      [DotsGame] BoardUI.vb(152,29): error BC30002: Type 'StringFormat' is not defined.
+  6 x BC30451
+      [DotsGame] BoardUI.vb(75,33): error BC30451: 'Pens' is not declared. It may be inaccessible due to its protection level.
+      [DotsGame] BoardUI.vb(76,33): error BC30451: 'Brushes' is not declared. It may be inaccessible due to its protection level.
+      [DotsGame] BoardUI.vb(97,44): error BC30451: 'Brushes' is not declared. It may be inaccessible due to its protection level.
+      [DotsGame] BoardUI.vb(107,44): error BC30451: 'Brushes' is not declared. It may be inaccessible due to its protection level.
+      [DotsGame] BoardUI.vb(153,30): error BC30451: 'StringAlignment' is not declared. It may be inaccessible due to its protection level.
+      [DotsGame] BoardUI.vb(154,34): error BC30451: 'StringAlignment' is not declared. It may be inaccessible due to its protection level.
+  1 x BC37330
+      [DotsGame] AssemblyInfo.vb(32,28): error BC37330: The specified version string contains wildcards, which are not compatible with determinism. Either remove wildcards from the version string, or disable determinism for this compilation
+Run: no window (0 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/Dots/Dots/frmBoard.vb:12
+Debug: ended without stopping at frmBoard.vb:12 (0 s)
+Tests: Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here. (120 s)
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Analyzing: Analyzing 0/3 projects
+  Analyzing: Analyzing 1/3 projects
+  Analyzing: Analyzing 2/3 projects
+  Analyzing: Analyzing 3/3 projects
+  Analyzing: Succeeded after 0.1 s
+  Building: Building
+  Building: Building 0/2 projects
+  Building: Building 1/2 projects
+  Building: Failed after 0.0 s
+  Building: Building
+  Building: Building Dots
+  Building: Failed after 0.0 s
+  Building: Building
+  Building: Building Dots
+  Building: Failed after 0.0 s
+Project setup:
+
+Output:
+Build started at 01:28:08...
+1>------ Build started: Project: Dots, Configuration: Debug ------
+1>AssemblyInfo.vb(32,28): error BC37330: The specified version string contains wildcards, which are not compatible with determinism. Either remove wildcards from the version string, or disable determinism for this compilation
+1>BoardUI.vb(71,38): error BC30002: Type 'Graphics' is not defined.
+1>BoardUI.vb(75,33): error BC30451: 'Pens' is not declared. It may be inaccessible due to its protection level.
+1>BoardUI.vb(76,33): error BC30451: 'Brushes' is not declared. It may be inaccessible due to its protection level.
+1>BoardUI.vb(88,39): error BC30002: Type 'Graphics' is not defined.
+1>BoardUI.vb(89,25): error BC30002: Type 'Font' is not defined.
+1>BoardUI.vb(97,44): error BC30451: 'Brushes' is not declared. It may be inaccessible due to its protection level.
+1>BoardUI.vb(107,44): error BC30451: 'Brushes' is not declared. It may be inaccessible due to its protection level.
+1>BoardUI.vb(111,39): error BC30002: Type 'Graphics' is not defined.
+1>BoardUI.vb(125,26): error BC30002: Type 'Pen' is not defined.
+1>BoardUI.vb(141,39): error BC30002: Type 'Graphics' is not defined.
+1>BoardUI.vb(142,24): error BC30002: Type 'Font' is not defined.
+1>BoardUI.vb(144,29): error BC30002: Type 'SolidBrush' is not defined.
+1>BoardUI.vb(152,29): error BC30002: Type 'StringFormat' is not defined.
+1>BoardUI.vb(153,30): error BC30451: 'StringAlignment' is not declared. It may be inaccessible due to its protection level.
+1>BoardUI.vb(154,34): error BC30451: 'StringAlignment' is not declared. It may be inaccessible due to its protection level.
+========== Build: 0 succeeded, 1 failed ==========
+

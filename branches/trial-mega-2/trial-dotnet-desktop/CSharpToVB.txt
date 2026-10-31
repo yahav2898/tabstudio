@@ -1,0 +1,695 @@
+CSharpToVB at 5f3b2f0430c4ec9d350ac83900ee98aad66265ed, opening /home/runner/work/_temp/repos/CSharpToVB/CSharpToVB.sln
+Opened in 0.2 s: CSharpToVB, solution /home/runner/work/_temp/repos/CSharpToVB/CSharpToVB.sln
+  project CSharpToVB [VisualBasic] /home/runner/work/_temp/repos/CSharpToVB/CSharpToVB/CSharpToVB.vbproj
+  project CodeConverter [VisualBasic] /home/runner/work/_temp/repos/CSharpToVB/CodeConverter/CodeConverter.vbproj
+  project CSharpToVB.Tests [VisualBasic] /home/runner/work/_temp/repos/CSharpToVB/CSharpToVB.Tests/CSharpToVB.Tests.vbproj
+  project ProgressReportLibrary [VisualBasic] /home/runner/work/_temp/repos/CSharpToVB/ProgressReportLibrary/ProgressReportLibrary.vbproj
+  project csvGenerator [VisualBasic] /home/runner/work/_temp/repos/CSharpToVB/csvGenerator/csvGenerator.vbproj
+  project TestConsoleApp [VisualBasic] /home/runner/work/_temp/repos/CSharpToVB/TestConsoleApp/TestConsoleApp.vbproj
+  project ObjectPoolLibrary [CSharp] /home/runner/work/_temp/repos/CSharpToVB/ObjectPoolLibrary/ObjectPoolLibrary.csproj
+Compatibility Doctor:
+  CSharpToVB: Needs Windows via Windows Bridge - OpenSilver builds C# WPF projects. A WPF project in Visual Basic builds and runs on your PC through the Windows Bridge.
+  CodeConverter: Library via Built with its users - A library is compiled together with the projects that reference it.
+  CSharpToVB.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  ProgressReportLibrary: Library via Built with its users - A library is compiled together with the projects that reference it.
+  csvGenerator: Library via Built with its users - A library is compiled together with the projects that reference it.
+  TestConsoleApp: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  ObjectPoolLibrary: Library via Built with its users - A library is compiled together with the projects that reference it.
+F5 startup project: CSharpToVB /home/runner/work/_temp/repos/CSharpToVB/CSharpToVB/CSharpToVB.vbproj
+Error List after analysis: 2269 errors, 29 warnings
+  918 x BC30456
+      [CSharpToVB.Tests] ConverterTestBase.vb(95,44): error BC30456: 'SplitLines' is not a member of 'String'.
+      [CSharpToVB.Tests] ConverterTestBase.vb(96,43): error BC30456: 'SplitLines' is not a member of 'String'.
+      [CSharpToVB.Tests] ConverterTestBase.vb(165,44): error BC30456: 'DoConversion' is not a member of 'CSharpSyntaxNode'.
+      [CSharpToVB.Tests] ConverterTestBase.vb(178,23): error BC30456: 'NormalizeWhitespaceEx' is not a member of 'SyntaxNode'.
+      [CSharpToVB.Tests] LoadSaveDictionaryTests.vb(71,26): error BC30456: 'WithoutNewLines' is not a member of 'String'.
+      [CSharpToVB] ColorizeSupport.vb(17,52): error BC30456: 'SplitLines' is not a member of 'String'.
+      [CSharpToVB] ColorizeSupport.vb(165,135): error BC30456: 'SplitLines' is not a member of 'String'.
+      [CSharpToVB] ColorizeSupport.vb(175,139): error BC30456: 'SplitLines' is not a member of 'String'.
+      [CSharpToVB] ColorizeSupport.vb(181,135): error BC30456: 'SplitLines' is not a member of 'String'.
+      [CSharpToVB] ThemeSupport.vb(16,74): error BC30456: 'Renderer' is not a member of 'MenuStrip'.
+  365 x BC30311
+      [CodeConverter] ArgumentListVisitor.vb(21,144): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(26,84): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(49,80): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(53,116): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(54,122): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(62,92): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(64,81): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(68,150): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(83,101): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(104,94): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+  360 x BC30002
+      [CSharpToVB.Tests] ConverterTestBase.vb(31,84): error BC30002: Type 'TestWorkspace' is not defined.
+      [CSharpToVB.Tests] ConverterTestBase.vb(32,29): error BC30002: Type 'TestWorkspace' is not defined.
+      [CSharpToVB.Tests] ConverterTestBase.vb(108,64): error BC30002: Type 'TestWorkspace' is not defined.
+      [CSharpToVB.Tests] ConverterTestBase.vb(111,29): error BC30002: Type 'TestWorkspace' is not defined.
+      [CSharpToVB.Tests] ConverterTestBase.vb(156,36): error BC30002: Type 'TestWorkspace' is not defined.
+      [CSharpToVB.Tests] ConverterTestBase.vb(157,32): error BC30002: Type 'TestWorkspace' is not defined.
+      [CSharpToVB.Tests] ConverterTestBase.vb(169,85): error BC30002: Type 'DefaultVbOptions' is not defined.
+      [CSharpToVB.Tests] ExpressionTests.vb(11,18): error BC30002: Type 'ConverterTestBase' is not defined.
+      [CSharpToVB.Tests] MemberTests.vb(11,18): error BC30002: Type 'ConverterTestBase' is not defined.
+      [CSharpToVB.Tests] SpecialConversionTests.vb(11,18): error BC30002: Type 'ConverterTestBase' is not defined.
+  289 x BC30451
+      [CSharpToVB.Tests] ConverterTestBase.vb(74,37): error BC30451: 'CSharpReferences' is not declared. It may be inaccessible due to its protection level.
+      [CSharpToVB.Tests] ConverterTestBase.vb(146,45): error BC30451: 'VisualBasicReferences' is not declared. It may be inaccessible due to its protection level.
+      [CSharpToVB.Tests] ConverterTestBase.vb(209,28): error BC30451: 'HomogenizeEol' is not declared. It may be inaccessible due to its protection level.
+      [CSharpToVB.Tests] ConverterTestBase.vb(210,29): error BC30451: 'HomogenizeEol' is not declared. It may be inaccessible due to its protection level.
+      [CSharpToVB.Tests] FormattingTestBase.vb(76,13): error BC30451: 'EqualOrDiff' is not declared. It may be inaccessible due to its protection level.
+      [CSharpToVB.Tests] VisualBasicFormattingTestBase.vb(42,13): error BC30451: 'GetSpans' is not declared. It may be inaccessible due to its protection level.
+      [CSharpToVB.Tests] ExpressionTests.vb(15,13): error BC30451: 'TestConversionCSharpToVisualBasic' is not declared. It may be inaccessible due to its protection level.
+      [CSharpToVB.Tests] ExpressionTests.vb(42,13): error BC30451: 'TestConversionCSharpToVisualBasic' is not declared. It may be inaccessible due to its protection level.
+      [CSharpToVB.Tests] ExpressionTests.vb(69,13): error BC30451: 'TestConversionCSharpToVisualBasic' is not declared. It may be inaccessible due to its protection level.
+      [CSharpToVB.Tests] ExpressionTests.vb(99,13): error BC30451: 'TestConversionCSharpToVisualBasic' is not declared. It may be inaccessible due to its protection level.
+  172 x BC30560
+      [CSharpToVB] ComboBoxEx.vb(102,24): error BC30560: 'Graphics' is ambiguous in the namespace 'System.Drawing'.
+      [CSharpToVB] ComboBoxEx.vb(102,35): error BC30560: 'Graphics' is ambiguous in the namespace 'System.Drawing'.
+      [CSharpToVB] ComboBoxEx.vb(113,32): error BC30560: 'Pen' is ambiguous in the namespace 'System.Drawing'.
+      [CSharpToVB] ComboBoxEx.vb(121,36): error BC30560: 'SolidBrush' is ambiguous in the namespace 'System.Drawing'.
+      [CSharpToVB] ComboBoxEx.vb(129,63): error BC30560: 'Pens' is ambiguous in the namespace 'System.Drawing'.
+      [CSharpToVB] ComboBoxEx.vb(131,63): error BC30560: 'Pens' is ambiguous in the namespace 'System.Drawing'.
+      [CSharpToVB] ComboBoxEx.vb(133,63): error BC30560: 'Pens' is ambiguous in the namespace 'System.Drawing'.
+      [CSharpToVB] LineNumbersForRichTextBox.vb(25,35): error BC30560: 'DashStyle' is ambiguous in the namespace 'System.Drawing.Drawing2D'.
+      [CSharpToVB] LineNumbersForRichTextBox.vb(25,57): error BC30560: 'DashStyle' is ambiguous in the namespace 'System.Drawing.Drawing2D'.
+      [CSharpToVB] LineNumbersForRichTextBox.vb(33,36): error BC30560: 'LinearGradientMode' is ambiguous in the namespace 'System.Drawing.Drawing2D'.
+  59 x BC30284
+      [CSharpToVB] DarkColorTable.vb(13,40): error BC30284: property 'MenuItemBorder' cannot be declared 'Overrides' because it does not override a property in a base class.
+      [CSharpToVB] DarkColorTable.vb(20,40): error BC30284: property 'MenuStripGradientBegin' cannot be declared 'Overrides' because it does not override a property in a base class.
+      [CSharpToVB] DarkColorTable.vb(22,40): error BC30284: property 'MenuStripGradientEnd' cannot be declared 'Overrides' because it does not override a property in a base class.
+      [CSharpToVB] DarkColorTable.vb(25,40): error BC30284: property 'MenuItemSelectedGradientBegin' cannot be declared 'Overrides' because it does not override a property in a base class.
+      [CSharpToVB] DarkColorTable.vb(27,40): error BC30284: property 'MenuItemSelectedGradientEnd' cannot be declared 'Overrides' because it does not override a property in a base class.
+      [CSharpToVB] DarkColorTable.vb(30,40): error BC30284: property 'MenuItemPressedGradientBegin' cannot be declared 'Overrides' because it does not override a property in a base class.
+      [CSharpToVB] DarkColorTable.vb(32,40): error BC30284: property 'MenuItemPressedGradientEnd' cannot be declared 'Overrides' because it does not override a property in a base class.
+      [CSharpToVB] DarkColorTable.vb(33,40): error BC30284: property 'MenuItemPressedGradientMiddle' cannot be declared 'Overrides' because it does not override a property in a base class.
+      [CSharpToVB] DarkColorTable.vb(40,40): error BC30284: property 'SeparatorDark' cannot be declared 'Overrides' because it does not override a property in a base class.
+      [CSharpToVB] DarkColorTable.vb(43,40): error BC30284: property 'MenuBorder' cannot be declared 'Overrides' because it does not override a property in a base class.
+  36 x BC31403
+      [CodeConverter] ArgumentListVisitor.vb(9,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] AttributesVisitor.vb(9,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] DeclarationVisitor.vb(11,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] DesignnationVisitor.vb(9,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] ExpressionVisitor.vb(12,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] LinkVisitor.vb(9,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] MethodBodyVisitor.vb(13,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] NamesVisitor.vb(9,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] NamespaceVisitor.vb(10,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] NodesVisitor.vb(11,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+  22 x BC32050
+      [CodeConverter] DeclarationVisitor.vb(67,84): error BC32050: Type parameter 'TNode' for 'Public Shared Function List(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] DeclarationVisitor.vb(104,84): error BC32050: Type parameter 'TNode' for 'Public Shared Function List(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] DeclarationVisitor.vb(331,79): error BC32050: Type parameter 'TNode' for 'Public Shared Function List(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] DeclarationVisitor.vb(438,88): error BC32050: Type parameter 'TNode' for 'Public Shared Function List(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] ExpressionVisitor.vb(172,50): error BC32050: Type parameter 'TNode' for 'Public Shared Function SingletonList(Of TNode As SyntaxNode)(node As TNode) As SyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] ExpressionVisitor.vb(228,54): error BC32050: Type parameter 'TNode' for 'Public Shared Function SingletonList(Of TNode As SyntaxNode)(node As TNode) As SyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] ExpressionVisitor.vb(1003,92): error BC32050: Type parameter 'TNode' for 'Public Shared Function SingletonList(Of TNode As SyntaxNode)(node As TNode) As SyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] LinkVisitor.vb(63,33): error BC32050: Type parameter 'TNode' for 'Public Shared Function SingletonSeparatedList(Of TNode As SyntaxNode)(node As TNode) As SeparatedSyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] LinkVisitor.vb(68,33): error BC32050: Type parameter 'TNode' for 'Public Shared Function SingletonSeparatedList(Of TNode As SyntaxNode)(node As TNode) As SeparatedSyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] LinkVisitor.vb(81,33): error BC32050: Type parameter 'TNode' for 'Public Shared Function SingletonSeparatedList(Of TNode As SyntaxNode)(node As TNode) As SeparatedSyntaxList(Of TNode)' cannot be inferred.
+  15 x BC30518
+      [CSharpToVB] System.Configuration.Settings.g.vb(184,61): error BC30518: Overload resolution failed because no accessible 'GetCustomAttribute' can be called with these arguments:
+    'Public Shared Overloads Function GetCustomAttribute(element As Assembly, attributeType As Type) As Attribute': Option Strict On disallows implicit conversions from 'Object' to 'Assembly'.
+    'Public Shared Overloads Function GetCustomAttribute(element As MemberInfo, attributeType As Type) As Attribute': Option Strict On disallows implicit conversions from 'Object' to 'MemberInfo'.
+    'Public Shared Overloads Function GetCustomAttribute(element As [Module], attributeType As Type) As Attribute': Option Strict On disallows implicit conversions from 'Object' to '[Module]'.
+    'Public Shared Overloads Function GetCustomAttribute(element As ParameterInfo, attributeType As Type) As Attribute': Option Strict On disallows implicit conversions from 'Object' to 'ParameterInfo'.
+      [CodeConverter] ArgumentListVisitor.vb(21,57): error BC30518: Overload resolution failed because no accessible 'SeparatedList' can be called with these arguments:
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As IEnumerable(Of SyntaxNodeOrToken)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As SyntaxNodeOrTokenList) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+      [CodeConverter] DeclarationVisitor.vb(951,38): error BC30518: Overload resolution failed because no accessible 'Contains' can be called with these arguments:
+    'Public Overloads Function Contains(item As SyntaxToken) As Boolean': Lambda expression cannot be converted to 'SyntaxToken' because 'SyntaxToken' is not a delegate type.
+    Extension method 'Friend Function Contains(predicate As Func(Of SyntaxToken, Boolean)) As Boolean' defined in 'EnumerableExtensions': 'SyntaxKind' is not a member of 'VB'.
+      [CodeConverter] ExpressionVisitor.vb(918,64): error BC30518: Overload resolution failed because no accessible 'SeparatedList' can be called with these arguments:
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As IEnumerable(Of SyntaxNodeOrToken)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As SyntaxNodeOrTokenList) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+      [CodeConverter] LinkVisitor.vb(94,54): error BC30518: Overload resolution failed because no accessible 'SeparatedList' can be called with these arguments:
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As IEnumerable(Of SyntaxNodeOrToken)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As SyntaxNodeOrTokenList) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+      [CodeConverter] TypesModifiersVisitor.vb(173,78): error BC30518: Overload resolution failed because no accessible 'SeparatedList' can be called with these arguments:
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As IEnumerable(Of SyntaxNodeOrToken)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As SyntaxNodeOrTokenList) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+      [CodeConverter] SyntaxNormalizer.vb(82,30): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+      [CodeConverter] SyntaxNormalizer.vb(238,22): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+      [CodeConverter] SyntaxNormalizer.vb(294,18): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+      [CodeConverter] SyntaxNormalizer.vb(295,22): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+  10 x BC32044
+      [CodeConverter] ArgumentListVisitor.vb(34,17): error BC32044: Type argument 'ArgumentSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ArgumentListVisitor.vb(172,17): error BC32044: Type argument 'TypeSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] AttributesVisitor.vb(127,17): error BC32044: Type argument 'AttributeSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ExpressionVisitor.vb(1448,21): error BC32044: Type argument 'ExpressionSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ExpressionVisitor.vb(1452,21): error BC32044: Type argument 'FieldInitializerSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ExpressionVisitor.vb(1548,29): error BC32044: Type argument 'FieldInitializerSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ExpressionVisitor.vb(1551,25): error BC32044: Type argument 'ExpressionSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ExpressionVisitor.vb(1562,21): error BC32044: Type argument 'ExpressionSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ParametersVisitor.vb(55,17): error BC32044: Type argument 'ParameterSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ParametersVisitor.vb(333,17): error BC32044: Type argument 'ParameterSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+  6 x BC37251
+      [CodeConverter] ExpressionVisitor.vb(1067,60): error BC37251: There were one or more errors emitting a call to String.Format. Method or its return type may be missing or malformed.
+      [CodeConverter] ExpressionVisitor.vb(1372,60): error BC37251: There were one or more errors emitting a call to String.Format. Method or its return type may be missing or malformed.
+      [CodeConverter] ExpressionVisitor.vb(1374,60): error BC37251: There were one or more errors emitting a call to String.Format. Method or its return type may be missing or malformed.
+      [CodeConverter] ExpressionVisitor.vb(2119,52): error BC37251: There were one or more errors emitting a call to String.Format. Method or its return type may be missing or malformed.
+      [CodeConverter] SyntaxKindExtensions.vb(161,47): error BC37251: There were one or more errors emitting a call to String.Format. Method or its return type may be missing or malformed.
+      [CodeConverter] SyntaxKindExtensions.vb(199,41): error BC37251: There were one or more errors emitting a call to String.Format. Method or its return type may be missing or malformed.
+  5 x BC30574
+      [CSharpToVB] System.Configuration.Settings.g.vb(183,24): error BC30574: Option Strict On disallows late binding.
+      [CSharpToVB] System.Configuration.Settings.g.vb(186,27): error BC30574: Option Strict On disallows late binding.
+      [CSharpToVB] System.Configuration.Settings.g.vb(190,24): error BC30574: Option Strict On disallows late binding.
+      [CSharpToVB] System.Configuration.Settings.g.vb(194,114): error BC30574: Option Strict On disallows late binding.
+      [CSharpToVB] System.Configuration.Settings.g.vb(196,27): error BC30574: Option Strict On disallows late binding.
+  3 x BC30590
+      [CSharpToVB] LineNumbersForRichTextBox.vb(749,106): error BC30590: Event 'ContentsResized' cannot be found.
+      [CSharpToVB] LineNumbersForRichTextBox.vb(761,82): error BC30590: Event 'HScroll' cannot be found.
+      [CSharpToVB] LineNumbersForRichTextBox.vb(761,99): error BC30590: Event 'VScroll' cannot be found.
+  3 x BC30209
+      [CSharpToVB] System.Configuration.Settings.g.vb(178,17): error BC30209: Option Strict On requires all variable declarations to have an 'As' clause.
+      [CSharpToVB] System.Configuration.Settings.g.vb(183,17): error BC30209: Option Strict On requires all variable declarations to have an 'As' clause.
+      [CSharpToVB] System.Configuration.Settings.g.vb(184,17): error BC30209: Option Strict On requires all variable declarations to have an 'As' clause.
+  2 x BC30512
+      [CSharpToVB] System.Configuration.Settings.g.vb(186,84): error BC30512: Option Strict On disallows implicit conversions from 'Object' to 'Type'.
+      [CSharpToVB] System.Configuration.Settings.g.vb(196,84): error BC30512: Option Strict On disallows implicit conversions from 'Object' to 'Type'.
+  1 x NU1101
+      [CSharpToVB.Tests] error NU1101: Unable to find package Microsoft.DotNet.XUnitExtensions. No packages exist with this id in nuget.org.
+  1 x BC30437
+      [CSharpToVB] LineNumbersForRichTextBox.vb(475,31): error BC30437: 'Public Overrides Property Font As Font' cannot override 'Public Overridable Overloads Property Font As Font' because they differ by their return types.
+  1 x BC30516
+      [CSharpToVB] TSToolBaseSupport.vb(67,49): error BC30516: Overload resolution failed because no accessible 'Find' accepts this number of arguments.
+  1 x BC36658
+      [CodeConverter] TypesModifiersVisitor.vb(99,36): error BC36658: Data type(s) of the type parameter(s) in extension method 'Friend Function TypeSwitch(Of TDerivedType1 As SyntaxNode, TDerivedType2 As SyntaxNode, TDerivedType3 As SyntaxNode, TDerivedType4 As SyntaxNode, TDerivedType5 As SyntaxNode, TDerivedType6 As SyntaxNode, TDerivedType7 As SyntaxNode, TResult)(matchFunc1 As Func(Of TDerivedType1, TResult), matchFunc2 As Func(Of TDerivedType2, TResult), matchFunc3 As Func(Of TDerivedType3, TResult), matchFunc4 As Func(Of TDerivedType4, TResult), matchFunc5 As Func(Of TDerivedType5, TResult), matchFunc6 As Func(Of TDerivedType6, TResult), matchFunc7 As Func(Of TDerivedType7, TResult), [defaultFunc As Func(Of SyntaxNode, TResult) = Nothing]) As TResult' defined in 'TypeSwitchExtensions' cannot be inferred from these arguments because they do not convert to the same type. Specifying the data type(s) explicitly might correct this error.
+Error List after the build: 1631 errors, 14 warnings
+  869 x BC30456
+      [CodeConverter] ArgumentListVisitor.vb(27,36): error BC30456: 'AdjustNodeTrivia' is not a member of 'ArgumentSyntax'.
+      [CodeConverter] ArgumentListVisitor.vb(73,79): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+      [CodeConverter] ArgumentListVisitor.vb(77,79): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+      [CodeConverter] ArgumentListVisitor.vb(89,54): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+      [CodeConverter] ArgumentListVisitor.vb(110,38): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+      [CodeConverter] ArgumentListVisitor.vb(110,70): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+      [CodeConverter] ArgumentListVisitor.vb(111,38): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+      [CodeConverter] ArgumentListVisitor.vb(111,67): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+      [CodeConverter] ArgumentListVisitor.vb(112,38): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+      [CodeConverter] ArgumentListVisitor.vb(113,38): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+  365 x BC30311
+      [CodeConverter] ArgumentListVisitor.vb(21,144): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(26,84): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(49,80): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(53,116): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(54,122): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(62,92): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(64,81): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(68,150): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(83,101): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+      [CodeConverter] ArgumentListVisitor.vb(104,94): error BC30311: Value of type 'CSharpConverter.NodesVisitor' cannot be converted to 'CSharpSyntaxVisitor'.
+  307 x BC30002
+      [CodeConverter] ArgumentListVisitor.vb(17,48): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+      [CodeConverter] ArgumentListVisitor.vb(19,162): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+      [CodeConverter] ArgumentListVisitor.vb(41,84): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+      [CodeConverter] ArgumentListVisitor.vb(83,54): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+      [CodeConverter] ArgumentListVisitor.vb(146,92): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+      [CodeConverter] ArgumentListVisitor.vb(150,110): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+      [CodeConverter] ArgumentListVisitor.vb(154,106): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+      [CodeConverter] ArgumentListVisitor.vb(158,100): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+      [CodeConverter] AttributesVisitor.vb(17,48): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+      [CodeConverter] AttributesVisitor.vb(19,86): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+  36 x BC31403
+      [CodeConverter] ArgumentListVisitor.vb(9,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] AttributesVisitor.vb(9,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] DeclarationVisitor.vb(11,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] DesignnationVisitor.vb(9,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] ExpressionVisitor.vb(12,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] LinkVisitor.vb(9,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] MethodBodyVisitor.vb(13,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] NamesVisitor.vb(9,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] NamespaceVisitor.vb(10,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+      [CodeConverter] NodesVisitor.vb(11,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+  22 x BC32050
+      [CodeConverter] DeclarationVisitor.vb(67,84): error BC32050: Type parameter 'TNode' for 'Public Shared Function List(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] DeclarationVisitor.vb(104,84): error BC32050: Type parameter 'TNode' for 'Public Shared Function List(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] DeclarationVisitor.vb(331,79): error BC32050: Type parameter 'TNode' for 'Public Shared Function List(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] DeclarationVisitor.vb(438,88): error BC32050: Type parameter 'TNode' for 'Public Shared Function List(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] ExpressionVisitor.vb(172,50): error BC32050: Type parameter 'TNode' for 'Public Shared Function SingletonList(Of TNode As SyntaxNode)(node As TNode) As SyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] ExpressionVisitor.vb(228,54): error BC32050: Type parameter 'TNode' for 'Public Shared Function SingletonList(Of TNode As SyntaxNode)(node As TNode) As SyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] ExpressionVisitor.vb(1003,92): error BC32050: Type parameter 'TNode' for 'Public Shared Function SingletonList(Of TNode As SyntaxNode)(node As TNode) As SyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] LinkVisitor.vb(63,33): error BC32050: Type parameter 'TNode' for 'Public Shared Function SingletonSeparatedList(Of TNode As SyntaxNode)(node As TNode) As SeparatedSyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] LinkVisitor.vb(68,33): error BC32050: Type parameter 'TNode' for 'Public Shared Function SingletonSeparatedList(Of TNode As SyntaxNode)(node As TNode) As SeparatedSyntaxList(Of TNode)' cannot be inferred.
+      [CodeConverter] LinkVisitor.vb(81,33): error BC32050: Type parameter 'TNode' for 'Public Shared Function SingletonSeparatedList(Of TNode As SyntaxNode)(node As TNode) As SeparatedSyntaxList(Of TNode)' cannot be inferred.
+  14 x BC30518
+      [CodeConverter] ArgumentListVisitor.vb(21,57): error BC30518: Overload resolution failed because no accessible 'SeparatedList' can be called with these arguments:
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As IEnumerable(Of SyntaxNodeOrToken)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As SyntaxNodeOrTokenList) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+      [CodeConverter] DeclarationVisitor.vb(951,38): error BC30518: Overload resolution failed because no accessible 'Contains' can be called with these arguments:
+    'Public Overloads Function Contains(item As SyntaxToken) As Boolean': Lambda expression cannot be converted to 'SyntaxToken' because 'SyntaxToken' is not a delegate type.
+    Extension method 'Friend Function Contains(predicate As Func(Of SyntaxToken, Boolean)) As Boolean' defined in 'EnumerableExtensions': 'SyntaxKind' is not a member of 'VB'.
+      [CodeConverter] ExpressionVisitor.vb(918,64): error BC30518: Overload resolution failed because no accessible 'SeparatedList' can be called with these arguments:
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As IEnumerable(Of SyntaxNodeOrToken)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As SyntaxNodeOrTokenList) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+      [CodeConverter] LinkVisitor.vb(94,54): error BC30518: Overload resolution failed because no accessible 'SeparatedList' can be called with these arguments:
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As IEnumerable(Of SyntaxNodeOrToken)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As SyntaxNodeOrTokenList) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+      [CodeConverter] TypesModifiersVisitor.vb(173,78): error BC30518: Overload resolution failed because no accessible 'SeparatedList' can be called with these arguments:
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodes As IEnumerable(Of TNode)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As IEnumerable(Of SyntaxNodeOrToken)) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+    'Public Shared Function SeparatedList(Of TNode As SyntaxNode)(nodesAndTokens As SyntaxNodeOrTokenList) As SeparatedSyntaxList(Of TNode)': Type parameter 'TNode' cannot be inferred.
+      [CodeConverter] SyntaxNormalizer.vb(82,30): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+      [CodeConverter] SyntaxNormalizer.vb(238,22): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+      [CodeConverter] SyntaxNormalizer.vb(294,18): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+      [CodeConverter] SyntaxNormalizer.vb(295,22): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+      [CodeConverter] SyntaxNormalizer.vb(338,26): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kind1 As SyntaxKind()) As Boolean' defined in 'SyntaxNodeExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kind1 As SyntaxKind()) As Boolean' defined in 'SyntaxNodeExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kind1 As SyntaxKind()) As Boolean' defined in 'SyntaxNodeExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kind1 As SyntaxKind()) As Boolean' defined in 'SyntaxNodeExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+  10 x BC32044
+      [CodeConverter] ArgumentListVisitor.vb(34,17): error BC32044: Type argument 'ArgumentSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ArgumentListVisitor.vb(172,17): error BC32044: Type argument 'TypeSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] AttributesVisitor.vb(127,17): error BC32044: Type argument 'AttributeSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ExpressionVisitor.vb(1448,21): error BC32044: Type argument 'ExpressionSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ExpressionVisitor.vb(1452,21): error BC32044: Type argument 'FieldInitializerSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ExpressionVisitor.vb(1548,29): error BC32044: Type argument 'FieldInitializerSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ExpressionVisitor.vb(1551,25): error BC32044: Type argument 'ExpressionSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ExpressionVisitor.vb(1562,21): error BC32044: Type argument 'ExpressionSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ParametersVisitor.vb(55,17): error BC32044: Type argument 'ParameterSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+      [CodeConverter] ParametersVisitor.vb(333,17): error BC32044: Type argument 'ParameterSyntax' does not inherit from or implement the constraint type 'VB.VisualBasicSyntaxNode'.
+  6 x BC37251
+      [CodeConverter] ExpressionVisitor.vb(1067,60): error BC37251: There were one or more errors emitting a call to String.Format. Method or its return type may be missing or malformed.
+      [CodeConverter] ExpressionVisitor.vb(1372,60): error BC37251: There were one or more errors emitting a call to String.Format. Method or its return type may be missing or malformed.
+      [CodeConverter] ExpressionVisitor.vb(1374,60): error BC37251: There were one or more errors emitting a call to String.Format. Method or its return type may be missing or malformed.
+      [CodeConverter] ExpressionVisitor.vb(2119,52): error BC37251: There were one or more errors emitting a call to String.Format. Method or its return type may be missing or malformed.
+      [CodeConverter] SyntaxKindExtensions.vb(161,47): error BC37251: There were one or more errors emitting a call to String.Format. Method or its return type may be missing or malformed.
+      [CodeConverter] SyntaxKindExtensions.vb(199,41): error BC37251: There were one or more errors emitting a call to String.Format. Method or its return type may be missing or malformed.
+  1 x NU1101
+      [CSharpToVB.Tests] error NU1101: Unable to find package Microsoft.DotNet.XUnitExtensions. No packages exist with this id in nuget.org.
+  1 x BC36658
+      [CodeConverter] TypesModifiersVisitor.vb(99,36): error BC36658: Data type(s) of the type parameter(s) in extension method 'Friend Function TypeSwitch(Of TDerivedType1 As SyntaxNode, TDerivedType2 As SyntaxNode, TDerivedType3 As SyntaxNode, TDerivedType4 As SyntaxNode, TDerivedType5 As SyntaxNode, TDerivedType6 As SyntaxNode, TDerivedType7 As SyntaxNode, TResult)(matchFunc1 As Func(Of TDerivedType1, TResult), matchFunc2 As Func(Of TDerivedType2, TResult), matchFunc3 As Func(Of TDerivedType3, TResult), matchFunc4 As Func(Of TDerivedType4, TResult), matchFunc5 As Func(Of TDerivedType5, TResult), matchFunc6 As Func(Of TDerivedType6, TResult), matchFunc7 As Func(Of TDerivedType7, TResult), [defaultFunc As Func(Of SyntaxNode, TResult) = Nothing]) As TResult' defined in 'TypeSwitchExtensions' cannot be inferred from these arguments because they do not convert to the same type. Specifying the data type(s) explicitly might correct this error.
+Run: no window (0 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/CSharpToVB/CSharpToVB/ClassificationSupport/ColorDescriptor.vb:10
+Debug: ended without stopping at ColorDescriptor.vb:10 (0 s)
+Tests: 786 found; 0 passed, 0 failed, 0 skipped, 786 not run - The build failed. Fix the errors in the Error List, then run the tests again. (0 s)
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring NuGet packages 0/7 projects
+  Analyzing: Analyzing 0/7 projects
+  Analyzing: Analyzing 1/7 projects
+  Analyzing: Analyzing 2/7 projects
+  Analyzing: Analyzing 3/7 projects
+  Analyzing: Analyzing 4/7 projects
+  Analyzing: Analyzing 5/7 projects
+  Analyzing: Analyzing 6/7 projects
+  Analyzing: Analyzing 7/7 projects
+  Analyzing: Succeeded after 1.0 s
+  Restoring NuGet packages: Downloading NuGet packages 1/55
+  Restoring NuGet packages: Downloading NuGet packages 2/55
+  Restoring NuGet packages: Downloading NuGet packages 3/55
+  Restoring NuGet packages: Downloading NuGet packages 4/55
+  Restoring NuGet packages: Downloading NuGet packages 5/55
+  Restoring NuGet packages: Downloading NuGet packages 6/55
+  Restoring NuGet packages: Downloading NuGet packages 7/55
+  Restoring NuGet packages: Downloading NuGet packages 8/55
+  Restoring NuGet packages: Downloading NuGet packages 9/55
+  Restoring NuGet packages: Downloading NuGet packages 10/55
+  Restoring NuGet packages: Downloading NuGet packages 11/55
+  Restoring NuGet packages: Downloading NuGet packages 12/55
+  Restoring NuGet packages: Downloading NuGet packages 13/55
+  Restoring NuGet packages: Downloading NuGet packages 14/55
+  Restoring NuGet packages: Downloading NuGet packages 15/55
+  Restoring NuGet packages: Downloading NuGet packages 16/55
+  Restoring NuGet packages: Downloading NuGet packages 17/55
+  Restoring NuGet packages: Downloading NuGet packages 18/55
+  Restoring NuGet packages: Downloading NuGet packages 19/55
+  Restoring NuGet packages: Downloading NuGet packages 20/55
+  Restoring NuGet packages: Downloading NuGet packages 21/55
+  Restoring NuGet packages: Downloading NuGet packages 22/55
+  Restoring NuGet packages: Downloading NuGet packages 23/55
+  Restoring NuGet packages: Downloading NuGet packages 24/55
+  Restoring NuGet packages: Downloading NuGet packages 25/55
+  Restoring NuGet packages: Downloading NuGet packages 26/55
+  Restoring NuGet packages: Downloading NuGet packages 27/55
+  Restoring NuGet packages: Downloading NuGet packages 28/55
+  Restoring NuGet packages: Downloading NuGet packages 29/55
+  Restoring NuGet packages: Downloading NuGet packages 30/55
+  Restoring NuGet packages: Downloading NuGet packages 31/55
+  Restoring NuGet packages: Downloading NuGet packages 32/55
+  Restoring NuGet packages: Downloading NuGet packages 33/55
+  Restoring NuGet packages: Downloading NuGet packages 34/55
+  Restoring NuGet packages: Downloading NuGet packages 35/55
+  Restoring NuGet packages: Downloading NuGet packages 36/55
+  Restoring NuGet packages: Downloading NuGet packages 37/55
+  Restoring NuGet packages: Downloading NuGet packages 38/55
+  Restoring NuGet packages: Downloading NuGet packages 39/55
+  Restoring NuGet packages: Downloading NuGet packages 40/55
+  Restoring NuGet packages: Downloading NuGet packages 41/55
+  Restoring NuGet packages: Downloading NuGet packages 42/55
+  Restoring NuGet packages: Downloading NuGet packages 43/55
+  Restoring NuGet packages: Downloading NuGet packages 44/55
+  Restoring NuGet packages: Downloading NuGet packages 45/55
+  Restoring NuGet packages: Downloading NuGet packages 46/55
+  Restoring NuGet packages: Downloading NuGet packages 47/55
+  Restoring NuGet packages: Downloading NuGet packages 48/55
+  Restoring NuGet packages: Downloading NuGet packages 49/55
+  Restoring NuGet packages: Downloading NuGet packages 50/55
+  Restoring NuGet packages: Downloading NuGet packages 51/55
+  Restoring NuGet packages: Downloading NuGet packages 52/55
+  Restoring NuGet packages: Downloading NuGet packages 53/55
+  Restoring NuGet packages: Downloading NuGet packages 54/55
+  Restoring NuGet packages: Downloading NuGet packages 55/55
+  Restoring NuGet packages: Restoring NuGet packages 1/7 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/19
+  Restoring NuGet packages: Downloading NuGet packages 2/19
+  Restoring NuGet packages: Downloading NuGet packages 3/19
+  Restoring NuGet packages: Downloading NuGet packages 4/19
+  Restoring NuGet packages: Downloading NuGet packages 5/19
+  Restoring NuGet packages: Downloading NuGet packages 6/19
+  Restoring NuGet packages: Downloading NuGet packages 7/19
+  Restoring NuGet packages: Downloading NuGet packages 8/19
+  Restoring NuGet packages: Downloading NuGet packages 9/19
+  Restoring NuGet packages: Downloading NuGet packages 10/19
+  Restoring NuGet packages: Downloading NuGet packages 11/19
+  Restoring NuGet packages: Downloading NuGet packages 12/19
+  Restoring NuGet packages: Downloading NuGet packages 13/19
+  Restoring NuGet packages: Downloading NuGet packages 14/19
+  Restoring NuGet packages: Downloading NuGet packages 15/19
+  Restoring NuGet packages: Downloading NuGet packages 16/19
+  Restoring NuGet packages: Downloading NuGet packages 17/19
+  Restoring NuGet packages: Downloading NuGet packages 18/19
+  Restoring NuGet packages: Downloading NuGet packages 19/19
+  Restoring NuGet packages: Restoring NuGet packages 2/7 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/71
+  Restoring NuGet packages: Downloading NuGet packages 2/71
+  Restoring NuGet packages: Downloading NuGet packages 3/71
+  Restoring NuGet packages: Downloading NuGet packages 4/71
+  Restoring NuGet packages: Downloading NuGet packages 5/71
+  Restoring NuGet packages: Downloading NuGet packages 6/71
+  Restoring NuGet packages: Downloading NuGet packages 7/71
+  Restoring NuGet packages: Downloading NuGet packages 8/71
+  Restoring NuGet packages: Downloading NuGet packages 9/71
+  Restoring NuGet packages: Downloading NuGet packages 10/71
+  Restoring NuGet packages: Downloading NuGet packages 11/71
+  Restoring NuGet packages: Downloading NuGet packages 12/71
+  Restoring NuGet packages: Downloading NuGet packages 13/71
+  Restoring NuGet packages: Downloading NuGet packages 14/71
+  Restoring NuGet packages: Downloading NuGet packages 15/71
+  Restoring NuGet packages: Downloading NuGet packages 16/71
+  Restoring NuGet packages: Downloading NuGet packages 17/71
+  Restoring NuGet packages: Downloading NuGet packages 18/71
+  Restoring NuGet packages: Downloading NuGet packages 19/71
+  Restoring NuGet packages: Downloading NuGet packages 20/71
+  Restoring NuGet packages: Downloading NuGet packages 21/71
+  Restoring NuGet packages: Downloading NuGet packages 22/71
+  Restoring NuGet packages: Downloading NuGet packages 23/71
+  Restoring NuGet packages: Downloading NuGet packages 24/71
+  Restoring NuGet packages: Downloading NuGet packages 25/71
+  Restoring NuGet packages: Downloading NuGet packages 26/71
+  Restoring NuGet packages: Downloading NuGet packages 27/71
+  Restoring NuGet packages: Downloading NuGet packages 28/71
+  Restoring NuGet packages: Downloading NuGet packages 29/71
+  Restoring NuGet packages: Downloading NuGet packages 30/71
+  Restoring NuGet packages: Downloading NuGet packages 31/71
+  Restoring NuGet packages: Downloading NuGet packages 32/71
+  Restoring NuGet packages: Downloading NuGet packages 33/71
+  Restoring NuGet packages: Downloading NuGet packages 34/71
+  Restoring NuGet packages: Downloading NuGet packages 35/71
+  Restoring NuGet packages: Downloading NuGet packages 36/71
+  Restoring NuGet packages: Downloading NuGet packages 37/71
+  Restoring NuGet packages: Downloading NuGet packages 38/71
+  Restoring NuGet packages: Downloading NuGet packages 39/71
+  Restoring NuGet packages: Downloading NuGet packages 40/71
+  Restoring NuGet packages: Downloading NuGet packages 41/71
+  Restoring NuGet packages: Downloading NuGet packages 42/71
+  Restoring NuGet packages: Downloading NuGet packages 43/71
+  Restoring NuGet packages: Downloading NuGet packages 44/71
+  Restoring NuGet packages: Downloading NuGet packages 45/71
+  Restoring NuGet packages: Downloading NuGet packages 46/71
+  Restoring NuGet packages: Downloading NuGet packages 47/71
+  Restoring NuGet packages: Downloading NuGet packages 48/71
+  Restoring NuGet packages: Downloading NuGet packages 49/71
+  Restoring NuGet packages: Downloading NuGet packages 50/71
+  Restoring NuGet packages: Downloading NuGet packages 51/71
+  Restoring NuGet packages: Downloading NuGet packages 52/71
+  Restoring NuGet packages: Downloading NuGet packages 53/71
+  Restoring NuGet packages: Downloading NuGet packages 54/71
+  Restoring NuGet packages: Downloading NuGet packages 55/71
+  Restoring NuGet packages: Downloading NuGet packages 56/71
+  Restoring NuGet packages: Downloading NuGet packages 57/71
+  Restoring NuGet packages: Downloading NuGet packages 58/71
+  Restoring NuGet packages: Downloading NuGet packages 59/71
+  Restoring NuGet packages: Downloading NuGet packages 60/71
+  Restoring NuGet packages: Downloading NuGet packages 61/71
+  Restoring NuGet packages: Downloading NuGet packages 62/71
+  Restoring NuGet packages: Downloading NuGet packages 63/71
+  Restoring NuGet packages: Downloading NuGet packages 64/71
+  Restoring NuGet packages: Downloading NuGet packages 65/71
+  Restoring NuGet packages: Downloading NuGet packages 66/71
+  Restoring NuGet packages: Downloading NuGet packages 67/71
+  Restoring NuGet packages: Downloading NuGet packages 68/71
+  Restoring NuGet packages: Downloading NuGet packages 69/71
+  Restoring NuGet packages: Downloading NuGet packages 70/71
+  Restoring NuGet packages: Downloading NuGet packages 71/71
+  Restoring NuGet packages: Restoring NuGet packages 3/7 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/2
+  Restoring NuGet packages: Downloading NuGet packages 2/2
+  Restoring NuGet packages: Restoring NuGet packages 4/7 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/5
+  Restoring NuGet packages: Downloading NuGet packages 2/5
+  Restoring NuGet packages: Downloading NuGet packages 3/5
+  Restoring NuGet packages: Downloading NuGet packages 4/5
+  Restoring NuGet packages: Downloading NuGet packages 5/5
+  Restoring NuGet packages: Restoring NuGet packages 5/7 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/15
+  Restoring NuGet packages: Downloading NuGet packages 2/15
+  Restoring NuGet packages: Downloading NuGet packages 3/15
+  Restoring NuGet packages: Downloading NuGet packages 4/15
+  Restoring NuGet packages: Downloading NuGet packages 5/15
+  Restoring NuGet packages: Downloading NuGet packages 6/15
+  Restoring NuGet packages: Downloading NuGet packages 7/15
+  Restoring NuGet packages: Downloading NuGet packages 8/15
+  Restoring NuGet packages: Downloading NuGet packages 9/15
+  Restoring NuGet packages: Downloading NuGet packages 10/15
+  Restoring NuGet packages: Downloading NuGet packages 11/15
+  Restoring NuGet packages: Downloading NuGet packages 12/15
+  Restoring NuGet packages: Downloading NuGet packages 13/15
+  Restoring NuGet packages: Downloading NuGet packages 14/15
+  Restoring NuGet packages: Downloading NuGet packages 15/15
+  Restoring NuGet packages: Restoring NuGet packages 6/7 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/2
+  Restoring NuGet packages: Downloading NuGet packages 2/2
+  Restoring NuGet packages: Failed after 9.1 s
+  Analyzing: Analyzing 0/7 projects
+  Analyzing: Analyzing 1/7 projects
+  Analyzing: Analyzing 2/7 projects
+  Analyzing: Analyzing 3/7 projects
+  Analyzing: Analyzing 4/7 projects
+  Analyzing: Analyzing 5/7 projects
+  Analyzing: Analyzing 6/7 projects
+  Analyzing: Analyzing 7/7 projects
+  Analyzing: Succeeded after 0.9 s
+  Building: Building
+  Building: Building 0/7 projects
+  Building: Building 1/7 projects
+  Building: Building 2/7 projects
+  Building: Building 3/7 projects
+  Building: Building 4/7 projects
+  Building: Building 5/7 projects
+  Building: Building 6/7 projects
+  Building: Failed after 1.1 s
+  Building: Building
+  Building: Building CSharpToVB
+  Building: Failed after 0.2 s
+  Building: Building
+  Building: Building CSharpToVB
+  Building: Failed after 0.3 s
+  Building: Building
+  Building: Building CSharpToVB.Tests
+  Building: Failed after 0.3 s
+Project setup:
+
+Output:
+VB'.
+1>TriviaExtensions.vb(39,18): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>TriviaExtensions.vb(41,18): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>TriviaExtensions.vb(43,18): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>TriviaExtensions.vb(82,26): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>TriviaExtensions.vb(83,26): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>TriviaExtensions.vb(89,23): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>TriviaExtensions.vb(93,74): error BC30002: Type 'VB.SyntaxKind' is not defined.
+1>TriviaExtensions.vb(94,16): error BC30456: 'Contains' is not a member of 'VB.SyntaxKind()'.
+1>TriviaExtensions.vb(94,53): error BC30002: Type 'VB.SyntaxKind' is not defined.
+1>TriviaExtensions.vb(119,26): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>TriviaExtensions.vb(120,26): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>TriviaExtensions.vb(125,24): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>TriviaExtensions.vb(131,24): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>TriviaExtensions.vb(144,26): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(11,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+1>VariableDeclarationExtensions.vb(61,61): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>VariableDeclarationExtensions.vb(66,53): error BC30456: 'GetTrailingTrivia' is not a member of 'T'.
+1>VariableDeclarationExtensions.vb(72,22): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(73,42): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(77,42): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(78,43): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(85,22): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(86,42): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(101,22): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(109,46): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(116,22): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(117,56): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(123,22): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(131,16): error BC30456: 'WithTrailingTrivia' is not a member of 'T'.
+1>VariableDeclarationExtensions.vb(145,113): error BC30002: Type 'NodesVisitor' is not defined.
+1>VariableDeclarationExtensions.vb(147,32): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>VariableDeclarationExtensions.vb(149,32): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>VariableDeclarationExtensions.vb(153,49): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(166,35): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(171,18): error BC30456: 'AdjustNodeTrivia' is not a member of 'TypeSyntax'.
+1>VariableDeclarationExtensions.vb(198,41): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>VariableDeclarationExtensions.vb(244,36): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(249,45): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>VariableDeclarationExtensions.vb(264,52): error BC32050: Type parameter 'TNode' for 'Public Shared Function SingletonSeparatedList(Of TNode As SyntaxNode)(node As TNode) As SeparatedSyntaxList(Of TNode)' cannot be inferred.
+1>ConversionResult.vb(9,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+1>ConversionResult.vb(26,53): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>ConversionResult.vb(31,38): error BC30456: 'VisualBasicSyntaxTree' is not a member of 'VB'.
+1>ConversionResult.vb(35,54): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>ConversionResult.vb(37,53): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>ConversionResult.vb(39,50): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>ConversionResult.vb(66,38): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>StatementHandling.vb(5,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+1>StatementHandling.vb(10,51): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>StatementHandling.vb(25,31): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>AttributeAndModifierSupport.vb(8,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+1>AttributeAndModifierSupport.vb(30,25): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>AttributeAndModifierSupport.vb(189,64): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>AttributeAndModifierSupport.vb(201,34): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>AttributeAndModifierSupport.vb(214,86): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>AttributeAndModifierSupport.vb(246,39): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>AttributeAndModifierSupport.vb(246,84): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(11,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+1>ConvertLiteralSupport.vb(129,97): error BC30002: Type 'NodesVisitor' is not defined.
+1>ConvertLiteralSupport.vb(135,86): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(136,84): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(137,84): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(138,85): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(139,87): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(140,83): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(141,84): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(145,86): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(146,83): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(147,84): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(148,84): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(149,85): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(150,87): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(151,83): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(152,84): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(157,82): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(158,79): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(159,80): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(160,80): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(161,81): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(162,83): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(163,79): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(168,54): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(170,81): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(171,81): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(172,82): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(206,54): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(216,54): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(219,54): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>ConvertLiteralSupport.vb(224,50): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>DoConversion.vb(8,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+1>DoConversion.vb(21,20): error BC30456: 'LanguageVersion' is not a member of 'VB'.
+1>DoConversion.vb(82,38): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>IdentifierSupport.vb(9,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+1>IdentifierSupport.vb(47,13): error BC30456: 'SyntaxFacts' is not a member of 'VB'.
+1>IdentifierSupport.vb(47,42): error BC30456: 'SyntaxFacts' is not a member of 'VB'.
+1>ParseUtilities.vb(7,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+1>ParseUtilities.vb(18,109): error BC30002: Type 'VB.VisualBasicParseOptions' is not defined.
+1>ParseUtilities.vb(19,20): error BC30002: Type 'VB.VisualBasicParseOptions' is not defined.
+1>StatementMarkerSupport.vb(12,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+1>StatementMarkerSupport.vb(26,57): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>StatementMarkerSupport.vb(26,97): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>StatementMarkerSupport.vb(151,68): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>StatementMarkerSupport.vb(232,50): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>StatementMarkerSupport.vb(238,36): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>StatementMarkerSupport.vb(248,44): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>StatementMarkerSupport.vb(256,16): error BC30456: 'With' is not a member of 'EmptyStatementSyntax'.
+1>StatementMarkerSupport.vb(269,79): error BC30002: Type 'VB.SyntaxKind' is not defined.
+1>StatementMarkerSupport.vb(447,91): error BC30002: Type 'VB.VisualBasicSyntaxNode' is not defined.
+1>StatementMarkerSupport.vb(504,43): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>SyntaxNormalizer.vb(82,30): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+1>SyntaxNormalizer.vb(238,22): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+1>SyntaxNormalizer.vb(294,18): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+1>SyntaxNormalizer.vb(295,22): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+1>SyntaxNormalizer.vb(338,26): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kind1 As SyntaxKind()) As Boolean' defined in 'SyntaxNodeExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kind1 As SyntaxKind()) As Boolean' defined in 'SyntaxNodeExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kind1 As SyntaxKind()) As Boolean' defined in 'SyntaxNodeExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kind1 As SyntaxKind()) As Boolean' defined in 'SyntaxNodeExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+1>SyntaxNormalizer.vb(340,30): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kind1 As SyntaxKind()) As Boolean' defined in 'SyntaxNodeExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kind1 As SyntaxKind()) As Boolean' defined in 'SyntaxNodeExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kind1 As SyntaxKind()) As Boolean' defined in 'SyntaxNodeExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kind1 As SyntaxKind()) As Boolean' defined in 'SyntaxNodeExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+1>SyntaxNormalizer.vb(379,18): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+1>SyntaxNormalizer.vb(383,18): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kinds As SyntaxKind()) As Boolean' defined in 'SyntaxTokenExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+1>SyntaxNormalizer.vb(1213,25): error BC30518: Overload resolution failed because no accessible 'IsKind' can be called with these arguments:
+    Extension method 'Friend Function IsKind(ParamArray kind1 As SyntaxKind()) As Boolean' defined in 'SyntaxNodeExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+    Extension method 'Friend Function IsKind(ParamArray kind1 As SyntaxKind()) As Boolean' defined in 'SyntaxNodeExtensions': Option Strict On disallows implicit conversions from 'SyntaxKind' to 'SyntaxKind'.
+1>TriviaListSupport.vb(8,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+1>TriviaListSupport.vb(39,51): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>TriviaListSupport.vb(40,56): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>TriviaListSupport.vb(41,56): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>TypeConverterSupport.vb(9,9): error BC31403: Imports alias 'VB' conflicts with 'VB' declared in the root namespace.
+1>TypeConverterSupport.vb(202,24): error BC30456: 'SyntaxKind' is not a member of 'VB'.
+1>BlockExtensions.vb(6,9): warning BC40056: Namespace or type specified in the Imports 'CSharpToVBConverter.CSharpToVBVisitors.CSharpConverter' doesn't contain any public member or cannot be found. Make sure the namespace or the type is defined and contains at least one public member. Make sure the imported element name doesn't use any aliases.
+1>ExpressionSyntaxExtensions.vb(6,9): warning BC40056: Namespace or type specified in the Imports 'CSharpToVBConverter.CSharpToVBVisitors.CSharpConverter' doesn't contain any public member or cannot be found. Make sure the namespace or the type is defined and contains at least one public member. Make sure the imported element name doesn't use any aliases.
+1>LanguageSyntaxNodeExtensions.vb(7,9): warning BC40056: Namespace or type specified in the Imports 'CSharpToVBConverter.CSharpToVBVisitors.CSharpConverter' doesn't contain any public member or cannot be found. Make sure the namespace or the type is defined and contains at least one public member. Make sure the imported element name doesn't use any aliases.
+1>SyntaxTriviaListExtensions.vb(7,9): warning BC40056: Namespace or type specified in the Imports 'CSharpToVBConverter.CSharpToVBVisitors' doesn't contain any public member or cannot be found. Make sure the namespace or the type is defined and contains at least one public member. Make sure the imported element name doesn't use any aliases.
+1>VariableDeclarationExtensions.vb(6,9): warning BC40056: Namespace or type specified in the Imports 'CSharpToVBConverter.CSharpToVBVisitors.CSharpConverter' doesn't contain any public member or cannot be found. Make sure the namespace or the type is defined and contains at least one public member. Make sure the imported element name doesn't use any aliases.
+1>ConvertLiteralSupport.vb(6,9): warning BC40056: Namespace or type specified in the Imports 'CSharpToVBConverter.CSharpToVBVisitors.CSharpConverter' doesn't contain any public member or cannot be found. Make sure the namespace or the type is defined and contains at least one public member. Make sure the imported element name doesn't use any aliases.
+========== Build: 0 succeeded, 1 failed ==========
+
