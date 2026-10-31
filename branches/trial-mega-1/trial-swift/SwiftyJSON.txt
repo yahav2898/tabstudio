@@ -1,0 +1,103 @@
+SwiftyJSON at 3d2544101a03f22b2217d464dc7d359eeb86e159, opening /home/runner/work/_temp/repos/SwiftyJSON
+Opened in 0.3 s: SwiftyJSON, solution (none)
+  toolchain project swift: /home/runner/work/_temp/repos/SwiftyJSON/Package.swift
+Compatibility Doctor:
+  SwiftyJSON: Needs a toolchain via Swift toolchain (experimental) - Builds with SwiftPM from the official Swift toolchain in the Toolchain Store, which runs in TabStudio's Ubuntu environment, and runs with console input and output in the Output panel; Vapor servers open in the web preview. Swift on a tablet is experimental. Install Swift to run it.
+F5 startup project: SwiftyJSON (swift) /home/runner/work/_temp/repos/SwiftyJSON/Package.swift
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 1 errors, 0 warnings
+  1 x Swift
+      [SwiftyJSON] SwiftyJSON.swift(1211,51): error Swift: ambiguous use of operator '<'
+Tests: 149 found; 0 passed, 0 failed, 0 skipped, 149 not run - The build failed. Fix the errors in the Error List, then run the tests again. (2 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up SwiftyJSON: swift package resolve
+  Installing SwiftyJSON's packages: Installing packages: swift package resolve
+  Installing SwiftyJSON's packages: Succeeded after 0.3 s
+  Setting up projects: Succeeded after 3.3 s
+  Building SwiftyJSON: Building SwiftyJSON
+  Building SwiftyJSON: Building SwiftyJSON 33/41
+  Building SwiftyJSON: Building SwiftyJSON 38/41
+  Building SwiftyJSON: Failed after 6.7 s
+  Testing SwiftyJSON: Running SwiftyJSON's tests
+  Testing SwiftyJSON: Building 19/39
+  Testing SwiftyJSON: Building 20/39
+  Testing SwiftyJSON: Building 22/39
+  Testing SwiftyJSON: Failed after 2.1 s
+Project setup:
+
+Output:
+------ Build started: SwiftyJSON (Swift) ------
+> swift build
+Building for debugging...
+[Pre-planning 1 / 124]
+[Starting]
+[33 / 41] SwiftyJSON
+[38 / 41] SwiftyJSON
+error: SwiftCompile normal x86_64 /home/runner/work/_temp/repos/SwiftyJSON/Source/SwiftyJSON/SwiftyJSON.swift failed with a nonzero exit code. Command line:     cd /home/runner/work/_temp/repos
+    builtin-SwiftPerFileCompile SwiftyJSON.swift
+/home/runner/work/_temp/repos/SwiftyJSON/Source/SwiftyJSON/SwiftyJSON.swift:1211:51: error: ambiguous use of operator '<'
+1209 | 
+1210 |     switch (lhs.type, rhs.type) {
+1211 |     case (.number, .number): return lhs.rawNumber < rhs.rawNumber
+     |                                                   `- error: ambiguous use of operator '<'
+1212 |     case (.string, .string): return lhs.rawString < rhs.rawString
+1213 |     default:                 return false
+     :
+1245 | }
+1246 | 
+1247 | func < (lhs: NSNumber, rhs: NSNumber) -> Bool {
+     |      `- note: found this candidate 
+1248 | 
+1249 |     switch (lhs.isBool, rhs.isBool) {
+
+Foundation.NSNumber.<:2:20: note: found this candidate in module 'Foundation'
+1 | class NSNumber {
+2 | public static func < (lhs: NSNumber, rhs: NSNumber) -> Bool}
+  |                    `- note: found this candidate in module 'Foundation'
+3 | 
+Failed frontend command:
+/home/runner/work/_temp/swift/usr/bin/swift-frontend -frontend -c /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/DerivedSources/resource_bundle_accessor.swift -primary-file /home/runner/work/_temp/repos/SwiftyJSON/Source/SwiftyJSON/SwiftyJSON.swift -emit-dependencies-path /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/Objects-normal/x86_64/SwiftyJSON.d -emit-const-values-path /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/Objects-normal/x86_64/SwiftyJSON.swiftconstvalues -emit-reference-dependencies-path /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/Objects-normal/x86_64/SwiftyJSON.swiftdeps -serialize-diagnostics-path /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/Objects-normal/x86_64/SwiftyJSON.dia -target x86_64-unknown-linux-gnu -disable-objc-interop -I /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Products/Debug-linux-x86_64 -module-cache-path /home/runner/work/_temp/repos/SwiftyJSON/.build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE -D Xcode -serialize-debugging-options -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /home/runner/work/_temp/swift/usr/lib/swift/host/plugins/testing\#/home/runner/work/_temp/swift/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file /home/runner/work/_temp/repos/SwiftyJSON/.build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /home/runner/work/_temp/repos -enable-anonymous-context-mangled-names -file-compilation-dir /home/runner/work/_temp/repos -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -Xcc -I/home/runner/work/_temp/repos/SwiftyJSON/.build/out/Products/Debug-linux-x86_64/include -Xcc -I/home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/DerivedSources-normal/x86_64 -Xcc -I/home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/DerivedSources/x86_64 -Xcc -I/home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\=1 -no-auto-bridging-header-chaining -module-name SwiftyJSON -package-name swiftyjson -const-gather-protocols-file /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/Objects-normal/x86_64/SwiftyJSON_const_extract_protocols.json -in-process-plugin-server-path /home/runner/work/_temp/swift/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /home/runner/work/_temp/swift/usr/lib/swift/host/plugins -plugin-path /home/runner/work/_temp/swift/usr/local/lib/swift/host/plugins -parse-as-library -o /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/Objects-normal/x86_64/SwiftyJSON.o -index-unit-output-path /SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/Objects-normal/x86_64/SwiftyJSON.o -index-store-path /home/runner/work/_temp/repos/SwiftyJSON/.build/out -index-system-modules
+error: Build failed
+SwiftyJSON: build failed.
+========== Build: 0 succeeded, 1 failed ==========
+========== Running SwiftyJSON's tests with SwiftPM ==========
+> swift test --parallel --xunit-output /home/runner/work/_temp/repos/SwiftyJSON/.tabstudio/test-results/0ac6a630604b4d6ab52aacaa3642ce04/swift.xml --experimental-xunit-message-failure
+Building for debugging...
+[Constructing description]
+[Planning deferred tasks]
+[19 / 39] SwiftJSONTests-product
+[20 / 39] SwiftJSONTests-product
+[22 / 39] SwiftJSONTests-product
+error: SwiftCompile normal x86_64 /home/runner/work/_temp/repos/SwiftyJSON/Source/SwiftyJSON/SwiftyJSON.swift failed with a nonzero exit code. Command line:     cd /home/runner/work/_temp/repos
+    builtin-SwiftPerFileCompile SwiftyJSON.swift
+/home/runner/work/_temp/repos/SwiftyJSON/Source/SwiftyJSON/SwiftyJSON.swift:1211:51: error: ambiguous use of operator '<'
+1209 | 
+1210 |     switch (lhs.type, rhs.type) {
+1211 |     case (.number, .number): return lhs.rawNumber < rhs.rawNumber
+     |                                                   `- error: ambiguous use of operator '<'
+1212 |     case (.string, .string): return lhs.rawString < rhs.rawString
+1213 |     default:                 return false
+     :
+1245 | }
+1246 | 
+1247 | func < (lhs: NSNumber, rhs: NSNumber) -> Bool {
+     |      `- note: found this candidate 
+1248 | 
+1249 |     switch (lhs.isBool, rhs.isBool) {
+
+Foundation.NSNumber.<:2:20: note: found this candidate in module 'Foundation'
+1 | class NSNumber {
+2 | public static func < (lhs: NSNumber, rhs: NSNumber) -> Bool}
+  |                    `- note: found this candidate in module 'Foundation'
+3 | 
+Failed frontend command:
+/home/runner/work/_temp/swift/usr/bin/swift-frontend -frontend -c /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/DerivedSources/resource_bundle_accessor.swift -primary-file /home/runner/work/_temp/repos/SwiftyJSON/Source/SwiftyJSON/SwiftyJSON.swift -emit-dependencies-path /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/Objects-normal/x86_64/SwiftyJSON.d -emit-const-values-path /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/Objects-normal/x86_64/SwiftyJSON.swiftconstvalues -emit-reference-dependencies-path /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/Objects-normal/x86_64/SwiftyJSON.swiftdeps -serialize-diagnostics-path /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/Objects-normal/x86_64/SwiftyJSON.dia -target x86_64-unknown-linux-gnu -disable-objc-interop -I /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Products/Debug-linux-x86_64 -module-cache-path /home/runner/work/_temp/repos/SwiftyJSON/.build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE -D Xcode -serialize-debugging-options -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /home/runner/work/_temp/swift/usr/lib/swift/host/plugins/testing\#/home/runner/work/_temp/swift/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file /home/runner/work/_temp/repos/SwiftyJSON/.build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /home/runner/work/_temp/repos -enable-anonymous-context-mangled-names -file-compilation-dir /home/runner/work/_temp/repos -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -Xcc -I/home/runner/work/_temp/repos/SwiftyJSON/.build/out/Products/Debug-linux-x86_64/include -Xcc -I/home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/DerivedSources-normal/x86_64 -Xcc -I/home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/DerivedSources/x86_64 -Xcc -I/home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\=1 -no-auto-bridging-header-chaining -module-name SwiftyJSON -package-name swiftyjson -const-gather-protocols-file /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/Objects-normal/x86_64/SwiftyJSON_const_extract_protocols.json -in-process-plugin-server-path /home/runner/work/_temp/swift/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /home/runner/work/_temp/swift/usr/lib/swift/host/plugins -plugin-path /home/runner/work/_temp/swift/usr/local/lib/swift/host/plugins -parse-as-library -o /home/runner/work/_temp/repos/SwiftyJSON/.build/out/Intermediates.noindex/SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/Objects-normal/x86_64/SwiftyJSON.o -index-unit-output-path /SwiftyJSON.build/Debug-linux-x86_64/SwiftyJSON-t.build/Objects-normal/x86_64/SwiftyJSON.o -index-store-path /home/runner/work/_temp/repos/SwiftyJSON/.build/out -index-system-modules
+error: Build failed
+error: fatalError
+SwiftyJSON's tests did not run: the build or the test runner failed. See the Error List and the output above.
+
