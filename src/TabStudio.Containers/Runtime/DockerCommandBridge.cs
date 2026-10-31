@@ -31,7 +31,8 @@ public sealed class DockerCommandBridge : IAsyncDisposable
     public string ShellScript => $$"""
         #!/bin/sh
         if [ "$1" != '__tabstudio_socket_{{_token}}' ]; then
-          exec busybox nc 127.0.0.1 {{((IPEndPoint)_listener.LocalEndpoint).Port}} -e /bin/sh "$0" '__tabstudio_socket_{{_token}}' "$@" 3<&0 4>&1
+          # Alpine netcat reserves descriptors 3 and 4 for its socket and optional hex dump.
+          exec busybox nc 127.0.0.1 {{((IPEndPoint)_listener.LocalEndpoint).Port}} -e /bin/sh "$0" '__tabstudio_socket_{{_token}}' "$@" 5<&0 6>&1
         fi
         shift
         umask 077
@@ -53,7 +54,7 @@ public sealed class DockerCommandBridge : IAsyncDisposable
             reader=
             trap '[ -z "$reader" ] || kill "$reader" 2>/dev/null; exit' TERM
             while :; do
-              busybox dd bs=1024 count=1 <&3 > "$dir/input" 2>/dev/null &
+              busybox dd bs=1024 count=1 <&5 > "$dir/input" 2>/dev/null &
               reader=$!
               wait "$reader" || break
               reader=
@@ -68,7 +69,7 @@ public sealed class DockerCommandBridge : IAsyncDisposable
         fi
         while IFS= read -r record; do
           case "$record" in
-            O*) printf '%s' "${record#O}" | base64 -d >&4;;
+            O*) printf '%s' "${record#O}" | base64 -d >&6;;
             E*) printf '%s' "${record#E}" | base64 -d >&2;;
             X*) exit "${record#X}";;
           esac
