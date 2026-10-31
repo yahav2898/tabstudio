@@ -1,0 +1,286 @@
+graphql-workshop at e50a7b03794bb64bea7bcff84f1a299bc3cd5ca5, opening /home/runner/work/_temp/repos/graphql-workshop/code/session-7/ConferencePlanner.sln
+Opened in 0.2 s: ConferencePlanner, solution /home/runner/work/_temp/repos/graphql-workshop/code/session-7/ConferencePlanner.sln
+  project GraphQL [CSharp] /home/runner/work/_temp/repos/graphql-workshop/code/session-7/GraphQL/GraphQL.csproj
+  project GraphQL.Tests [CSharp] /home/runner/work/_temp/repos/graphql-workshop/code/session-7/GraphQL.Tests/GraphQL.Tests.csproj
+Compatibility Doctor:
+  GraphQL: Ready via Local server + WebView - Served on this device and shown in the web preview beside the code. Saving a file restarts it.
+  GraphQL.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+F5 startup project: GraphQL /home/runner/work/_temp/repos/graphql-workshop/code/session-7/GraphQL/GraphQL.csproj
+Error List after analysis: 2 errors, 4 warnings
+  2 x NU1107
+      [GraphQL] error NU1107: Version conflict detected for Microsoft.EntityFrameworkCore. Reference Microsoft.EntityFrameworkCore 10.0.0 directly from GraphQL to resolve it.
+  GraphQL -> HotChocolate.Data.EntityFramework 16.6.9 -> Microsoft.EntityFrameworkCore (>= 10.0.0)
+  GraphQL -> Npgsql.EntityFrameworkCore.PostgreSQL 9.0.4 -> Microsoft.EntityFrameworkCore (>= 9.0.1 && < 10.0.0)
+      [GraphQL.Tests] error NU1107: Version conflict detected for Microsoft.EntityFrameworkCore. Reference Microsoft.EntityFrameworkCore 10.0.0 directly from GraphQL.Tests to resolve it.
+  GraphQL.Tests -> GraphQL -> HotChocolate.Data.EntityFramework 16.6.9 -> Microsoft.EntityFrameworkCore (>= 10.0.0)
+  GraphQL.Tests -> GraphQL -> Npgsql.EntityFrameworkCore.PostgreSQL 9.0.4 -> Microsoft.EntityFrameworkCore (>= 9.0.1 && < 10.0.0)
+Error List after the build: 2 errors, 4 warnings
+  2 x NU1107
+      [GraphQL] error NU1107: Version conflict detected for Microsoft.EntityFrameworkCore. Reference Microsoft.EntityFrameworkCore 10.0.0 directly from GraphQL to resolve it.
+  GraphQL -> HotChocolate.Data.EntityFramework 16.6.9 -> Microsoft.EntityFrameworkCore (>= 10.0.0)
+  GraphQL -> Npgsql.EntityFrameworkCore.PostgreSQL 9.0.4 -> Microsoft.EntityFrameworkCore (>= 9.0.1 && < 10.0.0)
+      [GraphQL.Tests] error NU1107: Version conflict detected for Microsoft.EntityFrameworkCore. Reference Microsoft.EntityFrameworkCore 10.0.0 directly from GraphQL.Tests to resolve it.
+  GraphQL.Tests -> GraphQL -> HotChocolate.Data.EntityFramework 16.6.9 -> Microsoft.EntityFrameworkCore (>= 10.0.0)
+  GraphQL.Tests -> GraphQL -> Npgsql.EntityFrameworkCore.PostgreSQL 9.0.4 -> Microsoft.EntityFrameworkCore (>= 9.0.1 && < 10.0.0)
+GET http://127.0.0.1:36895/graphql: 200, 1037 characters
+Run: GET /graphql 200 (3 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/graphql-workshop/code/session-7/GraphQL/Program.cs:5
+Debug: did not stop at Program.cs:5 within 10 min (600 s)
+Tests: 2 found; 1 passed, 1 failed, 0 skipped, 0 not run - 2 tests run in 9.9 sec: 1 passed, 1 failed, 0 skipped. (11 s)
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring NuGet packages 0/2 projects
+  Analyzing: Analyzing 0/2 projects
+  Analyzing: Analyzing 1/2 projects
+  Analyzing: Analyzing 2/2 projects
+  Analyzing: Succeeded after 0.3 s
+  Restoring NuGet packages: Downloading NuGet packages 1/96
+  Restoring NuGet packages: Downloading NuGet packages 2/96
+  Restoring NuGet packages: Downloading NuGet packages 3/96
+  Restoring NuGet packages: Downloading NuGet packages 4/96
+  Restoring NuGet packages: Downloading NuGet packages 5/96
+  Restoring NuGet packages: Downloading NuGet packages 6/96
+  Restoring NuGet packages: Downloading NuGet packages 7/96
+  Restoring NuGet packages: Downloading NuGet packages 8/96
+  Restoring NuGet packages: Downloading NuGet packages 9/96
+  Restoring NuGet packages: Downloading NuGet packages 10/96
+  Restoring NuGet packages: Downloading NuGet packages 11/96
+  Restoring NuGet packages: Downloading NuGet packages 12/96
+  Restoring NuGet packages: Downloading NuGet packages 13/96
+  Restoring NuGet packages: Downloading NuGet packages 14/96
+  Restoring NuGet packages: Downloading NuGet packages 15/96
+  Restoring NuGet packages: Downloading NuGet packages 16/96
+  Restoring NuGet packages: Downloading NuGet packages 17/96
+  Restoring NuGet packages: Downloading NuGet packages 18/96
+  Restoring NuGet packages: Downloading NuGet packages 19/96
+  Restoring NuGet packages: Downloading NuGet packages 20/96
+  Restoring NuGet packages: Downloading NuGet packages 21/96
+  Restoring NuGet packages: Downloading NuGet packages 22/96
+  Restoring NuGet packages: Downloading NuGet packages 23/96
+  Restoring NuGet packages: Downloading NuGet packages 24/96
+  Restoring NuGet packages: Downloading NuGet packages 25/96
+  Restoring NuGet packages: Downloading NuGet packages 26/96
+  Restoring NuGet packages: Downloading NuGet packages 27/96
+  Restoring NuGet packages: Downloading NuGet packages 28/96
+  Restoring NuGet packages: Downloading NuGet packages 29/96
+  Restoring NuGet packages: Downloading NuGet packages 30/96
+  Restoring NuGet packages: Downloading NuGet packages 31/96
+  Restoring NuGet packages: Downloading NuGet packages 32/96
+  Restoring NuGet packages: Downloading NuGet packages 33/96
+  Restoring NuGet packages: Downloading NuGet packages 34/96
+  Restoring NuGet packages: Downloading NuGet packages 35/96
+  Restoring NuGet packages: Downloading NuGet packages 36/96
+  Restoring NuGet packages: Downloading NuGet packages 37/96
+  Restoring NuGet packages: Downloading NuGet packages 38/96
+  Restoring NuGet packages: Downloading NuGet packages 39/96
+  Restoring NuGet packages: Downloading NuGet packages 40/96
+  Restoring NuGet packages: Downloading NuGet packages 41/96
+  Restoring NuGet packages: Downloading NuGet packages 42/96
+  Restoring NuGet packages: Downloading NuGet packages 43/96
+  Restoring NuGet packages: Downloading NuGet packages 44/96
+  Restoring NuGet packages: Downloading NuGet packages 45/96
+  Restoring NuGet packages: Downloading NuGet packages 46/96
+  Restoring NuGet packages: Downloading NuGet packages 47/96
+  Restoring NuGet packages: Downloading NuGet packages 48/96
+  Restoring NuGet packages: Downloading NuGet packages 49/96
+  Restoring NuGet packages: Downloading NuGet packages 50/96
+  Restoring NuGet packages: Downloading NuGet packages 51/96
+  Restoring NuGet packages: Downloading NuGet packages 52/96
+  Restoring NuGet packages: Downloading NuGet packages 53/96
+  Restoring NuGet packages: Downloading NuGet packages 54/96
+  Restoring NuGet packages: Downloading NuGet packages 55/96
+  Restoring NuGet packages: Downloading NuGet packages 56/96
+  Restoring NuGet packages: Downloading NuGet packages 57/96
+  Restoring NuGet packages: Downloading NuGet packages 58/96
+  Restoring NuGet packages: Downloading NuGet packages 59/96
+  Restoring NuGet packages: Downloading NuGet packages 60/96
+  Restoring NuGet packages: Downloading NuGet packages 61/96
+  Restoring NuGet packages: Downloading NuGet packages 62/96
+  Restoring NuGet packages: Downloading NuGet packages 63/96
+  Restoring NuGet packages: Downloading NuGet packages 64/96
+  Restoring NuGet packages: Downloading NuGet packages 65/96
+  Restoring NuGet packages: Downloading NuGet packages 66/96
+  Restoring NuGet packages: Downloading NuGet packages 67/96
+  Restoring NuGet packages: Downloading NuGet packages 68/96
+  Restoring NuGet packages: Downloading NuGet packages 69/96
+  Restoring NuGet packages: Downloading NuGet packages 70/96
+  Restoring NuGet packages: Downloading NuGet packages 71/96
+  Restoring NuGet packages: Downloading NuGet packages 72/96
+  Restoring NuGet packages: Downloading NuGet packages 73/96
+  Restoring NuGet packages: Downloading NuGet packages 74/96
+  Restoring NuGet packages: Downloading NuGet packages 75/96
+  Restoring NuGet packages: Downloading NuGet packages 76/96
+  Restoring NuGet packages: Downloading NuGet packages 77/96
+  Restoring NuGet packages: Downloading NuGet packages 78/96
+  Restoring NuGet packages: Downloading NuGet packages 79/96
+  Restoring NuGet packages: Downloading NuGet packages 80/96
+  Restoring NuGet packages: Downloading NuGet packages 81/96
+  Restoring NuGet packages: Downloading NuGet packages 82/96
+  Restoring NuGet packages: Downloading NuGet packages 83/96
+  Restoring NuGet packages: Downloading NuGet packages 84/96
+  Restoring NuGet packages: Downloading NuGet packages 85/96
+  Restoring NuGet packages: Downloading NuGet packages 86/96
+  Restoring NuGet packages: Downloading NuGet packages 87/96
+  Restoring NuGet packages: Downloading NuGet packages 88/96
+  Restoring NuGet packages: Downloading NuGet packages 89/96
+  Restoring NuGet packages: Downloading NuGet packages 90/96
+  Restoring NuGet packages: Downloading NuGet packages 91/96
+  Restoring NuGet packages: Downloading NuGet packages 92/96
+  Restoring NuGet packages: Downloading NuGet packages 93/96
+  Restoring NuGet packages: Downloading NuGet packages 94/96
+  Restoring NuGet packages: Downloading NuGet packages 95/96
+  Restoring NuGet packages: Downloading NuGet packages 96/96
+  Restoring NuGet packages: Restoring NuGet packages 1/2 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/118
+  Restoring NuGet packages: Downloading NuGet packages 2/118
+  Restoring NuGet packages: Downloading NuGet packages 3/118
+  Restoring NuGet packages: Downloading NuGet packages 4/118
+  Restoring NuGet packages: Downloading NuGet packages 5/118
+  Restoring NuGet packages: Downloading NuGet packages 6/118
+  Restoring NuGet packages: Downloading NuGet packages 7/118
+  Restoring NuGet packages: Downloading NuGet packages 8/118
+  Restoring NuGet packages: Downloading NuGet packages 9/118
+  Restoring NuGet packages: Downloading NuGet packages 10/118
+  Restoring NuGet packages: Downloading NuGet packages 11/118
+  Restoring NuGet packages: Downloading NuGet packages 12/118
+  Restoring NuGet packages: Downloading NuGet packages 13/118
+  Restoring NuGet packages: Downloading NuGet packages 14/118
+  Restoring NuGet packages: Downloading NuGet packages 15/118
+  Restoring NuGet packages: Downloading NuGet packages 16/118
+  Restoring NuGet packages: Downloading NuGet packages 17/118
+  Restoring NuGet packages: Downloading NuGet packages 18/118
+  Restoring NuGet packages: Downloading NuGet packages 19/118
+  Restoring NuGet packages: Downloading NuGet packages 20/118
+  Restoring NuGet packages: Downloading NuGet packages 21/118
+  Restoring NuGet packages: Downloading NuGet packages 22/118
+  Restoring NuGet packages: Downloading NuGet packages 23/118
+  Restoring NuGet packages: Downloading NuGet packages 24/118
+  Restoring NuGet packages: Downloading NuGet packages 25/118
+  Restoring NuGet packages: Downloading NuGet packages 26/118
+  Restoring NuGet packages: Downloading NuGet packages 27/118
+  Restoring NuGet packages: Downloading NuGet packages 28/118
+  Restoring NuGet packages: Downloading NuGet packages 29/118
+  Restoring NuGet packages: Downloading NuGet packages 30/118
+  Restoring NuGet packages: Downloading NuGet packages 31/118
+  Restoring NuGet packages: Downloading NuGet packages 32/118
+  Restoring NuGet packages: Downloading NuGet packages 33/118
+  Restoring NuGet packages: Downloading NuGet packages 34/118
+  Restoring NuGet packages: Downloading NuGet packages 35/118
+  Restoring NuGet packages: Downloading NuGet packages 36/118
+  Restoring NuGet packages: Downloading NuGet packages 37/118
+  Restoring NuGet packages: Downloading NuGet packages 38/118
+  Restoring NuGet packages: Downloading NuGet packages 39/118
+  Restoring NuGet packages: Downloading NuGet packages 40/118
+  Restoring NuGet packages: Downloading NuGet packages 41/118
+  Restoring NuGet packages: Downloading NuGet packages 42/118
+  Restoring NuGet packages: Downloading NuGet packages 43/118
+  Restoring NuGet packages: Downloading NuGet packages 44/118
+  Restoring NuGet packages: Downloading NuGet packages 45/118
+  Restoring NuGet packages: Downloading NuGet packages 46/118
+  Restoring NuGet packages: Downloading NuGet packages 47/118
+  Restoring NuGet packages: Downloading NuGet packages 48/118
+  Restoring NuGet packages: Downloading NuGet packages 49/118
+  Restoring NuGet packages: Downloading NuGet packages 50/118
+  Restoring NuGet packages: Downloading NuGet packages 51/118
+  Restoring NuGet packages: Downloading NuGet packages 52/118
+  Restoring NuGet packages: Downloading NuGet packages 53/118
+  Restoring NuGet packages: Downloading NuGet packages 54/118
+  Restoring NuGet packages: Downloading NuGet packages 55/118
+  Restoring NuGet packages: Downloading NuGet packages 56/118
+  Restoring NuGet packages: Downloading NuGet packages 57/118
+  Restoring NuGet packages: Downloading NuGet packages 58/118
+  Restoring NuGet packages: Downloading NuGet packages 59/118
+  Restoring NuGet packages: Downloading NuGet packages 60/118
+  Restoring NuGet packages: Downloading NuGet packages 61/118
+  Restoring NuGet packages: Downloading NuGet packages 62/118
+  Restoring NuGet packages: Downloading NuGet packages 63/118
+  Restoring NuGet packages: Downloading NuGet packages 64/118
+  Restoring NuGet packages: Downloading NuGet packages 65/118
+  Restoring NuGet packages: Downloading NuGet packages 66/118
+  Restoring NuGet packages: Downloading NuGet packages 67/118
+  Restoring NuGet packages: Downloading NuGet packages 68/118
+  Restoring NuGet packages: Downloading NuGet packages 69/118
+  Restoring NuGet packages: Downloading NuGet packages 70/118
+  Restoring NuGet packages: Downloading NuGet packages 71/118
+  Restoring NuGet packages: Downloading NuGet packages 72/118
+  Restoring NuGet packages: Downloading NuGet packages 73/118
+  Restoring NuGet packages: Downloading NuGet packages 74/118
+  Restoring NuGet packages: Downloading NuGet packages 75/118
+  Restoring NuGet packages: Downloading NuGet packages 76/118
+  Restoring NuGet packages: Downloading NuGet packages 77/118
+  Restoring NuGet packages: Downloading NuGet packages 78/118
+  Restoring NuGet packages: Downloading NuGet packages 79/118
+  Restoring NuGet packages: Downloading NuGet packages 80/118
+  Restoring NuGet packages: Downloading NuGet packages 81/118
+  Restoring NuGet packages: Downloading NuGet packages 82/118
+  Restoring NuGet packages: Downloading NuGet packages 83/118
+  Restoring NuGet packages: Downloading NuGet packages 84/118
+  Restoring NuGet packages: Downloading NuGet packages 85/118
+  Restoring NuGet packages: Downloading NuGet packages 86/118
+  Restoring NuGet packages: Downloading NuGet packages 87/118
+  Restoring NuGet packages: Downloading NuGet packages 88/118
+  Restoring NuGet packages: Downloading NuGet packages 89/118
+  Restoring NuGet packages: Downloading NuGet packages 90/118
+  Restoring NuGet packages: Downloading NuGet packages 91/118
+  Restoring NuGet packages: Downloading NuGet packages 92/118
+  Restoring NuGet packages: Downloading NuGet packages 93/118
+  Restoring NuGet packages: Downloading NuGet packages 94/118
+  Restoring NuGet packages: Downloading NuGet packages 95/118
+  Restoring NuGet packages: Downloading NuGet packages 96/118
+  Restoring NuGet packages: Downloading NuGet packages 97/118
+  Restoring NuGet packages: Downloading NuGet packages 98/118
+  Restoring NuGet packages: Downloading NuGet packages 99/118
+  Restoring NuGet packages: Downloading NuGet packages 100/118
+  Restoring NuGet packages: Downloading NuGet packages 101/118
+  Restoring NuGet packages: Downloading NuGet packages 102/118
+  Restoring NuGet packages: Downloading NuGet packages 103/118
+  Restoring NuGet packages: Downloading NuGet packages 104/118
+  Restoring NuGet packages: Downloading NuGet packages 105/118
+  Restoring NuGet packages: Downloading NuGet packages 106/118
+  Restoring NuGet packages: Downloading NuGet packages 107/118
+  Restoring NuGet packages: Downloading NuGet packages 108/118
+  Restoring NuGet packages: Downloading NuGet packages 109/118
+  Restoring NuGet packages: Downloading NuGet packages 110/118
+  Restoring NuGet packages: Downloading NuGet packages 111/118
+  Restoring NuGet packages: Downloading NuGet packages 112/118
+  Restoring NuGet packages: Downloading NuGet packages 113/118
+  Restoring NuGet packages: Downloading NuGet packages 114/118
+  Restoring NuGet packages: Downloading NuGet packages 115/118
+  Restoring NuGet packages: Downloading NuGet packages 116/118
+  Restoring NuGet packages: Downloading NuGet packages 117/118
+  Restoring NuGet packages: Downloading NuGet packages 118/118
+  Restoring NuGet packages: Failed after 16.1 s
+  Analyzing: Analyzing 0/2 projects
+  Analyzing: Analyzing 1/2 projects
+  Analyzing: Analyzing 2/2 projects
+  Analyzing: Succeeded after 1.1 s
+  Building: Building
+  Building: Building 0/2 projects
+  Building: Building 1/2 projects
+  Building: Succeeded after 0.6 s
+  Building: Building
+  Building: Building GraphQL
+  Building: Succeeded after 0.3 s
+  Building: Building
+  Building: Building GraphQL
+  Building: Succeeded after 0.5 s
+  Building: Building
+  Building: Building GraphQL.Tests
+  Building: Succeeded after 0.5 s
+Project setup:
+
+Output:
+Build started at 01:57:59...
+1>------ Build started: Project: GraphQL.Tests, Configuration: Debug ------
+1>warning: The NuGet restore of GraphQL.Tests reported errors, so it is built without the packages that could not be restored. The Error List shows the restore's errors.
+1>ApplicationDbContext.cs(8,28): warning CS8618: Non-nullable property 'Attendees' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
+1>ApplicationDbContext.cs(10,27): warning CS8618: Non-nullable property 'Sessions' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
+1>ApplicationDbContext.cs(12,27): warning CS8618: Non-nullable property 'Speakers' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
+1>ApplicationDbContext.cs(14,25): warning CS8618: Non-nullable property 'Tracks' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
+1>GraphQL.Tests -> compiled in memory (13 KB, 505 ms)
+========== Build: 1 succeeded, 0 failed ==========
+========== Starting test run ==========
+========== Test run finished: 2 Tests (1 Passed, 1 Failed, 0 Skipped) run in 9.9 sec ==========
+

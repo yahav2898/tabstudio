@@ -1,0 +1,391 @@
+aspire-samples-Metrics at bdc638b61bf8afd8b275d54a9ea7259be377ef8c, opening /home/runner/work/_temp/repos/aspire-samples-Metrics/samples/Metrics/Metrics.slnx
+Opened in 0.2 s: Metrics, solution /home/runner/work/_temp/repos/aspire-samples-Metrics/samples/Metrics/Metrics.slnx
+  project MetricsApp.AppHost [CSharp] /home/runner/work/_temp/repos/aspire-samples-Metrics/samples/Metrics/MetricsApp.AppHost/MetricsApp.AppHost.csproj
+  project MetricsApp.Client [CSharp] /home/runner/work/_temp/repos/aspire-samples-Metrics/samples/Metrics/MetricsApp.Client/MetricsApp.Client.csproj
+  project MetricsApp [CSharp] /home/runner/work/_temp/repos/aspire-samples-Metrics/samples/Metrics/MetricsApp/MetricsApp.csproj
+  project ServiceDefaults [CSharp] /home/runner/work/_temp/repos/aspire-samples-Metrics/samples/Metrics/ServiceDefaults/ServiceDefaults.csproj
+Compatibility Doctor:
+  MetricsApp.AppHost: Not supported via Not on a tablet - An Aspire AppHost starts the app's projects and containers through Aspire's developer control plane, which runs on a computer, and it compiles against code its SDK generates for the projects it references. TabStudio leaves it out of builds; run the projects it starts on their own.
+  MetricsApp.Client: Ready via WebAssembly in the WebView - Compiled for the browser and run on .NET for WebAssembly in the web preview, served from this device. It starts without the debugger: code running in the browser cannot be debugged here. Saving a file reloads it.
+  MetricsApp: Ready via Local server + WebView - Served on this device and shown in the web preview beside the code. Saving a file restarts it.
+  ServiceDefaults: Library via Built with its users - A library is compiled together with the projects that reference it.
+F5 startup project: MetricsApp /home/runner/work/_temp/repos/aspire-samples-Metrics/samples/Metrics/MetricsApp/MetricsApp.csproj
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+GET http://127.0.0.1:44103/: 200, 1586 characters
+Run: GET / 200 (5 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/aspire-samples-Metrics/samples/Metrics/MetricsApp/Program.cs:5
+Debug: did not stop at Program.cs:5 within 10 min (600 s)
+Long-operation progress:
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Restoring NuGet packages: Restoring NuGet packages
+  Restoring NuGet packages: Restoring NuGet packages 0/4 projects
+  Analyzing: Analyzing 0/4 projects
+  Analyzing: Analyzing 1/4 projects
+  Analyzing: Analyzing 2/4 projects
+  Analyzing: Analyzing 3/4 projects
+  Analyzing: Analyzing 4/4 projects
+  Analyzing: Succeeded after 0.5 s
+  Restoring NuGet packages: Downloading NuGet packages 1/131
+  Restoring NuGet packages: Downloading NuGet packages 2/131
+  Restoring NuGet packages: Downloading NuGet packages 3/131
+  Restoring NuGet packages: Downloading NuGet packages 4/131
+  Restoring NuGet packages: Downloading NuGet packages 5/131
+  Restoring NuGet packages: Downloading NuGet packages 6/131
+  Restoring NuGet packages: Downloading NuGet packages 7/131
+  Restoring NuGet packages: Downloading NuGet packages 8/131
+  Restoring NuGet packages: Downloading NuGet packages 9/131
+  Restoring NuGet packages: Downloading NuGet packages 10/131
+  Restoring NuGet packages: Downloading NuGet packages 11/131
+  Restoring NuGet packages: Downloading NuGet packages 12/131
+  Restoring NuGet packages: Downloading NuGet packages 13/131
+  Restoring NuGet packages: Downloading NuGet packages 14/131
+  Restoring NuGet packages: Downloading NuGet packages 15/131
+  Restoring NuGet packages: Downloading NuGet packages 16/131
+  Restoring NuGet packages: Downloading NuGet packages 17/131
+  Restoring NuGet packages: Downloading NuGet packages 18/131
+  Restoring NuGet packages: Downloading NuGet packages 19/131
+  Restoring NuGet packages: Downloading NuGet packages 20/131
+  Restoring NuGet packages: Downloading NuGet packages 21/131
+  Restoring NuGet packages: Downloading NuGet packages 22/131
+  Restoring NuGet packages: Downloading NuGet packages 23/131
+  Restoring NuGet packages: Downloading NuGet packages 24/131
+  Restoring NuGet packages: Downloading NuGet packages 25/131
+  Restoring NuGet packages: Downloading NuGet packages 26/131
+  Restoring NuGet packages: Downloading NuGet packages 27/131
+  Restoring NuGet packages: Downloading NuGet packages 28/131
+  Restoring NuGet packages: Downloading NuGet packages 29/131
+  Restoring NuGet packages: Downloading NuGet packages 30/131
+  Restoring NuGet packages: Downloading NuGet packages 31/131
+  Restoring NuGet packages: Downloading NuGet packages 32/131
+  Restoring NuGet packages: Downloading NuGet packages 33/131
+  Restoring NuGet packages: Downloading NuGet packages 34/131
+  Restoring NuGet packages: Downloading NuGet packages 35/131
+  Restoring NuGet packages: Downloading NuGet packages 36/131
+  Restoring NuGet packages: Downloading NuGet packages 37/131
+  Restoring NuGet packages: Downloading NuGet packages 38/131
+  Restoring NuGet packages: Downloading NuGet packages 39/131
+  Restoring NuGet packages: Downloading NuGet packages 40/131
+  Restoring NuGet packages: Downloading NuGet packages 41/131
+  Restoring NuGet packages: Downloading NuGet packages 42/131
+  Restoring NuGet packages: Downloading NuGet packages 43/131
+  Restoring NuGet packages: Downloading NuGet packages 44/131
+  Restoring NuGet packages: Downloading NuGet packages 45/131
+  Restoring NuGet packages: Downloading NuGet packages 46/131
+  Restoring NuGet packages: Downloading NuGet packages 47/131
+  Restoring NuGet packages: Downloading NuGet packages 48/131
+  Restoring NuGet packages: Downloading NuGet packages 49/131
+  Restoring NuGet packages: Downloading NuGet packages 50/131
+  Restoring NuGet packages: Downloading NuGet packages 51/131
+  Restoring NuGet packages: Downloading NuGet packages 52/131
+  Restoring NuGet packages: Downloading NuGet packages 53/131
+  Restoring NuGet packages: Downloading NuGet packages 54/131
+  Restoring NuGet packages: Downloading NuGet packages 55/131
+  Restoring NuGet packages: Downloading NuGet packages 56/131
+  Restoring NuGet packages: Downloading NuGet packages 57/131
+  Restoring NuGet packages: Downloading NuGet packages 58/131
+  Restoring NuGet packages: Downloading NuGet packages 59/131
+  Restoring NuGet packages: Downloading NuGet packages 60/131
+  Restoring NuGet packages: Downloading NuGet packages 61/131
+  Restoring NuGet packages: Downloading NuGet packages 62/131
+  Restoring NuGet packages: Downloading NuGet packages 63/131
+  Restoring NuGet packages: Downloading NuGet packages 64/131
+  Restoring NuGet packages: Downloading NuGet packages 65/131
+  Restoring NuGet packages: Downloading NuGet packages 66/131
+  Restoring NuGet packages: Downloading NuGet packages 67/131
+  Restoring NuGet packages: Downloading NuGet packages 68/131
+  Restoring NuGet packages: Downloading NuGet packages 69/131
+  Restoring NuGet packages: Downloading NuGet packages 70/131
+  Restoring NuGet packages: Downloading NuGet packages 71/131
+  Restoring NuGet packages: Downloading NuGet packages 72/131
+  Restoring NuGet packages: Downloading NuGet packages 73/131
+  Restoring NuGet packages: Downloading NuGet packages 74/131
+  Restoring NuGet packages: Downloading NuGet packages 75/131
+  Restoring NuGet packages: Downloading NuGet packages 76/131
+  Restoring NuGet packages: Downloading NuGet packages 77/131
+  Restoring NuGet packages: Downloading NuGet packages 78/131
+  Restoring NuGet packages: Downloading NuGet packages 79/131
+  Restoring NuGet packages: Downloading NuGet packages 80/131
+  Restoring NuGet packages: Downloading NuGet packages 81/131
+  Restoring NuGet packages: Downloading NuGet packages 82/131
+  Restoring NuGet packages: Downloading NuGet packages 83/131
+  Restoring NuGet packages: Downloading NuGet packages 84/131
+  Restoring NuGet packages: Downloading NuGet packages 85/131
+  Restoring NuGet packages: Downloading NuGet packages 86/131
+  Restoring NuGet packages: Downloading NuGet packages 87/131
+  Restoring NuGet packages: Downloading NuGet packages 88/131
+  Restoring NuGet packages: Downloading NuGet packages 89/131
+  Restoring NuGet packages: Downloading NuGet packages 90/131
+  Restoring NuGet packages: Downloading NuGet packages 91/131
+  Restoring NuGet packages: Downloading NuGet packages 92/131
+  Restoring NuGet packages: Downloading NuGet packages 93/131
+  Restoring NuGet packages: Downloading NuGet packages 94/131
+  Restoring NuGet packages: Downloading NuGet packages 95/131
+  Restoring NuGet packages: Downloading NuGet packages 96/131
+  Restoring NuGet packages: Downloading NuGet packages 97/131
+  Restoring NuGet packages: Downloading NuGet packages 98/131
+  Restoring NuGet packages: Downloading NuGet packages 99/131
+  Restoring NuGet packages: Downloading NuGet packages 100/131
+  Restoring NuGet packages: Downloading NuGet packages 101/131
+  Restoring NuGet packages: Downloading NuGet packages 102/131
+  Restoring NuGet packages: Downloading NuGet packages 103/131
+  Restoring NuGet packages: Downloading NuGet packages 104/131
+  Restoring NuGet packages: Downloading NuGet packages 105/131
+  Restoring NuGet packages: Downloading NuGet packages 106/131
+  Restoring NuGet packages: Downloading NuGet packages 107/131
+  Restoring NuGet packages: Downloading NuGet packages 108/131
+  Restoring NuGet packages: Downloading NuGet packages 109/131
+  Restoring NuGet packages: Downloading NuGet packages 110/131
+  Restoring NuGet packages: Downloading NuGet packages 111/131
+  Restoring NuGet packages: Downloading NuGet packages 112/131
+  Restoring NuGet packages: Downloading NuGet packages 113/131
+  Restoring NuGet packages: Downloading NuGet packages 114/131
+  Restoring NuGet packages: Downloading NuGet packages 115/131
+  Restoring NuGet packages: Downloading NuGet packages 116/131
+  Restoring NuGet packages: Downloading NuGet packages 117/131
+  Restoring NuGet packages: Downloading NuGet packages 118/131
+  Restoring NuGet packages: Downloading NuGet packages 119/131
+  Restoring NuGet packages: Downloading NuGet packages 120/131
+  Restoring NuGet packages: Downloading NuGet packages 121/131
+  Restoring NuGet packages: Downloading NuGet packages 122/131
+  Restoring NuGet packages: Downloading NuGet packages 123/131
+  Restoring NuGet packages: Downloading NuGet packages 124/131
+  Restoring NuGet packages: Downloading NuGet packages 125/131
+  Restoring NuGet packages: Downloading NuGet packages 126/131
+  Restoring NuGet packages: Downloading NuGet packages 127/131
+  Restoring NuGet packages: Downloading NuGet packages 128/131
+  Restoring NuGet packages: Downloading NuGet packages 129/131
+  Restoring NuGet packages: Downloading NuGet packages 130/131
+  Restoring NuGet packages: Downloading NuGet packages 131/131
+  Restoring NuGet packages: Restoring NuGet packages 1/4 projects
+  Restoring NuGet packages: Downloading NuGet packages 2/47
+  Restoring NuGet packages: Downloading NuGet packages 1/47
+  Restoring NuGet packages: Downloading NuGet packages 4/47
+  Restoring NuGet packages: Downloading NuGet packages 3/47
+  Restoring NuGet packages: Downloading NuGet packages 5/47
+  Restoring NuGet packages: Downloading NuGet packages 6/47
+  Restoring NuGet packages: Downloading NuGet packages 7/47
+  Restoring NuGet packages: Downloading NuGet packages 8/47
+  Restoring NuGet packages: Downloading NuGet packages 9/47
+  Restoring NuGet packages: Downloading NuGet packages 10/47
+  Restoring NuGet packages: Downloading NuGet packages 11/47
+  Restoring NuGet packages: Downloading NuGet packages 12/47
+  Restoring NuGet packages: Downloading NuGet packages 13/47
+  Restoring NuGet packages: Downloading NuGet packages 14/47
+  Restoring NuGet packages: Downloading NuGet packages 15/47
+  Restoring NuGet packages: Downloading NuGet packages 16/47
+  Restoring NuGet packages: Downloading NuGet packages 17/47
+  Restoring NuGet packages: Downloading NuGet packages 18/47
+  Restoring NuGet packages: Downloading NuGet packages 19/47
+  Restoring NuGet packages: Downloading NuGet packages 20/47
+  Restoring NuGet packages: Downloading NuGet packages 21/47
+  Restoring NuGet packages: Downloading NuGet packages 22/47
+  Restoring NuGet packages: Downloading NuGet packages 23/47
+  Restoring NuGet packages: Downloading NuGet packages 24/47
+  Restoring NuGet packages: Downloading NuGet packages 25/47
+  Restoring NuGet packages: Downloading NuGet packages 26/47
+  Restoring NuGet packages: Downloading NuGet packages 27/47
+  Restoring NuGet packages: Downloading NuGet packages 28/47
+  Restoring NuGet packages: Downloading NuGet packages 29/47
+  Restoring NuGet packages: Downloading NuGet packages 30/47
+  Restoring NuGet packages: Downloading NuGet packages 31/47
+  Restoring NuGet packages: Downloading NuGet packages 32/47
+  Restoring NuGet packages: Downloading NuGet packages 33/47
+  Restoring NuGet packages: Downloading NuGet packages 34/47
+  Restoring NuGet packages: Downloading NuGet packages 35/47
+  Restoring NuGet packages: Downloading NuGet packages 36/47
+  Restoring NuGet packages: Downloading NuGet packages 37/47
+  Restoring NuGet packages: Downloading NuGet packages 38/47
+  Restoring NuGet packages: Downloading NuGet packages 39/47
+  Restoring NuGet packages: Downloading NuGet packages 40/47
+  Restoring NuGet packages: Downloading NuGet packages 41/47
+  Restoring NuGet packages: Downloading NuGet packages 42/47
+  Restoring NuGet packages: Downloading NuGet packages 43/47
+  Restoring NuGet packages: Downloading NuGet packages 44/47
+  Restoring NuGet packages: Downloading NuGet packages 45/47
+  Restoring NuGet packages: Downloading NuGet packages 46/47
+  Restoring NuGet packages: Downloading NuGet packages 47/47
+  Restoring NuGet packages: Restoring NuGet packages 2/4 projects
+  Restoring NuGet packages: Downloading NuGet packages 1/86
+  Restoring NuGet packages: Downloading NuGet packages 2/86
+  Restoring NuGet packages: Downloading NuGet packages 3/86
+  Restoring NuGet packages: Downloading NuGet packages 4/86
+  Restoring NuGet packages: Downloading NuGet packages 5/86
+  Restoring NuGet packages: Downloading NuGet packages 6/86
+  Restoring NuGet packages: Downloading NuGet packages 7/86
+  Restoring NuGet packages: Downloading NuGet packages 8/86
+  Restoring NuGet packages: Downloading NuGet packages 9/86
+  Restoring NuGet packages: Downloading NuGet packages 10/86
+  Restoring NuGet packages: Downloading NuGet packages 11/86
+  Restoring NuGet packages: Downloading NuGet packages 12/86
+  Restoring NuGet packages: Downloading NuGet packages 13/86
+  Restoring NuGet packages: Downloading NuGet packages 14/86
+  Restoring NuGet packages: Downloading NuGet packages 15/86
+  Restoring NuGet packages: Downloading NuGet packages 16/86
+  Restoring NuGet packages: Downloading NuGet packages 17/86
+  Restoring NuGet packages: Downloading NuGet packages 18/86
+  Restoring NuGet packages: Downloading NuGet packages 19/86
+  Restoring NuGet packages: Downloading NuGet packages 20/86
+  Restoring NuGet packages: Downloading NuGet packages 21/86
+  Restoring NuGet packages: Downloading NuGet packages 22/86
+  Restoring NuGet packages: Downloading NuGet packages 23/86
+  Restoring NuGet packages: Downloading NuGet packages 25/86
+  Restoring NuGet packages: Downloading NuGet packages 24/86
+  Restoring NuGet packages: Downloading NuGet packages 26/86
+  Restoring NuGet packages: Downloading NuGet packages 27/86
+  Restoring NuGet packages: Downloading NuGet packages 28/86
+  Restoring NuGet packages: Downloading NuGet packages 29/86
+  Restoring NuGet packages: Downloading NuGet packages 30/86
+  Restoring NuGet packages: Downloading NuGet packages 31/86
+  Restoring NuGet packages: Downloading NuGet packages 33/86
+  Restoring NuGet packages: Downloading NuGet packages 32/86
+  Restoring NuGet packages: Downloading NuGet packages 34/86
+  Restoring NuGet packages: Downloading NuGet packages 35/86
+  Restoring NuGet packages: Downloading NuGet packages 36/86
+  Restoring NuGet packages: Downloading NuGet packages 37/86
+  Restoring NuGet packages: Downloading NuGet packages 39/86
+  Restoring NuGet packages: Downloading NuGet packages 38/86
+  Restoring NuGet packages: Downloading NuGet packages 40/86
+  Restoring NuGet packages: Downloading NuGet packages 41/86
+  Restoring NuGet packages: Downloading NuGet packages 42/86
+  Restoring NuGet packages: Downloading NuGet packages 43/86
+  Restoring NuGet packages: Downloading NuGet packages 44/86
+  Restoring NuGet packages: Downloading NuGet packages 45/86
+  Restoring NuGet packages: Downloading NuGet packages 47/86
+  Restoring NuGet packages: Downloading NuGet packages 48/86
+  Restoring NuGet packages: Downloading NuGet packages 46/86
+  Restoring NuGet packages: Downloading NuGet packages 49/86
+  Restoring NuGet packages: Downloading NuGet packages 50/86
+  Restoring NuGet packages: Downloading NuGet packages 51/86
+  Restoring NuGet packages: Downloading NuGet packages 52/86
+  Restoring NuGet packages: Downloading NuGet packages 53/86
+  Restoring NuGet packages: Downloading NuGet packages 54/86
+  Restoring NuGet packages: Downloading NuGet packages 55/86
+  Restoring NuGet packages: Downloading NuGet packages 56/86
+  Restoring NuGet packages: Downloading NuGet packages 57/86
+  Restoring NuGet packages: Downloading NuGet packages 58/86
+  Restoring NuGet packages: Downloading NuGet packages 59/86
+  Restoring NuGet packages: Downloading NuGet packages 60/86
+  Restoring NuGet packages: Downloading NuGet packages 61/86
+  Restoring NuGet packages: Downloading NuGet packages 62/86
+  Restoring NuGet packages: Downloading NuGet packages 63/86
+  Restoring NuGet packages: Downloading NuGet packages 64/86
+  Restoring NuGet packages: Downloading NuGet packages 65/86
+  Restoring NuGet packages: Downloading NuGet packages 66/86
+  Restoring NuGet packages: Downloading NuGet packages 67/86
+  Restoring NuGet packages: Downloading NuGet packages 68/86
+  Restoring NuGet packages: Downloading NuGet packages 69/86
+  Restoring NuGet packages: Downloading NuGet packages 70/86
+  Restoring NuGet packages: Downloading NuGet packages 71/86
+  Restoring NuGet packages: Downloading NuGet packages 72/86
+  Restoring NuGet packages: Downloading NuGet packages 73/86
+  Restoring NuGet packages: Downloading NuGet packages 74/86
+  Restoring NuGet packages: Downloading NuGet packages 75/86
+  Restoring NuGet packages: Downloading NuGet packages 76/86
+  Restoring NuGet packages: Downloading NuGet packages 77/86
+  Restoring NuGet packages: Downloading NuGet packages 78/86
+  Restoring NuGet packages: Downloading NuGet packages 79/86
+  Restoring NuGet packages: Downloading NuGet packages 80/86
+  Restoring NuGet packages: Downloading NuGet packages 81/86
+  Restoring NuGet packages: Downloading NuGet packages 82/86
+  Restoring NuGet packages: Downloading NuGet packages 83/86
+  Restoring NuGet packages: Downloading NuGet packages 84/86
+  Restoring NuGet packages: Downloading NuGet packages 85/86
+  Restoring NuGet packages: Downloading NuGet packages 86/86
+  Restoring NuGet packages: Restoring NuGet packages 3/4 projects
+  Restoring NuGet packages: Downloading NuGet packages 2/52
+  Restoring NuGet packages: Downloading NuGet packages 1/52
+  Restoring NuGet packages: Downloading NuGet packages 3/52
+  Restoring NuGet packages: Downloading NuGet packages 4/52
+  Restoring NuGet packages: Downloading NuGet packages 5/52
+  Restoring NuGet packages: Downloading NuGet packages 6/52
+  Restoring NuGet packages: Downloading NuGet packages 7/52
+  Restoring NuGet packages: Downloading NuGet packages 8/52
+  Restoring NuGet packages: Downloading NuGet packages 9/52
+  Restoring NuGet packages: Downloading NuGet packages 10/52
+  Restoring NuGet packages: Downloading NuGet packages 11/52
+  Restoring NuGet packages: Downloading NuGet packages 12/52
+  Restoring NuGet packages: Downloading NuGet packages 13/52
+  Restoring NuGet packages: Downloading NuGet packages 14/52
+  Restoring NuGet packages: Downloading NuGet packages 15/52
+  Restoring NuGet packages: Downloading NuGet packages 16/52
+  Restoring NuGet packages: Downloading NuGet packages 17/52
+  Restoring NuGet packages: Downloading NuGet packages 18/52
+  Restoring NuGet packages: Downloading NuGet packages 19/52
+  Restoring NuGet packages: Downloading NuGet packages 20/52
+  Restoring NuGet packages: Downloading NuGet packages 21/52
+  Restoring NuGet packages: Downloading NuGet packages 22/52
+  Restoring NuGet packages: Downloading NuGet packages 23/52
+  Restoring NuGet packages: Downloading NuGet packages 24/52
+  Restoring NuGet packages: Downloading NuGet packages 25/52
+  Restoring NuGet packages: Downloading NuGet packages 26/52
+  Restoring NuGet packages: Downloading NuGet packages 27/52
+  Restoring NuGet packages: Downloading NuGet packages 28/52
+  Restoring NuGet packages: Downloading NuGet packages 29/52
+  Restoring NuGet packages: Downloading NuGet packages 30/52
+  Restoring NuGet packages: Downloading NuGet packages 31/52
+  Restoring NuGet packages: Downloading NuGet packages 32/52
+  Restoring NuGet packages: Downloading NuGet packages 33/52
+  Restoring NuGet packages: Downloading NuGet packages 34/52
+  Restoring NuGet packages: Downloading NuGet packages 35/52
+  Restoring NuGet packages: Downloading NuGet packages 36/52
+  Restoring NuGet packages: Downloading NuGet packages 37/52
+  Restoring NuGet packages: Downloading NuGet packages 38/52
+  Restoring NuGet packages: Downloading NuGet packages 39/52
+  Restoring NuGet packages: Downloading NuGet packages 40/52
+  Restoring NuGet packages: Downloading NuGet packages 41/52
+  Restoring NuGet packages: Downloading NuGet packages 42/52
+  Restoring NuGet packages: Downloading NuGet packages 43/52
+  Restoring NuGet packages: Downloading NuGet packages 44/52
+  Restoring NuGet packages: Downloading NuGet packages 45/52
+  Restoring NuGet packages: Downloading NuGet packages 46/52
+  Restoring NuGet packages: Downloading NuGet packages 47/52
+  Restoring NuGet packages: Downloading NuGet packages 48/52
+  Restoring NuGet packages: Downloading NuGet packages 49/52
+  Restoring NuGet packages: Downloading NuGet packages 50/52
+  Restoring NuGet packages: Downloading NuGet packages 51/52
+  Restoring NuGet packages: Downloading NuGet packages 52/52
+  Restoring NuGet packages: Succeeded after 8.2 s
+  Analyzing: Analyzing 0/4 projects
+  Analyzing: Analyzing 1/4 projects
+  Analyzing: Analyzing 2/4 projects
+  Analyzing: Analyzing 3/4 projects
+  Analyzing: Analyzing 4/4 projects
+  Analyzing: Succeeded after 0.6 s
+  Building: Building
+  Building: Building 0/3 projects
+  Building: Building 1/3 projects
+  Building: Building 2/3 projects
+  Building: Succeeded after 0.2 s
+  Building: Building
+  Building: Building MetricsApp
+  Building: Succeeded after 0.2 s
+  Building: Building
+  Building: Building MetricsApp
+  Building: Succeeded after 0.1 s
+Project setup:
+
+Output:
+Build started at 01:58:30...
+1>------ Build started: Project: MetricsApp, Configuration: Debug ------
+1>MetricsApp -> compiled in memory (15 KB, 78 ms)
+========== Build: 1 succeeded, 0 failed ==========
+Started without the debugger: it pauses a program on its main thread, and a web app answers requests on others.
+The WebAssembly components of MetricsApp run in the web preview on .NET for WebAssembly, without the debugger.
+info: Microsoft.EntityFrameworkCore.Update[30100]
+      Saved 1 entities to in-memory store.
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://127.0.0.1:44103
+MetricsApp is listening on http://127.0.0.1:44103/
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /home/runner/work/_temp/repos/aspire-samples-Metrics/samples/Metrics/MetricsApp
+info: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+
+The program 'MetricsApp' has exited with code 0 (0x0).
+
