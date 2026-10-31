@@ -1,0 +1,33 @@
+anyhow at bb1b0f9af0f645d5fdf1ac63a1fcbf3975ee452c, opening /home/runner/work/_temp/repos/anyhow
+Opened in 0.3 s: anyhow, solution (none)
+  toolchain project embedded-rust: /home/runner/work/_temp/repos/anyhow/Cargo.toml
+Compatibility Doctor:
+  anyhow: Needs a toolchain via Embedded project tools - Builds firmware with the project's native toolchain. Upload requires a selected board and a granted device; firmware never runs as a tablet executable. Hardware support and verification depend on the chosen probe or bootloader.
+F5 startup project: anyhow (embedded-rust) /home/runner/work/_temp/repos/anyhow/Cargo.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here. (120 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 3.5 s
+  Building anyhow: Building anyhow
+  Building anyhow: Succeeded after 9.3 s
+Project setup:
+
+Output:
+Cargo's existing linker script and runner remain authoritative; select a chip before probe upload.
+Select the exact chip, ELF image and granted probe for upload. Existing Cargo runner configuration is preserved.
+> cargo build --message-format=json --jobs 2
+info: syncing channel updates for stable-x86_64-unknown-linux-gnu
+info: latest update on 2026-10-15 for version 1.99.1 (58cf8f9c3 2026-10-13)
+info: downloading component rust-src
+[1m[92m    Updating[0m crates.io index
+[1m[92m     Locking[0m 39 packages to highest compatible versions
+[1m[92m   Compiling[0m anyhow v1.0.104 (/home/runner/work/_temp/repos/anyhow)
+[1m[92m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 8.07s
+Memory analysis needs one linked ELF. Set Firmware in .tabstudio/embedded-analysis.json or .tabstudio/embedded.json when the build has multiple artifacts.
+

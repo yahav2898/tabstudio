@@ -1,0 +1,218 @@
+eza at 471bfbc7b03cbac8c738e8d9050edb06ee79132a, opening /home/runner/work/_temp/repos/eza
+Opened in 0.3 s: eza, solution (none)
+  toolchain project rust: /home/runner/work/_temp/repos/eza/Cargo.toml
+  toolchain project python: /home/runner/work/_temp/repos/eza/tests/itest-loc
+  toolchain project cpp: /home/runner/work/_temp/repos/eza/tests/itest/exa
+Compatibility Doctor:
+  eza: Needs a toolchain via Rust toolchain - Runs with Rust from the Toolchain Store, with console input and output in the Output panel. Install Rust to run it.
+  itest-loc: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  exa: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+F5 startup project: eza (rust) /home/runner/work/_temp/repos/eza/Cargo.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here. (120 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 3.1 s
+  Building eza: Building eza
+  Building eza: Succeeded after 53.9 s
+Project setup:
+
+Output:
+Building eza with Rust 1.99.1
+> cargo build --message-format=json
+info: syncing channel updates for 1.90-x86_64-unknown-linux-gnu
+info: latest update on 2025-09-18 for version 1.90.0 (1159e78c4 2025-09-14)
+info: downloading 7 components
+warn: the missing active toolchain `1.90-x86_64-unknown-linux-gnu` has been auto-installed
+warn: this might cause rustup commands to take longer time to finish than expected
+info: you may opt out with `RUSTUP_AUTO_INSTALL=0` or `rustup set auto-install disable`
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded ansi-width v0.1.0
+  Downloaded powerfmt v0.2.0
+  Downloaded approx v0.5.1
+  Downloaded base64 v0.22.1
+  Downloaded uutils_term_grid v0.7.0
+  Downloaded anstyle v1.0.13
+  Downloaded addr2line v0.25.1
+  Downloaded unit-prefix v0.5.2
+  Downloaded natord-plus-plus v2.0.0
+  Downloaded quote v1.0.44
+  Downloaded proc-mounts v0.3.0
+  Downloaded uzers v0.12.2
+  Downloaded serde_derive v1.0.228
+  Downloaded unsafe-libyaml-norway v0.2.15
+  Downloaded serde_norway v0.9.42
+  Downloaded serde v1.0.228
+  Downloaded memchr v2.8.0
+  Downloaded indexmap v2.13.0
+  Downloaded cc v1.2.56
+  Downloaded rayon-core v1.13.0
+  Downloaded vcpkg v0.2.15
+  Downloaded time v0.3.47
+  Downloaded palette v0.7.5
+  Downloaded rayon v1.11.0
+  Downloaded git2 v0.21.0
+  Downloaded unicode-width v0.1.14
+  Downloaded chrono v0.4.43
+  Downloaded syn v2.0.116
+  Downloaded gimli v0.32.3
+  Downloaded object v0.37.3
+  Downloaded clap_builder v4.5.59
+  Downloaded serde_core v1.0.228
+  Downloaded proc-macro2 v1.0.106
+  Downloaded clap v4.5.59
+  Downloaded rustix v1.1.3
+  Downloaded ryu v1.0.23
+  Downloaded plist v1.10.0
+  Downloaded log v0.4.29
+  Downloaded iana-time-zone v0.1.65
+  Downloaded fast-srgb8 v1.0.0
+  Downloaded crossbeam-utils v0.8.21
+  Downloaded crossbeam-epoch v0.9.20
+  Downloaded crossbeam-deque v0.8.6
+  Downloaded clap_derive v4.5.55
+  Downloaded bitflags v2.11.0
+  Downloaded backtrace v0.3.76
+  Downloaded rustc-demangle v0.1.27
+  Downloaded nu-ansi-term v0.50.3
+  Downloaded jobserver v0.1.34
+  Downloaded glob v0.3.3
+  Downloaded either v1.15.0
+  Downloaded deranged v0.5.6
+  Downloaded timeago v0.6.0
+  Downloaded time-macros v0.2.27
+  Downloaded libz-sys v1.1.23
+  Downloaded libc v0.2.182
+  Downloaded shlex v1.3.0
+  Downloaded pkg-config v0.3.32
+  Downloaded palette_derive v0.7.6
+  Downloaded locale v0.2.2
+  Downloaded clap_lex v1.0.0
+  Downloaded path-clean v1.0.1
+  Downloaded partition-identity v0.3.0
+  Downloaded colorchoice v1.0.4
+  Downloaded num-conv v0.2.0
+  Downloaded fastrand v2.3.0
+  Downloaded dirs-sys v0.5.0
+  Downloaded dirs v6.0.0
+  Downloaded itoa v1.0.17
+  Downloaded by_address v1.2.1
+  Downloaded time-core v0.1.8
+  Downloaded terminal_size v0.4.3
+  Downloaded siphasher v1.0.2
+  Downloaded option-ext v0.2.0
+  Downloaded anstyle-parse v0.2.7
+  Downloaded autocfg v1.5.0
+  Downloaded anstream v0.6.21
+  Downloaded libgit2-sys v0.18.5+1.9.4
+  Downloaded linux-raw-sys v0.11.0
+   Compiling proc-macro2 v1.0.106
+   Compiling quote v1.0.44
+   Compiling unicode-ident v1.0.24
+   Compiling libc v0.2.182
+   Compiling shlex v1.3.0
+   Compiling find-msvc-tools v0.1.9
+   Compiling pkg-config v0.3.32
+   Compiling vcpkg v0.2.15
+   Compiling crossbeam-utils v0.8.21
+   Compiling syn v2.0.116
+   Compiling autocfg v1.5.0
+   Compiling serde_core v1.0.228
+   Compiling crossbeam-epoch v0.9.20
+   Compiling jobserver v0.1.34
+   Compiling num-traits v0.2.19
+   Compiling siphasher v1.0.2
+   Compiling cc v1.2.56
+   Compiling thiserror v1.0.69
+   Compiling serde v1.0.228
+   Compiling utf8parse v0.2.2
+   Compiling memchr v2.8.0
+   Compiling anstyle-parse v0.2.7
+   Compiling phf_shared v0.13.1
+   Compiling libz-sys v1.1.23
+   Compiling libgit2-sys v0.18.5+1.9.4
+   Compiling itoa v1.0.17
+   Compiling powerfmt v0.2.0
+   Compiling rustix v1.1.3
+   Compiling object v0.37.3
+   Compiling is_terminal_polyfill v1.70.2
+   Compiling rayon-core v1.13.0
+   Compiling equivalent v1.0.2
+   Compiling anstyle v1.0.13
+   Compiling hashbrown v0.16.1
+   Compiling iana-time-zone v0.1.65
+   Compiling bitflags v2.11.0
+   Compiling anstyle-query v1.1.5
+   Compiling colorchoice v1.0.4
+   Compiling fastrand v2.3.0
+   Compiling anstream v0.6.21
+   Compiling indexmap v2.13.0
+   Compiling phf_generator v0.13.1
+   Compiling chrono v0.4.43
+   Compiling deranged v0.5.6
+   Compiling thiserror-impl v1.0.69
+   Compiling serde_derive v1.0.228
+   Compiling crossbeam-deque v0.8.6
+   Compiling num-conv v0.2.0
+   Compiling linux-raw-sys v0.11.0
+   Compiling unicode-width v0.1.14
+   Compiling heck v0.5.0
+   Compiling clap_lex v1.0.0
+   Compiling by_address v1.2.1
+   Compiling time-core v0.1.8
+   Compiling log v0.4.29
+   Compiling option-ext v0.2.0
+   Compiling palette v0.7.5
+   Compiling strsim v0.11.1
+   Compiling gimli v0.32.3
+   Compiling adler2 v2.0.1
+   Compiling miniz_oxide v0.8.9
+   Compiling clap_builder v4.5.59
+   Compiling addr2line v0.25.1
+   Compiling dirs-sys v0.5.0
+   Compiling time v0.3.47
+   Compiling palette_derive v0.7.6
+   Compiling clap_derive v4.5.55
+   Compiling ansi-width v0.1.0
+   Compiling partition-identity v0.3.0
+   Compiling eza v0.23.5 (/home/runner/work/_temp/repos/eza)
+   Compiling phf_macros v0.13.1
+   Compiling quick-xml v0.41.0
+   Compiling unsafe-libyaml-norway v0.2.15
+   Compiling fast-srgb8 v1.0.0
+   Compiling ryu v1.0.23
+   Compiling cfg-if v1.0.4
+   Compiling either v1.15.0
+   Compiling base64 v0.22.1
+   Compiling rustc-demangle v0.1.27
+   Compiling plist v1.10.0
+   Compiling rayon v1.11.0
+   Compiling serde_norway v0.9.42
+   Compiling backtrace v0.3.76
+   Compiling phf v0.13.1
+   Compiling clap v4.5.59
+   Compiling proc-mounts v0.3.0
+   Compiling uutils_term_grid v0.7.0
+   Compiling terminal_size v0.4.3
+   Compiling dirs v6.0.0
+   Compiling nu-ansi-term v0.50.3
+   Compiling uzers v0.12.2
+   Compiling locale v0.2.2
+   Compiling timeago v0.6.0
+   Compiling path-clean v1.0.1
+   Compiling unicode-width v0.2.2
+   Compiling glob v0.3.3
+   Compiling unit-prefix v0.5.2
+   Compiling natord-plus-plus v2.0.0
+   Compiling percent-encoding v2.3.2
+   Compiling git2 v0.21.0
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 43.33s
+
+Build succeeded: 'eza' is ready to run.
+

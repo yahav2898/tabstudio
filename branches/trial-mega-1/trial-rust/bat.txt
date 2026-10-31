@@ -1,0 +1,47 @@
+bat at 8f5727ea3869a71c65c0f4f4a42ed18bdb26ae7b, opening /home/runner/work/_temp/repos/bat
+Opened in 3.1 s: bat, solution (none)
+  load error: Could not load 'console.csproj': the XML is not valid ('', hexadecimal value 0x1B, is an invalid character. Line 1, position 1.).
+  project console [Unknown] /home/runner/work/_temp/repos/bat/tests/syntax-tests/highlighted/XML/console.csproj
+  project console [CSharp] /home/runner/work/_temp/repos/bat/tests/syntax-tests/source/XML/console.csproj
+  toolchain project rust: /home/runner/work/_temp/repos/bat/Cargo.toml
+  toolchain project cpp: /home/runner/work/_temp/repos/bat/tests/examples
+  toolchain project python: /home/runner/work/_temp/repos/bat/tests/scripts
+  toolchain project python: /home/runner/work/_temp/repos/bat/tests/snapshots
+  toolchain project python: /home/runner/work/_temp/repos/bat/tests/syntax-tests
+  toolchain project python: /home/runner/work/_temp/repos/bat/tests/benchmarks/highlighting-speed-src
+  toolchain project cpp: /home/runner/work/_temp/repos/bat/tests/benchmarks/highlighting-speed-src
+Compatibility Doctor:
+  console: Not supported via Unknown - TabStudio does not recognize this project type yet.
+  console: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  bat: Needs a toolchain via Rust toolchain - Runs with Rust from the Toolchain Store, with console input and output in the Output panel. Install Rust to run it.
+  examples: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+  scripts: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  snapshots: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  syntax-tests: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  highlighting-speed-src: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  highlighting-speed-src: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+F5 startup project: console /home/runner/work/_temp/repos/bat/tests/syntax-tests/source/XML/console.csproj
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 1 errors, 0 warnings
+  1 x CS5001
+      [console] error CS5001: Program does not contain a static 'Main' method suitable for an entry point
+Tests: Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here. (121 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 1.3 s
+  Analyzing: Analyzing 0/1 projects
+  Analyzing: Analyzing 1/1 projects
+  Analyzing: Succeeded after 1.6 s
+  Setting up projects: Succeeded after 17.6 s
+  Building: Building
+  Building: Building console
+  Building: Failed after 0.1 s
+Project setup:
+
+Output:
+Build started at 00:35:52...
+1>------ Build started: Project: console, Configuration: Debug ------
+1>error CS5001: Program does not contain a static 'Main' method suitable for an entry point
+========== Build: 0 succeeded, 1 failed ==========
+

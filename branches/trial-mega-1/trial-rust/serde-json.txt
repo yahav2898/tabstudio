@@ -1,0 +1,39 @@
+serde-json at 8c535a260ce561eaab4111aafc29038eb9f77ff3, opening /home/runner/work/_temp/repos/serde-json
+Opened in 0.3 s: serde-json, solution (none)
+  toolchain project embedded-rust: /home/runner/work/_temp/repos/serde-json/Cargo.toml
+Compatibility Doctor:
+  serde-json: Needs a toolchain via Embedded project tools - Builds firmware with the project's native toolchain. Upload requires a selected board and a granted device; firmware never runs as a tablet executable. Hardware support and verification depend on the chosen probe or bootloader.
+F5 startup project: serde-json (embedded-rust) /home/runner/work/_temp/repos/serde-json/Cargo.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here. (120 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 3.0 s
+  Building serde-json: Building serde-json
+  Building serde-json: Succeeded after 3.5 s
+Project setup:
+
+Output:
+Cargo's existing linker script and runner remain authoritative; select a chip before probe upload.
+Select the exact chip, ELF image and granted probe for upload. Existing Cargo runner configuration is preserved.
+> cargo build --message-format=json --jobs 2
+[1m[92m    Updating[0m crates.io index
+[1m[92m     Locking[0m 46 packages to highest compatible versions
+[1m[92m Downloading[0m crates ...
+[1m[92m  Downloaded[0m zmij v1.0.23
+[1m[92m  Downloaded[0m itoa v1.0.18
+[1m[92m  Downloaded[0m memchr v2.8.3
+[1m[92m  Downloaded[0m serde_core v1.0.229
+[1m[92m   Compiling[0m serde_core v1.0.229
+[1m[92m   Compiling[0m zmij v1.0.23
+[1m[92m   Compiling[0m serde_json v1.0.154 (/home/runner/work/_temp/repos/serde-json)
+[1m[92m   Compiling[0m memchr v2.8.3
+[1m[92m   Compiling[0m itoa v1.0.18
+[1m[92m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 3.44s
+Memory analysis needs one linked ELF. Set Firmware in .tabstudio/embedded-analysis.json or .tabstudio/embedded.json when the build has multiple artifacts.
+
