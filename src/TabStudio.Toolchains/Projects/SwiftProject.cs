@@ -69,9 +69,8 @@ public static partial class SwiftProject
 
     /// <summary>
     /// The Apple framework a Swift project's app is written with, which only Apple's SDKs in Xcode have, on a Mac:
-    /// <c>SwiftUI</c>, <c>UIKit</c> or <c>AppKit</c> imported by its sources, or an Xcode project (<c>.xcodeproj</c>) in its
-    /// folder or the folder above, as IceCubesApp's packages are; <see langword="null"/> for a package that builds on
-    /// Linux, which TabStudio's Swift toolchain is.
+    /// <c>SwiftUI</c>, <c>UIKit</c> or <c>AppKit</c> imported by its sources outside <c>#if</c>, as IceCubesApp's packages
+    /// do; <see langword="null"/> for a package that builds on Linux, which TabStudio's Swift toolchain is.
     /// </summary>
     /// <param name="directory">The package folder.</param>
     public static string? AppleFramework(string directory)
@@ -107,15 +106,9 @@ public static partial class SwiftProject
             }
         }
 
-        try
-        {
-            var parent = Path.GetDirectoryName(Path.GetFullPath(directory).TrimEnd(Path.DirectorySeparatorChar));
-            return new[] { directory, parent }.OfType<string>().Any(folder => Directory.EnumerateDirectories(folder, "*.xcodeproj").Any()) ? "Xcode" : null;
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-        {
-            return null;
-        }
+        // An Xcode project beside a package says nothing: SwiftyJSON, Rainbow and Alamofire ship one for Apple's
+        // platforms and build on Linux too.
+        return null;
     }
 
     /// <summary>The sentence that says why an Apple-platform app does not build here.</summary>

@@ -121,6 +121,8 @@ public sealed class SwiftProjectTests : IDisposable
 
         Assert.Equal("SwiftUI", SwiftProject.AppleFramework(_folder.Resolve("app")));
         Assert.Null(SwiftProject.AppleFramework(_folder.Resolve("lib")));
+        _folder.Write("lib/Alamofire.xcodeproj/project.pbxproj", "// !$*UTF8*$!");
+        Assert.Null(SwiftProject.AppleFramework(_folder.Resolve("lib")));
         Assert.StartsWith("Account is an Apple-platform app (SwiftUI), which builds only with Xcode", SwiftProject.AppleExplanation("Account", "SwiftUI"), StringComparison.Ordinal);
     }
 
