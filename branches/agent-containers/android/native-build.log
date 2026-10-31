@@ -33,13 +33,13 @@ No containers need to be restarted.
 No user sessions are running outdated binaries.
 
 No VM guests are running outdated hypervisor (qemu) binaries on this host.
-+ tar --no-same-owner -xzf /tmp/tabstudio-box64-arj4osbn/downloads/box64-source.tar.gz -C /tmp/tabstudio-box64-arj4osbn/box64-source
++ tar --no-same-owner -xzf /tmp/tabstudio-box64-5oll267s/downloads/box64-source.tar.gz -C /tmp/tabstudio-box64-5oll267s/box64-source
 
-+ patch -d /tmp/tabstudio-box64-arj4osbn/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -p1 -i /home/runner/work/tabstudio/tabstudio/build/pic/box64-static-clone.patch
++ patch -d /tmp/tabstudio-box64-5oll267s/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -p1 -i /home/runner/work/tabstudio/tabstudio/build/pic/box64-static-clone.patch
 patching file src/core.c
 patching file src/emu/x64syscall.c
 
-+ cmake -S /tmp/tabstudio-box64-arj4osbn/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -B /tmp/tabstudio-box64-arj4osbn/box64-build -DARM_DYNAREC=ON -DLD80BITS=OFF -DNOALIGN=OFF -DBAD_SIGNAL=ON -DCMAKE_BUILD_TYPE=Release -DNOGIT=1 -DCMAKE_EXE_LINKER_FLAGS=-Wl,-z,max-page-size=16384 -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_ASM_COMPILER=aarch64-linux-gnu-gcc
++ cmake -S /tmp/tabstudio-box64-5oll267s/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -B /tmp/tabstudio-box64-5oll267s/box64-build -DARM_DYNAREC=ON -DLD80BITS=OFF -DNOALIGN=OFF -DBAD_SIGNAL=ON -DCMAKE_BUILD_TYPE=Release -DNOGIT=1 -DCMAKE_EXE_LINKER_FLAGS=-Wl,-z,max-page-size=16384 -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_ASM_COMPILER=aarch64-linux-gnu-gcc
 -- Found Python3: /usr/bin/python3.14 (found suitable version "3.14.4", minimum required is "3.7") found components: Interpreter
 -- The C compiler identification is GNU 15.2.0
 -- The ASM compiler identification is GNU
@@ -51,11 +51,11 @@ patching file src/emu/x64syscall.c
 -- Detecting C compile features - done
 -- Performing Test HAS_FUSE_LD_GOLD
 -- Performing Test HAS_FUSE_LD_GOLD - Failed
--- Configuring done (1.1s)
+-- Configuring done (0.8s)
 -- Generating done (0.1s)
--- Build files have been written to: /tmp/tabstudio-box64-arj4osbn/box64-build
+-- Build files have been written to: /tmp/tabstudio-box64-5oll267s/box64-build
 
-+ cmake --build /tmp/tabstudio-box64-arj4osbn/box64-build --parallel 4
++ cmake --build /tmp/tabstudio-box64-5oll267s/box64-build --parallel 4
 pped/wrappedsecret1.c.o
 [ 88%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsoftokn3.c.o
 [ 88%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsmpeg.c.o
