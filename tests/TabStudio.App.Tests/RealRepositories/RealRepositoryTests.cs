@@ -175,7 +175,10 @@ public sealed class RealRepositoryTests
     }
 
     /// <param name="Tests">How many tests Test Explorer's Run All must pass, at least, after the run; <see langword="null"/> to run none.</param>
-    /// <param name="Program">The program Ctrl+F5 runs; <see langword="null"/> for a library, whose tests are its check.</param>
+    /// <param name="Program">
+    /// The program Ctrl+F5 runs; <see langword="null"/> for a library, whose tests are its check, or, without tests, a
+    /// project that Ctrl+Shift+B must build without errors.
+    /// </param>
     private sealed record ProgramExpectation(string Toolchain, string? Program, string? Web, string? Text, int? Tests = null);
 
     /// <summary>
@@ -222,6 +225,19 @@ public sealed class RealRepositoryTests
             }
 
             clock.Restart();
+            if (expected.Program is null && expected.Tests is null)
+            {
+                // A library or a program that needs arguments or a terminal: Ctrl+Shift+B must build it without errors.
+                await workspace.BuildCommand.ExecuteAsync(null);
+                await UiTestHelpers.WaitUntilAsync(() => workspace.State != IdeState.Busy, TimeSpan.FromMinutes(25), "the build");
+                var errors = workspace.ErrorList.Items.Count(i => i.Diagnostic.Severity == DiagnosticSeverityLevel.Error);
+                report.AppendLine(CultureInfo.InvariantCulture, $"Built in {clock.Elapsed.TotalSeconds:F1} s: {errors} errors, state {workspace.State}");
+                UiTestHelpers.SaveScreenshot(window, $"real-{name}-2-built");
+                AppendTail(report, "Project setup", workspace.ProjectSetupOutput.Text);
+                AppendTail(report, "Output", workspace.Output.Text);
+                return new RunOutcome(startup!.Toolchain.Id, null, errors == 0 && workspace.State != IdeState.Failed ? null : $"the build has {errors} errors", clock.Elapsed);
+            }
+
             if (expected.Program is null)
             {
                 // A library: Test Explorer builds it and runs its tests.
