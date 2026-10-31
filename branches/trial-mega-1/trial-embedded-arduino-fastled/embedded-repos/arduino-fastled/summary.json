@@ -1,0 +1,117 @@
+{
+  "repository": {
+    "name": "arduino-fastled",
+    "url": "https://github.com/FastLED/FastLED",
+    "sha": "264520b9dc8da8b64faa68d12d623bf3deb08048",
+    "kind": "arduino",
+    "project": "examples/Blink",
+    "maxErrors": 0,
+    "fqbn": "arduino:avr:uno",
+    "core": "arduino:avr@1.8.6"
+  },
+  "seconds": 32.908,
+  "passed": true,
+  "error": null,
+  "compilerErrors": 0,
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "steps": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-fastled/source",
+      "log": "01-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "add",
+        "origin",
+        "https://github.com/FastLED/FastLED"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-fastled/source",
+      "log": "02-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "fetch",
+        "--depth",
+        "1",
+        "--no-tags",
+        "origin",
+        "264520b9dc8da8b64faa68d12d623bf3deb08048"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-fastled/source",
+      "log": "03-git.log",
+      "seconds": 2.32,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "FETCH_HEAD"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-fastled/source",
+      "log": "04-git.log",
+      "seconds": 0.616,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/home/runner/work/_temp/embedded-repos/arduino-fastled/arduino-cli",
+        "core",
+        "update-index"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-fastled/source",
+      "log": "05-arduino-cli.log",
+      "seconds": 2.671,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/home/runner/work/_temp/embedded-repos/arduino-fastled/arduino-cli",
+        "core",
+        "install",
+        "arduino:avr@1.8.6"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-fastled/source",
+      "log": "06-arduino-cli.log",
+      "seconds": 10.191,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/home/runner/work/_temp/embedded-repos/arduino-fastled/arduino-cli",
+        "compile",
+        "--fqbn",
+        "arduino:avr:uno",
+        "--library",
+        "/home/runner/work/_temp/embedded-repos/arduino-fastled/source",
+        "--build-path",
+        "/home/runner/work/_temp/embedded-repos/arduino-fastled/build",
+        "/home/runner/work/_temp/embedded-repos/arduino-fastled/source/examples/Blink"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-fastled/source",
+      "log": "07-arduino-cli.log",
+      "seconds": 16.534,
+      "exitCode": 0,
+      "compilerErrors": 0
+    },
+    {
+      "firmware": "/home/runner/work/_temp/embedded-repos/arduino-fastled/build/Blink.ino.elf",
+      "bytes": 60880,
+      "sha256": "dd409c6c25132caf69214b4ed3f6625589e650173751e3d451169b1522d70ece"
+    }
+  ]
+}
