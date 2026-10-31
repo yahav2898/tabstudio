@@ -144,27 +144,27 @@ public sealed class ActivityBar : Control
             if (_modes[i] == AdaptiveMode.Overflow)
             {
                 overflows = true;
-                top[i].Arrange(AdaptiveLayout.Parked);
+                AdaptiveLayout.Place(top[i], AdaptiveLayout.Parked);
                 continue;
             }
 
-            top[i].Arrange(new Rect(0, y, ItemSize, ItemSize));
+            AdaptiveLayout.Place(top[i], new Rect(0, y, ItemSize, ItemSize));
             y += ItemSize;
         }
 
         ShowsMore = overflows;
-        _more.Arrange(overflows ? new Rect(0, y, ItemSize, ItemSize) : AdaptiveLayout.Parked);
+        AdaptiveLayout.Place(_more, overflows ? new Rect(0, y, ItemSize, ItemSize) : AdaptiveLayout.Parked);
 
         var bottomY = finalSize.Height - (bottom.Count * ItemSize);
         foreach (var button in bottom)
         {
-            button.Arrange(new Rect(0, bottomY, ItemSize, ItemSize));
+            AdaptiveLayout.Place(button, new Rect(0, bottomY, ItemSize, ItemSize));
             bottomY += ItemSize;
         }
 
         foreach (var hidden in _buttons.Where(button => !button.Item!.IsAvailable))
         {
-            hidden.Arrange(AdaptiveLayout.Parked);
+            AdaptiveLayout.Place(hidden, AdaptiveLayout.Parked);
         }
 
         return finalSize;
@@ -265,8 +265,8 @@ public sealed class ActivityBar : Control
     {
         private readonly StrokeIcon _icon = new() { Size = 22, StrokeThickness = 1.8, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
         private readonly Border _indicator = new() { Width = 3, CornerRadius = new CornerRadius(1.5), Margin = new Thickness(0, 10), IsVisible = false };
-        private readonly Border _count = new() { MinWidth = 18, Height = 18, CornerRadius = new CornerRadius(9), Padding = new Thickness(5, 0), HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top, Margin = new Thickness(25, 6, 0, 0), IsVisible = false };
-        private readonly TextBlock _countText = new() { FontSize = 10.5, FontWeight = FontWeight.Bold, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+        private readonly Border _count = new() { MinWidth = 18, MinHeight = 18, CornerRadius = new CornerRadius(9), Padding = new Thickness(5, 0), HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Top, Margin = new Thickness(0, 6, 5, 0), IsVisible = false };
+        private readonly TextBlock _countText = new() { FontWeight = FontWeight.Bold, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
         private readonly Border _dot = new() { Width = 11, Height = 11, CornerRadius = new CornerRadius(5.5), BorderThickness = new Thickness(2), HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top, Margin = new Thickness(29, 10, 0, 0), IsVisible = false };
         private readonly StrokeIcon _activity = new() { Size = 12, StrokeThickness = 2.6, HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top, Margin = new Thickness(29, 27, 0, 0), IsVisible = false };
         private bool _heldOpen;
@@ -275,6 +275,7 @@ public sealed class ActivityBar : Control
         {
             Item = item;
             _count.Child = _countText;
+            TabStudio.App.Accessibility.TypeScale.SetBaseFontSize(_countText, 10.5);
             _activity.Classes.Add("spinning");
             _activity.Data = Resource<Geometry>("Icon.Spinner");
             Content = new Panel { Children = { _indicator, _icon, _count, _dot, _activity } };

@@ -55,14 +55,14 @@
             BoxShadow="{DynamicResource Shadow.Popup}">
       <ListBox x:Name="ItemList" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem, Mode=OneWay}"
                ItemContainerTheme="{StaticResource CompletionRow}" Classes.soft="{Binding IsSoftSelection}"
-               Focusable="False" MaxHeight="276" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+               Focusable="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
         <ListBox.ItemTemplate>
           <DataTemplate DataType="vm:CompletionItemViewModel">
-            <Grid ColumnDefinitions="Auto,*,Auto" Height="34" Background="Transparent">
+            <Grid ColumnDefinitions="Auto,*,Auto" MinHeight="34" Background="Transparent">
               <controls:SymbolGlyphIcon Kind="{Binding Kind}" Size="16" Margin="8,0,10,0" VerticalAlignment="Center" />
-              <controls:StyledTextBlock Grid.Column="1" Runs="{Binding Runs}" FontFamily="{DynamicResource CodeFont}" FontSize="13"
+              <controls:StyledTextBlock Grid.Column="1" Runs="{Binding Runs}" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Section}"
                                         BoldForeground="{DynamicResource Brush.Link}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-              <TextBlock Grid.Column="2" Text="{Binding InlineDescription}" Classes="muted" FontSize="11.5" Margin="10,0,8,0"
+              <TextBlock Grid.Column="2" Text="{Binding InlineDescription}" Classes="muted" FontSize="{DynamicResource Type.Fine}" Margin="10,0,8,0"
                          MaxWidth="150" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
             </Grid>
           </DataTemplate>
@@ -74,7 +74,7 @@
     <Border MaxWidth="440" VerticalAlignment="Top" Padding="12,10" CornerRadius="8" IsVisible="{Binding HasDescription}"
             Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
             BoxShadow="{DynamicResource Shadow.Popup}">
-      <controls:StyledTextBlock Runs="{Binding Description}" TextWrapping="Wrap" FontFamily="{DynamicResource CodeFont}" FontSize="12.5"
+      <controls:StyledTextBlock Runs="{Binding Description}" TextWrapping="Wrap" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Body}"
                                 Foreground="{DynamicResource Brush.Text}" />
     </Border>
   </StackPanel>

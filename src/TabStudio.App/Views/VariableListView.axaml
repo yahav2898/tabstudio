@@ -8,11 +8,12 @@
   <UserControl.Styles>
     <!-- While the program runs, the values shown may be out of date. -->
     <Style Selector="ListBox.stale">
-      <Setter Property="Opacity" Value="0.55" />
+      <!-- Muted, not faded: the values stay readable (WCAG AA), docs/design/README.md "Contrast". -->
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextMuted}" />
     </Style>
     <Style Selector="TextBlock.value">
       <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
-      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     </Style>
     <!-- Values that changed since the last pause are red, as in Visual Studio. -->
     <Style Selector="TextBlock.value.changed">
@@ -28,7 +29,7 @@
     <TextBlock DockPanel.Dock="Top" Text="Historical · recorded values" IsVisible="{Binding IsHistorical}"
                Classes="muted small" Margin="12,4" />
     <!-- Column headers -->
-    <Border DockPanel.Dock="Top" Height="26" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Border DockPanel.Dock="Top" MinHeight="26" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="2*,3*,2*,34" Margin="12,0,0,0" VerticalAlignment="Center">
         <TextBlock Classes="muted small" Text="Name" />
         <TextBlock Grid.Column="1" Classes="muted small" Text="Value" />
@@ -66,15 +67,15 @@
                                        Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsExpanded}" />
                 </Panel>
               </Panel>
-              <TextBlock x:Name="NameText" Grid.Column="2" Text="{Binding Name}" FontFamily="{DynamicResource CodeFont}" FontSize="12.5"
+              <TextBlock x:Name="NameText" Grid.Column="2" Text="{Binding Name}" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Body}"
                          TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="2,0,8,0" />
             </Grid>
             <TextBlock Grid.Column="1" Classes="value" Classes.changed="{Binding HasChanged}" Classes.error="{Binding IsError}"
                        Text="{Binding Value}" ToolTip.Tip="{Binding Value}"
                        TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0" />
-            <TextBlock Grid.Column="2" Classes="muted" FontSize="12.5" Text="{Binding Type}"
+            <TextBlock Grid.Column="2" Classes="muted" FontSize="{DynamicResource Type.Body}" Text="{Binding Type}"
                        TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-            <Button Grid.Column="3" Theme="{StaticResource ToolButton}" Width="30" Height="28" MinWidth="30" MinHeight="28" Padding="0"
+            <Button Grid.Column="3" Theme="{StaticResource ToolButton}" Padding="0"
                     ToolTip.Tip="Remove Watch" IsVisible="{Binding IsRemovable}"
                     Command="{Binding Owner.RemoveCommand, FallbackValue={x:Null}}" CommandParameter="{Binding}">
               <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="11" Foreground="{DynamicResource Brush.TextMuted}" />

@@ -15,7 +15,7 @@
                              Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
                              Classes.spinning="{Binding Visual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
         <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
-          <TextBlock Text="{Binding JobName}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+          <TextBlock Text="{Binding JobName}" FontSize="{DynamicResource Type.Section}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
           <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis"><Run
             Text="{Binding RunText}" /><Run Text=" · " /><Run Text="{Binding StateText}" /></TextBlock>
         </StackPanel>
@@ -35,11 +35,11 @@
                     IsEnabled="{Binding HasErrors}" Click="OnPreviousErrorClick">
               <controls:StrokeIcon Data="{StaticResource Icon.PreviousError}" Size="16" />
             </Button>
-            <Button x:Name="NextErrorButton" Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" Padding="10,0"
+            <Button x:Name="NextErrorButton" Theme="{StaticResource ToolButton}" Padding="10,0"
                     ToolTip.Tip="Next Error (F8)" IsEnabled="{Binding HasErrors}" Click="OnNextErrorClick">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <controls:StrokeIcon Data="{StaticResource Icon.NextError}" Size="16" />
-                <TextBlock Text="Next error" VerticalAlignment="Center" FontSize="12.5" />
+                <TextBlock Text="Next error" VerticalAlignment="Center" FontSize="{DynamicResource Type.Body}" />
               </StackPanel>
             </Button>
             <Border Classes="toolbarSeparator" />
@@ -70,9 +70,9 @@
       <!-- Go to line -->
       <Grid x:Name="GoToLineBar" ColumnDefinitions="Auto,160,Auto,Auto,*" Margin="12,0,12,8" IsVisible="False">
         <TextBlock Classes="label" Text="Go to line" VerticalAlignment="Center" Margin="0,0,10,0" />
-        <TextBox Grid.Column="1" x:Name="GoToLineBox" Classes="mono" MinHeight="36" />
-        <Button Grid.Column="2" Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Padding="14,0" Margin="8,0,0,0" Content="Go" Click="OnGoClick" />
-        <Button Grid.Column="3" Theme="{StaticResource SecondaryButton}" Height="36" Padding="14,0" Margin="6,0,0,0" Content="Cancel" Click="OnGoToLineCancelClick" />
+        <TextBox Grid.Column="1" x:Name="GoToLineBox" Classes="mono" />
+        <Button Grid.Column="2" Theme="{StaticResource AccentButton}" Padding="14,0" Margin="8,0,0,0" Content="Go" Click="OnGoClick" />
+        <Button Grid.Column="3" Theme="{StaticResource SecondaryButton}" Padding="14,0" Margin="6,0,0,0" Content="Cancel" Click="OnGoToLineCancelClick" />
         <TextBlock Grid.Column="4" x:Name="GoToLineHint" Classes="muted small" VerticalAlignment="Center" Margin="10,0,0,0" TextTrimming="CharacterEllipsis" />
       </Grid>
 
@@ -86,7 +86,7 @@
       <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0,12,8" IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}">
         <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Margin="0,0,8,0" Foreground="{DynamicResource Brush.Warning}" />
         <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="{DynamicResource Brush.TextSecondary}" Text="{Binding ErrorText}" />
-        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="34" Padding="12,0" Margin="10,0,0,0" Content="Reload" Command="{Binding ReloadCommand}" />
+        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Padding="12,0" Margin="10,0,0,0" Content="Reload" Command="{Binding ReloadCommand}" />
       </Grid>
 
       <!-- A large log shows its start and end first -->
@@ -95,7 +95,7 @@
         <Grid ColumnDefinitions="Auto,*,Auto">
           <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Margin="0,0,8,0" Foreground="{DynamicResource Brush.Info}" />
           <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding TruncatedText}" />
-          <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="34" Padding="12,0" Margin="10,0,0,0"
+          <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Padding="12,0" Margin="10,0,0,0"
                   Content="Show the full log" Command="{Binding ShowFullLogCommand}" />
         </Grid>
       </Border>

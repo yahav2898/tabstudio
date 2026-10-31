@@ -18,7 +18,7 @@
                                  HorizontalAlignment="Center" VerticalAlignment="Center" />
           </Border>
           <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
-            <TextBlock Classes="h2" FontSize="15" Text="Join a Live session" />
+            <TextBlock Classes="h2" FontSize="{DynamicResource Type.Subtitle}" Text="Join a Live session" />
             <TextBlock Classes="muted small" TextWrapping="Wrap"
                        Text="Edit another device's workspace with it, in real time, over this Wi-Fi. Its files are copied here for IntelliSense and deleted when the session ends." />
           </StackPanel>
@@ -30,7 +30,7 @@
 
         <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="22,10,16,12">
           <TextBlock Classes="muted small" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding DeviceText}" />
-          <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Height="40" Padding="20,0" Content="Cancel" Command="{Binding CancelCommand}" />
+          <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Padding="20,0" Content="Cancel" Command="{Binding CancelCommand}" />
         </Grid>
         <Border DockPanel.Dock="Bottom" Height="1" Background="{DynamicResource Brush.Divider}" />
 
@@ -40,7 +40,7 @@
                        IsVisible="{Binding Error, Converter={x:Static ObjectConverters.IsNotNull}}" />
             <TextBlock Classes="muted" TextWrapping="Wrap"
                        Text="On the other device, choose File > Share Session. Both devices must be on the same Wi-Fi." />
-            <Button Theme="{StaticResource AccentButton}" Height="44" Padding="18,0" HorizontalAlignment="Left"
+            <Button Theme="{StaticResource AccentButton}" Padding="18,0" HorizontalAlignment="Left"
                     Command="{Binding ScanCommand}" IsVisible="{Binding CanScan}">
               <StackPanel Orientation="Horizontal" Spacing="8">
                 <controls:StrokeIcon Data="{StaticResource Icon.Camera}" Size="16" />
@@ -54,7 +54,7 @@
               <TextBlock x:Name="CodeLabel" Grid.Column="2" Classes="label" Text="Code" Margin="2,0,0,6" />
               <TextBox x:Name="AddressBox" Grid.Row="1" Classes="large mono" Watermark="192.168.1.23" Text="{Binding AddressText}" />
               <TextBox x:Name="CodeBox" Grid.Row="1" Grid.Column="2" Classes="large mono" Watermark="XXXX-XXXX" MaxLength="10" Text="{Binding CodeText}" />
-              <Button x:Name="JoinButton" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,12,0,0" Theme="{StaticResource AccentButton}" Height="44" Padding="22,0" HorizontalAlignment="Left" Command="{Binding JoinCommand}">
+              <Button x:Name="JoinButton" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,12,0,0" Theme="{StaticResource AccentButton}" Padding="22,0" HorizontalAlignment="Left" Command="{Binding JoinCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                   <controls:StrokeIcon Data="{StaticResource Icon.Live}" Size="16" />
                   <TextBlock Text="Join the session" VerticalAlignment="Center" />

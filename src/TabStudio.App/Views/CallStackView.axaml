@@ -7,7 +7,7 @@
   <UserControl.Styles>
     <Style Selector="TextBlock.method">
       <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
-      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     </Style>
     <!-- The frame the editor shows. -->
     <Style Selector="TextBlock.method.active">
@@ -21,7 +21,7 @@
     <Border DockPanel.Dock="Top" Padding="8,4" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" IsVisible="{Binding HasThreads}">
       <StackPanel Orientation="Horizontal" Spacing="8">
         <TextBlock Classes="muted small" Text="Thread:" VerticalAlignment="Center" />
-        <ComboBox x:Name="ThreadBox" MinWidth="200" Height="28" MinHeight="28" FontSize="12.5"
+        <ComboBox x:Name="ThreadBox" MinWidth="200" FontSize="{DynamicResource Type.Body}"
                   ItemsSource="{Binding Threads}" SelectedItem="{Binding SelectedThread}">
           <ComboBox.ItemTemplate>
             <DataTemplate DataType="vm:DebugThreadOption">
@@ -31,7 +31,7 @@
         </ComboBox>
       </StackPanel>
     </Border>
-    <Border DockPanel.Dock="Top" Height="26" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Border DockPanel.Dock="Top" MinHeight="26" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="26,*,Auto" Margin="8,0,12,0" VerticalAlignment="Center">
         <TextBlock Grid.Column="1" Classes="muted small" Text="Call Stack" />
         <TextBlock Grid.Column="2" Classes="muted small" Text="Location" />
@@ -55,7 +55,7 @@
               </Panel>
               <TextBlock Grid.Column="1" Classes="method" Classes.active="{Binding IsActive}" Text="{Binding MethodName}"
                          TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,12,0" />
-              <TextBlock Grid.Column="2" Classes="muted" FontSize="12.5" Text="{Binding LocationText}" VerticalAlignment="Center" />
+              <TextBlock Grid.Column="2" Classes="muted" FontSize="{DynamicResource Type.Body}" Text="{Binding LocationText}" VerticalAlignment="Center" />
             </Grid>
           </DataTemplate>
         </ListBox.ItemTemplate>

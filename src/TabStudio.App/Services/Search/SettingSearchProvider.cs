@@ -30,6 +30,30 @@ public sealed class SettingSearchProvider(IEnumerable<SettingEntry> settings) : 
         return Task.FromResult(items);
     }
 
+    /// <summary>The IDE's text size as settings: Follow the system, Small, Default, Large, Larger and Very large.</summary>
+    /// <param name="appearance">The IDE's appearance, which keeps the text size.</param>
+    public static IEnumerable<SettingEntry> TextSizes(AppearanceService appearance)
+    {
+        ArgumentNullException.ThrowIfNull(appearance);
+        string[] keywords = ["text size", "font size", "zoom", "larger text", "accessibility", "font scale"];
+        foreach (var size in Accessibility.TextSizes.All)
+        {
+            var description = size == Accessibility.TextSize.System
+                ? "Android's font size, from Settings > Display, changing with it"
+                : $"{Math.Round(Accessibility.TextSizes.Factor(size, 1) * 100)}% text in the whole IDE and the editor";
+            yield return new SettingEntry(
+                $"Text size: {Accessibility.TextSizes.DisplayName(size)}",
+                description,
+                keywords,
+                () => appearance.TextSize == size,
+                () =>
+                {
+                    appearance.SetTextSize(size);
+                    return Task.CompletedTask;
+                });
+        }
+    }
+
     /// <summary>The IDE's theme as three settings: Dark, Light and Follow the system.</summary>
     /// <param name="appearance">The IDE's theme.</param>
     /// <param name="apply">

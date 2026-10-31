@@ -278,18 +278,18 @@ public sealed class AdaptiveBar : Panel
             var child = _slotted[i];
             if (_modes[i] == AdaptiveMode.Overflow)
             {
-                child.Arrange(AdaptiveLayout.Parked);
+                AdaptiveLayout.Place(child, AdaptiveLayout.Parked);
                 continue;
             }
 
             var width = child is AdaptiveBarSpacer ? room / spacers
                 : trimmed[i] ?? (_modes[i] == AdaptiveMode.Compact ? slots[i].Compact : slots[i].Full);
-            child.Arrange(new Rect(x, 0, width, finalSize.Height));
+            AdaptiveLayout.Place(child, new Rect(x, 0, width, finalSize.Height));
             x += width + Spacing;
         }
 
         ShowsMore = overflows;
-        _more.Arrange(overflows ? new Rect(x, 0, _more.DesiredSize.Width, finalSize.Height) : AdaptiveLayout.Parked);
+        AdaptiveLayout.Place(_more, overflows ? new Rect(x, 0, _more.DesiredSize.Width, finalSize.Height) : AdaptiveLayout.Parked);
         return finalSize;
     }
 

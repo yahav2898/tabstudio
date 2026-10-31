@@ -28,7 +28,7 @@
                                      Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsExpanded}" />
               </Panel>
             </Panel>
-            <TextBlock VerticalAlignment="Center" Margin="2,0,10,0" FontFamily="{DynamicResource CodeFont}" FontSize="12.5"
+            <TextBlock VerticalAlignment="Center" Margin="2,0,10,0" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Body}"
                        TextTrimming="CharacterEllipsis" MaxWidth="580">
               <Run Text="{Binding Name}" Foreground="{DynamicResource Brush.Link}" />
               <Run Text=" = " Foreground="{DynamicResource Brush.TextMuted}" />

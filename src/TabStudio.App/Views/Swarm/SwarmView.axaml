@@ -8,14 +8,12 @@
 
   <UserControl.Styles>
     <Style Selector="Button.tool">
-      <Setter Property="Width" Value="36" />
-      <Setter Property="MinWidth" Value="36" />
-      <Setter Property="Height" Value="34" />
-      <Setter Property="MinHeight" Value="34" />
+      <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="0" />
     </Style>
     <Style Selector="TextBlock.section">
-      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Small}" />
       <Setter Property="FontWeight" Value="SemiBold" />
       <Setter Property="Foreground" Value="{DynamicResource Brush.TextLabel}" />
     </Style>
@@ -41,13 +39,13 @@
       <Setter Property="BorderBrush" Value="{DynamicResource Brush.Error}" />
     </Style>
     <Style Selector="Border.device.offline">
-      <Setter Property="Opacity" Value="0.6" />
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextMuted}" />
     </Style>
   </UserControl.Styles>
 
   <DockPanel>
     <!-- Title and the swarm's commands -->
-    <Border DockPanel.Dock="Top" Height="36" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Border DockPanel.Dock="Top" MinHeight="36" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="*,Auto" Margin="12,0,2,0">
         <StackPanel Orientation="Horizontal" Spacing="8">
           <TextBlock Classes="header" Text="Swarm" />
@@ -90,20 +88,20 @@
         <Border Padding="16,14" CornerRadius="10" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1"
                 IsVisible="{Binding !IsOn}">
           <StackPanel Spacing="10">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="20" Foreground="{DynamicResource Brush.AccentText}" />
-              <TextBlock Classes="h2" Text="Every phone and tablet at once" VerticalAlignment="Center" />
-            </StackPanel>
+            <Grid ColumnDefinitions="Auto,*">
+              <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="20" Foreground="{DynamicResource Brush.AccentText}" Margin="0,0,10,0" />
+              <TextBlock Grid.Column="1" Classes="h2" Text="Every phone and tablet at once" VerticalAlignment="Center" TextWrapping="Wrap" />
+            </Grid>
             <TextBlock Classes="muted" TextWrapping="Wrap"
                        Text="Phones and tablets with TabStudio join this tablet's swarm. Run on the swarm, and the app runs on all of them; every save updates them all, and a breakpoint on any of them stops here." />
             <StackPanel Orientation="Horizontal" Spacing="8">
-              <Button Theme="{StaticResource AccentButton}" Height="40" Padding="16,0" Command="{Binding AddDeviceCommand}">
+              <Button Theme="{StaticResource AccentButton}" Padding="16,0" Command="{Binding AddDeviceCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                   <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="14" />
                   <TextBlock Text="Add a device" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>
-              <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="16,0" Content="Start the swarm" Command="{Binding StartCommand}" />
+              <Button Theme="{StaticResource SecondaryButton}" Padding="16,0" Content="Start the swarm" Command="{Binding StartCommand}" />
             </StackPanel>
           </StackPanel>
         </Border>
@@ -113,9 +111,10 @@
 
         <!-- On: the devices -->
         <StackPanel Spacing="8" IsVisible="{Binding IsOn}">
-          <Grid ColumnDefinitions="*,Auto">
+          <Grid ColumnDefinitions="Auto,*">
             <TextBlock Classes="section" Text="Devices" VerticalAlignment="Center" />
-            <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding ListeningText}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding ListeningText}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                       HorizontalAlignment="Right" Margin="12,0,0,0" />
           </Grid>
 
           <Border Padding="14,12" CornerRadius="9" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" IsVisible="{Binding !HasDevices}">
@@ -123,7 +122,7 @@
               <TextBlock TextWrapping="Wrap" Text="No device has joined yet." Foreground="{DynamicResource Brush.TextBright}" />
               <TextBlock Classes="muted small" TextWrapping="Wrap"
                          Text="On a phone or tablet with TabStudio: File > TabStudio Link > Join a swarm, or Swarm on the start screen, then scan this tablet's code." />
-              <Button Theme="{StaticResource AccentButton}" Height="38" Padding="14,0" HorizontalAlignment="Left" Command="{Binding AddDeviceCommand}">
+              <Button Theme="{StaticResource AccentButton}" Padding="14,0" HorizontalAlignment="Left" Command="{Binding AddDeviceCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                   <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="14" />
                   <TextBlock Text="Add a device" VerticalAlignment="Center" />
@@ -158,7 +157,7 @@
                       <TextBlock Classes="small" Text="{Binding StateText}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}" />
                       <TextBlock Classes="muted small" Text="{Binding UpdateText}" TextTrimming="CharacterEllipsis" />
                     </StackPanel>
-                    <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Width="36" Height="36" MinWidth="36" MinHeight="36" Padding="0" VerticalAlignment="Top"
+                    <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Padding="0" VerticalAlignment="Top"
                             ToolTip.Tip="Remove from the swarm; it has to pair again" Command="{Binding RemoveCommand}" CommandParameter="{Binding}">
                       <controls:StrokeIcon Data="{StaticResource Icon.Trash}" Size="15" />
                     </Button>
@@ -182,7 +181,7 @@
           <StackPanel>
             <Grid ColumnDefinitions="*,Auto" Margin="0,6">
               <StackPanel Spacing="2" VerticalAlignment="Center">
-                <TextBlock Text="Mirror input" Foreground="{DynamicResource Brush.TextBright}" />
+                <TextBlock Text="Mirror input" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}" />
                 <TextBlock Classes="muted small" TextWrapping="Wrap" Text="A tap, scroll or key on any screen happens on every screen." />
               </StackPanel>
               <ToggleSwitch Grid.Column="1" IsChecked="{Binding MirrorInput}" OnContent="" OffContent="" Margin="12,0,0,0" />
@@ -190,7 +189,7 @@
             <Border Height="1" Background="{DynamicResource Brush.Divider}" />
             <Grid ColumnDefinitions="*,Auto" Margin="0,6">
               <StackPanel Spacing="2" VerticalAlignment="Center">
-                <TextBlock Text="Pause all on a breakpoint" Foreground="{DynamicResource Brush.TextBright}" />
+                <TextBlock Text="Pause all on a breakpoint" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}" />
                 <TextBlock Classes="muted small" TextWrapping="Wrap" Text="A breakpoint on one device pauses every device, until they continue together." />
               </StackPanel>
               <ToggleSwitch Grid.Column="1" IsChecked="{Binding PauseAllOnBreakpoint}" OnContent="" OffContent="" Margin="12,0,0,0" />
@@ -205,13 +204,13 @@
             <TextBlock Classes="muted small" TextWrapping="Wrap"
                        Text="Record taps, typing and checks on one screen. The test goes into the solution's test project, replays on every screen from the Test Explorer, and runs in CI." />
             <WrapPanel Orientation="Horizontal">
-              <Button Theme="{StaticResource SecondaryButton}" Height="38" Padding="14,0" Margin="0,0,8,8" Command="{Binding RecordTestCommand}">
+              <Button Theme="{StaticResource SecondaryButton}" Padding="14,0" Margin="0,0,8,8" Command="{Binding RecordTestCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                   <Ellipse Width="10" Height="10" Fill="{DynamicResource Brush.Error}" VerticalAlignment="Center" />
                   <TextBlock Text="Record a test" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>
-              <Button Theme="{StaticResource SecondaryButton}" Height="38" Padding="14,0" Margin="0,0,8,8" Command="{Binding RunUiTestsCommand}">
+              <Button Theme="{StaticResource SecondaryButton}" Padding="14,0" Margin="0,0,8,8" Command="{Binding RunUiTestsCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                   <controls:StrokeIcon Data="{StaticResource Icon.RunAll}" IsFilled="True" Size="14" Foreground="{DynamicResource Brush.Success}" />
                   <TextBlock Text="Run on every screen" VerticalAlignment="Center" />

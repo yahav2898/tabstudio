@@ -28,7 +28,9 @@ internal static class UiTestHelpers
     /// <summary>
     /// Renders a window and saves it as a PNG in the screenshot folder (TABSTUDIO_SCREENSHOTS, or a
     /// "screenshots" folder next to the test assembly). Fails when a single line of text in it is stretched to a fixed
-    /// height instead of centered in it (docs/design/README.md, "Type"), which Android's fonts show as text sitting high.
+    /// height instead of centered in it (docs/design/README.md, "Type"), which Android's fonts show as text sitting high,
+    /// or when a control in it breaks the accessibility rules (docs/design/README.md, "Accessibility"): a tap target under
+    /// the screen's touch target, a control with no accessible name, or text or an icon below WCAG AA contrast.
     /// </summary>
     public static string SaveScreenshot(Window window, string name)
     {
@@ -38,6 +40,12 @@ internal static class UiTestHelpers
         var path = Path.Combine(folder, name + ".png");
         SaveFrame(window, path);
         Design.StretchedText.Check(window, folder, name);
+        var found = Accessibility.AccessibilityReport.Check(window, folder, name);
+        if (Accessibility.AccessibilityReport.Enforced)
+        {
+            Accessibility.AccessibilityReport.AssertNone(found, name);
+        }
+
         return path;
     }
 
