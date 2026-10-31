@@ -1,0 +1,285 @@
+shelf at 62d3e4ee2503c3c497f749276e86b2331c18fd6a, opening /home/runner/work/_temp/repos/shelf/pkgs/shelf
+Opened in 0.3 s: shelf, solution (none)
+  toolchain project flutter: /home/runner/work/_temp/repos/shelf/pkgs/shelf/pubspec.yaml
+Compatibility Doctor:
+  shelf: Needs a toolchain via Dart and Flutter toolchain (experimental) - A Dart package: it runs with dart run and its tests with dart test, from the experimental Flutter SDK in the Toolchain Store.
+F5 startup project: shelf (flutter) /home/runner/work/_temp/repos/shelf/pkgs/shelf/pubspec.yaml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: 0 found; 230 passed, 0 failed, 1 skipped, 0 not run - 231 tests run in 10.0 sec: 230 passed, 0 failed, 1 skipped. (10 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up shelf: flutter pub get
+  Installing shelf's packages: Installing packages: flutter pub get
+  Installing shelf's packages: Succeeded after 2.1 s
+  Setting up projects: Succeeded after 5.3 s
+  Testing shelf: Running shelf's tests
+  Testing shelf: Succeeded after 10.0 s
+Project setup:
+
+Output:
+nce sync handler returns a value to the client
+✅ test/shelf_io_test.dart: adapter conformance async handler returns a value to the client
+ERROR - 2026-10-31 02:10:02.705461
+GET /
+Error thrown by handler.
+Unsupported operation: test
+package:_shelf_compliance/src/adapter/adapter_tests.dart 97:7  testAll.<fn>.<fn>
+
+✅ test/shelf_io_test.dart: adapter conformance thrown error leads to a 500
+ERROR - 2026-10-31 02:10:02.735687
+GET /
+Error thrown by handler.
+test
+
+✅ test/shelf_io_test.dart: adapter conformance async error leads to a 500
+✅ test/shelf_io_test.dart: adapter conformance supports HEAD requests
+✅ test/shelf_io_test.dart: adapter conformance Request is populated correctly
+✅ test/shelf_io_test.dart: adapter conformance Request can handle colon in first path segment
+✅ test/cascade_test.dart: a cascade with several handlers the first response should be returned if it matches
+✅ test/cascade_test.dart: a cascade with several handlers the second response should be returned if it matches and the first doesn't
+✅ test/cascade_test.dart: a cascade with several handlers the third response should be returned if it matches and the first two don't
+✅ test/cascade_test.dart: a cascade with several handlers the third response should be returned if no response matches
+✅ test/cascade_test.dart: a 404 response triggers a cascade by default
+✅ test/cascade_test.dart: a 405 response triggers a cascade by default
+✅ test/shelf_io_test.dart: adapter conformance chunked requests are un-chunked
+✅ test/cascade_test.dart: [statusCodes] controls which statuses cause cascading
+✅ test/cascade_test.dart: [shouldCascade] controls which responses cause cascading
+✅ test/cascade_test.dart: errors getting the handler for an empty cascade fails
+✅ test/cascade_test.dart: errors passing [statusCodes] and [shouldCascade] at the same time fails
+✅ test/shelf_io_test.dart: adapter conformance custom response headers are received by the client
+✅ test/shelf_io_test.dart: adapter conformance multiple headers are received from the client
+✅ test/shelf_io_test.dart: adapter conformance custom status code is received by the client
+✅ test/shelf_io_test.dart: adapter conformance custom request headers are received by the handler
+✅ test/shelf_io_test.dart: adapter conformance post with empty content
+✅ test/shelf_io_test.dart: adapter conformance post with request content
+✅ test/shelf_io_test.dart: adapter conformance supports request hijacking
+ERROR - 2026-10-31 02:10:03.061367
+GET /
+Caught HijackException, but the request wasn't hijacked.
+package:_shelf_compliance/src/adapter/adapter_tests.dart 329:41  testAll.<fn>.<fn>
+
+✅ test/shelf_io_test.dart: adapter conformance reports an error if a HijackException is thrown without hijacking
+✅ test/shelf_io_test.dart: adapter conformance passes asynchronous exceptions to the parent error zone
+ERROR - 2026-10-31 02:10:03.122371
+Asynchronous error
+Bad state: oh no
+package:_shelf_compliance/src/adapter/adapter_tests.dart 359:22  testAll.<fn>.<fn>.<fn>.<fn>
+
+✅ test/shelf_io_test.dart: adapter conformance doesn't pass asynchronous exceptions to the root error zone
+::group::❎ test/shelf_io_test.dart: adapter conformance a malformed HTTP host request results in a 400 response (skipped)
+Skip: adapter does not respond 400 to a malformed Host header (RFC 9112 section 3.2)
+::endgroup::
+ERROR - 2026-10-31 02:10:03.162879
+✅ test/shelf_io_test.dart: adapter conformance a bad HTTP URL request results in a 400 response
+Error parsing request.
+Invalid argument (requestedUri): must be an absolute URL.: Instance of '_Uri'
+dart:isolate  _RawReceivePort._handleMessage
+
+✅ test/shelf_io_test.dart: adapter conformance date header is sent by default
+✅ test/shelf_io_test.dart: adapter conformance date header defers to header in response
+✅ test/message_change_test.dart: Request body with String
+✅ test/message_change_test.dart: Request body with Stream
+✅ test/message_change_test.dart: Request with empty headers returns identical instance
+✅ test/message_change_test.dart: Request with empty context returns identical instance
+✅ test/shelf_io_test.dart: adapter conformance X-Powered-By header defaults to "Dart with package:shelf"
+✅ test/message_change_test.dart: Request new header values are added
+✅ test/message_change_test.dart: Request existing header values are overwritten
+✅ test/message_change_test.dart: Request new context values are added
+✅ test/message_change_test.dart: Request existing context values are overwritten
+✅ test/message_change_test.dart: Response body with String
+✅ test/shelf_io_test.dart: adapter conformance X-Powered-By header defers to header in response when default
+✅ test/message_change_test.dart: Response body with Stream
+✅ test/message_change_test.dart: Response with empty headers returns identical instance
+✅ test/message_change_test.dart: Response with empty context returns identical instance
+✅ test/message_change_test.dart: Response new header values are added
+✅ test/message_change_test.dart: Response existing header values are overwritten
+✅ test/message_change_test.dart: Response new context values are added
+✅ test/message_change_test.dart: Response existing context values are overwritten
+✅ test/shelf_io_test.dart: adapter conformance X-Powered-By header can be set at the server level
+✅ test/shelf_io_test.dart: adapter conformance X-Powered-By header defers to header in response when set at the server level
+✅ test/shelf_io_test.dart: adapter conformance X-Powered-By header is omitted when set to null
+✅ test/shelf_io_test.dart: adapter conformance chunked coding is added when the transfer-encoding header is unset
+✅ test/shelf_io_test.dart: adapter conformance chunked coding is added when the transfer-encoding header is "identity"
+✅ test/shelf_io_test.dart: adapter conformance chunked coding is preserved when the transfer-encoding header is "chunked"
+✅ test/shelf_io_test.dart: adapter conformance chunked coding is not added when content-length is set
+✅ test/shelf_io_test.dart: adapter conformance chunked coding is not added when status code is 1xx
+✅ test/shelf_io_test.dart: adapter conformance chunked coding is not added when status code is 204
+✅ test/shelf_io_test.dart: adapter conformance chunked coding is not added when status code is 304
+✅ test/shelf_io_test.dart: adapter conformance includes the dart:io HttpConnectionInfo in request context
+✅ test/shelf_io_test.dart: adapter conformance resolves connection info lazily, consistently, and through change()
+✅ test/add_chunked_encoding_test.dart: adds chunked encoding with no transfer-encoding header
+✅ test/add_chunked_encoding_test.dart: adds chunked encoding with transfer-encoding: identity
+✅ test/add_chunked_encoding_test.dart: doesn't add chunked encoding with content length
+✅ test/add_chunked_encoding_test.dart: doesn't add chunked encoding with status 1xx
+✅ test/add_chunked_encoding_test.dart: doesn't add chunked encoding with status 204
+✅ test/add_chunked_encoding_test.dart: doesn't add chunked encoding with status 304
+✅ test/add_chunked_encoding_test.dart: doesn't add chunked encoding with status 204
+✅ test/add_chunked_encoding_test.dart: doesn't add chunked encoding with status 204
+✅ test/shelf_io_test.dart: adapter conformance ssl tests secure sync handler returns a value to the client
+✅ test/shelf_io_test.dart: adapter conformance ssl tests secure async handler returns a value to the client
+✅ test/shelf_io_test.dart: respects the "shelf.io.buffer_output" context parameter
+✅ test/shelf_io_test.dart: throws StateError when connection info is first read after connection closes
+✅ test/pipeline_test.dart: compose middleware with Pipeline
+✅ test/pipeline_test.dart: extensions for composition
+✅ test/pipeline_test.dart: Pipeline can be used as middleware
+✅ test/response_test.dart: supports a String body readAsString
+✅ test/response_test.dart: supports a String body read
+✅ test/response_test.dart: supports a Uint8List body without copying
+✅ test/response_test.dart: supports a List<int> body without copying
+✅ test/response_test.dart: supports a Stream<List<int>> body without copying
+✅ test/response_test.dart: Copies a dynamic list of int elements
+✅ test/response_test.dart: allows content-length header even if body is null
+✅ test/response_test.dart: clears content-length for notModified response
+✅ test/response_test.dart: new Response.internalServerError without a body sets the body to "Internal Server Error"
+✅ test/response_test.dart: new Response.internalServerError without a body sets the content-type header to text/plain
+✅ test/response_test.dart: new Response.internalServerError without a body preserves content-type parameters
+✅ test/response_test.dart: Response.badRequest: no supplied body results in "Bad Request"
+✅ test/response_test.dart: Response.badRequest: sets body
+✅ test/response_test.dart: Response.unauthorized: sets body
+✅ test/response_test.dart: Response redirect sets the location header for a String
+✅ test/response_test.dart: Response redirect sets the location header for a Uri
+✅ test/response_test.dart: expires is null without an Expires header
+✅ test/log_middleware_test.dart: logs a request with a synchronous response
+✅ test/log_middleware_test.dart: logs a request with an asynchronous response
+✅ test/response_test.dart: expires comes from the Expires header
+✅ test/response_test.dart: lastModified is null without a Last-Modified header
+✅ test/response_test.dart: lastModified comes from the Last-Modified header
+✅ test/response_test.dart: change with no arguments returns instance with equal values
+✅ test/response_test.dart: change allows the original response to be read
+✅ test/response_test.dart: change allows the changed response to be read
+✅ test/response_test.dart: change allows another changed response to be read
+✅ test/response_test.dart: change change headers delete value with null
+✅ test/response_test.dart: change change headers delete value with empty list
+✅ test/log_middleware_test.dart: logs a request with an asynchronous error response
+✅ test/response_test.dart: change change headers override value with new String
+✅ test/log_middleware_test.dart: doesn't log a HijackException
+✅ test/response_test.dart: change change headers override value with new single-item List
+✅ test/response_test.dart: change change headers override value with new multi-item List
+✅ test/response_test.dart: change change headers adding a new values
+✅ test/create_middleware_test.dart: forwards the request and response if both handlers are null
+✅ test/create_middleware_test.dart: requestHandler sync null response forwards to inner handler
+✅ test/create_middleware_test.dart: requestHandler async null response forwards to inner handler
+✅ test/create_middleware_test.dart: requestHandler sync response is returned
+✅ test/create_middleware_test.dart: requestHandler async response is returned
+✅ test/create_middleware_test.dart: requestHandler with responseHandler with sync result, responseHandler is not called
+✅ test/create_middleware_test.dart: requestHandler with responseHandler with async result, responseHandler is not called
+✅ test/create_middleware_test.dart: responseHandler innerHandler sync response is seen, replaced value continues
+✅ test/create_middleware_test.dart: responseHandler innerHandler async response is seen, async value continues
+✅ test/create_middleware_test.dart: error handling sync error thrown by requestHandler bubbles down
+✅ test/create_middleware_test.dart: error handling async error thrown by requestHandler bubbles down
+✅ test/create_middleware_test.dart: error handling throw from responseHandler does not hit error handler
+✅ test/create_middleware_test.dart: error handling requestHandler throw does not hit errorHandlers
+✅ test/create_middleware_test.dart: error handling inner handler throws, is caught by errorHandler with response
+✅ test/create_middleware_test.dart: error handling inner handler throws, is caught by errorHandler and rethrown
+✅ test/create_middleware_test.dart: error handling error thrown by inner handler without a middleware errorHandler is rethrown
+✅ test/create_middleware_test.dart: error handling doesn't handle HijackException
+✅ test/request_test.dart: constructor protocolVersion defaults to "1.1"
+✅ test/request_test.dart: constructor provide non-default protocolVersion
+✅ test/request_test.dart: constructor url defaults to the requestedUri's relativized path and query
+✅ test/request_test.dart: constructor url may contain colon
+✅ test/request_test.dart: constructor url may contain colon in first segment
+✅ test/request_test.dart: constructor url may contain slash
+✅ test/request_test.dart: constructor url is inferred from handlerPath if possible
+✅ test/request_test.dart: constructor url uses the given value if passed
+✅ test/request_test.dart: constructor url may be empty
+✅ test/request_test.dart: constructor handlerPath defaults to '/'
+✅ test/request_test.dart: constructor handlerPath is inferred from url if possible
+✅ test/request_test.dart: constructor handlerPath uses the given value if passed
+✅ test/request_test.dart: constructor handlerPath adds a trailing slash to the given value if necessary
+✅ test/request_test.dart: constructor handlerPath may be a single slash
+✅ test/request_test.dart: constructor errors requestedUri must be absolute
+✅ test/request_test.dart: constructor errors requestedUri may not have a fragment
+✅ test/request_test.dart: constructor errors url must be relative
+✅ test/request_test.dart: constructor errors url may not be root-relative
+✅ test/request_test.dart: constructor errors url may not have a fragment
+✅ test/request_test.dart: constructor errors url must be a suffix of requestedUri
+✅ test/request_test.dart: constructor errors url must have the same query parameters as requestedUri
+✅ test/request_test.dart: constructor errors handlerPath must be a prefix of requestedUri
+✅ test/request_test.dart: constructor errors handlerPath must start with "/"
+✅ test/request_test.dart: constructor errors handlerPath must be the requestedUri path if url is empty
+✅ test/request_test.dart: constructor errors handlerPath + url must be requestedUrl path
+✅ test/request_test.dart: constructor errors handlerPath + url must be on a path boundary
+✅ test/request_test.dart: ifModifiedSince is null without an If-Modified-Since header
+✅ test/request_test.dart: ifModifiedSince comes from the Last-Modified header
+✅ test/request_test.dart: change with no arguments returns instance with equal values
+✅ test/request_test.dart: change change headers delete value with null
+✅ test/request_test.dart: change change headers delete value with empty list
+✅ test/request_test.dart: change change headers override value with new String
+✅ test/request_test.dart: change change headers override value with new single-item List
+✅ test/request_test.dart: change change headers override value with new multi-item List
+✅ test/request_test.dart: change change headers adding a new values
+✅ test/request_test.dart: change with path updates handlerPath and url
+✅ test/request_test.dart: change with path allows a trailing slash
+✅ test/request_test.dart: change with path regression test for Issue #142
+✅ test/request_test.dart: change with path allows changing path leading to double //
+✅ test/request_test.dart: change with path throws if path does not match existing uri
+✅ test/request_test.dart: change with path throws if path isn't a path boundary
+✅ test/request_test.dart: change allows the original request to be read
+✅ test/request_test.dart: change allows the changed request to be read
+✅ test/request_test.dart: change allows another changed request to be read
+✅ test/message_test.dart: headers message headers are case insensitive
+✅ test/message_test.dart: headers null header value becomes default
+✅ test/message_test.dart: headers headers are immutable
+✅ test/message_test.dart: headers headers with multiple values
+✅ test/message_test.dart: headers multiple cookie header values are joined with "; "
+✅ test/message_test.dart: context is accessible
+✅ test/message_test.dart: context null context value becomes empty and immutable
+✅ test/message_test.dart: context is immutable
+✅ test/message_test.dart: readAsString supports a null body
+✅ test/message_test.dart: readAsString supports a Stream<List<int>> body
+✅ test/server_handler_test.dart: passes the URL to the server
+✅ test/message_test.dart: readAsString defaults to UTF-8
+✅ test/message_test.dart: readAsString the content-type header overrides the default
+✅ test/message_test.dart: readAsString an explicit encoding overrides the content-type header
+✅ test/message_test.dart: read supports a null body
+✅ test/message_test.dart: read supports a Stream<List<int>> body
+✅ test/message_test.dart: read supports a List<int> body
+✅ test/message_test.dart: read throws when calling read()/readAsString() multiple times
+✅ test/message_test.dart: content-length is 0 with a default body and without a content-length header
+✅ test/message_test.dart: content-length comes from a byte body
+✅ test/message_test.dart: content-length comes from a string body
+✅ test/message_test.dart: content-length is set based on byte length for a string body
+✅ test/message_test.dart: content-length is null for a stream body
+✅ test/message_test.dart: content-length uses the content-length header for a stream body
+✅ test/message_test.dart: content-length real body length takes precedence over content-length header
+✅ test/message_test.dart: content-length is null for a chunked transfer encoding
+✅ test/server_handler_test.dart: pipes a request from ServerHandler.handler to a mounted handler
+✅ test/message_test.dart: content-length is null for a chunked transfer encoding with a different case
+✅ test/message_test.dart: content-length is null for a non-identity transfer encoding
+✅ test/server_handler_test.dart: waits until the server's handler is mounted to service a request
+✅ test/message_test.dart: content-length is set for identity transfer encoding
+✅ test/message_test.dart: content-length is set for identity transfer encoding with a different case
+✅ test/message_test.dart: mimeType is null without a content-type header
+✅ test/message_test.dart: mimeType comes from the content-type header
+✅ test/message_test.dart: mimeType doesn't include parameters
+✅ test/server_handler_test.dart: stops servicing requests after Server.close is called
+✅ test/message_test.dart: encoding is null without a content-type header
+✅ test/server_handler_test.dart: calls onClose when Server.close is called
+✅ test/message_test.dart: encoding is null without a charset parameter
+✅ test/server_handler_test.dart: doesn't allow Server.mount to be called multiple times
+✅ test/message_test.dart: encoding is null with an unrecognized charset parameter
+✅ test/message_test.dart: encoding comes from the content-type charset parameter
+✅ test/message_test.dart: encoding comes from the content-type charset parameter with a different case
+✅ test/message_test.dart: encoding defaults to encoding a String as UTF-8
+✅ test/message_test.dart: encoding uses the explicit encoding if available
+✅ test/message_test.dart: encoding adds an explicit encoding to the content-type
+✅ test/message_test.dart: encoding adds an explicit encoding to the content-type with a different case
+✅ test/message_test.dart: encoding sets an absent content-type to application/octet-stream in order to set the charset
+✅ test/message_test.dart: encoding overwrites an existing charset if given an explicit encoding
+✅ test/io_server_test.dart: serves HTTP requests with the mounted handler
+ERROR - 2026-10-31 02:10:05.305580
+Error parsing request.
+Invalid argument (requestedUri): URI parsing failed: FormatException: Missing extension byte (at offset 1): Instance of '_Uri'
+dart:isolate  _RawReceivePort._handleMessage
+
+✅ test/io_server_test.dart: Handles malformed requests gracefully.
+✅ test/io_server_test.dart: delays HTTP requests until a handler is mounted
+✅ test/io_server_test.dart: disallows more than one handler from being mounted
+
+🎉 232 tests passed, 1 skipped.
+
