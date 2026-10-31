@@ -71,7 +71,7 @@ public static partial class ProjectParser
             throw new ProjectLoadException(fullPath, "the file does not exist.", null);
         }
 
-        var root = LoadXml(fullPath, File.ReadAllText(fullPath));
+        var root = LoadXml(fullPath, PathUtilities.ReadAllTextBounded(fullPath));
         return WithPlatformInvokeFiles(WithRazorComponents(Build(fullPath, root, new EvaluationOptions(FromDisk: true, [], []))));
     }
 
@@ -174,6 +174,7 @@ public static partial class ProjectParser
             Name = Path.GetFileNameWithoutExtension(filePath),
             FilePath = filePath,
             Language = language,
+            IsPreMsBuildFormat = root.Name.LocalName == "VisualStudioProject",
             Sdk = sdk,
             TargetFrameworks = targetFrameworks,
             OutputType = properties.GetValueOrDefault("OutputType") ?? DefaultOutputType(sdk),

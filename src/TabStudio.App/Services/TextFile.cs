@@ -41,7 +41,7 @@ public static class TextFile
             throw new IOException($"'{info.Name}' is larger than 16 MB, which is more than the editor opens.");
         }
 
-        var bytes = await File.ReadAllBytesAsync(path, cancellationToken).ConfigureAwait(false);
+        var bytes = await ReadBoundedAsync(path, info.Name, cancellationToken).ConfigureAwait(false);
         var (encoding, preamble) = Detect(bytes);
         if (preamble == 0 && LooksBinary(bytes))
         {
@@ -131,6 +131,30 @@ public static class TextFile
 
             throw;
         }
+    }
+
+    /// <summary>
+    /// Reads at most <see cref="MaximumBytes"/>: the size checked first is not what is read when the file is a link to
+    /// a device such as <c>/dev/zero</c>, which reports no length and never ends, or a log another program is still
+    /// writing. Either was read until memory ran out.
+    /// </summary>
+    private static async Task<byte[]> ReadBoundedAsync(string path, string name, CancellationToken cancellationToken)
+    {
+        await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete, 81920, useAsync: true);
+        var buffer = new MemoryStream(stream.CanSeek ? (int)Math.Min(Math.Max(stream.Length, 0), MaximumBytes) : 0);
+        var chunk = new byte[81920];
+        int read;
+        while ((read = await stream.ReadAsync(chunk, cancellationToken).ConfigureAwait(false)) > 0)
+        {
+            if (buffer.Length + read > MaximumBytes)
+            {
+                throw new IOException($"'{name}' is larger than 16 MB, which is more than the editor opens.");
+            }
+
+            buffer.Write(chunk, 0, read);
+        }
+
+        return buffer.Length == buffer.Capacity ? buffer.GetBuffer() : buffer.ToArray();
     }
 
     /// <summary>UTF-8 that refuses bytes that are not UTF-8, so another encoding is noticed.</summary>

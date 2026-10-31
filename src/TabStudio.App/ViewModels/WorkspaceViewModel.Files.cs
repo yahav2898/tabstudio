@@ -196,14 +196,23 @@ public sealed partial class WorkspaceViewModel
             var trash = Path.Combine(_paths.Trash, DateTime.Now.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture));
             Directory.CreateDirectory(trash);
             var destination = Path.Combine(trash, node.Name);
-            if (node.Kind == WorkspaceNodeKind.Folder)
+
+            // Off the UI thread: the trash is in the app's own storage, so a folder in shared storage is copied there,
+            // and a node_modules or bin folder froze the IDE until Android offered to close it.
+            StatusText = $"Deleting {node.Name}";
+            var folder = node.Kind == WorkspaceNodeKind.Folder;
+            await Task.Run(() =>
             {
-                MoveDirectory(path, destination);
-            }
-            else
-            {
-                File.Move(path, destination);
-            }
+                if (folder)
+                {
+                    MoveDirectory(path, destination);
+                }
+                else
+                {
+                    File.Move(path, destination);
+                }
+            });
+            StatusText = $"Deleted {node.Name}";
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
@@ -333,15 +342,38 @@ public sealed partial class WorkspaceViewModel
         }
         catch (IOException)
         {
-            // Directory.Move cannot cross volumes; copy and delete instead.
-            foreach (var file in Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories))
-            {
-                var target = Path.Combine(destination, Path.GetRelativePath(source, file));
-                Directory.CreateDirectory(Path.GetDirectoryName(target)!);
-                File.Copy(file, target);
-            }
-
+            // Directory.Move cannot cross volumes; copy and delete instead. Links are copied as links: followed, a
+            // link back to a folder above was copied over and over until the storage was full.
+            CopyDirectory(source, destination);
             Directory.Delete(source, recursive: true);
+        }
+    }
+
+    private static void CopyDirectory(string source, string destination)
+    {
+        Directory.CreateDirectory(destination);
+        foreach (var entry in new DirectoryInfo(source).EnumerateFileSystemInfos())
+        {
+            var target = Path.Combine(destination, entry.Name);
+            if (entry.LinkTarget is { } link)
+            {
+                if (entry is DirectoryInfo)
+                {
+                    Directory.CreateSymbolicLink(target, link);
+                }
+                else
+                {
+                    File.CreateSymbolicLink(target, link);
+                }
+            }
+            else if (entry is DirectoryInfo)
+            {
+                CopyDirectory(entry.FullName, target);
+            }
+            else
+            {
+                File.Copy(entry.FullName, target);
+            }
         }
     }
 

@@ -13,6 +13,7 @@ public sealed partial class MainViewModel : ObservableObject
     private readonly Func<WorkspaceViewModel> _createWorkspace;
     private readonly RecentWorkspaces _recent;
     private readonly SessionStore _sessions;
+    private bool _opening;
     private readonly CompilerServices _compiler;
 
     /// <summary>Creates the root view model.</summary>
@@ -78,17 +79,58 @@ public sealed partial class MainViewModel : ObservableObject
 
         // Copies of other devices' workspaces from sessions the app did not end, as when it was closed in one.
         LiveJoin?.Live.DeleteCopies();
-        if (_sessions.Load() is { } session && LiveJoin?.Live.IsCopy(session.WorkspacePath) != true)
+        var session = _sessions.Load();
+        if (_sessions.LastRecovered.Count > 0)
         {
-            await OpenWorkspaceAsync(session.WorkspacePath, session);
+            Start.ShowError($"The last workspace can no longer be opened, so its unsaved changes to {Plural(_sessions.LastRecovered.Count, "file")} were kept in {_sessions.RecoveredFolder}.");
         }
+
+        if (session is null || LiveJoin?.Live.IsCopy(session.WorkspacePath) == true)
+        {
+            _sessions.EndRestore();
+            return;
+        }
+
+        // TabStudio ended while it reopened this workspace last time (out of memory on a small tablet, or a crash):
+        // reopening it at every start would end it every time. The start screen offers it instead, and opening it
+        // from there restores the session, unsaved text included.
+        if (_sessions.InterruptedRestore is not null)
+        {
+            _sessions.EndRestore();
+            Start.ShowError($"TabStudio closed while it was reopening '{Path.GetFileName(session.WorkspacePath)}', so it was not reopened this time. Open it from Recent to continue; its unsaved changes are kept.");
+            return;
+        }
+
+        await OpenWorkspaceAsync(session.WorkspacePath, session);
     }
+
+    private static string Plural(int count, string noun) => count == 1 ? $"1 {noun}" : $"{count} {noun}s";
 
     /// <summary>Opens a workspace, closing the current one once its unsaved documents are saved.</summary>
     /// <param name="path">A solution, project or folder.</param>
     /// <param name="session">A session to restore, if any.</param>
     /// <returns><see langword="false"/> when the open workspace stays because a document could not be saved.</returns>
     public async Task<bool> OpenWorkspaceAsync(string path, SessionState? session = null)
+    {
+        // A double tap on a recent workspace opened it twice at once: the second disposed the first in the middle of
+        // loading, and the first's failure then closed the second.
+        if (_opening)
+        {
+            return true;
+        }
+
+        _opening = true;
+        try
+        {
+            return await OpenWorkspaceCoreAsync(path, session);
+        }
+        finally
+        {
+            _opening = false;
+        }
+    }
+
+    private async Task<bool> OpenWorkspaceCoreAsync(string path, SessionState? session)
     {
         // Closing disposes the documents without saving: joining a Live session from an open workspace lost its edits.
         if (CurrentPage is WorkspaceViewModel { IsLiveGuest: false } current && !await current.SaveAllCoreAsync())
@@ -98,12 +140,24 @@ public sealed partial class MainViewModel : ObservableObject
 
         CloseCurrentWorkspace();
 
+        // A workspace that was not closed on purpose keeps its session, with the unsaved text, until it is opened
+        // again: from Recent after an interrupted restore, or after the storage it lives on came back.
+        if (session is null && _sessions.Load() is { } saved && string.Equals(Path.GetFullPath(saved.WorkspacePath), Path.GetFullPath(path), StringComparison.Ordinal))
+        {
+            session = saved;
+        }
+
         var workspace = _createWorkspace();
         workspace.CloseRequested += OnWorkspaceCloseRequested;
         workspace.OpenWorkspaceRequested += OnOpenWorkspaceRequested;
         workspace.NewProjectRequested += OnNewProjectRequested;
         CurrentPage = workspace;
         OnPropertyChanged(nameof(Workspace));
+        if (session is not null)
+        {
+            _sessions.BeginRestore(path);
+        }
+
         try
         {
             await workspace.LoadAsync(path, session);
@@ -118,13 +172,29 @@ public sealed partial class MainViewModel : ObservableObject
                 _recent.Add(new RecentWorkspace(path, loaded.Name, description, DateTimeOffset.Now));
             }
         }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException or Core.Workspaces.ProjectLoadException)
+        catch (Exception ex) when (ex is not OutOfMemoryException)
         {
-            CloseCurrentWorkspace();
+            // Any failure, not only the expected ones: from the restore at startup it left a half-open IDE, and from
+            // the search's Open it reached the dispatcher and ended the app.
+            if (ReferenceEquals(CurrentPage, workspace))
+            {
+                CloseCurrentWorkspace();
+            }
+            else
+            {
+                workspace.Dispose();
+            }
+
             Start.ShowError($"Could not open '{Path.GetFileName(path)}': {ex.Message}");
             Start.RefreshRecent();
             CurrentPage = Start;
             OnPropertyChanged(nameof(Workspace));
+        }
+        finally
+        {
+            // Reached when the restore finished or failed with an error the user sees; only the process ending
+            // while reopening leaves the note for the next start.
+            _sessions.EndRestore();
         }
 
         return true;
@@ -159,6 +229,27 @@ public sealed partial class MainViewModel : ObservableObject
 
         Start.ShowError(reason);
         LiveJoin?.Live.DeleteCopies();
+    }
+
+    /// <summary>
+    /// Shows an error nothing else handled, which TabStudio survived: in the IDE's Output and status bar, or on the
+    /// start screen.
+    /// </summary>
+    /// <param name="exception">The error.</param>
+    /// <param name="report">The crash log's report of it, if it could be written.</param>
+    public void ReportUnexpectedError(Exception exception, string? report)
+    {
+        ArgumentNullException.ThrowIfNull(exception);
+        var where = report is null ? string.Empty : $" Details: {report}";
+        var message = $"Something went wrong: {exception.Message} TabStudio kept running.{where}";
+        if (Workspace is { } workspace)
+        {
+            workspace.ShowUnexpectedError(message, $"Something went wrong: {exception.Message}");
+        }
+        else
+        {
+            Start.ShowError(message);
+        }
     }
 
     /// <summary>Saves the session, for example when the app goes to the background.</summary>

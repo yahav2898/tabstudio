@@ -186,7 +186,7 @@ public sealed class Downloader
             }
         }
 
-        using var response = await _http.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+        using var response = await SendWithinStallLimitAsync(message, cancellationToken).ConfigureAwait(false);
         if (response.StatusCode == HttpStatusCode.RequestedRangeNotSatisfiable)
         {
             // What is on the device does not fit what the server has any more: start over.
@@ -255,5 +255,16 @@ public sealed class Downloader
         }
 
         return request.Verify?.Invoke(path);
+    }
+
+    /// <summary>
+    /// Sends a request, giving up when no headers come within <see cref="StallTimeout"/>: a server that took the
+    /// connection and never answered (a half-open connection after a network switch) held an install until cancelled.
+    /// </summary>
+    private async Task<HttpResponseMessage> SendWithinStallLimitAsync(HttpRequestMessage message, CancellationToken cancellationToken)
+    {
+        using var headers = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        headers.CancelAfter(StallTimeout);
+        return await _http.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, headers.Token).ConfigureAwait(false);
     }
 }

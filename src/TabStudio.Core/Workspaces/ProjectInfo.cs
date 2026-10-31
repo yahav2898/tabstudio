@@ -143,6 +143,12 @@ public sealed record ProjectInfo
     /// <summary>The language, inferred from the file extension.</summary>
     public ProjectLanguage Language { get; init; }
 
+    /// <summary>
+    /// Whether the file is a Visual Studio .NET 2002 or 2003 project (<c>&lt;VisualStudioProject&gt;</c>), from before
+    /// MSBuild, as zlib's <c>contrib/dotzlib</c> is: none of its properties or items are MSBuild's.
+    /// </summary>
+    public bool IsPreMsBuildFormat { get; init; }
+
     /// <summary>The MSBuild SDK, for example <c>Microsoft.NET.Sdk.Web</c>, or <see langword="null"/> for legacy projects.</summary>
     public string? Sdk { get; init; }
 

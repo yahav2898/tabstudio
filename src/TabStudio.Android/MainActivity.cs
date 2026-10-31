@@ -27,8 +27,10 @@ namespace TabStudio.Android;
 /// </para>
 /// <para>
 /// It handles size, orientation, keyboard and theme changes itself instead of being recreated, so attaching a
-/// keyboard or resizing TabStudio in split screen never interrupts the IDE. The window resizes for the
-/// on-screen keyboard; on Android 15 and later, where apps are drawn edge to edge, the IDE pads itself instead.
+/// keyboard or resizing TabStudio in split screen never interrupts the IDE. Font size and layout direction are applied
+/// in place (<c>MainActivity.Accessibility</c>); language, SIM, touchscreen and color mode changes alter nothing the
+/// IDE draws, and each recreated the activity behind the user's back. The window resizes for the on-screen keyboard;
+/// on Android 15 and later, where apps are drawn edge to edge, the IDE pads itself instead.
 /// </para>
 /// <para>
 /// Started with the boolean extra <c>tabstudio.selftest</c>, it opens the sample, presses F5, debugs it, debugs
@@ -46,7 +48,8 @@ namespace TabStudio.Android;
     WindowSoftInputMode = SoftInput.AdjustResize,
     ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.SmallestScreenSize
         | ConfigChanges.ScreenLayout | ConfigChanges.UiMode | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden
-        | ConfigChanges.Navigation | ConfigChanges.FontScale | ConfigChanges.LayoutDirection)]
+        | ConfigChanges.Navigation | ConfigChanges.FontScale | ConfigChanges.Locale | ConfigChanges.LayoutDirection
+        | ConfigChanges.Touchscreen | ConfigChanges.ColorMode | ConfigChanges.Mcc | ConfigChanges.Mnc)]
 public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplication>
 {
     /// <summary>The intent extra that runs the self test.</summary>

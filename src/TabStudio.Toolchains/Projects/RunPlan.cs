@@ -21,7 +21,7 @@ public sealed record RunPlan(ProcessStartSpec? Build, ProcessStartSpec Run, stri
     [
         "Makefile", "makefile", "GNUmakefile", "CMakeLists.txt", "pom.xml", "build.gradle", "build.gradle.kts",
         "settings.gradle", "settings.gradle.kts", "Cargo.toml", "go.mod", "package.json", "pyproject.toml",
-        "composer.json", "artisan", "Package.swift",
+        "composer.json", "artisan", "Package.swift", "configure.ac", "configure",
     ];
 
     /// <summary>
@@ -522,7 +522,10 @@ public static partial class RunPlanner
             steps.Add(Spec(project, environment.Create, variables));
         }
 
-        steps.Add(Spec(project, dependency.Command, variables));
+        var composerRoot = dependency.Manifest == "composer.json" ? PhpProject.ComposerRootVersion(project.Directory) : null;
+        steps.Add(composerRoot is null
+            ? Spec(project, dependency.Command, variables)
+            : Spec(project, dependency.Command, variables, new Dictionary<string, string> { ["COMPOSER_ROOT_VERSION"] = composerRoot }));
         if (IsNodeManifest(dependency) && PrismaProject.Detect(project.Directory) is { } prisma)
         {
             var prismaEnvironment = PrismaProject.Environment(PrismaProject.EngineTarget(platform ?? Linux.ToolchainPlatform.Desktop));

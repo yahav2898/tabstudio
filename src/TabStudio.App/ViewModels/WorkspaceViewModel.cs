@@ -101,6 +101,10 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     private CancellationTokenSource? _background = new();
     private bool _disposed;
 
+    // While a session is being restored the IDE has not reopened its documents yet: a save then (going to the
+    // background while C# loads, or a property's scheduled save) replaced the session with one without its unsaved text.
+    private bool _restoringSession;
+
     /// <summary>Creates the IDE. Call <see cref="LoadAsync"/> to open a workspace.</summary>
     /// <param name="gitHubAccount">The app's GitHub account; without it, the Git Changes window starts signed out.</param>
     /// <param name="browser">Opens web pages, such as GitHub's; the system browser when <see langword="null"/>.</param>
@@ -299,6 +303,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     public async Task LoadAsync(string path, SessionState? session = null)
     {
         ArgumentNullException.ThrowIfNull(path);
+        _restoringSession = session is not null;
         State = IdeState.Busy;
         StatusText = "Opening";
         LoadRemoteState(Directory.Exists(path) ? path : Path.GetDirectoryName(path)!);
@@ -343,7 +348,15 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
         RestoreDebuggingState(session);
         RestoreShellState(session);
-        await RestoreDocumentsAsync(preview.Workspace, session);
+        try
+        {
+            await RestoreDocumentsAsync(preview.Workspace, session);
+        }
+        finally
+        {
+            _restoringSession = false;
+        }
+
         if (notebook is not null)
         {
             await OpenDocumentAsync(notebook);
@@ -477,7 +490,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     {
         StartupProjects.Clear();
         var choices = workspace.Projects
-            .Where(p => (p.IsExecutable || IsWindowsBridgeStartupProject(p)) && !p.IsTestProject && p.Kind is not (ProjectKind.AspireAppHost or ProjectKind.BuildScript) && !ProjectClassifier.NeedsPlatformWorkload(p))
+            .Where(p => (p.IsExecutable || IsWindowsBridgeStartupProject(p)) && !p.IsTestProject && p.Kind is not (ProjectKind.AspireAppHost or ProjectKind.BuildScript) && IsStartable(p))
             .ToList();
 
         // In the order F5 chooses from, the default first; the programs it never picks by itself, such as benchmarks,
@@ -490,9 +503,16 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
         // A build script or a project that needs a platform workload, remembered from an earlier version, which picked
         // them, is not kept.
-        StartupProject = workspace.Projects.FirstOrDefault(p => p.FilePath == preferred && p.Kind != ProjectKind.BuildScript && !ProjectClassifier.NeedsPlatformWorkload(p))
+        StartupProject = workspace.Projects.FirstOrDefault(p => p.FilePath == preferred && p.Kind != ProjectKind.BuildScript && IsStartable(p))
             ?? workspace.DefaultStartupProject;
     }
+
+    /// <summary>
+    /// Whether a project can be chosen to start: not one that needs a platform workload, unless all it needs is a code
+    /// generator, so that F5 says why it cannot build (see <see cref="ProjectClassifier.OnlyNeedsCodeGenerator"/>).
+    /// </summary>
+    private static bool IsStartable(ProjectInfo project) =>
+        !ProjectClassifier.NeedsPlatformWorkload(project) || ProjectClassifier.OnlyNeedsCodeGenerator(project);
 
     private async Task AnalyzeSolutionAsync(CancellationToken cancellationToken)
     {

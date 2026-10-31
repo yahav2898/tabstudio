@@ -93,4 +93,104 @@ public static class PathUtilities
     public static bool IsIgnoredDirectory(string directoryName) =>
         IgnoredDirectoryNames.Contains(directoryName) ||
         (directoryName.StartsWith('.') && directoryName is not ".github" and not ".devcontainer");
+
+    /// <summary>
+    /// The folder's path with every symbolic link in it resolved, so two paths to one folder compare equal; the path
+    /// itself when it cannot be resolved.
+    /// </summary>
+    /// <param name="directory">A folder.</param>
+    public static string RealDirectoryPath(string directory)
+    {
+        ArgumentNullException.ThrowIfNull(directory);
+        try
+        {
+            var full = Path.GetFullPath(directory);
+            var root = Path.GetPathRoot(full) ?? string.Empty;
+            var current = root;
+            foreach (var part in full[root.Length..].Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries))
+            {
+                current = Path.Combine(current, part);
+                if (new DirectoryInfo(current).ResolveLinkTarget(returnFinalTarget: true) is { } target)
+                {
+                    current = Path.GetFullPath(target.FullName);
+                }
+            }
+
+            return Path.TrimEndingDirectorySeparator(current);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            return Path.TrimEndingDirectorySeparator(directory);
+        }
+    }
+
+    /// <summary>
+    /// Whether a walk that has already been through <paramref name="visited"/> (real paths, see
+    /// <see cref="RealDirectoryPath"/>) should go into <paramref name="subdirectory"/>, adding it when it should.
+    /// </summary>
+    /// <remarks>
+    /// A symbolic link back to a folder the walk is in (<c>self -&gt; .</c>) made walks repeat every file up to the
+    /// system's limit of 40 links, doubling with every such link; a link to a folder outside is still followed, once.
+    /// </remarks>
+    /// <param name="subdirectory">The folder found.</param>
+    /// <param name="visited">The real paths of the folders the walk has been through.</param>
+    public static bool TryVisitDirectory(string subdirectory, ISet<string> visited)
+    {
+        ArgumentNullException.ThrowIfNull(subdirectory);
+        ArgumentNullException.ThrowIfNull(visited);
+        bool isLink;
+        try
+        {
+            isLink = new DirectoryInfo(subdirectory).LinkTarget is not null;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return false;
+        }
+
+        if (!isLink)
+        {
+            return visited.Add(Path.TrimEndingDirectorySeparator(subdirectory));
+        }
+
+        // A link to a folder above one the walk went through leads back into the walk.
+        var real = RealDirectoryPath(subdirectory);
+        var under = real + Path.DirectorySeparatorChar;
+        return !visited.Any(v => v.StartsWith(under, StringComparison.Ordinal)) && visited.Add(real);
+    }
+
+    /// <summary>The most a project, solution or source file read from a workspace may hold: 16 MB.</summary>
+    public const long MaximumWorkspaceFileBytes = 16L * 1024 * 1024;
+
+    /// <summary>
+    /// Reads a text file as <see cref="File.ReadAllText(string)"/> does, refusing one larger than
+    /// <paramref name="maximumBytes"/>.
+    /// </summary>
+    /// <remarks>
+    /// A repository can name any path, such as <c>&lt;Import Project="/dev/zero" /&gt;</c> or a link to a device: read
+    /// whole, it took the app's memory until Android ended it.
+    /// </remarks>
+    /// <param name="path">The file.</param>
+    /// <param name="maximumBytes">The largest size read.</param>
+    /// <exception cref="IOException">The file cannot be read or is too large.</exception>
+    public static string ReadAllTextBounded(string path, long maximumBytes = MaximumWorkspaceFileBytes)
+    {
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+        var buffer = new MemoryStream();
+        var chunk = new byte[81920];
+        int read;
+        while ((read = stream.Read(chunk, 0, chunk.Length)) > 0)
+        {
+            if (buffer.Length + read > maximumBytes)
+            {
+                throw new IOException($"'{Path.GetFileName(path)}' is larger than {maximumBytes / (1024 * 1024)} MB.");
+            }
+
+            buffer.Write(chunk, 0, read);
+        }
+
+        buffer.Position = 0;
+        using var reader = new StreamReader(buffer, System.Text.Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
+        return reader.ReadToEnd();
+    }
 }

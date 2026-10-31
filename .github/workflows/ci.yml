@@ -685,6 +685,165 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: bash build/ci/publish-logs.sh real-repos ${{ job.status }}
 
+  # The repositories of the 0.20.5 sweep, in every language, in two jobs of their own beside the one above, so that no
+  # job takes much longer: build/ci/real-repos.json's entries whose "job" is sweep-1 or sweep-2.
+  real-repos-sweep:
+    name: Real repositories (${{ matrix.job }})
+    # Ubuntu 24.04, not ubuntu-latest: the tools installed below (Swift's toolchain, LLVM and the PHP and Java
+    # packages) are the ones published for 24.04, and since ubuntu-latest became Ubuntu 26.04 the IDE's test host
+    # aborted at its first test there ("free(): invalid pointer"). The IDE's own code passes on 26.04 with only
+    # Node.js, Python and Go installed.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        job: [sweep-1, sweep-2]
+    services:
+      # The databases the sweep's apps' READMEs ask for, as on a tablet TabStudio's Services or a server on the network.
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: tabstudio-ci
+          MYSQL_DATABASE: bookstack
+        ports: [3306:3306]
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1 -ptabstudio-ci" --health-interval 5s --health-timeout 5s --health-retries 30
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: tabstudio-ci
+          POSTGRES_DB: realworld
+        ports: [5432:5432]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      TABSTUDIO_REAL_REPOS_JOB: ${{ matrix.job }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-real-repos-${{ matrix.job }}-${{ hashFiles('Directory.Packages.props', '**/*.csproj', 'build/ci/real-repos.json') }}
+          restore-keys: nuget-real-repos-${{ matrix.job }}-
+
+      # The toolchains the Python, Java, Rust and Node.js repositories run with, as the Toolchain Store installs them on a
+      # tablet: Python with uv (which installs the CPython a project's pins need), OpenJDK 21 with Maven, Rust with Cargo,
+      # Node.js 22 with npm, and Go (CMake and GCC are on the runner).
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: false
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: false
+
+      - name: Install Maven
+        run: |
+          # Maven 3.9, as the Toolchain Store installs it: commons-lang's build requires it.
+          maven=https://archive.apache.org/dist/maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz
+          curl -fsSL "$maven" -o "$RUNNER_TEMP/maven.tar.gz"
+          echo "$(curl -fsSL "$maven.sha512" | cut -d' ' -f1)  $RUNNER_TEMP/maven.tar.gz" | sha512sum -c -
+          tar -xzf "$RUNNER_TEMP/maven.tar.gz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/apache-maven-3.9.11/bin" >> "$GITHUB_PATH"
+          export PATH="$RUNNER_TEMP/apache-maven-3.9.11/bin:$PATH"
+          mvn -v; cargo --version; uv --version; python3 --version; node --version; go version; cmake --version | head -1
+
+      # PHP with Composer, the Kotlin compiler with Gradle, and Swift, for the PHP, Kotlin and Swift repositories, at the
+      # versions the Toolchain Store installs.
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, intl, bcmath, gd, pdo_mysql, pdo_pgsql, pdo_sqlite, sqlite3, zip
+          tools: composer
+          coverage: none
+
+      - name: Install Kotlin, Gradle and Swift
+        timeout-minutes: 15
+        run: |
+          curl -fsSL https://services.gradle.org/distributions/gradle-8.14.4-bin.zip -o "$RUNNER_TEMP/gradle.zip"
+          echo "f1771298a70f6db5a29daf62378c4e18a17fc33c9ba6b14362e0cdf40610380d  $RUNNER_TEMP/gradle.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/gradle-8.14.4/bin" >> "$GITHUB_PATH"
+          curl -fsSL https://github.com/JetBrains/kotlin/releases/download/v2.4.21/kotlin-compiler-2.4.21.zip -o "$RUNNER_TEMP/kotlinc.zip"
+          echo "7cc140e76daf416a0424a5557f99afd7ca89ebd463ea1101261e3e01c33e75cd  $RUNNER_TEMP/kotlinc.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/kotlinc.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/kotlinc/bin" >> "$GITHUB_PATH"
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq libz3-dev libncurses-dev libedit2 libpython3-dev > /dev/null
+          curl -fsSL https://download.swift.org/swift-6.4.1-release/ubuntu2404/swift-6.4.1-RELEASE/swift-6.4.1-RELEASE-ubuntu24.04.tar.gz -o "$RUNNER_TEMP/swift.tar.gz"
+          echo "7d246c7114077ad01dba4ad897628446ada4c489d6c7dbcf39ae3f25cbe17e8b  $RUNNER_TEMP/swift.tar.gz" | sha256sum -c -
+          mkdir -p "$RUNNER_TEMP/swift"
+          tar -xzf "$RUNNER_TEMP/swift.tar.gz" -C "$RUNNER_TEMP/swift" --strip-components=1
+          rm "$RUNNER_TEMP/swift.tar.gz"
+          echo "$RUNNER_TEMP/swift/usr/bin" >> "$GITHUB_PATH"
+          php --version; composer --version; "$RUNNER_TEMP/swift/usr/bin/swift" --version
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.cargo/registry
+            ~/.cache/uv
+            ~/.cache/pip
+            ~/.npm
+            ~/.cache/composer
+            ~/.gradle/caches
+          key: real-repos-${{ matrix.job }}-tools-${{ hashFiles('build/ci/real-repos.json') }}
+          restore-keys: real-repos-${{ matrix.job }}-tools-
+
+      - name: Clone the pinned repositories
+        run: python3 build/ci/real-repos.py "$RUNNER_TEMP/real-repos"
+
+      - name: Open and build them in TabStudio
+        env:
+          TABSTUDIO_REAL_REPOS: ${{ runner.temp }}/real-repos
+          TABSTUDIO_REAL_REPOS_OUT: ${{ github.workspace }}/ci-out
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame-hang-timeout 90m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~RealRepositoryTests" --logger "console;verbosity=normal" > ci-out/test.log 2>&1 || status=$?
+          tail -n 60 ci-out/test.log
+          for summary in ci-out/summary.md ci-out/summary-polyglot.md; do
+            if [ -f "$summary" ]; then cat "$summary" >> "$GITHUB_STEP_SUMMARY"; echo >> "$GITHUB_STEP_SUMMARY"; cat "$summary"; fi
+          done
+          exit "$status"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-repos-${{ matrix.job }}
+          path: ci-out/
+          if-no-files-found: ignore
+
+      - name: Publish logs and screenshots
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh real-repos-${{ matrix.job }} ${{ job.status }}
+
   ssh:
     name: SSH and SFTP integration
     runs-on: ubuntu-latest

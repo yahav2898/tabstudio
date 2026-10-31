@@ -26,5 +26,5 @@ public sealed class FileSystemTextProvider : ISourceTextProvider
     public static FileSystemTextProvider Instance { get; } = new();
 
     /// <inheritdoc />
-    public string GetText(string filePath) => File.ReadAllText(filePath);
+    public string GetText(string filePath) => global::TabStudio.Core.Workspaces.PathUtilities.ReadAllTextBounded(filePath);
 }

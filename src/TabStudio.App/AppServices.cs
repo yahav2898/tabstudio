@@ -44,6 +44,7 @@ public static class AppServices
         services.AddSingleton<Services.LocalAI.LocalAIService>();
         services.AddSingleton<RecentWorkspaces>();
         services.AddSingleton<SessionStore>();
+        services.AddSingleton<CrashLog>();
         services.AddSingleton<SampleLibrary>();
         services.AddSingleton<ProjectTemplates>();
         services.AddSingleton<FolderImporter>();

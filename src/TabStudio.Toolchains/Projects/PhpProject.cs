@@ -41,7 +41,7 @@ public static partial class PhpProject
             return PhpProjectKind.Laravel;
         }
 
-        var frontController = File.Exists(Path.Combine(directory, "public", "index.php"));
+        var frontController = DocumentRoot(directory) != ".";
         if (frontController && packages.Contains("symfony/framework-bundle"))
         {
             return PhpProjectKind.Symfony;
@@ -87,6 +87,88 @@ public static partial class PhpProject
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// The folders a PHP framework serves its front controller from, in the order looked at: <c>public</c> (Laravel,
+    /// Symfony, Slim, CodeIgniter), <c>web</c> (Yii 2) and <c>webroot</c> (CakePHP).
+    /// </summary>
+    public static IReadOnlyList<string> WebRoots { get; } = ["public", "web", "webroot"];
+
+    /// <summary>
+    /// The folder PHP's web server serves the project from: the first of <see cref="WebRoots"/> with an
+    /// <c>index.php</c>, else the project folder itself (<c>.</c>).
+    /// </summary>
+    /// <param name="directory">The project folder.</param>
+    public static string DocumentRoot(string directory)
+    {
+        ArgumentNullException.ThrowIfNull(directory);
+        return WebRoots.FirstOrDefault(root => File.Exists(Path.Combine(directory, root, "index.php"))) ?? ".";
+    }
+
+    /// <summary>
+    /// The version Composer should give the project itself when Git cannot say: on a detached checkout (a commit or a
+    /// tag, as a pinned clone is), Composer calls the root package <c>dev-&lt;commit&gt;</c>, which no dependency of its
+    /// own development requirements accepts (guzzle's test server requires guzzle 8, rollbar requires monolog 2 or 3).
+    /// The branch alias in <c>composer.json</c> (<c>extra.branch-alias</c>, such as <c>"dev-main": "3.x-dev"</c>) says
+    /// what the default branch is; <see langword="null"/> on a branch, which Composer reads itself, or without an alias.
+    /// </summary>
+    /// <param name="directory">The project folder.</param>
+    public static string? ComposerRootVersion(string directory)
+    {
+        ArgumentNullException.ThrowIfNull(directory);
+        var manifest = Path.Combine(directory, "composer.json");
+        if (!File.Exists(manifest) || !IsDetachedCheckout(directory))
+        {
+            return null;
+        }
+
+        try
+        {
+            using var document = JsonDocument.Parse(File.ReadAllText(manifest), new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
+            if (document.RootElement.ValueKind != JsonValueKind.Object
+                || !document.RootElement.TryGetProperty("extra", out var extra) || extra.ValueKind != JsonValueKind.Object
+                || !extra.TryGetProperty("branch-alias", out var aliases) || aliases.ValueKind != JsonValueKind.Object)
+            {
+                return null;
+            }
+
+            var all = aliases.EnumerateObject().Where(a => a.Value.ValueKind == JsonValueKind.String).ToList();
+            var alias = all.FirstOrDefault(a => a.Name is "dev-main" or "dev-master" or "dev-trunk" or "dev-develop");
+            return (alias.Value.ValueKind == JsonValueKind.String ? alias : all.FirstOrDefault()).Value is { ValueKind: JsonValueKind.String } value ? value.GetString() : null;
+        }
+        catch (Exception ex) when (ex is JsonException or IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>Whether the Git repository a folder is in has a commit checked out rather than a branch.</summary>
+    private static bool IsDetachedCheckout(string directory)
+    {
+        for (var folder = Path.GetFullPath(directory); folder is not null; folder = Path.GetDirectoryName(folder))
+        {
+            var head = Path.Combine(folder, ".git", "HEAD");
+            if (File.Exists(head))
+            {
+                try
+                {
+                    return !File.ReadAllText(head).TrimStart().StartsWith("ref:", StringComparison.Ordinal);
+                }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                {
+                    return false;
+                }
+            }
+
+            if (File.Exists(Path.Combine(folder, ".git")))
+            {
+                // A worktree or submodule: its HEAD is elsewhere, and Composer reads it there.
+                return false;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>The <c>composer.json</c> script that starts the app, such as Slim's <c>start</c>, or <see langword="null"/>.</summary>

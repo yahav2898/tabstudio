@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Drawing;
 using TabStudio.Forms.Runtime;
 
@@ -184,11 +185,30 @@ public partial class Form
 
     /// <summary>Raises the FormClosing event.</summary>
     /// <param name="e">The event data; setting Cancel keeps the form open.</param>
-    protected virtual void OnFormClosing(FormClosingEventArgs e) => ((FormClosingEventHandler?)Events[EventFormClosing])?.Invoke(this, e);
+    protected virtual void OnFormClosing(FormClosingEventArgs e)
+    {
+        ArgumentNullException.ThrowIfNull(e);
+        var closing = new CancelEventArgs(e.Cancel);
+        OnClosing(closing);
+        e.Cancel = closing.Cancel;
+        ((FormClosingEventHandler?)Events[EventFormClosing])?.Invoke(this, e);
+    }
+
+    /// <summary>Raises the Closing event, which comes before FormClosing.</summary>
+    /// <param name="e">The event data; setting Cancel keeps the form open.</param>
+    protected virtual void OnClosing(CancelEventArgs e) => ((CancelEventHandler?)Events[EventClosing])?.Invoke(this, e);
+
+    /// <summary>Raises the Closed event, which comes after FormClosed.</summary>
+    /// <param name="e">The event data.</param>
+    protected virtual void OnClosed(EventArgs e) => ((EventHandler?)Events[EventClosed])?.Invoke(this, e);
 
     /// <summary>Raises the FormClosed event.</summary>
     /// <param name="e">The event data.</param>
-    protected virtual void OnFormClosed(FormClosedEventArgs e) => ((FormClosedEventHandler?)Events[EventFormClosed])?.Invoke(this, e);
+    protected virtual void OnFormClosed(FormClosedEventArgs e)
+    {
+        ((FormClosedEventHandler?)Events[EventFormClosed])?.Invoke(this, e);
+        OnClosed(e);
+    }
 
     /// <summary>Raises the ResizeBegin event.</summary>
     /// <param name="e">The event data.</param>

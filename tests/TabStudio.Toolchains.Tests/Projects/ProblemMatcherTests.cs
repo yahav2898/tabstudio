@@ -223,4 +223,26 @@ public sealed class ProblemMatcherTests
         Assert.Null(Python.FindError(output, _ => true));
         Assert.Null(Node.FindError(output, _ => true));
     }
+
+    /// <summary>
+    /// Android's sunflower, architecture-samples and JetNews built with 3, 7 and 1 errors: the Kotlin compiler's
+    /// deprecation warnings (<c>w:</c>) were listed as errors, since the Android pattern dropped their severity.
+    /// </summary>
+    [Fact]
+    public void Kotlin_warnings_of_an_Android_build_are_not_errors()
+    {
+        var android = new ProblemMatcher(ToolchainCatalog.Default.Find("android")!);
+        string[] output =
+        [
+            "w: file:///p/app/build.gradle.kts:78:3: 'packagingOptions(Packaging.() -> Unit): Unit' is deprecated. Renamed to packaging",
+            "w: file:///p/app/src/main/java/com/example/Theme.kt:118:34 'rememberSystemUiController' is deprecated.",
+            "e: file:///p/app/src/main/java/com/example/Main.kt:10:5 Unresolved reference 'foo'.",
+        ];
+
+        var error = Assert.Single(android.FindErrors(output, _ => true));
+
+        Assert.Equal("Unresolved reference 'foo'.", error.Message);
+        Assert.Equal(10, error.Location?.Line);
+        Assert.Equal(["w", "w", "e"], output.SelectMany(android.Match).Select(l => l.Severity));
+    }
 }

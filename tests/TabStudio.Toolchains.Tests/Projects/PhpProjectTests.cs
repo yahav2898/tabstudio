@@ -145,5 +145,45 @@ public sealed class PhpProjectTests : IDisposable
         Assert.Contains("-d log_errors=0", script, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// Yii 2's basic app serves web/index.php and CakePHP's app webroot/index.php. Before 0.20.5 F5 said yii2-app-basic
+    /// had no entry point to run.
+    /// </summary>
+    [Theory]
+    [InlineData("web")]
+    [InlineData("webroot")]
+    public void Yii_and_CakePHP_apps_are_served_from_their_web_root(string root)
+    {
+        _folder.Write("composer.json", """{ "require": { "php": ">=7.4" } }""");
+        _folder.Write(root + "/index.php", "<?php");
+
+        var plan = RunPlanner.PlanProject(new(Php, _folder.Path, "composer.json"))!;
+
+        Assert.Equal(PhpProjectKind.Site, PhpProject.Detect(_folder.Path));
+        Assert.Equal(root, PhpProject.DocumentRoot(_folder.Path));
+        Assert.Equal(["-t", root], plan.Run.Arguments.Skip(2));
+    }
+
+    /// <summary>
+    /// guzzle and monolog checked out at a commit: Composer called the root package dev-&lt;commit&gt;, which their own
+    /// development requirements (guzzle's test server, rollbar) do not accept, and composer install failed. The branch
+    /// alias names the version; a checkout on a branch is left to Composer.
+    /// </summary>
+    [Fact]
+    public void A_detached_checkout_installs_with_the_root_version_its_branch_alias_names()
+    {
+        _folder.Write("composer.json", """{ "name": "monolog/monolog", "extra": { "branch-alias": { "dev-main": "3.x-dev" } } }""");
+        _folder.Write(".git/HEAD", "3bed304b1905fed5c30d172872f4d890cbb03c6a\n");
+        var project = new ToolchainProject(Php, _folder.Path, "composer.json");
+
+        Assert.Equal("3.x-dev", PhpProject.ComposerRootVersion(_folder.Path));
+        var install = RunPlanner.PlanDependencies(project, RunPlanner.DependenciesOf(project)!)[^1];
+        Assert.Equal("3.x-dev", install.Environment["COMPOSER_ROOT_VERSION"]);
+
+        _folder.Write(".git/HEAD", "ref: refs/heads/main\n");
+        Assert.Null(PhpProject.ComposerRootVersion(_folder.Path));
+        Assert.DoesNotContain("COMPOSER_ROOT_VERSION", RunPlanner.PlanDependencies(project, RunPlanner.DependenciesOf(project)!)[^1].Environment.Keys);
+    }
+
     public void Dispose() => _folder.Dispose();
 }

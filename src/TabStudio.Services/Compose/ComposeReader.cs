@@ -34,12 +34,18 @@ public static partial class ComposeReader
         }
         if (files.Count == 0)
         {
-            var file = ComposeFileNames
-                .Select(name => Path.Combine(directory, name)).FirstOrDefault(File.Exists);
+            // A backend opened below the repository root uses the repository's Compose file, just as
+            // `docker compose` does. A nested repository must never inherit its parent's services.
+            string? file = null;
+            for (var folder = new DirectoryInfo(directory); folder is not null; folder = folder.Parent)
+            {
+                file = ComposeFileNames.Select(name => Path.Combine(folder.FullName, name)).FirstOrDefault(File.Exists);
+                if (file is not null || Path.Exists(Path.Combine(folder.FullName, ".git"))) break;
+            }
             if (file is null) return null;
             files.Add(file);
             var extension = Path.GetExtension(file);
-            var over = Path.Combine(directory, Path.GetFileNameWithoutExtension(file) + ".override" + extension);
+            var over = Path.Combine(Path.GetDirectoryName(file)!, Path.GetFileNameWithoutExtension(file) + ".override" + extension);
             if (File.Exists(over)) files.Add(over);
         }
         return Read(files, environment) with { DevelopmentService = developmentService, RunServices = runServices };

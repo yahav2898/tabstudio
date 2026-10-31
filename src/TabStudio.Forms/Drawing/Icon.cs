@@ -6,7 +6,35 @@ namespace System.Drawing;
 /// <summary>A small image used to represent a window or a file, read from an <c>.ico</c> file.</summary>
 public sealed class Icon : MarshalByRefObject, ICloneable, IDisposable
 {
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, WeakReference<Icon>> Handles = new();
+    private static long _nextHandle = 0x2_0000;
     private readonly Bitmap _bitmap;
+    private IntPtr _handle;
+
+    /// <summary>
+    /// The icon's handle: an identifier of it, made when first read, which <see cref="FromHandle"/> turns back into the
+    /// icon. Visual Basic apps pass it to Windows (DualBrain's Solitaire to ShellAbout), which is not called here.
+    /// </summary>
+    public IntPtr Handle
+    {
+        get
+        {
+            if (_handle == IntPtr.Zero)
+            {
+                _handle = new IntPtr(Interlocked.Increment(ref _nextHandle));
+                Handles[_handle] = new WeakReference<Icon>(this);
+            }
+
+            return _handle;
+        }
+    }
+
+    /// <summary>The icon a handle from <see cref="Handle"/> names.</summary>
+    /// <param name="handle">The handle.</param>
+    public static Icon FromHandle(IntPtr handle) =>
+        Handles.TryGetValue(handle, out var reference) && reference.TryGetTarget(out var icon)
+            ? icon
+            : throw new ArgumentException("No icon has this handle.", nameof(handle));
 
     /// <summary>Reads an icon from a file.</summary>
     /// <param name="fileName">The <c>.ico</c> file's path.</param>

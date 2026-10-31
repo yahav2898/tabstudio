@@ -199,4 +199,17 @@ public sealed class WorkspaceLoaderTests
         temp.Write("platform/platform.slnx", """<Solution><Project Path="src/Api/Api.csproj" /></Solution>""");
         Assert.Equal("platform.slnx", Path.GetFileName(WorkspaceLoader.FindSolution(root)));
     }
+
+    [Fact]
+    public void A_link_back_to_the_folder_does_not_fill_the_tree_with_copies()
+    {
+        using var temp = CreateShop();
+        Directory.CreateSymbolicLink(temp.Resolve("src/App/loop"), temp.Path);
+
+        var workspace = WorkspaceLoader.Load(temp.Path);
+
+        var names = workspace.Tree.DescendantsAndSelf().Select(n => n.Name).ToList();
+        Assert.Single(names, n => n == "loop");
+        Assert.True(names.Count < 100, $"{names.Count} entries");
+    }
 }

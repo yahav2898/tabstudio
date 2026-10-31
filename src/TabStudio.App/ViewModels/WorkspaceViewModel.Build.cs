@@ -95,8 +95,12 @@ public sealed partial class WorkspaceViewModel
             _runner.Loaded -= Loaded;
             EndHotReload();
             Output.EndInput();
-            _run.Dispose();
-            _run = null;
+            runLifetime.Dispose();
+            if (ReferenceEquals(_run, runLifetime))
+            {
+                _run = null;
+            }
+
             EndServerRun();
         }
 

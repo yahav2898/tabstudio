@@ -80,7 +80,7 @@ public sealed class AlpinePackageManager : IDisposable
                 var packages = new List<ApkPackage>();
                 foreach (var repository in _environment.Distribution.Repositories)
                 {
-                    var bytes = await FetchIndexAsync(repository, cancellationToken).ConfigureAwait(false);
+                    var bytes = await FetchIndexAsync(repository, keys, cancellationToken).ConfigureAwait(false);
                     try
                     {
                         packages.AddRange(ApkSignature.ReadIndex(bytes, keys, repository));
@@ -257,7 +257,7 @@ public sealed class AlpinePackageManager : IDisposable
     private string IndexFile(string repository) => Path.Combine(_environment.Downloads, "index", repository, "APKINDEX.tar.gz");
 
     /// <summary>Downloads a repository's index, or keeps the last one when the mirror says it has not changed or cannot be reached.</summary>
-    private async Task<byte[]> FetchIndexAsync(string repository, CancellationToken cancellationToken)
+    private async Task<byte[]> FetchIndexAsync(string repository, IReadOnlyDictionary<string, System.Security.Cryptography.RSA> keys, CancellationToken cancellationToken)
     {
         var file = IndexFile(repository);
         var tag = file + ".etag";
@@ -280,7 +280,29 @@ public sealed class AlpinePackageManager : IDisposable
 
             response.EnsureSuccessStatusCode();
             var bytes = await response.Content.ReadAsByteArrayAsync(timeout.Token).ConfigureAwait(false);
-            await File.WriteAllBytesAsync(file, bytes, cancellationToken).ConfigureAwait(false);
+
+            // Verified before it replaces the last good index: a Wi-Fi sign-in page answers 200 with HTML, which was
+            // written over the index, failed its check and was deleted, leaving nothing to work offline with.
+            try
+            {
+                _ = ApkSignature.ReadIndex(bytes, keys, repository);
+            }
+            catch (InvalidDataException ex)
+            {
+                if (File.Exists(file))
+                {
+                    return await File.ReadAllBytesAsync(file, cancellationToken).ConfigureAwait(false);
+                }
+
+                throw new ToolchainInstallException(
+                    InstallFailure.NoNetwork,
+                    $"{request.RequestUri!.Host} did not send a {_environment.Distribution.Name} package index. If this network asks you to sign in, sign in with the browser and try again.",
+                    innerException: ex);
+            }
+
+            var temporary = file + ".download";
+            await File.WriteAllBytesAsync(temporary, bytes, cancellationToken).ConfigureAwait(false);
+            File.Move(temporary, file, overwrite: true);
             if (response.Headers.ETag is { } newTag)
             {
                 await File.WriteAllTextAsync(tag, newTag.ToString(), cancellationToken).ConfigureAwait(false);

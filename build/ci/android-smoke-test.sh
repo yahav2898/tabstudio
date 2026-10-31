@@ -177,6 +177,23 @@ adb shell settings delete global overlay_display_devices > /dev/null 2>&1 || tru
 adb logcat -d -v threadtime > "$out/logcat-full.txt"
 grep -E 'TabStudio|mono|monodroid|AndroidRuntime|DOTNET|FATAL' "$out/logcat-full.txt" > "$out/logcat.txt" || true
 
+# Measurements, the same on every run so releases compare: startup (process start to the app's first log line, and
+# Android's own "Displayed"), memory at the end of the run (PSS), and the frames the editor drew while scrolling.
+seconds_of() { awk '{ split($2, t, ":"); printf "%.3f\n", t[1] * 3600 + t[2] * 60 + t[3] }'; }
+proc_start="$(grep -m 1 -E 'Start proc [0-9]+:com\.tabstudio\.ide' "$out/logcat-full.txt" | seconds_of || true)"
+first_line="$(grep -m 1 -E 'TABSTUDIO_SELFTEST_START' "$out/logcat-full.txt" | seconds_of || true)"
+{
+  if [ -n "$proc_start" ] && [ -n "$first_line" ]; then
+    echo "Startup to self test start: $(awk -v a="$proc_start" -v b="$first_line" 'BEGIN { printf "%.2f", b - a }') s"
+  fi
+  grep -m 1 -oE 'Displayed com\.tabstudio\.ide/[^ ]+: \+[0-9a-z]+' "$out/logcat-full.txt" | sed 's/^/Android: /' || true
+  echo "Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):"
+  adb shell dumpsys meminfo "$package" 2> /dev/null | tr -d '\r' | grep -E 'TOTAL (PSS|RSS):|^ *(Native Heap|Dalvik Heap|TOTAL) +[0-9]' | sed -E 's/  +/ /g' || true
+  printf '%s\n' "$verdict" | tr '|' '\n' | grep -iE 'scroll|frame' | sed 's/^ *//' || true
+} > "$out/measurements.txt" 2>&1 || true
+echo "Measurements:"
+cat "$out/measurements.txt"
+
 verdict="${verdict:-TABSTUDIO_SELFTEST_TIMEOUT no verdict after ${timeout} s}"
 echo "$verdict" | tee "$out/verdict.txt"
 echo "Shard: $shard" | tee -a "$out/verdict.txt"

@@ -38,7 +38,20 @@ public sealed partial class WorkspaceViewModel
         }
 
         // Saved Database Explorer connections that replace the project's SQL Server, and the message when none answers.
-        _serviceEnvironment = await AddDatabaseEnvironmentAsync(project, _serviceEnvironment);
+        // Still preparing: the probes of each connection take seconds, and F5 or Build pressed meanwhile started a
+        // second build and run beside this one.
+        _preparingServices = true;
+        NotifyServicePreparationCommands();
+        try
+        {
+            _serviceEnvironment = await AddDatabaseEnvironmentAsync(project, _serviceEnvironment);
+        }
+        finally
+        {
+            _preparingServices = false;
+            NotifyServicePreparationCommands();
+        }
+
         return true;
     }
 

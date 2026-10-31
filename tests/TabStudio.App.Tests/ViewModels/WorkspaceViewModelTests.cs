@@ -162,6 +162,57 @@ public sealed class WorkspaceViewModelTests
     }
 
     [AvaloniaFact]
+    public async Task Going_to_the_background_while_a_session_is_restored_keeps_its_unsaved_text()
+    {
+        // Android sends Deactivated, which saves the session, whenever the user switches apps; while C# was still
+        // loading the IDE had no documents yet, and that save replaced the session's unsaved text with nothing.
+        string solution;
+        using (var first = new WorkspaceFixture())
+        {
+            solution = await first.OpenSampleAsync();
+            first.Workspace.ActiveDocument!.Document.Insert(0, "// not saved yet\n");
+            first.Workspace.SaveSessionNow();
+            first.Workspace.Dispose(); // Android ended the app: nothing of the first IDE saves the session again.
+
+            using var second = new WorkspaceViewModel(first.Compiler, first.DeviceStatus, first.Profile, new AvaloniaUiDispatcher(), first.Sessions, first.Paths);
+            var loading = second.LoadAsync(solution, first.Sessions.Load());
+            while (!loading.IsCompleted)
+            {
+                if (second.Workspace is not null)
+                {
+                    second.SaveSessionNow();
+                }
+
+                await Task.Delay(1);
+            }
+
+            await loading;
+            Assert.Contains(first.Sessions.Load()!.Documents, d => d.UnsavedText?.StartsWith("// not saved yet", StringComparison.Ordinal) == true);
+            Assert.StartsWith("// not saved yet", second.ActiveDocument!.Document.Text, StringComparison.Ordinal);
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task Unsaved_text_of_a_file_deleted_while_the_app_was_closed_is_recovered()
+    {
+        string solution;
+        using (var first = new WorkspaceFixture())
+        {
+            solution = await first.OpenSampleAsync();
+            var document = first.Workspace.ActiveDocument!;
+            var gone = Path.Combine(Path.GetDirectoryName(document.FilePath)!, "Gone.cs");
+            var session = new SessionState(solution, [new SessionDocument(gone, 0, "// only copy")], null, null);
+
+            using var second = new WorkspaceViewModel(first.Compiler, first.DeviceStatus, first.Profile, new AvaloniaUiDispatcher(), first.Sessions, first.Paths);
+            await second.LoadAsync(solution, session);
+
+            var kept = Assert.Single(Directory.GetFiles(first.Sessions.RecoveredFolder));
+            Assert.Equal("// only copy", await File.ReadAllTextAsync(kept));
+            Assert.Contains(kept, second.Output.Text, StringComparison.Ordinal);
+        }
+    }
+
+    [AvaloniaFact]
     public async Task The_sessions_unsaved_text_follows_typing()
     {
         // Saved only when a document first became dirty, the session restored that moment's text after Android

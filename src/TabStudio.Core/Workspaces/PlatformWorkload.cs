@@ -41,4 +41,10 @@ public enum PlatformWorkload
     /// Protocol Buffers code <c>protoc</c> generates, a native program that runs only on a computer.
     /// </summary>
     Protoc,
+
+    /// <summary>
+    /// A Visual Studio .NET 2002 or 2003 project (<c>&lt;VisualStudioProject&gt;</c>), in the format from before MSBuild,
+    /// which only those versions of Visual Studio build; a newer Visual Studio converts it when it opens it.
+    /// </summary>
+    PreMsBuild,
 }

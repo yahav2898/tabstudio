@@ -172,4 +172,21 @@ public sealed class ProjectSourceFilesTests
 
         Assert.Equal(new[] { temp.Resolve("App/Program.cs") }, ProjectSourceFiles.Enumerate(project));
     }
+
+    [Fact]
+    public void A_link_back_to_the_project_folder_is_not_walked_again()
+    {
+        // `self -> .` compiled every file about 40 times over, and two such links walked 2^40 paths.
+        using var temp = new TempDirectory();
+        temp.Write("App/App.csproj", "<Project Sdk=\"Microsoft.NET.Sdk\" />");
+        temp.Write("App/Program.cs");
+        temp.Write("App/Models/Order.cs");
+        Directory.CreateSymbolicLink(temp.Resolve("App/self"), temp.Resolve("App"));
+        Directory.CreateSymbolicLink(temp.Resolve("App/Models/up"), temp.Resolve("App"));
+        var project = ProjectParser.Load(temp.Resolve("App/App.csproj"));
+
+        var files = ProjectSourceFiles.Enumerate(project, []);
+
+        Assert.Equal(new[] { temp.Resolve("App/Models/Order.cs"), temp.Resolve("App/Program.cs") }, files);
+    }
 }

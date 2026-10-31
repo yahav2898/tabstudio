@@ -140,8 +140,10 @@ Store** כדי להוסיף שפה. כל גרסה מותקנת כעדכון מע
 - **‏Visual Basic, כמו C#.** פרויקטי `.vbproj` מקומפלים בתוך האפליקציה עם אותם IntelliSense, תיקונים מהירים, ניווט,
   מנפה באגים, Hot Reload ו-Live Unit Testing. ‏`Microsoft.VisualBasic` ומרחב השמות `My` עובדים באפליקציות קונסול ו-Windows
   Forms, כולל ה-Application Framework ‏(`Application.myapp`, ‏`My.Settings`, ‏`My.Resources`).
-- **‏Test Explorer לכל שפה עם מריץ בדיקות סטנדרטי.** מלבד xUnit, ‏NUnit ו-MSTest: ‏PHPUnit ו-Pest, ‏JUnit דרך Gradle או
-  Maven ‏(Kotlin ו-Java), ו-XCTest ו-Swift Testing דרך `swift test`.
+- **‏Test Explorer לכל שפה עם מריץ בדיקות סטנדרטי.** מלבד xUnit, ‏NUnit ו-MSTest: ‏pytest ‏(Python, עם דרישות הבדיקה
+  שהפרויקט מצהיר עליהן), ‏PHPUnit ו-Pest, ‏JUnit דרך Gradle או Maven ‏(Kotlin, ‏Kotlin Multiplatform ו-Java), ‏XCTest ו-Swift
+  Testing דרך `swift test`, ‏`go test`, ‏`cargo test`, ‏`dart test` ו-`flutter test`, ו-Vitest, ‏Jest, ‏Mocha ו-`node --test`
+  ל-JavaScript ול-TypeScript.
 - **‏PHP ו-Laravel.** פתיחת אפליקציית Laravel מריצה `composer install`, יוצרת `.env` ומפתח, ו-F5 מריץ את המיגרציות,
   בונה את נכסי Vite ומגיש `php artisan serve` בתצוגת הווב, עם מסד הנתונים ש-`.env` מציין ב-Services ו-Xdebug שעוצר
   בקונטרולרים. ראו [PHP ו-Laravel](docs/features/laravel.md).

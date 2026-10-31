@@ -7,8 +7,15 @@ namespace TabStudio.Agent.Anthropic;
 /// <summary>Reads a streamed Messages API answer (server-sent events) into a complete message.</summary>
 internal static class MessageStreamReader
 {
-    public static async Task<MessageResponse> ReadAsync(Stream stream, Action<string>? onText, CancellationToken cancellationToken)
+    /// <summary>
+    /// How long the stream may go without a line. The API sends a ping every few seconds while it thinks, so a
+    /// longer silence is a dead connection, which otherwise held the agent until the user pressed Stop.
+    /// </summary>
+    internal static readonly TimeSpan IdleTimeout = TimeSpan.FromSeconds(90);
+
+    public static async Task<MessageResponse> ReadAsync(Stream stream, Action<string>? onText, CancellationToken cancellationToken, TimeSpan? idleTimeout = null)
     {
+        var idle = idleTimeout ?? IdleTimeout;
         var blocks = new SortedDictionary<int, BlockBuilder>();
         var stop = StopReason.Other;
         var usage = new TokenUsage(0, 0);
@@ -16,7 +23,7 @@ internal static class MessageStreamReader
 
         using var reader = new StreamReader(stream, Encoding.UTF8);
         var data = new StringBuilder();
-        while (await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false) is { } line)
+        while (await ReadLineAsync(reader, idle, cancellationToken).ConfigureAwait(false) is { } line)
         {
             if (line.Length == 0)
             {
@@ -47,6 +54,24 @@ internal static class MessageStreamReader
 
         var content = blocks.Values.Select(b => b.Build()).ToList();
         return new MessageResponse(new ChatMessage(MessageRole.Assistant, content), stop, usage);
+    }
+
+    private static async Task<string?> ReadLineAsync(StreamReader reader, TimeSpan idleTimeout, CancellationToken cancellationToken)
+    {
+        using var idle = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        idle.CancelAfter(idleTimeout);
+        try
+        {
+            return await reader.ReadLineAsync(idle.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException ex) when (!cancellationToken.IsCancellationRequested)
+        {
+            throw new AnthropicException("Claude stopped answering: the connection went quiet. Check the network and try again.", ex);
+        }
+        catch (Exception ex) when (ex is IOException or HttpRequestException)
+        {
+            throw new AnthropicException("The connection to Claude broke during the answer. Check the network and try again.", ex);
+        }
     }
 
     /// <returns>Whether the message is complete.</returns>

@@ -63,7 +63,7 @@ public sealed partial class DatabaseExplorerViewModel : ObservableObject, IDispo
     [RelayCommand] private void ShowConnections() => IsEfCoreSelected = false;
     [RelayCommand] private void ShowEfCore() => IsEfCoreSelected = true;
     [ObservableProperty] public partial bool IsBusy { get; private set; }
-    [ObservableProperty] public partial string Status { get; private set; } = "Add a connection or discover one from the solution.";
+    [ObservableProperty] public partial string Status { get; internal set; } = "Add a connection or discover one from the solution.";
     public event Action<DatabaseConnection, DatabaseSchema?, DatabaseTable?>? OpenRequested;
     partial void OnSelectedConnectionChanged(DatabaseConnection? value) => SelectedNode = null;
 

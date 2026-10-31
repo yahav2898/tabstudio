@@ -25,7 +25,7 @@ jobs:
           - { arch: x64, runner: ubuntu-24.04 }
           - { arch: arm64, runner: ubuntu-24.04-arm }
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -47,6 +47,26 @@ jobs:
         if: matrix.arch == 'x64'
         with:
           node-version: '22'
+      - uses: actions/setup-python@v5
+        if: matrix.arch == 'x64'
+        with:
+          python-version: '3.14'
+      - uses: actions/checkout@v4
+        if: matrix.arch == 'x64'
+        with:
+          repository: fastapi/full-stack-fastapi-template
+          ref: f4bcfaba7c85be3c6332cc74a20819f586dcdbc6
+          path: artifacts/container-fastapi
+      - uses: oven-sh/setup-bun@v2
+        if: matrix.arch == 'x64'
+        with:
+          bun-version: '1'
+      - name: Build pinned FastAPI repository frontend as its development instructions require
+        if: matrix.arch == 'x64'
+        working-directory: artifacts/container-fastapi
+        run: |
+          bun install --frozen-lockfile
+          bun run --cwd frontend build
       - uses: actions/checkout@v4
         if: matrix.arch == 'x64'
         with:
@@ -57,6 +77,7 @@ jobs:
         if: matrix.arch == 'x64'
         env:
           TABSTUDIO_CONTAINER_TRIAL_REPO: ${{ github.workspace }}/artifacts/container-trial
+          TABSTUDIO_CONTAINER_FASTAPI_REPO: ${{ github.workspace }}/artifacts/container-fastapi
           TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
           NX_DAEMON: 'false'
         run: |

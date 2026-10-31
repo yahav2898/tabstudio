@@ -1072,8 +1072,12 @@ design keeps the second part proportional to what you are actually editing:
 - **Long operations finish in the background.** While a toolchain install, build, project setup or download runs,
   `OperationsService`, a data-sync foreground service with a partial wake lock, keeps the process from being frozen,
   and its ongoing notification shows the newest operation's progress.
-- **Session restore.** The open documents, unsaved edits and layout are saved as you work, so if Android
-  closes TabStudio in the background, it reopens where you left it.
+- **Session restore.** The open documents, unsaved edits and layout are saved as you work (written in the
+  background, never older over newer), so if Android closes TabStudio in the background, it reopens where you left
+  it. A restore that never finished (the app ended while reopening) is not retried at the next start: the start screen
+  offers the workspace instead. Unsaved text whose file or workspace is gone goes to `State/Recovered`.
+- **Errors.** An error nothing handled on the UI thread is written to `State/Crashes` and shown in the Output; the
+  IDE goes on. Only the runtime's own failures (out of memory) still end the app, after the session is saved.
 - **TabStudio Link.** The language service and build engine sit behind one interface, so they can also run on
   another device you own, with the tablet showing only the IDE.
 - **Background work stays in the background.** Analysis runs at below-normal priority and yields to typing,

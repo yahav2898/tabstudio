@@ -7,6 +7,24 @@ namespace TabStudio.Containers.Tests;
 public sealed class ComposeTests
 {
     [Fact]
+    public void Backend_discovers_parent_compose_and_override_but_stops_at_nested_repository_boundary()
+    {
+        using var temp = new TempDirectory();
+        var backend = Path.Combine(temp.Path, "backend");
+        Directory.CreateDirectory(backend);
+        File.WriteAllText(Path.Combine(temp.Path, "compose.yml"), "services:\n  db: {image: 'postgres:18'}\n  backend: {build: ., depends_on: [db]}\n");
+        File.WriteAllText(Path.Combine(temp.Path, "compose.override.yml"), "services:\n  backend:\n    environment: {DATABASE_URL: 'postgresql://postgres@db:5432/app'}\n");
+        var project = ComposeReader.Discover(backend)!;
+        Assert.Equal(temp.Path, project.Directory);
+        Assert.Equal(2, project.Files.Count);
+        var environment = TabStudio.Services.ConnectionEnvironment.ForProject(project, backend,
+            new Dictionary<string, IReadOnlyList<ServicePort>> { ["db"] = [new(5432, 25432)] });
+        Assert.Equal("postgresql://postgres@127.0.0.1:25432/app", environment["DATABASE_URL"]);
+        File.WriteAllText(Path.Combine(backend, ".git"), "gitdir: elsewhere\n");
+        Assert.Null(ComposeReader.Discover(backend));
+    }
+
+    [Fact]
     public void A_completed_image_without_ports_does_not_need_a_connection_endpoint()
     {
         using var temp = new TempDirectory();

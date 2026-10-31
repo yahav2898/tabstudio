@@ -134,5 +134,23 @@ public sealed class SampleAndFilesTests : IDisposable
     [InlineData("a:b", "a-b")]
     public void Imported_file_names_stay_as_close_as_possible(string name, string expected) => Assert.Equal(expected, AppPaths.MakeSafeFileName(name));
 
+    [Fact]
+    public async Task A_link_to_an_endless_device_is_refused_instead_of_filling_memory()
+    {
+        // A repository's symbolic link to /dev/zero reports no length, passed the size check, and was read until the
+        // app ran out of memory.
+        if (OperatingSystem.IsWindows() || !File.Exists("/dev/zero"))
+        {
+            return;
+        }
+
+        var link = _temp.Resolve("zero.txt");
+        File.CreateSymbolicLink(link, "/dev/zero");
+
+        var error = await Assert.ThrowsAsync<IOException>(() => TextFile.ReadAsync(link));
+
+        Assert.Contains("16 MB", error.Message, StringComparison.Ordinal);
+    }
+
     public void Dispose() => _temp.Dispose();
 }

@@ -175,7 +175,7 @@ internal sealed class AndroidNotifications : INotifications
         try
         {
             // Operations begin while the user is in TabStudio, which is when Android lets a foreground service start.
-            OperationsService.EnsureStarted(_context);
+            _context.StartForegroundService(new Intent(_context, typeof(OperationsService)));
         }
         catch (Java.Lang.IllegalStateException)
         {

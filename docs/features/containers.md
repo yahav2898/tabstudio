@@ -123,12 +123,21 @@ These numbers concern the OCI suite; the IDE/emulator/repository checks are sepa
 Its artifact records the exact platform manifest digests. These timings include first image initialization and
 depend on network/cache state; they are not a native-vs-PRoot performance comparison.
 
-The requested `build/ci/trial-sweep.json` was absent from main at the merge. The new regression subset is drawn
-from the existing `real-repos.json`: `gothinkster/node-express-realworld-example-app` at
+The original trial sweep is preserved on `trial/mega-4` at
+`56a50fcd8637b31e3343f9a09b0af3cc5a9ccf2f`. Its `fastapi/full-stack-fastapi-template` entry at
+`f4bcfaba7c85be3c6332cc74a20819f586dcdbc6` is retained in `build/ci/trial-sweep.json`, including its original
+environment. The regression opens `backend`, reproduces the missing `DATABASE_URL`, and requires F5 to discover
+the parent repository's unchanged `compose.yml` and `compose.override.yml`, start their real `postgres:18` image,
+forward the backend's Compose environment, and serve `/docs`. It then runs the upstream prestart commands explicitly
+(Alembic migrations and initial data), logs in, and queries `/api/v1/items/` against that database. TabStudio does
+not automatically run arbitrary repository prestart scripts. The frontend is built using the upstream Bun command;
+no Dockerfile build is involved. Only `db`, the backend's dependency, starts through F5.
+
+An additional regression uses `gothinkster/node-express-realworld-example-app` at
 `30b68e1e881462b2f4164ea09ab4c4f5699c7b0b`. That upstream has no Compose file, so the test supplies the checked-in
-`build/ci/container-trial/compose.yaml` fixture. It reproduces Prisma's database-connection failure without a database, then requires F5 to
-start the real PostgreSQL image, run migrations, and receive HTTP 200 containing `"tags"` at `/api/tags`.
-The fixture provenance is explicit; it is not presented as an upstream Compose file or an old trial result.
+`build/ci/container-trial/compose.yaml` fixture. It reproduces Prisma's database-connection failure without a database,
+then requires F5 to start PostgreSQL, run migrations, and receive HTTP 200 containing `"tags"` at `/api/tags`.
+The fixture is separate from the original sweep's upstream Compose regression.
 
 Reproduce Linux checks with:
 

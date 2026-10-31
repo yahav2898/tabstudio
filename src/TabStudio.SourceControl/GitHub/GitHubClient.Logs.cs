@@ -61,7 +61,7 @@ public sealed partial class GitHubClient
         var buffer = new byte[81920];
         long total = 0;
         int read;
-        while ((read = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0)
+        while ((read = await ReadBodyAsync(stream, buffer, cancellationToken).ConfigureAwait(false)) > 0)
         {
             var toHead = (int)Math.Min(read, Math.Max(0, headLimit - head.Length));
             head.Write(buffer, 0, toHead);

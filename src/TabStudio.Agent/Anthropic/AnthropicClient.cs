@@ -122,6 +122,11 @@ public sealed class AnthropicClient : IAgentClient
             {
                 throw new AnthropicException($"Could not reach Claude: {ex.Message}", ex);
             }
+            catch (OperationCanceledException ex) when (!cancellationToken.IsCancellationRequested)
+            {
+                // The client's own timeout, not the user's Stop: it was shown as "Stopped." as if they had pressed it.
+                throw new AnthropicException("Claude did not answer in time. Check the network and try again.", ex);
+            }
 
             using (response)
             {
