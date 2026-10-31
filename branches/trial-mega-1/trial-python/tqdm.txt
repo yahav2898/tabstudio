@@ -1,0 +1,55 @@
+tqdm at 9cf5a12b1f955468a17f0ba3c59092b23e4258ac, opening /home/runner/work/_temp/repos/tqdm
+Opened in 0.1 s: tqdm, solution (none)
+  toolchain project python: /home/runner/work/_temp/repos/tqdm/pyproject.toml
+Compatibility Doctor:
+  tqdm: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+F5 startup project: tqdm (python) /home/runner/work/_temp/repos/tqdm/pyproject.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: 0 found; 0 passed, 0 failed, 0 skipped, 0 not run - The build failed. Fix the errors in the Error List, then run the tests again. (2 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up tqdm: pip install -e .
+  Installing tqdm's packages: Installing packages: pip install -e .
+  Installing tqdm's packages: Succeeded after 6.1 s
+  Setting up projects: Succeeded after 9.8 s
+  Testing tqdm: Running tqdm's tests
+  Testing tqdm: Failed after 2.3 s
+Project setup:
+------ tqdm: pip install -e . ------
+> python3 -m venv .venv
+> /home/runner/work/_temp/repos/tqdm/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/repos/tqdm
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: tqdm
+  Building editable for tqdm (pyproject.toml): started
+  Building editable for tqdm (pyproject.toml): finished with status 'done'
+  Created wheel for tqdm: filename=tqdm-0.1.dev1+g9cf5a12b1-0.editable-py3-none-any.whl size=22543 sha256=ba36e0652376144da6eff9befa1ec43e0e41c7e5aaabdcc8eff3fe589170aa0d
+  Stored in directory: /tmp/pip-ephem-wheel-cache-bqni5dcb/wheels/d4/99/79/dcdc190788fb989f95d729ebb4540124b128faeb24fa490a10
+Successfully built tqdm
+Installing collected packages: tqdm
+Successfully installed tqdm-0.1.dev1+g9cf5a12b1
+
+Output:
+tqdm needs no build: Python runs it from its source. Press Ctrl+F5 to run it.
+========== Running tqdm's tests with Pytest ==========
+> sh -c 'if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/repos/tqdm/.tabstudio/test-results/ca7fa2b47b534963a02aa1668a54e226/pytest.xml
+Installing pytest, which the tests need
+ERROR: usage: python -m pytest [options] [file_or_dir] [file_or_dir] [...]
+python -m pytest: error: unrecognized arguments: --asyncio-mode=strict
+  inifile: /home/runner/work/_temp/repos/tqdm/pyproject.toml
+  rootdir: /home/runner/work/_temp/repos/tqdm
+
+tqdm's tests did not run: the build or the test runner failed. See the Error List and the output above.
+

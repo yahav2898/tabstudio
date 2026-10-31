@@ -1,0 +1,63 @@
+marshmallow at b762ea2d59ca52fe5df76b90de14bed7e5ec5607, opening /home/runner/work/_temp/repos/marshmallow
+Opened in 0.1 s: marshmallow, solution (none)
+  toolchain project python: /home/runner/work/_temp/repos/marshmallow/pyproject.toml
+  toolchain project node: /home/runner/work/_temp/repos/marshmallow/examples/package.json
+Compatibility Doctor:
+  marshmallow: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  examples: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+F5 startup project: marshmallow (python) /home/runner/work/_temp/repos/marshmallow/pyproject.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: 647 found; 0 passed, 0 failed, 0 skipped, 647 not run - The build failed. Fix the errors in the Error List, then run the tests again. (2 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up marshmallow: pip install -e .
+  Installing marshmallow's packages: Installing packages: pip install -e .
+  Installing marshmallow's packages: Succeeded after 4.7 s
+  Setting up projects: Setting up examples: npm install
+  Installing examples's packages: Installing packages: npm install
+  Installing examples's packages: Failed after 0.5 s
+  Setting up projects: Succeeded after 8.0 s
+  Testing marshmallow: Running marshmallow's tests
+  Testing marshmallow: Failed after 2.2 s
+Project setup:
+------ marshmallow: pip install -e . ------
+Reading which Python versions the 63 pinned packages have wheels for, from PyPI.
+> python3 -m venv .venv
+> /home/runner/work/_temp/repos/marshmallow/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/repos/marshmallow
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: marshmallow
+  Building editable for marshmallow (pyproject.toml): started
+  Building editable for marshmallow (pyproject.toml): finished with status 'done'
+  Created wheel for marshmallow: filename=marshmallow-4.3.1-py3-none-any.whl size=8824 sha256=6a3d43f38f53d4128e09739adaa6b0e1578a967e69d169f3735ca262e54c3103
+  Stored in directory: /tmp/pip-ephem-wheel-cache-p2t_eli9/wheels/7c/a5/1a/811c8c69f8c67ef50acaaea7faeb97b669d2393035f47b06d7
+Successfully built marshmallow
+Installing collected packages: marshmallow
+Successfully installed marshmallow-4.3.1
+examples's packages were not installed: npm install --no-fund --no-audit failed (npm error notarget No matching version found for pest@^23.4.1.). Fix that, then use Tools > Install Project Packages.
+
+Output:
+marshmallow needs no build: Python runs it from its source. Press Ctrl+F5 to run it.
+========== Running marshmallow's tests with Pytest ==========
+> sh -c 'if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/repos/marshmallow/.tabstudio/test-results/8df067c5bd92435f85aab872ed7ca199/pytest.xml
+Installing pytest, which the tests need
+ImportError while loading conftest '/home/runner/work/_temp/repos/marshmallow/tests/conftest.py'.
+tests/conftest.py:5: in <module>
+    from tests.base import Blog, User, UserSchema
+tests/base.py:10: in <module>
+    import simplejson
+E   ModuleNotFoundError: No module named 'simplejson'
+marshmallow's tests did not run: the build or the test runner failed. See the Error List and the output above.
+

@@ -1,0 +1,31 @@
+httpie at 5b604c37c6c67e18e7c3e9aee6c88a8c22b98345, opening /home/runner/work/_temp/repos/httpie
+Opened in 0.3 s: httpie, solution (none)
+  toolchain project python: /home/runner/work/_temp/repos/httpie/setup.py
+Compatibility Doctor:
+  httpie: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+F5 startup project: httpie (python) /home/runner/work/_temp/repos/httpie/setup.py
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: 429 found; 0 passed, 0 failed, 0 skipped, 429 not run - The build failed. Fix the errors in the Error List, then run the tests again. (2 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 3.1 s
+  Testing httpie: Running httpie's tests
+  Testing httpie: Failed after 2.4 s
+Project setup:
+
+Output:
+httpie needs no build: Python runs it from its source. Press Ctrl+F5 to run it.
+========== Running httpie's tests with Pytest ==========
+> sh -c 'if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' python3 --color=no --junitxml=/home/runner/work/_temp/repos/httpie/.tabstudio/test-results/dd364b0192b04ea19c1fb710389a2b35/pytest.xml
+Installing pytest, which the tests need
+ImportError while loading conftest '/home/runner/work/_temp/repos/httpie/tests/conftest.py'.
+tests/conftest.py:4: in <module>
+    from pytest_httpbin import certs
+E   ModuleNotFoundError: No module named 'pytest_httpbin'
+httpie's tests did not run: the build or the test runner failed. See the Error List and the output above.
+

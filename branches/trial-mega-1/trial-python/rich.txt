@@ -1,0 +1,100 @@
+rich at 9d8f9a372cc5916fd4781fec207ced7ddac2f08f, opening /home/runner/work/_temp/repos/rich
+Opened in 0.3 s: rich, solution (none)
+  toolchain project python: /home/runner/work/_temp/repos/rich/pyproject.toml
+  toolchain project cpp: /home/runner/work/_temp/repos/rich/Makefile
+Compatibility Doctor:
+  rich: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  rich: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+F5 startup project: rich (python) /home/runner/work/_temp/repos/rich/pyproject.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: 692 found; 0 passed, 1 failed, 0 skipped, 692 not run - 1 test run in 2.5 sec: 0 passed, 1 failed, 0 skipped. (2 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up rich: pip install -e .
+  Installing rich's packages: Installing packages: pip install -e .
+  Installing rich's packages: Succeeded after 4.4 s
+  Setting up projects: Succeeded after 7.6 s
+  Testing rich: Running rich's tests
+  Testing rich: Failed after 2.5 s
+Project setup:
+------ rich: pip install -e . ------
+Reading which Python versions the 49 pinned packages have wheels for, from PyPI.
+> uv venv --seed --python 3.13 .venv
+Downloading cpython-3.13.18-linux-x86_64-gnu (download) (33.8MiB)
+ Downloaded cpython-3.13.18-linux-x86_64-gnu (download)
+Using CPython 3.13.18
+Creating virtual environment with seed packages at: .venv
+ + pip==26.2.2
+Activate with: .venv/bin/activate
+> /home/runner/work/_temp/repos/rich/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/repos/rich
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting markdown-it-py>=2.2.0 (from rich==15.0.0)
+  Using cached markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich==15.0.0)
+  Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich==15.0.0)
+  Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Building wheels for collected packages: rich
+  Building editable for rich (pyproject.toml): started
+  Building editable for rich (pyproject.toml): finished with status 'done'
+  Created wheel for rich: filename=rich-15.0.0-py3-none-any.whl size=7829 sha256=dda269555b8123cc0ff01616d1fec473ea0a57e2191afeddc23c5dda27925620
+  Stored in directory: /tmp/pip-ephem-wheel-cache-rfxk5k4i/wheels/6d/e2/90/225749c11da1fd516e2a9d5c2fb8aa156be2caab28fc166bf2
+Successfully built rich
+Installing collected packages: pygments, mdurl, markdown-it-py, rich
+
+Successfully installed markdown-it-py-4.2.0 mdurl-0.1.2 pygments-2.21.0 rich-15.0.0
+
+Output:
+rich needs no build: Python runs it from its source. Press Ctrl+F5 to run it.
+========== Running rich's tests with Pytest ==========
+> sh -c 'if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/repos/rich/.tabstudio/test-results/30560bb144b84f89999a8c75771a2128/pytest.xml
+Installing pytest, which the tests need
+============================= test session starts ==============================
+platform linux -- Python 3.13.18, pytest-9.2.0, pluggy-1.7.0
+rootdir: /home/runner/work/_temp/repos/rich
+configfile: pyproject.toml
+testpaths: tests
+collected 929 items / 1 error
+
+==================================== ERRORS ====================================
+____________________ ERROR collecting tests/test_pretty.py _____________________
+ImportError while importing test module '/home/runner/work/_temp/repos/rich/tests/test_pretty.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../../../.local/share/uv/python/cpython-3.13.18-linux-x86_64-gnu/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_pretty.py:9: in <module>
+    import attr
+E   ModuleNotFoundError: No module named 'attr'
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/_pytest/python.py:144
+  /home/runner/work/_temp/repos/rich/.venv/lib/python3.13/site-packages/_pytest/python.py:144: PytestRemovedIn10Warning: Passing a non-Collection iterable to parametrize is deprecated.
+  Test: tests/test_panel.py::test_render_panel, argvalues type: zip
+  Please convert to a list or tuple.
+  See https://docs.pytest.org/en/stable/deprecations.html#parametrize-iterators
+    metafunc.parametrize(*marker.args, **marker.kwargs, _param_mark=marker)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /home/runner/work/_temp/repos/rich/.tabstudio/test-results/30560bb144b84f89999a8c75771a2128/pytest.xml -
+=========================== short test summary info ============================
+ERROR tests/test_pretty.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+========================= 1 warning, 1 error in 1.32s ==========================
+

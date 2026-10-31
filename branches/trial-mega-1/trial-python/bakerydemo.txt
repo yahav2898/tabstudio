@@ -1,0 +1,227 @@
+bakerydemo at c9b38d7a7170dba8bb84254beb7e5dc5a955e024, opening /home/runner/work/_temp/repos/bakerydemo
+Opened in 0.2 s: bakerydemo, solution (none)
+  toolchain project python: /home/runner/work/_temp/repos/bakerydemo/requirements.txt
+  toolchain project node: /home/runner/work/_temp/repos/bakerydemo/package.json
+Compatibility Doctor:
+  bakerydemo: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  bakerydemo: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+F5 startup project: bakerydemo (python) /home/runner/work/_temp/repos/bakerydemo/requirements.txt
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Run: exited before listening (0 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/bakerydemo/bakerydemo/wsgi.py:2
+Debug: ended without stopping at wsgi.py:2 (0 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up bakerydemo: pip install -r requirements.txt
+  Installing bakerydemo's packages: Installing packages: pip install -r requirements.txt
+  Installing bakerydemo's packages: Succeeded after 43.1 s
+  Setting up projects: Setting up bakerydemo: npm ci
+  Installing bakerydemo's packages: Installing packages: npm ci
+  Installing bakerydemo's packages: Succeeded after 2.8 s
+  Setting up projects: Succeeded after 49.6 s
+Project setup:
+d-5.3.1-py3-none-any.whl.metadata (3.0 kB)
+Collecting djangorestframework<4.0,>=3.18.0 (from wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading djangorestframework-3.18.3-py3-none-any.whl.metadata (7.8 kB)
+Collecting django-ninja<2.0,>=1.6.3 (from wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading django_ninja-1.7.3-py3-none-any.whl.metadata (6.0 kB)
+Collecting pydantic<3,>=2 (from wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading pydantic-2.14.2-py3-none-any.whl.metadata (137 kB)
+Collecting django-filter>=23.3 (from wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading django_filter-26.2-py3-none-any.whl.metadata (5.2 kB)
+Collecting draftjs_exporter<8.0,>=7.1.0 (from wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading draftjs_exporter-7.3.1-py3-none-any.whl.metadata (4.8 kB)
+Collecting Pillow>=9.1.0 (from wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Using cached pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+Collecting beautifulsoup4<5,>=4.13.3 (from wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading beautifulsoup4-4.15.0-py3-none-any.whl.metadata (3.8 kB)
+Collecting Willow<2,>=1.11.0 (from Willow[heif]<2,>=1.11.0->wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading willow-1.12.0-py3-none-any.whl.metadata (6.0 kB)
+Collecting openpyxl<4.0,>=3.0.10 (from wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading openpyxl-3.1.5-py2.py3-none-any.whl.metadata (2.5 kB)
+Collecting anyascii>=0.1.5 (from wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading anyascii-0.3.3-py3-none-any.whl.metadata (1.6 kB)
+Collecting telepath<1,>=0.3.1 (from wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading telepath-0.3.1-py38-none-any.whl.metadata (1.7 kB)
+Collecting laces<0.2,>=0.1 (from wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading laces-0.1.2-py3-none-any.whl.metadata (33 kB)
+Collecting django-tasks<0.13,>=0.9 (from wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading django_tasks-0.12.0-py3-none-any.whl.metadata (8.9 kB)
+Collecting modelsearch<1.4,>=1.3.2 (from wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading modelsearch-1.3.2-py3-none-any.whl.metadata (7.3 kB)
+Collecting swapper<2,>=1.4 (from wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading swapper-1.5.0-py2.py3-none-any.whl.metadata (15 kB)
+Collecting typing-extensions>=4.6 (from psycopg<3.4,>=3.3.3->psycopg[binary]<3.4,>=3.3.3->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 5))
+  Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting botocore<1.43.0,>=1.42.97 (from boto3<1.43,>=1.42->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 6))
+  Downloading botocore-1.42.97-py3-none-any.whl.metadata (5.9 kB)
+Collecting jmespath<2.0.0,>=0.7.1 (from boto3<1.43,>=1.42->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 6))
+  Downloading jmespath-1.1.0-py3-none-any.whl.metadata (7.6 kB)
+Collecting s3transfer<0.17.0,>=0.16.0 (from boto3<1.43,>=1.42->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 6))
+  Downloading s3transfer-0.16.1-py3-none-any.whl.metadata (1.7 kB)
+Collecting google-auth<3.0.0,>=2.26.1 (from google-cloud-storage<4,>=3.9.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 7))
+  Downloading google_auth-2.62.0-py3-none-any.whl.metadata (6.0 kB)
+Collecting google-api-core<3.0.0,>=2.27.0 (from google-cloud-storage<4,>=3.9.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 7))
+  Downloading google_api_core-2.43.2-py3-none-any.whl.metadata (3.2 kB)
+Collecting google-cloud-core<3.0.0,>=2.4.2 (from google-cloud-storage<4,>=3.9.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 7))
+  Downloading google_cloud_core-2.8.0-py3-none-any.whl.metadata (2.9 kB)
+Collecting google-resumable-media<3.0.0,>=2.7.2 (from google-cloud-storage<4,>=3.9.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 7))
+  Downloading google_resumable_media-2.11.0-py3-none-any.whl.metadata (2.3 kB)
+Collecting google-crc32c<2.0.0,>=1.6.0 (from google-cloud-storage<4,>=3.9.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 7))
+  Downloading google_crc32c-1.9.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.2 kB)
+Collecting redis>=4.0.2 (from django-redis<7,>=6.0.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 11))
+  Downloading redis-8.1.0-py3-none-any.whl.metadata (16 kB)
+Collecting psycopg-binary==3.3.6 (from psycopg[binary]<3.4,>=3.3.3->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 5))
+  Downloading psycopg_binary-3.3.6-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.7 kB)
+Collecting soupsieve>=1.6.1 (from beautifulsoup4<5,>=4.13.3->wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading soupsieve-3.0.4-py3-none-any.whl.metadata (4.4 kB)
+Collecting python-dateutil<3.0.0,>=2.1 (from botocore<1.43.0,>=1.42.97->boto3<1.43,>=1.42->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 6))
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting django-stubs-ext (from django-tasks<0.13,>=0.9->wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading django_stubs_ext-6.1.2-py3-none-any.whl.metadata (3.6 kB)
+Collecting googleapis-common-protos<2.0.0,>=1.69.2 (from google-api-core<3.0.0,>=2.27.0->google-cloud-storage<4,>=3.9.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 7))
+  Downloading googleapis_common_protos-1.76.0-py3-none-any.whl.metadata (8.5 kB)
+Collecting protobuf<8.0.0,>=6.33.5 (from google-api-core<3.0.0,>=2.27.0->google-cloud-storage<4,>=3.9.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 7))
+  Downloading protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+Collecting proto-plus<2.0.0,>=1.26.1 (from google-api-core<3.0.0,>=2.27.0->google-cloud-storage<4,>=3.9.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 7))
+  Downloading proto_plus-1.29.0-py3-none-any.whl.metadata (2.2 kB)
+Collecting opentelemetry-api<2.0.0,>=1.44.0 (from google-api-core<3.0.0,>=2.27.0->google-cloud-storage<4,>=3.9.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 7))
+  Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+Collecting pyasn1-modules>=0.2.1 (from google-auth<3.0.0,>=2.26.1->google-cloud-storage<4,>=3.9.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 7))
+  Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting cryptography>=38.0.3 (from google-auth<3.0.0,>=2.26.1->google-cloud-storage<4,>=3.9.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 7))
+  Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.4 kB)
+Collecting et-xmlfile (from openpyxl<4.0,>=3.0.10->wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading et_xmlfile-2.0.0-py3-none-any.whl.metadata (2.7 kB)
+Collecting annotated-types>=0.6.0 (from pydantic<3,>=2->wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.50.2 (from pydantic<3,>=2->wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading pydantic_core-2.50.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.5 kB)
+Collecting typing-inspection>=0.4.4 (from pydantic<3,>=2->wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+Collecting charset_normalizer<4,>=2 (from requests>=0.14.0->aws-requests-auth==0.4.3->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 10))
+  Using cached charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+Collecting idna<4,>=2.5 (from requests>=0.14.0->aws-requests-auth==0.4.3->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 10))
+  Using cached idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting certifi>=2023.5.7 (from requests>=0.14.0->aws-requests-auth==0.4.3->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 10))
+  Using cached certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+Collecting filetype!=1.1.0,>=1.0.10 (from Willow<2,>=1.11.0->Willow[heif]<2,>=1.11.0->wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading filetype-1.2.0-py2.py3-none-any.whl.metadata (6.5 kB)
+Collecting defusedxml<1.0,>=0.7 (from Willow<2,>=1.11.0->Willow[heif]<2,>=1.11.0->wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading defusedxml-0.7.1-py2.py3-none-any.whl.metadata (32 kB)
+Collecting pillow-heif>=1.0.0 (from Willow[heif]<2,>=1.11.0->wagtail<8.1,>=8.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/base.txt (line 3))
+  Downloading pillow_heif-1.8.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.7 kB)
+Collecting cffi>=2.0.0 (from cryptography>=38.0.3->google-auth<3.0.0,>=2.26.1->google-cloud-storage<4,>=3.9.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 7))
+  Using cached cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+Collecting pyasn1<0.7.0,>=0.6.1 (from pyasn1-modules>=0.2.1->google-auth<3.0.0,>=2.26.1->google-cloud-storage<4,>=3.9.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 7))
+  Downloading pyasn1-0.6.5-py3-none-any.whl.metadata (8.4 kB)
+Collecting six>=1.5 (from python-dateutil<3.0.0,>=2.1->botocore<1.43.0,>=1.42.97->boto3<1.43,>=1.42->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 6))
+  Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting pycparser (from cffi>=2.0.0->cryptography>=38.0.3->google-auth<3.0.0,>=2.26.1->google-cloud-storage<4,>=3.9.0->-r /home/runner/work/_temp/repos/bakerydemo/requirements/production.txt (line 7))
+  Using cached pycparser-3.12-py3-none-any.whl.metadata (9.7 kB)
+Downloading elasticsearch-5.5.3-py2.py3-none-any.whl (119 kB)
+Downloading aws_requests_auth-0.4.3-py2.py3-none-any.whl (6.8 kB)
+Downloading django-6.0.9-py3-none-any.whl (8.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.4/8.4 MB 114.8 MB/s eta 0:00:00
+Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+Downloading wagtail-8.0.1-py3-none-any.whl (9.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.8/9.8 MB 121.6 MB/s eta 0:00:00
+Downloading wagtail_font_awesome_svg-1.2.1-py3-none-any.whl (1.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 114.3 MB/s eta 0:00:00
+Downloading django_debug_toolbar-4.4.6-py3-none-any.whl (229 kB)
+Downloading django_extensions-4.1-py3-none-any.whl (232 kB)
+Downloading django_csp-3.8-py3-none-any.whl (17 kB)
+Downloading dj_database_url-3.1.2-py3-none-any.whl (9.0 kB)
+Downloading whitenoise-6.12.0-py3-none-any.whl (20 kB)
+Downloading psycopg-3.3.6-py3-none-any.whl (215 kB)
+Downloading boto3-1.42.97-py3-none-any.whl (140 kB)
+Downloading google_cloud_storage-3.17.1-py3-none-any.whl (345 kB)
+Downloading django_storages-1.14.6-py3-none-any.whl (33 kB)
+Downloading django_redis-6.0.0-py3-none-any.whl (33 kB)
+Downloading django_basic_auth_ip_whitelist-0.8.0-py3-none-any.whl (8.5 kB)
+Downloading psycopg_binary-3.3.6-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.2/5.2 MB 188.9 MB/s eta 0:00:00
+Downloading anyascii-0.3.3-py3-none-any.whl (345 kB)
+Downloading asgiref-3.13.0-py3-none-any.whl (27 kB)
+Downloading beautifulsoup4-4.15.0-py3-none-any.whl (109 kB)
+Downloading botocore-1.42.97-py3-none-any.whl (15.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.0/15.0 MB 307.2 MB/s eta 0:00:00
+Downloading django_filter-26.2-py3-none-any.whl (94 kB)
+Downloading django_modelcluster-6.5-py3-none-any.whl (29 kB)
+Downloading django_ninja-1.7.3-py3-none-any.whl (2.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.4/2.4 MB 139.0 MB/s eta 0:00:00
+Downloading django_permissionedforms-0.1-py2.py3-none-any.whl (5.7 kB)
+Downloading django_taggit-6.1.0-py3-none-any.whl (75 kB)
+Downloading django_tasks-0.12.0-py3-none-any.whl (15 kB)
+Downloading django_treebeard-5.3.1-py3-none-any.whl (82 kB)
+Downloading djangorestframework-3.18.3-py3-none-any.whl (903 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 904.0/904.0 kB 145.5 MB/s eta 0:00:00
+Downloading draftjs_exporter-7.3.1-py3-none-any.whl (75 kB)
+Downloading google_api_core-2.43.2-py3-none-any.whl (224 kB)
+Downloading google_auth-2.62.0-py3-none-any.whl (267 kB)
+Downloading google_cloud_core-2.8.0-py3-none-any.whl (31 kB)
+Downloading google_crc32c-1.9.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (36 kB)
+Downloading google_resumable_media-2.11.0-py3-none-any.whl (81 kB)
+Downloading jmespath-1.1.0-py3-none-any.whl (20 kB)
+Downloading laces-0.1.2-py3-none-any.whl (22 kB)
+Downloading modelsearch-1.3.2-py3-none-any.whl (129 kB)
+Downloading openpyxl-3.1.5-py2.py3-none-any.whl (250 kB)
+Using cached pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+Downloading pydantic-2.14.2-py3-none-any.whl (490 kB)
+Downloading pydantic_core-2.50.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 282.3 MB/s eta 0:00:00
+Downloading redis-8.1.0-py3-none-any.whl (560 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 560.6/560.6 kB 107.5 MB/s eta 0:00:00
+Using cached requests-2.34.2-py3-none-any.whl (73 kB)
+Downloading s3transfer-0.16.1-py3-none-any.whl (86 kB)
+Downloading sqlparse-0.6.0-py3-none-any.whl (50 kB)
+Downloading swapper-1.5.0-py2.py3-none-any.whl (7.3 kB)
+Downloading telepath-0.3.1-py38-none-any.whl (10 kB)
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Using cached urllib3-2.8.0-py3-none-any.whl (135 kB)
+Downloading willow-1.12.0-py3-none-any.whl (119 kB)
+Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Using cached certifi-2026.10.23-py3-none-any.whl (135 kB)
+Using cached charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (257 kB)
+Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 271.6 MB/s eta 0:00:00
+Downloading defusedxml-0.7.1-py2.py3-none-any.whl (25 kB)
+Downloading filetype-1.2.0-py2.py3-none-any.whl (19 kB)
+Downloading googleapis_common_protos-1.76.0-py3-none-any.whl (307 kB)
+Using cached idna-3.20-py3-none-any.whl (69 kB)
+Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+Downloading pillow_heif-1.8.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (5.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.7/5.7 MB 111.6 MB/s eta 0:00:00
+Downloading proto_plus-1.29.0-py3-none-any.whl (50 kB)
+Downloading protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl (343 kB)
+Downloading pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Downloading soupsieve-3.0.4-py3-none-any.whl (42 kB)
+Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+Downloading django_stubs_ext-6.1.2-py3-none-any.whl (10 kB)
+Downloading et_xmlfile-2.0.0-py3-none-any.whl (18 kB)
+Using cached cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+Downloading pyasn1-0.6.5-py3-none-any.whl (84 kB)
+Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+Using cached pycparser-3.12-py3-none-any.whl (62 kB)
+Building wheels for collected packages: uwsgi
+  Building wheel for uwsgi (pyproject.toml): started
+  Building wheel for uwsgi (pyproject.toml): finished with status 'done'
+  Created wheel for uwsgi: filename=uwsgi-2.0.31-cp312-cp312-linux_x86_64.whl size=597115 sha256=9ef1e6e371fe4c2027937a262176fa75fd0802ed19a0f1f38da33ea25b371378
+  Stored in directory: /home/runner/.cache/pip/wheels/de/9b/b9/cc2e42ac5a3197a4be493c415bcc29ea7e58fbfa4b715946a5
+Successfully built uwsgi
+Installing collected packages: uwsgi, filetype, whitenoise, urllib3, typing-extensions, telepath, swapper, sqlparse, soupsieve, six, redis, python-dotenv, pycparser, pyasn1, psycopg-binary, protobuf, Pillow, jmespath, idna, google-crc32c, et-xmlfile, draftjs_exporter, defusedxml, charset_normalizer, certifi, asgiref, anyascii, annotated-types, Willow, typing-inspection, requests, python-dateutil, pydantic-core, pyasn1-modules, psycopg, proto-plus, pillow-heif, opentelemetry-api, openpyxl, googleapis-common-protos, google-resumable-media, elasticsearch, Django, cffi, beautifulsoup4, pydantic, laces, djangorestframework, django-treebeard, django-taggit, django-stubs-ext, django-storages, django-redis, django-permissionedforms, django-modelcluster, django-filter, django-extensions, django-debug-toolbar, django-csp, django-basic-auth-ip-whitelist, dj-database-url, cryptography, botocore, aws-requests-auth, s3transfer, google-auth, django-tasks, django-ninja, modelsearch, google-api-core, boto3, wagtail, google-cloud-core, wagtail-font-awesome-svg, google-cloud-storage
+Successfully installed Django-6.0.9 Pillow-13.0.0 Willow-1.12.0 annotated-types-0.8.0 anyascii-0.3.3 asgiref-3.13.0 aws-requests-auth-0.4.3 beautifulsoup4-4.15.0 boto3-1.42.97 botocore-1.42.97 certifi-2026.10.23 cffi-2.1.1 charset_normalizer-3.5.2 cryptography-50.0.2 defusedxml-0.7.1 dj-database-url-3.1.2 django-basic-auth-ip-whitelist-0.8.0 django-csp-3.8 django-debug-toolbar-4.4.6 django-extensions-4.1 django-filter-26.2 django-modelcluster-6.5 django-ninja-1.7.3 django-permissionedforms-0.1 django-redis-6.0.0 django-storages-1.14.6 django-stubs-ext-6.1.2 django-taggit-6.1.0 django-tasks-0.12.0 django-treebeard-5.3.1 djangorestframework-3.18.3 draftjs_exporter-7.3.1 elasticsearch-5.5.3 et-xmlfile-2.0.0 filetype-1.2.0 google-api-core-2.43.2 google-auth-2.62.0 google-cloud-core-2.8.0 google-cloud-storage-3.17.1 google-crc32c-1.9.0 google-resumable-media-2.11.0 googleapis-common-protos-1.76.0 idna-3.20 jmespath-1.1.0 laces-0.1.2 modelsearch-1.3.2 openpyxl-3.1.5 opentelemetry-api-1.45.2 pillow-heif-1.8.1 proto-plus-1.29.0 protobuf-7.36.2 psycopg-3.3.6 psycopg-binary-3.3.6 pyasn1-0.6.5 pyasn1-modules-0.4.2 pycparser-3.12 pydantic-2.14.2 pydantic-core-2.50.2 python-dateutil-2.9.0.post0 python-dotenv-1.2.4 redis-8.1.0 requests-2.34.2 s3transfer-0.16.1 six-1.17.0 soupsieve-3.0.4 sqlparse-0.6.0 swapper-1.5.0 telepath-0.3.1 typing-extensions-4.16.0 typing-inspection-0.4.4 urllib3-2.8.0 uwsgi-2.0.31 wagtail-8.0.1 wagtail-font-awesome-svg-1.2.1 whitenoise-6.12.0
+
+Output:
+bakerydemo needs no build: Python runs it from its source. Press Ctrl+F5 to run it.
+The app was not started because its backing services did not start: db: Native Services need TabStudio's Alpine environment. On desktop use the Alpine CI harness or a remote host.
+redis: Native Services need TabStudio's Alpine environment. On desktop use the Alpine CI harness or a remote host. They are in the Services panel.
+The app was not started because its backing services did not start: db: Native Services need TabStudio's Alpine environment. On desktop use the Alpine CI harness or a remote host.
+redis: Native Services need TabStudio's Alpine environment. On desktop use the Alpine CI harness or a remote host. They are in the Services panel.
+

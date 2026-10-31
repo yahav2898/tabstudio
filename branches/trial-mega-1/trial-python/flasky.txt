@@ -1,0 +1,100 @@
+flasky at 3beedd640b9146b0bd65c8c2ecf402b01798bc33, opening /home/runner/work/_temp/repos/flasky
+Opened in 0.3 s: flasky, solution (none)
+  toolchain project python: /home/runner/work/_temp/repos/flasky/requirements.txt
+Compatibility Doctor:
+  flasky: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+F5 startup project: flasky (python) /home/runner/work/_temp/repos/flasky/requirements.txt
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Run: exited before listening with code 1 (0 s after F5)
+Debug: no entry point found for a breakpoint (0 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up flasky: pip install -r requirements.txt
+  Installing flasky's packages: Installing packages: pip install -r requirements.txt
+  Installing flasky's packages: Failed after 8.9 s
+  Setting up projects: Succeeded after 12.1 s
+Project setup:
+------ flasky: pip install -r requirements.txt ------
+> uv venv --seed --python 3.6 .venv
+error: No interpreter found for Python 3.6 in managed installations or search path
+
+hint: uv embeds available Python downloads and may require an update to install new versions. Consider retrying on a newer version of uv.
+> python3 -m venv --clear .venv
+> /home/runner/work/_temp/repos/flasky/.venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
+Collecting alembic==0.9.3 (from -r /home/runner/work/_temp/repos/flasky/requirements/common.txt (line 1))
+  Downloading alembic-0.9.3.tar.gz (991 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 991.7/991.7 kB 26.9 MB/s eta 0:00:00
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting bleach==2.0.0 (from -r /home/runner/work/_temp/repos/flasky/requirements/common.txt (line 2))
+  Downloading bleach-2.0.0-py2.py3-none-any.whl.metadata (11 kB)
+Collecting blinker==1.4 (from -r /home/runner/work/_temp/repos/flasky/requirements/common.txt (line 3))
+  Downloading blinker-1.4.tar.gz (111 kB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting click==6.7 (from -r /home/runner/work/_temp/repos/flasky/requirements/common.txt (line 4))
+  Downloading click-6.7-py2.py3-none-any.whl.metadata (424 bytes)
+Collecting dominate==2.3.1 (from -r /home/runner/work/_temp/repos/flasky/requirements/common.txt (line 5))
+  Downloading dominate-2.3.1.tar.gz (27 kB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Getting requirements to build wheel did not run successfully.
+  │ exit code: 1
+  ╰─> [21 lines of output]
+      Traceback (most recent call last):
+        File "/home/runner/work/_temp/repos/flasky/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/home/runner/work/_temp/repos/flasky/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/home/runner/work/_temp/repos/flasky/.venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 143, in get_requires_for_build_wheel
+          return hook(config_settings)
+                 ^^^^^^^^^^^^^^^^^^^^^
+        File "/tmp/pip-build-env-kxjodm2p/overlay/lib/python3.12/site-packages/setuptools/build_meta.py", line 333, in get_requires_for_build_wheel
+          return self._get_build_requires(config_settings, requirements=[])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/tmp/pip-build-env-kxjodm2p/overlay/lib/python3.12/site-packages/setuptools/build_meta.py", line 301, in _get_build_requires
+          self.run_setup()
+        File "/tmp/pip-build-env-kxjodm2p/overlay/lib/python3.12/site-packages/setuptools/build_meta.py", line 520, in run_setup
+          super().run_setup(setup_script=setup_script)
+        File "/tmp/pip-build-env-kxjodm2p/overlay/lib/python3.12/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())  # noqa: S102 # exec is intentional here
+          ^^^^^^^^^^^^^^^^^^^^
+        File "<string>", line 22, in <module>
+      ModuleNotFoundError: No module named 'imp'
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+error: subprocess-exited-with-error
+
+× Getting requirements to build wheel did not run successfully.
+│ exit code: 1
+╰─> See above for output.
+
+note: This error originates from a subprocess, and is likely not a problem with pip.
+dominate 2.3.1 could not be installed: it has no prebuilt wheel for Python 3.12 on this computer, so pip compiled it, and the build failed (ModuleNotFoundError: No module named 'imp'). Install what its build needs on this computer (a C compiler and Python's headers), then use Tools > Install Project Packages. A .python-version file naming the Python the project was written for, such as 3.11, lets pip use a prebuilt wheel, as does a dominate release that ships one.
+
+Output:
+dominate could not be installed, so it may fail to start. The install's log is in Output > Project Setup.
+Running flask run (app) with Python 3.12.15
+/home/runner/work/_temp/repos/flasky/.venv/bin/python: No module named flask
+
+The program 'flask run (app)' has exited with code 1 (0x1).
+
