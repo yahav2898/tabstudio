@@ -146,6 +146,18 @@ public sealed class CSharpCompiler
             ? LanguageVersion.Preview
             : LanguageVersion.Latest;
 
+    /// <summary>
+    /// Whether a project compiles deterministically, as MSBuild decides: its <c>Deterministic</c> property, else
+    /// <see langword="true"/> for an SDK-style project and <see langword="false"/> for a .NET Framework one, whose
+    /// <c>AssemblyInfo</c> often has a wildcard version (<c>[assembly: AssemblyVersion("1.0.*")]</c>), which a
+    /// deterministic build rejects (CS8357, BC37330: VBDev2Dev's Dots).
+    /// </summary>
+    /// <param name="project">The project, or <see langword="null"/> for code outside one.</param>
+    public static bool IsDeterministic(TsProject? project) =>
+        project?.GetProperty("Deterministic")?.Trim() is { Length: > 0 } value
+            ? string.Equals(value, "true", StringComparison.OrdinalIgnoreCase)
+            : project is null || project.Sdk is not null || project.Sdks.Count > 0;
+
     /// <summary>Compilation options for a project.</summary>
     /// <param name="kind">Whether to produce a program or a library.</param>
     /// <param name="nullable">Whether nullable reference types are enabled.</param>
