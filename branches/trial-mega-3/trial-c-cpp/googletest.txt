@@ -1,0 +1,71 @@
+googletest at a8380b01a25ebdb130097b607b3afed2a58d04ba, opening /home/runner/work/_temp/repos/googletest
+Opened in 0.3 s: googletest, solution (none)
+  toolchain project cpp: /home/runner/work/_temp/repos/googletest/CMakeLists.txt
+  toolchain project python: /home/runner/work/_temp/repos/googletest/googlemock/test
+  toolchain project python: /home/runner/work/_temp/repos/googletest/googletest/test
+Compatibility Doctor:
+  googletest: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+  test: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  test: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+F5 startup project: googletest (cpp) /home/runner/work/_temp/repos/googletest/CMakeLists.txt
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here. (120 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 3.4 s
+  Building googletest: Building googletest
+  Building googletest: Configuring CMake
+  Building googletest: Generating build files
+  Building googletest: Building 12%
+  Building googletest: Building 25%
+  Building googletest: Building 37%
+  Building googletest: Building 50%
+  Building googletest: Building 62%
+  Building googletest: Building 75%
+  Building googletest: Building 87%
+  Building googletest: Building 100%
+  Building googletest: Succeeded after 9.5 s
+Project setup:
+
+Output:
+Building googletest with C and C++ 13.3.0
+> cmake --build /home/runner/work/_temp/repos/googletest/.tabstudio/cmake --config Debug
+> cmake -S /home/runner/work/_temp/repos/googletest -B /home/runner/work/_temp/repos/googletest/.tabstudio/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (0.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/runner/work/_temp/repos/googletest/.tabstudio/cmake
+[ 12%] Building CXX object googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o
+[ 25%] Linking CXX static library ../lib/libgtest.a
+[ 25%] Built target gtest
+[ 37%] Building CXX object googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o
+[ 50%] Linking CXX static library ../lib/libgmock.a
+[ 50%] Built target gmock
+[ 62%] Building CXX object googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o
+[ 75%] Linking CXX static library ../lib/libgmock_main.a
+[ 75%] Built target gmock_main
+[ 87%] Building CXX object googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o
+[100%] Linking CXX static library ../lib/libgtest_main.a
+[100%] Built target gtest_main
+
+Build succeeded: 'googletest' is ready to run.
+
