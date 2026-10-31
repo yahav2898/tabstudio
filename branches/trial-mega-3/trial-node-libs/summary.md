@@ -1,0 +1,8 @@
+| Repository | Opened | F5 startup | Setup | Analysis stable | Errors | Build | Run | Debug | Tests | Doctor |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| axios | 3.7 s | axios (node) | ok in 25 s | 29.6 s | 0 errors, 0 warnings | 0 errors in 0 s | not run: build only | - | 0 found; 1690 passed, 25 failed, 0 skipped, 0 not run - The build failed. Fix the errors in the Error List, then run the tests again. | 6 Needs a toolchain |
+| chalk | 1.7 s | chalk (node) | ok in 21 s | 26.4 s | 0 errors, 0 warnings | 0 errors in 0 s | not run: build only | - | 0 found; 59 passed, 0 failed, 0 skipped, 0 not run - 59 tests run in 1.5 sec: 59 passed, 0 failed, 0 skipped. | 1 Needs a toolchain |
+| ky | 0.1 s | ky (node) | ok in 24 s | 28.5 s | 0 errors, 0 warnings | 0 errors in 0 s | not run: build only | - | Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here. | 1 Needs a toolchain |
+| express | 0.2 s | express (node) | ok in 11 s | 15.8 s | 0 errors, 0 warnings | 0 errors in 0 s | not run: build only | - | 0 found; 1282 passed, 0 failed, 0 skipped, 0 not run - 1282 tests run in 3.2 sec: 1282 passed, 0 failed, 0 skipped. | 1 Needs a toolchain |
+| chi-rest | 0.1 s | rest (go) | ok in 3 s | 7.9 s | 0 errors, 0 warnings | 0 errors in 13 s | GET / 200 | stopped at main.go:56 in main.main, 3 frames, 0 locals | - | 1 Needs a toolchain |
+| golang-example-hello | 0.1 s | hello (go) | ok in 3 s | 7.8 s | 0 errors, 0 warnings | 0 errors in 0 s | exited with code 0 | stopped at hello.go:46 in main.main, 3 frames, 0 locals | - | 1 Needs a toolchain |
