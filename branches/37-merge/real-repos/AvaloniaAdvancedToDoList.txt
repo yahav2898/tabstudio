@@ -4,21 +4,14 @@ Compatibility Doctor:
   AdvancedToDoListTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   SharedControlsTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   AdvancedToDoList.Android: Not supported via Android head, on a computer - The Android head of a cross-platform app: it builds only with .NET's Android workload, on a computer. TabStudio leaves it out of builds; the app's shared project and its desktop head run here.
-  AdvancedToDoList.Browser: Ready via Native view in the app preview - Rendered natively beside the code by TabStudio's own Avalonia. Saving a file restarts it.
+  AdvancedToDoList.Browser: Not supported via Browser head, on a computer - The browser head of a cross-platform app, compiled ahead of time to WebAssembly: it builds only with .NET's wasm-tools workload, on a computer. TabStudio leaves it out of builds; the app's shared project and its desktop head run here.
   AdvancedToDoList.Desktop: Ready via Native view in the app preview - Rendered natively beside the code by TabStudio's own Avalonia. Saving a file restarts it.
   AdvancedToDoList.iOS: Not supported via iOS head, on a computer - The iOS head of a cross-platform app: it builds only with .NET's iOS workload, on a computer. TabStudio leaves it out of builds; the app's shared project and its desktop head run here.
   AdvancedToDoList: Library via Built with its users - A library is compiled together with the projects that reference it.
   SharedControls: Library via Built with its users - A library is compiled together with the projects that reference it.
-Startup project: AdvancedToDoList.Browser
-Built in 5.1 s: 0 errors, 1 warnings
+Startup project: AdvancedToDoList.Desktop
+Built in 88.4 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
-  avalonia.browser 12.1.4
-      build/Avalonia.Browser.props
-      build/Avalonia.Browser.targets
-      build/Microsoft.AspNetCore.StaticWebAssets.props
-      buildMultiTargeting/Avalonia.Browser.props
-      buildTransitive/Avalonia.Browser.props
-      buildTransitive/Avalonia.Browser.targets
   avalonia.buildservices 11.3.2
       build/Avalonia.BuildServices.targets
       buildTransitive/Avalonia.BuildServices.targets
@@ -301,21 +294,20 @@ Packages with analyzers or MSBuild files:
       buildTransitive/xunit.v3.core.mtp-v1.props
       buildTransitive/xunit.v3.core.mtp-v1.targets
 Output:
-Build started at 23:18:13...
+Build started at 00:31:29...
 1>------ Build started: Project: SharedControls, Configuration: Debug ------
 1>DialogCommand.cs(111,32): warning CS0067: The event 'DialogCommand.CanExecuteChanged' is never used
-1>SharedControls -> compiled in memory (109 KB, 273 ms)
+1>SharedControls -> compiled in memory (109 KB, 295 ms)
 2>------ Build started: Project: AdvancedToDoList, Configuration: Debug ------
-2>AdvancedToDoList -> compiled in memory (1013 KB, 635 ms)
+2>AdvancedToDoList -> compiled in memory (1013 KB, 314 ms)
 3>------ Build started: Project: AdvancedToDoListTests, Configuration: Debug ------
-3>AdvancedToDoListTests -> compiled in memory (53 KB, 377 ms)
+3>AdvancedToDoListTests -> compiled in memory (53 KB, 337 ms)
 4>------ Build started: Project: SharedControlsTests, Configuration: Debug ------
-4>SharedControlsTests -> compiled in memory (7.5 KB, 67 ms)
-5>------ Build started: Project: AdvancedToDoList.Browser, Configuration: Debug ------
-5>AdvancedToDoList.Browser -> compiled in memory (11.5 KB, 180 ms)
-6>------ Build started: Project: AdvancedToDoList.Desktop, Configuration: Debug ------
-6>AdvancedToDoList.Desktop -> compiled in memory (7 KB, 365 ms)
-7>------ Skipped: Project: AdvancedToDoList.Android: it targets net10.0-android, which only .NET's mobile workloads build, on a computer ------
+4>SharedControlsTests -> compiled in memory (7.5 KB, 85 ms)
+5>------ Build started: Project: AdvancedToDoList.Desktop, Configuration: Debug ------
+5>AdvancedToDoList.Desktop -> compiled in memory (7 KB, 334 ms)
+6>------ Skipped: Project: AdvancedToDoList.Android: it targets net10.0-android, which only .NET's mobile workloads build, on a computer ------
+7>------ Skipped: Project: AdvancedToDoList.Browser: it is a browser head compiled ahead of time to WebAssembly, which only .NET's wasm-tools workload builds, on a computer ------
 8>------ Skipped: Project: AdvancedToDoList.iOS: it targets net10.0-ios, which only .NET's mobile workloads build, on a computer ------
-========== Build: 6 succeeded, 0 failed, 2 skipped ==========
+========== Build: 5 succeeded, 0 failed, 3 skipped ==========
 

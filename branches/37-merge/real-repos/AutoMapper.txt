@@ -3,11 +3,11 @@ Opened /home/runner/work/_temp/real-repos/AutoMapper/AutoMapper.slnx in 0.3 s
 Compatibility Doctor:
   AutoMapper.DI.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   AutoMapper: Library via Built with its users - A library is compiled together with the projects that reference it.
-  Benchmark: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  Benchmark: Library via Not in the solution's build - The solution's Debug configuration does not build it, so TabStudio leaves it out of builds, as Visual Studio does.
   AutoMapper.IntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   TestApp: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   AutoMapper.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
-Startup project: Benchmark
+Startup project: TestApp
 Built in 7.3 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   emptyfiles 4.4.0
@@ -228,18 +228,17 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Output:
-Build started at 23:15:09...
+Build started at 00:27:37...
 1>------ Build started: Project: AutoMapper, Configuration: Debug ------
-1>AutoMapper -> compiled in memory (303.5 KB, 355 ms)
+1>AutoMapper -> compiled in memory (303.5 KB, 429 ms)
 2>------ Build started: Project: AutoMapper.DI.Tests, Configuration: Debug ------
-2>AutoMapper.DI.Tests -> compiled in memory (26.5 KB, 359 ms)
-3>------ Build started: Project: Benchmark, Configuration: Debug ------
-3>Benchmark -> compiled in memory (24 KB, 301 ms)
-4>------ Build started: Project: AutoMapper.IntegrationTests, Configuration: Debug ------
-4>AutoMapper.IntegrationTests -> compiled in memory (572.5 KB, 960 ms)
-5>------ Build started: Project: TestApp, Configuration: Debug ------
-5>TestApp -> compiled in memory (7 KB, 303 ms)
-6>------ Build started: Project: AutoMapper.UnitTests, Configuration: Debug ------
-6>AutoMapper.UnitTests -> compiled in memory (1773 KB, 2200 ms)
-========== Build: 6 succeeded, 0 failed ==========
+2>AutoMapper.DI.Tests -> compiled in memory (26.5 KB, 361 ms)
+3>------ Build started: Project: AutoMapper.IntegrationTests, Configuration: Debug ------
+3>AutoMapper.IntegrationTests -> compiled in memory (572.5 KB, 1039 ms)
+4>------ Build started: Project: TestApp, Configuration: Debug ------
+4>TestApp -> compiled in memory (7 KB, 373 ms)
+5>------ Build started: Project: AutoMapper.UnitTests, Configuration: Debug ------
+5>AutoMapper.UnitTests -> compiled in memory (1773 KB, 2402 ms)
+6>------ Skipped: Project: Benchmark: it is not built by the solution's Debug configuration ------
+========== Build: 5 succeeded, 0 failed, 1 skipped ==========
 
