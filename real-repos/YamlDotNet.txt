@@ -11,7 +11,7 @@ Compatibility Doctor:
   YamlDotNet.Core7AoTCompileTest.Model: Library via Built with its users - A library is compiled together with the projects that reference it.
   YamlDotNet.Fsharp.Test: Coming in an update via Test Explorer - Tests run in-process from the Test Explorer. The F# compiler is not bundled yet.
 Startup project: YamlDotNet.Core7AoTCompileTest
-Built in 5.9 s: 0 errors, 2 warnings
+Built in 4.7 s: 0 errors, 2 warnings
 Packages with analyzers or MSBuild files:
   microsoft.codeanalysis.analyzers 3.3.3
       analyzers/dotnet/cs/Microsoft.CodeAnalysis.Analyzers.dll
@@ -259,22 +259,22 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Output:
-Build started at 00:05:34...
+Build started at 02:46:46...
 1>------ Build started: Project: YamlDotNet, Configuration: Debug ------
-1>YamlDotNet -> compiled in memory (318.5 KB, 638 ms)
+1>YamlDotNet -> compiled in memory (318.5 KB, 370 ms)
 2>------ Build started: Project: YamlDotNet.Analyzers.StaticGenerator, Configuration: Debug ------
 2>TypeFactoryGenerator.cs(59,65): warning CS8604: Possible null reference argument for parameter 'category' in 'Diagnostic Diagnostic.Create(string id, string category, LocalizableString message, DiagnosticSeverity severity, DiagnosticSeverity defaultSeverity, bool isEnabledByDefault, int warningLevel, LocalizableString? title = null, LocalizableString? description = null, string? helpLink = null, Location? location = null, IEnumerable<Location>? additionalLocations = null, IEnumerable<string>? customTags = null, ImmutableDictionary<string, string?>? properties = null)'.
 2>TypeFactoryGenerator.cs(132,27): warning CS8604: Possible null reference argument for parameter 'arg1' in 'void Action<string, bool>.Invoke(string arg1, bool arg2)'.
-2>YamlDotNet.Analyzers.StaticGenerator -> compiled in memory (53.5 KB, 55 ms)
+2>YamlDotNet.Analyzers.StaticGenerator -> compiled in memory (53.5 KB, 46 ms)
 3>------ Build started: Project: YamlDotNet.Test, Configuration: Debug ------
-3>YamlDotNet.Test -> compiled in memory (447 KB, 1113 ms)
+3>YamlDotNet.Test -> compiled in memory (447 KB, 745 ms)
 4>------ Build started: Project: YamlDotNet.Samples, Configuration: Debug ------
-4>YamlDotNet.Samples -> compiled in memory (29 KB, 1160 ms)
+4>YamlDotNet.Samples -> compiled in memory (29 KB, 650 ms)
 5>------ Build started: Project: YamlDotNet.Benchmark, Configuration: Debug ------
-5>YamlDotNet.Benchmark -> compiled in memory (15 KB, 482 ms)
+5>YamlDotNet.Benchmark -> compiled in memory (15 KB, 283 ms)
 6>------ Build started: Project: YamlDotNet.Core7AoTCompileTest.Model, Configuration: Debug ------
-6>YamlDotNet.Core7AoTCompileTest.Model -> compiled in memory (3 KB, 3 ms)
+6>YamlDotNet.Core7AoTCompileTest.Model -> compiled in memory (3 KB, 4 ms)
 7>------ Build started: Project: YamlDotNet.Core7AoTCompileTest, Configuration: Debug ------
-7>YamlDotNet.Core7AoTCompileTest -> compiled in memory (52 KB, 497 ms)
+7>YamlDotNet.Core7AoTCompileTest -> compiled in memory (52 KB, 371 ms)
 ========== Build: 7 succeeded, 0 failed ==========
 

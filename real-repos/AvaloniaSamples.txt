@@ -1,5 +1,5 @@
 AvaloniaSamples at e1904914cb00ea034870babdc01bfef797562e4c
-Opened /home/runner/work/_temp/real-repos/AvaloniaSamples/src/Avalonia.Samples/Avalonia.Samples.slnx in 0.2 s
+Opened /home/runner/work/_temp/real-repos/AvaloniaSamples/src/Avalonia.Samples/Avalonia.Samples.slnx in 0.6 s
 Compatibility Doctor:
   Avalonia.MusicStore: Ready via Native view in the app preview - Rendered natively beside the code by TabStudio's own Avalonia. Saving a file restarts it.
   SimpleToDoList: Ready via Native view in the app preview - Rendered natively beside the code by TabStudio's own Avalonia. Saving a file restarts it.
@@ -24,7 +24,7 @@ Compatibility Doctor:
   DialogManagerSample: Ready via Native view in the app preview - Rendered natively beside the code by TabStudio's own Avalonia. Saving a file restarts it.
   MvvmDialogSample: Ready via Native view in the app preview - Rendered natively beside the code by TabStudio's own Avalonia. Saving a file restarts it.
 Startup project: Avalonia.MusicStore
-Built in 7.5 s: 0 errors, 18 warnings
+Built in 11.9 s: 0 errors, 18 warnings
 Packages with analyzers or MSBuild files:
   avalonia.buildservices 11.3.2
       build/Avalonia.BuildServices.targets
@@ -490,45 +490,45 @@ Packages with analyzers or MSBuild files:
       buildTransitive/xunit.v3.core.mtp-v1.props
       buildTransitive/xunit.v3.core.mtp-v1.targets
 Output:
-Build started at 23:53:43...
+Build started at 02:36:03...
 1>------ Build started: Project: Avalonia.MusicStore, Configuration: Debug ------
 1>AlbumViewModel.cs(60,25): warning CS0618: 'Bitmap.Save(Stream, int?)' is obsolete: 'Use the overload accepting BitmapEncoderOptions instead.'
 1>MusicStoreWindow.axaml.cs(20,17): warning CS8602: Dereference of a possibly null reference.
-1>Avalonia.MusicStore -> compiled in memory (224 KB, 283 ms)
+1>Avalonia.MusicStore -> compiled in memory (224 KB, 174 ms)
 2>------ Build started: Project: SimpleToDoList, Configuration: Debug ------
-2>SimpleToDoList -> compiled in memory (204.5 KB, 47 ms)
+2>SimpleToDoList -> compiled in memory (204.5 KB, 14 ms)
 3>------ Build started: Project: RatingControlSample, Configuration: Debug ------
-3>RatingControlSample -> compiled in memory (202.5 KB, 62 ms)
+3>RatingControlSample -> compiled in memory (202.5 KB, 26 ms)
 4>------ Build started: Project: SnowflakesControlSample, Configuration: Debug ------
-4>SnowflakesControlSample -> compiled in memory (200 KB, 50 ms)
+4>SnowflakesControlSample -> compiled in memory (200 KB, 17 ms)
 5>------ Build started: Project: BasicDataTemplateSample, Configuration: Debug ------
-5>BasicDataTemplateSample -> compiled in memory (191 KB, 239 ms)
+5>BasicDataTemplateSample -> compiled in memory (191 KB, 64 ms)
 6>------ Build started: Project: FuncDataTemplateSample, Configuration: Debug ------
-6>FuncDataTemplateSample -> compiled in memory (189 KB, 50 ms)
+6>FuncDataTemplateSample -> compiled in memory (189 KB, 19 ms)
 7>------ Build started: Project: IDataTemplateSample, Configuration: Debug ------
-7>IDataTemplateSample -> compiled in memory (186 KB, 22 ms)
+7>IDataTemplateSample -> compiled in memory (186 KB, 40 ms)
 8>------ Build started: Project: TrayIcon, Configuration: Debug ------
 8>AboutWindow.axaml.cs(17,44): warning CS8602: Dereference of a possibly null reference.
 8>AboutWindow.axaml.cs(18,47): warning CS8602: Dereference of a possibly null reference.
-8>TrayIcon -> compiled in memory (94 KB, 20 ms)
+8>TrayIcon -> compiled in memory (94 KB, 16 ms)
 9>------ Build started: Project: BattleCity, Configuration: Debug ------
-9>BattleCity -> compiled in memory (39 KB, 40 ms)
+9>BattleCity -> compiled in memory (39 KB, 167 ms)
 10>------ Build started: Project: RectPainter, Configuration: Debug ------
-10>RectPainter -> compiled in memory (190 KB, 32 ms)
+10>RectPainter -> compiled in memory (190 KB, 45 ms)
 11>------ Build started: Project: BasicMvvmSample, Configuration: Debug ------
-11>BasicMvvmSample -> compiled in memory (187 KB, 68 ms)
+11>BasicMvvmSample -> compiled in memory (187 KB, 73 ms)
 12>------ Build started: Project: CommandSample, Configuration: Debug ------
-12>CommandSample -> compiled in memory (205 KB, 75 ms)
+12>CommandSample -> compiled in memory (205 KB, 81 ms)
 13>------ Build started: Project: ValidationSample, Configuration: Debug ------
-13>ValidationSample -> compiled in memory (189 KB, 42 ms)
+13>ValidationSample -> compiled in memory (189 KB, 33 ms)
 14>------ Build started: Project: ValueConversionSample, Configuration: Debug ------
-14>ValueConversionSample -> compiled in memory (191.5 KB, 43 ms)
+14>ValueConversionSample -> compiled in memory (191.5 KB, 25 ms)
 15>------ Build started: Project: BasicViewLocatorSample, Configuration: Debug ------
-15>BasicViewLocatorSample -> compiled in memory (199 KB, 63 ms)
+15>BasicViewLocatorSample -> compiled in memory (199 KB, 67 ms)
 16>------ Build started: Project: TestableApp, Configuration: Debug ------
-16>TestableApp -> compiled in memory (187 KB, 32 ms)
+16>TestableApp -> compiled in memory (187 KB, 23 ms)
 17>------ Build started: Project: TestableApp.Appium, Configuration: Debug ------
-17>TestableApp.Appium -> compiled in memory (8 KB, 63 ms)
+17>TestableApp.Appium -> compiled in memory (8 KB, 35 ms)
 18>------ Build started: Project: TestableApp.Headless.NUnit, Configuration: Debug ------
 18>CalculatorTests.cs(23,9): warning CS8602: Dereference of a possibly null reference.
 18>CalculatorTests.cs(27,9): warning CS8602: Dereference of a possibly null reference.
@@ -537,7 +537,7 @@ Build started at 23:53:43...
 18>CalculatorTests.cs(47,9): warning CS8602: Dereference of a possibly null reference.
 18>CalculatorTests.cs(51,9): warning CS8602: Dereference of a possibly null reference.
 18>CalculatorTests.cs(54,21): warning CS8602: Dereference of a possibly null reference.
-18>TestableApp.Headless.NUnit -> compiled in memory (4.5 KB, 25 ms)
+18>TestableApp.Headless.NUnit -> compiled in memory (4.5 KB, 20 ms)
 19>------ Build started: Project: TestableApp.Headless.XUnit, Configuration: Debug ------
 19>CalculatorTests.cs(23,9): warning CS8602: Dereference of a possibly null reference.
 19>CalculatorTests.cs(27,9): warning CS8602: Dereference of a possibly null reference.
@@ -546,10 +546,10 @@ Build started at 23:53:43...
 19>CalculatorTests.cs(47,9): warning CS8602: Dereference of a possibly null reference.
 19>CalculatorTests.cs(51,9): warning CS8602: Dereference of a possibly null reference.
 19>CalculatorTests.cs(54,48): warning CS8602: Dereference of a possibly null reference.
-19>TestableApp.Headless.XUnit -> compiled in memory (4.5 KB, 24 ms)
+19>TestableApp.Headless.XUnit -> compiled in memory (4.5 KB, 15 ms)
 20>------ Build started: Project: DialogManagerSample, Configuration: Debug ------
-20>DialogManagerSample -> compiled in memory (203 KB, 71 ms)
+20>DialogManagerSample -> compiled in memory (203 KB, 53 ms)
 21>------ Build started: Project: MvvmDialogSample, Configuration: Debug ------
-21>MvvmDialogSample -> compiled in memory (195.5 KB, 46 ms)
+21>MvvmDialogSample -> compiled in memory (195.5 KB, 38 ms)
 ========== Build: 21 succeeded, 0 failed ==========
 

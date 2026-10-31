@@ -31,7 +31,7 @@ Compatibility Doctor:
   ClientApp.UnitTests: Not supported via .NET MAUI, on a computer - Not supported: a .NET MAUI project is built by .NET's MAUI workload, on a computer. TabStudio leaves it out of builds.
   eShop: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
 Startup project: WebhookClient
-Built in 21.7 s: 0 errors, 1 warnings
+Built in 19.9 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   asp.versioning.abstractions 10.2.1
       analyzers/dotnet/cs/Asp.Versioning.Analyzers.dll
@@ -1218,39 +1218,39 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net7.0/Yarp.ReverseProxy.targets
       buildTransitive/net8.0/Yarp.ReverseProxy.targets
 Output:
-Build started at 23:58:44...
+Build started at 02:40:33...
 1>------ Build started: Project: EventBus, Configuration: Debug ------
-1>EventBus -> compiled in memory (8 KB, 299 ms)
+1>EventBus -> compiled in memory (8 KB, 195 ms)
 2>------ Build started: Project: EventBusRabbitMQ, Configuration: Debug ------
-2>EventBusRabbitMQ -> compiled in memory (34 KB, 176 ms)
+2>EventBusRabbitMQ -> compiled in memory (34 KB, 76 ms)
 3>------ Build started: Project: IntegrationEventLogEF, Configuration: Debug ------
-3>IntegrationEventLogEF -> compiled in memory (15.5 KB, 63 ms)
+3>IntegrationEventLogEF -> compiled in memory (15.5 KB, 56 ms)
 4>------ Build started: Project: eShop.ServiceDefaults, Configuration: Debug ------
-4>eShop.ServiceDefaults -> compiled in memory (50 KB, 90 ms)
+4>eShop.ServiceDefaults -> compiled in memory (50 KB, 55 ms)
 5>------ Build started: Project: Catalog.API, Configuration: Debug ------
-5>Catalog.API -> compiled in memory (149 KB, 573 ms)
+5>Catalog.API -> compiled in memory (149 KB, 390 ms)
 6>------ Build started: Project: Identity.API, Configuration: Debug ------
-6>Identity.API -> compiled in memory (301 KB, 694 ms)
+6>Identity.API -> compiled in memory (301 KB, 571 ms)
 7>------ Build started: Project: Ordering.Domain, Configuration: Debug ------
-7>Ordering.Domain -> compiled in memory (23.5 KB, 27 ms)
+7>Ordering.Domain -> compiled in memory (23.5 KB, 54 ms)
 8>------ Build started: Project: Ordering.Infrastructure, Configuration: Debug ------
-8>Ordering.Infrastructure -> compiled in memory (77.5 KB, 174 ms)
+8>Ordering.Infrastructure -> compiled in memory (77.5 KB, 101 ms)
 9>------ Build started: Project: Ordering.API, Configuration: Debug ------
-9>Ordering.API -> compiled in memory (163.5 KB, 641 ms)
+9>Ordering.API -> compiled in memory (163.5 KB, 405 ms)
 10>------ Build started: Project: OrderProcessor, Configuration: Debug ------
-10>OrderProcessor -> compiled in memory (50 KB, 232 ms)
+10>OrderProcessor -> compiled in memory (50 KB, 230 ms)
 11>------ Build started: Project: PaymentProcessor, Configuration: Debug ------
-11>PaymentProcessor -> compiled in memory (30 KB, 179 ms)
+11>PaymentProcessor -> compiled in memory (30 KB, 126 ms)
 12>------ Build started: Project: WebhookClient, Configuration: Debug ------
-12>WebhookClient -> compiled in memory (67 KB, 100 ms)
+12>WebhookClient -> compiled in memory (67 KB, 78 ms)
 13>------ Build started: Project: Webhooks.API, Configuration: Debug ------
-13>Webhooks.API -> compiled in memory (76 KB, 214 ms)
+13>Webhooks.API -> compiled in memory (76 KB, 182 ms)
 14>------ Build started: Project: WebAppComponents, Configuration: Debug ------
-14>WebAppComponents -> compiled in memory (35 KB, 115 ms)
+14>WebAppComponents -> compiled in memory (35 KB, 85 ms)
 15>------ Build started: Project: Application.UnitTests, Configuration: Debug ------
-15>Application.UnitTests -> compiled in memory (53 KB, 803 ms)
+15>Application.UnitTests -> compiled in memory (53 KB, 637 ms)
 16>------ Build started: Project: Ordering.UnitTests, Configuration: Debug ------
-16>Ordering.UnitTests -> compiled in memory (62 KB, 415 ms)
+16>Ordering.UnitTests -> compiled in memory (62 KB, 275 ms)
 17>------ Skipped: Project: eShop.AppHost: an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers ------
 18>------ Skipped: Project: Basket.API: it generates its gRPC and Protocol Buffers code with protoc, from Grpc.Tools, a native program that runs only on a computer ------
 19>------ Skipped: Project: WebApp: it generates its gRPC and Protocol Buffers code with protoc, from Grpc.Tools, a native program that runs only on a computer ------

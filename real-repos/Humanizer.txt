@@ -1,5 +1,5 @@
 Humanizer at 4574b93883bf48e3f0f3bca73297054537317ab2
-Opened /home/runner/work/_temp/real-repos/Humanizer/Humanizer.slnx in 2.3 s
+Opened /home/runner/work/_temp/real-repos/Humanizer/Humanizer.slnx in 0.7 s
 Compatibility Doctor:
   Benchmarks: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
   Humanizer.Analyzers.Roslyn38: Library via Built with its users - A library is compiled together with the projects that reference it.
@@ -16,7 +16,7 @@ Compatibility Doctor:
   Humanizer.Docs.LanguageCoverage: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   website: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
 Startup project: Humanizer.UnicodeDataGenerator
-Built in 32.6 s: 0 errors, 1 warnings
+Built in 23.2 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -1417,33 +1417,27 @@ Packages with analyzers or MSBuild files:
       buildTransitive/xunit.v3.core.mtp-v2.props
       buildTransitive/xunit.v3.core.mtp-v2.targets
 Output:
-Build started at 23:52:49...
+Build started at 02:35:00...
 1>------ Build started: Project: Humanizer.Analyzers.Roslyn38, Configuration: Debug ------
-1>Humanizer.Analyzers.Roslyn38 -> compiled in memory (20 KB, 621 ms)
+1>Humanizer.Analyzers.Roslyn38 -> compiled in memory (20 KB, 303 ms)
 2>------ Build started: Project: Humanizer.Analyzers.Roslyn48, Configuration: Debug ------
-2>Humanizer.Analyzers.Roslyn48 -> compiled in memory (20 KB, 76 ms)
+2>Humanizer.Analyzers.Roslyn48 -> compiled in memory (20 KB, 58 ms)
 3>------ Build started: Project: Humanizer.Analyzers.Roslyn414, Configuration: Debug ------
-3>Humanizer.Analyzers.Roslyn414 -> compiled in memory (20 KB, 38 ms)
+3>Humanizer.Analyzers.Roslyn414 -> compiled in memory (20 KB, 33 ms)
 4>------ Build started: Project: Humanizer.SourceGenerators, Configuration: Debug ------
-4>Humanizer.SourceGenerators -> compiled in memory (519 KB, 879 ms)
+4>Humanizer.SourceGenerators -> compiled in memory (519 KB, 436 ms)
 5>------ Build started: Project: Humanizer, Configuration: Debug ------
-5>Humanizer -> compiled in memory (4341 KB, 6162 ms)
+5>Humanizer -> compiled in memory (4341 KB, 3858 ms)
 6>------ Build started: Project: Benchmarks, Configuration: Debug ------
-6>Benchmarks -> compiled in memory (36 KB, 3385 ms)
+6>Benchmarks -> compiled in memory (36 KB, 1795 ms)
 7>------ Build started: Project: Humanizer.SourceGenerators.Tests, Configuration: Debug ------
-7>Humanizer.SourceGenerators.Tests -> compiled in memory (359.5 KB, 4214 ms)
+7>Humanizer.SourceGenerators.Tests -> compiled in memory (359.5 KB, 2716 ms)
 8>------ Build started: Project: Humanizer.Tests, Configuration: Debug ------
-npm warn EBADENGINE Unsupported engine {
-npm warn EBADENGINE   package: 'humanizer-docs@0.0.0',
-npm warn EBADENGINE   required: { node: '26.5.0', pnpm: '11.17.0' },
-npm warn EBADENGINE   current: { node: 'v22.23.4', npm: '10.9.9' }
-npm warn EBADENGINE }
-npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
-8>Humanizer.Tests -> compiled in memory (2837.5 KB, 6439 ms)
+8>Humanizer.Tests -> compiled in memory (2837.5 KB, 4402 ms)
 9>------ Build started: Project: Humanizer.UnicodeDataGenerator, Configuration: Debug ------
-9>Humanizer.UnicodeDataGenerator -> compiled in memory (35.5 KB, 117 ms)
+9>Humanizer.UnicodeDataGenerator -> compiled in memory (35.5 KB, 73 ms)
 10>------ Build started: Project: Humanizer.Docs.LanguageCoverage, Configuration: Debug ------
-10>Humanizer.Docs.LanguageCoverage -> compiled in memory (14.5 KB, 683 ms)
+10>Humanizer.Docs.LanguageCoverage -> compiled in memory (14.5 KB, 421 ms)
 11>------ Skipped: Project: Humanizer.Analyzers.Tests.Roslyn38: it targets net11.0, which only the .NET 11 SDK builds; TabStudio compiles with .NET 10 ------
 12>------ Skipped: Project: Humanizer.Analyzers.Tests.Roslyn48: it targets net11.0, which only the .NET 11 SDK builds; TabStudio compiles with .NET 10 ------
 13>------ Skipped: Project: Humanizer.Analyzers.Tests.Roslyn414: it targets net11.0, which only the .NET 11 SDK builds; TabStudio compiles with .NET 10 ------
