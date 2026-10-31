@@ -58,6 +58,9 @@ public sealed class ContainersTests
             await UiTestHelpers.WaitUntilAsync(() => window.IsVisible);
             UiTestHelpers.SaveScreenshot(window, "61-containers");
             window.Width = 800; window.Height = 1280;
+            window.UpdateLayout();
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.Containers);
             UiTestHelpers.SaveScreenshot(window, "61-containers-portrait");
         }
         finally { window.Close(); }

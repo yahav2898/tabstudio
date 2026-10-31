@@ -52,7 +52,7 @@ public sealed class ContainerRepositoryTests
             using var response = await http.GetAsync(route);
             response.EnsureSuccessStatusCode();
             Assert.Contains(repository["expect"]!.GetValue<string>(), await response.Content.ReadAsStringAsync(), StringComparison.Ordinal);
-            Assert.Single(workspace.Containers.Engine.Containers.Where(c => c.IsRunning));
+            Assert.Single(workspace.Containers.Engine.Containers, c => c.IsRunning);
             Assert.Equal("db", Assert.Single(workspace.Services.LastNeeded));
             UiTestHelpers.SaveScreenshot(window, "62-containers-realworld-first-route");
             Directory.CreateDirectory(Path.Combine(root, "ci-out"));

@@ -45,8 +45,8 @@ echo "Device: Android $(adb shell getprop ro.build.version.release | tr -d '\r')
   "(API $(adb shell getprop ro.build.version.sdk | tr -d '\r')), $(adb shell getprop ro.product.cpu.abi | tr -d '\r')," \
   "screen $(adb shell wm size | tr -d '\r' | sed 's/.*: //')"
 
-if [ "$shard" = performance ]; then
-  # The paired latency run measures the editor on one display, without desktop-mode notifications.
+if [ "$shard" = performance ] || [ "$shard" = containers ]; then
+  # Latency and container previews use one display; desktop-mode checks live in the other shards.
   adb shell settings delete global overlay_display_devices > /dev/null 2>&1 || true
 else
   # The second display: 1920 × 1080 at 240 dpi.

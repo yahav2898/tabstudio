@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text;
+using TabStudio.App.Platform;
+using TabStudio.App.Swarm;
 using TabStudio.App.ViewModels;
 using TabStudio.Toolchains.Processes;
 
@@ -62,7 +64,8 @@ public static partial class SelfTest
             var rendered = false;
             while (previewClock.Elapsed < TimeSpan.FromSeconds(30))
             {
-                if (workspace.WebScreen.WebView is { } browser)
+                // A container preview has no IDE-run web project, so it is not registered as a Swarm screen.
+                if (workspace.WebPreview.WebView is IScriptableWebView browser)
                 {
                     var text = await browser.EvaluateAsync("document.body && document.body.textContent", cancellationToken);
                     if (text?.Contains("Welcome to nginx", StringComparison.Ordinal) == true) { rendered = true; break; }
@@ -70,8 +73,11 @@ public static partial class SelfTest
                 await Task.Delay(200, cancellationToken);
             }
             if (!rendered) throw new IOException("The web preview did not render nginx's page.");
-            if (screenshots is not null && await workspace.WebScreen.CaptureAsync(cancellationToken) is { } picture)
+            if (screenshots is not null)
             {
+                if (workspace.WebPreview.WebView is not IScriptableWebView preview
+                    || await preview.CaptureAsync(ScreenCapture.MaxPixels, cancellationToken) is not { Length: > 0 } picture)
+                    throw new IOException("The nginx preview could not be captured.");
                 Directory.CreateDirectory(screenshots);
                 await File.WriteAllBytesAsync(Path.Combine(screenshots, "containers-nginx.png"), picture, cancellationToken);
             }

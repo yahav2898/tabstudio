@@ -28,7 +28,8 @@
       <SelectableTextBlock Text="{Binding Error}" IsVisible="{Binding HasError}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" />
     </StackPanel>
     <TabControl>
-      <TabItem Header="Containers">
+      <TabItem>
+        <TabItem.Header><TextBlock Text="Containers" FontSize="12.5" VerticalAlignment="Center" /></TabItem.Header>
         <Grid RowDefinitions="2*,Auto,Auto,3*" Margin="8">
           <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" MinHeight="80">
             <ListBox.ItemTemplate>
@@ -75,7 +76,8 @@
           </Grid>
         </Grid>
       </TabItem>
-      <TabItem Header="Images">
+      <TabItem>
+        <TabItem.Header><TextBlock Text="Images" FontSize="12.5" VerticalAlignment="Center" /></TabItem.Header>
         <DockPanel Margin="8">
           <Button DockPanel.Dock="Bottom" Content="Remove selected image" Command="{Binding RemoveImageCommand}" MinHeight="36" Margin="0,8,0,0" />
           <ListBox ItemsSource="{Binding Images}" SelectedItem="{Binding SelectedImage}">
@@ -91,7 +93,8 @@
           </ListBox>
         </DockPanel>
       </TabItem>
-      <TabItem Header="Details">
+      <TabItem>
+        <TabItem.Header><TextBlock Text="Details" FontSize="12.5" VerticalAlignment="Center" /></TabItem.Header>
         <ScrollViewer Margin="12">
           <StackPanel Spacing="12">
             <TextBlock Text="{Binding RuntimeProblem}" TextWrapping="Wrap" />

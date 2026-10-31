@@ -14,7 +14,7 @@ connection settings.
   Android host currently leaves 32-bit ARM disabled rather than assuming every ARM64 tablet has 32-bit execution.
   An amd64 glibc adapter reuses the APK's Box64 and an already prepared native glibc runtime from the PIC/embedded
   toolchains. Missing runtime files and amd64 musl images receive a specific reason. Cross-architecture container
-  execution has not been measured; use native ARM64 images where available.
+  execution has not been qualified end to end in the container suite; use native ARM64 images where available.
 - Manifests, configuration, compressed layers and uncompressed layer diff IDs are checked against SHA-256.
   Cached blobs are checked again, including same-length corruption. The content-addressed store keeps a layer once,
   across tags and images. Pulls serialize store commits so two tags resolving to one image cannot race unpacking.
@@ -114,6 +114,10 @@ terminal shim. The headless IDE tests capture the Containers window and a real r
 | Physical Android tablets | No attached physical device | Not measured; CI emulator results are tracked separately |
 
 The observations are from [run 41148448512](https://github.com/yahav2898/tabstudio/actions/runs/41148448512).
+The expanded suite passed 28/28 on each architecture in both push and PR runs at `48b6023b`, and its two IDE
+tests passed, including the pinned repository route below. The Android emulator release gate requires PostgreSQL
+query/TCP success, Redis PONG, nginx text read from the rendered browser and a captured PNG, all as the app UID.
+The PR records the final push/PR run links and emulator verdict rather than treating Linux results as device proof.
 These numbers concern the OCI suite; the IDE/emulator/repository checks are separate release gates.
 Its artifact records the exact platform manifest digests. These timings include first image initialization and
 depend on network/cache state; they are not a native-vs-PRoot performance comparison.
