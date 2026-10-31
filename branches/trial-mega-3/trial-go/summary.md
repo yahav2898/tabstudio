@@ -1,0 +1,10 @@
+| Repository | Opened | F5 startup | Setup | Analysis stable | Errors | Build | Run | Debug | Tests | Doctor |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| cobra | 3.2 s | cobra (go) | ok in 7 s | 12.0 s | 0 errors, 0 warnings | 0 errors in 0 s | not run: build only | - | 279 found; 279 passed, 0 failed, 0 skipped, 0 not run - 279 tests run in 6.1 sec: 279 passed, 0 failed, 0 skipped. | 1 Needs a toolchain |
+| urfave-cli | 0.4 s | urfave-cli (go) | ok in 3 s | 7.9 s | 0 errors, 0 warnings | 0 errors in 0 s | not run: build only | - | 639 found; 649 passed, 0 failed, 2 skipped, 4 not run - 651 tests run in 11.5 sec: 649 passed, 0 failed, 2 skipped. | 1 Needs a toolchain |
+| fzf | 0.3 s | fzf (go) | ok in 3 s | 8.3 s | 0 errors, 0 warnings | 0 errors in 9 s | not run: build only | - | 156 found; 147 passed, 0 failed, 2 skipped, 7 not run - 149 tests run in 13.8 sec: 147 passed, 0 failed, 2 skipped. | 1 Needs a toolchain |
+| echo | 0.3 s | echo (go) | ok in 3 s | 7.8 s | 0 errors, 0 warnings | 0 errors in 6 s | not run: build only | - | 726 found; 730 passed, 0 failed, 0 skipped, 0 not run - 730 tests run in 9.5 sec: 730 passed, 0 failed, 0 skipped. | 1 Needs a toolchain |
+| lazygit | 0.4 s | lazygit (go) | ok in 3 s | 7.9 s | 0 errors, 0 warnings | 0 errors in 15 s | not run: build only | - | - | 2 Needs a toolchain |
+| mux | 0.4 s | mux (go) | ok in 3 s | 7.7 s | 0 errors, 0 warnings | 0 errors in 0 s | not run: build only | - | 72 found; 76 passed, 0 failed, 0 skipped, 0 not run - 76 tests run in 1.0 sec: 76 passed, 0 failed, 0 skipped. | 1 Needs a toolchain |
+| gin-examples | 0.3 s | gin-examples (go) | ok in 3 s | 7.7 s | 0 errors, 0 warnings | 0 errors in 0 s | exited before listening | ended without stopping at main.go:27 | - | 8 Needs a toolchain |
+| gh-cli | 0.5 s | gh-cli (go) | ok in 3 s | 7.6 s | 0 errors, 0 warnings | 0 errors in 0 s | exited | ended without stopping at main.go:23 | 1992 found; 0 passed, 0 failed, 0 skipped, 1992 not run - The build failed. Fix the errors in the Error List, then run the tests again. | 2 Needs a toolchain |

@@ -1,0 +1,500 @@
+cobra at adbc8813901bba65827259daa8e22ff94ec1f30e, opening /home/runner/work/_temp/repos/cobra
+Opened in 3.2 s: cobra, solution (none)
+  toolchain project go: /home/runner/work/_temp/repos/cobra/go.mod
+Compatibility Doctor:
+  cobra: Needs a toolchain via Go toolchain - Runs with Go from the Toolchain Store, with console input and output in the Output panel. Install Go to run it.
+F5 startup project: cobra (go) /home/runner/work/_temp/repos/cobra/go.mod
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: 279 found; 279 passed, 0 failed, 0 skipped, 0 not run - 279 tests run in 6.1 sec: 279 passed, 0 failed, 0 skipped. (6 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 1.9 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Succeeded after 9.9 s
+  Testing cobra: Running cobra's tests
+  Testing cobra: Succeeded after 6.1 s
+Project setup:
+
+Output:
+er_--help_flag_when_created_by_program (0.00s)
+    --- PASS: TestCompletionCobraFlags/completion_after_-h_flag_when_created_by_program (0.00s)
+    --- PASS: TestCompletionCobraFlags/completion_after_--version_flag_when_created_by_program (0.00s)
+    --- PASS: TestCompletionCobraFlags/completion_after_-v_flag_when_created_by_program (0.00s)
+    --- PASS: TestCompletionCobraFlags/completion_after_--version_when_only_-v_flag_was_created_by_program (0.00s)
+    --- PASS: TestCompletionCobraFlags/completion_after_-v_flag_when_only_-v_flag_was_created_by_program (0.00s)
+    --- PASS: TestCompletionCobraFlags/no_completion_for_--help/-h_and_--version/-v_flags_when_DisableFlagParsing=true (0.00s)
+    --- PASS: TestCompletionCobraFlags/completions_for_program-defined_--help/-h_and_--version/-v_flags_even_when_DisableFlagParsing=true (0.00s)
+=== RUN   TestArgsNotDetectedAsFlagsCompletionInGo
+=== RUN   TestArgsNotDetectedAsFlagsCompletionInGo/empty
+=== RUN   TestArgsNotDetectedAsFlagsCompletionInGo/service_only
+=== RUN   TestArgsNotDetectedAsFlagsCompletionInGo/service_last
+=== RUN   TestArgsNotDetectedAsFlagsCompletionInGo/two_digit_prefixed_dash_last
+=== RUN   TestArgsNotDetectedAsFlagsCompletionInGo/one_digit_prefixed_dash_last
+--- PASS: TestArgsNotDetectedAsFlagsCompletionInGo (0.00s)
+    --- PASS: TestArgsNotDetectedAsFlagsCompletionInGo/empty (0.00s)
+    --- PASS: TestArgsNotDetectedAsFlagsCompletionInGo/service_only (0.00s)
+    --- PASS: TestArgsNotDetectedAsFlagsCompletionInGo/service_last (0.00s)
+    --- PASS: TestArgsNotDetectedAsFlagsCompletionInGo/two_digit_prefixed_dash_last (0.00s)
+    --- PASS: TestArgsNotDetectedAsFlagsCompletionInGo/one_digit_prefixed_dash_last (0.00s)
+=== RUN   TestGetFlagCompletion
+=== RUN   TestGetFlagCompletion/get_flag_completion_function_for_command
+=== RUN   TestGetFlagCompletion/get_persistent_flag_completion_function_for_command
+=== RUN   TestGetFlagCompletion/get_flag_completion_function_for_child_command
+=== RUN   TestGetFlagCompletion/get_persistent_flag_completion_function_for_child_command
+=== RUN   TestGetFlagCompletion/cannot_get_flag_completion_function_for_local_parent_flag
+--- PASS: TestGetFlagCompletion (0.00s)
+    --- PASS: TestGetFlagCompletion/get_flag_completion_function_for_command (0.00s)
+    --- PASS: TestGetFlagCompletion/get_persistent_flag_completion_function_for_command (0.00s)
+    --- PASS: TestGetFlagCompletion/get_flag_completion_function_for_child_command (0.00s)
+    --- PASS: TestGetFlagCompletion/get_persistent_flag_completion_function_for_child_command (0.00s)
+    --- PASS: TestGetFlagCompletion/cannot_get_flag_completion_function_for_local_parent_flag (0.00s)
+=== RUN   TestGetEnvConfig
+=== RUN   TestGetEnvConfig/Command_envvar_overrides_global
+=== RUN   TestGetEnvConfig/Missing/empty_command_envvar_falls_back_to_global
+=== RUN   TestGetEnvConfig/Missing/empty_command_and_global_envvars_fall_back_to_empty
+=== RUN   TestGetEnvConfig/Periods_in_command_use_transform_to_underscores_in_env_var_name
+=== RUN   TestGetEnvConfig/Dashes_in_command_use_transform_to_underscores_in_env_var_name
+--- PASS: TestGetEnvConfig (0.00s)
+    --- PASS: TestGetEnvConfig/Command_envvar_overrides_global (0.00s)
+    --- PASS: TestGetEnvConfig/Missing/empty_command_envvar_falls_back_to_global (0.00s)
+    --- PASS: TestGetEnvConfig/Missing/empty_command_and_global_envvars_fall_back_to_empty (0.00s)
+    --- PASS: TestGetEnvConfig/Periods_in_command_use_transform_to_underscores_in_env_var_name (0.00s)
+    --- PASS: TestGetEnvConfig/Dashes_in_command_use_transform_to_underscores_in_env_var_name (0.00s)
+=== RUN   TestDisableDescriptions
+=== RUN   TestDisableDescriptions/No_env_variables_set
+=== RUN   TestDisableDescriptions/Global_value_false
+=== RUN   TestDisableDescriptions/Specific_value_false
+=== RUN   TestDisableDescriptions/Both_values_false
+=== RUN   TestDisableDescriptions/Both_values_true
+--- PASS: TestDisableDescriptions (0.00s)
+    --- PASS: TestDisableDescriptions/No_env_variables_set (0.00s)
+    --- PASS: TestDisableDescriptions/Global_value_false (0.00s)
+    --- PASS: TestDisableDescriptions/Specific_value_false (0.00s)
+    --- PASS: TestDisableDescriptions/Both_values_false (0.00s)
+    --- PASS: TestDisableDescriptions/Both_values_true (0.00s)
+=== RUN   TestInitDefaultCompletionCmd
+=== RUN   TestInitDefaultCompletionCmd/no_child_command_and_not_calling_the_completion_command
+=== RUN   TestInitDefaultCompletionCmd/no_child_command_but_calling_the_completion_command
+=== RUN   TestInitDefaultCompletionCmd/no_child_command_but_calling___complete_on_the_root_command
+=== RUN   TestInitDefaultCompletionCmd/no_child_command_but_calling___complete_on_the_completion_command
+=== RUN   TestInitDefaultCompletionCmd/with_child_command
+=== RUN   TestInitDefaultCompletionCmd/no_child_command_not_passing_args
+=== RUN   TestInitDefaultCompletionCmd/with_child_command_not_passing_args
+--- PASS: TestInitDefaultCompletionCmd (0.00s)
+    --- PASS: TestInitDefaultCompletionCmd/no_child_command_and_not_calling_the_completion_command (0.00s)
+    --- PASS: TestInitDefaultCompletionCmd/no_child_command_but_calling_the_completion_command (0.00s)
+    --- PASS: TestInitDefaultCompletionCmd/no_child_command_but_calling___complete_on_the_root_command (0.00s)
+    --- PASS: TestInitDefaultCompletionCmd/no_child_command_but_calling___complete_on_the_completion_command (0.00s)
+    --- PASS: TestInitDefaultCompletionCmd/with_child_command (0.00s)
+    --- PASS: TestInitDefaultCompletionCmd/no_child_command_not_passing_args (0.00s)
+    --- PASS: TestInitDefaultCompletionCmd/with_child_command_not_passing_args (0.00s)
+=== RUN   TestCustomDefaultShellCompDirective
+=== RUN   TestCustomDefaultShellCompDirective/flag_completion_on_root_command_with_custom_DefaultShellCompDirective
+=== RUN   TestCustomDefaultShellCompDirective/flag_completion_on_subcommand_with_inherited_custom_DefaultShellCompDirective
+=== RUN   TestCustomDefaultShellCompDirective/flag_completion_on_subcommand_with_reset_DefaultShellCompDirective
+--- PASS: TestCustomDefaultShellCompDirective (0.00s)
+    --- PASS: TestCustomDefaultShellCompDirective/flag_completion_on_root_command_with_custom_DefaultShellCompDirective (0.00s)
+    --- PASS: TestCustomDefaultShellCompDirective/flag_completion_on_subcommand_with_inherited_custom_DefaultShellCompDirective (0.00s)
+    --- PASS: TestCustomDefaultShellCompDirective/flag_completion_on_subcommand_with_reset_DefaultShellCompDirective (0.00s)
+=== RUN   TestCompletionDoesNotMutateOsArgs
+--- PASS: TestCompletionDoesNotMutateOsArgs (0.00s)
+=== RUN   TestCompleteNoDesCmdInFishScript
+--- PASS: TestCompleteNoDesCmdInFishScript (0.00s)
+=== RUN   TestCompleteCmdInFishScript
+--- PASS: TestCompleteCmdInFishScript (0.00s)
+=== RUN   TestProgWithDash
+--- PASS: TestProgWithDash (0.00s)
+=== RUN   TestProgWithColon
+--- PASS: TestProgWithColon (0.00s)
+=== RUN   TestFishCompletionNoActiveHelp
+--- PASS: TestFishCompletionNoActiveHelp (0.00s)
+=== RUN   TestGenFishCompletionFile
+--- PASS: TestGenFishCompletionFile (0.00s)
+=== RUN   TestFailGenFishCompletionFile
+--- PASS: TestFailGenFishCompletionFile (0.00s)
+=== RUN   TestValidateFlagGroups
+=== RUN   TestValidateFlagGroups/No_flags_no_problem
+=== RUN   TestValidateFlagGroups/No_flags_no_problem_even_with_conflicting_groups
+=== RUN   TestValidateFlagGroups/Required_flag_group_not_satisfied
+Error: if any flags in the group [a b c] are set they must all be set; missing [b c]
+Usage:
+  testcmd [flags]
+  testcmd [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  subcmd      
+
+Flags:
+      --a string   
+      --b string   
+      --c string   
+      --d string   
+      --e string   
+      --f string   
+      --g string   
+  -h, --help       help for testcmd
+
+Use "testcmd [command] --help" for more information about a command.
+
+=== RUN   TestValidateFlagGroups/One-required_flag_group_not_satisfied
+Error: at least one of the flags in the group [a b] is required
+Usage:
+  testcmd [flags]
+  testcmd [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  subcmd      
+
+Flags:
+      --a string   
+      --b string   
+      --c string   
+      --d string   
+      --e string   
+      --f string   
+      --g string   
+  -h, --help       help for testcmd
+
+Use "testcmd [command] --help" for more information about a command.
+
+=== RUN   TestValidateFlagGroups/Exclusive_flag_group_not_satisfied
+Error: if any flags in the group [a b c] are set none of the others can be; [a b] were all set
+Usage:
+  testcmd [flags]
+  testcmd [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  subcmd      
+
+Flags:
+      --a string   
+      --b string   
+      --c string   
+      --d string   
+      --e string   
+      --f string   
+      --g string   
+  -h, --help       help for testcmd
+
+Use "testcmd [command] --help" for more information about a command.
+
+=== RUN   TestValidateFlagGroups/Multiple_required_flag_group_not_satisfied_returns_first_error
+Error: if any flags in the group [a b c] are set they must all be set; missing [a b]
+Usage:
+  testcmd [flags]
+  testcmd [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  subcmd      
+
+Flags:
+      --a string   
+      --b string   
+      --c string   
+      --d string   
+      --e string   
+      --f string   
+      --g string   
+  -h, --help       help for testcmd
+
+Use "testcmd [command] --help" for more information about a command.
+
+=== RUN   TestValidateFlagGroups/Multiple_one-required_flag_group_not_satisfied_returns_first_error
+Error: at least one of the flags in the group [a b] is required
+Usage:
+  testcmd [flags]
+  testcmd [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  subcmd      
+
+Flags:
+      --a string   
+      --b string   
+      --c string   
+      --d string   
+      --e string   
+      --f string   
+      --g string   
+  -h, --help       help for testcmd
+
+Use "testcmd [command] --help" for more information about a command.
+
+=== RUN   TestValidateFlagGroups/Multiple_exclusive_flag_group_not_satisfied_returns_first_error
+Error: if any flags in the group [a b c] are set none of the others can be; [a c] were all set
+Usage:
+  testcmd [flags]
+  testcmd [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  subcmd      
+
+Flags:
+      --a string   
+      --b string   
+      --c string   
+      --d string   
+      --e string   
+      --f string   
+      --g string   
+  -h, --help       help for testcmd
+
+Use "testcmd [command] --help" for more information about a command.
+
+=== RUN   TestValidateFlagGroups/Validation_of_required_groups_occurs_on_groups_in_sorted_order
+Error: if any flags in the group [a b] are set they must all be set; missing [b]
+Usage:
+  testcmd [flags]
+  testcmd [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  subcmd      
+
+Flags:
+      --a string   
+      --b string   
+      --c string   
+      --d string   
+      --e string   
+      --f string   
+      --g string   
+  -h, --help       help for testcmd
+
+Use "testcmd [command] --help" for more information about a command.
+
+=== RUN   TestValidateFlagGroups/Validation_of_one-required_groups_occurs_on_groups_in_sorted_order
+Error: at least one of the flags in the group [a b] is required
+Usage:
+  testcmd [flags]
+  testcmd [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  subcmd      
+
+Flags:
+      --a string   
+      --b string   
+      --c string   
+      --d string   
+      --e string   
+      --f string   
+      --g string   
+  -h, --help       help for testcmd
+
+Use "testcmd [command] --help" for more information about a command.
+
+=== RUN   TestValidateFlagGroups/Validation_of_exclusive_groups_occurs_on_groups_in_sorted_order
+Error: if any flags in the group [a b] are set none of the others can be; [a b] were all set
+Usage:
+  testcmd [flags]
+  testcmd [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  subcmd      
+
+Flags:
+      --a string   
+      --b string   
+      --c string   
+      --d string   
+      --e string   
+      --f string   
+      --g string   
+  -h, --help       help for testcmd
+
+Use "testcmd [command] --help" for more information about a command.
+
+=== RUN   TestValidateFlagGroups/Persistent_flags_utilize_required_and_exclusive_groups_and_can_fail_required_groups
+Error: if any flags in the group [a e] are set they must all be set; missing [e]
+Usage:
+  testcmd [flags]
+  testcmd [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  subcmd      
+
+Flags:
+      --a string   
+      --b string   
+      --c string   
+      --d string   
+      --e string   
+      --f string   
+      --g string   
+  -h, --help       help for testcmd
+
+Use "testcmd [command] --help" for more information about a command.
+
+=== RUN   TestValidateFlagGroups/Persistent_flags_utilize_one-required_and_exclusive_groups_and_can_fail_one-required_groups
+Error: at least one of the flags in the group [a b] is required
+Usage:
+  testcmd [flags]
+  testcmd [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  subcmd      
+
+Flags:
+      --a string   
+      --b string   
+      --c string   
+      --d string   
+      --e string   
+      --f string   
+      --g string   
+  -h, --help       help for testcmd
+
+Use "testcmd [command] --help" for more information about a command.
+
+=== RUN   TestValidateFlagGroups/Persistent_flags_utilize_required_and_exclusive_groups_and_can_fail_mutually_exclusive_groups
+Error: if any flags in the group [f g] are set none of the others can be; [f g] were all set
+Usage:
+  testcmd [flags]
+  testcmd [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  subcmd      
+
+Flags:
+      --a string   
+      --b string   
+      --c string   
+      --d string   
+      --e string   
+      --f string   
+      --g string   
+  -h, --help       help for testcmd
+
+Use "testcmd [command] --help" for more information about a command.
+
+=== RUN   TestValidateFlagGroups/Persistent_flags_utilize_required_and_exclusive_groups_and_can_pass
+=== RUN   TestValidateFlagGroups/Persistent_flags_utilize_one-required_and_exclusive_groups_and_can_pass
+=== RUN   TestValidateFlagGroups/Subcmds_can_use_required_groups_using_inherited_flags
+=== RUN   TestValidateFlagGroups/Subcmds_can_use_one-required_groups_using_inherited_flags
+=== RUN   TestValidateFlagGroups/Subcmds_can_use_one-required_groups_using_inherited_flags_and_fail_one-required_groups
+Error: at least one of the flags in the group [e subonly] is required
+Usage:
+  testcmd subcmd [flags]
+
+Flags:
+  -h, --help             help for subcmd
+      --subonly string
+
+Global Flags:
+      --e string   
+      --f string   
+      --g string
+
+=== RUN   TestValidateFlagGroups/Subcmds_can_use_exclusive_groups_using_inherited_flags
+Error: if any flags in the group [e subonly] are set none of the others can be; [e subonly] were all set
+Usage:
+  testcmd subcmd [flags]
+
+Flags:
+  -h, --help             help for subcmd
+      --subonly string
+
+Global Flags:
+      --e string   
+      --f string   
+      --g string
+
+=== RUN   TestValidateFlagGroups/Subcmds_can_use_exclusive_groups_using_inherited_flags_and_pass
+=== RUN   TestValidateFlagGroups/Flag_groups_not_applied_if_not_found_on_invoked_command
+--- PASS: TestValidateFlagGroups (0.00s)
+    --- PASS: TestValidateFlagGroups/No_flags_no_problem (0.00s)
+    --- PASS: TestValidateFlagGroups/No_flags_no_problem_even_with_conflicting_groups (0.00s)
+    --- PASS: TestValidateFlagGroups/Required_flag_group_not_satisfied (0.00s)
+    --- PASS: TestValidateFlagGroups/One-required_flag_group_not_satisfied (0.00s)
+    --- PASS: TestValidateFlagGroups/Exclusive_flag_group_not_satisfied (0.00s)
+    --- PASS: TestValidateFlagGroups/Multiple_required_flag_group_not_satisfied_returns_first_error (0.00s)
+    --- PASS: TestValidateFlagGroups/Multiple_one-required_flag_group_not_satisfied_returns_first_error (0.00s)
+    --- PASS: TestValidateFlagGroups/Multiple_exclusive_flag_group_not_satisfied_returns_first_error (0.00s)
+    --- PASS: TestValidateFlagGroups/Validation_of_required_groups_occurs_on_groups_in_sorted_order (0.00s)
+    --- PASS: TestValidateFlagGroups/Validation_of_one-required_groups_occurs_on_groups_in_sorted_order (0.00s)
+    --- PASS: TestValidateFlagGroups/Validation_of_exclusive_groups_occurs_on_groups_in_sorted_order (0.00s)
+    --- PASS: TestValidateFlagGroups/Persistent_flags_utilize_required_and_exclusive_groups_and_can_fail_required_groups (0.00s)
+    --- PASS: TestValidateFlagGroups/Persistent_flags_utilize_one-required_and_exclusive_groups_and_can_fail_one-required_groups (0.00s)
+    --- PASS: TestValidateFlagGroups/Persistent_flags_utilize_required_and_exclusive_groups_and_can_fail_mutually_exclusive_groups (0.00s)
+    --- PASS: TestValidateFlagGroups/Persistent_flags_utilize_required_and_exclusive_groups_and_can_pass (0.00s)
+    --- PASS: TestValidateFlagGroups/Persistent_flags_utilize_one-required_and_exclusive_groups_and_can_pass (0.00s)
+    --- PASS: TestValidateFlagGroups/Subcmds_can_use_required_groups_using_inherited_flags (0.00s)
+    --- PASS: TestValidateFlagGroups/Subcmds_can_use_one-required_groups_using_inherited_flags (0.00s)
+    --- PASS: TestValidateFlagGroups/Subcmds_can_use_one-required_groups_using_inherited_flags_and_fail_one-required_groups (0.00s)
+    --- PASS: TestValidateFlagGroups/Subcmds_can_use_exclusive_groups_using_inherited_flags (0.00s)
+    --- PASS: TestValidateFlagGroups/Subcmds_can_use_exclusive_groups_using_inherited_flags_and_pass (0.00s)
+    --- PASS: TestValidateFlagGroups/Flag_groups_not_applied_if_not_found_on_invoked_command (0.00s)
+=== RUN   TestPwshCompletionNoActiveHelp
+--- PASS: TestPwshCompletionNoActiveHelp (0.00s)
+=== RUN   TestZshCompletionWithActiveHelp
+--- PASS: TestZshCompletionWithActiveHelp (0.00s)
+PASS
+ok  	github.com/spf13/cobra	1.674s
+=== RUN   TestGenManDoc
+--- PASS: TestGenManDoc (0.00s)
+=== RUN   TestGenManNoHiddenParents
+--- PASS: TestGenManNoHiddenParents (0.00s)
+=== RUN   TestGenManNoGenTag
+--- PASS: TestGenManNoGenTag (0.00s)
+=== RUN   TestGenManSeeAlso
+--- PASS: TestGenManSeeAlso (0.00s)
+=== RUN   TestManPrintFlagsHidesShortDeprecated
+--- PASS: TestManPrintFlagsHidesShortDeprecated (0.00s)
+=== RUN   TestGenManTree
+--- PASS: TestGenManTree (0.00s)
+=== RUN   TestGenMdDoc
+--- PASS: TestGenMdDoc (0.00s)
+=== RUN   TestGenMdDocWithNoLongOrSynopsis
+--- PASS: TestGenMdDocWithNoLongOrSynopsis (0.00s)
+=== RUN   TestGenMdNoHiddenParents
+--- PASS: TestGenMdNoHiddenParents (0.00s)
+=== RUN   TestGenMdNoTag
+--- PASS: TestGenMdNoTag (0.00s)
+=== RUN   TestGenMdTree
+--- PASS: TestGenMdTree (0.00s)
+=== RUN   TestGenRSTDoc
+--- PASS: TestGenRSTDoc (0.00s)
+=== RUN   TestGenRSTNoHiddenParents
+--- PASS: TestGenRSTNoHiddenParents (0.00s)
+=== RUN   TestGenRSTNoTag
+--- PASS: TestGenRSTNoTag (0.00s)
+=== RUN   TestGenRSTTree
+--- PASS: TestGenRSTTree (0.00s)
+=== RUN   TestGenYamlDoc
+--- PASS: TestGenYamlDoc (0.00s)
+=== RUN   TestGenYamlNoTag
+--- PASS: TestGenYamlNoTag (0.00s)
+=== RUN   TestGenYamlTree
+--- PASS: TestGenYamlTree (0.00s)
+=== RUN   TestGenYamlDocRunnable
+--- PASS: TestGenYamlDocRunnable (0.00s)
+PASS
+ok  	github.com/spf13/cobra/doc	0.009s
+
