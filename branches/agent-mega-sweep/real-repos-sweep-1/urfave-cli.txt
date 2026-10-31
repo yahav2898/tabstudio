@@ -2,8 +2,8 @@ urfave-cli at 293b0229b99c460fa66283418569773681df010d
 Toolchain projects:
   go: /home/runner/work/_temp/real-repos/urfave-cli/go.mod
 Startup project: go /home/runner/work/_temp/real-repos/urfave-cli/go.mod
-Set up in 3.4 s
-Tests: 649 passed, 0 failed, 2 skipped of 655: 651 tests run in 17.1 sec: 649 passed, 0 failed, 2 skipped.
+Set up in 3.5 s
+Tests: 649 passed, 0 failed, 2 skipped of 655: 651 tests run in 17.0 sec: 649 passed, 0 failed, 2 skipped.
 Project setup:
 
 Output:
@@ -910,79 +910,79 @@ Incorrect Usage: flag provided but not defined: -help
 === RUN   TestMapValueSourceStringer
 --- PASS: TestMapValueSourceStringer (0.00s)
 === CONT  TestCommand_ParallelRun
+=== CONT  TestNIndent
 === RUN   TestCommand_ParallelRun/run_0
+=== CONT  Test_checkShellCompleteFlag
 === PAUSE TestCommand_ParallelRun/run_0
 === RUN   TestCommand_ParallelRun/run_1
+--- PASS: TestNIndent (0.00s)
 === PAUSE TestCommand_ParallelRun/run_1
-=== CONT  TestNIndent
 === RUN   TestCommand_ParallelRun/run_2
 === PAUSE TestCommand_ParallelRun/run_2
 === RUN   TestCommand_ParallelRun/run_3
---- PASS: TestNIndent (0.00s)
 === PAUSE TestCommand_ParallelRun/run_3
-=== RUN   TestCommand_ParallelRun/run_4
-=== PAUSE TestCommand_ParallelRun/run_4
-=== CONT  Test_checkShellCompleteFlag
-=== RUN   TestCommand_ParallelRun/run_5
-=== PAUSE TestCommand_ParallelRun/run_5
-=== RUN   TestCommand_ParallelRun/run_6
 === RUN   Test_checkShellCompleteFlag/disable-shell-completion
+=== RUN   TestCommand_ParallelRun/run_4
+=== PAUSE Test_checkShellCompleteFlag/disable-shell-completion
+=== PAUSE TestCommand_ParallelRun/run_4
+=== RUN   TestCommand_ParallelRun/run_5
+=== RUN   Test_checkShellCompleteFlag/child-disable-shell-completion
+=== PAUSE TestCommand_ParallelRun/run_5
+=== PAUSE Test_checkShellCompleteFlag/child-disable-shell-completion
+=== RUN   TestCommand_ParallelRun/run_6
 === PAUSE TestCommand_ParallelRun/run_6
+=== RUN   Test_checkShellCompleteFlag/last_argument_isn't_--generate-shell-completion
 === RUN   TestCommand_ParallelRun/run_7
+=== PAUSE Test_checkShellCompleteFlag/last_argument_isn't_--generate-shell-completion
 === PAUSE TestCommand_ParallelRun/run_7
+=== RUN   Test_checkShellCompleteFlag/arguments_include_double_dash
 === RUN   TestCommand_ParallelRun/run_8
+=== PAUSE Test_checkShellCompleteFlag/arguments_include_double_dash
 === PAUSE TestCommand_ParallelRun/run_8
 === RUN   TestCommand_ParallelRun/run_9
 === PAUSE TestCommand_ParallelRun/run_9
 === CONT  TestCommand_ParallelRun/run_0
-=== PAUSE Test_checkShellCompleteFlag/disable-shell-completion
-=== RUN   Test_checkShellCompleteFlag/child-disable-shell-completion
-=== CONT  TestCommand_ParallelRun/run_5
-=== CONT  TestCommand_ParallelRun/run_2
-=== CONT  TestCommand_ParallelRun/run_1
-=== PAUSE Test_checkShellCompleteFlag/child-disable-shell-completion
-=== RUN   Test_checkShellCompleteFlag/last_argument_isn't_--generate-shell-completion
-=== PAUSE Test_checkShellCompleteFlag/last_argument_isn't_--generate-shell-completion
-=== CONT  TestCommand_ParallelRun/run_4
-=== RUN   Test_checkShellCompleteFlag/arguments_include_double_dash
-=== PAUSE Test_checkShellCompleteFlag/arguments_include_double_dash
 === RUN   Test_checkShellCompleteFlag/shell_completion
 === PAUSE Test_checkShellCompleteFlag/shell_completion
-=== CONT  TestCommand_ParallelRun/run_9
 === RUN   Test_checkShellCompleteFlag/double_dash_is_the_token_being_completed
 === PAUSE Test_checkShellCompleteFlag/double_dash_is_the_token_being_completed
-=== CONT  TestCommand_ParallelRun/run_7
-=== RUN   Test_checkShellCompleteFlag/no_arguments_at_all
-=== PAUSE Test_checkShellCompleteFlag/no_arguments_at_all
-=== CONT  TestCommand_ParallelRun/run_6
-=== CONT  Test_checkShellCompleteFlag/disable-shell-completion
-=== CONT  TestCommand_ParallelRun/run_3
-=== CONT  Test_checkShellCompleteFlag/double_dash_is_the_token_being_completed
-=== CONT  Test_checkShellCompleteFlag/shell_completion
+=== CONT  TestCommand_ParallelRun/run_5
 === CONT  TestCommand_ParallelRun/run_8
-=== CONT  Test_checkShellCompleteFlag/arguments_include_double_dash
-=== CONT  Test_checkShellCompleteFlag/last_argument_isn't_--generate-shell-completion
-=== CONT  Test_checkShellCompleteFlag/child-disable-shell-completion
+=== CONT  TestCommand_ParallelRun/run_9
+=== CONT  TestCommand_ParallelRun/run_7
+=== CONT  TestCommand_ParallelRun/run_3
+=== CONT  TestCommand_ParallelRun/run_6
+=== CONT  TestCommand_ParallelRun/run_4
+=== CONT  TestCommand_ParallelRun/run_1
+=== CONT  TestCommand_ParallelRun/run_2
 --- PASS: TestCommand_ParallelRun (0.00s)
     --- PASS: TestCommand_ParallelRun/run_0 (0.00s)
     --- PASS: TestCommand_ParallelRun/run_5 (0.00s)
-    --- PASS: TestCommand_ParallelRun/run_2 (0.00s)
-    --- PASS: TestCommand_ParallelRun/run_1 (0.00s)
-    --- PASS: TestCommand_ParallelRun/run_4 (0.00s)
-    --- PASS: TestCommand_ParallelRun/run_9 (0.00s)
-    --- PASS: TestCommand_ParallelRun/run_7 (0.00s)
-    --- PASS: TestCommand_ParallelRun/run_6 (0.00s)
-    --- PASS: TestCommand_ParallelRun/run_3 (0.00s)
     --- PASS: TestCommand_ParallelRun/run_8 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_7 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_3 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_9 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_6 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_4 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_1 (0.00s)
+    --- PASS: TestCommand_ParallelRun/run_2 (0.00s)
+=== RUN   Test_checkShellCompleteFlag/no_arguments_at_all
+=== PAUSE Test_checkShellCompleteFlag/no_arguments_at_all
+=== CONT  Test_checkShellCompleteFlag/disable-shell-completion
+=== CONT  Test_checkShellCompleteFlag/shell_completion
+=== CONT  Test_checkShellCompleteFlag/child-disable-shell-completion
 === CONT  Test_checkShellCompleteFlag/no_arguments_at_all
+=== CONT  Test_checkShellCompleteFlag/arguments_include_double_dash
+=== CONT  Test_checkShellCompleteFlag/last_argument_isn't_--generate-shell-completion
+=== CONT  Test_checkShellCompleteFlag/double_dash_is_the_token_being_completed
 --- PASS: Test_checkShellCompleteFlag (0.00s)
     --- PASS: Test_checkShellCompleteFlag/disable-shell-completion (0.00s)
-    --- PASS: Test_checkShellCompleteFlag/double_dash_is_the_token_being_completed (0.00s)
+    --- PASS: Test_checkShellCompleteFlag/child-disable-shell-completion (0.00s)
     --- PASS: Test_checkShellCompleteFlag/shell_completion (0.00s)
+    --- PASS: Test_checkShellCompleteFlag/no_arguments_at_all (0.00s)
     --- PASS: Test_checkShellCompleteFlag/arguments_include_double_dash (0.00s)
     --- PASS: Test_checkShellCompleteFlag/last_argument_isn't_--generate-shell-completion (0.00s)
-    --- PASS: Test_checkShellCompleteFlag/child-disable-shell-completion (0.00s)
-    --- PASS: Test_checkShellCompleteFlag/no_arguments_at_all (0.00s)
+    --- PASS: Test_checkShellCompleteFlag/double_dash_is_the_token_being_completed (0.00s)
 === RUN   ExampleCommand_Suggest
 --- PASS: ExampleCommand_Suggest (0.00s)
 === RUN   ExampleCommand_Run
@@ -1016,7 +1016,7 @@ Incorrect Usage: flag provided but not defined: -help
 === RUN   ExampleCommand_Walk_visibleTree
 --- PASS: ExampleCommand_Walk_visibleTree (0.00s)
 PASS
-ok  	github.com/urfave/cli/v3	2.549s
+ok  	github.com/urfave/cli/v3	2.585s
 ?   	github.com/urfave/cli/v3/examples/example-cli	[no test files]
 ?   	github.com/urfave/cli/v3/examples/example-hello-world	[no test files]
 ?   	github.com/urfave/cli/v3/scripts	[no test files]

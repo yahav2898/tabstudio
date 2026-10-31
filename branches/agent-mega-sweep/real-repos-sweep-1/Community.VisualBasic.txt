@@ -1,5 +1,5 @@
 Community.VisualBasic at 20d2a51dfc9f342848ad134952ceaa8d79302559
-Opened /home/runner/work/_temp/real-repos/Community.VisualBasic/Community.VisualBasic.sln in 0.4 s
+Opened /home/runner/work/_temp/real-repos/Community.VisualBasic/Community.VisualBasic.sln in 0.3 s
 Compatibility Doctor:
   Community.VisualBasic: Library via Built with its users - A library is compiled together with the projects that reference it.
   net5-console: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
@@ -8,7 +8,7 @@ Compatibility Doctor:
   net4-console: Ready via In-process - A .NET Framework project, run with .NET on this tablet. Compiled in memory and run right here, with its output in the Output panel.
   Community.VisualBasic.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: net5-windows
-Built in 9.8 s: 0 errors, 9 warnings
+Built in 9.7 s: 0 errors, 9 warnings
 Packages with analyzers or MSBuild files:
   coverlet.collector 1.3.0
       build/netstandard1.0/Microsoft.DotNet.PlatformAbstractions.dll
@@ -120,24 +120,24 @@ Packages with analyzers or MSBuild files:
       build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.dll
       build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.pri
 Output:
-Build started at 03:03:09...
+Build started at 04:25:40...
 1>------ Build started: Project: Community.VisualBasic, Configuration: Debug ------
 1>LateBinding.vb(931,31): warning BC40000: 'CurrencyWrapper' is obsolete: 'CurrencyWrapper and support for marshalling to the VARIANT type may be unavailable in future releases.'.
 1>Network.vb(808,16): warning BC41004: First statement of this 'Sub New' should be an explicit call to 'MyBase.New' or 'MyClass.New' because the 'Public Overloads Sub New()' in the base class 'WebClient' of 'WebClientExtended' is marked obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead.'
 1>MalformedLineException.vb(78,7): warning SYSLIB0051: 'Protected Overloads Sub New(info As SerializationInfo, context As StreamingContext)' is obsolete: 'This API supports obsolete formatter-based serialization. It should not be called or extended by application code.'.
 1>MalformedLineException.vb(114,7): warning SYSLIB0051: 'Public Overridable Overloads Sub GetObjectData(info As SerializationInfo, context As StreamingContext)' is obsolete: 'This API supports obsolete formatter-based serialization. It should not be called or extended by application code.'.
-1>Community.VisualBasic -> compiled in memory (607.5 KB, 1870 ms)
+1>Community.VisualBasic -> compiled in memory (607.5 KB, 1678 ms)
 2>------ Build started: Project: netstandard2_0, Configuration: Debug ------
-2>netstandard2_0 -> compiled in memory (16 KB, 1361 ms)
+2>netstandard2_0 -> compiled in memory (16 KB, 1407 ms)
 3>------ Build started: Project: net5-console, Configuration: Debug ------
-3>net5-console -> compiled in memory (5 KB, 1476 ms)
+3>net5-console -> compiled in memory (5 KB, 1445 ms)
 4>------ Build started: Project: net5-windows, Configuration: Debug ------
-4>net5-windows -> compiled in memory (9 KB, 46 ms)
+4>net5-windows -> compiled in memory (9 KB, 59 ms)
 5>------ Build started: Project: net4-console, Configuration: Debug ------
-5>net4-console -> compiled in memory (14.5 KB, 1478 ms)
+5>net4-console -> compiled in memory (14.5 KB, 1437 ms)
 6>------ Build started: Project: Community.VisualBasic.Tests, Configuration: Debug ------
 6>PlatformDetection.vb(508,35): warning SYSLIB0039: 'Tls' is obsolete: 'TLS versions 1.0 and 1.1 have known vulnerabilities and are not recommended. Use a newer TLS version instead, or use SslProtocols.None to defer to OS defaults.'.
 6>PlatformDetection.vb(520,35): warning SYSLIB0039: 'Tls11' is obsolete: 'TLS versions 1.0 and 1.1 have known vulnerabilities and are not recommended. Use a newer TLS version instead, or use SslProtocols.None to defer to OS defaults.'.
-6>Community.VisualBasic.Tests -> compiled in memory (1113.5 KB, 3302 ms)
+6>Community.VisualBasic.Tests -> compiled in memory (1113.5 KB, 3363 ms)
 ========== Build: 6 succeeded, 0 failed ==========
 

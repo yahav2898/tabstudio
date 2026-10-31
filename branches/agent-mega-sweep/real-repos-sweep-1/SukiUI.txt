@@ -11,7 +11,7 @@ Compatibility Doctor:
   SukiUI.ConditionalXAML.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   SukiUI.Motion.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: SukiUI.Demo
-Built in 16.0 s: 0 errors, 136 warnings
+Built in 16.8 s: 0 errors, 136 warnings
 Packages with analyzers or MSBuild files:
   avalonia.buildservices 11.3.2
       build/Avalonia.BuildServices.targets
@@ -288,9 +288,9 @@ Packages with analyzers or MSBuild files:
       buildTransitive/xunit.v3.core.mtp-v1.props
       buildTransitive/xunit.v3.core.mtp-v1.targets
 Output:
-Build started at 03:03:34...
+Build started at 04:26:11...
 1>------ Build started: Project: SukiUI.Motion, Configuration: Debug ------
-1>SukiUI.Motion -> compiled in memory (121 KB, 244 ms)
+1>SukiUI.Motion -> compiled in memory (121 KB, 269 ms)
 2>------ Build started: Project: SukiUI, Configuration: Debug ------
 2>SukiEasings.cs(20,20): warning CS0219: The variable 'Pi' is assigned but its value is never used
 2>Shadcn.cs(16,13): warning CS8602: Dereference of a possibly null reference.
@@ -358,14 +358,14 @@ Build started at 03:03:34...
 2>SukiUI.Controls.Touch.MobileNumberPicker.MobileNumberPickerPopup.g.cs(10,51): warning CS0649: Field 'MobileNumberPickerPopup.CurrentValueTextPlus1' is never assigned to, and will always have its default value null
 2>SukiUI.Controls.Touch.MobileNumberPicker.MobileNumberPickerPopup.g.cs(11,51): warning CS0649: Field 'MobileNumberPickerPopup.CurrentValueTextPlus2' is never assigned to, and will always have its default value null
 2>SukiUI.Controls.Touch.MobilePicker.MobilePickerPopUp.g.cs(7,48): warning CS0649: Field 'MobilePickerPopUp.rootBorder' is never assigned to, and will always have its default value null
-2>SukiUI -> compiled in memory (2960.5 KB, 1252 ms)
+2>SukiUI -> compiled in memory (2960.5 KB, 1087 ms)
 3>------ Build started: Project: SukiUI.ConditionalXAML, Configuration: Debug ------
 3>InlineSharp.cs(143,36): warning CS8601: Possible null reference assignment.
-3>SukiUI.ConditionalXAML -> compiled in memory (10 KB, 1020 ms)
+3>SukiUI.ConditionalXAML -> compiled in memory (10 KB, 932 ms)
 4>------ Build started: Project: SukiUI.ColorPicker, Configuration: Debug ------
-4>SukiUI.ColorPicker -> compiled in memory (137.5 KB, 1018 ms)
+4>SukiUI.ColorPicker -> compiled in memory (137.5 KB, 796 ms)
 5>------ Build started: Project: SukiUI.DataGrid, Configuration: Debug ------
-5>SukiUI.DataGrid -> compiled in memory (139.5 KB, 983 ms)
+5>SukiUI.DataGrid -> compiled in memory (139.5 KB, 893 ms)
 6>------ Build started: Project: SukiUI.Dock, Configuration: Debug ------
 6>AlignmentConverter.cs(19,28): warning CS0436: The type 'AlignmentConverter' in '/home/runner/work/_temp/real-repos/SukiUI/SukiUI.Dock/Converters/AlignmentConverter.cs' conflicts with the imported type 'AlignmentConverter' in 'Dock.Avalonia, Version=12.1.0.1, Culture=neutral, PublicKeyToken=535dd7fb7a6cf113'. Using the type defined in '/home/runner/work/_temp/real-repos/SukiUI/SukiUI.Dock/Converters/AlignmentConverter.cs'.
 6>AlignmentConverter.cs(19,62): warning CS0436: The type 'AlignmentConverter' in '/home/runner/work/_temp/real-repos/SukiUI/SukiUI.Dock/Converters/AlignmentConverter.cs' conflicts with the imported type 'AlignmentConverter' in 'Dock.Avalonia, Version=12.1.0.1, Culture=neutral, PublicKeyToken=535dd7fb7a6cf113'. Using the type defined in '/home/runner/work/_temp/real-repos/SukiUI/SukiUI.Dock/Converters/AlignmentConverter.cs'.
@@ -376,7 +376,7 @@ Build started at 03:03:34...
 6>IsMaximizedConverter.cs(16,19): warning CS0436: The type 'IsMaximizedConverter' in '/home/runner/work/_temp/real-repos/SukiUI/SukiUI.Dock/Converters/IsMaximizedConverter.cs' conflicts with the imported type 'IsMaximizedConverter' in 'Dock.Avalonia, Version=12.1.0.1, Culture=neutral, PublicKeyToken=535dd7fb7a6cf113'. Using the type defined in '/home/runner/work/_temp/real-repos/SukiUI/SukiUI.Dock/Converters/IsMaximizedConverter.cs'.
 6>OrientationConverter.cs(17,28): warning CS0436: The type 'OrientationConverter' in '/home/runner/work/_temp/real-repos/SukiUI/SukiUI.Dock/Converters/OrientationConverter.cs' conflicts with the imported type 'OrientationConverter' in 'Dock.Avalonia, Version=12.1.0.1, Culture=neutral, PublicKeyToken=535dd7fb7a6cf113'. Using the type defined in '/home/runner/work/_temp/real-repos/SukiUI/SukiUI.Dock/Converters/OrientationConverter.cs'.
 6>OrientationConverter.cs(17,64): warning CS0436: The type 'OrientationConverter' in '/home/runner/work/_temp/real-repos/SukiUI/SukiUI.Dock/Converters/OrientationConverter.cs' conflicts with the imported type 'OrientationConverter' in 'Dock.Avalonia, Version=12.1.0.1, Culture=neutral, PublicKeyToken=535dd7fb7a6cf113'. Using the type defined in '/home/runner/work/_temp/real-repos/SukiUI/SukiUI.Dock/Converters/OrientationConverter.cs'.
-6>SukiUI.Dock -> compiled in memory (7.5 KB, 1031 ms)
+6>SukiUI.Dock -> compiled in memory (7.5 KB, 801 ms)
 7>------ Build started: Project: SukiUI.Demo, Configuration: Debug ------
 7>AllControlsView.axaml.cs(33,9): warning CS8602: Dereference of a possibly null reference.
 7>ButtonsView.axaml.cs(16,25): warning CS8600: Converting null literal or possible null value to non-nullable type.
@@ -437,11 +437,11 @@ Build started at 03:03:34...
 7>SukiUI.Demo.Features.Playground.PlaygroundView.g.cs(12,49): warning CS0649: Field 'PlaygroundView.GlassExample' is never assigned to, and will always have its default value null
 7>SukiUI.Demo.Features.Theming.ThemingView.g.cs(7,58): warning CS0649: Field 'ThemingView.ThemeHeader' is never assigned to, and will always have its default value null
 7>SukiUI.Demo.Features.Theming.ThemingView.g.cs(8,54): warning CS0649: Field 'ThemingView.Theming' is never assigned to, and will always have its default value null
-7>SukiUI.Demo -> compiled in memory (2834.5 KB, 2003 ms)
+7>SukiUI.Demo -> compiled in memory (2834.5 KB, 1870 ms)
 8>------ Build started: Project: SukiUI.ConditionalXAML.Tests, Configuration: Debug ------
-8>SukiUI.ConditionalXAML.Tests -> compiled in memory (13 KB, 944 ms)
+8>SukiUI.ConditionalXAML.Tests -> compiled in memory (13 KB, 908 ms)
 9>------ Build started: Project: SukiUI.Motion.Tests, Configuration: Debug ------
 9>ComboBoxPopupTests.cs(59,9): warning CS0618: 'TemplateExtensions.GetTemplateChildren(TemplatedControl)' is obsolete: 'Use GetTemplateDescendants'
-9>SukiUI.Motion.Tests -> compiled in memory (71 KB, 289 ms)
+9>SukiUI.Motion.Tests -> compiled in memory (71 KB, 253 ms)
 ========== Build: 9 succeeded, 0 failed ==========
 
