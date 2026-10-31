@@ -5,7 +5,7 @@
 
 | Moving the colors through | Before (copy per edit) | After (in place) |
 | --- | --- | --- |
-| A keystroke | 332.4 KB and 160 µs per edit | 0.0 KB and 9 µs per edit |
-| Format Document, in all | 649.1 MB and 347 ms | 0.0 MB and 18 ms |
+| A keystroke | 332.4 KB and 356 µs per edit | 0.0 KB and 26 µs per edit |
+| Format Document, in all | 649.1 MB and 312 ms | 0.0 MB and 18 ms |
 
-A whole keystroke in the editor, every listener included: 237.1 KB and 158 µs per edit.
+A whole keystroke in the editor, every listener included: 238.4 KB and 464 µs per edit.

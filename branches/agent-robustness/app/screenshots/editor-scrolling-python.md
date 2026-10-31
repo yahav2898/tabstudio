@@ -1,6 +1,6 @@
 # Scrolling a long Python file
 
-- 2211 lines; 29 visible lines; viewport 779 × 614 dip.
+- 2211 lines; 28 visible lines; viewport 779 × 586 dip.
 - 0 classified spans, 5 diagnostics, 683 folds, 6 breakpoints, 0 Live Unit Testing markers.
 - Margins: BreakpointMargin, CachedLineNumberMargin, Line, DrawnFoldingMargin.
 - Line transformers: SelectionColorizer, TextMateColoringTransformer, ClassificationColorizer, LineCounter.
@@ -16,9 +16,9 @@ Avalonia frame metrics: on.
 
 | Scroll | Frames | UI p50 ms | UI p95 ms | UI max ms | Frames < 8 ms | Layout p95 | Render p95 | Compositor p95 | KB/frame (1st → 2nd half) | GCs | Lines built/frame (mean / max) |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| drag, 15 dip per frame (900 dip/s at 60 Hz) | 300 | 0.36 | 2.07 | 11.71 | 100% | 0.30 | 1.82 | 2.55 | 96.4 → 103.4 | 1 | 0.7 / 1 |
-| 4 flings at 5000 dip/s | 436 | 0.48 | 2.22 | 22.08 | 99% | 1.03 | 1.88 | 3.10 | 133.1 → 130.8 | 4 | 1.4 / 4 |
-| 2 flings at 8000 dip/s | 308 | 0.64 | 2.56 | 15.96 | 99% | 1.31 | 2.04 | 3.43 | 180.7 → 165.8 | 3 | 2.3 / 29 |
+| drag, 15 dip per frame (900 dip/s at 60 Hz) | 300 | 0.37 | 2.11 | 13.99 | 99% | 0.38 | 1.91 | 2.97 | 93.4 → 100.6 | 2 | 0.7 / 1 |
+| 4 flings at 5000 dip/s | 436 | 0.56 | 2.55 | 14.65 | 99% | 1.02 | 2.03 | 3.33 | 129.7 → 130.2 | 3 | 1.4 / 4 |
+| 2 flings at 8000 dip/s | 308 | 0.65 | 2.54 | 15.68 | 99% | 1.25 | 2.06 | 3.30 | 176.8 → 162.7 | 3 | 2.2 / 28 |
 
 ## Without one part of the editor at a time
 
@@ -26,41 +26,41 @@ The same drag and two 5000 dip/s flings, with one part of the editor taken out.
 
 | Scroll | Frames | UI p50 ms | UI p95 ms | UI max ms | Frames < 8 ms | Layout p95 | Render p95 | Compositor p95 | KB/frame (1st → 2nd half) | GCs | Lines built/frame (mean / max) |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| everything | 368 | 0.47 | 2.31 | 13.73 | 99% | 0.51 | 1.94 | 3.02 | 118.1 → 119.4 | 3 | 1.1 / 4 |
-| without line numbers | 368 | 0.47 | 2.45 | 14.37 | 99% | 1.19 | 1.94 | 2.98 | 93.0 → 91.0 | 3 | 1.2 / 30 |
-| without the folding margin | 368 | 0.87 | 3.16 | 15.60 | 99% | 1.69 | 2.30 | 3.80 | 118.0 → 113.8 | 3 | 1.2 / 30 |
-| without the breakpoint margin | 368 | 0.59 | 2.58 | 14.75 | 99% | 0.61 | 2.05 | 3.29 | 120.1 → 116.5 | 2 | 1.2 / 30 |
-| without the Live Unit Testing margin | 368 | 0.60 | 2.39 | 14.93 | 99% | 0.81 | 2.00 | 3.13 | 123.1 → 119.5 | 3 | 1.2 / 30 |
-| without coloring | 368 | 0.52 | 2.25 | 11.90 | 99% | 0.43 | 1.88 | 2.81 | 82.2 → 80.2 | 2 | 1.2 / 30 |
-| without squiggles | 368 | 0.70 | 2.62 | 16.11 | 99% | 1.14 | 2.11 | 3.63 | 122.8 → 119.4 | 3 | 1.2 / 30 |
-| without the floating touch bar | 368 | 0.62 | 2.61 | 15.76 | 99% | 1.13 | 2.11 | 2.87 | 122.9 → 119.3 | 4 | 1.2 / 30 |
-| bare editor: no margins, coloring, squiggles or touch bar | 368 | 0.49 | 2.53 | 73.79 | 99% | 1.32 | 1.94 | 2.87 | 43.8 → 43.0 | 1 | 1.2 / 30 |
+| everything | 368 | 0.50 | 2.26 | 13.80 | 99% | 0.43 | 1.97 | 2.92 | 115.2 → 116.1 | 3 | 1.1 / 4 |
+| without line numbers | 368 | 0.39 | 2.20 | 14.27 | 99% | 0.54 | 1.88 | 2.89 | 91.5 → 89.3 | 2 | 1.2 / 29 |
+| without the folding margin | 368 | 0.44 | 2.61 | 17.53 | 99% | 0.83 | 2.01 | 2.98 | 115.4 → 110.8 | 4 | 1.2 / 29 |
+| without the breakpoint margin | 368 | 0.70 | 4.27 | 85.14 | 99% | 2.12 | 2.47 | 3.54 | 117.4 → 113.3 | 2 | 1.2 / 29 |
+| without the Live Unit Testing margin | 368 | 0.57 | 2.48 | 16.06 | 99% | 0.94 | 2.00 | 3.21 | 120.2 → 116.2 | 3 | 1.2 / 29 |
+| without coloring | 368 | 0.48 | 2.28 | 11.65 | 99% | 0.65 | 1.95 | 3.10 | 80.7 → 78.3 | 2 | 1.2 / 29 |
+| without squiggles | 368 | 0.57 | 2.54 | 15.49 | 99% | 1.02 | 2.12 | 4.39 | 119.9 → 116.1 | 2 | 1.2 / 29 |
+| without the floating touch bar | 368 | 0.56 | 2.51 | 17.83 | 99% | 0.53 | 2.09 | 2.80 | 120.1 → 116.0 | 3 | 1.2 / 29 |
+| bare editor: no margins, coloring, squiggles or touch bar | 368 | 0.34 | 2.18 | 12.61 | 100% | 0.47 | 1.89 | 2.33 | 44.0 → 43.0 | 1 | 1.2 / 29 |
 
 ## Where layout time goes
 
 Exclusive time of Avalonia's layout and style activities by control type, while dragging (profiling slows everything down).
 
-Style attachments per frame: 51.5
+Style attachments per frame: 62.2
 
 | Activity and control | ms per frame |
 |---|---|
-| MeasuringLayoutable TextView | 0.242 |
-| ArrangingLayoutable Track | 0.017 |
-| ArrangingLayoutable TextView | 0.013 |
-| FindingResource - | 0.013 |
-| AttachingStyle - | 0.012 |
-| ArrangingLayoutable LineDrawing | 0.010 |
+| MeasuringLayoutable TextView | 0.260 |
+| AttachingStyle - | 0.015 |
+| FindingResource - | 0.012 |
+| ArrangingLayoutable TextView | 0.011 |
+| ArrangingLayoutable LineDrawing | 0.009 |
+| ArrangingLayoutable Track | 0.008 |
 | ArrangingLayoutable CachedLineNumberMargin | 0.008 |
 | ArrangingLayoutable ScrollingTextLayer | 0.007 |
 | ArrangingLayoutable NumberDrawing | 0.005 |
+| ArrangingLayoutable ScrollContentPresenter | 0.004 |
 | RaisingRoutedEvent ScrollBar | 0.003 |
 | ArrangingLayoutable RepeatButton | 0.003 |
-| ArrangingLayoutable ScrollContentPresenter | 0.003 |
 | MeasuringLayoutable Grid | 0.003 |
 | MeasuringLayoutable CachedLineNumberMargin | 0.002 |
 | ArrangingLayoutable Border | 0.002 |
-| ArrangingLayoutable Thumb | 0.001 |
 | MeasuringLayoutable LineDrawing | 0.001 |
+| ArrangingLayoutable Thumb | 0.001 |
 | ArrangingLayoutable Grid | 0.001 |
 
 ## Before and after, in this run
@@ -69,6 +69,6 @@ The same drag and two 5000 dip/s flings with this editor, then with AvaloniaEdit
 
 | Scroll | Frames | UI p50 ms | UI p95 ms | UI max ms | Frames < 8 ms | Layout p95 | Render p95 | Compositor p95 | KB/frame (1st → 2nd half) | GCs | Lines built/frame (mean / max) |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| this editor | 368 | 0.56 | 2.46 | 19.74 | 99% | 0.50 | 2.04 | 3.09 | 118.7 → 119.5 | 3 | 1.1 / 4 |
-| AvaloniaEdit's own parts (before) | 368 | 1.66 | 4.82 | 23.98 | 96% | 0.58 | 4.28 | 5.64 | 593.1 → 613.5 | 13 | 3.5 / 31 |
+| this editor | 368 | 0.68 | 3.23 | 36.42 | 99% | 1.69 | 2.29 | 3.55 | 116.4 → 117.4 | 3 | 1.1 / 4 |
+| AvaloniaEdit's own parts (before) | 368 | 1.53 | 4.48 | 21.06 | 96% | 1.26 | 3.74 | 5.46 | 574.3 → 599.3 | 13 | 3.5 / 30 |
 
