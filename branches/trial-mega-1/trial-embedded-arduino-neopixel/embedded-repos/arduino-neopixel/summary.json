@@ -1,0 +1,117 @@
+{
+  "repository": {
+    "name": "arduino-neopixel",
+    "url": "https://github.com/adafruit/Adafruit_NeoPixel",
+    "sha": "d514fc3beae85dd4c2b19781b93faa47bd6e996f",
+    "kind": "arduino",
+    "project": "examples/strandtest",
+    "maxErrors": 0,
+    "fqbn": "arduino:avr:uno",
+    "core": "arduino:avr@1.8.6"
+  },
+  "seconds": 17.068,
+  "passed": true,
+  "error": null,
+  "compilerErrors": 0,
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "steps": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-neopixel/source",
+      "log": "01-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "add",
+        "origin",
+        "https://github.com/adafruit/Adafruit_NeoPixel"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-neopixel/source",
+      "log": "02-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "fetch",
+        "--depth",
+        "1",
+        "--no-tags",
+        "origin",
+        "d514fc3beae85dd4c2b19781b93faa47bd6e996f"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-neopixel/source",
+      "log": "03-git.log",
+      "seconds": 0.365,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "FETCH_HEAD"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-neopixel/source",
+      "log": "04-git.log",
+      "seconds": 0.008,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/home/runner/work/_temp/embedded-repos/arduino-neopixel/arduino-cli",
+        "core",
+        "update-index"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-neopixel/source",
+      "log": "05-arduino-cli.log",
+      "seconds": 4.274,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/home/runner/work/_temp/embedded-repos/arduino-neopixel/arduino-cli",
+        "core",
+        "install",
+        "arduino:avr@1.8.6"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-neopixel/source",
+      "log": "06-arduino-cli.log",
+      "seconds": 10.638,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/home/runner/work/_temp/embedded-repos/arduino-neopixel/arduino-cli",
+        "compile",
+        "--fqbn",
+        "arduino:avr:uno",
+        "--library",
+        "/home/runner/work/_temp/embedded-repos/arduino-neopixel/source",
+        "--build-path",
+        "/home/runner/work/_temp/embedded-repos/arduino-neopixel/build",
+        "/home/runner/work/_temp/embedded-repos/arduino-neopixel/source/examples/strandtest"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-neopixel/source",
+      "log": "07-arduino-cli.log",
+      "seconds": 0.968,
+      "exitCode": 0,
+      "compilerErrors": 0
+    },
+    {
+      "firmware": "/home/runner/work/_temp/embedded-repos/arduino-neopixel/build/strandtest.ino.elf",
+      "bytes": 34700,
+      "sha256": "dcb4157f85cca554baa182a79562672d672895f698390272f6c704f4fccd19d4"
+    }
+  ]
+}
