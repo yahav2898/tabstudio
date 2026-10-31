@@ -2,8 +2,8 @@ httpx at b5addb64f0161ff6bfe94c124ef76f6a1fba5254
 Toolchain projects:
   python: /home/runner/work/_temp/real-repos/httpx/pyproject.toml
 Startup project: python /home/runner/work/_temp/real-repos/httpx/pyproject.toml
-Set up in 30.7 s
-Tests: 1416 passed, 1 failed, 1 skipped of 1569: 1418 tests run in 13.9 sec: 1416 passed, 1 failed, 1 skipped.
+Set up in 20.9 s
+Tests: 1416 passed, 1 failed, 1 skipped of 1569: 1418 tests run in 10.6 sec: 1416 passed, 1 failed, 1 skipped.
 Project setup:
 ------ httpx: pip install -r requirements.txt ------
 Reading which Python versions the 15 pinned packages have wheels for, from PyPI.
@@ -196,19 +196,19 @@ Collecting more-itertools (from jaraco.classes->keyring>=15.1->twine==6.1.0->-r 
   Downloading more_itertools-11.2.1-py3-none-any.whl.metadata (42 kB)
 Downloading chardet-5.2.0-py3-none-any.whl (199 kB)
 Downloading mkdocs-1.6.1-py3-none-any.whl (3.9 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.9/3.9 MB 73.8 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.9/3.9 MB 112.7 MB/s eta 0:00:00
 Downloading mkdocs_material-9.6.18-py3-none-any.whl (9.2 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.2/9.2 MB 118.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.2/9.2 MB 108.1 MB/s eta 0:00:00
 Downloading build-1.3.0-py3-none-any.whl (23 kB)
 Downloading twine-6.1.0-py3-none-any.whl (40 kB)
 Downloading coverage-7.10.6-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (251 kB)
 Downloading cryptography-45.0.7-cp311-abi3-manylinux_2_34_x86_64.whl (4.5 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 239.8 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 132.3 MB/s eta 0:00:00
 Downloading mypy-1.17.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (12.7 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.7/12.7 MB 181.2 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.7/12.7 MB 110.0 MB/s eta 0:00:00
 Downloading pytest-8.4.1-py3-none-any.whl (365 kB)
 Downloading ruff-0.12.11-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.2 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.2/13.2 MB 173.4 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.2/13.2 MB 122.1 MB/s eta 0:00:00
 Downloading trio-0.31.0-py3-none-any.whl (512 kB)
 Downloading trio_typing-0.10.0-py3-none-any.whl (42 kB)
 Downloading trustme-1.2.1-py3-none-any.whl (16 kB)
@@ -219,7 +219,7 @@ Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
 Downloading socksio-1.0.0-py3-none-any.whl (12 kB)
 Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
 Downloading babel-2.18.0-py3-none-any.whl (10.2 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 305.5 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 118.2 MB/s eta 0:00:00
 Downloading backrefs-5.9-py312-none-any.whl (397 kB)
 Downloading cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
 Using cached colorama-0.4.6-py2.py3-none-any.whl (25 kB)
@@ -242,7 +242,7 @@ Using cached pathspec-1.1.1-py3-none-any.whl (57 kB)
 Using cached pluggy-1.7.0-py3-none-any.whl (27 kB)
 Downloading pymdown_extensions-10.21.3-py3-none-any.whl (269 kB)
 Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 146.1 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 198.5 MB/s eta 0:00:00
 Downloading pyyaml_env_tag-1.1-py3-none-any.whl (4.7 kB)
 Downloading readme_renderer-46.0-py3-none-any.whl (14 kB)
 Downloading requests-2.34.2-py3-none-any.whl (73 kB)
@@ -255,11 +255,11 @@ Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
 Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
 Downloading watchdog-6.0.0-py3-none-manylinux2014_x86_64.whl (79 kB)
 Downloading zstandard-0.25.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.5 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 323.1 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 138.7 MB/s eta 0:00:00
 Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
 Downloading async_generator-1.10-py3-none-any.whl (18 kB)
 Downloading brotli-1.2.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.4 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 258.8 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 156.3 MB/s eta 0:00:00
 Downloading id-1.6.1-py3-none-any.whl (14 kB)
 Downloading importlib_metadata-10.1.0-py3-none-any.whl (32 kB)
 Downloading outcome-1.3.0.post0-py2.py3-none-any.whl (10 kB)
@@ -267,13 +267,13 @@ Downloading pyproject_hooks-1.3.3-py3-none-any.whl (10 kB)
 Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
 Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (257 kB)
 Downloading docutils-0.23-py3-none-any.whl (634 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 634.7/634.7 kB 80.9 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 634.7/634.7 kB 95.9 MB/s eta 0:00:00
 Downloading hpack-4.2.0-py3-none-any.whl (34 kB)
 Downloading hyperframe-6.1.0-py3-none-any.whl (13 kB)
 Downloading jeepney-0.9.0-py3-none-any.whl (49 kB)
 Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
 Downloading nh3-0.3.7-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (832 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 832.2/832.2 kB 176.7 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 832.2/832.2 kB 91.9 MB/s eta 0:00:00
 Using cached platformdirs-4.14.0-py3-none-any.whl (35 kB)
 Downloading python_dateutil-3.0.0-py2.py3-none-any.whl (94 kB)
 Downloading secretstorage-3.5.0-py3-none-any.whl (15 kB)
@@ -289,12 +289,12 @@ Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
 Building wheels for collected packages: mkautodoc, httpx
   Building wheel for mkautodoc (pyproject.toml): started
   Building wheel for mkautodoc (pyproject.toml): finished with status 'done'
-  Created wheel for mkautodoc: filename=mkautodoc-0.2.0-py3-none-any.whl size=4348 sha256=fe83af210d210b762ef2b8f266ed1dacf66bd42d9d21f35531a00befeb036585
+  Created wheel for mkautodoc: filename=mkautodoc-0.2.0-py3-none-any.whl size=4348 sha256=44b7a456f218867bd4c7bdee12e4755e111c00231925718ad7c9405c0015bf2d
   Stored in directory: /home/runner/.cache/pip/wheels/ba/01/03/8bee86e15ec7515a9d5f9895a71d3c472297fec279f6736515
   Building editable for httpx (pyproject.toml): started
   Building editable for httpx (pyproject.toml): finished with status 'done'
   Created wheel for httpx: filename=httpx-0.28.1-py3-none-any.whl size=4864 sha256=079b96eded1e4059a2e860e53f82eed04f69480aabbf403785187b68a8d83fc9
-  Stored in directory: /tmp/pip-ephem-wheel-cache-ogpmnrxo/wheels/4a/c1/9d/73e05d642a37d392d95b7088ebff5594bec63d6e6609bf2ff4
+  Stored in directory: /tmp/pip-ephem-wheel-cache-v4ameaxd/wheels/4a/c1/9d/73e05d642a37d392d95b7088ebff5594bec63d6e6609bf2ff4
 Successfully built mkautodoc httpx
 Installing collected packages: sortedcontainers, paginate, brotli, zstandard, zipp, watchdog, urllib3, tzdata, typing_extensions, socksio, sniffio, six, ruff, rfc3986, pyyaml, pyproject_hooks, pygments, pycparser, pluggy, platformdirs, pathspec, packaging, nh3, mypy_extensions, more-itertools, mkdocs-material-extensions, mergedeep, mdurl, markupsafe, markdown, jeepney, jaraco.context, iniconfig, idna, hyperframe, hpack, h11, docutils, coverage, colorama, click, charset_normalizer, chardet, certifi, backrefs, babel, attrs, async-generator, uvicorn, requests, readme-renderer, pyyaml-env-tag, python-dateutil, pytest, pymdown-extensions, outcome, mypy, mkdocs-get-deps, mkautodoc, markdown-it-py, jinja2, jaraco.functools, jaraco.classes, importlib-metadata, id, httpcore, h2, cffi, build, anyio, trio, rich, requests-toolbelt, httpx, ghp-import, cryptography, trustme, trio-typing, SecretStorage, mkdocs, mkdocs-material, keyring, twine
 Successfully installed SecretStorage-3.5.0 anyio-4.15.1 async-generator-1.10 attrs-26.1.0 babel-2.18.0 backrefs-5.9 brotli-1.2.1 build-1.3.0 certifi-2026.10.23 cffi-2.1.1 chardet-5.2.0 charset_normalizer-3.5.2 click-8.2.1 colorama-0.4.6 coverage-7.10.6 cryptography-45.0.7 docutils-0.23 ghp-import-2.1.0 h11-0.16.0 h2-4.4.1 hpack-4.2.0 httpcore-1.0.9 httpx-0.28.1 hyperframe-6.1.0 id-1.6.1 idna-3.20 importlib-metadata-10.1.0 iniconfig-2.3.1 jaraco.classes-3.4.0 jaraco.context-6.1.2 jaraco.functools-4.6.0 jeepney-0.9.0 jinja2-3.1.6 keyring-25.7.0 markdown-3.11.2 markdown-it-py-4.2.0 markupsafe-3.0.4 mdurl-0.1.2 mergedeep-1.3.4 mkautodoc-0.2.0 mkdocs-1.6.1 mkdocs-get-deps-0.2.2 mkdocs-material-9.6.18 mkdocs-material-extensions-1.3.1 more-itertools-11.2.1 mypy-1.17.1 mypy_extensions-1.1.0 nh3-0.3.7 outcome-1.3.0.post0 packaging-26.3 paginate-0.5.7 pathspec-1.1.1 platformdirs-4.14.0 pluggy-1.7.0 pycparser-3.12 pygments-2.21.0 pymdown-extensions-10.21.3 pyproject_hooks-1.3.3 pytest-8.4.1 python-dateutil-3.0.0 pyyaml-6.0.3 pyyaml-env-tag-1.1 readme-renderer-46.0 requests-2.34.2 requests-toolbelt-1.0.0 rfc3986-2.0.0 rich-14.3.4 ruff-0.12.11 six-1.17.0 sniffio-1.3.1 socksio-1.0.0 sortedcontainers-2.4.0 trio-0.31.0 trio-typing-0.10.0 trustme-1.2.1 twine-6.1.0 typing_extensions-4.16.0 tzdata-2026.6 urllib3-2.8.0 uvicorn-0.35.0 watchdog-6.0.0 zipp-4.1.2 zstandard-0.25.0
@@ -307,7 +307,7 @@ Python 3.12 for httpx: pyproject.toml allows Python >=3.9.
 Installed 83 packages into .venv with Python 3.12. The full log is in Output > Project Setup.
 ========== pip install -r requirements.txt: succeeded ==========
 ========== Running httpx's tests with Pytest ==========
-> sh -c 'if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/httpx/.tabstudio/test-results/3e6f247b3fd143eda2aa66d7ed4e3733/pytest.xml
+> sh -c 'if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/httpx/.tabstudio/test-results/d27d7cca8e3a46b0ab541c3fb93ce7bd/pytest.xml
 ============================= test session starts ==============================
 platform linux -- Python 3.12.15, pytest-8.4.1, pluggy-1.7.0
 rootdir: /home/runner/work/_temp/real-repos/httpx
@@ -363,7 +363,7 @@ tests/test_wsgi.py ............                                          [100%]
 =================================== FAILURES ===================================
 ___________________________ test_write_timeout[trio] ___________________________
 
-agen = <async_generator object ByteStream.__aiter__ at 0x7fa1f07a5240>
+agen = <async_generator object ByteStream.__aiter__ at 0x7efc6c6cd300>
 
     @_core.enable_ki_protection
     def finalizer(agen: AsyncGeneratorType[object, NoReturn]) -> None:
@@ -402,7 +402,7 @@ E           ResourceWarning: Async generator 'httpx._content.ByteStream.__aiter_
 The above exception was the direct cause of the following exception:
 
 cls = <class '_pytest.runner.CallInfo'>
-func = <function call_and_report.<locals>.<lambda> at 0x7fa1f06f5620>
+func = <function call_and_report.<locals>.<lambda> at 0x7efc6c712e80>
 when = 'call'
 reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
 
@@ -454,7 +454,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     raise errors[0]
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-config = <_pytest.config.Config object at 0x7fa1f5937b90>
+config = <_pytest.config.Config object at 0x7efc72ef62a0>
 
     def collect_unraisable(config: Config) -> None:
         pop_unraisable = config.stash[unraisable_exceptions].pop
@@ -477,15 +477,15 @@ config = <_pytest.config.Config object at 0x7fa1f5937b90>
                 msg = meta.msg
                 try:
 >                   warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
-E                   pytest.PytestUnraisableExceptionWarning: Exception ignored in: <async_generator object ByteStream.__aiter__ at 0x7fa1f07a5240>
+E                   pytest.PytestUnraisableExceptionWarning: Exception ignored in: <async_generator object ByteStream.__aiter__ at 0x7efc6c6cd300>
 E                   Enable tracemalloc to get traceback where the object was allocated.
 E                   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 .venv/lib/python3.12/site-packages/_pytest/unraisableexception.py:67: PytestUnraisableExceptionWarning
 ----------------------------- Captured stdout call -----------------------------
-INFO:     127.0.0.1:48818 - "PUT /slow_response HTTP/1.1" 200 OK
-- generated xml file: /home/runner/work/_temp/real-repos/httpx/.tabstudio/test-results/3e6f247b3fd143eda2aa66d7ed4e3733/pytest.xml -
+INFO:     127.0.0.1:34342 - "PUT /slow_response HTTP/1.1" 200 OK
+- generated xml file: /home/runner/work/_temp/real-repos/httpx/.tabstudio/test-results/d27d7cca8e3a46b0ab541c3fb93ce7bd/pytest.xml -
 =========================== short test summary info ============================
 SKIPPED [1] tests/client/test_auth.py:273: netrc files without a password are valid from Python >= 3.11
-================== 1 failed, 1416 passed, 1 skipped in 12.59s ==================
+================== 1 failed, 1416 passed, 1 skipped in 9.41s ===================
 
