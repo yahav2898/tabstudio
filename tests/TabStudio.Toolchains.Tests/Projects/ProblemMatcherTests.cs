@@ -234,7 +234,7 @@ public sealed class ProblemMatcherTests
         var android = new ProblemMatcher(ToolchainCatalog.Default.Find("android")!);
         string[] output =
         [
-            "w: file:///p/app/build.gradle.kts:78:3 'packagingOptions(Packaging.() -> Unit): Unit' is deprecated. Renamed to packaging",
+            "w: file:///p/app/build.gradle.kts:78:3: 'packagingOptions(Packaging.() -> Unit): Unit' is deprecated. Renamed to packaging",
             "w: file:///p/app/src/main/java/com/example/Theme.kt:118:34 'rememberSystemUiController' is deprecated.",
             "e: file:///p/app/src/main/java/com/example/Main.kt:10:5 Unresolved reference 'foo'.",
         ];
@@ -243,5 +243,6 @@ public sealed class ProblemMatcherTests
 
         Assert.Equal("Unresolved reference 'foo'.", error.Message);
         Assert.Equal(10, error.Location?.Line);
+        Assert.Equal(["w", "w", "e"], output.SelectMany(android.Match).Select(l => l.Severity));
     }
 }
