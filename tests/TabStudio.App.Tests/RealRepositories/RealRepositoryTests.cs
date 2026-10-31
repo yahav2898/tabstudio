@@ -37,7 +37,7 @@ public sealed class RealRepositoryTests
         var summary = new StringBuilder("| Repository | Errors | Baseline | Warnings | Build |\n| --- | --- | --- | --- | --- |\n");
         var results = new JsonObject();
         var only = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_ONLY")?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        foreach (var repository in manifest["repositories"]!.AsArray().Where(r => only is null || only.Contains(r!["name"]!.GetValue<string>(), StringComparer.OrdinalIgnoreCase)))
+        foreach (var repository in manifest["repositories"]!.AsArray().Where(r => InThisJob(r!) && (only is null || only.Contains(r!["name"]!.GetValue<string>(), StringComparer.OrdinalIgnoreCase))))
         {
             // Python, Java, Rust, Node.js, PHP, Kotlin and Swift repositories run in the test below.
             if (repository!["toolchain"] is not null)
@@ -113,7 +113,8 @@ public sealed class RealRepositoryTests
         var manifest = JsonNode.Parse(await File.ReadAllTextAsync(Path.Combine(RepositoryRoot(), "build", "ci", "real-repos.json")))!;
         var problems = new List<string>();
         var summary = new StringBuilder("| Repository | Toolchain | Startup project | Program | Result | Time |\n| --- | --- | --- | --- | --- | --- |\n");
-        foreach (var repository in manifest["repositories"]!.AsArray())
+        var only = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_ONLY")?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        foreach (var repository in manifest["repositories"]!.AsArray().Where(r => InThisJob(r!) && (only is null || only.Contains(r!["name"]!.GetValue<string>(), StringComparer.OrdinalIgnoreCase))))
         {
             if (repository!["toolchain"]?.GetValue<string>() is not { } toolchain)
             {
@@ -125,7 +126,8 @@ public sealed class RealRepositoryTests
                 toolchain,
                 repository["program"]!.GetValue<string>(),
                 repository["web"]?.GetValue<string>(),
-                repository["expect"]?.GetValue<string>());
+                repository["expect"]?.GetValue<string>(),
+                repository["tests"]?.GetValue<int>());
             var report = new StringBuilder().AppendLine(CultureInfo.InvariantCulture, $"{name} at {repository["sha"]!.GetValue<string>()}");
 
             // The app's folder in the repository, such as next-learn's dashboard/final-example.
@@ -172,7 +174,16 @@ public sealed class RealRepositoryTests
         Assert.True(problems.Count == 0, string.Join('\n', problems) + "\n\n" + summary);
     }
 
-    private sealed record ProgramExpectation(string Toolchain, string Program, string? Web, string? Text);
+    /// <param name="Tests">How many tests Test Explorer's Run All must pass, at least, after the run; <see langword="null"/> to run none.</param>
+    private sealed record ProgramExpectation(string Toolchain, string Program, string? Web, string? Text, int? Tests = null);
+
+    /// <summary>
+    /// Whether a repository belongs to this run of the job: those with no <c>job</c> to the Real repositories job, and
+    /// those whose <c>job</c> is <c>TABSTUDIO_REAL_REPOS_JOB</c> to that job (<c>sweep</c>: the repositories of the
+    /// 0.20.5 sweep, in a job of their own so that neither job takes much longer).
+    /// </summary>
+    private static bool InThisJob(JsonNode repository) =>
+        string.Equals(repository["job"]?.GetValue<string>(), Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_JOB") is { Length: > 0 } job ? job : null, StringComparison.Ordinal);
 
     private sealed record RunOutcome(string? Startup, string? Program, string? Problem, TimeSpan Duration);
 
@@ -252,6 +263,12 @@ public sealed class RealRepositoryTests
             }
 
             report.AppendLine(CultureInfo.InvariantCulture, $"Ran in {clock.Elapsed.TotalSeconds:F1} s");
+            if (problem is null && expected.Tests is { } minimum)
+            {
+                problem = await RunAllTestsAsync(workspace, minimum, report);
+                UiTestHelpers.SaveScreenshot(window, $"real-{name}-3-tests");
+            }
+
             AppendTail(report, "Project setup", workspace.ProjectSetupOutput.Text);
             AppendTail(report, "Output", text);
             return new RunOutcome(startup!.Toolchain.Id, expected.Program, problem, clock.Elapsed);
@@ -266,6 +283,19 @@ public sealed class RealRepositoryTests
             window.Close();
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         }
+    }
+
+    /// <summary>
+    /// Runs every test with Test Explorer's Run All, as a person would after opening the repository; <see langword="null"/>
+    /// when at least <paramref name="minimum"/> passed.
+    /// </summary>
+    private static async Task<string?> RunAllTestsAsync(WorkspaceViewModel workspace, int minimum, StringBuilder report)
+    {
+        var explorer = workspace.Tests;
+        await UiTestHelpers.WaitUntilAsync(() => explorer.HasTestProjects && explorer.RunAllCommand.CanExecute(null), TimeSpan.FromMinutes(2), "Test Explorer's tests");
+        await explorer.RunAllCommand.ExecuteAsync(null);
+        report.AppendLine(CultureInfo.InvariantCulture, $"Tests: {explorer.PassedCount} passed, {explorer.FailedCount} failed, {explorer.SkippedCount} skipped of {explorer.TotalCount}: {explorer.RunStatusText}");
+        return explorer.PassedCount >= minimum ? null : $"Test Explorer's Run All passed {explorer.PassedCount} tests, fewer than {minimum} ({explorer.FailedCount} failed)";
     }
 
     /// <summary>Requests a page of the running app, as the web preview shows it; <see langword="null"/> when it answers as expected.</summary>
