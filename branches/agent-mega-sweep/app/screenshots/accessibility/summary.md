@@ -2,7 +2,7 @@
 
 ## /home/runner/work/tabstudio/tabstudio/ci-out/screenshots
 
-Views audited: 62 of 78 (0 exempt).
+Views audited: 78 of 78 (0 exempt).
 
 | Rule | Findings | Distinct controls |
 | --- | --- | --- |
@@ -11,28 +11,10 @@ Views audited: 62 of 78 (0 exempt).
 | contrast | 0 | 0 |
 | icon-contrast | 0 | 0 |
 | clipped | 0 | 0 |
-
-Views never audited:
-- TabStudio.App.Views.EmbeddedPeripheralsView
-- TabStudio.App.Views.Extensions.ExtensionDetailsView
-- TabStudio.App.Views.Extensions.ExtensionsView
-- TabStudio.App.Views.Extensions.QuickPickView
-- TabStudio.App.Views.Live.LiveJoinView
-- TabStudio.App.Views.LongOperations.OperationsPanel
-- TabStudio.App.Views.Notebooks.NotebookCellView
-- TabStudio.App.Views.Notebooks.NotebookView
-- TabStudio.App.Views.PortSummaryView
-- TabStudio.App.Views.ReferencesView
-- TabStudio.App.Views.RemoteExplorerView
-- TabStudio.App.Views.Search.UnifiedSearchView
-- TabStudio.App.Views.SignatureHelpView
-- TabStudio.App.Views.Toolchains.SerialMonitorView
-- TabStudio.App.Views.Toolchains.TerminalPanelView
-- TabStudio.App.Views.WatchView
 
 ## /home/runner/work/tabstudio/tabstudio/ci-out/screenshots/light
 
-Views audited: 77 of 78 (0 exempt).
+Views audited: 78 of 78 (0 exempt).
 
 | Rule | Findings | Distinct controls |
 | --- | --- | --- |
@@ -41,7 +23,4 @@ Views audited: 77 of 78 (0 exempt).
 | contrast | 0 | 0 |
 | icon-contrast | 0 | 0 |
 | clipped | 0 | 0 |
-
-Views never audited:
-- TabStudio.App.Views.Toolchains.SerialMonitorView
 
