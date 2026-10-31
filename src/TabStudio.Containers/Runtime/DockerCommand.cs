@@ -160,7 +160,8 @@ public sealed class DockerCommand(ContainerEngine engine, Func<string, ServiceMa
                     var action = Take();
                     if (args.Any(a => a is not ("-d" or "--detach"))) throw new ContainerException("Supported compose commands: up [-d], down (from the repository directory).");
                     var manager = compose(directory);
-                    void OnLog(object? sender, ServiceLogLine line) => _ = Print($"{line.Service}: {line.Text}");
+                    var pending = new System.Collections.Concurrent.ConcurrentQueue<Task>();
+                    void OnLog(object? sender, ServiceLogLine line) => pending.Enqueue(Print($"{line.Service}: {line.Text}"));
                     manager.Logged += OnLog;
                     try
                     {
@@ -169,7 +170,11 @@ public sealed class DockerCommand(ContainerEngine engine, Func<string, ServiceMa
                         else throw new ContainerException("Supported compose commands: up and down.");
                         foreach (var s in manager.Statuses) await Print($"{s.Name}: {s.State} {s.Detail}").ConfigureAwait(false);
                     }
-                    finally { manager.Logged -= OnLog; }
+                    finally
+                    {
+                        manager.Logged -= OnLog;
+                        await Task.WhenAll(pending).ConfigureAwait(false);
+                    }
                     return 0;
                 }
                 default: throw new ContainerException($"docker {arguments[0]} is not available in this version; use docker --help.");

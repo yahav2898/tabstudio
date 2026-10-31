@@ -35,7 +35,7 @@ public sealed class ContainerRepositoryTests
             var baseline = await CommandRunner.RunAsync(new HostRuntime(), new()
             {
                 Program = "node", WorkingDirectory = folder,
-                Arguments = ["-e", "const {PrismaClient}=require('@prisma/client');const p=new PrismaClient();p.tag.findMany().then(()=>process.exit(0)).catch(e=>{console.error(e.code);process.exit(1)})"],
+                Arguments = ["-e", "const {PrismaClient}=require('@prisma/client');const p=new PrismaClient();p.tag.findMany().then(()=>process.exit(0)).catch(e=>{console.error(JSON.stringify({name:e.name,code:e.code,errorCode:e.errorCode,message:e.message}));process.exit(1)})"],
                 Environment = new Dictionary<string, string?> { ["DATABASE_URL"] = "postgresql://tablet:development@127.0.0.1:1/realworld?connect_timeout=2" },
             }, null, CancellationToken.None);
             Assert.False(baseline.Succeeded);

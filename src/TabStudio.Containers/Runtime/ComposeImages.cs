@@ -57,7 +57,12 @@ public sealed class ComposeImages(ContainerEngine engine, IProgress<PullProgress
         {
             var spec = ToSpec(project, service, ports);
             container = engine.Find(spec.Name!);
-            if (container is not null && JsonSerializer.Serialize(container.Spec) != JsonSerializer.Serialize(spec))
+            if (container is not null && JsonSerializer.Serialize(container.Spec with { Ports = spec.Ports }) == JsonSerializer.Serialize(spec))
+            {
+                // Automatic device ports may change between starts; that must not discard the writable root.
+                container = await engine.RebindStoppedPortsAsync(container.Id, spec.Ports, cancellationToken).ConfigureAwait(false);
+            }
+            else if (container is not null && JsonSerializer.Serialize(container.Spec) != JsonSerializer.Serialize(spec))
             {
                 await engine.RemoveAsync(container.Id, force: true, cancellationToken).ConfigureAwait(false);
                 container = null;
@@ -125,7 +130,8 @@ public sealed class ComposeImages(ContainerEngine engine, IProgress<PullProgress
         private void OnChanged(object? sender, EngineEvent e)
         {
             if (e.Id != _id || _engine.Find(_id) is not { } info) return;
-            var state = !info.IsRunning ? ServiceState.Failed : info.Health == HealthStatus.Unhealthy ? ServiceState.Unhealthy : ServiceState.Running;
+            var state = !info.IsRunning ? info.StoppedByUser ? ServiceState.Stopped : info.ExitCode == 0 ? ServiceState.Completed : ServiceState.Failed
+                : info.Health == HealthStatus.Unhealthy ? ServiceState.Unhealthy : ServiceState.Running;
             _changed(state, info.Error ?? (info.IsRunning ? "OCI image under PRoot" : $"Image exited with code {info.ExitCode}"));
         }
         public void Detach() { _engine.Log(_id).Written -= OnLog; _engine.Changed -= OnChanged; }

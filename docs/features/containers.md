@@ -107,12 +107,14 @@ terminal shim. The headless IDE tests capture the Containers window and a real r
 
 | Measurement | Environment | Observed result |
 | --- | --- | --- |
-| Cold pull, unpack, initialize and start all three images | Ubuntu ARM64 CI, commit `1941e956` | 10.408 s |
-| PostgreSQL/Redis/nginx image tests, including restart/query | Same ARM64 run | Passed; job still reported a test-style analyzer error fixed afterward |
-| Unpacked image sizes | Same ARM64 run | PostgreSQL 291,097,276 B; Redis 39,678,355 B; nginx 62,687,539 B |
-| x64 and Android release-candidate measurements | Required CI jobs | Pending final verification; no physical-tablet timings claimed |
+| Cold pull, unpack, initialize and start all three images | Ubuntu ARM64 CI, commit `97325408` | 8.969 s |
+| Same three-image startup | Ubuntu x64 CI, same commit | 11.024 s |
+| Registry/layer/Compose and real image suite | Same ARM64 and x64 runs | 27/27 passed on each architecture, including shell bridge and same-guest-port Redis peers |
+| Unpacked image sizes | ARM64 run | PostgreSQL 291,097,276 B; Redis 39,678,355 B; nginx 62,687,539 B |
+| Physical Android tablets | No attached physical device | Not measured; CI emulator results are tracked separately |
 
-The ARM64 observation is from [run 41147429335](https://github.com/yahav2898/tabstudio/actions/runs/41147429335).
+The observations are from [run 41148448512](https://github.com/yahav2898/tabstudio/actions/runs/41148448512).
+These numbers concern the OCI suite; the IDE/emulator/repository checks are separate release gates.
 Its artifact records the exact platform manifest digests. These timings include first image initialization and
 depend on network/cache state; they are not a native-vs-PRoot performance comparison.
 

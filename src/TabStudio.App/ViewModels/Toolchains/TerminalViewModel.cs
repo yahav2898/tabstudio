@@ -455,7 +455,7 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
             var spec = _toolchains.Runtime.Shell(Directory.Exists(folder) ? folder : Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), _size);
             _process = _toolchains.Runtime.Start(spec);
         }
-        catch (ToolchainRuntimeException ex)
+        catch (Exception ex) when (ex is ToolchainRuntimeException or IOException or UnauthorizedAccessException or System.Net.Sockets.SocketException)
         {
             Message = ex.Message;
             return;
@@ -481,7 +481,7 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
             _ = ReadAsync(process);
             _ = WatchAsync(process);
         }
-        catch (Exception ex) when (ex is ToolchainRuntimeException or IOException or OperationCanceledException) { Message = ex.Message; }
+        catch (Exception ex) when (ex is ToolchainRuntimeException or IOException or OperationCanceledException or TabStudio.Containers.Runtime.ContainerException) { Message = ex.Message; }
         finally { _startingRemote = false; }
     }
 

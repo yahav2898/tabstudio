@@ -42,6 +42,9 @@ public sealed class ContainersTests
         Directory.CreateDirectory(workspace.Containers.Engine.Store.RootfsOf(image.Id));
         await workspace.Containers.Engine.Store.RecordAsync(image);
         await workspace.Containers.RefreshAsync();
+        workspace.Containers.ImageName = "redis:7-alpine";
+        await workspace.Containers.RefreshAsync();
+        Assert.Equal("redis:7-alpine", workspace.Containers.ImageName);
         workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.Containers);
         Assert.True(workspace.IsContainersSelected);
         Assert.Contains(workspace.Activity.Items, i => i.Title == "Containers");

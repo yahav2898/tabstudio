@@ -4,6 +4,11 @@
              xmlns:terminal="using:TabStudio.App.Views.Toolchains"
              x:Class="TabStudio.App.Views.ContainersView" x:DataType="vm:ContainersViewModel"
              Background="{DynamicResource Brush.Panel}">
+  <UserControl.Styles>
+    <Style Selector="Button">
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+  </UserControl.Styles>
   <DockPanel>
     <controls:PanelHeader DockPanel.Dock="Top" Title="Containers" Subtitle="OCI images · no root">
       <controls:PanelHeader.Actions>

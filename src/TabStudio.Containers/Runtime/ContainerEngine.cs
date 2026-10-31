@@ -140,6 +140,20 @@ public sealed class ContainerEngine : IAsyncDisposable
     /// <summary>A container's log.</summary>
     public ContainerLog Log(string idOrName) => Get(idOrName).Log;
 
+    internal async Task<ContainerInfo> RebindStoppedPortsAsync(string id, IReadOnlyList<PortBinding> ports, CancellationToken cancellationToken)
+    {
+        var instance = Get(id);
+        await instance.Gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            if (instance.Info.IsRunning) return instance.Info;
+            instance.Info = instance.Info with { Spec = instance.Info.Spec with { Ports = ports } };
+            Save(instance.Info);
+            return instance.Info;
+        }
+        finally { instance.Gate.Release(); }
+    }
+
     /// <summary>Creates a container: its writable copy of the image and its record. Nothing runs yet.</summary>
     public async Task<ContainerInfo> CreateAsync(ContainerSpec spec, IProgress<PullProgress>? progress = null, CancellationToken cancellationToken = default)
     {

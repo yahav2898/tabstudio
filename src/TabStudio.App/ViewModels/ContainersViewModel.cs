@@ -30,6 +30,7 @@ public sealed partial class ContainersViewModel : ObservableObject, IAsyncDispos
     private ContainerLog? _selectedLog;
     private CancellationTokenSource? _operation;
     private bool _disposed;
+    private bool _refreshingItems;
 
     public ContainersViewModel(ToolchainServices toolchains, AppPaths paths, IUiDispatcher ui,
         OperationsViewModel operations, Action<Uri> preview)
@@ -92,10 +93,15 @@ public sealed partial class ContainersViewModel : ObservableObject, IAsyncDispos
         var images = await Engine.Store.ListAsync();
         if (_disposed) return;
         var imageId = SelectedImage?.Id; var id = SelectedItem?.Id;
-        Images.Clear(); foreach (var image in images) Images.Add(image);
-        Items.Clear(); foreach (var item in Engine.Containers) Items.Add(item);
-        SelectedImage = Images.FirstOrDefault(i => i.Id == imageId) ?? Images.FirstOrDefault();
-        SelectedItem = Items.FirstOrDefault(i => i.Id == id) ?? Items.FirstOrDefault();
+        _refreshingItems = true;
+        try
+        {
+            Images.Clear(); foreach (var image in images) Images.Add(image);
+            Items.Clear(); foreach (var item in Engine.Containers) Items.Add(item);
+            SelectedImage = Images.FirstOrDefault(i => i.Id == imageId) ?? Images.FirstOrDefault();
+            SelectedItem = Items.FirstOrDefault(i => i.Id == id) ?? Items.FirstOrDefault();
+        }
+        finally { _refreshingItems = false; }
     }
 
     [RelayCommand] private Task PullAsync() => PerformAsync(async token => { await Engine.PullAsync(ImageName.Trim(), progress: _progress, cancellationToken: token); });
@@ -150,7 +156,7 @@ public sealed partial class ContainersViewModel : ObservableObject, IAsyncDispos
         Terminal.RequestFocus();
     }
 
-    partial void OnSelectedImageChanged(StoredImage? value) { if (value is not null) ImageName = value.DisplayName; }
+    partial void OnSelectedImageChanged(StoredImage? value) { if (!_refreshingItems && value is not null) ImageName = value.DisplayName; }
     partial void OnSelectedItemChanged(ContainerInfo? value)
     {
         if (_selectedLog is not null) _selectedLog.Written -= OnLog;

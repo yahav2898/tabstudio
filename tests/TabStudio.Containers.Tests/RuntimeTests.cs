@@ -106,6 +106,12 @@ public sealed class RuntimeTests(ITestOutputHelper output)
         await engine.RestartAsync(db.Id);
         var check = await engine.ExecCaptureAsync(db.Id, ["sh", "-c", "until pg_isready -U tablet >/dev/null; do sleep 1; done; psql -U tablet -d tablet -Atqc 'SELECT value FROM proof'"], TimeSpan.FromSeconds(45));
         Assert.Equal(0, check.ExitCode); Assert.Contains("oci-postgres", check.Output, StringComparison.Ordinal);
+        var marker = await engine.ExecCaptureAsync(db.Id, ["sh", "-c", "echo writable-root > /var/tmp/restart-proof"], TimeSpan.FromSeconds(10));
+        Assert.Equal(0, marker.ExitCode);
+        await manager.RestartAsync("db");
+        Assert.NotNull(engine.Find(db.Id));
+        var kept = await engine.ExecCaptureAsync(db.Id, ["cat", "/var/tmp/restart-proof"], TimeSpan.FromSeconds(10));
+        Assert.Equal(0, kept.ExitCode); Assert.Contains("writable-root", kept.Output, StringComparison.Ordinal);
         foreach (var image in await engine.Store.ListAsync()) output.WriteLine($"VERIFIED_IMAGE={image.DisplayName}@{image.ManifestDigest} BYTES={image.Size.ToString(CultureInfo.InvariantCulture)}");
         await manager.StopAsync();
         Assert.DoesNotContain(engine.Containers, c => c.IsRunning);
