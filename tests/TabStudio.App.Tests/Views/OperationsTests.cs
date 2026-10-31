@@ -121,6 +121,10 @@ public sealed class OperationsTests
         build.Complete();
         Assert.True(notifications.IsKeptRunning);
         sdk.Complete();
+
+        // Kept a little longer, so an operation that follows reuses the running service rather than starting it again.
+        Assert.True(notifications.IsKeptRunning);
+        clock.Advance(OperationsViewModel.ReleaseDelay);
         Assert.False(notifications.IsKeptRunning);
         Assert.Contains(notifications.Shown, n => n.Title == "Installing Pico SDK finished" && !n.IsProgress);
         analysis.Complete();
@@ -186,7 +190,7 @@ public sealed class OperationsTests
         // An idle IDE woke the UI thread every two seconds to refresh an empty list.
         var clock = new TimerClock();
         using var operations = new OperationsViewModel(new Immediate(), time: clock);
-        var timer = Assert.Single(clock.Timers);
+        var timer = clock.Timers[0];
         Assert.Equal(Timeout.InfiniteTimeSpan, timer.Due);
 
         var restore = operations.Begin("restore", "Restoring packages");
@@ -240,12 +244,58 @@ public sealed class OperationsTests
 
     private sealed class ManualClock : TimeProvider
     {
+        private readonly List<ManualTimer> _timers = [];
         private long _ticks;
 
         public override long TimestampFrequency => TimeSpan.TicksPerSecond;
 
         public override long GetTimestamp() => _ticks;
 
-        public void Advance(TimeSpan time) => _ticks += time.Ticks;
+        public override ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period)
+        {
+            var timer = new ManualTimer(this, () => callback(state));
+            timer.Change(dueTime, period);
+            _timers.Add(timer);
+            return timer;
+        }
+
+        public void Advance(TimeSpan time)
+        {
+            _ticks += time.Ticks;
+            foreach (var timer in _timers.ToList())
+            {
+                timer.FireIfDue(_ticks);
+            }
+        }
+
+        private sealed class ManualTimer(ManualClock clock, Action callback) : ITimer
+        {
+            private long? _dueAt;
+            private TimeSpan _period = Timeout.InfiniteTimeSpan;
+
+            public bool Change(TimeSpan dueTime, TimeSpan period)
+            {
+                _dueAt = dueTime == Timeout.InfiniteTimeSpan ? null : clock._ticks + dueTime.Ticks;
+                _period = period;
+                return true;
+            }
+
+            public void FireIfDue(long now)
+            {
+                if (_dueAt is { } due && due <= now)
+                {
+                    _dueAt = _period == Timeout.InfiniteTimeSpan ? null : now + _period.Ticks;
+                    callback();
+                }
+            }
+
+            public void Dispose() => _dueAt = null;
+
+            public ValueTask DisposeAsync()
+            {
+                Dispose();
+                return ValueTask.CompletedTask;
+            }
+        }
     }
 }
