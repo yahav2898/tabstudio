@@ -1,0 +1,1094 @@
+{
+ "comment": "Mega sweep for 0.20.5 (trial/mega-* branches only). Each entry is cloned at 'sha' and 'open' is opened in TabStudio as a person would. 'expect': build, console-exit-0, web-first-route, gui-window or explained. 'tests': the Test Explorer runs every test after the build. Every runnable entry is also debugged: a breakpoint on the entry point's first statement, F5, and the call stack and locals where it stops. Embedded entries run in the embedded job.",
+ "repositories": [
+  {
+   "name": "ContosoCrafts",
+   "area": "dotnet-web",
+   "url": "https://github.com/dotnet-presentations/ContosoCrafts",
+   "sha": "323514467b39c833d24d7c6c7a4adfd6ea8a04d7",
+   "open": "ContosoCrafts.WebSite.sln",
+   "expect": "web-first-route",
+   "note": "Razor Pages tutorial"
+  },
+  {
+   "name": "LocalStorage",
+   "area": "dotnet-web",
+   "url": "https://github.com/Blazored/LocalStorage",
+   "sha": "e1139f9538752094f60ba29d4a4fa184a56c1fb2",
+   "open": "Blazored.LocalStorage.sln",
+   "expect": "web-first-route",
+   "tests": true,
+   "note": "Blazor library with samples and bUnit tests"
+  },
+  {
+   "name": "graphql-workshop",
+   "area": "dotnet-web",
+   "url": "https://github.com/ChilliCream/graphql-workshop",
+   "sha": "e50a7b03794bb64bea7bcff84f1a299bc3cd5ca5",
+   "open": "code/session-7/ConferencePlanner.sln",
+   "expect": "web-first-route",
+   "tests": true,
+   "note": "Hot Chocolate workshop, last session",
+   "route": "/graphql"
+  },
+  {
+   "name": "aspire-samples-Metrics",
+   "area": "dotnet-web",
+   "url": "https://github.com/dotnet/aspire-samples",
+   "sha": "bdc638b61bf8afd8b275d54a9ea7259be377ef8c",
+   "open": "samples/Metrics/Metrics.slnx",
+   "expect": "web-first-route",
+   "note": "Aspire AppHost and a Blazor app"
+  },
+  {
+   "name": "eShop",
+   "area": "dotnet-web",
+   "url": "https://github.com/dotnet/eShop",
+   "sha": "913acea66708a59595351174cee9b29f37179d29",
+   "open": "eShop.slnx",
+   "expect": "web-first-route",
+   "note": "F5 must start WebApp (PR #35 regression)"
+  },
+  {
+   "name": "samples.xunit-v3",
+   "area": "dotnet-web",
+   "url": "https://github.com/xunit/samples.xunit",
+   "sha": "2bcd24a8643f4d1b9c6b1026177d2b964229c479",
+   "open": "v3/Samples.v3.slnx",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "nunit-csharp-samples",
+   "area": "dotnet-web",
+   "url": "https://github.com/nunit/nunit-csharp-samples",
+   "sha": "2058fb69939911d647b817e0d7a871ba9e4d34a6",
+   "open": "Samples.slnx",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "SmartEnum",
+   "area": "dotnet-web",
+   "url": "https://github.com/ardalis/SmartEnum",
+   "sha": "e06da550950b347f0ee47b1ec370a7416e79b030",
+   "open": "SmartEnum.sln",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "Respawn",
+   "area": "dotnet-web",
+   "url": "https://github.com/jbogard/Respawn",
+   "sha": "f550203c2caaded99ede64d85ff07acc6bb7514d",
+   "open": "Respawn.sln",
+   "expect": "build",
+   "tests": true,
+   "note": "database tests need SQL Server/PostgreSQL"
+  },
+  {
+   "name": "Newtonsoft.Json",
+   "area": "dotnet-lib",
+   "url": "https://github.com/JamesNK/Newtonsoft.Json",
+   "sha": "52fa3aef1f2cadcd3a3f874251eddc98d3efbbaa",
+   "open": "Src/Newtonsoft.Json.slnx",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "command-line-api",
+   "area": "dotnet-lib",
+   "url": "https://github.com/dotnet/command-line-api",
+   "sha": "eef106df3e5e74fae30236e1449cc3f4e955207a",
+   "open": "System.CommandLine.slnx",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "fluentassertions",
+   "area": "dotnet-lib",
+   "url": "https://github.com/fluentassertions/fluentassertions",
+   "sha": "a5bd378d5618380a5e12734560b0f64626765e17",
+   "open": "FluentAssertions.slnx",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "commandline",
+   "area": "dotnet-lib",
+   "url": "https://github.com/commandlineparser/commandline",
+   "sha": "1e3607b97af6141743edb3c434c06d5b492f6fb3",
+   "open": "CommandLine.sln",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "commandline-ReadText-VB",
+   "area": "dotnet-lib",
+   "url": "https://github.com/commandlineparser/commandline",
+   "sha": "1e3607b97af6141743edb3c434c06d5b492f6fb3",
+   "open": "demo/ReadText.Demo.VB/ReadText.Demo.VB.sln",
+   "expect": "console-exit-0",
+   "note": "Visual Basic console demo"
+  },
+  {
+   "name": "SukiUI",
+   "area": "dotnet-desktop",
+   "url": "https://github.com/kikipoulet/SukiUI",
+   "sha": "a7ce56d527eda5e796daa823f324cec86a7b523b",
+   "open": "Suki.sln",
+   "expect": "gui-window",
+   "tests": true,
+   "note": "Avalonia UI library and demo"
+  },
+  {
+   "name": "WPF-ExpenseIt-cs",
+   "area": "dotnet-desktop",
+   "url": "https://github.com/microsoft/WPF-Samples",
+   "sha": "811d01e95c8c929e68539d698d0a0609e94fd185",
+   "open": "Getting Started/WalkthroughFirstWPFApp/csharp/ExpenseItIntro.sln",
+   "expect": "gui-window"
+  },
+  {
+   "name": "WPF-ExpenseIt-vb",
+   "area": "dotnet-desktop",
+   "url": "https://github.com/microsoft/WPF-Samples",
+   "sha": "811d01e95c8c929e68539d698d0a0609e94fd185",
+   "open": "Getting Started/WalkthroughFirstWPFApp/vb/ExpenseItIntro2.sln",
+   "expect": "gui-window",
+   "note": "Visual Basic WPF"
+  },
+  {
+   "name": "dotnet-maui-workshop",
+   "area": "dotnet-desktop",
+   "url": "https://github.com/dotnet-presentations/dotnet-maui-workshop",
+   "sha": "4ee39d54476c83f7aa08bfba19c40058ff21119c",
+   "open": "Finish/MonkeyFinder.sln",
+   "expect": "explained",
+   "note": ".NET MAUI"
+  },
+  {
+   "name": "Solitaire",
+   "area": "dotnet-desktop",
+   "url": "https://github.com/DualBrain/Solitaire",
+   "sha": "b61b42b86fc14c54cf2c8639a765234952579b5f",
+   "open": "Solitaire.sln",
+   "expect": "gui-window",
+   "note": "Visual Basic Windows Forms, .NET 8"
+  },
+  {
+   "name": "Community.VisualBasic",
+   "area": "dotnet-desktop",
+   "url": "https://github.com/DualBrain/Community.VisualBasic",
+   "sha": "20d2a51dfc9f342848ad134952ceaa8d79302559",
+   "open": "Community.VisualBasic.sln",
+   "expect": "build",
+   "tests": true,
+   "note": "Visual Basic library and tests"
+  },
+  {
+   "name": "Dots",
+   "area": "dotnet-desktop",
+   "url": "https://github.com/VBDev2Dev/Dots",
+   "sha": "0e7c65aeb0081b791f3c30a351894f9874b5128c",
+   "open": "Dots.sln",
+   "expect": "gui-window",
+   "tests": true,
+   "note": "Visual Basic Windows Forms, .NET Framework"
+  },
+  {
+   "name": "LINQIntro",
+   "area": "dotnet-desktop",
+   "url": "https://github.com/VBDev2Dev/LINQIntro",
+   "sha": "810f1c35c99a975bad70ed7797a3f93df4167e80",
+   "open": "Linq Intro.sln",
+   "expect": "console-exit-0",
+   "note": "Visual Basic console, .NET Framework"
+  },
+  {
+   "name": "CSVFiles",
+   "area": "dotnet-desktop",
+   "url": "https://github.com/VBDev2Dev/CSVFiles",
+   "sha": "f3c794a93f0a7857a46a412ec0a452ab59ae5dac",
+   "open": "CSV Files.sln",
+   "expect": "gui-window",
+   "note": "Visual Basic Windows Forms, .NET Framework"
+  },
+  {
+   "name": "CSharpToVB",
+   "area": "dotnet-desktop",
+   "url": "https://github.com/paul1956/CSharpToVB",
+   "sha": "5f3b2f0430c4ec9d350ac83900ee98aad66265ed",
+   "open": "CSharpToVB.sln",
+   "expect": "gui-window",
+   "tests": true,
+   "note": "Visual Basic Windows Forms app with Roslyn"
+  },
+  {
+   "name": "click",
+   "area": "python",
+   "url": "https://github.com/pallets/click",
+   "sha": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "requests",
+   "area": "python",
+   "url": "https://github.com/psf/requests",
+   "sha": "3c7baaa05ab4aa49cc819ce3a819d260de19c157",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "httpx",
+   "area": "python",
+   "url": "https://github.com/encode/httpx",
+   "sha": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "rich",
+   "area": "python",
+   "url": "https://github.com/Textualize/rich",
+   "sha": "9d8f9a372cc5916fd4781fec207ced7ddac2f08f",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "typer",
+   "area": "python",
+   "url": "https://github.com/fastapi/typer",
+   "sha": "a5882dedf0bc7a46cd861fdfca020f88519e0f21",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "httpie",
+   "area": "python",
+   "url": "https://github.com/httpie/cli",
+   "sha": "5b604c37c6c67e18e7c3e9aee6c88a8c22b98345",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "flasky",
+   "area": "python",
+   "url": "https://github.com/miguelgrinberg/flasky",
+   "sha": "3beedd640b9146b0bd65c8c2ecf402b01798bc33",
+   "open": ".",
+   "expect": "web-first-route",
+   "note": "Flasky, the Flask book app",
+   "route": "/auth/login"
+  },
+  {
+   "name": "bakerydemo",
+   "area": "python",
+   "url": "https://github.com/wagtail/bakerydemo",
+   "sha": "c9b38d7a7170dba8bb84254beb7e5dc5a955e024",
+   "open": ".",
+   "expect": "web-first-route",
+   "note": "Wagtail (Django) demo site"
+  },
+  {
+   "name": "full-stack-fastapi-template",
+   "area": "python",
+   "url": "https://github.com/fastapi/full-stack-fastapi-template",
+   "sha": "f4bcfaba7c85be3c6332cc74a20819f586dcdbc6",
+   "open": "backend",
+   "expect": "web-first-route",
+   "tests": true,
+   "route": "/docs",
+   "files": {
+    "../.env": "PROJECT_NAME=Full Stack FastAPI Project\nSECRET_KEY=changethis\nFIRST_SUPERUSER=admin@example.com\nFIRST_SUPERUSER_PASSWORD=changethis\nPOSTGRES_SERVER=localhost\nPOSTGRES_PORT=5432\nPOSTGRES_USER=postgres\nPOSTGRES_PASSWORD=tabstudio-ci\nPOSTGRES_DB=realworld\nENVIRONMENT=local\nFRONTEND_HOST=http://localhost:5173\n"
+   }
+  },
+  {
+   "name": "tqdm",
+   "area": "python",
+   "url": "https://github.com/tqdm/tqdm",
+   "sha": "9cf5a12b1f955468a17f0ba3c59092b23e4258ac",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "attrs",
+   "area": "python",
+   "url": "https://github.com/python-attrs/attrs",
+   "sha": "c8bb9bfaa2843e7844b5bb13bed4370b51feec4f",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "marshmallow",
+   "area": "python",
+   "url": "https://github.com/marshmallow-code/marshmallow",
+   "sha": "b762ea2d59ca52fe5df76b90de14bed7e5ec5607",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "angular-realworld-example-app",
+   "area": "node-apps",
+   "url": "https://github.com/gothinkster/angular-realworld-example-app",
+   "sha": "dd99ed2cf39c805d719f943c5d7061a5683d98a8",
+   "open": ".",
+   "expect": "web-first-route"
+  },
+  {
+   "name": "react-redux-realworld-example-app",
+   "area": "node-apps",
+   "url": "https://github.com/gothinkster/react-redux-realworld-example-app",
+   "sha": "ee72eba4056392c95a27bc48d385d3f54ba38a18",
+   "open": ".",
+   "expect": "web-first-route"
+  },
+  {
+   "name": "typescript-starter",
+   "area": "node-apps",
+   "url": "https://github.com/nestjs/typescript-starter",
+   "sha": "da4aab8ea68d69b1974391958cf0f7ffd104be22",
+   "open": ".",
+   "expect": "web-first-route",
+   "tests": true
+  },
+  {
+   "name": "svelte-template",
+   "area": "node-apps",
+   "url": "https://github.com/sveltejs/template",
+   "sha": "5b3da65ea310f98480c5258af97ff4d5c6f9d5b0",
+   "open": ".",
+   "expect": "web-first-route"
+  },
+  {
+   "name": "nuxt-starter-v3",
+   "area": "node-apps",
+   "url": "https://github.com/nuxt/starter",
+   "sha": "d2c4bdf636dbea1beaada559252a9e9693ad446f",
+   "open": ".",
+   "expect": "web-first-route",
+   "note": "branch v3"
+  },
+  {
+   "name": "react-router-default",
+   "area": "node-apps",
+   "url": "https://github.com/remix-run/react-router-templates",
+   "sha": "067adb378a00a4c2ceb71934d5e8901d0e87c256",
+   "open": "default",
+   "expect": "web-first-route"
+  },
+  {
+   "name": "electron-quick-start",
+   "area": "node-apps",
+   "url": "https://github.com/electron/electron-quick-start",
+   "sha": "91a1d64abdeb31e7506d19434c46a3a541ffd3cb",
+   "open": ".",
+   "expect": "explained"
+  },
+  {
+   "name": "axios",
+   "area": "node-libs",
+   "url": "https://github.com/axios/axios",
+   "sha": "9d11464a75ee5c644c0308d742f58755c0482594",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "chalk",
+   "area": "node-libs",
+   "url": "https://github.com/chalk/chalk",
+   "sha": "72110019e147683f60e13fa0ff5c14a0c27cd9fe",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "ky",
+   "area": "node-libs",
+   "url": "https://github.com/sindresorhus/ky",
+   "sha": "3541888878c4d303a8bc2ad61815f4e048f55a5d",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "express",
+   "area": "node-libs",
+   "url": "https://github.com/expressjs/express",
+   "sha": "1c6f1b0fe4000977b9a7b4f34097e4d527dd9824",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "chi-rest",
+   "area": "node-libs",
+   "url": "https://github.com/go-chi/chi",
+   "sha": "9f8adb1aabaa8a91180a821111d3f8e668d1c0bf",
+   "open": "_examples/rest",
+   "expect": "web-first-route",
+   "note": "Go"
+  },
+  {
+   "name": "golang-example-hello",
+   "area": "node-libs",
+   "url": "https://github.com/golang/example",
+   "sha": "7f05d217867b2af52b0a28c6d1c91df97e1b5b39",
+   "open": "hello",
+   "expect": "console-exit-0",
+   "note": "Go"
+  },
+  {
+   "name": "cobra",
+   "area": "go",
+   "url": "https://github.com/spf13/cobra",
+   "sha": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "urfave-cli",
+   "area": "go",
+   "url": "https://github.com/urfave/cli",
+   "sha": "293b0229b99c460fa66283418569773681df010d",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "fzf",
+   "area": "go",
+   "url": "https://github.com/junegunn/fzf",
+   "sha": "26ff936df038b6a62ec42cf18db27b2ea2bb8ec3",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "echo",
+   "area": "go",
+   "url": "https://github.com/labstack/echo",
+   "sha": "7af8fac5354e53294c8d14fdd7dd4006dbaffd52",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "lazygit",
+   "area": "go",
+   "url": "https://github.com/jesseduffield/lazygit",
+   "sha": "4e1eebe278790f257a875da6633234391a5a85b3",
+   "open": ".",
+   "expect": "build"
+  },
+  {
+   "name": "mux",
+   "area": "go",
+   "url": "https://github.com/gorilla/mux",
+   "sha": "db9d1d0073d27a0a2d9a8c1bc52aa0af4374d265",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "gin-examples",
+   "area": "go",
+   "url": "https://github.com/gin-gonic/examples",
+   "sha": "439005e6e50c4abc65b0fd0a57aa88ce828cc9ee",
+   "open": ".",
+   "expect": "web-first-route"
+  },
+  {
+   "name": "gh-cli",
+   "area": "go",
+   "url": "https://github.com/cli/cli",
+   "sha": "9490d204a2ba95434153dedce99898ce9f281426",
+   "open": ".",
+   "expect": "console-exit-0",
+   "tests": true
+  },
+  {
+   "name": "bat",
+   "area": "rust",
+   "url": "https://github.com/sharkdp/bat",
+   "sha": "8f5727ea3869a71c65c0f4f4a42ed18bdb26ae7b",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "hyperfine",
+   "area": "rust",
+   "url": "https://github.com/sharkdp/hyperfine",
+   "sha": "c5161524980522320c7d3425e714cc0965a869a5",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "anyhow",
+   "area": "rust",
+   "url": "https://github.com/dtolnay/anyhow",
+   "sha": "bb1b0f9af0f645d5fdf1ac63a1fcbf3975ee452c",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "serde-json",
+   "area": "rust",
+   "url": "https://github.com/serde-rs/json",
+   "sha": "8c535a260ce561eaab4111aafc29038eb9f77ff3",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "mini-redis",
+   "area": "rust",
+   "url": "https://github.com/tokio-rs/mini-redis",
+   "sha": "3d93b42bc363220f85af4fc9e1bebd35b588a4a3",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "rustlings",
+   "area": "rust",
+   "url": "https://github.com/rust-lang/rustlings",
+   "sha": "f7b9b3c5882a1a43275130b95142d94f847526f5",
+   "open": ".",
+   "expect": "build"
+  },
+  {
+   "name": "eframe_template",
+   "area": "rust",
+   "url": "https://github.com/emilk/eframe_template",
+   "sha": "f108546a2b9f2fc6a82543ceae1625a3893305cb",
+   "open": ".",
+   "expect": "gui-window"
+  },
+  {
+   "name": "realworld-axum-sqlx",
+   "area": "rust",
+   "url": "https://github.com/launchbadge/realworld-axum-sqlx",
+   "sha": "f1b25654773228297e35c292f357d33b7121a101",
+   "open": ".",
+   "expect": "web-first-route",
+   "route": "/api/articles",
+   "dotenv": {
+    "DATABASE_URL": "postgresql://postgres:tabstudio-ci@localhost:5432/realworld",
+    "HMAC_KEY": "tabstudio-ci-hmac-key"
+   }
+  },
+  {
+   "name": "eza",
+   "area": "rust",
+   "url": "https://github.com/eza-community/eza",
+   "sha": "471bfbc7b03cbac8c738e8d9050edb06ee79132a",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "clap",
+   "area": "rust",
+   "url": "https://github.com/clap-rs/clap",
+   "sha": "ccc89b83875474399e9d9d70841163f6319d1a41",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "fmt",
+   "area": "c-cpp",
+   "url": "https://github.com/fmtlib/fmt",
+   "sha": "8362a1be157fd6885f79d7e8c4fa7479d886e592",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "spdlog",
+   "area": "c-cpp",
+   "url": "https://github.com/gabime/spdlog",
+   "sha": "6d9805df3f588402b17073dcd13eb569ceda864d",
+   "open": ".",
+   "expect": "build"
+  },
+  {
+   "name": "googletest",
+   "area": "c-cpp",
+   "url": "https://github.com/google/googletest",
+   "sha": "a8380b01a25ebdb130097b607b3afed2a58d04ba",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "zlib",
+   "area": "c-cpp",
+   "url": "https://github.com/madler/zlib",
+   "sha": "71747d1d39168833e0cae8ed84b8ce77cb049699",
+   "open": ".",
+   "expect": "console-exit-0",
+   "tests": true
+  },
+  {
+   "name": "tinyxml2",
+   "area": "c-cpp",
+   "url": "https://github.com/leethomason/tinyxml2",
+   "sha": "8224e427b655b83dae5e2298f1e6919523a78737",
+   "open": ".",
+   "expect": "console-exit-0"
+  },
+  {
+   "name": "lua",
+   "area": "c-cpp",
+   "url": "https://github.com/lua/lua",
+   "sha": "8cb93bada561977eb370819e39d7d644e5fd0a3f",
+   "open": ".",
+   "expect": "build"
+  },
+  {
+   "name": "redis",
+   "area": "c-cpp",
+   "url": "https://github.com/redis/redis",
+   "sha": "6a5fee67583480de1fec323649f43fd000001b49",
+   "open": ".",
+   "expect": "build"
+  },
+  {
+   "name": "jq",
+   "area": "c-cpp",
+   "url": "https://github.com/jqlang/jq",
+   "sha": "ac35c7dcbb991fa0f3c3196dd00ca479211e9847",
+   "open": ".",
+   "expect": "build"
+  },
+  {
+   "name": "raylib",
+   "area": "c-cpp",
+   "url": "https://github.com/raysan5/raylib",
+   "sha": "8413b0681075b201e3a55680b5d7aa2a648dc3b7",
+   "open": ".",
+   "expect": "build"
+  },
+  {
+   "name": "imgui",
+   "area": "c-cpp",
+   "url": "https://github.com/ocornut/imgui",
+   "sha": "391f714c3736206b896b63d6d5dfbc6a5e7ed4aa",
+   "open": ".",
+   "expect": "explained"
+  },
+  {
+   "name": "gs-spring-boot",
+   "area": "java",
+   "url": "https://github.com/spring-guides/gs-spring-boot",
+   "sha": "cc0ca7c0c89513c75902de8a9afd1fc2718acf3b",
+   "open": "complete",
+   "expect": "web-first-route",
+   "tests": true
+  },
+  {
+   "name": "gs-serving-web-content",
+   "area": "java",
+   "url": "https://github.com/spring-guides/gs-serving-web-content",
+   "sha": "de04dc825d8a802f18a3fecc6ceb33b369d2dffa",
+   "open": "complete",
+   "expect": "web-first-route",
+   "route": "/greeting"
+  },
+  {
+   "name": "spring-boot-realworld-example-app",
+   "area": "java",
+   "url": "https://github.com/gothinkster/spring-boot-realworld-example-app",
+   "sha": "ee17e31aafe733d98c4853c8b9a74d7f2f6c924a",
+   "open": ".",
+   "expect": "web-first-route",
+   "tests": true,
+   "route": "/tags"
+  },
+  {
+   "name": "gson",
+   "area": "java",
+   "url": "https://github.com/google/gson",
+   "sha": "57731049da3e415be3d5d34db1ca3b80f3c73810",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "junit5-starter-maven",
+   "area": "java",
+   "url": "https://github.com/junit-team/junit5-samples",
+   "sha": "bf77a084a1ae0f127c9e497c1067d93d94cbc3a3",
+   "open": "junit-jupiter-starter-maven",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "commons-lang",
+   "area": "java",
+   "url": "https://github.com/apache/commons-lang",
+   "sha": "61837eb4472dac790a69f5f34b7b89ddfaf43db0",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "gs-maven",
+   "area": "java",
+   "url": "https://github.com/spring-guides/gs-maven",
+   "sha": "c65883f80b35bac86bb2580944de9146e2c6a55a",
+   "open": "complete",
+   "expect": "console-exit-0"
+  },
+  {
+   "name": "gs-securing-web",
+   "area": "java",
+   "url": "https://github.com/spring-guides/gs-securing-web",
+   "sha": "38b43f1d209b880e234b1082f49973a9e97639b4",
+   "open": "complete",
+   "expect": "web-first-route"
+  },
+  {
+   "name": "sunflower",
+   "area": "kotlin-android",
+   "url": "https://github.com/android/sunflower",
+   "sha": "2a357a31551bb53f3fe80382a9ce6d30bcc8b960",
+   "open": ".",
+   "expect": "build"
+  },
+  {
+   "name": "architecture-samples",
+   "area": "kotlin-android",
+   "url": "https://github.com/android/architecture-samples",
+   "sha": "ee66e1526b84c026615df032c705842b7d2a521f",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "compose-samples-JetNews",
+   "area": "kotlin-android",
+   "url": "https://github.com/android/compose-samples",
+   "sha": "25631e8f544a9a1e3f01e296eaf1b4c28428196c",
+   "open": "JetNews",
+   "expect": "build"
+  },
+  {
+   "name": "clikt",
+   "area": "kotlin-android",
+   "url": "https://github.com/ajalt/clikt",
+   "sha": "fa2e48c54995a88d492f05568a64889d99994877",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "kotlinx-datetime",
+   "area": "kotlin-android",
+   "url": "https://github.com/Kotlin/kotlinx-datetime",
+   "sha": "00831dc5ab0aa9df7f383e9f92591339d9e55c28",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "compose-multiplatform-template",
+   "area": "kotlin-android",
+   "url": "https://github.com/JetBrains/compose-multiplatform-template",
+   "sha": "7acca3fe58ae19c8f61d4b315f2998cb69be0dce",
+   "open": ".",
+   "expect": "gui-window"
+  },
+  {
+   "name": "gs-securing-web-kotlin",
+   "area": "kotlin-android",
+   "url": "https://github.com/spring-guides/gs-securing-web",
+   "sha": "38b43f1d209b880e234b1082f49973a9e97639b4",
+   "open": "complete-kotlin",
+   "expect": "web-first-route"
+  },
+  {
+   "name": "demo",
+   "area": "php",
+   "url": "https://github.com/symfony/demo",
+   "sha": "8d2e2ef75c3e18df173d8bf2379a14abb58c4c31",
+   "open": ".",
+   "expect": "web-first-route",
+   "tests": true,
+   "route": "/en/blog/"
+  },
+  {
+   "name": "Slim-Skeleton",
+   "area": "php",
+   "url": "https://github.com/slimphp/Slim-Skeleton",
+   "sha": "0ef01549870b3234a3a9f602904a39c3ed73f44c",
+   "open": ".",
+   "expect": "web-first-route",
+   "tests": true
+  },
+  {
+   "name": "guzzle",
+   "area": "php",
+   "url": "https://github.com/guzzle/guzzle",
+   "sha": "7d9b1f430bb65ac664e120af227bf9a795ad6333",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "PHPMailer",
+   "area": "php",
+   "url": "https://github.com/PHPMailer/PHPMailer",
+   "sha": "c0b5268a626d6ddbe71333cc1c60c5ae37e44e0d",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "cakephp-app",
+   "area": "php",
+   "url": "https://github.com/cakephp/app",
+   "sha": "79c0a76f06697288ec168c44e3e43d0195c3c63e",
+   "open": ".",
+   "expect": "web-first-route"
+  },
+  {
+   "name": "appstarter",
+   "area": "php",
+   "url": "https://github.com/codeigniter4/appstarter",
+   "sha": "59112b3d9474b0ac8a9f217e8efb5ea2cd01ea88",
+   "open": ".",
+   "expect": "web-first-route",
+   "tests": true
+  },
+  {
+   "name": "yii2-app-basic",
+   "area": "php",
+   "url": "https://github.com/yiisoft/yii2-app-basic",
+   "sha": "7f1be647a7c9f09771823bc945b8b46bc4ecb906",
+   "open": ".",
+   "expect": "web-first-route",
+   "tests": true
+  },
+  {
+   "name": "monolog",
+   "area": "php",
+   "url": "https://github.com/Seldaek/monolog",
+   "sha": "3bed304b1905fed5c30d172872f4d890cbb03c6a",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "WordPress",
+   "area": "php",
+   "url": "https://github.com/WordPress/WordPress",
+   "sha": "71cb962dbf0be359b95bf3373f3d2f37f9249e26",
+   "open": ".",
+   "expect": "web-first-route",
+   "note": "needs wp-config.php and MySQL"
+  },
+  {
+   "name": "swift-algorithms",
+   "area": "swift",
+   "url": "https://github.com/apple/swift-algorithms",
+   "sha": "5b7143f8e291dee0e14c118fd0212487f0b37af5",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "swift-collections",
+   "area": "swift",
+   "url": "https://github.com/apple/swift-collections",
+   "sha": "f96b909e1a9e469620bc5037c1e24e00153f376f",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "swift-log",
+   "area": "swift",
+   "url": "https://github.com/apple/swift-log",
+   "sha": "d0f784af9ea2bc75e557c3d2bb628a68248605f3",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "hummingbird-hello",
+   "area": "swift",
+   "url": "https://github.com/hummingbird-project/hummingbird-examples",
+   "sha": "8fb9bc3ded31e886567d4549453b6b348714ee9e",
+   "open": "hello",
+   "expect": "web-first-route"
+  },
+  {
+   "name": "SwiftyJSON",
+   "area": "swift",
+   "url": "https://github.com/SwiftyJSON/SwiftyJSON",
+   "sha": "3d2544101a03f22b2217d464dc7d359eeb86e159",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "Rainbow",
+   "area": "swift",
+   "url": "https://github.com/onevcat/Rainbow",
+   "sha": "b6d790f5487f4673fae2222d04d57ff6d6c621ea",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "IceCubesApp",
+   "area": "swift",
+   "url": "https://github.com/Dimillian/IceCubesApp",
+   "sha": "98098b9c4b5928f89f338203193c2bf40ab7f38c",
+   "open": ".",
+   "expect": "explained",
+   "note": "iOS app"
+  },
+  {
+   "name": "Alamofire",
+   "area": "swift",
+   "url": "https://github.com/Alamofire/Alamofire",
+   "sha": "6c2892ea5adb5a03fa81c510933dd782c5ddd9cb",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "dart-samples-command_line",
+   "area": "dart",
+   "url": "https://github.com/dart-lang/samples",
+   "sha": "eeb85290e96486c1ccd30390adb7c4078b874b02",
+   "open": "command_line",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "shelf",
+   "area": "dart",
+   "url": "https://github.com/dart-lang/shelf",
+   "sha": "62d3e4ee2503c3c497f749276e86b2331c18fd6a",
+   "open": "pkgs/shelf",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "dart_style",
+   "area": "dart",
+   "url": "https://github.com/dart-lang/dart_style",
+   "sha": "81042caf2e54ac6d080e2b0c70669b52703c0b24",
+   "open": ".",
+   "expect": "build",
+   "tests": true
+  },
+  {
+   "name": "flutter-admin-panel",
+   "area": "dart",
+   "url": "https://github.com/abuanwar072/Flutter-Responsive-Admin-Panel-or-Dashboard",
+   "sha": "a0b5a89c2e6c6a7e4753b36a50b91230156f67b7",
+   "open": ".",
+   "expect": "web-first-route"
+  },
+  {
+   "name": "flutter-ui-templates",
+   "area": "dart",
+   "url": "https://github.com/mitesh77/Best-Flutter-UI-Templates",
+   "sha": "c85450cb4367742e879ebfae6cda2b7b4da1c3cd",
+   "open": "best_flutter_ui_templates",
+   "expect": "web-first-route"
+  },
+  {
+   "name": "flutter-samples-testing_app",
+   "area": "dart",
+   "url": "https://github.com/flutter/samples",
+   "sha": "21c71902bb2c7da3cce328ba5946cba2f35a660a",
+   "open": "testing_app",
+   "expect": "web-first-route",
+   "tests": true
+  }
+ ],
+ "embeddedRepositories": [
+  {
+   "name": "arduino-neopixel",
+   "url": "https://github.com/adafruit/Adafruit_NeoPixel",
+   "sha": "d514fc3beae85dd4c2b19781b93faa47bd6e996f",
+   "kind": "arduino",
+   "project": "examples/strandtest",
+   "maxErrors": 0,
+   "fqbn": "arduino:avr:uno",
+   "core": "arduino:avr@1.8.6"
+  },
+  {
+   "name": "arduino-fastled",
+   "url": "https://github.com/FastLED/FastLED",
+   "sha": "264520b9dc8da8b64faa68d12d623bf3deb08048",
+   "kind": "arduino",
+   "project": "examples/Blink",
+   "maxErrors": 0,
+   "fqbn": "arduino:avr:uno",
+   "core": "arduino:avr@1.8.6"
+  },
+  {
+   "name": "arduino-json",
+   "url": "https://github.com/bblanchon/ArduinoJson",
+   "sha": "1cd478f48e7c4cd142a0bd26ee17d63d70d04e3f",
+   "kind": "arduino",
+   "project": "examples/JsonParserExample",
+   "maxErrors": 0,
+   "fqbn": "arduino:avr:uno",
+   "core": "arduino:avr@1.8.6"
+  },
+  {
+   "name": "platformio-esp32",
+   "url": "https://github.com/platformio/platform-espressif32",
+   "sha": "7afb0a703a5f6492fd695a4c2ced9ad843745280",
+   "kind": "platformio",
+   "project": "examples/arduino-blink",
+   "maxErrors": 0,
+   "environment": "esp32doit-devkit-v1"
+  },
+  {
+   "name": "platformio-stm32cube",
+   "url": "https://github.com/platformio/platform-ststm32",
+   "sha": "c7fe5b923c22b9d0bf3304cc1a1fdbe9963f822e",
+   "kind": "platformio",
+   "project": "examples/stm32cube-hal-blink",
+   "maxErrors": 0,
+   "environment": "nucleo_f103rb"
+  },
+  {
+   "name": "rust-stm32f4xx-hal",
+   "url": "https://github.com/stm32-rs/stm32f4xx-hal",
+   "sha": "0eb673dd2fc657a052e824f2693dcbd4e1a1b83d",
+   "kind": "rust",
+   "project": ".",
+   "maxErrors": 0,
+   "target": "thumbv7em-none-eabihf",
+   "example": "blinky",
+   "features": "stm32f411",
+   "rust": "1.97.0"
+  }
+ ]
+}
