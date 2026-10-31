@@ -47,6 +47,40 @@ public sealed class EventTests
         Assert.Equal(["Load", "Activated", "Shown"], run.Invoke(() => events.ToList()));
     }
 
+    /// <summary>
+    /// DualBrain's Solitaire, a Visual Basic app, handles the .NET Framework's Form.Closing event and keeps help in a
+    /// HelpProvider; both were missing (BC30590, BC30002), so it did not build.
+    /// </summary>
+    [AvaloniaFact]
+    public void Closing_comes_before_FormClosing_and_can_cancel_it_and_Closed_follows_FormClosed()
+    {
+        Form form = null!;
+        var events = new List<string>();
+        var cancel = true;
+        using var run = FormsTestRun.Start(() =>
+        {
+            form = new Form();
+            form.Closing += (_, e) => { events.Add("Closing"); e.Cancel = cancel; };
+            form.FormClosing += (_, e) => events.Add(e.Cancel ? "FormClosing (cancelled)" : "FormClosing");
+            form.FormClosed += (_, _) => events.Add("FormClosed");
+            form.Closed += (_, _) => events.Add("Closed");
+            var help = new HelpProvider { HelpNamespace = "solitaire.chm" };
+            help.SetHelpString(form, "Deal a new game.");
+            help.SetHelpNavigator(form, HelpNavigator.TableOfContents);
+            Help.ShowHelp(form, help.HelpNamespace, HelpNavigator.TableOfContents);
+            events.Add(help.GetHelpString(form) + " " + help.GetShowHelp(form) + " " + help.GetHelpNavigator(form));
+            return form;
+        });
+
+        run.Invoke(() => form.WindowInternal!.CloseRequested());
+        Assert.True(run.Invoke(() => form.Visible));
+        cancel = false;
+        run.Post(() => form.WindowInternal!.CloseRequested());
+        Assert.True(run.Exit.Wait(TimeSpan.FromSeconds(10)));
+
+        Assert.Equal(["Deal a new game. True TableOfContents", "Closing", "FormClosing (cancelled)", "Closing", "FormClosing", "FormClosed", "Closed"], events);
+    }
+
     [AvaloniaFact]
     public void FormClosing_can_cancel_closing_and_the_run_ends_when_the_main_form_closes()
     {
