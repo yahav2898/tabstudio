@@ -85,7 +85,7 @@ public sealed class OperationsTests
     {
         // Android freezes an app in the background unless a foreground service runs: a toolchain install or a build
         // stopped where it was until the user came back.
-        var clock = new ManualClock();
+        var clock = new ManualClock { RunsTimers = true };
         var notifications = new FakeNotifications { KeepsRunning = true };
         var activity = new FakeAppActivity();
         using var operations = new OperationsViewModel(new Immediate(), notifications, activity, clock)
@@ -259,9 +259,17 @@ public sealed class OperationsTests
             return timer;
         }
 
+        /// <summary>Whether <see cref="Advance"/> fires the timers that are due; tests of the notifications alone leave them still.</summary>
+        public bool RunsTimers { get; init; }
+
         public void Advance(TimeSpan time)
         {
             _ticks += time.Ticks;
+            if (!RunsTimers)
+            {
+                return;
+            }
+
             foreach (var timer in _timers.ToList())
             {
                 timer.FireIfDue(_ticks);
