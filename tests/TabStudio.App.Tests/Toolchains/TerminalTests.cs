@@ -76,7 +76,7 @@ public sealed class TerminalTests
 
         // A taller dock, as a user drags the splitter up to work in the Terminal.
         var editorArea = window.GetVisualDescendants().OfType<Avalonia.Controls.Grid>().Single(g => g.Name == "EditorArea");
-        editorArea.RowDefinitions[4].Height = new Avalonia.Controls.GridLength(400);
+        editorArea.RowDefinitions[4].Height = new Avalonia.Controls.GridLength(330);
         workspace.ShowTerminalCommand.Execute(null);
         var terminal = workspace.Terminal;
         await UiTestHelpers.WaitUntilAsync(() => terminal.IsRunning, because: "the shell");
@@ -97,11 +97,12 @@ public sealed class TerminalTests
         await Task.Delay(200);
         await UiTestHelpers.WaitUntilAsync(() => true);
 
-        UiTestHelpers.SaveScreenshot(window, "33-terminal");
-
+        // Read before the screenshot: its audit shows the window again at Very large, and the terminal, fitting its
+        // bigger cells, has fewer rows and scrolls this line away.
         var line = Enumerable.Range(0, terminal.Emulator.Rows).Select(terminal.Emulator.ScreenLine).First(l => l.Text.StartsWith("TabStudio terminal", StringComparison.Ordinal));
         Assert.Equal(TerminalColor.Indexed(6), line[0].Style.Foreground);
         Assert.True(line[0].Style.Has(TerminalAttributes.Bold));
+        UiTestHelpers.SaveScreenshot(window, "33-terminal");
 
         // Ctrl+R, Ctrl+E and Ctrl+K are the shell's: the IDE's chords no longer swallow them and wait for a second key.
         foreach (var key in new[] { PhysicalKey.R, PhysicalKey.E, PhysicalKey.K })
