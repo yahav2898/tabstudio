@@ -3,6 +3,7 @@ using Avalonia.Headless.XUnit;
 using TabStudio.App.Accessibility;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
+using TabStudio.App.Tests.Theming;
 using TabStudio.App.Tests.ViewModels;
 using TabStudio.App.ViewModels;
 using TabStudio.App.Views;
@@ -14,6 +15,7 @@ namespace TabStudio.App.Tests.Accessibility;
 /// The web preview's placeholder names the app, and a long name (a repository's folder, such as
 /// react-redux-realworld-example-app) wraps instead of running past its box at the largest text size.
 /// </summary>
+[Collection(AppearanceTestGroup.Name)]
 public sealed class WebPreviewPlaceholderTests : IDisposable
 {
     private readonly TempDirectory _temp = new();
