@@ -1,0 +1,117 @@
+{
+  "repository": {
+    "name": "arduino-json",
+    "url": "https://github.com/bblanchon/ArduinoJson",
+    "sha": "1cd478f48e7c4cd142a0bd26ee17d63d70d04e3f",
+    "kind": "arduino",
+    "project": "examples/JsonParserExample",
+    "maxErrors": 0,
+    "fqbn": "arduino:avr:uno",
+    "core": "arduino:avr@1.8.6"
+  },
+  "seconds": 13.432,
+  "passed": true,
+  "error": null,
+  "compilerErrors": 0,
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "steps": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-json/source",
+      "log": "01-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "remote",
+        "add",
+        "origin",
+        "https://github.com/bblanchon/ArduinoJson"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-json/source",
+      "log": "02-git.log",
+      "seconds": 0.004,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "fetch",
+        "--depth",
+        "1",
+        "--no-tags",
+        "origin",
+        "1cd478f48e7c4cd142a0bd26ee17d63d70d04e3f"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-json/source",
+      "log": "03-git.log",
+      "seconds": 0.565,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "FETCH_HEAD"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-json/source",
+      "log": "04-git.log",
+      "seconds": 0.032,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/home/runner/work/_temp/embedded-repos/arduino-json/arduino-cli",
+        "core",
+        "update-index"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-json/source",
+      "log": "05-arduino-cli.log",
+      "seconds": 3.021,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/home/runner/work/_temp/embedded-repos/arduino-json/arduino-cli",
+        "core",
+        "install",
+        "arduino:avr@1.8.6"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-json/source",
+      "log": "06-arduino-cli.log",
+      "seconds": 8.183,
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "/home/runner/work/_temp/embedded-repos/arduino-json/arduino-cli",
+        "compile",
+        "--fqbn",
+        "arduino:avr:uno",
+        "--library",
+        "/home/runner/work/_temp/embedded-repos/arduino-json/source",
+        "--build-path",
+        "/home/runner/work/_temp/embedded-repos/arduino-json/build",
+        "/home/runner/work/_temp/embedded-repos/arduino-json/source/examples/JsonParserExample"
+      ],
+      "cwd": "/home/runner/work/_temp/embedded-repos/arduino-json/source",
+      "log": "07-arduino-cli.log",
+      "seconds": 0.868,
+      "exitCode": 0,
+      "compilerErrors": 0
+    },
+    {
+      "firmware": "/home/runner/work/_temp/embedded-repos/arduino-json/build/JsonParserExample.ino.elf",
+      "bytes": 104504,
+      "sha256": "e9b4cfc424867930a9f4ce63e1f764a398ad650a4f43ad6e6ace054f0b3bcaac"
+    }
+  ]
+}
