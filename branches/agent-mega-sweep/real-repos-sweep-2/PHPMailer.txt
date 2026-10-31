@@ -1,0 +1,630 @@
+PHPMailer at c0b5268a626d6ddbe71333cc1c60c5ae37e44e0d
+Toolchain projects:
+  php: /home/runner/work/_temp/real-repos/PHPMailer/composer.json
+Startup project: php /home/runner/work/_temp/real-repos/PHPMailer/composer.json
+Set up in 6.2 s
+Tests: 655 passed, 74 failed, 3 skipped of 799: 732 tests run in 371 ms: 655 passed, 74 failed, 3 skipped.
+Project setup:
+
+Output:
+wnloading php-parallel-lint/php-parallel-lint (v1.4.0)
+  - Downloading phpcsstandards/phpcsutils (1.2.3)
+  - Downloading phpcompatibility/php-compatibility (10.0.0-alpha2)
+  - Downloading sebastian/version (3.0.2)
+  - Downloading sebastian/lines-of-code (1.0.4)
+  - Downloading sebastian/environment (5.1.5)
+  - Downloading sebastian/complexity (2.0.3)
+  - Downloading sebastian/code-unit-reverse-lookup (2.0.3)
+  - Downloading phpunit/php-text-template (2.0.4)
+  - Downloading phpunit/php-file-iterator (3.0.6)
+  - Downloading phpunit/php-code-coverage (9.2.32)
+  - Downloading phpunit/php-invoker (3.1.1)
+  - Downloading phpunit/php-timer (5.0.3)
+  - Downloading sebastian/cli-parser (1.0.2)
+  - Downloading sebastian/code-unit (1.0.8)
+  - Downloading sebastian/recursion-context (4.0.7)
+  - Downloading sebastian/exporter (4.0.9)
+  - Downloading sebastian/diff (4.0.6)
+  - Downloading sebastian/comparator (4.0.10)
+  - Downloading sebastian/object-reflector (2.0.4)
+  - Downloading sebastian/global-state (5.0.8)
+  - Downloading sebastian/object-enumerator (4.0.4)
+  - Downloading sebastian/resource-operations (3.0.4)
+  - Downloading sebastian/type (3.2.1)
+  - Downloading phpunit/phpunit (9.6.38)
+  - Downloading yoast/phpunit-polyfills (1.1.5)
+  - Installing squizlabs/php_codesniffer (3.13.6): Extracting archive
+  - Installing dealerdirect/phpcodesniffer-composer-installer (v1.2.1): Extracting archive
+  - Installing psr/cache (3.0.0): Extracting archive
+  - Installing doctrine/deprecations (1.1.6): Extracting archive
+  - Installing doctrine/lexer (2.1.1): Extracting archive
+  - Installing doctrine/annotations (1.14.4): Extracting archive
+  - Installing doctrine/instantiator (2.1.0): Extracting archive
+  - Installing myclabs/deep-copy (1.14.0): Extracting archive
+  - Installing phar-io/version (3.2.1): Extracting archive
+  - Installing phar-io/manifest (2.0.4): Extracting archive
+  - Installing php-parallel-lint/php-console-color (v1.0.1): Extracting archive
+  - Installing php-parallel-lint/php-console-highlighter (v1.0.0): Extracting archive
+  - Installing php-parallel-lint/php-parallel-lint (v1.4.0): Extracting archive
+  - Installing phpcsstandards/phpcsutils (1.2.3): Extracting archive
+  - Installing phpcompatibility/php-compatibility (10.0.0-alpha2): Extracting archive
+  - Installing theseer/tokenizer (1.3.1): Extracting archive
+  - Installing sebastian/version (3.0.2): Extracting archive
+  - Installing nikic/php-parser (v5.9.0): Extracting archive
+  - Installing sebastian/lines-of-code (1.0.4): Extracting archive
+  - Installing sebastian/environment (5.1.5): Extracting archive
+  - Installing sebastian/complexity (2.0.3): Extracting archive
+  - Installing sebastian/code-unit-reverse-lookup (2.0.3): Extracting archive
+  - Installing phpunit/php-text-template (2.0.4): Extracting archive
+  - Installing phpunit/php-file-iterator (3.0.6): Extracting archive
+  - Installing phpunit/php-code-coverage (9.2.32): Extracting archive
+  - Installing phpunit/php-invoker (3.1.1): Extracting archive
+  - Installing phpunit/php-timer (5.0.3): Extracting archive
+  - Installing sebastian/cli-parser (1.0.2): Extracting archive
+  - Installing sebastian/code-unit (1.0.8): Extracting archive
+  - Installing sebastian/recursion-context (4.0.7): Extracting archive
+  - Installing sebastian/exporter (4.0.9): Extracting archive
+  - Installing sebastian/diff (4.0.6): Extracting archive
+  - Installing sebastian/comparator (4.0.10): Extracting archive
+  - Installing sebastian/object-reflector (2.0.4): Extracting archive
+  - Installing sebastian/global-state (5.0.8): Extracting archive
+  - Installing sebastian/object-enumerator (4.0.4): Extracting archive
+  - Installing sebastian/resource-operations (3.0.4): Extracting archive
+  - Installing sebastian/type (3.2.1): Extracting archive
+  - Installing phpunit/phpunit (9.6.38): Extracting archive
+  - Installing yoast/phpunit-polyfills (1.1.5): Extracting archive
+13 package suggestions were added by new dependencies, use `composer suggest` to see details.
+Package doctrine/annotations is abandoned, you should avoid using it. No replacement was suggested.
+Generating autoload files
+31 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+PHP CodeSniffer Config installed_paths set to ../../phpcompatibility/php-compatibility,../../phpcsstandards/phpcsutils
+========== composer install: succeeded ==========
+========== Running PHPMailer's tests with PhpUnit ==========
+> php vendor/bin/phpunit --colors=never --log-junit /home/runner/work/_temp/real-repos/PHPMailer/.tabstudio/test-results/7a21a5be0002471fbe61a3a173b0f238/phpunit.xml
+PHPUnit 9.6.38 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.12
+Configuration: /home/runner/work/_temp/real-repos/PHPMailer/phpunit.xml.dist
+Warning:       No code coverage driver available
+Warning:       Your XML configuration validates against a deprecated schema.
+Suggestion:    Migrate your XML configuration using "--migrate-configuration"!
+
+...................E.......................EEEEEES.............  63 / 732 (  8%)
+sh: 1: /usr/sbin/sendmail: not found
+Sending with mail()
+Sendmail path: /usr/sbin/sendmail -t -i
+Envelope sender: from@example.com
+To: John Doe <whoto@example.com>
+Subject: test
+Headers: Date: Sat, 31 Oct 2026 03:07:28 +0000
+To: John Doe <whoto@example.com>
+From: First Last <from@example.com>
+Subject: test
+Message-ID: <440ZssSW5dsWnjED22knnendKr83WGc95pkNymb9mvc@runnervm48cm3>
+X-Mailer: PHPMailer 7.1.1 (https://github.com/PHPMailer/PHPMailer)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+
+
+Additional params: -ffrom@example.com
+Result: false
+Could not instantiate mail function.
+Fsh: 1: /usr/sbin/sendmail: not found
+Sending with mail()
+Sendmail path: /usr/sbin/sendmail -t -i
+Envelope sender: from@example.com
+To: John Doe <whoto@example.com>
+Subject: test
+Headers: Date: Sat, 31 Oct 2026 03:07:28 +0000
+To: John Doe <whoto@example.com>
+From: First Last <from@example.com>
+Subject: test
+Message-ID: <Bizz2oMkcg5MZqn08CQykCMtyhB3agFWX71hCnRAdM@runnervm48cm3>
+X-Mailer: PHPMailer 7.1.1 (https://github.com/PHPMailer/PHPMailer)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+
+
+Additional params: -ffrom@example.com
+Result: false
+Could not instantiate mail function.
+F............................................................. 126 / 732 ( 17%)
+............................................................... 189 / 732 ( 25%)
+..............................................EEEEEEEEEEEEE.... 252 / 732 ( 34%)
+............................................................... 315 / 732 ( 43%)
+........EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE..... 378 / 732 ( 51%)
+........................................................S...... 441 / 732 ( 60%)
+.................S............................................. 504 / 732 ( 68%)
+............................................................... 567 / 732 ( 77%)
+............................................................... 630 / 732 ( 86%)
+............................................................... 693 / 732 ( 94%)
+.....................................EE                         732 / 732 (100%)
+
+Time: 00:00.219, Memory: 14.00 MB
+
+There were 72 errors:
+
+1) PHPMailer\Test\PHPMailer\AuthCRAMMD5Test::testAuthCRAMMD5
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+2) PHPMailer\Test\PHPMailer\DKIMTest::testDKIMBodyCanonicalization
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+3) PHPMailer\Test\PHPMailer\DKIMTest::testDKIMHeaderCanonicalization
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+4) PHPMailer\Test\PHPMailer\DKIMTest::testDKIMOptionalHeaderFieldsCopy
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+5) PHPMailer\Test\PHPMailer\DKIMTest::testDKIMExtraHeaders
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+6) PHPMailer\Test\PHPMailer\DKIMTest::testDKIMSigningMail
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+7) PHPMailer\Test\PHPMailer\DKIMTest::testDKIMSignOpenSSLNotAvailableException
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+8) PHPMailer\Test\PHPMailer\MailTransportTest::testSendmailSend
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/MailTransportTest.php:28
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+9) PHPMailer\Test\PHPMailer\MailTransportTest::testQmailSend
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/MailTransportTest.php:28
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+10) PHPMailer\Test\PHPMailer\MailTransportTest::testMailSend
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/MailTransportTest.php:28
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+11) PHPMailer\Test\PHPMailer\MailTransportTest::testMailSendWithSendmailParams
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/MailTransportTest.php:28
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+12) PHPMailer\Test\PHPMailer\MailTransportTest::testSendmailSendWithSendmailParams
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/MailTransportTest.php:28
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+13) PHPMailer\Test\PHPMailer\MailTransportTest::testParseSendmailPath with data set "path only" ('/usr/sbin/sendmail', '/usr/sbin/sendmail', '')
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/MailTransportTest.php:28
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+14) PHPMailer\Test\PHPMailer\MailTransportTest::testParseSendmailPath with data set "with i and t" ('/usr/sbin/sendmail -i -t', '/usr/sbin/sendmail', '')
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/MailTransportTest.php:28
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+15) PHPMailer\Test\PHPMailer\MailTransportTest::testParseSendmailPath with data set "with f concatenated" ('/usr/sbin/sendmail -frpath@ex...org -i', '/usr/sbin/sendmail', 'rpath@example.org')
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/MailTransportTest.php:28
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+16) PHPMailer\Test\PHPMailer\MailTransportTest::testParseSendmailPath with data set "with f separated" ('/usr/sbin/sendmail -f rpath@e...org -t', '/usr/sbin/sendmail', 'rpath@example.org')
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/MailTransportTest.php:28
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+17) PHPMailer\Test\PHPMailer\MailTransportTest::testParseSendmailPath with data set "with extra flags preserved" ('/opt/sendmail -x -y -fuser@example.org', '/opt/sendmail -x -y', 'user@example.org')
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/MailTransportTest.php:28
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+18) PHPMailer\Test\PHPMailer\MailTransportTest::testParseSendmailPath with data set "extra flags with values preserved" ('/opt/sendmail -X /path/to/log...le.org', '/opt/sendmail -X /path/to/logfile', 'user@example.org')
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/MailTransportTest.php:28
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+19) PHPMailer\Test\PHPMailer\MailTransportTest::testParseSendmailPath with data set "extra flags concatenated preserved" ('/opt/sendmail -X/path/to/logfile -t -i', '/opt/sendmail -X/path/to/logfile', '')
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/MailTransportTest.php:28
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+20) PHPMailer\Test\PHPMailer\MailTransportTest::testParseSendmailPath with data set "option values with regular parameters" ('/opt/sendmail -oi -t', '/opt/sendmail', '')
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/MailTransportTest.php:28
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+21) PHPMailer\Test\PHPMailer\PHPMailerTest::testLowPriority
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+22) PHPMailer\Test\PHPMailer\PHPMailerTest::testMultiplePlainFileAttachment
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+23) PHPMailer\Test\PHPMailer\PHPMailerTest::testRejectNonLocalFileAttachment
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+24) PHPMailer\Test\PHPMailer\PHPMailerTest::testQuotedPrintable
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+25) PHPMailer\Test\PHPMailer\PHPMailerTest::testHeaderEncoding
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+26) PHPMailer\Test\PHPMailer\PHPMailerTest::testHtml
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+27) PHPMailer\Test\PHPMailer\PHPMailerTest::testDsn
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+28) PHPMailer\Test\PHPMailer\PHPMailerTest::testCreateBody
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+29) PHPMailer\Test\PHPMailer\PHPMailerTest::testHtmlIso8859
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+30) PHPMailer\Test\PHPMailer\PHPMailerTest::testHtmlUtf8
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+31) PHPMailer\Test\PHPMailer\PHPMailerTest::testUtf8WithEmbeddedImage
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+32) PHPMailer\Test\PHPMailer\PHPMailerTest::testPlainUtf8
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+33) PHPMailer\Test\PHPMailer\PHPMailerTest::testMsgHTML
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+34) PHPMailer\Test\PHPMailer\PHPMailerTest::testHTMLAttachment
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+35) PHPMailer\Test\PHPMailer\PHPMailerTest::testAttachmentNaming
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+36) PHPMailer\Test\PHPMailer\PHPMailerTest::testHTMLMultiAttachment
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+37) PHPMailer\Test\PHPMailer\PHPMailerTest::testEmbeddedImage
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+38) PHPMailer\Test\PHPMailer\PHPMailerTest::testEmbeddedImageCustomCidDomain
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+39) PHPMailer\Test\PHPMailer\PHPMailerTest::testMultiEmbeddedImage
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+40) PHPMailer\Test\PHPMailer\PHPMailerTest::testAltBody
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+41) PHPMailer\Test\PHPMailer\PHPMailerTest::testAltBodyAttachment
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+42) PHPMailer\Test\PHPMailer\PHPMailerTest::testMultipleSend
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+43) PHPMailer\Test\PHPMailer\PHPMailerTest::testEmptyBody
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+44) PHPMailer\Test\PHPMailer\PHPMailerTest::testSmtpKeepAlive
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+45) PHPMailer\Test\PHPMailer\PHPMailerTest::testAddressing
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+46) PHPMailer\Test\PHPMailer\PHPMailerTest::testAddressEscaping
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+47) PHPMailer\Test\PHPMailer\PHPMailerTest::testMIMEStructure
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+48) PHPMailer\Test\PHPMailer\PHPMailerTest::testBCCAddressing
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+49) PHPMailer\Test\PHPMailer\PHPMailerTest::testAddAttachmentEncodingException
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+50) PHPMailer\Test\PHPMailer\PHPMailerTest::testAddFolderAsAttachment
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+51) PHPMailer\Test\PHPMailer\PHPMailerTest::testDeletedAttachmentException
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+52) PHPMailer\Test\PHPMailer\PHPMailerTest::testDeletedAttachmentError
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+53) PHPMailer\Test\PHPMailer\PHPMailerTest::testBase64
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+54) PHPMailer\Test\PHPMailer\PHPMailerTest::testSigning
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+55) PHPMailer\Test\PHPMailer\PHPMailerTest::testSigningWithCA
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+56) PHPMailer\Test\PHPMailer\PHPMailerTest::testLineBreaks
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+57) PHPMailer\Test\PHPMailer\PHPMailerTest::testMiscellaneous
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+58) PHPMailer\Test\PHPMailer\PHPMailerTest::testBadSMTP
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+59) PHPMailer\Test\PHPMailer\PHPMailerTest::testQuitDuringData
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+60) PHPMailer\Test\PHPMailer\PHPMailerTest::testConfirmReadingTo
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+61) PHPMailer\Test\PHPMailer\PHPMailerTest::testConvertEncoding
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+62) PHPMailer\Test\PHPMailer\PHPMailerTest::testDuplicateIDNRemoved
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+63) PHPMailer\Test\PHPMailer\PHPMailerTest::testUnsupportedSmtpUTF8
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+64) PHPMailer\Test\PHPMailer\PHPMailerTest::testStrangeUnicodeEmailAddresses
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+65) PHPMailer\Test\PHPMailer\PHPMailerTest::testAutomaticEaiValidation
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+66) PHPMailer\Test\PHPMailer\PHPMailerTest::testSmtpUTF8
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+67) PHPMailer\Test\PHPMailer\PHPMailerTest::testSmtpXclient
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+68) PHPMailer\Test\PHPMailer\PHPMailerTest::testSmtpConnect
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+69) PHPMailer\Test\PHPMailer\PHPMailerTest::testGivenIdnAddress_addAddress_returns_true
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+70) PHPMailer\Test\PHPMailer\PHPMailerTest::testErroneousAddress_addAddress_returns_false
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+71) PHPMailer\Test\Security\DenialOfServiceVectorsTest::testDenialOfServiceAttack1
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+72) PHPMailer\Test\Security\DenialOfServiceVectorsTest::testDenialOfServiceAttack2
+Exception: Test config params missing - copy testbootstrap-dist.php to testbootstrap.php and change as appropriate for your own test environment setup.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/SendTestCase.php:51
+/home/runner/work/_temp/real-repos/PHPMailer/vendor/yoast/phpunit-polyfills/src/TestCases/TestCasePHPUnitGte8.php:60
+
+--
+
+There were 2 failures:
+
+1) PHPMailer\Test\PHPMailer\EmptyMailerTest::testSendWithEmptyMailerDoesNotCrash with data set "empty string" ('')
+Could not instantiate mail function.
+Failed asserting that false is true.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/EmptyMailerTest.php:39
+
+2) PHPMailer\Test\PHPMailer\EmptyMailerTest::testSendWithEmptyMailerDoesNotCrash with data set "null" (null)
+Could not instantiate mail function.
+Failed asserting that false is true.
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/EmptyMailerTest.php:39
+
+--
+
+There were 3 skipped tests:
+
+1) PHPMailer\Test\PHPMailer\DKIMWithoutExceptionsTest::testDKIMSignOpenSSLNotAvailable
+Test requires OpenSSL *not* to be available
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/DKIMWithoutExceptionsTest.php:40
+
+2) PHPMailer\Test\PHPMailer\ReplyToGetSetClearTest::testAddReplyToFailsOn8BitCharInDomainWithoutOptionalExtensions
+Test requires MbString and/or Intl *not* to be available
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/ReplyToGetSetClearTest.php:405
+
+3) PHPMailer\Test\PHPMailer\SetFromTest::testSetFromFailsOn8BitCharInDomainWithoutOptionalExtensions
+Test requires MbString and/or Intl *not* to be available
+
+/home/runner/work/_temp/real-repos/PHPMailer/test/PHPMailer/SetFromTest.php:197
+
+ERRORS!
+Tests: 732, Assertions: 1391, Errors: 72, Failures: 2, Skipped: 3.
+
