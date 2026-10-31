@@ -1,0 +1,42 @@
+name: Dev check
+
+# Trial only (trial/mega-dev): builds everything with warnings as errors and runs the tests named in build/ci/dev-filter.txt.
+on:
+  push:
+    branches: ['trial/mega-dev']
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Build with warnings as errors
+        run: |
+          mkdir -p ci-out
+          dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true > ci-out/build.log 2>&1 || { grep -E "error" ci-out/build.log | sort -u | head -60; exit 1; }
+      - name: Unit tests
+        run: |
+          status=0
+          while IFS='|' read -r project filter; do
+            [ -z "$project" ] && continue
+            name=$(basename "$project")
+            dotnet test "$project" -c Release --filter "$filter" --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1 || status=1
+            grep -E "^\s*(Failed|Passed|Total|error)|Assert|Expected|Actual" "ci-out/$name.log" | grep -v "^\s*Passed " | head -80
+          done < build/ci/dev-filter.txt
+          exit $status
+      - name: Publish logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh dev ${{ job.status }}
