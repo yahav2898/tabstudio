@@ -1,0 +1,120 @@
+monolog at 3bed304b1905fed5c30d172872f4d890cbb03c6a, opening /home/runner/work/_temp/repos/monolog
+Opened in 0.2 s: monolog, solution (none)
+  toolchain project php: /home/runner/work/_temp/repos/monolog/composer.json
+Compatibility Doctor:
+  monolog: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+F5 startup project: monolog (php) /home/runner/work/_temp/repos/monolog/composer.json
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: 630 found; 1292 passed, 1 failed, 13 skipped, 59 not run - 1306 tests run in 18.5 sec: 1292 passed, 1 failed, 13 skipped. (19 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up monolog: composer install
+  Installing monolog's packages: Installing packages: composer install
+  Installing monolog's packages: Succeeded after 6.5 s
+  Setting up projects: Succeeded after 9.6 s
+  Building monolog: Running sh
+  Building monolog: Succeeded after 0.2 s
+  Testing monolog: Running monolog's tests
+  Testing monolog: Failed after 18.5 s
+Project setup:
+
+Output:
+monolog needs no build: PHP runs it from its source. Press Ctrl+F5 to run it.
+========== Running monolog's tests with PhpUnit ==========
+> php vendor/bin/phpunit --colors=never --log-junit /home/runner/work/_temp/repos/monolog/.tabstudio/test-results/ffb9c08c67f9454b870928f60a418521/phpunit.xml
+PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.12
+Configuration: /home/runner/work/_temp/repos/monolog/phpunit.xml.dist
+
+.........F............................................D......   61 / 1307 (  4%)
+.............................................................  122 / 1307 (  9%)
+....D........................................................  183 / 1307 ( 14%)
+..............................................S.....D........  244 / 1307 ( 18%)
+..SSSSSSS...........................................S........  305 / 1307 ( 23%)
+.........................................S...................  366 / 1307 ( 28%)
+..........................D..D......D........................  427 / 1307 ( 32%)
+.............................................................  488 / 1307 ( 37%)
+.............................................................  549 / 1307 ( 42%)
+.............................................................  610 / 1307 ( 46%)
+.SS..........................................................  671 / 1307 ( 51%)
+SS...........................................................  732 / 1307 ( 56%)
+.............................................................  793 / 1307 ( 60%)
+.............................................................  854 / 1307 ( 65%)
+.............................................................  915 / 1307 ( 70%)
+.............................................................  976 / 1307 ( 74%)
+............................................................. 1037 / 1307 ( 79%)
+............................................................. 1098 / 1307 ( 84%)
+............................................................. 1159 / 1307 ( 88%)
+............................................................. 1220 / 1307 ( 93%)
+............................................................. 1281 / 1307 ( 98%)
+..........................                                    1307 / 1307 (100%)
+
+Time: 00:18.067, Memory: 40.00 MB
+
+There was 1 failure:
+
+1) Monolog\ErrorHandlerTest::testFatalHandlerLogsNativeBacktrace
+Failed asserting that '[2026-10-31T02:12:11.607687+00:00] test.ALERT: Fatal Error (E_ERROR): Allowed memory size of 16777216 bytes exhausted (tried to allocate 2097152 bytes) {"code":1,"message":"Allowed memory size of 16777216 bytes exhausted (tried to allocate 2097152 bytes)","file":"/tmp/monolog-fatal-backtrace-34234.php","line":18,"trace":null} []\n
+' [ASCII](length: 331) contains "[stacktrace]" [ASCII](length: 12).
+
+/home/runner/work/_temp/repos/monolog/tests/Monolog/ErrorHandlerTest.php:228
+
+--
+
+There was 1 skipped test suite:
+
+1) Monolog\Handler\FrankenPhpHandlerE2ETest
+FrankenPHP is not running on 127.0.0.1:8099
+
+--
+
+There were 13 skipped tests:
+
+1) Monolog\Handler\CouchDBHandlerTest::testHandle
+Could not connect to couchdb server on http://localhost:5984
+
+2) Monolog\Handler\ElasticaHandlerTest::testHandleIntegrationNewESVersion
+Cannot connect to Elastic Search server on localhost
+
+3) Monolog\Handler\ElasticsearchHandlerTest::testSetFormatter
+Could not connect to Elasticsearch on 127.0.0.1:9200
+
+4) Monolog\Handler\ElasticsearchHandlerTest::testSetFormatterInvalid
+Could not connect to Elasticsearch on 127.0.0.1:9200
+
+5) Monolog\Handler\ElasticsearchHandlerTest::testOptions
+Could not connect to Elasticsearch on 127.0.0.1:9200
+
+6) Monolog\Handler\ElasticsearchHandlerTest::testConnectionErrors with data set #0 (false, ['RuntimeException', 'Error sending messages to Ela...search'])
+Could not connect to Elasticsearch on 127.0.0.1:9200
+
+7) Monolog\Handler\ElasticsearchHandlerTest::testConnectionErrors with data set #1 (true, false)
+Could not connect to Elasticsearch on 127.0.0.1:9200
+
+8) Monolog\Handler\ElasticsearchHandlerTest::testHandleBatchIntegration
+Could not connect to Elasticsearch on 127.0.0.1:9200
+
+9) Monolog\Handler\MongoDBHandlerTest::testHandleWithDriverManager
+Could not connect to MongoDB server on mongodb://localhost:27017
+
+10) Monolog\Handler\StreamHandlerTest::testPreventOOMError with data set #0 ('1M', 104857)
+We could not set a memory limit that would trigger the error.
+
+11) Monolog\Handler\StreamHandlerTest::testPreventOOMError with data set #1 ('10M', 1048576)
+We could not set a memory limit that would trigger the error.
+
+12) Monolog\Handler\ZendMonitorHandlerTest::testWrite
+ZendServer is not installed
+
+13) Monolog\Handler\ZendMonitorHandlerTest::testGetDefaultFormatterReturnsNormalizerFormatter
+ZendServer is not installed
+
+FAILURES!
+Tests: 1307, Assertions: 2520, Failures: 1, Deprecations: 11, PHPUnit Deprecations: 239, Skipped: 14.
+

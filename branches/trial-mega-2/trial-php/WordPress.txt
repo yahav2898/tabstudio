@@ -1,0 +1,66 @@
+WordPress at 71cb962dbf0be359b95bf3373f3d2f37f9249e26, opening /home/runner/work/_temp/repos/WordPress
+Opened in 0.2 s: WordPress, solution (none)
+  toolchain project php: /home/runner/work/_temp/repos/WordPress
+  toolchain project php: /home/runner/work/_temp/repos/WordPress/wp-includes/sodium_compat/composer.json
+  toolchain project node: /home/runner/work/_temp/repos/WordPress/wp-content/themes/twentynineteen/package.json
+  toolchain project node: /home/runner/work/_temp/repos/WordPress/wp-content/themes/twentytwenty/package.json
+  toolchain project node: /home/runner/work/_temp/repos/WordPress/wp-content/themes/twentytwentyfive/package.json
+  toolchain project node: /home/runner/work/_temp/repos/WordPress/wp-content/themes/twentytwentyone/package.json
+  toolchain project node: /home/runner/work/_temp/repos/WordPress/wp-content/themes/twentytwentytwo/package.json
+Compatibility Doctor:
+  WordPress: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+  sodium_compat: Needs a toolchain via PHP toolchain - Runs with PHP from the Toolchain Store: scripts with their output in the Output panel, and Laravel, Symfony, Slim and plain PHP sites served on this device in the web preview. Install PHP to run it.
+  twentynineteen: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+  twentytwenty: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+  twentytwentyfive: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+  twentytwentyone: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+  twentytwentytwo: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+F5 startup project: WordPress (php) /home/runner/work/_temp/repos/WordPress/.php
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+GET http://127.0.0.1:35927/: 200, 12462 characters
+Run: GET / 200 (1 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/WordPress/index.php:14
+Debug: did not stop at index.php:14 within 10 min (600 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up sodium_compat: composer install
+  Installing sodium_compat's packages: Installing packages: composer install
+  Installing sodium_compat's packages: Succeeded after 2.9 s
+  Setting up projects: Setting up twentynineteen: npm ci
+  Installing twentynineteen's packages: Installing packages: npm ci
+  Installing twentynineteen's packages: Failed after 0.9 s
+  Setting up projects: Setting up twentytwenty: npm ci
+  Installing twentytwenty's packages: Installing packages: npm ci
+  Installing twentytwenty's packages: Succeeded after 17.4 s
+  Setting up projects: Setting up twentytwentyfive: npm ci
+  Installing twentytwentyfive's packages: Installing packages: npm ci
+  Installing twentytwentyfive's packages: Failed after 0.5 s
+  Setting up projects: Setting up twentytwentyone: npm ci
+  Installing twentytwentyone's packages: Installing packages: npm ci
+  Installing twentytwentyone's packages: Failed after 0.4 s
+  Setting up projects: Setting up twentytwentytwo: npm ci
+  Installing twentytwentytwo's packages: Installing packages: npm ci
+  Installing twentytwentytwo's packages: Failed after 0.5 s
+  Setting up projects: Succeeded after 25.8 s
+  Building WordPress: Running sh
+  Building WordPress: Succeeded after 2.2 s
+  Building sodium_compat: Running sh
+  Building sodium_compat: Succeeded after 0.1 s
+Project setup:
+twentynineteen's packages were not installed: npm install --no-fund --no-audit failed (npm error EBADDEVENGINES The developer of this package has specified the following through devEngines). Fix that, then use Tools > Install Project Packages.
+twentytwentyfive's packages were not installed: npm install --no-fund --no-audit failed (npm error EBADDEVENGINES The developer of this package has specified the following through devEngines). Fix that, then use Tools > Install Project Packages.
+twentytwentyone's packages were not installed: npm install --no-fund --no-audit failed (npm error EBADDEVENGINES The developer of this package has specified the following through devEngines). Fix that, then use Tools > Install Project Packages.
+twentytwentytwo's packages were not installed: npm install --no-fund --no-audit failed (npm error EBADDEVENGINES The developer of this package has specified the following through devEngines). Fix that, then use Tools > Install Project Packages.
+
+Output:
+Debugging php -S with PHP (Xdebug)...
+[Sat Oct 31 02:13:04 2026] PHP Warning:  JIT is incompatible with third party extensions that override zend_execute_ex(). JIT disabled. in Unknown on line 0
+[Sat Oct 31 02:13:04 2026] PHP 8.5.12 Development Server (http://127.0.0.1:45503) started
+
+The program 'php -S' has exited with code 0 (0x0).
+
