@@ -124,7 +124,7 @@ public sealed class RealRepositoryTests
             var name = repository["name"]!.GetValue<string>();
             var expected = new ProgramExpectation(
                 toolchain,
-                repository["program"]!.GetValue<string>(),
+                repository["program"]?.GetValue<string>(),
                 repository["web"]?.GetValue<string>(),
                 repository["expect"]?.GetValue<string>(),
                 repository["tests"]?.GetValue<int>());
@@ -175,7 +175,8 @@ public sealed class RealRepositoryTests
     }
 
     /// <param name="Tests">How many tests Test Explorer's Run All must pass, at least, after the run; <see langword="null"/> to run none.</param>
-    private sealed record ProgramExpectation(string Toolchain, string Program, string? Web, string? Text, int? Tests = null);
+    /// <param name="Program">The program Ctrl+F5 runs; <see langword="null"/> for a library, whose tests are its check.</param>
+    private sealed record ProgramExpectation(string Toolchain, string? Program, string? Web, string? Text, int? Tests = null);
 
     /// <summary>
     /// Whether a repository belongs to this run of the job: those with no <c>job</c> to the Real repositories job, and
@@ -221,6 +222,16 @@ public sealed class RealRepositoryTests
             }
 
             clock.Restart();
+            if (expected.Program is null)
+            {
+                // A library: Test Explorer builds it and runs its tests.
+                var tested = await RunAllTestsAsync(workspace, expected.Tests ?? 1, report);
+                UiTestHelpers.SaveScreenshot(window, $"real-{name}-3-tests");
+                AppendTail(report, "Project setup", workspace.ProjectSetupOutput.Text);
+                AppendTail(report, "Output", workspace.Output.Text);
+                return new RunOutcome(startup!.Toolchain.Id, null, tested, clock.Elapsed);
+            }
+
             run = workspace.RunCommand.ExecuteAsync(null);
             string? problem = null;
             if (expected.Web is { } path)
