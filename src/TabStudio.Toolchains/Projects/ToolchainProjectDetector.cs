@@ -289,13 +289,37 @@ public static class ToolchainProjectDetector
         }
 
         var ranks = inFolder.ToDictionary(p => p, Rank);
-        if (ranks.Values.All(r => r == 0))
+        var named = inFolder.ToDictionary(p => p, p => NamesFolder(p, folder));
+        if (ranks.Values.All(r => r == 0) && named.Values.All(n => n == named[inFolder[0]]))
         {
             return;
         }
 
+        // Between equals, the package named after the folder is the folder's project: hyperfine's Cargo.toml, not the
+        // pyproject.toml of its plotting scripts (hyperfine-scripts).
         result.RemoveRange(first, inFolder.Count);
-        result.AddRange(inFolder.OrderBy(p => ranks[p]));
+        result.AddRange(inFolder.OrderBy(p => ranks[p]).ThenBy(p => !named[p]));
+    }
+
+    /// <summary>Whether a project's manifest names its package after its folder (<c>name = "hyperfine"</c> in hyperfine).</summary>
+    private static bool NamesFolder(ToolchainProject project, string folder)
+    {
+        if (project.MarkerPath is not { } manifest || Path.GetFileName(manifest) is not ("Cargo.toml" or "pyproject.toml" or "package.json"))
+        {
+            return false;
+        }
+
+        try
+        {
+            var text = new FileInfo(manifest).Length <= 256 * 1024 ? File.ReadAllText(manifest) : string.Empty;
+            var name = Path.GetFileName(folder.TrimEnd(Path.DirectorySeparatorChar));
+            return text.Contains("name = \"" + name + "\"", StringComparison.OrdinalIgnoreCase)
+                || text.Contains("\"name\": \"" + name + "\"", StringComparison.OrdinalIgnoreCase);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return false;
+        }
     }
 
     private static int Rank(ToolchainProject project) =>

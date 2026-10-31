@@ -2033,7 +2033,7 @@
       },
       "problemPatterns": [
         {
-          "pattern": "^(?:e: |w: )?(?:file://)?(?<file>/[^:]+\\.(?:java|kt|kts|xml)):(?<line>\\d+)(?::(?<column>\\d+))?:?\\s*(?:(?<severity>error|warning):\\s*)?(?<message>.*)$"
+          "pattern": "^(?:(?<severity>e|w): )?(?:file://)?(?<file>/[^:]+\\.(?:java|kt|kts|xml)):(?<line>\\d+)(?::(?<column>\\d+))?:?\\s*(?:(?<severity>error|warning):\\s*)?(?<message>.*)$"
         }
       ],
       "additionalToolIds": [

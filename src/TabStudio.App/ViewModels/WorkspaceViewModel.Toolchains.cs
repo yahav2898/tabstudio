@@ -135,10 +135,12 @@ public sealed partial class WorkspaceViewModel
 
     /// <summary>
     /// Whether a toolchain project is the build of the folder opened as the workspace, not of a solution: at its root,
-    /// with no .NET project that F5 would start.
+    /// with no .NET project that F5 would start, or only one in a tests or tools folder (bat's tests/syntax-tests hold
+    /// a console.csproj to highlight).
     /// </summary>
     private static bool IsRootToolchainProjectOfFolder(Workspace workspace, ToolchainProject project) =>
-        workspace.Solution is null && workspace.DefaultStartupProject is null
+        workspace.Solution is null
+        && (workspace.DefaultStartupProject is not { } dotnet || ProjectClassifier.IsInAuxiliaryFolder(dotnet, workspace.RootDirectory))
         && string.Equals(Path.GetFullPath(project.Directory).TrimEnd(Path.DirectorySeparatorChar), Path.GetFullPath(workspace.RootDirectory).TrimEnd(Path.DirectorySeparatorChar), StringComparison.Ordinal);
 
     /// <summary>
@@ -168,7 +170,7 @@ public sealed partial class WorkspaceViewModel
         {
             StartupProject = remembered.Info;
         }
-        else if (StartupProject is null && _toolchainProjects.Count > 0
+        else if (_toolchainProjects.Count > 0 && (StartupProject is null || StartupProject == workspace.DefaultStartupProject)
             && (workspace.Projects.Count == 0 || IsRootToolchainProjectOfFolder(workspace, _toolchainProjects[0].Project)))
         {
             // In a .NET solution, F5 starts one of its projects, as in Visual Studio: a docs site or a script folder
@@ -270,6 +272,16 @@ public sealed partial class WorkspaceViewModel
         else if (_toolchains.Manager.CanInstall)
         {
             installText = status.IsBusy ? $"Installing {toolchain.Name}" : $"Install {toolchain.Name}";
+        }
+
+        if (DesktopGui.Framework(item.Project) is { } framework)
+        {
+            report = report with
+            {
+                Status = CompatibilityStatus.Unsupported,
+                RunsVia = framework + ", on a computer",
+                Explanation = DesktopGui.Explanation(item.Info.Name, framework),
+            };
         }
 
         return new CompatibilityRowViewModel(report) { ToolchainId = toolchain.Id, InstallToolchainText = installText };
@@ -425,6 +437,14 @@ public sealed partial class WorkspaceViewModel
         }
 
         var project = item.Project;
+        if (OperatingSystem.IsAndroid() && DesktopGui.Framework(project) is { } framework)
+        {
+            // Its window could not open on the tablet: the program would only fail.
+            Output.WriteLine(DesktopGui.Explanation(info.Name, framework), OutputKind.Failure);
+            StatusText = $"{info.Name} opens its window only on a computer";
+            return;
+        }
+
         if (TabStudio.Toolchains.Embedded.Projects.EmbeddedProjectDetector.Read(project.Directory) is { } embedded)
         {
             try

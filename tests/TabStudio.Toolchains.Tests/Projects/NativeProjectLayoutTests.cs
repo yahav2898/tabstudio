@@ -76,5 +76,20 @@ public sealed class NativeProjectLayoutTests : IDisposable
         Assert.NotEqual("configure.ac", plan.ProgramName);
     }
 
+    /// <summary>hyperfine: a Cargo.toml and, beside it, the pyproject.toml of its plotting scripts. F5 ran Python.</summary>
+    [Fact]
+    public void Of_two_manifests_in_a_folder_the_package_named_after_it_comes_first()
+    {
+        using var workspace = new TempDirectory();
+        var root = Path.Combine(workspace.Path, "hyperfine");
+        Directory.CreateDirectory(root);
+        File.WriteAllText(Path.Combine(root, "Cargo.toml"), "[package]\nname = \"hyperfine\"\nversion = \"1.19.0\"\n");
+        File.WriteAllText(Path.Combine(root, "pyproject.toml"), "[project]\nname = \"hyperfine-scripts\"\n");
+
+        var projects = ToolchainProjectDetector.Detect(root, ToolchainCatalog.Default);
+
+        Assert.Equal(["rust", "python"], projects.Select(p => p.Toolchain.Id));
+    }
+
     public void Dispose() => _folder.Dispose();
 }
