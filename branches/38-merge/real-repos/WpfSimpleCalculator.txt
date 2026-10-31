@@ -1,0 +1,33 @@
+WpfSimpleCalculator at 9146bf6b4365f3c22a371e2525ce65ce32cb16ee
+Opened /home/runner/work/_temp/real-repos/WpfSimpleCalculator/Simple Calculator.sln in 0.2 s
+Compatibility Doctor:
+  Simple Calculator: Ready via OpenSilver in the web preview - A .NET Framework project, run with .NET on this tablet. Built on OpenSilver, which implements WPF's API, and run in the web preview. What OpenSilver lacks, such as 3D, Window.ShowDialog and some members, is named in the Error List; that code runs on your PC through the Windows Bridge.
+Startup project: Simple Calculator
+Built in 0.3 s: 0 errors, 1 warnings
+Packages with analyzers or MSBuild files:
+  opensilver 3.3.3
+      analyzers/dotnet/cs/OpenSilver.Analyzers.dll
+      build/OpenSilver.Common.Config.targets
+      build/OpenSilver.Common.targets
+      build/OpenSilver.GenerateAssemblyInfo.targets
+      build/OpenSilver.targets
+  system.componentmodel.composition 6.0.0
+      buildTransitive/netcoreapp2.0/System.ComponentModel.Composition.targets
+      buildTransitive/netcoreapp3.1/_._
+  system.security.cryptography.pkcs 8.0.1
+      buildTransitive/net461/System.Security.Cryptography.Pkcs.targets
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.Security.Cryptography.Pkcs.targets
+  system.security.cryptography.xml 8.0.2
+      buildTransitive/net461/System.Security.Cryptography.Xml.targets
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.Security.Cryptography.Xml.targets
+Output:
+Build started at 02:50:28...
+1>------ Build started: Project: Simple Calculator, Configuration: Debug ------
+1>MainWindow.xaml(1,1): warning TS7009: In the code OpenSilver's XAML compiler made from MainWindow.xaml: 'MainWindow.Equals' hides inherited member 'object.Equals(object?)'. Use the new keyword if hiding was intended. (CS0108)
+1>Simple Calculator -> compiled in memory (43.5 KB, 322 ms)
+========== Build: 1 succeeded, 0 failed ==========
+
