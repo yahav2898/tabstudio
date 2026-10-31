@@ -1,0 +1,247 @@
+full-stack-fastapi-template at f4bcfaba7c85be3c6332cc74a20819f586dcdbc6, opening /home/runner/work/_temp/repos/full-stack-fastapi-template/backend
+Opened in 0.3 s: backend, solution (none)
+  toolchain project python: /home/runner/work/_temp/repos/full-stack-fastapi-template/backend/pyproject.toml
+Compatibility Doctor:
+  backend: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+F5 startup project: backend (python) /home/runner/work/_temp/repos/full-stack-fastapi-template/backend/pyproject.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Run: exited before listening (0 s after F5)
+Breakpoint at /home/runner/work/_temp/repos/full-stack-fastapi-template/backend/app/main.py:11
+Debug: ended without stopping at main.py:11 (0 s)
+Tests: 58 found; 0 passed, 0 failed, 0 skipped, 58 not run - The build failed. Fix the errors in the Error List, then run the tests again. (4 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.1 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up backend: pip install -e .
+  Installing backend's packages: Installing packages: pip install -e .
+  Installing backend's packages: Succeeded after 12.4 s
+  Setting up projects: Succeeded after 15.0 s
+  Testing backend: Running backend's tests
+  Testing backend: Failed after 4.4 s
+Project setup:
+ting opentelemetry-sdk>=1.44.0 (from fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading opentelemetry_sdk-1.45.2-py3-none-any.whl.metadata (1.6 kB)
+Collecting opentelemetry-exporter-otlp-proto-http>=1.44.0 (from fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading opentelemetry_exporter_otlp_proto_http-1.45.2-py3-none-any.whl.metadata (3.0 kB)
+Collecting fastapi-cli>=0.0.32 (from fastapi-cli[standard]>=0.0.32; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading fastapi_cli-0.0.32-py3-none-any.whl.metadata (6.7 kB)
+Collecting fastar>=0.9.0 (from fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading fastar-0.12.0-cp314-cp314-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
+Collecting httpx2>=2.0.0 (from fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading httpx2-2.16.0-py3-none-any.whl.metadata (10 kB)
+Collecting uvicorn>=0.12.0 (from uvicorn[standard]>=0.12.0; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting pydantic-extra-types>=2.0.0 (from fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading pydantic_extra_types-2.11.1-py3-none-any.whl.metadata (4.2 kB)
+Collecting anyio (from httpx<1.0.0,>=0.25.1->app==0.1.0)
+  Using cached anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+Collecting certifi (from httpx<1.0.0,>=0.25.1->app==0.1.0)
+  Using cached certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+Collecting httpcore==1.* (from httpx<1.0.0,>=0.25.1->app==0.1.0)
+  Using cached httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting h11>=0.16 (from httpcore==1.*->httpx<1.0.0,>=0.25.1->app==0.1.0)
+  Using cached h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting MarkupSafe>=2.0 (from jinja2<4.0.0,>=3.1.4->app==0.1.0)
+  Downloading markupsafe-3.0.4-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting psycopg-binary==3.3.6 (from psycopg[binary]<4.0.0,>=3.3.6->app==0.1.0)
+  Downloading psycopg_binary-3.3.6-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.7 kB)
+Collecting python-dotenv>=1.2.2 (from pydantic-settings<3.0.0,>=2.2.1->app==0.1.0)
+  Using cached python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+Collecting urllib3>=1.26.11 (from sentry-sdk<3.0.0,>=2.70.0->sentry-sdk[fastapi]<3.0.0,>=2.70.0->app==0.1.0)
+  Using cached urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting typer>=0.16.0 (from fastapi-cli>=0.0.32->fastapi-cli[standard]>=0.0.32; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading typer-0.27.3-py3-none-any.whl.metadata (16 kB)
+Collecting rich-toolkit>=0.14.8 (from fastapi-cli>=0.0.32->fastapi-cli[standard]>=0.0.32; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading rich_toolkit-0.20.6-py3-none-any.whl.metadata (3.0 kB)
+Collecting fastapi-cloud-cli>=0.1.1 (from fastapi-cli[standard]>=0.0.32; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading fastapi_cloud_cli-0.26.0-py3-none-any.whl.metadata (3.1 kB)
+Collecting rignore>=0.5.1 (from fastapi-cloud-cli>=0.1.1->fastapi-cli[standard]>=0.0.32; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading rignore-0.8.1-cp314-cp314-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.2 kB)
+Collecting detect-installer>=0.1.0 (from fastapi-cloud-cli>=0.1.1->fastapi-cli[standard]>=0.0.32; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading detect_installer-0.2.1-py3-none-any.whl.metadata (1.2 kB)
+Collecting agent-detector>=1.1.0 (from fastapi-cloud-cli>=0.1.1->fastapi-cli[standard]>=0.0.32; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading agent_detector-2.0.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting httpcore2==2.16.0 (from httpx2>=2.0.0->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading httpcore2-2.16.0-py3-none-any.whl.metadata (27 kB)
+Collecting truststore>=0.10 (from httpx2>=2.0.0->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading truststore-0.10.5-py3-none-any.whl.metadata (4.5 kB)
+Collecting googleapis-common-protos~=1.52 (from opentelemetry-exporter-otlp-proto-http>=1.44.0->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Using cached googleapis_common_protos-1.76.0-py3-none-any.whl.metadata (8.5 kB)
+Collecting opentelemetry-exporter-http-transport==0.66b2 (from opentelemetry-exporter-http-transport[requests]==0.66b2->opentelemetry-exporter-otlp-proto-http>=1.44.0->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading opentelemetry_exporter_http_transport-0.66b2-py3-none-any.whl.metadata (2.3 kB)
+Collecting opentelemetry-exporter-otlp-common==0.66b2 (from opentelemetry-exporter-otlp-proto-http>=1.44.0->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading opentelemetry_exporter_otlp_common-0.66b2-py3-none-any.whl.metadata (1.9 kB)
+Collecting opentelemetry-exporter-otlp-proto-common==1.45.2 (from opentelemetry-exporter-otlp-proto-http>=1.44.0->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading opentelemetry_exporter_otlp_proto_common-1.45.2-py3-none-any.whl.metadata (1.8 kB)
+Collecting opentelemetry-proto==1.45.2 (from opentelemetry-exporter-otlp-proto-http>=1.44.0->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading opentelemetry_proto-1.45.2-py3-none-any.whl.metadata (2.3 kB)
+Collecting requests~=2.7 (from opentelemetry-exporter-otlp-proto-http>=1.44.0->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Using cached requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting protobuf<8.0,>=5.0 (from opentelemetry-proto==1.45.2->opentelemetry-exporter-otlp-proto-http>=1.44.0->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Using cached protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+Collecting opentelemetry-semantic-conventions==0.66b2 (from opentelemetry-sdk>=1.44.0->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading opentelemetry_semantic_conventions-0.66b2-py3-none-any.whl.metadata (2.4 kB)
+Collecting charset_normalizer<4,>=2 (from requests~=2.7->opentelemetry-exporter-otlp-proto-http>=1.44.0->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading charset_normalizer-3.5.2-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+Collecting argon2-cffi>=23.1.0 (from pwdlib[argon2,bcrypt]>=0.3.1->app==0.1.0)
+  Downloading argon2_cffi-25.1.0-py3-none-any.whl.metadata (4.1 kB)
+Collecting bcrypt>=4.1.2 (from pwdlib[argon2,bcrypt]>=0.3.1->app==0.1.0)
+  Downloading bcrypt-5.0.0-cp39-abi3-manylinux_2_34_x86_64.whl.metadata (10 kB)
+Collecting argon2-cffi-bindings (from argon2-cffi>=23.1.0->pwdlib[argon2,bcrypt]>=0.3.1->app==0.1.0)
+  Downloading argon2_cffi_bindings-26.1.0-cp310-abi3-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl.metadata (7.5 kB)
+Collecting annotated-types>=0.6.0 (from pydantic>=2.13.5->app==0.1.0)
+  Using cached annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.50.2 (from pydantic>=2.13.5->app==0.1.0)
+  Downloading pydantic_core-2.50.2-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.5 kB)
+Collecting click>=8.1.7 (from rich-toolkit>=0.14.8->fastapi-cli>=0.0.32->fastapi-cli[standard]>=0.0.32; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Using cached click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting rich>=13.7.1 (from rich-toolkit>=0.14.8->fastapi-cli>=0.0.32->fastapi-cli[standard]>=0.0.32; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Using cached rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+Collecting markdown-it-py>=2.2.0 (from rich>=13.7.1->rich-toolkit>=0.14.8->fastapi-cli>=0.0.32->fastapi-cli[standard]>=0.0.32; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Using cached markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich>=13.7.1->rich-toolkit>=0.14.8->fastapi-cli>=0.0.32->fastapi-cli[standard]>=0.0.32; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=13.7.1->rich-toolkit>=0.14.8->fastapi-cli>=0.0.32->fastapi-cli[standard]>=0.0.32; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Collecting shellingham>=1.3.0 (from typer>=0.16.0->fastapi-cli>=0.0.32->fastapi-cli[standard]>=0.0.32; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Using cached shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
+Collecting httptools>=0.8.0 (from uvicorn[standard]>=0.12.0; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading httptools-0.9.0-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+Collecting pyyaml>=5.1 (from uvicorn[standard]>=0.12.0; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading pyyaml-6.0.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Collecting uvloop>=0.15.1 (from uvicorn[standard]>=0.12.0; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading uvloop-0.23.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.1 kB)
+Collecting watchfiles>=0.20 (from uvicorn[standard]>=0.12.0; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+Collecting websockets>=13.0 (from uvicorn[standard]>=0.12.0; extra == "standard"->fastapi[standard]<1.0.0,>=0.141.1->app==0.1.0)
+  Downloading websockets-17.4-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.3 kB)
+Collecting cffi>=2 (from argon2-cffi-bindings->argon2-cffi>=23.1.0->pwdlib[argon2,bcrypt]>=0.3.1->app==0.1.0)
+  Downloading cffi-2.1.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+Collecting pycparser (from cffi>=2->argon2-cffi-bindings->argon2-cffi>=23.1.0->pwdlib[argon2,bcrypt]>=0.3.1->app==0.1.0)
+  Using cached pycparser-3.12-py3-none-any.whl.metadata (9.7 kB)
+Collecting six>=1.6 (from python-dateutil->emails<2.0,>=1.1.2->app==0.1.0)
+  Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting tzdata (from python-dateutil->emails<2.0,>=1.1.2->app==0.1.0)
+  Using cached tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+Downloading alembic-1.20.1-py3-none-any.whl (270 kB)
+Downloading email_validator-2.3.0-py3-none-any.whl (35 kB)
+Downloading emails-1.1.3-py3-none-any.whl (44 kB)
+Downloading fastapi-0.162.0-py3-none-any.whl (148 kB)
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+Using cached httpcore-1.0.9-py3-none-any.whl (78 kB)
+Using cached jinja2-3.1.6-py3-none-any.whl (134 kB)
+Using cached psycopg-3.3.6-py3-none-any.whl (215 kB)
+Downloading psycopg_binary-3.3.6-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.2/5.2 MB 94.5 MB/s  0:00:00
+Downloading pydantic_settings-2.16.2-py3-none-any.whl (81 kB)
+Downloading pyjwt-2.15.1-py3-none-any.whl (33 kB)
+Downloading python_multipart-0.0.32-py3-none-any.whl (30 kB)
+Downloading sentry_sdk-2.73.0-py3-none-any.whl (549 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 549.0/549.0 kB 103.2 MB/s  0:00:00
+Downloading sqlmodel-0.0.48-py3-none-any.whl (31 kB)
+Downloading sqlalchemy-2.1.6-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.6/4.6 MB 162.7 MB/s  0:00:00
+Using cached annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+Downloading dnspython-2.9.1-py3-none-any.whl (360 kB)
+Downloading fastapi_cli-0.0.32-py3-none-any.whl (14 kB)
+Downloading fastapi_cloud_cli-0.26.0-py3-none-any.whl (108 kB)
+Downloading agent_detector-2.0.0-py3-none-any.whl (9.4 kB)
+Downloading detect_installer-0.2.1-py3-none-any.whl (5.4 kB)
+Downloading fastar-0.12.0-cp314-cp314-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (809 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 809.6/809.6 kB 135.1 MB/s  0:00:00
+Using cached h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading httpx2-2.16.0-py3-none-any.whl (97 kB)
+Downloading httpcore2-2.16.0-py3-none-any.whl (85 kB)
+Using cached anyio-4.15.1-py3-none-any.whl (132 kB)
+Using cached idna-3.20-py3-none-any.whl (69 kB)
+Downloading markupsafe-3.0.4-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (23 kB)
+Using cached opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+Downloading opentelemetry_exporter_otlp_proto_http-1.45.2-py3-none-any.whl (22 kB)
+Downloading opentelemetry_exporter_http_transport-0.66b2-py3-none-any.whl (12 kB)
+Downloading opentelemetry_exporter_otlp_common-0.66b2-py3-none-any.whl (12 kB)
+Downloading opentelemetry_exporter_otlp_proto_common-1.45.2-py3-none-any.whl (15 kB)
+Downloading opentelemetry_proto-1.45.2-py3-none-any.whl (72 kB)
+Using cached googleapis_common_protos-1.76.0-py3-none-any.whl (307 kB)
+Downloading opentelemetry_sdk-1.45.2-py3-none-any.whl (141 kB)
+Downloading opentelemetry_semantic_conventions-0.66b2-py3-none-any.whl (206 kB)
+Using cached protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl (343 kB)
+Using cached requests-2.34.2-py3-none-any.whl (73 kB)
+Downloading charset_normalizer-3.5.2-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (255 kB)
+Using cached urllib3-2.8.0-py3-none-any.whl (135 kB)
+Using cached certifi-2026.10.23-py3-none-any.whl (135 kB)
+Downloading pwdlib-0.3.1-py3-none-any.whl (9.3 kB)
+Downloading argon2_cffi-25.1.0-py3-none-any.whl (14 kB)
+Downloading bcrypt-5.0.0-cp39-abi3-manylinux_2_34_x86_64.whl (278 kB)
+Using cached pydantic-2.14.2-py3-none-any.whl (490 kB)
+Downloading pydantic_core-2.50.2-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 142.1 MB/s  0:00:00
+Using cached annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Downloading pydantic_extra_types-2.11.1-py3-none-any.whl (79 kB)
+Using cached python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+Downloading rich_toolkit-0.20.6-py3-none-any.whl (39 kB)
+Using cached click-8.5.0-py3-none-any.whl (125 kB)
+Using cached rich-15.0.0-py3-none-any.whl (310 kB)
+Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading rignore-0.8.1-cp314-cp314-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (929 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 929.3/929.3 kB 205.1 MB/s  0:00:00
+Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+Downloading truststore-0.10.5-py3-none-any.whl (19 kB)
+Downloading typer-0.27.3-py3-none-any.whl (123 kB)
+Using cached shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Using cached typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+Downloading httptools-0.9.0-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (514 kB)
+Downloading pyyaml-6.0.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (794 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 794.2/794.2 kB 169.3 MB/s  0:00:00
+Downloading uvloop-0.23.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 257.0 MB/s  0:00:00
+Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (458 kB)
+Downloading websockets-17.4-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (226 kB)
+Downloading argon2_cffi_bindings-26.1.0-cp310-abi3-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (26 kB)
+Downloading cffi-2.1.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+Downloading mako-1.4.3-py3-none-any.whl (80 kB)
+Downloading puremagic-2.2.0-py3-none-any.whl (71 kB)
+Using cached pycparser-3.12-py3-none-any.whl (62 kB)
+Using cached python_dateutil-3.0.0-py2.py3-none-any.whl (94 kB)
+Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+Using cached tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Building wheels for collected packages: app, dkimpy
+  Building editable for app (pyproject.toml): started
+  Building editable for app (pyproject.toml): finished with status 'done'
+  Created wheel for app: filename=app-0.1.0-py3-none-any.whl size=1174 sha256=e5fe96081e8ddfc2545cc91a51a358f94d5776d3ad52e01eabd4a315f3eb87dc
+  Stored in directory: /tmp/pip-ephem-wheel-cache-6z6dqrvo/wheels/77/fe/b1/ca09c725a5873ee280b8e96466e1fd908efaa55963126fa0db
+  Building wheel for dkimpy (pyproject.toml): started
+  Building wheel for dkimpy (pyproject.toml): finished with status 'done'
+  Created wheel for dkimpy: filename=dkimpy-1.1.8-py3-none-any.whl size=50057 sha256=7c5aaa615669e0436614ae2eac28bf337969cc1d5dcd8cb9c6326dde5a59d31f
+  Stored in directory: /home/runner/.cache/pip/wheels/8a/05/53/16867ba8706c277f883f2cbe90084891436dd1594303dc9145
+Successfully built app dkimpy
+Installing collected packages: websockets, uvloop, urllib3, tzdata, typing-extensions, truststore, six, shellingham, rignore, pyyaml, python-multipart, python-dotenv, pyjwt, pygments, pycparser, pwdlib, puremagic, psycopg-binary, psycopg, protobuf, mdurl, MarkupSafe, idna, httptools, h11, fastar, dnspython, detect-installer, click, charset_normalizer, certifi, bcrypt, annotated-types, annotated-doc, agent-detector, uvicorn, typing-inspection, SQLAlchemy, sentry-sdk, requests, python-dateutil, pydantic-core, opentelemetry-proto, opentelemetry-api, markdown-it-py, Mako, jinja2, httpcore2, httpcore, googleapis-common-protos, email-validator, dkimpy, cffi, anyio, watchfiles, starlette, rich, pydantic, opentelemetry-semantic-conventions, opentelemetry-exporter-otlp-proto-common, opentelemetry-exporter-http-transport, httpx2, httpx, emails, argon2-cffi-bindings, alembic, typer, sqlmodel, rich-toolkit, pydantic-settings, pydantic-extra-types, opentelemetry-sdk, fastapi, argon2-cffi, opentelemetry-exporter-otlp-common, fastapi-cloud-cli, fastapi-cli, opentelemetry-exporter-otlp-proto-http, app
+
+Successfully installed Mako-1.4.3 MarkupSafe-3.0.4 SQLAlchemy-2.1.6 agent-detector-2.0.0 alembic-1.20.1 annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.15.1 app-0.1.0 argon2-cffi-25.1.0 argon2-cffi-bindings-26.1.0 bcrypt-5.0.0 certifi-2026.10.23 cffi-2.1.1 charset_normalizer-3.5.2 click-8.5.0 detect-installer-0.2.1 dkimpy-1.1.8 dnspython-2.9.1 email-validator-2.3.0 emails-1.1.3 fastapi-0.162.0 fastapi-cli-0.0.32 fastapi-cloud-cli-0.26.0 fastar-0.12.0 googleapis-common-protos-1.76.0 h11-0.16.0 httpcore-1.0.9 httpcore2-2.16.0 httptools-0.9.0 httpx-0.28.1 httpx2-2.16.0 idna-3.20 jinja2-3.1.6 markdown-it-py-4.2.0 mdurl-0.1.2 opentelemetry-api-1.45.2 opentelemetry-exporter-http-transport-0.66b2 opentelemetry-exporter-otlp-common-0.66b2 opentelemetry-exporter-otlp-proto-common-1.45.2 opentelemetry-exporter-otlp-proto-http-1.45.2 opentelemetry-proto-1.45.2 opentelemetry-sdk-1.45.2 opentelemetry-semantic-conventions-0.66b2 protobuf-7.36.2 psycopg-3.3.6 psycopg-binary-3.3.6 puremagic-2.2.0 pwdlib-0.3.1 pycparser-3.12 pydantic-2.14.2 pydantic-core-2.50.2 pydantic-extra-types-2.11.1 pydantic-settings-2.16.2 pygments-2.21.0 pyjwt-2.15.1 python-dateutil-3.0.0 python-dotenv-1.2.4 python-multipart-0.0.32 pyyaml-6.0.3 requests-2.34.2 rich-15.0.0 rich-toolkit-0.20.6 rignore-0.8.1 sentry-sdk-2.73.0 shellingham-1.5.4 six-1.17.0 sqlmodel-0.0.48 starlette-1.10.0 truststore-0.10.5 typer-0.27.3 typing-extensions-4.16.0 typing-inspection-0.4.4 tzdata-2026.6 urllib3-2.8.0 uvicorn-0.54.0 uvloop-0.23.0 watchfiles-1.3.0 websockets-17.4
+
+Output:
+backend is a web app in app/main.py, which runs with uvicorn app.main:app, but the project's dependencies do not list uvicorn. Add uvicorn to them, install the project's packages, and press F5 again.
+========== Running backend's tests with Pytest ==========
+> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''pytest<10.0.0,>=7.4.3'\'' '\''mypy<3.0.0,>=1.8.0'\'' '\''ty>=0.0.25'\'' '\''ruff<1.0.0,>=0.16.0'\'' '\''coverage<8.0.0,>=7.4.3'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/repos/full-stack-fastapi-template/backend/.tabstudio/test-results/b74c735a581e4161a19dedac75592cf8/pytest.xml
+Installing what the tests need
+ImportError while loading conftest '/home/runner/work/_temp/repos/full-stack-fastapi-template/backend/tests/conftest.py'.
+tests/conftest.py:7: in <module>
+    from app.core.config import settings
+app/core/config.py:91: in <module>
+    settings = Settings()  # type: ignore # ty: ignore[unused-ignore-comment]
+               ^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pydantic_settings/main.py:292: in __init__
+    super().__init__(**__pydantic_self__.__class__._settings_build_values(sources, init_kwargs))
+E   pydantic_core._pydantic_core.ValidationError: 1 validation error for Settings
+E   DATABASE_URL
+E     Field required [type=missing, input_value={'SECRET_KEY': 'changethi... 'environment': 'local'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.14/v/missing
+backend's tests did not run: the build or the test runner failed. See the Error List and the output above.
+

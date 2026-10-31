@@ -1,0 +1,311 @@
+typer at a5882dedf0bc7a46cd861fdfca020f88519e0f21, opening /home/runner/work/_temp/repos/typer
+Opened in 0.2 s: typer, solution (none)
+  toolchain project python: /home/runner/work/_temp/repos/typer/pyproject.toml
+Compatibility Doctor:
+  typer: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+F5 startup project: typer (python) /home/runner/work/_temp/repos/typer/pyproject.toml
+Error List after analysis: 0 errors, 0 warnings
+Error List after the build: 0 errors, 0 warnings
+Tests: 969 found; 1468 passed, 6 failed, 31 skipped, 366 not run - 1505 tests run in 1 min 44 sec: 1468 passed, 6 failed, 31 skipped. (105 s)
+Long-operation progress:
+  Setting up projects: Checking project setup
+  Loading C#: Loading C#
+  Loading C#: Succeeded after 0.0 s
+  Analyzing: Analyzing
+  Analyzing: Succeeded after 0.0 s
+  Setting up projects: Setting up typer: pip install -e .
+  Installing typer's packages: Installing packages: pip install -e .
+  Installing typer's packages: Succeeded after 3.9 s
+  Setting up projects: Succeeded after 6.5 s
+  Testing typer: Running typer's tests
+  Testing typer: Failed after 104.6 s
+Project setup:
+------ typer: pip install -e . ------
+> uv venv --seed --python 3.10 .venv
+Downloading cpython-3.10.22-linux-x86_64-gnu (download) (28.0MiB)
+ Downloaded cpython-3.10.22-linux-x86_64-gnu (download)
+Using CPython 3.10.22
+Creating virtual environment with seed packages at: .venv
+ + packaging==26.3
+ + pip==26.2.2
+ + setuptools==84.2.1
+ + wheel==0.48.0
+Activate with: .venv/bin/activate
+> /home/runner/work/_temp/repos/typer/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/repos/typer
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting shellingham>=1.3.0 (from typer==0.27.3)
+  Downloading shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
+Collecting rich>=13.8.0 (from typer==0.27.3)
+  Using cached rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+Collecting annotated-doc>=0.0.2 (from typer==0.27.3)
+  Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+Collecting markdown-it-py>=2.2.0 (from rich>=13.8.0->typer==0.27.3)
+  Using cached markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich>=13.8.0->typer==0.27.3)
+  Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=13.8.0->typer==0.27.3)
+  Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Building wheels for collected packages: typer
+  Building editable for typer (pyproject.toml): started
+  Building editable for typer (pyproject.toml): finished with status 'done'
+  Created wheel for typer: filename=typer-0.27.3-py3-none-any.whl size=6719 sha256=50a5f42ea8219131afea46513e8206f070e97d0537bfcd188cbbf3baed5ddce2
+  Stored in directory: /tmp/pip-ephem-wheel-cache-mz9q1hln/wheels/00/e6/ab/d4e5000275d796ba74f9185427dd1fa4ae32d1a5810db9a11c
+Successfully built typer
+Installing collected packages: shellingham, pygments, mdurl, annotated-doc, markdown-it-py, rich, typer
+
+Successfully installed annotated-doc-0.0.5 markdown-it-py-4.2.0 mdurl-0.1.2 pygments-2.21.0 rich-15.0.0 shellingham-1.5.4 typer-0.27.3
+
+Output:
+          [ 72%]
+tests/test_tutorial/test_parameter_types/test_bool/test_tutorial001.py . [ 72%]
+...........                                                              [ 73%]
+tests/test_tutorial/test_parameter_types/test_bool/test_tutorial002.py . [ 73%]
+.............                                                            [ 74%]
+tests/test_tutorial/test_parameter_types/test_bool/test_tutorial003.py . [ 74%]
+.......                                                                  [ 74%]
+tests/test_tutorial/test_parameter_types/test_bool/test_tutorial004.py . [ 74%]
+.........                                                                [ 75%]
+tests/test_tutorial/test_parameter_types/test_custom_types/test_tutorial001.py . [ 75%]
+.......                                                                  [ 75%]
+tests/test_tutorial/test_parameter_types/test_datetime/test_tutorial001.py . [ 75%]
+.....                                                                    [ 76%]
+tests/test_tutorial/test_parameter_types/test_datetime/test_tutorial002.py . [ 76%]
+.....                                                                    [ 76%]
+tests/test_tutorial/test_parameter_types/test_enum/test_tutorial001.py . [ 76%]
+.....                                                                    [ 76%]
+tests/test_tutorial/test_parameter_types/test_enum/test_tutorial002.py . [ 77%]
+.....                                                                    [ 77%]
+tests/test_tutorial/test_parameter_types/test_enum/test_tutorial003.py . [ 77%]
+.........                                                                [ 78%]
+tests/test_tutorial/test_parameter_types/test_enum/test_tutorial004.py . [ 78%]
+.......                                                                  [ 78%]
+tests/test_tutorial/test_parameter_types/test_file/test_tutorial001.py . [ 78%]
+...                                                                      [ 78%]
+tests/test_tutorial/test_parameter_types/test_file/test_tutorial002.py . [ 78%]
+...                                                                      [ 79%]
+tests/test_tutorial/test_parameter_types/test_file/test_tutorial003.py . [ 79%]
+...                                                                      [ 79%]
+tests/test_tutorial/test_parameter_types/test_file/test_tutorial004.py . [ 79%]
+...                                                                      [ 79%]
+tests/test_tutorial/test_parameter_types/test_file/test_tutorial005.py . [ 79%]
+...                                                                      [ 79%]
+tests/test_tutorial/test_parameter_types/test_index/test_tutorial001.py . [ 79%]
+....                                                                     [ 80%]
+tests/test_tutorial/test_parameter_types/test_number/test_tutorial001.py . [ 80%]
+.................                                                        [ 81%]
+tests/test_tutorial/test_parameter_types/test_number/test_tutorial002.py . [ 81%]
+.....                                                                    [ 81%]
+tests/test_tutorial/test_parameter_types/test_number/test_tutorial003.py . [ 81%]
+.............                                                            [ 82%]
+tests/test_tutorial/test_parameter_types/test_path/test_tutorial001.py . [ 82%]
+.........                                                                [ 83%]
+tests/test_tutorial/test_parameter_types/test_path/test_tutorial002.py . [ 83%]
+.......                                                                  [ 83%]
+tests/test_tutorial/test_parameter_types/test_uuid/test_tutorial001.py . [ 83%]
+....                                                                     [ 84%]
+tests/test_tutorial/test_printing/test_tutorial001.py F.                 [ 84%]
+tests/test_tutorial/test_printing/test_tutorial002.py F..                [ 84%]
+tests/test_tutorial/test_printing/test_tutorial003.py ..                 [ 84%]
+tests/test_tutorial/test_printing/test_tutorial004.py ..                 [ 84%]
+tests/test_tutorial/test_printing/test_tutorial005.py ...                [ 85%]
+tests/test_tutorial/test_printing/test_tutorial006.py ..                 [ 85%]
+tests/test_tutorial/test_progressbar/test_tutorial001.py ...             [ 85%]
+tests/test_tutorial/test_progressbar/test_tutorial002.py ..              [ 85%]
+tests/test_tutorial/test_progressbar/test_tutorial003.py ..              [ 85%]
+tests/test_tutorial/test_progressbar/test_tutorial004.py ...             [ 85%]
+tests/test_tutorial/test_progressbar/test_tutorial005.py ..              [ 85%]
+tests/test_tutorial/test_progressbar/test_tutorial006.py ..              [ 86%]
+tests/test_tutorial/test_prompt/test_tutorial001.py ..                   [ 86%]
+tests/test_tutorial/test_prompt/test_tutorial002.py ...                  [ 86%]
+tests/test_tutorial/test_prompt/test_tutorial003.py ...                  [ 86%]
+tests/test_tutorial/test_prompt/test_tutorial004.py ..                   [ 86%]
+tests/test_tutorial/test_subcommands/test_callback_override/test_tutorial001.py . [ 86%]
+.                                                                        [ 86%]
+tests/test_tutorial/test_subcommands/test_callback_override/test_tutorial002.py . [ 86%]
+.                                                                        [ 87%]
+tests/test_tutorial/test_subcommands/test_callback_override/test_tutorial003.py . [ 87%]
+..                                                                       [ 87%]
+tests/test_tutorial/test_subcommands/test_callback_override/test_tutorial004.py . [ 87%]
+..                                                                       [ 87%]
+tests/test_tutorial/test_subcommands/test_name_help/test_tutorial001.py . [ 87%]
+...                                                                      [ 87%]
+tests/test_tutorial/test_subcommands/test_name_help/test_tutorial002.py . [ 87%]
+...                                                                      [ 87%]
+tests/test_tutorial/test_subcommands/test_name_help/test_tutorial003.py . [ 88%]
+...                                                                      [ 88%]
+tests/test_tutorial/test_subcommands/test_name_help/test_tutorial004.py . [ 88%]
+...                                                                      [ 88%]
+tests/test_tutorial/test_subcommands/test_name_help/test_tutorial005.py . [ 88%]
+...                                                                      [ 88%]
+tests/test_tutorial/test_subcommands/test_name_help/test_tutorial006.py . [ 88%]
+...                                                                      [ 89%]
+tests/test_tutorial/test_subcommands/test_name_help/test_tutorial007.py . [ 89%]
+...                                                                      [ 89%]
+tests/test_tutorial/test_subcommands/test_name_help/test_tutorial008.py . [ 89%]
+...                                                                      [ 89%]
+tests/test_tutorial/test_subcommands/test_tutorial001.py .........       [ 90%]
+tests/test_tutorial/test_subcommands/test_tutorial002.py .........       [ 90%]
+tests/test_tutorial/test_subcommands/test_tutorial003.py ............... [ 91%]
+.                                                                        [ 91%]
+tests/test_tutorial/test_terminating/test_tutorial001.py ....            [ 92%]
+tests/test_tutorial/test_terminating/test_tutorial002.py ...             [ 92%]
+tests/test_tutorial/test_terminating/test_tutorial003.py .....           [ 92%]
+tests/test_tutorial/test_testing/test_app01.py ...                       [ 92%]
+tests/test_tutorial/test_testing/test_app02.py ....                      [ 93%]
+tests/test_tutorial/test_testing/test_app03.py ...                       [ 93%]
+tests/test_tutorial/test_typer_app/test_tutorial001.py ...               [ 93%]
+tests/test_type_conversion.py ..............................s........... [ 96%]
+........                                                                 [ 96%]
+tests/test_types.py .........                                            [ 97%]
+tests/test_types_file.py ...............Fs...s.....                      [ 99%]
+tests/test_win_console.py sssssssssssss                                  [100%]
+
+=================================== FAILURES ===================================
+___________ test_rich_exceptions_dont_truncate_code_on_wide_terminal ___________
+
+    def test_rich_exceptions_dont_truncate_code_on_wide_terminal():
+        file_path = Path(__file__).parent / "assets/type_error_rich.py"
+        result = subprocess.run(
+            [sys.executable, "-m", "coverage", "run", str(file_path)],
+            capture_output=True,
+            encoding="utf-8",
+            env={
+                **os.environ,
+                "TERMINAL_WIDTH": "120",
+                "TYPER_STANDARD_TRACEBACK": "",
+                "_TYPER_STANDARD_TRACEBACK": "",
+            },
+        )
+    
+>       assert (
+            "# The line below will cause TypeError because you cannot concatenate string and integer."
+            in result.stderr
+        )
+E       assert '# The line below will cause TypeError because you cannot concatenate string and integer.' in '╭───────────────────── Traceback (most recent call last) ──────────────────────╮\n│ /home/runner/work/_temp/repos/typ...───────────────────────────────────────────────────────────╯\nTypeError: can only concatenate str (not "int") to str\n'
+E        +  where '╭───────────────────── Traceback (most recent call last) ──────────────────────╮\n│ /home/runner/work/_temp/repos/typ...───────────────────────────────────────────────────────────╯\nTypeError: can only concatenate str (not "int") to str\n' = CompletedProcess(args=['/home/runner/work/_temp/repos/typer/.venv/bin/python', '-m', 'coverage', 'run', '/home/runner/...──────────────────────────────────────────────────────────╯\nTypeError: can only concatenate str (not "int") to str\n').stderr
+
+tests/test_tracebacks.py:81: AssertionError
+_________________________ test_help[tutorial004_py310] _________________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7f7dbbc1c0>
+mod = <module 'docs_src.options.help.tutorial004_py310' from '/home/runner/work/_temp/repos/typer/docs_src/options/help/tutorial004_py310.py'>
+
+    def test_help(monkeypatch, mod: ModuleType):
+        # avoid default width of 80 for non-attached consoles during testing
+        monkeypatch.setenv("COLUMNS", "200")
+        result = runner.invoke(mod.app, ["--help"])
+        assert result.exit_code == 0
+        assert "--fullname" in result.output
+        assert "<str>" in result.output
+>       assert "[default: (Deadpoolio the amazing's name)]" in result.output
+E       assert "[default: (Deadpoolio the amazing's name)]" in '                                                                                \n Usage: main [OPTIONS]             ...essage and exit.               │\n╰──────────────────────────────────────────────────────────────────────────────╯\n\n'
+E        +  where '                                                                                \n Usage: main [OPTIONS]             ...essage and exit.               │\n╰──────────────────────────────────────────────────────────────────────────────╯\n\n' = <Result okay>.output
+
+tests/test_tutorial/test_options/test_help/test_tutorial004.py:38: AssertionError
+_______________________ test_help[tutorial004_an_py310] ________________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7f7dbb89d0>
+mod = <module 'docs_src.options.help.tutorial004_an_py310' from '/home/runner/work/_temp/repos/typer/docs_src/options/help/tutorial004_an_py310.py'>
+
+    def test_help(monkeypatch, mod: ModuleType):
+        # avoid default width of 80 for non-attached consoles during testing
+        monkeypatch.setenv("COLUMNS", "200")
+        result = runner.invoke(mod.app, ["--help"])
+        assert result.exit_code == 0
+        assert "--fullname" in result.output
+        assert "<str>" in result.output
+>       assert "[default: (Deadpoolio the amazing's name)]" in result.output
+E       assert "[default: (Deadpoolio the amazing's name)]" in '                                                                                \n Usage: main [OPTIONS]             ...essage and exit.               │\n╰──────────────────────────────────────────────────────────────────────────────╯\n\n'
+E        +  where '                                                                                \n Usage: main [OPTIONS]             ...essage and exit.               │\n╰──────────────────────────────────────────────────────────────────────────────╯\n\n' = <Result okay>.output
+
+tests/test_tutorial/test_options/test_help/test_tutorial004.py:38: AssertionError
+___________________________________ test_cli ___________________________________
+
+    def test_cli():
+        console = Console(force_terminal=True, width=100)
+        with patch("rich.get_console", return_value=console):
+            result = runner.invoke(app)
+    
+        assert result.exit_code == 0
+    
+        # Replace all Rich formatting with `*` characters
+        normalized_output = normalize_rich_output(result.output, squash_whitespaces=False)
+    
+>       assert (
+            "Here's the data\n"
+            "*{*\n"
+            "    *'name'*: *'Rick'*,\n"
+            "    *'age'*: *42*,\n"
+            "    *'items'*: *[*{*'name'*: *'Portal Gun'*}*, *{*'name'*: *'Plumbus'*}*]*,\n"
+            "    *'active'*: *True*,\n"
+            "    *'affiliation'*: *None*\n"
+            "*}*\n"
+        ) in normalized_output
+E       assert "Here's the data\n*{*\n    *'name'*: *'Rick'*,\n    *'age'*: *42*,\n    *'items'*: *[*{*'name'*: *'Portal Gun'*}*, *{*'name'*: *'Plumbus'*}*]*,\n    *'active'*: *True*,\n    *'affiliation'*: *None*\n*}*\n" in "Here's the data\n{\n    'name': 'Rick',\n    'age': 42,\n    'items': [{'name': 'Portal Gun'}, {'name': 'Plumbus'}],\n    'active': True,\n    'affiliation': None\n}\n"
+
+tests/test_tutorial/test_printing/test_tutorial001.py:26: AssertionError
+___________________________________ test_cli ___________________________________
+
+    def test_cli():
+        console = Console(force_terminal=True, width=100)
+        with patch("rich.get_console", return_value=console):
+            result = runner.invoke(app)
+    
+        # Replace all Rich formatting with `*` characters
+        normalized_output = normalize_rich_output(result.output)
+    
+        assert result.exit_code == 0
+>       assert "*Alert!* *Portal gun* shooting! *" in normalized_output
+E       AssertionError: assert '*Alert!* *Portal gun* shooting! *' in 'Alert! Portal gun shooting! *\n'
+
+tests/test_tutorial/test_printing/test_tutorial002.py:25: AssertionError
+_______________________________ test_file_error ________________________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7f7de55090>
+tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-3/test_file_error0')
+
+    def test_file_error(monkeypatch, tmp_path: Path) -> None:
+        file_path = tmp_path / "cannot-open.txt"
+    
+        def fake_open(path, *args, **kwargs):
+            if Path(path) == file_path:
+                raise OSError()
+    
+        monkeypatch.setattr("builtins.open", fake_open)
+        result = runner.invoke(app, ["write-text", f"--file-out={file_path}"])
+        assert result.exit_code == 1
+        assert "Could not open file" in result.output
+        assert "cannot-open.txt" in result.output
+>       assert "unknown error" in result.output
+E       AssertionError: assert 'unknown error' in '╭─ Error ──────────────────────────────────────────────────────────────────────╮\n│ Could not open file              ...                                 │\n╰──────────────────────────────────────────────────────────────────────────────╯\n'
+E        +  where '╭─ Error ──────────────────────────────────────────────────────────────────────╮\n│ Could not open file              ...                                 │\n╰──────────────────────────────────────────────────────────────────────────────╯\n' = <Result SystemExit(1)>.output
+
+tests/test_types_file.py:285: AssertionError
+- generated xml file: /home/runner/work/_temp/repos/typer/.tabstudio/test-results/0ee8a2a85ba9415a84e5aafdc66e4436/pytest.xml -
+=========================== short test summary info ============================
+FAILED tests/test_tracebacks.py::test_rich_exceptions_dont_truncate_code_on_wide_terminal - assert '# The line below will cause TypeError because you cannot concatenate string and integer.' in '╭───────────────────── Traceback (most recent call last) ──────────────────────╮\n│ /home/runner/work/_temp/repos/typ...───────────────────────────────────────────────────────────╯\nTypeError: can only concatenate str (not "int") to str\n'
+ +  where '╭───────────────────── Traceback (most recent call last) ──────────────────────╮\n│ /home/runner/work/_temp/repos/typ...───────────────────────────────────────────────────────────╯\nTypeError: can only concatenate str (not "int") to str\n' = CompletedProcess(args=['/home/runner/work/_temp/repos/typer/.venv/bin/python', '-m', 'coverage', 'run', '/home/runner/...──────────────────────────────────────────────────────────╯\nTypeError: can only concatenate str (not "int") to str\n').stderr
+FAILED tests/test_tutorial/test_options/test_help/test_tutorial004.py::test_help[tutorial004_py310] - assert "[default: (Deadpoolio the amazing's name)]" in '                                                                                \n Usage: main [OPTIONS]             ...essage and exit.               │\n╰──────────────────────────────────────────────────────────────────────────────╯\n\n'
+ +  where '                                                                                \n Usage: main [OPTIONS]             ...essage and exit.               │\n╰──────────────────────────────────────────────────────────────────────────────╯\n\n' = <Result okay>.output
+FAILED tests/test_tutorial/test_options/test_help/test_tutorial004.py::test_help[tutorial004_an_py310] - assert "[default: (Deadpoolio the amazing's name)]" in '                                                                                \n Usage: main [OPTIONS]             ...essage and exit.               │\n╰──────────────────────────────────────────────────────────────────────────────╯\n\n'
+ +  where '                                                                                \n Usage: main [OPTIONS]             ...essage and exit.               │\n╰──────────────────────────────────────────────────────────────────────────────╯\n\n' = <Result okay>.output
+FAILED tests/test_tutorial/test_printing/test_tutorial001.py::test_cli - assert "Here's the data\n*{*\n    *'name'*: *'Rick'*,\n    *'age'*: *42*,\n    *'items'*: *[*{*'name'*: *'Portal Gun'*}*, *{*'name'*: *'Plumbus'*}*]*,\n    *'active'*: *True*,\n    *'affiliation'*: *None*\n*}*\n" in "Here's the data\n{\n    'name': 'Rick',\n    'age': 42,\n    'items': [{'name': 'Portal Gun'}, {'name': 'Plumbus'}],\n    'active': True,\n    'affiliation': None\n}\n"
+FAILED tests/test_tutorial/test_printing/test_tutorial002.py::test_cli - AssertionError: assert '*Alert!* *Portal gun* shooting! *' in 'Alert! Portal gun shooting! *\n'
+FAILED tests/test_types_file.py::test_file_error - AssertionError: assert 'unknown error' in '╭─ Error ──────────────────────────────────────────────────────────────────────╮\n│ Could not open file              ...                                 │\n╰──────────────────────────────────────────────────────────────────────────────╯\n'
+ +  where '╭─ Error ──────────────────────────────────────────────────────────────────────╮\n│ Could not open file              ...                                 │\n╰──────────────────────────────────────────────────────────────────────────────╯\n' = <Result SystemExit(1)>.output
+======= 6 failed, 1468 passed, 29 skipped, 2 xfailed in 98.91s (0:01:38) =======
+
