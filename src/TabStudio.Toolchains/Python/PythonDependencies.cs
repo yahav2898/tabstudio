@@ -173,7 +173,53 @@ public static partial class PythonDependencies
             }
         }
 
+        // uv workspaces keep their transitive dependencies at the workspace root. Opening a member
+        // (for example backend/) must still recognize the server installed by fastapi[standard].
+        if (WorkspaceLock(projectDirectory) is { } workspaceLock && Read(workspaceLock) is { } workspaceText)
+        {
+            names.UnionWith(LockPinsOf(workspaceText).Select(p => p.Name));
+        }
+
         return names;
+    }
+
+    private static string? WorkspaceLock(string projectDirectory)
+    {
+        var project = Path.GetFullPath(projectDirectory);
+        if (Path.Exists(Path.Combine(project, ".git"))) return null;
+        for (var folder = Directory.GetParent(project); folder is not null; folder = folder.Parent)
+        {
+            if (Read(Path.Combine(folder.FullName, "pyproject.toml")) is { } text
+                && text.Split('\n').Any(line => Header(line.Trim()) == "tool.uv.workspace"))
+            {
+                var relative = Path.GetRelativePath(folder.FullName, project).Replace('\\', '/');
+                bool Matches(string pattern) => Regex.IsMatch(relative, "^" + Regex.Escape(pattern.TrimEnd('/'))
+                    .Replace(@"\*\*", ".*", StringComparison.Ordinal).Replace(@"\*", "[^/]*", StringComparison.Ordinal)
+                    .Replace(@"\?", "[^/]", StringComparison.Ordinal) + "$", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+                return WorkspacePatterns(text, "members").Any(Matches) && !WorkspacePatterns(text, "exclude").Any(Matches)
+                    ? Path.Combine(folder.FullName, "uv.lock") : null;
+            }
+
+            if (Path.Exists(Path.Combine(folder.FullName, ".git"))) break;
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<string> WorkspacePatterns(string text, string key)
+    {
+        string? table = null;
+        var inArray = false;
+        foreach (var raw in text.Split('\n'))
+        {
+            var line = raw.Trim();
+            if (!inArray && line.StartsWith('[')) { table = Header(line); continue; }
+            if (table != "tool.uv.workspace") continue;
+            if (!inArray && !(ArrayStart().Match(line) is { Success: true } start && start.Groups["key"].Value == key)) continue;
+            var rest = inArray ? line : line[(line.IndexOf('[', StringComparison.Ordinal) + 1)..];
+            foreach (Match quoted in Quoted().Matches(rest)) yield return quoted.Groups["value"].Value;
+            inArray = !Quoted().Replace(rest, string.Empty).Contains(']', StringComparison.Ordinal);
+        }
     }
 
     /// <summary>

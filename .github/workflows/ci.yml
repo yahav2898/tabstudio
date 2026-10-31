@@ -1005,7 +1005,7 @@ jobs:
       # Keep all assertions visible even when a different group fails.
       fail-fast: false
       matrix:
-        shard: [managed, ui, native]
+        shard: [managed, ui, native, containers]
     steps:
       - uses: actions/checkout@v4
 
@@ -1201,3 +1201,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: bash build/ci/publish-release.sh "${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'auto' }}" ci-out/TabStudio.apk
+

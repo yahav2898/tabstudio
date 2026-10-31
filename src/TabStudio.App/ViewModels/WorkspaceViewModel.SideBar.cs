@@ -44,6 +44,9 @@ public enum SideBarPanel
     /// <summary>Native repository backing services.</summary>
     Services,
 
+    /// <summary>OCI images, PRoot containers, logs and exec terminals.</summary>
+    Containers,
+
     /// <summary>TabStudio Live: who is in the session, Follow, and what each participant may do.</summary>
     Live,
 }
@@ -58,7 +61,7 @@ public sealed partial class WorkspaceViewModel
     [NotifyPropertyChangedFor(nameof(IsPullRequestsSelected))]
     [NotifyPropertyChangedFor(nameof(IsSwarmSelected), nameof(ShowsSwarmTab))]
     [NotifyPropertyChangedFor(nameof(IsWindowsBridgeSelected), nameof(IsDatabaseSelected), nameof(IsRemoteExplorerSelected))]
-    [NotifyPropertyChangedFor(nameof(IsServicesSelected), nameof(IsLiveSelected))]
+    [NotifyPropertyChangedFor(nameof(IsServicesSelected), nameof(IsContainersSelected), nameof(IsLiveSelected))]
     public partial SideBarPanel SelectedSideBarPanel { get; set; } = SideBarPanel.SolutionExplorer;
 
     /// <summary>Whether the side bar shows the Solution Explorer and Properties.</summary>
@@ -82,3 +85,4 @@ public sealed partial class WorkspaceViewModel
         IsSideBarVisible = true;
     }
 }
+

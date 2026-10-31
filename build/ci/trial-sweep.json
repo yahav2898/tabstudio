@@ -1,0 +1,26 @@
+{
+  "comment": "Container regressions. The FastAPI entry is preserved from trial/mega-4 at 56a50fcd8637b31e3343f9a09b0af3cc5a9ccf2f (the original 0.20.5 trial sweep); its upstream Compose files remain unchanged. The additional Node entry uses an explicit Compose fixture.",
+  "repositories": [
+    {
+      "name": "node-express-realworld",
+      "url": "https://github.com/gothinkster/node-express-realworld-example-app",
+      "sha": "30b68e1e881462b2f4164ea09ab4c4f5699c7b0b",
+      "compose": "build/ci/container-trial/compose.yaml",
+      "route": "/api/tags",
+      "expect": "\"tags\""
+    },
+    {
+      "name": "full-stack-fastapi-template",
+      "area": "python",
+      "url": "https://github.com/fastapi/full-stack-fastapi-template",
+      "sha": "f4bcfaba7c85be3c6332cc74a20819f586dcdbc6",
+      "open": "backend",
+      "expect": "web-first-route",
+      "tests": true,
+      "route": "/docs",
+      "files": {
+        "../.env": "PROJECT_NAME=Full Stack FastAPI Project\nSECRET_KEY=changethis\nFIRST_SUPERUSER=admin@example.com\nFIRST_SUPERUSER_PASSWORD=changethis\nPOSTGRES_SERVER=localhost\nPOSTGRES_PORT=5432\nPOSTGRES_USER=postgres\nPOSTGRES_PASSWORD=tabstudio-ci\nPOSTGRES_DB=realworld\nENVIRONMENT=local\nFRONTEND_HOST=http://localhost:5173\n"
+      }
+    }
+  ]
+}

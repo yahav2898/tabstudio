@@ -34,6 +34,10 @@ public sealed record ComposeService(string Name, string? Image)
     public IReadOnlyList<string>? Command { get; init; }
     public IReadOnlyList<string>? Entrypoint { get; init; }
     public string? BuildContext { get; init; }
+    public string? WorkingDirectory { get; init; }
+    public string? User { get; init; }
+    public string? Platform { get; init; }
+    public string? Restart { get; init; }
     public IReadOnlyList<string> Profiles { get; init; } = [];
     public IReadOnlyList<string> Unsupported { get; init; } = [];
 }
@@ -62,3 +66,4 @@ public sealed record ServiceHealthcheck(IReadOnlyList<string> Test)
 
 /// <summary>Configuration errors identify the source file without printing secret values.</summary>
 public sealed class ComposeException(string message) : Exception(message);
+

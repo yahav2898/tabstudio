@@ -29,6 +29,29 @@ public sealed record ProotRuntimeOptions
 
     /// <summary>Folders of the device visible to programs at the same path, such as TabStudio's projects folder.</summary>
     public IReadOnlyList<string> SharedFolders { get; init; } = [];
+
+    /// <summary>
+    /// PRoot options added before the root file system, such as a container's <c>--net-map</c> rules or
+    /// <c>-q</c> for an emulator.
+    /// </summary>
+    public IReadOnlyList<string> ExtraArguments { get; init; } = [];
+
+    /// <summary>
+    /// Whether a working directory that exists on the device is shared into the environment at its own path. A
+    /// container's working directory is a path in its own file system, so containers turn this off.
+    /// </summary>
+    public bool ShareWorkingDirectory { get; init; } = true;
+
+    /// <summary>
+    /// The root file system that holds the stand-ins for the parts of <c>/proc</c> Android hides
+    /// (<see cref="ProotRuntime.ProcStandInFolder"/>); <see langword="null"/> for <see cref="Rootfs"/> itself.
+    /// </summary>
+    public string? ProcStandInRoot { get; init; }
+
+    /// <summary>
+    /// Whether the device's <c>/sys</c> is visible. A container keeps it, as Docker does, read through PRoot.
+    /// </summary>
+    public bool BindSys { get; init; } = true;
 }
 
 /// <summary>
@@ -179,10 +202,13 @@ public sealed partial class ProotRuntime : IToolchainRuntime
             "--link2symlink",
             "--sysvipc",
             "-L",
+        };
+        arguments.AddRange(_options.ExtraArguments);
+        arguments.AddRange(
+        [
             "-r", _options.Rootfs,
             "-b", "/dev",
             "-b", "/proc",
-            "-b", "/sys",
             "-b", "/dev/urandom:/dev/random",
             "-b", "/proc/self/fd:/dev/fd",
             "-b", "/proc/self/fd/0:/dev/stdin",
@@ -190,12 +216,18 @@ public sealed partial class ProotRuntime : IToolchainRuntime
             "-b", "/proc/self/fd/2:/dev/stderr",
             // Android has no /dev/shm; POSIX shared memory and semaphores (Python's multiprocessing) need one.
             "-b", $"{Path.Combine(_options.Rootfs, "tmp")}:/dev/shm",
-        };
+        ]);
+        if (_options.BindSys)
+        {
+            arguments.AddRange(["-b", "/sys"]);
+        }
 
         if (spec.UserId is { } uid)
         {
             ArgumentOutOfRangeException.ThrowIfNegative(uid);
-            arguments.AddRange(["-i", $"{uid}:{uid}"]);
+            var gid = spec.GroupId ?? uid;
+            ArgumentOutOfRangeException.ThrowIfNegative(gid);
+            arguments.AddRange(["-i", $"{uid}:{gid}"]);
         }
         else
         {
@@ -205,10 +237,10 @@ public sealed partial class ProotRuntime : IToolchainRuntime
         foreach (var file in _procStandIns.Value)
         {
             arguments.Add("-b");
-            arguments.Add($"{Path.Combine(_options.Rootfs, ProcStandInFolder, file)}:/proc/{file}");
+            arguments.Add($"{Path.Combine(_options.ProcStandInRoot ?? _options.Rootfs, ProcStandInFolder, file)}:/proc/{file}");
         }
 
-        if (spec.WorkingDirectory is { } folder && Directory.Exists(folder) && !folder.StartsWith(Normalize(_options.Rootfs) + "/", StringComparison.Ordinal))
+        if (_options.ShareWorkingDirectory && spec.WorkingDirectory is { } folder && Directory.Exists(folder) && !folder.StartsWith(Normalize(_options.Rootfs) + "/", StringComparison.Ordinal))
         {
             ShareFolder(folder);
         }
@@ -370,7 +402,7 @@ public sealed partial class ProotRuntime : IToolchainRuntime
     /// <summary>The stand-ins to bind: for the hidden <c>/proc</c> files the environment has one for.</summary>
     private List<string> FindProcStandIns() =>
         HiddenProcFiles
-            .Where(file => File.Exists(Path.Combine(_options.Rootfs, ProcStandInFolder, file)) && !IsReadable($"/proc/{file}"))
+            .Where(file => File.Exists(Path.Combine(_options.ProcStandInRoot ?? _options.Rootfs, ProcStandInFolder, file)) && !IsReadable($"/proc/{file}"))
             .ToList();
 
     private static bool IsReadable(string path)
