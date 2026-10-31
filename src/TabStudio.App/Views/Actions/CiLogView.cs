@@ -13,6 +13,7 @@ using TabStudio.App.Services.Ci;
 using TabStudio.App.Theming;
 using TabStudio.App.ViewModels;
 using TabStudio.App.ViewModels.Actions;
+using TabStudio.App.Accessibility;
 
 namespace TabStudio.App.Views.Actions;
 
@@ -52,8 +53,9 @@ public sealed class CiLogView : UserControl, IDisposable
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
             LineNumbersMargin = new Thickness(14, 0, 8, 0),
             Padding = new Thickness(0, 4, 0, 0),
-            FontSize = 13,
         };
+        TypeScale.SetBaseFontSize(_editor, 13);
+        Avalonia.Automation.AutomationProperties.SetName(_editor, "Log");
         _editor.Options.EnableHyperlinks = false;
         _editor.Options.EnableEmailHyperlinks = false;
         _editor.Options.HighlightCurrentLine = true;

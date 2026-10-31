@@ -109,7 +109,7 @@
     <Style Selector="^:indeterminate /template/ Panel#IndeterminateRoot">
       <Setter Property="Opacity" Value="1" />
     </Style>
-    <Style Selector="^:horizontal:indeterminate:not(.offscreen) /template/ Border#IndeterminateProgressBarIndicator">
+    <Style Selector="^:horizontal:indeterminate:not(.offscreen):not(.still) /template/ Border#IndeterminateProgressBarIndicator">
       <Style.Animations>
         <Animation IterationCount="Infinite" Duration="0:0:2">
           <KeyFrame KeySpline="0.4,0,0.6,1" KeyTime="0:0:0">
@@ -124,7 +124,7 @@
         </Animation>
       </Style.Animations>
     </Style>
-    <Style Selector="^:horizontal:indeterminate:not(.offscreen) /template/ Border#IndeterminateProgressBarIndicator2">
+    <Style Selector="^:horizontal:indeterminate:not(.offscreen):not(.still) /template/ Border#IndeterminateProgressBarIndicator2">
       <Style.Animations>
         <Animation IterationCount="Infinite" Duration="0:0:2">
           <KeyFrame KeySpline="0.4,0,0.6,1" KeyTime="0:0:0">
@@ -139,7 +139,7 @@
         </Animation>
       </Style.Animations>
     </Style>
-    <Style Selector="^:vertical:indeterminate:not(.offscreen) /template/ Border#IndeterminateProgressBarIndicator">
+    <Style Selector="^:vertical:indeterminate:not(.offscreen):not(.still) /template/ Border#IndeterminateProgressBarIndicator">
       <Style.Animations>
         <Animation IterationCount="Infinite" Duration="0:0:2">
           <KeyFrame KeySpline="0.4,0,0.6,1" KeyTime="0:0:0">
@@ -154,7 +154,7 @@
         </Animation>
       </Style.Animations>
     </Style>
-    <Style Selector="^:vertical:indeterminate:not(.offscreen) /template/ Border#IndeterminateProgressBarIndicator2">
+    <Style Selector="^:vertical:indeterminate:not(.offscreen):not(.still) /template/ Border#IndeterminateProgressBarIndicator2">
       <Style.Animations>
         <Animation IterationCount="Infinite" Duration="0:0:2">
           <KeyFrame KeySpline="0.4,0,0.6,1" KeyTime="0:0:0">

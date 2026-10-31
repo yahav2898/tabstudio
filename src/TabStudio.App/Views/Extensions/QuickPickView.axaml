@@ -14,8 +14,8 @@
             BoxShadow="{DynamicResource Shadow.Dialog}">
       <DockPanel>
         <StackPanel DockPanel.Dock="Top" Margin="8,6,8,8" Spacing="8">
-          <TextBlock Classes="h2" FontSize="14" Text="{Binding Title}" />
-          <TextBox x:Name="FilterBox" Height="40" Text="{Binding FilterText}" Watermark="{Binding Placeholder}" />
+          <TextBlock Classes="h2" FontSize="{DynamicResource Type.Large}" Text="{Binding Title}" />
+          <TextBox x:Name="FilterBox" Text="{Binding FilterText}" Watermark="{Binding Placeholder}" />
         </StackPanel>
         <TextBlock DockPanel.Dock="Bottom" Classes="muted" Margin="12,8,12,12" Text="Nothing matches." IsVisible="{Binding IsEmpty}" />
         <ListBox x:Name="ItemList" Classes="quickPick" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}"
@@ -25,11 +25,11 @@
               <StackPanel Background="Transparent">
                 <Border IsVisible="{Binding StartsGroup}" Margin="10,8,10,2" Padding="0,6,0,0"
                         BorderBrush="{DynamicResource Brush.Divider}" BorderThickness="0,1,0,0">
-                  <TextBlock Text="{Binding Group}" Classes="section" FontSize="11" />
+                  <TextBlock Text="{Binding Group}" Classes="section" FontSize="{DynamicResource Type.Caption}" />
                 </Border>
                 <StackPanel Margin="12,7,12,7" Spacing="2">
                   <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="{Binding Label}" FontSize="13.5" FontWeight="Medium" />
+                    <TextBlock Text="{Binding Label}" FontSize="{DynamicResource Type.Lead}" FontWeight="Medium" />
                     <TextBlock Text="{Binding Description}" Classes="muted small" VerticalAlignment="Center" IsVisible="{Binding HasDescription}" />
                   </StackPanel>
                   <TextBlock Text="{Binding Detail}" Classes="muted small" TextTrimming="CharacterEllipsis" IsVisible="{Binding HasDetail}" />

@@ -3,7 +3,9 @@
 
   <!--
     Control themes for TabStudio's buttons and list items, applied with Theme="{StaticResource ...}".
-    Every touch target is at least 34 px high, most are 40-44 px.
+    Every control that takes a tap is at least the touch target, Target.Size (Theme/Accessibility.axaml): 44 on a
+    tablet. A button draws Target.Visual (40) inside it, with a transparent Target.Inset around that still takes the
+    tap, so a toolbar of 44-pixel targets looks as light as one of 40-pixel buttons.
   -->
 
 
@@ -15,23 +17,26 @@
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="CornerRadius" Value="8" />
     <Setter Property="Padding" Value="10,0" />
-    <Setter Property="MinHeight" Value="40" />
-    <Setter Property="MinWidth" Value="40" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+    <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
     <Setter Property="HorizontalContentAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="Cursor" Value="Hand" />
     <Setter Property="Template">
       <ControlTemplate>
-        <ContentPresenter Name="PART_ContentPresenter"
-                          Background="{TemplateBinding Background}"
-                          BorderBrush="{TemplateBinding BorderBrush}"
-                          BorderThickness="{TemplateBinding BorderThickness}"
-                          CornerRadius="{TemplateBinding CornerRadius}"
-                          Content="{TemplateBinding Content}"
-                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                          Padding="{TemplateBinding Padding}"
-                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+        <!-- The whole control takes the tap; the button is drawn inside the transparent inset. -->
+        <Border Name="PART_HitArea" Background="Transparent" Padding="{DynamicResource Target.Inset}">
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+        </Border>
       </ControlTemplate>
     </Setter>
     <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
@@ -57,7 +62,6 @@
     <Setter Property="BorderBrush" Value="{DynamicResource Brush.BorderStrong}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CornerRadius" Value="7" />
-    <Setter Property="MinHeight" Value="34" />
     <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
   </ControlTheme>
 
@@ -111,8 +115,8 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource Brush.TextMuted}" />
     <Setter Property="Padding" Value="12,0" />
-    <Setter Property="MinHeight" Value="34" />
-    <Setter Property="FontSize" Value="12.5" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+    <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     <Setter Property="Cursor" Value="Hand" />
     <Setter Property="Template">
       <ControlTemplate>
@@ -143,7 +147,7 @@
   <ControlTheme x:Key="ListRow" TargetType="ListBoxItem">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Padding" Value="0" />
-    <Setter Property="MinHeight" Value="30" />
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="Template">
@@ -205,8 +209,6 @@
   <!-- A flat button on the accent-colored status bar, such as the current branch. -->
   <ControlTheme x:Key="StatusBarButton" TargetType="Button" BasedOn="{StaticResource ToolButton}">
     <Setter Property="Foreground" Value="{DynamicResource Brush.OnAccent}" />
-    <Setter Property="MinHeight" Value="24" />
-    <Setter Property="MinWidth" Value="0" />
     <Setter Property="Padding" Value="6,0" />
     <Setter Property="CornerRadius" Value="4" />
     <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">

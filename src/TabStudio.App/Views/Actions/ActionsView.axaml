@@ -18,15 +18,15 @@
       <Setter Property="BorderThickness" Value="1" />
     </Style>
     <Style Selector="ComboBox">
-      <Setter Property="MinHeight" Value="36" />
-      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+      <Setter Property="FontSize" Value="{DynamicResource Type.Body}" />
     </Style>
   </UserControl.Styles>
 
   <DockPanel>
 
     <!-- Title, with the repository and its GitHub page -->
-    <Border DockPanel.Dock="Top" Height="36" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Border DockPanel.Dock="Top" MinHeight="36" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0,4,0">
         <TextBlock Classes="header" Text="GitHub Actions" />
         <TextBlock Grid.Column="1" Classes="muted small" Margin="8,0,4,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
@@ -48,7 +48,7 @@
         <controls:StrokeIcon Data="{StaticResource Icon.User}" Size="15" Margin="0,0,8,0" Foreground="{DynamicResource Brush.TextMuted}" />
         <TextBlock Grid.Column="1" Classes="muted small" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
                    Text="{Binding Account.StatusText}" />
-        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" FontSize="12.5" Content="Sign in"
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" FontSize="{DynamicResource Type.Body}" Content="Sign in"
                 Foreground="{DynamicResource Brush.Link}" Command="{Binding Account.OpenCommand}" IsVisible="{Binding !Account.IsSignedIn}" />
       </Grid>
     </Border>
@@ -60,12 +60,12 @@
           <StackPanel Margin="12,10,12,16" Spacing="18">
 
             <!-- A watched repository: the way back to the workspace's -->
-            <Button Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" Padding="8,0" HorizontalAlignment="Left"
+            <Button Theme="{StaticResource ToolButton}" Padding="8,0" HorizontalAlignment="Left"
                     Command="{Binding BackToWorkspaceCommand}" IsVisible="{Binding IsWatchedScope}"
                     ToolTip.Tip="Back to this workspace's repository">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <controls:StrokeIcon Data="{StaticResource Icon.Back}" Size="15" />
-                <TextBlock Text="This workspace's repository" VerticalAlignment="Center" FontSize="12.5" />
+                <TextBlock Text="This workspace's repository" VerticalAlignment="Center" FontSize="{DynamicResource Type.Body}" />
               </StackPanel>
             </Button>
 
@@ -111,7 +111,7 @@
                                        Data="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.StateIcon}}"
                                        Foreground="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
                                        Classes.spinning="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
-                  <TextBlock Grid.Column="1" Text="{Binding ChecksSummary}" FontWeight="SemiBold" FontSize="12.5"
+                  <TextBlock Grid.Column="1" Text="{Binding ChecksSummary}" FontWeight="SemiBold" FontSize="{DynamicResource Type.Body}"
                              Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" VerticalAlignment="Center" />
                 </Grid>
               </Border>
@@ -120,7 +120,7 @@
               <ItemsControl ItemsSource="{Binding Checks}" IsVisible="{Binding HasChecks}">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate DataType="actions:CiCheckItemViewModel">
-                    <Button Theme="{StaticResource ToolButton}" Height="46" MinHeight="46" Padding="6,0" CornerRadius="6"
+                    <Button Theme="{StaticResource ToolButton}" MinHeight="46" Padding="6,0" CornerRadius="6"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                             ToolTip.Tip="{Binding ToolTip}" Command="{Binding Open}" CommandParameter="{Binding}">
                       <Grid ColumnDefinitions="Auto,*,Auto">
@@ -129,7 +129,7 @@
                                              Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
                                              Classes.spinning="{Binding Visual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
-                          <TextBlock Text="{Binding Name}" FontSize="12.5" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Text="{Binding Name}" FontSize="{DynamicResource Type.Body}" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
                           <TextBlock Classes="muted small" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
                         </StackPanel>
                         <Panel Grid.Column="2" Margin="8,0,2,0">
@@ -151,10 +151,10 @@
                           ToolTip.Tip="Which branches">
                   <ComboBox.ItemTemplate>
                     <DataTemplate DataType="actions:RunBranchFilter">
-                      <StackPanel Orientation="Horizontal" Spacing="6">
-                        <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" />
-                        <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                      </StackPanel>
+                      <Grid ColumnDefinitions="Auto,*">
+                        <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" Margin="0,0,6,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding Label}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                      </Grid>
                     </DataTemplate>
                   </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -162,10 +162,10 @@
                           ToolTip.Tip="Which workflows">
                   <ComboBox.ItemTemplate>
                     <DataTemplate DataType="actions:RunWorkflowFilter">
-                      <StackPanel Orientation="Horizontal" Spacing="6">
-                        <controls:StrokeIcon Data="{StaticResource Icon.Workflow}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" />
-                        <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                      </StackPanel>
+                      <Grid ColumnDefinitions="Auto,*">
+                        <controls:StrokeIcon Data="{StaticResource Icon.Workflow}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" Margin="0,0,6,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding Label}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                      </Grid>
                     </DataTemplate>
                   </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -186,7 +186,7 @@
                                              Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
                                              Classes.spinning="{Binding Visual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
                         <StackPanel Grid.Column="1" Spacing="2">
-                          <TextBlock Text="{Binding Title}" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Text="{Binding Title}" FontSize="{DynamicResource Type.Body}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
                           <TextBlock Classes="small" TextTrimming="CharacterEllipsis"><Run
                             Text="{Binding Workflow}" Foreground="{DynamicResource Brush.TextSecondary}" /><Run
                             Text=" · " Foreground="{DynamicResource Brush.TextMuted}" /><Run
@@ -212,12 +212,12 @@
                       <Grid ColumnDefinitions="Auto,*,Auto">
                         <controls:StrokeIcon Data="{StaticResource Icon.Workflow}" Size="16" Margin="0,2,10,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.TextMuted}" />
                         <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                          <TextBlock Text="{Binding Name}" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
-                          <TextBlock Classes="muted small" Text="{Binding Path}" FontFamily="{DynamicResource CodeFont}" FontSize="11" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Text="{Binding Name}" FontSize="{DynamicResource Type.Body}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Classes="muted small" Text="{Binding Path}" FontFamily="{DynamicResource CodeFont}" FontSize="{DynamicResource Type.Caption}" TextTrimming="CharacterEllipsis" />
                           <TextBlock Classes="muted small" Text="{Binding Note}" TextTrimming="CharacterEllipsis"
                                      IsVisible="{Binding Note, Converter={x:Static ObjectConverters.IsNotNull}}" />
                         </StackPanel>
-                        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="36" Padding="10,0" Margin="8,0,0,0" FontSize="12.5"
+                        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Padding="10,0" Margin="8,0,0,0" FontSize="{DynamicResource Type.Body}"
                                 VerticalAlignment="Center" ToolTip.Tip="Run workflow..." Command="{Binding Run}" CommandParameter="{Binding}"
                                 IsVisible="{Binding CanDispatch}">
                           <StackPanel Orientation="Horizontal" Spacing="6">
@@ -241,7 +241,7 @@
                 <ItemsControl.ItemTemplate>
                   <DataTemplate DataType="actions:WatchedRepositoryItemViewModel">
                     <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,2">
-                      <Button Theme="{StaticResource ToolButton}" Height="48" MinHeight="48" Padding="6,0" CornerRadius="6"
+                      <Button Theme="{StaticResource ToolButton}" MinHeight="48" Padding="6,0" CornerRadius="6"
                               HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                               ToolTip.Tip="Show this repository's runs" Command="{Binding Open}" CommandParameter="{Binding}">
                         <Grid ColumnDefinitions="Auto,*">
@@ -250,7 +250,7 @@
                                                Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
                                                Classes.spinning="{Binding Visual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
                           <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
-                            <TextBlock Text="{Binding FullName}" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{Binding FullName}" FontSize="{DynamicResource Type.Body}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
                             <TextBlock Classes="muted small" Text="{Binding Summary}" TextTrimming="CharacterEllipsis" />
                           </StackPanel>
                         </Grid>
@@ -264,8 +264,8 @@
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
               <Grid ColumnDefinitions="*,Auto">
-                <TextBox x:Name="WatchBox" Text="{Binding WatchText}" MinHeight="36" Watermark="owner/name or GitHub address" />
-                <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Height="36" Padding="12,0" Margin="6,0,0,0" FontSize="12.5"
+                <TextBox x:Name="WatchBox" Text="{Binding WatchText}" Watermark="owner/name or GitHub address" />
+                <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Padding="12,0" Margin="6,0,0,0" FontSize="{DynamicResource Type.Body}"
                         Command="{Binding AddWatchedCommand}" ToolTip.Tip="Watch this repository's runs">
                   <StackPanel Orientation="Horizontal" Spacing="6">
                     <controls:StrokeIcon Data="{StaticResource Icon.Watch}" Size="14" />

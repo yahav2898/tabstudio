@@ -91,7 +91,11 @@ internal static class ClippedTextRule
 
         // Right-to-left runs can come back with negative or no width; such a run takes no room of its own.
         Rect? area = null;
-        foreach (var rect in layout.HitTestTextRange(0, text.Text!.Length).Select(Normalized))
+        // A wrapped line's trailing spaces are not drawn, so they are left out: they may run past the box.
+        var drawn = layout.TextLines
+            .Where(line => line.Length > line.TrailingWhitespaceLength)
+            .SelectMany(line => layout.HitTestTextRange(line.FirstTextSourceIndex, line.Length - line.TrailingWhitespaceLength));
+        foreach (var rect in drawn.Select(Normalized))
         {
             if (rect.Width > 0 && rect.Height > 0)
             {

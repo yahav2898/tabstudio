@@ -14,21 +14,21 @@
       <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,10,10,10" Background="Transparent">
         <Panel Width="42" Height="42" VerticalAlignment="Top" Margin="0,1,12,0">
           <Border Classes="extensionIcon" Background="{Binding IconTint}" IsVisible="{Binding !HasIcon}">
-            <TextBlock Text="{Binding Initials}" FontSize="15" />
+            <TextBlock Text="{Binding Initials}" FontSize="{DynamicResource Type.Subtitle}" />
           </Border>
           <Image Source="{Binding Icon}" IsVisible="{Binding HasIcon}" Stretch="Uniform" />
         </Panel>
 
         <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Top">
-          <TextBlock Text="{Binding DisplayName}" FontSize="13.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}"
+          <TextBlock Text="{Binding DisplayName}" FontSize="{DynamicResource Type.Lead}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}"
                      TextTrimming="CharacterEllipsis" />
           <StackPanel Orientation="Horizontal" Spacing="4">
             <TextBlock Text="{Binding Publisher}" Classes="muted small" TextTrimming="CharacterEllipsis" />
             <controls:StrokeIcon Data="{StaticResource Icon.Verified}" Size="13" StrokeThickness="1.6"
                                  Foreground="{DynamicResource Brush.Extensions.Verified}" IsVisible="{Binding IsVerified}"
                                  ToolTip.Tip="The registry verified this publisher" />
-            <Border Classes="pill" Height="18" IsVisible="{Binding IsDeprecated}">
-              <TextBlock Text="Deprecated" FontSize="10" />
+            <Border Classes="pill" MinHeight="18" IsVisible="{Binding IsDeprecated}">
+              <TextBlock Text="Deprecated" FontSize="{DynamicResource Type.Micro}" />
             </Border>
           </StackPanel>
           <TextBlock Text="{Binding Description}" Classes="muted small" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis"
@@ -40,11 +40,11 @@
             <StackPanel Orientation="Horizontal" Spacing="3" IsVisible="{Binding DownloadsText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                         ToolTip.Tip="Downloads">
               <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="12" Foreground="{DynamicResource Brush.TextMuted}" />
-              <TextBlock Text="{Binding DownloadsText}" Classes="muted" FontSize="11.5" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding DownloadsText}" Classes="muted" FontSize="{DynamicResource Type.Fine}" VerticalAlignment="Center" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Spacing="3" IsVisible="{Binding HasRating}" ToolTip.Tip="Average rating">
               <controls:StrokeIcon Data="{StaticResource Icon.Star}" Size="12" IsFilled="True" Foreground="{DynamicResource Brush.Extensions.Star}" />
-              <TextBlock Text="{Binding RatingText}" Classes="muted" FontSize="11.5" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding RatingText}" Classes="muted" FontSize="{DynamicResource Type.Fine}" VerticalAlignment="Center" />
             </StackPanel>
           </StackPanel>
           <Button Theme="{StaticResource AccentButton}" Classes="rowAction" HorizontalAlignment="Right" Content="Install"
@@ -70,23 +70,23 @@
       <Border DockPanel.Dock="Top" Height="44" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
         <Grid ColumnDefinitions="*,Auto" Margin="4,0,4,0">
           <StackPanel Orientation="Horizontal">
-            <Button x:Name="BrowseTab" Theme="{StaticResource PanelTabButton}" MinHeight="44" Content="Browse" Classes.selected="{Binding IsBrowseSelected}"
+            <Button x:Name="BrowseTab" Theme="{StaticResource PanelTabButton}" Content="Browse" Classes.selected="{Binding IsBrowseSelected}"
                     Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:ExtensionsTab.Browse}" />
-            <Button x:Name="InstalledTab" Theme="{StaticResource PanelTabButton}" MinHeight="44" Classes.selected="{Binding IsInstalledSelected}"
+            <Button x:Name="InstalledTab" Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsInstalledSelected}"
                     Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:ExtensionsTab.Installed}">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <TextBlock Text="Installed" VerticalAlignment="Center" />
-                <Border Classes="pill" Height="18" IsVisible="{Binding HasInstalled}">
-                  <TextBlock Text="{Binding InstalledCount}" FontSize="10.5" />
+                <Border Classes="pill" MinHeight="18" IsVisible="{Binding HasInstalled}">
+                  <TextBlock Text="{Binding InstalledCount}" FontSize="{DynamicResource Type.Micro}" />
                 </Border>
               </StackPanel>
             </Button>
-            <Button x:Name="UpdatesTab" Theme="{StaticResource PanelTabButton}" MinHeight="44" Classes.selected="{Binding IsUpdatesSelected}"
+            <Button x:Name="UpdatesTab" Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsUpdatesSelected}"
                     Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:ExtensionsTab.Updates}">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <TextBlock Text="Updates" VerticalAlignment="Center" />
-                <Border Classes="pill ready" Height="18" IsVisible="{Binding HasUpdates}">
-                  <TextBlock Text="{Binding UpdateCount}" FontSize="10.5" />
+                <Border Classes="pill ready" MinHeight="18" IsVisible="{Binding HasUpdates}">
+                  <TextBlock Text="{Binding UpdateCount}" FontSize="{DynamicResource Type.Micro}" />
                 </Border>
               </StackPanel>
             </Button>
@@ -113,19 +113,19 @@
           <TextBlock Classes="h2" Text="Registry" />
           <TextBlock Classes="muted small" TextWrapping="Wrap"
                      Text="Extensions come from this Open VSX server. Companies that run their own can use theirs." />
-          <TextBox x:Name="RegistryBox" Classes="mono" Height="40" Text="{Binding RegistryText}" />
+          <TextBox x:Name="RegistryBox" Classes="mono" Text="{Binding RegistryText}" />
           <TextBlock Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding RegistryError}"
                      IsVisible="{Binding HasRegistryError}" />
           <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
-            <Button Theme="{StaticResource SecondaryButton}" Height="36" Padding="14,0" Content="Use open-vsx.org" Command="{Binding ResetRegistryCommand}" />
-            <Button Theme="{StaticResource AccentButton}" Height="36" Content="Use This Registry" Command="{Binding ApplyRegistryCommand}" />
+            <Button Theme="{StaticResource SecondaryButton}" Padding="14,0" Content="Use open-vsx.org" Command="{Binding ResetRegistryCommand}" />
+            <Button Theme="{StaticResource AccentButton}" Content="Use This Registry" Command="{Binding ApplyRegistryCommand}" />
           </StackPanel>
         </StackPanel>
       </Border>
 
       <!-- Search -->
       <Border DockPanel.Dock="Top" Padding="10,10,10,8">
-        <TextBox x:Name="SearchBox" Height="40" Text="{Binding SearchText}" Watermark="{Binding SearchWatermark}">
+        <TextBox x:Name="SearchBox" Text="{Binding SearchText}" Watermark="{Binding SearchWatermark}">
           <TextBox.InnerLeftContent>
             <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="15" Margin="10,0,0,0" Foreground="{DynamicResource Brush.TextMuted}" />
           </TextBox.InnerLeftContent>
@@ -158,7 +158,7 @@
                                IsVisible="{Binding IsNoticeError}" />
           <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="{DynamicResource Brush.Text}"
                      Text="{Binding Notice}" />
-          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="10,0" FontSize="12.5"
+          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Padding="10,0" FontSize="{DynamicResource Type.Body}"
                   Foreground="{DynamicResource Brush.Link}" Content="{Binding NoticeActionText}" Command="{Binding RunNoticeActionCommand}"
                   IsVisible="{Binding HasNoticeAction}" />
           <Button Grid.Column="3" Theme="{StaticResource ToolButton}" Classes="iconButton" ToolTip.Tip="Dismiss" Command="{Binding DismissNoticeCommand}">
@@ -170,24 +170,24 @@
       <Panel>
         <!-- Browse -->
         <DockPanel IsVisible="{Binding IsBrowseSelected}">
-          <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="14,0,14,4" Height="22">
+          <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="14,0,14,4" MinHeight="22">
             <TextBlock Classes="section" Text="{Binding ResultsHeading}" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5" IsVisible="{Binding IsOffline}"
                         ToolTip.Tip="The registry cannot be reached; these are the results it gave last time.">
               <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="13" Foreground="{DynamicResource Brush.Warning}" />
-              <TextBlock Classes="muted" FontSize="11.5" Text="Offline: saved results" VerticalAlignment="Center" />
+              <TextBlock Classes="muted" FontSize="{DynamicResource Type.Fine}" Text="Offline: saved results" VerticalAlignment="Center" />
             </StackPanel>
           </Grid>
-          <Button DockPanel.Dock="Bottom" Theme="{StaticResource SecondaryButton}" Height="38" Margin="10,6,10,10" HorizontalAlignment="Stretch"
+          <Button DockPanel.Dock="Bottom" Theme="{StaticResource SecondaryButton}" Margin="10,6,10,10" HorizontalAlignment="Stretch"
                   Content="Load More" Command="{Binding LoadMoreCommand}" IsVisible="{Binding CanLoadMore}" />
           <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True" Height="2" MinHeight="2" Margin="10,0" IsVisible="{Binding IsSearching}" />
           <Panel>
             <ListBox x:Name="BrowseList" ItemsSource="{Binding BrowseResults}" SelectedItem="{Binding SelectedBrowseItem}"
                      ItemContainerTheme="{StaticResource ListRow}" ItemTemplate="{StaticResource ExtensionRow}" />
             <StackPanel Spacing="10" Margin="24,40" HorizontalAlignment="Center" VerticalAlignment="Top" IsVisible="{Binding HasBrowseMessage}">
-              <controls:StrokeIcon Data="{StaticResource Icon.Extensions}" Size="34" HorizontalAlignment="Center" Foreground="{DynamicResource Brush.TextDisabled}" />
+              <controls:StrokeIcon Data="{StaticResource Icon.Extensions}" Size="34" HorizontalAlignment="Center" Foreground="{DynamicResource Brush.TextMuted}" />
               <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="300" Text="{Binding BrowseMessage}" />
-              <Button Theme="{StaticResource SecondaryButton}" Height="36" Padding="16,0" HorizontalAlignment="Center" Content="Try Again"
+              <Button Theme="{StaticResource SecondaryButton}" Padding="16,0" HorizontalAlignment="Center" Content="Try Again"
                       Command="{Binding RetryCommand}" IsVisible="{Binding CanRetry}" />
             </StackPanel>
           </Panel>
@@ -211,9 +211,9 @@
             <ListBox x:Name="InstalledList" ItemsSource="{Binding InstalledItems}" SelectedItem="{Binding SelectedInstalledItem}"
                      ItemContainerTheme="{StaticResource ListRow}" ItemTemplate="{StaticResource ExtensionRow}" />
             <StackPanel Spacing="10" Margin="24,40" HorizontalAlignment="Center" VerticalAlignment="Top" IsVisible="{Binding HasInstalledMessage}">
-              <controls:StrokeIcon Data="{StaticResource Icon.Extensions}" Size="34" HorizontalAlignment="Center" Foreground="{DynamicResource Brush.TextDisabled}" />
+              <controls:StrokeIcon Data="{StaticResource Icon.Extensions}" Size="34" HorizontalAlignment="Center" Foreground="{DynamicResource Brush.TextMuted}" />
               <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="300" Text="{Binding InstalledMessage}" />
-              <Button Theme="{StaticResource SecondaryButton}" Height="36" Padding="16,0" HorizontalAlignment="Center" Content="Install from VSIX…"
+              <Button Theme="{StaticResource SecondaryButton}" Padding="16,0" HorizontalAlignment="Center" Content="Install from VSIX…"
                       Command="{Binding InstallFromFileCommand}" IsVisible="{Binding !HasInstalled}" />
             </StackPanel>
           </Panel>
@@ -221,14 +221,14 @@
 
         <!-- Updates -->
         <DockPanel IsVisible="{Binding IsUpdatesSelected}">
-          <Button DockPanel.Dock="Top" Theme="{StaticResource AccentButton}" Height="38" Margin="10,0,10,6" HorizontalAlignment="Stretch"
+          <Button DockPanel.Dock="Top" Theme="{StaticResource AccentButton}" Margin="10,0,10,6" HorizontalAlignment="Stretch"
                   Content="Update All" Command="{Binding UpdateAllCommand}" IsVisible="{Binding HasUpdates}" />
           <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True" Height="2" MinHeight="2" Margin="10,0" IsVisible="{Binding IsCheckingUpdates}" />
           <Panel>
             <ListBox x:Name="UpdatesList" ItemsSource="{Binding UpdateItems}" SelectedItem="{Binding SelectedUpdateItem}"
                      ItemContainerTheme="{StaticResource ListRow}" ItemTemplate="{StaticResource ExtensionRow}" />
             <StackPanel Spacing="10" Margin="24,40" HorizontalAlignment="Center" VerticalAlignment="Top" IsVisible="{Binding !HasUpdates}">
-              <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="30" HorizontalAlignment="Center" Foreground="{DynamicResource Brush.TextDisabled}" />
+              <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="30" HorizontalAlignment="Center" Foreground="{DynamicResource Brush.TextMuted}" />
               <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="300" Text="{Binding UpdatesMessage}" />
             </StackPanel>
           </Panel>
@@ -241,10 +241,10 @@
     <!-- The selected extension -->
     <DockPanel x:Name="DetailsColumn" Grid.Column="1">
       <Border x:Name="BackBar" DockPanel.Dock="Top" Height="44" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" IsVisible="False">
-        <Button Theme="{StaticResource ToolButton}" Height="40" Padding="8,0" Margin="4,0" HorizontalAlignment="Left" Command="{Binding CloseDetailsCommand}">
+        <Button Theme="{StaticResource ToolButton}" Padding="8,0" Margin="4,0" HorizontalAlignment="Left" Command="{Binding CloseDetailsCommand}">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <controls:StrokeIcon Data="{StaticResource Icon.Back}" Size="16" />
-            <TextBlock Text="Extensions" VerticalAlignment="Center" FontSize="13" />
+            <TextBlock Text="Extensions" VerticalAlignment="Center" FontSize="{DynamicResource Type.Section}" />
           </StackPanel>
         </Button>
       </Border>
@@ -253,8 +253,8 @@
           <views:ExtensionDetailsView DataContext="{Binding Details}" />
         </Panel>
         <StackPanel Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding !HasDetails}" Margin="24">
-          <controls:StrokeIcon Data="{StaticResource Icon.Extensions}" Size="48" HorizontalAlignment="Center" Foreground="{DynamicResource Brush.TextDisabled}" />
-          <TextBlock Classes="h2" FontSize="15" HorizontalAlignment="Center" Text="VS Code extensions from Open VSX" />
+          <controls:StrokeIcon Data="{StaticResource Icon.Extensions}" Size="48" HorizontalAlignment="Center" Foreground="{DynamicResource Brush.TextMuted}" />
+          <TextBlock Classes="h2" FontSize="{DynamicResource Type.Subtitle}" HorizontalAlignment="Center" Text="VS Code extensions from Open VSX" />
           <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="380"
                      Text="Languages, color themes, file icon themes and snippets work in TabStudio's editor. Select an extension to see what it adds." />
         </StackPanel>

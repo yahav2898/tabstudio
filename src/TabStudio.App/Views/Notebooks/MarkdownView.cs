@@ -9,6 +9,7 @@ using TabStudio.App.Editing;
 using TabStudio.App.Notebooks.Markdown;
 using TabStudio.Compilation;
 using TabStudio.Notebooks;
+using TabStudio.App.Accessibility;
 
 namespace TabStudio.App.Views.Notebooks;
 
@@ -117,9 +118,9 @@ public sealed class MarkdownView : StackPanel
             {
                 Text = item.Marker,
                 MinWidth = 20,
-                FontSize = BodySize,
                 Foreground = MutedBrush,
             };
+            TypeScale.SetBaseFontSize(marker, BodySize);
             var content = CreateText(item.Spans, BodySize, FontWeight.Normal, TextBrush);
             Grid.SetColumn(content, 1);
             row.Children.Add(marker);
@@ -138,6 +139,7 @@ public sealed class MarkdownView : StackPanel
             FontSize = SmallSize,
             Foreground = TextBrush,
         };
+        TypeScale.SetBaseFontSize(text, SmallSize);
 
         if (code.Language is { } language && NotebookLanguages.IsCSharp(language))
         {
@@ -227,10 +229,10 @@ public sealed class MarkdownView : StackPanel
         var text = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap,
-            FontSize = size,
             FontWeight = weight,
             Foreground = foreground,
         };
+        TypeScale.SetBaseFontSize(text, size);
 
         var inlines = text.Inlines!;
         var links = new List<(int Start, int End, string Destination)>();
@@ -251,7 +253,7 @@ public sealed class MarkdownView : StackPanel
             if ((span.Style & MarkdownStyles.Code) != 0)
             {
                 run.FontFamily = ThemeResources.CodeFont;
-                run.FontSize = size - 1;
+                TypeScale.SetBaseFontSize(run, size - 1);
                 run.Background = CodeBackground;
             }
 

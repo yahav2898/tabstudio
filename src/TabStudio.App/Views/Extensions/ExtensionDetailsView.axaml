@@ -34,29 +34,29 @@
       <Grid ColumnDefinitions="Auto,*">
         <Panel Width="84" Height="84" VerticalAlignment="Top" Margin="0,2,18,0">
           <Border Classes="extensionIcon" CornerRadius="14" Background="{Binding Item.IconTint}" IsVisible="{Binding !Item.HasIcon}">
-            <TextBlock Text="{Binding Item.Initials}" FontSize="28" />
+            <TextBlock Text="{Binding Item.Initials}" FontSize="{DynamicResource Type.Display}" />
           </Border>
           <Image Source="{Binding Item.Icon}" IsVisible="{Binding Item.HasIcon}" Stretch="Uniform" />
         </Panel>
         <StackPanel Grid.Column="1" Spacing="7">
-          <TextBlock Text="{Binding Item.DisplayName}" FontSize="21" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding Item.DisplayName}" FontSize="{DynamicResource Type.Hero}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
           <WrapPanel ItemSpacing="12" LineSpacing="4">
             <StackPanel Orientation="Horizontal" Spacing="5">
-              <TextBlock Text="{Binding Publisher}" Foreground="{DynamicResource Brush.Link}" FontSize="13" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding Publisher}" Foreground="{DynamicResource Brush.Link}" FontSize="{DynamicResource Type.Section}" VerticalAlignment="Center" />
               <controls:StrokeIcon Data="{StaticResource Icon.Verified}" Size="14" StrokeThickness="1.6" Foreground="{DynamicResource Brush.Extensions.Verified}"
                                    IsVisible="{Binding Item.IsVerified}" ToolTip.Tip="The registry verified this publisher" />
             </StackPanel>
-            <TextBlock Text="{Binding VersionText}" Classes="muted" FontSize="13" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding VersionText}" Classes="muted" FontSize="{DynamicResource Type.Section}" VerticalAlignment="Center" />
             <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding Item.DownloadsText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
               <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" />
-              <TextBlock Text="{Binding Item.DownloadsText}" Classes="muted" FontSize="13" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding Item.DownloadsText}" Classes="muted" FontSize="{DynamicResource Type.Section}" VerticalAlignment="Center" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding Item.HasRating}">
               <controls:StrokeIcon Data="{StaticResource Icon.Star}" Size="13" IsFilled="True" Foreground="{DynamicResource Brush.Extensions.Star}" />
-              <TextBlock Text="{Binding Item.RatingText}" Classes="muted" FontSize="13" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding Item.RatingText}" Classes="muted" FontSize="{DynamicResource Type.Section}" VerticalAlignment="Center" />
             </StackPanel>
           </WrapPanel>
-          <TextBlock Text="{Binding Item.Description}" Foreground="{DynamicResource Brush.TextSecondary}" FontSize="13.5" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding Item.Description}" Foreground="{DynamicResource Brush.TextSecondary}" FontSize="{DynamicResource Type.Lead}" TextWrapping="Wrap" />
           <WrapPanel ItemSpacing="8" LineSpacing="8" Margin="0,6,0,0">
             <Button x:Name="InstallButton" Theme="{StaticResource AccentButton}" Classes="pageAction" Content="Install"
                     Command="{Binding InstallCommand}" IsVisible="{Binding CanInstall}" />
@@ -84,7 +84,7 @@
                 <TextBlock Text="Uninstall" VerticalAlignment="Center" />
               </StackPanel>
             </Button>
-            <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding Item.IsBusy}" VerticalAlignment="Center" Height="38">
+            <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding Item.IsBusy}" VerticalAlignment="Center" MinHeight="38">
               <ProgressBar Width="160" Height="6" MinHeight="6" Minimum="0" Maximum="1" Value="{Binding Item.Progress}" VerticalAlignment="Center" />
               <TextBlock Classes="muted small" Text="Installing…" VerticalAlignment="Center" />
             </StackPanel>
@@ -103,11 +103,11 @@
       <!-- Details, Features, Changelog -->
       <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
         <StackPanel Orientation="Horizontal">
-          <Button Theme="{StaticResource PanelTabButton}" MinHeight="40" Content="Details" Classes.selected="{Binding IsReadmeSelected}"
+          <Button Theme="{StaticResource PanelTabButton}" Content="Details" Classes.selected="{Binding IsReadmeSelected}"
                   Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:ExtensionDetailsTab.Details}" />
-          <Button x:Name="FeaturesTab" Theme="{StaticResource PanelTabButton}" MinHeight="40" Content="Features" Classes.selected="{Binding IsFeaturesSelected}"
+          <Button x:Name="FeaturesTab" Theme="{StaticResource PanelTabButton}" Content="Features" Classes.selected="{Binding IsFeaturesSelected}"
                   Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:ExtensionDetailsTab.Features}" />
-          <Button Theme="{StaticResource PanelTabButton}" MinHeight="40" Content="Changelog" Classes.selected="{Binding IsChangelogSelected}"
+          <Button Theme="{StaticResource PanelTabButton}" Content="Changelog" Classes.selected="{Binding IsChangelogSelected}"
                   Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:ExtensionDetailsTab.Changelog}" IsVisible="{Binding HasChangelog}" />
         </StackPanel>
       </Border>
@@ -131,8 +131,8 @@
                     <Grid ColumnDefinitions="Auto,*,Auto">
                       <Panel Width="22" Margin="0,1,10,0" VerticalAlignment="Top">
                         <controls:StrokeIcon Data="{StaticResource Icon.Feature}" Size="17" StrokeThickness="2" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsActive}" />
-                        <controls:StrokeIcon Data="{StaticResource Icon.Feature}" Size="17" StrokeThickness="2" Foreground="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding IsInactive}" />
-                        <controls:StrokeIcon Data="{StaticResource Icon.FeatureOff}" Size="17" StrokeThickness="2" Foreground="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding IsUnavailable}" />
+                        <controls:StrokeIcon Data="{StaticResource Icon.Feature}" Size="17" StrokeThickness="2" Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsInactive}" />
+                        <controls:StrokeIcon Data="{StaticResource Icon.FeatureOff}" Size="17" StrokeThickness="2" Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsUnavailable}" />
                       </Panel>
                       <StackPanel Grid.Column="1" Spacing="2">
                         <TextBlock Text="{Binding Title}" FontWeight="Medium" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
@@ -159,28 +159,28 @@
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:ExtensionInfoRow">
                   <StackPanel Spacing="1" Margin="0,0,0,9">
-                    <TextBlock Text="{Binding Label}" Classes="muted" FontSize="11.5" />
+                    <TextBlock Text="{Binding Label}" Classes="muted" FontSize="{DynamicResource Type.Fine}" />
                     <TextBlock Text="{Binding Value}" Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}" />
                   </StackPanel>
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>
             <StackPanel Spacing="2">
-              <Button Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="0" HorizontalAlignment="Left"
+              <Button Theme="{StaticResource ToolButton}" Padding="0" HorizontalAlignment="Left"
                       Command="{Binding OpenLinkCommand}" CommandParameter="{Binding Repository}" IsVisible="{Binding HasRepository}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                   <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="13" Foreground="{DynamicResource Brush.Link}" />
                   <TextBlock Text="Repository" Classes="link small" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>
-              <Button Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="0" HorizontalAlignment="Left"
+              <Button Theme="{StaticResource ToolButton}" Padding="0" HorizontalAlignment="Left"
                       Command="{Binding OpenLinkCommand}" CommandParameter="{Binding Homepage}" IsVisible="{Binding HasHomepage}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                   <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="13" Foreground="{DynamicResource Brush.Link}" />
                   <TextBlock Text="Home page" Classes="link small" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>
-              <Button Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="0" HorizontalAlignment="Left"
+              <Button Theme="{StaticResource ToolButton}" Padding="0" HorizontalAlignment="Left"
                       Command="{Binding OpenLinkCommand}" CommandParameter="{Binding RegistryPage}" IsVisible="{Binding HasRegistryPage}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                   <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="13" Foreground="{DynamicResource Brush.Link}" />

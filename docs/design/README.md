@@ -42,20 +42,41 @@ them again on every run, in `screenshots/` of the IDE job; the light screenshots
 
 ### Type
 
-The UI font is Inter, the code font JetBrains Mono (`CodeFont`). Sizes are in device-independent pixels.
+The UI font is Inter, the code font JetBrains Mono (`CodeFont`). Sizes are in device-independent pixels, at the
+default text size.
 
-| Role | Size | Weight | Where | Style |
-|---|---|---|---|---|
-| Display | 26 | SemiBold | The Start screen's title | |
-| Title | 18 | SemiBold | Page titles, a pull request's title | `TextBlock.h1` |
-| Subtitle | 15 | SemiBold | Dialog titles, empty and error state titles, the search box | |
-| Code | 14 | Regular | The editor (`CodeFont`) | |
-| Section | 13 | SemiBold | Section headers inside a panel, in sentence case | `TextBlock.h2` |
-| Body | 12.5 | Regular | Default text, list rows, buttons, text boxes | |
-| Body strong | 12.5 | SemiBold | Panel header titles, names in rows | `TextBlock.header` |
-| Small | 12 | Regular | Labels, secondary lines, the status bar, details | `TextBlock.label`, `.small` |
-| Caption | 11 | SemiBold | Pills, key caps, kind labels, counts | `Border.pill` |
-| Badge | 9.5 | Bold | File type badges (C#, NB) only | `Border.badge` |
+**Every font size is a token, never a number.** A view writes `FontSize="{DynamicResource Type.Body}"`, a setter
+`Value="{DynamicResource Type.Body}"`, and code that creates text calls `TypeScale.SetBaseFontSize(text, 12.5)`. The
+tokens are in `Theme/Type.axaml`; `Accessibility/TypeScale.cs` sets them all for the text size in use, so the whole IDE
+and its editors follow **Tools > Text Size** at once (see [Text size](#text-size)). `TextSizeTests` fails on a font size
+or a line height written as a number in a view.
+
+| Role | Token | Size | Weight | Where | Style |
+|---|---|---|---|---|---|
+| Display | `Type.Display` | 26 | SemiBold | The Start screen's title, an extension's initials | |
+| Hero | `Type.Hero` | 20 | SemiBold | A pull request's title, an extension's name | |
+| Title | `Type.Title` | 18 | SemiBold | Page titles, pairing codes | `TextBlock.h1` |
+| Heading | `Type.Heading` | 16 | SemiBold | A panel's own title (Terminal, TabStudio Link, Desktop mode) | |
+| Subtitle | `Type.Subtitle` | 15 | SemiBold | Dialog titles, empty and error state titles, the search box | |
+| Code | `Type.Code` | 14 | Regular | The editor (`CodeFont`) | |
+| Large | `Type.Large` | 14 | Regular | Empty and error state titles, larger labels | |
+| Lead | `Type.Lead` | 13.5 | Regular | Notebook text and cells | |
+| Section | `Type.Section` | 13 | SemiBold | Section headers inside a panel, in sentence case; the menu bar; the terminal | `TextBlock.h2` |
+| Body | `Type.Body` | 12.5 | Regular | Default text, list rows, buttons, text boxes | |
+| Body strong | `Type.Body` | 12.5 | SemiBold | Panel header titles, names in rows | `TextBlock.header` |
+| Small | `Type.Small` | 12 | Regular | Labels, secondary lines, the status bar, details | `TextBlock.label`, `.small` |
+| Fine | `Type.Fine` | 11.5 | Regular | Code details, logs in panels | |
+| Caption | `Type.Caption` | 11 | SemiBold | Pills, key caps, kind labels, counts | `Border.pill` |
+| Micro | `Type.Micro` | 10.5 | Bold | Count badges | |
+| Badge | `Type.Badge` | 9.5 | Bold | File type badges (C#, NB) only | `Border.badge` |
+
+Wrapped text that sets a line height uses `Type.Line.Body` (18) or `Type.Line.Relaxed` (20), which grow with the text.
+Fluent's own sizes (`ControlContentThemeFontSize`, `ToolTipContentThemeFontSize`) are scaled with the tokens, so text
+no view sizes follows too.
+
+**Text grows; containers make room.** A control that holds text never has a fixed `Height` that fits only the default
+size: it has a `MinHeight`, so at Very large it grows instead of clipping. A label beside a field in a fixed-width
+column trims with an ellipsis and a tooltip, or wraps.
 
 **Text in a fixed height is always centered vertically; never rely on stretch.** A pill, badge, chip, key cap, tab,
 header, status bar item or row with a fixed height sets `VerticalAlignment="Center"` on its text (or on the panel that
@@ -218,17 +239,27 @@ Only one toast shows at a time; more wait their turn. A toast never covers code 
 
 ## Touch targets and density
 
+Every control that takes a tap (a button, a toggle, a row, a tab, a menu item, a text box, a combo box, a check box,
+a slider) has a hit area of at least the screen's **touch target**. It is one set of resources per window
+(`Accessibility/TouchTargets.cs`), chosen by the window's width, and one style applies it to every control
+(`Theme/Accessibility.axaml`); a view never sets a smaller `Height`, `MinHeight` or `Width` on such a control.
+
 | | Phone | Tablet (default) | Desktop mode |
 |---|---|---|---|
 | When | Width under 600 | Width 600 and up with touch | An HDMI screen with a mouse and keyboard |
-| Minimum target | 48 | 44 (40 visual with 2 around) | 32 |
-| Tool buttons | 48 | 40 | 32 |
-| List rows | 40 | 32 (36 for two lines) | 26 |
-| Menu bar, toolbar | 44, 48 | 40, 46 | 32, 36 |
-| Status bar | 32 | 28 | 24 |
+| Touch target (`Target.Size`) | 48 | 44 | 32 |
+| What a flat button draws (`Target.Visual`) | 44 | 40, with 2 transparent around that takes the tap | 28 |
+| List and tree rows | 48 | 44 | 32 |
+| Menu bar, toolbar | 48, 48 | 44, 46 | 32, 36 |
+| Status bar | 48 | 44 | 32 |
 | Activity bar | 56 wide | 48 wide | 40 wide |
 | Touch bar | Icons only | Labels, folding to icons | Hidden |
 | Hover-only affordances | None | None | Allowed, with a touch path too |
+
+**Without looking heavier.** TabStudio's button themes (`ToolButton`, `SecondaryButton`, `AccentButton`,
+`StatusBarButton`) draw the button at `Target.Visual` inside a transparent `Target.Inset` (2 on each side) that still
+takes the tap, so a toolbar of 44-pixel targets looks as light as one of 40-pixel buttons, and two neighbours never
+need a gap between their hit areas. Rows keep their 12.5 text and padding; only their pitch grows.
 
 Gestures: tap activates; long press opens the context menu, or the tooltip of an icon-only button; double tap selects a
 word in the editor; drag on a splitter resizes (splitters are 6 px wide with a 12 px touch area). Keyboard shortcuts are
@@ -254,6 +285,88 @@ When the window is taller than wide or narrower than 900:
 - Dialogs fill the width less 16 on each side.
 
 ![Portrait, stage 2 mockup](images/mockup-04-portrait-dark.png)
+
+## Accessibility
+
+TabStudio is comfortable for every hand and every eye. Each rule below holds for every view because one mechanism
+applies it, not because each view remembers it, and each has a check that fails when a change breaks it.
+
+### Text size
+
+**Tools > Text Size** (or Ctrl+Q, "text size") has one setting: **Follow the system** (the default: Android's
+Settings > Display > Font size), **Small** (85%), **Default**, **Large** (115%), **Larger** (130%) and **Very large**
+(150%). **Make Text Larger** (Ctrl+Shift+.) and **Make Text Smaller** (Ctrl+Shift+,) step through them, as Visual
+Studio's zoom does. It changes the whole IDE and every editor at once, without a restart; when it follows the system,
+changing Android's font size changes the IDE while it runs. Android's sizes above 150% use Very large, the largest the
+IDE is laid out for. It is saved with the theme in `State/appearance.json`.
+
+Every view stays usable and unclipped at Very large, in landscape, portrait and on a phone: text is a token
+(see [Type](#type)), and containers grow with it.
+
+### Touch targets
+
+See [Touch targets and density](#touch-targets-and-density): 48 on a phone, 44 on a tablet, 32 in desktop mode, for
+every control that takes a tap.
+
+### Screen readers
+
+TalkBack reaches, names and operates every control (Avalonia's automation peers, which Avalonia's Android host gives
+TalkBack). `Accessibility/AccessibleNames.cs` names every control that takes a tap from what it shows:
+
+- a button, toggle, row or tab by its text ("Build Solution", "Program.cs, C#");
+- an icon-only button by its tooltip, which every icon-only button has ("Save All (Ctrl+Shift+S)");
+- a text box, combo box or slider by its placeholder ("Search Solution Explorer"), the label just before it or in its
+  grid row ("Branch name"), or its tooltip;
+- a menu item by its header, without the access key.
+
+A name the view sets (`AutomationProperties.Name`) always wins; set one where what shows is not what it does. Names
+follow the control as its text, tooltip or data change, as when a list recycles its rows. A control is never read as
+its class ("Avalonia.Controls.StackPanel").
+
+The editor reads its file, line and that line's text ("Program.cs, line 12 of 40: Console.WriteLine(name);") as the
+caret moves. The Error List reads each error's severity, code, message, file and line; the Solution Explorer each
+file and folder, with whether it is expanded; a dialog its title and fields, with the first field focused.
+
+What the user's own app shows (the app preview, a web page, a designed form, a virtual device) is the app's: it is
+marked `a11y:A11y.IsContent="True"` and checked by the layout checks (SWRM001 to SWRM005) instead.
+
+### Keyboard
+
+Everything works without touch. Tab and Shift+Tab move through the shell in reading order (menus, toolbar, side bar,
+editor, bottom panel, status bar), only to controls that can be seen: an adaptive bar's item folded into More is not
+a tab stop. The control with the keyboard focus shows it: a 2-pixel ring in `Brush.TextBright` (Avalonia's focus
+adorner; a text box shows its own focused border). Every command has a key gesture shown in its menu, tooltip and
+the search.
+
+### Contrast
+
+Every text passes WCAG AA, 4.5:1 (3:1 when large), and every icon and glyph 3:1, in both themes, on the surface it is
+drawn on, as the person sees it (with its opacity and the layers behind it): see [tokens.md](tokens.md).
+
+### Motion
+
+When Android asks apps not to animate (Settings > Accessibility > Remove animations, or the developer options'
+animator scale at off), spinners and indeterminate progress bars stand still (the `still` class, like `offscreen`)
+and transitions are skipped, so a change shows at once. The text beside them still says what is happening.
+
+### Right to left
+
+When the device's language is written right to left, the IDE mirrors (`FlowDirection`): the activity bar moves to the
+left edge, bars and rows read from the right, and only the icons that point a way (back, forward, the left and right
+arrows and chevrons, undo, redo) mirror with it; Run's triangle and the debugger's glyphs do not. Code stays left to
+right: the editors, the terminal and `.mono` text keep their direction.
+
+### How it is checked
+
+- **Every screenshot** (`UiTestHelpers.SaveScreenshot`) is audited by `Accessibility/AccessibilityAudit.cs` in the
+  tests, in the dark and the light theme: tap targets, names, text contrast and icon contrast at the text size it was
+  shown at; then the same window at Very large, saved in `screenshots/largest/`, for clipped text. A finding fails the
+  test, and is listed in `screenshots/accessibility/findings.tsv`.
+- `build/ci/accessibility-coverage.py` fails CI when a view of `src/TabStudio.App/Views` was never audited, and writes
+  the counts to `screenshots/accessibility/summary.md`.
+- `TextSizeTests`, `ScreenReaderTests`, `KeyboardTests` and `MotionAndDirectionTests` check the text size setting,
+  the names TalkBack reads, Tab's order and focus, Remove animations and the mirrored layout, at tablet, portrait and
+  phone sizes.
 
 ## Components
 

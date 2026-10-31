@@ -97,11 +97,12 @@ public sealed class TerminalTests
         await Task.Delay(200);
         await UiTestHelpers.WaitUntilAsync(() => true);
 
-        UiTestHelpers.SaveScreenshot(window, "33-terminal");
-
+        // Read before the screenshot: its audit shows the window again at Very large, and the terminal, fitting its
+        // bigger cells, has fewer rows and scrolls this line away.
         var line = Enumerable.Range(0, terminal.Emulator.Rows).Select(terminal.Emulator.ScreenLine).First(l => l.Text.StartsWith("TabStudio terminal", StringComparison.Ordinal));
         Assert.Equal(TerminalColor.Indexed(6), line[0].Style.Foreground);
         Assert.True(line[0].Style.Has(TerminalAttributes.Bold));
+        UiTestHelpers.SaveScreenshot(window, "33-terminal");
 
         // Ctrl+R, Ctrl+E and Ctrl+K are the shell's: the IDE's chords no longer swallow them and wait for a second key.
         foreach (var key in new[] { PhysicalKey.R, PhysicalKey.E, PhysicalKey.K })
