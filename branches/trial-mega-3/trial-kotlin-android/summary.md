@@ -1,0 +1,9 @@
+| Repository | Opened | F5 startup | Setup | Analysis stable | Errors | Build | Run | Debug | Tests | Doctor |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| sunflower | 2.5 s | sunflower (android) | ok in 11 s | 16.0 s | 0 errors, 0 warnings | 0 errors in 159 s | not run: build only | - | - | 1 Needs a toolchain |
+| architecture-samples | 0.3 s | architecture-samples (android) | ok in 8 s | 13.1 s | 0 errors, 0 warnings | 0 errors in 232 s | not run: build only | - | Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here. | 1 Needs a toolchain |
+| compose-samples-JetNews | 0.4 s | JetNews (android) | ok in 3 s | 7.8 s | 0 errors, 0 warnings | 0 errors in 148 s | not run: build only | - | - | 1 Needs a toolchain |
+| clikt | 0.4 s | clikt (kotlin) | ok in 2 s | 7.1 s | 0 errors, 0 warnings | 0 errors in 178 s | not run: build only | - | 112 found; 796 passed, 0 failed, 0 skipped, 112 not run - 796 tests run in 1 min 8 sec: 796 passed, 0 failed, 0 skipped. | 13 Needs a toolchain |
+| kotlinx-datetime | 0.3 s | kotlinx-datetime (kotlin) | ok in 2 s | 7.3 s | 0 errors, 0 warnings | 0 errors in 109 s | not run: build only | - | Test Explorer found no tests: No test projects in this solution. Add a project that references xUnit, NUnit or MSTest, and its tests appear here. | 12 Needs a toolchain |
+| compose-multiplatform-template | 0.3 s | compose-multiplatform-template (android) | ok in 2 s | 7.1 s | 0 errors, 0 warnings | 0 errors in 132 s | no window | ended without stopping at main.kt:5 | - | 1 Needs a toolchain, 1 Not supported |
+| gs-securing-web-kotlin | 0.5 s | complete-kotlin (kotlin) | ok in 2 s | 7.5 s | 0 errors, 0 warnings | 0 errors in 49 s | GET / 200 | stopped at SecuringWebApplication.kt:10 in SecuringWebApplicationKt.main(String[]), 1 frames, 0 locals | - | 1 Needs a toolchain |
