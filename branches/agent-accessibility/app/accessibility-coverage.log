@@ -1,0 +1,52 @@
+# Accessibility audit
+
+## /home/runner/work/tabstudio/tabstudio/ci-out/screenshots
+
+Views audited: 78 of 78 (0 exempt).
+
+| Rule | Findings | Distinct controls |
+| --- | --- | --- |
+| target | 0 | 0 |
+| name | 0 | 0 |
+| contrast | 1 | 1 |
+| icon-contrast | 0 | 0 |
+| clipped | 0 | 0 |
+
+## /home/runner/work/tabstudio/tabstudio/ci-out/screenshots/light
+
+Views audited: 55 of 78 (0 exempt).
+
+| Rule | Findings | Distinct controls |
+| --- | --- | --- |
+| target | 0 | 0 |
+| name | 0 | 0 |
+| contrast | 0 | 0 |
+| icon-contrast | 0 | 0 |
+| clipped | 0 | 0 |
+
+Views never audited:
+- TabStudio.App.Views.Actions.ActionsView
+- TabStudio.App.Views.Actions.CiLogHeaderView
+- TabStudio.App.Views.Actions.RunDetailsView
+- TabStudio.App.Views.Actions.RunNoticeView
+- TabStudio.App.Views.CompatibilityView
+- TabStudio.App.Views.DataTipView
+- TabStudio.App.Views.ExceptionHelperView
+- TabStudio.App.Views.Extensions.ExtensionDetailsView
+- TabStudio.App.Views.Extensions.ExtensionsView
+- TabStudio.App.Views.Extensions.QuickPickView
+- TabStudio.App.Views.FormsDesignerView
+- TabStudio.App.Views.Live.LiveJoinView
+- TabStudio.App.Views.LongOperations.OperationsPanel
+- TabStudio.App.Views.PeekDefinitionView
+- TabStudio.App.Views.PullRequests.PullRequestListView
+- TabStudio.App.Views.PullRequests.PullRequestView
+- TabStudio.App.Views.PullRequests.ReviewAnchorView
+- TabStudio.App.Views.PullRequests.ReviewDiffBar
+- TabStudio.App.Views.ReferencesView
+- TabStudio.App.Views.SignatureHelpView
+- TabStudio.App.Views.WatchView
+- TabStudio.App.Views.WindowsBridge.BridgePaneView
+- TabStudio.App.Views.WindowsBridge.WindowsBridgeTabView
+
+::error::Some views were never audited for accessibility (see above).
