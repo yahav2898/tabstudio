@@ -1,0 +1,57 @@
+  Determining projects to restore...
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.VisualBasic.Forms/TabStudio.VisualBasic.Forms.csproj (in 290 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.VisualBasic.Forms.Tests/TabStudio.VisualBasic.Forms.Tests.csproj (in 295 ms).
+  3 of 5 projects are up-to-date for restore.
+  TabStudio.Forms -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/bin/Release/net10.0/TabStudio.Forms.dll
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+  TabStudio.VisualBasic.Forms -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.VisualBasic.Forms/bin/Release/net10.0/Microsoft.VisualBasic.Forms.dll
+  TabStudio.VisualBasic.Forms.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.VisualBasic.Forms.Tests/bin/Release/net10.0/TabStudio.VisualBasic.Forms.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.VisualBasic.Forms.Tests/bin/Release/net10.0/TabStudio.VisualBasic.Forms.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.14]   Discovering: TabStudio.VisualBasic.Forms.Tests
+[xUnit.net 00:00:00.24]   Discovered:  TabStudio.VisualBasic.Forms.Tests
+[xUnit.net 00:00:00.32]   Starting:    TabStudio.VisualBasic.Forms.Tests
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationBaseTests.GetEnvironmentVariable_reads_a_variable_and_throws_for_one_that_is_not_defined [15 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationBaseTests.ChangeCulture_changes_the_cultures_of_the_current_thread [3 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationBaseTests.CommandLineArgs_are_the_ones_the_framework_was_given [47 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.InteractionTests.In_a_console_InputBox_reads_a_line_or_gives_the_default_answer [< 1 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationBaseTests.AssemblyInfo_reads_the_attributes_of_an_assembly [1 s]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationBaseTests.Info_describes_the_program_that_declares_the_My_class [< 1 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationBaseTests.AssemblyInfo_gives_empty_strings_for_attributes_an_assembly_does_not_have [232 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationFrameworkTests.Windows_authentication_makes_the_device_user_the_principal [2 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.VisualBasicProgramTests.A_Windows_Forms_app_with_the_application_framework_compiles_with_Sub_Main_from_the_My_namespace [1 s]
+  Passed TabStudio.VisualBasic.Forms.Tests.VisualBasicProgramTests.A_console_app_with_My_compiles_without_the_Forms_layer_and_runs [219 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ComputerTests.Log_writes_Information_and_more_severe_entries_to_its_file [18 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ComputerTests.Clock_reads_the_device_clock [5 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ComputerTests.The_computer_has_the_device_name_its_screen_keyboard_and_mouse [3 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.InteractionTests.MsgBox_shows_a_message_box_and_returns_the_button_pressed [188 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ComputerTests.Clipboard_keeps_text_files_audio_and_JSON_data [37 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.InteractionTests.In_a_console_MsgBox_writes_the_prompt_and_reads_the_choice [3 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ComputerTests.Network_copies_file_addresses_and_checks_its_arguments [4 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ComputerTests.Info_describes_the_operating_system_and_its_memory [4 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ComputerTests.What_the_tablet_cannot_do_throws_NotSupportedException_naming_the_member [1 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ComputerTests.FileSystem_reads_and_writes_the_device_files [2 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ComputerTests.ContextValue_keeps_a_value_per_thread [1 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ComputerTests.User_is_the_device_user_unless_the_program_sets_a_principal [< 1 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationFrameworkTests.With_AfterAllFormsClose_the_app_runs_until_its_last_form_closes [509 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.VisualBasicProgramTests.A_Windows_Forms_app_with_the_application_framework_runs_its_main_form_and_events [67 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.InteractionTests.InputBox_returns_an_empty_string_when_the_user_cancels [9 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationFrameworkTests.A_splash_screen_shows_while_the_main_form_loads_and_closes_after_it [107 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.InteractionTests.InputBox_shows_the_default_answer_and_returns_what_the_user_typed [5 ms]
+[xUnit.net 00:00:03.06]   Finished:    TabStudio.VisualBasic.Forms.Tests
+  Passed TabStudio.VisualBasic.Forms.Tests.InteractionTests.In_a_console_MsgBox_chooses_the_default_button_without_an_answer_and_does_not_wait_for_OK [< 1 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationFrameworkTests.Cancelling_Startup_ends_the_app_before_its_main_form_is_created [1 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationFrameworkTests.ShutdownStyle_rejects_values_that_are_not_modes [< 1 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationFrameworkTests.An_app_that_creates_no_main_form_throws_NoStartupFormException [1 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationFrameworkTests.Run_raises_its_events_in_order_and_ends_when_the_main_form_closes [1 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationFrameworkTests.UnhandledException_ends_the_app_normally_unless_the_handler_keeps_it_running [1 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationFrameworkTests.Without_an_UnhandledException_handler_an_exception_ends_the_app_with_it [1 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationFrameworkTests.UnhandledException_sees_an_exception_of_the_UI_thread_and_the_app_goes_on_when_the_handler_says_so [1 ms]
+  Passed TabStudio.VisualBasic.Forms.Tests.ApplicationFrameworkTests.With_AfterMainFormCloses_the_app_ends_with_its_main_form_and_closes_the_others [< 1 ms]
+
+Test Run Successful.
+Total tests: 36
+     Passed: 36
+ Total time: 3.8308 Seconds
