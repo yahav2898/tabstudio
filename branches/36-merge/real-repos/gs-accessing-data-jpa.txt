@@ -2,8 +2,8 @@ gs-accessing-data-jpa at ef48947528dba9021776282e12299e5298e66bca
 Toolchain projects:
   java: /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/pom.xml
 Startup project: java /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/pom.xml
-Set up in 3.0 s
-Ran in 8.8 s
+Set up in 2.0 s
+Ran in 7.3 s
 Project setup:
 
 Output:
@@ -14,13 +14,63 @@ Running complete with Java 21.0.13
 [INFO] --------------< com.example:accessing-data-jpa-complete >---------------
 [INFO] Building accessing-data-jpa-complete 0.0.1-SNAPSHOT
 [INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa/4.0.8/spring-boot-starter-data-jpa-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa/4.0.8/spring-boot-starter-data-jpa-4.0.8.pom (2.7 kB at 8.2 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa/4.0.8/spring-boot-data-jpa-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa/4.0.8/spring-boot-data-jpa-4.0.8.pom (2.6 kB at 42 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-hibernate/4.0.8/spring-boot-hibernate-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-hibernate/4.0.8/spring-boot-hibernate-4.0.8.pom (2.4 kB at 39 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa/4.0.8/spring-boot-jpa-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa/4.0.8/spring-boot-jpa-4.0.8.pom (2.6 kB at 47 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-orm/7.0.9/spring-orm-7.0.9.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-orm/7.0.9/spring-orm-7.0.9.pom (2.6 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/hibernate/orm/hibernate-core/7.2.24.Final/hibernate-core-7.2.24.Final.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/hibernate/orm/hibernate-core/7.2.24.Final/hibernate-core-7.2.24.Final.pom (5.4 kB at 96 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/hibernate/models/hibernate-models/1.0.1/hibernate-models-1.0.1.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/hibernate/models/hibernate-models/1.0.1/hibernate-models-1.0.1.pom (2.1 kB at 36 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-jpa/4.0.7/spring-data-jpa-4.0.7.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-jpa/4.0.7/spring-data-jpa-4.0.7.pom (13 kB at 228 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-jpa-parent/4.0.7/spring-data-jpa-parent-4.0.7.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-jpa-parent/4.0.7/spring-data-jpa-parent-4.0.7.pom (8.7 kB at 170 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-aspects/7.0.9/spring-aspects-7.0.9.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-aspects/7.0.9/spring-aspects-7.0.9.pom (2.0 kB at 38 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa-test/4.0.8/spring-boot-starter-data-jpa-test-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa-test/4.0.8/spring-boot-starter-data-jpa-test-4.0.8.pom (2.7 kB at 23 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa-test/4.0.8/spring-boot-data-jpa-test-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa-test/4.0.8/spring-boot-data-jpa-test-4.0.8.pom (2.5 kB at 22 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa-test/4.0.8/spring-boot-jpa-test-4.0.8.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa-test/4.0.8/spring-boot-jpa-test-4.0.8.pom (2.5 kB at 16 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa/4.0.8/spring-boot-starter-data-jpa-4.0.8.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa/4.0.8/spring-boot-data-jpa-4.0.8.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-hibernate/4.0.8/spring-boot-hibernate-4.0.8.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa/4.0.8/spring-boot-jpa-4.0.8.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/hibernate/orm/hibernate-core/7.2.24.Final/hibernate-core-7.2.24.Final.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa/4.0.8/spring-boot-jpa-4.0.8.jar (24 kB at 435 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/hibernate/models/hibernate-models/1.0.1/hibernate-models-1.0.1.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-hibernate/4.0.8/spring-boot-hibernate-4.0.8.jar (29 kB at 268 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-orm/7.0.9/spring-orm-7.0.9.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa/4.0.8/spring-boot-data-jpa-4.0.8.jar (16 kB at 131 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-jpa/4.0.7/spring-data-jpa-4.0.7.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa/4.0.8/spring-boot-starter-data-jpa-4.0.8.jar (4.8 kB at 37 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-aspects/7.0.9/spring-aspects-7.0.9.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/hibernate/models/hibernate-models/1.0.1/hibernate-models-1.0.1.jar (218 kB at 1.5 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa-test/4.0.8/spring-boot-starter-data-jpa-test-4.0.8.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-aspects/7.0.9/spring-aspects-7.0.9.jar (50 kB at 271 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa-test/4.0.8/spring-boot-data-jpa-test-4.0.8.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-orm/7.0.9/spring-orm-7.0.9.jar (226 kB at 1.2 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa-test/4.0.8/spring-boot-jpa-test-4.0.8.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-jpa-test/4.0.8/spring-boot-starter-data-jpa-test-4.0.8.jar (4.8 kB at 24 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-data-jpa-test/4.0.8/spring-boot-data-jpa-test-4.0.8.jar (9.4 kB at 37 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-jpa-test/4.0.8/spring-boot-jpa-test-4.0.8.jar (9.5 kB at 36 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-jpa/4.0.7/spring-data-jpa-4.0.7.jar (2.2 MB at 7.9 MB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/hibernate/orm/hibernate-core/7.2.24.Final/hibernate-core-7.2.24.Final.jar (14 MB at 47 MB/s)
 [INFO] 
 [INFO] --- maven-resources-plugin:3.3.1:resources (default-resources) @ accessing-data-jpa-complete ---
 [INFO] Copying 1 resource from src/main/resources to target/classes
 [INFO] Copying 0 resource from src/main/resources to target/classes
 [INFO] 
 [INFO] --- maven-compiler-plugin:3.14.1:compile (default-compile) @ accessing-data-jpa-complete ---
-[INFO] Recompiling the module because of changed source code.
+[INFO] Recompiling the module because of changed dependency.
 [INFO] Compiling 3 source files with javac [debug parameters release 17] to target/classes
 [INFO] 
 [INFO] --- maven-resources-plugin:3.3.1:testResources (default-testResources) @ accessing-data-jpa-complete ---
@@ -44,8 +94,8 @@ Running complete with Java 21.0.13
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.396 s
-[INFO] Finished at: 2026-10-31T02:56:57Z
+[INFO] Total time:  3.908 s
+[INFO] Finished at: 2026-10-31T17:54:18Z
 [INFO] ------------------------------------------------------------------------
 
   .   ____          _            __ _ _
@@ -57,52 +107,52 @@ Running complete with Java 21.0.13
 
  :: Spring Boot ::                (v4.0.8)
 
-2026-10-31T02:56:57.934Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : Starting AccessingDataJpaApplication using Java 21.0.13 with PID 35932 (/home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/target/classes started by runner in /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete)
-2026-10-31T02:56:57.938Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : No active profile set, falling back to 1 default profile: "default"
-2026-10-31T02:56:58.393Z  INFO 35932 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-10-31T02:56:58.437Z  INFO 35932 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 35 ms. Found 1 JPA repository interface.
-2026-10-31T02:56:58.839Z  INFO 35932 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-10-31T02:56:58.998Z  INFO 35932 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:6ffd3b37-cf39-46b4-9bb7-84042ba7d1a5 user=SA
-2026-10-31T02:56:59.000Z  INFO 35932 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-10-31T02:56:59.045Z  INFO 35932 --- [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
-2026-10-31T02:56:59.091Z  INFO 35932 --- [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.24.Final
-2026-10-31T02:56:59.455Z  INFO 35932 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-10-31T02:56:59.552Z  INFO 35932 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [jdbc:h2:mem:6ffd3b37-cf39-46b4-9bb7-84042ba7d1a5]
+2026-10-31T17:54:18.913Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : Starting AccessingDataJpaApplication using Java 21.0.13 with PID 33592 (/home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/target/classes started by runner in /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete)
+2026-10-31T17:54:18.916Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : No active profile set, falling back to 1 default profile: "default"
+2026-10-31T17:54:19.174Z  INFO 33592 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-31T17:54:19.204Z  INFO 33592 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 23 ms. Found 1 JPA repository interface.
+2026-10-31T17:54:19.433Z  INFO 33592 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-31T17:54:19.562Z  INFO 33592 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:1492fdc4-ba45-4830-a5a9-f46d334d0e67 user=SA
+2026-10-31T17:54:19.563Z  INFO 33592 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-31T17:54:19.588Z  INFO 33592 --- [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-31T17:54:19.612Z  INFO 33592 --- [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.24.Final
+2026-10-31T17:54:19.817Z  INFO 33592 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-31T17:54:19.860Z  INFO 33592 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:1492fdc4-ba45-4830-a5a9-f46d334d0e67]
 	Database driver: H2 JDBC Driver
 	Database dialect: H2Dialect
 	Database version: 2.4.240
-	Default catalog/schema: 6FFD3B37-CF39-46B4-9BB7-84042BA7D1A5/PUBLIC
+	Default catalog/schema: 1492FDC4-BA45-4830-A5A9-F46D334D0E67/PUBLIC
 	Autocommit mode: undefined/unknown
 	Isolation level: READ_COMMITTED [default READ_COMMITTED]
 	JDBC fetch size: 100
 	Pool: DataSourceConnectionProvider
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-10-31T02:57:00.191Z  INFO 35932 --- [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-10-31T02:57:00.218Z  INFO 35932 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-10-31T02:57:00.320Z  INFO 35932 --- [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-10-31T02:57:00.522Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : Started AccessingDataJpaApplication in 2.971 seconds (process running for 3.332)
-2026-10-31T02:57:00.594Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : Customers found with findAll():
-2026-10-31T02:57:00.594Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : -------------------------------
-2026-10-31T02:57:00.726Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
-2026-10-31T02:57:00.726Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=2, firstName='Chloe', lastName='O'Brian']
-2026-10-31T02:57:00.726Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=3, firstName='Kim', lastName='Bauer']
-2026-10-31T02:57:00.726Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=4, firstName='David', lastName='Palmer']
-2026-10-31T02:57:00.727Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=5, firstName='Michelle', lastName='Dessler']
-2026-10-31T02:57:00.727Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : 
-2026-10-31T02:57:00.736Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer found with findById(1L):
-2026-10-31T02:57:00.736Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : --------------------------------
-2026-10-31T02:57:00.736Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
-2026-10-31T02:57:00.736Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : 
-2026-10-31T02:57:00.736Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer found with findByLastName('Bauer'):
-2026-10-31T02:57:00.736Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : --------------------------------------------
-2026-10-31T02:57:01.021Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
-2026-10-31T02:57:01.022Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=3, firstName='Kim', lastName='Bauer']
-2026-10-31T02:57:01.022Z  INFO 35932 --- [           main] c.e.a.AccessingDataJpaApplication        : 
-2026-10-31T02:57:01.031Z  INFO 35932 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-10-31T02:57:01.039Z  INFO 35932 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2026-10-31T02:57:01.045Z  INFO 35932 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-10-31T17:54:20.338Z  INFO 33592 --- [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-31T17:54:20.359Z  INFO 33592 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-31T17:54:20.407Z  INFO 33592 --- [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-31T17:54:20.535Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : Started AccessingDataJpaApplication in 1.852 seconds (process running for 2.092)
+2026-10-31T17:54:20.579Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : Customers found with findAll():
+2026-10-31T17:54:20.579Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : -------------------------------
+2026-10-31T17:54:20.669Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
+2026-10-31T17:54:20.669Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=2, firstName='Chloe', lastName='O'Brian']
+2026-10-31T17:54:20.669Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=3, firstName='Kim', lastName='Bauer']
+2026-10-31T17:54:20.669Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=4, firstName='David', lastName='Palmer']
+2026-10-31T17:54:20.669Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=5, firstName='Michelle', lastName='Dessler']
+2026-10-31T17:54:20.669Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : 
+2026-10-31T17:54:20.675Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer found with findById(1L):
+2026-10-31T17:54:20.675Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : --------------------------------
+2026-10-31T17:54:20.675Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
+2026-10-31T17:54:20.675Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : 
+2026-10-31T17:54:20.675Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer found with findByLastName('Bauer'):
+2026-10-31T17:54:20.675Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : --------------------------------------------
+2026-10-31T17:54:20.859Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
+2026-10-31T17:54:20.860Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=3, firstName='Kim', lastName='Bauer']
+2026-10-31T17:54:20.860Z  INFO 33592 --- [           main] c.e.a.AccessingDataJpaApplication        : 
+2026-10-31T17:54:20.866Z  INFO 33592 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-31T17:54:20.869Z  INFO 33592 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-10-31T17:54:20.870Z  INFO 33592 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
 
 The program 'complete' has exited with code 0 (0x0).
 

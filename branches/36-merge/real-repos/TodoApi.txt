@@ -1,5 +1,5 @@
 TodoApi at 307a1eadbbd77a3004c318f2377e4818bc400af6
-Opened /home/runner/work/_temp/real-repos/TodoApi/TodoApp.sln in 0.2 s
+Opened /home/runner/work/_temp/real-repos/TodoApi/TodoApp.sln in 0.1 s
 Compatibility Doctor:
   Todo.Api: Ready via Local server + WebView - Served on this device and shown in the web preview beside the code. Saving a file restarts it.
   Todo.Api.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
@@ -9,7 +9,7 @@ Compatibility Doctor:
   TodoApp.AppHost: Not supported via Not on a tablet - An Aspire AppHost starts the app's projects and containers through Aspire's developer control plane, which runs on a computer, and it compiles against code its SDK generates for the projects it references. TabStudio leaves it out of builds; run the projects it starts on their own.
   TodoApp.ServiceDefaults: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: Todo.Web.Server
-Built in 6.0 s: 1 errors, 0 warnings
+Built in 7.9 s: 1 errors, 0 warnings
   1 x CS1739
       [Todo.Api] UsersApi.cs(42,109): error CS1739: The best overload for 'UserLoginInfo' does not have a parameter named 'displayName'
 Packages with analyzers or MSBuild files:
@@ -1003,18 +1003,18 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net7.0/Yarp.ReverseProxy.targets
       buildTransitive/net8.0/Yarp.ReverseProxy.targets
 Output:
-Build started at 03:03:25...
+Build started at 17:59:30...
 1>------ Build started: Project: TodoApp.ServiceDefaults, Configuration: Debug ------
-1>TodoApp.ServiceDefaults -> compiled in memory (13.5 KB, 67 ms)
+1>TodoApp.ServiceDefaults -> compiled in memory (13.5 KB, 20 ms)
 2>------ Build started: Project: Todo.Api, Configuration: Debug ------
 2>UsersApi.cs(42,109): error CS1739: The best overload for 'UserLoginInfo' does not have a parameter named 'displayName'
 3>------ Build started: Project: Todo.Api.Tests, Configuration: Debug ------
 4>------ Build started: Project: Todo.Web.Shared, Configuration: Debug ------
-4>Todo.Web.Shared -> compiled in memory (5.5 KB, 4 ms)
+4>Todo.Web.Shared -> compiled in memory (5.5 KB, 2 ms)
 5>------ Build started: Project: Todo.Web.Client, Configuration: Debug ------
-5>Todo.Web.Client -> compiled in memory (28.5 KB, 58 ms)
+5>Todo.Web.Client -> compiled in memory (28.5 KB, 26 ms)
 6>------ Build started: Project: Todo.Web.Server, Configuration: Debug ------
-6>Todo.Web.Server -> compiled in memory (36 KB, 85 ms)
+6>Todo.Web.Server -> compiled in memory (36 KB, 55 ms)
 7>------ Skipped: Project: TodoApp.AppHost: an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers ------
 ========== Build: 4 succeeded, 2 failed, 1 skipped ==========
 

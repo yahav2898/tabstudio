@@ -1,5 +1,5 @@
 Bogus at 6ece18c5c22648ab4606e45a0aaf2f07fc5259e4
-Opened /home/runner/work/_temp/real-repos/Bogus/Source/Bogus.sln in 0.2 s
+Opened /home/runner/work/_temp/real-repos/Bogus/Source/Bogus.sln in 0.3 s
 Compatibility Doctor:
   Bogus: Library via Built with its users - A library is compiled together with the projects that reference it.
   Bogus.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
@@ -595,14 +595,14 @@ Packages with analyzers or MSBuild files:
       build/net46/XunitXml.TestLogger.props
       build/netstandard1.5/XunitXml.TestLogger.props
 Output:
-Build started at 03:13:17...
+Build started at 18:07:54...
 1>------ Build started: Project: Bogus, Configuration: Debug ------
 1>BArray.cs(38,24): warning CS0114: 'BArray.Contains(BValue)' hides inherited member 'BValue.Contains(BValue)'. To make the current member override that implementation, add the override keyword. Otherwise add the new keyword.
 1>BValue.cs(12,14): warning CS0660: 'BValue' defines operator == or operator != but does not override Object.Equals(object o)
 1>BValue.cs(12,14): warning CS0661: 'BValue' defines operator == or operator != but does not override Object.GetHashCode()
 1>Date.cs(47,84): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
 1>Images.cs(130,21): warning SYSLIB0013: 'Uri.EscapeUriString(string)' is obsolete: 'Uri.EscapeUriString can corrupt the Uri string in some cases. Consider using Uri.EscapeDataString for query string components instead.'
-1>Bogus -> compiled in memory (2386 KB, 242 ms)
+1>Bogus -> compiled in memory (2386 KB, 178 ms)
 2>------ Build started: Project: Bogus.Tests, Configuration: Debug ------
 2>DateTest.cs(410,7): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
 2>DateTest.cs(424,7): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
@@ -614,10 +614,10 @@ Build started at 03:13:17...
 2>PersonTest.cs(251,7): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
 2>PersonTest.cs(276,7): warning CS0618: 'Date.SystemClock' is obsolete: 'Consider using new Faker[T].UseDateTimeReference(refDate), or new Faker(){ DateTimeReference = refDate } or new Date {LocalSystemClock = () => refDate}; all these options are scoped per object instance. Setting this global static system clock is considered bad practice and may be removed in the future.'
 2>Question66444118.cs(62,47): warning SYSLIB0050: 'FormatterServices' is obsolete: 'Formatter-based serialization is obsolete and should not be used.'
-2>Bogus.Tests -> compiled in memory (325.5 KB, 732 ms)
+2>Bogus.Tests -> compiled in memory (325.5 KB, 429 ms)
 3>------ Build started: Project: Benchmark, Configuration: Debug ------
 3>PR300_BenchDecimal.cs(50,31): warning CS0108: 'CustomRandomizer.localSeed' hides inherited member 'Randomizer.localSeed'. Use the new keyword if hiding was intended.
-3>Benchmark -> compiled in memory (15.5 KB, 206 ms)
+3>Benchmark -> compiled in memory (15.5 KB, 144 ms)
 4>------ Skipped: Project: Builder: it is not built by the solution's Debug configuration ------
 ========== Build: 3 succeeded, 0 failed, 1 skipped ==========
 

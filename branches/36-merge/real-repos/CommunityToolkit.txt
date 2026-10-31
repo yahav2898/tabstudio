@@ -1,5 +1,5 @@
 CommunityToolkit at b135626dd54d33b8f05f2ff31591592c004aa848
-Opened /home/runner/work/_temp/real-repos/CommunityToolkit/dotnet.slnx in 0.9 s
+Opened /home/runner/work/_temp/real-repos/CommunityToolkit/dotnet.slnx in 0.6 s
 Compatibility Doctor:
   CommunityToolkit.Common.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   CommunityToolkit.Diagnostics.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
@@ -28,7 +28,7 @@ Compatibility Doctor:
   CommunityToolkit.Mvvm.SourceGenerators.Roslyn5000: Library via Built with its users - A library is compiled together with the projects that reference it.
   CommunityToolkit.Mvvm: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: none
-Built in 26.7 s: 0 errors, 125 warnings
+Built in 25.7 s: 0 errors, 125 warnings
 Packages with analyzers or MSBuild files:
   dotnet.reproduciblebuilds 2.0.2
       build/DotNet.ReproducibleBuilds.props
@@ -1629,7 +1629,7 @@ gnored.
 17>Test_RelayCommandAttribute.cs(1270,10): warning CS0657: 'property' is not a valid attribute location for this declaration. Valid attribute locations for this declaration are 'method, return'. All attributes in this block will be ignored.
 17>Test_RelayCommandAttribute.cs(1274,10): warning CS0657: 'field' is not a valid attribute location for this declaration. Valid attribute locations for this declaration are 'method, return'. All attributes in this block will be ignored.
 17>Test_RelayCommandAttribute.cs(1275,10): warning CS0657: 'property' is not a valid attribute location for this declaration. Valid attribute locations for this declaration are 'method, return'. All attributes in this block will be ignored.
-17>CommunityToolkit.Mvvm.Roslyn4120.UnitTests -> compiled in memory (680.5 KB, 2270 ms)
+17>CommunityToolkit.Mvvm.Roslyn4120.UnitTests -> compiled in memory (680.5 KB, 1445 ms)
 18>------ Build started: Project: CommunityToolkit.Mvvm.SourceGenerators.Roslyn5000, Configuration: Debug ------
 18>TypedConstantInfo.cs(139,64): warning CS8604: Possible null reference argument for parameter 'text' in 'ExpressionSyntax SyntaxFactory.ParseExpression(string text, int offset = 0, ParseOptions? options = null, bool consumeFullText = true)'.
 18>ObservablePropertyGenerator.Execute.cs(1413,109): warning CS8604: Possible null reference argument for parameter 'value' in 'SyntaxToken SyntaxFactory.Literal(string value)'.
@@ -1720,7 +1720,7 @@ gnored.
 18>IMessengerRegisterAllGenerator.Execute.cs(89,105): warning CS8602: Dereference of a possibly null reference.
 18>DiagnosticInfo.cs(54,74): warning CS8620: Argument of type 'ImmutableArray<string?>' cannot be used for parameter 'Arguments' of type 'EquatableArray<string>' in 'DiagnosticInfo.DiagnosticInfo(DiagnosticDescriptor Descriptor, SyntaxTree? SyntaxTree, TextSpan TextSpan, EquatableArray<string> Arguments)' due to differences in the nullability of reference types.
 18>DiagnosticInfo.cs(68,74): warning CS8620: Argument of type 'ImmutableArray<string?>' cannot be used for parameter 'Arguments' of type 'EquatableArray<string>' in 'DiagnosticInfo.DiagnosticInfo(DiagnosticDescriptor Descriptor, SyntaxTree? SyntaxTree, TextSpan TextSpan, EquatableArray<string> Arguments)' due to differences in the nullability of reference types.
-18>CommunityToolkit.Mvvm.SourceGenerators.Roslyn5000 -> compiled in memory (333.5 KB, 317 ms)
+18>CommunityToolkit.Mvvm.SourceGenerators.Roslyn5000 -> compiled in memory (333.5 KB, 333 ms)
 19>------ Build started: Project: CommunityToolkit.Mvvm.Roslyn5000.UnitTests, Configuration: Debug ------
 19>Test_ObservablePropertyAttribute.cs(1650,10): warning CS0657: 'property' is not a valid attribute location for this declaration. Valid attribute locations for this declaration are 'field'. All attributes in this block will be ignored.
 19>Test_ObservablePropertyAttribute.cs(1651,10): warning CS0657: 'property' is not a valid attribute location for this declaration. Valid attribute locations for this declaration are 'field'. All attributes in this block will be ignored.
@@ -1756,20 +1756,20 @@ gnored.
 19>Test_RelayCommandAttribute.cs(1270,10): warning CS0657: 'property' is not a valid attribute location for this declaration. Valid attribute locations for this declaration are 'method, return'. All attributes in this block will be ignored.
 19>Test_RelayCommandAttribute.cs(1274,10): warning CS0657: 'field' is not a valid attribute location for this declaration. Valid attribute locations for this declaration are 'method, return'. All attributes in this block will be ignored.
 19>Test_RelayCommandAttribute.cs(1275,10): warning CS0657: 'property' is not a valid attribute location for this declaration. Valid attribute locations for this declaration are 'method, return'. All attributes in this block will be ignored.
-19>CommunityToolkit.Mvvm.Roslyn5000.UnitTests -> compiled in memory (680.5 KB, 2119 ms)
+19>CommunityToolkit.Mvvm.Roslyn5000.UnitTests -> compiled in memory (680.5 KB, 1371 ms)
 20>------ Build started: Project: CommunityToolkit.Mvvm.CodeFixers.Roslyn4001, Configuration: Debug ------
-20>CommunityToolkit.Mvvm.CodeFixers.Roslyn4001 -> compiled in memory (15.5 KB, 250 ms)
+20>CommunityToolkit.Mvvm.CodeFixers.Roslyn4001 -> compiled in memory (15.5 KB, 229 ms)
 21>------ Build started: Project: CommunityToolkit.Mvvm.SourceGenerators.Roslyn4001.UnitTests, Configuration: Debug ------
-21>CommunityToolkit.Mvvm.SourceGenerators.Roslyn4001.UnitTests -> compiled in memory (401.5 KB, 492 ms)
+21>CommunityToolkit.Mvvm.SourceGenerators.Roslyn4001.UnitTests -> compiled in memory (401.5 KB, 317 ms)
 22>------ Build started: Project: CommunityToolkit.Mvvm.SourceGenerators.Roslyn4031.UnitTests, Configuration: Debug ------
-22>CommunityToolkit.Mvvm.SourceGenerators.Roslyn4031.UnitTests -> compiled in memory (378.5 KB, 478 ms)
+22>CommunityToolkit.Mvvm.SourceGenerators.Roslyn4031.UnitTests -> compiled in memory (378.5 KB, 471 ms)
 23>------ Build started: Project: CommunityToolkit.Mvvm.SourceGenerators.Roslyn4120.UnitTests, Configuration: Debug ------
-23>CommunityToolkit.Mvvm.SourceGenerators.Roslyn4120.UnitTests -> compiled in memory (660 KB, 571 ms)
+23>CommunityToolkit.Mvvm.SourceGenerators.Roslyn4120.UnitTests -> compiled in memory (660 KB, 346 ms)
 24>------ Build started: Project: CommunityToolkit.Mvvm.SourceGenerators.Roslyn5000.UnitTests, Configuration: Debug ------
-24>CommunityToolkit.Mvvm.SourceGenerators.Roslyn5000.UnitTests -> compiled in memory (665.5 KB, 917 ms)
+24>CommunityToolkit.Mvvm.SourceGenerators.Roslyn5000.UnitTests -> compiled in memory (665.5 KB, 602 ms)
 25>------ Build started: Project: CommunityToolkit.Mvvm.DisableINotifyPropertyChanging.UnitTests, Configuration: Debug ------
-25>CommunityToolkit.Mvvm.DisableINotifyPropertyChanging.UnitTests -> compiled in memory (5.5 KB, 180 ms)
+25>CommunityToolkit.Mvvm.DisableINotifyPropertyChanging.UnitTests -> compiled in memory (5.5 KB, 150 ms)
 26>------ Build started: Project: CommunityToolkit.Mvvm.CodeFixers.Roslyn5000, Configuration: Debug ------
-26>CommunityToolkit.Mvvm.CodeFixers.Roslyn5000 -> compiled in memory (39.5 KB, 307 ms)
+26>CommunityToolkit.Mvvm.CodeFixers.Roslyn5000 -> compiled in memory (39.5 KB, 181 ms)
 ========== Build: 26 succeeded, 0 failed ==========
 

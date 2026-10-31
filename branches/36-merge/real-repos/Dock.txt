@@ -1,5 +1,5 @@
 Dock at 4b12dc1ef877d9950e5d1c620a9261d820afef72
-Opened /home/runner/work/_temp/real-repos/Dock/Dock.slnx in 1.0 s
+Opened /home/runner/work/_temp/real-repos/Dock/Dock.slnx in 1.1 s
 Compatibility Doctor:
   _build: Not supported via Build script, on a computer - The repository's build script (on Nuke.Common): it builds, tests and publishes the other projects by starting dotnet and other tools as processes, which a program cannot do on a tablet. TabStudio builds it with the solution but never starts it; build and run the other projects here, or run the script on a computer with the .NET SDK.
   DockAvalonDockSample: Ready via Native view in the app preview - Rendered natively beside the code by TabStudio's own Avalonia. Saving a file restarts it.
@@ -105,7 +105,7 @@ Compatibility Doctor:
   Dock.Settings.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   DockXamlSample.HeadlessTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: DockAvalonDockSample
-Built in 105.3 s: 43 errors, 23 warnings
+Built in 80.3 s: 43 errors, 23 warnings
   43 x CS0103
       [Dock.Model.ReactiveUI.Reactive] DockDock.cs(20,9): error CS0103: The name '_lastChildFill' does not exist in the current context
       [Dock.Model.ReactiveUI.Reactive] ProportionalDockSplitter.cs(20,9): error CS0103: The name '_canResize' does not exist in the current context
@@ -1715,57 +1715,57 @@ Packages with analyzers or MSBuild files:
       buildTransitive/xunit.v3.core.mtp-v1.props
       buildTransitive/xunit.v3.core.mtp-v1.targets
 Output:
-Build started at 03:06:54...
+Build started at 18:02:22...
 1>------ Build started: Project: _build, Configuration: Debug ------
-1>_build -> compiled in memory (9.5 KB, 103 ms)
+1>_build -> compiled in memory (9.5 KB, 31 ms)
 2>------ Build started: Project: Dock.Controls.DeferredContentControl, Configuration: Debug ------
-2>Dock.Controls.DeferredContentControl -> compiled in memory (25.5 KB, 56 ms)
+2>Dock.Controls.DeferredContentControl -> compiled in memory (25.5 KB, 49 ms)
 3>------ Build started: Project: Dock.Controls.ProportionalStackPanel, Configuration: Debug ------
-3>Dock.Controls.ProportionalStackPanel -> compiled in memory (30.5 KB, 68 ms)
+3>Dock.Controls.ProportionalStackPanel -> compiled in memory (30.5 KB, 51 ms)
 4>------ Build started: Project: Dock.Controls.Recycling.Model, Configuration: Debug ------
-4>Dock.Controls.Recycling.Model -> compiled in memory (4 KB, 7 ms)
+4>Dock.Controls.Recycling.Model -> compiled in memory (4 KB, 4 ms)
 5>------ Build started: Project: Dock.Controls.Recycling, Configuration: Debug ------
-5>Dock.Controls.Recycling -> compiled in memory (11.5 KB, 23 ms)
+5>Dock.Controls.Recycling -> compiled in memory (11.5 KB, 21 ms)
 6>------ Build started: Project: Dock.MarkupExtension, Configuration: Debug ------
-6>Dock.MarkupExtension -> compiled in memory (4.5 KB, 9 ms)
+6>Dock.MarkupExtension -> compiled in memory (4.5 KB, 7 ms)
 7>------ Build started: Project: Dock.Model, Configuration: Debug ------
-7>Dock.Model -> compiled in memory (179 KB, 416 ms)
+7>Dock.Model -> compiled in memory (179 KB, 290 ms)
 8>------ Build started: Project: Dock.Settings, Configuration: Debug ------
-8>Dock.Settings -> compiled in memory (15.5 KB, 363 ms)
+8>Dock.Settings -> compiled in memory (15.5 KB, 258 ms)
 9>------ Build started: Project: Dock.Avalonia, Configuration: Debug ------
 9>TabStudioXaml.g.cs(30,50): warning CS0436: The type 'TabStudioXaml' in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs' conflicts with the imported type 'TabStudioXaml' in 'Dock.Controls.ProportionalStackPanel, Version=12.1.0.12, Culture=neutral, PublicKeyToken=535dd7fb7a6cf113'. Using the type defined in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs'.
-9>Dock.Avalonia -> compiled in memory (392 KB, 1131 ms)
+9>Dock.Avalonia -> compiled in memory (392 KB, 864 ms)
 10>------ Build started: Project: Dock.Model.Avalonia, Configuration: Debug ------
-10>Dock.Model.Avalonia -> compiled in memory (108 KB, 1340 ms)
+10>Dock.Model.Avalonia -> compiled in memory (108 KB, 1128 ms)
 11>------ Build started: Project: Dock.Avalonia.Themes.Fluent, Configuration: Debug ------
-11>Dock.Avalonia.Themes.Fluent -> compiled in memory (588.5 KB, 1203 ms)
+11>Dock.Avalonia.Themes.Fluent -> compiled in memory (588.5 KB, 933 ms)
 12>------ Build started: Project: Dock.Avalonia.AvalonDock.Generators, Configuration: Debug ------
 12>Dock.Avalonia.AvalonDock.Generators -> compiled in memory (25 KB, 38 ms)
 13>------ Build started: Project: Dock.Avalonia.AvalonDock, Configuration: Debug ------
 13>warning CS8002: Referenced assembly 'ReactiveUI.Reactive, Version=26.0.0.0, Culture=neutral, PublicKeyToken=null' does not have a strong name.
-13>Dock.Avalonia.AvalonDock -> compiled in memory (687 KB, 1717 ms)
+13>Dock.Avalonia.AvalonDock -> compiled in memory (687 KB, 1541 ms)
 14>------ Build started: Project: DockAvalonDockSample, Configuration: Debug ------
-14>DockAvalonDockSample -> compiled in memory (23.5 KB, 1661 ms)
+14>DockAvalonDockSample -> compiled in memory (23.5 KB, 1593 ms)
 15>------ Build started: Project: Dock.Model.Mvvm, Configuration: Debug ------
-15>Dock.Model.Mvvm -> compiled in memory (36 KB, 412 ms)
+15>Dock.Model.Mvvm -> compiled in memory (36 KB, 226 ms)
 16>------ Build started: Project: Dock.Avalonia.Diagnostics, Configuration: Debug ------
-16>Dock.Avalonia.Diagnostics -> compiled in memory (112.5 KB, 895 ms)
+16>Dock.Avalonia.Diagnostics -> compiled in memory (112.5 KB, 847 ms)
 17>------ Build started: Project: Dock.Serializer.SystemTextJson.Generators, Configuration: Debug ------
-17>Dock.Serializer.SystemTextJson.Generators -> compiled in memory (142.5 KB, 183 ms)
+17>Dock.Serializer.SystemTextJson.Generators -> compiled in memory (142.5 KB, 83 ms)
 18>------ Build started: Project: Dock.Serializer.SystemTextJson, Configuration: Debug ------
-18>Dock.Serializer.SystemTextJson -> compiled in memory (27.5 KB, 573 ms)
+18>Dock.Serializer.SystemTextJson -> compiled in memory (27.5 KB, 253 ms)
 19>------ Build started: Project: Dock.Serializer.Newtonsoft, Configuration: Debug ------
-19>Dock.Serializer.Newtonsoft -> compiled in memory (6 KB, 402 ms)
+19>Dock.Serializer.Newtonsoft -> compiled in memory (6 KB, 215 ms)
 20>------ Build started: Project: DockCodeOnlyMvvmSample, Configuration: Debug ------
-20>DockCodeOnlyMvvmSample -> compiled in memory (7.5 KB, 1004 ms)
+20>DockCodeOnlyMvvmSample -> compiled in memory (7.5 KB, 722 ms)
 21>------ Build started: Project: DockCodeOnlySample, Configuration: Debug ------
-21>DockCodeOnlySample -> compiled in memory (70.5 KB, 1422 ms)
+21>DockCodeOnlySample -> compiled in memory (70.5 KB, 960 ms)
 22>------ Build started: Project: DockControlPanelsSample, Configuration: Debug ------
-22>DockControlPanelsSample -> compiled in memory (36 KB, 1132 ms)
+22>DockControlPanelsSample -> compiled in memory (36 KB, 682 ms)
 23>------ Build started: Project: DockDeferredContentSample, Configuration: Debug ------
-23>DockDeferredContentSample -> compiled in memory (43 KB, 64 ms)
+23>DockDeferredContentSample -> compiled in memory (43 KB, 54 ms)
 24>------ Build started: Project: DockExternalTabStripsSample, Configuration: Debug ------
-24>DockExternalTabStripsSample -> compiled in memory (27 KB, 1061 ms)
+24>DockExternalTabStripsSample -> compiled in memory (27 KB, 634 ms)
 25>------ Build started: Project: Dock.Model.ReactiveUI.Reactive, Configuration: Debug ------
 25>DockDock.cs(20,9): error CS0103: The name '_lastChildFill' does not exist in the current context
 25>ProportionalDockSplitter.cs(20,9): error CS0103: The name '_canResize' does not exist in the current context
@@ -1814,23 +1814,23 @@ Build started at 03:06:54...
 27>------ Build started: Project: DockOfficeSample, Configuration: Debug ------
 28>------ Build started: Project: DockFigmaSample, Configuration: Debug ------
 29>------ Build started: Project: DockFluentCodeOnlySample, Configuration: Debug ------
-29>DockFluentCodeOnlySample -> compiled in memory (11 KB, 965 ms)
+29>DockFluentCodeOnlySample -> compiled in memory (11 KB, 680 ms)
 30>------ Build started: Project: Dock.Model.Inpc, Configuration: Debug ------
-30>Dock.Model.Inpc -> compiled in memory (40.5 KB, 314 ms)
+30>Dock.Model.Inpc -> compiled in memory (40.5 KB, 208 ms)
 31>------ Build started: Project: DockInpcSample, Configuration: Debug ------
-31>DockInpcSample -> compiled in memory (95 KB, 1153 ms)
+31>DockInpcSample -> compiled in memory (95 KB, 656 ms)
 32>------ Build started: Project: DockQuickStartSample, Configuration: Debug ------
-32>DockQuickStartSample -> compiled in memory (17 KB, 1015 ms)
+32>DockQuickStartSample -> compiled in memory (17 KB, 736 ms)
 33>------ Build started: Project: DockMvvmSample, Configuration: Debug ------
-33>DockMvvmSample -> compiled in memory (101 KB, 1235 ms)
+33>DockMvvmSample -> compiled in memory (101 KB, 661 ms)
 34>------ Build started: Project: Dock.Model.Prism, Configuration: Debug ------
-34>Dock.Model.Prism -> compiled in memory (35.5 KB, 318 ms)
+34>Dock.Model.Prism -> compiled in memory (35.5 KB, 199 ms)
 35>------ Build started: Project: DockPrismSample, Configuration: Debug ------
-35>DockPrismSample -> compiled in memory (101.5 KB, 1156 ms)
+35>DockPrismSample -> compiled in memory (101.5 KB, 595 ms)
 36>------ Build started: Project: Dock.Model.ReactiveProperty, Configuration: Debug ------
-36>Dock.Model.ReactiveProperty -> compiled in memory (39.5 KB, 347 ms)
+36>Dock.Model.ReactiveProperty -> compiled in memory (39.5 KB, 222 ms)
 37>------ Build started: Project: DockReactivePropertySample, Configuration: Debug ------
-37>DockReactivePropertySample -> compiled in memory (97 KB, 1065 ms)
+37>DockReactivePropertySample -> compiled in memory (97 KB, 783 ms)
 38>------ Build started: Project: Dock.Model.ReactiveUI.Services.Avalonia.Reactive, Configuration: Debug ------
 39>------ Build started: Project: DockReactiveUICanonicalSample, Configuration: Debug ------
 40>------ Build started: Project: DockReactiveUIDiSample, Configuration: Debug ------
@@ -1881,55 +1881,55 @@ Build started at 03:06:54...
 43>DockableBase.cs(53,9): error CS0103: The name '_selectorTitle' does not exist in the current context
 43>DockableBase.cs(271,46): error CS0103: The name '_id' does not exist in the current context
 44>------ Build started: Project: Dock.Controls.DeferredContentControl.v11, Configuration: Debug ------
-44>Dock.Controls.DeferredContentControl.v11 -> compiled in memory (25 KB, 51 ms)
+44>Dock.Controls.DeferredContentControl.v11 -> compiled in memory (25 KB, 42 ms)
 45>------ Build started: Project: Dock.Controls.ProportionalStackPanel.v11, Configuration: Debug ------
-45>Dock.Controls.ProportionalStackPanel.v11 -> compiled in memory (30.5 KB, 71 ms)
+45>Dock.Controls.ProportionalStackPanel.v11 -> compiled in memory (30.5 KB, 48 ms)
 46>------ Build started: Project: Dock.Controls.Recycling.v11, Configuration: Debug ------
-46>Dock.Controls.Recycling.v11 -> compiled in memory (11.5 KB, 28 ms)
+46>Dock.Controls.Recycling.v11 -> compiled in memory (11.5 KB, 17 ms)
 47>------ Build started: Project: Dock.MarkupExtension.v11, Configuration: Debug ------
-47>Dock.MarkupExtension.v11 -> compiled in memory (4.5 KB, 41 ms)
+47>Dock.MarkupExtension.v11 -> compiled in memory (4.5 KB, 8 ms)
 48>------ Build started: Project: Dock.Settings.v11, Configuration: Debug ------
-48>Dock.Settings.v11 -> compiled in memory (15.5 KB, 308 ms)
+48>Dock.Settings.v11 -> compiled in memory (15.5 KB, 177 ms)
 49>------ Build started: Project: Dock.Avalonia.v11, Configuration: Debug ------
 49>TabStudioXaml.g.cs(30,50): warning CS0436: The type 'TabStudioXaml' in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs' conflicts with the imported type 'TabStudioXaml' in 'Dock.Controls.ProportionalStackPanel, Version=11.3.22.5, Culture=neutral, PublicKeyToken=535dd7fb7a6cf113'. Using the type defined in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs'.
-49>Dock.Avalonia.v11 -> compiled in memory (391.5 KB, 1161 ms)
+49>Dock.Avalonia.v11 -> compiled in memory (391.5 KB, 612 ms)
 50>------ Build started: Project: Dock.Avalonia.Diagnostics.v11, Configuration: Debug ------
-50>Dock.Avalonia.Diagnostics.v11 -> compiled in memory (111.5 KB, 953 ms)
+50>Dock.Avalonia.Diagnostics.v11 -> compiled in memory (111.5 KB, 654 ms)
 51>------ Build started: Project: Dock.Avalonia.Themes.Fluent.v11, Configuration: Debug ------
-51>Dock.Avalonia.Themes.Fluent.v11 -> compiled in memory (568.5 KB, 892 ms)
+51>Dock.Avalonia.Themes.Fluent.v11 -> compiled in memory (568.5 KB, 518 ms)
 52>------ Build started: Project: DockReactiveUISample.v11, Configuration: Debug ------
 53>------ Build started: Project: DockReactiveUIRiderSample, Configuration: Debug ------
 54>------ Build started: Project: DockReactiveUIManagedSample, Configuration: Debug ------
 55>------ Build started: Project: DockXamlReactiveUISample, Configuration: Debug ------
-55>DockXamlReactiveUISample -> compiled in memory (59.5 KB, 1114 ms)
+55>DockXamlReactiveUISample -> compiled in memory (59.5 KB, 756 ms)
 56>------ Build started: Project: DockReactiveUIWorkspaceSample, Configuration: Debug ------
 57>------ Build started: Project: DockReactiveUIWindowRelationsSample, Configuration: Debug ------
 58>------ Build started: Project: Dock.Avalonia.Themes.Browser, Configuration: Debug ------
-58>Dock.Avalonia.Themes.Browser -> compiled in memory (71.5 KB, 865 ms)
+58>Dock.Avalonia.Themes.Browser -> compiled in memory (71.5 KB, 525 ms)
 59>------ Build started: Project: BrowserTabTheme, Configuration: Debug ------
-59>BrowserTabTheme -> compiled in memory (20.5 KB, 981 ms)
+59>BrowserTabTheme -> compiled in memory (20.5 KB, 684 ms)
 60>------ Build started: Project: DockSystemTextJsonSourceGenAotSample, Configuration: Debug ------
-60>DockSystemTextJsonSourceGenAotSample -> compiled in memory (1232 KB, 3726 ms)
+60>DockSystemTextJsonSourceGenAotSample -> compiled in memory (1231.5 KB, 2167 ms)
 61>------ Build started: Project: DockSimplifiedFluentSample, Configuration: Debug ------
-61>DockSimplifiedFluentSample -> compiled in memory (10 KB, 1018 ms)
+61>DockSimplifiedFluentSample -> compiled in memory (10 KB, 573 ms)
 62>------ Build started: Project: DockSimplifiedSample, Configuration: Debug ------
-62>DockSimplifiedSample -> compiled in memory (9 KB, 1062 ms)
+62>DockSimplifiedSample -> compiled in memory (9 KB, 577 ms)
 63>------ Build started: Project: DockSplitViewSample, Configuration: Debug ------
-63>DockSplitViewSample -> compiled in memory (41 KB, 930 ms)
+63>DockSplitViewSample -> compiled in memory (41 KB, 703 ms)
 64>------ Build started: Project: DockXamlSample, Configuration: Debug ------
-64>DockXamlSample -> compiled in memory (53 KB, 1236 ms)
+64>DockXamlSample -> compiled in memory (53 KB, 688 ms)
 65>------ Build started: Project: NestedDockSample, Configuration: Debug ------
-65>NestedDockSample -> compiled in memory (17 KB, 1071 ms)
+65>NestedDockSample -> compiled in memory (17 KB, 675 ms)
 66>------ Build started: Project: Notepad, Configuration: Debug ------
-66>Notepad -> compiled in memory (55 KB, 964 ms)
+66>Notepad -> compiled in memory (55 KB, 610 ms)
 67>------ Build started: Project: Dock.Avalonia.Themes.Browser.v11, Configuration: Debug ------
-67>Dock.Avalonia.Themes.Browser.v11 -> compiled in memory (72.5 KB, 1030 ms)
+67>Dock.Avalonia.Themes.Browser.v11 -> compiled in memory (72.5 KB, 620 ms)
 68>------ Build started: Project: Dock.Avalonia.Themes.Simple, Configuration: Debug ------
-68>Dock.Avalonia.Themes.Simple -> compiled in memory (336.5 KB, 850 ms)
+68>Dock.Avalonia.Themes.Simple -> compiled in memory (336.5 KB, 505 ms)
 69>------ Build started: Project: Dock.Avalonia.Themes.Simple.v11, Configuration: Debug ------
-69>Dock.Avalonia.Themes.Simple.v11 -> compiled in memory (347.5 KB, 1027 ms)
+69>Dock.Avalonia.Themes.Simple.v11 -> compiled in memory (347.5 KB, 527 ms)
 70>------ Build started: Project: Dock.Model.CaliburMicro, Configuration: Debug ------
-70>Dock.Model.CaliburMicro -> compiled in memory (36.5 KB, 322 ms)
+70>Dock.Model.CaliburMicro -> compiled in memory (36.5 KB, 212 ms)
 71>------ Build started: Project: Dock.Model.ReactiveUI, Configuration: Debug ------
 71>DockDock.cs(20,9): error CS0103: The name '_lastChildFill' does not exist in the current context
 71>ProportionalDockSplitter.cs(20,9): error CS0103: The name '_canResize' does not exist in the current context
@@ -1977,20 +1977,20 @@ Build started at 03:06:54...
 72>------ Build started: Project: Dock.Model.ReactiveUI.Services, Configuration: Debug ------
 73>------ Build started: Project: Dock.Model.ReactiveUI.Services.Avalonia, Configuration: Debug ------
 74>------ Build started: Project: Dock.Serializer.Protobuf, Configuration: Debug ------
-74>Dock.Serializer.Protobuf -> compiled in memory (14.5 KB, 294 ms)
+74>Dock.Serializer.Protobuf -> compiled in memory (14.5 KB, 189 ms)
 75>------ Build started: Project: Dock.Serializer.Xml, Configuration: Debug ------
-75>Dock.Serializer.Xml -> compiled in memory (8.5 KB, 407 ms)
+75>Dock.Serializer.Xml -> compiled in memory (8.5 KB, 177 ms)
 76>------ Build started: Project: Dock.Serializer.Yaml, Configuration: Debug ------
-76>Dock.Serializer.Yaml -> compiled in memory (12 KB, 281 ms)
+76>Dock.Serializer.Yaml -> compiled in memory (12 KB, 182 ms)
 77>------ Build started: Project: DockAvalonDockSample.HeadlessTests, Configuration: Debug ------
-77>DockAvalonDockSample.HeadlessTests -> compiled in memory (32 KB, 1677 ms)
+77>DockAvalonDockSample.HeadlessTests -> compiled in memory (32 KB, 1102 ms)
 78>------ Build started: Project: Dock.Avalonia.v11.PreviewTests, Configuration: Debug ------
 78>Dock.Avalonia.HeadlessTests.App.g.cs(14,13): warning CS0436: The type 'TabStudioXaml' in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs' conflicts with the imported type 'TabStudioXaml' in 'Dock.Avalonia, Version=11.3.22.5, Culture=neutral, PublicKeyToken=535dd7fb7a6cf113'. Using the type defined in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs'.
 78>TabStudioXaml.g.cs(30,50): warning CS0436: The type 'TabStudioXaml' in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs' conflicts with the imported type 'TabStudioXaml' in 'Dock.Avalonia, Version=11.3.22.5, Culture=neutral, PublicKeyToken=535dd7fb7a6cf113'. Using the type defined in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs'.
-78>Dock.Avalonia.v11.PreviewTests -> compiled in memory (124 KB, 1292 ms)
+78>Dock.Avalonia.v11.PreviewTests -> compiled in memory (124 KB, 738 ms)
 79>------ Build started: Project: Dock.Avalonia.v11.HeadlessTests, Configuration: Debug ------
 80>------ Build started: Project: Dock.Avalonia.Diagnostics.UnitTests, Configuration: Debug ------
-80>Dock.Avalonia.Diagnostics.UnitTests -> compiled in memory (19.5 KB, 1075 ms)
+80>Dock.Avalonia.Diagnostics.UnitTests -> compiled in memory (19.5 KB, 564 ms)
 81>------ Build started: Project: Dock.Avalonia.LeakTests, Configuration: Debug ------
 82>------ Build started: Project: Dock.Avalonia.HeadlessTests, Configuration: Debug ------
 82>warning CS8002: Referenced assembly 'BrowserTabTheme, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' does not have a strong name.
@@ -2007,48 +2007,48 @@ Build started at 03:06:54...
 82>Dock.Avalonia.HeadlessTests.GeneratedDocumentContentView.g.cs(14,13): warning CS0436: The type 'TabStudioXaml' in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs' conflicts with the imported type 'TabStudioXaml' in 'Dock.Avalonia, Version=12.1.0.12, Culture=neutral, PublicKeyToken=535dd7fb7a6cf113'. Using the type defined in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs'.
 82>TabStudioXaml.g.cs(33,50): warning CS0436: The type 'TabStudioXaml' in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs' conflicts with the imported type 'TabStudioXaml' in 'Dock.Avalonia, Version=12.1.0.12, Culture=neutral, PublicKeyToken=535dd7fb7a6cf113'. Using the type defined in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs'.
 82>TabStudioXaml.g.cs(36,50): warning CS0436: The type 'TabStudioXaml' in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs' conflicts with the imported type 'TabStudioXaml' in 'Dock.Avalonia, Version=12.1.0.12, Culture=neutral, PublicKeyToken=535dd7fb7a6cf113'. Using the type defined in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs'.
-82>Dock.Avalonia.HeadlessTests -> compiled in memory (756.5 KB, 2706 ms)
+82>Dock.Avalonia.HeadlessTests -> compiled in memory (756.5 KB, 1529 ms)
 83>------ Build started: Project: Dock.Avalonia.Themes.UnitTests, Configuration: Debug ------
-83>Dock.Avalonia.Themes.UnitTests -> compiled in memory (52.5 KB, 1103 ms)
+83>Dock.Avalonia.Themes.UnitTests -> compiled in memory (52.5 KB, 757 ms)
 84>------ Build started: Project: Dock.Avalonia.UnitTests, Configuration: Debug ------
 84>Dock.Avalonia.UnitTests.App.g.cs(14,13): warning CS0436: The type 'TabStudioXaml' in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs' conflicts with the imported type 'TabStudioXaml' in 'Dock.Avalonia, Version=12.1.0.12, Culture=neutral, PublicKeyToken=535dd7fb7a6cf113'. Using the type defined in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs'.
 84>TabStudioXaml.g.cs(30,50): warning CS0436: The type 'TabStudioXaml' in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs' conflicts with the imported type 'TabStudioXaml' in 'Dock.Avalonia, Version=12.1.0.12, Culture=neutral, PublicKeyToken=535dd7fb7a6cf113'. Using the type defined in 'TabStudio.Compilation/TabStudio.Compilation.Xaml.AvaloniaXamlGenerator/TabStudioXaml.g.cs'.
-84>Dock.Avalonia.UnitTests -> compiled in memory (81 KB, 942 ms)
+84>Dock.Avalonia.UnitTests -> compiled in memory (81 KB, 622 ms)
 85>------ Build started: Project: Dock.Controls.Recycling.Model.UnitTests, Configuration: Debug ------
-85>Dock.Controls.Recycling.Model.UnitTests -> compiled in memory (6 KB, 24 ms)
+85>Dock.Controls.Recycling.Model.UnitTests -> compiled in memory (6 KB, 9 ms)
 86>------ Build started: Project: Dock.Controls.Recycling.UnitTests, Configuration: Debug ------
-86>Dock.Controls.Recycling.UnitTests -> compiled in memory (20.5 KB, 52 ms)
+86>Dock.Controls.Recycling.UnitTests -> compiled in memory (20.5 KB, 42 ms)
 87>------ Build started: Project: Dock.MarkupExtension.UnitTests, Configuration: Debug ------
-87>Dock.MarkupExtension.UnitTests -> compiled in memory (9.5 KB, 17 ms)
+87>Dock.MarkupExtension.UnitTests -> compiled in memory (9.5 KB, 13 ms)
 88>------ Build started: Project: Dock.Model.Avalonia.UnitTests, Configuration: Debug ------
-88>Dock.Model.Avalonia.UnitTests -> compiled in memory (148.5 KB, 1229 ms)
+88>Dock.Model.Avalonia.UnitTests -> compiled in memory (148.5 KB, 720 ms)
 89>------ Build started: Project: Dock.Model.CaliburMicro.UnitTests, Configuration: Debug ------
-89>Dock.Model.CaliburMicro.UnitTests -> compiled in memory (18.5 KB, 368 ms)
+89>Dock.Model.CaliburMicro.UnitTests -> compiled in memory (18.5 KB, 203 ms)
 90>------ Build started: Project: Dock.Model.Mvvm.LeakTests, Configuration: Debug ------
-90>Dock.Model.Mvvm.LeakTests -> compiled in memory (10 KB, 406 ms)
+90>Dock.Model.Mvvm.LeakTests -> compiled in memory (10 KB, 198 ms)
 91>------ Build started: Project: Dock.Model.Mvvm.UnitTests, Configuration: Debug ------
-91>Dock.Model.Mvvm.UnitTests -> compiled in memory (53.5 KB, 450 ms)
+91>Dock.Model.Mvvm.UnitTests -> compiled in memory (53.5 KB, 217 ms)
 92>------ Build started: Project: Dock.Model.Prism.UnitTests, Configuration: Debug ------
-92>Dock.Model.Prism.UnitTests -> compiled in memory (21 KB, 339 ms)
+92>Dock.Model.Prism.UnitTests -> compiled in memory (21 KB, 285 ms)
 93>------ Build started: Project: Dock.Model.ReactiveProperty.UnitTests, Configuration: Debug ------
-93>Dock.Model.ReactiveProperty.UnitTests -> compiled in memory (15 KB, 333 ms)
+93>Dock.Model.ReactiveProperty.UnitTests -> compiled in memory (15 KB, 307 ms)
 94>------ Build started: Project: Dock.Model.ReactiveUI.LeakTests, Configuration: Debug ------
 95>------ Build started: Project: Dock.Model.ReactiveUI.UnitTests, Configuration: Debug ------
 96>------ Build started: Project: Dock.Model.UnitTests, Configuration: Debug ------
-96>Dock.Model.UnitTests -> compiled in memory (105 KB, 1258 ms)
+96>Dock.Model.UnitTests -> compiled in memory (105 KB, 675 ms)
 97>------ Build started: Project: Dock.Serializer.SystemTextJson.SourceGenSharedTypes, Configuration: Debug ------
-97>Dock.Serializer.SystemTextJson.SourceGenSharedTypes -> compiled in memory (4.5 KB, 315 ms)
+97>Dock.Serializer.SystemTextJson.SourceGenSharedTypes -> compiled in memory (4.5 KB, 180 ms)
 98>------ Build started: Project: Dock.ReactiveUI.HeadlessTests, Configuration: Debug ------
 99>------ Build started: Project: Dock.Serializer.SystemTextJson.Generators.UnitTests, Configuration: Debug ------
-99>Dock.Serializer.SystemTextJson.Generators.UnitTests -> compiled in memory (46 KB, 542 ms)
+99>Dock.Serializer.SystemTextJson.Generators.UnitTests -> compiled in memory (46 KB, 457 ms)
 100>------ Build started: Project: Dock.Serializer.SystemTextJson.SourceGenTests, Configuration: Debug ------
-100>Dock.Serializer.SystemTextJson.SourceGenTests -> compiled in memory (1438.5 KB, 3576 ms)
+100>Dock.Serializer.SystemTextJson.SourceGenTests -> compiled in memory (1440 KB, 1743 ms)
 101>------ Build started: Project: Dock.Serializer.UnitTests, Configuration: Debug ------
-101>Dock.Serializer.UnitTests -> compiled in memory (57 KB, 501 ms)
+101>Dock.Serializer.UnitTests -> compiled in memory (57 KB, 425 ms)
 102>------ Build started: Project: Dock.Settings.UnitTests, Configuration: Debug ------
-102>Dock.Settings.UnitTests -> compiled in memory (11 KB, 1073 ms)
+102>Dock.Settings.UnitTests -> compiled in memory (11 KB, 610 ms)
 103>------ Build started: Project: DockXamlSample.HeadlessTests, Configuration: Debug ------
 103>warning CS8002: Referenced assembly 'DockXamlSample, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' does not have a strong name.
-103>DockXamlSample.HeadlessTests -> compiled in memory (6.5 KB, 1185 ms)
+103>DockXamlSample.HeadlessTests -> compiled in memory (6.5 KB, 675 ms)
 ========== Build: 80 succeeded, 23 failed ==========
 
