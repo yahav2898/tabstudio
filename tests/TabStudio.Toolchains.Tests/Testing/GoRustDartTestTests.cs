@@ -278,6 +278,23 @@ public sealed class GoRustDartTestTests : IDisposable
         Assert.Equal(["-e", ".[dev,test]"], ToolchainTestPlanner.PythonTestRequirements(_folder.Path));
     }
 
+    /// <summary>clikt and kotlinx-datetime are Kotlin Multiplatform builds: their tests are in commonTest and run as jvmTest.</summary>
+    [Fact]
+    public void A_Kotlin_Multiplatform_builds_tests_run_as_jvmTest()
+    {
+        _folder.Write("settings.gradle.kts", "include(\"clikt\")\n");
+        _folder.Write("clikt/build.gradle.kts", "plugins { kotlin(\"multiplatform\") }\n");
+        _folder.Write("clikt/src/commonTest/kotlin/com/github/ajalt/clikt/CliktTest.kt", "package com.github.ajalt.clikt\n\nclass CliktTest {\n    @Test\n    fun parses() {}\n}\n");
+        var project = Project("kotlin");
+
+        var tests = ToolchainTestDiscoverer.Discover(project.Directory, ToolchainTestFramework.Gradle);
+        var plan = ToolchainTestPlanner.Plan(project, ToolchainTestFramework.Gradle, null, _folder.Resolve("reports")).Command;
+
+        Assert.Equal(ToolchainTestFramework.Gradle, ToolchainTestPlanner.Detect(project));
+        Assert.Equal("com.github.ajalt.clikt.CliktTest.parses", Assert.Single(tests).Id);
+        Assert.Equal("jvmTest", plan.Arguments[^1]);
+    }
+
     private ToolchainTestFramework? NodeRunner(string manifest)
     {
         _folder.Write("package.json", manifest);

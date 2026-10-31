@@ -435,7 +435,8 @@ public static partial class ToolchainTestDiscoverer
 
     private static string[] JvmTestRoots(string directory)
     {
-        var roots = new List<string> { Path.Combine("src", "test") };
+        string[] sets = ["test", "commonTest", "jvmTest"];
+        var roots = sets.Select(set => Path.Combine("src", set)).ToList();
         try
         {
             roots.AddRange(Directory.EnumerateDirectories(directory)
@@ -443,7 +444,7 @@ public static partial class ToolchainTestDiscoverer
                 .Where(d => !d.StartsWith('.') && d is not ("build" or "target" or "node_modules" or "src"))
                 .Order(StringComparer.Ordinal)
                 .Take(64)
-                .Select(d => Path.Combine(d, "src", "test")));
+                .SelectMany(d => sets.Select(set => Path.Combine(d, "src", set))));
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {

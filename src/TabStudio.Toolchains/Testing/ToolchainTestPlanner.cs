@@ -142,7 +142,9 @@ public static partial class ToolchainTestPlanner
             case ToolchainTestFramework.Gradle:
                 var init = Path.Combine(reportDirectory, "tabstudio-tests.init.gradle");
                 File.WriteAllText(init, GradleInit);
-                command = ["gradle", "--no-daemon", "--console=plain", "--continue", "--init-script", init, "test"];
+                // A Kotlin Multiplatform build has no test task: its JVM target's tests are jvmTest (clikt,
+                // kotlinx-datetime); allTests would also need browsers and native toolchains.
+                command = ["gradle", "--no-daemon", "--console=plain", "--continue", "--init-script", init, IsKotlinMultiplatform(project.Directory) ? "jvmTest" : "test"];
                 foreach (var test in selected ?? [])
                 {
                     command.AddRange(["--tests", test.MethodName is null ? test.ClassName : test.ClassName + "." + test.MethodName]);
@@ -650,9 +652,28 @@ public static partial class ToolchainTestPlanner
         return builder.ToString();
     }
 
+    /// <summary>Whether a Gradle build uses the Kotlin Multiplatform plugin, in its root or one of its modules.</summary>
+    internal static bool IsKotlinMultiplatform(string directory)
+    {
+        static bool Uses(string folder) =>
+            ReadSmall(Path.Combine(folder, "build.gradle.kts")) is var build
+            && (build.Contains("kotlin(\"multiplatform\")", StringComparison.Ordinal) || build.Contains("kotlin.multiplatform", StringComparison.Ordinal)
+                || build.Contains("kotlinMultiplatform", StringComparison.Ordinal));
+        try
+        {
+            return Uses(directory) || Directory.EnumerateDirectories(directory).Where(d => !Path.GetFileName(d).StartsWith('.')).Take(64).Any(Uses);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return false;
+        }
+    }
+
     private static bool HasJvmTests(string directory)
     {
-        static bool Has(string folder) => Directory.Exists(Path.Combine(folder, "src", "test"));
+        // A Kotlin Multiplatform module's tests are in commonTest and jvmTest.
+        static bool Has(string folder) => Directory.Exists(Path.Combine(folder, "src", "test"))
+            || Directory.Exists(Path.Combine(folder, "src", "commonTest")) || Directory.Exists(Path.Combine(folder, "src", "jvmTest"));
         if (Has(directory))
         {
             return true;
