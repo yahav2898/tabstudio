@@ -1,0 +1,62 @@
+== file
+size: 141080788 bytes (135M)
+sha256: 190ce9c6cfbcf92e5ea44fb3d7e0bcea4e70a666caa3e3c4fe4b6ca9b9cd1426
+
+== manifest
+package: name='com.tabstudio.ide' versionCode='437749' versionName='0.21.0' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+minSdkVersion:'28'
+targetSdkVersion:'36'
+uses-permission: name='android.permission.INTERNET'
+uses-permission: name='android.permission.ACCESS_NETWORK_STATE'
+uses-permission: name='android.permission.POST_NOTIFICATIONS'
+uses-permission: name='android.permission.FOREGROUND_SERVICE'
+uses-permission: name='android.permission.FOREGROUND_SERVICE_DATA_SYNC'
+uses-permission: name='android.permission.WAKE_LOCK'
+uses-permission: name='android.permission.REQUEST_INSTALL_PACKAGES'
+uses-permission: name='android.permission.CAMERA'
+uses-permission: name='com.tabstudio.ide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+application-label:'TabStudio'
+launchable-activity: name='com.tabstudio.ide.MainActivity'  label='' icon=''
+native-code: 'arm64-v8a' 'armeabi-v7a'
+
+== native libraries per ABI
+     19 arm64-v8a
+     16 armeabi-v7a
+
+== largest entries
+  54377118 compressed   66131800 uncompressed  lib/arm64-v8a/libassembly-store.so
+  54366831 compressed   66080904 uncompressed  lib/armeabi-v7a/libassembly-store.so
+   7510082 compressed   29936120 uncompressed  lib/arm64-v8a/libtabstudio-ai.so
+   5782512 compressed   26225280 uncompressed  lib/arm64-v8a/libbox64.so
+   3915516 compressed    9027560 uncompressed  lib/arm64-v8a/libSkiaSharp.so
+   3282842 compressed    5957980 uncompressed  lib/armeabi-v7a/libSkiaSharp.so
+   2146367 compressed    6137292 uncompressed  classes.dex
+   1351800 compressed    3123640 uncompressed  lib/arm64-v8a/libmonosgen-2.0.so
+   1222042 compressed    2222252 uncompressed  lib/armeabi-v7a/libmonosgen-2.0.so
+    933508 compressed    2778464 uncompressed  lib/arm64-v8a/libHarfBuzzSharp.so
+    890712 compressed    1771632 uncompressed  lib/arm64-v8a/libe_sqlite3.so
+    831674 compressed    1994452 uncompressed  lib/armeabi-v7a/libHarfBuzzSharp.so
+    795911 compressed    1246020 uncompressed  lib/armeabi-v7a/libe_sqlite3.so
+    460244 compressed    1408384 uncompressed  lib/arm64-v8a/libmonodroid.so
+    454458 compressed    1074976 uncompressed  lib/armeabi-v7a/libmonodroid.so
+
+== signature
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): false
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+V3.0 Signer: certificate DN: CN=TabStudio Development, OU=Public development key, O=TabStudio contributors
+V3.0 Signer: certificate SHA-256 digest: c04ab9816d56f48856ed95b11fb5c56b9691fa34f18d06c3cc595ee23051300a
+V3.0 Signer: certificate SHA-1 digest: 1c52bf6a4e588685334c96fd264b69fc0922cdae
+V3.0 Signer: certificate MD5 digest: 989752b7d73ac1e58efdd05a459e4cea
+V3.0 Signer: key algorithm: RSA
+V3.0 Signer: key size (bits): 4096
+V3.0 Signer: public key SHA-256 digest: 4ad2796b8d86a4261ef6327933971dae31746d845ca557795485c3128fcaf21f
+V3.0 Signer: public key SHA-1 digest: a681870db73ce964fccf4409a67fe3391b0aae2b
+V3.0 Signer: public key MD5 digest: 0b8d6f4a7cada012a019f02be26b5cff
+expected development certificate SHA-256: c04ab9816d56f48856ed95b11fb5c56b9691fa34f18d06c3cc595ee23051300a
