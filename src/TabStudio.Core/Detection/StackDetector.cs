@@ -431,12 +431,27 @@ public static class StackDetector
 
             foreach (var subdirectory in subdirectories)
             {
-                if (!PathUtilities.IsIgnoredDirectory(Path.GetFileName(subdirectory))
-                    && (File.GetAttributes(subdirectory) & FileAttributes.ReparsePoint) == 0)
+                if (!PathUtilities.IsIgnoredDirectory(Path.GetFileName(subdirectory)) && IsPlainDirectory(subdirectory))
                 {
                     queue.Enqueue((subdirectory, depth + 1));
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Whether a folder is a real one rather than a link. A folder deleted after the listing (a build cleaning its
+    /// output) threw here, outside the walk's error handling, and the workspace did not open.
+    /// </summary>
+    private static bool IsPlainDirectory(string directory)
+    {
+        try
+        {
+            return (File.GetAttributes(directory) & FileAttributes.ReparsePoint) == 0;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return false;
         }
     }
 }
