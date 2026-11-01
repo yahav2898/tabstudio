@@ -1,8 +1,8 @@
 | Repository | Toolchain | Startup project | Program | Result | Time |
 | --- | --- | --- | --- | --- | --- |
 | cobra | go | go | none | started | 21 s |
-| urfave-cli | go | go | none | started | 19 s |
-| echo | go | go | none | started | 11 s |
+| urfave-cli | go | go | none | started | 17 s |
+| echo | go | go | none | started | 10 s |
 | mux | go | go | none | started | 2 s |
 | fzf | go | go | none | started | 14 s |
 | lazygit | go | go | none | started | 25 s |
@@ -12,14 +12,14 @@
 | serde-json | rust | rust | none | started | 19 s |
 | mini-redis | rust | rust | none | started | 17 s |
 | hyperfine | rust | rust | none | started | 34 s |
-| eza | rust | rust | none | started | 69 s |
-| bat | rust | rust | none | started | 73 s |
-| rustlings | rust | rust | none | started | 13 s |
-| tinyxml2 | cpp | cpp | xmltest | started | 2 s |
-| googletest | cpp | cpp | none | started | 10 s |
+| eza | rust | rust | none | started | 68 s |
+| bat | rust | rust | none | started | 69 s |
+| rustlings | rust | rust | none | started | 14 s |
+| tinyxml2 | cpp | cpp | xmltest | started | 3 s |
+| googletest | cpp | cpp | none | started | 11 s |
 | zlib | cpp | cpp | none | started | 4 s |
 | lua | cpp | cpp | none | started | 7 s |
 | spdlog | cpp | cpp | none | started | 16 s |
-| swift-algorithms | swift | swift | none | started | 21 s |
-| swift-log | swift | swift | none | started | 19 s |
+| swift-algorithms | swift | swift | none | started | 19 s |
+| swift-log | swift | swift | none | started | 22 s |
 | Rainbow | swift | swift | none | started | 13 s |

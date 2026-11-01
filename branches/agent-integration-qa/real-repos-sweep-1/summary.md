@@ -1,7 +1,7 @@
 | Repository | Errors | Baseline | Warnings | Build |
 | --- | --- | --- | --- | --- |
-| Newtonsoft.Json | 0 | 0 | 0 | 31 s |
-| Community.VisualBasic | 0 | 0 | 9 | 11 s |
+| Newtonsoft.Json | 0 | 0 | 0 | 30 s |
+| Community.VisualBasic | 0 | 0 | 9 | 10 s |
 | commandline-ReadText-VB | 0 | 0 | 0 | 0 s |
 | LINQIntro | 0 | 0 | 0 | 0 s |
 | CSVFiles | 0 | 0 | 0 | 0 s |
