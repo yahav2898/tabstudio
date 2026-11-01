@@ -34,8 +34,8 @@ Using cached urllib3-2.8.0-py3-none-any.whl (135 kB)
 Building wheels for collected packages: requests
   Building editable for requests (pyproject.toml): started
   Building editable for requests (pyproject.toml): finished with status 'done'
-  Created wheel for requests: filename=requests-2.34.2-0.editable-py3-none-any.whl size=7207 sha256=1efd8fbbe71bb24eb94eb662d6be9d3502c9138b7c9278994bc55e30f08e38d6
-  Stored in directory: /tmp/pip-ephem-wheel-cache-5__op5l9/wheels/6c/9d/2f/7bafa77cedc36edab8ffd35c2f4d7d44c36a13e0af0b1f03df
+  Created wheel for requests: filename=requests-2.34.2-0.editable-py3-none-any.whl size=7207 sha256=007e454601026ed663eca5ffd39691bfc73a16c875d9bfd34f1a08a6920cf9d6
+  Stored in directory: /tmp/pip-ephem-wheel-cache-jyhpkhy0/wheels/6c/9d/2f/7bafa77cedc36edab8ffd35c2f4d7d44c36a13e0af0b1f03df
 Successfully built requests
 Installing collected packages: urllib3, idna, charset_normalizer, certifi, requests
 Successfully installed certifi-2026.10.23 charset_normalizer-3.5.2 idna-3.20 requests-2.34.2 urllib3-2.8.0
@@ -48,9 +48,9 @@ Python 3.12 for requests: pyproject.toml allows Python >=3.10.
 Installed 5 packages into .venv with Python 3.12. The full log is in Output > Project Setup.
 ========== pip install -e .: succeeded ==========
 ========== Running requests's tests with Pytest ==========
-> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''-r'\'' '\''requirements-dev.txt'\'' '\''requests[socks]'\'' '\''pytest-httpbin==2.1.0'\'' '\''httpbin~=0.10.0'\'' '\''pytest-cov'\'' '\''pytest-mock'\'' '\''pytest-xdist'\'' '\''pytest>=3'\'' '\''trustme'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/requests/.tabstudio/test-results/37a19832b92c4cde8a7b633782eb2b55/pytest.xml
+> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''-r'\'' '\''requirements-dev.txt'\'' '\''requests[socks]'\'' '\''pytest-httpbin==2.1.0'\'' '\''httpbin~=0.10.0'\'' '\''pytest-cov'\'' '\''pytest-mock'\'' '\''pytest-xdist'\'' '\''pytest>=3'\'' '\''trustme'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/requests/.tabstudio/test-results/6d00c56a10e849d68bb09b5443bd1bc5/pytest.xml
 Installing what the tests need
-[2026-10-31 23:26:47,303] WARNING in core: flasgger is not installed; serving the static landing page at / and skipping the Swagger UI and /spec.json.
+[2026-11-01 06:28:22,936] WARNING in core: flasgger is not installed; serving the static landing page at / and skipping the Swagger UI and /spec.json.
 ============================= test session starts ==============================
 platform linux -- Python 3.12.15, pytest-9.2.0, pluggy-1.7.0
 rootdir: /home/runner/work/_temp/real-repos/requests
@@ -64,14 +64,14 @@ tests/test_help.py ...                                                   [  0%]
 tests/test_hooks.py ...                                                  [  1%]
 tests/test_lowlevel.py ....................                              [  4%]
 tests/test_packages.py ...                                               [  4%]
-tests/test_requests.py ................................................. [ 12%]
+tests/test_requests.py ....................................127.0.0.1 - - [01/Nov/2026 06:28:43] "GET /relative-redirect/20 HTTP/1.1" 302 0
+............. [ 12%]
 ........................................................................ [ 23%]
 s.pytest-httpbin server hit an exception serving request: [SSL: TLSV1_ALERT_UNKNOWN_CA] tlsv1 alert unknown ca (_ssl.c:1010)
-attempting to ignore so the rest of the tests can run
-...................................................................... [ 35%]
-................................127.0.0.1 - - [31/Oct/2026 23:27:08] "GET /get HTTP/1.1" 200 272
-.................x...................... [ 46%]
-........................................................................ [ 57%]
+attempting to ignore so the rest of the tests can run...................................................................... [ 35%]
+.................................................x...................... [ 46%]
+........................................................127.0.0.1 - - [01/Nov/2026 06:29:14] "GET /redirect-to?url=http%3A%2F%2F%3A1 HTTP/1.1" 302 0
+................ [ 57%]
 ....                                                                     [ 58%]
 tests/test_structures.py ........................                        [ 62%]
 tests/test_testserver.py ......s....                                     [ 63%]
@@ -118,6 +118,6 @@ tests/test_utils.py::TestContentEncodingDetection::test_precedence
     warnings.warn(
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-- generated xml file: /home/runner/work/_temp/real-repos/requests/.tabstudio/test-results/37a19832b92c4cde8a7b633782eb2b55/pytest.xml -
-====== 619 passed, 15 skipped, 1 xfailed, 18 warnings in 79.36s (0:01:19) ======
+- generated xml file: /home/runner/work/_temp/real-repos/requests/.tabstudio/test-results/6d00c56a10e849d68bb09b5443bd1bc5/pytest.xml -
+====== 619 passed, 15 skipped, 1 xfailed, 18 warnings in 79.46s (0:01:19) ======
 
