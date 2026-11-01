@@ -2,8 +2,8 @@ mux at db9d1d0073d27a0a2d9a8c1bc52aa0af4374d265
 Toolchain projects:
   go: /home/runner/work/_temp/real-repos/mux/go.mod
 Startup project: go /home/runner/work/_temp/real-repos/mux/go.mod
-Set up in 3.1 s
-Tests: 76 passed, 0 failed, 0 skipped of 76: 76 tests run in 1.0 sec: 76 passed, 0 failed, 0 skipped.
+Set up in 3.8 s
+Tests: 76 passed, 0 failed, 0 skipped of 76: 76 tests run in 932 ms: 76 passed, 0 failed, 0 skipped.
 Project setup:
 
 Output:
@@ -16,7 +16,7 @@ Output:
 === RUN   TestSchemeMatchers
 === RUN   TestSchemeMatchers/httpServer
 === RUN   TestSchemeMatchers/httpsServer
---- PASS: TestSchemeMatchers (0.00s)
+--- PASS: TestSchemeMatchers (0.01s)
     --- PASS: TestSchemeMatchers/httpServer (0.00s)
     --- PASS: TestSchemeMatchers/httpsServer (0.00s)
 === RUN   TestHost
@@ -520,17 +520,17 @@ Output:
 === RUN   Test_findFirstQueryKey/a==/a
 === RUN   Test_findFirstQueryKey/a=%2
 === RUN   Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30
-=== RUN   Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30/#00
 === RUN   Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30/a
 === RUN   Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30/_?
+=== RUN   Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30/#00
 === RUN   Test_findFirstQueryKey/a=1&_?&=#+%!<>#"{}|\^[]`☺_:/@$'()*,;&a=5
 === RUN   Test_findFirstQueryKey/a=1&_?&=#+%!<>#"{}|\^[]`☺_:/@$'()*,;&a=5/a
 === RUN   Test_findFirstQueryKey/a=1&_?&=#+%!<>#"{}|\^[]`☺_:/@$'()*,;&a=5/_?
 === RUN   Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu
-=== RUN   Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/a
-=== RUN   Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/b
 === RUN   Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/c
 === RUN   Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/f
+=== RUN   Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/a
+=== RUN   Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/b
 --- PASS: Test_findFirstQueryKey (0.00s)
     --- PASS: Test_findFirstQueryKey/a=1&b=2 (0.00s)
         --- PASS: Test_findFirstQueryKey/a=1&b=2/a (0.00s)
@@ -546,17 +546,17 @@ Output:
         --- PASS: Test_findFirstQueryKey/a==/a (0.00s)
     --- PASS: Test_findFirstQueryKey/a=%2 (0.00s)
     --- PASS: Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30 (0.00s)
-        --- PASS: Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30/#00 (0.00s)
         --- PASS: Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30/a (0.00s)
         --- PASS: Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30/_? (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30/#00 (0.00s)
     --- PASS: Test_findFirstQueryKey/a=1&_?&=#+%!<>#"{}|\^[]`☺_:/@$'()*,;&a=5 (0.00s)
         --- PASS: Test_findFirstQueryKey/a=1&_?&=#+%!<>#"{}|\^[]`☺_:/@$'()*,;&a=5/a (0.00s)
         --- PASS: Test_findFirstQueryKey/a=1&_?&=#+%!<>#"{}|\^[]`☺_:/@$'()*,;&a=5/_? (0.00s)
     --- PASS: Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu (0.00s)
-        --- PASS: Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/a (0.00s)
-        --- PASS: Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/b (0.00s)
         --- PASS: Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/c (0.00s)
         --- PASS: Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/f (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/a (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/b (0.00s)
 === RUN   TestRouteMetadata
 === RUN   TestRouteMetadata/get_metadata_map
 === RUN   TestRouteMetadata/get_metadata_value
@@ -566,54 +566,36 @@ Output:
     --- PASS: TestRouteMetadata/get_metadata_value (0.00s)
     --- PASS: TestRouteMetadata/get_metadata_value_or_fallback (0.00s)
 === CONT  TestMethodsSubrouterCatchall
-=== CONT  TestMethodsSubrouterPathPrefix
+=== CONT  TestMethodsSubrouterStrictSlash
 === RUN   TestMethodsSubrouterCatchall/match_GET_handler
 === RUN   TestMethodsSubrouterCatchall/match_POST_handler
 === RUN   TestMethodsSubrouterCatchall/match_DELETE_handler
+=== CONT  TestMethodsSubrouterSubrouter
+=== CONT  TestMethodsSubrouterPathVariable
 === RUN   TestMethodsSubrouterCatchall/disallow_PUT_method
 --- PASS: TestMethodsSubrouterCatchall (0.00s)
     --- PASS: TestMethodsSubrouterCatchall/match_GET_handler (0.00s)
     --- PASS: TestMethodsSubrouterCatchall/match_POST_handler (0.00s)
     --- PASS: TestMethodsSubrouterCatchall/match_DELETE_handler (0.00s)
     --- PASS: TestMethodsSubrouterCatchall/disallow_PUT_method (0.00s)
-=== CONT  TestMethodsSubrouterStrictSlash
-=== CONT  TestMethodsSubrouterSubrouter
 === RUN   TestMethodsSubrouterStrictSlash/match_POST_handler
 === RUN   TestMethodsSubrouterStrictSlash/match_GET_handler
+=== CONT  TestMethodsSubrouterPathPrefix
 === RUN   TestMethodsSubrouterPathPrefix/match_first_POST_handler
-=== RUN   TestMethodsSubrouterStrictSlash/match_POST_handler,_redirect_strict-slash
-=== CONT  TestMethodsSubrouterPathVariable
 === RUN   TestMethodsSubrouterPathPrefix/match_DELETE_handler
+=== RUN   TestMethodsSubrouterStrictSlash/match_POST_handler,_redirect_strict-slash
 === RUN   TestMethodsSubrouterSubrouter/match_first_POST_handler
 === RUN   TestMethodsSubrouterPathVariable/match_GET_handler
-=== RUN   TestMethodsSubrouterSubrouter/match_GET_handler
-=== RUN   TestMethodsSubrouterSubrouter/match_PATCH_handler
-=== RUN   TestMethodsSubrouterPathVariable/match_POST_handler
-=== RUN   TestMethodsSubrouterStrictSlash/match_GET_handler,_redirect_strict-slash
-=== RUN   TestMethodsSubrouterPathVariable/match_DELETE_handler
-=== RUN   TestMethodsSubrouterPathVariable/match_PUT_handler
-=== RUN   TestMethodsSubrouterPathVariable/disallow_PATCH_method
-=== RUN   TestMethodsSubrouterStrictSlash/disallow_DELETE_method
 === RUN   TestMethodsSubrouterPathPrefix/match_PUT_handler
-=== RUN   TestMethodsSubrouterSubrouter/match_PUT_handler
---- PASS: TestMethodsSubrouterPathVariable (0.00s)
-    --- PASS: TestMethodsSubrouterPathVariable/match_GET_handler (0.00s)
-    --- PASS: TestMethodsSubrouterPathVariable/match_POST_handler (0.00s)
-    --- PASS: TestMethodsSubrouterPathVariable/match_DELETE_handler (0.00s)
-    --- PASS: TestMethodsSubrouterPathVariable/match_PUT_handler (0.00s)
-    --- PASS: TestMethodsSubrouterPathVariable/disallow_PATCH_method (0.00s)
---- PASS: TestMethodsSubrouterStrictSlash (0.00s)
-    --- PASS: TestMethodsSubrouterStrictSlash/match_POST_handler (0.00s)
-    --- PASS: TestMethodsSubrouterStrictSlash/match_GET_handler (0.00s)
-    --- PASS: TestMethodsSubrouterStrictSlash/match_POST_handler,_redirect_strict-slash (0.00s)
-    --- PASS: TestMethodsSubrouterStrictSlash/match_GET_handler,_redirect_strict-slash (0.00s)
-    --- PASS: TestMethodsSubrouterStrictSlash/disallow_DELETE_method (0.00s)
 === RUN   TestMethodsSubrouterPathPrefix/disallow_PATCH_method
 --- PASS: TestMethodsSubrouterPathPrefix (0.00s)
     --- PASS: TestMethodsSubrouterPathPrefix/match_first_POST_handler (0.00s)
     --- PASS: TestMethodsSubrouterPathPrefix/match_DELETE_handler (0.00s)
     --- PASS: TestMethodsSubrouterPathPrefix/match_PUT_handler (0.00s)
     --- PASS: TestMethodsSubrouterPathPrefix/disallow_PATCH_method (0.00s)
+=== RUN   TestMethodsSubrouterSubrouter/match_GET_handler
+=== RUN   TestMethodsSubrouterSubrouter/match_PATCH_handler
+=== RUN   TestMethodsSubrouterSubrouter/match_PUT_handler
 === RUN   TestMethodsSubrouterSubrouter/disallow_DELETE_method
 --- PASS: TestMethodsSubrouterSubrouter (0.00s)
     --- PASS: TestMethodsSubrouterSubrouter/match_first_POST_handler (0.00s)
@@ -621,6 +603,24 @@ Output:
     --- PASS: TestMethodsSubrouterSubrouter/match_PATCH_handler (0.00s)
     --- PASS: TestMethodsSubrouterSubrouter/match_PUT_handler (0.00s)
     --- PASS: TestMethodsSubrouterSubrouter/disallow_DELETE_method (0.00s)
+=== RUN   TestMethodsSubrouterPathVariable/match_POST_handler
+=== RUN   TestMethodsSubrouterPathVariable/match_DELETE_handler
+=== RUN   TestMethodsSubrouterPathVariable/match_PUT_handler
+=== RUN   TestMethodsSubrouterStrictSlash/match_GET_handler,_redirect_strict-slash
+=== RUN   TestMethodsSubrouterPathVariable/disallow_PATCH_method
+--- PASS: TestMethodsSubrouterPathVariable (0.00s)
+    --- PASS: TestMethodsSubrouterPathVariable/match_GET_handler (0.00s)
+    --- PASS: TestMethodsSubrouterPathVariable/match_POST_handler (0.00s)
+    --- PASS: TestMethodsSubrouterPathVariable/match_DELETE_handler (0.00s)
+    --- PASS: TestMethodsSubrouterPathVariable/match_PUT_handler (0.00s)
+    --- PASS: TestMethodsSubrouterPathVariable/disallow_PATCH_method (0.00s)
+=== RUN   TestMethodsSubrouterStrictSlash/disallow_DELETE_method
+--- PASS: TestMethodsSubrouterStrictSlash (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/match_POST_handler (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/match_GET_handler (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/match_POST_handler,_redirect_strict-slash (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/match_GET_handler,_redirect_strict-slash (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/disallow_DELETE_method (0.00s)
 === RUN   ExampleSetURLVars
 --- PASS: ExampleSetURLVars (0.00s)
 === RUN   ExampleCORSMethodMiddleware
@@ -630,5 +630,5 @@ Output:
 === RUN   ExampleRoute_HeadersRegexp_exactMatch
 --- PASS: ExampleRoute_HeadersRegexp_exactMatch (0.00s)
 PASS
-ok  	github.com/gorilla/mux	0.030s
+ok  	github.com/gorilla/mux	0.031s
 

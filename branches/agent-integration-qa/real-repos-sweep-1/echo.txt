@@ -2,8 +2,8 @@ echo at 7af8fac5354e53294c8d14fdd7dd4006dbaffd52
 Toolchain projects:
   go: /home/runner/work/_temp/real-repos/echo/go.mod
 Startup project: go /home/runner/work/_temp/real-repos/echo/go.mod
-Set up in 3.3 s
-Tests: 730 passed, 0 failed, 0 skipped of 730: 730 tests run in 9.2 sec: 730 passed, 0 failed, 0 skipped.
+Set up in 4.1 s
+Tests: 730 passed, 0 failed, 0 skipped of 730: 730 tests run in 9.0 sec: 730 passed, 0 failed, 0 skipped.
 Project setup:
 
 Output:
@@ -169,12 +169,12 @@ is_set
 === RUN   TestMustRequestIDWithConfig_RequestIDHandler
 --- PASS: TestMustRequestIDWithConfig_RequestIDHandler (0.00s)
 === RUN   TestRequestIDWithConfig
-{"time":"2026-11-01T03:57:09.785852552Z","level":"ERROR","msg":"echo: response already written to client"}
+{"time":"2026-11-01T04:53:14.608629329Z","level":"ERROR","msg":"echo: response already written to client"}
 --- PASS: TestRequestIDWithConfig (0.00s)
 === RUN   TestRequestID_IDNotAltered
 --- PASS: TestRequestID_IDNotAltered (0.00s)
 === RUN   TestRequestIDConfigDifferentHeader
-{"time":"2026-11-01T03:57:09.785998546Z","level":"ERROR","msg":"echo: response already written to client"}
+{"time":"2026-11-01T04:53:14.608752878Z","level":"ERROR","msg":"echo: response already written to client"}
 --- PASS: TestRequestIDConfigDifferentHeader (0.00s)
 === RUN   TestRequestLoggerOK
 --- PASS: TestRequestLoggerOK (0.00s)
@@ -656,28 +656,28 @@ is_set
     --- PASS: TestValidateOrigins/nok,_custom_what_parameter_-_has_path (0.00s)
 === CONT  TestContextTimeoutSkipper
 === CONT  TestContextTimeoutCanHandleContextDeadlineOnNextHandler
-=== CONT  TestRateLimiterMemoryStore_RaceDetection
-=== CONT  TestContextTimeoutWithDefaultErrorMessage
---- PASS: TestRateLimiterMemoryStore_RaceDetection (0.00s)
-=== CONT  TestContextTimeoutSuccessfulRequest
---- PASS: TestContextTimeoutSuccessfulRequest (0.00s)
-=== CONT  TestContextTimeoutTestRequestClone
---- PASS: TestContextTimeoutTestRequestClone (0.00s)
-=== CONT  TestRateLimiterMemoryStore_ConcurrentAccess
---- PASS: TestContextTimeoutWithDefaultErrorMessage (0.01s)
-=== CONT  TestRateLimiterMemoryStore_TOCTOUFix
---- PASS: TestRateLimiterMemoryStore_TOCTOUFix (0.00s)
-=== CONT  TestRandomStringBias
---- PASS: TestContextTimeoutSkipper (0.02s)
-=== CONT  TestRateLimiterMemoryStore_TimeOrdering
---- PASS: TestRateLimiterMemoryStore_TimeOrdering (0.00s)
 === CONT  TestContextTimeoutErrorOutInHandler
+=== CONT  TestContextTimeoutSuccessfulRequest
 --- PASS: TestContextTimeoutErrorOutInHandler (0.00s)
 === CONT  TestContextTimeoutWithTimeout0
+--- PASS: TestContextTimeoutSuccessfulRequest (0.00s)
 --- PASS: TestContextTimeoutWithTimeout0 (0.00s)
+=== CONT  TestContextTimeoutWithDefaultErrorMessage
+=== CONT  TestContextTimeoutTestRequestClone
+--- PASS: TestContextTimeoutTestRequestClone (0.00s)
+=== CONT  TestRateLimiterMemoryStore_RaceDetection
+--- PASS: TestRateLimiterMemoryStore_RaceDetection (0.00s)
+=== CONT  TestRandomStringBias
+--- PASS: TestContextTimeoutWithDefaultErrorMessage (0.01s)
+=== CONT  TestRateLimiterMemoryStore_TimeOrdering
+--- PASS: TestRateLimiterMemoryStore_TimeOrdering (0.00s)
+=== CONT  TestRateLimiterMemoryStore_TOCTOUFix
+--- PASS: TestRateLimiterMemoryStore_TOCTOUFix (0.00s)
+=== CONT  TestRateLimiterMemoryStore_ConcurrentAccess
+--- PASS: TestContextTimeoutSkipper (0.02s)
 --- PASS: TestRateLimiterMemoryStore_ConcurrentAccess (0.02s)
 --- PASS: TestContextTimeoutCanHandleContextDeadlineOnNextHandler (0.05s)
 --- PASS: TestRandomStringBias (0.12s)
 PASS
-ok  	github.com/labstack/echo/v5/middleware	1.405s
+ok  	github.com/labstack/echo/v5/middleware	1.356s
 

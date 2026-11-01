@@ -3,8 +3,8 @@ Toolchain projects:
   rust: /home/runner/work/_temp/real-repos/hyperfine/Cargo.toml
   python: /home/runner/work/_temp/real-repos/hyperfine/pyproject.toml
 Startup project: rust /home/runner/work/_temp/real-repos/hyperfine/Cargo.toml
-Set up in 22.3 s
-Tests: 132 passed, 0 failed, 0 skipped of 134: 132 tests run in 34.5 sec: 132 passed, 0 failed, 0 skipped.
+Set up in 20.3 s
+Tests: 132 passed, 0 failed, 0 skipped of 134: 132 tests run in 32.1 sec: 132 passed, 0 failed, 0 skipped.
 Project setup:
 ------ hyperfine: pip install -e . ------
 > python3 -m venv .venv
@@ -70,7 +70,7 @@ Building wheels for collected packages: hyperfine-scripts
   Building editable for hyperfine-scripts (pyproject.toml): started
   Building editable for hyperfine-scripts (pyproject.toml): finished with status 'done'
   Created wheel for hyperfine-scripts: filename=hyperfine_scripts-2.0.0-py3-none-any.whl size=2078 sha256=ef7f9dd8170d7ec84f2a012b11f7fbbf1f3295410ef796ec4ca6f1cfffe46f07
-  Stored in directory: /tmp/pip-ephem-wheel-cache-6g898ljy/wheels/4d/fb/32/858263d8e2de7e2d50b0a84b1dff6307198ffd3ca26c845976
+  Stored in directory: /tmp/pip-ephem-wheel-cache-5eel_xmr/wheels/4d/fb/32/858263d8e2de7e2d50b0a84b1dff6307198ffd3ca26c845976
 Successfully built hyperfine-scripts
 Installing collected packages: PyQt6-Qt6, tzdata, six, PyQt6-sip, pyparsing, pillow, packaging, numpy, kiwisolver, fonttools, cycler, scipy, python-dateutil, pyqt6, contourpy, matplotlib, hyperfine-scripts
 Successfully installed PyQt6-Qt6-6.12.0 PyQt6-sip-13.13.0 contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 hyperfine-scripts-2.0.0 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.4 packaging-26.3 pillow-13.0.0 pyparsing-3.3.3 pyqt6-6.12.0 python-dateutil-3.0.0 scipy-1.18.1 six-1.17.0 tzdata-2026.6
@@ -83,92 +83,92 @@ Python 3.12 for hyperfine: pyproject.toml allows Python >=3.10.
 Installed 17 packages into .venv with Python 3.12. The full log is in Output > Project Setup.
 ========== pip install -e .: succeeded ==========
 ========== Running hyperfine's tests with Cargo ==========
-> sh -c 'report="$0"; { "$@"; echo $? > "$report.status"; } 2>&1 | tee "$report"; exit "$(cat "$report.status" 2> /dev/null || echo 1)"' /home/runner/work/_temp/real-repos/hyperfine/.tabstudio/test-results/a29d2177d93047bbb557ad9b174647a7/cargo-test.txt cargo test --no-fail-fast
+> sh -c 'report="$0"; { "$@"; echo $? > "$report.status"; } 2>&1 | tee "$report"; exit "$(cat "$report.status" 2> /dev/null || echo 1)"' /home/runner/work/_temp/real-repos/hyperfine/.tabstudio/test-results/7068139dedf0402f85e1d07238f3ccae/cargo-test.txt cargo test --no-fail-fast
    Compiling libc v0.2.189
    Compiling memchr v2.8.3
+   Compiling bitflags v2.13.2
    Compiling rustix v1.1.5
    Compiling proc-macro2 v1.0.107
-   Compiling bitflags v2.13.2
-   Compiling linux-raw-sys v0.12.1
-   Compiling quote v1.0.47
    Compiling unicode-ident v1.0.26
+   Compiling quote v1.0.47
+   Compiling linux-raw-sys v0.12.1
    Compiling autocfg v1.5.1
    Compiling num-traits v0.2.19
-   Compiling anstyle v1.0.14
    Compiling serde_core v1.0.229
+   Compiling anstyle v1.0.14
    Compiling syn v3.0.6
-   Compiling utf8parse v0.2.2
    Compiling cfg-if v1.0.5
+   Compiling utf8parse v0.2.2
    Compiling anstyle-parse v1.0.0
    Compiling aho-corasick v1.1.5
+   Compiling rand_core v0.10.1
+   Compiling regex-syntax v0.8.11
+   Compiling getrandom v0.4.3
+   Compiling is_terminal_polyfill v1.70.2
    Compiling colorchoice v1.0.5
    Compiling anstyle-query v1.1.5
-   Compiling getrandom v0.4.3
-   Compiling regex-syntax v0.8.11
-   Compiling rand_core v0.10.1
-   Compiling is_terminal_polyfill v1.70.2
-   Compiling anstream v1.0.0
    Compiling terminal_size v0.4.4
+   Compiling anstream v1.0.0
    Compiling strsim v0.11.1
-   Compiling clap_lex v1.1.1
    Compiling once_cell v1.21.4
+   Compiling clap_lex v1.1.1
    Compiling serde v1.0.229
    Compiling clap_builder v4.6.7
    Compiling serde_derive v1.0.229
    Compiling zmij v1.0.23
-   Compiling cfg_aliases v0.2.2
    Compiling itoa v1.0.18
-   Compiling portable-atomic v1.15.0
    Compiling regex-automata v0.4.18
    Compiling clap v4.6.7
+   Compiling cfg_aliases v0.2.2
    Compiling serde_json v1.0.151
-   Compiling clap_complete v4.6.11
+   Compiling portable-atomic v1.15.0
    Compiling nix v0.31.3
+   Compiling clap_complete v4.6.11
    Compiling regex v1.13.1
    Compiling vte v0.14.1
    Compiling predicates-core v1.0.10
+   Compiling thiserror v2.0.21
    Compiling anyhow v1.0.104
    Compiling rust_decimal v1.43.0
    Compiling fastrand v2.5.0
    Compiling cpufeatures v0.3.1
    Compiling unicode-width v0.2.2
-   Compiling thiserror v2.0.21
+   Compiling tempfile v3.27.0
    Compiling chacha20 v0.10.2
    Compiling console v0.15.11
    Compiling hyperfine v2.0.0 (/home/runner/work/_temp/real-repos/hyperfine)
-   Compiling tempfile v3.27.0
    Compiling strip-ansi-escapes v0.2.1
    Compiling thiserror-impl v2.0.21
    Compiling float-cmp v0.10.0
    Compiling console v0.16.6
    Compiling csv-core v0.1.13
-   Compiling typenum v1.20.1
+   Compiling number_prefix v0.4.0
    Compiling unicode-width v0.1.14
-   Compiling arrayvec v0.7.8
-   Compiling similar v2.7.0
-   Compiling ryu v1.0.23
    Compiling assert_cmd v2.2.2
+   Compiling arrayvec v0.7.8
    Compiling normalize-line-endings v0.3.0
    Compiling difflib v0.4.0
+   Compiling similar v2.7.0
+   Compiling typenum v1.20.1
    Compiling termtree v0.5.1
-   Compiling number_prefix v0.4.0
-   Compiling uom v0.36.0
-   Compiling indicatif v0.17.4
-   Compiling insta v1.48.0
-   Compiling predicates v3.1.4
-   Compiling predicates-tree v1.0.13
+   Compiling ryu v1.0.23
    Compiling csv v1.4.0
+   Compiling uom v0.36.0
+   Compiling predicates v3.1.4
+   Compiling insta v1.48.0
+   Compiling predicates-tree v1.0.13
+   Compiling indicatif v0.17.4
    Compiling rand v0.10.3
    Compiling bstr v1.13.1
    Compiling perf-event-open-sys v6.0.0
-   Compiling platform-info v2.2.0
    Compiling wait-timeout v0.2.1
-   Compiling humantime v2.4.0
-   Compiling colored v3.1.1
+   Compiling platform-info v2.2.0
    Compiling shell-words v1.1.1
+   Compiling colored v3.1.1
+   Compiling humantime v2.4.0
    Compiling insta-cmd v0.7.0
    Compiling approx v0.5.1
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 32.32s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 30.07s
      Running unittests src/main.rs (target/debug/deps/hyperfine-6a4f0391aa9c0825)
 
 running 56 tests
@@ -176,16 +176,16 @@ test benchmark::executor::test_mock_executor_extract_time ... ok
 test benchmark::measurement::tests::outliers_follow_the_selected_metric ... ok
 test cli::verify_app ... ok
 test command::test_build_commands_cross_product ... ok
-test command::test_build_parameter_list_commands ... ok
 test command::test_build_parameter_scan_commands ... ok
-test command::test_build_parameter_scan_commands_named ... ok
 test command::test_different_command_name_count_with_parameters ... ok
 test command::test_get_command_line_nonoverlapping ... ok
 test command::test_get_parameterized_command_name ... ok
+test command::test_build_parameter_list_commands ... ok
 test command::test_get_specified_command_names ... ok
-test command::test_parameter_scan_commands_decimal ... ok
+test command::test_build_parameter_scan_commands_named ... ok
 test command::test_parameter_scan_commands_int ... ok
 test command::test_parameter_scan_commands_names ... ok
+test command::test_parameter_scan_commands_decimal ... ok
 test export::asciidoc::test_asciidoc_exporter_table_data ... ok
 test export::asciidoc::test_asciidoc_exporter_table_header ... ok
 test export::markdown::test_markdown_formatter_command_with_backticks ... ok
@@ -194,35 +194,35 @@ test export::markdown::test_markdown_formatter_table_divider ... ok
 test export::orgmode::test_orgmode_formatter_table_data ... ok
 test export::orgmode::test_orgmode_formatter_table_line ... ok
 test benchmark::scheduler::scheduler_basic ... ok
-test export::tests::test_markup_export_auto_ms ... ok
 test export::tests::test_markup_export_auto_s ... ok
+test export::tests::test_markup_export_auto_ms ... ok
 test export::tests::test_markup_export_manual_ms ... ok
-test metric::tests::cpu_time_statistics_use_per_run_totals ... ok
-test export::tests::test_markup_export_manual_s ... ok
 test export::csv::test_csv ... ok
 test metric::tests::large_changes_include_factors ... ok
+test metric::tests::cpu_time_statistics_use_per_run_totals ... ok
+test export::tests::test_markup_export_manual_s ... ok
 test metric::tests::selection_units_and_validation ... ok
 test metric::tests::summaries_require_complete_samples ... ok
 test options::test_can_parse_shell_command_line_from_str ... ok
-test options::test_platform_default_shell ... ok
-test outlier_detection::test_detect_outliers_if_mad_becomes_0 ... ok
 test outlier_detection::test_detect_outliers ... ok
+test outlier_detection::test_detect_outliers_if_mad_becomes_0 ... ok
 test parameter::range_step::tests::test_decimal_range ... ok
+test options::test_platform_default_shell ... ok
 test parameter::range_step::tests::test_integer_range ... ok
 test parameter::range_step::tests::test_negative_decimal_step ... ok
-test parameter::range_step::tests::test_negative_integer_step ... ok
-test parameter::range_step::tests::test_range_step_validate ... ok
 test parameter::tokenize::test_tokenize_empty_values ... ok
+test parameter::range_step::tests::test_negative_integer_step ... ok
 test parameter::tokenize::test_tokenize_multiple_values ... ok
 test parameter::tokenize::test_tokenize_single_value ... ok
-test quantity::statistics::tests::test_max ... ok
+test parameter::range_step::tests::test_range_step_validate ... ok
 test quantity::statistics::tests::test_mean ... ok
+test quantity::statistics::tests::test_max ... ok
 test quantity::statistics::tests::test_median ... ok
 test quantity::statistics::tests::test_min ... ok
 test quantity::statistics::tests::test_standard_deviation ... ok
-test shell_syntax::tests::detects_leading_assignments ... ok
 test quantity::test_information ... ok
 test quantity::test_time ... ok
+test shell_syntax::tests::detects_leading_assignments ... ok
 test shell_syntax::tests::handles_empty_and_malformed_commands_without_panicking ... ok
 test shell_syntax::tests::finds_supported_operators_in_command_order ... ok
 test shell_syntax::tests::ignores_quoted_escaped_and_attached_operators ... ok
@@ -240,26 +240,26 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
      Running tests/execution_order_tests.rs (target/debug/deps/execution_order_tests-589387e669218b2c)
 
 running 18 tests
+test benchmarks_are_executed_sequentially_one ... ok
+test benchmarks_are_executed_sequentially ... ok
 test commands_execute_in_input_order ... ok
 test cleanup_commands_are_executed_once_after_each_benchmark ... ok
-test benchmarks_are_executed_sequentially ... ok
-test benchmarks_are_executed_sequentially_one ... ok
 test conclude_commands_are_executed_after_each_timing_run ... ok
-test conclude_commands_are_executed_after_each_warmup ... ok
 test prepare_commands_are_executed_before_each_timing_run ... ok
 test multiple_parameter_values ... ok
+test conclude_commands_are_executed_after_each_warmup ... ok
 test prepare_commands_are_executed_before_each_warmup ... ok
 test repeated_commands_execute_separately ... ok
-test setup_commands_are_executed_before_each_series_of_timing_runs ... ok
 test setup_prepare_cleanup_combined ... ok
+test setup_commands_are_executed_before_each_series_of_timing_runs ... ok
 test setup_prepare_conclude_cleanup_combined ... ok
-test setup_prepare_reference_conclude_cleanup_combined ... ok
 test setup_separate_prepare_separate_conclude_cleanup_combined ... ok
+test setup_prepare_reference_conclude_cleanup_combined ... ok
 test setup_separate_prepare_reference_separate_conclude_cleanup_combined ... ok
 test single_parameter_value ... ok
 test warmup_runs_are_executed_before_benchmarking_runs ... ok
 
-test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.48s
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.37s
 
      Running tests/integration_tests.rs (target/debug/deps/integration_tests-8085ed429467736a)
 
@@ -269,10 +269,10 @@ test can_run_commands_without_a_shell ... ok
 test can_run_failing_commands_with_ignore_failure_option ... ok
 test comparison_and_markup_identify_first_command_as_reference ... ok
 test environment_basic_usage ... ok
-test environment_parameter_expansion ... ok
 test exits_quietly_when_stdout_is_closed ... ok
 test exports_intermediate_results_to_file ... ok
 test fails_for_failing_command_without_shell ... ok
+test environment_parameter_expansion ... ok
 test can_ignore_specific_exit_codes ... ok
 test fails_for_unknown_command_without_shell ... ok
 test fails_for_unknown_cleanup_command ... ok
@@ -282,28 +282,28 @@ test fails_if_invalid_stdin_data_file_provided ... ok
 test fails_with_duplicate_parameter_names ... ok
 test fails_with_wrong_number_of_command_name_arguments ... ok
 test fails_for_unknown_prepare_command ... ok
+test fails_with_wrong_number_of_conclude_options ... ok
 test fails_for_unknown_setup_command ... ok
 test fails_with_zero_runs ... ok
-test fails_with_wrong_number_of_conclude_options ... ok
-test can_ignore_multiple_exit_codes ... ok
 test fails_with_wrong_number_of_prepare_options ... ok
-test intermediate_results_are_not_exported_to_stdout ... ok
 test intermediate_markdown_retains_completed_reference ... ok
+test can_ignore_multiple_exit_codes ... ok
+test intermediate_results_are_not_exported_to_stdout ... ok
 test invalid_command_options_preserve_export_files ... ok
 test json_export_basic ... ok
 test json_export_parameterized_with_reference ... ok
 test markdown_export_preserves_backticks_and_pipes_in_command_names ... ok
 test markdown_export_uses_first_parameterized_benchmark_as_reference ... ok
-test ignore_failure_with_all_non_zero ... ok
 test min_runs_of_one_still_performs_one_run ... ok
 test json_export_single_run ... ok
 test one_run_is_supported ... ok
 test performs_ten_runs_for_slow_commands ... ok
 test performs_all_benchmarks_in_parameter_scan ... ok
 test performs_three_seconds_of_benchmarking_for_fast_commands ... ok
+test hyperfine_iteration_env_var_in_prepare_and_conclude_commands ... ok
 test rejects_invalid_environment ... ok
 test rejects_invalid_metric_before_export_or_setup ... ok
-test hyperfine_iteration_env_var_in_prepare_and_conclude_commands ... ok
+test ignore_failure_with_all_non_zero ... ok
 test requires_explicit_shell_for_environment_assignments ... ok
 test rejects_negative_parameter_steps ... ok
 test rejects_removed_reference_option_with_migration_guidance ... ok
@@ -315,14 +315,14 @@ test shows_benchmark_comparison_with_same_time ... ok
 test shows_multiple_metrics_relative_to_first_command ... ok
 test shows_output_of_benchmarked_command ... ok
 test takes_both_preparation_and_conclusion_command_into_account_for_computing_number_of_runs ... ok
-test takes_conclusion_command_into_account_for_computing_number_of_runs ... ok
-test takes_preparation_command_into_account_for_computing_number_of_runs ... ok
-test takes_shell_spawning_time_into_account_for_computing_number_of_runs ... ok
 test requires_explicit_shell_for_shell_syntax ... ok
+test takes_conclusion_command_into_account_for_computing_number_of_runs ... ok
+test takes_shell_spawning_time_into_account_for_computing_number_of_runs ... ok
+test takes_preparation_command_into_account_for_computing_number_of_runs ... ok
 test unused_parameters_are_shown_in_benchmark_name ... ok
 test runs_commands_using_user_defined_shell ... ok
 test preserves_input_order_with_parameterized_prepare ... ok
 
-test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.62s
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.54s
 
 
