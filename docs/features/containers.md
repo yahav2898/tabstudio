@@ -97,6 +97,50 @@ Interactive run is available through the tool window's exec terminal. Terminal e
 use the tool window when a program needs a PTY. Compose commands discover the current directory's default files;
 file/profile/project-selection flags and attached Compose multiplexing are not implemented.
 
+## Image compatibility
+
+The compatibility job in `.github/workflows/containers.yml` pulls each image below, starts it under the same patched
+PRoot as the APK, and records whether it answers on its port (services) or runs a command (runtimes), on x64 and
+ARM64 Linux. Times are from start to the first answer, after the pull. Measured in
+[run 41270523310](https://github.com/yahav2898/tabstudio/actions/runs/41270523310) at `6774c86`; Android emulator
+and tablet timings differ.
+
+| Area | Image | x64 | ARM64 | Notes |
+| --- | --- | --- | --- | --- |
+| Database | `postgres:17-alpine` | Works, 3 s | Works, 2 s |  |
+| Database | `postgres:16` | Works, 3 s | Works, 3 s |  |
+| Database | `mysql:8.4` | Works, 13 s | Works, 13 s | Hung on creation before 0.21.1 (its image has a FIFO) |
+| Database | `mariadb:11` | Works, 5 s | Works, 6 s |  |
+| Database | `mongo:7` | Works, 3 s | Works, 2 s |  |
+| Cache | `redis:7-alpine` | Works, 1 s | Works, 1 s |  |
+| Cache | `redis:7` | Works, 1 s | Works, 1 s |  |
+| Cache | `valkey/valkey:8-alpine` | Works, 1 s | Works, 1 s |  |
+| Cache | `memcached:1.6-alpine` | Works, 1 s | Works, 1 s |  |
+| Queue | `rabbitmq:3-management-alpine` | Works, 12 s | Works, 8 s |  |
+| Queue | `nats:2-alpine` | Works, 1 s | Works, 1 s |  |
+| Queue | `apache/kafka:3.9.0` | Works, 4 s | Works, 4 s | KRaft, single node |
+| Web server | `nginx:alpine` | Works, 1 s | Works, 1 s |  |
+| Web server | `nginx:1.27` | Works, 1 s | Works, 1 s |  |
+| Web server | `httpd:2.4-alpine` | Works, 1 s | Works, 1 s |  |
+| Web server | `caddy:2-alpine` | Works, 1 s | Works, 1 s |  |
+| Mail | `axllent/mailpit` | Works, 1 s | Works, 1 s |  |
+| Tool | `adminer` | Works, 1 s | Works, 1 s |  |
+| Runtime | `node:22-alpine` | Works, 0 s | Works, 0 s | node v22.23.4 |
+| Runtime | `python:3.12-slim` | Works, 1 s | Works, 0 s | sqlite3 and ssl import |
+| Runtime | `golang:1.23-alpine` | Works, 1 s | Works, 1 s | go1.23.12 |
+| Runtime | `eclipse-temurin:21-jre-alpine` | Works, 0 s | Works, 0 s | OpenJDK 21.0.13 |
+| Runtime | `php:8.3-cli-alpine` | Works, 0 s | Works, 0 s |  |
+| Runtime | `ruby:3.3-alpine` | Works, 0 s | Works, 0 s |  |
+| Runtime | `mcr.microsoft.com/dotnet/runtime:9.0-alpine` | Works, 0 s | Works, 0 s | .NET 9.0.22 |
+| Storage | `minio/minio` | Not pulled | Not pulled | Docker Hub now requires sign-in for this repository; TabStudio says so and points to Containers → Registries |
+
+What does not work under PRoot, by design rather than by image: anything that needs a real kernel feature the app
+sandbox does not grant. That covers `privileged: true`, Docker-in-Docker, cgroup limits (`mem_limit`, `cpus` are
+not enforced), images whose entrypoint is systemd or another init needing PID 1, iptables or VPN images, FUSE mounts,
+kernel modules, debugging tools that use ptrace inside a container (PRoot itself is the tracer), UDP publication and
+zstd layers. Ownership and read-only mounts are advisory. Each container is a full copy of its image, so a large
+image needs its space twice.
+
 ## Verification and measurements
 
 `.github/workflows/containers.yml` runs fake-registry, digest, layer traversal/whiteout/link, Compose, argument
