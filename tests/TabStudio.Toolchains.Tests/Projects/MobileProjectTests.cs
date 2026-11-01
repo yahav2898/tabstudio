@@ -163,7 +163,7 @@ public sealed class MobileProjectTests
             Assert.StartsWith("https://registry.npmjs.org/", p.Value.GetProperty("resolved").GetString(), StringComparison.Ordinal);
             Assert.StartsWith("sha512-", p.Value.GetProperty("integrity").GetString(), StringComparison.Ordinal);
         });
-        Assert.Equal("npm ci", RunPlan.DependenciesOf(new ToolchainProject(ToolchainCatalog.Default.Find("node")!, temp.Path, null))!.Name);
+        Assert.Equal("npm ci", RunPlanner.DependenciesOf(new ToolchainProject(ToolchainCatalog.Default.Find("node")!, temp.Path, null))!.Name);
     }
 
     [Fact]
