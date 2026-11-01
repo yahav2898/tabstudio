@@ -1,0 +1,661 @@
+fzf at 26ff936df038b6a62ec42cf18db27b2ea2bb8ec3
+Toolchain projects:
+  go: /home/runner/work/_temp/real-repos/fzf/go.mod
+Startup project: go /home/runner/work/_temp/real-repos/fzf/go.mod
+Set up in 3.1 s
+Tests: 147 passed, 0 failed, 2 skipped of 156: 149 tests run in 13.4 sec: 147 passed, 0 failed, 2 skipped.
+Project setup:
+
+Output:
+========== Running fzf's tests with GoTest ==========
+> sh -c 'report="$0"; { "$@"; echo $? > "$report.status"; } 2>&1 | tee "$report"; exit "$(cat "$report.status" 2> /dev/null || echo 1)"' /home/runner/work/_temp/real-repos/fzf/.tabstudio/test-results/4024e8568cad444d87af7d4590402e71/go-test.txt go test -v ./...
+go: downloading github.com/rivo/uniseg v0.4.7
+go: downloading golang.org/x/sys v0.35.0
+go: downloading golang.org/x/term v0.34.0
+go: downloading github.com/junegunn/go-shellwords v0.0.0-20250127100254-2aa3b3277741
+go: downloading github.com/mattn/go-isatty v0.0.24
+go: downloading github.com/charlievieth/fastwalk v1.0.14
+?   	github.com/junegunn/fzf	[no test files]
+=== RUN   TestNextAnsiEscapeSequence
+--- PASS: TestNextAnsiEscapeSequence (0.00s)
+=== RUN   TestNextAnsiEscapeSequence_Fuzz_Modified
+=== PAUSE TestNextAnsiEscapeSequence_Fuzz_Modified
+=== RUN   TestNextAnsiEscapeSequence_Fuzz_Random
+=== PAUSE TestNextAnsiEscapeSequence_Fuzz_Random
+=== RUN   TestExtractColor
+    ansi_test.go:211: hello world <nil> 
+    ansi_test.go:211: hello world <nil> 
+    ansi_test.go:211: hello world &[{[0 11] {-1 -1 -1 1 -1 <nil>}}] 
+    ansi_test.go:211: hello w7o8r(Bld &[{[0 6] {-1 -1 -1 1 -1 <nil>}}] 
+    ansi_test.go:211: hello world &[{[0 11] {-1 -1 -1 1 -1 <nil>}}] 
+    ansi_test.go:211: hello world &[{[6 11] {4 5 -1 1 -1 <nil>}}] 
+    ansi_test.go:211: hello world &[{[6 11] {4 5 -1 1 -1 <nil>}}] 
+    ansi_test.go:211: hello world &[{[6 9] {4 5 -1 1 -1 <nil>}}] 
+    ansi_test.go:211: hello world &[{[6 8] {4 233 -1 1 -1 <nil>}} {[8 9] {161 233 -1 1 -1 <nil>}} {[10 11] {161 -1 -1 0 -1 <nil>}}] 
+    ansi_test.go:211: hello world &[{[6 9] {38 48 -1 1 -1 <nil>}} {[9 10] {48 38 -1 1 -1 <nil>}}] 
+    ansi_test.go:211: hello world &[{[6 11] {2 -1 -1 1 -1 <nil>}}] 
+    ansi_test.go:211: hello world &[{[0 11] {2 -1 -1 1 -1 <nil>}}] 
+    ansi_test.go:211: hello world &[{[0 6] {2 -1 -1 1 -1 <nil>}} {[6 11] {200 100 -1 0 -1 <nil>}}] 
+    ansi_test.go:211: hello world &[{[0 6] {-1 -1 -1 1 -1 <nil>}} {[6 11] {28622590 -1 -1 1 -1 <nil>}}] 
+    ansi_test.go:211: hello world &[{[0 11] {28622590 -1 -1 1 -1 <nil>}}] 
+--- PASS: TestExtractColor (0.00s)
+=== RUN   TestAnsiCodeStringConversion
+--- PASS: TestAnsiCodeStringConversion (0.00s)
+=== RUN   TestParseAnsiCode
+--- PASS: TestParseAnsiCode (0.00s)
+=== RUN   TestInterpretCodeUnderlineStyles
+--- PASS: TestInterpretCodeUnderlineStyles (0.00s)
+=== RUN   TestInterpretCodeUnderlineColor
+--- PASS: TestInterpretCodeUnderlineColor (0.00s)
+=== RUN   TestChunkCache
+--- PASS: TestChunkCache (0.00s)
+=== RUN   TestChunkList
+--- PASS: TestChunkList (0.00s)
+=== RUN   TestChunkListTail
+--- PASS: TestChunkListTail (0.00s)
+=== RUN   TestHistory
+--- PASS: TestHistory (0.02s)
+=== RUN   TestStringPtr
+--- PASS: TestStringPtr (0.00s)
+=== RUN   TestEmptyMerger
+--- PASS: TestEmptyMerger (0.00s)
+=== RUN   TestMergerUnsorted
+--- PASS: TestMergerUnsorted (0.00s)
+=== RUN   TestMergerSorted
+--- PASS: TestMergerSorted (0.00s)
+=== RUN   TestDelimiterRegex
+--- PASS: TestDelimiterRegex (0.00s)
+=== RUN   TestDelimiterRegexString
+--- PASS: TestDelimiterRegexString (0.00s)
+=== RUN   TestDelimiterRegexRegex
+--- PASS: TestDelimiterRegexRegex (0.00s)
+=== RUN   TestDelimiterRegexRegexCaret
+--- PASS: TestDelimiterRegexRegexCaret (0.00s)
+=== RUN   TestSplitNth
+--- PASS: TestSplitNth (0.00s)
+=== RUN   TestIrrelevantNth
+--- PASS: TestIrrelevantNth (0.00s)
+=== RUN   TestParseKeys
+--- PASS: TestParseKeys (0.00s)
+=== RUN   TestParseKeysWithComma
+--- PASS: TestParseKeysWithComma (0.00s)
+=== RUN   TestBind
+--- PASS: TestBind (0.00s)
+=== RUN   TestParseEveryEvent
+--- PASS: TestParseEveryEvent (0.00s)
+=== RUN   TestColorSpec
+--- PASS: TestColorSpec (0.00s)
+=== RUN   TestDefaultCtrlNP
+--- PASS: TestDefaultCtrlNP (0.00s)
+=== RUN   TestToggle
+--- PASS: TestToggle (0.00s)
+=== RUN   TestPreviewOpts
+--- PASS: TestPreviewOpts (0.00s)
+=== RUN   TestPreviewWrapSign
+--- PASS: TestPreviewWrapSign (0.00s)
+=== RUN   TestAdditiveExpect
+--- PASS: TestAdditiveExpect (0.00s)
+=== RUN   TestValidateSign
+--- PASS: TestValidateSign (0.00s)
+=== RUN   TestParseSingleActionList
+--- PASS: TestParseSingleActionList (0.00s)
+=== RUN   TestParseSingleActionListError
+--- PASS: TestParseSingleActionListError (0.00s)
+=== RUN   TestMaskActionContents
+--- PASS: TestMaskActionContents (0.00s)
+=== RUN   TestParseTermsExtended
+--- PASS: TestParseTermsExtended (0.00s)
+=== RUN   TestParseTermsExtendedExact
+--- PASS: TestParseTermsExtendedExact (0.00s)
+=== RUN   TestParseTermsEmpty
+--- PASS: TestParseTermsEmpty (0.00s)
+=== RUN   TestExact
+--- PASS: TestExact (0.00s)
+=== RUN   TestEqual
+--- PASS: TestEqual (0.00s)
+=== RUN   TestCaseSensitivity
+--- PASS: TestCaseSensitivity (0.00s)
+=== RUN   TestOrigTextAndTransformed
+--- PASS: TestOrigTextAndTransformed (0.00s)
+=== RUN   TestCacheKey
+--- PASS: TestCacheKey (0.00s)
+=== RUN   TestCacheable
+--- PASS: TestCacheable (0.00s)
+=== RUN   TestBitmapCacheBenefit
+    pattern_test.go:263: Chunks: 100, Queries: 5
+    pattern_test.go:264: Cache memory: 136008 bytes (132.8 KB)
+    pattern_test.go:265: Per-chunk-per-query: 272 bytes
+    pattern_test.go:286: query="s": matches=102400
+    pattern_test.go:286: query="se": matches=102400
+    pattern_test.go:286: query="ser": matches=71680
+    pattern_test.go:286: query="serv": matches=30720
+    pattern_test.go:286: query="servi": matches=20480
+--- PASS: TestBitmapCacheBenefit (0.74s)
+=== RUN   TestLabelUpdater
+    proxy_test.go:64: applied 1 of 100 updates
+--- PASS: TestLabelUpdater (0.00s)
+=== RUN   TestReadFromCommand
+--- PASS: TestReadFromCommand (0.07s)
+=== RUN   TestReadFilesSymlinkAcrossRoots
+--- PASS: TestReadFilesSymlinkAcrossRoots (0.00s)
+=== RUN   TestReadFilesSkipsAncestorSymlinks
+--- PASS: TestReadFilesSkipsAncestorSymlinks (0.00s)
+=== RUN   TestOffsetSort
+--- PASS: TestOffsetSort (0.00s)
+=== RUN   TestRankComparison
+--- PASS: TestRankComparison (0.00s)
+=== RUN   TestResultRank
+--- PASS: TestResultRank (0.00s)
+=== RUN   TestChunkTiebreak
+--- PASS: TestChunkTiebreak (0.00s)
+=== RUN   TestColorOffset
+--- PASS: TestColorOffset (0.00s)
+=== RUN   TestRadixSortResults
+--- PASS: TestRadixSortResults (0.00s)
+=== RUN   TestPathnameTiebreak
+--- PASS: TestPathnameTiebreak (0.00s)
+=== RUN   TestReplacePlaceholder
+--- PASS: TestReplacePlaceholder (0.00s)
+=== RUN   TestQuoteEntry
+--- PASS: TestQuoteEntry (0.00s)
+=== RUN   TestUnixCommands
+--- PASS: TestUnixCommands (0.00s)
+=== RUN   TestWindowsCommands
+--- SKIP: TestWindowsCommands (0.00s)
+=== RUN   TestPowershellCommands
+--- SKIP: TestPowershellCommands (0.00s)
+=== RUN   TestParsePlaceholder
+--- PASS: TestParsePlaceholder (0.00s)
+=== RUN   TestExtractPassthroughs
+--- PASS: TestExtractPassthroughs (0.00s)
+=== RUN   TestWrapPassThrough
+--- PASS: TestWrapPassThrough (0.00s)
+=== RUN   TestIsImagePassThrough
+--- PASS: TestIsImagePassThrough (0.00s)
+=== RUN   TestWordWrapAnsiLine
+--- PASS: TestWordWrapAnsiLine (0.00s)
+=== RUN   TestSplitOnIND
+--- PASS: TestSplitOnIND (0.00s)
+=== RUN   TestNextValue
+--- PASS: TestNextValue (0.00s)
+=== RUN   TestNextValueRepeated
+--- PASS: TestNextValueRepeated (0.00s)
+=== RUN   TestEscapeTmuxFormat
+--- PASS: TestEscapeTmuxFormat (0.00s)
+=== RUN   TestEscapeTmuxSeparator
+--- PASS: TestEscapeTmuxSeparator (0.00s)
+=== RUN   TestParseRange
+--- PASS: TestParseRange (0.00s)
+=== RUN   TestTokenize
+--- PASS: TestTokenize (0.00s)
+=== RUN   TestTransform
+--- PASS: TestTransform (0.00s)
+=== RUN   TestTransformIndexOutOfBounds
+--- PASS: TestTransformIndexOutOfBounds (0.00s)
+=== CONT  TestNextAnsiEscapeSequence_Fuzz_Modified
+=== CONT  TestNextAnsiEscapeSequence_Fuzz_Random
+--- PASS: TestNextAnsiEscapeSequence_Fuzz_Modified (0.08s)
+--- PASS: TestNextAnsiEscapeSequence_Fuzz_Random (0.49s)
+PASS
+ok  	github.com/junegunn/fzf/src	1.337s
+=== RUN   TestFuzzyMatch
+--- PASS: TestFuzzyMatch (0.00s)
+=== RUN   TestFuzzyMatchBackward
+--- PASS: TestFuzzyMatchBackward (0.00s)
+=== RUN   TestExactMatchNaive
+--- PASS: TestExactMatchNaive (0.00s)
+=== RUN   TestExactMatchNaiveBackward
+--- PASS: TestExactMatchNaiveBackward (0.00s)
+=== RUN   TestPrefixMatch
+--- PASS: TestPrefixMatch (0.00s)
+=== RUN   TestSuffixMatch
+--- PASS: TestSuffixMatch (0.00s)
+=== RUN   TestEmptyPattern
+--- PASS: TestEmptyPattern (0.00s)
+=== RUN   TestNormalize
+--- PASS: TestNormalize (0.00s)
+=== RUN   TestLongString
+--- PASS: TestLongString (0.00s)
+=== RUN   TestLongStringWithNormalize
+--- PASS: TestLongStringWithNormalize (0.00s)
+=== RUN   TestResultPositionsWithReusedSlab
+--- PASS: TestResultPositionsWithReusedSlab (0.00s)
+=== RUN   TestFuzzyMatchV2TwoEquivalence
+--- PASS: TestFuzzyMatchV2TwoEquivalence (0.18s)
+=== RUN   TestFuzzyMatchV2SingleExhaustive
+--- PASS: TestFuzzyMatchV2SingleExhaustive (1.10s)
+=== RUN   TestFuzzyMatchV2TwoExhaustive
+--- PASS: TestFuzzyMatchV2TwoExhaustive (5.65s)
+=== RUN   TestIndexByteTwo
+=== RUN   TestIndexByteTwo/empty
+=== RUN   TestIndexByteTwo/single_b1
+=== RUN   TestIndexByteTwo/single_b2
+=== RUN   TestIndexByteTwo/single_none
+=== RUN   TestIndexByteTwo/b1_first
+=== RUN   TestIndexByteTwo/b2_first
+=== RUN   TestIndexByteTwo/same_byte
+=== RUN   TestIndexByteTwo/at_end
+=== RUN   TestIndexByteTwo/not_found
+=== RUN   TestIndexByteTwo/long_b1_at_3000
+=== RUN   TestIndexByteTwo/long_b2_at_3000
+--- PASS: TestIndexByteTwo (0.01s)
+    --- PASS: TestIndexByteTwo/empty (0.00s)
+    --- PASS: TestIndexByteTwo/single_b1 (0.00s)
+    --- PASS: TestIndexByteTwo/single_b2 (0.00s)
+    --- PASS: TestIndexByteTwo/single_none (0.00s)
+    --- PASS: TestIndexByteTwo/b1_first (0.00s)
+    --- PASS: TestIndexByteTwo/b2_first (0.00s)
+    --- PASS: TestIndexByteTwo/same_byte (0.00s)
+    --- PASS: TestIndexByteTwo/at_end (0.00s)
+    --- PASS: TestIndexByteTwo/not_found (0.00s)
+    --- PASS: TestIndexByteTwo/long_b1_at_3000 (0.00s)
+    --- PASS: TestIndexByteTwo/long_b2_at_3000 (0.00s)
+=== RUN   TestLastIndexByteTwo
+=== RUN   TestLastIndexByteTwo/empty
+=== RUN   TestLastIndexByteTwo/single_b1
+=== RUN   TestLastIndexByteTwo/single_b2
+=== RUN   TestLastIndexByteTwo/single_none
+=== RUN   TestLastIndexByteTwo/b1_last
+=== RUN   TestLastIndexByteTwo/b2_last
+=== RUN   TestLastIndexByteTwo/same_byte
+=== RUN   TestLastIndexByteTwo/at_start
+=== RUN   TestLastIndexByteTwo/both_present
+=== RUN   TestLastIndexByteTwo/not_found
+=== RUN   TestLastIndexByteTwo/long_b1_at_3000
+=== RUN   TestLastIndexByteTwo/long_b2_at_end
+--- PASS: TestLastIndexByteTwo (0.01s)
+    --- PASS: TestLastIndexByteTwo/empty (0.00s)
+    --- PASS: TestLastIndexByteTwo/single_b1 (0.00s)
+    --- PASS: TestLastIndexByteTwo/single_b2 (0.00s)
+    --- PASS: TestLastIndexByteTwo/single_none (0.00s)
+    --- PASS: TestLastIndexByteTwo/b1_last (0.00s)
+    --- PASS: TestLastIndexByteTwo/b2_last (0.00s)
+    --- PASS: TestLastIndexByteTwo/same_byte (0.00s)
+    --- PASS: TestLastIndexByteTwo/at_start (0.00s)
+    --- PASS: TestLastIndexByteTwo/both_present (0.00s)
+    --- PASS: TestLastIndexByteTwo/not_found (0.00s)
+    --- PASS: TestLastIndexByteTwo/long_b1_at_3000 (0.00s)
+    --- PASS: TestLastIndexByteTwo/long_b2_at_end (0.00s)
+=== RUN   TestMayFoldToAsciiIsSuperset
+--- PASS: TestMayFoldToAsciiIsSuperset (0.15s)
+=== RUN   TestMayFoldToAsciiExcludesMajorScripts
+--- PASS: TestMayFoldToAsciiExcludesMajorScripts (0.00s)
+=== RUN   TestIndexAsciiRuneMatchesReference
+--- PASS: TestIndexAsciiRuneMatchesReference (0.00s)
+=== RUN   TestRunePrefilterEquivalence
+    runeprefilter_test.go:163: prefilter engaged on 5506 items, bypassed on 21025
+    runeprefilter_test.go:189: prefilter rejected 560 items, narrowed scope on 93
+--- PASS: TestRunePrefilterEquivalence (0.03s)
+=== RUN   TestRunePrefilterEquivalenceV1
+--- PASS: TestRunePrefilterEquivalenceV1 (0.01s)
+=== RUN   TestNormalizedKeysAreFlagged
+--- PASS: TestNormalizedKeysAreFlagged (0.00s)
+=== RUN   TestNormalizeRuneUnchangedByGuard
+--- PASS: TestNormalizeRuneUnchangedByGuard (0.00s)
+=== RUN   TestRunePrefilterableGuardIsSound
+    runeprefilter_test.go:292: guard admits 1108802 non-ASCII pattern runes, unsound for 0
+--- PASS: TestRunePrefilterableGuardIsSound (0.11s)
+=== RUN   TestNonAsciiPatternPrefilterEngages
+    runeprefilter_test.go:338: non-ASCII patterns: engaged 2470, bypassed 1897, rejected 1352, narrowed 1006
+--- PASS: TestNonAsciiPatternPrefilterEngages (0.00s)
+=== RUN   TestIndexRuneMatchesReference
+--- PASS: TestIndexRuneMatchesReference (0.01s)
+=== RUN   TestEmptyRuneModeChars
+--- PASS: TestEmptyRuneModeChars (0.00s)
+=== RUN   TestMayFoldToAsciiOutOfRange
+--- PASS: TestMayFoldToAsciiOutOfRange (0.00s)
+=== RUN   FuzzFuzzyMatchV2Single
+=== RUN   FuzzFuzzyMatchV2Single/seed#0
+=== RUN   FuzzFuzzyMatchV2Single/seed#1
+=== RUN   FuzzFuzzyMatchV2Single/seed#2
+=== RUN   FuzzFuzzyMatchV2Single/seed#3
+=== RUN   FuzzFuzzyMatchV2Single/seed#4
+=== RUN   FuzzFuzzyMatchV2Single/seed#5
+=== RUN   FuzzFuzzyMatchV2Single/seed#6
+=== RUN   FuzzFuzzyMatchV2Single/seed#7
+=== RUN   FuzzFuzzyMatchV2Single/seed#8
+=== RUN   FuzzFuzzyMatchV2Single/seed#9
+=== RUN   FuzzFuzzyMatchV2Single/seed#10
+=== RUN   FuzzFuzzyMatchV2Single/seed#11
+--- PASS: FuzzFuzzyMatchV2Single (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Single/seed#0 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Single/seed#1 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Single/seed#2 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Single/seed#3 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Single/seed#4 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Single/seed#5 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Single/seed#6 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Single/seed#7 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Single/seed#8 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Single/seed#9 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Single/seed#10 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Single/seed#11 (0.00s)
+=== RUN   FuzzFuzzyMatchV2Two
+=== RUN   FuzzFuzzyMatchV2Two/seed#0
+=== RUN   FuzzFuzzyMatchV2Two/seed#1
+=== RUN   FuzzFuzzyMatchV2Two/seed#2
+=== RUN   FuzzFuzzyMatchV2Two/seed#3
+=== RUN   FuzzFuzzyMatchV2Two/seed#4
+=== RUN   FuzzFuzzyMatchV2Two/seed#5
+=== RUN   FuzzFuzzyMatchV2Two/seed#6
+=== RUN   FuzzFuzzyMatchV2Two/seed#7
+=== RUN   FuzzFuzzyMatchV2Two/seed#8
+=== RUN   FuzzFuzzyMatchV2Two/seed#9
+=== RUN   FuzzFuzzyMatchV2Two/seed#10
+=== RUN   FuzzFuzzyMatchV2Two/seed#11
+=== RUN   FuzzFuzzyMatchV2Two/seed#12
+=== RUN   FuzzFuzzyMatchV2Two/seed#13
+=== RUN   FuzzFuzzyMatchV2Two/seed#14
+=== RUN   FuzzFuzzyMatchV2Two/seed#15
+--- PASS: FuzzFuzzyMatchV2Two (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#0 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#1 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#2 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#3 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#4 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#5 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#6 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#7 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#8 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#9 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#10 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#11 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#12 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#13 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#14 (0.00s)
+    --- PASS: FuzzFuzzyMatchV2Two/seed#15 (0.00s)
+=== RUN   FuzzIndexByteTwo
+=== RUN   FuzzIndexByteTwo/seed#0
+=== RUN   FuzzIndexByteTwo/seed#1
+=== RUN   FuzzIndexByteTwo/seed#2
+--- PASS: FuzzIndexByteTwo (0.00s)
+    --- PASS: FuzzIndexByteTwo/seed#0 (0.00s)
+    --- PASS: FuzzIndexByteTwo/seed#1 (0.00s)
+    --- PASS: FuzzIndexByteTwo/seed#2 (0.00s)
+=== RUN   FuzzLastIndexByteTwo
+=== RUN   FuzzLastIndexByteTwo/seed#0
+=== RUN   FuzzLastIndexByteTwo/seed#1
+=== RUN   FuzzLastIndexByteTwo/seed#2
+--- PASS: FuzzLastIndexByteTwo (0.00s)
+    --- PASS: FuzzLastIndexByteTwo/seed#0 (0.00s)
+    --- PASS: FuzzLastIndexByteTwo/seed#1 (0.00s)
+    --- PASS: FuzzLastIndexByteTwo/seed#2 (0.00s)
+=== RUN   FuzzRunePrefilter
+=== RUN   FuzzRunePrefilter/seed#0
+=== RUN   FuzzRunePrefilter/seed#1
+=== RUN   FuzzRunePrefilter/seed#2
+=== RUN   FuzzRunePrefilter/seed#3
+=== RUN   FuzzRunePrefilter/seed#4
+=== RUN   FuzzRunePrefilter/seed#5
+=== RUN   FuzzRunePrefilter/seed#6
+=== RUN   FuzzRunePrefilter/seed#7
+=== RUN   FuzzRunePrefilter/seed#8
+=== RUN   FuzzRunePrefilter/seed#9
+=== RUN   FuzzRunePrefilter/seed#10
+=== RUN   FuzzRunePrefilter/seed#11
+=== RUN   FuzzRunePrefilter/seed#12
+=== RUN   FuzzRunePrefilter/seed#13
+=== RUN   FuzzRunePrefilter/seed#14
+=== RUN   FuzzRunePrefilter/seed#15
+=== RUN   FuzzRunePrefilter/seed#16
+=== RUN   FuzzRunePrefilter/seed#17
+=== RUN   FuzzRunePrefilter/seed#18
+=== RUN   FuzzRunePrefilter/seed#19
+=== RUN   FuzzRunePrefilter/seed#20
+=== RUN   FuzzRunePrefilter/seed#21
+=== RUN   FuzzRunePrefilter/seed#22
+=== RUN   FuzzRunePrefilter/seed#23
+=== RUN   FuzzRunePrefilter/seed#24
+=== RUN   FuzzRunePrefilter/seed#25
+=== RUN   FuzzRunePrefilter/seed#26
+=== RUN   FuzzRunePrefilter/seed#27
+=== RUN   FuzzRunePrefilter/seed#28
+=== RUN   FuzzRunePrefilter/seed#29
+=== RUN   FuzzRunePrefilter/seed#30
+=== RUN   FuzzRunePrefilter/seed#31
+=== RUN   FuzzRunePrefilter/seed#32
+=== RUN   FuzzRunePrefilter/seed#33
+=== RUN   FuzzRunePrefilter/seed#34
+=== RUN   FuzzRunePrefilter/seed#35
+=== RUN   FuzzRunePrefilter/seed#36
+=== RUN   FuzzRunePrefilter/seed#37
+=== RUN   FuzzRunePrefilter/seed#38
+=== RUN   FuzzRunePrefilter/seed#39
+=== RUN   FuzzRunePrefilter/seed#40
+=== RUN   FuzzRunePrefilter/seed#41
+=== RUN   FuzzRunePrefilter/seed#42
+=== RUN   FuzzRunePrefilter/seed#43
+=== RUN   FuzzRunePrefilter/seed#44
+=== RUN   FuzzRunePrefilter/seed#45
+=== RUN   FuzzRunePrefilter/seed#46
+=== RUN   FuzzRunePrefilter/seed#47
+=== RUN   FuzzRunePrefilter/seed#48
+=== RUN   FuzzRunePrefilter/seed#49
+=== RUN   FuzzRunePrefilter/seed#50
+=== RUN   FuzzRunePrefilter/seed#51
+=== RUN   FuzzRunePrefilter/seed#52
+=== RUN   FuzzRunePrefilter/seed#53
+=== RUN   FuzzRunePrefilter/seed#54
+=== RUN   FuzzRunePrefilter/seed#55
+=== RUN   FuzzRunePrefilter/seed#56
+=== RUN   FuzzRunePrefilter/seed#57
+=== RUN   FuzzRunePrefilter/seed#58
+=== RUN   FuzzRunePrefilter/seed#59
+=== RUN   FuzzRunePrefilter/seed#60
+=== RUN   FuzzRunePrefilter/seed#61
+=== RUN   FuzzRunePrefilter/seed#62
+=== RUN   FuzzRunePrefilter/seed#63
+=== RUN   FuzzRunePrefilter/seed#64
+=== RUN   FuzzRunePrefilter/seed#65
+=== RUN   FuzzRunePrefilter/seed#66
+=== RUN   FuzzRunePrefilter/seed#67
+=== RUN   FuzzRunePrefilter/seed#68
+=== RUN   FuzzRunePrefilter/seed#69
+=== RUN   FuzzRunePrefilter/seed#70
+=== RUN   FuzzRunePrefilter/seed#71
+=== RUN   FuzzRunePrefilter/seed#72
+=== RUN   FuzzRunePrefilter/seed#73
+=== RUN   FuzzRunePrefilter/seed#74
+=== RUN   FuzzRunePrefilter/seed#75
+=== RUN   FuzzRunePrefilter/seed#76
+=== RUN   FuzzRunePrefilter/seed#77
+=== RUN   FuzzRunePrefilter/seed#78
+=== RUN   FuzzRunePrefilter/seed#79
+--- PASS: FuzzRunePrefilter (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#0 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#1 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#2 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#3 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#4 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#5 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#6 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#7 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#8 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#9 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#10 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#11 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#12 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#13 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#14 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#15 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#16 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#17 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#18 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#19 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#20 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#21 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#22 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#23 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#24 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#25 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#26 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#27 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#28 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#29 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#30 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#31 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#32 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#33 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#34 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#35 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#36 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#37 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#38 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#39 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#40 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#41 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#42 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#43 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#44 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#45 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#46 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#47 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#48 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#49 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#50 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#51 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#52 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#53 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#54 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#55 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#56 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#57 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#58 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#59 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#60 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#61 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#62 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#63 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#64 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#65 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#66 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#67 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#68 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#69 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#70 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#71 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#72 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#73 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#74 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#75 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#76 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#77 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#78 (0.00s)
+    --- PASS: FuzzRunePrefilter/seed#79 (0.00s)
+PASS
+ok  	github.com/junegunn/fzf/src/algo	7.271s
+?   	github.com/junegunn/fzf/src/protector	[no test files]
+=== RUN   TestUnknownEscapeSequence
+--- PASS: TestUnknownEscapeSequence (0.00s)
+=== RUN   TestStringEnd
+--- PASS: TestStringEnd (0.00s)
+=== RUN   TestStillArriving
+--- PASS: TestStillArriving (0.00s)
+=== RUN   TestStringReply
+--- PASS: TestStringReply (0.00s)
+=== RUN   TestCsiEnd
+--- PASS: TestCsiEnd (0.00s)
+=== RUN   TestKeyAfterSequence
+--- PASS: TestKeyAfterSequence (0.00s)
+=== RUN   TestIncompleteEscape
+--- PASS: TestIncompleteEscape (0.00s)
+=== RUN   TestIncompleteStringEscape
+--- PASS: TestIncompleteStringEscape (0.00s)
+=== RUN   TestIncompleteSS3
+--- PASS: TestIncompleteSS3 (0.00s)
+=== RUN   TestQueryStartup
+=== RUN   TestQueryStartup/mode_already_set
+=== RUN   TestQueryStartup/mode_reset
+=== RUN   TestQueryStartup/mode_not_recognized
+=== RUN   TestQueryStartup/query_ignored
+=== RUN   TestQueryStartup/query_echoed
+=== RUN   TestQueryStartup/longer_echo
+=== RUN   TestQueryStartup/echo_wrapped
+=== RUN   TestQueryStartup/no_reply_at_all
+--- PASS: TestQueryStartup (0.50s)
+    --- PASS: TestQueryStartup/mode_already_set (0.00s)
+    --- PASS: TestQueryStartup/mode_reset (0.00s)
+    --- PASS: TestQueryStartup/mode_not_recognized (0.00s)
+    --- PASS: TestQueryStartup/query_ignored (0.00s)
+    --- PASS: TestQueryStartup/query_echoed (0.00s)
+    --- PASS: TestQueryStartup/longer_echo (0.00s)
+    --- PASS: TestQueryStartup/echo_wrapped (0.00s)
+    --- PASS: TestQueryStartup/no_reply_at_all (0.50s)
+=== RUN   TestLateKeyAfterUnfinishedSequence
+--- PASS: TestLateKeyAfterUnfinishedSequence (0.20s)
+=== RUN   TestSecondChanceReadError
+--- PASS: TestSecondChanceReadError (3.12s)
+=== RUN   TestLightRenderer
+--- PASS: TestLightRenderer (0.00s)
+=== RUN   TestLightRendererScrollWheel
+--- PASS: TestLightRendererScrollWheel (0.00s)
+=== RUN   TestLightRendererSGRDeduplication
+--- PASS: TestLightRendererSGRDeduplication (0.00s)
+=== RUN   TestWrapLine
+--- PASS: TestWrapLine (0.00s)
+=== RUN   TestHexToColor
+--- PASS: TestHexToColor (0.00s)
+PASS
+ok  	github.com/junegunn/fzf/src/tui	3.835s
+=== RUN   TestAtExit
+--- PASS: TestAtExit (0.00s)
+=== RUN   TestAtomicBool
+--- PASS: TestAtomicBool (0.00s)
+=== RUN   TestCountRunes
+--- PASS: TestCountRunes (0.00s)
+=== RUN   TestCountRunesRandom
+--- PASS: TestCountRunesRandom (0.02s)
+=== RUN   TestToCharsIntegrity
+--- PASS: TestToCharsIntegrity (0.02s)
+=== RUN   TestToCharsAscii
+--- PASS: TestToCharsAscii (0.00s)
+=== RUN   TestCharsLength
+--- PASS: TestCharsLength (0.00s)
+=== RUN   TestCharsToString
+--- PASS: TestCharsToString (0.00s)
+=== RUN   TestTrimLength
+--- PASS: TestTrimLength (0.00s)
+=== RUN   TestCharsLines
+[[97 98 99 100 101 102 10]] true
+[[97 98 99 100 101 102 10] [44032 45208 45796 10]] true
+[[97 98 99 100 101 102 10] [44032 45208 45796 10] [9 100 101 102]] false
+[[97 98] [99 100] [101 102 10] [44032]] true
+[[97 98] [99 100] [101 102 10] [44032] [45208]] true
+[[97 98] [99 100] [101 102 10] [44032] [45208] [45796 10]] true
+[[97 98] [99 100] [101 102 10] [44032] [45208] [45796 10] [9]] true
+[[97 98] [99 100] [101 102 10] [44032] [45208] [45796 10] [9] [100 101]] true
+[[97 98] [99 100] [101 102 10] [44032] [45208] [45796 10] [9] [100 101] [102]] false
+[[97 98] [99 100] [101 102 10] [44032] [45208] [45796 10] [9 100] [101 102]] false
+[[97 98 99] [100 101] [102 10] [44032] [45208] [45796 10] [9 100 101] [102]] false
+[[97 98 99] [100] [101] [102 10] [44032] [45208] [45796] [10] [9 100 101] [102]] false
+[[97 98 99] [100] [101] [102] [10] [44032] [45208] [45796] [10] [9] [100] [101] [102]] false
+--- PASS: TestCharsLines (0.00s)
+=== RUN   TestCharsLinesWrapWord
+--- PASS: TestCharsLinesWrapWord (0.00s)
+=== RUN   TestCharsSize
+--- PASS: TestCharsSize (0.00s)
+=== RUN   TestMayFoldFlag
+--- PASS: TestMayFoldFlag (0.00s)
+=== RUN   TestRuneSlicesAliasTheText
+--- PASS: TestRuneSlicesAliasTheText (0.00s)
+=== RUN   TestEventBox
+--- PASS: TestEventBox (0.00s)
+=== RUN   TestConstrain
+--- PASS: TestConstrain (0.00s)
+=== RUN   TestAsUint16
+--- PASS: TestAsUint16 (0.00s)
+=== RUN   TestOnce
+--- PASS: TestOnce (0.00s)
+=== RUN   TestRunesWidth
+--- PASS: TestRunesWidth (0.00s)
+=== RUN   TestTruncate
+--- PASS: TestTruncate (0.00s)
+=== RUN   TestRepeatToFill
+--- PASS: TestRepeatToFill (0.00s)
+=== RUN   TestStringWidth
+--- PASS: TestStringWidth (0.00s)
+=== RUN   TestCompareVersions
+--- PASS: TestCompareVersions (0.00s)
+PASS
+ok  	github.com/junegunn/fzf/src/util	0.040s
+
