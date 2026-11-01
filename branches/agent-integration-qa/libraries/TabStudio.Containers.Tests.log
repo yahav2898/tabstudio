@@ -1,8 +1,8 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/TabStudio.Toolchains.csproj (in 78 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Containers/TabStudio.Containers.csproj (in 109 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Services/TabStudio.Services.csproj (in 137 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Containers.Tests/TabStudio.Containers.Tests.csproj (in 144 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/TabStudio.Toolchains.csproj (in 117 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Containers/TabStudio.Containers.csproj (in 175 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Services/TabStudio.Services.csproj (in 214 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Containers.Tests/TabStudio.Containers.Tests.csproj (in 184 ms).
   2 of 6 projects are up-to-date for restore.
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
@@ -13,30 +13,30 @@
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Containers.Tests/bin/Release/net10.0/TabStudio.Containers.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.09]   Discovering: TabStudio.Containers.Tests
-[xUnit.net 00:00:00.14]   Discovered:  TabStudio.Containers.Tests
-[xUnit.net 00:00:00.16]   Starting:    TabStudio.Containers.Tests
-[xUnit.net 00:00:00.19]     TabStudio.Containers.Tests.CompatibilityTests.Common_images_answer_or_say_why_not [SKIP]
-[xUnit.net 00:00:00.19]       The image compatibility sweep runs in containers.yml's compatibility job.
-[xUnit.net 00:00:00.20]     TabStudio.Containers.Tests.RuntimeTests.Postgres_redis_and_nginx_run_from_real_images_with_compose_exec_ports_and_persistent_data [SKIP]
-[xUnit.net 00:00:00.20]       Real PRoot image runtime is configured by containers.yml.
+[xUnit.net 00:00:00.12]   Discovering: TabStudio.Containers.Tests
+[xUnit.net 00:00:00.20]   Discovered:  TabStudio.Containers.Tests
+[xUnit.net 00:00:00.25]   Starting:    TabStudio.Containers.Tests
+[xUnit.net 00:00:00.45]     TabStudio.Containers.Tests.CompatibilityTests.Common_images_answer_or_say_why_not [SKIP]
+[xUnit.net 00:00:00.45]       The image compatibility sweep runs in containers.yml's compatibility job.
+[xUnit.net 00:00:00.54]     TabStudio.Containers.Tests.RuntimeTests.Postgres_redis_and_nginx_run_from_real_images_with_compose_exec_ports_and_persistent_data [SKIP]
+[xUnit.net 00:00:00.54]       Real PRoot image runtime is configured by containers.yml.
+  Passed TabStudio.Containers.Tests.LayerTests.Paths_resolve_links_inside_the_root [10 ms]
+  Passed TabStudio.Containers.Tests.RegistryTests.Only_actual_loopback_registries_allow_plain_HTTP [6 ms]
   Skipped TabStudio.Containers.Tests.CompatibilityTests.Common_images_answer_or_say_why_not [1 ms]
+  Passed TabStudio.Containers.Tests.EmulatorTests.Explicit_automatic_ports_work_and_unsupported_network_semantics_fail [34 ms]
+  Passed TabStudio.Containers.Tests.EmulatorTests.Missing_Box64_and_musl_images_get_specific_reasons_and_native_mounts_preserve_argv [32 ms]
   Skipped TabStudio.Containers.Tests.RuntimeTests.Postgres_redis_and_nginx_run_from_real_images_with_compose_exec_ports_and_persistent_data [1 ms]
-  Passed TabStudio.Containers.Tests.RegistryTests.Only_actual_loopback_registries_allow_plain_HTTP [7 ms]
-  Passed TabStudio.Containers.Tests.ComposeTests.Privileged_services_are_rejected_and_missing_bind_rules_are_honored [46 ms]
-  Passed TabStudio.Containers.Tests.ComposeTests.Real_image_configuration_preserves_overrides_environment_health_and_workspace_volumes [24 ms]
-  Passed TabStudio.Containers.Tests.ComposeTests.Docker_run_arguments_remain_literal_and_unknown_options_fail [8 ms]
-  Passed TabStudio.Containers.Tests.ComposeTests.A_completed_image_without_ports_does_not_need_a_connection_endpoint [3 ms]
-  Passed TabStudio.Containers.Tests.ComposeTests.Network_addresses_are_distinct_and_explicit_port_collisions_fail_before_launch [11 ms]
-  Passed TabStudio.Containers.Tests.ComposeTests.Backend_discovers_parent_compose_and_override_but_stops_at_nested_repository_boundary [34 ms]
-  Passed TabStudio.Containers.Tests.LayerTests.Paths_resolve_links_inside_the_root [2 ms]
-  Passed TabStudio.Containers.Tests.EmulatorTests.Explicit_automatic_ports_work_and_unsupported_network_semantics_fail [2 ms]
-  Passed TabStudio.Containers.Tests.LayerTests.Whiteouts_remove_lower_files_and_opaque_folders_hide_their_contents [49 ms]
-  Passed TabStudio.Containers.Tests.EmulatorTests.Missing_Box64_and_musl_images_get_specific_reasons_and_native_mounts_preserve_argv [8 ms]
-  Passed TabStudio.Containers.Tests.LayerTests.Links_permissions_and_the_diff_id_are_kept [12 ms]
-  Passed TabStudio.Containers.Tests.LayerTests.Entries_cannot_escape_the_root_through_dot_dot_or_links [5 ms]
-  Passed TabStudio.Containers.Tests.LayerTests.A_copied_tree_is_independent_of_its_source [28 ms]
-  Passed TabStudio.Containers.Tests.RegistryTests.A_cached_layer_is_reverified_even_when_its_length_is_unchanged [287 ms]
+  Passed TabStudio.Containers.Tests.LayerTests.Whiteouts_remove_lower_files_and_opaque_folders_hide_their_contents [224 ms]
+  Passed TabStudio.Containers.Tests.ComposeTests.Privileged_services_are_rejected_and_missing_bind_rules_are_honored [102 ms]
+  Passed TabStudio.Containers.Tests.LayerTests.Links_permissions_and_the_diff_id_are_kept [47 ms]
+  Passed TabStudio.Containers.Tests.ComposeTests.Real_image_configuration_preserves_overrides_environment_health_and_workspace_volumes [51 ms]
+  Passed TabStudio.Containers.Tests.ComposeTests.Docker_run_arguments_remain_literal_and_unknown_options_fail [6 ms]
+  Passed TabStudio.Containers.Tests.LayerTests.Entries_cannot_escape_the_root_through_dot_dot_or_links [21 ms]
+  Passed TabStudio.Containers.Tests.ComposeTests.A_completed_image_without_ports_does_not_need_a_connection_endpoint [8 ms]
+  Passed TabStudio.Containers.Tests.ComposeTests.Network_addresses_are_distinct_and_explicit_port_collisions_fail_before_launch [17 ms]
+  Passed TabStudio.Containers.Tests.LayerTests.A_copied_tree_is_independent_of_its_source [35 ms]
+  Passed TabStudio.Containers.Tests.ComposeTests.Backend_discovers_parent_compose_and_override_but_stops_at_nested_repository_boundary [54 ms]
+  Passed TabStudio.Containers.Tests.RegistryTests.A_cached_layer_is_reverified_even_when_its_length_is_unchanged [430 ms]
   Passed TabStudio.Containers.Tests.RegistryTests.Image_names_are_normalized_as_Docker_does(text: "postgres:17-alpine", registry: "docker.io", repository: "library/postgres", tag: "17-alpine", familiar: "postgres:17-alpine") [< 1 ms]
   Passed TabStudio.Containers.Tests.RegistryTests.Image_names_are_normalized_as_Docker_does(text: "index.docker.io/library/nginx:alpine", registry: "docker.io", repository: "library/nginx", tag: "alpine", familiar: "nginx:alpine") [< 1 ms]
   Passed TabStudio.Containers.Tests.RegistryTests.Image_names_are_normalized_as_Docker_does(text: "ghcr.io/owner/app:1.2", registry: "ghcr.io", repository: "owner/app", tag: "1.2", familiar: "ghcr.io/owner/app:1.2") [< 1 ms]
@@ -44,18 +44,18 @@ A total of 1 test files matched the specified pattern.
   Passed TabStudio.Containers.Tests.RegistryTests.Image_names_are_normalized_as_Docker_does(text: "bitnami/redis:7", registry: "docker.io", repository: "bitnami/redis", tag: "7", familiar: "bitnami/redis:7") [< 1 ms]
   Passed TabStudio.Containers.Tests.RegistryTests.Image_names_are_normalized_as_Docker_does(text: "postgres", registry: "docker.io", repository: "library/postgres", tag: "latest", familiar: "postgres:latest") [< 1 ms]
   Passed TabStudio.Containers.Tests.RegistryTests.Challenges_are_parsed_with_quotes_and_commas [< 1 ms]
-  Passed TabStudio.Containers.Tests.RegistryTests.A_registry_cannot_downgrade_its_token_service_to_remote_plain_HTTP(realm: "http://localhost.attacker.example/token") [7 ms]
-  Passed TabStudio.Containers.Tests.RegistryTests.A_registry_cannot_downgrade_its_token_service_to_remote_plain_HTTP(realm: "http://tokens.example/token") [4 ms]
-[xUnit.net 00:00:00.55]   Finished:    TabStudio.Containers.Tests
-  Passed TabStudio.Containers.Tests.RegistryTests.Missing_images_and_platforms_get_one_line_reasons [7 ms]
+  Passed TabStudio.Containers.Tests.RegistryTests.A_registry_cannot_downgrade_its_token_service_to_remote_plain_HTTP(realm: "http://localhost.attacker.example/token") [9 ms]
+  Passed TabStudio.Containers.Tests.RegistryTests.A_registry_cannot_downgrade_its_token_service_to_remote_plain_HTTP(realm: "http://tokens.example/token") [3 ms]
+[xUnit.net 00:00:00.82]   Finished:    TabStudio.Containers.Tests
+  Passed TabStudio.Containers.Tests.RegistryTests.Missing_images_and_platforms_get_one_line_reasons [9 ms]
   Passed TabStudio.Containers.Tests.RegistryTests.Docker_Hub_is_served_from_its_registry_host_and_digests_pin [< 1 ms]
-  Passed TabStudio.Containers.Tests.RegistryTests.Platforms_prefer_arm64_then_arm_then_amd64 [< 1 ms]
-  Passed TabStudio.Containers.Tests.RegistryTests.Saved_credentials_are_sent_to_the_token_service [5 ms]
-  Passed TabStudio.Containers.Tests.RegistryTests.A_corrupted_layer_is_rejected_and_nothing_is_unpacked [9 ms]
-  Passed TabStudio.Containers.Tests.RegistryTests.A_pull_authenticates_chooses_the_platform_verifies_and_deduplicates [13 ms]
+  Passed TabStudio.Containers.Tests.RegistryTests.Platforms_prefer_arm64_then_arm_then_amd64 [1 ms]
+  Passed TabStudio.Containers.Tests.RegistryTests.Saved_credentials_are_sent_to_the_token_service [6 ms]
+  Passed TabStudio.Containers.Tests.RegistryTests.A_corrupted_layer_is_rejected_and_nothing_is_unpacked [13 ms]
+  Passed TabStudio.Containers.Tests.RegistryTests.A_pull_authenticates_chooses_the_platform_verifies_and_deduplicates [20 ms]
 
 Test Run Successful.
 Total tests: 32
      Passed: 30
     Skipped: 2
- Total time: 0.9683 Seconds
+ Total time: 1.4740 Seconds
