@@ -418,18 +418,25 @@ public sealed partial class InstrumentationTests
     }
 
     [Fact]
-    public void The_in_process_safety_check_still_rejects_environment_exit()
+    public async Task Environment_exit_ends_the_debugged_program_with_its_code_as_Ctrl_F5_does()
     {
-        var compilation = new CSharpCompiler().CreateCompilation(new CompilationRequest
-        {
-            AssemblyName = "Exits",
-            Documents = [new SourceDocument(DebuggedProgram.FilePath, "Environment.Exit(3);")],
-        });
+        // F5 refused this program with TS1001 while Ctrl+F5 ran it: only the run build redirected Environment.Exit.
+        using var program = new DebuggedProgram("""
+            Console.WriteLine("before");
+            Environment.Exit(3);
+            Console.WriteLine("after");
+            """, 2);
+        program.Start();
 
-        var build = DebugBuilder.Build(compilation);
+        var pause = await program.NextPauseAsync();
+        Assert.Equal(2, pause.Location?.Line);
+        program.Session.Continue();
+        var result = await program.FinishAsync();
 
-        Assert.False(build.Success);
-        Assert.Contains(build.Result.Diagnostics, d => d.Id == InProcessSafetyAnalyzer.ExitId);
+        Assert.Equal(RunOutcome.Completed, result.Outcome);
+        Assert.Equal(3, result.ExitCode);
+        Assert.Contains("before", program.Console.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("after", program.Console.Output, StringComparison.Ordinal);
     }
 
     [Fact]

@@ -4,6 +4,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
 using Microsoft.CodeAnalysis;
 using TabStudio.App.Previews;
+using TabStudio.App.Services;
 using TabStudio.App.ViewModels;
 using TabStudio.App.Views;
 using TabStudio.Compilation;
@@ -188,6 +189,35 @@ public sealed class HotReloadTests
         {
             yield return item;
             foreach (var child in MenuItems(item)) yield return child;
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task Saving_a_Visual_Basic_file_applies_Hot_Reload_as_saving_a_CSharp_file_does()
+    {
+        // Hot Reload on Save looked only at .cs files; Alt+F10 already applied Visual Basic edits.
+        using var fixture = new WorkspaceFixture();
+        var workspace = fixture.Workspace;
+        var solution = new ProjectTemplates(fixture.Paths).Create(ProjectTemplates.VisualBasicConsoleId, "Greeter");
+        await workspace.LoadAsync(solution);
+        var program = Path.Combine(Path.GetDirectoryName(solution)!, "Greeter", "Program.vb");
+        var document = (await workspace.OpenDocumentAsync(program))!;
+        var run = workspace.RunCommand.ExecuteAsync(null);
+        try
+        {
+            await UiTestHelpers.WaitUntilAsync(() => workspace.Output.IsWaitingForInput || run.IsCompleted, because: "the program to ask for a name");
+            Assert.False(run.IsCompleted, workspace.Output.Text);
+            workspace.HotReloadOnSave = true;
+            document.Document.Text = document.Document.Text.Replace("This is Visual Basic", "Saved and reloaded", StringComparison.Ordinal);
+            await workspace.SaveCommand.ExecuteAsync(null);
+            Assert.Equal(1, workspace.HotReloadGeneration);
+            Submit(workspace, "Ada");
+            await UiTestHelpers.WaitUntilAsync(() => workspace.Output.Text.Contains("Hello, Ada! Saved and reloaded", StringComparison.Ordinal), because: "the edited function to run");
+        }
+        finally
+        {
+            workspace.StopCommand.Execute(null);
+            await run.WaitAsync(TimeSpan.FromSeconds(15));
         }
     }
 

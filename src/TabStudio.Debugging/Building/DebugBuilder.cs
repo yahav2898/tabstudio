@@ -97,7 +97,7 @@ public sealed class DebugBuilder
             var compilation = await _host.GetCompilationAsync(current.FilePath, cancellationToken).ConfigureAwait(false);
             var assembly = compilation is not (CSharpCompilation or VisualBasicCompilation)
                 ? null
-                : Compile(compilation, current.Name, isEntry && current.IsExecutable, ManifestResources.For(current), info, diagnostics, cancellationToken);
+                : Compile(compilation, current.Name, ProjectBuilder.RunsRedirected(project, current, isEntry), ManifestResources.For(current), info, diagnostics, cancellationToken);
             if (assembly is null)
             {
                 return Finish(project.Name, diagnostics, null, dependencies, stopwatch, info, language);
@@ -153,6 +153,9 @@ public sealed class DebugBuilder
         var original = DiagnosticMapper.Map(compilation.GetDiagnostics(cancellationToken), projectName).ToList();
         if (checkInProcessSafety)
         {
+            // As Ctrl+F5 does: Environment.Exit and FailFast end the program, not TabStudio. F5 refused such programs
+            // with TS1001 while Ctrl+F5 ran them. What cannot be redirected (Visual Basic) is still an error.
+            compilation = InProcessExit.Redirect(compilation, cancellationToken);
             original.AddRange(InProcessSafetyAnalyzer.Analyze(compilation, projectName, cancellationToken));
         }
 

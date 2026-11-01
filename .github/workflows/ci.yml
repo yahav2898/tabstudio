@@ -1005,7 +1005,7 @@ jobs:
       # Keep all assertions visible even when a different group fails.
       fail-fast: false
       matrix:
-        shard: [managed, ui, native, containers]
+        shard: [managed, ui, native, compiled, containers]
     steps:
       - uses: actions/checkout@v4
 

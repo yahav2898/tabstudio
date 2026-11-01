@@ -61,6 +61,84 @@ public sealed class XunitDataAndFixtureTests
     }
 
     [Fact]
+    public async Task XUnit_v3_theories_get_their_rows_from_v3_data_attributes()
+    {
+        // xUnit.net v3's data attributes derive from Xunit.v3.DataAttribute, not v2's Xunit.Sdk.DataAttribute, so every
+        // v3 [Theory] said "No data found". The v3 types are declared here as the v3 assemblies declare them.
+        var source = """
+            using System;
+            using System.Collections.Generic;
+            using System.Reflection;
+            using System.Threading.Tasks;
+
+            namespace Xunit
+            {
+                [AttributeUsage(AttributeTargets.Method)] public class FactAttribute : Attribute { public string? Skip { get; set; } }
+                [AttributeUsage(AttributeTargets.Method)] public class TheoryAttribute : FactAttribute { }
+                public interface ITheoryDataRow { object?[] GetData(); }
+                public sealed class TheoryDataRow(params object?[] data) : ITheoryDataRow { public object?[] GetData() => data; }
+                public sealed class InlineDataAttribute(params object?[] data) : v3.DataAttribute
+                {
+                    public override ValueTask<IReadOnlyCollection<ITheoryDataRow>> GetData(MethodInfo testMethod, v3.DisposalTracker disposalTracker) =>
+                        new([new TheoryDataRow(data)]);
+                }
+                public sealed class MemberDataAttribute(string memberName, params object?[] arguments) : v3.MemberDataAttributeBase(memberName, arguments) { }
+            }
+
+            namespace Xunit.v3
+            {
+                public sealed class DisposalTracker { }
+                [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+                public abstract class DataAttribute : Attribute
+                {
+                    public string? Skip { get; set; }
+                    public abstract ValueTask<IReadOnlyCollection<ITheoryDataRow>> GetData(MethodInfo testMethod, DisposalTracker disposalTracker);
+                }
+                public abstract class MemberDataAttributeBase(string memberName, object?[] arguments) : DataAttribute
+                {
+                    public string MemberName { get; } = memberName;
+                    public object?[] Arguments { get; } = arguments;
+                    public Type? MemberType { get; set; }
+                    public override ValueTask<IReadOnlyCollection<ITheoryDataRow>> GetData(MethodInfo testMethod, DisposalTracker disposalTracker) =>
+                        throw new NotSupportedException("The runner reads the member itself.");
+                }
+            }
+
+            namespace V3.Tests
+            {
+                using Xunit;
+                using Xunit.v3;
+
+                public sealed class EvenAttribute : DataAttribute
+                {
+                    public override ValueTask<IReadOnlyCollection<ITheoryDataRow>> GetData(MethodInfo testMethod, DisposalTracker disposalTracker) =>
+                        new([new TheoryDataRow(2), new TheoryDataRow(4)]);
+                }
+
+                public class Theories
+                {
+                    public static IEnumerable<object[]> Words => [["tablet", 6], ["pen", 3]];
+
+                    [Theory, InlineData(1, 2, 3), InlineData(2, 2, 4)]
+                    public void Adds(int a, int b, int sum) { if (a + b != sum) throw new Exception("wrong sum"); }
+
+                    [Theory, MemberData(nameof(Words))]
+                    public void CountsLetters(string word, int length) { if (word.Length != length) throw new Exception("wrong length"); }
+
+                    [Theory, Even]
+                    public void IsEven(int value) { if (value % 2 != 0) throw new Exception("odd"); }
+                }
+            }
+            """;
+
+        var summary = await UserProject.RunAllAsync(source, []);
+
+        Assert.Equal(6, summary.Results.Count);
+        Assert.All(summary.Results, r => Assert.Equal(TestOutcome.Passed, r.Outcome));
+        Assert.DoesNotContain(summary.Results, r => r.Message?.Contains("No data found", StringComparison.Ordinal) == true);
+    }
+
+    [Fact]
     public async Task Theories_take_member_types_value_tasks_params_and_generic_arguments()
     {
         var source = """

@@ -18,12 +18,17 @@ public enum SelfTestShard
     Managed,
     /// <summary>Native app previews, design, extensions, Swarm, scrolling and external-display input.</summary>
     Ui,
-    /// <summary>Python/Node, C/C++/Java, native backing services and native process integrity.</summary>
+    /// <summary>Python/Node, native backing services, the embedded bridge and native process integrity.</summary>
     Native,
     /// <summary>OCI image PostgreSQL, Redis, nginx preview and the docker terminal command.</summary>
     Containers,
     /// <summary>Opt-in paired-runtime latency measurements; not a functional CI shard.</summary>
     Performance,
+    /// <summary>
+    /// The C/C++ and Java toolchains. They were part of <see cref="Native"/>, whose serial downloads and installs of
+    /// four SDKs left it 15 to 60 seconds inside its 900-second budget on a slow mirror, so it timed out now and then.
+    /// </summary>
+    Compiled,
 }
 
 /// <summary>
@@ -49,6 +54,7 @@ public static partial class SelfTest
             "native" => SelfTestShard.Native,
             "containers" => SelfTestShard.Containers,
             "performance" => SelfTestShard.Performance,
+            "compiled" => SelfTestShard.Compiled,
             _ => (SelfTestShard)(-1),
         };
         return Enum.IsDefined(shard);
@@ -82,7 +88,7 @@ public static partial class SelfTest
         ArgumentNullException.ThrowIfNull(main);
         ArgumentNullException.ThrowIfNull(samples);
         ArgumentOutOfRangeException.ThrowIfNegative((int)shard);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan((int)shard, (int)SelfTestShard.Performance);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan((int)shard, (int)SelfTestShard.Compiled);
         if (shard == SelfTestShard.Containers)
         {
             return templates is null ? new(false, "Containers: templates are required", TimeSpan.Zero)
@@ -116,6 +122,7 @@ public static partial class SelfTest
         var managed = shard is SelfTestShard.All or SelfTestShard.Managed;
         var ui = shard is SelfTestShard.All or SelfTestShard.Ui;
         var native = shard is SelfTestShard.All or SelfTestShard.Native;
+        var compiled = shard is SelfTestShard.All or SelfTestShard.Compiled;
         var previousProcessTrace = Environment.GetEnvironmentVariable("TABSTUDIO_TRACE_PROCESSES");
         if (native && OperatingSystem.IsAndroid()) Environment.SetEnvironmentVariable("TABSTUDIO_TRACE_PROCESSES", "1");
         using var preparationStop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -199,7 +206,8 @@ public static partial class SelfTest
 
             // Check the runtime capability boundary and the complete native process/GC sequence before packages.
             if (native && (!await CheckAsync(() => Task.FromResult(CheckHotReload(cancellationToken)))
-                || !await CheckAsync(() => StartProgramsWhileCollectingAsync(cancellationToken))))
+                || !await CheckAsync(() => StartProgramsWhileCollectingAsync(cancellationToken))
+                || !await CheckAsync(() => CheckOperationsServiceAsync(main.Workspace!, cancellationToken))))
             {
                 return Finish(false);
             }
@@ -207,7 +215,7 @@ public static partial class SelfTest
             // In a full run the browser's trusted-input assertions finish before downloads/decompression start.
             // Each independent shard installs only its own tools. Full runs retain the original complete plan.
             // Native runtime/process-integrity checks belong immediately before this preparation starts.
-            if (native || shard == SelfTestShard.Managed)
+            if (native || compiled || shard == SelfTestShard.Managed)
             {
                 preparation = PrepareSelfTestToolchainsAsync(main.Workspace!.Toolchains, shard, preparationStop.Token);
             }
@@ -266,8 +274,16 @@ public static partial class SelfTest
                     || !await CheckAsync(() => RunServicesAsync(main, templates, cancellationToken))
                     || !await CheckAsync(() => CheckPythonToolsAsync(main, cancellationToken))
                     || !await CheckAsync(() => CheckListeningPortAsync(main, templates, cancellationToken))
-                    || (shard == SelfTestShard.All && !await CheckGoAndRustAsync())
-                    || !await CheckAsync(() => CheckCppToolchainAsync(main, templates, cancellationToken))
+                    || (shard == SelfTestShard.All && !await CheckGoAndRustAsync()))
+                {
+                    return Finish(false);
+                }
+            }
+
+            if (compiled)
+            {
+                await preparation!;
+                if (!await CheckAsync(() => CheckCppToolchainAsync(main, templates, cancellationToken))
                     || !await CheckAsync(() => CheckJavaToolchainAsync(main, templates, cancellationToken)))
                 {
                     return Finish(false);

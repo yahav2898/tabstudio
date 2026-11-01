@@ -9,7 +9,7 @@ work=${3:?PIC working directory is required}
 probe_apk=${4:?Disposable PIC probe APK path is required}
 shard=${5:-all}
 case "$shard" in
-  all|managed|ui|native|containers) ;;
+  all|managed|ui|native|compiled|containers) ;;
   *) echo "Unknown self-test shard: $shard" >&2; exit 2 ;;
 esac
 

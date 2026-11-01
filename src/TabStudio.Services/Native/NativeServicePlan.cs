@@ -10,13 +10,15 @@ public sealed record NativeServicePlan(ProcessStartSpec Start, ProcessStartSpec 
 {
     public const string GuestDirectory = "/tabstudio-service";
 
-    public static NativeServicePlan Create(ComposeService service, ServiceMapping mapping, ServiceStorage storage, IReadOnlyList<ServicePort> ports, Func<string, string>? rewrite = null)
+    public static NativeServicePlan Create(ComposeService service, ServiceMapping mapping, ServiceStorage storage, IReadOnlyList<ServicePort> ports, Func<string, string>? rewrite = null, Func<string, string, string>? rewriteSetting = null)
     {
         var mounts = storage.Prepare(service);
         var directory = storage.ServiceDirectory(service.Name);
         var environment = new Dictionary<string, string?>(service.Environment, StringComparer.Ordinal);
         rewrite ??= x => x;
-        foreach (var key in environment.Keys.ToArray()) if (environment[key] is { } value) environment[key] = rewrite(value);
+        // A setting is rewritten knowing its name, so the server's own POSTGRES_USER=postgres is not taken for a host.
+        var setting = rewriteSetting ?? ((_, value) => rewrite(value));
+        foreach (var key in environment.Keys.ToArray()) if (environment[key] is { } value) environment[key] = setting(key, value);
         environment["TS_SERVICE"] = GuestDirectory;
         environment["TMPDIR"] = GuestDirectory + "/tmp";
         Directory.CreateDirectory(Path.Combine(directory, "tmp"));

@@ -25,7 +25,7 @@ class RetryPolicyTests(unittest.TestCase):
         self.assertFalse(policy.retry_allowed(log, "TabStudio.App.Tests")[0])
 
     def test_crashes_and_build_failures_cannot_retry(self):
-        for log in ("error CS1234: build failed", "Test Run Aborted.", "  Failed Baseline.Test [1 ms]\nThe active test run was aborted."):
+        for log in ("/src/a.cs(1,1): error CS1234: build failed [/src/a.csproj]", "Build FAILED.", "Test Run Aborted.", "  Failed Baseline.Test [1 ms]\nThe active test run was aborted."):
             self.assertFalse(policy.retry_allowed(log, "TabStudio.App.Tests")[0])
 
     def test_feature_libraries_never_retry(self):
@@ -55,10 +55,18 @@ class RetryPolicyTests(unittest.TestCase):
                     self.assertFalse(policy.retry_allowed(log, project)[0])
 
     def test_build_error_cannot_hide_behind_an_unrelated_test_failure(self):
-        for error in ("error CS1002: ; expected", "error MSB1009: Project file does not exist", "error NU1101: package missing"):
+        for error in ("/src/A.cs(3,9): error CS1002: ; expected [/src/A.csproj]",
+                      "MSBUILD : error MSB1009: Project file does not exist. [/src/B.vbproj]",
+                      "/src/C.csproj : error NU1101: package missing [/src/C.csproj::TargetFramework=net10.0]"):
             with self.subTest(error=error):
                 log = f"  Failed Baseline.Test [1 ms]\n{error}"
                 self.assertFalse(policy.retry_allowed(log, "TabStudio.App.Tests")[0])
 
     def test_similarly_named_unrelated_class_can_retry(self):
         self.check("NotHotReloadTests.Baseline", True)
+
+    def test_compiler_errors_quoted_by_a_test_are_not_a_build_failure(self):
+        log = ("[xUnit.net 00:01:00]     TabStudio.App.Tests.Views.ScreenshotLifetimeTests.Capture [FAIL]\n"
+               "      Program.cs(4,1): error CS0103: The name 'x' does not exist in the current context\n"
+               "  Failed TabStudio.App.Tests.Views.ScreenshotLifetimeTests.Capture [1 s]")
+        self.assertTrue(policy.retry_allowed(log, "TabStudio.App.Tests")[0])

@@ -29,6 +29,7 @@ public sealed class ScreenReaderTests
         var named = new Button { Content = new StrokeIcon() };
         AutomationProperties.SetName(named, "Close the panel");
         var menu = new MenuItem { Header = "_Build Solution" };
+        var tabs = new TabControl { Items = { new TabItem { Header = new TextBlock { Text = "Images" }, Content = new TextBlock { Text = "Body" } } } };
         var window = new Window
         {
             Content = new StackPanel
@@ -40,6 +41,7 @@ public sealed class ScreenReaderTests
                     new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*"), Children = { new TextBlock { Text = "Configuration:" }, Column(picker, 1) } },
                     named,
                     new Menu { Items = { menu } },
+                    tabs,
                 },
             },
         };
@@ -54,6 +56,8 @@ public sealed class ScreenReaderTests
             Assert.Equal("Configuration", NameOf(picker));
             Assert.Equal("Close the panel", NameOf(named));
             Assert.Equal("Build Solution", NameOf(menu));
+            // A tab whose header is a text block, as View > Containers has.
+            Assert.Equal("Images", NameOf((TabItem)tabs.Items[0]!));
 
             // A name follows what the control shows.
             ToolTip.SetTip(iconOnly, "Save (Ctrl+S)");

@@ -117,7 +117,10 @@ FEATURE_CLASSES = frozenset({
 def retry_allowed(log: str, project: str) -> tuple[bool, str]:
     if project in FEATURE_PROJECTS:
         return False, "merged feature libraries must pass on the first attempt"
-    if re.search(r"\berror (?:CS|MSB|NU)\d+\b", log):
+    # MSBuild writes every build error with the project it belongs to: "a.cs(1,2): error CS1002: ; expected [a.csproj]".
+    # A test's own output quotes compiler errors too (the Error List tests do), without the project; those are not
+    # build failures, and counting them made an unrelated test's failure in the light theme unretriable.
+    if re.search(r"\berror (?:CS|MSB|NU)\d+:.*\[[^\]]+\.(?:cs|vb|fs)proj(?:::[^\]]*)?\]\s*$", log, re.M) or re.search(r"^Build FAILED\.", log, re.M):
         return False, "a build failure cannot be retried"
     if re.search(r"test run (?:was )?aborted|test host process crashed|testhost.*exited unexpectedly", log, re.I):
         return False, "an aborted test host cannot prove that only unrelated tests failed"

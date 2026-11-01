@@ -6,7 +6,8 @@ public static partial class SelfTest
 {
     private static readonly string[] SelfTestToolchainIds = ["python", "node", "go", "rust", "cpp", "java"];
     private static readonly string[] ManagedSelfTestToolchainIds = ["go", "rust"];
-    private static readonly string[] NativeSelfTestToolchainIds = ["python", "node", "cpp", "java"];
+    private static readonly string[] NativeSelfTestToolchainIds = ["python", "node"];
+    private static readonly string[] CompiledSelfTestToolchainIds = ["cpp", "java"];
 
     // Kept in one place so the partition can be checked without downloading SDKs in a unit test.
     internal static IReadOnlyList<string> SelfTestToolchainIdsForShard(SelfTestShard shard) => shard switch
@@ -14,6 +15,7 @@ public static partial class SelfTest
         SelfTestShard.All => SelfTestToolchainIds,
         SelfTestShard.Managed => ManagedSelfTestToolchainIds,
         SelfTestShard.Native => NativeSelfTestToolchainIds,
+        SelfTestShard.Compiled => CompiledSelfTestToolchainIds,
         SelfTestShard.Ui => [],
         _ => throw new ArgumentOutOfRangeException(nameof(shard), shard, "Unknown self-test shard."),
     };

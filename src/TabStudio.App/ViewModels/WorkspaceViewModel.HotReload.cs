@@ -191,7 +191,7 @@ public sealed partial class WorkspaceViewModel
 
     private async Task<bool> TryHotReloadOnSaveAsync(DocumentViewModel document)
     {
-        if (!HotReloadSession.IsSupported || !HotReloadOnSave || _hotReload is null || !string.Equals(Path.GetExtension(document.FilePath), ".cs", StringComparison.OrdinalIgnoreCase)) return false;
+        if (!HotReloadSession.IsSupported || !HotReloadOnSave || _hotReload is null || !document.FileType.IsRoslyn) return false;
         await ApplyCurrentEditsAsync();
         return true; // Compilation errors/rude edits keep the current app alive and offer an explicit restart.
     }

@@ -174,13 +174,14 @@ internal sealed class AndroidNotifications : INotifications
 
         try
         {
-            // Operations begin while the user is in TabStudio, which is when Android lets a foreground service start.
-            _context.StartForegroundService(new Intent(_context, typeof(OperationsService)));
+            // Operations begin while the user is in TabStudio, which is when Android lets a service start and go into
+            // the foreground. A plain start, not startForegroundService: see OperationsService for why.
+            _context.StartService(new Intent(_context, typeof(OperationsService)));
         }
         catch (Java.Lang.IllegalStateException)
         {
-            // Android 12 and later refuse to start one from the background (ForegroundServiceStartNotAllowedException):
-            // the operation runs as long as Android lets TabStudio run, as before.
+            // Android 8 and later refuse to start one from the background: the operation runs as long as Android lets
+            // TabStudio run, as before.
         }
         catch (Java.Lang.SecurityException)
         {

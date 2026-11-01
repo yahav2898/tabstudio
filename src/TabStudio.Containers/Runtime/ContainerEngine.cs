@@ -106,7 +106,8 @@ public sealed class ContainerEngine : IAsyncDisposable
         try { stored = await Store.PullAsync(_registry, reference, preference, progress, cancellationToken).ConfigureAwait(false); }
         catch
         {
-            progress?.Report(new PullProgress(image, cancellationToken.IsCancellationRequested ? "Cancelled" : "Failed", 0, 0, 0, 0));
+            // Under the name the store reports progress with, so the operation it began is the one that ends.
+            progress?.Report(new PullProgress(reference.Familiar, cancellationToken.IsCancellationRequested ? "Cancelled" : "Failed", 0, 0, 0, 0));
             throw;
         }
         Publish("image", "pull", stored.Id, new Dictionary<string, string> { ["name"] = reference.Familiar });

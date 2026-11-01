@@ -27,6 +27,7 @@ public sealed class SelfTestTests : IDisposable
     [InlineData("UI", SelfTestShard.Ui)]
     [InlineData("native", SelfTestShard.Native)]
     [InlineData("performance", SelfTestShard.Performance)]
+    [InlineData("compiled", SelfTestShard.Compiled)]
     public void Recognizes_only_named_device_test_shards(string? value, SelfTestShard expected)
     {
         Assert.True(SelfTest.TryParseShard(value, out var actual));
@@ -48,15 +49,27 @@ public sealed class SelfTestTests : IDisposable
         var managed = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.Managed);
         var ui = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.Ui);
         var native = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.Native);
+        var compiled = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.Compiled);
         var all = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.All);
 
         Assert.Equal(["go", "rust"], managed);
         Assert.Empty(ui);
-        Assert.Equal(["python", "node", "cpp", "java"], native);
-        Assert.Empty(managed.Intersect(ui, StringComparer.Ordinal));
-        Assert.Empty(ui.Intersect(native, StringComparer.Ordinal));
-        Assert.Empty(managed.Intersect(native, StringComparer.Ordinal));
-        Assert.Equal(all.Order(StringComparer.Ordinal), managed.Concat(ui).Concat(native).Order(StringComparer.Ordinal));
+        Assert.Equal(["python", "node"], native);
+        Assert.Equal(["cpp", "java"], compiled);
+        string[][] shards = [managed.ToArray(), ui.ToArray(), native.ToArray(), compiled.ToArray()];
+        Assert.Equal(all.Count, shards.Sum(s => s.Length));
+        Assert.Equal(all.Order(StringComparer.Ordinal), shards.SelectMany(s => s).Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public void No_emulator_shard_installs_more_than_two_SDKs_one_after_another()
+    {
+        // The native shard installed four SDKs in a row and ran 540 to 886 seconds of its 900, so a slow mirror timed
+        // it out. Two SDKs keep each shard well inside its budget.
+        foreach (var shard in new[] { SelfTestShard.Managed, SelfTestShard.Ui, SelfTestShard.Native, SelfTestShard.Compiled })
+        {
+            Assert.True(SelfTest.SelfTestToolchainIdsForShard(shard).Count <= 2, shard.ToString());
+        }
     }
 
     [Fact]
