@@ -6,7 +6,7 @@ Compatibility Doctor:
   BlazingPizza.Shared: Library via Built with its users - A library is compiled together with the projects that reference it.
   BlazingPizza.ComponentsLibrary: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: BlazingPizza
-Built in 5.6 s: 0 errors, 14 warnings
+Built in 5.0 s: 0 errors, 14 warnings
 Packages with analyzers or MSBuild files:
   microsoft.aspnetcore.app.ref 10.0.14
       analyzers/dotnet/cs/Microsoft.AspNetCore.App.Analyzers.dll
@@ -315,18 +315,18 @@ Packages with analyzers or MSBuild files:
       buildTransitive/netcoreapp2.0/System.Composition.targets
       buildTransitive/netcoreapp3.1/_._
 Output:
-Build started at 01:39:42...
+Build started at 02:47:47...
 1>------ Build started: Project: BlazingPizza.ComponentsLibrary, Configuration: Debug ------
 1>TemplatedList.razor(17,6): warning CS8602: Dereference of a possibly null reference.
-1>BlazingPizza.ComponentsLibrary -> compiled in memory (10.5 KB, 328 ms)
+1>BlazingPizza.ComponentsLibrary -> compiled in memory (10.5 KB, 270 ms)
 2>------ Build started: Project: BlazingPizza.Shared, Configuration: Debug ------
-2>BlazingPizza.Shared -> compiled in memory (71.5 KB, 238 ms)
+2>BlazingPizza.Shared -> compiled in memory (71.5 KB, 288 ms)
 3>------ Build started: Project: BlazingPizza.Client, Configuration: Debug ------
 3>OrderState.cs(17,20): warning CS8618: Non-nullable property 'JSRuntime' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 3>OrderState.cs(48,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
 3>OrderState.cs(55,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
 3>OrderState.cs(70,11): warning CS8602: Dereference of a possibly null reference.
-3>BlazingPizza.Client -> compiled in memory (42 KB, 248 ms)
+3>BlazingPizza.Client -> compiled in memory (42 KB, 323 ms)
 4>------ Build started: Project: BlazingPizza, Configuration: Debug ------
 4>LoginDisplay.razor(12,60): warning CS8602: Dereference of a possibly null reference.
 4>MyOrders.razor(36,32): warning CS0169: The field 'MyOrders.ordersWithStatus' is never used
@@ -337,6 +337,6 @@ Build started at 01:39:42...
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Specials' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Toppings' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'NotificationSubscriptions' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-4>BlazingPizza -> compiled in memory (238.5 KB, 699 ms)
+4>BlazingPizza -> compiled in memory (238.5 KB, 737 ms)
 ========== Build: 4 succeeded, 0 failed ==========
 
