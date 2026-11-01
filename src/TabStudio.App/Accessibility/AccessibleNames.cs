@@ -198,7 +198,16 @@ public static class AccessibleNames
     };
 
     /// <summary>The text a header or content shows when it is a string, without an access key's underscore.</summary>
-    private static string? HeaderOf(object? header) => header is string text ? text.Replace("__", "\u0001", StringComparison.Ordinal).Replace("_", string.Empty, StringComparison.Ordinal).Replace('\u0001', '_') : null;
+    /// <remarks>
+    /// A header can be a text block, as the Containers view's tabs are to take the body type size; those tabs had no name
+    /// for TalkBack because only text headers were read.
+    /// </remarks>
+    private static string? HeaderOf(object? header) => header switch
+    {
+        string text => text.Replace("__", "\u0001", StringComparison.Ordinal).Replace("_", string.Empty, StringComparison.Ordinal).Replace('\u0001', '_'),
+        TextBlock { Text: { Length: > 0 } text } => text,
+        _ => null,
+    };
 
     /// <summary>
     /// The text a control shows, its text blocks in order, joined by commas; not the text of controls inside it that

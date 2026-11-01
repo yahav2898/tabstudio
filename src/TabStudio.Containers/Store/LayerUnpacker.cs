@@ -128,8 +128,11 @@ public static class LayerUnpacker
                         UnixFiles.TrySetModified(path, entry.ModificationTime);
                         break;
                     case TarEntryType.HardLink:
-                        var target = SafePath.Resolve(root, entry.LinkName);
-                        if (!File.Exists(target))
+                        // Follow links in the target as the container would, inside the root: a hard link to a
+                        // symbolic link pointing outside the image copied the device's file (TabStudio's own
+                        // private files) into the container, because File.Copy follows the device's links.
+                        var target = SafePath.ResolveFollowing(root, entry.LinkName);
+                        if (!File.Exists(target) || new FileInfo(target).LinkTarget is not null)
                         {
                             throw new InvalidDataException($"A layer links /{relative} to /{entry.LinkName}, which it does not contain.");
                         }

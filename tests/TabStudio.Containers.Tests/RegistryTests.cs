@@ -118,6 +118,34 @@ public sealed class RegistryTests
     }
 
     [Fact]
+    public async Task A_failed_pull_ends_under_the_name_it_began_with()
+    {
+        // The store reported progress as "host/team/app:latest" and the engine reported the failure as "host/team/app",
+        // so the operation the pull began never ended and kept TabStudio's foreground service running.
+        using var registry = new FakeRegistry { CorruptBlobs = true };
+        registry.PublishImage("team/app", "latest", "arm64", "amd64");
+        using var folder = new TempDirectory();
+        await using var engine = new Runtime.ContainerEngine(new() { StoreRoot = folder.Path },
+            new RegistryClient(new HttpClient(), new SessionRegistryCredentialStore()));
+        var reports = new Recorder();
+
+        await Assert.ThrowsAnyAsync<Exception>(() => engine.PullAsync($"{registry.Host}/team/app", progress: reports));
+
+        Assert.Equal([$"{registry.Host}/team/app:latest"], reports.Items.Select(p => p.Image).Distinct());
+        Assert.Equal("Failed", reports.Items[^1].Phase);
+    }
+
+    private sealed class Recorder : IProgress<PullProgress>
+    {
+        public List<PullProgress> Items { get; } = [];
+
+        public void Report(PullProgress value)
+        {
+            lock (Items) Items.Add(value);
+        }
+    }
+
+    [Fact]
     public async Task Missing_images_and_platforms_get_one_line_reasons()
     {
         using var registry = new FakeRegistry();
