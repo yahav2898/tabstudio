@@ -50,8 +50,8 @@ public static partial class ConnectionEnvironment
             {
                 var equals = fields[i].IndexOf('=');
                 if (equals < 0) continue;
-                var key = fields[i][..equals].Trim();
-                if (!new[] { "Host", "Server", "Data Source" }.Contains(key, StringComparer.OrdinalIgnoreCase)) continue;
+                var field = fields[i][..equals].Trim();
+                if (!new[] { "Host", "Server", "Data Source" }.Contains(field, StringComparer.OrdinalIgnoreCase)) continue;
                 var host = fields[i][(equals + 1)..].Trim().Trim('\'', '"');
                 if (host.Equals(name, StringComparison.OrdinalIgnoreCase))
                 { fields[i] = fields[i][..(equals + 1)] + "127.0.0.1"; changedHost = true; }
