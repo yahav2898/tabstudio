@@ -1,5 +1,5 @@
 eShopOnWeb at 4da8212117e87d808d4bbc7da6286fd2147ce606
-Opened /home/runner/work/_temp/real-repos/eShopOnWeb/eShopOnWeb.sln in 0.2 s
+Opened /home/runner/work/_temp/real-repos/eShopOnWeb/eShopOnWeb.sln in 0.3 s
 Compatibility Doctor:
   Web: Needs a database via Local server + WebView - Web uses SQL Server, which has no engine for ARM64 Linux, so it cannot run on this tablet, and 'CatalogConnection' in appsettings.json uses (localdb)\mssqllocaldb, which exists only on Windows. Connect to a SQL Server on your network or in the cloud with a SQL login (Windows sign-in is not available here).
   Infrastructure: Library via Built with its users - A library is compiled together with the projects that reference it.
@@ -12,7 +12,7 @@ Compatibility Doctor:
   BlazorShared: Library via Built with its users - A library is compiled together with the projects that reference it.
   PublicApiIntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: Web
-Built in 13.0 s: 0 errors, 27 warnings
+Built in 20.3 s: 0 errors, 27 warnings
 Packages with analyzers or MSBuild files:
   ardalis.apiendpoints.codeanalyzers 4.0.0
       analyzers/dotnet/cs/Ardalis.ApiEndpoints.CodeAnalyzers.dll
@@ -1075,22 +1075,22 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Output:
-Build started at 01:04:26...
+Build started at 01:38:33...
 1>------ Build started: Project: BlazorShared, Configuration: Debug ------
-1>BlazorShared -> compiled in memory (13.5 KB, 10 ms)
+1>BlazorShared -> compiled in memory (13.5 KB, 15 ms)
 2>------ Build started: Project: ApplicationCore, Configuration: Debug ------
 2>EmptyBasketOnCheckoutException.cs(12,154): warning SYSLIB0051: 'Exception.Exception(SerializationInfo, StreamingContext)' is obsolete: 'This API supports obsolete formatter-based serialization. It should not be called or extended by application code.'
-2>ApplicationCore -> compiled in memory (33 KB, 35 ms)
+2>ApplicationCore -> compiled in memory (33 KB, 83 ms)
 3>------ Build started: Project: BlazorAdmin, Configuration: Debug ------
-3>BlazorAdmin -> compiled in memory (103 KB, 291 ms)
+3>BlazorAdmin -> compiled in memory (103 KB, 112 ms)
 4>------ Build started: Project: Infrastructure, Configuration: Debug ------
-4>Infrastructure -> compiled in memory (106.5 KB, 123 ms)
+4>Infrastructure -> compiled in memory (106.5 KB, 156 ms)
 5>------ Build started: Project: Web, Configuration: Debug ------
-5>Web -> compiled in memory (562.5 KB, 567 ms)
+5>Web -> compiled in memory (562.5 KB, 1088 ms)
 6>------ Build started: Project: UnitTests, Configuration: Debug ------
-6>UnitTests -> compiled in memory (33.5 KB, 437 ms)
+6>UnitTests -> compiled in memory (33.5 KB, 1036 ms)
 7>------ Build started: Project: IntegrationTests, Configuration: Debug ------
-7>IntegrationTests -> compiled in memory (11.5 KB, 365 ms)
+7>IntegrationTests -> compiled in memory (11.5 KB, 1043 ms)
 8>------ Build started: Project: PublicApi, Configuration: Debug ------
 8>AuthenticateEndpoint.AuthenticateRequest.cs(5,19): warning CS8618: Non-nullable property 'Username' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 8>AuthenticateEndpoint.AuthenticateRequest.cs(6,19): warning CS8618: Non-nullable property 'Password' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
@@ -1115,10 +1115,10 @@ Build started at 01:04:26...
 8>UpdateCatalogItemEndpoint.UpdateCatalogItemResponse.cs(7,12): warning CS8618: Non-nullable property 'CatalogItem' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 8>UpdateCatalogItemEndpoint.UpdateCatalogItemResponse.cs(11,12): warning CS8618: Non-nullable property 'CatalogItem' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 8>CatalogTypeDto.cs(6,19): warning CS8618: Non-nullable property 'Name' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-8>PublicApi -> compiled in memory (52 KB, 141 ms)
+8>PublicApi -> compiled in memory (52 KB, 352 ms)
 9>------ Build started: Project: FunctionalTests, Configuration: Debug ------
-9>FunctionalTests -> compiled in memory (32.5 KB, 423 ms)
+9>FunctionalTests -> compiled in memory (32.5 KB, 1074 ms)
 10>------ Build started: Project: PublicApiIntegrationTests, Configuration: Debug ------
-10>PublicApiIntegrationTests -> compiled in memory (21.5 KB, 364 ms)
+10>PublicApiIntegrationTests -> compiled in memory (21.5 KB, 770 ms)
 ========== Build: 10 succeeded, 0 failed ==========
 

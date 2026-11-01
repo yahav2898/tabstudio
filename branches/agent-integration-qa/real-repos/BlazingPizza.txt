@@ -1,18 +1,12 @@
 BlazingPizza at e0f5968e7c4699209dc7b5b0b2edc86162287792
-Opened /home/runner/work/_temp/real-repos/BlazingPizza/src/BlazingPizza.sln in 0.1 s
+Opened /home/runner/work/_temp/real-repos/BlazingPizza/src/BlazingPizza.sln in 0.2 s
 Compatibility Doctor:
   BlazingPizza: Ready via Local server + WebView - Served on this device and shown in the web preview. Interactive Server components run here over a live circuit; WebAssembly components run in the preview on .NET for WebAssembly, without the debugger. Saving a file restarts it.
   BlazingPizza.Client: Library via WebAssembly, in its web app - The WebAssembly part of a Blazor Web App: it is compiled for the browser and runs in the web preview when the app that references it runs.
   BlazingPizza.Shared: Library via Built with its users - A library is compiled together with the projects that reference it.
   BlazingPizza.ComponentsLibrary: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: BlazingPizza
-Built in 3.9 s: 5 errors, 20 warnings
-  5 x CS0103
-      [BlazingPizza] MyOrders.razor(18,10): error CS0103: The name 'item' does not exist in the current context
-      [BlazingPizza] MyOrders.razor(20,14): error CS0103: The name 'item' does not exist in the current context
-      [BlazingPizza] MyOrders.razor(22,15): error CS0103: The name 'item' does not exist in the current context
-      [BlazingPizza] MyOrders.razor(25,22): error CS0103: The name 'item' does not exist in the current context
-      [BlazingPizza] MyOrders.razor(28,24): error CS0103: The name 'item' does not exist in the current context
+Built in 5.6 s: 0 errors, 14 warnings
 Packages with analyzers or MSBuild files:
   microsoft.aspnetcore.app.ref 10.0.14
       analyzers/dotnet/cs/Microsoft.AspNetCore.App.Analyzers.dll
@@ -321,38 +315,28 @@ Packages with analyzers or MSBuild files:
       buildTransitive/netcoreapp2.0/System.Composition.targets
       buildTransitive/netcoreapp3.1/_._
 Output:
-Build started at 01:05:14...
+Build started at 01:39:42...
 1>------ Build started: Project: BlazingPizza.ComponentsLibrary, Configuration: Debug ------
 1>TemplatedList.razor(17,6): warning CS8602: Dereference of a possibly null reference.
-1>BlazingPizza.ComponentsLibrary -> compiled in memory (10.5 KB, 28 ms)
+1>BlazingPizza.ComponentsLibrary -> compiled in memory (10.5 KB, 328 ms)
 2>------ Build started: Project: BlazingPizza.Shared, Configuration: Debug ------
-2>BlazingPizza.Shared -> compiled in memory (71.5 KB, 62 ms)
+2>BlazingPizza.Shared -> compiled in memory (71.5 KB, 238 ms)
 3>------ Build started: Project: BlazingPizza.Client, Configuration: Debug ------
-3>Home.razor(55,1): warning RZ10012: Found markup element with unexpected name 'BlazingPizza.ComponentsLibrary.TemplatedDialog'. If this is intended to be a component, add a @using directive for its namespace.
 3>OrderState.cs(17,20): warning CS8618: Non-nullable property 'JSRuntime' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 3>OrderState.cs(48,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
 3>OrderState.cs(55,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
 3>OrderState.cs(70,11): warning CS8602: Dereference of a possibly null reference.
-3>BlazingPizza.Client -> compiled in memory (42 KB, 137 ms)
+3>BlazingPizza.Client -> compiled in memory (42 KB, 248 ms)
 4>------ Build started: Project: BlazingPizza, Configuration: Debug ------
-4>MyOrders.razor(18,10): error CS0103: The name 'item' does not exist in the current context
-4>MyOrders.razor(20,14): error CS0103: The name 'item' does not exist in the current context
-4>MyOrders.razor(22,15): error CS0103: The name 'item' does not exist in the current context
-4>MyOrders.razor(25,22): error CS0103: The name 'item' does not exist in the current context
-4>MyOrders.razor(28,24): error CS0103: The name 'item' does not exist in the current context
 4>LoginDisplay.razor(12,60): warning CS8602: Dereference of a possibly null reference.
-4>MyOrders.razor(10,2): warning RZ10012: Found markup element with unexpected name 'TemplatedList'. If this is intended to be a component, add a @using directive for its namespace.
-4>MyOrders.razor(11,3): warning RZ10012: Found markup element with unexpected name 'Loading'. If this is intended to be a component, add a @using directive for its namespace.
-4>MyOrders.razor(12,3): warning RZ10012: Found markup element with unexpected name 'Empty'. If this is intended to be a component, add a @using directive for its namespace.
-4>MyOrders.razor(16,3): warning RZ10012: Found markup element with unexpected name 'Item'. If this is intended to be a component, add a @using directive for its namespace.
 4>MyOrders.razor(36,32): warning CS0169: The field 'MyOrders.ordersWithStatus' is never used
 4>MyOrders.razor(46,54): warning CS8604: Possible null reference argument for parameter 'userId' in 'Task<List<OrderWithStatus>> IRepository.GetOrdersAsync(string userId)'.
-4>OrderDetails.razor(38,7): warning RZ10012: Found markup element with unexpected name 'Map'. If this is intended to be a component, add a @using directive for its namespace.
 4>OrderDetails.razor(56,15): warning CS8618: Non-nullable field 'pollingTask' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Orders' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Pizzas' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Specials' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Toppings' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'NotificationSubscriptions' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-========== Build: 3 succeeded, 1 failed ==========
+4>BlazingPizza -> compiled in memory (238.5 KB, 699 ms)
+========== Build: 4 succeeded, 0 failed ==========
 
