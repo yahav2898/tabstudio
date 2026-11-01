@@ -2,13 +2,13 @@ fzf at 26ff936df038b6a62ec42cf18db27b2ea2bb8ec3
 Toolchain projects:
   go: /home/runner/work/_temp/real-repos/fzf/go.mod
 Startup project: go /home/runner/work/_temp/real-repos/fzf/go.mod
-Set up in 3.1 s
-Tests: 147 passed, 0 failed, 2 skipped of 156: 149 tests run in 13.5 sec: 147 passed, 0 failed, 2 skipped.
+Set up in 3.2 s
+Tests: 147 passed, 0 failed, 2 skipped of 156: 149 tests run in 13.2 sec: 147 passed, 0 failed, 2 skipped.
 Project setup:
 
 Output:
 ========== Running fzf's tests with GoTest ==========
-> sh -c 'report="$0"; { "$@"; echo $? > "$report.status"; } 2>&1 | tee "$report"; exit "$(cat "$report.status" 2> /dev/null || echo 1)"' /home/runner/work/_temp/real-repos/fzf/.tabstudio/test-results/07fdb1725e7645e99799d431b6690c39/go-test.txt go test -v ./...
+> sh -c 'report="$0"; { "$@"; echo $? > "$report.status"; } 2>&1 | tee "$report"; exit "$(cat "$report.status" 2> /dev/null || echo 1)"' /home/runner/work/_temp/real-repos/fzf/.tabstudio/test-results/ce532f982a3b4c67bc43fc5153a7aad1/go-test.txt go test -v ./...
 go: downloading github.com/rivo/uniseg v0.4.7
 go: downloading golang.org/x/sys v0.35.0
 go: downloading golang.org/x/term v0.34.0
@@ -54,7 +54,7 @@ go: downloading github.com/charlievieth/fastwalk v1.0.14
 === RUN   TestChunkListTail
 --- PASS: TestChunkListTail (0.00s)
 === RUN   TestHistory
---- PASS: TestHistory (0.03s)
+--- PASS: TestHistory (0.02s)
 === RUN   TestStringPtr
 --- PASS: TestStringPtr (0.00s)
 === RUN   TestEmptyMerger
@@ -123,14 +123,14 @@ go: downloading github.com/charlievieth/fastwalk v1.0.14
 --- PASS: TestCacheable (0.00s)
 === RUN   TestBitmapCacheBenefit
     pattern_test.go:263: Chunks: 100, Queries: 5
-    pattern_test.go:264: Cache memory: 130464 bytes (127.4 KB)
+    pattern_test.go:264: Cache memory: 130336 bytes (127.3 KB)
     pattern_test.go:265: Per-chunk-per-query: 261 bytes
     pattern_test.go:286: query="s": matches=102400
     pattern_test.go:286: query="se": matches=102400
     pattern_test.go:286: query="ser": matches=71680
     pattern_test.go:286: query="serv": matches=30720
     pattern_test.go:286: query="servi": matches=20480
---- PASS: TestBitmapCacheBenefit (0.75s)
+--- PASS: TestBitmapCacheBenefit (0.83s)
 === RUN   TestLabelUpdater
     proxy_test.go:64: applied 1 of 100 updates
 --- PASS: TestLabelUpdater (0.00s)
@@ -194,10 +194,10 @@ go: downloading github.com/charlievieth/fastwalk v1.0.14
 --- PASS: TestTransformIndexOutOfBounds (0.00s)
 === CONT  TestNextAnsiEscapeSequence_Fuzz_Modified
 === CONT  TestNextAnsiEscapeSequence_Fuzz_Random
---- PASS: TestNextAnsiEscapeSequence_Fuzz_Modified (0.10s)
---- PASS: TestNextAnsiEscapeSequence_Fuzz_Random (0.50s)
+--- PASS: TestNextAnsiEscapeSequence_Fuzz_Modified (0.09s)
+--- PASS: TestNextAnsiEscapeSequence_Fuzz_Random (0.48s)
 PASS
-ok  	github.com/junegunn/fzf/src	1.368s
+ok  	github.com/junegunn/fzf/src	1.425s
 === RUN   TestFuzzyMatch
 --- PASS: TestFuzzyMatch (0.00s)
 === RUN   TestFuzzyMatchBackward
@@ -221,11 +221,11 @@ ok  	github.com/junegunn/fzf/src	1.368s
 === RUN   TestResultPositionsWithReusedSlab
 --- PASS: TestResultPositionsWithReusedSlab (0.00s)
 === RUN   TestFuzzyMatchV2TwoEquivalence
---- PASS: TestFuzzyMatchV2TwoEquivalence (0.20s)
+--- PASS: TestFuzzyMatchV2TwoEquivalence (0.18s)
 === RUN   TestFuzzyMatchV2SingleExhaustive
---- PASS: TestFuzzyMatchV2SingleExhaustive (1.08s)
+--- PASS: TestFuzzyMatchV2SingleExhaustive (1.14s)
 === RUN   TestFuzzyMatchV2TwoExhaustive
---- PASS: TestFuzzyMatchV2TwoExhaustive (5.44s)
+--- PASS: TestFuzzyMatchV2TwoExhaustive (5.36s)
 === RUN   TestIndexByteTwo
 === RUN   TestIndexByteTwo/empty
 === RUN   TestIndexByteTwo/single_b1
@@ -277,7 +277,7 @@ ok  	github.com/junegunn/fzf/src	1.368s
     --- PASS: TestLastIndexByteTwo/long_b1_at_3000 (0.00s)
     --- PASS: TestLastIndexByteTwo/long_b2_at_end (0.00s)
 === RUN   TestMayFoldToAsciiIsSuperset
---- PASS: TestMayFoldToAsciiIsSuperset (0.16s)
+--- PASS: TestMayFoldToAsciiIsSuperset (0.14s)
 === RUN   TestMayFoldToAsciiExcludesMajorScripts
 --- PASS: TestMayFoldToAsciiExcludesMajorScripts (0.00s)
 === RUN   TestIndexAsciiRuneMatchesReference
@@ -294,7 +294,7 @@ ok  	github.com/junegunn/fzf/src	1.368s
 --- PASS: TestNormalizeRuneUnchangedByGuard (0.00s)
 === RUN   TestRunePrefilterableGuardIsSound
     runeprefilter_test.go:292: guard admits 1108802 non-ASCII pattern runes, unsound for 0
---- PASS: TestRunePrefilterableGuardIsSound (0.11s)
+--- PASS: TestRunePrefilterableGuardIsSound (0.13s)
 === RUN   TestNonAsciiPatternPrefilterEngages
     runeprefilter_test.go:338: non-ASCII patterns: engaged 2470, bypassed 1897, rejected 1352, narrowed 1006
 --- PASS: TestNonAsciiPatternPrefilterEngages (0.00s)
@@ -543,7 +543,7 @@ ok  	github.com/junegunn/fzf/src	1.368s
     --- PASS: FuzzRunePrefilter/seed#78 (0.00s)
     --- PASS: FuzzRunePrefilter/seed#79 (0.00s)
 PASS
-ok  	github.com/junegunn/fzf/src/algo	7.082s
+ok  	github.com/junegunn/fzf/src/algo	7.055s
 ?   	github.com/junegunn/fzf/src/protector	[no test files]
 === RUN   TestUnknownEscapeSequence
 --- PASS: TestUnknownEscapeSequence (0.00s)
@@ -584,7 +584,7 @@ ok  	github.com/junegunn/fzf/src/algo	7.082s
 === RUN   TestLateKeyAfterUnfinishedSequence
 --- PASS: TestLateKeyAfterUnfinishedSequence (0.20s)
 === RUN   TestSecondChanceReadError
---- PASS: TestSecondChanceReadError (3.10s)
+--- PASS: TestSecondChanceReadError (3.17s)
 === RUN   TestLightRenderer
 --- PASS: TestLightRenderer (0.00s)
 === RUN   TestLightRendererScrollWheel
@@ -596,7 +596,7 @@ ok  	github.com/junegunn/fzf/src/algo	7.082s
 === RUN   TestHexToColor
 --- PASS: TestHexToColor (0.00s)
 PASS
-ok  	github.com/junegunn/fzf/src/tui	3.811s
+ok  	github.com/junegunn/fzf/src/tui	3.889s
 === RUN   TestAtExit
 --- PASS: TestAtExit (0.00s)
 === RUN   TestAtomicBool
@@ -606,7 +606,7 @@ ok  	github.com/junegunn/fzf/src/tui	3.811s
 === RUN   TestCountRunesRandom
 --- PASS: TestCountRunesRandom (0.02s)
 === RUN   TestToCharsIntegrity
---- PASS: TestToCharsIntegrity (0.01s)
+--- PASS: TestToCharsIntegrity (0.02s)
 === RUN   TestToCharsAscii
 --- PASS: TestToCharsAscii (0.00s)
 === RUN   TestCharsLength
@@ -657,5 +657,5 @@ ok  	github.com/junegunn/fzf/src/tui	3.811s
 === RUN   TestCompareVersions
 --- PASS: TestCompareVersions (0.00s)
 PASS
-ok  	github.com/junegunn/fzf/src/util	0.035s
+ok  	github.com/junegunn/fzf/src/util	0.048s
 
