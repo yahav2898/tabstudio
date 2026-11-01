@@ -113,16 +113,19 @@ jobs:
   # The images people put in their Compose files, on both architectures: which start and answer under PRoot, and
   # why the others do not. Only the images the release notes promise must pass; the table is the record.
   compatibility:
-    name: Image compatibility (${{ matrix.arch }})
+    name: Image compatibility (${{ matrix.arch }}, ${{ matrix.shard }}/2)
     if: github.event_name != 'pull_request'
     strategy:
       fail-fast: false
       matrix:
+        arch: [x64, arm64]
+        shard: [0, 1]
         include:
           - { arch: x64, runner: ubuntu-24.04 }
           - { arch: arm64, runner: ubuntu-24.04-arm }
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 90
+    # 13 images of at most 4 minutes each.
+    timeout-minutes: 70
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -134,14 +137,17 @@ jobs:
         env:
           TABSTUDIO_CONTAINER_REQUIRED: '1'
           TABSTUDIO_CONTAINER_COMPAT: '1'
-          TABSTUDIO_CONTAINER_COMPAT_OUT: ${{ github.workspace }}/ci-out/compatibility-${{ matrix.arch }}.md
+          TABSTUDIO_CONTAINER_COMPAT_OUT: ${{ github.workspace }}/ci-out/compatibility-${{ matrix.arch }}-${{ matrix.shard }}.md
+          TABSTUDIO_CONTAINER_COMPAT_SHARD: ${{ matrix.shard }}
+          TABSTUDIO_CONTAINER_COMPAT_SHARDS: '2'
         run: |
           mkdir -p ci-out
-          status=0
-          dotnet test tests/TabStudio.Containers.Tests -c Release -warnaserror --filter 'FullyQualifiedName~CompatibilityTests' --logger 'console;verbosity=detailed' > ci-out/compatibility.log 2>&1 || status=$?
-          grep 'COMPAT |' ci-out/compatibility.log || tail -n 60 ci-out/compatibility.log
-          if [ -f "$TABSTUDIO_CONTAINER_COMPAT_OUT" ]; then cat "$TABSTUDIO_CONTAINER_COMPAT_OUT" >> "$GITHUB_STEP_SUMMARY"; fi
-          exit $status
+          dotnet test tests/TabStudio.Containers.Tests -c Release -warnaserror --filter 'FullyQualifiedName~CompatibilityTests' --logger 'console;verbosity=detailed' > ci-out/compatibility.log 2>&1 || { tail -n 80 ci-out/compatibility.log; exit 1; }
+      - name: The compatibility table
+        if: always()
+        run: |
+          file=ci-out/compatibility-${{ matrix.arch }}-${{ matrix.shard }}.md
+          if [ -f "$file" ]; then cat "$file"; cat "$file" >> "$GITHUB_STEP_SUMMARY"; else echo "No table was written."; fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:

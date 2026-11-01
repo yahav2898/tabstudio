@@ -86,12 +86,26 @@ public sealed class CompatibilityTests(ITestOutputHelper output)
 
         var table = new StringBuilder("| Area | Image | Result | Ready in | Notes |\n| --- | --- | --- | --- | --- |\n");
         var failures = new List<string>();
-        foreach (var probe in Probes)
+        var file = Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_COMPAT_OUT");
+        if (file is { Length: > 0 })
+        {
+            await File.WriteAllTextAsync(file, $"Host: {engine.Options.Host}\n\n" + table);
+        }
+
+        // The job splits the images between shards, so each finishes well inside its time limit.
+        var shard = int.TryParse(Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_COMPAT_SHARD"), CultureInfo.InvariantCulture, out var index) ? index : 0;
+        var shards = int.TryParse(Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_COMPAT_SHARDS"), CultureInfo.InvariantCulture, out var count) && count > 0 ? count : 1;
+        foreach (var probe in Probes.Where((_, i) => i % shards == shard))
         {
             var (works, seconds, note) = await TryAsync(engine, probe);
             var row = $"| {probe.Area} | `{probe.Image}` | {(works ? "Works" : "Does not start")} | {(works ? seconds.ToString("0", CultureInfo.InvariantCulture) + " s" : "-")} | {note.Replace('|', '/')} |";
             table.AppendLine(row);
             output.WriteLine("COMPAT " + row);
+            if (file is { Length: > 0 })
+            {
+                // Row by row, so a job that runs out of time still shows what it measured.
+                await File.AppendAllTextAsync(file, row + "\n");
+            }
             if (!works && Required.Contains(probe.Image))
             {
                 failures.Add(probe.Image + ": " + note);
@@ -99,17 +113,13 @@ public sealed class CompatibilityTests(ITestOutputHelper output)
         }
 
         output.WriteLine(table.ToString());
-        if (Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_COMPAT_OUT") is { Length: > 0 } file)
-        {
-            await File.WriteAllTextAsync(file, $"Host: {engine.Options.Host}\n\n" + table);
-        }
 
         Assert.True(failures.Count == 0, string.Join("\n", failures));
     }
 
     private async Task<(bool Works, double Seconds, string Note)> TryAsync(ContainerEngine engine, Probe probe)
     {
-        using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(6));
+        using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(4));
         var clock = Stopwatch.StartNew();
         ContainerInfo? container = null;
         try
@@ -154,7 +164,7 @@ public sealed class CompatibilityTests(ITestOutputHelper output)
                 await Task.Delay(500, deadline.Token);
             }
 
-            return (false, 0, "no answer in 6 min: " + Tail(engine.Log(container.Id)));
+            return (false, 0, "no answer in 4 min: " + Tail(engine.Log(container.Id)));
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
