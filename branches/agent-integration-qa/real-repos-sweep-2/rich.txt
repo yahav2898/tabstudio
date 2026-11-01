@@ -1,0 +1,345 @@
+rich at 9d8f9a372cc5916fd4781fec207ced7ddac2f08f
+Toolchain projects:
+  python: /home/runner/work/_temp/real-repos/rich/pyproject.toml
+  cpp: /home/runner/work/_temp/real-repos/rich/Makefile
+Startup project: python /home/runner/work/_temp/real-repos/rich/pyproject.toml
+Set up in 6.7 s
+Tests: 948 passed, 8 failed, 25 skipped of 1015: 981 tests run in 9.0 sec: 948 passed, 8 failed, 25 skipped.
+Project setup:
+------ rich: pip install -e . ------
+Reading which Python versions the 49 pinned packages have wheels for, from PyPI.
+> uv venv --seed --python 3.13 .venv
+Downloading cpython-3.13.18-linux-x86_64-gnu (download) (33.8MiB)
+ Downloaded cpython-3.13.18-linux-x86_64-gnu (download)
+Using CPython 3.13.18
+Creating virtual environment with seed packages at: .venv
+ + pip==26.2.2
+Activate with: .venv/bin/activate
+> /home/runner/work/_temp/real-repos/rich/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/real-repos/rich
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting markdown-it-py>=2.2.0 (from rich==15.0.0)
+  Using cached markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich==15.0.0)
+  Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich==15.0.0)
+  Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Building wheels for collected packages: rich
+  Building editable for rich (pyproject.toml): started
+  Building editable for rich (pyproject.toml): finished with status 'done'
+  Created wheel for rich: filename=rich-15.0.0-py3-none-any.whl size=7831 sha256=48ee26d4a97a76411dd7f488e9d01aac970ad3a32b2c112bbf1aaa66074df40f
+  Stored in directory: /tmp/pip-ephem-wheel-cache-kd81n3jy/wheels/a8/68/bf/d8ba43a9f12300e8f2b8aced9a06e57c54f1d01405943d6982
+Successfully built rich
+Installing collected packages: pygments, mdurl, markdown-it-py, rich
+
+Successfully installed markdown-it-py-4.2.0 mdurl-0.1.2 pygments-2.21.0 rich-15.0.0
+
+Output:
+numbers=True,
+            line_range=(2, 10),
+            code_width=60,
+            word_wrap=False,
+            background_color="red",
+        )
+    
+        rendered_syntax = render(syntax, True)
+        print(repr(rendered_syntax))
+        expected = '\x1b[1;39;41m  \x1b[0m\x1b[39;41m 2 \x1b[0m\x1b[38;2;248;248;242;41m    \x1b[0m\x1b[38;2;230;219;116;41m"""Iterate and generate a tuple with a flag for first and last value."""\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m 3 \x1b[0m\x1b[38;2;248;248;242;41m    \x1b[0m\x1b[38;2;248;248;242;41miter_values\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;255;70;137;41m=\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;248;248;242;41miter\x1b[0m\x1b[38;2;248;248;242;41m(\x1b[0m\x1b[38;2;248;248;242;41mvalues\x1b[0m\x1b[38;2;248;248;242;41m)\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m 4 \x1b[0m\x1b[38;2;248;248;242;41m    \x1b[0m\x1b[38;2;102;217;239;41mtry\x1b[0m\x1b[38;2;248;248;242;41m:\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m 5 \x1b[0m\x1b[38;2;248;248;242;41m        \x1b[0m\x1b[38;2;248;248;242;41mprevious_value\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;255;70;137;41m=\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;248;248;242;41mnext\x1b[0m\x1b[38;2;248;248;242;41m(\x1b[0m\x1b[38;2;248;248;242;41miter_values\x1b[0m\x1b[38;2;248;248;242;41m)\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m 6 \x1b[0m\x1b[38;2;248;248;242;41m    \x1b[0m\x1b[38;2;102;217;239;41mexcept\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;166;226;46;41mStopIteration\x1b[0m\x1b[38;2;248;248;242;41m:\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m 7 \x1b[0m\x1b[38;2;248;248;242;41m        \x1b[0m\x1b[38;2;102;217;239;41mreturn\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m 8 \x1b[0m\x1b[38;2;248;248;242;41m    \x1b[0m\x1b[38;2;248;248;242;41mfirst\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;255;70;137;41m=\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;102;217;239;41mTrue\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m 9 \x1b[0m\x1b[38;2;248;248;242;41m    \x1b[0m\x1b[38;2;102;217;239;41mfor\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;248;248;242;41mvalue\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;255;70;137;41min\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;248;248;242;41miter_values\x1b[0m\x1b[38;2;248;248;242;41m:\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m10 \x1b[0m\x1b[38;2;248;248;242;41m        \x1b[0m\x1b[38;2;102;217;239;41myield\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;248;248;242;41mfirst\x1b[0m\x1b[38;2;248;248;242;41m,\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;102;217;239;41mFalse\x1b[0m\x1b[38;2;248;248;242;41m,\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;248;248;242;41mprevious_value\x1b[0m\n'
+>       assert rendered_syntax == expected
+E       AssertionError: assert '\x1b[1;39;41...alue\x1b[0m\n' == '\x1b[1;39;41...alue\x1b[0m\n'
+E         
+E         Skipping 335 identical leading characters in diff, use -v to show
+E         - [0miter(values)
+E         ?           ^^^   ^^^^^
+E         + [0miter(values)
+E         ?           ^^^  +++ ^
+E              4     try:
+E         -    5         previous_value = next(iter_values)
+E         ?                                                                                                                                                                                                 ^^^^^^^^^^^
+E         +    5         previous_value = next(iter_values)
+E         ?                                                                                                                                                                                                 ^^^^^^^^^^
+E              6     except StopIteration:
+E              7         return
+E              8     first = True
+E              9     for value in iter_values:
+E             10         yield first, False, previous_value
+
+tests/test_syntax.py:247: AssertionError
+----------------------------- Captured stdout call -----------------------------
+'\x1b[1;39;41m  \x1b[0m\x1b[39;41m 2 \x1b[0m\x1b[38;2;248;248;242;41m    \x1b[0m\x1b[38;2;230;219;116;41m"""Iterate and generate a tuple with a flag for first and last value."""\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m 3 \x1b[0m\x1b[38;2;248;248;242;41m    \x1b[0m\x1b[38;2;248;248;242;41miter_values\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;255;70;137;41m=\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;166;226;46;41miter\x1b[0m\x1b[38;2;248;248;242;41m(\x1b[0m\x1b[38;2;248;248;242;41mvalues\x1b[0m\x1b[38;2;248;248;242;41m)\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m 4 \x1b[0m\x1b[38;2;248;248;242;41m    \x1b[0m\x1b[38;2;102;217;239;41mtry\x1b[0m\x1b[38;2;248;248;242;41m:\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m 5 \x1b[0m\x1b[38;2;248;248;242;41m        \x1b[0m\x1b[38;2;248;248;242;41mprevious_value\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;255;70;137;41m=\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;166;226;46;41mnext\x1b[0m\x1b[38;2;248;248;242;41m(\x1b[0m\x1b[38;2;248;248;242;41miter_values\x1b[0m\x1b[38;2;248;248;242;41m)\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m 6 \x1b[0m\x1b[38;2;248;248;242;41m    \x1b[0m\x1b[38;2;102;217;239;41mexcept\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;166;226;46;41mStopIteration\x1b[0m\x1b[38;2;248;248;242;41m:\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m 7 \x1b[0m\x1b[38;2;248;248;242;41m        \x1b[0m\x1b[38;2;102;217;239;41mreturn\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m 8 \x1b[0m\x1b[38;2;248;248;242;41m    \x1b[0m\x1b[38;2;248;248;242;41mfirst\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;255;70;137;41m=\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;102;217;239;41mTrue\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m 9 \x1b[0m\x1b[38;2;248;248;242;41m    \x1b[0m\x1b[38;2;102;217;239;41mfor\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;248;248;242;41mvalue\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;255;70;137;41min\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;248;248;242;41miter_values\x1b[0m\x1b[38;2;248;248;242;41m:\x1b[0m\n\x1b[1;39;41m  \x1b[0m\x1b[39;41m10 \x1b[0m\x1b[38;2;248;248;242;41m        \x1b[0m\x1b[38;2;102;217;239;41myield\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;248;248;242;41mfirst\x1b[0m\x1b[38;2;248;248;242;41m,\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;102;217;239;41mFalse\x1b[0m\x1b[38;2;248;248;242;41m,\x1b[0m\x1b[38;2;248;248;242;41m \x1b[0m\x1b[38;2;248;248;242;41mprevious_value\x1b[0m\n'
+_________________________ test_syntax_highlight_ranges _________________________
+
+    def test_syntax_highlight_ranges() -> None:
+        syntax = Syntax(
+            CODE,
+            lexer="python",
+            line_numbers=True,
+            word_wrap=False,
+        )
+        stylized_ranges = [
+            _SyntaxHighlightRange(
+                # overline the 2nd char of the 1st line:
+                start=(1, 1),
+                end=(1, 2),
+                style=Style(overline=True),
+            ),
+            _SyntaxHighlightRange(
+                start=(1, len("def loop_")),
+                end=(1, len("def loop_first_last")),
+                style=Style(underline=True),
+            ),
+            _SyntaxHighlightRange(
+                start=(1, len("def loop_first")),
+                end=(3, len("    iter_values = iter")),
+                style=Style(bold=True),
+            ),
+            _SyntaxHighlightRange(
+                start=(9, len("    for ")),
+                end=(9, len("    for value in")),
+                style=Style(strike=True),
+            ),
+            _SyntaxHighlightRange(
+                start=(6, len("    except ")),
+                end=(6, len("    except StopIteration")),
+                style=Style(reverse=True),
+            ),
+            _SyntaxHighlightRange(
+                start=(10, len("       yield first,")),
+                # `column_index` is out of range: should be clamped to the line length:
+                end=(10, 300),
+                style=Style(bold=True),
+            ),
+            # For this one the end `line_number` is out of range, so it should have no impact:
+            _SyntaxHighlightRange(
+                start=(1, 1),
+                end=(30, 2),
+                style=Style(bold=True),
+            ),
+        ]
+        for range_ in stylized_ranges:
+            syntax.stylize_range(range_.style, range_.start, range_.end)
+        rendered_syntax = render(syntax, True)
+        print(repr(rendered_syntax))
+        expected = '\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 1 \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34md\x1b[0m\x1b[53;38;2;102;217;239;48;2;39;40;34me\x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mf\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;166;226;46;48;2;39;40;34mloop_\x1b[0m\x1b[4;38;2;166;226;46;48;2;39;40;34mfirst\x1b[0m\x1b[1;4;38;2;166;226;46;48;2;39;40;34m_last\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m(\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mvalues\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m:\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mIterable\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m[\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mT\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m]\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m)\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;255;70;137;48;2;39;40;34m-\x1b[0m\x1b[1;38;2;255;70;137;48;2;39;40;34m>\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mIterable\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m[\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mTuple\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m[\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mbool\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m,\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mbool\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m,\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mT\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m]\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m]\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m:\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 2 \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m    \x1b[0m\x1b[1;38;2;230;219;116;48;2;39;40;34m"""Iterate and generate a tuple with a flag for first and last value."""\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 3 \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m    \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34miter_values\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;255;70;137;48;2;39;40;34m=\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34miter\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m(\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mvalues\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m)\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 4 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m    \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mtry\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m:\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 5 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m        \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mprevious_value\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;255;70;137;48;2;39;40;34m=\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mnext\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m(\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34miter_values\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m)\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 6 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m    \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mexcept\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[7;38;2;166;226;46;48;2;39;40;34mStopIteration\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m:\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 7 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m        \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mreturn\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 8 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m    \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mfirst\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;255;70;137;48;2;39;40;34m=\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mTrue\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 9 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m    \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mfor\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[9;38;2;248;248;242;48;2;39;40;34mvalue\x1b[0m\x1b[9;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[9;38;2;255;70;137;48;2;39;40;34min\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34miter_values\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m:\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m10 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m        \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34myield\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mfirst\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m,\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;102;217;239;48;2;39;40;34mFalse\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m,\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mprevious_value\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m11 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m        \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mfirst\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;255;70;137;48;2;39;40;34m=\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mFalse\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m12 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m        \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mprevious_value\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;255;70;137;48;2;39;40;34m=\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mvalue\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m13 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m    \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34myield\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mfirst\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m,\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mTrue\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m,\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mprevious_value\x1b[0m\n'
+>       assert rendered_syntax == expected
+E       assert '\x1b[1;38;2;...alue\x1b[0m\n' == '\x1b[1;38;2;...alue\x1b[0m\n'
+E         
+E         Skipping 1064 identical leading characters in diff, use -v to show
+E         - mbool, bool, T]]:
+E         ?           ^^^^^^^^^^^                                                                                                                ^^^^^^^^^^^
+E         + mbool, bool, T]]:
+E         ?           ^^^^^^^^^^                                                                                                                ^^^^^^^^^^
+E              2     """Iterate and generate a tuple with a flag for first and last value."""
+E         -    3     iter_values = iter(values)
+E         ?                                                                                                                                                                                                                                                                                                              ^^^^^^^^^^^
+E         +    3     iter_values = iter(values)
+E         ?                                                                                                                                                                                                                                                                                                              ^^^^^^^^^^
+E              4     try:
+E         -    5         previous_value = next(iter_values)
+E         ?                                                                                                                                                                                                                                                                                                         ^^^^^^^^^^^
+E         +    5         previous_value = next(iter_values)
+E         ?                                                                                                                                                                                                                                                                                                         ^^^^^^^^^^
+E              6     except StopIteration:
+E              7         return
+E              8     first = True
+E              9     for value in iter_values:
+E             10         yield first, False, previous_value
+E             11         first = False
+E             12         previous_value = value
+E             13     yield first, True, previous_value
+
+tests/test_syntax.py:302: AssertionError
+----------------------------- Captured stdout call -----------------------------
+'\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 1 \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34md\x1b[0m\x1b[53;38;2;102;217;239;48;2;39;40;34me\x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mf\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;166;226;46;48;2;39;40;34mloop_\x1b[0m\x1b[4;38;2;166;226;46;48;2;39;40;34mfirst\x1b[0m\x1b[1;4;38;2;166;226;46;48;2;39;40;34m_last\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m(\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mvalues\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m:\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mIterable\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m[\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mT\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m]\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m)\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;255;70;137;48;2;39;40;34m-\x1b[0m\x1b[1;38;2;255;70;137;48;2;39;40;34m>\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mIterable\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m[\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mTuple\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m[\x1b[0m\x1b[1;38;2;166;226;46;48;2;39;40;34mbool\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m,\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;166;226;46;48;2;39;40;34mbool\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m,\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mT\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m]\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m]\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m:\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 2 \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m    \x1b[0m\x1b[1;38;2;230;219;116;48;2;39;40;34m"""Iterate and generate a tuple with a flag for first and last value."""\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 3 \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m    \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34miter_values\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;255;70;137;48;2;39;40;34m=\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;166;226;46;48;2;39;40;34miter\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m(\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mvalues\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m)\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 4 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m    \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mtry\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m:\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 5 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m        \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mprevious_value\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;255;70;137;48;2;39;40;34m=\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;166;226;46;48;2;39;40;34mnext\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m(\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34miter_values\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m)\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 6 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m    \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mexcept\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[7;38;2;166;226;46;48;2;39;40;34mStopIteration\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m:\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 7 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m        \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mreturn\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 8 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m    \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mfirst\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;255;70;137;48;2;39;40;34m=\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mTrue\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m 9 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m    \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mfor\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[9;38;2;248;248;242;48;2;39;40;34mvalue\x1b[0m\x1b[9;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[9;38;2;255;70;137;48;2;39;40;34min\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34miter_values\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m:\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m10 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m        \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34myield\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mfirst\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m,\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;102;217;239;48;2;39;40;34mFalse\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m,\x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[1;38;2;248;248;242;48;2;39;40;34mprevious_value\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m11 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m        \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mfirst\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;255;70;137;48;2;39;40;34m=\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mFalse\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m12 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m        \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mprevious_value\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;255;70;137;48;2;39;40;34m=\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mvalue\x1b[0m\n\x1b[1;38;2;227;227;221;48;2;39;40;34m  \x1b[0m\x1b[38;2;101;102;96;48;2;39;40;34m13 \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m    \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34myield\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mfirst\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m,\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;102;217;239;48;2;39;40;34mTrue\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m,\x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34m \x1b[0m\x1b[38;2;248;248;242;48;2;39;40;34mprevious_value\x1b[0m\n'
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/_pytest/python.py:144
+  /home/runner/work/_temp/real-repos/rich/.venv/lib/python3.13/site-packages/_pytest/python.py:144: PytestRemovedIn10Warning: Passing a non-Collection iterable to parametrize is deprecated.
+  Test: tests/test_panel.py::test_render_panel, argvalues type: zip
+  Please convert to a list or tuple.
+  See https://docs.pytest.org/en/stable/deprecations.html#parametrize-iterators
+    metafunc.parametrize(*marker.args, **marker.kwargs, _param_mark=marker)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /home/runner/work/_temp/real-repos/rich/.tabstudio/test-results/cc10f444a82347c4a993734894ddf7c8/pytest.xml -
+=========================== short test summary info ============================
+FAILED tests/test_card.py::test_card_render - AssertionError: assert '\x1b[3m     ...           \n' == '\x1b[3m     ...           \n'
+  
+  Skipping 17494 identical leading characters in diff, use -v to show
+  - [0miter(values)         │   │   3.1427,                           
+  ?           ^^^^^^^^^^^
+  + [0miter(values)         │   │   3.1427,                           
+  ?           ^^^^^^^^^^
+        pretty       4 │   try:                               │   │   (                                 
+  -    printing      5 │   │   previous_value = next(iter_va  │   │   │   'Paul Atreides',              
+  ?                                                                                                                                                                                                                                                                                                                                                          ^^^^^^^^^^^
+  +    printing      5 │   │   previous_value = next(iter_va  │   │   │   'Paul Atreides',              
+  ?                                                                                                                                                                                                                                                                                                                                                          ^^^^^^^^^^
+                     6 │   except StopIteration:              │   │   │   'Vladimir Harkonnen',         
+                     7 │   │   return                         │   │   │   'Thufir Hawat'                
+                     8 │   for value in iter_values:          │   │   )                                 
+                     9 │   │   yield False, previous_value    │   ],                                    
+                    10 │   │   previous_value = value         │   'atomic': (False, True, None)         
+                    11 │   yield True, previous_value         }                                         
+                                                                                                        
+       Markdown   # Markdown                                                  Markdown                  
+                                                                                                        
+                  Supports much of the *markdown*             Supports much of the markdown syntax!     
+                  __syntax__!                                                                           
+                                                               • Headers                                
+                  - Headers                                    • Basic formatting: bold, italic, code   
+                  - Basic formatting: **bold**, *italic*,      • Block quotes                           
+                  `code`                                       • Lists, and more...                     
+                  - Block quotes                                                                        
+                  - Lists, and more...                                                                  
+                                                                                                        
+                                                                                                        
+        +more!    Progress bars, columns, styled logging handler, tracebacks, etc...                    
+                  
+FAILED tests/test_markdown.py::test_inline_code_in_table_cells - AssertionError: assert '\n\x1b[36m  ...    \x1b[0m\n' == '\n\x1b[36m  ...    \x1b[0m\n'
+  
+  Skipping 115 identical leading characters in diff, use -v to show
+  - [0mprint('hello'); 
+  ?           ^^^^^^^^^^^
+  + [0m[38;2;166;226;46;48;2;39;40;34mprint('hello'); 
+  ?           ^^^^^^^^^^
+                     
+FAILED tests/test_syntax.py::test_python_render - AssertionError: assert '╭───────────...──────────╯\n' == '╭───────────...──────────╯\n'
+  
+  Skipping 730 identical leading characters in diff, use -v to show
+  - [0miter(values)                              │
+  ?           ^^^^^^^^^^^
+  + [0miter(values)                              │
+  ?           ^^^^^^^^^^
+    │   4     try:                                                    │
+  - │   5         previous_value = next(iter_values)                  │
+  ?                                                                                                                                                                                                                                                                                                          ^^^^^^^^^^^
+  + │   5         previous_value = next(iter_values)                  │
+  ?                                                                                                                                                                                                                                                                                                          ^^^^^^^^^^
+    │   6     except StopIteration:                                   │
+    │   7         return                                              │
+    │   8     first = True                                            │
+    │   9     for value in iter_values:                               │
+    │  10         yield first, False, previous_value                  │
+    ╰─────────────────────────────────────────────────────────────────╯
+FAILED tests/test_syntax.py::test_python_render_simple - assert '\x1b[38;2;10...    \x1b[0m\n' == '\x1b[38;2;10...    \x1b[0m\n'
+  
+  Skipping 793 identical leading characters in diff, use -v to show
+  - [0mb
+  ?           ^^^   ^^^^^
+  + [0mb
+  ?           ^^^  +++ ^
+        """Iterate and generate a tuple with a flag for first an
+  -     iter_values = iter(values)                              
+  ?                                                                                                                                                                                                                  ^^^^^^^^^^^
+  +     iter_values = iter(values)                              
+  ?                                                                                                                                                                                                                  ^^^^^^^^^^
+        try:                                                    
+  -         previous_value = next(iter_values)                  
+  ?                                                                                                                                                                                                                         ^^^^^^^^^^^
+  +         previous_value = next([38;2;248;248;242;48;2;39;40;34miter_values)                  
+  ?                                                                                                                                                                                                                         ^^^^^^^^^^
+        except StopIteration:                                   
+            return                                              
+        first = True                                            
+        for value in iter_values:                               
+            yield first, False, previous_value                  
+            first = False                                       
+            previous_value = value                              
+        yield first, True, previous_value                       
+FAILED tests/test_syntax.py::test_python_render_simple_passing_lexer_instance - assert '\x1b[38;2;10...    \x1b[0m\n' == '\x1b[38;2;10...    \x1b[0m\n'
+  
+  Skipping 793 identical leading characters in diff, use -v to show
+  - [0mb
+  ?           ^^^   ^^^^^
+  + [0mb
+  ?           ^^^  +++ ^
+        """Iterate and generate a tuple with a flag for first an
+  -     iter_values = iter(values)                              
+  ?                                                                                                                                                                                                                  ^^^^^^^^^^^
+  +     iter_values = iter(values)                              
+  ?                                                                                                                                                                                                                  ^^^^^^^^^^
+        try:                                                    
+  -         previous_value = next(iter_values)                  
+  ?                                                                                                                                                                                                                         ^^^^^^^^^^^
+  +         previous_value = next(iter_values)                  
+  ?                                                                                                                                                                                                                         ^^^^^^^^^^
+        except StopIteration:                                   
+            return                                              
+        first = True                                            
+        for value in iter_values:                               
+            yield first, False, previous_value                  
+            first = False                                       
+            previous_value = value                              
+        yield first, True, previous_value                       
+FAILED tests/test_syntax.py::test_python_render_indent_guides - AssertionError: assert '╭───────────...──────────╯\n' == '╭───────────...──────────╯\n'
+  
+  Skipping 734 identical leading characters in diff, use -v to show
+  - [0miter(values)                              │
+  ?           ^^^^^^^^^^^
+  + [0miter(values)                              │
+  ?           ^^^^^^^^^^
+    │   4 │   try:                                                    │
+  - │   5 │   │   previous_value = next(iter_values)                  │
+  ?                                                                                                                                                                                                                                                                                                            ^^^^^^^^^^^
+  + │   5 │   │   previous_value = next(iter_values)                  │
+  ?                                                                                                                                                                                                                                                                                                            ^^^^^^^^^^
+    │   6 │   except StopIteration:                                   │
+    │   7 │   │   return                                              │
+    │   8 │   first = True                                            │
+    │   9 │   for value in iter_values:                               │
+    │  10 │   │   yield first, False, previous_value                  │
+    ╰─────────────────────────────────────────────────────────────────╯
+FAILED tests/test_syntax.py::test_option_no_wrap - AssertionError: assert '\x1b[1;39;41...alue\x1b[0m\n' == '\x1b[1;39;41...alue\x1b[0m\n'
+  
+  Skipping 335 identical leading characters in diff, use -v to show
+  - [0miter(values)
+  ?           ^^^   ^^^^^
+  + [0miter(values)
+  ?           ^^^  +++ ^
+       4     try:
+  -    5         previous_value = next(iter_values)
+  ?                                                                                                                                                                                                 ^^^^^^^^^^^
+  +    5         previous_value = next(iter_values)
+  ?                                                                                                                                                                                                 ^^^^^^^^^^
+       6     except StopIteration:
+       7         return
+       8     first = True
+       9     for value in [38;2;248;248;242;41miter_values:
+      10         yield first, False, previous_value
+FAILED tests/test_syntax.py::test_syntax_highlight_ranges - assert '\x1b[1;38;2;...alue\x1b[0m\n' == '\x1b[1;38;2;...alue\x1b[0m\n'
+  
+  Skipping 1064 identical leading characters in diff, use -v to show
+  - mbool, bool, T]]:
+  ?           ^^^^^^^^^^^                                                                                                                ^^^^^^^^^^^
+  + mbool, bool, T]]:
+  ?           ^^^^^^^^^^                                                                                                                ^^^^^^^^^^
+       2     """Iterate and generate a tuple with a flag for first and last value."""
+  -    3     iter_values = iter(values)
+  ?                                                                                                                                                                                                                                                                                                              ^^^^^^^^^^^
+  +    3     iter_values = iter(values)
+  ?                                                                                                                                                                                                                                                                                                              ^^^^^^^^^^
+       4     try:
+  -    5         previous_value = next(iter_values)
+  ?                                                                                                                                                                                                                                                                                                         ^^^^^^^^^^^
+  +    5         previous_value = next(iter_values)
+  ?                                                                                                                                                                                                                                                                                                         ^^^^^^^^^^
+       6     except StopIteration:
+       7         return
+       8     first = True
+       9     for value in iter_values:
+      10         yield first, False, previous_value
+      11         first = False
+      12         previous_value = value
+      13     yield first, True, previous_value
+============= 8 failed, 948 passed, 25 skipped, 1 warning in 5.06s =============
+

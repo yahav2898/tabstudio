@@ -1,0 +1,73 @@
+gs-securing-web at 38b43f1d209b880e234b1082f49973a9e97639b4
+Toolchain projects:
+  java: /home/runner/work/_temp/real-repos/gs-securing-web/complete/pom.xml
+Startup project: java /home/runner/work/_temp/real-repos/gs-securing-web/complete/pom.xml
+Set up in 2.4 s
+Web preview: http://127.0.0.1:8080/
+GET http://127.0.0.1:8080/: 200 , 261 characters
+Ran in 6.6 s
+Project setup:
+
+Output:
+Running complete with Java 21.0.13
+> mvn -B -Dstyle.color=never -Daether.connector.http.retryHandler.count=5 -DskipTests package org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies -DincludeScope=runtime
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< com.example:securing-web-complete >------------------
+[INFO] Building securing-web-complete 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ securing-web-complete ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ securing-web-complete ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 3 source files with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ securing-web-complete ---
+[INFO] skip non existing resourceDirectory /home/runner/work/_temp/real-repos/gs-securing-web/complete/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ securing-web-complete ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ securing-web-complete ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ securing-web-complete ---
+[INFO] Building jar: /home/runner/work/_temp/real-repos/gs-securing-web/complete/target/securing-web-complete-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- dependency:3.8.1:copy-dependencies (default-cli) @ securing-web-complete ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.564 s
+[INFO] Finished at: 2026-11-01T01:00:53Z
+[INFO] ------------------------------------------------------------------------
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.8)
+
+2026-11-01T01:00:54.033Z  INFO 12855 --- [           main] c.e.securingweb.SecuringWebApplication   : Starting SecuringWebApplication using Java 21.0.13 with PID 12855 (/home/runner/work/_temp/real-repos/gs-securing-web/complete/target/classes started by runner in /home/runner/work/_temp/real-repos/gs-securing-web/complete)
+2026-11-01T01:00:54.037Z  INFO 12855 --- [           main] c.e.securingweb.SecuringWebApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-11-01T01:00:54.834Z  INFO 12855 --- [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-11-01T01:00:54.851Z  INFO 12855 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-01T01:00:54.851Z  INFO 12855 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-11-01T01:00:54.895Z  INFO 12855 --- [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 798 ms
+2026-11-01T01:00:55.136Z  INFO 12855 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsService
+2026-11-01T01:00:55.439Z  INFO 12855 --- [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-11-01T01:00:55.448Z  INFO 12855 --- [           main] c.e.securingweb.SecuringWebApplication   : Started SecuringWebApplication in 1.738 seconds (process running for 2.007)
+2026-11-01T01:00:55.750Z  INFO 12855 --- [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-01T01:00:55.750Z  INFO 12855 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-11-01T01:00:55.751Z  INFO 12855 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+
+The program 'complete' was stopped.
+
