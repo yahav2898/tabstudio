@@ -8,8 +8,37 @@ namespace TabStudio.Services;
 /// <summary>Rewrites service endpoints, without replacing credentials or unrelated text.</summary>
 public static partial class ConnectionEnvironment
 {
-    public static string Rewrite(string value, IReadOnlyDictionary<string, IReadOnlyList<ServicePort>> endpoints)
+    /// <summary>The setting names that hold a host: the last word of <c>DB_HOST</c>, <c>Redis:Configuration</c> or <c>KAFKA_BROKERS</c>.</summary>
+    private static readonly HashSet<string> HostWords = new(StringComparer.OrdinalIgnoreCase)
     {
+        "host", "hosts", "hostname", "server", "servers", "address", "addr", "endpoint", "endpoints", "url", "uri",
+        "broker", "brokers", "nodes", "seeds", "configuration", "connection", "dsn",
+    };
+
+    /// <summary>
+    /// Whether a setting's value names a host on its own. A value that is just a service's name is a host only there:
+    /// <c>POSTGRES_USER=postgres</c> beside a service named postgres became <c>127.0.0.1</c>, as did its password.
+    /// </summary>
+    /// <param name="key">The setting's name; <see langword="null"/> when it is not known.</param>
+    public static bool IsHostSetting(string? key)
+    {
+        if (key is null)
+        {
+            return false;
+        }
+
+        var words = key.Split([':', '_', '.', '-'], StringSplitOptions.RemoveEmptyEntries);
+        return words.Length > 0 && HostWords.Contains(words[^1]);
+    }
+
+    /// <summary>Rewrites a value whose setting is not known: only connection strings, URIs and <c>name:port</c> lists.</summary>
+    public static string Rewrite(string value, IReadOnlyDictionary<string, IReadOnlyList<ServicePort>> endpoints) =>
+        Rewrite(value, endpoints, key: null);
+
+    /// <summary>Rewrites a setting's value; a bare service name is rewritten only in a host setting (<see cref="IsHostSetting"/>).</summary>
+    public static string Rewrite(string value, IReadOnlyDictionary<string, IReadOnlyList<ServicePort>> endpoints, string? key)
+    {
+        var hostSetting = IsHostSetting(key);
         foreach (var (name, ports) in endpoints.OrderByDescending(x => x.Key.Length))
         {
             if (ports.Count == 0) continue;
@@ -46,6 +75,9 @@ public static partial class ConnectionEnvironment
             }, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
             value = Regex.Replace(value, "(^|[,\\s])" + namePattern + @"(?::([0-9]+))?(?=[,;\s]|$)", m =>
             {
+                // "db:5432" and "kafka:9092,kafka2:9092" are hosts wherever they are; "postgres" alone is a host only in a
+                // host setting, and otherwise a user name, a password or a database that happens to share the name.
+                if (!m.Groups[2].Success && !hostSetting && m.Length == value.Length) return m.Value;
                 var target = m.Groups[2].Success ? int.Parse(m.Groups[2].Value, CultureInfo.InvariantCulture) : port.Target;
                 var mapped = ports.FirstOrDefault(p => p.Target == target) ?? port;
                 return m.Groups[1].Value + "127.0.0.1" + (m.Groups[2].Success ? ":" + mapped.Published.ToString(CultureInfo.InvariantCulture) : "");
@@ -58,8 +90,8 @@ public static partial class ConnectionEnvironment
     {
         var result = new Dictionary<string, string?>(StringComparer.Ordinal);
         var application = FindApplication(project, projectDirectory);
-        foreach (var pair in application?.Environment ?? new Dictionary<string, string?>()) result[pair.Key] = pair.Value is { } value ? Rewrite(value, endpoints) : null;
-        foreach (var pair in project.RunEnvironment) result.TryAdd(pair.Key, pair.Value is { } value ? Rewrite(value, endpoints) : null);
+        foreach (var pair in application?.Environment ?? new Dictionary<string, string?>()) result[pair.Key] = pair.Value is { } value ? Rewrite(value, endpoints, pair.Key) : null;
+        foreach (var pair in project.RunEnvironment) result.TryAdd(pair.Key, pair.Value is { } value ? Rewrite(value, endpoints, pair.Key) : null);
         foreach (var file in new[] { "appsettings.json", $"appsettings.{environmentName}.json" })
         {
             var path = Path.Combine(projectDirectory, file);
@@ -67,7 +99,7 @@ public static partial class ConnectionEnvironment
             using var json = JsonDocument.Parse(File.ReadAllText(path), new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
             Visit(json.RootElement, "", (key, value) =>
             {
-                var replaced = Rewrite(value, endpoints);
+                var replaced = Rewrite(value, endpoints, key);
                 if (value != replaced && !result.ContainsKey(key.Replace(":", "__", StringComparison.Ordinal))) result[key.Replace(":", "__", StringComparison.Ordinal)] = replaced;
             });
         }

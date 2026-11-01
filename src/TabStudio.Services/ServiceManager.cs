@@ -66,9 +66,21 @@ public sealed class ServiceManager : IAsyncDisposable
     public IReadOnlyList<string> NeededBy(string projectDirectory, IReadOnlyDictionary<string, string?>? environment = null, string environmentName = "Development")
     {
         var application = ConnectionEnvironment.FindApplication(Project, projectDirectory);
-        return application?.Dependencies.Select(d => d.Name).ToArray()
-            ?? (Project.RunServices.Count > 0 ? Project.RunServices.Where(n => n != application?.Name).ToArray()
-                : ServiceTargets.Referenced(Project, projectDirectory, environment, environmentName));
+        if (application is { Dependencies.Count: > 0 })
+        {
+            return application.Dependencies.Select(d => d.Name).ToArray();
+        }
+
+        if (Project.RunServices.Count > 0)
+        {
+            return Project.RunServices.Where(n => n != application?.Name).ToArray();
+        }
+
+        // An app service with no depends_on still names what it uses, as DATABASE_URL=postgres://…@db/app: an empty
+        // list ended the search here, and F5 debugged it with no database.
+        var variables = new Dictionary<string, string?>(application?.Environment ?? new Dictionary<string, string?>(), StringComparer.Ordinal);
+        foreach (var (name, value) in environment ?? new Dictionary<string, string?>()) variables[name] = value;
+        return ServiceTargets.Referenced(Project, projectDirectory, variables, environmentName).Where(n => n != application?.Name).ToArray();
     }
 
     public async Task<IReadOnlyDictionary<string, string?>> StartForProjectAsync(string projectDirectory, string environmentName = "Development", IReadOnlyDictionary<string, string?>? environment = null, CancellationToken cancellationToken = default)
@@ -268,7 +280,7 @@ public sealed class ServiceManager : IAsyncDisposable
             }
             lock (_gate) _statuses[name] = _statuses[name] with { Mapping = resolved.Mapping };
             if (resolved.Mapping!.Note is { } note) Log(name, note);
-            var plan = NativeServicePlan.Create(definition, resolved.Mapping, _storage, Endpoints[name], value => ConnectionEnvironment.Rewrite(value, Endpoints));
+            var plan = NativeServicePlan.Create(definition, resolved.Mapping, _storage, Endpoints[name], value => ConnectionEnvironment.Rewrite(value, Endpoints), (key, value) => ConnectionEnvironment.Rewrite(value, Endpoints, key));
             var instance = new Instance(plan, CancellationTokenSource.CreateLinkedTokenSource(_lifetime.Token));
             lock (_gate) { _running.Add(name, instance); _startedOrder.Add(name); }
             Update(name, ServiceState.Starting, "Initializing and waiting for health");

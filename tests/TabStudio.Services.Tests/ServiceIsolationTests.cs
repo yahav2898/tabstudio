@@ -118,6 +118,18 @@ public sealed class ServiceIsolationTests : IDisposable
         Assert.Equal(["cache"], manager.NeededBy(_workspace.Resolve("app")));
     }
 
+    [Fact]
+    public async Task An_app_service_without_depends_on_starts_what_its_environment_points_at()
+    {
+        // An empty depends_on list ended the search, so this app debugged with no database.
+        _workspace.Write("app/main.py", "print('hi')\n");
+        var project = Read("services:\n  app:\n    build: ./app\n    environment:\n      DATABASE_URL: postgres://user:pass@db:5432/app\n  db:\n    image: postgres:18\n  cache:\n    image: redis:7\n");
+        var runtime = new FailingRuntime(null);
+        await using var manager = new ServiceManager(project, runtime, new Packages(), new ServiceStorage(_storage.Path, _workspace.Path), new Network());
+
+        Assert.Equal(["db"], manager.NeededBy(_workspace.Resolve("app")));
+    }
+
     public void Dispose()
     {
         _workspace.Dispose();
