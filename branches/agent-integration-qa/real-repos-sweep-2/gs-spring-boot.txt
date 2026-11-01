@@ -2,11 +2,11 @@ gs-spring-boot at cc0ca7c0c89513c75902de8a9afd1fc2718acf3b
 Toolchain projects:
   java: /home/runner/work/_temp/real-repos/gs-spring-boot/complete/pom.xml
 Startup project: java /home/runner/work/_temp/real-repos/gs-spring-boot/complete/pom.xml
-Set up in 2.0 s
+Set up in 3.0 s
 Web preview: http://127.0.0.1:8080/
 GET http://127.0.0.1:8080/: 200 , 27 characters
-Ran in 6.7 s
-Tests: 2 passed, 0 failed, 0 skipped of 2: 2 tests run in 12.4 sec: 2 passed, 0 failed, 0 skipped.
+Ran in 9.2 s
+Tests: 2 passed, 0 failed, 0 skipped of 2: 2 tests run in 24.1 sec: 2 passed, 0 failed, 0 skipped.
 Project setup:
 
 Output:
@@ -48,8 +48,8 @@ Running complete with Java 21.0.13
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  2.882 s
-[INFO] Finished at: 2026-11-01T01:25:52Z
+[INFO] Total time:  3.878 s
+[INFO] Finished at: 2026-11-01T02:35:40Z
 [INFO] ------------------------------------------------------------------------
 
   .   ____          _            __ _ _
@@ -61,15 +61,15 @@ Running complete with Java 21.0.13
 
  :: Spring Boot ::                (v4.0.8)
 
-2026-11-01T01:25:52.902Z  INFO 11266 --- [           main] com.example.springboot.Application       : Starting Application using Java 21.0.13 with PID 11266 (/home/runner/work/_temp/real-repos/gs-spring-boot/complete/target/classes started by runner in /home/runner/work/_temp/real-repos/gs-spring-boot/complete)
-2026-11-01T01:25:52.907Z  INFO 11266 --- [           main] com.example.springboot.Application       : No active profile set, falling back to 1 default profile: "default"
-2026-11-01T01:25:53.745Z  INFO 11266 --- [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
-2026-11-01T01:25:53.763Z  INFO 11266 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-11-01T01:25:53.764Z  INFO 11266 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
-2026-11-01T01:25:53.794Z  INFO 11266 --- [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 835 ms
-2026-11-01T01:25:54.184Z  INFO 11266 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
-2026-11-01T01:25:54.268Z  INFO 11266 --- [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
-2026-11-01T01:25:54.275Z  INFO 11266 --- [           main] com.example.springboot.Application       : Started Application in 1.734 seconds (process running for 1.971)
+2026-11-01T02:35:41.156Z  INFO 12651 --- [           main] com.example.springboot.Application       : Starting Application using Java 21.0.13 with PID 12651 (/home/runner/work/_temp/real-repos/gs-spring-boot/complete/target/classes started by runner in /home/runner/work/_temp/real-repos/gs-spring-boot/complete)
+2026-11-01T02:35:41.162Z  INFO 12651 --- [           main] com.example.springboot.Application       : No active profile set, falling back to 1 default profile: "default"
+2026-11-01T02:35:42.285Z  INFO 12651 --- [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-11-01T02:35:42.311Z  INFO 12651 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-01T02:35:42.312Z  INFO 12651 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-11-01T02:35:42.365Z  INFO 12651 --- [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1138 ms
+2026-11-01T02:35:42.847Z  INFO 12651 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-11-01T02:35:42.969Z  INFO 12651 --- [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-11-01T02:35:42.980Z  INFO 12651 --- [           main] com.example.springboot.Application       : Started Application in 2.336 seconds (process running for 2.687)
 Let's inspect the beans provided by Spring Boot:
 application
 applicationAvailability
@@ -328,9 +328,9 @@ webServerFactoryCustomizerBeanPostProcessor
 webSocketWebServerCustomizer
 welcomePageHandlerMapping
 welcomePageNotAcceptableHandlerMapping
-2026-11-01T01:25:54.663Z  INFO 11266 --- [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-11-01T01:25:54.664Z  INFO 11266 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-11-01T01:25:54.665Z  INFO 11266 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-11-01T02:35:43.597Z  INFO 12651 --- [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-01T02:35:43.598Z  INFO 12651 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-11-01T02:35:43.600Z  INFO 12651 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
 
 The program 'complete' was stopped.
 
