@@ -113,18 +113,18 @@ jobs:
   # The images people put in their Compose files, on both architectures: which start and answer under PRoot, and
   # why the others do not. Only the images the release notes promise must pass; the table is the record.
   compatibility:
-    name: Image compatibility (${{ matrix.arch }}, ${{ matrix.shard }}/2)
+    name: Image compatibility (${{ matrix.arch }}, ${{ matrix.shard }}/3)
     if: github.event_name != 'pull_request'
     strategy:
       fail-fast: false
       matrix:
         arch: [x64, arm64]
-        shard: [0, 1]
+        shard: [0, 1, 2]
         include:
           - { arch: x64, runner: ubuntu-24.04 }
           - { arch: arm64, runner: ubuntu-24.04-arm }
     runs-on: ${{ matrix.runner }}
-    # 13 images of at most 4 minutes each.
+    # Nine images of at most five minutes each (four, and one more for a step that ignores its cancellation).
     timeout-minutes: 70
     steps:
       - uses: actions/checkout@v4
@@ -139,7 +139,7 @@ jobs:
           TABSTUDIO_CONTAINER_COMPAT: '1'
           TABSTUDIO_CONTAINER_COMPAT_OUT: ${{ github.workspace }}/ci-out/compatibility-${{ matrix.arch }}-${{ matrix.shard }}.md
           TABSTUDIO_CONTAINER_COMPAT_SHARD: ${{ matrix.shard }}
-          TABSTUDIO_CONTAINER_COMPAT_SHARDS: '2'
+          TABSTUDIO_CONTAINER_COMPAT_SHARDS: '3'
         run: |
           mkdir -p ci-out
           dotnet test tests/TabStudio.Containers.Tests -c Release -warnaserror --filter 'FullyQualifiedName~CompatibilityTests' --logger 'console;verbosity=detailed' > ci-out/compatibility.log 2>&1 || { tail -n 80 ci-out/compatibility.log; exit 1; }
@@ -151,5 +151,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compatibility-${{ matrix.arch }}
+          name: compatibility-${{ matrix.arch }}-${{ matrix.shard }}
           path: ci-out/

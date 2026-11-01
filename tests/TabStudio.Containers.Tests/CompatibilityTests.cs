@@ -97,7 +97,13 @@ public sealed class CompatibilityTests(ITestOutputHelper output)
         var shards = int.TryParse(Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_COMPAT_SHARDS"), CultureInfo.InvariantCulture, out var count) && count > 0 ? count : 1;
         foreach (var probe in Probes.Where((_, i) => i % shards == shard))
         {
-            var (works, seconds, note) = await TryAsync(engine, probe);
+            // A step that ignores its cancellation would hold the whole shard: the probe gets one more minute, then
+            // the row says which step never returned and the sweep moves on.
+            var stage = new Stage();
+            var attempt = Task.Run(() => TryAsync(engine, probe, stage));
+            var (works, seconds, note) = await Task.WhenAny(attempt, Task.Delay(TimeSpan.FromMinutes(5))) == attempt
+                ? await attempt
+                : (false, 0d, $"hung in {stage.Name} past its 4 min deadline");
             var row = $"| {probe.Area} | `{probe.Image}` | {(works ? "Works" : "Does not start")} | {(works ? seconds.ToString("0", CultureInfo.InvariantCulture) + " s" : "-")} | {note.Replace('|', '/')} |";
             table.AppendLine(row);
             output.WriteLine("COMPAT " + row);
@@ -117,7 +123,13 @@ public sealed class CompatibilityTests(ITestOutputHelper output)
         Assert.True(failures.Count == 0, string.Join("\n", failures));
     }
 
-    private async Task<(bool Works, double Seconds, string Note)> TryAsync(ContainerEngine engine, Probe probe)
+    /// <summary>The step a probe is in, for the row of one that never returns.</summary>
+    private sealed class Stage
+    {
+        public volatile string Name = "pull";
+    }
+
+    private async Task<(bool Works, double Seconds, string Note)> TryAsync(ContainerEngine engine, Probe probe, Stage stage)
     {
         using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(4));
         var clock = Stopwatch.StartNew();
@@ -126,6 +138,7 @@ public sealed class CompatibilityTests(ITestOutputHelper output)
         {
             await engine.PullAsync(probe.Image, cancellationToken: deadline.Token);
             var pulled = clock.Elapsed;
+            stage.Name = "create";
             container = await engine.CreateAsync(new ContainerSpec
             {
                 Image = probe.Image,
@@ -136,7 +149,9 @@ public sealed class CompatibilityTests(ITestOutputHelper output)
                 Command = probe.Command is null ? probe.Arguments : new[] { "600" },
                 Ports = probe.Port > 0 ? [new PortBinding(probe.Port)] : [],
             }, cancellationToken: deadline.Token);
+            stage.Name = "start";
             await engine.StartAsync(container.Id, deadline.Token);
+            stage.Name = probe.Command is null ? "waiting for the port" : "exec";
             if (probe.Command is { } command)
             {
                 var (code, text) = await engine.ExecCaptureAsync(container.Id, command, TimeSpan.FromMinutes(2), deadline.Token);
@@ -172,11 +187,13 @@ public sealed class CompatibilityTests(ITestOutputHelper output)
         }
         finally
         {
+            stage.Name = "remove";
             if (container is not null)
             {
                 try { await engine.RemoveAsync(container.Id, force: true); } catch (Exception ex) when (ex is not OutOfMemoryException) { output.WriteLine("remove: " + ex.Message); }
             }
 
+            stage.Name = "prune";
             // Two dozen images do not fit on a runner's disk together with their writable copies.
             try { await engine.PruneAsync(allImages: true); } catch (Exception ex) when (ex is not OutOfMemoryException) { output.WriteLine("prune: " + ex.Message); }
         }
