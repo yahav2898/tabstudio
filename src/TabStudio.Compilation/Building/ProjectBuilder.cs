@@ -152,9 +152,11 @@ public sealed class ProjectBuilder
                     current.Name)));
 
             var isEntry = string.Equals(current.FilePath, project.FilePath, StringComparison.Ordinal);
-            // Every project an in-process program loads runs inside TabStudio, its libraries too: a library's
-            // Environment.Exit closed the IDE, because only the entry project's calls were redirected.
-            var result = await _host.EmitAsync(current.FilePath, checkInProcessSafety: project.IsExecutable, cancellationToken).ConfigureAwait(false);
+            // Every project an in-process program loads runs inside TabStudio, its libraries too: a C# library's
+            // Environment.Exit closed the IDE, because only the entry project's calls were redirected. A Visual Basic
+            // library's calls cannot be redirected, and refusing to build it would break repositories that build
+            // today (Community.VisualBasic's ProjectData), so only its entry project is checked, as before.
+            var result = await _host.EmitAsync(current.FilePath, checkInProcessSafety: RunsRedirected(project, current, isEntry), cancellationToken).ConfigureAwait(false);
             diagnostics.AddRange(result.Diagnostics);
 
             if (!result.Success)
@@ -177,4 +179,18 @@ public sealed class ProjectBuilder
 
     private static List<BuildDiagnostic> Sort(List<BuildDiagnostic> diagnostics) =>
         diagnostics.OrderByDescending(d => d.Severity).ToList();
+
+    /// <summary>
+    /// Whether a project of an in-process program is built with its exits redirected and checked: the program's entry
+    /// project, and its C# libraries, whose calls are always redirected.
+    /// </summary>
+    /// <param name="entry">The project that runs.</param>
+    /// <param name="current">A project in its build order.</param>
+    /// <param name="isEntry">Whether <paramref name="current"/> is <paramref name="entry"/>.</param>
+    public static bool RunsRedirected(TabStudio.Core.Workspaces.ProjectInfo entry, TabStudio.Core.Workspaces.ProjectInfo current, bool isEntry)
+    {
+        ArgumentNullException.ThrowIfNull(entry);
+        ArgumentNullException.ThrowIfNull(current);
+        return entry.IsExecutable && (isEntry || current.Language == TabStudio.Core.Workspaces.ProjectLanguage.CSharp);
+    }
 }

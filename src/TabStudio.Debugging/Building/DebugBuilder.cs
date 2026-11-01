@@ -97,7 +97,7 @@ public sealed class DebugBuilder
             var compilation = await _host.GetCompilationAsync(current.FilePath, cancellationToken).ConfigureAwait(false);
             var assembly = compilation is not (CSharpCompilation or VisualBasicCompilation)
                 ? null
-                : Compile(compilation, current.Name, project.IsExecutable, ManifestResources.For(current), info, diagnostics, cancellationToken);
+                : Compile(compilation, current.Name, ProjectBuilder.RunsRedirected(project, current, isEntry), ManifestResources.For(current), info, diagnostics, cancellationToken);
             if (assembly is null)
             {
                 return Finish(project.Name, diagnostics, null, dependencies, stopwatch, info, language);
