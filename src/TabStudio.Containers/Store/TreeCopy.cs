@@ -33,9 +33,10 @@ public static class TreeCopy
                     directories.Add((entry.FullName, target));
                     pending.Push((entry.FullName, target));
                 }
-                else if ((entry.Attributes & FileAttributes.Device) != 0 || entry is FileInfo { Exists: false })
+                else if (UnixFiles.IsSpecial(entry.FullName))
                 {
-                    // A FIFO or socket: make a FIFO where possible, as the image had.
+                    // A FIFO or socket: make a FIFO where possible, as the image had. .NET sees a FIFO as a file, and
+                    // File.Copy opened it and waited for a writer forever: creating a mysql:8.4 container never ended.
                     UnixFiles.TryMakeFifo(target, UnixFileMode.UserRead | UnixFileMode.UserWrite);
                 }
                 else

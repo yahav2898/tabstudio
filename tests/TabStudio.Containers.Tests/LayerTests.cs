@@ -101,6 +101,24 @@ public sealed class LayerTests
         Assert.Equal("config", new FileInfo(Path.Combine(copy, "etc/link")).LinkTarget);
     }
 
+    [Fact]
+    public async Task A_container_copy_of_an_image_with_a_FIFO_finishes_and_keeps_the_FIFO()
+    {
+        if (OperatingSystem.IsWindows()) return;
+        using var folder = new TempDirectory();
+        var source = Path.Combine(folder.Path, "image");
+        await Apply(source, Tar(Dir("run"), new PaxTarEntry(TarEntryType.Fifo, "run/initctl") { Mode = (UnixFileMode)0b110_000_000 }, File("run/ok", "ok")));
+        Assert.True(UnixFiles.IsSpecial(Path.Combine(source, "run/initctl")));
+        Assert.False(UnixFiles.IsSpecial(Path.Combine(source, "run/ok")));
+        var copy = Path.Combine(folder.Path, "container");
+
+        // File.Copy opened the FIFO and waited for a writer, so the copy never ended.
+        await TreeCopy.CopyAsync(source, copy).WaitAsync(TimeSpan.FromSeconds(30));
+
+        Assert.True(UnixFiles.IsSpecial(Path.Combine(copy, "run/initctl")));
+        Assert.Equal("ok", System.IO.File.ReadAllText(Path.Combine(copy, "run/ok")));
+    }
+
     private static Task<LayerResult> Apply(string root, byte[] tar) =>
         LayerUnpacker.ApplyAsync(new MemoryStream(FakeRegistry.Gzip(tar)), Images.MediaTypes.OciLayerGzip, root, null);
 
