@@ -1,5 +1,5 @@
 CleanArchitecture-Template at 345e7fe7612fdaf0cb5da58826a7c57d42e1fdd8
-Opened /home/runner/work/_temp/real-repos/CleanArchitecture-Template/CleanArchitecture.slnx in 0.3 s
+Opened /home/runner/work/_temp/real-repos/CleanArchitecture-Template/CleanArchitecture.slnx in 0.2 s
 Compatibility Doctor:
   AppHost: Not supported via Not on a tablet - An Aspire AppHost starts the app's projects and containers through Aspire's developer control plane, which runs on a computer, and it compiles against code its SDK generates for the projects it references. TabStudio leaves it out of builds; run the projects it starts on their own.
   ServiceDefaults: Library via Built with its users - A library is compiled together with the projects that reference it.
@@ -17,7 +17,7 @@ Compatibility Doctor:
   ClientApp: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
   ClientApp-React: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
 Startup project: Web
-Built in 23.8 s: 0 errors, 0 warnings
+Built in 30.8 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   aspire.hosting.apphost 13.6.4
       analyzers/dotnet/cs/Aspire.Hosting.Analyzers.dll
@@ -1459,25 +1459,25 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net6.0/_._
       buildTransitive/netcoreapp2.0/System.Threading.RateLimiting.targets
 Output:
-Build started at 23:48:59...
+Build started at 06:50:36...
 1>------ Build started: Project: ServiceDefaults, Configuration: Debug ------
-1>ServiceDefaults -> compiled in memory (13.5 KB, 35 ms)
+1>ServiceDefaults -> compiled in memory (13.5 KB, 14 ms)
 2>------ Build started: Project: Domain, Configuration: Debug ------
-2>Domain -> compiled in memory (11.5 KB, 10 ms)
+2>Domain -> compiled in memory (11.5 KB, 14 ms)
 3>------ Build started: Project: Application, Configuration: Debug ------
-3>Application -> compiled in memory (57.5 KB, 83 ms)
+3>Application -> compiled in memory (57.5 KB, 86 ms)
 4>------ Build started: Project: Shared, Configuration: Debug ------
 4>Shared -> compiled in memory (2.5 KB, 1 ms)
 5>------ Build started: Project: Infrastructure, Configuration: Debug ------
-5>Infrastructure -> compiled in memory (30.5 KB, 114 ms)
+5>Infrastructure -> compiled in memory (30.5 KB, 183 ms)
 6>------ Build started: Project: Web, Configuration: Debug ------
-6>Web -> compiled in memory (63.5 KB, 212 ms)
+6>Web -> compiled in memory (63.5 KB, 103 ms)
 7>------ Build started: Project: Application.UnitTests, Configuration: Debug ------
-7>Application.UnitTests -> compiled in memory (12 KB, 103 ms)
+7>Application.UnitTests -> compiled in memory (12 KB, 149 ms)
 8>------ Build started: Project: Domain.UnitTests, Configuration: Debug ------
-8>Domain.UnitTests -> compiled in memory (4 KB, 33 ms)
+8>Domain.UnitTests -> compiled in memory (4 KB, 15 ms)
 9>------ Build started: Project: Infrastructure.IntegrationTests, Configuration: Debug ------
-9>Infrastructure.IntegrationTests -> compiled in memory (2.5 KB, 2 ms)
+9>Infrastructure.IntegrationTests -> compiled in memory (2.5 KB, 3 ms)
 10>------ Skipped: Project: AppHost: an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers ------
 11>------ Skipped: Project: Application.FunctionalTests: it references TestAppHost, which is not built on this device ------
 12>------ Skipped: Project: TestAppHost: an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers ------
