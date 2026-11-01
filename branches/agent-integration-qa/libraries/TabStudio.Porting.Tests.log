@@ -1,0 +1,72 @@
+  Determining projects to restore...
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Porting.Tests/TabStudio.Porting.Tests.csproj (in 254 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/TabStudio.Porting.csproj (in 254 ms).
+  2 of 4 projects are up-to-date for restore.
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+  TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
+  TabStudio.Porting -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/bin/Release/net10.0/TabStudio.Porting.dll
+  TabStudio.Porting.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Porting.Tests/bin/Release/net10.0/TabStudio.Porting.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Porting.Tests/bin/Release/net10.0/TabStudio.Porting.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.07]   Discovering: TabStudio.Porting.Tests
+[xUnit.net 00:00:00.14]   Discovered:  TabStudio.Porting.Tests
+[xUnit.net 00:00:00.17]   Starting:    TabStudio.Porting.Tests
+  Passed TabStudio.Porting.Tests.RuleTests.Wpf_element_rules(source: "AdornerDecorator", target: "Decorator") [44 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Wpf_element_rules(source: "ListViewItem", target: "ListBoxItem") [< 1 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Wpf_element_rules(source: "DatePicker", target: "CalendarDatePicker") [< 1 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Invalid_project_names_are_rejected(name: "") [< 1 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Invalid_project_names_are_rejected(name: "../Source") [< 1 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Invalid_project_names_are_rejected(name: "App..Next") [< 1 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Invalid_project_names_are_rejected(name: "A/B") [< 1 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Designer_event_rules_keep_handlers_and_adapt_arguments(source: "KeyDown", target: "KeyDown", args: "KeyEventArgs") [166 ms]
+  Passed TabStudio.Porting.Tests.PartialAndVisibilityTests.A_user_controls_Load_handler_connects_to_Avalonia_Loaded [216 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Designer_event_rules_keep_handlers_and_adapt_arguments(source: "Click", target: "Click", args: "EventArgs") [3 ms]
+  Passed TabStudio.Porting.Tests.PartialAndVisibilityTests.Designer_root_uses_the_base_class_from_the_other_partial_file(baseClass: "Form", rootClass: "AppForm") [3 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Designer_event_rules_keep_handlers_and_adapt_arguments(source: "TextChanged", target: "TextChanged", args: "EventArgs") [2 ms]
+  Passed TabStudio.Porting.Tests.PartialAndVisibilityTests.Designer_root_uses_the_base_class_from_the_other_partial_file(baseClass: "UserControl", rootClass: "UserControl") [2 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Designer_event_rules_keep_handlers_and_adapt_arguments(source: "MouseDown", target: "PointerPressed", args: "PointerPressedEventArgs") [2 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Forms_control_rules(source: "GroupBox", target: "HeaderedContentControl") [5 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Forms_control_rules(source: "Button", target: "Button") [2 ms]
+  Passed TabStudio.Porting.Tests.PartialAndVisibilityTests.Hidden_visibility_approximations_have_reviewable_notes(content: "<TextBlock Visibility=\"Hidden\" />", expected: "Visibility.Hidden") [11 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Forms_control_rules(source: "TextBox", target: "TextBox") [2 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Forms_control_rules(source: "PictureBox", target: "Image") [2 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Forms_control_rules(source: "DateTimePicker", target: "CalendarDatePicker") [2 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Forms_control_rules(source: "Label", target: "TextBlock") [2 ms]
+  Passed TabStudio.Porting.Tests.PartialAndVisibilityTests.Hidden_visibility_approximations_have_reviewable_notes(content: "<Window.Resources><Style TargetType=\"Button\"><Se"···, expected: "Visibility.Hidden setter") [11 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Forms_control_rules(source: "NumericUpDown", target: "NumericUpDown") [2 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Forms_control_rules(source: "ProgressBar", target: "ProgressBar") [2 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Forms_control_rules(source: "CheckBox", target: "CheckBox") [2 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Forms_control_rules(source: "TrackBar", target: "Slider") [3 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Designer_reader_accepts_this_qualified_and_delegate_event_wiring [3 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Auto_grid_tracks_are_preserved_because_their_default_is_star_not_auto [2 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Unmapped_events_properties_and_components_have_navigable_structured_notes [4 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Code_member_rules(source: "Text", target: "Content") [6 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Code_member_rules(source: "Enabled", target: "IsEnabled") [2 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Code_member_rules(source: "Visible", target: "IsVisible") [2 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Wpf_unmapped_controls_have_notes(control: "MediaElement") [7 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Wpf_unmapped_controls_have_notes(control: "RichTextBox") [6 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Wpf_unmapped_controls_have_notes(control: "Viewport3D") [< 1 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Wpf_unmapped_controls_have_notes(control: "WebBrowser") [< 1 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Write_refuses_to_overwrite_existing_files_and_originals_stay_byte_identical [20 ms]
+  Passed TabStudio.Porting.Tests.WpfTemplateTests.The_application_opens_the_StartupUri_window_as_the_main_window [98 ms]
+  Passed TabStudio.Porting.Tests.WpfTemplateTests.The_code_behind_derives_from_AppWindow_without_WPF_usings [3 ms]
+  Passed TabStudio.Porting.Tests.WpfTemplateTests.The_window_becomes_an_AppWindow_that_keeps_its_title_and_size [3 ms]
+  Passed TabStudio.Porting.Tests.WpfTemplateTests.The_template_ports_without_notes [3 ms]
+  Passed TabStudio.Porting.Tests.WpfTemplateTests.The_project_is_an_Avalonia_project_as_TabStudio_makes_one [5 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Async_closing_waits_and_numeric_and_checked_reads_preserve_value_semantics [147 ms]
+  Passed TabStudio.Porting.Tests.RuleTests.Unsupported_component_calls_remain_as_commented_code_with_a_note [9 ms]
+  Passed TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(sample: "WpfContacts") [179 ms]
+  Passed TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(sample: "WpfTemplate") [5 ms]
+  Passed TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(sample: "WinFormsTemplate") [5 ms]
+  Passed TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(sample: "WinFormsCustomers") [28 ms]
+  Passed TabStudio.Porting.Tests.SampleBuildTests.The_ported_sample_builds_with_zero_errors(sample: "WinFormsTemplate") [4 s]
+  Passed TabStudio.Porting.Tests.SampleBuildTests.The_ported_sample_builds_with_zero_errors(sample: "WpfContacts") [4 s]
+  Passed TabStudio.Porting.Tests.SampleBuildTests.The_ported_sample_builds_with_zero_errors(sample: "WinFormsCustomers") [4 s]
+[xUnit.net 00:00:17.33]   Finished:    TabStudio.Porting.Tests
+  Passed TabStudio.Porting.Tests.SampleBuildTests.The_ported_sample_builds_with_zero_errors(sample: "WpfTemplate") [3 s]
+
+Test Run Successful.
+Total tests: 52
+     Passed: 52
+ Total time: 17.7888 Seconds
