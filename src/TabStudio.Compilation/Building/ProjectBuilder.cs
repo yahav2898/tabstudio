@@ -152,7 +152,9 @@ public sealed class ProjectBuilder
                     current.Name)));
 
             var isEntry = string.Equals(current.FilePath, project.FilePath, StringComparison.Ordinal);
-            var result = await _host.EmitAsync(current.FilePath, checkInProcessSafety: isEntry && current.IsExecutable, cancellationToken).ConfigureAwait(false);
+            // Every project an in-process program loads runs inside TabStudio, its libraries too: a library's
+            // Environment.Exit closed the IDE, because only the entry project's calls were redirected.
+            var result = await _host.EmitAsync(current.FilePath, checkInProcessSafety: project.IsExecutable, cancellationToken).ConfigureAwait(false);
             diagnostics.AddRange(result.Diagnostics);
 
             if (!result.Success)

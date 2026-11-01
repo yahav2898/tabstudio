@@ -12,6 +12,9 @@ internal static class FrameworkNames
     public const string XunitData = "Xunit.Sdk.DataAttribute";
     public const string XunitInlineData = "Xunit.InlineDataAttribute";
     public const string XunitMemberDataBase = "Xunit.MemberDataAttributeBase";
+    // xUnit.net v3 moved its data attributes' base types into Xunit.v3; [InlineData] and [MemberData] kept their names.
+    public const string XunitV3Data = "Xunit.v3.DataAttribute";
+    public const string XunitV3MemberDataBase = "Xunit.v3.MemberDataAttributeBase";
     public const string XunitClassData = "Xunit.ClassDataAttribute";
     public const string XunitTrait = "Xunit.TraitAttribute";
     public const string XunitClassFixture = "Xunit.IClassFixture`1";

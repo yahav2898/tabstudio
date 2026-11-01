@@ -80,7 +80,7 @@ internal sealed class XunitAdapter : FrameworkAdapter
     private static List<RunnableTest> TheoryRows(TestMethodBuilder builder, Type type, MethodInfo method, List<AttributeReader> attributes)
     {
         var tests = new List<RunnableTest>();
-        foreach (var data in attributes.Where(a => a.Is(FrameworkNames.XunitData)))
+        foreach (var data in attributes.Where(a => a.Is(FrameworkNames.XunitData) || a.Is(FrameworkNames.XunitV3Data)))
         {
             var skip = NonEmpty(data.Named("Skip") as string);
             try
@@ -112,7 +112,7 @@ internal sealed class XunitAdapter : FrameworkAdapter
             return [data.ExpandedArguments()];
         }
 
-        if (data.Is(FrameworkNames.XunitMemberDataBase))
+        if (data.Is(FrameworkNames.XunitMemberDataBase) || data.Is(FrameworkNames.XunitV3MemberDataBase))
         {
             var arguments = data.ExpandedArguments();
             var memberName = arguments.Length > 0 ? arguments[0] as string : null;
@@ -133,12 +133,40 @@ internal sealed class XunitAdapter : FrameworkAdapter
                 ?? throw new InvalidOperationException($"'{classType.FullName}' must be a sequence of rows."));
         }
 
-        // Any other data attribute: ask it for its rows, as xUnit v2 does.
-        var getData = data.Type.GetMethod("GetData", [typeof(MethodInfo)])
-            ?? throw new InvalidOperationException($"[{data.Type.Name}] is not supported: it has no GetData(MethodInfo) method.");
+        // Any other data attribute: ask it for its rows, as xUnit v2 does with GetData(MethodInfo) and v3 with
+        // GetData(MethodInfo, DisposalTracker), which returns a ValueTask of rows.
         var instance = data.Instance ?? throw new InvalidOperationException($"[{data.Type.Name}] could not be created.");
-        return ToRows(getData.Invoke(instance, [method]) as IEnumerable
+        if (data.Type.GetMethod("GetData", [typeof(MethodInfo)]) is { } getData)
+        {
+            return ToRows(getData.Invoke(instance, [method]) as IEnumerable
+                ?? throw new InvalidOperationException($"[{data.Type.Name}] returned no data."));
+        }
+
+        var getDataV3 = data.Type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+            .FirstOrDefault(m => m.Name == "GetData" && m.GetParameters() is [{ } first, { } second]
+                && first.ParameterType == typeof(MethodInfo) && second.ParameterType.Name == "DisposalTracker")
+            ?? throw new InvalidOperationException($"[{data.Type.Name}] is not supported: it has no GetData method.");
+        var tracker = Activator.CreateInstance(getDataV3.GetParameters()[1].ParameterType);
+        return ToRows(Await(getDataV3.Invoke(instance, [method, tracker])) as IEnumerable
             ?? throw new InvalidOperationException($"[{data.Type.Name}] returned no data."));
+    }
+
+    /// <summary>The result of a <c>ValueTask&lt;T&gt;</c> or <c>Task&lt;T&gt;</c> returned through reflection.</summary>
+    private static object? Await(object? awaitable)
+    {
+        if (awaitable is null)
+        {
+            return null;
+        }
+
+        var task = awaitable as Task ?? awaitable.GetType().GetMethod("AsTask", Type.EmptyTypes)?.Invoke(awaitable, null) as Task;
+        if (task is null)
+        {
+            return awaitable;
+        }
+
+        task.GetAwaiter().GetResult();
+        return task.GetType().GetProperty("Result")?.GetValue(task);
     }
 
     private static List<object?[]> ToRows(IEnumerable items)
