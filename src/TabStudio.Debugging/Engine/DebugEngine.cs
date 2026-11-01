@@ -406,6 +406,10 @@ internal sealed class DebugEngine
         if (origin.Frame is not null) Recording?.FindExceptionCause(origin.Frame, exception);
         if (!_breakOnUnhandledExceptions) return false;
 
+        // Environment.Exit, redirected so that the program ends and TabStudio does not (InProcessExit): it is how the
+        // program ends, not an exception it failed to handle, so the debugger lets it end as its process would.
+        if (TabStudio.Compilation.InProcessExit.TryGetExitCode(exception, out _)) return false;
+
         // Nothing has unwound yet, so the innermost frame of this flow is still the one that threw.
         var top = _current.Value ?? frame;
         var method = _map.GetMethod(top.MethodId);
