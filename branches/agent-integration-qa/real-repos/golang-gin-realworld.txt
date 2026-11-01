@@ -1,0 +1,77 @@
+golang-gin-realworld at 626c372d259472148d93303f74aa9b9a1cdcef24
+Toolchain projects:
+  go: /home/runner/work/_temp/real-repos/golang-gin-realworld/go.mod
+Startup project: go /home/runner/work/_temp/real-repos/golang-gin-realworld/go.mod
+Set up in 1.9 s
+Web preview: http://127.0.0.1:8080/
+GET http://127.0.0.1:8080/api/tags: 200 OK, 11 characters
+Ran in 34.4 s
+Project setup:
+
+Output:
+Running golang-gin-realworld with Go 1.27.3
+> go build '-gcflags=all=-N -l' -o .tabstudio/bin/app .
+go: downloading github.com/gin-gonic/gin v1.10.0
+go: downloading gorm.io/gorm v1.25.12
+go: downloading github.com/go-playground/validator/v10 v10.24.0
+go: downloading github.com/golang-jwt/jwt/v5 v5.2.1
+go: downloading gorm.io/driver/sqlite v1.5.7
+go: downloading golang.org/x/crypto v0.32.0
+go: downloading github.com/gosimple/slug v1.15.0
+go: downloading github.com/gin-contrib/sse v0.1.0
+go: downloading github.com/mattn/go-isatty v0.0.20
+go: downloading golang.org/x/net v0.34.0
+go: downloading github.com/pelletier/go-toml/v2 v2.2.2
+go: downloading github.com/ugorji/go/codec v1.2.12
+go: downloading google.golang.org/protobuf v1.34.1
+go: downloading gopkg.in/yaml.v3 v3.0.1
+go: downloading github.com/jinzhu/now v1.1.5
+go: downloading github.com/gabriel-vasile/mimetype v1.4.8
+go: downloading github.com/go-playground/universal-translator v0.18.1
+go: downloading github.com/leodido/go-urn v1.4.0
+go: downloading golang.org/x/text v0.21.0
+go: downloading github.com/mattn/go-sqlite3 v1.14.22
+go: downloading github.com/gosimple/unidecode v1.0.1
+go: downloading golang.org/x/sys v0.29.0
+go: downloading github.com/jinzhu/inflection v1.0.0
+go: downloading github.com/go-playground/locales v0.14.1
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] POST   /api/users                --> github.com/gothinkster/golang-gin-realworld-example-app/users.UsersRegistration (3 handlers)
+[GIN-debug] POST   /api/users/               --> github.com/gothinkster/golang-gin-realworld-example-app/users.UsersRegistration (3 handlers)
+[GIN-debug] POST   /api/users/login          --> github.com/gothinkster/golang-gin-realworld-example-app/users.UsersLogin (3 handlers)
+[GIN-debug] GET    /api/articles             --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleList (4 handlers)
+[GIN-debug] GET    /api/articles/            --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleList (4 handlers)
+[GIN-debug] GET    /api/articles/:slug       --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleRetrieve (4 handlers)
+[GIN-debug] GET    /api/articles/:slug/comments --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleCommentList (4 handlers)
+[GIN-debug] GET    /api/tags                 --> github.com/gothinkster/golang-gin-realworld-example-app/articles.TagList (4 handlers)
+[GIN-debug] GET    /api/tags/                --> github.com/gothinkster/golang-gin-realworld-example-app/articles.TagList (4 handlers)
+[GIN-debug] GET    /api/profiles/:username   --> github.com/gothinkster/golang-gin-realworld-example-app/users.ProfileRetrieve (4 handlers)
+[GIN-debug] GET    /api/user                 --> github.com/gothinkster/golang-gin-realworld-example-app/users.UserRetrieve (5 handlers)
+[GIN-debug] GET    /api/user/                --> github.com/gothinkster/golang-gin-realworld-example-app/users.UserRetrieve (5 handlers)
+[GIN-debug] PUT    /api/user                 --> github.com/gothinkster/golang-gin-realworld-example-app/users.UserUpdate (5 handlers)
+[GIN-debug] PUT    /api/user/                --> github.com/gothinkster/golang-gin-realworld-example-app/users.UserUpdate (5 handlers)
+[GIN-debug] POST   /api/profiles/:username/follow --> github.com/gothinkster/golang-gin-realworld-example-app/users.ProfileFollow (5 handlers)
+[GIN-debug] DELETE /api/profiles/:username/follow --> github.com/gothinkster/golang-gin-realworld-example-app/users.ProfileUnfollow (5 handlers)
+[GIN-debug] GET    /api/articles/feed        --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleFeed (5 handlers)
+[GIN-debug] POST   /api/articles             --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleCreate (5 handlers)
+[GIN-debug] POST   /api/articles/            --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleCreate (5 handlers)
+[GIN-debug] PUT    /api/articles/:slug       --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleUpdate (5 handlers)
+[GIN-debug] PUT    /api/articles/:slug/      --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleUpdate (5 handlers)
+[GIN-debug] DELETE /api/articles/:slug       --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleDelete (5 handlers)
+[GIN-debug] POST   /api/articles/:slug/favorite --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleFavorite (5 handlers)
+[GIN-debug] DELETE /api/articles/:slug/favorite --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleUnfavorite (5 handlers)
+[GIN-debug] POST   /api/articles/:slug/comments --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleCommentCreate (5 handlers)
+[GIN-debug] DELETE /api/articles/:slug/comments/:id --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleCommentDelete (5 handlers)
+[GIN-debug] GET    /api/ping/                --> main.main.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
+[GIN] 2026/11/01 - 01:03:21 | 200 |     305.211µs |       127.0.0.1 | GET      "/api/tags"
+
+The program 'golang-gin-realworld' was stopped.
+
