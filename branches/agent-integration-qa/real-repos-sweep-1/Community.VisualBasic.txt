@@ -1,0 +1,144 @@
+Community.VisualBasic at 20d2a51dfc9f342848ad134952ceaa8d79302559
+Opened /home/runner/work/_temp/real-repos/Community.VisualBasic/Community.VisualBasic.sln in 0.3 s
+Compatibility Doctor:
+  Community.VisualBasic: Library via Built with its users - A library is compiled together with the projects that reference it.
+  net5-console: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  net5-windows: Ready via Cross-platform Forms layer in the app preview - Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
+  netstandard2_0: Library via Built with its users - A library is compiled together with the projects that reference it.
+  net4-console: Ready via In-process - A .NET Framework project, run with .NET on this tablet. Compiled in memory and run right here, with its output in the Output panel.
+  Community.VisualBasic.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+Startup project: net5-windows
+Built in 12.1 s: 1 errors, 9 warnings
+  1 x TS1001
+      [Community.VisualBasic] ProjectData.vb(182,7): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. In a Windows Forms app call Application.Exit() or the form's Close(); in a console app return the exit code from Sub Main.
+Packages with analyzers or MSBuild files:
+  coverlet.collector 1.3.0
+      build/netstandard1.0/Microsoft.DotNet.PlatformAbstractions.dll
+      build/netstandard1.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+      build/netstandard1.0/Microsoft.Extensions.DependencyInjection.dll
+      build/netstandard1.0/Microsoft.Extensions.DependencyModel.dll
+      build/netstandard1.0/Microsoft.Extensions.FileSystemGlobbing.dll
+      build/netstandard1.0/Microsoft.TestPlatform.CoreUtilities.dll
+      build/netstandard1.0/Microsoft.TestPlatform.PlatformAbstractions.dll
+      build/netstandard1.0/Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
+      build/netstandard1.0/Mono.Cecil.Mdb.dll
+      build/netstandard1.0/Mono.Cecil.Pdb.dll
+      build/netstandard1.0/Mono.Cecil.Rocks.dll
+      build/netstandard1.0/Mono.Cecil.dll
+      build/netstandard1.0/Newtonsoft.Json.dll
+      build/netstandard1.0/NuGet.Frameworks.dll
+      build/netstandard1.0/coverlet.collector.deps.json
+      build/netstandard1.0/coverlet.collector.dll
+      build/netstandard1.0/coverlet.collector.pdb
+      build/netstandard1.0/coverlet.collector.targets
+      build/netstandard1.0/coverlet.core.dll
+      build/netstandard1.0/coverlet.core.pdb
+  microsoft.codecoverage 16.9.0-preview-20201123-03
+      build/netstandard1.0/CodeCoverage/CodeCoverage.config
+      build/netstandard1.0/CodeCoverage/CodeCoverage.exe
+      build/netstandard1.0/CodeCoverage/VanguardInstrumentationProfiler_x86.config
+      build/netstandard1.0/CodeCoverage/amd64/CodeCoverage.exe
+      build/netstandard1.0/CodeCoverage/amd64/VanguardInstrumentationProfiler_x64.config
+      build/netstandard1.0/CodeCoverage/amd64/covrun64.dll
+      build/netstandard1.0/CodeCoverage/amd64/msdia140.dll
+      build/netstandard1.0/CodeCoverage/amd64/msvcdis140.dll
+      build/netstandard1.0/CodeCoverage/amd64/msvcp140.dll
+      build/netstandard1.0/CodeCoverage/amd64/msvcp140_atomic_wait.dll
+      build/netstandard1.0/CodeCoverage/amd64/vcruntime140.dll
+      build/netstandard1.0/CodeCoverage/amd64/vcruntime140_1.dll
+      build/netstandard1.0/CodeCoverage/codecoveragemessages.dll
+      build/netstandard1.0/CodeCoverage/coreclr/Microsoft.VisualStudio.CodeCoverage.Shim.dll
+      build/netstandard1.0/CodeCoverage/covrun32.dll
+      build/netstandard1.0/CodeCoverage/msdia140.dll
+      build/netstandard1.0/CodeCoverage/msvcdis140.dll
+      build/netstandard1.0/CodeCoverage/msvcp140.dll
+      build/netstandard1.0/CodeCoverage/msvcp140_atomic_wait.dll
+      build/netstandard1.0/CodeCoverage/vcruntime140.dll
+      build/netstandard1.0/InstrumentationEngine/x64/MicrosoftInstrumentationEngine_x64.dll
+      build/netstandard1.0/InstrumentationEngine/x86/MicrosoftInstrumentationEngine_x86.dll
+      build/netstandard1.0/Microsoft.CodeCoverage.props
+      build/netstandard1.0/Microsoft.CodeCoverage.targets
+      build/netstandard1.0/Microsoft.VisualStudio.TraceDataCollector.dll
+  microsoft.net.test.sdk 16.9.0-preview-20201123-03
+      build/net40/Microsoft.NET.Test.Sdk.props
+      build/net40/Microsoft.NET.Test.Sdk.targets
+      build/netcoreapp1.0/Microsoft.NET.Test.Sdk.Program.cs
+      build/netcoreapp1.0/Microsoft.NET.Test.Sdk.Program.fs
+      build/netcoreapp1.0/Microsoft.NET.Test.Sdk.Program.vb
+      build/netcoreapp1.0/Microsoft.NET.Test.Sdk.props
+      build/netcoreapp1.0/Microsoft.NET.Test.Sdk.targets
+      build/netcoreapp2.1/Microsoft.NET.Test.Sdk.Program.cs
+      build/netcoreapp2.1/Microsoft.NET.Test.Sdk.Program.fs
+      build/netcoreapp2.1/Microsoft.NET.Test.Sdk.Program.vb
+      build/netcoreapp2.1/Microsoft.NET.Test.Sdk.props
+      build/netcoreapp2.1/Microsoft.NET.Test.Sdk.targets
+      build/uap10.0/Microsoft.NET.Test.Sdk.props
+      buildMultiTargeting/Microsoft.NET.Test.Sdk.props
+  microsoft.testplatform.testhost 16.9.0-preview-20201123-03
+      build/netcoreapp1.0/Microsoft.TestPlatform.PlatformAbstractions.dll
+      build/netcoreapp1.0/Microsoft.TestPlatform.TestHost.props
+      build/netcoreapp1.0/x64/Microsoft.TestPlatform.PlatformAbstractions.dll
+      build/netcoreapp1.0/x64/testhost.dll
+      build/netcoreapp1.0/x64/testhost.exe
+      build/netcoreapp1.0/x86/Microsoft.TestPlatform.PlatformAbstractions.dll
+      build/netcoreapp1.0/x86/testhost.x86.dll
+      build/netcoreapp1.0/x86/testhost.x86.exe
+      build/netcoreapp2.1/Microsoft.TestPlatform.PlatformAbstractions.dll
+      build/netcoreapp2.1/Microsoft.TestPlatform.TestHost.props
+      build/netcoreapp2.1/x64/Microsoft.TestPlatform.PlatformAbstractions.dll
+      build/netcoreapp2.1/x64/testhost.dll
+      build/netcoreapp2.1/x64/testhost.exe
+      build/netcoreapp2.1/x86/Microsoft.TestPlatform.PlatformAbstractions.dll
+      build/netcoreapp2.1/x86/testhost.x86.dll
+      build/netcoreapp2.1/x86/testhost.x86.exe
+      build/uap10.0/Microsoft.TestPlatform.TestHost.props
+      build/uap10.0/Microsoft.TestPlatform.TestHost.targets
+      build/uap10.0/x64/msdia140.dll
+      build/uap10.0/x86/msdia140.dll
+  xunit.analyzers 0.10.0
+      analyzers/dotnet/cs/xunit.analyzers.dll
+  xunit.core 2.4.1
+      build/xunit.core.props
+      build/xunit.core.targets
+      buildMultiTargeting/xunit.core.props
+      buildMultiTargeting/xunit.core.targets
+  xunit.runner.visualstudio 2.4.3
+      build/net452/xunit.abstractions.dll
+      build/net452/xunit.runner.reporters.net452.dll
+      build/net452/xunit.runner.utility.net452.dll
+      build/net452/xunit.runner.visualstudio.props
+      build/net452/xunit.runner.visualstudio.testadapter.dll
+      build/netcoreapp2.1/xunit.abstractions.dll
+      build/netcoreapp2.1/xunit.runner.reporters.netcoreapp10.dll
+      build/netcoreapp2.1/xunit.runner.utility.netcoreapp10.dll
+      build/netcoreapp2.1/xunit.runner.visualstudio.dotnetcore.testadapter.dll
+      build/netcoreapp2.1/xunit.runner.visualstudio.props
+      build/uap10.0.16299/xunit.runner.reporters.netstandard15.dll
+      build/uap10.0.16299/xunit.runner.utility.netstandard15.dll
+      build/uap10.0.16299/xunit.runner.utility.uwp10.dll
+      build/uap10.0.16299/xunit.runner.utility.uwp10.pri
+      build/uap10.0.16299/xunit.runner.visualstudio.props
+      build/uap10.0.16299/xunit.runner.visualstudio.targets
+      build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.dll
+      build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.pri
+Output:
+Build started at 01:06:19...
+1>------ Build started: Project: Community.VisualBasic, Configuration: Debug ------
+1>LateBinding.vb(931,31): warning BC40000: 'CurrencyWrapper' is obsolete: 'CurrencyWrapper and support for marshalling to the VARIANT type may be unavailable in future releases.'.
+1>Network.vb(808,16): warning BC41004: First statement of this 'Sub New' should be an explicit call to 'MyBase.New' or 'MyClass.New' because the 'Public Overloads Sub New()' in the base class 'WebClient' of 'WebClientExtended' is marked obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead.'
+1>MalformedLineException.vb(78,7): warning SYSLIB0051: 'Protected Overloads Sub New(info As SerializationInfo, context As StreamingContext)' is obsolete: 'This API supports obsolete formatter-based serialization. It should not be called or extended by application code.'.
+1>MalformedLineException.vb(114,7): warning SYSLIB0051: 'Public Overridable Overloads Sub GetObjectData(info As SerializationInfo, context As StreamingContext)' is obsolete: 'This API supports obsolete formatter-based serialization. It should not be called or extended by application code.'.
+1>Community.VisualBasic -> compiled in memory (607.5 KB, 1451 ms)
+2>------ Build started: Project: netstandard2_0, Configuration: Debug ------
+2>netstandard2_0 -> compiled in memory (16 KB, 1301 ms)
+3>------ Build started: Project: net5-console, Configuration: Debug ------
+3>ProjectData.vb(182,7): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. In a Windows Forms app call Application.Exit() or the form's Close(); in a console app return the exit code from Sub Main.
+4>------ Build started: Project: net5-windows, Configuration: Debug ------
+4>net5-windows -> compiled in memory (9 KB, 40 ms)
+5>------ Build started: Project: net4-console, Configuration: Debug ------
+6>------ Build started: Project: Community.VisualBasic.Tests, Configuration: Debug ------
+6>PlatformDetection.vb(508,35): warning SYSLIB0039: 'Tls' is obsolete: 'TLS versions 1.0 and 1.1 have known vulnerabilities and are not recommended. Use a newer TLS version instead, or use SslProtocols.None to defer to OS defaults.'.
+6>PlatformDetection.vb(520,35): warning SYSLIB0039: 'Tls11' is obsolete: 'TLS versions 1.0 and 1.1 have known vulnerabilities and are not recommended. Use a newer TLS version instead, or use SslProtocols.None to defer to OS defaults.'.
+6>Community.VisualBasic.Tests -> compiled in memory (1113.5 KB, 3038 ms)
+========== Build: 4 succeeded, 2 failed ==========
+
