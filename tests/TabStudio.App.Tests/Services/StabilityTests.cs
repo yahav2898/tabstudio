@@ -9,7 +9,7 @@ using TabStudio.Testing;
 namespace TabStudio.App.Tests.Services;
 
 /// <summary>
-/// The 0.21.5 stability pass: a full storage, Android's low-memory killer, Android 15's foreground-service limit and
+/// The 0.21.2 stability pass: a full storage, Android's low-memory killer, Android 15's foreground-service limit and
 /// an app that ended without a word. Each test failed before its fix.
 /// </summary>
 public sealed class StabilityTests : IDisposable
