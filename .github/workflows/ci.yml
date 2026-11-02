@@ -1068,6 +1068,24 @@ jobs:
           python3 build/pic/android_spike.py prepare --work "$RUNNER_TEMP/pic-android" \
             --output ci-out/pic-android --accept-microchip-license
 
+      # The emulator needs 1.2 times its 8 GB data partition free in ~/.android. A runner with 7.4 GB left after the
+      # builds made it stop at once ("Not enough space to create userdata partition"), and the runner action then
+      # waited its whole 600-second boot timeout: the containers shard's one failure on main for 0.21.1.
+      - name: Make room for the emulator's disk
+        run: |
+          df -h "$HOME" /tmp
+          # Build output is in ci-out/ by now; nothing below is used by the rest of this job.
+          find src tests -maxdepth 3 -type d \( -name obj -o -name bin \) -prune -exec rm -rf {} + 2>/dev/null || true
+          sudo rm -rf /usr/share/swift /opt/ghc /usr/local/.ghcup /usr/local/share/boost /usr/local/share/powershell \
+            /usr/local/share/chromium /opt/hostedtoolcache/CodeQL /opt/hostedtoolcache/PyPy /opt/hostedtoolcache/Ruby /opt/microsoft/msedge || true
+          df -h "$HOME"
+          free_mb=$(( $(df -Pk "$HOME" | awk 'NR==2 {print $4}') / 1024 ))
+          need_mb=$(( 8192 * 12 / 10 + 1536 ))
+          if [ "$free_mb" -lt "$need_mb" ]; then
+            echo "::error::The runner has ${free_mb} MB free; the emulator's 8 GB data partition and system image need ${need_mb} MB."
+            exit 1
+          fi
+
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules

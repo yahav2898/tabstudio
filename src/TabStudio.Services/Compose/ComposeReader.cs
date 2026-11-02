@@ -182,6 +182,12 @@ public static partial class ComposeReader
             Platform = Get(node, "platform") is { } platform ? Text(platform) : null,
             Restart = Get(node, "restart") is { } restart ? Text(restart) : null,
             Profiles = SequenceOrOne(Get(node, "profiles")).Select(Text).ToArray(),
+            ContainerName = Get(node, "container_name") is { } containerName && !IsNull(containerName) ? Text(containerName) : null,
+            Hostname = Get(node, "hostname") is { } hostname && !IsNull(hostname) ? Text(hostname) : null,
+            Aliases = ReadAliases(Get(node, "networks")),
+            Expose = SequenceOrOne(Get(node, "expose")).Select(e => Text(e).Split('/')[0])
+                .Select(e => int.TryParse(e, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var port) && port is > 0 and < 65536 ? port : 0)
+                .Where(port => port > 0).ToArray(),
             Unsupported = unsupported,
             Healthcheck = health is null ? null : new ServiceHealthcheck(Get(health, "test") is YamlSequenceNode tests ? tests.Children.Select(Text).ToArray() : Get(health, "test") is { } shell ? ["CMD-SHELL", Text(shell)] : [])
             {
@@ -193,6 +199,18 @@ public static partial class ComposeReader
                 Retries = Get(health, "retries") is { } retry && int.TryParse(Text(retry), out var count) && count > 0 ? count : 3,
             },
         };
+    }
+
+    /// <summary>
+    /// The names a service has on its networks. TabStudio has one network, so every network's aliases resolve, as
+    /// they would for a service on all of them.
+    /// </summary>
+    private static string[] ReadAliases(YamlNode? networks)
+    {
+        if (networks is not YamlMappingNode map) return [];
+        return [.. map.Children.Values.OfType<YamlMappingNode>()
+            .SelectMany(network => SequenceOrOne(Get(network, "aliases")).Select(Text))
+            .Where(alias => alias.Length > 0).Distinct(StringComparer.Ordinal)];
     }
 
     private static IEnumerable<ServicePort> ReadPorts(YamlNode node)

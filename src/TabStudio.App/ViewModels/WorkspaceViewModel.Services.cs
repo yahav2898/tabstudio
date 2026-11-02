@@ -81,6 +81,9 @@ public sealed partial class WorkspaceViewModel
                 return false;
             }
             _serviceEnvironment = environment;
+            // A native service in an image's place is a different server with its own data: say so where F5 reports.
+            foreach (var (name, reason) in Services.Manager?.Fallbacks ?? new Dictionary<string, string>())
+                Output.WriteLine($"{name} runs as a native Alpine service, not its image. {reason}.", OutputKind.Warning);
             State = IdeState.Ready;
             return true;
         }

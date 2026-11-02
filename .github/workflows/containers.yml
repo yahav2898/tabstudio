@@ -124,8 +124,9 @@ jobs:
           - { arch: x64, runner: ubuntu-24.04 }
           - { arch: arm64, runner: ubuntu-24.04-arm }
     runs-on: ${{ matrix.runner }}
-    # Nine images of at most five minutes each (four, and one more for a step that ignores its cancellation).
-    timeout-minutes: 70
+    # Eleven images of at most five minutes each (four, and one more for a step that ignores its cancellation), and on
+    # shard 0 two public Compose stacks of at most fifteen minutes each.
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4

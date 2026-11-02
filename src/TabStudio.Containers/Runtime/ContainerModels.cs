@@ -53,6 +53,11 @@ public sealed record ContainerSpec
     public TimeSpan? StopTimeout { get; init; }
     /// <summary>Settings asked for that cannot work without root, each a one-line reason, shown and otherwise ignored.</summary>
     public IReadOnlyList<string> Unsupported { get; init; } = [];
+    /// <summary>
+    /// Names the volumes made for the image's <c>VOLUME</c>s after this instead of after the container, so a
+    /// container created again for the same Compose service finds its data, as Docker Compose carries it over.
+    /// </summary>
+    public string? VolumeScope { get; init; }
 }
 
 /// <summary>A port published on the device.</summary>

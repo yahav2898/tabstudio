@@ -62,6 +62,11 @@ public sealed class CompatibilityTests(ITestOutputHelper output)
         new("Storage", "minio/minio:latest", 9000, Arguments: ["server", "/data"]),
         new("Mail", "axllent/mailpit:latest", 8025),
         new("Tool", "adminer:latest", 8080),
+        new("Web app", "wordpress:6.6-apache", 80),
+        new("Git", "gitea/gitea:1.22", 3000),
+        new("Monitoring", "grafana/grafana:11.2.0", 3000),
+        new("Monitoring", "prom/prometheus:v2.54.1", 9090),
+        new("Proxy", "traefik:v3.1", 8080, Arguments: ["--api.insecure=true"]),
         new("Runtime", "node:22-alpine", 0, ["node", "-e", "console.log('node-ok', process.version)"], "node-ok"),
         new("Runtime", "python:3.12-slim", 0, ["python3", "-c", "import sqlite3, ssl; print('python-ok')"], "python-ok"),
         new("Runtime", "golang:1.23-alpine", 0, ["go", "version"], "go version"),
@@ -121,6 +126,86 @@ public sealed class CompatibilityTests(ITestOutputHelper output)
         output.WriteLine(table.ToString());
 
         Assert.True(failures.Count == 0, string.Join("\n", failures));
+    }
+
+    /// <summary>A public repository's own Compose file, pinned to a commit, and the service whose page must answer.</summary>
+    public sealed record Stack(string Name, string Url, string Web);
+
+    /// <summary>docker/awesome-compose at 30f4b7f: stacks of images only, as people copy them.</summary>
+    public static readonly Stack[] Stacks =
+    [
+        new("awesome-compose/wordpress-mysql", "https://raw.githubusercontent.com/docker/awesome-compose/30f4b7f6a6c3b0c0ecf4d4efb0de203c48d11562/wordpress-mysql/compose.yaml", "wordpress"),
+        new("awesome-compose/gitea-postgres", "https://raw.githubusercontent.com/docker/awesome-compose/30f4b7f6a6c3b0c0ecf4d4efb0de203c48d11562/gitea-postgres/compose.yaml", "gitea"),
+    ];
+
+    [ContainerCompatibilityFact]
+    public async Task Public_compose_stacks_start_from_their_own_files_or_say_why_not()
+    {
+        // One shard runs them; the others keep their time for the images.
+        if (Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_COMPAT_SHARD") is { Length: > 0 } shard && shard != "0") return;
+        using var temp = new TempDirectory();
+        using var registry = new HttpClient { Timeout = TimeSpan.FromMinutes(5) };
+        using var http = new HttpClient(new HttpClientHandler { AllowAutoRedirect = false }) { Timeout = TimeSpan.FromSeconds(30) };
+        await using var engine = new ContainerEngine(new()
+        {
+            StoreRoot = Path.Combine(temp.Path, "store"),
+            ProotPath = Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_PROOT"),
+            LoaderPath = Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_LOADER"),
+        }, new RegistryClient(registry, new SessionRegistryCredentialStore()));
+        var file = Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_COMPAT_OUT");
+        foreach (var stack in Stacks)
+        {
+            var folder = Path.Combine(temp.Path, stack.Name.Replace('/', '-'));
+            Directory.CreateDirectory(folder);
+            await File.WriteAllTextAsync(Path.Combine(folder, "compose.yaml"), await registry.GetStringAsync(stack.Url));
+            var project = TabStudio.Services.Compose.ComposeReader.Discover(folder)!;
+            var clock = Stopwatch.StartNew();
+            string row;
+            await using (var manager = new TabStudio.Services.ServiceManager(project, new TabStudio.Toolchains.Runtimes.HostRuntime(), new NoFallback(),
+                new TabStudio.Services.Native.ServiceStorage(Path.Combine(temp.Path, "services"), folder), images: new ComposeImages(engine)))
+            {
+                try
+                {
+                    await manager.StartAllAsync().WaitAsync(TimeSpan.FromMinutes(12));
+                    var port = manager.Endpoints[stack.Web][0].Published;
+                    using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(3));
+                    int status = 0;
+                    while (!deadline.IsCancellationRequested)
+                    {
+                        try
+                        {
+                            using var response = await http.GetAsync($"http://127.0.0.1:{port}/", deadline.Token);
+                            status = (int)response.StatusCode;
+                            if (status < 500) break;
+                        }
+                        catch (HttpRequestException) { }
+                        await Task.Delay(1000, CancellationToken.None);
+                    }
+
+                    row = status is > 0 and < 500
+                        ? $"| Stack | `{stack.Name}` | Works | {clock.Elapsed.TotalSeconds:0} s | {string.Join(", ", project.Services.Keys)}; {stack.Web} answers HTTP {status} |"
+                        : $"| Stack | `{stack.Name}` | Does not start | - | {stack.Web} did not answer HTTP |";
+                }
+                catch (Exception ex) when (ex is not OutOfMemoryException)
+                {
+                    row = $"| Stack | `{stack.Name}` | Does not start | - | {FirstLine(ex.Message).Replace('|', '/')} |";
+                }
+
+                foreach (var state in manager.Statuses) output.WriteLine($"{stack.Name} {state.Name}: {state.State} {state.Detail}");
+                await manager.StopAsync();
+            }
+
+            output.WriteLine("COMPAT " + row);
+            if (file is { Length: > 0 }) await File.AppendAllTextAsync(file, row + "\n");
+            foreach (var container in engine.Containers.ToList()) await engine.RemoveAsync(container.Id, force: true);
+            await engine.PruneAsync(allImages: true);
+        }
+    }
+
+    private sealed class NoFallback : TabStudio.Services.IServicePackages
+    {
+        public Task<TabStudio.Services.Native.MappingResult> EnsureAsync(TabStudio.Services.Compose.ComposeService service, Action<string> log, CancellationToken cancellationToken) =>
+            throw new InvalidOperationException(service.Name + " needed a native fallback: its image did not run.");
     }
 
     /// <summary>The step a probe is in, for the row of one that never returns.</summary>

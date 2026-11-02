@@ -130,6 +130,39 @@ public sealed class ServiceIsolationTests : IDisposable
         Assert.Equal(["db"], manager.NeededBy(_workspace.Resolve("app")));
     }
 
+    [Fact]
+    public async Task An_image_that_ran_but_never_became_ready_fails_with_its_reason_instead_of_falling_back()
+    {
+        // 0.21.1 waited 120 seconds, then started a native PostgreSQL with other data in its place, saying so only
+        // in the row's detail.
+        var runtime = new FailingRuntime(null);
+        var project = Read("services:\n  db:\n    image: postgres:18\n    environment: {POSTGRES_PASSWORD: test}\n");
+        var images = new Images(new TimeoutException("db: image did not answer on port 5432 within 600 seconds; see service logs."));
+        await using var manager = new ServiceManager(project, runtime, new Packages(), new ServiceStorage(_storage.Path, _workspace.Path), new Network(), images);
+
+        var error = await Assert.ThrowsAsync<ComposeException>(() => manager.StartAsync(["db"]));
+
+        Assert.Contains("did not answer on port 5432", error.Message, StringComparison.Ordinal);
+        Assert.Equal(ServiceState.Failed, State(manager, "db"));
+        Assert.Empty(runtime.Started);
+        Assert.Empty(manager.Fallbacks);
+    }
+
+    [Fact]
+    public async Task An_image_that_cannot_run_here_falls_back_and_says_so()
+    {
+        var runtime = new FailingRuntime(null);
+        var project = Read("services:\n  db:\n    image: postgres:18\n    environment: {POSTGRES_PASSWORD: test}\n");
+        var images = new Images(new ServiceImageUnavailableException("db: zstd layers are not supported"));
+        await using var manager = new ServiceManager(project, runtime, new Packages(), new ServiceStorage(_storage.Path, _workspace.Path), new Network(), images);
+
+        await manager.StartAsync(["db"]);
+
+        Assert.Single(runtime.Started);
+        Assert.Contains("zstd", Assert.Single(manager.Fallbacks).Value, StringComparison.Ordinal);
+        Assert.Contains("Native fallback", Detail(manager, "db"), StringComparison.Ordinal);
+    }
+
     public void Dispose()
     {
         _workspace.Dispose();
@@ -149,6 +182,15 @@ public sealed class ServiceIsolationTests : IDisposable
     private sealed class Packages : IServicePackages
     {
         public Task<MappingResult> EnsureAsync(ComposeService service, Action<string> log, CancellationToken cancellationToken) => Task.FromResult(ServiceCatalog.Map(service));
+    }
+
+    /// <summary>An image backend whose every start fails the same way.</summary>
+    private sealed class Images(Exception failure) : IServiceImages
+    {
+        public bool CanRun(ComposeService service) => true;
+
+        public Task<IServiceImageProcess> StartAsync(ComposeProject project, ComposeService service, IReadOnlyList<ServicePort> ports,
+            Action<string> log, Action<ServiceState, string?> changed, CancellationToken cancellationToken) => Task.FromException<IServiceImageProcess>(failure);
     }
 
     private sealed class Network : IServiceNetwork

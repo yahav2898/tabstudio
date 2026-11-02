@@ -24,3 +24,10 @@ public interface IServiceImageProcess
     /// <summary>Stops the process and detaches its observers.</summary>
     Task StopAsync(CancellationToken cancellationToken);
 }
+
+/// <summary>
+/// The image could not be run here at all: it could not be pulled, it is not for this device, or it needs what
+/// Android does not give apps. Only this lets Services fall back to a native service. An image that started and then
+/// failed, or never became ready, fails with its own reason: a different database in its place would hide that.
+/// </summary>
+public sealed class ServiceImageUnavailableException(string message, Exception? inner = null) : Exception(message, inner);
