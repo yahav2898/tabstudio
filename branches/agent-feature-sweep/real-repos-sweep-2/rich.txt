@@ -3,8 +3,8 @@ Toolchain projects:
   python: /home/runner/work/_temp/real-repos/rich/pyproject.toml
   cpp: /home/runner/work/_temp/real-repos/rich/Makefile
 Startup project: python /home/runner/work/_temp/real-repos/rich/pyproject.toml
-Set up in 7.8 s
-Tests: 948 passed, 8 failed, 25 skipped of 1015: 981 tests run in 10.8 sec: 948 passed, 8 failed, 25 skipped.
+Set up in 6.5 s
+Tests: 948 passed, 8 failed, 25 skipped of 1015: 981 tests run in 9.5 sec: 948 passed, 8 failed, 25 skipped.
 Project setup:
 ------ rich: pip install -e . ------
 Reading which Python versions the 49 pinned packages have wheels for, from PyPI.
@@ -38,14 +38,15 @@ Building wheels for collected packages: rich
   Building editable for rich (pyproject.toml): started
   Building editable for rich (pyproject.toml): finished with status 'done'
   Created wheel for rich: filename=rich-15.0.0-py3-none-any.whl size=7831 sha256=48ee26d4a97a76411dd7f488e9d01aac970ad3a32b2c112bbf1aaa66074df40f
-  Stored in directory: /tmp/pip-ephem-wheel-cache-6x373d6g/wheels/a8/68/bf/d8ba43a9f12300e8f2b8aced9a06e57c54f1d01405943d6982
+  Stored in directory: /tmp/pip-ephem-wheel-cache-6io2zywn/wheels/a8/68/bf/d8ba43a9f12300e8f2b8aced9a06e57c54f1d01405943d6982
 Successfully built rich
 Installing collected packages: pygments, mdurl, markdown-it-py, rich
 
 Successfully installed markdown-it-py-4.2.0 mdurl-0.1.2 pygments-2.21.0 rich-15.0.0
 
 Output:
-  code_width=60,
+2, 10),
+            code_width=60,
             word_wrap=False,
             background_color="red",
         )
@@ -168,7 +169,7 @@ tests/test_syntax.py:302: AssertionError
     metafunc.parametrize(*marker.args, **marker.kwargs, _param_mark=marker)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-- generated xml file: /home/runner/work/_temp/real-repos/rich/.tabstudio/test-results/89c6f62f21fb411f84d3555eedf9eba7/pytest.xml -
+- generated xml file: /home/runner/work/_temp/real-repos/rich/.tabstudio/test-results/18837d65e8c640ffa3dc7fb19850512a/pytest.xml -
 =========================== short test summary info ============================
 FAILED tests/test_card.py::test_card_render - AssertionError: assert '\x1b[3m     ...           \n' == '\x1b[3m     ...           \n'
   
@@ -183,7 +184,7 @@ FAILED tests/test_card.py::test_card_render - AssertionError: assert '\x1b[3m   
   +    printing      5 │   │   previous_value = next(iter_va  │   │   │   'Paul Atreides',              
   ?                                                                                                                                                                                                                                                                                                                                                          ^^^^^^^^^^
                      6 │   except StopIteration:              │   │   │   'Vladimir Harkonnen',         
-                     7 │   │   return                         │   │   │   'Thufir Hawat'                
+                     7 │   │   [38;2;102;217;239;48;2;39;40;34mreturn                         │   │   │   'Thufir Hawat'                
                      8 │   for value in iter_values:          │   │   )                                 
                      9 │   │   yield False, previous_value    │   ],                                    
                     10 │   │   previous_value = value         │   'atomic': (False, True, None)         
@@ -208,7 +209,7 @@ FAILED tests/test_markdown.py::test_inline_code_in_table_cells - AssertionError:
   Skipping 115 identical leading characters in diff, use -v to show
   - [0mprint('hello'); 
   ?           ^^^^^^^^^^^
-  + [0m[38;2;166;226;46;48;2;39;40;34mprint('hello'); 
+  + [0mprint('hello'); 
   ?           ^^^^^^^^^^
                      
 FAILED tests/test_syntax.py::test_python_render - AssertionError: assert '╭───────────...──────────╯\n' == '╭───────────...──────────╯\n'
@@ -244,7 +245,7 @@ FAILED tests/test_syntax.py::test_python_render_simple - assert '\x1b[38;2;10...
         try:                                                    
   -         previous_value = next(iter_values)                  
   ?                                                                                                                                                                                                                         ^^^^^^^^^^^
-  +         previous_value = next([38;2;248;248;242;48;2;39;40;34miter_values)                  
+  +         previous_value = next(iter_values)                  
   ?                                                                                                                                                                                                                         ^^^^^^^^^^
         except StopIteration:                                   
             return                                              
@@ -262,7 +263,7 @@ FAILED tests/test_syntax.py::test_python_render_simple_passing_lexer_instance - 
   + [0mb
   ?           ^^^  +++ ^
         """Iterate and generate a tuple with a flag for first an
-  -     iter_values = iter(values)                              
+  -     [0miter_values = iter(values)                              
   ?                                                                                                                                                                                                                  ^^^^^^^^^^^
   +     iter_values = iter(values)                              
   ?                                                                                                                                                                                                                  ^^^^^^^^^^
@@ -312,7 +313,7 @@ FAILED tests/test_syntax.py::test_option_no_wrap - AssertionError: assert '\x1b[
        6     except StopIteration:
        7         return
        8     first = True
-       9     for value in [38;2;248;248;242;41miter_values:
+       9     for value in iter_values:
       10         yield first, False, previous_value
 FAILED tests/test_syntax.py::test_syntax_highlight_ranges - assert '\x1b[1;38;2;...alue\x1b[0m\n' == '\x1b[1;38;2;...alue\x1b[0m\n'
   
@@ -326,7 +327,7 @@ FAILED tests/test_syntax.py::test_syntax_highlight_ranges - assert '\x1b[1;38;2;
   ?                                                                                                                                                                                                                                                                                                              ^^^^^^^^^^^
   +    3     iter_values = iter(values)
   ?                                                                                                                                                                                                                                                                                                              ^^^^^^^^^^
-       4     try:
+      [38;2;101;102;96;48;2;39;40;34m 4     try:
   -    5         previous_value = next(iter_values)
   ?                                                                                                                                                                                                                                                                                                         ^^^^^^^^^^^
   +    5         previous_value = next(iter_values)
@@ -339,5 +340,5 @@ FAILED tests/test_syntax.py::test_syntax_highlight_ranges - assert '\x1b[1;38;2;
       11         first = False
       12         previous_value = value
       13     yield first, True, previous_value
-============= 8 failed, 948 passed, 25 skipped, 1 warning in 5.87s =============
+============= 8 failed, 948 passed, 25 skipped, 1 warning in 5.33s =============
 
