@@ -2,8 +2,8 @@ monolog at 3bed304b1905fed5c30d172872f4d890cbb03c6a
 Toolchain projects:
   php: /home/runner/work/_temp/real-repos/monolog/composer.json
 Startup project: php /home/runner/work/_temp/real-repos/monolog/composer.json
-Set up in 5.8 s
-Tests: 1292 passed, 1 failed, 13 skipped of 1365: 1306 tests run in 19.3 sec: 1292 passed, 1 failed, 13 skipped.
+Set up in 4.0 s
+Tests: 1292 passed, 1 failed, 13 skipped of 1365: 1306 tests run in 17.8 sec: 1292 passed, 1 failed, 13 skipped.
 Project setup:
 
 Output:
@@ -98,7 +98,7 @@ Generating autoload files
 Use the `composer fund` command to find out more!
 ========== composer install: succeeded ==========
 ========== Running monolog's tests with PhpUnit ==========
-> php vendor/bin/phpunit --colors=never --log-junit /home/runner/work/_temp/real-repos/monolog/.tabstudio/test-results/922316b4adf24302aa58ab436e17918d/phpunit.xml
+> php vendor/bin/phpunit --colors=never --log-junit /home/runner/work/_temp/real-repos/monolog/.tabstudio/test-results/f2e944dba86c4e1f86e71188e8e68ea3/phpunit.xml
 PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
 
 Runtime:       PHP 8.5.12
@@ -127,12 +127,12 @@ SS...........................................................  732 / 1307 ( 56%)
 ............................................................. 1281 / 1307 ( 98%)
 ..........................                                    1307 / 1307 (100%)
 
-Time: 00:18.867, Memory: 40.00 MB
+Time: 00:17.431, Memory: 40.00 MB
 
 There was 1 failure:
 
 1) Monolog\ErrorHandlerTest::testFatalHandlerLogsNativeBacktrace
-Failed asserting that '[2026-11-02T02:18:47.878125+00:00] test.ALERT: Fatal Error (E_ERROR): Allowed memory size of 16777216 bytes exhausted (tried to allocate 2097152 bytes) {"code":1,"message":"Allowed memory size of 16777216 bytes exhausted (tried to allocate 2097152 bytes)","file":"/tmp/monolog-fatal-backtrace-18997.php","line":18,"trace":null} []\n
+Failed asserting that '[2026-11-02T03:23:34.161052+00:00] test.ALERT: Fatal Error (E_ERROR): Allowed memory size of 16777216 bytes exhausted (tried to allocate 2097152 bytes) {"code":1,"message":"Allowed memory size of 16777216 bytes exhausted (tried to allocate 2097152 bytes)","file":"/tmp/monolog-fatal-backtrace-16781.php","line":18,"trace":null} []\n
 ' [ASCII](length: 331) contains "[stacktrace]" [ASCII](length: 12).
 
 /home/runner/work/_temp/real-repos/monolog/tests/Monolog/ErrorHandlerTest.php:228

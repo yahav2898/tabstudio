@@ -2,10 +2,10 @@ gs-serving-web-content at de04dc825d8a802f18a3fecc6ceb33b369d2dffa
 Toolchain projects:
   java: /home/runner/work/_temp/real-repos/gs-serving-web-content/complete/pom.xml
 Startup project: java /home/runner/work/_temp/real-repos/gs-serving-web-content/complete/pom.xml
-Set up in 3.0 s
+Set up in 2.2 s
 Web preview: http://127.0.0.1:8080/
 GET http://127.0.0.1:8080/greeting: 200 , 219 characters
-Ran in 7.9 s
+Ran in 5.3 s
 Project setup:
 
 Output:
@@ -47,8 +47,8 @@ Running complete with Java 21.0.13
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.369 s
-[INFO] Finished at: 2026-11-02T02:15:25Z
+[INFO] Total time:  2.223 s
+[INFO] Finished at: 2026-11-02T03:21:10Z
 [INFO] ------------------------------------------------------------------------
 
   .   ____          _            __ _ _
@@ -60,20 +60,20 @@ Running complete with Java 21.0.13
 
  :: Spring Boot ::                (v4.1.1)
 
-2026-11-02T02:15:26.250Z  INFO 13908 --- [  restartedMain] c.e.s.ServingWebContentApplication       : Starting ServingWebContentApplication using Java 21.0.13 with PID 13908 (/home/runner/work/_temp/real-repos/gs-serving-web-content/complete/target/classes started by runner in /home/runner/work/_temp/real-repos/gs-serving-web-content/complete)
-2026-11-02T02:15:26.256Z  INFO 13908 --- [  restartedMain] c.e.s.ServingWebContentApplication       : No active profile set, falling back to 1 default profile: "default"
-2026-11-02T02:15:26.325Z  INFO 13908 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2026-11-02T02:15:26.325Z  INFO 13908 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2026-11-02T02:15:27.171Z  INFO 13908 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
-2026-11-02T02:15:27.186Z  INFO 13908 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-11-02T02:15:27.186Z  INFO 13908 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
-2026-11-02T02:15:27.215Z  INFO 13908 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 888 ms
-2026-11-02T02:15:27.336Z  INFO 13908 --- [  restartedMain] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page: class path resource [static/index.html]
-2026-11-02T02:15:27.602Z  INFO 13908 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
-2026-11-02T02:15:27.609Z  INFO 13908 --- [  restartedMain] c.e.s.ServingWebContentApplication       : Started ServingWebContentApplication in 1.757 seconds (process running for 2.154)
-2026-11-02T02:15:27.788Z  INFO 13908 --- [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-11-02T02:15:27.788Z  INFO 13908 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-11-02T02:15:27.790Z  INFO 13908 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-11-02T03:21:11.503Z  INFO 12153 --- [  restartedMain] c.e.s.ServingWebContentApplication       : Starting ServingWebContentApplication using Java 21.0.13 with PID 12153 (/home/runner/work/_temp/real-repos/gs-serving-web-content/complete/target/classes started by runner in /home/runner/work/_temp/real-repos/gs-serving-web-content/complete)
+2026-11-02T03:21:11.505Z  INFO 12153 --- [  restartedMain] c.e.s.ServingWebContentApplication       : No active profile set, falling back to 1 default profile: "default"
+2026-11-02T03:21:11.561Z  INFO 12153 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-11-02T03:21:11.561Z  INFO 12153 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-11-02T03:21:12.105Z  INFO 12153 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-11-02T03:21:12.115Z  INFO 12153 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-02T03:21:12.115Z  INFO 12153 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-11-02T03:21:12.133Z  INFO 12153 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 570 ms
+2026-11-02T03:21:12.204Z  INFO 12153 --- [  restartedMain] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page: class path resource [static/index.html]
+2026-11-02T03:21:12.369Z  INFO 12153 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-11-02T03:21:12.374Z  INFO 12153 --- [  restartedMain] c.e.s.ServingWebContentApplication       : Started ServingWebContentApplication in 1.113 seconds (process running for 1.396)
+2026-11-02T03:21:12.637Z  INFO 12153 --- [nio-8080-exec-3] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-02T03:21:12.638Z  INFO 12153 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-11-02T03:21:12.639Z  INFO 12153 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
 
 The program 'complete' was stopped.
 
