@@ -443,6 +443,8 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _background?.Cancel();
         _background?.Dispose();
         _background = null;
+        _findInFiles?.Dispose();
+        _findInFiles = null;
         _run?.Cancel();
         RemoteExplorer.Dispose();
         DisconnectRemote();

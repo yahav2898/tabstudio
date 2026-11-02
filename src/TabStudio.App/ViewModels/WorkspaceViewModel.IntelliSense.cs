@@ -340,7 +340,7 @@ public sealed partial class WorkspaceViewModel
     {
         if (ActiveDocument is not { Features: { } features } document)
         {
-            StatusText = ActiveDocument is null ? "Open a C# file first." : NoIntelliSenseReason(ActiveDocument);
+            StatusText = ActiveDocument is null ? "Open a code file first." : NoIntelliSenseReason(ActiveDocument);
             return null;
         }
 

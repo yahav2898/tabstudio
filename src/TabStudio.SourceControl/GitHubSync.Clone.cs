@@ -48,6 +48,77 @@ public sealed partial class GitHubSync
     }
 
     /// <summary>
+    /// Links a folder that Git cloned from GitHub to its repository without downloading it again: the files of the
+    /// commit the clone holds become the base its changes are compared with. When GitHub does not have that commit
+    /// (it was made in the clone and never pushed), the base is the branch on GitHub, so those commits' edits show as
+    /// changes to commit. A branch GitHub does not have is linked as a commit, so a commit from here never lands on
+    /// another branch. <c>.tabstudio</c> is added to the clone's <c>info/exclude</c>, so Git leaves it alone.
+    /// </summary>
+    /// <param name="client">The GitHub client to use; a public repository needs no account.</param>
+    /// <param name="checkout">The clone, from <see cref="GitCheckout.Find"/>.</param>
+    /// <param name="cancellationToken">Cancels the requests; the folder then stays unlinked.</param>
+    public static async Task<GitHubSync> LinkCheckoutAsync(GitHubClient client, GitCheckout checkout, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(client);
+        ArgumentNullException.ThrowIfNull(checkout);
+        if (SyncMetadata.Load(checkout.Root) is { } existing)
+        {
+            return new GitHubSync(client, checkout.Root, existing);
+        }
+
+        var info = await client.GetRepositoryAsync(checkout.Owner, checkout.Repository, cancellationToken).ConfigureAwait(false);
+        var branch = checkout.Branch is { } name && await IsBranchAsync(client, info, name, cancellationToken).ConfigureAwait(false) ? name : null;
+        GitCommit? commit = null;
+        if (checkout.Commit is { } sha)
+        {
+            try
+            {
+                commit = await client.GetCommitAsync(info.Owner, info.Name, sha, cancellationToken).ConfigureAwait(false);
+            }
+            catch (GitHubApiException ex) when (ex.IsNotFound)
+            {
+                // A commit made in the clone and never pushed.
+            }
+        }
+
+        if (commit is null)
+        {
+            var reference = branch ?? info.DefaultBranch;
+            commit = await client.ResolveCommitAsync(info.Owner, info.Name, reference, cancellationToken).ConfigureAwait(false);
+        }
+
+        var files = await ReadFilesAsync(client, info.Owner, info.Name, commit.TreeSha, cancellationToken).ConfigureAwait(false);
+        var metadata = new SyncMetadata(new GitHubLink(info.Owner, info.Name, branch, commit.Sha), files);
+        metadata.Save(checkout.Root);
+        HashCache.Empty().Save(checkout.Root);
+        ExcludeSyncFolder(checkout.GitDirectory);
+        return new GitHubSync(client, checkout.Root, metadata);
+    }
+
+    /// <summary>Adds <c>.tabstudio/</c> to a Git directory's <c>info/exclude</c>, unless it is there.</summary>
+    private static void ExcludeSyncFolder(string gitDirectory)
+    {
+        try
+        {
+            var info = Path.Combine(gitDirectory, "info");
+            var exclude = Path.Combine(info, "exclude");
+            var pattern = SyncMetadata.FolderName + "/";
+            var text = File.Exists(exclude) ? File.ReadAllText(exclude) : string.Empty;
+            if (text.Split('\n').Any(line => line.Trim() is var trimmed && (trimmed == pattern || trimmed == SyncMetadata.FolderName || trimmed == "/" + pattern)))
+            {
+                return;
+            }
+
+            Directory.CreateDirectory(info);
+            File.AppendAllText(exclude, (text.Length > 0 && !text.EndsWith('\n') ? "\n" : string.Empty) + pattern + "\n");
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Git then lists .tabstudio as untracked; the link still works.
+        }
+    }
+
+    /// <summary>
     /// Publishes a folder as a new GitHub repository in the signed-in account: every file the folder's
     /// <c>.gitignore</c> files do not exclude goes into the first commit, and the folder is linked to the repository.
     /// </summary>

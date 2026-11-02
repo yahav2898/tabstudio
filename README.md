@@ -94,6 +94,8 @@ From there, try **New project** for a template in any language, **Open from GitH
   toolbar and status bar fold their least used buttons into **More** instead of clipping.
 - **One search for everything.** **Ctrl+Q** finds files, menu commands with their shortcuts, settings, types and
   members, templates and recent solutions, ranked together.
+- **Find in Files.** **Ctrl+Shift+F** lists every line of the solution's folder that holds some text, open documents'
+  unsaved edits included, grouped by file; a tap opens the match.
 - **Sized for fingers, quiet for keyboards.** Every control that takes a tap is a whole 44-pixel target (48 on a
   phone). A floating touch bar puts Rename, Peek, Comment, Run to Cursor, Format and Run one tap away; it stays clear
   of the line you edit and fades while you type on a hardware keyboard, where every Visual Studio shortcut works.
