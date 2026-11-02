@@ -14,7 +14,7 @@ Compatibility Doctor:
   Moq.Vsix: Library via Built with its users - A library is compiled together with the projects that reference it.
   Moq: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: none
-Built in 7.8 s: 16 errors, 41 warnings
+Built in 6.3 s: 16 errors, 41 warnings
   8 x CS0117
       [Moq.Sdk] CallContext.cs(99,73): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'UnexpectedNullContextState'
       [Moq.Sdk] DefaultMockRuntime.cs(88,82): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'DuplicateContextBehavior'
@@ -1346,9 +1346,9 @@ Packages with analyzers or MSBuild files:
       build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.dll
       build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.pri
 Output:
-Build started at 02:40:05...
+Build started at 03:21:19...
 1>------ Build started: Project: Moq.CodeAnalysis, Configuration: Debug ------
-1>Moq.CodeAnalysis -> compiled in memory (41.5 KB, 243 ms)
+1>Moq.CodeAnalysis -> compiled in memory (41.5 KB, 241 ms)
 2>------ Build started: Project: Moq.Sdk, Configuration: Debug ------
 2>AnyMatcher.cs(59,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
 2>AnyMatcher`1.cs(55,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)

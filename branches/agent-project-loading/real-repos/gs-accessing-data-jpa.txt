@@ -3,7 +3,7 @@ Toolchain projects:
   java: /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/pom.xml
 Startup project: java /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/pom.xml
 Set up in 2.5 s
-Ran in 7.8 s
+Ran in 7.0 s
 Project setup:
 
 Output:
@@ -44,8 +44,8 @@ Running complete with Java 21.0.13
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.021 s
-[INFO] Finished at: 2026-11-02T02:26:54Z
+[INFO] Total time:  2.716 s
+[INFO] Finished at: 2026-11-02T03:08:59Z
 [INFO] ------------------------------------------------------------------------
 
   .   ____          _            __ _ _
@@ -57,52 +57,52 @@ Running complete with Java 21.0.13
 
  :: Spring Boot ::                (v4.0.8)
 
-2026-11-02T02:26:55.627Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : Starting AccessingDataJpaApplication using Java 21.0.13 with PID 34327 (/home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/target/classes started by runner in /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete)
-2026-11-02T02:26:55.631Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : No active profile set, falling back to 1 default profile: "default"
-2026-11-02T02:26:56.003Z  INFO 34327 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-11-02T02:26:56.044Z  INFO 34327 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 34 ms. Found 1 JPA repository interface.
-2026-11-02T02:26:56.410Z  INFO 34327 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-11-02T02:26:56.583Z  INFO 34327 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:8dff7ceb-e095-433a-ab6b-bbfb2fca342c user=SA
-2026-11-02T02:26:56.585Z  INFO 34327 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-11-02T02:26:56.622Z  INFO 34327 --- [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
-2026-11-02T02:26:56.663Z  INFO 34327 --- [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.24.Final
-2026-11-02T02:26:56.982Z  INFO 34327 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-11-02T02:26:57.038Z  INFO 34327 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [jdbc:h2:mem:8dff7ceb-e095-433a-ab6b-bbfb2fca342c]
+2026-11-02T03:09:00.101Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : Starting AccessingDataJpaApplication using Java 21.0.13 with PID 33895 (/home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete/target/classes started by runner in /home/runner/work/_temp/real-repos/gs-accessing-data-jpa/complete)
+2026-11-02T03:09:00.103Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : No active profile set, falling back to 1 default profile: "default"
+2026-11-02T03:09:00.437Z  INFO 33895 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-02T03:09:00.477Z  INFO 33895 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 1 JPA repository interface.
+2026-11-02T03:09:00.772Z  INFO 33895 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-11-02T03:09:00.916Z  INFO 33895 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:ec450ae6-3b04-46b3-b133-58f1fae58dd6 user=SA
+2026-11-02T03:09:00.917Z  INFO 33895 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-11-02T03:09:00.956Z  INFO 33895 --- [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-11-02T03:09:00.993Z  INFO 33895 --- [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.24.Final
+2026-11-02T03:09:01.276Z  INFO 33895 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-02T03:09:01.326Z  INFO 33895 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:ec450ae6-3b04-46b3-b133-58f1fae58dd6]
 	Database driver: H2 JDBC Driver
 	Database dialect: H2Dialect
 	Database version: 2.4.240
-	Default catalog/schema: 8DFF7CEB-E095-433A-AB6B-BBFB2FCA342C/PUBLIC
+	Default catalog/schema: EC450AE6-3B04-46B3-B133-58F1FAE58DD6/PUBLIC
 	Autocommit mode: undefined/unknown
 	Isolation level: READ_COMMITTED [default READ_COMMITTED]
 	JDBC fetch size: 100
 	Pool: DataSourceConnectionProvider
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-11-02T02:26:57.652Z  INFO 34327 --- [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-11-02T02:26:57.674Z  INFO 34327 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-11-02T02:26:57.747Z  INFO 34327 --- [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-11-02T02:26:57.944Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : Started AccessingDataJpaApplication in 2.646 seconds (process running for 2.948)
-2026-11-02T02:26:58.000Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : Customers found with findAll():
-2026-11-02T02:26:58.000Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : -------------------------------
-2026-11-02T02:26:58.110Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
-2026-11-02T02:26:58.110Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=2, firstName='Chloe', lastName='O'Brian']
-2026-11-02T02:26:58.110Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=3, firstName='Kim', lastName='Bauer']
-2026-11-02T02:26:58.110Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=4, firstName='David', lastName='Palmer']
-2026-11-02T02:26:58.110Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=5, firstName='Michelle', lastName='Dessler']
-2026-11-02T02:26:58.110Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : 
-2026-11-02T02:26:58.117Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer found with findById(1L):
-2026-11-02T02:26:58.117Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : --------------------------------
-2026-11-02T02:26:58.117Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
-2026-11-02T02:26:58.117Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : 
-2026-11-02T02:26:58.117Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer found with findByLastName('Bauer'):
-2026-11-02T02:26:58.117Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : --------------------------------------------
-2026-11-02T02:26:58.363Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
-2026-11-02T02:26:58.364Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=3, firstName='Kim', lastName='Bauer']
-2026-11-02T02:26:58.366Z  INFO 34327 --- [           main] c.e.a.AccessingDataJpaApplication        : 
-2026-11-02T02:26:58.372Z  INFO 34327 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-11-02T02:26:58.376Z  INFO 34327 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2026-11-02T02:26:58.379Z  INFO 34327 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-11-02T03:09:01.838Z  INFO 33895 --- [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-02T03:09:01.859Z  INFO 33895 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-02T03:09:01.916Z  INFO 33895 --- [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-11-02T03:09:02.090Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : Started AccessingDataJpaApplication in 2.279 seconds (process running for 2.571)
+2026-11-02T03:09:02.153Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : Customers found with findAll():
+2026-11-02T03:09:02.153Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : -------------------------------
+2026-11-02T03:09:02.267Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
+2026-11-02T03:09:02.267Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=2, firstName='Chloe', lastName='O'Brian']
+2026-11-02T03:09:02.267Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=3, firstName='Kim', lastName='Bauer']
+2026-11-02T03:09:02.267Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=4, firstName='David', lastName='Palmer']
+2026-11-02T03:09:02.267Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=5, firstName='Michelle', lastName='Dessler']
+2026-11-02T03:09:02.267Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : 
+2026-11-02T03:09:02.273Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer found with findById(1L):
+2026-11-02T03:09:02.274Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : --------------------------------
+2026-11-02T03:09:02.274Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
+2026-11-02T03:09:02.274Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : 
+2026-11-02T03:09:02.274Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer found with findByLastName('Bauer'):
+2026-11-02T03:09:02.274Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : --------------------------------------------
+2026-11-02T03:09:02.526Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=1, firstName='Jack', lastName='Bauer']
+2026-11-02T03:09:02.526Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : Customer[id=3, firstName='Kim', lastName='Bauer']
+2026-11-02T03:09:02.526Z  INFO 33895 --- [           main] c.e.a.AccessingDataJpaApplication        : 
+2026-11-02T03:09:02.535Z  INFO 33895 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-11-02T03:09:02.538Z  INFO 33895 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-11-02T03:09:02.541Z  INFO 33895 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
 
 The program 'complete' has exited with code 0 (0x0).
 
