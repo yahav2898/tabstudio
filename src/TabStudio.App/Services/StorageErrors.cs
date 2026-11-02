@@ -11,7 +11,7 @@ public static class StorageErrors
     private const int WindowsDiskFull = 0x70;
 
     /// <summary>What the user is told when the storage is full.</summary>
-    public const string FullMessage = "The storage is full. Free some space (Settings > Storage), then save again; your changes are kept in the editor.";
+    public const string FullMessage = "The storage is full. Free some space, then save again; your changes are kept in the editor.";
 
     /// <summary>Whether <paramref name="exception"/>, or an error inside it, means there is no space left.</summary>
     /// <param name="exception">The error.</param>

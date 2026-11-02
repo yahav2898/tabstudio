@@ -96,10 +96,10 @@ public sealed class StabilityTests : IDisposable
         Assert.Null(new CrashLog(_paths).TakeLastExit());
 
         // An error that ended it is named, with its report.
-        var report = log.WriteFatal(new OutOfMemoryException("Insufficient memory"), "UI thread (the app ended)");
+        var report = log.WriteFatal(new InsufficientExecutionStackException("Insufficient stack"), "UI thread (the app ended)");
         var fatal = new CrashLog(_paths).TakeLastExit();
         Assert.NotNull(fatal);
-        Assert.Equal("OutOfMemoryException: Insufficient memory", fatal.Reason);
+        Assert.Equal("InsufficientExecutionStackException: Insufficient stack", fatal.Reason);
         Assert.Equal(report, fatal.Report);
         Assert.Contains(report!, fatal.Message, StringComparison.Ordinal);
         Assert.Single(log.GetReports());
