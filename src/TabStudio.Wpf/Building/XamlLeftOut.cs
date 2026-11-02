@@ -17,6 +17,16 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
     /// <summary>How many times a build compiles the XAML again at most.</summary>
     public const int MaxRounds = 60;
 
+    /// <summary>The namespaces WPF's types that XAML names by their simple name are in.</summary>
+    private static readonly string[] WpfNamespaces =
+    [
+        "System.Windows", "System.Windows.Automation", "System.Windows.Controls", "System.Windows.Controls.Primitives",
+        "System.Windows.Data", "System.Windows.Documents", "System.Windows.Input", "System.Windows.Media",
+        "System.Windows.Navigation", "System.Windows.Shapes",
+    ];
+
+    private static readonly string[] ClrPrefixes = [XamlNamespaces.ClrNamespacePrefix, XamlNamespaces.UsingPrefix];
+
     private readonly Dictionary<string, List<(int Start, int End)>> _spans = new(StringComparer.Ordinal);
     private readonly Dictionary<string, XamlDocument> _documents = new(StringComparer.Ordinal);
     private readonly List<BuildDiagnostic> _notes = [];
@@ -91,18 +101,12 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
     }
 
     /// <summary>The full names a WPF type an attribute names by its simple name can have.</summary>
-    private static IEnumerable<string> WpfOwners(string name) =>
-        new[]
-        {
-            "System.Windows", "System.Windows.Automation", "System.Windows.Controls", "System.Windows.Controls.Primitives",
-            "System.Windows.Data", "System.Windows.Documents", "System.Windows.Input", "System.Windows.Media",
-            "System.Windows.Navigation", "System.Windows.Shapes",
-        }.Select(ns => ns + "." + name);
+    private static IEnumerable<string> WpfOwners(string name) => WpfNamespaces.Select(ns => ns + "." + name);
 
     /// <summary>The CLR namespace of an XML namespace: of <c>clr-namespace:X;assembly=Y</c> and <c>using:X</c>, or itself when it is one.</summary>
     private static string ClrNamespace(string xmlNamespace)
     {
-        foreach (var prefix in new[] { XamlNamespaces.ClrNamespacePrefix, XamlNamespaces.UsingPrefix })
+        foreach (var prefix in ClrPrefixes)
         {
             if (xmlNamespace.StartsWith(prefix, StringComparison.Ordinal))
             {
