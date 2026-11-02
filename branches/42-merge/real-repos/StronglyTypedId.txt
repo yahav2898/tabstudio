@@ -1,0 +1,573 @@
+StronglyTypedId at 6bd17db4a4b700eaad9e209baf41478cc3f0bbe9
+Opened /home/runner/work/_temp/real-repos/StronglyTypedId/StronglyTypedId.sln in 0.3 s
+Compatibility Doctor:
+  StronglyTypedIds: Library via Built with its users - A library is compiled together with the projects that reference it.
+  StronglyTypedIds.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  StronglyTypedIds.IntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  _build: Not supported via Build script, on a computer - The repository's build script (on Nuke.Common): it builds, tests and publishes the other projects by starting dotnet and other tools as processes, which a program cannot do on a tablet. TabStudio builds it with the solution but never starts it; build and run the other projects here, or run the script on a computer with the .NET SDK.
+  StronglyTypedIds.Attributes: Library via Built with its users - A library is compiled together with the projects that reference it.
+  StronglyTypedIds.Nuget.IntegrationTests: Library via Not in the solution's build - The solution's Debug configuration does not build it, so TabStudio leaves it out of builds, as Visual Studio does.
+  StronglyTypedIds.Nuget.Attributes.IntegrationTests: Library via Not in the solution's build - The solution's Debug configuration does not build it, so TabStudio leaves it out of builds, as Visual Studio does.
+  StronglyTypedIds.Templates: Library via Built with its users - A library is compiled together with the projects that reference it.
+  StronglyTypedIds.IntegrationTests.Types: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  StronglyTypedIds.IntegrationTests.ExternalIds: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+Startup project: none
+Built in 9.0 s: 0 errors, 0 warnings
+Packages with analyzers or MSBuild files:
+  coverlet.collector 3.2.0
+      build/netstandard1.0/Microsoft.Bcl.AsyncInterfaces.dll
+      build/netstandard1.0/Microsoft.CSharp.dll
+      build/netstandard1.0/Microsoft.DotNet.PlatformAbstractions.dll
+      build/netstandard1.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+      build/netstandard1.0/Microsoft.Extensions.DependencyInjection.dll
+      build/netstandard1.0/Microsoft.Extensions.DependencyModel.dll
+      build/netstandard1.0/Microsoft.Extensions.FileSystemGlobbing.dll
+      build/netstandard1.0/Microsoft.TestPlatform.CoreUtilities.dll
+      build/netstandard1.0/Microsoft.TestPlatform.PlatformAbstractions.dll
+      build/netstandard1.0/Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
+      build/netstandard1.0/Mono.Cecil.Mdb.dll
+      build/netstandard1.0/Mono.Cecil.Pdb.dll
+      build/netstandard1.0/Mono.Cecil.Rocks.dll
+      build/netstandard1.0/Mono.Cecil.dll
+      build/netstandard1.0/Newtonsoft.Json.dll
+      build/netstandard1.0/NuGet.Frameworks.dll
+      build/netstandard1.0/System.AppContext.dll
+      build/netstandard1.0/System.Collections.Immutable.dll
+      build/netstandard1.0/System.Dynamic.Runtime.dll
+      build/netstandard1.0/System.IO.FileSystem.Primitives.dll
+      build/netstandard1.0/System.Linq.Expressions.dll
+      build/netstandard1.0/System.Linq.dll
+      build/netstandard1.0/System.ObjectModel.dll
+      build/netstandard1.0/System.Reflection.Emit.ILGeneration.dll
+      build/netstandard1.0/System.Reflection.Emit.Lightweight.dll
+      build/netstandard1.0/System.Reflection.Emit.dll
+      build/netstandard1.0/System.Reflection.Metadata.dll
+      build/netstandard1.0/System.Reflection.TypeExtensions.dll
+      build/netstandard1.0/System.Runtime.CompilerServices.Unsafe.dll
+      build/netstandard1.0/System.Runtime.Serialization.Primitives.dll
+      build/netstandard1.0/System.Text.RegularExpressions.dll
+      build/netstandard1.0/System.Threading.Tasks.Extensions.dll
+      build/netstandard1.0/System.Threading.dll
+      build/netstandard1.0/System.Xml.ReaderWriter.dll
+      build/netstandard1.0/System.Xml.XDocument.dll
+      build/netstandard1.0/coverlet.collector.deps.json
+      build/netstandard1.0/coverlet.collector.dll
+      build/netstandard1.0/coverlet.collector.pdb
+      build/netstandard1.0/coverlet.collector.targets
+      build/netstandard1.0/coverlet.core.dll
+      build/netstandard1.0/coverlet.core.pdb
+  emptyfiles 4.1.0
+      build/EmptyFiles.targets
+      buildTransitive/EmptyFiles.targets
+  microsoft.build.locator 1.7.8
+      build/Microsoft.Build.Locator.props
+      build/Microsoft.Build.Locator.targets
+  microsoft.build.tasks.git 1.1.1
+      build/Microsoft.Build.Tasks.Git.props
+      build/Microsoft.Build.Tasks.Git.targets
+      buildMultiTargeting/Microsoft.Build.Tasks.Git.props
+      buildMultiTargeting/Microsoft.Build.Tasks.Git.targets
+  microsoft.codeanalysis.analyzers 3.3.3
+      analyzers/dotnet/cs/Microsoft.CodeAnalysis.Analyzers.dll
+      analyzers/dotnet/cs/Microsoft.CodeAnalysis.CSharp.Analyzers.dll
+      analyzers/dotnet/vb/Microsoft.CodeAnalysis.Analyzers.dll
+      analyzers/dotnet/vb/Microsoft.CodeAnalysis.VisualBasic.Analyzers.dll
+      build/Microsoft.CodeAnalysis.Analyzers.props
+      build/Microsoft.CodeAnalysis.Analyzers.targets
+      build/config/analysislevel_2_9_8_all.editorconfig
+      build/config/analysislevel_2_9_8_default.editorconfig
+      build/config/analysislevel_2_9_8_minimum.editorconfig
+      build/config/analysislevel_2_9_8_none.editorconfig
+      build/config/analysislevel_2_9_8_recommended.editorconfig
+      build/config/analysislevel_3_3_all.editorconfig
+      build/config/analysislevel_3_3_default.editorconfig
+      build/config/analysislevel_3_3_minimum.editorconfig
+      build/config/analysislevel_3_3_none.editorconfig
+      build/config/analysislevel_3_3_recommended.editorconfig
+      build/config/analysislevel_3_all.editorconfig
+      build/config/analysislevel_3_default.editorconfig
+      build/config/analysislevel_3_minimum.editorconfig
+      build/config/analysislevel_3_none.editorconfig
+      build/config/analysislevel_3_recommended.editorconfig
+      build/config/analysislevelcorrectness_2_9_8_all.editorconfig
+      build/config/analysislevelcorrectness_2_9_8_default.editorconfig
+      build/config/analysislevelcorrectness_2_9_8_minimum.editorconfig
+      build/config/analysislevelcorrectness_2_9_8_none.editorconfig
+      build/config/analysislevelcorrectness_2_9_8_recommended.editorconfig
+      build/config/analysislevelcorrectness_3_3_all.editorconfig
+      build/config/analysislevelcorrectness_3_3_default.editorconfig
+      build/config/analysislevelcorrectness_3_3_minimum.editorconfig
+      build/config/analysislevelcorrectness_3_3_none.editorconfig
+      build/config/analysislevelcorrectness_3_3_recommended.editorconfig
+      build/config/analysislevelcorrectness_3_all.editorconfig
+      build/config/analysislevelcorrectness_3_default.editorconfig
+      build/config/analysislevelcorrectness_3_minimum.editorconfig
+      build/config/analysislevelcorrectness_3_none.editorconfig
+      build/config/analysislevelcorrectness_3_recommended.editorconfig
+      build/config/analysislevellibrary_2_9_8_all.editorconfig
+      build/config/analysislevellibrary_2_9_8_default.editorconfig
+      build/config/analysislevellibrary_2_9_8_minimum.editorconfig
+      build/config/analysislevellibrary_2_9_8_none.editorconfig
+      build/config/analysislevellibrary_2_9_8_recommended.editorconfig
+      build/config/analysislevellibrary_3_3_all.editorconfig
+      build/config/analysislevellibrary_3_3_default.editorconfig
+      build/config/analysislevellibrary_3_3_minimum.editorconfig
+      build/config/analysislevellibrary_3_3_none.editorconfig
+      build/config/analysislevellibrary_3_3_recommended.editorconfig
+      build/config/analysislevellibrary_3_all.editorconfig
+      build/config/analysislevellibrary_3_default.editorconfig
+      build/config/analysislevellibrary_3_minimum.editorconfig
+      build/config/analysislevellibrary_3_none.editorconfig
+      build/config/analysislevellibrary_3_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_3_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_3_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_3_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_3_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscompatibility_3_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_3_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_3_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_3_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_3_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysiscorrectness_3_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_3_3_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_3_3_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_3_3_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_3_3_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_3_3_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_3_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_3_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_3_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_3_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdesign_3_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_3_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_3_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_3_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_3_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisdocumentation_3_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_3_3_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_3_3_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_3_3_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_3_3_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_3_3_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_3_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_3_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_3_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_3_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysislocalization_3_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_3_3_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_3_3_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_3_3_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_3_3_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_3_3_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_3_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_3_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_3_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_3_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisperformance_3_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_recommended.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_all.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_default.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_minimum.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_none.editorconfig
+      build/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_recommended.editorconfig
+  microsoft.codecoverage 17.4.1
+      build/netstandard2.0/CodeCoverage/CodeCoverage.config
+      build/netstandard2.0/CodeCoverage/CodeCoverage.exe
+      build/netstandard2.0/CodeCoverage/VanguardInstrumentationProfiler_x86.config
+      build/netstandard2.0/CodeCoverage/amd64/CodeCoverage.exe
+      build/netstandard2.0/CodeCoverage/amd64/VanguardInstrumentationProfiler_x64.config
+      build/netstandard2.0/CodeCoverage/amd64/covrun64.dll
+      build/netstandard2.0/CodeCoverage/amd64/msdia140.dll
+      build/netstandard2.0/CodeCoverage/arm64/VanguardInstrumentationProfiler_arm64.config
+      build/netstandard2.0/CodeCoverage/arm64/covrunarm64.dll
+      build/netstandard2.0/CodeCoverage/arm64/msdia140.dll
+      build/netstandard2.0/CodeCoverage/codecoveragemessages.dll
+      build/netstandard2.0/CodeCoverage/coreclr/Microsoft.VisualStudio.CodeCoverage.Shim.dll
+      build/netstandard2.0/CodeCoverage/covrun32.dll
+      build/netstandard2.0/CodeCoverage/msdia140.dll
+      build/netstandard2.0/InstrumentationEngine/alpine/x64/VanguardInstrumentationProfiler_x64.config
+      build/netstandard2.0/InstrumentationEngine/alpine/x64/libCoverageInstrumentationMethod.so
+      build/netstandard2.0/InstrumentationEngine/alpine/x64/libInstrumentationEngine.so
+      build/netstandard2.0/InstrumentationEngine/arm64/MicrosoftInstrumentationEngine_arm64.dll
+      build/netstandard2.0/InstrumentationEngine/macos/x64/VanguardInstrumentationProfiler_x64.config
+      build/netstandard2.0/InstrumentationEngine/macos/x64/libCoverageInstrumentationMethod.dylib
+      build/netstandard2.0/InstrumentationEngine/macos/x64/libInstrumentationEngine.dylib
+      build/netstandard2.0/InstrumentationEngine/ubuntu/x64/VanguardInstrumentationProfiler_x64.config
+      build/netstandard2.0/InstrumentationEngine/ubuntu/x64/libCoverageInstrumentationMethod.so
+      build/netstandard2.0/InstrumentationEngine/ubuntu/x64/libInstrumentationEngine.so
+      build/netstandard2.0/InstrumentationEngine/x64/MicrosoftInstrumentationEngine_x64.dll
+      build/netstandard2.0/InstrumentationEngine/x86/MicrosoftInstrumentationEngine_x86.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Core.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Instrumentation.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Interprocess.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.props
+      build/netstandard2.0/Microsoft.CodeCoverage.targets
+      build/netstandard2.0/Microsoft.VisualStudio.TraceDataCollector.dll
+      build/netstandard2.0/Mono.Cecil.Pdb.dll
+      build/netstandard2.0/Mono.Cecil.dll
+      build/netstandard2.0/ThirdPartyNotices.txt
+  microsoft.entityframeworkcore.analyzers 9.0.0
+      analyzers/dotnet/cs/Microsoft.EntityFrameworkCore.Analyzers.dll
+  microsoft.entityframeworkcore 9.0.0
+      buildTransitive/net8.0/Microsoft.EntityFrameworkCore.props
+  microsoft.extensions.caching.abstractions 9.0.0
+      buildTransitive/net461/Microsoft.Extensions.Caching.Abstractions.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Caching.Abstractions.targets
+  microsoft.extensions.caching.memory 9.0.0
+      buildTransitive/net461/Microsoft.Extensions.Caching.Memory.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Caching.Memory.targets
+  microsoft.extensions.configuration.abstractions 9.0.0
+      buildTransitive/net461/Microsoft.Extensions.Configuration.Abstractions.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Configuration.Abstractions.targets
+  microsoft.extensions.dependencyinjection.abstractions 9.0.0
+      buildTransitive/net461/Microsoft.Extensions.DependencyInjection.Abstractions.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.Abstractions.targets
+  microsoft.extensions.dependencyinjection 9.0.0
+      buildTransitive/net461/Microsoft.Extensions.DependencyInjection.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.targets
+  microsoft.extensions.dependencymodel 9.0.0
+      buildTransitive/net461/Microsoft.Extensions.DependencyModel.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyModel.targets
+  microsoft.extensions.logging.abstractions 9.0.0
+      analyzers/dotnet/roslyn3.11/cs/Microsoft.Extensions.Logging.Generators.dll
+      analyzers/dotnet/roslyn4.0/cs/Microsoft.Extensions.Logging.Generators.dll
+      analyzers/dotnet/roslyn4.4/cs/Microsoft.Extensions.Logging.Generators.dll
+      buildTransitive/net461/Microsoft.Extensions.Logging.Abstractions.targets
+      buildTransitive/net462/Microsoft.Extensions.Logging.Abstractions.targets
+      buildTransitive/net8.0/Microsoft.Extensions.Logging.Abstractions.targets
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.Abstractions.targets
+      buildTransitive/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.targets
+  microsoft.extensions.logging 9.0.0
+      buildTransitive/net461/Microsoft.Extensions.Logging.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.targets
+  microsoft.extensions.options 9.0.0
+      analyzers/dotnet/roslyn4.4/cs/Microsoft.Extensions.Options.SourceGeneration.dll
+      buildTransitive/net461/Microsoft.Extensions.Options.targets
+      buildTransitive/net462/Microsoft.Extensions.Options.targets
+      buildTransitive/net8.0/Microsoft.Extensions.Options.targets
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Options.targets
+      buildTransitive/netstandard2.0/Microsoft.Extensions.Options.targets
+  microsoft.extensions.primitives 9.0.0
+      buildTransitive/net461/Microsoft.Extensions.Primitives.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Primitives.targets
+  microsoft.net.test.sdk 17.4.1
+      build/net462/Microsoft.NET.Test.Sdk.props
+      build/net462/Microsoft.NET.Test.Sdk.targets
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.fs
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.vb
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.props
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.targets
+      buildMultiTargeting/Microsoft.NET.Test.Sdk.props
+  microsoft.netcore.app.ref 10.0.14
+      analyzers/dotnet/cs/Microsoft.Interop.ComInterfaceGenerator.dll
+      analyzers/dotnet/cs/Microsoft.Interop.JavaScript.JSImportGenerator.dll
+      analyzers/dotnet/cs/Microsoft.Interop.LibraryImportGenerator.dll
+      analyzers/dotnet/cs/Microsoft.Interop.SourceGeneration.dll
+      analyzers/dotnet/cs/System.Text.Json.SourceGeneration.dll
+      analyzers/dotnet/cs/System.Text.RegularExpressions.Generator.dll
+  microsoft.sourcelink.common 1.1.1
+      build/InitializeSourceControlInformation.targets
+      build/Microsoft.SourceLink.Common.props
+      build/Microsoft.SourceLink.Common.targets
+      buildMultiTargeting/Microsoft.SourceLink.Common.props
+      buildMultiTargeting/Microsoft.SourceLink.Common.targets
+  microsoft.sourcelink.github 1.1.1
+      build/Microsoft.SourceLink.GitHub.props
+      build/Microsoft.SourceLink.GitHub.targets
+      buildMultiTargeting/Microsoft.SourceLink.GitHub.props
+      buildMultiTargeting/Microsoft.SourceLink.GitHub.targets
+  microsoft.testplatform.testhost 17.4.1
+      build/netcoreapp3.1/Microsoft.TestPlatform.TestHost.props
+      build/netcoreapp3.1/x64/testhost.dll
+      build/netcoreapp3.1/x64/testhost.exe
+      build/netcoreapp3.1/x86/testhost.x86.dll
+      build/netcoreapp3.1/x86/testhost.x86.exe
+  nuke.common 9.0.3
+      analyzers/dotnet/cs/Newtonsoft.Json.dll
+      analyzers/dotnet/cs/Nuke.Build.Shared.dll
+      analyzers/dotnet/cs/Nuke.SolutionModel.dll
+      analyzers/dotnet/cs/Nuke.SourceGenerators.dll
+      analyzers/dotnet/cs/Nuke.Utilities.IO.Globbing.dll
+      analyzers/dotnet/cs/Nuke.Utilities.dll
+      build/Nuke.Common.props
+      build/Nuke.Common.targets
+      build/netcore/HtmlAgilityPack.dll
+      build/netcore/Humanizer.dll
+      build/netcore/JetBrains.Annotations.dll
+      build/netcore/Newtonsoft.Json.dll
+      build/netcore/NuGet.Common.dll
+      build/netcore/NuGet.Configuration.dll
+      build/netcore/NuGet.Frameworks.dll
+      build/netcore/NuGet.Packaging.dll
+      build/netcore/NuGet.Versioning.dll
+      build/netcore/Nuke.MSBuildTasks.deps.json
+      build/netcore/Nuke.MSBuildTasks.dll
+      build/netcore/Nuke.MSBuildTasks.targets
+      build/netcore/Nuke.MSBuildTasks.xml
+      build/netcore/Nuke.Tooling.Generator.dll
+      build/netcore/Nuke.Tooling.Generator.dll.config
+      build/netcore/Nuke.Tooling.Generator.xml
+      build/netcore/Nuke.Tooling.dll
+      build/netcore/Nuke.Tooling.xml
+      build/netcore/Nuke.Utilities.Net.dll
+      build/netcore/Nuke.Utilities.Net.xml
+      build/netcore/Nuke.Utilities.Text.Json.dll
+      build/netcore/Nuke.Utilities.Text.Json.xml
+      build/netcore/Nuke.Utilities.dll
+      build/netcore/Nuke.Utilities.xml
+      build/netcore/Serilog.dll
+      build/netcore/System.Security.Cryptography.Pkcs.dll
+      build/netcore/System.Security.Cryptography.ProtectedData.dll
+      build/netcore/runtimes/win/lib/net6.0/System.Security.Cryptography.Pkcs.dll
+      build/netfx/HtmlAgilityPack.dll
+      build/netfx/Humanizer.dll
+      build/netfx/JetBrains.Annotations.dll
+      build/netfx/Newtonsoft.Json.dll
+      build/netfx/NuGet.Common.dll
+      build/netfx/NuGet.Configuration.dll
+      build/netfx/NuGet.Frameworks.dll
+      build/netfx/NuGet.Packaging.dll
+      build/netfx/NuGet.Versioning.dll
+      build/netfx/Nuke.MSBuildTasks.dll
+      build/netfx/Nuke.MSBuildTasks.targets
+      build/netfx/Nuke.MSBuildTasks.xml
+      build/netfx/Nuke.Tooling.Generator.dll
+      build/netfx/Nuke.Tooling.Generator.dll.config
+      build/netfx/Nuke.Tooling.Generator.xml
+      build/netfx/Nuke.Tooling.dll
+      build/netfx/Nuke.Tooling.xml
+      build/netfx/Nuke.Utilities.Net.dll
+      build/netfx/Nuke.Utilities.Net.xml
+      build/netfx/Nuke.Utilities.Text.Json.dll
+      build/netfx/Nuke.Utilities.Text.Json.xml
+      build/netfx/Nuke.Utilities.dll
+      build/netfx/Nuke.Utilities.xml
+      build/netfx/Serilog.dll
+      build/netfx/System.Buffers.dll
+      build/netfx/System.ComponentModel.Annotations.dll
+      build/netfx/System.Diagnostics.DiagnosticSource.dll
+      build/netfx/System.Memory.dll
+      build/netfx/System.Numerics.Vectors.dll
+      build/netfx/System.Runtime.CompilerServices.Unsafe.dll
+      build/netfx/System.Threading.Channels.dll
+      build/netfx/System.Threading.Tasks.Extensions.dll
+  polyfill 1.29.0
+      build/Polyfill.props
+      build/Polyfill.targets
+  sqlitepclraw.lib.e_sqlite3 2.1.10
+      buildTransitive/net461/SQLitePCLRaw.lib.e_sqlite3.targets
+      buildTransitive/net6.0/SQLitePCLRaw.lib.e_sqlite3.targets
+      buildTransitive/net7.0/SQLitePCLRaw.lib.e_sqlite3.targets
+      buildTransitive/net8.0/SQLitePCLRaw.lib.e_sqlite3.targets
+      buildTransitive/net9.0/SQLitePCLRaw.lib.e_sqlite3.targets
+  stronglytypedid.templates 1.0.0-beta08
+      build/AdditionalFiles/guid-dapper.typedid
+      build/AdditionalFiles/guid-efcore.typedid
+      build/AdditionalFiles/guid-full.typedid
+      build/AdditionalFiles/guid-newtonsoftjson.typedid
+      build/AdditionalFiles/int-dapper.typedid
+      build/AdditionalFiles/int-efcore.typedid
+      build/AdditionalFiles/int-full.typedid
+      build/AdditionalFiles/int-newtonsoftjson.typedid
+      build/AdditionalFiles/long-dapper.typedid
+      build/AdditionalFiles/long-efcore.typedid
+      build/AdditionalFiles/long-full.typedid
+      build/AdditionalFiles/long-newtonsoftjson.typedid
+      build/AdditionalFiles/newid-full.typedid
+      build/AdditionalFiles/nullablestring-full.typedid
+      build/AdditionalFiles/string-dapper.typedid
+      build/AdditionalFiles/string-efcore.typedid
+      build/AdditionalFiles/string-full.typedid
+      build/AdditionalFiles/string-newtonsoftjson.typedid
+      build/StronglyTypedId.Templates.targets
+  stronglytypedid 1.0.0-beta08
+      analyzers/dotnet/cs/StronglyTypedIds.Attributes.dll
+      analyzers/dotnet/cs/StronglyTypedIds.dll
+  system.codedom 8.0.0
+      buildTransitive/net461/System.CodeDom.targets
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.CodeDom.targets
+  system.composition.attributedmodel 6.0.0
+      buildTransitive/netcoreapp2.0/System.Composition.AttributedModel.targets
+      buildTransitive/netcoreapp3.1/_._
+  system.composition.convention 6.0.0
+      buildTransitive/netcoreapp2.0/System.Composition.Convention.targets
+      buildTransitive/netcoreapp3.1/_._
+  system.composition.hosting 6.0.0
+      buildTransitive/netcoreapp2.0/System.Composition.Hosting.targets
+      buildTransitive/netcoreapp3.1/_._
+  system.composition.runtime 6.0.0
+      buildTransitive/netcoreapp2.0/System.Composition.Runtime.targets
+      buildTransitive/netcoreapp3.1/_._
+  system.composition.typedparts 6.0.0
+      buildTransitive/netcoreapp2.0/System.Composition.TypedParts.targets
+      buildTransitive/netcoreapp3.1/_._
+  system.composition 6.0.0
+      buildTransitive/netcoreapp2.0/System.Composition.targets
+      buildTransitive/netcoreapp3.1/_._
+  system.configuration.configurationmanager 8.0.0
+      buildTransitive/net461/System.Configuration.ConfigurationManager.targets
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.Configuration.ConfigurationManager.targets
+  system.diagnostics.eventlog 8.0.0
+      buildTransitive/net461/System.Diagnostics.EventLog.targets
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.Diagnostics.EventLog.targets
+  system.memory.data 6.0.0
+      buildTransitive/netcoreapp2.0/System.Memory.Data.targets
+      buildTransitive/netcoreapp3.1/_._
+  system.reflection.metadataloadcontext 8.0.0
+      buildTransitive/net461/System.Reflection.MetadataLoadContext.targets
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.Reflection.MetadataLoadContext.targets
+  system.resources.extensions 8.0.0
+      buildTransitive/net461/System.Resources.Extensions.targets
+      buildTransitive/net462/System.Resources.Extensions.targets
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.Resources.Extensions.targets
+  system.security.cryptography.pkcs 8.0.0
+      buildTransitive/net461/System.Security.Cryptography.Pkcs.targets
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.Security.Cryptography.Pkcs.targets
+  system.security.cryptography.protecteddata 8.0.0
+      buildTransitive/net461/System.Security.Cryptography.ProtectedData.targets
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.Security.Cryptography.ProtectedData.targets
+  system.security.cryptography.xml 8.0.0
+      buildTransitive/net461/System.Security.Cryptography.Xml.targets
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.Security.Cryptography.Xml.targets
+  verify.xunit 19.5.0
+      build/Verify.Xunit.props
+      buildTransitive/Verify.Xunit.props
+  verify 19.5.0
+      build/Verify.props
+      build/Verify.targets
+      buildTransitive/Verify.props
+      buildTransitive/Verify.targets
+  xunit.analyzers 1.0.0
+      analyzers/dotnet/cs/xunit.analyzers.dll
+      analyzers/dotnet/cs/xunit.analyzers.fixes.dll
+  xunit.core 2.4.2
+      build/xunit.core.props
+      build/xunit.core.targets
+      buildMultiTargeting/xunit.core.props
+      buildMultiTargeting/xunit.core.targets
+  xunit.runner.visualstudio 2.4.5
+      build/net462/xunit.abstractions.dll
+      build/net462/xunit.runner.reporters.net452.dll
+      build/net462/xunit.runner.utility.net452.dll
+      build/net462/xunit.runner.visualstudio.props
+      build/net462/xunit.runner.visualstudio.testadapter.dll
+      build/netcoreapp3.1/xunit.abstractions.dll
+      build/netcoreapp3.1/xunit.runner.reporters.netcoreapp10.dll
+      build/netcoreapp3.1/xunit.runner.utility.netcoreapp10.dll
+      build/netcoreapp3.1/xunit.runner.visualstudio.dotnetcore.testadapter.dll
+      build/netcoreapp3.1/xunit.runner.visualstudio.props
+      build/uap10.0.16299/xunit.runner.reporters.netstandard15.dll
+      build/uap10.0.16299/xunit.runner.utility.netstandard15.dll
+      build/uap10.0.16299/xunit.runner.utility.uwp10.dll
+      build/uap10.0.16299/xunit.runner.utility.uwp10.pri
+      build/uap10.0.16299/xunit.runner.visualstudio.props
+      build/uap10.0.16299/xunit.runner.visualstudio.targets
+      build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.dll
+      build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.pri
+Output:
+Build started at 04:23:28...
+1>------ Build started: Project: StronglyTypedIds.Attributes, Configuration: Debug ------
+1>StronglyTypedIds.Attributes -> compiled in memory (3 KB, 177 ms)
+2>------ Build started: Project: StronglyTypedIds, Configuration: Debug ------
+2>StronglyTypedIds -> compiled in memory (266 KB, 73 ms)
+3>------ Build started: Project: StronglyTypedIds.Tests, Configuration: Debug ------
+3>StronglyTypedIds.Tests -> compiled in memory (108.5 KB, 113 ms)
+4>------ Build started: Project: StronglyTypedIds.IntegrationTests, Configuration: Debug ------
+4>StronglyTypedIds.IntegrationTests -> compiled in memory (178.5 KB, 563 ms)
+5>------ Build started: Project: StronglyTypedIds.Templates, Configuration: Debug ------
+5>StronglyTypedIds.Templates -> compiled in memory (2 KB, 35 ms)
+6>------ Build started: Project: StronglyTypedIds.IntegrationTests.Types, Configuration: Debug ------
+6>StronglyTypedIds.IntegrationTests.Types -> compiled in memory (77.5 KB, 131 ms)
+7>------ Build started: Project: StronglyTypedIds.IntegrationTests.ExternalIds, Configuration: Debug ------
+7>StronglyTypedIds.IntegrationTests.ExternalIds -> compiled in memory (104 KB, 359 ms)
+8>------ Skipped: Project: _build: it is not built by the solution's Debug configuration ------
+9>------ Skipped: Project: StronglyTypedIds.Nuget.IntegrationTests: it is not built by the solution's Debug configuration ------
+10>------ Skipped: Project: StronglyTypedIds.Nuget.Attributes.IntegrationTests: it is not built by the solution's Debug configuration ------
+========== Build: 7 succeeded, 0 failed, 3 skipped ==========
+
