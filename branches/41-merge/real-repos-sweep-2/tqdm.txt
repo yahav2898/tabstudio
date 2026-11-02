@@ -1,0 +1,279 @@
+tqdm at 9cf5a12b1f955468a17f0ba3c59092b23e4258ac
+Toolchain projects:
+  python: /home/runner/work/_temp/real-repos/tqdm/pyproject.toml
+Startup project: python /home/runner/work/_temp/real-repos/tqdm/pyproject.toml
+Set up in 8.8 s
+Tests: 168 passed, 1 failed, 10 skipped of 179: 179 tests run in 41.9 sec: 168 passed, 1 failed, 10 skipped.
+Project setup:
+------ tqdm: pip install -e . ------
+> python3 -m venv .venv
+> /home/runner/work/_temp/real-repos/tqdm/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/real-repos/tqdm
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: tqdm
+  Building editable for tqdm (pyproject.toml): started
+  Building editable for tqdm (pyproject.toml): finished with status 'done'
+  Created wheel for tqdm: filename=tqdm-0.1.dev1+g9cf5a12b1-0.editable-py3-none-any.whl size=22548 sha256=363433300ff47257442c8cb447c9e6588aceafe33fbf491c83c57120c4d25487
+  Stored in directory: /tmp/pip-ephem-wheel-cache-6iz6ygpt/wheels/1d/56/11/4e061dde2dd75281f7929dd882935ef43b3116ba2e3522512a
+Successfully built tqdm
+Installing collected packages: tqdm
+Successfully installed tqdm-0.1.dev1+g9cf5a12b1
+
+Output:
+------ Setting up tqdm: pip install -e . ------
+Python 3.12 for tqdm: pyproject.toml allows Python >=3.8.
+> python3 -m venv .venv
+> /home/runner/work/_temp/real-repos/tqdm/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Installed 1 package into .venv with Python 3.12. The full log is in Output > Project Setup.
+========== pip install -e .: succeeded ==========
+========== Running tqdm's tests with Pytest ==========
+> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''-r'\'' '\''.meta/requirements-test.txt'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/tqdm/.tabstudio/test-results/7e4dcd79e2d844e790ca4b840fd89481/pytest.xml
+Installing what the tests need
+============================= test session starts ==============================
+platform linux -- Python 3.12.15, pytest-9.2.0, pluggy-1.7.0 -- /home/runner/work/_temp/real-repos/tqdm/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/runner/work/_temp/real-repos/tqdm
+configfile: pyproject.toml
+testpaths: tests
+plugins: platformdirs-4.14.3, asyncio-1.4.1.post1, timeout-2.4.0, nbval-0.11.0, cov-7.1.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+timeout: 30.0s
+timeout method: signal
+timeout func_only: False
+collecting ... collected 178 items / 1 skipped
+
+tests/tests_asyncio.py::test_break PASSED                                [  0%]
+tests/tests_asyncio.py::test_generators PASSED                           [  1%]
+tests/tests_asyncio.py::test_range PASSED                                [  1%]
+tests/tests_asyncio.py::test_nested PASSED                               [  2%]
+tests/tests_asyncio.py::test_coroutine_send PASSED                       [  2%]
+tests/tests_asyncio.py::test_as_completed[0.1] PASSED                    [  3%]
+tests/tests_asyncio.py::test_gather PASSED                               [  3%]
+tests/tests_asyncio.py::test_gather_exceptions PASSED                    [  4%]
+tests/tests_asyncio.py::test_async_iterable PASSED                       [  5%]
+tests/tests_concurrent.py::test_min_map_len PASSED                       [  5%]
+tests/tests_concurrent.py::test_concurrent_map[interpreter_map] SKIPPED  [  6%]
+tests/tests_concurrent.py::test_concurrent_map[process_map] PASSED       [  6%]
+tests/tests_concurrent.py::test_concurrent_map[thread_map] PASSED        [  7%]
+tests/tests_concurrent.py::test_concurrent_map_unknown_len[interpreter_map] SKIPPED [  7%]
+tests/tests_concurrent.py::test_concurrent_map_unknown_len[process_map] PASSED [  8%]
+tests/tests_concurrent.py::test_concurrent_map_unknown_len[thread_map] PASSED [  8%]
+tests/tests_concurrent.py::test_interpreter_map_lock SKIPPED (requir...) [  9%]
+tests/tests_concurrent.py::test_chunksize_warning[iterables0-False] PASSED [ 10%]
+tests/tests_concurrent.py::test_chunksize_warning[iterables1-False] PASSED [ 10%]
+tests/tests_concurrent.py::test_chunksize_warning[iterables2-False] PASSED [ 11%]
+tests/tests_concurrent.py::test_chunksize_warning[iterables3-False] PASSED [ 11%]
+tests/tests_concurrent.py::test_chunksize_warning[iterables4-True] PASSED [ 12%]
+tests/tests_concurrent.py::test_chunksize_warning[iterables5-False] PASSED [ 12%]
+tests/tests_concurrent.py::test_chunksize_warning[iterables6-False] PASSED [ 13%]
+tests/tests_concurrent.py::test_chunksize_warning[iterables7-True] PASSED [ 14%]
+tests/tests_contrib.py::test_enumerate[tqdm_kwargs0] PASSED              [ 14%]
+tests/tests_contrib.py::test_enumerate[tqdm_kwargs1] PASSED              [ 15%]
+tests/tests_contrib.py::test_enumerate_numpy SKIPPED (could not impo...) [ 15%]
+tests/tests_contrib.py::test_zip[tqdm_kwargs0] PASSED                    [ 16%]
+tests/tests_contrib.py::test_zip[tqdm_kwargs1] PASSED                    [ 16%]
+tests/tests_contrib.py::test_map[tqdm_kwargs0] PASSED                    [ 17%]
+tests/tests_contrib.py::test_map[tqdm_kwargs1] PASSED                    [ 17%]
+tests/tests_contrib_logging.py::TestTqdmLoggingHandler::test_should_call_tqdm_write PASSED [ 18%]
+tests/tests_contrib_logging.py::TestTqdmLoggingHandler::test_should_call_handle_error_if_exception_was_thrown PASSED [ 19%]
+tests/tests_contrib_logging.py::TestTqdmLoggingHandler::test_should_not_swallow_certain_exceptions[KeyboardInterrupt] PASSED [ 19%]
+tests/tests_contrib_logging.py::TestTqdmLoggingHandler::test_should_not_swallow_certain_exceptions[SystemExit] PASSED [ 20%]
+tests/tests_contrib_logging.py::TestGetFirstFoundConsoleLoggingHandler::test_should_return_none_for_no_handlers PASSED [ 20%]
+tests/tests_contrib_logging.py::TestGetFirstFoundConsoleLoggingHandler::test_should_return_none_without_stream_handler PASSED [ 21%]
+tests/tests_contrib_logging.py::TestGetFirstFoundConsoleLoggingHandler::test_should_return_none_for_stream_handler_not_stdout_or_stderr PASSED [ 21%]
+tests/tests_contrib_logging.py::TestGetFirstFoundConsoleLoggingHandler::test_should_return_stream_handler_if_stream_is_stdout PASSED [ 22%]
+tests/tests_contrib_logging.py::TestGetFirstFoundConsoleLoggingHandler::test_should_return_stream_handler_if_stream_is_stderr PASSED [ 23%]
+tests/tests_contrib_logging.py::TestRedirectLoggingToTqdm::test_should_add_and_remove_tqdm_handler PASSED [ 23%]
+tests/tests_contrib_logging.py::TestRedirectLoggingToTqdm::test_should_remove_and_restore_console_handlers PASSED [ 24%]
+tests/tests_contrib_logging.py::TestRedirectLoggingToTqdm::test_should_inherit_console_logger_formatter PASSED [ 24%]
+tests/tests_contrib_logging.py::TestRedirectLoggingToTqdm::test_should_inherit_console_handler_filters PASSED [ 25%]
+tests/tests_contrib_logging.py::TestRedirectLoggingToTqdm::test_should_not_remove_stream_handlers_not_for_stdout_or_stderr PASSED [ 25%]
+tests/tests_contrib_logging.py::TestTqdmWithLoggingRedirect::test_should_add_and_remove_handler_from_root_logger_by_default PASSED [ 26%]
+tests/tests_contrib_logging.py::TestTqdmWithLoggingRedirect::test_should_add_and_remove_handler_from_custom_logger PASSED [ 26%]
+tests/tests_contrib_logging.py::TestTqdmWithLoggingRedirect::test_should_not_fail_with_logger_without_console_handler PASSED [ 27%]
+tests/tests_contrib_logging.py::TestTqdmWithLoggingRedirect::test_should_format_message PASSED [ 28%]
+tests/tests_contrib_logging.py::TestTqdmWithLoggingRedirect::test_use_root_logger_by_default_and_write_to_custom_tqdm PASSED [ 28%]
+tests/tests_dask.py::test_dask SKIPPED (could not import 'tqdm.dask'...) [ 29%]
+tests/tests_gui.py::test_gui_import PASSED                               [ 29%]
+tests/tests_itertools.py::test_chain PASSED                              [ 30%]
+tests/tests_itertools.py::test_product PASSED                            [ 30%]
+tests/tests_itertools.py::test_permutations PASSED                       [ 31%]
+tests/tests_itertools.py::test_combinations PASSED                       [ 32%]
+tests/tests_itertools.py::test_combinations_with_replacement PASSED      [ 32%]
+tests/tests_itertools.py::test_batched PASSED                            [ 33%]
+tests/tests_keras.py::test_keras SKIPPED (could not import 'tqdm.ker...) [ 33%]
+tests/tests_main.py::test_pipes PASSED                                   [ 34%]
+tests/tests_main.py::test_main_import PASSED                             [ 34%]
+tests/tests_main.py::test_main_bytes PASSED                              [ 35%]
+tests/tests_main.py::test_main_log[INFO-False] PASSED                    [ 35%]
+tests/tests_main.py::test_main_log[DEBUG-True] PASSED                    [ 36%]
+tests/tests_main.py::test_main_misc_options PASSED                       [ 37%]
+tests/tests_main.py::test_manpath PASSED                                 [ 37%]
+tests/tests_main.py::test_comppath PASSED                                [ 38%]
+tests/tests_main.py::test_exceptions PASSED                              [ 38%]
+tests/tests_notebook.py::test_notebook_disabled_description PASSED       [ 39%]
+tests/tests_perf.py::test_iter_basic_overhead PASSED                     [ 39%]
+tests/tests_perf.py::test_manual_basic_overhead PASSED                   [ 40%]
+tests/tests_perf.py::test_lock_args PASSED                               [ 41%]
+tests/tests_perf.py::test_iter_overhead_hard PASSED                      [ 41%]
+tests/tests_perf.py::test_manual_overhead_hard PASSED                    [ 42%]
+tests/tests_perf.py::test_iter_overhead_simplebar_hard PASSED            [ 42%]
+tests/tests_perf.py::test_manual_overhead_simplebar_hard PASSED          [ 43%]
+tests/tests_rich.py::test_rich_no_total SKIPPED (could not import 't...) [ 43%]
+tests/tests_rich.py::test_rich_fraction_column_no_total SKIPPED (cou...) [ 44%]
+tests/tests_rlock.py::test_rlock_creation PASSED                         [ 44%]
+tests/tests_synchronisation.py::test_monitor_thread PASSED               [ 45%]
+tests/tests_synchronisation.py::test_monitoring_and_cleanup PASSED       [ 46%]
+tests/tests_synchronisation.py::test_monitoring_multi PASSED             [ 46%]
+tests/tests_synchronisation.py::test_imap PASSED                         [ 47%]
+tests/tests_synchronisation.py::test_threadpool PASSED                   [ 47%]
+tests/tests_synchronisation.py::test_monitor_atexit_does_not_deadlock_on_stuck_get_lock PASSED [ 48%]
+tests/tests_tk.py::test_tk_import PASSED                                 [ 48%]
+tests/tests_tqdm.py::test_format_interval PASSED                         [ 49%]
+tests/tests_tqdm.py::test_format_num PASSED                              [ 50%]
+tests/tests_tqdm.py::test_format_meter PASSED                            [ 50%]
+tests/tests_tqdm.py::test_ANSI_escape_codes PASSED                       [ 51%]
+tests/tests_tqdm.py::test_SI_format PASSED                               [ 51%]
+tests/tests_tqdm.py::test_bar_formatspec PASSED                          [ 52%]
+tests/tests_tqdm.py::test_no_kwargs PASSED                               [ 52%]
+tests/tests_tqdm.py::test_native_string_io_for_default_file PASSED       [ 53%]
+tests/tests_tqdm.py::test_unicode_string_io_for_specified_file PASSED    [ 53%]
+tests/tests_tqdm.py::test_write_bytes PASSED                             [ 54%]
+tests/tests_tqdm.py::test_iterate_over_csv_rows PASSED                   [ 55%]
+tests/tests_tqdm.py::test_file_output PASSED                             [ 55%]
+tests/tests_tqdm.py::test_leave_option PASSED                            [ 56%]
+tests/tests_tqdm.py::test_trange PASSED                                  [ 56%]
+tests/tests_tqdm.py::test_min_interval PASSED                            [ 57%]
+tests/tests_tqdm.py::test_max_interval PASSED                            [ 57%]
+tests/tests_tqdm.py::test_delay PASSED                                   [ 58%]
+tests/tests_tqdm.py::test_min_iters PASSED                               [ 58%]
+tests/tests_tqdm.py::test_dynamic_min_iters PASSED                       [ 59%]
+tests/tests_tqdm.py::test_big_min_interval PASSED                        [ 60%]
+tests/tests_tqdm.py::test_smoothed_dynamic_min_iters PASSED              [ 60%]
+tests/tests_tqdm.py::test_smoothed_dynamic_min_iters_with_min_interval PASSED [ 61%]
+tests/tests_tqdm.py::test_disable PASSED                                 [ 61%]
+tests/tests_tqdm.py::test_infinite_total PASSED                          [ 62%]
+tests/tests_tqdm.py::test_nototal PASSED                                 [ 62%]
+tests/tests_tqdm.py::test_SI_unit PASSED                                 [ 63%]
+tests/tests_tqdm.py::test_ascii_autodetect PASSED                        [ 64%]
+tests/tests_tqdm.py::test_ascii_bar PASSED                               [ 64%]
+tests/tests_tqdm.py::test_unicode_bar PASSED                             [ 65%]
+tests/tests_tqdm.py::test_custom_bar[ .oO0] PASSED                       [ 65%]
+tests/tests_tqdm.py::test_custom_bar[ #] PASSED                          [ 66%]
+tests/tests_tqdm.py::test_update PASSED                                  [ 66%]
+tests/tests_tqdm.py::test_close PASSED                                   [ 67%]
+tests/tests_tqdm.py::test_close_after_stream_closed PASSED               [ 67%]
+tests/tests_tqdm.py::test_ema PASSED                                     [ 68%]
+tests/tests_tqdm.py::test_smoothing PASSED                               [ 69%]
+tests/tests_tqdm.py::test_deprecated_nested PASSED                       [ 69%]
+tests/tests_tqdm.py::test_bar_format PASSED                              [ 70%]
+tests/tests_tqdm.py::test_custom_format PASSED                           [ 70%]
+tests/tests_tqdm.py::test_eta PASSED                                     [ 71%]
+tests/tests_tqdm.py::test_unpause PASSED                                 [ 71%]
+tests/tests_tqdm.py::test_disabled_unpause PASSED                        [ 72%]
+tests/tests_tqdm.py::test_reset PASSED                                   [ 73%]
+tests/tests_tqdm.py::test_reset_inf PASSED                               [ 73%]
+tests/tests_tqdm.py::test_disabled_reset PASSED                          [ 74%]
+tests/tests_tqdm.py::test_position PASSED                                [ 74%]
+tests/tests_tqdm.py::test_set_description PASSED                         [ 75%]
+tests/tests_tqdm.py::test_deprecated_gui[update] PASSED                  [ 75%]
+tests/tests_tqdm.py::test_deprecated_gui[iter] PASSED                    [ 76%]
+tests/tests_tqdm.py::test_gui_disabled PASSED                            [ 76%]
+tests/tests_tqdm.py::test_cmp PASSED                                     [ 77%]
+tests/tests_tqdm.py::test_repr PASSED                                    [ 78%]
+tests/tests_tqdm.py::test_clear PASSED                                   [ 78%]
+tests/tests_tqdm.py::test_clear_disabled PASSED                          [ 79%]
+tests/tests_tqdm.py::test_refresh PASSED                                 [ 79%]
+tests/tests_tqdm.py::test_disabled_repr PASSED                           [ 80%]
+tests/tests_tqdm.py::test_disabled_refresh PASSED                        [ 80%]
+tests/tests_tqdm.py::test_write PASSED                                   [ 81%]
+tests/tests_tqdm.py::test_write_other_file PASSED                        [ 82%]
+tests/tests_tqdm.py::test_write_stdout_stderr PASSED                     [ 82%]
+tests/tests_tqdm.py::test_len SKIPPED (could not import 'numpy': No ...) [ 83%]
+tests/tests_tqdm.py::test_autodisable_nonTTY PASSED                      [ 83%]
+tests/tests_tqdm.py::test_autoenable_TTY PASSED                          [ 84%]
+tests/tests_tqdm.py::test_deprecation_exception PASSED                   [ 84%]
+tests/tests_tqdm.py::test_postfix PASSED                                 [ 85%]
+tests/tests_tqdm.py::test_postfix_direct PASSED                          [ 85%]
+tests/tests_tqdm.py::test_file_redirection PASSED                        [ 86%]
+tests/tests_tqdm.py::test_external_write PASSED                          [ 87%]
+tests/tests_tqdm.py::test_numeric_unit_scale PASSED                      [ 87%]
+tests/tests_tqdm.py::test_threading PASSED                               [ 88%]
+tests/tests_tqdm.py::test_bool[False] PASSED                             [ 88%]
+tests/tests_tqdm.py::test_bool[True] PASSED                              [ 89%]
+tests/tests_tqdm.py::test_auto[auto] PASSED                              [ 89%]
+tests/tests_tqdm.py::test_auto[autonotebook] PASSED                      [ 90%]
+tests/tests_tqdm.py::test_wrapattr[bytes] PASSED                         [ 91%]
+tests/tests_tqdm.py::test_wrapattr[iters] PASSED                         [ 91%]
+tests/tests_tqdm.py::test_float_totals PASSED                            [ 92%]
+tests/tests_tqdm.py::test_screen_shape PASSED                            [ 92%]
+tests/tests_tqdm.py::test_initial PASSED                                 [ 93%]
+tests/tests_tqdm.py::test_colour[#beefed-\x1b[38;2;190;239;237m] PASSED  [ 93%]
+tests/tests_tqdm.py::test_colour[blue-\x1b[34m] PASSED                   [ 94%]
+tests/tests_tqdm.py::test_colour_unknown PASSED                          [ 94%]
+tests/tests_tqdm.py::test_closed_file PASSED                             [ 95%]
+tests/tests_tqdm.py::test_reversed PASSED                                [ 96%]
+tests/tests_tqdm.py::test_contains PASSED                                [ 96%]
+tests/tests_tqdm.py::test_write_stdout_none PASSED                       [ 97%]
+tests/tests_utils.py::test_envwrap_deprecated PASSED                     [ 97%]
+tests/tests_utils.py::test_envwrap PASSED                                [ 98%]
+tests/tests_utils.py::test_envwrap_types PASSED                          [ 98%]
+tests/tests_utils.py::test_envwrap_annotations PASSED                    [ 99%]
+tests/tests_version.py::test_version FAILED                              [100%]
+
+=================================== FAILURES ===================================
+_________________________________ test_version _________________________________
+tests/tests_version.py:10: in test_version
+    assert all(
+tests/tests_version.py:11: in <genexpr>
+    isinstance(literal_eval(i), int) for i in version_parts[:3]
+               ^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ast.py:112: in literal_eval
+    return _convert(node_or_string)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ast.py:104: in _convert
+    left = _convert_signed_num(node.left)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ast.py:85: in _convert_signed_num
+    return _convert_num(node)
+           ^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ast.py:76: in _convert_num
+    _raise_malformed_node(node)
+/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ast.py:73: in _raise_malformed_node
+    raise ValueError(msg + f': {node!r}')
+E   ValueError: malformed node or string on line 1: <ast.Name object at 0x7f54a6cf7190>
+- generated xml file: /home/runner/work/_temp/real-repos/tqdm/.tabstudio/test-results/7e4dcd79e2d844e790ca4b840fd89481/pytest.xml -
+============================== slowest durations ===============================
+10.07s call     tests/tests_perf.py::test_lock_args
+4.42s call     tests/tests_perf.py::test_manual_overhead_hard
+4.25s call     tests/tests_perf.py::test_iter_overhead_hard
+2.80s call     tests/tests_perf.py::test_iter_basic_overhead
+2.34s call     tests/tests_perf.py::test_manual_basic_overhead
+0.91s call     tests/tests_asyncio.py::test_as_completed[0.1]
+0.47s call     tests/tests_perf.py::test_manual_overhead_simplebar_hard
+0.44s call     tests/tests_perf.py::test_iter_overhead_simplebar_hard
+0.24s call     tests/tests_rlock.py::test_rlock_creation
+0.17s call     tests/tests_tk.py::test_tk_import
+0.11s call     tests/tests_main.py::test_pipes
+
+(522 durations < 0.1s hidden.)
+=========================== short test summary info ============================
+SKIPPED [1] tests/tests_pandas.py:7: could not import 'numpy': No module named 'numpy'
+SKIPPED [1] tests/tests_concurrent.py:27: cannot import name 'interpreters' from 'concurrent' (/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/concurrent/__init__.py)
+SKIPPED [1] tests/tests_concurrent.py:38: cannot import name 'interpreters' from 'concurrent' (/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/concurrent/__init__.py)
+SKIPPED [1] tests/tests_concurrent.py:72: requires Python 3.14+
+SKIPPED [1] tests/tests_contrib.py:21: could not import 'numpy': No module named 'numpy'
+SKIPPED [1] tests/tests_dask.py:10: could not import 'tqdm.dask': No module named 'dask'
+SKIPPED [1] tests/tests_keras.py:9: could not import 'tqdm.keras': No module named 'keras'
+SKIPPED [1] tests/tests_rich.py:8: could not import 'tqdm.rich': No module named 'rich'
+SKIPPED [1] tests/tests_rich.py:19: could not import 'tqdm.rich': No module named 'rich'
+SKIPPED [1] tests/tests_tqdm.py:1278: could not import 'numpy': No module named 'numpy'
+================== 1 failed, 168 passed, 10 skipped in 27.32s ==================
+
