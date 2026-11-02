@@ -1,0 +1,64 @@
+itsdangerous at 672971d66a2ef9f85151e53283113f33d642dabd
+Toolchain projects:
+  python: /home/runner/work/_temp/real-repos/itsdangerous/pyproject.toml
+Startup project: python /home/runner/work/_temp/real-repos/itsdangerous/pyproject.toml
+Set up in 4.2 s
+Tests: 297 passed, 0 failed, 0 skipped of 314: 297 tests run in 3.5 sec: 297 passed, 0 failed, 0 skipped.
+Project setup:
+------ itsdangerous: pip install -e . ------
+Reading which Python versions the 67 pinned packages have wheels for, from PyPI.
+> uv venv --seed --python 3.13 .venv
+Using CPython 3.13.18
+Creating virtual environment with seed packages at: .venv
+ + pip==26.2.2
+Activate with: .venv/bin/activate
+> /home/runner/work/_temp/real-repos/itsdangerous/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/real-repos/itsdangerous
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: itsdangerous
+  Building editable for itsdangerous (pyproject.toml): started
+  Building editable for itsdangerous (pyproject.toml): finished with status 'done'
+  Created wheel for itsdangerous: filename=itsdangerous-2.3.0.dev0-py3-none-any.whl size=3140 sha256=38dfcdbce96acd5d2f72e78ada364d55299f57e4567d4fdcb5046620ae54132f
+  Stored in directory: /tmp/pip-ephem-wheel-cache-upltdh8r/wheels/12/51/48/48d94c0992a8b2913a6151794b7468c48d42eaf0439c916ae9
+Successfully built itsdangerous
+Installing collected packages: itsdangerous
+Successfully installed itsdangerous-2.3.0.dev0
+
+Output:
+------ Setting up itsdangerous: pip install -e . ------
+Python 3.13 for itsdangerous: pyproject.toml allows Python >=3.10; the newest Python the pinned packages install on from prebuilt wheels (alabaster 1.0.0, click 8.2.1, gha-update 0.1.0, …).
+> uv venv --seed --python 3.13 .venv
+> /home/runner/work/_temp/real-repos/itsdangerous/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Installed 1 package into .venv with Python 3.13. The full log is in Output > Project Setup.
+========== pip install -e .: succeeded ==========
+========== Running itsdangerous's tests with Pytest ==========
+> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''ruff'\'' '\''tox'\'' '\''tox-uv'\'' '\''freezegun'\'' '\''pytest'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/itsdangerous/.tabstudio/test-results/30bed35ba4cb42e28b98cd725a0f43cb/pytest.xml
+Installing what the tests need
+============================= test session starts ==============================
+platform linux -- Python 3.13.18, pytest-9.2.0, pluggy-1.7.0
+rootdir: /home/runner/work/_temp/real-repos/itsdangerous
+configfile: pyproject.toml
+testpaths: tests
+plugins: platformdirs-4.14.3
+collected 297 items
+
+tests/test_itsdangerous/test_encoding.py ........                        [  2%]
+tests/test_itsdangerous/test_serializer.py ............................. [ 12%]
+............                                                             [ 16%]
+tests/test_itsdangerous/test_signer.py .................                 [ 22%]
+tests/test_itsdangerous/test_timed.py .................................. [ 33%]
+...................................................................      [ 56%]
+tests/test_itsdangerous/test_url_safe.py ............................... [ 66%]
+........................................................................ [ 90%]
+...........................                                              [100%]
+
+- generated xml file: /home/runner/work/_temp/real-repos/itsdangerous/.tabstudio/test-results/30bed35ba4cb42e28b98cd725a0f43cb/pytest.xml -
+============================= 297 passed in 0.63s ==============================
+
