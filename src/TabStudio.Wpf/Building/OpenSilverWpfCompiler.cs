@@ -79,6 +79,7 @@ public sealed class OpenSilverWpfCompiler(string? frameworkReferenceDirectory) :
         var items = WpfProject.XamlItems(project);
         var types = XamlTypeSystem.For(compilation);
         var leftOut = new XamlLeftOut(items, project.Name);
+        leftOut.LeaveOutMissingSetters(types);
         IReadOnlyList<BuildDiagnostic> sanitizing;
         XamlCompilerResult result;
         for (var round = 0; ; round++)

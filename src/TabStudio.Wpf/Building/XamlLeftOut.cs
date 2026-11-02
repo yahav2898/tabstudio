@@ -38,6 +38,60 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
     /// <param name="filePath">The XAML file.</param>
     public IReadOnlyList<(int Start, int End)> SpansOf(string filePath) => _spans.TryGetValue(filePath, out var spans) ? spans : [];
 
+    /// <summary>
+    /// Leaves out the style setters for a property the style's type has in WPF and not in OpenSilver, as
+    /// <c>FocusVisualStyle</c>: OpenSilver's compiler does not check a setter's property, and the C# it writes for one
+    /// does not compile. A setter for a property neither has stays, and stays an error.
+    /// </summary>
+    /// <param name="types">The XAML types of the project's compilation.</param>
+    public void LeaveOutMissingSetters(XamlTypeSystem types)
+    {
+        var catalog = WpfApiCatalog.Shipped;
+        foreach (var item in items)
+        {
+            if (Document(item.FilePath) is not { } document)
+            {
+                continue;
+            }
+
+            foreach (var style in document.Elements.Where(e => !e.IsPropertyElement && e.LocalName == "Style" && e.XmlNamespace == XamlNamespaces.Presentation).ToList())
+            {
+                var target = style.Attribute("TargetType")?.Value.Trim() is { Length: > 0 } text ? TypeName(text) : null;
+                var setters = style.Children.Where(c => c.LocalName == "Setter")
+                    .Concat(style.Children.Where(c => c.LocalName == "Style.Setters").SelectMany(c => c.Children.Where(s => s.LocalName == "Setter")));
+                foreach (var setter in setters.ToList())
+                {
+                    if (setter.Attribute("Property")?.Value.Trim() is not { Length: > 0 } property || property.StartsWith('('))
+                    {
+                        continue;
+                    }
+
+                    var dot = property.LastIndexOf('.');
+                    var owner = dot > 0 ? property[..dot] : target;
+                    var name = property[(dot + 1)..];
+                    if (owner is null || owner.Contains(':', StringComparison.Ordinal) || types.FindType(XamlNamespaces.Presentation, owner) is not { } type
+                        || types.FindMember(type, name) is not null || types.FindAttachedMember(type, name) is not null)
+                    {
+                        continue;
+                    }
+
+                    var full = type.ContainingNamespace is { IsGlobalNamespace: false } ns ? ns.ToDisplayString() + "." + type.MetadataName : type.MetadataName;
+                    if (catalog.IsMissingType(full) || IsWpfOnlyMember(full, name))
+                    {
+                        LeaveOutElement(item.FilePath, document, setter, $"OpenSilver's {type.Name} has no {name}");
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>The type a <c>TargetType</c> names, as <c>Label</c> or <c>{x:Type Label}</c>.</summary>
+    private static string TypeName(string text)
+    {
+        var match = XTypeName().Match(text);
+        return match.Success ? match.Groups["type"].Value : text;
+    }
+
     /// <summary>Leaves out what each error is about, or is in.</summary>
     /// <param name="errors">The XAML compiler's errors, in the project's files.</param>
     /// <returns>Whether anything more was left out, so compiling again can get further.</returns>
@@ -306,6 +360,9 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
         var stack = text.IndexOf(" at OpenSilver.", StringComparison.Ordinal);
         return (stack > 0 ? text[..stack] : text).Trim();
     }
+
+    [GeneratedRegex(@"^\{\s*x:Type\s+(TypeName\s*=\s*)?(?<type>[\w:.]+)\s*\}$", RegexOptions.CultureInvariant)]
+    private static partial Regex XTypeName();
 
     [GeneratedRegex(@"Type not found:\s*\{(?<ns>[^}]*)\}(?<name>[\w.]+)", RegexOptions.CultureInvariant)]
     private static partial Regex TypeNotFound();
