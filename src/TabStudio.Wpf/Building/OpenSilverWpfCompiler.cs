@@ -75,21 +75,35 @@ public sealed class OpenSilverWpfCompiler(string? frameworkReferenceDirectory) :
         File.WriteAllBytes(firstPass, request.FirstPassImage.ToArray());
         cancellationToken.ThrowIfCancellationRequested();
 
-        var (inputs, sanitizing) = XamlSanitizer.Prepare(WpfProject.XamlItems(project), XamlTypeSystem.For(compilation), Path.Combine(output, "sanitized"), project.Name);
-        var result = compiler.Compile(new XamlCompilerRequest
+        // What OpenSilver's compiler cannot compile is left out and the XAML compiled again, so the window still shows.
+        var items = WpfProject.XamlItems(project);
+        var types = XamlTypeSystem.For(compilation);
+        var leftOut = new XamlLeftOut(items, project.Name);
+        IReadOnlyList<BuildDiagnostic> sanitizing;
+        XamlCompilerResult result;
+        for (var round = 0; ; round++)
         {
-            ProjectFilePath = project.FilePath,
-            AssemblyName = assemblyName,
-            RootNamespace = project.GetProperty("RootNamespace") ?? assemblyName,
-            Files = inputs,
-            References = references,
-            IntermediateDirectory = WpfProject.SecondPassDirectory(project),
-            IsSecondPass = true,
-            FirstPassAssemblyPath = firstPass,
-            IsVisualBasic = compilation.Language == LanguageNames.VisualBasic,
-        }, project.Name);
+            cancellationToken.ThrowIfCancellationRequested();
+            (var inputs, sanitizing) = XamlSanitizer.Prepare(items, types, Path.Combine(output, "sanitized"), project.Name, leftOut);
+            result = compiler.Compile(new XamlCompilerRequest
+            {
+                ProjectFilePath = project.FilePath,
+                AssemblyName = assemblyName,
+                RootNamespace = project.GetProperty("RootNamespace") ?? assemblyName,
+                Files = inputs,
+                References = references,
+                IntermediateDirectory = WpfProject.SecondPassDirectory(project),
+                IsSecondPass = true,
+                FirstPassAssemblyPath = firstPass,
+                IsVisualBasic = compilation.Language == LanguageNames.VisualBasic,
+            }, project.Name);
+            if (result.Succeeded || round >= XamlLeftOut.MaxRounds || !leftOut.LeaveOut(result.Diagnostics))
+            {
+                break;
+            }
+        }
 
-        IReadOnlyList<BuildDiagnostic> diagnostics = [.. sanitizing, .. result.Diagnostics];
+        IReadOnlyList<BuildDiagnostic> diagnostics = [.. sanitizing, .. leftOut.Notes, .. result.Diagnostics];
         if (!result.Succeeded)
         {
             return new WpfSecondPass(null, diagnostics);

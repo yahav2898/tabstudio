@@ -29,4 +29,7 @@ public static class WpfDiagnosticIds
 
     /// <summary>An error in the C# that OpenSilver's XAML compiler generated, placed in the XAML file it came from.</summary>
     public const string GeneratedCodeError = "TS7009";
+
+    /// <summary>XAML that OpenSilver's compiler cannot compile, left out so the rest of the window shows in the web preview.</summary>
+    public const string LeftOut = "TS7010";
 }

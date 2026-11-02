@@ -20,7 +20,8 @@ namespace TabStudio.Wpf.Building;
 ///   <c>Text</c>, where OpenSilver's type has no content property: the text becomes that attribute, in the same
 ///   characters, as <c>&lt;TextBox Text="00"     /&gt;</c>.</item>
 /// </list>
-/// Only what the restored OpenSilver lacks is left out, so a release that adds it gets it.
+/// Only what the restored OpenSilver lacks is left out, so a release that adds it gets it. What its compiler then still
+/// cannot compile is left out too, as <see cref="XamlLeftOut"/> finds it.
 /// </remarks>
 internal static class XamlSanitizer
 {
@@ -29,11 +30,13 @@ internal static class XamlSanitizer
     /// <param name="types">The XAML types of the project's compilation.</param>
     /// <param name="copyDirectory">Where copies go, each under its path in the project.</param>
     /// <param name="projectName">The project, for the diagnostics.</param>
+    /// <param name="leftOut">What OpenSilver's compiler could not compile, which the copies leave out (see <see cref="XamlLeftOut"/>).</param>
     public static (IReadOnlyList<XamlCompilerInput> Inputs, IReadOnlyList<BuildDiagnostic> Diagnostics) Prepare(
         IReadOnlyList<XamlItem> items,
         XamlTypeSystem types,
         string copyDirectory,
-        string projectName)
+        string projectName,
+        XamlLeftOut? leftOut = null)
     {
         var inputs = new List<XamlCompilerInput>(items.Count);
         var diagnostics = new List<BuildDiagnostic>();
@@ -53,7 +56,8 @@ internal static class XamlSanitizer
             var document = XamlDocument.Parse(text);
             var removed = document.Root is { } root ? Removals(item, root, types, document, diagnostics, projectName) : [];
             var rewritten = document.Root is { } top ? TextContentRewrites(top, types, text) : [];
-            if (removed.Count == 0 && rewritten.Count == 0)
+            var spans = leftOut?.SpansOf(item.FilePath) ?? [];
+            if (removed.Count == 0 && rewritten.Count == 0 && spans.Count == 0)
             {
                 inputs.Add(new XamlCompilerInput(item));
                 continue;
@@ -68,6 +72,17 @@ internal static class XamlSanitizer
             foreach (var attribute in removed)
             {
                 for (var i = attribute.NameStart; i < attribute.End && i < chars.Length; i++)
+                {
+                    if (chars[i] is not ('\n' or '\r'))
+                    {
+                        chars[i] = ' ';
+                    }
+                }
+            }
+
+            foreach (var (start, end) in spans)
+            {
+                for (var i = start; i < end && i < chars.Length; i++)
                 {
                     if (chars[i] is not ('\n' or '\r'))
                     {
