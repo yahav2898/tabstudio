@@ -1,0 +1,554 @@
+Terminal.Gui at f210f00f638f3968654c31d93ecbbcb814902a71
+Opened /home/runner/work/_temp/real-repos/Terminal.Gui/Terminal.slnx in 1.2 s
+Compatibility Doctor:
+  OutputView: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  ScenarioRunner: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  UICatalog: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  AppTestHelpers.XunitHelpers.Generator: Library via Built with its users - A library is compiled together with the projects that reference it.
+  AppTestHelpers.XunitHelpers: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  AppTestHelpers: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Benchmarks: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
+  IntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  NativeAotSmoke: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  PerformanceTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  StressTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  UnitTests.Legacy: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  UnitTests.NonParallelizable: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  UnitTests.Parallelizable: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Terminal.Gui.Analyzers.Internal: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Terminal.Gui.Interop.Spectre: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Terminal.Gui: Library via Built with its users - A library is compiled together with the projects that reference it.
+  tuirec: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+Startup project: UICatalog
+Built in 73.6 s: 9 errors, 352 warnings
+  9 x CS0234
+      [UnitTests.Parallelizable] LoggingTests.cs(5,17): error CS0234: The type or namespace name 'Parallelizable' does not exist in the namespace 'UnitTests' (are you missing an assembly reference?)
+      [UnitTests.Parallelizable] MainLoopCoordinatorTests.cs(6,17): error CS0234: The type or namespace name 'Parallelizable' does not exist in the namespace 'UnitTests' (are you missing an assembly reference?)
+      [UnitTests.Parallelizable] PopoverBaseImplTests.cs(4,17): error CS0234: The type or namespace name 'Parallelizable' does not exist in the namespace 'UnitTests' (are you missing an assembly reference?)
+      [UnitTests.Parallelizable] CommandBubblingTests.cs(2,17): error CS0234: The type or namespace name 'Parallelizable' does not exist in the namespace 'UnitTests' (are you missing an assembly reference?)
+      [UnitTests.Parallelizable] MenuBarTests.cs(2,17): error CS0234: The type or namespace name 'Parallelizable' does not exist in the namespace 'UnitTests' (are you missing an assembly reference?)
+      [UnitTests.Parallelizable] MenuItemTests.cs(3,17): error CS0234: The type or namespace name 'Parallelizable' does not exist in the namespace 'UnitTests' (are you missing an assembly reference?)
+      [UnitTests.Parallelizable] MenuTests.cs(4,17): error CS0234: The type or namespace name 'Parallelizable' does not exist in the namespace 'UnitTests' (are you missing an assembly reference?)
+      [UnitTests.Parallelizable] PopoverMenuTests.cs(3,17): error CS0234: The type or namespace name 'Parallelizable' does not exist in the namespace 'UnitTests' (are you missing an assembly reference?)
+      [UnitTests.Parallelizable] ShortcutTests.Command.cs(3,17): error CS0234: The type or namespace name 'Parallelizable' does not exist in the namespace 'UnitTests' (are you missing an assembly reference?)
+Packages with analyzers or MSBuild files:
+  benchmarkdotnet.annotations 0.15.8
+      analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
+      analyzers/dotnet/roslyn3.8/cs/BenchmarkDotNet.Analyzers.dll
+      analyzers/dotnet/roslyn4.8/cs/BenchmarkDotNet.Analyzers.dll
+  benchmarkdotnet 0.15.8
+      buildTransitive/BenchmarkDotNet.targets
+  coverlet.collector 10.0.0
+      build/net10.0/Microsoft.Bcl.AsyncInterfaces.dll
+      build/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+      build/net10.0/Microsoft.Extensions.DependencyInjection.dll
+      build/net10.0/Microsoft.Extensions.DependencyModel.dll
+      build/net10.0/Microsoft.Extensions.FileSystemGlobbing.dll
+      build/net10.0/Microsoft.TestPlatform.CoreUtilities.dll
+      build/net10.0/Microsoft.TestPlatform.PlatformAbstractions.dll
+      build/net10.0/Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
+      build/net10.0/Mono.Cecil.Mdb.dll
+      build/net10.0/Mono.Cecil.Pdb.dll
+      build/net10.0/Mono.Cecil.Rocks.dll
+      build/net10.0/Mono.Cecil.dll
+      build/net10.0/NuGet.Frameworks.dll
+      build/net10.0/NuGet.Versioning.dll
+      build/net10.0/System.Security.Cryptography.Pkcs.dll
+      build/net10.0/coverlet.collector.deps.json
+      build/net10.0/coverlet.collector.dll
+      build/net10.0/coverlet.collector.pdb
+      build/net10.0/coverlet.collector.targets
+      build/net10.0/coverlet.core.dll
+      build/net10.0/coverlet.core.pdb
+      build/net10.0/coverlet.core.xml
+      build/net10.0/runtimes/win/lib/net10.0/System.Security.Cryptography.Pkcs.dll
+      build/net8.0/Microsoft.Bcl.AsyncInterfaces.dll
+      build/net8.0/Microsoft.Bcl.Cryptography.dll
+      build/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+      build/net8.0/Microsoft.Extensions.DependencyInjection.dll
+      build/net8.0/Microsoft.Extensions.DependencyModel.dll
+      build/net8.0/Microsoft.Extensions.FileSystemGlobbing.dll
+      build/net8.0/Microsoft.TestPlatform.CoreUtilities.dll
+      build/net8.0/Microsoft.TestPlatform.PlatformAbstractions.dll
+      build/net8.0/Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
+      build/net8.0/Mono.Cecil.Mdb.dll
+      build/net8.0/Mono.Cecil.Pdb.dll
+      build/net8.0/Mono.Cecil.Rocks.dll
+      build/net8.0/Mono.Cecil.dll
+      build/net8.0/NuGet.Frameworks.dll
+      build/net8.0/NuGet.Versioning.dll
+      build/net8.0/System.Formats.Asn1.dll
+      build/net8.0/System.Security.Cryptography.Pkcs.dll
+      build/net8.0/coverlet.collector.deps.json
+      build/net8.0/coverlet.collector.dll
+      build/net8.0/coverlet.collector.pdb
+      build/net8.0/coverlet.collector.targets
+      build/net8.0/coverlet.core.dll
+      build/net8.0/coverlet.core.pdb
+      build/net8.0/coverlet.core.xml
+      build/net8.0/runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll
+      build/net9.0/Microsoft.Bcl.AsyncInterfaces.dll
+      build/net9.0/Microsoft.Bcl.Cryptography.dll
+      build/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+      build/net9.0/Microsoft.Extensions.DependencyInjection.dll
+      build/net9.0/Microsoft.Extensions.DependencyModel.dll
+      build/net9.0/Microsoft.Extensions.FileSystemGlobbing.dll
+      build/net9.0/Microsoft.TestPlatform.CoreUtilities.dll
+      build/net9.0/Microsoft.TestPlatform.PlatformAbstractions.dll
+      build/net9.0/Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
+      build/net9.0/Mono.Cecil.Mdb.dll
+      build/net9.0/Mono.Cecil.Pdb.dll
+      build/net9.0/Mono.Cecil.Rocks.dll
+      build/net9.0/Mono.Cecil.dll
+      build/net9.0/NuGet.Frameworks.dll
+      build/net9.0/NuGet.Versioning.dll
+      build/net9.0/System.Formats.Asn1.dll
+      build/net9.0/System.Security.Cryptography.Pkcs.dll
+      build/net9.0/coverlet.collector.deps.json
+      build/net9.0/coverlet.collector.dll
+      build/net9.0/coverlet.collector.pdb
+      build/net9.0/coverlet.collector.targets
+      build/net9.0/coverlet.core.dll
+      build/net9.0/coverlet.core.pdb
+      build/net9.0/coverlet.core.xml
+      build/net9.0/runtimes/win/lib/net9.0/System.Security.Cryptography.Pkcs.dll
+  gitversion.msbuild 6.8.2
+      build/GitVersion.MsBuild.props
+      build/GitVersion.MsBuild.targets
+      buildMultiTargeting/GitVersion.MsBuild.props
+      buildMultiTargeting/GitVersion.MsBuild.targets
+  microsoft.build.tasks.git 10.0.203
+      build/Microsoft.Build.Tasks.Git.props
+      build/Microsoft.Build.Tasks.Git.targets
+      buildMultiTargeting/Microsoft.Build.Tasks.Git.props
+      buildMultiTargeting/Microsoft.Build.Tasks.Git.targets
+      buildTransitive/Microsoft.Build.Tasks.Git.props
+      buildTransitive/Microsoft.Build.Tasks.Git.targets
+  microsoft.codeanalysis.analyzers 5.9.0
+      analyzers/dotnet/cs/Microsoft.CodeAnalysis.Analyzers.dll
+      analyzers/dotnet/cs/Microsoft.CodeAnalysis.CSharp.Analyzers.dll
+      analyzers/dotnet/vb/Microsoft.CodeAnalysis.Analyzers.dll
+      analyzers/dotnet/vb/Microsoft.CodeAnalysis.VisualBasic.Analyzers.dll
+      buildTransitive/Microsoft.CodeAnalysis.Analyzers.props
+      buildTransitive/Microsoft.CodeAnalysis.Analyzers.targets
+  microsoft.codeanalysis.analyzers 5.9.0-1.26328.17
+      analyzers/dotnet/cs/Microsoft.CodeAnalysis.Analyzers.dll
+      analyzers/dotnet/cs/Microsoft.CodeAnalysis.CSharp.Analyzers.dll
+      analyzers/dotnet/vb/Microsoft.CodeAnalysis.Analyzers.dll
+      analyzers/dotnet/vb/Microsoft.CodeAnalysis.VisualBasic.Analyzers.dll
+      buildTransitive/Microsoft.CodeAnalysis.Analyzers.props
+      buildTransitive/Microsoft.CodeAnalysis.Analyzers.targets
+  microsoft.codecoverage 18.11.0
+      build/netstandard2.0/CodeCoverage/CodeCoverage.config
+      build/netstandard2.0/CodeCoverage/CodeCoverage.exe
+      build/netstandard2.0/CodeCoverage/CodeCoverageMessages.dll
+      build/netstandard2.0/CodeCoverage/Cov_x86.config
+      build/netstandard2.0/CodeCoverage/amd64/CodeCoverage.exe
+      build/netstandard2.0/CodeCoverage/amd64/Cov_x64.config
+      build/netstandard2.0/CodeCoverage/amd64/covrun64.dll
+      build/netstandard2.0/CodeCoverage/amd64/msdia140.dll
+      build/netstandard2.0/CodeCoverage/arm64/Cov_arm64.config
+      build/netstandard2.0/CodeCoverage/arm64/covrunarm64.dll
+      build/netstandard2.0/CodeCoverage/arm64/msdia140.dll
+      build/netstandard2.0/CodeCoverage/coreclr/Microsoft.VisualStudio.CodeCoverage.Shim.dll
+      build/netstandard2.0/CodeCoverage/covrun32.dll
+      build/netstandard2.0/CodeCoverage/msdia140.dll
+      build/netstandard2.0/Microsoft.Bcl.AsyncInterfaces.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Core.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Instrumentation.Core.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Instrumentation.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Interprocess.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.props
+      build/netstandard2.0/Microsoft.CodeCoverage.targets
+      build/netstandard2.0/Microsoft.DiaSymReader.dll
+      build/netstandard2.0/Microsoft.VisualStudio.TraceDataCollector.dll
+      build/netstandard2.0/Mono.Cecil.Pdb.dll
+      build/netstandard2.0/Mono.Cecil.Rocks.dll
+      build/netstandard2.0/Mono.Cecil.dll
+      build/netstandard2.0/System.Buffers.dll
+      build/netstandard2.0/System.Memory.dll
+      build/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll
+      build/netstandard2.0/System.Text.Encodings.Web.dll
+      build/netstandard2.0/System.Text.Json.dll
+      build/netstandard2.0/System.Threading.Tasks.Extensions.dll
+      build/netstandard2.0/ThirdPartyNotices.txt
+      build/netstandard2.0/alpine/x64/Cov_x64.config
+      build/netstandard2.0/alpine/x64/libCoverageInstrumentationMethod.so
+      build/netstandard2.0/alpine/x64/libInstrumentationEngine.so
+      build/netstandard2.0/arm64/MicrosoftInstrumentationEngine_arm64.dll
+      build/netstandard2.0/macos/x64/Cov_x64.config
+      build/netstandard2.0/macos/x64/libCoverageInstrumentationMethod.dylib
+      build/netstandard2.0/macos/x64/libInstrumentationEngine.dylib
+      build/netstandard2.0/ubuntu/x64/Cov_x64.config
+      build/netstandard2.0/ubuntu/x64/libCoverageInstrumentationMethod.so
+      build/netstandard2.0/ubuntu/x64/libInstrumentationEngine.so
+      build/netstandard2.0/x64/MicrosoftInstrumentationEngine_x64.dll
+      build/netstandard2.0/x86/MicrosoftInstrumentationEngine_x86.dll
+  microsoft.diagnostics.tracing.traceevent 3.1.21
+      build/Microsoft.Diagnostics.Tracing.TraceEvent.props
+      build/native/amd64/KernelTraceControl.dll
+      build/native/amd64/msdia140.dll
+      build/native/arm64/KernelTraceControl.dll
+      build/native/arm64/msdia140.dll
+      build/native/x86/KernelTraceControl.Win61.dll
+      build/native/x86/KernelTraceControl.dll
+      build/native/x86/msdia140.dll
+      buildTransitive/Microsoft.Diagnostics.Tracing.TraceEvent.props
+  microsoft.extensions.configuration.abstractions 10.0.13
+      buildTransitive/net461/Microsoft.Extensions.Configuration.Abstractions.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Configuration.Abstractions.targets
+  microsoft.extensions.configuration.binder 10.0.13
+      analyzers/dotnet/cs/Microsoft.Extensions.Configuration.Binder.SourceGeneration.dll
+      buildTransitive/netstandard2.0/Microsoft.Extensions.Configuration.Binder.targets
+  microsoft.extensions.configuration.fileextensions 10.0.13
+      buildTransitive/net461/Microsoft.Extensions.Configuration.FileExtensions.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Configuration.FileExtensions.targets
+  microsoft.extensions.configuration.json 10.0.13
+      buildTransitive/net461/Microsoft.Extensions.Configuration.Json.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Configuration.Json.targets
+  microsoft.extensions.configuration 10.0.13
+      buildTransitive/net461/Microsoft.Extensions.Configuration.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Configuration.targets
+  microsoft.extensions.dependencyinjection.abstractions 10.0.13
+      buildTransitive/net461/Microsoft.Extensions.DependencyInjection.Abstractions.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.Abstractions.targets
+  microsoft.extensions.dependencyinjection 10.0.0
+      buildTransitive/net461/Microsoft.Extensions.DependencyInjection.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.targets
+  microsoft.extensions.dependencyinjection 10.0.7
+      buildTransitive/net461/Microsoft.Extensions.DependencyInjection.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.targets
+  microsoft.extensions.fileproviders.abstractions 10.0.13
+      buildTransitive/net461/Microsoft.Extensions.FileProviders.Abstractions.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.FileProviders.Abstractions.targets
+  microsoft.extensions.fileproviders.physical 10.0.13
+      buildTransitive/net461/Microsoft.Extensions.FileProviders.Physical.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.FileProviders.Physical.targets
+  microsoft.extensions.filesystemglobbing 10.0.13
+      buildTransitive/net461/Microsoft.Extensions.FileSystemGlobbing.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.FileSystemGlobbing.targets
+  microsoft.extensions.logging.abstractions 10.0.7
+      analyzers/dotnet/roslyn3.11/cs/Microsoft.Extensions.Logging.Generators.dll
+      analyzers/dotnet/roslyn4.0/cs/Microsoft.Extensions.Logging.Generators.dll
+      analyzers/dotnet/roslyn4.4/cs/Microsoft.Extensions.Logging.Generators.dll
+      buildTransitive/net461/Microsoft.Extensions.Logging.Abstractions.targets
+      buildTransitive/net462/Microsoft.Extensions.Logging.Abstractions.targets
+      buildTransitive/net8.0/Microsoft.Extensions.Logging.Abstractions.targets
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.Abstractions.targets
+      buildTransitive/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.targets
+  microsoft.extensions.logging 10.0.0
+      buildTransitive/net461/Microsoft.Extensions.Logging.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.targets
+  microsoft.extensions.logging 10.0.7
+      buildTransitive/net461/Microsoft.Extensions.Logging.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.targets
+  microsoft.extensions.options 10.0.13
+      analyzers/dotnet/roslyn4.4/cs/Microsoft.Extensions.Options.SourceGeneration.dll
+      buildTransitive/net461/Microsoft.Extensions.Options.targets
+      buildTransitive/net462/Microsoft.Extensions.Options.targets
+      buildTransitive/net8.0/Microsoft.Extensions.Options.targets
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Options.targets
+      buildTransitive/netstandard2.0/Microsoft.Extensions.Options.targets
+  microsoft.extensions.primitives 10.0.13
+      buildTransitive/net461/Microsoft.Extensions.Primitives.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Primitives.targets
+  microsoft.net.compilers.toolset 5.9.0
+      build/Microsoft.Net.Compilers.Toolset.props
+      buildMultiTargeting/Microsoft.Net.Compilers.Toolset.props
+  microsoft.net.test.sdk 18.11.0
+      build/net462/Microsoft.NET.Test.Sdk.props
+      build/net462/Microsoft.NET.Test.Sdk.targets
+      build/net8.0/Microsoft.NET.Test.Sdk.Program.cs
+      build/net8.0/Microsoft.NET.Test.Sdk.Program.fs
+      build/net8.0/Microsoft.NET.Test.Sdk.Program.vb
+      build/net8.0/Microsoft.NET.Test.Sdk.props
+      build/net8.0/Microsoft.NET.Test.Sdk.targets
+      build/netcoreapp2.0/Microsoft.NET.Test.Sdk.props
+      build/netcoreapp2.0/Microsoft.NET.Test.Sdk.targets
+      build/netstandard2.0/Microsoft.NET.Test.Sdk.props
+      build/netstandard2.0/Microsoft.NET.Test.Sdk.targets
+      buildMultiTargeting/net462/Microsoft.NET.Test.Sdk.props
+      buildMultiTargeting/net8.0/Microsoft.NET.Test.Sdk.props
+      buildMultiTargeting/netcoreapp2.0/Microsoft.NET.Test.Sdk.props
+      buildMultiTargeting/netcoreapp2.0/Microsoft.NET.Test.Sdk.targets
+      buildMultiTargeting/netstandard2.0/Microsoft.NET.Test.Sdk.props
+      buildMultiTargeting/netstandard2.0/Microsoft.NET.Test.Sdk.targets
+  microsoft.netcore.app.ref 10.0.14
+      analyzers/dotnet/cs/Microsoft.Interop.ComInterfaceGenerator.dll
+      analyzers/dotnet/cs/Microsoft.Interop.JavaScript.JSImportGenerator.dll
+      analyzers/dotnet/cs/Microsoft.Interop.LibraryImportGenerator.dll
+      analyzers/dotnet/cs/Microsoft.Interop.SourceGeneration.dll
+      analyzers/dotnet/cs/System.Text.Json.SourceGeneration.dll
+      analyzers/dotnet/cs/System.Text.RegularExpressions.Generator.dll
+  microsoft.sourcelink.common 10.0.203
+      build/InitializeSourceControlInformation.targets
+      build/Microsoft.SourceLink.Common.props
+      build/Microsoft.SourceLink.Common.targets
+      buildMultiTargeting/Microsoft.SourceLink.Common.props
+      buildMultiTargeting/Microsoft.SourceLink.Common.targets
+      buildTransitive/Microsoft.SourceLink.Common.props
+      buildTransitive/Microsoft.SourceLink.Common.targets
+  microsoft.sourcelink.github 10.0.203
+      build/Microsoft.SourceLink.GitHub.props
+      build/Microsoft.SourceLink.GitHub.targets
+      buildMultiTargeting/Microsoft.SourceLink.GitHub.props
+      buildMultiTargeting/Microsoft.SourceLink.GitHub.targets
+  microsoft.testing.extensions.telemetry 2.5.1
+      build/net8.0/Microsoft.Testing.Extensions.Telemetry.props
+      build/net9.0/Microsoft.Testing.Extensions.Telemetry.props
+      build/netstandard2.0/Microsoft.Testing.Extensions.Telemetry.props
+      buildMultiTargeting/Microsoft.Testing.Extensions.Telemetry.props
+      buildTransitive/net8.0/Microsoft.Testing.Extensions.Telemetry.props
+      buildTransitive/net9.0/Microsoft.Testing.Extensions.Telemetry.props
+      buildTransitive/netstandard2.0/Microsoft.Testing.Extensions.Telemetry.props
+  microsoft.testing.platform.msbuild 2.5.1
+      build/Microsoft.Testing.Platform.MSBuild.props
+      build/Microsoft.Testing.Platform.MSBuild.targets
+      buildMultiTargeting/Microsoft.Testing.Platform.MSBuild.CustomTestTarget.targets
+      buildMultiTargeting/Microsoft.Testing.Platform.MSBuild.VSTest.targets
+      buildMultiTargeting/Microsoft.Testing.Platform.MSBuild.props
+      buildMultiTargeting/Microsoft.Testing.Platform.MSBuild.targets
+      buildTransitive/Microsoft.Testing.Platform.MSBuild.props
+      buildTransitive/Microsoft.Testing.Platform.MSBuild.targets
+  microsoft.testing.platform 2.5.1
+      build/net8.0/Microsoft.Testing.Platform.props
+      build/net8.0/Microsoft.Testing.Platform.targets
+      build/net9.0/Microsoft.Testing.Platform.props
+      build/net9.0/Microsoft.Testing.Platform.targets
+      build/netstandard2.0/Microsoft.Testing.Platform.props
+      build/netstandard2.0/Microsoft.Testing.Platform.targets
+      buildMultiTargeting/Microsoft.Testing.Platform.props
+      buildMultiTargeting/Microsoft.Testing.Platform.targets
+      buildTransitive/net8.0/Microsoft.Testing.Platform.props
+      buildTransitive/net8.0/Microsoft.Testing.Platform.targets
+      buildTransitive/net9.0/Microsoft.Testing.Platform.props
+      buildTransitive/net9.0/Microsoft.Testing.Platform.targets
+      buildTransitive/netstandard2.0/Microsoft.Testing.Platform.props
+      buildTransitive/netstandard2.0/Microsoft.Testing.Platform.targets
+  microsoft.testplatform.testhost 18.11.0
+      build/net8.0/Microsoft.TestPlatform.TestHost.props
+      build/net8.0/Microsoft.TestPlatform.TestHost.targets
+      build/net8.0/x64/testhost.dll
+      build/net8.0/x64/testhost.exe
+      build/net8.0/x86/testhost.x86.dll
+      build/net8.0/x86/testhost.x86.exe
+  microsoft.visualstudio.azure.containers.tools.targets 1.23.0
+      build/Container.props
+      build/Container.targets
+      build/Microsoft.VisualStudio.Azure.Containers.Tools.Targets.props
+      build/Microsoft.VisualStudio.Azure.Containers.Tools.Targets.targets
+      build/Rules/GeneralBrowseObject.xaml
+      build/Rules/cs-CZ/GeneralBrowseObject.xaml
+      build/Rules/de-DE/GeneralBrowseObject.xaml
+      build/Rules/es-ES/GeneralBrowseObject.xaml
+      build/Rules/fr-FR/GeneralBrowseObject.xaml
+      build/Rules/it-IT/GeneralBrowseObject.xaml
+      build/Rules/ja-JP/GeneralBrowseObject.xaml
+      build/Rules/ko-KR/GeneralBrowseObject.xaml
+      build/Rules/pl-PL/GeneralBrowseObject.xaml
+      build/Rules/pt-BR/GeneralBrowseObject.xaml
+      build/Rules/ru-RU/GeneralBrowseObject.xaml
+      build/Rules/tr-TR/GeneralBrowseObject.xaml
+      build/Rules/zh-CN/GeneralBrowseObject.xaml
+      build/Rules/zh-TW/GeneralBrowseObject.xaml
+      build/ToolsTarget.props
+      build/ToolsTarget.targets
+  onigwrap 1.0.11
+      buildTransitive/net471/Onigwrap.props
+      buildTransitive/net471/Onigwrap.targets
+      buildTransitive/netstandard1.0/Onigwrap.props
+      buildTransitive/netstandard1.0/Onigwrap.targets
+      buildTransitive/netstandard1.0/wasm/2.0.23/st/libonigwrap.a
+      buildTransitive/netstandard1.0/wasm/3.1.12/mt/libonigwrap.a
+      buildTransitive/netstandard1.0/wasm/3.1.12/st/libonigwrap.a
+      buildTransitive/netstandard1.0/wasm/3.1.34/mt/libonigwrap.a
+      buildTransitive/netstandard1.0/wasm/3.1.34/st/libonigwrap.a
+      buildTransitive/netstandard1.0/wasm/3.1.56/mt/libonigwrap.a
+      buildTransitive/netstandard1.0/wasm/3.1.56/st/libonigwrap.a
+  reportgenerator 5.5.9
+      build/netstandard2.0/ReportGenerator.props
+  serilog 4.4.0
+      build/Serilog.targets
+      buildTransitive/Serilog.targets
+  sixlabors.imagesharp 3.1.12
+      build/SixLabors.ImageSharp.props
+  system.codedom 9.0.5
+      buildTransitive/net461/System.CodeDom.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/System.CodeDom.targets
+  system.diagnostics.eventlog 6.0.0
+      buildTransitive/netcoreapp2.0/System.Diagnostics.EventLog.targets
+      buildTransitive/netcoreapp3.1/_._
+  system.io.hashing 10.0.7
+      buildTransitive/net461/System.IO.Hashing.targets
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/System.IO.Hashing.targets
+  system.management 9.0.5
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/System.Management.targets
+  xunit.analyzers 2.2.0
+      analyzers/dotnet/cs/xunit.analyzers.dll
+      analyzers/dotnet/cs/xunit.analyzers.fixes.dll
+  xunit.runner.visualstudio 4.0.1
+      build/net472/xunit.abstractions.dll
+      build/net472/xunit.runner.visualstudio.props
+      build/net472/xunit.runner.visualstudio.testadapter.dll
+      build/net8.0/xunit.abstractions.dll
+      build/net8.0/xunit.runner.visualstudio.props
+      build/net8.0/xunit.runner.visualstudio.testadapter.dll
+  xunit.v3.core.mtp-v2 4.0.2
+      buildTransitive/xunit.v3.core.mtp-v2.props
+      buildTransitive/xunit.v3.core.mtp-v2.targets
+Output:
+ighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewPerformanceTests.cs(307,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewPerformanceTests.cs(333,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewPerformanceTests.cs(360,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewScrollingTests.cs(19,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewScrollingTests.cs(49,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewScrollingTests.cs(80,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewScrollingTests.cs(116,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewScrollingTests.cs(150,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewScrollingTests.cs(188,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewScrollingTests.cs(212,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewScrollingTests.cs(242,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewScrollingTests.cs(277,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewScrollingTests.cs(309,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewScrollingTests.cs(344,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewScrollingTests.cs(384,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewScrollingTests.cs(415,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewScrollingTests.cs(449,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(12,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(23,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(49,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(71,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(87,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(105,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(119,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(159,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(218,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(257,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(291,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(363,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(449,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(576,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(691,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(764,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(818,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(872,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(900,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(949,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(999,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1086,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1129,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1175,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1341,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1360,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1369,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1378,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1387,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1405,26): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1427,26): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1444,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1453,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1461,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1470,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1481,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1491,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1500,24): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1525,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1535,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1547,24): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1558,24): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1575,24): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1592,24): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1609,24): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1624,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1640,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1682,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1711,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1731,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1743,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1758,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1778,22): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1829,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(1949,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2073,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2135,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2146,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2164,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2191,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2219,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2252,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2283,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2312,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2375,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2419,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2453,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2468,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2493,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2568,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2613,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2644,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2663,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2682,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2698,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2714,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2746,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2788,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2830,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2872,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(2915,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3017,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3165,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3233,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3306,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3335,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3398,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3424,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3442,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3471,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3500,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3565,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3626,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3647,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3686,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3742,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3794,13): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3805,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3839,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3854,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3914,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3931,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3960,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+17>TextViewTests.cs(3979,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
+========== Build: 16 succeeded, 1 failed ==========
+
