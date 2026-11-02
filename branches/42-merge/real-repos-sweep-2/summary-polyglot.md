@@ -2,13 +2,13 @@
 | --- | --- | --- | --- | --- | --- |
 | click | python | python | none | started | 13 s |
 | marshmallow | python | python | none | started | 9 s |
-| httpx | python | python | none | started | 15 s |
-| tqdm | python | python | none | started | 42 s |
+| httpx | python | python | none | started | 14 s |
+| tqdm | python | python | none | started | 45 s |
 | attrs | python | python | none | started | 16 s |
-| rich | python | python | none | started | 12 s |
-| requests | python | python | none | started | 90 s |
-| gs-spring-boot | java | java | complete | started | 31 s |
-| gs-serving-web-content | java | java | complete | started | 9 s |
+| rich | python | python | none | started | 11 s |
+| requests | python | python | none | started | 89 s |
+| gs-spring-boot | java | java | complete | started | 37 s |
+| gs-serving-web-content | java | java | complete | started | 8 s |
 | gs-securing-web | java | java | complete | started | 9 s |
 | gs-maven | java | java | complete | started | 5 s |
 | junit5-starter-maven | java | java | none | started | 5 s |
@@ -23,4 +23,4 @@
 | codeigniter-appstarter | php | php | php -S | started | 1 s |
 | monolog | php | php | none | started | 19 s |
 | PHPMailer | php | php | none | started | 1 s |
-| WordPress | php | php | php -S | started | 3 s |
+| WordPress | php | php | php -S | started | 1 s |
