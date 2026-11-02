@@ -129,10 +129,10 @@ public sealed class CompatibilityTests(ITestOutputHelper output)
     }
 
     /// <summary>A public repository's own Compose file, pinned to a commit, and the service whose page must answer.</summary>
-    public sealed record ComposeStack(string Name, string Url, string Web);
+    public sealed record PublicComposeFile(string Name, string Url, string Web);
 
     /// <summary>docker/awesome-compose at 30f4b7f: stacks of images only, as people copy them.</summary>
-    public static readonly ComposeStack[] Stacks =
+    public static readonly PublicComposeFile[] Stacks =
     [
         new("awesome-compose/wordpress-mysql", "https://raw.githubusercontent.com/docker/awesome-compose/30f4b7f6a6c3b0c0ecf4d4efb0de203c48d11562/wordpress-mysql/compose.yaml", "wordpress"),
         new("awesome-compose/gitea-postgres", "https://raw.githubusercontent.com/docker/awesome-compose/30f4b7f6a6c3b0c0ecf4d4efb0de203c48d11562/gitea-postgres/compose.yaml", "gitea"),
