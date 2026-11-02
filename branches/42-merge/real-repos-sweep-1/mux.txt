@@ -2,8 +2,8 @@ mux at db9d1d0073d27a0a2d9a8c1bc52aa0af4374d265
 Toolchain projects:
   go: /home/runner/work/_temp/real-repos/mux/go.mod
 Startup project: go /home/runner/work/_temp/real-repos/mux/go.mod
-Set up in 2.3 s
-Tests: 76 passed, 0 failed, 0 skipped of 76: 76 tests run in 710 ms: 76 passed, 0 failed, 0 skipped.
+Set up in 2.2 s
+Tests: 76 passed, 0 failed, 0 skipped of 76: 76 tests run in 696 ms: 76 passed, 0 failed, 0 skipped.
 Project setup:
 
 Output:
@@ -448,11 +448,11 @@ Output:
 === RUN   TestMethodNotAllowedSubrouterWithSeveralRoutes
 --- PASS: TestMethodNotAllowedSubrouterWithSeveralRoutes (0.00s)
 === RUN   TestSubrouterCustomMethodNotAllowed
-=== RUN   TestSubrouterCustomMethodNotAllowed/router_method_not_allowed
 === RUN   TestSubrouterCustomMethodNotAllowed/subrouter_method_not_allowed
+=== RUN   TestSubrouterCustomMethodNotAllowed/router_method_not_allowed
 --- PASS: TestSubrouterCustomMethodNotAllowed (0.00s)
-    --- PASS: TestSubrouterCustomMethodNotAllowed/router_method_not_allowed (0.00s)
     --- PASS: TestSubrouterCustomMethodNotAllowed/subrouter_method_not_allowed (0.00s)
+    --- PASS: TestSubrouterCustomMethodNotAllowed/router_method_not_allowed (0.00s)
 === RUN   TestSubrouterNotFound
 --- PASS: TestSubrouterNotFound (0.00s)
 === RUN   TestContextMiddleware
@@ -587,30 +587,8 @@ Output:
     --- PASS: TestMethodsSubrouterPathVariable/match_DELETE_handler (0.00s)
     --- PASS: TestMethodsSubrouterPathVariable/match_PUT_handler (0.00s)
     --- PASS: TestMethodsSubrouterPathVariable/disallow_PATCH_method (0.00s)
-=== CONT  TestMethodsSubrouterStrictSlash
-=== CONT  TestMethodsSubrouterPathPrefix
-=== RUN   TestMethodsSubrouterStrictSlash/match_POST_handler
-=== RUN   TestMethodsSubrouterStrictSlash/match_GET_handler
-=== RUN   TestMethodsSubrouterStrictSlash/match_POST_handler,_redirect_strict-slash
-=== RUN   TestMethodsSubrouterPathPrefix/match_first_POST_handler
-=== RUN   TestMethodsSubrouterStrictSlash/match_GET_handler,_redirect_strict-slash
-=== RUN   TestMethodsSubrouterStrictSlash/disallow_DELETE_method
---- PASS: TestMethodsSubrouterStrictSlash (0.00s)
-    --- PASS: TestMethodsSubrouterStrictSlash/match_POST_handler (0.00s)
-    --- PASS: TestMethodsSubrouterStrictSlash/match_GET_handler (0.00s)
-    --- PASS: TestMethodsSubrouterStrictSlash/match_POST_handler,_redirect_strict-slash (0.00s)
-    --- PASS: TestMethodsSubrouterStrictSlash/match_GET_handler,_redirect_strict-slash (0.00s)
-    --- PASS: TestMethodsSubrouterStrictSlash/disallow_DELETE_method (0.00s)
 === CONT  TestMethodsSubrouterSubrouter
-=== RUN   TestMethodsSubrouterPathPrefix/match_DELETE_handler
-=== RUN   TestMethodsSubrouterPathPrefix/match_PUT_handler
-=== RUN   TestMethodsSubrouterPathPrefix/disallow_PATCH_method
 === RUN   TestMethodsSubrouterSubrouter/match_first_POST_handler
---- PASS: TestMethodsSubrouterPathPrefix (0.00s)
-    --- PASS: TestMethodsSubrouterPathPrefix/match_first_POST_handler (0.00s)
-    --- PASS: TestMethodsSubrouterPathPrefix/match_DELETE_handler (0.00s)
-    --- PASS: TestMethodsSubrouterPathPrefix/match_PUT_handler (0.00s)
-    --- PASS: TestMethodsSubrouterPathPrefix/disallow_PATCH_method (0.00s)
 === RUN   TestMethodsSubrouterSubrouter/match_GET_handler
 === RUN   TestMethodsSubrouterSubrouter/match_PATCH_handler
 === RUN   TestMethodsSubrouterSubrouter/match_PUT_handler
@@ -621,6 +599,28 @@ Output:
     --- PASS: TestMethodsSubrouterSubrouter/match_PATCH_handler (0.00s)
     --- PASS: TestMethodsSubrouterSubrouter/match_PUT_handler (0.00s)
     --- PASS: TestMethodsSubrouterSubrouter/disallow_DELETE_method (0.00s)
+=== CONT  TestMethodsSubrouterPathPrefix
+=== RUN   TestMethodsSubrouterPathPrefix/match_first_POST_handler
+=== RUN   TestMethodsSubrouterPathPrefix/match_DELETE_handler
+=== RUN   TestMethodsSubrouterPathPrefix/match_PUT_handler
+=== RUN   TestMethodsSubrouterPathPrefix/disallow_PATCH_method
+--- PASS: TestMethodsSubrouterPathPrefix (0.00s)
+    --- PASS: TestMethodsSubrouterPathPrefix/match_first_POST_handler (0.00s)
+    --- PASS: TestMethodsSubrouterPathPrefix/match_DELETE_handler (0.00s)
+    --- PASS: TestMethodsSubrouterPathPrefix/match_PUT_handler (0.00s)
+    --- PASS: TestMethodsSubrouterPathPrefix/disallow_PATCH_method (0.00s)
+=== CONT  TestMethodsSubrouterStrictSlash
+=== RUN   TestMethodsSubrouterStrictSlash/match_POST_handler
+=== RUN   TestMethodsSubrouterStrictSlash/match_GET_handler
+=== RUN   TestMethodsSubrouterStrictSlash/match_POST_handler,_redirect_strict-slash
+=== RUN   TestMethodsSubrouterStrictSlash/match_GET_handler,_redirect_strict-slash
+=== RUN   TestMethodsSubrouterStrictSlash/disallow_DELETE_method
+--- PASS: TestMethodsSubrouterStrictSlash (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/match_POST_handler (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/match_GET_handler (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/match_POST_handler,_redirect_strict-slash (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/match_GET_handler,_redirect_strict-slash (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/disallow_DELETE_method (0.00s)
 === RUN   ExampleSetURLVars
 --- PASS: ExampleSetURLVars (0.00s)
 === RUN   ExampleCORSMethodMiddleware
@@ -630,5 +630,5 @@ Output:
 === RUN   ExampleRoute_HeadersRegexp_exactMatch
 --- PASS: ExampleRoute_HeadersRegexp_exactMatch (0.00s)
 PASS
-ok  	github.com/gorilla/mux	0.018s
+ok  	github.com/gorilla/mux	0.020s
 
