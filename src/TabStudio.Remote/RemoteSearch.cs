@@ -8,6 +8,8 @@ public sealed record RemoteSearchHit(string FilePath, int Line, int Column, stri
 /// <summary>Literal text search over the downloaded source cache. No remote shell command is built from a query.</summary>
 public static class RemoteSearch
 {
+    public const int MaximumHits = 200;
+
     public static Task<IReadOnlyList<RemoteSearchHit>> FindAsync(string cacheRoot, string query, CancellationToken cancellationToken = default) => Task.Run<IReadOnlyList<RemoteSearchHit>>(() =>
     {
         if (string.IsNullOrEmpty(query)) { return []; }
@@ -17,6 +19,7 @@ public static class RemoteSearch
             foreach (var entry in Directory.EnumerateFileSystemEntries(directory))
             {
                 cancellationToken.ThrowIfCancellationRequested();
+                if (results.Count >= MaximumHits) { return; }
                 var attributes = File.GetAttributes(entry);
                 if (attributes.HasFlag(FileAttributes.ReparsePoint)) { continue; }
                 if (attributes.HasFlag(FileAttributes.Directory))
@@ -36,12 +39,12 @@ public static class RemoteSearch
                         if (index >= 0)
                         {
                             results.Add(new RemoteSearchHit(entry, number, index + 1, line.Trim()[..Math.Min(line.Trim().Length, 180)]));
-                            if (results.Count == 200) { return; }
+                            if (results.Count >= MaximumHits) { return; }
                         }
                     }
                 }
                 catch (IOException) { /* A file may have been removed by a refresh; the next search sees the new cache. */ }
-                if (results.Count == 200) { return; }
+                if (results.Count >= MaximumHits) { return; }
             }
         }
         Walk(cacheRoot);

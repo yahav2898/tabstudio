@@ -28,7 +28,15 @@ public sealed class McpToolProvider(McpClient client) : IAgentToolProvider
             builder.Append(char.IsAsciiLetterOrDigit(c) || c is '_' or '-' ? c : '_');
         }
 
-        return builder.Length <= 64 ? builder.ToString() : builder.ToString(0, 64);
+        if (builder.Length <= 64)
+        {
+            return builder.ToString();
+        }
+
+        // Cut names must stay unique: two long tools of one server often share their first 64 characters, and the API
+        // refuses a request whose tools repeat a name, which stopped the agent altogether.
+        var hash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(Encoding.UTF8.GetBytes($"{server}__{tool}")), 0, 4).ToLowerInvariant();
+        return builder.ToString(0, 55) + "_" + hash;
     }
 
     private sealed class McpAgentTool(McpClient client, McpTool tool) : AgentTool

@@ -91,8 +91,20 @@ public sealed class SqlExecutor
     // An array of columns/rows preserves duplicate column names and SQL NULL without loss.
     public static string Json(QueryResultSet result) => JsonSerializer.Serialize(new
     {
-        columns = result.Columns.Select(c => c.Name), rows = result.Rows, truncated = result.Truncated,
+        columns = result.Columns.Select(c => c.Name), rows = result.Rows.Select(r => r.Select(JsonValue)), truncated = result.Truncated,
     }, JsonOptions);
+
+    // JSON has no NaN or Infinity, and provider types such as IPAddress (PostgreSQL inet) or NpgsqlRange throw or
+    // serialize their internals; such values are written as the text the grid shows.
+    private static object? JsonValue(object? value) => value switch
+    {
+        null or DBNull => null,
+        double d when !double.IsFinite(d) => Format(d),
+        float f when !float.IsFinite(f) => Format(f),
+        string or bool or byte or sbyte or short or ushort or int or uint or long or ulong or float or double or decimal
+            or DateTime or DateTimeOffset or DateOnly or TimeOnly or TimeSpan or Guid or byte[] => value,
+        _ => Format(value),
+    };
 
     public static string Format(object? value) => value switch
     {

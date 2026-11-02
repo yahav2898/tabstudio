@@ -225,6 +225,14 @@ internal static class VisualBasicDesignerFile
                 return;
             }
 
+            // A field the designer did not create with new (a user field, or one a factory method returns) is not a
+            // component: its statements are kept as written, not stored on a component nothing writes back.
+            if (!Known(component))
+            {
+                Keep(statement, null);
+                return;
+            }
+
             if (path.Length == 0)
             {
                 Keep(statement, component);
@@ -237,7 +245,7 @@ internal static class VisualBasicDesignerFile
         private void ReadEvent(StatementSyntax statement, AddRemoveHandlerStatementSyntax handler)
         {
             var method = HandlerOf(handler.DelegateExpression);
-            if (method is null || Target(handler.EventExpression) is not (var component, var path) || path.Length == 0 || path.Contains('.', StringComparison.Ordinal))
+            if (method is null || Target(handler.EventExpression) is not (var component, var path) || !Known(component) || path.Length == 0 || path.Contains('.', StringComparison.Ordinal))
             {
                 Keep(statement, null);
                 return;
@@ -262,7 +270,7 @@ internal static class VisualBasicDesignerFile
             }
 
             if ((Is(method, "Add") || Is(method, "AddRange")) && invocation.Expression is MemberAccessExpressionSyntax { Expression: { } receiver }
-                && Target(receiver) is (var component, var path) && path.Length > 0)
+                && Target(receiver) is (var component, var path) && Known(component) && path.Length > 0)
             {
                 var arguments = invocation.ArgumentList?.Arguments ?? default;
                 if (Is(method, "AddRange") && arguments is [SimpleArgumentSyntax { Expression: ArrayCreationExpressionSyntax array }])
@@ -313,6 +321,8 @@ internal static class VisualBasicDesignerFile
         /// The component an expression starts with, and the property path after it: <c>Me.Button1.Location</c> is
         /// Button1's Location, <c>Text</c> and <c>Me.Text</c> are the form's Text, and <c>Button1</c> is Button1 itself.
         /// </summary>
+        private bool Known(DesignComponent component) => component.IsRoot || Document.Components.Contains(component);
+
         private (DesignComponent Component, string Path)? Target(ExpressionSyntax expression)
         {
             var parts = new List<string>();

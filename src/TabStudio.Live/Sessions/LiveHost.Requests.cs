@@ -64,6 +64,12 @@ public sealed partial class LiveHost
                 }
 
                 var shared = FindDocument(request.Path) ?? throw new LinkRemoteException(LinkErrorCodes.Failed, $"{request.Path} is not open in the session.");
+
+                // A file renamed or deleted on the host is not written again under its old name by a guest's save.
+                if (_files.Find(request.Path) is null)
+                {
+                    throw new LinkRemoteException(LinkErrorCodes.Failed, $"{request.Path} was renamed or deleted on {HostName}. Copy your changes into the file as it is now.");
+                }
                 var version = shared.Text.Version;
                 return request.Version.All(v => version[v.Key] >= v.Value) ? shared : null;
             }).ConfigureAwait(false);

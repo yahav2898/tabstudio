@@ -51,6 +51,31 @@ public sealed class OpenSshTests
     }
 
     [SshFact]
+    public async Task Sftp_save_creates_new_files_and_folders_and_refuses_files_deleted_on_the_server()
+    {
+        using var temp = new TempDirectory();
+        using var connection = await SshTestServer.ConnectAsync();
+        var root = SshTestServer.Root + "/new-" + Guid.NewGuid().ToString("N");
+        connection.Sftp.CreateDirectory(root);
+        using (var content = new MemoryStream("original\n"u8.ToArray())) { connection.Sftp.UploadFile(content, root + "/Program.cs"); }
+        using var workspace = new RemoteWorkspace(connection, root, temp.Path);
+        await workspace.RefreshAsync();
+        var added = Path.Combine(temp.Path, "Models", "Data", "Item.cs");
+        Directory.CreateDirectory(Path.GetDirectoryName(added)!);
+        await File.WriteAllTextAsync(added, "class Item {}\n");
+        await workspace.SaveAsync(added);
+        Assert.Equal("class Item {}\n", connection.Sftp.ReadAllText(root + "/Models/Data/Item.cs"));
+        await File.WriteAllTextAsync(added, "class Item { int Id; }\n");
+        await workspace.SaveAsync(added);
+        Assert.Equal("class Item { int Id; }\n", connection.Sftp.ReadAllText(root + "/Models/Data/Item.cs"));
+        connection.Sftp.DeleteFile(root + "/Program.cs");
+        var local = Path.Combine(temp.Path, "Program.cs");
+        await File.WriteAllTextAsync(local, "edited\n");
+        await Assert.ThrowsAsync<IOException>(() => workspace.SaveAsync(local));
+        Assert.False(connection.Sftp.Exists(root + "/Program.cs"));
+    }
+
+    [SshFact]
     public async Task Device_generated_signer_authenticates_to_OpenSSH()
     {
         using var temp = new TempDirectory();

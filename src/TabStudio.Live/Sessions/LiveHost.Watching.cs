@@ -90,24 +90,28 @@ public sealed partial class LiveHost
         }
 
         // Hashing reads the files, off the session's thread.
-        var found = paths.Select(p => (Path: p, Entry: _files.Find(p))).ToList();
+        // A folder renamed, moved or unzipped into the workspace raises one event for itself, none for its files.
+        var found = paths.Select(p => (Path: p, Entry: _files.Find(p), Folder: _files.FindFolder(p))).ToList();
         Dispatcher.Post(() => ApplyFileChanges(found));
     }
 
-    private void ApplyFileChanges(List<(string Path, LiveFileEntry? Entry)> found)
+    private void ApplyFileChanges(List<(string Path, LiveFileEntry? Entry, IReadOnlyList<LiveFileEntry> Folder)> found)
     {
         var changed = new List<LiveFileEntry>();
         var removed = new List<string>();
-        foreach (var (path, entry) in found)
+        foreach (var (path, entry, folder) in found)
         {
+            foreach (var file in entry is null ? folder : [entry])
+            {
+                if (!_shared.TryGetValue(file.Path, out var known) || known != file)
+                {
+                    _shared[file.Path] = file;
+                    changed.Add(file);
+                }
+            }
+
             if (entry is not null)
             {
-                if (!_shared.TryGetValue(path, out var known) || known != entry)
-                {
-                    _shared[path] = entry;
-                    changed.Add(entry);
-                }
-
                 continue;
             }
 

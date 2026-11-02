@@ -29,12 +29,40 @@ public sealed class LiveWorkspaceFiles
     /// <summary>Lists and hashes every shared file.</summary>
     /// <param name="cancellationToken">Gives up.</param>
     /// <exception cref="IOException">The workspace has more files, or more bytes, than a session shares.</exception>
-    public IReadOnlyList<LiveFileEntry> Collect(CancellationToken cancellationToken)
+    public IReadOnlyList<LiveFileEntry> Collect(CancellationToken cancellationToken) => CollectFrom(new DirectoryInfo(_root), cancellationToken);
+
+    /// <summary>
+    /// The entries of the files in a folder that appeared in the workspace, such as one renamed, moved or unzipped
+    /// into it; none when the path is not such a folder.
+    /// </summary>
+    /// <param name="relativePath">The folder.</param>
+    public IReadOnlyList<LiveFileEntry> FindFolder(string relativePath)
+    {
+        if (LiveWorkspacePaths.ToFullPath(_root, relativePath) is not { } full
+            || relativePath.Split('/').Any(PathUtilities.IsIgnoredDirectory))
+        {
+            return [];
+        }
+
+        var folder = new DirectoryInfo(full);
+        try
+        {
+            return folder.Exists && !folder.Attributes.HasFlag(FileAttributes.ReparsePoint) && folder.LinkTarget is null
+                ? CollectFrom(folder, CancellationToken.None)
+                : [];
+        }
+        catch (IOException)
+        {
+            return [];
+        }
+    }
+
+    private List<LiveFileEntry> CollectFrom(DirectoryInfo start, CancellationToken cancellationToken)
     {
         var entries = new List<LiveFileEntry>();
         long total = 0;
         var pending = new Stack<DirectoryInfo>();
-        pending.Push(new DirectoryInfo(_root));
+        pending.Push(start);
         while (pending.TryPop(out var directory))
         {
             cancellationToken.ThrowIfCancellationRequested();

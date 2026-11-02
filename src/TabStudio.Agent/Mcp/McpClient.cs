@@ -85,6 +85,7 @@ public sealed class McpClient
         await EnsureInitializedAsync(cancellationToken).ConfigureAwait(false);
         var tools = new List<McpTool>();
         string? cursor = null;
+        var pages = 0;
         do
         {
             var parameters = cursor is null ? new JsonObject() : new JsonObject { ["cursor"] = cursor };
@@ -103,7 +104,9 @@ public sealed class McpClient
                 }
             }
 
-            cursor = result["nextCursor"]?.GetValue<string>();
+            // An empty or repeated cursor would ask for the same page forever.
+            var next = result["nextCursor"] is JsonValue value && value.TryGetValue<string>(out var c) && c.Length > 0 ? c : null;
+            cursor = next == cursor || ++pages >= 100 ? null : next;
         }
         while (cursor is not null);
 

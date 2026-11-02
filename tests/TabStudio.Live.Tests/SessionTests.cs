@@ -398,4 +398,20 @@ public sealed class SessionTests
         Assert.Null(await dana.On(() => dana.Session.OpenDocumentAsync("../../etc/passwd")));
         Assert.Null(await dana.On(() => dana.Session.OpenDocumentAsync("Missing.cs")));
     }
+
+    [Fact]
+    public async Task A_guests_save_does_not_bring_back_a_file_deleted_on_the_host()
+    {
+        await using var live = await LiveLoopback.StartAsync();
+        var dana = await live.JoinAsync("Dana");
+        var document = await dana.OpenAsync("Program.cs");
+        File.Delete(Path.Combine(live.Root, "Program.cs"));
+
+        Assert.True(await dana.On(() => document.Edit(document.Text.Length, string.Empty, "// late\n")));
+        var error = await Record.ExceptionAsync(() => dana.On(() => dana.Session.SaveAsync(document)));
+
+        Assert.NotNull(error);
+        Assert.False(File.Exists(Path.Combine(live.Root, "Program.cs")));
+        Assert.Empty(await live.On(() => live.Workspace.Saved.ToList()));
+    }
 }

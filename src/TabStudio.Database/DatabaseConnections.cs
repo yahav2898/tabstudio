@@ -63,6 +63,10 @@ public static class DatabaseConnections
         {
             var b = new DbConnectionStringBuilder { ConnectionString = value };
             if (b.ContainsKey("Host")) return DatabaseProvider.PostgreSql;
+            // Npgsql also reads "Server" as the host, and "Server=…;Port=5432;User Id=…" is its documented form.
+            // SqlClient has no Port keyword (it writes "host,port"), so a Port names another provider; 3306 is MySQL.
+            if (b.TryGetValue("Port", out var port))
+                return string.Equals(Convert.ToString(port, System.Globalization.CultureInfo.InvariantCulture)?.Trim(), "3306", StringComparison.Ordinal) ? null : DatabaseProvider.PostgreSql;
             if (SqlServerKeys.Any(b.ContainsKey)) return DatabaseProvider.SqlServer;
             if (b.ContainsKey("Data Source") || b.ContainsKey("DataSource") || b.ContainsKey("Filename")) return DatabaseProvider.SQLite;
         }

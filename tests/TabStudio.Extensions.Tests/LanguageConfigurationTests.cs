@@ -59,10 +59,20 @@ public sealed class LanguageConfigurationTests
     [InlineData("a[]b", false, "a(?!)b")]
     [InlineData("[a-z-[]", false, @"[a-z-\[]")]
     [InlineData(@"\u{1F600}", true, @"\uD83D\uDE00")]
-    [InlineData(@"^\s*\/\/\s*\d+\w", false, @"^\s*\/\/\s*\d+\w")]
+    [InlineData(@"^\s*\/\/\s*\d+\w", false, @"^\s*\/\/\s*[0-9]+[a-zA-Z0-9_]")]
+    [InlineData(@"[\w.]\D\W", false, @"[a-zA-Z0-9_.][^0-9][^a-zA-Z0-9_]")]
     public void JavaScript_patterns_are_translated_to_dotnet(string pattern, bool unicode, string expected)
     {
         Assert.Equal(expected, JsRegex.Translate(pattern, unicode));
+    }
+
+    [Fact]
+    public void Word_and_digit_classes_match_only_ASCII_as_in_JavaScript()
+    {
+        var word = JsRegex.TryCreate(@"^\w+:$")!;
+        Assert.Matches(word, "case_1:");
+        Assert.DoesNotMatch(word, "é:");
+        Assert.DoesNotMatch(JsRegex.TryCreate(@"^\d$")!, "\u0663");
     }
 
     [Fact]
