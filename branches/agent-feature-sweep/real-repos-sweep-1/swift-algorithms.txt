@@ -1,0 +1,266 @@
+swift-algorithms at 5b7143f8e291dee0e14c118fd0212487f0b37af5
+Toolchain projects:
+  swift: /home/runner/work/_temp/real-repos/swift-algorithms/Package.swift
+Startup project: swift /home/runner/work/_temp/real-repos/swift-algorithms/Package.swift
+Set up in 4.4 s
+Tests: 224 passed, 0 failed, 0 skipped of 224: 224 tests run in 10.5 sec: 224 passed, 0 failed, 0 skipped.
+Project setup:
+
+Output:
+------ Setting up swift-algorithms: swift package resolve ------
+> swift package resolve
+Fetching https://github.com/apple/swift-numerics.git
+[1/6766] Fetching swift-numerics
+Fetched https://github.com/apple/swift-numerics.git (0.53s)
+Computing version for https://github.com/apple/swift-numerics.git
+Computed https://github.com/apple/swift-numerics.git at 1.1.1 (0.67s)
+Creating working copy for https://github.com/apple/swift-numerics.git
+Working copy of https://github.com/apple/swift-numerics.git resolved at 1.1.1
+========== swift package resolve: succeeded ==========
+========== Running swift-algorithms's tests with SwiftPM ==========
+> swift test --parallel --xunit-output /home/runner/work/_temp/real-repos/swift-algorithms/.tabstudio/test-results/082efacf51a34954881e0bf50215cbda/swift.xml --experimental-xunit-message-failure
+Building for debugging...
+[Pre-planning 1 / 184]
+[41 / 73] RealModule
+[48 / 73] RealModule
+[53 / 79] Algorithms
+[54 / 80] RealModule
+[56 / 80] RealModule
+[57 / 80] Algorithms
+[67 / 86] SwiftAlgorithmsTests-product
+[68 / 87] SwiftAlgorithmsTests-product
+[76 / 88] SwiftAlgorithmsTests-product
+[80 / 88] SwiftAlgorithmsTests-product
+[84 / 91] SwiftAlgorithmsTests-test-runner
+[88 / 91] SwiftAlgorithmsTests-test-runner
+[92 / 92] SwiftAlgorithmsTests-test-runner
+Build complete! (7.97 secs)
+[1/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testEmptySequence
+[2/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testManyElements
+[3/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testIndexTraversals
+[4/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testLaziness
+[5/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testThreeElementSequence
+[6/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testManySequences
+[7/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testOneElement
+[8/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testOneElementSequence
+[9/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testZeroElements
+[10/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testTwoElements
+[11/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testThreeElements
+[12/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testTwoElementSequence
+[13/224] Testing SwiftAlgorithmsTests.ChainTests/testChainBidirectionalCollection
+[14/224] Testing SwiftAlgorithmsTests.ChainTests/testChainIndexOffsetAcrossBoundary
+[15/224] Testing SwiftAlgorithmsTests.ChainTests/testChainForwardCollection
+[16/224] Testing SwiftAlgorithmsTests.ChainTests/testChainIndexTraversals
+[17/224] Testing SwiftAlgorithmsTests.ChainTests/testChainSequences
+[18/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunkedBy
+[19/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunkedByComparesConsecutiveElements
+[20/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunkedLazy
+[21/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunkedOn
+[22/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunksOfCount
+[23/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunksOfCountBidirectional
+[24/224] Testing SwiftAlgorithmsTests.ChunkedTests/testEmptyChunksOfCountTraversal
+[25/224] Testing SwiftAlgorithmsTests.ChunkedTests/testEvenChunks
+[26/224] Testing SwiftAlgorithmsTests.ChunkedTests/testSimple
+[27/224] Testing SwiftAlgorithmsTests.ChunkedTests/testEvenChunksIndexTraversals
+[28/224] Testing SwiftAlgorithmsTests.CombinationsTests/testCombinations
+[29/224] Testing SwiftAlgorithmsTests.CombinationsTests/testCombinationsLazy
+[30/224] Testing SwiftAlgorithmsTests.CombinationsTests/testCount
+[31/224] Testing SwiftAlgorithmsTests.CombinationsTests/testEmpty
+[32/224] Testing SwiftAlgorithmsTests.CompactedTests/testCompactedBidirectionalCollection
+[33/224] Testing SwiftAlgorithmsTests.CompactedTests/testCompactedCompacted
+[34/224] Testing SwiftAlgorithmsTests.CompactedTests/testCollectionTraversals
+[35/224] Testing SwiftAlgorithmsTests.CycleTests/testCycle
+[36/224] Testing SwiftAlgorithmsTests.CycleTests/testCycleClosedRangePrefix
+[37/224] Testing SwiftAlgorithmsTests.CycleTests/testCycleLazy
+[38/224] Testing SwiftAlgorithmsTests.CycleTests/testEmptyCycle
+[39/224] Testing SwiftAlgorithmsTests.CycleTests/testRepeated
+[40/224] Testing SwiftAlgorithmsTests.CycleTests/testRepeatedCount
+[41/224] Testing SwiftAlgorithmsTests.CycleTests/testRepeatedClosedRange
+[42/224] Testing SwiftAlgorithmsTests.CycleTests/testRepeatedIndexMethods
+[43/224] Testing SwiftAlgorithmsTests.CycleTests/testRepeatedEmptyCollection
+[44/224] Testing SwiftAlgorithmsTests.CycleTests/testRepeatedLazy
+[45/224] Testing SwiftAlgorithmsTests.CycleTests/testRepeatedZeroTimesCycle
+[46/224] Testing SwiftAlgorithmsTests.EndsWithNonEquatableTests/testDoesntEndWithWrongSuffix
+[47/224] Testing SwiftAlgorithmsTests.EndsWithNonEquatableTests/testDoesntEndWithTooLongSuffix
+[48/224] Testing SwiftAlgorithmsTests.EndsWithNonEquatableTests/testEmptyEndsWithEmpty
+[49/224] Testing SwiftAlgorithmsTests.EndsWithNonEquatableTests/testEmptyDoesNotEndWithNonempty
+[50/224] Testing SwiftAlgorithmsTests.EndsWithNonEquatableTests/testEndsWithEmpty
+[51/224] Testing SwiftAlgorithmsTests.EndsWithNonEquatableTests/testEndsWithCorrectSuffix
+[52/224] Testing SwiftAlgorithmsTests.EndsWithTests/testDoesntEndWithTooLongSuffix
+[53/224] Testing SwiftAlgorithmsTests.EndsWithTests/testDoesntEndWithWrongSuffix
+[54/224] Testing SwiftAlgorithmsTests.EndsWithTests/testEmptyEndsWithEmpty
+[55/224] Testing SwiftAlgorithmsTests.EndsWithTests/testEmptyDoesNotEndWithNonempty
+[56/224] Testing SwiftAlgorithmsTests.EndsWithTests/testEndsWithEmpty
+[57/224] Testing SwiftAlgorithmsTests.EndsWithTests/testEndsWithCorrectSuffix
+[58/224] Testing SwiftAlgorithmsTests.GroupedTests/testGroupedBy
+[59/224] Testing SwiftAlgorithmsTests.FirstNonNilTests/testFirstNonNil
+[60/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunksOfCountCount
+[61/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunksOfCountTraversal
+[62/224] Testing SwiftAlgorithmsTests.GroupedTests/testThrowingFromKeyFunction
+[63/224] Testing SwiftAlgorithmsTests.IntersperseTests/testArray
+[64/224] Testing SwiftAlgorithmsTests.IndexedTests/testIndexed
+[65/224] Testing SwiftAlgorithmsTests.IndexedTests/testIndexedLazy
+[66/224] Testing SwiftAlgorithmsTests.IntersperseTests/testBidirectionalCollection
+[67/224] Testing SwiftAlgorithmsTests.IntersperseTests/testIndexTraversals
+[68/224] Testing SwiftAlgorithmsTests.IntersperseTests/testArrayEmpty
+[69/224] Testing SwiftAlgorithmsTests.IntersperseTests/testCollection
+[70/224] Testing SwiftAlgorithmsTests.IntersperseTests/testIntersperseLazy
+[71/224] Testing SwiftAlgorithmsTests.IntersperseTests/testInterspersedMap
+[72/224] Testing SwiftAlgorithmsTests.IntersperseTests/testSequence
+[73/224] Testing SwiftAlgorithmsTests.IntersperseTests/testInterspersedMapLazy
+[74/224] Testing SwiftAlgorithmsTests.IntersperseTests/testInterspersedMapIndexTraversals
+[75/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoined
+[76/224] Testing SwiftAlgorithmsTests.IntersperseTests/testStringEmpty
+[77/224] Testing SwiftAlgorithmsTests.IntersperseTests/testString
+[78/224] Testing SwiftAlgorithmsTests.IntersperseTests/testSequenceEmpty
+[79/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoinedByElementClosure
+[80/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoinedByElement
+[81/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoinedBySequence
+[82/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoinedBySequenceClosure
+[83/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoinedLazy
+[84/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoinedIndexTraversals
+[85/224] Testing SwiftAlgorithmsTests.KeyedTests/testEmpty
+[86/224] Testing SwiftAlgorithmsTests.KeyedTests/testNonUniqueKeysWithMergeFunction
+[87/224] Testing SwiftAlgorithmsTests.KeyedTests/testNonUniqueKeys
+[88/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoinedByIndexTraversals
+[89/224] Testing SwiftAlgorithmsTests.KeyedTests/testThrowingFromCombineFunction
+[90/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testEmpty
+[91/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testPredicate
+[92/224] Testing SwiftAlgorithmsTests.KeyedTests/testThrowingFromKeyFunction
+[93/224] Testing SwiftAlgorithmsTests.KeyedTests/testUniqueKeys
+[94/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testRampDown
+[95/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testSingleValueMultipleElements
+[96/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testSingleElement
+[97/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testRampUp
+[98/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testUpsAndDowns
+[99/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testStability
+[100/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitionWithSubrangeBidirectionalCollection
+[101/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitionedExample
+[102/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitionedWithPredicate
+[103/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitionWithSubrangeMutableCollection
+[104/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitionedWithEmptyInput
+[105/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitioningIndex
+[106/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitioningIndexWithOneEmptyPartition
+[107/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitioningIndexWithEmptyInput
+[108/224] Testing SwiftAlgorithmsTests.PermutationsTests/testDocumentationExample2
+[109/224] Testing SwiftAlgorithmsTests.PermutationsTests/testDocumentationExample1
+[110/224] Testing SwiftAlgorithmsTests.PartitionTests/testStablePartitionWithSubrange
+[111/224] Testing SwiftAlgorithmsTests.PartitionTests/testStablePartition
+[112/224] Testing SwiftAlgorithmsTests.PermutationsTests/testDocumentationExample3
+[113/224] Testing SwiftAlgorithmsTests.PermutationsTests/testDocumentationExample4
+[114/224] Testing SwiftAlgorithmsTests.PermutationsTests/testDocumentationExample5
+[115/224] Testing SwiftAlgorithmsTests.PermutationsTests/testDocumentationExample6
+[116/224] Testing SwiftAlgorithmsTests.PermutationsTests/testNextPermutation
+[117/224] Testing SwiftAlgorithmsTests.PermutationsTests/testEmpty
+[118/224] Testing SwiftAlgorithmsTests.PermutationsTests/testPermutationsLazy
+[119/224] Testing SwiftAlgorithmsTests.PermutationsTests/testPermutations
+[120/224] Testing SwiftAlgorithmsTests.ProductTests/testProduct
+[121/224] Testing SwiftAlgorithmsTests.ProductTests/testProductDistanceFromTo
+[122/224] Testing SwiftAlgorithmsTests.ProductTests/testProductIndexTraversals
+[123/224] Testing SwiftAlgorithmsTests.RandomSampleTests/testRandomSampleEdgeCases
+[124/224] Testing SwiftAlgorithmsTests.RandomSampleTests/testRandomSampleRandomEdgeCasesInternal
+[125/224] Testing SwiftAlgorithmsTests.RandomSampleTests/testRandomSampleRepeatable
+[126/224] Testing SwiftAlgorithmsTests.RandomSampleTests/testRandomStableSampleCollection
+[127/224] Testing SwiftAlgorithmsTests.ProductTests/testProductReversed
+[128/224] Testing SwiftAlgorithmsTests.RandomSampleTests/testRandomSampleCollection
+[129/224] Testing SwiftAlgorithmsTests.ReductionsTests/testExclusiveEager
+[130/224] Testing SwiftAlgorithmsTests.ReductionsTests/testExclusiveLazy
+[131/224] Testing SwiftAlgorithmsTests.ReductionsTests/testExclusiveIndexTraversals
+[132/224] Testing SwiftAlgorithmsTests.ReductionsTests/testInclusiveEager
+[133/224] Testing SwiftAlgorithmsTests.ReductionsTests/testInclusiveLazy
+[134/224] Testing SwiftAlgorithmsTests.ReductionsTests/testInclusiveIndexTraversals
+[135/224] Testing SwiftAlgorithmsTests.RotateTests/testReverse
+[136/224] Testing SwiftAlgorithmsTests.RotateTests/testRotateExample
+[137/224] Testing SwiftAlgorithmsTests.RotateTests/testRotate
+[138/224] Testing SwiftAlgorithmsTests.RotateTests/testRotateEmptySubrange
+[139/224] Testing SwiftAlgorithmsTests.RotateTests/testRotateFullRange
+[140/224] Testing SwiftAlgorithmsTests.RotateTests/testRotateSubrange
+[141/224] Testing SwiftAlgorithmsTests.RotateTests/testRotateSubrangeOnEmptyCollection
+[142/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testMaxCount
+[143/224] Testing SwiftAlgorithmsTests.RotateTests/testUnderscoreReverse
+[144/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testEmpty
+[145/224] Testing SwiftAlgorithmsTests.RandomSampleTests/testRandomSampleSequence
+[146/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testMaxCountWithHugeInput
+[147/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testMinCount
+[148/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testMinCountWithHugeInput
+[149/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testMinMaxSequences
+[150/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testMinMaxWithHugeCount
+[151/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testSortedPrefixComparable
+[152/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testStability
+[153/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEEEESSS
+[154/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEEES
+[155/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEEEESSSS
+[156/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEEEEESSSS
+[157/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEEESS
+[158/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEES
+[159/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEEESSSSSS
+[160/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEEESSSS
+[161/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEESS
+[162/224] Testing SwiftAlgorithmsTests.SplitTests/testAllESS
+[163/224] Testing SwiftAlgorithmsTests.SplitTests/testCollectionDocExample
+[164/224] Testing SwiftAlgorithmsTests.SplitTests/testAllESSS
+[165/224] Testing SwiftAlgorithmsTests.SplitTests/testEE
+[166/224] Testing SwiftAlgorithmsTests.SplitTests/testE
+[167/224] Testing SwiftAlgorithmsTests.SplitTests/testEEE
+[168/224] Testing SwiftAlgorithmsTests.SplitTests/testES
+[169/224] Testing SwiftAlgorithmsTests.SplitTests/testEEEE
+[170/224] Testing SwiftAlgorithmsTests.SplitTests/testEmpty
+[171/224] Testing SwiftAlgorithmsTests.SplitTests/testS
+[172/224] Testing SwiftAlgorithmsTests.SplitTests/testLaziness
+[173/224] Testing SwiftAlgorithmsTests.SplitTests/testSE
+[174/224] Testing SwiftAlgorithmsTests.SplitTests/testSS
+[175/224] Testing SwiftAlgorithmsTests.SplitTests/testSSS
+[176/224] Testing SwiftAlgorithmsTests.SplitTests/testSequenceDocExamples
+[177/224] Testing SwiftAlgorithmsTests.SplitTests/testSSSS
+[178/224] Testing SwiftAlgorithmsTests.SplitTests/testSplitFilenameComponents
+[179/224] Testing SwiftAlgorithmsTests.SplitTests/testVintagePatterns
+[180/224] Testing SwiftAlgorithmsTests.StridingTests/testCount
+[181/224] Testing SwiftAlgorithmsTests.StridingTests/testLazy
+[182/224] Testing SwiftAlgorithmsTests.StridingTests/testOffsetBy
+[183/224] Testing SwiftAlgorithmsTests.StridingTests/testIndexTraversals
+[184/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEESSS
+[185/224] Testing SwiftAlgorithmsTests.StridingTests/testOffsetByEndIndex
+[186/224] Testing SwiftAlgorithmsTests.StridingTests/testStride
+[187/224] Testing SwiftAlgorithmsTests.StridingTests/testStrideIndexes
+[188/224] Testing SwiftAlgorithmsTests.StridingTests/testStrideLast
+[189/224] Testing SwiftAlgorithmsTests.StridingTests/testStrideString
+[190/224] Testing SwiftAlgorithmsTests.StridingTests/testStrideReversed
+[191/224] Testing SwiftAlgorithmsTests.SuffixTests/testEndOfPrefix
+[192/224] Testing SwiftAlgorithmsTests.SuffixTests/testStartOfSuffix
+[193/224] Testing SwiftAlgorithmsTests.SuffixTests/testSuffix
+[194/224] Testing SwiftAlgorithmsTests.TrimTests/testBothEndsMatch
+[195/224] Testing SwiftAlgorithmsTests.TrimTests/testEverythingButOneMatches
+[196/224] Testing SwiftAlgorithmsTests.TrimTests/testEmpty
+[197/224] Testing SwiftAlgorithmsTests.TrimTests/testEverythingMatches
+[198/224] Testing SwiftAlgorithmsTests.TrimTests/testNoHeadMatch
+[199/224] Testing SwiftAlgorithmsTests.TrimTests/testNoTailMatch
+[200/224] Testing SwiftAlgorithmsTests.TrimTests/testNoMatch
+[201/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimPrefixNoAmbiguity
+[202/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimPrefixRangeReplaceable
+[203/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimNoAmbiguity
+[204/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimRangeReplaceable
+[205/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimSuffixNoAmbiguity
+[206/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimmingSuffix
+[207/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimSuffixRangeReplaceable
+[208/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimmingPrefix
+[209/224] Testing SwiftAlgorithmsTests.UniquePermutationsTests/testEmpty
+[210/224] Testing SwiftAlgorithmsTests.UniquePermutationsTests/testLaziness
+[211/224] Testing SwiftAlgorithmsTests.UniquePermutationsTests/testFirstUnique
+[212/224] Testing SwiftAlgorithmsTests.UniquePermutationsTests/testRanges
+[213/224] Testing SwiftAlgorithmsTests.UniquePermutationsTests/testSingleCounts
+[214/224] Testing SwiftAlgorithmsTests.UniqueTests/testLazyUniqueOn
+[215/224] Testing SwiftAlgorithmsTests.UniqueTests/testUnique
+[216/224] Testing SwiftAlgorithmsTests.UniqueTests/testUniqueOn
+[217/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsCount
+[218/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsIndexAfterAndBefore
+[219/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsLazy
+[220/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsOfInt
+[221/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsOfRange
+[222/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsIndexTraversals
+[223/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsSecondAndLast
+[224/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsOfString
+◇ Test run started.
+↳ Testing Library Version: 6.4.1 (804dc4530ef3666)
+↳ Target Platform: x86_64-unknown-linux-gnu
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+
