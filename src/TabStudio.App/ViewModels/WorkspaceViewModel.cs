@@ -591,6 +591,8 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
     private void OnMemoryPressure(object? sender, MemoryPressure pressure) => _ui.Post(() =>
     {
+        // Android ends an app with every process it started: a container stops first, so the IDE stays.
+        _ = Containers.RelieveMemoryAsync(pressure == MemoryPressure.Critical);
         // Roslyn's cached compilations are by far the largest thing TabStudio can rebuild on demand. They are let go
         // by a reload on a background thread, not here: on a 3 GB tablet a reload and its skeleton compile on the UI
         // thread froze the IDE. The collection runs once they are let go, which is what makes it free them.

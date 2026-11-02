@@ -13,7 +13,5 @@ public sealed partial class WorkspaceViewModel
             SelectSideBarPanel(SideBarPanel.WebPreview);
         });
         Terminal.BeforeLocalShell = Containers.PrepareTerminalCommand;
-        // Android ends an app with every process it started; a container stops first so the IDE stays.
-        _device.MemoryPressureRaised += (_, pressure) => _ = Containers.RelieveMemoryAsync(pressure == TabStudio.App.Platform.MemoryPressure.Critical);
     }
 }
