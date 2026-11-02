@@ -61,13 +61,43 @@ public static class WorkingTree
             }
             else if (!string.Equals(hashes.GetHash(root, path), file.Sha, StringComparison.Ordinal))
             {
-                changes.Add(new FileChange(path, ChangeKind.Modified));
+                if (IsLfsContentOf(root, path, file.Sha))
+                {
+                    // Remembered under the pointer's hash, so the next scan does not hash the file again.
+                    hashes.Remember(root, path, file.Sha);
+                }
+                else
+                {
+                    changes.Add(new FileChange(path, ChangeKind.Modified));
+                }
             }
         }
 
         changes.AddRange(tracked.Keys.Where(path => !presentSet.Contains(path)).Select(path => new FileChange(path, ChangeKind.Deleted)));
         changes.Sort((a, b) => string.CompareOrdinal(a.Path, b.Path));
         return changes;
+    }
+
+    /// <summary>
+    /// Whether a file holds the content a Git LFS pointer names, as Git LFS's clean filter decides: the commit tracks the
+    /// pointer, and the folder holds the file it stands for.
+    /// </summary>
+    /// <param name="root">The folder.</param>
+    /// <param name="relativePath">The path relative to the root, with <c>/</c> separators.</param>
+    /// <param name="trackedSha">The blob hash the commit tracks for the path.</param>
+    public static bool IsLfsContentOf(string root, string relativePath, string trackedSha)
+    {
+        var full = FullPath(root, relativePath);
+        long length;
+        string oid;
+        using (var stream = File.OpenRead(full))
+        {
+            length = stream.Length;
+            oid = Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(stream));
+        }
+
+        var pointer = $"version https://git-lfs.github.com/spec/v1\noid sha256:{oid}\nsize {length.ToString(System.Globalization.CultureInfo.InvariantCulture)}\n";
+        return string.Equals(GitObjects.BlobHash(System.Text.Encoding.UTF8.GetBytes(pointer)), trackedSha, StringComparison.Ordinal);
     }
 
     /// <summary>The Git blob hash of a file in the folder.</summary>
