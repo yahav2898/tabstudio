@@ -1,19 +1,18 @@
 Device: Android 15 (API 35), x86_64, screen 2560x1800
 Displays:
 Built-in Screen, displayId 0
-Overlay #1, displayId 2: a presentation display
 Performing Streamed Install
 Success
 Typing on the tablet's keyboard: ' by keyboard'
 Taking screenshots of the device
 Measurements:
-Startup to self test start: 22.17 s
+Startup to self test start: 20.24 s
 Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
- Native Heap 628500 628492 0 33 629748 658972 647254 6603
- Dalvik Heap 3010 2960 20 72 5204 9059 4562 4497
- TOTAL 1321616 1239068 59580 195 1469400 668031 651816 11100
- TOTAL PSS: 1321616 TOTAL RSS: 1469400 TOTAL SWAP PSS: 195
-Scrolling: a 254 dip drag moved the text 261 dip; a flick glided 972 dip (717 dip in 966 ms on Android's curve); 52 Hz display: the text moved on 3 of the 63 frames of the glide, 50 frame gaps on the UI thread 
-TABSTUDIO_SELFTEST_OK 314.3 s: Shard: ui | Avalonia: shown in 42.9 s, the button counted 2 taps | Designer: previewed MainView.axaml in 2.9 s | Extensions: installed vscode.perl 1.95.3 from open-vsx.org (Signature) in 4.6 s; Perl colored, comment #ff8ca77a, string #ffe6a26b | Windows Forms: Form1 shown in 5.1 s | Forms designer: added a button to Form1 in 3.4 s | Port to Avalonia: event=OK, original=unchanged, 0 notes | Design: the activity bar with 13 tool windows, the search found Build Solution, the bars fit 1280 pixels; 178 lines of text centered in the Forms designer and on the Start screen, in the light and dark themes; Follow the system is Light | WPF: F5 rendered "Hello from WPF on the tablet" on OpenSilver, the whole window in Fit (fits: scale 0.412 of 0.412, window 800x450 ends at 330,421 in a 330x656 pane), in 43.5 s | WinUI: Uno window 'SelfTestWinUI' shown | Swarm: tapped MainView/StackPanel[0]/Button#CountButton on a small phone through real input, counted there alone, 3 screens, 1 layout findings, in 11.7 s | Swarm: Self-test phone joined over TLS 1.3, showed SelfTestSwarm in 15.2 s, paused at the breakpoint in MainViewModel.Count() (MainViewModel.cs, line 17) with next = 1, counted on, and its screen read "Clicked 1 times" | Scrolling: a 254 dip drag moved the text 261 dip; a flick glided 972 dip (717 dip in 966 ms on Android's curve); 52 Hz display: the text moved on 3 of the 63 frames of the glide, 50 frame gaps on the UI thread | Desktop: the IDE on Overlay #1 (1920 × 1080 at 135%, 1422×800) · the Toolbox put a Button into MainView.axaml · the Properties panel set its Content · the tablet's keyboard typed on the display and the designer showed it · a keyboard is connected, so the companion shows no typing bar · the tablet's mouse moved TabStudio's pointer to the Output tab and clicked it · its wheel reached the editor · back on the tablet with the caret at line 19 and its touch buttons
+ Native Heap 627815 627800 0 59 628856 658588 646946 7186
+ Dalvik Heap 3010 2956 4 118 5268 8563 4282 4281
+ TOTAL 1318822 1225708 69200 338 1460512 667151 651228 11467
+ TOTAL PSS: 1318822 TOTAL RSS: 1460512 TOTAL SWAP PSS: 338
+Scrolling: a 254 dip drag moved the text 261 dip; a flick glided 972 dip (717 dip in 966 ms on Android's curve); 59 Hz display: the text moved on 3 of the 49 frames of the glide, 39 frame gaps on the UI thread 
+TABSTUDIO_SELFTEST_OK 258.3 s: Shard: ui | Avalonia: shown in 33.7 s, the button counted 2 taps | Designer: previewed MainView.axaml in 2.3 s | Extensions: installed vscode.perl 1.95.3 from open-vsx.org (Signature) in 3.9 s; Perl colored, comment #ff8ca77a, string #ffe6a26b | Windows Forms: Form1 shown in 4.8 s | Forms designer: added a button to Form1 in 3.0 s | Port to Avalonia: event=OK, original=unchanged, 0 notes | Design: the activity bar with 13 tool windows, the search found Build Solution, the bars fit 1280 pixels; 178 lines of text centered in the Forms designer and on the Start screen, in the light and dark themes; Follow the system is Light | WPF: F5 rendered "Hello from WPF on the tablet" on OpenSilver, the whole window in Fit (fits: scale 0.412 of 0.412, window 800x450 ends at 330,421 in a 330x656 pane), in 35.2 s | WinUI: Uno window 'SelfTestWinUI' shown | Swarm: tapped MainView/StackPanel[0]/Button#CountButton on a small phone through real input, counted there alone, 3 screens, 1 layout findings, in 9.7 s | Swarm: Self-test phone joined over TLS 1.3, showed SelfTestSwarm in 10.5 s, paused at the breakpoint in MainViewModel.Count() (MainViewModel.cs, line 17) with next = 1, counted on, and its screen read "Clicked 1 times" | Scrolling: a 254 dip drag moved the text 261 dip; a flick glided 972 dip (717 dip in 966 ms on Android's curve); 59 Hz display: the text moved on 3 of the 49 frames of the glide, 39 frame gaps on the UI thread | Desktop: the IDE on Overlay #1 (1920 × 1080 at 135%, 1422×800) · the Toolbox put a Button into MainView.axaml · the Properties panel set its Content · the tablet's keyboard typed on the display and the designer showed it · a keyboard is connected, so the companion shows no typing bar · the tablet's mouse moved TabStudio's pointer to the Output tab and clicked it · its wheel reached the editor · back on the tablet with the caret at line 19 and its touch buttons
 Shard: ui
-Seconds from launch to verdict: 343
+Seconds from launch to verdict: 283
