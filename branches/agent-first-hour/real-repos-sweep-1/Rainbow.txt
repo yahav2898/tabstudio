@@ -2,8 +2,8 @@ Rainbow at b6d790f5487f4673fae2222d04d57ff6d6c621ea
 Toolchain projects:
   swift: /home/runner/work/_temp/real-repos/Rainbow/Package.swift
 Startup project: swift /home/runner/work/_temp/real-repos/Rainbow/Package.swift
-Set up in 5.3 s
-Tests: 129 passed, 0 failed, 0 skipped of 139: 129 tests run in 13.0 sec: 129 passed, 0 failed, 0 skipped.
+Set up in 4.7 s
+Tests: 129 passed, 0 failed, 0 skipped of 139: 129 tests run in 13.4 sec: 129 passed, 0 failed, 0 skipped.
 Project setup:
 
 Output:
@@ -11,128 +11,128 @@ Output:
 > swift package resolve
 ========== swift package resolve: succeeded ==========
 ========== Running Rainbow's tests with SwiftPM ==========
-> swift test --parallel --xunit-output /home/runner/work/_temp/real-repos/Rainbow/.tabstudio/test-results/8b75f8876c1344fb8fd7250d3b8b816f/swift.xml --experimental-xunit-message-failure
+> swift test --parallel --xunit-output /home/runner/work/_temp/real-repos/Rainbow/.tabstudio/test-results/5b2a6fdc43a7429a805817fd91cd19b0/swift.xml --experimental-xunit-message-failure
 Building for debugging...
 [Constructing description]
 [Planning deferred tasks]
 [37 / 64] Rainbow
-[38 / 64] Rainbow
 [48 / 73] RainbowTests-product
-[49 / 74] RainbowPlayground-product
-[55 / 74] RainbowPlayground-product
-[56 / 75] RainbowTests-test-runner
-[59 / 75] RainbowPlayground-product
+[49 / 74] RainbowTests-product
+[50 / 74] RainbowTests-product
+[55 / 74] RainbowTests-product
+[58 / 75] RainbowTests-test-runner
 [62 / 75]
 [64 / 75] RainbowTests-product
+[65 / 76] RainbowTests-product
 [68 / 76] RainbowTests-product
 [72 / 79] RainbowTests-test-runner
 [76 / 79] RainbowTests-test-runner
 [80 / 80] RainbowTests-test-runner
-Build complete! (11.36 secs)
+Build complete! (11.84 secs)
 [1/129] Testing RainbowTests.ColorApproximatedTests/testHexUIntColorApproximation
 [2/129] Testing RainbowTests.ColorApproximatedTests/testHex3ColorApproximation
 [3/129] Testing RainbowTests.ColorApproximatedTests/testHex6ColorApproximation
 [4/129] Testing RainbowTests.ColorApproximatedTests/testColorConversion
-[5/129] Testing RainbowTests.ColorTests/testBit24ColorConversion
-[6/129] Testing RainbowTests.ColorTests/testNamedColorConvertToNamedBackgroundColor
-[7/129] Testing RainbowTests.ColorTests/testBit8ColorConversion
-[8/129] Testing RainbowTests.ColorTests/testNamedBackgroundNamedColorConvertToColor
-[9/129] Testing RainbowTests.CompoundResetTests/testApplyingAllResetsExistingAttributes
-[10/129] Testing RainbowTests.CompoundResetTests/testAttributesAfterResetRemain
-[11/129] Testing RainbowTests.CompoundResetTests/testApplyingStylesResetsExistingAttributes
-[12/129] Testing RainbowTests.CompoundResetTests/testApplyingCodesResetsExistingAttributes
-[13/129] Testing RainbowTests.CompoundResetTests/testExtendedColorZeroComponentsDoNotClearExistingAttributes
+[5/129] Testing RainbowTests.ColorTests/testBit8ColorConversion
+[6/129] Testing RainbowTests.ColorTests/testNamedBackgroundNamedColorConvertToColor
+[7/129] Testing RainbowTests.ColorTests/testNamedColorConvertToNamedBackgroundColor
+[8/129] Testing RainbowTests.ColorTests/testBit24ColorConversion
+[9/129] Testing RainbowTests.CompoundResetTests/testApplyingStylesResetsExistingAttributes
+[10/129] Testing RainbowTests.CompoundResetTests/testApplyingAllResetsExistingAttributes
+[11/129] Testing RainbowTests.CompoundResetTests/testApplyingCodesResetsExistingAttributes
+[12/129] Testing RainbowTests.CompoundResetTests/testAttributesAfterResetRemain
+[13/129] Testing RainbowTests.CompoundResetTests/testResetAfterExtendedColorClearsIt
 [14/129] Testing RainbowTests.CompoundResetTests/testRegenerationKeepsAttributesFollowingReset
-[15/129] Testing RainbowTests.CompoundResetTests/testResetAfterExtendedColorClearsIt
+[15/129] Testing RainbowTests.CompoundResetTests/testExtendedColorZeroComponentsDoNotClearExistingAttributes
 [16/129] Testing RainbowTests.CompoundResetTests/testResetAppliesToEverySegment
 [17/129] Testing RainbowTests.CompoundResetTests/testResetClearsAllPreviousAttributes
-[18/129] Testing RainbowTests.CompoundResetTests/testZeroColorComponentsAreNotResets
+[18/129] Testing RainbowTests.ConditionalStylingTests/testApplyIfFalse
 [19/129] Testing RainbowTests.CompoundResetTests/testResetThenColorPreservesNewColor
-[20/129] Testing RainbowTests.ConditionalStylingTests/testApplyIfFalse
+[20/129] Testing RainbowTests.CompoundResetTests/testZeroColorComponentsAreNotResets
 [21/129] Testing RainbowTests.ConditionalStylingTests/testApplyIfTrue
-[22/129] Testing RainbowTests.ConditionalStylingTests/testApplyWhenTrue
-[23/129] Testing RainbowTests.ConditionalStylingTests/testBackgroundColorIfFalse
-[24/129] Testing RainbowTests.ConditionalStylingTests/testBackgroundColorIfTrue
-[25/129] Testing RainbowTests.ConditionalStylingTests/testBackgroundColorTypeIfTrue
-[26/129] Testing RainbowTests.ConditionalStylingTests/testBackgroundColorWhenTrue
-[27/129] Testing RainbowTests.ConditionalStylingTests/testBuilderMultipleConditions
-[28/129] Testing RainbowTests.ConditionalStylingTests/testBuilderSingleConditionTrue
+[22/129] Testing RainbowTests.ConditionalStylingTests/testBackgroundColorTypeIfTrue
+[23/129] Testing RainbowTests.ConditionalStylingTests/testApplyWhenTrue
+[24/129] Testing RainbowTests.ConditionalStylingTests/testBackgroundColorIfFalse
+[25/129] Testing RainbowTests.ConditionalStylingTests/testBackgroundColorIfTrue
+[26/129] Testing RainbowTests.ConditionalStylingTests/testBuilderSingleConditionTrue
+[27/129] Testing RainbowTests.ConditionalStylingTests/testBackgroundColorWhenTrue
+[28/129] Testing RainbowTests.ConditionalStylingTests/testBuilderMultipleConditions
 [29/129] Testing RainbowTests.ConditionalStylingTests/testBuilderSingleConditionFalse
-[30/129] Testing RainbowTests.ConditionalStylingTests/testBuilderWithBackgroundColor
-[31/129] Testing RainbowTests.ConditionalStylingTests/testBuilderWithClosurePredicate
-[32/129] Testing RainbowTests.ConditionalStylingTests/testBuilderWithColorAndStyles
-[33/129] Testing RainbowTests.ConditionalStylingTests/testBuilderWithCustomTransform
-[34/129] Testing RainbowTests.ConditionalStylingTests/testBuilderWithNoConditions
-[35/129] Testing RainbowTests.ConditionalStylingTests/testBuilderWithMultipleStyles
-[36/129] Testing RainbowTests.ConditionalStylingTests/testChainingMultipleConditions
-[37/129] Testing RainbowTests.ConditionalStylingTests/testColorIfFalse
-[38/129] Testing RainbowTests.ConditionalStylingTests/testChainingMixedConditions
+[30/129] Testing RainbowTests.ConditionalStylingTests/testBuilderWithClosurePredicate
+[31/129] Testing RainbowTests.ConditionalStylingTests/testBuilderWithBackgroundColor
+[32/129] Testing RainbowTests.ConditionalStylingTests/testBuilderWithCustomTransform
+[33/129] Testing RainbowTests.ConditionalStylingTests/testBuilderWithColorAndStyles
+[34/129] Testing RainbowTests.ConditionalStylingTests/testBuilderWithMultipleStyles
+[35/129] Testing RainbowTests.ConditionalStylingTests/testBuilderWithNoConditions
+[36/129] Testing RainbowTests.ConditionalStylingTests/testChainingMixedConditions
+[37/129] Testing RainbowTests.ConditionalStylingTests/testChainingMultipleConditions
+[38/129] Testing RainbowTests.ConditionalStylingTests/testColorTypeIfFalse
 [39/129] Testing RainbowTests.ConditionalStylingTests/testColorIfTrue
-[40/129] Testing RainbowTests.ConditionalStylingTests/testColorTypeIfTrue
-[41/129] Testing RainbowTests.ConditionalStylingTests/testColorWhenFalse
-[42/129] Testing RainbowTests.ConditionalStylingTests/testColorTypeIfFalse
-[43/129] Testing RainbowTests.ConditionalStylingTests/testConditionalStylingWhenRainbowDisabled
-[44/129] Testing RainbowTests.ConditionalStylingTests/testConditionalStylingWithExistingStyles
-[45/129] Testing RainbowTests.ConditionalStylingTests/testColorWhenTrue
+[40/129] Testing RainbowTests.ConditionalStylingTests/testColorIfFalse
+[41/129] Testing RainbowTests.ConditionalStylingTests/testColorTypeIfTrue
+[42/129] Testing RainbowTests.ConditionalStylingTests/testConditionalStylingWithExistingStyles
+[43/129] Testing RainbowTests.ConditionalStylingTests/testColorWhenTrue
+[44/129] Testing RainbowTests.ConditionalStylingTests/testConditionalStylingWhenRainbowDisabled
+[45/129] Testing RainbowTests.ConditionalStylingTests/testColorWhenFalse
 [46/129] Testing RainbowTests.ConditionalStylingTests/testEmptyStringConditionalStyling
-[47/129] Testing RainbowTests.ConditionalStylingTests/testStyleIfTrue
-[48/129] Testing RainbowTests.ConditionalStylingTests/testStyleWhenTrue
-[49/129] Testing RainbowTests.ConditionalStylingTests/testStyleIfFalse
+[47/129] Testing RainbowTests.ConditionalStylingTests/testStyleIfFalse
+[48/129] Testing RainbowTests.ConditionalStylingTests/testStyleIfTrue
+[49/129] Testing RainbowTests.ConditionalStylingTests/testStyleWhenTrue
 [50/129] Testing RainbowTests.ConditionalStylingTests/testStylesIfFalse
-[51/129] Testing RainbowTests.ConsoleStringTests/testString24BitBackgroundColor
+[51/129] Testing RainbowTests.ConsoleStringTests/testHexColorString
 [52/129] Testing RainbowTests.ConditionalStylingTests/testStylesIfTrue
 [53/129] Testing RainbowTests.ConsoleStringTests/testMultipartString
-[54/129] Testing RainbowTests.ConsoleStringTests/testHexColorString
-[55/129] Testing RainbowTests.ConsoleStringTests/testString24BitColor
+[54/129] Testing RainbowTests.ConsoleStringTests/testString24BitColor
+[55/129] Testing RainbowTests.ConsoleStringTests/testString24BitBackgroundColor
 [56/129] Testing RainbowTests.ConsoleStringTests/testString8BitBackgroundColor
-[57/129] Testing RainbowTests.ConsoleStringTests/testString8BitColor
-[58/129] Testing RainbowTests.ConsoleStringTests/testStringBackgroundColor
-[59/129] Testing RainbowTests.ConsoleStringTests/testStringClearMode
+[57/129] Testing RainbowTests.ConsoleStringTests/testStringBackgroundColor
+[58/129] Testing RainbowTests.ConsoleStringTests/testStringClearMode
+[59/129] Testing RainbowTests.ConsoleStringTests/testString8BitColor
 [60/129] Testing RainbowTests.ConsoleStringTests/testStringColor
 [61/129] Testing RainbowTests.ConsoleStringTests/testStringStyle
 [62/129] Testing RainbowTests.ConsoleStringTests/testStringMultipleModes
-[63/129] Testing RainbowTests.ConsoleTextParserTests/testParseConsoleStringWithStyle
-[64/129] Testing RainbowTests.ConsoleTextParserTests/testParseMultipleConsoleString
-[65/129] Testing RainbowTests.ConsoleTextParserTests/testParseDefaultString
-[66/129] Testing RainbowTests.ConsoleTextParserTests/testParseMultipleConsoleStringWithUnformat
-[67/129] Testing RainbowTests.ConsoleTextParserTests/testParseSimpleConsoleString
-[68/129] Testing RainbowTests.ConsoleTextParserTests/testParsePlainString
-[69/129] Testing RainbowTests.EdgeCaseTests/testChineseCharacters
-[70/129] Testing RainbowTests.EdgeCaseTests/testBoundaryBitValues
-[71/129] Testing RainbowTests.EdgeCaseTests/testEmptyString
-[72/129] Testing RainbowTests.EdgeCaseTests/testEmptyStringWithDisabledRainbow
-[73/129] Testing RainbowTests.EdgeCaseTests/testInvalidUInt32HexColors
-[74/129] Testing RainbowTests.EdgeCaseTests/testInvalidHexColors
+[63/129] Testing RainbowTests.ConsoleTextParserTests/testParseDefaultString
+[64/129] Testing RainbowTests.ConsoleTextParserTests/testParseConsoleStringWithStyle
+[65/129] Testing RainbowTests.ConsoleTextParserTests/testParseMultipleConsoleStringWithUnformat
+[66/129] Testing RainbowTests.ConsoleTextParserTests/testParseMultipleConsoleString
+[67/129] Testing RainbowTests.ConsoleTextParserTests/testParsePlainString
+[68/129] Testing RainbowTests.ConsoleTextParserTests/testParseSimpleConsoleString
+[69/129] Testing RainbowTests.EdgeCaseTests/testBoundaryBitValues
+[70/129] Testing RainbowTests.EdgeCaseTests/testChineseCharacters
+[71/129] Testing RainbowTests.EdgeCaseTests/testEmptyStringWithDisabledRainbow
+[72/129] Testing RainbowTests.EdgeCaseTests/testEmptyString
+[73/129] Testing RainbowTests.EdgeCaseTests/testInvalidHexColors
+[74/129] Testing RainbowTests.EdgeCaseTests/testInvalidUInt32HexColors
 [75/129] Testing RainbowTests.EdgeCaseTests/testNewlineCharacters
-[76/129] Testing RainbowTests.EdgeCaseTests/testMixedUnicodeAndASCII
-[77/129] Testing RainbowTests.EdgeCaseTests/testSingleCharacter
+[76/129] Testing RainbowTests.EdgeCaseTests/testSingleCharacter
+[77/129] Testing RainbowTests.EdgeCaseTests/testMixedUnicodeAndASCII
 [78/129] Testing RainbowTests.EdgeCaseTests/testSingleUnicodeCharacter
-[79/129] Testing RainbowTests.EdgeCaseTests/testTabCharacters
-[80/129] Testing RainbowTests.EdgeCaseTests/testUnicodeCharacters
-[81/129] Testing RainbowTests.EdgeCaseTests/testSpecialCharacters
+[79/129] Testing RainbowTests.EdgeCaseTests/testSpecialCharacters
+[80/129] Testing RainbowTests.EdgeCaseTests/testTabCharacters
+[81/129] Testing RainbowTests.EdgeCaseTests/testUnicodeCharacters
 [82/129] Testing RainbowTests.EdgeCaseTests/testVeryLongString
-[83/129] Testing RainbowTests.EdgeCaseTests/testVeryLongStringWithMultipleStyles
-[84/129] Testing RainbowTests.EdgeCaseTests/testWhitespaceOnly
-[85/129] Testing RainbowTests.HSLColorTests/testHSL8BitApproximation
-[86/129] Testing RainbowTests.HSLColorTests/testHSLChaining
-[87/129] Testing RainbowTests.HSLColorTests/testHSLNormalization
-[88/129] Testing RainbowTests.HSLColorTests/testHSLEdgeCases
-[89/129] Testing RainbowTests.HSLColorTests/testHSLWithDisabledRainbow
+[83/129] Testing RainbowTests.EdgeCaseTests/testWhitespaceOnly
+[84/129] Testing RainbowTests.EdgeCaseTests/testVeryLongStringWithMultipleStyles
+[85/129] Testing RainbowTests.HSLColorTests/testHSLChaining
+[86/129] Testing RainbowTests.HSLColorTests/testHSLEdgeCases
+[87/129] Testing RainbowTests.HSLColorTests/testHSL8BitApproximation
+[88/129] Testing RainbowTests.HSLColorTests/testHSLNormalization
+[89/129] Testing RainbowTests.HSLColorTests/testHSLToRGBConversion
 [90/129] Testing RainbowTests.HSLColorTests/testStringHSLMethods
-[91/129] Testing RainbowTests.HSLColorTests/testStringOnHSLMethods
-[92/129] Testing RainbowTests.RainbowTests/testExtract24bitModes
+[91/129] Testing RainbowTests.HSLColorTests/testHSLWithDisabledRainbow
+[92/129] Testing RainbowTests.HSLColorTests/testStringOnHSLMethods
 [93/129] Testing RainbowTests.RainbowTests/testExtract8BitModes
-[94/129] Testing RainbowTests.RainbowTests/testExtractModes
-[95/129] Testing RainbowTests.RainbowTests/testGenerateConsoleStringWithCodes8Bit
-[96/129] Testing RainbowTests.RainbowTests/testGenerateConsoleStringWithCodes
-[97/129] Testing RainbowTests.RainbowTests/testExtractModesNotMatch
-[98/129] Testing RainbowTests.RainbowTests/testGenerateUnknownStringWithCodes
-[99/129] Testing RainbowTests.RainbowTests/testRainbowEnabled
-[100/129] Testing RainbowTests.RainbowTests/testGenerateStringWithSegments
-[101/129] Testing RainbowTests.RainbowTests/testRainbowRawString
-[102/129] Testing RainbowTests.RainbowTests/testRainbowEnabledByEnvironment
-[103/129] Testing RainbowTests.StyledStringBuilderTests/testAdvancedBackgroundColors
-[104/129] Testing RainbowTests.HSLColorTests/testHSLToRGBConversion
+[94/129] Testing RainbowTests.RainbowTests/testExtract24bitModes
+[95/129] Testing RainbowTests.RainbowTests/testExtractModes
+[96/129] Testing RainbowTests.RainbowTests/testExtractModesNotMatch
+[97/129] Testing RainbowTests.RainbowTests/testGenerateConsoleStringWithCodes
+[98/129] Testing RainbowTests.RainbowTests/testGenerateConsoleStringWithCodes8Bit
+[99/129] Testing RainbowTests.RainbowTests/testGenerateStringWithSegments
+[100/129] Testing RainbowTests.RainbowTests/testRainbowEnabledByEnvironment
+[101/129] Testing RainbowTests.RainbowTests/testGenerateUnknownStringWithCodes
+[102/129] Testing RainbowTests.RainbowTests/testRainbowEnabled
+[103/129] Testing RainbowTests.RainbowTests/testRainbowRawString
+[104/129] Testing RainbowTests.StyledStringBuilderTests/testAdvancedBackgroundColors
 [105/129] Testing RainbowTests.StyledStringBuilderTests/testBasicColors
 [106/129] Testing RainbowTests.StyledStringBuilderTests/testBasicBackgroundColors
 [107/129] Testing RainbowTests.StyledStringBuilderTests/testBasicStyles
@@ -145,19 +145,19 @@ Build complete! (11.36 secs)
 [114/129] Testing RainbowTests.StyledStringBuilderTests/testConsistentOrdering
 [115/129] Testing RainbowTests.StyledStringBuilderTests/testEmptyString
 [116/129] Testing RainbowTests.StyledStringBuilderTests/testCustomStringConvertible
-[117/129] Testing RainbowTests.StyledStringBuilderTests/testHexColors
-[118/129] Testing RainbowTests.StyledStringBuilderTests/testInvalidHexColors
-[119/129] Testing RainbowTests.StyledStringBuilderTests/testLightBackgroundColors
-[120/129] Testing RainbowTests.StyledStringBuilderTests/testEquatable
-[121/129] Testing RainbowTests.StyledStringBuilderTests/testLightColors
-[122/129] Testing RainbowTests.StyledStringBuilderTests/testRainbowDisabled
-[123/129] Testing RainbowTests.StyledStringBuilderTests/testLongString
-[124/129] Testing RainbowTests.StyledStringBuilderTests/testPlainTextProperty
-[125/129] Testing RainbowTests.StyledStringBuilderTests/testSimpleChaining
-[126/129] Testing RainbowTests.StyledStringBuilderTests/testSpecialCharacters
-[127/129] Testing RainbowTests.StyledStringBuilderTests/testSingleCharacter
-[128/129] Testing RainbowTests.StyledStringBuilderTests/testVeryComplexChaining
-[129/129] Testing RainbowTests.StyledStringBuilderTests/testRainbowUnknownTarget
+[117/129] Testing RainbowTests.StyledStringBuilderTests/testEquatable
+[118/129] Testing RainbowTests.StyledStringBuilderTests/testHexColors
+[119/129] Testing RainbowTests.StyledStringBuilderTests/testInvalidHexColors
+[120/129] Testing RainbowTests.StyledStringBuilderTests/testLightBackgroundColors
+[121/129] Testing RainbowTests.StyledStringBuilderTests/testPlainTextProperty
+[122/129] Testing RainbowTests.StyledStringBuilderTests/testLongString
+[123/129] Testing RainbowTests.StyledStringBuilderTests/testLightColors
+[124/129] Testing RainbowTests.StyledStringBuilderTests/testRainbowDisabled
+[125/129] Testing RainbowTests.StyledStringBuilderTests/testSingleCharacter
+[126/129] Testing RainbowTests.StyledStringBuilderTests/testSimpleChaining
+[127/129] Testing RainbowTests.StyledStringBuilderTests/testRainbowUnknownTarget
+[128/129] Testing RainbowTests.StyledStringBuilderTests/testSpecialCharacters
+[129/129] Testing RainbowTests.StyledStringBuilderTests/testVeryComplexChaining
 ◇ Test run started.
 ↳ Testing Library Version: 6.4.1 (804dc4530ef3666)
 ↳ Target Platform: x86_64-unknown-linux-gnu

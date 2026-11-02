@@ -4,20 +4,20 @@ Toolchain projects:
   rust: /home/runner/work/_temp/real-repos/serde-json/fuzz/Cargo.toml
   rust: /home/runner/work/_temp/real-repos/serde-json/tests/crate/Cargo.toml
 Startup project: rust /home/runner/work/_temp/real-repos/serde-json/Cargo.toml
-Set up in 3.0 s
-Tests: 240 passed, 0 failed, 1 skipped of 267: 241 tests run in 18.5 sec: 240 passed, 0 failed, 1 skipped.
+Set up in 3.8 s
+Tests: 240 passed, 0 failed, 1 skipped of 267: 241 tests run in 20.6 sec: 240 passed, 0 failed, 1 skipped.
 Project setup:
 
 Output:
 ========== Running serde-json's tests with Cargo ==========
-> sh -c 'report="$0"; { "$@"; echo $? > "$report.status"; } 2>&1 | tee "$report"; exit "$(cat "$report.status" 2> /dev/null || echo 1)"' /home/runner/work/_temp/real-repos/serde-json/.tabstudio/test-results/469d401b28f64f749c8e60e869b6f300/cargo-test.txt cargo test --no-fail-fast
+> sh -c 'report="$0"; { "$@"; echo $? > "$report.status"; } 2>&1 | tee "$report"; exit "$(cat "$report.status" 2> /dev/null || echo 1)"' /home/runner/work/_temp/real-repos/serde-json/.tabstudio/test-results/e907b7d701ca421ca7bacbf4765bd7fd/cargo-test.txt cargo test --no-fail-fast
     Updating crates.io index
      Locking 46 packages to highest compatible versions
-   Compiling proc-macro2 v1.0.107
    Compiling serde_core v1.0.229
-   Compiling quote v1.0.47
-   Compiling memchr v2.8.3
+   Compiling proc-macro2 v1.0.107
    Compiling unicode-ident v1.0.27
+   Compiling memchr v2.8.3
+   Compiling quote v1.0.47
    Compiling find-msvc-tools v0.1.15
    Compiling object v0.39.1
    Compiling shlex v2.0.1
@@ -27,20 +27,20 @@ Output:
    Compiling libc v0.2.191
    Compiling stacker v0.1.25
    Compiling serde_json v1.0.154
+   Compiling itoa v1.0.18
    Compiling winnow v1.0.4
    Compiling serde v1.0.229
-   Compiling itoa v1.0.18
    Compiling target-tuple v1.0.2
    Compiling toml_parser v1.1.5+spec-1.1.0
    Compiling serde_derive v1.0.229
-   Compiling toml_datetime v1.1.2+spec-1.1.0
-   Compiling ar_archive_writer v0.5.3
    Compiling serde_spanned v1.1.2
+   Compiling toml_datetime v1.1.2+spec-1.1.0
    Compiling toml_writer v1.1.3+spec-1.1.0
-   Compiling serde_json v1.0.154 (/home/runner/work/_temp/real-repos/serde-json)
-   Compiling ref-cast v1.0.27
-   Compiling cfg-if v1.0.5
+   Compiling ar_archive_writer v0.5.3
    Compiling rustversion v1.0.23
+   Compiling serde_json v1.0.154 (/home/runner/work/_temp/real-repos/serde-json)
+   Compiling cfg-if v1.0.5
+   Compiling ref-cast v1.0.27
    Compiling toml v1.1.8+spec-1.1.0
    Compiling psm v0.1.32
    Compiling ref-cast-impl v1.0.27
@@ -48,12 +48,12 @@ Output:
    Compiling dissimilar v1.0.11
    Compiling termcolor v1.4.1
    Compiling glob v0.3.4
-   Compiling serde_stacker v0.1.14
    Compiling trybuild v1.0.122
    Compiling serde_bytes v0.11.19
    Compiling indoc v2.0.8
    Compiling automod v1.0.17
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.41s
+   Compiling serde_stacker v0.1.14
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 16.51s
      Running unittests src/lib.rs (target/debug/deps/serde_json-425dedc8f6475183)
 
 running 0 tests
@@ -75,8 +75,8 @@ test indented ... ok
 test number ... ok
 test value_array ... ok
 test value_bool ... ok
-test value_null ... ok
 test value_number ... ok
+test value_null ... ok
 test value_object ... ok
 test value_string ... ok
 
@@ -85,41 +85,41 @@ test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
      Running tests/lexical.rs (target/debug/deps/lexical-5f971a83d61e181b)
 
 running 35 tests
-test algorithm::moderate_path_test ... ok
-test exponent::mantissa_exponent_test ... ok
 test algorithm::double_fast_path_test ... ok
 test algorithm::float_fast_path_test ... ok
-test exponent::scientific_exponent_test ... ok
+test algorithm::moderate_path_test ... ok
+test exponent::mantissa_exponent_test ... ok
 test float::from_float ... ok
 test float::imul_test ... ok
+test exponent::scientific_exponent_test ... ok
 test float::mul_test ... ok
-test float::normalize_test ... ok
 test float::round_to_f64_test ... ok
+test float::normalize_test ... ok
 test float::round_to_f32_test ... ok
-test math::bit_length_test ... ok
 test float::to_f32_test ... ok
-test float::to_f64_test ... ok
 test math::compare_test ... ok
+test float::to_f64_test ... ok
 test math::hi64_test ... ok
-test num::as_primitive_test ... ok
 test math::iadd_small_test ... ok
+test math::bit_length_test ... ok
 test math::imul_small_test ... ok
+test num::as_primitive_test ... ok
 test math::shl_test ... ok
+test num::number_test ... ok
 test num::float_test ... ok
 test num::integer_test ... ok
 test parse::parse_f32_test ... ok
-test num::number_test ... ok
 test rounding::avoid_overflow_test ... ok
 test rounding::internal_n_mask_test ... ok
 test rounding::lower_n_halfway_test ... ok
 test rounding::lower_n_mask_test ... ok
-test parse::parse_f64_test ... ok
 test rounding::round_nearest_test ... ok
-test rounding::round_nearest_tie_even_test ... ok
-test rounding::round_downward_test ... ok
 test rounding::nth_bit_test ... ok
-test rounding::round_to_native_test ... ok
+test parse::parse_f64_test ... ok
+test rounding::round_nearest_tie_even_test ... ok
 test rounding::round_to_float_test ... ok
+test rounding::round_to_native_test ... ok
+test rounding::round_downward_test ... ok
 
 test result: ok. 35 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
@@ -138,11 +138,11 @@ running 8 tests
 test regression::issue1083::invalid_utf8_after_escape_reports_the_bad_byte ... ok
 test regression::issue1083::invalid_utf8_at_start_of_string ... ok
 test regression::issue1083::invalid_utf8_inside_string_reports_the_bad_byte ... ok
-test regression::issue795::test ... ok
 test regression::issue520::test ... ok
-test regression::issue979::test ... ok
-test regression::issue845::test ... ok
 test regression::issue953::test ... ok
+test regression::issue979::test ... ok
+test regression::issue795::test ... ok
+test regression::issue845::test ... ok
 
 test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
@@ -150,16 +150,16 @@ test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 running 11 tests
 test test_error ... ok
+test test_json_stream_empty ... ok
 test test_json_stream_invalid_literal ... ok
 test test_json_stream_invalid_number ... ok
-test test_json_stream_primitive ... ok
 test test_json_stream_newlines ... ok
 test test_json_stream_trailing_whitespaces ... ok
-test test_json_stream_truncated_decimal ... ok
+test test_json_stream_primitive ... ok
 test test_json_stream_truncated ... ok
-test test_json_stream_truncated_exponent ... ok
-test test_json_stream_empty ... ok
+test test_json_stream_truncated_decimal ... ok
 test test_json_stream_truncated_negative ... ok
+test test_json_stream_truncated_exponent ... ok
 
 test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
@@ -167,58 +167,59 @@ test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fin
 
 running 77 tests
 test hash_positive_and_negative_zero ... ok
-test issue_220 ... ok
 test null_invalid_type ... ok
-test test_borrow_in_map_key ... ok
 test test_borrow ... ok
+test issue_220 ... ok
 test test_boolean_key ... ok
-test test_byte_buf_de_multiple ... ok
+test test_borrow_in_map_key ... ok
 test test_borrowed_key ... ok
 test test_byte_buf_de ... ok
 test test_byte_buf_de_invalid_surrogates ... ok
+test test_byte_buf_de_multiple ... ok
 test test_byte_buf_de_surrogate_pair ... ok
-test test_category ... ok
 test test_byte_buf_ser ... ok
 test test_bytes_ser ... ok
+test test_category ... ok
 test test_deny_non_finite_f32_key ... ok
 test test_deny_non_finite_f64_key ... ok
 test test_control_character_search ... ok
 test test_deserialize_number_to_untagged_enum ... ok
-test test_effectively_string_keys ... ok
 test test_encode_nonfinite_float_yields_null ... ok
-test test_float_key ... ok
-test test_deserialize_from_stream ... ok
-test test_integer128 ... ok
-test test_integer_key ... ok
+test test_effectively_string_keys ... ok
 test test_integer128_key ... ok
-test test_into_io_error ... ok
+test test_float_key ... ok
+test test_integer128 ... ok
 test test_integer128_to_value ... ok
+test test_deserialize_from_stream ... ok
+test test_integer_key ... ok
+test test_into_io_error ... ok
 test test_json_macro ... ok
 test test_json_pointer ... ok
 test test_json_pointer_mut ... ok
+test test_missing_option_field ... ok
 test test_missing_renamed_field ... ok
-test test_multiline_errors ... ok
+test test_missing_nonoption_field ... ok
 test test_negative_zero_value ... ok
+test test_multiline_errors ... ok
 test test_parse_bool ... ok
 test test_parse_char ... ok
-test test_missing_nonoption_field ... ok
-test test_missing_option_field ... ok
 test test_parse_enum_errors ... ok
-test test_parse_f64 ... ok
-test test_parse_enum ... ok
 test test_parse_i64 ... ok
+test test_parse_f64 ... ok
+test test_parse_list ... ok
 test test_parse_negative_zero ... ok
 test test_parse_null ... ok
 test test_parse_number ... ok
 test test_parse_number_errors ... ok
-test test_parse_list ... ok
+test test_parse_string ... ok
+test test_parse_enum ... ok
+test test_parse_object ... ok
 test test_parse_option ... ok
 test test_parse_trailing_whitespace ... ok
-test test_parse_string ... ok
-test test_parse_object ... ok
-test test_parse_u64 ... ok
 test test_partialeq_bool ... ok
 test test_partialeq_f32_out_of_range ... ok
+test test_parse_u64 ... ok
+test test_parse_struct ... ok
 test test_partialeq_number ... ok
 test test_partialeq_string ... ok
 test test_roundtrip_f32 ... ok
@@ -226,50 +227,49 @@ test test_serialize_char ... ok
 test test_serialize_map_with_no_len ... ok
 test test_serialize_rejects_adt_keys ... ok
 test test_serialize_seq_with_no_len ... ok
-test test_parse_struct ... ok
-test test_stack_overflow ... ok
 test test_value_as_f64 ... ok
-test test_write_bool ... ok
+test test_stack_overflow ... ok
 test test_value_into_deserializer ... ok
+test test_write_bool ... ok
 test test_write_char ... ok
-test test_write_f64 ... ok
-test test_write_list ... ok
-test test_write_newtype_struct ... ok
-test test_write_null ... ok
 test test_write_enum ... ok
+test test_write_f64 ... ok
 test test_write_i64 ... ok
+test test_write_newtype_struct ... ok
+test test_write_list ... ok
+test test_write_null ... ok
+test test_write_str ... ok
+test test_write_tuple ... ok
+test test_write_u64 ... ok
 test test_write_object ... ok
 test test_write_option ... ok
-test test_write_u64 ... ok
-test test_write_tuple ... ok
-test test_write_str ... ok
 
 test result: ok. 77 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
 
    Doc-tests serde_json
 
 running 97 tests
-test src/de.rs - de::&'_mutDeserializer<R>::deserialize_bytes (line 1620) ... ok
 test src/de.rs - de::StreamDeserializer (line 2348) ... ok
+test src/de.rs - de::&'_mutDeserializer<R>::deserialize_bytes (line 1620) ... ok
 test src/de.rs - de::StreamDeserializer<'de,R,T>::byte_offset (line 2398) ... ok
 test src/de.rs - de::&'_mutDeserializer<R>::deserialize_bytes (line 1599) ... ok
-test src/de.rs - de::from_reader (line 2545) ... ok
 test src/de.rs - de::from_reader (line 2581) ... ok
+test src/de.rs - de::from_reader (line 2545) ... ok
 test src/de.rs - de::from_str (line 2678) ... ok
-test src/error.rs - error::io::Error::from (line 195) ... ok
 test src/de.rs - de::from_slice (line 2636) ... ok
+test src/error.rs - error::io::Error::from (line 195) ... ok
 test src/error.rs - error::Error::io_error_kind (line 119) ... ok
 test src/lib.rs - (line 120) ... ok
 test src/lib.rs - (line 211) ... ok
 test src/lib.rs - (line 182) ... ok
+test src/lib.rs - (line 242) ... ok
 test src/lib.rs - (line 43) ... ok
 test src/lib.rs - (line 62) ... ok
-test src/lib.rs - (line 242) ... ok
 test src/macros.rs - macros::json (line 26) ... ok
-test src/macros.rs - macros::json (line 43) ... ok
 test src/macros.rs - macros::json (line 3) ... ok
-test src/map.rs - map::Entry<'a>::and_modify (line 723) ... ok
+test src/macros.rs - macros::json (line 43) ... ok
 test src/map.rs - map::Entry<'a>::key (line 663) ... ok
+test src/map.rs - map::Entry<'a>::and_modify (line 723) ... ok
 test src/map.rs - map::Entry<'a>::or_insert (line 679) ... ok
 test src/map.rs - map::Entry<'a>::or_insert_with (line 700) ... ok
 test src/map.rs - map::Map<String,Value> (line 445) ... ok
@@ -279,13 +279,13 @@ test src/map.rs - map::OccupiedEntry<'a>::get_mut (line 854) ... ok
 test src/map.rs - map::OccupiedEntry<'a>::insert (line 907) ... ok
 test src/map.rs - map::OccupiedEntry<'a>::into_mut (line 880) ... ok
 test src/map.rs - map::OccupiedEntry<'a>::key (line 806) ... ok
-test src/map.rs - map::OccupiedEntry<'a>::remove (line 938) ... ok
 test src/map.rs - map::VacantEntry<'a>::insert (line 781) ... ok
+test src/map.rs - map::OccupiedEntry<'a>::remove (line 938) ... ok
 test src/map.rs - map::OccupiedEntry<'a>::remove_entry (line 999) ... ok
 test src/map.rs - map::VacantEntry<'a>::key (line 759) ... ok
+test src/number.rs - number::Number::from_u128 (line 259) ... ok
 test src/number.rs - number::Number::from_f64 (line 176) ... ok
 test src/number.rs - number::Number::from_i128 (line 230) ... ok
-test src/number.rs - number::Number::from_u128 (line 259) ... ok
 test src/value/from.rs - value::from::Value::from (line 101) ... ok
 test src/value/from.rs - value::from::Value::from (line 117) ... ok
 test src/value/from.rs - value::from::Value::from (line 125) ... ok
@@ -293,8 +293,8 @@ test src/value/from.rs - value::from::Value::from (line 142) ... ok
 test src/value/from.rs - value::from::Value::from (line 158) ... ok
 test src/value/from.rs - value::from::Value::from (line 175) ... ok
 test src/value/from.rs - value::from::Value::from (line 197) ... ok
-test src/value/from.rs - value::from::Value::from (line 263) ... ok
 test src/value/from.rs - value::from::Value::from (line 36) ... ok
+test src/value/from.rs - value::from::Value::from (line 263) ... ok
 test src/value/from.rs - value::from::Value::from (line 53) ... ok
 test src/value/from.rs - value::from::Value::from (line 69) ... ok
 test src/value/from.rs - value::from::Value::from (line 85) ... ok
@@ -303,42 +303,42 @@ test src/value/from.rs - value::from::Value::from_iter (line 220) ... ok
 test src/value/from.rs - value::from::Value::from_iter (line 227) ... ok
 test src/value/index.rs - value::index::Index (line 24) ... ok
 test src/value/from.rs - value::from::Value::from_iter (line 243) ... ok
-test src/value/index.rs - value::index::Value::index_mut (line 236) ... ok
 test src/value/index.rs - value::index::Value::index (line 197) ... ok
+test src/value/index.rs - value::index::Value::index_mut (line 236) ... ok
 test src/value/mod.rs - value (line 37) ... ok
 test src/value/mod.rs - value (line 61) ... ok
 test src/value/mod.rs - value (line 8) ... ok
-test src/value/mod.rs - value::Value (line 898) ... ok
-test src/value/mod.rs - value::Value::Bool (line 128) ... ok
 test src/value/mod.rs - value::Value::Array (line 155) ... ok
+test src/value/mod.rs - value::Value::Bool (line 128) ... ok
+test src/value/mod.rs - value::Value (line 898) ... ok
 test src/value/mod.rs - value::Value::Null (line 119) ... ok
+test src/value/mod.rs - value::Value::Object (line 170) ... ok
 test src/value/mod.rs - value::Value::Number (line 137) ... ok
 test src/value/mod.rs - value::Value::String (line 146) ... ok
-test src/value/mod.rs - value::Value::Object (line 170) ... ok
 test src/value/mod.rs - value::Value::as_array (line 414) ... ok
 test src/value/mod.rs - value::Value::as_bool (line 698) ... ok
 test src/value/mod.rs - value::Value::as_array_mut (line 435) ... ok
 test src/value/mod.rs - value::Value::as_f64 (line 660) ... ok
+test src/value/mod.rs - value::Value::as_null (line 736) ... ok
 test src/value/mod.rs - value::Value::as_i64 (line 621) ... ok
 test src/value/mod.rs - value::Value::as_number (line 521) ... ok
-test src/value/mod.rs - value::Value::as_null (line 736) ... ok
 test src/value/mod.rs - value::Value::as_object (line 355) ... ok
 test src/value/mod.rs - value::Value::as_object_mut (line 376) ... ok
 test src/value/mod.rs - value::Value::as_str (line 472) ... ok
 test src/value/mod.rs - value::Value::as_u64 (line 641) ... ok
 test src/value/mod.rs - value::Value::fmt (line 200) ... ok
+test src/value/mod.rs - value::Value::get_mut (line 318) ... ok
 test src/value/mod.rs - value::Value::get (line 276) ... ok
 test src/value/mod.rs - value::Value::get (line 292) ... ok
-test src/value/mod.rs - value::Value::get_mut (line 318) ... ok
 test src/value/mod.rs - value::Value::is_array (line 397) ... ok
 test src/value/mod.rs - value::Value::is_boolean (line 681) ... ok
-test src/value/mod.rs - value::Value::is_i64 (line 546) ... ok
 test src/value/mod.rs - value::Value::is_f64 (line 600) ... ok
+test src/value/mod.rs - value::Value::is_i64 (line 546) ... ok
 test src/value/mod.rs - value::Value::is_null (line 720) ... ok
 test src/value/mod.rs - value::Value::is_number (line 501) ... ok
-test src/value/mod.rs - value::Value::is_u64 (line 572) ... ok
-test src/value/mod.rs - value::Value::is_string (line 455) ... ok
 test src/value/mod.rs - value::Value::is_object (line 337) ... ok
+test src/value/mod.rs - value::Value::is_string (line 455) ... ok
+test src/value/mod.rs - value::Value::is_u64 (line 572) ... ok
 test src/value/mod.rs - value::Value::pointer (line 767) ... ok
 test src/value/mod.rs - value::Value::take (line 854) ... ok
 test src/value/mod.rs - value::Value::pointer_mut (line 812) ... ok
@@ -347,6 +347,6 @@ test src/value/ser.rs - value::ser::Serializer (line 47) ... ok
 test src/value/mod.rs - value::to_value (line 945) ... ok
 test src/value/mod.rs - value::to_value (line 982) ... ok
 
-test result: ok. 97 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.90s
+test result: ok. 97 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.85s
 
 
