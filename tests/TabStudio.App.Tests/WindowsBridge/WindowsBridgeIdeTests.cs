@@ -31,7 +31,9 @@ public sealed class WindowsBridgeIdeTests
         devices.WriteConsoleProject("Hello");
         devices.WriteWpfProject("HelloWpf", visualBasic);
         var workspace = await devices.OpenAsync(devices.SolutionFolder);
-        Assert.Equal(!visualBasic, Row(workspace, "HelloWpf").IsReady);
+
+        // WPF in Visual Basic runs on OpenSilver too, as in C#: ready on the tablet, with the PC as another target.
+        Assert.True(Row(workspace, "HelloWpf").IsReady);
         Assert.DoesNotContain(workspace.RunTargets, t => t.Detail == Via);
 
         await devices.PairAsync();
@@ -41,21 +43,18 @@ public sealed class WindowsBridgeIdeTests
         workspace.RunTargets.Single(t => t.Name == "HelloWpf" && t.Detail == Via).Select.Execute(null);
         UiTestHelpers.SaveScreenshot(devices.Window, visualBasic ? "windows-bridge-01-doctor" : "windows-bridge-01-opensilver");
 
-        Assert.Equal(visualBasic ? Via : "OpenSilver in the web preview", Row(workspace, "HelloWpf").RunsVia);
+        Assert.Equal("OpenSilver in the web preview", Row(workspace, "HelloWpf").RunsVia);
         Assert.Equal("Ready", Row(workspace, "HelloWpf").Status);
         Assert.Equal(Via, workspace.RunHostText);
         Assert.Contains(workspace.RunTargets, t => t.Name == "HelloWpf" && t.Detail == Via);
-        if (!visualBasic)
-        {
-            Assert.Contains(workspace.RunTargets, t => t.Name == "HelloWpf" && t.Detail == "C# project");
-        }
+        Assert.Contains(workspace.RunTargets, t => t.Name == "HelloWpf" && t.Detail != Via);
         Assert.Contains(workspace.RunTargets, t => t.Name == "Hello" && t.Detail == Via);
         Assert.Contains(workspace.RunTargets, t => t.Name == "Hello" && t.Detail == "C# project");
         Assert.StartsWith("Test PC", workspace.WindowsBridgeStatusText, StringComparison.Ordinal);
 
         await devices.Tablet.ForgetPcAsync(devices.Tablet.PairedPcs.Devices[0]);
         await UiTestHelpers.WaitUntilAsync(() => !workspace.RunTargets.Any(t => t.Detail == Via), because: "the PC's run targets to leave");
-        Assert.Equal(!visualBasic, Row(workspace, "HelloWpf").IsReady);
+        Assert.True(Row(workspace, "HelloWpf").IsReady);
         Assert.DoesNotContain(workspace.RunTargets, t => t.Detail == Via);
         Assert.NotEqual(Via, workspace.RunHostText);
     }
