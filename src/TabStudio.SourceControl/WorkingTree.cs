@@ -100,6 +100,13 @@ public static class WorkingTree
         foreach (var file in Directory.EnumerateFiles(folder))
         {
             var relative = Combine(relativeFolder, Path.GetFileName(file));
+
+            // A symbolic link the download created is the repository's link, not a new file to commit.
+            if (tracked?.ContainsKey(relative) != true && new FileInfo(file).LinkTarget is not null)
+            {
+                continue;
+            }
+
             if (tracked?.ContainsKey(relative) == true || (!trackedOnly && !ignore.IsIgnored(relative, isDirectory: false)))
             {
                 files.Add(relative);
@@ -125,6 +132,13 @@ public static class WorkingTree
                     Walk(root, relative, ignore, tracked, files, trackedOnly: true);
                 }
 
+                continue;
+            }
+
+            // A submodule, downloaded into its own linked folder, belongs to its own repository, as Git leaves a
+            // submodule's files out of the repository that has it.
+            if (SyncMetadata.Exists(directory) && !HoldsTracked(tracked, relative))
+            {
                 continue;
             }
 

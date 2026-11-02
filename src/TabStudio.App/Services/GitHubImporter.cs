@@ -64,6 +64,8 @@ public sealed class GitHubImporter
     {
         ArgumentNullException.ThrowIfNull(repository);
 
+        LastNotes = [];
+        DeleteIncompleteDownloads();
         var target = _paths.GetAvailableProjectDirectory(repository.Name);
         var syncProgress = progress is null ? null : new ProgressAdapter(progress);
         try
@@ -75,7 +77,8 @@ public sealed class GitHubImporter
             {
                 try
                 {
-                    await GitHubSync.CloneAsync(_account.CreateClient(), repository.Owner, repository.Name, reference, target, syncProgress, cancellationToken);
+                    var sync = await GitHubSync.CloneAsync(_account.CreateClient(), repository.Owner, repository.Name, reference, target, syncProgress, cancellationToken);
+                    LastNotes = sync.CloneNotes;
                     return target;
                 }
                 catch (GitHubApiException ex) when ((ex.IsNotFound || ex.IsRejected) && reference?.LastIndexOf('/') is > 0 and var cut)
@@ -94,6 +97,37 @@ public sealed class GitHubImporter
         {
             TryDelete(target);
             throw new ImportException(Describe(repository, ex), ex);
+        }
+    }
+
+    /// <summary>
+    /// What the person should know about the last download, such as a submodule on another host or a Git LFS file that
+    /// could not be downloaded; empty when everything arrived.
+    /// </summary>
+    public IReadOnlyList<string> LastNotes { get; private set; } = [];
+
+    /// <summary>
+    /// Deletes the folders of downloads that never finished because Android ended TabStudio in the middle of them:
+    /// before 0.21.2 each stayed in the projects folder, taking storage, and the next download of the same repository
+    /// went to a folder with "-2" after its name.
+    /// </summary>
+    private void DeleteIncompleteDownloads()
+    {
+        try
+        {
+            if (!Directory.Exists(_paths.Projects))
+            {
+                return;
+            }
+
+            foreach (var folder in Directory.EnumerateDirectories(_paths.Projects).Where(GitHubSync.IsIncompleteClone).ToList())
+            {
+                TryDelete(folder);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // The download itself goes on; a leftover is only storage.
         }
     }
 

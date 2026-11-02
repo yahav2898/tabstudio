@@ -329,8 +329,12 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         DatabaseExplorer.EfCore.LoadProjects(preview.Workspace.Projects);
         StartDatabaseCheck(preview.Workspace);
         ShowNetFrameworkDiagnostics(preview.Workspace);
-        LoadStartupProjects(preview.Workspace, session?.StartupProject);
-        await LoadToolchainProjectsAsync(preview.Workspace, session?.StartupProject, opening: true);
+        // Only a startup project the person chose is restored: before 0.21.2 the session kept TabStudio's own pick too,
+        // so eShop, first opened when WebhookClient was the pick, kept starting WebhookClient after every update.
+        var chosen = session?.IsStartupProjectChosen == true ? session.StartupProject : null;
+        LoadStartupProjects(preview.Workspace, chosen);
+        await LoadToolchainProjectsAsync(preview.Workspace, chosen, opening: true);
+        _isStartupProjectChosen = chosen is not null && StartupProject?.FilePath == chosen;
         await Services.LoadAsync(preview.Workspace.RootDirectory);
 
         StatusText = "Loading C#";
@@ -376,7 +380,14 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
     /// <summary>Makes a project the startup project.</summary>
     /// <param name="project">The project.</param>
-    public void SetStartupProject(ProjectInfo? project) => StartupProject = project;
+    public void SetStartupProject(ProjectInfo? project)
+    {
+        StartupProject = project;
+        _isStartupProjectChosen = project is not null;
+    }
+
+    /// <summary>Whether the person chose the startup project; otherwise it is TabStudio's pick, made again on every load.</summary>
+    private bool _isStartupProjectChosen;
 
     /// <summary>
     /// Why F5 has nothing to start, for the status bar once the workspace is open, such as

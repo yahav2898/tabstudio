@@ -34,13 +34,20 @@ public sealed partial class GitHubClient
     /// Where the server serves files of a commit as they are, outside the API: <see cref="DefaultRawAddress"/> for
     /// GitHub's API, and none for any other unless given.
     /// </param>
-    public GitHubClient(HttpClient http, string? token = null, Uri? apiAddress = null, Uri? rawAddress = null)
+    /// <param name="webAddress">
+    /// The server's web address, where Git LFS files are served: <see cref="DefaultWebAddress"/> for GitHub's API, the
+    /// server's root for a GitHub Enterprise API at <c>/api/v3/</c>, and none for any other unless given.
+    /// </param>
+    public GitHubClient(HttpClient http, string? token = null, Uri? apiAddress = null, Uri? rawAddress = null, Uri? webAddress = null)
     {
         ArgumentNullException.ThrowIfNull(http);
         _http = http;
         _token = string.IsNullOrWhiteSpace(token) ? null : token.Trim();
         _apiAddress = apiAddress ?? DefaultApiAddress;
         _rawAddress = rawAddress ?? (_apiAddress == DefaultApiAddress ? DefaultRawAddress : null);
+        _webAddress = webAddress ?? (_apiAddress == DefaultApiAddress
+            ? DefaultWebAddress
+            : _apiAddress.AbsolutePath.EndsWith("/api/v3/", StringComparison.OrdinalIgnoreCase) ? new Uri(_apiAddress, "/") : null);
     }
 
     /// <summary>Whether requests are made with a token.</summary>

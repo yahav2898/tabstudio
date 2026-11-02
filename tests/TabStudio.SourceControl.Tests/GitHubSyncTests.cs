@@ -42,6 +42,110 @@ public sealed class GitHubSyncTests : IDisposable
     }
 
     [Fact]
+    public async Task Clone_downloads_submodules_on_GitHub_at_their_pinned_commits_and_names_the_others()
+    {
+        // Submodules came down as empty folders, so a repository that builds its dependencies from them could not build.
+        _github.AddRepository("lib", new Dictionary<string, string> { ["lib.h"] = "int lib(void);\n" });
+        _github.AddRepository("app", new Dictionary<string, string>
+        {
+            ["main.c"] = "#include \"lib.h\"\n",
+            [".gitmodules"] = """
+                [submodule "lib"]
+                	path = external/lib
+                	url = https://github.com/tester/lib.git
+                [submodule "other"]
+                	path = external/other
+                	url = https://gitlab.com/someone/other.git
+                [submodule "gone"]
+                	path = external/gone
+                	url = ../gone.git
+                """,
+        });
+        var pinned = _github.Head("lib", "main");
+        _github.AddSubmodule("app", "external/lib", "lib");
+        _github.AddSubmodule("app", "external/other", "lib");
+        _github.AddSubmodule("app", "external/gone", "lib");
+        _github.Push("lib", "main", "Newer", new Dictionary<string, string?> { ["lib.h"] = "int lib(int);\n" });
+
+        var sync = await GitHubSync.CloneAsync(_github.CreateClient(), FakeGitHub.Login, "app", null, Folder);
+
+        Assert.Equal("int lib(void);\n", Read("external/lib/lib.h"));
+        Assert.Equal(pinned, SyncMetadata.Load(Path.Combine(Folder, "external", "lib"))!.Link.BaseCommit);
+        Assert.False(File.Exists(Path.Combine(Folder, "external", "other", "lib.h")));
+        Assert.Contains(sync.CloneNotes, n => n.Contains("external/other", StringComparison.Ordinal) && n.Contains("gitlab.com", StringComparison.Ordinal));
+        Assert.Contains(sync.CloneNotes, n => n.Contains("external/gone", StringComparison.Ordinal) && n.Contains("tester/gone", StringComparison.Ordinal));
+
+        // The submodule's files are its own repository's, not new files of this one.
+        Assert.Empty((await sync.GetStatusAsync()).Changes);
+        Assert.False(GitHubSync.IsIncompleteClone(Folder));
+    }
+
+    [Fact]
+    public async Task Clone_downloads_Git_LFS_files_in_place_of_their_pointers()
+    {
+        // They arrived as three lines of text, so a model, an image or a native library was unusable.
+        var model = Enumerable.Range(0, 5000).Select(i => (byte)(i % 251)).ToArray();
+        var refused = Encoding.UTF8.GetBytes(new string('x', 300));
+        var pointer = _github.AddLfsObject(model);
+        var refusedPointer = _github.AddLfsObject(refused);
+        _github.RefusedLfsObjects.Add(refusedPointer.Split('\n')[1]["oid sha256:".Length..]);
+        _github.AddRepository("models", new Dictionary<string, string>
+        {
+            [".gitattributes"] = "*.bin filter=lfs diff=lfs merge=lfs -text\n",
+            ["model.bin"] = pointer,
+            ["quota.bin"] = refusedPointer,
+            ["README.md"] = "# Models\n",
+        }, isPrivate: true);
+
+        var sync = await GitHubSync.CloneAsync(_github.CreateClient(), FakeGitHub.Login, "models", null, Folder);
+
+        Assert.Equal(model, await File.ReadAllBytesAsync(Path.Combine(Folder, "model.bin")));
+        Assert.Equal(refusedPointer, Read("quota.bin"));
+        var note = Assert.Single(sync.CloneNotes);
+        Assert.Contains("quota.bin", note, StringComparison.Ordinal);
+        Assert.Contains("Object does not exist on the server", note, StringComparison.Ordinal);
+        Assert.Empty((await sync.GetStatusAsync()).Changes);
+    }
+
+    [Fact]
+    public async Task Clone_creates_the_symbolic_links_that_stay_inside_the_repository()
+    {
+        _github.AddRepository("links", new Dictionary<string, string> { ["shared/settings.json"] = "{}\n", ["app/main.js"] = "\n" });
+        _github.AddSymbolicLink("links", "app/settings.json", "../shared/settings.json");
+        _github.AddSymbolicLink("links", "app/passwd", "../../../etc/passwd");
+
+        var sync = await GitHubSync.CloneAsync(_github.CreateClient(), FakeGitHub.Login, "links", null, Folder);
+
+        Assert.Equal("{}\n", Read("app/settings.json"));
+        Assert.False(File.Exists(Path.Combine(Folder, "app", "passwd")));
+        Assert.Contains(sync.CloneNotes, n => n.Contains("app/passwd", StringComparison.Ordinal));
+        Assert.Empty((await sync.GetStatusAsync()).Changes);
+    }
+
+    [Fact]
+    public async Task A_clone_that_does_not_finish_is_marked_incomplete()
+    {
+        using var cancel = new CancellationTokenSource();
+        var progress = new SyncProgressCallback(p =>
+        {
+            if (p.Message.StartsWith("Downloading", StringComparison.Ordinal))
+            {
+                cancel.Cancel();
+            }
+        });
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => GitHubSync.CloneAsync(_github.CreateClient(), FakeGitHub.Login, Repo, null, Folder, progress, cancel.Token));
+
+        Assert.True(GitHubSync.IsIncompleteClone(Folder));
+        Assert.False(SyncMetadata.Exists(Folder));
+    }
+
+    private sealed class SyncProgressCallback(Action<SyncProgress> report) : IProgress<SyncProgress>
+    {
+        public void Report(SyncProgress value) => report(value);
+    }
+
+    [Fact]
     public async Task Clone_of_a_large_repository_uses_one_archive_and_downloads_only_what_it_lacks()
     {
         var files = Enumerable.Range(0, 60).ToDictionary(i => $"src/File{i:00}.cs", i => $"class File{i};\n");

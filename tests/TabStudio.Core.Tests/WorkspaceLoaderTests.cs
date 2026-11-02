@@ -159,6 +159,26 @@ public sealed class WorkspaceLoaderTests
         Assert.Throws<ProjectLoadException>(() => WorkspaceLoader.Load(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))));
     }
 
+    [Fact]
+    public void A_solution_that_cannot_be_read_opens_as_its_folder_with_its_projects_and_says_why()
+    {
+        // A .slnx cut off by a lost connection or an ended app: the open failed before, from the folder and from Recent.
+        using var temp = CreateShop();
+        var solution = temp.Write("Shop.slnx", "<Solution>\n  <Folder Name=\"/src/\">\n    <Project Path=\"src/App/App.cs");
+
+        foreach (var path in new[] { temp.Path, solution })
+        {
+            var workspace = WorkspaceLoader.Load(path);
+
+            Assert.Null(workspace.Solution);
+            Assert.Equal(new[] { "App", "Lib" }, workspace.Projects.Select(p => p.Name).Order());
+            Assert.Contains(workspace.Tree.Children, n => n.Kind == WorkspaceNodeKind.File && n.FullPath == solution);
+            var error = Assert.Single(workspace.LoadErrors);
+            Assert.Contains("Shop.slnx", error, StringComparison.Ordinal);
+            Assert.Contains("fix Shop.slnx", error, StringComparison.Ordinal);
+        }
+    }
+
     private static TempDirectory CreateShop()
     {
         var temp = new TempDirectory();

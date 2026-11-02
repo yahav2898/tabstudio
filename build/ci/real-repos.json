@@ -147,5 +147,12 @@
     { "name": "platformio-esp32", "url": "https://github.com/platformio/platform-espressif32", "sha": "7afb0a703a5f6492fd695a4c2ced9ad843745280", "kind": "platformio", "project": "examples/arduino-blink", "maxErrors": 0, "environment": "esp32doit-devkit-v1" },
     { "name": "platformio-stm32cube", "url": "https://github.com/platformio/platform-ststm32", "sha": "c7fe5b923c22b9d0bf3304cc1a1fdbe9963f822e", "kind": "platformio", "project": "examples/stm32cube-hal-blink", "maxErrors": 0, "environment": "nucleo_f103rb" },
     { "name": "rust-stm32f4xx-hal", "url": "https://github.com/stm32-rs/stm32f4xx-hal", "sha": "0eb673dd2fc657a052e824f2693dcbd4e1a1b83d", "kind": "rust", "project": ".", "maxErrors": 0, "target": "thumbv7em-none-eabihf", "example": "blinky", "features": "stm32f411", "rust": "1.97.0" }
+  ],
+  "cloneComment": "Public repositories TabStudio's own download (Open from GitHub, GitHubSync.CloneAsync) fetches in the libraries job, pinned to commits, with files that must arrive: 'expect' lists paths inside submodules too, so a submodule left empty fails the job. 'lfsObjects' are Git LFS objects of public repositories, downloaded through GitHub's Git LFS batch API as a clone downloads them, without a token.",
+  "cloneRepositories": [
+    { "name": "rapidjson", "owner": "Tencent", "repository": "rapidjson", "sha": "24b5e7a8b27f42fa16b96fc70aade9106cf7102f", "expect": ["include/rapidjson/document.h", "thirdparty/gtest/CMakeLists.txt", "thirdparty/gtest/googletest/include/gtest/gtest.h"], "submodules": { "thirdparty/gtest": "ba96d0b1161f540656efdaed035b3c062b60e006" } }
+  ],
+  "lfsObjects": [
+    { "owner": "Unity-Technologies", "repository": "Graphics", "path": ".github/pr-read.png", "oid": "74e0f73da84b921ffe01b243561c7f4c5222573133c7753dae4733a5f43069da", "size": 306993 }
   ]
 }

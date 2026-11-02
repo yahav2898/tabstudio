@@ -20,9 +20,19 @@ public static class SyncErrors
             GitHubApiException { StatusCode: System.Net.HttpStatusCode.Forbidden } api => $"GitHub refused: {api.Message}",
             GitHubApiException api => api.Message,
             OperationCanceledException => "Cancelled.",
+            IOException io when IsDiskFull(io) => "The tablet ran out of storage. Free some space and try again.",
             IOException io => $"A file could not be read or written: {io.Message}",
             UnauthorizedAccessException access => $"A file could not be read or written: {access.Message}",
             _ => exception.Message,
         };
+    }
+
+    /// <summary>Whether a write failed because the storage is full (ENOSPC on Android and Linux, ERROR_DISK_FULL on Windows).</summary>
+    /// <param name="exception">The failure.</param>
+    public static bool IsDiskFull(IOException exception)
+    {
+        ArgumentNullException.ThrowIfNull(exception);
+        return (exception.HResult & 0xFFFF) is 28 or 112 or 39
+            || exception.Message.Contains("No space left on device", StringComparison.OrdinalIgnoreCase);
     }
 }
