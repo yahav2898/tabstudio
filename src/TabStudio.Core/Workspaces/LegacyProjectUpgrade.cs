@@ -311,7 +311,20 @@ public static class LegacyProjectUpgrader
 
                 if (condition is not null)
                 {
-                    // An item for one configuration is kept as written; the SDK's defaults do not cover it.
+                    // An item for one configuration is kept as written. A file the SDK includes by default is first
+                    // removed for every configuration, or it was compiled in all of them, twice in this one.
+                    if (include is not null && type is "Compile" or "EmbeddedResource" or "Page" && !include.Contains('*', StringComparison.Ordinal))
+                    {
+                        var full = Path.GetFullPath(Path.Combine(_directory, include.Replace('\\', '/')));
+                        var extension = type switch { "Compile" => _sourceExtension, "EmbeddedResource" => ".resx", _ => _usesWpf ? ".xaml" : null };
+                        if (extension is not null && string.Equals(Path.GetExtension(full), extension, StringComparison.OrdinalIgnoreCase)
+                            && full.StartsWith(_directory.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.Ordinal)
+                            && _listed.Add(type + "|" + full))
+                        {
+                            _items.Add(new XElement(type, new XAttribute("Remove", include)));
+                        }
+                    }
+
                     _items.Add(WithCondition(Clean(item), condition));
                     continue;
                 }

@@ -109,7 +109,7 @@ internal static class VisualBasicValueWriter
     /// Whether a character is written with ChrW: a control character, and the typographic quotes Visual Basic reads as
     /// a string's quote.
     /// </summary>
-    private static bool NeedsChrW(char character) => character < ' ' || character is '“' or '”' or '＂';
+    private static bool NeedsChrW(char character) => character < ' ' || character is '“' or '”' or '＂' or '\u0085' or '\u2028' or '\u2029';
 
     private static string CharacterLiteral(char character) => character switch
     {

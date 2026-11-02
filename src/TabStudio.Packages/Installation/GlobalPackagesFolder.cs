@@ -35,17 +35,19 @@ internal sealed class GlobalPackagesFolder
 
     /// <summary>The folder a package version is (or would be) installed in.</summary>
     public string GetPackageDirectory(string id, NuGetVersion version) =>
-        Path.Combine(Root, NuGetNames.Lower(id), NuGetNames.Lower(version));
+        NuGetNames.IsValidId(id)
+            ? Path.Combine(Root, NuGetNames.Lower(id), NuGetNames.Lower(version))
+            : throw new ArgumentException($"'{id}' is not a valid package id.", nameof(id));
 
     /// <summary>Whether a package version is completely installed.</summary>
     public bool IsInstalled(string id, NuGetVersion version) =>
-        File.Exists(Path.Combine(GetPackageDirectory(id, version), CompletionMarkerName));
+        NuGetNames.IsValidId(id) && File.Exists(Path.Combine(GetPackageDirectory(id, version), CompletionMarkerName));
 
     /// <summary>The completely installed versions of a package.</summary>
     public IReadOnlyList<NuGetVersion> GetInstalledVersions(string id)
     {
         var directory = Path.Combine(Root, NuGetNames.Lower(id));
-        if (!Directory.Exists(directory))
+        if (!NuGetNames.IsValidId(id) || !Directory.Exists(directory))
         {
             return [];
         }

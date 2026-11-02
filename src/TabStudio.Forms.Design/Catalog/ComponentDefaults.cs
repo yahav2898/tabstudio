@@ -59,9 +59,12 @@ internal static class ComponentDefaults
     /// <param name="type">The type.</param>
     public static bool IsVisual(Type type) => typeof(Control).IsAssignableFrom(type) || typeof(ToolStripItem).IsAssignableFrom(type);
 
-    /// <summary>The event a double-tap on a component handles, as in Visual Studio.</summary>
+    /// <summary>
+    /// The event a double-tap on a component handles, as in Visual Studio; null for a component without one, such as an
+    /// ImageList or a ToolTip.
+    /// </summary>
     /// <param name="type">The component's type.</param>
-    public static string DefaultEvent(Type type)
+    public static string? DefaultEvent(Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
         if (type.GetCustomAttribute<DefaultEventAttribute>() is { Name: { Length: > 0 } name } && type.GetEvent(name) is not null)
@@ -69,7 +72,7 @@ internal static class ComponentDefaults
             return name;
         }
 
-        return DefaultEvents.First(d => d.Type.IsAssignableFrom(type)).Event;
+        return DefaultEvents.FirstOrDefault(d => d.Type.IsAssignableFrom(type)).Event;
     }
 
     /// <summary>

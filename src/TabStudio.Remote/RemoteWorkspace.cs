@@ -98,21 +98,41 @@ public sealed class RemoteWorkspace(SshConnection connection, string remoteRoot,
                 var sftp = Connection.Sftp;
                 // Check canonical parent and file immediately before writing. A symlink introduced after refresh must not redirect a save.
                 var parent = remote[..remote.LastIndexOf('/')];
+                var known = _hashes.TryGetValue(Path.GetFullPath(localPath), out var expected);
+                // A file added in the editor (Add > New Item, a new folder) has no baseline and does not exist yet on the
+                // server: its folders are created below the opened root, and it is uploaded as a new file.
+                if (!known && parent.Length > 0 && !sftp.Exists(parent)) { CreateDirectories(sftp, parent); }
                 sftp.ChangeDirectory(parent.Length == 0 ? "/" : parent);
-                if (Normalize(sftp.WorkingDirectory) != (parent.Length == 0 ? "/" : parent) || sftp.Get(remote).IsSymbolicLink) { throw new IOException("The remote file became a symbolic link. Refresh before saving."); }
-                using var current = new MemoryStream();
-                sftp.DownloadFile(remote, current);
-                if (!_hashes.TryGetValue(Path.GetFullPath(localPath), out var expected) || Convert.ToHexString(SHA256.HashData(current.ToArray())) != expected)
+                if (Normalize(sftp.WorkingDirectory) != (parent.Length == 0 ? "/" : parent)) { throw new IOException("The remote file became a symbolic link. Refresh before saving."); }
+                Renci.SshNet.Sftp.SftpFileAttributes? attributes = null;
+                if (sftp.Exists(remote))
                 {
-                    throw new IOException("The remote file changed since it was downloaded. Your edits remain in the editor and cache. Preserve your changes, then choose Reload file from server in Remote Explorer to resolve the conflict.");
+                    if (sftp.Get(remote).IsSymbolicLink) { throw new IOException("The remote file became a symbolic link. Refresh before saving."); }
+                    using var current = new MemoryStream();
+                    sftp.DownloadFile(remote, current);
+                    if (!known || Convert.ToHexString(SHA256.HashData(current.ToArray())) != expected)
+                    {
+                        throw new IOException("The remote file changed since it was downloaded. Your edits remain in the editor and cache. Preserve your changes, then choose Reload file from server in Remote Explorer to resolve the conflict.");
+                    }
+                    attributes = sftp.GetAttributes(remote);
                 }
-                var attributes = sftp.GetAttributes(remote);
+                else if (known)
+                {
+                    throw new IOException("The remote file was deleted since it was downloaded. Your edits remain in the editor and cache. Choose Refresh in Remote Explorer, then save again to create it.");
+                }
                 var temp = remote + ".tabstudio-" + Guid.NewGuid().ToString("N");
                 try
                 {
                     using var input = File.OpenRead(localPath);
                     sftp.UploadFile(input, temp, canOverride: false);
                     cancellationToken.ThrowIfCancellationRequested();
+                    if (attributes is null)
+                    {
+                        sftp.RenameFile(temp, remote, isPosix: true);
+                        _hashes[Path.GetFullPath(localPath)] = HashFile(localPath);
+                        SaveHashes();
+                        return;
+                    }
                     var tempAttributes = sftp.GetAttributes(temp);
                     tempAttributes.OwnerCanRead = attributes.OwnerCanRead;
                     tempAttributes.OwnerCanWrite = attributes.OwnerCanWrite;
@@ -133,6 +153,19 @@ public sealed class RemoteWorkspace(SshConnection connection, string remoteRoot,
         }
         catch (Renci.SshNet.Common.SshException ex) { throw new IOException($"SFTP save failed: {ex.Message}", ex); }
         finally { _gate.Release(); }
+    }
+
+    // Creates each missing folder from the opened root down; a folder that turns out to be a link is refused.
+    private void CreateDirectories(Renci.SshNet.SftpClient sftp, string directory)
+    {
+        if (directory != _remoteRoot && !directory.StartsWith(_remoteRoot.TrimEnd('/') + "/", StringComparison.Ordinal)) { throw new IOException("The file is outside the remote folder."); }
+        var path = _remoteRoot.TrimEnd('/');
+        foreach (var part in directory[path.Length..].Split('/', StringSplitOptions.RemoveEmptyEntries))
+        {
+            path += "/" + part;
+            if (!sftp.Exists(path)) { sftp.CreateDirectory(path); }
+            else if (!sftp.Get(path).IsDirectory) { throw new IOException($"The remote path {path} is not a folder."); }
+        }
     }
 
     public string ToRemotePath(string localPath)

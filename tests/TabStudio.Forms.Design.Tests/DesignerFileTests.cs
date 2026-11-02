@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Avalonia.Headless.XUnit;
 using TabStudio.Forms.Design.Code;
+using TabStudio.Forms.Design.Model;
 using TabStudio.Forms.Design.Surface;
 
 namespace TabStudio.Forms.Design.Tests;
@@ -47,6 +48,70 @@ public sealed class DesignerFileTests
         Assert.Equal("AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right", document.Find("nameTextBox")!.GetCode("Anchor"));
         Assert.Contains("toolTip1.SetToolTip(nameTextBox, \"The customer's name, as on the invoice.\");", document.Find("nameTextBox")!.OtherStatements);
         Assert.Equal("saveButton", document.Root.GetCode("AcceptButton"));
+    }
+
+    [Fact]
+    public void Statements_about_fields_the_designer_did_not_create_are_kept()
+    {
+        var source = Samples.Template
+            .Replace("private System.ComponentModel.IContainer components = null;", "private System.ComponentModel.IContainer components = null;\n        private int counter;\n        private System.Windows.Forms.Button helper;", StringComparison.Ordinal)
+            .Replace("this.Text = \"Form1\";", "this.Text = \"Form1\";\n            this.counter = 5;\n            this.helper = CreateButton();\n            this.helper.Text = \"Help\";\n            this.helper.Click += this.helper_Click;", StringComparison.Ordinal);
+        var file = DesignerFile.Parse(source)!;
+
+        var written = DesignerWriter.Write(file, file.Document);
+
+        Assert.Contains("this.counter = 5;", written, StringComparison.Ordinal);
+        Assert.Contains("this.helper = CreateButton();", written, StringComparison.Ordinal);
+        Assert.Contains("this.helper.Text = \"Help\";", written, StringComparison.Ordinal);
+        Assert.Contains("this.helper.Click += this.helper_Click;", written, StringComparison.Ordinal);
+        Assert.True(written.IndexOf("CreateButton()", StringComparison.Ordinal) < written.IndexOf("\"Help\"", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Components_without_a_default_event_list_their_events_without_failing()
+    {
+        Assert.Null(Catalog.ComponentDefaults.DefaultEvent(typeof(ImageList)));
+        Assert.Null(Catalog.ComponentDefaults.DefaultEvent(typeof(ToolTip)));
+        _ = Catalog.PropertyCatalog.EventsOf(typeof(ToolTip));
+        Assert.Equal("Click", Catalog.ComponentDefaults.DefaultEvent(typeof(Button)));
+    }
+
+    [Fact]
+    public void Line_separators_and_floats_are_written_as_valid_literals()
+    {
+        Assert.Equal("\"a\\u2028b\"", ValueWriter.Literal("a\u2028b"));
+        Assert.DoesNotContain('\u2028', VisualBasicValueWriter.Literal("a\u2028b"));
+        Assert.Equal("9.9F", ValueWriter.Write(9.9F, CodeStyle.Simplified));
+    }
+
+    [Fact]
+    public void Components_declared_together_are_declared_once()
+    {
+        var source = Samples.Template
+            .Replace("#region Windows Form Designer generated code", "private System.Windows.Forms.Button okButton, cancelButton;\n\n        #region Windows Form Designer generated code", StringComparison.Ordinal)
+            .Replace("this.Text = \"Form1\";", "this.Text = \"Form1\";\n            this.okButton = new System.Windows.Forms.Button();\n            this.cancelButton = new System.Windows.Forms.Button();", StringComparison.Ordinal);
+        var file = DesignerFile.Parse(source)!;
+
+        var written = DesignerWriter.Write(file, file.Document);
+
+        Assert.DoesNotContain("okButton, cancelButton;", written, StringComparison.Ordinal);
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(written, @"Button okButton;"));
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(written, @"Button cancelButton;"));
+    }
+
+    [Fact]
+    public void Property_and_event_names_written_in_another_case_are_the_same_member()
+    {
+        var button = new DesignComponent("Button1", "System.Windows.Forms.Button");
+        button.SetCode("text", "\"Old\"");
+        button.SetHandler("click", "Button1_Click");
+
+        button.SetCode("Text", "\"New\"");
+        button.SetHandler("Click", "Button1_Click");
+
+        Assert.Equal("\"New\"", button.GetCode("Text"));
+        Assert.Single(button.Properties);
+        Assert.Single(button.Events);
     }
 
     [Fact]

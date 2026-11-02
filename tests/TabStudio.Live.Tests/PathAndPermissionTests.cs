@@ -52,6 +52,22 @@ public sealed class PathAndPermissionTests
     }
 
     [Fact]
+    public void A_folder_moved_into_the_workspace_shares_its_files()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("App/Renamed/Model.cs", "class Model {}");
+        temp.Write("App/Renamed/Deep/View.cs", "class View {}");
+        temp.Write("App/Renamed/bin/App.dll", "binary");
+        temp.Write("App/obj/Moved/x.cs", "generated");
+        var files = new LiveWorkspaceFiles(temp.Path);
+
+        Assert.Null(files.Find("App/Renamed"));
+        Assert.Equal(["App/Renamed/Deep/View.cs", "App/Renamed/Model.cs"], files.FindFolder("App/Renamed").Select(f => f.Path));
+        Assert.Empty(files.FindFolder("App/obj/Moved"));
+        Assert.Empty(files.FindFolder("App/Renamed/Model.cs"));
+    }
+
+    [Fact]
     public void The_shared_files_leave_out_build_output_and_git()
     {
         using var temp = new TempDirectory();

@@ -64,7 +64,9 @@ internal static class ValueWriter
                 '\r' => "\\r",
                 '\t' => "\\t",
                 '\0' => "\\0",
-                < ' ' => $"\\u{(int)character:X4}",
+                // C# reads U+0085, U+2028 and U+2029 as line breaks, which a string literal cannot contain: text
+                // pasted from a web page or Word broke the build.
+                < ' ' or '\u0085' or '\u2028' or '\u2029' => $"\\u{(int)character:X4}",
                 _ => character.ToString(),
             });
         }
@@ -82,6 +84,9 @@ internal static class ValueWriter
     };
 
     private static string Float(double value) => value.ToString("R", CultureInfo.InvariantCulture);
+
+    // A float's own shortest text: 9.9F, as Visual Studio writes it, not the widened 9.899999618530273F.
+    private static string Float(float value) => value.ToString("R", CultureInfo.InvariantCulture);
 
     private static string WriteColor(Color color, Func<Type, string> type)
     {

@@ -22,6 +22,13 @@ public sealed class ConnectionsTests
         Assert.Equal(DatabaseProvider.PostgreSql, found.Single(c => c.Name == "Remote").Provider);
         Assert.Equal(DatabaseProvider.SqlServer, found.Single(c => c.Name == "Production").Provider);
     }
+    [Theory]
+    [InlineData("Server=127.0.0.1;Port=5432;Database=app;User Id=postgres;Password=p", DatabaseProvider.PostgreSql)]
+    [InlineData("Server=localhost;Database=app;User Id=sa;Password=p;TrustServerCertificate=True", DatabaseProvider.SqlServer)]
+    [InlineData("Server=localhost;Port=3306;Database=app;Uid=root;Pwd=p", null)]
+    [InlineData("Data Source=app.db", DatabaseProvider.SQLite)]
+    public void Detect_tells_npgsql_server_and_port_strings_from_sql_server(string value, DatabaseProvider? expected) =>
+        Assert.Equal(expected, DatabaseConnections.Detect(value));
     [Fact] public async Task Saved_metadata_contains_no_connection_string_or_password_and_removal_forgets_secret()
     {
         using var temp = new TempDirectory();
