@@ -152,5 +152,21 @@ public sealed class SampleAndFilesTests : IDisposable
         Assert.Contains("16 MB", error.Message, StringComparison.Ordinal);
     }
 
+    [Theory]
+    [InlineData("Order.Validation.cs", "public class Order_Validation")]
+    [InlineData("my-helper.cs", "public class my_helper")]
+    [InlineData("IRepository.cs", "public interface IRepository")]
+    [InlineData("Order.Validation.vb", "Public Class Order_Validation")]
+    public void New_types_are_named_with_one_identifier(string file, string declaration)
+    {
+        var project = new ProjectInfo
+        {
+            Name = "Shop", FilePath = _temp.Resolve(file.EndsWith(".vb", StringComparison.Ordinal) ? "Shop.vbproj" : "Shop.csproj"),
+            Language = file.EndsWith(".vb", StringComparison.Ordinal) ? ProjectLanguage.VisualBasic : ProjectLanguage.CSharp,
+        };
+
+        Assert.Contains(declaration, FileTemplates.ContentFor(_temp.Resolve(file), project), StringComparison.Ordinal);
+    }
+
     public void Dispose() => _temp.Dispose();
 }

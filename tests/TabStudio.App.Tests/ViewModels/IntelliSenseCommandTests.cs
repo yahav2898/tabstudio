@@ -24,6 +24,18 @@ public sealed class IntelliSenseCommandTests
     }
 
     [AvaloniaFact]
+    public async Task Go_to_definition_with_no_file_open_does_not_name_one_language()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        await fixture.Workspace.CloseDocumentCommand.ExecuteAsync(fixture.Workspace.ActiveDocument);
+
+        await fixture.Workspace.GoToDefinitionCommand.ExecuteAsync(null);
+
+        Assert.Equal("Open a code file first.", fixture.Workspace.StatusText);
+    }
+
+    [AvaloniaFact]
     public async Task Go_to_definition_of_a_framework_method_names_its_assembly()
     {
         using var fixture = new WorkspaceFixture();

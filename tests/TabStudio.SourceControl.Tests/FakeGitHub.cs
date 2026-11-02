@@ -59,7 +59,88 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
 
     /// <summary>A client of this fake, signed in or not.</summary>
     public GitHub.GitHubClient CreateClient(bool signedIn = true) =>
-        new(new HttpClient(this, disposeHandler: false), signedIn ? "test-token" : null, new Uri("https://api.github.test/"), new Uri($"https://{RawHost}/"));
+        new(new HttpClient(this, disposeHandler: false), signedIn ? "test-token" : null, new Uri("https://api.github.test/"), new Uri($"https://{RawHost}/"), new Uri($"https://{WebHost}/"));
+
+    /// <summary>The fake's web host, which serves Git LFS's batch API as github.com does.</summary>
+    public const string WebHost = "github.test";
+
+    /// <summary>Where the fake's Git LFS objects are downloaded from, as GitHub's are from its storage.</summary>
+    public const string LfsStorageHost = "lfs.github.test";
+
+    private readonly ConcurrentDictionary<string, byte[]> _lfs = new(StringComparer.Ordinal);
+
+    /// <summary>Git LFS objects the batch API answers for with an error, as for a repository over its LFS quota.</summary>
+    public HashSet<string> RefusedLfsObjects { get; } = new(StringComparer.Ordinal);
+
+    /// <summary>Stores a file in the fake's Git LFS storage and returns the pointer the repository holds for it.</summary>
+    public string AddLfsObject(byte[] content)
+    {
+        var oid = Convert.ToHexStringLower(SHA256.HashData(content));
+        _lfs[oid] = content;
+        return $"version https://git-lfs.github.com/spec/v1\noid sha256:{oid}\nsize {content.Length}\n";
+    }
+
+    /// <summary>Adds a submodule, pinned to the tip of another repository's default branch, in a new commit.</summary>
+    public string AddSubmodule(string name, string path, string submodule) => AddEntry(name, path, "160000", _repos[$"{Login}/{submodule}"].Branches[_repos[$"{Login}/{submodule}"].DefaultBranch]);
+
+    /// <summary>Adds a symbolic link in a new commit.</summary>
+    public string AddSymbolicLink(string name, string path, string target) => AddEntry(name, path, "120000", StoreBlob(_repos[$"{Login}/{name}"], Encoding.UTF8.GetBytes(target)));
+
+    private string AddEntry(string name, string path, string mode, string sha)
+    {
+        lock (_gate)
+        {
+            var repo = _repos[$"{Login}/{name}"];
+            var head = repo.Branches[repo.DefaultBranch];
+            var files = new Dictionary<string, (string Mode, string Sha)>(repo.Trees[repo.Commits[head].Tree], StringComparer.Ordinal) { [path] = (mode, sha) };
+            var commit = StoreCommit(repo, StoreTree(repo, files), "Add " + path, [head]);
+            repo.Branches[repo.DefaultBranch] = commit;
+            return commit;
+        }
+    }
+
+    private async Task<HttpResponseMessage?> HandleLfsAsync(HttpRequestMessage request, string path, CancellationToken cancellationToken)
+    {
+        var host = request.RequestUri!.Host;
+        if (string.Equals(host, LfsStorageHost, StringComparison.OrdinalIgnoreCase))
+        {
+            return _lfs.TryGetValue(path, out var content)
+                ? new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(content) }
+                : new HttpResponseMessage(HttpStatusCode.NotFound);
+        }
+
+        if (!string.Equals(host, WebHost, StringComparison.OrdinalIgnoreCase) || !path.EndsWith(".git/info/lfs/objects/batch", StringComparison.Ordinal))
+        {
+            return null;
+        }
+
+        var parts = path.Split('/');
+        var name = parts[1][..^4];
+        if (!_repos.TryGetValue($"{parts[0]}/{name}", out var repo) || (repo.IsPrivate && request.Headers.Authorization?.Scheme != "Basic"))
+        {
+            return Error(HttpStatusCode.NotFound, "Repository not found");
+        }
+
+        var body = JsonNode.Parse(await request.Content!.ReadAsStringAsync(cancellationToken).ConfigureAwait(false))!;
+        var objects = new JsonArray();
+        foreach (var item in body["objects"]!.AsArray())
+        {
+            var oid = item!["oid"]!.GetValue<string>();
+            var answer = new JsonObject { ["oid"] = oid, ["size"] = item["size"]!.GetValue<long>() };
+            if (RefusedLfsObjects.Contains(oid) || !_lfs.ContainsKey(oid))
+            {
+                answer["error"] = new JsonObject { ["code"] = 404, ["message"] = "Object does not exist on the server" };
+            }
+            else
+            {
+                answer["actions"] = new JsonObject { ["download"] = new JsonObject { ["href"] = $"https://{LfsStorageHost}/{oid}", ["header"] = new JsonObject { ["X-Signed"] = "yes" } } };
+            }
+
+            objects.Add(answer);
+        }
+
+        return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(new JsonObject { ["transfer"] = "basic", ["objects"] = objects }.ToJsonString(), Encoding.UTF8, "application/vnd.git-lfs+json") };
+    }
 
     /// <summary>Creates a repository whose default branch holds the files.</summary>
     public FakeGitHub AddRepository(string name, IReadOnlyDictionary<string, string> files, string defaultBranch = "main", bool isPrivate = false)
@@ -108,6 +189,7 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
     {
         var repo = _repos[$"{Login}/{name}"];
         return repo.Trees[repo.Commits[repo.Branches[branch]].Tree]
+            .Where(e => e.Value.Mode != "160000")
             .ToDictionary(e => e.Key, e => Encoding.UTF8.GetString(repo.Blobs[e.Value.Sha]), StringComparer.Ordinal);
     }
 
@@ -140,6 +222,11 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
         if (HandleDownload(request) is { } download)
         {
             return download;
+        }
+
+        if (await HandleLfsAsync(request, path, cancellationToken).ConfigureAwait(false) is { } lfs)
+        {
+            return lfs;
         }
 
         if (string.Equals(uri.Host, RawHost, StringComparison.OrdinalIgnoreCase))
@@ -442,7 +529,7 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
             zip.CreateEntry(top);
             foreach (var (path, file) in repo.Trees[repo.Commits[sha].Tree])
             {
-                if (ArchiveOmits.Contains(path))
+                if (ArchiveOmits.Contains(path) || file.Mode == "160000")
                 {
                     continue;
                 }
@@ -540,14 +627,16 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
         ["object"] = new JsonObject { ["sha"] = sha, ["type"] = "commit" },
     };
 
-    private static JsonObject EntryJson(Repo repo, string path, (string Mode, string Sha) file) => new()
-    {
-        ["path"] = path,
-        ["mode"] = file.Mode,
-        ["type"] = "blob",
-        ["sha"] = file.Sha,
-        ["size"] = repo.Blobs[file.Sha].Length,
-    };
+    private static JsonObject EntryJson(Repo repo, string path, (string Mode, string Sha) file) => file.Mode == "160000"
+        ? new() { ["path"] = path, ["mode"] = file.Mode, ["type"] = "commit", ["sha"] = file.Sha }
+        : new()
+        {
+            ["path"] = path,
+            ["mode"] = file.Mode,
+            ["type"] = "blob",
+            ["sha"] = file.Sha,
+            ["size"] = repo.Blobs[file.Sha].Length,
+        };
 
     private static JsonObject Author() => new() { ["name"] = "Test User", ["email"] = "tester@example.test", ["date"] = "2026-10-25T08:00:00Z" };
 

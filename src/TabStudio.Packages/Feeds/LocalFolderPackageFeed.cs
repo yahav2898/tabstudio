@@ -73,7 +73,7 @@ internal sealed class LocalFolderPackageFeed : IPackageFeed
         }
 
         var index = new Dictionary<string, Dictionary<NuGetVersion, LocalPackage>>(StringComparer.OrdinalIgnoreCase);
-        foreach (var file in Directory.EnumerateFiles(root, "*.nupkg", SearchOption.AllDirectories).Order(StringComparer.Ordinal))
+        foreach (var file in Directory.EnumerateFiles(root, "*.nupkg", new EnumerationOptions { RecurseSubdirectories = true, IgnoreInaccessible = true, AttributesToSkip = FileAttributes.ReparsePoint }).Order(StringComparer.Ordinal))
         {
             PackageManifest manifest;
             try

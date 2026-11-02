@@ -40,6 +40,28 @@ public sealed class GitHubImporterTests : IDisposable
     }
 
     [Fact]
+    public async Task A_download_Android_ended_is_cleaned_up_and_the_next_one_takes_its_folder()
+    {
+        // Android ended TabStudio in the middle of a download: the half folder stayed for good, and the next download
+        // of the repository went to demo-2.
+        var leftover = Path.Combine(_paths.Projects, "demo");
+        Directory.CreateDirectory(Path.Combine(leftover, SyncMetadata.FolderName));
+        await File.WriteAllTextAsync(Path.Combine(leftover, "README.md"), "# De");
+        await File.WriteAllTextAsync(Path.Combine(leftover, SyncMetadata.FolderName, "incomplete"), "0000000");
+        var finished = Path.Combine(_paths.Projects, "mine");
+        Directory.CreateDirectory(finished);
+        await File.WriteAllTextAsync(Path.Combine(finished, "notes.txt"), "keep");
+        Assert.True(GitHubSync.IsIncompleteClone(leftover));
+
+        var folder = await new GitHubImporter(_account, _paths).ImportAsync(new GitHubRepository(FakeGitHub.Login, "demo", null));
+
+        Assert.Equal(leftover, folder);
+        Assert.Equal("# Demo\n", await File.ReadAllTextAsync(Path.Combine(folder, "README.md")));
+        Assert.False(GitHubSync.IsIncompleteClone(folder));
+        Assert.True(File.Exists(Path.Combine(finished, "notes.txt")));
+    }
+
+    [Fact]
     public async Task A_private_repository_needs_an_account_and_opens_once_signed_in()
     {
         _github.AddRepository("secret", new Dictionary<string, string> { ["a.txt"] = "a\n" }, isPrivate: true);

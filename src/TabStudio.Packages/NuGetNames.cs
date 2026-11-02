@@ -15,4 +15,11 @@ internal static class NuGetNames
 
     /// <summary>Whether two package ids are the same. Ids are case-insensitive.</summary>
     public static bool SameId(string left, string right) => string.Equals(left, right, StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Whether an id is one NuGet accepts: letters, digits and <c>_</c>, joined by <c>.</c> or <c>-</c>, up to 100
+    /// characters. An id becomes a folder name, so "../x" or "/data/x" must never reach the packages folder.
+    /// </summary>
+    public static bool IsValidId([NotNullWhen(true)] string? id) =>
+        id is { Length: > 0 and <= 100 } && System.Text.RegularExpressions.Regex.IsMatch(id, @"^\w+([.-]\w+)*$", System.Text.RegularExpressions.RegexOptions.CultureInvariant);
 }

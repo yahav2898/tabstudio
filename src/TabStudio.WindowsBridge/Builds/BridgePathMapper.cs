@@ -142,12 +142,30 @@ public sealed class BridgePathMapper
         return new BuildDiagnostic(code, message.Severity, text, location, projectName);
     }
 
-    /// <summary>Where a path ends in free text: before a character no path in the mirror has, such as a colon, or a comma and a space.</summary>
+    /// <summary>
+    /// Where a path ends in free text: before a character no path in the mirror has, such as a colon, or a comma and a
+    /// space. Parentheses and apostrophes can be in a folder's name ("My App (x86)", "Yahav's"): a parenthesis ends
+    /// the path when it is MSBuild's "(line,column)" or closes one opened before the path; an apostrophe ends it when
+    /// no letter or digit follows, as a closing quote does.
+    /// </summary>
     private static int EndOfPath(string text, int from)
     {
+        var depth = 0;
         for (var i = from; i < text.Length; i++)
         {
             var c = text[i];
+            switch (c)
+            {
+                case '(' when !IsLocation(text, i + 1):
+                    depth++;
+                    continue;
+                case ')' when depth > 0:
+                    depth--;
+                    continue;
+                case '\'' when i + 1 < text.Length && char.IsLetterOrDigit(text[i + 1]):
+                    continue;
+            }
+
             if (PathEnd.Contains(c) || (c == ',' && i + 1 < text.Length && text[i + 1] == ' '))
             {
                 return i;
@@ -155,6 +173,19 @@ public sealed class BridgePathMapper
         }
 
         return text.Length;
+    }
+
+    // "12)" or "12,5)" or "12,5,12,9)": the position MSBuild writes after a file.
+    private static bool IsLocation(string text, int from)
+    {
+        var i = from;
+        var digits = 0;
+        for (; i < text.Length && (char.IsAsciiDigit(text[i]) || (text[i] == ',' && digits > 0)); i++)
+        {
+            digits += char.IsAsciiDigit(text[i]) ? 1 : 0;
+        }
+
+        return digits > 0 && i < text.Length && text[i] == ')';
     }
 
     private string ToClientSeparators(string relative)

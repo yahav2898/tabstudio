@@ -97,6 +97,18 @@ public sealed class BuildOutputTests : IDisposable
     }
 
     [Fact]
+    public void Paths_with_parentheses_and_apostrophes_in_folder_names_are_mapped_whole()
+    {
+        var paths = Mapper();
+        var library = Path.Combine(_mirror.Path, "My App (x86)", "Yahav's", "lib.dll");
+        var source = Path.Combine(_mirror.Path, "App", "Program.cs");
+
+        Assert.Equal($"Could not resolve {TabletRoot}/My App (x86)/Yahav's/lib.dll.", paths.ToClientText($"Could not resolve {library}."));
+        Assert.Equal($"{TabletRoot}/App/Program.cs(3,5): error CS1002", paths.ToClientText($"{source}(3,5): error CS1002"));
+        Assert.Equal($"(see '{TabletRoot}/App/Program.cs')", paths.ToClientText($"(see '{source}')"));
+    }
+
+    [Fact]
     public void Paths_go_both_ways()
     {
         var paths = Mapper();

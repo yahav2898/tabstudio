@@ -263,9 +263,11 @@ public sealed partial class WorkspaceViewModel
         DatabaseExplorer.EfCore.LoadProjects(preview.Workspace.Projects);
         StartDatabaseCheck(preview.Workspace);
         ShowNetFrameworkDiagnostics(preview.Workspace);
-        var startup = StartupProject?.FilePath;
+        // TabStudio's own pick is made again, so a project added outside the IDE can become it; a chosen one stays.
+        var startup = _isStartupProjectChosen ? StartupProject?.FilePath : null;
         LoadStartupProjects(preview.Workspace, startup);
         await LoadToolchainProjectsAsync(preview.Workspace, startup);
+        _isStartupProjectChosen = startup is not null && StartupProject?.FilePath == startup;
 
         if (_language is { } language)
         {

@@ -1,4 +1,7 @@
+using System.Collections.Concurrent;
 using System.IO.Compression;
+using System.Security.Cryptography;
+using System.Text;
 using TabStudio.SourceControl.GitHub;
 
 namespace TabStudio.SourceControl;
@@ -29,7 +32,8 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
     /// <param name="hashes">Learns the hash of every written file.</param>
     /// <param name="progress">Receives progress.</param>
     /// <param name="cancellationToken">Cancels the downloads.</param>
-    public async Task WriteAsync(
+    /// <returns>What the person should know, such as Git LFS files that could not be downloaded; empty when nothing.</returns>
+    public async Task<IReadOnlyList<string>> WriteAsync(
         string root,
         string commitSha,
         IReadOnlyDictionary<string, TrackedFile> files,
@@ -39,14 +43,177 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
     {
         if (files.Count == 0)
         {
-            return;
+            return [];
         }
 
+        var pointers = new ConcurrentDictionary<string, LfsPointer>(StringComparer.Ordinal);
         var remaining = files.Count >= ArchiveThreshold
-            ? await WriteFromArchiveAsync(root, commitSha, files, hashes, progress, cancellationToken).ConfigureAwait(false)
+            ? await WriteFromArchiveAsync(root, commitSha, files, hashes, pointers, progress, cancellationToken).ConfigureAwait(false)
             : [.. files.Keys];
 
-        await WriteBlobsAsync(root, commitSha, remaining, files, hashes, progress, cancellationToken).ConfigureAwait(false);
+        await WriteBlobsAsync(root, commitSha, remaining, files, hashes, pointers, progress, cancellationToken).ConfigureAwait(false);
+        return await WriteLfsObjectsAsync(root, files, hashes, pointers, progress, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>The largest Git LFS file TabStudio downloads: 2 GB.</summary>
+    internal const long MaximumLfsBytes = 2L << 30;
+
+    /// <summary>
+    /// Replaces the Git LFS pointers that were written with the files they stand for, as <c>git lfs pull</c> does after
+    /// a clone: before 0.21.2 a repository's images, models and binaries stored with Git LFS arrived as three lines of
+    /// text. The hash cache keeps the pointer's hash for each, so Git Changes does not see them as changed. A file that
+    /// cannot be downloaded keeps its pointer and is named in the returned notes.
+    /// </summary>
+    private async Task<IReadOnlyList<string>> WriteLfsObjectsAsync(
+        string root,
+        IReadOnlyDictionary<string, TrackedFile> files,
+        HashCache hashes,
+        ConcurrentDictionary<string, LfsPointer> pointers,
+        IProgress<SyncProgress>? progress,
+        CancellationToken cancellationToken)
+    {
+        if (pointers.IsEmpty)
+        {
+            return [];
+        }
+
+        if (!client.CanReadLfs)
+        {
+            return [$"{Files(pointers.Count)} stored with Git LFS hold only their pointers: this server does not serve Git LFS files to TabStudio."];
+        }
+
+        var wanted = pointers.OrderBy(p => p.Key, StringComparer.Ordinal).ToList();
+        var total = wanted.Sum(p => p.Value.Size);
+        if (FreeSpace(root) is { } free && total > free)
+        {
+            return [$"{Files(wanted.Count)} stored with Git LFS ({FormatSize(total)}) were not downloaded: the tablet has {FormatSize(free)} free. They hold only their pointers; free some space and download the repository again."];
+        }
+
+        var failed = new List<string>();
+        var done = 0;
+        progress?.Report(new SyncProgress($"Downloading {Files(wanted.Count)} stored with Git LFS", 0, wanted.Count));
+        foreach (var batch in wanted.Chunk(100))
+        {
+            IReadOnlyList<LfsObjectLink> links;
+            try
+            {
+                links = await client.GetLfsDownloadLinksAsync(owner, repository, [.. batch.Select(p => (p.Value.Oid, p.Value.Size)).Distinct()], cancellationToken).ConfigureAwait(false);
+            }
+            catch (GitHubApiException ex)
+            {
+                failed.Add($"{Files(batch.Length)} stored with Git LFS were not downloaded and hold only their pointers: {ex.Message}");
+                continue;
+            }
+
+            var byOid = links.GroupBy(l => l.Oid, StringComparer.Ordinal).ToDictionary(g => g.Key, g => g.First(), StringComparer.Ordinal);
+            foreach (var (path, pointer) in batch)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                try
+                {
+                    if (!byOid.TryGetValue(pointer.Oid, out var link))
+                    {
+                        throw new GitHubApiException("the server did not answer for it.");
+                    }
+
+                    await DownloadLfsObjectAsync(root, path, pointer, link, cancellationToken).ConfigureAwait(false);
+                    hashes.Remember(root, path, files[path].Sha);
+                }
+                catch (GitHubApiException ex)
+                {
+                    failed.Add($"{path} is stored with Git LFS and holds only its pointer: {ex.Message.TrimEnd('.')}.");
+                }
+
+                progress?.Report(new SyncProgress($"Downloading {Files(wanted.Count)} stored with Git LFS", ++done, wanted.Count));
+            }
+        }
+
+        return failed.Count <= 5
+            ? failed
+            : [.. failed.Take(4), $"{failed.Count - 4} more files stored with Git LFS hold only their pointers."];
+    }
+
+    private async Task DownloadLfsObjectAsync(string root, string path, LfsPointer pointer, LfsObjectLink link, CancellationToken cancellationToken)
+    {
+        if (pointer.Size > MaximumLfsBytes)
+        {
+            throw new GitHubApiException($"it is {FormatSize(pointer.Size)}, more than TabStudio downloads.");
+        }
+
+        var full = WorkingTree.FullPath(root, path);
+        var temporary = Path.Combine(root, SyncMetadata.FolderName, $"lfs-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(Path.GetDirectoryName(temporary)!);
+        try
+        {
+            string hash;
+            await using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.ReadWrite))
+            {
+                await client.DownloadLfsObjectAsync(link, stream, cancellationToken).ConfigureAwait(false);
+                stream.Position = 0;
+                hash = Convert.ToHexStringLower(await SHA256.HashDataAsync(stream, cancellationToken).ConfigureAwait(false));
+            }
+
+            if (!string.Equals(hash, pointer.Oid, StringComparison.Ordinal))
+            {
+                throw new GitHubApiException("what the server sent is not the file the pointer names.");
+            }
+
+            File.SetAttributes(full, FileAttributes.Normal);
+            File.Move(temporary, full, overwrite: true);
+        }
+        finally
+        {
+            TryDelete(temporary);
+        }
+    }
+
+    private static long? FreeSpace(string root)
+    {
+        try
+        {
+            return new DriveInfo(Path.GetFullPath(root)).AvailableFreeSpace;
+        }
+        catch (Exception ex) when (ex is IOException or ArgumentException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    private static string Files(int count) => count == 1 ? "1 file" : $"{count} files";
+
+    /// <summary>A Git LFS pointer: the small text a repository holds in place of a file stored with Git LFS.</summary>
+    /// <param name="Oid">The file's SHA-256, in hexadecimal.</param>
+    /// <param name="Size">The file's size in bytes.</param>
+    internal sealed record LfsPointer(string Oid, long Size)
+    {
+        private const string Version = "version https://git-lfs.github.com/spec/v1\n";
+
+        /// <summary>Reads a pointer; <see langword="null"/> when the content is not one.</summary>
+        /// <param name="content">A file's content.</param>
+        public static LfsPointer? TryParse(ReadOnlySpan<byte> content)
+        {
+            // A pointer is at most a few hundred bytes and starts with its version line.
+            if (content.Length is < 100 or > 1024 || !content.StartsWith(Encoding.ASCII.GetBytes(Version)))
+            {
+                return null;
+            }
+
+            string? oid = null;
+            long? size = null;
+            foreach (var line in Encoding.ASCII.GetString(content).Split('\n', StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (line.StartsWith("oid sha256:", StringComparison.Ordinal) && line.Length == 11 + 64)
+                {
+                    oid = line[11..];
+                }
+                else if (line.StartsWith("size ", StringComparison.Ordinal) && long.TryParse(line.AsSpan(5), System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var value))
+                {
+                    size = value;
+                }
+            }
+
+            return oid is not null && size is { } length && oid.All(char.IsAsciiHexDigitLower) ? new LfsPointer(oid, length) : null;
+        }
     }
 
     /// <summary>Downloads one file's content.</summary>
@@ -62,6 +229,7 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
         string commitSha,
         IReadOnlyDictionary<string, TrackedFile> files,
         HashCache hashes,
+        ConcurrentDictionary<string, LfsPointer> pointers,
         IProgress<SyncProgress>? progress,
         CancellationToken cancellationToken)
     {
@@ -104,6 +272,10 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
                 await WriteFileAsync(root, path, content, cancellationToken).ConfigureAwait(false);
                 hashes.Remember(root, path, file.Sha);
                 missing.Remove(path);
+                if (LfsPointer.TryParse(content) is { } pointer)
+                {
+                    pointers[path] = pointer;
+                }
                 if (++written % 50 == 0)
                 {
                     progress?.Report(new SyncProgress("Writing files", written, files.Count));
@@ -124,6 +296,7 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
         List<string> paths,
         IReadOnlyDictionary<string, TrackedFile> files,
         HashCache hashes,
+        ConcurrentDictionary<string, LfsPointer> pointers,
         IProgress<SyncProgress>? progress,
         CancellationToken cancellationToken)
     {
@@ -140,6 +313,10 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
         {
             var content = await ReadFileAsync(commitSha, path, files[path].Sha, token).ConfigureAwait(false);
             await WriteFileAsync(root, path, content, token).ConfigureAwait(false);
+            if (LfsPointer.TryParse(content) is { } pointer)
+            {
+                pointers[path] = pointer;
+            }
             lock (gate)
             {
                 hashes.Remember(root, path, files[path].Sha);

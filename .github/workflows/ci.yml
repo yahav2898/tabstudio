@@ -107,6 +107,10 @@ jobs:
           cat ci-out/proot-thread-waits.log
 
       - name: Build and test
+        env:
+          # TabStudio's own download of the repositories pinned in build/ci/real-repos.json (cloneRepositories, lfsObjects).
+          TABSTUDIO_REAL_CLONES: '1'
+          TABSTUDIO_GITHUB_TOKEN: ${{ github.token }}
         run: |
           mkdir -p ci-out
           status=0
