@@ -1,0 +1,87 @@
+marshmallow at b762ea2d59ca52fe5df76b90de14bed7e5ec5607
+Toolchain projects:
+  python: /home/runner/work/_temp/real-repos/marshmallow/pyproject.toml
+  node: /home/runner/work/_temp/real-repos/marshmallow/examples/package.json
+Startup project: python /home/runner/work/_temp/real-repos/marshmallow/pyproject.toml
+Set up in 6.2 s
+Tests: 1192 passed, 0 failed, 0 skipped of 1288: 1192 tests run in 5.1 sec: 1192 passed, 0 failed, 0 skipped.
+Project setup:
+------ marshmallow: pip install -e . ------
+Reading which Python versions the 63 pinned packages have wheels for, from PyPI.
+> python3 -m venv .venv
+> /home/runner/work/_temp/real-repos/marshmallow/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/real-repos/marshmallow
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: marshmallow
+  Building editable for marshmallow (pyproject.toml): started
+  Building editable for marshmallow (pyproject.toml): finished with status 'done'
+  Created wheel for marshmallow: filename=marshmallow-4.3.1-py3-none-any.whl size=8828 sha256=ab189784c2615e19c60ae21a2330a04042434b1234867cf882d5f8cf09cc1e00
+  Stored in directory: /tmp/pip-ephem-wheel-cache-kxvdl91k/wheels/08/c4/77/981bf58402b8d8300873f2aa42077442f3628813859c979450
+Successfully built marshmallow
+Installing collected packages: marshmallow
+Successfully installed marshmallow-4.3.1
+examples's packages were not installed: npm install --no-fund --no-audit failed (npm error notarget No matching version found for pest@^23.4.1.). Fix that, then use Tools > Install Project Packages.
+
+Output:
+------ Setting up marshmallow: pip install -e . ------
+Python 3.12 for marshmallow: pyproject.toml allows Python >=3.10; the newest Python the pinned packages install on from prebuilt wheels (alabaster 1.0.0, backports-datetime-fromisoformat 2.0.3, cachetools 7.2.0, …).
+> python3 -m venv .venv
+> /home/runner/work/_temp/real-repos/marshmallow/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Installed 1 package into .venv with Python 3.12. The full log is in Output > Project Setup.
+========== pip install -e .: succeeded ==========
+------ Setting up examples: npm install ------
+> npm install --no-fund --no-audit
+npm error code ETARGET
+npm error notarget No matching version found for pest@^23.4.1.
+npm error notarget In most cases you or one of your dependencies are requesting
+npm error notarget a package version that doesn't exist.
+npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2026-11-02T02_24_22_809Z-debug-0.log
+examples's packages were not installed: npm install --no-fund --no-audit failed (npm error notarget No matching version found for pest@^23.4.1.). Fix that, then use Tools > Install Project Packages.
+========== npm install: failed (exited with code 1) ==========
+========== Running marshmallow's tests with Pytest ==========
+> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''pytest'\'' '\''simplejson'\'' '\''tox'\'' '\''tox-uv'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/marshmallow/.tabstudio/test-results/463918c26abf43e285b450bb2ab25d2f/pytest.xml
+Installing what the tests need
+============================= test session starts ==============================
+platform linux -- Python 3.12.15, pytest-9.2.0, pluggy-1.7.0
+rootdir: /home/runner/work/_temp/real-repos/marshmallow
+configfile: pyproject.toml
+plugins: platformdirs-4.14.3
+collected 1192 items
+
+tests/test_context.py ............                                       [  1%]
+tests/test_decorators.py ............................................    [  4%]
+tests/test_deserialization.py .......................................... [  8%]
+........................................................................ [ 14%]
+........................................................................ [ 20%]
+........................................................................ [ 26%]
+........................................................................ [ 32%]
+..................................................................       [ 37%]
+tests/test_error_store.py ...............................                [ 40%]
+tests/test_exceptions.py .......                                         [ 41%]
+tests/test_fields.py ................................................... [ 45%]
+...........................................................              [ 50%]
+tests/test_options.py ..........                                         [ 51%]
+tests/test_registry.py ..........                                        [ 52%]
+tests/test_schema.py ................................................... [ 56%]
+........................................................................ [ 62%]
+........................................................................ [ 68%]
+........                                                                 [ 69%]
+tests/test_serialization.py ............................................ [ 72%]
+........................................................................ [ 78%]
+.............                                                            [ 79%]
+tests/test_utils.py ...................                                  [ 81%]
+tests/test_validate.py ................................................. [ 85%]
+........................................................................ [ 91%]
+........................................................................ [ 97%]
+............................                                             [100%]
+
+- generated xml file: /home/runner/work/_temp/real-repos/marshmallow/.tabstudio/test-results/463918c26abf43e285b450bb2ab25d2f/pytest.xml -
+============================= 1192 passed in 1.91s =============================
+
