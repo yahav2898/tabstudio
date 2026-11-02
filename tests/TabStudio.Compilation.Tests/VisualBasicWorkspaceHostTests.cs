@@ -113,15 +113,13 @@ public sealed class VisualBasicWorkspaceHostTests : IDisposable
         Assert.Contains(diagnostics, d => d.Id == "BC30451" && d.Location is { Line: 3 } location && location.FilePath == GreeterPath);
     }
 
-    [Theory]
-    [InlineData("End")]
-    [InlineData("Environment.Exit(2)")]
-    public async Task Live_diagnostics_include_the_in_process_safety_check(string statement)
+    [Fact]
+    public async Task Live_diagnostics_include_the_in_process_safety_check()
     {
-        _host.UpdateText(ProgramPath, $"""
+        _host.UpdateText(ProgramPath, """
             Module Program
                 Sub Main()
-                    {statement}
+                    End
                 End Sub
             End Module
             """);
@@ -130,9 +128,29 @@ public sealed class VisualBasicWorkspaceHostTests : IDisposable
 
         var exit = Assert.Single(diagnostics, d => d.Id == InProcessSafetyAnalyzer.ExitId);
         Assert.Equal(3, exit.Location?.Line);
+        Assert.Equal(DiagnosticSeverityLevel.Error, exit.Severity);
 
         // The advice can be followed in a click handler too, where there is no Main to return from.
         Assert.Contains("Application.Exit()", exit.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task Environment_exit_is_redirected_as_in_CSharp_so_it_is_a_warning_not_an_error()
+    {
+        _host.UpdateText(ProgramPath, """
+            Module Program
+                Sub Main()
+                    Environment.Exit(2)
+                End Sub
+            End Module
+            """);
+
+        var diagnostics = await _host.GetDocumentDiagnosticsAsync(ProgramPath);
+
+        var exit = Assert.Single(diagnostics, d => d.Id == InProcessSafetyAnalyzer.ExitId);
+        Assert.Equal(3, exit.Location?.Line);
+        Assert.Equal(DiagnosticSeverityLevel.Warning, exit.Severity);
+        Assert.Contains("TabStudio keeps running", exit.Message, StringComparison.Ordinal);
     }
 
     [Fact]

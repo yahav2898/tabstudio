@@ -302,14 +302,14 @@ public static class CompatibilityDoctor
                 project, RunHost.None, CompatibilityStatus.Unsupported, ".NET MAUI, on a computer",
                 "Not supported: a .NET MAUI project is built by .NET's MAUI workload, on a computer. TabStudio leaves it out of builds."),
 
-            ProjectKind.Wpf when project.Language == ProjectLanguage.CSharp => Report(
+            ProjectKind.Wpf when project.Language is ProjectLanguage.CSharp or ProjectLanguage.VisualBasic => Report(
                 project, RunHost.WebView, CompatibilityStatus.Ready, "OpenSilver in the web preview",
                 "Built on OpenSilver, which implements WPF's API, and run in the web preview. What OpenSilver lacks, such as 3D, "
                 + "Window.ShowDialog and some members, is named in the Error List; that code runs on your PC through the Windows Bridge."),
 
             ProjectKind.Wpf => Report(
                 project, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows, "Windows Bridge",
-                $"OpenSilver builds C# WPF projects. A WPF project in {LanguageName(project.Language)} builds and runs on your PC through the Windows Bridge."),
+                $"OpenSilver builds C# and Visual Basic WPF projects. A WPF project in {LanguageName(project.Language)} builds and runs on your PC through the Windows Bridge."),
 
             ProjectKind.WinForms when project.IsRoslynLanguage => Report(
                 project, RunHost.AndroidView, CompatibilityStatus.Ready, "Cross-platform Forms layer in the app preview",

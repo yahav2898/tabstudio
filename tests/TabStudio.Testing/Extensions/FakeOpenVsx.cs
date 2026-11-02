@@ -35,6 +35,9 @@ public sealed class FakeOpenVsx : HttpMessageHandler
     /// <summary>Whether the Lumen package is sent damaged, so its hash and signature do not match.</summary>
     public bool CorruptsLumenPackage { get; set; }
 
+    /// <summary>File extensions (such as <c>.sigzip</c>) whose requests fail as on a broken connection.</summary>
+    public HashSet<string> UnreachableFiles { get; } = [];
+
     /// <summary>The paths and queries of the requests received, in order.</summary>
     public List<string> Requests { get; } = [];
 
@@ -70,6 +73,11 @@ public sealed class FakeOpenVsx : HttpMessageHandler
         if (IsOffline)
         {
             throw new HttpRequestException("No such host is known. (open-vsx.test:443)");
+        }
+
+        if (UnreachableFiles.Any(suffix => uri.AbsolutePath.EndsWith(suffix, StringComparison.Ordinal)))
+        {
+            throw new HttpRequestException("The connection was reset. (open-vsx.test:443)");
         }
 
         return Task.FromResult(Answer(uri));

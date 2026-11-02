@@ -143,7 +143,7 @@
 
       <StackPanel Spacing="14" IsVisible="{Binding IsBridging}">
         <Grid ColumnDefinitions="Auto,22,*" IsVisible="{Binding HasNetwork}">
-          <Border Width="220" Height="220" CornerRadius="10" Background="White" VerticalAlignment="Top">
+          <Border x:Name="BridgeQrCard" Width="220" Height="220" CornerRadius="10" Background="{DynamicResource Brush.QrCode.Light}" VerticalAlignment="Top">
             <controls:QrCodeView Code="{Binding BridgeQrCode}" />
           </Border>
           <StackPanel Grid.Column="2" Spacing="10" VerticalAlignment="Center">

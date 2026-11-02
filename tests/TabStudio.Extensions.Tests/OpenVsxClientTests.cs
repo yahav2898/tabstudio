@@ -161,6 +161,24 @@ public sealed class OpenVsxClientTests : IDisposable
         Assert.Equal(PackageVerification.Signature, installed.Source.Verification);
     }
 
+    [Theory]
+    [InlineData(".sigzip")]
+    [InlineData("/lumen-test-key")]
+    public async Task A_package_whose_listed_signature_cannot_be_fetched_is_refused_not_installed_unverified(string unreachable)
+    {
+        var client = CreateClient();
+        var lumen = await client.GetExtensionAsync(Lumen);
+        Assert.NotNull(lumen.Files.Signature);
+        _registry.UnreachableFiles.Add(unreachable);
+        var path = _temp.Resolve("lumen.vsix");
+
+        var error = await Assert.ThrowsAsync<OpenVsxException>(() => client.DownloadAsync(lumen, path));
+
+        Assert.Equal(OpenVsxFailure.IntegrityFailed, error.Failure);
+        Assert.Contains("cannot be verified", error.Message, StringComparison.Ordinal);
+        Assert.False(File.Exists(path));
+    }
+
     [Fact]
     public async Task A_damaged_download_is_refused_and_deleted()
     {

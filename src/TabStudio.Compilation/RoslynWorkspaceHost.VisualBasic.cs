@@ -56,6 +56,9 @@ public sealed partial class RoslynWorkspaceHost
             additionalDocuments.Add(CreateDocumentInfo(AdditionalFileDocumentId(id, path), path, ReadSource(sources, path), isGenerated: false));
         }
 
+        // A WPF project's XAML, which the WPF generator reads for the classes it declares, as for C#.
+        AddWpfDocuments(project, id, sources, additionalDocuments);
+
         if (VisualBasicCompiler.CreateAssemblyAttributesSource(project) is { } assemblyInfo)
         {
             var path = Path.Combine(project.DirectoryPath, "obj", $"{project.Name}.AssemblyInfo.g.vb");

@@ -116,7 +116,8 @@ public static class WpfProject
             }
         }
 
-        var app = Path.Combine(directory, "App.xaml");
+        // The Windows Desktop SDK's default: Application.xaml in Visual Basic, App.xaml in C#.
+        var app = Path.Combine(directory, project.IsVisualBasic ? "Application.xaml" : "App.xaml");
         if (!IsFalse(project.GetProperty("EnableDefaultApplicationDefinition")) && File.Exists(app))
         {
             items[app] = XamlItemKind.ApplicationDefinition;

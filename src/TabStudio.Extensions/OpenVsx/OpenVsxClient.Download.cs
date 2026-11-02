@@ -11,7 +11,7 @@ public sealed partial class OpenVsxClient
     /// <summary>
     /// Downloads an extension version's package to a file and verifies it: its SHA-256 hash against the registry's,
     /// and the registry's Ed25519 signature with its public key. Checks the registry does not offer for a version are
-    /// skipped; a package that fails a check is deleted.
+    /// skipped; a package that fails a check, or whose listed signature cannot be fetched, is deleted.
     /// </summary>
     /// <param name="extension">The version to download, from <see cref="GetExtensionAsync"/>.</param>
     /// <param name="destination">The file to write.</param>
@@ -105,15 +105,20 @@ public sealed partial class OpenVsxClient
             : throw new OpenVsxException(OpenVsxFailure.IntegrityFailed, $"The downloaded package of {extension.DisplayName} does not match the hash the registry published. It was not installed.");
     }
 
-    /// <summary>Checks the registry's signature; <see langword="false"/> when it publishes none or it cannot be read.</summary>
+    /// <summary>
+    /// Checks the registry's signature; <see langword="false"/> only when the registry publishes none for this version.
+    /// A signature or key the registry lists but that cannot be fetched refuses the package: installing it unverified
+    /// would let anyone who can break that one request skip the check.
+    /// </summary>
     private async Task<bool> VerifySignatureAsync(OpenVsxExtension extension, string package, CancellationToken cancellationToken)
     {
-        if (extension.Files.Signature is not { } signatureAddress || extension.Files.PublicKey is not { } keyAddress
-            || await TryGetFileAsync(signatureAddress, cancellationToken).ConfigureAwait(false) is not { } archive
-            || await TryGetFileAsync(keyAddress, cancellationToken).ConfigureAwait(false) is not { } pem)
+        if (extension.Files.Signature is not { } signatureAddress || extension.Files.PublicKey is not { } keyAddress)
         {
             return false;
         }
+
+        var archive = await GetVerificationFileAsync(extension, signatureAddress, "signature", cancellationToken).ConfigureAwait(false);
+        var pem = await GetVerificationFileAsync(extension, keyAddress, "public key", cancellationToken).ConfigureAwait(false);
 
         bool valid;
         try
@@ -137,6 +142,22 @@ public sealed partial class OpenVsxClient
         return valid
             ? true
             : throw new OpenVsxException(OpenVsxFailure.IntegrityFailed, $"The signature of {extension.DisplayName} does not match the downloaded package. It was not installed.");
+    }
+
+    /// <summary>A file the registry lists for verifying a package; failing to fetch it refuses the package.</summary>
+    private async Task<byte[]> GetVerificationFileAsync(OpenVsxExtension extension, Uri address, string what, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await GetFileAsync(address, cancellationToken).ConfigureAwait(false);
+        }
+        catch (OpenVsxException ex) when (ex.Failure is not OpenVsxFailure.IntegrityFailed)
+        {
+            throw new OpenVsxException(
+                OpenVsxFailure.IntegrityFailed,
+                $"The registry lists a {what} for {extension.DisplayName}, but it could not be downloaded ({ex.Message}), so the package cannot be verified. It was not installed; try again when {Registry.Host} can be reached.",
+                ex);
+        }
     }
 
     /// <summary>A file of a version, or <see langword="null"/> when the registry does not have it or cannot be reached.</summary>

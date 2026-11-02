@@ -93,7 +93,9 @@ public sealed class CSharpCompilerTests
     {
         // Visual Studio builds markdig's and Simple Drawing App's calls of Environment.Exit; built to run in a workspace,
         // they are redirected so that the program ends, with its code, and TabStudio does not.
-        var compilation = InProcessExit.Redirect(_compiler.CreateCompilation(Request("System.Console.WriteLine(1);\n" + statement)));
+        // A statement before the exit that writes nothing: this test runs the program on the process's own console, which
+        // other tests own while they run, and a "1" written here turned up in their output.
+        var compilation = InProcessExit.Redirect(_compiler.CreateCompilation(Request("System.GC.KeepAlive(1);\n" + statement)));
 
         var result = CSharpCompiler.Emit(compilation, checkInProcessSafety: true, null, "Hello", null, null, CancellationToken.None);
 

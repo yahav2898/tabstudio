@@ -35,6 +35,29 @@ public sealed class RecordingTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public async Task Finding_a_step_in_history_never_changes_the_selection_so_it_can_run_off_the_UI_thread()
+    {
+        using var session = Recorded("int total = 0; for (int i = 0; i < 3; i++) { total += i; } total = 3;");
+        await RunAsync(session);
+        var changes = 0;
+        session.HistorySelectionChanged += (_, _) => Interlocked.Increment(ref changes);
+        var latest = session.HistoryIndex;
+
+        var found = await Task.WhenAll(
+            Task.Run(session.FindStepBack), Task.Run(session.FindReverseContinue), Task.Run(() => session.FindLastWrite("total")));
+
+        Assert.Equal(0, changes);
+        Assert.Equal(latest, session.HistoryIndex);
+        Assert.Null(session.HistoricalPause);
+        Assert.InRange(found[0], 0, latest - 1);
+        Assert.Equal(session.FindStepBack(), found[0]);
+        Assert.Equal(found[2], session.FindLastWrite("total"));
+        Assert.Equal(session.SeekHistory(found[2])!.RecordedStep, session.HistoricalPause!.RecordedStep);
+        Assert.Equal(found[2], session.HistoryIndex);
+        Assert.Equal(1, changes);
+    }
+
+    [Fact]
     public async Task Loop_records_every_sequence_point_and_same_value_writes_with_original_lines()
     {
         const string source = """
