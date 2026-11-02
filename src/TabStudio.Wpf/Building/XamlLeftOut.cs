@@ -258,7 +258,8 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
     /// <summary>Leaves out an attribute; a setter or a trigger's condition without its property or value is left out whole.</summary>
     private bool LeaveOutAttribute(string file, XamlDocument document, XamlElement element, XamlAttributeNode attribute, string reason)
     {
-        if (element.LocalName is "Setter" or "Condition" or "EventSetter")
+        // A setter or condition is nothing without it, and a style or template is nothing without the type it is for.
+        if (element.LocalName is "Setter" or "Condition" or "EventSetter" || attribute.LocalName is "TargetType" or "DataType")
         {
             return LeaveOutElement(file, document, element, reason);
         }
@@ -271,6 +272,12 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
     /// <summary>Leaves out an element with what is in it, and every reference to it when it is a keyed resource.</summary>
     private bool LeaveOutElement(string file, XamlDocument document, XamlElement element, string reason)
     {
+        // A template or style that is a setter's value goes with the setter, which cannot be left without one.
+        if (element.Parent is { IsPropertyElement: true, LocalName: "Setter.Value", Parent: { LocalName: "Setter" } setter })
+        {
+            element = setter;
+        }
+
         if (ReferenceEquals(element, document.Root) || element.End <= element.Start)
         {
             return false;
