@@ -70,9 +70,9 @@ public sealed class LanguageConfigurationTests
     public void Word_and_digit_classes_match_only_ASCII_as_in_JavaScript()
     {
         var word = JsRegex.TryCreate(@"^\w+:$")!;
-        Assert.True(word.IsMatch("case_1:"));
-        Assert.False(word.IsMatch("é:"));
-        Assert.False(JsRegex.TryCreate(@"^\d$")!.IsMatch("\u0663"));
+        Assert.Matches(word, "case_1:");
+        Assert.DoesNotMatch(word, "é:");
+        Assert.DoesNotMatch(JsRegex.TryCreate(@"^\d$")!, "\u0663");
     }
 
     [Fact]
