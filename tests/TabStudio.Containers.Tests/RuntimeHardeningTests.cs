@@ -86,7 +86,8 @@ public sealed class RuntimeHardeningTests(ITestOutputHelper output)
         var tree = new[] { pid }.Concat(ProcessTreeOf(pid)).ToList();
         foreach (var process in tree) UnixFiles.TrySignal(process, Signals.Kill);
         await Until(() => engine.Find(small.Id)!.RestartCount == 1 && engine.Find(small.Id)!.IsRunning, TimeSpan.FromSeconds(30), "the killed container to restart");
-        Assert.Equal(ContainerEngine.KilledBySystem, engine.Find(small.Id)!.Error);
+        // The new start clears the error; the log keeps why it ended.
+        Assert.Contains(engine.Log(small.Id).Recent(50), e => e.Text == ContainerEngine.KilledBySystem);
         output.WriteLine($"stopped {stopped!.Name}: {info.Error}");
     }
 

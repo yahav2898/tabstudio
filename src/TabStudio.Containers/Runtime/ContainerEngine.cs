@@ -712,6 +712,7 @@ public sealed class ContainerEngine : IAsyncDisposable
             Ports = [],
             Health = instance.Info.Health == HealthStatus.None ? HealthStatus.None : HealthStatus.Unhealthy,
         };
+        if (killed) instance.Log.Write(2, KilledBySystem);
         if (!instance.Removed) Save(instance.Info);
         RefreshHosts();
         Publish("container", "die", instance.Info.Id, new Dictionary<string, string>(Attributes(instance.Info)) { ["exitCode"] = code.ToString(System.Globalization.CultureInfo.InvariantCulture) });
