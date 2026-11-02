@@ -53,7 +53,7 @@ public sealed class RealRepositoryTests
             Outcome outcome;
             try
             {
-                outcome = await OpenAndBuildAsync(solution, name, repository["startup"]?.GetValue<string>(), repository["serve"], report);
+                outcome = await OpenAndBuildAsync(solution, name, repository["startup"]?.GetValue<string>(), repository["serve"], report, repository["tests"]?.GetValue<int>());
             }
             catch (Exception ex) when (ex is not OutOfMemoryException)
             {
@@ -372,7 +372,8 @@ public sealed class RealRepositoryTests
     /// <param name="Editor">What the editor's squiggles get wrong next to the build, when they do.</param>
     private sealed record Outcome(int Errors, int Warnings, TimeSpan Duration, bool? Served = null, string? Startup = null, string? Editor = null);
 
-    private static async Task<Outcome> OpenAndBuildAsync(string solution, string name, string? expectedStartup, JsonNode? serve, StringBuilder report)
+    /// <param name="tests">How many tests Test Explorer's Run All must pass after the build; <see langword="null"/> to run none.</param>
+    private static async Task<Outcome> OpenAndBuildAsync(string solution, string name, string? expectedStartup, JsonNode? serve, StringBuilder report, int? tests = null)
     {
         using var fixture = new WorkspaceFixture();
         var workspace = fixture.Workspace;
@@ -426,8 +427,16 @@ public sealed class RealRepositoryTests
             AppendGeneratorPackages(report, fixture.Paths.Packages);
 
             UiTestHelpers.SaveScreenshot(window, $"real-{name}-2-built");
-            var editor = await CompareEditorWithBuildAsync(workspace, errors.Select(e => e.Diagnostic).ToList(), report);
+            // A project whose reference has errors is not compiled, so the build has nothing to say about its files.
+            var notCompiled = System.Text.RegularExpressions.Regex.Matches(workspace.Output.Text, @"^\d+>(?<name>\S+) was not compiled because", System.Text.RegularExpressions.RegexOptions.Multiline)
+                .Select(m => m.Groups["name"].Value).ToHashSet(StringComparer.Ordinal);
+            var editor = await CompareEditorWithBuildAsync(workspace, errors.Select(e => e.Diagnostic).ToList(), notCompiled, report);
             bool? served = serve is null ? null : await ServeFirstPageAsync(workspace, window, name, serve, report);
+            if (tests is { } minimum && await RunAllTestsAsync(workspace, minimum, report) is { } testProblem)
+            {
+                editor = editor is null ? testProblem : $"{editor}; {testProblem}";
+            }
+
             report.AppendLine("Output:");
             var text = workspace.Output.Text;
             report.AppendLine(text.Length > 40000 ? text[^40000..] : text);
@@ -444,17 +453,18 @@ public sealed class RealRepositoryTests
     /// The first thing a person does after a build: opens source files and reads their squiggles. Opens the first files
     /// of each project (up to <see cref="EditorFilesPerProject"/> each, <see cref="EditorFiles"/> in all) and compares
     /// the editor's errors with the build's in those files: an error only the editor shows is a false squiggle, and one
-    /// only the build shows is a missed one.
+    /// only the build shows is a missed one. Projects in <paramref name="notCompiled"/> are left out: a reference of
+    /// theirs has errors, so the build did not compile them.
     /// </summary>
     /// <returns><see langword="null"/> when they agree, else what differs.</returns>
-    private static async Task<string?> CompareEditorWithBuildAsync(WorkspaceViewModel workspace, List<BuildDiagnostic> buildErrors, StringBuilder report)
+    private static async Task<string?> CompareEditorWithBuildAsync(WorkspaceViewModel workspace, List<BuildDiagnostic> buildErrors, HashSet<string> notCompiled, StringBuilder report)
     {
         if (workspace.Workspace is not { } opened)
         {
             return null;
         }
 
-        var projects = opened.Projects.Where(p => p.Language is ProjectLanguage.CSharp or ProjectLanguage.VisualBasic).OrderBy(p => p.FilePath, StringComparer.Ordinal).ToList();
+        var projects = opened.Projects.Where(p => p.Language is ProjectLanguage.CSharp or ProjectLanguage.VisualBasic && !notCompiled.Contains(p.Name)).OrderBy(p => p.FilePath, StringComparer.Ordinal).ToList();
         var folders = projects.Select(p => Path.GetDirectoryName(p.FilePath)!).ToList();
         var files = projects
             .SelectMany(p => ProjectSourceFiles.Enumerate(p, folders.Where(f => f != Path.GetDirectoryName(p.FilePath)), p.Language == ProjectLanguage.VisualBasic ? ".vb" : ".cs").Take(EditorFilesPerProject))
