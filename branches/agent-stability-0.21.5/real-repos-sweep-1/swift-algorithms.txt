@@ -2,8 +2,8 @@ swift-algorithms at 5b7143f8e291dee0e14c118fd0212487f0b37af5
 Toolchain projects:
   swift: /home/runner/work/_temp/real-repos/swift-algorithms/Package.swift
 Startup project: swift /home/runner/work/_temp/real-repos/swift-algorithms/Package.swift
-Set up in 6.4 s
-Tests: 0 passed, 0 failed, 0 skipped of 219: The build failed. Fix the errors in the Error List, then run the tests again.
+Set up in 6.6 s
+Tests: 224 passed, 0 failed, 0 skipped of 224: 224 tests run in 18.6 sec: 224 passed, 0 failed, 0 skipped.
 Project setup:
 
 Output:
@@ -11,301 +11,259 @@ Output:
 > swift package resolve
 Fetching https://github.com/apple/swift-numerics.git
 [1/6766] Fetching swift-numerics
-Fetched https://github.com/apple/swift-numerics.git (0.35s)
+Fetched https://github.com/apple/swift-numerics.git (0.63s)
 Computing version for https://github.com/apple/swift-numerics.git
-Computed https://github.com/apple/swift-numerics.git at 1.1.1 (0.56s)
+Computed https://github.com/apple/swift-numerics.git at 1.1.1 (0.83s)
 Creating working copy for https://github.com/apple/swift-numerics.git
 Working copy of https://github.com/apple/swift-numerics.git resolved at 1.1.1
 ========== swift package resolve: succeeded ==========
 ========== Running swift-algorithms's tests with SwiftPM ==========
-> swift test --parallel --xunit-output /home/runner/work/_temp/real-repos/swift-algorithms/.tabstudio/test-results/944b6a0ab15c4cfa9c38ec761f2f3be8/swift.xml --experimental-xunit-message-failure
+> swift test --parallel --xunit-output /home/runner/work/_temp/real-repos/swift-algorithms/.tabstudio/test-results/e41cc570befe47b99241d719f63f0c2b/swift.xml --experimental-xunit-message-failure
 Building for debugging...
 [Computing dependencies]
 [Pre-planning 1 / 184]
-swift-runtime: cannot open status file
-swift-runtime: failed to suspend thread 41249 retrying...
-
-*** Signal 11: Backtracing from 0x7fe9ad53296a... done ***
-
-*** Program crashed: Bad pointer dereference at 0xffff801652b0e720 ***
-
-Platform: x86_64 Linux (Ubuntu 24.04.5 LTS)
-
-Thread 2 "DispatchWorker" crashed:
-
-0      0x00007fe9ad53296a _dispatch_event_loop_drain + 1130 in libdispatch.so
-1 [ra] 0x00007fe9ad528022 _dispatch_mgr_invoke + 129 in libdispatch.so
-2 [ra] 0x00007fe9ad527f8d _dispatch_mgr_thread + 108 in libdispatch.so
-3 [ra] 0x00007fe9ad52b1b5 _dispatch_worker_thread + 660 in libdispatch.so
-4 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 0 "swift-test":
-
-0      0x00007fe9abc455eb <unknown> in libc.so.6
-1 [ra] 0x00007fe9ad52b788 _dispatch_sigsuspend + 23 in libdispatch.so
-2 [ra] 0x00007fe9ad528c59 _dispatch_sig_thread + 8 in libdispatch.so
-3 [ra] 0x00007fe9abc99420 <unknown> in libc.so.6
-4 [ra] 0x00007fe9abc2a1d6 <unknown> in libc.so.6
-5 [ra] 0x00007fe9abc2a28b <unknown> in libc.so.6
-
-Thread 1 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 3 "DispatchWorker":
-
- 0                  0x00007fe9adcbff14 swift_conformsToProtocolMaybeInstantiateSuperclasses(swift::TargetMetadata<swift::InProcess> const*, swift::TargetProtocolDescriptor<swift::InProcess> const*, bool) + 1364 in libswiftCore.so
- 1 [ra]             0x00007fe9adcbef07 swift_conformsToProtocolWithExecutionContext + 38 in libswiftCore.so
- 2 [ra]             0x00007fe9adc676bb swift::_conformsToProtocol(swift::OpaqueValue const*, swift::TargetMetadata<swift::InProcess> const*, swift::TargetProtocolDescriptorRef<swift::InProcess>, swift::TargetWitnessTable<swift::InProcess> const**, swift::ConformanceExecutionContext*) + 26 in libswiftCore.so
- 3 [ra]             0x00007fe9adcbc7f7 swift::_checkGenericRequirements(__swift::__runtime::llvm::ArrayRef<swift::GenericParamDescriptor>, __swift::__runtime::llvm::ArrayRef<swift::TargetGenericRequirementDescriptor<swift::InProcess> >, __swift::__runtime::llvm::SmallVectorImpl<void const*>&, __swift::__runtime::llvm::function_ref<void const* (unsigned int, unsigned int)>, __swift::__runtime::llvm::function_ref<void const* (unsigned int, unsigned int)>, __swift::__runtime::llvm::function_ref<swift::TargetWitnessTable<swift::InProcess> const* (swift::TargetMetadata<swift::InProcess> const*, unsigned int)>, swift::ConformanceExecutionContext*) + 1142 in libswiftCore.so
- 4 [ra]             0x00007fe9adcbc0d8 swift::TargetProtocolConformanceDescriptor<swift::InProcess>::getWitnessTable(swift::TargetMetadata<swift::InProcess> const*, swift::ConformanceExecutionContext&) const + 471 in libswiftCore.so
- 5 [ra]             0x00007fe9adcbfb6a swift_conformsToProtocolMaybeInstantiateSuperclasses(swift::TargetMetadata<swift::InProcess> const*, swift::TargetProtocolDescriptor<swift::InProcess> const*, bool) + 425 in libswiftCore.so
- 6 [ra]             0x00007fe9adcbef07 swift_conformsToProtocolWithExecutionContext + 38 in libswiftCore.so
- 7 [ra]             0x00007fe9adc676bb swift::_conformsToProtocol(swift::OpaqueValue const*, swift::TargetMetadata<swift::InProcess> const*, swift::TargetProtocolDescriptorRef<swift::InProcess>, swift::TargetWitnessTable<swift::InProcess> const**, swift::ConformanceExecutionContext*) + 26 in libswiftCore.so
- 8 [ra]             0x00007fe9adcbc7f7 swift::_checkGenericRequirements(__swift::__runtime::llvm::ArrayRef<swift::GenericParamDescriptor>, __swift::__runtime::llvm::ArrayRef<swift::TargetGenericRequirementDescriptor<swift::InProcess> >, __swift::__runtime::llvm::SmallVectorImpl<void const*>&, __swift::__runtime::llvm::function_ref<void const* (unsigned int, unsigned int)>, __swift::__runtime::llvm::function_ref<void const* (unsigned int, unsigned int)>, __swift::__runtime::llvm::function_ref<swift::TargetWitnessTable<swift::InProcess> const* (swift::TargetMetadata<swift::InProcess> const*, unsigned int)>, swift::ConformanceExecutionContext*) + 1142 in libswiftCore.so
- 9 [ra]             0x00007fe9adca8e2f _gatherGenericParameters(swift::TargetContextDescriptor<swift::InProcess> const*, __swift::__runtime::llvm::ArrayRef<swift::MetadataPackOrValue>, swift::TargetMetadata<swift::InProcess> const*, __swift::__runtime::llvm::SmallVectorImpl<unsigned int>&, __swift::__runtime::llvm::SmallVectorImpl<void const*>&, swift::Demangle::__runtime::Demangler&) + 1438 in libswiftCore.so
-10 [ra]             0x00007fe9adcb4b92 (anonymous namespace)::DecodedMetadataBuilder::createBoundGenericType(swift::TargetContextDescriptor<swift::InProcess> const*, __swift::__runtime::llvm::ArrayRef<swift::MetadataPackOrValue>, swift::MetadataPackOrValue) const + 193 in libswiftCore.so
-11 [ra]             0x00007fe9adcb24a0 swift::Demangle::__runtime::TypeDecoder<(anonymous namespace)::DecodedMetadataBuilder>::decodeMangledType(swift::Demangle::__runtime::Node*, unsigned int, bool, bool) + 15183 in libswiftCore.so
-12 [ra]             0x00007fe9adca7683 swift_getTypeByMangledNode + 738 in libswiftCore.so
-13 [ra]             0x00007fe9adca5cd9 swift_getTypeByMangledName + 1160 in libswiftCore.so
-14 [ra]             0x00007fe9adca60a6 swift_getTypeByMangledNameInContextImpl(char const*, unsigned long, swift::TargetContextDescriptor<swift::InProcess> const*, void const* const*) + 197 in libswiftCore.so
-15 [ra]             0x00007fe9ad71190d __swift_instantiateConcreteTypeFromMangledName + 44 in libswift_StringProcessing.so
-16 [ra]             0x00007fe9ad70e715 specialized _NativeDictionary._copyOrMoveAndResize(capacity:moveElements:) + 52 in libswift_StringProcessing.so
-17 [ra]             0x00007fe9ad70d230 specialized _NativeDictionary.setValue(_:forKey:isUnique:) + 79 in libswift_StringProcessing.so
-18 [ra]             0x00007fe9ad6e53df specialized TypedSetVector.store(_:) + 142 in libswift_StringProcessing.so
-19 [ra]             0x00007fe9ad6d644b Compiler.ByteCodeGen.emitQuotedLiteral(_:) + 362 in libswift_StringProcessing.so
-20 [ra]             0x00007fe9ad6cd51c Compiler.ByteCodeGen.emitNode(_:) + 939 in libswift_StringProcessing.so
-21 [ra]             0x00007fe9ad6cd8e8 Compiler.ByteCodeGen.emitNode(_:) + 1911 in libswift_StringProcessing.so
-22 [ra]             0x00007fe9ad6cd3a6 Compiler.ByteCodeGen.emitNode(_:) + 565 in libswift_StringProcessing.so
-23 [ra]             0x00007fe9ad6ccdc5 Compiler.ByteCodeGen.emitRoot(_:) + 356 in libswift_StringProcessing.so
-24 [ra]             0x00007fe9ad6de2d6 Compiler.emitViaList() + 629 in libswift_StringProcessing.so
-25 [ra]             0x00007fe9ad6c73a8 Regex.Program.loweredProgram.getter + 311 in libswift_StringProcessing.so
-26 [ra]             0x00007fe9ad7319a4 Regex.firstMatch(in:) + 131 in libswift_StringProcessing.so
-27 [ra] [inlined]   0x000056129d007e68 specialized Sequence.compactMap<A>(_:) in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/Tools/LinkerTools.swift:1981:62
-28 [ra]             0x000056129d007e68 closure #1 in discoveredLinkerToolsInfo(_:_:at:) + 1143 in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/Tools/LinkerTools.swift:1981:42
-29 [async] [thunk]  0x000056129d028b00 partial apply for closure #1 in discoveredLinkerToolsInfo(_:_:at:) in swift-package
-30 [async]          0x000056129cf67cc0 closure #1 in DiscoveredCommandLineToolSpecInfoCache.run(_:_:_:_:) in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/CommandLineToolSpec.swift:140
-31 [async] [thunk]  0x000056129cf79120 partial apply for closure #1 in DiscoveredCommandLineToolSpecInfoCache.run(_:_:_:_:) in swift-package
-32 [async]          0x000056129cb888b0 closure #1 in AsyncCache.value(forKey:_:) in swift-package at /home/build-user/swift-build/Sources/SWBUtil/AsyncCache.swift:39
-33 [async] [thunk]  0x000056129cb88f90 partial apply for closure #1 in AsyncCache.value(forKey:_:) in swift-package at //<compiler-generated>
-34 [async]          0x000056129cc1dd70 static Result.catching(_:) in swift-package at /home/build-user/swift-build/Sources/SWBUtil/Result.swift:46
-35 [async]          0x000056129cb87c70 AsyncCache.value(forKey:_:) in swift-package at /home/build-user/swift-build/Sources/SWBUtil/AsyncCache.swift:39
-36 [async]          0x000056129cf67730 DiscoveredCommandLineToolSpecInfoCache.run(_:_:_:_:) in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/CommandLineToolSpec.swift:139
-37 [async] [thunk]  0x000056129d53f2a0 protocol witness for CommandProducer.discoveredCommandLineToolSpecInfo(_:_:_:_:) in conformance TaskProducerContext in swift-package
-38 [async]          0x000056129d004020 discoveredLinkerToolsInfo(_:_:at:) in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/Tools/LinkerTools.swift:1976
-39 [async]          0x000056129cffdeb0 LdLinkerSpec.discoveredCommandLineToolSpecInfo(_:_:_:) in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/Tools/LinkerTools.swift:1632
-40 [async]          0x000056129cf6e210 CommandLineToolSpec.additionalEvaluatedOutputs(_:_:) in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/CommandLineToolSpec.swift:1026
-41 [async]          0x000056129cff6540 LdLinkerSpec.constructLinkerTasks(_:_:libraries:usedTools:) in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/Tools/LinkerTools.swift:554
-42 [async]          0x000056129d4a6c30 closure #24 in SourcesTaskProducer.generateTasks() in swift-package at /home/build-user/swift-build/Sources/SWBTaskConstruction/TaskProducers/BuildPhaseTaskProducers/SourcesTaskProducer.swift:1111
-43 [async] [thunk]  0x000056129d4b8420 partial apply for closure #24 in SourcesTaskProducer.generateTasks() in swift-package
-44 [async]          0x000056129d451040 SourcesTaskProducer.appendGeneratedTasks(_:options:staleFileRemovalScope:body:) in swift-package at /home/build-user/swift-build/Sources/SWBTaskConstruction/TaskProducers/BuildPhaseTaskProducers/SourcesTaskProducer.swift:313
-45 [async]          0x000056129d46fc80 SourcesTaskProducer.generateTasks() in swift-package at /home/build-user/swift-build/Sources/SWBTaskConstruction/TaskProducers/BuildPhaseTaskProducers/SourcesTaskProducer.swift:1106
-46 [async] [thunk]  0x000056129d4af940 protocol witness for TaskProducer.generateTasks() in conformance SourcesTaskProducer in swift-package at //<compiler-generated>
-47 [async]          0x000056129d3c64f0 closure #2 in closure #4 in BuildPlan.init(planRequest:taskPlanningDelegate:) in swift-package at /home/build-user/swift-build/Sources/SWBTaskConstruction/ProductPlanning/BuildPlan.swift:175
-48 [async] [thunk]  0x000056129d3d39b0 partial apply for closure #2 in closure #4 in BuildPlan.init(planRequest:taskPlanningDelegate:) in swift-package
-49 [async] [thunk]  0x000056129d3d3970 thunk for @escaping @callee_guaranteed @Sendable @async (@guaranteed ProductPlanResultContext, @in_guaranteed TaskProducer) -> () in swift-package
-50 [async] [system] 0x000056129d3d2b40 partial apply for thunk for @escaping @callee_guaranteed @Sendable @async (@guaranteed ProductPlanResultContext, @in_guaranteed TaskProducer) -> () in swift-package at //<compiler-generated>
-51 [async]          0x000056129cbdd170 closure #1 in Sequence<>.parallelForEach<A>(group:maximumParallelism:_:) in swift-package
-52 [async] [thunk]  0x000056129cbdce10 partial apply for closure #1 in Sequence<>.parallelForEach<A>(group:maximumParallelism:_:) in swift-package at //<compiler-generated>
-53 [async] [thunk]  0x000056129cbdcc70 thunk for @escaping @isolated(any) @callee_guaranteed @async () -> (@out A) in swift-package at //<compiler-generated>
-54 [async] [thunk]  0x000056129cbdd0f0 partial apply for thunk for @escaping @isolated(any) @callee_guaranteed @async () -> (@out A) in swift-package
-55 [async] [system] 0x00007fe9ad7cef50 completeTaskWithClosure(swift::AsyncContext*, swift::SwiftError*) in libswift_Concurrency.so
-
-Thread 4 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 5 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 6 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 7 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 8 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 9 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 10 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 11 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 12 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 13 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 14 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 15 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 16 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 17 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 18 "DispatchWorker":
-
-0      0x00007fe9abc98e51 <unknown> in libc.so.6
-1 [ra] 0x00007fe9abca4e73 <unknown> in libc.so.6
-2 [ra] 0x00007fe9ad532d21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007fe9ad52ba21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007fe9ad52b34e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 19 "DispatchWorker":
-
-0      0x00007fe9abd1bcd0 <unknown> in libc.so.6
-1 [ra] 0x00007fe9ad1d3c75 __CFRunLoopServiceFileDescriptors + 100 in libFoundation.so
-2 [ra] 0x00007fe9ad1cf778 __CFRunLoopRun + 1047 in libFoundation.so
-3 [ra] 0x00007fe9ad1cf0b8 CFRunLoopRunSpecific + 503 in libFoundation.so
-4 [ra] 0x00007fe9ad14e5e9 RunLoop.run() + 184 in libFoundation.so
-5 [ra] 0x00007fe9ad1407df closure #1 in closure #1 in static Process.setup() + 510 in libFoundation.so
-6 [ra] 0x00007fe9ad162419 Thread.main() + 24 in libFoundation.so
-7 [ra] 0x00007fe9ad161207 NSThreadStart(_:) + 150 in libFoundation.so
-8 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-Thread 20 "DispatchWorker":
-
-0      0x00007fe9abd26fa7 <unknown> in libc.so.6
-1 [ra] 0x00007fe9ad1da29f __CFSocketManager + 622 in libFoundation.so
-2 [ra] 0x00007fe9abc9cb84 <unknown> in libc.so.6
-
-
-Registers:
-
-rax 0x00007fe9ad4efec0  00 00 00 00 00 00 00 00 30 00 00 00 00 00 00 00  ········0·······
-rdx 0x0000000000000000  0
-rcx 0xffff801652b0e718  18446603432097802008
-rbx 0x0000000000000001  1
-rsi 0x00007fe9ad5521d0  00 00 00 00 03 00 00 00 00 00 00 00 00 00 00 00  ················
-rdi 0x0000000000000081  129
-rbp 0x00007fe9a5659ab0  30 9b 65 a5 e9 7f 00 00 22 80 52 ad e9 7f 00 00  0·e¥é···"·R­é···
-rsp 0x00007fe9a5659930  10 00 00 00 e0 10 00 98 e9 7f 00 00 e9 7f 00 00  ····à···é···é···
- r8 0x0000000000000004  4
- r9 0x00007fe98c001c90  21 8b 98 72 ee 7f 00 00 ff ff ff ff ff ff ff ff  !··rî···ÿÿÿÿÿÿÿÿ
-r10 0x0000000000000000  0
-r11 0x0000000000000246  582
-r12 0x00007fe9a56599f8  01 00 00 00 00 00 00 00 40 fc 54 ad e9 7f 00 00  ········@üT­é···
-r13 0x00007fe9ad535374  63 d2 ff ff a6 d2 ff ff 02 d2 ff ff 84 d2 ff ff  cÒÿÿ¦Òÿÿ·Òÿÿ·Òÿÿ
-r14 0x0000000000000000  0
-r15 0x0000000000000001  1
-rip 0x00007fe9ad53296a  8b 51 08 81 fa ff ff ff 7f 74 12 ba 02 00 00 00  ·Q··úÿÿÿ·t·º····
-
-rflags 0x0000000000010206  PF
-
-cs 0x0033  fs 0x0000  gs 0x0000
-
-
-Images (70 omitted):
-
-0x000056129b8cf000–0x000056129ed994c8 184e3719c821b22a25ae4aaaa49a5cd4f46a65c5 swift-package                /home/runner/work/_temp/swift/usr/bin/swift-package
-0x00007fe9abc00000–0x00007fe9abdb0039 a4a7992a8e66555c8141ab2a08a8465ff6e0ea65 libc.so.6                    /usr/lib/x86_64-linux-gnu/libc.so.6
-0x00007fe9ace00000–0x00007fe9ad2d60d8 ec5f28a4914b13096b6806391b770e992fc0ab9a libFoundation.so             /home/runner/work/_temp/swift/usr/lib/swift/linux/libFoundation.so
-0x00007fe9ad4f6000–0x00007fe9ad53e1c0 37138795bda5c9dff39febf66624c331261c921b libdispatch.so               /home/runner/work/_temp/swift/usr/lib/swift/linux/libdispatch.so
-0x00007fe9ad69d000–0x00007fe9ad743010 2d2f7a1451a80bb173b8f874384554b8d09d1d35 libswift_StringProcessing.so /home/runner/work/_temp/swift/usr/lib/swift/linux/libswift_StringProcessing.so
-0x00007fe9ad758000–0x00007fe9ad7ec2a8 fddba3304bf1d23be98145f0dade7926fafd25cf libswift_Concurrency.so      /home/runner/work/_temp/swift/usr/lib/swift/linux/libswift_Concurrency.so
-0x00007fe9ad800000–0x00007fe9addd9b30 7f58c0a650758160f6344ec08a47634d4f888be7 libswiftCore.so              /home/runner/work/_temp/swift/usr/lib/swift/linux/libswiftCore.so
-
-Backtrace took 22.59s
-
-swift-algorithms's tests did not run: the build or the test runner failed. See the Error List and the output above.
+[Planning deferred tasks]
+[41 / 73] RealModule
+[42 / 73] _NumericsShims
+[44 / 73] RealModule
+[52 / 79] Algorithms
+[54 / 80] RealModule
+[57 / 80] RealModule
+[57 / 80] Algorithms
+[67 / 86] SwiftAlgorithmsTests-product
+[68 / 87] SwiftAlgorithmsTests-product
+[75 / 87]
+[80 / 88] SwiftAlgorithmsTests-product
+[84 / 91] SwiftAlgorithmsTests-test-runner
+[88 / 91] SwiftAlgorithmsTests-test-runner
+[92 / 92] SwiftAlgorithmsTests-test-runner
+Build complete! (14.57 secs)
+[1/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testEmptySequence
+[2/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testManyElements
+[3/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testLaziness
+[4/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testIndexTraversals
+[5/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testThreeElementSequence
+[6/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testManySequences
+[7/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testOneElementSequence
+[8/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testOneElement
+[9/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testTwoElements
+[10/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testZeroElements
+[11/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testThreeElements
+[12/224] Testing SwiftAlgorithmsTests.AdjacentPairsTests/testTwoElementSequence
+[13/224] Testing SwiftAlgorithmsTests.ChainTests/testChainBidirectionalCollection
+[14/224] Testing SwiftAlgorithmsTests.ChainTests/testChainSequences
+[15/224] Testing SwiftAlgorithmsTests.ChainTests/testChainForwardCollection
+[16/224] Testing SwiftAlgorithmsTests.ChainTests/testChainIndexTraversals
+[17/224] Testing SwiftAlgorithmsTests.ChainTests/testChainIndexOffsetAcrossBoundary
+[18/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunkedByComparesConsecutiveElements
+[19/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunkedBy
+[20/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunkedLazy
+[21/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunkedOn
+[22/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunksOfCount
+[23/224] Testing SwiftAlgorithmsTests.ChunkedTests/testEmptyChunksOfCountTraversal
+[24/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunksOfCountBidirectional
+[25/224] Testing SwiftAlgorithmsTests.ChunkedTests/testEvenChunks
+[26/224] Testing SwiftAlgorithmsTests.ChunkedTests/testEvenChunksIndexTraversals
+[27/224] Testing SwiftAlgorithmsTests.ChunkedTests/testSimple
+[28/224] Testing SwiftAlgorithmsTests.CombinationsTests/testCombinations
+[29/224] Testing SwiftAlgorithmsTests.CombinationsTests/testCombinationsLazy
+[30/224] Testing SwiftAlgorithmsTests.CombinationsTests/testCount
+[31/224] Testing SwiftAlgorithmsTests.CombinationsTests/testEmpty
+[32/224] Testing SwiftAlgorithmsTests.CompactedTests/testCompactedBidirectionalCollection
+[33/224] Testing SwiftAlgorithmsTests.CompactedTests/testCompactedCompacted
+[34/224] Testing SwiftAlgorithmsTests.CycleTests/testCycle
+[35/224] Testing SwiftAlgorithmsTests.CycleTests/testCycleClosedRangePrefix
+[36/224] Testing SwiftAlgorithmsTests.CompactedTests/testCollectionTraversals
+[37/224] Testing SwiftAlgorithmsTests.CycleTests/testCycleLazy
+[38/224] Testing SwiftAlgorithmsTests.CycleTests/testEmptyCycle
+[39/224] Testing SwiftAlgorithmsTests.CycleTests/testRepeated
+[40/224] Testing SwiftAlgorithmsTests.CycleTests/testRepeatedCount
+[41/224] Testing SwiftAlgorithmsTests.CycleTests/testRepeatedClosedRange
+[42/224] Testing SwiftAlgorithmsTests.CycleTests/testRepeatedEmptyCollection
+[43/224] Testing SwiftAlgorithmsTests.CycleTests/testRepeatedIndexMethods
+[44/224] Testing SwiftAlgorithmsTests.CycleTests/testRepeatedLazy
+[45/224] Testing SwiftAlgorithmsTests.CycleTests/testRepeatedZeroTimesCycle
+[46/224] Testing SwiftAlgorithmsTests.EndsWithNonEquatableTests/testDoesntEndWithTooLongSuffix
+[47/224] Testing SwiftAlgorithmsTests.EndsWithNonEquatableTests/testDoesntEndWithWrongSuffix
+[48/224] Testing SwiftAlgorithmsTests.EndsWithNonEquatableTests/testEmptyDoesNotEndWithNonempty
+[49/224] Testing SwiftAlgorithmsTests.EndsWithNonEquatableTests/testEmptyEndsWithEmpty
+[50/224] Testing SwiftAlgorithmsTests.EndsWithNonEquatableTests/testEndsWithCorrectSuffix
+[51/224] Testing SwiftAlgorithmsTests.EndsWithNonEquatableTests/testEndsWithEmpty
+[52/224] Testing SwiftAlgorithmsTests.EndsWithTests/testDoesntEndWithTooLongSuffix
+[53/224] Testing SwiftAlgorithmsTests.EndsWithTests/testDoesntEndWithWrongSuffix
+[54/224] Testing SwiftAlgorithmsTests.EndsWithTests/testEmptyDoesNotEndWithNonempty
+[55/224] Testing SwiftAlgorithmsTests.EndsWithTests/testEmptyEndsWithEmpty
+[56/224] Testing SwiftAlgorithmsTests.EndsWithTests/testEndsWithCorrectSuffix
+[57/224] Testing SwiftAlgorithmsTests.EndsWithTests/testEndsWithEmpty
+[58/224] Testing SwiftAlgorithmsTests.FirstNonNilTests/testFirstNonNil
+[59/224] Testing SwiftAlgorithmsTests.GroupedTests/testGroupedBy
+[60/224] Testing SwiftAlgorithmsTests.IndexedTests/testIndexed
+[61/224] Testing SwiftAlgorithmsTests.GroupedTests/testThrowingFromKeyFunction
+[62/224] Testing SwiftAlgorithmsTests.IntersperseTests/testArray
+[63/224] Testing SwiftAlgorithmsTests.IndexedTests/testIndexedLazy
+[64/224] Testing SwiftAlgorithmsTests.IntersperseTests/testBidirectionalCollection
+[65/224] Testing SwiftAlgorithmsTests.IntersperseTests/testArrayEmpty
+[66/224] Testing SwiftAlgorithmsTests.IntersperseTests/testCollection
+[67/224] Testing SwiftAlgorithmsTests.IntersperseTests/testIndexTraversals
+[68/224] Testing SwiftAlgorithmsTests.IntersperseTests/testIntersperseLazy
+[69/224] Testing SwiftAlgorithmsTests.IntersperseTests/testInterspersedMap
+[70/224] Testing SwiftAlgorithmsTests.IntersperseTests/testInterspersedMapLazy
+[71/224] Testing SwiftAlgorithmsTests.IntersperseTests/testInterspersedMapIndexTraversals
+[72/224] Testing SwiftAlgorithmsTests.IntersperseTests/testSequenceEmpty
+[73/224] Testing SwiftAlgorithmsTests.IntersperseTests/testSequence
+[74/224] Testing SwiftAlgorithmsTests.IntersperseTests/testStringEmpty
+[75/224] Testing SwiftAlgorithmsTests.IntersperseTests/testString
+[76/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoined
+[77/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoinedByElement
+[78/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoinedByElementClosure
+[79/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoinedBySequence
+[80/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunksOfCountTraversal
+[81/224] Testing SwiftAlgorithmsTests.ChunkedTests/testChunksOfCountCount
+[82/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoinedBySequenceClosure
+[83/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoinedLazy
+[84/224] Testing SwiftAlgorithmsTests.KeyedTests/testEmpty
+[85/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoinedIndexTraversals
+[86/224] Testing SwiftAlgorithmsTests.KeyedTests/testNonUniqueKeysWithMergeFunction
+[87/224] Testing SwiftAlgorithmsTests.KeyedTests/testNonUniqueKeys
+[88/224] Testing SwiftAlgorithmsTests.JoinedTests/testJoinedByIndexTraversals
+[89/224] Testing SwiftAlgorithmsTests.KeyedTests/testThrowingFromCombineFunction
+[90/224] Testing SwiftAlgorithmsTests.KeyedTests/testThrowingFromKeyFunction
+[91/224] Testing SwiftAlgorithmsTests.KeyedTests/testUniqueKeys
+[92/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testEmpty
+[93/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testPredicate
+[94/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testRampDown
+[95/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testRampUp
+[96/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testUpsAndDowns
+[97/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testSingleValueMultipleElements
+[98/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testSingleElement
+[99/224] Testing SwiftAlgorithmsTests.MinAndMaxTests/testStability
+[100/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitionedExample
+[101/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitionedWithEmptyInput
+[102/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitionWithSubrangeBidirectionalCollection
+[103/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitionedWithPredicate
+[104/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitioningIndex
+[105/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitioningIndexWithEmptyInput
+[106/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitioningIndexWithOneEmptyPartition
+[107/224] Testing SwiftAlgorithmsTests.PartitionTests/testPartitionWithSubrangeMutableCollection
+[108/224] Testing SwiftAlgorithmsTests.PermutationsTests/testDocumentationExample1
+[109/224] Testing SwiftAlgorithmsTests.PartitionTests/testStablePartitionWithSubrange
+[110/224] Testing SwiftAlgorithmsTests.PermutationsTests/testDocumentationExample2
+[111/224] Testing SwiftAlgorithmsTests.PermutationsTests/testDocumentationExample5
+[112/224] Testing SwiftAlgorithmsTests.PermutationsTests/testDocumentationExample4
+[113/224] Testing SwiftAlgorithmsTests.PermutationsTests/testDocumentationExample3
+[114/224] Testing SwiftAlgorithmsTests.PartitionTests/testStablePartition
+[115/224] Testing SwiftAlgorithmsTests.PermutationsTests/testNextPermutation
+[116/224] Testing SwiftAlgorithmsTests.PermutationsTests/testDocumentationExample6
+[117/224] Testing SwiftAlgorithmsTests.PermutationsTests/testEmpty
+[118/224] Testing SwiftAlgorithmsTests.PermutationsTests/testPermutationsLazy
+[119/224] Testing SwiftAlgorithmsTests.PermutationsTests/testPermutations
+[120/224] Testing SwiftAlgorithmsTests.ProductTests/testProduct
+[121/224] Testing SwiftAlgorithmsTests.ProductTests/testProductDistanceFromTo
+[122/224] Testing SwiftAlgorithmsTests.ProductTests/testProductIndexTraversals
+[123/224] Testing SwiftAlgorithmsTests.RandomSampleTests/testRandomSampleEdgeCases
+[124/224] Testing SwiftAlgorithmsTests.RandomSampleTests/testRandomSampleRepeatable
+[125/224] Testing SwiftAlgorithmsTests.RandomSampleTests/testRandomSampleRandomEdgeCasesInternal
+[126/224] Testing SwiftAlgorithmsTests.ProductTests/testProductReversed
+[127/224] Testing SwiftAlgorithmsTests.RandomSampleTests/testRandomSampleCollection
+[128/224] Testing SwiftAlgorithmsTests.ReductionsTests/testExclusiveIndexTraversals
+[129/224] Testing SwiftAlgorithmsTests.ReductionsTests/testExclusiveEager
+[130/224] Testing SwiftAlgorithmsTests.ReductionsTests/testExclusiveLazy
+[131/224] Testing SwiftAlgorithmsTests.ReductionsTests/testInclusiveEager
+[132/224] Testing SwiftAlgorithmsTests.ReductionsTests/testInclusiveLazy
+[133/224] Testing SwiftAlgorithmsTests.ReductionsTests/testInclusiveIndexTraversals
+[134/224] Testing SwiftAlgorithmsTests.RotateTests/testReverse
+[135/224] Testing SwiftAlgorithmsTests.RotateTests/testRotate
+[136/224] Testing SwiftAlgorithmsTests.RotateTests/testRotateEmptySubrange
+[137/224] Testing SwiftAlgorithmsTests.RotateTests/testRotateExample
+[138/224] Testing SwiftAlgorithmsTests.RotateTests/testRotateFullRange
+[139/224] Testing SwiftAlgorithmsTests.RandomSampleTests/testRandomStableSampleCollection
+[140/224] Testing SwiftAlgorithmsTests.RotateTests/testRotateSubrangeOnEmptyCollection
+[141/224] Testing SwiftAlgorithmsTests.RotateTests/testRotateSubrange
+[142/224] Testing SwiftAlgorithmsTests.RotateTests/testUnderscoreReverse
+[143/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testEmpty
+[144/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testMaxCount
+[145/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testMinCount
+[146/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testMinCountWithHugeInput
+[147/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testMinMaxSequences
+[148/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testMinMaxWithHugeCount
+[149/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testSortedPrefixComparable
+[150/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testStability
+[151/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEEEESSS
+[152/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEEEEESSSS
+[153/224] Testing SwiftAlgorithmsTests.RandomSampleTests/testRandomSampleSequence
+[154/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEEES
+[155/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEEEESSSS
+[156/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEEESS
+[157/224] Testing SwiftAlgorithmsTests.SortedPrefixTests/testMaxCountWithHugeInput
+[158/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEEESSSS
+[159/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEES
+[160/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEEESSSSSS
+[161/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEESS
+[162/224] Testing SwiftAlgorithmsTests.SplitTests/testAllEESSS
+[163/224] Testing SwiftAlgorithmsTests.SplitTests/testAllESSS
+[164/224] Testing SwiftAlgorithmsTests.SplitTests/testAllESS
+[165/224] Testing SwiftAlgorithmsTests.SplitTests/testCollectionDocExample
+[166/224] Testing SwiftAlgorithmsTests.SplitTests/testEEE
+[167/224] Testing SwiftAlgorithmsTests.SplitTests/testEE
+[168/224] Testing SwiftAlgorithmsTests.SplitTests/testE
+[169/224] Testing SwiftAlgorithmsTests.SplitTests/testEEEE
+[170/224] Testing SwiftAlgorithmsTests.SplitTests/testES
+[171/224] Testing SwiftAlgorithmsTests.SplitTests/testEmpty
+[172/224] Testing SwiftAlgorithmsTests.SplitTests/testLaziness
+[173/224] Testing SwiftAlgorithmsTests.SplitTests/testS
+[174/224] Testing SwiftAlgorithmsTests.SplitTests/testSS
+[175/224] Testing SwiftAlgorithmsTests.SplitTests/testSE
+[176/224] Testing SwiftAlgorithmsTests.SplitTests/testSSS
+[177/224] Testing SwiftAlgorithmsTests.SplitTests/testSSSS
+[178/224] Testing SwiftAlgorithmsTests.SplitTests/testSequenceDocExamples
+[179/224] Testing SwiftAlgorithmsTests.SplitTests/testSplitFilenameComponents
+[180/224] Testing SwiftAlgorithmsTests.SplitTests/testVintagePatterns
+[181/224] Testing SwiftAlgorithmsTests.StridingTests/testCount
+[182/224] Testing SwiftAlgorithmsTests.StridingTests/testIndexTraversals
+[183/224] Testing SwiftAlgorithmsTests.StridingTests/testOffsetBy
+[184/224] Testing SwiftAlgorithmsTests.StridingTests/testLazy
+[185/224] Testing SwiftAlgorithmsTests.StridingTests/testOffsetByEndIndex
+[186/224] Testing SwiftAlgorithmsTests.StridingTests/testStride
+[187/224] Testing SwiftAlgorithmsTests.StridingTests/testStrideLast
+[188/224] Testing SwiftAlgorithmsTests.StridingTests/testStrideIndexes
+[189/224] Testing SwiftAlgorithmsTests.StridingTests/testStrideReversed
+[190/224] Testing SwiftAlgorithmsTests.StridingTests/testStrideString
+[191/224] Testing SwiftAlgorithmsTests.SuffixTests/testEndOfPrefix
+[192/224] Testing SwiftAlgorithmsTests.SuffixTests/testStartOfSuffix
+[193/224] Testing SwiftAlgorithmsTests.SuffixTests/testSuffix
+[194/224] Testing SwiftAlgorithmsTests.TrimTests/testEmpty
+[195/224] Testing SwiftAlgorithmsTests.TrimTests/testBothEndsMatch
+[196/224] Testing SwiftAlgorithmsTests.TrimTests/testEverythingMatches
+[197/224] Testing SwiftAlgorithmsTests.TrimTests/testEverythingButOneMatches
+[198/224] Testing SwiftAlgorithmsTests.TrimTests/testNoMatch
+[199/224] Testing SwiftAlgorithmsTests.TrimTests/testNoHeadMatch
+[200/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimNoAmbiguity
+[201/224] Testing SwiftAlgorithmsTests.TrimTests/testNoTailMatch
+[202/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimPrefixNoAmbiguity
+[203/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimPrefixRangeReplaceable
+[204/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimSuffixNoAmbiguity
+[205/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimRangeReplaceable
+[206/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimmingPrefix
+[207/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimmingSuffix
+[208/224] Testing SwiftAlgorithmsTests.TrimTests/testTrimSuffixRangeReplaceable
+[209/224] Testing SwiftAlgorithmsTests.UniquePermutationsTests/testEmpty
+[210/224] Testing SwiftAlgorithmsTests.UniquePermutationsTests/testRanges
+[211/224] Testing SwiftAlgorithmsTests.UniquePermutationsTests/testFirstUnique
+[212/224] Testing SwiftAlgorithmsTests.UniquePermutationsTests/testLaziness
+[213/224] Testing SwiftAlgorithmsTests.UniquePermutationsTests/testSingleCounts
+[214/224] Testing SwiftAlgorithmsTests.UniqueTests/testUniqueOn
+[215/224] Testing SwiftAlgorithmsTests.UniqueTests/testUnique
+[216/224] Testing SwiftAlgorithmsTests.UniqueTests/testLazyUniqueOn
+[217/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsCount
+[218/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsLazy
+[219/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsIndexTraversals
+[220/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsOfInt
+[221/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsIndexAfterAndBefore
+[222/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsOfString
+[223/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsOfRange
+[224/224] Testing SwiftAlgorithmsTests.WindowsTests/testWindowsSecondAndLast
+◇ Test run started.
+↳ Testing Library Version: 6.4.1 (804dc4530ef3666)
+↳ Target Platform: x86_64-unknown-linux-gnu
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
 
