@@ -2,8 +2,8 @@ tqdm at 9cf5a12b1f955468a17f0ba3c59092b23e4258ac
 Toolchain projects:
   python: /home/runner/work/_temp/real-repos/tqdm/pyproject.toml
 Startup project: python /home/runner/work/_temp/real-repos/tqdm/pyproject.toml
-Set up in 9.5 s
-Tests: 168 passed, 1 failed, 10 skipped of 179: 179 tests run in 44.9 sec: 168 passed, 1 failed, 10 skipped.
+Set up in 5.7 s
+Tests: 168 passed, 1 failed, 10 skipped of 179: 179 tests run in 23.5 sec: 168 passed, 1 failed, 10 skipped.
 Project setup:
 ------ tqdm: pip install -e . ------
 > python3 -m venv .venv
@@ -20,8 +20,8 @@ Obtaining file:///home/runner/work/_temp/real-repos/tqdm
 Building wheels for collected packages: tqdm
   Building editable for tqdm (pyproject.toml): started
   Building editable for tqdm (pyproject.toml): finished with status 'done'
-  Created wheel for tqdm: filename=tqdm-0.1.dev1+g9cf5a12b1-0.editable-py3-none-any.whl size=22548 sha256=d67caa096427270bf3205f33282ff25bcb7e49bba8e4d6140548f3fb0e16be1d
-  Stored in directory: /tmp/pip-ephem-wheel-cache-yafgzp88/wheels/1d/56/11/4e061dde2dd75281f7929dd882935ef43b3116ba2e3522512a
+  Created wheel for tqdm: filename=tqdm-0.1.dev1+g9cf5a12b1-0.editable-py3-none-any.whl size=22548 sha256=5178025dce3ce549d266444a23a8fe61d98179ae4329cad79b5f6c4be417cb0f
+  Stored in directory: /tmp/pip-ephem-wheel-cache-9yk2dofy/wheels/1d/56/11/4e061dde2dd75281f7929dd882935ef43b3116ba2e3522512a
 Successfully built tqdm
 Installing collected packages: tqdm
 Successfully installed tqdm-0.1.dev1+g9cf5a12b1
@@ -34,7 +34,7 @@ Python 3.12 for tqdm: pyproject.toml allows Python >=3.8.
 Installed 1 package into .venv with Python 3.12. The full log is in Output > Project Setup.
 ========== pip install -e .: succeeded ==========
 ========== Running tqdm's tests with Pytest ==========
-> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''-r'\'' '\''.meta/requirements-test.txt'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/tqdm/.tabstudio/test-results/808df1b953bb49c6b76bb3a9e1adb11d/pytest.xml
+> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''-r'\'' '\''.meta/requirements-test.txt'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/tqdm/.tabstudio/test-results/cde6b8f3bd7842fdbf806859531aa5bf/pytest.xml
 Installing what the tests need
 ============================= test session starts ==============================
 platform linux -- Python 3.12.15, pytest-9.2.0, pluggy-1.7.0 -- /home/runner/work/_temp/real-repos/tqdm/.venv/bin/python
@@ -248,19 +248,19 @@ tests/tests_version.py:11: in <genexpr>
     _raise_malformed_node(node)
 /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ast.py:73: in _raise_malformed_node
     raise ValueError(msg + f': {node!r}')
-E   ValueError: malformed node or string on line 1: <ast.Name object at 0x7fd4ba9fe390>
-- generated xml file: /home/runner/work/_temp/real-repos/tqdm/.tabstudio/test-results/808df1b953bb49c6b76bb3a9e1adb11d/pytest.xml -
+E   ValueError: malformed node or string on line 1: <ast.Name object at 0x7ff56a3d68d0>
+- generated xml file: /home/runner/work/_temp/real-repos/tqdm/.tabstudio/test-results/cde6b8f3bd7842fdbf806859531aa5bf/pytest.xml -
 ============================== slowest durations ===============================
-10.23s call     tests/tests_perf.py::test_lock_args
-4.34s call     tests/tests_perf.py::test_manual_overhead_hard
-4.16s call     tests/tests_perf.py::test_iter_overhead_hard
-2.76s call     tests/tests_perf.py::test_iter_basic_overhead
-2.27s call     tests/tests_perf.py::test_manual_basic_overhead
+4.07s call     tests/tests_perf.py::test_lock_args
+2.10s call     tests/tests_perf.py::test_iter_basic_overhead
+1.93s call     tests/tests_perf.py::test_iter_overhead_hard
+1.89s call     tests/tests_perf.py::test_manual_overhead_hard
+1.71s call     tests/tests_perf.py::test_manual_basic_overhead
 0.91s call     tests/tests_asyncio.py::test_as_completed[0.1]
-0.46s call     tests/tests_perf.py::test_manual_overhead_simplebar_hard
-0.44s call     tests/tests_perf.py::test_iter_overhead_simplebar_hard
-0.27s call     tests/tests_tk.py::test_tk_import
-0.24s call     tests/tests_rlock.py::test_rlock_creation
+0.21s call     tests/tests_perf.py::test_manual_overhead_simplebar_hard
+0.20s call     tests/tests_perf.py::test_iter_overhead_simplebar_hard
+0.17s call     tests/tests_rlock.py::test_rlock_creation
+0.11s call     tests/tests_tk.py::test_tk_import
 
 (523 durations < 0.1s hidden.)
 =========================== short test summary info ============================
@@ -274,5 +274,5 @@ SKIPPED [1] tests/tests_keras.py:9: could not import 'tqdm.keras': No module nam
 SKIPPED [1] tests/tests_rich.py:8: could not import 'tqdm.rich': No module named 'rich'
 SKIPPED [1] tests/tests_rich.py:19: could not import 'tqdm.rich': No module named 'rich'
 SKIPPED [1] tests/tests_tqdm.py:1278: could not import 'numpy': No module named 'numpy'
-================== 1 failed, 168 passed, 10 skipped in 27.52s ==================
+================== 1 failed, 168 passed, 10 skipped in 14.04s ==================
 

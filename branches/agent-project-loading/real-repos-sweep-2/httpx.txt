@@ -2,8 +2,8 @@ httpx at b5addb64f0161ff6bfe94c124ef76f6a1fba5254
 Toolchain projects:
   python: /home/runner/work/_temp/real-repos/httpx/pyproject.toml
 Startup project: python /home/runner/work/_temp/real-repos/httpx/pyproject.toml
-Set up in 26.7 s
-Tests: 1416 passed, 1 failed, 1 skipped of 1569: 1418 tests run in 14.2 sec: 1416 passed, 1 failed, 1 skipped.
+Set up in 14.7 s
+Tests: 1416 passed, 1 failed, 1 skipped of 1569: 1418 tests run in 8.8 sec: 1416 passed, 1 failed, 1 skipped.
 Project setup:
 ------ httpx: pip install -r requirements.txt ------
 Reading which Python versions the 15 pinned packages have wheels for, from PyPI.
@@ -270,7 +270,7 @@ Building wheels for collected packages: httpx
   Building editable for httpx (pyproject.toml): started
   Building editable for httpx (pyproject.toml): finished with status 'done'
   Created wheel for httpx: filename=httpx-0.28.1-py3-none-any.whl size=4864 sha256=079b96eded1e4059a2e860e53f82eed04f69480aabbf403785187b68a8d83fc9
-  Stored in directory: /tmp/pip-ephem-wheel-cache-r5324nfe/wheels/4a/c1/9d/73e05d642a37d392d95b7088ebff5594bec63d6e6609bf2ff4
+  Stored in directory: /tmp/pip-ephem-wheel-cache-obrryb0t/wheels/4a/c1/9d/73e05d642a37d392d95b7088ebff5594bec63d6e6609bf2ff4
 Successfully built httpx
 Installing collected packages: sortedcontainers, paginate, brotli, zstandard, zipp, watchdog, urllib3, tzdata, typing_extensions, socksio, sniffio, ruff, rfc3986, pyyaml, pyproject_hooks, pygments, pycparser, pluggy, platformdirs, pathspec, packaging, nh3, mypy_extensions, more-itertools, mkdocs-material-extensions, mergedeep, mdurl, markupsafe, markdown, jeepney, jaraco.context, iniconfig, idna, hyperframe, hpack, h11, docutils, coverage, colorama, click, charset_normalizer, chardet, certifi, backrefs, babel, attrs, async-generator, uvicorn, requests, readme-renderer, pyyaml-env-tag, python-dateutil, pytest, pymdown-extensions, outcome, mypy, mkdocs-get-deps, mkautodoc, markdown-it-py, jinja2, jaraco.functools, jaraco.classes, importlib-metadata, id, httpcore, h2, cffi, build, anyio, trio, rich, requests-toolbelt, httpx, ghp-import, cryptography, trustme, trio-typing, SecretStorage, mkdocs, mkdocs-material, keyring, twine
 Successfully installed SecretStorage-3.5.0 anyio-4.16.0 async-generator-1.10 attrs-26.1.0 babel-2.18.0 backrefs-5.9 brotli-1.2.1 build-1.3.0 certifi-2026.10.23 cffi-2.1.1 chardet-5.2.0 charset_normalizer-3.5.2 click-8.2.1 colorama-0.4.6 coverage-7.10.6 cryptography-45.0.7 docutils-0.23 ghp-import-2.1.0 h11-0.16.0 h2-4.4.1 hpack-4.2.0 httpcore-1.0.9 httpx-0.28.1 hyperframe-6.1.0 id-1.6.1 idna-3.20 importlib-metadata-10.1.0 iniconfig-2.3.1 jaraco.classes-3.4.0 jaraco.context-6.1.2 jaraco.functools-4.6.0 jeepney-0.9.0 jinja2-3.1.6 keyring-25.7.0 markdown-3.11.2 markdown-it-py-4.2.0 markupsafe-3.0.4 mdurl-0.1.2 mergedeep-1.3.4 mkautodoc-0.2.0 mkdocs-1.6.1 mkdocs-get-deps-0.2.2 mkdocs-material-9.6.18 mkdocs-material-extensions-1.3.1 more-itertools-11.2.1 mypy-1.17.1 mypy_extensions-1.1.0 nh3-0.3.7 outcome-1.3.0.post0 packaging-26.3 paginate-0.5.7 pathspec-1.1.1 platformdirs-4.14.3 pluggy-1.7.0 pycparser-3.12 pygments-2.21.0 pymdown-extensions-10.21.3 pyproject_hooks-1.3.3 pytest-8.4.1 python-dateutil-4.0.0 pyyaml-6.0.3 pyyaml-env-tag-1.1 readme-renderer-46.0 requests-2.34.2 requests-toolbelt-1.0.0 rfc3986-2.0.0 rich-14.3.4 ruff-0.12.11 sniffio-1.3.1 socksio-1.0.0 sortedcontainers-2.4.0 trio-0.31.0 trio-typing-0.10.0 trustme-1.2.1 twine-6.1.0 typing_extensions-4.16.0 tzdata-2026.6 urllib3-2.8.0 uvicorn-0.35.0 watchdog-7.0.0 zipp-4.1.2 zstandard-0.25.0
@@ -283,7 +283,7 @@ Python 3.12 for httpx: pyproject.toml allows Python >=3.9.
 Installed 82 packages into .venv with Python 3.12. The full log is in Output > Project Setup.
 ========== pip install -r requirements.txt: succeeded ==========
 ========== Running httpx's tests with Pytest ==========
-> sh -c 'if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/httpx/.tabstudio/test-results/0803536ae4224735a39d0d08979675a6/pytest.xml
+> sh -c 'if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/httpx/.tabstudio/test-results/dad8e1a554d44c0481e069771b581f54/pytest.xml
 ============================= test session starts ==============================
 platform linux -- Python 3.12.15, pytest-8.4.1, pluggy-1.7.0
 rootdir: /home/runner/work/_temp/real-repos/httpx
@@ -339,7 +339,7 @@ tests/test_wsgi.py ............                                          [100%]
 =================================== FAILURES ===================================
 ___________________________ test_write_timeout[trio] ___________________________
 
-agen = <async_generator object ByteStream.__aiter__ at 0x7fa1b90c8700>
+agen = <async_generator object ByteStream.__aiter__ at 0x7f4b90228340>
 
     @_core.enable_ki_protection
     def finalizer(agen: AsyncGeneratorType[object, NoReturn]) -> None:
@@ -378,7 +378,7 @@ E           ResourceWarning: Async generator 'httpx._content.ByteStream.__aiter_
 The above exception was the direct cause of the following exception:
 
 cls = <class '_pytest.runner.CallInfo'>
-func = <function call_and_report.<locals>.<lambda> at 0x7fa1b8fe3ce0>
+func = <function call_and_report.<locals>.<lambda> at 0x7f4b9023ab60>
 when = 'call'
 reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
 
@@ -430,7 +430,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     raise errors[0]
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-config = <_pytest.config.Config object at 0x7fa1c0436750>
+config = <_pytest.config.Config object at 0x7f4b951964b0>
 
     def collect_unraisable(config: Config) -> None:
         pop_unraisable = config.stash[unraisable_exceptions].pop
@@ -453,15 +453,15 @@ config = <_pytest.config.Config object at 0x7fa1c0436750>
                 msg = meta.msg
                 try:
 >                   warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
-E                   pytest.PytestUnraisableExceptionWarning: Exception ignored in: <async_generator object ByteStream.__aiter__ at 0x7fa1b90c8700>
+E                   pytest.PytestUnraisableExceptionWarning: Exception ignored in: <async_generator object ByteStream.__aiter__ at 0x7f4b90228340>
 E                   Enable tracemalloc to get traceback where the object was allocated.
 E                   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
 .venv/lib/python3.12/site-packages/_pytest/unraisableexception.py:67: PytestUnraisableExceptionWarning
 ----------------------------- Captured stdout call -----------------------------
-INFO:     127.0.0.1:56912 - "PUT /slow_response HTTP/1.1" 200 OK
-- generated xml file: /home/runner/work/_temp/real-repos/httpx/.tabstudio/test-results/0803536ae4224735a39d0d08979675a6/pytest.xml -
+INFO:     127.0.0.1:44586 - "PUT /slow_response HTTP/1.1" 200 OK
+- generated xml file: /home/runner/work/_temp/real-repos/httpx/.tabstudio/test-results/dad8e1a554d44c0481e069771b581f54/pytest.xml -
 =========================== short test summary info ============================
 SKIPPED [1] tests/client/test_auth.py:273: netrc files without a password are valid from Python >= 3.11
-================== 1 failed, 1416 passed, 1 skipped in 12.62s ==================
+================== 1 failed, 1416 passed, 1 skipped in 7.87s ===================
 
