@@ -12,7 +12,7 @@ Compatibility Doctor:
   BlazorShared: Library via Built with its users - A library is compiled together with the projects that reference it.
   PublicApiIntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: Web
-Built in 18.9 s: 0 errors, 27 warnings
+Built in 15.9 s: 0 errors, 27 warnings
 Packages with analyzers or MSBuild files:
   ardalis.apiendpoints.codeanalyzers 4.0.0
       analyzers/dotnet/cs/Ardalis.ApiEndpoints.CodeAnalyzers.dll
@@ -1074,24 +1074,24 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.utility.netcoreapp10.dll
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
-Editor: 24 files opened and analyzed in 0.7 s, 0 errors only the editor shows, 0 only the build shows
+Editor: 24 files opened and analyzed in 0.9 s, 0 errors only the editor shows, 0 only the build shows
 Output:
-Build started at 02:19:55...
+Build started at 03:31:17...
 1>------ Build started: Project: BlazorShared, Configuration: Debug ------
-1>BlazorShared -> compiled in memory (13.5 KB, 9 ms)
+1>BlazorShared -> compiled in memory (13.5 KB, 36 ms)
 2>------ Build started: Project: ApplicationCore, Configuration: Debug ------
 2>EmptyBasketOnCheckoutException.cs(12,154): warning SYSLIB0051: 'Exception.Exception(SerializationInfo, StreamingContext)' is obsolete: 'This API supports obsolete formatter-based serialization. It should not be called or extended by application code.'
-2>ApplicationCore -> compiled in memory (33 KB, 48 ms)
+2>ApplicationCore -> compiled in memory (33 KB, 27 ms)
 3>------ Build started: Project: BlazorAdmin, Configuration: Debug ------
-3>BlazorAdmin -> compiled in memory (103 KB, 345 ms)
+3>BlazorAdmin -> compiled in memory (103 KB, 93 ms)
 4>------ Build started: Project: Infrastructure, Configuration: Debug ------
-4>Infrastructure -> compiled in memory (106.5 KB, 205 ms)
+4>Infrastructure -> compiled in memory (106.5 KB, 151 ms)
 5>------ Build started: Project: Web, Configuration: Debug ------
-5>Web -> compiled in memory (562.5 KB, 681 ms)
+5>Web -> compiled in memory (562.5 KB, 734 ms)
 6>------ Build started: Project: UnitTests, Configuration: Debug ------
-6>UnitTests -> compiled in memory (33.5 KB, 531 ms)
+6>UnitTests -> compiled in memory (33.5 KB, 809 ms)
 7>------ Build started: Project: IntegrationTests, Configuration: Debug ------
-7>IntegrationTests -> compiled in memory (11.5 KB, 472 ms)
+7>IntegrationTests -> compiled in memory (11.5 KB, 882 ms)
 8>------ Build started: Project: PublicApi, Configuration: Debug ------
 8>AuthenticateEndpoint.AuthenticateRequest.cs(5,19): warning CS8618: Non-nullable property 'Username' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 8>AuthenticateEndpoint.AuthenticateRequest.cs(6,19): warning CS8618: Non-nullable property 'Password' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
@@ -1116,10 +1116,10 @@ Build started at 02:19:55...
 8>UpdateCatalogItemEndpoint.UpdateCatalogItemResponse.cs(7,12): warning CS8618: Non-nullable property 'CatalogItem' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 8>UpdateCatalogItemEndpoint.UpdateCatalogItemResponse.cs(11,12): warning CS8618: Non-nullable property 'CatalogItem' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 8>CatalogTypeDto.cs(6,19): warning CS8618: Non-nullable property 'Name' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-8>PublicApi -> compiled in memory (52 KB, 263 ms)
+8>PublicApi -> compiled in memory (52 KB, 240 ms)
 9>------ Build started: Project: FunctionalTests, Configuration: Debug ------
-9>FunctionalTests -> compiled in memory (32.5 KB, 496 ms)
+9>FunctionalTests -> compiled in memory (32.5 KB, 823 ms)
 10>------ Build started: Project: PublicApiIntegrationTests, Configuration: Debug ------
-10>PublicApiIntegrationTests -> compiled in memory (21.5 KB, 434 ms)
+10>PublicApiIntegrationTests -> compiled in memory (21.5 KB, 642 ms)
 ========== Build: 10 succeeded, 0 failed ==========
 

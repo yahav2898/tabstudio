@@ -35,7 +35,7 @@ Compatibility Doctor:
   benchmarks: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
   benchmarks: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
 Startup project: AspNetCoreBlazor
-Built in 25.3 s: 0 errors, 4 warnings
+Built in 17.5 s: 0 errors, 4 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -1409,70 +1409,70 @@ Packages with analyzers or MSBuild files:
   xunit.v3.core.mtp-v1 3.2.0
       buildTransitive/xunit.v3.core.mtp-v1.props
       buildTransitive/xunit.v3.core.mtp-v1.targets
-Editor: 24 files opened and analyzed in 1.0 s, 0 errors only the editor shows, 0 only the build shows
+Editor: 24 files opened and analyzed in 1.1 s, 0 errors only the editor shows, 0 only the build shows
 Output:
-Build started at 02:23:27...
+Build started at 03:34:48...
 1>------ Build started: Project: Mediator.SourceGenerator, Configuration: Debug ------
 1>Versioning.cs(8,32): warning CS8602: Dereference of a possibly null reference.
-1>Mediator.SourceGenerator -> compiled in memory (280.5 KB, 163 ms)
+1>Mediator.SourceGenerator -> compiled in memory (280.5 KB, 171 ms)
 2>------ Build started: Project: Mediator, Configuration: Debug ------
-2>Mediator -> compiled in memory (34.5 KB, 34 ms)
+2>Mediator -> compiled in memory (34.5 KB, 64 ms)
 3>------ Build started: Project: Mediator.Benchmarks.ColdStart, Configuration: Debug ------
-3>Mediator.Benchmarks.ColdStart -> compiled in memory (45.5 KB, 249 ms)
+3>Mediator.Benchmarks.ColdStart -> compiled in memory (45.5 KB, 315 ms)
 4>------ Build started: Project: Mediator.Benchmarks, Configuration: Debug ------
-4>Mediator.Benchmarks -> compiled in memory (187.5 KB, 384 ms)
+4>Mediator.Benchmarks -> compiled in memory (187.5 KB, 410 ms)
 5>------ Build started: Project: Showcase, Configuration: Debug ------
-5>Showcase -> compiled in memory (73 KB, 380 ms)
+5>Showcase -> compiled in memory (73 KB, 263 ms)
 6>------ Build started: Project: ASPNET_Core, Configuration: Debug ------
-6>ASPNET_Core -> compiled in memory (86 KB, 382 ms)
+6>ASPNET_Core -> compiled in memory (86 KB, 402 ms)
 7>------ Build started: Project: AspNetCoreBlazor.Client, Configuration: Debug ------
-7>AspNetCoreBlazor.Client -> compiled in memory (53 KB, 240 ms)
+7>AspNetCoreBlazor.Client -> compiled in memory (53 KB, 213 ms)
 8>------ Build started: Project: AspNetCoreBlazor, Configuration: Debug ------
-8>AspNetCoreBlazor -> compiled in memory (86.5 KB, 374 ms)
+8>AspNetCoreBlazor -> compiled in memory (86.5 KB, 231 ms)
 9>------ Build started: Project: AspNetCoreSample.Domain, Configuration: Debug ------
-9>AspNetCoreSample.Domain -> compiled in memory (5 KB, 5 ms)
+9>AspNetCoreSample.Domain -> compiled in memory (5 KB, 4 ms)
 10>------ Build started: Project: AspNetCoreSample.Application, Configuration: Debug ------
-10>AspNetCoreSample.Application -> compiled in memory (69.5 KB, 269 ms)
+10>AspNetCoreSample.Application -> compiled in memory (69.5 KB, 242 ms)
 11>------ Build started: Project: AspNetCoreSample.Infrastructure, Configuration: Debug ------
-11>AspNetCoreSample.Infrastructure -> compiled in memory (4.5 KB, 253 ms)
+11>AspNetCoreSample.Infrastructure -> compiled in memory (4.5 KB, 256 ms)
 12>------ Build started: Project: AspNetCoreSample.Api, Configuration: Debug ------
-12>AspNetCoreSample.Api -> compiled in memory (32.5 KB, 455 ms)
+12>AspNetCoreSample.Api -> compiled in memory (32.5 KB, 395 ms)
 13>------ Build started: Project: AspNetCoreIndirect.BaseClasses, Configuration: Debug ------
-13>AspNetCoreIndirect.BaseClasses -> compiled in memory (7.5 KB, 28 ms)
+13>AspNetCoreIndirect.BaseClasses -> compiled in memory (7.5 KB, 45 ms)
 14>------ Build started: Project: AspNetCoreIndirect.Implementations, Configuration: Debug ------
-14>AspNetCoreIndirect.Implementations -> compiled in memory (7 KB, 41 ms)
+14>AspNetCoreIndirect.Implementations -> compiled in memory (7 KB, 29 ms)
 15>------ Build started: Project: AspNetCoreIndirect.Application, Configuration: Debug ------
-15>AspNetCoreIndirect.Application -> compiled in memory (82.5 KB, 374 ms)
+15>AspNetCoreIndirect.Application -> compiled in memory (83 KB, 289 ms)
 16>------ Build started: Project: InternalMessages.Domain, Configuration: Debug ------
-16>InternalMessages.Domain -> compiled in memory (6 KB, 33 ms)
+16>InternalMessages.Domain -> compiled in memory (6 KB, 25 ms)
 17>------ Build started: Project: InternalMessages.Application, Configuration: Debug ------
-17>InternalMessages.Application -> compiled in memory (4.5 KB, 42 ms)
+17>InternalMessages.Application -> compiled in memory (4.5 KB, 53 ms)
 18>------ Build started: Project: InternalMessages.Api, Configuration: Debug ------
-18>InternalMessages.Api -> compiled in memory (83.5 KB, 432 ms)
+18>InternalMessages.Api -> compiled in memory (83.5 KB, 321 ms)
 19>------ Build started: Project: Console, Configuration: Debug ------
-19>Console -> compiled in memory (53 KB, 283 ms)
+19>Console -> compiled in memory (53 KB, 226 ms)
 20>------ Build started: Project: ConsoleAOT, Configuration: Debug ------
-20>ConsoleAOT -> compiled in memory (53.5 KB, 267 ms)
+20>ConsoleAOT -> compiled in memory (53.5 KB, 212 ms)
 21>------ Build started: Project: NotificationPublisher, Configuration: Debug ------
-21>NotificationPublisher -> compiled in memory (51 KB, 275 ms)
+21>NotificationPublisher -> compiled in memory (51 KB, 211 ms)
 22>------ Build started: Project: Notifications, Configuration: Debug ------
-22>Notifications -> compiled in memory (49.5 KB, 317 ms)
+22>Notifications -> compiled in memory (49.5 KB, 249 ms)
 23>------ Build started: Project: Streaming, Configuration: Debug ------
-23>Streaming -> compiled in memory (52 KB, 272 ms)
+23>Streaming -> compiled in memory (52 KB, 202 ms)
 24>------ Build started: Project: Autofac_DI, Configuration: Debug ------
-24>Autofac_DI -> compiled in memory (71 KB, 334 ms)
+24>Autofac_DI -> compiled in memory (71 KB, 241 ms)
 25>------ Build started: Project: MassTransitIntegration, Configuration: Debug ------
-25>MassTransitIntegration -> compiled in memory (71 KB, 368 ms)
+25>MassTransitIntegration -> compiled in memory (71 KB, 254 ms)
 26>------ Build started: Project: RequestScopedState, Configuration: Debug ------
-26>RequestScopedState -> compiled in memory (76.5 KB, 312 ms)
+26>RequestScopedState -> compiled in memory (76.5 KB, 329 ms)
 27>------ Build started: Project: Mediator.MemAllocationTests, Configuration: Debug ------
-27>Mediator.MemAllocationTests -> compiled in memory (51.5 KB, 289 ms)
+27>Mediator.MemAllocationTests -> compiled in memory (51.5 KB, 249 ms)
 28>------ Build started: Project: Mediator.SmokeTestConsole, Configuration: Debug ------
-28>Mediator.SmokeTestConsole -> compiled in memory (60 KB, 358 ms)
+28>Mediator.SmokeTestConsole -> compiled in memory (60 KB, 226 ms)
 29>------ Build started: Project: Mediator.SourceGenerator.Tests, Configuration: Debug ------
-29>Mediator.SourceGenerator.Tests -> compiled in memory (248.5 KB, 396 ms)
+29>Mediator.SourceGenerator.Tests -> compiled in memory (248.5 KB, 341 ms)
 30>------ Build started: Project: Mediator.Telemetry.Tests, Configuration: Debug ------
-30>Mediator.Telemetry.Tests -> compiled in memory (106.5 KB, 380 ms)
+30>Mediator.Telemetry.Tests -> compiled in memory (107 KB, 345 ms)
 31>------ Build started: Project: Mediator.Tests, Configuration: Debug ------
 31>Mediator.Tests -> compiled in memory (418 KB, 538 ms)
 ========== Build: 31 succeeded, 0 failed ==========

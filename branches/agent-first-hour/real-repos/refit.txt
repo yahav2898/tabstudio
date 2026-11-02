@@ -1,5 +1,5 @@
 refit at 92ae878250798dc103a01304704a99bb8033ed77
-Opened /home/runner/work/_temp/real-repos/refit/src/Refit.slnx in 1.1 s
+Opened /home/runner/work/_temp/real-repos/refit/src/Refit.slnx in 1.6 s
 Compatibility Doctor:
   index: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   advanced-index: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
@@ -88,7 +88,7 @@ Compatibility Doctor:
   Refit.Xml: Library via Built with its users - A library is compiled together with the projects that reference it.
   Refit: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: RestApiForTest
-Built in 56.3 s: 25 errors, 4 warnings
+Built in 56.7 s: 25 errors, 4 warnings
   25 x CS0103
       [InterfaceStubGenerator.Roslyn48] InlineRequestClassification.cs(90,44): error CS0103: The name 'with' does not exist in the current context
       [InterfaceStubGenerator.Roslyn48] InlineRequestClassification.cs(90,84): error CS0103: The name 'with' does not exist in the current context
@@ -817,21 +817,21 @@ Packages with analyzers or MSBuild files:
   xunit.v3.core.mtp-v2 4.0.2
       buildTransitive/xunit.v3.core.mtp-v2.props
       buildTransitive/xunit.v3.core.mtp-v2.targets
-Editor: 24 files opened and analyzed in 1.0 s, 0 errors only the editor shows, 0 only the build shows
+Editor: 24 files opened and analyzed in 1.2 s, 0 errors only the editor shows, 0 only the build shows
 Output:
-Build started at 02:22:37...
+Build started at 03:34:03...
 1>------ Build started: Project: Refit, Configuration: Debug ------
-1>Refit -> compiled in memory (267 KB, 450 ms)
+1>Refit -> compiled in memory (267 KB, 577 ms)
 2>------ Build started: Project: Refit.HttpClientFactory, Configuration: Debug ------
-2>Refit.HttpClientFactory -> compiled in memory (34.5 KB, 246 ms)
+2>Refit.HttpClientFactory -> compiled in memory (34.5 KB, 281 ms)
 3>------ Build started: Project: Refit.Reflection, Configuration: Debug ------
 3>RequestBuilderImplementation.QueryAndHeaders.cs(482,37): error CS0103: The name 'with' does not exist in the current context
 4>------ Build started: Project: Refit.Testing, Configuration: Debug ------
-4>Refit.Testing -> compiled in memory (58.5 KB, 276 ms)
+4>Refit.Testing -> compiled in memory (58.5 KB, 254 ms)
 5>------ Build started: Project: Refit.Newtonsoft.Json, Configuration: Debug ------
-5>Refit.Newtonsoft.Json -> compiled in memory (9 KB, 219 ms)
+5>Refit.Newtonsoft.Json -> compiled in memory (9 KB, 236 ms)
 6>------ Build started: Project: Refit.Xml, Configuration: Debug ------
-6>Refit.Xml -> compiled in memory (11.5 KB, 232 ms)
+6>Refit.Xml -> compiled in memory (11.5 KB, 274 ms)
 7>------ Build started: Project: InterfaceStubGenerator.Roslyn48, Configuration: Debug ------
 7>InlineRequestClassification.cs(90,44): error CS0103: The name 'with' does not exist in the current context
 7>InlineRequestClassification.cs(90,84): error CS0103: The name 'with' does not exist in the current context
@@ -871,113 +871,170 @@ Build started at 02:22:37...
 8>RequestParameterKindParsing.cs(690,31): error CS0103: The name 'with' does not exist in the current context
 8>RequestParameterParsing.cs(622,23): error CS0103: The name 'with' does not exist in the current context
 9>------ Build started: Project: index, Configuration: Debug ------
+9>index was not compiled because Refit.Reflection, which it references, has errors.
 10>------ Build started: Project: advanced-index, Configuration: Debug ------
+10>advanced-index was not compiled because Refit.Reflection, which it references, has errors.
 11>------ Build started: Project: advanced-method-metadata, Configuration: Debug ------
+11>advanced-method-metadata was not compiled because Refit.Reflection, which it references, has errors.
 12>------ Build started: Project: advanced-query-builder, Configuration: Debug ------
+12>advanced-query-builder was not compiled because Refit.Reflection, which it references, has errors.
 13>------ Build started: Project: advanced-request-helpers, Configuration: Debug ------
+13>advanced-request-helpers was not compiled because Refit.Reflection, which it references, has errors.
 14>------ Build started: Project: clients-creation, Configuration: Debug ------
+14>clients-creation was not compiled because Refit.Reflection, which it references, has errors.
 15>------ Build started: Project: clients-index, Configuration: Debug ------
+15>clients-index was not compiled because Refit.Reflection, which it references, has errors.
 16>------ Build started: Project: clients-dependency-injection, Configuration: Debug ------
+16>clients-dependency-injection was not compiled because Refit.Reflection, which it references, has errors.
 17>------ Build started: Project: clients-request-builders, Configuration: Debug ------
+17>clients-request-builders was not compiled because Refit.Reflection, which it references, has errors.
 18>------ Build started: Project: clients-settings, Configuration: Debug ------
+18>clients-settings was not compiled because Refit.Reflection, which it references, has errors.
 19>------ Build started: Project: clients-resilience, Configuration: Debug ------
+19>clients-resilience was not compiled because Refit.Reflection, which it references, has errors.
 20>------ Build started: Project: clients-telemetry, Configuration: Debug ------
+20>clients-telemetry was not compiled because Refit.Reflection, which it references, has errors.
 21>------ Build started: Project: requests-bodies, Configuration: Debug ------
+21>requests-bodies was not compiled because Refit.Reflection, which it references, has errors.
 22>------ Build started: Project: requests-index, Configuration: Debug ------
+22>requests-index was not compiled because Refit.Reflection, which it references, has errors.
 23>------ Build started: Project: requests-headers, Configuration: Debug ------
+23>requests-headers was not compiled because Refit.Reflection, which it references, has errors.
 24>------ Build started: Project: requests-multipart, Configuration: Debug ------
+24>requests-multipart was not compiled because Refit.Reflection, which it references, has errors.
 25>------ Build started: Project: requests-queries, Configuration: Debug ------
+25>requests-queries was not compiled because Refit.Reflection, which it references, has errors.
 26>------ Build started: Project: requests-query-converters, Configuration: Debug ------
+26>requests-query-converters was not compiled because Refit.Reflection, which it references, has errors.
 27>------ Build started: Project: requests-query-formatters, Configuration: Debug ------
+27>requests-query-formatters was not compiled because Refit.Reflection, which it references, has errors.
 28>------ Build started: Project: requests-request-context, Configuration: Debug ------
+28>requests-request-context was not compiled because Refit.Reflection, which it references, has errors.
 29>------ Build started: Project: requests-routes, Configuration: Debug ------
+29>requests-routes was not compiled because Refit.Reflection, which it references, has errors.
 30>------ Build started: Project: results-adapters, Configuration: Debug ------
+30>results-adapters was not compiled because Refit.Reflection, which it references, has errors.
 31>------ Build started: Project: results-index, Configuration: Debug ------
+31>results-index was not compiled because Refit.Reflection, which it references, has errors.
 32>------ Build started: Project: results-paging, Configuration: Debug ------
+32>results-paging was not compiled because Refit.Reflection, which it references, has errors.
 33>------ Build started: Project: results-errors, Configuration: Debug ------
+33>results-errors was not compiled because Refit.Reflection, which it references, has errors.
 34>------ Build started: Project: results-responses, Configuration: Debug ------
+34>results-responses was not compiled because Refit.Reflection, which it references, has errors.
 35>------ Build started: Project: results-return-types, Configuration: Debug ------
+35>results-return-types was not compiled because Refit.Reflection, which it references, has errors.
 36>------ Build started: Project: results-streaming, Configuration: Debug ------
+36>results-streaming was not compiled because Refit.Reflection, which it references, has errors.
 37>------ Build started: Project: serialization-content, Configuration: Debug ------
+37>serialization-content was not compiled because Refit.Reflection, which it references, has errors.
 38>------ Build started: Project: serialization-index, Configuration: Debug ------
+38>serialization-index was not compiled because Refit.Reflection, which it references, has errors.
 39>------ Build started: Project: serialization-json, Configuration: Debug ------
+39>serialization-json was not compiled because Refit.Reflection, which it references, has errors.
 40>------ Build started: Project: serialization-newtonsoft-json, Configuration: Debug ------
+40>serialization-newtonsoft-json was not compiled because Refit.Reflection, which it references, has errors.
 41>------ Build started: Project: serialization-xml, Configuration: Debug ------
+41>serialization-xml was not compiled because Refit.Reflection, which it references, has errors.
 42>------ Build started: Project: testing-faults, Configuration: Debug ------
+42>testing-faults was not compiled because Refit.Reflection, which it references, has errors.
 43>------ Build started: Project: testing-index, Configuration: Debug ------
+43>testing-index was not compiled because Refit.Reflection, which it references, has errors.
 44>------ Build started: Project: testing-replies, Configuration: Debug ------
+44>testing-replies was not compiled because Refit.Reflection, which it references, has errors.
 45>------ Build started: Project: testing-response-stubs, Configuration: Debug ------
+45>testing-response-stubs was not compiled because Refit.Reflection, which it references, has errors.
 46>------ Build started: Project: testing-routes, Configuration: Debug ------
+46>testing-routes was not compiled because Refit.Reflection, which it references, has errors.
 47>------ Build started: Project: testing-streaming, Configuration: Debug ------
+47>testing-streaming was not compiled because Refit.Reflection, which it references, has errors.
 48>------ Build started: Project: testing-verification, Configuration: Debug ------
+48>testing-verification was not compiled because Refit.Reflection, which it references, has errors.
 49>------ Build started: Project: why-refit, Configuration: Debug ------
+49>why-refit was not compiled because Refit.Reflection, which it references, has errors.
 50>------ Build started: Project: aot, Configuration: Debug ------
+50>aot was not compiled because Refit.Reflection, which it references, has errors.
 51>------ Build started: Project: NativeClient, Configuration: Debug ------
 51>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-51>NativeClient -> compiled in memory (424 KB, 736 ms)
+51>NativeClient -> compiled in memory (424.5 KB, 722 ms)
 52>------ Build started: Project: Reflection, Configuration: Debug ------
+52>Reflection was not compiled because Refit.Reflection, which it references, has errors.
 53>------ Build started: Project: Other, Configuration: Debug ------
-53>Other -> compiled in memory (16 KB, 246 ms)
+53>Other -> compiled in memory (16 KB, 257 ms)
 54>------ Build started: Project: Refit.CodeFixes.Roslyn48, Configuration: Debug ------
-54>Refit.CodeFixes.Roslyn48 -> compiled in memory (11.5 KB, 40 ms)
+54>Refit.CodeFixes.Roslyn48 -> compiled in memory (11.5 KB, 23 ms)
 55>------ Build started: Project: Tooling, Configuration: Debug ------
+55>Tooling was not compiled because InterfaceStubGenerator.Roslyn48, which it references, has errors.
 56>------ Build started: Project: RuntimeHelpers, Configuration: Debug ------
 56>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-56>RuntimeHelpers -> compiled in memory (64.5 KB, 279 ms)
+56>RuntimeHelpers -> compiled in memory (64.5 KB, 269 ms)
 57>------ Build started: Project: Content, Configuration: Debug ------
 57>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-57>Content -> compiled in memory (42 KB, 310 ms)
+57>Content -> compiled in memory (42 KB, 432 ms)
 58>------ Build started: Project: Multipart, Configuration: Debug ------
 58>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-58>Multipart -> compiled in memory (38.5 KB, 368 ms)
+58>Multipart -> compiled in memory (38.5 KB, 299 ms)
 59>------ Build started: Project: Legacy, Configuration: Debug ------
+59>Legacy was not compiled because Refit.Reflection, which it references, has errors.
 60>------ Build started: Project: XUnitTests, Configuration: Debug ------
 60>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-60>XUnitTests -> compiled in memory (30 KB, 315 ms)
+60>XUnitTests -> compiled in memory (30 KB, 291 ms)
 61>------ Build started: Project: NUnitTests, Configuration: Debug ------
 61>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-61>NUnitTests -> compiled in memory (30.5 KB, 306 ms)
+61>NUnitTests -> compiled in memory (30.5 KB, 298 ms)
 62>------ Build started: Project: MSTestTests, Configuration: Debug ------
 62>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-62>MSTestTests -> compiled in memory (31 KB, 307 ms)
+62>MSTestTests -> compiled in memory (31 KB, 321 ms)
 63>------ Build started: Project: TUnitTests, Configuration: Debug ------
 63>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-63>TUnitTests -> compiled in memory (47.5 KB, 480 ms)
+63>TUnitTests -> compiled in memory (47.5 KB, 507 ms)
 64>------ Build started: Project: BlazorWasmSample, Configuration: Debug ------
 64>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-64>BlazorWasmSample -> compiled in memory (20 KB, 305 ms)
+64>BlazorWasmSample -> compiled in memory (20 KB, 296 ms)
 65>------ Build started: Project: Meow.Common, Configuration: Debug ------
 65>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-65>Meow.Common -> compiled in memory (24.5 KB, 270 ms)
+65>Meow.Common -> compiled in memory (24.5 KB, 278 ms)
 66>------ Build started: Project: Meow, Configuration: Debug ------
-66>Meow -> compiled in memory (5.5 KB, 241 ms)
+66>Meow -> compiled in memory (5.5 KB, 341 ms)
 67>------ Build started: Project: LibraryWithSDKandRefitService, Configuration: Debug ------
 67>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-67>LibraryWithSDKandRefitService -> compiled in memory (3.5 KB, 217 ms)
+67>LibraryWithSDKandRefitService -> compiled in memory (3.5 KB, 302 ms)
 68>------ Build started: Project: ConsoleSampleUsingLocalApi, Configuration: Debug ------
-68>ConsoleSampleUsingLocalApi -> compiled in memory (6.5 KB, 338 ms)
+68>ConsoleSampleUsingLocalApi -> compiled in memory (6.5 KB, 233 ms)
 69>------ Build started: Project: RestApiForTest, Configuration: Debug ------
-69>RestApiForTest -> compiled in memory (6.5 KB, 313 ms)
+69>RestApiForTest -> compiled in memory (6.5 KB, 231 ms)
 70>------ Build started: Project: Refit.Benchmarks, Configuration: Debug ------
+70>Refit.Benchmarks was not compiled because Refit.Reflection, which it references, has errors.
 71>------ Build started: Project: Refit.Generator.Benchmarks, Configuration: Debug ------
+71>Refit.Generator.Benchmarks was not compiled because InterfaceStubGenerator.Roslyn48, which it references, has errors.
 72>------ Build started: Project: Refit.Reflection.Benchmarks, Configuration: Debug ------
+72>Refit.Reflection.Benchmarks was not compiled because Refit.Reflection, which it references, has errors.
 73>------ Build started: Project: Refit.Analyzers.Tests, Configuration: Debug ------
+73>Refit.Analyzers.Tests was not compiled because Refit.Analyzers.Roslyn48, which it references, has errors.
 74>------ Build started: Project: Refit.Analyzers.Internals.Tests, Configuration: Debug ------
+74>Refit.Analyzers.Internals.Tests was not compiled because Refit.Analyzers.Roslyn48, which it references, has errors.
 75>------ Build started: Project: Refit.CodeFixes.Tests, Configuration: Debug ------
+75>Refit.CodeFixes.Tests was not compiled because Refit.Analyzers.Roslyn48, which it references, has errors.
 76>------ Build started: Project: Refit.GeneratedCode.TestModels, Configuration: Debug ------
 76>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-76>Refit.GeneratedCode.TestModels -> compiled in memory (7 KB, 213 ms)
+76>Refit.GeneratedCode.TestModels -> compiled in memory (7 KB, 212 ms)
 77>------ Build started: Project: Refit.GeneratorTests, Configuration: Debug ------
+77>Refit.GeneratorTests was not compiled because InterfaceStubGenerator.Roslyn48, which it references, has errors.
 78>------ Build started: Project: Refit.HttpClientFactory.Tests, Configuration: Debug ------
-78>Refit.HttpClientFactory.Tests -> compiled in memory (17 KB, 274 ms)
+78>Refit.HttpClientFactory.Tests -> compiled in memory (17 KB, 388 ms)
 79>------ Build started: Project: Refit.MockInterop.Tests, Configuration: Debug ------
+79>Refit.MockInterop.Tests was not compiled because Refit.Reflection, which it references, has errors.
 80>------ Build started: Project: Refit.Newtonsoft.Json.Tests, Configuration: Debug ------
+80>Refit.Newtonsoft.Json.Tests was not compiled because Refit.Reflection, which it references, has errors.
 81>------ Build started: Project: Refit.Reflection.Tests, Configuration: Debug ------
+81>Refit.Reflection.Tests was not compiled because Refit.Reflection, which it references, has errors.
 82>------ Build started: Project: Refit.Testing.Tests, Configuration: Debug ------
+82>Refit.Testing.Tests was not compiled because Refit.Reflection, which it references, has errors.
 83>------ Build started: Project: Refit.Tests, Configuration: Debug ------
+83>Refit.Tests was not compiled because Refit.Reflection, which it references, has errors.
 84>------ Build started: Project: Refit.NetFrameworkSmoke, Configuration: Debug ------
 84>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-84>Refit.NetFrameworkSmoke -> compiled in memory (14 KB, 216 ms)
+84>Refit.NetFrameworkSmoke -> compiled in memory (14 KB, 215 ms)
 85>------ Skipped: Project: Compression: it targets net11.0, which only the .NET 11 SDK builds; TabStudio compiles with .NET 10 ------
 86>------ Skipped: Project: Refit.NativeAotSmoke: it targets net11.0, which only the .NET 11 SDK builds; TabStudio compiles with .NET 10 ------
 ========== Build: 24 succeeded, 60 failed, 2 skipped ==========

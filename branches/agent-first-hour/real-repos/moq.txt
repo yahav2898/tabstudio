@@ -1,5 +1,5 @@
 moq at bdf16e758e8022c40cef2bfd025181f845bbd2a9
-Opened /home/runner/work/_temp/real-repos/moq/Moq.slnx in 0.2 s
+Opened /home/runner/work/_temp/real-repos/moq/Moq.slnx in 0.3 s
 Compatibility Doctor:
   Moq.CodeAnalysis.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   Moq.CodeAnalysis: Library via Built with its users - A library is compiled together with the projects that reference it.
@@ -14,7 +14,7 @@ Compatibility Doctor:
   Moq.Vsix: Library via Built with its users - A library is compiled together with the projects that reference it.
   Moq: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: none
-Built in 10.4 s: 16 errors, 41 warnings
+Built in 6.7 s: 16 errors, 41 warnings
   8 x CS0117
       [Moq.Sdk] CallContext.cs(99,73): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'UnexpectedNullContextState'
       [Moq.Sdk] DefaultMockRuntime.cs(88,82): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'DuplicateContextBehavior'
@@ -1345,13 +1345,11 @@ Packages with analyzers or MSBuild files:
       build/uap10.0.16299/xunit.runner.visualstudio.targets
       build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.dll
       build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.pri
-Editor: 24 files opened and analyzed in 1.6 s, 2 errors only the editor shows, 0 only the build shows
-  editor only: CustomDelegateCodeFix.cs(162,66): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'CustomDelegateCodeFix'
-  editor only: CustomDelegateCompletion.cs(25,112): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'CustomDelegateCompletion'
+Editor: 6 files opened and analyzed in 0.4 s, 0 errors only the editor shows, 0 only the build shows
 Output:
-Build started at 02:31:24...
+Build started at 03:42:39...
 1>------ Build started: Project: Moq.CodeAnalysis, Configuration: Debug ------
-1>Moq.CodeAnalysis -> compiled in memory (41.5 KB, 180 ms)
+1>Moq.CodeAnalysis -> compiled in memory (41.5 KB, 204 ms)
 2>------ Build started: Project: Moq.Sdk, Configuration: Debug ------
 2>AnyMatcher.cs(59,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
 2>AnyMatcher`1.cs(55,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
@@ -1396,14 +1394,24 @@ Build started at 02:31:24...
 2>ValueMatcher.cs(56,21): warning CS8767: Nullability of reference types in type of parameter 'other' of 'bool ValueMatcher.Equals(ValueMatcher other)' doesn't match implicitly implemented member 'bool IEquatable<ValueMatcher>.Equals(ValueMatcher? other)' (possibly because of nullability attributes).
 2>ValueMatcher.cs(59,30): warning CS8765: Nullability of type of parameter 'obj' doesn't match overridden member (possibly because of nullability attributes).
 3>------ Build started: Project: Moq.DynamicProxy, Configuration: Debug ------
+3>Moq.DynamicProxy was not compiled because Moq.Sdk, which it references, has errors.
 4>------ Build started: Project: Moq, Configuration: Debug ------
+4>Moq was not compiled because Moq.Sdk, which it references, has errors.
 5>------ Build started: Project: Moq.CodeAnalysis.UnitTests, Configuration: Debug ------
+5>Moq.CodeAnalysis.UnitTests was not compiled because Moq.Sdk, which it references, has errors.
 6>------ Build started: Project: Moq.CodeFixes, Configuration: Debug ------
+6>Moq.CodeFixes was not compiled because Moq.Sdk, which it references, has errors.
 7>------ Build started: Project: Moq.CodeFixes.UnitTests, Configuration: Debug ------
+7>Moq.CodeFixes.UnitTests was not compiled because Moq.Sdk, which it references, has errors.
 8>------ Build started: Project: Moq.Sdk.Tests, Configuration: Debug ------
+8>Moq.Sdk.Tests was not compiled because Moq.Sdk, which it references, has errors.
 9>------ Build started: Project: Moq.StaticProxy, Configuration: Debug ------
+9>Moq.StaticProxy was not compiled because Moq.Sdk, which it references, has errors.
 10>------ Build started: Project: Moq.StaticProxy.UnitTests, Configuration: Debug ------
+10>Moq.StaticProxy.UnitTests was not compiled because Moq.Sdk, which it references, has errors.
 11>------ Build started: Project: Moq.Tests, Configuration: Debug ------
+11>Moq.Tests was not compiled because Moq.Sdk, which it references, has errors.
 12>------ Build started: Project: Moq.Vsix, Configuration: Debug ------
+12>Moq.Vsix was not compiled because Moq.Sdk, which it references, has errors.
 ========== Build: 1 succeeded, 11 failed ==========
 
