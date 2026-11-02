@@ -43,7 +43,7 @@ public static class WorkspaceLoader
         {
             if (SolutionParser.IsSolutionFile(fullPath))
             {
-                return LoadSolution(SolutionParser.Load(fullPath), options);
+                return LoadSolutionOrItsFolder(fullPath, options);
             }
 
             if (ProjectParser.IsProjectFile(fullPath))
@@ -62,7 +62,7 @@ public static class WorkspaceLoader
         var solution = FindSolution(fullPath) ?? FindNestedSolution(fullPath);
         if (solution is not null)
         {
-            return LoadSolution(SolutionParser.Load(solution), options);
+            return LoadSolutionOrItsFolder(solution, options);
         }
 
         var projects = FindProjects(fullPath, options.ProjectSearchDepth);
@@ -174,6 +174,42 @@ public static class WorkspaceLoader
         {
             return 0;
         }
+    }
+
+    /// <summary>
+    /// Loads a solution; one that cannot be read, such as a <c>.slnx</c> left half-written or with merge conflict markers,
+    /// opens as its folder instead, with the projects in it and the solution file in the tree, so it can be fixed in the
+    /// editor. Before 0.21.2 the open failed, and a downloaded repository with such a solution could not be opened at all.
+    /// </summary>
+    private static Workspace LoadSolutionOrItsFolder(string solutionPath, WorkspaceLoaderOptions options)
+    {
+        SolutionInfo solution;
+        try
+        {
+            solution = SolutionParser.Load(solutionPath);
+        }
+        catch (ProjectLoadException ex)
+        {
+            var directory = Path.GetDirectoryName(solutionPath)!;
+            var name = new DirectoryInfo(directory).Name;
+            var projects = FindProjects(directory, options.ProjectSearchDepth);
+            var loaded = projects.Count > 0 ? LoadProjects(name, directory, projects, options) : LoadFolder(name, directory, options);
+            if (projects.Count > 0)
+            {
+                loaded.Tree.Add(new WorkspaceNode(WorkspaceNodeKind.File, Path.GetFileName(solutionPath), solutionPath));
+            }
+
+            return new Workspace
+            {
+                Name = loaded.Name,
+                RootDirectory = loaded.RootDirectory,
+                Projects = loaded.Projects,
+                Tree = loaded.Tree,
+                LoadErrors = [$"{ex.Message} The folder was opened instead: fix {Path.GetFileName(solutionPath)} and open it again.", .. loaded.LoadErrors],
+            };
+        }
+
+        return LoadSolution(solution, options);
     }
 
     private static Workspace LoadSolution(SolutionInfo solution, WorkspaceLoaderOptions options)

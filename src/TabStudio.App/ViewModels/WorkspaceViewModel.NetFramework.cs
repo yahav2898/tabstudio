@@ -22,6 +22,12 @@ public sealed partial class WorkspaceViewModel
 
     private readonly HashSet<string> _netFrameworkDiagnostics = new(StringComparer.Ordinal);
 
+    /// <summary>The Error List key of the problems found while the workspace loaded.</summary>
+    private const string LoadErrorsKey = "|workspace-load";
+
+    /// <summary>The Error List code of a solution or project file TabStudio could not read.</summary>
+    internal const string LoadErrorId = "TS1101";
+
     /// <summary>The .NET Framework program that needs Windows whose file is in the editor, for the editor's banner.</summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasNetFrameworkBanner), nameof(NetFrameworkBannerText))]
@@ -40,6 +46,7 @@ public sealed partial class WorkspaceViewModel
     /// </summary>
     private void ShowNetFrameworkDiagnostics(Workspace workspace)
     {
+        ShowLoadErrors(workspace);
         foreach (var key in _netFrameworkDiagnostics)
         {
             ErrorList.SetRestoreDiagnostics(key, []);
@@ -170,6 +177,20 @@ public sealed partial class WorkspaceViewModel
         if (Workspace is { } workspace)
         {
             StartPackageRestore(workspace);
+        }
+    }
+
+    /// <summary>
+    /// Puts what could not be read while the workspace loaded, such as a project file that is not valid XML, in the Error
+    /// List and the Output, as Visual Studio does: before 0.21.2 such a project was shown as an unknown project with no
+    /// word of why.
+    /// </summary>
+    private void ShowLoadErrors(Workspace workspace)
+    {
+        ErrorList.SetRestoreDiagnostics(LoadErrorsKey, [.. workspace.LoadErrors.Select(e => new BuildDiagnostic(LoadErrorId, DiagnosticSeverityLevel.Error, e, null))]);
+        foreach (var error in workspace.LoadErrors)
+        {
+            Output.WriteLine(error);
         }
     }
 }

@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
+using TabStudio.Core.Workspaces;
 
 namespace TabStudio.App.ViewModels;
 
@@ -254,7 +255,7 @@ public sealed partial class StartViewModel : ObservableObject, IDisposable
             var progress = new Progress<ImportProgress>(p => ProgressText = Describe(p));
             ProgressText = $"Connecting to GitHub";
             var folder = await _gitHub.ImportAsync(repository, progress, token);
-            await ShowPreviewAsync(folder, repository.ToString(), token);
+            await ShowPreviewAsync(folder, repository.ToString(), _gitHub.LastNotes, token);
         });
     }
 
@@ -274,7 +275,7 @@ public sealed partial class StartViewModel : ObservableObject, IDisposable
                 var progress = new Progress<ImportProgress>(p => ProgressText = Describe(p));
                 ProgressText = "Reading the folder";
                 var path = await _folders.ImportAsync(folder, progress, token);
-                await ShowPreviewAsync(path, folder.Name, token);
+                await ShowPreviewAsync(path, folder.Name, null, token);
             }
         });
     }
@@ -314,11 +315,17 @@ public sealed partial class StartViewModel : ObservableObject, IDisposable
 
     private bool CanCreateProject() => !IsBusy && ProjectNameError is null;
 
-    private async Task ShowPreviewAsync(string path, string source, CancellationToken cancellationToken)
+    private async Task ShowPreviewAsync(string path, string source, IReadOnlyList<string>? notes, CancellationToken cancellationToken)
     {
         ProgressText = "Detecting the stack";
         var preview = await WorkspaceInspector.InspectAsync(path, cancellationToken);
-        Preview = new WorkspacePreviewViewModel(preview, source);
+        Preview = new WorkspacePreviewViewModel(preview, source) { Notes = notes ?? [] };
+
+        // In Recent at once: dismissed before it was opened, a downloaded repository was in no list, and downloading it
+        // again made a second copy.
+        var projects = preview.Workspace.Projects.Count;
+        _recent.Add(new RecentWorkspace(Preview.Path, Preview.Name, projects switch { 0 => "Folder", 1 => "1 project", _ => $"{projects} projects" }, DateTimeOffset.Now));
+        RefreshRecent();
     }
 
     private async Task RunAsync(Func<CancellationToken, Task> work)
@@ -334,9 +341,15 @@ public sealed partial class StartViewModel : ObservableObject, IDisposable
         {
             ErrorText = "Cancelled.";
         }
-        catch (Exception ex) when (ex is ImportException or IOException or UnauthorizedAccessException or ArgumentException or InvalidOperationException)
+        catch (Exception ex) when (ex is ImportException or IOException or UnauthorizedAccessException or ArgumentException or InvalidOperationException or ProjectLoadException)
         {
             ErrorText = ex.Message;
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            // Anything else, such as a repository's file the inspection could not read, is said too: before 0.21.2 it
+            // left the start screen as it was, with no word of what happened.
+            ErrorText = $"Something went wrong: {ex.Message}";
         }
         finally
         {
@@ -409,4 +422,13 @@ public sealed class WorkspacePreviewViewModel
 
     /// <summary>Whether there are projects to show.</summary>
     public bool HasProjects => Projects.Count > 0;
+
+    /// <summary>What the download could not bring, such as a submodule on another host, one sentence each.</summary>
+    public IReadOnlyList<string> Notes { get; init; } = [];
+
+    /// <summary>The notes, one per line.</summary>
+    public string NotesText => string.Join(Environment.NewLine, Notes);
+
+    /// <summary>Whether there are notes to show.</summary>
+    public bool HasNotes => Notes.Count > 0;
 }

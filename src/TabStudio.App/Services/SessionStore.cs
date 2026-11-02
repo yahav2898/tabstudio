@@ -41,6 +41,13 @@ public sealed record SessionState(
     /// <summary>Size of an opt-in C# recording ring, in MiB. Recording itself is never enabled on restore.</summary>
     public int RecordingBufferMegabytes { get; init; } = 64;
 
+    /// <summary>
+    /// Whether the person chose <see cref="StartupProject"/>, rather than TabStudio picking it; <see langword="null"/> in
+    /// sessions saved before 0.21.2, which saved the automatic choice too. Only a chosen startup project is restored, so
+    /// a better choice of a newer version, or a project added outside the IDE, is not hidden by an old automatic one.
+    /// </summary>
+    public bool? IsStartupProjectChosen { get; init; }
+
     /// <summary>Whether the Properties panel was open rather than folded into its header; <see langword="null"/> in older sessions.</summary>
     public bool? IsPropertiesExpanded { get; init; }
 }

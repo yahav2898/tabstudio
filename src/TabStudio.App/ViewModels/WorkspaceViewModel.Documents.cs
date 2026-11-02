@@ -149,7 +149,7 @@ public sealed partial class WorkspaceViewModel
             .Select(d => new SessionDocument(d.FilePath, d.CaretOffset, d.IsDirty ? d.CurrentText : null))
             .ToList();
         var path = workspace.Solution?.FilePath ?? workspace.RootDirectory;
-        return WithShellState(WithDebuggingState(new SessionState(path, documents, ActiveDocument?.FilePath, StartupProject?.FilePath)));
+        return WithShellState(WithDebuggingState(new SessionState(path, documents, ActiveDocument?.FilePath, StartupProject?.FilePath) { IsStartupProjectChosen = _isStartupProjectChosen }));
     }
 
     /// <summary>
