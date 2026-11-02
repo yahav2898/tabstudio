@@ -48,10 +48,15 @@ public sealed record WpfStartupInfo(string? ApplicationClass, string? StartupUri
                 continue;
             }
 
-            if (document.Root is not { } root || root.Attribute(XamlNamespaces.Language, "Class")?.Value.Trim() is not { Length: > 0 } className)
+            if (document.Root is not { } root || root.Attribute(XamlNamespaces.Language, "Class")?.Value.Trim() is not { Length: > 0 } xamlClass)
             {
                 continue;
             }
+
+            // In Visual Basic an x:Class is relative to the project's root namespace, as every type of the project is.
+            var className = project.IsVisualBasic && TabStudio.Compilation.VisualBasic.VisualBasicCompiler.RootNamespaceOf(project) is { Length: > 0 } rootNamespace
+                ? rootNamespace + "." + xamlClass
+                : xamlClass;
 
             if (item.Kind == XamlItemKind.ApplicationDefinition)
             {

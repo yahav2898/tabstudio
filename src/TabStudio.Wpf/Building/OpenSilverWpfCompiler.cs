@@ -86,6 +86,7 @@ public sealed class OpenSilverWpfCompiler(string? frameworkReferenceDirectory) :
             IntermediateDirectory = WpfProject.SecondPassDirectory(project),
             IsSecondPass = true,
             FirstPassAssemblyPath = firstPass,
+            IsVisualBasic = compilation.Language == LanguageNames.VisualBasic,
         }, project.Name);
 
         IReadOnlyList<BuildDiagnostic> diagnostics = [.. sanitizing, .. result.Diagnostics];
@@ -94,10 +95,10 @@ public sealed class OpenSilverWpfCompiler(string? frameworkReferenceDirectory) :
             return new WpfSecondPass(null, diagnostics);
         }
 
-        var options = compilation.SyntaxTrees.FirstOrDefault()?.Options as CSharpParseOptions ?? CSharpParseOptions.Default;
+        var options = compilation.SyntaxTrees.FirstOrDefault(t => !WpfXamlGenerator.IsFirstPassTree(t))?.Options;
         var generated = result.GeneratedFiles.Values
             .Order(StringComparer.Ordinal)
-            .Select(path => CSharpSyntaxTree.ParseText(SourceText.From(File.ReadAllText(path), Encoding.UTF8), options, path, cancellationToken))
+            .Select(path => Parse(SourceText.From(File.ReadAllText(path), Encoding.UTF8), options, path, cancellationToken))
             .ToList();
         var completed = compilation
             .RemoveSyntaxTrees(compilation.SyntaxTrees.Where(WpfXamlGenerator.IsFirstPassTree))
@@ -139,6 +140,12 @@ public sealed class OpenSilverWpfCompiler(string? frameworkReferenceDirectory) :
 
         return paths;
     }
+
+    /// <summary>A generated file in the project's language: Visual Basic for a Visual Basic project, C# otherwise.</summary>
+    private static SyntaxTree Parse(SourceText text, ParseOptions? options, string path, CancellationToken cancellationToken) =>
+        options is Microsoft.CodeAnalysis.VisualBasic.VisualBasicParseOptions basic
+            ? Microsoft.CodeAnalysis.VisualBasic.VisualBasicSyntaxTree.ParseText(text, basic, path, cancellationToken)
+            : CSharpSyntaxTree.ParseText(text, options as CSharpParseOptions ?? CSharpParseOptions.Default, path, cancellationToken);
 
     private static WpfSecondPass Failed(string id, string message, string projectName) =>
         new(null, [new BuildDiagnostic(id, DiagnosticSeverityLevel.Error, message, null, projectName)]);

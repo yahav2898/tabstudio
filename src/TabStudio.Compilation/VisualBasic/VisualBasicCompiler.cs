@@ -45,6 +45,13 @@ public static class VisualBasicCompiler
     /// <summary>What the Windows Desktop SDK adds for a Visual Basic project with <c>UseWindowsForms</c>.</summary>
     public static IReadOnlyList<string> WindowsFormsImports { get; } = ["System.Drawing", "System.Windows.Forms"];
 
+    /// <summary>What the Windows Desktop SDK imports into a Visual Basic WPF project.</summary>
+    public static IReadOnlyList<string> WpfImports { get; } =
+    [
+        "System.Windows", "System.Windows.Controls", "System.Windows.Data", "System.Windows.Documents", "System.Windows.Input",
+        "System.Windows.Media", "System.Windows.Media.Imaging", "System.Windows.Navigation", "System.Windows.Shapes",
+    ];
+
     /// <summary>
     /// The warnings the SDK's default <c>NoWarn</c> turns off in a Visual Basic project, and BC40000-range ones that a
     /// reference to an older framework assembly gives, as CS1701 does in C#.
@@ -209,13 +216,15 @@ public static class VisualBasicCompiler
 
     /// <summary>
     /// The namespaces imported into every file: the SDK's defaults (unless <c>DisableImplicitNamespaceImports</c>),
-    /// those of Windows Forms when the project uses it, and its <c>&lt;Import&gt;</c> items, without those it removes.
+    /// those of Windows Forms or WPF when the project uses it, and its <c>&lt;Import&gt;</c> items, without those it removes.
     /// </summary>
     /// <param name="project">The project, or <see langword="null"/> for the SDK's defaults.</param>
     public static IReadOnlyList<string> ImportsOf(TsProject? project)
     {
         var implicitImports = project is null || !IsTrue(project.GetProperty("DisableImplicitNamespaceImports"))
-            ? DefaultImports.Concat(project is not null && WindowsForms.WindowsFormsProject.UsesWindowsForms(project) ? WindowsFormsImports : [])
+            ? DefaultImports
+                .Concat(project is not null && WindowsForms.WindowsFormsProject.UsesWindowsForms(project) ? WindowsFormsImports : [])
+                .Concat(project is not null && Wpf.WpfProject.UsesWpf(project) ? WpfImports : [])
             : [];
         return [.. implicitImports.Concat(project?.Imports ?? [])
             .Where(name => !(project?.RemovedImports ?? []).Contains(name, StringComparer.OrdinalIgnoreCase))

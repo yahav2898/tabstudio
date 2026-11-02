@@ -118,11 +118,16 @@ public sealed class CompatibilityDoctorTests
     {
         var csharp = CompatibilityDoctor.Diagnose(Project(ProjectKind.Wpf));
         var visualBasic = CompatibilityDoctor.Diagnose(Project(ProjectKind.Wpf, ProjectLanguage.VisualBasic));
+        var fsharp = CompatibilityDoctor.Diagnose(Project(ProjectKind.Wpf, ProjectLanguage.FSharp));
 
         Assert.Equal("OpenSilver in the web preview", csharp.RunsVia);
         Assert.Contains("Windows Bridge", csharp.Explanation, StringComparison.Ordinal);
-        Assert.Equal(RunHost.WindowsBridge, visualBasic.Host);
-        Assert.Equal(CompatibilityStatus.NeedsWindows, visualBasic.Status);
+
+        // OpenSilver's XAML compiler writes Visual Basic too (Microsoft's ExpenseIt walkthrough in Visual Basic).
+        Assert.Equal(RunHost.WebView, visualBasic.Host);
+        Assert.Equal(CompatibilityStatus.Ready, visualBasic.Status);
+        Assert.Equal(RunHost.WindowsBridge, fsharp.Host);
+        Assert.Equal(CompatibilityStatus.NeedsWindows, fsharp.Status);
     }
 
     [Fact]
