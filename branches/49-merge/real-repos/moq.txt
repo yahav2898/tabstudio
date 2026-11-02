@@ -14,7 +14,7 @@ Compatibility Doctor:
   Moq.Vsix: Library via Built with its users - A library is compiled together with the projects that reference it.
   Moq: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: none
-Built in 6.2 s: 17 errors, 41 warnings
+Built in 7.5 s: 16 errors, 41 warnings
   8 x CS0117
       [Moq.Sdk] CallContext.cs(99,73): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'UnexpectedNullContextState'
       [Moq.Sdk] DefaultMockRuntime.cs(88,82): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'DuplicateContextBehavior'
@@ -33,8 +33,6 @@ Built in 6.2 s: 17 errors, 41 warnings
   2 x CS1503
       [Moq.Sdk] MockRuntime.cs(19,126): error CS1503: Argument 2: cannot convert from 'string' to 'System.Exception?'
       [Moq.Sdk] PropertyBehavior.cs(36,122): error CS1503: Argument 2: cannot convert from 'string' to 'System.Exception?'
-  1 x NU1301
-      [Moq.Vsix] error NU1301: nuget.org answered 304 (Not Modified) for https://api.nuget.org/v3-flatcontainer/microsoft.visualstudio.shell.interop.10.0/index.json.
   1 x CS0246
       [Moq.Sdk] IMockSetup.cs(9,59): error CS0246: The type or namespace name 'IFluentInterface' could not be found (are you missing a using directive or an assembly reference?)
 Packages with analyzers or MSBuild files:
@@ -1349,9 +1347,9 @@ Packages with analyzers or MSBuild files:
       build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.pri
 Editor: 6 files opened and analyzed in 0.3 s, 0 errors only the editor shows, 0 only the build shows
 Output:
-Build started at 16:36:36...
+Build started at 18:19:05...
 1>------ Build started: Project: Moq.CodeAnalysis, Configuration: Debug ------
-1>Moq.CodeAnalysis -> compiled in memory (41.5 KB, 165 ms)
+1>Moq.CodeAnalysis -> compiled in memory (41.5 KB, 168 ms)
 2>------ Build started: Project: Moq.Sdk, Configuration: Debug ------
 2>AnyMatcher.cs(59,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
 2>AnyMatcher`1.cs(55,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
@@ -1414,7 +1412,6 @@ Build started at 16:36:36...
 11>------ Build started: Project: Moq.Tests, Configuration: Debug ------
 11>Moq.Tests was not compiled because Moq.Sdk, which it references, has errors.
 12>------ Build started: Project: Moq.Vsix, Configuration: Debug ------
-12>warning: The NuGet restore of Moq.Vsix reported errors, so it is built without the packages that could not be restored. The Error List shows the restore's errors.
 12>Moq.Vsix was not compiled because Moq.Sdk, which it references, has errors.
 ========== Build: 1 succeeded, 11 failed ==========
 
