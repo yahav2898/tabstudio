@@ -1,120 +1,112 @@
-11-02 08:38:04.344  3026  3026 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-11-02 08:38:04.428  3026  3026 I AndroidRuntime: Using default boot image
-11-02 08:38:04.428  3026  3026 I AndroidRuntime: Leaving lock profiling enabled
-11-02 08:38:05.004  3026  3026 D AndroidRuntime: Calling main entry com.android.commands.am.Am
-11-02 08:38:05.231  3026  3026 I AndroidRuntime: VM exiting with result code 0.
-11-02 08:38:06.689  3036  3120 I cr_LibraryLoader: Loading monochrome_64 from within /data/app/~~UsT16Hc4SptXvBS32F2SjQ==/com.android.chrome-YVaROn2fXgU6dchhWqZ7KA==/Chrome.apk
-11-02 08:38:06.897  3036  3120 I cr_Linker: loadLibraryImplLocked: monochrome_64, relroMode=1
-11-02 08:38:07.286  3036  3120 D nativeloader: Load /data/app/~~hHBZw5hpp4BvRTbh3hXWYA==/com.google.android.trichromelibrary_636771938-5dEG0HcDliNHZVr0u9Gbjw==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~UsT16Hc4SptXvBS32F2SjQ==/com.android.chrome-YVaROn2fXgU6dchhWqZ7KA==/Chrome.apk): ok
-11-02 08:38:07.609  3066  3066 D nativeloader: Load /data/app/~~NSfKne8rWt6WHwJk0BKUWg==/com.tabstudio.ide-EXdXxeVCGn8BxDDkDIQ6NA==/lib/x86_64/libmonosgen-2.0.so using ns clns-7 from class loader (caller=/data/app/~~NSfKne8rWt6WHwJk0BKUWg==/com.tabstudio.ide-EXdXxeVCGn8BxDDkDIQ6NA==/base.apk): ok
-11-02 08:38:07.613  3066  3066 D nativeloader: Load /data/app/~~NSfKne8rWt6WHwJk0BKUWg==/com.tabstudio.ide-EXdXxeVCGn8BxDDkDIQ6NA==/lib/x86_64/libmonodroid.so using ns clns-7 from class loader (caller=/data/app/~~NSfKne8rWt6WHwJk0BKUWg==/com.tabstudio.ide-EXdXxeVCGn8BxDDkDIQ6NA==/base.apk): ok
-11-02 08:38:08.240  3066  3066 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
-11-02 08:38:08.241  3066  3066 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
-11-02 08:38:23.642  3066  3066 I TabStudio: TABSTUDIO_SELFTEST_START shard=compiled
-11-02 08:38:26.563  3066  3275 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
-11-02 08:38:48.438  3066  3282 I TabStudio: Toolchain preparation: flutter NotInstalled at 23.4 s
-11-02 08:38:48.438  3066  3282 I TabStudio: Toolchain preparation: python NotInstalled at 23.4 s
-11-02 08:38:48.438  3066  3282 I TabStudio: Toolchain preparation: node NotInstalled at 23.4 s
-11-02 08:38:48.438  3066  3282 I TabStudio: Toolchain preparation: cpp NotInstalled at 23.4 s
-11-02 08:38:48.438  3066  3282 I TabStudio: Toolchain preparation: rust NotInstalled at 23.4 s
-11-02 08:38:48.438  3066  3282 I TabStudio: Toolchain preparation: go NotInstalled at 23.4 s
-11-02 08:38:48.438  3066  3282 I TabStudio: Toolchain preparation: java NotInstalled at 23.4 s
-11-02 08:38:48.438  3066  3282 I TabStudio: Toolchain preparation: php NotInstalled at 23.4 s
-11-02 08:38:48.462  3066  3282 I TabStudio: Toolchain preparation: kotlin NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: swift NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: android NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: xc8 NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: xc32 NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-arm NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-riscv NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-avr NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-support NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: platformio NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: arduino NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: esp-idf NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: zephyr NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: pico-sdk NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: micropython NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-import NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-debug NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: probe-rs NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-esptool NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-picotool NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-bossac NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-teensy NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-wchisp NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-mspdebug NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-rust NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-ch32fun NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-nrfutil NotInstalled at 23.4 s
-11-02 08:38:48.463  3066  3282 I TabStudio: Toolchain preparation: embedded-wlink NotInstalled at 23.4 s
-11-02 08:38:48.509  3066  3282 I TabStudio: Toolchain preparation: cpp Preparing at 23.5 s
-11-02 08:38:48.551  3066  3282 I TabStudio: Toolchain preparation: cpp SettingUpLinux at 23.5 s
-11-02 08:38:56.767  3066  4215 I TabStudio: Toolchain preparation: cpp Resolving at 31.7 s
-11-02 08:39:11.239  3066  3284 I TabStudio: Toolchain preparation: cpp Downloading at 46.2 s
-11-02 08:41:07.607  3066  3603 I TabStudio: Toolchain preparation: cpp Installing at 162.6 s
-11-02 08:41:07.672  3066  3066 W com.tabstudio.ide: type=1400 audit(0.0:60): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/main/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=500093 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-11-02 08:41:07.740  3066  3066 W com.tabstudio.ide: type=1400 audit(0.0:61): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/community/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=501232 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-11-02 08:41:08.080  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'pipe2' may fail
-11-02 08:41:08.135  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'fcntl' may fail
-11-02 08:41:08.196  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_init' may fail
-11-02 08:41:08.196  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_init' may fail
-11-02 08:41:08.197  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_adddup2' may fail
-11-02 08:41:08.197  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setflags' may fail
-11-02 08:41:08.197  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setpgroup' may fail
-11-02 08:41:08.197  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'sigemptyset' may fail
-11-02 08:41:08.197  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'sigaddset' may fail
-11-02 08:41:08.197  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setsigdefault' may fail
-11-02 08:41:08.197  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setsigmask' may fail
-11-02 08:41:08.206  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn' may fail
-11-02 08:41:08.247  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_destroy' may fail
-11-02 08:41:08.247  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_destroy' may fail
-11-02 08:41:08.270  3066  3603 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'close' may fail
-11-02 08:41:08.505  3066  5185 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'waitpid' may fail
-11-02 08:41:08.517  3066  3884 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'read' may fail
-11-02 08:41:44.576  5317  5317 W libproot-loader: type=1400 audit(0.0:99): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=500931 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:41:44.576  5317  5317 W libproot-loader: type=1400 audit(0.0:100): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=500943 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:41:44.616  5318  5318 W libproot-loader: type=1400 audit(0.0:103): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=500931 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:41:45.452  3066  3884 I TabStudio: Toolchain preparation: cpp Completed at 200.4 s
-11-02 08:41:46.464  3066  3884 I TabStudio: Toolchain preparation: cpp Installed at 201.4 s
-11-02 08:41:46.465  3066  3884 I TabStudio: Toolchain preparation: java Preparing at 201.4 s
-11-02 08:41:46.546  3066  3884 I TabStudio: Toolchain preparation: java Resolving at 201.5 s
-11-02 08:41:47.833  3066  3884 I TabStudio: Toolchain preparation: java Downloading at 202.8 s
-11-02 08:43:02.044  3066  3884 I TabStudio: Toolchain preparation: java Installing at 277.0 s
-11-02 08:43:02.040  3066  3066 W com.tabstudio.ide: type=1400 audit(0.0:141): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/main/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=98316 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-11-02 08:43:02.044  3066  3066 W com.tabstudio.ide: type=1400 audit(0.0:142): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/community/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=49784 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-11-02 08:43:13.648  5663  5663 W libproot-loader: type=1400 audit(0.0:178): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=500931 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:13.664  5663  5663 W libproot-loader: type=1400 audit(0.0:179): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=500943 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:13.668  5666  5666 W libproot-loader: type=1400 audit(0.0:182): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=500931 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:14.688  5706  5706 W libproot-loader: type=1400 audit(0.0:350): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=500931 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
-11-02 08:43:14.688  5706  5706 W libproot-loader: type=1400 audit(0.0:351): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=500943 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
-11-02 08:43:15.948  5715  5715 W libproot-loader: type=1400 audit(0.0:383): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=500931 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:16.625  3066  3884 I TabStudio: Toolchain preparation: java Configuring at 291.6 s
-11-02 08:43:16.970  3066  4215 I TabStudio: Toolchain preparation: java Completed at 292.0 s
-11-02 08:43:17.888  3066  4215 I TabStudio: Toolchain preparation: java Installed at 292.9 s
-11-02 08:43:28.636  3066  3282 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'write' may fail
-11-02 08:43:33.076  5812  5812 W libproot-loader: type=1400 audit(0.0:2302): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/bin/.l2s..apk.09d09f063efae006b1b5cb569f8130cf7621ebb8e569b2ee0001.0002" dev="dm-46" ino=501252 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:33.076  5812  5812 W libproot-loader: type=1400 audit(0.0:2303): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=500943 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:33.076  5812  5812 W as      : type=1400 audit(0.0:2304): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libbfd-2.45.1.so" dev="dm-46" ino=501271 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:33.076  5812  5812 W as      : type=1400 audit(0.0:2305): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libz.so.1.3.2" dev="dm-46" ino=500538 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:33.076  5812  5812 W as      : type=1400 audit(0.0:2306): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libzstd.so.1.5.7" dev="dm-46" ino=501249 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:40.332  3066  3066 W m.tabstudio.ide: type=1400 audit(0.0:4741): avc:  denied  { ioctl } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Projects/SelfTestCpp/compile_commands.json" dev="dm-46" ino=156864 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-11-02 08:43:40.359  3066  3066 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'mkfifo' may fail
-11-02 08:43:42.808  5975  5975 W greeter : type=1400 audit(0.0:4863): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libstdc++.so.6.0.34" dev="dm-46" ino=501247 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:42.808  5975  5975 W greeter : type=1400 audit(0.0:4864): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libgcc_s.so.1" dev="dm-46" ino=501243 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:50.140  6059  6059 W /usr/lib/jvm/java-21-openjdk/bin/java: type=1400 audit(0.0:5097): avc:  granted  { execute } for  comm=433220436F6D70696C657254687265 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libjsvml.so" dev="dm-46" ino=90497 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:55.984  6144  6144 W libproot-loader: type=1400 audit(0.0:5294): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=500931 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:55.984  6144  6144 W libproot-loader: type=1400 audit(0.0:5295): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=500943 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:56.000  6145  6145 W libproot-loader: type=1400 audit(0.0:5298): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=500931 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:57.060  6155  6155 W libproot-loader: type=1400 audit(0.0:5460): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/bin/java" dev="dm-46" ino=90136 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:43:57.060  6155  6155 W libproot-loader: type=1400 audit(0.0:5461): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=500943 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:44:01.088  6040  6040 W -Declipse.application=org.eclipse.jdt.ls.core.id1: type=1400 audit(0.0:5550): avc:  granted  { execute } for  comm=5374617274204C6576656C3A204571 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libmanagement.so" dev="dm-46" ino=90499 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:44:01.104  6040  6040 W -Declipse.application=org.eclipse.jdt.ls.core.id1: type=1400 audit(0.0:5551): avc:  granted  { execute } for  comm=5374617274204C6576656C3A204571 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libmanagement_ext.so" dev="dm-46" ino=90501 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:44:01.608  6040  6040 W -Declipse.application=org.eclipse.jdt.ls.core.id1: type=1400 audit(0.0:5552): avc:  granted  { execute } for  comm=5374617274204C6576656C3A204571 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libverify.so" dev="dm-46" ino=90510 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:44:07.132  6040  6040 W -Declipse.application=org.eclipse.jdt.ls.core.id1: type=1400 audit(0.0:5579): avc:  granted  { execute } for  comm=576F726B65722D323A204C6F616469 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libextnet.so" dev="dm-46" ino=90486 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:44:07.992  6155  6155 W java    : type=1400 audit(0.0:5580): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libextnet.so" dev="dm-46" ino=90486 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:44:44.000  6476  6476 W libproot-loader: type=1400 audit(0.0:5800): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/bin/java" dev="dm-46" ino=90136 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:44:44.024  6476  6476 W libproot-loader: type=1400 audit(0.0:5801): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=500943 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:44:45.484  6476  6476 W java    : type=1400 audit(0.0:5883): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/tmp/jansi-2.4.3-1910c897d54f96c2-libjansi.so" dev="dm-46" ino=502748 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:44:45.516  6476  6476 W java    : type=1400 audit(0.0:5886): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libverify.so" dev="dm-46" ino=90510 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
-11-02 08:45:06.032  3066  3066 I TabStudio: TABSTUDIO_SELFTEST_OK 401.0 s: Shard: compiled | C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting | Java debugging: stopped at 10, answer = 42, console input and completed greeting
+11-02 09:16:37.762  2978  2978 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-02 09:16:37.771  2978  2978 I AndroidRuntime: Using default boot image
+11-02 09:16:37.771  2978  2978 I AndroidRuntime: Leaving lock profiling enabled
+11-02 09:16:38.056  2978  2978 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+11-02 09:16:38.387  2978  2978 I AndroidRuntime: VM exiting with result code 0.
+11-02 09:16:38.862  2974  3044 I cr_LibraryLoader: Loading monochrome_64 from within /data/app/~~ty-2D-uphieLIKSipBN8-g==/com.android.chrome-8pmHVMXNnyzLOwJFhpa1BA==/Chrome.apk
+11-02 09:16:38.876  3012  3012 D nativeloader: Load /data/app/~~iJmVNAoBNSUUbIHQSemZRA==/com.tabstudio.ide-16Lkr06FoqzVG3ohXkhp6A==/lib/x86_64/libmonosgen-2.0.so using ns clns-7 from class loader (caller=/data/app/~~iJmVNAoBNSUUbIHQSemZRA==/com.tabstudio.ide-16Lkr06FoqzVG3ohXkhp6A==/base.apk): ok
+11-02 09:16:38.877  3012  3012 D nativeloader: Load /data/app/~~iJmVNAoBNSUUbIHQSemZRA==/com.tabstudio.ide-16Lkr06FoqzVG3ohXkhp6A==/lib/x86_64/libmonodroid.so using ns clns-7 from class loader (caller=/data/app/~~iJmVNAoBNSUUbIHQSemZRA==/com.tabstudio.ide-16Lkr06FoqzVG3ohXkhp6A==/base.apk): ok
+11-02 09:16:39.104  2974  3044 I cr_Linker: loadLibraryImplLocked: monochrome_64, relroMode=1
+11-02 09:16:39.741  2974  3044 D nativeloader: Load /data/app/~~Kd58fG1j_d4k9YO5dQI5jQ==/com.google.android.trichromelibrary_636771938-Foa4KB7F4KV0rQvWIKC1hw==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~ty-2D-uphieLIKSipBN8-g==/com.android.chrome-8pmHVMXNnyzLOwJFhpa1BA==/Chrome.apk): ok
+11-02 09:16:39.895  3012  3012 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
+11-02 09:16:39.895  3012  3012 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
+11-02 09:16:47.999  1838  2149 D nativeloader: Load /data/app/~~Kd58fG1j_d4k9YO5dQI5jQ==/com.google.android.trichromelibrary_636771938-Foa4KB7F4KV0rQvWIKC1hw==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-9 from class loader (caller=/data/app/~~2joVEBWOuWmTf5UQP1b5ag==/com.google.android.webview-5v7WNg_dCKvtpgedg3iMww==/WebViewGoogle.apk): ok
+11-02 09:16:51.480  3688  3688 D nativeloader: Load /data/app/~~Kd58fG1j_d4k9YO5dQI5jQ==/com.google.android.trichromelibrary_636771938-Foa4KB7F4KV0rQvWIKC1hw==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~2joVEBWOuWmTf5UQP1b5ag==/com.google.android.webview-5v7WNg_dCKvtpgedg3iMww==/WebViewGoogle.apk): ok
+11-02 09:16:51.726  3012  3012 I TabStudio: TABSTUDIO_SELFTEST_START shard=compiled
+11-02 09:17:04.756  3012  3235 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: flutter NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: python NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: node NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: cpp NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: rust NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: go NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: java NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: php NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: kotlin NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: swift NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: android NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: xc8 NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: xc32 NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-arm NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-riscv NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-avr NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-support NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: platformio NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: arduino NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: esp-idf NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: zephyr NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: pico-sdk NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: micropython NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-import NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-debug NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: probe-rs NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-esptool NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-picotool NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-bossac NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-teensy NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-wchisp NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-mspdebug NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-rust NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-ch32fun NotInstalled at 18.7 s
+11-02 09:17:11.155  3012  3253 I TabStudio: Toolchain preparation: embedded-nrfutil NotInstalled at 18.7 s
+11-02 09:17:11.228  3012  3253 I TabStudio: Toolchain preparation: embedded-wlink NotInstalled at 18.7 s
+11-02 09:17:11.363  3012  3253 I TabStudio: Toolchain preparation: cpp Preparing at 18.9 s
+11-02 09:17:11.434  3012  3253 I TabStudio: Toolchain preparation: cpp SettingUpLinux at 19.0 s
+11-02 09:17:18.534  3012  3253 I TabStudio: Toolchain preparation: cpp Resolving at 26.1 s
+11-02 09:17:30.323  3012  3253 I TabStudio: Toolchain preparation: cpp Downloading at 37.8 s
+11-02 09:19:03.712  3012  4255 I TabStudio: Toolchain preparation: cpp Installing at 131.2 s
+11-02 09:19:03.712  3012  3012 W com.tabstudio.ide: type=1400 audit(0.0:58): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/main/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=501509 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+11-02 09:19:03.736  3012  3012 W com.tabstudio.ide: type=1400 audit(0.0:59): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/community/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=501514 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+11-02 09:19:03.947  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'pipe2' may fail
+11-02 09:19:03.970  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'fcntl' may fail
+11-02 09:19:03.972  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_init' may fail
+11-02 09:19:03.972  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_init' may fail
+11-02 09:19:03.972  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_adddup2' may fail
+11-02 09:19:03.982  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setflags' may fail
+11-02 09:19:03.982  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setpgroup' may fail
+11-02 09:19:03.982  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'sigemptyset' may fail
+11-02 09:19:03.982  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'sigaddset' may fail
+11-02 09:19:03.982  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setsigdefault' may fail
+11-02 09:19:03.982  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setsigmask' may fail
+11-02 09:19:03.983  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn' may fail
+11-02 09:19:04.016  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_destroy' may fail
+11-02 09:19:04.016  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_destroy' may fail
+11-02 09:19:04.017  3012  4255 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'close' may fail
+11-02 09:19:04.023  3012  5203 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'waitpid' may fail
+11-02 09:19:04.067  3012  4383 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'read' may fail
+11-02 09:19:36.604  5333  5333 W libproot-loader: type=1400 audit(0.0:97): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501059 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:19:36.608  5333  5333 W libproot-loader: type=1400 audit(0.0:98): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501072 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:19:36.668  5334  5334 W libproot-loader: type=1400 audit(0.0:101): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501059 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:19:37.049  3012  4383 I TabStudio: Toolchain preparation: cpp Completed at 164.6 s
+11-02 09:19:37.516  3012  4383 I TabStudio: Toolchain preparation: cpp Installed at 165.0 s
+11-02 09:19:37.523  3012  4383 I TabStudio: Toolchain preparation: java Preparing at 165.0 s
+11-02 09:19:37.541  3012  4383 I TabStudio: Toolchain preparation: java Resolving at 165.1 s
+11-02 09:19:38.179  3012  4383 I TabStudio: Toolchain preparation: java Downloading at 165.7 s
+11-02 09:20:36.836  3012  3249 I TabStudio: Toolchain preparation: java Installing at 224.4 s
+11-02 09:20:36.832  3012  3012 W com.tabstudio.ide: type=1400 audit(0.0:137): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/main/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=58496 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+11-02 09:20:36.896  3012  3012 W com.tabstudio.ide: type=1400 audit(0.0:138): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/community/x86_64/APKINDEX.tar.gz" dev="dm-46" ino=58520 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+11-02 09:20:48.068  5609  5609 W libproot-loader: type=1400 audit(0.0:174): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501059 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:20:48.068  5609  5609 W libproot-loader: type=1400 audit(0.0:175): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501072 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:20:49.096  5648  5648 W libproot-loader: type=1400 audit(0.0:318): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501059 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+11-02 09:20:49.096  5648  5648 W libproot-loader: type=1400 audit(0.0:319): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501072 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file
+11-02 09:20:50.204  3012  4384 I TabStudio: Toolchain preparation: java Configuring at 237.7 s
+11-02 09:20:50.818  3012  3661 I TabStudio: Toolchain preparation: java Completed at 238.3 s
+11-02 09:20:51.551  3012  3661 I TabStudio: Toolchain preparation: java Installed at 239.1 s
+11-02 09:20:58.239  3012  3249 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'write' may fail
+11-02 09:21:06.675  3012  3012 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'mkfifo' may fail
+11-02 09:21:08.344  5850  5850 W greeter : type=1400 audit(0.0:4859): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libstdc++.so.6.0.34" dev="dm-46" ino=501527 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:21:08.344  5850  5850 W greeter : type=1400 audit(0.0:4860): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/libgcc_s.so.1" dev="dm-46" ino=501521 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:21:13.824  5918  5918 W -Declipse.application=org.eclipse.jdt.ls.core.id1: type=1400 audit(0.0:5266): avc:  granted  { execute } for  comm=433220436F6D70696C657254687265 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libjsvml.so" dev="dm-46" ino=59032 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:21:14.092  5918  5918 W java    : type=1400 audit(0.0:5267): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libnio.so" dev="dm-46" ino=59039 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:21:14.232  5918  5918 W java    : type=1400 audit(0.0:5268): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libnet.so" dev="dm-46" ino=59038 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:21:19.684  6085  6085 W libproot-loader: type=1400 audit(0.0:5288): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="dm-46" ino=501059 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:21:20.720  6095  6095 W java    : type=1400 audit(0.0:5511): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libjava.so" dev="dm-46" ino=59027 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:21:23.820  5918  5918 W -Declipse.application=org.eclipse.jdt.ls.core.id1: type=1400 audit(0.0:5543): avc:  granted  { execute } for  comm=5374617274204C6576656C3A204571 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libmanagement.so" dev="dm-46" ino=59034 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:21:23.872  5918  5918 W -Declipse.application=org.eclipse.jdt.ls.core.id1: type=1400 audit(0.0:5544): avc:  granted  { execute } for  comm=5374617274204C6576656C3A204571 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libmanagement_ext.so" dev="dm-46" ino=59036 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:21:24.248  5918  5918 W -Declipse.application=org.eclipse.jdt.ls.core.id1: type=1400 audit(0.0:5545): avc:  granted  { execute } for  comm=5374617274204C6576656C3A204571 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libverify.so" dev="dm-46" ino=59045 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:21:29.220  6095  6095 W java    : type=1400 audit(0.0:5573): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libextnet.so" dev="dm-46" ino=59021 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:21:59.544  6427  6427 W libproot-loader: type=1400 audit(0.0:5796): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/bin/java" dev="dm-46" ino=58671 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:21:59.544  6427  6427 W libproot-loader: type=1400 audit(0.0:5797): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/lib/ld-musl-x86_64.so.1" dev="dm-46" ino=501072 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:22:00.756  6427  6427 W java    : type=1400 audit(0.0:5879): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/tmp/jansi-2.4.3-17e086901a331242-libjansi.so" dev="dm-46" ino=502434 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:22:00.812  6427  6427 W java    : type=1400 audit(0.0:5882): avc:  granted  { execute } for  path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/usr/lib/jvm/java-21-openjdk/lib/libverify.so" dev="dm-46" ino=59045 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file app=com.tabstudio.ide
+11-02 09:22:19.022  3012  3012 I TabStudio: TABSTUDIO_SELFTEST_OK 326.5 s: Shard: compiled | C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting | Java debugging: stopped at 10, answer = 42, console input and completed greeting
