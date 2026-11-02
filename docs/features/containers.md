@@ -159,7 +159,10 @@ and tablet timings differ.
 
 0.21.4 adds `wordpress:6.6-apache`, `gitea/gitea:1.22`, `grafana/grafana:11.2.0`, `prom/prometheus:v2.54.1` and
 `traefik:v3.1` to the job, and two public Compose stacks started from their own files at docker/awesome-compose
-`30f4b7f6a6c3b0c0ecf4d4efb0de203c48d11562`: `wordpress-mysql` and `gitea-postgres`. Their rows are in the job's summary.
+`30f4b7f6a6c3b0c0ecf4d4efb0de203c48d11562`: `wordpress-mysql` and `gitea-postgres`. All five images work on x64 and
+ARM64, and both stacks start from their own files and answer HTTP on both. Their rows are in the job's summary.
+Readiness waits for the ports a Compose file publishes, or for any one of the image's own when it publishes none. A
+privileged published port such as `80:80` gets a free unprivileged port.
 
 What does not work under PRoot, by design rather than by image: anything that needs a real kernel feature the app
 sandbox does not grant. That covers `privileged: true`, Docker-in-Docker, cgroup limits (`mem_limit`, `cpus` are
