@@ -3,8 +3,8 @@ Toolchain projects:
   python: /home/runner/work/_temp/real-repos/rich/pyproject.toml
   cpp: /home/runner/work/_temp/real-repos/rich/Makefile
 Startup project: python /home/runner/work/_temp/real-repos/rich/pyproject.toml
-Set up in 6.4 s
-Tests: 948 passed, 8 failed, 25 skipped of 1015: 981 tests run in 8.1 sec: 948 passed, 8 failed, 25 skipped.
+Set up in 7.2 s
+Tests: 948 passed, 8 failed, 25 skipped of 1015: 981 tests run in 10.9 sec: 948 passed, 8 failed, 25 skipped.
 Project setup:
 ------ rich: pip install -e . ------
 Reading which Python versions the 49 pinned packages have wheels for, from PyPI.
@@ -38,14 +38,17 @@ Building wheels for collected packages: rich
   Building editable for rich (pyproject.toml): started
   Building editable for rich (pyproject.toml): finished with status 'done'
   Created wheel for rich: filename=rich-15.0.0-py3-none-any.whl size=7831 sha256=48ee26d4a97a76411dd7f488e9d01aac970ad3a32b2c112bbf1aaa66074df40f
-  Stored in directory: /tmp/pip-ephem-wheel-cache-nzdu6lm4/wheels/a8/68/bf/d8ba43a9f12300e8f2b8aced9a06e57c54f1d01405943d6982
+  Stored in directory: /tmp/pip-ephem-wheel-cache-grhf8tf_/wheels/a8/68/bf/d8ba43a9f12300e8f2b8aced9a06e57c54f1d01405943d6982
 Successfully built rich
 Installing collected packages: pygments, mdurl, markdown-it-py, rich
 
 Successfully installed markdown-it-py-4.2.0 mdurl-0.1.2 pygments-2.21.0 rich-15.0.0
 
 Output:
-  code_width=60,
+,
+            line_numbers=True,
+            line_range=(2, 10),
+            code_width=60,
             word_wrap=False,
             background_color="red",
         )
@@ -57,7 +60,7 @@ Output:
 E       AssertionError: assert '\x1b[1;39;41...alue\x1b[0m\n' == '\x1b[1;39;41...alue\x1b[0m\n'
 E         
 E         Skipping 335 identical leading characters in diff, use -v to show
-E         - [0miter([38;2;248;248;242;41mvalues)
+E         - [0miter(values)
 E         ?           ^^^   ^^^^^
 E         + [0miter(values)
 E         ?           ^^^  +++ ^
@@ -140,7 +143,7 @@ E         ?           ^^^^^^^^^^                                                
 E              2     """Iterate and generate a tuple with a flag for first and last value."""
 E         -    3     iter_values = iter(values)
 E         ?                                                                                                                                                                                                                                                                                                              ^^^^^^^^^^^
-E         +    3     iter_values [1;38;2;255;70;137;48;2;39;40;34m= iter(values)
+E         +    3     iter_values = iter(values)
 E         ?                                                                                                                                                                                                                                                                                                              ^^^^^^^^^^
 E              4     try:
 E         -    5         previous_value = next(iter_values)
@@ -168,7 +171,7 @@ tests/test_syntax.py:302: AssertionError
     metafunc.parametrize(*marker.args, **marker.kwargs, _param_mark=marker)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-- generated xml file: /home/runner/work/_temp/real-repos/rich/.tabstudio/test-results/52dd0e11330e4690be656ae9d7fd9a82/pytest.xml -
+- generated xml file: /home/runner/work/_temp/real-repos/rich/.tabstudio/test-results/ef8642d9ecc1445f89ca4337c14def67/pytest.xml -
 =========================== short test summary info ============================
 FAILED tests/test_card.py::test_card_render - AssertionError: assert '\x1b[3m     ...           \n' == '\x1b[3m     ...           \n'
   
@@ -208,7 +211,7 @@ FAILED tests/test_markdown.py::test_inline_code_in_table_cells - AssertionError:
   Skipping 115 identical leading characters in diff, use -v to show
   - [0mprint('hello'); 
   ?           ^^^^^^^^^^^
-  + [0m[38;2;166;226;46;48;2;39;40;34mprint('hello'); 
+  + [0mprint('hello'); 
   ?           ^^^^^^^^^^
                      
 FAILED tests/test_syntax.py::test_python_render - AssertionError: assert '╭───────────...──────────╯\n' == '╭───────────...──────────╯\n'
@@ -244,7 +247,7 @@ FAILED tests/test_syntax.py::test_python_render_simple - assert '\x1b[38;2;10...
         try:                                                    
   -         previous_value = next(iter_values)                  
   ?                                                                                                                                                                                                                         ^^^^^^^^^^^
-  +         previous_value = next([38;2;248;248;242;48;2;39;40;34miter_values)                  
+  +         previous_value = next(iter_values)                  
   ?                                                                                                                                                                                                                         ^^^^^^^^^^
         except StopIteration:                                   
             return                                              
@@ -273,7 +276,7 @@ FAILED tests/test_syntax.py::test_python_render_simple_passing_lexer_instance - 
   ?                                                                                                                                                                                                                         ^^^^^^^^^^
         except StopIteration:                                   
             return                                              
-        first = True                                            
+        first[38;2;248;248;242;48;2;39;40;34m = True                                            
         for value in iter_values:                               
             yield first, False, previous_value                  
             first = False                                       
@@ -312,7 +315,7 @@ FAILED tests/test_syntax.py::test_option_no_wrap - AssertionError: assert '\x1b[
        6     except StopIteration:
        7         return
        8     first = True
-       9     for value in [38;2;248;248;242;41miter_values:
+       9     for value in iter_values:
       10         yield first, False, previous_value
 FAILED tests/test_syntax.py::test_syntax_highlight_ranges - assert '\x1b[1;38;2;...alue\x1b[0m\n' == '\x1b[1;38;2;...alue\x1b[0m\n'
   
@@ -335,9 +338,9 @@ FAILED tests/test_syntax.py::test_syntax_highlight_ranges - assert '\x1b[1;38;2;
        7         return
        8     first = True
        9     for value in iter_values:
-      10         yield first, False, previous_value
+      10         yield first, [1;38;2;102;217;239;48;2;39;40;34mFalse, previous_value
       11         first = False
       12         previous_value = value
       13     yield first, True, previous_value
-============= 8 failed, 948 passed, 25 skipped, 1 warning in 4.64s =============
+============= 8 failed, 948 passed, 25 skipped, 1 warning in 6.01s =============
 
