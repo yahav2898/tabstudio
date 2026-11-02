@@ -8,6 +8,7 @@ using TabStudio.App.Tests.ViewModels;
 using TabStudio.App.ViewModels;
 using TabStudio.App.Views;
 using TabStudio.Core.Diagnostics;
+using TabStudio.Core.Workspaces;
 
 namespace TabStudio.App.Tests.RealRepositories;
 
@@ -72,6 +73,11 @@ public sealed class RealRepositoryTests
             if (outcome.Served == false)
             {
                 problems.Add($"{name} built, but its first page was not served as expected; see {name}.txt.");
+            }
+
+            if (outcome.Editor is { } editor)
+            {
+                problems.Add($"{name}: {editor}; see {name}.txt.");
             }
 
             if (outcome.Errors < 0)
@@ -363,7 +369,8 @@ public sealed class RealRepositoryTests
 
     /// <param name="Served">Whether the first page was served as the repository's <c>serve</c> entry expects; <see langword="null"/> without one.</param>
     /// <param name="Startup">What is wrong with the startup project TabStudio chose, when the entry names the one it expects.</param>
-    private sealed record Outcome(int Errors, int Warnings, TimeSpan Duration, bool? Served = null, string? Startup = null);
+    /// <param name="Editor">What the editor's squiggles get wrong next to the build, when they do.</param>
+    private sealed record Outcome(int Errors, int Warnings, TimeSpan Duration, bool? Served = null, string? Startup = null, string? Editor = null);
 
     private static async Task<Outcome> OpenAndBuildAsync(string solution, string name, string? expectedStartup, JsonNode? serve, StringBuilder report)
     {
@@ -419,11 +426,12 @@ public sealed class RealRepositoryTests
             AppendGeneratorPackages(report, fixture.Paths.Packages);
 
             UiTestHelpers.SaveScreenshot(window, $"real-{name}-2-built");
+            var editor = await CompareEditorWithBuildAsync(workspace, errors.Select(e => e.Diagnostic).ToList(), report);
             bool? served = serve is null ? null : await ServeFirstPageAsync(workspace, window, name, serve, report);
             report.AppendLine("Output:");
             var text = workspace.Output.Text;
             report.AppendLine(text.Length > 40000 ? text[^40000..] : text);
-            return new Outcome(errors.Count, warnings, duration, served, startupProblem);
+            return new Outcome(errors.Count, warnings, duration, served, startupProblem, editor);
         }
         finally
         {
@@ -431,6 +439,67 @@ public sealed class RealRepositoryTests
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         }
     }
+
+    /// <summary>
+    /// The first thing a person does after a build: opens source files and reads their squiggles. Opens the first files
+    /// of each project (up to <see cref="EditorFilesPerProject"/> each, <see cref="EditorFiles"/> in all) and compares
+    /// the editor's errors with the build's in those files: an error only the editor shows is a false squiggle, and one
+    /// only the build shows is a missed one.
+    /// </summary>
+    /// <returns><see langword="null"/> when they agree, else what differs.</returns>
+    private static async Task<string?> CompareEditorWithBuildAsync(WorkspaceViewModel workspace, List<BuildDiagnostic> buildErrors, StringBuilder report)
+    {
+        if (workspace.Workspace is not { } opened)
+        {
+            return null;
+        }
+
+        var projects = opened.Projects.Where(p => p.Language is ProjectLanguage.CSharp or ProjectLanguage.VisualBasic).OrderBy(p => p.FilePath, StringComparer.Ordinal).ToList();
+        var folders = projects.Select(p => Path.GetDirectoryName(p.FilePath)!).ToList();
+        var files = projects
+            .SelectMany(p => ProjectSourceFiles.Enumerate(p, folders.Where(f => f != Path.GetDirectoryName(p.FilePath)), p.Language == ProjectLanguage.VisualBasic ? ".vb" : ".cs").Take(EditorFilesPerProject))
+            .Distinct(StringComparer.Ordinal)
+            .Take(EditorFiles)
+            .ToList();
+        static string Key(BuildDiagnostic d) => string.Create(CultureInfo.InvariantCulture, $"{d.Id} {d.FileName}({d.Location?.Line})");
+        var falseErrors = new List<string>();
+        var missedErrors = new List<string>();
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        foreach (var file in files)
+        {
+            if (await workspace.OpenDocumentAsync(file) is not { } document)
+            {
+                falseErrors.Add($"{Path.GetFileName(file)} did not open");
+                continue;
+            }
+
+            await document.AnalyzeNowAsync();
+            var editor = document.Diagnostics.Where(d => d.Severity == DiagnosticSeverityLevel.Error).ToList();
+            var build = buildErrors.Where(d => string.Equals(d.Location?.FilePath, file, StringComparison.Ordinal)).ToList();
+            var buildKeys = build.Select(Key).ToHashSet(StringComparer.Ordinal);
+            var editorKeys = editor.Select(Key).ToHashSet(StringComparer.Ordinal);
+            falseErrors.AddRange(editor.Where(d => !buildKeys.Contains(Key(d))).Select(d => d.ToString()));
+            missedErrors.AddRange(build.Where(d => !editorKeys.Contains(Key(d))).Select(d => d.ToString()));
+        }
+
+        report.AppendLine(CultureInfo.InvariantCulture, $"Editor: {files.Count} files opened and analyzed in {clock.Elapsed.TotalSeconds:F1} s, {falseErrors.Count} errors only the editor shows, {missedErrors.Count} only the build shows");
+        foreach (var line in falseErrors.Take(40))
+        {
+            report.AppendLine(CultureInfo.InvariantCulture, $"  editor only: {line}");
+        }
+
+        foreach (var line in missedErrors.Take(40))
+        {
+            report.AppendLine(CultureInfo.InvariantCulture, $"  build only: {line}");
+        }
+
+        return falseErrors.Count == 0 && missedErrors.Count == 0 ? null
+            : $"the editor shows {falseErrors.Count} errors the build does not and misses {missedErrors.Count} it reports in {files.Count} opened files";
+    }
+
+    private const int EditorFilesPerProject = 3;
+
+    private const int EditorFiles = 24;
 
     /// <summary>
     /// The <c>serve</c> check: F5 on the named web project, with each connection string in <c>connections</c> taken

@@ -70,6 +70,58 @@ public sealed partial class GitChangesViewModel
         await CommitCoreAsync();
     }
 
+    /// <summary>
+    /// Links the Git clone that holds the workspace to its GitHub repository, comparing its files with the commit it
+    /// holds instead of downloading it again. Runs by itself when the workspace opens; the button retries after a
+    /// failure, such as no connection or a private repository before signing in.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanLinkCheckout))]
+    private async Task LinkCheckoutAsync()
+    {
+        if (Checkout is not { } checkout || _disposed)
+        {
+            return;
+        }
+
+        ErrorText = null;
+        InfoText = null;
+        IsBusy = true;
+        ProgressText = $"Linking to {checkout.FullName}";
+        try
+        {
+            await _gate.WaitAsync(_lifetime.Token);
+            try
+            {
+                var sync = await GitHubSync.LinkCheckoutAsync(Account.Account.CreateClient(), checkout, _lifetime.Token);
+                _sync = sync;
+                IsLinked = true;
+                Checkout = null;
+                await RefreshCoreAsync(checkGitHub: false);
+            }
+            catch (Exception ex) when (IsExpected(ex) || ex is HttpRequestException)
+            {
+                ErrorText = ex is HttpRequestException
+                    ? $"GitHub could not be reached to link {checkout.FullName}. Check the connection and tap Link to GitHub."
+                    : SyncErrors.Describe(ex);
+            }
+            finally
+            {
+                _gate.Release();
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // The workspace closed.
+        }
+        finally
+        {
+            IsBusy = false;
+            ProgressText = null;
+        }
+    }
+
+    private bool CanLinkCheckout() => Checkout is not null && !IsLinked && !IsBusy;
+
     [RelayCommand(CanExecute = nameof(CanPublish))]
     private async Task PublishAsync()
     {

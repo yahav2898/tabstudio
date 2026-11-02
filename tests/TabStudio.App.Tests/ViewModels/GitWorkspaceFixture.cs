@@ -84,6 +84,24 @@ internal sealed class GitWorkspaceFixture : IDisposable
         await UiTestHelpers.WaitUntilAsync(() => Git.HasWorkspace, because: "the Git Changes window to see the workspace");
     }
 
+    /// <summary>
+    /// Puts the sample on the fake GitHub and opens it where it is extracted, with a <c>.git</c> folder as
+    /// <c>git clone</c> of that repository leaves it, as a folder cloned on a computer is.
+    /// </summary>
+    public async Task OpenGitCloneOfSampleAsync()
+    {
+        GitHub.AddRepository(Repository, await SampleFilesAsync(Paths));
+        var solution = await new SampleLibrary(Paths).EnsureExtractedAsync();
+        Folder = Path.GetDirectoryName(solution)!;
+        var git = Path.Combine(Folder, ".git");
+        Directory.CreateDirectory(Path.Combine(git, "refs", "heads"));
+        await File.WriteAllTextAsync(Path.Combine(git, "HEAD"), "ref: refs/heads/main\n");
+        await File.WriteAllTextAsync(Path.Combine(git, "config"), $"[remote \"origin\"]\n\turl = https://github.com/{FakeGitHub.Login}/{Repository}.git\n[branch \"main\"]\n\tremote = origin\n");
+        await File.WriteAllTextAsync(Path.Combine(git, "refs", "heads", "main"), GitHub.Head(Repository, "main") + "\n");
+        await Workspace.LoadAsync(solution);
+        await UiTestHelpers.WaitUntilAsync(() => Git.HasWorkspace, because: "the Git Changes window to see the workspace");
+    }
+
     /// <summary>The full path of a file in the workspace folder.</summary>
     public string PathOf(string relativePath) => Path.Combine(Folder, relativePath.Replace('/', Path.DirectorySeparatorChar));
 
