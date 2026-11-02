@@ -41,6 +41,9 @@ public sealed partial class DesignRuleTests
         "Views/Live/LivePanelView.axaml",
         "Views/Live/LiveShareView.axaml",
         "Views/Live/LiveJoinView.axaml",
+
+        // A white literal behind the Windows Bridge's QR code broke the dark theme.
+        "Views/WindowsBridge/WindowsBridgeTabView.axaml#BridgeQrCard",
     ];
 
     [Theory]

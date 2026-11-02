@@ -5,6 +5,7 @@ using System.Text.Json.Nodes;
 using TabStudio.Agent.Anthropic;
 using TabStudio.Agent.Local;
 using TabStudio.Testing;
+using TabStudio.Toolchains.Downloads;
 
 namespace TabStudio.Agent.Tests;
 
@@ -70,26 +71,87 @@ public sealed class LocalAITests
         await File.WriteAllTextAsync(manager.PathFor(model), new string('x', content.Length));
         await Assert.ThrowsAsync<InvalidDataException>(() => manager.VerifyAsync(model));
         await manager.DeleteAsync(model);
-        await Assert.ThrowsAsync<InvalidDataException>(() => manager.DownloadAsync(model with { Sha256 = new string('0', 64) }, true));
+        var mismatch = await Assert.ThrowsAsync<DownloadException>(() => manager.DownloadAsync(model with { Sha256 = new string('0', 64) }, true));
+        Assert.Equal(DownloadFailure.IntegrityFailed, mismatch.Failure);
         Assert.False(File.Exists(manager.PathFor(model)));
-        Assert.Empty(Directory.GetFiles(temp.Path, "*.partial"));
+        Assert.Empty(Directory.GetFiles(temp.Path, "*.part"));
         await manager.DownloadAsync(model, true);
         await manager.DeleteAsync(model);
         Assert.False(manager.IsInstalled(model));
     }
 
     [Fact]
-    public async Task Cancellation_discards_partial_models()
+    public async Task Cancellation_keeps_what_arrived_and_the_next_download_continues_from_it()
     {
         using var temp = new TempDirectory();
-        var content = new byte[300000];
-        using var http = new HttpClient(new BytesServer(content));
+        var content = RandomNumberGenerator.GetBytes(300000);
+        var server = new ResumableServer(content, ResumableServer.Ending.Complete);
+        using var http = new HttpClient(server);
         using var cancellation = new CancellationTokenSource();
-        using var manager = new ModelManager(temp.Path, http);
+        using var manager = new ModelManager(temp.Path, http) { RetryDelay = TimeSpan.Zero };
         var model = Model(content);
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => manager.DownloadAsync(model, true, new CancelProgress(cancellation), cancellation.Token));
         Assert.False(manager.IsInstalled(model));
-        Assert.Empty(Directory.GetFiles(temp.Path, "*.partial"));
+        var kept = new FileInfo(manager.PartialPathFor(model)).Length;
+        Assert.InRange(kept, 1, content.Length - 1);
+
+        await manager.DownloadAsync(model, true);
+
+        Assert.Equal($"bytes={kept}-", server.Ranges[^1]);
+        await manager.VerifyAsync(model);
+        Assert.False(File.Exists(manager.PartialPathFor(model)));
+    }
+
+    [Fact]
+    public async Task A_broken_connection_is_resumed_with_a_range_request_not_restarted()
+    {
+        using var temp = new TempDirectory();
+        var content = RandomNumberGenerator.GetBytes(200000);
+        var server = new ResumableServer(content, ResumableServer.Ending.Break, cut: 70000);
+        using var http = new HttpClient(server);
+        using var manager = new ModelManager(temp.Path, http) { Retries = 0, RetryDelay = TimeSpan.Zero };
+        var model = Model(content);
+
+        var broken = await Assert.ThrowsAsync<DownloadException>(() => manager.DownloadAsync(model, true));
+        Assert.Equal(DownloadFailure.Interrupted, broken.Failure);
+        Assert.Equal(70000, new FileInfo(manager.PartialPathFor(model)).Length);
+
+        await manager.DownloadAsync(model, true);
+
+        Assert.Equal(new string?[] { null, "bytes=70000-" }, server.Ranges);
+        await manager.VerifyAsync(model);
+    }
+
+    [Fact]
+    public async Task A_stalled_download_is_detected_and_continued_from_the_last_byte()
+    {
+        using var temp = new TempDirectory();
+        var content = RandomNumberGenerator.GetBytes(200000);
+        var server = new ResumableServer(content, ResumableServer.Ending.Stall, cut: 50000);
+        using var http = new HttpClient(server) { Timeout = Timeout.InfiniteTimeSpan };
+        using var manager = new ModelManager(temp.Path, http) { StallTimeout = TimeSpan.FromMilliseconds(300), Retries = 1, RetryDelay = TimeSpan.Zero };
+        var model = Model(content);
+
+        await manager.DownloadAsync(model, true).WaitAsync(TimeSpan.FromSeconds(30));
+
+        Assert.Equal(new string?[] { null, "bytes=50000-" }, server.Ranges);
+        await manager.VerifyAsync(model);
+    }
+
+    [Fact]
+    public async Task A_model_larger_than_its_pinned_size_is_refused_before_it_fills_storage()
+    {
+        using var temp = new TempDirectory();
+        var content = Encoding.UTF8.GetBytes("GGUF pinned size");
+        using var http = new HttpClient(new BytesServer([.. content, .. new byte[100000]]));
+        using var manager = new ModelManager(temp.Path, http);
+        var model = Model(content);
+
+        var error = await Assert.ThrowsAsync<DownloadException>(() => manager.DownloadAsync(model, true));
+
+        Assert.Equal(DownloadFailure.IntegrityFailed, error.Failure);
+        Assert.False(manager.IsInstalled(model));
+        Assert.False(File.Exists(manager.PartialPathFor(model)));
     }
 
     [Fact]
@@ -147,7 +209,62 @@ public sealed class LocalAITests
     }
 
     private static LocalModel Model(byte[] bytes) => new("test-model", "Test", "https://huggingface.co/test/model.gguf", Convert.ToHexString(SHA256.HashData(bytes)), bytes.Length, 1000, "MIT", "https://huggingface.co/test/LICENSE", true);
-    private sealed class CancelProgress(CancellationTokenSource cancellation) : IProgress<long> { public void Report(long value) => cancellation.Cancel(); }
+    private sealed class CancelProgress(CancellationTokenSource cancellation) : IProgress<long> { public void Report(long value) { if (value > 0) cancellation.Cancel(); } }
+
+    /// <summary>Serves a file whose first response ends early, by breaking or stalling, and honours Range requests.</summary>
+    private sealed class ResumableServer(byte[] bytes, ResumableServer.Ending ending, int? cut = null) : HttpMessageHandler
+    {
+        public enum Ending { Complete, Break, Stall }
+
+        public List<string?> Ranges { get; } = [];
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            var range = request.Headers.Range?.Ranges.Single();
+            lock (Ranges) Ranges.Add(request.Headers.Range?.ToString());
+            if (range?.From is not { } from)
+            {
+                var first = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StreamContent(new EndingStream(bytes[..(cut ?? bytes.Length)], ending)) };
+                first.Content.Headers.ContentLength = bytes.Length;
+                return Task.FromResult(first);
+            }
+
+            var rest = new HttpResponseMessage(HttpStatusCode.PartialContent) { Content = new ByteArrayContent(bytes[(int)from..]) };
+            rest.Content.Headers.ContentRange = new System.Net.Http.Headers.ContentRangeHeaderValue(from, bytes.Length - 1, bytes.Length);
+            return Task.FromResult(rest);
+        }
+    }
+
+    private sealed class EndingStream(byte[] data, ResumableServer.Ending ending) : Stream
+    {
+        private int _position;
+        public override bool CanRead => true;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => _position; set => throw new NotSupportedException(); }
+        public override void Flush() { }
+        public override int Read(byte[] buffer, int offset, int count) => ReadAsync(buffer.AsMemory(offset, count)).AsTask().GetAwaiter().GetResult();
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (_position < data.Length)
+            {
+                var count = Math.Min(buffer.Length, Math.Min(16384, data.Length - _position));
+                data.AsMemory(_position, count).CopyTo(buffer);
+                _position += count;
+                return count;
+            }
+
+            if (ending == ResumableServer.Ending.Stall) await Task.Delay(Timeout.Infinite, cancellationToken);
+            if (ending == ResumableServer.Ending.Break) throw new IOException("The connection was reset by the peer.");
+            return 0;
+        }
+    }
     private sealed class BytesServer(byte[] bytes) : HttpMessageHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(bytes) });

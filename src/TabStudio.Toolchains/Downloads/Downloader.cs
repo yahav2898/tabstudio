@@ -108,6 +108,12 @@ public sealed class Downloader
                 await TransferAsync(request, partial, validatorFile, progress, cancellationToken).ConfigureAwait(false);
                 break;
             }
+            catch (DownloadException ex) when (ex.Failure == DownloadFailure.IntegrityFailed)
+            {
+                File.Delete(partial);
+                File.Delete(validatorFile);
+                throw;
+            }
             catch (Exception ex) when (IsTransient(ex, cancellationToken) && attempt < Retries)
             {
                 await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
@@ -221,6 +227,12 @@ public sealed class Downloader
             if (read == 0)
             {
                 break;
+            }
+
+            if (request.Size is { } limit && received + read > limit)
+            {
+                // A server that sends more than the pinned size is not the file asked for; never fill storage with it.
+                throw new DownloadException(DownloadFailure.IntegrityFailed, $"{request.DisplayName} is larger than its expected size. It was deleted; try again.");
             }
 
             await file.WriteAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);

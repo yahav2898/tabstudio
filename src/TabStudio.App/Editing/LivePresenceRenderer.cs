@@ -40,6 +40,12 @@ public sealed class LivePresenceRenderer
     /// <summary>The carets drawn now, for tests.</summary>
     public IReadOnlyList<LiveRemoteCaret> Shown => _shown;
 
+    /// <summary>
+    /// The size of the name on a caret's tag: the caption size of the IDE's type scale (11 at the default text size),
+    /// so it grows with the chosen text size, Very large included, as the rest of the IDE's text does.
+    /// </summary>
+    public static double TagFontSize => Accessibility.TypeScale.Size("Type.Caption");
+
     /// <summary>Draws in a text view: the selections behind its text, the carets over it.</summary>
     /// <param name="textView">The editor's text view.</param>
     public void Attach(TextView textView)
@@ -57,6 +63,7 @@ public sealed class LivePresenceRenderer
         textView.InsertLayer(_carets, KnownLayer.Caret, LayerInsertionPosition.Above);
         textView.VisualLinesChanged += OnViewChanged;
         textView.ScrollOffsetChanged += OnViewChanged;
+        Accessibility.TypeScale.Changed += OnViewChanged;
     }
 
     /// <summary>Stops drawing in the text view.</summary>
@@ -70,6 +77,7 @@ public sealed class LivePresenceRenderer
         textView.BackgroundRenderers.Remove(_selections);
         textView.VisualLinesChanged -= OnViewChanged;
         textView.ScrollOffsetChanged -= OnViewChanged;
+        Accessibility.TypeScale.Changed -= OnViewChanged;
         if (_carets is not null)
         {
             textView.Layers.Remove(_carets);
@@ -179,7 +187,7 @@ public sealed class LivePresenceRenderer
                 context.DrawRectangle(brush, null, new Rect(top.X - 1, top.Y, 2, Math.Max(1, bottom.Y - top.Y)));
 
                 // The name on a tag at the caret's top, inside the view: above the line, or below it on the first line.
-                var name = new FormattedText(caret.Name, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, TagFace, 11, foreground);
+                var name = new FormattedText(caret.Name, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, TagFace, TagFontSize, foreground);
                 var width = name.Width + 10;
                 var height = name.Height + 4;
                 var x = Math.Clamp(top.X - 1, 0, Math.Max(0, Bounds.Width - width));

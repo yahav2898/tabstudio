@@ -34,7 +34,7 @@ public static class InProcessSafetyAnalyzer
     /// <param name="compilation">The compilation to check.</param>
     /// <param name="projectName">The project name to attach to diagnostics.</param>
     /// <param name="redirected">
-    /// Whether the program's C# calls are redirected when it is built to run (see <see cref="InProcessExit"/>), as a
+    /// Whether the program's C# and Visual Basic calls are redirected when it is built to run (see <see cref="InProcessExit"/>), as a
     /// workspace's are: they are then warnings that say what happens, and only what cannot be redirected is an error.
     /// </param>
     /// <param name="cancellationToken">Cancels the analysis.</param>
@@ -59,7 +59,7 @@ public static class InProcessSafetyAnalyzer
     /// <param name="compilation">The compilation that contains the tree.</param>
     /// <param name="tree">The tree to check.</param>
     /// <param name="projectName">The project name to attach to diagnostics.</param>
-    /// <param name="redirected">Whether C# calls are redirected when the program runs (see <see cref="Analyze(RoslynCompilation, string?, bool, CancellationToken)"/>).</param>
+    /// <param name="redirected">Whether C# and Visual Basic calls are redirected when the program runs (see <see cref="Analyze(RoslynCompilation, string?, bool, CancellationToken)"/>).</param>
     /// <param name="cancellationToken">Cancels the analysis.</param>
     public static IReadOnlyList<BuildDiagnostic> AnalyzeTree(RoslynCompilation compilation, SyntaxTree tree, string? projectName, bool redirected, CancellationToken cancellationToken = default)
     {
@@ -109,8 +109,9 @@ public static class InProcessSafetyAnalyzer
             var location = invocation.GetLocation();
             var lineSpan = location.GetLineSpan().StartLinePosition;
 
-            // A C# program's call is redirected when it runs: the program ends with its exit code, and TabStudio stays.
-            if (redirected && root.Language == LanguageNames.CSharp)
+            // A C# or Visual Basic program's call is redirected when it runs: the program ends with its exit code, and
+            // TabStudio stays. Visual Basic's End statement is not redirected and stays an error.
+            if (redirected)
             {
                 results.Add(new BuildDiagnostic(
                     isExit ? ExitId : FailFastId,

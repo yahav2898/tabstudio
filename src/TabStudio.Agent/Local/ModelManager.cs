@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using System.Text.Json;
+using TabStudio.Toolchains.Downloads;
 
 namespace TabStudio.Agent.Local;
 
@@ -24,7 +25,7 @@ public static class ModelCatalog
     }
 }
 
-/// <summary>Verified, atomic and cancellable model storage in the app's private files.</summary>
+/// <summary>Verified, atomic, resumable and cancellable model storage in the app's private files.</summary>
 public sealed class ModelManager(string directory, HttpClient http) : IDisposable
 {
     private readonly SemaphoreSlim _downloads = new(1, 1);
@@ -43,44 +44,38 @@ public sealed class ModelManager(string directory, HttpClient http) : IDisposabl
     /// <summary>Whether a full, previously verified download is available.</summary>
     public bool IsInstalled(LocalModel model) => File.Exists(PathFor(model)) && new FileInfo(PathFor(model)).Length == model.Size;
 
-    /// <summary>Downloads after the user has accepted the exact model license; incomplete files are removed.</summary>
+    /// <summary>How long the connection may send nothing before it counts as broken and is retried.</summary>
+    public TimeSpan StallTimeout { get; init; } = TimeSpan.FromSeconds(30);
+
+    /// <summary>How many times a broken or stalled connection is retried, continuing from the last byte.</summary>
+    public int Retries { get; init; } = 4;
+
+    /// <summary>How long to wait before the first retry; each further retry waits twice as long.</summary>
+    public TimeSpan RetryDelay { get; init; } = TimeSpan.FromSeconds(1);
+
+    /// <summary>Where the bytes of an unfinished download are kept until it completes.</summary>
+    public string PartialPathFor(LocalModel model) => PathFor(model) + ".part";
+
+    /// <summary>
+    /// Downloads after the user has accepted the exact model license. The toolchain downloader writes to
+    /// <see cref="PartialPathFor"/> and continues it with a <c>Range</c> request after a broken connection, a stall of
+    /// <see cref="StallTimeout"/>, a cancellation or an app restart; only a file of the pinned size and SHA-256 is installed.
+    /// </summary>
+    /// <exception cref="DownloadException">The download failed; what arrived is kept unless it failed verification.</exception>
     public async Task DownloadAsync(LocalModel model, bool licenseAccepted, IProgress<long>? progress = null, CancellationToken cancellationToken = default)
     {
         if (!licenseAccepted) throw new InvalidOperationException("Read and accept this model's license before downloading.");
         if (!Uri.TryCreate(model.Url, UriKind.Absolute, out var url) || url.Scheme != "https" || url.Host != "huggingface.co") throw new InvalidOperationException("Models must come from Hugging Face over HTTPS.");
         await _downloads.WaitAsync(cancellationToken).ConfigureAwait(false);
-        var target = PathFor(model);
-        var temporary = target + ".partial";
         try
         {
             if (IsInstalled(model)) return;
-            Directory.CreateDirectory(directory);
-            using var response = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-            await using var input = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-            using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
-            long size = 0;
-            var buffer = new byte[128 * 1024];
-            await using (var output = new FileStream(temporary, FileMode.Create, FileAccess.Write, FileShare.None, buffer.Length, useAsync: true))
-            {
-                int read;
-                while ((read = await input.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0)
-                {
-                    size += read;
-                    if (size > model.Size) throw new InvalidDataException("The model exceeds its pinned download size.");
-                    hash.AppendData(buffer, 0, read);
-                    await output.WriteAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
-                    progress?.Report(size);
-                }
-            }
-
-            if (size != model.Size || !string.Equals(Convert.ToHexString(hash.GetHashAndReset()), model.Sha256, StringComparison.OrdinalIgnoreCase)) throw new InvalidDataException("The model's size or SHA-256 does not match. The download was discarded.");
-            cancellationToken.ThrowIfCancellationRequested();
-            File.Move(temporary, target, overwrite: true);
+            var downloader = new Downloader(http) { StallTimeout = StallTimeout, Retries = Retries, RetryDelay = RetryDelay };
+            var request = new DownloadRequest { Address = url, Destination = PathFor(model), Name = model.Name, Size = model.Size, Sha256 = model.Sha256 };
+            await downloader.DownloadAsync(request, progress is null ? null : new BytesProgress(progress), cancellationToken).ConfigureAwait(false);
         }
         finally
         {
-            if (File.Exists(temporary)) File.Delete(temporary);
             _downloads.Release();
         }
     }
@@ -98,7 +93,18 @@ public sealed class ModelManager(string directory, HttpClient http) : IDisposabl
     public async Task DeleteAsync(LocalModel model, CancellationToken cancellationToken = default)
     {
         await _downloads.WaitAsync(cancellationToken).ConfigureAwait(false);
-        try { File.Delete(PathFor(model)); }
+        try
+        {
+            File.Delete(PathFor(model));
+            File.Delete(PartialPathFor(model));
+            File.Delete(PartialPathFor(model) + ".validator");
+        }
         finally { _downloads.Release(); }
     }
+}
+
+/// <summary>Reports received bytes as they arrive, without posting to a synchronization context.</summary>
+file sealed class BytesProgress(IProgress<long> inner) : IProgress<DownloadProgress>
+{
+    public void Report(DownloadProgress value) => inner.Report(value.Received);
 }
