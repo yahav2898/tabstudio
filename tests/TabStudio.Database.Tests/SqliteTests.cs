@@ -79,5 +79,15 @@ public sealed class SqliteTests : IDisposable
         using var json = System.Text.Json.JsonDocument.Parse(SqlExecutor.Json(result.Results.Single()));
         Assert.Equal(System.Text.Json.JsonValueKind.Null, json.RootElement.GetProperty("rows")[0][2].ValueKind);
     }
+    [Fact] public void Json_writes_infinity_and_provider_types_as_text()
+    {
+        var set = new QueryResultSet([new("inf", typeof(double)), new("ip", typeof(System.Net.IPAddress)), new("n", typeof(int))],
+            [new object?[] { double.PositiveInfinity, System.Net.IPAddress.Parse("10.0.0.1"), 7 }], false);
+        using var json = System.Text.Json.JsonDocument.Parse(SqlExecutor.Json(set));
+        var row = json.RootElement.GetProperty("rows")[0];
+        Assert.Equal("Infinity", row[0].GetString());
+        Assert.Equal("10.0.0.1", row[1].GetString());
+        Assert.Equal(7, row[2].GetInt32());
+    }
     public void Dispose() => _temp.Dispose();
 }

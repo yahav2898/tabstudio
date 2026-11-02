@@ -78,6 +78,16 @@ public static class JsRegex
                     }
                 }
 
+                // JavaScript's \d and \w are ASCII; .NET's match any script's digits and letters, so an indentation or
+                // word rule matched "é:" or "٣" where VS Code does not.
+                if (next is 'd' or 'w' || (!inClass && next is 'D' or 'W'))
+                {
+                    var set = next is 'd' or 'D' ? "0-9" : "a-zA-Z0-9_";
+                    result.Append(inClass ? set : next is 'D' or 'W' ? $"[^{set}]" : $"[{set}]");
+                    i++;
+                    continue;
+                }
+
                 if (char.IsAsciiLetter(next) && !JavaScriptEscapes.Contains(next, StringComparison.Ordinal))
                 {
                     // In JavaScript, \a is "a"; in .NET it is the bell character.
