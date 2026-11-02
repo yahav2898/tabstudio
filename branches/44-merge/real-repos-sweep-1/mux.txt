@@ -1,0 +1,634 @@
+mux at db9d1d0073d27a0a2d9a8c1bc52aa0af4374d265
+Toolchain projects:
+  go: /home/runner/work/_temp/real-repos/mux/go.mod
+Startup project: go /home/runner/work/_temp/real-repos/mux/go.mod
+Set up in 3.4 s
+Tests: 76 passed, 0 failed, 0 skipped of 76: 76 tests run in 780 ms: 76 passed, 0 failed, 0 skipped.
+Project setup:
+
+Output:
+/second_uses_second_middleware
+=== RUN   TestMiddlewareOnMultiSubrouter/uses_not_found_handler
+--- PASS: TestMiddlewareOnMultiSubrouter (0.00s)
+    --- PASS: TestMiddlewareOnMultiSubrouter//first_uses_first_middleware (0.00s)
+    --- PASS: TestMiddlewareOnMultiSubrouter//second_uses_second_middleware (0.00s)
+    --- PASS: TestMiddlewareOnMultiSubrouter/uses_not_found_handler (0.00s)
+=== RUN   TestSchemeMatchers
+=== RUN   TestSchemeMatchers/httpServer
+=== RUN   TestSchemeMatchers/httpsServer
+--- PASS: TestSchemeMatchers (0.00s)
+    --- PASS: TestSchemeMatchers/httpServer (0.00s)
+    --- PASS: TestSchemeMatchers/httpsServer (0.00s)
+=== RUN   TestHost
+=== RUN   TestHost/Host_route_match
+=== RUN   TestHost/Host_route,_wrong_host_in_request_URL
+=== RUN   TestHost/Host_route_with_port,_match
+=== RUN   TestHost/Host_route_with_port,_wrong_port_in_request_URL
+=== RUN   TestHost/Host_route,_match_with_host_in_request_header
+=== RUN   TestHost/Host_route,_wrong_host_in_request_header
+=== RUN   TestHost/Host_route_with_port,_match_with_request_header
+=== RUN   TestHost/Host_route_with_port,_wrong_host_in_request_header
+=== RUN   TestHost/Host_route_with_pattern,_match_with_request_header
+=== RUN   TestHost/Host_route_with_pattern,_match
+=== RUN   TestHost/Host_route_with_pattern,_additional_capturing_group,_match
+=== RUN   TestHost/Host_route_with_pattern,_wrong_host_in_request_URL
+=== RUN   TestHost/Host_route_with_multiple_patterns,_match
+=== RUN   TestHost/Host_route_with_multiple_patterns,_wrong_host_in_request_URL
+=== RUN   TestHost/Host_route_with_hyphenated_name_and_pattern,_match
+=== RUN   TestHost/Host_route_with_hyphenated_name_and_pattern,_additional_capturing_group,_match
+=== RUN   TestHost/Host_route_with_multiple_hyphenated_names_and_patterns,_match
+--- PASS: TestHost (0.00s)
+    --- PASS: TestHost/Host_route_match (0.00s)
+    --- PASS: TestHost/Host_route,_wrong_host_in_request_URL (0.00s)
+    --- PASS: TestHost/Host_route_with_port,_match (0.00s)
+    --- PASS: TestHost/Host_route_with_port,_wrong_port_in_request_URL (0.00s)
+    --- PASS: TestHost/Host_route,_match_with_host_in_request_header (0.00s)
+    --- PASS: TestHost/Host_route,_wrong_host_in_request_header (0.00s)
+    --- PASS: TestHost/Host_route_with_port,_match_with_request_header (0.00s)
+    --- PASS: TestHost/Host_route_with_port,_wrong_host_in_request_header (0.00s)
+    --- PASS: TestHost/Host_route_with_pattern,_match_with_request_header (0.00s)
+    --- PASS: TestHost/Host_route_with_pattern,_match (0.00s)
+    --- PASS: TestHost/Host_route_with_pattern,_additional_capturing_group,_match (0.00s)
+    --- PASS: TestHost/Host_route_with_pattern,_wrong_host_in_request_URL (0.00s)
+    --- PASS: TestHost/Host_route_with_multiple_patterns,_match (0.00s)
+    --- PASS: TestHost/Host_route_with_multiple_patterns,_wrong_host_in_request_URL (0.00s)
+    --- PASS: TestHost/Host_route_with_hyphenated_name_and_pattern,_match (0.00s)
+    --- PASS: TestHost/Host_route_with_hyphenated_name_and_pattern,_additional_capturing_group,_match (0.00s)
+    --- PASS: TestHost/Host_route_with_multiple_hyphenated_names_and_patterns,_match (0.00s)
+=== RUN   TestPath
+=== RUN   TestPath/Path_route,_match
+=== RUN   TestPath/Path_route,_match_with_trailing_slash_in_request_and_path
+=== RUN   TestPath/Path_route,_do_not_match_with_trailing_slash_in_path
+=== RUN   TestPath/Path_route,_do_not_match_with_trailing_slash_in_request
+=== RUN   TestPath/Path_route,_match_root_with_no_host
+=== RUN   TestPath/Path_route,_match_root_with_no_host,_App_Engine_format
+=== RUN   TestPath/Path_route,_wrong_path_in_request_in_request_URL
+=== RUN   TestPath/Path_route_with_pattern,_match
+=== RUN   TestPath/Path_route_with_pattern,_URL_in_request_does_not_match
+=== RUN   TestPath/Path_route_with_multiple_patterns,_match
+=== RUN   TestPath/Path_route_with_multiple_patterns,_URL_in_request_does_not_match
+=== RUN   TestPath/Path_route_with_multiple_patterns_with_pipe,_match
+=== RUN   TestPath/Path_route_with_hyphenated_name_and_pattern,_match
+=== RUN   TestPath/Path_route_with_multiple_hyphenated_names_and_patterns,_match
+=== RUN   TestPath/Path_route_with_multiple_hyphenated_names_and_patterns_with_pipe,_match
+=== RUN   TestPath/Path_route_with_multiple_hyphenated_names_and_patterns_with_pipe_and_case_insensitive,_match
+=== RUN   TestPath/Path_route_with_empty_match_right_after_other_match
+=== RUN   TestPath/Path_route_with_single_pattern_with_pipe,_match
+=== RUN   TestPath/Path_route_with_single_pattern_with_pipe,_match#01
+=== RUN   TestPath/Path_route_with_multiple_patterns_with_pipe,_match#01
+=== RUN   TestPath/Path_route_with_multiple_patterns_with_pipe,_match#02
+--- PASS: TestPath (0.00s)
+    --- PASS: TestPath/Path_route,_match (0.00s)
+    --- PASS: TestPath/Path_route,_match_with_trailing_slash_in_request_and_path (0.00s)
+    --- PASS: TestPath/Path_route,_do_not_match_with_trailing_slash_in_path (0.00s)
+    --- PASS: TestPath/Path_route,_do_not_match_with_trailing_slash_in_request (0.00s)
+    --- PASS: TestPath/Path_route,_match_root_with_no_host (0.00s)
+    --- PASS: TestPath/Path_route,_match_root_with_no_host,_App_Engine_format (0.00s)
+    --- PASS: TestPath/Path_route,_wrong_path_in_request_in_request_URL (0.00s)
+    --- PASS: TestPath/Path_route_with_pattern,_match (0.00s)
+    --- PASS: TestPath/Path_route_with_pattern,_URL_in_request_does_not_match (0.00s)
+    --- PASS: TestPath/Path_route_with_multiple_patterns,_match (0.00s)
+    --- PASS: TestPath/Path_route_with_multiple_patterns,_URL_in_request_does_not_match (0.00s)
+    --- PASS: TestPath/Path_route_with_multiple_patterns_with_pipe,_match (0.00s)
+    --- PASS: TestPath/Path_route_with_hyphenated_name_and_pattern,_match (0.00s)
+    --- PASS: TestPath/Path_route_with_multiple_hyphenated_names_and_patterns,_match (0.00s)
+    --- PASS: TestPath/Path_route_with_multiple_hyphenated_names_and_patterns_with_pipe,_match (0.00s)
+    --- PASS: TestPath/Path_route_with_multiple_hyphenated_names_and_patterns_with_pipe_and_case_insensitive,_match (0.00s)
+    --- PASS: TestPath/Path_route_with_empty_match_right_after_other_match (0.00s)
+    --- PASS: TestPath/Path_route_with_single_pattern_with_pipe,_match (0.00s)
+    --- PASS: TestPath/Path_route_with_single_pattern_with_pipe,_match#01 (0.00s)
+    --- PASS: TestPath/Path_route_with_multiple_patterns_with_pipe,_match#01 (0.00s)
+    --- PASS: TestPath/Path_route_with_multiple_patterns_with_pipe,_match#02 (0.00s)
+=== RUN   TestPathPrefix
+=== RUN   TestPathPrefix/PathPrefix_route,_match
+=== RUN   TestPathPrefix/PathPrefix_route,_match_substring
+=== RUN   TestPathPrefix/PathPrefix_route,_URL_prefix_in_request_does_not_match
+=== RUN   TestPathPrefix/PathPrefix_route_with_pattern,_match
+=== RUN   TestPathPrefix/PathPrefix_route_with_pattern,_URL_prefix_in_request_does_not_match
+=== RUN   TestPathPrefix/PathPrefix_route_with_multiple_patterns,_match
+=== RUN   TestPathPrefix/PathPrefix_route_with_multiple_patterns,_URL_prefix_in_request_does_not_match
+--- PASS: TestPathPrefix (0.00s)
+    --- PASS: TestPathPrefix/PathPrefix_route,_match (0.00s)
+    --- PASS: TestPathPrefix/PathPrefix_route,_match_substring (0.00s)
+    --- PASS: TestPathPrefix/PathPrefix_route,_URL_prefix_in_request_does_not_match (0.00s)
+    --- PASS: TestPathPrefix/PathPrefix_route_with_pattern,_match (0.00s)
+    --- PASS: TestPathPrefix/PathPrefix_route_with_pattern,_URL_prefix_in_request_does_not_match (0.00s)
+    --- PASS: TestPathPrefix/PathPrefix_route_with_multiple_patterns,_match (0.00s)
+    --- PASS: TestPathPrefix/PathPrefix_route_with_multiple_patterns,_URL_prefix_in_request_does_not_match (0.00s)
+=== RUN   TestSchemeHostPath
+=== RUN   TestSchemeHostPath/Host_and_Path_route,_match
+=== RUN   TestSchemeHostPath/Scheme,_Host,_and_Path_route,_match
+=== RUN   TestSchemeHostPath/Host_and_Path_route,_wrong_host_in_request_URL
+=== RUN   TestSchemeHostPath/Host_and_Path_route_with_pattern,_match
+=== RUN   TestSchemeHostPath/Scheme,_Host,_and_Path_route_with_host_and_path_patterns,_match
+=== RUN   TestSchemeHostPath/Host_and_Path_route_with_pattern,_URL_in_request_does_not_match
+=== RUN   TestSchemeHostPath/Host_and_Path_route_with_multiple_patterns,_match
+=== RUN   TestSchemeHostPath/Host_and_Path_route_with_multiple_patterns,_URL_in_request_does_not_match
+--- PASS: TestSchemeHostPath (0.00s)
+    --- PASS: TestSchemeHostPath/Host_and_Path_route,_match (0.00s)
+    --- PASS: TestSchemeHostPath/Scheme,_Host,_and_Path_route,_match (0.00s)
+    --- PASS: TestSchemeHostPath/Host_and_Path_route,_wrong_host_in_request_URL (0.00s)
+    --- PASS: TestSchemeHostPath/Host_and_Path_route_with_pattern,_match (0.00s)
+    --- PASS: TestSchemeHostPath/Scheme,_Host,_and_Path_route_with_host_and_path_patterns,_match (0.00s)
+    --- PASS: TestSchemeHostPath/Host_and_Path_route_with_pattern,_URL_in_request_does_not_match (0.00s)
+    --- PASS: TestSchemeHostPath/Host_and_Path_route_with_multiple_patterns,_match (0.00s)
+    --- PASS: TestSchemeHostPath/Host_and_Path_route_with_multiple_patterns,_URL_in_request_does_not_match (0.00s)
+=== RUN   TestHeaders
+=== RUN   TestHeaders/Headers_route,_match
+=== RUN   TestHeaders/Headers_route,_bad_header_values
+=== RUN   TestHeaders/Headers_route,_regex_header_values_to_match
+=== RUN   TestHeaders/Headers_route,_regex_header_values_to_match#01
+--- PASS: TestHeaders (0.00s)
+    --- PASS: TestHeaders/Headers_route,_match (0.00s)
+    --- PASS: TestHeaders/Headers_route,_bad_header_values (0.00s)
+    --- PASS: TestHeaders/Headers_route,_regex_header_values_to_match (0.00s)
+    --- PASS: TestHeaders/Headers_route,_regex_header_values_to_match#01 (0.00s)
+=== RUN   TestMethods
+=== RUN   TestMethods/Methods_route,_match_GET
+=== RUN   TestMethods/Methods_route,_match_POST
+=== RUN   TestMethods/Methods_route,_bad_method
+=== RUN   TestMethods/Route_without_methods
+--- PASS: TestMethods (0.00s)
+    --- PASS: TestMethods/Methods_route,_match_GET (0.00s)
+    --- PASS: TestMethods/Methods_route,_match_POST (0.00s)
+    --- PASS: TestMethods/Methods_route,_bad_method (0.00s)
+    --- PASS: TestMethods/Route_without_methods (0.00s)
+=== RUN   TestQueries
+=== RUN   TestQueries/Queries_route,_match
+=== RUN   TestQueries/Queries_route,_match_with_a_query_string
+=== RUN   TestQueries/Queries_route,_match_with_a_query_string_out_of_order
+=== RUN   TestQueries/Queries_route,_bad_query
+=== RUN   TestQueries/Queries_route_with_pattern,_match
+=== RUN   TestQueries/Queries_route_with_multiple_patterns,_match
+=== RUN   TestQueries/Queries_route_with_regexp_pattern,_match
+=== RUN   TestQueries/Queries_route_with_regexp_pattern,_regexp_does_not_match
+=== RUN   TestQueries/Queries_route_with_regexp_pattern_with_quantifier,_match
+=== RUN   TestQueries/Queries_route_with_regexp_pattern_with_quantifier,_additional_variable_in_query_string,_match
+=== RUN   TestQueries/Queries_route_with_regexp_pattern_with_quantifier,_regexp_does_not_match
+=== RUN   TestQueries/Queries_route_with_regexp_pattern_with_quantifier,_additional_capturing_group
+=== RUN   TestQueries/Queries_route_with_regexp_pattern_with_quantifier,_additional_variable_in_query_string,_regexp_does_not_match
+=== RUN   TestQueries/Queries_route_with_hyphenated_name,_match
+=== RUN   TestQueries/Queries_route_with_multiple_hyphenated_names,_match
+=== RUN   TestQueries/Queries_route_with_hyphenate_name_and_pattern,_match
+=== RUN   TestQueries/Queries_route_with_hyphenated_name_and_pattern_with_quantifier,_additional_capturing_group
+=== RUN   TestQueries/Queries_route_with_empty_value,_should_match
+=== RUN   TestQueries/Queries_route_with_empty_value_and_no_parameter_in_request,_should_not_match
+=== RUN   TestQueries/Queries_route_with_empty_value_and_empty_parameter_in_request,_should_match
+=== RUN   TestQueries/Queries_route_with_overlapping_value,_should_not_match
+=== RUN   TestQueries/Queries_route_with_no_parameter_in_request,_should_not_match
+=== RUN   TestQueries/Queries_route_with_empty_parameter_in_request,_should_match
+=== RUN   TestQueries/Queries_route,_bad_submatch
+=== RUN   TestQueries/Queries_route_with_pattern,_match,_escaped_value
+--- PASS: TestQueries (0.00s)
+    --- PASS: TestQueries/Queries_route,_match (0.00s)
+    --- PASS: TestQueries/Queries_route,_match_with_a_query_string (0.00s)
+    --- PASS: TestQueries/Queries_route,_match_with_a_query_string_out_of_order (0.00s)
+    --- PASS: TestQueries/Queries_route,_bad_query (0.00s)
+    --- PASS: TestQueries/Queries_route_with_pattern,_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_multiple_patterns,_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_regexp_pattern,_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_regexp_pattern,_regexp_does_not_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_regexp_pattern_with_quantifier,_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_regexp_pattern_with_quantifier,_additional_variable_in_query_string,_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_regexp_pattern_with_quantifier,_regexp_does_not_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_regexp_pattern_with_quantifier,_additional_capturing_group (0.00s)
+    --- PASS: TestQueries/Queries_route_with_regexp_pattern_with_quantifier,_additional_variable_in_query_string,_regexp_does_not_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_hyphenated_name,_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_multiple_hyphenated_names,_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_hyphenate_name_and_pattern,_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_hyphenated_name_and_pattern_with_quantifier,_additional_capturing_group (0.00s)
+    --- PASS: TestQueries/Queries_route_with_empty_value,_should_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_empty_value_and_no_parameter_in_request,_should_not_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_empty_value_and_empty_parameter_in_request,_should_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_overlapping_value,_should_not_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_no_parameter_in_request,_should_not_match (0.00s)
+    --- PASS: TestQueries/Queries_route_with_empty_parameter_in_request,_should_match (0.00s)
+    --- PASS: TestQueries/Queries_route,_bad_submatch (0.00s)
+    --- PASS: TestQueries/Queries_route_with_pattern,_match,_escaped_value (0.00s)
+=== RUN   TestSchemes
+=== RUN   TestSchemes/Schemes_route,_default_scheme,_match_http,_build_http
+=== RUN   TestSchemes/Schemes_route,_match_https,_build_https
+=== RUN   TestSchemes/Schemes_route,_match_ftp,_build_https
+=== RUN   TestSchemes/Schemes_route,_match_ftp,_build_ftp
+=== RUN   TestSchemes/Schemes_route,_bad_scheme
+--- PASS: TestSchemes (0.00s)
+    --- PASS: TestSchemes/Schemes_route,_default_scheme,_match_http,_build_http (0.00s)
+    --- PASS: TestSchemes/Schemes_route,_match_https,_build_https (0.00s)
+    --- PASS: TestSchemes/Schemes_route,_match_ftp,_build_https (0.00s)
+    --- PASS: TestSchemes/Schemes_route,_match_ftp,_build_ftp (0.00s)
+    --- PASS: TestSchemes/Schemes_route,_bad_scheme (0.00s)
+=== RUN   TestMatcherFunc
+=== RUN   TestMatcherFunc/MatchFunc_route,_match
+=== RUN   TestMatcherFunc/MatchFunc_route,_non-match
+--- PASS: TestMatcherFunc (0.00s)
+    --- PASS: TestMatcherFunc/MatchFunc_route,_match (0.00s)
+    --- PASS: TestMatcherFunc/MatchFunc_route,_non-match (0.00s)
+=== RUN   TestBuildVarsFunc
+=== RUN   TestBuildVarsFunc/BuildVarsFunc_set_on_route
+=== RUN   TestBuildVarsFunc/BuildVarsFunc_set_on_route_and_parent_route
+--- PASS: TestBuildVarsFunc (0.00s)
+    --- PASS: TestBuildVarsFunc/BuildVarsFunc_set_on_route (0.00s)
+    --- PASS: TestBuildVarsFunc/BuildVarsFunc_set_on_route_and_parent_route (0.00s)
+=== RUN   TestSubRouter
+=== RUN   TestSubRouter/#00
+=== RUN   TestSubRouter/#01
+=== RUN   TestSubRouter/#02
+=== RUN   TestSubRouter/#03
+=== RUN   TestSubRouter/#04
+=== RUN   TestSubRouter/#05
+=== RUN   TestSubRouter/#06
+=== RUN   TestSubRouter/#07
+=== RUN   TestSubRouter/#08
+=== RUN   TestSubRouter/#09
+=== RUN   TestSubRouter/Mismatch_method_specified_on_parent_route
+=== RUN   TestSubRouter/Match_method_specified_on_parent_route
+=== RUN   TestSubRouter/Mismatch_scheme_specified_on_parent_route
+=== RUN   TestSubRouter/Match_scheme_specified_on_parent_route
+=== RUN   TestSubRouter/No_match_header_specified_on_parent_route
+=== RUN   TestSubRouter/Header_mismatch_value_specified_on_parent_route
+=== RUN   TestSubRouter/Header_match_value_specified_on_parent_route
+=== RUN   TestSubRouter/Query_specified_on_parent_route_not_present
+=== RUN   TestSubRouter/Query_mismatch_value_specified_on_parent_route
+=== RUN   TestSubRouter/Query_match_value_specified_on_subroute
+=== RUN   TestSubRouter/Build_with_scheme_on_parent_router
+=== RUN   TestSubRouter/Prefer_scheme_on_child_route_when_building_URLs
+--- PASS: TestSubRouter (0.00s)
+    --- PASS: TestSubRouter/#00 (0.00s)
+    --- PASS: TestSubRouter/#01 (0.00s)
+    --- PASS: TestSubRouter/#02 (0.00s)
+    --- PASS: TestSubRouter/#03 (0.00s)
+    --- PASS: TestSubRouter/#04 (0.00s)
+    --- PASS: TestSubRouter/#05 (0.00s)
+    --- PASS: TestSubRouter/#06 (0.00s)
+    --- PASS: TestSubRouter/#07 (0.00s)
+    --- PASS: TestSubRouter/#08 (0.00s)
+    --- PASS: TestSubRouter/#09 (0.00s)
+    --- PASS: TestSubRouter/Mismatch_method_specified_on_parent_route (0.00s)
+    --- PASS: TestSubRouter/Match_method_specified_on_parent_route (0.00s)
+    --- PASS: TestSubRouter/Mismatch_scheme_specified_on_parent_route (0.00s)
+    --- PASS: TestSubRouter/Match_scheme_specified_on_parent_route (0.00s)
+    --- PASS: TestSubRouter/No_match_header_specified_on_parent_route (0.00s)
+    --- PASS: TestSubRouter/Header_mismatch_value_specified_on_parent_route (0.00s)
+    --- PASS: TestSubRouter/Header_match_value_specified_on_parent_route (0.00s)
+    --- PASS: TestSubRouter/Query_specified_on_parent_route_not_present (0.00s)
+    --- PASS: TestSubRouter/Query_mismatch_value_specified_on_parent_route (0.00s)
+    --- PASS: TestSubRouter/Query_match_value_specified_on_subroute (0.00s)
+    --- PASS: TestSubRouter/Build_with_scheme_on_parent_router (0.00s)
+    --- PASS: TestSubRouter/Prefer_scheme_on_child_route_when_building_URLs (0.00s)
+=== RUN   TestNamedRoutes
+--- PASS: TestNamedRoutes (0.00s)
+=== RUN   TestNameMultipleCalls
+--- PASS: TestNameMultipleCalls (0.00s)
+=== RUN   TestStrictSlash
+=== RUN   TestStrictSlash/Redirect_path_without_slash
+=== RUN   TestStrictSlash/Do_not_redirect_path_with_slash
+=== RUN   TestStrictSlash/Redirect_path_with_slash
+=== RUN   TestStrictSlash/Do_not_redirect_path_without_slash
+=== RUN   TestStrictSlash/Propagate_StrictSlash_to_subrouters
+=== RUN   TestStrictSlash/Ignore_StrictSlash_for_path_prefix
+--- PASS: TestStrictSlash (0.00s)
+    --- PASS: TestStrictSlash/Redirect_path_without_slash (0.00s)
+    --- PASS: TestStrictSlash/Do_not_redirect_path_with_slash (0.00s)
+    --- PASS: TestStrictSlash/Redirect_path_with_slash (0.00s)
+    --- PASS: TestStrictSlash/Do_not_redirect_path_without_slash (0.00s)
+    --- PASS: TestStrictSlash/Propagate_StrictSlash_to_subrouters (0.00s)
+    --- PASS: TestStrictSlash/Ignore_StrictSlash_for_path_prefix (0.00s)
+=== RUN   TestUseEncodedPath
+=== RUN   TestUseEncodedPath/Router_with_useEncodedPath,_URL_with_encoded_slash_does_match
+=== RUN   TestUseEncodedPath/Router_with_useEncodedPath,_URL_with_encoded_slash_doesn't_match
+--- PASS: TestUseEncodedPath (0.00s)
+    --- PASS: TestUseEncodedPath/Router_with_useEncodedPath,_URL_with_encoded_slash_does_match (0.00s)
+    --- PASS: TestUseEncodedPath/Router_with_useEncodedPath,_URL_with_encoded_slash_doesn't_match (0.00s)
+=== RUN   TestWalkSingleDepth
+--- PASS: TestWalkSingleDepth (0.00s)
+=== RUN   TestWalkNested
+--- PASS: TestWalkNested (0.00s)
+=== RUN   TestWalkSubrouters
+--- PASS: TestWalkSubrouters (0.00s)
+=== RUN   TestWalkErrorRoute
+--- PASS: TestWalkErrorRoute (0.00s)
+=== RUN   TestWalkErrorMatcher
+--- PASS: TestWalkErrorMatcher (0.00s)
+=== RUN   TestWalkErrorHandler
+--- PASS: TestWalkErrorHandler (0.00s)
+=== RUN   TestSubrouterErrorHandling
+--- PASS: TestSubrouterErrorHandling (0.00s)
+=== RUN   TestPanicOnCapturingGroups
+--- PASS: TestPanicOnCapturingGroups (0.00s)
+=== RUN   TestRouterInContext
+=== RUN   TestRouterInContext/router_in_request_context_get_route_by_name
+=== RUN   TestRouterInContext/omit_router_from_request_context
+--- PASS: TestRouterInContext (0.00s)
+    --- PASS: TestRouterInContext/router_in_request_context_get_route_by_name (0.00s)
+    --- PASS: TestRouterInContext/omit_router_from_request_context (0.00s)
+=== RUN   Test301Redirect
+--- PASS: Test301Redirect (0.00s)
+=== RUN   TestSkipClean
+--- PASS: TestSkipClean (0.00s)
+=== RUN   TestSubrouterHeader
+--- PASS: TestSubrouterHeader (0.00s)
+=== RUN   TestNoMatchMethodErrorHandler
+--- PASS: TestNoMatchMethodErrorHandler (0.00s)
+=== RUN   TestMultipleDefinitionOfSamePathWithDifferentMethods
+=== RUN   TestMultipleDefinitionOfSamePathWithDifferentMethods/Post_Method_should_be_matched_properly
+=== RUN   TestMultipleDefinitionOfSamePathWithDifferentMethods/Get_Method_with_invalid_query_value_should_not_match
+=== RUN   TestMultipleDefinitionOfSamePathWithDifferentMethods/A_mismach_method_of_a_valid_path_should_return_ErrMethodMismatch
+--- PASS: TestMultipleDefinitionOfSamePathWithDifferentMethods (0.00s)
+    --- PASS: TestMultipleDefinitionOfSamePathWithDifferentMethods/Post_Method_should_be_matched_properly (0.00s)
+    --- PASS: TestMultipleDefinitionOfSamePathWithDifferentMethods/Get_Method_with_invalid_query_value_should_not_match (0.00s)
+    --- PASS: TestMultipleDefinitionOfSamePathWithDifferentMethods/A_mismach_method_of_a_valid_path_should_return_ErrMethodMismatch (0.00s)
+=== RUN   TestMultipleDefinitionOfSamePathWithDifferentQueries
+--- PASS: TestMultipleDefinitionOfSamePathWithDifferentQueries (0.00s)
+=== RUN   TestErrMatchNotFound
+--- PASS: TestErrMatchNotFound (0.00s)
+=== RUN   TestMethodsSubrouterCatchall
+=== PAUSE TestMethodsSubrouterCatchall
+=== RUN   TestMethodsSubrouterStrictSlash
+=== PAUSE TestMethodsSubrouterStrictSlash
+=== RUN   TestMethodsSubrouterPathPrefix
+=== PAUSE TestMethodsSubrouterPathPrefix
+=== RUN   TestMethodsSubrouterSubrouter
+=== PAUSE TestMethodsSubrouterSubrouter
+=== RUN   TestMethodsSubrouterPathVariable
+=== PAUSE TestMethodsSubrouterPathVariable
+=== RUN   TestSubrouterMatching
+=== RUN   TestSubrouterMatching/pathPrefix
+=== RUN   TestSubrouterMatching/pathPrefix/no_match_final_path_prefix
+=== RUN   TestSubrouterMatching/pathPrefix/no_match_parent_path_prefix
+=== RUN   TestSubrouterMatching/pathPrefix/matches_append
+=== RUN   TestSubrouterMatching/pathPrefix/matches_as_prefix
+=== RUN   TestSubrouterMatching/path
+=== RUN   TestSubrouterMatching/path/no_match_subroute_path
+=== RUN   TestSubrouterMatching/path/no_match_parent_path
+=== RUN   TestSubrouterMatching/path/no_match_as_prefix
+=== RUN   TestSubrouterMatching/path/no_match_append
+=== RUN   TestSubrouterMatching/host
+=== RUN   TestSubrouterMatching/host/no_match_before
+=== RUN   TestSubrouterMatching/host/no_match_other
+=== RUN   TestSubrouterMatching/host/matches_after
+=== RUN   TestSubrouterMatching/queries_variant_keys
+=== RUN   TestSubrouterMatching/queries_variant_keys/matches_with_all
+=== RUN   TestSubrouterMatching/queries_variant_keys/matches_with_more
+=== RUN   TestSubrouterMatching/queries_variant_keys/no_match_with_none
+=== RUN   TestSubrouterMatching/queries_variant_keys/no_match_with_some
+=== RUN   TestSubrouterMatching/queries_overlapping_keys
+=== RUN   TestSubrouterMatching/queries_overlapping_keys/no_match_old_value
+=== RUN   TestSubrouterMatching/queries_overlapping_keys/no_match_diff_value
+=== RUN   TestSubrouterMatching/queries_overlapping_keys/no_match_with_none
+=== RUN   TestSubrouterMatching/queries_overlapping_keys/matches_override
+=== RUN   TestSubrouterMatching/header_variant_keys
+=== RUN   TestSubrouterMatching/header_variant_keys/matches_with_all
+=== RUN   TestSubrouterMatching/header_variant_keys/matches_with_more
+=== RUN   TestSubrouterMatching/header_variant_keys/no_match_with_none
+=== RUN   TestSubrouterMatching/header_variant_keys/no_match_with_some
+=== RUN   TestSubrouterMatching/header_overlapping_keys
+=== RUN   TestSubrouterMatching/header_overlapping_keys/no_match_old_value
+=== RUN   TestSubrouterMatching/header_overlapping_keys/no_match_diff_value
+=== RUN   TestSubrouterMatching/header_overlapping_keys/no_match_with_none
+=== RUN   TestSubrouterMatching/header_overlapping_keys/matches_override
+=== RUN   TestSubrouterMatching/method
+=== RUN   TestSubrouterMatching/method/matches_before
+=== RUN   TestSubrouterMatching/method/no_match_other
+=== RUN   TestSubrouterMatching/method/matches_override
+=== RUN   TestSubrouterMatching/schemes
+=== RUN   TestSubrouterMatching/schemes/matches_overrides
+=== RUN   TestSubrouterMatching/schemes/matches_original
+=== RUN   TestSubrouterMatching/schemes/no_match_other
+--- PASS: TestSubrouterMatching (0.00s)
+    --- PASS: TestSubrouterMatching/pathPrefix (0.00s)
+        --- PASS: TestSubrouterMatching/pathPrefix/no_match_final_path_prefix (0.00s)
+        --- PASS: TestSubrouterMatching/pathPrefix/no_match_parent_path_prefix (0.00s)
+        --- PASS: TestSubrouterMatching/pathPrefix/matches_append (0.00s)
+        --- PASS: TestSubrouterMatching/pathPrefix/matches_as_prefix (0.00s)
+    --- PASS: TestSubrouterMatching/path (0.00s)
+        --- PASS: TestSubrouterMatching/path/no_match_subroute_path (0.00s)
+        --- PASS: TestSubrouterMatching/path/no_match_parent_path (0.00s)
+        --- PASS: TestSubrouterMatching/path/no_match_as_prefix (0.00s)
+        --- PASS: TestSubrouterMatching/path/no_match_append (0.00s)
+    --- PASS: TestSubrouterMatching/host (0.00s)
+        --- PASS: TestSubrouterMatching/host/no_match_before (0.00s)
+        --- PASS: TestSubrouterMatching/host/no_match_other (0.00s)
+        --- PASS: TestSubrouterMatching/host/matches_after (0.00s)
+    --- PASS: TestSubrouterMatching/queries_variant_keys (0.00s)
+        --- PASS: TestSubrouterMatching/queries_variant_keys/matches_with_all (0.00s)
+        --- PASS: TestSubrouterMatching/queries_variant_keys/matches_with_more (0.00s)
+        --- PASS: TestSubrouterMatching/queries_variant_keys/no_match_with_none (0.00s)
+        --- PASS: TestSubrouterMatching/queries_variant_keys/no_match_with_some (0.00s)
+    --- PASS: TestSubrouterMatching/queries_overlapping_keys (0.00s)
+        --- PASS: TestSubrouterMatching/queries_overlapping_keys/no_match_old_value (0.00s)
+        --- PASS: TestSubrouterMatching/queries_overlapping_keys/no_match_diff_value (0.00s)
+        --- PASS: TestSubrouterMatching/queries_overlapping_keys/no_match_with_none (0.00s)
+        --- PASS: TestSubrouterMatching/queries_overlapping_keys/matches_override (0.00s)
+    --- PASS: TestSubrouterMatching/header_variant_keys (0.00s)
+        --- PASS: TestSubrouterMatching/header_variant_keys/matches_with_all (0.00s)
+        --- PASS: TestSubrouterMatching/header_variant_keys/matches_with_more (0.00s)
+        --- PASS: TestSubrouterMatching/header_variant_keys/no_match_with_none (0.00s)
+        --- PASS: TestSubrouterMatching/header_variant_keys/no_match_with_some (0.00s)
+    --- PASS: TestSubrouterMatching/header_overlapping_keys (0.00s)
+        --- PASS: TestSubrouterMatching/header_overlapping_keys/no_match_old_value (0.00s)
+        --- PASS: TestSubrouterMatching/header_overlapping_keys/no_match_diff_value (0.00s)
+        --- PASS: TestSubrouterMatching/header_overlapping_keys/no_match_with_none (0.00s)
+        --- PASS: TestSubrouterMatching/header_overlapping_keys/matches_override (0.00s)
+    --- PASS: TestSubrouterMatching/method (0.00s)
+        --- PASS: TestSubrouterMatching/method/matches_before (0.00s)
+        --- PASS: TestSubrouterMatching/method/no_match_other (0.00s)
+        --- PASS: TestSubrouterMatching/method/matches_override (0.00s)
+    --- PASS: TestSubrouterMatching/schemes (0.00s)
+        --- PASS: TestSubrouterMatching/schemes/matches_overrides (0.00s)
+        --- PASS: TestSubrouterMatching/schemes/matches_original (0.00s)
+        --- PASS: TestSubrouterMatching/schemes/no_match_other (0.00s)
+=== RUN   Test_copyRouteConf
+=== RUN   Test_copyRouteConf/empty
+=== RUN   Test_copyRouteConf/full
+--- PASS: Test_copyRouteConf (0.00s)
+    --- PASS: Test_copyRouteConf/empty (0.00s)
+    --- PASS: Test_copyRouteConf/full (0.00s)
+=== RUN   TestMethodNotAllowed
+--- PASS: TestMethodNotAllowed (0.00s)
+=== RUN   TestMethodNotAllowedSubrouterWithSeveralRoutes
+--- PASS: TestMethodNotAllowedSubrouterWithSeveralRoutes (0.00s)
+=== RUN   TestSubrouterCustomMethodNotAllowed
+=== RUN   TestSubrouterCustomMethodNotAllowed/subrouter_method_not_allowed
+=== RUN   TestSubrouterCustomMethodNotAllowed/router_method_not_allowed
+--- PASS: TestSubrouterCustomMethodNotAllowed (0.00s)
+    --- PASS: TestSubrouterCustomMethodNotAllowed/subrouter_method_not_allowed (0.00s)
+    --- PASS: TestSubrouterCustomMethodNotAllowed/router_method_not_allowed (0.00s)
+=== RUN   TestSubrouterNotFound
+--- PASS: TestSubrouterNotFound (0.00s)
+=== RUN   TestContextMiddleware
+--- PASS: TestContextMiddleware (0.00s)
+=== RUN   TestGetVarNames
+--- PASS: TestGetVarNames (0.00s)
+=== RUN   TestPopulateContext
+=== RUN   TestPopulateContext/no_populated_vars
+=== RUN   TestPopulateContext/empty_var
+=== RUN   TestPopulateContext/populated_vars
+=== RUN   TestPopulateContext/omit_route_/static
+=== RUN   TestPopulateContext/omit_route_/dynamic
+--- PASS: TestPopulateContext (0.00s)
+    --- PASS: TestPopulateContext/no_populated_vars (0.00s)
+    --- PASS: TestPopulateContext/empty_var (0.00s)
+    --- PASS: TestPopulateContext/populated_vars (0.00s)
+    --- PASS: TestPopulateContext/omit_route_/static (0.00s)
+    --- PASS: TestPopulateContext/omit_route_/dynamic (0.00s)
+=== RUN   TestRouteMatchers
+--- PASS: TestRouteMatchers (0.00s)
+=== RUN   TestHeaderMatcher
+--- PASS: TestHeaderMatcher (0.00s)
+=== RUN   TestHostMatcher
+--- PASS: TestHostMatcher (0.00s)
+=== RUN   TestMethodMatcher
+--- PASS: TestMethodMatcher (0.00s)
+=== RUN   TestPathMatcher
+--- PASS: TestPathMatcher (0.00s)
+=== RUN   TestSchemeMatcher
+--- PASS: TestSchemeMatcher (0.00s)
+=== RUN   TestUrlBuilding
+--- PASS: TestUrlBuilding (0.00s)
+=== RUN   TestMatchedRouteName
+--- PASS: TestMatchedRouteName (0.00s)
+=== RUN   TestSubRouting
+--- PASS: TestSubRouting (0.00s)
+=== RUN   TestVariableNames
+--- PASS: TestVariableNames (0.00s)
+=== RUN   TestRedirectSlash
+--- PASS: TestRedirectSlash (0.00s)
+=== RUN   TestNewRegexp
+--- PASS: TestNewRegexp (0.00s)
+=== RUN   Test_newRouteRegexp_Errors
+=== RUN   Test_newRouteRegexp_Errors/Test_case_for_/{}
+=== RUN   Test_newRouteRegexp_Errors/Test_case_for_/{:.}
+=== RUN   Test_newRouteRegexp_Errors/Test_case_for_/{a:}
+=== RUN   Test_newRouteRegexp_Errors/Test_case_for_/{id:abc(}
+--- PASS: Test_newRouteRegexp_Errors (0.00s)
+    --- PASS: Test_newRouteRegexp_Errors/Test_case_for_/{} (0.00s)
+    --- PASS: Test_newRouteRegexp_Errors/Test_case_for_/{:.} (0.00s)
+    --- PASS: Test_newRouteRegexp_Errors/Test_case_for_/{a:} (0.00s)
+    --- PASS: Test_newRouteRegexp_Errors/Test_case_for_/{id:abc(} (0.00s)
+=== RUN   Test_findFirstQueryKey
+=== RUN   Test_findFirstQueryKey/a=1&b=2
+=== RUN   Test_findFirstQueryKey/a=1&b=2/a
+=== RUN   Test_findFirstQueryKey/a=1&b=2/b
+=== RUN   Test_findFirstQueryKey/a=1&a=2&a=banana
+=== RUN   Test_findFirstQueryKey/a=1&a=2&a=banana/a
+=== RUN   Test_findFirstQueryKey/ascii=%3Ckey%3A+0x90%3E
+=== RUN   Test_findFirstQueryKey/ascii=%3Ckey%3A+0x90%3E/ascii
+=== RUN   Test_findFirstQueryKey/a=1;b=2
+=== RUN   Test_findFirstQueryKey/a=1&a=2;a=banana
+=== RUN   Test_findFirstQueryKey/a=1&a=2;a=banana/a
+=== RUN   Test_findFirstQueryKey/a==
+=== RUN   Test_findFirstQueryKey/a==/a
+=== RUN   Test_findFirstQueryKey/a=%2
+=== RUN   Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30
+=== RUN   Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30/a
+=== RUN   Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30/_?
+=== RUN   Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30/#00
+=== RUN   Test_findFirstQueryKey/a=1&_?&=#+%!<>#"{}|\^[]`☺_:/@$'()*,;&a=5
+=== RUN   Test_findFirstQueryKey/a=1&_?&=#+%!<>#"{}|\^[]`☺_:/@$'()*,;&a=5/a
+=== RUN   Test_findFirstQueryKey/a=1&_?&=#+%!<>#"{}|\^[]`☺_:/@$'()*,;&a=5/_?
+=== RUN   Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu
+=== RUN   Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/b
+=== RUN   Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/c
+=== RUN   Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/f
+=== RUN   Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/a
+--- PASS: Test_findFirstQueryKey (0.00s)
+    --- PASS: Test_findFirstQueryKey/a=1&b=2 (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=1&b=2/a (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=1&b=2/b (0.00s)
+    --- PASS: Test_findFirstQueryKey/a=1&a=2&a=banana (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=1&a=2&a=banana/a (0.00s)
+    --- PASS: Test_findFirstQueryKey/ascii=%3Ckey%3A+0x90%3E (0.00s)
+        --- PASS: Test_findFirstQueryKey/ascii=%3Ckey%3A+0x90%3E/ascii (0.00s)
+    --- PASS: Test_findFirstQueryKey/a=1;b=2 (0.00s)
+    --- PASS: Test_findFirstQueryKey/a=1&a=2;a=banana (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=1&a=2;a=banana/a (0.00s)
+    --- PASS: Test_findFirstQueryKey/a== (0.00s)
+        --- PASS: Test_findFirstQueryKey/a==/a (0.00s)
+    --- PASS: Test_findFirstQueryKey/a=%2 (0.00s)
+    --- PASS: Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30 (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30/a (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30/_? (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=20&%20%3F&=%23+%25%21%3C%3E%23%22%7B%7D%7C%5C%5E%5B%5D%60%E2%98%BA%09:%2F@$%27%28%29%2A%2C%3B&a=30/#00 (0.00s)
+    --- PASS: Test_findFirstQueryKey/a=1&_?&=#+%!<>#"{}|\^[]`☺_:/@$'()*,;&a=5 (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=1&_?&=#+%!<>#"{}|\^[]`☺_:/@$'()*,;&a=5/a (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=1&_?&=#+%!<>#"{}|\^[]`☺_:/@$'()*,;&a=5/_? (0.00s)
+    --- PASS: Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/b (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/c (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/f (0.00s)
+        --- PASS: Test_findFirstQueryKey/a=xxxxxxxxxxxxxxxx&b=YYYYYYYYYYYYYYY&c=ppppppppppppppppppp&f=ttttttttttttttttt&a=uuuuuuuuuuuuu/a (0.00s)
+=== RUN   TestRouteMetadata
+=== RUN   TestRouteMetadata/get_metadata_map
+=== RUN   TestRouteMetadata/get_metadata_value
+=== RUN   TestRouteMetadata/get_metadata_value_or_fallback
+--- PASS: TestRouteMetadata (0.00s)
+    --- PASS: TestRouteMetadata/get_metadata_map (0.00s)
+    --- PASS: TestRouteMetadata/get_metadata_value (0.00s)
+    --- PASS: TestRouteMetadata/get_metadata_value_or_fallback (0.00s)
+=== CONT  TestMethodsSubrouterCatchall
+=== CONT  TestMethodsSubrouterSubrouter
+=== RUN   TestMethodsSubrouterCatchall/match_GET_handler
+=== CONT  TestMethodsSubrouterPathPrefix
+=== RUN   TestMethodsSubrouterCatchall/match_POST_handler
+=== RUN   TestMethodsSubrouterCatchall/match_DELETE_handler
+=== RUN   TestMethodsSubrouterCatchall/disallow_PUT_method
+--- PASS: TestMethodsSubrouterCatchall (0.00s)
+    --- PASS: TestMethodsSubrouterCatchall/match_GET_handler (0.00s)
+    --- PASS: TestMethodsSubrouterCatchall/match_POST_handler (0.00s)
+    --- PASS: TestMethodsSubrouterCatchall/match_DELETE_handler (0.00s)
+    --- PASS: TestMethodsSubrouterCatchall/disallow_PUT_method (0.00s)
+=== CONT  TestMethodsSubrouterStrictSlash
+=== RUN   TestMethodsSubrouterPathPrefix/match_first_POST_handler
+=== RUN   TestMethodsSubrouterPathPrefix/match_DELETE_handler
+=== CONT  TestMethodsSubrouterPathVariable
+=== RUN   TestMethodsSubrouterPathPrefix/match_PUT_handler
+=== RUN   TestMethodsSubrouterPathPrefix/disallow_PATCH_method
+=== RUN   TestMethodsSubrouterSubrouter/match_first_POST_handler
+--- PASS: TestMethodsSubrouterPathPrefix (0.00s)
+    --- PASS: TestMethodsSubrouterPathPrefix/match_first_POST_handler (0.00s)
+    --- PASS: TestMethodsSubrouterPathPrefix/match_DELETE_handler (0.00s)
+    --- PASS: TestMethodsSubrouterPathPrefix/match_PUT_handler (0.00s)
+    --- PASS: TestMethodsSubrouterPathPrefix/disallow_PATCH_method (0.00s)
+=== RUN   TestMethodsSubrouterStrictSlash/match_POST_handler
+=== RUN   TestMethodsSubrouterStrictSlash/match_GET_handler
+=== RUN   TestMethodsSubrouterStrictSlash/match_POST_handler,_redirect_strict-slash
+=== RUN   TestMethodsSubrouterPathVariable/match_GET_handler
+=== RUN   TestMethodsSubrouterStrictSlash/match_GET_handler,_redirect_strict-slash
+=== RUN   TestMethodsSubrouterPathVariable/match_POST_handler
+=== RUN   TestMethodsSubrouterStrictSlash/disallow_DELETE_method
+=== RUN   TestMethodsSubrouterPathVariable/match_DELETE_handler
+=== RUN   TestMethodsSubrouterSubrouter/match_GET_handler
+--- PASS: TestMethodsSubrouterStrictSlash (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/match_POST_handler (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/match_GET_handler (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/match_POST_handler,_redirect_strict-slash (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/match_GET_handler,_redirect_strict-slash (0.00s)
+    --- PASS: TestMethodsSubrouterStrictSlash/disallow_DELETE_method (0.00s)
+=== RUN   TestMethodsSubrouterSubrouter/match_PATCH_handler
+=== RUN   TestMethodsSubrouterSubrouter/match_PUT_handler
+=== RUN   TestMethodsSubrouterPathVariable/match_PUT_handler
+=== RUN   TestMethodsSubrouterSubrouter/disallow_DELETE_method
+--- PASS: TestMethodsSubrouterSubrouter (0.00s)
+    --- PASS: TestMethodsSubrouterSubrouter/match_first_POST_handler (0.00s)
+    --- PASS: TestMethodsSubrouterSubrouter/match_GET_handler (0.00s)
+    --- PASS: TestMethodsSubrouterSubrouter/match_PATCH_handler (0.00s)
+    --- PASS: TestMethodsSubrouterSubrouter/match_PUT_handler (0.00s)
+    --- PASS: TestMethodsSubrouterSubrouter/disallow_DELETE_method (0.00s)
+=== RUN   TestMethodsSubrouterPathVariable/disallow_PATCH_method
+--- PASS: TestMethodsSubrouterPathVariable (0.00s)
+    --- PASS: TestMethodsSubrouterPathVariable/match_GET_handler (0.00s)
+    --- PASS: TestMethodsSubrouterPathVariable/match_POST_handler (0.00s)
+    --- PASS: TestMethodsSubrouterPathVariable/match_DELETE_handler (0.00s)
+    --- PASS: TestMethodsSubrouterPathVariable/match_PUT_handler (0.00s)
+    --- PASS: TestMethodsSubrouterPathVariable/disallow_PATCH_method (0.00s)
+=== RUN   ExampleSetURLVars
+--- PASS: ExampleSetURLVars (0.00s)
+=== RUN   ExampleCORSMethodMiddleware
+--- PASS: ExampleCORSMethodMiddleware (0.00s)
+=== RUN   ExampleRoute_HeadersRegexp
+--- PASS: ExampleRoute_HeadersRegexp (0.00s)
+=== RUN   ExampleRoute_HeadersRegexp_exactMatch
+--- PASS: ExampleRoute_HeadersRegexp_exactMatch (0.00s)
+PASS
+ok  	github.com/gorilla/mux	0.021s
+
