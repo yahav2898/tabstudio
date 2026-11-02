@@ -8,7 +8,7 @@ using TabStudio.Testing;
 
 namespace TabStudio.Containers.Tests;
 
-/// <summary>The engine's store, recovery, cleanup and Compose fixes of 0.21.4, without a real PRoot.</summary>
+/// <summary>The engine's store, recovery, cleanup and Compose fixes of 0.21.3, without a real PRoot.</summary>
 public sealed class HardeningTests
 {
     private static ContainerEngine Engine(TempDirectory temp, HttpClient http) => new(new()
