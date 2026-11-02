@@ -1,0 +1,569 @@
+[  0%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run.c.o
+[  0%] Built target functions_list
+[  0%] Built target WRAPPERS
+[  0%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run0f.c.o
+[  1%] Generating /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/git_head.h
+fatal: not a git repository (or any of the parent directories): .git
+[  1%] Built target generate_git_head_target
+[  1%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66.c.o
+[  1%] Built target generate_dynacache_hashes
+[  1%] Building C object CMakeFiles/mainobj.dir/src/os/backtrace.c.o
+[  1%] Building C object CMakeFiles/mainobj.dir/src/os/emit_signals_linux.c.o
+[  2%] Building C object CMakeFiles/mainobj.dir/src/os/hostext_common.c.o
+[  2%] Building C object CMakeFiles/mainobj.dir/src/os/hostext_linux.c.o
+[  2%] Building C object CMakeFiles/mainobj.dir/src/os/freq_linux.c.o
+[  2%] Building C object CMakeFiles/mainobj.dir/src/os/os_linux.c.o
+[  3%] Building C object CMakeFiles/mainobj.dir/src/os/perfmap.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/os_linux.c: In function ‘PrintfFtrace’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/os_linux.c:228:9: warning: ignoring return value of ‘write’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  228 |         write(trace_fd, tmp, strlen(tmp));
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/os_linux.c:235:5: warning: ignoring return value of ‘write’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  235 |     write(trace_fd, tmp, strlen(tmp));
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[  4%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run660f.c.o
+[  4%] Building C object CMakeFiles/mainobj.dir/src/os/symbolfuncs_linux.c.o
+[  4%] Building C object CMakeFiles/mainobj.dir/src/os/random_linux.c.o
+[  4%] Building C object CMakeFiles/mainobj.dir/src/os/my_cpuid.c.o
+[  5%] Building C object CMakeFiles/mainobj.dir/src/os/sysinfo.c.o
+In file included from /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:9:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c: In function ‘InitializeSystemInfo’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:34:19: warning: ‘%04lu’ directive output may be truncated writing 4 bytes into a region of size between 2 and 30 [-Wformat-truncation=]
+   34 | #define BOX64_STR "Box64"
+      |                   ^~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:42:5: note: in expansion of macro ‘BOX64_STR’
+   42 |     BOX64_STR                         \
+      |     ^~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:195:52: note: in expansion of macro ‘BOX64_BUILD_INFO_STRING_SHORT’
+  195 |             snprintf(branding, sizeof(branding)-1, BOX64_BUILD_INFO_STRING_SHORT " on %.*s @%04" PRIu64 " MHz", 28, box64_sysinfo.cpuname, box64_sysinfo.frequency / 1000000);
+      |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:34:19: note: directive argument in the range [0, 1]
+   34 | #define BOX64_STR "Box64"
+      |                   ^~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:42:5: note: in expansion of macro ‘BOX64_STR’
+   42 |     BOX64_STR                         \
+      |     ^~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:195:52: note: in expansion of macro ‘BOX64_BUILD_INFO_STRING_SHORT’
+  195 |             snprintf(branding, sizeof(branding)-1, BOX64_BUILD_INFO_STRING_SHORT " on %.*s @%04" PRIu64 " MHz", 28, box64_sysinfo.cpuname, box64_sysinfo.frequency / 1000000);
+      |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/stdio.h:974,
+                 from /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/include/sysinfo.h:3,
+                 from /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/include/debug.h:8,
+                 from /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:7:
+In function ‘snprintf’,
+    inlined from ‘InitializeSystemInfo’ at /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:195:13:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:68:10: note: ‘__builtin___snprintf_chk’ output between 27 and 55 bytes into a destination of size 48
+   68 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   69 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   70 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c: In function ‘InitializeSystemInfo’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:34:19: warning: ‘%1.2f’ directive output may be truncated writing between 3 and 313 bytes into a region of size between 2 and 30 [-Wformat-truncation=]
+   34 | #define BOX64_STR "Box64"
+      |                   ^~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:42:5: note: in expansion of macro ‘BOX64_STR’
+   42 |     BOX64_STR                         \
+      |     ^~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:193:52: note: in expansion of macro ‘BOX64_BUILD_INFO_STRING_SHORT’
+  193 |             snprintf(branding, sizeof(branding)-1, BOX64_BUILD_INFO_STRING_SHORT " on %.*s @%1.2f GHz", 28, box64_sysinfo.cpuname, box64_sysinfo.frequency / 1000000000.);
+      |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:34:19: note: assuming directive output of 4 bytes
+   34 | #define BOX64_STR "Box64"
+      |                   ^~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:42:5: note: in expansion of macro ‘BOX64_STR’
+   42 |     BOX64_STR                         \
+      |     ^~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:193:52: note: in expansion of macro ‘BOX64_BUILD_INFO_STRING_SHORT’
+  193 |             snprintf(branding, sizeof(branding)-1, BOX64_BUILD_INFO_STRING_SHORT " on %.*s @%1.2f GHz", 28, box64_sysinfo.cpuname, box64_sysinfo.frequency / 1000000000.);
+      |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function ‘snprintf’,
+    inlined from ‘InitializeSystemInfo’ at /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:193:13:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:68:10: note: ‘__builtin___snprintf_chk’ output between 26 and 364 bytes into a destination of size 48
+   68 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   69 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   70 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c: In function ‘InitializeSystemInfo’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:34:19: warning: ‘__builtin___snprintf_chk’ output may be truncated before the last format character [-Wformat-truncation=]
+   34 | #define BOX64_STR "Box64"
+      |                   ^~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/build_info.h:42:5: note: in expansion of macro ‘BOX64_STR’
+   42 |     BOX64_STR                         \
+      |     ^~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:190:48: note: in expansion of macro ‘BOX64_BUILD_INFO_STRING_SHORT’
+  190 |         snprintf(branding, sizeof(branding)-1, BOX64_BUILD_INFO_STRING_SHORT " on %.*s", 32, box64_sysinfo.cpuname);
+      |                                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function ‘snprintf’,
+    inlined from ‘InitializeSystemInfo’ at /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/os/sysinfo.c:190:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:68:10: note: ‘__builtin___snprintf_chk’ output between 17 and 49 bytes into a destination of size 48
+   68 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   69 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   70 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+[  5%] Building C object CMakeFiles/mainobj.dir/src/main.c.o
+[  5%] Building C object CMakeFiles/mainobj.dir/src/test.c.o
+[  5%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66f20f.c.o
+[  5%] Building C object CMakeFiles/mainobj.dir/src/core.c.o
+[  6%] Building C object CMakeFiles/mainobj.dir/src/box64context.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c: In function ‘KillAllInstances’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c:385:73: warning: ‘ (deleted)’ directive output may be truncated writing 10 bytes into a region of size between 1 and 4096 [-Wformat-truncation=]
+  385 |     snprintf(self_name_with_deleted, sizeof(self_name_with_deleted), "%s (deleted)", self_name);
+      |                                                                         ^~~~~~~~~~
+In file included from /usr/include/stdio.h:974,
+                 from /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c:1:
+In function ‘snprintf’,
+    inlined from ‘KillAllInstances’ at /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c:385:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:68:10: note: ‘__builtin___snprintf_chk’ output between 11 and 4106 bytes into a destination of size 4096
+   68 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   69 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   70 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c: In function ‘KillAllInstances’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c:395:49: warning: ‘/exe’ directive output may be truncated writing 4 bytes into a region of size between 1 and 4096 [-Wformat-truncation=]
+  395 |         snprintf(exe_path, sizeof(exe_path), "%s/exe", proc_path);
+      |                                                 ^~~~
+In function ‘snprintf’,
+    inlined from ‘KillAllInstances’ at /home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/core.c:395:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:68:10: note: ‘__builtin___snprintf_chk’ output between 5 and 4100 bytes into a destination of size 4096
+   68 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   69 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   70 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+[  6%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66f30f.c.o
+[  6%] Building C object CMakeFiles/mainobj.dir/src/build_info.c.o
+[  6%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66d9.c.o
+[  6%] Building C object CMakeFiles/mainobj.dir/src/custommem.c.o
+[  7%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66dd.c.o
+[  7%] Building C object CMakeFiles/interpreter.dir/src/emu/x64run66f0.c.o
+[  7%] Building C object CMakeFiles/mainobj.dir/src/custommmap.c.o
+[  7%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rund8.c.o
+[  7%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rund9.c.o
+[  8%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runda.c.o
+[  9%] Building C object CMakeFiles/mainobj.dir/src/dynarec/dynarec.c.o
+[  9%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfloader.c.o
+[  9%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfhacks.c.o
+[  9%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rundb.c.o
+[  9%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rundc.c.o
+[  9%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rundd.c.o
+[ 10%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfparser.c.o
+[ 10%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfhash.c.o
+[ 11%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runde.c.o
+[ 11%] Building C object CMakeFiles/interpreter.dir/src/emu/x64rundf.c.o
+[ 11%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runf0.c.o
+[ 11%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfload_dump.c.o
+[ 11%] Building C object CMakeFiles/mainobj.dir/src/elfs/elfdwarf_private.c.o
+[ 11%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runf20f.c.o
+[ 12%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runf30f.c.o
+[ 13%] Building C object CMakeFiles/mainobj.dir/src/emu/entrypoint.c.o
+[ 13%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx.c.o
+[ 13%] Building C object CMakeFiles/mainobj.dir/src/emu/x64compstrings.c.o
+[ 13%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx0f.c.o
+[ 13%] Building C object CMakeFiles/mainobj.dir/src/emu/x64emu.c.o
+[ 13%] Building C object CMakeFiles/mainobj.dir/src/emu/x64printer.c.o
+[ 14%] Building C object CMakeFiles/mainobj.dir/src/emu/x64int3.c.o
+[ 14%] Building C object CMakeFiles/mainobj.dir/src/emu/x87emu_private.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/emu/x87emu_private.c: In function ‘PrintLD’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/emu/x87emu_private.c:262:46: warning: format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 6 has type ‘uint64_t’ {aka ‘long unsigned int’} [-Wformat=]
+  262 |     snprintf(buf, sizeof(buf), "%s%04x %016llx", prefix?prefix:"", val.b, val.f.q);
+      |                                        ~~~~~~^                            ~~~~~~~
+      |                                              |                                 |
+      |                                              long long unsigned int            uint64_t {aka long unsigned int}
+      |                                        %016lx
+[ 14%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx0f38.c.o
+[ 15%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx660f.c.o
+[ 15%] Building C object CMakeFiles/mainobj.dir/src/emu/x64primop.c.o
+[ 15%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf20f.c.o
+[ 15%] Building C object CMakeFiles/mainobj.dir/src/emu/x64run_private.c.o
+[ 15%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf30f.c.o
+[ 16%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx660f38.c.o
+[ 16%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavx660f3a.c.o
+[ 17%] Building C object CMakeFiles/mainobj.dir/src/emu/x64shaext.c.o
+[ 17%] Building C object CMakeFiles/mainobj.dir/src/emu/x64syscall.c.o
+[ 17%] Building C object CMakeFiles/mainobj.dir/src/emu/x64tls.c.o
+[ 17%] Building C object CMakeFiles/mainobj.dir/src/emu/x64trace.c.o
+[ 18%] Building C object CMakeFiles/mainobj.dir/src/librarian/librarian.c.o
+[ 18%] Building C object CMakeFiles/mainobj.dir/src/librarian/library.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/librarian/library.c: In function ‘Path2Name’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/librarian/library.c:86:15: warning: initialization discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+   86 |     char* p = strrchr(path, '/');
+      |               ^~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/librarian/library.c: In function ‘NbDot’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/librarian/library.c:101:15: warning: initialization discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+  101 |     char *p = strstr(name, ".so");
+      |               ^~~~~~
+[ 18%] Building C object CMakeFiles/mainobj.dir/src/librarian/dictionnary.c.o
+[ 18%] Building C object CMakeFiles/mainobj.dir/src/librarian/symbols.c.o
+[ 19%] Building C object CMakeFiles/mainobj.dir/src/libtools/auxval.c.o
+[ 19%] Building C object CMakeFiles/mainobj.dir/src/libtools/myalign.c.o
+[ 19%] Building C object CMakeFiles/mainobj.dir/src/libtools/signals.c.o
+[ 19%] Building C object CMakeFiles/mainobj.dir/src/libtools/sigtools.c.o
+[ 20%] Building C object CMakeFiles/mainobj.dir/src/libtools/syscall_user_dispatch.c.o
+[ 20%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf20f38.c.o
+[ 20%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf30f38.c.o
+[ 20%] Building C object CMakeFiles/mainobj.dir/src/libtools/decopcode.c.o
+[ 21%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf20f3a.c.o
+[ 21%] Building C object CMakeFiles/mainobj.dir/src/libtools/threads.c.o
+[ 21%] Building C object CMakeFiles/interpreter.dir/src/emu/x64runavxf30f3a.c.o
+[ 22%] Building C object CMakeFiles/mainobj.dir/src/tools/bitutils.c.o
+[ 22%] Building C object CMakeFiles/mainobj.dir/src/tools/box64stack.c.o
+[ 22%] Building C object CMakeFiles/mainobj.dir/src/tools/bridge.c.o
+[ 22%] Building C object CMakeFiles/mainobj.dir/src/tools/alternate.c.o
+[ 23%] Building C object CMakeFiles/mainobj.dir/src/tools/callback.c.o
+[ 23%] Building C object CMakeFiles/mainobj.dir/src/tools/cleanup.c.o
+[ 23%] Building C object CMakeFiles/mainobj.dir/src/tools/cpumask.c.o
+[ 23%] Building C object CMakeFiles/mainobj.dir/src/tools/gdbjit.c.o
+[ 24%] Building C object CMakeFiles/mainobj.dir/src/tools/fileutils.c.o
+[ 24%] Building C object CMakeFiles/mainobj.dir/src/tools/pathcoll.c.o
+[ 24%] Building C object CMakeFiles/mainobj.dir/src/tools/rbtree.c.o
+[ 24%] Building C object CMakeFiles/mainobj.dir/src/tools/env.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/tools/env.c:355:2: warning: #warning "Unknown architecture for ENV_ARCH" [-Wcpp]
+  355 | #warning "Unknown architecture for ENV_ARCH"
+      |  ^~~~~~~
+[ 25%] Building C object CMakeFiles/mainobj.dir/src/tools/dynacache.c.o
+[ 25%] Building C object CMakeFiles/mainobj.dir/src/tools/wine_tools.c.o
+[ 25%] Building C object CMakeFiles/mainobj.dir/src/tools/pe_tools.c.o
+[ 25%] Building C object CMakeFiles/mainobj.dir/src/wrapped/generated/wrapper.c.o
+[ 26%] Building C object CMakeFiles/mainobj.dir/src/mallochook.c.o
+[ 26%] Building C object CMakeFiles/mainobj.dir/src/steam.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/steam.c: In function ‘create_lib_symlink’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/steam.c:35:5: warning: ignoring return value of ‘symlink’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   35 |     symlink(file, tmp);
+      |     ^~~~~~~~~~~~~~~~~~
+[ 26%] Built target interpreter
+[ 26%] Building C object CMakeFiles/mainobj.dir/src/libtools/sdl1rwops.c.o
+[ 26%] Building C object CMakeFiles/mainobj.dir/src/libtools/sdl2rwops.c.o
+[ 27%] Building C object CMakeFiles/mainobj.dir/src/tools/gtkclass.c.o
+[ 27%] Building C object CMakeFiles/mainobj.dir/src/librarian/globalsymbols.c.o
+[ 27%] Building C object CMakeFiles/mainobj.dir/src/emu/x86syscall.c.o
+[ 27%] Building C object CMakeFiles/mainobj.dir/src/libtools/obstack.c.o
+[ 28%] Building C object CMakeFiles/mainobj.dir/src/libtools/libdl.c.o
+[ 28%] Building C object CMakeFiles/mainobj.dir/src/libtools/vulkanoverlay.c.o
+[ 28%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedalure.c.o
+[ 29%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedalut.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/libtools/vulkanoverlay.c: In function ‘LoadVulkanOverlay’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/libtools/vulkanoverlay.c:926:23: warning: initialization discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+  926 |             char* p = strrchr(path, '/');
+      |                       ^~~~~~~
+[ 29%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedatk.c.o
+[ 29%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedatkbridge.c.o
+[ 29%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedatomic.c.o
+[ 30%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedatspi.c.o
+[ 30%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedayatanaappindicator3.c.o
+[ 30%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedayatanaindicator3.c.o
+[ 30%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedayatanaido3.c.o
+[ 31%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedavahiclient.c.o
+[ 31%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedavahicommon.c.o
+[ 31%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedbz2.c.o
+[ 31%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedcap.c.o
+[ 32%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedcuda.c.o
+[ 32%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedcairo.c.o
+[ 32%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedcairogobject.c.o
+[ 32%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedcrashhandler.c.o
+[ 33%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedcrypto.c.o
+[ 33%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedcrypto3.c.o
+[ 33%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedcurl.c.o
+[ 33%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappeddbus.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappeddbus.c: In function ‘my_dbus_message_new_error_printf’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappeddbus.c:685:5: warning: ignoring return value of ‘vasprintf’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  685 |     vasprintf(&buff, (char*)fmt, VARARGS);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 34%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappeddbusglib1.c.o
+[ 34%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappeddbusmenuglib.c.o
+[ 34%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappeddecor0.c.o
+[ 34%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedevent21.c.o
+[ 35%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedexpat.c.o
+[ 35%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedfaudio.c.o
+[ 35%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedflac.c.o
+[ 36%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedfontconfig.c.o
+[ 36%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedfreebl3.c.o
+[ 36%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedfreetype.c.o
+[ 36%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgbm.c.o
+[ 37%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgconf2.c.o
+[ 37%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgcrypt.c.o
+[ 37%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgdk3.c.o
+[ 37%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgdkpixbuf2.c.o
+[ 38%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgdkx112.c.o
+[ 38%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgio2.c.o
+[ 38%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedglesv2.c.o
+[ 38%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedglib2.c.o
+[ 39%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgmodule2.c.o
+[ 39%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgmp.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedgmp.c: In function ‘my___gmp_asprintf’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedgmp.c:158:38: warning: passing argument 2 of ‘my_gmp.__gmp_vasprintf’ discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+  158 |     return my->__gmp_vasprintf(strp, fmt, VARARGS);
+      |                                      ^~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedgmp.c:158:38: note: expected ‘void *’ but argument is of type ‘const char *’
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedgmp.c: In function ‘my___gmp_fprintf’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedgmp.c:165:39: warning: passing argument 2 of ‘my_gmp.__gmp_vfprintf’ discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+  165 |     return my->__gmp_vfprintf(stream, fmt, VARARGS);
+      |                                       ^~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedgmp.c:165:39: note: expected ‘void *’ but argument is of type ‘const char *’
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedgmp.c: In function ‘my___gmp_vasprintf’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedgmp.c:176:38: warning: passing argument 2 of ‘my_gmp.__gmp_vasprintf’ discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+  176 |     return my->__gmp_vasprintf(strp, fmt, VARARGS);
+      |                                      ^~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedgmp.c:176:38: note: expected ‘void *’ but argument is of type ‘const char *’
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedgmp.c: In function ‘my___gmp_vfprintf’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedgmp.c:187:39: warning: passing argument 2 of ‘my_gmp.__gmp_vfprintf’ discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+  187 |     return my->__gmp_vfprintf(stream, fmt, VARARGS);
+      |                                       ^~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedgmp.c:187:39: note: expected ‘void *’ but argument is of type ‘const char *’
+[ 39%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgnutls.c.o
+[ 39%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgobject2.c.o
+[ 40%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgomp.c.o
+[ 40%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgssapi.c.o
+[ 40%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgssapikrb5.c.o
+[ 40%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstallocators.c.o
+[ 41%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstapp.c.o
+[ 41%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstaudio.c.o
+[ 41%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstbase.c.o
+[ 41%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstcheck.c.o
+[ 42%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstcontroller.c.o
+[ 42%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstfft.c.o
+[ 42%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstgl.c.o
+[ 43%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstnet.c.o
+[ 43%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstpbutils.c.o
+[ 43%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstreamer.c.o
+[ 43%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstriff.c.o
+[ 44%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstrtp.c.o
+[ 44%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstrtsp.c.o
+[ 44%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstsdp.c.o
+[ 44%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgsttag.c.o
+[ 45%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgstvideo.c.o
+[ 45%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgthread2.c.o
+[ 45%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgtk3.c.o
+[ 45%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedgtkx112.c.o
+[ 46%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedharfbuzzsubset.c.o
+[ 46%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedkrb5.c.o
+[ 46%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlcms2.c.o
+[ 46%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedldlinux.c.o
+[ 47%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibasound.c.o
+[ 47%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibavcodec58.c.o
+[ 47%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibavformat58.c.o
+[ 47%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibavutil56.c.o
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedlibavutil56.c: In function ‘my_av_asprintf’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedlibavutil56.c:213:5: warning: ignoring return value of ‘vasprintf’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  213 |     vasprintf(&buff, (char*)fmt, VARARGS);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedlibavutil56.c: In function ‘my_av_log’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedlibavutil56.c:260:5: warning: ignoring return value of ‘vasprintf’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  260 |     vasprintf(&buff, (char*)fmt, VARARGS);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedlibavutil56.c: In function ‘my_av_strlcatf’:
+/home/runner/work/_temp/pic-android/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a/src/wrapped/wrappedlibavutil56.c:285:5: warning: ignoring return value of ‘vasprintf’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  285 |     vasprintf(&buff, (char*)fmt, VARARGS);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 48%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibblas.c.o
+[ 48%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibbsd.c.o
+[ 48%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibc.c.o
+[ 48%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibcmusl.c.o
+[ 49%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibcrypt.c.o
+[ 49%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibcups.c.o
+[ 49%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibcupsimage.c.o
+[ 50%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibdl.c.o
+[ 50%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibdrm.c.o
+[ 50%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibdrmamdgpu.c.o
+[ 50%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibegl.c.o
+[ 51%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibform.c.o
+[ 51%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibformw.c.o
+[ 51%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibformw6.c.o
+[ 51%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibfuse.c.o
+[ 52%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibgl.c.o
+[ 52%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibglu.c.o
+[ 52%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibglx.c.o
+[ 52%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibglxnvidia.c.o
+[ 53%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibgpgme.c.o
+[ 53%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibharfbuzz.c.o
+[ 53%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibibus.c.o
+[ 53%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibice.c.o
+[ 54%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedliblapack.c.o
+[ 54%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibm.c.o
+[ 54%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibmvec.c.o
+[ 54%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibncurses.c.o
+[ 55%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibncurses6.c.o
+[ 55%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibncursesw.c.o
+[ 55%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibncursesw6.c.o
+[ 55%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibnuma.c.o
+[ 56%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibogg.c.o
+[ 56%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibomp.c.o
+[ 56%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibpanel.c.o
+[ 56%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibpci.c.o
+[ 57%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibpcre.c.o
+[ 57%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibpcre216.c.o
+[ 57%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibpthread.c.o
+[ 58%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibresolv.c.o
+[ 58%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibrt.c.o
+[ 58%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibsm.c.o
+[ 58%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibsndfile.c.o
+[ 59%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibssl.c.o
+[ 59%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibssl3.c.o
+[ 59%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibtinfo.c.o
+[ 59%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibtinfo6.c.o
+[ 60%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibusb1.c.o
+[ 60%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibuuid.c.o
+[ 60%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibva.c.o
+[ 60%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibvadrm.c.o
+[ 61%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibvawayland.c.o
+[ 61%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibvax11.c.o
+[ 61%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibvdpau.c.o
+[ 61%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibvpx.c.o
+[ 62%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibvorbis.c.o
+[ 62%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibx11.c.o
+[ 62%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibx11xcb.c.o
+[ 62%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxau.c.o
+[ 63%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxaw.c.o
+[ 63%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcb.c.o
+[ 63%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbcursor.c.o
+[ 63%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbdri2.c.o
+[ 64%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbdri3.c.o
+[ 64%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbglx.c.o
+[ 64%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbkeysyms.c.o
+[ 65%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbicccm.c.o
+[ 65%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbimage.c.o
+[ 65%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbpresent.c.o
+[ 65%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbrandr.c.o
+[ 66%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbrender.c.o
+[ 66%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbrenderutil.c.o
+[ 66%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbres.c.o
+[ 66%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbshape.c.o
+[ 67%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbshm.c.o
+[ 67%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbsync.c.o
+[ 67%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbutil.c.o
+[ 67%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbxinerama.c.o
+[ 68%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbxinput.c.o
+[ 68%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbxfixes.c.o
+[ 68%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbxkb.c.o
+[ 68%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcbxtest.c.o
+[ 69%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcomposite.c.o
+[ 69%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxcursor.c.o
+[ 69%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxdamage.c.o
+[ 69%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxdmcp.c.o
+[ 70%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxext.c.o
+[ 70%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxfixes.c.o
+[ 70%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxft.c.o
+[ 70%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxi.c.o
+[ 71%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxmu.c.o
+[ 71%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxpm.c.o
+[ 71%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxpresent.c.o
+[ 72%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxrandr.c.o
+[ 72%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxrender.c.o
+[ 72%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxss.c.o
+[ 72%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxt.c.o
+[ 73%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxtst.c.o
+[ 73%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibxxf86vm.c.o
+[ 73%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibz.c.o
+[ 73%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlzma.c.o
+[ 74%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedmpg123.c.o
+[ 74%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappednotify.c.o
+[ 74%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappednsl.c.o
+[ 74%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappednspr4.c.o
+[ 75%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappednss3.c.o
+[ 75%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappednssutil3.c.o
+[ 75%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappednvml.c.o
+[ 75%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedopenal.c.o
+[ 76%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedopencl.c.o
+[ 76%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpango.c.o
+[ 76%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpangocairo.c.o
+[ 76%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpangoft2.c.o
+[ 77%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpam.c.o
+[ 77%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpcap.c.o
+[ 77%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedplc4.c.o
+[ 77%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedplds4.c.o
+[ 78%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpng16.c.o
+[ 78%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpulse.c.o
+[ 78%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpulsemainloopglib.c.o
+[ 79%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpulsesimple.c.o
+[ 79%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsdl1.c.o
+[ 79%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsdl1image.c.o
+[ 79%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsdl1mixer.c.o
+[ 80%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsdl1net.c.o
+[ 80%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsdl1sound.c.o
+[ 80%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsdl1ttf.c.o
+[ 80%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsecret1.c.o
+[ 81%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsoftokn3.c.o
+[ 81%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsmpeg.c.o
+[ 81%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsdl2.c.o
+[ 81%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsdl2image.c.o
+[ 82%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsdl2mixer.c.o
+[ 82%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsdl2net.c.o
+[ 82%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsdl2ttf.c.o
+[ 82%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsdl3.c.o
+[ 83%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsdl3ttf.c.o
+[ 83%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedselinux.c.o
+[ 83%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsmime3.c.o
+[ 83%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsmpeg2.c.o
+[ 84%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedssl3.c.o
+[ 84%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsystemd.c.o
+[ 84%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedtbbbind.c.o
+[ 84%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedtbbmalloc.c.o
+[ 85%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedtbbmallocproxy.c.o
+[ 85%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedtcmallocminimal.c.o
+[ 85%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedudev0.c.o
+[ 86%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedudev1.c.o
+[ 86%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedunwind.c.o
+[ 86%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedutil.c.o
+[ 86%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedvorbisfile.c.o
+[ 87%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedwaylandclient.c.o
+[ 87%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedwaylandcursor.c.o
+[ 87%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedwaylandegl.c.o
+[ 87%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedxinerama.c.o
+[ 88%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedxkbcommon.c.o
+[ 88%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedxkbfile.c.o
+[ 88%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedxkbcommonx11.c.o
+[ 88%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedxkbregistry.c.o
+[ 89%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedxml2.c.o
+[ 89%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedxslt.c.o
+[ 89%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedldapr.c.o
+[ 89%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlber.c.o
+[ 90%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedvulkan.c.o
+[ 90%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedxshmfence.c.o
+[ 90%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedd3dadapter9.c.o
+[ 90%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicuuc64.c.o
+[ 91%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n64.c.o
+[ 91%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicuuc66.c.o
+[ 91%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n66.c.o
+[ 91%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicuuc67.c.o
+[ 92%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n67.c.o
+[ 92%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicuuc68.c.o
+[ 92%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n68.c.o
+[ 93%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicuuc72.c.o
+[ 93%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n72.c.o
+[ 93%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicuuc73.c.o
+[ 93%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n73.c.o
+[ 94%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicuuc74.c.o
+[ 94%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n74.c.o
+[ 94%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicuuc75.c.o
+[ 94%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n75.c.o
+[ 95%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicuuc76.c.o
+[ 95%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedicui18n76.c.o
+[ 95%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedidn2.c.o
+[ 95%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedanl.c.o
+[ 96%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpsl5.c.o
+[ 96%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibssh2.c.o
+[ 96%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedp11kit.c.o
+[ 96%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibtasn1.c.o
+[ 97%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibnettle8.c.o
+[ 97%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibunistring2.c.o
+[ 97%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibhogweed6.c.o
+[ 97%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibsqlite3.c.o
+[ 98%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlibtiff5.c.o
+[ 98%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedbrotlidec.c.o
+[ 98%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedzstd.c.o
+[ 98%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedlz4.c.o
+[ 99%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedproxy.c.o
+[ 99%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedssh4.c.o
+[ 99%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsmbclient.c.o
+[100%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedpixman1.c.o
+[100%] Built target mainobj
+[100%] Linking C executable box64
+[100%] Built target box64
