@@ -54,6 +54,7 @@
     <KeyBinding Gesture="Ctrl+OemQuestion" Command="{Binding ToggleCommentCommand}" />
     <KeyBinding Gesture="Shift+Alt+F" Command="{Binding FormatDocumentCommand}" />
     <KeyBinding Gesture="Ctrl+H" Command="{Binding ReplaceCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+F" Command="{Binding FindInFilesCommand}" />
     <KeyBinding Gesture="Ctrl+F4" Command="{Binding CloseDocumentCommand}" />
     <KeyBinding Gesture="Ctrl+W" Command="{Binding CloseDocumentCommand}" />
     <KeyBinding Gesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
@@ -154,6 +155,7 @@
             <Separator />
             <MenuItem Header="_Find" InputGesture="Ctrl+F" Command="{Binding FindCommand}" />
             <MenuItem Header="Re_place" InputGesture="Ctrl+H" Command="{Binding ReplaceCommand}" />
+            <MenuItem Header="Find in F_iles" InputGesture="Ctrl+Shift+F" Command="{Binding FindInFilesCommand}" />
             <Separator />
             <MenuItem Header="Toggle Line _Comment (Ctrl+/)" Command="{Binding ToggleCommentCommand}" />
             <MenuItem Header="F_ormat Document" InputGesture="Shift+Alt+F" Command="{Binding FormatDocumentCommand}" />

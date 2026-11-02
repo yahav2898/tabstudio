@@ -59,18 +59,36 @@ public sealed partial class GitChangesViewModel : ObservableObject, IGitChangeAc
 
     /// <summary>Whether a workspace is open.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsPublishVisible))]
+    [NotifyPropertyChangedFor(nameof(IsPublishVisible), nameof(IsLinkCheckoutVisible))]
     [NotifyCanExecuteChangedFor(nameof(PublishCommand))]
     public partial bool HasWorkspace { get; private set; }
 
     /// <summary>Whether the workspace is in a folder linked to a GitHub repository.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsPublishVisible))]
-    [NotifyCanExecuteChangedFor(nameof(FetchCommand), nameof(PullCommand), nameof(SyncCommand), nameof(CommitCommand), nameof(PublishCommand), nameof(OpenBranchPickerCommand), nameof(NewBranchCommand), nameof(OpenPullRequestFormCommand), nameof(OpenHistoryCommand), nameof(OpenOnGitHubCommand))]
+    [NotifyPropertyChangedFor(nameof(IsPublishVisible), nameof(IsLinkCheckoutVisible))]
+    [NotifyCanExecuteChangedFor(nameof(FetchCommand), nameof(PullCommand), nameof(SyncCommand), nameof(CommitCommand), nameof(PublishCommand), nameof(LinkCheckoutCommand), nameof(OpenBranchPickerCommand), nameof(NewBranchCommand), nameof(OpenPullRequestFormCommand), nameof(OpenHistoryCommand), nameof(OpenOnGitHubCommand))]
     public partial bool IsLinked { get; private set; }
 
     /// <summary>Whether the "Publish to GitHub" panel is shown instead of the changes.</summary>
-    public bool IsPublishVisible => HasWorkspace && !IsLinked;
+    public bool IsPublishVisible => HasWorkspace && !IsLinked && Checkout is null;
+
+    /// <summary>
+    /// The Git clone of a GitHub repository that holds the workspace while it is not linked yet, such as a folder
+    /// cloned on a computer; <see langword="null"/> otherwise. Link to GitHub links it, without downloading it again;
+    /// opening a folder never writes into it or asks GitHub by itself.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPublishVisible), nameof(IsLinkCheckoutVisible), nameof(LinkCheckoutText))]
+    [NotifyCanExecuteChangedFor(nameof(LinkCheckoutCommand))]
+    public partial GitCheckout? Checkout { get; private set; }
+
+    /// <summary>Whether the "Link to GitHub" panel for a Git clone is shown instead of the changes.</summary>
+    public bool IsLinkCheckoutVisible => HasWorkspace && !IsLinked && Checkout is not null;
+
+    /// <summary>What the "Link to GitHub" panel says about the clone.</summary>
+    public string LinkCheckoutText => Checkout is { } checkout
+        ? $"This folder is a Git clone of {checkout.FullName}{(checkout.Branch is { } branch ? $" on {branch}" : string.Empty)}. Link it to see its changes, commit, pull and create branches from here. Nothing is downloaded again."
+        : string.Empty;
 
     /// <summary>"owner/repository".</summary>
     [ObservableProperty]
@@ -97,7 +115,7 @@ public sealed partial class GitChangesViewModel : ObservableObject, IGitChangeAc
 
     /// <summary>Whether an operation is running.</summary>
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(FetchCommand), nameof(PullCommand), nameof(SyncCommand), nameof(CommitCommand), nameof(PublishCommand), nameof(OpenBranchPickerCommand), nameof(NewBranchCommand), nameof(OpenPullRequestFormCommand), nameof(CreatePullRequestCommand))]
+    [NotifyCanExecuteChangedFor(nameof(FetchCommand), nameof(PullCommand), nameof(SyncCommand), nameof(CommitCommand), nameof(PublishCommand), nameof(LinkCheckoutCommand), nameof(OpenBranchPickerCommand), nameof(NewBranchCommand), nameof(OpenPullRequestFormCommand), nameof(CreatePullRequestCommand))]
     public partial bool IsBusy { get; private set; }
 
     /// <summary>What the running operation is doing.</summary>
@@ -222,6 +240,7 @@ public sealed partial class GitChangesViewModel : ObservableObject, IGitChangeAc
         PullRequest = null;
         CanCreatePullRequest = false;
         IsLinked = _sync is not null;
+        Checkout = _sync is null && _workspaceRoot is not null ? GitCheckout.Find(_workspaceRoot) : null;
         if (_sync is null)
         {
             RepositoryName = null;
@@ -239,6 +258,7 @@ public sealed partial class GitChangesViewModel : ObservableObject, IGitChangeAc
 
         ErrorText = null;
         PublishCommand.NotifyCanExecuteChanged();
+        LinkCheckoutCommand.NotifyCanExecuteChanged();
         _ = ReopenAsync();
     }
 

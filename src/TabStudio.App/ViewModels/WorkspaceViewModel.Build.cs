@@ -287,6 +287,28 @@ public sealed partial class WorkspaceViewModel
 
     private bool CanBuild() => !_preparingServices && (!IsRemoteWorkspace || _remoteWorkspace?.Connection.IsConnected == true) && State is IdeState.Ready or IdeState.Failed && !IsLiveGuest;
 
+    /// <summary>
+    /// Why a project that failed shows no error of its own: a project it references has errors, so it was not
+    /// compiled, which the Output says as Visual Studio's dependent projects do. <see langword="null"/> when the project
+    /// has errors of its own, which the Output already lists.
+    /// </summary>
+    internal static string? WhyNotCompiled(ProjectInfo project, BuildResult result)
+    {
+        var errors = result.Diagnostics.Where(d => d.Severity == DiagnosticSeverityLevel.Error).ToList();
+        if (errors.Any(d => d.ProjectName is null || d.ProjectName == project.Name))
+        {
+            return null;
+        }
+
+        var blocking = errors.Select(d => d.ProjectName!).Distinct(StringComparer.Ordinal).ToList();
+        return blocking switch
+        {
+            [] => $"{project.Name} did not build, and the compiler gave no reason. Build it again; if it still fails, the Error List and Output show what else went wrong.",
+            [var one] => $"{project.Name} was not compiled because {one}, which it references, has errors.",
+            _ => $"{project.Name} was not compiled because {string.Join(", ", blocking.SkipLast(1))} and {blocking[^1]}, which it references, have errors.",
+        };
+    }
+
     /// <summary>Builds projects one after another, reporting in the Output panel and the Error List.</summary>
     /// <param name="projects">The projects.</param>
     /// <param name="showOutput">Whether to clear the Output panel and bring it forward.</param>
@@ -385,6 +407,10 @@ public sealed partial class WorkspaceViewModel
             else
             {
                 failed++;
+                if (WhyNotCompiled(project, last) is { } reason)
+                {
+                    Output.WriteLine(prefix + reason, OutputKind.Failure);
+                }
             }
         }
 
