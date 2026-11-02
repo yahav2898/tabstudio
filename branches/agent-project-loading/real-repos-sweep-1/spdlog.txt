@@ -1,0 +1,46 @@
+spdlog at 6d9805df3f588402b17073dcd13eb569ceda864d
+Toolchain projects:
+  cpp: /home/runner/work/_temp/real-repos/spdlog/CMakeLists.txt
+  python: /home/runner/work/_temp/real-repos/spdlog/scripts
+Startup project: cpp /home/runner/work/_temp/real-repos/spdlog/CMakeLists.txt
+Set up in 2.6 s
+Built in 12.7 s: 0 errors, state Ready
+Project setup:
+
+Output:
+Building spdlog with C and C++ 13.3.0
+> cmake --build /home/runner/work/_temp/real-repos/spdlog/.tabstudio/cmake --config Debug
+> cmake -S /home/runner/work/_temp/real-repos/spdlog -B /home/runner/work/_temp/real-repos/spdlog/.tabstudio/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Build spdlog: 1.17.0
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Build type: Debug
+-- Looking for fwrite_unlocked
+-- Looking for fwrite_unlocked - found
+-- Generating example(s)
+-- Generating install
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/runner/work/_temp/real-repos/spdlog/.tabstudio/cmake
+[ 10%] Building CXX object CMakeFiles/spdlog.dir/src/spdlog.cpp.o
+[ 20%] Building CXX object CMakeFiles/spdlog.dir/src/stdout_sinks.cpp.o
+[ 30%] Building CXX object CMakeFiles/spdlog.dir/src/color_sinks.cpp.o
+[ 40%] Building CXX object CMakeFiles/spdlog.dir/src/file_sinks.cpp.o
+[ 50%] Building CXX object CMakeFiles/spdlog.dir/src/async.cpp.o
+[ 60%] Building CXX object CMakeFiles/spdlog.dir/src/cfg.cpp.o
+[ 70%] Building CXX object CMakeFiles/spdlog.dir/src/bundled_fmtlib_format.cpp.o
+[ 80%] Linking CXX static library libspdlogd.a
+[ 80%] Built target spdlog
+[ 90%] Building CXX object example/CMakeFiles/example.dir/example.cpp.o
+[100%] Linking CXX executable example
+[100%] Built target example
+
+Build succeeded: 'example' is ready to run.
+
