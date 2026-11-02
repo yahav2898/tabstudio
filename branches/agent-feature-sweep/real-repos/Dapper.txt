@@ -12,7 +12,7 @@ Compatibility Doctor:
   Dapper.Tests.Performance: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
   Dapper.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: none
-Built in 19.3 s: 2 errors, 6 warnings
+Built in 17.6 s: 2 errors, 6 warnings
   2 x CS1069
       [Dapper.EntityFramework.StrongName] DbGeographyHandler.cs(38,30): error CS1069: The type name 'SqlParameter' could not be found in the namespace 'System.Data.SqlClient'. This type has been forwarded to assembly 'System.Data.SqlClient, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' Consider adding a reference to that assembly.
       [Dapper.EntityFramework.StrongName] DbGeometryHandler.cs(38,30): error CS1069: The type name 'SqlParameter' could not be found in the namespace 'System.Data.SqlClient'. This type has been forwarded to assembly 'System.Data.SqlClient, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' Consider adding a reference to that assembly.
@@ -1454,28 +1454,28 @@ Packages with analyzers or MSBuild files:
       build/net8.0/xunit.runner.visualstudio.props
       build/net8.0/xunit.runner.visualstudio.testadapter.dll
 Output:
-Build started at 03:10:54...
+Build started at 04:26:45...
 1>------ Build started: Project: docs, Configuration: Debug ------
-1>docs -> compiled in memory (2.5 KB, 196 ms)
+1>docs -> compiled in memory (2.5 KB, 158 ms)
 2>------ Build started: Project: Dapper.StrongName, Configuration: Debug ------
-2>Dapper.StrongName -> compiled in memory (215 KB, 520 ms)
+2>Dapper.StrongName -> compiled in memory (215 KB, 440 ms)
 3>------ Build started: Project: Dapper.EntityFramework.StrongName, Configuration: Debug ------
 3>DbGeographyHandler.cs(38,30): error CS1069: The type name 'SqlParameter' could not be found in the namespace 'System.Data.SqlClient'. This type has been forwarded to assembly 'System.Data.SqlClient, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' Consider adding a reference to that assembly.
 3>DbGeometryHandler.cs(38,30): error CS1069: The type name 'SqlParameter' could not be found in the namespace 'System.Data.SqlClient'. This type has been forwarded to assembly 'System.Data.SqlClient, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' Consider adding a reference to that assembly.
 4>------ Build started: Project: Dapper, Configuration: Debug ------
-4>Dapper -> compiled in memory (214.5 KB, 461 ms)
+4>Dapper -> compiled in memory (214.5 KB, 495 ms)
 5>------ Build started: Project: Dapper.EntityFramework, Configuration: Debug ------
 5>DbGeographyHandler.cs(38,30): error CS1069: The type name 'SqlParameter' could not be found in the namespace 'System.Data.SqlClient'. This type has been forwarded to assembly 'System.Data.SqlClient, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' Consider adding a reference to that assembly.
 5>DbGeometryHandler.cs(38,30): error CS1069: The type name 'SqlParameter' could not be found in the namespace 'System.Data.SqlClient'. This type has been forwarded to assembly 'System.Data.SqlClient, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' Consider adding a reference to that assembly.
 6>------ Build started: Project: Dapper.ProviderTools, Configuration: Debug ------
-6>Dapper.ProviderTools -> compiled in memory (13.5 KB, 15 ms)
+6>Dapper.ProviderTools -> compiled in memory (13.5 KB, 41 ms)
 7>------ Build started: Project: Dapper.Rainbow, Configuration: Debug ------
-7>Dapper.Rainbow -> compiled in memory (27 KB, 366 ms)
+7>Dapper.Rainbow -> compiled in memory (27 KB, 328 ms)
 8>------ Build started: Project: Dapper.SqlBuilder, Configuration: Debug ------
-8>Dapper.SqlBuilder -> compiled in memory (8 KB, 350 ms)
+8>Dapper.SqlBuilder -> compiled in memory (8 KB, 302 ms)
 9>------ Build started: Project: Dapper.Tests.Performance, Configuration: Debug ------
-9>Dapper.Tests.Performance -> compiled in memory (111 KB, 734 ms)
+9>Dapper.Tests.Performance -> compiled in memory (111 KB, 537 ms)
 10>------ Build started: Project: Dapper.Tests, Configuration: Debug ------
-10>Dapper.Tests -> compiled in memory (485 KB, 1140 ms)
+10>Dapper.Tests -> compiled in memory (485 KB, 989 ms)
 ========== Build: 8 succeeded, 2 failed ==========
 
