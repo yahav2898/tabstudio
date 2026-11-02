@@ -29,7 +29,7 @@ public sealed class LiveWorkspaceFiles
     /// <summary>Lists and hashes every shared file.</summary>
     /// <param name="cancellationToken">Gives up.</param>
     /// <exception cref="IOException">The workspace has more files, or more bytes, than a session shares.</exception>
-    public IReadOnlyList<LiveFileEntry> Collect(CancellationToken cancellationToken) => Collect(new DirectoryInfo(_root), cancellationToken);
+    public IReadOnlyList<LiveFileEntry> Collect(CancellationToken cancellationToken) => CollectFrom(new DirectoryInfo(_root), cancellationToken);
 
     /// <summary>
     /// The entries of the files in a folder that appeared in the workspace, such as one renamed, moved or unzipped
@@ -48,7 +48,7 @@ public sealed class LiveWorkspaceFiles
         try
         {
             return folder.Exists && !folder.Attributes.HasFlag(FileAttributes.ReparsePoint) && folder.LinkTarget is null
-                ? Collect(folder, CancellationToken.None)
+                ? CollectFrom(folder, CancellationToken.None)
                 : [];
         }
         catch (IOException)
@@ -57,7 +57,7 @@ public sealed class LiveWorkspaceFiles
         }
     }
 
-    private List<LiveFileEntry> Collect(DirectoryInfo start, CancellationToken cancellationToken)
+    private List<LiveFileEntry> CollectFrom(DirectoryInfo start, CancellationToken cancellationToken)
     {
         var entries = new List<LiveFileEntry>();
         long total = 0;
