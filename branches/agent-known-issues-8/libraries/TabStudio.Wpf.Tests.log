@@ -1,10 +1,219 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/TabStudio.Wpf.Tests.csproj (in 749 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Wpf/TabStudio.Wpf.csproj (in 697 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/TabStudio.Wpf.Tests.csproj (in 663 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Wpf/TabStudio.Wpf.csproj (in 622 ms).
   5 of 7 projects are up-to-date for restore.
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
   TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
   TabStudio.Web -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Web/bin/Release/net10.0/TabStudio.Web.dll
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Wpf/Building/XamlSanitizer.cs(40,17): error CS1573: Parameter 'assemblyName' has no matching param tag in the XML comment for 'XamlSanitizer.Prepare(IReadOnlyList<XamlItem>, XamlTypeSystem, string, string, XamlLeftOut?, string?)' (but other parameters do) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Wpf/TabStudio.Wpf.csproj]
+  TabStudio.Wpf -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Wpf/bin/Release/net10.0/TabStudio.Wpf.dll
+  TabStudio.Wpf.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/bin/Release/net10.0/TabStudio.Wpf.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/bin/Release/net10.0/TabStudio.Wpf.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.12]   Discovering: TabStudio.Wpf.Tests
+[xUnit.net 00:00:00.20]   Discovered:  TabStudio.Wpf.Tests
+[xUnit.net 00:00:00.27]   Starting:    TabStudio.Wpf.Tests
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.WPF_takes_System_IO_and_System_Net_Http_out_of_the_implicit_usings [138 ms]
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.App_xaml_is_the_application_definition_and_every_other_xaml_file_is_a_page [70 ms]
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.The_project_file_adds_and_removes_xaml_items [23 ms]
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.Second_pass_files_lead_back_to_their_xaml [7 ms]
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.WPF_projects_get_the_symbol_OpenSilver_defines [30 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Completion_offers_enum_values_attached_properties_and_binding_paths [3 s]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Button Click=\"Missing_Click\" />", name: "Missing_Click") [89 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Button HorizontalAlignment=\"Middle\" />", name: "Middle") [53 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Buton />", name: "Buton") [81 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Grid><Button x:Name=\"Go\" /><Button x:Name=\"Go\"···, name: "Go") [61 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Live_errors_point_to_the_invalid_name_or_value(content: "<Button Contnt=\"Go\" />", name: "Contnt") [53 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.The_light_bulb_adds_a_typed_handler_inside_the_class_and_removes_the_live_error(crlf: True, compact: False) [178 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.The_light_bulb_adds_a_typed_handler_inside_the_class_and_removes_the_live_error(crlf: False, compact: False) [95 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.The_light_bulb_adds_a_typed_handler_inside_the_class_and_removes_the_live_error(crlf: False, compact: True) [81 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.A_non_WPF_file_and_an_invalid_action_return_no_results [15 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Quick_info_and_definition_resolve_types_handlers_names_and_resources [444 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Element_completion_replaces_the_whole_word_and_describes_the_type [90 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Missing_WPF_API_is_named_with_the_Windows_Bridge_in_XAML_and_CSharp [403 ms]
+  Passed TabStudio.Wpf.Tests.Editing.WpfXamlEditingTests.Attribute_completion_places_the_caret_inside_quotes_without_duplicating_existing_quotes [60 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.An_event_handler_the_class_does_not_have_is_reported_at_its_attribute [863 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Code_that_uses_what_OpenSilver_does_not_implement_gets_a_warning [76 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.The_Visual_Studio_template_builds_on_OpenSilver [191 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Window_settings_without_effect_in_the_web_preview_are_reported_and_left_out [199 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Named_elements_are_fields_of_their_types_in_the_code_behind [331 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.A_xaml_error_is_reported_in_its_file [139 ms]
+  Passed TabStudio.Wpf.Tests.WpfBrowserTests.A_new_build_is_served_at_the_same_address [4 s]
+  Passed TabStudio.Wpf.Tests.WpfBrowserTests.In_Fit_a_phone_browser_zooms_the_whole_window_into_view_and_taps_still_reach_its_buttons [2 s]
+  Passed TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack [2 s]
+  Passed TabStudio.Wpf.Tests.WpfBrowserTests.Shows_the_window_full_size_under_its_title_and_handles_clicks [2 s]
+  Passed TabStudio.Wpf.Tests.WpfBrowserTests.Serves_the_app_with_OpenSilver_and_Blazor [264 ms]
+  Passed TabStudio.Wpf.Tests.WpfApiCatalogTests.The_shipped_catalog_is_what_WPF_has_and_OpenSilver_does_not [1 s]
+  Passed TabStudio.Wpf.Tests.ExpenseItTests.ExpenseIt_builds_on_OpenSilver(language: "csharp", project: "ExpenseItIntro") [2 s]
+  Passed TabStudio.Wpf.Tests.ExpenseItTests.ExpenseIt_builds_on_OpenSilver(language: "vb", project: "ExpenseItIntro2") [1 s]
+[xUnit.net 00:02:28.77]     TabStudio.Wpf.Tests.ExpenseItTests.The_CSharp_app_shows_its_navigation_window_and_goes_to_the_report_page [FAIL]
+[xUnit.net 00:02:28.77]       System.TimeoutException : After 120 s, still not true: document.body.innerText.includes('View Expense Report')
+[xUnit.net 00:02:28.77]       The console:
+[xUnit.net 00:02:28.77]       error: Failed to load resource: the server responded with a status of 404 (Not Found) http://127.0.0.1:42781/favicon.ico
+[xUnit.net 00:02:28.77]       console.info: Debugging hotkey: Shift+Alt+D (when application has focus)
+[xUnit.net 00:02:28.77]       console.error: Unhandled exception in ExpenseItIntro: System.Windows.Markup.XamlParseException: Cannot find resource named 'CustomNavWindowStyle'. Resource names are case sensitive.
+[xUnit.net 00:02:28.77]       console.error:    at System.Windows.Markup.StaticResourceExtension.ProvideValue(IServiceProvider serviceProvider) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Markup\StaticResourceExtension.cs:line 68
+[xUnit.net 00:02:28.77]       console.error:    at OpenSilver.Internal.Xaml.RuntimeHelpers.CallProvideValue[Object](XamlContext context, IMarkupExtension`1 markupExtension) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\OpenSilver\Internal\Xaml\RuntimeHelpers.cs:line 402
+[xUnit.net 00:02:28.77]       console.error:    at ǀǀExpenseit9ǀǀComponentǀǀMainwindowǀǀXamlǀǀFactory.LoadComponentImpl(NavigationWindow navigationWindow_62dacb25fde6499dbffe1abd4c3d463a)
+[xUnit.net 00:02:28.77]       console.error:    at ǀǀExpenseit9ǀǀComponentǀǀMainwindowǀǀXamlǀǀFactory.global::OpenSilver.Internal.Xaml.IXamlComponentLoader.LoadComponent(Object component)
+[xUnit.net 00:02:28.77]       console.error:    at System.Windows.Application.LoadComponent(Object component, IXamlComponentLoader loader) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\Application.cs:line 578
+[xUnit.net 00:02:28.77]       console.error:    at ExpenseIt.MainWindow.InitializeComponent()
+[xUnit.net 00:02:28.77]       console.error:    at ExpenseIt.MainWindow..ctor()
+[xUnit.net 00:02:28.77]       console.error:    at TabStudio.WpfHost.WpfApp.<>c.<.cctor>b__18_0()
+[xUnit.net 00:02:28.77]       console.error:    at TabStudio.WpfHost.WpfApp.Create(String path)
+[xUnit.net 00:02:28.77]       console.error:    at TabStudio.WpfHost.WpfApp.ShowStartupWindow(Application app)
+[xUnit.net 00:02:28.77]       console.error:    at TabStudio.WpfHost.WpfApp.<>c__DisplayClass7_0.<Start>b__3()
+[xUnit.net 00:02:28.77]       console.error:    at System.Windows.Threading.DispatcherOperation.InvokeDelegateCore() in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Threading\DispatcherOperation.cs:line 141
+[xUnit.net 00:02:28.77]       console.error:    at System.Windows.Threading.DispatcherOperation.InvokeImpl() in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Threading\DispatcherOperation.cs:line 151
+[xUnit.net 00:02:28.77]       console.error:    at System.Windows.Threading.DispatcherOperation.Invoke() in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Threading\DispatcherOperation.cs:line 125
+[xUnit.net 00:02:28.77]       console.error:    at System.Windows.Threading.Dispatcher.InvokeOperation(DispatcherOperation operation, List`1& unhandledExceptions) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Threading\Dispatcher.cs:line 480
+[xUnit.net 00:02:28.77]       The page:
+[xUnit.net 00:02:28.77]       <html lang="en" style="--blazor-load-percentage: 100%; --blazor-load-percentage-text: &quot;100%&quot;;"><head>
+[xUnit.net 00:02:28.77]           <meta charset="utf-8">
+[xUnit.net 00:02:28.77]           <meta name="viewport" id="tabstudio-wpf-viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=4, user-scalable=yes">
+[xUnit.net 00:02:28.77]           <title>ExpenseItIntro</title>
+[xUnit.net 00:02:28.77]           <base href="/">
+[xUnit.net 00:02:28.77]           <link href="_framework/dotnet.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-L1Ajt+EJNa6OW6LjOxgTM0rrKPRpUl58L+t090/qPJY=">
+[xUnit.net 00:02:28.77]           <link rel="stylesheet" href="_tabstudio/wpf.css">
+[xUnit.net 00:02:28.77]           <script type="importmap">{ "imports": {} }</script>
+[xUnit.net 00:02:28.77]           <script src="_tabstudio/wpf.js"></script>
+[xUnit.net 00:02:28.77]       <link rel="stylesheet" type="text/css" href="libs/cshtml5.css?date=2026-11-02T12:34:54.618Z"><link rel="stylesheet" type="text/css" href="libs/quill.core.css?date=2026-11-02T12:34:54.618Z"><script type="application/javascript" src="libs/cshtml5.js?date=2026-11-02T12:34:54.618Z"></script><script type="application/javascript" src="libs/quill.min.js?date=2026-11-02T12:34:54.618Z"></script><script type="application/javascript" src="libs/htmlToImage.js?date=2026-11-02T12:34:54.618Z"></script><script type="application/javascript" src="libs/FileSaver.min.js?date=2026-11-02T12:34:54.618Z"></script></head>
+[xUnit.net 00:02:28.77]       
+[xUnit.net 00:02:28.77]       <body>
+[xUnit.net 00:02:28.77]           <div id="tabstudio-wpf-window" class="tabstudio-wpf-window">
+[xUnit.net 00:02:28.77]               <div class="tabstudio-wpf-titlebar">
+[xUnit.net 00:02:28.77]                   <svg class="tabstudio-wpf-icon" viewBox="0 0 16 16" aria-hidden="true">
+[xUnit.net 00:02:28.77]                       <rect x="1.5" y="2.5" width="13" height="11" rx="1.5" fill="none" stroke="currentColor"></rect>
+[xUnit.net 00:02:28.77]                       <path d="M1.5 5.5h13" stroke="currentColor"></path>
+[xUnit.net 00:02:28.77]                   </svg>
+[xUnit.net 00:02:28.77]                   <span id="tabstudio-wpf-title" class="tabstudio-wpf-title">ExpenseItIntro</span>
+[xUnit.net 00:02:28.77]                   <button id="tabstudio-wpf-close" class="tabstudio-wpf-close" type="button" title="Close ExpenseItIntro" aria-label="Close">
+[xUnit.net 00:02:28.77]                       <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" stroke-width="1.1"></path></svg>
+[xUnit.net 00:02:28.77]                   </button>
+[xUnit.net 00:02:28.77]               </div>
+[xUnit.net 00:02:28.77]               <div id="tabstudio-wpf-client" class="tabstudio-wpf-client">
+[xUnit.net 00:02:28.77]                   <div id="tabstudio-wpf-starting" class="tabstudio-wpf-starting">Starting ExpenseItIntro…</div>
+[xUnit.net 00:02:28.77]               </div>
+[xUnit.net 00:02:28.77]           </div>
+[xUnit.net 00:02:28.77]           <div id="app"></div>
+[xUnit.net 00:02:28.77]           <div id="opensilver-root" class="tabstudio-wpf-offscreen opensilver-root-element" tabindex="0" style="display: grid; overflow: clip;"><div id="id1" class="opensilver-window"><div style="position: absolute; visibility: hidden; box-sizing: border-box; white-space: pre; left: -100000px; top: -100000px; text-align: left;"></div></div></div>
+[xUnit.net 00:02:28.77]       
+[xUnit.net 00:02:28.77]           <script>
+[xUnit.net 00:02:28.77]               (function () {
+[xUnit.net 00:02:28.77]                   var script = document.createElement('script');
+[xUnit.net 00:02:28.77]                   script.setAttribute('src', 'libs/opensilver.js');
+[xUnit.net 00:02:28.77]                   script.addEventListener('load', function () {
+[xUnit.net 00:02:28.77]                       var blazor = document.createElement('script');
+[xUnit.net 00:02:28.77]                       blazor.setAttribute('src', '_framework/blazor.webassembly.js');
+[xUnit.net 00:02:28.77]                       document.body.appendChild(blazor);
+[xUnit.net 00:02:28.77]                   });
+[xUnit.net 00:02:28.77]                   document.body.appendChild(script);
+[xUnit.net 00:02:28.77]               })();
+[xUnit.net 00:02:28.77]           </script><script src="libs/opensilver.js"></script>
+[xUnit.net 00:02:28.77]       
+[xUnit.net 00:02:28.77]       
+[xUnit.net 00:02:28.77]       
+[xUnit.net 00:02:28.77]       <script src="_framework/blazor.webassembly.js"></script></body></html>
+[xUnit.net 00:02:28.78]       Stack Trace:
+[xUnit.net 00:02:28.78]         /_/tests/TabStudio.Testing/HeadlessChrome.cs(208,0): at TabStudio.Testing.HeadlessChrome.WaitUntilAsync(String condition, TimeSpan timeout)
+[xUnit.net 00:02:28.78]         /_/tests/TabStudio.Wpf.Tests/ExpenseItTests.cs(64,0): at TabStudio.Wpf.Tests.ExpenseItTests.ShowsWindowAsync(String language, String project)
+[xUnit.net 00:02:28.78]         /_/tests/TabStudio.Wpf.Tests/ExpenseItTests.cs(79,0): at TabStudio.Wpf.Tests.ExpenseItTests.ShowsWindowAsync(String language, String project)
+[xUnit.net 00:02:28.78]         /_/tests/TabStudio.Wpf.Tests/ExpenseItTests.cs(79,0): at TabStudio.Wpf.Tests.ExpenseItTests.ShowsWindowAsync(String language, String project)
+[xUnit.net 00:02:28.78]         /_/tests/TabStudio.Wpf.Tests/ExpenseItTests.cs(79,0): at TabStudio.Wpf.Tests.ExpenseItTests.ShowsWindowAsync(String language, String project)
+[xUnit.net 00:02:28.78]         --- End of stack trace from previous location ---
+[xUnit.net 00:02:28.78]       Output:
+[xUnit.net 00:02:28.78]         _tabstudio/console: [{"level":"info","text":"Debugging hotkey: Shift+Alt+D (when application has focus)"}]
+[xUnit.net 00:02:28.78]         _tabstudio/console: [{"level":"error","text":"Unhandled exception in ExpenseItIntro: System.Windows.Markup.XamlParseException: Cannot find resource named 'CustomNavWindowStyle'. Resource names are case sensitive."},{"level":"error","text":"   at System.Windows.Markup.StaticResourceExtension.ProvideValue(IServiceProvider serviceProvider) in E:\\Travail\\USERWARE\\opensilver\\src\\Runtime\\Runtime\\System.Windows.Markup\\StaticResourceExtension.cs:line 68"},{"level":"error","text":"   at OpenSilver.Internal.Xaml.RuntimeHelpers.CallProvideValue[Object](XamlContext context, IMarkupExtension`1 markupExtension) in E:\\Travail\\USERWARE\\opensilver\\src\\Runtime\\Runtime\\OpenSilver\\Internal\\Xaml\\RuntimeHelpers.cs:line 402"},{"level":"error","text":"   at ǀǀExpenseit9ǀǀComponentǀǀMainwindowǀǀXamlǀǀFactory.LoadComponentImpl(NavigationWindow navigationWindow_62dacb25fde6499dbffe1abd4c3d463a)"},{"level":"error","text":"   at ǀǀExpenseit9ǀǀComponentǀǀMainwindowǀǀXamlǀǀFactory.global::OpenSilver.Internal.Xaml.IXamlComponentLoader.LoadComponent(Object component)"},{"level":"error","text":"   at System.Windows.Application.LoadComponent(Object component, IXamlComponentLoader loader) in E:\\Travail\\USERWARE\\opensilver\\src\\Runtime\\Runtime\\System.Windows\\Application.cs:line 578"},{"level":"error","text":"   at ExpenseIt.MainWindow.InitializeComponent()"},{"level":"error","text":"   at ExpenseIt.MainWindow..ctor()"},{"level":"error","text":"   at TabStudio.WpfHost.WpfApp.<>c.<.cctor>b__18_0()"},{"level":"error","text":"   at TabStudio.WpfHost.WpfApp.Create(String path)"},{"level":"error","text":"   at TabStudio.WpfHost.WpfApp.ShowStartupWindow(Application app)"},{"level":"error","text":"   at TabStudio.WpfHost.WpfApp.<>c__DisplayClass7_0.<Start>b__3()"},{"level":"error","text":"   at System.Windows.Threading.DispatcherOperation.InvokeDelegateCore() in E:\\Travail\\USERWARE\\opensilver\\src\\Runtime\\Runtime\\System.Windows.Threading\\DispatcherOperation.cs:line 141"},{"level":"error","text":"   at System.Windows.Threading.DispatcherOperation.InvokeImpl() in E:\\Travail\\USERWARE\\opensilver\\src\\Runtime\\Runtime\\System.Windows.Threading\\DispatcherOperation.cs:line 151"},{"level":"error","text":"   at System.Windows.Threading.DispatcherOperation.Invoke() in E:\\Travail\\USERWARE\\opensilver\\src\\Runtime\\Runtime\\System.Windows.Threading\\DispatcherOperation.cs:line 125"},{"level":"error","text":"   at System.Windows.Threading.Dispatcher.InvokeOperation(DispatcherOperation operation, List`1& unhandledExceptions) in E:\\Travail\\USERWARE\\opensilver\\src\\Runtime\\Runtime\\System.Windows.Threading\\Dispatcher.cs:line 480"}]
+  Failed TabStudio.Wpf.Tests.ExpenseItTests.The_CSharp_app_shows_its_navigation_window_and_goes_to_the_report_page [2 m 3 s]
+  Error Message:
+   System.TimeoutException : After 120 s, still not true: document.body.innerText.includes('View Expense Report')
+The console:
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://127.0.0.1:42781/favicon.ico
+console.info: Debugging hotkey: Shift+Alt+D (when application has focus)
+console.error: Unhandled exception in ExpenseItIntro: System.Windows.Markup.XamlParseException: Cannot find resource named 'CustomNavWindowStyle'. Resource names are case sensitive.
+console.error:    at System.Windows.Markup.StaticResourceExtension.ProvideValue(IServiceProvider serviceProvider) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Markup\StaticResourceExtension.cs:line 68
+console.error:    at OpenSilver.Internal.Xaml.RuntimeHelpers.CallProvideValue[Object](XamlContext context, IMarkupExtension`1 markupExtension) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\OpenSilver\Internal\Xaml\RuntimeHelpers.cs:line 402
+console.error:    at ǀǀExpenseit9ǀǀComponentǀǀMainwindowǀǀXamlǀǀFactory.LoadComponentImpl(NavigationWindow navigationWindow_62dacb25fde6499dbffe1abd4c3d463a)
+console.error:    at ǀǀExpenseit9ǀǀComponentǀǀMainwindowǀǀXamlǀǀFactory.global::OpenSilver.Internal.Xaml.IXamlComponentLoader.LoadComponent(Object component)
+console.error:    at System.Windows.Application.LoadComponent(Object component, IXamlComponentLoader loader) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\Application.cs:line 578
+console.error:    at ExpenseIt.MainWindow.InitializeComponent()
+console.error:    at ExpenseIt.MainWindow..ctor()
+console.error:    at TabStudio.WpfHost.WpfApp.<>c.<.cctor>b__18_0()
+console.error:    at TabStudio.WpfHost.WpfApp.Create(String path)
+console.error:    at TabStudio.WpfHost.WpfApp.ShowStartupWindow(Application app)
+console.error:    at TabStudio.WpfHost.WpfApp.<>c__DisplayClass7_0.<Start>b__3()
+console.error:    at System.Windows.Threading.DispatcherOperation.InvokeDelegateCore() in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Threading\DispatcherOperation.cs:line 141
+console.error:    at System.Windows.Threading.DispatcherOperation.InvokeImpl() in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Threading\DispatcherOperation.cs:line 151
+console.error:    at System.Windows.Threading.DispatcherOperation.Invoke() in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Threading\DispatcherOperation.cs:line 125
+console.error:    at System.Windows.Threading.Dispatcher.InvokeOperation(DispatcherOperation operation, List`1& unhandledExceptions) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Threading\Dispatcher.cs:line 480
+The page:
+<html lang="en" style="--blazor-load-percentage: 100%; --blazor-load-percentage-text: &quot;100%&quot;;"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" id="tabstudio-wpf-viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=4, user-scalable=yes">
+    <title>ExpenseItIntro</title>
+    <base href="/">
+    <link href="_framework/dotnet.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-L1Ajt+EJNa6OW6LjOxgTM0rrKPRpUl58L+t090/qPJY=">
+    <link rel="stylesheet" href="_tabstudio/wpf.css">
+    <script type="importmap">{ "imports": {} }</script>
+    <script src="_tabstudio/wpf.js"></script>
+<link rel="stylesheet" type="text/css" href="libs/cshtml5.css?date=2026-11-02T12:34:54.618Z"><link rel="stylesheet" type="text/css" href="libs/quill.core.css?date=2026-11-02T12:34:54.618Z"><script type="application/javascript" src="libs/cshtml5.js?date=2026-11-02T12:34:54.618Z"></script><script type="application/javascript" src="libs/quill.min.js?date=2026-11-02T12:34:54.618Z"></script><script type="application/javascript" src="libs/htmlToImage.js?date=2026-11-02T12:34:54.618Z"></script><script type="application/javascript" src="libs/FileSaver.min.js?date=2026-11-02T12:34:54.618Z"></script></head>
+
+<body>
+    <div id="tabstudio-wpf-window" class="tabstudio-wpf-window">
+        <div class="tabstudio-wpf-titlebar">
+            <svg class="tabstudio-wpf-icon" viewBox="0 0 16 16" aria-hidden="true">
+                <rect x="1.5" y="2.5" width="13" height="11" rx="1.5" fill="none" stroke="currentColor"></rect>
+                <path d="M1.5 5.5h13" stroke="currentColor"></path>
+            </svg>
+            <span id="tabstudio-wpf-title" class="tabstudio-wpf-title">ExpenseItIntro</span>
+            <button id="tabstudio-wpf-close" class="tabstudio-wpf-close" type="button" title="Close ExpenseItIntro" aria-label="Close">
+                <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" stroke-width="1.1"></path></svg>
+            </button>
+        </div>
+        <div id="tabstudio-wpf-client" class="tabstudio-wpf-client">
+            <div id="tabstudio-wpf-starting" class="tabstudio-wpf-starting">Starting ExpenseItIntro…</div>
+        </div>
+    </div>
+    <div id="app"></div>
+    <div id="opensilver-root" class="tabstudio-wpf-offscreen opensilver-root-element" tabindex="0" style="display: grid; overflow: clip;"><div id="id1" class="opensilver-window"><div style="position: absolute; visibility: hidden; box-sizing: border-box; white-space: pre; left: -100000px; top: -100000px; text-align: left;"></div></div></div>
+
+    <script>
+        (function () {
+            var script = document.createElement('script');
+            script.setAttribute('src', 'libs/opensilver.js');
+            script.addEventListener('load', function () {
+                var blazor = document.createElement('script');
+                blazor.setAttribute('src', '_framework/blazor.webassembly.js');
+                document.body.appendChild(blazor);
+            });
+            document.body.appendChild(script);
+        })();
+    </script><script src="libs/opensilver.js"></script>
+
+
+
+<script src="_framework/blazor.webassembly.js"></script></body></html>
+  Stack Trace:
+     at TabStudio.Testing.HeadlessChrome.WaitUntilAsync(String condition, TimeSpan timeout) in /_/tests/TabStudio.Testing/HeadlessChrome.cs:line 208
+   at TabStudio.Wpf.Tests.ExpenseItTests.ShowsWindowAsync(String language, String project) in /_/tests/TabStudio.Wpf.Tests/ExpenseItTests.cs:line 64
+   at TabStudio.Wpf.Tests.ExpenseItTests.ShowsWindowAsync(String language, String project) in /_/tests/TabStudio.Wpf.Tests/ExpenseItTests.cs:line 79
+   at TabStudio.Wpf.Tests.ExpenseItTests.ShowsWindowAsync(String language, String project) in /_/tests/TabStudio.Wpf.Tests/ExpenseItTests.cs:line 79
+   at TabStudio.Wpf.Tests.ExpenseItTests.ShowsWindowAsync(String language, String project) in /_/tests/TabStudio.Wpf.Tests/ExpenseItTests.cs:line 79
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ _tabstudio/console: [{"level":"info","text":"Debugging hotkey: Shift+Alt+D (when application has focus)"}]
+ _tabstudio/console: [{"level":"error","text":"Unhandled exception in ExpenseItIntro: System.Windows.Markup.XamlParseException: Cannot find resource named 'CustomNavWindowStyle'. Resource names are case sensitive."},{"level":"error","text":"   at System.Windows.Markup.StaticResourceExtension.ProvideValue(IServiceProvider serviceProvider) in E:\\Travail\\USERWARE\\opensilver\\src\\Runtime\\Runtime\\System.Windows.Markup\\StaticResourceExtension.cs:line 68"},{"level":"error","text":"   at OpenSilver.Internal.Xaml.RuntimeHelpers.CallProvideValue[Object](XamlContext context, IMarkupExtension`1 markupExtension) in E:\\Travail\\USERWARE\\opensilver\\src\\Runtime\\Runtime\\OpenSilver\\Internal\\Xaml\\RuntimeHelpers.cs:line 402"},{"level":"error","text":"   at ǀǀExpenseit9ǀǀComponentǀǀMainwindowǀǀXamlǀǀFactory.LoadComponentImpl(NavigationWindow navigationWindow_62dacb25fde6499dbffe1abd4c3d463a)"},{"level":"error","text":"   at ǀǀExpenseit9ǀǀComponentǀǀMainwindowǀǀXamlǀǀFactory.global::OpenSilver.Internal.Xaml.IXamlComponentLoader.LoadComponent(Object component)"},{"level":"error","text":"   at System.Windows.Application.LoadComponent(Object component, IXamlComponentLoader loader) in E:\\Travail\\USERWARE\\opensilver\\src\\Runtime\\Runtime\\System.Windows\\Application.cs:line 578"},{"level":"error","text":"   at ExpenseIt.MainWindow.InitializeComponent()"},{"level":"error","text":"   at ExpenseIt.MainWindow..ctor()"},{"level":"error","text":"   at TabStudio.WpfHost.WpfApp.<>c.<.cctor>b__18_0()"},{"level":"error","text":"   at TabStudio.WpfHost.WpfApp.Create(String path)"},{"level":"error","text":"   at TabStudio.WpfHost.WpfApp.ShowStartupWindow(Application app)"},{"level":"error","text":"   at TabStudio.WpfHost.WpfApp.<>c__DisplayClass7_0.<Start>b__3()"},{"level":"error","text":"   at System.Windows.Threading.DispatcherOperation.InvokeDelegateCore() in E:\\Travail\\USERWARE\\opensilver\\src\\Runtime\\Runtime\\System.Windows.Threading\\DispatcherOperation.cs:line 141"},{"level":"error","text":"   at System.Windows.Threading.DispatcherOperation.InvokeImpl() in E:\\Travail\\USERWARE\\opensilver\\src\\Runtime\\Runtime\\System.Windows.Threading\\DispatcherOperation.cs:line 151"},{"level":"error","text":"   at System.Windows.Threading.DispatcherOperation.Invoke() in E:\\Travail\\USERWARE\\opensilver\\src\\Runtime\\Runtime\\System.Windows.Threading\\DispatcherOperation.cs:line 125"},{"level":"error","text":"   at System.Windows.Threading.Dispatcher.InvokeOperation(DispatcherOperation operation, List`1& unhandledExceptions) in E:\\Travail\\USERWARE\\opensilver\\src\\Runtime\\Runtime\\System.Windows.Threading\\Dispatcher.cs:line 480"}]
+
+
+  Passed TabStudio.Wpf.Tests.ExpenseItTests.The_Visual_Basic_app_shows_its_navigation_window_and_goes_to_the_report_page [2 s]
+  Passed TabStudio.Wpf.Tests.BusinessAppTests.The_business_app_builds_on_OpenSilver [225 ms]
+[xUnit.net 00:02:34.46]   Finished:    TabStudio.Wpf.Tests
+  Passed TabStudio.Wpf.Tests.BusinessAppTests.Lists_the_contacts_in_a_data_grid_and_adds_one_with_a_command [2 s]
+
+Test Run Failed.
+Total tests: 37
+     Passed: 36
+     Failed: 1
+ Total time: 2.5903 Minutes

@@ -4,5 +4,5 @@ An app and a library of 300 classes referenced as a skeleton image, as on a 3 GB
 
 | | Caller waited, before (the reload and compile it did) | Caller waited, after | Longest keystroke wait, after |
 | --- | --- | --- | --- |
-| Rename edits the library | 935 ms | 4.0 ms | 20.5 ms |
-| Memory pressure | 18 ms | 0.0 ms | 6.9 ms |
+| Rename edits the library | 716 ms | 4.3 ms | 97.4 ms |
+| Memory pressure | 23 ms | 0.1 ms | 11.4 ms |
