@@ -163,6 +163,21 @@ public sealed class ServiceIsolationTests : IDisposable
         Assert.Contains("Native fallback", Detail(manager, "db"), StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task An_image_published_on_a_port_below_1024_gets_an_unprivileged_one()
+    {
+        // awesome-compose's WordPress publishes 80:80; an app cannot bind it, and the image failed as "port in use".
+        var project = Read("services:\n  web:\n    image: wordpress:6.6-apache\n    ports: ['80:80']\n");
+        var images = new Images(new TimeoutException("web: stop here"));
+        await using var manager = new ServiceManager(project, new TabStudio.Toolchains.Runtimes.HostRuntime(), new Packages(), new ServiceStorage(_storage.Path, _workspace.Path), new Network(), images);
+
+        await Assert.ThrowsAsync<ComposeException>(() => manager.StartAsync(["web"]));
+
+        var port = Assert.Single(Assert.Single(images.Requested));
+        Assert.Equal(80, port.Target);
+        Assert.True(port.Published >= 1024, $"published on {port.Published}");
+    }
+
     public void Dispose()
     {
         _workspace.Dispose();
@@ -187,10 +202,16 @@ public sealed class ServiceIsolationTests : IDisposable
     /// <summary>An image backend whose every start fails the same way.</summary>
     private sealed class Images(Exception failure) : IServiceImages
     {
+        public List<IReadOnlyList<ServicePort>> Requested { get; } = [];
+
         public bool CanRun(ComposeService service) => true;
 
         public Task<IServiceImageProcess> StartAsync(ComposeProject project, ComposeService service, IReadOnlyList<ServicePort> ports,
-            Action<string> log, Action<ServiceState, string?> changed, CancellationToken cancellationToken) => Task.FromException<IServiceImageProcess>(failure);
+            Action<string> log, Action<ServiceState, string?> changed, CancellationToken cancellationToken)
+        {
+            Requested.Add(ports);
+            return Task.FromException<IServiceImageProcess>(failure);
+        }
     }
 
     private sealed class Network : IServiceNetwork

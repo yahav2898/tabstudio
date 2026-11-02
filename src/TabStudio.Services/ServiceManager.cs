@@ -440,7 +440,8 @@ public sealed class ServiceManager : IAsyncDisposable
                 var requested = Project.Services[name].Ports.Where(p => p.Target == target).ToArray();
                 if (requested.Length > 1) throw new ComposeException($"{name}: publishing a target port more than once requires a remote host.");
                 var published = requested.FirstOrDefault()?.Published ?? target;
-                if (published is > 0 and < 1024 && _runtime.Kind == RuntimeKind.Linux) { Log(name, $"Port {published} needs root; assigning an unprivileged localhost port."); published = 0; }
+                // Below 1024 needs root, which apps do not have: 80:80, as most web stacks write it, failed as "in use".
+                if (published is > 0 and < 1024 && (_runtime.Kind == RuntimeKind.Linux || CanRunImage(Project.Services[name]) || !_network.IsFree(published))) { Log(name, $"Port {published} needs root; assigning an unprivileged localhost port."); published = 0; }
                 if (published > 0 && (used.Contains(published) || !_network.IsFree(published)))
                 {
                     if (requested.FirstOrDefault()?.Published > 0) throw new ComposeException($"{name}: localhost port {published} is already in use.");

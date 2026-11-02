@@ -135,19 +135,24 @@ public sealed class ComposeImages(ContainerEngine engine, IProgress<PullProgress
                         if (!state.IsRunning) throw new ComposeException($"{service.Name}: image exited with code {state.ExitCode}{(state.Error is { } error ? " (" + error + ")" : "")}; see service logs.");
                         if (state.Health == HealthStatus.Unhealthy) throw new ComposeException($"{service.Name}: image health check failed: {state.HealthOutput?.Trim()}; see service logs.");
                         var waitingFor = new List<int>();
-                        foreach (var port in state.Ports)
+                        var answering = 0;
+                        foreach (var port in ReadinessPorts(state.Ports, spec.Ports))
                         {
                             using var socket = new TcpClient();
-                            try { await socket.ConnectAsync("127.0.0.1", port.HostPort, cancellationToken).ConfigureAwait(false); }
-                            catch (SocketException) { waitingFor.Add(port.ContainerPort); break; }
+                            try { await socket.ConnectAsync("127.0.0.1", port.HostPort, cancellationToken).ConfigureAwait(false); answering++; }
+                            catch (SocketException) { waitingFor.Add(port.ContainerPort); }
                         }
+                        // Ports the Compose file publishes must all answer. Without any, one of the image's own is
+                        // enough: images declare ports they never open, as MariaDB's 33060 and RabbitMQ's 5671.
+                        if (spec.Ports.Count == 0 && answering > 0) waitingFor.Clear();
                         var healthy = state.Health is HealthStatus.None or HealthStatus.Healthy;
                         if (waitingFor.Count == 0 && healthy && clock.Elapsed > TimeSpan.FromMilliseconds(300)) break;
                         var quiet = DateTimeOffset.UtcNow - lastLog;
                         if (!KeepWaiting(clock.Elapsed, deadline, quiet))
                         {
                             var what = waitingFor.Count > 0 ? $"did not answer on port {string.Join(", ", waitingFor)}" : "did not report healthy";
-                            throw new TimeoutException($"{service.Name}: image {what} within {clock.Elapsed.TotalSeconds:0} seconds and has written nothing for {quiet.TotalSeconds:0} seconds; see service logs.");
+                            var why = clock.Elapsed >= MaximumReadiness ? $"within the {MaximumReadiness.TotalMinutes:0}-minute limit" : $"within {clock.Elapsed.TotalSeconds:0} seconds and has written nothing for {quiet.TotalSeconds:0} seconds";
+                            throw new TimeoutException($"{service.Name}: image {what} {why}; see service logs.");
                         }
                         if (clock.Elapsed - reported >= TimeSpan.FromSeconds(10))
                         {
@@ -198,6 +203,13 @@ public sealed class ComposeImages(ContainerEngine engine, IProgress<PullProgress
 
         return deadline < MaximumReadiness ? deadline : MaximumReadiness;
     }
+
+    /// <summary>
+    /// The ports readiness looks at: those the Compose file publishes when it publishes any, otherwise every port
+    /// mapped for the image, of which one answering is enough.
+    /// </summary>
+    public static IReadOnlyList<PublishedPort> ReadinessPorts(IReadOnlyList<PublishedPort> mapped, IReadOnlyList<PortBinding> published) =>
+        published.Count == 0 ? mapped : [.. mapped.Where(p => published.Any(b => b.ContainerPort == p.ContainerPort))];
 
     /// <summary>The longest any image is waited for, even one that keeps writing to its log.</summary>
     public static readonly TimeSpan MaximumReadiness = TimeSpan.FromMinutes(10);

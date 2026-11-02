@@ -206,6 +206,11 @@ public sealed class HardeningTests
         Assert.True(ComposeImages.KeepWaiting(TimeSpan.FromSeconds(200), TimeSpan.FromSeconds(120), TimeSpan.FromSeconds(3)));
         Assert.False(ComposeImages.KeepWaiting(TimeSpan.FromSeconds(200), TimeSpan.FromSeconds(120), TimeSpan.FromSeconds(45)));
         Assert.False(ComposeImages.KeepWaiting(TimeSpan.FromMinutes(11), TimeSpan.FromSeconds(120), TimeSpan.Zero));
+
+        // MariaDB declares 33060 and never opens it; only what the Compose file publishes must answer.
+        PublishedPort[] mapped = [new(3306, "tcp", 31000, "127.0.0.1"), new(33060, "tcp", 31001, "127.0.0.1")];
+        Assert.Equal(mapped, ComposeImages.ReadinessPorts(mapped, []));
+        Assert.Equal([3306], ComposeImages.ReadinessPorts(mapped, [new PortBinding(3306)]).Select(p => p.ContainerPort));
     }
 
     [Fact]

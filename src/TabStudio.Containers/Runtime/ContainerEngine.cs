@@ -1270,8 +1270,17 @@ public sealed class ContainerEngine : IAsyncDisposable
         var folder = Path.Combine(Store.ContainersFolder, info.Id);
         if (!Directory.Exists(folder)) return;
         var file = Path.Combine(folder, "container.json");
-        File.WriteAllBytes(file + ".partial", JsonSerializer.SerializeToUtf8Bytes(info, StateJson));
-        File.Move(file + ".partial", file, overwrite: true);
+        // A name of its own, so two saves of one container never move each other's file; and a container removed
+        // meanwhile (its exit saved while it is deleted) has nothing left to save.
+        var partial = file + "." + Guid.NewGuid().ToString("N")[..8] + ".partial";
+        try
+        {
+            File.WriteAllBytes(partial, JsonSerializer.SerializeToUtf8Bytes(info, StateJson));
+            File.Move(partial, file, overwrite: true);
+        }
+        catch (Exception ex) when ((ex is FileNotFoundException or DirectoryNotFoundException) && !Directory.Exists(folder))
+        {
+        }
     }
 
     private static Dictionary<string, string> Attributes(ContainerInfo info)
