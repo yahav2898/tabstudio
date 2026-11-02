@@ -31,6 +31,7 @@ internal static partial class XamlSanitizer
     /// <param name="copyDirectory">Where copies go, each under its path in the project.</param>
     /// <param name="projectName">The project, for the diagnostics.</param>
     /// <param name="leftOut">What OpenSilver's compiler could not compile, which the copies leave out (see <see cref="XamlLeftOut"/>).</param>
+    /// <param name="assemblyName">The project's assembly, which dictionaries merged from its root are read from.</param>
     public static (IReadOnlyList<XamlCompilerInput> Inputs, IReadOnlyList<BuildDiagnostic> Diagnostics) Prepare(
         IReadOnlyList<XamlItem> items,
         XamlTypeSystem types,
