@@ -1,0 +1,683 @@
+echo at 7af8fac5354e53294c8d14fdd7dd4006dbaffd52
+Toolchain projects:
+  go: /home/runner/work/_temp/real-repos/echo/go.mod
+Startup project: go /home/runner/work/_temp/real-repos/echo/go.mod
+Set up in 2.3 s
+Tests: 730 passed, 0 failed, 0 skipped of 730: 730 tests run in 8.2 sec: 730 passed, 0 failed, 0 skipped.
+Project setup:
+
+Output:
+is_set
+=== RUN   TestProxyWebSocketXForwardedFor/single-line_single-entry_XFF_is_preserved_with_proxy_RealIP_appended
+=== RUN   TestProxyWebSocketXForwardedFor/single-line_comma-separated_XFF_is_preserved_with_proxy_RealIP_appended
+=== RUN   TestProxyWebSocketXForwardedFor/multi-line_XFF_(multiple_header_occurrences)_is_joined_with_proxy_RealIP_appended
+--- PASS: TestProxyWebSocketXForwardedFor (0.00s)
+    --- PASS: TestProxyWebSocketXForwardedFor/no_incoming_XFF,_only_proxy_RealIP_is_set (0.00s)
+    --- PASS: TestProxyWebSocketXForwardedFor/single-line_single-entry_XFF_is_preserved_with_proxy_RealIP_appended (0.00s)
+    --- PASS: TestProxyWebSocketXForwardedFor/single-line_comma-separated_XFF_is_preserved_with_proxy_RealIP_appended (0.00s)
+    --- PASS: TestProxyWebSocketXForwardedFor/multi-line_XFF_(multiple_header_occurrences)_is_joined_with_proxy_RealIP_appended (0.00s)
+=== RUN   TestRandomStringConcurrent
+--- PASS: TestRandomStringConcurrent (0.01s)
+=== RUN   TestRateLimiter_storeAllowContextIsPreferred
+--- PASS: TestRateLimiter_storeAllowContextIsPreferred (0.00s)
+=== RUN   TestRateLimiterMemoryStore_AllowContextSetsHeaders
+--- PASS: TestRateLimiterMemoryStore_AllowContextSetsHeaders (0.00s)
+=== RUN   TestRateLimiter
+--- PASS: TestRateLimiter (0.00s)
+=== RUN   TestMustRateLimiterWithConfig_panicBehaviour
+--- PASS: TestMustRateLimiterWithConfig_panicBehaviour (0.00s)
+=== RUN   TestRateLimiterWithConfig
+--- PASS: TestRateLimiterWithConfig (0.00s)
+=== RUN   TestRateLimiterWithConfig_defaultDenyHandler
+--- PASS: TestRateLimiterWithConfig_defaultDenyHandler (0.00s)
+=== RUN   TestRateLimiterWithConfig_defaultConfig
+--- PASS: TestRateLimiterWithConfig_defaultConfig (0.00s)
+=== RUN   TestRateLimiterWithConfig_skipper
+--- PASS: TestRateLimiterWithConfig_skipper (0.00s)
+=== RUN   TestRateLimiterWithConfig_skipperNoSkip
+--- PASS: TestRateLimiterWithConfig_skipperNoSkip (0.00s)
+=== RUN   TestRateLimiterWithConfig_beforeFunc
+--- PASS: TestRateLimiterWithConfig_beforeFunc (0.00s)
+=== RUN   TestRateLimiterMemoryStore_Allow
+    rate_limiter_test.go:366: Running testcase #0 => 0s
+    rate_limiter_test.go:366: Running testcase #1 => 220ms
+    rate_limiter_test.go:366: Running testcase #2 => 440ms
+    rate_limiter_test.go:366: Running testcase #3 => 660ms
+    rate_limiter_test.go:366: Running testcase #4 => 880ms
+    rate_limiter_test.go:366: Running testcase #5 => 1.1s
+    rate_limiter_test.go:366: Running testcase #6 => 1.32s
+    rate_limiter_test.go:366: Running testcase #7 => 1.54s
+    rate_limiter_test.go:366: Running testcase #8 => 1.76s
+    rate_limiter_test.go:366: Running testcase #9 => 1.98s
+    rate_limiter_test.go:366: Running testcase #10 => 2.2s
+    rate_limiter_test.go:366: Running testcase #11 => 2.42s
+    rate_limiter_test.go:366: Running testcase #12 => 2.64s
+    rate_limiter_test.go:366: Running testcase #13 => 2.86s
+    rate_limiter_test.go:366: Running testcase #14 => 3.08s
+    rate_limiter_test.go:366: Running testcase #15 => 3.3s
+    rate_limiter_test.go:366: Running testcase #16 => 3.52s
+    rate_limiter_test.go:366: Running testcase #17 => 3.74s
+    rate_limiter_test.go:366: Running testcase #18 => 3.96s
+    rate_limiter_test.go:366: Running testcase #19 => 4.18s
+    rate_limiter_test.go:366: Running testcase #20 => 4.4s
+    rate_limiter_test.go:366: Running testcase #21 => 4.62s
+    rate_limiter_test.go:366: Running testcase #22 => 4.84s
+    rate_limiter_test.go:366: Running testcase #23 => 5.06s
+--- PASS: TestRateLimiterMemoryStore_Allow (0.00s)
+=== RUN   TestRateLimiterMemoryStore_cleanupStaleVisitors
+--- PASS: TestRateLimiterMemoryStore_cleanupStaleVisitors (0.00s)
+=== RUN   TestNewRateLimiterMemoryStore
+--- PASS: TestNewRateLimiterMemoryStore (0.00s)
+=== RUN   TestRateLimiterMemoryStore_FractionalRateDefaultBurst
+--- PASS: TestRateLimiterMemoryStore_FractionalRateDefaultBurst (0.00s)
+=== RUN   TestRateLimiterMemoryStore_TOCTOUFix
+=== PAUSE TestRateLimiterMemoryStore_TOCTOUFix
+=== RUN   TestRateLimiterMemoryStore_ConcurrentAccess
+=== PAUSE TestRateLimiterMemoryStore_ConcurrentAccess
+=== RUN   TestRateLimiterMemoryStore_RaceDetection
+=== PAUSE TestRateLimiterMemoryStore_RaceDetection
+=== RUN   TestRateLimiterMemoryStore_TimeOrdering
+=== PAUSE TestRateLimiterMemoryStore_TimeOrdering
+=== RUN   TestRecover
+--- PASS: TestRecover (0.00s)
+=== RUN   TestRecover_skipper
+--- PASS: TestRecover_skipper (0.00s)
+=== RUN   TestRecoverErrAbortHandler
+--- PASS: TestRecoverErrAbortHandler (0.00s)
+=== RUN   TestRecoverWithConfig
+=== RUN   TestRecoverWithConfig/ok,_default_config
+=== RUN   TestRecoverWithConfig/ok,_no_panic
+=== RUN   TestRecoverWithConfig/ok,_DisablePrintStack
+--- PASS: TestRecoverWithConfig (0.00s)
+    --- PASS: TestRecoverWithConfig/ok,_default_config (0.00s)
+    --- PASS: TestRecoverWithConfig/ok,_no_panic (0.00s)
+    --- PASS: TestRecoverWithConfig/ok,_DisablePrintStack (0.00s)
+=== RUN   TestRedirectHTTPSRedirect
+=== RUN   TestRedirectHTTPSRedirect/labstack.com
+=== RUN   TestRedirectHTTPSRedirect/labstack.com#01
+--- PASS: TestRedirectHTTPSRedirect (0.00s)
+    --- PASS: TestRedirectHTTPSRedirect/labstack.com (0.00s)
+    --- PASS: TestRedirectHTTPSRedirect/labstack.com#01 (0.00s)
+=== RUN   TestRedirectHTTPSWWWRedirect
+=== RUN   TestRedirectHTTPSWWWRedirect/labstack.com
+=== RUN   TestRedirectHTTPSWWWRedirect/www.labstack.com
+=== RUN   TestRedirectHTTPSWWWRedirect/a.com
+=== RUN   TestRedirectHTTPSWWWRedirect/ip
+=== RUN   TestRedirectHTTPSWWWRedirect/labstack.com#01
+=== RUN   TestRedirectHTTPSWWWRedirect/www.labstack.com#01
+--- PASS: TestRedirectHTTPSWWWRedirect (0.00s)
+    --- PASS: TestRedirectHTTPSWWWRedirect/labstack.com (0.00s)
+    --- PASS: TestRedirectHTTPSWWWRedirect/www.labstack.com (0.00s)
+    --- PASS: TestRedirectHTTPSWWWRedirect/a.com (0.00s)
+    --- PASS: TestRedirectHTTPSWWWRedirect/ip (0.00s)
+    --- PASS: TestRedirectHTTPSWWWRedirect/labstack.com#01 (0.00s)
+    --- PASS: TestRedirectHTTPSWWWRedirect/www.labstack.com#01 (0.00s)
+=== RUN   TestRedirectHTTPSNonWWWRedirect
+=== RUN   TestRedirectHTTPSNonWWWRedirect/www.labstack.com
+=== RUN   TestRedirectHTTPSNonWWWRedirect/a.com
+=== RUN   TestRedirectHTTPSNonWWWRedirect/ip
+=== RUN   TestRedirectHTTPSNonWWWRedirect/www.labstack.com#01
+=== RUN   TestRedirectHTTPSNonWWWRedirect/labstack.com
+--- PASS: TestRedirectHTTPSNonWWWRedirect (0.00s)
+    --- PASS: TestRedirectHTTPSNonWWWRedirect/www.labstack.com (0.00s)
+    --- PASS: TestRedirectHTTPSNonWWWRedirect/a.com (0.00s)
+    --- PASS: TestRedirectHTTPSNonWWWRedirect/ip (0.00s)
+    --- PASS: TestRedirectHTTPSNonWWWRedirect/www.labstack.com#01 (0.00s)
+    --- PASS: TestRedirectHTTPSNonWWWRedirect/labstack.com (0.00s)
+=== RUN   TestRedirectWWWRedirect
+=== RUN   TestRedirectWWWRedirect/labstack.com
+=== RUN   TestRedirectWWWRedirect/a.com
+=== RUN   TestRedirectWWWRedirect/ip
+=== RUN   TestRedirectWWWRedirect/a.com#01
+=== RUN   TestRedirectWWWRedirect/www.ip
+--- PASS: TestRedirectWWWRedirect (0.00s)
+    --- PASS: TestRedirectWWWRedirect/labstack.com (0.00s)
+    --- PASS: TestRedirectWWWRedirect/a.com (0.00s)
+    --- PASS: TestRedirectWWWRedirect/ip (0.00s)
+    --- PASS: TestRedirectWWWRedirect/a.com#01 (0.00s)
+    --- PASS: TestRedirectWWWRedirect/www.ip (0.00s)
+=== RUN   TestRedirectNonWWWRedirect
+=== RUN   TestRedirectNonWWWRedirect/www.labstack.com
+=== RUN   TestRedirectNonWWWRedirect/www.a.com
+=== RUN   TestRedirectNonWWWRedirect/www.a.com#01
+=== RUN   TestRedirectNonWWWRedirect/ip
+--- PASS: TestRedirectNonWWWRedirect (0.00s)
+    --- PASS: TestRedirectNonWWWRedirect/www.labstack.com (0.00s)
+    --- PASS: TestRedirectNonWWWRedirect/www.a.com (0.00s)
+    --- PASS: TestRedirectNonWWWRedirect/www.a.com#01 (0.00s)
+    --- PASS: TestRedirectNonWWWRedirect/ip (0.00s)
+=== RUN   TestNonWWWRedirectWithConfig
+=== RUN   TestNonWWWRedirectWithConfig/www.labstack.com
+=== RUN   TestNonWWWRedirectWithConfig/www.labstack.com#01
+=== RUN   TestNonWWWRedirectWithConfig/www.labstack.com#02
+--- PASS: TestNonWWWRedirectWithConfig (0.00s)
+    --- PASS: TestNonWWWRedirectWithConfig/www.labstack.com (0.00s)
+    --- PASS: TestNonWWWRedirectWithConfig/www.labstack.com#01 (0.00s)
+    --- PASS: TestNonWWWRedirectWithConfig/www.labstack.com#02 (0.00s)
+=== RUN   TestRedirectHTTPSRedirect_forwardedProtoTrust
+=== RUN   TestRedirectHTTPSRedirect_forwardedProtoTrust/redirects_when_X-Forwarded-Proto_comes_from_untrusted_client
+=== RUN   TestRedirectHTTPSRedirect_forwardedProtoTrust/does_not_redirect_when_X-Forwarded-Proto_comes_from_trusted_proxy
+--- PASS: TestRedirectHTTPSRedirect_forwardedProtoTrust (0.00s)
+    --- PASS: TestRedirectHTTPSRedirect_forwardedProtoTrust/redirects_when_X-Forwarded-Proto_comes_from_untrusted_client (0.00s)
+    --- PASS: TestRedirectHTTPSRedirect_forwardedProtoTrust/does_not_redirect_when_X-Forwarded-Proto_comes_from_trusted_proxy (0.00s)
+=== RUN   TestRequestID
+--- PASS: TestRequestID (0.00s)
+=== RUN   TestMustRequestIDWithConfig_skipper
+--- PASS: TestMustRequestIDWithConfig_skipper (0.00s)
+=== RUN   TestMustRequestIDWithConfig_customGenerator
+--- PASS: TestMustRequestIDWithConfig_customGenerator (0.00s)
+=== RUN   TestMustRequestIDWithConfig_RequestIDHandler
+--- PASS: TestMustRequestIDWithConfig_RequestIDHandler (0.00s)
+=== RUN   TestRequestIDWithConfig
+{"time":"2026-11-02T03:38:08.907477756Z","level":"ERROR","msg":"echo: response already written to client"}
+--- PASS: TestRequestIDWithConfig (0.00s)
+=== RUN   TestRequestID_IDNotAltered
+--- PASS: TestRequestID_IDNotAltered (0.00s)
+=== RUN   TestRequestIDConfigDifferentHeader
+{"time":"2026-11-02T03:38:08.907546048Z","level":"ERROR","msg":"echo: response already written to client"}
+--- PASS: TestRequestIDConfigDifferentHeader (0.00s)
+=== RUN   TestRequestLoggerOK
+--- PASS: TestRequestLoggerOK (0.00s)
+=== RUN   TestRequestLoggerError
+--- PASS: TestRequestLoggerError (0.00s)
+=== RUN   TestRequestLoggerWithConfig
+--- PASS: TestRequestLoggerWithConfig (0.00s)
+=== RUN   TestRequestLoggerWithConfig_missingOnLogValuesPanics
+--- PASS: TestRequestLoggerWithConfig_missingOnLogValuesPanics (0.00s)
+=== RUN   TestRequestLogger_skipper
+--- PASS: TestRequestLogger_skipper (0.00s)
+=== RUN   TestRequestLogger_beforeNextFunc
+--- PASS: TestRequestLogger_beforeNextFunc (0.00s)
+=== RUN   TestRequestLogger_logError
+--- PASS: TestRequestLogger_logError (0.00s)
+=== RUN   TestRequestLogger_HandleError
+--- PASS: TestRequestLogger_HandleError (0.00s)
+=== RUN   TestRequestLogger_LogValuesFuncError
+--- PASS: TestRequestLogger_LogValuesFuncError (0.00s)
+=== RUN   TestRequestLogger_ID
+=== RUN   TestRequestLogger_ID/ok,_ID_is_provided_from_request_headers
+=== RUN   TestRequestLogger_ID/ok,_ID_is_from_response_headers
+--- PASS: TestRequestLogger_ID (0.00s)
+    --- PASS: TestRequestLogger_ID/ok,_ID_is_provided_from_request_headers (0.00s)
+    --- PASS: TestRequestLogger_ID/ok,_ID_is_from_response_headers (0.00s)
+=== RUN   TestRequestLogger_headerIsCaseInsensitive
+--- PASS: TestRequestLogger_headerIsCaseInsensitive (0.00s)
+=== RUN   TestRequestLogger_allFields
+--- PASS: TestRequestLogger_allFields (0.00s)
+=== RUN   TestTestRequestLogger
+=== RUN   TestTestRequestLogger/ok
+=== RUN   TestTestRequestLogger/error
+--- PASS: TestTestRequestLogger (0.00s)
+    --- PASS: TestTestRequestLogger/ok (0.00s)
+    --- PASS: TestTestRequestLogger/error (0.00s)
+=== RUN   TestRewriteAfterRouting
+=== RUN   TestRewriteAfterRouting//api/users
+=== RUN   TestRewriteAfterRouting//js/main.js
+=== RUN   TestRewriteAfterRouting//users/jack/orders/1
+=== RUN   TestRewriteAfterRouting//user/jill/order/T%2FcO4lW%2Ft%2FVp%2F
+=== RUN   TestRewriteAfterRouting//users/jill/orders/T%2FcO4lW%2Ft%2FVp%2F
+=== RUN   TestRewriteAfterRouting//api/new_users
+--- PASS: TestRewriteAfterRouting (0.00s)
+    --- PASS: TestRewriteAfterRouting//api/users (0.00s)
+    --- PASS: TestRewriteAfterRouting//js/main.js (0.00s)
+    --- PASS: TestRewriteAfterRouting//users/jack/orders/1 (0.00s)
+    --- PASS: TestRewriteAfterRouting//user/jill/order/T%2FcO4lW%2Ft%2FVp%2F (0.00s)
+    --- PASS: TestRewriteAfterRouting//users/jill/orders/T%2FcO4lW%2Ft%2FVp%2F (0.00s)
+    --- PASS: TestRewriteAfterRouting//api/new_users (0.00s)
+=== RUN   TestMustRewriteWithConfig_emptyRulesPanics
+--- PASS: TestMustRewriteWithConfig_emptyRulesPanics (0.00s)
+=== RUN   TestMustRewriteWithConfig_skipper
+=== RUN   TestMustRewriteWithConfig_skipper/not_skipped
+=== RUN   TestMustRewriteWithConfig_skipper/skipped
+--- PASS: TestMustRewriteWithConfig_skipper (0.00s)
+    --- PASS: TestMustRewriteWithConfig_skipper/not_skipped (0.00s)
+    --- PASS: TestMustRewriteWithConfig_skipper/skipped (0.00s)
+=== RUN   TestEchoRewritePreMiddleware
+--- PASS: TestEchoRewritePreMiddleware (0.00s)
+=== RUN   TestRewriteWithConfigPreMiddleware_Issue1143
+--- PASS: TestRewriteWithConfigPreMiddleware_Issue1143 (0.00s)
+=== RUN   TestEchoRewriteWithCaret
+--- PASS: TestEchoRewriteWithCaret (0.00s)
+=== RUN   TestEchoRewriteWithRegexRules
+=== RUN   TestEchoRewriteWithRegexRules//unmatched
+=== RUN   TestEchoRewriteWithRegexRules//a/test
+=== RUN   TestEchoRewriteWithRegexRules//b/foo/c/bar/baz
+=== RUN   TestEchoRewriteWithRegexRules//c/ignore/test
+=== RUN   TestEchoRewriteWithRegexRules//c/ignore1/test/this
+=== RUN   TestEchoRewriteWithRegexRules//x/ignore/test
+=== RUN   TestEchoRewriteWithRegexRules//y/foo/bar
+--- PASS: TestEchoRewriteWithRegexRules (0.00s)
+    --- PASS: TestEchoRewriteWithRegexRules//unmatched (0.00s)
+    --- PASS: TestEchoRewriteWithRegexRules//a/test (0.00s)
+    --- PASS: TestEchoRewriteWithRegexRules//b/foo/c/bar/baz (0.00s)
+    --- PASS: TestEchoRewriteWithRegexRules//c/ignore/test (0.00s)
+    --- PASS: TestEchoRewriteWithRegexRules//c/ignore1/test/this (0.00s)
+    --- PASS: TestEchoRewriteWithRegexRules//x/ignore/test (0.00s)
+    --- PASS: TestEchoRewriteWithRegexRules//y/foo/bar (0.00s)
+=== RUN   TestEchoRewriteReplacementEscaping
+=== RUN   TestEchoRewriteReplacementEscaping//unmatched
+=== RUN   TestEchoRewriteReplacementEscaping//a/test
+=== RUN   TestEchoRewriteReplacementEscaping//b/foo/bar
+=== RUN   TestEchoRewriteReplacementEscaping//x/test
+=== RUN   TestEchoRewriteReplacementEscaping//y/foo/bar
+=== RUN   TestEchoRewriteReplacementEscaping//z/foo/b%20ar
+=== RUN   TestEchoRewriteReplacementEscaping//z/foo/b%20ar?nope=1#yes
+--- PASS: TestEchoRewriteReplacementEscaping (0.00s)
+    --- PASS: TestEchoRewriteReplacementEscaping//unmatched (0.00s)
+    --- PASS: TestEchoRewriteReplacementEscaping//a/test (0.00s)
+    --- PASS: TestEchoRewriteReplacementEscaping//b/foo/bar (0.00s)
+    --- PASS: TestEchoRewriteReplacementEscaping//x/test (0.00s)
+    --- PASS: TestEchoRewriteReplacementEscaping//y/foo/bar (0.00s)
+    --- PASS: TestEchoRewriteReplacementEscaping//z/foo/b%20ar (0.00s)
+    --- PASS: TestEchoRewriteReplacementEscaping//z/foo/b%20ar?nope=1#yes (0.00s)
+=== RUN   TestSecure
+--- PASS: TestSecure (0.00s)
+=== RUN   TestSecureWithConfig
+--- PASS: TestSecureWithConfig (0.00s)
+=== RUN   TestSecureWithConfig_CSPReportOnly
+--- PASS: TestSecureWithConfig_CSPReportOnly (0.00s)
+=== RUN   TestSecureWithConfig_HSTSPreloadEnabled
+--- PASS: TestSecureWithConfig_HSTSPreloadEnabled (0.00s)
+=== RUN   TestSecureWithConfig_HSTSExcludeSubdomains
+--- PASS: TestSecureWithConfig_HSTSExcludeSubdomains (0.00s)
+=== RUN   TestSecureWithConfig_HSTSIgnoresForwardedProtoFromUntrustedClient
+--- PASS: TestSecureWithConfig_HSTSIgnoresForwardedProtoFromUntrustedClient (0.00s)
+=== RUN   TestAddTrailingSlashWithConfig
+=== RUN   TestAddTrailingSlashWithConfig//add-slash
+=== RUN   TestAddTrailingSlashWithConfig//add-slash?key=value
+=== RUN   TestAddTrailingSlashWithConfig//
+=== RUN   TestAddTrailingSlashWithConfig/http://localhost:1323/%5Cexample.com
+=== RUN   TestAddTrailingSlashWithConfig/http://localhost:1323/\example.com
+=== RUN   TestAddTrailingSlashWithConfig/http://localhost:1323/\\%5C////%5C\\\example.com
+=== RUN   TestAddTrailingSlashWithConfig/http://localhost:1323//example.com
+=== RUN   TestAddTrailingSlashWithConfig/http://localhost:1323/%5C%5C
+=== RUN   TestAddTrailingSlashWithConfig/http://localhost:1323/%09/evil.example/x
+=== RUN   TestAddTrailingSlashWithConfig/http://localhost:1323/%09%5Cevil.example/x
+=== RUN   TestAddTrailingSlashWithConfig/http://localhost:1323/%09//evil.example/x
+=== RUN   TestAddTrailingSlashWithConfig/http://localhost:1323/%09%09/evil.example/x
+--- PASS: TestAddTrailingSlashWithConfig (0.00s)
+    --- PASS: TestAddTrailingSlashWithConfig//add-slash (0.00s)
+    --- PASS: TestAddTrailingSlashWithConfig//add-slash?key=value (0.00s)
+    --- PASS: TestAddTrailingSlashWithConfig// (0.00s)
+    --- PASS: TestAddTrailingSlashWithConfig/http://localhost:1323/%5Cexample.com (0.00s)
+    --- PASS: TestAddTrailingSlashWithConfig/http://localhost:1323/\example.com (0.00s)
+    --- PASS: TestAddTrailingSlashWithConfig/http://localhost:1323/\\%5C////%5C\\\example.com (0.00s)
+    --- PASS: TestAddTrailingSlashWithConfig/http://localhost:1323//example.com (0.00s)
+    --- PASS: TestAddTrailingSlashWithConfig/http://localhost:1323/%5C%5C (0.00s)
+    --- PASS: TestAddTrailingSlashWithConfig/http://localhost:1323/%09/evil.example/x (0.00s)
+    --- PASS: TestAddTrailingSlashWithConfig/http://localhost:1323/%09%5Cevil.example/x (0.00s)
+    --- PASS: TestAddTrailingSlashWithConfig/http://localhost:1323/%09//evil.example/x (0.00s)
+    --- PASS: TestAddTrailingSlashWithConfig/http://localhost:1323/%09%09/evil.example/x (0.00s)
+=== RUN   TestAddTrailingSlash
+=== RUN   TestAddTrailingSlash//add-slash
+=== RUN   TestAddTrailingSlash//add-slash?key=value
+=== RUN   TestAddTrailingSlash//
+--- PASS: TestAddTrailingSlash (0.00s)
+    --- PASS: TestAddTrailingSlash//add-slash (0.00s)
+    --- PASS: TestAddTrailingSlash//add-slash?key=value (0.00s)
+    --- PASS: TestAddTrailingSlash// (0.00s)
+=== RUN   TestRemoveTrailingSlashWithConfig
+=== RUN   TestRemoveTrailingSlashWithConfig//remove-slash/
+=== RUN   TestRemoveTrailingSlashWithConfig//remove-slash/?key=value
+=== RUN   TestRemoveTrailingSlashWithConfig//
+=== RUN   TestRemoveTrailingSlashWithConfig/http://localhost
+=== RUN   TestRemoveTrailingSlashWithConfig/http://localhost:1323/%5Cexample.com/
+=== RUN   TestRemoveTrailingSlashWithConfig/http://localhost:1323/\example.com/
+=== RUN   TestRemoveTrailingSlashWithConfig/http://localhost:1323/\\%5C////%5C\\\example.com/
+=== RUN   TestRemoveTrailingSlashWithConfig/http://localhost:1323//example.com/
+=== RUN   TestRemoveTrailingSlashWithConfig/http://localhost:1323/%5C%5C/
+=== RUN   TestRemoveTrailingSlashWithConfig/http://localhost:1323/%09/evil.example/x/
+=== RUN   TestRemoveTrailingSlashWithConfig/http://localhost:1323/%09%5Cevil.example/x/
+=== RUN   TestRemoveTrailingSlashWithConfig/http://localhost:1323/%09//evil.example/x/
+=== RUN   TestRemoveTrailingSlashWithConfig/http://localhost:1323/%09%09/evil.example/x/
+--- PASS: TestRemoveTrailingSlashWithConfig (0.00s)
+    --- PASS: TestRemoveTrailingSlashWithConfig//remove-slash/ (0.00s)
+    --- PASS: TestRemoveTrailingSlashWithConfig//remove-slash/?key=value (0.00s)
+    --- PASS: TestRemoveTrailingSlashWithConfig// (0.00s)
+    --- PASS: TestRemoveTrailingSlashWithConfig/http://localhost (0.00s)
+    --- PASS: TestRemoveTrailingSlashWithConfig/http://localhost:1323/%5Cexample.com/ (0.00s)
+    --- PASS: TestRemoveTrailingSlashWithConfig/http://localhost:1323/\example.com/ (0.00s)
+    --- PASS: TestRemoveTrailingSlashWithConfig/http://localhost:1323/\\%5C////%5C\\\example.com/ (0.00s)
+    --- PASS: TestRemoveTrailingSlashWithConfig/http://localhost:1323//example.com/ (0.00s)
+    --- PASS: TestRemoveTrailingSlashWithConfig/http://localhost:1323/%5C%5C/ (0.00s)
+    --- PASS: TestRemoveTrailingSlashWithConfig/http://localhost:1323/%09/evil.example/x/ (0.00s)
+    --- PASS: TestRemoveTrailingSlashWithConfig/http://localhost:1323/%09%5Cevil.example/x/ (0.00s)
+    --- PASS: TestRemoveTrailingSlashWithConfig/http://localhost:1323/%09//evil.example/x/ (0.00s)
+    --- PASS: TestRemoveTrailingSlashWithConfig/http://localhost:1323/%09%09/evil.example/x/ (0.00s)
+=== RUN   TestRemoveTrailingSlash
+=== RUN   TestRemoveTrailingSlash//remove-slash/
+=== RUN   TestRemoveTrailingSlash//remove-slash/?key=value
+=== RUN   TestRemoveTrailingSlash//
+=== RUN   TestRemoveTrailingSlash/http://localhost
+--- PASS: TestRemoveTrailingSlash (0.00s)
+    --- PASS: TestRemoveTrailingSlash//remove-slash/ (0.00s)
+    --- PASS: TestRemoveTrailingSlash//remove-slash/?key=value (0.00s)
+    --- PASS: TestRemoveTrailingSlash// (0.00s)
+    --- PASS: TestRemoveTrailingSlash/http://localhost (0.00s)
+=== RUN   TestSanitizeURI
+=== RUN   TestSanitizeURI//path
+=== RUN   TestSanitizeURI/#00
+=== RUN   TestSanitizeURI///example.com
+=== RUN   TestSanitizeURI//\example.com
+=== RUN   TestSanitizeURI//_/example.com
+=== RUN   TestSanitizeURI//_/example.com#01
+=== RUN   TestSanitizeURI//_/example.com#02
+=== RUN   TestSanitizeURI//\x7f/example.com
+=== RUN   TestSanitizeURI/_//example.com
+=== RUN   TestSanitizeURI//a_b
+--- PASS: TestSanitizeURI (0.00s)
+    --- PASS: TestSanitizeURI//path (0.00s)
+    --- PASS: TestSanitizeURI/#00 (0.00s)
+    --- PASS: TestSanitizeURI///example.com (0.00s)
+    --- PASS: TestSanitizeURI//\example.com (0.00s)
+    --- PASS: TestSanitizeURI//_/example.com (0.00s)
+    --- PASS: TestSanitizeURI//_/example.com#01 (0.00s)
+    --- PASS: TestSanitizeURI//_/example.com#02 (0.00s)
+    --- PASS: TestSanitizeURI//\x7f/example.com (0.00s)
+    --- PASS: TestSanitizeURI/_//example.com (0.00s)
+    --- PASS: TestSanitizeURI//a_b (0.00s)
+=== RUN   TestStatic_servesFileWithPercentInName
+--- PASS: TestStatic_servesFileWithPercentInName (0.00s)
+=== RUN   TestStatic_percentEncodedTraversalIsBlocked
+--- PASS: TestStatic_percentEncodedTraversalIsBlocked (0.00s)
+=== RUN   TestStatic_useCaseForApiAndSPAs
+--- PASS: TestStatic_useCaseForApiAndSPAs (0.00s)
+=== RUN   TestStaticHTML5PreservesMatchedHandlerNotFound
+=== RUN   TestStaticHTML5PreservesMatchedHandlerNotFound/ok,_router-matched_handler_404_is_preserved_instead_of_serving_index
+=== RUN   TestStaticHTML5PreservesMatchedHandlerNotFound/ok,_router-level_404_for_group_without_matched_route_still_serves_index
+--- PASS: TestStaticHTML5PreservesMatchedHandlerNotFound (0.00s)
+    --- PASS: TestStaticHTML5PreservesMatchedHandlerNotFound/ok,_router-matched_handler_404_is_preserved_instead_of_serving_index (0.00s)
+    --- PASS: TestStaticHTML5PreservesMatchedHandlerNotFound/ok,_router-level_404_for_group_without_matched_route_still_serves_index (0.00s)
+=== RUN   TestStatic
+=== RUN   TestStatic/ok,_serve_index_with_Echo_message
+=== RUN   TestStatic/ok,_serve_file_from_subdirectory
+=== RUN   TestStatic/ok,_when_html5_mode_serve_index_for_any_static_file_that_does_not_exist
+=== RUN   TestStatic/ok,_serve_index_as_directory_index_listing_files_directory
+=== RUN   TestStatic/ok,_serve_directory_index_with_IgnoreBase_and_browse
+=== RUN   TestStatic/ok,_serve_file_with_IgnoreBase
+=== RUN   TestStatic/nok,_file_not_found
+=== RUN   TestStatic/ok,_when_no_file_then_a_handler_will_care_of_the_request
+=== RUN   TestStatic/ok,_skip_middleware_and_serve_handler
+=== RUN   TestStatic/nok,_when_html5_fail_if_the_index_file_does_not_exist
+=== RUN   TestStatic/ok,_serve_from_http.FileSystem
+=== RUN   TestStatic/nok,_do_not_allow_directory_traversal_(backslash_-_windows_separator)
+=== RUN   TestStatic/nok,do_not_allow_directory_traversal_(slash_-_unix_separator)
+=== RUN   TestStatic/nok,_URL_encoded_path_traversal_(single_encoding,_slash_-_unix_separator)
+=== RUN   TestStatic/nok,_URL_encoded_path_traversal_(single_encoding,_backslash_-_windows_separator)
+=== RUN   TestStatic/nok,_URL_encoded_path_traversal_(double_encoding,_slash_-_unix_separator)
+=== RUN   TestStatic/nok,_URL_encoded_path_traversal_(double_encoding,_backslash_-_windows_separator)
+=== RUN   TestStatic/nok,_URL_encoded_path_traversal_(mixed_encoding)
+=== RUN   TestStatic/nok,_backslash_URL_encoded
+=== RUN   TestStatic/nok,_mixed_backslash_and_forward_slash_traversal
+=== RUN   TestStatic/nok,_trailing_dots_(Windows_edge_case)
+--- PASS: TestStatic (0.00s)
+    --- PASS: TestStatic/ok,_serve_index_with_Echo_message (0.00s)
+    --- PASS: TestStatic/ok,_serve_file_from_subdirectory (0.00s)
+    --- PASS: TestStatic/ok,_when_html5_mode_serve_index_for_any_static_file_that_does_not_exist (0.00s)
+    --- PASS: TestStatic/ok,_serve_index_as_directory_index_listing_files_directory (0.00s)
+    --- PASS: TestStatic/ok,_serve_directory_index_with_IgnoreBase_and_browse (0.00s)
+    --- PASS: TestStatic/ok,_serve_file_with_IgnoreBase (0.00s)
+    --- PASS: TestStatic/nok,_file_not_found (0.00s)
+    --- PASS: TestStatic/ok,_when_no_file_then_a_handler_will_care_of_the_request (0.00s)
+    --- PASS: TestStatic/ok,_skip_middleware_and_serve_handler (0.00s)
+    --- PASS: TestStatic/nok,_when_html5_fail_if_the_index_file_does_not_exist (0.00s)
+    --- PASS: TestStatic/ok,_serve_from_http.FileSystem (0.00s)
+    --- PASS: TestStatic/nok,_do_not_allow_directory_traversal_(backslash_-_windows_separator) (0.00s)
+    --- PASS: TestStatic/nok,do_not_allow_directory_traversal_(slash_-_unix_separator) (0.00s)
+    --- PASS: TestStatic/nok,_URL_encoded_path_traversal_(single_encoding,_slash_-_unix_separator) (0.00s)
+    --- PASS: TestStatic/nok,_URL_encoded_path_traversal_(single_encoding,_backslash_-_windows_separator) (0.00s)
+    --- PASS: TestStatic/nok,_URL_encoded_path_traversal_(double_encoding,_slash_-_unix_separator) (0.00s)
+    --- PASS: TestStatic/nok,_URL_encoded_path_traversal_(double_encoding,_backslash_-_windows_separator) (0.00s)
+    --- PASS: TestStatic/nok,_URL_encoded_path_traversal_(mixed_encoding) (0.00s)
+    --- PASS: TestStatic/nok,_backslash_URL_encoded (0.00s)
+    --- PASS: TestStatic/nok,_mixed_backslash_and_forward_slash_traversal (0.00s)
+    --- PASS: TestStatic/nok,_trailing_dots_(Windows_edge_case) (0.00s)
+=== RUN   TestStaticMiddlewareAndRouterInconsistentEscaping
+=== RUN   TestStaticMiddlewareAndRouterInconsistentEscaping/ok,_normal_file_is_served
+=== RUN   TestStaticMiddlewareAndRouterInconsistentEscaping/ok,_direct_request_to_restricted_path_is_blocked_by_ACL_route
+=== RUN   TestStaticMiddlewareAndRouterInconsistentEscaping/ok,_encoded_slash_returns_404_with_default_safe_config_(EnablePathUnescaping=false)
+=== RUN   TestStaticMiddlewareAndRouterInconsistentEscaping/nok,_encoded_slash_bypasses_ACL_when_EnablePathUnescaping=true
+--- PASS: TestStaticMiddlewareAndRouterInconsistentEscaping (0.00s)
+    --- PASS: TestStaticMiddlewareAndRouterInconsistentEscaping/ok,_normal_file_is_served (0.00s)
+    --- PASS: TestStaticMiddlewareAndRouterInconsistentEscaping/ok,_direct_request_to_restricted_path_is_blocked_by_ACL_route (0.00s)
+    --- PASS: TestStaticMiddlewareAndRouterInconsistentEscaping/ok,_encoded_slash_returns_404_with_default_safe_config_(EnablePathUnescaping=false) (0.00s)
+    --- PASS: TestStaticMiddlewareAndRouterInconsistentEscaping/nok,_encoded_slash_bypasses_ACL_when_EnablePathUnescaping=true (0.00s)
+=== RUN   TestStatic_EncodedSeparatorDoesNotBypassRoute
+--- PASS: TestStatic_EncodedSeparatorDoesNotBypassRoute (0.00s)
+=== RUN   TestMustStaticWithConfig_panicsInvalidDirListTemplate
+--- PASS: TestMustStaticWithConfig_panicsInvalidDirListTemplate (0.00s)
+=== RUN   TestFormat
+=== RUN   TestFormat/byte
+=== RUN   TestFormat/bytes
+=== RUN   TestFormat/KB
+=== RUN   TestFormat/MB
+=== RUN   TestFormat/GB
+=== RUN   TestFormat/TB
+=== RUN   TestFormat/PB
+=== RUN   TestFormat/EB
+--- PASS: TestFormat (0.00s)
+    --- PASS: TestFormat/byte (0.00s)
+    --- PASS: TestFormat/bytes (0.00s)
+    --- PASS: TestFormat/KB (0.00s)
+    --- PASS: TestFormat/MB (0.00s)
+    --- PASS: TestFormat/GB (0.00s)
+    --- PASS: TestFormat/TB (0.00s)
+    --- PASS: TestFormat/PB (0.00s)
+    --- PASS: TestFormat/EB (0.00s)
+=== RUN   TestStatic_CustomFS
+=== RUN   TestStatic_CustomFS/ok,_serve_index_with_Echo_message
+=== RUN   TestStatic_CustomFS/ok,_serve_index_with_Echo_message#01
+=== RUN   TestStatic_CustomFS/ok,_serve_file_from_map_fs
+=== RUN   TestStatic_CustomFS/nok,_missing_file_in_map_fs
+=== RUN   TestStatic_CustomFS/nok,_file_is_not_a_subpath_of_root
+=== RUN   TestStatic_CustomFS/nok,_backslash_is_forbidden
+--- PASS: TestStatic_CustomFS (0.00s)
+    --- PASS: TestStatic_CustomFS/ok,_serve_index_with_Echo_message (0.00s)
+    --- PASS: TestStatic_CustomFS/ok,_serve_index_with_Echo_message#01 (0.00s)
+    --- PASS: TestStatic_CustomFS/ok,_serve_file_from_map_fs (0.00s)
+    --- PASS: TestStatic_CustomFS/nok,_missing_file_in_map_fs (0.00s)
+    --- PASS: TestStatic_CustomFS/nok,_file_is_not_a_subpath_of_root (0.00s)
+    --- PASS: TestStatic_CustomFS/nok,_backslash_is_forbidden (0.00s)
+=== RUN   TestStatic_DirectoryBrowsing
+=== RUN   TestStatic_DirectoryBrowsing/ok,_should_return_index.html_contents_from_Root=public_folder
+=== RUN   TestStatic_DirectoryBrowsing/ok,_should_return_only_subfolder_folder_listing_from_Root=public/assets
+--- PASS: TestStatic_DirectoryBrowsing (0.00s)
+    --- PASS: TestStatic_DirectoryBrowsing/ok,_should_return_index.html_contents_from_Root=public_folder (0.00s)
+    --- PASS: TestStatic_DirectoryBrowsing/ok,_should_return_only_subfolder_folder_listing_from_Root=public/assets (0.00s)
+=== RUN   TestStatic_resolvesRoutedPath
+=== RUN   TestStatic_resolvesRoutedPath/encoded_slash
+=== RUN   TestStatic_resolvesRoutedPath/encoded_slash_lowercase
+=== RUN   TestStatic_resolvesRoutedPath/encoded_letter
+=== RUN   TestStatic_resolvesRoutedPath/encoded_dot_segment
+=== RUN   TestStatic_resolvesRoutedPath/encoded_slashes_and_dots
+=== RUN   TestStatic_resolvesRoutedPath/parent_dot_segment
+=== RUN   TestStatic_resolvesRoutedPath/current_dot_segment
+=== RUN   TestStatic_resolvesRoutedPath/empty_segment
+=== RUN   TestStatic_resolvesRoutedPath/canonical_escape_is_still_served
+=== RUN   TestStatic_resolvesRoutedPath/plain_public_file_is_still_served
+--- PASS: TestStatic_resolvesRoutedPath (0.00s)
+    --- PASS: TestStatic_resolvesRoutedPath/encoded_slash (0.00s)
+    --- PASS: TestStatic_resolvesRoutedPath/encoded_slash_lowercase (0.00s)
+    --- PASS: TestStatic_resolvesRoutedPath/encoded_letter (0.00s)
+    --- PASS: TestStatic_resolvesRoutedPath/encoded_dot_segment (0.00s)
+    --- PASS: TestStatic_resolvesRoutedPath/encoded_slashes_and_dots (0.00s)
+    --- PASS: TestStatic_resolvesRoutedPath/parent_dot_segment (0.00s)
+    --- PASS: TestStatic_resolvesRoutedPath/current_dot_segment (0.00s)
+    --- PASS: TestStatic_resolvesRoutedPath/empty_segment (0.00s)
+    --- PASS: TestStatic_resolvesRoutedPath/canonical_escape_is_still_served (0.00s)
+    --- PASS: TestStatic_resolvesRoutedPath/plain_public_file_is_still_served (0.00s)
+=== RUN   TestStatic_routeLevelGuard
+=== RUN   TestStatic_routeLevelGuard/guarded_path
+=== RUN   TestStatic_routeLevelGuard/guarded_path_repeated_prefix
+=== RUN   TestStatic_routeLevelGuard/encoded_slash
+=== RUN   TestStatic_routeLevelGuard/encoded_letter
+=== RUN   TestStatic_routeLevelGuard/parent_dot_segment
+=== RUN   TestStatic_routeLevelGuard/empty_segment
+=== RUN   TestStatic_routeLevelGuard/encoded_dots_with_unescaping
+=== RUN   TestStatic_routeLevelGuard/encoded_dot_slash_with_unescaping
+=== RUN   TestStatic_routeLevelGuard/public_file
+--- PASS: TestStatic_routeLevelGuard (0.00s)
+    --- PASS: TestStatic_routeLevelGuard/guarded_path (0.00s)
+    --- PASS: TestStatic_routeLevelGuard/guarded_path_repeated_prefix (0.00s)
+    --- PASS: TestStatic_routeLevelGuard/encoded_slash (0.00s)
+    --- PASS: TestStatic_routeLevelGuard/encoded_letter (0.00s)
+    --- PASS: TestStatic_routeLevelGuard/parent_dot_segment (0.00s)
+    --- PASS: TestStatic_routeLevelGuard/empty_segment (0.00s)
+    --- PASS: TestStatic_routeLevelGuard/encoded_dots_with_unescaping (0.00s)
+    --- PASS: TestStatic_routeLevelGuard/encoded_dot_slash_with_unescaping (0.00s)
+    --- PASS: TestStatic_routeLevelGuard/public_file (0.00s)
+=== RUN   TestStatic_HTML5WithUncleanPath
+--- PASS: TestStatic_HTML5WithUncleanPath (0.00s)
+=== RUN   TestStatic_nonValidatingCustomFSCannotEscapeRoot
+--- PASS: TestStatic_nonValidatingCustomFSCannotEscapeRoot (0.00s)
+=== RUN   TestHasDotOrEmptySegment
+=== RUN   TestHasDotOrEmptySegment/#00
+=== RUN   TestHasDotOrEmptySegment//
+=== RUN   TestHasDotOrEmptySegment//index.html
+=== RUN   TestHasDotOrEmptySegment//css/app.css
+=== RUN   TestHasDotOrEmptySegment//..
+=== RUN   TestHasDotOrEmptySegment//a/../b
+=== RUN   TestHasDotOrEmptySegment//a/./b
+=== RUN   TestHasDotOrEmptySegment//a//b
+=== RUN   TestHasDotOrEmptySegment//..\secret.txt
+=== RUN   TestHasDotOrEmptySegment//a\..\b
+=== RUN   TestHasDotOrEmptySegment//.\secret.txt
+=== RUN   TestHasDotOrEmptySegment//\..
+=== RUN   TestHasDotOrEmptySegment//..\
+=== RUN   TestHasDotOrEmptySegment//dir\file.txt
+=== RUN   TestHasDotOrEmptySegment//...
+=== RUN   TestHasDotOrEmptySegment//..foo
+=== RUN   TestHasDotOrEmptySegment//a\\b
+=== RUN   TestHasDotOrEmptySegment//..%2fsecret.txt
+--- PASS: TestHasDotOrEmptySegment (0.00s)
+    --- PASS: TestHasDotOrEmptySegment/#00 (0.00s)
+    --- PASS: TestHasDotOrEmptySegment// (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//index.html (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//css/app.css (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//.. (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//a/../b (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//a/./b (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//a//b (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//..\secret.txt (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//a\..\b (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//.\secret.txt (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//\.. (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//..\ (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//dir\file.txt (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//... (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//..foo (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//a\\b (0.00s)
+    --- PASS: TestHasDotOrEmptySegment//..%2fsecret.txt (0.00s)
+=== RUN   Test_matchScheme
+--- PASS: Test_matchScheme (0.00s)
+=== RUN   TestRandomString
+=== RUN   TestRandomString/ok,_16
+=== RUN   TestRandomString/ok,_32
+--- PASS: TestRandomString (0.00s)
+    --- PASS: TestRandomString/ok,_16 (0.00s)
+    --- PASS: TestRandomString/ok,_32 (0.00s)
+=== RUN   TestRandomStringBias
+=== PAUSE TestRandomStringBias
+=== RUN   TestValidateOrigins
+=== RUN   TestValidateOrigins/ok,_empty_origins
+=== RUN   TestValidateOrigins/ok,_basic_http
+=== RUN   TestValidateOrigins/ok,_basic_https
+=== RUN   TestValidateOrigins/ok,_with_port
+=== RUN   TestValidateOrigins/ok,_with_subdomain
+=== RUN   TestValidateOrigins/ok,_subdomain_with_port
+=== RUN   TestValidateOrigins/ok,_localhost
+=== RUN   TestValidateOrigins/ok,_IPv4_address
+=== RUN   TestValidateOrigins/ok,_IPv4_with_port
+=== RUN   TestValidateOrigins/ok,_IPv6_loopback
+=== RUN   TestValidateOrigins/ok,_IPv6_with_port
+=== RUN   TestValidateOrigins/ok,_IPv6_full_address
+=== RUN   TestValidateOrigins/ok,_multiple_valid_origins
+=== RUN   TestValidateOrigins/ok,_different_schemes
+=== RUN   TestValidateOrigins/nok,_plain_domain
+=== RUN   TestValidateOrigins/nok,_with_slashes_but_no_scheme
+=== RUN   TestValidateOrigins/nok,_www_without_scheme
+=== RUN   TestValidateOrigins/nok,_localhost_without_scheme
+=== RUN   TestValidateOrigins/nok,_scheme_only_http
+=== RUN   TestValidateOrigins/nok,_scheme_only_https
+=== RUN   TestValidateOrigins/nok,_has_simple_path
+=== RUN   TestValidateOrigins/nok,_has_nested_path
+=== RUN   TestValidateOrigins/nok,_has_root_path
+=== RUN   TestValidateOrigins/nok,_has_single_query_param
+=== RUN   TestValidateOrigins/nok,_has_multiple_query_params
+=== RUN   TestValidateOrigins/nok,_has_simple_fragment
+=== RUN   TestValidateOrigins/nok,_has_path_and_query
+=== RUN   TestValidateOrigins/nok,_has_path_and_fragment
+=== RUN   TestValidateOrigins/nok,_has_query_and_fragment
+=== RUN   TestValidateOrigins/nok,_has_path,_query,_and_fragment
+=== RUN   TestValidateOrigins/nok,_empty_string
+=== RUN   TestValidateOrigins/nok,_whitespace_only
+=== RUN   TestValidateOrigins/nok,_multiple_origins_-_first_invalid
+=== RUN   TestValidateOrigins/nok,_multiple_origins_-_middle_invalid
+=== RUN   TestValidateOrigins/nok,_multiple_origins_-_last_invalid
+=== RUN   TestValidateOrigins/nok,_custom_what_parameter_-_missing_scheme
+=== RUN   TestValidateOrigins/nok,_custom_what_parameter_-_has_path
+--- PASS: TestValidateOrigins (0.00s)
+    --- PASS: TestValidateOrigins/ok,_empty_origins (0.00s)
+    --- PASS: TestValidateOrigins/ok,_basic_http (0.00s)
+    --- PASS: TestValidateOrigins/ok,_basic_https (0.00s)
+    --- PASS: TestValidateOrigins/ok,_with_port (0.00s)
+    --- PASS: TestValidateOrigins/ok,_with_subdomain (0.00s)
+    --- PASS: TestValidateOrigins/ok,_subdomain_with_port (0.00s)
+    --- PASS: TestValidateOrigins/ok,_localhost (0.00s)
+    --- PASS: TestValidateOrigins/ok,_IPv4_address (0.00s)
+    --- PASS: TestValidateOrigins/ok,_IPv4_with_port (0.00s)
+    --- PASS: TestValidateOrigins/ok,_IPv6_loopback (0.00s)
+    --- PASS: TestValidateOrigins/ok,_IPv6_with_port (0.00s)
+    --- PASS: TestValidateOrigins/ok,_IPv6_full_address (0.00s)
+    --- PASS: TestValidateOrigins/ok,_multiple_valid_origins (0.00s)
+    --- PASS: TestValidateOrigins/ok,_different_schemes (0.00s)
+    --- PASS: TestValidateOrigins/nok,_plain_domain (0.00s)
+    --- PASS: TestValidateOrigins/nok,_with_slashes_but_no_scheme (0.00s)
+    --- PASS: TestValidateOrigins/nok,_www_without_scheme (0.00s)
+    --- PASS: TestValidateOrigins/nok,_localhost_without_scheme (0.00s)
+    --- PASS: TestValidateOrigins/nok,_scheme_only_http (0.00s)
+    --- PASS: TestValidateOrigins/nok,_scheme_only_https (0.00s)
+    --- PASS: TestValidateOrigins/nok,_has_simple_path (0.00s)
+    --- PASS: TestValidateOrigins/nok,_has_nested_path (0.00s)
+    --- PASS: TestValidateOrigins/nok,_has_root_path (0.00s)
+    --- PASS: TestValidateOrigins/nok,_has_single_query_param (0.00s)
+    --- PASS: TestValidateOrigins/nok,_has_multiple_query_params (0.00s)
+    --- PASS: TestValidateOrigins/nok,_has_simple_fragment (0.00s)
+    --- PASS: TestValidateOrigins/nok,_has_path_and_query (0.00s)
+    --- PASS: TestValidateOrigins/nok,_has_path_and_fragment (0.00s)
+    --- PASS: TestValidateOrigins/nok,_has_query_and_fragment (0.00s)
+    --- PASS: TestValidateOrigins/nok,_has_path,_query,_and_fragment (0.00s)
+    --- PASS: TestValidateOrigins/nok,_empty_string (0.00s)
+    --- PASS: TestValidateOrigins/nok,_whitespace_only (0.00s)
+    --- PASS: TestValidateOrigins/nok,_multiple_origins_-_first_invalid (0.00s)
+    --- PASS: TestValidateOrigins/nok,_multiple_origins_-_middle_invalid (0.00s)
+    --- PASS: TestValidateOrigins/nok,_multiple_origins_-_last_invalid (0.00s)
+    --- PASS: TestValidateOrigins/nok,_custom_what_parameter_-_missing_scheme (0.00s)
+    --- PASS: TestValidateOrigins/nok,_custom_what_parameter_-_has_path (0.00s)
+=== CONT  TestContextTimeoutSkipper
+=== CONT  TestContextTimeoutCanHandleContextDeadlineOnNextHandler
+=== CONT  TestContextTimeoutWithDefaultErrorMessage
+=== CONT  TestRateLimiterMemoryStore_RaceDetection
+--- PASS: TestRateLimiterMemoryStore_RaceDetection (0.00s)
+=== CONT  TestContextTimeoutTestRequestClone
+--- PASS: TestContextTimeoutTestRequestClone (0.00s)
+=== CONT  TestContextTimeoutSuccessfulRequest
+--- PASS: TestContextTimeoutSuccessfulRequest (0.00s)
+=== CONT  TestContextTimeoutErrorOutInHandler
+--- PASS: TestContextTimeoutErrorOutInHandler (0.00s)
+=== CONT  TestContextTimeoutWithTimeout0
+--- PASS: TestContextTimeoutWithTimeout0 (0.00s)
+=== CONT  TestRateLimiterMemoryStore_ConcurrentAccess
+--- PASS: TestContextTimeoutWithDefaultErrorMessage (0.01s)
+=== CONT  TestRandomStringBias
+--- PASS: TestContextTimeoutSkipper (0.02s)
+=== CONT  TestRateLimiterMemoryStore_TOCTOUFix
+--- PASS: TestRateLimiterMemoryStore_TOCTOUFix (0.00s)
+=== CONT  TestRateLimiterMemoryStore_TimeOrdering
+--- PASS: TestRateLimiterMemoryStore_TimeOrdering (0.00s)
+--- PASS: TestRateLimiterMemoryStore_ConcurrentAccess (0.02s)
+--- PASS: TestContextTimeoutCanHandleContextDeadlineOnNextHandler (0.05s)
+--- PASS: TestRandomStringBias (0.09s)
+PASS
+ok  	github.com/labstack/echo/v5/middleware	1.269s
+
