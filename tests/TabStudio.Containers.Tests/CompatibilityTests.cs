@@ -152,7 +152,9 @@ public sealed class CompatibilityTests(ITestOutputHelper output)
             ProotPath = Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_PROOT"),
             LoaderPath = Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_LOADER"),
         }, new RegistryClient(registry, new SessionRegistryCredentialStore()));
-        var file = Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_COMPAT_OUT");
+        // Its own table beside the images' one, which the image sweep starts afresh.
+        var file = Environment.GetEnvironmentVariable("TABSTUDIO_CONTAINER_COMPAT_OUT") is { Length: > 0 } images ? Path.ChangeExtension(images, ".stacks.md") : null;
+        if (file is not null) await File.WriteAllTextAsync(file, "| Area | Compose file | Result | Ready in | Notes |\n| --- | --- | --- | --- | --- |\n");
         foreach (var stack in Stacks)
         {
             var folder = Path.Combine(temp.Path, stack.Name.Replace('/', '-'));
