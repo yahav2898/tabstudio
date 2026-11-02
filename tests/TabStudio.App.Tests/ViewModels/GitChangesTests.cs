@@ -428,6 +428,34 @@ public sealed class GitChangesTests
     }
 
     [AvaloniaFact]
+    public async Task A_folder_Git_cloned_from_GitHub_offers_to_link_it_instead_of_publishing_it_again()
+    {
+        using var fixture = new GitWorkspaceFixture();
+        await fixture.OpenGitCloneOfSampleAsync();
+        var git = fixture.Git;
+        Assert.True(git.IsLinkCheckoutVisible);
+        Assert.False(git.IsPublishVisible);
+        Assert.False(git.IsLinked);
+        Assert.Contains("a Git clone of tester/hello on main", git.LinkCheckoutText, StringComparison.Ordinal);
+        Assert.False(File.Exists(fixture.PathOf(".tabstudio/sync.json")));
+
+        await git.LinkCheckoutCommand.ExecuteAsync(null);
+
+        Assert.Null(git.ErrorText);
+        Assert.True(git.IsLinked);
+        Assert.False(git.IsPublishVisible);
+        Assert.False(git.IsLinkCheckoutVisible);
+        Assert.Equal("tester/hello", git.RepositoryName);
+        Assert.Equal("main", git.BranchName);
+        Assert.True(git.IsClean);
+
+        await fixture.WriteAsync(Greeter, "// Edited in a clone\n");
+        var change = Assert.Single(git.Changes);
+        Assert.Equal(Greeter, change.RelativePath);
+        Assert.Equal(GitFileStatus.Modified, change.Status);
+    }
+
+    [AvaloniaFact]
     public async Task Publishing_creates_the_repository_and_links_the_folder()
     {
         using var fixture = new GitWorkspaceFixture();

@@ -92,6 +92,24 @@ public sealed class WorkspaceViewModelTests
     }
 
     [AvaloniaFact]
+    public async Task Build_Solution_says_why_a_project_whose_reference_has_errors_was_not_compiled()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+        var greetings = workspace.Workspace!.Projects.Single(p => p.Name == "Greetings").DirectoryPath;
+        var greeter = (await workspace.OpenDocumentAsync(Path.Combine(greetings, "Greeter.cs")))!;
+        greeter.Document.Insert(0, "this does not compile;\n");
+
+        await workspace.BuildCommand.ExecuteAsync(null);
+
+        var output = workspace.Output.Text;
+        Assert.Contains("0 succeeded, 2 failed", output, StringComparison.Ordinal);
+        Assert.Contains("HelloTablet was not compiled because Greetings, which it references, has errors.", output, StringComparison.Ordinal);
+        Assert.DoesNotContain("Greetings was not compiled", output, StringComparison.Ordinal);
+    }
+
+    [AvaloniaFact]
     public async Task Format_document_fixes_the_layout_as_one_undo_step()
     {
         using var fixture = new WorkspaceFixture();

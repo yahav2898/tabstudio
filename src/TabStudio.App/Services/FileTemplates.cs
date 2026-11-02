@@ -39,7 +39,7 @@ public static partial class FileTemplates
 
     private static string CSharpType(string filePath, ProjectInfo project, string name)
     {
-        var typeName = IdentifierPattern().IsMatch(name) ? name : "NewClass";
+        var typeName = TypeName(name);
         var keyword = typeName.Length > 1 && typeName[0] == 'I' && char.IsUpper(typeName[1]) ? "interface" : "class";
         return $$"""
             namespace {{NamespaceFor(filePath, project)}};
@@ -57,7 +57,7 @@ public static partial class FileTemplates
     /// </summary>
     private static string VisualBasicType(string name)
     {
-        var typeName = IdentifierPattern().IsMatch(name) ? name : "NewClass";
+        var typeName = TypeName(name);
         var keyword = typeName.Length > 1 && typeName[0] == 'I' && char.IsUpper(typeName[1]) ? "Interface" : "Class";
         return $"Public {keyword} {typeName}\n\nEnd {keyword}\n";
     }
@@ -77,6 +77,14 @@ public static partial class FileTemplates
         }
 
         return string.Join('.', parts.Select(p => IdentifierPattern().IsMatch(p) ? p : SanitizeIdentifier(p)));
+    }
+
+    // A type name is one identifier: "Order.Validation.cs" declares Order_Validation, as Visual Studio's safe item name
+    // does, not "class Order.Validation", which does not compile.
+    private static string TypeName(string name)
+    {
+        var typeName = SanitizeIdentifier(name).Replace('.', '_');
+        return IdentifierPattern().IsMatch(typeName) ? typeName : "NewClass";
     }
 
     private static string SanitizeIdentifier(string text)

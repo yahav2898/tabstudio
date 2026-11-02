@@ -1,4 +1,5 @@
 using Avalonia.Headless.XUnit;
+using TabStudio.App.Services;
 using TabStudio.Testing;
 
 namespace TabStudio.App.Tests.ViewModels;
@@ -160,5 +161,48 @@ public sealed class StartupProjectSelectionTests
 
         Assert.Null(fixture.Workspace.StartupProject);
         Assert.Equal("This solution has only libraries and tests: run the tests in Test Explorer.", fixture.Workspace.StatusText);
+    }
+
+    /// <summary>
+    /// eShop kept starting WebhookClient after updates: the session saved TabStudio's automatic pick of an older version
+    /// as if the person had chosen it. Only a chosen startup project is restored now, and a reload makes the pick again.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task An_automatic_startup_project_saved_by_an_older_version_is_picked_again_and_a_chosen_one_is_kept()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("Shop/src/Hooks/Hooks.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        temp.Write("Shop/src/Hooks/Program.cs", "System.Console.WriteLine(\"hooks\");\n");
+        temp.Write("Shop/src/WebApp/WebApp.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.Web">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        temp.Write("Shop/src/WebApp/Program.cs", "var app = WebApplication.Create(args);\napp.MapGet(\"/\", () => \"shop\");\napp.Run();\n");
+        var solution = temp.Write("Shop/Shop.slnx", """
+            <Solution>
+              <Project Path="src/Hooks/Hooks.csproj" />
+              <Project Path="src/WebApp/WebApp.csproj" />
+            </Solution>
+            """);
+        var hooks = temp.Resolve("Shop/src/Hooks/Hooks.csproj");
+
+        using (var fixture = new WorkspaceFixture())
+        {
+            await fixture.Workspace.LoadAsync(solution, new SessionState(solution, [], null, hooks));
+            Assert.Equal("WebApp", fixture.Workspace.StartupProject?.Name);
+        }
+
+        using (var fixture = new WorkspaceFixture())
+        {
+            await fixture.Workspace.LoadAsync(solution, new SessionState(solution, [], null, hooks) { IsStartupProjectChosen = true });
+            Assert.Equal("Hooks", fixture.Workspace.StartupProject?.Name);
+            await fixture.Workspace.ReloadWorkspaceAsync();
+            Assert.Equal("Hooks", fixture.Workspace.StartupProject?.Name);
+        }
     }
 }

@@ -56,16 +56,20 @@ internal sealed class DesignComponent
     /// <summary>The live object on the design surface.</summary>
     public object? Instance { get; set; }
 
+    // Visual Basic names members in any case: Me.Button1.text is the Text the designer sets, not a second property.
+    // No Windows Forms component has two members whose names differ only by case.
+    private static bool SamePath(string left, string right) => string.Equals(left, right, StringComparison.OrdinalIgnoreCase);
+
     /// <summary>The value of a property as C#, or <see langword="null"/> when it is not set.</summary>
     /// <param name="path">The property's path.</param>
-    public string? GetCode(string path) => Properties.Find(p => p.Path == path)?.Code;
+    public string? GetCode(string path) => Properties.Find(p => SamePath(p.Path, path))?.Code;
 
     /// <summary>Sets a property's value as C#, or removes it with <see langword="null"/>.</summary>
     /// <param name="path">The property's path.</param>
     /// <param name="code">The value as C#.</param>
     public void SetCode(string path, string? code)
     {
-        var index = Properties.FindIndex(p => p.Path == path);
+        var index = Properties.FindIndex(p => SamePath(p.Path, path));
         if (code is null)
         {
             if (index >= 0)
@@ -85,14 +89,14 @@ internal sealed class DesignComponent
 
     /// <summary>The handler of an event, or <see langword="null"/>.</summary>
     /// <param name="eventName">The event.</param>
-    public string? GetHandler(string eventName) => Events.Find(e => e.Event == eventName)?.Handler;
+    public string? GetHandler(string eventName) => Events.Find(e => SamePath(e.Event, eventName))?.Handler;
 
     /// <summary>Sets an event's handler, or removes it with <see langword="null"/>.</summary>
     /// <param name="eventName">The event.</param>
     /// <param name="handler">The handler method's name.</param>
     public void SetHandler(string eventName, string? handler)
     {
-        Events.RemoveAll(e => e.Event == eventName);
+        Events.RemoveAll(e => SamePath(e.Event, eventName));
         if (!string.IsNullOrEmpty(handler))
         {
             Events.Add(new DesignEvent(eventName, handler));

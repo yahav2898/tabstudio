@@ -293,6 +293,10 @@
                   </ItemsControl>
                 </StackPanel>
 
+                <!-- What the download could not bring: submodules elsewhere, Git LFS files, links -->
+                <TextBlock Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Warning}"
+                           Text="{Binding Preview.NotesText}" IsVisible="{Binding Preview.HasNotes}" />
+
                 <StackPanel Spacing="0" IsVisible="{Binding Preview.HasProjects}">
                   <TextBlock Margin="0,0,0,8">
                     <Run Text="Compatibility Doctor" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" />

@@ -47,7 +47,7 @@ internal static class NuspecReader
 
         var id = ChildValue(metadata, "id");
         var versionText = ChildValue(metadata, "version");
-        if (string.IsNullOrWhiteSpace(id) || !NuGetVersion.TryParse(versionText, out var version))
+        if (!NuGetNames.IsValidId(id) || !NuGetVersion.TryParse(versionText, out var version))
         {
             throw new InvalidPackageException("The package manifest has no valid <id> and <version>.");
         }
@@ -161,6 +161,7 @@ internal static class NuspecReader
             .Where(e => e.Name.LocalName == "dependency")
             .Select(e => (Id: e.Attribute("id")?.Value.Trim(), Version: e.Attribute("version")?.Value, Include: e.Attribute("include")?.Value, Exclude: e.Attribute("exclude")?.Value))
             .Where(d => !string.IsNullOrEmpty(d.Id))
+            .Select(d => NuGetNames.IsValidId(d.Id) ? d : throw new InvalidPackageException($"The package manifest depends on '{d.Id}', which is not a valid package id."))
             .Select(d => new PackageDependency(d.Id!, ParseRange(d.Version)) { Excluded = AssetFlagNames.NuspecExcluded(d.Include, d.Exclude) })
             .DistinctBy(d => d.Id, StringComparer.OrdinalIgnoreCase)
             .ToList();

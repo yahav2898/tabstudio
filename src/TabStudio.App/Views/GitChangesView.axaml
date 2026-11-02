@@ -120,6 +120,19 @@
           </Grid>
         </StackPanel>
 
+        <!-- Link a folder Git cloned from GitHub -->
+        <StackPanel Spacing="10" IsVisible="{Binding IsLinkCheckoutVisible}">
+          <Grid ColumnDefinitions="Auto,*">
+            <controls:StrokeIcon Data="{StaticResource Icon.Upload}" Size="20" Margin="0,0,10,0" Foreground="{DynamicResource Brush.AccentText}" />
+            <TextBlock Grid.Column="1" Classes="h2" Text="Link to GitHub" VerticalAlignment="Center" />
+          </Grid>
+          <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding LinkCheckoutText}" />
+          <Button Theme="{StaticResource AccentButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                  Content="Sign in to GitHub" Command="{Binding Account.OpenCommand}" IsVisible="{Binding !Account.IsSignedIn}" />
+          <Button Theme="{StaticResource AccentButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                  Content="Link to GitHub" Command="{Binding LinkCheckoutCommand}" />
+        </StackPanel>
+
         <!-- Publish a folder that is not on GitHub yet -->
         <StackPanel Spacing="10" IsVisible="{Binding IsPublishVisible}">
           <Grid ColumnDefinitions="Auto,*">

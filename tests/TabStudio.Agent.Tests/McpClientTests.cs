@@ -42,6 +42,16 @@ public sealed class McpClientTests
         Assert.Equal(64, McpToolProvider.QualifiedName(new string('s', 40), new string('t', 40)).Length);
 
     [Fact]
+    public void Long_tool_names_stay_unique_when_cut()
+    {
+        var server = "company-wide-issue-tracker-production";
+        var first = McpToolProvider.QualifiedName(server, "list_issues_for_repository_by_label");
+        var second = McpToolProvider.QualifiedName(server, "list_issues_for_repository_by_milestone");
+        Assert.NotEqual(first, second);
+        Assert.All(new[] { first, second }, name => Assert.Matches("^[A-Za-z0-9_-]{1,64}$", name));
+    }
+
+    [Fact]
     public async Task Errors_are_explained()
     {
         var client = new McpClient(new HttpClient(new FakeMcpServer { Status = HttpStatusCode.Unauthorized }), new McpServer("locked", new Uri("https://mcp.test/mcp")));

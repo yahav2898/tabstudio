@@ -73,4 +73,13 @@ public sealed class PublishingTests
         Assert.Equal(Path.Combine(temp.Path, "src", "Program.cs"), hit.FilePath);
         Assert.Equal(2, hit.Line); Assert.Equal(4, hit.Column);
     }
+
+    [Fact]
+    public async Task Content_search_stops_at_its_limit_across_folders()
+    {
+        using var temp = new TempDirectory();
+        for (var i = 0; i < 5; i++) temp.Write($"a{i}/many.txt", string.Concat(Enumerable.Repeat("needle\n", 150)));
+        var hits = await RemoteSearch.FindAsync(temp.Path, "needle");
+        Assert.Equal(RemoteSearch.MaximumHits, hits.Count);
+    }
 }

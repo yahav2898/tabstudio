@@ -127,10 +127,16 @@ internal sealed class DesignerFile
         foreach (var component in document.Components)
         {
             component.Type = TypeResolver.Resolve(component.TypeName);
-            if (fieldNames.Find(f => f.Name == component.Name) is { Field: { } field } && field.Declaration.Variables.Count == 1)
+            // "private Button a, b;" declares two components: the writer writes a field for each, so the shared
+            // declaration goes, or both were declared twice. One that also declares another field stays as it is.
+            if (fieldNames.Find(f => f.Name == component.Name) is { Field: { } field }
+                && field.Declaration.Variables.All(v => document.Find(v.Identifier.ValueText) is not null))
             {
                 component.FieldModifiers = field.Modifiers.ToString();
-                componentFields.Add(field.Span);
+                if (!componentFields.Contains(field.Span))
+                {
+                    componentFields.Add(field.Span);
+                }
             }
         }
 
@@ -227,6 +233,14 @@ internal sealed class DesignerFile
                 return;
             }
 
+            // A field the designer did not create with new (a user field, or one a factory method returns) is not a
+            // component: its statements are kept as written, not stored on a component nothing writes back.
+            if (!Known(component))
+            {
+                Keep(statement, null);
+                return;
+            }
+
             if (path.Length == 0)
             {
                 Keep(statement, component);
@@ -251,7 +265,7 @@ internal sealed class DesignerFile
                 _ => null,
             };
 
-            if (handler is null || Target(subscription.Left) is not (var component, var path) || path.Length == 0 || path.Contains('.', StringComparison.Ordinal))
+            if (handler is null || Target(subscription.Left) is not (var component, var path) || !Known(component) || path.Length == 0 || path.Contains('.', StringComparison.Ordinal))
             {
                 Keep(statement, null);
                 return;
@@ -276,7 +290,7 @@ internal sealed class DesignerFile
             }
 
             if (method is "Add" or "AddRange" && invocation.Expression is MemberAccessExpressionSyntax { Expression: var receiver }
-                && Target(receiver) is (var component, var path) && path.Length > 0)
+                && Target(receiver) is (var component, var path) && Known(component) && path.Length > 0)
             {
                 var arguments = invocation.ArgumentList.Arguments;
                 if (method == "AddRange" && arguments is [{ Expression: ArrayCreationExpressionSyntax array }])
@@ -326,6 +340,8 @@ internal sealed class DesignerFile
         /// The component an expression starts with, and the property path after it: <c>this.button1.Location</c>
         /// is button1's Location, <c>Text</c> and <c>this.Text</c> are the form's Text, and <c>button1</c> is button1 itself.
         /// </summary>
+        private bool Known(DesignComponent component) => component.IsRoot || Document.Components.Contains(component);
+
         private (DesignComponent Component, string Path)? Target(ExpressionSyntax expression)
         {
             var parts = new List<string>();

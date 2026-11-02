@@ -69,7 +69,11 @@ public sealed partial class TabStudioApplication : Application
         {
             case IClassicDesktopStyleApplicationLifetime desktop:
                 desktop.MainWindow = new MainWindow { DataContext = Main };
-                desktop.ShutdownRequested += (_, _) => Main.SaveSession();
+                desktop.ShutdownRequested += (_, _) =>
+                {
+                    Main.SaveSession();
+                    _crashLog?.MarkStopped();
+                };
                 break;
 
             case ISingleViewApplicationLifetime singleView:
@@ -80,7 +84,12 @@ public sealed partial class TabStudioApplication : Application
         // On Android the app can be stopped at any time once it is in the background: save the session first.
         if (this.TryGetFeature<IActivatableLifetime>() is { } activatable)
         {
-            activatable.Deactivated += (_, _) => Main.SaveSession();
+            activatable.Deactivated += (_, _) =>
+            {
+                Main.SaveSession();
+                _crashLog?.MarkStopped();
+            };
+            activatable.Activated += (_, _) => _crashLog?.MarkRunning();
         }
 
         if (ApplicationLifetime is not null)
@@ -95,12 +104,16 @@ public sealed partial class TabStudioApplication : Application
             {
                 if (e.ExceptionObject is Exception exception)
                 {
-                    crashLog.Write(exception, "Background thread (the app ended)");
+                    crashLog.WriteFatal(exception, "Background thread (the app ended)");
                 }
 
                 SaveSessionBeforeCrash();
             };
-            _ = Main.StartAsync();
+            // An end nothing reported (a crash in native code, or Android ending an app that stopped responding) is
+            // told at this start, as one that was reported is, instead of starting as though nothing happened.
+            var lastExit = crashLog.TakeLastExit();
+            crashLog.MarkRunning();
+            _ = Main.StartAsync(lastExit);
         }
 
         base.OnFrameworkInitializationCompleted();
@@ -111,7 +124,7 @@ public sealed partial class TabStudioApplication : Application
         var exception = e.Exception;
         if (!CrashLog.IsRecoverable(exception))
         {
-            _crashLog?.Write(exception, "UI thread (the app ended)");
+            _crashLog?.WriteFatal(exception, "UI thread (the app ended)");
             SaveSessionBeforeCrash();
             return;
         }

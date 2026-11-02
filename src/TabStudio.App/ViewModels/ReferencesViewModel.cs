@@ -13,7 +13,8 @@ public abstract class ReferenceRow
 /// <param name="fileName">The file name.</param>
 /// <param name="folder">The folder, relative to the workspace.</param>
 /// <param name="count">How many references the file has.</param>
-public sealed class ReferenceFileRow(string fileName, string folder, int count) : ReferenceRow
+/// <param name="noun">What is counted, singular and plural: references, or matches for Find in Files.</param>
+public sealed class ReferenceFileRow(string fileName, string folder, int count, (string One, string Many)? noun = null) : ReferenceRow
 {
     /// <summary>The file name.</summary>
     public string FileName { get; } = fileName;
@@ -22,7 +23,10 @@ public sealed class ReferenceFileRow(string fileName, string folder, int count) 
     public string Folder { get; } = folder;
 
     /// <summary>"1 reference" or "3 references".</summary>
-    public string CountText { get; } = count == 1 ? "1 reference" : $"{count} references";
+    public string CountText { get; } = count == 1 ? $"1 {(noun ?? References).One}" : $"{count} {(noun ?? References).Many}";
+
+    /// <summary>What Find All References counts.</summary>
+    internal static readonly (string One, string Many) References = ("reference", "references");
 }
 
 /// <summary>One reference: its line, with the reference in bold.</summary>
@@ -94,8 +98,11 @@ public sealed partial class ReferencesViewModel : ObservableObject
     /// <param name="title">What was searched for.</param>
     /// <param name="items">The results, sorted by file and position.</param>
     /// <param name="workspaceRoot">The workspace folder, to show folders relative to it.</param>
-    public void Show(string title, IReadOnlyList<ReferenceItem> items, string workspaceRoot)
+    /// <param name="noun">What the results are, singular and plural; references when <see langword="null"/>.</param>
+    /// <param name="emptyText">What the summary says when there are none.</param>
+    public void Show(string title, IReadOnlyList<ReferenceItem> items, string workspaceRoot, (string One, string Many)? noun = null, string? emptyText = null)
     {
+        var (one, many) = noun ?? ReferenceFileRow.References;
         ArgumentNullException.ThrowIfNull(title);
         ArgumentNullException.ThrowIfNull(items);
         ArgumentNullException.ThrowIfNull(workspaceRoot);
@@ -108,16 +115,16 @@ public sealed partial class ReferencesViewModel : ObservableObject
         foreach (var file in files)
         {
             var folder = Path.GetDirectoryName(file.Key) is { } directory ? Path.GetRelativePath(workspaceRoot, directory) : string.Empty;
-            rows.Add(new ReferenceFileRow(Path.GetFileName(file.Key), folder == "." ? string.Empty : folder, file.Count()));
+            rows.Add(new ReferenceFileRow(Path.GetFileName(file.Key), folder == "." ? string.Empty : folder, file.Count(), (one, many)));
             rows.AddRange(file.Select(item => new ReferenceLineRow(item, Highlight(item))));
         }
 
         Rows.ReplaceAll(rows);
         Summary = items.Count switch
         {
-            0 => "No references found.",
-            1 => "1 reference",
-            _ => files.Count == 1 ? $"{items.Count} references" : $"{items.Count} references in {files.Count} files",
+            0 => emptyText ?? $"No {many} found.",
+            1 => $"1 {one}",
+            _ => files.Count == 1 ? $"{items.Count} {many}" : $"{items.Count} {many} in {files.Count} files",
         };
     }
 

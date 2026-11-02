@@ -233,7 +233,7 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
         ArgumentNullException.ThrowIfNull(component);
         var type = component.Type ?? component.Instance?.GetType() ?? typeof(System.Windows.Forms.Form);
         eventName ??= ComponentDefaults.DefaultEvent(type);
-        if (CodeBehind.DelegateTypeOf(type, eventName) is not { } delegateType)
+        if (eventName is null || CodeBehind.DelegateTypeOf(type, eventName) is not { } delegateType)
         {
             return;
         }

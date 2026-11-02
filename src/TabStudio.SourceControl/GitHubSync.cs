@@ -140,15 +140,32 @@ public sealed partial class GitHubSync
     }
 
     /// <summary>Reads every file of a tree, walking folder by folder when the tree is too large to read at once.</summary>
-    private static async Task<Dictionary<string, TrackedFile>> ReadFilesAsync(GitHubClient client, string owner, string repository, string treeSha, CancellationToken cancellationToken)
+    private static Task<Dictionary<string, TrackedFile>> ReadFilesAsync(GitHubClient client, string owner, string repository, string treeSha, CancellationToken cancellationToken) =>
+        ReadFilesAsync(client, owner, repository, treeSha, null, cancellationToken);
+
+    /// <summary>Reads the regular files of a tree; <paramref name="others"/> receives its submodules and symbolic links.</summary>
+    private static async Task<Dictionary<string, TrackedFile>> ReadFilesAsync(
+        GitHubClient client,
+        string owner,
+        string repository,
+        string treeSha,
+        List<GitTreeEntry>? others,
+        CancellationToken cancellationToken)
     {
         var files = new Dictionary<string, TrackedFile>(StringComparer.Ordinal);
         var tree = await client.GetTreeAsync(owner, repository, treeSha, recursive: true, cancellationToken).ConfigureAwait(false);
         if (!tree.Truncated)
         {
-            foreach (var entry in tree.Entries.Where(e => e.IsRegularFile))
+            foreach (var entry in tree.Entries)
             {
-                files[entry.Path] = new TrackedFile(entry.Sha, entry.Mode);
+                if (entry.IsRegularFile)
+                {
+                    files[entry.Path] = new TrackedFile(entry.Sha, entry.Mode);
+                }
+                else if (entry.Kind == GitTreeEntryKind.Commit || (entry.Kind == GitTreeEntryKind.Blob && entry.Mode == GitTreeEntry.SymbolicLinkMode))
+                {
+                    others?.Add(entry);
+                }
             }
 
             return files;
@@ -169,6 +186,10 @@ public sealed partial class GitHubSync
                 else if (entry.IsRegularFile)
                 {
                     files[path] = new TrackedFile(entry.Sha, entry.Mode);
+                }
+                else if (entry.Kind == GitTreeEntryKind.Commit || (entry.Kind == GitTreeEntryKind.Blob && entry.Mode == GitTreeEntry.SymbolicLinkMode))
+                {
+                    others?.Add(entry with { Path = path });
                 }
             }
         }

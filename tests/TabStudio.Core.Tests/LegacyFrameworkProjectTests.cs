@@ -179,6 +179,37 @@ public sealed class LegacyFrameworkProjectTests : IDisposable
     }
 
     [Fact]
+    public void Upgrade_keeps_a_file_compiled_in_one_configuration_out_of_the_others()
+    {
+        _temp.Write("Tool/Tool.csproj", """
+            <?xml version="1.0" encoding="utf-8"?>
+            <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+              </PropertyGroup>
+              <ItemGroup>
+                <Compile Include="Program.cs" />
+              </ItemGroup>
+              <ItemGroup Condition="'$(Configuration)'=='Debug'">
+                <Compile Include="DebugOnly.cs" />
+              </ItemGroup>
+            </Project>
+            """);
+        _temp.Write("Tool/Program.cs", "class P { static void Main() { } }");
+        _temp.Write("Tool/DebugOnly.cs", "class D { }");
+
+        var project = XElement.Parse(LegacyProjectUpgrader.Plan(_temp.Resolve("Tool/Tool.csproj")).UpgradedXml);
+
+        var items = project.Descendants().Where(e => e.Name.LocalName == "Compile" && (e.Attribute("Include") ?? e.Attribute("Remove"))?.Value == "DebugOnly.cs").ToList();
+        Assert.Equal(2, items.Count);
+        Assert.NotNull(items[0].Attribute("Remove"));
+        Assert.Null(items[0].Attribute("Condition"));
+        Assert.NotNull(items[1].Attribute("Include"));
+        Assert.Contains("Debug", items[1].Attribute("Condition")?.Value ?? items[1].Parent?.Attribute("Condition")?.Value, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Upgrade_writes_an_sdk_style_visual_basic_windows_forms_project()
     {
         _temp.Write("Pong/Pong.vbproj", """

@@ -28,6 +28,19 @@ public sealed class PackageArchiveTests : IDisposable
         Assert.False(Directory.Exists(target), "Nothing is written when any entry is unsafe.");
     }
 
+    [Theory]
+    [InlineData("../../escape")]
+    [InlineData("/data/escape")]
+    [InlineData("a\\..\\..\\b")]
+    public void Rejects_package_and_dependency_ids_that_are_paths(string id)
+    {
+        var own = $"<package><metadata><id>{id}</id><version>1.0.0</version></metadata></package>";
+        Assert.Throws<InvalidPackageException>(() => Manifests.NuspecReader.Read(new MemoryStream(Encoding.UTF8.GetBytes(own))));
+        var dependency = $"<package><metadata><id>Fine</id><version>1.0.0</version><dependencies><dependency id=\"{id}\" version=\"1.0.0\" /></dependencies></metadata></package>";
+        Assert.Throws<InvalidPackageException>(() => Manifests.NuspecReader.Read(new MemoryStream(Encoding.UTF8.GetBytes(dependency))));
+        Assert.Throws<ArgumentException>(() => new GlobalPackagesFolder(_temp.Resolve("packages")).GetPackageDirectory(id, NuGet.Versioning.NuGetVersion.Parse("1.0.0")));
+    }
+
     [Fact]
     public void Rejects_a_file_that_is_not_a_zip_archive()
     {
