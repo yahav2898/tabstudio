@@ -8,26 +8,26 @@ Toolchain projects:
   python: /home/runner/work/_temp/real-repos/bat/tests/benchmarks/highlighting-speed-src
   cpp: /home/runner/work/_temp/real-repos/bat/tests/benchmarks/highlighting-speed-src
 Startup project: rust /home/runner/work/_temp/real-repos/bat/Cargo.toml
-Set up in 3.5 s
-Tests: 456 passed, 0 failed, 5 skipped of 498: 461 tests run in 1 min 13 sec: 456 passed, 0 failed, 5 skipped.
+Set up in 2.8 s
+Tests: 456 passed, 0 failed, 5 skipped of 498: 461 tests run in 57.3 sec: 456 passed, 0 failed, 5 skipped.
 Project setup:
 
 Output:
 ========== Running bat's tests with Cargo ==========
-> sh -c 'report="$0"; { "$@"; echo $? > "$report.status"; } 2>&1 | tee "$report"; exit "$(cat "$report.status" 2> /dev/null || echo 1)"' /home/runner/work/_temp/real-repos/bat/.tabstudio/test-results/e2bfd8018f5e43848f2ed6c8b5455de0/cargo-test.txt cargo test --no-fail-fast
+> sh -c 'report="$0"; { "$@"; echo $? > "$report.status"; } 2>&1 | tee "$report"; exit "$(cat "$report.status" 2> /dev/null || echo 1)"' /home/runner/work/_temp/real-repos/bat/.tabstudio/test-results/62122dfb1c3c4abf8a8e50cde1b058c8/cargo-test.txt cargo test --no-fail-fast
    Compiling proc-macro2 v1.0.107
    Compiling unicode-ident v1.0.24
-   Compiling libc v0.2.186
    Compiling quote v1.0.47
+   Compiling libc v0.2.186
    Compiling memchr v2.8.0
    Compiling regex-syntax v0.8.11
-   Compiling syn v2.0.117
    Compiling cfg-if v1.0.4
    Compiling aho-corasick v1.1.4
+   Compiling syn v2.0.117
    Compiling thiserror v2.0.18
    Compiling once_cell v1.21.4
-   Compiling parking_lot_core v0.9.12
    Compiling regex-automata v0.4.18
+   Compiling parking_lot_core v0.9.12
    Compiling bitflags v2.11.1
    Compiling scopeguard v1.2.0
    Compiling smallvec v1.15.1
@@ -42,85 +42,85 @@ Output:
    Compiling bstr v1.12.1
    Compiling same-file v1.0.6
    Compiling crc32fast v1.5.0
-   Compiling gix-validate v0.11.3
-   Compiling thiserror-impl v2.0.18
-   Compiling gix-utils v0.3.5
    Compiling walkdir v2.5.0
+   Compiling gix-validate v0.11.3
+   Compiling gix-utils v0.3.5
    Compiling prodash v31.0.0
    Compiling equivalent v1.0.2
+   Compiling thiserror-impl v2.0.18
    Compiling version_check v0.9.5
    Compiling generic-array v0.14.7
    Compiling gix-error v0.2.5
-   Compiling gix-path v0.12.3
    Compiling typenum v1.20.0
    Compiling heapless v0.8.0
    Compiling linux-raw-sys v0.12.1
-   Compiling gix-features v0.49.0
    Compiling byteorder v1.5.0
+   Compiling gix-path v0.12.3
    Compiling foldhash v0.2.0
    Compiling allocator-api2 v0.2.21
    Compiling hash32 v0.3.1
+   Compiling gix-features v0.49.0
    Compiling stable_deref_trait v1.2.1
    Compiling itoa v1.0.18
-   Compiling cpufeatures v0.2.17
    Compiling hashbrown v0.17.1
-   Compiling crossbeam-utils v0.8.21
-   Compiling faster-hex v0.10.0
    Compiling block-buffer v0.10.4
    Compiling crypto-common v0.1.7
+   Compiling cpufeatures v0.2.17
    Compiling digest v0.10.7
-   Compiling rustix v1.1.4
+   Compiling crossbeam-utils v0.8.21
    Compiling sha1 v0.10.6
-   Compiling jiff v0.2.29
-   Compiling memmap2 v0.9.11
+   Compiling faster-hex v0.10.0
    Compiling sha1-checked v0.10.0
-   Compiling hashbrown v0.14.5
+   Compiling rustix v1.1.4
+   Compiling jiff v0.2.29
    Compiling gix-hash v0.26.0
+   Compiling memmap2 v0.9.11
    Compiling gix-hashtable v0.16.0
+   Compiling hashbrown v0.14.5
    Compiling gix-fs v0.22.0
-   Compiling dashmap v6.2.1
    Compiling gix-chunk v0.7.3
+   Compiling dashmap v6.2.1
    Compiling nonempty v0.12.0
    Compiling gix-quote v0.7.2
    Compiling strsim v0.11.1
    Compiling gix-glob v0.27.0
    Compiling serde_core v1.0.228
    Compiling gix-commitgraph v0.38.0
+   Compiling anstyle v1.0.14
    Compiling tempfile v3.27.0
+   Compiling unicode-bom v2.0.3
    Compiling gix-tempfile v24.0.0
    Compiling gix-lock v24.0.0
-   Compiling unicode-bom v2.0.3
-   Compiling anstyle v1.0.14
    Compiling utf8parse v0.2.2
    Compiling anstyle-parse v1.0.0
    Compiling serde_derive v1.0.228
-   Compiling log v0.4.29
    Compiling is_terminal_polyfill v1.70.2
    Compiling gix-date v0.15.6
    Compiling gix-actor v0.41.2
    Compiling gix-object v0.63.0
-   Compiling gix-revwalk v0.34.0
    Compiling colorchoice v1.0.5
    Compiling ident_case v1.0.1
-   Compiling anstyle-query v1.1.5
    Compiling crossbeam-epoch v0.9.20
+   Compiling gix-revwalk v0.34.0
+   Compiling anstyle-query v1.1.5
+   Compiling log v0.4.29
    Compiling anstream v1.0.0
    Compiling darling_core v0.23.0
    Compiling gix-attributes v0.34.0
    Compiling gix-sec v0.14.2
-   Compiling either v1.15.0
-   Compiling serde v1.0.228
    Compiling find-msvc-tools v0.1.9
    Compiling shell-words v1.1.1
-   Compiling clap_lex v1.1.0
    Compiling shlex v1.3.0
-   Compiling gix-command v0.9.1
+   Compiling clap_lex v1.1.0
+   Compiling either v1.15.0
+   Compiling serde v1.0.228
    Compiling cc v1.2.62
+   Compiling gix-command v0.9.1
    Compiling gix-ref v0.66.0
    Compiling gix-packetline v0.22.0
+   Compiling darling_macro v0.23.0
    Compiling errno v0.3.14
    Compiling pkg-config v0.3.33
-   Compiling darling_macro v0.23.0
    Compiling rayon-core v1.13.0
    Compiling fnv v1.0.7
    Compiling rustversion v1.0.22
@@ -132,25 +132,25 @@ Output:
    Compiling onig_sys v69.9.3
    Compiling darling v0.23.0
    Compiling signal-hook-registry v1.4.8
-   Compiling terminal_size v0.4.4
    Compiling crossbeam-deque v0.8.6
-   Compiling gix-traverse v0.60.0
+   Compiling terminal_size v0.4.4
    Compiling mio v1.2.0
+   Compiling gix-traverse v0.60.0
    Compiling hashbrown v0.16.1
    Compiling gix-config-value v0.19.0
    Compiling gix-bitmap v0.3.3
    Compiling filetime v0.2.29
    Compiling winnow v1.0.2
-   Compiling anyhow v1.0.103
    Compiling zmij v1.0.21
    Compiling prettyplease v0.2.37
    Compiling powerfmt v0.2.0
+   Compiling anyhow v1.0.103
    Compiling zlib-rs v0.6.3
    Compiling autocfg v1.5.0
-   Compiling deranged v0.5.8
    Compiling num-traits v0.2.19
-   Compiling indexmap v2.14.1
    Compiling toml_parser v1.1.2+spec-1.1.0
+   Compiling deranged v0.5.8
+   Compiling indexmap v2.14.1
    Compiling clru v0.6.3
    Compiling gix-index v0.54.0
    Compiling clap_builder v4.6.0
@@ -158,12 +158,11 @@ Output:
    Compiling serde_with_macros v3.21.0
    Compiling derive_more-impl v2.1.1
    Compiling gix-revision v0.48.0
-   Compiling serde_spanned v1.1.1
    Compiling toml_datetime v1.1.1+spec-1.1.0
+   Compiling serde_spanned v1.1.1
    Compiling gix-ignore v0.22.0
    Compiling regex v1.13.1
    Compiling encoding_rs v0.8.35
-   Compiling num-conv v0.2.1
    Compiling time-core v0.1.8
    Compiling adler2 v2.0.1
    Compiling unicode-width v0.2.2
@@ -172,19 +171,20 @@ Output:
    Compiling serde_json v1.0.149
    Compiling toml_writer v1.1.1+spec-1.1.0
    Compiling bisync_macros v0.2.3
-   Compiling toml v1.1.2+spec-1.1.0
+   Compiling num-conv v0.2.1
    Compiling bisync v0.3.0
+   Compiling toml v1.1.2+spec-1.1.0
+   Compiling time v0.3.47
+   Compiling gix-filter v0.33.0
    Compiling document-features v0.2.12
    Compiling miniz_oxide v0.8.9
-   Compiling gix-filter v0.33.0
-   Compiling time v0.3.47
    Compiling gix-worktree v0.55.0
    Compiling derive_more v2.1.1
    Compiling gix-refspec v0.44.0
    Compiling serde_with v3.21.0
    Compiling arc-swap v1.9.1
-   Compiling signal-hook-mio v0.2.5
    Compiling gix-pack v0.73.0
+   Compiling signal-hook-mio v0.2.5
    Compiling clap v4.6.1
    Compiling rayon v1.12.0
    Compiling gix-pathspec v0.19.0
@@ -195,19 +195,19 @@ Output:
    Compiling gix-imara-diff v0.2.4
    Compiling git-version-macro v0.3.9
    Compiling quick-xml v0.41.0
-   Compiling linked-hash-map v0.5.6
    Compiling bytemuck v1.25.0
+   Compiling linked-hash-map v0.5.6
    Compiling base64 v0.22.1
    Compiling bugreport v0.6.0
-   Compiling bat v0.26.1 (/home/runner/work/_temp/real-repos/bat)
    Compiling plist v1.10.0
-   Compiling rgb v0.8.53
    Compiling yaml-rust v0.4.5
+   Compiling bat v0.26.1 (/home/runner/work/_temp/real-repos/bat)
+   Compiling rgb v0.8.53
    Compiling git-version v0.3.9
-   Compiling gix-submodule v0.33.0
    Compiling gix-diff v0.66.0
-   Compiling gix-protocol v0.64.0
+   Compiling gix-submodule v0.33.0
    Compiling sysinfo v0.33.1
+   Compiling gix-protocol v0.64.0
    Compiling gix-odb v0.83.0
    Compiling crossterm v0.29.0
    Compiling flate2 v1.1.9
@@ -218,36 +218,36 @@ Output:
    Compiling globset v0.4.20
    Compiling crossbeam-channel v0.5.15
    Compiling terminal-trx v0.2.6
-   Compiling termcolor v1.4.1
    Compiling cfg_aliases v0.2.1
    Compiling unsafe-libyaml v0.2.11
-   Compiling predicates-core v1.0.10
    Compiling std_prelude v0.2.12
    Compiling xterm-color v1.0.2
    Compiling shell-escape v0.1.5
+   Compiling predicates-core v1.0.10
    Compiling ryu v1.0.23
+   Compiling termcolor v1.4.1
    Compiling terminal-colorsaurus v1.0.3
-   Compiling path_abs v0.5.1
    Compiling serde_yaml v0.9.34+deprecated
+   Compiling grep-cli v0.1.12
+   Compiling path_abs v0.5.1
    Compiling minus v5.7.2
    Compiling nix v0.31.3
-   Compiling grep-cli v0.1.12
-   Compiling syntect v5.3.0
    Compiling gix v0.86.0
+   Compiling syntect v5.3.0
    Compiling float-cmp v0.10.0
    Compiling ansi_colours v1.2.3
    Compiling console v0.16.4
    Compiling clircle v0.6.1
    Compiling etcetera v0.11.0
    Compiling content_inspector v0.2.4
-   Compiling semver v1.0.28
+   Compiling normalize-line-endings v0.3.0
+   Compiling assert_cmd v2.2.1
    Compiling difflib v0.4.0
    Compiling wild v2.2.1
-   Compiling assert_cmd v2.2.1
    Compiling nu-ansi-term v0.50.3
    Compiling termtree v0.5.1
-   Compiling normalize-line-endings v0.3.0
    Compiling bytesize v2.7.0
+   Compiling semver v1.0.28
    Compiling predicates-tree v1.0.13
    Compiling predicates v3.1.4
    Compiling dashmap v5.5.3
@@ -255,30 +255,30 @@ Output:
    Compiling wait-timeout v0.2.1
    Compiling lazy_static v1.5.0
    Compiling dissimilar v1.0.11
-   Compiling serial_test v2.0.0
    Compiling expect-test v1.5.1
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 04s
+   Compiling serial_test v2.0.0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 48.85s
      Running unittests src/lib.rs (target/debug/deps/bat-2a296499b933f9ed)
 
 running 147 tests
 test assets::build_assets::acknowledgements::tests::test_append_to_acknowledgements_adds_newline_if_missing ... ok
-test assets::build_assets::acknowledgements::tests::test_normalize_license_text_with_windows_line_endings ... ok
 test assets::build_assets::acknowledgements::tests::test_normalize_license_text ... ok
-test assets::tests::syntax_detection_for_symlinked_file ... ok
-test assets::tests::syntax_detection_basic ... ok
-No themes were found in '/tmp/.tmpYrlsdp/themes', using the default set
-Writing theme set to /tmp/.tmp3FoK1C/themes.bin ... okay
-Writing syntax set to /tmp/.tmp3FoK1C/syntaxes.bin ... okay
-Writing metadata to folder /tmp/.tmp3FoK1C ... okay
-test assets::tests::syntax_detection_hidden_file_extensions ... ok
-test assets::tests::syntax_detection_first_line_with_utf8_bom ... ok
+test assets::build_assets::acknowledgements::tests::test_normalize_license_text_with_windows_line_endings ... ok
 test assets::tests::syntax_detection_first_line ... ok
-test assets::tests::syntax_detection_for_symlinked_file_by_target_extension ... ok
+test assets::tests::syntax_detection_first_line_with_utf8_bom ... ok
+No themes were found in '/tmp/.tmp3WcIiJ/themes', using the default set
+Writing theme set to /tmp/.tmp7HzVVK/themes.bin ... okay
+Writing syntax set to /tmp/.tmp7HzVVK/syntaxes.bin ... okay
+Writing metadata to folder /tmp/.tmp7HzVVK ... okay
+test assets::tests::syntax_detection_hidden_file_extensions ... ok
+test assets::tests::syntax_detection_basic ... ok
+test assets::tests::syntax_detection_for_symlinked_file ... ok
+test assets::tests::syntax_detection_ignored_suffix_falls_back_to_first_line ... ok
 test assets::tests::syntax_detection_invalid_utf8 ... ok
 test assets::tests::syntax_detection_is_case_insensitive ... ok
-test assets::tests::syntax_detection_ignored_suffix_falls_back_to_first_line ... ok
-test assets::tests::syntax_detection_same_for_inputkinds ... ok
+test assets::tests::syntax_detection_for_symlinked_file_by_target_extension ... ok
 test assets::tests::syntax_detection_stdin_filename ... ok
+test assets::tests::syntax_detection_with_custom_mapping ... ok
 test config::default_config_should_highlight_no_lines ... ok
 test config::default_config_should_include_all_lines ... ok
 test config::get_pager_executable_default ... ok
@@ -291,10 +291,10 @@ test config::get_pager_executable_with_config_pager_builtin ... ok
 test config::get_pager_executable_with_config_pager_less ... ok
 test config::get_pager_executable_with_config_pager_more ... ok
 test config::get_pager_executable_with_pager_more_switches_to_less ... ok
-test assets::tests::syntax_detection_with_custom_mapping ... ok
-test diff::tests::diff_is_calculated_against_index ... ok
+test assets::tests::syntax_detection_well_defined_mapping_for_duplicate_extensions ... ok
 test assets::tests::syntax_detection_with_extension_mapping_to_unknown ... ok
-test diff::tests::diff_is_calculated_against_index_2 ... ok
+test assets::tests::syntax_detection_same_for_inputkinds ... ok
+test diff::tests::diff_is_calculated_against_index ... ok
 test diff::tests::not_a_git_repository ... ok
 test input::basic ... ok
 test input::binary_detection_scans_beyond_first_line_and_preserves_input ... ok
@@ -319,23 +319,22 @@ test line_range::test_parse_context_fail ... ok
 test line_range::test_parse_context_range ... ok
 test line_range::test_parse_context_single_line ... ok
 test line_range::test_parse_fail ... ok
-test assets::tests::syntax_detection_well_defined_mapping_for_duplicate_extensions ... ok
+test line_range::test_parse_full ... ok
 test line_range::test_parse_minus_edge_cases_success ... ok
 test line_range::test_parse_minus_fail ... ok
 test line_range::test_parse_minus_success ... ok
-test line_range::test_parse_full ... ok
 test line_range::test_parse_partial_max ... ok
 test line_range::test_parse_partial_min ... ok
 test line_range::test_parse_partial_relative_negative_from_back ... ok
 test line_range::test_parse_plus ... ok
 test line_range::test_parse_plus_fail ... ok
-test line_range::test_parse_relative_negative_from_back_partial ... ok
 test line_range::test_parse_plus_overflow ... ok
+test line_range::test_parse_relative_negative_from_back_partial ... ok
 test line_range::test_parse_single ... ok
+test line_range::test_ranges_3_from_back_up_to_end ... ok
 test line_range::test_ranges_absolute_bound_and_offset ... ok
 test line_range::test_ranges_advanced ... ok
 test line_range::test_ranges_all ... ok
-test line_range::test_ranges_3_from_back_up_to_end ... ok
 test line_range::test_ranges_multiple_negative_from_back ... ok
 test line_range::test_ranges_multiple_negative_offsets_to_end ... ok
 test line_range::test_ranges_none ... ok
@@ -357,6 +356,7 @@ test preprocessor::test_strip_ansi_8bit_c1_introducers ... ok
 test preprocessor::test_strip_ansi_preserves_control_bytes ... ok
 test preprocessor::test_strip_ansi_single_char_esc ... ok
 test preprocessor::test_strip_overstrike ... ok
+test preprocessor::test_try_parse_utf8_char ... ok
 test style::test::style_component_list_default_builds_on_auto ... ok
 test style::test::style_component_list_expand_negates_subcomponents ... ok
 test style::test::style_component_list_parse ... ok
@@ -364,17 +364,17 @@ test style::test::style_component_list_to_components ... ok
 test style::test::style_component_list_to_components_expands_subcomponents ... ok
 test style::test::style_component_list_to_components_precedence_merges_previous_lists ... ok
 test style::test::style_component_list_to_components_precedence_overrides_previous_lists ... ok
-test preprocessor::test_try_parse_utf8_char ... ok
 test style::test::style_component_list_to_components_removes_negated ... ok
 test syntax_mapping::ignored_suffixes::external_suffixes ... ok
-test syntax_mapping::tests::all_fixed_builtin_mappings_can_compile ... ok
 test syntax_mapping::ignored_suffixes::internal_suffixes ... ok
-test syntax_mapping::tests::builtin_mappings_matcher_only_compile_once ... ok
+test syntax_mapping::tests::all_fixed_builtin_mappings_can_compile ... ok
 test syntax_mapping::tests::builtin_mappings_build_is_case_sensitive ... ok
+test syntax_mapping::tests::builtin_mappings_matcher_only_compile_once ... ok
 test syntax_mapping::tests::builtin_mappings_work ... ok
+test syntax_mapping::tests::case_sensitive_custom_mappings_work ... ok
 test syntax_mapping::tests::custom_mappings_override_builtin ... ok
 test syntax_mapping::tests::custom_mappings_precedence ... ok
-test syntax_mapping::tests::case_sensitive_custom_mappings_work ... ok
+test syntax_mapping::tests::custom_mappings_work ... ok
 test theme::tests::choosing::chooses_dark_theme_if_dark_or_unknown ... ok
 test theme::tests::choosing::chooses_default_theme_if_unknown ... ok
 test theme::tests::choosing::chooses_light_theme_if_light ... ok
@@ -394,41 +394,41 @@ test vscreen::tests::test_escape_sequence_offsets_iterator_iterates ... ok
 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_7bit_dcs_consumes_body ... ok
 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_8bit_csi ... ok
 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_8bit_osc_with_8bit_st ... ok
-test syntax_mapping::tests::custom_mappings_work ... ok
 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_csi ... ok
 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_csi_thats_broken ... ok
 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_csi_with_intermediates ... ok
 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_csi_with_parameters ... ok
 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_csi_with_parameters_and_intermediates ... ok
 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_nf ... ok
-test diff::tests::diff_is_calculated_correctly ... ok
 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_nf_thats_broken ... ok
 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_osc_thats_broken ... ok
-test vscreen::tests::test_escape_sequence_offsets_iterator_parses_text ... ok
-test vscreen::tests::test_escape_sequence_offsets_iterator_parses_text_stops_at_esc ... ok
 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_osc_with_bel ... ok
 test vscreen::tests::test_escape_sequence_offsets_iterator_parses_osc_with_st ... ok
-test vscreen::tests::test_sgr_attributes_do_not_leak_into_wrong_field ... ok
+test vscreen::tests::test_escape_sequence_offsets_iterator_parses_text ... ok
+test vscreen::tests::test_escape_sequence_offsets_iterator_parses_text_stops_at_esc ... ok
 test vscreen::tests::test_escape_sequence_offsets_iterator_truncated_dcs_consumes_to_eof ... ok
+test vscreen::tests::test_sgr_attributes_do_not_leak_into_wrong_field ... ok
 test vscreen::tests::test_sgr_strike_is_tracked_and_cleared ... ok
+test diff::tests::diff_is_calculated_against_index_2 ... ok
 test diff::tests::faulty_git_version_does_not_panic ... ok
+test diff::tests::diff_is_calculated_correctly ... ok
 
-test result: ok. 147 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s
+test result: ok. 147 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.19s
 
      Running unittests src/bin/bat/main.rs (target/debug/deps/bat-3ef62af49c82f08d)
 
 running 11 tests
-test config::comments ... ok
 test config::empty ... ok
+test config::comments ... ok
 test config::multiple ... ok
 test config::multi_line ... ok
 test config::quotes ... ok
+test config::same_file_identical_paths ... ok
+test config::same_file_different_paths ... ok
+test config::same_file_nonexistent ... ok
+test config::single ... ok
 test clap_app::verify_app ... ok
 test config::same_file_via_symlink ... ok
-test config::same_file_different_paths ... ok
-test config::single ... ok
-test config::same_file_identical_paths ... ok
-test config::same_file_nonexistent ... ok
 
 test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
@@ -453,98 +453,98 @@ test alias_pager_disable ... ok
 test accepts_no_custom_assets_arg ... ok
 test acknowledgements ... ok
 test alias_pager_disable_long_overrides_short ... ok
-test ansi_hyperlink_emitted_when_wrapped ... ok
 test ansi_highlight_underline ... ok
+test ansi_hyperlink_emitted_when_wrapped ... ok
+test ansi_passthrough_emit ... ok
 test ansi_sgr_emitted_when_wrapped ... ok
 test ansi_sgr_joins_attributes_when_wrapped ... ok
-test ansi_passthrough_emit ... ok
 test ansi_sgr_strike_joins_attributes_when_wrapped ... ok
 test attached_short_option_values_are_not_treated_as_flags ... ok
 test basic ... ok
 test ansi_highlight_json_keys ... ok
-test basic_io_cycle ... ok
-test basic_set_terminal_title ... ok
 test auxiliary_output_does_not_panic_on_closed_stdout ... ok
+test basic_set_terminal_title ... ok
 test bat_error_to_stderr ... ok
-test binary_as_text ... ok
 test binary_as_text_control_char_width ... ok
+test binary_as_text ... ok
+test basic_io_cycle ... ok
 test bom_not_stripped_in_loop_through_mode ... ok
 test bom_stripped_when_no_color_and_not_loop_through ... ok
 test boolean_flag_in_config_and_on_command_line ... ok
 test bom_stripped_when_colored_output ... ok
-test cache_build_blank ... ok
-test cache_clear ... ok
-test cache_help_shows_help_message ... ok
 test binary_stdin_does_not_detect_syntax_from_invalid_utf8_first_line ... ok
-test can_print_file_named_cache_with_additional_argument ... ok
+test all_global_git_config_locations_syntax_mapping_work ... ok
+test cache_build_blank ... ok
+test cache_help_shows_help_message ... ok
+test cache_clear ... ok
 test can_print_file_named_cache ... ok
+test can_print_file_named_cache_with_additional_argument ... ok
 test can_print_file_starting_with_cache ... ok
-test completion_does_not_panic_on_closed_stdout ... ok
-test concatenate ... ok
 test concatenate_empty_between ... ok
+test concatenate ... ok
+test completion_does_not_panic_on_closed_stdout ... ok
 test concatenate_empty_both ... ok
 test concatenate_empty_first ... ok
 test concatenate_empty_first_and_last ... ok
-test concatenate_empty_last ... ok
 test concatenate_single_line ... ok
-test all_global_git_config_locations_syntax_mapping_work ... ok
+test concatenate_empty_last ... ok
 test concatenate_single_line_empty ... ok
-test concatenate_stdin ... ok
 test config_location_from_bat_config_dir_variable ... ok
 test config_location_test ... ok
 test config_location_when_generating ... ok
 test diagnostic_sanity_check ... ok
-test diagnostic_works_with_invalid_config ... ok
+test concatenate_stdin ... ok
 test config_read_arguments_from_file ... ok
+test diagnostic_works_with_invalid_config ... ok
 test disable_pager_if_disable_paging_flag_comes_after_paging ... ok
 test disable_pager_if_pp_flag_comes_after_paging ... ok
-test diff_plain_does_not_show_grid_or_header ... ok
-test diff_plain_preserves_change_markers ... ok
+test do_not_detect_different_syntax_for_stdin_and_files ... ok
 test do_not_exit_directory ... ok
+test do_not_panic_regression_tests ... ok
 test does_not_print_unwanted_file_named_cache ... ok
 test empty_file_cycle_is_ok ... ok
+test diff_plain_preserves_change_markers ... ok
+test diff_plain_does_not_show_grid_or_header ... ok
 test empty_file_leads_to_empty_output_with_grid_enabled ... ok
 test empty_file_leads_to_empty_output_with_rule_enabled ... ok
-test empty_stdin_does_not_detect_syntax ... ok
 test enable_pager_if_disable_paging_flag_comes_before_paging ... ok
-test enable_pager_if_pp_flag_comes_before_paging ... ok
 test env_var_bat_pager_value_bat ... ok
-test env_var_bat_paging ... ok
+test enable_pager_if_pp_flag_comes_before_paging ... ok
 test env_var_pager_value_bat ... ok
-test do_not_detect_different_syntax_for_stdin_and_files ... ok
+test empty_stdin_does_not_detect_syntax ... ok
+test env_var_bat_paging ... ok
 test fail_directory ... ok
 test fail_non_existing ... ok
 test explicit_language_overrides_stdin_first_line_detection ... ok
-test fallback_syntax_does_not_override_detected_syntax ... ok
 test fallback_syntax_does_not_override_explicit_language ... ok
 test file_with_invalid_utf8_filename ... ok
 test filename_multiple_err ... ok
 test filename_multiple_ok ... ok
 test filename_stdin ... ok
 test filename_stdin_binary ... ok
-test do_not_panic_regression_tests ... ok
 test first_file_cyclic_is_ok ... ok
+test fallback_syntax_does_not_override_detected_syntax ... ok
 test grid_overrides_rule ... ok
 test grid_for_file_without_newline ... ok
 test header_arg_overrides_env ... ok
+test header_and_changes_only ... ok
 test header_basic ... ok
 test fallback_syntax_is_used_when_no_syntax_is_detected ... ok
-test header_and_changes_only ... ok
-test header_binary_with_null_after_first_line ... ok
 test header_binary ... ok
+test header_binary_with_null_after_first_line ... ok
 test header_default ... ok
-test header_env_basic ... ok
-test header_default_is_default ... ok
 test header_full_basic ... ok
+test header_env_basic ... ok
 test header_full_binary ... ok
+test header_default_is_default ... ok
 test header_full_padding ... ok
 test header_full_padding_rule ... ok
-test header_narrow_terminal_with_multibyte_chars ... ok
 test header_padding ... ok
 test header_padding_rule ... ok
+test header_narrow_terminal_with_multibyte_chars ... ok
+test header_very_narrow_terminal ... ok
 test header_zip_file_is_binary ... ok
 test help_uses_valid_config ... ok
-test header_very_narrow_terminal ... ok
 test help_with_color_never ... ok
 test help_works_with_invalid_config ... ok
 test highlighting_is_skipped_on_long_lines ... ok
@@ -555,52 +555,52 @@ test line_numbers_from_cli_in_loop_through_mode ... ok
 test line_range_2_3 ... ok
 test line_range_context_around_range ... ok
 test line_range_context_around_single_line ... ok
-test ignored_suffix_arg ... ok
 test line_range_context_around_single_line_minimal ... ok
 test line_range_context_at_end_of_file ... ok
-test line_range_context_negative_range ... ok
+test ignored_suffix_arg ... ok
 test line_range_context_at_file_boundaries ... ok
 test line_range_context_negative_single_line ... ok
+test line_range_context_negative_range ... ok
 test line_range_context_non_numeric_range ... ok
 test line_range_context_non_numeric_single_line ... ok
-test line_range_context_very_large ... ok
 test line_range_context_zero ... ok
+test line_range_context_very_large ... ok
 test line_range_first_two ... ok
 test line_range_from_back_last_two ... ok
 test line_range_from_back_last_two_single_line_eq_sep ... ok
-test ignored_suffix_enables_first_line_detection ... ok
 test line_range_from_back_last_two_single_line_no_sep ... ok
 test line_range_last_3 ... ok
+test ignored_suffix_enables_first_line_detection ... ok
 test line_range_multiple_with_context ... ok
-test line_range_up_to_2_from_back ... ok
 test line_range_multiple ... ok
+test line_range_up_to_2_from_back ... ok
 test line_range_up_to_2_from_back_single_line_is_empty ... ok
 test line_wrapping_when_auto ... ok
 test list_themes_to_piped_output ... ok
 test list_themes_without_colors ... ok
 test long_help ... ok
 test list_languages ... ok
-test long_help_with_highlighting ... ok
 test list_themes_with_colors ... ok
+test long_help_with_highlighting ... ok
 test map_syntax_and_ignored_suffix_work_together ... ok
 test no_args_doesnt_break ... ok
 test map_syntax_target_syntax_case_insensitive ... ok
 test no_line_wrapping_when_set_to_never ... ok
 test no_line_wrapping_with_s_flag ... ok
 test no_pager_arg ... ok
-test no_broken_osc_emit_with_line_wrapping ... ok
-test no_first_line_fallback_when_mapping_to_invalid_syntax ... ok
-test no_paging_short_arg ... ok
 test no_paging_arg ... ok
+test no_paging_short_arg ... ok
+test no_broken_osc_emit_with_line_wrapping ... ok
 test no_strip_overstrike_for_plain_text ... ok
+test no_first_line_fallback_when_mapping_to_invalid_syntax ... ok
 test no_wrapping_with_chop_long_lines ... ok
 test number_nonblank_from_cli_in_loop_through_mode ... ok
 test number_nonblank_ignored_when_followed_by_plain ... ok
 test number_nonblank_style ... ok
 test number_nonblank_takes_precedence_over_number ... ok
 test numbers_honored_from_cli_when_preceeded_by_plain_in_loop_through_mode ... ok
-test numbers_ignored_from_cli_when_followed_by_plain_in_loop_through_mode ... ok
 test option_terminator_keeps_filename_from_number_flags ... ok
+test numbers_ignored_from_cli_when_followed_by_plain_in_loop_through_mode ... ok
 test pager_arg_override_env_noconfig ... ok
 test no_strip_overstrike_for_other_syntax ... ok
 test pager_arg_override_env_withconfig ... ok
@@ -616,20 +616,20 @@ test pager_most_from_bat_pager_env_var ... ok
 test pager_most_from_pager_arg ... ok
 test pager_most_from_pager_env_var ... ok
 test pager_value_bat ... ok
-test pager_most_with_arg ... ok
 test paging_does_not_override_simple_plain ... ok
+test pager_most_with_arg ... ok
 test piped_output_with_auto_style ... ok
 test piped_output_with_default_style_flag ... ok
-test pager_overwrite ... ok
 test piped_output_with_implicit_auto_style ... ok
 test piped_output_with_line_numbers_style_flag ... ok
-test piped_output_with_line_numbers_with_header_grid_style_flag ... ok
 test piped_output_with_line_number_flag ... ok
+test piped_output_with_line_numbers_with_header_grid_style_flag ... ok
+test piped_output_with_number_nonblank_flag ... ok
 test plain_mode_does_not_add_nonexisting_newline ... ok
 test plain_with_sized_terminal_width ... ok
-test piped_output_with_number_nonblank_flag ... ok
 test quiet_empty_does_not_affect_non_empty_input ... ok
 test quiet_empty_suppresses_output_on_empty_file ... ok
+test plain_without_diff_still_works ... ok
 test quiet_empty_suppresses_output_on_empty_stdin ... ok
 test repeated_boolean_flag_is_accepted ... ok
 test s_flag_respected_with_paging_always ... ok
@@ -637,13 +637,13 @@ test sanitize_implies_strip_ansi ... ok
 test repeated_combined_flags_use_last_number_or_plain_flag ... ok
 test sanitize_preserves_crlf ... ok
 test sanitize_preserves_form_feed_in_source ... ok
-test sanitize_preserves_unicode_text ... ok
 test sanitize_strips_8bit_csi ... ok
+test sanitize_preserves_unicode_text ... ok
 test sanitize_strips_osc_8_hyperlink_spoof ... ok
 test sanitize_strips_osc_clipboard_hijack ... ok
-test sanitize_substitutes_bare_cr ... ok
 test sanitize_strips_window_title_injection ... ok
 test sanitize_substitutes_bidi_controls ... ok
+test sanitize_substitutes_bare_cr ... ok
 test sanitize_substitutes_zero_width ... ok
 test short_help ... ok
 test show_all_extends_tab_markers_to_next_tabstop ... ok
@@ -653,69 +653,69 @@ test show_all_shows_backspace_with_caret_notation ... ok
 test show_all_with_caret_notation ... ok
 test show_all_with_unicode ... ok
 test short_help_with_highlighting ... ok
-test simple_plain_does_not_override_paging ... ok
 test snip ... ok
+test simple_plain_does_not_override_paging ... ok
 test squeeze_blank ... ok
+test pager_overwrite ... ok
 test squeeze_blank_line_numbers ... ok
 test squeeze_limit ... ok
 test squeeze_limit_line_numbers ... ok
-test snip_at_terminal_width_one_does_not_panic ... ok
 test stdin ... ok
-test stdin_detects_diff_from_first_line ... ok
-test stdin_detects_bash_from_first_line ... ok
-test plain_without_diff_still_works ... ok
+test snip_at_terminal_width_one_does_not_panic ... ok
+test stdin_to_stdout_cycle ... ok
 test strip_ansi_always_strips_ansi ... ok
 test strip_ansi_auto_does_not_strip_ansi_when_plain_text_by_option ... ok
+test stdin_detects_diff_from_first_line ... ok
+test stdin_detects_bash_from_first_line ... ok
 test strip_ansi_auto_does_not_strip_when_plain_text_by_filename ... ok
-test stdin_to_stdout_cycle ... ok
-test strip_ansi_auto_strips_ansi_when_detected_syntax_by_filename ... ok
 test strip_ansi_does_not_affect_simple_printer ... ok
-test strip_ansi_auto_strips_ansi_when_provided_syntax_by_option ... ok
+test strip_ansi_auto_strips_ansi_when_detected_syntax_by_filename ... ok
 test strip_ansi_never_does_not_strip_ansi ... ok
+test strip_ansi_auto_strips_ansi_when_provided_syntax_by_option ... ok
 test strip_ansi_does_not_strip_when_show_nonprintable ... ok
+test strip_overstrike_for_manpage_syntax ... ok
 test style_components_can_be_overidden ... ok
+test cache_build ... ok
 test style_components_can_be_removed ... ok
+test style_from_env_var_ignored_and_line_numbers_from_cli_in_loop_through_mode ... ok
 test style_components_will_merge ... ok
 test strip_overstrike_with_syntax_highlighting ... ok
 test style_components_will_merge_with_env_var ... ok
-test style_from_env_var_ignored_and_line_numbers_from_cli_in_loop_through_mode ... ok
 test tabs_4 ... ok
-test strip_overstrike_for_manpage_syntax ... ok
 test tabs_4_arg_overrides_env ... ok
 test tabs_4_env_overrides_config ... ok
-test tabs_4_wrapped ... ok
 test tabs_4_arg_overrides_env_noconfig ... ok
+test tabs_4_wrapped ... ok
 test tabs_8_wrapped ... ok
-test tabs_numbers ... ok
 test tabs_8 ... ok
-test tabs_passthrough_wrapped ... ok
 test tabs_passthrough ... ok
-test tcl_shebang_detection_tclsh ... ok
-test tcl_shebang_detection_wish ... ok
-test tcl_shebang_detection_expect ... ok
-test terminal_width_env_var_is_respected ... ok
+test tabs_numbers ... ok
+test tabs_passthrough_wrapped ... ok
 test terminal_width_arg_overrides_env ... ok
+test terminal_width_env_var_is_respected ... ok
 test theme_arg_overrides_env ... ok
 test theme_arg_overrides_env_withconfig ... ok
 test theme_dark_env_var_is_respected ... ok
-test theme_light_env_var_is_respected ... ok
 test theme_env_overrides_config ... ok
+test theme_light_env_var_is_respected ... ok
 test unbuffered_flag_is_accepted ... ok
+test tcl_shebang_detection_expect ... ok
 test unbuffered_mode_disables_line_numbers ... ok
+test tcl_shebang_detection_tclsh ... ok
 test unbuffered_mode_plain_output ... ok
 test unicode_wrap ... ok
-test utf16 ... ok
 test utf16be ... ok
+test tcl_shebang_detection_wish ... ok
 test utf16be_first_line_not_merged_with_second ... ok
 test version_works_with_invalid_config ... ok
 test utf16le ... ok
-test word_wrap_short_line_no_wrap ... ok
 test word_wrap_breaks_at_word_boundaries ... ok
 test word_wrap_with_line_numbers ... ok
+test utf16 ... ok
 test wrap_never_flag_respected_with_paging_always ... ok
-test cache_build ... ok
+test word_wrap_short_line_no_wrap ... ok
 
-test result: ok. 265 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.06s
+test result: ok. 265 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.72s
 
      Running tests/no_duplicate_extensions.rs (target/debug/deps/no_duplicate_extensions-01bb09266174037c)
 
@@ -727,35 +727,35 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
      Running tests/snapshot_tests.rs (target/debug/deps/snapshot_tests-8cfbe297b8ee4d5b)
 
 running 27 tests
-test changes ... ok
 test changes_grid ... ok
+test changes ... ok
+test changes_grid_header ... ok
 test changes_grid_header_numbers ... ok
 test changes_grid_header_rule ... ok
-test changes_grid_header ... ok
+test changes_grid_rule ... ok
+test changes_grid_header_numbers_rule ... ok
 test changes_grid_numbers ... ok
 test changes_header ... ok
-test changes_grid_header_numbers_rule ... ok
-test changes_grid_rule ... ok
-test changes_header_numbers ... ok
 test changes_header_rule ... ok
 test changes_numbers ... ok
+test changes_header_numbers ... ok
 test changes_rule ... ok
-test full ... ok
-test grid ... ok
 test grid_header ... ok
+test full ... ok
 test grid_header_rule ... ok
+test grid ... ok
 test grid_header_numbers ... ok
 test grid_numbers ... ok
-test header_numbers ... ok
 test grid_rule ... ok
+test header_numbers ... ok
 test header ... ok
 test header_numbers_rule ... ok
 test header_rule ... ok
-test numbers ... ok
 test plain ... ok
+test numbers ... ok
 test rule ... ok
 
-test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
 
      Running tests/system_wide_config.rs (target/debug/deps/system_wide_config-f7a78f280b8ce7d4)
 
@@ -777,10 +777,10 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 running 5 tests
 test src/vscreen.rs - vscreen::EscapeSequenceIterator (line 676) ... ignored
 test src/vscreen.rs - vscreen::EscapeSequenceOffsetsIterator (line 355) ... ignored
-test src/theme.rs - theme::ThemeName (line 125) ... ok
 test src/theme.rs - theme::ThemePreference (line 61) ... ok
+test src/theme.rs - theme::ThemeName (line 125) ... ok
 test src/lib.rs - (line 12) ... ok
 
-test result: ok. 3 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 1.02s
+test result: ok. 3 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.93s
 
 
