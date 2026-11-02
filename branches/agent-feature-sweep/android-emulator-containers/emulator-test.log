@@ -2,12 +2,12 @@ Device: Android 15 (API 35), x86_64, screen 2560x1800
 Performing Streamed Install
 Success
 Measurements:
-Startup to self test start: 18.12 s
+Startup to self test start: 9.36 s
 Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
- Native Heap 281586 281564 16 35 282596 301368 290736 6006
- Dalvik Heap 2461 2432 0 71 4652 7936 4000 3936
- TOTAL 621856 566972 30456 204 763904 309304 294736 9942
- TOTAL PSS: 621856 TOTAL RSS: 763904 TOTAL SWAP PSS: 204
-TABSTUDIO_SELFTEST_OK 112.1 s: Containers: PostgreSQL query=42 and TCP connected; Redis PING=PONG; nginx rendered in web preview; docker ps and exec stdin/output/exit; 3 verified images; 112.1 s; postgres:17-alpine@sha256:e4cb93687b062cd25a0e8f672d85a7708235009d70d31f8a7698d9370092a9c4, redis:7-alpine@sha256:1cf73a2f04808e55a8bd2f5706c2aa0ebb0f71938f93deb7af79f48311cd5cb9, nginx:alpine@sha256:2db7d28517d1fba17c2da3210395f7be11a11b419246ad0da2edf782af72f367; 8 run variables
+ Native Heap 281080 281044 28 696 282108 301588 290577 6221
+ Dalvik Heap 2428 2388 0 112 4940 7936 3968 3968
+ TOTAL 630477 547988 42664 14857 762648 309524 294545 10189
+ TOTAL PSS: 630477 TOTAL RSS: 762648 TOTAL SWAP PSS: 14857
+TABSTUDIO_SELFTEST_OK 91.0 s: Containers: PostgreSQL query=42 and TCP connected; Redis PING=PONG; nginx rendered in web preview; docker ps and exec stdin/output/exit; 3 verified images; 91.0 s; postgres:17-alpine@sha256:e4cb93687b062cd25a0e8f672d85a7708235009d70d31f8a7698d9370092a9c4, redis:7-alpine@sha256:1cf73a2f04808e55a8bd2f5706c2aa0ebb0f71938f93deb7af79f48311cd5cb9, nginx:alpine@sha256:2db7d28517d1fba17c2da3210395f7be11a11b419246ad0da2edf782af72f367; 8 run variables
 Shard: containers
-Seconds from launch to verdict: 134
+Seconds from launch to verdict: 102
