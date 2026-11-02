@@ -3,7 +3,7 @@ Toolchain projects:
   php: /home/runner/work/_temp/real-repos/PHPMailer/composer.json
 Startup project: php /home/runner/work/_temp/real-repos/PHPMailer/composer.json
 Set up in 5.2 s
-Tests: 655 passed, 74 failed, 3 skipped of 799: 732 tests run in 249 ms: 655 passed, 74 failed, 3 skipped.
+Tests: 655 passed, 74 failed, 3 skipped of 799: 732 tests run in 408 ms: 655 passed, 74 failed, 3 skipped.
 Project setup:
 
 Output:
@@ -61,7 +61,7 @@ Use the `composer fund` command to find out more!
 PHP CodeSniffer Config installed_paths set to ../../phpcompatibility/php-compatibility,../../phpcsstandards/phpcsutils
 ========== composer install: succeeded ==========
 ========== Running PHPMailer's tests with PhpUnit ==========
-> php vendor/bin/phpunit --colors=never --log-junit /home/runner/work/_temp/real-repos/PHPMailer/.tabstudio/test-results/7b27b2841e4444c288799713d3662c8d/phpunit.xml
+> php vendor/bin/phpunit --colors=never --log-junit /home/runner/work/_temp/real-repos/PHPMailer/.tabstudio/test-results/6ce11fa817ab40d189bade4b8c8eb7fc/phpunit.xml
 PHPUnit 9.6.38 by Sebastian Bergmann and contributors.
 
 Runtime:       PHP 8.5.12
@@ -77,11 +77,11 @@ Sendmail path: /usr/sbin/sendmail -t -i
 Envelope sender: from@example.com
 To: John Doe <whoto@example.com>
 Subject: test
-Headers: Date: Mon, 2 Nov 2026 03:46:34 +0000
+Headers: Date: Mon, 2 Nov 2026 04:13:38 +0000
 To: John Doe <whoto@example.com>
 From: First Last <from@example.com>
 Subject: test
-Message-ID: <los945xcxvc0lmSm05qiXfy8EdXW7vs5MB1N99USPaE@runnervm48cm3>
+Message-ID: <C2GqEro6k4ZKAWbzyrWlYhCX7tyJ6ldIlSdn06hV2o@runnervm48cm3>
 X-Mailer: PHPMailer 7.1.1 (https://github.com/PHPMailer/PHPMailer)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
@@ -96,11 +96,11 @@ Sendmail path: /usr/sbin/sendmail -t -i
 Envelope sender: from@example.com
 To: John Doe <whoto@example.com>
 Subject: test
-Headers: Date: Mon, 2 Nov 2026 03:46:34 +0000
+Headers: Date: Mon, 2 Nov 2026 04:13:38 +0000
 To: John Doe <whoto@example.com>
 From: First Last <from@example.com>
 Subject: test
-Message-ID: <1DsUmzorpR6qj8F08354vdNjyiKDiy9qpzbXJPM@runnervm48cm3>
+Message-ID: <RZJjplxRfEGHzDOu0n5WaF0cLQULkE1JdFCykLT3E@runnervm48cm3>
 X-Mailer: PHPMailer 7.1.1 (https://github.com/PHPMailer/PHPMailer)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
@@ -121,7 +121,7 @@ F............................................................. 126 / 732 ( 17%)
 ............................................................... 693 / 732 ( 94%)
 .....................................EE                         732 / 732 (100%)
 
-Time: 00:00.132, Memory: 14.00 MB
+Time: 00:00.260, Memory: 14.00 MB
 
 There were 72 errors:
 
