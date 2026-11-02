@@ -591,6 +591,13 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
     private void OnMemoryPressure(object? sender, MemoryPressure pressure) => _ui.Post(() =>
     {
+        // Critical pressure is the last word before Android's low-memory killer ends the app, in front or behind, with
+        // no Deactivated to save the session: text typed since the last save would be lost with it.
+        if (pressure == MemoryPressure.Critical && !_disposed)
+        {
+            SaveSessionNow();
+        }
+
         // Roslyn's cached compilations are by far the largest thing TabStudio can rebuild on demand. They are let go
         // by a reload on a background thread, not here: on a 3 GB tablet a reload and its skeleton compile on the UI
         // thread froze the IDE. The collection runs once they are let go, which is what makes it free them.

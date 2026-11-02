@@ -45,6 +45,19 @@ public sealed record SessionState(
     public bool? IsPropertiesExpanded { get; init; }
 }
 
+/// <summary>What became of a session save.</summary>
+public enum SessionSaveResult
+{
+    /// <summary>The session is on disk, or a later one was saved already.</summary>
+    Saved,
+
+    /// <summary>The storage was full: the space TabStudio keeps aside for this was given up to save it.</summary>
+    SavedFromReserve,
+
+    /// <summary>It could not be written; the session saved before it is still there.</summary>
+    Failed,
+}
+
 /// <summary>
 /// Saves and restores the IDE session, so TabStudio reopens exactly where the user left it even after
 /// Android closed it in the background.
@@ -54,7 +67,9 @@ public sealed class SessionStore
     private readonly string _file;
     private readonly string _restoring;
     private readonly string _recovered;
+    private readonly string _reserve;
     private readonly Lock _gate = new();
+    private int _reserving;
     private long _sequence;
     private long _saved;
 
@@ -66,7 +81,17 @@ public sealed class SessionStore
         _file = paths.SessionFile;
         _restoring = paths.SessionFile + ".restoring";
         _recovered = Path.Combine(paths.State, "Recovered");
+        _reserve = Path.Combine(paths.State, "session.reserve");
     }
+
+    /// <summary>
+    /// How much space is kept aside, in a file of its own, for the session to be saved into when the storage fills up:
+    /// the session is where unsaved text lives until it is saved, and a full storage is exactly when files cannot be.
+    /// </summary>
+    internal int ReserveBytes { get; init; } = 8 * 1024 * 1024;
+
+    /// <summary>Opens the file a session is written to; replaced by tests to fill the storage.</summary>
+    internal Func<string, Stream> CreateFile { get; init; } = File.Create;
 
     /// <summary>Where unsaved text that has no file left to go back to is kept, one file per document.</summary>
     public string RecoveredFolder => _recovered;
@@ -248,7 +273,8 @@ public sealed class SessionStore
 
     /// <summary>Saves a session, replacing the previous one atomically.</summary>
     /// <param name="state">The session.</param>
-    public void Save(SessionState state) => Save(state, NextSequence());
+    /// <returns>Whether it was written, and whether the storage was full.</returns>
+    public SessionSaveResult Save(SessionState state) => Save(state, NextSequence());
 
     /// <summary>
     /// Saves a session taken as <paramref name="sequence"/>, unless a later one was saved already: a save written in
@@ -256,32 +282,139 @@ public sealed class SessionStore
     /// </summary>
     /// <param name="state">The session.</param>
     /// <param name="sequence">From <see cref="NextSequence"/>, taken when the state was.</param>
-    public void Save(SessionState state, long sequence)
+    /// <returns>Whether it was written, and whether the storage was full.</returns>
+    public SessionSaveResult Save(SessionState state, long sequence)
     {
         ArgumentNullException.ThrowIfNull(state);
+        SessionSaveResult result;
         lock (_gate)
         {
             if (sequence <= _saved)
             {
-                return;
+                return SessionSaveResult.Saved;
             }
 
             _saved = sequence;
+            var error = TryWrite(state);
+            if (error is null)
+            {
+                result = SessionSaveResult.Saved;
+            }
+            else if (StorageErrors.IsFull(error) && ReleaseReserve() && TryWrite(state) is null)
+            {
+                // The storage filled up: the newest unsaved text would have stayed only in memory, and gone with the
+                // app when Android ended it. The space kept aside for it holds it instead.
+                return SessionSaveResult.SavedFromReserve;
+            }
+            else
+            {
+                // The files themselves are saved separately; the previous session is still in place.
+                return SessionSaveResult.Failed;
+            }
+        }
+
+        EnsureReserveInBackground();
+        return result;
+    }
+
+    private Exception? TryWrite(SessionState state)
+    {
+        var temporary = _file + ".tmp";
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(_file)!);
+            using (var stream = CreateFile(temporary))
+            {
+                JsonSerializer.Serialize(stream, state, StateJsonContext.Default.SessionState);
+            }
+
+            File.Move(temporary, _file, overwrite: true);
+            return null;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
             try
             {
-                var temporary = _file + ".tmp";
-                using (var stream = File.Create(temporary))
+                // A half-written copy only takes space a full storage does not have.
+                File.Delete(temporary);
+            }
+            catch (Exception cleanup) when (cleanup is IOException or UnauthorizedAccessException)
+            {
+                // The save's own error is what counts.
+            }
+
+            return ex;
+        }
+    }
+
+    private bool ReleaseReserve()
+    {
+        try
+        {
+            if (!File.Exists(_reserve))
+            {
+                return false;
+            }
+
+            File.Delete(_reserve);
+            return true;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>Puts the space for a full storage aside again, once, when there is plenty to spare.</summary>
+    private void EnsureReserveInBackground()
+    {
+        if (ReserveBytes <= 0 || File.Exists(_reserve) || Interlocked.Exchange(ref _reserving, 1) == 1)
+        {
+            return;
+        }
+
+        _ = Task.Run(() =>
+        {
+            var temporary = _reserve + ".tmp";
+            try
+            {
+                // Never the last of a nearly full storage: that is what the reserve is for.
+                if (StorageErrors.AvailableBytes(_reserve) is { } free && free < 32L * ReserveBytes)
                 {
-                    JsonSerializer.Serialize(stream, state, StateJsonContext.Default.SessionState);
+                    return;
                 }
 
-                File.Move(temporary, _file, overwrite: true);
+                using (var stream = new FileStream(temporary, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    // Written, not only sized: a sparse file would hold no blocks to give back.
+                    var block = new byte[64 * 1024];
+                    for (var written = 0; written < ReserveBytes; written += block.Length)
+                    {
+                        stream.Write(block, 0, Math.Min(block.Length, ReserveBytes - written));
+                    }
+
+                    stream.Flush(flushToDisk: true);
+                }
+
+                File.Move(temporary, _reserve, overwrite: true);
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
-                // Saving the session is best effort; the files themselves are saved separately.
+                // Without a reserve a full storage fails the save, as it did before there was one.
+                try
+                {
+                    File.Delete(temporary);
+                }
+                catch (Exception cleanup) when (cleanup is IOException or UnauthorizedAccessException)
+                {
+                    // Nothing more to give back.
+                }
             }
-        }
+            finally
+            {
+                Volatile.Write(ref _reserving, 0);
+            }
+        });
     }
 
     /// <summary>Forgets the session, after the user closed the workspace on purpose.</summary>
