@@ -17,6 +17,7 @@ public sealed partial class WorkspaceViewModel
     private bool _navigatingHistory;
     private CancellationTokenSource? _sessionSave;
     private bool _sessionSavePending;
+    private SessionSaveResult _lastSessionSave;
 
     /// <summary>The open documents, in tab order.</summary>
     public ObservableCollection<DocumentViewModel> Documents { get; } = [];
@@ -140,7 +141,32 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
-        _sessions.Save(CaptureSession(workspace));
+        ReportSessionSave(_sessions.Save(CaptureSession(workspace)));
+    }
+
+    /// <summary>
+    /// Tells the user when the storage is full, once: the session holds the unsaved text while files cannot be saved,
+    /// and a session that cannot be written either means that text lives only in this run of the app.
+    /// </summary>
+    private void ReportSessionSave(SessionSaveResult result)
+    {
+        if (result == _lastSessionSave)
+        {
+            return;
+        }
+
+        _lastSessionSave = result;
+        switch (result)
+        {
+            case SessionSaveResult.SavedFromReserve:
+                Output.WriteLine("The storage is full. TabStudio used the space it keeps aside to save your unsaved changes in its session; free some space soon.", OutputKind.Failure);
+                StatusText = "Storage full: unsaved changes are kept for now. Free some space.";
+                break;
+            case SessionSaveResult.Failed:
+                Output.WriteLine("TabStudio could not keep a copy of your unsaved changes, because its storage cannot be written (it may be full). Free some space, or save your files, before closing TabStudio.", OutputKind.Failure);
+                StatusText = "Unsaved changes are not backed up: free some space and save.";
+                break;
+        }
     }
 
     private SessionState CaptureSession(Workspace workspace)
@@ -167,7 +193,17 @@ public sealed partial class WorkspaceViewModel
         var sequence = _sessions.NextSequence();
         var state = CaptureSession(workspace);
         var sessions = _sessions;
-        _ = Task.Run(() => sessions.Save(state, sequence));
+        _ = Task.Run(() =>
+        {
+            var result = sessions.Save(state, sequence);
+            _ui.Post(() =>
+            {
+                if (!_disposed)
+                {
+                    ReportSessionSave(result);
+                }
+            });
+        });
     }
 
     [RelayCommand]
@@ -311,6 +347,14 @@ public sealed partial class WorkspaceViewModel
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
+            if (StorageErrors.IsFull(ex))
+            {
+                // The session keeps the text while the storage is full (SessionStore's reserve), as the editor does.
+                SaveSessionNow();
+                StatusText = $"Could not save {document.FileName}: {StorageErrors.FullMessage}";
+                return false;
+            }
+
             StatusText = $"Could not save {document.FileName}: {ex.Message}";
             return false;
         }

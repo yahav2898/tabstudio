@@ -116,6 +116,22 @@ public sealed class OperationsService : Service
         StopSelf(_lastStartId);
     }
 
+    /// <summary>Stops the service when Android says its time for the day is used up.</summary>
+    /// <remarks>
+    /// Android 15 gives data-sync services six hours in every 24, counted across starts, and calls this when they are
+    /// used up. A service still in the foreground a few seconds later ends the app
+    /// (<c>ForegroundServiceDidNotStopInTimeException</c>), with every build and unsaved edit in it. Five and a half
+    /// hours of one start never reached the limit, but three hours in the morning and three in the evening did. The
+    /// operations go on for as long as Android lets TabStudio run without the service, as when its start is refused.
+    /// </remarks>
+    /// <param name="startId">The start the timeout is for.</param>
+    /// <param name="fgsType">The type of foreground service whose time is up.</param>
+    [System.Runtime.Versioning.SupportedOSPlatform("android35.0")]
+    public override void OnTimeout(int startId, ForegroundService fgsType)
+    {
+        Stop();
+    }
+
     /// <inheritdoc />
     public override void OnDestroy()
     {
