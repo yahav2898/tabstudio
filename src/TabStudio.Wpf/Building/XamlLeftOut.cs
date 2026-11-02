@@ -78,7 +78,49 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
                     var full = type.ContainingNamespace is { IsGlobalNamespace: false } ns ? ns.ToDisplayString() + "." + type.MetadataName : type.MetadataName;
                     if (catalog.IsMissingType(full) || IsWpfOnlyMember(full, name))
                     {
-                        LeaveOutElement(item.FilePath, document, setter, $"OpenSilver's {type.Name} has no {name}");
+                        LeaveOutElement(item.FilePath, document, setter, $"OpenSilver's {type.Name} has no {name}. It works when the project runs on your PC through the Windows Bridge");
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Leaves out the <c>{StaticResource Key}</c> references to a key no XAML file of the project defines, as ExpenseIt's
+    /// <c>CustomNavWindowStyle</c>: loading the window would stop there, in WPF too. A project that merges dictionaries
+    /// from elsewhere, such as a package's theme, may get the key from them, so its references are kept.
+    /// </summary>
+    public void LeaveOutUndefinedStaticResources()
+    {
+        var documents = items.Select(i => (Item: i, Document: Document(i.FilePath))).Where(d => d.Document is not null).ToList();
+        var keys = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var (_, document) in documents)
+        {
+            foreach (var element in document!.Elements)
+            {
+                if (element.Attribute(XamlNamespaces.Language, "Key")?.Value.Trim() is { Length: > 0 } key)
+                {
+                    keys.Add(key);
+                }
+
+                if (element.LocalName == "ResourceDictionary" && element.Attribute("Source")?.Value.Trim() is { Length: > 0 } source
+                    && (source.StartsWith("pack:", StringComparison.OrdinalIgnoreCase) || source.Contains("://", StringComparison.Ordinal)
+                        || (source.Contains(";component/", StringComparison.OrdinalIgnoreCase) && !documents.Any(d => source.EndsWith(";component/" + d.Item.RelativePath, StringComparison.OrdinalIgnoreCase)))))
+                {
+                    return;
+                }
+            }
+        }
+
+        foreach (var (item, document) in documents)
+        {
+            foreach (var element in document!.Elements.ToList())
+            {
+                foreach (var attribute in element.Attributes.Where(a => !a.IsNamespaceDeclaration).ToList())
+                {
+                    if (SimpleStaticResource().Match(attribute.RawValue) is { Success: true } reference && !keys.Contains(reference.Groups["key"].Value))
+                    {
+                        LeaveOutAttribute(item.FilePath, document, element, attribute, $"no XAML file of the project defines the resource {reference.Groups["key"].Value}, so loading it would stop here, in WPF too");
                     }
                 }
             }
@@ -131,7 +173,7 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
             else if (NestedResourceKey().IsMatch(error.Message))
             {
                 // OpenSilver has no resources keyed by a type or a system key, so WPF's are left out with what uses them.
-                progress |= LeaveOutNestedResourceKeys(file, document, "OpenSilver's resources are keyed by name, not by a markup extension such as {x:Type} or {x:Static}");
+                progress |= LeaveOutNestedResourceKeys(file, document, "OpenSilver's resources are keyed by name, not by a markup extension such as {x:Type} or {x:Static}. It works when the project runs on your PC through the Windows Bridge");
             }
             else if (error.Message.Contains("Style must declare a TargetType", StringComparison.Ordinal))
             {
@@ -139,7 +181,7 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
                 // whose setters all name one type that type; one it cannot is left out.
                 foreach (var style in document.Elements.Where(e => !e.IsPropertyElement && e.LocalName == "Style" && e.Attribute("TargetType") is null).ToList())
                 {
-                    progress |= LeaveOutElement(file, document, style, "OpenSilver needs a style's TargetType");
+                    progress |= LeaveOutElement(file, document, style, "OpenSilver needs a style's TargetType. It works when the project runs on your PC through the Windows Bridge");
                 }
             }
             else if (PropertyNotFound().Match(error.Message) is { Success: true } attached
@@ -358,8 +400,11 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
     {
         var text = message.StartsWith("Exception: ", StringComparison.Ordinal) ? message["Exception: ".Length..] : message;
         var stack = text.IndexOf(" at OpenSilver.", StringComparison.Ordinal);
-        return (stack > 0 ? text[..stack] : text).Trim();
+        return $"OpenSilver cannot compile it ({(stack > 0 ? text[..stack] : text).Trim().TrimEnd('.')}). It works when the project runs on your PC through the Windows Bridge";
     }
+
+    [GeneratedRegex(@"^\s*\{\s*StaticResource\s+(ResourceKey\s*=\s*)?(?<key>[\w.-]+)\s*\}\s*$", RegexOptions.CultureInvariant)]
+    private static partial Regex SimpleStaticResource();
 
     [GeneratedRegex(@"^\{\s*x:Type\s+(TypeName\s*=\s*)?(?<type>[\w:.]+)\s*\}$", RegexOptions.CultureInvariant)]
     private static partial Regex XTypeName();
@@ -445,7 +490,7 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
         _notes.Add(new BuildDiagnostic(
             WpfDiagnosticIds.LeftOut,
             DiagnosticSeverityLevel.Warning,
-            $"{what} is left out in the web preview: OpenSilver cannot compile it ({reason.TrimEnd('.')}). It works when the project runs on your PC through the Windows Bridge.",
+            $"{what} is left out in the web preview: {reason.TrimEnd('.')}.",
             location with { Start = start, Length = Math.Min(end - start, Math.Max(1, location.Length)) },
             projectName));
         return true;
