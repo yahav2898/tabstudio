@@ -67,6 +67,20 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
             {
                 progress |= LeaveOutMember(file, document, member.Groups["member"].Value, member.Groups["type"].Value, reason, location);
             }
+            else if (NestedResourceKey().IsMatch(error.Message))
+            {
+                // OpenSilver has no resources keyed by a type or a system key, so WPF's are left out with what uses them.
+                progress |= LeaveOutNestedResourceKeys(file, document, "OpenSilver's resources are keyed by name, not by a markup extension such as {x:Type} or {x:Static}");
+            }
+            else if (error.Message.Contains("Style must declare a TargetType", StringComparison.Ordinal))
+            {
+                // WPF applies a style without a target type to any element; OpenSilver needs one. The sanitizer gives a style
+                // whose setters all name one type that type; one it cannot is left out.
+                foreach (var style in document.Elements.Where(e => !e.IsPropertyElement && e.LocalName == "Style" && e.Attribute("TargetType") is null).ToList())
+                {
+                    progress |= LeaveOutElement(file, document, style, "OpenSilver needs a style's TargetType");
+                }
+            }
             else if (PropertyNotFound().Match(error.Message) is { Success: true } attached
                 && WpfOwners(attached.Groups["owner"].Value).FirstOrDefault(owner => IsWpfOnlyMember(owner, attached.Groups["member"].Value)) is { } ownerType)
             {
@@ -181,6 +195,24 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
         return any || LeaveOutAt(file, document, location, member, reason);
     }
 
+    /// <summary>
+    /// Every use of a resource whose key is a markup extension, as <c>{StaticResource {x:Type ListBoxItem}}</c> or
+    /// <c>{DynamicResource {x:Static SystemColors.WindowBrushKey}}</c>: OpenSilver's compiler takes only a name as the key.
+    /// </summary>
+    private bool LeaveOutNestedResourceKeys(string file, XamlDocument document, string reason)
+    {
+        var any = false;
+        foreach (var element in document.Elements.ToList())
+        {
+            foreach (var attribute in element.Attributes.Where(a => !a.IsNamespaceDeclaration && ResourceWithExtensionKey().IsMatch(a.RawValue)).ToList())
+            {
+                any |= LeaveOutAttribute(file, document, element, attribute, reason);
+            }
+        }
+
+        return any;
+    }
+
     /// <summary>What is at an error's line and column: the attribute, or the resource or element, it is in.</summary>
     private bool LeaveOutAt(string file, XamlDocument document, DiagnosticLocation location, string message, string reason)
     {
@@ -269,6 +301,12 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
 
     [GeneratedRegex(@"The property '(?<owner>\w+)\.(?<member>\w+)' does not exist", RegexOptions.CultureInvariant)]
     private static partial Regex PropertyNotFound();
+
+    [GeneratedRegex(@"""_placeHolderForDefaultValue"" not found in type ""System\.Windows\.Markup\.(Static|Dynamic)ResourceExtension""", RegexOptions.CultureInvariant)]
+    private static partial Regex NestedResourceKey();
+
+    [GeneratedRegex(@"\{\s*(Static|Dynamic)Resource\s+(ResourceKey\s*=\s*)?\{", RegexOptions.CultureInvariant)]
+    private static partial Regex ResourceWithExtensionKey();
 
     /// <summary>Whether an error message names an attribute, as in <c>'XPath'</c> or <c>XPath</c> on its own.</summary>
     private static bool Names(string message, string name) =>

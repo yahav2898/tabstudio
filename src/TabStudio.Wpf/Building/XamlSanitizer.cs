@@ -198,15 +198,16 @@ internal static class XamlSanitizer
                     continue;
                 }
 
+                // A property of the type itself, inherited or its own, as FrameworkElement.FontSize is Label's: not an attached one.
                 var name = value[(dot + 1)..];
-                if (types.FindAttachedMember(owner, name) is not null || types.FindMember(owner, name) is null)
+                owners.Add(value[..dot]);
+                if (types.FindMember(owner, name) is null)
                 {
                     continue;
                 }
 
                 var length = property.End - property.ValueStart;
                 rewrites.Add((property.ValueStart, name + text[property.ValueEnd] + new string(' ', length - name.Length - 1)));
-                owners.Add(value[..dot]);
             }
 
             if (owners.Count == 1 && style.Attribute("TargetType") is null)
