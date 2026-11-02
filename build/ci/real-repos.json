@@ -127,10 +127,10 @@
     { "name": "monolog", "job": "sweep-2", "url": "https://github.com/Seldaek/monolog", "sha": "3bed304b1905fed5c30d172872f4d890cbb03c6a", "toolchain": "php", "tests": 1250 },
     { "name": "PHPMailer", "job": "sweep-2", "url": "https://github.com/PHPMailer/PHPMailer", "sha": "c0b5268a626d6ddbe71333cc1c60c5ae37e44e0d", "toolchain": "php", "tests": 600 },
     { "name": "WordPress", "job": "sweep-2", "url": "https://github.com/WordPress/WordPress", "sha": "71cb962dbf0be359b95bf3373f3d2f37f9249e26", "toolchain": "php", "program": "php -S", "web": "/" },
-    { "name": "SmartEnum", "job": "sweep-1", "url": "https://github.com/ardalis/SmartEnum", "sha": "e06da550950b347f0ee47b1ec370a7416e79b030", "solution": "SmartEnum.sln", "maxErrors": 0, "tests": 100 },
+    { "name": "SmartEnum", "job": "sweep-1", "url": "https://github.com/ardalis/SmartEnum", "sha": "e06da550950b347f0ee47b1ec370a7416e79b030", "solution": "SmartEnum.sln", "maxErrors": 0, "tests": 420 },
     { "name": "Respawn", "job": "sweep-2", "url": "https://github.com/jbogard/Respawn", "sha": "f550203c2caaded99ede64d85ff07acc6bb7514d", "solution": "Respawn.sln", "maxErrors": 0 },
-    { "name": "ErrorOr", "job": "sweep-1", "url": "https://github.com/amantinband/error-or", "sha": "d7cdea2ddc764ffaffac0f73466f0dcb0b07d44c", "solution": "ErrorOr.slnx", "maxErrors": 0, "tests": 100 },
-    { "name": "itsdangerous", "job": "sweep-2", "url": "https://github.com/pallets/itsdangerous", "sha": "672971d66a2ef9f85151e53283113f33d642dabd", "toolchain": "python", "tests": 100 }
+    { "name": "ErrorOr", "job": "sweep-1", "url": "https://github.com/amantinband/error-or", "sha": "d7cdea2ddc764ffaffac0f73466f0dcb0b07d44c", "solution": "ErrorOr.slnx", "maxErrors": 0, "tests": 220 },
+    { "name": "itsdangerous", "job": "sweep-2", "url": "https://github.com/pallets/itsdangerous", "sha": "672971d66a2ef9f85151e53283113f33d642dabd", "toolchain": "python", "tests": 290 }
   ],
   "embeddedComment": "Public firmware repositories built by .github/workflows/embedded.yml through build/embedded/run-real-repos.py. A zero-error native CLI build is required; this does not imply a physical-board or Android USB test. SDK/source revisions are pinned; where upstream omits dependency locks the resulting lock is preserved as an artifact.",
   "embeddedRepositories": [

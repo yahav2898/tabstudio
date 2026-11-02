@@ -428,14 +428,21 @@ public sealed class GitChangesTests
     }
 
     [AvaloniaFact]
-    public async Task A_folder_Git_cloned_from_GitHub_is_linked_when_it_opens_instead_of_offering_to_publish_it()
+    public async Task A_folder_Git_cloned_from_GitHub_offers_to_link_it_instead_of_publishing_it_again()
     {
         using var fixture = new GitWorkspaceFixture();
         await fixture.OpenGitCloneOfSampleAsync();
         var git = fixture.Git;
-        await UiTestHelpers.WaitUntilAsync(() => git.IsLinked, because: "the clone to be linked");
+        Assert.True(git.IsLinkCheckoutVisible);
+        Assert.False(git.IsPublishVisible);
+        Assert.False(git.IsLinked);
+        Assert.Contains("a Git clone of tester/hello on main", git.LinkCheckoutText, StringComparison.Ordinal);
+        Assert.False(File.Exists(fixture.PathOf(".tabstudio/sync.json")));
+
+        await git.LinkCheckoutCommand.ExecuteAsync(null);
 
         Assert.Null(git.ErrorText);
+        Assert.True(git.IsLinked);
         Assert.False(git.IsPublishVisible);
         Assert.False(git.IsLinkCheckoutVisible);
         Assert.Equal("tester/hello", git.RepositoryName);

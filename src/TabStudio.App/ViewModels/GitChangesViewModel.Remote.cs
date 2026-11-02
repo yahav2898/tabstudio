@@ -72,8 +72,7 @@ public sealed partial class GitChangesViewModel
 
     /// <summary>
     /// Links the Git clone that holds the workspace to its GitHub repository, comparing its files with the commit it
-    /// holds instead of downloading it again. Runs by itself when the workspace opens; the button retries after a
-    /// failure, such as no connection or a private repository before signing in.
+    /// holds instead of downloading it again. A private repository's clone needs the owner's account signed in.
     /// </summary>
     [RelayCommand(CanExecute = nameof(CanLinkCheckout))]
     private async Task LinkCheckoutAsync()

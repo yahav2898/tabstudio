@@ -74,7 +74,8 @@ public sealed partial class GitChangesViewModel : ObservableObject, IGitChangeAc
 
     /// <summary>
     /// The Git clone of a GitHub repository that holds the workspace while it is not linked yet, such as a folder
-    /// cloned on a computer; <see langword="null"/> otherwise. It is linked when the workspace opens.
+    /// cloned on a computer; <see langword="null"/> otherwise. Link to GitHub links it, without downloading it again;
+    /// opening a folder never writes into it or asks GitHub by itself.
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsPublishVisible), nameof(IsLinkCheckoutVisible), nameof(LinkCheckoutText))]
@@ -86,7 +87,7 @@ public sealed partial class GitChangesViewModel : ObservableObject, IGitChangeAc
 
     /// <summary>What the "Link to GitHub" panel says about the clone.</summary>
     public string LinkCheckoutText => Checkout is { } checkout
-        ? $"This folder is a Git clone of {checkout.FullName}{(checkout.Branch is { } branch ? $" on {branch}" : string.Empty)}. Link it to see its changes, commit, pull and create branches from here; nothing is downloaded again."
+        ? $"This folder is a Git clone of {checkout.FullName}{(checkout.Branch is { } branch ? $" on {branch}" : string.Empty)}. Link it to see its changes, commit, pull and create branches from here. Nothing is downloaded again."
         : string.Empty;
 
     /// <summary>"owner/repository".</summary>
@@ -147,13 +148,6 @@ public sealed partial class GitChangesViewModel : ObservableObject, IGitChangeAc
         HasWorkspace = true;
         PublishName = DefaultRepositoryName(workspaceRoot);
         OpenLinkedFolder();
-        if (Checkout is not null)
-        {
-            // A folder Git cloned from GitHub works as one downloaded here, with no step to take.
-            await LinkCheckoutAsync();
-            return;
-        }
-
         await RefreshAsync();
     }
 
@@ -264,13 +258,7 @@ public sealed partial class GitChangesViewModel : ObservableObject, IGitChangeAc
 
         ErrorText = null;
         PublishCommand.NotifyCanExecuteChanged();
-        if (Checkout is not null && !IsLinked)
-        {
-            // A private repository's clone links once its owner signs in.
-            _ = LinkCheckoutAsync();
-            return;
-        }
-
+        LinkCheckoutCommand.NotifyCanExecuteChanged();
         _ = ReopenAsync();
     }
 
