@@ -16,9 +16,9 @@ Avalonia frame metrics: on.
 
 | Scroll | Frames | UI p50 ms | UI p95 ms | UI max ms | Frames < 8 ms | Layout p95 | Render p95 | Compositor p95 | KB/frame (1st → 2nd half) | GCs | Lines built/frame (mean / max) |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| drag, 15 dip per frame (900 dip/s at 60 Hz) | 300 | 0.65 | 3.17 | 17.67 | 99% | 0.51 | 2.75 | 4.86 | 93.5 → 100.6 | 2 | 0.7 / 1 |
-| 4 flings at 5000 dip/s | 436 | 0.82 | 3.48 | 19.76 | 99% | 1.33 | 2.80 | 5.06 | 129.7 → 130.2 | 3 | 1.4 / 4 |
-| 2 flings at 8000 dip/s | 308 | 0.98 | 3.76 | 18.05 | 99% | 1.73 | 2.86 | 5.50 | 176.9 → 162.8 | 3 | 2.2 / 28 |
+| drag, 15 dip per frame (900 dip/s at 60 Hz) | 300 | 0.76 | 3.34 | 18.78 | 99% | 0.53 | 2.84 | 4.79 | 93.5 → 100.7 | 2 | 0.7 / 1 |
+| 4 flings at 5000 dip/s | 436 | 0.94 | 3.49 | 17.33 | 99% | 0.96 | 2.83 | 5.04 | 129.8 → 130.2 | 4 | 1.4 / 4 |
+| 2 flings at 8000 dip/s | 308 | 1.08 | 3.90 | 19.34 | 99% | 1.82 | 2.85 | 5.78 | 176.9 → 162.9 | 3 | 2.2 / 28 |
 
 ## Without one part of the editor at a time
 
@@ -26,15 +26,15 @@ The same drag and two 5000 dip/s flings, with one part of the editor taken out.
 
 | Scroll | Frames | UI p50 ms | UI p95 ms | UI max ms | Frames < 8 ms | Layout p95 | Render p95 | Compositor p95 | KB/frame (1st → 2nd half) | GCs | Lines built/frame (mean / max) |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| everything | 368 | 0.92 | 4.80 | 20.03 | 99% | 1.78 | 3.02 | 5.38 | 115.2 → 116.2 | 4 | 1.1 / 4 |
-| without line numbers | 368 | 0.62 | 3.15 | 17.65 | 99% | 0.82 | 2.59 | 5.13 | 91.5 → 89.3 | 2 | 1.2 / 29 |
-| without the folding margin | 368 | 0.73 | 3.19 | 34.41 | 99% | 0.74 | 2.71 | 5.20 | 115.5 → 110.8 | 3 | 1.2 / 29 |
-| without the breakpoint margin | 368 | 0.80 | 3.40 | 21.14 | 99% | 0.76 | 2.78 | 5.33 | 117.4 → 113.3 | 2 | 1.2 / 29 |
-| without the Live Unit Testing margin | 368 | 0.80 | 3.59 | 18.17 | 99% | 1.30 | 2.78 | 5.27 | 120.2 → 116.2 | 4 | 1.2 / 29 |
-| without coloring | 368 | 0.75 | 4.87 | 104.37 | 99% | 1.51 | 2.82 | 4.96 | 80.7 → 78.4 | 2 | 1.2 / 29 |
-| without squiggles | 368 | 0.78 | 3.25 | 17.32 | 99% | 0.96 | 2.74 | 5.73 | 119.9 → 116.2 | 3 | 1.2 / 29 |
-| without the floating touch bar | 368 | 0.80 | 3.25 | 16.67 | 99% | 0.75 | 2.69 | 4.29 | 120.1 → 116.0 | 2 | 1.2 / 29 |
-| bare editor: no margins, coloring, squiggles or touch bar | 368 | 0.43 | 2.77 | 18.43 | 100% | 0.63 | 2.42 | 4.12 | 43.9 → 43.0 | 1 | 1.2 / 29 |
+| everything | 368 | 1.14 | 4.73 | 20.89 | 99% | 1.95 | 3.01 | 5.88 | 115.2 → 116.3 | 3 | 1.1 / 4 |
+| without line numbers | 368 | 0.76 | 3.39 | 14.90 | 99% | 0.90 | 2.69 | 5.46 | 91.6 → 89.3 | 3 | 1.2 / 29 |
+| without the folding margin | 368 | 0.90 | 3.47 | 20.60 | 99% | 0.81 | 2.91 | 5.37 | 115.5 → 110.8 | 2 | 1.2 / 29 |
+| without the breakpoint margin | 368 | 0.86 | 3.58 | 18.49 | 99% | 0.81 | 2.86 | 5.66 | 117.5 → 113.4 | 3 | 1.2 / 29 |
+| without the Live Unit Testing margin | 368 | 0.95 | 3.71 | 17.49 | 99% | 0.82 | 2.99 | 5.42 | 120.2 → 116.2 | 2 | 1.2 / 29 |
+| without coloring | 368 | 0.89 | 4.27 | 15.81 | 100% | 1.73 | 2.97 | 5.88 | 80.7 → 78.4 | 3 | 1.2 / 29 |
+| without squiggles | 368 | 0.95 | 3.67 | 18.67 | 99% | 0.88 | 2.95 | 5.72 | 120.0 → 116.2 | 3 | 1.2 / 29 |
+| without the floating touch bar | 368 | 0.85 | 3.44 | 21.11 | 99% | 0.80 | 2.87 | 4.63 | 120.1 → 116.0 | 3 | 1.2 / 29 |
+| bare editor: no margins, coloring, squiggles or touch bar | 368 | 0.50 | 2.91 | 11.95 | 100% | 0.53 | 2.49 | 4.27 | 43.9 → 43.1 | 1 | 1.2 / 29 |
 
 ## Where layout time goes
 
@@ -44,23 +44,23 @@ Style attachments per frame: 62.2
 
 | Activity and control | ms per frame |
 |---|---|
-| MeasuringLayoutable TextView | 0.312 |
-| AttachingStyle - | 0.021 |
-| ArrangingLayoutable TextView | 0.017 |
+| MeasuringLayoutable TextView | 0.343 |
+| ArrangingLayoutable RepeatButton | 0.098 |
+| AttachingStyle - | 0.020 |
+| ArrangingLayoutable TextView | 0.019 |
 | FindingResource - | 0.013 |
 | ArrangingLayoutable CachedLineNumberMargin | 0.011 |
-| ArrangingLayoutable LineDrawing | 0.010 |
-| ArrangingLayoutable ScrollingTextLayer | 0.008 |
-| ArrangingLayoutable Track | 0.007 |
-| ArrangingLayoutable NumberDrawing | 0.006 |
-| ArrangingLayoutable RepeatButton | 0.004 |
-| RaisingRoutedEvent ScrollBar | 0.003 |
-| MeasuringLayoutable Grid | 0.003 |
+| ArrangingLayoutable LineDrawing | 0.011 |
+| ArrangingLayoutable ScrollingTextLayer | 0.009 |
+| ArrangingLayoutable Track | 0.008 |
+| ArrangingLayoutable NumberDrawing | 0.007 |
+| RaisingRoutedEvent ScrollBar | 0.004 |
 | ArrangingLayoutable ScrollContentPresenter | 0.003 |
+| MeasuringLayoutable Grid | 0.003 |
 | MeasuringLayoutable CachedLineNumberMargin | 0.002 |
 | ArrangingLayoutable Border | 0.002 |
 | MeasuringLayoutable LineDrawing | 0.002 |
-| ArrangingLayoutable Thumb | 0.002 |
+| ArrangingLayoutable Thumb | 0.001 |
 | MeasuringLayoutable NumberDrawing | 0.001 |
 
 ## Before and after, in this run
@@ -69,6 +69,6 @@ The same drag and two 5000 dip/s flings with this editor, then with AvaloniaEdit
 
 | Scroll | Frames | UI p50 ms | UI p95 ms | UI max ms | Frames < 8 ms | Layout p95 | Render p95 | Compositor p95 | KB/frame (1st → 2nd half) | GCs | Lines built/frame (mean / max) |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| this editor | 368 | 0.89 | 3.58 | 37.79 | 99% | 0.86 | 2.95 | 5.32 | 116.4 → 117.5 | 3 | 1.1 / 4 |
-| AvaloniaEdit's own parts (before) | 368 | 4.16 | 8.06 | 33.03 | 95% | 1.68 | 5.89 | 10.14 | 605.6 → 630.9 | 14 | 3.5 / 30 |
+| this editor | 368 | 1.03 | 3.76 | 41.29 | 99% | 1.73 | 3.03 | 5.50 | 116.4 → 117.5 | 3 | 1.1 / 4 |
+| AvaloniaEdit's own parts (before) | 368 | 4.23 | 7.41 | 37.92 | 95% | 0.96 | 6.51 | 9.28 | 605.6 → 630.9 | 14 | 3.5 / 30 |
 
