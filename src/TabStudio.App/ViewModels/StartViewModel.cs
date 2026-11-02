@@ -320,6 +320,12 @@ public sealed partial class StartViewModel : ObservableObject, IDisposable
         ProgressText = "Detecting the stack";
         var preview = await WorkspaceInspector.InspectAsync(path, cancellationToken);
         Preview = new WorkspacePreviewViewModel(preview, source) { Notes = notes ?? [] };
+
+        // In Recent at once: dismissed before it was opened, a downloaded repository was in no list, and downloading it
+        // again made a second copy.
+        var projects = preview.Workspace.Projects.Count;
+        _recent.Add(new RecentWorkspace(Preview.Path, Preview.Name, projects switch { 0 => "Folder", 1 => "1 project", _ => $"{projects} projects" }, DateTimeOffset.Now));
+        RefreshRecent();
     }
 
     private async Task RunAsync(Func<CancellationToken, Task> work)
