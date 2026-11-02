@@ -1,0 +1,248 @@
+anyhow at bb1b0f9af0f645d5fdf1ac63a1fcbf3975ee452c
+Toolchain projects:
+  rust: /home/runner/work/_temp/real-repos/anyhow/Cargo.toml
+  rust: /home/runner/work/_temp/real-repos/anyhow/tests/crate/Cargo.toml
+Startup project: rust /home/runner/work/_temp/real-repos/anyhow/Cargo.toml
+Set up in 3.0 s
+Tests: 97 passed, 0 failed, 2 skipped of 99: 99 tests run in 15.1 sec: 97 passed, 0 failed, 2 skipped.
+Project setup:
+
+Output:
+========== Running anyhow's tests with Cargo ==========
+> sh -c 'report="$0"; { "$@"; echo $? > "$report.status"; } 2>&1 | tee "$report"; exit "$(cat "$report.status" 2> /dev/null || echo 1)"' /home/runner/work/_temp/real-repos/anyhow/.tabstudio/test-results/6b18186e22e0401e9dbfbe3d012db81e/cargo-test.txt cargo test --no-fail-fast
+info: syncing channel updates for stable-x86_64-unknown-linux-gnu
+info: latest update on 2026-10-15 for version 1.99.1 (58cf8f9c3 2026-10-13)
+info: downloading component rust-src
+    Updating crates.io index
+     Locking 39 packages to highest compatible versions
+   Compiling unicode-ident v1.0.27
+   Compiling serde_core v1.0.229
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling zmij v1.0.23
+   Compiling target-tuple v1.0.2
+   Compiling futures-sink v0.3.34
+   Compiling futures-core v0.3.34
+   Compiling winnow v1.0.4
+   Compiling serde_json v1.0.154
+   Compiling serde v1.0.229
+   Compiling toml_parser v1.1.5+spec-1.1.0
+   Compiling syn v3.0.9
+   Compiling memchr v2.8.3
+   Compiling rustversion v1.0.23
+   Compiling toml_datetime v1.1.2+spec-1.1.0
+   Compiling serde_spanned v1.1.2
+   Compiling toml_writer v1.1.3+spec-1.1.0
+   Compiling anyhow v1.0.104 (/home/runner/work/_temp/real-repos/anyhow)
+   Compiling pin-project-lite v0.2.17
+   Compiling thiserror v2.0.21
+   Compiling itoa v1.0.18
+   Compiling futures-task v0.3.34
+   Compiling futures-util v0.3.34
+   Compiling toml v1.1.8+spec-1.1.0
+   Compiling thiserror-impl v2.0.21
+   Compiling serde_derive v1.0.229
+   Compiling futures-channel v0.3.34
+   Compiling glob v0.3.4
+   Compiling dissimilar v1.0.11
+   Compiling futures-io v0.3.34
+   Compiling termcolor v1.4.1
+   Compiling futures v0.3.34
+   Compiling trybuild v1.0.122
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.01s
+     Running unittests src/lib.rs (target/debug/deps/anyhow-c7ebf76e862b0ddf)
+
+running 3 tests
+test fmt::tests::no_digits ... ok
+test fmt::tests::one_digit ... ok
+test fmt::tests::two_digits ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/compiletest.rs (target/debug/deps/compiletest-da35f29626d996fb)
+
+running 1 test
+test ui ... ignored, requires nightly
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_autotrait.rs (target/debug/deps/test_autotrait-b82c41bdb3a1a881)
+
+running 5 tests
+test test_ref_unwind_safe ... ok
+test test_send ... ok
+test test_sync ... ok
+test test_unpin ... ok
+test test_unwind_safe ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_backtrace.rs (target/debug/deps/test_backtrace-45d97ff489a8ab62)
+
+running 1 test
+test test_backtrace ... ignored, requires nightly
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_boxed.rs (target/debug/deps/test_boxed-dba5245a1d6eec09)
+
+running 3 tests
+test test_boxed_anyhow ... ok
+test test_boxed_str ... ok
+test test_boxed_thiserror ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_chain.rs (target/debug/deps/test_chain-7366097985dd67fc)
+
+running 5 tests
+test test_clone ... ok
+test test_default ... ok
+test test_iter ... ok
+test test_len ... ok
+test test_rev ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_context.rs (target/debug/deps/test_context-28e0930eeefe42bc)
+
+running 8 tests
+test test_downcast_high ... ok
+test test_downcast_low ... ok
+test test_downcast_mut ... ok
+test test_inference ... ok
+test test_downcast_mid ... ok
+test test_root_cause ... ok
+test test_unsuccessful_downcast ... ok
+test test_downcast_ref ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_convert.rs (target/debug/deps/test_convert-50c24ba985db840a)
+
+running 4 tests
+test test_convert ... ok
+test test_question_mark ... ok
+test test_convert_send_sync ... ok
+test test_convert_send ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_downcast.rs (target/debug/deps/test_downcast-521d78f869297a26)
+
+running 7 tests
+test test_downcast ... ok
+test test_downcast_mut ... ok
+test test_as_ref ... ok
+test test_downcast_ref ... ok
+test test_drop ... ok
+test test_large_alignment ... ok
+test test_unsuccessful_downcast ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_ensure.rs (target/debug/deps/test_ensure-6522e51b98261313)
+
+running 18 tests
+test test_as ... ok
+test test_atom ... ok
+test test_closure ... ok
+test test_loop ... ok
+test test_high_precedence_binary_operator ... ok
+test test_if ... ok
+test test_low_precedence_binary_operator ... ok
+test test_low_precedence_control_flow ... ok
+test test_match ... ok
+test test_raw_addr ... ok
+test test_macro ... ok
+test test_pat ... ok
+test test_recursion ... ok
+test test_too_long ... ok
+test test_trailer ... ok
+test test_unary ... ok
+test test_whitespace ... ok
+test test_path ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_ffi.rs (target/debug/deps/test_ffi-e30e3484ada578ac)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_fmt.rs (target/debug/deps/test_fmt-befb34f6852bd343)
+
+running 4 tests
+test test_altdebug ... ok
+test test_altdisplay ... ok
+test test_debug ... ok
+test test_display ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_macros.rs (target/debug/deps/test_macros-9046e7063404f21a)
+
+running 5 tests
+test test_brace_escape ... ok
+test test_ensure ... ok
+test test_ensure_nonbool ... ok
+test test_messages ... ok
+test test_temporaries ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_repr.rs (target/debug/deps/test_repr-42e2b1b6afcd7cec)
+
+running 4 tests
+test test_autotraits ... ok
+test test_drop ... ok
+test test_error_size ... ok
+test test_null_pointer_optimization ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_source.rs (target/debug/deps/test_source-ea89a9cc1da8a192)
+
+running 5 tests
+test test_anyhow_from_anyhow ... ok
+test test_fmt_source ... ok
+test test_literal_source ... ok
+test test_variable_source ... ok
+test test_io_source ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests anyhow
+
+running 26 tests
+test src/context.rs - context::Option<T> (line 70) ... ok
+test src/error.rs - error::Error::context (line 311) ... ok
+test src/error.rs - error::Error::chain (line 426) ... ok
+test src/error.rs - error::Error::downcast_ref (line 504) ... ok
+test src/error.rs - error::Error::from_boxed (line 94) ... ok
+test src/error.rs - error::Error::into_boxed_dyn_error (line 579) ... ok
+test src/error.rs - error::Error::reallocate_into_boxed_dyn_error_without_backtrace (line 621) ... ok
+test src/error.rs - error::Error::msg (line 50) ... ok
+test src/lib.rs - (line 181) ... ok
+test src/lib.rs - (line 151) ... ok
+test src/lib.rs - (line 169) ... ok
+test src/lib.rs - (line 22) ... ok
+test src/lib.rs - (line 54) ... ok
+test src/lib.rs - Chain (line 400) ... ok
+test src/lib.rs - (line 98) ... ok
+test src/lib.rs - Context (line 479) ... ok
+test src/lib.rs - Context (line 583) ... ok
+test src/lib.rs - Context (line 543) ... ok
+test src/lib.rs - Error (line 371) ... ok
+test src/lib.rs - Result (line 427) ... ok
+test src/lib.rs - Result (line 441) ... ok
+test src/macros.rs - macros::anyhow (line 188) ... ok
+test src/macros.rs - macros::bail (line 13) ... ok
+test src/macros.rs - macros::bail (line 31) ... ok
+test src/macros.rs - macros::ensure (line 143) ... ok
+test src/macros.rs - macros::ensure (line 154) ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.86s
+
+
