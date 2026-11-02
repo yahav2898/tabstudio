@@ -1,0 +1,187 @@
+attrs at c8bb9bfaa2843e7844b5bb13bed4370b51feec4f
+Toolchain projects:
+  python: /home/runner/work/_temp/real-repos/attrs/pyproject.toml
+Startup project: python /home/runner/work/_temp/real-repos/attrs/pyproject.toml
+Set up in 6.2 s
+Tests: 1405 passed, 2 failed, 6 skipped of 1601: 1413 tests run in 14.5 sec: 1405 passed, 2 failed, 6 skipped.
+Project setup:
+------ attrs: pip install -e . ------
+Reading which Python versions the 86 pinned packages have wheels for, from PyPI.
+> uv venv --seed --python 3.14 .venv
+Using CPython 3.14.10
+Creating virtual environment with seed packages at: .venv
+ + pip==26.2.2
+Activate with: .venv/bin/activate
+> /home/runner/work/_temp/real-repos/attrs/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/real-repos/attrs
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Installing backend dependencies: started
+  Installing backend dependencies: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: attrs
+  Building editable for attrs (pyproject.toml): started
+  Building editable for attrs (pyproject.toml): finished with status 'done'
+  Created wheel for attrs: filename=attrs-0.1.dev1-py3-none-any.whl size=5274 sha256=7a773228deb4daf9b1b0905abd175f6e4e933e582b3615ef8d2446f9e98e7f75
+  Stored in directory: /tmp/pip-ephem-wheel-cache-kir5laua/wheels/8c/a4/a6/fabab3501e91caa66cd2a9295554ca7b3a5c4514d004331716
+Successfully built attrs
+Installing collected packages: attrs
+Successfully installed attrs-0.1.dev1
+
+Output:
+------ Setting up attrs: pip install -e . ------
+Python 3.14 for attrs: pyproject.toml allows Python >=3.10; the newest Python the pinned packages install on from prebuilt wheels (alabaster 1.0.0, anyio 4.15.1, cachetools 7.2.0, …).
+> uv venv --seed --python 3.14 .venv
+> /home/runner/work/_temp/real-repos/attrs/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Installed 1 package into .venv with Python 3.14. The full log is in Output > Project Setup.
+========== pip install -e .: succeeded ==========
+========== Running attrs's tests with Pytest ==========
+> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''cloudpickle; platform_python_implementation == "CPython"'\'' '\''hypothesis'\'' '\''pympler'\'' '\''pytest>9'\'' '\''pytest-xdist[psutil]'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/attrs/.tabstudio/test-results/fe5e7912dd2d495e9c5443731a5689b5/pytest.xml
+Installing what the tests need
+============================= test session starts ==============================
+platform linux -- Python 3.14.10, pytest-9.2.0, pluggy-1.7.0
+rootdir: /home/runner/work/_temp/real-repos/attrs
+configfile: pyproject.toml
+testpaths: tests
+plugins: xdist-3.8.0, hypothesis-6.170.14
+collected 1413 items
+
+tests/test_3rd_party.py .                                                [  0%]
+tests/test_abc.py ....                                                   [  0%]
+tests/test_annotations.py .............................................. [  3%]
+....                                                                     [  3%]
+tests/test_cmp.py ...................................................... [  7%]
+........................                                                 [  9%]
+tests/test_compat.py ......                                              [  9%]
+tests/test_config.py ....                                                [ 10%]
+tests/test_converters.py ......................................          [ 12%]
+tests/test_dunders.py .................................................. [ 16%]
+.................................................                        [ 19%]
+tests/test_filters.py .................................                  [ 22%]
+tests/test_forward_references.py .                                       [ 22%]
+tests/test_funcs.py .................................................... [ 25%]
+.                                                                        [ 25%]
+tests/test_functional.py ............................................... [ 29%]
+........................................................................ [ 34%]
+........................................................................ [ 39%]
+........................................................................ [ 44%]
+........................................................................ [ 49%]
+........................................................................ [ 54%]
+....                                                                     [ 55%]
+tests/test_hooks.py ....................                                 [ 56%]
+tests/test_import.py ...                                                 [ 56%]
+tests/test_init_subclass.py ....                                         [ 56%]
+tests/test_make.py ..................................................... [ 60%]
+........................................................................ [ 65%]
+........................................................................ [ 70%]
+........................................................................ [ 76%]
+...........                                                              [ 76%]
+tests/test_next_gen.py ....................................              [ 79%]
+tests/test_packaging.py ....FF                                           [ 79%]
+tests/test_pattern_matching.py .....                                     [ 80%]
+tests/test_pyright.py sss                                                [ 80%]
+tests/test_setattr.py ............................x..................    [ 83%]
+tests/test_slots.py ..............s...................x................. [ 87%]
+..                                                                       [ 87%]
+tests/test_utils.py ..                                                   [ 87%]
+tests/test_validators.py ............................................... [ 90%]
+........................................................................ [ 96%]
+.................................................                        [ 99%]
+tests/test_version_info.py .......                                       [100%]
+
+=================================== FAILURES ===================================
+________________ TestLegacyMetadataHack.test_version_info[attr] ________________
+
+self = <tests.test_packaging.TestLegacyMetadataHack object at 0x7fd9e1504290>
+recwarn = WarningsRecorder(record=True)
+mod = <module 'attr' from '/home/runner/work/_temp/real-repos/attrs/src/attr/__init__.py'>
+
+    def test_version_info(self, recwarn, mod):
+        """
+        ___version_info__ is not deprecated, therefore doesn't raise a warning
+        and parses correctly.
+        """
+>       assert isinstance(mod.__version_info__, attr.VersionInfo)
+                          ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_packaging.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/attr/__init__.py:109: in __getattr__
+    return VersionInfo._from_version_string(meta["version"])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = <class 'attr._version_info.VersionInfo'>, s = '0.1.dev1'
+
+    @classmethod
+    def _from_version_string(cls, s):
+        """
+        Parse *s* and return a _VersionInfo.
+        """
+        v = s.split(".")
+        if len(v) == 3:
+            v.append("final")
+    
+        return cls(
+>           year=int(v[0]), minor=int(v[1]), micro=int(v[2]), releaselevel=v[3]
+                                                   ^^^^^^^^^
+        )
+E       ValueError: invalid literal for int() with base 10: 'dev1'
+
+src/attr/_version_info.py:48: ValueError
+_______________ TestLegacyMetadataHack.test_version_info[attrs] ________________
+
+self = <tests.test_packaging.TestLegacyMetadataHack object at 0x7fd9e14b9370>
+recwarn = WarningsRecorder(record=True)
+mod = <module 'attrs' from '/home/runner/work/_temp/real-repos/attrs/src/attrs/__init__.py'>
+
+    def test_version_info(self, recwarn, mod):
+        """
+        ___version_info__ is not deprecated, therefore doesn't raise a warning
+        and parses correctly.
+        """
+>       assert isinstance(mod.__version_info__, attr.VersionInfo)
+                          ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_packaging.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/attr/__init__.py:109: in __getattr__
+    return VersionInfo._from_version_string(meta["version"])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = <class 'attr._version_info.VersionInfo'>, s = '0.1.dev1'
+
+    @classmethod
+    def _from_version_string(cls, s):
+        """
+        Parse *s* and return a _VersionInfo.
+        """
+        v = s.split(".")
+        if len(v) == 3:
+            v.append("final")
+    
+        return cls(
+>           year=int(v[0]), minor=int(v[1]), micro=int(v[2]), releaselevel=v[3]
+                                                   ^^^^^^^^^
+        )
+E       ValueError: invalid literal for int() with base 10: 'dev1'
+
+src/attr/_version_info.py:48: ValueError
+- generated xml file: /home/runner/work/_temp/real-repos/attrs/.tabstudio/test-results/fe5e7912dd2d495e9c5443731a5689b5/pytest.xml -
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_pyright.py:35: Requires pyright.
+SKIPPED [1] tests/test_pyright.py:89: Requires pyright.
+SKIPPED [1] tests/test_pyright.py:117: Requires pyright.
+SKIPPED [1] tests/test_slots.py:517: slots without weakref_slot should only work on PyPy
+XFAIL tests/test_setattr.py::TestSetAttr::test_slotted_confused
+XFAIL tests/test_slots.py::test_slots_cached_property_infers_type - 3.14 does not infer the type anymore.
+FAILED tests/test_packaging.py::TestLegacyMetadataHack::test_version_info[attr] - ValueError: invalid literal for int() with base 10: 'dev1'
+FAILED tests/test_packaging.py::TestLegacyMetadataHack::test_version_info[attrs] - ValueError: invalid literal for int() with base 10: 'dev1'
+============ 2 failed, 1405 passed, 4 skipped, 2 xfailed in 10.45s =============
+
