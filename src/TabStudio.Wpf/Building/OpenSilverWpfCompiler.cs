@@ -85,7 +85,7 @@ public sealed class OpenSilverWpfCompiler(string? frameworkReferenceDirectory) :
         for (var round = 0; ; round++)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            (var inputs, sanitizing) = XamlSanitizer.Prepare(items, types, Path.Combine(output, "sanitized"), project.Name, leftOut);
+            (var inputs, sanitizing) = XamlSanitizer.Prepare(items, types, Path.Combine(output, "sanitized"), project.Name, leftOut, assemblyName);
             result = compiler.Compile(new XamlCompilerRequest
             {
                 ProjectFilePath = project.FilePath,

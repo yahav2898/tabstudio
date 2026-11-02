@@ -36,7 +36,8 @@ internal static partial class XamlSanitizer
         XamlTypeSystem types,
         string copyDirectory,
         string projectName,
-        XamlLeftOut? leftOut = null)
+        XamlLeftOut? leftOut = null,
+        string? assemblyName = null)
     {
         var inputs = new List<XamlCompilerInput>(items.Count);
         var diagnostics = new List<BuildDiagnostic>();
@@ -60,7 +61,13 @@ internal static partial class XamlSanitizer
             var (setters, insertions) = QualifiedSetters(document, types, text, spans);
             rewritten.AddRange(setters);
             DataGridRowHeaders(document, spans, removed, insertions);
-            if (removed.Count == 0 && rewritten.Count == 0 && spans.Count == 0)
+            if (assemblyName is not null)
+            {
+                RootRelativeDictionaries(document, spans, assemblyName, insertions);
+            }
+
+            rewritten.Sort((a, b) => a.Start.CompareTo(b.Start));
+            if (removed.Count == 0 && rewritten.Count == 0 && spans.Count == 0 && insertions.Count == 0)
             {
                 inputs.Add(new XamlCompilerInput(item));
                 continue;
@@ -227,6 +234,25 @@ internal static partial class XamlSanitizer
         }
 
         return (rewrites, insertions);
+    }
+
+    /// <summary>
+    /// A merged dictionary or a theme dictionary at a path from the project's root, as
+    /// <c>Source="/NavigationStyle.xaml"</c>: WPF reads it from the app's assembly, and OpenSilver from the assembly that
+    /// starts the app, which in the web preview is TabStudio's host. It becomes <c>/App;component/NavigationStyle.xaml</c>.
+    /// </summary>
+    private static void RootRelativeDictionaries(XamlDocument document, IReadOnlyList<(int Start, int End)> leftOut, string assemblyName, List<(int Start, string Insertion)> insertions)
+    {
+        foreach (var dictionary in document.Elements.Where(e => !e.IsPropertyElement && e.LocalName == "ResourceDictionary" && e.XmlNamespace == XamlNamespaces.Presentation))
+        {
+            if (dictionary.Attribute("Source") is { HasValue: true } source
+                && source.RawValue.StartsWith('/') && !source.RawValue.StartsWith("//", StringComparison.Ordinal)
+                && !source.RawValue.Contains(";component/", StringComparison.OrdinalIgnoreCase)
+                && !leftOut.Any(span => span.Start <= dictionary.Start && dictionary.Start < span.End))
+            {
+                insertions.Add((source.ValueStart + 1, assemblyName + ";component/"));
+            }
+        }
     }
 
     /// <summary>
