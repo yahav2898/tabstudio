@@ -53,9 +53,14 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
                 progress |= LeaveOutType(file, document, type.Groups["ns"].Value, type.Groups["name"].Value, reason, location);
             }
             else if (MemberNotFound().Match(error.Message) is { Success: true } member
-                && WpfApiCatalog.Shipped.FindMissingMember(member.Groups["type"].Value, member.Groups["member"].Value[(member.Groups["member"].Value.LastIndexOf('.') + 1)..]) is not null)
+                && IsWpfOnlyMember(member.Groups["type"].Value, member.Groups["member"].Value[(member.Groups["member"].Value.LastIndexOf('.') + 1)..]))
             {
                 progress |= LeaveOutMember(file, document, member.Groups["member"].Value, member.Groups["type"].Value, reason, location);
+            }
+            else if (PropertyNotFound().Match(error.Message) is { Success: true } attached
+                && WpfOwners(attached.Groups["owner"].Value).FirstOrDefault(owner => IsWpfOnlyMember(owner, attached.Groups["member"].Value)) is { } ownerType)
+            {
+                progress |= LeaveOutMember(file, document, attached.Groups["owner"].Value + "." + attached.Groups["member"].Value, ownerType, reason, location);
             }
         }
 
@@ -71,21 +76,50 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
             return catalog.MissingTypesNamed(name).Any();
         }
 
-        if (!xmlNamespace.StartsWith(XamlNamespaces.ClrNamespacePrefix, StringComparison.Ordinal))
+        // clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2, which the compiler names {Microsoft.Windows.Themes}.
+        var clr = ClrNamespace(xmlNamespace);
+        return clr.Length > 0 && (catalog.IsMissingType(clr + "." + name) || catalog.IsMissingNamespace(clr));
+    }
+
+    /// <summary>Whether a member of a WPF type is one OpenSilver's type lacks; an attached property counts by its field or accessor.</summary>
+    private static bool IsWpfOnlyMember(string type, string member)
+    {
+        var catalog = WpfApiCatalog.Shipped;
+        return catalog.FindMissingMember(type, member) is not null
+            || catalog.FindMissingMember(type, member + "Property") is not null
+            || catalog.FindMissingMember(type, "Get" + member) is not null;
+    }
+
+    /// <summary>The full names a WPF type an attribute names by its simple name can have.</summary>
+    private static IEnumerable<string> WpfOwners(string name) =>
+        new[]
         {
-            return false;
+            "System.Windows", "System.Windows.Automation", "System.Windows.Controls", "System.Windows.Controls.Primitives",
+            "System.Windows.Data", "System.Windows.Documents", "System.Windows.Input", "System.Windows.Media",
+            "System.Windows.Navigation", "System.Windows.Shapes",
+        }.Select(ns => ns + "." + name);
+
+    /// <summary>The CLR namespace of an XML namespace: of <c>clr-namespace:X;assembly=Y</c> and <c>using:X</c>, or itself when it is one.</summary>
+    private static string ClrNamespace(string xmlNamespace)
+    {
+        foreach (var prefix in new[] { XamlNamespaces.ClrNamespacePrefix, XamlNamespaces.UsingPrefix })
+        {
+            if (xmlNamespace.StartsWith(prefix, StringComparison.Ordinal))
+            {
+                return xmlNamespace[prefix.Length..].Split(';')[0].Trim();
+            }
         }
 
-        // clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2
-        var clr = xmlNamespace[XamlNamespaces.ClrNamespacePrefix.Length..].Split(';')[0].Trim();
-        return catalog.IsMissingType(clr + "." + name) || catalog.IsMissingNamespace(clr);
+        return xmlNamespace.Contains(':', StringComparison.Ordinal) || xmlNamespace.Contains('/', StringComparison.Ordinal) ? string.Empty : xmlNamespace;
     }
 
     /// <summary>Every element of a type the compiler did not find, or every attribute whose markup extension names it.</summary>
     private bool LeaveOutType(string file, XamlDocument document, string xmlNamespace, string name, string reason, DiagnosticLocation location)
     {
         var any = false;
-        foreach (var element in document.Elements.Where(e => !e.IsPropertyElement && e.LocalName == name && e.XmlNamespace == xmlNamespace).ToList())
+        var clr = ClrNamespace(xmlNamespace);
+        foreach (var element in document.Elements.Where(e => !e.IsPropertyElement && e.LocalName == name
+            && (e.XmlNamespace == xmlNamespace || (clr.Length > 0 && ClrNamespace(e.XmlNamespace) == clr))).ToList())
         {
             any |= LeaveOutElement(file, document, element, reason);
         }
@@ -228,6 +262,9 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
 
     [GeneratedRegex(@"Member\s+""(?<member>[\w.]+)""\s+not found in type\s+""(?<type>[\w.`+]+)""", RegexOptions.CultureInvariant)]
     private static partial Regex MemberNotFound();
+
+    [GeneratedRegex(@"The property '(?<owner>\w+)\.(?<member>\w+)' does not exist", RegexOptions.CultureInvariant)]
+    private static partial Regex PropertyNotFound();
 
     /// <summary>Whether an error message names an attribute, as in <c>'XPath'</c> or <c>XPath</c> on its own.</summary>
     private static bool Names(string message, string name) =>

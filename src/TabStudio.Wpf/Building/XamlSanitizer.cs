@@ -55,8 +55,10 @@ internal static class XamlSanitizer
 
             var document = XamlDocument.Parse(text);
             var removed = document.Root is { } root ? Removals(item, root, types, document, diagnostics, projectName) : [];
-            var rewritten = document.Root is { } top ? TextContentRewrites(top, types, text) : [];
             var spans = leftOut?.SpansOf(item.FilePath) ?? [];
+            var rewritten = document.Root is { } top ? TextContentRewrites(top, types, text) : [];
+            var (setters, insertions) = QualifiedSetters(document, types, text, spans);
+            rewritten.AddRange(setters);
             if (removed.Count == 0 && rewritten.Count == 0 && spans.Count == 0)
             {
                 inputs.Add(new XamlCompilerInput(item));
@@ -91,9 +93,16 @@ internal static class XamlSanitizer
                 }
             }
 
+            // Text added to a start tag moves only what follows it on its line, so it goes in last, from the end.
+            var sanitized = new string(chars);
+            foreach (var (start, insertion) in insertions.OrderByDescending(i => i.Start))
+            {
+                sanitized = sanitized.Insert(start, insertion);
+            }
+
             var copy = Path.Combine(copyDirectory, item.RelativePath.Replace('/', Path.DirectorySeparatorChar));
             Directory.CreateDirectory(Path.GetDirectoryName(copy)!);
-            File.WriteAllText(copy, new string(chars));
+            File.WriteAllText(copy, sanitized);
             inputs.Add(new XamlCompilerInput(item, copy));
         }
 
@@ -156,6 +165,57 @@ internal static class XamlSanitizer
         }
 
         return rewrites;
+    }
+
+    /// <summary>
+    /// A style's setters that name their property through a type, as <c>Property="Label.FontSize"</c> in a style without
+    /// a <c>TargetType</c>: WPF looks the property up on that type, where OpenSilver's compiler looks for an attached
+    /// property. Each becomes <c>Property="FontSize"</c>, in as many characters, and a style without a target type gets
+    /// that type as its <c>TargetType</c>, added to its start tag.
+    /// </summary>
+    private static (List<(int Start, string Replacement)> Rewrites, List<(int Start, string Insertion)> Insertions) QualifiedSetters(
+        XamlDocument document, XamlTypeSystem types, string text, IReadOnlyList<(int Start, int End)> leftOut)
+    {
+        var rewrites = new List<(int Start, string Replacement)>();
+        var insertions = new List<(int Start, string Insertion)>();
+        foreach (var style in document.Elements.Where(e => !e.IsPropertyElement && e.LocalName == "Style" && e.XmlNamespace == XamlNamespaces.Presentation))
+        {
+            if (leftOut.Any(span => span.Start <= style.Start && style.Start < span.End))
+            {
+                continue;
+            }
+
+            var owners = new HashSet<string>(StringComparer.Ordinal);
+            var setters = style.Children.Where(c => c.LocalName == "Setter")
+                .Concat(style.Children.Where(c => c.LocalName == "Style.Setters").SelectMany(c => c.Children.Where(s => s.LocalName == "Setter")));
+            foreach (var setter in setters)
+            {
+                if (setter.Attribute("Property") is not { HasValue: true, IsValueClosed: true } property
+                    || leftOut.Any(span => span.Start <= setter.Start && setter.Start < span.End)
+                    || property.RawValue.Trim() is not { } value || value.StartsWith('(') || value.IndexOf('.', StringComparison.Ordinal) is var dot && dot <= 0
+                    || types.FindType(XamlNamespaces.Presentation, value[..dot]) is not { } owner)
+                {
+                    continue;
+                }
+
+                var name = value[(dot + 1)..];
+                if (types.FindAttachedMember(owner, name) is not null || types.FindMember(owner, name) is null)
+                {
+                    continue;
+                }
+
+                var length = property.End - property.ValueStart;
+                rewrites.Add((property.ValueStart, name + text[property.ValueEnd] + new string(' ', length - name.Length - 1)));
+                owners.Add(value[..dot]);
+            }
+
+            if (owners.Count == 1 && style.Attribute("TargetType") is null)
+            {
+                insertions.Add((style.NameEnd, $" TargetType=\"{owners.Single()}\""));
+            }
+        }
+
+        return (rewrites, insertions);
     }
 
     private static List<XamlAttributeNode> Removals(XamlItem item, XamlElement root, XamlTypeSystem types, XamlDocument document, List<BuildDiagnostic> diagnostics, string projectName)
