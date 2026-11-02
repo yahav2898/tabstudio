@@ -23,7 +23,7 @@ namespace TabStudio.Wpf.Building;
 /// Only what the restored OpenSilver lacks is left out, so a release that adds it gets it. What its compiler then still
 /// cannot compile is left out too, as <see cref="XamlLeftOut"/> finds it.
 /// </remarks>
-internal static class XamlSanitizer
+internal static partial class XamlSanitizer
 {
     /// <summary>The XAML of a project as OpenSilver's compiler gets it.</summary>
     /// <param name="items">The project's XAML files.</param>
@@ -178,11 +178,20 @@ internal static class XamlSanitizer
     {
         var rewrites = new List<(int Start, string Replacement)>();
         var insertions = new List<(int Start, string Insertion)>();
-        foreach (var style in document.Elements.Where(e => !e.IsPropertyElement && e.LocalName == "Style" && e.XmlNamespace == XamlNamespaces.Presentation))
+        foreach (var style in document.Elements.Where(e => !e.IsPropertyElement && e.LocalName is "Style" or "ControlTemplate" && e.XmlNamespace == XamlNamespaces.Presentation))
         {
             if (leftOut.Any(span => span.Start <= style.Start && style.Start < span.End))
             {
                 continue;
+            }
+
+            // TargetType="{x:Type Label}" becomes TargetType="Label": OpenSilver's compiler reads a style's setters from the
+            // attribute's text, which it no longer has once it turned the markup extension into an element.
+            if (style.Attribute("TargetType") is { HasValue: true, IsValueClosed: true } targetType && XTypeArgument().Match(targetType.RawValue) is { Success: true } typeName)
+            {
+                var length = targetType.End - targetType.ValueStart;
+                var name = typeName.Groups["type"].Value;
+                rewrites.Add((targetType.ValueStart, name + text[targetType.ValueEnd] + new string(' ', length - name.Length - 1)));
             }
 
             var owners = new HashSet<string>(StringComparer.Ordinal);
@@ -218,6 +227,9 @@ internal static class XamlSanitizer
 
         return (rewrites, insertions);
     }
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"^\s*\{\s*x:Type\s+(TypeName\s*=\s*)?(?<type>[\w:.]+)\s*\}\s*$", System.Text.RegularExpressions.RegexOptions.CultureInvariant)]
+    private static partial System.Text.RegularExpressions.Regex XTypeArgument();
 
     private static List<XamlAttributeNode> Removals(XamlItem item, XamlElement root, XamlTypeSystem types, XamlDocument document, List<BuildDiagnostic> diagnostics, string projectName)
     {
