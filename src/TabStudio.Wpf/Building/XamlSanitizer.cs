@@ -59,6 +59,7 @@ internal static partial class XamlSanitizer
             var rewritten = document.Root is { } top ? TextContentRewrites(top, types, text) : [];
             var (setters, insertions) = QualifiedSetters(document, types, text, spans);
             rewritten.AddRange(setters);
+            DataGridRowHeaders(document, spans, removed, insertions);
             if (removed.Count == 0 && rewritten.Count == 0 && spans.Count == 0)
             {
                 inputs.Add(new XamlCompilerInput(item));
@@ -226,6 +227,31 @@ internal static partial class XamlSanitizer
         }
 
         return (rewrites, insertions);
+    }
+
+    /// <summary>
+    /// A DataGrid whose <c>RowHeaderWidth</c> is under 4, as WPF's <c>RowHeaderWidth="0"</c> that hides the row headers:
+    /// OpenSilver's DataGrid throws for it, so the attribute is left out and the headers are hidden with
+    /// <c>HeadersVisibility="Column"</c>, as WPF shows it.
+    /// </summary>
+    private static void DataGridRowHeaders(XamlDocument document, IReadOnlyList<(int Start, int End)> leftOut, List<XamlAttributeNode> removed, List<(int Start, string Insertion)> insertions)
+    {
+        foreach (var grid in document.Elements.Where(e => !e.IsPropertyElement && e.LocalName == "DataGrid" && e.XmlNamespace == XamlNamespaces.Presentation))
+        {
+            if (leftOut.Any(span => span.Start <= grid.Start && grid.Start < span.End)
+                || grid.Attribute("RowHeaderWidth") is not { } width
+                || !double.TryParse(width.Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var value)
+                || value >= 4)
+            {
+                continue;
+            }
+
+            removed.Add(width);
+            if (grid.Attribute("HeadersVisibility") is null)
+            {
+                insertions.Add((grid.NameEnd, " HeadersVisibility=\"Column\""));
+            }
+        }
     }
 
     [System.Text.RegularExpressions.GeneratedRegex(@"^\s*\{\s*x:Type\s+(TypeName\s*=\s*)?(?<type>[\w:.]+)\s*\}\s*$", System.Text.RegularExpressions.RegexOptions.CultureInvariant)]

@@ -67,6 +67,13 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
             {
                 progress |= LeaveOutMember(file, document, member.Groups["member"].Value, member.Groups["type"].Value, reason, location);
             }
+            else if (AccessorNotFound().Match(error.Message) is { Success: true } accessor
+                && IsWpfOnlyMember(accessor.Groups["type"].Value, accessor.Groups["member"].Value))
+            {
+                // An attached property OpenSilver's type lacks, as ScrollViewer.PanningMode, whose GetPanningMode the compiler looked for.
+                var accessorType = accessor.Groups["type"].Value;
+                progress |= LeaveOutMember(file, document, accessorType[(accessorType.LastIndexOf('.') + 1)..] + "." + accessor.Groups["member"].Value, accessorType, reason, location);
+            }
             else if (NestedResourceKey().IsMatch(error.Message))
             {
                 // OpenSilver has no resources keyed by a type or a system key, so WPF's are left out with what uses them.
@@ -298,6 +305,9 @@ internal sealed partial class XamlLeftOut(IReadOnlyList<XamlItem> items, string 
 
     [GeneratedRegex(@"Member\s+""(?<member>[\w.]+)""\s+not found in type\s+""(?<type>[\w.`+]+)""", RegexOptions.CultureInvariant)]
     private static partial Regex MemberNotFound();
+
+    [GeneratedRegex(@"Method\s+""(Get|Set)(?<member>\w+)""\s+not found in type\s+""(?<type>[\w.`+]+)""", RegexOptions.CultureInvariant)]
+    private static partial Regex AccessorNotFound();
 
     [GeneratedRegex(@"The property '(?<owner>\w+)\.(?<member>\w+)' does not exist", RegexOptions.CultureInvariant)]
     private static partial Regex PropertyNotFound();
