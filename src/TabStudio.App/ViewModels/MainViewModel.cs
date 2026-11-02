@@ -73,7 +73,36 @@ public sealed partial class MainViewModel : ObservableObject
     public WorkspaceViewModel? Workspace => CurrentPage as WorkspaceViewModel;
 
     /// <summary>Starts warming up Roslyn and reopens the last session, if there is one.</summary>
-    public async Task StartAsync()
+    /// <param name="lastExit">How the last run ended, when it ended by itself: said once the IDE is up.</param>
+    public async Task StartAsync(UnexpectedExit? lastExit = null)
+    {
+        try
+        {
+            await StartCoreAsync();
+        }
+        finally
+        {
+            // A crash is never a silent exit: the next start says it happened, in the restored workspace or on the start
+            // screen, and where its report is.
+            if (lastExit is not null)
+            {
+                if (Workspace is { } workspace)
+                {
+                    workspace.ShowUnexpectedError(lastExit.Message, "TabStudio closed unexpectedly last time; your work was restored.");
+                }
+                else if (string.IsNullOrEmpty(Start.ErrorText))
+                {
+                    Start.ShowError(lastExit.Message);
+                }
+                else
+                {
+                    Start.ShowError(lastExit.Message + " " + Start.ErrorText);
+                }
+            }
+        }
+    }
+
+    private async Task StartCoreAsync()
     {
         _ = _compiler.WarmUpAsync();
 
