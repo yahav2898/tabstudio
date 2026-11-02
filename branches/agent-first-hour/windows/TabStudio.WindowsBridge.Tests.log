@@ -1,14 +1,14 @@
   Determining projects to restore...
-  Restored D:\a\tabstudio\tabstudio\tests\TabStudio.Testing\TabStudio.Testing.csproj (in 374 ms).
-  Restored D:\a\tabstudio\tabstudio\tests\TabStudio.WindowsBridge.Tests\TabStudio.WindowsBridge.Tests.csproj (in 382 ms).
+  Restored D:\a\tabstudio\tabstudio\tests\TabStudio.Testing\TabStudio.Testing.csproj (in 458 ms).
+  Restored D:\a\tabstudio\tabstudio\tests\TabStudio.WindowsBridge.Tests\TabStudio.WindowsBridge.Tests.csproj (in 604 ms).
   9 of 11 projects are up-to-date for restore.
   TabStudio.LanguageServers -> D:\a\tabstudio\tabstudio\src\TabStudio.LanguageServers\bin\Release\net10.0\TabStudio.LanguageServers.dll
-  TabStudio.Core -> D:\a\tabstudio\tabstudio\src\TabStudio.Core\bin\Release\net10.0\TabStudio.Core.dll
   TabStudio.Testing -> D:\a\tabstudio\tabstudio\tests\TabStudio.Testing\bin\Release\net10.0\TabStudio.Testing.dll
+  TabStudio.Core -> D:\a\tabstudio\tabstudio\src\TabStudio.Core\bin\Release\net10.0\TabStudio.Core.dll
   TabStudio.Compilation -> D:\a\tabstudio\tabstudio\src\TabStudio.Compilation\bin\Release\net10.0\TabStudio.Compilation.dll
-  TabStudio.TestRunner -> D:\a\tabstudio\tabstudio\src\TabStudio.TestRunner\bin\Release\net10.0\TabStudio.TestRunner.dll
   TabStudio.Toolchains -> D:\a\tabstudio\tabstudio\src\TabStudio.Toolchains\bin\Release\net10.0\TabStudio.Toolchains.dll
   TabStudio.Debugging -> D:\a\tabstudio\tabstudio\src\TabStudio.Debugging\bin\Release\net10.0\TabStudio.Debugging.dll
+  TabStudio.TestRunner -> D:\a\tabstudio\tabstudio\src\TabStudio.TestRunner\bin\Release\net10.0\TabStudio.TestRunner.dll
   TabStudio.LiveTesting -> D:\a\tabstudio\tabstudio\src\TabStudio.LiveTesting\bin\Release\net10.0\TabStudio.LiveTesting.dll
   TabStudio.Link -> D:\a\tabstudio\tabstudio\src\TabStudio.Link\bin\Release\net10.0\TabStudio.Link.dll
   TabStudio.WindowsBridge -> D:\a\tabstudio\tabstudio\src\TabStudio.WindowsBridge\bin\Release\net10.0\TabStudio.WindowsBridge.dll
@@ -16,53 +16,51 @@
 Test run for D:\a\tabstudio\tabstudio\tests\TabStudio.WindowsBridge.Tests\bin\Release\net10.0\TabStudio.WindowsBridge.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.12]   Discovering: TabStudio.WindowsBridge.Tests
-[xUnit.net 00:00:00.20]   Discovered:  TabStudio.WindowsBridge.Tests
-[xUnit.net 00:00:00.25]   Starting:    TabStudio.WindowsBridge.Tests
-  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Errors_are_read_with_their_file_position_code_and_text(line: "/home/m/App/Program.cs(3,1): error CS0103: The nam"···, origin: "/home/m/App/Program.cs", lineNumber: 3, column: 1, code: "CS0103", text: "The name 'x' does not exist in the current context") [21 ms]
+[xUnit.net 00:00:00.17]   Discovering: TabStudio.WindowsBridge.Tests
+[xUnit.net 00:00:00.27]   Discovered:  TabStudio.WindowsBridge.Tests
+[xUnit.net 00:00:00.33]   Starting:    TabStudio.WindowsBridge.Tests
+  Passed TabStudio.WindowsBridge.Tests.DebugTunnelTests.A_stream_without_lengths_is_refused [13 ms]
+  Passed TabStudio.WindowsBridge.Tests.DebugTunnelTests.Breakpoints_and_the_program_get_the_mirrors_paths [29 ms]
+  Passed TabStudio.WindowsBridge.Tests.DebugTunnelTests.Messages_that_are_not_json_pass_through [2 ms]
+  Passed TabStudio.WindowsBridge.Tests.DebugTunnelTests.Stack_frames_and_output_get_the_tablets_paths [4 ms]
+  Passed TabStudio.WindowsBridge.Tests.DebugTunnelTests.Messages_are_cut_from_a_stream_that_arrives_in_pieces [17 ms]
+  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Errors_are_read_with_their_file_position_code_and_text(line: "/home/m/App/Program.cs(3,1): error CS0103: The nam"···, origin: "/home/m/App/Program.cs", lineNumber: 3, column: 1, code: "CS0103", text: "The name 'x' does not exist in the current context") [15 ms]
   Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Errors_are_read_with_their_file_position_code_and_text(line: "LINK : fatal error LNK1104: cannot open file 'kern"···, origin: "LINK", lineNumber: 0, column: 0, code: "LNK1104", text: "cannot open file 'kernel32.lib'") [1 ms]
-  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Errors_are_read_with_their_file_position_code_and_text(line: "MSBUILD : error MSB1009: Project file does not exi"···, origin: "MSBUILD", lineNumber: 0, column: 0, code: "MSB1009", text: "Project file does not exist.") [< 1 ms]
-  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Errors_are_read_with_their_file_position_code_and_text(line: "C:\\m\\App\\MainWindow.xaml.cs(12,17): error CS100"···, origin: "C:\\m\\App\\MainWindow.xaml.cs", lineNumber: 12, column: 17, code: "CS1002", text: "; expected") [< 1 ms]
-  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Errors_are_read_with_their_file_position_code_and_text(line: "C:\\m\\App\\MainWindow.xaml(10,9): error MC3072: T"···, origin: "C:\\m\\App\\MainWindow.xaml", lineNumber: 10, column: 9, code: "MC3072", text: "The property 'Fill' does not exist in XML namespac"···) [< 1 ms]
-  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Errors_are_read_with_their_file_position_code_and_text(line: "C:\\m\\Cpp\\main.cpp(7,5): error C2065: 'count': u"···, origin: "C:\\m\\Cpp\\main.cpp", lineNumber: 7, column: 5, code: "C2065", text: "'count': undeclared identifier") [< 1 ms]
-  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Paths_in_output_lines_become_the_tablets [3 ms]
+  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Errors_are_read_with_their_file_position_code_and_text(line: "MSBUILD : error MSB1009: Project file does not exi"···, origin: "MSBUILD", lineNumber: 0, column: 0, code: "MSB1009", text: "Project file does not exist.") [1 ms]
+  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Errors_are_read_with_their_file_position_code_and_text(line: "C:\\m\\App\\MainWindow.xaml.cs(12,17): error CS100"···, origin: "C:\\m\\App\\MainWindow.xaml.cs", lineNumber: 12, column: 17, code: "CS1002", text: "; expected") [1 ms]
+  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Errors_are_read_with_their_file_position_code_and_text(line: "C:\\m\\App\\MainWindow.xaml(10,9): error MC3072: T"···, origin: "C:\\m\\App\\MainWindow.xaml", lineNumber: 10, column: 9, code: "MC3072", text: "The property 'Fill' does not exist in XML namespac"···) [1 ms]
+  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Errors_are_read_with_their_file_position_code_and_text(line: "C:\\m\\Cpp\\main.cpp(7,5): error C2065: 'count': u"···, origin: "C:\\m\\Cpp\\main.cpp", lineNumber: 7, column: 5, code: "C2065", text: "'count': undeclared identifier") [1 ms]
+  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Paths_in_output_lines_become_the_tablets [2 ms]
   Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Relative_paths_are_the_projects_and_errors_without_a_file_keep_their_tool [5 ms]
-  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Paths_go_both_ways [3 ms]
-  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Warnings_are_warnings_and_name_their_project [1 ms]
-  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.A_diagnostic_lands_on_the_tablets_file_at_its_position [7 ms]
-  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Other_lines_are_not_errors(line: "Restore complete (0.4s)") [< 1 ms]
+  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Paths_go_both_ways [1 ms]
+  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Warnings_are_warnings_and_name_their_project [4 ms]
+  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.A_diagnostic_lands_on_the_tablets_file_at_its_position [6 ms]
+  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Other_lines_are_not_errors(line: "Restore complete (0.4s)") [1 ms]
   Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Other_lines_are_not_errors(line: "    0 Warning(s)") [1 ms]
-  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Other_lines_are_not_errors(line: "    1 Error(s)") [< 1 ms]
+  Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Other_lines_are_not_errors(line: "    1 Error(s)") [1 ms]
   Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Other_lines_are_not_errors(line: "  HelloWpf -> C:\\m\\App\\bin\\Debug\\net10.0-wind"···) [< 1 ms]
   Passed TabStudio.WindowsBridge.Tests.BuildOutputTests.Other_lines_are_not_errors(line: "Build succeeded.") [< 1 ms]
+  Passed TabStudio.WindowsBridge.Tests.MplabTests.Ipe_programs_and_verifies_the_explicit_tool_without_changing_target_power [4 ms]
   Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.A_decoder_refuses_an_update_before_its_keyframe [2 ms]
-  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.The_roughest_level_sends_half_the_resolution [19 ms]
+  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.The_roughest_level_sends_half_the_resolution [23 ms]
   Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.Rough_levels_stay_close_to_the_picture(level: 1, tolerance: 4) [1 ms]
   Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.Rough_levels_stay_close_to_the_picture(level: 3, tolerance: 16) [1 ms]
-  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.Rough_levels_stay_close_to_the_picture(level: 2, tolerance: 8) [< 1 ms]
-  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.Only_the_tiles_that_changed_are_found [17 ms]
-  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.A_keyframe_arrives_exactly [6 ms]
-  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.A_reset_starts_the_stream_over_with_a_keyframe [< 1 ms]
-  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.Nothing_is_sent_when_nothing_changed [< 1 ms]
+  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.Rough_levels_stay_close_to_the_picture(level: 2, tolerance: 8) [1 ms]
+  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.Only_the_tiles_that_changed_are_found [4 ms]
+  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.A_keyframe_arrives_exactly [8 ms]
+  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.A_reset_starts_the_stream_over_with_a_keyframe [1 ms]
+  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.Nothing_is_sent_when_nothing_changed [1 ms]
   Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.One_color_tiles_are_exact_at_any_level [< 1 ms]
-  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.Rough_tiles_are_sent_again_exactly_once_the_window_is_still [4 ms]
-  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.Tiles_on_the_edges_are_cut_to_the_picture [1 ms]
-  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.A_resized_window_is_sent_as_a_keyframe [4 ms]
-  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.Scaling_down_keeps_the_proportions_and_averages_the_pixels [5 ms]
-  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.An_update_carries_only_the_changed_tiles_and_is_small [33 ms]
-  Passed TabStudio.WindowsBridge.Tests.DebugTunnelTests.A_stream_without_lengths_is_refused [2 ms]
-  Passed TabStudio.WindowsBridge.Tests.DebugTunnelTests.Breakpoints_and_the_program_get_the_mirrors_paths [17 ms]
-  Passed TabStudio.WindowsBridge.Tests.DebugTunnelTests.Messages_that_are_not_json_pass_through [1 ms]
-  Passed TabStudio.WindowsBridge.Tests.DebugTunnelTests.Stack_frames_and_output_get_the_tablets_paths [2 ms]
-  Passed TabStudio.WindowsBridge.Tests.DebugTunnelTests.Messages_are_cut_from_a_stream_that_arrives_in_pieces [4 ms]
-  Passed TabStudio.WindowsBridge.Tests.StreamTests.A_change_to_the_window_is_sent_in_the_next_frame [185 ms]
-  Passed TabStudio.WindowsBridge.Tests.MplabTests.Ipe_programs_and_verifies_the_explicit_tool_without_changing_target_power [2 ms]
-  Passed TabStudio.WindowsBridge.Tests.StreamTests.A_resized_window_is_sent_whole_at_its_new_size [635 ms]
-  Passed TabStudio.WindowsBridge.Tests.MplabTests.Windows_batch_generator_keeps_a_project_path_with_spaces_as_one_argument [516 ms]
-  Passed TabStudio.WindowsBridge.Tests.MplabTests.Mplab_projects_report_missing_vendor_tools_instead_of_being_parsed_as_msbuild [26 ms]
-  Passed TabStudio.WindowsBridge.Tests.MplabTests.Finds_the_newest_vendor_tools_including_bundled_java [20 ms]
-  Passed TabStudio.WindowsBridge.Tests.StreamTests.A_window_that_closes_ends_its_stream [91 ms]
-  Passed TabStudio.WindowsBridge.Tests.InputTests.Keys_are_Windows_virtual_keys(name: "NumPad3", code: 99) [9 ms]
+  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.Rough_tiles_are_sent_again_exactly_once_the_window_is_still [5 ms]
+  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.Tiles_on_the_edges_are_cut_to_the_picture [2 ms]
+  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.A_resized_window_is_sent_as_a_keyframe [9 ms]
+  Passed TabStudio.WindowsBridge.Tests.MplabTests.Windows_batch_generator_keeps_a_project_path_with_spaces_as_one_argument [51 ms]
+  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.Scaling_down_keeps_the_proportions_and_averages_the_pixels [6 ms]
+  Passed TabStudio.WindowsBridge.Tests.MplabTests.Mplab_projects_report_missing_vendor_tools_instead_of_being_parsed_as_msbuild [33 ms]
+  Passed TabStudio.WindowsBridge.Tests.FrameCodecTests.An_update_carries_only_the_changed_tiles_and_is_small [48 ms]
+  Passed TabStudio.WindowsBridge.Tests.StreamTests.A_change_to_the_window_is_sent_in_the_next_frame [321 ms]
+  Passed TabStudio.WindowsBridge.Tests.MplabTests.Finds_the_newest_vendor_tools_including_bundled_java [25 ms]
+  Passed TabStudio.WindowsBridge.Tests.InputTests.Keys_are_Windows_virtual_keys(name: "NumPad3", code: 99) [11 ms]
   Passed TabStudio.WindowsBridge.Tests.InputTests.Keys_are_Windows_virtual_keys(name: "PageDown", code: 34) [< 1 ms]
   Passed TabStudio.WindowsBridge.Tests.InputTests.Keys_are_Windows_virtual_keys(name: "D7", code: 55) [< 1 ms]
   Passed TabStudio.WindowsBridge.Tests.InputTests.Keys_are_Windows_virtual_keys(name: "Return", code: 13) [< 1 ms]
@@ -75,29 +73,31 @@ A total of 1 test files matched the specified pattern.
   Passed TabStudio.WindowsBridge.Tests.InputTests.Keys_are_Windows_virtual_keys(name: "Next", code: 34) [< 1 ms]
   Passed TabStudio.WindowsBridge.Tests.InputTests.Keys_are_Windows_virtual_keys(name: "A", code: 65) [< 1 ms]
   Passed TabStudio.WindowsBridge.Tests.InputTests.Positions_outside_the_window_are_kept_on_its_edge [1 ms]
-  Passed TabStudio.WindowsBridge.Tests.InputTests.A_window_is_fitted_into_the_pane_without_growing_past_its_size [6 ms]
+  Passed TabStudio.WindowsBridge.Tests.InputTests.A_window_is_fitted_into_the_pane_without_growing_past_its_size [9 ms]
   Passed TabStudio.WindowsBridge.Tests.InputTests.Modifiers_go_down_in_Windows_order_and_unknown_keys_have_no_code [3 ms]
-  Passed TabStudio.WindowsBridge.Tests.InputTests.A_drag_holds_the_left_button_from_where_it_started_to_where_it_ends [7 ms]
-  Passed TabStudio.WindowsBridge.Tests.InputTests.A_long_press_is_a_right_click_and_lifting_afterwards_does_nothing [3 ms]
-  Passed TabStudio.WindowsBridge.Tests.InputTests.Two_fingers_turn_the_wheel_and_the_content_follows_them [5 ms]
+  Passed TabStudio.WindowsBridge.Tests.InputTests.A_drag_holds_the_left_button_from_where_it_started_to_where_it_ends [13 ms]
+  Passed TabStudio.WindowsBridge.Tests.InputTests.A_long_press_is_a_right_click_and_lifting_afterwards_does_nothing [4 ms]
+  Passed TabStudio.WindowsBridge.Tests.InputTests.Two_fingers_turn_the_wheel_and_the_content_follows_them [8 ms]
   Passed TabStudio.WindowsBridge.Tests.InputTests.A_tap_is_a_click_where_the_finger_touched [< 1 ms]
   Passed TabStudio.WindowsBridge.Tests.AdaptiveQualityTests.A_fast_link_stays_exact [< 1 ms]
-  Passed TabStudio.WindowsBridge.Tests.AdaptiveQualityTests.Only_a_few_frames_are_on_their_way_at_once [1 ms]
+  Passed TabStudio.WindowsBridge.Tests.AdaptiveQualityTests.Only_a_few_frames_are_on_their_way_at_once [2 ms]
   Passed TabStudio.WindowsBridge.Tests.AdaptiveQualityTests.Slow_frames_lower_the_quality_and_fast_ones_raise_it_again [< 1 ms]
-  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.A_program_runs_on_the_PC_with_its_console_on_the_tablet [9 s]
-  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.Only_new_and_changed_files_are_sent_to_the_PC [1 s]
+  Passed TabStudio.WindowsBridge.Tests.StreamTests.A_resized_window_is_sent_whole_at_its_new_size [393 ms]
+  Passed TabStudio.WindowsBridge.Tests.StreamTests.A_window_that_closes_ends_its_stream [150 ms]
+  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.A_program_runs_on_the_PC_with_its_console_on_the_tablet [8 s]
   Passed TabStudio.WindowsBridge.Tests.DebuggerTests.The_tablets_debugger_stops_at_a_breakpoint_in_a_program_on_the_PC [10 s]
-  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.Programs_keep_running_while_the_tablet_is_away_and_are_there_when_it_is_back [3 s]
-  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.The_tablet_pairs_like_a_Link_host_and_learns_what_the_PC_is [840 ms]
-  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.Requests_about_a_workspace_the_bridge_does_not_have_say_so [808 ms]
+  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.Only_new_and_changed_files_are_sent_to_the_PC [1 s]
+  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.Programs_keep_running_while_the_tablet_is_away_and_are_there_when_it_is_back [4 s]
+  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.The_tablet_pairs_like_a_Link_host_and_learns_what_the_PC_is [1 s]
+  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.Requests_about_a_workspace_the_bridge_does_not_have_say_so [982 ms]
   Passed TabStudio.WindowsBridge.Tests.ProtocolTests.The_window_follows_the_pane_and_the_clipboard_goes_both_ways [3 s]
-  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.A_window_streams_and_a_tap_on_its_button_shows_in_the_next_frames [2 s]
-  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.The_PC_going_to_sleep_is_told_before_the_connection_drops [726 ms]
-  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.A_build_on_the_PC_streams_its_output_and_its_errors_land_on_the_tablets_files [3 s]
-[xUnit.net 00:00:29.66]   Finished:    TabStudio.WindowsBridge.Tests
-  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.Dialogs_are_listed_after_their_window_and_windows_that_close_leave_the_list [3 s]
+  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.A_window_streams_and_a_tap_on_its_button_shows_in_the_next_frames [5 s]
+  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.The_PC_going_to_sleep_is_told_before_the_connection_drops [884 ms]
+  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.A_build_on_the_PC_streams_its_output_and_its_errors_land_on_the_tablets_files [4 s]
+[xUnit.net 00:00:35.30]   Finished:    TabStudio.WindowsBridge.Tests
+  Passed TabStudio.WindowsBridge.Tests.ProtocolTests.Dialogs_are_listed_after_their_window_and_windows_that_close_leave_the_list [4 s]
 
 Test Run Successful.
 Total tests: 76
      Passed: 76
- Total time: 30.2910 Seconds
+ Total time: 36.0898 Seconds
