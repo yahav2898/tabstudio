@@ -1,0 +1,17 @@
+Device: Android 15 (API 35), x86_64, screen 2560x1800
+Displays:
+Built-in Screen, displayId 0
+Overlay #1, displayId 2: a presentation display
+Performing Streamed Install
+Success
+Measurements:
+Startup to self test start: 17.25 s
+Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
+ Native Heap 610683 610552 124 15337 611860 657296 645723 7469
+ Dalvik Heap 2984 2936 24 110 4780 8633 4317 4316
+ TOTAL 1293601 1131396 52456 89012 1351636 665929 650040 11785
+ TOTAL PSS: 1293601 TOTAL RSS: 1351636 TOTAL SWAP PSS: 89012
+Scrolling: a 254 dip drag moved the text 261 dip; a flick glided 0 dip (0 dip in 0 ms on Android's curve); 54 Hz display: the text moved on 0 of the 0 frames of the glide, 37 frame gaps on the UI thread
+TABSTUDIO_SELFTEST_FAIL 223.0 s: Shard: ui | Avalonia: shown in 33.6 s, the button counted 2 taps | Designer: previewed MainView.axaml in 2.5 s | Extensions: installed vscode.perl 1.95.3 from open-vsx.org (Signature) in 5.5 s; Perl colored, comment #ff8ca77a, string #ffe6a26b | Windows Forms: Form1 shown in 4.4 s | Forms designer: added a button to Form1 in 3.1 s | Port to Avalonia: event=OK, original=unchanged, 0 notes | Design: the activity bar with 13 tool windows, the search found Build Solution, the bars fit 1280 pixels; 178 lines of text centered in the Forms designer and on the Start screen, in the light and dark themes; Follow the system is Light | WPF: F5 rendered "Hello from WPF on the tablet" on OpenSilver, the whole window in Fit (fits: scale 0.412 of 0.412, window 800x450 ends at 330,421 in a 330x656 pane), in 34.1 s | WinUI: Uno window 'SelfTestWinUI' shown | Swarm: tapped MainView/StackPanel[0]/Button#CountButton on a small phone through real input, counted there alone, 3 screens, 1 layout findings, in 8.5 s | Swarm: Self-test phone joined over TLS 1.3, showed SelfTestSwarm in 9.5 s, paused at the breakpoint in MainViewModel.Count() (MainViewModel.cs, line 17) with next = 1, counted on, and its screen read "Clicked 1 times" | Scrolling: a 254 dip drag moved the text 261 dip; a flick glided 0 dip (0 dip in 0 ms on Android's curve); 54 Hz display: the text moved on 0 of the 0 frames of the glide, 37 frame gaps on the UI thread
+Shard: ui
+Seconds from launch to verdict: 245
