@@ -330,6 +330,54 @@ public sealed class SdkProjectItemsTests
     }
 
     [Fact]
+    public void CommunityToolkit_Mvvm_keeps_its_generators_in_a_C_sharp_project()
+    {
+        // Its targets remove its generators where no C# compiler is found (CSharpCoreTargetsPath empty) or the compiler
+        // is older than Roslyn 4. Running their DependsOnTargets took [ObservableProperty]'s generator away (CS0103 on the
+        // properties it writes); the generators stay in C# and go in Visual Basic, as with the SDK.
+        using var temp = new TempDirectory();
+        var targets = temp.Write("packages/communitytoolkit.mvvm/8.4.0/buildTransitive/CommunityToolkit.Mvvm.SourceGenerators.targets", """
+            <Project>
+              <Target Name="MVVMToolkitGatherAnalyzers">
+                <ItemGroup>
+                  <MVVMToolkitAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'CommunityToolkit.Mvvm'" />
+                </ItemGroup>
+              </Target>
+              <Target Name="MVVMToolkitRemoveAnalyzersForRosynNotFound" Condition="'$(CSharpCoreTargetsPath)' == ''"
+                      AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets" DependsOnTargets="MVVMToolkitGatherAnalyzers">
+                <ItemGroup><Analyzer Remove="@(MVVMToolkitAnalyzer)"/></ItemGroup>
+              </Target>
+              <Target Name="MVVMToolkitRemoveAnalyzersForRoslyn3" Condition="'$(CSharpCoreTargetsPath)' != ''"
+                      AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets" DependsOnTargets="MVVMToolkitGatherAnalyzers">
+                <GetAssemblyIdentity AssemblyFiles="$([System.IO.Path]::Combine(`$([System.IO.Path]::GetDirectoryName($(CSharpCoreTargetsPath)))`,`Microsoft.Build.Tasks.CodeAnalysis.dll`))">
+                  <Output TaskParameter="Assemblies" ItemName="MVVMToolkitCurrentCompilerAssemblyIdentity"/>
+                </GetAssemblyIdentity>
+                <PropertyGroup>
+                  <MVVMToolkitCurrentCompilerVersion>@(MVVMToolkitCurrentCompilerAssemblyIdentity->'%(Version)')</MVVMToolkitCurrentCompilerVersion>
+                  <MVVMToolkitCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(MVVMToolkitCurrentCompilerVersion), 4.0))">true</MVVMToolkitCurrentCompilerVersionIsNotNewEnough>
+                </PropertyGroup>
+                <ItemGroup Condition ="'$(MVVMToolkitCurrentCompilerVersionIsNotNewEnough)' == 'true'">
+                  <Analyzer Remove="@(MVVMToolkitAnalyzer)"/>
+                </ItemGroup>
+                <PropertyGroup>
+                  <MVVMToolkitIsManualRoslynMultiTargetingLogicNeeded Condition="'$(MVVMToolkitCurrentCompilerVersionIsNotNewEnough)' != 'true' AND '$(SupportsRoslynComponentVersioning)' != 'true'">true</MVVMToolkitIsManualRoslynMultiTargetingLogicNeeded>
+                </PropertyGroup>
+              </Target>
+            </Project>
+            """);
+        var generator = Path.Combine(temp.Path, "packages", "communitytoolkit.mvvm", "8.4.0", "analyzers", "dotnet", "roslyn4.12", "cs", "CommunityToolkit.Mvvm.SourceGenerators.dll");
+        var csharp = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(temp.Write("App/App.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup></Project>
+            """)), [targets]);
+        var basic = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(temp.Write("Vb/Vb.vbproj", """
+            <Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup></Project>
+            """)), [targets]);
+
+        Assert.Empty(TargetItems.RemovedAnalyzers(csharp, [new AnalyzerItem(generator, "CommunityToolkit.Mvvm")]));
+        Assert.Equal(new[] { generator }, TargetItems.RemovedAnalyzers(basic, [new AnalyzerItem(generator, "CommunityToolkit.Mvvm")]));
+    }
+
+    [Fact]
     public void Project_references_keep_their_metadata_and_packages_their_PrivateAssets()
     {
         var project = ProjectParser.Parse(ProjectPath, """

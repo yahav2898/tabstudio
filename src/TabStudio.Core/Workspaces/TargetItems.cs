@@ -269,6 +269,14 @@ public static partial class TargetItems
         // The SDK picks a package's analyzers for the compiler's Roslyn version itself, which packages' targets check.
         var properties = new Dictionary<string, string>(project.Properties, StringComparer.OrdinalIgnoreCase);
         properties.TryAdd("SupportsRoslynComponentVersioning", "true");
+
+        // The SDK's C# targets say where the compiler is; packages' targets take an empty value to mean there is none and
+        // remove their generators, as CommunityToolkit.Mvvm's MVVMToolkitRemoveAnalyzersForRosynNotFound does. Since its
+        // DependsOnTargets run here too, that removed [ObservableProperty]'s generator from every C# project.
+        if (project.Language == ProjectLanguage.CSharp)
+        {
+            properties.TryAdd("CSharpCoreTargetsPath", Path.Combine(AppContext.BaseDirectory, "Roslyn", "Microsoft.CSharp.Core.targets"));
+        }
         var seeds = analyzers.Select(a =>
         {
             var metadata = WellKnownMetadata(project, a.FullPath);
