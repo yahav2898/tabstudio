@@ -371,6 +371,13 @@ internal sealed class SweepHarness : IDisposable
             var (name, close) = overlay.Value;
             PressKey(Key.Escape);
             await SettleAsync(80);
+            if (OpenOverlay() is { } first && first.Name == name)
+            {
+                // A menu or a box inside the dialog may take the first Escape, as it does on every platform.
+                PressKey(Key.Escape);
+                await SettleAsync(150);
+            }
+
             if (OpenOverlay() is { } still && still.Name == name)
             {
                 Add("dead-end", where, $"Escape does not close {name}: a keyboard user is left in it.");
@@ -413,7 +420,7 @@ internal sealed class SweepHarness : IDisposable
         }
 
         // A dialog over the IDE dims it with the scrim brush, whatever its panel is called.
-        var scrim = Application.Current?.FindResource("Brush.Scrim");
+        var scrim = Window.TryFindResource("Brush.Scrim", Window.ActualThemeVariant, out var found) ? found : null;
         foreach (var control in Window.GetVisualDescendants().OfType<Control>())
         {
             var dims = scrim is not null && control switch
