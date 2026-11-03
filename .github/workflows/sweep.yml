@@ -55,8 +55,13 @@ jobs:
             tail -n 30 ci-out/sweep.light.log
           fi
           exit $status
-      - name: Publish logs
+      - name: Keep the reports
         if: always()
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: bash build/ci/publish-logs.sh sweep ${{ job.status }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: sweep
+          retention-days: 3
+          path: |
+            ci-out/*.log
+            ci-out/screenshots/sweep/**
+            ci-out/screenshots/light/sweep/**
