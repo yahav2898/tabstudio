@@ -1,0 +1,62 @@
+name: Sweep (exploration)
+
+# Temporary: runs only the sweep of every command, on sweep/** branches, while its findings are collected.
+on:
+  push:
+    branches: ['sweep/**']
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  DOTNET_MODIFIABLE_ASSEMBLIES: debug
+
+jobs:
+  sweep:
+    name: Sweep every command
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-app-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: nuget-app-
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and sweep
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots/light
+          status=0
+          dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true > ci-out/build.log 2>&1 || status=1
+          grep -E "error|warning CS|warning CA|warning IDE" ci-out/build.log | sort -u | head -n 80
+          tail -n 5 ci-out/build.log
+          if [ $status -eq 0 ]; then
+            dotnet test tests/TabStudio.App.Tests -c Release --no-build --blame --blame-hang-timeout 20m --blame-hang-dump-type none \
+              --filter "FullyQualifiedName~TabStudio.App.Tests.Sweep|FullyQualifiedName~TabStudio.App.Tests.Accessibility.AccessibilityTourTests" \
+              --logger "console;verbosity=normal" > ci-out/sweep.dark.log 2>&1 || status=1
+            tail -n 60 ci-out/sweep.dark.log
+            TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
+              dotnet test tests/TabStudio.App.Tests -c Release --no-build --blame --blame-hang-timeout 20m --blame-hang-dump-type none \
+              --filter "FullyQualifiedName~TabStudio.App.Tests.Sweep" --logger "console;verbosity=normal" > ci-out/sweep.light.log 2>&1 || status=1
+            tail -n 30 ci-out/sweep.light.log
+          fi
+          exit $status
+      - name: Publish logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh sweep ${{ job.status }}
