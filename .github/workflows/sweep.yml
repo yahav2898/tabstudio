@@ -54,6 +54,15 @@ jobs:
               --filter "FullyQualifiedName~TabStudio.App.Tests.Sweep" --logger "console;verbosity=normal" > ci-out/sweep.light.log 2>&1 || status=1
             tail -n 30 ci-out/sweep.light.log
           fi
+          for log in ci-out/sweep.dark.log ci-out/sweep.light.log; do
+            [ -f "$log" ] && grep -A 25 "^  Failed " "$log" | head -n 200
+          done
+          for report in ci-out/screenshots/sweep/*.tsv ci-out/screenshots/light/sweep/*.tsv; do
+            [ -f "$report" ] && { echo "=== $report"; cat "$report"; }
+          done
+          for log in ci-out/screenshots/sweep/*.log; do
+            [ -f "$log" ] && { echo "=== $log"; grep -E "^(slow|done|commands|unavailable|tapped|skipped)" "$log" | cut -c1-300; }
+          done
           exit $status
       - name: Keep the reports
         if: always()
