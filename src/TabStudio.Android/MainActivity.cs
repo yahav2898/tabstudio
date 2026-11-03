@@ -232,6 +232,7 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
 
         AndroidLog.Info(LogTag, StartupTimeline.Summary());
         AndroidLog.Info(LogTag, $"TabStudio UI stalls: {stalls.Summary()}");
+        AndroidLog.Info(LogTag, $"TabStudio UI timings: {stalls.Timings(12)}");
         foreach (var stall in stalls.Worst(15))
         {
             AndroidLog.Info(LogTag, $"TabStudio UI stall: {stall}");

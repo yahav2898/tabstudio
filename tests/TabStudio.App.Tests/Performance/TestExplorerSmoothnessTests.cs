@@ -31,8 +31,30 @@ public sealed class TestExplorerSmoothnessTests
     [AvaloniaFact]
     public async Task Five_thousand_results_arriving_one_by_one_leave_the_IDE_responsive()
     {
-        var ui = new AvaloniaUiDispatcher();
+        if (Smoothness.IsLightPass)
+        {
+            return;
+        }
+
         var cases = Enumerable.Range(0, Tests).Select(Case).ToList();
+        var (beforeTime, beforeStalls, _) = await RunAllAsync(cases, batched: false);
+        var (afterTime, afterStalls, discovery) = await RunAllAsync(cases, batched: true);
+
+        var report = new StringBuilder("# Test Explorer: 5,000 results arriving one by one\n\n");
+        var culture = CultureInfo.InvariantCulture;
+        report.AppendLine(culture, $"- {Namespaces} namespaces, {ClassesPerNamespace} classes in each, {TestsPerClass} tests in each class; Test Explorer shown in a 1280 × 800 window.");
+        report.AppendLine(culture, $"- Discovery (the build's 5,000 tests arrive): {discovery}.\n");
+        report.AppendLine("| Run All, the runner reporting from its threads | From the first start to the last result shown | The UI thread meanwhile |");
+        report.AppendLine("| --- | --- | --- |");
+        report.AppendLine(culture, $"| Each start and result posted on its own, as before 0.21.11 | {beforeTime.TotalSeconds:0.00} s | {beforeStalls} |");
+        report.AppendLine(culture, $"| Queued and shown in batches | {afterTime.TotalSeconds:0.00} s | {afterStalls} |");
+        Smoothness.Write("test-explorer", report.ToString());
+    }
+
+    /// <summary>Run All with every test passing, reported as the workspace reported them before 0.21.11 or as it does now.</summary>
+    private static async Task<(TimeSpan Ran, string Stalls, UiCost Discovery)> RunAllAsync(List<TestCase> cases, bool batched)
+    {
+        var ui = new AvaloniaUiDispatcher();
         var host = new RunHost();
         var explorer = new TestExplorerViewModel(host, ui);
         explorer.SetProjects([Project]);
@@ -40,8 +62,6 @@ public sealed class TestExplorerSmoothnessTests
         window.Show();
         var discovery = Smoothness.Measure(window, () => explorer.SetBuiltTests(Project, cases));
         Assert.Equal(Tests, explorer.TotalCount);
-
-        // The runner's threads report every test as the workspace does: each start and each result posted to the UI thread.
         host.OnRun = async _ =>
         {
             explorer.ReportQueued(Project.FilePath, cases);
@@ -49,9 +69,17 @@ public sealed class TestExplorerSmoothnessTests
             {
                 foreach (var test in cases)
                 {
-                    ui.Post(() => explorer.ReportStarted(Project.FilePath, test));
                     var result = new TestResult { Test = test, Outcome = TestOutcome.Passed, Duration = TimeSpan.FromMilliseconds(1) };
-                    ui.Post(() => explorer.ReportFinished(Project.FilePath, result));
+                    if (batched)
+                    {
+                        explorer.QueueStarted(Project.FilePath, test);
+                        explorer.QueueFinished(Project.FilePath, result);
+                    }
+                    else
+                    {
+                        ui.Post(() => explorer.ReportStarted(Project.FilePath, test));
+                        ui.Post(() => explorer.ReportFinished(Project.FilePath, result));
+                    }
                 }
             });
             await UiTestHelpers.WaitUntilAsync(() => explorer.PassedCount == Tests, TimeSpan.FromMinutes(5), "every result");
@@ -63,16 +91,8 @@ public sealed class TestExplorerSmoothnessTests
         var ran = clock.Elapsed;
         stalls.Dispose();
         Assert.Equal(Tests, explorer.PassedCount);
-
-        var report = new StringBuilder("# Test Explorer: 5,000 results arriving one by one\n\n");
-        var culture = CultureInfo.InvariantCulture;
-        report.AppendLine(culture, $"- {Namespaces} namespaces, {ClassesPerNamespace} classes in each, {TestsPerClass} tests in each class; Test Explorer shown in a 1280 × 800 window.");
-        report.AppendLine(culture, $"- Discovery (the build's 5,000 tests arrive): {discovery}.");
-        report.AppendLine(culture, $"- Run All, from the first start to the last result shown: {ran.TotalSeconds:0.00} s.");
-        report.AppendLine(culture, $"- The UI thread meanwhile: {stalls.Summary()}.\n");
-        report.Append(stalls.Table(10));
-        Smoothness.Write("test-explorer", report.ToString());
         window.Close();
+        return (ran, stalls.Summary(), discovery);
     }
 
     private static TestCase Case(int index)

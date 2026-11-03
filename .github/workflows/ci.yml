@@ -489,6 +489,8 @@ jobs:
             cp "$RUNNER_TEMP"/crash/*.json ci-out/ 2>/dev/null || true
             find tests/TabStudio.App.Tests/TestResults -name 'Sequence_*.xml' -exec cp {} ci-out/ \; 2>/dev/null || true
           fi
+          # The smoothness benchmarks' reports, in the job's log too: publishing the logs can run out of the job's time.
+          for report in ci-out/screenshots/smoothness-*.md; do [ -f "$report" ] && { echo "== $report"; cat "$report"; }; done
           # The UI test the swarm's test recorded on a phone runs as its users' CI runs it: dotnet test, headless.
           recorded=$(find "$TABSTUDIO_RECORDED_UI_TESTS" -name '*.UITests.csproj' 2>/dev/null | head -n 1)
           if [ -n "$recorded" ]; then

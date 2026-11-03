@@ -3,9 +3,11 @@ using System.Globalization;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
 using TabStudio.App.Services;
 using TabStudio.App.Tests.Extensions;
+using TabStudio.App.Tests.ViewModels;
 using TabStudio.App.ViewModels;
 using TabStudio.App.Views;
 using TabStudio.Testing;
@@ -24,6 +26,11 @@ public sealed class StartupSmoothnessTests
     [AvaloniaFact]
     public async Task The_services_and_the_start_screen_are_ready_quickly()
     {
+        if (Smoothness.IsLightPass)
+        {
+            return;
+        }
+
         var culture = CultureInfo.InvariantCulture;
         var report = new StringBuilder("# TabStudio's start\n\n");
         report.AppendLine("## This test process's own start (cold)\n");
@@ -76,6 +83,53 @@ public sealed class StartupSmoothnessTests
         }
 
         Smoothness.Write("startup", report.ToString());
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task Opening_a_workspace_builds_only_the_tool_windows_it_shows()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var clock = Stopwatch.StartNew();
+        var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = fixture.Workspace } };
+        window.Show();
+        Smoothness.Settle(window);
+        var shown = clock.Elapsed;
+        var visuals = window.GetVisualDescendants().Count();
+
+        // A tool window nobody opened is not built; choosing it builds it, and it stays.
+        Assert.Empty(window.GetVisualDescendants().OfType<TabStudio.App.Views.Swarm.SwarmView>());
+        Assert.Empty(window.GetVisualDescendants().OfType<TabStudio.App.Views.Toolchains.TerminalPanelView>());
+        Assert.Empty(window.GetVisualDescendants().OfType<LocalsView>());
+        fixture.Workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.Swarm);
+        fixture.Workspace.SelectPanelCommand.Execute(BottomPanel.Terminal);
+        Smoothness.Settle(window);
+        Assert.Single(window.GetVisualDescendants().OfType<TabStudio.App.Views.Swarm.SwarmView>());
+        Assert.Single(window.GetVisualDescendants().OfType<TabStudio.App.Views.Toolchains.TerminalPanelView>());
+        fixture.Workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.SolutionExplorer);
+        fixture.Workspace.SelectPanelCommand.Execute(BottomPanel.ErrorList);
+        Smoothness.Settle(window);
+        Assert.Single(window.GetVisualDescendants().OfType<TabStudio.App.Views.Swarm.SwarmView>());
+
+        // What opening built before 0.21.11 besides: every other tool window, hidden.
+        var unbuilt = window.GetVisualDescendants().OfType<TabStudio.App.Controls.DeferredView>().Where(d => !d.IsRealized).ToList();
+        clock.Restart();
+        foreach (var view in unbuilt)
+        {
+            view.Realize();
+        }
+
+        Smoothness.Settle(window);
+        var rest = clock.Elapsed;
+        var allVisuals = window.GetVisualDescendants().Count();
+        if (!Smoothness.IsLightPass)
+        {
+            Smoothness.Write("workspace-view", string.Create(
+                CultureInfo.InvariantCulture,
+                $"# The workspace's view\n\n- Built and drawn for the first time in {shown.TotalMilliseconds:0} ms with {visuals} visuals, the sample open.\n- The {unbuilt.Count} tool windows it no longer builds until they are shown, built as before 0.21.11: {rest.TotalMilliseconds:0} ms more, {allVisuals} visuals in all.\n"));
+        }
+
         window.Close();
     }
 }

@@ -9,7 +9,8 @@ namespace TabStudio.App.Services;
 /// <param name="At">When it started, from the start of the monitor.</param>
 /// <param name="Duration">How long the UI thread did not answer.</param>
 /// <param name="Phase">What the app was doing then, as the code that started the monitor named it.</param>
-public readonly record struct UiStall(TimeSpan At, TimeSpan Duration, string Phase);
+/// <param name="GcPause">How much of it the runtime spent with every thread paused for garbage collection, where it says.</param>
+public readonly record struct UiStall(TimeSpan At, TimeSpan Duration, string Phase, TimeSpan GcPause = default);
 
 /// <summary>
 /// Watches the UI thread from a thread of its own, as a finger on the screen would feel it: every few milliseconds it
@@ -27,6 +28,8 @@ public sealed class UiStallMonitor : IDisposable
     private readonly List<UiStall> _stalls = [];
     private readonly List<double> _latencies = [];
     private readonly List<(TimeSpan At, string Label)> _marks = [];
+    private readonly List<(TimeSpan At, string Phase)> _phases = [];
+    private readonly List<(string Label, TimeSpan Took)> _timings = [];
     private readonly Thread _thread;
     private string _phase = string.Empty;
     private int _asked;
@@ -50,11 +53,62 @@ public sealed class UiStallMonitor : IDisposable
     /// <summary>The monitor the self test runs, if any, for its steps to name what they do.</summary>
     public static UiStallMonitor? Current { get; set; }
 
-    /// <summary>What the app is doing now; a stall that starts now is recorded with it.</summary>
+    /// <summary>
+    /// What the app is doing now; a stall is recorded with this and every phase set while it lasted, so work that blocks
+    /// the UI thread in one go is still named by the phases its code set.
+    /// </summary>
     public string Phase
     {
         get => Volatile.Read(ref _phase);
-        set => Volatile.Write(ref _phase, value ?? string.Empty);
+        set
+        {
+            var phase = value ?? string.Empty;
+            if (phase == Volatile.Read(ref _phase))
+            {
+                return;
+            }
+
+            Volatile.Write(ref _phase, phase);
+            lock (_gate)
+            {
+                _phases.Add((_clock.Elapsed, phase));
+            }
+        }
+    }
+
+    /// <summary>Names what the app does now for the running monitor, if any; nothing happens without one.</summary>
+    /// <param name="phase">What the app does, such as "creating the workspace view".</param>
+    public static void Note(string phase)
+    {
+        if (Current is { } monitor)
+        {
+            monitor.Phase = phase;
+        }
+    }
+
+    /// <summary>Records how long a piece of work on the UI thread took, for the running monitor, if any.</summary>
+    /// <param name="label">The work.</param>
+    /// <param name="took">How long it took.</param>
+    public static void Time(string label, TimeSpan took)
+    {
+        if (Current is { } monitor)
+        {
+            lock (monitor._gate)
+            {
+                monitor._timings.Add((label, took));
+            }
+        }
+    }
+
+    /// <summary>The work timed with <see cref="Time"/>, longest first, one line: "workspace view 1234 ms, …".</summary>
+    /// <param name="count">How many.</param>
+    public string Timings(int count)
+    {
+        lock (_gate)
+        {
+            return string.Join(", ", _timings.OrderByDescending(t => t.Took).Take(count)
+                .Select(t => string.Create(CultureInfo.InvariantCulture, $"{t.Label} {t.Took.TotalMilliseconds:0} ms")));
+        }
     }
 
     /// <summary>The time since the monitor started.</summary>
@@ -141,6 +195,12 @@ public sealed class UiStallMonitor : IDisposable
             text += string.Create(culture, $", longest {longest.Duration.TotalMilliseconds:0} ms during {Describe(longest)}");
         }
 
+        var gc = stalls.Aggregate(TimeSpan.Zero, (sum, stall) => sum + stall.GcPause);
+        if (gc > TimeSpan.Zero)
+        {
+            text += string.Create(culture, $", {gc.TotalSeconds:0.0} s of it garbage collection");
+        }
+
         return text + string.Create(culture, $"; answer p50 {Percentile(0.5):0.0} ms, p95 {Percentile(0.95):0.0} ms, p99 {Percentile(0.99):0.0} ms over {Answers} questions in {Elapsed.TotalSeconds:0} s");
     }
 
@@ -150,25 +210,40 @@ public sealed class UiStallMonitor : IDisposable
     {
         var culture = CultureInfo.InvariantCulture;
         return [.. Stalls.OrderByDescending(s => s.Duration).Take(count)
-            .Select(s => string.Create(culture, $"{s.Duration.TotalMilliseconds:0} ms at {s.At.TotalSeconds:0.0} s during {Describe(s)}"))];
+            .Select(s => string.Create(culture, $"{s.Duration.TotalMilliseconds:0} ms{Collected(s)} at {s.At.TotalSeconds:0.0} s during {Describe(s)}"))];
     }
 
     /// <summary>What the app was doing during a stall: its phase, or the step that ended after it.</summary>
     /// <param name="stall">The stall.</param>
     public string Describe(UiStall stall)
     {
-        if (stall.Phase.Length > 0)
-        {
-            return stall.Phase;
-        }
-
         lock (_gate)
         {
+            // The phase it started in and every phase set before it ended.
+            var during = new List<string>();
+            if (stall.Phase.Length > 0)
+            {
+                during.Add(stall.Phase);
+            }
+
+            foreach (var (at, phase) in _phases)
+            {
+                if (at > stall.At && at <= stall.At + stall.Duration && phase.Length > 0 && (during.Count == 0 || during[^1] != phase))
+                {
+                    during.Add(phase);
+                }
+            }
+
+            if (during.Count > 0)
+            {
+                return Shorten(string.Join(" → ", during), 200);
+            }
+
             foreach (var (at, label) in _marks)
             {
                 if (at >= stall.At)
                 {
-                    return "the step that ended with: " + Shorten(label);
+                    return "the step that ended with: " + Shorten(label, 90);
                 }
             }
         }
@@ -180,10 +255,10 @@ public sealed class UiStallMonitor : IDisposable
     /// <param name="count">How many.</param>
     public string Table(int count)
     {
-        var table = new StringBuilder("| Stall | At | During |\n| --- | --- | --- |\n");
+        var table = new StringBuilder("| Stall | Of it, GC | At | During |\n| --- | --- | --- | --- |\n");
         foreach (var stall in Stalls.OrderByDescending(s => s.Duration).Take(count))
         {
-            table.Append(CultureInfo.InvariantCulture, $"| {stall.Duration.TotalMilliseconds:0} ms | {stall.At.TotalSeconds:0.0} s | {Describe(stall).Replace('|', '/')} |\n");
+            table.Append(CultureInfo.InvariantCulture, $"| {stall.Duration.TotalMilliseconds:0} ms | {stall.GcPause.TotalMilliseconds:0} ms | {stall.At.TotalSeconds:0.0} s | {Describe(stall).Replace('|', '/')} |\n");
         }
 
         return table.ToString();
@@ -199,10 +274,26 @@ public sealed class UiStallMonitor : IDisposable
         }
     }
 
-    private static string Shorten(string label)
+    /// <summary>The runtime's total garbage collection pause so far, or zero where it does not say (Mono may not).</summary>
+    private static TimeSpan PauseDuration()
+    {
+        try
+        {
+            return GC.GetTotalPauseDuration();
+        }
+        catch (Exception ex) when (ex is PlatformNotSupportedException or NotImplementedException or NotSupportedException)
+        {
+            return TimeSpan.Zero;
+        }
+    }
+
+    private static string Collected(UiStall stall) =>
+        stall.GcPause > TimeSpan.Zero ? string.Create(CultureInfo.InvariantCulture, $" ({stall.GcPause.TotalMilliseconds:0} ms GC)") : string.Empty;
+
+    private static string Shorten(string label, int length)
     {
         var line = label.ReplaceLineEndings(" ");
-        return line.Length > 90 ? line[..90] + "…" : line;
+        return line.Length > length ? line[..length] + "…" : line;
     }
 
     private void Run()
@@ -212,6 +303,7 @@ public sealed class UiStallMonitor : IDisposable
             var question = ++_asked;
             var asked = _clock.Elapsed;
             var phase = Phase;
+            var paused = PauseDuration();
             _dispatcher.Post(() => Volatile.Write(ref _answered, question), DispatcherPriority.Send);
             while (Volatile.Read(ref _answered) != question)
             {
@@ -229,7 +321,7 @@ public sealed class UiStallMonitor : IDisposable
                 _latencies.Add(waited.TotalMilliseconds);
                 if (waited >= _threshold)
                 {
-                    _stalls.Add(new UiStall(asked, waited, phase));
+                    _stalls.Add(new UiStall(asked, waited, phase, PauseDuration() - paused));
                 }
             }
 

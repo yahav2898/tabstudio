@@ -52,7 +52,8 @@ public sealed partial class CodeEditorView
         if (_acceptingInline || InlineCompletion is null) return;
         InlineCompletion.Cancel();
         if (!IsVisible || !_editor.IsKeyboardFocusWithin || _editor.SelectionLength > 0 || _document.LocalAI is not { InlineEnabled: true, PauseReason: null }) return;
-        _ = InlineCompletion.RequestAsync(_document.FilePath, _document.Document.Text, _editor.CaretOffset, _document.LocalAINeighbors?.Invoke() ?? []);
+        var document = _document;
+        _ = InlineCompletion.RequestAsync(document.FilePath, () => document.Document.Text, _editor.CaretOffset, () => document.LocalAINeighbors?.Invoke() ?? []);
     }
 
     private void OnInlineKeyDown(object? sender, KeyEventArgs e)

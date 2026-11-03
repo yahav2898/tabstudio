@@ -34,6 +34,18 @@ public interface ILanguageService : IDisposable
     /// <param name="text">The text.</param>
     void UpdateText(string filePath, string text);
 
+    /// <summary>
+    /// Replaces a file's text with the editor's current text, given as the text sent before with the edits made since
+    /// applied to it: nothing the size of the file is copied, and Roslyn reparses only around the edits.
+    /// </summary>
+    /// <param name="filePath">Full path of the file.</param>
+    /// <param name="text">The text.</param>
+    void UpdateText(string filePath, Microsoft.CodeAnalysis.Text.SourceText text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        UpdateText(filePath, text.ToString());
+    }
+
     /// <summary>Adds a new file to the project whose folder contains it.</summary>
     /// <param name="filePath">Full path of the file.</param>
     /// <param name="text">Its text.</param>

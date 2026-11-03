@@ -49,6 +49,9 @@ public sealed class LocalLanguageService : ILanguageService
     public void UpdateText(string filePath, string text) => _host.UpdateText(filePath, text);
 
     /// <inheritdoc />
+    public void UpdateText(string filePath, Microsoft.CodeAnalysis.Text.SourceText text) => _host.UpdateText(filePath, text);
+
+    /// <inheritdoc />
     public bool AddDocument(string filePath, string text) => _host.AddDocument(filePath, text);
 
     /// <inheritdoc />

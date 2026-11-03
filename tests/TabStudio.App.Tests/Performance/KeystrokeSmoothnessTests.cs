@@ -26,6 +26,11 @@ public sealed class KeystrokeSmoothnessTests
     [AvaloniaFact]
     public async Task A_keystroke_in_a_long_file_costs_little_and_nothing_the_size_of_the_file()
     {
+        if (Smoothness.IsLightPass)
+        {
+            return;
+        }
+
         using var fixture = new ExtensionsFixture();
         var solution = await new SampleLibrary(fixture.Paths).EnsureExtractedAsync();
         var path = Path.Combine(Path.GetDirectoryName(solution)!, "src", "Greetings", "Operations.cs");
@@ -40,13 +45,13 @@ public sealed class KeystrokeSmoothnessTests
         editor.CaretOffset = editor.Document.TextLength / 2;
         var textBytes = editor.Document.TextLength * 2L;
 
-        long PerKeystroke()
+        long PerKeystroke(string key = "x")
         {
             Dispatcher.UIThread.RunJobs();
             var before = GC.GetAllocatedBytesForCurrentThread();
             for (var i = 0; i < Keystrokes; i++)
             {
-                editor.TextArea.PerformTextInput("x");
+                editor.TextArea.PerformTextInput(key);
             }
 
             return (GC.GetAllocatedBytesForCurrentThread() - before) / Keystrokes;
@@ -54,6 +59,27 @@ public sealed class KeystrokeSmoothnessTests
 
         PerKeystroke();
         var whole = PerKeystroke();
+
+        // A space never starts a completion list, so every one is a keystroke with the list closed.
+        var space = PerKeystroke(" ");
+
+        // The same space with the whole text sent to Roslyn as a new string, as every such keystroke did before 0.21.11.
+        var language = Assert.IsType<LocalLanguageService>(fixture.Workspace.LanguageService);
+        Dispatcher.UIThread.RunJobs();
+        var oldBefore = GC.GetAllocatedBytesForCurrentThread();
+        var oldClock = System.Diagnostics.Stopwatch.StartNew();
+        for (var i = 0; i < Keystrokes; i++)
+        {
+            editor.TextArea.PerformTextInput(" ");
+            language.UpdateText(path, editor.Document.Text);
+        }
+
+        oldClock.Stop();
+        var oldSpace = (GC.GetAllocatedBytesForCurrentThread() - oldBefore) / Keystrokes;
+        document.SyncText();
+        var newClock = System.Diagnostics.Stopwatch.StartNew();
+        var newSpace = PerKeystroke(" ");
+        newClock.Stop();
 
         // The same keystroke in a bare document of the same text: what AvaloniaEdit's document itself costs.
         var bare = new TextDocument(editor.Document.Text);
@@ -96,7 +122,8 @@ public sealed class KeystrokeSmoothnessTests
         var culture = CultureInfo.InvariantCulture;
         var report = new StringBuilder("# A keystroke in a long C# file\n\n");
         report.AppendLine(culture, $"- {editor.Document.LineCount} lines, {editor.Document.TextLength} characters ({textBytes / 1024.0:0} KB as a string); {document.Classifications.Count} colored ranges.");
-        report.AppendLine(culture, $"- A keystroke in the editor allocates {whole / 1024.0:0.0} KB; in a bare AvaloniaEdit document of the same text, {bareCost / 1024.0:0.0} KB.\n");
+        report.AppendLine(culture, $"- A letter typed in the editor allocates {whole / 1024.0:0.0} KB, a space {space / 1024.0:0.0} KB; in a bare AvaloniaEdit document of the same text, a keystroke allocates {bareCost / 1024.0:0.0} KB.");
+        report.AppendLine(culture, $"- A space with the whole text sent to Roslyn as a new string, as before 0.21.11: {oldSpace / 1024.0:0.0} KB and {oldClock.Elapsed.TotalMicroseconds / Keystrokes:0} µs; as now: {newSpace / 1024.0:0.0} KB and {newClock.Elapsed.TotalMicroseconds / Keystrokes:0} µs.\n");
         report.AppendLine("| Without | KB per keystroke | Saved |");
         report.AppendLine("| --- | --- | --- |");
         foreach (var (listener, without) in rows.OrderBy(r => r.Without))
@@ -105,6 +132,10 @@ public sealed class KeystrokeSmoothnessTests
         }
 
         Smoothness.Write("keystroke", report.ToString());
+
+        // What the language service has is the editor's text, however the edits reached it.
+        document.SyncText();
+        Assert.Equal(editor.Document.Text, language.Host.GetCurrentText(path));
         window.Close();
     }
 

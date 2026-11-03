@@ -30,6 +30,11 @@ public sealed class DocumentSmoothnessTests
     [AvaloniaFact]
     public async Task Twenty_long_tabs_switch_quickly_and_closing_them_frees_them()
     {
+        if (Smoothness.IsLightPass)
+        {
+            return;
+        }
+
         using var fixture = new WorkspaceFixture();
         var solution = await new SampleLibrary(fixture.Paths).EnsureExtractedAsync();
         var files = await WriteLongFilesAsync(solution, Tabs);
@@ -105,6 +110,11 @@ public sealed class DocumentSmoothnessTests
     [AvaloniaFact]
     public async Task Opening_and_closing_a_workspace_all_day_gives_its_memory_back()
     {
+        if (Smoothness.IsLightPass)
+        {
+            return;
+        }
+
         using var temp = new TempDirectory();
         await using var services = AppServices.Create(new AppPaths(Path.Combine(temp.Path, "app")));
         var main = services.GetRequiredService<MainViewModel>();

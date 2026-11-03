@@ -391,6 +391,7 @@ public sealed class RealRepositoryTests
         var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = workspace } };
         window.Show();
         using var stalls = new UiStallMonitor(Avalonia.Threading.Dispatcher.UIThread) { Phase = "opening the solution" };
+        UiStallMonitor.Current = stalls;
         try
         {
             var clock = System.Diagnostics.Stopwatch.StartNew();
@@ -457,6 +458,7 @@ public sealed class RealRepositoryTests
 
             stalls.Phase = "the end";
             report.AppendLine(CultureInfo.InvariantCulture, $"UI stalls: {stalls.Summary()}");
+            report.AppendLine(CultureInfo.InvariantCulture, $"UI timings: {stalls.Timings(12)}");
             report.Append(stalls.Table(15));
             report.AppendLine("Output:");
             var text = workspace.Output.Text;

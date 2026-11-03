@@ -33,6 +33,9 @@ public sealed class LinkedLanguageService : ILanguageService
     private readonly Lock _gate = new();
     private readonly SemaphoreSlim _switching = new(1, 1);
     private readonly Dictionary<string, string> _texts = new(StringComparer.Ordinal);
+
+    // Editors' texts as the incremental syncs gave them, turned into strings in _texts only when a load needs them.
+    private readonly Dictionary<string, Microsoft.CodeAnalysis.Text.SourceText> _sourceTexts = new(StringComparer.Ordinal);
     private readonly Dictionary<string, ProjectInfo> _restored = new(StringComparer.Ordinal);
     private readonly ConcurrentDictionary<string, IReadOnlyList<string>> _runtimeAssemblies = new(StringComparer.Ordinal);
     private Workspace? _workspace;
@@ -116,6 +119,7 @@ public sealed class LinkedLanguageService : ILanguageService
             _workspace = workspace;
             _sources = sources;
             _texts.Clear();
+            _sourceTexts.Clear();
             remote = _remote;
             local = _local;
         }
@@ -172,9 +176,33 @@ public sealed class LinkedLanguageService : ILanguageService
     {
         lock (_gate)
         {
+            _sourceTexts.Remove(filePath);
             _texts[filePath] = text;
             ActiveUnderGate()?.UpdateText(filePath, text);
         }
+    }
+
+    /// <inheritdoc />
+    public void UpdateText(string filePath, Microsoft.CodeAnalysis.Text.SourceText text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        lock (_gate)
+        {
+            _texts.Remove(filePath);
+            _sourceTexts[filePath] = text;
+            ActiveUnderGate()?.UpdateText(filePath, text);
+        }
+    }
+
+    /// <summary>Turns the editors' incremental texts into the strings a load overlays. The caller holds the gate.</summary>
+    private void MaterializeTextsUnderGate()
+    {
+        foreach (var (path, text) in _sourceTexts)
+        {
+            _texts[path] = text.ToString();
+        }
+
+        _sourceTexts.Clear();
     }
 
     /// <inheritdoc />
@@ -182,6 +210,7 @@ public sealed class LinkedLanguageService : ILanguageService
     {
         lock (_gate)
         {
+            _sourceTexts.Remove(filePath);
             _texts[filePath] = text;
             return ActiveUnderGate()?.AddDocument(filePath, text) ?? false;
         }
@@ -448,6 +477,7 @@ public sealed class LinkedLanguageService : ILanguageService
             }
 
             // Edits made while the host loaded: the host has the sources' text, not these.
+            MaterializeTextsUnderGate();
             foreach (var (path, text) in _texts)
             {
                 remote.UpdateText(path, text);
@@ -563,6 +593,7 @@ public sealed class LinkedLanguageService : ILanguageService
             local.SetOptimization(_optimize);
             local.SetConcurrentBuild(_concurrentBuild);
             workspace = _workspace;
+            MaterializeTextsUnderGate();
             sources = new OverlayTextProvider(new Dictionary<string, string>(_texts, StringComparer.Ordinal), _sources);
             restored = [.. _restored.Values];
             generators = _frameworkGenerators;
@@ -595,6 +626,7 @@ public sealed class LinkedLanguageService : ILanguageService
             }
 
             // Edits made while this device loaded the workspace.
+            MaterializeTextsUnderGate();
             foreach (var (path, text) in _texts)
             {
                 if (!sources.Has(path, text))
@@ -639,6 +671,7 @@ public sealed class LinkedLanguageService : ILanguageService
 
                 remote = _remote;
                 workspace = _workspace;
+                MaterializeTextsUnderGate();
                 sources = new OverlayTextProvider(new Dictionary<string, string>(_texts, StringComparer.Ordinal), _sources);
             }
 

@@ -230,12 +230,25 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
     {
         ArgumentNullException.ThrowIfNull(filePath);
         ArgumentNullException.ThrowIfNull(text);
+        return UpdateText(filePath, SourceText.From(text, Encoding.UTF8));
+    }
+
+    /// <summary>
+    /// Replaces the text of a source file with a text made from the one before by the edits typed since, which Roslyn
+    /// reparses only around the edits. Called as the user types.
+    /// </summary>
+    /// <param name="filePath">Full path of the file.</param>
+    /// <param name="source">The new text.</param>
+    /// <returns><see langword="true"/> when the file belongs to a loaded project.</returns>
+    public bool UpdateText(string filePath, SourceText source)
+    {
+        ArgumentNullException.ThrowIfNull(filePath);
+        ArgumentNullException.ThrowIfNull(source);
 
         lock (_gate)
         {
             if (_additionalDocuments.TryGetValue(filePath, out var additional))
             {
-                var source = SourceText.From(text, Encoding.UTF8);
                 var withText = _workspace.CurrentSolution.WithAdditionalDocumentText(additional, source);
                 foreach (var copy in _sharedAdditionalDocuments.GetValueOrDefault(filePath) ?? [])
                 {
@@ -245,7 +258,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
                 return _workspace.TryApplyChanges(withText);
             }
 
-            if (!_documents.TryGetValue(filePath, out var id) || !ReplaceText(id, text))
+            if (!_documents.TryGetValue(filePath, out var id) || !ReplaceText(id, source))
             {
                 return false;
             }
@@ -264,6 +277,15 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
             return true;
         }
+    }
+
+    /// <summary>The text Roslyn has for a source file now, as the editor's edits reached it.</summary>
+    /// <param name="filePath">Full path of the file.</param>
+    /// <returns>The text, or <see langword="null"/> when the file is not in a loaded project.</returns>
+    public string? GetCurrentText(string filePath)
+    {
+        ArgumentNullException.ThrowIfNull(filePath);
+        return Snapshot(filePath).Document is { } document && document.TryGetText(out var text) ? text.ToString() : null;
     }
 
     /// <summary>Adds a new source file to the project whose folder contains it.</summary>
@@ -599,8 +621,10 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
     }
 
     /// <summary>Replaces a document's text. The caller holds the gate.</summary>
-    private bool ReplaceText(DocumentId id, string text) =>
-        _workspace.TryApplyChanges(_workspace.CurrentSolution.WithDocumentText(id, SourceText.From(text, Encoding.UTF8)));
+    private bool ReplaceText(DocumentId id, string text) => ReplaceText(id, SourceText.From(text, Encoding.UTF8));
+
+    private bool ReplaceText(DocumentId id, SourceText text) =>
+        _workspace.TryApplyChanges(_workspace.CurrentSolution.WithDocumentText(id, text));
 
     private (Document? Document, TsProject? Project) Snapshot(string filePath)
     {

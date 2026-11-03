@@ -31,6 +31,15 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
     private int _syncedEdits = -1;
     private bool _disposed;
 
+    // The text last sent to the language service, and the edits made since: the next sync sends that text with the
+    // edits applied rather than a copy of the whole document.
+    private Microsoft.CodeAnalysis.Text.SourceText? _syncedText;
+    private readonly List<Microsoft.CodeAnalysis.Text.TextChange> _unsyncedEdits = [];
+    private bool _tooManyUnsyncedEdits;
+
+    /// <summary>The most edits a sync applies one by one; after more, such as a Format Document, it sends the whole text.</summary>
+    private const int MaxIncrementalEdits = 64;
+
     /// <summary>Creates a document over text that was read from disk. Call on the UI thread.</summary>
     /// <param name="filePath">Full path of the file.</param>
     /// <param name="file">The file's text and encoding.</param>
@@ -190,9 +199,34 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
         SyncXamlText();
         if (_language is not null && _syncedEdits != _edits)
         {
-            _language.UpdateText(FilePath, Document.Text);
+            // Before 0.21.11 every sync, which runs on every character typed while the completion list is closed,
+            // copied the whole document into a new string for Roslyn, which then parsed it all again.
+            var text = TextForLanguageService();
+            _language.UpdateText(FilePath, text);
+            _syncedText = text;
+            _unsyncedEdits.Clear();
+            _tooManyUnsyncedEdits = false;
             _syncedEdits = _edits;
         }
+    }
+
+    /// <summary>The document's text for the language service: the text sent last with the edits since, when it can.</summary>
+    private Microsoft.CodeAnalysis.Text.SourceText TextForLanguageService()
+    {
+        if (_syncedText is { } text && !_tooManyUnsyncedEdits)
+        {
+            foreach (var edit in _unsyncedEdits)
+            {
+                text = text.WithChanges(edit);
+            }
+
+            if (text.Length == Document.TextLength)
+            {
+                return text;
+            }
+        }
+
+        return Microsoft.CodeAnalysis.Text.SourceText.From(Document.Text, System.Text.Encoding.UTF8);
     }
 
     /// <summary>Writes the text to disk in the file's original encoding.</summary>
@@ -348,6 +382,19 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
     private void OnDocumentChanged(object? sender, DocumentChangeEventArgs e)
     {
         _edits++;
+        if (_language is not null && !_tooManyUnsyncedEdits)
+        {
+            if (_unsyncedEdits.Count < MaxIncrementalEdits)
+            {
+                _unsyncedEdits.Add(new Microsoft.CodeAnalysis.Text.TextChange(new Microsoft.CodeAnalysis.Text.TextSpan(e.Offset, e.RemovalLength), e.InsertedText.Text));
+            }
+            else
+            {
+                _tooManyUnsyncedEdits = true;
+                _unsyncedEdits.Clear();
+            }
+        }
+
         if (_language is not null || HasXamlFeatures)
         {
             var token = RestartAnalysis();

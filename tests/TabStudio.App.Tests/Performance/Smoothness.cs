@@ -24,6 +24,12 @@ internal readonly record struct UiCost(TimeSpan Time, long Allocated, int Collec
 /// </summary>
 internal static class Smoothness
 {
+    /// <summary>
+    /// Whether this is CI's second pass of the tests, in the light theme, for its screenshots: the benchmarks measure the
+    /// same thing in both themes, so they run in the first pass only.
+    /// </summary>
+    public static bool IsLightPass => string.Equals(Environment.GetEnvironmentVariable("TABSTUDIO_THEME"), "Light", StringComparison.OrdinalIgnoreCase);
+
     /// <summary>Runs an action on the UI thread and everything it queued, then the layout and a frame of the window.</summary>
     /// <param name="window">The window that shows the result.</param>
     /// <param name="action">What the person did.</param>

@@ -50,12 +50,36 @@ public static partial class SelfTest
             await workspace.PauseShown.WaitAsync(cancellationToken);
             var where = workspace.StatusText;
             var name = workspace.Locals.Tree.Rows.FirstOrDefault(r => string.Equals(r.Name, "name", StringComparison.Ordinal))?.Value;
-            workspace.StartDebuggingCommand.Execute(null);
+
+            // How long a step takes, from the tap to the new line, Locals and Call Stack shown: three Step Overs.
+            var steps = new List<double>();
+            for (var i = 0; i < 3 && workspace.IsPaused && workspace.StepOverCommand.CanExecute(null); i++)
+            {
+                var step = Stopwatch.StartNew();
+                var previous = workspace.PauseShown;
+                workspace.StepOverCommand.Execute(null);
+                await WaitAsync(() => !workspace.IsDebugging || (workspace.IsPaused && !ReferenceEquals(workspace.PauseShown, previous)), cancellationToken);
+                if (!workspace.IsPaused)
+                {
+                    break;
+                }
+
+                await workspace.PauseShown.WaitAsync(cancellationToken);
+                steps.Add(step.Elapsed.TotalMilliseconds);
+            }
+
+            if (workspace.IsDebugging)
+            {
+                workspace.StartDebuggingCommand.Execute(null);
+            }
+
             await WaitAsync(() => !workspace.IsDebugging, cancellationToken);
 
             var expected = $"\"{Name}\"";
+            var stepped = steps.Count == 0 ? string.Empty
+                : $", {steps.Count} steps in {string.Join(" / ", steps.Select(s => s.ToString("0", System.Globalization.CultureInfo.InvariantCulture)))} ms";
             return string.Equals(name, expected, StringComparison.Ordinal)
-                ? new SelfTestResult(true, $"Debugger: {where}, name = {name}", clock.Elapsed)
+                ? new SelfTestResult(true, $"Debugger: {where}, name = {name}{stepped}", clock.Elapsed)
                 : new SelfTestResult(false, $"Debugger: stopped, but the local 'name' was {name ?? "missing"}.", clock.Elapsed);
         }
         finally

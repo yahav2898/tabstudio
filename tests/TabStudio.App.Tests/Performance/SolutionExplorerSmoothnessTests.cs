@@ -23,6 +23,11 @@ public sealed class SolutionExplorerSmoothnessTests
     [AvaloniaFact]
     public async Task A_folder_of_thousands_of_files_expands_and_searches_without_a_pause()
     {
+        if (Smoothness.IsLightPass)
+        {
+            return;
+        }
+
         using var temp = new TempDirectory();
         var root = Path.Combine(temp.Path, "Notes");
         var big = Path.Combine(root, "big");
