@@ -53,18 +53,42 @@ public static partial class SelfTest
 
             // How long a step takes, from the tap to the new line, Locals and Call Stack shown: three Step Overs.
             var steps = new List<double>();
+            // Watched through the pause state, which every kind of session (in-process, Link, adapters) sets; a step
+            // that does not pause again within 20 s ends the measurement, never the self test.
             for (var i = 0; i < 3 && workspace.IsPaused && workspace.StepOverCommand.CanExecute(null); i++)
             {
+                var resumed = false;
+                var paused = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+                void OnState(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+                {
+                    if (!workspace.IsPaused)
+                    {
+                        resumed = true;
+                    }
+                    else if (resumed)
+                    {
+                        paused.TrySetResult();
+                    }
+                }
+
                 var step = Stopwatch.StartNew();
-                var previous = workspace.PauseShown;
-                workspace.StepOverCommand.Execute(null);
-                await WaitAsync(() => !workspace.IsDebugging || (workspace.IsPaused && !ReferenceEquals(workspace.PauseShown, previous)), cancellationToken);
-                if (!workspace.IsPaused)
+                workspace.PropertyChanged += OnState;
+                try
+                {
+                    workspace.StepOverCommand.Execute(null);
+                    using var limit = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                    limit.CancelAfter(TimeSpan.FromSeconds(20));
+                    await paused.Task.WaitAsync(limit.Token);
+                }
+                catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
                 {
                     break;
                 }
+                finally
+                {
+                    workspace.PropertyChanged -= OnState;
+                }
 
-                await workspace.PauseShown.WaitAsync(cancellationToken);
                 steps.Add(step.Elapsed.TotalMilliseconds);
             }
 
