@@ -91,7 +91,7 @@ internal sealed class NUnitAdapter : FrameworkAdapter
     private static bool IsTestAttribute(AttributeReader attribute) =>
         attribute.Is(FrameworkNames.NUnitTest) || attribute.Is(FrameworkNames.NUnitTestCase) || attribute.Is(FrameworkNames.NUnitTestCaseSource);
 
-    private static IEnumerable<RunnableTest> SingleTest(TestMethodBuilder builder, Type type, MethodInfo method, List<AttributeReader> attributes)
+    private static List<RunnableTest> SingleTest(TestMethodBuilder builder, Type type, MethodInfo method, List<AttributeReader> attributes)
     {
         if (method.GetParameters().Any(p => !p.IsOptional))
         {
