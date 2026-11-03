@@ -36,9 +36,9 @@ remote_url="${TABSTUDIO_PUBLISH_REMOTE:-$remote}"
 
 # Every job of every branch publishes here, and a fetch or push can stall on the busy branch: one did until the SSH job's
 # 20 minutes ran out, failing a job whose tests had passed. Each Git call gets a limit, and publishing gives up after
-# ten minutes with a warning; the logs are an aid, never the job's verdict.
-limit="${TABSTUDIO_PUBLISH_GIT_TIMEOUT:-120}"
-deadline=$(( $(date +%s) + ${TABSTUDIO_PUBLISH_DEADLINE:-600} ))
+# four minutes with a warning (ten still ran the SSH job past its 20); the logs are an aid, never the job's verdict.
+limit="${TABSTUDIO_PUBLISH_GIT_TIMEOUT:-60}"
+deadline=$(( $(date +%s) + ${TABSTUDIO_PUBLISH_DEADLINE:-240} ))
 for attempt in $(seq 1 12); do
   if [ "$(date +%s)" -ge "$deadline" ]; then
     break

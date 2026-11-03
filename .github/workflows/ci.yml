@@ -131,6 +131,8 @@ jobs:
                 echo "$name: the first attempt failed and the retry passed (see $name.log)" >> ci-out/FLAKY.txt
               else
                 status=1
+                # The failures themselves, which the tail below (the end of the first run) does not reach.
+                grep -E -A30 "^  Failed " "ci-out/$name.retry.log" | head -n 200 || true
               fi
             fi
             tail -n 40 "ci-out/$name.log"
@@ -567,6 +569,15 @@ jobs:
       TABSTUDIO_SQLSERVER: Server=tcp:127.0.0.1,1433;Database=SimplCommerce;User ID=sa;Password=TabStudio-ci-1433;TrustServerCertificate=True;MultipleActiveResultSets=true
     steps:
       - uses: actions/checkout@v4
+
+      # The repositories, their packages and the toolchains above filled the runner's disk while cloning ("No space left
+      # on device", with no step's log kept). None of these is used here: Swift is installed below in its own version.
+      - name: Make room for the repositories
+        run: |
+          df -h "$HOME"
+          sudo rm -rf /usr/share/swift /opt/ghc /usr/local/.ghcup /usr/local/share/boost /usr/local/share/powershell \
+            /opt/hostedtoolcache/CodeQL /opt/hostedtoolcache/PyPy /opt/hostedtoolcache/Ruby /opt/microsoft/msedge || true
+          df -h "$HOME"
 
       - uses: actions/setup-dotnet@v4
         with:

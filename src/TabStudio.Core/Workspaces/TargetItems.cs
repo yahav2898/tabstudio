@@ -251,7 +251,7 @@ public static partial class TargetItems
                 continue;
             }
 
-            var copy = new Item(item.Type, item.FullPath, new Dictionary<string, string>(item.Metadata, StringComparer.OrdinalIgnoreCase), item.Types);
+            var copy = new Item(item.Type, item.FullPath, new Dictionary<string, string>(item.Metadata, StringComparer.OrdinalIgnoreCase), item.Types, item.IsFile);
             byPath[item.FullPath] = copy;
             files.Add(copy);
         }
