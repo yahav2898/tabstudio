@@ -309,6 +309,14 @@ public static class LegacyProjectUpgrader
                     continue;
                 }
 
+                // An analyzer of a package in ..\packages\, which packages.config restored there: that folder is not
+                // restored once packages.config is gone, so the item would name a missing file. The package's
+                // PackageReference brings its analyzers.
+                if (type == "Analyzer" && include is not null && ConvertPackageAnalyzer(include, packagesFromConfig))
+                {
+                    continue;
+                }
+
                 if (condition is not null)
                 {
                     // An item for one configuration is kept as written. A file the SDK includes by default is first
@@ -347,6 +355,41 @@ public static class LegacyProjectUpgrader
                         break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Drops an Analyzer item whose file is in a package's folder under <c>packages</c>, giving the package a
+        /// PackageReference when packages.config did not list it.
+        /// </summary>
+        /// <returns>Whether the item is dropped.</returns>
+        private bool ConvertPackageAnalyzer(string include, IReadOnlyList<PackageReferenceInfo> packagesFromConfig)
+        {
+            var folder = include.Replace('\\', '/').Split('/', StringSplitOptions.RemoveEmptyEntries);
+            var index = Array.FindIndex(folder, p => string.Equals(p, "packages", StringComparison.OrdinalIgnoreCase));
+            if (index < 0 || index + 2 >= folder.Length)
+            {
+                return false;
+            }
+
+            var packageFolder = folder[index + 1];
+            if (packagesFromConfig.Any(p => packageFolder.StartsWith(p.Name + ".", StringComparison.OrdinalIgnoreCase)))
+            {
+                return true;
+            }
+
+            // Name.1.2.3: the name ends before the first part that starts with a digit.
+            var parts = packageFolder.Split('.');
+            var version = Array.FindIndex(parts, p => p.Length > 0 && char.IsAsciiDigit(p[0]));
+            if (version <= 0)
+            {
+                _notes.Add($"The analyzer {include} is in the packages folder, which is not restored without packages.config: it is left out.");
+                return true;
+            }
+
+            var name = string.Join('.', parts[..version]);
+            AddPackage(name, string.Join('.', parts[version..]), "all");
+            _notes.Add($"The analyzer {include} is the {name} package's: it is a PackageReference now.");
+            return true;
         }
 
         private void ConvertReference(XElement item, string include, IReadOnlyList<PackageReferenceInfo> packagesFromConfig)

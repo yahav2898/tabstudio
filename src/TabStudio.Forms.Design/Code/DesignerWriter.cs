@@ -116,6 +116,7 @@ internal static class DesignerWriter
             lines.Add($"{Target(document.Root, string.Empty, style)}PerformLayout();");
         }
 
+        KeptLines.Apply(lines, document);
         var builder = new StringBuilder("{").Append(style.NewLine);
         foreach (var line in lines)
         {
@@ -255,7 +256,7 @@ internal static class DesignerWriter
     private static string WriteFields(DesignDocument document, string indent)
     {
         var builder = new StringBuilder();
-        foreach (var component in document.Components)
+        foreach (var component in document.Components.Where(c => !c.FieldKept))
         {
             builder.Append(indent).Append(component.FieldModifiers).Append(' ').Append(component.TypeName).Append(' ').Append(component.Name).Append(';').Append(document.Style.NewLine);
         }

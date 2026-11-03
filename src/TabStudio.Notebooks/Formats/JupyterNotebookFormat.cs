@@ -64,7 +64,8 @@ public static class JupyterNotebookFormat
         ArgumentNullException.ThrowIfNull(document);
 
         var minor = JsonNodes.IntOf(document.AdditionalProperties.Peek(NbFormatMinorKey)) ?? LatestMinorVersion;
-        var writeIds = minor >= 5;
+        // Cell ids came with nbformat 4.5; a 4.4 notebook whose cells have them, as some tools write, keeps them.
+        var writeIds = minor >= 5 || document.HasCellIds;
         var defaultLanguage = document.DefaultLanguage;
 
         var cells = new JsonArray();
@@ -142,6 +143,7 @@ public static class JupyterNotebookFormat
             Metadata = metadata,
             AdditionalProperties = NotebookMetadata.Own(root),
             Format = NotebookFormat.Jupyter,
+            HasCellIds = cells.Any(c => !c.HasGeneratedId),
         };
     }
 
@@ -231,10 +233,19 @@ public static class JupyterNotebookFormat
 
     private static DisplayOutput ReadDisplay(JsonObject output, bool isResult)
     {
-        var data = ReadMimeBundle(JsonNodes.TakeObject(output, "data"));
+        var bundle = JsonNodes.TakeObject(output, "data");
+        var jsonAsText = bundle?.Where(entry => MimeTypes.IsJson(entry.Key) && JsonNodes.TextOf(entry.Value) is not null)
+            .Select(entry => entry.Key).ToHashSet(StringComparer.Ordinal);
+        var data = ReadMimeBundle(bundle);
         var metadata = NotebookMetadata.Own(JsonNodes.TakeObject(output, MetadataKey) ?? new JsonObject());
         var executionCount = isResult ? JsonNodes.IntOf(JsonNodes.Take(output, "execution_count")) : null;
-        return new DisplayOutput(data) { Metadata = metadata, IsResult = isResult, ExecutionCount = executionCount };
+        return new DisplayOutput(data)
+        {
+            Metadata = metadata,
+            IsResult = isResult,
+            ExecutionCount = executionCount,
+            JsonAsText = jsonAsText is { Count: > 0 } ? jsonAsText : null,
+        };
     }
 
     private static MimeBundle ReadMimeBundle(JsonObject? data)
@@ -349,7 +360,7 @@ public static class JupyterNotebookFormat
                 break;
 
             case DisplayOutput display:
-                json["data"] = WriteMimeBundle(display.Data);
+                json["data"] = WriteMimeBundle(display.Data, display.JsonAsText);
                 json[MetadataKey] = display.Metadata.ToJsonObject();
                 json["output_type"] = display.IsResult ? "execute_result" : "display_data";
                 if (display.IsResult)
@@ -379,12 +390,17 @@ public static class JupyterNotebookFormat
         return json;
     }
 
-    private static JsonObject WriteMimeBundle(MimeBundle data)
+    private static JsonObject WriteMimeBundle(MimeBundle data, IReadOnlySet<string>? jsonAsText)
     {
         var json = new JsonObject();
         foreach (var (mimeType, value) in data.Entries)
         {
-            if (MimeTypes.IsJson(mimeType) && TryParseJson(value, out var parsed))
+            if (jsonAsText?.Contains(mimeType) == true)
+            {
+                // The file had the JSON as a string: it stays one.
+                json[mimeType] = value;
+            }
+            else if (MimeTypes.IsJson(mimeType) && TryParseJson(value, out var parsed))
             {
                 json[mimeType] = parsed;
             }

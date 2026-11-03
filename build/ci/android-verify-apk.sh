@@ -36,6 +36,36 @@ expected="$(keytool -list -v -keystore "$keystore" -storepass tabstudio-dev -ali
 } > "$report" 2>&1
 cat "$report"
 
+# The IDE's activity handles a change of display size (DeX's, or Android's Display size: density) and of Bold text
+# (fontWeightAdjustment) itself; without them in configChanges, Android recreated it and lost the IDE's window.
+xmltree="$(mktemp)"
+"$build_tools/aapt2" dump xmltree --file AndroidManifest.xml "$apk" > "$xmltree"
+python3 - "$xmltree" <<'PY'
+import re, sys
+tree = open(sys.argv[1], encoding="utf-8").read().splitlines()
+required = {"density": 0x1000, "fontWeightAdjustment": 0x10000000, "fontScale": 0x40000000, "screenSize": 0x400}
+for i, line in enumerate(tree):
+    if "E: activity" not in line:
+        continue
+    indent = len(line) - len(line.lstrip())
+    attributes = []
+    for following in tree[i + 1:]:
+        if len(following) - len(following.lstrip()) <= indent:
+            break
+        attributes.append(following)
+    if not any('"com.tabstudio.ide.MainActivity"' in a for a in attributes):
+        continue
+    changes = [a for a in attributes if "android:configChanges" in a]
+    value = int(re.search(r"0x([0-9a-fA-F]+)\s*$", changes[0]).group(1), 16) if changes else 0
+    missing = [name for name, bit in required.items() if not value & bit]
+    if missing:
+        sys.exit(f"MainActivity's configChanges (0x{value:x}) lack {', '.join(missing)}: changing them recreates the IDE.")
+    print(f"MainActivity handles its configuration changes itself (configChanges 0x{value:x}).")
+    break
+else:
+    sys.exit("The manifest has no com.tabstudio.ide.MainActivity.")
+PY
+
 # apksigner names the signer by scheme ("Signer #1" for v1/v2, "V3.0 Signer" for v3); take the first certificate.
 actual="$({ "$build_tools/apksigner" verify --print-certs "$apk" || true; } | sed -n 's/^.*certificate SHA-256 digest: //p' | head -n 1 || true)"
 if [ -z "$expected" ] || [ "$actual" != "$expected" ]; then

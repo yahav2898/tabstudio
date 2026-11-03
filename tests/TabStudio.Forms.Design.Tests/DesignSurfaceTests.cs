@@ -261,6 +261,115 @@ public sealed class DesignSurfaceTests
         Assert.Contains("saveButton.Text = \"Save customer\";", surface.Text, StringComparison.Ordinal);
     }
 
+    [AvaloniaFact]
+    public void A_new_control_skips_names_the_code_file_declares_and_a_rename_cannot_take_them_or_hide_a_form_member()
+    {
+        const string code = """
+            namespace HelloForms
+            {
+                public partial class Form1 : Form
+                {
+                    private int button1;
+                    private string label1 = "";
+
+                    public Form1()
+                    {
+                        InitializeComponent();
+                    }
+
+                    private void button2() { }
+                    public event EventHandler button3;
+                }
+            }
+            """;
+        var surface = new DesignSurface(Samples.Template, "Form", simplified: true, codeText: code);
+
+        // button1 is a field and button2 a method in Form1.cs, and button3 an event: the designer goes on to button4.
+        var name = surface.Add(typeof(Button), new Point(16, 16));
+        Assert.Equal("button4", name);
+        var label = surface.Add(typeof(Label), new Point(16, 64));
+        Assert.Equal("label2", label);
+        Compiles(surface.Text, code);
+
+        var button = surface.Document!.Find(name)!;
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "button1"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "button2"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "label1"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "InitializeComponent"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "components"));
+
+        // A field named Text or Size would hide the form's own property.
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "Text"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "Size"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "Form1"));
+        Assert.Equal(name, surface.Document!.Find(name)!.Name);
+
+        surface.Rename(button, "okButton");
+        Compiles(surface.Text, code);
+    }
+
+    [AvaloniaFact]
+    public void Comments_and_conditional_blocks_in_InitializeComponent_survive_an_edit_and_stay_conditional()
+    {
+        var designer = Samples.Template.Replace(
+            """
+                        this.components = new System.ComponentModel.Container();
+                        this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+                        this.ClientSize = new System.Drawing.Size(800, 450);
+                        this.Text = "Form1";
+            """,
+            """
+                        // Created first so the others can use it.
+                        this.button1 = new System.Windows.Forms.Button();
+                        this.SuspendLayout();
+                        //
+                        // button1
+                        //
+                        this.button1.Location = new System.Drawing.Point(12, 12);
+                        this.button1.Name = "button1";
+                        this.button1.Text = "OK"; // the default action
+            #if DEBUG
+                        this.button1.BackColor = System.Drawing.Color.Red;
+            #endif
+                        //
+                        // Form1
+                        //
+                        this.ClientSize = new System.Drawing.Size(800, 450);
+                        this.Controls.Add(this.button1);
+                        this.Name = "Form1";
+                        this.Text = "Form1";
+                        this.ResumeLayout(false);
+                        // Last of all.
+            """,
+            StringComparison.Ordinal).Replace("#endregion", "#endregion\n\n        private System.Windows.Forms.Button button1;", StringComparison.Ordinal);
+        Assert.Contains("#if DEBUG", designer, StringComparison.Ordinal);
+        var surface = new DesignSurface(designer, "Form", simplified: true);
+
+        surface.SetProperty(surface.Document!.Find("button1")!, "Text", "Save");
+
+        var text = Lines(surface.Text);
+        Assert.Contains("// Created first so the others can use it.\n            button1 = new Button();", text, StringComparison.Ordinal);
+        Assert.Contains("button1.Text = \"Save\"; // the default action", text, StringComparison.Ordinal);
+        Assert.Contains("// Last of all.", text, StringComparison.Ordinal);
+
+        // The back color is still set only in a Debug build: once, between #if DEBUG and #endif.
+        var opening = text.IndexOf("#if DEBUG", StringComparison.Ordinal);
+        var color = text.IndexOf("button1.BackColor = ", StringComparison.Ordinal);
+        var closing = text.IndexOf("#endif", StringComparison.Ordinal);
+        Assert.True(opening >= 0 && opening < color && color < closing, text);
+        Assert.Equal(color, text.LastIndexOf("button1.BackColor = ", StringComparison.Ordinal));
+        Assert.Null(surface.Document!.Find("button1")!.GetCode("BackColor"));
+        Compiles(surface.Text, Samples.TemplateCode);
+
+        // A second edit, with the file read back, keeps them again.
+        surface.SetProperty(surface.Document!.Find("button1")!, "Text", "Send");
+        text = Lines(surface.Text);
+        Assert.Contains("button1.Text = \"Send\"; // the default action", text, StringComparison.Ordinal);
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(text, "#if DEBUG"));
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(text, "// Created first"));
+        Compiles(surface.Text, Samples.TemplateCode);
+    }
+
     /// <summary>The text with its line endings as <c>\n</c> and no spaces at their ends, for comparing blocks of lines.</summary>
     private static string Lines(string text) =>
         string.Join('\n', text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n').Select(line => line.TrimEnd()));

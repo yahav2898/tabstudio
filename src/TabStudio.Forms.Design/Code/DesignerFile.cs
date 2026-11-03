@@ -116,10 +116,15 @@ internal sealed class DesignerFile
         var statements = method.Body!.Statements;
         var style = DetectStyle(text, method, statements);
         var reader = new Reader(new DesignDocument(new DesignComponent(type.Identifier.ValueText, rootTypeName, isRoot: true), style), fieldNames.Select(f => f.Name).ToHashSet(StringComparer.Ordinal));
-        foreach (var statement in statements)
-        {
-            reader.Read(statement);
-        }
+        var layout = KeptLines.Analyze(
+            text,
+            TextLines.LineEnd(text, method.Body!.OpenBraceToken.Span.End),
+            TextLines.LineStart(text, method.Body!.CloseBraceToken.SpanStart),
+            [.. statements.Select(s => s.Span)],
+            DesignerLanguage.CSharp,
+            style.Indent,
+            style.NewLine);
+        ReadAll(reader.Document, statements, layout, reader.Read, reader.KeepBlock);
 
         var document = reader.Document;
         document.Root.Type = TypeResolver.Resolve(rootTypeName) ?? typeof(System.Windows.Forms.Form);
@@ -129,14 +134,23 @@ internal sealed class DesignerFile
             component.Type = TypeResolver.Resolve(component.TypeName);
             // "private Button a, b;" declares two components: the writer writes a field for each, so the shared
             // declaration goes, or both were declared twice. One that also declares another field stays as it is.
-            if (fieldNames.Find(f => f.Name == component.Name) is { Field: { } field }
-                && field.Declaration.Variables.All(v => document.Find(v.Identifier.ValueText) is not null))
+            if (fieldNames.Find(f => f.Name == component.Name) is not { Field: { } field })
+            {
+                continue;
+            }
+
+            if (field.Declaration.Variables.All(v => document.Find(v.Identifier.ValueText) is not null))
             {
                 component.FieldModifiers = field.Modifiers.ToString();
                 if (!componentFields.Contains(field.Span))
                 {
                     componentFields.Add(field.Span);
                 }
+            }
+            else
+            {
+                // The writer writes no field for it, or it was declared twice.
+                component.FieldKept = true;
             }
         }
 
@@ -145,6 +159,49 @@ internal sealed class DesignerFile
         {
             MemberIndent = TextLines.Indentation(method.GetLeadingTrivia().ToString()),
         };
+    }
+
+    /// <summary>
+    /// Reads InitializeComponent's statements, keeping its blocks of conditional compilation as they are, with the
+    /// statements inside them, and the comments each statement has.
+    /// </summary>
+    /// <param name="document">The document the statements are read into.</param>
+    /// <param name="statements">The statements.</param>
+    /// <param name="layout">The body split around them.</param>
+    /// <param name="read">Reads a statement.</param>
+    /// <param name="keepBlock">Keeps a block as it is written.</param>
+    internal static void ReadAll<TStatement>(DesignDocument document, IReadOnlyList<TStatement> statements, BodyLayout layout, Action<TStatement> read, Action<string> keepBlock)
+        where TStatement : SyntaxNode
+    {
+        var blocks = new Queue<KeptBlock>(layout.Blocks);
+        for (var i = 0; i < statements.Count; i++)
+        {
+            while (blocks.Count > 0 && blocks.Peek().Start <= statements[i].SpanStart)
+            {
+                keepBlock(blocks.Dequeue().Text);
+            }
+
+            if (layout.InBlocks.Contains(i))
+            {
+                continue;
+            }
+
+            read(statements[i]);
+            if (layout.Comments.TryGetValue(i, out var comment))
+            {
+                document.Comments.Add(new KeptComment(statements[i].ToString(), comment.Leading, comment.After));
+            }
+        }
+
+        while (blocks.Count > 0)
+        {
+            keepBlock(blocks.Dequeue().Text);
+        }
+
+        if (layout.Trailing.Count > 0)
+        {
+            document.Comments.Add(new KeptComment(string.Empty, [.. layout.Trailing], null));
+        }
     }
 
     /// <summary>Where new fields go: after the <c>#endregion</c> that follows InitializeComponent, or before the class's closing brace.</summary>
@@ -310,6 +367,16 @@ internal sealed class DesignerFile
             }
 
             Keep(statement, null);
+        }
+
+        /// <summary>
+        /// Keeps a block of conditional compilation as it is written, in the section of the first component it names
+        /// that is created before it, or the form's.
+        /// </summary>
+        public void KeepBlock(string text)
+        {
+            var component = KeptLines.NamedFields(text, fields).Select(Document.Find).FirstOrDefault(c => c is not null && Document.Components.Contains(c));
+            (component ?? Document.Root).OtherStatements.Add(text);
         }
 
         /// <summary>

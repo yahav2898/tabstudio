@@ -344,6 +344,40 @@ public sealed class LegacyFrameworkProjectTests : IDisposable
     }
 
     [Fact]
+    public void Upgrade_drops_analyzers_in_the_packages_folder_for_their_package_references()
+    {
+        LegacyFrameworkProjects.WriteWindowsFormsApp(_temp.Path, "Hello");
+        _temp.Write("Hello/packages.config", """
+            <?xml version="1.0" encoding="utf-8"?>
+            <packages>
+              <package id="StyleCop.Analyzers" version="1.1.118" targetFramework="net48" developmentDependency="true" />
+            </packages>
+            """);
+        var path = _temp.Resolve("Hello/Hello.csproj");
+        File.WriteAllText(path, File.ReadAllText(path).Replace("</Project>", """
+              <ItemGroup>
+                <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+                <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+                <Analyzer Include="..\packages\Microsoft.CodeAnalysis.NetAnalyzers.8.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll" />
+                <Analyzer Include="Tools\Local.Analyzer.dll" />
+              </ItemGroup>
+            </Project>
+            """, StringComparison.Ordinal));
+
+        var upgrade = LegacyProjectUpgrader.Plan(path);
+        var project = XElement.Parse(upgrade.UpgradedXml);
+
+        // No analyzer names ..\packages\, which nothing restores once packages.config is gone.
+        var analyzers = project.Descendants("Analyzer").Select(a => a.Attribute("Include")!.Value).ToList();
+        Assert.Equal(["Tools\\Local.Analyzer.dll"], analyzers);
+        var packages = project.Descendants("PackageReference").ToDictionary(p => p.Attribute("Include")!.Value, p => p);
+        Assert.Equal("1.1.118", packages["StyleCop.Analyzers"].Attribute("Version")?.Value);
+        Assert.Equal("8.0.0", packages["Microsoft.CodeAnalysis.NetAnalyzers"].Attribute("Version")?.Value);
+        Assert.Equal("all", packages["Microsoft.CodeAnalysis.NetAnalyzers"].Attribute("PrivateAssets")?.Value);
+        Assert.Contains(upgrade.Notes, n => n.Contains("Microsoft.CodeAnalysis.NetAnalyzers", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void Upgrade_refuses_a_project_that_is_already_sdk_style()
     {
         var path = _temp.Write("App/App.csproj", """<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup></Project>""");

@@ -80,7 +80,7 @@ internal sealed partial class DesignSurface
             var names = new Dictionary<string, string>(StringComparer.Ordinal);
             foreach (var item in clip.Components)
             {
-                var name = item.Type is { } type ? doc.NewName(type) : doc.NewName(typeof(System.Windows.Forms.Control));
+                var name = NewName(doc, item.Type ?? typeof(System.Windows.Forms.Control));
                 names[item.Name] = name;
                 doc.Components.Add(new DesignComponent(name, item.TypeName)
                 {

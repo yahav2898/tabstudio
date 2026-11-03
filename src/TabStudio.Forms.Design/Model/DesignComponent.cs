@@ -41,6 +41,12 @@ internal sealed class DesignComponent
     /// </summary>
     public int? FieldIndex { get; set; }
 
+    /// <summary>
+    /// Whether the component's field shares its declaration with a field that is not a component's, as in
+    /// <c>Dim Button1, count As Object</c>: the declaration stays as it is, and the writer writes no field for it.
+    /// </summary>
+    public bool FieldKept { get; set; }
+
     /// <summary>The properties set, by property path, such as <c>Location</c> or <c>FlatAppearance.BorderSize</c>, with their values as C#.</summary>
     public List<DesignAssignment> Properties { get; } = [];
 

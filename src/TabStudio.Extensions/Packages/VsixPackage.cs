@@ -174,6 +174,23 @@ public sealed class VsixPackage : IDisposable
 
     private static bool IsSafeRelativePath(string relative) =>
         !Path.IsPathRooted(relative)
-        && !relative.Contains(':', StringComparison.Ordinal)
+        && !HasUnsafeColon(relative)
         && relative.Split('/').All(segment => segment is not ("." or ".."));
+
+    /// <summary>
+    /// Whether a colon makes a path in a package unsafe: one after a drive letter, as in <c>C:</c>, or any colon on
+    /// Windows, where it names an alternate data stream. On Android a colon is an ordinary character in a file's name,
+    /// and extensions such as those with <c>icons/file:dark.svg</c> install.
+    /// </summary>
+    /// <param name="relative">The path, with '/' or '\' between folders.</param>
+    internal static bool HasUnsafeColon(string relative)
+    {
+        ArgumentNullException.ThrowIfNull(relative);
+        if (!relative.Contains(':', StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        return OperatingSystem.IsWindows() || (relative.Length >= 2 && char.IsAsciiLetter(relative[0]) && relative[1] == ':');
+    }
 }

@@ -121,6 +121,28 @@ public sealed class ExtensionStoreTests : IDisposable
     }
 
     [Fact]
+    public async Task A_file_with_a_colon_in_its_name_installs_where_the_system_allows_it_and_a_drive_never_does()
+    {
+        Assert.True(VsixPackage.HasUnsafeColon("C:/Windows/win.ini"));
+        Assert.True(VsixPackage.HasUnsafeColon("c:evil.txt"));
+        Assert.False(VsixPackage.HasUnsafeColon("icons/file.svg"));
+        Assert.Equal(OperatingSystem.IsWindows(), VsixPackage.HasUnsafeColon("icons/file:dark.svg"));
+        if (OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        using var store = CreateStore();
+        var vsix = LumenExtension.Builder().Add("icons/file:dark.svg", "<svg />").WriteTo(_temp.Path, "colon.vsix");
+
+        var installed = await store.InstallAsync(vsix, new ExtensionSource(ExtensionOrigin.File));
+
+        Assert.Equal("<svg />", File.ReadAllText(Path.Combine(installed.Folder, "icons", "file:dark.svg")));
+        Assert.Equal(Path.Combine(installed.Folder, "icons", "file:dark.svg"), installed.Resolve("./icons/file:dark.svg"));
+        Assert.Null(installed.Resolve("C:/Windows/win.ini"));
+    }
+
+    [Fact]
     public async Task Files_outside_the_extension_folder_of_the_archive_are_not_extracted()
     {
         using var store = CreateStore();

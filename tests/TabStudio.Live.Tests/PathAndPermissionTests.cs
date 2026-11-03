@@ -30,6 +30,28 @@ public sealed class PathAndPermissionTests
     }
 
     [Fact]
+    public void A_file_with_a_colon_in_its_name_is_shared_where_the_system_allows_it()
+    {
+        Assert.Null(LiveWorkspacePaths.Normalize("C:/Windows/win.ini"));
+        Assert.Null(LiveWorkspacePaths.Normalize("c:secret.txt"));
+        Assert.Equal(OperatingSystem.IsWindows() ? null : "docs/notes:v2.md", LiveWorkspacePaths.Normalize("docs/notes:v2.md"));
+        if (OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        using var temp = new TempDirectory();
+        temp.Write("docs/notes:v2.md", "# Notes");
+        temp.Write("Program.cs", "class P { }");
+
+        var files = new LiveWorkspaceFiles(temp.Path).Collect(CancellationToken.None);
+
+        Assert.Equal(["Program.cs", "docs/notes:v2.md"], files.Select(f => f.Path).Order(StringComparer.Ordinal));
+        Assert.Equal("# Notes", File.ReadAllText(LiveWorkspacePaths.ToFullPath(temp.Path, "docs/notes:v2.md")!));
+        Assert.Equal("docs/notes:v2.md", LiveWorkspacePaths.ToRelativePath(temp.Path, Path.Combine(temp.Path, "docs", "notes:v2.md")));
+    }
+
+    [Fact]
     public void A_path_through_a_link_out_of_the_workspace_is_refused()
     {
         using var temp = new TempDirectory();

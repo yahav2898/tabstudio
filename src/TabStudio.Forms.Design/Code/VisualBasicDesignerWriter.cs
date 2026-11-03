@@ -135,6 +135,7 @@ internal static class VisualBasicDesignerWriter
             lines.Add($"{Target(document.Root, string.Empty, style)}PerformLayout()");
         }
 
+        KeptLines.Apply(lines, document);
         var builder = new StringBuilder();
         foreach (var line in lines)
         {
@@ -233,7 +234,7 @@ internal static class VisualBasicDesignerWriter
     private static string WriteFields(DesignDocument document, string indent)
     {
         var builder = new StringBuilder();
-        foreach (var component in document.Components.OrderBy(c => c.FieldIndex ?? int.MaxValue))
+        foreach (var component in document.Components.Where(c => !c.FieldKept).OrderBy(c => c.FieldIndex ?? int.MaxValue))
         {
             builder.Append(indent).Append(component.FieldModifiers).Append(' ').Append(component.Name).Append(" As ").Append(component.TypeName)
                 .Append(document.Style.NewLine);
