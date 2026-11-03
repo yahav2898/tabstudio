@@ -46,6 +46,11 @@ public sealed partial class PackageRestorer
     /// <param name="http">The client for web sources. The caller owns it and decides its timeout and proxy.</param>
     /// <exception cref="ArgumentException">The options name no packages folder or an unknown target framework.</exception>
     public PackageRestorer(PackageRestoreOptions options, HttpClient http)
+        : this(options, http, runtimeTargetFramework: null)
+    {
+    }
+
+    private PackageRestorer(PackageRestoreOptions options, HttpClient http, string? runtimeTargetFramework)
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(http);
@@ -69,8 +74,50 @@ public sealed partial class PackageRestorer
             .ToList();
         _frameworkPackages = new FrameworkPackages(options.FrameworkAssemblyNames, framework);
         _packages = new GlobalPackagesFolder(options.GlobalPackagesFolder);
-        _sharedFrameworks = new SharedFrameworks(_packages, CreateFeeds, options.TargetFramework, options.CompilerVersion);
+        _sharedFrameworks = new SharedFrameworks(_packages, CreateFeeds, options.TargetFramework, options.CompilerVersion, runtimeTargetFramework);
+        _runtimeTargetFramework = runtimeTargetFramework;
     }
+
+    private readonly string? _runtimeTargetFramework;
+    private readonly ConcurrentDictionary<string, PackageRestorer> _olderFrameworks = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// The older .NET a project targets, which its packages and shared frameworks are restored for, as the SDK restores
+    /// them; <see langword="null"/> when it targets <see cref="PackageRestoreOptions.TargetFramework"/> or newer, more than
+    /// one platform, .NET Framework or .NET Standard. Its programs still run on TabStudio's .NET, as a program that rolls
+    /// forward does.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public string? OlderTargetFrameworkOf(ProjectInfo project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        if (_runtimeTargetFramework is not null || project.TargetFrameworks.Count == 0)
+        {
+            return null;
+        }
+
+        NuGetFramework? newest = null;
+        foreach (var name in project.TargetFrameworks)
+        {
+            var framework = NuGetFramework.Parse(name);
+            if (framework.IsUnsupported
+                || framework.Framework != FrameworkConstants.FrameworkIdentifiers.NetCoreApp
+                || framework.HasPlatform
+                || framework.Version.Major < 6
+                || framework.Version >= _framework.Version)
+            {
+                return null;
+            }
+
+            newest = newest is null || framework.Version > newest.Version ? framework : newest;
+        }
+
+        return newest?.GetShortFolderName();
+    }
+
+    /// <summary>A restorer for an older .NET, whose programs run on this restorer's .NET.</summary>
+    private PackageRestorer ForOlderFramework(string targetFramework) =>
+        _olderFrameworks.GetOrAdd(targetFramework, name => new PackageRestorer(Options with { TargetFramework = name }, _http, Options.TargetFramework));
 
     /// <summary>The options the restorer was created with.</summary>
     public PackageRestoreOptions Options { get; }
@@ -99,6 +146,10 @@ public sealed partial class PackageRestorer
     public async Task<RestoreResult> RestoreAsync(ProjectInfo project, IProgress<RestoreProgress>? progress = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(project);
+        if (OlderTargetFrameworkOf(project) is { } older)
+        {
+            return await ForOlderFramework(older).RestoreAsync(project, progress, cancellationToken).ConfigureAwait(false);
+        }
 
         var stopwatch = Stopwatch.StartNew();
         var diagnostics = new List<BuildDiagnostic>();

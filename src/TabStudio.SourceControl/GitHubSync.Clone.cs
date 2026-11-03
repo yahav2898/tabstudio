@@ -455,7 +455,7 @@ public sealed partial class GitHubSync
         IProgress<SyncProgress>? progress,
         CancellationToken cancellationToken,
         IReadOnlyDictionary<string, TrackedFile>? tracked = null,
-        IReadOnlyDictionary<string, byte[]>? replacements = null)
+        Dictionary<string, byte[]>? replacements = null)
     {
         var uploads = changes.Where(c => c.Kind != ChangeKind.Deleted).ToList();
         var result = new Dictionary<string, TrackedFile>(StringComparer.Ordinal);

@@ -27,8 +27,15 @@ public sealed record SharedFrameworkAssets(string Name, string Version, IReadOnl
 /// assemblies. The runtime pack of the device's operating system and processor is used; its assemblies are IL,
 /// so a pack built for Linux also serves Android.
 /// </remarks>
-internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IReadOnlyList<IPackageFeed>> feeds, string targetFramework, Version? compilerVersion)
+internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IReadOnlyList<IPackageFeed>> feeds, string targetFramework, Version? compilerVersion, string? runtimeTargetFramework = null)
 {
+    /// <summary>
+    /// The framework programs run on: <paramref name="runtimeTargetFramework"/> when the project targets an older .NET
+    /// than TabStudio runs, which then compiles against the project's own version of a framework such as ASP.NET Core
+    /// and runs on TabStudio's, as a program that rolls forward does.
+    /// </summary>
+    private readonly string _runtimeFramework = runtimeTargetFramework ?? targetFramework;
+
     /// <summary>.NET itself: its targeting pack brings the source generators of the base library, such as the regular expression and JSON ones.</summary>
     public const string NetCoreFramework = "Microsoft.NETCore.App";
 
@@ -78,10 +85,31 @@ internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IRead
         }
 
         var referencePack = $"{prefix}.Ref";
+        var isNetCore = string.Equals(name, NetCoreFramework, StringComparison.OrdinalIgnoreCase);
 
         // .NET's own runtime is the one TabStudio runs on, so only its targeting pack is needed, for the generators.
-        var runtimePack = string.Equals(name, NetCoreFramework, StringComparison.OrdinalIgnoreCase) ? referencePack : $"{prefix}.Runtime.{RuntimeIdentifier}";
+        var runtimePack = isNetCore ? referencePack : $"{prefix}.Runtime.{RuntimeIdentifier}";
         var major = MajorVersion(targetFramework);
+        if (!isNetCore && !string.Equals(_runtimeFramework, targetFramework, StringComparison.OrdinalIgnoreCase))
+        {
+            // A project for an older .NET compiles against its own version's targeting pack and runs on TabStudio's:
+            // TodoApi, for .NET 9, called UserLoginInfo(displayName:), which ASP.NET Core 10 renamed.
+            var compile = await RestorePackAsync(referencePack, referencePack, major, name, projectName, diagnostics, cancellationToken).ConfigureAwait(false);
+            var run = await RestorePackAsync(runtimePack, runtimePack, MajorVersion(_runtimeFramework), name, projectName, diagnostics, cancellationToken).ConfigureAwait(false);
+            if (compile is null || run is null)
+            {
+                return null;
+            }
+
+            return new SharedFrameworkAssets(
+                name,
+                run.Value.Version.ToNormalizedString(),
+                Assemblies(Path.Combine(compile.Value.Directory, "ref", targetFramework)),
+                Assemblies(Path.Combine(run.Value.Directory, "runtimes", RuntimeIdentifier, "lib", _runtimeFramework)))
+            {
+                Analyzers = Analyzers(compile.Value.Directory),
+            };
+        }
 
         NuGetVersion? version;
         IPackageFeed? feed;
@@ -115,7 +143,6 @@ internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IRead
         {
             var reference = feed is null ? packages.GetPackageDirectory(referencePack, version) : await packages.InstallAsync(feed, referencePack, version, cancellationToken).ConfigureAwait(false);
             var runtime = feed is null ? packages.GetPackageDirectory(runtimePack, version) : await packages.InstallAsync(feed, runtimePack, version, cancellationToken).ConfigureAwait(false);
-            var isNetCore = string.Equals(name, NetCoreFramework, StringComparison.OrdinalIgnoreCase);
             return new SharedFrameworkAssets(
                 name,
                 version.ToNormalizedString(),
@@ -124,6 +151,42 @@ internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IRead
             {
                 Analyzers = Analyzers(reference),
             };
+        }
+        catch (Exception ex) when (ex is PackageSourceException or InvalidPackageException or IOException)
+        {
+            diagnostics.Add(PackageDiagnostics.Error(PackageDiagnosticIds.NetworkUnreachable, $"{name} could not be downloaded: {ex.Message}", projectName));
+            return null;
+        }
+    }
+
+    /// <summary>Restores one pack, the newest stable version for a .NET major version.</summary>
+    /// <returns>The version and folder, or <see langword="null"/> after adding the reason to <paramref name="diagnostics"/>.</returns>
+    private async Task<(NuGetVersion Version, string Directory)?> RestorePackAsync(string pack, string partner, int major, string name, string projectName, List<BuildDiagnostic> diagnostics, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var (version, feed) = await FindVersionAsync(pack, partner, major, cancellationToken).ConfigureAwait(false);
+            if (version is null)
+            {
+                diagnostics.Add(PackageDiagnostics.Error(PackageDiagnosticIds.UnsupportedFramework, $"No version of {name} for .NET {major} was found.", projectName));
+                return null;
+            }
+
+            var directory = feed is null ? packages.GetPackageDirectory(pack, version) : await packages.InstallAsync(feed, pack, version, cancellationToken).ConfigureAwait(false);
+            return (version, directory);
+        }
+        catch (PackageSourceException ex) when (ex.IsUnreachable)
+        {
+            if (Installed(pack, partner, major) is { } installed)
+            {
+                return (installed, packages.GetPackageDirectory(pack, installed));
+            }
+
+            diagnostics.Add(PackageDiagnostics.Error(
+                PackageDiagnosticIds.NetworkUnreachable,
+                $"{name} is not on this device yet, and {ex.PackageSource?.Name ?? "the package source"} cannot be reached to download it. Connect to the internet and build again.",
+                projectName));
+            return null;
         }
         catch (Exception ex) when (ex is PackageSourceException or InvalidPackageException or IOException)
         {

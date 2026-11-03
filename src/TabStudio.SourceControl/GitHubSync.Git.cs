@@ -143,12 +143,15 @@ public sealed partial class GitHubSync
         return builder.Uri.AbsoluteUri;
     }
 
+    /// <summary>The branches a repository whose server does not name its default branch is cloned at, in order.</summary>
+    private static readonly string[] DefaultBranchNames = ["refs/heads/main", "refs/heads/master"];
+
     private static (string Commit, string? Branch) ResolveReference(GitRemoteAddress address, RemoteRefs refs, string? reference)
     {
         if (reference is null)
         {
             var head = refs.Head is { } named && refs.Refs.ContainsKey(named) ? named
-                : new[] { "refs/heads/main", "refs/heads/master" }.FirstOrDefault(refs.Refs.ContainsKey)
+                : DefaultBranchNames.FirstOrDefault(refs.Refs.ContainsKey)
                 ?? refs.Refs.Keys.FirstOrDefault(k => k.StartsWith("refs/heads/", StringComparison.Ordinal));
             if (head is null)
             {
@@ -181,7 +184,7 @@ public sealed partial class GitHubSync
         GitHubClient client,
         GitRemoteAddress parent,
         string folder,
-        IReadOnlyDictionary<string, string> pins,
+        Dictionary<string, string> pins,
         IProgress<SyncProgress>? progress,
         int depth,
         CancellationToken cancellationToken)
@@ -217,7 +220,7 @@ public sealed partial class GitHubSync
         string folder,
         string path,
         string sha,
-        IReadOnlyDictionary<string, string> urls,
+        Dictionary<string, string> urls,
         IProgress<SyncProgress>? progress,
         int depth,
         CancellationToken cancellationToken)

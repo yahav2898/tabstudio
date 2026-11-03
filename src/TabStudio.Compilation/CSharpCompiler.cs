@@ -18,7 +18,7 @@ namespace TabStudio.Compilation;
 /// An instance is immutable and safe to share. It is used directly for one-off compilations, and its static
 /// members give <see cref="RoslynWorkspaceHost"/> the options every project in a workspace is compiled with.
 /// </remarks>
-public sealed class CSharpCompiler
+public sealed partial class CSharpCompiler
 {
     private readonly IReadOnlyList<MetadataReference> _references;
 
@@ -154,6 +154,14 @@ public sealed class CSharpCompiler
             return LanguageVersion.Latest;
         }
 
+        if (version is LanguageVersion.Latest or LanguageVersion.LatestMajor && project is not null && NeedsNewerCompiler(project))
+        {
+            // "latest" is the newest C# of the SDK that builds the project. A repository that targets .NET 11 is built
+            // with the .NET 11 SDK, whose latest is C# 15; where this Roslyn has C# 15 only as a preview, the preview is
+            // that version. Refit's collection expression arguments ([with(StringComparer.Ordinal)]) were 25 CS0103.
+            return LanguageVersion.Preview;
+        }
+
         if (version is LanguageVersion.Preview or LanguageVersion.Latest or LanguageVersion.LatestMajor or LanguageVersion.Default)
         {
             return version == LanguageVersion.Preview ? LanguageVersion.Preview : LanguageVersion.Latest;
@@ -161,6 +169,60 @@ public sealed class CSharpCompiler
 
         return version < MinimumLanguageVersion ? MinimumLanguageVersion : version;
     }
+
+    /// <summary>The newest C# the .NET SDK of a given major version calls "latest": C# 14 for .NET 10, C# 15 for .NET 11.</summary>
+    private static int LatestCSharpOf(int sdkMajor) => sdkMajor + 4;
+
+    /// <summary>
+    /// Whether the SDK a project is built with knows a newer C# than this Roslyn's latest: the project, or a property its
+    /// imports set (Refit's <c>RefitModernTargets</c>), names a target framework of a newer .NET, or its
+    /// <c>global.json</c> pins a newer SDK.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    internal static bool NeedsNewerCompiler(TsProject project)
+    {
+        var latest = (int)LanguageVersionFacts.MapSpecifiedToEffectiveVersion(LanguageVersion.Latest) / 100;
+        var major = 0;
+        foreach (var text in project.TargetFrameworks.Concat(project.Properties.Values))
+        {
+            foreach (System.Text.RegularExpressions.Match match in ModernFramework().Matches(text))
+            {
+                major = Math.Max(major, int.Parse(match.Groups["major"].Value, System.Globalization.CultureInfo.InvariantCulture));
+            }
+        }
+
+        for (var folder = Path.GetDirectoryName(project.FilePath); folder is not null; folder = Path.GetDirectoryName(folder))
+        {
+            var globalJson = Path.Combine(folder, "global.json");
+            if (!File.Exists(globalJson))
+            {
+                continue;
+            }
+
+            try
+            {
+                using var document = System.Text.Json.JsonDocument.Parse(File.ReadAllText(globalJson));
+                if (document.RootElement.TryGetProperty("sdk", out var sdk)
+                    && sdk.TryGetProperty("version", out var value)
+                    && value.GetString() is { } sdkVersion
+                    && int.TryParse(sdkVersion.Split('.')[0], System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var pinned))
+                {
+                    major = Math.Max(major, pinned);
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Text.Json.JsonException)
+            {
+                // An unreadable global.json pins nothing.
+            }
+
+            break;
+        }
+
+        return major > 0 && LatestCSharpOf(major) > latest;
+    }
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"(?<![\w.])net(?<major>[1-9][0-9])\.[0-9]", System.Text.RegularExpressions.RegexOptions.CultureInvariant)]
+    private static partial System.Text.RegularExpressions.Regex ModernFramework();
 
     /// <summary>
     /// Whether a project compiles deterministically, as MSBuild decides: its <c>Deterministic</c> property, else

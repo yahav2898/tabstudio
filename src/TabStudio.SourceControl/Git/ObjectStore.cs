@@ -216,7 +216,7 @@ internal sealed class ObjectStore
         return kept;
     }
 
-    private IReadOnlyList<PackFile> Packs()
+    private List<PackFile> Packs()
     {
         lock (_gate)
         {
