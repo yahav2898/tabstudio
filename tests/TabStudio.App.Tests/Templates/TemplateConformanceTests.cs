@@ -40,7 +40,7 @@ public sealed class TemplateConformanceTests : IClassFixture<SharedToolchain>, I
         [ProjectTemplates.WpfId] = [nameof(Dotnet_templates_template_conformance_build_with_no_errors_or_warnings), "WpfXamlEditorTests"],
         [ProjectTemplates.WindowsFormsId] = [nameof(Dotnet_templates_template_conformance_build_with_no_errors_or_warnings), "WindowsFormsAppTests"],
         [TabStudio.Uno.Templates.UnoTemplates.UnoAppId] = [nameof(Dotnet_templates_template_conformance_build_with_no_errors_or_warnings), "UnoAppTests"],
-        [TabStudio.Uno.Templates.UnoTemplates.WinUIAppId] = [nameof(Dotnet_templates_template_conformance_build_with_no_errors_or_warnings), "WinUIAppTests"],
+        [TabStudio.Uno.Templates.UnoTemplates.WinUIAppId] = [nameof(Dotnet_templates_template_conformance_build_with_no_errors_or_warnings), "UnoAppTests"],
         [TabStudio.Web.Templates.WebTemplates.BlazorWebAppId] = [nameof(Dotnet_templates_template_conformance_build_with_no_errors_or_warnings), "BlazorAppTests"],
         [TabStudio.Web.Templates.WebTemplates.BlazorWebAssemblyId] = [nameof(Dotnet_templates_template_conformance_build_with_no_errors_or_warnings), "BlazorAppTests"],
         [TabStudio.Web.Templates.WebTemplates.RazorPagesId] = [nameof(Dotnet_templates_template_conformance_build_with_no_errors_or_warnings), "BlazorAppTests"],

@@ -115,13 +115,13 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
 
     /// <summary>
     /// Starts a child session the adapter asks for with <c>startDebugging</c>; without one, such requests are refused.
-    /// Set it before <see cref="LaunchAsync"/>, with <see cref="DebugAdapterSessionOptions.SupportsChildSessions"/>.
+    /// Set it before <see cref="LaunchAsync(LaunchConfiguration, IReadOnlyDictionary{string, IReadOnlyList{DapSourceBreakpoint}}, IReadOnlyList{string}, CancellationToken)"/>, with <see cref="DebugAdapterSessionOptions.SupportsChildSessions"/>.
     /// </summary>
     public Func<DapChildSessionRequest, CancellationToken, Task>? ChildSessionHandler { get; set; }
 
     /// <summary>
     /// Runs the program the adapter asks TabStudio to run (<c>runInTerminal</c>), and completes with its process
-    /// id once it started, or <see langword="null"/> when that is not known. Set it before <see cref="LaunchAsync"/>,
+    /// id once it started, or <see langword="null"/> when that is not known. Set it before <see cref="LaunchAsync(LaunchConfiguration, IReadOnlyDictionary{string, IReadOnlyList{DapSourceBreakpoint}}, IReadOnlyList{string}, CancellationToken)"/>,
     /// with <see cref="DebugAdapterSessionOptions.SupportsRunInTerminal"/>; without one, such requests are refused.
     /// </summary>
     public Func<DapRunInTerminalRequest, CancellationToken, Task<int?>>? RunInTerminalHandler { get; set; }
