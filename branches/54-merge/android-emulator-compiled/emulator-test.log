@@ -1,0 +1,33 @@
+Device: Android 15 (API 35), x86_64, screen 2560x1800
+Displays:
+Built-in Screen, displayId 0
+Performing Streamed Install
+Success
+Measurements:
+Startup to self test start: 20.58 s
+TabStudio startup: first frame at 20418 ms, ready at 20418 ms; process start to activity 6715 ms, application +1312 ms, styles +1156 ms, services +1752 ms, theme +344 ms, view models +2417 ms, main view +3285 ms, start screen +52 ms, first frame +3386 ms
+TabStudio UI stalls: 248 over 100 ms (74 over 250 ms, 11 over 1 s), 80.7 s in all, longest 8185 ms during the step that ended with: Extracting the sample; answer p50 4.5 ms, p95 61.5 ms, p99 208.4 ms over 9436 questions in 390 s
+TabStudio UI timings: document view 1711 ms, workspace view 1613 ms, workspace view model 1564 ms, document view 474 ms, document view 175 ms, LocalsView 104 ms, workspace view model 41 ms, workspace view model 34 ms, CallStackView 23 ms
+TabStudio UI stall: 8185 ms at 0.6 s during the step that ended with: Extracting the sample
+TabStudio UI stall: 4404 ms at 9.8 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 2300 ms at 19.7 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 1968 ms at 272.4 s during creating a document's view
+TabStudio UI stall: 1678 ms at 14.2 s during reading the solution
+TabStudio UI stall: 1515 ms at 291.5 s during creating the LocalsView → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 1286 ms at 294.4 s during creating a document's view
+TabStudio UI stall: 1241 ms at 351.8 s during creating a document's view
+TabStudio UI stall: 1202 ms at 22.0 s during the step that ended with: C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting
+TabStudio UI stall: 1067 ms at 347.7 s during creating a document's view
+TabStudio UI stall: 1034 ms at 111.3 s during the step that ended with: C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting
+TabStudio UI stall: 946 ms at 289.4 s during creating the LocalsView
+TabStudio UI stall: 899 ms at 327.9 s during creating a document's view
+TabStudio UI stall: 840 ms at 283.8 s during creating a document's view
+TabStudio UI stall: 838 ms at 8.9 s during the step that ended with: Extracting the sample
+Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
+ Native Heap 328154 327932 216 21370 329116 366828 358217 3514
+ Dalvik Heap 1965 1940 0 162 3716 6917 3459 3458
+ TOTAL 740923 625636 16856 95011 746464 373745 361676 6972
+ TOTAL PSS: 740923 TOTAL RSS: 746464 TOTAL SWAP PSS: 95011
+TABSTUDIO_SELFTEST_OK 389.7 s: Shard: compiled | C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting | Java debugging: stopped at 10, answer = 42, console input and completed greeting
+Shard: compiled
+Seconds from launch to verdict: 415
