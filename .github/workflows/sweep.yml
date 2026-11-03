@@ -74,3 +74,8 @@ jobs:
             ci-out/*.log
             ci-out/screenshots/sweep/**
             ci-out/screenshots/light/sweep/**
+      - name: Publish logs and screenshots
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh sweep ${{ job.status }}
