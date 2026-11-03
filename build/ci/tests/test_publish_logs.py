@@ -60,5 +60,22 @@ class PublishLogsTests(unittest.TestCase):
         self.assertIn("Could not publish the logs of libraries", result.stderr)
 
 
+    def test_a_git_call_outside_the_limits_that_hangs_is_stopped_with_everything_it_started(self):
+        # With every fetch and push under a limit, publishing still held the SSH job for 17 minutes: another Git call,
+        # and what it started, kept going. The watchdog stops the whole publish.
+        bin_dir = os.path.join(self.temp, "bin")
+        os.makedirs(bin_dir)
+        wrapper = os.path.join(bin_dir, "git")
+        with open(wrapper, "w") as script:
+            script.write(f'#!/usr/bin/env bash\nfor a in "$@"; do [ "$a" = write-tree ] && {{ sleep 600 & sleep 600; }}; done\nexec "{REAL_GIT}" "$@"\n')
+        os.chmod(wrapper, 0o755)
+
+        result, elapsed = self.run_script(bin_dir, TABSTUDIO_PUBLISH_DEADLINE="3", TABSTUDIO_PUBLISH_GRACE="3")
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertLess(elapsed, 30)
+        self.assertIn("took too long and was stopped", result.stderr)
+
+
 if __name__ == "__main__":
     unittest.main()

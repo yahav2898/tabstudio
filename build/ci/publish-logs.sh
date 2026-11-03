@@ -6,6 +6,28 @@
 # Usage: build/ci/publish-logs.sh <job-name> <job-status>
 set -euo pipefail
 
+# A watchdog over the whole publish: with every Git call under a limit, publishing still held the SSH job for 17
+# minutes, past its 20, after its tests had passed. The publish runs in its own process group, which is killed with
+# everything it started once the deadline and a minute have passed; the logs are an aid, never the job's verdict.
+if [ -z "${TABSTUDIO_PUBLISH_INNER:-}" ]; then
+  total=$(( ${TABSTUDIO_PUBLISH_DEADLINE:-240} + ${TABSTUDIO_PUBLISH_GRACE:-60} ))
+  TABSTUDIO_PUBLISH_INNER=1 setsid bash "$0" "$@" < /dev/null &
+  pid=$!
+  for _ in $(seq 1 "$total"); do
+    if ! kill -0 "$pid" 2> /dev/null; then
+      wait "$pid" || true
+      exit 0
+    fi
+    sleep 1
+  done
+  kill -KILL -- "-$pid" 2> /dev/null || kill -KILL "$pid" 2> /dev/null || true
+  echo "::warning::Publishing the logs of ${1:-the job} to ci-logs took too long and was stopped; they are in the job's artifact." >&2
+  exit 0
+fi
+
+# The fetch below leaves out files' contents; nothing may fetch them later behind the limits' back.
+export GIT_NO_LAZY_FETCH=1
+
 job="${1:?job name}"
 status="${2:?job status}"
 remote="https://x-access-token:${GITHUB_TOKEN:?}@github.com/${GITHUB_REPOSITORY:?}.git"
@@ -45,7 +67,7 @@ for attempt in $(seq 1 12); do
   fi
   rm -f "$workdir/.git/index"
   parent=""
-  if timeout "$limit" git -C "$workdir" fetch -q --depth 1 --filter=blob:none "$remote_url" ci-logs 2>/dev/null; then
+  if timeout -k 5 "$limit" git -C "$workdir" fetch -q --depth 1 --filter=blob:none "$remote_url" ci-logs 2>/dev/null; then
     parent="$(git -C "$workdir" rev-parse FETCH_HEAD)"
     git -C "$workdir" read-tree "$parent"
   fi
@@ -59,7 +81,7 @@ for attempt in $(seq 1 12); do
     exit 0
   fi
   commit="$(git -C "$workdir" commit-tree "$tree" ${parent:+-p "$parent"} -m "${folder}: ${status} @ ${GITHUB_SHA::8}")"
-  if timeout "$limit" git -C "$workdir" push -q "$remote_url" "$commit:refs/heads/ci-logs"; then
+  if timeout -k 5 "$limit" git -C "$workdir" push -q "$remote_url" "$commit:refs/heads/ci-logs"; then
     exit 0
   fi
   # Jobs on every branch publish here; back off with jitter so they stop colliding.
