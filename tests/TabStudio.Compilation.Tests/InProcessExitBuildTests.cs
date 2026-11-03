@@ -55,6 +55,51 @@ public sealed class InProcessExitBuildTests : IDisposable
         Assert.Equal("usage: app <file>\n", console.Output);
     }
 
+    [Fact]
+    public async Task Environment_exit_in_a_referenced_Visual_Basic_library_ends_the_program_not_TabStudio()
+    {
+        // As Community.VisualBasic's ProjectData.EndApp does: a Visual Basic library's calls were never redirected.
+        _temp.Write("Shared/Shared.vbproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework><RootNamespace>Shared</RootNamespace><OptionStrict>On</OptionStrict></PropertyGroup>
+            </Project>
+            """);
+        _temp.Write("Shared/Cli.vb", """
+            Public Module Cli
+                Public Sub Fail(message As String)
+                    System.Console.WriteLine(message)
+                    System.Environment.Exit(3)
+                End Sub
+
+                Public Sub Crash(message As String)
+                    ENVIRONMENT.failfast(message)
+                End Sub
+            End Module
+            """);
+        _temp.Write("App/App.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup><ProjectReference Include="..\Shared\Shared.vbproj" /></ItemGroup>
+            </Project>
+            """);
+        _temp.Write("App/Program.cs", """
+            Shared.Cli.Fail("usage: app <file>");
+            System.Console.WriteLine("not reached");
+            """);
+        var solution = _temp.Write("All.slnx", """<Solution><Project Path="App/App.csproj" /><Project Path="Shared/Shared.vbproj" /></Solution>""");
+        _host.Load(WorkspaceLoader.Load(solution), FileSystemTextProvider.Instance);
+
+        var build = await new ProjectBuilder(_host).BuildAsync(_host.FindProject(_temp.Resolve("App/App.csproj"))!);
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+
+        var console = new CapturingConsole();
+        var run = await new ProgramRunner().RunAsync(build.EntryAssembly!, build.Dependencies, [], console);
+
+        Assert.Equal(RunOutcome.Completed, run.Outcome);
+        Assert.Equal(3, run.ExitCode);
+        Assert.Equal("usage: app <file>\n", console.Output);
+    }
+
     public void Dispose()
     {
         _host.Dispose();

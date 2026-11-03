@@ -45,7 +45,7 @@ public sealed partial class WorkspaceViewModel
 
     /// <summary>Shift+F10: skips called frames while stepping backwards.</summary>
     [RelayCommand(CanExecute = nameof(CanNavigateRecording))]
-    private async Task StepBackAsync() => await ShowHistoricalAsync(await Task.Run(() => _recordedSession?.StepBack()));
+    private Task StepBackAsync() => SeekFoundAsync(session => session.FindStepBack());
 
     /// <summary>Steps backwards into a recorded call.</summary>
     [RelayCommand(CanExecute = nameof(CanNavigateRecording))]
@@ -53,11 +53,26 @@ public sealed partial class WorkspaceViewModel
 
     /// <summary>Goes to a preceding breakpoint hit or a derivable exception cause.</summary>
     [RelayCommand(CanExecute = nameof(CanNavigateRecording))]
-    private async Task ReverseContinueAsync() => await ShowHistoricalAsync(await Task.Run(() => _recordedSession?.ReverseContinue()));
+    private Task ReverseContinueAsync() => SeekFoundAsync(session => session.FindReverseContinue());
 
     /// <summary>Finds the last write to a Locals, Watch or DataTip variable.</summary>
     [RelayCommand(CanExecute = nameof(CanNavigateRecording))]
-    private async Task JumpToLastWriteAsync(string? path) => await ShowHistoricalAsync(path is null ? null : await Task.Run(() => _recordedSession?.JumpToLastWrite(path)));
+    private Task JumpToLastWriteAsync(string? path) => path is null ? Task.CompletedTask : SeekFoundAsync(session => session.FindLastWrite(path));
+
+    /// <summary>
+    /// Searches the recording on a background thread, which only reads it, then selects what was found here on the
+    /// UI thread, which owns the debugger's selected step and every panel that shows it.
+    /// </summary>
+    private async Task SeekFoundAsync(Func<DebugSession, int> find)
+    {
+        if (_recordedSession is not { } session) return;
+        var index = await Task.Run(() => find(session));
+        if (index < 0 || !ReferenceEquals(session, _recordedSession)) return;
+        await ShowHistoricalAsync(session.SeekHistory(index));
+    }
+
+    /// <summary>The session whose recording the timeline shows, for tests.</summary>
+    internal DebugSession? RecordedSession => _recordedSession;
 
     /// <summary>Returns to the live paused point without running code.</summary>
     [RelayCommand(CanExecute = nameof(IsHistorical))]

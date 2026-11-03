@@ -31,6 +31,9 @@ public sealed record XamlCompilerRequest
     /// <summary>Whether this is pass 2, which reads the project's own types from <see cref="FirstPassAssemblyPath"/>.</summary>
     public bool IsSecondPass { get; init; }
 
+    /// <summary>Whether the project is in Visual Basic, which OpenSilver's compiler writes as it writes C#.</summary>
+    public bool IsVisualBasic { get; init; }
+
     /// <summary>For pass 2, the assembly pass 1 compiled: it must be named after <see cref="AssemblyName"/>.</summary>
     public string? FirstPassAssemblyPath { get; init; }
 }

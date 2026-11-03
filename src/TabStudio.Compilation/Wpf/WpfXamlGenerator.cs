@@ -24,13 +24,16 @@ namespace TabStudio.Compilation.Wpf;
 /// </para>
 /// <para>It runs inside TabStudio's own Roslyn rather than shipping as an analyzer assembly, so it is not marked with <c>[Generator]</c>.</para>
 /// </remarks>
-public sealed class WpfXamlGenerator : IIncrementalGenerator
+public sealed partial class WpfXamlGenerator : IIncrementalGenerator
 {
     /// <summary>The editorconfig metadata that says how a XAML file is built: <c>ApplicationDefinition</c> or <c>Page</c>.</summary>
     public const string ItemKindMetadata = "build_metadata.AdditionalFiles.TabStudioXamlItemKind";
 
     /// <summary>The suffix of the first pass's files, which a build replaces with the second pass's.</summary>
     public const string FirstPassSuffix = ".g.i.cs";
+
+    /// <summary>The suffix of the first pass's files in a Visual Basic project.</summary>
+    public const string VisualBasicFirstPassSuffix = ".g.i.vb";
 
     /// <summary>The <see cref="AppContext"/> data key under which <c>Application.Run(Window)</c> leaves the window to show.</summary>
     public const string MainWindowKey = "TabStudio.Wpf.MainWindow";
@@ -50,13 +53,27 @@ public sealed class WpfXamlGenerator : IIncrementalGenerator
         {
             if (input.Left is { ClassName: not null } file)
             {
-                output.AddSource(HintName(file.RelativePath) + FirstPassSuffix, GenerateClass(file, XamlTypeSystem.For(input.Right)));
+                if (IsVisualBasic(input.Right))
+                {
+                    output.AddSource(HintName(file.RelativePath) + VisualBasicFirstPassSuffix, GenerateVisualBasicClass(file, XamlTypeSystem.For(input.Right)));
+                }
+                else
+                {
+                    output.AddSource(HintName(file.RelativePath) + FirstPassSuffix, GenerateClass(file, XamlTypeSystem.For(input.Right)));
+                }
             }
         });
 
         context.RegisterSourceOutput(files.Collect().Combine(context.CompilationProvider).Combine(outputType), static (output, input) =>
         {
-            if (GenerateProjectCode(input.Left.Left, input.Left.Right, input.Right) is { } code)
+            if (IsVisualBasic(input.Left.Right))
+            {
+                if (GenerateVisualBasicProjectCode(input.Left.Left, input.Left.Right, input.Right) is { } basic)
+                {
+                    output.AddSource("TabStudio.Wpf.g.vb", basic);
+                }
+            }
+            else if (GenerateProjectCode(input.Left.Left, input.Left.Right, input.Right) is { } code)
             {
                 output.AddSource("TabStudio.Wpf.g.cs", code);
             }
@@ -68,7 +85,7 @@ public sealed class WpfXamlGenerator : IIncrementalGenerator
     public static bool IsFirstPassTree(SyntaxTree tree)
     {
         ArgumentNullException.ThrowIfNull(tree);
-        return tree.FilePath.EndsWith(FirstPassSuffix, StringComparison.Ordinal)
+        return (tree.FilePath.EndsWith(FirstPassSuffix, StringComparison.Ordinal) || tree.FilePath.EndsWith(VisualBasicFirstPassSuffix, StringComparison.Ordinal))
             && tree.FilePath.Contains(nameof(WpfXamlGenerator), StringComparison.Ordinal);
     }
 
@@ -168,11 +185,18 @@ public sealed class WpfXamlGenerator : IIncrementalGenerator
             text.Append(ApplicationClass(app, compilation, hasRun: !application.GetMembers("Run").IsEmpty));
         }
 
-        var compatibility = Compatibility(compilation, application);
+        var compatibility = Compatibility(compilation, application) + NavigationCompatibility(compilation) + AutomationCompatibility(compilation);
         if (compatibility.Length > 0)
         {
             hasCode = true;
             text.Append("\nnamespace System.Windows\n{\n").Append(compatibility).Append("}\n");
+        }
+
+        if (NeedsNavigationWindow(compilation))
+        {
+            // OpenSilver's XAML compiler finds a type of WPF's namespace in an assembly that maps it, as WPF's own do.
+            text.Insert(text.ToString().IndexOf("// </auto-generated>", StringComparison.Ordinal) + "// </auto-generated>".Length,
+                "\n[assembly: global::System.Windows.Markup.XmlnsDefinition(\"" + XamlNamespaces.Presentation + "\", \"System.Windows.Navigation\")]\n");
         }
 
         return hasCode ? text.ToString() : null;

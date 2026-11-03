@@ -180,6 +180,15 @@ public partial class Form : ContainerControl
         set => _minimizeBox = value;
     }
 
+    /// <summary>
+    /// The .NET Framework 1.x way to say what font size the form was designed at, which its designer files still set
+    /// (VBDev2Dev's Dots). It is kept, and the form is laid out at its designed size, as the app preview lays forms out
+    /// at 96 DPI; <see cref="ContainerControl.AutoScaleMode"/> is what scales a form.
+    /// </summary>
+    [Browsable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual Size AutoScaleBaseSize { get; set; } = new(5, 13);
+
     /// <summary>Whether the title bar has a help button. Kept for compatibility.</summary>
     public bool HelpButton { get; set; }
 

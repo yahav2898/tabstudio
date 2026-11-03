@@ -168,8 +168,13 @@ internal static class WpfApiCatalogBuilder
         }
     }
 
+    /// <summary>
+    /// A public type of OpenSilver or .NET: never one of the project's own, such as the NavigationWindow TabStudio
+    /// writes into a WPF project because OpenSilver does not have it.
+    /// </summary>
     private static INamedTypeSymbol? FindPublic(Microsoft.CodeAnalysis.Compilation compilation, string metadataName) =>
-        compilation.GetTypesByMetadataName(metadataName).FirstOrDefault(t => t.DeclaredAccessibility == Accessibility.Public);
+        compilation.GetTypesByMetadataName(metadataName).FirstOrDefault(t => t.DeclaredAccessibility == Accessibility.Public
+            && !SymbolEqualityComparer.Default.Equals(t.ContainingAssembly, compilation.Assembly));
 
     private static string FullName(INamedTypeSymbol type) =>
         type.ContainingNamespace is { IsGlobalNamespace: false } ns ? $"{ns.ToDisplayString()}.{type.MetadataName}" : type.MetadataName;

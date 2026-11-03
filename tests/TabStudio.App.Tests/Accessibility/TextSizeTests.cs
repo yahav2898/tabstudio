@@ -110,6 +110,25 @@ public sealed class TextSizeTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void A_Live_participants_name_tag_follows_the_text_size_up_to_Very_large()
+    {
+        // The tag was drawn at a fixed 11 points, so Very large did not reach it.
+        try
+        {
+            TypeScale.Apply(TextSizes.Factor(TextSize.Default, 1));
+            Assert.Equal(11, TabStudio.App.Editing.LivePresenceRenderer.TagFontSize);
+
+            TypeScale.Apply(TextSizes.Factor(TextSize.VeryLarge, 1));
+            Assert.Equal(TypeScale.Scaled(11, TextSizes.Largest), TabStudio.App.Editing.LivePresenceRenderer.TagFontSize);
+            Assert.True(TabStudio.App.Editing.LivePresenceRenderer.TagFontSize >= 16);
+        }
+        finally
+        {
+            TypeScale.Apply(1);
+        }
+    }
+
+    [AvaloniaFact]
     public async Task Text_that_takes_its_size_from_its_button_grows_with_it()
     {
         // A tab's string content inherits its size from the button's theme (PanelTabButton): it must be laid out again,

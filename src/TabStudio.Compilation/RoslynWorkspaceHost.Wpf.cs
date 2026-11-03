@@ -17,7 +17,7 @@ namespace TabStudio.Compilation;
 /// </summary>
 public sealed partial class RoslynWorkspaceHost
 {
-    private static readonly Xaml.GeneratorReference WpfXaml = new(new WpfXamlGenerator(), "TabStudio WPF XAML");
+    private static readonly Xaml.GeneratorReference WpfXaml = new(new WpfXamlGenerator(), "TabStudio WPF XAML", visualBasic: true);
 
     private IWpfXamlCompiler? _wpfXamlCompiler;
 

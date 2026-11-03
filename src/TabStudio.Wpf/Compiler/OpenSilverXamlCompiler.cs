@@ -10,7 +10,7 @@ namespace TabStudio.Wpf.Compiler;
 /// <summary>
 /// OpenSilver's own XAML compiler, run inside TabStudio from the restored OpenSilver package, the way OpenSilver's
 /// build targets run it: its <c>OpenSilver.Compiler.XamlPreprocessor</c> MSBuild task, which turns each XAML file into
-/// C#, once before the C# compiler (pass 1) and once after it (pass 2), against the assembly of the first compile.
+/// C# or Visual Basic, once before the C# compiler (pass 1) and once after it (pass 2), against the assembly of the first compile.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -109,7 +109,7 @@ public sealed class OpenSilverXamlCompiler
             {
                 var task = (ITask)Activator.CreateInstance(_taskType)!;
                 task.BuildEngine = engine;
-                Set(task, "Language", "C#");
+                Set(task, "Language", request.IsVisualBasic ? "VB" : "C#");
                 Set(task, "PageFiles", pages);
                 Set(task, "ApplicationDefinitionFiles", applications);
                 Set(task, "ContentFiles", Array.Empty<ITaskItem>());
@@ -148,7 +148,8 @@ public sealed class OpenSilverXamlCompiler
         {
             var path = output.ItemSpec;
             var identity = Normalize(Path.GetRelativePath(request.IntermediateDirectory, path));
-            var suffix = request.IsSecondPass ? ".g.cs" : ".g.i.cs";
+            var extension = request.IsVisualBasic ? "vb" : "cs";
+            var suffix = request.IsSecondPass ? ".g." + extension : ".g.i." + extension;
             if (identity.EndsWith(suffix, StringComparison.OrdinalIgnoreCase) && byIdentity.TryGetValue(identity[..^suffix.Length], out var source) && File.Exists(path))
             {
                 files[source] = path;

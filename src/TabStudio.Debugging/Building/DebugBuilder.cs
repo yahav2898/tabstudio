@@ -154,7 +154,7 @@ public sealed class DebugBuilder
         if (checkInProcessSafety)
         {
             // As Ctrl+F5 does: Environment.Exit and FailFast end the program, not TabStudio. F5 refused such programs
-            // with TS1001 while Ctrl+F5 ran them. What cannot be redirected (Visual Basic) is still an error.
+            // with TS1001 while Ctrl+F5 ran them. What cannot be redirected (Visual Basic's End) is still an error.
             compilation = InProcessExit.Redirect(compilation, cancellationToken);
             original.AddRange(InProcessSafetyAnalyzer.Analyze(compilation, projectName, cancellationToken));
         }

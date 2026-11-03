@@ -79,8 +79,8 @@ public sealed partial class LocalAIViewModel : ObservableObject, IDisposable
             await _service.Models.DownloadAsync(model, LicenseAccepted, progress, _download.Token);
             ProgressText = "Download verified with SHA-256. Ready offline.";
         }
-        catch (OperationCanceledException) { ProgressText = "Download canceled; partial file removed."; }
-        catch (Exception ex) when (ex is IOException or HttpRequestException or UnauthorizedAccessException or InvalidOperationException) { ProgressText = ex.Message; }
+        catch (OperationCanceledException) { ProgressText = "Download paused. Download again to continue where it stopped."; }
+        catch (Exception ex) when (ex is TabStudio.Toolchains.Downloads.DownloadException or IOException or HttpRequestException or UnauthorizedAccessException or InvalidOperationException) { ProgressText = ex.Message; }
         finally { _download.Dispose(); _download = null; IsBusy = false; Refresh(); }
     }
 

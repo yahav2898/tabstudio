@@ -52,6 +52,30 @@ public sealed class RecordingTests
     }
 
     [AvaloniaFact]
+    public async Task Stepping_back_reverse_continue_and_jump_to_last_write_change_the_selected_step_only_on_the_UI_thread()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+        workspace.ActiveDocument!.Document.Text = Loop;
+        await workspace.StartWithRecordingCommand.ExecuteAsync(null);
+        await DebuggingTests.WaitForExitAsync(workspace);
+        var session = Assert.IsType<TabStudio.Debugging.DebugSession>(workspace.RecordedSession);
+        var onUiThread = new List<bool>();
+        session.HistorySelectionChanged += (_, _) => { lock (onUiThread) onUiThread.Add(Avalonia.Threading.Dispatcher.UIThread.CheckAccess()); };
+
+        await workspace.StepBackCommand.ExecuteAsync(null);
+        await workspace.StepBackCommand.ExecuteAsync(null);
+        await workspace.JumpToLastWriteCommand.ExecuteAsync("total");
+        await workspace.ReverseContinueCommand.ExecuteAsync(null);
+        await workspace.ReturnToLiveCommand.ExecuteAsync(null);
+
+        Assert.True(onUiThread.Count >= 3, $"{onUiThread.Count} selection changes");
+        Assert.All(onUiThread, Assert.True);
+        Assert.False(workspace.IsHistorical);
+    }
+
+    [AvaloniaFact]
     public async Task A_live_pause_stays_paused_while_history_is_selected_and_F5_continues_from_live()
     {
         using var fixture = new WorkspaceFixture();

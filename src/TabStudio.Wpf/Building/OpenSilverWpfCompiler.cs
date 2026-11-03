@@ -75,29 +75,46 @@ public sealed class OpenSilverWpfCompiler(string? frameworkReferenceDirectory) :
         File.WriteAllBytes(firstPass, request.FirstPassImage.ToArray());
         cancellationToken.ThrowIfCancellationRequested();
 
-        var (inputs, sanitizing) = XamlSanitizer.Prepare(WpfProject.XamlItems(project), XamlTypeSystem.For(compilation), Path.Combine(output, "sanitized"), project.Name);
-        var result = compiler.Compile(new XamlCompilerRequest
+        // What OpenSilver's compiler cannot compile is left out and the XAML compiled again, so the window still shows.
+        var items = WpfProject.XamlItems(project);
+        var types = XamlTypeSystem.For(compilation);
+        var leftOut = new XamlLeftOut(items, project.Name);
+        leftOut.LeaveOutMissingSetters(types);
+        leftOut.LeaveOutUndefinedStaticResources();
+        IReadOnlyList<BuildDiagnostic> sanitizing;
+        XamlCompilerResult result;
+        for (var round = 0; ; round++)
         {
-            ProjectFilePath = project.FilePath,
-            AssemblyName = assemblyName,
-            RootNamespace = project.GetProperty("RootNamespace") ?? assemblyName,
-            Files = inputs,
-            References = references,
-            IntermediateDirectory = WpfProject.SecondPassDirectory(project),
-            IsSecondPass = true,
-            FirstPassAssemblyPath = firstPass,
-        }, project.Name);
+            cancellationToken.ThrowIfCancellationRequested();
+            (var inputs, sanitizing) = XamlSanitizer.Prepare(items, types, Path.Combine(output, "sanitized"), project.Name, leftOut, assemblyName);
+            result = compiler.Compile(new XamlCompilerRequest
+            {
+                ProjectFilePath = project.FilePath,
+                AssemblyName = assemblyName,
+                RootNamespace = project.GetProperty("RootNamespace") ?? assemblyName,
+                Files = inputs,
+                References = references,
+                IntermediateDirectory = WpfProject.SecondPassDirectory(project),
+                IsSecondPass = true,
+                FirstPassAssemblyPath = firstPass,
+                IsVisualBasic = compilation.Language == LanguageNames.VisualBasic,
+            }, project.Name);
+            if (result.Succeeded || round >= XamlLeftOut.MaxRounds || !leftOut.LeaveOut(result.Diagnostics))
+            {
+                break;
+            }
+        }
 
-        IReadOnlyList<BuildDiagnostic> diagnostics = [.. sanitizing, .. result.Diagnostics];
+        IReadOnlyList<BuildDiagnostic> diagnostics = [.. sanitizing, .. leftOut.Notes, .. result.Diagnostics];
         if (!result.Succeeded)
         {
             return new WpfSecondPass(null, diagnostics);
         }
 
-        var options = compilation.SyntaxTrees.FirstOrDefault()?.Options as CSharpParseOptions ?? CSharpParseOptions.Default;
+        var options = compilation.SyntaxTrees.FirstOrDefault(t => !WpfXamlGenerator.IsFirstPassTree(t))?.Options;
         var generated = result.GeneratedFiles.Values
             .Order(StringComparer.Ordinal)
-            .Select(path => CSharpSyntaxTree.ParseText(SourceText.From(File.ReadAllText(path), Encoding.UTF8), options, path, cancellationToken))
+            .Select(path => Parse(SourceText.From(File.ReadAllText(path), Encoding.UTF8), options, path, cancellationToken))
             .ToList();
         var completed = compilation
             .RemoveSyntaxTrees(compilation.SyntaxTrees.Where(WpfXamlGenerator.IsFirstPassTree))
@@ -139,6 +156,12 @@ public sealed class OpenSilverWpfCompiler(string? frameworkReferenceDirectory) :
 
         return paths;
     }
+
+    /// <summary>A generated file in the project's language: Visual Basic for a Visual Basic project, C# otherwise.</summary>
+    private static SyntaxTree Parse(SourceText text, ParseOptions? options, string path, CancellationToken cancellationToken) =>
+        options is Microsoft.CodeAnalysis.VisualBasic.VisualBasicParseOptions basic
+            ? Microsoft.CodeAnalysis.VisualBasic.VisualBasicSyntaxTree.ParseText(text, basic, path, cancellationToken)
+            : CSharpSyntaxTree.ParseText(text, options as CSharpParseOptions ?? CSharpParseOptions.Default, path, cancellationToken);
 
     private static WpfSecondPass Failed(string id, string message, string projectName) =>
         new(null, [new BuildDiagnostic(id, DiagnosticSeverityLevel.Error, message, null, projectName)]);

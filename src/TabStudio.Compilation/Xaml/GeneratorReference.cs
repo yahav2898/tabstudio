@@ -7,7 +7,8 @@ namespace TabStudio.Compilation.Xaml;
 /// <summary>A source generator built into TabStudio, given to Roslyn like a package's analyzer assembly.</summary>
 /// <param name="generator">The generator.</param>
 /// <param name="display">Its name, as diagnostics show it.</param>
-internal sealed class GeneratorReference(IIncrementalGenerator generator, string display) : AnalyzerReference
+/// <param name="visualBasic">Whether it also generates for Visual Basic projects, as WPF's XAML generator does.</param>
+internal sealed class GeneratorReference(IIncrementalGenerator generator, string display, bool visualBasic = false) : AnalyzerReference
 {
     private readonly ImmutableArray<ISourceGenerator> _generators = [generator.AsSourceGenerator()];
 
@@ -31,7 +32,7 @@ internal sealed class GeneratorReference(IIncrementalGenerator generator, string
 
     /// <inheritdoc />
     public override ImmutableArray<ISourceGenerator> GetGenerators(string language) =>
-        language == LanguageNames.CSharp ? _generators : [];
+        language == LanguageNames.CSharp || (visualBasic && language == LanguageNames.VisualBasic) ? _generators : [];
 
     /// <inheritdoc />
     public override ImmutableArray<ISourceGenerator> GetGeneratorsForAllLanguages() => _generators;
