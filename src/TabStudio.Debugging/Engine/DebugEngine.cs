@@ -360,13 +360,14 @@ internal sealed class DebugEngine
         {
             WaitHoldingGate(() => _paused && !_stopped);
             var reason = ReasonToBreak(frame, statementId);
+            // Every hit with its condition holding counts, and its hit count says whether this one stops.
+            var breakpoint = !_stopped && reason == PauseReason.Breakpoint && conditionMet ? _breakpoints.Find(statementId) : null;
+            var stopsAtBreakpoint = breakpoint?.RecordHit() ?? false;
             if (!_stopped && frame is not null)
-                Recording?.Record(frame, slots, locals, reason == PauseReason.Breakpoint && conditionMet);
-            if (!_stopped && reason is { } pauseReason && (pauseReason != PauseReason.Breakpoint || conditionMet))
+                Recording?.Record(frame, slots, locals, stopsAtBreakpoint);
+            if (!_stopped && reason is { } pauseReason && (pauseReason != PauseReason.Breakpoint || stopsAtBreakpoint))
             {
-                var breakpoint = pauseReason == PauseReason.Breakpoint ? _breakpoints.Find(statementId) : null;
-                breakpoint?.RecordHit();
-                pause = BeginPause(pauseReason, frame, values ?? CreateLocals(slots, locals, visualBasic), breakpoint, exception: null, conditionError);
+                pause = BeginPause(pauseReason, frame, values ?? CreateLocals(slots, locals, visualBasic), pauseReason == PauseReason.Breakpoint ? breakpoint : null, exception: null, conditionError);
             }
         }
 

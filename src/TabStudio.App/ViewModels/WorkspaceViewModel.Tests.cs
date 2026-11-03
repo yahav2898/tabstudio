@@ -168,6 +168,21 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
         await Tests.RunAsync(new TestRunRequest(tests.Description, [new TestProjectSelection(project.FilePath, tests.Names)]));
     }
 
+    /// <summary>Ctrl+R, Ctrl+T and the editor's "Debug Tests": debugs the data row, test, class or file at the caret.</summary>
+    [RelayCommand]
+    private async Task DebugTestsInContextAsync()
+    {
+        if (ActiveDocument is not { } document
+            || Workspace?.FindProjectForFile(document.FilePath) is not { IsTestProject: true } project
+            || CaretTestFinder.Find(document.Document.Text, document.FilePath, document.CaretOffset) is not { } tests)
+        {
+            StatusText = "There are no tests at the caret";
+            return;
+        }
+
+        await Tests.DebugAsync(new TestRunRequest(tests.Description, [new TestProjectSelection(project.FilePath, tests.Names)]));
+    }
+
     /// <summary>Starts watching the workspace for test projects. Called once, by the constructor.</summary>
     private void InitializeTests() => PropertyChanged += OnPropertyChangedForTests;
 

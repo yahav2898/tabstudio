@@ -60,12 +60,16 @@ public sealed partial class ExceptionFilterOption : ObservableObject
     public partial bool IsEnabled { get; set; }
 }
 
-/// <summary>What the editor's breakpoint menu offers for files a debug adapter runs: hit counts and logpoints.</summary>
+/// <summary>What the editor's breakpoint menu offers beyond conditions: hit counts, and logpoints where a debug adapter runs the file.</summary>
 public interface IEditorBreakpointOptions
 {
-    /// <summary>Whether a file's breakpoints can have hit counts and log messages: a debug adapter runs its language.</summary>
+    /// <summary>Whether a file's breakpoints can have hit counts: C# and Visual Basic files, and those a debug adapter runs.</summary>
     /// <param name="filePath">Full path of the file.</param>
     bool HasBreakpointOptions(string filePath);
+
+    /// <summary>Whether a file's breakpoints can log a message instead of stopping: a debug adapter runs its language.</summary>
+    /// <param name="filePath">Full path of the file.</param>
+    bool HasLogpoints(string filePath);
 
     /// <summary>Asks for the hit count of the breakpoint on a line, setting one there first if needed.</summary>
     /// <param name="filePath">Full path of the file.</param>
@@ -94,6 +98,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     /// </summary>
     private Func<string, IReadOnlyList<DapSourceBreakpoint>, IReadOnlyList<DapBreakpointSource>?>? _pendingBreakpointSources;
     private readonly List<DebugAdapterSession> _adapterChildren = [];
+    private readonly Dictionary<BreakpointViewModel, (string HitCount, int Hits)> _adapterHits = [];
     private DebugAdapterSession? _adapter;
     private DebugAdapterSession? _adapterRoot;
     private int? _adapterExitCode;
@@ -105,6 +110,11 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     private (string FilePath, int Line)? _cursorBreakpoint;
     private bool _adapterLaunched;
     private bool _adapterRestart;
+
+    // How Restart starts the session again: a toolchain project saves and builds again, as F5 does. The pending one
+    // is the next session's, handed over when it launches.
+    private Func<Task>? _adapterRelaunch;
+    private Func<Task>? _pendingAdapterRelaunch;
     private int _adapterPauses;
 
     /// <summary>What the Run button's menu offers: the startup projects, launch configurations and the current file.</summary>
@@ -160,7 +170,10 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     private bool UsesLaunchTarget => StartupProject is null && CurrentLaunchTarget is not null;
 
     /// <inheritdoc />
-    bool IEditorBreakpointOptions.HasBreakpointOptions(string filePath) => UsesAdapterBreakpoints(filePath);
+    bool IEditorBreakpointOptions.HasBreakpointOptions(string filePath) => FileTypes.For(filePath).IsRoslyn || UsesAdapterBreakpoints(filePath);
+
+    /// <inheritdoc />
+    bool IEditorBreakpointOptions.HasLogpoints(string filePath) => UsesAdapterBreakpoints(filePath);
 
     /// <inheritdoc />
     Task IEditorBreakpointOptions.EditHitCountAsync(string filePath, int line) => EditAdapterBreakpointAsync(filePath, line, BreakpointOption.HitCount);
@@ -290,12 +303,16 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
         _adapter = session;
         _adapterRoot = session;
+        _adapterEnd = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         _adapterExitCode = null;
         _adapterTarget = target;
+        _adapterRelaunch = _pendingAdapterRelaunch;
+        _pendingAdapterRelaunch = null;
         session.BreakpointSources = _pendingBreakpointSources;
         _pendingBreakpointSources = null;
         _adapterLaunched = false;
         _sentBreakpoints.Clear();
+        _adapterHits.Clear();
         WireAdapterEvents(session);
         StartAdapterInput(session);
         if (session.Adapter.Id == "flutter") ConfigureFlutterTarget(configuration);
@@ -600,6 +617,11 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
 
         var thread = stop.ThreadId ?? (threads.Count > 0 ? threads[0].Id : 1);
+        if (await ContinuesPastHitCountAsync(session, stop, thread, version))
+        {
+            return;
+        }
+
         _adapterThread = thread;
         State = IdeState.Paused;
         _exceptionHelper = null;
@@ -610,7 +632,9 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             return;
         }
 
-        if (stop.Reason == "exception" && session.Capabilities.ExceptionInfo)
+        // Without the exceptionInfo request, the stop's own description is the exception helper's: Xdebug's adapter
+        // and older LLDBs stop at exceptions with only that.
+        if (stop.Reason == "exception")
         {
             await ShowAdapterExceptionAsync(session, thread, stop, version);
         }
@@ -633,6 +657,57 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         // Actual exception stops may capture only the bound embedded GDB session. The capture core checks
         // ICSR.VECTACTIVE, exact profile/ELF and this halt epoch before publishing any automatic diagnosis.
         await TryCaptureEmbeddedFaultAutomaticallyAsync(session, stop, version);
+    }
+
+    /// <summary>
+    /// Counts a hit of a breakpoint with a hit count, which the IDE counts for every adapter, and lets the program go on
+    /// when the count says this hit does not stop, before anything shows the pause.
+    /// </summary>
+    /// <returns><see langword="true"/> when the program was let go on.</returns>
+    private async Task<bool> ContinuesPastHitCountAsync(DebugAdapterSession session, DapStoppedEventArgs stop, int thread, int version)
+    {
+        if (stop.Reason != "breakpoint" || !Breakpoints.All.Any(BreakpointsViewModel.CountsHitsForAdapter))
+        {
+            return false;
+        }
+
+        IReadOnlyList<DapStackFrame> frames;
+        try
+        {
+            frames = await session.GetStackTraceAsync(thread, CancellationToken.None);
+        }
+        catch (DebugAdapterException)
+        {
+            return false;
+        }
+
+        if (version != _adapterPauses || !ReferenceEquals(session, _adapter) || frames.Count == 0
+            || ToStackFrame(frames[0]).Location is not { } location
+            || Breakpoints.Find(location.FilePath, location.Line) is not { } breakpoint
+            || !BreakpointsViewModel.CountsHitsForAdapter(breakpoint)
+            || BreakpointHitCondition.Parse(breakpoint.HitCount) is not { } hitCondition)
+        {
+            return false;
+        }
+
+        // A changed hit count counts again from zero, as the C# debugger's does.
+        var hits = _adapterHits.TryGetValue(breakpoint, out var counted) && counted.HitCount == breakpoint.HitCount ? counted.Hits + 1 : 1;
+        _adapterHits[breakpoint] = (breakpoint.HitCount!, hits);
+        if (hitCondition.IsMet(hits))
+        {
+            return false;
+        }
+
+        try
+        {
+            await session.ContinueAsync(thread, CancellationToken.None);
+            return true;
+        }
+        catch (DebugAdapterException)
+        {
+            // The program could not go on: show where it stopped.
+            return false;
+        }
     }
 
     /// <summary>Reads a thread's call stack into the Call Stack panel.</summary>
@@ -1055,6 +1130,9 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         State = IdeState.Ready;
         StatusText = code is null or 0 ? "Ready" : "The program stopped with an error";
         OnPropertyChanged(nameof(IsDebuggingWithAdapter));
+        var ended = _adapterEnd;
+        _adapterEnd = null;
+        ended?.TrySetResult();
         if (SelectedPanel is BottomPanel.Locals or BottomPanel.Watch or BottomPanel.CallStack)
         {
             SelectedPanel = BottomPanel.Output;
@@ -1063,7 +1141,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         if (_adapterRestart && _adapterTarget is { } target)
         {
             _adapterRestart = false;
-            _ = LaunchAdapterAsync(target, DebugStart.Run, noDebug: false);
+            _ = _adapterRelaunch is { } relaunch ? relaunch() : LaunchAdapterAsync(target, DebugStart.Run, noDebug: false);
         }
     }
 
@@ -1095,6 +1173,8 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         var root = _adapterRoot ?? _adapter;
         _adapterRoot = null;
         _adapter = null;
+        _adapterEnd?.TrySetResult();
+        _adapterEnd = null;
         DisposeEmbeddedDebug();
         if (root is not null)
         {
@@ -1160,7 +1240,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
                 breakpoint.Condition),
             BreakpointOption.HitCount => (
                 "Breakpoint Hit Count",
-                $"Line {breakpoint.Line} of {breakpoint.FileName}. Stop when the line was reached this many times, such as 5, or as the debugger writes it, such as >= 10.",
+                $"Line {breakpoint.Line} of {breakpoint.FileName}. Stop when the line was reached {BreakpointHitCondition.Forms}.",
                 breakpoint.HitCount),
             _ => (
                 "Logpoint",
@@ -1168,6 +1248,12 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
                 breakpoint.LogMessage),
         };
         var answer = await Prompt.AskAsync(title, message, "Apply", current ?? string.Empty);
+        while (option == BreakpointOption.HitCount && answer is not null && !BreakpointHitCondition.TryParse(answer, out _))
+        {
+            // As Visual Studio's settings do, a hit count that is not one is not applied: the prompt says why.
+            answer = await Prompt.AskAsync(title, $"\"{answer.Trim()}\" is not a hit count. Write it as {BreakpointHitCondition.Forms}.", "Apply", answer);
+        }
+
         if (answer is null)
         {
             return;

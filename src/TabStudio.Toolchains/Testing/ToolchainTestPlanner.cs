@@ -41,9 +41,7 @@ public static partial class ToolchainTestPlanner
     /// Runs pytest with the project's Python, installing it first when the project names it only among its
     /// development requirements, which the project's own install leaves out.
     /// </summary>
-    internal const string PytestScript =
-        "if ! \"$0\" -c 'import pytest' 2> /dev/null; then echo 'Installing pytest, which the tests need'; "
-        + "\"$0\" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec \"$0\" -m pytest \"$@\"";
+    internal const string PytestScript = PytestInstall + "; exec \"$0\" -m pytest \"$@\"";
 
     /// <summary>
     /// Runs a test runner that writes no report file of its own and keeps its output, as the Output panel shows it, in the

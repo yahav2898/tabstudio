@@ -194,6 +194,7 @@
                 <Grid.ContextFlyout>
                   <MenuFlyout>
                     <MenuItem Header="Run" Command="{Binding RunCommand}" />
+                    <MenuItem Header="Debug" Command="{Binding DebugCommand}" />
                     <MenuItem Header="Go To Test" Command="{Binding GoToTestCommand}" IsVisible="{Binding HasLocation}" />
                     <Separator />
                     <MenuItem Header="Live Unit Testing">

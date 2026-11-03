@@ -315,6 +315,78 @@ public sealed class ToolchainTestTests : IDisposable
         Assert.Equal(ToolchainTestOutcome.Failed, results[1].Outcome);
     }
 
+    [Fact]
+    public void Pytest_is_debugged_as_a_module_after_what_the_tests_need_is_installed()
+    {
+        _folder.Write("py/test_math.py", "def test_adds():\n    assert 1 + 1 == 2\n");
+        _folder.Write("py/requirements-dev.txt", "pytest\n");
+        var project = Project("python", "py");
+        var reports = _folder.Resolve("reports");
+
+        var debug = ToolchainTestPlanner.PlanDebug(project, ToolchainTestFramework.Pytest, [new("test_math", "test_adds")], reports)!;
+
+        Assert.Equal(["-c", ToolchainTestPlanner.PythonTestInstall(["-r", "requirements-dev.txt"]) + ToolchainTestPlanner.PytestInstall, "python3"], debug.Prepare!.Arguments);
+        Assert.Equal("python3", debug.Debuggee.Program);
+        Assert.Equal(["-m", "pytest", "--color=no", "--junitxml=" + Path.Combine(reports, "pytest.xml"), "test_math.py::test_adds"], debug.Debuggee.Arguments);
+        Assert.Null(debug.OutputReport);
+        Assert.Equal(ToolchainTestPlanner.PytestInstall + "; exec \"$0\" -m pytest \"$@\"", ToolchainTestPlanner.PytestScript);
+    }
+
+    [Fact]
+    public void A_Go_package_is_debugged_as_its_test_binary_in_its_folder_and_its_output_is_its_report()
+    {
+        _folder.Write("go/go.mod", "module example.com/shop\n\ngo 1.24\n");
+        _folder.Write("go/cart/cart_test.go", "package cart\n");
+        _folder.Write("go/shop_test.go", "package main\n");
+        var project = Project("go", "go");
+        var reports = _folder.Resolve("reports");
+
+        var debug = ToolchainTestPlanner.PlanDebug(project, ToolchainTestFramework.GoTest, [new("shop.cart", "TestTotal")], reports)!;
+
+        var binary = Path.Combine(reports, "tests.test");
+        Assert.Equal(["test", "-c", "-gcflags=all=-N -l", "-o", binary, "./cart"], debug.Prepare!.Arguments);
+        Assert.Equal(binary, debug.Debuggee.Program);
+        Assert.Equal(["-test.v", "-test.run", "^(?:TestTotal)$"], debug.Debuggee.Arguments);
+        Assert.Equal(Path.Combine(project.Directory, "cart"), debug.Debuggee.WorkingDirectory);
+        Assert.Equal("ok  \texample.com/shop/cart\t0.000s", debug.OutputFooter);
+
+        // The saved output of the debugged binary reads as go test's.
+        File.WriteAllText(debug.OutputReport!, "=== RUN   TestTotal\n--- FAIL: TestTotal (0.00s)\n    cart_test.go:9: wrong\nFAIL\n" + debug.OutputFooter + "\n");
+        var result = Assert.Single(ToolchainTestPlanner.ReadResults(project, debug.Results, DateTime.UtcNow));
+        Assert.Equal(("shop.cart", "TestTotal", ToolchainTestOutcome.Failed), (result.ClassName, result.MethodName, result.Outcome));
+
+        var all = ToolchainTestPlanner.PlanDebug(project, ToolchainTestFramework.GoTest, null, reports)!;
+        Assert.Equal(".", all.Prepare!.Arguments[^1]);
+        Assert.Equal(["-test.v"], all.Debuggee.Arguments);
+    }
+
+    [Fact]
+    public void Node_runners_and_PHPUnit_are_debugged_as_they_run_and_Jest_in_one_process()
+    {
+        _folder.Write("jest/package.json", """{ "devDependencies": { "jest": "^30.0.0" }, "scripts": { "test": "jest" } }""");
+        var reports = _folder.Resolve("reports");
+        var jest = ToolchainTestPlanner.PlanDebug(Project("node", "jest"), ToolchainTestFramework.Jest, null, reports)!;
+        Assert.Equal("--runInBand", jest.Debuggee.Arguments[^1]);
+        Assert.Equal(jest.Results.Command.Arguments, jest.Debuggee.Arguments.SkipLast(1));
+        Assert.Null(jest.Prepare);
+
+        _folder.Write("php/composer.json", """{ "require-dev": { "phpunit/phpunit": "^12.0" } }""");
+        var php = ToolchainTestPlanner.PlanDebug(Project("php", "php"), ToolchainTestFramework.PhpUnit, null, reports)!;
+        Assert.Equal(php.Results.Command, php.Debuggee);
+    }
+
+    [Theory]
+    [InlineData(ToolchainTestFramework.Cargo, "rust")]
+    [InlineData(ToolchainTestFramework.Gradle, "kotlin")]
+    [InlineData(ToolchainTestFramework.Maven, "java")]
+    [InlineData(ToolchainTestFramework.SwiftPM, "swift")]
+    [InlineData(ToolchainTestFramework.DartTest, "flutter")]
+    public void Runners_TabStudio_cannot_debug_yet_say_so(ToolchainTestFramework framework, string toolchain)
+    {
+        _folder.Write("other/README", string.Empty);
+        Assert.Null(ToolchainTestPlanner.PlanDebug(Project(toolchain, "other"), framework, null, _folder.Resolve("reports")));
+    }
+
     private ToolchainProject Project(string toolchain, string folder) =>
         new(Toolchain(toolchain), Path.GetFullPath(_folder.Resolve(folder)), null);
 

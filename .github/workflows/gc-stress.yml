@@ -32,7 +32,7 @@ on:
         description: Builds to test, a JSON list of release, checked and concurrent
         default: '["release","checked"]'
   push:
-    branches: [main, 'agent/**']
+    branches: [main, 'agent/**', '!agent/build-run-debug']
 
 permissions:
   contents: write

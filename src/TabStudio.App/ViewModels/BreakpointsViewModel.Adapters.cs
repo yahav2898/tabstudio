@@ -1,3 +1,4 @@
+using TabStudio.Debugging;
 using TabStudio.LanguageServers.DebugAdapters;
 
 namespace TabStudio.App.ViewModels;
@@ -5,15 +6,32 @@ namespace TabStudio.App.ViewModels;
 /// <summary>The breakpoints of programs debug adapters run: hit counts, logpoints, and what the adapter verified.</summary>
 public sealed partial class BreakpointsViewModel
 {
-    /// <summary>Changes a breakpoint's hit count and log message, which debug adapters support.</summary>
+    /// <summary>Changes a breakpoint's hit count and its log message, which debug adapters support.</summary>
     /// <param name="breakpoint">The breakpoint.</param>
-    /// <param name="hitCount">After how many hits it stops; <see langword="null"/> for every hit.</param>
+    /// <param name="hitCount">On which hits it stops, as <see cref="BreakpointHitCondition"/> reads it; <see langword="null"/> for every hit.</param>
     /// <param name="logMessage">The message to log instead of stopping; <see langword="null"/> to stop.</param>
     public void SetOptions(BreakpointViewModel breakpoint, string? hitCount, string? logMessage)
     {
         ArgumentNullException.ThrowIfNull(breakpoint);
         breakpoint.SetOptions(hitCount, logMessage);
+        if (_session is not null && breakpoint.Binding is { } binding)
+        {
+            // A new hit count replaces the C# debugger's breakpoint on the line, and counts again from zero.
+            breakpoint.Bind(_session.SetBreakpoint(binding.FilePath, binding.Line, breakpoint.Condition, BreakpointHitCondition.Parse(breakpoint.HitCount)));
+        }
+
         OnChanged(breakpoint.FilePath);
+    }
+
+    /// <summary>
+    /// Whether the IDE counts a breakpoint's hits for a debug adapter, rather than the adapter: every breakpoint with a
+    /// hit count, except a logpoint, which never stops for the IDE to count it.
+    /// </summary>
+    /// <param name="breakpoint">The breakpoint.</param>
+    public static bool CountsHitsForAdapter(BreakpointViewModel breakpoint)
+    {
+        ArgumentNullException.ThrowIfNull(breakpoint);
+        return breakpoint.LogMessage is null && BreakpointHitCondition.Parse(breakpoint.HitCount) is not null;
     }
 
     /// <summary>The breakpoints of every file, as a debug adapter takes them.</summary>
@@ -61,6 +79,7 @@ public sealed partial class BreakpointsViewModel
         }
     }
 
+    // A hit count the IDE counts is not the adapter's: each adapter reads a bare number its own way.
     private static DapSourceBreakpoint ToAdapter(BreakpointViewModel breakpoint) =>
-        new(breakpoint.Line, breakpoint.Condition, breakpoint.HitCount, breakpoint.LogMessage);
+        new(breakpoint.Line, breakpoint.Condition, CountsHitsForAdapter(breakpoint) ? null : breakpoint.HitCount, breakpoint.LogMessage);
 }

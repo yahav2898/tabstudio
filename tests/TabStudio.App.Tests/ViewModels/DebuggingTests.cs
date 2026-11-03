@@ -328,6 +328,48 @@ public sealed class DebuggingTests
         Assert.Empty(reopened.Breakpoints);
     }
 
+    [AvaloniaFact]
+    public async Task A_CSharp_breakpoint_with_a_hit_count_stops_on_that_hit_and_the_editor_offers_it()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+        var program = workspace.ActiveDocument!;
+        program.Document.Text = """
+            var total = 0;
+            for (var i = 0; i < 5; i++)
+            {
+                total += i;
+            }
+            Console.WriteLine(total);
+            """;
+        var options = (IEditorBreakpointOptions)workspace;
+        Assert.True(options.HasBreakpointOptions(program.FilePath));
+        Assert.False(options.HasLogpoints(program.FilePath));
+
+        var edit = options.EditHitCountAsync(program.FilePath, 4);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.Prompt.IsOpen, because: "the hit count prompt");
+        workspace.Prompt.Text = "> 3";
+        workspace.Prompt.ConfirmCommand.Execute(null);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.Prompt.IsOpen && workspace.Prompt.Message.Contains("is not a hit count", StringComparison.Ordinal), because: "the prompt to refuse > 3");
+        workspace.Prompt.Text = "= 3";
+        workspace.Prompt.ConfirmCommand.Execute(null);
+        await edit;
+
+        var breakpoint = Assert.Single(workspace.Breakpoints.All);
+        Assert.Equal("= 3", breakpoint.HitCount);
+        Assert.Equal(BreakpointGlyph.Conditional, breakpoint.Glyph);
+
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await WaitForPauseAsync(workspace, 4);
+        await WaitForLocalAsync(workspace, "i");
+        Assert.Equal("2", workspace.Locals.Tree.Rows.Single(r => r.Name == "i").Value);
+
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await WaitForExitAsync(workspace);
+        Assert.Contains("10", workspace.Output.Text, StringComparison.Ordinal);
+    }
+
     private const string ThrowingProgram = """
         var numbers = new List<int>();
         Console.WriteLine("Looking for the first number");

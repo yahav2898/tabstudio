@@ -29,6 +29,13 @@ public interface ITestRunHost
     /// <param name="request">The tests to run.</param>
     Task RunTestsAsync(TestRunRequest request);
 
+    /// <summary>
+    /// Builds the request's projects for debugging and runs their tests under the debugger: breakpoints in tests and in
+    /// the code they call stop, as in Visual Studio's Debug Tests. Completes when the debugged run has ended.
+    /// </summary>
+    /// <param name="request">The tests to debug.</param>
+    Task DebugTestsAsync(TestRunRequest request) => RunTestsAsync(request);
+
     /// <summary>Stops the run in progress, if any.</summary>
     void CancelTestRun();
 
