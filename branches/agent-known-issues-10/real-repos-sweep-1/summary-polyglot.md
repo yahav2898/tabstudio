@@ -1,0 +1,25 @@
+| Repository | Toolchain | Startup project | Program | Result | Time |
+| --- | --- | --- | --- | --- | --- |
+| cobra | go | go | none | started | 5 s |
+| urfave-cli | go | go | none | started | 7 s |
+| echo | go | go | none | started | 5 s |
+| mux | go | go | none | started | 1 s |
+| fzf | go | go | none | started | 11 s |
+| lazygit | go | go | none | started | 25 s |
+| chi-rest | go | go | rest | started | 2 s |
+| golang-example-hello | go | go | hello | started | 1 s |
+| anyhow | rust | rust | none | started | 13 s |
+| serde-json | rust | rust | none | started | 15 s |
+| mini-redis | rust | rust | none | started | 15 s |
+| hyperfine | rust | rust | none | started | 32 s |
+| eza | rust | rust | none | started | 53 s |
+| bat | rust | rust | none | started | 63 s |
+| rustlings | rust | rust | none | started | 9 s |
+| tinyxml2 | cpp | cpp | xmltest | started | 3 s |
+| googletest | cpp | cpp | none | started | 11 s |
+| zlib | cpp | cpp | none | started | 4 s |
+| lua | cpp | cpp | none | started | 7 s |
+| spdlog | cpp | cpp | none | started | 17 s |
+| swift-algorithms | swift | swift | none | started | 21 s |
+| swift-log | swift | swift | none | started | 18 s |
+| Rainbow | swift | swift | none | started | 13 s |

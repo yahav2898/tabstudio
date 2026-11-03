@@ -1,0 +1,23 @@
+{
+  "files": 10,
+  "squiggles": 0,
+  "compilerErrors": 0,
+  "falseSquiggles": [],
+  "missed": [],
+  "notCompiled": [
+    {
+      "file": "tests/itest-loc/hello.rs",
+      "squiggles": 0
+    }
+  ],
+  "problems": [
+    "tests/itest-loc/binary.rs: no language server is not open, so it has no squiggles to compare"
+  ],
+  "name": "eza",
+  "toolchain": "rust",
+  "commands": [
+    "(in /home/runner/work/_temp/real-repos/eza) cargo metadata --format-version 1 --no-deps",
+    "(in /home/runner/work/_temp/real-repos/eza) cargo check --workspace --all-targets --keep-going --message-format=json"
+  ],
+  "seconds": 83.7
+}

@@ -1,0 +1,29 @@
+anyhow at bb1b0f9af0f645d5fdf1ac63a1fcbf3975ee452c
+Opened 12 of 12 files; set up in 4.5 s
+The language servers went quiet after 36.6 s; progress seen: rust-analyzer: Building CrateGraph, rust-analyzer: Building compile-time-deps, rust-analyzer: Fetching, rust-analyzer: Indexing, rust-analyzer: Loading proc-macros, rust-analyzer: Roots Scanned, rust-analyzer: cargo check
+  build.rs: rust-analyzer Running, 0 errors
+  src/backtrace.rs: rust-analyzer Running, 0 errors
+  tests/compiletest.rs: rust-analyzer Running, 0 errors
+  src/chain.rs: rust-analyzer Running, 0 errors
+  src/context.rs: rust-analyzer Running, 0 errors
+  tests/common/mod.rs: rust-analyzer Running, 0 errors
+  src/ensure.rs: rust-analyzer Running, 0 errors
+  src/error.rs: rust-analyzer Running, 0 errors
+  tests/crate/test.rs: rust-analyzer Running, 0 errors
+  src/fmt.rs: rust-analyzer Running, 0 errors
+  src/kind.rs: rust-analyzer Running, 0 errors
+  tests/drop/mod.rs: rust-analyzer Running, 0 errors
+Language servers:
+18:41:38 [rust-analyzer] Starting rust-analyzer for /home/runner/work/_temp/real-repos/anyhow: /home/runner/.cargo/bin/rust-analyzer 
+18:41:39 [rust-analyzer] rust-analyzer is running (rust-analyzer 1.99.1 (58cf8f9 2026-10-13)).
+18:41:39 [rust-analyzer] Starting rust-analyzer for /home/runner/work/_temp/real-repos/anyhow/tests/crate: /home/runner/.cargo/bin/rust-analyzer 
+18:41:40 [rust-analyzer] rust-analyzer is running (rust-analyzer 1.99.1 (58cf8f9 2026-10-13)).
+
+Project setup:
+
+Squiggles of anyhow (Rust) next to the compiler's errors:
+  compiler: (in /home/runner/work/_temp/real-repos/anyhow) cargo metadata --format-version 1 --no-deps
+  compiler: (in /home/runner/work/_temp/real-repos/anyhow) cargo check --workspace --all-targets --keep-going --message-format=json
+  11 files compared: 0 editor errors, 0 compiler errors, 0 false squiggles, 0 missed
+  not compiled by the build, so not compared: tests/crate/test.rs (0 editor errors)
+

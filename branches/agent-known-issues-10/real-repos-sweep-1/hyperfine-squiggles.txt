@@ -1,0 +1,95 @@
+hyperfine at c5161524980522320c7d3425e714cc0965a869a5
+Opened 12 of 12 files; set up in 31.3 s
+The language servers went quiet after 39.1 s; progress seen: rust-analyzer: Building CrateGraph, rust-analyzer: Building compile-time-deps, rust-analyzer: Fetching, rust-analyzer: Indexing, rust-analyzer: Loading proc-macros, rust-analyzer: Roots Scanned, rust-analyzer: cargo check
+  build.rs: rust-analyzer Running, 0 errors
+  src/cli.rs: rust-analyzer Running, 0 errors
+  tests/common.rs: rust-analyzer Running, 0 errors
+  src/benchmark/benchmark_result.rs: rust-analyzer Running, 0 errors
+  src/export/asciidoc.rs: rust-analyzer Running, 0 errors
+  tests/execution_order_tests.rs: rust-analyzer Running, 0 errors
+  src/output/mod.rs: rust-analyzer Running, 0 errors
+  src/parameter/mod.rs: rust-analyzer Running, 0 errors
+  tests/integration_tests.rs: rust-analyzer Running, 0 errors
+  src/quantity/mod.rs: rust-analyzer Running, 0 errors
+  src/timer/linux_counters.rs: rust-analyzer Running, 0 errors
+  src/util/exit_code.rs: rust-analyzer Running, 0 errors
+Language servers:
+18:43:55 [rust-analyzer] Starting rust-analyzer for /home/runner/work/_temp/real-repos/hyperfine: /home/runner/.cargo/bin/rust-analyzer 
+18:43:55 [rust-analyzer] rust-analyzer is running (rust-analyzer 1.99.1 (58cf8f9 2026-10-13)).
+18:44:43 [rust-analyzer] 2026-11-03T18:44:43.376817581Z  WARN overly long loop turn took 530.693745ms:
+18:44:43 [rust-analyzer] (event handling took 530.678242ms): Response { id: RequestId(I32(123)), error: None }
+18:44:43 [rust-analyzer] (cancellation took None)
+18:44:43 [rust-analyzer]                 (garbage collection took None)
+
+Project setup:
+------ hyperfine: pip install -e . ------
+> python3 -m venv .venv
+> /home/runner/work/_temp/real-repos/hyperfine/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/real-repos/hyperfine
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting matplotlib (from hyperfine-scripts==2.0.0)
+  Using cached matplotlib-3.11.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (80 kB)
+Collecting numpy (from hyperfine-scripts==2.0.0)
+  Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting pyqt6 (from hyperfine-scripts==2.0.0)
+  Using cached pyqt6-6.12.0-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (2.1 kB)
+Collecting scipy (from hyperfine-scripts==2.0.0)
+  Using cached scipy-1.18.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+Collecting contourpy>=1.0.1 (from matplotlib->hyperfine-scripts==2.0.0)
+  Using cached contourpy-1.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+Collecting cycler>=0.10 (from matplotlib->hyperfine-scripts==2.0.0)
+  Using cached cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.28.2 (from matplotlib->hyperfine-scripts==2.0.0)
+  Using cached fonttools-4.68.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (139 kB)
+Collecting kiwisolver>=1.3.1 (from matplotlib->hyperfine-scripts==2.0.0)
+  Using cached kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+Collecting packaging>=20.0 (from matplotlib->hyperfine-scripts==2.0.0)
+  Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pillow>=9 (from matplotlib->hyperfine-scripts==2.0.0)
+  Using cached pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+Collecting pyparsing>=3 (from matplotlib->hyperfine-scripts==2.0.0)
+  Using cached pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+Collecting python-dateutil>=2.7 (from matplotlib->hyperfine-scripts==2.0.0)
+  Using cached python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting PyQt6-sip<14,>=13.13 (from pyqt6->hyperfine-scripts==2.0.0)
+  Using cached pyqt6_sip-13.13.0-cp312-cp312-manylinux1_x86_64.manylinux_2_5_x86_64.whl.metadata (495 bytes)
+Collecting PyQt6-Qt6<6.13.0,>=6.12.0 (from pyqt6->hyperfine-scripts==2.0.0)
+  Using cached pyqt6_qt6-6.12.0-py3-none-manylinux_2_34_x86_64.whl.metadata (535 bytes)
+Collecting tzdata (from python-dateutil>=2.7->matplotlib->hyperfine-scripts==2.0.0)
+  Using cached tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+Using cached matplotlib-3.11.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.9 MB)
+Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+Using cached pyqt6-6.12.0-cp310-abi3-manylinux_2_34_x86_64.whl (8.5 MB)
+Using cached scipy-1.18.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (35.3 MB)
+Using cached contourpy-1.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (383 kB)
+Using cached cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Using cached fonttools-4.68.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.4 MB)
+Using cached kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.5 MB)
+Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Using cached pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+Using cached pyparsing-3.3.3-py3-none-any.whl (126 kB)
+Using cached pyqt6_qt6-6.12.0-py3-none-manylinux_2_34_x86_64.whl (88.5 MB)
+Using cached pyqt6_sip-13.13.0-cp312-cp312-manylinux1_x86_64.manylinux_2_5_x86_64.whl (301 kB)
+Using cached python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+Using cached tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Building wheels for collected packages: hyperfine-scripts
+  Building editable for hyperfine-scripts (pyproject.toml): started
+  Building editable for hyperfine-scripts (pyproject.toml): finished with status 'done'
+  Created wheel for hyperfine-scripts: filename=hyperfine_scripts-2.0.0-py3-none-any.whl size=2078 sha256=ef7f9dd8170d7ec84f2a012b11f7fbbf1f3295410ef796ec4ca6f1cfffe46f07
+  Stored in directory: /tmp/pip-ephem-wheel-cache-19ewq6ej/wheels/4d/fb/32/858263d8e2de7e2d50b0a84b1dff6307198ffd3ca26c845976
+Successfully built hyperfine-scripts
+Installing collected packages: PyQt6-Qt6, tzdata, PyQt6-sip, pyparsing, pillow, packaging, numpy, kiwisolver, fonttools, cycler, scipy, python-dateutil, pyqt6, contourpy, matplotlib, hyperfine-scripts
+Successfully installed PyQt6-Qt6-6.12.0 PyQt6-sip-13.13.0 contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 hyperfine-scripts-2.0.0 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.4 packaging-26.3 pillow-13.0.0 pyparsing-3.3.3 pyqt6-6.12.0 python-dateutil-4.0.0 scipy-1.18.1 tzdata-2026.6
+
+Squiggles of hyperfine (Rust) next to the compiler's errors:
+  compiler: (in /home/runner/work/_temp/real-repos/hyperfine) cargo metadata --format-version 1 --no-deps
+  compiler: (in /home/runner/work/_temp/real-repos/hyperfine) cargo check --workspace --all-targets --keep-going --message-format=json
+  12 files compared: 0 editor errors, 0 compiler errors, 0 false squiggles, 0 missed
+

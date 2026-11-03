@@ -1,0 +1,20 @@
+{
+  "files": 12,
+  "squiggles": 0,
+  "compilerErrors": 0,
+  "falseSquiggles": [],
+  "missed": [],
+  "notCompiled": [],
+  "problems": [],
+  "name": "urfave-cli",
+  "toolchain": "go",
+  "commands": [
+    "(in /home/runner/work/_temp/real-repos/urfave-cli) go list -e -f {{.Dir}}|{{join .GoFiles \",\"}},{{join .CgoFiles \",\"}},{{join .TestGoFiles \",\"}},{{join .XTestGoFiles \",\"}} ./...",
+    "(in /home/runner/work/_temp/real-repos/urfave-cli) go build ./...",
+    "(in /home/runner/work/_temp/real-repos/urfave-cli) go vet ./...",
+    "(in /home/runner/work/_temp/real-repos/urfave-cli/docs) go list -e -f {{.Dir}}|{{join .GoFiles \",\"}},{{join .CgoFiles \",\"}},{{join .TestGoFiles \",\"}},{{join .XTestGoFiles \",\"}} ./...",
+    "(in /home/runner/work/_temp/real-repos/urfave-cli/docs) go build ./...",
+    "(in /home/runner/work/_temp/real-repos/urfave-cli/docs) go vet ./..."
+  ],
+  "seconds": 26.7
+}

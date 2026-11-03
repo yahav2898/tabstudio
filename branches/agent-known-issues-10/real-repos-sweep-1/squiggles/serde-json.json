@@ -1,0 +1,29 @@
+{
+  "files": 9,
+  "squiggles": 0,
+  "compilerErrors": 0,
+  "falseSquiggles": [],
+  "missed": [],
+  "notCompiled": [
+    {
+      "file": "fuzz/fuzz_targets/from_slice.rs",
+      "squiggles": 0
+    },
+    {
+      "file": "src/io/core.rs",
+      "squiggles": 0
+    },
+    {
+      "file": "tests/crate/test.rs",
+      "squiggles": 0
+    }
+  ],
+  "problems": [],
+  "name": "serde-json",
+  "toolchain": "rust",
+  "commands": [
+    "(in /home/runner/work/_temp/real-repos/serde-json) cargo metadata --format-version 1 --no-deps",
+    "(in /home/runner/work/_temp/real-repos/serde-json) cargo check --workspace --all-targets --keep-going --message-format=json"
+  ],
+  "seconds": 53.2
+}

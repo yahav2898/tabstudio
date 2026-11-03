@@ -1,0 +1,26 @@
+mini-redis at 3d93b42bc363220f85af4fc9e1bebd35b588a4a3
+Opened 12 of 12 files; set up in 4.6 s
+The language servers went quiet after 33.1 s; progress seen: rust-analyzer: Building CrateGraph, rust-analyzer: Building compile-time-deps, rust-analyzer: Fetching, rust-analyzer: Indexing, rust-analyzer: Loading proc-macros, rust-analyzer: Roots Scanned, rust-analyzer: cargo check
+  src/connection.rs: rust-analyzer Running, 0 errors
+  src/clients/blocking_client.rs: rust-analyzer Running, 0 errors
+  examples/chat.rs: rust-analyzer Running, 0 errors
+  src/cmd/get.rs: rust-analyzer Running, 0 errors
+  src/db.rs: rust-analyzer Running, 0 errors
+  tests/buffered_client.rs: rust-analyzer Running, 0 errors
+  src/clients/buffered_client.rs: rust-analyzer Running, 0 errors
+  src/cmd/mod.rs: rust-analyzer Running, 0 errors
+  examples/hello_world.rs: rust-analyzer Running, 0 errors
+  src/frame.rs: rust-analyzer Running, 0 errors
+  src/clients/client.rs: rust-analyzer Running, 0 errors
+  tests/client.rs: rust-analyzer Running, 0 errors
+Language servers:
+18:43:14 [rust-analyzer] Starting rust-analyzer for /home/runner/work/_temp/real-repos/mini-redis: /home/runner/.cargo/bin/rust-analyzer 
+18:43:14 [rust-analyzer] rust-analyzer is running (rust-analyzer 1.99.1 (58cf8f9 2026-10-13)).
+
+Project setup:
+
+Squiggles of mini-redis (Rust) next to the compiler's errors:
+  compiler: (in /home/runner/work/_temp/real-repos/mini-redis) cargo metadata --format-version 1 --no-deps
+  compiler: (in /home/runner/work/_temp/real-repos/mini-redis) cargo check --workspace --all-targets --keep-going --message-format=json
+  12 files compared: 0 editor errors, 0 compiler errors, 0 false squiggles, 0 missed
+

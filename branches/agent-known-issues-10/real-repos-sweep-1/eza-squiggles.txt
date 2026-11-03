@@ -1,0 +1,34 @@
+eza at 471bfbc7b03cbac8c738e8d9050edb06ee79132a
+Opened 11 of 12 files; set up in 3.7 s
+The language servers went quiet after 80.0 s; progress seen: rust-analyzer: Building CrateGraph, rust-analyzer: Building build-artifacts, rust-analyzer: Fetching, rust-analyzer: Indexing, rust-analyzer: Loading proc-macros, rust-analyzer: Roots Scanned, rust-analyzer: cargo check
+  build.rs: rust-analyzer Running, 0 errors
+  src/lib.rs: rust-analyzer Running, 0 errors
+  benches/my_benchmark.rs: rust-analyzer Running, 0 errors
+  src/fs/dir.rs: rust-analyzer Running, 0 errors
+  src/info/filetype.rs: rust-analyzer Running, 0 errors
+  tests/cli_tests.rs: rust-analyzer Running, 0 errors
+  src/loc/mod.rs: rust-analyzer Running, 0 errors
+  src/options/config.rs: rust-analyzer Running, 0 errors
+  tests/itest-loc/binary.rs: no server not open, 0 errors
+  src/output/cell.rs: rust-analyzer Running, 0 errors
+  src/theme/default_theme.rs: rust-analyzer Running, 0 errors
+  tests/itest-loc/hello.rs: rust-analyzer Running, 0 errors
+Language servers:
+18:45:06 [rust-analyzer] Starting rust-analyzer for /home/runner/work/_temp/real-repos/eza: /home/runner/.cargo/bin/rust-analyzer 
+18:45:06 [rust-analyzer] info: syncing channel updates for 1.90-x86_64-unknown-linux-gnu
+18:45:06 [rust-analyzer] info: latest update on 2025-09-18 for version 1.90.0 (1159e78c4 2025-09-14)
+18:45:06 [rust-analyzer] info: downloading 7 components
+18:45:17 [rust-analyzer] warn: the missing active toolchain `1.90-x86_64-unknown-linux-gnu` has been auto-installed
+18:45:17 [rust-analyzer] warn: this might cause rustup commands to take longer time to finish than expected
+18:45:17 [rust-analyzer] info: you may opt out with `RUSTUP_AUTO_INSTALL=0` or `rustup set auto-install disable`
+18:45:17 [rust-analyzer] rust-analyzer is running (rust-analyzer 1.90.0 (1159e78 2025-09-14)).
+
+Project setup:
+
+Squiggles of eza (Rust) next to the compiler's errors:
+  compiler: (in /home/runner/work/_temp/real-repos/eza) cargo metadata --format-version 1 --no-deps
+  compiler: (in /home/runner/work/_temp/real-repos/eza) cargo check --workspace --all-targets --keep-going --message-format=json
+  10 files compared: 0 editor errors, 0 compiler errors, 0 false squiggles, 0 missed
+  not compiled by the build, so not compared: tests/itest-loc/hello.rs (0 editor errors)
+  PROBLEM: tests/itest-loc/binary.rs: no language server is not open, so it has no squiggles to compare
+

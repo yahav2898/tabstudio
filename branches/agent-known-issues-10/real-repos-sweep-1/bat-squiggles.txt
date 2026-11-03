@@ -1,0 +1,31 @@
+bat at 8f5727ea3869a71c65c0f4f4a42ed18bdb26ae7b
+Opened 12 of 12 files; set up in 6.5 s
+The language servers went quiet after 63.4 s; progress seen: rust-analyzer: Building CrateGraph, rust-analyzer: Building compile-time-deps, rust-analyzer: Fetching, rust-analyzer: Indexing, rust-analyzer: Loading proc-macros, rust-analyzer: Roots Scanned, rust-analyzer: cargo check
+  assets/theme_preview.rs: rust-analyzer Running, 0 errors
+  src/assets.rs: rust-analyzer Running, 0 errors
+  examples/advanced.rs: rust-analyzer Running, 0 errors
+  src/assets/assets_metadata.rs: rust-analyzer Running, 0 errors
+  src/syntax_mapping/builtin.rs: rust-analyzer Running, 0 errors
+  tests/assets.rs: rust-analyzer Running, 0 errors
+  src/assets/build_assets/acknowledgements.rs: rust-analyzer Running, 0 errors
+  src/config.rs: rust-analyzer Running, 0 errors
+  tests/snapshots/sample.modified.rs: rust-analyzer Running, 1 errors
+  src/assets/build_assets.rs: rust-analyzer Running, 0 errors
+  src/syntax_mapping/ignored_suffixes.rs: rust-analyzer Running, 0 errors
+  tests/tester/mod.rs: rust-analyzer Running, 0 errors
+Language servers:
+18:46:28 [rust-analyzer] Starting rust-analyzer for /home/runner/work/_temp/real-repos/bat: /home/runner/.cargo/bin/rust-analyzer 
+18:46:28 [rust-analyzer] rust-analyzer is running (rust-analyzer 1.99.1 (58cf8f9 2026-10-13)).
+18:46:58 [rust-analyzer] 2026-11-03T18:46:58.97881559Z  WARN overly long loop turn took 793.917781ms:
+18:46:58 [rust-analyzer] (event handling took 751.755728ms): Response { id: RequestId(I32(128)), error: None }
+18:46:58 [rust-analyzer] (cancellation took None)
+18:46:58 [rust-analyzer]                 (garbage collection took Some(35.697252ms))
+
+Project setup:
+
+Squiggles of bat (Rust) next to the compiler's errors:
+  compiler: (in /home/runner/work/_temp/real-repos/bat) cargo metadata --format-version 1 --no-deps
+  compiler: (in /home/runner/work/_temp/real-repos/bat) cargo check --workspace --all-targets --keep-going --message-format=json
+  11 files compared: 0 editor errors, 0 compiler errors, 0 false squiggles, 0 missed
+  not compiled by the build, so not compared: tests/snapshots/sample.modified.rs (1 editor errors)
+

@@ -1,0 +1,33 @@
+serde-json at 8c535a260ce561eaab4111aafc29038eb9f77ff3
+Opened 12 of 12 files; set up in 5.3 s
+The language servers went quiet after 48.0 s; progress seen: rust-analyzer: Building CrateGraph, rust-analyzer: Building compile-time-deps, rust-analyzer: Fetching, rust-analyzer: Indexing, rust-analyzer: Loading proc-macros, rust-analyzer: Roots Scanned, rust-analyzer: cargo check
+  build.rs: rust-analyzer Running, 0 errors
+  src/de.rs: rust-analyzer Running, 0 errors
+  tests/compiletest.rs: rust-analyzer Running, 0 errors
+  fuzz/fuzz_targets/from_slice.rs: rust-analyzer Running, 0 errors
+  src/io/core.rs: rust-analyzer Running, 0 errors
+  tests/crate/test.rs: rust-analyzer Running, 0 errors
+  src/lexical/algorithm.rs: rust-analyzer Running, 0 errors
+  src/value/de.rs: rust-analyzer Running, 0 errors
+  tests/lexical/algorithm.rs: rust-analyzer Running, 0 errors
+  src/error.rs: rust-analyzer Running, 0 errors
+  src/io/mod.rs: rust-analyzer Running, 0 errors
+  tests/macros/mod.rs: rust-analyzer Running, 0 errors
+Language servers:
+18:42:20 [rust-analyzer] Starting rust-analyzer for /home/runner/work/_temp/real-repos/serde-json: /home/runner/.cargo/bin/rust-analyzer 
+18:42:20 [rust-analyzer] rust-analyzer is running (rust-analyzer 1.99.1 (58cf8f9 2026-10-13)).
+18:42:20 [rust-analyzer] Starting rust-analyzer for /home/runner/work/_temp/real-repos/serde-json/fuzz: /home/runner/.cargo/bin/rust-analyzer 
+18:42:20 [rust-analyzer] rust-analyzer is running (rust-analyzer 1.99.1 (58cf8f9 2026-10-13)).
+18:42:20 [rust-analyzer] Starting rust-analyzer for /home/runner/work/_temp/real-repos/serde-json/tests/crate: /home/runner/.cargo/bin/rust-analyzer 
+18:42:20 [rust-analyzer] rust-analyzer is running (rust-analyzer 1.99.1 (58cf8f9 2026-10-13)).
+
+Project setup:
+
+Squiggles of serde-json (Rust) next to the compiler's errors:
+  compiler: (in /home/runner/work/_temp/real-repos/serde-json) cargo metadata --format-version 1 --no-deps
+  compiler: (in /home/runner/work/_temp/real-repos/serde-json) cargo check --workspace --all-targets --keep-going --message-format=json
+  9 files compared: 0 editor errors, 0 compiler errors, 0 false squiggles, 0 missed
+  not compiled by the build, so not compared: fuzz/fuzz_targets/from_slice.rs (0 editor errors)
+  not compiled by the build, so not compared: src/io/core.rs (0 editor errors)
+  not compiled by the build, so not compared: tests/crate/test.rs (0 editor errors)
+

@@ -1,0 +1,17 @@
+{
+  "files": 12,
+  "squiggles": 0,
+  "compilerErrors": 0,
+  "falseSquiggles": [],
+  "missed": [],
+  "notCompiled": [],
+  "problems": [],
+  "name": "cobra",
+  "toolchain": "go",
+  "commands": [
+    "(in /home/runner/work/_temp/real-repos/cobra) go list -e -f {{.Dir}}|{{join .GoFiles \",\"}},{{join .CgoFiles \",\"}},{{join .TestGoFiles \",\"}},{{join .XTestGoFiles \",\"}} ./...",
+    "(in /home/runner/work/_temp/real-repos/cobra) go build ./...",
+    "(in /home/runner/work/_temp/real-repos/cobra) go vet ./..."
+  ],
+  "seconds": 34
+}
