@@ -33,10 +33,19 @@ echo "job=${job} branch=${branch} status=${status} sha=${GITHUB_SHA} run=${GITHU
 # disk ("Disk quota exceeded") and failed a job whose tests had finished. Fetch its trees without their files, lay
 # this job's folder over them in the index, and commit that, so only this job's files are ever on disk.
 remote_url="${TABSTUDIO_PUBLISH_REMOTE:-$remote}"
+
+# Every job of every branch publishes here, and a fetch or push can stall on the busy branch: one did until the SSH job's
+# 20 minutes ran out, failing a job whose tests had passed. Each Git call gets a limit, and publishing gives up after
+# ten minutes with a warning; the logs are an aid, never the job's verdict.
+limit="${TABSTUDIO_PUBLISH_GIT_TIMEOUT:-120}"
+deadline=$(( $(date +%s) + ${TABSTUDIO_PUBLISH_DEADLINE:-600} ))
 for attempt in $(seq 1 12); do
+  if [ "$(date +%s)" -ge "$deadline" ]; then
+    break
+  fi
   rm -f "$workdir/.git/index"
   parent=""
-  if git -C "$workdir" fetch -q --depth 1 --filter=blob:none "$remote_url" ci-logs 2>/dev/null; then
+  if timeout "$limit" git -C "$workdir" fetch -q --depth 1 --filter=blob:none "$remote_url" ci-logs 2>/dev/null; then
     parent="$(git -C "$workdir" rev-parse FETCH_HEAD)"
     git -C "$workdir" read-tree "$parent"
   fi
@@ -50,10 +59,10 @@ for attempt in $(seq 1 12); do
     exit 0
   fi
   commit="$(git -C "$workdir" commit-tree "$tree" ${parent:+-p "$parent"} -m "${folder}: ${status} @ ${GITHUB_SHA::8}")"
-  if git -C "$workdir" push -q "$remote_url" "$commit:refs/heads/ci-logs"; then
+  if timeout "$limit" git -C "$workdir" push -q "$remote_url" "$commit:refs/heads/ci-logs"; then
     exit 0
   fi
   # Jobs on every branch publish here; back off with jitter so they stop colliding.
   sleep $((attempt * 2 + RANDOM % 5))
 done
-echo "Could not publish logs after 12 attempts" >&2
+echo "::warning::Could not publish the logs of ${job} to ci-logs; they are in the job's artifact." >&2
