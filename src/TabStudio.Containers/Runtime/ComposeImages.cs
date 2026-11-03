@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using TabStudio.Containers.Build;
 using TabStudio.Containers.Store;
 using TabStudio.Services;
 using TabStudio.Services.Compose;
@@ -13,15 +14,22 @@ namespace TabStudio.Containers.Runtime;
 public sealed class ComposeImages(ContainerEngine engine, IProgress<PullProgress>? progress = null) : IServiceImages
 {
     /// <inheritdoc />
-    public bool CanRun(ComposeService service) => engine.Problem is null && service.Image is { Length: > 0 }
+    /// <remarks>A service with only <c>build:</c> can run too: its image is built from its Dockerfile first.</remarks>
+    public bool CanRun(ComposeService service) => engine.Problem is null && (service.Image is { Length: > 0 } || service.BuildContext is not null)
         && service.Unsupported.Count == 0 && service.Ports.All(p => p.Protocol == "tcp");
 
     /// <summary>Converts a parsed Compose service into a workspace-scoped container definition.</summary>
+    /// <remarks>
+    /// A service with <c>build:</c> and no <c>image:</c> runs the image built from its Dockerfile, named
+    /// <see cref="BuiltImageName"/>; <see cref="BuildAsync"/> builds it.
+    /// </remarks>
     public static ContainerSpec ToSpec(ComposeProject project, ComposeService service, IReadOnlyList<ServicePort> ports)
     {
-        if (service.Image is not { Length: > 0 } image) throw new ComposeException($"{service.Name}: Dockerfile builds are deferred; run the application with F5.");
+        var image = service.Image is { Length: > 0 } named ? named
+            : service.BuildContext is not null ? BuiltImageName(project, service)
+            : throw new ComposeException($"{service.Name}: the service has neither an image nor a build.");
         if (service.Unsupported.Count > 0) throw new ComposeException($"{service.Name}: {string.Join(' ', service.Unsupported)}");
-        var projectId = "compose-" + Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(Path.GetFullPath(project.Directory))))[..12];
+        var projectId = ProjectId(project);
         var mounts = service.Volumes.Select(v =>
         {
             if (v.IsBind && v.Source is { } source && !Directory.Exists(source) && !File.Exists(source))
@@ -51,6 +59,66 @@ public sealed class ComposeImages(ContainerEngine engine, IProgress<PullProgress
         };
     }
 
+    /// <summary>
+    /// The name of the image built for a service with <c>build:</c> and no <c>image:</c>: the project and the
+    /// service, as Compose names it, such as <c>compose-1a2b3c4d5e6f-api</c>.
+    /// </summary>
+    /// <param name="project">The Compose project.</param>
+    /// <param name="service">The service.</param>
+    public static string BuiltImageName(ComposeProject project, ComposeService service)
+    {
+        var name = new StringBuilder(service.Name.Length);
+        foreach (var c in service.Name.ToLowerInvariant()) name.Append(char.IsAsciiLetterLower(c) || char.IsAsciiDigit(c) ? c : '-');
+        var part = name.ToString().Trim('-');
+        return ProjectId(project) + "-" + (part.Length > 0 ? part : "service");
+    }
+
+    /// <summary>
+    /// Builds a service's image from its Dockerfile, as <c>docker compose build</c> does, named
+    /// <c>image:</c> when the service has one and <see cref="BuiltImageName"/> otherwise. An image already built from
+    /// the same Dockerfile, arguments and files is used again.
+    /// </summary>
+    /// <param name="project">The Compose project.</param>
+    /// <param name="service">The service; it must have <c>build:</c>.</param>
+    /// <param name="log">Receives the build's output.</param>
+    /// <param name="cancellationToken">Stops the build.</param>
+    /// <exception cref="ComposeException">The service has no <c>build:</c>.</exception>
+    /// <exception cref="ContainerException">The Dockerfile is invalid or one of its steps failed.</exception>
+    public async Task<StoredImage> BuildAsync(ComposeProject project, ComposeService service, Action<string> log, CancellationToken cancellationToken)
+    {
+        var context = service.BuildContext ?? throw new ComposeException($"{service.Name}: the service has no build.");
+        var request = new BuildRequest(context, service.Image is { Length: > 0 } image ? image : BuiltImageName(project, service))
+        {
+            DockerfilePath = service.BuildDockerfile,
+            Arguments = service.BuildArgs.Where(a => a.Value is not null).ToDictionary(a => a.Key, a => a.Value!, StringComparer.Ordinal),
+            Target = service.BuildTarget,
+            Platform = service.Platform,
+        };
+        return await new DockerfileBuilder(engine).BuildAsync(request, log, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Builds a service's image for a start; a build that fails means the image cannot run here, which lets a
+    /// service with a native counterpart fall back to it.
+    /// </summary>
+    private async Task<StoredImage> BuildForStartAsync(ComposeProject project, ComposeService service, Action<string> log, Action<ServiceState, string?> changed, CancellationToken cancellationToken)
+    {
+        changed(ServiceState.Starting, "Building its image from the Dockerfile");
+        try
+        {
+            return await BuildAsync(project, service, log, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is ContainerException or TabStudio.Containers.Registry.RegistryException or HttpRequestException or IOException
+            or UnauthorizedAccessException or InvalidDataException or NotSupportedException or FormatException)
+        {
+            throw new ServiceImageUnavailableException($"{service.Name}: its image could not be built from its Dockerfile: {FirstLine(ex.Message)}", ex);
+        }
+    }
+
+    /// <summary>A project's ID: a short digest of its folder, which its containers' names and volumes start with.</summary>
+    private static string ProjectId(ComposeProject project) =>
+        "compose-" + Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(Path.GetFullPath(project.Directory))))[..12];
+
     /// <summary>The names other services reach a service by: its name, its networks' aliases and its hostname.</summary>
     private static string[] Aliases(ComposeService service)
     {
@@ -76,6 +144,16 @@ public sealed class ComposeImages(ContainerEngine engine, IProgress<PullProgress
             {
                 throw new ComposeException($"{service.Name}: a container named {spec.Name} that is not this service's already exists; remove it in View > Containers or change container_name.");
             }
+            // build: without image: has nothing to pull; its image is built here, and again only when its files change.
+            var built = service.Image is not { Length: > 0 } ? await BuildForStartAsync(project, service, log, changed, cancellationToken).ConfigureAwait(false) : null;
+            if (container is not null && built is not null && container.ImageId != built.Id)
+            {
+                // Rebuilt: a container keeps the files of the image it was created from, so it is created again.
+                var stale = container.ImageId;
+                await engine.RemoveAsync(container.Id, force: true, cancellationToken).ConfigureAwait(false);
+                container = null;
+                await new DockerfileBuilder(engine).RemoveQuietlyAsync(stale, cancellationToken).ConfigureAwait(false);
+            }
             if (container is not null && JsonSerializer.Serialize(container.Spec with { Ports = spec.Ports }) == JsonSerializer.Serialize(spec))
             {
                 // Automatic device ports may change between starts; that must not discard the writable root.
@@ -90,10 +168,19 @@ public sealed class ComposeImages(ContainerEngine engine, IProgress<PullProgress
             {
                 container ??= await engine.CreateAsync(spec, progress, cancellationToken).ConfigureAwait(false);
             }
-            catch (Exception ex) when (ex is TabStudio.Containers.Registry.RegistryException or HttpRequestException && service.BuildContext is { } context)
+            catch (Exception ex) when (ex is TabStudio.Containers.Registry.RegistryException or HttpRequestException && service.BuildContext is not null && built is null)
             {
-                // build: with image: names what the build produces; it is often in no registry at all.
-                throw new ServiceImageUnavailableException($"{service.Name}: {service.Image} is built from {Path.GetFileName(context.TrimEnd(Path.DirectorySeparatorChar))}/Dockerfile and could not be pulled ({FirstLine(ex.Message)}). Dockerfile builds come in a later release; publish the image to a registry, or start what it runs with F5.", ex);
+                // build: with image: names what the build produces; it is often in no registry at all, so it is built here.
+                log($"{service.Name}: {service.Image} could not be pulled ({FirstLine(ex.Message)}); building it from its Dockerfile.");
+                await BuildForStartAsync(project, service, log, changed, cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    container = await engine.CreateAsync(spec, progress, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception again) when (again is TabStudio.Containers.Registry.RegistryException or HttpRequestException or ContainerException or InvalidDataException or NotSupportedException)
+                {
+                    throw new ServiceImageUnavailableException($"{service.Name}: {FirstLine(again.Message)}", again);
+                }
             }
             catch (Exception ex) when (ex is TabStudio.Containers.Registry.RegistryException or HttpRequestException or ContainerException or InvalidDataException or NotSupportedException)
             {

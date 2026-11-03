@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using System.Formats.Tar;
 using System.Text;
+using TabStudio.Containers.Runtime;
 using TabStudio.Containers.Store;
 using TabStudio.Testing;
 
@@ -117,6 +119,51 @@ public sealed class LayerTests
 
         Assert.True(UnixFiles.IsSpecial(Path.Combine(copy, "run/initctl")));
         Assert.Equal("ok", System.IO.File.ReadAllText(Path.Combine(copy, "run/ok")));
+    }
+
+    [Fact]
+    public async Task A_container_shares_the_image_program_files_and_its_own_writes_never_reach_the_image()
+    {
+        // Every container was a full copy of its image, so a large image needed its space again for each container.
+        if (!OperatingSystem.IsLinux() || Environment.IsPrivilegedProcess) return;
+        using var folder = new TempDirectory();
+        var image = Path.Combine(folder.Path, "image");
+        var big = new string('x', 256 * 1024);
+        await Apply(image, Tar(Dir("usr"), Dir("usr/lib"), Dir("etc"),
+            File("usr/lib/libbig.so", big, 0b111_101_101),
+            File("usr/lib/small.so", "small", 0b111_101_101),
+            File("etc/big.conf", big)));
+        var container = Path.Combine(folder.Path, "container");
+        var library = Path.Combine(container, "usr/lib/libbig.so");
+
+        var copied = await TreeCopy.ShareAsync(image, container);
+
+        // The large library is the image's own file: one inode with two links, and no new space.
+        Assert.Equal(Stat("%i", Path.Combine(image, "usr/lib/libbig.so")), Stat("%i", library));
+        Assert.Equal("2", Stat("%h", library));
+        Assert.Equal((long)(big.Length + "small".Length), copied);
+        // Small files and configuration are the container's own copies.
+        Assert.NotEqual(Stat("%i", Path.Combine(image, "usr/lib/small.so")), Stat("%i", Path.Combine(container, "usr/lib/small.so")));
+        Assert.NotEqual(Stat("%i", Path.Combine(image, "etc/big.conf")), Stat("%i", Path.Combine(container, "etc/big.conf")));
+
+        // A container's process cannot write the shared file in place: the kernel refuses, and the image is unchanged.
+        Assert.Throws<UnauthorizedAccessException>(() => System.IO.File.AppendAllText(library, "y"));
+        Assert.Equal(big, System.IO.File.ReadAllText(Path.Combine(image, "usr/lib/libbig.so")));
+
+        // The engine's own write breaks the link first, so the image keeps its file.
+        ContainerEngine.WriteReplacing(library, "patched");
+        Assert.Equal("patched", System.IO.File.ReadAllText(library));
+        Assert.Equal(big, System.IO.File.ReadAllText(Path.Combine(image, "usr/lib/libbig.so")));
+        Assert.Equal("1", Stat("%h", Path.Combine(image, "usr/lib/libbig.so")));
+    }
+
+    /// <summary>A file's inode number (<c>%i</c>) or link count (<c>%h</c>), from coreutils' stat.</summary>
+    private static string Stat(string format, string path)
+    {
+        using var process = Process.Start(new ProcessStartInfo("stat") { RedirectStandardOutput = true, ArgumentList = { "-c", format, path } })!;
+        var output = process.StandardOutput.ReadToEnd().Trim();
+        process.WaitForExit();
+        return output;
     }
 
     private static Task<LayerResult> Apply(string root, byte[] tar) =>

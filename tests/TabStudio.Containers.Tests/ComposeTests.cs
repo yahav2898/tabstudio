@@ -1,3 +1,4 @@
+using TabStudio.Containers.Registry;
 using TabStudio.Containers.Runtime;
 using TabStudio.Services.Compose;
 using TabStudio.Testing;
@@ -73,7 +74,71 @@ public sealed class ComposeTests
         Assert.EndsWith("-data", Assert.Single(spec.Mounts).Source, StringComparison.Ordinal);
         Assert.Equal("db", Assert.Single(spec.Aliases));
         Assert.Equal(TimeSpan.FromSeconds(1), spec.Healthcheck!.Interval);
-        Assert.Throws<ComposeException>(() => ComposeImages.ToSpec(project, project.Services["app"], []));
+        Assert.Equal(ComposeImages.BuiltImageName(project, project.Services["app"]), ComposeImages.ToSpec(project, project.Services["app"], []).Image);
+    }
+
+    [Fact]
+    public async Task A_service_with_only_a_build_is_built_from_its_Dockerfile_and_created_like_an_image_service()
+    {
+        // A service with build: and no image: could not run at all: Services refused it and ToSpec threw.
+        using var registry = new FakeRegistry();
+        registry.PublishImage("team/base", "1.0", "amd64", "arm64");
+        using var temp = new TempDirectory();
+        // Creating a container only needs PRoot to exist; nothing runs in this test.
+        var proot = temp.Write("tools/proot");
+        temp.Write("app/Dockerfile.dev", """
+            ARG BASE
+            FROM ${BASE}
+            ENV GREETING=hello
+            WORKDIR /srv/app
+            COPY site/ ./
+            COPY --chmod=755 run.sh /usr/local/bin/run
+            EXPOSE 8080
+            CMD ["/usr/local/bin/run"]
+            """);
+        temp.Write("app/site/index.html", "<h1>hi</h1>");
+        temp.Write("app/site/secret.txt", "left out");
+        temp.Write("app/.dockerignore", "site/secret.txt\n");
+        temp.Write("app/run.sh", "#!/bin/sh\necho \"$GREETING\"\n");
+        var file = temp.Write("compose.yaml", $$"""
+            services:
+              web:
+                build:
+                  context: ./app
+                  dockerfile: Dockerfile.dev
+                  args:
+                    BASE: {{registry.Host}}/team/base:1.0
+            """);
+        var project = ComposeReader.Read([file]);
+        var service = project.Services["web"];
+        Assert.Null(service.Image);
+        Assert.Equal(Path.Combine(temp.Path, "app", "Dockerfile.dev"), service.BuildDockerfile);
+        Assert.Equal($"{registry.Host}/team/base:1.0", service.BuildArgs["BASE"]);
+        using var http = new HttpClient();
+        await using var engine = new ContainerEngine(new() { StoreRoot = Path.Combine(temp.Path, "store"), ProotPath = proot },
+            new RegistryClient(http, new SessionRegistryCredentialStore()));
+        var images = new ComposeImages(engine);
+        Assert.True(images.CanRun(service));
+
+        var image = await images.BuildAsync(project, service, _ => { }, CancellationToken.None);
+        var spec = ComposeImages.ToSpec(project, service, []);
+        var container = await engine.CreateAsync(spec);
+
+        Assert.Equal(ComposeImages.BuiltImageName(project, service), spec.Image);
+        Assert.Equal(image.Id, container.ImageId);
+        var rootfs = engine.RootfsOf(container.Id);
+        Assert.True(File.Exists(Path.Combine(rootfs, "bin/hello")));
+        Assert.Equal("<h1>hi</h1>", File.ReadAllText(Path.Combine(rootfs, "srv/app/index.html")));
+        Assert.False(File.Exists(Path.Combine(rootfs, "srv/app/secret.txt")));
+        Assert.True(File.Exists(Path.Combine(rootfs, "usr/local/bin/run")));
+        if (!OperatingSystem.IsWindows()) Assert.Equal((UnixFileMode)0b111_101_101, File.GetUnixFileMode(Path.Combine(rootfs, "usr/local/bin/run")));
+        Assert.Equal(["/usr/local/bin/run"], image.Config.Config.Cmd!);
+        Assert.Contains("GREETING=hello", image.Config.Config.Env!);
+        Assert.Equal("/srv/app", image.Config.Config.WorkingDir);
+        Assert.Contains("8080/tcp", image.Config.Config.ExposedPorts!.Keys);
+
+        // Nothing it is built from changed, so the next start uses the same image instead of building it again.
+        Assert.Equal(image.Id, (await images.BuildAsync(project, service, _ => { }, CancellationToken.None)).Id);
     }
 
     [Fact]
