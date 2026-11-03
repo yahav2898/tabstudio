@@ -1,0 +1,17 @@
+11-03 17:19:11.269  2963  2963 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-03 17:19:11.296  2963  2963 I AndroidRuntime: Using default boot image
+11-03 17:19:11.296  2963  2963 I AndroidRuntime: Leaving lock profiling enabled
+11-03 17:19:11.656  1631  1930 D nativeloader: Load /data/app/~~ZVJwkedjEFxV6Akq83hf9w==/com.google.android.trichromelibrary_636771938-1qfkqhQ8DvifGxoU9qkdJg==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-9 from class loader (caller=/data/app/~~sap4Sa93sHMU5_ayZuKQeQ==/com.google.android.webview-51-JJG5RjfMRkmgWnBAwvQ==/WebViewGoogle.apk): ok
+11-03 17:19:11.795  2963  2963 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+11-03 17:19:11.905  2963  2963 I AndroidRuntime: VM exiting with result code 0.
+11-03 17:19:12.601  2990  2990 D nativeloader: Load /data/app/~~hSgG5xlbinowBvfksjuz1A==/com.tabstudio.ide-Rfaou9sQuiOSbzNqNuxSMQ==/lib/x86_64/libmonosgen-2.0.so using ns clns-7 from class loader (caller=/data/app/~~hSgG5xlbinowBvfksjuz1A==/com.tabstudio.ide-Rfaou9sQuiOSbzNqNuxSMQ==/base.apk): ok
+11-03 17:19:12.603  2990  2990 D nativeloader: Load /data/app/~~hSgG5xlbinowBvfksjuz1A==/com.tabstudio.ide-Rfaou9sQuiOSbzNqNuxSMQ==/lib/x86_64/libmonodroid.so using ns clns-7 from class loader (caller=/data/app/~~hSgG5xlbinowBvfksjuz1A==/com.tabstudio.ide-Rfaou9sQuiOSbzNqNuxSMQ==/base.apk): ok
+11-03 17:19:13.458  2990  2990 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
+11-03 17:19:13.458  2990  2990 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
+11-03 17:19:20.345  3261  3261 D nativeloader: Load /data/app/~~ZVJwkedjEFxV6Akq83hf9w==/com.google.android.trichromelibrary_636771938-1qfkqhQ8DvifGxoU9qkdJg==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~sap4Sa93sHMU5_ayZuKQeQ==/com.google.android.webview-51-JJG5RjfMRkmgWnBAwvQ==/WebViewGoogle.apk): ok
+11-03 17:19:21.074  3332  3359 I cr_LibraryLoader: Loading monochrome_64 from within /data/app/~~o4-ZCHy9rQTC7laCv67sjw==/com.android.chrome-ykbUJR2ZYYZt-UsK9GdrQg==/Chrome.apk
+11-03 17:19:21.183  3332  3359 I cr_Linker: loadLibraryImplLocked: monochrome_64, relroMode=1
+11-03 17:19:21.241  3332  3359 D nativeloader: Load /data/app/~~ZVJwkedjEFxV6Akq83hf9w==/com.google.android.trichromelibrary_636771938-1qfkqhQ8DvifGxoU9qkdJg==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~o4-ZCHy9rQTC7laCv67sjw==/com.android.chrome-ykbUJR2ZYYZt-UsK9GdrQg==/Chrome.apk): ok
+11-03 17:19:31.128  2990  2990 I TabStudio: TABSTUDIO_SELFTEST_START shard=ui
+11-03 17:19:45.362  2990  3160 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
+11-03 17:20:20.877  2990  2990 E TabStudio: TABSTUDIO_SELFTEST_FAIL 48.4 s: Shard: ui | Avalonia: the app did not start: Build started at 5:20:14 PM... | 1>------ Build started: Project: SelfTestAvalonia, Configuration: Debug ------ | 1>MainViewModel.cs(14,29): error CS0103: The name 'Clicks' does not exist in the current context | 1>MainViewModel.cs(11,17): warning CS0169: The field 'MainViewModel._clicks' is never used | ========== Build: 0 succeeded, 1 failed ==========
