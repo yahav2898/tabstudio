@@ -30,7 +30,7 @@ public sealed record SharedFrameworkAssets(string Name, string Version, IReadOnl
 internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IReadOnlyList<IPackageFeed>> feeds, string targetFramework, Version? compilerVersion, string? runtimeTargetFramework = null)
 {
     /// <summary>
-    /// The framework programs run on: <paramref name="runtimeTargetFramework"/> when the project targets an older .NET
+    /// The framework programs run on: the runtime target framework given when the project targets an older .NET
     /// than TabStudio runs, which then compiles against the project's own version of a framework such as ASP.NET Core
     /// and runs on TabStudio's, as a program that rolls forward does.
     /// </summary>

@@ -121,7 +121,7 @@ public sealed partial class RoslynWorkspaceHost
     /// <param name="id">The project's id.</param>
     /// <param name="project">The project, with its packages' build files read into it.</param>
     /// <param name="compiled">The paths of the documents the project has already.</param>
-    private List<DocumentInfo> PackageCompileDocuments(ProjectId id, TsProject project, IReadOnlySet<string> compiled)
+    private List<DocumentInfo> PackageCompileDocuments(ProjectId id, TsProject project, HashSet<string> compiled)
     {
         var documents = project.PackageCompileFiles
             .Where(f => f.FullPath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) && !compiled.Contains(f.FullPath))
