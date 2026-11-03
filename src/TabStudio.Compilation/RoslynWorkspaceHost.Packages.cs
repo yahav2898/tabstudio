@@ -67,6 +67,7 @@ public sealed partial class RoslynWorkspaceHost
 
             ApplyMetadataReferences(projectFilePath);
             InvalidateGenerators(projectFilePath);
+            RenewRazorGeneratorsOfUsers(projectFilePath);
         }
     }
 
@@ -83,6 +84,7 @@ public sealed partial class RoslynWorkspaceHost
             {
                 ApplyMetadataReferences(projectFilePath);
                 InvalidateGenerators(projectFilePath);
+                RenewRazorGeneratorsOfUsers(projectFilePath);
             }
         }
     }

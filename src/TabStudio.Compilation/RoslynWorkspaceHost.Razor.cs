@@ -22,6 +22,51 @@ public sealed partial class RoslynWorkspaceHost
     /// <summary>The Razor files of each loaded project, for its analyzer configuration.</summary>
     private readonly Dictionary<ProjectId, IReadOnlyList<string>> _razorFiles = [];
 
+    /// <summary>The Razor generator of each Razor project, by project file. The caller holds the gate.</summary>
+    private readonly Dictionary<string, Xaml.GeneratorReference> _razorGenerators = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// The Razor generator a project compiles its Razor files with: an instance of its own, so that it can be replaced
+    /// for that project alone (see <see cref="RenewRazorGeneratorsOfUsers"/>). The caller holds the gate.
+    /// </summary>
+    private Xaml.GeneratorReference RazorGeneratorFor(TsProject project)
+    {
+        if (!_razorGenerators.TryGetValue(project.FilePath, out var generator))
+        {
+            generator = RazorCompiler.CreateReference();
+            _razorGenerators[project.FilePath] = generator;
+        }
+
+        return generator;
+    }
+
+    /// <summary>
+    /// Gives every Razor project that compiles against a project a new Razor generator, after that project's packages or
+    /// analyzers changed, so the components the generator finds in it are found again. The caller holds the gate.
+    /// </summary>
+    /// <remarks>
+    /// The Razor generator remembers the components of a project's references for as long as its references compare
+    /// equal, and it compares them by module version id, which a project reference (a compilation, not an assembly)
+    /// does not have: any two versions of a referenced project compare equal. So a Razor project compiled once while a
+    /// project it references had no packages yet (the restore goes in solution order, and MudBlazor.Docs comes before
+    /// MudBlazor) kept "no components" from it for good: 1416 errors (RZ9991, CS0103) in MudBlazor.Docs, in the runs
+    /// where something, such as IntelliSense's warm-up, compiled it inside that window. A new generator instance starts
+    /// from nothing.
+    /// </remarks>
+    /// <param name="projectFilePath">The project that changed.</param>
+    private void RenewRazorGeneratorsOfUsers(string projectFilePath)
+    {
+        var users = _projects.Values
+            .Where(p => RazorProjects.UsesRazor(p) && CompileReferencesOf(p).Contains(projectFilePath, StringComparer.Ordinal))
+            .Select(p => p.FilePath)
+            .ToList();
+        foreach (var user in users)
+        {
+            _razorGenerators.Remove(user);
+            ApplyAnalyzerReferences(user);
+        }
+    }
+
     /// <summary>Whether a file is a Razor component, view or page of a loaded project.</summary>
     /// <param name="filePath">Full path of the file.</param>
     public bool IsRazorDocument(string filePath)
