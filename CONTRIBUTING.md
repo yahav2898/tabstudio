@@ -91,7 +91,10 @@ and debugs a program in each language, and checks desktop mode on a second displ
 new self-test step should be quick and must not wait on the network longer than it needs.
 
 **Retries.** A test run that fails is retried once. If the retry passes, the job passes with a warning, and the
-test is named in `FLAKY.txt` in the job's logs. A test that shows up there is a bug to fix, not noise to ignore.
+test is named in `FLAKY.txt` in the job's logs. A test that shows up there is a bug to fix, not noise to ignore. The
+real-repository jobs retry their network steps (cloning, downloads), and a repository whose restore or setup failed on
+the network (NU1301, TS3001, a registry that did not answer) is restored and built once more, and named in `FLAKY.txt`;
+errors over a baseline without a network failure are never retried.
 
 **Logs.** Every job publishes its logs, test results and screenshots to the
 [`ci-logs`](https://github.com/yahav2898/tabstudio/tree/ci-logs) branch: `<job>/` for `main`, and
