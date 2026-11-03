@@ -235,7 +235,7 @@ jobs:
           tail -n 60 ci-out/test.log
           cat ci-out/summary.md 2>/dev/null || true
           grep -h "^Tests:" ci-out/*.txt 2>/dev/null || true
-          for f in ci-out/*.txt; do echo "== $f"; grep -m1 "^Tests:" "$f" || true; grep -m3 "EXCEPTION\|Built in" "$f" || true; done
+          for f in ci-out/*.txt; do echo "== $f"; grep -A12 -m1 "^Tests:" "$f" || true; grep -m3 "EXCEPTION\|Built in" "$f" || true; done
           exit "$status"
 
       - name: Save logs
