@@ -164,10 +164,11 @@ jobs:
     # aborted at its first test there ("free(): invalid pointer"). The IDE's own code passes on 26.04 with only
     # Node.js, Python and Go installed.
     runs-on: ubuntu-24.04
-    # A healthy run takes about 27 minutes: setup (apt alone may take its full 10), the tool tests, and about 20
-    # minutes of IDE tests in both themes. The one retry below repeats the whole dark-theme run, and a hung first
-    # attempt only ends at its 12-minute hang timeout, so the budget holds both attempts and the log publishing.
-    timeout-minutes: 80
+    # A healthy run takes 50 to 80 minutes: setup and the tool tests (about 13), the IDE tests (33 to 36 minutes in
+    # the dark theme and 24 in the light one on a slow runner), and on main up to 8 minutes publishing to ci-logs.
+    # 0.21.3's main run had every test pass and was still cancelled at the old 80-minute limit. The one retry below
+    # repeats the whole dark-theme run, so the budget holds both attempts and the log publishing.
+    timeout-minutes: 130
     steps:
       - uses: actions/checkout@v4
 
