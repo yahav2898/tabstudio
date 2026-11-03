@@ -1,0 +1,25 @@
+Startup to self test start: 17.97 s
+TabStudio startup: first frame at 17299 ms, ready at 17299 ms; process start to activity 4782 ms, application +1279 ms, styles +986 ms, services +975 ms, theme +223 ms, view models +3535 ms, main view +2408 ms, start screen +44 ms, first frame +3067 ms
+TabStudio UI stalls: 168 over 100 ms (95 over 250 ms, 21 over 1 s), 101.6 s in all, longest 8714 ms during the step that ended with: Avalonia: shown in 36.0 s, the button counted 2 taps | Designer: previewed MainView.axaml …; answer p50 3.1 ms, p95 43.3 ms, p99 459.7 ms over 6026 questions in 265 s
+TabStudio UI timings: workspace view 2747 ms, document view 2658 ms, workspace view model 2300 ms, document view 654 ms, document view 387 ms, workspace view 348 ms, SwarmView 330 ms, document view 320 ms, document view 297 ms, document view 285 ms, document view 275 ms, document view 179 ms
+TabStudio UI stall: 8714 ms at 49.3 s during the step that ended with: Avalonia: shown in 36.0 s, the button counted 2 taps | Designer: previewed MainView.axaml …
+TabStudio UI stall: 7423 ms at 0.7 s during the step that ended with: Extracting the sample
+TabStudio UI stall: 6304 ms at 9.0 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 3300 ms at 58.2 s during creating the AppPreviewView → creating a document's view
+TabStudio UI stall: 2851 ms at 20.4 s during opening the session's documents → creating a document's view → starting restore and analysis → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 2651 ms at 204.4 s during the step that ended with: Swarm: tapped MainView/StackPanel[0]/Button#CountButton on a small phone through real inpu…
+TabStudio UI stall: 2068 ms at 239.9 s during creating a document's view
+TabStudio UI stall: 1961 ms at 237.9 s during creating a document's view
+TabStudio UI stall: 1632 ms at 123.4 s during the step that ended with: WPF: F5 rendered "Hello from WPF on the tablet" on OpenSilver, the whole window in Fit (fi…
+TabStudio UI stall: 1558 ms at 243.1 s during creating a document's view
+TabStudio UI stall: 1533 ms at 207.0 s during creating a document's view
+TabStudio UI stall: 1418 ms at 24.5 s during the step that ended with: Avalonia: shown in 36.0 s, the button counted 2 taps | Designer: previewed MainView.axaml …
+TabStudio UI stall: 1356 ms at 77.0 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 1328 ms at 87.6 s during creating a document's view
+TabStudio UI stall: 1280 ms at 89.2 s during creating a document's view
+Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
+ Native Heap 619454 619392 48 10809 620424 661404 648929 7470
+ Dalvik Heap 3218 3148 24 157 5156 9067 4534 4533
+ TOTAL 1296781 1165044 49396 59399 1378472 670471 653463 12003
+ TOTAL PSS: 1296781 TOTAL RSS: 1378472 TOTAL SWAP PSS: 59399
+Scrolling: a 254 dip drag moved the text 261 dip; a flick glided 972 dip (717 dip in 966 ms on Android's curve); 57 Hz display: the text moved on 3 of the 61 frames of the glide, 40 frame gaps on the UI thread 
