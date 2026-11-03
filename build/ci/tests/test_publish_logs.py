@@ -26,17 +26,28 @@ FAKE_GH = textwrap.dedent(r'''
         print(git("rev-parse", "refs/heads/ci-logs"))
     elif "/git/commits/" in path:
         print(git("rev-parse", path.rsplit("/", 1)[1] + "^{tree}"))
+    elif "/git/trees/" in path:  # <commit>:<folder>?recursive=1, printed as its blobs' hashes
+        listing = subprocess.run(["git", "--git-dir", bare, "ls-tree", "-r", path.split("/git/trees/", 1)[1].split("?")[0]],
+                                 capture_output=True, text=True)
+        if listing.returncode:
+            sys.exit(1)
+        print("\n".join(line.split()[2] for line in listing.stdout.splitlines()))
     elif path.endswith("git/trees"):
+        # Like GitHub: every entry goes in at its path over base_tree, and git mktree refuses objects the repository lacks.
         body = json.load(open(opts["--input"]))
-        entry = body["tree"][0]
-        def replace(tree, parts, new):
+        def put(tree, parts, entry):
             lines = git("ls-tree", tree).splitlines() if tree else []
             sub = next((l.split()[2] for l in lines if l.split("\t")[1] == parts[0]), None)
             kept = [l for l in lines if l.split("\t")[1] != parts[0]]
-            child = new if len(parts) == 1 else replace(sub, parts[1:], new)
-            kept.append(f"040000 tree {child}\t{parts[0]}")
+            if len(parts) == 1:
+                kept.append(f"{entry['mode']} {entry['type']} {entry['sha']}\t{parts[0]}")
+            else:
+                kept.append(f"040000 tree {put(sub, parts[1:], entry)}\t{parts[0]}")
             return git("mktree", stdin="\n".join(kept) + "\n")
-        print(replace(body["base_tree"], entry["path"].split("/"), entry["sha"]))
+        tree = body.get("base_tree")
+        for entry in body["tree"]:
+            tree = put(tree, entry["path"].split("/"), entry)
+        print(tree)
     elif path.endswith("git/commits"):
         body = json.load(open(opts["--input"]))
         print(git("-c", "user.name=t", "-c", "user.email=t@t", "commit-tree", body["tree"], "-p", body["parents"][0], "-m", body["message"]))
@@ -65,6 +76,16 @@ class PublishLogsTests(unittest.TestCase):
         subprocess.run(git + ["add", "-A"], check=True)
         subprocess.run(git + ["commit", "-qm", "seed"], check=True)
         subprocess.run(git + ["push", "-q", str(self.bare), "HEAD:refs/heads/ci-logs"], check=True)
+        # Records what each push of a temporary branch carried.
+        self.pushed = self.temp / "pushed"
+        hook = self.bare / "hooks" / "pre-receive"
+        hook.write_text(textwrap.dedent(f'''\
+            #!/bin/sh
+            while read old new ref; do
+              case "$ref:$new" in refs/heads/ci-logs-staging/*:*[1-9a-f]*) git ls-tree --name-only "$new" >> "{self.pushed}";; esac
+            done
+        '''))
+        hook.chmod(0o755)
         bin_dir = self.temp / "bin"
         bin_dir.mkdir()
         (bin_dir / "gh").write_text(FAKE_GH)
@@ -103,6 +124,23 @@ class PublishLogsTests(unittest.TestCase):
                           "branches/agent-x/app/STATUS", "branches/agent-x/app/test.log", "branches/agent-x/app/screenshots/s.png",
                           "branches/agent-y/libraries/l.log"}, self.files())
         self.assertEqual(["refs/heads/ci-logs"], self.refs())  # the temporary branches are gone
+
+    def test_files_github_has_already_are_not_pushed_again(self):
+        def blob(path):
+            return subprocess.run(["git", "hash-object", str(path)], capture_output=True, text=True, check=True).stdout.strip()
+        for text in ("first", "second"):
+            (self.work / "ci-out" / "test.log").write_text(text)
+            self.pushed.write_text("")
+            run = self.publish("app", "main")
+            output = run.communicate(timeout=120)[0]
+            self.assertEqual(0, run.returncode, output)
+            self.assertNotIn("fetching ci-logs instead", output)
+        pushed = set(self.pushed.read_text().split())
+        self.assertIn(blob(self.work / "ci-out" / "test.log"), pushed)
+        self.assertNotIn(blob(self.work / "ci-out" / "screenshots" / "s.png"), pushed)
+        self.assertEqual("second", subprocess.run(["git", "--git-dir", str(self.bare), "show", "ci-logs:app/test.log"],
+                                                  capture_output=True, text=True, check=True).stdout)
+        self.assertIn("app/screenshots/s.png", self.files())
 
     def test_jobs_publishing_at_once_keep_each_other(self):
         runs = [self.publish(job, "main") for job in ("j1", "j2", "j3", "j4")]
