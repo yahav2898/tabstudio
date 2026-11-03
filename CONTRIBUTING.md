@@ -90,6 +90,13 @@ web apps, shows Avalonia, Windows Forms and WPF apps, installs toolchains from A
 and debugs a program in each language, and checks desktop mode on a second display. It has a 15-minute budget, so a
 new self-test step should be quick and must not wait on the network longer than it needs.
 
+**Real repositories.** Three more jobs, Real repositories and Real repositories (sweep-1 and sweep-2), open the public
+repositories pinned in [`build/ci/real-repos.json`](build/ci/real-repos.json) in the IDE: .NET solutions build within
+their error baselines, other languages set up, build and run their programs, and the squiggles of every TypeScript,
+Go, Rust, Java and Python repository are compared with its compiler's errors by
+[`build/ci/squiggles.py`](build/ci/squiggles.py), whose docstring says what the compiler is for each language. Each
+repository's differences may not exceed its `squiggleBaselines` entry (0 by default); the job summary has the table.
+
 **Retries.** A test run that fails is retried once. If the retry passes, the job passes with a warning, and the
 test is named in `FLAKY.txt` in the job's logs. A test that shows up there is a bug to fix, not noise to ignore. The
 real-repository jobs retry their network steps (cloning, downloads), and a repository whose restore or setup failed on

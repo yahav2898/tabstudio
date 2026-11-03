@@ -51,14 +51,16 @@ public sealed class RealLanguageServerTests(ITestOutputHelper output)
         """;
 
     [RealServerFact("pyright-langserver")]
-    public async Task Pyright_reports_an_undefined_name_as_an_error()
+    public async Task Pyright_reports_an_undefined_name_as_a_warning()
     {
+        // Python compiles the file and raises NameError only when the line runs, so it is a warning, as Visual Studio
+        // and VS Code show it; red is for what Python's compiler rejects (BuiltInLanguages.json's severity overrides).
         await using var workspace = new RealWorkspace(output);
         var document = await workspace.OpenAsync("main.py", PythonProgram);
 
         var diagnostic = await RealWorkspace.WaitForDiagnosticAsync(document, d => d.Message.Contains("mesage", StringComparison.Ordinal));
 
-        Assert.Equal(LspDiagnosticSeverity.Error, diagnostic.Severity);
+        Assert.Equal(LspDiagnosticSeverity.Warning, diagnostic.Severity);
         Assert.Equal(9, diagnostic.Line);
         Assert.Equal(7, diagnostic.Column);
         Assert.Equal("mesage", document.Snapshot.Text.Substring(diagnostic.Span.Start, diagnostic.Span.Length));

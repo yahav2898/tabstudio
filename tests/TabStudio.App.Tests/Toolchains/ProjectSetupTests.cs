@@ -271,6 +271,44 @@ public sealed class ProjectSetupTests
         Assert.Equal(2, File.ReadAllLines(repo.Resolve("installs.txt")).Length);
     }
 
+    [RealServerAvaloniaFact("python3", "pyright-langserver")]
+    public async Task Pyright_reads_the_packages_the_setup_installs_into_the_venv_of_a_file_already_open()
+    {
+        // A person opens app.py at once, while the setup creates .venv and installs greeting into it. Pyright was never
+        // told about the .venv, so it kept squiggling "Import "greeting" could not be resolved" in red, in every Python
+        // repository with packages, though Python runs the file.
+        using var fixture = new WorkspaceFixture();
+        using var repo = new TempDirectory();
+        using var package = new TempDirectory();
+        repo.Write("requirements.txt", package.Path + "\n");
+        package.Write("pyproject.toml", """
+            [build-system]
+            requires = ["setuptools>=61"]
+            build-backend = "setuptools.build_meta"
+
+            [project]
+            name = "greeting"
+            version = "1.0.0"
+            """);
+        package.Write("src/greeting/__init__.py", "def greet(name: str) -> str:\n    return 'Hello, ' + name\n");
+        var app = repo.Write("app.py", "from greeting import greet\n\nanswer: int = greet('Ada')\nprint(answer)\n");
+        var workspace = fixture.Workspace;
+        var window = Show(workspace);
+
+        await workspace.LoadAsync(repo.Path);
+        var document = await workspace.OpenDocumentAsync(app);
+        Assert.NotNull(document);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.Output.Text.Contains("pip install -r requirements.txt: succeeded", StringComparison.Ordinal), SetupTimeout, "pip install -r requirements.txt");
+
+        // Pyright knows greet from the .venv once it is told about it: a str assigned to an int, which Python runs, so a
+        // warning; nothing is red.
+        await UiTestHelpers.WaitUntilAsync(() => document.Diagnostics.Any(d => d.Id == "reportAssignmentType"), TimeSpan.FromSeconds(90), "Pyright to read greeting from the .venv");
+        Assert.DoesNotContain(document.Diagnostics, d => d.Id == "reportMissingImports");
+        Assert.All(document.Diagnostics, d => Assert.NotEqual(global::TabStudio.Core.Diagnostics.DiagnosticSeverityLevel.Error, d.Severity));
+        Assert.Equal("Pyright", document.LanguageServer?.ServerName);
+        window.Close();
+    }
+
     private static Window Show(WorkspaceViewModel workspace)
     {
         var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = workspace } };

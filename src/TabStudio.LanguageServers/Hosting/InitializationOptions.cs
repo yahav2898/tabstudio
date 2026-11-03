@@ -3,10 +3,14 @@ using System.Text.Json.Nodes;
 namespace TabStudio.LanguageServers.Hosting;
 
 /// <summary>
-/// Fills in the variables of a server's <c>initializationOptions</c>. <c>${packageFile:typescript/lib/tsserver.js}</c>
+/// Fills in the variables of a server's <c>initializationOptions</c> and settings. <c>${packageFile:typescript/lib/tsserver.js}</c>
 /// is a file of an npm package: the workspace's own copy in <c>node_modules</c> when it has one, otherwise the copy
-/// installed next to the server's own package, as <c>npm install -g</c> puts them. An option whose file is not found
-/// is left out, so the server falls back to its own search.
+/// installed next to the server's own package, as <c>npm install -g</c> puts them.
+/// <c>${workspaceFile:.venv/bin/python|.venv/Scripts/python.exe}</c> is the first of those files of the folder the
+/// server serves that exists, such as the interpreter of the project's virtual environment, which Pyright does not
+/// look for by itself. <c>${env:NAME:default}</c> is an environment variable. An option whose file is not found is left
+/// out, so the server falls back to its own search; the project setup can create the file later, so the variables are
+/// filled in again whenever the options are sent.
 /// </summary>
 /// <remarks>
 /// Paths are the server's: in TabStudio's Linux environment on Android the server sees its files at other paths than
@@ -16,6 +20,7 @@ namespace TabStudio.LanguageServers.Hosting;
 internal static class InitializationOptions
 {
     private const string PackageFilePrefix = "${packageFile:";
+    private const string WorkspaceFilePrefix = "${workspaceFile:";
     private const int MaxLinks = 16;
 
     /// <summary>The options with their variables filled in, or <see langword="null"/> when there are none.</summary>
@@ -57,7 +62,45 @@ internal static class InitializationOptions
         return null;
     }
 
+    /// <summary>The first of a server folder's files that exists, such as a project's virtual environment interpreter.</summary>
+    /// <param name="relativePaths">The files relative to the folder, separated by <c>|</c>, in order of preference.</param>
+    /// <param name="rootDirectory">The folder the server serves.</param>
+    /// <param name="toLocalPath">Finds a file the server sees at a path on this device; the same path when <see langword="null"/>.</param>
+    /// <returns>The file's full path, or <see langword="null"/> when none of them exists.</returns>
+    public static string? FindWorkspaceFile(string relativePaths, string rootDirectory, Func<string, string?>? toLocalPath = null)
+    {
+        ArgumentNullException.ThrowIfNull(relativePaths);
+        ArgumentNullException.ThrowIfNull(rootDirectory);
+        toLocalPath ??= LocalFile;
+        foreach (var relative in relativePaths.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            var candidate = Path.GetFullPath(Path.Combine(rootDirectory, relative.Replace('/', Path.DirectorySeparatorChar)));
+            if (toLocalPath(candidate) is not null || IsLink(candidate))
+            {
+                return candidate;
+            }
+        }
+
+        return null;
+    }
+
     private static string? LocalFile(string path) => File.Exists(path) ? path : null;
+
+    /// <summary>
+    /// Whether a path is a symbolic link: a virtual environment's <c>bin/python</c> links to an interpreter that, in the
+    /// Linux environment on Android, only exists at the path the server sees, so the link itself is what counts.
+    /// </summary>
+    private static bool IsLink(string path)
+    {
+        try
+        {
+            return new FileInfo(path).LinkTarget is not null;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return false;
+        }
+    }
 
     private static void Fill(JsonObject node, string rootDirectory, string executable, Action<string, bool>? log, Func<string, string?> toLocalPath)
     {
@@ -105,7 +148,8 @@ internal static class InitializationOptions
     }
 
     private static bool IsVariable(string text) => text.EndsWith('}')
-        && (text.StartsWith(PackageFilePrefix, StringComparison.Ordinal) || text.StartsWith("${env:", StringComparison.Ordinal));
+        && (text.StartsWith(PackageFilePrefix, StringComparison.Ordinal) || text.StartsWith(WorkspaceFilePrefix, StringComparison.Ordinal)
+            || text.StartsWith("${env:", StringComparison.Ordinal));
 
     private static string? ResolveVariable(string text, string rootDirectory, string executable, Action<string, bool>? log, Func<string, string?> toLocalPath)
     {
@@ -113,6 +157,11 @@ internal static class InitializationOptions
         {
             var parts = text[6..^1].Split(':', 2);
             return Environment.GetEnvironmentVariable(parts[0]) is { Length: > 0 } value ? value : parts.Length == 2 ? parts[1] : null;
+        }
+
+        if (text.StartsWith(WorkspaceFilePrefix, StringComparison.Ordinal))
+        {
+            return FindWorkspaceFile(text[WorkspaceFilePrefix.Length..^1], rootDirectory, toLocalPath);
         }
 
         var relative = text[PackageFilePrefix.Length..^1];

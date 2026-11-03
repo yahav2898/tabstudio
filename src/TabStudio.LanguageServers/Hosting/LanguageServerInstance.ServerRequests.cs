@@ -227,7 +227,7 @@ internal sealed partial class LanguageServerInstance
     private Task<JsonNode?> OnConfiguration(JsonElement parameters, CancellationToken cancellationToken)
     {
         var items = Read(parameters, LspJsonContext.Default.ConfigurationParamsDto)?.Items ?? [];
-        var settings = Settings;
+        var settings = ResolvedSettings();
         var answers = new JsonArray();
         foreach (var item in items)
         {

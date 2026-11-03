@@ -51,7 +51,8 @@ public sealed class PythonScreenshotTests : IDisposable
         UiTestHelpers.SaveScreenshot(window, "lsp-10-python-squiggles");
 
         var row = workspace.ErrorList.Items.First(i => i.Code == "reportUndefinedVariable");
-        Assert.True(row.IsError);
+        // A warning: Python compiles the file and raises NameError only when the line runs.
+        Assert.True(row.IsWarning);
         Assert.Equal("10", row.Line);
         Assert.Equal("Pyright ready", workspace.LanguageServerText);
     }
