@@ -163,6 +163,9 @@ sequenceDiagram
   gets ASP.NET Core the way a self-contained app does: its targeting pack (`Microsoft.AspNetCore.App.Ref`) to
   compile against and the runtime pack for the device's processor to run with, both from NuGet. The packs'
   assemblies are IL, so the Linux pack serves Android too.
+- **.NET Framework projects** compile with .NET, whose framework assemblies forward some of .NET Framework's types
+  to packages: a project whose code names `System.Data.SqlClient` gets the System.Data.SqlClient package, as
+  Dapper.EntityFramework's `SqlParameter` needs. A project that uses none of them restores nothing more.
 
 ## Source generators
 
@@ -198,7 +201,16 @@ errors, builds and the debugger all see the code they generate.
   NuGet imports them (`buildTransitive` in place of `build` for a package referenced through another, the nearest
   target framework's folder, props before the project and targets after it). `ProjectParser.WithPackageBuildFiles`
   evaluates what generators need from them: `CompilerVisibleProperty`, `CompilerVisibleItemMetadata`, `Using` items
-  (ReactiveUI's global usings), `AdditionalFiles` and the interceptor namespaces their targets add.
+  (ReactiveUI's global usings), `AdditionalFiles` and the interceptor namespaces their targets add. A file two
+  targets add, as ThisAssembly.Resources and ThisAssembly.Strings add a `.resx` file, keeps the metadata of every item
+  type it was. `TargetItems` runs the targets before the compiler with their dependencies (`DependsOnTargets`), those
+  `CoreCompileDependsOn` lists, their property groups, and the tasks that write a source the project then compiles,
+  in memory: `Copy` (TypeNameFormatter.Sources copies its source into `obj/`), `WriteLinesToFile` (IFluentInterface
+  writes its interface there) and Microsoft.Testing.Platform's `SelfRegisteredExtensions`, whose namespace xUnit.net
+  v3 tests may import.
+- **Language version.** A project compiles with the C# version its `LangVersion` asks for, as generators check it:
+  ReactiveUI's writes a backing field for a partial property below C# 14 and uses `field` from C# 14 on. The latest
+  is used for `latest`, `default` or none, and C# 13 for anything older, which the code TabStudio adds needs.
 - **Build properties.** A generated global `.editorconfig` hands generators the project's MSBuild properties as
   `build_property.*` (empty when unset, as the SDK writes them) and each additional file's metadata as
   `build_metadata.*`; Avalonia's `.axaml` files are additional files with `SourceItemGroup=AvaloniaXaml`. `SdkGenerators` applies the SDK's other rules: ASP.NET Core's request delegate generator and

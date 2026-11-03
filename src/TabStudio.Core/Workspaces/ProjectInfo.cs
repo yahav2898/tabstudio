@@ -317,6 +317,13 @@ public sealed record ProjectInfo
     /// </summary>
     public IReadOnlyList<string> PackageBuildFiles { get; init; } = [];
 
+    /// <summary>
+    /// The sources the targets of the project and its packages write before the compiler runs and add to its
+    /// <c>Compile</c> items (see <see cref="ProjectParser.WithPackageBuildFiles"/>), such as the file a source-only
+    /// package's target copies into <c>obj/</c>, with the text they would write; empty before its packages are restored.
+    /// </summary>
+    public IReadOnlyList<CompileFileItem> PackageCompileFiles { get; init; } = [];
+
     /// <summary>What the project produces.</summary>
     public ProjectKind Kind { get; init; }
 

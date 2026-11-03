@@ -195,6 +195,243 @@ public sealed class SourceGeneratorTests : IDisposable
         }
     }
 
+    /// <summary>
+    /// Sources that packages' targets put into <c>obj/</c> before the compiler runs, which TabStudio keeps in memory:
+    /// TypeNameFormatter.Sources copies its source there and adds it outside a target (moq's <c>GetFormattedName</c>),
+    /// IFluentInterface writes its interface there from a <c>.cs.pp</c> with the root namespace put in, from a target
+    /// listed in <c>CoreCompileDependsOn</c> that depends on the one writing it, and Microsoft.Testing.Platform generates
+    /// <c>SelfRegisteredExtensions</c> in the root namespace (Terminal.Gui's <c>using UnitTests.Parallelizable;</c>).
+    /// </summary>
+    [Fact]
+    public async Task Sources_that_packages_targets_copy_or_write_before_the_compiler_are_compiled()
+    {
+        var formatter = _temp.Resolve("packages/typenameformatter.sources/1.0.1/build");
+        _temp.Write("packages/typenameformatter.sources/1.0.1/build/TypeNameFormatter.cs", """
+            namespace TypeNameFormatter
+            {
+            #if TYPENAMEFORMATTER_INTERNAL
+                internal
+            #else
+                public
+            #endif
+                static class TypeName
+                {
+                    public static string GetFormattedName(this System.Type type) => type == typeof(int) ? "int" : type.Name;
+                }
+            }
+            """);
+        _temp.Write("packages/typenameformatter.sources/1.0.1/build/TypeNameFormatter.Sources.targets", """
+            <Project TreatAsLocalProperty="IsCompatibleWithProject;SourceFolder">
+              <PropertyGroup>
+                <TypeNameFormatterInternal Condition="'$(TypeNameFormatterInternal)' == ''">True</TypeNameFormatterInternal>
+              </PropertyGroup>
+              <PropertyGroup>
+                <IsCompatibleWithProject Condition="'$(Language)' == 'C#'">True</IsCompatibleWithProject>
+                <SourceFolder>$(MSBuildThisFileDirectory)</SourceFolder>
+              </PropertyGroup>
+              <PropertyGroup Condition="'$(IsCompatibleWithProject)' == 'True'">
+                <DefineConstants Condition="$(TypeNameFormatterInternal)">TYPENAMEFORMATTER_INTERNAL;$(DefineConstants)</DefineConstants>
+              </PropertyGroup>
+              <Target Name="_TypeNameFormatterCopy" Condition="'$(IsCompatibleWithProject)' == 'True'" AfterTargets="PrepareForBuild" BeforeTargets="CoreCompile"
+                      Inputs="$(SourceFolder)TypeNameFormatter.cs" Outputs="$(BaseIntermediateOutputPath)TypeNameFormatter.cs">
+                <Copy SourceFiles="$(SourceFolder)TypeNameFormatter.cs" DestinationFolder="$(BaseIntermediateOutputPath)" OverwriteReadOnlyFiles="true" />
+              </Target>
+              <ItemGroup Condition="'$(IsCompatibleWithProject)' == 'True'">
+                <Compile Include="$(BaseIntermediateOutputPath)TypeNameFormatter.cs">
+                  <AutoGen>true</AutoGen>
+                </Compile>
+              </ItemGroup>
+            </Project>
+            """);
+        var fluent = _temp.Resolve("packages/ifluentinterface/2.1.0/build");
+        _temp.Write("packages/ifluentinterface/2.1.0/build/IFluentInterface.cs.pp", """
+            namespace $rootnamespace$
+            {
+                using global::System;
+                using global::System.ComponentModel;
+
+                /// <summary>Hides the members of object from IntelliSense; "quoted"; semicolons; and all.</summary>
+                [EditorBrowsable(EditorBrowsableState.Never)]
+                public interface IFluentInterface
+                {
+                    [EditorBrowsable(EditorBrowsableState.Never)]
+                    Type GetType();
+                }
+            }
+            """);
+        _temp.Write("packages/ifluentinterface/2.1.0/build/IFluentInterface.targets", """
+            <?xml version="1.0" encoding="utf-8"?>
+            <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+              <PropertyGroup>
+                <IFluentInterfaceInput>$(MSBuildThisFileDirectory)IFluentInterface$(DefaultLanguageSourceExtension).pp</IFluentInterfaceInput>
+                <IFluentInterfaceOutput>$(IntermediateOutputPath)IFluentInterface.g$(DefaultLanguageSourceExtension)</IFluentInterfaceOutput>
+                <IFluentInterfaceSupported Condition="'$(Language)' == 'C#' Or '$(Language)' == 'VB'">true</IFluentInterfaceSupported>
+              </PropertyGroup>
+              <PropertyGroup Condition="'$(IFluentInterfaceSupported)' == 'true'">
+                <CoreCompileDependsOn>
+                  IFluentInterface;
+                  $(CoreCompileDependsOn)
+                </CoreCompileDependsOn>
+              </PropertyGroup>
+              <Target Name="IFluentInterface" Condition="'$(IFluentInterfaceSupported)' == 'true'" DependsOnTargets="IFluentInterfaceGenerate">
+                <ItemGroup>
+                  <Compile Include="$(IFluentInterfaceOutput)" />
+                </ItemGroup>
+              </Target>
+              <Target Name="IFluentInterfaceGenerate" Inputs="$(IFluentInterfaceInput)" Outputs="$(IFluentInterfaceOutput)">
+                <PropertyGroup>
+                  <_IFluentInterfaceContent>$([System.IO.File]::ReadAllText('$(IFluentInterfaceInput)'))</_IFluentInterfaceContent>
+                  <_IFluentInterfaceContent>$(_IFluentInterfaceContent.Replace('$rootnamespace$', '$(RootNamespace)'))</_IFluentInterfaceContent>
+                </PropertyGroup>
+                <PropertyGroup>
+                  <IFluentInterfaceDir>$([System.IO.Path]::GetDirectoryName('$(IFluentInterfaceOutput)'))</IFluentInterfaceDir>
+                </PropertyGroup>
+                <MakeDir Directories="$(IFluentInterfaceDir)" Condition=" !Exists('$(IFluentInterfaceDir)') " />
+                <WriteLinesToFile File='$(IFluentInterfaceOutput)' Lines='$(_IFluentInterfaceContent)' Overwrite='true' />
+              </Target>
+            </Project>
+            """);
+        var testing = _temp.Resolve("packages/microsoft.testing.platform.msbuild/2.5.1");
+        _temp.Write("packages/microsoft.testing.platform.msbuild/2.5.1/build/Microsoft.Testing.Platform.MSBuild.targets", """
+            <Project>
+              <Import Project="$(MSBuildThisFileDirectory)..\buildMultiTargeting\Microsoft.Testing.Platform.MSBuild.targets" />
+            </Project>
+            """);
+        _temp.Write("packages/microsoft.testing.platform.msbuild/2.5.1/buildMultiTargeting/Microsoft.Testing.Platform.MSBuild.targets", """
+            <Project>
+              <Target Name="_CalculateGenerateSelfRegisteredExtensions">
+                <PropertyGroup>
+                  <GenerateSelfRegisteredExtensions Condition=" '$(GenerateSelfRegisteredExtensions)' == '' ">$(IsTestingPlatformApplication)</GenerateSelfRegisteredExtensions>
+                </PropertyGroup>
+              </Target>
+              <PropertyGroup>
+                <_SelfRegisteredExtensionsSourceName>SelfRegisteredExtensions$(DefaultLanguageSourceExtension)</_SelfRegisteredExtensionsSourceName>
+                <_SelfRegisteredExtensionsSourcePath>$([System.IO.Path]::Combine($(IntermediateOutputPath),$(_SelfRegisteredExtensionsSourceName)))</_SelfRegisteredExtensionsSourcePath>
+                <_SelfRegisteredExtensionsSourcePath>$([MSBuild]::NormalizePath($(MSBuildProjectDirectory), $(_SelfRegisteredExtensionsSourcePath)))</_SelfRegisteredExtensionsSourcePath>
+              </PropertyGroup>
+              <Target Name="_GenerateSelfRegisteredExtensions" Outputs="$(_SelfRegisteredExtensionsSourcePath)" Condition=" '$(GenerateSelfRegisteredExtensions)' == 'true' ">
+                <TestingPlatformSelfRegisteredExtensions SelfRegisteredExtensionsSourcePath="$(_SelfRegisteredExtensionsSourcePath)"
+                                                         SelfRegisteredExtensionsBuilderHook="@(TestingPlatformBuilderHook)"
+                                                         RootNamespace="$(RootNamespace)"
+                                                         Language="$(Language)" />
+              </Target>
+              <Target Name="_IncludeGenerateAutoRegisteredExtensionsIntoCompilation" BeforeTargets="BeforeCompile;XamlPreCompile"
+                      DependsOnTargets="_CalculateGenerateSelfRegisteredExtensions;_GenerateSelfRegisteredExtensions">
+                <ItemGroup Condition=" '$(GenerateSelfRegisteredExtensions)' == 'true' ">
+                  <Compile Include="$(_SelfRegisteredExtensionsSourcePath)" />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+        _temp.Write("packages/xunit.v3.core/4.0.2/buildTransitive/xunit.v3.core.props", """
+            <Project>
+              <PropertyGroup>
+                <GenerateSelfRegisteredExtensions>true</GenerateSelfRegisteredExtensions>
+                <IsTestingPlatformApplication Condition=" '$(IsTestingPlatformApplication)' == '' ">true</IsTestingPlatformApplication>
+              </PropertyGroup>
+            </Project>
+            """);
+        var platform = Emit("Microsoft.Testing.Platform", "packages/microsoft.testing.platform/2.5.1/lib/net9.0/Microsoft.Testing.Platform.dll",
+            "namespace Microsoft.Testing.Platform.Builder { public interface ITestApplicationBuilder { } }", []);
+        _host.UpdateText(_programPath, """
+            using TypeNameFormatter;
+            using Tablet.App;
+
+            Console.WriteLine($"{typeof(int).GetFormattedName()} {typeof(IFluentInterface).FullName} {typeof(SelfRegisteredExtensions).FullName}");
+            """);
+        var before = await new ProjectBuilder(_host).BuildAsync(Project);
+
+        _host.SetPackageReferences(_projectPath, [platform], []);
+        _host.SetPackageBuildFiles(_projectPath, [
+            _temp.Resolve("packages/xunit.v3.core/4.0.2/buildTransitive/xunit.v3.core.props"),
+            Path.Combine(fluent, "IFluentInterface.targets"),
+            Path.Combine(testing, "build", "Microsoft.Testing.Platform.MSBuild.targets"),
+            Path.Combine(formatter, "TypeNameFormatter.Sources.targets")]);
+        var build = await new ProjectBuilder(_host).BuildAsync(Project);
+
+        Assert.False(before.Success);
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+        var console = new CapturingConsole();
+        var run = await new ProgramRunner().RunAsync(build.EntryAssembly!, build.Dependencies, [], console);
+        Assert.Equal(RunOutcome.Completed, run.Outcome);
+        Assert.Equal("int Tablet.App.IFluentInterface Tablet.App.SelfRegisteredExtensions\n", console.Output);
+        Assert.False(File.Exists(_temp.Resolve("App/obj/TypeNameFormatter.cs")));
+    }
+
+    /// <summary>
+    /// A project's <c>LangVersion</c> reaches its generators: ReactiveUI's writes a backing field for a <c>[Reactive]</c>
+    /// partial property below C# 14 and uses <c>field</c> from C# 14 on, and Dock, at C# 13, assigns the field.
+    /// </summary>
+    [Fact]
+    public async Task A_generator_sees_the_C_sharp_version_the_project_asks_for()
+    {
+        _temp.Write("App/App.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFramework>net10.0</TargetFramework>
+                <ImplicitUsings>enable</ImplicitUsings>
+                <RootNamespace>Tablet.App</RootNamespace>
+                <LangVersion>13</LangVersion>
+              </PropertyGroup>
+            </Project>
+            """);
+        _temp.Write("App/Counter.cs", """
+            namespace Tablet.App;
+
+            public partial class Counter
+            {
+                public Counter() => _value = 42;
+
+                public partial int Value { get; set; }
+            }
+            """);
+        _host.Load(WorkspaceLoader.Load(_temp.Resolve("App")), FileSystemTextProvider.Instance);
+        _host.UpdateText(_programPath, "Console.WriteLine(new Tablet.App.Counter().Value);");
+        var generator = Emit("Counter.Generator", "packages/counter.generator/1.0.0/analyzers/dotnet/cs/Counter.Generator.dll", """
+            using Microsoft.CodeAnalysis;
+            using Microsoft.CodeAnalysis.CSharp;
+
+            [Generator]
+            public sealed class CounterGenerator : IIncrementalGenerator
+            {
+                public void Initialize(IncrementalGeneratorInitializationContext context) =>
+                    context.RegisterSourceOutput(context.CompilationProvider, static (output, compilation) =>
+                        output.AddSource("Counter.g.cs", compilation is CSharpCompilation { LanguageVersion: > LanguageVersion.CSharp13 }
+                            ? "namespace Tablet.App;\npublic partial class Counter { public partial int Value { get => field; set => field = value; } }\n"
+                            : "namespace Tablet.App;\npublic partial class Counter { private int _value; public partial int Value { get => _value; set => _value = value; } }\n"));
+            }
+            """, [MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location)]);
+
+        _host.SetAnalyzers(_projectPath, [generator]);
+        var build = await new ProjectBuilder(_host).BuildAsync(Project);
+
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+        var console = new CapturingConsole();
+        await new ProgramRunner().RunAsync(build.EntryAssembly!, build.Dependencies, [], console);
+        Assert.Equal("42\n", console.Output);
+    }
+
+    [Theory]
+    [InlineData(null, LanguageVersion.Latest)]
+    [InlineData("latest", LanguageVersion.Latest)]
+    [InlineData("default", LanguageVersion.Latest)]
+    [InlineData("preview", LanguageVersion.Preview)]
+    [InlineData("13", LanguageVersion.CSharp13)]
+    [InlineData("14.0", LanguageVersion.CSharp14)]
+    [InlineData("7.3", CSharpCompiler.MinimumLanguageVersion)]
+    public void A_project_compiles_with_the_C_sharp_version_its_LangVersion_asks_for(string? langVersion, LanguageVersion expected)
+    {
+        var property = langVersion is null ? string.Empty : $"<LangVersion>{langVersion}</LangVersion>";
+        var project = ProjectParser.Parse(_projectPath, $"""
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework>{property}</PropertyGroup>
+            </Project>
+            """);
+
+        Assert.Equal(expected, CSharpCompiler.LanguageVersionOf(project));
+    }
+
     /// <summary>A generator that reports what the analyzer configuration and additional files gave it.</summary>
     private const string ProbeGenerator = """
         using System.Linq;
