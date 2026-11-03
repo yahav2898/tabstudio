@@ -1,6 +1,8 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 using Avalonia.Headless.XUnit;
+using TabStudio.Agent.Local;
+using TabStudio.App.Editing;
 using TabStudio.App.Services;
 using TabStudio.App.Services.Toolchains;
 using TabStudio.App.ViewModels;
@@ -118,6 +120,34 @@ public sealed class BatchingTests
         ui.RunAll();
         Assert.Equal(2000, explorer.PassedCount);
         Assert.Equal(TestState.Passed, explorer.Rows.First(r => r.Kind == TestNodeKind.Project).State);
+    }
+
+    [Fact]
+    public async Task Local_AI_reads_the_file_once_typing_pauses_not_on_every_keystroke()
+    {
+        var asked = new List<string>();
+        using var controller = new InlineCompletionController(
+            (_, text, _, _, _) =>
+            {
+                asked.Add(text);
+                return Task.FromResult<string?>("done");
+            },
+            TimeSpan.FromMilliseconds(100));
+        var reads = 0;
+        var neighbours = 0;
+        var keystrokes = new List<Task>();
+        for (var i = 0; i < 5; i++)
+        {
+            var typed = new string('x', i + 1);
+            keystrokes.Add(controller.RequestAsync("a.py", () => { reads++; return typed; }, i + 1, () => { neighbours++; return []; }));
+        }
+
+        await Task.WhenAll(keystrokes);
+
+        // Five keystrokes: one read of the text and its neighbours, after the last, for the one request that went out.
+        Assert.Equal((1, 1), (reads, neighbours));
+        Assert.Equal(new[] { "xxxxx" }, asked);
+        Assert.Equal("done", controller.Text);
     }
 
     /// <summary>A UI thread that only queues, and runs what was queued when the test says, counting how it was asked.</summary>
