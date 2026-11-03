@@ -46,7 +46,7 @@ publish_through_api() {
   command -v gh > /dev/null && command -v jq > /dev/null || return 1
   [ -z "${TABSTUDIO_PUBLISH_REMOTE:-}" ] || return 1
   export GH_TOKEN="${GH_TOKEN:-$GITHUB_TOKEN}"
-  local repo="$GITHUB_REPOSITORY" api_dir folder_tree staged temp head base root commit published=""
+  local repo="$GITHUB_REPOSITORY" api_dir folder_tree batch staged temp head base root commit published=""
   api_dir="$(mktemp -d)" || return 1
   rm -f "$workdir/.git/index"
   git -C "$staging" --git-dir="$workdir/.git" --work-tree="$staging" add -A . || return 1
@@ -64,9 +64,17 @@ publish_through_api() {
   temp="ci-logs-staging/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT:-1}-${job}"
   git -C "$workdir" push -q "$remote_url" "+$staged:refs/heads/$temp" || return 1
   echo "Pushed $(wc -l < "$api_dir/new") of $(wc -l < "$api_dir/files") files; the others are on GitHub already"
-  jq -Rn '{tree: [inputs | split("\t") as [$meta, $path] | ($meta | split(" ")) as [$mode, $sha]
-                  | {path: $path, mode: $mode, type: "blob", sha: $sha}]}' < "$api_dir/files" > "$api_dir/folder.json"
-  folder_tree="$(gh api "repos/$repo/git/trees" --input "$api_dir/folder.json" --jq .sha)" || folder_tree=""
+  # In batches, each over the tree the previous one made: the IDE job's 1,300 files in one request took GitHub 10
+  # seconds and ended in a 502.
+  folder_tree=""
+  split -l 250 "$api_dir/files" "$api_dir/batch."
+  for batch in "$api_dir"/batch.*; do
+    jq -Rn --arg base "$folder_tree" '{tree: [inputs | split("\t") as [$meta, $path] | ($meta | split(" ")) as [$mode, $sha]
+                                           | {path: $path, mode: $mode, type: "blob", sha: $sha}]}
+                                     + (if $base == "" then {} else {base_tree: $base} end)' < "$batch" > "$api_dir/folder.json"
+    folder_tree="$(gh api "repos/$repo/git/trees" --input "$api_dir/folder.json" --jq .sha ||
+                   { sleep 5; gh api "repos/$repo/git/trees" --input "$api_dir/folder.json" --jq .sha; })" || { folder_tree=""; break; }
+  done
   # The same files make the same tree; anything else (a name git had to quote, say) goes to the fallback.
   if [ "$folder_tree" != "$(git -C "$workdir" write-tree)" ]; then
     git -C "$workdir" push -q "$remote_url" ":refs/heads/$temp" || true

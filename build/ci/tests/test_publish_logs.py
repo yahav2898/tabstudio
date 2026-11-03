@@ -35,6 +35,9 @@ FAKE_GH = textwrap.dedent(r'''
     elif path.endswith("git/trees"):
         # Like GitHub: every entry goes in at its path over base_tree, and git mktree refuses objects the repository lacks.
         body = json.load(open(opts["--input"]))
+        if len(body["tree"]) > 300:
+            print("gh: Server Error (HTTP 502)", file=sys.stderr)  # what GitHub answered to 1,300 entries at once
+            sys.exit(1)
         def put(tree, parts, entry):
             lines = git("ls-tree", tree).splitlines() if tree else []
             sub = next((l.split()[2] for l in lines if l.split("\t")[1] == parts[0]), None)
@@ -141,6 +144,15 @@ class PublishLogsTests(unittest.TestCase):
         self.assertEqual("second", subprocess.run(["git", "--git-dir", str(self.bare), "show", "ci-logs:app/test.log"],
                                                   capture_output=True, text=True, check=True).stdout)
         self.assertIn("app/screenshots/s.png", self.files())
+
+    def test_a_folder_of_many_files_is_built_on_github_in_batches(self):
+        for i in range(700):
+            (self.work / "ci-out" / "screenshots" / f"{i}.png").write_text(str(i))
+        run = self.publish("app", "main")
+        output = run.communicate(timeout=300)[0]
+        self.assertEqual(0, run.returncode, output)
+        self.assertNotIn("fetching ci-logs instead", output)
+        self.assertTrue({f"app/screenshots/{i}.png" for i in range(700)} | {"app/test.log", "app/STATUS"} <= self.files())
 
     def test_jobs_publishing_at_once_keep_each_other(self):
         runs = [self.publish(job, "main") for job in ("j1", "j2", "j3", "j4")]
