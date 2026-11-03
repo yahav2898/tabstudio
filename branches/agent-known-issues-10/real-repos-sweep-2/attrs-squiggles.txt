@@ -1,0 +1,69 @@
+attrs at c8bb9bfaa2843e7844b5bb13bed4370b51feec4f
+Opened 12 of 12 files; set up in 5.5 s
+The language servers went quiet after 21.1 s; progress seen: Pyright: 
+  docs/conf.py: Pyright Running, 0 errors
+  typing_tests/__init__.py: Pyright Running, 0 errors
+  bench/test_benchmarks.py: Pyright Running, 3 errors
+  src/attr/__init__.py: Pyright Running, 2 errors
+  src/attrs/__init__.py: Pyright Running, 1 errors
+  tests/__init__.py: Pyright Running, 0 errors
+  typing_tests/baseline.py: Pyright Running, 0 errors
+  src/attr/_cmp.py: Pyright Running, 0 errors
+  tests/attr_import_star.py: Pyright Running, 0 errors
+  src/attrs/converters.py: Pyright Running, 0 errors
+  typing_tests/mypy.py: Pyright Running, 16 errors
+  tests/conftest.py: Pyright Running, 2 errors
+Language servers:
+18:32:42 [Pyright] Starting Pyright for /home/runner/work/_temp/real-repos/attrs: /opt/hostedtoolcache/node/22.23.4/x64/bin/pyright-langserver --stdio
+18:32:42 [Pyright] Pyright language server 1.1.403 starting
+18:32:42 [Pyright] Server root directory: file:///opt/hostedtoolcache/node/22.23.4/x64/lib/node_modules/pyright/dist
+18:32:42 [Pyright] Starting service instance "attrs"
+18:32:42 [Pyright] Pyright is running.
+18:32:42 [Pyright] Loading pyproject.toml file at /home/runner/work/_temp/real-repos/attrs/pyproject.toml
+18:32:42 [Pyright] Auto-excluding **/node_modules
+18:32:42 [Pyright] Auto-excluding **/__pycache__
+18:32:42 [Pyright] Auto-excluding **/.*
+18:32:42 [Pyright] Assuming Python version 3.12.15.final.0
+18:32:42 [Pyright] Found 1 source file
+18:32:47 [Pyright] Loading pyproject.toml file at /home/runner/work/_temp/real-repos/attrs/pyproject.toml
+18:32:47 [Pyright] Setting pythonPath for service "attrs": "/home/runner/work/_temp/real-repos/attrs/.venv/bin/python"
+18:32:47 [Pyright] Auto-excluding **/node_modules
+18:32:47 [Pyright] Auto-excluding **/__pycache__
+18:32:47 [Pyright] Auto-excluding **/.*
+18:32:47 [Pyright] Assuming Python version 3.14.10.final.0
+18:32:47 [Pyright] Found 1 source file
+
+Project setup:
+------ attrs: pip install -e . ------
+Reading which Python versions the 86 pinned packages have wheels for, from PyPI.
+> uv venv --seed --python 3.14 .venv
+Using CPython 3.14.10
+Creating virtual environment with seed packages at: .venv
+ + pip==26.2.2
+Activate with: .venv/bin/activate
+> /home/runner/work/_temp/real-repos/attrs/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/real-repos/attrs
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Installing backend dependencies: started
+  Installing backend dependencies: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: attrs
+  Building editable for attrs (pyproject.toml): started
+  Building editable for attrs (pyproject.toml): finished with status 'done'
+  Created wheel for attrs: filename=attrs-0.1.dev1-py3-none-any.whl size=5274 sha256=7a773228deb4daf9b1b0905abd175f6e4e933e582b3615ef8d2446f9e98e7f75
+  Stored in directory: /tmp/pip-ephem-wheel-cache-etthjabj/wheels/8c/a4/a6/fabab3501e91caa66cd2a9295554ca7b3a5c4514d004331716
+Successfully built attrs
+Installing collected packages: attrs
+Successfully installed attrs-0.1.dev1
+
+Squiggles of attrs (Python) next to the compiler's errors:
+  compiler: (in /home/runner/work/_temp/real-repos/attrs) /home/runner/work/_temp/real-repos/attrs/.venv/bin/python -m py_compile <the 12 files>
+  compiler: (in /home/runner/work/_temp/real-repos/attrs) pyright --outputjson --pythonpath /home/runner/work/_temp/real-repos/attrs/.venv/bin/python <the 12 files>
+  12 files compared: 24 editor errors, 24 compiler errors, 0 false squiggles, 0 missed
+

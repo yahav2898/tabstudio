@@ -1,0 +1,97 @@
+rich at 9d8f9a372cc5916fd4781fec207ced7ddac2f08f
+Opened 12 of 12 files; set up in 7.4 s
+The language servers went quiet after 20.9 s; progress seen: Pyright: 
+  setup.py: Pyright Running, 0 errors
+  rich/__init__.py: Pyright Running, 0 errors
+  benchmarks/__init__.py: Pyright Running, 0 errors
+  tools/make_emoji.py: Pyright Running, 0 errors
+  docs/source/conf.py: Pyright Running, 0 errors
+  examples/attrs.py: Pyright Running, 0 errors
+  rich/_unicode_data/__init__.py: Pyright Running, 0 errors
+  rich/__main__.py: Pyright Running, 0 errors
+  tests/__init__.py: Pyright Running, 0 errors
+  tools/make_width_tables.py: Pyright Running, 0 errors
+  rich/_unicode_data/_versions.py: Pyright Running, 0 errors
+  benchmarks/benchmarks.py: Pyright Running, 0 errors
+Language servers:
+18:33:10 [Pyright] Starting Pyright for /home/runner/work/_temp/real-repos/rich: /opt/hostedtoolcache/node/22.23.4/x64/bin/pyright-langserver --stdio
+18:33:11 [Pyright] Starting Pyright for /home/runner/work/_temp/real-repos/rich/docs: /opt/hostedtoolcache/node/22.23.4/x64/bin/pyright-langserver --stdio
+18:33:11 [Pyright] Pyright language server 1.1.403 starting
+18:33:11 [Pyright] Server root directory: file:///opt/hostedtoolcache/node/22.23.4/x64/lib/node_modules/pyright/dist
+18:33:11 [Pyright] Starting service instance "rich"
+18:33:11 [Pyright] Pyright is running.
+18:33:11 [Pyright] Pyright language server 1.1.403 starting
+18:33:11 [Pyright] Server root directory: file:///opt/hostedtoolcache/node/22.23.4/x64/lib/node_modules/pyright/dist
+18:33:11 [Pyright] Starting service instance "docs"
+18:33:11 [Pyright] Loading pyproject.toml file at /home/runner/work/_temp/real-repos/rich/pyproject.toml
+18:33:11 [Pyright] No include entries specified; assuming /home/runner/work/_temp/real-repos/rich
+18:33:11 [Pyright] Auto-excluding **/node_modules
+18:33:11 [Pyright] Auto-excluding **/__pycache__
+18:33:11 [Pyright] Auto-excluding **/.*
+18:33:11 [Pyright] Assuming Python version 3.12.15.final.0
+18:33:11 [Pyright] Found 213 source files
+18:33:11 [Pyright] Pyright is running.
+18:33:13 [Pyright] No include entries specified; assuming /home/runner/work/_temp/real-repos/rich/docs
+18:33:13 [Pyright] Auto-excluding **/node_modules
+18:33:13 [Pyright] Auto-excluding **/__pycache__
+18:33:13 [Pyright] Auto-excluding **/.*
+18:33:13 [Pyright] Assuming Python version 3.12.15.final.0
+18:33:13 [Pyright] Found 1 source file
+18:33:18 [Pyright] No include entries specified; assuming /home/runner/work/_temp/real-repos/rich/docs
+18:33:18 [Pyright] Auto-excluding **/node_modules
+18:33:18 [Pyright] Auto-excluding **/__pycache__
+18:33:18 [Pyright] Auto-excluding **/.*
+18:33:18 [Pyright] Assuming Python version 3.12.15.final.0
+18:33:18 [Pyright] Found 1 source file
+18:33:18 [Pyright] Loading pyproject.toml file at /home/runner/work/_temp/real-repos/rich/pyproject.toml
+18:33:18 [Pyright] Setting pythonPath for service "rich": "/home/runner/work/_temp/real-repos/rich/.venv/bin/python"
+18:33:18 [Pyright] No include entries specified; assuming /home/runner/work/_temp/real-repos/rich
+18:33:18 [Pyright] Auto-excluding **/node_modules
+18:33:18 [Pyright] Auto-excluding **/__pycache__
+18:33:18 [Pyright] Auto-excluding **/.*
+18:33:18 [Pyright] Assuming Python version 3.13.18.final.0
+18:33:18 [Pyright] Found 213 source files
+
+Project setup:
+------ rich: pip install -e . ------
+Reading which Python versions the 49 pinned packages have wheels for, from PyPI.
+> uv venv --seed --python 3.13 .venv
+Downloading cpython-3.13.18-linux-x86_64-gnu (download) (33.8MiB)
+ Downloaded cpython-3.13.18-linux-x86_64-gnu (download)
+Using CPython 3.13.18
+Creating virtual environment with seed packages at: .venv
+ + pip==26.3
+Activate with: .venv/bin/activate
+> /home/runner/work/_temp/real-repos/rich/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/real-repos/rich
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting markdown-it-py>=2.2.0 (from rich==15.0.0)
+  Using cached markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich==15.0.0)
+  Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich==15.0.0)
+  Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Building wheels for collected packages: rich
+  Building editable for rich (pyproject.toml): started
+  Building editable for rich (pyproject.toml): finished with status 'done'
+  Created wheel for rich: filename=rich-15.0.0-py3-none-any.whl size=7831 sha256=48ee26d4a97a76411dd7f488e9d01aac970ad3a32b2c112bbf1aaa66074df40f
+  Stored in directory: /tmp/pip-ephem-wheel-cache-pqbdpuv1/wheels/a8/68/bf/d8ba43a9f12300e8f2b8aced9a06e57c54f1d01405943d6982
+Successfully built rich
+Installing collected packages: pygments, mdurl, markdown-it-py, rich
+
+Successfully installed markdown-it-py-4.2.0 mdurl-0.1.2 pygments-2.21.0 rich-15.0.0
+
+Squiggles of rich (Python) next to the compiler's errors:
+  compiler: (in /home/runner/work/_temp/real-repos/rich) /home/runner/work/_temp/real-repos/rich/.venv/bin/python -m py_compile <the 12 files>
+  12 files compared: 0 editor errors, 0 compiler errors, 0 false squiggles, 0 missed
+

@@ -1,0 +1,34 @@
+{
+  "files": 12,
+  "squiggles": 7,
+  "compilerErrors": 9,
+  "falseSquiggles": [],
+  "missed": [
+    {
+      "file": "examples/aliases/aliases.py",
+      "line": 31,
+      "column": 26,
+      "code": "reportArgumentType",
+      "message": "Argument of type \"BufferedWriter\" cannot be assigned to parameter \"fp\" of type \"SupportsWrite[str]\" in function \"write\""
+    },
+    {
+      "file": "examples/aliases/aliases.py",
+      "line": 73,
+      "column": 20,
+      "code": "reportOptionalMemberAccess",
+      "message": "\"name\" is not a known attribute of \"None\""
+    }
+  ],
+  "notCompiled": [],
+  "problems": [],
+  "name": "click",
+  "toolchain": "python",
+  "commands": [
+    "(in /home/runner/work/_temp/real-repos/click) /home/runner/work/_temp/real-repos/click/.venv/bin/python -m py_compile <the 12 files>",
+    "(in /home/runner/work/_temp/real-repos/click) pyright --outputjson --pythonpath /home/runner/work/_temp/real-repos/click/.venv/bin/python <the 9 files>",
+    "(in /home/runner/work/_temp/real-repos/click/examples/aliases) pyright --outputjson --pythonpath /home/runner/work/_temp/real-repos/click/examples/aliases/.venv/bin/python <the 1 files>",
+    "(in /home/runner/work/_temp/real-repos/click/examples/colors) pyright --outputjson --pythonpath /home/runner/work/_temp/real-repos/click/examples/colors/.venv/bin/python <the 1 files>",
+    "(in /home/runner/work/_temp/real-repos/click/examples/completion) pyright --outputjson --pythonpath /home/runner/work/_temp/real-repos/click/examples/completion/.venv/bin/python <the 1 files>"
+  ],
+  "seconds": 73.4
+}

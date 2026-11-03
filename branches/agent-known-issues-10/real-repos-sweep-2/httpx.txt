@@ -1,0 +1,303 @@
+httpx at b5addb64f0161ff6bfe94c124ef76f6a1fba5254
+Toolchain projects:
+  python: /home/runner/work/_temp/real-repos/httpx/pyproject.toml
+Startup project: python /home/runner/work/_temp/real-repos/httpx/pyproject.toml
+Set up in 4.2 s
+Tests: 1416 passed, 1 failed, 1 skipped of 1569: 1418 tests run in 8.7 sec: 1416 passed, 1 failed, 1 skipped.
+Project setup:
+------ httpx: pip install -r requirements.txt ------
+Reading which Python versions the 15 pinned packages have wheels for, from PyPI.
+> /home/runner/work/_temp/real-repos/httpx/.venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
+Obtaining file:///home/runner/work/_temp/real-repos/httpx
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Installing backend dependencies: started
+  Installing backend dependencies: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: chardet==5.2.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 9)) (5.2.0)
+Requirement already satisfied: mkdocs==1.6.1 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 12)) (1.6.1)
+Requirement already satisfied: mkautodoc==0.2.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 13)) (0.2.0)
+Requirement already satisfied: mkdocs-material==9.6.18 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 14)) (9.6.18)
+Requirement already satisfied: build==1.3.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 17)) (1.3.0)
+Requirement already satisfied: twine==6.1.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 18)) (6.1.0)
+Requirement already satisfied: coverage==7.10.6 in ./.venv/lib/python3.12/site-packages (from coverage[toml]==7.10.6->-r requirements.txt (line 21)) (7.10.6)
+Requirement already satisfied: cryptography==45.0.7 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 22)) (45.0.7)
+Requirement already satisfied: mypy==1.17.1 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 23)) (1.17.1)
+Requirement already satisfied: pytest==8.4.1 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 24)) (8.4.1)
+Requirement already satisfied: ruff==0.12.11 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 25)) (0.12.11)
+Requirement already satisfied: trio==0.31.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 26)) (0.31.0)
+Requirement already satisfied: trio-typing==0.10.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 27)) (0.10.0)
+Requirement already satisfied: trustme==1.2.1 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 28)) (1.2.1)
+Requirement already satisfied: uvicorn==0.35.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 29)) (0.35.0)
+Requirement already satisfied: click>=7.0 in ./.venv/lib/python3.12/site-packages (from mkdocs==1.6.1->-r requirements.txt (line 12)) (8.2.1)
+Requirement already satisfied: ghp-import>=1.0 in ./.venv/lib/python3.12/site-packages (from mkdocs==1.6.1->-r requirements.txt (line 12)) (2.1.0)
+Requirement already satisfied: jinja2>=2.11.1 in ./.venv/lib/python3.12/site-packages (from mkdocs==1.6.1->-r requirements.txt (line 12)) (3.1.6)
+Requirement already satisfied: markdown>=3.3.6 in ./.venv/lib/python3.12/site-packages (from mkdocs==1.6.1->-r requirements.txt (line 12)) (3.11.2)
+Requirement already satisfied: markupsafe>=2.0.1 in ./.venv/lib/python3.12/site-packages (from mkdocs==1.6.1->-r requirements.txt (line 12)) (3.0.4)
+Requirement already satisfied: mergedeep>=1.3.4 in ./.venv/lib/python3.12/site-packages (from mkdocs==1.6.1->-r requirements.txt (line 12)) (1.3.4)
+Requirement already satisfied: mkdocs-get-deps>=0.2.0 in ./.venv/lib/python3.12/site-packages (from mkdocs==1.6.1->-r requirements.txt (line 12)) (0.2.2)
+Requirement already satisfied: packaging>=20.5 in ./.venv/lib/python3.12/site-packages (from mkdocs==1.6.1->-r requirements.txt (line 12)) (26.3)
+Requirement already satisfied: pathspec>=0.11.1 in ./.venv/lib/python3.12/site-packages (from mkdocs==1.6.1->-r requirements.txt (line 12)) (1.1.1)
+Requirement already satisfied: pyyaml-env-tag>=0.1 in ./.venv/lib/python3.12/site-packages (from mkdocs==1.6.1->-r requirements.txt (line 12)) (1.1)
+Requirement already satisfied: pyyaml>=5.1 in ./.venv/lib/python3.12/site-packages (from mkdocs==1.6.1->-r requirements.txt (line 12)) (6.0.3)
+Requirement already satisfied: watchdog>=2.0 in ./.venv/lib/python3.12/site-packages (from mkdocs==1.6.1->-r requirements.txt (line 12)) (7.0.0)
+Requirement already satisfied: babel~=2.10 in ./.venv/lib/python3.12/site-packages (from mkdocs-material==9.6.18->-r requirements.txt (line 14)) (2.18.0)
+Requirement already satisfied: backrefs~=5.7.post1 in ./.venv/lib/python3.12/site-packages (from mkdocs-material==9.6.18->-r requirements.txt (line 14)) (5.9)
+Requirement already satisfied: colorama~=0.4 in ./.venv/lib/python3.12/site-packages (from mkdocs-material==9.6.18->-r requirements.txt (line 14)) (0.4.6)
+Requirement already satisfied: mkdocs-material-extensions~=1.3 in ./.venv/lib/python3.12/site-packages (from mkdocs-material==9.6.18->-r requirements.txt (line 14)) (1.3.1)
+Requirement already satisfied: paginate~=0.5 in ./.venv/lib/python3.12/site-packages (from mkdocs-material==9.6.18->-r requirements.txt (line 14)) (0.5.7)
+Requirement already satisfied: pygments~=2.16 in ./.venv/lib/python3.12/site-packages (from mkdocs-material==9.6.18->-r requirements.txt (line 14)) (2.21.0)
+Requirement already satisfied: pymdown-extensions~=10.2 in ./.venv/lib/python3.12/site-packages (from mkdocs-material==9.6.18->-r requirements.txt (line 14)) (10.21.3)
+Requirement already satisfied: requests~=2.26 in ./.venv/lib/python3.12/site-packages (from mkdocs-material==9.6.18->-r requirements.txt (line 14)) (2.34.2)
+Requirement already satisfied: pyproject_hooks in ./.venv/lib/python3.12/site-packages (from build==1.3.0->-r requirements.txt (line 17)) (1.3.3)
+Requirement already satisfied: readme-renderer>=35.0 in ./.venv/lib/python3.12/site-packages (from twine==6.1.0->-r requirements.txt (line 18)) (46.0)
+Requirement already satisfied: requests-toolbelt!=0.9.0,>=0.8.0 in ./.venv/lib/python3.12/site-packages (from twine==6.1.0->-r requirements.txt (line 18)) (1.0.0)
+Requirement already satisfied: urllib3>=1.26.0 in ./.venv/lib/python3.12/site-packages (from twine==6.1.0->-r requirements.txt (line 18)) (2.8.0)
+Requirement already satisfied: keyring>=15.1 in ./.venv/lib/python3.12/site-packages (from twine==6.1.0->-r requirements.txt (line 18)) (25.7.0)
+Requirement already satisfied: rfc3986>=1.4.0 in ./.venv/lib/python3.12/site-packages (from twine==6.1.0->-r requirements.txt (line 18)) (2.0.0)
+Requirement already satisfied: rich>=12.0.0 in ./.venv/lib/python3.12/site-packages (from twine==6.1.0->-r requirements.txt (line 18)) (14.3.4)
+Requirement already satisfied: id in ./.venv/lib/python3.12/site-packages (from twine==6.1.0->-r requirements.txt (line 18)) (1.6.1)
+Requirement already satisfied: cffi>=1.14 in ./.venv/lib/python3.12/site-packages (from cryptography==45.0.7->-r requirements.txt (line 22)) (2.1.1)
+Requirement already satisfied: typing_extensions>=4.6.0 in ./.venv/lib/python3.12/site-packages (from mypy==1.17.1->-r requirements.txt (line 23)) (4.16.0)
+Requirement already satisfied: mypy_extensions>=1.0.0 in ./.venv/lib/python3.12/site-packages (from mypy==1.17.1->-r requirements.txt (line 23)) (1.2.0)
+Requirement already satisfied: iniconfig>=1 in ./.venv/lib/python3.12/site-packages (from pytest==8.4.1->-r requirements.txt (line 24)) (2.3.1)
+Requirement already satisfied: pluggy<2,>=1.5 in ./.venv/lib/python3.12/site-packages (from pytest==8.4.1->-r requirements.txt (line 24)) (1.7.0)
+Requirement already satisfied: attrs>=23.2.0 in ./.venv/lib/python3.12/site-packages (from trio==0.31.0->-r requirements.txt (line 26)) (26.1.0)
+Requirement already satisfied: sortedcontainers in ./.venv/lib/python3.12/site-packages (from trio==0.31.0->-r requirements.txt (line 26)) (2.4.0)
+Requirement already satisfied: idna in ./.venv/lib/python3.12/site-packages (from trio==0.31.0->-r requirements.txt (line 26)) (3.20)
+Requirement already satisfied: outcome in ./.venv/lib/python3.12/site-packages (from trio==0.31.0->-r requirements.txt (line 26)) (1.3.0.post0)
+Requirement already satisfied: sniffio>=1.3.0 in ./.venv/lib/python3.12/site-packages (from trio==0.31.0->-r requirements.txt (line 26)) (1.3.1)
+Requirement already satisfied: async-generator in ./.venv/lib/python3.12/site-packages (from trio-typing==0.10.0->-r requirements.txt (line 27)) (1.10)
+Requirement already satisfied: importlib-metadata in ./.venv/lib/python3.12/site-packages (from trio-typing==0.10.0->-r requirements.txt (line 27)) (10.1.0)
+Requirement already satisfied: h11>=0.8 in ./.venv/lib/python3.12/site-packages (from uvicorn==0.35.0->-r requirements.txt (line 29)) (0.16.0)
+Requirement already satisfied: anyio in ./.venv/lib/python3.12/site-packages (from httpx==0.28.1) (4.16.0)
+Requirement already satisfied: certifi in ./.venv/lib/python3.12/site-packages (from httpx==0.28.1) (2026.10.23)
+Requirement already satisfied: httpcore==1.* in ./.venv/lib/python3.12/site-packages (from httpx==0.28.1) (1.0.9)
+Requirement already satisfied: brotli in ./.venv/lib/python3.12/site-packages (from httpx==0.28.1) (1.2.1)
+Requirement already satisfied: h2<5,>=3 in ./.venv/lib/python3.12/site-packages (from httpx==0.28.1) (4.4.1)
+Requirement already satisfied: socksio==1.* in ./.venv/lib/python3.12/site-packages (from httpx==0.28.1) (1.0.0)
+Requirement already satisfied: zstandard>=0.18.0 in ./.venv/lib/python3.12/site-packages (from httpx==0.28.1) (0.25.0)
+Requirement already satisfied: pycparser in ./.venv/lib/python3.12/site-packages (from cffi>=1.14->cryptography==45.0.7->-r requirements.txt (line 22)) (3.12)
+Requirement already satisfied: python-dateutil>=2.8.1 in ./.venv/lib/python3.12/site-packages (from ghp-import>=1.0->mkdocs==1.6.1->-r requirements.txt (line 12)) (4.0.0)
+Requirement already satisfied: hyperframe<7,>=6.1 in ./.venv/lib/python3.12/site-packages (from h2<5,>=3->httpx==0.28.1) (6.1.0)
+Requirement already satisfied: hpack<5,>=4.2 in ./.venv/lib/python3.12/site-packages (from h2<5,>=3->httpx==0.28.1) (4.2.0)
+Requirement already satisfied: SecretStorage>=3.2 in ./.venv/lib/python3.12/site-packages (from keyring>=15.1->twine==6.1.0->-r requirements.txt (line 18)) (3.5.0)
+Requirement already satisfied: jeepney>=0.4.2 in ./.venv/lib/python3.12/site-packages (from keyring>=15.1->twine==6.1.0->-r requirements.txt (line 18)) (0.9.0)
+Requirement already satisfied: jaraco.classes in ./.venv/lib/python3.12/site-packages (from keyring>=15.1->twine==6.1.0->-r requirements.txt (line 18)) (3.4.0)
+Requirement already satisfied: jaraco.functools in ./.venv/lib/python3.12/site-packages (from keyring>=15.1->twine==6.1.0->-r requirements.txt (line 18)) (4.6.0)
+Requirement already satisfied: jaraco.context in ./.venv/lib/python3.12/site-packages (from keyring>=15.1->twine==6.1.0->-r requirements.txt (line 18)) (6.1.2)
+Requirement already satisfied: platformdirs>=2.2.0 in ./.venv/lib/python3.12/site-packages (from mkdocs-get-deps>=0.2.0->mkdocs==1.6.1->-r requirements.txt (line 12)) (4.14.3)
+Requirement already satisfied: nh3>=0.2.14 in ./.venv/lib/python3.12/site-packages (from readme-renderer>=35.0->twine==6.1.0->-r requirements.txt (line 18)) (0.3.7)
+Requirement already satisfied: docutils>=0.21.2 in ./.venv/lib/python3.12/site-packages (from readme-renderer>=35.0->twine==6.1.0->-r requirements.txt (line 18)) (0.23)
+Requirement already satisfied: charset_normalizer<4,>=2 in ./.venv/lib/python3.12/site-packages (from requests~=2.26->mkdocs-material==9.6.18->-r requirements.txt (line 14)) (3.5.2)
+Requirement already satisfied: markdown-it-py>=2.2.0 in ./.venv/lib/python3.12/site-packages (from rich>=12.0.0->twine==6.1.0->-r requirements.txt (line 18)) (4.2.0)
+Requirement already satisfied: zipp>=3.20 in ./.venv/lib/python3.12/site-packages (from importlib-metadata->trio-typing==0.10.0->-r requirements.txt (line 27)) (4.1.2)
+Requirement already satisfied: mdurl~=0.1 in ./.venv/lib/python3.12/site-packages (from markdown-it-py>=2.2.0->rich>=12.0.0->twine==6.1.0->-r requirements.txt (line 18)) (0.1.2)
+Requirement already satisfied: tzdata in ./.venv/lib/python3.12/site-packages (from python-dateutil>=2.8.1->ghp-import>=1.0->mkdocs==1.6.1->-r requirements.txt (line 12)) (2026.6)
+Requirement already satisfied: more-itertools in ./.venv/lib/python3.12/site-packages (from jaraco.classes->keyring>=15.1->twine==6.1.0->-r requirements.txt (line 18)) (11.2.1)
+Building wheels for collected packages: httpx
+  Building editable for httpx (pyproject.toml): started
+  Building editable for httpx (pyproject.toml): finished with status 'done'
+  Created wheel for httpx: filename=httpx-0.28.1-py3-none-any.whl size=4864 sha256=079b96eded1e4059a2e860e53f82eed04f69480aabbf403785187b68a8d83fc9
+  Stored in directory: /tmp/pip-ephem-wheel-cache-25q33jyg/wheels/4a/c1/9d/73e05d642a37d392d95b7088ebff5594bec63d6e6609bf2ff4
+Successfully built httpx
+Installing collected packages: httpx
+  Attempting uninstall: httpx
+    Found existing installation: httpx 0.28.1
+    Uninstalling httpx-0.28.1:
+      Successfully uninstalled httpx-0.28.1
+Successfully installed httpx-0.28.1
+
+Output:
+------ Setting up httpx: pip install -r requirements.txt ------
+> /home/runner/work/_temp/real-repos/httpx/.venv/bin/python -m pip install --disable-pip-version-check -r requirements.txt
+Installed 1 package into .venv with Python 3.12. The full log is in Output > Project Setup.
+========== pip install -r requirements.txt: succeeded ==========
+========== Running httpx's tests with Pytest ==========
+> sh -c 'if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/httpx/.tabstudio/test-results/099d03a4ac2546b49fa53545b3fa4700/pytest.xml
+============================= test session starts ==============================
+platform linux -- Python 3.12.15, pytest-8.4.1, pluggy-1.7.0
+rootdir: /home/runner/work/_temp/real-repos/httpx
+configfile: pyproject.toml
+plugins: anyio-4.16.0, platformdirs-4.14.3
+collected 1418 items
+
+tests/client/test_async_client.py ...................................... [  2%]
+..............                                                           [  3%]
+tests/client/test_auth.py .............................................. [  6%]
+..........................s.......                                       [  9%]
+tests/client/test_client.py ...................................          [ 11%]
+tests/client/test_cookies.py .......                                     [ 12%]
+tests/client/test_event_hooks.py .........                               [ 12%]
+tests/client/test_headers.py .................                           [ 14%]
+tests/client/test_properties.py ........                                 [ 14%]
+tests/client/test_proxies.py ........................................... [ 17%]
+..........................                                               [ 19%]
+tests/client/test_queryparams.py ...                                     [ 19%]
+tests/client/test_redirects.py ...............................           [ 21%]
+tests/models/test_cookies.py .......                                     [ 22%]
+tests/models/test_headers.py ...........................                 [ 24%]
+tests/models/test_queryparams.py ..............                          [ 25%]
+tests/models/test_requests.py ........................                   [ 27%]
+tests/models/test_responses.py ......................................... [ 29%]
+.................................................................        [ 34%]
+tests/models/test_url.py ............................................... [ 37%]
+...........................................                              [ 40%]
+tests/models/test_whatwg.py ............................................ [ 43%]
+........................................................................ [ 49%]
+........................................................................ [ 54%]
+........................................................................ [ 59%]
+........................................................................ [ 64%]
+........................................................................ [ 69%]
+........................................................................ [ 74%]
+........................................................................ [ 79%]
+...............                                                          [ 80%]
+tests/test_api.py ............                                           [ 81%]
+tests/test_asgi.py ........................                              [ 83%]
+tests/test_auth.py ........                                              [ 83%]
+tests/test_config.py ............................                        [ 85%]
+tests/test_content.py ...........................................        [ 88%]
+tests/test_decoders.py ........................................          [ 91%]
+tests/test_exceptions.py ...                                             [ 91%]
+tests/test_exported_members.py .                                         [ 91%]
+tests/test_main.py ...........                                           [ 92%]
+tests/test_multipart.py ......................................           [ 95%]
+tests/test_status_codes.py ......                                        [ 95%]
+tests/test_timeouts.py ......F...                                        [ 96%]
+tests/test_utils.py ........................................             [ 99%]
+tests/test_wsgi.py ............                                          [100%]
+
+=================================== FAILURES ===================================
+___________________________ test_write_timeout[trio] ___________________________
+
+agen = <async_generator object ByteStream.__aiter__ at 0x7fea9ce80b80>
+
+    @_core.enable_ki_protection
+    def finalizer(agen: AsyncGeneratorType[object, NoReturn]) -> None:
+        try:
+            self.foreign.remove(id(agen))
+        except KeyError:
+            is_ours = True
+        else:
+            is_ours = False
+    
+        agen_name = name_asyncgen(agen)
+        if is_ours:
+            runner.entry_queue.run_sync_soon(
+                finalize_in_trio_context,
+                agen,
+                agen_name,
+            )
+    
+            # Do this last, because it might raise an exception
+            # depending on the user's warnings filter. (That
+            # exception will be printed to the terminal and
+            # ignored, since we're running in GC context.)
+>           warnings.warn(
+                f"Async generator {agen_name!r} was garbage collected before it "
+                "had been exhausted. Surround its use in 'async with "
+                "aclosing(...):' to ensure that it gets cleaned up as soon as "
+                "you're done using it.",
+                ResourceWarning,
+                stacklevel=2,
+                source=agen,
+            )
+E           ResourceWarning: Async generator 'httpx._content.ByteStream.__aiter__' was garbage collected before it had been exhausted. Surround its use in 'async with aclosing(...):' to ensure that it gets cleaned up as soon as you're done using it.
+
+.venv/lib/python3.12/site-packages/trio/_core/_asyncgens.py:122: ResourceWarning
+
+The above exception was the direct cause of the following exception:
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x7fea9ce1efc0>
+when = 'call'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.12/site-packages/_pytest/runner.py:344: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/_pytest/runner.py:246: in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/pluggy/_caller.py:197: in __call__
+    return self._hookexec(
+.venv/lib/python3.12/site-packages/pluggy/_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/_pytest/logging.py:850: in pytest_runtest_call
+    yield
+.venv/lib/python3.12/site-packages/_pytest/capture.py:900: in pytest_runtest_call
+    return (yield)
+            ^^^^^
+.venv/lib/python3.12/site-packages/_pytest/skipping.py:263: in pytest_runtest_call
+    return (yield)
+            ^^^^^
+.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py:158: in pytest_runtest_call
+    collect_unraisable(item.config)
+.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py:79: in collect_unraisable
+    raise errors[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+config = <_pytest.config.Config object at 0x7feaa28093a0>
+
+    def collect_unraisable(config: Config) -> None:
+        pop_unraisable = config.stash[unraisable_exceptions].pop
+        errors: list[pytest.PytestUnraisableExceptionWarning | RuntimeError] = []
+        meta = None
+        hook_error = None
+        try:
+            while True:
+                try:
+                    meta = pop_unraisable()
+                except IndexError:
+                    break
+    
+                if isinstance(meta, BaseException):
+                    hook_error = RuntimeError("Failed to process unraisable exception")
+                    hook_error.__cause__ = meta
+                    errors.append(hook_error)
+                    continue
+    
+                msg = meta.msg
+                try:
+>                   warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+E                   pytest.PytestUnraisableExceptionWarning: Exception ignored in: <async_generator object ByteStream.__aiter__ at 0x7fea9ce80b80>
+E                   Enable tracemalloc to get traceback where the object was allocated.
+E                   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py:67: PytestUnraisableExceptionWarning
+----------------------------- Captured stdout call -----------------------------
+INFO:     127.0.0.1:46212 - "PUT /slow_response HTTP/1.1" 200 OK
+- generated xml file: /home/runner/work/_temp/real-repos/httpx/.tabstudio/test-results/099d03a4ac2546b49fa53545b3fa4700/pytest.xml -
+=========================== short test summary info ============================
+SKIPPED [1] tests/client/test_auth.py:273: netrc files without a password are valid from Python >= 3.11
+================== 1 failed, 1416 passed, 1 skipped in 7.73s ===================
+

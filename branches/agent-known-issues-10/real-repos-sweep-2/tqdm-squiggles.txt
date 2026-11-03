@@ -1,0 +1,63 @@
+tqdm at 9cf5a12b1f955468a17f0ba3c59092b23e4258ac
+Opened 12 of 12 files; set up in 6.4 s
+The language servers went quiet after 20.8 s; progress seen: Pyright: 
+  tqdm/__init__.py: Pyright Running, 0 errors
+  tqdm/contrib/__init__.py: Pyright Running, 0 errors
+  benchmarks/__init__.py: Pyright Running, 0 errors
+  tqdm/__main__.py: Pyright Running, 0 errors
+  tqdm/contrib/bells.py: Pyright Running, 0 errors
+  examples/7zx.py: Pyright Running, 0 errors
+  tqdm/_main.py: Pyright Running, 0 errors
+  tqdm/contrib/concurrent.py: Pyright Running, 0 errors
+  tests/__init__.py: Pyright Running, 0 errors
+  tqdm/_monitor.py: Pyright Running, 0 errors
+  tqdm/contrib/discord.py: Pyright Running, 0 errors
+  benchmarks/benchmarks.py: Pyright Running, 0 errors
+Language servers:
+18:32:15 [Pyright] Starting Pyright for /home/runner/work/_temp/real-repos/tqdm: /opt/hostedtoolcache/node/22.23.4/x64/bin/pyright-langserver --stdio
+18:32:15 [Pyright] Pyright language server 1.1.403 starting
+18:32:15 [Pyright] Server root directory: file:///opt/hostedtoolcache/node/22.23.4/x64/lib/node_modules/pyright/dist
+18:32:15 [Pyright] Starting service instance "tqdm"
+18:32:15 [Pyright] Pyright is running.
+18:32:15 [Pyright] Loading pyproject.toml file at /home/runner/work/_temp/real-repos/tqdm/pyproject.toml
+18:32:15 [Pyright] No include entries specified; assuming /home/runner/work/_temp/real-repos/tqdm
+18:32:15 [Pyright] Auto-excluding **/node_modules
+18:32:15 [Pyright] Auto-excluding **/__pycache__
+18:32:15 [Pyright] Auto-excluding **/.*
+18:32:15 [Pyright] Assuming Python version 3.12.15.final.0
+18:32:15 [Pyright] Found 65 source files
+18:32:21 [Pyright] Loading pyproject.toml file at /home/runner/work/_temp/real-repos/tqdm/pyproject.toml
+18:32:21 [Pyright] Setting pythonPath for service "tqdm": "/home/runner/work/_temp/real-repos/tqdm/.venv/bin/python"
+18:32:21 [Pyright] No include entries specified; assuming /home/runner/work/_temp/real-repos/tqdm
+18:32:21 [Pyright] Auto-excluding **/node_modules
+18:32:21 [Pyright] Auto-excluding **/__pycache__
+18:32:21 [Pyright] Auto-excluding **/.*
+18:32:21 [Pyright] Assuming Python version 3.12.15.final.0
+18:32:21 [Pyright] Found 65 source files
+
+Project setup:
+------ tqdm: pip install -e . ------
+> python3 -m venv .venv
+> /home/runner/work/_temp/real-repos/tqdm/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/real-repos/tqdm
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: tqdm
+  Building editable for tqdm (pyproject.toml): started
+  Building editable for tqdm (pyproject.toml): finished with status 'done'
+  Created wheel for tqdm: filename=tqdm-0.1.dev1+g9cf5a12b1-0.editable-py3-none-any.whl size=22548 sha256=0774d46196b3ae4b6d2c3f18503a5e60585e0b7718436a623f88dc605e80cfd5
+  Stored in directory: /tmp/pip-ephem-wheel-cache-unfoqw4b/wheels/1d/56/11/4e061dde2dd75281f7929dd882935ef43b3116ba2e3522512a
+Successfully built tqdm
+Installing collected packages: tqdm
+Successfully installed tqdm-0.1.dev1+g9cf5a12b1
+
+Squiggles of tqdm (Python) next to the compiler's errors:
+  compiler: (in /home/runner/work/_temp/real-repos/tqdm) /home/runner/work/_temp/real-repos/tqdm/.venv/bin/python -m py_compile <the 12 files>
+  12 files compared: 0 editor errors, 0 compiler errors, 0 false squiggles, 0 missed
+

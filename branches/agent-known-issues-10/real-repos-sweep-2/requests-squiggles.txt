@@ -1,0 +1,92 @@
+requests at 3c7baaa05ab4aa49cc819ce3a819d260de19c157
+Opened 12 of 12 files; set up in 7.5 s
+The language servers went quiet after 20.8 s; progress seen: Pyright: 
+  setup.py: Pyright Running, 0 errors
+  docs/conf.py: Pyright Running, 0 errors
+  tests/__init__.py: Pyright Running, 3 errors
+  docs/_themes/flask_theme_support.py: Pyright Running, 0 errors
+  src/requests/__init__.py: Pyright Running, 6 errors
+  tests/testserver/__init__.py: Pyright Running, 0 errors
+  src/requests/__version__.py: Pyright Running, 0 errors
+  src/requests/_internal_utils.py: Pyright Running, 0 errors
+  tests/compat.py: Pyright Running, 7 errors
+  src/requests/_types.py: Pyright Running, 0 errors
+  src/requests/adapters.py: Pyright Running, 0 errors
+  tests/testserver/server.py: Pyright Running, 79 errors
+Language servers:
+18:33:39 [Pyright] Starting Pyright for /home/runner/work/_temp/real-repos/requests: /opt/hostedtoolcache/node/22.23.4/x64/bin/pyright-langserver --stdio
+18:33:39 [Pyright] Starting Pyright for /home/runner/work/_temp/real-repos/requests/docs: /opt/hostedtoolcache/node/22.23.4/x64/bin/pyright-langserver --stdio
+18:33:39 [Pyright] Pyright language server 1.1.403 starting
+18:33:39 [Pyright] Server root directory: file:///opt/hostedtoolcache/node/22.23.4/x64/lib/node_modules/pyright/dist
+18:33:39 [Pyright] Starting service instance "requests"
+18:33:39 [Pyright] Pyright is running.
+18:33:40 [Pyright] Pyright language server 1.1.403 starting
+18:33:40 [Pyright] Server root directory: file:///opt/hostedtoolcache/node/22.23.4/x64/lib/node_modules/pyright/dist
+18:33:40 [Pyright] Starting service instance "docs"
+18:33:40 [Pyright] Loading pyproject.toml file at /home/runner/work/_temp/real-repos/requests/pyproject.toml
+18:33:40 [Pyright] Auto-excluding **/node_modules
+18:33:40 [Pyright] Auto-excluding **/__pycache__
+18:33:40 [Pyright] Auto-excluding **/.*
+18:33:40 [Pyright] Assuming Python version 3.12.15.final.0
+18:33:40 [Pyright] Found 19 source files
+18:33:40 [Pyright] Pyright is running.
+18:33:41 [Pyright] No include entries specified; assuming /home/runner/work/_temp/real-repos/requests/docs
+18:33:41 [Pyright] Auto-excluding **/node_modules
+18:33:41 [Pyright] Auto-excluding **/__pycache__
+18:33:41 [Pyright] Auto-excluding **/.*
+18:33:41 [Pyright] Assuming Python version 3.12.15.final.0
+18:33:41 [Pyright] Found 2 source files
+18:33:46 [Pyright] Loading pyproject.toml file at /home/runner/work/_temp/real-repos/requests/pyproject.toml
+18:33:46 [Pyright] Setting pythonPath for service "requests": "/home/runner/work/_temp/real-repos/requests/.venv/bin/python"
+18:33:46 [Pyright] Auto-excluding **/node_modules
+18:33:46 [Pyright] Auto-excluding **/__pycache__
+18:33:46 [Pyright] Auto-excluding **/.*
+18:33:46 [Pyright] Assuming Python version 3.12.15.final.0
+18:33:46 [Pyright] Found 19 source files
+18:33:46 [Pyright] No include entries specified; assuming /home/runner/work/_temp/real-repos/requests/docs
+18:33:46 [Pyright] Auto-excluding **/node_modules
+18:33:46 [Pyright] Auto-excluding **/__pycache__
+18:33:46 [Pyright] Auto-excluding **/.*
+18:33:46 [Pyright] Assuming Python version 3.12.15.final.0
+18:33:46 [Pyright] Found 2 source files
+
+Project setup:
+------ requests: pip install -e . ------
+> python3 -m venv .venv
+> /home/runner/work/_temp/real-repos/requests/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/real-repos/requests
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting charset_normalizer<4,>=2 (from requests==2.34.2)
+  Using cached charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+Collecting idna<4,>=2.5 (from requests==2.34.2)
+  Using cached idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting urllib3<3,>=1.26 (from requests==2.34.2)
+  Using cached urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting certifi>=2023.5.7 (from requests==2.34.2)
+  Using cached certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+Using cached certifi-2026.10.23-py3-none-any.whl (135 kB)
+Using cached charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (257 kB)
+Using cached idna-3.20-py3-none-any.whl (69 kB)
+Using cached urllib3-2.8.0-py3-none-any.whl (135 kB)
+Building wheels for collected packages: requests
+  Building editable for requests (pyproject.toml): started
+  Building editable for requests (pyproject.toml): finished with status 'done'
+  Created wheel for requests: filename=requests-2.34.2-0.editable-py3-none-any.whl size=7207 sha256=a0923598f2d4afc8651328e1bfc72d90f2beb610d3a3dede90acdfe12406e8e0
+  Stored in directory: /tmp/pip-ephem-wheel-cache-i37jroxy/wheels/6c/9d/2f/7bafa77cedc36edab8ffd35c2f4d7d44c36a13e0af0b1f03df
+Successfully built requests
+Installing collected packages: urllib3, idna, charset_normalizer, certifi, requests
+Successfully installed certifi-2026.10.23 charset_normalizer-3.5.2 idna-3.20 requests-2.34.2 urllib3-2.8.0
+
+Squiggles of requests (Python) next to the compiler's errors:
+  compiler: (in /home/runner/work/_temp/real-repos/requests) /home/runner/work/_temp/real-repos/requests/.venv/bin/python -m py_compile <the 12 files>
+  compiler: (in /home/runner/work/_temp/real-repos/requests) pyright --outputjson --pythonpath /home/runner/work/_temp/real-repos/requests/.venv/bin/python <the 10 files>
+  compiler: (in /home/runner/work/_temp/real-repos/requests/docs) pyright --outputjson <the 2 files>
+  12 files compared: 95 editor errors, 91 compiler errors, 0 false squiggles, 0 missed
+

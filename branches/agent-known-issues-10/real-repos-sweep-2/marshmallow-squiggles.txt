@@ -1,0 +1,65 @@
+marshmallow at b762ea2d59ca52fe5df76b90de14bed7e5ec5607
+Opened 12 of 12 files; set up in 17.7 s
+The language servers went quiet after 20.0 s; progress seen: Pyright: 
+  docs/conf.py: Pyright Running, 0 errors
+  performance/benchmark.py: Pyright Running, 0 errors
+  examples/flask_example.py: Pyright Running, 0 errors
+  src/marshmallow/__init__.py: Pyright Running, 0 errors
+  src/marshmallow/experimental/__init__.py: Pyright Running, 0 errors
+  tests/__init__.py: Pyright Running, 0 errors
+  src/marshmallow/class_registry.py: Pyright Running, 0 errors
+  src/marshmallow/experimental/context.py: Pyright Running, 0 errors
+  tests/mypy_test_cases/test_class_registry.py: Pyright Running, 0 errors
+  src/marshmallow/constants.py: Pyright Running, 0 errors
+  src/marshmallow/decorators.py: Pyright Running, 0 errors
+  examples/inflection_example.py: Pyright Running, 0 errors
+Language servers:
+18:30:59 [Pyright] Starting Pyright for /home/runner/work/_temp/real-repos/marshmallow: /opt/hostedtoolcache/node/22.23.4/x64/bin/pyright-langserver --stdio
+18:31:01 [Pyright] Pyright language server 1.1.403 starting
+18:31:01 [Pyright] Server root directory: file:///opt/hostedtoolcache/node/22.23.4/x64/lib/node_modules/pyright/dist
+18:31:01 [Pyright] Starting service instance "marshmallow"
+18:31:01 [Pyright] Pyright is running.
+18:31:03 [Pyright] Loading pyproject.toml file at /home/runner/work/_temp/real-repos/marshmallow/pyproject.toml
+18:31:03 [Pyright] No include entries specified; assuming /home/runner/work/_temp/real-repos/marshmallow
+18:31:03 [Pyright] Auto-excluding **/node_modules
+18:31:03 [Pyright] Auto-excluding **/__pycache__
+18:31:03 [Pyright] Auto-excluding **/.*
+18:31:03 [Pyright] Assuming Python version 3.12.15.final.0
+18:31:03 [Pyright] Found 38 source files
+18:31:16 [Pyright] Loading pyproject.toml file at /home/runner/work/_temp/real-repos/marshmallow/pyproject.toml
+18:31:16 [Pyright] Setting pythonPath for service "marshmallow": "/home/runner/work/_temp/real-repos/marshmallow/.venv/bin/python"
+18:31:16 [Pyright] No include entries specified; assuming /home/runner/work/_temp/real-repos/marshmallow
+18:31:16 [Pyright] Auto-excluding **/node_modules
+18:31:16 [Pyright] Auto-excluding **/__pycache__
+18:31:16 [Pyright] Auto-excluding **/.*
+18:31:16 [Pyright] Assuming Python version 3.12.15.final.0
+18:31:16 [Pyright] Found 38 source files
+
+Project setup:
+------ marshmallow: pip install -e . ------
+Reading which Python versions the 63 pinned packages have wheels for, from PyPI.
+> python3 -m venv .venv
+> /home/runner/work/_temp/real-repos/marshmallow/.venv/bin/python -m pip install --disable-pip-version-check -e .
+Obtaining file:///home/runner/work/_temp/real-repos/marshmallow
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: marshmallow
+  Building editable for marshmallow (pyproject.toml): started
+  Building editable for marshmallow (pyproject.toml): finished with status 'done'
+  Created wheel for marshmallow: filename=marshmallow-4.3.1-py3-none-any.whl size=8828 sha256=be9e0599f5bca89ea5b937aa9e1cd75b21c697c91e8ddd4842037837a84a10e3
+  Stored in directory: /tmp/pip-ephem-wheel-cache-h_csrpfk/wheels/08/c4/77/981bf58402b8d8300873f2aa42077442f3628813859c979450
+Successfully built marshmallow
+Installing collected packages: marshmallow
+Successfully installed marshmallow-4.3.1
+examples's packages were not installed: npm install --no-fund --no-audit failed (npm error notarget No matching version found for pest@^23.4.1.). Fix that, then use Tools > Install Project Packages.
+
+Squiggles of marshmallow (Python) next to the compiler's errors:
+  compiler: (in /home/runner/work/_temp/real-repos/marshmallow) /home/runner/work/_temp/real-repos/marshmallow/.venv/bin/python -m py_compile <the 12 files>
+  12 files compared: 0 editor errors, 0 compiler errors, 0 false squiggles, 0 missed
+
