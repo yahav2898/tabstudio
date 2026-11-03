@@ -3,7 +3,7 @@ Opened /home/runner/work/_temp/real-repos/WpfSimpleCalculator/Simple Calculator.
 Compatibility Doctor:
   Simple Calculator: Ready via OpenSilver in the web preview - A .NET Framework project, run with .NET on this tablet. Built on OpenSilver, which implements WPF's API, and run in the web preview. What OpenSilver lacks, such as 3D, Window.ShowDialog and some members, is named in the Error List; that code runs on your PC through the Windows Bridge.
 Startup project: Simple Calculator
-Built in 0.4 s: 0 errors, 1 warnings
+Built in 0.3 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   opensilver 3.3.3
       analyzers/dotnet/cs/OpenSilver.Analyzers.dll
@@ -25,17 +25,18 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net6.0/_._
       buildTransitive/netcoreapp2.0/System.Security.Cryptography.Xml.targets
 Editor: 3 files opened and analyzed in 0.1 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 4 over 100 ms (2 over 250 ms, 0 over 1 s), 1.2 s in all, longest 433 ms during screenshots; answer p50 5.6 ms, p95 420.1 ms, p99 432.9 ms over 33 questions in 2 s
-| Stall | At | During |
-| --- | --- | --- |
-| 433 ms | 0.2 s | screenshots |
-| 420 ms | 0.8 s | screenshots |
-| 161 ms | 1.8 s | screenshots |
-| 161 ms | 1.6 s | screenshots |
+UI stalls: 4 over 100 ms (2 over 250 ms, 0 over 1 s), 1.0 s in all, longest 353 ms during screenshots, 0.1 s of it garbage collection; answer p50 6.4 ms, p95 268.5 ms, p99 352.9 ms over 33 questions in 2 s
+UI timings: document view 52 ms, document view 3 ms, document view 2 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 353 ms | 78 ms | 0.2 s | screenshots |
+| 268 ms | 24 ms | 1.2 s | screenshots |
+| 231 ms | 0 ms | 0.6 s | screenshots |
+| 169 ms | 7 ms | 1.5 s | screenshots |
 Output:
-Build started at 18:26:35...
+Build started at 20:50:24...
 1>------ Build started: Project: Simple Calculator, Configuration: Debug ------
 1>MainWindow.xaml(1,1): warning TS7009: In the code OpenSilver's XAML compiler made from MainWindow.xaml: 'MainWindow.Equals' hides inherited member 'object.Equals(object?)'. Use the new keyword if hiding was intended. (CS0108)
-1>Simple Calculator -> compiled in memory (48.5 KB, 367 ms)
+1>Simple Calculator -> compiled in memory (48.5 KB, 319 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 

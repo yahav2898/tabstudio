@@ -1,5 +1,5 @@
 eShopOnWeb at 4da8212117e87d808d4bbc7da6286fd2147ce606
-Opened /home/runner/work/_temp/real-repos/eShopOnWeb/eShopOnWeb.sln in 0.3 s
+Opened /home/runner/work/_temp/real-repos/eShopOnWeb/eShopOnWeb.sln in 0.2 s
 Compatibility Doctor:
   Web: Needs a database via Local server + WebView - Web uses SQL Server, which has no engine for ARM64 Linux, so it cannot run on this tablet, and 'CatalogConnection' in appsettings.json uses (localdb)\mssqllocaldb, which exists only on Windows. Connect to a SQL Server on your network or in the cloud with a SQL login (Windows sign-in is not available here).
   Infrastructure: Library via Built with its users - A library is compiled together with the projects that reference it.
@@ -12,7 +12,7 @@ Compatibility Doctor:
   BlazorShared: Library via Built with its users - A library is compiled together with the projects that reference it.
   PublicApiIntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: Web
-Built in 21.0 s: 0 errors, 27 warnings
+Built in 17.1 s: 0 errors, 27 warnings
 Packages with analyzers or MSBuild files:
   ardalis.apiendpoints.codeanalyzers 4.0.0
       analyzers/dotnet/cs/Ardalis.ApiEndpoints.CodeAnalyzers.dll
@@ -1074,32 +1074,32 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.utility.netcoreapp10.dll
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
-Editor: 24 files opened and analyzed in 0.9 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 5 over 100 ms (2 over 250 ms, 0 over 1 s), 1.4 s in all, longest 463 ms during screenshots; answer p50 8.6 ms, p95 15.2 ms, p99 32.5 ms over 864 questions in 24 s
-| Stall | At | During |
-| --- | --- | --- |
-| 463 ms | 0.7 s | screenshots |
-| 345 ms | 0.3 s | screenshots |
-| 246 ms | 3.2 s | the first build |
-| 175 ms | 22.2 s | screenshots |
-| 157 ms | 22.5 s | screenshots |
+Editor: 24 files opened and analyzed in 1.0 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 4 over 100 ms (2 over 250 ms, 0 over 1 s), 1.0 s in all, longest 370 ms during screenshots, 0.1 s of it garbage collection; answer p50 7.6 ms, p95 19.1 ms, p99 51.4 ms over 717 questions in 20 s
+UI timings: document view 50 ms, document view 8 ms, document view 5 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 370 ms | 43 ms | 0.3 s | screenshots |
+| 305 ms | 55 ms | 0.7 s | screenshots |
+| 148 ms | 9 ms | 18.2 s | screenshots |
+| 130 ms | 0 ms | 18.4 s | screenshots |
 Output:
-Build started at 18:25:04...
+Build started at 20:49:04...
 1>------ Build started: Project: BlazorShared, Configuration: Debug ------
-1>BlazorShared -> compiled in memory (13.5 KB, 13 ms)
+1>BlazorShared -> compiled in memory (13.5 KB, 17 ms)
 2>------ Build started: Project: ApplicationCore, Configuration: Debug ------
 2>EmptyBasketOnCheckoutException.cs(12,154): warning SYSLIB0051: 'Exception.Exception(SerializationInfo, StreamingContext)' is obsolete: 'This API supports obsolete formatter-based serialization. It should not be called or extended by application code.'
-2>ApplicationCore -> compiled in memory (33 KB, 83 ms)
+2>ApplicationCore -> compiled in memory (33 KB, 85 ms)
 3>------ Build started: Project: BlazorAdmin, Configuration: Debug ------
-3>BlazorAdmin -> compiled in memory (103 KB, 218 ms)
+3>BlazorAdmin -> compiled in memory (103 KB, 417 ms)
 4>------ Build started: Project: Infrastructure, Configuration: Debug ------
-4>Infrastructure -> compiled in memory (106.5 KB, 309 ms)
+4>Infrastructure -> compiled in memory (106.5 KB, 250 ms)
 5>------ Build started: Project: Web, Configuration: Debug ------
-5>Web -> compiled in memory (562.5 KB, 870 ms)
+5>Web -> compiled in memory (562.5 KB, 1185 ms)
 6>------ Build started: Project: UnitTests, Configuration: Debug ------
-6>UnitTests -> compiled in memory (33.5 KB, 964 ms)
+6>UnitTests -> compiled in memory (33.5 KB, 752 ms)
 7>------ Build started: Project: IntegrationTests, Configuration: Debug ------
-7>IntegrationTests -> compiled in memory (11.5 KB, 870 ms)
+7>IntegrationTests -> compiled in memory (11.5 KB, 823 ms)
 8>------ Build started: Project: PublicApi, Configuration: Debug ------
 8>AuthenticateEndpoint.AuthenticateRequest.cs(5,19): warning CS8618: Non-nullable property 'Username' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 8>AuthenticateEndpoint.AuthenticateRequest.cs(6,19): warning CS8618: Non-nullable property 'Password' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
@@ -1124,10 +1124,10 @@ Build started at 18:25:04...
 8>UpdateCatalogItemEndpoint.UpdateCatalogItemResponse.cs(7,12): warning CS8618: Non-nullable property 'CatalogItem' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 8>UpdateCatalogItemEndpoint.UpdateCatalogItemResponse.cs(11,12): warning CS8618: Non-nullable property 'CatalogItem' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 8>CatalogTypeDto.cs(6,19): warning CS8618: Non-nullable property 'Name' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-8>PublicApi -> compiled in memory (52 KB, 407 ms)
+8>PublicApi -> compiled in memory (52 KB, 249 ms)
 9>------ Build started: Project: FunctionalTests, Configuration: Debug ------
-9>FunctionalTests -> compiled in memory (32.5 KB, 849 ms)
+9>FunctionalTests -> compiled in memory (32.5 KB, 779 ms)
 10>------ Build started: Project: PublicApiIntegrationTests, Configuration: Debug ------
-10>PublicApiIntegrationTests -> compiled in memory (21.5 KB, 766 ms)
+10>PublicApiIntegrationTests -> compiled in memory (21.5 KB, 850 ms)
 ========== Build: 10 succeeded, 0 failed ==========
 

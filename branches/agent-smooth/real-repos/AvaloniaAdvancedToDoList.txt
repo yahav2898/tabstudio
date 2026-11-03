@@ -10,7 +10,7 @@ Compatibility Doctor:
   AdvancedToDoList: Library via Built with its users - A library is compiled together with the projects that reference it.
   SharedControls: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: AdvancedToDoList.Desktop
-Built in 5.1 s: 0 errors, 1 warnings
+Built in 6.0 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   avalonia.buildservices 11.3.2
       build/Avalonia.BuildServices.targets
@@ -293,27 +293,29 @@ Packages with analyzers or MSBuild files:
   xunit.v3.core.mtp-v1 3.2.2
       buildTransitive/xunit.v3.core.mtp-v1.props
       buildTransitive/xunit.v3.core.mtp-v1.targets
-Editor: 23 files opened and analyzed in 1.7 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 4 over 100 ms (2 over 250 ms, 0 over 1 s), 1.1 s in all, longest 388 ms during screenshots; answer p50 8.5 ms, p95 28.4 ms, p99 190.4 ms over 284 questions in 9 s
-| Stall | At | During |
-| --- | --- | --- |
-| 388 ms | 0.9 s | screenshots |
-| 360 ms | 0.2 s | screenshots |
-| 190 ms | 6.5 s | screenshots |
-| 153 ms | 6.7 s | screenshots |
+Editor: 23 files opened and analyzed in 3.6 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 5 over 100 ms (1 over 250 ms, 0 over 1 s), 1.0 s in all, longest 281 ms during screenshots, 0.3 s of it garbage collection; answer p50 5.6 ms, p95 23.4 ms, p99 115.6 ms over 434 questions in 11 s
+UI timings: document view 44 ms, document view 42 ms, document view 28 ms, document view 26 ms, document view 8 ms, document view 8 ms, document view 6 ms, document view 6 ms, document view 6 ms, document view 4 ms, document view 4 ms, document view 4 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 281 ms | 32 ms | 0.2 s | screenshots |
+| 216 ms | 196 ms | 3.1 s | the first build |
+| 203 ms | 51 ms | 0.8 s | screenshots |
+| 136 ms | 9 ms | 7.2 s | screenshots |
+| 116 ms | 0 ms | 7.1 s | screenshots |
 Output:
-Build started at 18:27:23...
+Build started at 20:51:06...
 1>------ Build started: Project: SharedControls, Configuration: Debug ------
 1>DialogCommand.cs(111,32): warning CS0067: The event 'DialogCommand.CanExecuteChanged' is never used
-1>SharedControls -> compiled in memory (109 KB, 280 ms)
+1>SharedControls -> compiled in memory (109 KB, 303 ms)
 2>------ Build started: Project: AdvancedToDoList, Configuration: Debug ------
-2>AdvancedToDoList -> compiled in memory (1013 KB, 432 ms)
+2>AdvancedToDoList -> compiled in memory (1013 KB, 652 ms)
 3>------ Build started: Project: AdvancedToDoListTests, Configuration: Debug ------
-3>AdvancedToDoListTests -> compiled in memory (53 KB, 278 ms)
+3>AdvancedToDoListTests -> compiled in memory (53 KB, 350 ms)
 4>------ Build started: Project: SharedControlsTests, Configuration: Debug ------
-4>SharedControlsTests -> compiled in memory (7.5 KB, 70 ms)
+4>SharedControlsTests -> compiled in memory (7.5 KB, 85 ms)
 5>------ Build started: Project: AdvancedToDoList.Desktop, Configuration: Debug ------
-5>AdvancedToDoList.Desktop -> compiled in memory (7 KB, 264 ms)
+5>AdvancedToDoList.Desktop -> compiled in memory (7 KB, 251 ms)
 6>------ Skipped: Project: AdvancedToDoList.Android: it targets net10.0-android, which only .NET's mobile workloads build, on a computer ------
 7>------ Skipped: Project: AdvancedToDoList.Browser: it is a browser head compiled ahead of time to WebAssembly, which only .NET's wasm-tools workload builds, on a computer ------
 8>------ Skipped: Project: AdvancedToDoList.iOS: it targets net10.0-ios, which only .NET's mobile workloads build, on a computer ------

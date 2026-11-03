@@ -3,8 +3,8 @@ Toolchain projects:
   swift: /home/runner/work/_temp/real-repos/swift-argument-parser/Package.swift
   cpp: /home/runner/work/_temp/real-repos/swift-argument-parser/CMakeLists.txt
 Startup project: swift /home/runner/work/_temp/real-repos/swift-argument-parser/Package.swift
-Set up in 4.2 s
-Ran in 10.8 s
+Set up in 4.3 s
+Ran in 11.0 s
 Project setup:
 
 Output:
@@ -15,7 +15,8 @@ Building for debugging...
 [Planning deferred tasks]
 [30 / 48] ArgumentParserToolInfo
 [40 / 54] ArgumentParser
-[41 / 54] ArgumentParser
+[40 / 54] ArgumentParserToolInfo
+[43 / 55] ArgumentParser
 /home/runner/work/_temp/real-repos/swift-argument-parser/Sources/ArgumentParser/Usage/DumpHelpGenerator.swift:208:15: warning: 'customDeprecated' is deprecated: Use custom instead. [#DeprecatedDeclaration]
 206 |       self = .customAsync
 207 |     case .customDeprecated(_):
@@ -25,9 +26,9 @@ Building for debugging...
 210 |   }
 
 [#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
-[43 / 55] ArgumentParser
-[48 / 55]
+[47 / 55] ArgumentParserToolInfo
 [52 / 59] roll-product
+[53 / 59] roll-product
 [54 / 59] roll-product
 [57 / 60] ArgumentParser
 /home/runner/work/_temp/real-repos/swift-argument-parser/Sources/ArgumentParser/Parsable Types/ParsableArguments.swift:76:8: warning: '_errorLabel' is deprecated: Use _errorPrefix instead. [#DeprecatedDeclaration]
@@ -41,7 +42,7 @@ Building for debugging...
 [#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
 [60 / 61] ArgumentParser
 [61 / 61] roll-product
-Build complete! (9.37 secs)
+Build complete! (9.60 secs)
 1
 
 The program 'roll' has exited with code 0 (0x0).

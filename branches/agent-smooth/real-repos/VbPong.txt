@@ -1,20 +1,21 @@
 VbPong at f546e3787861280c877d434c26048f311ac9e12c
-Opened /home/runner/work/_temp/real-repos/VbPong/Pong.sln in 0.4 s
+Opened /home/runner/work/_temp/real-repos/VbPong/Pong.sln in 0.3 s
 Compatibility Doctor:
   Pong: Ready via Cross-platform Forms layer in the app preview - Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
 Startup project: Pong
 Built in 0.5 s: 0 errors, 0 warnings
 Editor: 3 files opened and analyzed in 0.2 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 4 over 100 ms (2 over 250 ms, 1 over 1 s), 2.0 s in all, longest 1087 ms during screenshots; answer p50 6.5 ms, p95 159.4 ms, p99 1086.5 ms over 47 questions in 3 s
-| Stall | At | During |
-| --- | --- | --- |
-| 1087 ms | 0.4 s | screenshots |
-| 606 ms | 1.5 s | screenshots |
-| 159 ms | 2.7 s | screenshots |
-| 153 ms | 3.0 s | screenshots |
+UI stalls: 4 over 100 ms (2 over 250 ms, 0 over 1 s), 1.1 s in all, longest 438 ms during screenshots, 0.2 s of it garbage collection; answer p50 6.6 ms, p95 172.2 ms, p99 438.2 ms over 49 questions in 2 s
+UI timings: document view 119 ms, document view 3 ms, document view 2 ms, document view 2 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 438 ms | 56 ms | 0.8 s | screenshots |
+| 366 ms | 105 ms | 0.3 s | screenshots |
+| 172 ms | 3 ms | 1.8 s | screenshots |
+| 134 ms | 8 ms | 2.0 s | screenshots |
 Output:
-Build started at 18:26:50...
+Build started at 20:50:34...
 1>------ Build started: Project: Pong, Configuration: Debug ------
-1>Pong -> compiled in memory (8814 KB, 530 ms)
+1>Pong -> compiled in memory (8814 KB, 522 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 

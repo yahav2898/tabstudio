@@ -1,5 +1,5 @@
 StronglyTypedId at 6bd17db4a4b700eaad9e209baf41478cc3f0bbe9
-Opened /home/runner/work/_temp/real-repos/StronglyTypedId/StronglyTypedId.sln in 0.4 s
+Opened /home/runner/work/_temp/real-repos/StronglyTypedId/StronglyTypedId.sln in 0.3 s
 Compatibility Doctor:
   StronglyTypedIds: Library via Built with its users - A library is compiled together with the projects that reference it.
   StronglyTypedIds.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
@@ -12,7 +12,7 @@ Compatibility Doctor:
   StronglyTypedIds.IntegrationTests.Types: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   StronglyTypedIds.IntegrationTests.ExternalIds: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: none
-Built in 6.0 s: 0 errors, 0 warnings
+Built in 5.3 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   coverlet.collector 3.2.0
       build/netstandard1.0/Microsoft.Bcl.AsyncInterfaces.dll
@@ -550,30 +550,31 @@ Packages with analyzers or MSBuild files:
       build/uap10.0.16299/xunit.runner.visualstudio.targets
       build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.dll
       build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.pri
-Editor: 16 files opened and analyzed in 0.7 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 4 over 100 ms (2 over 250 ms, 0 over 1 s), 1.0 s in all, longest 355 ms during screenshots; answer p50 8.5 ms, p95 29.1 ms, p99 169.8 ms over 273 questions in 9 s
-| Stall | At | During |
-| --- | --- | --- |
-| 355 ms | 1.0 s | screenshots |
-| 268 ms | 0.5 s | screenshots |
-| 170 ms | 7.8 s | screenshots |
-| 160 ms | 7.5 s | screenshots |
+Editor: 16 files opened and analyzed in 0.6 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 4 over 100 ms (1 over 250 ms, 0 over 1 s), 0.7 s in all, longest 262 ms during screenshots, 0.1 s of it garbage collection; answer p50 7.5 ms, p95 33.6 ms, p99 140.6 ms over 250 questions in 8 s
+UI timings: document view 54 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 262 ms | 31 ms | 0.4 s | screenshots |
+| 206 ms | 32 ms | 1.1 s | screenshots |
+| 141 ms | 5 ms | 6.9 s | screenshots |
+| 126 ms | 0 ms | 6.7 s | screenshots |
 Output:
-Build started at 18:29:16...
+Build started at 20:52:51...
 1>------ Build started: Project: StronglyTypedIds.Attributes, Configuration: Debug ------
-1>StronglyTypedIds.Attributes -> compiled in memory (3 KB, 234 ms)
+1>StronglyTypedIds.Attributes -> compiled in memory (3 KB, 245 ms)
 2>------ Build started: Project: StronglyTypedIds, Configuration: Debug ------
-2>StronglyTypedIds -> compiled in memory (266 KB, 95 ms)
+2>StronglyTypedIds -> compiled in memory (266 KB, 62 ms)
 3>------ Build started: Project: StronglyTypedIds.Tests, Configuration: Debug ------
-3>StronglyTypedIds.Tests -> compiled in memory (108.5 KB, 132 ms)
+3>StronglyTypedIds.Tests -> compiled in memory (108.5 KB, 84 ms)
 4>------ Build started: Project: StronglyTypedIds.IntegrationTests, Configuration: Debug ------
-4>StronglyTypedIds.IntegrationTests -> compiled in memory (178.5 KB, 301 ms)
+4>StronglyTypedIds.IntegrationTests -> compiled in memory (178.5 KB, 295 ms)
 5>------ Build started: Project: StronglyTypedIds.Templates, Configuration: Debug ------
-5>StronglyTypedIds.Templates -> compiled in memory (2 KB, 6 ms)
+5>StronglyTypedIds.Templates -> compiled in memory (2 KB, 5 ms)
 6>------ Build started: Project: StronglyTypedIds.IntegrationTests.Types, Configuration: Debug ------
-6>StronglyTypedIds.IntegrationTests.Types -> compiled in memory (77.5 KB, 130 ms)
+6>StronglyTypedIds.IntegrationTests.Types -> compiled in memory (77.5 KB, 152 ms)
 7>------ Build started: Project: StronglyTypedIds.IntegrationTests.ExternalIds, Configuration: Debug ------
-7>StronglyTypedIds.IntegrationTests.ExternalIds -> compiled in memory (104 KB, 262 ms)
+7>StronglyTypedIds.IntegrationTests.ExternalIds -> compiled in memory (104 KB, 236 ms)
 8>------ Skipped: Project: _build: it is not built by the solution's Debug configuration ------
 9>------ Skipped: Project: StronglyTypedIds.Nuget.IntegrationTests: it is not built by the solution's Debug configuration ------
 10>------ Skipped: Project: StronglyTypedIds.Nuget.Attributes.IntegrationTests: it is not built by the solution's Debug configuration ------

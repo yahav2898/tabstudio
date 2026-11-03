@@ -1,12 +1,12 @@
 FluentValidation at f95dbd5c8166a10e38f7a8bca4d752abd641a453
-Opened /home/runner/work/_temp/real-repos/FluentValidation/FluentValidation.sln in 0.2 s
+Opened /home/runner/work/_temp/real-repos/FluentValidation/FluentValidation.sln in 0.3 s
 Compatibility Doctor:
   FluentValidation.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   FluentValidation: Library via Built with its users - A library is compiled together with the projects that reference it.
   FluentValidation.DependencyInjectionExtensions: Library via Built with its users - A library is compiled together with the projects that reference it.
   FluentValidation.Tests.Benchmarks: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
 Startup project: none
-Built in 4.9 s: 0 errors, 1 warnings
+Built in 4.7 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   microsoft.codeanalysis.analyzers 2.6.1
       analyzers/dotnet/cs/Microsoft.CodeAnalysis.Analyzers.dll
@@ -84,22 +84,23 @@ Packages with analyzers or MSBuild files:
       analyzers/dotnet/cs/Microsoft.Bcl.HashCode.dll
       analyzers/dotnet/cs/Zomp.SyncMethodGenerator.dll
 Editor: 11 files opened and analyzed in 1.0 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 4 over 100 ms (4 over 250 ms, 0 over 1 s), 1.6 s in all, longest 796 ms during screenshots; answer p50 6.5 ms, p95 49.0 ms, p99 270.9 ms over 234 questions in 8 s
-| Stall | At | During |
-| --- | --- | --- |
-| 796 ms | 0.3 s | screenshots |
-| 286 ms | 6.9 s | screenshots |
-| 271 ms | 6.5 s | screenshots |
-| 268 ms | 1.3 s | screenshots |
+UI stalls: 4 over 100 ms (2 over 250 ms, 0 over 1 s), 1.3 s in all, longest 539 ms during screenshots, 0.2 s of it garbage collection; answer p50 5.5 ms, p95 27.1 ms, p99 242.4 ms over 254 questions in 8 s
+UI timings: document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 539 ms | 123 ms | 0.3 s | screenshots |
+| 270 ms | 19 ms | 1.1 s | screenshots |
+| 242 ms | 26 ms | 6.2 s | screenshots |
+| 211 ms | 0 ms | 6.5 s | screenshots |
 Output:
-Build started at 18:24:25...
+Build started at 20:48:23...
 1>------ Build started: Project: FluentValidation, Configuration: Debug ------
-1>FluentValidation -> compiled in memory (500.5 KB, 1071 ms)
+1>FluentValidation -> compiled in memory (500.5 KB, 1138 ms)
 2>------ Build started: Project: FluentValidation.DependencyInjectionExtensions, Configuration: Debug ------
-2>FluentValidation.DependencyInjectionExtensions -> compiled in memory (5.5 KB, 386 ms)
+2>FluentValidation.DependencyInjectionExtensions -> compiled in memory (5.5 KB, 361 ms)
 3>------ Build started: Project: FluentValidation.Tests, Configuration: Debug ------
-3>FluentValidation.Tests -> compiled in memory (684 KB, 1035 ms)
+3>FluentValidation.Tests -> compiled in memory (684 KB, 1375 ms)
 4>------ Build started: Project: FluentValidation.Tests.Benchmarks, Configuration: Debug ------
-4>FluentValidation.Tests.Benchmarks -> compiled in memory (37 KB, 462 ms)
+4>FluentValidation.Tests.Benchmarks -> compiled in memory (37 KB, 634 ms)
 ========== Build: 4 succeeded, 0 failed ==========
 

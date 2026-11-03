@@ -1,19 +1,20 @@
 WinFormsToDoList at 97fb69d9cd0b31521f121f440d954ba00d612990
-Opened /home/runner/work/_temp/real-repos/WinFormsToDoList/simple-toDoList-winforms/simple-toDoList-winforms.sln in 0.1 s
+Opened /home/runner/work/_temp/real-repos/WinFormsToDoList/simple-toDoList-winforms/simple-toDoList-winforms.sln in 0.2 s
 Compatibility Doctor:
   simple-toDoList-winforms: Ready via Cross-platform Forms layer in the app preview - A .NET Framework project, run with .NET on this tablet. Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
 Startup project: simple-toDoList-winforms
 Built in 0.0 s: 0 errors, 0 warnings
 Editor: 3 files opened and analyzed in 0.0 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 4 over 100 ms (2 over 250 ms, 0 over 1 s), 1.2 s in all, longest 426 ms during screenshots; answer p50 2.1 ms, p95 425.6 ms, p99 425.6 ms over 18 questions in 2 s
-| Stall | At | During |
-| --- | --- | --- |
-| 426 ms | 0.2 s | screenshots |
-| 398 ms | 0.7 s | screenshots |
-| 199 ms | 1.1 s | screenshots |
-| 142 ms | 1.4 s | screenshots |
+UI stalls: 4 over 100 ms (0 over 250 ms, 0 over 1 s), 0.6 s in all, longest 155 ms during screenshots, 0.0 s of it garbage collection; answer p50 5.5 ms, p95 150.9 ms, p99 155.4 ms over 20 questions in 1 s
+UI timings: document view 4 ms, document view 2 ms, document view 2 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 155 ms | 15 ms | 0.2 s | screenshots |
+| 151 ms | 9 ms | 0.9 s | screenshots |
+| 140 ms | 25 ms | 0.5 s | screenshots |
+| 122 ms | 0 ms | 0.7 s | screenshots |
 Output:
-Build started at 18:26:39...
+Build started at 20:50:27...
 1>------ Build started: Project: simple-toDoList-winforms, Configuration: Debug ------
 1>simple-toDoList-winforms -> compiled in memory (82.5 KB, 18 ms)
 ========== Build: 1 succeeded, 0 failed ==========
