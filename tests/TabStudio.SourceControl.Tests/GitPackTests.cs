@@ -10,7 +10,7 @@ public sealed class GitPackTests : IDisposable
     private readonly TempDirectory _temp = new();
 
     [Theory]
-    [InlineData(0, CompressionLevel.Optimal)]
+    [InlineData(1, CompressionLevel.Optimal)]
     [InlineData(1, CompressionLevel.Fastest)]
     [InlineData(100, CompressionLevel.NoCompression)]
     [InlineData(70_000, CompressionLevel.Optimal)]
@@ -96,10 +96,11 @@ public sealed class GitPackTests : IDisposable
         Assert.Equal($"100755 blob {blob}\trun.sh", listing[2]);
         Assert.Equal("Tab Studio|tab@example.test|1800000000 +0200|First", GitServer.Git(work, "log", "-1", "--date=raw", "--format=%an|%ae|%ad|%s", commit).Trim());
 
+        var subtree = TreeCodec.Parse(store.Read(tree).Content).Single(i => i.IsTree).Id;
         var packPath = Path.Combine(_temp.Path, "out.pack");
         using (var file = File.Create(packPath))
         {
-            PackWriter.Write(file, store, [commit, tree, blob]);
+            PackWriter.Write(file, store, [commit, tree, subtree, blob]);
         }
 
         var other = new ObjectStore(Path.Combine(_temp.Path, "other", "objects"));

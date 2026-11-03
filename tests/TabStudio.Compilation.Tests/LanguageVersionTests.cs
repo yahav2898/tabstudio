@@ -86,5 +86,5 @@ public sealed class LanguageVersionTests : IDisposable
 
     public void Dispose() => _temp.Dispose();
 
-    private ProjectInfo Parse(string xml) => ProjectParser.Parse(_temp.Write("src/App/App.csproj", xml), xml);
+    private TabStudio.Core.Workspaces.ProjectInfo Parse(string xml) => ProjectParser.Parse(_temp.Write("src/App/App.csproj", xml), xml);
 }
