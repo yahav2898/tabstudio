@@ -9,6 +9,7 @@ using TabStudio.App.ViewModels;
 using TabStudio.App.Views;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
+using TabStudio.LanguageServers.Hosting;
 
 namespace TabStudio.App.Tests.RealRepositories;
 
@@ -178,6 +179,273 @@ public sealed class RealRepositoryTests
 
         await File.WriteAllTextAsync(Path.Combine(output, "summary-polyglot.md"), summary.ToString());
         Assert.True(problems.Count == 0, string.Join('\n', problems) + "\n\n" + summary);
+    }
+
+    /// <summary>
+    /// Compares the squiggles of the pinned TypeScript, Go, Rust, Java and Python repositories with their compilers'
+    /// errors. Each repository opens as a person opens it: its source files open at once, while the project setup
+    /// installs its packages, and once the language servers have gone quiet the editor's errors in those files, as
+    /// their squiggles show them, are saved. <c>build/ci/squiggles.py</c> chooses the files, runs the compiler on them
+    /// (its docstring says what the compiler is for each language), compares the two per file and line, and holds
+    /// each repository to its baseline in <c>real-repos.json</c>'s <c>squiggleBaselines</c>; its table is
+    /// <c>summary-squiggles.md</c>, and each repository's report <c>&lt;name&gt;-squiggles.txt</c>.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task Pinned_TypeScript_Go_Rust_Java_and_Python_repositories_squiggle_what_their_compilers_report()
+    {
+        var clones = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS");
+        if (string.IsNullOrEmpty(clones))
+        {
+            return;
+        }
+
+        var output = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_OUT") ?? Path.Combine(clones, "reports");
+        var editorFolder = Path.Combine(output, "squiggles-editor");
+        Directory.CreateDirectory(editorFolder);
+        var script = Path.Combine(RepositoryRoot(), "build", "ci", "squiggles.py");
+        var manifest = JsonNode.Parse(await File.ReadAllTextAsync(Path.Combine(RepositoryRoot(), "build", "ci", "real-repos.json")))!;
+        var problems = new List<string>();
+        var only = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_ONLY")?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        foreach (var repository in manifest["repositories"]!.AsArray().Where(r => InThisJob(r!) && (only is null || only.Contains(r!["name"]!.GetValue<string>(), StringComparer.OrdinalIgnoreCase))))
+        {
+            if (repository!["toolchain"]?.GetValue<string>() is not { } toolchain || !SquiggleToolchains.Contains(toolchain, StringComparer.Ordinal))
+            {
+                continue;
+            }
+
+            var name = repository["name"]!.GetValue<string>();
+            var folder = Path.Combine(clones, name, (repository["folder"]?.GetValue<string>() ?? ".").Replace('/', Path.DirectorySeparatorChar));
+            var chosen = await RunPythonAsync(script, "files", toolchain, folder);
+            var files = chosen.Output.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Where(f => File.Exists(f)).ToList();
+            if (chosen.ExitCode != 0)
+            {
+                problems.Add($"{name}: squiggles.py could not choose its files: {chosen.Output}");
+                continue;
+            }
+
+            if (files.Count == 0)
+            {
+                // Such as a JavaScript repository, with no tsconfig.json to compare tsserver with.
+                continue;
+            }
+
+            var report = new StringBuilder().AppendLine(CultureInfo.InvariantCulture, $"{name} at {repository["sha"]!.GetValue<string>()}");
+            try
+            {
+                var squiggles = await CollectSquigglesAsync(folder, files, report);
+                var editor = Path.Combine(editorFolder, name + ".json");
+                await File.WriteAllTextAsync(editor, squiggles.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
+                var compared = await RunPythonAsync(script, "compare", "--name", name, "--toolchain", toolchain, "--folder", folder, "--squiggles", editor, "--out", output);
+                report.AppendLine(compared.Output);
+                if (compared.ExitCode != 0)
+                {
+                    problems.Add($"{name}: squiggles.py could not compare its squiggles; see {name}-squiggles.txt.");
+                }
+            }
+            catch (Exception ex) when (ex is not OutOfMemoryException)
+            {
+                report.AppendLine(CultureInfo.InvariantCulture, $"EXCEPTION: {ex}");
+                problems.Add($"{name}: its squiggles were not collected ({ex.GetType().Name}: {ex.Message}); see {name}-squiggles.txt.");
+            }
+
+            await File.WriteAllTextAsync(Path.Combine(output, name + "-squiggles.txt"), report.ToString());
+        }
+
+        var summary = await RunPythonAsync(script, "summary", "--out", output);
+        if (summary.ExitCode != 0)
+        {
+            problems.Add(summary.Output);
+        }
+
+        Assert.True(problems.Count == 0, string.Join('\n', problems));
+    }
+
+    /// <summary>The toolchains of real-repos.json whose squiggles are compared with a compiler.</summary>
+    private static readonly string[] SquiggleToolchains = ["node", "go", "rust", "java", "python"];
+
+    /// <summary>How long the language servers must have been quiet: no progress and no new diagnostics.</summary>
+    private static readonly TimeSpan SquiggleQuiet = TimeSpan.FromSeconds(20);
+
+    /// <summary>The longest a repository's language servers may take to go quiet, such as Eclipse JDT's Maven import.</summary>
+    private static readonly TimeSpan SquiggleLimit = TimeSpan.FromMinutes(6);
+
+    /// <summary>
+    /// Opens a repository and its chosen files as a person does, and returns the editor's errors in each file, as the
+    /// squiggles show them (<see cref="DocumentViewModel.Diagnostics"/>, from the language server through the same
+    /// path the editor takes), with the server and its state, for <c>squiggles.py compare</c>.
+    /// </summary>
+    private static async Task<JsonObject> CollectSquigglesAsync(string folder, List<string> files, StringBuilder report)
+    {
+        using var fixture = new WorkspaceFixture();
+        var workspace = fixture.Workspace;
+        var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = workspace } };
+        window.Show();
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        var activity = new ServerActivity();
+        try
+        {
+            await workspace.LoadAsync(folder);
+            await UiTestHelpers.WaitUntilAsync(() => workspace.State != IdeState.Busy, TimeSpan.FromMinutes(5), "the load");
+            if (workspace.LanguageServers is { } host)
+            {
+                host.ProgressChanged += activity.OnProgress;
+                host.DiagnosticsPublished += activity.OnDiagnostics;
+            }
+
+            // The files open at once, while the project setup installs the packages in the background.
+            var documents = new List<(string File, DocumentViewModel? Document)>();
+            foreach (var file in files)
+            {
+                documents.Add((file, await workspace.OpenDocumentAsync(file)));
+            }
+
+            await UiTestHelpers.WaitUntilAsync(() => workspace.ProjectSetupTask.IsCompleted && !workspace.IsSettingUpProjects, TimeSpan.FromMinutes(20), "the project setup");
+            report.AppendLine(CultureInfo.InvariantCulture, $"Opened {documents.Count(d => d.Document is not null)} of {files.Count} files; set up in {clock.Elapsed.TotalSeconds:F1} s");
+
+            // The setup's end refreshes the servers (Pyright reads its settings again); they get a quiet spell to answer.
+            activity.Touch();
+            var started = clock.Elapsed;
+            while (clock.Elapsed - started < SquiggleLimit)
+            {
+                var running = documents.All(d => d.Document?.LanguageServer?.ServerState is null or LanguageServerState.Running or LanguageServerState.Failed or LanguageServerState.Stopped);
+                if (running && activity.IsQuiet(SquiggleQuiet))
+                {
+                    break;
+                }
+
+                Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+                await Task.Delay(250);
+            }
+
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            var settled = activity.IsQuiet(SquiggleQuiet);
+            report.AppendLine(CultureInfo.InvariantCulture, $"The language servers {(settled ? "went quiet" : "were still busy")} after {(clock.Elapsed - started).TotalSeconds:F1} s; progress seen: {activity.Titles}");
+            var opened = new JsonArray();
+            foreach (var (file, document) in documents)
+            {
+                var server = document?.LanguageServer;
+                var errors = new JsonArray();
+                foreach (var error in document?.Diagnostics ?? [])
+                {
+                    if (error is { Severity: DiagnosticSeverityLevel.Error, Location: { } location })
+                    {
+                        errors.Add(new JsonObject { ["line"] = location.Line, ["column"] = location.Column, ["code"] = error.Id, ["message"] = error.Message });
+                    }
+                }
+
+                var state = document is null ? "not open" : server?.ServerState.ToString() ?? "without a language server";
+                report.AppendLine(CultureInfo.InvariantCulture, $"  {Path.GetRelativePath(folder, file)}: {server?.ServerName ?? "no server"} {state}, {errors.Count} errors");
+                opened.Add(new JsonObject { ["path"] = file, ["server"] = server?.ServerName, ["state"] = state, ["errors"] = errors });
+            }
+
+            AppendTail(report, "Language servers", workspace.LanguageServerOutput.Text.Length > 20000 ? workspace.LanguageServerOutput.Text[^20000..] : workspace.LanguageServerOutput.Text);
+            AppendTail(report, "Project setup", workspace.ProjectSetupOutput.Text.Length > 8000 ? workspace.ProjectSetupOutput.Text[^8000..] : workspace.ProjectSetupOutput.Text);
+            return new JsonObject { ["files"] = opened, ["seconds"] = Math.Round(clock.Elapsed.TotalSeconds, 1), ["settled"] = settled };
+        }
+        finally
+        {
+            if (workspace.LanguageServers is { } host)
+            {
+                host.ProgressChanged -= activity.OnProgress;
+                host.DiagnosticsPublished -= activity.OnDiagnostics;
+            }
+
+            window.Close();
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    /// <summary>Runs <c>build/ci/squiggles.py</c> with Python and returns its exit code and output.</summary>
+    private static async Task<(int ExitCode, string Output)> RunPythonAsync(string script, params string[] arguments)
+    {
+        var start = new System.Diagnostics.ProcessStartInfo("python3")
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+        };
+        start.ArgumentList.Add(script);
+        foreach (var argument in arguments)
+        {
+            start.ArgumentList.Add(argument);
+        }
+
+        using var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(45));
+        using var process = System.Diagnostics.Process.Start(start) ?? throw new InvalidOperationException("python3 did not start.");
+        var standardOutput = process.StandardOutput.ReadToEndAsync(timeout.Token);
+        var standardError = process.StandardError.ReadToEndAsync(timeout.Token);
+        try
+        {
+            await process.WaitForExitAsync(timeout.Token);
+            return (process.ExitCode, (await standardOutput) + (await standardError));
+        }
+        catch (OperationCanceledException)
+        {
+            process.Kill(entireProcessTree: true);
+            return (-1, $"squiggles.py {string.Join(' ', arguments.Take(1))} did not finish in 45 minutes.");
+        }
+    }
+
+    /// <summary>
+    /// What the language servers are doing, from their progress reports (<c>$/progress</c>, such as rust-analyzer's
+    /// indexing and its <c>cargo check</c>) and the diagnostics they publish, which arrive on background threads.
+    /// </summary>
+    private sealed class ServerActivity
+    {
+        private readonly Lock _gate = new();
+        private readonly HashSet<string> _active = new(StringComparer.Ordinal);
+        private readonly SortedSet<string> _titles = new(StringComparer.Ordinal);
+        private DateTime _last = DateTime.UtcNow;
+
+        /// <summary>The progress titles seen, for the report.</summary>
+        public string Titles
+        {
+            get
+            {
+                lock (_gate)
+                {
+                    return _titles.Count == 0 ? "none" : string.Join(", ", _titles);
+                }
+            }
+        }
+
+        public void OnProgress(object? sender, LanguageServerProgressEventArgs e)
+        {
+            var key = $"{e.ServerName}: {e.Title ?? "work"}";
+            lock (_gate)
+            {
+                _last = DateTime.UtcNow;
+                _titles.Add(key);
+                if (e.IsDone)
+                {
+                    _active.Remove(key);
+                }
+                else
+                {
+                    _active.Add(key);
+                }
+            }
+        }
+
+        public void OnDiagnostics(object? sender, LanguageServerDiagnosticsEventArgs e) => Touch();
+
+        /// <summary>Counts as activity, such as the end of the project setup, which the servers react to.</summary>
+        public void Touch()
+        {
+            lock (_gate)
+            {
+                _last = DateTime.UtcNow;
+            }
+        }
+
+        /// <summary>Whether no work is in progress and nothing happened for a while.</summary>
+        public bool IsQuiet(TimeSpan quiet)
+        {
+            lock (_gate)
+            {
+                return _active.Count == 0 && DateTime.UtcNow - _last >= quiet;
+            }
+        }
     }
 
     /// <param name="Tests">How many tests Test Explorer's Run All must pass, at least, after the run; <see langword="null"/> to run none.</param>
