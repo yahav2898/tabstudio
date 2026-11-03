@@ -4,6 +4,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
+using Microsoft.Extensions.DependencyInjection;
 using TabStudio.App.Controls;
 using TabStudio.App.Tests.Theming;
 using TabStudio.App.ViewModels;
@@ -280,6 +281,20 @@ public sealed class CommandFixTests
         sweep.PressKey(Key.Escape);
         await sweep.SettleAsync();
         Assert.Null(await name);
+    }
+
+    [AvaloniaFact]
+    public async Task A_language_request_after_the_solution_closed_is_cancelled_rather_than_failed()
+    {
+        using var sweep = new SweepHarness("fix-closed-language");
+        var service = new TabStudio.App.Services.Link.LinkedLanguageService(
+            sweep.Services.GetRequiredService<TabStudio.App.Services.CompilerServices>(), sweep.Services.GetRequiredService<TabStudio.App.Services.Link.LinkService>());
+        service.Dispose();
+
+        // The editor's coloring, still on its way when the solution closed: an ObjectDisposedException nobody awaited.
+        var request = service.GetClassificationsAsync("Program.cs", CancellationToken.None);
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => request);
+        Assert.True(request.IsCanceled);
     }
 
     private static bool InView(CodeEditorView view)

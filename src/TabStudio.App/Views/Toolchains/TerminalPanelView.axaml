@@ -9,7 +9,8 @@
     <!-- The on-screen keys: they never take the focus, so the keyboard stays up while they are tapped. -->
     <Style Selector="Button.key">
       <Setter Property="Focusable" Value="False" />
-      <Setter Property="MinWidth" Value="46" />
+      <!-- A whole touch target: 48 on a phone-sized window, such as a third of a split screen. -->
+      <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
       <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
       <Setter Property="Padding" Value="10,0" />
       <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />

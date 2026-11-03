@@ -1180,7 +1180,7 @@
           <!-- A choice, such as which APK to install: rows to tap rather than a number to type. -->
           <Border CornerRadius="{StaticResource Radius.Control}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1"
                   Background="{DynamicResource Brush.Control}" ClipToBounds="True" IsVisible="{Binding Prompt.HasChoices}">
-            <ListBox x:Name="PromptChoices" ItemsSource="{Binding Prompt.Choices}" SelectedIndex="{Binding Prompt.SelectedIndex}" MaxHeight="264"
+            <ListBox x:Name="PromptChoices" ItemsSource="{Binding Prompt.Choices}" AutomationProperties.Name="{Binding Prompt.Title}" SelectedIndex="{Binding Prompt.SelectedIndex}" MaxHeight="264"
                      ItemContainerTheme="{StaticResource ListRow}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
               <ListBox.Styles>
                 <Style Selector="ListBoxItem">
@@ -1195,7 +1195,7 @@
               </ListBox.ItemTemplate>
             </ListBox>
           </Border>
-          <TextBox x:Name="PromptBox" Classes="large mono" Text="{Binding Prompt.Text}" PasswordChar="{Binding Prompt.PasswordCharacter}" IsVisible="{Binding Prompt.HasInput}" />
+          <TextBox x:Name="PromptBox" Classes="large mono" Text="{Binding Prompt.Text}" AutomationProperties.Name="{Binding Prompt.Title}" PasswordChar="{Binding Prompt.PasswordCharacter}" IsVisible="{Binding Prompt.HasInput}" />
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
             <Button Theme="{StaticResource SecondaryButton}" Padding="18,0" Content="Cancel" Command="{Binding Prompt.CancelCommand}" />
             <Button x:Name="PromptConfirm" Theme="{StaticResource AccentButton}" Padding="18,0" Content="{Binding Prompt.ConfirmText}"

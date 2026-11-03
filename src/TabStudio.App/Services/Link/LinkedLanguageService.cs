@@ -531,12 +531,20 @@ public sealed class LinkedLanguageService : ILanguageService
         await LocalAsync().ConfigureAwait(false);
     }
 
-    /// <summary>This device's language service, made and loaded with the workspace and its unsaved text when first needed.</summary>
+    /// <summary>
+    /// This device's language service, made and loaded with the workspace and its unsaved text when first needed. Once
+    /// the workspace is closed, a request still on its way (coloring, squiggles, a build the editor asked for) is
+    /// cancelled rather than failed: it was an ObjectDisposedException in tasks nobody awaited any more.
+    /// </summary>
     private Task<LocalLanguageService> LocalAsync()
     {
         lock (_gate)
         {
-            ObjectDisposedException.ThrowIf(_disposed, this);
+            if (_disposed)
+            {
+                return Task.FromCanceled<LocalLanguageService>(new CancellationToken(canceled: true));
+            }
+
             if (_local is { } local)
             {
                 return Task.FromResult(local);

@@ -292,10 +292,14 @@ public sealed partial class EveryCommandTests
 
         var where = "menu: " + Title(entry);
         var size = sweep.Workspace.CurrentTextSize;
+        var already = IsAlreadyChosen(sweep, entry);
         AnswerInput(sweep.Workspace);
         var outcome = await sweep.RunAsync(where, () => Start(entry.Command, entry.Parameter));
         sweep.Audit(where);
-        await NoEffectAsync(sweep, where, outcome);
+        if (!already)
+        {
+            await NoEffectAsync(sweep, where, outcome);
+        }
         await sweep.DismissAsync(where);
 
         // The theme and the text size are the app's: they go back for the next command.
@@ -456,6 +460,34 @@ public sealed partial class EveryCommandTests
         {
             sweep.Add("no-effect", where, "It changed nothing a person can see: no panel, dialog, text, selection or status.");
         }
+    }
+
+    /// <summary>
+    /// Whether a command chooses what is already chosen, which changes nothing by design: the panel that shows, the
+    /// configuration, theme or text size in use, a radio item already checked.
+    /// </summary>
+    private static bool IsAlreadyChosen(SweepHarness sweep, CommandEntry entry)
+    {
+        var workspace = sweep.Workspace;
+        if (entry.Parameter switch
+        {
+            BottomPanel panel => workspace.SelectedPanel == panel && workspace.IsBottomPanelVisible,
+            SideBarPanel panel => workspace.SelectedSideBarPanel == panel && workspace.IsSideBarVisible,
+            string configuration => workspace.Configuration == configuration,
+            IdeTheme theme => workspace.CurrentTheme == theme,
+            TextSize size => workspace.CurrentTextSize == size,
+            _ => false,
+        })
+        {
+            return true;
+        }
+
+        var menu = sweep.Window.GetVisualDescendants().OfType<Menu>().FirstOrDefault(m => m.Name == "MainMenu");
+        return menu is not null && Flatten(menu.Items.OfType<MenuItem>()).Any(item =>
+            ReferenceEquals(item.Command, entry.Command) && Equals(item.CommandParameter, entry.Parameter) && item.ToggleType != MenuItemToggleType.None && item.IsChecked);
+
+        static IEnumerable<MenuItem> Flatten(IEnumerable<MenuItem> items) =>
+            items.SelectMany(item => Flatten(item.Items.OfType<MenuItem>()).Prepend(item));
     }
 
     private static string Title(CommandEntry entry) => entry.Path is null ? entry.Title : $"{entry.Path} > {entry.Title}";
@@ -700,6 +732,7 @@ public sealed partial class EveryCommandTests
     private static List<Button> Buttons(Window window) =>
         [.. window.GetVisualDescendants().OfType<Button>().Where(b => b.IsEffectivelyVisible && b.IsEffectivelyEnabled
             && b.Bounds.Width >= 1 && b.Bounds.Height >= 1
+            && b.GetVisualAncestors().Prepend(b).OfType<InputElement>().All(e => e.IsHitTestVisible)
             && b.TranslatePoint(new Point(b.Bounds.Width / 2, b.Bounds.Height / 2), window) is { } middle
             && middle.X >= 0 && middle.Y >= 0 && middle.X <= window.Bounds.Width && middle.Y <= window.Bounds.Height
             && !b.GetVisualAncestors().Any(a => a is ListBoxItem or TreeViewItem or ScrollBar or AvaloniaEdit.TextEditor))];
@@ -722,6 +755,18 @@ public sealed partial class EveryCommandTests
     /// <summary>A finger's tap on a button's middle, after checking that nothing covers it there.</summary>
     private static void Tap(SweepHarness sweep, HeadlessTouchScreen finger, Button button, string where)
     {
+        // A finger scrolls a button below the fold into view first, and a tap outside an open menu only closes it.
+        button.BringIntoView();
+        sweep.Pump();
+        if (sweep.HasLightDismissPopup())
+        {
+            var corner = new Point(sweep.Window.Bounds.Width - 2, sweep.Window.Bounds.Height - 2);
+            finger.Down(corner);
+            finger.Up(corner);
+            finger.Wait(100);
+            sweep.Pump();
+        }
+
         var middle = button.TranslatePoint(new Point(button.Bounds.Width / 2, button.Bounds.Height / 2), sweep.Window)
             ?? throw new InvalidOperationException("The button left the window.");
         if (sweep.Window.InputHitTest(middle) is Visual hit && !ReferenceEquals(hit, button) && !button.IsVisualAncestorOf(hit))

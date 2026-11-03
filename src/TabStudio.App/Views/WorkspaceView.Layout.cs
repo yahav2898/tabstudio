@@ -41,6 +41,13 @@ public sealed partial class WorkspaceView
     /// <summary>The most of a portrait editor's height the bottom dock takes.</summary>
     private const double PortraitDockShare = 0.4;
 
+    /// <summary>
+    /// The most of a landscape editor's height the bottom dock takes. It kept its 200 pixels however short the screen
+    /// got, so when the on-screen keyboard took the lower half of a landscape tablet, or a split screen made the window
+    /// short, the editor was left one or two lines, often not the one being typed on.
+    /// </summary>
+    private const double LandscapeDockShare = 0.5;
+
     private GridLength _sideBarWidth = new(SideBarWidth);
     private GridLength _bottomPanelHeight = new(BottomPanelHeight);
     private GridLength _propertiesHeight = new(PropertiesHeight);
@@ -241,13 +248,14 @@ public sealed partial class WorkspaceView
     }
 
     /// <summary>
-    /// Fits the editor area: in portrait the bottom dock takes at most 40% of its height, and the floating touch bars
+    /// Fits the editor area: the bottom dock takes at most 40% of its height in portrait and half of it in landscape,
+    /// so a short window (the on-screen keyboard, a split screen) keeps lines of code to type on; the floating touch bars
     /// leave most of the editor's width to the code, folding their least used buttons to icons.
     /// </summary>
     private void UpdateEditorArea()
     {
         var height = EditorArea.Bounds.Height;
-        EditorArea.RowDefinitions[4].MaxHeight = _isWide || height <= 0 ? double.PositiveInfinity : Math.Max(120, height * PortraitDockShare);
+        EditorArea.RowDefinitions[4].MaxHeight = height <= 0 ? double.PositiveInfinity : Math.Max(120, height * (_isWide ? LandscapeDockShare : PortraitDockShare));
 
         var width = EditorPanel.Bounds.Width;
         if (width > 0)

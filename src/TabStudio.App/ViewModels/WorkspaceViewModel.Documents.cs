@@ -26,7 +26,7 @@ public sealed partial class WorkspaceViewModel
     /// <summary>The selected tab.</summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasDocuments), nameof(CaretText), nameof(Breadcrumb))]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(FormatDocumentCommand), nameof(ToggleCommentCommand), nameof(FindCommand), nameof(ReplaceCommand), nameof(UndoCommand), nameof(RedoCommand), nameof(CutCommand), nameof(CopyCommand), nameof(PasteCommand), nameof(SelectAllCommand), nameof(GoToLineCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(FormatDocumentCommand), nameof(ToggleCommentCommand), nameof(FindCommand), nameof(ReplaceCommand), nameof(UndoCommand), nameof(RedoCommand), nameof(CutCommand), nameof(CopyCommand), nameof(PasteCommand), nameof(SelectAllCommand), nameof(GoToLineCommand), nameof(NavigateBackCommand), nameof(NavigateForwardCommand))]
     public partial DocumentViewModel? ActiveDocument { get; set; }
 
     /// <summary>Whether any document is open.</summary>
@@ -588,12 +588,15 @@ public sealed partial class WorkspaceViewModel
         UpdateNavigationCommands();
     }
 
-    /// <summary>Where Navigate Backward (-1) or Forward (1) goes: the nearest document in the history still open, or -1.</summary>
+    /// <summary>
+    /// Where Navigate Backward (-1) or Forward (1) goes: the nearest document in the history that is still open and is
+    /// not the one shown, or -1. Going "back" to the document already shown did nothing.
+    /// </summary>
     private int HistoryTarget(int step)
     {
         for (var target = _historyIndex + step; target >= 0 && target < _history.Count; target += step)
         {
-            if (Documents.Any(d => d.FilePath == _history[target]))
+            if (_history[target] != ActiveDocument?.FilePath && Documents.Any(d => d.FilePath == _history[target]))
             {
                 return target;
             }

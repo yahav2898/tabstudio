@@ -61,7 +61,8 @@ internal sealed class SweepHarness : IDisposable
     private readonly List<SweepProblem> _problems = [];
     private readonly HashSet<string> _seen = new(StringComparer.Ordinal);
     private readonly HashSet<Exception> _exceptions = new(ReferenceEqualityComparer.Instance);
-    private readonly HashSet<string> _volatile = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string> _originals = new(StringComparer.Ordinal);
+    private int _shots;
     private readonly List<string> _log = [];
     private WorkspaceViewModel? _watched;
     private string _where = "opening the sample";
@@ -137,6 +138,11 @@ internal sealed class SweepHarness : IDisposable
             await workspace.OpenDocumentAsync(ProgramPath);
         }
 
+        foreach (var file in Directory.EnumerateFiles(Path.GetDirectoryName(SolutionPath)!, "*.cs", SearchOption.AllDirectories))
+        {
+            _originals[file] = await File.ReadAllTextAsync(file);
+        }
+
         var document = workspace.ActiveDocument!;
         await document.AnalyzeNowAsync();
         await UiTestHelpers.WaitUntilAsync(() => document.Classifications.Count > 0 && workspace.Commands.Commands.Count > 0, because: "syntax colors and the commands");
@@ -208,7 +214,7 @@ internal sealed class SweepHarness : IDisposable
         _where = where;
         Actions++;
         Note("run\t" + where);
-        var before = await StableSnapshotAsync();
+        var (before, moving) = await StableSnapshotAsync();
         Task? task = null;
         var clock = Stopwatch.StartNew();
         try
@@ -248,7 +254,7 @@ internal sealed class SweepHarness : IDisposable
 
         await SettleAsync();
         var after = Snapshot();
-        var changes = Diff(before, after);
+        var changes = Diff(before, after, moving);
         var change = string.Join(", ", changes.Take(4));
         Note($"done\t{where}\t{(changes.Count > 0 ? change : "no change")}");
         return new SweepOutcome(changes.Count > 0, change, completed);
@@ -257,7 +263,7 @@ internal sealed class SweepHarness : IDisposable
     /// <summary>Records a problem, once for each kind, place and text.</summary>
     public void Add(string kind, string where, string what)
     {
-        if (_seen.Add(kind + "\t" + what))
+        if (_seen.Add(kind + "\t" + where + "\t" + what))
         {
             _problems.Add(new SweepProblem(kind, where, what));
             Note($"problem\t{kind}\t{where}\t{what}");
@@ -290,7 +296,7 @@ internal sealed class SweepHarness : IDisposable
         IReadOnlyList<AccessibilityFinding> found;
         try
         {
-            found = AccessibilityAudit.Everything(Window, IsDark);
+            found = AccessibilityAudit.Everything(Window, IsDark, overlaps: OpenOverlay() is null && !HasLightDismissPopup());
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
@@ -298,15 +304,38 @@ internal sealed class SweepHarness : IDisposable
             return;
         }
 
+        string? shot = null;
         foreach (var finding in found)
         {
             if (_seen.Add("a11y\t" + finding.Kind + "\t" + finding.Path))
             {
-                _problems.Add(new SweepProblem(finding.Kind, where, finding.Path + ": " + finding.Text));
-                Note($"problem\t{finding.Kind}\t{where}\t{finding.Path}: {finding.Text}");
+                shot ??= Shoot();
+                _problems.Add(new SweepProblem(finding.Kind, where, $"{finding.Path}: {finding.Text} [{shot}]"));
+                Note($"problem\t{finding.Kind}\t{where}\t{finding.Path}: {finding.Text} [{shot}]");
             }
         }
     }
+
+    /// <summary>Saves what the window shows now, for a finding, as <c>sweep/shots/&lt;name&gt;-&lt;n&gt;.png</c>.</summary>
+    public string Shoot()
+    {
+        var name = string.Create(CultureInfo.InvariantCulture, $"{_name}-{(IsDark ? "dark" : "light")}-{++_shots:000}.png");
+        try
+        {
+            var folder = Directory.CreateDirectory(Path.Combine(ReportFolder, "shots")).FullName;
+            UiTestHelpers.SaveFrame(Window, Path.Combine(folder, name));
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            return "no picture: " + ex.Message;
+        }
+
+        return name;
+    }
+
+    /// <summary>Whether a flyout, context menu or other light-dismiss popup is open: the first tap only closes it.</summary>
+    public bool HasLightDismissPopup() =>
+        Window.GetVisualDescendants().OfType<LightDismissOverlayLayer>().Any(layer => layer.IsVisible);
 
     /// <summary>
     /// Closes whatever an action opened over the IDE, as a person would with the keyboard (Escape) and by touch (the
@@ -314,6 +343,18 @@ internal sealed class SweepHarness : IDisposable
     /// </summary>
     public async Task DismissAsync(string where)
     {
+        if (HasLightDismissPopup())
+        {
+            // A tap outside a flyout or a context menu closes it, as on a tablet.
+            Window.MouseDown(new Point(Window.Bounds.Width - 2, Window.Bounds.Height - 2), MouseButton.Left);
+            Window.MouseUp(new Point(Window.Bounds.Width - 2, Window.Bounds.Height - 2), MouseButton.Left);
+            await SettleAsync(60);
+            if (HasLightDismissPopup())
+            {
+                Add("dead-end", where, "A tap outside its flyout or menu does not close it.");
+            }
+        }
+
         for (var round = 0; round < 4; round++)
         {
             var overlay = OpenOverlay();
@@ -458,10 +499,38 @@ internal sealed class SweepHarness : IDisposable
             await workspace.OpenDocumentAsync(ProgramPath);
         }
 
-        if (!workspace.IsSideBarVisible || workspace.SelectedSideBarPanel != SideBarPanel.SolutionExplorer)
+        // The sample as it was: commands edit, comment, cut and format it, and the next one must find it whole.
+        foreach (var document in workspace.Documents.ToList())
+        {
+            if (_originals.TryGetValue(document.FilePath, out var original) && document.Document.Text != original)
+            {
+                workspace.ActiveDocument = document;
+                document.Document.Text = original;
+                await workspace.SaveCommand.ExecuteAsync(null);
+            }
+        }
+
+        foreach (var (file, original) in _originals)
+        {
+            if (!workspace.Documents.Any(d => d.FilePath == file) && File.Exists(file) && await File.ReadAllTextAsync(file) != original)
+            {
+                await File.WriteAllTextAsync(file, original);
+            }
+        }
+
+        if (workspace.ActiveDocument?.FilePath != ProgramPath)
+        {
+            await workspace.OpenDocumentAsync(ProgramPath);
+        }
+
+        if (workspace.SelectedSideBarPanel != SideBarPanel.SolutionExplorer)
         {
             workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.SolutionExplorer);
         }
+
+        // Docked beside the editor on a landscape tablet; folded away in portrait, where it is a drawer over it.
+        var docked = Window.GetVisualDescendants().OfType<WorkspaceView>().FirstOrDefault()?.IsSideBarDocked ?? true;
+        workspace.IsSideBarVisible = docked;
 
         if (!workspace.IsBottomPanelVisible)
         {
@@ -623,34 +692,39 @@ internal sealed class SweepHarness : IDisposable
                 if (_exceptions.Add(inner))
                 {
                     Add("unobserved", "near " + _where, Describe(inner));
+                    Note("stack\t" + inner.ToString().ReplaceLineEndings(" | "));
                 }
             }
         });
     }
 
-    /// <summary>Two snapshots a moment apart: what changes between them on its own is left out of every comparison.</summary>
-    private async Task<Dictionary<string, string>> StableSnapshotAsync()
+    /// <summary>
+    /// Two snapshots a moment apart, and what changed between them on its own, such as a spinner or a clock, which is
+    /// left out of this action's comparison.
+    /// </summary>
+    private async Task<(Dictionary<string, string> Snapshot, HashSet<string> Moving)> StableSnapshotAsync()
     {
         var first = Snapshot();
         await SettleAsync(60);
         var second = Snapshot();
+        var moving = new HashSet<string>(StringComparer.Ordinal);
         foreach (var key in first.Keys.Union(second.Keys))
         {
             if (!first.TryGetValue(key, out var a) || !second.TryGetValue(key, out var b) || a != b)
             {
-                _volatile.Add(key);
+                moving.Add(key);
             }
         }
 
-        return second;
+        return (second, moving);
     }
 
-    private List<string> Diff(Dictionary<string, string> before, Dictionary<string, string> after)
+    private static List<string> Diff(Dictionary<string, string> before, Dictionary<string, string> after, HashSet<string> moving)
     {
         var changes = new List<string>();
         foreach (var (key, value) in after)
         {
-            if (_volatile.Contains(key))
+            if (moving.Contains(key))
             {
                 continue;
             }
@@ -667,7 +741,7 @@ internal sealed class SweepHarness : IDisposable
 
         foreach (var key in before.Keys)
         {
-            if (!after.ContainsKey(key) && !_volatile.Contains(key))
+            if (!after.ContainsKey(key) && !moving.Contains(key))
             {
                 changes.Add("-" + key);
             }

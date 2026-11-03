@@ -99,7 +99,7 @@ public sealed class TabletSituationTests
             Foreground(activity);
             return task;
         }, TimeSpan.FromSeconds(90));
-        if (!build.Completed || !workspace.Output.Text.Contains("Build succeeded", StringComparison.OrdinalIgnoreCase))
+        if (!build.Completed || !workspace.Output.Text.Contains(" 0 failed", StringComparison.Ordinal))
         {
             sweep.Add("lifecycle", "a build, to the background and back", "The build did not succeed after the app went to the background and came back: " + Last(workspace.Output.Text));
         }

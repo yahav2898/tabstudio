@@ -70,10 +70,14 @@ internal static partial class AccessibilityAudit
     /// </summary>
     /// <param name="window">The window, laid out and rendered.</param>
     /// <param name="dark">Whether the dark theme shows.</param>
-    public static IReadOnlyList<AccessibilityFinding> Everything(Window window, bool dark)
+    /// <param name="overlaps">
+    /// Whether to look for controls over each other: not while a dialog, the search or a menu shows over the IDE, whose
+    /// controls lie over the IDE's by design, behind a scrim that takes the taps.
+    /// </param>
+    public static IReadOnlyList<AccessibilityFinding> Everything(Window window, bool dark, bool overlaps = true)
     {
         var found = new List<AccessibilityFinding>(In(window, window, dark, clipping: true));
-        found.AddRange(Layout(window, window, dark));
+        found.AddRange(Layout(window, window, dark, overlaps));
         foreach (var popup in window.GetVisualDescendants().OfType<Popup>())
         {
             if (popup.IsOpen && popup.Child is { IsVisible: true } child && child.Bounds.Width >= 1 && child.Bounds.Height >= 1 && child is not ToolTip)
@@ -91,17 +95,24 @@ internal static partial class AccessibilityAudit
     /// are not targets of their own are left out, as in the accessibility rules; so are the editor's own text area and
     /// what floats over it by design (the touch bar, the editor's popups), which a tap reaches on its own.
     /// </summary>
-    private static IEnumerable<AccessibilityFinding> Layout(Visual root, TopLevel window, bool dark)
+    private static IEnumerable<AccessibilityFinding> Layout(Visual root, TopLevel window, bool dark, bool overlaps)
     {
         var profile = new ScreenProfile("audit", FormFactor.Tablet, window.Bounds.Width, window.Bounds.Height, IsDark: dark);
         var scan = LayoutScan.Run(root, profile);
         var offScreen = new HashSet<Visual>(ReferenceEqualityComparer.Instance);
         foreach (var (element, severity, message) in OffScreenRule.Find(scan, offScreen).ToList())
         {
-            if (severity == LayoutIssueSeverity.Error && Counts(element.Visual) && element.Visual.GetVisualAncestors().OfType<AdaptiveBar>().FirstOrDefault() is null)
+            // The bars park what they fold far off the screen, until More shows it.
+            if (severity == LayoutIssueSeverity.Error && Counts(element.Visual) && element.Bounds.X > AdaptiveLayout.Parked.X + 1
+                && !element.Visual.GetVisualAncestors().Any(a => a is AdaptiveBar or ActivityBar))
             {
                 yield return new("off-screen", PathOf(root, element.Visual), message);
             }
+        }
+
+        if (!overlaps)
+        {
+            yield break;
         }
 
         foreach (var (element, severity, message) in OverlapRule.Find(scan, offScreen))
