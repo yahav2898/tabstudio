@@ -114,6 +114,15 @@ class SquiggleTests(unittest.TestCase):
         self.write("pyproject.toml", "[project]\nname = 'x'\n[tool.pyright]\ntypeCheckingMode = 'strict'\n")
         self.assertTrue(squiggles.configures_pyright(str(self.root)))
 
+    def test_the_nearest_pyproject_is_the_configuration_pyright_loads(self):
+        # click has [tool.pyright]; its examples each have a pyproject.toml without one, which Pyright loads instead.
+        self.write("pyproject.toml", "[project]\nname = 'click'\n[tool.pyright]\ntypeCheckingMode = 'basic'\n")
+        self.write("examples/aliases/pyproject.toml", "[project]\nname = 'aliases'\n")
+        self.write("src/click/core.py", "x = 1\n")
+        root = str(self.root)
+        self.assertTrue(squiggles.pyright_configured_for(os.path.join(root, "src", "click"), root))
+        self.assertFalse(squiggles.pyright_configured_for(os.path.join(root, "examples", "aliases"), root))
+
     def squiggles_of(self, *files):
         return {"files": [{"path": str(self.root / f), "server": "S", "state": state, "errors": [{"line": l, "column": 1, "code": "E", "message": "m"} for l in lines]}
                           for f, state, lines in files]}

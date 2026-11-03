@@ -528,6 +528,20 @@ def configures_pyright(folder):
     return re.search(r"^\[tool\.pyright\]", text, re.MULTILINE) is not None
 
 
+def pyright_configured_for(root, folder):
+    """
+    Whether Pyright, serving a folder, finds a configuration of the project's: the nearest pyrightconfig.json or
+    pyproject.toml at or above the folder is the one Pyright loads, even a pyproject.toml without [tool.pyright], as the
+    IDE's Pyright log shows for click's examples ("Loading pyproject.toml file at .../examples/aliases/pyproject.toml").
+    So an example with a pyproject.toml of its own does not get click's [tool.pyright], and the editor shows its findings
+    as warnings: comparing it with the Pyright command line counted two warnings as missed errors.
+    """
+    for directory in folders_up(root, folder):
+        if os.path.exists(os.path.join(directory, "pyrightconfig.json")) or os.path.exists(os.path.join(directory, "pyproject.toml")):
+            return configures_pyright(directory)
+    return False
+
+
 def compile_python(folder, files):
     result = CompilerResult()
     result.covers_all = True
@@ -545,9 +559,7 @@ def compile_python(folder, files):
     for file in files:
         roots.setdefault(pyright_root(file, folder), []).append(file)
     for root, checked in sorted(roots.items()):
-        # Pyright looks for its configuration in the folder it serves and then above it, as click's examples, each with
-        # a pyproject.toml of its own, get click's [tool.pyright].
-        if not any(configures_pyright(d) for d in folders_up(root, folder)):
+        if not pyright_configured_for(root, folder):
             continue
         environment = virtual_environment(root)
         command = ["pyright", "--outputjson", *(["--pythonpath", environment] if environment else []), *checked]
