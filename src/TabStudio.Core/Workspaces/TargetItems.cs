@@ -84,7 +84,7 @@ public static partial class TargetItems
         while (added);
 
         // A target hooked before another chosen one runs before it.
-        var byName = chosen.Where(t => NameOf(t).Length > 0).GroupBy(NameOf, StringComparer.OrdinalIgnoreCase)
+        var byName = chosen.Where(t => NameOf(t).Length > 0).GroupBy(t => NameOf(t), StringComparer.OrdinalIgnoreCase)
             .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
         int Depth(XElement target, int guard)
         {
@@ -102,7 +102,7 @@ public static partial class TargetItems
         // Each target's dependencies run first, once, as MSBuild runs them: IFluentInterface's target depends on the one
         // that writes its source, and Microsoft.Testing.Platform's on the one that generates SelfRegisteredExtensions. A
         // target defined twice is the last definition, as in MSBuild.
-        var all = targets.Where(t => NameOf(t).Length > 0).GroupBy(NameOf, StringComparer.OrdinalIgnoreCase)
+        var all = targets.Where(t => NameOf(t).Length > 0).GroupBy(t => NameOf(t), StringComparer.OrdinalIgnoreCase)
             .ToDictionary(g => g.Key, g => g.Last(), StringComparer.OrdinalIgnoreCase);
         var result = new List<XElement>();
         var visited = new HashSet<XElement>();
