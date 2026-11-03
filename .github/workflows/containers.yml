@@ -2,7 +2,7 @@ name: OCI containers
 on:
   # main ran no container checks at all: the workflow ran only on agent/containers and on pull requests.
   push:
-    branches: [main, 'agent/**', '!agent/build-run-debug']
+    branches: [main, 'agent/**']
     paths:
       - 'src/TabStudio.Containers/**'
       - 'src/TabStudio.Services/**'

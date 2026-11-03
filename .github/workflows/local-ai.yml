@@ -1,7 +1,7 @@
 name: Local AI
 on:
   push:
-    branches: [main, 'agent/**', '!agent/build-run-debug']
+    branches: [main, 'agent/**']
     paths: ['native/local-ai/**', 'build/local-ai/**', '.github/workflows/local-ai.yml', 'src/TabStudio.Agent/Local/**']
   pull_request:
     paths: ['native/local-ai/**', 'build/local-ai/**', '.github/workflows/local-ai.yml', 'src/TabStudio.Agent/Local/**']
