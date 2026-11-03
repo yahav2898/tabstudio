@@ -189,7 +189,7 @@ public static class PolyglotNotebookFormat
     }
 
     /// <summary>A <c>#!</c> line after the <c>#!</c>: its first word, and the rest as written, such as <c> --name x</c>.</summary>
-    private static (string Name, string Rest) SplitMarker(string marker)
+    private static (string Name, string Options) SplitMarker(string marker)
     {
         var end = 0;
         while (end < marker.Length && !char.IsWhiteSpace(marker[end]))
