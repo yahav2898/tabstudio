@@ -43,6 +43,41 @@ public sealed partial class GitHubSync
     /// <param name="folder">The folder.</param>
     public static bool IsIncompleteClone(string folder) => File.Exists(IncompleteMarker(folder));
 
+    /// <summary>
+    /// Marks a folder as holding a download of <paramref name="source"/> that has not finished yet, before the download
+    /// starts, so that downloading the same repository again after it broke goes on in the same folder.
+    /// </summary>
+    /// <param name="folder">The folder the download goes into.</param>
+    /// <param name="source">What is downloaded, such as the repository's address.</param>
+    public static void MarkIncomplete(string folder, string source)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(folder);
+        ArgumentNullException.ThrowIfNull(source);
+        Directory.CreateDirectory(Path.Combine(folder, SyncMetadata.FolderName));
+        File.WriteAllText(SourceMarker(folder), source);
+        if (!File.Exists(IncompleteMarker(folder)))
+        {
+            File.WriteAllText(IncompleteMarker(folder), string.Empty);
+        }
+    }
+
+    /// <summary>What an unfinished download in a folder was downloading, as <see cref="MarkIncomplete"/> recorded it.</summary>
+    /// <param name="folder">The folder.</param>
+    /// <returns>The source, or <see langword="null"/> when the folder holds no unfinished download or does not say.</returns>
+    public static string? IncompleteSource(string folder)
+    {
+        try
+        {
+            return IsIncompleteClone(folder) && File.Exists(SourceMarker(folder)) ? File.ReadAllText(SourceMarker(folder)) : null;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    private static string SourceMarker(string folder) => Path.Combine(folder, SyncMetadata.FolderName, "source");
+
     /// <summary>How deep submodules of submodules are followed, as a guard against a repository that includes itself.</summary>
     private const int MaximumSubmoduleDepth = 4;
 
@@ -59,7 +94,8 @@ public sealed partial class GitHubSync
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(client);
-        if (Directory.Exists(folder) && Directory.EnumerateFileSystemEntries(folder).Any())
+        var resuming = IsIncompleteClone(folder);
+        if (Directory.Exists(folder) && Directory.EnumerateFileSystemEntries(folder).Any() && !resuming)
         {
             throw new SyncException($"The folder '{folder}' is not empty.");
         }
@@ -78,9 +114,14 @@ public sealed partial class GitHubSync
         Directory.CreateDirectory(Path.Combine(folder, SyncMetadata.FolderName));
         await File.WriteAllTextAsync(IncompleteMarker(folder), commit.Sha, cancellationToken).ConfigureAwait(false);
 
-        var hashes = HashCache.Empty();
+        // A download that broke goes on: the files it wrote, which the hash cache remembers, stay, and only the rest is
+        // downloaded. Before 0.21.9 it started over from zero.
+        var hashes = resuming ? HashCache.Load(folder) : HashCache.Empty();
+        var write = resuming
+            ? files.Where(f => !File.Exists(WorkingTree.FullPath(folder, f.Key)) || hashes.GetHash(folder, f.Key) != f.Value.Sha).ToDictionary(f => f.Key, f => f.Value, StringComparer.Ordinal)
+            : files;
         var fetcher = new FileFetcher(client, info.Owner, info.Name);
-        var notes = new List<string>(await fetcher.WriteAsync(folder, commit.Sha, files, hashes, progress, cancellationToken).ConfigureAwait(false));
+        var notes = new List<string>(await fetcher.WriteAsync(folder, commit.Sha, write, hashes, progress, cancellationToken).ConfigureAwait(false));
         notes.AddRange(CaseClashes(files.Keys));
         notes.AddRange(await WriteSymbolicLinksAsync(fetcher, folder, [.. others.Where(e => e.Kind == GitTreeEntryKind.Blob)], cancellationToken).ConfigureAwait(false));
         var submodules = others.Where(e => e.Kind == GitTreeEntryKind.Commit).ToList();
@@ -89,7 +130,10 @@ public sealed partial class GitHubSync
             notes.AddRange(await CloneSubmodulesAsync(client, info, folder, submodules, progress, depth, cancellationToken).ConfigureAwait(false));
         }
 
-        var metadata = new SyncMetadata(new GitHubLink(info.Owner, info.Name, isBranch ? reference : null, commit.Sha), files);
+        var metadata = new SyncMetadata(new GitHubLink(info.Owner, info.Name, isBranch ? reference : null, commit.Sha), files)
+        {
+            Submodules = submodules.ToDictionary(s => s.Path, s => s.Sha, StringComparer.Ordinal),
+        };
         metadata.Save(folder);
         hashes.Save(folder);
         File.Delete(IncompleteMarker(folder));
@@ -243,7 +287,20 @@ public sealed partial class GitHubSync
         ArgumentNullException.ThrowIfNull(checkout);
         if (SyncMetadata.Load(checkout.Root) is { } existing)
         {
-            return new GitHubSync(client, checkout.Root, existing);
+            return Open(client, checkout.Root) ?? new GitHubSync(client, checkout.Root, existing);
+        }
+
+        // A real clone, whose .git holds its commit, is committed to and pulled into with Git's own protocol, so its
+        // .git, branch and index move with every commit and pull from here and 'git status' agrees with Git Changes.
+        if (checkout.Commit is { } local && HasObject(checkout.GitDirectory, local))
+        {
+            var remote = checkout.IsGitHub ? client.GitAddress(checkout.Owner, checkout.Repository) : checkout.RemoteAddress;
+            return LinkWorkingCopy(client, checkout.Root, checkout.GitDirectory, remote, checkout.Owner, checkout.Repository, checkout.IsGitHub);
+        }
+
+        if (!checkout.IsGitHub)
+        {
+            throw new SyncException("This clone's .git does not hold its commit, so TabStudio cannot link it. Download the repository again.");
         }
 
         var info = await client.GetRepositoryAsync(checkout.Owner, checkout.Repository, cancellationToken).ConfigureAwait(false);
@@ -273,6 +330,18 @@ public sealed partial class GitHubSync
         HashCache.Empty().Save(checkout.Root);
         ExcludeSyncFolder(checkout.GitDirectory);
         return new GitHubSync(client, checkout.Root, metadata);
+    }
+
+    private static bool HasObject(string gitDirectory, string id)
+    {
+        try
+        {
+            return Git.GitDirectory.Open(gitDirectory).Objects.Contains(id);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
+        {
+            return false;
+        }
     }
 
     /// <summary>Adds <c>.tabstudio/</c> to a Git directory's <c>info/exclude</c>, unless it is there.</summary>
@@ -385,7 +454,8 @@ public sealed partial class GitHubSync
         HashCache hashes,
         IProgress<SyncProgress>? progress,
         CancellationToken cancellationToken,
-        IReadOnlyDictionary<string, TrackedFile>? tracked = null)
+        IReadOnlyDictionary<string, TrackedFile>? tracked = null,
+        IReadOnlyDictionary<string, byte[]>? replacements = null)
     {
         var uploads = changes.Where(c => c.Kind != ChangeKind.Deleted).ToList();
         var result = new Dictionary<string, TrackedFile>(StringComparer.Ordinal);
@@ -396,7 +466,13 @@ public sealed partial class GitHubSync
         var options = new ParallelOptions { MaxDegreeOfParallelism = 4, CancellationToken = cancellationToken };
         await Parallel.ForEachAsync(uploads, options, async (change, token) =>
         {
-            var content = await File.ReadAllBytesAsync(WorkingTree.FullPath(root, change.Path), token).ConfigureAwait(false);
+            byte[]? content = null;
+            if (replacements is not null && replacements.TryGetValue(change.Path, out var replacement))
+            {
+                content = replacement;
+            }
+
+            content ??= await File.ReadAllBytesAsync(WorkingTree.FullPath(root, change.Path), token).ConfigureAwait(false);
             var sha = await client.CreateBlobAsync(owner, repository, content, token).ConfigureAwait(false);
             var mode = tracked?.TryGetValue(change.Path, out var previous) == true ? previous.Mode : GitObjects.RegularFileMode;
             lock (gate)

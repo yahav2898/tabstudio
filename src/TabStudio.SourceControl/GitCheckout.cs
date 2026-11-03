@@ -3,8 +3,8 @@ using System.Text.RegularExpressions;
 namespace TabStudio.SourceControl;
 
 /// <summary>
-/// A folder that Git cloned from GitHub, read from its <c>.git</c> files without Git: the GitHub repository its remote
-/// points at, the branch it is on and the commit it holds. Such a folder is linked with
+/// A folder that Git cloned, from GitHub or any other host, read from its <c>.git</c> files without Git: the repository
+/// its remote points at, the branch it is on and the commit it holds. Such a folder is linked with
 /// <see cref="GitHubSync.LinkCheckoutAsync"/>, so its changes show without downloading it again.
 /// </summary>
 /// <param name="Root">The folder that holds <c>.git</c>.</param>
@@ -16,13 +16,19 @@ namespace TabStudio.SourceControl;
 public sealed partial record GitCheckout(string Root, string Owner, string Repository, string? Branch, string? Commit, string GitDirectory)
 {
     /// <summary>"owner/repository".</summary>
-    public string FullName => $"{Owner}/{Repository}";
+    public string FullName => Owner.Length == 0 ? Repository : $"{Owner}/{Repository}";
+
+    /// <summary>The remote's HTTPS address when it is not on GitHub; <see langword="null"/> for a clone of a GitHub repository.</summary>
+    public Uri? RemoteAddress { get; init; }
+
+    /// <summary>Whether the remote is a GitHub repository.</summary>
+    public bool IsGitHub => RemoteAddress is null;
 
     /// <summary>
     /// Finds the Git clone of a GitHub repository that contains a path: the path itself or one of its parents.
     /// </summary>
     /// <param name="path">A file or folder.</param>
-    /// <returns>The clone, or <see langword="null"/> when there is none or its remote is not on GitHub.</returns>
+    /// <returns>The clone, or <see langword="null"/> when there is none or it has no remote TabStudio can reach.</returns>
     public static GitCheckout? Find(string path)
     {
         ArgumentException.ThrowIfNullOrEmpty(path);
@@ -67,8 +73,14 @@ public sealed partial record GitCheckout(string Root, string Owner, string Repos
             }
 
             var config = File.Exists(Path.Combine(common, "config")) ? File.ReadAllText(Path.Combine(common, "config")) : string.Empty;
-            return RemoteRepository(config, branch) is { } remote
-                ? new GitCheckout(Path.GetFullPath(root), remote.Owner, remote.Repository, branch, commit, gitDirectory)
+            if (RemoteRepository(config, branch) is { } remote)
+            {
+                return new GitCheckout(Path.GetFullPath(root), remote.Owner, remote.Repository, branch, commit, gitDirectory);
+            }
+
+            // A clone from GitLab, Bitbucket, Azure DevOps or any other host.
+            return RemoteAddresses(config, branch).Select(a => Git.GitRemoteAddress.TryParse(a, out var address, out _, out _) ? address : null).FirstOrDefault(a => a is not null) is { } other
+                ? new GitCheckout(Path.GetFullPath(root), other.Owner, other.Name, branch, commit, gitDirectory) { RemoteAddress = other.Address }
                 : null;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
@@ -93,7 +105,11 @@ public sealed partial record GitCheckout(string Root, string Owner, string Repos
     }
 
     /// <summary>The GitHub repository of the branch's remote, else <c>origin</c>, else the first remote on GitHub.</summary>
-    internal static (string Owner, string Repository)? RemoteRepository(string config, string? branch)
+    internal static (string Owner, string Repository)? RemoteRepository(string config, string? branch) =>
+        RemoteAddresses(config, branch).Select(ParseRemote).FirstOrDefault(r => r is not null);
+
+    /// <summary>The addresses of the remotes: the branch's first, then <c>origin</c>, then the others.</summary>
+    private static List<string> RemoteAddresses(string config, string? branch)
     {
         var remotes = new Dictionary<string, string>(StringComparer.Ordinal);
         string? branchRemote = null;
@@ -130,15 +146,17 @@ public sealed partial record GitCheckout(string Root, string Owner, string Repos
             }
         }
 
+        var ordered = new List<string>();
         foreach (var name in new[] { branchRemote, "origin" })
         {
-            if (name is not null && remotes.TryGetValue(name, out var address) && ParseRemote(address) is { } repository)
+            if (name is not null && remotes.TryGetValue(name, out var address))
             {
-                return repository;
+                ordered.Add(address);
             }
         }
 
-        return remotes.Values.Select(ParseRemote).FirstOrDefault(r => r is not null);
+        ordered.AddRange(remotes.Values.Where(v => !ordered.Contains(v)));
+        return ordered;
     }
 
     private static string? GitDirectoryOf(string root)

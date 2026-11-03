@@ -1,4 +1,5 @@
 using TabStudio.SourceControl;
+using TabStudio.SourceControl.Git;
 using TabStudio.SourceControl.GitHub;
 
 namespace TabStudio.App.Services;
@@ -34,9 +35,11 @@ public sealed class ImportException : Exception
 }
 
 /// <summary>
-/// Downloads a GitHub repository into the projects folder and links the folder to it, so the Git Changes
-/// window can commit, pull and switch branches there. No Git installation is needed, which is what lets this
-/// work on any tablet. Private repositories work when the user is signed in to GitHub.
+/// Downloads a repository — from GitHub, or from any Git host over Git's own protocol — into the projects folder and
+/// links the folder to it, so the Git Changes window can commit, pull and switch branches there. No Git installation is
+/// needed, which is what lets this work on any tablet. Private GitHub repositories work when the user is signed in to
+/// GitHub; private repositories elsewhere take a sign-in written into their address. A download that breaks goes on
+/// where it stopped the next time the same repository is downloaded.
 /// </summary>
 public sealed class GitHubImporter
 {
@@ -65,8 +68,8 @@ public sealed class GitHubImporter
         ArgumentNullException.ThrowIfNull(repository);
 
         LastNotes = [];
-        DeleteIncompleteDownloads();
-        var target = _paths.GetAvailableProjectDirectory(repository.Name);
+        var source = "github:" + repository;
+        var target = ResumableFolder(source) ?? _paths.GetAvailableProjectDirectory(repository.Name);
         var syncProgress = progress is null ? null : new ProgressAdapter(progress);
         try
         {
@@ -77,6 +80,7 @@ public sealed class GitHubImporter
             {
                 try
                 {
+                    GitHubSync.MarkIncomplete(target, source);
                     var sync = await GitHubSync.CloneAsync(_account.CreateClient(), repository.Owner, repository.Name, reference, target, syncProgress, cancellationToken);
                     LastNotes = sync.CloneNotes;
                     return target;
@@ -93,43 +97,108 @@ public sealed class GitHubImporter
             TryDelete(target);
             throw;
         }
-        catch (Exception ex) when (ex is GitHubApiException or SyncException or IOException or UnauthorizedAccessException or InvalidOperationException)
+        catch (GitHubApiException ex) when (ex.IsNotFound || ex.IsUnauthorized || ex.IsRejected)
         {
             TryDelete(target);
             throw new ImportException(Describe(repository, ex), ex);
         }
+        catch (Exception ex) when (ex is GitHubApiException or SyncException or IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            // What arrived stays in the folder: downloading the repository again goes on from there.
+            throw new ImportException(Describe(repository, ex) + Resumable(target), ex);
+        }
     }
 
     /// <summary>
-    /// What the person should know about the last download, such as a submodule on another host or a Git LFS file that
-    /// could not be downloaded; empty when everything arrived.
+    /// Downloads a repository from any Git host — GitLab, Bitbucket, Azure DevOps, Codeberg, a server of one's own, or
+    /// GitHub — as a Git clone over Git's own protocol, into a new folder linked to it.
     /// </summary>
-    public IReadOnlyList<string> LastNotes { get; private set; } = [];
+    /// <param name="address">The repository's address.</param>
+    /// <param name="reference">A branch, tag or commit, or <see langword="null"/> for the default branch.</param>
+    /// <param name="credentials">The sign-in written into the address, if any.</param>
+    /// <param name="progress">Receives download progress.</param>
+    /// <param name="cancellationToken">Cancels the download; the incomplete folder is removed.</param>
+    /// <returns>The folder the repository was downloaded into.</returns>
+    /// <exception cref="ImportException">The repository could not be downloaded.</exception>
+    public async Task<string> ImportAsync(GitRemoteAddress address, string? reference, GitCredentials? credentials, IProgress<ImportProgress>? progress = null, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(address);
+
+        LastNotes = [];
+        var source = reference is null ? address.ToString() : $"{address}@{reference}";
+        var target = ResumableFolder(source) ?? _paths.GetAvailableProjectDirectory(address.Name);
+        try
+        {
+            GitHubSync.MarkIncomplete(target, source);
+            var sync = await GitHubSync.CloneAsync(_account.CreateClient(), address, credentials, reference, target, progress is null ? null : new ProgressAdapter(progress), cancellationToken);
+            LastNotes = sync.CloneNotes;
+            return target;
+        }
+        catch (OperationCanceledException)
+        {
+            TryDelete(target);
+            throw;
+        }
+        catch (GitTransportException ex) when (ex.IsNotFound || ex.IsUnauthorized)
+        {
+            TryDelete(target);
+            throw new ImportException(ex.IsUnauthorized && credentials is null
+                ? $"{address.Host} wants a sign-in for {address.FullName}. Write it into the address, as https://user:token@{address.Host}/{address.FullName}.git."
+                : SyncErrors.Describe(ex), ex);
+        }
+        catch (SyncException ex) when (Directory.Exists(target) && !Directory.Exists(Path.Combine(target, ".git")))
+        {
+            TryDelete(target);
+            throw new ImportException(ex.Message, ex);
+        }
+        catch (Exception ex) when (ex is GitTransportException or SyncException or MissingObjectException or InvalidDataException or IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            throw new ImportException(SyncErrors.Describe(ex) + Resumable(target), ex);
+        }
+    }
 
     /// <summary>
-    /// Deletes the folders of downloads that never finished because Android ended TabStudio in the middle of them:
-    /// before 0.21.2 each stayed in the projects folder, taking storage, and the next download of the same repository
-    /// went to a folder with "-2" after its name.
+    /// The folder of an earlier download of the same source that did not finish, to go on in; the unfinished downloads
+    /// of other repositories are deleted, as before 0.21.9 every unfinished download was.
     /// </summary>
-    private void DeleteIncompleteDownloads()
+    private string? ResumableFolder(string source)
     {
+        string? found = null;
         try
         {
             if (!Directory.Exists(_paths.Projects))
             {
-                return;
+                return null;
             }
 
             foreach (var folder in Directory.EnumerateDirectories(_paths.Projects).Where(GitHubSync.IsIncompleteClone).ToList())
             {
-                TryDelete(folder);
+                if (found is null && GitHubSync.IncompleteSource(folder) == source)
+                {
+                    found = folder;
+                }
+                else
+                {
+                    TryDelete(folder);
+                }
             }
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
             // The download itself goes on; a leftover is only storage.
         }
+
+        return found;
     }
+
+    private static string Resumable(string target) =>
+        GitHubSync.IsIncompleteClone(target) ? " What arrived is kept: download the repository again to go on from there." : string.Empty;
+
+    /// <summary>
+    /// What the person should know about the last download, such as a submodule on another host or a Git LFS file that
+    /// could not be downloaded; empty when everything arrived.
+    /// </summary>
+    public IReadOnlyList<string> LastNotes { get; private set; } = [];
 
     private string Describe(GitHubRepository repository, Exception exception) => exception switch
     {

@@ -13,11 +13,26 @@ public sealed record GitHubLink(string Owner, string Repository, string? Branch,
     /// <summary>Whether the folder holds a tag or commit rather than following a branch.</summary>
     public bool IsDetached => Branch is null;
 
+    /// <summary>
+    /// The HTTPS address of the repository when the folder holds a Git clone (<c>.git</c>) that TabStudio fetches and
+    /// pushes with Git's own protocol, on GitHub or any other host; <see langword="null"/> when commits and pulls go
+    /// through GitHub's API.
+    /// </summary>
+    public string? Remote { get; init; }
+
     /// <summary>"owner/repository".</summary>
-    public string FullName => $"{Owner}/{Repository}";
+    public string FullName => Owner.Length == 0 ? Repository : $"{Owner}/{Repository}";
+
+    /// <summary>Whether the repository is on GitHub, where pull requests and Actions are.</summary>
+    public bool IsGitHub => Remote is null || (Uri.TryCreate(Remote, UriKind.Absolute, out var address) && string.Equals(address.Host, "github.com", StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>The host the repository is on, such as <c>github.com</c> or <c>gitlab.com</c>.</summary>
+    public string Host => Remote is not null && Uri.TryCreate(Remote, UriKind.Absolute, out var address) ? address.Host : "github.com";
 
     /// <summary>The repository's web page.</summary>
-    public Uri WebUri => new($"https://github.com/{Owner}/{Repository}");
+    public Uri WebUri => Remote is not null && Git.GitRemoteAddress.TryParse(Remote, out var address, out _, out _) && !address.IsGitHub
+        ? address.WebUri
+        : new($"https://github.com/{Owner}/{Repository}");
 }
 
 /// <summary>A file in the last synced commit.</summary>
@@ -35,6 +50,12 @@ public sealed record SyncMetadata(GitHubLink Link, IReadOnlyDictionary<string, T
 {
     /// <summary>Files a pull could not merge, until they are committed, discarded or marked as resolved.</summary>
     public IReadOnlyList<string> Conflicts { get; init; } = [];
+
+    /// <summary>
+    /// The commit each submodule is pinned to in <see cref="GitHubLink.BaseCommit"/>, by its path, so a pull that moves a
+    /// pin moves the submodule's folder too.
+    /// </summary>
+    public IReadOnlyDictionary<string, string> Submodules { get; init; } = new Dictionary<string, string>(StringComparer.Ordinal);
 
     /// <summary>The folder inside a linked folder where TabStudio keeps its sync data. Never committed.</summary>
     public const string FolderName = ".tabstudio";

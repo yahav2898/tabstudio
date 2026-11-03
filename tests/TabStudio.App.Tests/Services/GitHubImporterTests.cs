@@ -98,6 +98,26 @@ public sealed class GitHubImporterTests : IDisposable
         Assert.Single(Directory.EnumerateDirectories(_paths.Projects));
     }
 
+    [Fact]
+    public async Task A_download_that_breaks_goes_on_where_it_stopped_the_next_time()
+    {
+        // An interrupted download started over from zero, and its folder was deleted.
+        _github.AddRepository("many", Enumerable.Range(0, 50).ToDictionary(i => $"f{i}.txt", i => new string('y', 300 + i), StringComparer.Ordinal));
+        _github.BreakArchiveAfter = 500;
+        var importer = new GitHubImporter(_account, _paths);
+        var repository = new GitHubRepository(FakeGitHub.Login, "many", null);
+
+        var error = await Assert.ThrowsAsync<ImportException>(() => importer.ImportAsync(repository));
+        Assert.Contains("download the repository again to go on", error.Message, StringComparison.Ordinal);
+        var folder = await importer.ImportAsync(repository);
+
+        Assert.Equal(Path.Combine(_paths.Projects, "many"), folder);
+        Assert.Equal(["", "bytes=500-"], _github.ArchiveRanges);
+        Assert.Equal(new string('y', 349), await File.ReadAllTextAsync(Path.Combine(folder, "f49.txt")));
+        Assert.False(GitHubSync.IsIncompleteClone(folder));
+        Assert.Single(Directory.EnumerateDirectories(_paths.Projects));
+    }
+
     public void Dispose()
     {
         _github.Dispose();

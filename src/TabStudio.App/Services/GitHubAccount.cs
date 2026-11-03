@@ -49,6 +49,7 @@ public sealed class GitHubAccount
         {
             _token = stored.Token;
             User = new GitHubUser(stored.Login, stored.Name);
+            UseAsCommitIdentity(User);
         }
     }
 
@@ -77,6 +78,7 @@ public sealed class GitHubAccount
         Save(new StoredGitHubAccount(trimmed, user.Login, user.Name));
         _token = trimmed;
         User = user;
+        UseAsCommitIdentity(user);
         Changed?.Invoke(this, EventArgs.Empty);
         return user;
     }
@@ -125,6 +127,13 @@ public sealed class GitHubAccount
     }
 
     /// <summary>Makes the file readable by the user only, where the file system supports it.</summary>
+    /// <summary>
+    /// Names the account in commits made with Git's own protocol when the clone's Git configuration names no one, as
+    /// GitHub names the account in commits made through its API.
+    /// </summary>
+    private static void UseAsCommitIdentity(GitHubUser user) =>
+        global::TabStudio.SourceControl.Git.GitIdentity.SetFallback(string.IsNullOrWhiteSpace(user.Name) ? user.Login : user.Name, $"{user.Login}@users.noreply.github.com");
+
     private static void RestrictToUser(string path)
     {
         if (OperatingSystem.IsWindows())
