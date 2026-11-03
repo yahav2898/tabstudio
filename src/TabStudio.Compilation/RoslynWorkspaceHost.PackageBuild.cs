@@ -241,7 +241,8 @@ public sealed partial class RoslynWorkspaceHost
     private static IReadOnlyList<string> AdditionalFilePaths(TsProject project) =>
         project.AdditionalFiles.Count == 0
             ? []
-            : ProjectSourceFiles.EnumerateItems(project, [.. project.AdditionalFiles.Select(i => i.Include).Distinct(StringComparer.Ordinal)], []);
+            : [.. ProjectSourceFiles.EnumerateItems(project, [.. project.AdditionalFiles.Where(i => !i.IsItemOnly).Select(i => i.Include).Distinct(StringComparer.Ordinal)], []),
+                .. project.AdditionalFiles.Where(i => i.IsItemOnly).Select(i => Path.GetFullPath(Path.Combine(i.BaseDirectory, i.Include))).Distinct(StringComparer.Ordinal)];
 
     /// <summary>
     /// The sections of a project's analyzer configuration for its additional files: for each file, the metadata of
@@ -287,7 +288,9 @@ public sealed partial class RoslynWorkspaceHost
             text.Append(CultureInfo.InvariantCulture, $"\n[{path.Replace('\\', '/')}]\n");
             foreach (var line in lines)
             {
-                var value = metadata.GetValueOrDefault(line.MetadataName) ?? string.Empty;
+                // The SDK gives each item its type as ItemType, which ThisAssembly.Constants' generator checks.
+                var value = metadata.GetValueOrDefault(line.MetadataName)
+                    ?? (string.Equals(line.MetadataName, "ItemType", StringComparison.OrdinalIgnoreCase) ? line.ItemType : string.Empty);
                 text.Append(CultureInfo.InvariantCulture, $"build_metadata.{line.ItemType}.{line.MetadataName} = {value.ReplaceLineEndings(" ")}\n");
             }
         }

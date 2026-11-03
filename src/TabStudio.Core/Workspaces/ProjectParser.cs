@@ -214,6 +214,7 @@ public static partial class ProjectParser
         {
             CompilerTargets = TargetItems.CompilerTargetsOf([evaluation.Targets]),
             EmbeddedResourceItems = ReadItemMetadata(items, "EmbeddedResource"),
+            TargetInputItems = ReadTargetInputItems(items, properties, directory),
             ProtobufIncludes = ReadItemPatterns(items, "Protobuf", "Include", properties),
         };
         if (info.CompilerTargets.Count > 0)
@@ -235,6 +236,56 @@ public static partial class ProjectParser
         && !string.Equals(properties.GetValueOrDefault("EnableDefaultEmbeddedResourceItems")?.Trim(), "false", StringComparison.OrdinalIgnoreCase)
             ? ["**/*.resx"]
             : [];
+
+    /// <summary>
+    /// The item types TabStudio reads from a project in its own way, or that list files no target turns into compiler
+    /// input, which <see cref="ProjectInfo.TargetInputItems"/> leaves out.
+    /// </summary>
+    private static readonly HashSet<string> NonTargetInputTypes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Compile", "None", "Content", "EmbeddedResource", "PackageReference", "PackageVersion", "GlobalPackageReference",
+        "ProjectReference", "Reference", "FrameworkReference", "Using", "Folder", "AdditionalFiles", "Analyzer",
+        "CompilerVisibleProperty", "CompilerVisibleItemMetadata", "AvaloniaResource", "AvaloniaXaml", "Page",
+        "ApplicationDefinition", "Resource", "InternalsVisibleTo", "AssemblyAttribute", "Protobuf", "Service",
+        "SupportedPlatform", "PackageDownload", "Import", "TrimmerRootAssembly", "BundleResource", "AndroidResource",
+    };
+
+    /// <summary>The project's items outside targets that its targets may read (see <see cref="ProjectInfo.TargetInputItems"/>).</summary>
+    private static List<TargetInputItem> ReadTargetInputItems(XElement items, Dictionary<string, string> properties, string directory)
+    {
+        var result = new List<TargetInputItem>();
+        foreach (var item in items.Descendants().Where(e => e.Parent?.Name.LocalName == "ItemGroup" && !NonTargetInputTypes.Contains(e.Name.LocalName)))
+        {
+            if (item.Attribute("Include")?.Value is not { Length: > 0 } include || include.Contains("@(", StringComparison.Ordinal)
+                || include.Contains("%(", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            if (item.Ancestors().Any(a => a.Name.LocalName == "Target") || MsBuildExpressions.Expand(include, properties, null, directory) is not { } expanded)
+            {
+                continue;
+            }
+
+            var metadata = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var attribute in item.Attributes().Where(a => !ItemAttributes.Contains(a.Name.LocalName) && !a.IsNamespaceDeclaration))
+            {
+                metadata[attribute.Name.LocalName] = attribute.Value.Trim();
+            }
+
+            foreach (var child in item.Elements())
+            {
+                metadata[child.Name.LocalName] = child.Value.Trim();
+            }
+
+            foreach (var part in expanded.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            {
+                result.Add(new TargetInputItem(item.Name.LocalName, part, metadata));
+            }
+        }
+
+        return result;
+    }
 
     /// <summary>The metadata of an item type's items that include or update files, in order.</summary>
     private static List<ItemMetadataInfo> ReadItemMetadata(XElement items, string itemType)

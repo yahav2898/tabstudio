@@ -134,6 +134,60 @@ public sealed partial class CSharpCompiler
             : [];
 
     /// <summary>
+    /// The version of .NET Standard a project is built for, such as 2.0 for <c>netstandard2.0</c>, or
+    /// <see langword="null"/> when the target framework it is built for here is not .NET Standard.
+    /// </summary>
+    /// <param name="project">The project, or <see langword="null"/> for none.</param>
+    public static Version? NetStandardVersionOf(TsProject? project)
+    {
+        var framework = project?.GetProperty("TargetFramework") is { Length: > 0 } evaluated
+            ? evaluated
+            : project is null ? null : TabStudio.Core.Workspaces.ProjectParser.EvaluationTargetFramework(project.TargetFrameworks);
+        if (framework is null)
+        {
+            return null;
+        }
+
+        var match = NetStandardFramework().Match(framework.Trim());
+        return match.Success ? new Version(int.Parse(match.Groups["major"].Value, System.Globalization.CultureInfo.InvariantCulture), int.Parse(match.Groups["minor"].Value, System.Globalization.CultureInfo.InvariantCulture)) : null;
+    }
+
+    /// <summary>
+    /// The framework symbols the SDK defines for a project, as its <c>TargetFramework</c> decides: <c>NET</c>,
+    /// <c>NETCOREAPP</c> and the <c>NETx_0_OR_GREATER</c> of .NET 10 for a .NET project, <c>NETSTANDARD</c>,
+    /// <c>NETSTANDARD2_0</c> and the <c>NETSTANDARDx_y_OR_GREATER</c> up to its version for a .NET Standard one.
+    /// Without them refit's analyzers, built for .NET Standard 2.0, left out the System.Index and System.Range they
+    /// define under <c>#if NETSTANDARD2_0</c>, which its tests use through an alias: 7 CS0234.
+    /// </summary>
+    /// <param name="project">The project, or <see langword="null"/> for none.</param>
+    public static IReadOnlyList<string> FrameworkSymbols(TsProject? project)
+    {
+        if (NetStandardVersionOf(project) is not { } version)
+        {
+            return CommonSymbols;
+        }
+
+        var symbols = new List<string> { "TRACE", "NETSTANDARD", $"NETSTANDARD{version.Major}_{version.Minor}", "TABSTUDIO" };
+        foreach (var known in NetStandardVersions)
+        {
+            if (known <= version)
+            {
+                symbols.Add($"NETSTANDARD{known.Major}_{known.Minor}_OR_GREATER");
+            }
+        }
+
+        return symbols;
+    }
+
+    private static readonly Version[] NetStandardVersions =
+    [
+        new(1, 0), new(1, 1), new(1, 2), new(1, 3), new(1, 4), new(1, 5), new(1, 6), new(2, 0), new(2, 1),
+    ];
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"^netstandard(?<major>\d)\.(?<minor>\d)$", System.Text.RegularExpressions.RegexOptions.IgnoreCase)]
+    private static partial System.Text.RegularExpressions.Regex NetStandardFramework();
+
+    /// <summary>
     /// The oldest C# version a project compiles with here, whatever its <c>LangVersion</c> asks: the code TabStudio adds
     /// to a project (XAML loaders and their interceptors, the debugger's and coverage's runtime) needs C# 13 at most.
     /// </summary>
@@ -269,6 +323,13 @@ public sealed partial class CSharpCompiler
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(project);
         var specific = new Dictionary<string, ReportDiagnostic>(options.SpecificDiagnosticOptions, StringComparer.Ordinal);
+        if (NetStandardVersionOf(project) is not null)
+        {
+            // A .NET Standard project compiles here against .NET's reference assemblies, which have the types its
+            // polyfills add (System.Index, IsExternalInit); its own copy is the one it uses, as with .NET Standard.
+            specific.TryAdd("CS0436", ReportDiagnostic.Suppress);
+        }
+
         foreach (var code in WarningCodes(project.GetProperty("WarningsAsErrors")))
         {
             specific[code] = ReportDiagnostic.Error;

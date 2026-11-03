@@ -42,6 +42,19 @@ public static partial class TargetItems
         "RemoveDuplicateAnalyzers", "BuildOnlySettings",
     };
 
+    /// <summary>
+    /// The SDK's targets in the order a build runs them, so that targets hooked to an earlier one run first; a target
+    /// hooked to none of them runs last.
+    /// </summary>
+    private static readonly string[] SdkTargetOrder =
+    [
+        "BuildOnlySettings", "BeforeBuild", "PrepareForBuild", "ResolvePackageAssets", "ResolveTargetingPackAssets",
+        "ResolvePackageDependenciesForBuild", "ResolveNuGetPackageAssets", "ResolveReferences", "AssignTargetPaths",
+        "PrepareResourceNames", "PrepareResources", "_GenerateCompileInputs", "BeforeCompile", "CoreGenerateAssemblyInfo",
+        "GenerateMSBuildEditorConfigFileShouldRun", "GenerateMSBuildEditorConfigFileCore", "RemoveDuplicateAnalyzers",
+        "CoreCompile", "Compile", "CompileDesignTime",
+    ];
+
     /// <summary>The item types whose items the compiler or its generators get, which are kept from what targets add.</summary>
     private static readonly HashSet<string> CompilerItemTypes = new(StringComparer.OrdinalIgnoreCase) { "AdditionalFiles" };
 
@@ -67,6 +80,8 @@ public static partial class TargetItems
         var chosen = new List<XElement>();
         var names = new HashSet<string>(CompilerTargets, StringComparer.OrdinalIgnoreCase);
         names.UnionWith(listed);
+        var definitions = targets.Where(t => NameOf(t).Length > 0).GroupBy(t => NameOf(t), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.Last(), StringComparer.OrdinalIgnoreCase);
         bool added;
         do
         {
@@ -80,8 +95,56 @@ public static partial class TargetItems
                     added = true;
                 }
             }
+
+            // A target another one depends on runs too, and so do those hooked to it: ThisAssembly.Project's
+            // PrepareProjectProperties runs before PrepareConstants, which ThisAssembly.Constants' target depends on.
+            foreach (var dependency in chosen.ToList().SelectMany(t => Split(t.Attribute("DependsOnTargets")?.Value)))
+            {
+                if (dependency.Contains("$(", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                names.Add(dependency);
+                if (definitions.TryGetValue(dependency, out var defined) && !chosen.Contains(defined))
+                {
+                    chosen.Add(defined);
+                    added = true;
+                }
+            }
         }
         while (added);
+
+        // The SDK's targets run in their order, and a target hooked to one runs with it: Moq's AddConstants, before
+        // PrepareForBuild, adds the FileConstant items PrepareConstants, before GenerateMSBuildEditorConfigFileShouldRun,
+        // reads, wherever their files put them.
+        var stage = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        for (var i = 0; i < SdkTargetOrder.Length; i++)
+        {
+            stage[SdkTargetOrder[i]] = i;
+        }
+
+        bool changed;
+        var pass = 0;
+        do
+        {
+            changed = false;
+            foreach (var target in chosen)
+            {
+                var name = NameOf(target);
+                var own = Hooks(target).Select(h => stage.GetValueOrDefault(h, int.MaxValue))
+                    .Concat(chosen.Where(t => Split(t.Attribute("DependsOnTargets")?.Value).Contains(name, StringComparer.OrdinalIgnoreCase)).Select(t => stage.GetValueOrDefault(NameOf(t), int.MaxValue)))
+                    .DefaultIfEmpty(int.MaxValue).Min();
+                if (name.Length > 0 && own < stage.GetValueOrDefault(name, int.MaxValue) && !SdkTargetOrder.Contains(name, StringComparer.OrdinalIgnoreCase))
+                {
+                    stage[name] = own;
+                    changed = true;
+                }
+            }
+        }
+        while (changed && ++pass < 32);
+
+        int StageOf(XElement target) => stage.GetValueOrDefault(NameOf(target), Hooks(target).Select(h => stage.GetValueOrDefault(h, int.MaxValue)).DefaultIfEmpty(int.MaxValue).Min());
 
         // A target hooked before another chosen one runs before it.
         var byName = chosen.Where(t => NameOf(t).Length > 0).GroupBy(t => NameOf(t), StringComparer.OrdinalIgnoreCase)
@@ -97,13 +160,13 @@ public static partial class TargetItems
             return before.Count == 0 ? 0 : before.Max(b => Depth(b, guard + 1)) + 1;
         }
 
-        var ordered = chosen.Select((t, i) => (Target: t, Index: i, Depth: Depth(t, 0))).OrderByDescending(t => t.Depth).ThenBy(t => t.Index).Select(t => t.Target);
+        var ordered = chosen.Select((t, i) => (Target: t, Index: i, Depth: Depth(t, 0), Stage: StageOf(t)))
+            .OrderBy(t => t.Stage).ThenByDescending(t => t.Depth).ThenBy(t => t.Index).Select(t => t.Target);
 
         // Each target's dependencies run first, once, as MSBuild runs them: IFluentInterface's target depends on the one
         // that writes its source, and Microsoft.Testing.Platform's on the one that generates SelfRegisteredExtensions. A
         // target defined twice is the last definition, as in MSBuild.
-        var all = targets.Where(t => NameOf(t).Length > 0).GroupBy(t => NameOf(t), StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(g => g.Key, g => g.Last(), StringComparer.OrdinalIgnoreCase);
+        var all = definitions;
         var result = new List<XElement>();
         var visited = new HashSet<XElement>();
         void Visit(XElement target, int guard)
@@ -167,10 +230,7 @@ public static partial class TargetItems
             return [];
         }
 
-        var items = new Dictionary<string, List<Item>>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["EmbeddedResource"] = EmbeddedResources(project, properties),
-        };
+        var items = Seeds(project, properties);
         var run = Run(project, properties, items);
 
         // A file two targets add, as ThisAssembly.Resources and ThisAssembly.Strings both add a .resx file (one from
@@ -199,7 +259,66 @@ public static partial class TargetItems
         return [.. files.Select(i => new AdditionalFileItem(Path.GetRelativePath(project.DirectoryPath, i.FullPath), project.DirectoryPath, i.Metadata)
         {
             ItemTypes = [.. i.Types],
+            IsItemOnly = !i.IsFile,
         })];
+    }
+
+    /// <summary>
+    /// The items the targets start from: the project's <c>EmbeddedResource</c> items, its <c>Compile</c> files when a
+    /// target reads them (Moq's tests make a ThisAssembly constant of each scenario file), and its other items outside
+    /// targets (<see cref="ProjectInfo.TargetInputItems"/>), such as ThisAssembly.Project's <c>ProjectProperty</c>.
+    /// </summary>
+    private static Dictionary<string, List<Item>> Seeds(ProjectInfo project, IReadOnlyDictionary<string, string> properties)
+    {
+        var items = new Dictionary<string, List<Item>>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["EmbeddedResource"] = EmbeddedResources(project, properties),
+        };
+        if (project.CompilerTargets.Any(t => CompileReference().IsMatch(t.ToString())))
+        {
+            items["Compile"] = [.. ProjectSourceFiles.Enumerate(project, extension: project.Language == ProjectLanguage.VisualBasic ? ".vb" : ".cs")
+                .Select(path => new Item("Compile", path, WellKnownMetadata(project, path), []))];
+        }
+
+        foreach (var input in project.TargetInputItems)
+        {
+            if (!items.TryGetValue(input.ItemType, out var list))
+            {
+                items[input.ItemType] = list = [];
+            }
+
+            if (NamedItem(project, input.Include) is { } item)
+            {
+                foreach (var (name, value) in input.Metadata)
+                {
+                    item.Metadata[name] = MsBuildExpressions.Expand(value, properties, null, project.DirectoryPath) ?? value;
+                }
+
+                list.Add(new Item(input.ItemType, item.FullPath, item.Metadata, [], item.IsFile));
+            }
+        }
+
+        return items;
+    }
+
+    /// <summary>
+    /// An item MSBuild makes of a name, which is a file's path or not (<c>Project.MSBuildProjectDirectory</c>): its full
+    /// path under the project's folder and its well-known metadata either way; <see langword="null"/> for no path.
+    /// </summary>
+    private static Item? NamedItem(ProjectInfo project, string name)
+    {
+        if (FullPath(project, name) is not { } path)
+        {
+            return null;
+        }
+
+        var metadata = WellKnownMetadata(project, path);
+        if (!Path.IsPathRooted(name.Trim()))
+        {
+            metadata["Identity"] = name.Trim();
+        }
+
+        return new Item("File", path, metadata, [], File.Exists(path));
     }
 
     /// <summary>
@@ -224,10 +343,7 @@ public static partial class TargetItems
             return [];
         }
 
-        var items = new Dictionary<string, List<Item>>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["EmbeddedResource"] = EmbeddedResources(project, properties),
-        };
+        var items = Seeds(project, properties);
         var run = project.CompilerTargets.Count == 0 ? new TargetRun(properties) : Run(project, properties, items);
         var paths = new List<string>();
         foreach (var include in includes)
@@ -568,9 +684,18 @@ public static partial class TargetItems
     }
 
     /// <summary>One item: its file, its metadata, and the item types it was created as, the last one its own.</summary>
-    private sealed class Item(string type, string fullPath, Dictionary<string, string> metadata, IEnumerable<string> types)
+    private sealed class Item(string type, string fullPath, Dictionary<string, string> metadata, IEnumerable<string> types, bool isFile = true)
     {
         public string Type { get; } = type;
+
+        /// <summary>Whether the item is a file, rather than a name such as a ThisAssembly constant's.</summary>
+        public bool IsFile { get; } = isFile;
+
+        /// <summary>
+        /// For an item a transform made (<c>@(ProjectProperty -&gt; 'Project.%(Identity)')</c>), the item it was made from,
+        /// whose metadata the element's own metadata and condition read, as MSBuild batches over it.
+        /// </summary>
+        public Item? Origin { get; init; }
 
         public string FullPath { get; } = fullPath;
 
@@ -584,6 +709,7 @@ public static partial class TargetItems
         var properties = run.Properties;
         var type = element.Name.LocalName;
         var include = element.Attribute("Include")?.Value;
+        var update = element.Attribute("Update")?.Value;
         var remove = element.Attribute("Remove")?.Value;
         var condition = element.Attribute("Condition")?.Value;
         if (!items.TryGetValue(type, out var own))
@@ -604,7 +730,11 @@ public static partial class TargetItems
         {
             // <EmbeddedResource><FileExtension Condition="...">%(Extension)</FileExtension></EmbeddedResource> sets
             // metadata on every item of its type, one item at a time.
-            foreach (var item in own.Where(i => Condition(condition, properties, i, project) != false))
+            // With Update, only the items it names, as ThisAssembly.Constants' <Constant Update="@(Constant)">.
+            var updated = update is null || ItemReference().Match(update.Trim()) is { Success: true } self && string.Equals(self.Groups["type"].Value, type, StringComparison.OrdinalIgnoreCase)
+                ? null
+                : Sources(update, items, project, run).Select(i => i.FullPath).ToHashSet(StringComparer.Ordinal);
+            foreach (var item in own.Where(i => (updated is null || updated.Contains(i.FullPath)) && Condition(condition, properties, i, project) != false))
             {
                 SetMetadata(element, item, item.Metadata, properties, project);
             }
@@ -614,14 +744,15 @@ public static partial class TargetItems
 
         foreach (var source in Sources(include, items, project, run))
         {
-            if (Condition(condition, properties, source, project) == false)
+            var batch = source.Origin ?? source;
+            if (Condition(condition, properties, batch, project) == false)
             {
                 continue;
             }
 
             var metadata = new Dictionary<string, string>(source.Metadata, StringComparer.OrdinalIgnoreCase);
-            SetMetadata(element, source, metadata, properties, project);
-            var item = new Item(type, source.FullPath, metadata, source.Types);
+            SetMetadata(element, batch, metadata, properties, project);
+            var item = new Item(type, source.FullPath, metadata, source.Types, source.IsFile);
             own.Add(item);
             run.Added.Add(item);
         }
@@ -669,6 +800,12 @@ public static partial class TargetItems
                 continue;
             }
 
+            if (ItemTransform().Match(part) is { Success: true } transform)
+            {
+                sources.AddRange(Transform(items.GetValueOrDefault(transform.Groups["type"].Value) ?? [], transform.Groups["body"].Value.Trim(), project, properties));
+                continue;
+            }
+
             if (part.Contains("@(", StringComparison.Ordinal) || part.Contains("%(", StringComparison.Ordinal)
                 || MsBuildExpressions.Expand(part, properties, null, project.DirectoryPath, unknownProperties: false) is not { } path)
             {
@@ -681,6 +818,17 @@ public static partial class TargetItems
                 continue;
             }
 
+            if (!new GlobPattern(project.DirectoryPath, path).HasWildcards && ProjectSourceFiles.EnumerateItems(project, [path], []).Count == 0)
+            {
+                // A name is an item whether or not a file has it, as MSBuild includes it.
+                if (NamedItem(project, path) is { } named)
+                {
+                    sources.Add(named);
+                }
+
+                continue;
+            }
+
             foreach (var file in ProjectSourceFiles.EnumerateItems(project, [path], []))
             {
                 sources.Add(new Item("File", file, WellKnownMetadata(project, file), []));
@@ -688,6 +836,44 @@ public static partial class TargetItems
         }
 
         return sources;
+    }
+
+    /// <summary>
+    /// The items of a transform, <c>@(Type -&gt; 'expression')</c>, each made from one item, with its metadata and its
+    /// well-known metadata of the new name; or of <c>@(Type -&gt; Distinct())</c>, the first item of each name.
+    /// Another item function gives none.
+    /// </summary>
+    private static List<Item> Transform(List<Item> inputs, string body, ProjectInfo project, Dictionary<string, string> properties)
+    {
+        if (string.Equals(body, "Distinct()", StringComparison.OrdinalIgnoreCase))
+        {
+            return [.. inputs.DistinctBy(i => i.Metadata.GetValueOrDefault("Identity") ?? i.FullPath, StringComparer.OrdinalIgnoreCase)];
+        }
+
+        if (body.Length < 2 || body[0] != '\'' || body[^1] != '\'')
+        {
+            return [];
+        }
+
+        var result = new List<Item>();
+        foreach (var item in inputs)
+        {
+            if (Expand(body[1..^1], properties, item, project) is not { Length: > 0 } name
+                || NamedItem(project, name) is not { } named)
+            {
+                continue;
+            }
+
+            var metadata = new Dictionary<string, string>(item.Metadata, StringComparer.OrdinalIgnoreCase);
+            foreach (var (key, value) in named.Metadata)
+            {
+                metadata[key] = value;
+            }
+
+            result.Add(new Item("File", named.FullPath, metadata, [], named.IsFile) { Origin = item });
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -858,6 +1044,12 @@ public static partial class TargetItems
 
     [GeneratedRegex(@"^@\(\s*(?<type>[A-Za-z_][A-Za-z0-9_.\-]*)\s*\)$", RegexOptions.CultureInvariant, 100)]
     private static partial Regex ItemReference();
+
+    [GeneratedRegex(@"^@\(\s*(?<type>[A-Za-z_][A-Za-z0-9_.\-]*)\s*->\s*(?<body>.*)\)$", RegexOptions.CultureInvariant | RegexOptions.Singleline, 100)]
+    private static partial Regex ItemTransform();
+
+    [GeneratedRegex(@"@\(\s*Compile\s*[)\-]", RegexOptions.CultureInvariant, 100)]
+    private static partial Regex CompileReference();
 
     [GeneratedRegex(@"%\(\s*(?:[A-Za-z_][A-Za-z0-9_\-]*\s*\.\s*)?(?<name>[A-Za-z_][A-Za-z0-9_\-]*)\s*\)", RegexOptions.CultureInvariant, 100)]
     private static partial Regex MetadataReference();

@@ -33,6 +33,12 @@ internal static class RazorCompiler
             optimize,
             project is null ? null : SdkGenerators.InterceptorsNamespaces(project),
             CSharpCompiler.LanguageVersionOf(project)));
+        if (CSharpCompiler.NetStandardVersionOf(project) is not null)
+        {
+            options = options.WithPreprocessorSymbols(
+                [.. CSharpCompiler.FrameworkSymbols(project), optimize ? "RELEASE" : "DEBUG", .. options.PreprocessorSymbolNames.Where(symbol => !IsFrameworkSymbol(symbol))]);
+        }
+
         if (CSharpCompiler.DefinedSymbols(project) is { Count: > 0 } defined)
         {
             options = options.WithPreprocessorSymbols(options.PreprocessorSymbolNames.Concat(defined).Distinct(StringComparer.Ordinal).ToArray());
@@ -42,4 +48,9 @@ internal static class RazorCompiler
             ? options.WithFeatures([.. options.Features, new(RoslynTokenizerFeature, "true")])
             : options;
     }
+
+    /// <summary>Whether a symbol is one the SDK derives from the target framework or the configuration.</summary>
+    private static bool IsFrameworkSymbol(string symbol) =>
+        symbol is "TRACE" or "NET" or "NETCOREAPP" or "TABSTUDIO" or "DEBUG" or "RELEASE"
+        || symbol.StartsWith("NET", StringComparison.Ordinal) && (symbol.EndsWith("_OR_GREATER", StringComparison.Ordinal) || char.IsAsciiDigit(symbol[^1]));
 }

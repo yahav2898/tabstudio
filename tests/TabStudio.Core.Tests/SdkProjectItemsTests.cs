@@ -378,6 +378,92 @@ public sealed class SdkProjectItemsTests
     }
 
     [Fact]
+    public void ThisAssembly_Constants_and_Project_get_the_constants_their_targets_make()
+    {
+        // Moq's static proxy tests use ThisAssembly.Constants.Scenarios.MultipleUses, a FileConstant its own target adds
+        // from each Compile item under Scenarios/, and ThisAssembly.Project.MSBuildProjectDirectory, from a ProjectProperty
+        // item: the packages' targets turn both into Constant items, which reach the generator as additional files without
+        // a file. None did: 10 CS0117 on ThisAssembly.
+        using var temp = new TempDirectory();
+        temp.Write("Tests/Scenarios/MultipleUses.cs", "class MultipleUses { }");
+        temp.Write("Tests/Other.cs", "class Other { }");
+        var path = temp.Write("Tests/Tests.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup>
+                <ProjectProperty Include="MSBuildProjectDirectory" />
+                <ProjectProperty Include="CI" />
+                <ProjectProperty Include="CI" />
+              </ItemGroup>
+              <Target Name="AddConstants" BeforeTargets="PrepareForBuild;CompileDesignTime;GenerateMSBuildEditorConfigFileShouldRun">
+                <ItemGroup>
+                  <FileConstant Include="@(Compile)" Condition="$([MSBuild]::ValueOrDefault('%(RelativeDir)', '').StartsWith('Scenarios'))" />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+        var project = temp.Write("packages/thisassembly.project/build/ThisAssembly.Project.targets", """
+            <Project>
+              <Target Name="PrepareProjectProperties" BeforeTargets="PrepareConstants" DependsOnTargets="$(PrepareProjectPropertiesDependsOn)">
+                <ItemGroup>
+                  <ProjectProperty Include="$(ProjectProperty)" Condition="'$(ProjectProperty)' != ''" />
+                  <ProjectPropertyDistinct Include="@(ProjectProperty -> Distinct())" />
+                </ItemGroup>
+                <ItemGroup>
+                  <Constant Include="@(ProjectPropertyDistinct -> 'Project.%(Identity)')" Value="$(%(ProjectPropertyDistinct.Identity))" Comment="%(ProjectPropertyDistinct.Comment)" Root="." />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+        var constants = temp.Write("packages/thisassembly.constants/build/ThisAssembly.Constants.targets", """
+            <Project>
+              <ItemGroup>
+                <CompilerVisibleItemMetadata Include="Constant" MetadataName="ItemType" />
+                <CompilerVisibleItemMetadata Include="Constant" MetadataName="Value" />
+                <CompilerVisibleItemMetadata Include="Constant" MetadataName="Root" />
+              </ItemGroup>
+              <Target Name="PrepareConstants">
+                <ItemGroup>
+                  <FileConstant Condition="!$([System.IO.Path]::IsPathRooted('%(RelativeDir)')) OR '%(Link)' != ''">
+                    <AreaPath Condition="!$([System.IO.Path]::IsPathRooted('%(RelativeDir)'))">%(RelativeDir)%(Filename)</AreaPath>
+                    <FileExtension Condition="!$([System.IO.Path]::IsPathRooted('%(RelativeDir)'))">%(Extension)</FileExtension>
+                  </FileConstant>
+                  <FileConstant Condition="'%(AreaPath)' != ''">
+                    <Area>$([MSBuild]::ValueOrDefault('%(AreaPath)', '').Replace('', '.').Replace('/', '.'))</Area>
+                    <Value>%(AreaPath)%(FileExtension)</Value>
+                  </FileConstant>
+                  <Constant Include="@(FileConstant -> '%(Area)')" Condition="'%(FileConstant.Area)' != '' AND '%(FileConstant.Value)' != ''"
+                            Value="%(FileConstant.Value)" Comment="%(FileConstant.Comment)" />
+                </ItemGroup>
+                <ItemGroup>
+                  <Constant Update="@(Constant)">
+                    <Value>$([MSBuild]::ValueOrDefault('%(Constant.Value)', '').Replace('&#xD;&#xA;', '`n').Replace('&#xA;', '`n'))</Value>
+                  </Constant>
+                </ItemGroup>
+              </Target>
+              <Target Name="_InjectConstantAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="PrepareResourceNames;PrepareConstants">
+                <ItemGroup>
+                  <Constant Update="@(Constant)" Condition="$([MSBuild]::ValueOrdefault('%(Constant.Value)', '').Contains(';'))">
+                    <Value>|$([MSBuild]::ValueOrdefault('%(Constant.Value)', '').Replace(';', '|'))|</Value>
+                  </Constant>
+                  <AdditionalFiles Include="@(Constant)" />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+
+        var result = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(path), [project, constants]);
+
+        var items = result.AdditionalFiles.Where(f => f.ItemTypes?.Contains("Constant") == true).ToDictionary(f => f.Include, StringComparer.Ordinal);
+        Assert.Equal(new[] { "Project.CI", "Project.MSBuildProjectDirectory", "Scenarios.MultipleUses" }, items.Keys.Order(StringComparer.Ordinal));
+        Assert.All(items.Values, f => Assert.True(f.IsItemOnly));
+        Assert.Equal("Scenarios/MultipleUses.cs", items["Scenarios.MultipleUses"].Metadata["Value"].Replace('\\', '/'));
+        Assert.Equal(Path.GetDirectoryName(path), items["Project.MSBuildProjectDirectory"].Metadata["Value"]);
+        Assert.Equal(".", items["Project.MSBuildProjectDirectory"].Metadata["Root"]);
+        Assert.Contains(result.CompilerVisibleItemMetadata, m => m is { ItemType: "Constant", MetadataName: "ItemType" });
+    }
+
+    [Fact]
     public void Project_references_keep_their_metadata_and_packages_their_PrivateAssets()
     {
         var project = ProjectParser.Parse(ProjectPath, """

@@ -90,6 +90,12 @@ public sealed record UsingInfo(string Name, string? Alias = null, bool IsStatic 
 /// <param name="HintPath">The <c>HintPath</c> metadata, as written in the project file, or <see langword="null"/>.</param>
 public sealed record AssemblyReferenceInfo(string Name, string? HintPath = null);
 
+/// <summary>An item of a project file outside targets, which its targets may read (see <see cref="ProjectInfo.TargetInputItems"/>).</summary>
+/// <param name="ItemType">The item type, such as <c>ProjectProperty</c>.</param>
+/// <param name="Include">Its <c>Include</c>, with properties expanded.</param>
+/// <param name="Metadata">Its metadata. Keys are case-insensitive.</param>
+public sealed record TargetInputItem(string ItemType, string Include, IReadOnlyDictionary<string, string> Metadata);
+
 /// <summary>
 /// An item source generators see: an <c>&lt;AdditionalFiles&gt;</c> item, with its metadata, from the project, its
 /// <c>Directory.Build</c> files or its packages' props and targets.
@@ -106,6 +112,12 @@ public sealed record AdditionalFileItem(string Include, string BaseDirectory, IR
     /// <c>AdditionalFiles</c> item of a project file.
     /// </summary>
     public IReadOnlyList<string>? ItemTypes { get; init; }
+
+    /// <summary>
+    /// Whether the item names no file, as ThisAssembly.Constants' <c>Constant</c> items name a constant: MSBuild still
+    /// hands the compiler its path, and generators read its metadata, so it is an additional file without text.
+    /// </summary>
+    public bool IsItemOnly { get; init; }
 }
 
 /// <summary>
@@ -291,6 +303,13 @@ public sealed record ProjectInfo
     /// <see cref="TargetItems"/> carries out, in the order they run.
     /// </summary>
     public IReadOnlyList<System.Xml.Linq.XElement> CompilerTargets { get; init; } = [];
+
+    /// <summary>
+    /// The project's items, outside targets, of the types its <see cref="CompilerTargets"/> may read that are not files
+    /// TabStudio lists itself, such as Moq's <c>&lt;ProjectProperty Include="MSBuildProjectDirectory" /&gt;</c>, which
+    /// ThisAssembly.Project's target turns into constants: each item type with its items, in order.
+    /// </summary>
+    public IReadOnlyList<TargetInputItem> TargetInputItems { get; init; } = [];
 
     /// <summary>
     /// The patterns of the project's own <c>&lt;AvaloniaXaml Include="..." /&gt;</c> items, besides the <c>.axaml</c> files
