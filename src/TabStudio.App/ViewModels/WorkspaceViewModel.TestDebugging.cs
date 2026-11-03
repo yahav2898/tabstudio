@@ -72,6 +72,13 @@ public sealed partial class WorkspaceViewModel
                     }
 
                     summaries.Add(summary);
+
+                    // Shift+F5 or Restart stops the debugged session, which ends its run as cancelled rather than
+                    // throwing: the projects after it are not built and debugged.
+                    if (summary.WasCancelled || _restartRequested)
+                    {
+                        break;
+                    }
                 }
 
                 if (summaries.Count > 0)
@@ -128,7 +135,7 @@ public sealed partial class WorkspaceViewModel
             return await session.RunHostedAsync(async stop =>
             {
                 // A test may stay paused at a breakpoint for as long as the user looks at it: no timeout.
-                using var tests = await TestSession.LoadAsync(assemblies, packages, TestRunOptionsFor(project) with { DefaultTimeout = null }, stop);
+                using var tests = await TestSession.LoadAsync(assemblies, packages, TestRunOptionsFor(project) with { DefaultTimeout = null, IgnoreTestTimeouts = true }, stop);
                 return await InvokeOnUiAsync(() => RunDebuggedTestsAsync(project, tests, names, stop));
             }, cancellationToken);
         }
@@ -318,28 +325,48 @@ public sealed partial class WorkspaceViewModel
             _programEnvironments.AddOrUpdate(target, WithServiceEnvironment(debug.Debuggee).Environment);
             var started = DateTime.UtcNow;
             var clock = Stopwatch.GetTimestamp();
-            _pendingAdapterRelaunch = () => DebugToolchainTestsAsync(info, project, framework, selection);
-            await LaunchAdapterAsync(target, DebugStart.Run, noDebug: false);
-            _pendingAdapterRelaunch = null;
-            if (!IsDebuggingWithAdapter)
+            // The runner's results are its output, which the debugger shows in the Output panel. That panel keeps
+            // only its last part, so the report gets every piece as it is written: a large suite's first results too.
+            StreamWriter? reportWriter = null;
+            void OnWritten(object? sender, OutputWrittenEventArgs e) => reportWriter?.Write(e.Text);
+            try
             {
-                StopNativeDebugInput();
-            }
-
-            if (_adapterEnd is { } end)
-            {
-                // Test Explorer's Cancel stops the debugger, which ends the run.
-                using (cancellation.Token.Register(() => _ui.Post(() => _ = StopAdapterAsync())))
+                if (debug.OutputReport is { } reportFile)
                 {
-                    await end.Task;
+                    Directory.CreateDirectory(Path.GetDirectoryName(reportFile)!);
+                    reportWriter = new StreamWriter(reportFile);
+                    reportWriter.WriteLine(debug.OutputHeader);
+                    Output.Written += OnWritten;
                 }
-            }
 
-            if (debug.OutputReport is { } report)
+                _pendingAdapterRelaunch = () => DebugToolchainTestsAsync(info, project, framework, selection);
+                await LaunchAdapterAsync(target, DebugStart.Run, noDebug: false);
+                _pendingAdapterRelaunch = null;
+                if (!IsDebuggingWithAdapter)
+                {
+                    StopNativeDebugInput();
+                }
+
+                if (_adapterEnd is { } end)
+                {
+                    // Test Explorer's Cancel stops the debugger, which ends the run.
+                    using (cancellation.Token.Register(() => _ui.Post(() => _ = StopAdapterAsync())))
+                    {
+                        await end.Task;
+                    }
+                }
+
+                // Reading the text writes out what is still queued for the panel.
+                _ = Output.Text;
+                reportWriter?.Write("\n" + debug.OutputFooter + "\n");
+            }
+            finally
             {
-                // The runner's results are its output, which the debugger showed in the Output panel.
-                Directory.CreateDirectory(Path.GetDirectoryName(report)!);
-                await File.WriteAllTextAsync(report, debug.OutputHeader + "\n" + Output.Text + "\n" + debug.OutputFooter + "\n");
+                Output.Written -= OnWritten;
+                if (reportWriter is not null)
+                {
+                    await reportWriter.DisposeAsync();
+                }
             }
 
             var results = await Task.Run(() => ToolchainTestPlanner.ReadResults(project, debug.Results, started));

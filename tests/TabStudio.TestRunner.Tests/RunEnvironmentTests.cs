@@ -167,6 +167,35 @@ public sealed class RunEnvironmentTests : IDisposable
 
         var summary = await second.RunSelectedAsync(["Output.Tests.EnvironmentTests.FindsItsOwnTypesByName"]);
         Assert.Equal(1, summary.Passed);
+
+        // A third build takes the next name and deletes the sibling before it, so edits leave at most one behind.
+        var third = UserProject.Compile(source + "\npublic sealed class AddedAgain { }\n", UserProject.XunitAssemblies) with { Name = first.Tests[0].AssemblyName };
+        using var thirdSession = TestSession.Load([third], UserProject.XunitAssemblies, new TestRunOptions { OutputDirectory = _folder });
+        Assert.Equal(_folder + "-3", thirdSession.OutputDirectory);
+        Assert.False(Directory.Exists(_folder + "-2"));
+        Assert.True(Directory.Exists(_folder));
+    }
+
+    [Fact]
+    public async Task Under_the_debugger_a_test_s_own_timeout_does_not_abandon_it()
+    {
+        const string source = """
+            using NUnit.Framework;
+
+            namespace Output.Tests;
+
+            public class SlowTests
+            {
+                [Test, Timeout(50)]
+                public void PausedLongerThanItsTimeout() => System.Threading.Thread.Sleep(400);
+            }
+            """;
+
+        var timed = await UserProject.RunAllAsync(source, UserProject.NUnitAssemblies);
+        Assert.Equal(TestOutcome.Errored, Assert.Single(timed.Results).Outcome);
+
+        var debugged = await UserProject.RunAllAsync(source, UserProject.NUnitAssemblies, new TestRunOptions { DefaultTimeout = null, IgnoreTestTimeouts = true });
+        Assert.Equal(TestOutcome.Passed, Assert.Single(debugged.Results).Outcome);
     }
 
     [Fact]

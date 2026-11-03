@@ -706,21 +706,29 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             await Task.WhenAll(Locals.ShowAsync(pause.Locals), Watch.EvaluateAsync(pause));
         }
 
-        // The other threads stop at their next statement in the program's code, soon after this one paused.
-        await ShowSessionThreadsAsync(session, pause);
-        if (selectCause && pause.Exception is not null && session.Recording?.ExceptionCause is { } cause && session.Recording.IndexOf(cause) is var causeIndex && causeIndex >= 0)
+        // The other threads stop at their next statement in the program's code, soon after this one paused: they
+        // are listed now and again a moment later, without holding up the pause or a step that follows it.
+        ShowSessionThreads(session, pause);
+        _ = RefreshSessionThreadsAsync(session, pause);
+        if (selectCause && ReferenceEquals(_pause, pause) && pause.Exception is not null && session.Recording?.ExceptionCause is { } cause && session.Recording.IndexOf(cause) is var causeIndex && causeIndex >= 0)
             await ShowHistoricalAsync(session.SeekHistory(causeIndex));
     }
 
     /// <summary>Lists the paused program's threads in the Call Stack, with the one that paused chosen.</summary>
-    private async Task ShowSessionThreadsAsync(DebugSession session, DebugPausedEventArgs pause)
+    private void ShowSessionThreads(DebugSession session, DebugPausedEventArgs pause)
     {
-        for (var attempt = 0; attempt < 2 && ReferenceEquals(_session, session) && ReferenceEquals(_pause, pause); attempt++)
+        if (ReferenceEquals(_session, session) && ReferenceEquals(_pause, pause))
         {
             var options = session.Threads.Select(t => new DebugThreadOption(t.Id, t.Name)).ToList();
             CallStack.ShowThreads(options, options.FirstOrDefault(t => t.Id == (_shownThread ?? pause.ThreadId)));
-            await Task.Delay(TimeSpan.FromMilliseconds(150));
         }
+    }
+
+    /// <summary>Lists the threads again once the others had time to reach their next statement, if the pause still holds.</summary>
+    private async Task RefreshSessionThreadsAsync(DebugSession session, DebugPausedEventArgs pause)
+    {
+        await Task.Delay(TimeSpan.FromMilliseconds(150));
+        ShowSessionThreads(session, pause);
     }
 
     /// <summary>Shows another thread's frames, as choosing it in the Call Stack's thread box does.</summary>

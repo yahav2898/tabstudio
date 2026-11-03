@@ -397,7 +397,7 @@ public sealed class DebuggingTests
 
         await workspace.StartDebuggingCommand.ExecuteAsync(null);
         await WaitForPauseAsync(workspace, 12);
-        await UiTestHelpers.WaitUntilAsync(() => workspace.CallStack.HasThreads, because: "the worker thread");
+        await UiTestHelpers.WaitUntilAsync(() => workspace.CallStack.Threads.Any(t => t.Name == "Worker"), because: "the worker thread");
 
         var worker = Assert.Single(workspace.CallStack.Threads, t => t.Name == "Worker");
         Assert.NotEqual(worker, workspace.CallStack.SelectedThread);

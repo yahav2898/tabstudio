@@ -120,6 +120,9 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     // unwinds and exits with code 101, which LLDB does not see as an exception.
     private bool _pendingPanicStops;
     private bool _adapterPanicStops;
+
+    /// <summary>Whether the program last resumed with a step rather than Continue.</summary>
+    private bool _adapterStepping;
     private int _adapterPauses;
 
     /// <summary>What the Run button's menu offers: the startup projects, launch configurations and the current file.</summary>
@@ -320,6 +323,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         _adapterLaunched = false;
         _sentBreakpoints.Clear();
         _adapterHits.Clear();
+        _adapterStepping = false;
         WireAdapterEvents(session);
         StartAdapterInput(session);
         if (session.Adapter.Id == "flutter") ConfigureFlutterTarget(configuration);
@@ -718,7 +722,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
             if (AdapterCondition.TryEvaluate(condition, locals, out var holds) && !holds)
             {
-                return await ContinueAfterHitAsync(session, thread);
+                return !StepWasInterrupted() && await ContinueAfterHitAsync(session, thread);
             }
         }
 
@@ -730,8 +734,14 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         // A changed hit count counts again from zero, as the C# debugger's does.
         var hits = _adapterHits.TryGetValue(breakpoint, out var counted) && counted.HitCount == breakpoint.HitCount ? counted.Hits + 1 : 1;
         _adapterHits[breakpoint] = (breakpoint.HitCount!, hits);
-        return !hitCondition.IsMet(hits) && await ContinueAfterHitAsync(session, thread);
+        return !hitCondition.IsMet(hits) && !StepWasInterrupted() && await ContinueAfterHitAsync(session, thread);
     }
+
+    /// <summary>
+    /// Whether the adapter stopped at a breakpoint the IDE would let pass while a step was under way: the adapter
+    /// ended the step there, and a continue would let the program run on, so the pause is shown, where the step went.
+    /// </summary>
+    private bool StepWasInterrupted() => _adapterStepping;
 
     /// <summary>Lets the program go on from a hit that does not stop.</summary>
     /// <returns><see langword="false"/> when it could not go on, so the pause is shown.</returns>
@@ -1022,9 +1032,19 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         await ShowAdapterFrameAsync(CallStack.ActiveFrame);
     }
 
-    private async Task ContinueAdapterAsync() => await ResumeAdapterAsync((session, thread) => session.ContinueAsync(thread, CancellationToken.None));
+    private async Task ContinueAdapterAsync()
+    {
+        _adapterStepping = false;
+        await ResumeAdapterAsync((session, thread) => session.ContinueAsync(thread, CancellationToken.None));
+    }
 
-    private Task StepAdapterAsync(AdapterStep step) => ResumeAdapterAsync((session, thread) => step switch
+    private Task StepAdapterAsync(AdapterStep step)
+    {
+        _adapterStepping = true;
+        return StepAdapterCoreAsync(step);
+    }
+
+    private Task StepAdapterCoreAsync(AdapterStep step) => ResumeAdapterAsync((session, thread) => step switch
     {
         AdapterStep.Into => session.StepIntoAsync(thread, CancellationToken.None),
         AdapterStep.Out => session.StepOutAsync(thread, CancellationToken.None),

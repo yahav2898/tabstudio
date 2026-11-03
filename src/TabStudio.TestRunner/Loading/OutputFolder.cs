@@ -34,14 +34,15 @@ internal static class OutputFolder
         var hashes = assemblies.ToDictionary(a => a.Name, a => Convert.ToHexString(SHA256.HashData(a.Image)), StringComparer.OrdinalIgnoreCase);
         lock (Gate)
         {
-            var chosen = Candidates(Path.TrimEndingDirectorySeparator(Path.GetFullPath(folder)))
+            var root = Path.TrimEndingDirectorySeparator(Path.GetFullPath(folder));
+            var chosen = Candidates(root)
                 .First(candidate => assemblies.All(a => !Loaded.TryGetValue(FileOf(candidate, a), out var hash) || hash == hashes[a.Name]));
             _ = Directory.CreateDirectory(chosen);
             var files = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             foreach (var assembly in assemblies)
             {
                 var file = FileOf(chosen, assembly);
-                if (!Loaded.ContainsKey(file))
+                if (!Loaded.ContainsKey(file) || !File.Exists(file))
                 {
                     Replace(file, assembly.Image);
                     if (assembly.Symbols is { } symbols)
@@ -50,21 +51,46 @@ internal static class OutputFolder
                     }
                 }
 
+                // Claimed now, under the gate, so a second load of the same project with other code, such as the
+                // agent's beside Test Explorer's, goes to another folder instead of replacing these files.
+                Loaded[file] = hashes[assembly.Name];
                 files[assembly.Name] = file;
             }
 
+            RemoveOtherSiblings(root, chosen);
             return files;
         }
     }
 
-    /// <summary>Records that an assembly was loaded from a file, so the file is not replaced while the process runs.</summary>
-    /// <param name="file">The file.</param>
-    /// <param name="assembly">What it holds.</param>
-    public static void MarkLoaded(string file, CompiledAssembly assembly)
+    /// <summary>
+    /// Deletes the siblings (<c>net8.0-2</c> and on) other than the one just used, so an afternoon of edits leaves at
+    /// most one beside the output folder. Their assemblies were loaded whole when their sessions loaded, so the sessions
+    /// keep running; their names stay claimed, since the runtime would serve the old image for the same path. A
+    /// sibling that cannot be deleted, as on Windows while loaded, stays until a later run.
+    /// </summary>
+    private static void RemoveOtherSiblings(string root, string chosen)
     {
-        lock (Gate)
+        if (Path.GetDirectoryName(root) is not { } parent || !Directory.Exists(parent))
         {
-            Loaded[file] = Convert.ToHexString(SHA256.HashData(assembly.Image));
+            return;
+        }
+
+        var prefix = Path.GetFileName(root) + "-";
+        foreach (var sibling in Directory.EnumerateDirectories(parent, prefix + "*"))
+        {
+            if (string.Equals(sibling, chosen, StringComparison.Ordinal) || !Path.GetFileName(sibling)[prefix.Length..].All(char.IsAsciiDigit))
+            {
+                continue;
+            }
+
+            try
+            {
+                Directory.Delete(sibling, recursive: true);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // In use; a later run deletes it.
+            }
         }
     }
 

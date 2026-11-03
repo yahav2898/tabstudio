@@ -64,4 +64,10 @@ public sealed record TestRunOptions
     /// depth is used (<c>net8.0-2</c>), since a loaded file cannot be replaced while TabStudio runs.
     /// </remarks>
     public string? OutputDirectory { get; init; }
+
+    /// <summary>
+    /// Whether the tests' own timeouts (NUnit's and MSTest's <c>[Timeout]</c>, xUnit's <c>Timeout =</c>) are ignored
+    /// too, as under a debugger, where a test paused at a breakpoint must not be abandoned as timed out.
+    /// </summary>
+    public bool IgnoreTestTimeouts { get; init; }
 }

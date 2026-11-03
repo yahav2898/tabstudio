@@ -204,7 +204,7 @@ internal sealed class TestExecutor
     {
         _started(test.Case);
         var sink = new TestOutputSink(_options.MaxOutputLength);
-        var timeout = test.Case.Timeout ?? _options.DefaultTimeout;
+        var timeout = _options.IgnoreTestTimeouts ? null : test.Case.Timeout ?? _options.DefaultTimeout;
         var stopwatch = Stopwatch.StartNew();
         var run = await TestThread.RunAsync(() => InTest(test.Case, () => lifecycle.RunTest(test, sink)), $"TabStudio: {test.Case.DisplayName}", _options.StackSize, sink, timeout, cancellationToken, _reflection).ConfigureAwait(false);
         stopwatch.Stop();

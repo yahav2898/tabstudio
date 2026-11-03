@@ -89,7 +89,6 @@ internal sealed class TestLoadContext : AssemblyLoadContext
             if (_files is not null && _files.TryGetValue(compiled.Name, out var file))
             {
                 assembly = LoadFromAssemblyPath(file);
-                OutputFolder.MarkLoaded(file, compiled);
             }
             else
             {

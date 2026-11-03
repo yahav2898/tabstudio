@@ -43,7 +43,16 @@ internal static class RunDirectory
                 }
             }
 
-            Directory.SetCurrentDirectory(folder);
+            // The scope is counted from here, so a folder that cannot be entered still leaves, and puts back, the rest.
+            try
+            {
+                Directory.SetCurrentDirectory(folder);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // Removed since it was checked: the tests run from where the process is.
+            }
+
             AppContext.SetData(BaseDirectoryKey, Path.TrimEndingDirectorySeparator(folder) + Path.DirectorySeparatorChar);
         }
 
