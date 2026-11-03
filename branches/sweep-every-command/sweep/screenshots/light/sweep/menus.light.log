@@ -1,0 +1,341 @@
+commands	180
+run	menu: File > New > C# Notebook
+done	menu: File > New > C# Notebook	vm.StatusText=Created Untitled.ipynb, vm.ShowsEditorTouchBar=False, vm.CaretText=Ln 1, Col 1, vm.Documents=/tmp/tabstudio-tests/ad5abe50c0d44716aa…
+run	menu: File > Save
+done	menu: File > Save	vm.StatusText=Saved Program.cs, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/border/PART_ScrollViewer/PART_ContentPresenter/PART_ItemsPresenter/PART_ContentPresenter/text:117262815, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1822972847, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/border/PART_ScrollViewer/PART_ContentPresenter/PART_ItemsPresenter/PART_ContentPresenter/text:-1354310599
+run	menu: File > Open Remote Folder (SSH)
+done	menu: File > Open Remote Folder (SSH)	vm.IsRemoteExplorerSelected=True, vm.SelectedSideBarPanel=RemoteExplorer, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView
+problem	overlap	menu: File > Open Remote Folder (SSH)	Grid#SideBar > SolutionExplorerView > ContentPresenter#PART_ContentPresenter > Button: Button lies under Button: 44 × 44 dips of them overlap, and a tap there goes to Button. [menus-light-001.png]
+run	menu: File > Publish to server
+done	menu: File > Publish to server	vm.StatusText=Open a local ASP.NET Core project to pu…, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1750978759, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1822972847
+run	menu: File > Save All
+done	menu: File > Save All	vm.StatusText=Saved Program.cs, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/border/PART_ScrollViewer/PART_ContentPresenter/PART_ItemsPresenter/PART_ContentPresenter/text:117262815, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1822972847, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/border/PART_ScrollViewer/PART_ContentPresenter/PART_ItemsPresenter/PART_ContentPresenter/text:-1354310599
+run	menu: File > TabStudio Link
+done	menu: File > TabStudio Link	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/text:-287005286, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/text:1607280148, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/PART_HitArea, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/PART_HitArea/PART_ContentPresenter
+problem	overlap	menu: File > TabStudio Link	Grid#SideBar > SolutionExplorerView > ContentPresenter#PART_ContentPresenter > TextBox: TextBox lies under Button: 44 × 18 dips of them overlap, and a tap there goes to Button. [menus-light-002.png]
+run	menu: File > Join a Swarm
+done	menu: File > Join a Swarm	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/PART_ContentPresenter/SwarmJoinView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/PART_ContentPresenter/SwarmJoinView/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/PART_ContentPresenter/SwarmJoinView/PART_ContentPresenter/text:-1114995078, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/PART_ContentPresenter/SwarmJoinView/PART_ContentPresenter/text:-1258657502
+problem	overlap	menu: File > Join a Swarm	Panel#TouchBarHost > Panel#TouchBarFader > Border#EditTouchBar > Button#FoldTouchBarButton: Button FoldTouchBarButton lies under Button: 24 × 37 dips of them overlap, and a tap there goes to Button. [menus-light-003.png]
+problem	overlap	menu: File > Join a Swarm	Panel#TouchBarFader > Border#EditTouchBar > AdaptiveBar#TouchBar > AdaptiveBarItem: AdaptiveBarItem lies under Button: 99 × 37 dips of them overlap, and a tap there goes to Button. [menus-light-003.png]
+run	menu: File > Share Session
+done	menu: File > Share Session	vm.StatusText=Sharing the workspace: scan the code to…, vm.IsLiveSelected=True, vm.IsLiveHost=True, vm.SelectedSideBarPanel=Live
+problem	overlap	menu: File > Share Session	ContentPresenter#PART_ContentPresenter > LiveShareView > ContentPresenter#PART_ContentPresenter > Button: Button lies under Button: 16 × 34 dips of them overlap, and a tap there goes to Button. [menus-light-004.png]
+run	menu: File > Join Live Session
+done	menu: File > Join Live Session	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LiveJoinView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LiveJoinView/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LiveJoinView/PART_ContentPresenter/text:1649046369, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LiveJoinView/PART_ContentPresenter/text:-1761482703
+problem	overlap	menu: File > Join Live Session	Grid#MainArea > Grid#EditorArea > Border#BottomDock > Button#HideBottomPanelButton: Button HideBottomPanelButton lies under Button "Cancel": 39 × 36 dips of them overlap, and a tap there goes to Button "Cancel". [menus-light-005.png]
+run	menu: File > Windows PC
+done	menu: File > Windows PC	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/PART_ContentPresenter/WindowsBridgeTabView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/PART_ContentPresenter/WindowsBridgeTabView/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/PART_ContentPresenter/WindowsBridgeTabView/PART_ContentPresenter/text:-163172655, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/PART_ContentPresenter/WindowsBridgeTabView/PART_ContentPresenter/text:1514324885
+run	menu: File > Close Document
+done	menu: File > Close Document	vm.ShowsEditorTouchBar=False, vm.CaretText=Ln 1, Col 1, vm.Documents=/tmp/tabstudio-tests/ad5abe50c0d44716aa…, focus=NotebookView
+run	menu: Edit > Undo
+done	menu: Edit > Undo	vm.CaretText=Ln 15, Col 20, editor=1193:1693536592:463:463+0:0, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/PART_HitArea/PART_ContentPresenter/text:-1063693372, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/PART_HitArea/PART_ContentPresenter/text:2147183710
+run	menu: Edit > Redo
+done	menu: Edit > Redo	no change
+problem	no-effect	menu: Edit > Redo	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	menu: Edit > Cut
+done	menu: Edit > Cut	vm.CaretText=Ln 15, Col 1, editor=1160:-1228263338:444:444+0:0, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/border/PART_ScrollViewer/PART_ContentPresenter/PART_ItemsPresenter/PART_ContentPresenter/text:-1354310599, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/PART_HitArea/PART_ContentPresenter/text:-1208518464
+run	menu: Edit > Copy
+done	menu: Edit > Copy	no change
+problem	no-effect	menu: Edit > Copy	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	menu: Edit > Paste
+done	menu: Edit > Paste	vm.CaretText=Ln 16, Col 1, editor=1226:409172156:496:496+0:0, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/border/PART_ScrollViewer/PART_ContentPresenter/PART_ItemsPresenter/PART_ContentPresenter/text:-1354310599, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/PART_HitArea/PART_ContentPresenter/text:-134110095
+run	menu: Edit > Select All
+done	menu: Edit > Select All	vm.CaretText=Ln 39, Col 1, editor=1193:1693536592:1193:0+1193:0, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/PART_HitArea/PART_ContentPresenter/text:545912894, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/PART_HitArea/PART_ContentPresenter/text:-1063693372
+run	menu: Edit > Find
+done	menu: Edit > Find	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_ContentPresenter/PART_Border, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_ContentPresenter/PART_Border/Expander, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_ContentPresenter/PART_Border/Expander/toggle30077984, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_ContentPresenter/PART_Border/PART_searchTextBox
+run	menu: Edit > Replace
+done	menu: Edit > Replace	focus=TextBox, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_ContentPresenter/PART_Border/Expander/toggle30077984=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_ContentPresenter/PART_Border/ReplaceButtons, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_ContentPresenter/PART_Border/ReplaceButtons/PART_replaceTextBox
+run	menu: Edit > Find in Files
+slow	menu: Edit > Find in Files	still running after 20 s
+done	menu: Edit > Find in Files	vm.Prompt=Find in Files, focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog/text:-1377247258
+run	menu: Edit > Go To Line
+slow	menu: Edit > Go To Line	still running after 20 s
+done	menu: Edit > Go To Line	vm.Prompt=Go To Line, focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog/text:1829560782
+run	menu: Edit > Toggle Line Comment
+done	menu: Edit > Toggle Line Comment	vm.CaretText=Ln 15, Col 23, editor=1286:361713596:499:3+1283:0, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/border/PART_ScrollViewer/PART_ContentPresenter/PART_ItemsPresenter/PART_ContentPresenter/text:-1354310599, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_ContentPresenter/PART_Border/PART_MessageView
+run	menu: Edit > Format Document
+done	menu: Edit > Format Document	vm.StatusText=Already formatted, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-449316563, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1822972847
+run	menu: Edit > IntelliSense > List Members
+done	menu: Edit > IntelliSense > List Members	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:CompletionListView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:CompletionListView/CompletionListView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:CompletionListView/CompletionListView/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:CompletionListView/CompletionListView/PART_ContentPresenter/ItemList
+run	menu: Edit > IntelliSense > Parameter Info
+done	menu: Edit > IntelliSense > Parameter Info	no change
+problem	no-effect	menu: Edit > IntelliSense > Parameter Info	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	menu: Edit > IntelliSense > Quick Info
+done	menu: Edit > IntelliSense > Quick Info	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:QuickInfoView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:QuickInfoView/QuickInfoView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:QuickInfoView/QuickInfoView/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:QuickInfoView/QuickInfoView/PART_ContentPresenter/PART_ItemsPresenter
+run	menu: Edit > IntelliSense > Complete Word
+done	menu: Edit > IntelliSense > Complete Word	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:CompletionListView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:CompletionListView/CompletionListView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:CompletionListView/CompletionListView/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:CompletionListView/CompletionListView/PART_ContentPresenter/ItemList
+run	menu: Edit > IntelliSense > Insert Snippet
+done	menu: Edit > IntelliSense > Insert Snippet	vm.StatusText=There are no snippets for C#. Extension…, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-6328315, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-449316563
+run	menu: Edit > Refactor > Rename
+slow	menu: Edit > Refactor > Rename	still running after 20 s
+done	menu: Edit > Refactor > Rename	vm.Prompt=Rename, focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView/LightBulbView
+run	menu: Edit > Quick Actions and Refactorings
+done	menu: Edit > Quick Actions and Refactorings	focus=MenuItem, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView/LightBulbView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView/LightBulbView/PART_ContentPresenter
+problem	dead-end	menu: Edit > Quick Actions and Refactorings	A tap outside its flyout or menu does not close it.
+problem	dead-end	putting the IDE back	A tap outside its flyout or menu does not close it.
+run	menu: View > Solution Explorer
+done	menu: View > Solution Explorer	no change
+run	menu: View > Git Changes
+done	menu: View > Git Changes	vm.SelectedSideBarPanel=GitChanges, vm.IsSolutionExplorerSelected=False, vm.IsGitChangesSelected=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/GitChangesView
+problem	overlap	menu: View > Git Changes	Grid#SideBar > PropertiesView#PropertiesPanel > ContentPresenter#PART_ContentPresenter > Button#HeaderButton: Button HeaderButton lies under Button "Sign in": 64 × 42 dips of them overlap, and a tap there goes to Button "Sign in". [menus-light-006.png]
+run	menu: View > Database Explorer
+done	menu: View > Database Explorer	vm.IsDatabaseSelected=True, vm.SelectedSideBarPanel=Database, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/DatabaseExplorerView
+problem	overlap	menu: View > Database Explorer	Grid#SideBar > DatabaseExplorerView > ContentPresenter#PART_ContentPresenter > Button#ConnectionsTab: Button "Connections" lies under Button: 44 × 43 dips of them overlap, and a tap there goes to Button. [menus-light-007.png]
+run	menu: View > GitHub Actions
+done	menu: View > GitHub Actions	vm.IsActionsSelected=True, vm.SelectedSideBarPanel=Actions, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/ActionsView
+run	menu: View > Pull Requests
+done	menu: View > Pull Requests	vm.IsPullRequestsSelected=True, vm.SelectedSideBarPanel=PullRequests, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/PullRequestList
+run	menu: View > Test Explorer
+done	menu: View > Test Explorer	vm.SelectedSideBarPanel=TestExplorer, vm.IsSolutionExplorerSelected=False, vm.IsTestExplorerSelected=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/TestExplorer
+problem	overlap	menu: View > Test Explorer	Grid#SideBar > TestExplorerView#TestExplorer > ContentPresenter#PART_ContentPresenter > Button: Button lies under Button: 13 × 43 dips of them overlap, and a tap there goes to Button. [menus-light-008.png]
+problem	overlap	menu: View > Test Explorer	Grid#SideBar > TestExplorerView#TestExplorer > ContentPresenter#PART_ContentPresenter > TextBox: TextBox lies under Button: 44 × 18 dips of them overlap, and a tap there goes to Button. [menus-light-008.png]
+run	menu: View > Device Peripherals
+done	menu: View > Device Peripherals	vm.SelectedPanel=Peripherals, vm.IsOutputSelected=False, vm.IsEmbeddedPeripheralsSelected=True, vm.ShowsEmbeddedPeripheralsTab=True
+run	menu: View > Claude Agent
+done	menu: View > Claude Agent	vm.SelectedSideBarPanel=Agent, vm.IsSolutionExplorerSelected=False, vm.IsAgentSelected=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/AgentPanelView
+run	menu: View > Swarm
+done	menu: View > Swarm	vm.SelectedSideBarPanel=Swarm, vm.IsSolutionExplorerSelected=False, vm.IsSwarmSelected=True, vm.ShowsSwarmTab=True
+run	menu: View > Live Share
+done	menu: View > Live Share	vm.IsLiveSelected=True, vm.SelectedSideBarPanel=Live, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/LivePanelView
+run	menu: View > Web Preview
+done	menu: View > Web Preview	vm.SelectedSideBarPanel=WebPreview, vm.IsSolutionExplorerSelected=False, vm.IsWebPreviewSelected=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/WebPreviewView
+run	menu: View > App Preview
+done	menu: View > App Preview	vm.IsAppPreviewSelected=True, vm.SelectedSideBarPanel=AppPreview, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/AppPreviewView
+run	menu: View > Device Matrix
+done	menu: View > Device Matrix	vm.ShowsEditorTouchBar=False, vm.CaretText=Ln 1, Col 1, vm.Documents=/tmp/tabstudio-tests/ad5abe50c0d44716aa…, focus=none
+run	menu: View > Windows Bridge
+done	menu: View > Windows Bridge	vm.SelectedSideBarPanel=WindowsBridge, vm.IsSolutionExplorerSelected=False, vm.IsWindowsBridgeSelected=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/BridgePaneView
+run	menu: View > Error List
+done	menu: View > Error List	vm.SelectedPanel=ErrorList, vm.IsErrorListSelected=True, vm.IsOutputSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/ErrorListView
+run	menu: View > Output
+done	menu: View > Output	no change
+run	menu: View > Containers
+done	menu: View > Containers	vm.IsContainersSelected=True, vm.SelectedSideBarPanel=Containers, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/ContainersView
+problem	overlap	menu: View > Containers	Grid#SideBar > ContainersView > ContentPresenter#PART_ContentPresenter > TextBox: TextBox lies under Button: 44 × 31 dips of them overlap, and a tap there goes to Button. [menus-light-009.png]
+run	menu: View > Services
+done	menu: View > Services	vm.IsServicesSelected=True, vm.SelectedSideBarPanel=Services, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/ServicesView
+run	menu: View > Terminal
+done	menu: View > Terminal	vm.SelectedPanel=Terminal, vm.IsOutputSelected=False, vm.IsTerminalSelected=True, focus=TerminalView
+run	menu: View > Serial Monitor
+done	menu: View > Serial Monitor	vm.SelectedPanel=SerialMonitor, vm.IsOutputSelected=False, vm.ShowsSerialMonitorTab=True, vm.IsSerialMonitorSelected=True
+run	menu: View > Compatibility Doctor
+done	menu: View > Compatibility Doctor	vm.SelectedPanel=Compatibility, vm.IsOutputSelected=False, vm.IsCompatibilitySelected=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/CompatibilityView
+run	menu: View > References
+done	menu: View > References	vm.SelectedPanel=References, vm.IsOutputSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/ReferencesView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/ReferencesView/PART_ContentPresenter
+run	menu: View > Side Bar
+done	menu: View > Side Bar	vm.IsSideBarVisible=False, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideSplitter, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar
+run	menu: View > Bottom Panel
+done	menu: View > Bottom Panel	vm.IsBottomPanelVisible=False, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomSplitter, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/BottomTabsScroller
+run	menu: View > Navigate Backward
+done	menu: View > Navigate Backward	vm.CaretText=Ln 1, Col 1, editor=676:1947379066:0:0+0:0, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/list38351949=4:2, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BreadcrumbScroller/PART_ContentPresenter/PART_ItemsPresenter/text:977895594
+run	menu: View > Navigate Forward
+done	menu: View > Navigate Forward	vm.CaretText=Ln 15, Col 20, editor=1193:1693536592:463:463+0:0, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/list38351949=4:1, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BreadcrumbScroller/PART_ContentPresenter/PART_ItemsPresenter/text:-1186351891
+run	menu: View > Sync with Active Document
+done	menu: View > Sync with Active Document	w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/SolutionExplorerView/PART_ContentPresenter/Tree/list64728958=9:4, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/PropertiesPanel/PART_ContentPresenter/HeaderButton/PART_HitArea/PART_ContentPresenter/text:117262815, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/PropertiesPanel/PART_ContentPresenter/HeaderButton/PART_HitArea/PART_ContentPresenter/text:-517971036
+run	menu: View > Go To Definition
+done	menu: View > Go To Definition	vm.CaretText=Ln 11, Col 12, editor=676:1947379066:258:258+0:0, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/list38351949=4:2, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BreadcrumbScroller/PART_ContentPresenter/PART_ItemsPresenter/text:977895594
+run	menu: View > Peek Definition
+done	menu: View > Peek Definition	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:PeekDefinitionView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:PeekDefinitionView/PeekDefinitionView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:PeekDefinitionView/PeekDefinitionView/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:PeekDefinitionView/PeekDefinitionView/PART_ContentPresenter/TitleButton
+run	menu: View > Go To Implementation
+done	menu: View > Go To Implementation	vm.CaretText=Ln 11, Col 12, editor=676:1947379066:258:258+0:0, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/list38351949=4:2, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BreadcrumbScroller/PART_ContentPresenter/PART_ItemsPresenter/text:977895594
+run	menu: View > Go To Declaration
+done	menu: View > Go To Declaration	vm.StatusText=Go To Declaration needs a language serv…, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:357834690, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-6328315
+run	menu: View > Go To Type Definition
+done	menu: View > Go To Type Definition	vm.StatusText=Go To Type Definition needs a language …, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-594861136, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:357834690
+run	menu: View > Find All References
+done	menu: View > Find All References	vm.SelectedPanel=References, vm.IsOutputSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/ReferencesView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/ReferencesView/PART_ContentPresenter
+run	menu: Git > Commit
+done	menu: Git > Commit	vm.SelectedSideBarPanel=GitChanges, vm.IsSolutionExplorerSelected=False, vm.IsGitChangesSelected=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/GitChangesView
+run	menu: Git > Pull Requests
+done	menu: Git > Pull Requests	vm.IsPullRequestsSelected=True, vm.SelectedSideBarPanel=PullRequests, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/PullRequestList
+run	menu: Git > Publish to GitHub
+done	menu: Git > Publish to GitHub	vm.SelectedSideBarPanel=GitChanges, vm.IsSolutionExplorerSelected=False, vm.IsGitChangesSelected=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/GitChangesView
+run	menu: Git > GitHub Actions
+done	menu: Git > GitHub Actions	vm.IsActionsSelected=True, vm.SelectedSideBarPanel=Actions, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/ActionsView
+run	menu: Git > GitHub Account
+done	menu: Git > GitHub Account	focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/GitHubSignInView/PART_ContentPresenter/text:-396629211, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/GitHubSignInView/PART_ContentPresenter/text:-2017855817, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/GitHubSignInView/PART_ContentPresenter/text:-404578162
+problem	overlap	menu: Git > GitHub Account	Grid#MainArea > Grid#EditorArea > Border#BottomDock > ComboBox#OutputSourceBox: ComboBox OutputSourceBox lies under Button "Cancel": 85 × 43 dips of them overlap, and a tap there goes to Button "Cancel". [menus-light-010.png]
+run	menu: Build > Embedded Firmware
+done	menu: Build > Embedded Firmware	vm.Output=113, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_ContentPresenter/PART_Watermark
+run	menu: Build > Build Android APK
+done	menu: Build > Build Android APK	vm.StatusText=Choose a Gradle Android or Capacitor st…, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:452377083, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-594861136
+run	menu: Build > Run Android App
+done	menu: Build > Run Android App	no change
+problem	no-effect	menu: Build > Run Android App	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	menu: Build > Build for iOS
+done	menu: Build > Build for iOS	vm.StatusText=Build for iOS needs a Capacitor app or …, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-1505749198, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:452377083
+run	menu: Build > Run iOS Workflow
+done	menu: Build > Run iOS Workflow	vm.IsActionsSelected=True, vm.SelectedSideBarPanel=Actions, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/ActionsView
+run	menu: Build > Build Solution
+done	menu: Build > Build Solution	vm.StatusText=Build succeeded, vm.Output=324, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1537374349, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-1505749198
+run	menu: Build > Debug Configuration
+done	menu: Build > Debug Configuration	no change
+run	menu: Build > Release Configuration
+done	menu: Build > Release Configuration	vm.Configuration=Release, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/Toolbar/ConfigurationItem/PART_HitArea/PART_ContentPresenter/text:297655870, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/Toolbar/ConfigurationItem/PART_HitArea/PART_ContentPresenter/text:403147530
+run	menu: Debug > Windows > Locals
+done	menu: Debug > Windows > Locals	vm.SelectedPanel=Locals, vm.IsOutputSelected=False, vm.IsLocalsSelected=True, vm.ShowsDebugPanels=True
+run	menu: Debug > Windows > Watch
+done	menu: Debug > Windows > Watch	vm.SelectedPanel=Watch, vm.IsOutputSelected=False, vm.IsWatchSelected=True, vm.ShowsDebugPanels=True
+run	menu: Debug > Windows > Call Stack
+done	menu: Debug > Windows > Call Stack	vm.SelectedPanel=CallStack, vm.IsOutputSelected=False, vm.IsCallStackSelected=True, vm.ShowsDebugPanels=True
+run	menu: Debug > Windows > Output
+done	menu: Debug > Windows > Output	no change
+run	menu: Debug > Start Debugging
+done	menu: Debug > Start Debugging	vm.StatusText=Ready, vm.Output=467, focus=none, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar
+run	menu: Debug > Start with Recording
+done	menu: Debug > Start with Recording	vm.ShowsDebugPanels=True, vm.HasRecording=True, vm.RecordingMaximum=20, vm.RecordingPosition=20
+problem	overlap	menu: Debug > Start with Recording	Grid#EditorArea > Border#BottomDock > Border#RecordingTimeline > Slider#RecordingSlider: Slider RecordingSlider lies under TextBox TokenBox: 454 × 17 dips of them overlap, and a tap there goes to TextBox TokenBox. [menus-light-011.png]
+run	menu: Debug > Recording Buffer
+slow	menu: Debug > Recording Buffer	still running after 20 s
+done	menu: Debug > Recording Buffer	vm.Prompt=Recording buffer, focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog/text:-816771675
+run	menu: Debug > Start Without Debugging
+done	menu: Debug > Start Without Debugging	vm.Output=468, focus=none
+run	menu: Debug > Embedded > Devices and probes
+done	menu: Debug > Embedded > Devices and probes	vm.Output=506
+run	menu: Debug > Embedded > Read target identity
+problem	error-log	menu: Debug > Embedded > Read target identity	Identify target uses an Android USB-OTG connection. On a desktop, use its installed probe-rs info command.
+done	menu: Debug > Embedded > Read target identity	vm.State=Failed, vm.StatusText=Embedded operation failed; see Output, vm.Output=613, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1391650729
+run	menu: Debug > Embedded > Board and build configuration
+done	menu: Debug > Embedded > Board and build configuration	vm.Output=726
+run	menu: Debug > Embedded > Build firmware
+done	menu: Debug > Embedded > Build firmware	vm.Output=839
+run	menu: Debug > Embedded > Upload and verify
+done	menu: Debug > Embedded > Upload and verify	vm.Output=952
+run	menu: Debug > Embedded > Upload UF2 to BOOTSEL storage
+problem	error-log	menu: Debug > Embedded > Upload UF2 to BOOTSEL storage	Permissioned BOOTSEL storage upload uses Android USB-OTG. On a desktop, use the board's mounted drive or picotool.
+done	menu: Debug > Embedded > Upload UF2 to BOOTSEL storage	vm.Output=1067
+run	menu: Debug > Embedded > Debug on chip
+done	menu: Debug > Embedded > Debug on chip	vm.Output=1180
+run	menu: Debug > Embedded > RTT and defmt logs
+done	menu: Debug > Embedded > RTT and defmt logs	vm.Output=1293
+run	menu: Debug > Embedded > Upload over Wi-Fi
+done	menu: Debug > Embedded > Upload over Wi-Fi	vm.Output=1406
+run	menu: Debug > Embedded > Production batch
+done	menu: Debug > Embedded > Production batch	vm.Output=1519
+run	menu: Debug > Embedded > Backup firmware
+done	menu: Debug > Embedded > Backup firmware	vm.Output=1632
+run	menu: Debug > Embedded > Compare firmware dumps
+slow	menu: Debug > Embedded > Compare firmware dumps	still running after 20 s
+done	menu: Debug > Embedded > Compare firmware dumps	vm.Prompt=Compare firmware dumps, focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog/text:-1269658461
+run	menu: Debug > Embedded > Memory report
+done	menu: Debug > Embedded > Memory report	vm.Output=1745
+run	menu: Debug > Embedded > Stack analysis
+done	menu: Debug > Embedded > Stack analysis	vm.Output=1858
+run	menu: Debug > Embedded > Decode crash
+done	menu: Debug > Embedded > Decode crash	vm.Output=1971
+run	menu: Debug > Embedded > Capture halted Cortex-M fault
+problem	error-log	menu: Debug > Embedded > Capture halted Cortex-M fault	Live fault capture: Pause the matching on-chip GDB session before capturing live fault status.
+done	menu: Debug > Embedded > Capture halted Cortex-M fault	vm.Output=2066
+run	menu: Debug > Embedded > Load CMSIS-SVD
+slow	menu: Debug > Embedded > Load CMSIS-SVD	still running after 20 s
+done	menu: Debug > Embedded > Load CMSIS-SVD	vm.Prompt=Load device registers, focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog/text:323829038
+run	menu: Debug > Embedded > Load register header
+slow	menu: Debug > Embedded > Load register header	still running after 20 s
+done	menu: Debug > Embedded > Load register header	vm.Prompt=Load device register macros, focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog/text:1060243182
+run	menu: Debug > Embedded > Inspect peripheral register
+done	menu: Debug > Embedded > Inspect peripheral register	vm.StatusText=Load the selected chip's CMSIS-SVD file…, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-960129229, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1391650729
+run	menu: Debug > Embedded > Edit register field
+done	menu: Debug > Embedded > Edit register field	no change
+problem	no-effect	menu: Debug > Embedded > Edit register field	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	menu: Debug > Embedded > RTOS threads
+done	menu: Debug > Embedded > RTOS threads	vm.StatusText=Pause the embedded debug adapter to ins…, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-392380798, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-960129229
+run	menu: Debug > Embedded > Check pin conflicts
+done	menu: Debug > Embedded > Check pin conflicts	vm.StatusText=Pin check: Pin checks support .ioc, .dt…, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-1742709766, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-392380798
+run	menu: Debug > Embedded > Run embedded tests
+done	menu: Debug > Embedded > Run embedded tests	vm.Output=2179
+run	menu: Debug > Embedded > Run tests on board
+done	menu: Debug > Embedded > Run tests on board	vm.Output=2292
+run	menu: Debug > Embedded > Run Unity tests over serial
+done	menu: Debug > Embedded > Run Unity tests over serial	vm.Output=2405
+run	menu: Debug > Embedded > Import test results
+done	menu: Debug > Embedded > Import test results	vm.Output=2518
+run	menu: Debug > Embedded > MicroPython REPL
+problem	error-log	menu: Debug > Embedded > MicroPython REPL	Not found on this computer. Install MicroPython / CircuitPython, then open the Store again.
+done	menu: Debug > Embedded > MicroPython REPL	vm.StatusText=MicroPython / CircuitPython is not avai…, vm.Output=92, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-2020925371, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar
+run	menu: Debug > Embedded > Sync active Python file
+problem	error-log	menu: Debug > Embedded > Sync active Python file	Open the Python file to synchronize first.
+done	menu: Debug > Embedded > Sync active Python file	vm.StatusText=Embedded operation failed; see Output, vm.Output=135, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1391650729, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-2020925371
+run	menu: Debug > Embedded > Import vendor project
+problem	error-log	menu: Debug > Embedded > Import vendor project	Open a Keil .uvprojx, IAR .ewp or Atmel/Microchip .cproj file first.
+done	menu: Debug > Embedded > Import vendor project	vm.Output=204
+run	menu: Debug > Flutter Hot Reload
+done	menu: Debug > Flutter Hot Reload	no change
+problem	no-effect	menu: Debug > Flutter Hot Reload	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	menu: Debug > Flutter Hot Restart
+done	menu: Debug > Flutter Hot Restart	no change
+problem	no-effect	menu: Debug > Flutter Hot Restart	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	menu: Debug > Step Into
+done	menu: Debug > Step Into	vm.SelectedPanel=Locals, vm.IsOutputSelected=False, vm.State=Paused, vm.StatusText=Paused (Break All) · Program.cs, line 12
+problem	overlap	menu: Debug > Step Into	DebugTouchBarView#DebugTouchBar > ContentPresenter#PART_ContentPresenter > AdaptiveBar#Bar > AdaptiveBarItem: AdaptiveBarItem lies under TextBox TokenBox: 80 × 14 dips of them overlap, and a tap there goes to TextBox TokenBox. [menus-light-012.png]
+run	menu: Debug > Step Over
+done	menu: Debug > Step Over	vm.SelectedPanel=Locals, vm.IsOutputSelected=False, vm.State=Paused, vm.StatusText=Paused (Break All) · Program.cs, line 12
+run	menu: Debug > Run To Cursor
+done	menu: Debug > Run To Cursor	vm.SelectedPanel=Locals, vm.IsOutputSelected=False, vm.State=Paused, vm.StatusText=Paused at the cursor · Program.cs, line…
+run	menu: Debug > Toggle Breakpoint
+done	menu: Debug > Toggle Breakpoint	vm.Breakpoints=1
+run	menu: Debug > Delete All Breakpoints
+done	menu: Debug > Delete All Breakpoints	vm.Breakpoints=0, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView/LightBulbView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView/LightBulbView/PART_ContentPresenter
+run	menu: Test > Run Tests in Context
+done	menu: Test > Run Tests in Context	vm.StatusText=There are no tests at the caret, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1562495575, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-913985013
+run	menu: Test > Live Unit Testing > Run After Typing Pauses
+done	menu: Test > Live Unit Testing > Run After Typing Pauses	no change
+run	menu: Test > Live Unit Testing > Run on Save
+done	menu: Test > Live Unit Testing > Run on Save	no change
+problem	no-effect	menu: Test > Live Unit Testing > Run on Save	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	menu: Test > Record UI Test
+done	menu: Test > Record UI Test	vm.SelectedSideBarPanel=Swarm, vm.IsSolutionExplorerSelected=False, vm.IsSwarmSelected=True, vm.ShowsSwarmTab=True
+run	menu: Test > Run UI Tests on Every Screen
+done	menu: Test > Run UI Tests on Every Screen	vm.StatusText=There are no recorded UI tests yet: rec…, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-95631852, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1562495575
+run	menu: Test > Test Explorer
+done	menu: Test > Test Explorer	vm.SelectedSideBarPanel=TestExplorer, vm.IsSolutionExplorerSelected=False, vm.IsTestExplorerSelected=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/TestExplorer
+run	menu: Project > Port to Avalonia
+done	menu: Project > Port to Avalonia	vm.StatusText=Select a C# WPF or Windows Forms projec…, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:640317460, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-95631852
+run	menu: Extensions > Manage Extensions
+done	menu: Extensions > Manage Extensions	vm.ShowsEditorTouchBar=False, vm.CaretText=Ln 1, Col 1, vm.ShowsEditorStatus=False, vm.Documents=/tmp/tabstudio-tests/ad5abe50c0d44716aa…
+problem	overlap	menu: Extensions > Manage Extensions	ContentPresenter#PART_ContentPresenter > Grid#Root > DockPanel#ListColumn > TextBox#SearchBox: TextBox SearchBox lies under Button: 71 × 38 dips of them overlap, and a tap there goes to Button. [menus-light-013.png]
+run	menu: Extensions > Install from VSIX
+done	menu: Extensions > Install from VSIX	vm.ShowsEditorTouchBar=False, vm.CaretText=Ln 1, Col 1, vm.ShowsEditorStatus=False, focus=none
+run	menu: Extensions > Color Theme
+slow	menu: Extensions > Color Theme	still running after 20 s
+done	menu: Extensions > Color Theme	focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView/LightBulbView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView/LightBulbView/PART_ContentPresenter
+run	menu: Tools > Theme > Light
+done	menu: Tools > Theme > Light	vm.CurrentTheme=Light
+run	menu: Tools > Theme > Follow the System
+done	menu: Tools > Theme > Follow the System	vm.CurrentTheme=System
+run	menu: Tools > Text Size > Make Text Larger
+done	menu: Tools > Text Size > Make Text Larger	vm.CurrentTextSize=Large, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar/Root, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar/Root/VerticalRoot
+run	menu: Tools > Text Size > Make Text Smaller
+done	menu: Tools > Text Size > Make Text Smaller	vm.CurrentTextSize=Small, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar/Root, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar/Root/VerticalRoot
+run	menu: Tools > Text Size > Follow the System
+done	menu: Tools > Text Size > Follow the System	no change
+run	menu: Tools > Text Size > Small
+done	menu: Tools > Text Size > Small	vm.CurrentTextSize=Small, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar/Root, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar/Root/VerticalRoot
+run	menu: Tools > Text Size > Default
+done	menu: Tools > Text Size > Default	vm.CurrentTextSize=Default
+run	menu: Tools > Text Size > Large
+done	menu: Tools > Text Size > Large	vm.CurrentTextSize=Large
+run	menu: Tools > Text Size > Larger
+done	menu: Tools > Text Size > Larger	vm.CurrentTextSize=Larger, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_HorizontalScrollBar, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_HorizontalScrollBar/Root, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_HorizontalScrollBar/Root/HorizontalRoot
+run	menu: Tools > Text Size > Very Large
+done	menu: Tools > Text Size > Very Large	vm.CurrentTextSize=VeryLarge, editor=1193:1693536592:463:463+0:234, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_HorizontalScrollBar, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_HorizontalScrollBar/Root
+run	menu: Window > Next Document
+done	menu: Window > Next Document	vm.ShowsEditorTouchBar=False, vm.CaretText=Ln 1, Col 1, vm.ShowsEditorStatus=False, focus=none
+run	menu: Window > Previous Document
+done	menu: Window > Previous Document	vm.ShowsEditorTouchBar=False, vm.CaretText=Ln 1, Col 1, focus=NotebookView, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/list38351949=5:0
+run	debugging: Debug > Embedded > Read target memory
+done	debugging: Debug > Embedded > Read target memory	vm.StatusText=Target memory: Pause the connected on-c…, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:2018379012, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-1452103408
+run	debugging: Debug > Embedded > Disassembly
+done	debugging: Debug > Embedded > Disassembly	vm.StatusText=Target disassembly: Pause the connected…, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-10510179, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-1452103408
+run	debugging: Debug > Stop Debugging
+done	debugging: Debug > Stop Debugging	vm.SelectedPanel=Output, vm.IsOutputSelected=True, vm.State=Ready, vm.StatusText=Debugging stopped
+run	debugging: Debug > Restart
+done	debugging: Debug > Restart	vm.CaretText=Ln 16, Col 1, editor=1193:1693536592:477:477+0:234, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/PART_HitArea/PART_ContentPresenter/text:-134110095, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/PART_HitArea/PART_ContentPresenter/text:2147183710
+run	debugging: Debug > Apply C# Hot Reload
+done	debugging: Debug > Apply C# Hot Reload	vm.StatusText=No executable C# changes to apply., vm.Output=275, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1058442730, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-1452103408
+run	debugging: Debug > Show Next Statement
+done	debugging: Debug > Show Next Statement	vm.CaretText=Ln 16, Col 1, editor=1193:1693536592:477:477+0:234, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/PART_HitArea/PART_ContentPresenter/text:-134110095, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/PART_HitArea/PART_ContentPresenter/text:2147183710
+run	debugging: Debug > Step Out
+done	debugging: Debug > Step Out	vm.SelectedPanel=Output, vm.IsOutputSelected=True, vm.State=Ready, vm.StatusText=Ready
+run	menu: File > Close Solution
+done	menu: File > Close Solution	page=StartViewModel, focus=none, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/StartView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/StartView/PART_ContentPresenter
+unavailable on the sample	Git > Fetch, Git > Pull, Git > Sync (Pull then Push), Git > New Branch, Git > Switch Branch, Git > Create Pull Request, Git > Open on GitHub, Git > View History, Debug > Run Current File, Debug > Use the Windows Bridge, Debug > PIC Target, Debug > MPLAB Configuration, Debug > On-chip Debugging in MPLAB X, Debug > Break All, Debug > Step Back, Debug > Step Back Into, Debug > Reverse Continue, Test > Run All Tests, Test > Run Failed Tests, Test > Repeat Last Run, Test > Cancel Test Run, Test > Live Unit Testing > Start, Test > Live Unit Testing > Pause, Test > Live Unit Testing > Continue, Test > Live Unit Testing > Stop, Tools > Install Project Packages

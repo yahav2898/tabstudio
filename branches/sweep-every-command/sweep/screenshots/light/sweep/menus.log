@@ -1,0 +1,13 @@
+problem	dead-end	menu: Extensions > Color Theme	Escape does not close the dialog PART_ContentPresenter in LiveShareView: a keyboard user is left in it.
+problem	dead-end	menu: Extensions > Color Theme	Escape does not close the dialog PART_ContentPresenter in GitHubSignInView: a keyboard user is left in it.
+problem	dead-end	menu: Extensions > Color Theme	Escape does not close the dialog PART_ContentPresenter in LinkView: a keyboard user is left in it.
+problem	dead-end	menu: Extensions > Color Theme	the dialog PART_ContentPresenter in LiveJoinView cannot be closed.
+run	menu: Extensions > File Icon Theme
+slow	menu: Extensions > File Icon Theme	still running after 20 s
+done	menu: Extensions > File Icon Theme	focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView/LightBulbView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView/LightBulbView/PART_ContentPresenter
+run	menu: Extensions > Check for Updates
+done	menu: Extensions > Check for Updates	vm.ShowsEditorTouchBar=False, vm.CaretText=Ln 1, Col 1, vm.ShowsEditorStatus=False, focus=none
+run	menu: Tools > Toolchain Store
+done	menu: Tools > Toolchain Store	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/ToolchainOverlaysView/PART_ContentPresenter/StoreScrim, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/ToolchainOverlaysView/PART_ContentPresenter/StoreScrim/Store, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/ToolchainOverlaysView/PART_ContentPresenter/StoreScrim/Store/text:1578213879, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/ToolchainOverlaysView/PART_ContentPresenter/StoreScrim/Store/text:1570509864
+run	menu: Tools > Theme > Dark
+done	menu: Tools > Theme > Dark	no change

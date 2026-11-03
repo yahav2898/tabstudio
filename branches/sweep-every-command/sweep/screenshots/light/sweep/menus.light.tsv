@@ -1,0 +1,36 @@
+# menus (light): 154 actions, 35 problems
+dead-end	menu: Edit > Quick Actions and Refactorings	A tap outside its flyout or menu does not close it.
+dead-end	putting the IDE back	A tap outside its flyout or menu does not close it.
+dead-end	menu: Extensions > Color Theme	Escape does not close the dialog PART_ContentPresenter in LiveShareView: a keyboard user is left in it.
+dead-end	menu: Extensions > Color Theme	Escape does not close the dialog PART_ContentPresenter in GitHubSignInView: a keyboard user is left in it.
+dead-end	menu: Extensions > Color Theme	Escape does not close the dialog PART_ContentPresenter in LinkView: a keyboard user is left in it.
+dead-end	menu: Extensions > Color Theme	the dialog PART_ContentPresenter in LiveJoinView cannot be closed.
+error-log	menu: Debug > Embedded > Read target identity	Identify target uses an Android USB-OTG connection. On a desktop, use its installed probe-rs info command.
+error-log	menu: Debug > Embedded > Upload UF2 to BOOTSEL storage	Permissioned BOOTSEL storage upload uses Android USB-OTG. On a desktop, use the board's mounted drive or picotool.
+error-log	menu: Debug > Embedded > Capture halted Cortex-M fault	Live fault capture: Pause the matching on-chip GDB session before capturing live fault status.
+error-log	menu: Debug > Embedded > MicroPython REPL	Not found on this computer. Install MicroPython / CircuitPython, then open the Store again.
+error-log	menu: Debug > Embedded > Sync active Python file	Open the Python file to synchronize first.
+error-log	menu: Debug > Embedded > Import vendor project	Open a Keil .uvprojx, IAR .ewp or Atmel/Microchip .cproj file first.
+no-effect	menu: Edit > Redo	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	menu: Edit > Copy	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	menu: Edit > IntelliSense > Parameter Info	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	menu: Build > Run Android App	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	menu: Debug > Embedded > Edit register field	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	menu: Debug > Flutter Hot Reload	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	menu: Debug > Flutter Hot Restart	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	menu: Test > Live Unit Testing > Run on Save	It changed nothing a person can see: no panel, dialog, text, selection or status.
+overlap	menu: File > Open Remote Folder (SSH)	Grid#SideBar > SolutionExplorerView > ContentPresenter#PART_ContentPresenter > Button: Button lies under Button: 44 × 44 dips of them overlap, and a tap there goes to Button. [menus-light-001.png]
+overlap	menu: File > TabStudio Link	Grid#SideBar > SolutionExplorerView > ContentPresenter#PART_ContentPresenter > TextBox: TextBox lies under Button: 44 × 18 dips of them overlap, and a tap there goes to Button. [menus-light-002.png]
+overlap	menu: File > Join a Swarm	Panel#TouchBarHost > Panel#TouchBarFader > Border#EditTouchBar > Button#FoldTouchBarButton: Button FoldTouchBarButton lies under Button: 24 × 37 dips of them overlap, and a tap there goes to Button. [menus-light-003.png]
+overlap	menu: File > Join a Swarm	Panel#TouchBarFader > Border#EditTouchBar > AdaptiveBar#TouchBar > AdaptiveBarItem: AdaptiveBarItem lies under Button: 99 × 37 dips of them overlap, and a tap there goes to Button. [menus-light-003.png]
+overlap	menu: File > Share Session	ContentPresenter#PART_ContentPresenter > LiveShareView > ContentPresenter#PART_ContentPresenter > Button: Button lies under Button: 16 × 34 dips of them overlap, and a tap there goes to Button. [menus-light-004.png]
+overlap	menu: File > Join Live Session	Grid#MainArea > Grid#EditorArea > Border#BottomDock > Button#HideBottomPanelButton: Button HideBottomPanelButton lies under Button "Cancel": 39 × 36 dips of them overlap, and a tap there goes to Button "Cancel". [menus-light-005.png]
+overlap	menu: View > Git Changes	Grid#SideBar > PropertiesView#PropertiesPanel > ContentPresenter#PART_ContentPresenter > Button#HeaderButton: Button HeaderButton lies under Button "Sign in": 64 × 42 dips of them overlap, and a tap there goes to Button "Sign in". [menus-light-006.png]
+overlap	menu: View > Database Explorer	Grid#SideBar > DatabaseExplorerView > ContentPresenter#PART_ContentPresenter > Button#ConnectionsTab: Button "Connections" lies under Button: 44 × 43 dips of them overlap, and a tap there goes to Button. [menus-light-007.png]
+overlap	menu: View > Test Explorer	Grid#SideBar > TestExplorerView#TestExplorer > ContentPresenter#PART_ContentPresenter > Button: Button lies under Button: 13 × 43 dips of them overlap, and a tap there goes to Button. [menus-light-008.png]
+overlap	menu: View > Test Explorer	Grid#SideBar > TestExplorerView#TestExplorer > ContentPresenter#PART_ContentPresenter > TextBox: TextBox lies under Button: 44 × 18 dips of them overlap, and a tap there goes to Button. [menus-light-008.png]
+overlap	menu: View > Containers	Grid#SideBar > ContainersView > ContentPresenter#PART_ContentPresenter > TextBox: TextBox lies under Button: 44 × 31 dips of them overlap, and a tap there goes to Button. [menus-light-009.png]
+overlap	menu: Git > GitHub Account	Grid#MainArea > Grid#EditorArea > Border#BottomDock > ComboBox#OutputSourceBox: ComboBox OutputSourceBox lies under Button "Cancel": 85 × 43 dips of them overlap, and a tap there goes to Button "Cancel". [menus-light-010.png]
+overlap	menu: Debug > Start with Recording	Grid#EditorArea > Border#BottomDock > Border#RecordingTimeline > Slider#RecordingSlider: Slider RecordingSlider lies under TextBox TokenBox: 454 × 17 dips of them overlap, and a tap there goes to TextBox TokenBox. [menus-light-011.png]
+overlap	menu: Debug > Step Into	DebugTouchBarView#DebugTouchBar > ContentPresenter#PART_ContentPresenter > AdaptiveBar#Bar > AdaptiveBarItem: AdaptiveBarItem lies under TextBox TokenBox: 80 × 14 dips of them overlap, and a tap there goes to TextBox TokenBox. [menus-light-012.png]
+overlap	menu: Extensions > Manage Extensions	ContentPresenter#PART_ContentPresenter > Grid#Root > DockPanel#ListColumn > TextBox#SearchBox: TextBox SearchBox lies under Button: 71 × 38 dips of them overlap, and a tap there goes to Button. [menus-light-013.png]

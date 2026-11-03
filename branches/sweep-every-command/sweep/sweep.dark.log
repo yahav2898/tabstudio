@@ -1,0 +1,53 @@
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.13]   Discovering: TabStudio.App.Tests
+[xUnit.net 00:00:00.31]   Discovered:  TabStudio.App.Tests
+[xUnit.net 00:00:00.34]   Starting:    TabStudio.App.Tests
+  Passed TabStudio.App.Tests.Accessibility.AccessibilityTourTests.Joining_a_Live_session [1 s]
+  Passed TabStudio.App.Tests.Accessibility.AccessibilityTourTests.The_shell_at_the_largest_text_size_on_every_screen [2 s]
+  Passed TabStudio.App.Tests.Sweep.TabletSituationTests.Hebrew_and_IME_composition_in_the_editor_Find_Replace_and_the_Terminal [5 s]
+  Passed TabStudio.App.Tests.Sweep.TabletSituationTests.Rotating_and_going_to_the_background_during_a_build_and_a_debug_session [2 s]
+  Passed TabStudio.App.Tests.Sweep.TabletSituationTests.Every_tool_window_fits_every_screen_and_window_size [35 s]
+  Passed TabStudio.App.Tests.Sweep.TabletSituationTests.A_hardware_keyboard_attached_and_detached_and_the_on_screen_keyboard_over_the_caret [3 s]
+Good evening, developer! This program was compiled and run on your tablet.
+Statically typed languages, oldest first:
+  C#         since 2000 (26 years)
+  Rust       since 2015 (11 years)
+  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_key_gesture_the_IDE_shows_runs_its_command [25 s]
+  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_menu_and_search_command_runs_without_an_error_on_a_tablet [4 m 31 s]
+  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_shell_and_its_tool_windows_works_by_touch_in_both_orientations [1 m 59 s]
+  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_command_and_setting_is_found_by_Ctrl_Q_and_runs_from_it [2 s]
+  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_context_menu_item_runs_its_command [5 s]
+  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_Start_window_works [2 s]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.A_confirmation_answers_Enter_and_Escape_and_keeps_keys_out_of_the_editor_behind_it [1 s]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Select_All_Cut_Copy_and_Paste_are_in_the_Edit_menu_and_Select_All_in_the_context_menu [616 ms]
+[xUnit.net 00:08:01.72]     TabStudio.App.Tests.Sweep.CommandFixTests.The_caret_stays_above_the_on_screen_keyboard [FAIL]
+[xUnit.net 00:08:01.72]       Assert.Equal() Failure: Values are not within 1 decimal place
+[xUnit.net 00:08:01.72]       Expected: 0 (rounded from 0)
+[xUnit.net 00:08:01.72]       Actual:   296.89999999999998 (rounded from 296.92559999999997)
+[xUnit.net 00:08:01.72]       Stack Trace:
+[xUnit.net 00:08:01.72]         /_/tests/TabStudio.App.Tests/Sweep/CommandFixTests.cs(243,0): at TabStudio.App.Tests.Sweep.CommandFixTests.The_caret_stays_above_the_on_screen_keyboard()
+[xUnit.net 00:08:01.72]         --- End of stack trace from previous location ---
+  Failed TabStudio.App.Tests.Sweep.CommandFixTests.The_caret_stays_above_the_on_screen_keyboard [1 s]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 1 decimal place
+Expected: 0 (rounded from 0)
+Actual:   296.89999999999998 (rounded from 296.92559999999997)
+  Stack Trace:
+     at TabStudio.App.Tests.Sweep.CommandFixTests.The_caret_stays_above_the_on_screen_keyboard() in /_/tests/TabStudio.App.Tests/Sweep/CommandFixTests.cs:line 243
+--- End of stack trace from previous location ---
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.View_Solution_Explorer_and_Ctrl_Alt_L_show_it_instead_of_folding_the_side_bar [685 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Go_To_Line_moves_the_caret_from_Ctrl_G_and_from_the_caret_in_the_status_bar [1 s]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.A_language_request_after_the_solution_closed_is_cancelled_rather_than_failed [13 ms]
+[xUnit.net 00:08:05.67]   Finished:    TabStudio.App.Tests
+Data collector 'Blame' message: All tests finished running, Sequence file will not be generated.
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Navigate_Backward_and_Forward_are_available_only_when_they_go_somewhere [773 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.The_status_bar_labels_are_not_buttons_that_do_nothing [489 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Sync_with_Active_Document_shows_the_file_in_Solution_Explorer_from_another_tool_window [503 ms]
+
+Test Run Failed.
+Total tests: 21
+     Passed: 20
+     Failed: 1
+ Total time: 8.1041 Minutes

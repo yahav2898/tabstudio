@@ -1,0 +1,28 @@
+run	start: StartView > "Join a tablet's swarm, to run the app it builds on this device"
+done	start: StartView > "Join a tablet's swarm, to run the app it builds on this device"	focus=Button, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/text:-287005286, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/text:1607280148, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/PART_HitArea
+run	start: StartView > "Join a Live session: code together with another device on this Wi-Fi"
+problem	covered	start: StartView > "Join a Live session: code together with another device on this Wi-Fi"	A tap on its middle reaches Panel instead.
+done	start: StartView > "Join a Live session: code together with another device on this Wi-Fi"	no change
+problem	no-effect	start: StartView > "Join a Live session: code together with another device on this Wi-Fi"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	start: StartView > "TabStudio Link: a phone or PC compiles for this device"
+problem	covered	start: StartView > "TabStudio Link: a phone or PC compiles for this device"	A tap on its middle reaches Panel instead.
+done	start: StartView > "TabStudio Link: a phone or PC compiles for this device"	no change
+problem	no-effect	start: StartView > "TabStudio Link: a phone or PC compiles for this device"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	start: StartView > "Open from GitHub"
+problem	covered	start: StartView > "Open from GitHub"	A tap on its middle reaches Border instead.
+done	start: StartView > "Open from GitHub"	no change
+problem	no-effect	start: StartView > "Open from GitHub"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	start: StartView > "Open a folder"
+problem	covered	start: StartView > "Open a folder"	A tap on its middle reaches Border instead.
+done	start: StartView > "Open a folder"	no change
+problem	no-effect	start: StartView > "Open a folder"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	start: StartView > "New project"
+problem	covered	start: StartView > "New project"	A tap on its middle reaches Border instead.
+done	start: StartView > "New project"	no change
+problem	no-effect	start: StartView > "New project"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	start: StartView > "Open the sample"
+problem	covered	start: StartView > "Open the sample"	A tap on its middle reaches Panel instead.
+done	start: StartView > "Open the sample"	no change
+problem	no-effect	start: StartView > "Open the sample"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	start: LinkView > "Close"
+done	start: LinkView > "Close"	focus=none, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/text:-287005286, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/text:1607280148, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LinkView/PART_ContentPresenter/PART_HitArea

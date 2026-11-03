@@ -1,0 +1,16 @@
+# touch-landscape (dark): 142 actions, 15 problems
+dead-end	tap (landscape: Swarm): SwarmView > "Add a device"	Escape does not close the dialog PART_ContentPresenter in SwarmInviteView: a keyboard user is left in it.
+dead-end	tap (landscape: Live): LivePanelView > "Share session"	Escape does not close the dialog PART_ContentPresenter in LiveShareView: a keyboard user is left in it.
+dead-end	tap (landscape: Live): LivePanelView > "Show the session's code"	Escape does not close the dialog PART_ContentPresenter in LiveShareView: a keyboard user is left in it.
+dead-end	tap (landscape: Live): LivePanelView > "Join a session"	Escape does not close the dialog PART_ContentPresenter in LiveJoinView: a keyboard user is left in it.
+no-effect	tap (landscape): WorkspaceView > "Save All"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (landscape): WorkspaceView > "Output"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (landscape: Swarm): UiTestRecorderView > "Record"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (landscape: Database): DatabaseExplorerView > "Update Database"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (landscape: Database): DatabaseExplorerView > "Add"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (landscape: Containers): ContainersView > "Stop"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (landscape: Containers): ContainersView > "Restart"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+overlap	tap (landscape): PropertiesView > HeaderButton "Show or hide Properties"	Grid#SideBar > PropertiesView#PropertiesPanel > ContentPresenter#PART_ContentPresenter > Button#HeaderButton: Button HeaderButton lies under GridSplitter PropertiesSplitter: 330 × 3 dips of them overlap, and a tap there goes to GridSplitter PropertiesSplitter. [touch-landscape-dark-001.png]
+overlap	tap (landscape): WorkspaceView > "Test Explorer (Ctrl+E, T)"	Grid#SideBar > SolutionExplorerView > ContentPresenter#PART_ContentPresenter > Button: Button lies under Button: 42 × 44 dips of them overlap, and a tap there goes to Button. [touch-landscape-dark-002.png]
+overlap	tap (landscape): WorkspaceView > "Test Explorer (Ctrl+E, T)"	Grid#SideBar > SolutionExplorerView > ContentPresenter#PART_ContentPresenter > TextBox: TextBox lies under Button: 43 × 38 dips of them overlap, and a tap there goes to Button. [touch-landscape-dark-002.png]
+overlap	tap (landscape): WorkspaceView > "Containers"	ContentPresenter#PART_ContentPresenter > TabControl > ContentPresenter#PART_SelectedContentHost > Button: Button "Terminal" lies under GridSplitter PropertiesSplitter: 71 × 12 dips of them overlap, and a tap there goes to GridSplitter PropertiesSplitter. [touch-landscape-dark-003.png]

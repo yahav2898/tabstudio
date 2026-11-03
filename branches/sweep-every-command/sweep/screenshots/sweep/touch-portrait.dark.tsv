@@ -1,0 +1,23 @@
+# touch-portrait (dark): 150 actions, 22 problems
+covered	tap (portrait): WorkspaceView > "Terminal"	A tap on its middle reaches Border instead.
+covered	tap (portrait: Agent): AgentPanelView > "Save"	A tap on its middle reaches ScrollContentPresenter#PART_ContentPresenter instead.
+covered	tap (portrait: Terminal): TerminalPanelView > "~"	A tap on its middle reaches ContentPresenter#PART_ContentPresenter instead.
+covered	tap (portrait: Terminal): TerminalPanelView > "/"	A tap on its middle reaches TextBlock instead.
+covered	tap (portrait: Terminal): TerminalPanelView > "-"	A tap on its middle reaches TextBlock instead.
+dead-end	tap (portrait: Swarm): SwarmView > "Add a device"	Escape does not close the dialog PART_ContentPresenter in SwarmInviteView: a keyboard user is left in it.
+dead-end	tap (portrait: Live): LivePanelView > "Share session"	Escape does not close the dialog PART_ContentPresenter in LiveShareView: a keyboard user is left in it.
+dead-end	tap (portrait: Live): LivePanelView > "Show the session's code"	Escape does not close the dialog PART_ContentPresenter in LiveShareView: a keyboard user is left in it.
+dead-end	tap (portrait: Live): LivePanelView > "Join a session"	Escape does not close the dialog PART_ContentPresenter in LiveJoinView: a keyboard user is left in it.
+no-effect	tap (portrait): WorkspaceView > "Output"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (portrait: Agent): AgentPanelView > "Save"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (portrait: Swarm): UiTestRecorderView > "Record"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (portrait: Database): DatabaseExplorerView > "Update Database"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (portrait: Database): DatabaseExplorerView > "Add"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (portrait: Containers): ContainersView > "Stop"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (portrait: Containers): ContainersView > "Restart"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+overlap	tap (portrait): WorkspaceView > "Git Changes"	Grid#SideBar > PropertiesView#PropertiesPanel > ContentPresenter#PART_ContentPresenter > Button#HeaderButton: Button HeaderButton lies under Button "Sign in": 64 × 42 dips of them overlap, and a tap there goes to Button "Sign in". [touch-portrait-dark-001.png]
+overlap	tap (portrait): WorkspaceView > "Test Explorer (Ctrl+E, T)"	Grid#SideBar > SolutionExplorerView > ContentPresenter#PART_ContentPresenter > Button: Button lies under Button: 42 × 44 dips of them overlap, and a tap there goes to Button. [touch-portrait-dark-002.png]
+overlap	tap (portrait): WorkspaceView > "Test Explorer (Ctrl+E, T)"	Grid#SideBar > SolutionExplorerView > ContentPresenter#PART_ContentPresenter > TextBox: TextBox lies under Button: 43 × 38 dips of them overlap, and a tap there goes to Button. [touch-portrait-dark-002.png]
+overlap	tap (portrait: SolutionExplorer): PropertiesView > HeaderButton "Show or hide Properties"	Grid#MainArea > Grid#EditorArea > Border#BottomDock > ComboBox#OutputSourceBox: ComboBox OutputSourceBox lies under Button HeaderButton: 170 × 30 dips of them overlap, and a tap there goes to Button HeaderButton. [touch-portrait-dark-003.png]
+overlap	tap (portrait: SolutionExplorer): PropertiesView > HeaderButton "Show or hide Properties"	Grid#MainArea > Grid#EditorArea > Border#BottomDock > Button: Button "Clear" lies under Button HeaderButton: 56 × 30 dips of them overlap, and a tap there goes to Button HeaderButton. [touch-portrait-dark-003.png]
+overlap	tap (portrait: SolutionExplorer): PropertiesView > HeaderButton "Show or hide Properties"	Grid#MainArea > Grid#EditorArea > Border#BottomDock > Button#HideBottomPanelButton: Button HideBottomPanelButton lies under Button HeaderButton: 44 × 30 dips of them overlap, and a tap there goes to Button HeaderButton. [touch-portrait-dark-003.png]
