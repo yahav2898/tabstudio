@@ -1,15 +1,17 @@
 Device: Android 15 (API 35), x86_64, screen 2560x1800
 Displays:
 Built-in Screen, displayId 0
+Overlay #1, displayId 2: a presentation display
 Performing Streamed Install
 Success
+22:24:00 com.google.android.apps.nexuslauncher isn't responding: tapped Wait (system-dialog-1.png)
 Measurements:
-Startup to self test start: 19.40 s
+Startup to self test start: 18.76 s
 Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
- Native Heap 682434 682420 8 519 683428 717116 705694 7029
- Dalvik Heap 2804 2784 0 117 4300 8185 4093 4092
- TOTAL 1271052 1156904 51384 38606 1384128 725301 709787 11121
- TOTAL PSS: 1271052 TOTAL RSS: 1384128 TOTAL SWAP PSS: 38606
-TABSTUDIO_SELFTEST_OK 389.8 s: Shard: managed | What's your name? Tablet | Good evening, Tablet! This program was compiled and run on your tablet. | Statically typed languages, oldest first: | C#         since 2000 (26 years) | Rust       since 2015 (11 years) | The program 'HelloTablet' has exited with code 0 (0x0). | Debugger: Paused at a breakpoint · Program.cs, line 15, name = "Tablet" | Recording: historical loop total = 3 (expected 3). | Local AI: tiny GGUF generated 16 tokens / 55 characters at 29.8 tokens/s on device | Link: debugged on Self-test host over TLS 1.3 (6 requests), built on this device after it left | Live: shared the sample, Self-test guest joined over TLS (2 participants), edits went both ways within 60 ms | Language servers: Loopback Server ready, warning LB0003 on line 5, completion and Quick Info | Debug adapters: Paused at a breakpoint · greet.loopback, line 4, name = "Tablet" | SSH: device key generation, non-exportable signing provider and config import verified | Database: Keystore connection, SQLite schema, multiple SQL results and package native SQLite passed | Web: served on 127.0.0.1:43443 in 20.3 s, the API said "Hello, Tablet!" | Web screen: typed "Tablet" and tapped Greet through the browser's input on a 330 × 656 page, 3 layout findings, in 7.3 s | Static site: served on 127.0.0.1:39425 in 4.0 s | Static site preview: the page showed in 0.8 s, CSS applied without a reload and saved HTML reloaded in 3.7 s | WebAssembly: served on 127.0.0.1:40521 in 70.8 s with its boot files, no errors, run in the preview in 7.1 s: its Weather page fetched its forecast | Blazor: served on 127.0.0.1:32801 in 20.4 s with blazor.web.js (195 KB), no errors, left running | Go debugging: stopped at 13, name = "Tablet", console input and completed greeting | Rust debugging: stopped at 6, answer = 42, console input and completed greeting
+ Native Heap 676490 676444 40 15659 677464 728540 714570 10116
+ Dalvik Heap 2940 2912 0 110 4984 8217 4109 4108
+ TOTAL 1255175 1117324 40468 73659 1323252 736757 718679 14224
+ TOTAL PSS: 1255175 TOTAL RSS: 1323252 TOTAL SWAP PSS: 73659
+TABSTUDIO_SELFTEST_OK 401.3 s: Shard: managed | What's your name? Tablet | Good evening, Tablet! This program was compiled and run on your tablet. | Statically typed languages, oldest first: | C#         since 2000 (26 years) | Rust       since 2015 (11 years) | The program 'HelloTablet' has exited with code 0 (0x0). | Debugger: Paused at a breakpoint · Program.cs, line 15, name = "Tablet" | Recording: historical loop total = 3 (expected 3). | Local AI: tiny GGUF generated 16 tokens / 55 characters at 40.9 tokens/s on device | Link: debugged on Self-test host over TLS 1.3 (6 requests), built on this device after it left | Live: shared the sample, Self-test guest joined over TLS (2 participants), edits went both ways within 102 ms | Language servers: Loopback Server ready, warning LB0003 on line 5, completion and Quick Info | Debug adapters: Paused at a breakpoint · greet.loopback, line 4, name = "Tablet" | SSH: device key generation, non-exportable signing provider and config import verified | Database: Keystore connection, SQLite schema, multiple SQL results and package native SQLite passed | Web: served on 127.0.0.1:46167 in 21.0 s, the API said "Hello, Tablet!" | Web screen: typed "Tablet" and tapped Greet through the browser's input on a 330 × 656 page, 3 layout findings, in 6.5 s | Static site: served on 127.0.0.1:41395 in 3.4 s | Static site preview: the page showed in 0.4 s, CSS applied without a reload and saved HTML reloaded in 4.3 s | WebAssembly: served on 127.0.0.1:33405 in 68.6 s with its boot files, no errors, run in the preview in 6.7 s: its Weather page fetched its forecast | Blazor: served on 127.0.0.1:42075 in 11.4 s with blazor.web.js (195 KB), no errors, left running | Go debugging: stopped at 13, name = "Tablet", console input and completed greeting | Rust debugging: stopped at 6, answer = 42, console input and completed greeting
 Shard: managed
-Seconds from launch to verdict: 413
+Seconds from launch to verdict: 423
