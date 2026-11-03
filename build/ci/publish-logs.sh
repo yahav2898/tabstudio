@@ -6,6 +6,14 @@
 # Usage: build/ci/publish-logs.sh <job-name> <job-status>
 set -euo pipefail
 
+# The whole publish is bounded, so that publishing can never run a job past its time limit; see the deadline below.
+if [ -z "${TABSTUDIO_PUBLISH_BOUNDED:-}" ]; then
+  if ! TABSTUDIO_PUBLISH_BOUNDED=1 timeout -k 10 "${TABSTUDIO_PUBLISH_LIMIT:-420}" bash "$0" "$@"; then
+    echo "::warning title=publish-logs::Publishing ${1:-} to ci-logs did not finish in time; this run's logs are not there."
+  fi
+  exit 0
+fi
+
 job="${1:?job name}"
 status="${2:?job status}"
 remote="https://x-access-token:${GITHUB_TOKEN:?}@github.com/${GITHUB_REPOSITORY:?}.git"
@@ -34,9 +42,9 @@ echo "job=${job} branch=${branch} status=${status} sha=${GITHUB_SHA} run=${GITHU
 # this job's folder over them in the index, and commit that, so only this job's files are ever on disk.
 remote_url="${TABSTUDIO_PUBLISH_REMOTE:-$remote}"
 # With many branches' runs publishing at once, a fetch of the branch's trees and the retries after a lost race took
-# over half an hour, and ran jobs whose tests had passed past their time limit, which failed them. Publishing gets ten
-# minutes, each fetch and push three; logs that miss them are lost for this run, and the job keeps its result.
-deadline=$((SECONDS + ${TABSTUDIO_PUBLISH_SECONDS:-600}))
+# over half an hour, and ran jobs whose tests had passed past their time limit, which failed them. Publishing gets five
+# minutes to try, seven in all, each fetch and push three; logs that miss them are lost for this run, and the job keeps its result.
+deadline=$((SECONDS + ${TABSTUDIO_PUBLISH_SECONDS:-300}))
 for attempt in $(seq 1 12); do
   if [ "$SECONDS" -ge "$deadline" ]; then
     break
