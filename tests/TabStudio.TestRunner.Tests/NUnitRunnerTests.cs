@@ -86,6 +86,48 @@ public sealed class NUnitRunnerTests
         }
         """;
 
+    private const string ParameterDataSource = """
+        using NUnit.Framework;
+
+        namespace Shop.Tests;
+
+        public class ParameterDataTests
+        {
+            public static int[] Sizes = { 1, 2 };
+
+            [Test]
+            public void EveryCombination([Values(1, 2)] int count, [Values] bool gift) => Assert.That(count, Is.Positive);
+
+            [Test, Sequential]
+            public void InStep([Values(1, 2, 3)] int a, [Values(2, 4, 6)] int b) => Assert.That(b, Is.EqualTo(a * 2));
+
+            [Test]
+            public void InRange([Range(1, 3)] int value, [ValueSource(nameof(Sizes))] int size) => Assert.That(value * size, Is.LessThanOrEqualTo(6));
+
+            [Test]
+            public void Random([Random(1, 9, 3)] int value) => Assert.That(value, Is.InRange(1, 9));
+
+            [Test]
+            public void NoData(int value) { }
+        }
+        """;
+
+    [Fact]
+    public async Task Parameter_data_attributes_make_a_test_of_each_combination_as_NUnit_does()
+    {
+        // markdig's [Values] tests failed with "not supported by TabStudio yet".
+        using var session = UserProject.Load(ParameterDataSource, UserProject.NUnitAssemblies);
+        var summary = await session.RunAllAsync();
+
+        Assert.Equal(4, summary.Results.Count(r => r.Test.MethodName == "EveryCombination" && r.Outcome == TestOutcome.Passed));
+        Assert.Equal(3, summary.Results.Count(r => r.Test.MethodName == "InStep" && r.Outcome == TestOutcome.Passed));
+        Assert.Equal(6, summary.Results.Count(r => r.Test.MethodName == "InRange" && r.Outcome == TestOutcome.Passed));
+        Assert.Equal(3, summary.Results.Count(r => r.Test.MethodName == "Random" && r.Outcome == TestOutcome.Passed));
+        var noData = Assert.Single(summary.Results, r => r.Test.MethodName == "NoData");
+        Assert.NotEqual(TestOutcome.Passed, noData.Outcome);
+        Assert.Contains("has no data", noData.Message, StringComparison.Ordinal);
+    }
+
     [Fact]
     public async Task Discovers_tests_test_cases_and_sources()
     {

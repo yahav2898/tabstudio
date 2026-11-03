@@ -8,7 +8,7 @@ namespace TabStudio.TestRunner.Tests;
 /// base directory), YamlDotNet (the current directory and <c>[TypeConverter]</c>), FluentValidation
 /// (<c>async void</c> and <c>[InlineData(0)]</c> for a string).
 /// </summary>
-[Collection(RunEnvironmentCollection.Name)]
+[Collection(RunEnvironmentGroup.Name)]
 public sealed class RunEnvironmentTests : IDisposable
 {
     private readonly string _folder = Path.Combine(Path.GetTempPath(), "tabstudio-output-" + Guid.NewGuid().ToString("N")[..8], "bin", "Debug", "net10.0");
@@ -99,6 +99,44 @@ public sealed class RunEnvironmentTests : IDisposable
         }
         """;
 
+    private const string HookSource = """
+        using System.Reflection;
+        using Xunit;
+        using Xunit.Sdk;
+
+        namespace Output.Tests;
+
+        public sealed class RecordAttribute : BeforeAfterTestAttribute
+        {
+            public static string Log = "";
+
+            public override void Before(MethodInfo methodUnderTest) => Log += "before " + methodUnderTest.Name + ";";
+
+            public override void After(MethodInfo methodUnderTest) => Log += "after;";
+        }
+
+        [Record]
+        public class HookTests
+        {
+            [Fact]
+            public void SeesItsBefore() => Assert.EndsWith("before SeesItsBefore;", RecordAttribute.Log);
+
+            [Fact]
+            public void FailsAfterItsBefore() => throw new System.InvalidOperationException(RecordAttribute.Log);
+        }
+        """;
+
+    [Fact]
+    public async Task BeforeAfterTest_attributes_run_around_each_test_as_Verify_needs()
+    {
+        var summary = await UserProject.RunAllAsync(HookSource, UserProject.XunitAssemblies);
+
+        Assert.Equal(TestOutcome.Passed, summary.Result("SeesItsBefore").Outcome);
+        var failed = summary.Result("FailsAfterItsBefore");
+        Assert.Equal(TestOutcome.Errored, failed.Outcome);
+        Assert.Contains("before FailsAfterItsBefore;", failed.Message, StringComparison.Ordinal);
+    }
+
     [Fact]
     public async Task Tests_run_from_their_output_folder_as_under_dotnet_test()
     {
@@ -147,7 +185,7 @@ public sealed class RunEnvironmentTests : IDisposable
 
 /// <summary>The tests that change the process's current directory run one at a time.</summary>
 [CollectionDefinition(Name, DisableParallelization = true)]
-public sealed class RunEnvironmentCollection
+public sealed class RunEnvironmentGroup
 {
     public const string Name = "Run environment";
 }

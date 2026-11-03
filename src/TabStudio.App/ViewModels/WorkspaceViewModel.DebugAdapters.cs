@@ -475,7 +475,9 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
             if (e.Category is "console" or "important")
             {
-                Output.Write(e.Output, OutputKind.Info);
+                // The adapter's own message is a line: LLDB's warning that it has no Rust plugin ends without one, and
+                // the program's next line, such as libtest's "test name ... ok" that Test Explorer reads, ran on after it.
+                Output.Write(e.Output.EndsWith('\n') ? e.Output : e.Output + "\n", OutputKind.Info);
             }
             else
             {

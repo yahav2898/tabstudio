@@ -128,7 +128,7 @@ From there, try **New project** for a template in any language, **Open from GitH
 | **Swift** (experimental) | SwiftPM and `swiftc`, from the official toolchain | sourcekit-lsp | LLDB |
 
 - **C# on the tablet.** NuGet packages restore on the device, so real projects build as they are. Test Explorer runs
-  and debugs xUnit, NUnit and MSTest, and **Live Unit Testing** marks every covered line with a pass, fail or not-covered glyph
+  and debugs xUnit, NUnit and MSTest from the project's output folder, as `dotnet test` does, and **Live Unit Testing** marks every covered line with a pass, fail or not-covered glyph
   and reruns the affected tests as you type. C# notebooks run cells as you write them.
 - **Visual Basic, like C#.** `.vbproj` projects compile in the app with the same IntelliSense, quick fixes,
   navigation, debugger, Hot Reload and Live Unit Testing. `Microsoft.VisualBasic` and the `My` namespace work in

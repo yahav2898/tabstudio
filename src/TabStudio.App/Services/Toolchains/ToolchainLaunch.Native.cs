@@ -32,6 +32,7 @@ internal static partial class ToolchainLaunch
         + " e = os.path.join(s, 'lib', 'rustlib', 'etc')\\n"
         + " if os.path.isfile(os.path.join(e, 'lldb_lookup.py')):\\n"
         + "  lldb.debugger.HandleCommand('command script import \\\"' + os.path.join(e, 'lldb_lookup.py') + '\\\"')\\n"
+        + " if os.path.isfile(os.path.join(e, 'lldb_commands')):\\n"
         + "  lldb.debugger.HandleCommand('command source -s 1 \\\"' + os.path.join(e, 'lldb_commands') + '\\\"')\\n"
         + "except Exception:\\n pass\")";
 
