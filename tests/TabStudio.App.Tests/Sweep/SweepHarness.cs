@@ -407,9 +407,18 @@ internal sealed class SweepHarness : IDisposable
             }
         }
 
+        // A dialog over the IDE dims it with the scrim brush, whatever its panel is called.
+        var scrim = Application.Current?.FindResource("Brush.Scrim");
         foreach (var control in Window.GetVisualDescendants().OfType<Control>())
         {
-            if (control.Name is { } name && (name.EndsWith("Scrim", StringComparison.Ordinal) || name == "OperationsOverlay") && control.IsEffectivelyVisible)
+            var dims = scrim is not null && control switch
+            {
+                Panel panel => ReferenceEquals(panel.Background, scrim),
+                Border border => ReferenceEquals(border.Background, scrim),
+                _ => false,
+            };
+            if ((dims || control.Name is { } name && (name.EndsWith("Scrim", StringComparison.Ordinal) || name == "OperationsOverlay"))
+                && control.IsEffectivelyVisible && control.Bounds.Width > 1)
             {
                 var shown = control;
                 return ($"the dialog {Describe(control)}", () => CloseScrim(shown));

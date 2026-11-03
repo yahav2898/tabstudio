@@ -16,6 +16,7 @@ using TabStudio.App.Services.Search;
 using TabStudio.App.Tests.Theming;
 using TabStudio.App.Tests.Views.Scrolling;
 using TabStudio.App.ViewModels;
+using TabStudio.App.ViewModels.Search;
 using TabStudio.App.Views;
 
 namespace TabStudio.App.Tests.Sweep;
@@ -65,6 +66,63 @@ public sealed partial class EveryCommandTests
         }
 
         sweep.Note("unavailable on the sample\t" + string.Join(", ", unavailable.Select(Title)));
+        Finish(sweep);
+    }
+
+    [AvaloniaFact]
+    public async Task Every_command_and_setting_is_found_by_Ctrl_Q_and_runs_from_it()
+    {
+        using var sweep = new SweepHarness("search");
+        sweep.Show(1280, 800);
+        var workspace = await sweep.OpenSampleAsync();
+        var search = workspace.Search;
+        foreach (var entry in workspace.Commands.Commands)
+        {
+            search.OpenCommand.Execute(null);
+            search.Query = ">" + entry.Title;
+            await search.Completion;
+            var row = search.Rows.OfType<SearchResultRow>().FirstOrDefault(r => r.Title == entry.Title && r.Detail == entry.Path);
+            if (row is null)
+            {
+                sweep.Add("palette", "search: " + Title(entry), "Ctrl+Q does not find it by its name.");
+            }
+            else if (row.Item.IsEnabled != entry.IsAvailable())
+            {
+                sweep.Add("palette", "search: " + Title(entry), $"Ctrl+Q shows it {(row.Item.IsEnabled ? "available" : "unavailable")}, the menu {(entry.IsAvailable() ? "available" : "unavailable")}.");
+            }
+
+            search.CloseCommand.Execute(null);
+        }
+
+        // The settings the search changes in one tap: each runs from its row and goes back.
+        foreach (var query in new[] { "theme", "text size" })
+        {
+            search.OpenCommand.Execute(null);
+            search.Query = query;
+            await search.Completion;
+            var titles = search.Rows.OfType<SearchResultRow>().Where(r => r.Item.Kind == SearchKind.Setting).Select(r => r.Title).ToList();
+            search.CloseCommand.Execute(null);
+            foreach (var title in titles)
+            {
+                search.OpenCommand.Execute(null);
+                search.Query = query;
+                await search.Completion;
+                var row = search.Rows.OfType<SearchResultRow>().FirstOrDefault(r => r.Title == title);
+                if (row is null)
+                {
+                    continue;
+                }
+
+                await sweep.RunAsync("setting: " + title, () => search.AcceptCommand.ExecuteAsync(row));
+                sweep.Audit("setting: " + title);
+                await sweep.DismissAsync("setting: " + title);
+            }
+
+            AppearanceService.Preview(TestTheme.Baseline);
+            workspace.UseTextSizeCommand.Execute(TextSize.Default);
+            TypeScale.Apply(1);
+        }
+
         Finish(sweep);
     }
 
