@@ -35,8 +35,10 @@ internal static class RazorCompiler
             CSharpCompiler.LanguageVersionOf(project)));
         if (CSharpCompiler.NetStandardVersionOf(project) is not null)
         {
-            options = options.WithPreprocessorSymbols(
-                [.. CSharpCompiler.FrameworkSymbols(project), optimize ? "RELEASE" : "DEBUG", .. options.PreprocessorSymbolNames.Where(symbol => !IsFrameworkSymbol(symbol))]);
+            options = options.WithPreprocessorSymbols(CSharpCompiler.FrameworkSymbols(project)
+                .Append(optimize ? "RELEASE" : "DEBUG")
+                .Concat(options.PreprocessorSymbolNames.Where(symbol => !IsFrameworkSymbol(symbol)))
+                .ToArray());
         }
 
         if (CSharpCompiler.DefinedSymbols(project) is { Count: > 0 } defined)
