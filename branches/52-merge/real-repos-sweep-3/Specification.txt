@@ -13,7 +13,7 @@ Compatibility Doctor:
   Ardalis.Sample.App3: Needs a database via Local server + WebView - Ardalis.Sample.App3 uses SQL Server, which has no engine for ARM64 Linux, so it cannot run on this tablet, and 'DbConnection' in appsettings.json uses (localdb)\mssqllocaldb, which exists only on Windows. Connect to a SQL Server on your network or in the cloud with a SQL login (Windows sign-in is not available here).
   Ardalis.Sample.App2: Needs a database via Local server + WebView - Ardalis.Sample.App2 uses SQL Server, which has no engine for ARM64 Linux, so it cannot run on this tablet, and 'DbConnection' in appsettings.json uses (localdb)\mssqllocaldb, which exists only on Windows. Connect to a SQL Server on your network or in the cloud with a SQL login (Windows sign-in is not available here).
 Startup project: Ardalis.Sample.App1
-Built in 8.6 s: 0 errors, 3 warnings
+Built in 9.3 s: 0 errors, 3 warnings
 Packages with analyzers or MSBuild files:
   coverlet.collector 6.0.4
       build/netstandard2.0/Microsoft.Bcl.AsyncInterfaces.dll
@@ -925,17 +925,17 @@ Packages with analyzers or MSBuild files:
       build/net8.0/xunit.abstractions.dll
       build/net8.0/xunit.runner.visualstudio.props
       build/net8.0/xunit.runner.visualstudio.testadapter.dll
-Editor: 24 files opened and analyzed in 0.9 s, 0 errors only the editor shows, 0 only the build shows
-Tests: 1142 passed, 0 failed, 3 skipped of 1145: 1145 tests run in 1 min 17 sec: 1142 passed, 0 failed, 3 skipped.
+Editor: 24 files opened and analyzed in 1.1 s, 0 errors only the editor shows, 0 only the build shows
+Tests: 1142 passed, 0 failed, 3 skipped of 1145: 1145 tests run in 1 min 18 sec: 1142 passed, 0 failed, 3 skipped.
 Output:
-Build started at 21:33:30...
+Build started at 23:19:14...
 1>------ Build started: Project: Ardalis.Specification.Tests, Configuration: Debug ------
-1>Ardalis.Specification.Tests -> compiled in memory (215 KB, 391 ms)
+1>Ardalis.Specification.Tests -> compiled in memory (215 KB, 729 ms)
 2>------ Build started: Project: Ardalis.Specification.EntityFrameworkCore.Tests, Configuration: Debug ------
-2>Ardalis.Specification.EntityFrameworkCore.Tests -> compiled in memory (171 KB, 659 ms)
+2>Ardalis.Specification.EntityFrameworkCore.Tests -> compiled in memory (171 KB, 1221 ms)
 3>------ Build started: Project: Ardalis.Specification.EntityFramework6.Tests, Configuration: Debug ------
-3>Ardalis.Specification.EntityFramework6.Tests -> compiled in memory (120.5 KB, 579 ms)
+3>Ardalis.Specification.EntityFramework6.Tests -> compiled in memory (120.5 KB, 772 ms)
 ========== Build: 3 succeeded, 0 failed ==========
 ========== Starting test run ==========
-========== Test run finished: 1145 Tests (1142 Passed, 0 Failed, 3 Skipped) run in 1 min 17 sec ==========
+========== Test run finished: 1145 Tests (1142 Passed, 0 Failed, 3 Skipped) run in 1 min 18 sec ==========
 
