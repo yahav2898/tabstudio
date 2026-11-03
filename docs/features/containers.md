@@ -28,8 +28,23 @@ connection settings.
   an interactive `/bin/sh` exec terminal. Stops signal the main process and then terminate its PRoot process tree.
 
 The writable copy is a full copy, not an OverlayFS layer: budget for the image, compressed blobs, each container
-copy and its data. PRoot adds syscall overhead. Android can stop the app or its children under memory/process
-pressure; this is a development runtime, not an always-on server.
+copy and its data. PRoot adds syscall overhead. This is a development runtime, not an always-on server.
+
+One engine owns a store at a time. A second TabStudio window or process sees the containers but cannot change them
+and says so; the lock is the kernel's and ends with the process that held it. When an engine starts, what an earlier
+one left halfway (a container copy Android cut short, unpacking work, half-written records) is removed in the
+background; interrupted downloads are kept and resume.
+
+When Android reports low memory, TabStudio stops the running container using the most (under moderate pressure only
+when containers hold 256 MiB or more together) and names it in the Containers window, so Android does not end the IDE
+with all of its processes. Container processes also get the highest `oom_score_adj`, so the kernel's out-of-memory
+killer picks them before the IDE; Android's own low-memory killer chooses between apps and does not read it. A
+container ended by SIGKILL that TabStudio did not send says so. Restart policies work as in Docker, and containers
+with `always`, or `unless-stopped` and not stopped by hand, start again when TabStudio starts, except Compose
+services, which F5 and the Services window start. Prune also removes the volumes only a removed container could use.
+
+Before a program starts, a command that runs systemd, or an ELF program built for another processor than the image
+declares, gets a one-line reason instead of a bare exit code.
 
 ## Networking and Android limits
 
@@ -57,11 +72,19 @@ supported in this version. gzip and plain tar layers work; zstd layers receive a
 
 The existing Compose reader handles `.env`, `env_file`, interpolation, anchors, overrides, ports, volumes,
 dependencies, profiles, commands and health checks. It now also preserves `working_dir`, `user`, `platform` and
-`restart`. Opening a repository never pulls or starts its service images. F5 starts only the dependencies of its
-application service or services referenced by its configuration. Services use their real image before attempting
-the existing native Alpine mapping; a failed image is stopped first, and a native fallback is named in the row and
-logs with its reason. Unknown images without a mapping remain failed with their own reason. Image and native
-fallback data directories are separate; no data migration is attempted.
+`restart`, `container_name`, `hostname`, `expose` and each network's `aliases` (TabStudio has one network, so every
+alias resolves). An image's own `VOLUME`s get a volume per Compose service, so their data survives the container
+being created again for a changed setting. Opening a repository never pulls or starts its service images. F5 starts
+only the dependencies of its application service or services referenced by its configuration.
+
+Services use their real image first. An image is ready when its ports answer and its health check passes; the wait is
+two minutes or what the health check allows (start period plus every retry), whichever is longer, and continues while
+the image is still writing to its log, up to ten minutes. The row shows what it is waiting for. An image that starts
+and then exits, turns unhealthy or never becomes ready fails with its reason and logs. Only an image that cannot run
+here at all (it cannot be pulled, is not for this device, or needs what apps do not have) falls back to the native
+Alpine mapping, and the row, the logs and F5's Output name the fallback and why. Image and native fallback data
+directories are separate; no data migration is attempted. A service with both `build:` and `image:` is pulled by
+that name, as Compose does; when no registry has it, the message names its Dockerfile.
 
 Build-only application services are run by the IDE with F5. Dockerfile image builds, reopening the workspace in a
 development container, and the Docker Engine HTTP/Unix-socket API are deferred. Reading a Compose reference from
@@ -133,6 +156,13 @@ and tablet timings differ.
 | Runtime | `ruby:3.3-alpine` | Works, 0 s | Works, 0 s |  |
 | Runtime | `mcr.microsoft.com/dotnet/runtime:9.0-alpine` | Works, 0 s | Works, 0 s | .NET 9.0.22 |
 | Storage | `minio/minio` | Not pulled | Not pulled | Docker Hub now requires sign-in for this repository; TabStudio says so and points to Containers → Registries |
+
+0.21.3 adds `wordpress:6.6-apache`, `gitea/gitea:1.22`, `grafana/grafana:11.2.0`, `prom/prometheus:v2.54.1` and
+`traefik:v3.1` to the job, and two public Compose stacks started from their own files at docker/awesome-compose
+`30f4b7f6a6c3b0c0ecf4d4efb0de203c48d11562`: `wordpress-mysql` and `gitea-postgres`. All five images work on x64 and
+ARM64, and both stacks start from their own files and answer HTTP on both. Their rows are in the job's summary.
+Readiness waits for the ports a Compose file publishes, or for any one of the image's own when it publishes none. A
+privileged published port such as `80:80` gets a free unprivileged port.
 
 What does not work under PRoot, by design rather than by image: anything that needs a real kernel feature the app
 sandbox does not grant. That covers `privileged: true`, Docker-in-Docker, cgroup limits (`mem_limit`, `cpus` are

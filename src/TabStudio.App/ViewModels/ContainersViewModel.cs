@@ -52,6 +52,40 @@ public sealed partial class ContainersViewModel : ObservableObject, IAsyncDispos
         Terminal = new TerminalViewModel(toolchains, ui, () => "/", _ => { });
         Engine.Changed += OnEngineChanged;
         _ = RefreshAsync();
+        _ = ResumeAsync();
+    }
+
+    /// <summary>Starts again, as Docker does when it starts, what runs with restart: always or unless-stopped.</summary>
+    private async Task ResumeAsync()
+    {
+        try
+        {
+            await Engine.Recovery;
+            if (_disposed || Engine.Problem is not null || !Engine.HasContainersToResume) return;
+            await PrepareRuntimeAsync(CancellationToken.None);
+            if (!_disposed) await Engine.ResumeAsync();
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            _ui.Post(() => Error = "Containers set to restart were not started again: " + ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Android is low on memory: a container gives its memory back before Android ends TabStudio, and the window
+    /// says which one and why.
+    /// </summary>
+    public async Task RelieveMemoryAsync(bool critical)
+    {
+        if (_disposed) return;
+        try
+        {
+            if (await Engine.RelieveMemoryAsync(critical) is { } stopped)
+                _ui.Post(() => Error = $"{stopped.Name} was stopped to free memory: Android was running low. Start it again when memory allows.");
+        }
+        catch (ContainerException)
+        {
+        }
     }
 
     public ContainerEngine Engine { get; }
@@ -71,7 +105,7 @@ public sealed partial class ContainersViewModel : ObservableObject, IAsyncDispos
     [ObservableProperty] public partial string RegistryUser { get; set; } = "";
     [ObservableProperty] public partial string RegistrySecret { get; set; } = "";
     public string Limits { get; } = string.Join("\n", ContainerEngine.Limits);
-    public string? RuntimeProblem => Engine.Options.Problem;
+    public string? RuntimeProblem => Engine.Problem;
     public bool HasError => Error is not null;
     partial void OnErrorChanged(string? value) => OnPropertyChanged(nameof(HasError));
 
@@ -126,7 +160,7 @@ public sealed partial class ContainersViewModel : ObservableObject, IAsyncDispos
         if (SelectedImage is { } image)
         {
             if (Engine.IsImageInUse(image.Id)) throw new ContainerException("Remove the containers using this image first.");
-            await Engine.Store.RemoveAsync(image.Id, Engine.IsImageInUse, token);
+            await Engine.RemoveImageAsync(image.Id, token);
         }
     });
     [RelayCommand] private void Cancel() => _operation?.Cancel();

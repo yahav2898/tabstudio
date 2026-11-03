@@ -29,19 +29,28 @@ staging="$(mktemp -d)"
 cp -r ci-out/. "$staging/" 2>/dev/null || true
 echo "job=${job} branch=${branch} status=${status} sha=${GITHUB_SHA} run=${GITHUB_RUN_ID} time=$(date -u +%FT%TZ)" > "$staging/STATUS"
 
+# The branch's tree holds every job's logs and screenshots, gigabytes of them: checking it out filled the runner's
+# disk ("Disk quota exceeded") and failed a job whose tests had finished. Fetch its trees without their files, lay
+# this job's folder over them in the index, and commit that, so only this job's files are ever on disk.
+remote_url="${TABSTUDIO_PUBLISH_REMOTE:-$remote}"
 for attempt in $(seq 1 12); do
-  if git -C "$workdir" fetch -q --depth 1 "$remote" ci-logs 2>/dev/null; then
-    git -C "$workdir" checkout -q -B ci-logs FETCH_HEAD
-  else
-    git -C "$workdir" checkout -q --orphan ci-logs
-    git -C "$workdir" rm -rqf --ignore-unmatch . >/dev/null
+  rm -f "$workdir/.git/index"
+  parent=""
+  if git -C "$workdir" fetch -q --depth 1 --filter=blob:none "$remote_url" ci-logs 2>/dev/null; then
+    parent="$(git -C "$workdir" rev-parse FETCH_HEAD)"
+    git -C "$workdir" read-tree "$parent"
   fi
   rm -rf "${workdir:?}/${folder}"
   mkdir -p "$workdir/$folder"
   cp -r "$staging/." "$workdir/$folder/"
-  git -C "$workdir" add -A
-  git -C "$workdir" commit -qm "${folder}: ${status} @ ${GITHUB_SHA::8}" || exit 0
-  if git -C "$workdir" push -q "$remote" HEAD:ci-logs; then
+  # Only this folder: entries elsewhere stay as the tip has them, and files gone from it are removed from it.
+  git -C "$workdir" add -A -- "$folder"
+  tree="$(git -C "$workdir" write-tree)"
+  if [ -n "$parent" ] && [ "$tree" = "$(git -C "$workdir" rev-parse "$parent^{tree}")" ]; then
+    exit 0
+  fi
+  commit="$(git -C "$workdir" commit-tree "$tree" ${parent:+-p "$parent"} -m "${folder}: ${status} @ ${GITHUB_SHA::8}")"
+  if git -C "$workdir" push -q "$remote_url" "$commit:refs/heads/ci-logs"; then
     exit 0
   fi
   # Jobs on every branch publish here; back off with jitter so they stop colliding.

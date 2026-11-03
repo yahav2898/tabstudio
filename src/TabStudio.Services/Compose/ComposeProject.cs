@@ -39,6 +39,14 @@ public sealed record ComposeService(string Name, string? Image)
     public string? Platform { get; init; }
     public string? Restart { get; init; }
     public IReadOnlyList<string> Profiles { get; init; } = [];
+    /// <summary><c>container_name</c>: the container's name, which other services also reach it by.</summary>
+    public string? ContainerName { get; init; }
+    /// <summary>Other names other services reach it by: its networks' <c>aliases</c>, and <c>hostname</c>.</summary>
+    public IReadOnlyList<string> Aliases { get; init; } = [];
+    /// <summary><c>hostname</c>: the name it sees for itself.</summary>
+    public string? Hostname { get; init; }
+    /// <summary><c>expose</c>: TCP ports it listens on for other services, not published.</summary>
+    public IReadOnlyList<int> Expose { get; init; } = [];
     public IReadOnlyList<string> Unsupported { get; init; } = [];
 }
 

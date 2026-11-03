@@ -124,8 +124,9 @@ jobs:
           - { arch: x64, runner: ubuntu-24.04 }
           - { arch: arm64, runner: ubuntu-24.04-arm }
     runs-on: ${{ matrix.runner }}
-    # Nine images of at most five minutes each (four, and one more for a step that ignores its cancellation).
-    timeout-minutes: 70
+    # Eleven images of at most five minutes each (four, and one more for a step that ignores its cancellation), and on
+    # shard 0 two public Compose stacks of at most fifteen minutes each.
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -146,8 +147,12 @@ jobs:
       - name: The compatibility table
         if: always()
         run: |
-          file=ci-out/compatibility-${{ matrix.arch }}-${{ matrix.shard }}.md
-          if [ -f "$file" ]; then cat "$file"; cat "$file" >> "$GITHUB_STEP_SUMMARY"; else echo "No table was written."; fi
+          found=0
+          for file in ci-out/compatibility-${{ matrix.arch }}-${{ matrix.shard }}.md ci-out/compatibility-${{ matrix.arch }}-${{ matrix.shard }}.stacks.md; do
+            if [ -f "$file" ]; then found=1; cat "$file"; { cat "$file"; echo; } >> "$GITHUB_STEP_SUMMARY"; fi
+          done
+          [ "$found" = 1 ] || echo "No table was written."
+          grep -h "awesome-compose/" ci-out/compatibility.log | sed 's/^ *//' | sort -u | head -n 40 || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:

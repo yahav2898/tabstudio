@@ -50,6 +50,8 @@ public sealed class ServiceManager : IAsyncDisposable
     public IReadOnlyDictionary<string, IReadOnlyList<ServicePort>> Endpoints { get { lock (_gate) return new Dictionary<string, IReadOnlyList<ServicePort>>(_endpoints, StringComparer.Ordinal); } }
     public event EventHandler<ServiceStatus>? Changed;
     public event EventHandler<ServiceLogLine>? Logged;
+    /// <summary>The services running as native Alpine services in place of their images, with the reason for each.</summary>
+    public IReadOnlyDictionary<string, string> Fallbacks { get { lock (_gate) return new Dictionary<string, string>(_fallbackReasons, StringComparer.Ordinal); } }
     public IReadOnlyList<ServiceLogLine> Logs(string name) { lock (_gate) return _logs.TryGetValue(name, out var lines) ? lines.ToArray() : []; }
 
     public Task StartAllAsync(CancellationToken cancellationToken = default) => StartAsync(Project.Services.Values.Where(s => s.Profiles.Count == 0 && (CanRunImage(s) || ServiceCatalog.Map(s).Supported)).Select(s => s.Name), cancellationToken);
@@ -256,17 +258,26 @@ public sealed class ServiceManager : IAsyncDisposable
                 return;
             }
             catch (OperationCanceledException) { Update(name, ServiceState.Stopped, "Start cancelled"); throw; }
-            catch (Exception ex) when (ex is IOException or InvalidOperationException or NotSupportedException or TimeoutException or ComposeException)
+            catch (ServiceImageUnavailableException ex)
             {
+                // Only an image that cannot run here at all falls back, and never silently: the row, the log and
+                // Fallbacks (which F5 writes to the Output) say which native service runs instead and why.
                 var reason = Redact(ex.Message).Replace('\n', ' ');
                 if (!ServiceCatalog.Map(definition).Supported)
                 {
                     Update(name, ServiceState.Failed, reason);
                     throw new ComposeException($"{name}: {reason}");
                 }
-                Log(name, $"{name}: image could not run ({reason}); using native Alpine service.");
-                _fallbackReasons[name] = $"Native fallback: {reason}";
+                Log(name, $"{name}: image could not run ({reason}); using native Alpine service. Its data is kept apart from the image's.");
+                lock (_gate) _fallbackReasons[name] = $"Native fallback: {reason}";
                 Update(name, ServiceState.Starting, _fallbackReasons[name]);
+            }
+            catch (Exception ex) when (ex is IOException or InvalidOperationException or NotSupportedException or TimeoutException or ComposeException)
+            {
+                // The image ran and failed, or never became ready: its own reason, not a different database.
+                var reason = Redact(ex.Message).Replace('\n', ' ');
+                Update(name, ServiceState.Failed, reason);
+                throw new ComposeException(reason.StartsWith(name + ":", StringComparison.Ordinal) ? reason : $"{name}: {reason}");
             }
         }
         Update(name, ServiceState.Installing, "Preparing Alpine packages");
@@ -429,7 +440,8 @@ public sealed class ServiceManager : IAsyncDisposable
                 var requested = Project.Services[name].Ports.Where(p => p.Target == target).ToArray();
                 if (requested.Length > 1) throw new ComposeException($"{name}: publishing a target port more than once requires a remote host.");
                 var published = requested.FirstOrDefault()?.Published ?? target;
-                if (published is > 0 and < 1024 && _runtime.Kind == RuntimeKind.Linux) { Log(name, $"Port {published} needs root; assigning an unprivileged localhost port."); published = 0; }
+                // Below 1024 needs root, which apps do not have: 80:80, as most web stacks write it, failed as "in use".
+                if (published is > 0 and < 1024 && (_runtime.Kind == RuntimeKind.Linux || CanRunImage(Project.Services[name]) || !_network.IsFree(published))) { Log(name, $"Port {published} needs root; assigning an unprivileged localhost port."); published = 0; }
                 if (published > 0 && (used.Contains(published) || !_network.IsFree(published)))
                 {
                     if (requested.FirstOrDefault()?.Published > 0) throw new ComposeException($"{name}: localhost port {published} is already in use.");

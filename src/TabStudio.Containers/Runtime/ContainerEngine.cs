@@ -53,6 +53,9 @@ public sealed class ContainerEngine : IAsyncDisposable
     private readonly Lock _eventsGate = new();
     private readonly List<Channel<EngineEvent>> _subscribers = [];
     private readonly CancellationTokenSource _lifetime = new();
+    private readonly Lock _ownershipGate = new();
+    private FileStream? _ownership;
+    private string? _busy;
 
     /// <summary>Creates the engine.</summary>
     public ContainerEngine(ContainerEngineOptions options, RegistryClient registry)
@@ -77,7 +80,25 @@ public sealed class ContainerEngine : IAsyncDisposable
             {
             }
         }
+
+        TryOwn();
     }
+
+    /// <summary>The name of the file that says which engine owns a store.</summary>
+    public const string LockFileName = "engine.lock";
+
+    /// <summary>
+    /// Why this engine cannot change its store, or <see langword="null"/> when it can: containers cannot run here, or
+    /// another engine (another TabStudio window or process) owns the same store. Two engines on one store overwrote
+    /// each other's image index and container records.
+    /// </summary>
+    public string? Problem => _options.Problem ?? (TryOwn() ? null : _busy);
+
+    /// <summary>
+    /// Removing what an engine ended by Android left behind: half-copied containers, unpacking work and unfinished
+    /// blobs. It starts when the engine takes the store and runs in the background.
+    /// </summary>
+    public Task Recovery { get; private set; } = Task.CompletedTask;
 
     /// <summary>The image store.</summary>
     public ImageStore Store { get; }
@@ -100,6 +121,7 @@ public sealed class ContainerEngine : IAsyncDisposable
     /// <summary>Pulls an image.</summary>
     public async Task<StoredImage> PullAsync(string image, string? platform = null, IProgress<PullProgress>? progress = null, CancellationToken cancellationToken = default)
     {
+        Claim();
         var reference = ImageReference.Parse(image);
         var preference = platform is null ? _options.Preference : [OciPlatform.Parse(platform)];
         StoredImage stored;
@@ -159,6 +181,7 @@ public sealed class ContainerEngine : IAsyncDisposable
     public async Task<ContainerInfo> CreateAsync(ContainerSpec spec, IProgress<PullProgress>? progress = null, CancellationToken cancellationToken = default)
     {
         if (_options.Problem is { } problem) throw new ContainerException(problem);
+        Claim();
         var image = await ImageAsync(spec.Image, pull: true, spec.Platform, progress, cancellationToken).ConfigureAwait(false);
         if (image.Platform.Os != "linux") throw new ContainerException("Only Linux OCI images can run in TabStudio's PRoot runtime.");
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -203,6 +226,7 @@ public sealed class ContainerEngine : IAsyncDisposable
     /// <summary>Starts a container's main process.</summary>
     public async Task<ContainerInfo> StartAsync(string idOrName, CancellationToken cancellationToken = default)
     {
+        Claim();
         var instance = Get(idOrName);
         await instance.Gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
@@ -275,6 +299,7 @@ public sealed class ContainerEngine : IAsyncDisposable
     /// <summary>Removes a container and its writable layer; a running one only with <paramref name="force"/>.</summary>
     public async Task RemoveAsync(string idOrName, bool force = false, CancellationToken cancellationToken = default)
     {
+        Claim();
         var instance = Get(idOrName);
         if (instance.Info.IsRunning && !force)
         {
@@ -393,6 +418,7 @@ public sealed class ContainerEngine : IAsyncDisposable
     public VolumeInfo CreateVolume(string name, IReadOnlyDictionary<string, string>? labels = null)
     {
         if (!IsValidName(name)) throw new ContainerException($"'{name}' is not a valid volume name.");
+        Claim();
         var folder = Path.Combine(Store.VolumesFolder, name);
         var data = Path.Combine(folder, "_data");
         var meta = Path.Combine(folder, "volume.json");
@@ -412,6 +438,7 @@ public sealed class ContainerEngine : IAsyncDisposable
     /// <summary>Removes a named volume no container uses.</summary>
     public void RemoveVolume(string name, bool force = false)
     {
+        Claim();
         if (!force && _instances.Values.Any(i => i.Info.Spec.Mounts.Any(m => m.Type == "volume" && m.Source == name)))
         {
             throw new ContainerException($"Volume {name} is in use by a container; remove the container first.");
@@ -426,13 +453,124 @@ public sealed class ContainerEngine : IAsyncDisposable
     /// <summary>Removes stopped containers, unused images and dangling blobs; returns the bytes freed.</summary>
     public async Task<long> PruneAsync(bool allImages, CancellationToken cancellationToken = default)
     {
+        Claim();
         foreach (var stopped in _instances.Values.Where(i => !i.Info.IsRunning).Select(i => i.Info.Id).ToList())
         {
             await RemoveAsync(stopped, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        return await Store.PruneAsync(IsImageInUse, allImages, cancellationToken).ConfigureAwait(false);
+        var freed = 0L;
+        foreach (var volume in OrphanedPrivateVolumes())
+        {
+            var folder = Path.Combine(Store.VolumesFolder, volume);
+            freed += TreeCopy.Size(folder);
+            RemoveVolume(volume, force: true);
+        }
+
+        return freed + await Store.PruneAsync(IsImageInUse, allImages, cancellationToken).ConfigureAwait(false);
     }
+
+    /// <summary>Removes an image or one of its names, as <c>docker rmi</c> does.</summary>
+    public async Task<(IReadOnlyList<string> Untagged, IReadOnlyList<string> Deleted)> RemoveImageAsync(string nameOrId, CancellationToken cancellationToken = default)
+    {
+        Claim();
+        var result = await Store.RemoveAsync(nameOrId, IsImageInUse, cancellationToken).ConfigureAwait(false);
+        foreach (var id in result.Deleted) Publish("image", "delete", id, new Dictionary<string, string>());
+        return result;
+    }
+
+    /// <summary>
+    /// The volumes only one container could ever use, its image's <c>VOLUME</c>s and its anonymous volumes, whose
+    /// container is gone. Nothing else can mount them again, so they only take space.
+    /// </summary>
+    public IReadOnlyList<string> OrphanedPrivateVolumes()
+    {
+        var owners = _instances.Values.Select(i => i.Info.ShortId).ToHashSet(StringComparer.Ordinal);
+        return [.. Directory.EnumerateDirectories(Store.VolumesFolder).Select(folder => Path.GetFileName(folder))
+            .Where(name => PrivateVolumeOwner(name) is { } owner && !owners.Contains(owner))];
+    }
+
+    /// <summary>The short container ID a container-private volume belongs to, or <see langword="null"/>.</summary>
+    internal static string? PrivateVolumeOwner(string volume)
+    {
+        foreach (var marker in new[] { "-image-", "-anonymous-" })
+        {
+            var at = volume.IndexOf(marker, StringComparison.Ordinal);
+            if (at == 12 && volume[..12].All(char.IsAsciiHexDigitLower)) return volume[..12];
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Frees memory before Android ends TabStudio for it: stops the running container that uses the most, so the
+    /// IDE and the user's work stay. Android ends an app with all of its processes, and a container's processes are
+    /// TabStudio's; without this a database's memory cost the whole IDE.
+    /// </summary>
+    /// <param name="critical">Android is about to end apps: stop one whatever it uses.</param>
+    /// <param name="cancellationToken">Cancels the stop.</param>
+    /// <returns>The container stopped, or <see langword="null"/> when none was.</returns>
+    public async Task<ContainerInfo?> RelieveMemoryAsync(bool critical, CancellationToken cancellationToken = default)
+    {
+        var running = _instances.Values.Where(i => i.Process is { HasExited: false }).Select(i => (Instance: i, Stats: Stats(i.Info.Id))).ToList();
+        if (running.Count == 0) return null;
+        var largest = running.OrderByDescending(r => r.Stats.MemoryBytes).First();
+        // Under moderate pressure a container is stopped only when containers hold a share worth giving back.
+        if (!critical && running.Sum(r => r.Stats.MemoryBytes) < ModerateMemoryThreshold) return null;
+        var megabytes = largest.Stats.MemoryBytes / (1024 * 1024);
+        await StopAsync(largest.Instance.Info.Id, TimeSpan.FromSeconds(2), cancellationToken).ConfigureAwait(false);
+        var instance = largest.Instance;
+        await instance.Gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            instance.Info = instance.Info with { Error = $"Stopped by TabStudio to free memory: Android was running low and this container used {megabytes} MB. Start it again when memory allows." };
+            Save(instance.Info);
+            instance.Log.Write(2, instance.Info.Error);
+        }
+        finally
+        {
+            instance.Gate.Release();
+        }
+
+        Publish("container", "oom", instance.Info.Id, Attributes(instance.Info));
+        return instance.Info;
+    }
+
+    /// <summary>What running containers must use together before moderate memory pressure stops one.</summary>
+    public long ModerateMemoryThreshold { get; init; } = 256L * 1024 * 1024;
+
+    /// <summary>
+    /// Starts again what Docker starts again when its daemon starts: containers with <c>restart: always</c>, and with
+    /// <c>unless-stopped</c> unless they were stopped by hand. Compose services are left to F5 and the Services
+    /// window, which start what a project needs. One that cannot start says why in its log.
+    /// </summary>
+    /// <returns>The containers started.</returns>
+    public async Task<IReadOnlyList<string>> ResumeAsync(CancellationToken cancellationToken = default)
+    {
+        if (Problem is not null) return [];
+        var started = new List<string>();
+        foreach (var instance in _instances.Values.Where(ShouldResume).ToList())
+        {
+            try
+            {
+                await StartAsync(instance.Info.Id, cancellationToken).ConfigureAwait(false);
+                started.Add(instance.Info.Name);
+            }
+            catch (ContainerException ex)
+            {
+                instance.Log.Write(2, "Not started again with TabStudio: " + ex.Message);
+            }
+        }
+
+        return started;
+    }
+
+    /// <summary>Whether <see cref="ResumeAsync"/> has a container to start.</summary>
+    public bool HasContainersToResume => _instances.Values.Any(ShouldResume);
+
+    private static bool ShouldResume(Instance instance) =>
+        instance.Process is null && !instance.Info.IsRunning && !instance.Info.Spec.Labels.ContainsKey("com.docker.compose.project")
+        && (instance.Info.Spec.Restart.Name == "always" || (instance.Info.Spec.Restart.Name == "unless-stopped" && !instance.Info.StoppedByUser));
 
     /// <summary>Whether a container uses an image.</summary>
     public bool IsImageInUse(string imageId) => _instances.Values.Any(i => i.Info.ImageId == imageId);
@@ -453,6 +591,12 @@ public sealed class ContainerEngine : IAsyncDisposable
         }
 
         foreach (var instance in _instances.Values) instance.Log.Dispose();
+        lock (_ownershipGate)
+        {
+            _ownership?.Dispose();
+            _ownership = null;
+        }
+
         Store.Dispose();
         _gate.Dispose();
         _lifetime.Dispose();
@@ -491,6 +635,7 @@ public sealed class ContainerEngine : IAsyncDisposable
             PrepareFiles(rootfs, info, lease);
             var command = Command(image, info.Spec);
             if (command.Count == 0) throw new ContainerException($"{info.ImageName} has no command to run: give one after the image name.");
+            if (Unrunnable(rootfs, command[0], environment, emulation is null ? image.Platform : null) is { } reason) throw new ContainerException($"{info.ImageName} cannot run here: {reason}");
             var spec = ProcessSpec(rootfs, command, WorkingDirectory(image, info), environment, user, Mounts(info), info.Spec.Tty ? TerminalSize.Default : null);
             var runtime = Runtime(info, lease, environment);
             var process = runtime.Start(Wrap(instance, spec));
@@ -520,7 +665,8 @@ public sealed class ContainerEngine : IAsyncDisposable
             Publish("container", "start", info.Id, Attributes(instance.Info));
             var stop = CancellationTokenSource.CreateLinkedTokenSource(_lifetime.Token);
             instance.Monitor = stop;
-            _ = MonitorAsync(instance, process, readers, stop.Token);
+            _ = MonitorAsync(instance, process, readers);
+            if (OperatingSystem.IsLinux() || OperatingSystem.IsAndroid()) _ = PreferForOutOfMemoryAsync(process.Id, stop.Token);
             if (HealthOf(image, info.Spec) is { Disabled: false } health) _ = HealthAsync(instance, health, stop.Token);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
@@ -534,7 +680,7 @@ public sealed class ContainerEngine : IAsyncDisposable
         }
     }
 
-    private async Task MonitorAsync(Instance instance, ToolchainProcess process, Task readers, CancellationToken stop)
+    private async Task MonitorAsync(Instance instance, ToolchainProcess process, Task readers)
     {
         var exit = await process.Completion.ConfigureAwait(false);
         try
@@ -550,9 +696,15 @@ public sealed class ContainerEngine : IAsyncDisposable
         Network.Release(instance.Info.Id);
         instance.Lease = null;
         var code = exit.Signal is { } signal ? 128 + signal : exit.ExitCode;
-        var restart = !instance.Removed && !stop.IsCancellationRequested && instance.Info.Spec.Restart.Restarts(code, instance.Info.RestartCount, instance.Info.StoppedByUser);
+        // Only the engine's own end stops a restart here. This checked the monitor's token, which the line above had
+        // just cancelled, so no restart policy ever restarted anything.
+        var closing = _lifetime.IsCancellationRequested;
+        var restart = !instance.Removed && !closing && instance.Info.Spec.Restart.Restarts(code, instance.Info.RestartCount, instance.Info.StoppedByUser);
+        // A SIGKILL nobody in TabStudio sent is the system's: on Android, the low-memory killer.
+        var killed = exit.WasKilledBySystem && !instance.Info.StoppedByUser && !instance.Removed && !closing;
         instance.Info = instance.Info with
         {
+            Error = killed ? KilledBySystem : instance.Info.Error,
             Status = restart ? ContainerStatus.Restarting : ContainerStatus.Exited,
             ExitCode = code,
             FinishedAt = DateTimeOffset.UtcNow,
@@ -560,6 +712,7 @@ public sealed class ContainerEngine : IAsyncDisposable
             Ports = [],
             Health = instance.Info.Health == HealthStatus.None ? HealthStatus.None : HealthStatus.Unhealthy,
         };
+        if (killed) instance.Log.Write(2, KilledBySystem);
         if (!instance.Removed) Save(instance.Info);
         RefreshHosts();
         Publish("container", "die", instance.Info.Id, new Dictionary<string, string>(Attributes(instance.Info)) { ["exitCode"] = code.ToString(System.Globalization.CultureInfo.InvariantCulture) });
@@ -634,6 +787,34 @@ public sealed class ContainerEngine : IAsyncDisposable
     }
 
     private static TimeSpan Min(TimeSpan a, TimeSpan b) => a < b ? a : b;
+
+    /// <summary>What a container that the system killed says.</summary>
+    public const string KilledBySystem = "Ended by the system (SIGKILL), most likely because Android ran low on memory. Stop other containers or apps, then start it again.";
+
+    /// <summary>
+    /// Asks the kernel to end a container's processes before the IDE's when memory runs out: the highest
+    /// <c>oom_score_adj</c>, which an app may give its own processes. Processes forked later inherit it.
+    /// </summary>
+    private static async Task PreferForOutOfMemoryAsync(int root, CancellationToken stop)
+    {
+        foreach (var delay in new[] { 0, 1000, 5000 })
+        {
+            try
+            {
+                if (delay > 0) await Task.Delay(delay, stop).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+
+            foreach (var pid in ProcessTree.Descendants(root).Prepend(root))
+            {
+                try { await File.WriteAllTextAsync($"/proc/{pid}/oom_score_adj", "1000", CancellationToken.None).ConfigureAwait(false); }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { }
+            }
+        }
+    }
 
     private async Task TerminateAsync(Instance instance, TimeSpan timeout, int? signal)
     {
@@ -731,6 +912,55 @@ public sealed class ContainerEngine : IAsyncDisposable
         };
     }
 
+    /// <summary>
+    /// Why a container's program cannot run under PRoot on this device, said before it fails with a bare exit code:
+    /// systemd as PID 1, or a program built for another processor than the image says.
+    /// </summary>
+    /// <param name="rootfs">The container's files.</param>
+    /// <param name="program">Its first command word.</param>
+    /// <param name="environment">Its environment, for <c>PATH</c>.</param>
+    /// <param name="platform">The image's platform when it runs natively; <see langword="null"/> under an emulator.</param>
+    internal static string? Unrunnable(string rootfs, string program, IReadOnlyDictionary<string, string> environment, OciPlatform? platform)
+    {
+        string? path;
+        try
+        {
+            path = program.Contains('/', StringComparison.Ordinal)
+                ? (program.StartsWith('/') ? SafePath.ResolveFollowing(rootfs, program) : null)
+                : (environment.GetValueOrDefault("PATH") ?? ProotRuntime.SearchPath).Split(':', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(folder => SafePath.ResolveFollowing(rootfs, folder.TrimEnd('/') + "/" + program)).FirstOrDefault(File.Exists);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or InvalidOperationException)
+        {
+            return null;
+        }
+
+        if (path is null || !File.Exists(path)) return null;
+        if (Path.GetFileName(path) == "systemd" || path.Replace('\\', '/').Contains("/systemd/systemd", StringComparison.Ordinal))
+        {
+            return "its command starts systemd, which must be process 1 in its own PID namespace, and Android does not give apps one. Run the service it manages directly instead.";
+        }
+
+        if (platform is null) return null;
+        Span<byte> header = stackalloc byte[20];
+        try
+        {
+            using var file = File.OpenRead(path);
+            if (file.ReadAtLeast(header, header.Length, throwOnEndOfStream: false) < header.Length) return null;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+
+        if (header[0] != 0x7f || header[1] != (byte)'E' || header[2] != (byte)'L' || header[3] != (byte)'F') return null;
+        var machine = header[5] == 2 ? header[18] << 8 | header[19] : header[18] | header[19] << 8;
+        var built = machine switch { 62 => "amd64", 183 => "arm64", 40 => "arm", 3 => "386", 243 => "riscv64", 22 => "s390x", 21 => "ppc64le", _ => null };
+        return built is not null && built != platform.Architecture
+            ? $"{program} is built for {built}, but the image says it is for {platform.Architecture}. Use an image published for {platform.Architecture}, or pick its {built} variant with --platform linux/{built}."
+            : null;
+    }
+
     private static bool Exists(string path) => File.Exists(path) || new FileInfo(path).LinkTarget is not null;
 
     internal static Dictionary<string, string> Environment(StoredImage image, ContainerInfo info, ContainerUser user)
@@ -814,8 +1044,9 @@ public sealed class ContainerEngine : IAsyncDisposable
         var definitions = info.Spec.Mounts.ToList();
         foreach (var target in Get(info.Id).Image?.Config.Config.Volumes?.Keys ?? Enumerable.Empty<string>())
         {
-            if (definitions.All(m => m.Target.TrimEnd('/') != target.TrimEnd('/')))
-                definitions.Add(new ContainerMount("volume", info.ShortId + "-image-" + definitions.Count.ToString(System.Globalization.CultureInfo.InvariantCulture), target));
+            if (definitions.Any(m => m.Target.TrimEnd('/') == target.TrimEnd('/'))) continue;
+            var own = info.ShortId + "-image-" + definitions.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            definitions.Add(new ContainerMount("volume", ImageVolumeName(info.Spec, target, own), target));
         }
         var index = 0;
         foreach (var mount in definitions)
@@ -847,6 +1078,37 @@ public sealed class ContainerEngine : IAsyncDisposable
 
         return mounts;
     }
+
+    /// <summary>
+    /// The volume for an image's <c>VOLUME</c>: per Compose service when the spec has a scope, so a database's data
+    /// outlives the container being created again for a changed setting; otherwise the container's own. A scoped
+    /// volume takes over the data of the container-named one an earlier version made.
+    /// </summary>
+    private string ImageVolumeName(ContainerSpec spec, string target, string own)
+    {
+        if (spec.VolumeScope is not { Length: > 0 } scope) return own;
+        var name = ScopedVolumeName(scope, target);
+        var folder = Path.Combine(Store.VolumesFolder, name);
+        var earlier = Path.Combine(Store.VolumesFolder, own);
+        if (!Directory.Exists(folder) && Directory.Exists(earlier))
+        {
+            try
+            {
+                Directory.Move(earlier, folder);
+                var meta = Path.Combine(folder, "volume.json");
+                File.WriteAllBytes(meta, JsonSerializer.SerializeToUtf8Bytes(new VolumeInfo(name, Path.Combine(folder, "_data"), DateTimeOffset.UtcNow, new Dictionary<string, string>())));
+            }
+            catch (IOException)
+            {
+            }
+        }
+
+        return name;
+    }
+
+    /// <summary>The name of a scoped image volume: the scope and a short hash of the path.</summary>
+    public static string ScopedVolumeName(string scope, string target) =>
+        scope + "-" + Convert.ToHexStringLower(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes("/" + string.Join('/', SafePath.Split(target)))))[..8];
 
     private static string RunDirectory(string id) => Path.Combine(Path.GetTempPath(), "ts-run-" + id[..16]);
 
@@ -927,6 +1189,79 @@ public sealed class ContainerEngine : IAsyncDisposable
         }
     }
 
+    /// <summary>Takes the store when no other engine has it; true when this engine owns it.</summary>
+    private bool TryOwn()
+    {
+        lock (_ownershipGate)
+        {
+            if (_ownership is not null) return true;
+            try
+            {
+                // An exclusive lock (flock on Linux and Android) that the kernel drops when the process ends, so an
+                // engine Android ended never keeps the store from the next one.
+                _ownership = new FileStream(Path.Combine(Store.Root, LockFileName), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException)
+            {
+                _busy = "Another TabStudio window or process is using these containers. Close it, or manage the containers there.";
+                return false;
+            }
+
+            _busy = null;
+            Recovery = RecoverAsync();
+            return true;
+        }
+    }
+
+    private void Claim()
+    {
+        if (!TryOwn()) throw new ContainerException(_busy!);
+    }
+
+    /// <summary>
+    /// What an engine ended mid-operation left: a container folder with no record (its copy was cut short), unpacking
+    /// work, small blobs written halfway and half-written records. Downloads are kept: they resume. What is listed
+    /// here existed before this engine did anything, so nothing it starts is removed.
+    /// </summary>
+    private Task RecoverAsync()
+    {
+        var leftovers = new List<string>();
+        try
+        {
+            leftovers.AddRange(Directory.EnumerateDirectories(Store.ContainersFolder).Where(folder => !File.Exists(Path.Combine(folder, "container.json"))));
+            leftovers.AddRange(Directory.EnumerateFileSystemEntries(Store.TemporaryFolder).Where(entry => Path.GetFileName(entry) != "proot"));
+            leftovers.AddRange(Directory.EnumerateFiles(Store.BlobFolder).Where(IsUnfinishedBlob));
+            leftovers.AddRange(Directory.EnumerateFiles(Store.Root, "*.partial"));
+            leftovers.AddRange(Directory.EnumerateFiles(Store.ContainersFolder, "*.partial", SearchOption.AllDirectories));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+        }
+
+        if (leftovers.Count == 0) return Task.CompletedTask;
+        return Task.Run(() =>
+        {
+            foreach (var path in leftovers)
+            {
+                try
+                {
+                    if (Directory.Exists(path) && new FileInfo(path).LinkTarget is null) LayerUnpacker.Delete(path);
+                    else File.Delete(path);
+                }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                {
+                }
+            }
+        });
+    }
+
+    /// <summary>A small blob written to a temporary name beside its digest: <c>&lt;digest&gt;.&lt;8 hex digits&gt;</c>.</summary>
+    private static bool IsUnfinishedBlob(string path)
+    {
+        var name = Path.GetFileName(path);
+        return name.Length == 73 && name[64] == '.' && name.All(c => c == '.' || char.IsAsciiHexDigitLower(c));
+    }
+
     private Instance Get(string idOrName) =>
         Find(idOrName) is { } info && _instances.TryGetValue(info.Id, out var instance) ? instance : throw new ContainerException($"No such container: {idOrName}");
 
@@ -935,8 +1270,17 @@ public sealed class ContainerEngine : IAsyncDisposable
         var folder = Path.Combine(Store.ContainersFolder, info.Id);
         if (!Directory.Exists(folder)) return;
         var file = Path.Combine(folder, "container.json");
-        File.WriteAllBytes(file + ".partial", JsonSerializer.SerializeToUtf8Bytes(info, StateJson));
-        File.Move(file + ".partial", file, overwrite: true);
+        // A name of its own, so two saves of one container never move each other's file; and a container removed
+        // meanwhile (its exit saved while it is deleted) has nothing left to save.
+        var partial = file + "." + Guid.NewGuid().ToString("N")[..8] + ".partial";
+        try
+        {
+            File.WriteAllBytes(partial, JsonSerializer.SerializeToUtf8Bytes(info, StateJson));
+            File.Move(partial, file, overwrite: true);
+        }
+        catch (Exception ex) when ((ex is FileNotFoundException or DirectoryNotFoundException) && !Directory.Exists(folder))
+        {
+        }
     }
 
     private static Dictionary<string, string> Attributes(ContainerInfo info)
