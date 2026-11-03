@@ -5,7 +5,7 @@ Compatibility Doctor:
   Respawn.DatabaseTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   Respawn.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: none
-Built in 13.5 s: 0 errors, 0 warnings
+Built in 7.6 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   awssdk.s3 3.7.0.4
       analyzers/dotnet/cs/AWSSDK.S3.CodeAnalysis.dll
@@ -402,23 +402,22 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.abstractions.dll
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
-Editor: 7 files opened and analyzed in 1.1 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 6 over 100 ms (0 over 250 ms, 0 over 1 s), 1.1 s in all, longest 248 ms during screenshots; answer p50 8.7 ms, p95 16.0 ms, p99 78.3 ms over 602 questions in 17 s
-| Stall | At | During |
-| --- | --- | --- |
-| 248 ms | 1.0 s | screenshots |
-| 193 ms | 1.3 s | screenshots |
-| 189 ms | 0.7 s | screenshots |
-| 147 ms | 15.3 s | screenshots |
-| 144 ms | 4.7 s | the first build |
-| 143 ms | 15.1 s | screenshots |
+Editor: 7 files opened and analyzed in 1.0 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 4 over 100 ms (0 over 250 ms, 0 over 1 s), 0.7 s in all, longest 238 ms during screenshots, 0.1 s of it garbage collection; answer p50 7.6 ms, p95 32.2 ms, p99 125.3 ms over 358 questions in 10 s
+UI timings: document view 64 ms, document view 29 ms, document view 21 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 238 ms | 45 ms | 0.8 s | screenshots |
+| 174 ms | 24 ms | 1.2 s | screenshots |
+| 125 ms | 8 ms | 9.0 s | screenshots |
+| 125 ms | 0 ms | 9.1 s | screenshots |
 Output:
-Build started at 18:07:21...
+Build started at 23:52:20...
 1>------ Build started: Project: Respawn, Configuration: Debug ------
-1>Respawn -> compiled in memory (96 KB, 1162 ms)
+1>Respawn -> compiled in memory (96 KB, 1107 ms)
 2>------ Build started: Project: Respawn.DatabaseTests, Configuration: Debug ------
-2>Respawn.DatabaseTests -> compiled in memory (260 KB, 1201 ms)
+2>Respawn.DatabaseTests -> compiled in memory (260 KB, 1438 ms)
 3>------ Build started: Project: Respawn.UnitTests, Configuration: Debug ------
-3>Respawn.UnitTests -> compiled in memory (7 KB, 430 ms)
+3>Respawn.UnitTests -> compiled in memory (7 KB, 420 ms)
 ========== Build: 3 succeeded, 0 failed ==========
 
