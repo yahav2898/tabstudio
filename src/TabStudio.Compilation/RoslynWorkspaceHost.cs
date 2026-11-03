@@ -38,7 +38,7 @@ public readonly record struct TextEdit(int Start, int Length, string NewText);
 /// <para>
 /// This is the language service behind the editor. It mirrors the open <see cref="TsWorkspace"/> into a
 /// Roslyn <see cref="AdhocWorkspace"/>, keeps it in sync with every keystroke through
-/// <see cref="UpdateText"/>, and answers the editor's questions: which diagnostics a file has, how to color
+/// <see cref="UpdateText(string, string)"/>, and answers the editor's questions: which diagnostics a file has, how to color
 /// it, and how to compile a project. Roslyn caches compilations between edits, so asking again after a small
 /// change is cheap.
 /// </para>

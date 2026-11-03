@@ -72,6 +72,13 @@ public sealed class StartupSmoothnessTests
         Smoothness.Settle(window);
         var firstFrame = clock.Elapsed;
 
+        // The dialogs over every page are built the first time they open, not with the start screen.
+        Assert.Empty(window.GetVisualDescendants().OfType<LinkView>());
+        Assert.Empty(window.GetVisualDescendants().OfType<GitHubSignInView>());
+        main.Link.Open();
+        Smoothness.Settle(window);
+        Assert.True(window.GetVisualDescendants().OfType<LinkView>().Single().IsEffectivelyVisible);
+
         report.AppendLine(culture, $"\n## Again, warm\n\n- Building the service provider: {built.TotalMilliseconds:0} ms.");
         report.AppendLine(culture, $"- Every service, created one at a time: {created.Sum(c => c.Took.TotalMilliseconds):0} ms.");
         report.AppendLine(culture, $"- The main view's first frame on the start screen: {firstFrame.TotalMilliseconds:0} ms.\n");
