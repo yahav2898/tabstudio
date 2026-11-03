@@ -371,6 +371,46 @@ public sealed class DebuggingTests
     }
 
     [AvaloniaFact]
+    public async Task The_call_stack_lists_the_programs_threads_and_shows_the_one_chosen()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+        var program = workspace.ActiveDocument!;
+        program.Document.Text = """
+            var running = true;
+            var worker = new Thread(() =>
+            {
+                var spins = 0;
+                while (Volatile.Read(ref running))
+                {
+                    spins++;
+                }
+            }) { Name = "Worker", IsBackground = true };
+            worker.Start();
+            Thread.Sleep(300);
+            Console.WriteLine("paused here");
+            running = false;
+            worker.Join();
+            """;
+        workspace.Breakpoints.Toggle(program.FilePath, 12);
+
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await WaitForPauseAsync(workspace, 12);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.CallStack.HasThreads, because: "the worker thread");
+
+        var worker = Assert.Single(workspace.CallStack.Threads, t => t.Name == "Worker");
+        Assert.NotEqual(worker, workspace.CallStack.SelectedThread);
+        workspace.CallStack.SelectedThread = worker;
+        await UiTestHelpers.WaitUntilAsync(() => workspace.CallStack.Frames.FirstOrDefault()?.Location?.Line is 5 or 7, because: "the worker's frames");
+        Assert.Contains(workspace.CallStack.Frames[0].MethodName, workspace.Locals.Note ?? string.Empty, StringComparison.Ordinal);
+
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await WaitForExitAsync(workspace);
+        Assert.Empty(workspace.CallStack.Threads);
+    }
+
+    [AvaloniaFact]
     public async Task Stop_cancels_a_build_in_progress_says_so_and_the_next_build_runs()
     {
         using var fixture = new WorkspaceFixture();

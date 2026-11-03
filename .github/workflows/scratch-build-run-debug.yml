@@ -182,7 +182,7 @@ jobs:
             timeout 40m dotnet test "$@" -c Release --no-build --blame-hang-timeout 10m --blame-hang-dump-type none --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1 || status=1
             grep -E "^\s+(Failed|Passed|Skipped) |Total tests|Passed:|Failed:" "ci-out/$name.log" | head -n 80
           }
-          run debugging tests/TabStudio.Debugging.Tests --filter "FullyQualifiedName~BreakpointHitCountTests|FullyQualifiedName~HostedRunTests|FullyQualifiedName~BreakpointConditionTests"
+          run debugging tests/TabStudio.Debugging.Tests --filter "FullyQualifiedName~BreakpointHitCountTests|FullyQualifiedName~HostedRunTests|FullyQualifiedName~ThreadTests|FullyQualifiedName~BreakpointConditionTests"
           run toolchains tests/TabStudio.Toolchains.Tests --filter "FullyQualifiedName~ToolchainTestTests"
           run app-unit tests/TabStudio.App.Tests --filter "FullyQualifiedName~TestExplorerViewModelTests|FullyQualifiedName~ProjectTemplatesTests|FullyQualifiedName~LanguageServerCommandTests|FullyQualifiedName~ViewModels.DebuggingTests|FullyQualifiedName~ViewModels.TestExplorerTests|FullyQualifiedName~TemplateConformanceTests.Every_template"
           run app-templates tests/TabStudio.App.Tests --filter "FullyQualifiedName~template_conformance|FullyQualifiedName~WebAppTests|FullyQualifiedName~BlazorAppTests"
@@ -194,6 +194,53 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: scratch-logs
+          retention-days: 3
+          if-no-files-found: ignore
+          path: ci-out/
+
+  scratch-repos:
+    name: Scratch (real .NET repositories' tests)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      TABSTUDIO_REAL_REPOS_JOB: sweep-3
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-real-repos-sweep-3-${{ hashFiles('Directory.Packages.props', '**/*.csproj', 'build/ci/real-repos.json') }}
+          restore-keys: nuget-real-repos-sweep-3-
+
+      - name: Clone the pinned repositories
+        run: python3 build/ci/real-repos.py "$RUNNER_TEMP/real-repos"
+
+      - name: Open, build and test them in TabStudio
+        env:
+          TABSTUDIO_REAL_REPOS: ${{ runner.temp }}/real-repos
+          TABSTUDIO_REAL_REPOS_OUT: ${{ github.workspace }}/ci-out
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame-hang-timeout 90m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~RealRepositoryTests" --logger "console;verbosity=normal" > ci-out/test.log 2>&1 || status=$?
+          tail -n 60 ci-out/test.log
+          cat ci-out/summary.md 2>/dev/null || true
+          grep -h "^Tests:" ci-out/*.txt 2>/dev/null || true
+          for f in ci-out/*.txt; do echo "== $f"; grep -m1 "^Tests:" "$f" || true; done
+          exit "$status"
+
+      - name: Save logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scratch-repos
           retention-days: 3
           if-no-files-found: ignore
           path: ci-out/

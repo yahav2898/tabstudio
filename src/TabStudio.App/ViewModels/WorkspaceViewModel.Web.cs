@@ -206,8 +206,10 @@ public sealed partial class WorkspaceViewModel
         _debuggedProject = null;
         _pause = null;
         _exceptionHelper = null;
+        _shownThread = null;
         Breakpoints.Unbind();
         CallStack.Clear();
+        CallStack.ClearThreads();
         Locals.Clear();
         _ = Watch.EvaluateAsync(null);
         ShowExecutionPoints();

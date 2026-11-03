@@ -60,6 +60,8 @@ internal sealed class DebugEngine
     private long _resumedGeneration;
     private DebugFrame? _pausedFrame;
     private DebugPausedEventArgs? _currentPause;
+    private string? _pausedThreadName;
+    private readonly Dictionary<int, ParkedThread> _parked = [];
 
     public DebugEngine(DebugInfoMap map, ValueInspector inspector, Action<DebugPausedEventArgs> onPaused, Action onResumed)
     {
@@ -320,7 +322,7 @@ internal sealed class DebugEngine
 
         if (_paused)
         {
-            WaitWhilePaused();
+            WaitWhilePaused(frame);
         }
 
         if (_stopped)
@@ -358,7 +360,7 @@ internal sealed class DebugEngine
         DebugPausedEventArgs? pause = null;
         lock (_gate)
         {
-            WaitHoldingGate(() => _paused && !_stopped);
+            ParkWhilePaused(frame);
             var reason = ReasonToBreak(frame, statementId);
             // Every hit with its condition holding counts, and its hit count says whether this one stops.
             var breakpoint = !_stopped && reason == PauseReason.Breakpoint && conditionMet ? _breakpoints.Find(statementId) : null;
@@ -421,7 +423,7 @@ internal sealed class DebugEngine
         DebugPausedEventArgs pause;
         lock (_gate)
         {
-            WaitHoldingGate(() => _paused && !_stopped);
+            ParkWhilePaused(top);
 
             if (_stopped)
             {
@@ -499,6 +501,7 @@ internal sealed class DebugEngine
         _mode = StepMode.Run;
         _stepFrame = null;
         _pausedFrame = frame;
+        _pausedThreadName = Thread.CurrentThread.Name;
         _paused = true;
         _currentPause = new DebugPausedEventArgs(
             reason,
@@ -524,13 +527,71 @@ internal sealed class DebugEngine
         ThrowIfStoppedOnMainThread();
     }
 
-    private void WaitWhilePaused()
+    private void WaitWhilePaused(DebugFrame? frame)
     {
         lock (_gate)
         {
-            WaitHoldingGate(() => _paused && !_stopped);
+            ParkWhilePaused(frame);
         }
     }
+
+    /// <summary>
+    /// Blocks a thread at its hook while another is paused (all-stop), listed with its frame so the Call Stack can
+    /// show it among the program's threads. The caller holds the gate.
+    /// </summary>
+    private void ParkWhilePaused(DebugFrame? frame)
+    {
+        if (!_paused || _stopped)
+        {
+            return;
+        }
+
+        var id = Environment.CurrentManagedThreadId;
+        _parked[id] = new ParkedThread(frame, Thread.CurrentThread.Name);
+        try
+        {
+            WaitHoldingGate(() => _paused && !_stopped);
+        }
+        finally
+        {
+            _parked.Remove(id);
+        }
+    }
+
+    /// <summary>
+    /// The threads of the paused program in its own code: the one that paused first, then those waiting at their next
+    /// statement, each with its call stack. Threads outside the program's code, such as one waiting for input in a
+    /// library, are not among them. Empty while the program runs.
+    /// </summary>
+    public IReadOnlyList<DebugThreadInfo> GetThreads()
+    {
+        lock (_gate)
+        {
+            if (_currentPause is not { } pause)
+            {
+                return [];
+            }
+
+            var threads = new List<DebugThreadInfo> { new(pause.ThreadId, ThreadName(pause.ThreadId, _pausedThreadName), pause.CallStack) };
+            foreach (var (id, parked) in _parked.OrderBy(p => p.Key))
+            {
+                if (id != pause.ThreadId)
+                {
+                    threads.Add(new DebugThreadInfo(id, ThreadName(id, parked.Name), CreateCallStack(parked.Frame)));
+                }
+            }
+
+            return threads;
+        }
+    }
+
+    private string ThreadName(int id, string? name) =>
+        name is { Length: > 0 } ? name
+        : id == Volatile.Read(ref _mainThreadId) ? "Main Thread"
+        : "Thread " + id.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+    /// <summary>A thread waiting at its hook while another is paused.</summary>
+    private sealed record ParkedThread(DebugFrame? Frame, string? Name);
 
     /// <summary>
     /// Waits while a condition holds. The caller holds the gate, and holds it again when this returns. A thread the

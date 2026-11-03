@@ -130,6 +130,12 @@ public sealed partial class DebugSession : IDisposable
     /// <summary>The current pause, or <see langword="null"/> while the program runs.</summary>
     public DebugPausedEventArgs? CurrentPause => _engine.CurrentPause;
 
+    /// <summary>
+    /// The threads of the paused program in its own code, each with its call stack: the one that paused first, then
+    /// those that stopped at their next statement, as every thread does while one is paused. Empty while it runs.
+    /// </summary>
+    public IReadOnlyList<DebugThreadInfo> Threads => _engine.GetThreads();
+
     /// <summary>Whether to pause when an exception is about to leave the program unhandled. On by default.</summary>
     public bool BreakOnUnhandledExceptions
     {
