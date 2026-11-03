@@ -432,9 +432,7 @@ public sealed class DesignSurfaceTests
         Assert.Contains("button1.Text = \"Save\";", text, StringComparison.Ordinal);
         Assert.Contains("#region Buttons\n            button1 = new Button();\n            #endregion", text, StringComparison.Ordinal);
         Assert.DoesNotContain("#region Form", text, StringComparison.Ordinal);
-        Assert.Equal(
-            System.Text.RegularExpressions.Regex.Matches(text, "#region").Count,
-            System.Text.RegularExpressions.Regex.Matches(text, "#endregion").Count);
+        Assert.Equal(System.Text.RegularExpressions.Regex.Count(text, "#region"), System.Text.RegularExpressions.Regex.Count(text, "#endregion"));
         Compiles(surface.Text, Samples.TemplateCode);
         Assert.Equal("Save", surface.Root!.Controls["button1"]!.Text);
     }
