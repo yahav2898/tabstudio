@@ -101,7 +101,9 @@ public sealed class RealRepositoryTests
             }
             else if (baseline is { } limit && outcome.Errors > limit)
             {
-                problems.Add($"{name} has {outcome.Errors} errors, more than its baseline of {limit}; see {name}.txt.");
+                // The first errors too: the job's log keeps this message when the logs cannot be published.
+                var first = report.ToString().Split('\n').Where(line => line.StartsWith("      [", StringComparison.Ordinal) || line.StartsWith("  generator: ", StringComparison.Ordinal)).Take(12);
+                problems.Add($"{name} has {outcome.Errors} errors, more than its baseline of {limit}; see {name}.txt.\n{string.Join('\n', first)}");
             }
             else if (baseline is { } previous && outcome.Errors < previous)
             {

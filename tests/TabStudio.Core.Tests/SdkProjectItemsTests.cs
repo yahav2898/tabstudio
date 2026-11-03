@@ -378,6 +378,63 @@ public sealed class SdkProjectItemsTests
     }
 
     [Fact]
+    public void A_target_reads_the_Compile_items_with_their_well_known_metadata()
+    {
+        // Moq's AddConstants picks the Compile items under Scenarios/ by %(RelativeDir).
+        using var temp = new TempDirectory();
+        temp.Write("Tests/Scenarios/MultipleUses.cs", "class MultipleUses { }");
+        temp.Write("Tests/Other.cs", "class Other { }");
+        var path = temp.Write("Tests/Tests.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <Target Name="AddScenarios" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+                <ItemGroup>
+                  <AdditionalFiles Include="@(Compile)" Condition="$([MSBuild]::ValueOrDefault('%(RelativeDir)', '').StartsWith('Scenarios'))" />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+
+        var project = ProjectParser.Load(path);
+
+        var files = project.AdditionalFiles.Where(f => f.ItemTypes is not null).Select(f => f.Include.Replace('\\', '/')).ToList();
+        Assert.Equal(new[] { "Scenarios/MultipleUses.cs" }, files);
+    }
+
+    [Fact]
+    public void Metadata_a_target_sets_from_other_metadata_follows_its_property_functions()
+    {
+        // ThisAssembly.Constants' PrepareConstants: AreaPath from RelativeDir and Filename, then Area with '\' and '/' as dots.
+        using var temp = new TempDirectory();
+        temp.Write("Tests/Scenarios/MultipleUses.cs", "class MultipleUses { }");
+        var path = temp.Write("Tests/Tests.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <Target Name="Areas" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+                <ItemGroup>
+                  <FileConstant Include="@(Compile)" />
+                  <FileConstant Condition="!$([System.IO.Path]::IsPathRooted('%(RelativeDir)')) OR '%(Link)' != ''">
+                    <AreaPath Condition="!$([System.IO.Path]::IsPathRooted('%(RelativeDir)'))">%(RelativeDir)%(Filename)</AreaPath>
+                    <FileExtension Condition="!$([System.IO.Path]::IsPathRooted('%(RelativeDir)'))">%(Extension)</FileExtension>
+                  </FileConstant>
+                  <FileConstant Condition="'%(AreaPath)' != ''">
+                    <Area>$([MSBuild]::ValueOrDefault('%(AreaPath)', '').Replace('\', '.').Replace('/', '.'))</Area>
+                    <Value>%(AreaPath)%(FileExtension)</Value>
+                  </FileConstant>
+                  <AdditionalFiles Include="@(FileConstant)" />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+
+        var file = Assert.Single(ProjectParser.Load(path).AdditionalFiles, f => f.ItemTypes is not null);
+
+        Assert.Equal("Scenarios/MultipleUses", file.Metadata.GetValueOrDefault("AreaPath")?.Replace('\\', '/'));
+        Assert.Equal("Scenarios.MultipleUses", file.Metadata.GetValueOrDefault("Area"));
+        Assert.Equal("Scenarios/MultipleUses.cs", file.Metadata.GetValueOrDefault("Value")?.Replace('\\', '/'));
+    }
+
+    [Fact]
     public void ThisAssembly_Constants_and_Project_get_the_constants_their_targets_make()
     {
         // Moq's static proxy tests use ThisAssembly.Constants.Scenarios.MultipleUses, a FileConstant its own target adds
