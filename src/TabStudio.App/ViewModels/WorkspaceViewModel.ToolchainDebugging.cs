@@ -147,6 +147,11 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        if (toolchain.Id == "rust" && type == "lldb-dap")
+        {
+            configuration = ToolchainLaunch.WithRustFormatters(configuration);
+        }
+
         var withInput = PrepareNativeDebugInput(configuration);
         if (withInput is null)
         {

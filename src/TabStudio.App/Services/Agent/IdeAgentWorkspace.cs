@@ -108,7 +108,7 @@ internal sealed class IdeAgentWorkspace(IAgentWorkspaceHost host, IUiDispatcher 
                 continue;
             }
 
-            using var session = await TestSession.LoadAsync([build.EntryAssembly!, .. build.Dependencies], language.GetPackageRuntimeAssemblies(project.FilePath), cancellationToken: cancellationToken);
+            using var session = await TestSession.LoadAsync([build.EntryAssembly!, .. build.Dependencies], language.GetPackageRuntimeAssemblies(project.FilePath), new TestRunOptions { OutputDirectory = ProjectOutputFolder.For(project) }, cancellationToken);
             var summary = filter is null
                 ? await session.RunAllAsync(cancellationToken)
                 : await session.RunSelectedAsync([filter], cancellationToken);

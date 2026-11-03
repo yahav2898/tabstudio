@@ -341,7 +341,7 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
         TestSession session;
         try
         {
-            session = await TestSession.LoadAsync(assemblies, packages, cancellationToken: cancellationToken);
+            session = await TestSession.LoadAsync(assemblies, packages, TestRunOptionsFor(project), cancellationToken);
         }
         catch (Exception ex) when (ex is not (OperationCanceledException or OutOfMemoryException))
         {
@@ -358,6 +358,12 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
 
         return session;
     }
+
+    /// <summary>
+    /// How Test Explorer runs a project's tests: from its output folder, as <c>dotnet test</c> runs them, so tests
+    /// that find files next to their assembly or relative to the current directory find them.
+    /// </summary>
+    private static TestRunOptions TestRunOptionsFor(ProjectInfo project) => new() { OutputDirectory = ProjectOutputFolder.For(project) };
 
     /// <summary>Runs tests of one session, reporting each start and result to the Test Explorer as it happens.</summary>
     private async Task<TestRunSummary> RunTestSessionAsync(ProjectInfo project, TestSession session, IReadOnlyList<TestCase> tests, CancellationToken cancellationToken)

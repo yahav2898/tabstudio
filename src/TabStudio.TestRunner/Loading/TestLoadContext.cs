@@ -6,7 +6,8 @@ using TabStudio.Compilation.Running;
 namespace TabStudio.TestRunner.Loading;
 
 /// <summary>
-/// Loads a test project into one <see cref="AssemblyLoadContext"/>: the user's assemblies from memory and the
+/// Loads a test project into one <see cref="AssemblyLoadContext"/>: the user's assemblies from memory, or from the
+/// output folder they were written to, and the
 /// test framework's assemblies, such as <c>xunit.core.dll</c>, from the files NuGet restored.
 /// </summary>
 /// <remarks>
@@ -30,6 +31,7 @@ internal sealed class TestLoadContext : AssemblyLoadContext
     private readonly Lock _gate = new();
     private readonly PackageLoadContext? _packages;
     private readonly PackageNativeLibraries _nativeLibraries;
+    private readonly IReadOnlyDictionary<string, string>? _files;
 
     /// <summary>Creates a context for a test project.</summary>
     /// <param name="name">A name for diagnostics, usually the test project's name.</param>
@@ -39,10 +41,15 @@ internal sealed class TestLoadContext : AssemblyLoadContext
     /// Where the package assemblies come from when they are shared with other sessions, or <see langword="null"/> to
     /// load them into this context.
     /// </param>
-    public TestLoadContext(string name, IReadOnlyList<CompiledAssembly> compiled, IReadOnlyList<string> runtimeAssemblyPaths, PackageLoadContext? packages = null)
+    /// <param name="files">
+    /// The files the compiled assemblies were written to (see <see cref="OutputFolder"/>), by name, to load them from;
+    /// <see langword="null"/> to load them from memory.
+    /// </param>
+    public TestLoadContext(string name, IReadOnlyList<CompiledAssembly> compiled, IReadOnlyList<string> runtimeAssemblyPaths, PackageLoadContext? packages = null, IReadOnlyDictionary<string, string>? files = null)
         : base($"TabStudio tests: {name}", isCollectible: false)
     {
         _packages = packages;
+        _files = files;
         _compiled = new Dictionary<string, CompiledAssembly>(StringComparer.OrdinalIgnoreCase);
         foreach (var assembly in compiled)
         {
@@ -78,9 +85,19 @@ internal sealed class TestLoadContext : AssemblyLoadContext
                 return existing;
             }
 
-            using var image = new MemoryStream(compiled.Image, writable: false);
-            using var symbols = compiled.Symbols is null ? null : new MemoryStream(compiled.Symbols, writable: false);
-            var assembly = LoadFromStream(image, symbols);
+            Assembly assembly;
+            if (_files is not null && _files.TryGetValue(compiled.Name, out var file))
+            {
+                assembly = LoadFromAssemblyPath(file);
+                OutputFolder.MarkLoaded(file, compiled);
+            }
+            else
+            {
+                using var image = new MemoryStream(compiled.Image, writable: false);
+                using var symbols = compiled.Symbols is null ? null : new MemoryStream(compiled.Symbols, writable: false);
+                assembly = LoadFromStream(image, symbols);
+            }
+
             _loaded[compiled.Name] = assembly;
             return assembly;
         }

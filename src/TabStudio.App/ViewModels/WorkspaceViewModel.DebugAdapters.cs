@@ -800,6 +800,10 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
         _adapterFrames = frames;
         var shown = frames.Select(ToStackFrame).ToList();
+        if (!shown.Exists(f => f.Location is not null) && SwiftFatalErrorFrame(frames) is { } fatal)
+        {
+            shown[fatal.Index] = fatal.Frame;
+        }
 
         // A program stopped in code without source here, such as a C library's abort after an uncaught C++ exception
         // or a signal, shows the first frame that has source: the code that led there, with the exception helper.
@@ -1499,8 +1503,51 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     /// <see cref="RustPanicFunction"/>, or a Swift fatal error, which Swift's LLDB stops at as a breakpoint.
     /// </summary>
     private bool IsPanicStop(DapStoppedEventArgs stop) =>
-        (_adapterPanicStops && stop.Reason == "function breakpoint" && _adapterFrames.Take(4).Any(f => f.Name.Contains(RustPanicFunction, StringComparison.Ordinal)))
+        (_adapterPanicStops && stop.Reason is "function breakpoint" or "breakpoint" && _adapterFrames.Take(4).Any(f => f.Name.Contains(RustPanicFunction, StringComparison.Ordinal)))
         || (stop.Reason is "breakpoint" or "exception" && _adapterFrames.Take(3).Any(f => f.Name.Contains(SwiftRuntimeFailure, StringComparison.Ordinal)));
+
+    /// <summary>
+    /// The program's own frame of a Swift fatal error, at the file and line the runtime printed: Swift inlines
+    /// <c>fatalError</c> and the like into the caller with the standard library's location, so LLDB gives that frame
+    /// no source of the program's. The message names the file by module (<c>Greeter/main.swift:17: Fatal error</c>).
+    /// </summary>
+    private (int Index, DebugStackFrame Frame)? SwiftFatalErrorFrame(IReadOnlyList<DapStackFrame> frames)
+    {
+        if (!frames.Take(3).Any(f => f.Name.Contains(SwiftRuntimeFailure, StringComparison.Ordinal)) || Workspace?.RootDirectory is not { } root)
+        {
+            return null;
+        }
+
+        var output = Output.Text;
+        var match = SwiftFatalErrorPattern().Matches(output.Length > 8000 ? output[^8000..] : output).LastOrDefault();
+        if (match is null || !int.TryParse(match.Groups["line"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var line))
+        {
+            return null;
+        }
+
+        var reported = match.Groups["file"].Value.Replace('/', Path.DirectorySeparatorChar);
+        var name = Path.GetFileName(reported);
+        var module = Path.GetDirectoryName(reported);
+        var files = Directory.EnumerateFiles(root, name, new EnumerationOptions { RecurseSubdirectories = true, IgnoreInaccessible = true, MaxRecursionDepth = 10 })
+            .Where(f => !f.Contains($"{Path.DirectorySeparatorChar}.build{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
+            .ToList();
+        var file = files.FirstOrDefault(f => f.EndsWith(Path.DirectorySeparatorChar + reported, StringComparison.Ordinal))
+            ?? files.FirstOrDefault(f => module is { Length: > 0 } && f.Contains(Path.DirectorySeparatorChar + module + Path.DirectorySeparatorChar, StringComparison.Ordinal))
+            ?? (files.Count == 1 ? files[0] : null);
+        var index = frames.ToList().FindIndex(f =>
+            !f.Name.Contains("_swift", StringComparison.Ordinal) && !f.Name.Contains("ssertionFailure", StringComparison.Ordinal)
+            && !f.Name.Contains("fatalError", StringComparison.Ordinal) && !f.Name.Contains("reconditionFailure", StringComparison.Ordinal));
+        if (file is null || index < 0)
+        {
+            return null;
+        }
+
+        var frame = ToStackFrame(frames[index] with { FilePath = file, Line = line, Column = 0, EndLine = null, EndColumn = null });
+        return frame.Location is null ? null : (index, frame);
+    }
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"(?m)^(?<file>[^\s:][^:\n]*\.swift):(?<line>\d+): Fatal error")]
+    private static partial System.Text.RegularExpressions.Regex SwiftFatalErrorPattern();
 
     /// <summary>The exception helper of a Rust panic, at the program's own frame that panicked.</summary>
     private void ShowPanic()

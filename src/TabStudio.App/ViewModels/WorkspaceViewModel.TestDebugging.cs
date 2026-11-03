@@ -128,7 +128,7 @@ public sealed partial class WorkspaceViewModel
             return await session.RunHostedAsync(async stop =>
             {
                 // A test may stay paused at a breakpoint for as long as the user looks at it: no timeout.
-                using var tests = await TestSession.LoadAsync(assemblies, packages, new TestRunOptions { DefaultTimeout = null }, stop);
+                using var tests = await TestSession.LoadAsync(assemblies, packages, TestRunOptionsFor(project) with { DefaultTimeout = null }, stop);
                 return await InvokeOnUiAsync(() => RunDebuggedTestsAsync(project, tests, names, stop));
             }, cancellationToken);
         }
@@ -301,7 +301,7 @@ public sealed partial class WorkspaceViewModel
             }
 
             if (ToolchainLaunch.Create(type, new RunPlan(null, debug.Debuggee, debug.Debuggee.Program)) is not { } launch
-                || PrepareNativeDebugInput(launch) is not { } configuration)
+                || PrepareNativeDebugInput(toolchain.Id == "rust" && type == "lldb-dap" ? ToolchainLaunch.WithRustFormatters(launch) : launch) is not { } configuration)
             {
                 Output.WriteLine($"{toolchain.Name}'s debugger cannot start the tests of {project.Name}.", OutputKind.Failure);
                 Tests.ReportBuildFailed();

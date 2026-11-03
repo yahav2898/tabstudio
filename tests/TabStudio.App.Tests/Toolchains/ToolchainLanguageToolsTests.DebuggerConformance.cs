@@ -64,7 +64,9 @@ public sealed partial class ToolchainLanguageToolsTests
           throw new Error('boom from main');
         }
 
-        main();
+        // From a callback: thrown at a module's top level, V8 counts the error as caught by Node's module loader, so
+        // no debugger pauses there for uncaught exceptions (VS Code's neither).
+        setImmediate(main);
 
         """;
 
