@@ -15,8 +15,11 @@ internal static class RazorCompiler
     /// <summary>The parse option feature the SDK turns on for .NET 10 projects, which has Razor read C# with Roslyn's tokenizer.</summary>
     public const string RoslynTokenizerFeature = "use-roslyn-tokenizer";
 
-    /// <summary>The generator, shared by every project that compiles Razor.</summary>
-    public static GeneratorReference Reference { get; } = new(new RazorSourceGenerator(), "Razor");
+    /// <summary>
+    /// A new instance of the generator, for one project that compiles Razor. Roslyn keeps a generator's incremental
+    /// state per instance, and a new one starts from nothing: see <c>RoslynWorkspaceHost.RazorGeneratorFor</c>.
+    /// </summary>
+    public static GeneratorReference CreateReference() => new(new RazorSourceGenerator(), "Razor");
 
     /// <summary>
     /// The parse options of a project: the compiler's defaults for the configuration, the interceptor namespaces of

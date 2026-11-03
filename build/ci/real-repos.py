@@ -14,24 +14,48 @@ build and the serve check themselves happen in TabStudio.
 
 TABSTUDIO_REAL_REPOS_ONLY (comma-separated names) limits both to some of the repositories, as it does the test, and
 TABSTUDIO_REAL_REPOS_JOB to the repositories of one job (their "job"; unset, those that name none).
+
+What goes over the network (git fetch, installing dotnet-ef) is tried again after a failure, after each of
+RETRY_DELAYS, so a blip on GitHub's or nuget.org's side does not fail the job: a pinned commit that really is gone
+still fails, after the last try.
 """
 import json
 import os
 import pathlib
 import subprocess
 import sys
+import time
+
+# Seconds to wait before each new try of a network step: four tries in all.
+RETRY_DELAYS = (5, 15, 30)
 
 
 def run(*args: str, cwd: pathlib.Path, env: dict[str, str] | None = None) -> None:
     subprocess.run(args, cwd=cwd, check=True, env=env)
 
 
-def clone(destination: pathlib.Path, repositories: list[dict]) -> None:
+def run_with_retries(*args: str, cwd: pathlib.Path, env: dict[str, str] | None = None, delays=None, sleep=None) -> None:
+    """Runs a command that uses the network, again after each of the delays while it fails."""
+    delays = RETRY_DELAYS if delays is None else delays
+    sleep = time.sleep if sleep is None else sleep
+    for attempt in range(len(delays) + 1):
+        try:
+            run(*args, cwd=cwd, env=env)
+            return
+        except subprocess.CalledProcessError as error:
+            if attempt == len(delays):
+                raise
+            print(f"{' '.join(args[:2])} failed with exit code {error.returncode}; trying again in {delays[attempt]} s "
+                  f"(attempt {attempt + 2} of {len(delays) + 1}).", file=sys.stderr, flush=True)
+            sleep(delays[attempt])
+
+
+def clone(destination: pathlib.Path, repositories: list[dict], delays=None, sleep=None) -> None:
     for repository in repositories:
         folder = destination / repository["name"]
         folder.mkdir(parents=True, exist_ok=True)
         run("git", "init", "-q", cwd=folder)
-        run("git", "fetch", "-q", "--depth", "1", repository["url"], repository["sha"], cwd=folder)
+        run_with_retries("git", "fetch", "-q", "--depth", "1", repository["url"], repository["sha"], cwd=folder, delays=delays, sleep=sleep)
         run("git", "-c", "advice.detachedHead=false", "checkout", "-q", "FETCH_HEAD", cwd=folder)
         print(f"{repository['name']}: {repository['sha']}")
 
@@ -52,7 +76,7 @@ def migrate(destination: pathlib.Path, repositories: list[dict]) -> None:
 
         folder = destination / repository["name"]
         if not (tools / "dotnet-ef").exists():
-            run("dotnet", "tool", "install", "dotnet-ef", "--version", "8.0.11", "--tool-path", str(tools), cwd=folder)
+            run_with_retries("dotnet", "tool", "install", "dotnet-ef", "--version", "8.0.11", "--tool-path", str(tools), cwd=folder)
         run(str(tools / "dotnet-ef"), "database", "update", "--project", serve["migrate"], cwd=folder, env=env)
         print(f"{repository['name']}: migrated {serve['migrate']}")
 

@@ -17,6 +17,9 @@ internal sealed class FakeNuGetServer : HttpMessageHandler
 
     private readonly ConcurrentDictionary<string, TestPackage> _packages = new(StringComparer.Ordinal);
     private readonly ConcurrentQueue<string> _requests = new();
+    private readonly ConcurrentQueue<string> _noCacheRequests = new();
+    private readonly ConcurrentQueue<(string Suffix, Func<HttpRequestMessage, HttpResponseMessage> Fault)> _faults = new();
+    private readonly Lock _faultGate = new();
 
     /// <summary>When set, every request fails the way it does without a network.</summary>
     public bool Offline { get; set; }
@@ -25,6 +28,22 @@ internal sealed class FakeNuGetServer : HttpMessageHandler
     public HttpStatusCode? FailWith { get; set; }
 
     public IReadOnlyList<string> Requests => [.. _requests];
+
+    /// <summary>The addresses of the requests that asked the caches on the way for a fresh answer (<c>Cache-Control: no-cache</c>).</summary>
+    public IReadOnlyList<string> NoCacheRequests => [.. _noCacheRequests];
+
+    /// <summary>
+    /// Answers the next request whose address ends with <paramref name="suffix"/> with <paramref name="fault"/>, which
+    /// may also throw, as a network does; later requests are served normally. Faults added again apply in turn.
+    /// </summary>
+    public FakeNuGetServer FailNext(string suffix, Func<HttpRequestMessage, HttpResponseMessage> fault)
+    {
+        _faults.Enqueue((suffix, fault));
+        return this;
+    }
+
+    /// <summary>A body that sends some bytes and then ends before its length, as a connection that broke off does.</summary>
+    public static HttpResponseMessage Truncated() => new(HttpStatusCode.OK) { Content = new StreamContent(new BreakingStream()) };
 
     public PackageSource Source { get; } = new("packages.test", IndexAddress);
 
@@ -42,6 +61,18 @@ internal sealed class FakeNuGetServer : HttpMessageHandler
     {
         var address = request.RequestUri?.AbsoluteUri ?? string.Empty;
         _requests.Enqueue(address);
+        if (request.Headers.CacheControl?.NoCache == true)
+        {
+            _noCacheRequests.Enqueue(address);
+        }
+
+        lock (_faultGate)
+        {
+            if (_faults.TryPeek(out var next) && address.EndsWith(next.Suffix, StringComparison.Ordinal) && _faults.TryDequeue(out var fault))
+            {
+                return Task.FromResult(fault.Fault(request));
+            }
+        }
 
         if (Offline)
         {
@@ -97,4 +128,42 @@ internal sealed class FakeNuGetServer : HttpMessageHandler
 
     private static Task<HttpResponseMessage> NotFound() =>
         Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+
+    /// <summary>A stream that gives a few bytes, then fails the way HttpClient does when a body ends before its length.</summary>
+    private sealed class BreakingStream : Stream
+    {
+        private bool _sent;
+
+        public override bool CanRead => true;
+
+        public override bool CanSeek => false;
+
+        public override bool CanWrite => false;
+
+        public override long Length => throw new NotSupportedException();
+
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            if (_sent)
+            {
+                throw new HttpIOException(HttpRequestError.ResponseEnded, "The response ended prematurely.");
+            }
+
+            _sent = true;
+            buffer[offset] = (byte)'{';
+            return 1;
+        }
+
+        public override void Flush()
+        {
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+
+        public override void SetLength(long value) => throw new NotSupportedException();
+
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+    }
 }

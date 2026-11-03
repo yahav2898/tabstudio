@@ -127,6 +127,7 @@ public sealed partial class PackageRestorer
                 project.Name)));
 
         IReadOnlyList<RestoredPackage> packages = [];
+        var sourcesFailed = false;
         if (graph.HasPackages)
         {
             progress?.Report(new RestoreProgress(RestoreStage.Resolving, $"Resolving the packages of {project.Name}", 0, 0));
@@ -142,6 +143,7 @@ public sealed partial class PackageRestorer
                 }
             }
 
+            sourcesFailed = finder.Failures.Count > 0;
             diagnostics.AddRange(finder.Failures.Select(f => DescribeSourceFailure(f, project.Name, isError: resolution.Unresolved.Count > 0)));
             packages = await InstallAsync(resolution.Packages, project.Name, diagnostics, progress, cancellationToken).ConfigureAwait(false);
         }
@@ -160,8 +162,10 @@ public sealed partial class PackageRestorer
         };
 
         // A restore with errors still returns the packages it restored, but it is never remembered: the next
-        // restore with the same inputs tries the sources again and reports the errors again.
-        if (Options.UseRestoreCache && result.Success)
+        // restore with the same inputs tries the sources again and reports the errors again. Nor is one that could not
+        // read a source and settled for the versions already on the device (a warning): remembered, it kept those
+        // versions for good, even once the source answered again with the ones NuGet would pick.
+        if (Options.UseRestoreCache && result.Success && !sourcesFailed)
         {
             RestoreCache.TryWrite(cachePath, inputsHash, result);
         }
@@ -300,7 +304,7 @@ public sealed partial class PackageRestorer
 
     private List<IPackageFeed> CreateFeeds() =>
         Options.Sources
-            .Select(source => source.IsLocal ? (IPackageFeed)new LocalFolderPackageFeed(source) : new HttpPackageFeed(source, _http))
+            .Select(source => source.IsLocal ? (IPackageFeed)new LocalFolderPackageFeed(source) : new HttpPackageFeed(source, _http, Options.HttpRetryDelays))
             .ToList();
 
     /// <summary>Downloads the packages that are not installed yet and selects the assets of every package.</summary>

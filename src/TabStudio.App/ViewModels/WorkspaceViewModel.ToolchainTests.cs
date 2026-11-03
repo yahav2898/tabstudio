@@ -140,23 +140,37 @@ public sealed partial class WorkspaceViewModel
                 return;
             }
 
-            var reports = Path.Combine(project.Directory, ".tabstudio", "test-results", Guid.NewGuid().ToString("N"));
-            var plan = ToolchainTestPlanner.Plan(project, framework, selection, reports);
-            Output.WriteLine($"========== Running {project.Name}'s tests with {framework} ==========", OutputKind.Info);
-            Output.WriteLine("> " + plan.Command.CommandLine, OutputKind.Info);
-            var started = DateTime.UtcNow;
             var clock = Stopwatch.GetTimestamp();
             OutputProcessResult result;
-            using (var operation = new CompletingOperation(Operations.Begin("tests:" + project.Directory, $"Testing {project.Name}", new OperationProgress($"Running {project.Name}'s tests"), cancellation.Cancel)))
-            using (FollowOutput(operation.Operation))
+            IReadOnlyList<ToolchainTestResult> results;
+            for (var attempt = 1; ; attempt++)
             {
-                result = await OutputProcess.RunAsync(_toolchains.Runtime, plan.Command, Output, null, cancellation.Token, toolchain: project.Toolchain.Id);
-                operation.Outcome = result.Succeeded ? OperationOutcome.Succeeded
-                    : cancellation.IsCancellationRequested ? OperationOutcome.Cancelled : OperationOutcome.Failed;
+                var reports = Path.Combine(project.Directory, ".tabstudio", "test-results", Guid.NewGuid().ToString("N"));
+                var plan = ToolchainTestPlanner.Plan(project, framework, selection, reports);
+                Output.WriteLine($"========== Running {project.Name}'s tests with {framework} ==========", OutputKind.Info);
+                Output.WriteLine("> " + plan.Command.CommandLine, OutputKind.Info);
+                var started = DateTime.UtcNow;
+                using (var operation = new CompletingOperation(Operations.Begin("tests:" + project.Directory, $"Testing {project.Name}", new OperationProgress($"Running {project.Name}'s tests"), cancellation.Cancel)))
+                using (FollowOutput(operation.Operation))
+                {
+                    result = await OutputProcess.RunAsync(_toolchains.Runtime, plan.Command, Output, null, cancellation.Token, toolchain: project.Toolchain.Id);
+                    operation.Outcome = result.Succeeded ? OperationOutcome.Succeeded
+                        : cancellation.IsCancellationRequested ? OperationOutcome.Cancelled : OperationOutcome.Failed;
+                }
+
+                results = await Task.Run(() => ToolchainTestPlanner.ReadResults(project, plan, started));
+                TryDeleteDirectory(reports);
+
+                // A runner that crashed before reporting any test, as SwiftPM sometimes does while it plans the build,
+                // says nothing about the tests: run it once more before saying they did not run.
+                if (attempt > 1 || results.Count > 0 || cancellation.IsCancellationRequested || !TestRunnerCrash.Crashed(result.Exit, result.Lines))
+                {
+                    break;
+                }
+
+                Output.WriteLine($"{project.Name}'s test runner crashed ({result.Exit?.Description}) before it reported any test; running it again.", OutputKind.Warning);
             }
 
-            var results = await Task.Run(() => ToolchainTestPlanner.ReadResults(project, plan, started));
-            TryDeleteDirectory(reports);
             if (results.Count == 0 && !cancellation.IsCancellationRequested)
             {
                 ErrorList.SetRunErrors(project.Directory, [.. Matcher(project.Toolchain).FindErrors(result.Lines, IsWorkspaceFile).Select(error => ToDiagnostic(project, error))]);

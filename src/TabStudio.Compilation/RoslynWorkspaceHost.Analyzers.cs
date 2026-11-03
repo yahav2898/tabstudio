@@ -43,6 +43,7 @@ public sealed partial class RoslynWorkspaceHost
             _packageAnalyzers[projectFilePath] = analyzerPaths.Distinct(StringComparer.Ordinal).Select(GetOrCreateAnalyzerReference).ToList();
             ApplyAnalyzerReferences(projectFilePath);
             InvalidateGenerators(projectFilePath);
+            RenewRazorGeneratorsOfUsers(projectFilePath);
         }
     }
 
@@ -57,6 +58,9 @@ public sealed partial class RoslynWorkspaceHost
         lock (_gate)
         {
             _frameworkAnalyzers = analyzerPaths.Distinct(StringComparer.Ordinal).Select(GetOrCreateAnalyzerReference).ToList();
+
+            // Every project's generated code may change, so no Razor project may keep the components it found in another.
+            _razorGenerators.Clear();
             foreach (var path in _projectIds.Keys.ToList())
             {
                 ApplyAnalyzerReferences(path);
@@ -101,7 +105,7 @@ public sealed partial class RoslynWorkspaceHost
         {
             analyzers = analyzers
                 .Where(a => !string.Equals(Path.GetFileName(a.FullPath), "Microsoft.CodeAnalysis.Razor.Compiler.dll", StringComparison.OrdinalIgnoreCase))
-                .Append(Razor.RazorCompiler.Reference);
+                .Append(RazorGeneratorFor(project));
         }
 
         if (!UsesAvaloniaXaml(project))

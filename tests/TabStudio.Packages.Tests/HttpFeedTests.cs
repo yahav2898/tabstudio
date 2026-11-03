@@ -1,4 +1,6 @@
 using System.Net;
+using System.Net.Sockets;
+using TabStudio.Core.Diagnostics;
 
 namespace TabStudio.Packages.Tests;
 
@@ -54,6 +56,99 @@ public sealed class HttpFeedTests : IDisposable
 
         Assert.False(result.Success);
         Assert.Equal(PackageDiagnosticIds.SourceFailed, Assert.Single(result.Diagnostics).Id);
+    }
+
+    [Fact]
+    public async Task A_304_to_a_plain_GET_is_asked_again_past_the_caches_instead_of_failing_with_NU1301()
+    {
+        // nuget.org's CDN answered 304 Not Modified to a GET that had no If-None-Match, and Moq's restore failed (NU1301).
+        const string versions = "https://packages.test/v3-flatcontainer/cdn.package/index.json";
+        _server.Add(new TestPackage("Cdn.Package", "1.0.0").WithAssembly("lib/net8.0"));
+        _server.FailNext("cdn.package/index.json", _ => new HttpResponseMessage(HttpStatusCode.NotModified));
+
+        var result = await RestoreAsync(("Cdn.Package", "1.0.0"));
+
+        Assert.True(result.Success, Describe(result));
+        Assert.Equal(2, _server.Requests.Count(r => r == versions));
+        Assert.Equal(new[] { versions }, _server.NoCacheRequests);
+    }
+
+    [Fact]
+    public async Task A_connection_reset_once_is_retried_instead_of_failing_with_TS3001()
+    {
+        // RestSharp's restore failed with TS3001 when one request's connection was reset.
+        _server.Add(new TestPackage("Reset.Package", "1.0.0").WithAssembly("lib/net8.0"));
+        _server.FailNext(".nupkg", _ => throw new HttpRequestException(
+            HttpRequestError.ConnectionError,
+            "An error occurred while sending the request.",
+            new IOException("Connection reset by peer", new SocketException((int)SocketError.ConnectionReset))));
+
+        var result = await RestoreAsync(("Reset.Package", "1.0.0"));
+
+        Assert.True(result.Success, Describe(result));
+        Assert.Equal(2, _server.Requests.Count(r => r.EndsWith(".nupkg", StringComparison.Ordinal)));
+    }
+
+    [Fact]
+    public async Task Server_errors_rate_limits_and_timeouts_are_retried()
+    {
+        _server.Add(new TestPackage("Busy.Package", "1.0.0").WithAssembly("lib/net8.0"));
+        _server.FailNext(".nuspec", _ => new HttpResponseMessage(HttpStatusCode.ServiceUnavailable))
+            .FailNext(".nuspec", _ => new HttpResponseMessage(HttpStatusCode.TooManyRequests) { Headers = { RetryAfter = new(TimeSpan.Zero) } })
+            .FailNext(".nuspec", _ => new HttpResponseMessage(HttpStatusCode.RequestTimeout));
+
+        var result = await RestoreAsync(("Busy.Package", "1.0.0"));
+
+        Assert.True(result.Success, Describe(result));
+        Assert.Equal(4, _server.Requests.Count(r => r.EndsWith(".nuspec", StringComparison.Ordinal)));
+    }
+
+    [Fact]
+    public async Task A_download_cut_short_is_downloaded_again()
+    {
+        _server.Add(new TestPackage("Truncated.Package", "1.0.0").WithAssembly("lib/net8.0", "Truncated.Package"));
+        _server.FailNext(".nupkg", _ => FakeNuGetServer.Truncated());
+
+        var result = await RestoreAsync(("Truncated.Package", "1.0.0"));
+
+        Assert.True(result.Success, Describe(result));
+        Assert.True(File.Exists(Assert.Single(result.CompileAssemblies)));
+    }
+
+    [Fact]
+    public async Task A_source_whose_name_does_not_resolve_is_not_asked_again()
+    {
+        // Offline: no retry brings the network back, and an offline restore must not wait for one.
+        _server.FailNext("index.json", _ => throw new HttpRequestException(HttpRequestError.NameResolutionError, "Name or service not known (packages.test:443)"));
+
+        var result = await RestoreAsync(("Anything", "1.0.0"));
+
+        Assert.Equal(PackageDiagnosticIds.NetworkUnreachable, Assert.Single(result.Diagnostics).Id);
+        Assert.Single(_server.Requests);
+    }
+
+    [Fact]
+    public async Task A_restore_that_settled_for_installed_versions_while_the_source_failed_is_not_remembered()
+    {
+        _server.Add(new TestPackage("Floating", "1.0.0").WithAssembly("lib/net8.0", "Floating"));
+        var restorer = _fixture.CreateRestorer(_fixture.Options(_server.Source), _http);
+        var installed = await restorer.RestoreAsync(_fixture.Project("First", ("Floating", "1.0.0")));
+        Assert.True(installed.Success, Describe(installed));
+
+        // The source fails: the installed 1.0.0 is used, with a warning.
+        var project = _fixture.Project("Second", ("Floating", "1.*"));
+        _server.FailWith = HttpStatusCode.ServiceUnavailable;
+        var offline = await restorer.RestoreAsync(project);
+        Assert.True(offline.Success, Describe(offline));
+        Assert.Contains(offline.Diagnostics, d => d.Id == PackageDiagnosticIds.SourceFailed && d.Severity == DiagnosticSeverityLevel.Warning);
+        Assert.False(File.Exists(PackageRestorer.GetCacheFilePath(project)));
+
+        // Back online, the restore asks the source again and gets the version NuGet picks.
+        _server.FailWith = null;
+        _server.Add(new TestPackage("Floating", "1.1.0").WithAssembly("lib/net8.0", "Floating"));
+        var online = await restorer.RestoreAsync(project);
+        Assert.False(online.FromCache);
+        Assert.Equal("1.1.0", Assert.Single(online.Packages).Version);
     }
 
     [Fact]

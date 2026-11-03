@@ -33,6 +33,9 @@ internal sealed class RestoreFixture : IDisposable
         GlobalPackagesFolder = PackagesDirectory,
         Sources = sources.Length == 0 ? [Feed] : sources,
         FrameworkAssemblyNames = ReferenceAssemblyNames.Net100,
+
+        // The fake server's failures are retried without waiting, so tests of them stay fast.
+        HttpRetryDelays = [TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero],
     };
 
     public PackageRestorer CreateRestorer(PackageRestoreOptions? options = null, HttpClient? http = null) =>

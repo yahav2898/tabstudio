@@ -35,6 +35,7 @@ public sealed class RealRepositoryTests
         Directory.CreateDirectory(output);
         var manifest = JsonNode.Parse(await File.ReadAllTextAsync(Path.Combine(RepositoryRoot(), "build", "ci", "real-repos.json")))!;
         var problems = new List<string>();
+        var flaky = new List<string>();
         var summary = new StringBuilder("| Repository | Errors | Baseline | Warnings | Build |\n| --- | --- | --- | --- | --- |\n");
         var results = new JsonObject();
         var only = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_ONLY")?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
@@ -50,15 +51,28 @@ public sealed class RealRepositoryTests
             var baseline = repository["maxErrors"]?.GetValue<int>();
             var solution = Path.Combine(clones, name, repository["solution"]!.GetValue<string>().Replace('/', Path.DirectorySeparatorChar));
             var report = new StringBuilder().AppendLine(CultureInfo.InvariantCulture, $"{name} at {repository["sha"]!.GetValue<string>()}");
-            Outcome outcome;
-            try
+            async Task<Outcome> AttemptAsync()
             {
-                outcome = await OpenAndBuildAsync(solution, name, repository["startup"]?.GetValue<string>(), repository["serve"], report, repository["tests"]?.GetValue<int>());
+                try
+                {
+                    return await OpenAndBuildAsync(solution, name, repository["startup"]?.GetValue<string>(), repository["serve"], report, repository["tests"]?.GetValue<int>());
+                }
+                catch (Exception ex) when (ex is not OutOfMemoryException)
+                {
+                    report.AppendLine(CultureInfo.InvariantCulture, $"EXCEPTION: {ex}");
+                    return new Outcome(-1, 0, TimeSpan.Zero);
+                }
             }
-            catch (Exception ex) when (ex is not OutOfMemoryException)
+
+            var outcome = await AttemptAsync();
+
+            // A restore that could not reach nuget.org is a blip, not a regression: restore and build once more, from a
+            // fresh packages folder. Errors over the baseline without a network error are never retried.
+            if (outcome.Network is { } network && HasProblem(outcome, baseline))
             {
-                report.AppendLine(CultureInfo.InvariantCulture, $"EXCEPTION: {ex}");
-                outcome = new Outcome(-1, 0, TimeSpan.Zero);
+                report.AppendLine(CultureInfo.InvariantCulture, $"RETRY: the first attempt failed on the network ({network}); restoring and building {name} once more.");
+                outcome = await AttemptAsync();
+                flaky.Add($"{name}: the first attempt failed on the network ({network}); the retry {(HasProblem(outcome, baseline) ? "failed too" : "passed")}.");
             }
 
             await File.WriteAllTextAsync(Path.Combine(output, name + ".txt"), report.ToString());
@@ -96,7 +110,27 @@ public sealed class RealRepositoryTests
 
         await File.WriteAllTextAsync(Path.Combine(output, "summary.md"), summary.ToString());
         await File.WriteAllTextAsync(Path.Combine(output, "results.json"), results.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
+        await WriteFlakyAsync(output, flaky);
         Assert.True(problems.Count == 0, string.Join('\n', problems) + "\n\n" + summary);
+    }
+
+    /// <summary>
+    /// Whether an outcome fails the gate: the repository did not open and build, has more errors than its baseline, was
+    /// not served, or its editor disagrees with its build.
+    /// </summary>
+    private static bool HasProblem(Outcome outcome, int? baseline) =>
+        outcome.Errors < 0 || (baseline is { } limit && outcome.Errors > limit) || outcome.Served == false || outcome.Editor is not null;
+
+    /// <summary>
+    /// Adds the repositories that were tried again after a network failure to <c>FLAKY.txt</c> in the job's logs, which
+    /// the job turns into warnings, as it does for the tests it retries.
+    /// </summary>
+    private static async Task WriteFlakyAsync(string output, List<string> flaky)
+    {
+        if (flaky.Count > 0)
+        {
+            await File.AppendAllLinesAsync(Path.Combine(output, "FLAKY.txt"), flaky);
+        }
     }
 
     /// <summary>
@@ -118,6 +152,7 @@ public sealed class RealRepositoryTests
         Directory.CreateDirectory(output);
         var manifest = JsonNode.Parse(await File.ReadAllTextAsync(Path.Combine(RepositoryRoot(), "build", "ci", "real-repos.json")))!;
         var problems = new List<string>();
+        var flaky = new List<string>();
         var summary = new StringBuilder("| Repository | Toolchain | Startup project | Program | Result | Time |\n| --- | --- | --- | --- | --- | --- |\n");
         var only = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_ONLY")?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         foreach (var repository in manifest["repositories"]!.AsArray().Where(r => InThisJob(r!) && (only is null || only.Contains(r!["name"]!.GetValue<string>(), StringComparer.OrdinalIgnoreCase))))
@@ -157,15 +192,28 @@ public sealed class RealRepositoryTests
                 report.AppendLine(CultureInfo.InvariantCulture, $".env: {string.Join(", ", dotenv.Select(pair => pair.Key))}");
             }
 
-            RunOutcome outcome;
-            try
+            async Task<RunOutcome> AttemptAsync()
             {
-                outcome = await OpenAndRunAsync(folder, name, expected, report);
+                try
+                {
+                    return await OpenAndRunAsync(folder, name, expected, report);
+                }
+                catch (Exception ex) when (ex is not OutOfMemoryException)
+                {
+                    report.AppendLine(CultureInfo.InvariantCulture, $"EXCEPTION: {ex}");
+                    return new RunOutcome(null, null, ex.GetType().Name + ": " + ex.Message, TimeSpan.Zero);
+                }
             }
-            catch (Exception ex) when (ex is not OutOfMemoryException)
+
+            var start = report.Length;
+            var outcome = await AttemptAsync();
+
+            // A package registry, git host or download that did not answer is a blip, not a regression: set up and run once more.
+            if (outcome.Problem is not null && NetworkFailures.FindInOutput(report.ToString(start, report.Length - start)) is { } network)
             {
-                report.AppendLine(CultureInfo.InvariantCulture, $"EXCEPTION: {ex}");
-                outcome = new RunOutcome(null, null, ex.GetType().Name + ": " + ex.Message, TimeSpan.Zero);
+                report.AppendLine(CultureInfo.InvariantCulture, $"RETRY: the first attempt failed on the network ({network}); setting up and running {name} once more.");
+                outcome = await AttemptAsync();
+                flaky.Add($"{name}: the first attempt failed on the network ({network}); the retry {(outcome.Problem is null ? "passed" : "failed too")}.");
             }
 
             await File.WriteAllTextAsync(Path.Combine(output, name + ".txt"), report.ToString());
@@ -177,6 +225,7 @@ public sealed class RealRepositoryTests
         }
 
         await File.WriteAllTextAsync(Path.Combine(output, "summary-polyglot.md"), summary.ToString());
+        await WriteFlakyAsync(output, flaky);
         Assert.True(problems.Count == 0, string.Join('\n', problems) + "\n\n" + summary);
     }
 
@@ -370,7 +419,8 @@ public sealed class RealRepositoryTests
     /// <param name="Served">Whether the first page was served as the repository's <c>serve</c> entry expects; <see langword="null"/> without one.</param>
     /// <param name="Startup">What is wrong with the startup project TabStudio chose, when the entry names the one it expects.</param>
     /// <param name="Editor">What the editor's squiggles get wrong next to the build, when they do.</param>
-    private sealed record Outcome(int Errors, int Warnings, TimeSpan Duration, bool? Served = null, string? Startup = null, string? Editor = null);
+    /// <param name="Network">The first error that says a package source could not be read, when there is one.</param>
+    private sealed record Outcome(int Errors, int Warnings, TimeSpan Duration, bool? Served = null, string? Startup = null, string? Editor = null, string? Network = null);
 
     /// <param name="tests">How many tests Test Explorer's Run All must pass after the build; <see langword="null"/> to run none.</param>
     private static async Task<Outcome> OpenAndBuildAsync(string solution, string name, string? expectedStartup, JsonNode? serve, StringBuilder report, int? tests = null)
@@ -440,7 +490,8 @@ public sealed class RealRepositoryTests
             report.AppendLine("Output:");
             var text = workspace.Output.Text;
             report.AppendLine(text.Length > 40000 ? text[^40000..] : text);
-            return new Outcome(errors.Count, warnings, duration, served, startupProblem, editor);
+            var network = errors.Select(e => e.Diagnostic).FirstOrDefault(NetworkFailures.IsNetworkDiagnostic);
+            return new Outcome(errors.Count, warnings, duration, served, startupProblem, editor, network is null ? null : $"{network.Id}: {network.Message}");
         }
         finally
         {
