@@ -22,8 +22,6 @@ public sealed partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
-        // Tunnelling, so a dialog closes even while the editor behind it still has the keyboard focus.
-        AddHandler(KeyDownEvent, OnDialogKeyDown, RoutingStrategies.Tunnel);
     }
 
     /// <summary>
@@ -80,6 +78,10 @@ public sealed partial class MainView : UserControl
         if (topLevel is not null)
         {
             InputModality.Track(topLevel);
+
+            // On the top level and tunnelling: a dialog closes while the editor behind it has the keyboard focus, and
+            // when nothing has it, as after a tap on a button that then hid itself, when keys go to the top level alone.
+            topLevel.AddHandler(KeyDownEvent, OnDialogKeyDown, RoutingStrategies.Tunnel);
         }
 
         _insets = topLevel?.InsetsManager;
@@ -105,6 +107,7 @@ public sealed partial class MainView : UserControl
         if (TopLevel.GetTopLevel(this) is { } topLevel)
         {
             InputModality.Untrack(topLevel);
+            topLevel.RemoveHandler(KeyDownEvent, OnDialogKeyDown);
         }
 
         if (_insets is not null)

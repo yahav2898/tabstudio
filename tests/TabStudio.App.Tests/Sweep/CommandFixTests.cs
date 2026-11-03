@@ -257,7 +257,9 @@ public sealed class CommandFixTests
         // Enter confirms; a key typed before it does not reach the editor.
         answer = workspace.Prompt.ConfirmAsync("Delete Greeter.cs?", "It is deleted from the disk.", "Delete", destructive: true);
         await sweep.SettleAsync();
+        // Typed as a keyboard types it: the key, and the text it makes.
         sweep.PressKey(Key.X);
+        sweep.Window.KeyTextInput("x");
         sweep.PressKey(Key.Enter);
         await sweep.SettleAsync();
         Assert.True(answer.IsCompleted);
@@ -316,6 +318,18 @@ public sealed class CommandFixTests
         }
 
         Assert.True(opened >= 3, $"Only {opened} of the dialogs could be opened here.");
+
+        // With nothing focused, as after a tap on a button that hid itself, keys go to the window alone.
+        var share = workspace.Commands.Commands.First(c => c.Title == "Share Session" && c.IsAvailable());
+        share.Command.Execute(share.Parameter);
+        await sweep.SettleAsync(200);
+        Assert.NotNull(main.TopDialogClose());
+        sweep.Window.FocusManager?.ClearFocus();
+        sweep.Pump();
+        Assert.Null(sweep.Window.FocusManager?.GetFocusedElement());
+        sweep.PressKey(Key.Escape);
+        await sweep.SettleAsync(200);
+        Assert.Null(main.TopDialogClose());
     }
 
     [AvaloniaFact]

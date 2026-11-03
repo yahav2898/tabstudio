@@ -252,6 +252,9 @@ internal sealed class SweepHarness : IDisposable
             }
         }
 
+        // A task the action left faulted and unobserved is reported only when it is collected: collect now, so the
+        // report names this action rather than a later one, or none at all.
+        CollectUnobserved();
         await SettleAsync();
         var after = Snapshot();
         var changes = Diff(before, after, moving);
@@ -584,6 +587,8 @@ internal sealed class SweepHarness : IDisposable
     /// </summary>
     public void AssertClean()
     {
+        CollectUnobserved();
+        Pump();
         Write();
         var open = _problems.Where(p => !SweepAllowances.IsAllowed(p)).ToList();
         Assert.True(open.Count == 0, $"The sweep \"{_name}\" found {open.Count} problems in {Actions} actions:\n"
@@ -703,10 +708,19 @@ internal sealed class SweepHarness : IDisposable
         e.Handled = true;
     }
 
+    /// <summary>Collects garbage and runs finalizers, which raises the unobserved exceptions of faulted tasks.</summary>
+    public static void CollectUnobserved()
+    {
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+    }
+
     private void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
     {
-        // Raised on the finalizer thread; recorded on the UI thread.
+        // Raised on the finalizer thread; recorded on the UI thread, with the action that ran when it was raised.
         var exception = e.Exception;
+        var where = _where;
         e.SetObserved();
         Dispatcher.UIThread.Post(() =>
         {
@@ -714,7 +728,7 @@ internal sealed class SweepHarness : IDisposable
             {
                 if (_exceptions.Add(inner))
                 {
-                    Add("unobserved", "near " + _where, Describe(inner));
+                    Add("unobserved", "near " + where, Describe(inner));
                     Note("stack\t" + inner.ToString().ReplaceLineEndings(" | "));
                 }
             }
