@@ -4,7 +4,7 @@ Toolchain projects:
   cpp: /home/runner/work/_temp/real-repos/requests/tests/certs/expired/Makefile
   cpp: /home/runner/work/_temp/real-repos/requests/tests/certs/mtls/Makefile
 Startup project: python /home/runner/work/_temp/real-repos/requests/pyproject.toml
-Set up in 8.8 s
+Set up in 9.3 s
 Tests: 619 passed, 0 failed, 16 skipped of 717: 635 tests run in 1 min 27 sec: 619 passed, 0 failed, 16 skipped.
 Project setup:
 ------ requests: pip install -e . ------
@@ -34,8 +34,8 @@ Using cached urllib3-2.8.0-py3-none-any.whl (135 kB)
 Building wheels for collected packages: requests
   Building editable for requests (pyproject.toml): started
   Building editable for requests (pyproject.toml): finished with status 'done'
-  Created wheel for requests: filename=requests-2.34.2-0.editable-py3-none-any.whl size=7207 sha256=90fd342a076dfb05c00bc84aeaa74599fd63ab273fbd1d4e842aba2133817b63
-  Stored in directory: /tmp/pip-ephem-wheel-cache-j6inesw0/wheels/6c/9d/2f/7bafa77cedc36edab8ffd35c2f4d7d44c36a13e0af0b1f03df
+  Created wheel for requests: filename=requests-2.34.2-0.editable-py3-none-any.whl size=7207 sha256=f865ceb1cdeddb266790b3564e117b0f0f139e6a51ff573bfb73f30d6264e665
+  Stored in directory: /tmp/pip-ephem-wheel-cache-hizpyc89/wheels/6c/9d/2f/7bafa77cedc36edab8ffd35c2f4d7d44c36a13e0af0b1f03df
 Successfully built requests
 Installing collected packages: urllib3, idna, charset_normalizer, certifi, requests
 Successfully installed certifi-2026.10.23 charset_normalizer-3.5.2 idna-3.20 requests-2.34.2 urllib3-2.8.0
@@ -48,9 +48,9 @@ Python 3.12 for requests: pyproject.toml allows Python >=3.10.
 Installed 5 packages into .venv with Python 3.12. The full log is in Output > Project Setup.
 ========== pip install -e .: succeeded ==========
 ========== Running requests's tests with Pytest ==========
-> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''-r'\'' '\''requirements-dev.txt'\'' '\''requests[socks]'\'' '\''pytest-httpbin==2.1.0'\'' '\''httpbin~=0.10.0'\'' '\''pytest-cov'\'' '\''pytest-mock'\'' '\''pytest-xdist'\'' '\''pytest>=3'\'' '\''trustme'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/requests/.tabstudio/test-results/1be820aa516749909e7f8a7721538866/pytest.xml
+> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''-r'\'' '\''requirements-dev.txt'\'' '\''requests[socks]'\'' '\''pytest-httpbin==2.1.0'\'' '\''httpbin~=0.10.0'\'' '\''pytest-cov'\'' '\''pytest-mock'\'' '\''pytest-xdist'\'' '\''pytest>=3'\'' '\''trustme'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/requests/.tabstudio/test-results/82f99e475a854857bf4b4de3b07c071f/pytest.xml
 Installing what the tests need
-[2026-11-03 15:26:26,742] WARNING in core: flasgger is not installed; serving the static landing page at / and skipping the Swagger UI and /spec.json.
+[2026-11-03 22:09:05,797] WARNING in core: flasgger is not installed; serving the static landing page at / and skipping the Swagger UI and /spec.json.
 ============================= test session starts ==============================
 platform linux -- Python 3.12.15, pytest-9.2.0, pluggy-1.7.0
 rootdir: /home/runner/work/_temp/real-repos/requests
@@ -66,9 +66,9 @@ tests/test_lowlevel.py ....................                              [  4%]
 tests/test_packages.py ...                                               [  4%]
 tests/test_requests.py ................................................. [ 12%]
 ........................................................................ [ 23%]
-s.attempting to ignore so the rest of the tests can run
-...................................................................... [ 35%]
-................................127.0.0.1 - - [03/Nov/2026 15:26:47] "GET /get HTTP/1.1" 200 272
+sattempting to ignore so the rest of the tests can run
+....................................................................... [ 35%]
+................................127.0.0.1 - - [03/Nov/2026 22:09:27] "GET /get HTTP/1.1" 200 272
 .................x...................... [ 46%]
 ........................................................................ [ 57%]
 ....                                                                     [ 58%]
@@ -117,6 +117,6 @@ tests/test_utils.py::TestContentEncodingDetection::test_precedence
     warnings.warn(
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-- generated xml file: /home/runner/work/_temp/real-repos/requests/.tabstudio/test-results/1be820aa516749909e7f8a7721538866/pytest.xml -
-====== 619 passed, 15 skipped, 1 xfailed, 18 warnings in 79.03s (0:01:19) ======
+- generated xml file: /home/runner/work/_temp/real-repos/requests/.tabstudio/test-results/82f99e475a854857bf4b4de3b07c071f/pytest.xml -
+====== 619 passed, 15 skipped, 1 xfailed, 18 warnings in 79.07s (0:01:19) ======
 
