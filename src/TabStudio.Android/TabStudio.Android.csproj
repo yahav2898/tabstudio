@@ -52,17 +52,12 @@
     <AndroidUseInterpreter Condition="'$(TabStudioInterpreterBenchmark)' == 'true'">true</AndroidUseInterpreter>
     <!--
       Roslyn composes its services with MEF and the programs TabStudio runs bind to the framework by reflection,
-      so nothing may be trimmed away.
-      Profiled AOT, as the SDK does for Release by default: the methods the SDK's startup profile names (the base
-      class library's, which every start runs) are compiled ahead of time and everything else stays on the JIT. A
-      full AOT of every assembly would multiply build time and APK size; the emulator's startup timeline
-      (measurements.txt) shows what this one buys. The interpreter benchmark keeps the JIT-only build it compares.
+      so nothing may be trimmed away. Mono AOT is off for now: it multiplies build time and APK size, and
+      startup is not yet the bottleneck.
     -->
     <PublishTrimmed>false</PublishTrimmed>
-    <RunAOTCompilation>true</RunAOTCompilation>
-    <AndroidEnableProfiledAot>true</AndroidEnableProfiledAot>
-    <RunAOTCompilation Condition="'$(TabStudioInterpreterBenchmark)' == 'true' Or '$(Configuration)' != 'Release'">false</RunAOTCompilation>
-    <AndroidEnableProfiledAot Condition="'$(TabStudioInterpreterBenchmark)' == 'true' Or '$(Configuration)' != 'Release'">false</AndroidEnableProfiledAot>
+    <RunAOTCompilation>false</RunAOTCompilation>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <!-- The IDE is in English; leaving out Roslyn's and the framework's translations saves megabytes. -->
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <!-- Android creates the activity through a Java callable wrapper, so the head's entry types stay public. -->
