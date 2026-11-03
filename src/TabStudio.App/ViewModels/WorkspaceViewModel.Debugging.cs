@@ -815,7 +815,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     private void ApplyExecutionPoints(DocumentViewModel document)
     {
         var current = _pause is { CallStack.Count: > 0 } pause ? pause.CallStack[0].Location : _adapterCurrent ?? _swarmCurrent ?? _liveCurrent;
-        var caller = CallStack.ActiveFrame is { IsTop: false } frame ? frame.Location : null;
+        var caller = CallStack.ActiveFrame is { IsTop: false } frame && frame.Location != current ? frame.Location : null;
         document.ShowExecutionPoints(PointIn(document, current), PointIn(document, caller), _exceptionHelper);
     }
 

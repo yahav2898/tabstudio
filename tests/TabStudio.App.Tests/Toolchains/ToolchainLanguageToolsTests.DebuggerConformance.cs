@@ -305,9 +305,8 @@ public sealed partial class ToolchainLanguageToolsTests
     public Task A_Rust_template_passes_the_debugger_conformance_checks() =>
         DebuggerConformanceAsync(new(ProjectTemplates.RustId, "main.rs", RustConformance, "rust", "i == 2", "i")
         {
-            CalleeFirst = "let result = n * n", CalleeNext = "return result", Caller = "main", Threads = 2,
-            // A Rust panic unwinds and exits with code 101; it is not an exception LLDB stops at.
-            BreaksOnUncaught = false, ExitText = "boom from main",
+            // The panic stops at rust_panic, shown at the program's own frame that panicked.
+            CalleeFirst = "let result = n * n", CalleeNext = "return result", Caller = "main", Threads = 2, ExitText = "boom from main",
         });
 
     [RealServerAvaloniaFact("cmake", "c++", "clangd", "lldb-dap")]

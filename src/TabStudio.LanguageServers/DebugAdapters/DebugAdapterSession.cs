@@ -279,15 +279,35 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
     /// <param name="cancellationToken">Gives up launching.</param>
     /// <returns>The breakpoints as the adapter set them, by file, in the order they were given.</returns>
     /// <exception cref="DebugAdapterException">The adapter could not launch or attach, with its reason.</exception>
+    public Task<IReadOnlyDictionary<string, IReadOnlyList<DapBreakpoint>>> LaunchAsync(
+        LaunchConfiguration configuration,
+        IReadOnlyDictionary<string, IReadOnlyList<DapSourceBreakpoint>> breakpoints,
+        IReadOnlyList<string> exceptionFilters,
+        CancellationToken cancellationToken) =>
+        LaunchAsync(configuration, breakpoints, exceptionFilters, [], cancellationToken);
+
+    /// <summary>
+    /// Launches or attaches as <see cref="LaunchAsync(LaunchConfiguration, IReadOnlyDictionary{string, IReadOnlyList{DapSourceBreakpoint}}, IReadOnlyList{string}, CancellationToken)"/>
+    /// does, and also stops at functions by name before the program starts, such as <c>rust_panic</c>, where a Rust
+    /// program panics, when the adapter supports function breakpoints.
+    /// </summary>
+    /// <param name="configuration">The launch configuration.</param>
+    /// <param name="breakpoints">The breakpoints to set first, by file.</param>
+    /// <param name="exceptionFilters">The exception filters to turn on.</param>
+    /// <param name="functionBreakpoints">The functions to stop at.</param>
+    /// <param name="cancellationToken">Cancels the launch.</param>
+    /// <returns>The breakpoints as the adapter set them, by file.</returns>
     public async Task<IReadOnlyDictionary<string, IReadOnlyList<DapBreakpoint>>> LaunchAsync(
         LaunchConfiguration configuration,
         IReadOnlyDictionary<string, IReadOnlyList<DapSourceBreakpoint>> breakpoints,
         IReadOnlyList<string> exceptionFilters,
+        IReadOnlyList<string> functionBreakpoints,
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(configuration);
         ArgumentNullException.ThrowIfNull(breakpoints);
         ArgumentNullException.ThrowIfNull(exceptionFilters);
+        ArgumentNullException.ThrowIfNull(functionBreakpoints);
         var start = _connection.SendRequestAsync(configuration.IsAttach ? "attach" : "launch", configuration.ToRequestArguments(Adapter, RunsInTerminal), cancellationToken);
 
         // Adapters send "initialized" when they are ready for breakpoints; some answer the launch first.
@@ -306,6 +326,17 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
         if (Capabilities.ExceptionFilters.Count > 0)
         {
             await SetExceptionBreakpointsAsync(exceptionFilters, cancellationToken).ConfigureAwait(false);
+        }
+
+        if (functionBreakpoints.Count > 0 && Capabilities.FunctionBreakpoints)
+        {
+            var functions = new System.Text.Json.Nodes.JsonArray();
+            foreach (var function in functionBreakpoints)
+            {
+                functions.Add(new System.Text.Json.Nodes.JsonObject { ["name"] = function });
+            }
+
+            await _connection.SendRequestAsync("setFunctionBreakpoints", new System.Text.Json.Nodes.JsonObject { ["breakpoints"] = functions }, cancellationToken).ConfigureAwait(false);
         }
 
         if (Capabilities.ConfigurationDone)
@@ -629,6 +660,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             Disassemble = dto.SupportsDisassembleRequest ?? before.Disassemble,
             ExceptionInfo = dto.SupportsExceptionInfoRequest ?? before.ExceptionInfo,
             Terminate = dto.SupportsTerminateRequest ?? before.Terminate,
+            FunctionBreakpoints = dto.SupportsFunctionBreakpoints ?? before.FunctionBreakpoints,
             ExceptionFilters = dto.ExceptionBreakpointFilters is { } filters
                 ? [.. filters
                     .Where(f => !string.IsNullOrEmpty(f.Filter))

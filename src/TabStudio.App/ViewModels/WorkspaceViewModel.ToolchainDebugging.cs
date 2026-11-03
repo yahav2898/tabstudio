@@ -199,8 +199,10 @@ public sealed partial class WorkspaceViewModel
         _programEnvironments.AddOrUpdate(target, WithServiceEnvironment(plan.Run).Environment);
         // Restart (Ctrl+Shift+F5) saves and builds again, so it debugs the code as it is now, not the last build.
         _pendingAdapterRelaunch = () => DebugToolchainProjectAsync(info, DebugStart.Run);
+        _pendingPanicStops = toolchain.Id == "rust";
         await LaunchAdapterAsync(target, start, noDebug: false);
         _pendingAdapterRelaunch = null;
+        _pendingPanicStops = false;
         if (!IsDebuggingWithAdapter)
         {
             StopNativeDebugInput();

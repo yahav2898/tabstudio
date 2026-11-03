@@ -62,7 +62,12 @@ public sealed partial class CallStackViewModel : ObservableObject
 
     /// <summary>Shows the call stack of a pause, with the top frame active.</summary>
     /// <param name="frames">The frames, innermost first.</param>
-    public void Show(IReadOnlyList<DebugStackFrame> frames)
+    public void Show(IReadOnlyList<DebugStackFrame> frames) => Show(frames, 0);
+
+    /// <summary>Shows the call stack of a pause, with one frame active, such as the first with source code.</summary>
+    /// <param name="frames">The frames, innermost first.</param>
+    /// <param name="active">The index of the active frame.</param>
+    public void Show(IReadOnlyList<DebugStackFrame> frames, int active)
     {
         ArgumentNullException.ThrowIfNull(frames);
         Frames.Clear();
@@ -71,7 +76,7 @@ public sealed partial class CallStackViewModel : ObservableObject
             Frames.Add(new StackFrameViewModel(i, frames[i]));
         }
 
-        SetActive(Frames.Count > 0 ? Frames[0] : null);
+        SetActive(Frames.Count > 0 ? Frames[Math.Clamp(active, 0, Frames.Count - 1)] : null);
     }
 
     /// <summary>Removes every frame, when the program runs again or the session ends.</summary>

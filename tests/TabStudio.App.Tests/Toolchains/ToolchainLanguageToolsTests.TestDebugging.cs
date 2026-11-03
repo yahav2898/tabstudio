@@ -90,7 +90,7 @@ public sealed partial class ToolchainLanguageToolsTests
         Assert.Contains("1. Kotlin", workspace.Output.Text, StringComparison.Ordinal);
         Assert.Contains("4. PHP", workspace.Output.Text, StringComparison.Ordinal);
         Assert.Contains("has exited with code 0", workspace.Output.Text, StringComparison.Ordinal);
-        Assert.Empty(workspace.ErrorList.Items.Where(e => e.IsError));
+        Assert.DoesNotContain(workspace.ErrorList.Items, e => e.IsError);
         trace.Passed = true;
     }
 

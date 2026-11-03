@@ -115,6 +115,11 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     // is the next session's, handed over when it launches.
     private Func<Task>? _adapterRelaunch;
     private Func<Task>? _pendingAdapterRelaunch;
+
+    // A Rust program under LLDB stops where it panics (rust_panic), as Break on Unhandled Exceptions asks: a panic
+    // unwinds and exits with code 101, which LLDB does not see as an exception.
+    private bool _pendingPanicStops;
+    private bool _adapterPanicStops;
     private int _adapterPauses;
 
     /// <summary>What the Run button's menu offers: the startup projects, launch configurations and the current file.</summary>
@@ -308,6 +313,8 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         _adapterTarget = target;
         _adapterRelaunch = _pendingAdapterRelaunch;
         _pendingAdapterRelaunch = null;
+        _adapterPanicStops = _pendingPanicStops && !noDebug && BreakOnUnhandledExceptions && session.Capabilities.FunctionBreakpoints;
+        _pendingPanicStops = false;
         session.BreakpointSources = _pendingBreakpointSources;
         _pendingBreakpointSources = null;
         _adapterLaunched = false;
@@ -338,7 +345,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             : AdapterBreakpoints(session);
         try
         {
-            var results = await session.LaunchAsync(configuration, breakpoints, EnabledExceptionFilters(), CancellationToken.None);
+            var results = await session.LaunchAsync(configuration, breakpoints, EnabledExceptionFilters(), _adapterPanicStops ? [RustPanicFunction] : [], CancellationToken.None);
 
             // A short program can end before the launch's answer is handled: its breakpoints then stay unbound.
             if (ReferenceEquals(session, _adapter))
@@ -638,6 +645,10 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         {
             await ShowAdapterExceptionAsync(session, thread, stop, version);
         }
+        else if (IsPanicStop(stop))
+        {
+            ShowPanic();
+        }
 
         StatusText = DescribeAdapterPause(stop);
 
@@ -731,8 +742,12 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
         _adapterFrames = frames;
         var shown = frames.Select(ToStackFrame).ToList();
-        _adapterCurrent = shown.FirstOrDefault()?.Location;
-        CallStack.Show(shown);
+
+        // A program stopped in code without source here, such as a C library's abort after an uncaught C++ exception
+        // or a signal, shows the first frame that has source: the code that led there, with the exception helper.
+        var current = Math.Max(0, shown.FindIndex(f => f.Location is not null));
+        _adapterCurrent = shown.Count > 0 ? shown[current].Location : null;
+        CallStack.Show(shown, current);
         return true;
     }
 
@@ -1415,8 +1430,39 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         return new DebugStackFrame(frame.Name, new DebugSourceSpan(path, frame.Line, column, frame.Line, column + length, start, length));
     }
 
+    /// <summary>The function a Rust program calls when it panics, where LLDB stops it for Break on Unhandled Exceptions.</summary>
+    private const string RustPanicFunction = "rust_panic";
+
+    /// <summary>Whether a stop is a Rust panic: the function breakpoint on <see cref="RustPanicFunction"/>.</summary>
+    private bool IsPanicStop(DapStoppedEventArgs stop) =>
+        _adapterPanicStops && stop.Reason == "function breakpoint"
+        && _adapterFrames.Take(4).Any(f => f.Name.Contains(RustPanicFunction, StringComparison.Ordinal));
+
+    /// <summary>The exception helper of a Rust panic, at the program's own frame that panicked.</summary>
+    private void ShowPanic()
+    {
+        var details = new StringBuilder();
+        foreach (var frame in _adapterFrames)
+        {
+            details.Append("   at ").Append(frame.Name);
+            if (frame.FilePath is { } path)
+            {
+                details.Append(" in ").Append(Path.GetFileName(path)).Append(":line ").Append(frame.Line.ToString(CultureInfo.InvariantCulture));
+            }
+
+            details.AppendLine();
+        }
+
+        _exceptionHelper = new ExceptionHelperViewModel("panic", "The program panicked; the panic's message is in the Output panel. Continue lets it unwind and exit.", details.ToString().TrimEnd(), StartDebuggingCommand, StopDebuggingCommand);
+    }
+
     private string DescribeAdapterPause(DapStoppedEventArgs stop)
     {
+        if (IsPanicStop(stop))
+        {
+            return "Exception: panic";
+        }
+
         var where = _adapterCurrent is { } location ? $"{Path.GetFileName(location.FilePath)}, line {location.Line.ToString(CultureInfo.CurrentCulture)}" : "external code";
         return stop.Reason switch
         {
