@@ -104,6 +104,9 @@ internal static class VisualBasicDesignerFile
             else
             {
                 component.FieldKept = true;
+                var identifier = field.Declarators.SelectMany(d => d.Names)
+                    .First(n => string.Equals(n.Identifier.ValueText, component.Name, StringComparison.OrdinalIgnoreCase)).Identifier.Span;
+                component.KeptFieldName = (identifier.Start, identifier.End);
             }
         }
 

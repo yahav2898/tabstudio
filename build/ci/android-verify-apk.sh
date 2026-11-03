@@ -38,7 +38,10 @@ cat "$report"
 
 # The IDE's activity handles a change of display size (DeX's, or Android's Display size: density) and of Bold text
 # (fontWeightAdjustment) itself; without them in configChanges, Android recreated it and lost the IDE's window.
-if ! "$build_tools/aapt2" dump badging "$apk" 2>/dev/null | grep -q "^launchable-activity: name='com.tabstudio.ide.MainActivity'"; then
+# The badging is read whole first: piped into grep -q, which stops at the first match, aapt2 could be killed by
+# SIGPIPE while still writing, and pipefail made a good APK fail.
+badging="$("$build_tools/aapt2" dump badging "$apk" 2>/dev/null || true)"
+if ! grep -q "^launchable-activity: name='com.tabstudio.ide.MainActivity'" <<<"$badging"; then
   echo "The APK has no launcher activity com.tabstudio.ide.MainActivity: Android cannot start TabStudio." >&2
   exit 1
 fi

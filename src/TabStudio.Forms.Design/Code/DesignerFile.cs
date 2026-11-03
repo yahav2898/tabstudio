@@ -149,8 +149,10 @@ internal sealed class DesignerFile
             }
             else
             {
-                // The writer writes no field for it, or it was declared twice.
+                // The writer writes no field for it, or it was declared twice; it writes its name in this one.
                 component.FieldKept = true;
+                var identifier = field.Declaration.Variables.First(v => v.Identifier.ValueText == component.Name).Identifier.Span;
+                component.KeptFieldName = (identifier.Start, identifier.End);
             }
         }
 

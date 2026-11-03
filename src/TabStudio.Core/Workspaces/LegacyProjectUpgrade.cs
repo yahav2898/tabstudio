@@ -372,7 +372,7 @@ public static class LegacyProjectUpgrader
             }
 
             var packageFolder = folder[index + 1];
-            if (packagesFromConfig.Any(p => packageFolder.StartsWith(p.Name + ".", StringComparison.OrdinalIgnoreCase)))
+            if (packagesFromConfig.Any(p => IsFolderOf(packageFolder, p.Name)))
             {
                 return true;
             }
@@ -392,6 +392,24 @@ public static class LegacyProjectUpgrader
             return true;
         }
 
+        /// <summary>
+        /// Whether a folder under <c>packages</c> is the package's: its name, a dot and a version, such as
+        /// <c>Foo.1.0.0</c> or <c>Foo.2.0.0-beta1</c>. <c>Foo.Analyzers.1.0.0</c> is another package's, not Foo's.
+        /// </summary>
+        private static bool IsFolderOf(string folder, string package) =>
+            folder.Length > package.Length + 1
+            && folder.StartsWith(package, StringComparison.OrdinalIgnoreCase)
+            && folder[package.Length] == '.'
+            && IsVersion(folder[(package.Length + 1)..]);
+
+        /// <summary>A NuGet version: one to four numbers, then perhaps <c>-prerelease</c> or <c>+metadata</c>.</summary>
+        private static bool IsVersion(string text)
+        {
+            var end = text.IndexOfAny(['-', '+']);
+            var numbers = (end < 0 ? text : text[..end]).Split('.');
+            return numbers.Length <= 4 && numbers.All(n => n.Length > 0 && n.All(char.IsAsciiDigit));
+        }
+
         private void ConvertReference(XElement item, string include, IReadOnlyList<PackageReferenceInfo> packagesFromConfig)
         {
             var name = include.Split(',')[0].Trim();
@@ -402,7 +420,7 @@ public static class LegacyProjectUpgrader
                 var folder = hintPath.Replace('\\', '/').Split('/', StringSplitOptions.RemoveEmptyEntries);
                 var index = Array.FindIndex(folder, p => string.Equals(p, "packages", StringComparison.OrdinalIgnoreCase));
                 if (index >= 0 && index + 1 < folder.Length
-                    && packagesFromConfig.Any(p => folder[index + 1].StartsWith(p.Name + ".", StringComparison.OrdinalIgnoreCase)))
+                    && packagesFromConfig.Any(p => IsFolderOf(folder[index + 1], p.Name)))
                 {
                     return;
                 }

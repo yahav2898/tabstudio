@@ -25,6 +25,12 @@ internal sealed partial class DesignSurface
         return NameChecker(document, except)(name);
     }
 
+    /// <summary>
+    /// How many times <see cref="NameChecker"/> has read the files, with Roslyn, and the members the form inherits.
+    /// Each read costs time on the UI thread, so an edit that names many components reads them once.
+    /// </summary>
+    internal int NameCheckers { get; private set; }
+
     /// <summary>A name for a new component of a type that no member of the form's class has.</summary>
     /// <param name="document">The document as it is now.</param>
     /// <param name="type">The type.</param>
@@ -38,6 +44,7 @@ internal sealed partial class DesignSurface
     internal Func<string, bool> NameChecker(DesignDocument document, string? except = null)
     {
         ArgumentNullException.ThrowIfNull(document);
+        NameCheckers++;
         var comparer = _language == DesignerLanguage.VisualBasic ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
         var members = new HashSet<string>(DesignerMembers, comparer) { ClassName };
 

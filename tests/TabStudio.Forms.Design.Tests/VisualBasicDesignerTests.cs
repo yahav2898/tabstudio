@@ -343,6 +343,24 @@ public sealed class VisualBasicDesignerTests
     }
 
     [AvaloniaFact]
+    public void Renaming_a_control_whose_field_is_declared_with_another_field_renames_it_in_that_declaration()
+    {
+        // The declaration shared with a field that is not a control's stays, and no field is written for the control,
+        // so a rename left Button1 declared and OkButton not: the designer file no longer compiled.
+        var designer = VisualBasicSamples.Button.Replace("    Friend WithEvents Button1 As Button\n", "    Friend WithEvents Button1, Spare As Button\n", StringComparison.Ordinal);
+        Assert.Contains("Button1, Spare", designer, StringComparison.Ordinal);
+        var surface = new DesignSurface(designer, "Form", simplified: true, DesignerLanguage.VisualBasic, VisualBasicSamples.ButtonCode);
+
+        surface.Rename(surface.Document!.Find("Button1")!, "OkButton");
+        var code = surface.RenameInCode(VisualBasicSamples.ButtonCode, "Button1", "OkButton");
+
+        var text = surface.Text;
+        Assert.Contains("    Friend WithEvents OkButton, Spare As Button\n", text, StringComparison.Ordinal);
+        Assert.DoesNotContain("Friend WithEvents OkButton As Button", text, StringComparison.Ordinal);
+        Compiles(text, code);
+    }
+
+    [AvaloniaFact]
     public void Deleting_a_control_takes_it_off_the_Handles_clauses_and_leaves_its_handler()
     {
         var surface = new DesignSurface(VisualBasicSamples.Button, "Form", simplified: true, DesignerLanguage.VisualBasic, VisualBasicSamples.ButtonCode);

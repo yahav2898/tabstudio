@@ -378,6 +378,37 @@ public sealed class LegacyFrameworkProjectTests : IDisposable
     }
 
     [Fact]
+    public void Upgrade_keeps_the_analyzers_of_a_package_whose_name_only_starts_with_a_listed_one()
+    {
+        // The folder was matched by its start, so packages.config's Contoso counted as referencing
+        // Contoso.Analyzers.1.0.0: its analyzer was dropped and nothing brought it back.
+        LegacyFrameworkProjects.WriteWindowsFormsApp(_temp.Path, "Hello");
+        _temp.Write("Hello/packages.config", """
+            <?xml version="1.0" encoding="utf-8"?>
+            <packages>
+              <package id="Contoso" version="1.0.0" targetFramework="net48" />
+            </packages>
+            """);
+        var path = _temp.Resolve("Hello/Hello.csproj");
+        File.WriteAllText(path, File.ReadAllText(path).Replace("</Project>", """
+              <ItemGroup>
+                <Analyzer Include="..\packages\Contoso.1.0.0\analyzers\dotnet\cs\Contoso.dll" />
+                <Analyzer Include="..\packages\Contoso.Analyzers.1.0.0\analyzers\dotnet\cs\Contoso.Analyzers.dll" />
+              </ItemGroup>
+            </Project>
+            """, StringComparison.Ordinal));
+
+        var upgrade = LegacyProjectUpgrader.Plan(path);
+        var project = XElement.Parse(upgrade.UpgradedXml);
+
+        Assert.Empty(project.Descendants("Analyzer"));
+        var packages = project.Descendants("PackageReference").ToDictionary(p => p.Attribute("Include")!.Value, p => p);
+        Assert.Equal("1.0.0", packages["Contoso"].Attribute("Version")?.Value);
+        Assert.Equal("1.0.0", packages["Contoso.Analyzers"].Attribute("Version")?.Value);
+        Assert.Equal("all", packages["Contoso.Analyzers"].Attribute("PrivateAssets")?.Value);
+    }
+
+    [Fact]
     public void Upgrade_refuses_a_project_that_is_already_sdk_style()
     {
         var path = _temp.Write("App/App.csproj", """<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup></Project>""");

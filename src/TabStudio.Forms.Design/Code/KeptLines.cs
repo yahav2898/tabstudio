@@ -7,8 +7,10 @@ namespace TabStudio.Forms.Design.Code;
 /// <summary>
 /// What InitializeComponent has besides its statements, which the designer keeps when it writes the method again:
 /// the comments a statement has before it or after it on its line, and blocks of conditional compilation, such as
-/// <c>#if DEBUG</c> … <c>#endif</c>, whose statements stay inside them as they were written. The comments Visual
-/// Studio writes around each component's name are its own, and the writer writes them again.
+/// <c>#if DEBUG</c> … <c>#endif</c>, whose statements stay inside them as they were written. A region changes nothing
+/// that is compiled, so the statements inside one are read as any others, and its <c>#region</c> and <c>#endregion</c>
+/// lines are kept as comments are. The comments Visual Studio writes around each component's name are its own, and
+/// the writer writes them again.
 /// </summary>
 internal static class KeptLines
 {
@@ -32,17 +34,26 @@ internal static class KeptLines
             position = lineEnd;
         }
 
+        // The first line that ends after the position: a binary search, since a large form has thousands of lines and
+        // each statement asks twice.
         int LineOf(int position)
         {
-            for (var i = 0; i < lines.Count; i++)
+            var low = 0;
+            var high = lines.Count - 1;
+            while (low < high)
             {
-                if (position < lines[i].End)
+                var middle = low + ((high - low) / 2);
+                if (position < lines[middle].End)
                 {
-                    return i;
+                    high = middle;
+                }
+                else
+                {
+                    low = middle + 1;
                 }
             }
 
-            return lines.Count - 1;
+            return high;
         }
 
         string Line(int i) => text[lines[i].Start..lines[i].End].TrimEnd('\r', '\n');
@@ -61,8 +72,8 @@ internal static class KeptLines
 
         var layout = new BodyLayout();
 
-        // Blocks: from a directive that opens one (#if, #region) to the one that closes it, with every statement that
-        // starts inside, which the reader leaves as the block has it.
+        // Blocks: from an #if to the #endif that closes it, with every statement that starts inside, which the reader
+        // leaves as the block has it. A #region is not one: the lines of a region are kept as comments.
         var inBlock = new bool[lines.Count];
         for (var i = 0; i < lines.Count; i++)
         {
@@ -217,8 +228,46 @@ internal static class KeptLines
             }
         }
 
+        BalanceRegions(result);
         lines.Clear();
         lines.AddRange(result);
+    }
+
+    /// <summary>
+    /// Leaves out the <c>#region</c> and <c>#endregion</c> lines that no longer pair up. They went with the statements
+    /// after them, which the writer writes in its own order, so an <c>#endregion</c> can come before its <c>#region</c>,
+    /// which would not compile.
+    /// </summary>
+    private static void BalanceRegions(List<string> lines)
+    {
+        var open = new Stack<int>();
+        var unpaired = new HashSet<int>();
+        for (var i = 0; i < lines.Count; i++)
+        {
+            switch (Directive(lines[i]))
+            {
+                case "region":
+                    open.Push(i);
+                    break;
+                case "endregion" or "end region":
+                    if (!open.TryPop(out _))
+                    {
+                        unpaired.Add(i);
+                    }
+
+                    break;
+            }
+        }
+
+        unpaired.UnionWith(open);
+        if (unpaired.Count == 0)
+        {
+            return;
+        }
+
+        var kept = lines.Where((_, i) => !unpaired.Contains(i)).ToList();
+        lines.Clear();
+        lines.AddRange(kept);
     }
 
     /// <summary>The components a block of code names, in the order it names them, of the fields given.</summary>
@@ -246,17 +295,9 @@ internal static class KeptLines
         }
     }
 
-    private static bool Opens(string line)
-    {
-        var directive = Directive(line);
-        return directive is "if" or "region";
-    }
+    private static bool Opens(string line) => Directive(line) is "if";
 
-    private static bool Closes(string line)
-    {
-        var directive = Directive(line);
-        return directive is "endif" or "end if" or "endregion" or "end region";
-    }
+    private static bool Closes(string line) => Directive(line) is "endif" or "end if";
 
     /// <summary>A directive's keyword in lower case with single spaces, such as <c>if</c> or <c>end if</c>; null for any other line.</summary>
     private static string? Directive(string line)
@@ -340,7 +381,7 @@ internal static class KeptLines
 /// <summary>InitializeComponent's body split around its statements.</summary>
 internal sealed class BodyLayout
 {
-    /// <summary>The blocks of conditional compilation and regions, in order, each with the statements inside it.</summary>
+    /// <summary>The blocks of conditional compilation, in order, each with the statements inside it.</summary>
     public List<KeptBlock> Blocks { get; } = [];
 
     /// <summary>The indexes of the statements inside a block, which the reader does not read.</summary>
@@ -353,7 +394,7 @@ internal sealed class BodyLayout
     public List<string> Trailing { get; } = [];
 }
 
-/// <summary>A block of conditional compilation or a region, kept as it was written.</summary>
+/// <summary>A block of conditional compilation, kept as it was written.</summary>
 /// <param name="Start">Where its first line starts in the file.</param>
 /// <param name="Text">Its lines, the first without indentation and the rest with the statements' indentation.</param>
 /// <param name="Statements">The indexes of the statements inside it.</param>

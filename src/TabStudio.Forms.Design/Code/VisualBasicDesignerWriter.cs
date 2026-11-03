@@ -63,6 +63,7 @@ internal static class VisualBasicDesignerWriter
             }
         }
 
+        DesignerWriter.RenameKeptFields(text, document, edits);
         var builder = new StringBuilder(text);
         foreach (var (start, end, replacement) in edits.OrderByDescending(e => e.Start))
         {

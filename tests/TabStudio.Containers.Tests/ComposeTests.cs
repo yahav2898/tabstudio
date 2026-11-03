@@ -1,3 +1,4 @@
+using TabStudio.Containers.Build;
 using TabStudio.Containers.Registry;
 using TabStudio.Containers.Runtime;
 using TabStudio.Services.Compose;
@@ -139,6 +140,43 @@ public sealed class ComposeTests
 
         // Nothing it is built from changed, so the next start uses the same image instead of building it again.
         Assert.Equal(image.Id, (await images.BuildAsync(project, service, _ => { }, CancellationToken.None)).Id);
+    }
+
+    [Fact]
+    public async Task COPY_and_ADD_never_follow_a_link_out_of_the_build_context()
+    {
+        // Sources were opened by their path on the device, which follows links: a link in a repository could copy
+        // TabStudio's own files, such as its tokens, into an image. Docker never takes a source from outside the
+        // context; a link is followed as if the context were /.
+        if (OperatingSystem.IsWindows()) return;
+        using var temp = new TempDirectory();
+        var proot = temp.Write("tools/proot");
+        var secret = temp.Write("private/token.txt", "ghp_not_for_images");
+        Directory.CreateDirectory(temp.Resolve("private/bundle"));
+        File.Copy(secret, temp.Resolve("private/bundle/token.txt"));
+        System.Formats.Tar.TarFile.CreateFromDirectory(temp.Resolve("private/bundle"), temp.Resolve("private/bundle.tar"), includeBaseDirectory: false);
+        var context = Path.GetDirectoryName(temp.Write("app/real.txt", "real"))!;
+        File.CreateSymbolicLink(Path.Combine(context, "token"), secret);
+        File.CreateSymbolicLink(Path.Combine(context, "api.key"), secret);
+        File.CreateSymbolicLink(Path.Combine(context, "outside"), "../private");
+        File.CreateSymbolicLink(Path.Combine(context, "bundle.tar"), "../private/bundle.tar");
+        File.CreateSymbolicLink(Path.Combine(context, "alias.txt"), "real.txt");
+        using var http = new HttpClient();
+        await using var engine = new ContainerEngine(new() { StoreRoot = temp.Resolve("store"), ProotPath = proot },
+            new RegistryClient(http, new SessionRegistryCredentialStore()));
+        var builder = new DockerfileBuilder(engine);
+
+        foreach (var (name, copy) in new[] { ("absolute", "COPY token /token"), ("folder", "COPY outside/token.txt /token"), ("wildcard", "COPY *.key /keys/"), ("archive", "ADD bundle.tar /unpacked/") })
+        {
+            File.WriteAllText(Path.Combine(context, "Dockerfile." + name), "FROM scratch\n" + copy + "\n");
+            var error = await Assert.ThrowsAsync<ContainerException>(() => builder.BuildAsync(new BuildRequest(context, "escape/" + name + ":1") { DockerfilePath = "Dockerfile." + name }, _ => { }));
+            Assert.Contains("not in the build context", error.Message, StringComparison.Ordinal);
+        }
+
+        // A link to a file in the context is followed, and the copy has the link's name.
+        File.WriteAllText(Path.Combine(context, "Dockerfile"), "FROM scratch\nCOPY alias.txt /copied/\n");
+        var image = await builder.BuildAsync(new BuildRequest(context, "escape/inside:1"), _ => { });
+        Assert.Equal("real", File.ReadAllText(Path.Combine(engine.Store.RootfsOf(image.Id), "copied/alias.txt")));
     }
 
     [Fact]

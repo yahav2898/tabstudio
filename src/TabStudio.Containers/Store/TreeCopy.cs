@@ -49,9 +49,11 @@ public static class TreeCopy
     /// TabStudio's own writes to a container's files remove the file first, which breaks the link.
     /// </para>
     /// <para>
-    /// The cost: such a file is read-only in the image and its containers, where Docker's root could write it in
-    /// place. A process that first gives itself write permission (<c>chmod u+w</c>) changes the permissions of the
-    /// image's file too, and could then write it. Nothing is shared when TabStudio itself runs as root, which may
+    /// The cost: such a file is read-only on the device, for the image and its containers, where Docker's root could
+    /// write it in place. The image's own mode is kept with the file (an extended attribute), and a copy of the image,
+    /// such as a build's stage (<see cref="CopyAsync"/>), gets that mode; where the file system keeps no extended
+    /// attributes, the file is copied instead. A process that first gives itself write permission (<c>chmod u+w</c>)
+    /// changes the permissions of the image's file too, and could then write it. Nothing is shared when TabStudio itself runs as root, which may
     /// write any file, or where the device does not let apps make hard links (Android): there every file is copied,
     /// as before.
     /// </para>
@@ -129,20 +131,28 @@ public static class TreeCopy
             if (share && !OperatingSystem.IsWindows() && IsShareable(source, file.From) && UnixFiles.TryHardLink(file.From, file.To))
             {
                 // One file for both, its permissions and times the source's. Nobody may write it in place from now
-                // on, so neither the container nor the image can change the other through it.
+                // on, so neither the container nor the image can change the other through it. The image's own mode
+                // is kept with the file first, so a copy of the image, such as a build's stage, still has it.
                 var mode = File.GetUnixFileMode(file.From);
-                if ((mode & WriteBits) != 0)
+                if ((mode & WriteBits) == 0)
                 {
-                    File.SetUnixFileMode(file.From, mode & ~WriteBits);
+                    return ValueTask.CompletedTask;
                 }
 
-                return ValueTask.CompletedTask;
+                if (UnixFiles.TrySetSharedMode(file.From, mode))
+                {
+                    File.SetUnixFileMode(file.From, mode & ~WriteBits);
+                    return ValueTask.CompletedTask;
+                }
+
+                // The file system cannot keep the mode: the container gets a copy of its own.
+                File.Delete(file.To);
             }
 
             File.Copy(file.From, file.To);
             if (!OperatingSystem.IsWindows())
             {
-                File.SetUnixFileMode(file.To, File.GetUnixFileMode(file.From));
+                File.SetUnixFileMode(file.To, ModeOf(file.From));
             }
 
             File.SetLastWriteTimeUtc(file.To, File.GetLastWriteTimeUtc(file.From));
@@ -161,6 +171,19 @@ public static class TreeCopy
         }
 
         return bytes;
+    }
+
+    /// <summary>
+    /// A file's mode as its image gives it. A file shared with containers (<see cref="ShareAsync"/>) is read-only on
+    /// the device, for the image too, and keeps the image's mode with it: a copy gets that, so a build from the image
+    /// sees the same modes whether or not a container of it was ever created.
+    /// </summary>
+    /// <param name="path">The file.</param>
+    [System.Runtime.Versioning.UnsupportedOSPlatform("windows")]
+    public static UnixFileMode ModeOf(string path)
+    {
+        var mode = File.GetUnixFileMode(path);
+        return (mode & WriteBits) == 0 && UnixFiles.SharedMode(path) is { } own ? own : mode;
     }
 
     /// <summary>The bytes a folder tree takes, not following links.</summary>

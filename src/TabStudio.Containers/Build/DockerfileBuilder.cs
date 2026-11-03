@@ -671,7 +671,7 @@ public sealed class DockerfileBuilder(ContainerEngine engine)
             {
                 CopyFolder(source, stage.Rootfs, guestDestination, source.Relative is null ? null : inputs.Ignore, mode);
             }
-            else if (instruction.Keyword == "ADD" && IsArchive(source.Device))
+            else if (instruction.Keyword == "ADD" && IsArchive(source.Name))
             {
                 var folder = SafePath.ResolveFollowing(stage.Rootfs, guestDestination);
                 Directory.CreateDirectory(folder);
@@ -680,7 +680,7 @@ public sealed class DockerfileBuilder(ContainerEngine engine)
             }
             else
             {
-                CopyFile(source.Device, stage.Rootfs, intoFolder ? guestDestination.TrimEnd('/') + "/" + Path.GetFileName(source.Device) : guestDestination, mode);
+                CopyFile(source.Device, stage.Rootfs, intoFolder ? guestDestination.TrimEnd('/') + "/" + source.Name : guestDestination, mode);
             }
         }
 
@@ -734,6 +734,11 @@ public sealed class DockerfileBuilder(ContainerEngine engine)
     }
 
     /// <summary>The files and folders a source in the build context names, wildcards and <c>.dockerignore</c> applied.</summary>
+    /// <remarks>
+    /// A link in the context is followed as if the context were <c>/</c> (<see cref="SafePath.ResolveFollowing"/>), as
+    /// Docker does: a link to a file outside it, such as TabStudio's own tokens, names nothing, rather than copying
+    /// that file into the image.
+    /// </remarks>
     private static List<Source> ContextSources(Inputs inputs, string word, int line)
     {
         var relative = string.Join('/', SafePath.Split(word));
@@ -742,14 +747,20 @@ public sealed class DockerfileBuilder(ContainerEngine engine)
         {
             var pattern = new Regex("^" + DockerIgnore.Translate(relative) + "$", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
             var matched = inputs.Files.Select(f => f.TrimEnd('/')).Where(f => pattern.IsMatch(f)).Distinct(StringComparer.Ordinal)
-                .Select(f => new Source(Path.Combine(inputs.Context, f), f)).ToList();
+                .Select(f => InContext(inputs, f, word, line)).ToList();
             return matched.Count > 0 ? matched : throw new ContainerException($"Line {line}: nothing in the build context matches {word}.");
         }
 
         if (inputs.Ignore.IsExcluded(relative)) throw new ContainerException($"Line {line}: {word} is left out of the build context by .dockerignore.");
-        var device = Path.Combine(inputs.Context, relative);
+        return [InContext(inputs, relative, word, line)];
+    }
+
+    /// <summary>A file or folder of the build context by its path there, links followed inside the context.</summary>
+    private static Source InContext(Inputs inputs, string relative, string word, int line)
+    {
+        var device = SafePath.ResolveFollowing(inputs.Context, relative);
         if (!File.Exists(device) && !Directory.Exists(device)) throw new ContainerException($"Line {line}: {word} is not in the build context.");
-        return [new Source(device, relative)];
+        return new Source(device, relative);
     }
 
     /// <summary>The files and folders a source names in an earlier stage's or an image's files.</summary>
@@ -787,7 +798,7 @@ public sealed class DockerfileBuilder(ContainerEngine engine)
     {
         var target = Prepare(rootfs, guest);
         File.Copy(source, target);
-        if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(target, mode ?? File.GetUnixFileMode(source));
+        if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(target, mode ?? TreeCopy.ModeOf(source));
     }
 
     /// <summary>Copies what a folder holds into a folder of the stage's files, keeping links and leaving out ignored paths.</summary>
@@ -906,7 +917,11 @@ public sealed class DockerfileBuilder(ContainerEngine engine)
     }
 
     /// <summary>A source of <c>COPY</c>: its path on the device, and its path in the context when it is from there.</summary>
-    private readonly record struct Source(string Device, string? Relative);
+    private readonly record struct Source(string Device, string? Relative)
+    {
+        /// <summary>The name a copy into a folder gets: the source's own, also when it is a link to another file.</summary>
+        public string Name => Relative is { Length: > 0 } relative ? Path.GetFileName(relative) : Path.GetFileName(Device);
+    }
 
     /// <summary>What every step of one build reads.</summary>
     private sealed record Inputs(BuildRequest Request, Dockerfile Dockerfile, string Context, DockerIgnore Ignore, List<string> Files,

@@ -77,10 +77,12 @@ internal sealed partial class DesignSurface
         Edit(doc =>
         {
             // New names first, so copies that name each other, as a group box names its controls, are renamed together.
+            // The files are read once for all of them: the checker sees each new component as it is added.
             var names = new Dictionary<string, string>(StringComparer.Ordinal);
+            var isTaken = NameChecker(doc);
             foreach (var item in clip.Components)
             {
-                var name = NewName(doc, item.Type ?? typeof(System.Windows.Forms.Control));
+                var name = doc.NewName(item.Type ?? typeof(System.Windows.Forms.Control), isTaken);
                 names[item.Name] = name;
                 doc.Components.Add(new DesignComponent(name, item.TypeName)
                 {

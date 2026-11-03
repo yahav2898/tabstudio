@@ -157,6 +157,37 @@ public sealed class LayerTests
         Assert.Equal("1", Stat("%h", Path.Combine(image, "usr/lib/libbig.so")));
     }
 
+    [Fact]
+    public async Task A_copy_of_an_image_whose_files_a_container_shares_keeps_the_image_s_own_modes()
+    {
+        // Sharing took the write permission off the image's own file for good, so a build from the image after a
+        // container of it was created got a read-only file, which a RUN could not write in place: the build passed or
+        // failed by what had run on the device before.
+        if (!OperatingSystem.IsLinux() || Environment.IsPrivilegedProcess) return;
+        using var folder = new TempDirectory();
+        var image = Path.Combine(folder.Path, "image");
+        var big = new string('x', 256 * 1024);
+        await Apply(image, Tar(Dir("usr"), Dir("usr/lib"), File("usr/lib/libbig.so", big, 0b111_101_101), File("usr/lib/libro.so", big, 0b101_101_101)));
+        await TreeCopy.ShareAsync(image, Path.Combine(folder.Path, "container"));
+        Assert.Equal("2", Stat("%h", Path.Combine(image, "usr/lib/libbig.so")));
+        Assert.Throws<UnauthorizedAccessException>(() => System.IO.File.AppendAllText(Path.Combine(folder.Path, "container/usr/lib/libbig.so"), "y"));
+
+        var stage = Path.Combine(folder.Path, "stage");
+        await TreeCopy.CopyAsync(image, stage);
+
+        // The copy has the image's modes, as before any container shared the file, and can be written in place.
+        var library = Path.Combine(stage, "usr/lib/libbig.so");
+        Assert.Equal((UnixFileMode)0b111_101_101, System.IO.File.GetUnixFileMode(library));
+        Assert.Equal((UnixFileMode)0b101_101_101, System.IO.File.GetUnixFileMode(Path.Combine(stage, "usr/lib/libro.so")));
+        System.IO.File.AppendAllText(library, "y");
+        Assert.Equal(big, System.IO.File.ReadAllText(Path.Combine(image, "usr/lib/libbig.so")));
+
+        // Another container shares the file again, and it stays read-only there.
+        await TreeCopy.ShareAsync(image, Path.Combine(folder.Path, "second"));
+        Assert.Equal("3", Stat("%h", Path.Combine(image, "usr/lib/libbig.so")));
+        Assert.Equal((UnixFileMode)0b111_101_101, TreeCopy.ModeOf(Path.Combine(folder.Path, "second/usr/lib/libbig.so")));
+    }
+
     /// <summary>A file's inode number (<c>%i</c>) or link count (<c>%h</c>), from coreutils' stat.</summary>
     private static string Stat(string format, string path)
     {
