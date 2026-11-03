@@ -145,9 +145,30 @@ def source_files(toolchain, folder):
     for root, folders, files in os.walk(folder):
         folders[:] = sorted(f for f in folders if not f.startswith(".") and f not in SKIPPED_FOLDERS)
         for name in sorted(files):
-            if name.endswith(extensions) and not name.endswith(".d.ts"):
-                found.append(os.path.join(root, name))
+            path = os.path.join(root, name)
+            if name.endswith(extensions) and not name.endswith(".d.ts") and is_text(path):
+                found.append(path)
     return found
+
+
+def is_text(path):
+    """
+    Whether a file is source text the editor opens with its language server: eza's tests/itest-loc/binary.rs is eight
+    bytes of binary that only has the extension, and the editor rightly opens it in no language's editor.
+    """
+    try:
+        with open(path, "rb") as file:
+            head = file.read(8192)
+    except OSError:
+        return False
+    if b"\0" in head:
+        return False
+    try:
+        head.decode("utf-8")
+    except UnicodeDecodeError as error:
+        # A multi-byte character cut by the 8 KB read is still text.
+        return error.start >= len(head) - 3
+    return True
 
 
 def choose_files(toolchain, folder, limit=FILES_PER_REPOSITORY):

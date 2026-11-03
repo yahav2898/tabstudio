@@ -114,6 +114,14 @@ class SquiggleTests(unittest.TestCase):
         self.write("pyproject.toml", "[project]\nname = 'x'\n[tool.pyright]\ntypeCheckingMode = 'strict'\n")
         self.assertTrue(squiggles.configures_pyright(str(self.root)))
 
+    def test_binary_files_with_a_source_extension_are_not_chosen(self):
+        # eza's tests/itest-loc/binary.rs, which the editor opens in no language's editor.
+        self.write("src/main.rs", "fn main() {}\n")
+        (self.root / "tests").mkdir(exist_ok=True)
+        (self.root / "tests" / "binary.rs").write_bytes(b"\0\xff\xfejunk\0")
+        chosen = [os.path.relpath(f, str(self.root)).replace(os.sep, "/") for f in squiggles.source_files("rust", str(self.root))]
+        self.assertEqual(["src/main.rs"], chosen)
+
     def test_the_nearest_pyproject_is_the_configuration_pyright_loads(self):
         # click has [tool.pyright]; its examples each have a pyproject.toml without one, which Pyright loads instead.
         self.write("pyproject.toml", "[project]\nname = 'click'\n[tool.pyright]\ntypeCheckingMode = 'basic'\n")
