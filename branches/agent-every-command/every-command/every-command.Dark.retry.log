@@ -1,0 +1,59 @@
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.13]   Discovering: TabStudio.App.Tests
+[xUnit.net 00:00:00.33]   Discovered:  TabStudio.App.Tests
+[xUnit.net 00:00:00.35]   Starting:    TabStudio.App.Tests
+  Passed TabStudio.App.Tests.Sweep.TabletSituationTests.Hebrew_and_IME_composition_in_the_editor_Find_Replace_and_the_Terminal [8 s]
+  Passed TabStudio.App.Tests.Sweep.TabletSituationTests.Rotating_and_going_to_the_background_during_a_build_and_a_debug_session [3 s]
+  Passed TabStudio.App.Tests.Sweep.TabletSituationTests.Every_tool_window_fits_every_screen_and_window_size [36 s]
+  Passed TabStudio.App.Tests.Sweep.TabletSituationTests.A_hardware_keyboard_attached_and_detached_and_the_on_screen_keyboard_over_the_caret [3 s]
+Good evening, developer! This program was compiled and run on your tablet.
+Statically typed languages, oldest first:
+  C#         since 2000 (26 years)
+  Rust       since 2015 (11 years)
+  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_key_gesture_the_IDE_shows_runs_its_command [26 s]
+  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_menu_and_search_command_runs_without_an_error_on_a_tablet [4 m 26 s]
+[xUnit.net 00:06:46.16]     TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_shell_and_its_tool_windows_works_by_touch_in_both_orientations [FAIL]
+[xUnit.net 00:06:46.17]       The sweep "touch-landscape" found 1 problems in 142 actions:
+[xUnit.net 00:06:46.17]       dead-end: tap (landscape: Live): LivePanelView > "Share session": Escape does not close the dialog PART_ContentPresenter in LiveShareView: a keyboard user is left in it.
+[xUnit.net 00:06:46.17]       Stack Trace:
+[xUnit.net 00:06:46.17]         /_/tests/TabStudio.App.Tests/Sweep/SweepHarness.cs(587,0): at TabStudio.App.Tests.Sweep.SweepHarness.AssertClean()
+[xUnit.net 00:06:46.17]         /_/tests/TabStudio.App.Tests/Sweep/EveryCommandTests.cs(337,0): at TabStudio.App.Tests.Sweep.EveryCommandTests.Finish(SweepHarness sweep)
+[xUnit.net 00:06:46.17]         /_/tests/TabStudio.App.Tests/Sweep/EveryCommandTests.cs(209,0): at TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_shell_and_its_tool_windows_works_by_touch_in_both_orientations()
+[xUnit.net 00:06:46.17]         --- End of stack trace from previous location ---
+  Failed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_shell_and_its_tool_windows_works_by_touch_in_both_orientations [1 m]
+  Error Message:
+   The sweep "touch-landscape" found 1 problems in 142 actions:
+dead-end: tap (landscape: Live): LivePanelView > "Share session": Escape does not close the dialog PART_ContentPresenter in LiveShareView: a keyboard user is left in it.
+  Stack Trace:
+     at TabStudio.App.Tests.Sweep.SweepHarness.AssertClean() in /_/tests/TabStudio.App.Tests/Sweep/SweepHarness.cs:line 587
+   at TabStudio.App.Tests.Sweep.EveryCommandTests.Finish(SweepHarness sweep) in /_/tests/TabStudio.App.Tests/Sweep/EveryCommandTests.cs:line 337
+   at TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_shell_and_its_tool_windows_works_by_touch_in_both_orientations() in /_/tests/TabStudio.App.Tests/Sweep/EveryCommandTests.cs:line 209
+--- End of stack trace from previous location ---
+  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_command_and_setting_is_found_by_Ctrl_Q_and_runs_from_it [4 s]
+  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_context_menu_item_runs_its_command [5 s]
+  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_Start_window_works [2 s]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.A_confirmation_answers_Enter_and_Escape_and_keeps_keys_out_of_the_editor_behind_it [1 s]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Select_All_Cut_Copy_and_Paste_are_in_the_Edit_menu_and_Select_All_in_the_context_menu [719 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.The_caret_stays_above_the_on_screen_keyboard [1 s]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Home_End_and_the_page_keys_come_from_a_hardware_keyboard(key: Home) [< 1 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Home_End_and_the_page_keys_come_from_a_hardware_keyboard(key: PageDown) [< 1 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Home_End_and_the_page_keys_come_from_a_hardware_keyboard(key: End) [< 1 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Home_End_and_the_page_keys_come_from_a_hardware_keyboard(key: PageUp) [< 1 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.View_Solution_Explorer_and_Ctrl_Alt_L_show_it_instead_of_folding_the_side_bar [817 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Escape_closes_every_dialog_drawn_over_the_IDE [2 s]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Go_To_Line_moves_the_caret_from_Ctrl_G_and_from_the_caret_in_the_status_bar [1 s]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.A_language_request_after_the_solution_closed_is_cancelled_rather_than_failed [20 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Navigate_Backward_and_Forward_are_available_only_when_they_go_somewhere [907 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.The_status_bar_labels_are_not_buttons_that_do_nothing [661 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Sync_with_Active_Document_shows_the_file_in_Solution_Explorer_from_another_tool_window [649 ms]
+[xUnit.net 00:07:09.32]   Finished:    TabStudio.App.Tests
+Data collector 'Blame' message: All tests finished running, Sequence file will not be generated.
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Only_the_chosen_tool_window_is_on_the_side_bar [839 ms]
+
+Test Run Failed.
+Total tests: 25
+     Passed: 24
+     Failed: 1
+ Total time: 7.1666 Minutes
