@@ -1,0 +1,31 @@
+Device: Android 15 (API 35), x86_64, screen 2560x1800
+Performing Streamed Install
+Success
+Measurements:
+Startup to self test start: 11.09 s
+TabStudio startup: first frame at 10734 ms, ready at 10734 ms; process start to activity 2947 ms, application +1611 ms, styles +710 ms, services +564 ms, theme +134 ms, view models +1455 ms, main view +1805 ms, start screen +20 ms, first frame +1487 ms
+TabStudio UI stalls: 34 over 100 ms (13 over 250 ms, 5 over 1 s), 21.8 s in all, longest 5832 ms during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution; answer p50 2.4 ms, p95 25.4 ms, p99 99.2 ms over 3480 questions in 110 s
+TabStudio UI timings: workspace view 2858 ms, workspace view model 1322 ms, document view 297 ms
+TabStudio UI stall: 5832 ms at 0.4 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 3869 ms at 8.8 s during backing services
+TabStudio UI stall: 1978 ms at 15.1 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 1520 ms at 17.1 s during the end of the run
+TabStudio UI stall: 1328 ms at 6.2 s during reading the solution
+TabStudio UI stall: 943 ms at 13.5 s during loading C#
+TabStudio UI stall: 639 ms at 106.9 s during the end of the run
+TabStudio UI stall: 565 ms at 7.6 s during showing the solution in Solution Explorer → databases, startup projects and toolchains
+TabStudio UI stall: 504 ms at 12.7 s during backing services → loading C#
+TabStudio UI stall: 369 ms at 20.4 s during the end of the run
+TabStudio UI stall: 337 ms at 63.5 s during the end of the run
+TabStudio UI stall: 325 ms at 48.9 s during the end of the run
+TabStudio UI stall: 290 ms at 61.3 s during the end of the run
+TabStudio UI stall: 236 ms at 0.0 s during the end of the run
+TabStudio UI stall: 228 ms at 46.3 s during the end of the run
+Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
+ Native Heap 283714 283708 0 35 284740 303488 292702 5774
+ Dalvik Heap 3062 3032 0 73 5284 7944 3972 3972
+ TOTAL 617693 563860 29488 208 761032 311432 296674 9746
+ TOTAL PSS: 617693 TOTAL RSS: 761032 TOTAL SWAP PSS: 208
+TABSTUDIO_SELFTEST_OK 109.6 s: Containers: PostgreSQL query=42 and TCP connected; Redis PING=PONG; nginx rendered in web preview; docker ps and exec stdin/output/exit; 3 verified images; 109.6 s; postgres:17-alpine@sha256:e4cb93687b062cd25a0e8f672d85a7708235009d70d31f8a7698d9370092a9c4, redis:7-alpine@sha256:1cf73a2f04808e55a8bd2f5706c2aa0ebb0f71938f93deb7af79f48311cd5cb9, nginx:alpine@sha256:2db7d28517d1fba17c2da3210395f7be11a11b419246ad0da2edf782af72f367; 8 run variables
+Shard: containers
+Seconds from launch to verdict: 125
