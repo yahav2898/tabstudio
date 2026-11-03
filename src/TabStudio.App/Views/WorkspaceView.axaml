@@ -937,8 +937,8 @@
           <!-- Properties, folded into its header until a tap opens it; hidden while a designer shows its own. -->
           <views:PropertiesView Grid.Row="2" x:Name="PropertiesPanel" DataContext="{Binding Properties}"
                                 IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).ShowsSideBarProperties}" />
-          <views:GitChangesView Grid.Row="0" Grid.RowSpan="3" DataContext="{Binding GitChanges}"
-                                IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsGitChangesSelected}" />
+          <controls:DeferredView ViewType="{x:Type views:GitChangesView}" Grid.Row="0" Grid.RowSpan="3" DataContext="{Binding GitChanges}"
+                                 IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsGitChangesSelected}" />
 
           <!-- The repository's pull requests, beside Git Changes. -->
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsPullRequestsSelected}">
@@ -1140,21 +1140,29 @@
     <views:GitDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding GitChanges}" />
 
     <!-- The swarm's Add a device dialog, with its QR code. -->
-    <swarmViews:SwarmInviteView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Swarm.Invite, FallbackValue={x:Null}}" />
+    <Panel Grid.Row="0" Grid.RowSpan="4" IsVisible="{Binding Swarm.Invite.IsOpen, FallbackValue=False}">
+      <controls:DeferredView ViewType="{x:Type swarmViews:SwarmInviteView}" DataContext="{Binding Swarm.Invite, FallbackValue={x:Null}}" />
+    </Panel>
 
     <!-- TabStudio Live's Share Session dialog, with its QR code. -->
-    <liveViews:LiveShareView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding LivePanel, FallbackValue={x:Null}}" />
+    <Panel Grid.Row="0" Grid.RowSpan="4" IsVisible="{Binding LivePanel.IsShareOpen, FallbackValue=False}">
+      <controls:DeferredView ViewType="{x:Type liveViews:LiveShareView}" DataContext="{Binding LivePanel, FallbackValue={x:Null}}" />
+    </Panel>
 
     <!-- GitHub Actions' dialog: Run workflow. -->
     <actionViews:ActionsDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Actions}" />
 
     <!-- The quick pick: color themes, file icon themes and snippets. -->
-    <extensionViews:QuickPickView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding QuickPick}" />
+    <Panel Grid.Row="0" Grid.RowSpan="4" IsVisible="{Binding QuickPick.IsOpen}">
+      <controls:DeferredView ViewType="{x:Type extensionViews:QuickPickView}" DataContext="{Binding QuickPick}" />
+    </Panel>
     <!-- The Toolchain Store, and offers to install a project's toolchain or packages. -->
     <toolchainViews:ToolchainOverlaysView Grid.Row="0" Grid.RowSpan="4" />
 
     <!-- One search for everything (Ctrl+Q): over the whole IDE, as a dialog at the top. -->
-    <searchViews:UnifiedSearchView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Search}" />
+    <Panel Grid.Row="0" Grid.RowSpan="4" IsVisible="{Binding Search.IsOpen}">
+      <controls:DeferredView ViewType="{x:Type searchViews:UnifiedSearchView}" DataContext="{Binding Search}" />
+    </Panel>
 
     <!-- The in-app dialog that asks for names and confirmations. -->
     <Panel Grid.Row="0" Grid.RowSpan="4" Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding Prompt.IsOpen}">

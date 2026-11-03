@@ -46,6 +46,12 @@ public sealed partial class UnifiedSearchView : UserControl
         if (_viewModel is not null)
         {
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+
+            // Built when the search first opens: it is open already.
+            if (_viewModel.IsOpen)
+            {
+                OnViewModelPropertyChanged(_viewModel, new PropertyChangedEventArgs(nameof(UnifiedSearchViewModel.IsOpen)));
+            }
         }
     }
 
