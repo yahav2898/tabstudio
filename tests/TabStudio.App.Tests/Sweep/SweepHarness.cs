@@ -371,9 +371,11 @@ internal sealed class SweepHarness : IDisposable
             var (name, close) = overlay.Value;
             PressKey(Key.Escape);
             await SettleAsync(80);
-            if (OpenOverlay() is { } first && first.Name == name)
+            // A menu or a box inside the dialog may take the first Escape, as it does on every platform, and a
+            // dialog an unfinished command opened again (Share session, once its host starts) closes on the next.
+            for (var again = 0; again < 3 && OpenOverlay() is { } first && first.Name == name; again++)
             {
-                // A menu or a box inside the dialog may take the first Escape, as it does on every platform.
+                await SettleAsync(400);
                 PressKey(Key.Escape);
                 await SettleAsync(150);
             }

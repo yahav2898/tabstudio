@@ -36,6 +36,8 @@ internal static class SweepAllowances
         ("no-effect", "DatabaseExplorerView > \"Add\"", "Database Explorer: Add Migration is enabled with no EF Core project."),
         ("no-effect", "ContainersView > \"Stop\"", "Containers: Stop is enabled with no container selected."),
         ("no-effect", "ContainersView > \"Restart\"", "Containers: Restart is enabled with no container selected."),
+        ("no-effect", "ContainersView > \"Start\"", "Containers: Start is enabled with no container selected."),
+        ("error-log", "DebugSessionStoppedException: The debugging session was stopped", "Build, run, debug: stopping a session paused while the program waits for input prints the debugger's own exception as the program's."),
 
         // A splitter's grab area reaches a few pixels past its line by design, so a finger can find it.
         ("overlap", "lies under GridSplitter", "A splitter takes the few pixels at the edge of what it resizes, by design."),
