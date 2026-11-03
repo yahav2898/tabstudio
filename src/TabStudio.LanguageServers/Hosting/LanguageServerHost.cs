@@ -202,6 +202,24 @@ public sealed class LanguageServerHost : IAsyncDisposable, ISnapshotSource
         }
     }
 
+    /// <summary>
+    /// Brings every running server up to date with packages installed after it started, as the project setup installs
+    /// them while the first files are already open: a server whose initialization options now come out differently,
+    /// such as typescript-language-server once the workspace has its own TypeScript, starts again with them, and every
+    /// other server gets its settings again, with their variables filled in anew, such as the interpreter of the
+    /// project's new <c>.venv</c>, which Pyright needs to resolve the project's imports.
+    /// </summary>
+    public async Task RefreshAsync()
+    {
+        List<LanguageServerInstance> servers;
+        lock (_gate)
+        {
+            servers = [.. _servers.Values];
+        }
+
+        await Task.WhenAll(servers.Select(s => s.RefreshAsync())).ConfigureAwait(false);
+    }
+
     /// <summary>Tells every running server that files were created, changed or deleted.</summary>
     /// <param name="changes">Each file's full path and what happened to it.</param>
     public async Task NotifyFilesChangedAsync(IReadOnlyList<(string FilePath, FileChangeKind Kind)> changes)

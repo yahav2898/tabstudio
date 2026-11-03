@@ -45,7 +45,30 @@ public sealed partial class WorkspaceViewModel
         var result = await RunDependencyInstallCoreAsync(project, dependency, cancellationToken);
         operation.Outcome = result is null ? global::TabStudio.Core.Progress.OperationOutcome.Succeeded
             : cancellationToken.IsCancellationRequested ? global::TabStudio.Core.Progress.OperationOutcome.Cancelled : global::TabStudio.Core.Progress.OperationOutcome.Failed;
+        if (result is null)
+        {
+            await RefreshLanguageServersAfterInstallAsync(project, dependency);
+        }
+
         return result;
+    }
+
+    /// <summary>
+    /// Tells the language servers about the packages an install brought. The project setup runs while the first files
+    /// are already open, so their servers started without them: Pyright kept "Import 'flask' could not be resolved"
+    /// until it was told about the project's new <c>.venv</c>, and typescript-language-server kept the TypeScript it
+    /// came with rather than the workspace's own.
+    /// </summary>
+    private async Task RefreshLanguageServersAfterInstallAsync(ToolchainProject project, DependencyInstallDefinition dependency)
+    {
+        if (_languageServers is not { } host)
+        {
+            return;
+        }
+
+        var installed = dependency.Installed is { Length: > 0 } folder ? Path.Combine(project.Directory, folder) : project.Directory;
+        await host.NotifyFilesChangedAsync([(installed, global::TabStudio.LanguageServers.Hosting.FileChangeKind.Created)]);
+        await host.RefreshAsync();
     }
 
     private async Task<OutputProcessResult?> RunDependencyInstallCoreAsync(ToolchainProject project, DependencyInstallDefinition dependency, CancellationToken cancellationToken)

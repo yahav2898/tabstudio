@@ -938,6 +938,29 @@ breakpoints, Locals, Watch, Call Stack and DataTips. `.tabstudio/settings.json` 
 `.tabstudio/launch.json` holds launch configurations in VS Code's format. Servers and adapters start through
 `IServerProcessLauncher`, which the Toolchain Store implements on the tablet.
 
+Red squiggles mean what the language's compiler rejects, and the Real repositories jobs check that on every pinned
+TypeScript, Go, Rust, Java and Python repository: `build/ci/squiggles.py` compares the editor's errors in some of each
+repository's files, per line, with tsc, `go build`/`go vet`, `cargo check`, javac through Maven or Gradle, and Python's
+`py_compile` plus the Pyright command line where the project configures Pyright, and holds each repository to a
+baseline (`squiggleBaselines` in `build/ci/real-repos.json`, 0 unless a comment there says why). Two things keep them
+in step:
+
+- **Packages installed after a server started.** The project setup installs a repository's packages while its first
+  files are already open. Once an install succeeds, `LanguageServerHost.RefreshAsync` brings the servers up to date:
+  settings and initialization options may name files with `${workspaceFile:a|b}` (the first that exists in the
+  server's folder) and `${packageFile:...}`, which are filled in again whenever they are sent. A server whose
+  initialization options now come out differently starts again with them, as typescript-language-server does once
+  `npm install` brought the workspace its own TypeScript; every other server gets its settings again, which is how
+  Pyright learns the project's new `.venv` interpreter (`python.pythonPath`) and resolves its imports.
+- **Pyright's type rules.** Without a configuration of the project's own, Pyright's standard rules showed the
+  attributes microblog sets on its Flask app (`app.redis = ...`) as errors, though Python runs them, and every import
+  of an optional package. The built-in settings report every rule standard mode makes an error as a warning instead
+  (`diagnosticSeverityOverrides`), as Visual Studio and VS Code, whose default is no type checking, would not show
+  them as errors either; syntax errors stay errors. A project's `pyrightconfig.json` or `[tool.pyright]` wins over the
+  client's settings, so a project that configures Pyright gets exactly the errors its own `pyright` run reports. A
+  workspace can bring the errors back in `.tabstudio/settings.json` with
+  `"python.analysis.diagnosticSeverityOverrides": null`.
+
 An orderly connection EOF during `initialize` uses the same bounded restart budget and backoff as a later server
 crash. Readiness and queued commands stay pending across those attempts, and the restarted server receives the
 latest document text. Initialization rejection, protocol/read errors, timeouts and missing launchers still fail;

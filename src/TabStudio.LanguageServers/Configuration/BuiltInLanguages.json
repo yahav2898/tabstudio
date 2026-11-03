@@ -172,10 +172,47 @@
       ],
       "settings": {
         "python": {
+          "pythonPath": "${workspaceFile:.venv/bin/python|venv/bin/python|.venv/Scripts/python.exe}",
           "analysis": {
             "autoSearchPaths": true,
             "useLibraryCodeForTypes": true,
-            "diagnosticMode": "openFilesOnly"
+            "diagnosticMode": "openFilesOnly",
+            "diagnosticSeverityOverrides": {
+              "reportGeneralTypeIssues": "warning",
+              "reportFunctionMemberAccess": "warning",
+              "reportMissingImports": "warning",
+              "reportInvalidTypeForm": "warning",
+              "reportAbstractUsage": "warning",
+              "reportArgumentType": "warning",
+              "reportAssertTypeFailure": "warning",
+              "reportAssignmentType": "warning",
+              "reportAttributeAccessIssue": "warning",
+              "reportCallIssue": "warning",
+              "reportInconsistentOverload": "warning",
+              "reportIndexIssue": "warning",
+              "reportInvalidTypeArguments": "warning",
+              "reportNoOverloadImplementation": "warning",
+              "reportOperatorIssue": "warning",
+              "reportOptionalSubscript": "warning",
+              "reportOptionalMemberAccess": "warning",
+              "reportOptionalCall": "warning",
+              "reportOptionalIterable": "warning",
+              "reportOptionalContextManager": "warning",
+              "reportOptionalOperand": "warning",
+              "reportRedeclaration": "warning",
+              "reportReturnType": "warning",
+              "reportTypedDictNotRequiredAccess": "warning",
+              "reportPrivateImportUsage": "warning",
+              "reportIncompatibleMethodOverride": "warning",
+              "reportIncompatibleVariableOverride": "warning",
+              "reportOverlappingOverload": "warning",
+              "reportPossiblyUnboundVariable": "warning",
+              "reportUnboundVariable": "warning",
+              "reportUnhashable": "warning",
+              "reportUndefinedVariable": "warning",
+              "reportUnusedCoroutine": "warning",
+              "reportUnusedExcept": "warning"
+            }
           }
         }
       }
