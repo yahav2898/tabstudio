@@ -187,6 +187,10 @@ first_line="$(grep -m 1 -E 'TABSTUDIO_SELFTEST_START' "$out/logcat-full.txt" | s
     echo "Startup to self test start: $(awk -v a="$proc_start" -v b="$first_line" 'BEGIN { printf "%.2f", b - a }') s"
   fi
   grep -m 1 -oE 'Displayed com\.tabstudio\.ide/[^ ]+: \+[0-9a-z]+' "$out/logcat-full.txt" | sed 's/^/Android: /' || true
+  # TabStudio's own timeline of its start (styles, services, view models, first frame, ready), and every time the UI
+  # thread did not answer for 100 ms or more during the self test, with the step it happened in.
+  grep -m 1 -oE 'TabStudio startup: .*' "$out/logcat-full.txt" || true
+  grep -oE 'TabStudio UI stalls?: .*' "$out/logcat-full.txt" || true
   echo "Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):"
   adb shell dumpsys meminfo "$package" 2> /dev/null | tr -d '\r' | grep -E 'TOTAL (PSS|RSS):|^ *(Native Heap|Dalvik Heap|TOTAL) +[0-9]' | sed -E 's/  +/ /g' || true
   printf '%s\n' "$verdict" | tr '|' '\n' | grep -iE 'scroll|frame' | sed 's/^ *//' || true
