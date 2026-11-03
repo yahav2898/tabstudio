@@ -3,10 +3,10 @@ Toolchain projects:
   php: /home/runner/work/_temp/real-repos/laravel/composer.json
   node: /home/runner/work/_temp/real-repos/laravel/package.json
 Startup project: php /home/runner/work/_temp/real-repos/laravel/composer.json
-Set up in 22.9 s
-Web preview: http://127.0.0.1:38171/
-GET http://127.0.0.1:38171/: 200 OK, 35728 characters
-Ran in 3.1 s
+Set up in 21.4 s
+Web preview: http://127.0.0.1:43875/
+GET http://127.0.0.1:43875/: 200 OK, 35728 characters
+Ran in 2.2 s
 Project setup:
 
 Output:
@@ -16,8 +16,8 @@ Running artisan serve with PHP 8.5.12
 > build
 > vite build
 
-[plugin laravel:fonts] Optimized font fallbacks require the optional "fontaine" package. Install it, or set "optimizedFallbacks: false" on your fonts to disable the feature.
 vite v8.3.5 building client environment for production...
+[plugin laravel:fonts] Optimized font fallbacks require the optional "fontaine" package. Install it, or set "optimizedFallbacks: false" on your fonts to disable the feature.
 transforming...
 ✓ 3 modules transformed.
 rendering chunks...
@@ -31,28 +31,29 @@ public/build/assets/instrument-sans-400-normal-D1W7dsQl.woff   21.24 kB
 public/build/assets/instrument-sans-500-normal-Z6ESRlEs.woff   21.65 kB
 public/build/assets/instrument-sans-600-normal-B9e8oLYv.woff   21.67 kB
 public/build/assets/fonts-C9MNnjVw.css                          2.35 kB │ gzip: 0.38 kB
-public/build/assets/app-DssUf-X9.css                           37.73 kB │ gzip: 9.42 kB
+public/build/assets/app-0RyRGaKH.css                           37.75 kB │ gzip: 9.42 kB
 public/build/assets/app-BvRk9kiK.js                             0.00 kB │ gzip: 0.02 kB
 
-✓ built in 229ms
+✓ built in 191ms
 > php artisan migrate --force --no-interaction
 
    INFO  Preparing database.  
 
-  Creating migration table ..................................... 107.71ms DONE
+  Creating migration table ...................................... 67.27ms DONE
 
    INFO  Running migrations.  
 
-  0001_01_01_000000_create_users_table ......................... 476.19ms DONE
-  0001_01_01_000001_create_cache_table .......................... 49.46ms DONE
-  0001_01_01_000002_create_jobs_table ........................... 21.19ms DONE
+  0001_01_01_000000_create_users_table .......................... 30.04ms DONE
+  0001_01_01_000001_create_cache_table ........................... 3.79ms DONE
+  0001_01_01_000002_create_jobs_table ........................... 23.34ms DONE
 
 
-   INFO  Server running on [http://127.0.0.1:38171].  
+   INFO  Server running on [http://127.0.0.1:43875].  
 
   Press Ctrl+C to stop the server
 
-  2026-11-02 18:01:31 .............................................. ~ 0.11ms
+  2026-11-03 19:49:03 .............................................. ~ 0.11ms
+  2026-11-03 19:49:03 / ............................................ ~ 0.03ms
 
 The program 'artisan serve' was stopped.
 
