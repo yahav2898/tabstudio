@@ -984,7 +984,8 @@ and is split into partial classes by concern (`.Build`, `.Debugging`, `.Tests`, 
 
 - **Tool windows.** The side bar holds Solution Explorer with Properties, Git Changes, Test Explorer, the web
   preview and the agent, one at a time, chosen with tabs at its bottom (`SideBarPanel`). The bottom dock holds
-  the Error List, Output, the Compatibility Doctor, References, and Locals, Watch and Call Stack while
+  the Error List, Output, the Compatibility Doctor, References, Find Results (Find and Replace in Files, with a
+  list of its own, so Find All References never replaces its matches), and Locals, Watch and Call Stack while
   debugging (`BottomPanel`).
 - **The editor.** `CodeEditorView` is AvaloniaEdit with Roslyn's classifications and squiggles, split into
   partial files: completion, Parameter Info, Quick Info, quick actions, Peek Definition, the context menu,

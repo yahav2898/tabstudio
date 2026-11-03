@@ -29,6 +29,9 @@ public enum BottomPanel
     /// <summary>Find All References and the other lists of symbol locations.</summary>
     References,
 
+    /// <summary>Find in Files and Replace in Files, with their matches, apart from the references.</summary>
+    FindResults,
+
     /// <summary>The paused program's local variables.</summary>
     Locals,
 
@@ -214,7 +217,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
     /// <summary>The selected bottom panel.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsErrorListSelected), nameof(IsOutputSelected), nameof(IsCompatibilitySelected))]
+    [NotifyPropertyChangedFor(nameof(IsErrorListSelected), nameof(IsOutputSelected), nameof(IsCompatibilitySelected), nameof(IsFindResultsSelected))]
     [NotifyPropertyChangedFor(nameof(IsEmbeddedPeripheralsSelected), nameof(ShowsEmbeddedPeripheralsTab))]
     public partial BottomPanel SelectedPanel { get; set; } = BottomPanel.ErrorList;
 
