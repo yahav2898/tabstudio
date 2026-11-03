@@ -55,6 +55,7 @@
     <KeyBinding Gesture="Shift+Alt+F" Command="{Binding FormatDocumentCommand}" />
     <KeyBinding Gesture="Ctrl+H" Command="{Binding ReplaceCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+F" Command="{Binding FindInFilesCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+H" Command="{Binding ReplaceInFilesCommand}" />
     <KeyBinding Gesture="Ctrl+F4" Command="{Binding CloseDocumentCommand}" />
     <KeyBinding Gesture="Ctrl+W" Command="{Binding CloseDocumentCommand}" />
     <KeyBinding Gesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
@@ -156,6 +157,7 @@
             <MenuItem Header="_Find" InputGesture="Ctrl+F" Command="{Binding FindCommand}" />
             <MenuItem Header="Re_place" InputGesture="Ctrl+H" Command="{Binding ReplaceCommand}" />
             <MenuItem Header="Find in F_iles" InputGesture="Ctrl+Shift+F" Command="{Binding FindInFilesCommand}" />
+            <MenuItem Header="Replace in File_s" InputGesture="Ctrl+Shift+H" Command="{Binding ReplaceInFilesCommand}" />
             <Separator />
             <MenuItem Header="Toggle Line _Comment (Ctrl+/)" Command="{Binding ToggleCommentCommand}" />
             <MenuItem Header="F_ormat Document" InputGesture="Shift+Alt+F" Command="{Binding FormatDocumentCommand}" />
@@ -199,6 +201,7 @@
             <MenuItem Header="_Serial Monitor" Command="{Binding ShowSerialMonitorCommand}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
             <MenuItem Header="Re_ferences" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.References}" />
+            <MenuItem Header="Find Res_ults" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.FindResults}" />
             <MenuItem Header="_Bottom Panel" Command="{Binding ToggleBottomPanelCommand}" />
             <MenuItem Header="Des_ktop Mode" ToggleType="CheckBox" IsChecked="{Binding DesktopMode.IsActive, Mode=TwoWay, FallbackValue=False}"
                       IsEnabled="{Binding DesktopMode.HasDisplay, FallbackValue=False}" IsVisible="{Binding DesktopMode.IsSupported, FallbackValue=False}" />
@@ -827,6 +830,8 @@
                 <Button Theme="{StaticResource PanelTabButton}"
                         Classes.selected="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.References}}"
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.References}" Content="References" />
+                <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsFindResultsSelected}"
+                        Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.FindResults}" Content="Find Results" />
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsLocalsSelected}" IsVisible="{Binding ShowsDebugPanels}"
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Locals}" Content="Locals" />
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsWatchSelected}" IsVisible="{Binding ShowsDebugPanels}"
@@ -883,6 +888,8 @@
               <Panel IsVisible="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.References}}">
                 <views:ReferencesView DataContext="{Binding References}" />
               </Panel>
+              <!-- Find in Files has a list of its own, so Find All References never replaces its matches, nor it theirs. -->
+              <views:FindResultsView DataContext="{Binding FindResults}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsFindResultsSelected}" />
               <views:LocalsView DataContext="{Binding Locals}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsLocalsSelected}" />
               <views:WatchView DataContext="{Binding Watch}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsWatchSelected}" />
               <views:EmbeddedPeripheralsView IsVisible="{Binding IsEmbeddedPeripheralsSelected}" />

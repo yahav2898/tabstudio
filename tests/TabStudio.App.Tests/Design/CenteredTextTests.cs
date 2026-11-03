@@ -49,7 +49,7 @@ public sealed class CenteredTextTests : IDisposable
             found.AddRange(StretchedText.In(window).Select(text => $"{panel}: {text}"));
         }
 
-        foreach (var panel in new[] { BottomPanel.Output, BottomPanel.Compatibility, BottomPanel.References, BottomPanel.ErrorList })
+        foreach (var panel in new[] { BottomPanel.Output, BottomPanel.Compatibility, BottomPanel.References, BottomPanel.FindResults, BottomPanel.ErrorList })
         {
             workspace.SelectPanelCommand.Execute(panel);
             Dispatcher.UIThread.RunJobs();

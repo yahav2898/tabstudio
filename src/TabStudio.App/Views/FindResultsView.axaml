@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="using:TabStudio.App.Views"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.FindResultsView"
+             x:DataType="vm:FindResultsViewModel">
+  <!--
+    Find in Files and Replace in Files, as Visual Studio has them, with their matches beside the form on a wide panel
+    and under it on a narrow one (FindResultsView.axaml.cs). The form scrolls when the panel is short.
+  -->
+  <Grid x:Name="LayoutRoot" ColumnDefinitions="360,*" RowDefinitions="*">
+    <Border x:Name="FormPane" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,1,0">
+      <ScrollViewer x:Name="FormScroller" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="12,8" Spacing="8">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBox x:Name="FindBox" Text="{Binding FindText}" Watermark="Find what"
+                     AutomationProperties.Name="Find what" ToolTip.Tip="Find what: Enter lists every match" />
+            <Button x:Name="FindAllButton" Grid.Column="1" Theme="{StaticResource AccentButton}" Margin="8,0,0,0"
+                    Content="Find All" AutomationProperties.Name="Find All" Command="{Binding FindAllCommand}" />
+          </Grid>
+          <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding IsReplaceMode}">
+            <TextBox x:Name="ReplaceBox" Text="{Binding ReplaceText}" Watermark="Replace with"
+                     AutomationProperties.Name="Replace with" ToolTip.Tip="Replace with: with regular expressions, $1 is the first group" />
+            <Button x:Name="ReplaceAllButton" Grid.Column="1" Theme="{StaticResource SecondaryButton}" Margin="8,0,0,0" Padding="14,0"
+                    Content="Replace All" AutomationProperties.Name="Replace All" Command="{Binding ReplaceAllCommand}" />
+          </Grid>
+          <WrapPanel>
+            <CheckBox x:Name="MatchCaseBox" Content="Match case" IsChecked="{Binding MatchCase}" Margin="0,0,12,0"
+                      AutomationProperties.Name="Match case" />
+            <CheckBox x:Name="MatchWholeWordBox" Content="Match whole word" IsChecked="{Binding MatchWholeWord}" Margin="0,0,12,0"
+                      AutomationProperties.Name="Match whole word" />
+            <CheckBox x:Name="UseRegularExpressionsBox" Content="Use regular expressions" IsChecked="{Binding UseRegularExpressions}"
+                      AutomationProperties.Name="Use regular expressions" />
+          </WrapPanel>
+        </StackPanel>
+      </ScrollViewer>
+    </Border>
+    <views:ReferencesView x:Name="ResultsView" Grid.Column="1" DataContext="{Binding Results}" />
+  </Grid>
+</UserControl>

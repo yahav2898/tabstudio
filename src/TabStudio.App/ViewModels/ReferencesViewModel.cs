@@ -50,7 +50,8 @@ public sealed class ReferenceLineRow(ReferenceItem item, IReadOnlyList<StyledRun
 /// <summary>
 /// The Find All References panel (Shift+F12): every reference to a symbol, grouped by file, with the line of each
 /// and the reference in bold. Tapping a reference opens it. Go to Implementation also lists its results here when
-/// there is more than one.
+/// there is more than one. The Find Results panel lists Find in Files' matches in a list of its own, of this type
+/// (<see cref="FindResultsViewModel.Results"/>), so neither search replaces the other's results.
 /// </summary>
 public sealed partial class ReferencesViewModel : ObservableObject
 {
@@ -58,10 +59,21 @@ public sealed partial class ReferencesViewModel : ObservableObject
 
     /// <summary>Creates the panel.</summary>
     /// <param name="navigate">Opens a file at a 1-based line and column.</param>
-    public ReferencesViewModel(Func<string, int, int, Task> navigate)
+    /// <param name="title">The title before the first search; Find All References' when <see langword="null"/>.</param>
+    /// <param name="summary">What the panel says before the first search; how to use Shift+F12 when <see langword="null"/>.</param>
+    public ReferencesViewModel(Func<string, int, int, Task> navigate, string? title = null, string? summary = null)
     {
         ArgumentNullException.ThrowIfNull(navigate);
         _navigate = navigate;
+        if (title is not null)
+        {
+            Title = title;
+        }
+
+        if (summary is not null)
+        {
+            Summary = summary;
+        }
     }
 
     /// <summary>What was searched for, such as <c>'Greet' references</c>.</summary>
@@ -126,6 +138,20 @@ public sealed partial class ReferencesViewModel : ObservableObject
             1 => $"1 {one}",
             _ => files.Count == 1 ? $"{items.Count} {many}" : $"{items.Count} {many} in {files.Count} files",
         };
+    }
+
+    /// <summary>Shows a message instead of results, such as why a search could not run.</summary>
+    /// <param name="title">What was searched for.</param>
+    /// <param name="message">The message, in the summary.</param>
+    public void ShowMessage(string title, string message)
+    {
+        ArgumentNullException.ThrowIfNull(title);
+        ArgumentNullException.ThrowIfNull(message);
+        Title = title;
+        IsSearching = false;
+        Items = [];
+        Rows.ReplaceAll([]);
+        Summary = message;
     }
 
     /// <summary>Opens a reference.</summary>
