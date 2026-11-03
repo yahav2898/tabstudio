@@ -1,8 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Platform;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using TabStudio.App.Input;
 
 namespace TabStudio.App.Views;
@@ -20,6 +22,54 @@ public sealed partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
+        // Tunnelling, so a dialog closes even while the editor behind it still has the keyboard focus.
+        AddHandler(KeyDownEvent, OnDialogKeyDown, RoutingStrategies.Tunnel);
+    }
+
+    /// <summary>
+    /// Escape closes the dialog that shows over the IDE or the start screen, as its Close, Cancel or Done button does:
+    /// TabStudio Link, Join a Swarm, Share Session, Join Live Session, Add a device and the others drawn over a scrim
+    /// answered only a tap, and a keyboard user was left in them.
+    /// </summary>
+    private void OnDialogKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Handled || e.Key != Key.Escape || e.KeyModifiers != KeyModifiers.None || TopDialogClose() is not { } close)
+        {
+            return;
+        }
+
+        if (close.Command is { } command)
+        {
+            if (command.CanExecute(close.CommandParameter))
+            {
+                command.Execute(close.CommandParameter);
+            }
+        }
+        else
+        {
+            close.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
+
+        e.Handled = true;
+    }
+
+    /// <summary>The button that closes the topmost dialog shown over a scrim, or <see langword="null"/> when none shows.</summary>
+    internal Button? TopDialogClose()
+    {
+        if (!this.TryFindResource("Brush.Scrim", ActualThemeVariant, out var scrim) || scrim is null)
+        {
+            return null;
+        }
+
+        var dialog = this.GetVisualDescendants().OfType<Control>().LastOrDefault(control => control.IsEffectivelyVisible && control switch
+        {
+            Panel panel => ReferenceEquals(panel.Background, scrim),
+            Border border => ReferenceEquals(border.Background, scrim),
+            _ => false,
+        });
+        return dialog?.GetVisualDescendants().OfType<Button>().FirstOrDefault(button => button.IsEffectivelyVisible && button.IsEffectivelyEnabled
+            && (button.Content as string ?? ToolTip.GetTip(button) as string) is { } text
+            && (text is "Close" or "Cancel" or "Done" or "Not now" or "Not Now" || text.StartsWith("Close ", StringComparison.Ordinal)));
     }
 
     /// <inheritdoc />

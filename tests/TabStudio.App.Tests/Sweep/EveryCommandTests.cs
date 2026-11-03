@@ -390,7 +390,8 @@ public sealed partial class EveryCommandTests
                 editor?.Editor.Document.Insert(0, "// edited\n");
                 if (entry.Title == "Redo")
                 {
-                    editor?.Editor.Undo();
+                    // As Edit > Undo does, through the document's own undo, which Redo then redoes.
+                    workspace.UndoCommand.Execute(null);
                 }
 
                 break;
@@ -815,6 +816,8 @@ public sealed partial class EveryCommandTests
     {
         // A finger scrolls a button below the fold into view first, and a tap outside an open menu only closes it.
         button.BringIntoView();
+        sweep.Pump();
+        sweep.Window.UpdateLayout();
         sweep.Pump();
         if (sweep.HasLightDismissPopup())
         {

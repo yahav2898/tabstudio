@@ -930,7 +930,12 @@
       -->
       <Border x:Name="SideBarFrame" Grid.Column="2" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.Border}" ZIndex="10">
         <Grid x:Name="SideBar" RowDefinitions="*,Auto,Auto">
-          <views:SolutionExplorerView DataContext="{Binding Explorer}" />
+          <!--
+            Only the chosen tool window shows. Solution Explorer and Properties stayed visible under the others, where
+            Tab, F6 and TalkBack still reached their controls and the layout checks found them under the shown window.
+          -->
+          <views:SolutionExplorerView DataContext="{Binding Explorer}"
+                                      IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsSolutionExplorerSelected}" />
           <Panel Grid.RowSpan="3" ZIndex="20" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsRemoteExplorerSelected}">
             <views:RemoteExplorerView DataContext="{Binding RemoteExplorer}" />
           </Panel>
@@ -944,8 +949,14 @@
             </GridSplitter.Template>
           </GridSplitter>
           <!-- Properties, folded into its header until a tap opens it; hidden while a designer shows its own. -->
-          <views:PropertiesView Grid.Row="2" x:Name="PropertiesPanel" DataContext="{Binding Properties}"
-                                IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).ShowsSideBarProperties}" />
+          <views:PropertiesView Grid.Row="2" x:Name="PropertiesPanel" DataContext="{Binding Properties}">
+            <views:PropertiesView.IsVisible>
+              <MultiBinding Converter="{x:Static BoolConverters.And}">
+                <Binding Path="$parent[UserControl].((vm:WorkspaceViewModel)DataContext).ShowsSideBarProperties" />
+                <Binding Path="$parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsSolutionExplorerSelected" />
+              </MultiBinding>
+            </views:PropertiesView.IsVisible>
+          </views:PropertiesView>
           <views:GitChangesView Grid.Row="0" Grid.RowSpan="3" DataContext="{Binding GitChanges}"
                                 IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsGitChangesSelected}" />
 

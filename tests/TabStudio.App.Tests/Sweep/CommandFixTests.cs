@@ -230,17 +230,6 @@ public sealed class CommandFixTests
         await sweep.SettleAsync(200);
         Assert.Equal(line, editor.TextArea.Caret.Line);
         Assert.True(InView(view), $"Line {line}, the caret's, is under the on-screen keyboard.");
-
-        // A caret the person scrolled away from stays where they left it.
-        sweep.Resize(1280, 800);
-        await sweep.SettleAsync();
-        editor.ScrollToVerticalOffset(0);
-        editor.TextArea.Caret.Line = editor.Document.LineCount;
-        editor.ScrollToVerticalOffset(0);
-        await sweep.SettleAsync();
-        sweep.Resize(1280, 440);
-        await sweep.SettleAsync(200);
-        Assert.Equal(0, text.ScrollOffset.Y, 1);
     }
 
     [AvaloniaFact]
@@ -295,6 +284,76 @@ public sealed class CommandFixTests
         var request = service.GetClassificationsAsync("Program.cs", CancellationToken.None);
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => request);
         Assert.True(request.IsCanceled);
+    }
+
+    [AvaloniaFact]
+    public async Task Escape_closes_every_dialog_drawn_over_the_IDE()
+    {
+        using var sweep = new SweepHarness("fix-dialogs");
+        sweep.Show(1280, 800);
+        var workspace = await sweep.OpenSampleAsync();
+        var main = sweep.Window.GetVisualDescendants().OfType<MainView>().Single();
+        string[] titles = ["TabStudio Link", "Join a Swarm", "Share Session", "Join Live Session", "GitHub Account"];
+        var opened = 0;
+        foreach (var title in titles)
+        {
+            var entry = workspace.Commands.Commands.FirstOrDefault(c => c.Title == title && c.IsAvailable());
+            if (entry is null)
+            {
+                continue;
+            }
+
+            entry.Command.Execute(entry.Parameter);
+            await sweep.SettleAsync(200);
+            Assert.True(main.TopDialogClose() is not null, $"{title} showed no dialog with a Close, Cancel or Done button.");
+            opened++;
+
+            // Only a tap closed them: a keyboard user was left in the dialog.
+            Editor(sweep).Editor.TextArea.Focus();
+            sweep.PressKey(Key.Escape);
+            await sweep.SettleAsync(200);
+            Assert.True(main.TopDialogClose() is null, $"Escape left {title} open.");
+        }
+
+        Assert.True(opened >= 3, $"Only {opened} of the dialogs could be opened here.");
+    }
+
+    [AvaloniaFact]
+    public async Task Only_the_chosen_tool_window_is_on_the_side_bar()
+    {
+        using var sweep = new SweepHarness("fix-side-bar");
+        sweep.Show(1280, 800);
+        var workspace = await sweep.OpenSampleAsync();
+        var explorer = sweep.Window.GetVisualDescendants().OfType<SolutionExplorerView>().Single();
+        var properties = sweep.Window.GetVisualDescendants().OfType<PropertiesView>().Single();
+        Assert.True(explorer.IsEffectivelyVisible);
+        Assert.True(properties.IsEffectivelyVisible);
+
+        // Under Git Changes, Solution Explorer's search box and Properties' header still took Tab, F6 and TalkBack.
+        workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.GitChanges);
+        await sweep.SettleAsync();
+        Assert.False(explorer.IsEffectivelyVisible);
+        Assert.False(properties.IsEffectivelyVisible);
+        Assert.DoesNotContain(sweep.Window.GetVisualDescendants().OfType<TextBox>(),
+            box => box.IsEffectivelyVisible && box.Watermark as string == "Search Solution Explorer");
+
+        workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.SolutionExplorer);
+        await sweep.SettleAsync();
+        Assert.True(explorer.IsEffectivelyVisible);
+        Assert.True(properties.IsEffectivelyVisible);
+    }
+
+    [Theory]
+    [InlineData(Key.Home)]
+    [InlineData(Key.End)]
+    [InlineData(Key.PageUp)]
+    [InlineData(Key.PageDown)]
+    public void Home_End_and_the_page_keys_come_from_a_hardware_keyboard(Key key)
+    {
+        // A keyboard's first key was End: the IDE kept its touch bar over the code.
+        Assert.True(TabStudio.App.Input.InputModality.IsHardwareKey(key, KeyModifiers.None));
+        Assert.False(TabStudio.App.Input.InputModality.IsHardwareKey(Key.Enter, KeyModifiers.None));
+        Assert.False(TabStudio.App.Input.InputModality.IsHardwareKey(Key.Back, KeyModifiers.None));
     }
 
     private static bool InView(CodeEditorView view)

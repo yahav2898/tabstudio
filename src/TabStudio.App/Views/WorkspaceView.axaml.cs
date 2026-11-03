@@ -129,7 +129,7 @@ public sealed partial class WorkspaceView : UserControl
             case nameof(WorkspaceViewModel.HasRecording):
                 UpdateBottomPanel();
                 break;
-            case nameof(WorkspaceViewModel.ShowsSideBarProperties):
+            case nameof(WorkspaceViewModel.ShowsSideBarProperties) or nameof(WorkspaceViewModel.SelectedSideBarPanel):
                 UpdateProperties();
                 break;
             case nameof(WorkspaceViewModel.ActiveDocument):

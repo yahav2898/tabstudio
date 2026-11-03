@@ -242,7 +242,7 @@ public sealed partial class WorkspaceView
             _propertiesHeight = row.Height;
         }
 
-        var open = _viewModel.Properties.IsExpanded && _viewModel.ShowsSideBarProperties;
+        var open = _viewModel.Properties.IsExpanded && _viewModel.ShowsSideBarProperties && _viewModel.IsSolutionExplorerSelected;
         row.Height = open ? _propertiesHeight : GridLength.Auto;
         PropertiesSplitter.IsVisible = open;
     }

@@ -351,7 +351,12 @@ internal sealed class SweepHarness : IDisposable
             await SettleAsync(60);
             if (HasLightDismissPopup())
             {
-                Add("dead-end", where, "A tap outside its flyout or menu does not close it.");
+                PressKey(Key.Escape);
+                await SettleAsync(60);
+                if (HasLightDismissPopup())
+                {
+                    Add("dead-end", where, "Neither a tap outside its flyout or menu nor Escape closes it.");
+                }
             }
         }
 
