@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace TabStudio.App.Tests.Platform;
 
@@ -10,18 +10,20 @@ namespace TabStudio.App.Tests.Platform;
 public sealed class AndroidActivityTests
 {
     [Theory]
-    [InlineData("Density")]
-    [InlineData("FontWeightAdjustment")]
-    [InlineData("FontScale")]
-    [InlineData("ScreenSize")]
-    [InlineData("UiMode")]
+    [InlineData("density")]
+    [InlineData("fontWeightAdjustment")]
+    [InlineData("fontScale")]
+    [InlineData("screenSize")]
+    [InlineData("uiMode")]
     public void The_IDE_activity_is_not_recreated_when_the_display_size_or_text_weight_changes(string change)
     {
-        var source = File.ReadAllText(Path.Combine(RepositoryRoot(), "src", "TabStudio.Android", "MainActivity.cs"));
-        var attribute = Regex.Match(source, @"\[Activity\((?<body>.*?)\)\]\s*(#pragma[^\n]*\n\s*)?public sealed partial class MainActivity", RegexOptions.Singleline, TimeSpan.FromSeconds(5));
+        var manifest = XDocument.Load(Path.Combine(RepositoryRoot(), "src", "TabStudio.Android", "Properties", "AndroidManifest.xml"));
+        XNamespace android = "http://schemas.android.com/apk/res/android";
 
-        Assert.True(attribute.Success, "MainActivity's [Activity] attribute was not found.");
-        Assert.Contains("ConfigChanges." + change, attribute.Groups["body"].Value, StringComparison.Ordinal);
+        var activity = manifest.Descendants("activity").SingleOrDefault(a => (string?)a.Attribute(android + "name") == "com.tabstudio.ide.MainActivity");
+
+        Assert.NotNull(activity);
+        Assert.Contains(change, ((string?)activity.Attribute(android + "configChanges") ?? string.Empty).Split('|'));
     }
 
     private static string RepositoryRoot()

@@ -40,22 +40,14 @@ namespace TabStudio.Android;
 /// emulator's simulated second display, asking the CI script in its log to type and take screenshots.
 /// </para>
 /// </remarks>
-// Density is DeX's and Android's display size, and FontWeightAdjustment the Bold text setting: without them, changing
-// either recreated the activity, which threw away the IDE's window and with it anything not yet saved. Android before 12
-// ignores FontWeightAdjustment, which it does not have.
-#pragma warning disable CA1416
 [Activity(
     Name = "com.tabstudio.ide.MainActivity",
     Theme = "@style/Theme.TabStudio.Starting",
     MainLauncher = true,
     Exported = true,
-    WindowSoftInputMode = SoftInput.AdjustResize,
-    ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.SmallestScreenSize
-        | ConfigChanges.ScreenLayout | ConfigChanges.UiMode | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden
-        | ConfigChanges.Navigation | ConfigChanges.FontScale | ConfigChanges.Locale | ConfigChanges.LayoutDirection
-        | ConfigChanges.Touchscreen | ConfigChanges.ColorMode | ConfigChanges.Mcc | ConfigChanges.Mnc
-        | ConfigChanges.Density | ConfigChanges.FontWeightAdjustment)]
-#pragma warning restore CA1416
+    WindowSoftInputMode = SoftInput.AdjustResize)]
+// The configuration changes the activity handles itself, instead of being recreated, are in
+// Properties/AndroidManifest.xml: the attribute cannot name fontWeightAdjustment.
 public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplication>
 {
     /// <summary>The intent extra that runs the self test.</summary>
