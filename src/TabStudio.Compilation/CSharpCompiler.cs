@@ -134,17 +134,33 @@ public sealed class CSharpCompiler
             : [];
 
     /// <summary>
-    /// The C# version a project compiles with: <c>preview</c> when its <c>LangVersion</c> asks for it, otherwise the
-    /// latest. Source generators check it, and some only generate for preview features. A lower version than the latest
-    /// is not applied, because the code TabStudio generates for a project (XAML loaders, interceptors) uses current C#.
+    /// The oldest C# version a project compiles with here, whatever its <c>LangVersion</c> asks: the code TabStudio adds
+    /// to a project (XAML loaders and their interceptors, the debugger's and coverage's runtime) needs C# 13 at most.
+    /// </summary>
+    public const LanguageVersion MinimumLanguageVersion = LanguageVersion.CSharp13;
+
+    /// <summary>
+    /// The C# version a project compiles with: the one its <c>LangVersion</c> asks for, as with the SDK, and the latest
+    /// when it asks for none, for <c>latest</c> or <c>default</c>. Source generators check it: ReactiveUI's writes a
+    /// backing field such as <c>_lastChildFill</c> for a <c>[Reactive]</c> partial property below C# 14 and uses
+    /// <c>field</c> from C# 14 on, so Dock's code, at C# 13, assigns fields that only exist at its own version. A version
+    /// older than <see cref="MinimumLanguageVersion"/> compiles as that one.
     /// </summary>
     /// <param name="project">The project, or <see langword="null"/> for the latest.</param>
-    public static LanguageVersion LanguageVersionOf(TsProject? project) =>
-        project?.GetProperty("LangVersion") is { Length: > 0 } text
-        && LanguageVersionFacts.TryParse(text.Trim(), out var version)
-        && version == LanguageVersion.Preview
-            ? LanguageVersion.Preview
-            : LanguageVersion.Latest;
+    public static LanguageVersion LanguageVersionOf(TsProject? project)
+    {
+        if (project?.GetProperty("LangVersion") is not { Length: > 0 } text || !LanguageVersionFacts.TryParse(text.Trim(), out var version))
+        {
+            return LanguageVersion.Latest;
+        }
+
+        if (version is LanguageVersion.Preview or LanguageVersion.Latest or LanguageVersion.LatestMajor or LanguageVersion.Default)
+        {
+            return version == LanguageVersion.Preview ? LanguageVersion.Preview : LanguageVersion.Latest;
+        }
+
+        return version < MinimumLanguageVersion ? MinimumLanguageVersion : version;
+    }
 
     /// <summary>
     /// Whether a project compiles deterministically, as MSBuild decides: its <c>Deterministic</c> property, else

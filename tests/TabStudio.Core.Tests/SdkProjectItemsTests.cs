@@ -178,6 +178,116 @@ public sealed class SdkProjectItemsTests
     }
 
     [Fact]
+    public void A_resx_file_two_packages_add_keeps_what_each_says_about_it()
+    {
+        // moq's Moq.Sdk: ThisAssembly.Resources adds every EmbeddedResource as an additional file before ThisAssembly.Strings
+        // adds its .resx files from ResxCode items. The SDK writes build_metadata.ResxCode.* for the file all the same, and
+        // without them the strings generator wrote an empty ThisAssembly.Strings (CS0117 for every string).
+        using var temp = new TempDirectory();
+        temp.Write("Lib/Resources.resx", "<root />");
+        var path = temp.Write("Lib/Lib.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        var resources = temp.Write("packages/thisassembly.resources/build/netstandard2.0/ThisAssembly.Resources.targets", """
+            <Project>
+              <ItemGroup>
+                <CompilerVisibleItemMetadata Include="EmbeddedResource" MetadataName="ThisAssemblyResource" />
+              </ItemGroup>
+              <Target Name="PrepareEmbeddedResources" DependsOnTargets="PrepareResourceNames" />
+              <Target Name="_InjectResourcesAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="PrepareEmbeddedResources">
+                <ItemGroup>
+                  <EmbeddedResource ThisAssemblyResource="true" />
+                  <AdditionalFiles Include="@(EmbeddedResource)" />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+        var strings = temp.Write("packages/thisassembly.strings/build/netstandard2.0/ThisAssembly.Strings.targets", """
+            <Project>
+              <Target Name="_InjectResxAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="PrepareResourceNames">
+                <ItemGroup>
+                  <ResxCode Include="@(EmbeddedResource)" ThisAssemblyStrings="true"
+                            Condition="'%(EmbeddedResource.Type)' == 'Resx' And '%(EmbeddedResource.WithCulture)' != 'true' And '%(EmbeddedResource.GenerateResource)' != 'false' And '%(EmbeddedResource.ManifestResourceName)' != ''" />
+                  <AdditionalFiles Include="@(ResxCode)" />
+                </ItemGroup>
+              </Target>
+              <ItemGroup>
+                <CompilerVisibleItemMetadata Include="ResxCode" MetadataName="ThisAssemblyStrings" />
+                <CompilerVisibleItemMetadata Include="ResxCode" MetadataName="ManifestResourceName" />
+              </ItemGroup>
+            </Project>
+            """);
+
+        var project = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(path), [resources, strings]);
+
+        var file = Assert.Single(project.AdditionalFiles, f => f.ItemTypes is not null);
+        Assert.Equal("Resources.resx", file.Include);
+        Assert.Contains("ResxCode", file.ItemTypes!);
+        Assert.Contains("EmbeddedResource", file.ItemTypes!);
+        Assert.Equal("true", file.Metadata["ThisAssemblyStrings"]);
+        Assert.Equal("true", file.Metadata["ThisAssemblyResource"]);
+        Assert.Equal("Lib.Resources", file.Metadata["ManifestResourceName"]);
+    }
+
+    [Fact]
+    public void Microsoft_Testing_Platform_s_SelfRegisteredExtensions_is_generated_in_the_root_namespace()
+    {
+        // Terminal.Gui's UnitTests.Parallelizable has `using UnitTests.Parallelizable;`, a namespace only the class
+        // Microsoft.Testing.Platform's task generates for an xUnit.net v3 project declares (CS0234 without it).
+        using var temp = new TempDirectory();
+        var path = temp.Write("UnitTestsParallelizable/UnitTests.Parallelizable.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework><OutputType>Exe</OutputType></PropertyGroup>
+            </Project>
+            """);
+        var props = temp.Write("packages/xunit.v3.core/buildTransitive/xunit.v3.core.props", """
+            <Project>
+              <PropertyGroup>
+                <GenerateSelfRegisteredExtensions>true</GenerateSelfRegisteredExtensions>
+                <IsTestingPlatformApplication Condition=" '$(IsTestingPlatformApplication)' == '' ">true</IsTestingPlatformApplication>
+              </PropertyGroup>
+            </Project>
+            """);
+        var targets = temp.Write("packages/microsoft.testing.platform.msbuild/buildMultiTargeting/Microsoft.Testing.Platform.MSBuild.targets", """
+            <Project>
+              <Target Name="_CalculateGenerateSelfRegisteredExtensions">
+                <PropertyGroup>
+                  <GenerateSelfRegisteredExtensions Condition=" '$(GenerateSelfRegisteredExtensions)' == '' " >$(IsTestingPlatformApplication)</GenerateSelfRegisteredExtensions>
+                </PropertyGroup>
+              </Target>
+              <PropertyGroup>
+                <_SelfRegisteredExtensionsSourceName>SelfRegisteredExtensions$(DefaultLanguageSourceExtension)</_SelfRegisteredExtensionsSourceName>
+                <_SelfRegisteredExtensionsSourcePath>$([System.IO.Path]::Combine($(IntermediateOutputPath),$(_SelfRegisteredExtensionsSourceName)))</_SelfRegisteredExtensionsSourcePath>
+                <_SelfRegisteredExtensionsSourcePath>$([MSBuild]::NormalizePath($(MSBuildProjectDirectory), $(_SelfRegisteredExtensionsSourcePath)))</_SelfRegisteredExtensionsSourcePath>
+              </PropertyGroup>
+              <Target Name="_GenerateSelfRegisteredExtensions" Condition=" '$(GenerateSelfRegisteredExtensions)' == 'true' " >
+                <TestingPlatformSelfRegisteredExtensions SelfRegisteredExtensionsSourcePath="$(_SelfRegisteredExtensionsSourcePath)"
+                                                         SelfRegisteredExtensionsBuilderHook="@(TestingPlatformBuilderHook)"
+                                                         RootNamespace="$(RootNamespace)"
+                                                         Language="$(Language)" />
+              </Target>
+              <Target Name="_IncludeGenerateAutoRegisteredExtensionsIntoCompilation" BeforeTargets="BeforeCompile;XamlPreCompile"
+                      DependsOnTargets="_CalculateGenerateSelfRegisteredExtensions;_GenerateSelfRegisteredExtensions">
+                <ItemGroup Condition=" '$(GenerateSelfRegisteredExtensions)' == 'true' ">
+                  <Compile Include="$(_SelfRegisteredExtensionsSourcePath)" />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+
+        var project = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(path), [props, targets]);
+
+        var file = Assert.Single(project.PackageCompileFiles);
+        Assert.Equal(Path.Combine(temp.Path, "UnitTestsParallelizable", "obj", "Debug", "net10.0", "SelfRegisteredExtensions.cs"), file.FullPath);
+        Assert.Contains("namespace UnitTests.Parallelizable", file.Text, StringComparison.Ordinal);
+        Assert.Contains("internal static class SelfRegisteredExtensions", file.Text, StringComparison.Ordinal);
+        Assert.False(File.Exists(file.FullPath));
+        Assert.Null(project.GetProperty("RootNamespace"));
+    }
+
+    [Fact]
     public void A_package_s_targets_remove_the_generator_it_replaces()
     {
         // eShop's Ordering.API: Microsoft.Extensions.Telemetry.Abstractions writes [LoggerMessage] code itself and removes

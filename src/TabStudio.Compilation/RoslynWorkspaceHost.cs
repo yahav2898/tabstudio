@@ -141,6 +141,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         _projectIds.Clear();
         _projects.Clear();
         _projectsAsRead.Clear();
+        _packageCompileDocuments.Clear();
         _skeletons.Clear();
         _generatorProjects.Clear();
 
@@ -690,6 +691,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
         documents.AddRange(WindowsFormsDocuments(id, project));
         documents.AddRange(PackageContentDocuments(id, project));
+        documents.AddRange(PackageCompileDocuments(id, project, documents.Select(d => d.FilePath).OfType<string>().ToHashSet(StringComparer.Ordinal)));
         if (DesktopSettings.Applies(project, documents.Where(d => !d.IsGenerated).Select(d => d.FilePath ?? string.Empty)))
         {
             var path = Path.Combine(project.DirectoryPath, "obj", "TabStudio", "System.Configuration.Settings.g.cs");
