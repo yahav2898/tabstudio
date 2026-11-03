@@ -184,12 +184,16 @@ jobs:
           }
           run debugging tests/TabStudio.Debugging.Tests --filter "FullyQualifiedName~BreakpointHitCountTests|FullyQualifiedName~HostedRunTests|FullyQualifiedName~BreakpointConditionTests"
           run toolchains tests/TabStudio.Toolchains.Tests --filter "FullyQualifiedName~ToolchainTestTests"
-          run app-unit tests/TabStudio.App.Tests --filter "FullyQualifiedName~TestExplorerViewModelTests|FullyQualifiedName~ProjectTemplatesTests|FullyQualifiedName~LanguageServerCommandTests|FullyQualifiedName~ViewModels.DebuggingTests|FullyQualifiedName~ViewModels.TestExplorerTests|FullyQualifiedName~TemplateCoverage"
-          run app-debuggers tests/TabStudio.App.Tests --filter "FullyQualifiedName~debugger_conformance"
+          run app-unit tests/TabStudio.App.Tests --filter "FullyQualifiedName~TestExplorerViewModelTests|FullyQualifiedName~ProjectTemplatesTests|FullyQualifiedName~LanguageServerCommandTests|FullyQualifiedName~ViewModels.DebuggingTests|FullyQualifiedName~ViewModels.TestExplorerTests|FullyQualifiedName~TemplateConformanceTests.Every_template"
+          run app-templates tests/TabStudio.App.Tests --filter "FullyQualifiedName~template_conformance|FullyQualifiedName~WebAppTests|FullyQualifiedName~BlazorAppTests"
+          run app-debuggers tests/TabStudio.App.Tests --filter "FullyQualifiedName~debugger_conformance|FullyQualifiedName~runs_the_Kotlin_script_template_too|FullyQualifiedName~serves_the_PHP_site_template_too"
           exit $status
 
-      - name: Publish logs and screenshots
+      - name: Save logs and screenshots
         if: always()
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: bash build/ci/publish-logs.sh scratch ${{ job.status }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: scratch-logs
+          retention-days: 3
+          if-no-files-found: ignore
+          path: ci-out/

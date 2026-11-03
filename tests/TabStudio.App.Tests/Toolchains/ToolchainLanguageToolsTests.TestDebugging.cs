@@ -79,6 +79,42 @@ public sealed partial class ToolchainLanguageToolsTests
         await DebugTestsAsync(folder, Path.Combine(folder, "src", "Greeter.php"), "$answer = 42;", "$name", "Ada", passed: 1, failed: 0, "phpunit", TimeSpan.FromSeconds(300));
     }
 
+    [RealServerAvaloniaFact("kotlinc", "gradle", "kotlin-lsp", "jdtls")]
+    public async Task A_Kotlin_Gradle_template_runs_the_Kotlin_script_template_too()
+    {
+        var (workspace, _) = await OpenTemplateAsync(ProjectTemplates.KotlinScriptId, "Greeter.main.kts");
+        using var trace = new SavedLogs(workspace, "toolchains-kotlin-script");
+
+        await workspace.RunCommand.ExecuteAsync(null);
+
+        Assert.Contains("1. Kotlin", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Contains("4. PHP", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Contains("has exited with code 0", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Empty(workspace.ErrorList.Items.Where(e => e.IsError));
+        trace.Passed = true;
+    }
+
+    [RealServerAvaloniaFact("php", "composer", "phpactor", "php-debug-adapter")]
+    public async Task A_PHP_template_serves_the_PHP_site_template_too()
+    {
+        var (workspace, _) = await OpenTemplateAsync(ProjectTemplates.PhpSiteId, "index.php");
+        using var trace = new SavedLogs(workspace, "toolchains-php-site");
+        using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
+
+        var run = workspace.RunCommand.ExecuteAsync(null);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.ServerNotice is not null || run.IsCompleted, TimeSpan.FromMinutes(3), because: "PHP's web server to listen");
+        Assert.True(workspace.ServerNotice is not null, workspace.Output.Text);
+        workspace.ServerNotice!.OpenPreview.Execute(null);
+        var address = workspace.WebPreview.AppAddress!;
+        Assert.Contains("Hello from PHP!", await http.GetStringAsync(address), StringComparison.Ordinal);
+        Assert.Contains("Hello, Ada!", await http.GetStringAsync(new Uri(address, "?name=Ada")), StringComparison.Ordinal);
+
+        workspace.StopCommand.Execute(null);
+        await run.WaitAsync(TimeSpan.FromMinutes(1));
+        Assert.False(workspace.IsRunning);
+        trace.Passed = true;
+    }
+
     /// <summary>
     /// Opens a folder, sets a breakpoint on a line of a file, debugs every test from Test Explorer, checks a local at
     /// the first stop, continues to the end and checks the results.

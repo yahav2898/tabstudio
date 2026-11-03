@@ -286,7 +286,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return;
         }
 
-        if (IsRunning)
+        if (IsBuilding)
+        {
+            CancelBuild();
+        }
+        else if (IsRunning)
         {
             _run?.Cancel();
         }
@@ -298,7 +302,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         }
     }
 
-    private bool CanStopDebugging() => IsDebugging || IsRunning || HasWindowsBridgeApps;
+    private bool CanStopDebugging() => IsDebugging || IsRunning || IsBuilding || HasWindowsBridgeApps;
 
     /// <summary>Ctrl+Shift+F5: stops debugging and starts again with a fresh build.</summary>
     [RelayCommand(CanExecute = nameof(IsDebugging))]

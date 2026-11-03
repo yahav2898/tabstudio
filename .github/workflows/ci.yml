@@ -451,7 +451,7 @@ jobs:
           # The 100-frame GC stress can take eleven minutes on hosted runners; do not abort a healthy run.
           run_ide_tests() {
             DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
-              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~ScreenshotLifetimeTests&FullyQualifiedName!~debugger_conformance&FullyQualifiedName!~ToolchainLanguageToolsTests.A_PHP_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Swift_package_template" --logger "console;verbosity=normal" > "$1" 2>&1
+              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~ScreenshotLifetimeTests&FullyQualifiedName!~debugger_conformance&FullyQualifiedName!~template_conformance&FullyQualifiedName!~ToolchainLanguageToolsTests.A_PHP_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Swift_package_template" --logger "console;verbosity=normal" > "$1" 2>&1
           }
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
@@ -474,7 +474,7 @@ jobs:
           mkdir -p ci-out/screenshots/light
           run_light_tests() {
             TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
-              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --no-build --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design&FullyQualifiedName!~ScreenshotLifetimeTests&FullyQualifiedName!~debugger_conformance&FullyQualifiedName!~ToolchainLanguageToolsTests.A_PHP_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Swift_package_template" \
+              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --no-build --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design&FullyQualifiedName!~ScreenshotLifetimeTests&FullyQualifiedName!~debugger_conformance&FullyQualifiedName!~template_conformance&FullyQualifiedName!~ToolchainLanguageToolsTests.A_PHP_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Swift_package_template" \
               --logger "console;verbosity=normal" > "$1" 2>&1
           }
           light=0
@@ -539,6 +539,43 @@ jobs:
   # repositories are set up by the IDE with the computer's toolchains, and Ctrl+F5 must start their programs: a web
   # app must answer in the web preview, a command-line program must exit with code 0. Reports and screenshots are
   # published.
+  templates:
+    name: New Project templates
+    # Every .NET template from New Project, created, restored from nuget.org, built with no errors or warnings, run,
+    # stopped at a breakpoint, and for test projects, its tests run and debugged (TemplateConformanceTests). The
+    # templates of other languages are checked with their tools in the IDE job's tool steps.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-app-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: nuget-app-
+
+      - name: Create, build, run, debug and test every .NET template
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame-hang-timeout 10m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~template_conformance" --logger "console;verbosity=normal" > ci-out/templates.log 2>&1 || status=$?
+          tail -n 120 ci-out/templates.log
+          exit "$status"
+
+      - name: Publish logs
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh templates ${{ job.status }}
+
   real-repos:
     name: Real repositories
     # Ubuntu 24.04, not ubuntu-latest: the tools installed below (Swift's toolchain, LLVM and the PHP and Java

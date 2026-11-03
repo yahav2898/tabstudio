@@ -130,7 +130,7 @@ public sealed partial class WorkspaceViewModel
                 // A test may stay paused at a breakpoint for as long as the user looks at it: no timeout.
                 using var tests = await TestSession.LoadAsync(assemblies, packages, new TestRunOptions { DefaultTimeout = null }, stop);
                 return await InvokeOnUiAsync(() => RunDebuggedTestsAsync(project, tests, names, stop));
-            });
+            }, cancellationToken);
         }
         catch (OperationCanceledException)
         {

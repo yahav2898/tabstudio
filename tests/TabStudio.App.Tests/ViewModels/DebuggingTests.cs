@@ -370,6 +370,28 @@ public sealed class DebuggingTests
         Assert.Contains("10", workspace.Output.Text, StringComparison.Ordinal);
     }
 
+    [AvaloniaFact]
+    public async Task Stop_cancels_a_build_in_progress_says_so_and_the_next_build_runs()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+
+        var build = workspace.BuildCommand.ExecuteAsync(null);
+        Assert.True(workspace.StopDebuggingCommand.CanExecute(null));
+        workspace.StopDebuggingCommand.Execute(null);
+        await build;
+
+        Assert.Contains("========== Build: cancelled ==========", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Equal(IdeState.Ready, workspace.State);
+        Assert.Equal("Build cancelled", workspace.StatusText);
+        Assert.False(workspace.StopDebuggingCommand.CanExecute(null));
+
+        await workspace.BuildCommand.ExecuteAsync(null);
+        Assert.Contains(" succeeded, 0 failed", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Equal("Build succeeded", workspace.StatusText);
+    }
+
     private const string ThrowingProgram = """
         var numbers = new List<int>();
         Console.WriteLine("Looking for the first number");
