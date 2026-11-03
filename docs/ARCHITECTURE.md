@@ -153,7 +153,12 @@ sequenceDiagram
   folder in private app storage: Android's W^X rule forbids `exec()` there, not `dlopen`, so nothing is copied.
   Swarm devices get the managed assemblies only, and WebAssembly apps never get native files.
 - **No-op restores** are instant: the inputs are hashed, and an unchanged project reuses its last result.
-  Offline, versions already on the device are used.
+  Offline, versions already on the device are used; such a restore, like one with errors, is not remembered, so the
+  next one asks the sources again.
+- **Transient failures** are tried again, up to three times with growing delays (`PackageRestoreOptions.HttpRetryDelays`):
+  a reset or refused connection, a body cut short, a timeout, 5xx, 408 and 429, and a 304 Not Modified to a request
+  that asked for no such thing (a CDN glitch), which is asked again with `Cache-Control: no-cache`. A source whose
+  name does not resolve (offline) is not retried, and one that stays down through the retries is asked once from then on.
 - **Shared frameworks.** A project on the Web SDK, or with a `FrameworkReference` to `Microsoft.AspNetCore.App`,
   gets ASP.NET Core the way a self-contained app does: its targeting pack (`Microsoft.AspNetCore.App.Ref`) to
   compile against and the runtime pack for the device's processor to run with, both from NuGet. The packs'
