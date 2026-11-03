@@ -1,0 +1,26 @@
+fd at c44735ec0f130c2486afe9c976937c03b57a8c62
+Opened 12 of 12 files; set up in 5.1 s
+The language servers went quiet after 81.1 s; progress seen: rust-analyzer: Building CrateGraph, rust-analyzer: Building compile-time-deps, rust-analyzer: Fetching, rust-analyzer: Indexing, rust-analyzer: Loading proc-macros, rust-analyzer: Roots Scanned, rust-analyzer: cargo check
+  src/cli.rs: rust-analyzer Running, 0 errors
+  src/exec/command.rs: rust-analyzer Running, 0 errors
+  tests/tests.rs: rust-analyzer Running, 0 errors
+  src/filter/mod.rs: rust-analyzer Running, 0 errors
+  src/fmt/input.rs: rust-analyzer Running, 0 errors
+  tests/testenv/mod.rs: rust-analyzer Running, 0 errors
+  src/config.rs: rust-analyzer Running, 0 errors
+  src/exec/job.rs: rust-analyzer Running, 0 errors
+  src/filter/owner.rs: rust-analyzer Running, 0 errors
+  src/fmt/mod.rs: rust-analyzer Running, 0 errors
+  src/dir_entry.rs: rust-analyzer Running, 0 errors
+  src/exec/mod.rs: rust-analyzer Running, 0 errors
+Language servers:
+18:44:25 [rust-analyzer] Starting rust-analyzer for /home/runner/work/_temp/real-repos/fd: /home/runner/.cargo/bin/rust-analyzer 
+18:44:25 [rust-analyzer] rust-analyzer is running (rust-analyzer 1.99.1 (58cf8f9 2026-10-13)).
+
+Project setup:
+
+Squiggles of fd (Rust) next to the compiler's errors:
+  compiler: (in /home/runner/work/_temp/real-repos/fd) cargo metadata --format-version 1 --no-deps
+  compiler: (in /home/runner/work/_temp/real-repos/fd) cargo check --workspace --all-targets --keep-going --message-format=json
+  12 files compared: 0 editor errors, 0 compiler errors, 0 false squiggles, 0 missed
+

@@ -1,0 +1,20 @@
+gs-rest-service at 3f4cef01152596c19bc4d37939409358812b1421
+Opened 4 of 4 files; set up in 4.0 s
+The language servers went quiet after 51.8 s; progress seen: Eclipse JDT: Building, Eclipse JDT: Building project rest-service-complete-complete after Java compiler settings changed, Eclipse JDT: Initialize Workspace, Eclipse JDT: Publish Diagnostics, Eclipse JDT: Refreshing workspace, Eclipse JDT: Searching..., Eclipse JDT: Synchronizing projects, Eclipse JDT: Validate documents, Eclipse JDT: Validating Gradle wrapper checksum...
+  src/main/java/com/example/restservice/Greeting.java: Eclipse JDT Running, 0 errors
+  src/main/java/com/example/restservice/GreetingController.java: Eclipse JDT Running, 0 errors
+  src/test/java/com/example/restservice/GreetingControllerTests.java: Eclipse JDT Running, 0 errors
+  src/main/java/com/example/restservice/RestServiceApplication.java: Eclipse JDT Running, 0 errors
+Language servers:
+18:47:58 [Eclipse JDT] Starting Eclipse JDT for /home/runner/work/_temp/real-repos/gs-rest-service/complete: /home/runner/work/_temp/jdtls/bin/jdtls -data ${serverStorage}
+18:47:59 [Eclipse JDT] WARNING: Using incubator modules: jdk.incubator.vector
+18:48:00 [Eclipse JDT] Nov 03, 2026 6:48:00 PM org.apache.aries.spifly.BaseActivator log
+18:48:00 [Eclipse JDT] INFO: Registered provider ch.qos.logback.classic.spi.LogbackServiceProvider of service org.slf4j.spi.SLF4JServiceProvider in bundle ch.qos.logback.classic
+18:48:02 [Eclipse JDT] Eclipse JDT is running (JDT Language Server (Standard) 1.58.0-SNAPSHOT).
+
+Project setup:
+
+Squiggles of gs-rest-service (Java) next to the compiler's errors:
+  compiler: (in /home/runner/work/_temp/real-repos/gs-rest-service/complete) mvn -B test-compile -DskipTests -Dcheckstyle.skip=true -Denforcer.skip=true -Dspring-javaformat.skip=true -Djacoco.skip=true -Dmaven.gitcommitid.skip=true -Dcyclonedx.skip=true -Dlicense.skip=true -Dspotless.check.skip=true -Dformatter.skip=true -Dpmd.skip=true -Dspotbugs.skip=true -Danimal.sniffer.skip=true
+  4 files compared: 0 editor errors, 0 compiler errors, 0 false squiggles, 0 missed
+

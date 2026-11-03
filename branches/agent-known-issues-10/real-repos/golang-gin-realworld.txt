@@ -1,0 +1,53 @@
+golang-gin-realworld at 626c372d259472148d93303f74aa9b9a1cdcef24
+Toolchain projects:
+  go: /home/runner/work/_temp/real-repos/golang-gin-realworld/go.mod
+Startup project: go /home/runner/work/_temp/real-repos/golang-gin-realworld/go.mod
+Set up in 2.8 s
+Web preview: http://127.0.0.1:8080/
+GET http://127.0.0.1:8080/api/tags: 200 OK, 11 characters
+Ran in 44.8 s
+Project setup:
+
+Output:
+Running golang-gin-realworld with Go 1.27.3
+> go build '-gcflags=all=-N -l' -o .tabstudio/bin/app .
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] POST   /api/users                --> github.com/gothinkster/golang-gin-realworld-example-app/users.UsersRegistration (3 handlers)
+[GIN-debug] POST   /api/users/               --> github.com/gothinkster/golang-gin-realworld-example-app/users.UsersRegistration (3 handlers)
+[GIN-debug] POST   /api/users/login          --> github.com/gothinkster/golang-gin-realworld-example-app/users.UsersLogin (3 handlers)
+[GIN-debug] GET    /api/articles             --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleList (4 handlers)
+[GIN-debug] GET    /api/articles/            --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleList (4 handlers)
+[GIN-debug] GET    /api/articles/:slug       --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleRetrieve (4 handlers)
+[GIN-debug] GET    /api/articles/:slug/comments --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleCommentList (4 handlers)
+[GIN-debug] GET    /api/tags                 --> github.com/gothinkster/golang-gin-realworld-example-app/articles.TagList (4 handlers)
+[GIN-debug] GET    /api/tags/                --> github.com/gothinkster/golang-gin-realworld-example-app/articles.TagList (4 handlers)
+[GIN-debug] GET    /api/profiles/:username   --> github.com/gothinkster/golang-gin-realworld-example-app/users.ProfileRetrieve (4 handlers)
+[GIN-debug] GET    /api/user                 --> github.com/gothinkster/golang-gin-realworld-example-app/users.UserRetrieve (5 handlers)
+[GIN-debug] GET    /api/user/                --> github.com/gothinkster/golang-gin-realworld-example-app/users.UserRetrieve (5 handlers)
+[GIN-debug] PUT    /api/user                 --> github.com/gothinkster/golang-gin-realworld-example-app/users.UserUpdate (5 handlers)
+[GIN-debug] PUT    /api/user/                --> github.com/gothinkster/golang-gin-realworld-example-app/users.UserUpdate (5 handlers)
+[GIN-debug] POST   /api/profiles/:username/follow --> github.com/gothinkster/golang-gin-realworld-example-app/users.ProfileFollow (5 handlers)
+[GIN-debug] DELETE /api/profiles/:username/follow --> github.com/gothinkster/golang-gin-realworld-example-app/users.ProfileUnfollow (5 handlers)
+[GIN-debug] GET    /api/articles/feed        --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleFeed (5 handlers)
+[GIN-debug] POST   /api/articles             --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleCreate (5 handlers)
+[GIN-debug] POST   /api/articles/            --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleCreate (5 handlers)
+[GIN-debug] PUT    /api/articles/:slug       --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleUpdate (5 handlers)
+[GIN-debug] PUT    /api/articles/:slug/      --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleUpdate (5 handlers)
+[GIN-debug] DELETE /api/articles/:slug       --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleDelete (5 handlers)
+[GIN-debug] POST   /api/articles/:slug/favorite --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleFavorite (5 handlers)
+[GIN-debug] DELETE /api/articles/:slug/favorite --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleUnfavorite (5 handlers)
+[GIN-debug] POST   /api/articles/:slug/comments --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleCommentCreate (5 handlers)
+[GIN-debug] DELETE /api/articles/:slug/comments/:id --> github.com/gothinkster/golang-gin-realworld-example-app/articles.ArticleCommentDelete (5 handlers)
+[GIN-debug] GET    /api/ping/                --> main.main.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
+[GIN] 2026/11/03 - 19:02:36 | 200 |     270.882µs |       127.0.0.1 | GET      "/api/tags"
+
+The program 'golang-gin-realworld' was stopped.
+
