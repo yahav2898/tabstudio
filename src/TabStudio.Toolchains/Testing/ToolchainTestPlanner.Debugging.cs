@@ -12,7 +12,18 @@ namespace TabStudio.Toolchains.Testing;
 /// <c>go test -v</c>; <see langword="null"/> when the runner writes a report itself.
 /// </param>
 /// <param name="OutputFooter">A line that ends the saved output, such as the package line <c>go test</c> prints and a test binary does not.</param>
-public sealed record ToolchainTestDebugPlan(ToolchainTestPlan Results, ProcessStartSpec? Prepare, ProcessStartSpec Debuggee, string? OutputReport = null, string? OutputFooter = null);
+public sealed record ToolchainTestDebugPlan(ToolchainTestPlan Results, ProcessStartSpec? Prepare, ProcessStartSpec Debuggee, string? OutputReport = null, string? OutputFooter = null)
+{
+    /// <summary>A line that starts the saved output, such as the <c>Running</c> line <c>cargo test</c> prints before a test binary's output.</summary>
+    public string? OutputHeader { get; init; }
+
+    /// <summary>
+    /// What the debug adapter launches once <see cref="Prepare"/> ran, from its output: the test binary <c>cargo test
+    /// --no-run</c> built. <see langword="null"/> when <see cref="Debuggee"/> is known before; the function returns
+    /// <see langword="null"/> when the output names no test binary.
+    /// </summary>
+    public Func<IReadOnlyList<string>, ToolchainTestDebugPlan?>? AfterPrepare { get; init; }
+}
 
 public static partial class ToolchainTestPlanner
 {
@@ -24,8 +35,9 @@ public static partial class ToolchainTestPlanner
     /// <summary>
     /// How to debug a test run, or <see langword="null"/> when TabStudio cannot debug the runner's tests yet: pytest
     /// under debugpy (what the tests need installed first, as for a run), Vitest, Jest, Mocha and <c>node --test</c>
-    /// under js-debug, which debugs every Node.js process the runner starts, PHPUnit and Pest under Xdebug, and one Go
-    /// package's test binary, built without optimizations, under Delve. Each writes the same results as a run.
+    /// under js-debug, which debugs every Node.js process the runner starts, PHPUnit and Pest under Xdebug, one Go
+    /// package's test binary, built without optimizations, under Delve, and the test binary of one Rust target under
+    /// LLDB. Each writes the same results as a run.
     /// </summary>
     /// <param name="project">The project.</param>
     /// <param name="framework">Its test runner.</param>
@@ -73,10 +85,76 @@ public static partial class ToolchainTestPlanner
             case ToolchainTestFramework.GoTest:
                 return PlanGoDebug(project, selection, reportDirectory);
 
+            case ToolchainTestFramework.Cargo:
+                return PlanCargoDebug(project, selection, reportDirectory);
+
             default:
                 return null;
         }
     }
+
+    /// <summary>
+    /// Debugs the tests of one Rust target: <c>cargo test --no-run</c> builds the test binaries and names them, and LLDB
+    /// runs the one of the selected tests' target (the first unit tests without a selection) with their filters, in
+    /// the package's folder, as <c>cargo test</c> does. Its output, under the <c>Running</c> line, is read as a run's.
+    /// </summary>
+    private static ToolchainTestDebugPlan PlanCargoDebug(ToolchainProject project, IReadOnlyList<ToolchainTestSelector>? selection, string reportDirectory)
+    {
+        var results = Plan(project, ToolchainTestFramework.Cargo, selection, reportDirectory);
+        List<string> build = ["cargo", "test", "--no-run"];
+        if (ReadSmall(Path.Combine(project.Directory, "Cargo.toml")).Contains("[workspace]", StringComparison.Ordinal))
+        {
+            build.Add("--workspace");
+        }
+
+        var prepare = RunPlanner.CommandSpec(project, build);
+        var selected = selection is { Count: > 0 } ? selection : null;
+        var plan = new ToolchainTestDebugPlan(results, prepare, prepare, Path.Combine(reportDirectory, CargoReport));
+        return plan with
+        {
+            AfterPrepare = lines => CargoDebuggee(project, lines, selected) is { } debuggee
+                ? plan with { Debuggee = debuggee, OutputHeader = "     Running " + debuggee.Program, AfterPrepare = null }
+                : null,
+        };
+    }
+
+    /// <summary>The test binary to debug, from the <c>Executable</c> lines of <c>cargo test --no-run</c>, with the selection's filters.</summary>
+    internal static ProcessStartSpec? CargoDebuggee(ToolchainProject project, IReadOnlyList<string> lines, IReadOnlyList<ToolchainTestSelector>? selection)
+    {
+        var binaries = lines.Select(line => CargoExecutable().Match(line)).Where(m => m.Success)
+            .Select(m => (Kind: m.Groups["kind"].Value, Path: m.Groups["path"].Value)).ToList();
+        if (binaries.Count == 0)
+        {
+            return null;
+        }
+
+        var target = selection?.Select(s => s.ClassName.Split('.')[0]).FirstOrDefault();
+        var chosen = binaries.FirstOrDefault(b => target is not null && CargoBinaryHash().Replace(Path.GetFileName(b.Path), string.Empty) == target);
+        if (chosen.Path is null)
+        {
+            chosen = binaries.FirstOrDefault(b => b.Kind == "unittests");
+        }
+
+        if (chosen.Path is null)
+        {
+            chosen = binaries[0];
+        }
+
+        var path = Path.IsPathRooted(chosen.Path) ? chosen.Path : Path.GetFullPath(Path.Combine(project.Directory, chosen.Path));
+        List<string> command = [path];
+        if (selection is not null)
+        {
+            command.AddRange(selection.Select(CargoFilter).Distinct(StringComparer.Ordinal));
+        }
+
+        return RunPlanner.CommandSpec(project, command) with { WorkingDirectory = project.Directory };
+    }
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"^\s*Executable\s+(?:(?<kind>unittests|tests|benches)\s+)?\S+\s+\((?<path>[^)]+)\)\s*$", System.Text.RegularExpressions.RegexOptions.CultureInvariant)]
+    private static partial System.Text.RegularExpressions.Regex CargoExecutable();
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"-[0-9a-f]{16}$", System.Text.RegularExpressions.RegexOptions.CultureInvariant)]
+    private static partial System.Text.RegularExpressions.Regex CargoBinaryHash();
 
     /// <summary>
     /// Debugs the tests of one Go package: <c>go test -c</c> builds its test binary without optimizations, and Delve runs

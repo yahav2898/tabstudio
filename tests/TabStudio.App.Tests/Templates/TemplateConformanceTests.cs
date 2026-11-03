@@ -49,7 +49,7 @@ public sealed class TemplateConformanceTests : IClassFixture<SharedToolchain>, I
         [ProjectTemplates.PythonId] = ["ToolchainLanguageToolsTests.A_Python_template_passes_the_debugger_conformance_checks", "PythonRunTests"],
         [ProjectTemplates.NodeId] = ["ToolchainLanguageToolsTests.A_Node_template_passes_the_debugger_conformance_checks", "NodeRunTests"],
         [ProjectTemplates.GoId] = ["ToolchainLanguageToolsTests.A_Go_template_passes_the_debugger_conformance_checks", "ToolchainLanguageToolsTests.A_Go_template_debugger_conformance_for_go_tests"],
-        [ProjectTemplates.RustId] = ["ToolchainLanguageToolsTests.A_Rust_template_passes_the_debugger_conformance_checks", "ToolchainLanguageToolsTests.A_Rust_template_gets_completion_diagnostics_navigation_output_and_an_LLDB_breakpoint"],
+        [ProjectTemplates.RustId] = ["ToolchainLanguageToolsTests.A_Rust_template_passes_the_debugger_conformance_checks", "ToolchainLanguageToolsTests.A_Rust_template_debugger_conformance_for_cargo_tests"],
         [ProjectTemplates.CppId] = ["ToolchainLanguageToolsTests.A_Cpp_template_passes_the_debugger_conformance_checks"],
         [ProjectTemplates.JavaId] = ["ToolchainLanguageToolsTests.A_Java_template_passes_the_debugger_conformance_checks"],
         [ProjectTemplates.KotlinId] = ["ToolchainLanguageToolsTests.A_Kotlin_Gradle_template_passes_the_debugger_conformance_checks"],
@@ -130,8 +130,17 @@ public sealed class TemplateConformanceTests : IClassFixture<SharedToolchain>, I
 
         await workspace.BuildCommand.ExecuteAsync(null);
 
-        var problems = string.Join("\n", workspace.ErrorList.Items.Where(i => i.IsError || i.IsWarning).Select(i => $"{i.Diagnostic.Id} {i.File}({i.Line}): {i.Description}"));
-        Assert.True(workspace.ErrorList.ErrorCount == 0 && workspace.ErrorList.WarningCount == 0, $"{template}:\n{problems}\n{workspace.Output.Text}");
+        // The WinUI template is Visual Studio's, with its Mica backdrop and title bar, which Uno does not implement: the
+        // build says so (TS7101), as the Uno tests require, and those three are the only warnings it may have.
+        var expected = template == TabStudio.Uno.Templates.UnoTemplates.WinUIAppId
+            ? new[] { "Window.SystemBackdrop", "MicaBackdrop", "TitleBar" }
+            : [];
+        var unexpected = workspace.ErrorList.Items
+            .Where(i => i.IsError || (i.IsWarning && !(i.Diagnostic.Id == "TS7101" && expected.Any(e => i.Description.Contains(e, StringComparison.Ordinal)))))
+            .ToList();
+        var problems = string.Join("\n", unexpected.Select(i => $"{i.Diagnostic.Id} {i.File}({i.Line}): {i.Description}"));
+        Assert.True(unexpected.Count == 0, $"{template}:\n{problems}\n{workspace.Output.Text}");
+        Assert.Equal(expected.Length, workspace.ErrorList.WarningCount);
         Assert.Contains(" succeeded, 0 failed", workspace.Output.Text, StringComparison.Ordinal);
     }
 

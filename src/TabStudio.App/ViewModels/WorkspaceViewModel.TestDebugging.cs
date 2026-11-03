@@ -253,8 +253,7 @@ public sealed partial class WorkspaceViewModel
                 return;
             }
 
-            if (ToolchainTestPlanner.PlanDebug(project, framework, selection, reports) is not { } debug
-                || ToolchainLaunch.Create(type, new RunPlan(null, debug.Debuggee, debug.Debuggee.Program)) is not { } configuration)
+            if (ToolchainTestPlanner.PlanDebug(project, framework, selection, reports) is not { } debug)
             {
                 TryDeleteDirectory(reports);
                 ReleaseTestRun(cancellation);
@@ -285,6 +284,29 @@ public sealed partial class WorkspaceViewModel
                     Tests.ReportBuildFailed();
                     return;
                 }
+
+                // The test binary to debug is known once it was built, as cargo test --no-run names it.
+                if (debug.AfterPrepare is { } after)
+                {
+                    if (after(prepared.Lines) is not { } built)
+                    {
+                        Output.WriteLine($"The tests of {project.Name} built, but the build named no test program to debug.", OutputKind.Failure);
+                        Tests.ReportBuildFailed();
+                        State = IdeState.Failed;
+                        return;
+                    }
+
+                    debug = built;
+                }
+            }
+
+            if (ToolchainLaunch.Create(type, new RunPlan(null, debug.Debuggee, debug.Debuggee.Program)) is not { } launch
+                || PrepareNativeDebugInput(launch) is not { } configuration)
+            {
+                Output.WriteLine($"{toolchain.Name}'s debugger cannot start the tests of {project.Name}.", OutputKind.Failure);
+                Tests.ReportBuildFailed();
+                State = IdeState.Failed;
+                return;
             }
 
             if (type == ToolchainLaunch.PhpType)
@@ -299,6 +321,11 @@ public sealed partial class WorkspaceViewModel
             _pendingAdapterRelaunch = () => DebugToolchainTestsAsync(info, project, framework, selection);
             await LaunchAdapterAsync(target, DebugStart.Run, noDebug: false);
             _pendingAdapterRelaunch = null;
+            if (!IsDebuggingWithAdapter)
+            {
+                StopNativeDebugInput();
+            }
+
             if (_adapterEnd is { } end)
             {
                 // Test Explorer's Cancel stops the debugger, which ends the run.
@@ -312,7 +339,7 @@ public sealed partial class WorkspaceViewModel
             {
                 // The runner's results are its output, which the debugger showed in the Output panel.
                 Directory.CreateDirectory(Path.GetDirectoryName(report)!);
-                await File.WriteAllTextAsync(report, Output.Text + "\n" + debug.OutputFooter + "\n");
+                await File.WriteAllTextAsync(report, debug.OutputHeader + "\n" + Output.Text + "\n" + debug.OutputFooter + "\n");
             }
 
             var results = await Task.Run(() => ToolchainTestPlanner.ReadResults(project, debug.Results, started));

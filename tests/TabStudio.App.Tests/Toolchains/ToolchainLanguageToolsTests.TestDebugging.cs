@@ -72,6 +72,25 @@ public sealed partial class ToolchainLanguageToolsTests
         await DebugTestsAsync(folder, Path.Combine(folder, "main.go"), "message := \"Hello, \"", "name", "Ada", passed: 1, failed: 0, "go-test");
     }
 
+    [RealServerAvaloniaFact("cargo", "rust-analyzer", "lldb-dap")]
+    public async Task A_Rust_template_debugger_conformance_for_cargo_tests()
+    {
+        var folder = _services.GetRequiredService<ProjectTemplates>().Create(ProjectTemplates.RustId, "Greeter");
+        var main = Path.Combine(folder, "src", "main.rs");
+        await File.AppendAllTextAsync(main, """
+
+            #[cfg(test)]
+            mod tests {
+                #[test]
+                fn greets_by_name() {
+                    assert!(super::greet("Ada").starts_with("Hello, Ada!"));
+                }
+            }
+
+            """);
+        await DebugTestsAsync(folder, main, "let answer: i32 = 42;", "name", "Ada", passed: 1, failed: 0, "cargo-test");
+    }
+
     [RealServerAvaloniaFact("php", "composer", "phpactor", "php-debug-adapter")]
     public async Task A_PHP_template_debugger_conformance_for_PHPUnit_tests()
     {

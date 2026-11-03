@@ -375,8 +375,44 @@ public sealed class ToolchainTestTests : IDisposable
         Assert.Equal(php.Results.Command, php.Debuggee);
     }
 
+    [Fact]
+    public void A_Rust_target_is_debugged_as_the_test_binary_cargo_built_with_the_selections_filters()
+    {
+        _folder.Write("rs/Cargo.toml", "[package]\nname = \"shop\"\nversion = \"0.1.0\"\n");
+        _folder.Write("rs/src/lib.rs", "#[cfg(test)]\nmod tests {}\n");
+        var project = Project("rust", "rs");
+        var reports = _folder.Resolve("reports");
+
+        var debug = ToolchainTestPlanner.PlanDebug(project, ToolchainTestFramework.Cargo, [new("it.cart", "totals")], reports)!;
+        Assert.Equal(["test", "--no-run"], debug.Prepare!.Arguments);
+        string[] built =
+        [
+            "   Compiling shop v0.1.0 (/work/rs)",
+            "    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.20s",
+            "  Executable unittests src/lib.rs (target/debug/deps/shop-0123456789abcdef)",
+            "  Executable tests/it.rs (target/debug/deps/it-fedcba9876543210)",
+        ];
+
+        var after = debug.AfterPrepare!(built)!;
+        var binary = Path.Combine(project.Directory, "target", "debug", "deps", "it-fedcba9876543210");
+        Assert.Equal(binary, after.Debuggee.Program);
+        Assert.Equal(["cart::totals"], after.Debuggee.Arguments);
+        Assert.Equal(project.Directory, after.Debuggee.WorkingDirectory);
+        Assert.Equal("     Running " + binary, after.OutputHeader);
+
+        // The saved output reads as cargo test's, under its Running line.
+        File.WriteAllText(after.OutputReport!, after.OutputHeader + "\n\nrunning 1 test\ntest cart::totals ... ok\n\ntest result: ok. 1 passed\n");
+        var result = Assert.Single(ToolchainTestPlanner.ReadResults(project, after.Results, DateTime.UtcNow));
+        Assert.Equal(("totals", ToolchainTestOutcome.Passed), (result.MethodName, result.Outcome));
+
+        // Without a selection, the unit tests; with no binary named, nothing to debug.
+        var all = ToolchainTestPlanner.PlanDebug(project, ToolchainTestFramework.Cargo, null, reports)!.AfterPrepare!(built)!;
+        Assert.EndsWith("shop-0123456789abcdef", all.Debuggee.Program, StringComparison.Ordinal);
+        Assert.Empty(all.Debuggee.Arguments);
+        Assert.Null(debug.AfterPrepare!(["error: could not compile `shop`"]));
+    }
+
     [Theory]
-    [InlineData(ToolchainTestFramework.Cargo, "rust")]
     [InlineData(ToolchainTestFramework.Gradle, "kotlin")]
     [InlineData(ToolchainTestFramework.Maven, "java")]
     [InlineData(ToolchainTestFramework.SwiftPM, "swift")]

@@ -365,19 +365,25 @@ public sealed partial class ToolchainLanguageToolsTests
         await LocalIsAsync(workspace, scenario.Index, "2");
         UiTestHelpers.SaveScreenshot(window, $"debugger-conformance-{scenario.Name}-1-condition");
 
-        // Step Into enters the call, Step Over goes to its next line, and Step Out returns to the caller.
+        // Step Into enters the call (Delve stops at the function's own line first), Step Over goes on in it, and Step
+        // Out returns to the caller (V8 at the loop's next statement, Xdebug first at the function's return).
+        var declaration = first - 1;
         await workspace.StepIntoCommand.ExecuteAsync(null);
-        await PausedAtAsync(workspace, first, step, "Step Into", scenario.Callee);
+        await PausedInAsync(workspace, declaration, first, step, "Step Into", scenario.Callee);
+        var entered = workspace.CallStack.Frames[0].Location!.Line;
         await workspace.StepOverCommand.ExecuteAsync(null);
-        await PausedAtAsync(workspace, next, step, "Step Over", scenario.Callee);
-        workspace.StepOutCommand.Execute(null);
-        await UiTestHelpers.WaitUntilAsync(
-            () => workspace.IsPaused && workspace.CallStack.Frames.Count > 0
-                && !workspace.CallStack.Frames[0].MethodName.Contains(scenario.Callee, StringComparison.Ordinal)
-                && workspace.CallStack.Frames[0].MethodName.Contains(scenario.Caller, StringComparison.Ordinal),
-            step,
-            because: "Step Out to return to " + scenario.Caller);
-        Assert.Equal(loop, workspace.CallStack.Frames[0].Location?.Line);
+        await PausedInAsync(workspace, entered + 1, next + 1, step, "Step Over", scenario.Callee);
+        for (var attempt = 0; attempt < 2 && workspace.CallStack.Frames[0].MethodName.Contains(scenario.Callee, StringComparison.Ordinal); attempt++)
+        {
+            // Step Out resumes at once (the IDE shows the program running), then pauses again.
+            workspace.StepOutCommand.Execute(null);
+            Assert.False(workspace.IsPaused);
+            await UiTestHelpers.WaitUntilAsync(() => workspace.IsPaused && workspace.CallStack.Frames.Count > 0, step, because: "Step Out to pause again");
+        }
+
+        Assert.DoesNotContain(scenario.Callee, workspace.CallStack.Frames[0].MethodName, StringComparison.Ordinal);
+        Assert.Contains(scenario.Caller, workspace.CallStack.Frames[0].MethodName, StringComparison.Ordinal);
+        Assert.InRange(workspace.CallStack.Frames[0].Location?.Line ?? 0, loop - 1, loop);
 
         // A hit count of = 2 set now stops on the second hit from here: i is 3, then 4.
         workspace.Breakpoints.SetCondition(breakpoint, null);
@@ -436,6 +442,15 @@ public sealed partial class ToolchainLanguageToolsTests
             timeout,
             because: $"{because} to pause at line {line}");
     }
+
+    /// <summary>Waits until the program is paused in a function, on a line from <paramref name="from"/> to <paramref name="to"/>.</summary>
+    private static Task PausedInAsync(WorkspaceViewModel workspace, int from, int to, TimeSpan timeout, string because, string method) =>
+        UiTestHelpers.WaitUntilAsync(
+            () => workspace.IsPaused && workspace.CallStack.Frames.Count > 0
+                && workspace.CallStack.Frames[0].MethodName.Contains(method, StringComparison.Ordinal)
+                && workspace.CallStack.Frames[0].Location?.Line is { } line && line >= from && line <= to,
+            timeout,
+            because: $"{because} to pause in {method} on a line from {from} to {to}");
 
     private static Task LocalIsAsync(WorkspaceViewModel workspace, string name, string value) =>
         UiTestHelpers.WaitUntilAsync(

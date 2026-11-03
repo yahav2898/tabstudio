@@ -138,7 +138,7 @@ From there, try **New project** for a template in any language, **Open from GitH
   project declares), PHPUnit and Pest, JUnit through Gradle or Maven (Kotlin, Kotlin Multiplatform's JVM tests and
   Java), XCTest and Swift Testing through `swift test`, `go test`, `cargo test`, `dart test` and `flutter test`, and
   Vitest, Jest, Mocha and `node --test` for JavaScript and TypeScript, each run with the project's own runner. Debug
-  runs pytest, the JavaScript runners, PHPUnit and Pest, and `go test` under their debuggers.
+  runs pytest, the JavaScript runners, PHPUnit and Pest, `go test` and `cargo test` under their debuggers.
 - **C# Hot Reload and Edit and Continue (desktop build).** Tap **Hot Reload** or press **Alt+F10** to apply edits to
   a running console, Avalonia, ASP.NET Core or Blazor Server app without restarting, or let saving apply them. On
   Android, C# edits apply with a quick restart. See [Hot Reload](docs/ARCHITECTURE.md#hot-reload).

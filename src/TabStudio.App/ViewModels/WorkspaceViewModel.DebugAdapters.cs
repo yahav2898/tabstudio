@@ -527,6 +527,12 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     private List<DapSourceBreakpoint> AdapterBreakpointsIn(string file)
     {
         var list = Breakpoints.ForAdapter(file);
+        if (_adapter is { } session && EvaluatesConditionsForAdapter(session, file))
+        {
+            // The IDE evaluates these conditions: the adapter would stop on every hit.
+            list = [.. list.Select(b => b with { Condition = null })];
+        }
+
         if (_cursorBreakpoint is { } cursor && string.Equals(cursor.FilePath, file, StringComparison.Ordinal) && list.All(b => b.Line != cursor.Line))
         {
             list.Add(new DapSourceBreakpoint(cursor.Line));
@@ -641,13 +647,13 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
         // Without the exceptionInfo request, the stop's own description is the exception helper's: Xdebug's adapter
         // and older LLDBs stop at exceptions with only that.
-        if (stop.Reason == "exception")
-        {
-            await ShowAdapterExceptionAsync(session, thread, stop, version);
-        }
-        else if (IsPanicStop(stop))
+        if (IsPanicStop(stop))
         {
             ShowPanic();
+        }
+        else if (stop.Reason == "exception")
+        {
+            await ShowAdapterExceptionAsync(session, thread, stop, version);
         }
 
         StatusText = DescribeAdapterPause(stop);
@@ -677,7 +683,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     /// <returns><see langword="true"/> when the program was let go on.</returns>
     private async Task<bool> ContinuesPastHitCountAsync(DebugAdapterSession session, DapStoppedEventArgs stop, int thread, int version)
     {
-        if (stop.Reason != "breakpoint" || !Breakpoints.All.Any(BreakpointsViewModel.CountsHitsForAdapter))
+        if (stop.Reason != "breakpoint" || !Breakpoints.All.Any(b => BreakpointsViewModel.CountsHitsForAdapter(b) || (b.Condition is not null && EvaluatesConditionsForAdapter(session, b.FilePath))))
         {
             return false;
         }
@@ -694,9 +700,27 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
         if (version != _adapterPauses || !ReferenceEquals(session, _adapter) || frames.Count == 0
             || ToStackFrame(frames[0]).Location is not { } location
-            || Breakpoints.Find(location.FilePath, location.Line) is not { } breakpoint
-            || !BreakpointsViewModel.CountsHitsForAdapter(breakpoint)
-            || BreakpointHitCondition.Parse(breakpoint.HitCount) is not { } hitCondition)
+            || Breakpoints.Find(location.FilePath, location.Line) is not { } breakpoint)
+        {
+            return false;
+        }
+
+        // A condition the IDE evaluates, from the frame's locals: only hits where it holds count.
+        if (breakpoint.Condition is { } condition && EvaluatesConditionsForAdapter(session, breakpoint.FilePath))
+        {
+            var locals = await FrameLocalsAsync(session, frames[0].Id);
+            if (version != _adapterPauses || !ReferenceEquals(session, _adapter))
+            {
+                return false;
+            }
+
+            if (AdapterCondition.TryEvaluate(condition, locals, out var holds) && !holds)
+            {
+                return await ContinueAfterHitAsync(session, thread);
+            }
+        }
+
+        if (!BreakpointsViewModel.CountsHitsForAdapter(breakpoint) || BreakpointHitCondition.Parse(breakpoint.HitCount) is not { } hitCondition)
         {
             return false;
         }
@@ -704,10 +728,13 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         // A changed hit count counts again from zero, as the C# debugger's does.
         var hits = _adapterHits.TryGetValue(breakpoint, out var counted) && counted.HitCount == breakpoint.HitCount ? counted.Hits + 1 : 1;
         _adapterHits[breakpoint] = (breakpoint.HitCount!, hits);
-        if (hitCondition.IsMet(hits))
-        {
-            return false;
-        }
+        return !hitCondition.IsMet(hits) && await ContinueAfterHitAsync(session, thread);
+    }
+
+    /// <summary>Lets the program go on from a hit that does not stop.</summary>
+    /// <returns><see langword="false"/> when it could not go on, so the pause is shown.</returns>
+    private static async Task<bool> ContinueAfterHitAsync(DebugAdapterSession session, int thread)
+    {
 
         try
         {
@@ -719,6 +746,37 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             // The program could not go on: show where it stopped.
             return false;
         }
+    }
+
+    /// <summary>
+    /// Whether the IDE evaluates a file's breakpoint conditions for an adapter, which ignores them there: Java's
+    /// debugger compiles conditions as Java against a JDT project, so in a Kotlin file it stops on every hit.
+    /// </summary>
+    private static bool EvaluatesConditionsForAdapter(DebugAdapterSession session, string filePath) =>
+        session.Adapter.Id == "java"
+        && (filePath.EndsWith(".kt", StringComparison.OrdinalIgnoreCase) || filePath.EndsWith(".kts", StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>The locals of a frame, by name, as the adapter shows them; empty when they cannot be read.</summary>
+    private static async Task<Dictionary<string, string>> FrameLocalsAsync(DebugAdapterSession session, int frameId)
+    {
+        var values = new Dictionary<string, string>(StringComparer.Ordinal);
+        try
+        {
+            var scopes = await session.GetScopesAsync(frameId, CancellationToken.None);
+            if ((scopes.FirstOrDefault(s => s.IsLocals) ?? (scopes.Count > 0 ? scopes[0] : null)) is { } locals)
+            {
+                foreach (var variable in await session.GetVariablesAsync(locals.VariablesReference, CancellationToken.None))
+                {
+                    values.TryAdd(variable.Name, variable.Value);
+                }
+            }
+        }
+        catch (DebugAdapterException)
+        {
+            // Without the locals, the condition cannot be evaluated, and the breakpoint stops.
+        }
+
+        return values;
     }
 
     /// <summary>Reads a thread's call stack into the Call Stack panel.</summary>
@@ -1433,10 +1491,16 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     /// <summary>The function a Rust program calls when it panics, where LLDB stops it for Break on Unhandled Exceptions.</summary>
     private const string RustPanicFunction = "rust_panic";
 
-    /// <summary>Whether a stop is a Rust panic: the function breakpoint on <see cref="RustPanicFunction"/>.</summary>
+    /// <summary>Where the Swift runtime reports a fatal error, at which Swift's LLDB stops with a breakpoint of its own.</summary>
+    private const string SwiftRuntimeFailure = "_swift_runtime_on_report";
+
+    /// <summary>
+    /// Whether a stop is where the program fails as an exception would: a Rust panic, at the function breakpoint on
+    /// <see cref="RustPanicFunction"/>, or a Swift fatal error, which Swift's LLDB stops at as a breakpoint.
+    /// </summary>
     private bool IsPanicStop(DapStoppedEventArgs stop) =>
-        _adapterPanicStops && stop.Reason == "function breakpoint"
-        && _adapterFrames.Take(4).Any(f => f.Name.Contains(RustPanicFunction, StringComparison.Ordinal));
+        (_adapterPanicStops && stop.Reason == "function breakpoint" && _adapterFrames.Take(4).Any(f => f.Name.Contains(RustPanicFunction, StringComparison.Ordinal)))
+        || (stop.Reason is "breakpoint" or "exception" && _adapterFrames.Take(3).Any(f => f.Name.Contains(SwiftRuntimeFailure, StringComparison.Ordinal)));
 
     /// <summary>The exception helper of a Rust panic, at the program's own frame that panicked.</summary>
     private void ShowPanic()
@@ -1453,14 +1517,16 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             details.AppendLine();
         }
 
-        _exceptionHelper = new ExceptionHelperViewModel("panic", "The program panicked; the panic's message is in the Output panel. Continue lets it unwind and exit.", details.ToString().TrimEnd(), StartDebuggingCommand, StopDebuggingCommand);
+        _exceptionHelper = _adapterFrames.Take(3).Any(f => f.Name.Contains(SwiftRuntimeFailure, StringComparison.Ordinal))
+            ? new ExceptionHelperViewModel("Fatal error", "The program stopped at a fatal error; its message is in the Output panel.", details.ToString().TrimEnd(), StartDebuggingCommand, StopDebuggingCommand)
+            : new ExceptionHelperViewModel("panic", "The program panicked; the panic's message is in the Output panel. Continue lets it unwind and exit.", details.ToString().TrimEnd(), StartDebuggingCommand, StopDebuggingCommand);
     }
 
     private string DescribeAdapterPause(DapStoppedEventArgs stop)
     {
         if (IsPanicStop(stop))
         {
-            return "Exception: panic";
+            return "Exception: " + (_exceptionHelper?.ExceptionType ?? "panic");
         }
 
         var where = _adapterCurrent is { } location ? $"{Path.GetFileName(location.FilePath)}, line {location.Line.ToString(CultureInfo.CurrentCulture)}" : "external code";
