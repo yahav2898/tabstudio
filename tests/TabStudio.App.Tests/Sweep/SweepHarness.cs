@@ -607,7 +607,7 @@ internal sealed class SweepHarness : IDisposable
 
     private void OnUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
     {
-        Exception(e.Exception);
+        RecordException(e.Exception);
         e.Handled = true;
     }
 

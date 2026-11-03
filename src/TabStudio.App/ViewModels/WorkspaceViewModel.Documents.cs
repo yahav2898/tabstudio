@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Editing;
@@ -25,7 +26,7 @@ public sealed partial class WorkspaceViewModel
     /// <summary>The selected tab.</summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasDocuments), nameof(CaretText), nameof(Breadcrumb))]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(FormatDocumentCommand), nameof(ToggleCommentCommand), nameof(FindCommand), nameof(ReplaceCommand), nameof(UndoCommand), nameof(RedoCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(FormatDocumentCommand), nameof(ToggleCommentCommand), nameof(FindCommand), nameof(ReplaceCommand), nameof(UndoCommand), nameof(RedoCommand), nameof(CutCommand), nameof(CopyCommand), nameof(PasteCommand), nameof(SelectAllCommand), nameof(GoToLineCommand))]
     public partial DocumentViewModel? ActiveDocument { get; set; }
 
     /// <summary>Whether any document is open.</summary>
@@ -272,24 +273,84 @@ public sealed partial class WorkspaceViewModel
     [RelayCommand(CanExecute = nameof(HasDocuments))]
     private void Redo() => ActiveDocument?.RequestAction(EditorAction.Redo);
 
+    /// <summary>
+    /// Edit &gt; Go To Line (Ctrl+G), and a tap on the caret's place in the status bar: asks for a line number and
+    /// moves the caret there. A tablet had no way to reach a line it was told about, such as one in a stack trace
+    /// or a review comment, other than scrolling to it.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(HasDocuments))]
+    private async Task GoToLineAsync()
+    {
+        if (ActiveDocument is not { } document)
+        {
+            return;
+        }
+
+        var count = document.Document.LineCount;
+        var answer = await Prompt.AskAsync("Go To Line", $"Line number (1 - {count.ToString(CultureInfo.CurrentCulture)}):", "Go To",
+            document.CaretLine.ToString(CultureInfo.CurrentCulture));
+        if (answer is null || !ReferenceEquals(document, ActiveDocument))
+        {
+            return;
+        }
+
+        if (!int.TryParse(answer.Trim(), NumberStyles.Integer, CultureInfo.CurrentCulture, out var line) || line < 1)
+        {
+            StatusText = $"\"{answer.Trim()}\" is not a line number";
+            return;
+        }
+
+        document.NavigateTo(Math.Min(line, count), 1);
+        document.RequestAction(EditorAction.Focus);
+    }
+
+    /// <summary>Edit &gt; Cut: on a tablet without a keyboard, the way to Ctrl+X besides a long press.</summary>
+    [RelayCommand(CanExecute = nameof(HasDocuments))]
+    private void Cut() => ActiveDocument?.RequestAction(EditorAction.Cut);
+
+    /// <summary>Edit &gt; Copy.</summary>
+    [RelayCommand(CanExecute = nameof(HasDocuments))]
+    private void Copy() => ActiveDocument?.RequestAction(EditorAction.Copy);
+
+    /// <summary>Edit &gt; Paste.</summary>
+    [RelayCommand(CanExecute = nameof(HasDocuments))]
+    private void Paste() => ActiveDocument?.RequestAction(EditorAction.Paste);
+
+    /// <summary>
+    /// Edit &gt; Select All. The editor's Ctrl+A was the only way to select a whole document: by touch, a finger had
+    /// to drag across every line.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(HasDocuments))]
+    private void SelectAll() => ActiveDocument?.RequestAction(EditorAction.SelectAll);
+
     [RelayCommand]
     private void NextDocument() => CycleDocument(1);
 
     [RelayCommand]
     private void PreviousDocument() => CycleDocument(-1);
 
-    [RelayCommand]
+    /// <summary>Goes back to the document shown before; unavailable, as its toolbar button is, when there is none.</summary>
+    [RelayCommand(CanExecute = nameof(CanNavigateBack))]
     private void NavigateBack() => MoveInHistory(-1);
 
-    [RelayCommand]
+    /// <summary>Goes forward again after going back; unavailable when there is nowhere to go.</summary>
+    [RelayCommand(CanExecute = nameof(CanNavigateForward))]
     private void NavigateForward() => MoveInHistory(1);
 
+    private bool CanNavigateBack() => HistoryTarget(-1) >= 0;
+
+    private bool CanNavigateForward() => HistoryTarget(1) >= 0;
+
+    /// <summary>
+    /// Shows the active document in Solution Explorer. It selected the file in Solution Explorer even when another
+    /// tool window, such as Git Changes, was on the side bar, where nobody saw it.
+    /// </summary>
     [RelayCommand]
     private void SyncWithActiveDocument()
     {
         if (ActiveDocument is { } document)
         {
-            IsSideBarVisible = true;
+            SelectSideBarPanel(SideBarPanel.SolutionExplorer);
             Explorer.Reveal(document.FilePath);
         }
     }
@@ -510,24 +571,42 @@ public sealed partial class WorkspaceViewModel
         _history.RemoveRange(_historyIndex + 1, _history.Count - _historyIndex - 1);
         _history.Add(path);
         _historyIndex = _history.Count - 1;
+        UpdateNavigationCommands();
     }
 
     private void MoveInHistory(int step)
     {
-        var target = _historyIndex + step;
-        while (target >= 0 && target < _history.Count)
+        if (HistoryTarget(step) is var target && target >= 0
+            && Documents.FirstOrDefault(d => d.FilePath == _history[target]) is { } document)
         {
-            if (Documents.FirstOrDefault(d => d.FilePath == _history[target]) is { } document)
-            {
-                _historyIndex = target;
-                _navigatingHistory = true;
-                ActiveDocument = document;
-                _navigatingHistory = false;
-                return;
-            }
-
-            target += step;
+            _historyIndex = target;
+            _navigatingHistory = true;
+            ActiveDocument = document;
+            _navigatingHistory = false;
         }
+
+        UpdateNavigationCommands();
+    }
+
+    /// <summary>Where Navigate Backward (-1) or Forward (1) goes: the nearest document in the history still open, or -1.</summary>
+    private int HistoryTarget(int step)
+    {
+        for (var target = _historyIndex + step; target >= 0 && target < _history.Count; target += step)
+        {
+            if (Documents.Any(d => d.FilePath == _history[target]))
+            {
+                return target;
+            }
+        }
+
+        return -1;
+    }
+
+    /// <summary>Enables Navigate Backward and Forward, in the menu and the toolbar, only when they go somewhere.</summary>
+    private void UpdateNavigationCommands()
+    {
+        NavigateBackCommand.NotifyCanExecuteChanged();
+        NavigateForwardCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>

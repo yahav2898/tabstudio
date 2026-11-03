@@ -67,7 +67,14 @@ public class AdaptiveBarItem : Button
         Content = _face;
         AddHandler(Gestures.HoldingEvent, OnHolding);
         UpdateFace();
+        UpdateInteractivity();
     }
+
+    /// <summary>
+    /// Whether the item is a label: it has no command and no menu, as the status bar's indentation, encoding and
+    /// language have. Such an item looked like a button and took taps and the keyboard focus, and did nothing.
+    /// </summary>
+    public bool IsLabel => Command is null && Flyout is null;
 
     /// <inheritdoc cref="IconProperty"/>
     public Geometry? Icon
@@ -157,6 +164,10 @@ public class AdaptiveBarItem : Button
         {
             UpdateFace();
         }
+        else if (change.Property == CommandProperty || change.Property == FlyoutProperty)
+        {
+            UpdateInteractivity();
+        }
         else if (change.Property == FontSizeProperty)
         {
             // The label is body text unless the item or its theme sets a size, as the status bar's 12 does.
@@ -205,6 +216,15 @@ public class AdaptiveBarItem : Button
             ToolTip.SetIsOpen(this, true);
             e.Handled = true;
         }
+    }
+
+    /// <summary>A label takes no taps and no keyboard focus; anything with a command or a menu does.</summary>
+    private void UpdateInteractivity()
+    {
+        var label = IsLabel;
+        Focusable = !label;
+        IsHitTestVisible = !label;
+        Classes.Set("label", label);
     }
 
     private void UpdateFace()

@@ -244,13 +244,13 @@ public sealed partial class EveryCommandTests
                 await sweep.SettleAsync(200);
             }
 
-            var next = Buttons(window).FirstOrDefault(b => !done.Contains(Key(b)));
+            var next = Buttons(window).FirstOrDefault(b => !done.Contains(NameOf(b)));
             if (next is null)
             {
                 break;
             }
 
-            var key = Key(next);
+            var key = NameOf(next);
             done.Add(key);
             if (Destructive().IsMatch(key))
             {
@@ -567,13 +567,13 @@ public sealed partial class EveryCommandTests
         sweep.Audit(state);
         for (var round = 0; round < 80; round++)
         {
-            var next = Buttons(sweep.Window).FirstOrDefault(b => !done.Contains(Key(b)));
+            var next = Buttons(sweep.Window).FirstOrDefault(b => !done.Contains(NameOf(b)));
             if (next is null)
             {
                 return;
             }
 
-            var key = Key(next);
+            var key = NameOf(next);
             done.Add(key);
             if (Destructive().IsMatch(key) || next.Name is "RunButton" or "MenuButton")
             {
@@ -705,7 +705,7 @@ public sealed partial class EveryCommandTests
             && !b.GetVisualAncestors().Any(a => a is ListBoxItem or TreeViewItem or ScrollBar or AvaloniaEdit.TextEditor))];
 
     /// <summary>A button's name for the report, the same wherever it shows: the view it is in and what it says.</summary>
-    private static string Key(Button button)
+    private static string NameOf(Button button)
     {
         var view = button.GetVisualAncestors().OfType<UserControl>().FirstOrDefault()?.GetType().Name ?? "Window";
         var label = button switch
