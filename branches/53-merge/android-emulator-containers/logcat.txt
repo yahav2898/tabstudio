@@ -1,43 +1,41 @@
-11-04 00:48:35.024  2797  2797 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-11-04 00:48:35.031  2797  2797 I AndroidRuntime: Using default boot image
-11-04 00:48:35.031  2797  2797 I AndroidRuntime: Leaving lock profiling enabled
-11-04 00:48:35.177  2797  2797 D AndroidRuntime: Calling main entry com.android.commands.am.Am
-11-04 00:48:35.181  2797  2797 I AndroidRuntime: VM exiting with result code 0.
-11-04 00:48:35.574  2817  2817 D nativeloader: Load /data/app/~~lyBOTHQs7RllDooNQx2gFg==/com.tabstudio.ide-pLKx-wpiqADrrkui0KPkFA==/lib/x86_64/libmonosgen-2.0.so using ns clns-7 from class loader (caller=/data/app/~~lyBOTHQs7RllDooNQx2gFg==/com.tabstudio.ide-pLKx-wpiqADrrkui0KPkFA==/base.apk): ok
-11-04 00:48:35.585  2817  2817 D nativeloader: Load /data/app/~~lyBOTHQs7RllDooNQx2gFg==/com.tabstudio.ide-pLKx-wpiqADrrkui0KPkFA==/lib/x86_64/libmonodroid.so using ns clns-7 from class loader (caller=/data/app/~~lyBOTHQs7RllDooNQx2gFg==/com.tabstudio.ide-pLKx-wpiqADrrkui0KPkFA==/base.apk): ok
-11-04 00:48:35.870  2817  2817 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
-11-04 00:48:35.870  2817  2817 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
-11-04 00:48:41.150  3392  3413 I cr_LibraryLoader: Loading monochrome_64 from within /data/app/~~aY91X_-yttGCg-YkRmoNrA==/com.android.chrome-aFzrsvoNS_WNHIIf4TE4WA==/Chrome.apk
-11-04 00:48:41.170  3392  3413 I cr_Linker: loadLibraryImplLocked: monochrome_64, relroMode=1
-11-04 00:48:41.281  3392  3413 D nativeloader: Load /data/app/~~k5fC-T8L08CotPzoaT15Dg==/com.google.android.trichromelibrary_636771938-HQwlCjp-7Rlwy7hp5a05rg==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~aY91X_-yttGCg-YkRmoNrA==/com.android.chrome-aFzrsvoNS_WNHIIf4TE4WA==/Chrome.apk): ok
-11-04 00:48:42.807  2817  2817 I TabStudio: TABSTUDIO_SELFTEST_START shard=containers
-11-04 00:48:50.202  2817  3100 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
-11-04 00:49:31.439  2817  3117 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'utimensat' may fail
-11-04 00:49:34.882  2817  3115 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'link' may fail
-11-04 00:49:34.888  2817  2817 W com.tabstudio.ide: type=1400 audit(0.0:53): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/tmp/ee6d6631cf7f4ad6856243520cd88854/usr/share/zoneinfo/Africa/Accra" dev="dm-46" ino=331 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-11-04 00:49:34.888  2817  2817 W com.tabstudio.ide: type=1400 audit(0.0:55): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/tmp/ee6d6631cf7f4ad6856243520cd88854/usr/share/zoneinfo/Africa/Asmara" dev="dm-46" ino=334 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-11-04 00:49:35.862  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'pipe2' may fail
-11-04 00:49:35.863  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'fcntl' may fail
-11-04 00:49:35.863  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_init' may fail
-11-04 00:49:35.864  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_init' may fail
-11-04 00:49:35.864  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_adddup2' may fail
-11-04 00:49:35.864  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setflags' may fail
-11-04 00:49:35.864  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setpgroup' may fail
-11-04 00:49:35.864  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'sigemptyset' may fail
-11-04 00:49:35.864  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'sigaddset' may fail
-11-04 00:49:35.864  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setsigdefault' may fail
-11-04 00:49:35.864  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setsigmask' may fail
-11-04 00:49:35.866  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn' may fail
-11-04 00:49:35.881  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_destroy' may fail
-11-04 00:49:35.882  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_destroy' may fail
-11-04 00:49:35.882  2817  3476 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'close' may fail
-11-04 00:49:35.887  2817  4545 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'waitpid' may fail
-11-04 00:49:35.904  2817  4546 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'read' may fail
-11-04 00:49:53.124  2817  2817 W com.tabstudio.ide: type=1400 audit(0.0:17500): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/containers/1b069064f5899cfcb749f665ac33bbdb8e8fbb2c6d04d6625e75dda61a6b5ca6/rootfs/docker-entrypoint.sh" dev="dm-46" ino=76098 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-11-04 00:49:53.124  2817  2817 W com.tabstudio.ide: type=1400 audit(0.0:17501): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/containers/1b069064f5899cfcb749f665ac33bbdb8e8fbb2c6d04d6625e75dda61a6b5ca6/rootfs/docker-entrypoint.d/10-listen-on-ipv6-by-default.sh" dev="dm-46" ino=76099 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-11-04 00:49:53.124  2817  2817 W com.tabstudio.ide: type=1400 audit(0.0:17502): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/containers/1b069064f5899cfcb749f665ac33bbdb8e8fbb2c6d04d6625e75dda61a6b5ca6/rootfs/docker-entrypoint.d/15-local-resolvers.envsh" dev="dm-46" ino=76100 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-11-04 00:49:53.751  2817  2817 D nativeloader: Load /data/app/~~k5fC-T8L08CotPzoaT15Dg==/com.google.android.trichromelibrary_636771938-HQwlCjp-7Rlwy7hp5a05rg==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-9 from class loader (caller=/data/app/~~aMHfV8fOWViFh-wxmeuiEw==/com.google.android.webview-gE14J0qid7X0GL2m2gjIgQ==/WebViewGoogle.apk): ok
-11-04 00:49:53.973  5007  5007 D nativeloader: Load /data/app/~~k5fC-T8L08CotPzoaT15Dg==/com.google.android.trichromelibrary_636771938-HQwlCjp-7Rlwy7hp5a05rg==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~aMHfV8fOWViFh-wxmeuiEw==/com.google.android.webview-gE14J0qid7X0GL2m2gjIgQ==/WebViewGoogle.apk): ok
-11-04 00:49:54.853  2817  3117 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'write' may fail
-11-04 00:49:54.994  2817  2817 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'kill' may fail
-11-04 00:49:55.121  2817  2817 I TabStudio: TABSTUDIO_SELFTEST_OK 71.5 s: Containers: PostgreSQL query=42 and TCP connected; Redis PING=PONG; nginx rendered in web preview; docker ps and exec stdin/output/exit; 3 verified images; 71.5 s; postgres:17-alpine@sha256:e4cb93687b062cd25a0e8f672d85a7708235009d70d31f8a7698d9370092a9c4, redis:7-alpine@sha256:1cf73a2f04808e55a8bd2f5706c2aa0ebb0f71938f93deb7af79f48311cd5cb9, nginx:alpine@sha256:2db7d28517d1fba17c2da3210395f7be11a11b419246ad0da2edf782af72f367; 8 run variables
+11-04 01:59:51.412  2907  2907 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-04 01:59:51.415  2907  2907 I AndroidRuntime: Using default boot image
+11-04 01:59:51.415  2907  2907 I AndroidRuntime: Leaving lock profiling enabled
+11-04 01:59:51.572  2907  2907 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+11-04 01:59:51.621  2907  2907 I AndroidRuntime: VM exiting with result code 0.
+11-04 01:59:51.854  2948  2948 D nativeloader: Load /data/app/~~PGorYD3a53nJhAOdRHE5Ig==/com.tabstudio.ide-ypXTmz_wQoIqs2fXAwNR5g==/lib/x86_64/libmonosgen-2.0.so using ns clns-7 from class loader (caller=/data/app/~~PGorYD3a53nJhAOdRHE5Ig==/com.tabstudio.ide-ypXTmz_wQoIqs2fXAwNR5g==/base.apk): ok
+11-04 01:59:51.857  2948  2948 D nativeloader: Load /data/app/~~PGorYD3a53nJhAOdRHE5Ig==/com.tabstudio.ide-ypXTmz_wQoIqs2fXAwNR5g==/lib/x86_64/libmonodroid.so using ns clns-7 from class loader (caller=/data/app/~~PGorYD3a53nJhAOdRHE5Ig==/com.tabstudio.ide-ypXTmz_wQoIqs2fXAwNR5g==/base.apk): ok
+11-04 01:59:52.065  2948  2948 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
+11-04 01:59:52.065  2948  2948 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
+11-04 01:59:52.928  3051  3051 D nativeloader: Load /data/app/~~vXLtaL8PACSn4WCr-aITyg==/com.google.android.trichromelibrary_636771938-hUrq9xGoj7PVPr2uiaweng==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~HzxP-haMsfJdYq-KrMbUhA==/com.google.android.webview-I_CSMqLmPQ6aWxhlgHiRVA==/WebViewGoogle.apk): ok
+11-04 01:59:59.044  2948  2948 I TabStudio: TABSTUDIO_SELFTEST_START shard=containers
+11-04 02:00:00.139  3617  3663 I cr_LibraryLoader: Loading monochrome_64 from within /data/app/~~zrs1AvKEaf-1OJ6MBtZ-Sg==/com.android.chrome-vhBOKzf0P2wkD0Abt_2Oug==/Chrome.apk
+11-04 02:00:00.236  3617  3663 I cr_Linker: loadLibraryImplLocked: monochrome_64, relroMode=1
+11-04 02:00:00.322  3617  3663 D nativeloader: Load /data/app/~~vXLtaL8PACSn4WCr-aITyg==/com.google.android.trichromelibrary_636771938-hUrq9xGoj7PVPr2uiaweng==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~zrs1AvKEaf-1OJ6MBtZ-Sg==/com.android.chrome-vhBOKzf0P2wkD0Abt_2Oug==/Chrome.apk): ok
+11-04 02:00:05.610  2948  3212 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
+11-04 02:00:47.115  2948  3694 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'utimensat' may fail
+11-04 02:00:50.142  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'link' may fail
+11-04 02:00:50.140  2948  2948 W com.tabstudio.ide: type=1400 audit(0.0:53): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/tmp/3027f31b505444528dc5409e8f3ba460/usr/share/zoneinfo/Africa/Accra" dev="dm-46" ino=667 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+11-04 02:00:50.140  2948  2948 W com.tabstudio.ide: type=1400 audit(0.0:55): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/tmp/3027f31b505444528dc5409e8f3ba460/usr/share/zoneinfo/Africa/Asmara" dev="dm-46" ino=670 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+11-04 02:00:51.124  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'pipe2' may fail
+11-04 02:00:51.125  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'fcntl' may fail
+11-04 02:00:51.126  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_init' may fail
+11-04 02:00:51.126  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_init' may fail
+11-04 02:00:51.126  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_adddup2' may fail
+11-04 02:00:51.126  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setflags' may fail
+11-04 02:00:51.126  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setpgroup' may fail
+11-04 02:00:51.126  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'sigemptyset' may fail
+11-04 02:00:51.126  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'sigaddset' may fail
+11-04 02:00:51.126  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setsigdefault' may fail
+11-04 02:00:51.127  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setsigmask' may fail
+11-04 02:00:51.127  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn' may fail
+11-04 02:00:51.140  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_destroy' may fail
+11-04 02:00:51.140  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_destroy' may fail
+11-04 02:00:51.140  2948  3223 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'close' may fail
+11-04 02:00:51.146  2948  4740 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'waitpid' may fail
+11-04 02:00:51.161  2948  4741 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'read' may fail
+11-04 02:00:51.162  2948  4742 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'read' may fail
+11-04 02:01:09.993  2948  2948 D nativeloader: Load /data/app/~~vXLtaL8PACSn4WCr-aITyg==/com.google.android.trichromelibrary_636771938-hUrq9xGoj7PVPr2uiaweng==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-9 from class loader (caller=/data/app/~~HzxP-haMsfJdYq-KrMbUhA==/com.google.android.webview-I_CSMqLmPQ6aWxhlgHiRVA==/WebViewGoogle.apk): ok
+11-04 02:01:10.857  2948  4115 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'write' may fail
+11-04 02:01:10.900  2948  2948 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'kill' may fail
+11-04 02:01:11.163  2948  2948 I TabStudio: TABSTUDIO_SELFTEST_OK 71.2 s: Containers: PostgreSQL query=42 and TCP connected; Redis PING=PONG; nginx rendered in web preview; docker ps and exec stdin/output/exit; 3 verified images; 71.2 s; postgres:17-alpine@sha256:e4cb93687b062cd25a0e8f672d85a7708235009d70d31f8a7698d9370092a9c4, redis:7-alpine@sha256:1cf73a2f04808e55a8bd2f5706c2aa0ebb0f71938f93deb7af79f48311cd5cb9, nginx:alpine@sha256:2db7d28517d1fba17c2da3210395f7be11a11b419246ad0da2edf782af72f367; 8 run variables
