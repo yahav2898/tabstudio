@@ -1,12 +1,9 @@
-# touch-landscape (light): 142 actions, 11 problems
-covered	tap (landscape: Containers): ContainersView > "Cancel"	A tap on its middle 1124.5, 274 reaches ContentPresenter#PART_ContentPresenter < ContainersView < Panel < Grid#SideBar < Border#SideBarFrame < Grid#MainArea instead (the button is 61, 44 in a 1280, 800 window). [touch-landscape-light-002.png]
+# touch-landscape (light): 142 actions, 8 problems
 no-effect	tap (landscape): WorkspaceView > "Save All"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (landscape): WorkspaceView > "Output"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (landscape: Swarm): UiTestRecorderView > "Record"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (landscape: Database): DatabaseExplorerView > "Update Database"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (landscape: Database): DatabaseExplorerView > "Add"	It changed nothing a person can see: no panel, dialog, text, selection or status.
-no-effect	tap (landscape: Containers): ContainersView > "Cancel"	It changed nothing a person can see: no panel, dialog, text, selection or status.
-no-effect	tap (landscape: Containers): ContainersView > "Start"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (landscape: Containers): ContainersView > "Stop"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (landscape: Containers): ContainersView > "Restart"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 overlap	tap (landscape): PropertiesView > HeaderButton "Show or hide Properties"	Grid#SideBar > PropertiesView#PropertiesPanel > ContentPresenter#PART_ContentPresenter > Button#HeaderButton: Button HeaderButton lies under GridSplitter PropertiesSplitter: 330 × 3 dips of them overlap, and a tap there goes to GridSplitter PropertiesSplitter. [touch-landscape-light-001.png]

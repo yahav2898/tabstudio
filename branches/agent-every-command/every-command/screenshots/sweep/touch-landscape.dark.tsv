@@ -1,9 +1,10 @@
-# touch-landscape (dark): 142 actions, 8 problems
+# touch-landscape (dark): 141 actions, 9 problems
 no-effect	tap (landscape): WorkspaceView > "Save All"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (landscape): WorkspaceView > "Output"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (landscape: Swarm): UiTestRecorderView > "Record"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (landscape: Database): DatabaseExplorerView > "Update Database"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (landscape: Database): DatabaseExplorerView > "Add"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (landscape: Containers): ContainersView > "Start"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (landscape: Containers): ContainersView > "Stop"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (landscape: Containers): ContainersView > "Restart"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 overlap	tap (landscape): PropertiesView > HeaderButton "Show or hide Properties"	Grid#SideBar > PropertiesView#PropertiesPanel > ContentPresenter#PART_ContentPresenter > Button#HeaderButton: Button HeaderButton lies under GridSplitter PropertiesSplitter: 330 × 3 dips of them overlap, and a tap there goes to GridSplitter PropertiesSplitter. [touch-landscape-dark-001.png]
