@@ -3,7 +3,7 @@ Toolchain projects:
   python: /home/runner/work/_temp/real-repos/itsdangerous/pyproject.toml
 Startup project: python /home/runner/work/_temp/real-repos/itsdangerous/pyproject.toml
 Set up in 5.3 s
-Tests: 297 passed, 0 failed, 0 skipped of 314: 297 tests run in 4.6 sec: 297 passed, 0 failed, 0 skipped.
+Tests: 297 passed, 0 failed, 0 skipped of 314: 297 tests run in 4.7 sec: 297 passed, 0 failed, 0 skipped.
 Project setup:
 ------ itsdangerous: pip install -e . ------
 Reading which Python versions the 67 pinned packages have wheels for, from PyPI.
@@ -25,8 +25,8 @@ Obtaining file:///home/runner/work/_temp/real-repos/itsdangerous
 Building wheels for collected packages: itsdangerous
   Building editable for itsdangerous (pyproject.toml): started
   Building editable for itsdangerous (pyproject.toml): finished with status 'done'
-  Created wheel for itsdangerous: filename=itsdangerous-2.3.0.dev0-py3-none-any.whl size=3140 sha256=19b43c962df81d0e142a60ac619932193ed4fca59debb745fa67f8643810fdc9
-  Stored in directory: /tmp/pip-ephem-wheel-cache-uj_dt8mm/wheels/12/51/48/48d94c0992a8b2913a6151794b7468c48d42eaf0439c916ae9
+  Created wheel for itsdangerous: filename=itsdangerous-2.3.0.dev0-py3-none-any.whl size=3140 sha256=7fae5422f3a73590e6ba14d5d6869860431f534b959cad3ef08624f5bea530a2
+  Stored in directory: /tmp/pip-ephem-wheel-cache-j5oc9scx/wheels/12/51/48/48d94c0992a8b2913a6151794b7468c48d42eaf0439c916ae9
 Successfully built itsdangerous
 Installing collected packages: itsdangerous
 Successfully installed itsdangerous-2.3.0.dev0
@@ -39,7 +39,7 @@ Python 3.13 for itsdangerous: pyproject.toml allows Python >=3.10; the newest Py
 Installed 1 package into .venv with Python 3.13. The full log is in Output > Project Setup.
 ========== pip install -e .: succeeded ==========
 ========== Running itsdangerous's tests with Pytest ==========
-> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''ruff'\'' '\''tox'\'' '\''tox-uv'\'' '\''freezegun'\'' '\''pytest'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/itsdangerous/.tabstudio/test-results/65094bf4e6ef44199cd793544f87efb1/pytest.xml
+> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''ruff'\'' '\''tox'\'' '\''tox-uv'\'' '\''freezegun'\'' '\''pytest'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/itsdangerous/.tabstudio/test-results/d24e2c66f4ed4f8d9f2d0f8f8c176eb9/pytest.xml
 Installing what the tests need
 ============================= test session starts ==============================
 platform linux -- Python 3.13.18, pytest-9.2.0, pluggy-1.7.0
@@ -59,6 +59,6 @@ tests/test_itsdangerous/test_url_safe.py ............................... [ 66%]
 ........................................................................ [ 90%]
 ...........................                                              [100%]
 
-- generated xml file: /home/runner/work/_temp/real-repos/itsdangerous/.tabstudio/test-results/65094bf4e6ef44199cd793544f87efb1/pytest.xml -
-============================= 297 passed in 0.76s ==============================
+- generated xml file: /home/runner/work/_temp/real-repos/itsdangerous/.tabstudio/test-results/d24e2c66f4ed4f8d9f2d0f8f8c176eb9/pytest.xml -
+============================= 297 passed in 0.79s ==============================
 
