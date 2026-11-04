@@ -5,30 +5,30 @@ Overlay #1, displayId 2: a presentation display
 Performing Streamed Install
 Success
 Measurements:
-Startup to self test start: 18.83 s
-TabStudio startup: first frame at 18682 ms, ready at 18682 ms; process start to activity 5718 ms, application +895 ms, styles +994 ms, services +1300 ms, theme +197 ms, view models +3132 ms, main view +3449 ms, start screen +30 ms, first frame +2968 ms
-TabStudio UI stalls: 184 over 100 ms (51 over 250 ms, 12 over 1 s), 64.1 s in all, longest 7586 ms during the step that ended with: Extracting the sample; answer p50 4.4 ms, p95 52.5 ms, p99 137.2 ms over 10741 questions in 411 s
-TabStudio UI timings: workspace view 2849 ms, document view 1984 ms, workspace view model 1839 ms, LocalsView 991 ms, document view 755 ms, document view 755 ms, workspace view model 609 ms, CallStackView 13 ms, workspace view model 12 ms
-TabStudio UI stall: 7586 ms at 0.7 s during the step that ended with: Extracting the sample
-TabStudio UI stall: 6533 ms at 9.0 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
-TabStudio UI stall: 2264 ms at 19.5 s during opening the session's documents → creating a document's view → starting restore and analysis
-TabStudio UI stall: 2153 ms at 311.5 s during creating a document's view
-TabStudio UI stall: 1692 ms at 21.8 s during the step that ended with: C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting
-TabStudio UI stall: 1387 ms at 325.3 s during creating the LocalsView → creating the workspace's view model → showing the workspace → reading the solution → showing the solution in Solution Explorer → databases, startup projects and toolchains
-TabStudio UI stall: 1224 ms at 326.9 s during starting restore and analysis → creating a document's view
-TabStudio UI stall: 1190 ms at 46.3 s during the step that ended with: C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting
-TabStudio UI stall: 1086 ms at 15.6 s during reading the solution
-TabStudio UI stall: 1037 ms at 53.5 s during the step that ended with: C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting
-TabStudio UI stall: 1031 ms at 323.4 s during creating the CallStackView → creating the LocalsView
-TabStudio UI stall: 1018 ms at 237.4 s during the step that ended with: C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting
-TabStudio UI stall: 925 ms at 395.5 s during the step that ended with: Java debugging: stopped at 10, answer = 42, console input and completed greeting
-TabStudio UI stall: 863 ms at 99.3 s during the step that ended with: C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting
-TabStudio UI stall: 673 ms at 8.3 s during the step that ended with: Extracting the sample
+Startup to self test start: 12.61 s
+TabStudio startup: first frame at 12274 ms, ready at 12274 ms; process start to activity 3355 ms, application +893 ms, styles +883 ms, services +671 ms, theme +155 ms, view models +1825 ms, main view +2399 ms, start screen +65 ms, first frame +2027 ms
+TabStudio UI stalls: 125 over 100 ms (35 over 250 ms, 7 over 1 s), 43.0 s in all, longest 6289 ms during the step that ended with: Extracting the sample; answer p50 3.9 ms, p95 43.9 ms, p99 130.1 ms over 8112 questions in 293 s
+TabStudio UI timings: workspace view 1719 ms, workspace view model 1561 ms, document view 900 ms, document view 557 ms, document view 234 ms, workspace view model 99 ms, LocalsView 68 ms, CallStackView 44 ms, workspace view model 9 ms
+TabStudio UI stall: 6289 ms at 0.6 s during the step that ended with: Extracting the sample
+TabStudio UI stall: 4219 ms at 6.9 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 1378 ms at 15.8 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 1330 ms at 17.2 s during the step that ended with: C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting
+TabStudio UI stall: 1192 ms at 224.3 s during creating the LocalsView → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 1181 ms at 210.2 s during creating a document's view
+TabStudio UI stall: 1145 ms at 222.4 s during creating the CallStackView → creating the LocalsView
+TabStudio UI stall: 941 ms at 11.1 s during reading the solution
+TabStudio UI stall: 764 ms at 288.2 s during creating a document's view
+TabStudio UI stall: 675 ms at 13.1 s during backing services
+TabStudio UI stall: 657 ms at 37.6 s during the step that ended with: C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting
+TabStudio UI stall: 650 ms at 274.2 s during creating a document's view
+TabStudio UI stall: 628 ms at 259.1 s during creating a document's view
+TabStudio UI stall: 616 ms at 263.6 s during creating a document's view
+TabStudio UI stall: 608 ms at 225.9 s during creating a document's view
 Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
- Native Heap 337002 336988 8 12613 337944 366708 358124 3494
- Dalvik Heap 1923 1892 0 113 3920 6941 3471 3470
- TOTAL 737143 639208 14280 80054 764324 373649 361595 6964
- TOTAL PSS: 737143 TOTAL RSS: 764324 TOTAL SWAP PSS: 80054
-TABSTUDIO_SELFTEST_OK 411.0 s: Shard: compiled | C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting | Java debugging: stopped at 10, answer = 42, console input and completed greeting
+ Native Heap 331061 330992 64 18363 332020 365936 357896 3383
+ Dalvik Heap 1930 1904 0 142 3864 6957 3479 3478
+ TOTAL 729072 612196 9164 104751 716464 372893 361375 6861
+ TOTAL PSS: 729072 TOTAL RSS: 716464 TOTAL SWAP PSS: 104751
+TABSTUDIO_SELFTEST_OK 292.6 s: Shard: compiled | C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting | Java debugging: stopped at 10, answer = 42, console input and completed greeting
 Shard: compiled
-Seconds from launch to verdict: 434
+Seconds from launch to verdict: 308
