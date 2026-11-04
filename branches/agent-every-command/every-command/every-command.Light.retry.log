@@ -1,39 +1,37 @@
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.16]   Discovering: TabStudio.App.Tests
-[xUnit.net 00:00:00.39]   Discovered:  TabStudio.App.Tests
-[xUnit.net 00:00:00.43]   Starting:    TabStudio.App.Tests
+[xUnit.net 00:00:00.14]   Discovering: TabStudio.App.Tests
+[xUnit.net 00:00:00.43]   Discovered:  TabStudio.App.Tests
+[xUnit.net 00:00:00.46]   Starting:    TabStudio.App.Tests
   Passed TabStudio.App.Tests.Sweep.TabletSituationTests.Hebrew_and_IME_composition_in_the_editor_Find_Replace_and_the_Terminal [12 s]
   Passed TabStudio.App.Tests.Sweep.TabletSituationTests.Rotating_and_going_to_the_background_during_a_build_and_a_debug_session [4 s]
-  Passed TabStudio.App.Tests.Sweep.TabletSituationTests.Every_tool_window_fits_every_screen_and_window_size [59 s]
+  Passed TabStudio.App.Tests.Sweep.TabletSituationTests.Every_tool_window_fits_every_screen_and_window_size [1 m]
   Passed TabStudio.App.Tests.Sweep.TabletSituationTests.A_hardware_keyboard_attached_and_detached_and_the_on_screen_keyboard_over_the_caret [4 s]
 Good morning, developer! This program was compiled and run on your tablet.
 Statically typed languages, oldest first:
   C#         since 2000 (26 years)
   Rust       since 2015 (11 years)
-  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_key_gesture_the_IDE_shows_runs_its_command [36 s]
-  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_menu_and_search_command_runs_without_an_error_on_a_tablet [5 m 3 s]
-[xUnit.net 00:09:53.74]     TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_shell_and_its_tool_windows_works_by_touch_in_both_orientations [FAIL]
-[xUnit.net 00:09:53.74]       The sweep "touch-portrait" found 6 problems in 150 actions:
-[xUnit.net 00:09:53.74]       covered: tap (portrait): WorkspaceView > "Terminal": A tap on its middle reaches Border instead.
-[xUnit.net 00:09:53.74]       covered: tap (portrait: Agent): AgentPanelView > "Save": A tap on its middle reaches ScrollContentPresenter#PART_ContentPresenter instead.
-[xUnit.net 00:09:53.74]       no-effect: tap (portrait: Agent): AgentPanelView > "Save": It changed nothing a person can see: no panel, dialog, text, selection or status.
-[xUnit.net 00:09:53.74]       covered: tap (portrait: Terminal): TerminalPanelView > "~": A tap on its middle reaches ContentPresenter#PART_ContentPresenter instead.
-[xUnit.net 00:09:53.74]       covered: tap (portrait: Terminal): TerminalPanelView > "/": A tap on its middle reaches TextBlock instead.
-[xUnit.net 00:09:53.74]       covered: tap (portrait: Terminal): TerminalPanelView > "-": A tap on its middle reaches TextBlock instead.
-[xUnit.net 00:09:53.74]       Stack Trace:
-[xUnit.net 00:09:53.74]         /_/tests/TabStudio.App.Tests/Sweep/EveryCommandTests.cs(222,0): at TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_shell_and_its_tool_windows_works_by_touch_in_both_orientations()
-[xUnit.net 00:09:53.74]         --- End of stack trace from previous location ---
-  Failed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_shell_and_its_tool_windows_works_by_touch_in_both_orientations [2 m 52 s]
+  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_key_gesture_the_IDE_shows_runs_its_command [35 s]
+  Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_menu_and_search_command_runs_without_an_error_on_a_tablet [4 m 54 s]
+[xUnit.net 00:09:47.39]     TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_shell_and_its_tool_windows_works_by_touch_in_both_orientations [FAIL]
+[xUnit.net 00:09:47.39]       The sweep "touch-portrait" found 5 problems in 149 actions:
+[xUnit.net 00:09:47.39]       covered: tap (portrait): WorkspaceView > "Terminal": A tap on its middle 309.5, 1058 reaches Border < Button < StackPanel#BottomTabs < ScrollContentPresenter#PART_ContentPresenter < Grid < ScrollViewer#BottomTabsScroller instead (the button is 75, 44 in a 800, 1280 window). [touch-portrait-light-001.png]
+[xUnit.net 00:09:47.39]       covered: tap (portrait: Agent): AgentPanelView > "Save": A tap on its middle 708.5, 1214 reaches ScrollContentPresenter#PART_ContentPresenter < Grid < ScrollViewer#Settings < DockPanel < ContentPresenter#PART_ContentPresenter < AgentPanelView instead (the button is 63, 44 in a 800, 1280 window). [touch-portrait-light-002.png]
+[xUnit.net 00:09:47.39]       covered: tap (portrait: Terminal): TerminalPanelView > "~": A tap on its middle 724, 1210 reaches ContentPresenter#PART_ContentPresenter < Border#PART_HitArea < Button < StackPanel < ScrollContentPresenter#PART_ContentPresenter < Grid instead (the button is 44, 44 in a 800, 1280 window). [touch-portrait-light-003.png]
+[xUnit.net 00:09:47.39]       covered: tap (portrait: Terminal): TerminalPanelView > "/": A tap on its middle 724, 1210 reaches TextBlock < ContentPresenter#PART_ContentPresenter < Border#PART_HitArea < Button < StackPanel < ScrollContentPresenter#PART_ContentPresenter instead (the button is 44, 44 in a 800, 1280 window). [touch-portrait-light-004.png]
+[xUnit.net 00:09:47.39]       covered: tap (portrait: Terminal): TerminalPanelView > "-": A tap on its middle 724, 1210 reaches TextBlock < ContentPresenter#PART_ContentPresenter < Border#PART_HitArea < Button < StackPanel < ScrollContentPresenter#PART_ContentPresenter instead (the button is 44, 44 in a 800, 1280 window). [touch-portrait-light-005.png]
+[xUnit.net 00:09:47.39]       Stack Trace:
+[xUnit.net 00:09:47.39]         /_/tests/TabStudio.App.Tests/Sweep/EveryCommandTests.cs(222,0): at TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_shell_and_its_tool_windows_works_by_touch_in_both_orientations()
+[xUnit.net 00:09:47.39]         --- End of stack trace from previous location ---
+  Failed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_shell_and_its_tool_windows_works_by_touch_in_both_orientations [2 m 55 s]
   Error Message:
-   The sweep "touch-portrait" found 6 problems in 150 actions:
-covered: tap (portrait): WorkspaceView > "Terminal": A tap on its middle reaches Border instead.
-covered: tap (portrait: Agent): AgentPanelView > "Save": A tap on its middle reaches ScrollContentPresenter#PART_ContentPresenter instead.
-no-effect: tap (portrait: Agent): AgentPanelView > "Save": It changed nothing a person can see: no panel, dialog, text, selection or status.
-covered: tap (portrait: Terminal): TerminalPanelView > "~": A tap on its middle reaches ContentPresenter#PART_ContentPresenter instead.
-covered: tap (portrait: Terminal): TerminalPanelView > "/": A tap on its middle reaches TextBlock instead.
-covered: tap (portrait: Terminal): TerminalPanelView > "-": A tap on its middle reaches TextBlock instead.
+   The sweep "touch-portrait" found 5 problems in 149 actions:
+covered: tap (portrait): WorkspaceView > "Terminal": A tap on its middle 309.5, 1058 reaches Border < Button < StackPanel#BottomTabs < ScrollContentPresenter#PART_ContentPresenter < Grid < ScrollViewer#BottomTabsScroller instead (the button is 75, 44 in a 800, 1280 window). [touch-portrait-light-001.png]
+covered: tap (portrait: Agent): AgentPanelView > "Save": A tap on its middle 708.5, 1214 reaches ScrollContentPresenter#PART_ContentPresenter < Grid < ScrollViewer#Settings < DockPanel < ContentPresenter#PART_ContentPresenter < AgentPanelView instead (the button is 63, 44 in a 800, 1280 window). [touch-portrait-light-002.png]
+covered: tap (portrait: Terminal): TerminalPanelView > "~": A tap on its middle 724, 1210 reaches ContentPresenter#PART_ContentPresenter < Border#PART_HitArea < Button < StackPanel < ScrollContentPresenter#PART_ContentPresenter < Grid instead (the button is 44, 44 in a 800, 1280 window). [touch-portrait-light-003.png]
+covered: tap (portrait: Terminal): TerminalPanelView > "/": A tap on its middle 724, 1210 reaches TextBlock < ContentPresenter#PART_ContentPresenter < Border#PART_HitArea < Button < StackPanel < ScrollContentPresenter#PART_ContentPresenter instead (the button is 44, 44 in a 800, 1280 window). [touch-portrait-light-004.png]
+covered: tap (portrait: Terminal): TerminalPanelView > "-": A tap on its middle 724, 1210 reaches TextBlock < ContentPresenter#PART_ContentPresenter < Border#PART_HitArea < Button < StackPanel < ScrollContentPresenter#PART_ContentPresenter instead (the button is 44, 44 in a 800, 1280 window). [touch-portrait-light-005.png]
   Stack Trace:
      at TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_shell_and_its_tool_windows_works_by_touch_in_both_orientations() in /_/tests/TabStudio.App.Tests/Sweep/EveryCommandTests.cs:line 222
 --- End of stack trace from previous location ---
@@ -41,25 +39,25 @@ covered: tap (portrait: Terminal): TerminalPanelView > "-": A tap on its middle 
   Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_context_menu_item_runs_its_command [7 s]
   Passed TabStudio.App.Tests.Sweep.EveryCommandTests.Every_button_of_the_Start_window_works [2 s]
   Passed TabStudio.App.Tests.Sweep.CommandFixTests.A_confirmation_answers_Enter_and_Escape_and_keeps_keys_out_of_the_editor_behind_it [1 s]
-  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Select_All_Cut_Copy_and_Paste_are_in_the_Edit_menu_and_Select_All_in_the_context_menu [797 ms]
-  Passed TabStudio.App.Tests.Sweep.CommandFixTests.The_caret_stays_above_the_on_screen_keyboard [1 s]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Select_All_Cut_Copy_and_Paste_are_in_the_Edit_menu_and_Select_All_in_the_context_menu [799 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.The_caret_stays_above_the_on_screen_keyboard [949 ms]
   Passed TabStudio.App.Tests.Sweep.CommandFixTests.Home_End_and_the_page_keys_come_from_a_hardware_keyboard(key: Home) [< 1 ms]
   Passed TabStudio.App.Tests.Sweep.CommandFixTests.Home_End_and_the_page_keys_come_from_a_hardware_keyboard(key: PageDown) [< 1 ms]
   Passed TabStudio.App.Tests.Sweep.CommandFixTests.Home_End_and_the_page_keys_come_from_a_hardware_keyboard(key: End) [< 1 ms]
   Passed TabStudio.App.Tests.Sweep.CommandFixTests.Home_End_and_the_page_keys_come_from_a_hardware_keyboard(key: PageUp) [< 1 ms]
-  Passed TabStudio.App.Tests.Sweep.CommandFixTests.View_Solution_Explorer_and_Ctrl_Alt_L_show_it_instead_of_folding_the_side_bar [934 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.View_Solution_Explorer_and_Ctrl_Alt_L_show_it_instead_of_folding_the_side_bar [781 ms]
   Passed TabStudio.App.Tests.Sweep.CommandFixTests.Escape_closes_every_dialog_drawn_over_the_IDE [3 s]
   Passed TabStudio.App.Tests.Sweep.CommandFixTests.Go_To_Line_moves_the_caret_from_Ctrl_G_and_from_the_caret_in_the_status_bar [1 s]
-  Passed TabStudio.App.Tests.Sweep.CommandFixTests.A_language_request_after_the_solution_closed_is_cancelled_rather_than_failed [28 ms]
-  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Navigate_Backward_and_Forward_are_available_only_when_they_go_somewhere [1 s]
-  Passed TabStudio.App.Tests.Sweep.CommandFixTests.The_status_bar_labels_are_not_buttons_that_do_nothing [675 ms]
-  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Sync_with_Active_Document_shows_the_file_in_Solution_Explorer_from_another_tool_window [803 ms]
-[xUnit.net 00:10:22.00]   Finished:    TabStudio.App.Tests
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.A_language_request_after_the_solution_closed_is_cancelled_rather_than_failed [26 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Navigate_Backward_and_Forward_are_available_only_when_they_go_somewhere [893 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.The_status_bar_labels_are_not_buttons_that_do_nothing [584 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Sync_with_Active_Document_shows_the_file_in_Solution_Explorer_from_another_tool_window [734 ms]
+[xUnit.net 00:10:14.68]   Finished:    TabStudio.App.Tests
 Data collector 'Blame' message: All tests finished running, Sequence file will not be generated.
-  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Only_the_chosen_tool_window_is_on_the_side_bar [784 ms]
+  Passed TabStudio.App.Tests.Sweep.CommandFixTests.Only_the_chosen_tool_window_is_on_the_side_bar [772 ms]
 
 Test Run Failed.
 Total tests: 25
      Passed: 24
      Failed: 1
- Total time: 10.3788 Minutes
+ Total time: 10.2563 Minutes

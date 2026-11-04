@@ -1,13 +1,13 @@
-# touch-portrait (dark): 150 actions, 12 problems
-covered	tap (portrait): WorkspaceView > "Terminal"	A tap on its middle reaches Border instead.
-covered	tap (portrait: Agent): AgentPanelView > "Save"	A tap on its middle reaches ScrollContentPresenter#PART_ContentPresenter instead.
-covered	tap (portrait: Terminal): TerminalPanelView > "~"	A tap on its middle reaches ContentPresenter#PART_ContentPresenter instead.
-covered	tap (portrait: Terminal): TerminalPanelView > "/"	A tap on its middle reaches TextBlock instead.
-covered	tap (portrait: Terminal): TerminalPanelView > "-"	A tap on its middle reaches TextBlock instead.
+# touch-portrait (dark): 149 actions, 12 problems
+covered	tap (portrait): WorkspaceView > "Terminal"	A tap on its middle 309.5, 1058 reaches Border < Button < StackPanel#BottomTabs < ScrollContentPresenter#PART_ContentPresenter < Grid < ScrollViewer#BottomTabsScroller instead (the button is 75, 44 in a 800, 1280 window). [touch-portrait-dark-001.png]
+covered	tap (portrait: Agent): AgentPanelView > "Save"	A tap on its middle 708.5, 1214 reaches ScrollContentPresenter#PART_ContentPresenter < Grid < ScrollViewer#Settings < DockPanel < ContentPresenter#PART_ContentPresenter < AgentPanelView instead (the button is 63, 44 in a 800, 1280 window). [touch-portrait-dark-002.png]
+covered	tap (portrait: Terminal): TerminalPanelView > "~"	A tap on its middle 724, 1210 reaches ContentPresenter#PART_ContentPresenter < Border#PART_HitArea < Button < StackPanel < ScrollContentPresenter#PART_ContentPresenter < Grid instead (the button is 44, 44 in a 800, 1280 window). [touch-portrait-dark-003.png]
+covered	tap (portrait: Terminal): TerminalPanelView > "/"	A tap on its middle 724, 1210 reaches TextBlock < ContentPresenter#PART_ContentPresenter < Border#PART_HitArea < Button < StackPanel < ScrollContentPresenter#PART_ContentPresenter instead (the button is 44, 44 in a 800, 1280 window). [touch-portrait-dark-004.png]
+covered	tap (portrait: Terminal): TerminalPanelView > "-"	A tap on its middle 724, 1210 reaches TextBlock < ContentPresenter#PART_ContentPresenter < Border#PART_HitArea < Button < StackPanel < ScrollContentPresenter#PART_ContentPresenter instead (the button is 44, 44 in a 800, 1280 window). [touch-portrait-dark-005.png]
 no-effect	tap (portrait): WorkspaceView > "Output"	It changed nothing a person can see: no panel, dialog, text, selection or status.
-no-effect	tap (portrait: Agent): AgentPanelView > "Save"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (portrait: Swarm): UiTestRecorderView > "Record"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (portrait: Database): DatabaseExplorerView > "Update Database"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (portrait: Database): DatabaseExplorerView > "Add"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (portrait: Containers): ContainersView > "Start"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (portrait: Containers): ContainersView > "Stop"	It changed nothing a person can see: no panel, dialog, text, selection or status.
 no-effect	tap (portrait: Containers): ContainersView > "Restart"	It changed nothing a person can see: no panel, dialog, text, selection or status.
