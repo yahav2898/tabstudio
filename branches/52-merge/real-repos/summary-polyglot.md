@@ -1,17 +1,17 @@
 | Repository | Toolchain | Startup project | Program | Result | Time |
 | --- | --- | --- | --- | --- | --- |
 | microblog | python | python | flask run | started | 2 s |
-| spring-petclinic | java | java | spring-petclinic | started | 85 s |
-| fd | rust | rust | fd | started | 78 s |
+| spring-petclinic | java | java | spring-petclinic | started | 75 s |
+| fd | rust | rust | fd | started | 83 s |
 | node-express-realworld | node | node | npm start | started | 5 s |
 | laravel | php | php | artisan serve | started | 3 s |
-| BookStack | php | php | artisan serve | started | 8 s |
+| BookStack | php | php | artisan serve | started | 6 s |
 | symfony-skeleton | php | php | php -S | started | 1 s |
-| ktor-httpbin | kotlin | kotlin | ServerKt | started | 82 s |
-| tut-spring-boot-kotlin | kotlin | kotlin | BlogApplicationKt | started | 35 s |
-| swift-argument-parser | swift | swift | roll | started | 12 s |
-| vapor-template-bare | swift | swift | TemplateBare | started | 281 s |
-| next-learn | node | node | npm run dev | started | 8 s |
+| ktor-httpbin | kotlin | kotlin | ServerKt | started | 81 s |
+| tut-spring-boot-kotlin | kotlin | kotlin | BlogApplicationKt | started | 31 s |
+| swift-argument-parser | swift | swift | roll | started | 11 s |
+| vapor-template-bare | swift | swift | TemplateBare | started | 286 s |
+| next-learn | node | node | npm run dev | started | 10 s |
 | vite-react-ts | node | node | npm run dev | started | 1 s |
 | nodejs-docs-hello-world | node | node | npm start | started | 1 s |
 | gs-rest-service | java | java | complete | started | 7 s |
