@@ -4,8 +4,8 @@ Toolchain projects:
   cpp: /home/runner/work/_temp/real-repos/requests/tests/certs/expired/Makefile
   cpp: /home/runner/work/_temp/real-repos/requests/tests/certs/mtls/Makefile
 Startup project: python /home/runner/work/_temp/real-repos/requests/pyproject.toml
-Set up in 9.5 s
-Tests: 619 passed, 0 failed, 16 skipped of 717: 635 tests run in 1 min 30 sec: 619 passed, 0 failed, 16 skipped.
+Set up in 8.7 s
+Tests: 619 passed, 0 failed, 16 skipped of 717: 635 tests run in 1 min 54 sec: 619 passed, 0 failed, 16 skipped.
 Project setup:
 ------ requests: pip install -e . ------
 > python3 -m venv .venv
@@ -34,8 +34,8 @@ Using cached urllib3-2.8.0-py3-none-any.whl (135 kB)
 Building wheels for collected packages: requests
   Building editable for requests (pyproject.toml): started
   Building editable for requests (pyproject.toml): finished with status 'done'
-  Created wheel for requests: filename=requests-2.34.2-0.editable-py3-none-any.whl size=7207 sha256=cf11bc178d17324dba66502fe0c43ae7a3ddfac9abe11486bb42e0e1b464a2c8
-  Stored in directory: /tmp/pip-ephem-wheel-cache-kk3xhfh7/wheels/6c/9d/2f/7bafa77cedc36edab8ffd35c2f4d7d44c36a13e0af0b1f03df
+  Created wheel for requests: filename=requests-2.34.2-0.editable-py3-none-any.whl size=7207 sha256=792459aca0b64a35261c005d5352d41102a874b91d7143c410dddef516db49d2
+  Stored in directory: /tmp/pip-ephem-wheel-cache-h5xzwvht/wheels/6c/9d/2f/7bafa77cedc36edab8ffd35c2f4d7d44c36a13e0af0b1f03df
 Successfully built requests
 Installing collected packages: urllib3, idna, charset_normalizer, certifi, requests
 Successfully installed certifi-2026.10.23 charset_normalizer-3.5.2 idna-3.20 requests-2.34.2 urllib3-2.8.0
@@ -48,11 +48,11 @@ Python 3.12 for requests: pyproject.toml allows Python >=3.10.
 Installed 5 packages into .venv with Python 3.12. The full log is in Output > Project Setup.
 ========== pip install -e .: succeeded ==========
 ========== Running requests's tests with Pytest ==========
-> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''-r'\'' '\''requirements-dev.txt'\'' '\''requests[socks]'\'' '\''pytest-httpbin==2.1.0'\'' '\''httpbin~=0.10.0'\'' '\''pytest-cov'\'' '\''pytest-mock'\'' '\''pytest-xdist'\'' '\''pytest>=3'\'' '\''trustme'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/requests/.tabstudio/test-results/9d773decd5e242969e0fdecf7362454c/pytest.xml
+> sh -c 'echo '\''Installing what the tests need'\''; "$0" -m pip install --disable-pip-version-check -q '\''-r'\'' '\''requirements-dev.txt'\'' '\''requests[socks]'\'' '\''pytest-httpbin==2.1.0'\'' '\''httpbin~=0.10.0'\'' '\''pytest-cov'\'' '\''pytest-mock'\'' '\''pytest-xdist'\'' '\''pytest>=3'\'' '\''trustme'\'' || echo '\''Some of what the tests need could not be installed'\''; if ! "$0" -c '\''import pytest'\'' 2> /dev/null; then echo '\''Installing pytest, which the tests need'\''; "$0" -m pip install --disable-pip-version-check -q pytest || exit 1; fi; exec "$0" -m pytest "$@"' .venv/bin/python --color=no --junitxml=/home/runner/work/_temp/real-repos/requests/.tabstudio/test-results/9867b0b37b5e4b6c9c252cecc11b599f/pytest.xml
 Installing what the tests need
-[2026-11-04 01:13:23,201] WARNING in core: flasgger is not installed; serving the static landing page at / and skipping the Swagger UI and /spec.json.
+[2026-11-04 02:18:17,291] WARNING in core: flasgger is not installed; serving the static landing page at / and skipping the Swagger UI and /spec.json.
 ============================= test session starts ==============================
-platform linux -- Python 3.12.16, pytest-9.2.0, pluggy-1.7.0
+platform linux -- Python 3.12.15, pytest-9.2.0, pluggy-1.7.0
 rootdir: /home/runner/work/_temp/real-repos/requests
 configfile: pyproject.toml
 testpaths: tests
@@ -65,14 +65,12 @@ tests/test_hooks.py ...                                                  [  1%]
 tests/test_lowlevel.py ....................                              [  4%]
 tests/test_packages.py ...                                               [  4%]
 tests/test_requests.py ................................................. [ 12%]
-........................................................127.0.0.1 - - [04/Nov/2026 01:13:44] "GET /get HTTP/1.1" 200 272
-................ [ 23%]
-spytest-httpbin server hit an exception serving request: [SSL: TLSV1_ALERT_UNKNOWN_CA] tlsv1 alert unknown ca (_ssl.c:1011)
+........................................................................ [ 23%]
+s.pytest-httpbin server hit an exception serving request: [SSL: TLSV1_ALERT_UNKNOWN_CA] tlsv1 alert unknown ca (_ssl.c:1010)
 attempting to ignore so the rest of the tests can run
-....................................................................... [ 35%]
+...................................................................... [ 35%]
 .................................................x...................... [ 46%]
-........................................................127.0.0.1 - - [04/Nov/2026 01:14:14] "GET /redirect-to?url=http%3A%2F%2F%3A1 HTTP/1.1" 302 0
-................ [ 57%]
+........................................................................ [ 57%]
 ....                                                                     [ 58%]
 tests/test_structures.py ........................                        [ 62%]
 tests/test_testserver.py ......s....                                     [ 63%]
@@ -119,6 +117,6 @@ tests/test_utils.py::TestContentEncodingDetection::test_precedence
     warnings.warn(
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-- generated xml file: /home/runner/work/_temp/real-repos/requests/.tabstudio/test-results/9d773decd5e242969e0fdecf7362454c/pytest.xml -
-====== 619 passed, 15 skipped, 1 xfailed, 18 warnings in 79.60s (0:01:19) ======
+- generated xml file: /home/runner/work/_temp/real-repos/requests/.tabstudio/test-results/9867b0b37b5e4b6c9c252cecc11b599f/pytest.xml -
+===== 619 passed, 15 skipped, 1 xfailed, 18 warnings in 102.63s (0:01:42) ======
 
