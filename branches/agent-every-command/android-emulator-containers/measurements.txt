@@ -1,0 +1,22 @@
+Startup to self test start: 5.75 s
+TabStudio startup: first frame at 5725 ms, ready at 5725 ms; process start to activity 1594 ms, application +983 ms, styles +328 ms, services +363 ms, theme +64 ms, view models +880 ms, main view +748 ms, start screen +16 ms, first frame +749 ms
+TabStudio UI stalls: 13 over 100 ms (6 over 250 ms, 3 over 1 s), 9.4 s in all, longest 2800 ms during backing services; answer p50 1.7 ms, p95 17.3 ms, p99 63.9 ms over 2135 questions in 59 s
+TabStudio UI timings: workspace view 865 ms, workspace view model 435 ms, document view 201 ms
+TabStudio UI stall: 2800 ms at 3.4 s during backing services
+TabStudio UI stall: 2092 ms at 0.0 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 1158 ms at 7.4 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 858 ms at 8.6 s during the end of the run
+TabStudio UI stall: 845 ms at 6.3 s during loading C#
+TabStudio UI stall: 474 ms at 2.1 s during reading the solution
+TabStudio UI stall: 224 ms at 57.9 s during the end of the run
+TabStudio UI stall: 211 ms at 2.6 s during reading the solution
+TabStudio UI stall: 196 ms at 11.2 s during the end of the run
+TabStudio UI stall: 193 ms at 2.8 s during showing the solution in Solution Explorer → databases, startup projects and toolchains
+TabStudio UI stall: 144 ms at 3.1 s during databases, startup projects and toolchains
+TabStudio UI stall: 116 ms at 16.3 s during the end of the run
+TabStudio UI stall: 106 ms at 57.4 s during the end of the run
+Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
+ Native Heap 280343 280328 8 36 281492 299944 289504 5838
+ Dalvik Heap 2494 2460 0 81 4712 7936 3968 3968
+ TOTAL 650227 542756 83636 217 802568 307880 293472 9806
+ TOTAL PSS: 650227 TOTAL RSS: 802568 TOTAL SWAP PSS: 217
