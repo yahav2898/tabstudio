@@ -1,12 +1,12 @@
 FluentValidation at f95dbd5c8166a10e38f7a8bca4d752abd641a453
-Opened /home/runner/work/_temp/real-repos/FluentValidation/FluentValidation.sln in 0.1 s
+Opened /home/runner/work/_temp/real-repos/FluentValidation/FluentValidation.sln in 0.3 s
 Compatibility Doctor:
   FluentValidation.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   FluentValidation: Library via Built with its users - A library is compiled together with the projects that reference it.
   FluentValidation.DependencyInjectionExtensions: Library via Built with its users - A library is compiled together with the projects that reference it.
   FluentValidation.Tests.Benchmarks: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
 Startup project: none
-Built in 4.3 s: 0 errors, 1 warnings
+Built in 7.2 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   microsoft.codeanalysis.analyzers 2.6.1
       analyzers/dotnet/cs/Microsoft.CodeAnalysis.Analyzers.dll
@@ -83,13 +83,24 @@ Packages with analyzers or MSBuild files:
   zomp.syncmethodgenerator 1.6.17
       analyzers/dotnet/cs/Microsoft.Bcl.HashCode.dll
       analyzers/dotnet/cs/Zomp.SyncMethodGenerator.dll
-Editor: 11 files opened and analyzed in 0.6 s, 0 errors only the editor shows, 0 only the build shows
-Tests: 889 passed, 0 failed, 1 skipped of 890: 890 tests run in 3.5 sec: 889 passed, 0 failed, 1 skipped.
+Editor: 11 files opened and analyzed in 1.3 s, 0 errors only the editor shows, 0 only the build shows
+Tests: 889 passed, 0 failed, 1 skipped of 890: 890 tests run in 4.4 sec: 889 passed, 0 failed, 1 skipped.
+UI stalls: 7 over 100 ms (2 over 250 ms, 0 over 1 s), 1.4 s in all, longest 283 ms during screenshots, 0.2 s of it garbage collection; answer p50 5.5 ms, p95 24.8 ms, p99 122.2 ms over 582 questions in 16 s
+UI timings: document view 35 ms, document view 5 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 283 ms | 53 ms | 0.3 s | screenshots |
+| 271 ms | 31 ms | 0.6 s | screenshots |
+| 226 ms | 0 ms | 8.1 s | screenshots |
+| 211 ms | 0 ms | 8.4 s | screenshots |
+| 139 ms | 52 ms | 6.8 s | the first build |
+| 122 ms | 31 ms | 11.2 s | Run All Tests |
+| 101 ms | 45 ms | 10.2 s | Run All Tests |
 Output:
-Build started at 06:54:30...
+Build started at 06:59:15...
 1>------ Build started: Project: FluentValidation.Tests, Configuration: Debug ------
-1>FluentValidation.Tests -> compiled in memory (684 KB, 1371 ms)
+1>FluentValidation.Tests -> compiled in memory (684 KB, 1665 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 ========== Starting test run ==========
-========== Test run finished: 890 Tests (889 Passed, 0 Failed, 1 Skipped) run in 3.5 sec ==========
+========== Test run finished: 890 Tests (889 Passed, 0 Failed, 1 Skipped) run in 4.4 sec ==========
 

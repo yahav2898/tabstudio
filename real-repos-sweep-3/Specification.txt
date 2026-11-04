@@ -1,5 +1,5 @@
 Specification at fc2670ac94d3ac427b232cc15ee0e1a7d2748a1b
-Opened /home/runner/work/_temp/real-repos/Specification/Ardalis.Specification.sln in 0.2 s
+Opened /home/runner/work/_temp/real-repos/Specification/Ardalis.Specification.sln in 0.3 s
 Compatibility Doctor:
   Ardalis.Specification: Library via Built with its users - A library is compiled together with the projects that reference it.
   Ardalis.Specification.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
@@ -13,7 +13,7 @@ Compatibility Doctor:
   Ardalis.Sample.App3: Needs a database via Local server + WebView - Ardalis.Sample.App3 uses SQL Server, which has no engine for ARM64 Linux, so it cannot run on this tablet, and 'DbConnection' in appsettings.json uses (localdb)\mssqllocaldb, which exists only on Windows. Connect to a SQL Server on your network or in the cloud with a SQL login (Windows sign-in is not available here).
   Ardalis.Sample.App2: Needs a database via Local server + WebView - Ardalis.Sample.App2 uses SQL Server, which has no engine for ARM64 Linux, so it cannot run on this tablet, and 'DbConnection' in appsettings.json uses (localdb)\mssqllocaldb, which exists only on Windows. Connect to a SQL Server on your network or in the cloud with a SQL login (Windows sign-in is not available here).
 Startup project: Ardalis.Sample.App1
-Built in 7.5 s: 0 errors, 3 warnings
+Built in 9.0 s: 0 errors, 3 warnings
 Packages with analyzers or MSBuild files:
   coverlet.collector 6.0.4
       build/netstandard2.0/Microsoft.Bcl.AsyncInterfaces.dll
@@ -925,17 +925,25 @@ Packages with analyzers or MSBuild files:
       build/net8.0/xunit.abstractions.dll
       build/net8.0/xunit.runner.visualstudio.props
       build/net8.0/xunit.runner.visualstudio.testadapter.dll
-Editor: 24 files opened and analyzed in 0.7 s, 0 errors only the editor shows, 0 only the build shows
-Tests: 1142 passed, 0 failed, 3 skipped of 1145: 1145 tests run in 1 min 11 sec: 1142 passed, 0 failed, 3 skipped.
+Editor: 24 files opened and analyzed in 1.4 s, 0 errors only the editor shows, 0 only the build shows
+Tests: 1142 passed, 0 failed, 3 skipped of 1145: 1145 tests run in 1 min 21 sec: 1142 passed, 0 failed, 3 skipped.
+UI stalls: 4 over 100 ms (2 over 250 ms, 0 over 1 s), 1.1 s in all, longest 471 ms during screenshots, 0.1 s of it garbage collection; answer p50 6.5 ms, p95 12.0 ms, p99 28.3 ms over 3962 questions in 96 s
+UI timings: document view 46 ms, document view 45 ms, document view 13 ms, document view 8 ms, document view 6 ms, document view 6 ms, document view 5 ms, document view 5 ms, document view 5 ms, document view 3 ms, document view 3 ms, document view 3 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 471 ms | 111 ms | 0.3 s | screenshots |
+| 301 ms | 0 ms | 1.1 s | screenshots |
+| 151 ms | 16 ms | 10.5 s | screenshots |
+| 147 ms | 0 ms | 10.7 s | screenshots |
 Output:
-Build started at 06:57:16...
+Build started at 07:03:41...
 1>------ Build started: Project: Ardalis.Specification.Tests, Configuration: Debug ------
-1>Ardalis.Specification.Tests -> compiled in memory (215 KB, 300 ms)
+1>Ardalis.Specification.Tests -> compiled in memory (215 KB, 558 ms)
 2>------ Build started: Project: Ardalis.Specification.EntityFrameworkCore.Tests, Configuration: Debug ------
-2>Ardalis.Specification.EntityFrameworkCore.Tests -> compiled in memory (171 KB, 453 ms)
+2>Ardalis.Specification.EntityFrameworkCore.Tests -> compiled in memory (171 KB, 927 ms)
 3>------ Build started: Project: Ardalis.Specification.EntityFramework6.Tests, Configuration: Debug ------
-3>Ardalis.Specification.EntityFramework6.Tests -> compiled in memory (120.5 KB, 366 ms)
+3>Ardalis.Specification.EntityFramework6.Tests -> compiled in memory (120.5 KB, 760 ms)
 ========== Build: 3 succeeded, 0 failed ==========
 ========== Starting test run ==========
-========== Test run finished: 1145 Tests (1142 Passed, 0 Failed, 3 Skipped) run in 1 min 11 sec ==========
+========== Test run finished: 1145 Tests (1142 Passed, 0 Failed, 3 Skipped) run in 1 min 21 sec ==========
 

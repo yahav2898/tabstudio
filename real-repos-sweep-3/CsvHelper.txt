@@ -10,7 +10,7 @@ Compatibility Doctor:
   CsvHelper.Linq: Library via Built with its users - A library is compiled together with the projects that reference it.
   CsvHelper.Linq.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: CsvHelper.Docs
-Built in 13.7 s: 0 errors, 3 warnings
+Built in 18.9 s: 0 errors, 3 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -1356,16 +1356,35 @@ Packages with analyzers or MSBuild files:
       build/net8.0/xunit.abstractions.dll
       build/net8.0/xunit.runner.visualstudio.props
       build/net8.0/xunit.runner.visualstudio.testadapter.dll
-Editor: 22 files opened and analyzed in 1.8 s, 0 errors only the editor shows, 0 only the build shows
-Tests: 1378 passed, 0 failed, 0 skipped of 1383: 1378 tests run in 1 min 2 sec: 1378 passed, 0 failed, 0 skipped.
+Editor: 22 files opened and analyzed in 4.1 s, 0 errors only the editor shows, 0 only the build shows
+Tests: 1378 passed, 0 failed, 0 skipped of 1383: 1378 tests run in 2 min 6 sec: 1378 passed, 0 failed, 0 skipped.
+UI stalls: 38 over 100 ms (2 over 250 ms, 0 over 1 s), 5.5 s in all, longest 398 ms during screenshots, 0.5 s of it garbage collection; answer p50 6.7 ms, p95 21.8 ms, p99 77.4 ms over 5882 questions in 156 s
+UI timings: document view 33 ms, document view 7 ms, document view 6 ms, document view 5 ms, document view 5 ms, document view 5 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 398 ms | 117 ms | 0.3 s | screenshots |
+| 295 ms | 13 ms | 1.1 s | screenshots |
+| 195 ms | 9 ms | 51.3 s | Run All Tests |
+| 188 ms | 7 ms | 53.2 s | Run All Tests |
+| 178 ms | 10 ms | 52.3 s | Run All Tests |
+| 174 ms | 9 ms | 42.4 s | Run All Tests |
+| 167 ms | 7 ms | 40.9 s | Run All Tests |
+| 165 ms | 11 ms | 55.6 s | Run All Tests |
+| 162 ms | 7 ms | 52.0 s | Run All Tests |
+| 160 ms | 6 ms | 54.1 s | Run All Tests |
+| 157 ms | 9 ms | 20.6 s | screenshots |
+| 151 ms | 15 ms | 53.5 s | Run All Tests |
+| 145 ms | 8 ms | 42.7 s | Run All Tests |
+| 140 ms | 6 ms | 41.5 s | Run All Tests |
+| 134 ms | 5 ms | 51.9 s | Run All Tests |
 Output:
-Build started at 06:54:53...
+Build started at 06:59:46...
 1>------ Build started: Project: CsvHelper.Tests, Configuration: Debug ------
 1>warning CS8002: Referenced assembly 'CsvHelper.Generators, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' does not have a strong name.
-1>CsvHelper.Tests -> compiled in memory (778.5 KB, 1823 ms)
+1>CsvHelper.Tests -> compiled in memory (778.5 KB, 2692 ms)
 2>------ Build started: Project: CsvHelper.Linq.Tests, Configuration: Debug ------
-2>CsvHelper.Linq.Tests -> compiled in memory (254 KB, 1260 ms)
+2>CsvHelper.Linq.Tests -> compiled in memory (254 KB, 2295 ms)
 ========== Build: 2 succeeded, 0 failed ==========
 ========== Starting test run ==========
-========== Test run finished: 1378 Tests (1378 Passed, 0 Failed, 0 Skipped) run in 1 min 2 sec ==========
+========== Test run finished: 1378 Tests (1378 Passed, 0 Failed, 0 Skipped) run in 2 min 6 sec ==========
 

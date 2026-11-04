@@ -26,7 +26,7 @@ Compatibility Doctor:
   Mapster.Tool.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   Benchmark.Development: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
 Startup project: Sample.AspNetCore
-Built in 11.7 s: 0 errors, 218 warnings
+Built in 13.9 s: 0 errors, 218 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -1592,10 +1592,19 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.abstractions.dll
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
-Editor: 24 files opened and analyzed in 0.7 s, 0 errors only the editor shows, 0 only the build shows
-Tests: 389 passed, 0 failed, 6 skipped of 395: 395 tests run in 3.1 sec: 389 passed, 0 failed, 6 skipped.
+Editor: 24 files opened and analyzed in 1.2 s, 0 errors only the editor shows, 0 only the build shows
+Tests: 389 passed, 0 failed, 6 skipped of 395: 395 tests run in 6.5 sec: 389 passed, 0 failed, 6 skipped.
+UI stalls: 5 over 100 ms (2 over 250 ms, 0 over 1 s), 1.2 s in all, longest 537 ms during screenshots, 0.2 s of it garbage collection; answer p50 7.6 ms, p95 25.4 ms, p99 69.0 ms over 974 questions in 28 s
+UI timings: document view 44 ms, document view 5 ms, document view 5 ms, document view 5 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 537 ms | 96 ms | 1.0 s | screenshots |
+| 261 ms | 34 ms | 0.3 s | screenshots |
+| 155 ms | 0 ms | 15.9 s | screenshots |
+| 145 ms | 0 ms | 15.7 s | screenshots |
+| 134 ms | 39 ms | 19.3 s | Run All Tests |
 Output:
-Build started at 06:57:00...
+Build started at 07:03:17...
 1>------ Build started: Project: Mapster.Tests, Configuration: Debug ------
 1>ExpressionTranslator.cs(493,55): warning CS8600: Converting null literal or possible null value to non-nullable type.
 1>ExpressionTranslator.cs(793,27): warning CS8602: Dereference of a possibly null reference.
@@ -1732,21 +1741,21 @@ Build started at 06:57:00...
 1>WhenUseDestinatonValueMappingRegression.cs(125,35): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 1>WhenUseDestinatonValueMappingRegression.cs(126,35): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 1>WhenUseDestinatonValueMappingRegression.cs(127,35): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-1>Mapster.Tests -> compiled in memory (449.5 KB, 580 ms)
+1>Mapster.Tests -> compiled in memory (449.5 KB, 1022 ms)
 2>------ Build started: Project: Mapster.Async.Tests, Configuration: Debug ------
 2>TypeAdapterExtensions.cs(112,84): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 2>TypeAdapterExtensions.cs(125,84): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 2>TypeAdapterExtensions.cs(140,98): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-2>Mapster.Async.Tests -> compiled in memory (19 KB, 272 ms)
+2>Mapster.Async.Tests -> compiled in memory (19 KB, 434 ms)
 3>------ Build started: Project: Mapster.DependencyInjection.Tests, Configuration: Debug ------
-3>Mapster.DependencyInjection.Tests -> compiled in memory (7 KB, 271 ms)
+3>Mapster.DependencyInjection.Tests -> compiled in memory (7 KB, 442 ms)
 4>------ Build started: Project: Mapster.JsonNet.Tests, Configuration: Debug ------
-4>Mapster.JsonNet.Tests -> compiled in memory (4.5 KB, 190 ms)
+4>Mapster.JsonNet.Tests -> compiled in memory (4.5 KB, 313 ms)
 5>------ Build started: Project: Mapster.EFCore.Tests, Configuration: Debug ------
 5>EFCoreExtensions.cs(14,30): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-5>Mapster.EFCore.Tests -> compiled in memory (20.5 KB, 204 ms)
+5>Mapster.EFCore.Tests -> compiled in memory (20.5 KB, 408 ms)
 6>------ Build started: Project: Mapster.Immutable.Tests, Configuration: Debug ------
-6>Mapster.Immutable.Tests -> compiled in memory (5.5 KB, 199 ms)
+6>Mapster.Immutable.Tests -> compiled in memory (5.5 KB, 381 ms)
 7>------ Build started: Project: TemplateTest, Configuration: Debug ------
 7>CreateMapExpressionTest.cs(72,23): warning CS8618: Non-nullable property 'Street' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 7>CreateMapExpressionTest.cs(73,23): warning CS8618: Non-nullable property 'City' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
@@ -1770,7 +1779,7 @@ Build started at 06:57:00...
 7>FooTest.cs(53,22): warning CS8618: Non-nullable property 'FooArr' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 7>FooTest.cs(55,22): warning CS8618: Non-nullable property 'IntArr' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 7>FooTest.cs(57,33): warning CS8618: Non-nullable property 'Ints' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-7>TemplateTest -> compiled in memory (9.5 KB, 246 ms)
+7>TemplateTest -> compiled in memory (9.5 KB, 487 ms)
 8>------ Build started: Project: Mapster.Tool.Tests, Configuration: Debug ------
 8>ExtensionOptions.cs(11,23): warning CS8618: Non-nullable property 'Assembly' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 8>ExtensionOptions.cs(14,23): warning CS8618: Non-nullable property 'Output' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
@@ -1784,8 +1793,8 @@ Build started at 06:57:00...
 8>UserMapper.cs(32,13): warning CS8602: Dereference of a possibly null reference.
 8>WhenMappingWithExistingObjectAndInitProperties.cs(40,19): warning CS8618: Non-nullable property 'Name' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 8>WhenMappingWithExistingObjectAndInitProperties.cs(46,19): warning CS8618: Non-nullable property 'Name' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-8>Mapster.Tool.Tests -> compiled in memory (8 KB, 299 ms)
+8>Mapster.Tool.Tests -> compiled in memory (8 KB, 549 ms)
 ========== Build: 8 succeeded, 0 failed ==========
 ========== Starting test run ==========
-========== Test run finished: 395 Tests (389 Passed, 0 Failed, 6 Skipped) run in 3.1 sec ==========
+========== Test run finished: 395 Tests (389 Passed, 0 Failed, 6 Skipped) run in 6.5 sec ==========
 
