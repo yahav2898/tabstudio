@@ -8,7 +8,7 @@ Compatibility Doctor:
   Serilog.ApprovalTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   AotTestApp: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
 Startup project: AotTestApp
-Built in 6.1 s: 0 errors, 0 warnings
+Built in 5.5 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   emptyfiles 4.4.0
       build/EmptyFiles.targets
@@ -754,28 +754,27 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.utility.netcoreapp10.dll
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
-Editor: 14 files opened and analyzed in 0.8 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 4 over 100 ms (2 over 250 ms, 0 over 1 s), 1.1 s in all, longest 540 ms during screenshots, 0.1 s of it garbage collection; answer p50 7.6 ms, p95 25.9 ms, p99 137.8 ms over 277 questions in 9 s
-UI timings: document view 11 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+Editor: 14 files opened and analyzed in 0.6 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 3 over 100 ms (0 over 250 ms, 0 over 1 s), 0.6 s in all, longest 243 ms during screenshots, 0.1 s of it garbage collection; answer p50 5.4 ms, p95 26.1 ms, p99 104.0 ms over 261 questions in 7 s
+UI timings: document view 19 ms, document view 5 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 540 ms | 84 ms | 0.7 s | screenshots |
-| 271 ms | 50 ms | 0.3 s | screenshots |
-| 138 ms | 6 ms | 7.4 s | screenshots |
-| 124 ms | 3 ms | 7.6 s | screenshots |
+| 243 ms | 41 ms | 0.5 s | screenshots |
+| 219 ms | 45 ms | 0.2 s | screenshots |
+| 104 ms | 6 ms | 6.5 s | screenshots |
 Output:
-Build started at 07:20:26...
+Build started at 08:33:42...
 1>------ Build started: Project: Serilog, Configuration: Debug ------
-1>Serilog -> compiled in memory (170.5 KB, 425 ms)
+1>Serilog -> compiled in memory (170.5 KB, 353 ms)
 2>------ Build started: Project: TestDummies, Configuration: Debug ------
-2>TestDummies -> compiled in memory (8 KB, 347 ms)
+2>TestDummies -> compiled in memory (8 KB, 332 ms)
 3>------ Build started: Project: Serilog.Tests, Configuration: Debug ------
-3>Serilog.Tests -> compiled in memory (282 KB, 926 ms)
+3>Serilog.Tests -> compiled in memory (282 KB, 741 ms)
 4>------ Build started: Project: Serilog.PerformanceTests, Configuration: Debug ------
-4>Serilog.PerformanceTests -> compiled in memory (33 KB, 448 ms)
+4>Serilog.PerformanceTests -> compiled in memory (33 KB, 465 ms)
 5>------ Build started: Project: Serilog.ApprovalTests, Configuration: Debug ------
-5>Serilog.ApprovalTests -> compiled in memory (4.5 KB, 453 ms)
+5>Serilog.ApprovalTests -> compiled in memory (4.5 KB, 297 ms)
 6>------ Build started: Project: AotTestApp, Configuration: Debug ------
-6>AotTestApp -> compiled in memory (2.5 KB, 403 ms)
+6>AotTestApp -> compiled in memory (2.5 KB, 295 ms)
 ========== Build: 6 succeeded, 0 failed ==========
 

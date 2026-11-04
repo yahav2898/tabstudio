@@ -1,5 +1,5 @@
 Ocelot at 80268bc9a950cd4544e70d9582374ca55fc6029f
-Opened /home/runner/work/_temp/real-repos/Ocelot/Ocelot.slnx in 0.4 s
+Opened /home/runner/work/_temp/real-repos/Ocelot/Ocelot.slnx in 0.5 s
 Compatibility Doctor:
   Ocelot: Library via Built with its users - A library is compiled together with the projects that reference it.
   Ocelot.Acceptance: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
@@ -8,7 +8,7 @@ Compatibility Doctor:
   Ocelot.Testing: Library via Built with its users - A library is compiled together with the projects that reference it.
   Ocelot.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: Ocelot.ManualTest
-Built in 9.6 s: 0 errors, 67 warnings
+Built in 9.5 s: 0 errors, 67 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -933,20 +933,17 @@ Packages with analyzers or MSBuild files:
   xunit.v3.core.mtp-v2 4.0.2
       buildTransitive/xunit.v3.core.mtp-v2.props
       buildTransitive/xunit.v3.core.mtp-v2.targets
-Editor: 18 files opened and analyzed in 1.2 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 7 over 100 ms (2 over 250 ms, 0 over 1 s), 1.4 s in all, longest 409 ms during screenshots, 0.3 s of it garbage collection; answer p50 6.6 ms, p95 58.5 ms, p99 144.5 ms over 369 questions in 13 s
-UI timings: document view 36 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms
+Editor: 18 files opened and analyzed in 1.0 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 4 over 100 ms (1 over 250 ms, 0 over 1 s), 0.7 s in all, longest 259 ms during screenshots, 0.2 s of it garbage collection; answer p50 5.4 ms, p95 36.0 ms, p99 81.6 ms over 405 questions in 12 s
+UI timings: document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 409 ms | 95 ms | 0.5 s | screenshots |
-| 316 ms | 49 ms | 1.2 s | screenshots |
-| 154 ms | 61 ms | 2.4 s | the first build |
-| 144 ms | 57 ms | 5.0 s | the first build |
-| 143 ms | 61 ms | 5.6 s | the first build |
-| 127 ms | 13 ms | 11.4 s | screenshots |
-| 116 ms | 0 ms | 11.2 s | screenshots |
+| 259 ms | 51 ms | 1.0 s | screenshots |
+| 223 ms | 59 ms | 0.5 s | screenshots |
+| 115 ms | 21 ms | 11.0 s | screenshots |
+| 107 ms | 55 ms | 1.9 s | the first build |
 Output:
-Build started at 07:31:52...
+Build started at 08:43:44...
 1>------ Build started: Project: Ocelot, Configuration: Debug ------
 1>AuthenticationOptions.cs(19,44): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
 1>AuthenticationOptionsCreator.cs(55,9): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
@@ -1014,16 +1011,16 @@ Build started at 07:31:52...
 1>RateLimitOptions.cs(64,51): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
 1>FileAuthenticationOptionsValidator.cs(24,13): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
 1>FileAuthenticationOptionsValidator.cs(31,23): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
-1>Ocelot -> compiled in memory (432.5 KB, 819 ms)
+1>Ocelot -> compiled in memory (432.5 KB, 608 ms)
 2>------ Build started: Project: Ocelot.Testing, Configuration: Debug ------
-2>Ocelot.Testing -> compiled in memory (119.5 KB, 578 ms)
+2>Ocelot.Testing -> compiled in memory (119.5 KB, 387 ms)
 3>------ Build started: Project: Ocelot.Acceptance, Configuration: Debug ------
-3>Ocelot.Acceptance -> compiled in memory (740.5 KB, 1132 ms)
+3>Ocelot.Acceptance -> compiled in memory (740.5 KB, 923 ms)
 4>------ Build started: Project: Ocelot.Benchmarks, Configuration: Debug ------
-4>Ocelot.Benchmarks -> compiled in memory (46 KB, 690 ms)
+4>Ocelot.Benchmarks -> compiled in memory (46 KB, 503 ms)
 5>------ Build started: Project: Ocelot.ManualTest, Configuration: Debug ------
-5>Ocelot.ManualTest -> compiled in memory (11.5 KB, 543 ms)
+5>Ocelot.ManualTest -> compiled in memory (11.5 KB, 551 ms)
 6>------ Build started: Project: Ocelot.UnitTests, Configuration: Debug ------
-6>Ocelot.UnitTests -> compiled in memory (1306 KB, 2135 ms)
+6>Ocelot.UnitTests -> compiled in memory (1306 KB, 1754 ms)
 ========== Build: 6 succeeded, 0 failed ==========
 

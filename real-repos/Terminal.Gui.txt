@@ -1,5 +1,5 @@
 Terminal.Gui at f210f00f638f3968654c31d93ecbbcb814902a71
-Opened /home/runner/work/_temp/real-repos/Terminal.Gui/Terminal.slnx in 1.4 s
+Opened /home/runner/work/_temp/real-repos/Terminal.Gui/Terminal.slnx in 2.1 s
 Compatibility Doctor:
   OutputView: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   ScenarioRunner: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
@@ -20,7 +20,7 @@ Compatibility Doctor:
   Terminal.Gui: Library via Built with its users - A library is compiled together with the projects that reference it.
   tuirec: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
 Startup project: UICatalog
-Built in 68.3 s: 9 errors, 352 warnings
+Built in 55.4 s: 9 errors, 352 warnings
   9 x CS0234
       [UnitTests.Parallelizable] LoggingTests.cs(5,17): error CS0234: The type or namespace name 'Parallelizable' does not exist in the namespace 'UnitTests' (are you missing an assembly reference?)
       [UnitTests.Parallelizable] MainLoopCoordinatorTests.cs(6,17): error CS0234: The type or namespace name 'Parallelizable' does not exist in the namespace 'UnitTests' (are you missing an assembly reference?)
@@ -427,26 +427,26 @@ Packages with analyzers or MSBuild files:
   xunit.v3.core.mtp-v2 4.0.2
       buildTransitive/xunit.v3.core.mtp-v2.props
       buildTransitive/xunit.v3.core.mtp-v2.targets
-Editor: 24 files opened and analyzed in 3.9 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 70 over 100 ms (11 over 250 ms, 0 over 1 s), 13.7 s in all, longest 998 ms during screenshots, 3.8 s of it garbage collection; answer p50 6.4 ms, p95 82.6 ms, p99 207.1 ms over 1863 questions in 77 s
-UI timings: document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+Editor: 24 files opened and analyzed in 3.2 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 52 over 100 ms (11 over 250 ms, 0 over 1 s), 10.0 s in all, longest 796 ms during screenshots, 3.2 s of it garbage collection; answer p50 5.3 ms, p95 68.0 ms, p99 172.6 ms over 1630 questions in 63 s
+UI timings: document view 18 ms, document view 15 ms, document view 5 ms, document view 5 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 998 ms | 492 ms | 1.5 s | screenshots |
-| 820 ms | 278 ms | 3.4 s | screenshots |
-| 443 ms | 87 ms | 7.7 s | the first build |
-| 422 ms | 97 ms | 12.2 s | the first build |
-| 334 ms | 129 ms | 15.3 s | the first build |
-| 306 ms | 53 ms | 8.5 s | the first build |
-| 302 ms | 74 ms | 45.5 s | the first build |
-| 292 ms | 126 ms | 2.6 s | screenshots |
-| 282 ms | 89 ms | 41.7 s | the first build |
-| 264 ms | 105 ms | 16.6 s | the first build |
-| 262 ms | 43 ms | 12.7 s | the first build |
-| 242 ms | 36 ms | 19.1 s | the first build |
-| 240 ms | 76 ms | 31.8 s | the first build |
-| 236 ms | 68 ms | 46.6 s | the first build |
-| 227 ms | 57 ms | 39.7 s | the first build |
+| 796 ms | 388 ms | 2.2 s | screenshots |
+| 569 ms | 134 ms | 9.4 s | the first build |
+| 528 ms | 195 ms | 15.7 s | the first build |
+| 377 ms | 130 ms | 52.3 s | the first build |
+| 361 ms | 134 ms | 15.1 s | the first build |
+| 357 ms | 86 ms | 56.1 s | the first build |
+| 315 ms | 106 ms | 3.4 s | screenshots |
+| 293 ms | 79 ms | 30.3 s | the first build |
+| 293 ms | 71 ms | 55.8 s | the first build |
+| 276 ms | 76 ms | 18.8 s | the first build |
+| 255 ms | 77 ms | 18.3 s | the first build |
+| 229 ms | 69 ms | 28.6 s | the first build |
+| 215 ms | 35 ms | 58.3 s | the first build |
+| 209 ms | 90 ms | 14.3 s | the first build |
+| 204 ms | 84 ms | 49.0 s | the first build |
 Output:
 ighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
 17>TextViewPerformanceTests.cs(307,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
