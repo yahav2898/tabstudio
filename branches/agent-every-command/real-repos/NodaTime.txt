@@ -1,5 +1,5 @@
 NodaTime at 3d290520894faa6f16c80eebac8c5ebbf9df136a
-Opened /home/runner/work/_temp/real-repos/NodaTime/src/NodaTime.slnx in 0.6 s
+Opened /home/runner/work/_temp/real-repos/NodaTime/src/NodaTime.slnx in 0.4 s
 Compatibility Doctor:
   NodaTime.AotCompatibilityTestApp: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   NodaTime.Benchmarks.Custom: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
@@ -17,7 +17,7 @@ Compatibility Doctor:
   NodaTime.TzValidate.NzdCompatibility: Needs Windows via Windows Bridge - .NET Framework apps run on Windows only. They build and run on your PC through the Windows Bridge.
   NodaTime: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: NodaTime.TzdbCompiler
-Built in 14.8 s: 0 errors, 15 warnings
+Built in 9.9 s: 0 errors, 15 warnings
 Packages with analyzers or MSBuild files:
   approvaltests 7.0.0
       build/ApprovalTests.props
@@ -963,23 +963,23 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net462/_._
       buildTransitive/net8.0/_._
       buildTransitive/netcoreapp2.0/System.Reflection.Metadata.targets
-Editor: 24 files opened and analyzed in 0.8 s, 0 errors only the editor shows, 0 only the build shows
+Editor: 24 files opened and analyzed in 0.7 s, 0 errors only the editor shows, 0 only the build shows
 Output:
-Build started at 03:40:45...
+Build started at 05:47:44...
 1>------ Build started: Project: NodaTime, Configuration: Debug ------
-1>NodaTime -> compiled in memory (535.5 KB, 996 ms)
+1>NodaTime -> compiled in memory (535.5 KB, 539 ms)
 2>------ Build started: Project: NodaTime.Testing, Configuration: Debug ------
 2>FakeDateTimeZoneSource.cs(47,39): warning CS8600: Converting null literal or possible null value to non-nullable type.
 2>FakeDateTimeZoneSource.cs(60,42): warning CS8600: Converting null literal or possible null value to non-nullable type.
-2>NodaTime.Testing -> compiled in memory (13.5 KB, 685 ms)
+2>NodaTime.Testing -> compiled in memory (13.5 KB, 380 ms)
 3>------ Build started: Project: NodaTime.AotCompatibilityTestApp, Configuration: Debug ------
-3>NodaTime.AotCompatibilityTestApp -> compiled in memory (3 KB, 597 ms)
+3>NodaTime.AotCompatibilityTestApp -> compiled in memory (3 KB, 400 ms)
 4>------ Build started: Project: NodaTime.Benchmarks.Custom, Configuration: Debug ------
-4>NodaTime.Benchmarks.Custom -> compiled in memory (8 KB, 472 ms)
+4>NodaTime.Benchmarks.Custom -> compiled in memory (8 KB, 425 ms)
 5>------ Build started: Project: NodaTime.Benchmarks, Configuration: Debug ------
-5>NodaTime.Benchmarks -> compiled in memory (81.5 KB, 934 ms)
+5>NodaTime.Benchmarks -> compiled in memory (81.5 KB, 555 ms)
 6>------ Build started: Project: NodaTime.Demo, Configuration: Debug ------
-6>NodaTime.Demo -> compiled in memory (45 KB, 652 ms)
+6>NodaTime.Demo -> compiled in memory (45 KB, 557 ms)
 7>------ Build started: Project: NodaTime.Tools.Common, Configuration: Debug ------
 7>CommandLine.cs(157,16): warning CS8600: Converting null literal or possible null value to non-nullable type.
 7>CommandLine.cs(336,16): warning CS8600: Converting null literal or possible null value to non-nullable type.
@@ -991,22 +991,22 @@ Build started at 03:40:45...
 7>CommandLine.cs(1903,40): warning CS8600: Converting null literal or possible null value to non-nullable type.
 7>CommandLine.cs(1923,40): warning CS8600: Converting null literal or possible null value to non-nullable type.
 7>CommandLine.cs(1963,16): warning CS8603: Possible null reference return.
-7>NodaTime.Tools.Common -> compiled in memory (42 KB, 119 ms)
+7>NodaTime.Tools.Common -> compiled in memory (42 KB, 31 ms)
 8>------ Build started: Project: NodaTime.NzdPrinter, Configuration: Debug ------
-8>NodaTime.NzdPrinter -> compiled in memory (10.5 KB, 988 ms)
+8>NodaTime.NzdPrinter -> compiled in memory (10.5 KB, 451 ms)
 9>------ Build started: Project: NodaTime.Test, Configuration: Debug ------
-9>NodaTime.Test -> compiled in memory (827.5 KB, 1889 ms)
+9>NodaTime.Test -> compiled in memory (827.5 KB, 1222 ms)
 10>------ Build started: Project: NodaTime.Tools.DumpTimeZoneInfo, Configuration: Debug ------
-10>NodaTime.Tools.DumpTimeZoneInfo -> compiled in memory (8.5 KB, 14 ms)
+10>NodaTime.Tools.DumpTimeZoneInfo -> compiled in memory (8.5 KB, 22 ms)
 11>------ Build started: Project: NodaTime.Tools.ValidateHistoricalNzd, Configuration: Debug ------
-11>NodaTime.Tools.ValidateHistoricalNzd -> compiled in memory (6.5 KB, 724 ms)
+11>NodaTime.Tools.ValidateHistoricalNzd -> compiled in memory (6.5 KB, 409 ms)
 12>------ Build started: Project: NodaTime.TzdbCompiler, Configuration: Debug ------
-12>NodaTime.TzdbCompiler -> compiled in memory (63 KB, 1033 ms)
+12>NodaTime.TzdbCompiler -> compiled in memory (63 KB, 493 ms)
 13>------ Build started: Project: NodaTime.TzdbCompiler.Test, Configuration: Debug ------
-13>NodaTime.TzdbCompiler.Test -> compiled in memory (34.5 KB, 912 ms)
+13>NodaTime.TzdbCompiler.Test -> compiled in memory (34.5 KB, 564 ms)
 14>------ Build started: Project: NodaTime.TzValidate.NodaDump, Configuration: Debug ------
-14>NodaTime.TzValidate.NodaDump -> compiled in memory (16.5 KB, 1017 ms)
+14>NodaTime.TzValidate.NodaDump -> compiled in memory (16.5 KB, 585 ms)
 15>------ Build started: Project: NodaTime.TzValidate.NzdCompatibility, Configuration: Debug ------
-15>NodaTime.TzValidate.NzdCompatibility -> compiled in memory (13.5 KB, 56 ms)
+15>NodaTime.TzValidate.NzdCompatibility -> compiled in memory (13.5 KB, 49 ms)
 ========== Build: 15 succeeded, 0 failed ==========
 
