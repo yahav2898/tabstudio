@@ -1,5 +1,5 @@
 Terminal.Gui at f210f00f638f3968654c31d93ecbbcb814902a71
-Opened /home/runner/work/_temp/real-repos/Terminal.Gui/Terminal.slnx in 1.2 s
+Opened /home/runner/work/_temp/real-repos/Terminal.Gui/Terminal.slnx in 1.4 s
 Compatibility Doctor:
   OutputView: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   ScenarioRunner: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
@@ -20,7 +20,7 @@ Compatibility Doctor:
   Terminal.Gui: Library via Built with its users - A library is compiled together with the projects that reference it.
   tuirec: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
 Startup project: UICatalog
-Built in 78.8 s: 9 errors, 352 warnings
+Built in 68.3 s: 9 errors, 352 warnings
   9 x CS0234
       [UnitTests.Parallelizable] LoggingTests.cs(5,17): error CS0234: The type or namespace name 'Parallelizable' does not exist in the namespace 'UnitTests' (are you missing an assembly reference?)
       [UnitTests.Parallelizable] MainLoopCoordinatorTests.cs(6,17): error CS0234: The type or namespace name 'Parallelizable' does not exist in the namespace 'UnitTests' (are you missing an assembly reference?)
@@ -427,7 +427,26 @@ Packages with analyzers or MSBuild files:
   xunit.v3.core.mtp-v2 4.0.2
       buildTransitive/xunit.v3.core.mtp-v2.props
       buildTransitive/xunit.v3.core.mtp-v2.targets
-Editor: 24 files opened and analyzed in 3.7 s, 0 errors only the editor shows, 0 only the build shows
+Editor: 24 files opened and analyzed in 3.9 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 70 over 100 ms (11 over 250 ms, 0 over 1 s), 13.7 s in all, longest 998 ms during screenshots, 3.8 s of it garbage collection; answer p50 6.4 ms, p95 82.6 ms, p99 207.1 ms over 1863 questions in 77 s
+UI timings: document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 998 ms | 492 ms | 1.5 s | screenshots |
+| 820 ms | 278 ms | 3.4 s | screenshots |
+| 443 ms | 87 ms | 7.7 s | the first build |
+| 422 ms | 97 ms | 12.2 s | the first build |
+| 334 ms | 129 ms | 15.3 s | the first build |
+| 306 ms | 53 ms | 8.5 s | the first build |
+| 302 ms | 74 ms | 45.5 s | the first build |
+| 292 ms | 126 ms | 2.6 s | screenshots |
+| 282 ms | 89 ms | 41.7 s | the first build |
+| 264 ms | 105 ms | 16.6 s | the first build |
+| 262 ms | 43 ms | 12.7 s | the first build |
+| 242 ms | 36 ms | 19.1 s | the first build |
+| 240 ms | 76 ms | 31.8 s | the first build |
+| 236 ms | 68 ms | 46.6 s | the first build |
+| 227 ms | 57 ms | 39.7 s | the first build |
 Output:
 ighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'
 17>TextViewPerformanceTests.cs(307,9): warning CS0618: 'TextView' is obsolete: 'TextView is superseded by tui-cs/Editor's EditorView, which provides a rope-backed document model, cell-aware rendering, multi-caret editing, undo, syntax highlighting, folding, find/replace, and soft wrap. See https://github.com/tui-cs/Editor for details.'

@@ -4,10 +4,18 @@ Compatibility Doctor:
   Classic Snakes Game Tutorial - MOO ICT: Ready via Cross-platform Forms layer in the app preview - A .NET Framework project, run with .NET on this tablet. Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
 Startup project: Classic Snakes Game Tutorial - MOO ICT
 Built in 0.0 s: 0 errors, 0 warnings
-Editor: 3 files opened and analyzed in 0.2 s, 0 errors only the editor shows, 0 only the build shows
+Editor: 3 files opened and analyzed in 0.1 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 4 over 100 ms (0 over 250 ms, 0 over 1 s), 0.6 s in all, longest 198 ms during screenshots, 0.0 s of it garbage collection; answer p50 7.6 ms, p95 165.8 ms, p99 198.4 ms over 22 questions in 1 s
+UI timings: document view 54 ms, document view 3 ms, document view 2 ms, document view 2 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 198 ms | 21 ms | 0.7 s | screenshots |
+| 166 ms | 0 ms | 0.3 s | screenshots |
+| 163 ms | 0 ms | 0.5 s | screenshots |
+| 115 ms | 7 ms | 1.0 s | screenshots |
 Output:
-Build started at 07:14:23...
+Build started at 07:22:17...
 1>------ Build started: Project: Classic Snakes Game Tutorial - MOO ICT, Configuration: Debug ------
-1>Classic Snakes Game Tutorial - MOO ICT -> compiled in memory (20.5 KB, 23 ms)
+1>Classic Snakes Game Tutorial - MOO ICT -> compiled in memory (20.5 KB, 20 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 

@@ -19,7 +19,118 @@ Compatibility Doctor:
   MudBlazor: Library via Built with its users - A library is compiled together with the projects that reference it.
   src: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
 Startup project: MudBlazor.Docs.Server
-Built in 140.6 s: 0 errors, 3 warnings
+Built in 138.3 s: 1450 errors, 9246 warnings
+  888 x RZ9991
+      [MudBlazor.Analyzers.TestComponents] AttributeTest.razor(28,49): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-RequiredError'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] AttributeTest.razor(31,23): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Value'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] AttributeTest.razor(37,28): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Value'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] LegacyBindings.razor(3,38): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Checked'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] LegacyBindings.razor(4,39): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Checked'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] LegacyBindings.razor(5,36): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Checked'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] LegacyBindings.razor(6,49): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-SelectedOption'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] LegacyBindings.razor(7,29): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-IsVisible'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] LegacyBindings.razor(8,33): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-IsVisible'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] LegacyBindings.razor(9,45): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-IsVisible'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] LegacyBindings.razor(10,55): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-IsHidden'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] LegacyBindings.razor(12,55): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-IsExpanded'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] LegacyBindings.razor(16,33): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-IsChecked'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(14,27): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Value'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(16,25): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Value'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(17,29): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Value'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(44,27): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Visible'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(45,31): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Visible'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(46,43): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Visible'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(48,53): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Hidden'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(52,53): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Expanded'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(60,28): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Value'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(61,31): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Value'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(106,48): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Checked'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+      [MudBlazor.Analyzers.TestComponents] MigrationHints.razor(18,28): error RZ9991: The attribute names could not be inferred from bind attribute 'bind-Value'. Bind attributes should be of the form 'bind' or 'bind-value' along with their corresponding optional parameters like 'bind-value:event', 'bind:format' etc.
+  408 x CS0103
+      [MudBlazor.Docs] ApiBreadcrumbs.razor(3,25): error CS0103: The name 'Item' does not exist in the current context
+      [MudBlazor.Docs] ApiBreadcrumbs.razor(3,59): error CS0103: The name 'Item' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(9,42): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(17,46): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(23,47): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(70,21): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(73,47): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(74,53): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(104,22): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(104,55): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(106,47): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(107,34): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(112,30): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(116,32): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(126,33): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(134,18): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(142,33): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(142,58): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(142,95): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(144,93): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(147,34): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(147,58): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(147,111): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(153,34): error CS0103: The name 'context' does not exist in the current context
+      [MudBlazor.Docs] ApiMemberTable.razor(153,58): error CS0103: The name 'context' does not exist in the current context
+  87 x CS1660
+      [MudBlazor.Analyzers.TestComponents] RemovedInputsNavigationAndData.razor(61,75): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(62,61): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(63,43): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(64,49): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(118,75): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(118,106): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Analyzers.TestComponents] Replacements.razor(120,72): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] AutocompleteClrObjectsExample.razor(10,64): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] AutocompleteClrObjectsExample.razor(14,64): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] AutocompleteClrObjectsExample.razor(29,118): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] AutocompletePresentationExtrasExample.razor(10,64): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] AutocompletePresentationExtrasExample.razor(20,69): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] AutocompletePresentationExtrasExample.razor(30,64): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] AutocompletePresentationExtrasExample.razor(38,64): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] AutocompleteStrictFalseExample.razor(15,64): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] DataGridAdvancedFilteringExample.razor(15,60): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] DataGridAriaLabelExample.razor(5,43): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] DataGridDetailRowExample.razor(8,62): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] DataGridDetailRowExample.razor(8,109): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] DataGridDetailRowRendererExample.razor(8,62): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] DataGridDetailRowRendererExample.razor(8,109): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] DataGridFilterTemplateSimpleModeExample.razor(16,61): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] DataGridFilterTemplateSimpleModeExample.razor(49,52): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] DataGridSelectionExample.razor(9,44): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+      [MudBlazor.Docs] DataGridSelectionExample.razor(9,92): error CS1660: Cannot convert lambda expression to type 'bool' because it is not a delegate type
+  63 x CS0029
+      [MudBlazor.Docs] ApiMemberTable.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudTable<MudBlazor.Docs.Models.DocumentedMember>'
+      [MudBlazor.Docs] ApiSeeAlsoLinks.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudTable<MudBlazor.Docs.Models.DocumentedLink>'
+      [MudBlazor.Docs] ApiTypeTable.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudTable<MudBlazor.Docs.Models.DocumentedType>'
+      [MudBlazor.Docs] DocsPage.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudPageContentNavigation'
+      [MudBlazor.Docs] AutocompleteValidationExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudForm'
+      [MudBlazor.Docs] CarouselBindingExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudCarousel<string>'
+      [MudBlazor.Docs] RadarChartExample1.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudChart<double>'
+      [MudBlazor.Docs] SankeyExample3.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudChart<int>'
+      [MudBlazor.Docs] DataGridAdvancedFilteringExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudDataGrid<MudBlazor.Examples.Data.Models.Element>'
+      [MudBlazor.Docs] DataGridCellContextMenuExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudMenu'
+      [MudBlazor.Docs] DataGridColumnsPanelExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudDataGrid<MudBlazor.Examples.Data.Models.Element>'
+      [MudBlazor.Docs] DataGridContextMenuExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudMenu'
+      [MudBlazor.Docs] DataGridCustomSortingExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudDataGrid<MudBlazor.Docs.Examples.DataGridCustomSortingExample.Item>'
+      [MudBlazor.Docs] DataGridDetailRowExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudDataGrid<MudBlazor.Examples.Data.Models.Element>'
+      [MudBlazor.Docs] DataGridDetailRowRendererExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudDataGrid<MudBlazor.Examples.Data.Models.Element>'
+      [MudBlazor.Docs] DataGridEditingExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudDataGrid<MudBlazor.Examples.Data.Models.Element>'
+      [MudBlazor.Docs] DataGridFilterTemplateSimpleModeExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudDataGrid<MudBlazor.Examples.Data.Models.Element>'
+      [MudBlazor.Docs] DataGridFilteringExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudDataGrid<MudBlazor.Examples.Data.Models.Element>'
+      [MudBlazor.Docs] DataGridGroupingExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudDataGrid<MudBlazor.Examples.Data.Models.Element>'
+      [MudBlazor.Docs] DataGridGroupingMultiLevelExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudDataGrid<MudBlazor.Docs.Examples.DataGridGroupingMultiLevelExample.USState>'
+      [MudBlazor.Docs] DataGridInlineRowEditingExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudDataGrid<MudBlazor.Examples.Data.Models.Element>'
+      [MudBlazor.Docs] DataGridServerSideExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudDataGrid<MudBlazor.Examples.Data.Models.Element>'
+      [MudBlazor.Docs] DataGridValidatorExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudForm'
+      [MudBlazor.Docs] DatePickerActionButtonsExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudDatePicker'
+      [MudBlazor.Docs] DatePickerGoToDateExample.razor(1,1): error CS0029: Cannot implicitly convert type 'Microsoft.AspNetCore.Components.ElementReference' to 'MudBlazor.MudDatePicker'
+  2 x CS9174
+      [MudBlazor.Docs] DonutExample1.razor(4,125): error CS9174: Cannot initialize type 'bool' with a collection expression because the type is not constructible.
+      [MudBlazor.Docs] DonutExample2.razor(4,26): error CS9174: Cannot initialize type 'bool' with a collection expression because the type is not constructible.
+  1 x CS0119
+      [MudBlazor.Docs] DonutExample2.razor(8,80): error CS0119: 'Position' is a type, which is not valid in the given context
+  1 x CS1662
+      [MudBlazor.Docs] DataGridFilterTemplateSimpleModeExample.razor(1,1): error CS1662: Cannot convert lambda expression to intended delegate type because some of the return types in the block are not implicitly convertible to the delegate return type
 Packages with analyzers or MSBuild files:
   blazor-analytics 4.0.0
       build/Blazor-Analytics.props
@@ -1190,46 +1301,244 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net462/_._
       buildTransitive/net8.0/_._
       buildTransitive/netcoreapp2.0/System.Security.Cryptography.ProtectedData.targets
-Editor: 24 files opened and analyzed in 2.5 s, 0 errors only the editor shows, 0 only the build shows
+Editor: 24 files opened and analyzed in 3.5 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 62 over 100 ms (13 over 250 ms, 0 over 1 s), 12.4 s in all, longest 726 ms during the first build, 4.8 s of it garbage collection; answer p50 6.4 ms, p95 59.7 ms, p99 138.0 ms over 3885 questions in 145 s
+UI timings: document view 4 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 726 ms | 292 ms | 130.4 s | the first build |
+| 580 ms | 157 ms | 1.8 s | screenshots |
+| 532 ms | 128 ms | 2.5 s | screenshots |
+| 404 ms | 155 ms | 127.0 s | the first build |
+| 371 ms | 181 ms | 108.6 s | the first build |
+| 355 ms | 141 ms | 114.0 s | the first build |
+| 352 ms | 132 ms | 64.6 s | the first build |
+| 324 ms | 172 ms | 111.3 s | the first build |
+| 306 ms | 108 ms | 131.2 s | the first build |
+| 305 ms | 145 ms | 51.3 s | the first build |
+| 304 ms | 117 ms | 119.4 s | the first build |
+| 279 ms | 92 ms | 60.9 s | the first build |
+| 256 ms | 71 ms | 74.8 s | the first build |
+| 250 ms | 74 ms | 67.2 s | the first build |
+| 248 ms | 117 ms | 132.0 s | the first build |
 Output:
-Build started at 07:17:23...
-1>------ Build started: Project: MudBlazor.Analyzers, Configuration: Debug ------
-1>MudBlazor.Analyzers -> compiled in memory (75 KB, 337 ms)
-2>------ Build started: Project: MudBlazor.Analyzers.CodeFixes, Configuration: Debug ------
-2>MudBlazor.Analyzers.CodeFixes -> compiled in memory (11 KB, 135 ms)
-3>------ Build started: Project: MudBlazor, Configuration: Debug ------
-
-added 101 packages in 7s
-========== npm install: succeeded ==========
-3>BaseAxisChart.razor.cs(68,19): warning CS8618: Non-nullable property 'Width' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-3>BaseAxisChart.razor.cs(76,19): warning CS8618: Non-nullable property 'Height' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-3>BaseAxisChart.razor.cs(108,26): warning CS8618: Non-nullable property 'ChartOptions' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-3>MudBlazor -> compiled in memory (10278.5 KB, 8729 ms)
-4>------ Build started: Project: MudBlazor.Docs.Compiler, Configuration: Debug ------
-4>MudBlazor.Docs.Compiler -> compiled in memory (72 KB, 5029 ms)
-5>------ Build started: Project: MudBlazor.Examples.Data, Configuration: Debug ------
-5>MudBlazor.Examples.Data -> compiled in memory (46 KB, 14 ms)
-6>------ Build started: Project: MudBlazor.Docs, Configuration: Debug ------
-6>MudBlazor.Docs -> compiled in memory (4885.5 KB, 16932 ms)
-7>------ Build started: Project: MudBlazor.Docs.Server, Configuration: Debug ------
-7>MudBlazor.Docs.Server -> compiled in memory (41 KB, 10469 ms)
-8>------ Build started: Project: MudBlazor.Docs.Wasm, Configuration: Debug ------
-8>MudBlazor.Docs.Wasm -> compiled in memory (14 KB, 10388 ms)
-9>------ Build started: Project: MudBlazor.Docs.WasmHost, Configuration: Debug ------
-9>MudBlazor.Docs.WasmHost -> compiled in memory (47.5 KB, 10104 ms)
-10>------ Build started: Project: MudBlazor.Analyzers.TestComponents, Configuration: Debug ------
-10>MudBlazor.Analyzers.TestComponents -> compiled in memory (58 KB, 4547 ms)
+ame 'MudSelect'. If this is intended to be a component, add a @using directive for its namespace.
+10>Boundaries.razor(4,5): warning RZ10012: Found markup element with unexpected name 'MudSelectItem'. If this is intended to be a component, add a @using directive for its namespace.
+10>Boundaries.razor(6,1): warning RZ10012: Found markup element with unexpected name 'MudAutocomplete'. If this is intended to be a component, add a @using directive for its namespace.
+10>Boundaries.razor(7,1): warning RZ10012: Found markup element with unexpected name 'MudRadio'. If this is intended to be a component, add a @using directive for its namespace.
+10>Boundaries.razor(8,1): warning RZ10012: Found markup element with unexpected name 'MudTHeadRow'. If this is intended to be a component, add a @using directive for its namespace.
+10>Boundaries.razor(9,1): warning RZ10012: Found markup element with unexpected name 'MudIconButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>Boundaries.razor(12,1): warning RZ10012: Found markup element with unexpected name 'MudTabs'. If this is intended to be a component, add a @using directive for its namespace.
+10>Boundaries.razor(13,5): warning RZ10012: Found markup element with unexpected name 'MudTabPanel'. If this is intended to be a component, add a @using directive for its namespace.
+10>Boundaries.razor(15,1): warning RZ10012: Found markup element with unexpected name 'MudTreeView'. If this is intended to be a component, add a @using directive for its namespace.
+10>Boundaries.razor(16,5): warning RZ10012: Found markup element with unexpected name 'MudTreeViewItem'. If this is intended to be a component, add a @using directive for its namespace.
+10>Boundaries.razor(18,1): warning RZ10012: Found markup element with unexpected name 'MudTreeViewItemToggleButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>Boundaries.razor(19,1): warning RZ10012: Found markup element with unexpected name 'MudCheckBox'. If this is intended to be a component, add a @using directive for its namespace.
+10>Boundaries.razor(20,1): warning RZ10012: Found markup element with unexpected name 'MudThemeProvider'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(3,1): warning RZ10012: Found markup element with unexpected name 'MudCheckBox'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(4,1): warning RZ10012: Found markup element with unexpected name 'MudCheckBox'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(5,1): warning RZ10012: Found markup element with unexpected name 'MudSwitch'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(6,1): warning RZ10012: Found markup element with unexpected name 'MudRadioGroup'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(7,1): warning RZ10012: Found markup element with unexpected name 'MudDialog'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(8,1): warning RZ10012: Found markup element with unexpected name 'MudMessageBox'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(9,1): warning RZ10012: Found markup element with unexpected name 'MudTooltip'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(10,1): warning RZ10012: Found markup element with unexpected name 'MudHidden'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(11,1): warning RZ10012: Found markup element with unexpected name 'MudExpansionPanels'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(12,5): warning RZ10012: Found markup element with unexpected name 'MudExpansionPanel'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(14,1): warning RZ10012: Found markup element with unexpected name 'MudTable'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(15,5): warning RZ10012: Found markup element with unexpected name 'RowTemplate'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(16,9): warning RZ10012: Found markup element with unexpected name 'MudTr'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(21,1): warning RZ10012: Found markup element with unexpected name 'MudCheckBox'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(22,1): warning RZ10012: Found markup element with unexpected name 'MudSwitch'. If this is intended to be a component, add a @using directive for its namespace.
+10>LegacyBindings.razor(32,20): warning CS0414: The field 'LegacyBindings._text' is assigned but its value is never used
+10>RemovedButtonsAndSelection.razor(4,1): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedButtonsAndSelection.razor(5,1): warning RZ10012: Found markup element with unexpected name 'MudIconButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedButtonsAndSelection.razor(6,1): warning RZ10012: Found markup element with unexpected name 'MudFab'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedButtonsAndSelection.razor(7,1): warning RZ10012: Found markup element with unexpected name 'MudToggleIconButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedButtonsAndSelection.razor(8,1): warning RZ10012: Found markup element with unexpected name 'MudButtonGroup'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedButtonsAndSelection.razor(9,5): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedButtonsAndSelection.razor(13,1): warning RZ10012: Found markup element with unexpected name 'MudCheckBox'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedButtonsAndSelection.razor(14,1): warning RZ10012: Found markup element with unexpected name 'MudSwitch'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedButtonsAndSelection.razor(15,1): warning RZ10012: Found markup element with unexpected name 'MudRadioGroup'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedButtonsAndSelection.razor(16,5): warning RZ10012: Found markup element with unexpected name 'MudRadio'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedButtonsAndSelection.razor(18,1): warning RZ10012: Found markup element with unexpected name 'MudToggleGroup'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedButtonsAndSelection.razor(19,1): warning RZ10012: Found markup element with unexpected name 'MudRating'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedButtonsAndSelection.razor(20,1): warning RZ10012: Found markup element with unexpected name 'MudRatingItem'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(5,1): warning RZ10012: Found markup element with unexpected name 'MudTextField'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(6,1): warning RZ10012: Found markup element with unexpected name 'MudNumericField'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(7,1): warning RZ10012: Found markup element with unexpected name 'MudSelect'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(8,1): warning RZ10012: Found markup element with unexpected name 'MudAutocomplete'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(9,1): warning RZ10012: Found markup element with unexpected name 'MudField'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(10,1): warning RZ10012: Found markup element with unexpected name 'MudInput'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(13,1): warning RZ10012: Found markup element with unexpected name 'MudDatePicker'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(14,1): warning RZ10012: Found markup element with unexpected name 'MudDateRangePicker'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(15,1): warning RZ10012: Found markup element with unexpected name 'MudTimePicker'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(16,1): warning RZ10012: Found markup element with unexpected name 'MudColorPicker'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(17,1): warning RZ10012: Found markup element with unexpected name 'MudPickerToolbar'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(20,1): warning RZ10012: Found markup element with unexpected name 'MudNavMenu'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(21,5): warning RZ10012: Found markup element with unexpected name 'MudNavGroup'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(22,9): warning RZ10012: Found markup element with unexpected name 'MudNavLink'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(25,1): warning RZ10012: Found markup element with unexpected name 'MudTabs'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(26,5): warning RZ10012: Found markup element with unexpected name 'MudTabPanel'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(28,1): warning RZ10012: Found markup element with unexpected name 'MudDynamicTabs'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(29,1): warning RZ10012: Found markup element with unexpected name 'MudTimeline'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(30,1): warning RZ10012: Found markup element with unexpected name 'MudProgressCircular'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(31,1): warning RZ10012: Found markup element with unexpected name 'MudProgressLinear'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(32,1): warning RZ10012: Found markup element with unexpected name 'MudCarousel'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(33,1): warning RZ10012: Found markup element with unexpected name 'MudPagination'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(36,1): warning RZ10012: Found markup element with unexpected name 'MudTablePager'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(37,1): warning RZ10012: Found markup element with unexpected name 'MudDataGridPager'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(38,1): warning RZ10012: Found markup element with unexpected name 'MudDataGrid'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(39,5): warning RZ10012: Found markup element with unexpected name 'Columns'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(40,9): warning RZ10012: Found markup element with unexpected name 'PropertyColumn'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(41,9): warning RZ10012: Found markup element with unexpected name 'TemplateColumn'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(44,1): warning RZ10012: Found markup element with unexpected name 'MudTable'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(45,5): warning RZ10012: Found markup element with unexpected name 'HeaderContent'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(46,9): warning RZ10012: Found markup element with unexpected name 'MudTHeadRow'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(48,5): warning RZ10012: Found markup element with unexpected name 'RowTemplate'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(49,9): warning RZ10012: Found markup element with unexpected name 'MudTr'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(51,5): warning RZ10012: Found markup element with unexpected name 'FooterContent'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(52,9): warning RZ10012: Found markup element with unexpected name 'MudTFootRow'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(55,1): warning RZ10012: Found markup element with unexpected name 'MudTableGroupRow'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(58,1): warning RZ10012: Found markup element with unexpected name 'MudTreeView'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(59,5): warning RZ10012: Found markup element with unexpected name 'MudTreeViewItem'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(61,1): warning RZ10012: Found markup element with unexpected name 'MudDropContainer'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(62,5): warning RZ10012: Found markup element with unexpected name 'ChildContent'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(63,9): warning RZ10012: Found markup element with unexpected name 'MudDropZone'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedInputsNavigationAndData.razor(66,1): warning RZ10012: Found markup element with unexpected name 'MudChart'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(4,1): warning RZ10012: Found markup element with unexpected name 'MudChipSet'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(5,5): warning RZ10012: Found markup element with unexpected name 'MudChip'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(7,1): warning RZ10012: Found markup element with unexpected name 'MudList'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(8,5): warning RZ10012: Found markup element with unexpected name 'MudListSubheader'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(9,5): warning RZ10012: Found markup element with unexpected name 'MudListItem'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(13,1): warning RZ10012: Found markup element with unexpected name 'MudMenu'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(14,5): warning RZ10012: Found markup element with unexpected name 'MudMenuItem'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(18,1): warning RZ10012: Found markup element with unexpected name 'MudAlert'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(19,1): warning RZ10012: Found markup element with unexpected name 'MudDialog'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(20,1): warning RZ10012: Found markup element with unexpected name 'MudMessageBox'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(21,1): warning RZ10012: Found markup element with unexpected name 'MudTooltip'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(22,1): warning RZ10012: Found markup element with unexpected name 'MudHidden'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(25,1): warning RZ10012: Found markup element with unexpected name 'MudExpansionPanels'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(26,5): warning RZ10012: Found markup element with unexpected name 'MudExpansionPanel'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(28,1): warning RZ10012: Found markup element with unexpected name 'MudAppBar'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(29,1): warning RZ10012: Found markup element with unexpected name 'MudToolBar'. If this is intended to be a component, add a @using directive for its namespace.
+10>RemovedListsMenusAndLayout.razor(30,1): warning RZ10012: Found markup element with unexpected name 'MudDrawer'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(5,1): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(6,1): warning RZ10012: Found markup element with unexpected name 'MudIconButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(7,1): warning RZ10012: Found markup element with unexpected name 'MudFab'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(8,1): warning RZ10012: Found markup element with unexpected name 'MudToggleIconButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(9,1): warning RZ10012: Found markup element with unexpected name 'MudButtonGroup'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(10,5): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(14,1): warning RZ10012: Found markup element with unexpected name 'MudCheckBox'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(15,1): warning RZ10012: Found markup element with unexpected name 'MudCheckBox'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(16,1): warning RZ10012: Found markup element with unexpected name 'MudSwitch'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(17,1): warning RZ10012: Found markup element with unexpected name 'MudRadioGroup'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(18,5): warning RZ10012: Found markup element with unexpected name 'MudRadio'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(20,1): warning RZ10012: Found markup element with unexpected name 'MudToggleGroup'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(21,1): warning RZ10012: Found markup element with unexpected name 'MudRating'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(22,1): warning RZ10012: Found markup element with unexpected name 'MudRatingItem'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(25,1): warning RZ10012: Found markup element with unexpected name 'MudChipSet'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(26,5): warning RZ10012: Found markup element with unexpected name 'MudChip'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(27,5): warning RZ10012: Found markup element with unexpected name 'MudChip'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(28,5): warning RZ10012: Found markup element with unexpected name 'MudChip'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(30,1): warning RZ10012: Found markup element with unexpected name 'MudList'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(31,5): warning RZ10012: Found markup element with unexpected name 'MudListSubheader'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(32,5): warning RZ10012: Found markup element with unexpected name 'MudListItem'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(33,5): warning RZ10012: Found markup element with unexpected name 'MudListItem'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(34,5): warning RZ10012: Found markup element with unexpected name 'MudListItem'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(38,1): warning RZ10012: Found markup element with unexpected name 'MudMenu'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(39,5): warning RZ10012: Found markup element with unexpected name 'MudMenuItem'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(43,1): warning RZ10012: Found markup element with unexpected name 'MudAlert'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(44,1): warning RZ10012: Found markup element with unexpected name 'MudDialog'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(45,1): warning RZ10012: Found markup element with unexpected name 'MudMessageBox'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(46,1): warning RZ10012: Found markup element with unexpected name 'MudTooltip'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(47,1): warning RZ10012: Found markup element with unexpected name 'MudTooltip'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(48,1): warning RZ10012: Found markup element with unexpected name 'MudHidden'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(51,1): warning RZ10012: Found markup element with unexpected name 'MudExpansionPanels'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(52,5): warning RZ10012: Found markup element with unexpected name 'MudExpansionPanel'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(53,5): warning RZ10012: Found markup element with unexpected name 'MudExpansionPanel'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(55,1): warning RZ10012: Found markup element with unexpected name 'MudAppBar'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(56,1): warning RZ10012: Found markup element with unexpected name 'MudToolBar'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(57,1): warning RZ10012: Found markup element with unexpected name 'MudDrawer'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(60,1): warning RZ10012: Found markup element with unexpected name 'MudTextField'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(61,1): warning RZ10012: Found markup element with unexpected name 'MudNumericField'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(62,1): warning RZ10012: Found markup element with unexpected name 'MudSelect'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(63,1): warning RZ10012: Found markup element with unexpected name 'MudSelect'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(64,1): warning RZ10012: Found markup element with unexpected name 'MudSelect'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(65,1): warning RZ10012: Found markup element with unexpected name 'MudAutocomplete'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(66,1): warning RZ10012: Found markup element with unexpected name 'MudField'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(67,1): warning RZ10012: Found markup element with unexpected name 'MudInput'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(70,1): warning RZ10012: Found markup element with unexpected name 'MudDatePicker'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(71,1): warning RZ10012: Found markup element with unexpected name 'MudDateRangePicker'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(72,1): warning RZ10012: Found markup element with unexpected name 'MudTimePicker'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(73,1): warning RZ10012: Found markup element with unexpected name 'MudColorPicker'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(74,1): warning RZ10012: Found markup element with unexpected name 'MudPickerToolbar'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(77,1): warning RZ10012: Found markup element with unexpected name 'MudNavMenu'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(78,5): warning RZ10012: Found markup element with unexpected name 'MudNavGroup'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(79,9): warning RZ10012: Found markup element with unexpected name 'MudNavLink'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(82,1): warning RZ10012: Found markup element with unexpected name 'MudTabs'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(83,5): warning RZ10012: Found markup element with unexpected name 'MudTabPanel'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(85,1): warning RZ10012: Found markup element with unexpected name 'MudDynamicTabs'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(86,1): warning RZ10012: Found markup element with unexpected name 'MudTimeline'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(87,1): warning RZ10012: Found markup element with unexpected name 'MudProgressCircular'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(88,1): warning RZ10012: Found markup element with unexpected name 'MudProgressLinear'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(89,1): warning RZ10012: Found markup element with unexpected name 'MudCarousel'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(90,1): warning RZ10012: Found markup element with unexpected name 'MudPagination'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(93,1): warning RZ10012: Found markup element with unexpected name 'MudTablePager'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(94,1): warning RZ10012: Found markup element with unexpected name 'MudDataGridPager'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(95,1): warning RZ10012: Found markup element with unexpected name 'MudDataGrid'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(96,5): warning RZ10012: Found markup element with unexpected name 'Columns'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(97,9): warning RZ10012: Found markup element with unexpected name 'PropertyColumn'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(98,9): warning RZ10012: Found markup element with unexpected name 'TemplateColumn'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(101,1): warning RZ10012: Found markup element with unexpected name 'MudTable'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(102,5): warning RZ10012: Found markup element with unexpected name 'HeaderContent'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(103,9): warning RZ10012: Found markup element with unexpected name 'MudTHeadRow'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(105,5): warning RZ10012: Found markup element with unexpected name 'RowTemplate'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(106,9): warning RZ10012: Found markup element with unexpected name 'MudTr'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(108,5): warning RZ10012: Found markup element with unexpected name 'FooterContent'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(109,9): warning RZ10012: Found markup element with unexpected name 'MudTFootRow'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(112,1): warning RZ10012: Found markup element with unexpected name 'MudTableGroupRow'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(115,1): warning RZ10012: Found markup element with unexpected name 'MudTreeView'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(116,5): warning RZ10012: Found markup element with unexpected name 'MudTreeViewItem'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(118,1): warning RZ10012: Found markup element with unexpected name 'MudDropContainer'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(119,5): warning RZ10012: Found markup element with unexpected name 'ChildContent'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(120,9): warning RZ10012: Found markup element with unexpected name 'MudDropZone'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(123,1): warning RZ10012: Found markup element with unexpected name 'MudChart'. If this is intended to be a component, add a @using directive for its namespace.
+10>Replacements.razor(137,17): warning CS0169: The field 'Replacements._number' is never used
+10>MigrationHints.razor(2,1): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(5,1): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(6,1): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(7,1): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(8,1): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(11,1): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(14,5): warning RZ10012: Found markup element with unexpected name 'MudText'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(18,1): warning RZ10012: Found markup element with unexpected name 'MudTextField'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(19,1): warning RZ10012: Found markup element with unexpected name 'MudTextField'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(20,1): warning RZ10012: Found markup element with unexpected name 'MudTextField'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(21,1): warning RZ10012: Found markup element with unexpected name 'MudTextField'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(24,1): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(25,1): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(26,1): warning RZ10012: Found markup element with unexpected name 'MudTextField'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(27,1): warning RZ10012: Found markup element with unexpected name 'MudTextField'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(39,1): warning RZ10012: Found markup element with unexpected name 'MudChip'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(40,1): warning RZ10012: Found markup element with unexpected name 'MudIconButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(43,1): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(44,1): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(45,1): warning RZ10012: Found markup element with unexpected name 'MudTextField'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(48,1): warning RZ10012: Found markup element with unexpected name 'MudButton'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(53,1): warning RZ10012: Found markup element with unexpected name 'MudText'. If this is intended to be a component, add a @using directive for its namespace.
+10>MigrationHints.razor(63,20): warning CS0414: The field 'MigrationHints._text' is assigned but its value is never used
 11>------ Build started: Project: MudBlazor.UnitTests.Shared, Configuration: Debug ------
-11>MudBlazor.UnitTests.Shared -> compiled in memory (24.5 KB, 3538 ms)
+11>MudBlazor.UnitTests.Shared -> compiled in memory (24.5 KB, 3750 ms)
 12>------ Build started: Project: MudBlazor.UnitTests.Analyzers, Configuration: Debug ------
-12>MudBlazor.UnitTests.Analyzers -> compiled in memory (237.5 KB, 4409 ms)
+12>MudBlazor.UnitTests.Analyzers was not compiled because MudBlazor.Analyzers.TestComponents, which it references, has errors.
 13>------ Build started: Project: MudBlazor.UnitTests.Docs.Generator, Configuration: Debug ------
-13>MudBlazor.UnitTests.Docs.Generator -> compiled in memory (26.5 KB, 3816 ms)
+13>MudBlazor.UnitTests.Docs.Generator -> compiled in memory (26.5 KB, 4424 ms)
 14>------ Build started: Project: MudBlazor.UnitTests.Docs, Configuration: Debug ------
-14>MudBlazor.UnitTests.Docs -> compiled in memory (61 KB, 10343 ms)
+14>MudBlazor.UnitTests.Docs was not compiled because MudBlazor.Docs, which it references, has errors.
 15>------ Build started: Project: MudBlazor.UnitTests.Viewer, Configuration: Debug ------
-15>MudBlazor.UnitTests.Viewer -> compiled in memory (2575.5 KB, 16138 ms)
+15>MudBlazor.UnitTests.Viewer -> compiled in memory (2575 KB, 16480 ms)
 16>------ Build started: Project: MudBlazor.UnitTests, Configuration: Debug ------
-16>MudBlazor.UnitTests -> compiled in memory (7162 KB, 28146 ms)
-========== Build: 16 succeeded, 0 failed ==========
+16>MudBlazor.UnitTests -> compiled in memory (7163 KB, 28434 ms)
+========== Build: 9 succeeded, 7 failed ==========
 

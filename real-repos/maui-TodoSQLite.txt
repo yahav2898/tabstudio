@@ -5,8 +5,16 @@ Compatibility Doctor:
 Startup project: none
 Built in 0.0 s: 0 errors, 0 warnings
 Editor: 3 files opened and analyzed in 0.1 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 4 over 100 ms (0 over 250 ms, 0 over 1 s), 0.8 s in all, longest 205 ms during screenshots, 0.0 s of it garbage collection; answer p50 4.4 ms, p95 205.1 ms, p99 205.1 ms over 19 questions in 1 s
+UI timings: document view 105 ms, document view 28 ms, document view 4 ms, document view 3 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 205 ms | 32 ms | 0.5 s | screenshots |
+| 193 ms | 0 ms | 0.8 s | screenshots |
+| 192 ms | 0 ms | 0.3 s | screenshots |
+| 166 ms | 0 ms | 1.0 s | screenshots |
 Output:
-Build started at 07:20:16...
+Build started at 07:28:00...
 1>------ Skipped: Project: TodoSQLite: it is a .NET MAUI project, which only .NET's MAUI workload builds, on a computer ------
 ========== Build: 0 succeeded, 0 failed, 1 skipped ==========
 
