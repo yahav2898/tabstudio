@@ -32,6 +32,16 @@ public sealed partial class CodeEditorView
             return;
         }
 
-        Dispatcher.UIThread.Post(() => caret.BringCaretToView(TextView.DefaultLineHeight), DispatcherPriority.Loaded);
+        // Once the lines are laid out at the new height: only a caret that is still hidden is scrolled to, since a
+        // scroll also closes Quick Info and the other popups at the caret.
+        Dispatcher.UIThread.Post(() =>
+        {
+            var view = TextView;
+            var line = view.GetVisualTopByDocumentLine(caret.Line) - view.ScrollOffset.Y;
+            if (line < -0.5 || line + view.DefaultLineHeight > view.Bounds.Height + 0.5)
+            {
+                caret.BringCaretToView(view.DefaultLineHeight);
+            }
+        }, DispatcherPriority.Loaded);
     }
 }
