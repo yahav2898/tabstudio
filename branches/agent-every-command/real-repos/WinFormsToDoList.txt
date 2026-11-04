@@ -5,9 +5,17 @@ Compatibility Doctor:
 Startup project: simple-toDoList-winforms
 Built in 0.0 s: 0 errors, 0 warnings
 Editor: 3 files opened and analyzed in 0.0 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 4 over 100 ms (0 over 250 ms, 0 over 1 s), 0.5 s in all, longest 171 ms during screenshots, 0.0 s of it garbage collection; answer p50 3.3 ms, p95 110.3 ms, p99 170.7 ms over 21 questions in 1 s
+UI timings: document view 3 ms, document view 2 ms, document view 2 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 171 ms | 41 ms | 0.2 s | screenshots |
+| 110 ms | 0 ms | 0.8 s | screenshots |
+| 110 ms | 0 ms | 0.4 s | screenshots |
+| 106 ms | 0 ms | 0.6 s | screenshots |
 Output:
-Build started at 05:37:48...
+Build started at 07:54:53...
 1>------ Build started: Project: simple-toDoList-winforms, Configuration: Debug ------
-1>simple-toDoList-winforms -> compiled in memory (82.5 KB, 35 ms)
+1>simple-toDoList-winforms -> compiled in memory (82.5 KB, 43 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 

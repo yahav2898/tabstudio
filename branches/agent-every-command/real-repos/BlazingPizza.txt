@@ -6,7 +6,7 @@ Compatibility Doctor:
   BlazingPizza.Shared: Library via Built with its users - A library is compiled together with the projects that reference it.
   BlazingPizza.ComponentsLibrary: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: BlazingPizza
-Built in 3.7 s: 0 errors, 14 warnings
+Built in 4.3 s: 0 errors, 14 warnings
 Packages with analyzers or MSBuild files:
   microsoft.aspnetcore.app.ref 10.0.14
       analyzers/dotnet/cs/Microsoft.AspNetCore.App.Analyzers.dll
@@ -314,20 +314,28 @@ Packages with analyzers or MSBuild files:
   system.composition 6.0.0
       buildTransitive/netcoreapp2.0/System.Composition.targets
       buildTransitive/netcoreapp3.1/_._
-Editor: 12 files opened and analyzed in 0.5 s, 0 errors only the editor shows, 0 only the build shows
+Editor: 12 files opened and analyzed in 0.7 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 4 over 100 ms (1 over 250 ms, 0 over 1 s), 0.8 s in all, longest 348 ms during screenshots, 0.1 s of it garbage collection; answer p50 6.6 ms, p95 41.8 ms, p99 235.8 ms over 189 questions in 6 s
+UI timings: document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 348 ms | 63 ms | 0.2 s | screenshots |
+| 236 ms | 32 ms | 0.7 s | screenshots |
+| 138 ms | 17 ms | 5.4 s | screenshots |
+| 111 ms | 0 ms | 5.3 s | screenshots |
 Output:
-Build started at 05:37:40...
+Build started at 07:54:44...
 1>------ Build started: Project: BlazingPizza.ComponentsLibrary, Configuration: Debug ------
 1>TemplatedList.razor(17,6): warning CS8602: Dereference of a possibly null reference.
-1>BlazingPizza.ComponentsLibrary -> compiled in memory (10.5 KB, 201 ms)
+1>BlazingPizza.ComponentsLibrary -> compiled in memory (10.5 KB, 280 ms)
 2>------ Build started: Project: BlazingPizza.Shared, Configuration: Debug ------
-2>BlazingPizza.Shared -> compiled in memory (71.5 KB, 147 ms)
+2>BlazingPizza.Shared -> compiled in memory (71.5 KB, 271 ms)
 3>------ Build started: Project: BlazingPizza.Client, Configuration: Debug ------
 3>OrderState.cs(17,20): warning CS8618: Non-nullable property 'JSRuntime' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 3>OrderState.cs(48,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
 3>OrderState.cs(55,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
 3>OrderState.cs(70,11): warning CS8602: Dereference of a possibly null reference.
-3>BlazingPizza.Client -> compiled in memory (42 KB, 133 ms)
+3>BlazingPizza.Client -> compiled in memory (42 KB, 194 ms)
 4>------ Build started: Project: BlazingPizza, Configuration: Debug ------
 4>LoginDisplay.razor(12,60): warning CS8602: Dereference of a possibly null reference.
 4>MyOrders.razor(36,32): warning CS0169: The field 'MyOrders.ordersWithStatus' is never used
@@ -338,6 +346,6 @@ Build started at 05:37:40...
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Specials' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Toppings' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'NotificationSubscriptions' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-4>BlazingPizza -> compiled in memory (238.5 KB, 552 ms)
+4>BlazingPizza -> compiled in memory (238.5 KB, 730 ms)
 ========== Build: 4 succeeded, 0 failed ==========
 
