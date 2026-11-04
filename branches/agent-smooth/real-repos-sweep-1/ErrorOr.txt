@@ -1,10 +1,10 @@
 ErrorOr at d7cdea2ddc764ffaffac0f73466f0dcb0b07d44c
-Opened /home/runner/work/_temp/real-repos/ErrorOr/ErrorOr.slnx in 0.5 s
+Opened /home/runner/work/_temp/real-repos/ErrorOr/ErrorOr.slnx in 0.3 s
 Compatibility Doctor:
   ErrorOr: Library via Built with its users - A library is compiled together with the projects that reference it.
   Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: none
-Built in 0.7 s: 0 errors, 8 warnings
+Built in 0.6 s: 0 errors, 8 warnings
 Packages with analyzers or MSBuild files:
   coverlet.collector 10.1.0
       build/net10.0/Microsoft.Bcl.AsyncInterfaces.dll
@@ -210,29 +210,28 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Editor: 6 files opened and analyzed in 0.4 s, 0 errors only the editor shows, 0 only the build shows
-Tests: 228 passed, 0 failed, 0 skipped of 228: 228 tests run in 433 ms: 228 passed, 0 failed, 0 skipped.
-UI stalls: 5 over 100 ms (2 over 250 ms, 0 over 1 s), 1.1 s in all, longest 359 ms during screenshots, 0.1 s of it garbage collection; answer p50 6.6 ms, p95 140.6 ms, p99 359.2 ms over 92 questions in 4 s
-UI timings: document view 188 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 2 ms
+Tests: 228 passed, 0 failed, 0 skipped of 228: 228 tests run in 429 ms: 228 passed, 0 failed, 0 skipped.
+UI stalls: 4 over 100 ms (1 over 250 ms, 0 over 1 s), 0.8 s in all, longest 311 ms during screenshots, 0.1 s of it garbage collection; answer p50 7.6 ms, p95 91.6 ms, p99 311.0 ms over 93 questions in 3 s
+UI timings: document view 72 ms, document view 5 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 359 ms | 32 ms | 0.9 s | screenshots |
-| 301 ms | 19 ms | 0.5 s | screenshots |
-| 179 ms | 81 ms | 0.2 s | creating a document's view → starting restore and analysis |
-| 156 ms | 6 ms | 2.0 s | screenshots |
-| 141 ms | 0 ms | 2.2 s | screenshots |
+| 311 ms | 37 ms | 0.6 s | screenshots |
+| 206 ms | 36 ms | 0.4 s | screenshots |
+| 138 ms | 17 ms | 1.9 s | screenshots |
+| 123 ms | 0 ms | 1.7 s | screenshots |
 Output:
-Build started at 20:48:52...
+Build started at 01:04:21...
 1>------ Build started: Project: Tests, Configuration: Debug ------
-1>ErrorOr.cs(25,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
-1>ErrorOr.cs(26,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
-1>ErrorOr.cs(27,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
-1>ErrorOr.cs(28,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
-1>ErrorOr.cs(34,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
-1>ErrorOr.cs(35,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
-1>ErrorOr.cs(36,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
-1>ErrorOr.cs(37,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/2c96dc188340455b99bb4ab02834061f/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
-1>Tests -> compiled in memory (184.5 KB, 389 ms)
+1>ErrorOr.cs(25,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
+1>ErrorOr.cs(26,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
+1>ErrorOr.cs(27,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
+1>ErrorOr.cs(28,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
+1>ErrorOr.cs(34,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
+1>ErrorOr.cs(35,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
+1>ErrorOr.cs(36,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
+1>ErrorOr.cs(37,6): warning CS0436: The type 'MemberNotNullWhenAttribute' in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs' conflicts with the imported type 'MemberNotNullWhenAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/tmp/tabstudio-tests/0cd266204a824953af8020b243c0f3af/Packages/nullable/1.3.1/contentFiles/cs/netstandard2.1/Nullable/MemberNotNullWhenAttribute.cs'.
+1>Tests -> compiled in memory (184.5 KB, 444 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 ========== Starting test run ==========
-========== Test run finished: 228 Tests (228 Passed, 0 Failed, 0 Skipped) run in 433 ms ==========
+========== Test run finished: 228 Tests (228 Passed, 0 Failed, 0 Skipped) run in 429 ms ==========
 
