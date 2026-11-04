@@ -852,7 +852,10 @@ public sealed partial class EveryCommandTests
             }
         }
 
+        // Taps are hit-tested against what was last drawn: draw the scrolled frame before the finger comes down.
         sweep.Window.UpdateLayout();
+        sweep.Pump();
+        Avalonia.Headless.AvaloniaHeadlessPlatform.ForceRenderTimerTick();
         sweep.Pump();
         var middle = button.TranslatePoint(new Point(button.Bounds.Width / 2, button.Bounds.Height / 2), sweep.Window)
             ?? throw new InvalidOperationException("The button left the window.");
@@ -860,6 +863,8 @@ public sealed partial class EveryCommandTests
         {
             // Beside the open drawer, a tap closes the drawer first, as on a tablet: close it, then tap.
             sweep.Workspace.IsSideBarVisible = false;
+            sweep.Pump();
+            Avalonia.Headless.AvaloniaHeadlessPlatform.ForceRenderTimerTick();
             sweep.Pump();
         }
 
