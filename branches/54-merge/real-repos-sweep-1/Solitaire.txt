@@ -1,20 +1,21 @@
 Solitaire at b61b42b86fc14c54cf2c8639a765234952579b5f
-Opened /home/runner/work/_temp/real-repos/Solitaire/Solitaire.sln in 0.2 s
+Opened /home/runner/work/_temp/real-repos/Solitaire/Solitaire.sln in 0.3 s
 Compatibility Doctor:
   Solitaire: Ready via Cross-platform Forms layer in the app preview - Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
 Startup project: Solitaire
-Built in 0.1 s: 0 errors, 0 warnings
+Built in 0.2 s: 0 errors, 0 warnings
 Editor: 3 files opened and analyzed in 0.2 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 3 over 100 ms (0 over 250 ms, 0 over 1 s), 0.4 s in all, longest 158 ms during screenshots, 0.1 s of it garbage collection; answer p50 5.3 ms, p95 150.9 ms, p99 157.8 ms over 24 questions in 1 s
-UI timings: document view 104 ms, document view 2 ms, document view 2 ms, document view 2 ms
+UI stalls: 4 over 100 ms (1 over 250 ms, 0 over 1 s), 0.8 s in all, longest 293 ms during screenshots, 0.1 s of it garbage collection; answer p50 7.5 ms, p95 175.8 ms, p99 293.5 ms over 31 questions in 2 s
+UI timings: document view 89 ms, document view 4 ms, document view 3 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 158 ms | 31 ms | 0.5 s | screenshots |
-| 151 ms | 14 ms | 0.3 s | screenshots |
-| 107 ms | 59 ms | 0.1 s | creating a document's view → starting restore and analysis |
+| 293 ms | 64 ms | 0.3 s | screenshots |
+| 176 ms | 9 ms | 1.1 s | screenshots |
+| 163 ms | 0 ms | 0.6 s | screenshots |
+| 132 ms | 8 ms | 1.3 s | screenshots |
 Output:
-Build started at 00:54:18...
+Build started at 02:48:47...
 1>------ Build started: Project: Solitaire, Configuration: Debug ------
-1>Solitaire -> compiled in memory (1652 KB, 130 ms)
+1>Solitaire -> compiled in memory (1652 KB, 237 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 

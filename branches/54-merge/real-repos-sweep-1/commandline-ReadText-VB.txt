@@ -1,19 +1,22 @@
 commandline-ReadText-VB at 1e3607b97af6141743edb3c434c06d5b492f6fb3
-Opened /home/runner/work/_temp/real-repos/commandline-ReadText-VB/demo/ReadText.Demo.VB/ReadText.Demo.VB.sln in 0.1 s
+Opened /home/runner/work/_temp/real-repos/commandline-ReadText-VB/demo/ReadText.Demo.VB/ReadText.Demo.VB.sln in 0.2 s
 Compatibility Doctor:
   ReadText.Demo.VB: Ready via In-process - A .NET Framework project, run with .NET on this tablet. Compiled in memory and run right here, with its output in the Output panel.
 Startup project: ReadText.Demo.VB
-Built in 0.0 s: 0 errors, 0 warnings
+Built in 0.1 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
 Editor: 3 files opened and analyzed in 0.0 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 1 over 100 ms (0 over 250 ms, 0 over 1 s), 0.1 s in all, longest 101 ms during screenshots; answer p50 3.3 ms, p95 67.2 ms, p99 100.6 ms over 21 questions in 1 s
-UI timings: document view 3 ms, document view 2 ms, document view 1 ms
+UI stalls: 4 over 100 ms (0 over 250 ms, 0 over 1 s), 0.7 s in all, longest 207 ms during screenshots, 0.1 s of it garbage collection; answer p50 4.3 ms, p95 197.3 ms, p99 207.4 ms over 21 questions in 1 s
+UI timings: document view 3 ms, document view 3 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 101 ms | 0 ms | 0.2 s | screenshots |
+| 207 ms | 24 ms | 0.2 s | screenshots |
+| 197 ms | 10 ms | 0.5 s | screenshots |
+| 163 ms | 23 ms | 0.8 s | screenshots |
+| 121 ms | 0 ms | 1.0 s | screenshots |
 Output:
-Build started at 00:54:15...
+Build started at 02:48:43...
 1>------ Build started: Project: ReadText.Demo.VB, Configuration: Debug ------
-1>ReadText.Demo.VB -> compiled in memory (21.5 KB, 32 ms)
+1>ReadText.Demo.VB -> compiled in memory (21.5 KB, 47 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 
