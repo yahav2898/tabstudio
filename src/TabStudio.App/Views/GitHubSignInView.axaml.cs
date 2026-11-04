@@ -32,6 +32,12 @@ public sealed partial class GitHubSignInView : UserControl
         if (_viewModel is not null)
         {
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+
+            // Built when the dialog first opens: it is open already.
+            if (_viewModel is { IsOpen: true, IsSignedIn: false })
+            {
+                Dispatcher.UIThread.Post(() => TokenBox.Focus(), DispatcherPriority.Background);
+            }
         }
     }
 

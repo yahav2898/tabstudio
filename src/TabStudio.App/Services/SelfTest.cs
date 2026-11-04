@@ -116,6 +116,7 @@ public static partial class SelfTest
         {
             var result = await run();
             messages.Add(result.Message);
+            UiStallMonitor.Current?.Mark(result.Message);
             return result.Success;
         }
 
@@ -131,7 +132,9 @@ public static partial class SelfTest
         try
         {
             var solution = await samples.EnsureExtractedAsync(cancellationToken);
+            UiStallMonitor.Current?.Mark("Extracting the sample");
             await main.OpenWorkspaceAsync(solution);
+            UiStallMonitor.Current?.Mark("Opening the sample");
             if (main.Workspace is not { } workspace)
             {
                 messages.Add("The sample did not open.");
@@ -167,6 +170,7 @@ public static partial class SelfTest
 
                 var output = workspace.Output.Text;
                 messages.Add(string.Join(" | ", output.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0).TakeLast(6)));
+                UiStallMonitor.Current?.Mark("F5: " + messages[^1]);
                 if (!output.Contains("has exited with code 0", StringComparison.Ordinal)
                     || !output.Contains($", {Name}!", StringComparison.Ordinal)
                     || !await CheckAsync(() => DebugSampleAsync(workspace, cancellationToken))

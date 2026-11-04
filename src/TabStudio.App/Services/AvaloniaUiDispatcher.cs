@@ -22,6 +22,9 @@ public sealed class AvaloniaUiDispatcher : IUiDispatcher
     public void Post(Action action) => UiThread.Post(action);
 
     /// <inheritdoc />
+    public void PostBackground(Action action) => UiThread.Post(action, DispatcherPriority.Background);
+
+    /// <inheritdoc />
     public Task InvokeAsync(Action action)
     {
         var dispatcher = UiThread;

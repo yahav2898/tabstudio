@@ -19,7 +19,11 @@ public sealed partial class WorkspaceView : UserControl
     /// <summary>Creates the view.</summary>
     public WorkspaceView()
     {
+        Services.UiStallMonitor.Note("creating the workspace view");
+        var created = System.Diagnostics.Stopwatch.StartNew();
         InitializeComponent();
+        Services.UiStallMonitor.Time("workspace view", created.Elapsed);
+        Services.UiStallMonitor.Note("the workspace view's first layout");
         Editors.ViewFactory = document => document switch
         {
             DocumentViewModel { PullRequest: { } pullRequest } => new PullRequests.PullRequestView { DataContext = pullRequest },

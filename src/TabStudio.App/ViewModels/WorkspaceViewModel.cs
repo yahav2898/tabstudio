@@ -309,7 +309,9 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         LoadRemoteState(Directory.Exists(path) ? path : Path.GetDirectoryName(path)!);
 
         var notebook = NotebookToOpen(path);
+        UiStallMonitor.Note("reading the solution");
         var preview = await WorkspaceInspector.InspectAsync(notebook is null ? path : Path.GetDirectoryName(notebook)!);
+        UiStallMonitor.Note("showing the solution in Solution Explorer");
         Workspace = preview.Workspace;
         Explorer.Load(preview.Workspace, preview.Reports);
         ShowProperties(Explorer.SelectedItem?.Node);
@@ -326,6 +328,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
             Stacks.Add(new StackChipViewModel(component.Version is null ? component.DisplayName : $"{component.DisplayName} {component.Version}", component.Evidence));
         }
 
+        UiStallMonitor.Note("databases, startup projects and toolchains");
         DatabaseExplorer.EfCore.LoadProjects(preview.Workspace.Projects);
         StartDatabaseCheck(preview.Workspace);
         ShowNetFrameworkDiagnostics(preview.Workspace);
@@ -335,8 +338,10 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         LoadStartupProjects(preview.Workspace, chosen);
         await LoadToolchainProjectsAsync(preview.Workspace, chosen, opening: true);
         _isStartupProjectChosen = chosen is not null && StartupProject?.FilePath == chosen;
+        UiStallMonitor.Note("backing services");
         await Services.LoadAsync(preview.Workspace.RootDirectory);
 
+        UiStallMonitor.Note("loading C#");
         StatusText = "Loading C#";
         var loading = Operations.Begin(LanguageOperation, "Loading C#");
         try
@@ -350,6 +355,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
         LanguageServiceText = null;
 
+        UiStallMonitor.Note("opening the session's documents");
         RestoreDebuggingState(session);
         RestoreShellState(session);
         try
@@ -366,6 +372,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
             await OpenDocumentAsync(notebook);
         }
 
+        UiStallMonitor.Note("starting restore and analysis");
         State = IdeState.Ready;
         StatusText = NoStartupProjectStatus() ?? "Ready";
         OnLoadedForLive();
@@ -376,6 +383,8 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         {
             StartSolutionAnalysis();
         }
+
+        UiStallMonitor.Note(string.Empty);
     }
 
     /// <summary>Makes a project the startup project.</summary>

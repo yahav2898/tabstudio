@@ -29,6 +29,9 @@ namespace TabStudio.App.ViewModels;
 public sealed partial class TerminalViewModel : ObservableObject, IDisposable
 {
     private readonly ToolchainServices _toolchains;
+    /// <summary>The most output one batch feeds to the emulator; the rest waits for the next batch, after a frame.</summary>
+    internal const int MaxBytesPerFlush = 64 * 1024;
+
     private readonly IUiDispatcher _ui;
     private readonly Func<string> _workingDirectory;
     private readonly Action<string?> _openStore;
@@ -496,7 +499,7 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
                 _output.Enqueue(buffer.AsSpan(0, read).ToArray());
                 if (Interlocked.Exchange(ref _flushScheduled, 1) == 0)
                 {
-                    _ui.Post(Flush);
+                    _ui.PostBackground(FlushQueued);
                 }
             }
         }
@@ -528,15 +531,38 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
         });
     }
 
-    /// <summary>Feeds what the shell wrote to the emulator. Runs on the UI thread.</summary>
+    /// <summary>Feeds everything the shell wrote to the emulator. Runs on the UI thread.</summary>
     private void Flush()
     {
         Interlocked.Exchange(ref _flushScheduled, 0);
+        Feed(int.MaxValue);
+    }
+
+    /// <summary>
+    /// Feeds the next batch of what the shell wrote, and queues the next batch behind input and drawing when more is
+    /// waiting: a command that prints without end, such as <c>yes</c> or a large <c>cat</c>, gets a batch per frame rather
+    /// than the whole UI thread.
+    /// </summary>
+    private void FlushQueued()
+    {
+        Interlocked.Exchange(ref _flushScheduled, 0);
+        Feed(MaxBytesPerFlush);
+        if (!_output.IsEmpty && Interlocked.Exchange(ref _flushScheduled, 1) == 0)
+        {
+            _ui.PostBackground(FlushQueued);
+        }
+    }
+
+    /// <summary>Feeds queued output to the emulator, up to about a number of bytes.</summary>
+    private void Feed(int maxBytes)
+    {
         var any = false;
-        while (_output.TryDequeue(out var chunk))
+        var bytes = 0;
+        while (bytes < maxBytes && _output.TryDequeue(out var chunk))
         {
             Emulator.Feed(chunk);
             ShellOutput?.Invoke(this, chunk);
+            bytes += chunk.Length;
             any = true;
         }
 

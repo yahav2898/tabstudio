@@ -13,6 +13,13 @@ public interface IUiDispatcher
     /// <param name="action">The action to run.</param>
     void Post(Action action);
 
+    /// <summary>
+    /// Queues an action on the UI thread behind input and drawing, for work that keeps coming, such as a program's
+    /// output: taps, keystrokes and frames go first, so a stream of such work cannot freeze the IDE.
+    /// </summary>
+    /// <param name="action">The action to run.</param>
+    void PostBackground(Action action) => Post(action);
+
     /// <summary>Runs an action on the UI thread and waits for it.</summary>
     /// <param name="action">The action to run.</param>
     Task InvokeAsync(Action action);

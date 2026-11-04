@@ -36,13 +36,19 @@ public sealed partial class TabStudioApplication : Application
     public void UseDataDirectory(string directory) => _dataDirectory = directory;
 
     /// <inheritdoc />
-    public override void Initialize() => AvaloniaXamlLoader.Load(this);
+    public override void Initialize()
+    {
+        StartupTimeline.Mark("application");
+        AvaloniaXamlLoader.Load(this);
+        StartupTimeline.Mark("styles");
+    }
 
     /// <inheritdoc />
     public override void OnFrameworkInitializationCompleted()
     {
         var paths = _dataDirectory is null ? AppPaths.CreateDefault() : new AppPaths(_dataDirectory);
         Services = AppServices.Create(paths, _configurePlatform);
+        StartupTimeline.Mark("services");
 
         // Windows Forms apps copy images through the device's own clipboard where Avalonia's holds only text.
         if (Services.GetService<Platform.IImageClipboard>() is { } images)
@@ -63,12 +69,17 @@ public sealed partial class TabStudioApplication : Application
             Services.GetRequiredService<AppearanceService>().Apply();
         }
 
+        StartupTimeline.Mark("theme");
         Main = Services.GetRequiredService<MainViewModel>();
+        StartupTimeline.Mark("view models");
 
         switch (ApplicationLifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:
-                desktop.MainWindow = new MainWindow { DataContext = Main };
+                var window = new MainWindow { DataContext = Main };
+                desktop.MainWindow = window;
+                StartupTimeline.Mark("main view");
+                StartupTimeline.MarkFirstFrame(window);
                 desktop.ShutdownRequested += (_, _) =>
                 {
                     Main.SaveSession();
@@ -77,7 +88,10 @@ public sealed partial class TabStudioApplication : Application
                 break;
 
             case ISingleViewApplicationLifetime singleView:
-                singleView.MainView = new MainView { DataContext = Main };
+                var view = new MainView { DataContext = Main };
+                singleView.MainView = view;
+                StartupTimeline.Mark("main view");
+                StartupTimeline.MarkFirstFrame(view);
                 break;
         }
 
@@ -113,10 +127,16 @@ public sealed partial class TabStudioApplication : Application
             // told at this start, as one that was reported is, instead of starting as though nothing happened.
             var lastExit = crashLog.TakeLastExit();
             crashLog.MarkRunning();
-            _ = Main.StartAsync(lastExit);
+            _ = StartAsync(Main, lastExit);
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private static async Task StartAsync(MainViewModel main, UnexpectedExit? lastExit)
+    {
+        await main.StartAsync(lastExit);
+        StartupTimeline.MarkStarted(main.Workspace is null ? "start screen" : "workspace restored");
     }
 
     private void OnUnhandledException(object? sender, Avalonia.Threading.DispatcherUnhandledExceptionEventArgs e)

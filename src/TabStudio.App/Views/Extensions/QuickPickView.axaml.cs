@@ -42,6 +42,12 @@ public sealed partial class QuickPickView : UserControl
         if (_viewModel is not null)
         {
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+
+            // Built when the quick pick first opens: it is open already.
+            if (_viewModel.IsOpen)
+            {
+                OnViewModelPropertyChanged(_viewModel, new PropertyChangedEventArgs(nameof(QuickPickViewModel.IsOpen)));
+            }
         }
     }
 
