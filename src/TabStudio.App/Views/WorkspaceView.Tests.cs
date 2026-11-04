@@ -10,6 +10,7 @@ namespace TabStudio.App.Views;
 /// <remarks>
 /// Ctrl+R, A runs all tests; Ctrl+R, F the failed ones; Ctrl+R, L repeats the last run; Ctrl+R, T runs the tests at
 /// the editor's caret, or the selected tests while the Test Explorer has the focus; Ctrl+E, T shows the Test Explorer.
+/// Ctrl+R, Ctrl+A and Ctrl+R, Ctrl+T debug them instead.
 /// </remarks>
 public sealed partial class WorkspaceView
 {
@@ -23,6 +24,12 @@ public sealed partial class WorkspaceView
             ? _viewModel?.Tests.RunSelectedCommand
             : _viewModel?.RunTestsInContextCommand);
         _chords.Add(Key.E, KeyModifiers.Control, Key.T, () => _viewModel?.SelectSideBarPanelCommand, SideBarPanel.TestExplorer);
+
+        // Visual Studio's Debug Tests: the second key with Ctrl held.
+        _chords.Add(new KeyGesture(Key.R, KeyModifiers.Control), new KeyGesture(Key.A, KeyModifiers.Control), () => _viewModel?.Tests.DebugAllCommand);
+        _chords.Add(new KeyGesture(Key.R, KeyModifiers.Control), new KeyGesture(Key.T, KeyModifiers.Control), () => TestExplorer.IsKeyboardFocusWithin
+            ? _viewModel?.Tests.DebugSelectedCommand
+            : _viewModel?.DebugTestsInContextCommand);
         AddHandler(CodeEditorView.RunTestsRequestedEvent, OnRunTestsRequested);
     }
 

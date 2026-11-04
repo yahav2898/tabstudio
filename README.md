@@ -115,7 +115,7 @@ From there, try **New project** for a template in any language, **Open from GitH
 
 | Language | Build and run | IntelliSense | Debugger |
 | --- | --- | --- | --- |
-| **C#** | Roslyn in the app, compiled to memory, F5 in under a second | Roslyn: completion, signature help, Quick Info, navigation, rename, quick fixes | Breakpoints, stepping, Locals, Watch, Call Stack, DataTips, exceptions |
+| **C#** | Roslyn in the app, compiled to memory, F5 in under a second | Roslyn: completion, signature help, Quick Info, navigation, rename, quick fixes | Breakpoints with conditions and hit counts, stepping, Locals, Watch, Call Stack and threads, DataTips, exceptions, ASP.NET Core apps and tests |
 | **Python** | CPython from the Toolchain Store | Pyright | debugpy |
 | **JavaScript / TypeScript** | Node.js from the Toolchain Store | typescript-language-server | vscode-js-debug, including child processes |
 | **Go** | `go build` | gopls | Delve |
@@ -128,7 +128,7 @@ From there, try **New project** for a template in any language, **Open from GitH
 | **Swift** (experimental) | SwiftPM and `swiftc`, from the official toolchain | sourcekit-lsp | LLDB |
 
 - **C# on the tablet.** NuGet packages restore on the device, so real projects build as they are. Test Explorer runs
-  xUnit, NUnit and MSTest, and **Live Unit Testing** marks every covered line with a pass, fail or not-covered glyph
+  and debugs xUnit, NUnit and MSTest from the project's output folder, as `dotnet test` does, and **Live Unit Testing** marks every covered line with a pass, fail or not-covered glyph
   and reruns the affected tests as you type. C# notebooks run cells as you write them.
 - **Visual Basic, like C#.** `.vbproj` projects compile in the app with the same IntelliSense, quick fixes,
   navigation, debugger, Hot Reload and Live Unit Testing. `Microsoft.VisualBasic` and the `My` namespace work in
@@ -137,7 +137,8 @@ From there, try **New project** for a template in any language, **Open from GitH
 - **Test Explorer beyond .NET.** Besides xUnit, NUnit and MSTest: pytest (Python, with the test requirements the
   project declares), PHPUnit and Pest, JUnit through Gradle or Maven (Kotlin, Kotlin Multiplatform's JVM tests and
   Java), XCTest and Swift Testing through `swift test`, `go test`, `cargo test`, `dart test` and `flutter test`, and
-  Vitest, Jest, Mocha and `node --test` for JavaScript and TypeScript, each run with the project's own runner.
+  Vitest, Jest, Mocha and `node --test` for JavaScript and TypeScript, each run with the project's own runner. Debug
+  runs pytest, the JavaScript runners, PHPUnit and Pest, `go test` and `cargo test` under their debuggers.
 - **C# Hot Reload and Edit and Continue (desktop build).** Tap **Hot Reload** or press **Alt+F10** to apply edits to
   a running console, Avalonia, ASP.NET Core or Blazor Server app without restarting, or let saving apply them. On
   Android, C# edits apply with a quick restart. See [Hot Reload](docs/ARCHITECTURE.md#hot-reload).

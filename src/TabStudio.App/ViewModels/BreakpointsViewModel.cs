@@ -122,7 +122,7 @@ public sealed partial class BreakpointsViewModel
         if (_session is not null && breakpoint.Binding is { } binding)
         {
             // Setting the same line with another condition replaces the engine's breakpoint.
-            breakpoint.Bind(_session.SetBreakpoint(binding.FilePath, binding.Line, breakpoint.Condition));
+            breakpoint.Bind(_session.SetBreakpoint(binding.FilePath, binding.Line, breakpoint.Condition, BreakpointHitCondition.Parse(breakpoint.HitCount)));
         }
 
         OnChanged(breakpoint.FilePath);
@@ -221,7 +221,7 @@ public sealed partial class BreakpointsViewModel
 
     private void BindToSession(BreakpointViewModel breakpoint)
     {
-        var binding = _session!.SetBreakpoint(breakpoint.FilePath, breakpoint.Line, breakpoint.Condition);
+        var binding = _session!.SetBreakpoint(breakpoint.FilePath, breakpoint.Line, breakpoint.Condition, BreakpointHitCondition.Parse(breakpoint.HitCount));
         breakpoint.Bind(binding);
         if (binding.Location is not { } location
             || location.Line == breakpoint.Line

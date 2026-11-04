@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using System.Runtime.Loader;
 using TabStudio.Compilation.Running;
 
 namespace TabStudio.TestRunner.Execution;
@@ -15,14 +16,20 @@ internal sealed class TestExecutor
     private readonly Action<TestCase> _started;
     private readonly Action<TestResult> _finished;
     private readonly Lock _gate = new();
+    private readonly AssemblyLoadContext? _reflection;
 
     /// <summary>Creates an executor.</summary>
     /// <param name="options">How to run.</param>
     /// <param name="stackTraces">Trims stack traces to the user's code.</param>
     /// <param name="started">Called when a test starts, on a runner thread.</param>
     /// <param name="finished">Called when a test finishes, on a runner thread.</param>
-    public TestExecutor(TestRunOptions options, StackTraceCleaner stackTraces, Action<TestCase> started, Action<TestResult> finished)
+    /// <param name="reflection">
+    /// The tests' load context, which <c>Type.GetType</c> and the like use while they run, as they would in a test
+    /// host of their own; <see langword="null"/> for the default.
+    /// </param>
+    public TestExecutor(TestRunOptions options, StackTraceCleaner stackTraces, Action<TestCase> started, Action<TestResult> finished, AssemblyLoadContext? reflection = null)
     {
+        _reflection = reflection;
         _options = options;
         _stackTraces = stackTraces;
         _started = started;
@@ -77,7 +84,7 @@ internal sealed class TestExecutor
                 })).ConfigureAwait(false);
             }
 
-            var finish = await TestThread.RunAsync(scope.Finish, "TabStudio test cleanup", _options.StackSize, null, _options.DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
+            var finish = await TestThread.RunAsync(scope.Finish, "TabStudio test cleanup", _options.StackSize, null, _options.DefaultTimeout, CancellationToken.None, _reflection).ConfigureAwait(false);
             lock (_gate)
             {
                 messages.AddRange(finish.Value ?? []);
@@ -134,7 +141,7 @@ internal sealed class TestExecutor
         var setUpRan = false;
         if (runnable.Count > 0)
         {
-            var setUp = await TestThread.RunAsync(() => InClassStage(cases, lifecycle.SetUpClass), $"TabStudio: {className} setup", _options.StackSize, null, _options.DefaultTimeout, cancellationToken).ConfigureAwait(false);
+            var setUp = await TestThread.RunAsync(() => InClassStage(cases, lifecycle.SetUpClass), $"TabStudio: {className} setup", _options.StackSize, null, _options.DefaultTimeout, cancellationToken, _reflection).ConfigureAwait(false);
             setUpRan = true;
             setUpFailure = setUp.Status switch
             {
@@ -174,7 +181,7 @@ internal sealed class TestExecutor
 
         if (setUpRan)
         {
-            var tearDown = await TestThread.RunAsync(() => InClassStage(cases, lifecycle.TearDownClass), $"TabStudio: {className} cleanup", _options.StackSize, null, _options.DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
+            var tearDown = await TestThread.RunAsync(() => InClassStage(cases, lifecycle.TearDownClass), $"TabStudio: {className} cleanup", _options.StackSize, null, _options.DefaultTimeout, CancellationToken.None, _reflection).ConfigureAwait(false);
             var failure = tearDown.Status switch
             {
                 ThreadRunStatus.Completed => tearDown.Value,
@@ -197,9 +204,9 @@ internal sealed class TestExecutor
     {
         _started(test.Case);
         var sink = new TestOutputSink(_options.MaxOutputLength);
-        var timeout = test.Case.Timeout ?? _options.DefaultTimeout;
+        var timeout = _options.IgnoreTestTimeouts ? null : test.Case.Timeout ?? _options.DefaultTimeout;
         var stopwatch = Stopwatch.StartNew();
-        var run = await TestThread.RunAsync(() => InTest(test.Case, () => lifecycle.RunTest(test, sink)), $"TabStudio: {test.Case.DisplayName}", _options.StackSize, sink, timeout, cancellationToken).ConfigureAwait(false);
+        var run = await TestThread.RunAsync(() => InTest(test.Case, () => lifecycle.RunTest(test, sink)), $"TabStudio: {test.Case.DisplayName}", _options.StackSize, sink, timeout, cancellationToken, _reflection).ConfigureAwait(false);
         stopwatch.Stop();
 
         var outcome = run.Status switch

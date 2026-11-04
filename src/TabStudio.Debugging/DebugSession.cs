@@ -130,6 +130,12 @@ public sealed partial class DebugSession : IDisposable
     /// <summary>The current pause, or <see langword="null"/> while the program runs.</summary>
     public DebugPausedEventArgs? CurrentPause => _engine.CurrentPause;
 
+    /// <summary>
+    /// The threads of the paused program in its own code, each with its call stack: the one that paused first, then
+    /// those that stopped at their next statement, as every thread does while one is paused. Empty while it runs.
+    /// </summary>
+    public IReadOnlyList<DebugThreadInfo> Threads => _engine.GetThreads();
+
     /// <summary>Whether to pause when an exception is about to leave the program unhandled. On by default.</summary>
     public bool BreakOnUnhandledExceptions
     {
@@ -159,22 +165,24 @@ public sealed partial class DebugSession : IDisposable
         }
     }
 
-    /// <summary>Sets a breakpoint on a line, or returns the one already there with the same condition.</summary>
+    /// <summary>Sets a breakpoint on a line, or returns the one already there with the same condition and hit count.</summary>
     /// <param name="filePath">Full path of the source file.</param>
     /// <param name="line">One-based line number.</param>
     /// <param name="condition">When to stop, such as <c>count == 3</c> (see <see cref="Breakpoint"/>), or
     /// <see langword="null"/> to stop every time. A different condition replaces the breakpoint on the line.</param>
+    /// <param name="hitCondition">On which hits to stop, such as the fifth, or <see langword="null"/> for every hit. A
+    /// different hit count replaces the breakpoint on the line, and counts again from zero.</param>
     /// <returns>The breakpoint; check <see cref="Breakpoint.IsBound"/> and <see cref="Breakpoint.Location"/> for where it hits.</returns>
-    public Breakpoint SetBreakpoint(string filePath, int line, string? condition = null)
+    public Breakpoint SetBreakpoint(string filePath, int line, string? condition = null, BreakpointHitCondition? hitCondition = null)
     {
         ArgumentNullException.ThrowIfNull(filePath);
         ArgumentOutOfRangeException.ThrowIfLessThan(line, 1);
 
-        var breakpoint = new Breakpoint(filePath, line, DebugInfo.FindStatement(filePath, line), condition);
+        var breakpoint = new Breakpoint(filePath, line, DebugInfo.FindStatement(filePath, line), condition, hitCondition);
         lock (_breakpointsGate)
         {
             var index = _breakpoints.FindIndex(b => b.Line == line && string.Equals(b.FilePath, filePath, StringComparison.Ordinal));
-            if (index >= 0 && _breakpoints[index].Condition == breakpoint.Condition)
+            if (index >= 0 && _breakpoints[index].Condition == breakpoint.Condition && _breakpoints[index].HitCondition == breakpoint.HitCondition)
             {
                 return _breakpoints[index];
             }
@@ -303,6 +311,67 @@ public sealed partial class DebugSession : IDisposable
         }
 
         Exited?.Invoke(this, new DebugExitedEventArgs(result));
+        return result;
+    }
+
+    /// <summary>
+    /// Debugs code of this build that the caller loads and runs itself and that ends when <paramref name="run"/>
+    /// completes, such as the tests Test Explorer's runner loads from the build and runs: every assembly of the build
+    /// that loads while it runs connects to this session, as the program does in
+    /// <see cref="RunAsync(IReadOnlyList{string}, IConsoleSink, ConsoleInput, CancellationToken)"/>.
+    /// </summary>
+    /// <remarks>
+    /// The code runs on the caller's threads, so stopping never unwinds them (see <see cref="Attach"/>): <see cref="Stop"/>
+    /// releases a paused thread, turns the hooks off and cancels the token given to <paramref name="run"/>, which
+    /// should stop the run. Only one session runs at a time in the process, as for a program.
+    /// </remarks>
+    /// <typeparam name="T">What the run returns.</typeparam>
+    /// <param name="run">Loads and runs the code, given a token that <see cref="Stop"/> cancels.</param>
+    /// <param name="cancellationToken">Cancels waiting for another session, and the run, like <see cref="Stop"/>.</param>
+    /// <returns>What <paramref name="run"/> returned.</returns>
+    /// <exception cref="InvalidOperationException">The session already ran or attached a program.</exception>
+    public async Task<T> RunHostedAsync<T>(Func<CancellationToken, Task<T>> run, CancellationToken cancellationToken = default)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ArgumentNullException.ThrowIfNull(run);
+        if (Interlocked.CompareExchange(ref _phase, Running, NotStarted) != NotStarted)
+        {
+            throw new InvalidOperationException("This session has already run its program. Start a new session to debug again.");
+        }
+
+        try
+        {
+            await ActiveSession.WaitAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            Volatile.Write(ref _phase, Finished);
+            throw;
+        }
+
+        _engine.IsHosted = true;
+        var sink = _engine.CreateSink();
+        T result;
+        try
+        {
+            // Each assembly reads the sink once, when its instrumented code first runs, so it stays set for the run.
+            AppContext.SetData(DebugRuntimeSource.DataKey, sink);
+            using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _stop.Token);
+            result = await run(stop.Token).ConfigureAwait(false);
+        }
+        finally
+        {
+            _engine.Stop();
+            if (ReferenceEquals(AppContext.GetData(DebugRuntimeSource.DataKey), sink))
+            {
+                AppContext.SetData(DebugRuntimeSource.DataKey, null);
+            }
+
+            Volatile.Write(ref _phase, Finished);
+            ActiveSession.Release();
+        }
+
+        Exited?.Invoke(this, new DebugExitedEventArgs(new RunResult(_stop.IsCancellationRequested ? RunOutcome.Stopped : RunOutcome.Completed, 0, TimeSpan.Zero, null)));
         return result;
     }
 

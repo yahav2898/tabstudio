@@ -64,7 +64,10 @@ public static partial class ServiceTargets
         {
             foreach (var service in project.Services.Values)
             {
-                var named = host.Equals(service.Name, StringComparison.OrdinalIgnoreCase);
+                // A service is reached by its name, its container_name and its networks' aliases.
+                var named = host.Equals(service.Name, StringComparison.OrdinalIgnoreCase)
+                    || host.Equals(service.ContainerName, StringComparison.OrdinalIgnoreCase)
+                    || service.Aliases.Any(alias => host.Equals(alias, StringComparison.OrdinalIgnoreCase));
                 var local = LocalHosts.Contains(host, StringComparer.OrdinalIgnoreCase) && port is { } p && Listens(service, p);
                 if ((named || local) && !result.Contains(service.Name))
                 {

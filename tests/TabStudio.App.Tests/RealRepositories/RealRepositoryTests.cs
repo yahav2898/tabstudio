@@ -328,6 +328,14 @@ public sealed class RealRepositoryTests
         await UiTestHelpers.WaitUntilAsync(() => explorer.HasTestProjects && explorer.RunAllCommand.CanExecute(null), TimeSpan.FromMinutes(2), "Test Explorer's tests");
         await explorer.RunAllCommand.ExecuteAsync(null);
         report.AppendLine(CultureInfo.InvariantCulture, $"Tests: {explorer.PassedCount} passed, {explorer.FailedCount} failed, {explorer.SkippedCount} skipped of {explorer.TotalCount}: {explorer.RunStatusText}");
+
+        // The first failures, so a report says why without the IDE at hand.
+        foreach (var failed in explorer.Entries.Where(e => e.State == TestState.Failed).Take(12))
+        {
+            var message = failed.Result?.Message?.ReplaceLineEndings(" ") ?? string.Empty;
+            report.AppendLine(CultureInfo.InvariantCulture, $"  failed: {failed.MethodFullName}: {(message.Length > 300 ? message[..300] + "…" : message)}");
+        }
+
         return explorer.PassedCount >= minimum ? null : $"Test Explorer's Run All passed {explorer.PassedCount} tests, fewer than {minimum} ({explorer.FailedCount} failed)";
     }
 

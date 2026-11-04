@@ -47,5 +47,24 @@
     android:fullBackupContent="@xml/backup_rules"
     android:dataExtractionRules="@xml/data_extraction_rules"
     android:extractNativeLibs="true"
-    android:supportsRtl="true" />
+    android:supportsRtl="true">
+    <!--
+      The changes the IDE's activity handles itself rather than being recreated, which would throw away its window:
+      rotation, window size and DeX, keyboards, the theme, text size and direction, display size (density, which DeX
+      and Android's Display size change) and Bold text (fontWeightAdjustment). The rest of the activity comes from
+      MainActivity's [Activity] attribute, which cannot name fontWeightAdjustment. With the activity here, the build
+      no longer adds the launcher's intent filter for MainLauncher, so it is here too.
+    -->
+    <activity
+      android:name="com.tabstudio.ide.MainActivity"
+      android:exported="true"
+      android:theme="@style/Theme.TabStudio.Starting"
+      android:windowSoftInputMode="adjustResize"
+      android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|uiMode|keyboard|keyboardHidden|navigation|fontScale|locale|layoutDirection|touchscreen|colorMode|mcc|mnc|density|fontWeightAdjustment">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+  </application>
 </manifest>

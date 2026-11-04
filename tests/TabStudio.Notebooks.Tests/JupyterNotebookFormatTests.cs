@@ -89,6 +89,79 @@ public sealed class JupyterNotebookFormatTests
     }
 
     [Fact]
+    public void JSON_output_stored_as_a_string_is_saved_as_a_string()
+    {
+        const string text = """
+            {
+             "cells": [
+              {
+               "cell_type": "code",
+               "execution_count": 1,
+               "id": "a1",
+               "metadata": {},
+               "outputs": [
+                {
+                 "data": {
+                  "application/json": "{\"answer\": 42}",
+                  "application/vnd.custom+json": {
+                   "kept": true
+                  }
+                 },
+                 "metadata": {},
+                 "output_type": "display_data"
+                }
+               ],
+               "source": [
+                "display(x)"
+               ]
+              }
+             ],
+             "metadata": {},
+             "nbformat": 4,
+             "nbformat_minor": 5
+            }
+            """;
+
+        var saved = JsonNode.Parse(JupyterNotebookFormat.Serialize(JupyterNotebookFormat.Parse(text)))!;
+
+        var data = saved["cells"]![0]!["outputs"]![0]!["data"]!;
+        Assert.Equal("{\"answer\": 42}", data["application/json"]!.GetValue<string>());
+        Assert.True(data["application/vnd.custom+json"] is JsonObject { } kept && kept["kept"]!.GetValue<bool>());
+    }
+
+    [Fact]
+    public void A_4_4_notebook_keeps_its_cell_ids_and_one_without_them_gets_none()
+    {
+        const string withIds = """
+            {
+             "cells": [
+              { "cell_type": "markdown", "id": "intro", "metadata": {}, "source": ["# Title"] },
+              { "cell_type": "code", "execution_count": null, "id": "work", "metadata": {}, "outputs": [], "source": ["1 + 1"] }
+             ],
+             "metadata": {},
+             "nbformat": 4,
+             "nbformat_minor": 4
+            }
+            """;
+
+        var document = JupyterNotebookFormat.Parse(withIds);
+        var saved = JsonNode.Parse(JupyterNotebookFormat.Serialize(document))!;
+
+        Assert.Equal(4, saved["nbformat_minor"]!.GetValue<int>());
+        Assert.Equal("intro", saved["cells"]![0]!["id"]!.GetValue<string>());
+        Assert.Equal("work", saved["cells"]![1]!["id"]!.GetValue<string>());
+
+        // Edited, the notebook still keeps them.
+        var edited = JsonNode.Parse(JupyterNotebookFormat.Serialize(document.ReplaceCell(document.Cells[1] with { Source = "2 + 2" })))!;
+        Assert.Equal("work", edited["cells"]![1]!["id"]!.GetValue<string>());
+
+        var withoutIds = withIds.Replace("\"id\": \"intro\", ", string.Empty, StringComparison.Ordinal).Replace("\"id\": \"work\", ", string.Empty, StringComparison.Ordinal);
+        var plain = JsonNode.Parse(JupyterNotebookFormat.Serialize(JupyterNotebookFormat.Parse(withoutIds)))!;
+        Assert.Null(plain["cells"]![0]!["id"]);
+        Assert.Null(plain["cells"]![1]!["id"]);
+    }
+
+    [Fact]
     public void Editing_one_cell_keeps_everything_else_in_the_file()
     {
         var document = JupyterNotebookFormat.Parse(Fixtures.JupyterNotebook);

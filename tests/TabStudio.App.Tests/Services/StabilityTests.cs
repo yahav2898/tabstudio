@@ -120,6 +120,27 @@ public sealed class StabilityTests : IDisposable
     }
 
     [AvaloniaFact]
+    public async Task A_crash_on_a_background_thread_saves_the_text_typed_a_moment_before()
+    {
+        // The crash handler runs on the thread that crashed, and the app ends before the UI thread runs again: the
+        // session it saved was the last throttled one, up to two seconds of typing earlier, or none at all.
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var document = fixture.Workspace.ActiveDocument!;
+        document.Document.Insert(0, "// typed a while ago\n");
+        fixture.Workspace.SaveSessionNow();
+        document.Document.Insert(0, "// typed just now\n");
+
+        await Task.Run(() => fixture.Workspace.SaveSessionNow());
+
+        var saved = new SessionStore(fixture.Paths).Load();
+        Assert.NotNull(saved);
+        var text = saved.Documents.Single(d => d.Path == document.FilePath).UnsavedText;
+        Assert.StartsWith("// typed just now\n// typed a while ago\n", text, StringComparison.Ordinal);
+        Assert.Equal(document.Document.Text, text);
+    }
+
+    [AvaloniaFact]
     public async Task Critical_memory_pressure_saves_the_unsaved_text_before_Android_ends_the_app()
     {
         // Android's low-memory killer can end the app right after critical pressure, with no Deactivated to save the

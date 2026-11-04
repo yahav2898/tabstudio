@@ -45,11 +45,9 @@ namespace TabStudio.Android;
     Theme = "@style/Theme.TabStudio.Starting",
     MainLauncher = true,
     Exported = true,
-    WindowSoftInputMode = SoftInput.AdjustResize,
-    ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.SmallestScreenSize
-        | ConfigChanges.ScreenLayout | ConfigChanges.UiMode | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden
-        | ConfigChanges.Navigation | ConfigChanges.FontScale | ConfigChanges.Locale | ConfigChanges.LayoutDirection
-        | ConfigChanges.Touchscreen | ConfigChanges.ColorMode | ConfigChanges.Mcc | ConfigChanges.Mnc)]
+    WindowSoftInputMode = SoftInput.AdjustResize)]
+// The configuration changes the activity handles itself, instead of being recreated, are in
+// Properties/AndroidManifest.xml: the attribute cannot name fontWeightAdjustment.
 public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplication>
 {
     /// <summary>The intent extra that runs the self test.</summary>

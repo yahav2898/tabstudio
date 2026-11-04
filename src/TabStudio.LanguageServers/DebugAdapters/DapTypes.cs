@@ -46,6 +46,9 @@ public sealed record DapCapabilities
     /// <summary>Whether it can end the program gracefully with <c>terminate</c>.</summary>
     public bool Terminate { get; init; }
 
+    /// <summary>Whether the adapter stops at functions by name (<c>setFunctionBreakpoints</c>), such as Rust's <c>rust_panic</c>.</summary>
+    public bool FunctionBreakpoints { get; init; }
+
     /// <summary>The exception filters it offers.</summary>
     public IReadOnlyList<DapExceptionFilter> ExceptionFilters { get; init; } = [];
 }

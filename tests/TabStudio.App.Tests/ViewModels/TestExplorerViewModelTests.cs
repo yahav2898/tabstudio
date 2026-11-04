@@ -223,6 +223,41 @@ public sealed class TestExplorerViewModelTests
         DataRow = row,
     };
 
+    [Fact]
+    public async Task Debug_runs_a_row_its_selection_or_every_test_under_the_debugger()
+    {
+        var adds = _explorer.Rows.Single(r => r.Name == "Adds");
+        Assert.True(adds.DebugCommand.CanExecute(null));
+
+        await adds.DebugCommand.ExecuteAsync(null);
+        _explorer.SelectedNode = _explorer.Rows.Single(r => r.Kind == TestNodeKind.Class);
+        await _explorer.DebugSelectedCommand.ExecuteAsync(null);
+        await _explorer.DebugAllCommand.ExecuteAsync(null);
+
+        Assert.Empty(_host.Requests);
+        Assert.Equal(
+            new[] { "Calc.Tests.MathTests.Adds", "Calc.Tests.MathTests", "*" },
+            _host.DebugRequests.Select(r => r.Projects.Single().Names is { } names ? string.Join(",", names) : "*"));
+    }
+
+    [Fact]
+    public async Task Debugging_shows_the_run_in_progress_and_blocks_another_until_it_ends()
+    {
+        var finish = new TaskCompletionSource();
+        _host.OnRun = _ => finish.Task;
+
+        var debugging = _explorer.DebugAllCommand.ExecuteAsync(null);
+
+        Assert.True(_explorer.IsRunning);
+        Assert.Equal("Building to debug all tests…", _explorer.RunStatusText);
+        Assert.False(_explorer.RunAllCommand.CanExecute(null));
+        Assert.False(_explorer.DebugAllCommand.CanExecute(null));
+        finish.SetResult();
+        await debugging;
+        Assert.False(_explorer.IsRunning);
+        Assert.True(_explorer.DebugAllCommand.CanExecute(null));
+    }
+
     private static TestResult Result(string method, TestOutcome outcome, string? message = null, TimeSpan? duration = null, IReadOnlyList<TestStackFrame>? frames = null) => new()
     {
         Test = Case(method),
@@ -248,6 +283,14 @@ public sealed class TestExplorerViewModelTests
         public Task RunTestsAsync(TestRunRequest request)
         {
             Requests.Add(request);
+            return OnRun?.Invoke(request) ?? Task.CompletedTask;
+        }
+
+        public List<TestRunRequest> DebugRequests { get; } = [];
+
+        public Task DebugTestsAsync(TestRunRequest request)
+        {
+            DebugRequests.Add(request);
             return OnRun?.Invoke(request) ?? Task.CompletedTask;
         }
 

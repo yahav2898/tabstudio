@@ -14,8 +14,8 @@ public static class LiveWorkspacePaths
 
     /// <summary>
     /// A relative path in its one accepted form, or <see langword="null"/> when it is not a safe path inside a workspace:
-    /// empty, absolute, with a drive, a backslash, a control character, an empty, <c>.</c> or <c>..</c> segment, or
-    /// a folder the workspace leaves out.
+    /// empty, absolute, with a drive, a backslash, a control character, an empty, <c>.</c> or <c>..</c> segment, a
+    /// folder the workspace leaves out, or on Windows a colon (<see cref="HasUnsafeColon"/>).
     /// </summary>
     /// <param name="relativePath">The path as a device sent it.</param>
     public static string? Normalize(string? relativePath)
@@ -27,10 +27,15 @@ public static class LiveWorkspacePaths
 
         foreach (var c in relativePath)
         {
-            if (c < ' ' || c is '\\' or ':' or '\u007f')
+            if (c < ' ' || c is '\\' or '\u007f')
             {
                 return null;
             }
+        }
+
+        if (HasUnsafeColon(relativePath))
+        {
+            return null;
         }
 
         var segments = relativePath.Split('/');
@@ -108,6 +113,23 @@ public static class LiveWorkspacePaths
 
         var relative = full[prefix.Length..].Replace(Path.DirectorySeparatorChar, '/');
         return Normalize(relative);
+    }
+
+    /// <summary>
+    /// Whether a colon makes a relative path unsafe: one after a drive letter, as in <c>C:</c>, which leads out of the
+    /// folder on Windows, or any colon on Windows, where it names a file's alternate data stream. On Android and
+    /// Linux a colon is an ordinary character, and a file such as <c>notes:v2.md</c> is shared.
+    /// </summary>
+    /// <param name="relativePath">The path, with '/' between folders.</param>
+    internal static bool HasUnsafeColon(string relativePath)
+    {
+        ArgumentNullException.ThrowIfNull(relativePath);
+        if (!relativePath.Contains(':', StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        return OperatingSystem.IsWindows() || (relativePath.Length >= 2 && char.IsAsciiLetter(relativePath[0]) && relativePath[1] == ':');
     }
 
     private static bool IsLink(string path)

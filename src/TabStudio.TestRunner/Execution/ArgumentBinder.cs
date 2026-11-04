@@ -161,6 +161,12 @@ internal static class ArgumentBinder
             return conversion.Invoke(null, [value]);
         }
 
+        // Last, as xUnit and NUnit do: Convert.ChangeType, so [InlineData(0)] feeds a string parameter "0".
+        if (value is IConvertible && typeof(IConvertible).IsAssignableFrom(type))
+        {
+            return System.Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
+        }
+
         return value;
     }
 

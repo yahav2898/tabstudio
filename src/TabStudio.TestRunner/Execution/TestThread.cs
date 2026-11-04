@@ -1,3 +1,5 @@
+using System.Runtime.Loader;
+
 namespace TabStudio.TestRunner.Execution;
 
 /// <summary>How a piece of test code on a <see cref="TestThread"/> ended.</summary>
@@ -48,19 +50,26 @@ internal static class TestThread
     /// <param name="sink">Where console output written by the code goes, or <see langword="null"/> to drop it.</param>
     /// <param name="timeout">How long to wait, or <see langword="null"/> to wait until it ends.</param>
     /// <param name="cancellationToken">Stops waiting.</param>
+    /// <param name="reflection">
+    /// The load context the code's reflection by name uses (<see cref="AssemblyLoadContext.EnterContextualReflection()"/>),
+    /// so that <c>Type.GetType</c>, and <c>TypeDescriptor</c> reading a <c>[TypeConverter]</c>, find the tests' own types;
+    /// <see langword="null"/> for the default context.
+    /// </param>
     public static async Task<ThreadRunResult<T>> RunAsync<T>(
         Func<T> work,
         string name,
         int stackSize,
         TestOutputSink? sink,
         TimeSpan? timeout,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        AssemblyLoadContext? reflection = null)
     {
         var completion = new TaskCompletionSource<ThreadRunResult<T>>(TaskCreationOptions.RunContinuationsAsynchronously);
         var thread = new Thread(
             () =>
             {
                 ConsoleCapture.Current = sink;
+                using var scope = reflection is null ? default : reflection.EnterContextualReflection();
                 try
                 {
                     completion.TrySetResult(new ThreadRunResult<T>(ThreadRunStatus.Completed, work(), null));

@@ -168,6 +168,21 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
         await Tests.RunAsync(new TestRunRequest(tests.Description, [new TestProjectSelection(project.FilePath, tests.Names)]));
     }
 
+    /// <summary>Ctrl+R, Ctrl+T and the editor's "Debug Tests": debugs the data row, test, class or file at the caret.</summary>
+    [RelayCommand]
+    private async Task DebugTestsInContextAsync()
+    {
+        if (ActiveDocument is not { } document
+            || Workspace?.FindProjectForFile(document.FilePath) is not { IsTestProject: true } project
+            || CaretTestFinder.Find(document.Document.Text, document.FilePath, document.CaretOffset) is not { } tests)
+        {
+            StatusText = "There are no tests at the caret";
+            return;
+        }
+
+        await Tests.DebugAsync(new TestRunRequest(tests.Description, [new TestProjectSelection(project.FilePath, tests.Names)]));
+    }
+
     /// <summary>Starts watching the workspace for test projects. Called once, by the constructor.</summary>
     private void InitializeTests() => PropertyChanged += OnPropertyChangedForTests;
 
@@ -326,7 +341,7 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
         TestSession session;
         try
         {
-            session = await TestSession.LoadAsync(assemblies, packages, cancellationToken: cancellationToken);
+            session = await TestSession.LoadAsync(assemblies, packages, TestRunOptionsFor(project), cancellationToken);
         }
         catch (Exception ex) when (ex is not (OperationCanceledException or OutOfMemoryException))
         {
@@ -343,6 +358,12 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
 
         return session;
     }
+
+    /// <summary>
+    /// How Test Explorer runs a project's tests: from its output folder, as <c>dotnet test</c> runs them, so tests
+    /// that find files next to their assembly or relative to the current directory find them.
+    /// </summary>
+    private static TestRunOptions TestRunOptionsFor(ProjectInfo project) => new() { OutputDirectory = ProjectOutputFolder.For(project) };
 
     /// <summary>Runs tests of one session, reporting each start and result to the Test Explorer as it happens.</summary>
     private async Task<TestRunSummary> RunTestSessionAsync(ProjectInfo project, TestSession session, IReadOnlyList<TestCase> tests, CancellationToken cancellationToken)

@@ -50,6 +50,12 @@ public sealed record NotebookCell
     /// </summary>
     internal bool HasGeneratedId { get; init; }
 
+    /// <summary>
+    /// What followed the kernel's name on the <c>#!</c> line that started the cell in a <c>.dib</c> file, such as
+    /// options or a trailing space, written back after it so that saving the file does not change the line.
+    /// </summary>
+    internal string? DibMarkerSuffix { get; init; }
+
     /// <summary>Creates a code cell.</summary>
     /// <param name="source">The code.</param>
     /// <param name="language">The language, as a kernel name. C# unless given.</param>

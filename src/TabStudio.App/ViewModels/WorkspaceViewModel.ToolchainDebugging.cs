@@ -147,6 +147,11 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        if (toolchain.Id == "rust" && type == "lldb-dap")
+        {
+            configuration = ToolchainLaunch.WithRustFormatters(configuration);
+        }
+
         var withInput = PrepareNativeDebugInput(configuration);
         if (withInput is null)
         {
@@ -197,7 +202,12 @@ public sealed partial class WorkspaceViewModel
 
         var target = new LaunchTarget(configuration.Name, configuration, IsCurrentFile: false);
         _programEnvironments.AddOrUpdate(target, WithServiceEnvironment(plan.Run).Environment);
+        // Restart (Ctrl+Shift+F5) saves and builds again, so it debugs the code as it is now, not the last build.
+        _pendingAdapterRelaunch = () => DebugToolchainProjectAsync(info, DebugStart.Run);
+        _pendingPanicStops = toolchain.Id == "rust";
         await LaunchAdapterAsync(target, start, noDebug: false);
+        _pendingAdapterRelaunch = null;
+        _pendingPanicStops = false;
         if (!IsDebuggingWithAdapter)
         {
             StopNativeDebugInput();

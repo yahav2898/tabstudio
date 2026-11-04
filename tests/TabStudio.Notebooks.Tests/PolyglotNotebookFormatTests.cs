@@ -65,6 +65,43 @@ public sealed class PolyglotNotebookFormatTests
     }
 
     [Fact]
+    public void A_Windows_file_is_saved_with_its_own_line_endings()
+    {
+        var text = Fixtures.CSharpDib.Replace("#!C#", "#!csharp", StringComparison.Ordinal).Replace("\n", "\r\n", StringComparison.Ordinal);
+
+        var document = PolyglotNotebookFormat.Parse(text);
+
+        Assert.Equal("\r\n", document.NewLine);
+        Assert.Equal(text, PolyglotNotebookFormat.Serialize(document));
+        Assert.Equal(text, NotebookSerializer.Serialize(document.ReplaceCell(document.Cells[0]), NotebookFormat.Polyglot));
+        Assert.Equal(text.Replace("\r\n", "\n", StringComparison.Ordinal), PolyglotNotebookFormat.Serialize(document, "\n"));
+
+        // A notebook made in memory, or read from Jupyter, is written with \n as dotnet/interactive writes it.
+        Assert.DoesNotContain("\r", PolyglotNotebookFormat.Serialize(NotebookDocument.Create(NotebookCell.Code("var x = 1;\nvar y = 2;"))), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void A_kernel_marker_with_a_trailing_space_or_options_starts_a_cell_and_is_written_back_as_it_was()
+    {
+        const string text = "#!csharp \n\nvar x = 1;\n\n#!fsharp --kernel-name fs\n\nlet y = 2\n\n#!markdown\n\nNotes\n";
+
+        var document = PolyglotNotebookFormat.Parse(text);
+
+        Assert.Equal(3, document.Cells.Count);
+        Assert.Equal(NotebookLanguages.CSharp, document.Cells[0].Language);
+        Assert.Equal("var x = 1;", document.Cells[0].Source);
+        Assert.Equal(NotebookLanguages.FSharp, document.Cells[1].Language);
+        Assert.Equal("let y = 2", document.Cells[1].Source);
+        Assert.Equal(NotebookCellKind.Markdown, document.Cells[2].Kind);
+        Assert.Equal(text, PolyglotNotebookFormat.Serialize(document));
+
+        // A magic command that is not a kernel's name stays in its cell.
+        var magic = PolyglotNotebookFormat.Parse("#!csharp\n\n#!time \nvar z = 3;\n");
+        Assert.Single(magic.Cells);
+        Assert.Equal("#!time \nvar z = 3;", magic.Cells[0].Source);
+    }
+
+    [Fact]
     public void Windows_line_endings_are_read_and_can_be_written()
     {
         var text = Fixtures.CSharpDib.Replace("\n", "\r\n", StringComparison.Ordinal);

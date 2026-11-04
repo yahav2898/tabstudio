@@ -33,6 +33,15 @@ public sealed record NotebookDocument
     /// <summary>The format the notebook was read from, or <see langword="null"/> for a notebook created in memory.</summary>
     public NotebookFormat? Format { get; init; }
 
+    /// <summary>
+    /// The line break of the <c>.dib</c> file the notebook was read from, <c>\r\n</c> or <c>\n</c>, which writing it
+    /// again keeps; <see langword="null"/> for a notebook that was not read from one.
+    /// </summary>
+    public string? NewLine { get; init; }
+
+    /// <summary>Whether the <c>.ipynb</c> file the notebook was read from gave its cells ids, which writing it again keeps.</summary>
+    internal bool HasCellIds { get; init; }
+
     /// <summary>The language of code cells that do not name one, as a kernel name. C# unless the metadata says otherwise.</summary>
     public string DefaultLanguage => KernelInfoMetadata.GetDefaultLanguage(Metadata);
 

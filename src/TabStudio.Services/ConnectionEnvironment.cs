@@ -86,12 +86,40 @@ public static partial class ConnectionEnvironment
         return value;
     }
 
+    /// <summary>
+    /// The endpoints under every name other services reach a service by: its service name, its <c>container_name</c>
+    /// and its networks' <c>aliases</c>, so <c>DB_HOST=my-db</c> beside <c>container_name: my-db</c> is rewritten as
+    /// <c>DB_HOST=db</c> is. A service's own name wins over another service's container name or alias.
+    /// </summary>
+    /// <param name="project">The Compose model.</param>
+    /// <param name="endpoints">The published ports, by service name.</param>
+    public static IReadOnlyDictionary<string, IReadOnlyList<ServicePort>> WithNames(ComposeProject project, IReadOnlyDictionary<string, IReadOnlyList<ServicePort>> endpoints)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        ArgumentNullException.ThrowIfNull(endpoints);
+        var result = new Dictionary<string, IReadOnlyList<ServicePort>>(endpoints, StringComparer.Ordinal);
+        foreach (var (name, ports) in endpoints)
+        {
+            if (!project.Services.TryGetValue(name, out var service)) continue;
+            if (service.ContainerName is { Length: > 0 } containerName) result.TryAdd(containerName, ports);
+            foreach (var alias in service.Aliases) result.TryAdd(alias, ports);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// The variables a project's run gets: its Compose service's environment, <c>appsettings.json</c> values and the
+    /// services' own variables, with every service host rewritten to its local endpoint, whether it is named by its
+    /// service name, its <c>container_name</c> or a network alias (<see cref="WithNames"/>).
+    /// </summary>
     public static IReadOnlyDictionary<string, string?> ForProject(ComposeProject project, string projectDirectory, IReadOnlyDictionary<string, IReadOnlyList<ServicePort>> endpoints, string environmentName = "Development")
     {
         var result = new Dictionary<string, string?>(StringComparer.Ordinal);
         var application = FindApplication(project, projectDirectory);
-        foreach (var pair in application?.Environment ?? new Dictionary<string, string?>()) result[pair.Key] = pair.Value is { } value ? Rewrite(value, endpoints, pair.Key) : null;
-        foreach (var pair in project.RunEnvironment) result.TryAdd(pair.Key, pair.Value is { } value ? Rewrite(value, endpoints, pair.Key) : null);
+        var names = WithNames(project, endpoints);
+        foreach (var pair in application?.Environment ?? new Dictionary<string, string?>()) result[pair.Key] = pair.Value is { } value ? Rewrite(value, names, pair.Key) : null;
+        foreach (var pair in project.RunEnvironment) result.TryAdd(pair.Key, pair.Value is { } value ? Rewrite(value, names, pair.Key) : null);
         foreach (var file in new[] { "appsettings.json", $"appsettings.{environmentName}.json" })
         {
             var path = Path.Combine(projectDirectory, file);
@@ -99,7 +127,7 @@ public static partial class ConnectionEnvironment
             using var json = JsonDocument.Parse(File.ReadAllText(path), new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
             Visit(json.RootElement, "", (key, value) =>
             {
-                var replaced = Rewrite(value, endpoints, key);
+                var replaced = Rewrite(value, names, key);
                 if (value != replaced && !result.ContainsKey(key.Replace(":", "__", StringComparison.Ordinal))) result[key.Replace(":", "__", StringComparison.Ordinal)] = replaced;
             });
         }

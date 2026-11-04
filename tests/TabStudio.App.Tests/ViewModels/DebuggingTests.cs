@@ -328,6 +328,110 @@ public sealed class DebuggingTests
         Assert.Empty(reopened.Breakpoints);
     }
 
+    [AvaloniaFact]
+    public async Task A_CSharp_breakpoint_with_a_hit_count_stops_on_that_hit_and_the_editor_offers_it()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+        var program = workspace.ActiveDocument!;
+        program.Document.Text = """
+            var total = 0;
+            for (var i = 0; i < 5; i++)
+            {
+                total += i;
+            }
+            Console.WriteLine(total);
+            """;
+        var options = (IEditorBreakpointOptions)workspace;
+        Assert.True(options.HasBreakpointOptions(program.FilePath));
+        Assert.False(options.HasLogpoints(program.FilePath));
+
+        var edit = options.EditHitCountAsync(program.FilePath, 4);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.Prompt.IsOpen, because: "the hit count prompt");
+        workspace.Prompt.Text = "> 3";
+        workspace.Prompt.ConfirmCommand.Execute(null);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.Prompt.IsOpen && workspace.Prompt.Message.Contains("is not a hit count", StringComparison.Ordinal), because: "the prompt to refuse > 3");
+        workspace.Prompt.Text = "= 3";
+        workspace.Prompt.ConfirmCommand.Execute(null);
+        await edit;
+
+        var breakpoint = Assert.Single(workspace.Breakpoints.All);
+        Assert.Equal("= 3", breakpoint.HitCount);
+        Assert.Equal(BreakpointGlyph.Conditional, breakpoint.Glyph);
+
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await WaitForPauseAsync(workspace, 4);
+        await WaitForLocalAsync(workspace, "i");
+        Assert.Equal("2", workspace.Locals.Tree.Rows.Single(r => r.Name == "i").Value);
+
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await WaitForExitAsync(workspace);
+        Assert.Contains("10", workspace.Output.Text, StringComparison.Ordinal);
+    }
+
+    [AvaloniaFact]
+    public async Task The_call_stack_lists_the_programs_threads_and_shows_the_one_chosen()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+        var program = workspace.ActiveDocument!;
+        program.Document.Text = """
+            var running = true;
+            var worker = new Thread(() =>
+            {
+                var spins = 0;
+                while (Volatile.Read(ref running))
+                {
+                    spins++;
+                }
+            }) { Name = "Worker", IsBackground = true };
+            worker.Start();
+            Thread.Sleep(300);
+            Console.WriteLine("paused here");
+            running = false;
+            worker.Join();
+            """;
+        workspace.Breakpoints.Toggle(program.FilePath, 12);
+
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await WaitForPauseAsync(workspace, 12);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.CallStack.Threads.Any(t => t.Name == "Worker"), because: "the worker thread");
+
+        var worker = Assert.Single(workspace.CallStack.Threads, t => t.Name == "Worker");
+        Assert.NotEqual(worker, workspace.CallStack.SelectedThread);
+        workspace.CallStack.SelectedThread = worker;
+        await UiTestHelpers.WaitUntilAsync(() => workspace.CallStack.Frames.FirstOrDefault()?.Location?.Line is 5 or 7, because: "the worker's frames");
+        Assert.Contains(workspace.CallStack.Frames[0].MethodName, workspace.Locals.Note ?? string.Empty, StringComparison.Ordinal);
+
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await WaitForExitAsync(workspace);
+        Assert.Empty(workspace.CallStack.Threads);
+    }
+
+    [AvaloniaFact]
+    public async Task Stop_cancels_a_build_in_progress_says_so_and_the_next_build_runs()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+
+        var build = workspace.BuildCommand.ExecuteAsync(null);
+        Assert.True(workspace.StopDebuggingCommand.CanExecute(null));
+        workspace.StopDebuggingCommand.Execute(null);
+        await build;
+
+        Assert.Contains("========== Build: cancelled ==========", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Equal(IdeState.Ready, workspace.State);
+        Assert.Equal("Build cancelled", workspace.StatusText);
+        Assert.False(workspace.StopDebuggingCommand.CanExecute(null));
+
+        await workspace.BuildCommand.ExecuteAsync(null);
+        Assert.Contains(" succeeded, 0 failed", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Equal("Build succeeded", workspace.StatusText);
+    }
+
     private const string ThrowingProgram = """
         var numbers = new List<int>();
         Console.WriteLine("Looking for the first number");
