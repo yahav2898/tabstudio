@@ -1,24 +1,24 @@
-Startup to self test start: 10.45 s
-TabStudio startup: first frame at 10066 ms, ready at 10066 ms; process start to activity 2764 ms, application +1366 ms, styles +788 ms, services +828 ms, theme +154 ms, view models +1624 ms, main view +1534 ms, start screen +54 ms, first frame +954 ms
-TabStudio UI stalls: 198 over 100 ms (71 over 250 ms, 6 over 1 s), 61.9 s in all, longest 5281 ms during the step that ended with: Extracting the sample; answer p50 3.8 ms, p95 66.7 ms, p99 261.4 ms over 6507 questions in 267 s
-TabStudio UI timings: workspace view 1673 ms, document view 731 ms, workspace view model 654 ms, workspace view model 577 ms, document view 491 ms, LivePanelView 406 ms, document view 357 ms, document view 257 ms, document view 219 ms, document view 197 ms, document view 111 ms, document view 96 ms
-TabStudio UI stall: 5281 ms at 0.6 s during the step that ended with: Extracting the sample
-TabStudio UI stall: 2933 ms at 6.3 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
-TabStudio UI stall: 1485 ms at 12.4 s during opening the session's documents → creating a document's view → starting restore and analysis
-TabStudio UI stall: 1183 ms at 131.3 s during the step that ended with: WebAssembly: served on 127.0.0.1:33345 in 52.9 s with its boot files, no errors, run in th…
-TabStudio UI stall: 1146 ms at 47.9 s during creating the DatabaseExplorerView
-TabStudio UI stall: 1010 ms at 67.8 s during creating the workspace's view model → showing the workspace → reading the solution → showing the solution in Solution Explorer → databases, startup projects and toolchains → backing services → loading…
-TabStudio UI stall: 955 ms at 135.6 s during creating the workspace's view model → showing the workspace → reading the solution
-TabStudio UI stall: 954 ms at 70.4 s during the step that ended with: Static site: served on 127.0.0.1:42201 in 3.8 s | Static site preview: the page showed in …
-TabStudio UI stall: 893 ms at 73.7 s during creating a document's view
-TabStudio UI stall: 875 ms at 75.3 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution → showing the solution in Solution Explorer → databases, startup projects and toolchains…
-TabStudio UI stall: 823 ms at 69.2 s during starting restore and analysis → creating a document's view
-TabStudio UI stall: 801 ms at 9.2 s during reading the solution
-TabStudio UI stall: 778 ms at 218.5 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution
-TabStudio UI stall: 688 ms at 72.8 s during creating a document's view
-TabStudio UI stall: 675 ms at 14.6 s during the step that ended with: F5: What's your name? Tablet | Good morning, Tablet! This program was compiled and run on …
+Startup to self test start: 18.74 s
+TabStudio startup: first frame at 18391 ms, ready at 18391 ms; process start to activity 4760 ms, application +1604 ms, styles +1249 ms, services +1068 ms, theme +265 ms, view models +2499 ms, main view +2856 ms, start screen +141 ms, first frame +3948 ms
+TabStudio UI stalls: 328 over 100 ms (126 over 250 ms, 19 over 1 s), 122.6 s in all, longest 8089 ms during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution; answer p50 4.8 ms, p95 73.5 ms, p99 309.4 ms over 9555 questions in 437 s
+TabStudio UI timings: workspace view 4103 ms, document view 1513 ms, workspace view model 1191 ms, document view 1031 ms, document view 745 ms, LivePanelView 712 ms, document view 558 ms, document view 485 ms, DatabaseExplorerView 484 ms, document view 435 ms, workspace view model 357 ms, document view 342 ms
+TabStudio UI stall: 8089 ms at 0.4 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 6542 ms at 12.4 s during backing services
+TabStudio UI stall: 2545 ms at 22.1 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 2256 ms at 8.5 s during reading the solution
+TabStudio UI stall: 2084 ms at 111.2 s during the step that ended with: Web: served on 127.0.0.1:37619 in 26.0 s, the API said "Hello, Tablet!" | Web screen: type…
+TabStudio UI stall: 2020 ms at 19.2 s during loading C#
+TabStudio UI stall: 1879 ms at 351.1 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 1860 ms at 412.5 s during creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 1584 ms at 126.8 s during creating a document's view
+TabStudio UI stall: 1504 ms at 373.9 s during the step that ended with: Go debugging: stopped at 13, name = "Tablet", console input and completed greeting
+TabStudio UI stall: 1400 ms at 219.4 s during creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 1392 ms at 78.1 s during creating the LiveShareView → creating the workspace's view model → showing the workspace → reading the solution → showing the solution in Solution Explorer → databases, startup projects and toolchains…
+TabStudio UI stall: 1288 ms at 124.9 s during creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 1269 ms at 135.8 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 1264 ms at 24.6 s during the step that ended with: F5: What's your name? Tablet | Good morning, Tablet! This program was compiled and run on …
 Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
- Native Heap 674582 674536 40 6439 675600 713096 701747 6728
- Dalvik Heap 2960 2912 20 115 4888 8105 4053 4052
- TOTAL 1208805 1090528 38964 57622 1275888 721201 705800 10780
- TOTAL PSS: 1208805 TOTAL RSS: 1275888 TOTAL SWAP PSS: 57622
+ Native Heap 676006 675944 56 35 676992 712792 697938 10776
+ Dalvik Heap 2794 2768 0 116 4576 8185 4093 4092
+ TOTAL 1220493 1149104 48980 1677 1351356 720977 702031 14868
+ TOTAL PSS: 1220493 TOTAL RSS: 1351356 TOTAL SWAP PSS: 1677
