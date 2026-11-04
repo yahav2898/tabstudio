@@ -10,7 +10,7 @@ Compatibility Doctor:
   CsvHelper.Linq: Library via Built with its users - A library is compiled together with the projects that reference it.
   CsvHelper.Linq.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: CsvHelper.Docs
-Built in 13.0 s: 0 errors, 3 warnings
+Built in 9.4 s: 0 errors, 3 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -1356,35 +1356,34 @@ Packages with analyzers or MSBuild files:
       build/net8.0/xunit.abstractions.dll
       build/net8.0/xunit.runner.visualstudio.props
       build/net8.0/xunit.runner.visualstudio.testadapter.dll
-Editor: 22 files opened and analyzed in 1.7 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 4 over 100 ms (3 over 250 ms, 0 over 1 s), 1.2 s in all, longest 387 ms during screenshots, 0.7 s of it garbage collection; answer p50 4.3 ms, p95 13.8 ms, p99 80.1 ms over 616 questions in 16 s
-UI timings: document view 26 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+Editor: 22 files opened and analyzed in 1.4 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 3 over 100 ms (2 over 250 ms, 0 over 1 s), 0.8 s in all, longest 355 ms during screenshots, 0.2 s of it garbage collection; answer p50 4.2 ms, p95 25.0 ms, p99 95.2 ms over 420 questions in 12 s
+UI timings: document view 23 ms, document view 11 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 387 ms | 114 ms | 0.8 s | screenshots |
-| 384 ms | 127 ms | 0.3 s | screenshots |
-| 347 ms | 342 ms | 2.5 s | the first build |
-| 105 ms | 82 ms | 2.1 s | the first build |
+| 355 ms | 126 ms | 0.4 s | screenshots |
+| 291 ms | 77 ms | 0.9 s | screenshots |
+| 107 ms | 39 ms | 6.8 s | the first build |
 Output:
-Build started at 01:18:22...
+Build started at 03:27:17...
 1>------ Build started: Project: CsvHelper.Generators, Configuration: Debug ------
-1>CsvHelper.Generators -> compiled in memory (195.5 KB, 286 ms)
+1>CsvHelper.Generators -> compiled in memory (195.5 KB, 395 ms)
 2>------ Build started: Project: CsvHelper, Configuration: Debug ------
-2>CsvHelper -> compiled in memory (308.5 KB, 711 ms)
+2>CsvHelper -> compiled in memory (308.5 KB, 468 ms)
 3>------ Build started: Project: CsvHelper.Tests, Configuration: Debug ------
 3>warning CS8002: Referenced assembly 'CsvHelper.Generators, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' does not have a strong name.
-3>CsvHelper.Tests -> compiled in memory (778.5 KB, 2205 ms)
+3>CsvHelper.Tests -> compiled in memory (778.5 KB, 1369 ms)
 4>------ Build started: Project: CsvHelper.Linq, Configuration: Debug ------
-4>CsvHelper.Linq -> compiled in memory (174.5 KB, 966 ms)
+4>CsvHelper.Linq -> compiled in memory (174.5 KB, 788 ms)
 5>------ Build started: Project: CsvHelper.Benchmarks, Configuration: Debug ------
 5>warning CS8002: Referenced assembly 'Sylvan.Data.Csv, Version=1.4.4.0, Culture=neutral, PublicKeyToken=null' does not have a strong name.
 5>warning CS8002: Referenced assembly 'Sep, Version=0.17.0.0, Culture=neutral, PublicKeyToken=null' does not have a strong name.
-5>CsvHelper.Benchmarks -> compiled in memory (165.5 KB, 1171 ms)
+5>CsvHelper.Benchmarks -> compiled in memory (165.5 KB, 813 ms)
 6>------ Build started: Project: CsvHelper.Docs, Configuration: Debug ------
-6>CsvHelper.Docs -> compiled in memory (384.5 KB, 762 ms)
+6>CsvHelper.Docs -> compiled in memory (384.5 KB, 345 ms)
 7>------ Build started: Project: CsvHelper.QuickTester, Configuration: Debug ------
-7>CsvHelper.QuickTester -> compiled in memory (5 KB, 861 ms)
+7>CsvHelper.QuickTester -> compiled in memory (5 KB, 564 ms)
 8>------ Build started: Project: CsvHelper.Linq.Tests, Configuration: Debug ------
-8>CsvHelper.Linq.Tests -> compiled in memory (254 KB, 1374 ms)
+8>CsvHelper.Linq.Tests -> compiled in memory (254 KB, 961 ms)
 ========== Build: 8 succeeded, 0 failed ==========
 

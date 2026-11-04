@@ -1,5 +1,5 @@
 YamlDotNet at 4f7e6e346649ec2a402607a3c1ea352c6fb5ecd3
-Opened /home/runner/work/_temp/real-repos/YamlDotNet/YamlDotNet.sln in 0.3 s
+Opened /home/runner/work/_temp/real-repos/YamlDotNet/YamlDotNet.sln in 0.2 s
 Compatibility Doctor:
   YamlDotNet: Library via Built with its users - A library is compiled together with the projects that reference it.
   YamlDotNet.Samples: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
@@ -11,7 +11,7 @@ Compatibility Doctor:
   YamlDotNet.Core7AoTCompileTest.Model: Library via Built with its users - A library is compiled together with the projects that reference it.
   YamlDotNet.Fsharp.Test: Coming in an update via Test Explorer - Tests run in-process from the Test Explorer. The F# compiler is not bundled yet.
 Startup project: YamlDotNet.Core7AoTCompileTest
-Built in 4.0 s: 0 errors, 2 warnings
+Built in 3.3 s: 0 errors, 2 warnings
 Packages with analyzers or MSBuild files:
   microsoft.codeanalysis.analyzers 3.3.3
       analyzers/dotnet/cs/Microsoft.CodeAnalysis.Analyzers.dll
@@ -259,32 +259,29 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Editor: 18 files opened and analyzed in 0.5 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 5 over 100 ms (1 over 250 ms, 0 over 1 s), 0.8 s in all, longest 253 ms during screenshots, 0.2 s of it garbage collection; answer p50 5.4 ms, p95 26.9 ms, p99 153.0 ms over 191 questions in 6 s
-UI timings: document view 23 ms, document view 18 ms, document view 8 ms, document view 5 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+UI stalls: 2 over 100 ms (0 over 250 ms, 0 over 1 s), 0.3 s in all, longest 152 ms during screenshots, 0.1 s of it garbage collection; answer p50 4.3 ms, p95 35.0 ms, p99 142.8 ms over 159 questions in 5 s
+UI timings: document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 253 ms | 0 ms | 0.7 s | screenshots |
-| 153 ms | 66 ms | 5.1 s | screenshots |
-| 151 ms | 0 ms | 0.3 s | screenshots |
-| 136 ms | 117 ms | 1.1 s | the first build |
-| 103 ms | 0 ms | 5.0 s | screenshots |
+| 152 ms | 51 ms | 0.3 s | screenshots |
+| 143 ms | 13 ms | 0.6 s | screenshots |
 Output:
-Build started at 01:21:23...
+Build started at 03:29:55...
 1>------ Build started: Project: YamlDotNet, Configuration: Debug ------
-1>YamlDotNet -> compiled in memory (318.5 KB, 499 ms)
+1>YamlDotNet -> compiled in memory (318.5 KB, 330 ms)
 2>------ Build started: Project: YamlDotNet.Analyzers.StaticGenerator, Configuration: Debug ------
 2>TypeFactoryGenerator.cs(59,65): warning CS8604: Possible null reference argument for parameter 'category' in 'Diagnostic Diagnostic.Create(string id, string category, LocalizableString message, DiagnosticSeverity severity, DiagnosticSeverity defaultSeverity, bool isEnabledByDefault, int warningLevel, LocalizableString? title = null, LocalizableString? description = null, string? helpLink = null, Location? location = null, IEnumerable<Location>? additionalLocations = null, IEnumerable<string>? customTags = null, ImmutableDictionary<string, string?>? properties = null)'.
 2>TypeFactoryGenerator.cs(132,27): warning CS8604: Possible null reference argument for parameter 'arg1' in 'void Action<string, bool>.Invoke(string arg1, bool arg2)'.
-2>YamlDotNet.Analyzers.StaticGenerator -> compiled in memory (53.5 KB, 27 ms)
+2>YamlDotNet.Analyzers.StaticGenerator -> compiled in memory (53.5 KB, 47 ms)
 3>------ Build started: Project: YamlDotNet.Test, Configuration: Debug ------
-3>YamlDotNet.Test -> compiled in memory (447 KB, 746 ms)
+3>YamlDotNet.Test -> compiled in memory (447 KB, 582 ms)
 4>------ Build started: Project: YamlDotNet.Samples, Configuration: Debug ------
-4>YamlDotNet.Samples -> compiled in memory (29 KB, 716 ms)
+4>YamlDotNet.Samples -> compiled in memory (29 KB, 559 ms)
 5>------ Build started: Project: YamlDotNet.Benchmark, Configuration: Debug ------
-5>YamlDotNet.Benchmark -> compiled in memory (15 KB, 229 ms)
+5>YamlDotNet.Benchmark -> compiled in memory (15 KB, 253 ms)
 6>------ Build started: Project: YamlDotNet.Core7AoTCompileTest.Model, Configuration: Debug ------
 6>YamlDotNet.Core7AoTCompileTest.Model -> compiled in memory (3 KB, 1 ms)
 7>------ Build started: Project: YamlDotNet.Core7AoTCompileTest, Configuration: Debug ------
-7>YamlDotNet.Core7AoTCompileTest -> compiled in memory (52 KB, 326 ms)
+7>YamlDotNet.Core7AoTCompileTest -> compiled in memory (52 KB, 273 ms)
 ========== Build: 7 succeeded, 0 failed ==========
 

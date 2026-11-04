@@ -25,17 +25,15 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net6.0/_._
       buildTransitive/netcoreapp2.0/System.Security.Cryptography.Xml.targets
 Editor: 3 files opened and analyzed in 0.1 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 3 over 100 ms (0 over 250 ms, 0 over 1 s), 0.5 s in all, longest 172 ms during screenshots, 0.2 s of it garbage collection; answer p50 4.5 ms, p95 162.3 ms, p99 172.5 ms over 28 questions in 1 s
-UI timings: document view 3 ms, document view 2 ms, document view 2 ms
+UI stalls: 1 over 100 ms (0 over 250 ms, 0 over 1 s), 0.2 s in all, longest 152 ms during screenshots, 0.0 s of it garbage collection; answer p50 2.1 ms, p95 72.6 ms, p99 152.3 ms over 26 questions in 1 s
+UI timings: document view 4 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 172 ms | 82 ms | 0.8 s | screenshots |
-| 162 ms | 0 ms | 0.2 s | screenshots |
-| 118 ms | 117 ms | 0.1 s | screenshots |
+| 152 ms | 18 ms | 0.1 s | screenshots |
 Output:
-Build started at 01:10:31...
+Build started at 03:19:57...
 1>------ Build started: Project: Simple Calculator, Configuration: Debug ------
 1>MainWindow.xaml(1,1): warning TS7009: In the code OpenSilver's XAML compiler made from MainWindow.xaml: 'MainWindow.Equals' hides inherited member 'object.Equals(object?)'. Use the new keyword if hiding was intended. (CS0108)
-1>Simple Calculator -> compiled in memory (48.5 KB, 178 ms)
+1>Simple Calculator -> compiled in memory (48.5 KB, 173 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 

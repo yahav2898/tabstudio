@@ -6,7 +6,7 @@ Compatibility Doctor:
   BlazingPizza.Shared: Library via Built with its users - A library is compiled together with the projects that reference it.
   BlazingPizza.ComponentsLibrary: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: BlazingPizza
-Built in 3.6 s: 0 errors, 14 warnings
+Built in 4.3 s: 0 errors, 14 warnings
 Packages with analyzers or MSBuild files:
   microsoft.aspnetcore.app.ref 10.0.14
       analyzers/dotnet/cs/Microsoft.AspNetCore.App.Analyzers.dll
@@ -314,28 +314,26 @@ Packages with analyzers or MSBuild files:
   system.composition 6.0.0
       buildTransitive/netcoreapp2.0/System.Composition.targets
       buildTransitive/netcoreapp3.1/_._
-Editor: 12 files opened and analyzed in 0.5 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 4 over 100 ms (1 over 250 ms, 0 over 1 s), 0.8 s in all, longest 387 ms during screenshots, 0.4 s of it garbage collection; answer p50 6.4 ms, p95 26.7 ms, p99 169.6 ms over 161 questions in 5 s
-UI timings: document view 5 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms, document view 1 ms, document view 1 ms, document view 1 ms, document view 1 ms
+Editor: 12 files opened and analyzed in 0.4 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 2 over 100 ms (0 over 250 ms, 0 over 1 s), 0.2 s in all, longest 125 ms during screenshots, 0.0 s of it garbage collection; answer p50 4.3 ms, p95 12.2 ms, p99 70.2 ms over 222 questions in 5 s
+UI timings: document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms, document view 1 ms, document view 1 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 387 ms | 135 ms | 0.2 s | screenshots |
-| 170 ms | 0 ms | 0.6 s | screenshots |
-| 154 ms | 128 ms | 1.0 s | the first build |
-| 114 ms | 112 ms | 3.5 s | the first build |
+| 125 ms | 15 ms | 0.3 s | screenshots |
+| 113 ms | 15 ms | 0.2 s | screenshots |
 Output:
-Build started at 01:10:27...
+Build started at 03:19:54...
 1>------ Build started: Project: BlazingPizza.ComponentsLibrary, Configuration: Debug ------
 1>TemplatedList.razor(17,6): warning CS8602: Dereference of a possibly null reference.
-1>BlazingPizza.ComponentsLibrary -> compiled in memory (10.5 KB, 155 ms)
+1>BlazingPizza.ComponentsLibrary -> compiled in memory (10.5 KB, 9 ms)
 2>------ Build started: Project: BlazingPizza.Shared, Configuration: Debug ------
-2>BlazingPizza.Shared -> compiled in memory (71.5 KB, 217 ms)
+2>BlazingPizza.Shared -> compiled in memory (71.5 KB, 64 ms)
 3>------ Build started: Project: BlazingPizza.Client, Configuration: Debug ------
 3>OrderState.cs(17,20): warning CS8618: Non-nullable property 'JSRuntime' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 3>OrderState.cs(48,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
 3>OrderState.cs(55,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
 3>OrderState.cs(70,11): warning CS8602: Dereference of a possibly null reference.
-3>BlazingPizza.Client -> compiled in memory (42 KB, 104 ms)
+3>BlazingPizza.Client -> compiled in memory (42 KB, 124 ms)
 4>------ Build started: Project: BlazingPizza, Configuration: Debug ------
 4>LoginDisplay.razor(12,60): warning CS8602: Dereference of a possibly null reference.
 4>MyOrders.razor(36,32): warning CS0169: The field 'MyOrders.ordersWithStatus' is never used
@@ -346,6 +344,6 @@ Build started at 01:10:27...
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Specials' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Toppings' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'NotificationSubscriptions' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-4>BlazingPizza -> compiled in memory (238.5 KB, 639 ms)
+4>BlazingPizza -> compiled in memory (238.5 KB, 326 ms)
 ========== Build: 4 succeeded, 0 failed ==========
 

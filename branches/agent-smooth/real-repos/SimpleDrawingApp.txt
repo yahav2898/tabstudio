@@ -4,18 +4,18 @@ Compatibility Doctor:
   Paint-v2: Ready via Cross-platform Forms layer in the app preview - A .NET Framework project, run with .NET on this tablet. Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
 Startup project: Paint-v2
 Built in 0.0 s: 0 errors, 0 warnings
-Editor: 3 files opened and analyzed in 0.2 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 4 over 100 ms (0 over 250 ms, 0 over 1 s), 0.5 s in all, longest 130 ms during screenshots, 0.0 s of it garbage collection; answer p50 4.2 ms, p95 129.6 ms, p99 129.6 ms over 19 questions in 1 s
-UI timings: document view 14 ms, document view 2 ms, document view 2 ms
+Editor: 3 files opened and analyzed in 0.1 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 4 over 100 ms (1 over 250 ms, 0 over 1 s), 0.6 s in all, longest 250 ms during screenshots, 0.1 s of it garbage collection; answer p50 4.3 ms, p95 250.2 ms, p99 250.2 ms over 14 questions in 1 s
+UI timings: document view 10 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 130 ms | 0 ms | 0.2 s | screenshots |
-| 126 ms | 0 ms | 0.6 s | screenshots |
-| 117 ms | 0 ms | 0.4 s | screenshots |
-| 109 ms | 13 ms | 0.7 s | screenshots |
+| 250 ms | 64 ms | 0.1 s | screenshots |
+| 141 ms | 6 ms | 0.7 s | screenshots |
+| 123 ms | 0 ms | 0.4 s | screenshots |
+| 122 ms | 0 ms | 0.6 s | screenshots |
 Output:
-Build started at 01:10:36...
+Build started at 03:20:01...
 1>------ Build started: Project: Paint-v2, Configuration: Debug ------
-1>Paint-v2 -> compiled in memory (142.5 KB, 21 ms)
+1>Paint-v2 -> compiled in memory (142.5 KB, 25 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 

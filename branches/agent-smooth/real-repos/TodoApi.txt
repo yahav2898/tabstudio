@@ -9,7 +9,7 @@ Compatibility Doctor:
   TodoApp.AppHost: Not supported via Not on a tablet - An Aspire AppHost starts the app's projects and containers through Aspire's developer control plane, which runs on a computer, and it compiles against code its SDK generates for the projects it references. TabStudio leaves it out of builds; run the projects it starts on their own.
   TodoApp.ServiceDefaults: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: Todo.Web.Server
-Built in 4.5 s: 1 errors, 0 warnings
+Built in 5.1 s: 1 errors, 0 warnings
   1 x CS1739
       [Todo.Api] UsersApi.cs(42,109): error CS1739: The best overload for 'UserLoginInfo' does not have a parameter named 'displayName'
 Packages with analyzers or MSBuild files:
@@ -1003,27 +1003,26 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net7.0/Yarp.ReverseProxy.targets
       buildTransitive/net8.0/Yarp.ReverseProxy.targets
 Editor: 12 files opened and analyzed in 0.4 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 3 over 100 ms (0 over 250 ms, 0 over 1 s), 0.4 s in all, longest 184 ms during screenshots, 0.1 s of it garbage collection; answer p50 5.4 ms, p95 12.4 ms, p99 108.5 ms over 220 questions in 6 s
-UI timings: document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms, document view 1 ms, document view 1 ms, document view 1 ms
+UI stalls: 2 over 100 ms (0 over 250 ms, 0 over 1 s), 0.3 s in all, longest 180 ms during screenshots, 0.0 s of it garbage collection; answer p50 4.3 ms, p95 9.9 ms, p99 73.0 ms over 262 questions in 6 s
+UI timings: document view 23 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms, document view 1 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 184 ms | 0 ms | 0.1 s | screenshots |
-| 149 ms | 0 ms | 0.6 s | screenshots |
-| 109 ms | 96 ms | 5.1 s | the first build |
+| 180 ms | 7 ms | 0.4 s | screenshots |
+| 143 ms | 25 ms | 0.2 s | screenshots |
 Output:
-Build started at 01:12:55...
+Build started at 03:22:08...
 1>------ Build started: Project: TodoApp.ServiceDefaults, Configuration: Debug ------
-1>TodoApp.ServiceDefaults -> compiled in memory (13.5 KB, 43 ms)
+1>TodoApp.ServiceDefaults -> compiled in memory (13.5 KB, 36 ms)
 2>------ Build started: Project: Todo.Api, Configuration: Debug ------
 2>UsersApi.cs(42,109): error CS1739: The best overload for 'UserLoginInfo' does not have a parameter named 'displayName'
 3>------ Build started: Project: Todo.Api.Tests, Configuration: Debug ------
 3>Todo.Api.Tests was not compiled because Todo.Api, which it references, has errors.
 4>------ Build started: Project: Todo.Web.Shared, Configuration: Debug ------
-4>Todo.Web.Shared -> compiled in memory (5.5 KB, 2 ms)
+4>Todo.Web.Shared -> compiled in memory (5.5 KB, 3 ms)
 5>------ Build started: Project: Todo.Web.Client, Configuration: Debug ------
-5>Todo.Web.Client -> compiled in memory (28.5 KB, 28 ms)
+5>Todo.Web.Client -> compiled in memory (28.5 KB, 17 ms)
 6>------ Build started: Project: Todo.Web.Server, Configuration: Debug ------
-6>Todo.Web.Server -> compiled in memory (36 KB, 194 ms)
+6>Todo.Web.Server -> compiled in memory (36 KB, 62 ms)
 7>------ Skipped: Project: TodoApp.AppHost: an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers ------
 ========== Build: 4 succeeded, 2 failed, 1 skipped ==========
 

@@ -1,5 +1,5 @@
 CleanArchitecture at e7c79be54ba0b001a5b332c1efe935f520b9db4b
-Opened /home/runner/work/_temp/real-repos/CleanArchitecture/Clean.Architecture.slnx in 0.1 s
+Opened /home/runner/work/_temp/real-repos/CleanArchitecture/Clean.Architecture.slnx in 0.2 s
 Compatibility Doctor:
   Clean.Architecture.Core: Library via Built with its users - A library is compiled together with the projects that reference it.
   Clean.Architecture.Infrastructure: Library via Built with its users - A library is compiled together with the projects that reference it.
@@ -11,7 +11,7 @@ Compatibility Doctor:
   Clean.Architecture.IntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   Clean.Architecture.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: Clean.Architecture.Web
-Built in 15.6 s: 0 errors, 0 warnings
+Built in 13.8 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   aspire.hosting 13.4.6
       buildTransitive/net8.0/Aspire.Hosting.Integration.Analyzers.dll
@@ -1339,31 +1339,30 @@ Packages with analyzers or MSBuild files:
   xunit.v3.core.mtp-v1 3.2.2
       buildTransitive/xunit.v3.core.mtp-v1.props
       buildTransitive/xunit.v3.core.mtp-v1.targets
-Editor: 24 files opened and analyzed in 1.6 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 2 over 100 ms (0 over 250 ms, 0 over 1 s), 0.3 s in all, longest 151 ms during screenshots, 0.0 s of it garbage collection; answer p50 6.4 ms, p95 10.2 ms, p99 18.4 ms over 761 questions in 18 s
-UI timings: document view 98 ms, document view 5 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+Editor: 24 files opened and analyzed in 1.7 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 1 over 100 ms (0 over 250 ms, 0 over 1 s), 0.1 s in all, longest 124 ms during screenshots, 0.0 s of it garbage collection; answer p50 4.4 ms, p95 10.6 ms, p99 16.5 ms over 738 questions in 16 s
+UI timings: document view 25 ms, document view 21 ms, document view 7 ms, document view 6 ms, document view 4 ms, document view 4 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 151 ms | 0 ms | 0.1 s | screenshots |
-| 113 ms | 15 ms | 0.5 s | screenshots |
+| 124 ms | 32 ms | 0.2 s | screenshots |
 Output:
-Build started at 01:08:55...
+Build started at 03:18:31...
 1>------ Build started: Project: Clean.Architecture.Core, Configuration: Debug ------
-1>Clean.Architecture.Core -> compiled in memory (35 KB, 29 ms)
+1>Clean.Architecture.Core -> compiled in memory (35 KB, 50 ms)
 2>------ Build started: Project: Clean.Architecture.UseCases, Configuration: Debug ------
-2>Clean.Architecture.UseCases -> compiled in memory (21.5 KB, 42 ms)
+2>Clean.Architecture.UseCases -> compiled in memory (21.5 KB, 70 ms)
 3>------ Build started: Project: Clean.Architecture.Infrastructure, Configuration: Debug ------
-3>Clean.Architecture.Infrastructure -> compiled in memory (41.5 KB, 133 ms)
+3>Clean.Architecture.Infrastructure -> compiled in memory (41.5 KB, 231 ms)
 4>------ Build started: Project: Clean.Architecture.ServiceDefaults, Configuration: Debug ------
-4>Clean.Architecture.ServiceDefaults -> compiled in memory (14.5 KB, 36 ms)
+4>Clean.Architecture.ServiceDefaults -> compiled in memory (14.5 KB, 71 ms)
 5>------ Build started: Project: Clean.Architecture.Web, Configuration: Debug ------
-5>Clean.Architecture.Web -> compiled in memory (96.5 KB, 262 ms)
+5>Clean.Architecture.Web -> compiled in memory (96.5 KB, 315 ms)
 6>------ Build started: Project: Clean.Architecture.FunctionalTests, Configuration: Debug ------
-6>Clean.Architecture.FunctionalTests -> compiled in memory (16.5 KB, 225 ms)
+6>Clean.Architecture.FunctionalTests -> compiled in memory (16.5 KB, 385 ms)
 7>------ Build started: Project: Clean.Architecture.IntegrationTests, Configuration: Debug ------
-7>Clean.Architecture.IntegrationTests -> compiled in memory (14.5 KB, 73 ms)
+7>Clean.Architecture.IntegrationTests -> compiled in memory (14.5 KB, 189 ms)
 8>------ Build started: Project: Clean.Architecture.UnitTests, Configuration: Debug ------
-8>Clean.Architecture.UnitTests -> compiled in memory (56.5 KB, 183 ms)
+8>Clean.Architecture.UnitTests -> compiled in memory (56 KB, 177 ms)
 9>------ Skipped: Project: Clean.Architecture.AspireHost: an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers ------
 ========== Build: 8 succeeded, 0 failed, 1 skipped ==========
 

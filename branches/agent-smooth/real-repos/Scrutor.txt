@@ -1,10 +1,10 @@
 Scrutor at 7f315dab5b0f7134a6be58941db1da8c904507e2
-Opened /home/runner/work/_temp/real-repos/Scrutor/Scrutor.sln in 0.2 s
+Opened /home/runner/work/_temp/real-repos/Scrutor/Scrutor.sln in 0.4 s
 Compatibility Doctor:
   Scrutor: Library via Built with its users - A library is compiled together with the projects that reference it.
   Scrutor.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: none
-Built in 1.4 s: 0 errors, 0 warnings
+Built in 0.9 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   microsoft.build.tasks.git 8.0.0
       build/Microsoft.Build.Tasks.Git.props
@@ -424,17 +424,19 @@ Packages with analyzers or MSBuild files:
       buildTransitive/xunit.v3.core.mtp-v2.props
       buildTransitive/xunit.v3.core.mtp-v2.targets
 Editor: 6 files opened and analyzed in 0.2 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 2 over 100 ms (0 over 250 ms, 0 over 1 s), 0.4 s in all, longest 250 ms during screenshots, 0.1 s of it garbage collection; answer p50 5.4 ms, p95 20.5 ms, p99 249.6 ms over 84 questions in 3 s
-UI timings: document view 20 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms, document view 1 ms
+UI stalls: 4 over 100 ms (0 over 250 ms, 0 over 1 s), 0.7 s in all, longest 218 ms during screenshots, 0.2 s of it garbage collection; answer p50 4.3 ms, p95 115.8 ms, p99 217.5 ms over 64 questions in 2 s
+UI timings: document view 122 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms, document view 1 ms, document view 1 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 250 ms | 83 ms | 0.2 s | screenshots |
-| 173 ms | 0 ms | 0.6 s | screenshots |
+| 218 ms | 64 ms | 0.4 s | screenshots |
+| 170 ms | 17 ms | 0.8 s | screenshots |
+| 148 ms | 63 ms | 0.1 s | creating a document's view → starting restore and analysis |
+| 116 ms | 10 ms | 1.9 s | screenshots |
 Output:
-Build started at 01:18:35...
+Build started at 03:27:26...
 1>------ Build started: Project: Scrutor, Configuration: Debug ------
-1>Scrutor -> compiled in memory (63 KB, 227 ms)
+1>Scrutor -> compiled in memory (63 KB, 61 ms)
 2>------ Build started: Project: Scrutor.Tests, Configuration: Debug ------
-2>Scrutor.Tests -> compiled in memory (76.5 KB, 167 ms)
+2>Scrutor.Tests -> compiled in memory (76.5 KB, 109 ms)
 ========== Build: 2 succeeded, 0 failed ==========
 

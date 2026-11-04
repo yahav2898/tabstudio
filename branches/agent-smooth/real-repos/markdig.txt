@@ -11,7 +11,7 @@ Compatibility Doctor:
   SpecFileGen: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   UnicodeNormDApp: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
 Startup project: Markdig.WebApp
-Built in 6.1 s: 0 errors, 0 warnings
+Built in 6.7 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   azure.core 1.53.0
       buildTransitive/net10.0/Azure.Core.targets
@@ -911,32 +911,31 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net8.0/_._
       buildTransitive/netcoreapp2.0/System.Memory.Data.targets
 Editor: 15 files opened and analyzed in 0.4 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 4 over 100 ms (0 over 250 ms, 0 over 1 s), 0.7 s in all, longest 218 ms during screenshots, 0.3 s of it garbage collection; answer p50 6.4 ms, p95 30.2 ms, p99 151.9 ms over 268 questions in 8 s
-UI timings: document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms, document view 1 ms, document view 1 ms, document view 1 ms, document view 1 ms
+UI stalls: 3 over 100 ms (1 over 250 ms, 0 over 1 s), 0.6 s in all, longest 300 ms during screenshots, 0.2 s of it garbage collection; answer p50 4.3 ms, p95 33.2 ms, p99 106.2 ms over 295 questions in 8 s
+UI timings: document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms, document view 1 ms, document view 1 ms, document view 1 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 218 ms | 34 ms | 1.0 s | screenshots |
-| 163 ms | 0 ms | 0.5 s | screenshots |
-| 152 ms | 103 ms | 4.5 s | the first build |
-| 143 ms | 136 ms | 1.2 s | screenshots |
+| 300 ms | 110 ms | 0.7 s | screenshots |
+| 170 ms | 52 ms | 0.4 s | screenshots |
+| 106 ms | 44 ms | 7.1 s | the first build |
 Output:
-Build started at 01:18:40...
+Build started at 03:27:32...
 1>------ Build started: Project: Markdig, Configuration: Debug ------
-1>Markdig -> compiled in memory (542 KB, 447 ms)
+1>Markdig -> compiled in memory (542 KB, 504 ms)
 2>------ Build started: Project: Markdig.AotTests, Configuration: Debug ------
-2>Markdig.AotTests -> compiled in memory (3 KB, 549 ms)
+2>Markdig.AotTests -> compiled in memory (3 KB, 360 ms)
 3>------ Build started: Project: Markdig.Benchmarks, Configuration: Debug ------
-3>Markdig.Benchmarks -> compiled in memory (9 KB, 466 ms)
+3>Markdig.Benchmarks -> compiled in memory (9 KB, 501 ms)
 4>------ Build started: Project: Markdig.Fuzzing, Configuration: Debug ------
-4>Markdig.Fuzzing -> compiled in memory (4.5 KB, 395 ms)
+4>Markdig.Fuzzing -> compiled in memory (4.5 KB, 437 ms)
 5>------ Build started: Project: SpecFileGen, Configuration: Debug ------
-5>SpecFileGen -> compiled in memory (15.5 KB, 15 ms)
+5>SpecFileGen -> compiled in memory (15.5 KB, 12 ms)
 6>------ Build started: Project: Markdig.Tests, Configuration: Debug ------
-6>Markdig.Tests -> compiled in memory (1428 KB, 643 ms)
+6>Markdig.Tests -> compiled in memory (1428 KB, 608 ms)
 7>------ Build started: Project: Markdig.WebApp, Configuration: Debug ------
-7>Markdig.WebApp -> compiled in memory (11 KB, 536 ms)
+7>Markdig.WebApp -> compiled in memory (11 KB, 453 ms)
 8>------ Build started: Project: mdtoc, Configuration: Debug ------
-8>mdtoc -> compiled in memory (6.5 KB, 376 ms)
+8>mdtoc -> compiled in memory (6.5 KB, 365 ms)
 9>------ Build started: Project: UnicodeNormDApp, Configuration: Debug ------
 9>UnicodeNormDApp -> compiled in memory (7 KB, 5 ms)
 ========== Build: 9 succeeded, 0 failed ==========

@@ -7,7 +7,7 @@ Compatibility Doctor:
   NSubstitute.Documentation.Tests.Generator: Library via Built with its users - A library is compiled together with the projects that reference it.
   NSubstitute.Documentation.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: none
-Built in 3.0 s: 0 errors, 55 warnings
+Built in 2.4 s: 0 errors, 55 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -735,19 +735,17 @@ Packages with analyzers or MSBuild files:
   system.management 9.0.5
       buildTransitive/net8.0/_._
       buildTransitive/netcoreapp2.0/System.Management.targets
-Editor: 10 files opened and analyzed in 0.3 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 4 over 100 ms (0 over 250 ms, 0 over 1 s), 0.7 s in all, longest 221 ms during screenshots, 0.2 s of it garbage collection; answer p50 6.4 ms, p95 64.8 ms, p99 199.3 ms over 148 questions in 5 s
-UI timings: document view 61 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms
+Editor: 10 files opened and analyzed in 0.2 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 2 over 100 ms (0 over 250 ms, 0 over 1 s), 0.4 s in all, longest 217 ms during screenshots, 0.1 s of it garbage collection; answer p50 4.3 ms, p95 34.8 ms, p99 214.4 ms over 130 questions in 4 s
+UI timings: document view 63 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms, document view 1 ms, document view 1 ms, document view 1 ms, document view 1 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 221 ms | 0 ms | 0.5 s | screenshots |
-| 199 ms | 0 ms | 1.0 s | screenshots |
-| 177 ms | 151 ms | 0.8 s | screenshots |
-| 106 ms | 0 ms | 4.3 s | screenshots |
+| 217 ms | 77 ms | 0.4 s | screenshots |
+| 214 ms | 37 ms | 0.8 s | screenshots |
 Output:
-Build started at 01:19:02...
+Build started at 03:27:51...
 1>------ Build started: Project: NSubstitute, Configuration: Debug ------
-1>NSubstitute -> compiled in memory (177 KB, 225 ms)
+1>NSubstitute -> compiled in memory (177 KB, 118 ms)
 2>------ Build started: Project: NSubstitute.Acceptance.Specs, Configuration: Debug ------
 2>ArgumentMatchingCompat.cs(15,25): warning CS0618: 'Arg.Compat' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
 2>ArgumentMatchingCompat.cs(24,25): warning CS0618: 'Arg.Compat' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
@@ -792,11 +790,11 @@ Build started at 01:19:02...
 2>ArgumentMatchingCompat.cs(350,23): warning CS0618: 'Arg.Compat' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
 2>ArgumentMatchingCompat.cs(365,21): warning CS0618: 'Arg.Compat' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
 2>TestImplementation.cs(7,34): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-2>NSubstitute.Acceptance.Specs -> compiled in memory (404.5 KB, 501 ms)
+2>NSubstitute.Acceptance.Specs -> compiled in memory (404.5 KB, 441 ms)
 3>------ Build started: Project: NSubstitute.Benchmarks, Configuration: Debug ------
-3>NSubstitute.Benchmarks -> compiled in memory (15.5 KB, 210 ms)
+3>NSubstitute.Benchmarks -> compiled in memory (15.5 KB, 189 ms)
 4>------ Build started: Project: NSubstitute.Documentation.Tests.Generator, Configuration: Debug ------
-4>NSubstitute.Documentation.Tests.Generator -> compiled in memory (7 KB, 13 ms)
+4>NSubstitute.Documentation.Tests.Generator -> compiled in memory (7 KB, 22 ms)
 5>------ Build started: Project: NSubstitute.Documentation.Tests, Configuration: Debug ------
 5>Tests_compat_args.g.cs(29,33): warning CS0618: 'CompatArg' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
 5>Tests_compat_args.g.cs(29,75): warning CS0618: 'CompatArg' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
@@ -810,6 +808,6 @@ Build started at 01:19:02...
 5>Tests_compat_args.g.cs(81,47): warning CS0618: 'Arg.Compat' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
 5>Tests_compat_args.g.cs(82,40): warning CS0618: 'Arg.Compat' is obsolete: 'This api is deprecated and will be removed in future versions of product.'
 5>Tests_received_calls.g.cs(92,18): warning CS0169: The field 'Tests_received_calls.CommandWatcher.command' is never used
-5>NSubstitute.Documentation.Tests -> compiled in memory (47 KB, 179 ms)
+5>NSubstitute.Documentation.Tests -> compiled in memory (47 KB, 196 ms)
 ========== Build: 5 succeeded, 0 failed ==========
 

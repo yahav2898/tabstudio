@@ -1,5 +1,5 @@
 MudBlazor at ed6b3e023a4780c29c7951da580751733227892a
-Opened /home/runner/work/_temp/real-repos/MudBlazor/src/MudBlazor.slnx in 1.3 s
+Opened /home/runner/work/_temp/real-repos/MudBlazor/src/MudBlazor.slnx in 1.1 s
 Compatibility Doctor:
   MudBlazor.Analyzers.CodeFixes: Library via Built with its users - A library is compiled together with the projects that reference it.
   MudBlazor.Analyzers: Library via Built with its users - A library is compiled together with the projects that reference it.
@@ -19,7 +19,7 @@ Compatibility Doctor:
   MudBlazor: Library via Built with its users - A library is compiled together with the projects that reference it.
   src: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
 Startup project: MudBlazor.Docs.Server
-Built in 103.3 s: 0 errors, 3 warnings
+Built in 104.9 s: 0 errors, 3 warnings
 Packages with analyzers or MSBuild files:
   blazor-analytics 4.0.0
       build/Blazor-Analytics.props
@@ -1190,62 +1190,62 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net462/_._
       buildTransitive/net8.0/_._
       buildTransitive/netcoreapp2.0/System.Security.Cryptography.ProtectedData.targets
-Editor: 24 files opened and analyzed in 1.6 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 48 over 100 ms (2 over 250 ms, 0 over 1 s), 7.2 s in all, longest 260 ms during screenshots, 5.5 s of it garbage collection; answer p50 4.2 ms, p95 20.6 ms, p99 120.0 ms over 3492 questions in 107 s
-UI timings: document view 4 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+Editor: 24 files opened and analyzed in 1.8 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 31 over 100 ms (5 over 250 ms, 0 over 1 s), 5.2 s in all, longest 391 ms during the first build, 2.9 s of it garbage collection; answer p50 3.9 ms, p95 45.1 ms, p99 100.3 ms over 3076 questions in 109 s
+UI timings: document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 3 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 260 ms | 65 ms | 1.6 s | screenshots |
-| 255 ms | 0 ms | 1.3 s | screenshots |
-| 242 ms | 133 ms | 88.9 s | the first build |
-| 237 ms | 227 ms | 81.3 s | the first build |
-| 226 ms | 96 ms | 65.0 s | the first build |
-| 197 ms | 111 ms | 100.0 s | the first build |
-| 192 ms | 121 ms | 71.0 s | the first build |
-| 190 ms | 133 ms | 82.1 s | the first build |
-| 177 ms | 176 ms | 16.7 s | the first build |
-| 177 ms | 156 ms | 34.1 s | the first build |
-| 169 ms | 101 ms | 64.7 s | the first build |
-| 163 ms | 157 ms | 31.2 s | the first build |
-| 161 ms | 126 ms | 59.2 s | the first build |
-| 161 ms | 113 ms | 85.2 s | the first build |
-| 161 ms | 124 ms | 83.0 s | the first build |
+| 391 ms | 230 ms | 97.9 s | the first build |
+| 318 ms | 186 ms | 95.2 s | the first build |
+| 308 ms | 182 ms | 96.0 s | the first build |
+| 294 ms | 151 ms | 100.3 s | the first build |
+| 290 ms | 152 ms | 99.3 s | the first build |
+| 215 ms | 110 ms | 93.5 s | the first build |
+| 203 ms | 103 ms | 14.0 s | the first build |
+| 179 ms | 171 ms | 63.7 s | the first build |
+| 162 ms | 158 ms | 49.2 s | the first build |
+| 162 ms | 88 ms | 95.5 s | the first build |
+| 159 ms | 154 ms | 89.0 s | the first build |
+| 156 ms | 0 ms | 1.2 s | screenshots |
+| 153 ms | 137 ms | 107.0 s | creating a document's view |
+| 150 ms | 26 ms | 1.4 s | screenshots |
+| 146 ms | 91 ms | 100.1 s | the first build |
 Output:
-Build started at 01:13:23...
+Build started at 03:22:28...
 1>------ Build started: Project: MudBlazor.Analyzers, Configuration: Debug ------
-1>MudBlazor.Analyzers -> compiled in memory (75 KB, 113 ms)
+1>MudBlazor.Analyzers -> compiled in memory (75 KB, 392 ms)
 2>------ Build started: Project: MudBlazor.Analyzers.CodeFixes, Configuration: Debug ------
-2>MudBlazor.Analyzers.CodeFixes -> compiled in memory (11 KB, 65 ms)
+2>MudBlazor.Analyzers.CodeFixes -> compiled in memory (11 KB, 163 ms)
 3>------ Build started: Project: MudBlazor, Configuration: Debug ------
 3>BaseAxisChart.razor.cs(68,19): warning CS8618: Non-nullable property 'Width' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 3>BaseAxisChart.razor.cs(76,19): warning CS8618: Non-nullable property 'Height' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 3>BaseAxisChart.razor.cs(108,26): warning CS8618: Non-nullable property 'ChartOptions' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-3>MudBlazor -> compiled in memory (10278.5 KB, 8446 ms)
+3>MudBlazor -> compiled in memory (10279 KB, 7987 ms)
 4>------ Build started: Project: MudBlazor.Docs.Compiler, Configuration: Debug ------
-4>MudBlazor.Docs.Compiler -> compiled in memory (72 KB, 3633 ms)
+4>MudBlazor.Docs.Compiler -> compiled in memory (72 KB, 3810 ms)
 5>------ Build started: Project: MudBlazor.Examples.Data, Configuration: Debug ------
-5>MudBlazor.Examples.Data -> compiled in memory (46 KB, 12 ms)
+5>MudBlazor.Examples.Data -> compiled in memory (46 KB, 16 ms)
 6>------ Build started: Project: MudBlazor.Docs, Configuration: Debug ------
-6>MudBlazor.Docs -> compiled in memory (4885 KB, 8871 ms)
+6>MudBlazor.Docs -> compiled in memory (4885.5 KB, 12195 ms)
 7>------ Build started: Project: MudBlazor.Docs.Server, Configuration: Debug ------
-7>MudBlazor.Docs.Server -> compiled in memory (41 KB, 6898 ms)
+7>MudBlazor.Docs.Server -> compiled in memory (41 KB, 8197 ms)
 8>------ Build started: Project: MudBlazor.Docs.Wasm, Configuration: Debug ------
-8>MudBlazor.Docs.Wasm -> compiled in memory (14 KB, 6752 ms)
+8>MudBlazor.Docs.Wasm -> compiled in memory (14 KB, 7943 ms)
 9>------ Build started: Project: MudBlazor.Docs.WasmHost, Configuration: Debug ------
-9>MudBlazor.Docs.WasmHost -> compiled in memory (47.5 KB, 6820 ms)
+9>MudBlazor.Docs.WasmHost -> compiled in memory (47.5 KB, 7311 ms)
 10>------ Build started: Project: MudBlazor.Analyzers.TestComponents, Configuration: Debug ------
-10>MudBlazor.Analyzers.TestComponents -> compiled in memory (58 KB, 3173 ms)
+10>MudBlazor.Analyzers.TestComponents -> compiled in memory (58 KB, 3194 ms)
 11>------ Build started: Project: MudBlazor.UnitTests.Shared, Configuration: Debug ------
-11>MudBlazor.UnitTests.Shared -> compiled in memory (24.5 KB, 2430 ms)
+11>MudBlazor.UnitTests.Shared -> compiled in memory (24.5 KB, 3829 ms)
 12>------ Build started: Project: MudBlazor.UnitTests.Analyzers, Configuration: Debug ------
-12>MudBlazor.UnitTests.Analyzers -> compiled in memory (237.5 KB, 2851 ms)
+12>MudBlazor.UnitTests.Analyzers -> compiled in memory (237.5 KB, 3667 ms)
 13>------ Build started: Project: MudBlazor.UnitTests.Docs.Generator, Configuration: Debug ------
-13>MudBlazor.UnitTests.Docs.Generator -> compiled in memory (26.5 KB, 3163 ms)
+13>MudBlazor.UnitTests.Docs.Generator -> compiled in memory (26.5 KB, 3113 ms)
 14>------ Build started: Project: MudBlazor.UnitTests.Docs, Configuration: Debug ------
-14>MudBlazor.UnitTests.Docs -> compiled in memory (61 KB, 6325 ms)
+14>MudBlazor.UnitTests.Docs -> compiled in memory (61 KB, 7663 ms)
 15>------ Build started: Project: MudBlazor.UnitTests.Viewer, Configuration: Debug ------
-15>MudBlazor.UnitTests.Viewer -> compiled in memory (2575 KB, 10747 ms)
+15>MudBlazor.UnitTests.Viewer -> compiled in memory (2575.5 KB, 10721 ms)
 16>------ Build started: Project: MudBlazor.UnitTests, Configuration: Debug ------
-16>MudBlazor.UnitTests -> compiled in memory (7161.5 KB, 20706 ms)
+16>MudBlazor.UnitTests -> compiled in memory (7161.5 KB, 16940 ms)
 ========== Build: 16 succeeded, 0 failed ==========
 
