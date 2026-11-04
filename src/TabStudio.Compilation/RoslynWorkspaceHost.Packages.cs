@@ -112,6 +112,33 @@ public sealed partial class RoslynWorkspaceHost
         }
     }
 
+    /// <summary>
+    /// The assembly files a project references by <c>HintPath</c>, in its own files or its packages' targets, that
+    /// exist, such as MSTest 4's <c>MSTest.TestFramework.Extensions.dll</c>, where <c>TestContext</c> is. They are
+    /// not among a restore's runtime assemblies, yet the SDK copies each to the output folder, so a program or a
+    /// test that uses one loads it from there.
+    /// </summary>
+    /// <param name="projectFilePath">Full path of the project file.</param>
+    /// <returns>The file paths, or an empty list when the project has none.</returns>
+    public IReadOnlyList<string> GetHintPathAssemblyPaths(string projectFilePath)
+    {
+        lock (_gate)
+        {
+            if (!_projectIds.TryGetValue(projectFilePath, out var id))
+            {
+                return [];
+            }
+
+            var project = _projects[id];
+            return project.AssemblyReferences
+                .Where(r => !string.IsNullOrWhiteSpace(r.HintPath))
+                .Select(r => TabStudio.Core.Workspaces.PathUtilities.ResolveRelative(project.DirectoryPath, r.HintPath!))
+                .Where(File.Exists)
+                .Distinct(StringComparer.Ordinal)
+                .ToList();
+        }
+    }
+
     /// <summary>The package assemblies a project compiles against, as set by <see cref="SetPackageReferences"/>.</summary>
     /// <param name="projectFilePath">Full path of the project file.</param>
     /// <returns>The file paths, or an empty list when the project has none.</returns>

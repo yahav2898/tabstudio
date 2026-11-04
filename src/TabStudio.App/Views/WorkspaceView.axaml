@@ -334,6 +334,11 @@
             <MenuItem Header="Run _Failed Tests (Ctrl+R, F)" Command="{Binding Tests.RunFailedCommand}" />
             <MenuItem Header="Run Tests in _Context (Ctrl+R, T)" Command="{Binding RunTestsInContextCommand}" />
             <MenuItem Header="_Repeat Last Run (Ctrl+R, L)" Command="{Binding Tests.RepeatLastRunCommand}" />
+            <Separator />
+            <MenuItem Header="_Debug All Tests (Ctrl+R, Ctrl+A)" Command="{Binding Tests.DebugAllCommand}" />
+            <MenuItem Header="Debug _Selected Tests" Command="{Binding Tests.DebugSelectedCommand}" />
+            <MenuItem Header="Debug Tests in Conte_xt (Ctrl+R, Ctrl+T)" Command="{Binding DebugTestsInContextCommand}" />
+            <Separator />
             <MenuItem Header="_Cancel Test Run" Command="{Binding Tests.CancelCommand}" />
             <Separator />
             <MenuItem Header="Live _Unit Testing">

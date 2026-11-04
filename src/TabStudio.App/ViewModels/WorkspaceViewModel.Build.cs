@@ -333,7 +333,39 @@ public sealed partial class WorkspaceViewModel
             return null;
         }
 
+        // Stop (Shift+F5) and the build's Cancel in the operations list end it before its next project, and the
+        // project it compiles stops where the compiler checks.
+        using var cancellation = new CancellationTokenSource();
+        _buildCancellation = cancellation;
         State = IdeState.Busy;
+        StopDebuggingCommand.NotifyCanExecuteChanged();
+        try
+        {
+            return await BuildProjectsCoreAsync(language, projects, showOutput, build, results, skipped, cancellation.Token);
+        }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+        {
+            Output.WriteLine("========== Build: cancelled ==========", OutputKind.Info);
+            State = IdeState.Ready;
+            StatusText = "Build cancelled";
+            return null;
+        }
+        finally
+        {
+            _buildCancellation = null;
+            StopDebuggingCommand.NotifyCanExecuteChanged();
+        }
+    }
+
+    private async Task<BuildResult?> BuildProjectsCoreAsync(
+        ILanguageService language,
+        List<ProjectInfo> projects,
+        bool showOutput,
+        Func<ProjectInfo, CancellationToken, Task<BuildResult>>? build,
+        List<BuildResult>? results,
+        List<ProjectInfo> skipped,
+        CancellationToken cancellationToken)
+    {
         await SaveAllCoreAsync();
         await WaitForPackagesAsync();
         foreach (var document in Documents)
@@ -365,9 +397,15 @@ public sealed partial class WorkspaceViewModel
         int succeeded = 0, failed = 0;
         var reported = new List<BuildDiagnostic>();
         var seen = new HashSet<BuildDiagnostic>();
-        using var operation = new CompletingOperation(Operations.Begin("build", "Building"));
+        using var operation = new CompletingOperation(Operations.Begin("build", "Building", cancel: CancelBuild));
         for (var i = 0; i < projects.Count; i++)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                operation.Outcome = OperationOutcome.Cancelled;
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
             var project = projects[i];
             var prefix = $"{(i + 1).ToString(CultureInfo.InvariantCulture)}>";
             StatusText = $"Building {project.Name}";
@@ -383,7 +421,16 @@ public sealed partial class WorkspaceViewModel
                 Output.WriteLine($"{prefix}warning: The NuGet restore of {project.Name} reported errors, so it is built without the packages that could not be restored. The Error List shows the restore's errors.", OutputKind.Warning);
             }
 
-            last = await (build ?? language.BuildAsync)(project, CancellationToken.None);
+            try
+            {
+                last = await (build ?? language.BuildAsync)(project, cancellationToken);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                operation.Outcome = OperationOutcome.Cancelled;
+                throw;
+            }
+
             results?.Add(last);
             var fresh = last.Diagnostics.Where(seen.Add).ToList();
             reported.AddRange(fresh);
@@ -438,6 +485,21 @@ public sealed partial class WorkspaceViewModel
         }
 
         return last;
+    }
+
+    private CancellationTokenSource? _buildCancellation;
+
+    /// <summary>Whether a build of the solution's C# and Visual Basic projects is in progress, so Stop cancels it.</summary>
+    private bool IsBuilding => _buildCancellation is not null;
+
+    /// <summary>Cancels the build in progress, if any.</summary>
+    private void CancelBuild()
+    {
+        if (_buildCancellation is { IsCancellationRequested: false } build)
+        {
+            StatusText = "Cancelling the build";
+            build.Cancel();
+        }
     }
 
     /// <summary>

@@ -17,12 +17,17 @@ internal static class UserCode
     /// <param name="target">The instance, or <see langword="null"/> for a static method.</param>
     /// <param name="arguments">The arguments, already converted to the parameter types.</param>
     /// <returns>The method's result, or the result of the task it returned; <see langword="null"/> for <c>void</c> and <c>Task</c>.</returns>
-    /// <exception cref="InvalidOperationException">The method is <c>async void</c>, which cannot be awaited.</exception>
+    /// <remarks>
+    /// An <c>async void</c> method is waited for as xUnit waits for one: it runs under a synchronization context that
+    /// counts the operations it starts, and the call returns when the last one completes, with the first exception
+    /// that left it.
+    /// </remarks>
     public static object? Invoke(MethodInfo method, object? target, object?[]? arguments)
     {
         if (method.ReturnType == typeof(void) && method.IsDefined(typeof(AsyncStateMachineAttribute), inherit: false))
         {
-            throw new InvalidOperationException($"'{method.Name}' is async void, so TabStudio cannot wait for it. Make it return Task instead.");
+            AsyncVoidContext.Run(() => method.Invoke(target, BindingFlags.DoNotWrapExceptions, binder: null, arguments, culture: null));
+            return null;
         }
 
         var returned = method.Invoke(target, BindingFlags.DoNotWrapExceptions, binder: null, arguments, culture: null);

@@ -53,6 +53,24 @@ public sealed partial class ToolchainLaunchTests
     }
 
     [Fact]
+    public void A_Rust_program_loads_the_toolchain_s_LLDB_formatters_first()
+    {
+        var configuration = ToolchainLaunch.Create("lldb-dap", Plan("/work/target/debug/greeter", ["Ada"], "/work", "greeter"))!;
+
+        var rust = ToolchainLaunch.WithRustFormatters(configuration);
+
+        // As rust-lldb does: rustc names the sysroot whose lldb_lookup.py and lldb_commands give &str, String and Vec
+        // their values; the configuration made for C and C++ is left as it was.
+        var command = Assert.Single(Strings(rust.Properties["initCommands"]));
+        Assert.StartsWith("script exec(", command, StringComparison.Ordinal);
+        Assert.Contains("'rustc', '--print', 'sysroot'", command, StringComparison.Ordinal);
+        Assert.Contains("lldb_lookup.py", command, StringComparison.Ordinal);
+        Assert.Contains("lldb_commands", command, StringComparison.Ordinal);
+        Assert.Null(configuration.Properties["initCommands"]);
+        Assert.Equal("/work/target/debug/greeter", (string?)rust.Properties["program"]);
+    }
+
+    [Fact]
     public void A_Node_file_is_debugged_as_the_program()
     {
         var configuration = ToolchainLaunch.Create(ToolchainLaunch.NodeType, Plan("node", ["--enable-source-maps", "server.js", "8080"], "/work/web", "server.js"))!;

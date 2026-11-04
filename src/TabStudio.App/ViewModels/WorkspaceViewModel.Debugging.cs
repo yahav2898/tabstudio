@@ -25,6 +25,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     private ExceptionHelperViewModel? _exceptionHelper;
     private Task _pauseShown = Task.CompletedTask;
     private bool _restartRequested;
+    private int? _shownThread;
 
     /// <summary>How a debug session begins.</summary>
     private enum DebugStart
@@ -286,7 +287,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return;
         }
 
-        if (IsRunning)
+        if (IsBuilding)
+        {
+            CancelBuild();
+        }
+        else if (IsRunning)
         {
             _run?.Cancel();
         }
@@ -298,7 +303,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         }
     }
 
-    private bool CanStopDebugging() => IsDebugging || IsRunning || HasWindowsBridgeApps;
+    private bool CanStopDebugging() => IsDebugging || IsRunning || IsBuilding || HasWindowsBridgeApps;
 
     /// <summary>Ctrl+Shift+F5: stops debugging and starts again with a fresh build.</summary>
     [RelayCommand(CanExecute = nameof(IsDebugging))]
@@ -390,6 +395,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         PropertyChanged += OnDebuggingPropertyChanged;
         Output.PropertyChanged += OnOutputPropertyChangedWhileDebugging;
         CallStack.FrameActivated += async (_, frame) => await ShowFrameAsync(frame);
+        CallStack.ThreadChosen += async (_, thread) => await ShowSessionThreadAsync(thread.Id);
         Breakpoints.Changed += (_, _) => ScheduleSessionSave();
         Watch.ExpressionsChanged += (_, _) => ScheduleSessionSave();
         Locals.Tree.LastWriteRequested += async (_, row) => await JumpToLastWriteAsync(row.Path);
@@ -610,8 +616,10 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         _debuggedProject = null;
         _pause = null;
         _exceptionHelper = null;
+        _shownThread = null;
         Breakpoints.Unbind();
         CallStack.Clear();
+        CallStack.ClearThreads();
         Locals.Clear();
         _ = Watch.EvaluateAsync(null);
         ShowExecutionPoints();
@@ -691,13 +699,54 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             SelectPanel(BottomPanel.Locals);
         }
 
+        _shownThread = pause.ThreadId;
         await ShowFrameAsync(CallStack.ActiveFrame);
         if (ReferenceEquals(_pause, pause))
         {
             await Task.WhenAll(Locals.ShowAsync(pause.Locals), Watch.EvaluateAsync(pause));
         }
-        if (selectCause && pause.Exception is not null && session.Recording?.ExceptionCause is { } cause && session.Recording.IndexOf(cause) is var causeIndex && causeIndex >= 0)
+
+        // The other threads stop at their next statement in the program's code, soon after this one paused: they
+        // are listed now and again a moment later, without holding up the pause or a step that follows it.
+        ShowSessionThreads(session, pause);
+        _ = RefreshSessionThreadsAsync(session, pause);
+        if (selectCause && ReferenceEquals(_pause, pause) && pause.Exception is not null && session.Recording?.ExceptionCause is { } cause && session.Recording.IndexOf(cause) is var causeIndex && causeIndex >= 0)
             await ShowHistoricalAsync(session.SeekHistory(causeIndex));
+    }
+
+    /// <summary>Lists the paused program's threads in the Call Stack, with the one that paused chosen.</summary>
+    private void ShowSessionThreads(DebugSession session, DebugPausedEventArgs pause)
+    {
+        if (ReferenceEquals(_session, session) && ReferenceEquals(_pause, pause))
+        {
+            var options = session.Threads.Select(t => new DebugThreadOption(t.Id, t.Name)).ToList();
+            CallStack.ShowThreads(options, options.FirstOrDefault(t => t.Id == (_shownThread ?? pause.ThreadId)));
+        }
+    }
+
+    /// <summary>Lists the threads again once the others had time to reach their next statement, if the pause still holds.</summary>
+    private async Task RefreshSessionThreadsAsync(DebugSession session, DebugPausedEventArgs pause)
+    {
+        await Task.Delay(TimeSpan.FromMilliseconds(150));
+        ShowSessionThreads(session, pause);
+    }
+
+    /// <summary>Shows another thread's frames, as choosing it in the Call Stack's thread box does.</summary>
+    private async Task ShowSessionThreadAsync(int threadId)
+    {
+        if (_adapter is not null || _swarmDebug is not null || _session is not { } session || _pause is not { IsHistorical: false } pause)
+        {
+            return;
+        }
+
+        if (session.Threads.FirstOrDefault(t => t.Id == threadId) is not { } thread || !ReferenceEquals(_pause, pause))
+        {
+            return;
+        }
+
+        _shownThread = threadId;
+        CallStack.Show(thread.Id == pause.ThreadId ? pause.CallStack : thread.CallStack);
+        await ShowFrameAsync(CallStack.ActiveFrame);
     }
 
     private void ShowRunning(DebugSession session)
@@ -709,9 +758,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
         _pause = null;
         _exceptionHelper = null;
+        _shownThread = null;
         State = IdeState.Debugging;
         StatusText = $"Debugging {_debuggedProject?.Name}";
         CallStack.Clear();
+        CallStack.ClearThreads();
         Locals.Tree.IsStale = true;
         Watch.MarkStale();
         ShowExecutionPoints();
@@ -745,7 +796,9 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return;
         }
 
-        Locals.ShowFrameNote(pause.CallStack[0].MethodName, frame.IsTop ? null : frame.MethodName);
+        // Locals are the paused thread's innermost frame's: for any other frame, or another thread, the panel says so.
+        var otherThread = _shownThread is { } shown && shown != pause.ThreadId;
+        Locals.ShowFrameNote(pause.CallStack[0].MethodName, frame.IsTop && !otherThread ? null : frame.MethodName);
         if (pause.IsHistorical && _recordedSession?.GetHistoricalFrame(frame.Index) is { } historical)
         {
             _pause = historical;
@@ -770,7 +823,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     private void ApplyExecutionPoints(DocumentViewModel document)
     {
         var current = _pause is { CallStack.Count: > 0 } pause ? pause.CallStack[0].Location : _adapterCurrent ?? _swarmCurrent ?? _liveCurrent;
-        var caller = CallStack.ActiveFrame is { IsTop: false } frame ? frame.Location : null;
+        var caller = CallStack.ActiveFrame is { IsTop: false } frame && frame.Location != current ? frame.Location : null;
         document.ShowExecutionPoints(PointIn(document, current), PointIn(document, caller), _exceptionHelper);
     }
 

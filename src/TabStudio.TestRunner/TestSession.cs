@@ -37,13 +37,17 @@ public sealed class TestSession : IDisposable
     private readonly List<MethodLocator> _locators;
     private readonly TestRunOptions _options;
     private readonly StackTraceCleaner _stackTraces;
+    private readonly string? _folder;
+    private readonly TestLoadContext _context;
     private readonly Lock _gate = new();
     private readonly Dictionary<string, TestResult> _latestResults = new(StringComparer.Ordinal);
     private bool _running;
     private bool _disposed;
 
-    private TestSession(List<RunnableTest> tests, List<string> problems, List<MethodLocator> locators, HashSet<string> userTypes, TestRunOptions options)
+    private TestSession(List<RunnableTest> tests, List<string> problems, List<MethodLocator> locators, HashSet<string> userTypes, TestRunOptions options, string? folder, TestLoadContext context)
     {
+        _folder = folder;
+        _context = context;
         _tests = tests;
         _locators = locators;
         _options = options;
@@ -51,6 +55,12 @@ public sealed class TestSession : IDisposable
         Tests = tests.Select(t => t.Case).ToList();
         DiscoveryMessages = problems;
     }
+
+    /// <summary>
+    /// The folder the test assemblies were loaded from, when <see cref="TestRunOptions.OutputDirectory"/> asked for
+    /// one and it could be written; otherwise <see langword="null"/>.
+    /// </summary>
+    public string? OutputDirectory => _folder;
 
     /// <summary>Raised when a test starts. Skipped tests get one too, just before they finish.</summary>
     public event EventHandler<TestStartedEventArgs>? TestStarted;
@@ -113,8 +123,22 @@ public sealed class TestSession : IDisposable
 
         var name = assemblies.Count > 0 ? assemblies[0].Name : "tests";
         var packages = options.ShareRuntimeAssemblies ? PackageLoadContext.For(runtimeAssemblyPaths) : null;
-        var context = new TestLoadContext(name, assemblies, runtimeAssemblyPaths, packages);
         var problems = new List<string>();
+        Dictionary<string, string>? files = null;
+        if (options.OutputDirectory is { Length: > 0 } output)
+        {
+            try
+            {
+                files = OutputFolder.Write(output, assemblies);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                problems.Add($"The tests run from memory: their output folder '{output}' could not be written: {ex.Message}");
+            }
+        }
+
+        var folder = files?.Values.Select(file => Path.GetDirectoryName(file)).FirstOrDefault();
+        var context = new TestLoadContext(name, assemblies, runtimeAssemblyPaths, packages, files);
         var loaded = new List<Assembly>();
         var locators = new Dictionary<Assembly, MethodLocator>();
         foreach (var compiled in assemblies)
@@ -136,9 +160,15 @@ public sealed class TestSession : IDisposable
 
         var discovery = new DiscoveryContext(method =>
             method.Module.Assembly is { } owner && locators.TryGetValue(owner, out var locator) ? locator.Find(method) : null);
-        var tests = ReflectionDiscoverer.Discover(loaded, discovery, problems);
+        List<RunnableTest> tests;
+        using (RunDirectory.Enter(folder))
+        using (context.EnterContextualReflection())
+        {
+            tests = ReflectionDiscoverer.Discover(loaded, discovery, problems);
+        }
+
         var userTypes = StackTraceCleaner.TypeNamesOf(loaded.SelectMany(a => AssemblyTypes.Of(a)));
-        return new TestSession(tests, problems, [.. locators.Values], userTypes, options);
+        return new TestSession(tests, problems, [.. locators.Values], userTypes, options, folder, context);
     }
 
     /// <summary>Loads a test project and discovers its tests on a background thread.</summary>
@@ -228,6 +258,11 @@ public sealed class TestSession : IDisposable
             _disposed = true;
         }
 
+        if (_folder is not null)
+        {
+            OutputFolder.Release(_folder);
+        }
+
         foreach (var locator in _locators)
         {
             locator.Dispose();
@@ -249,7 +284,8 @@ public sealed class TestSession : IDisposable
 
         try
         {
-            var executor = new TestExecutor(_options, _stackTraces, OnTestStarted, OnTestFinished);
+            using var folder = RunDirectory.Enter(_folder);
+            var executor = new TestExecutor(_options, _stackTraces, OnTestStarted, OnTestFinished, _context);
             var summary = await executor.RunAsync(tests, cancellationToken).ConfigureAwait(false);
             RunFinished?.Invoke(this, new TestRunFinishedEventArgs(summary));
             return summary;

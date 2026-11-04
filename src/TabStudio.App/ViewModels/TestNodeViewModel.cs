@@ -33,6 +33,9 @@ public interface ITestNodeActions
     /// <summary>Runs the tests under a row.</summary>
     Task RunAsync(TestNodeViewModel node);
 
+    /// <summary>Runs the tests under a row under the debugger.</summary>
+    Task DebugAsync(TestNodeViewModel node);
+
     /// <summary>Opens a row's test or class in the editor.</summary>
     Task GoToAsync(TestNodeViewModel node);
 }
@@ -205,6 +208,9 @@ public sealed partial class TestNodeViewModel : ObservableObject
 
     [RelayCommand]
     private Task RunAsync() => _actions.RunAsync(this);
+
+    [RelayCommand]
+    private Task DebugAsync() => _actions.DebugAsync(this);
 
     [RelayCommand(CanExecute = nameof(HasLocation))]
     private Task GoToTestAsync() => _actions.GoToAsync(this);

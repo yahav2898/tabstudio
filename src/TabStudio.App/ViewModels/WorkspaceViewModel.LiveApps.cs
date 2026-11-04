@@ -44,9 +44,23 @@ public sealed partial class WorkspaceViewModel
             : IsUnoApp(project) ? ShowUnoAppAsync
             : ShowAvaloniaAppAsync;
         var restarted = false;
+        var debugged = fromDebugger && IsWebApp(project);
         do
         {
             _restartLiveApp = false;
+
+            // A web app runs under the debugger, from its debug build; the others start without it, and say why.
+            if (debugged)
+            {
+                if (await DebugWebAppAsync(project, restarted))
+                {
+                    restarted = true;
+                    continue;
+                }
+
+                debugged = false;
+                restarted = true;
+            }
 
             // A restart keeps the app's log so far in the Output panel, under the line that says why it restarted.
             var build = await BuildProjectsAsync([project], showOutput: !restarted);
@@ -59,11 +73,10 @@ public sealed partial class WorkspaceViewModel
                 return;
             }
 
-            if (fromDebugger && !restarted)
+            if (fromDebugger && !restarted && !IsWebApp(project))
             {
                 Output.WriteLine(
-                    IsWebApp(project) ? "Started without the debugger: it pauses a program on its main thread, and a web app answers requests on others."
-                    : IsWebAssemblyApp(project) ? "Started without the debugger: a WebAssembly app runs in the web preview's browser, out of the debugger's reach."
+                    IsWebAssemblyApp(project) ? "Started without the debugger: a WebAssembly app runs in the web preview's browser, out of the debugger's reach."
                     : IsWpfApp(project) ? "Started without the debugger: a WPF app runs on OpenSilver in the web preview's browser, out of the debugger's reach."
                     : IsWindowsFormsApp(project) ? "Started without the debugger: a Windows Forms app runs its own message loop, which the debugger does not pause yet."
                     : IsUnoApp(project) ? "Started without the debugger: an Uno app has its own UI dispatcher, which the debugger cannot pause yet."

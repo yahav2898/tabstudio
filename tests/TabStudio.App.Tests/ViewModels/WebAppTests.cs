@@ -31,12 +31,13 @@ public sealed class WebAppTests
 
         Assert.True(workspace.WebPreview.IsRunning, workspace.Output.Text);
         Assert.True(workspace.IsWebPreviewSelected);
-        Assert.True(workspace.IsRunning);
+        Assert.True(workspace.IsDebugging);
         var address = workspace.WebPreview.AppAddress!;
         Assert.Equal(address.ToString(), workspace.WebPreview.AddressText);
         Assert.Contains("<h1>HelloWeb</h1>", await http.GetStringAsync(address), StringComparison.Ordinal);
         Assert.Contains("\"message\":\"Hello, Tablet!\"", await http.GetStringAsync(new Uri(address, "api/greeting?name=Tablet")), StringComparison.Ordinal);
-        Assert.Contains("Started without the debugger", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.DoesNotContain("Started without the debugger", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.StartsWith("Debugging HelloWeb at", workspace.StatusText, StringComparison.Ordinal);
         Assert.Contains($"HelloWeb is listening on {address}", workspace.Output.Text, StringComparison.Ordinal);
         UiTestHelpers.SaveScreenshot(window, "web-01-preview");
 
@@ -58,10 +59,56 @@ public sealed class WebAppTests
 
         Assert.False(workspace.WebPreview.IsRunning);
         Assert.False(workspace.IsRunning);
+        Assert.False(workspace.IsDebugging);
         Assert.True(workspace.WebPreview.HasApp);
         Assert.Contains("The program 'HelloWeb' has exited with code 0", workspace.Output.Text, StringComparison.Ordinal);
         await Assert.ThrowsAsync<HttpRequestException>(() => http.GetStringAsync(address));
         window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task F5_debugs_the_web_template_a_request_stops_at_a_breakpoint_in_its_endpoint_and_Shift_F5_stops_it()
+    {
+        using var fixture = new WorkspaceFixture();
+        using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
+        var solution = new ProjectTemplates(fixture.Paths).Create(ProjectTemplates.WebId, "HelloWeb");
+        var program = Path.Combine(Path.GetDirectoryName(solution)!, "HelloWeb", "Program.cs");
+        var source = await File.ReadAllTextAsync(program);
+        await File.WriteAllTextAsync(program, source.Replace(
+            "app.MapGet(\"/api/greeting\", (string? name) => new Greeting($\"Hello, {name ?? \"web\"}!\", DateTimeOffset.Now));",
+            "app.MapGet(\"/api/greeting\", (string? name) =>\n{\n    var message = $\"Hello, {name ?? \"web\"}!\";\n    return new Greeting(message, DateTimeOffset.Now);\n});",
+            StringComparison.Ordinal));
+        var workspace = fixture.Workspace;
+        await workspace.LoadAsync(solution);
+        var document = (await workspace.OpenDocumentAsync(program))!;
+        var line = document.Document.Lines.First(l => document.Document.GetText(l).Contains("return new Greeting(message", StringComparison.Ordinal)).LineNumber;
+        workspace.Breakpoints.Toggle(program, line);
+
+        var run = workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.WebPreview.IsRunning || run.IsCompleted, StartTimeout, "the web app to start under the debugger");
+        Assert.True(workspace.WebPreview.IsRunning, workspace.Output.Text);
+        Assert.True(workspace.IsDebugging);
+        var address = workspace.WebPreview.AppAddress!;
+        var request = http.GetStringAsync(new Uri(address, "api/greeting?name=Tablet"));
+
+        await UiTestHelpers.WaitUntilAsync(
+            () => workspace.IsPaused && workspace.CallStack.Frames.FirstOrDefault()?.Location?.Line == line,
+            StartTimeout,
+            because: "the request to stop at the breakpoint");
+        await workspace.PauseShown;
+        await UiTestHelpers.WaitUntilAsync(() => workspace.Locals.Tree.Rows.Any(r => r.Name == "message" && r.Value == "\"Hello, Tablet!\""), because: "the endpoint's locals");
+        Assert.False(request.IsCompleted);
+        Assert.StartsWith("Paused at a breakpoint", workspace.StatusText, StringComparison.Ordinal);
+
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        Assert.Contains("\"message\":\"Hello, Tablet!\"", await request.WaitAsync(TimeSpan.FromSeconds(30)), StringComparison.Ordinal);
+        Assert.True(workspace.IsDebugging);
+
+        workspace.StopDebuggingCommand.Execute(null);
+        await run.WaitAsync(TimeSpan.FromSeconds(30));
+        Assert.False(workspace.IsDebugging);
+        Assert.False(workspace.WebPreview.IsRunning);
+        Assert.Empty(workspace.CallStack.Frames);
     }
 
     /// <summary>Waits until a page answers with some text, while the app restarts.</summary>

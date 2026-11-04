@@ -185,7 +185,7 @@ public sealed partial class ToolchainLanguageToolsTests : IDisposable
             {
                 Directory.CreateDirectory(folder);
                 var locals = string.Join("\n", workspace.Locals.Tree.Rows.Select(r => r.Name + " = " + r.Value));
-                var stack = string.Join("\n", workspace.CallStack.Frames.Select(f => f.MethodName));
+                var stack = string.Join("\n", workspace.CallStack.Frames.Select(f => f.MethodName + "  @ " + f.LocationText));
                 File.WriteAllText(Path.Combine(folder, name + ".txt"), $"== Output\n{workspace.Output.Text}\n== State\n{workspace.State}: {workspace.StatusText}\n== Diagnostics\n{string.Join("\n", workspace.ActiveDocument?.Diagnostics.Select(d => d.Message) ?? [])}\n== Locals\n{locals}\n== Call Stack\n{stack}\n== Language Servers\n{workspace.LanguageServerOutput.Text}\n== Debug Adapters\n{workspace.DebugAdapterOutput.Text}\n== PATH\n{Environment.GetEnvironmentVariable("PATH")}\n== Processes\n{Processes()}");
             }
         }
