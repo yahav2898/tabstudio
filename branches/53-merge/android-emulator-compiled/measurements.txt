@@ -1,6 +1,24 @@
-Startup to self test start: 17.49 s
+Startup to self test start: 13.21 s
+TabStudio startup: first frame at 12658 ms, ready at 12658 ms; process start to activity 3109 ms, application +1423 ms, styles +638 ms, services +1377 ms, theme +180 ms, view models +2191 ms, main view +2070 ms, start screen +55 ms, first frame +1614 ms
+TabStudio UI stalls: 176 over 100 ms (38 over 250 ms, 7 over 1 s), 52.8 s in all, longest 6313 ms during backing services; answer p50 4.0 ms, p95 54.3 ms, p99 156.7 ms over 8472 questions in 330 s
+TabStudio UI timings: workspace view 2185 ms, document view 1593 ms, workspace view model 1106 ms, document view 497 ms, document view 169 ms, CallStackView 55 ms, workspace view model 41 ms, LocalsView 17 ms, workspace view model 6 ms
+TabStudio UI stall: 6313 ms at 8.0 s during backing services
+TabStudio UI stall: 4980 ms at 0.0 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 2035 ms at 228.4 s during starting restore and analysis → creating a document's view
+TabStudio UI stall: 1893 ms at 16.9 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 1518 ms at 14.6 s during loading C#
+TabStudio UI stall: 1283 ms at 18.8 s during the step that ended with: C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting
+TabStudio UI stall: 1070 ms at 5.0 s during reading the solution
+TabStudio UI stall: 793 ms at 328.5 s during creating a document's view
+TabStudio UI stall: 780 ms at 268.2 s during creating a document's view
+TabStudio UI stall: 751 ms at 246.0 s during creating the CallStackView → creating the LocalsView
+TabStudio UI stall: 717 ms at 249.3 s during creating a document's view
+TabStudio UI stall: 712 ms at 247.8 s during creating the LocalsView → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 575 ms at 40.9 s during the step that ended with: C and C++ debugging: stopped at 8, answer = 42, console input and completed greeting
+TabStudio UI stall: 556 ms at 6.1 s during reading the solution
+TabStudio UI stall: 529 ms at 6.8 s during showing the solution in Solution Explorer → databases, startup projects and toolchains
 Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
- Native Heap 336840 336820 12 13638 337840 367272 359267 3627
- Dalvik Heap 1857 1824 0 134 3920 6845 3455 3390
- TOTAL 751987 639364 13600 94920 764660 374117 362722 7017
- TOTAL PSS: 751987 TOTAL RSS: 764660 TOTAL SWAP PSS: 94920
+ Native Heap 335170 335072 92 14119 336144 366752 358254 3566
+ Dalvik Heap 1952 1928 0 146 3620 6941 3471 3470
+ TOTAL 732020 614236 11104 103298 733600 373693 361725 7036
+ TOTAL PSS: 732020 TOTAL RSS: 733600 TOTAL SWAP PSS: 103298
