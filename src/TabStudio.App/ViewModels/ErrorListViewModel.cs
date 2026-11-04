@@ -47,13 +47,16 @@ public sealed partial record ErrorItemViewModel(BuildDiagnostic Diagnostic)
 /// </summary>
 public sealed partial class ErrorListViewModel : ObservableObject
 {
+    /// <summary>The most rows the list is told about one by one; more changes are told as one reset.</summary>
+    private const int MaxRowChanges = 64;
+
     private readonly Dictionary<string, IReadOnlyList<BuildDiagnostic>> _byFile = new(StringComparer.Ordinal);
     private IReadOnlyList<BuildDiagnostic> _withoutLocation = [];
     private readonly Dictionary<string, IReadOnlyList<BuildDiagnostic>> _restore = new(StringComparer.Ordinal);
     private readonly Dictionary<string, HashSet<string>> _reportedByProject = new(StringComparer.Ordinal);
 
     /// <summary>The rows that pass the current filters, most severe first.</summary>
-    public ObservableCollection<ErrorItemViewModel> Items { get; } = [];
+    public RangeObservableCollection<ErrorItemViewModel> Items { get; } = [];
 
     /// <summary>Whether errors are listed.</summary>
     [ObservableProperty]
@@ -294,17 +297,55 @@ public sealed partial class ErrorListViewModel : ObservableObject
             .Select(CreateItem)
             .ToList();
 
-        if (!visible.SequenceEqual(Items))
-        {
-            Items.Clear();
-            foreach (var item in visible)
-            {
-                Items.Add(item);
-            }
-        }
+        Update(visible);
 
         HasItems = Items.Count > 0;
         Refreshed?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Makes the rows those given, telling the list only what changed: a file's new analysis changes a row or two of
+    /// thousands, and those rows are removed and inserted where they are. When most rows change, as when a filter
+    /// changes, the list is told once to start over rather than once per row.
+    /// </summary>
+    private void Update(List<ErrorItemViewModel> visible)
+    {
+        var start = 0;
+        while (start < visible.Count && start < Items.Count && visible[start] == Items[start])
+        {
+            start++;
+        }
+
+        var oldEnd = Items.Count;
+        var newEnd = visible.Count;
+        while (oldEnd > start && newEnd > start && visible[newEnd - 1] == Items[oldEnd - 1])
+        {
+            oldEnd--;
+            newEnd--;
+        }
+
+        var removed = oldEnd - start;
+        var added = newEnd - start;
+        if (removed == 0 && added == 0)
+        {
+            return;
+        }
+
+        if (removed + added > MaxRowChanges)
+        {
+            Items.ReplaceAll(visible);
+            return;
+        }
+
+        for (var i = oldEnd - 1; i >= start; i--)
+        {
+            Items.RemoveAt(i);
+        }
+
+        for (var i = start; i < newEnd; i++)
+        {
+            Items.Insert(i, visible[i]);
+        }
     }
 
     private bool Matches(BuildDiagnostic diagnostic)

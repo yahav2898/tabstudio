@@ -20,8 +20,22 @@ public sealed class InlineCompletionController(
     public event EventHandler? Changed;
 
     /// <summary>Captures immutable document context, waits for typing to settle, then asks the local model.</summary>
-    public async Task RequestAsync(string path, string text, int caret, IReadOnlyList<OpenFileContext> neighbors)
+    public Task RequestAsync(string path, string text, int caret, IReadOnlyList<OpenFileContext> neighbors) =>
+        RequestAsync(path, () => text, caret, () => neighbors);
+
+    /// <summary>
+    /// Waits for typing to settle, then reads the document's context and asks the local model. The text is read only
+    /// once typing has paused: any edit or caret move before then cancels the request, so it is the same text, and a
+    /// keystroke no longer copies the whole file and its neighbors only for the next one to throw the copy away.
+    /// </summary>
+    /// <param name="path">The document's path.</param>
+    /// <param name="text">Reads the document's text, on the UI thread.</param>
+    /// <param name="caret">The caret's offset.</param>
+    /// <param name="neighbors">Reads the other open files' context, on the UI thread.</param>
+    public async Task RequestAsync(string path, Func<string> text, int caret, Func<IReadOnlyList<OpenFileContext>> neighbors)
     {
+        ArgumentNullException.ThrowIfNull(text);
+        ArgumentNullException.ThrowIfNull(neighbors);
         Cancel();
         if (_disposed) return;
         var version = _version;
@@ -30,7 +44,8 @@ public sealed class InlineCompletionController(
         try
         {
             await Task.Delay(debounce ?? TimeSpan.FromMilliseconds(450), request.Token);
-            var insertion = await complete(path, text, caret, neighbors, request.Token);
+            if (version != _version || request.IsCancellationRequested || _disposed) return;
+            var insertion = await complete(path, text(), caret, neighbors(), request.Token);
             if (version != _version || request.IsCancellationRequested || _disposed) return;
             Offset = caret;
             Text = insertion ?? string.Empty;

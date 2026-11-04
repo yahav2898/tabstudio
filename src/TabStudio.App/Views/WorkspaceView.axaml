@@ -94,7 +94,7 @@
       <Setter Property="IsVisible" Value="False" />
     </Style>
     <!-- Beside Locals with no room, the Call Stack is hidden rather than squeezed to nothing (WorkspaceView.Layout.cs). -->
-    <Style Selector="Border#CallStackBeside.folded > views|CallStackView">
+    <Style Selector="Border#CallStackBeside.folded > controls|DeferredView">
       <Setter Property="IsVisible" Value="False" />
     </Style>
     <!-- The status bar's items: touch targets (Theme/Accessibility.axaml), small text, white on teal. -->
@@ -879,29 +879,29 @@
             <!-- Its width follows the panel's (WorkspaceView.Layout.cs): on a phone it gives Locals the room and keeps its tab. -->
             <Border x:Name="CallStackBeside" DockPanel.Dock="Right" Width="380" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1,0,0,0"
                     IsVisible="{Binding ShowsCallStackBeside}">
-              <views:CallStackView DataContext="{Binding CallStack}" />
+              <controls:DeferredView ViewType="{x:Type views:CallStackView}" DataContext="{Binding CallStack}" />
             </Border>
             <Panel>
               <views:ErrorListView DataContext="{Binding ErrorList}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsErrorListSelected}" />
               <views:OutputView DataContext="{Binding ShownOutput}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsOutputSelected}" />
-              <views:CompatibilityView IsVisible="{Binding IsCompatibilitySelected}" />
+              <controls:DeferredView ViewType="{x:Type views:CompatibilityView}" IsVisible="{Binding IsCompatibilitySelected}" />
               <Panel IsVisible="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.References}}">
-                <views:ReferencesView DataContext="{Binding References}" />
+                <controls:DeferredView ViewType="{x:Type views:ReferencesView}" DataContext="{Binding References}" />
               </Panel>
-              <views:LocalsView DataContext="{Binding Locals}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsLocalsSelected}" />
-              <views:WatchView DataContext="{Binding Watch}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsWatchSelected}" />
-              <views:EmbeddedPeripheralsView IsVisible="{Binding IsEmbeddedPeripheralsSelected}" />
-              <views:CallStackView DataContext="{Binding CallStack}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsCallStackSelected}" />
+              <controls:DeferredView ViewType="{x:Type views:LocalsView}" DataContext="{Binding Locals}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsLocalsSelected}" />
+              <controls:DeferredView ViewType="{x:Type views:WatchView}" DataContext="{Binding Watch}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsWatchSelected}" />
+              <controls:DeferredView ViewType="{x:Type views:EmbeddedPeripheralsView}" IsVisible="{Binding IsEmbeddedPeripheralsSelected}" />
+              <controls:DeferredView ViewType="{x:Type views:CallStackView}" DataContext="{Binding CallStack}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsCallStackSelected}" />
               <Panel x:Name="LogcatPanel" IsVisible="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.Logcat}}">
-                <views:OutputView DataContext="{Binding Logcat}" />
+                <controls:DeferredView ViewType="{x:Type views:OutputView}" DataContext="{Binding Logcat}" />
                 <ScrollViewer IsVisible="{Binding Logcat.IsEmpty}" HorizontalScrollBarVisibility="Disabled">
                   <controls:EmptyState Icon="{StaticResource Icon.Log}" Title="No log yet" IsCompact="True"
                                        Message="Run Android App installs the app and follows its log here: its own process, from the debug build."
                                        ActionText="Run Android App" ActionCommand="{Binding RunAndroidCommand}" />
                 </ScrollViewer>
               </Panel>
-              <toolchainViews:TerminalPanelView DataContext="{Binding Terminal}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsTerminalSelected}" />
-              <toolchainViews:SerialMonitorView DataContext="{Binding SerialMonitor}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsSerialMonitorSelected}" />
+              <controls:DeferredView ViewType="{x:Type toolchainViews:TerminalPanelView}" DataContext="{Binding Terminal}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsTerminalSelected}" />
+              <controls:DeferredView ViewType="{x:Type toolchainViews:SerialMonitorView}" DataContext="{Binding SerialMonitor}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsSerialMonitorSelected}" />
             </Panel>
           </DockPanel>
         </Border>
@@ -928,7 +928,7 @@
         <Grid x:Name="SideBar" RowDefinitions="*,Auto,Auto">
           <views:SolutionExplorerView DataContext="{Binding Explorer}" />
           <Panel Grid.RowSpan="3" ZIndex="20" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsRemoteExplorerSelected}">
-            <views:RemoteExplorerView DataContext="{Binding RemoteExplorer}" />
+            <controls:DeferredView ViewType="{x:Type views:RemoteExplorerView}" DataContext="{Binding RemoteExplorer}" />
           </Panel>
           <GridSplitter Grid.Row="1" x:Name="PropertiesSplitter" AutomationProperties.Name="Resize Properties" Height="12" Margin="0,-3" ZIndex="10" ResizeDirection="Rows" Background="Transparent" IsVisible="False">
             <GridSplitter.Template>
@@ -942,8 +942,8 @@
           <!-- Properties, folded into its header until a tap opens it; hidden while a designer shows its own. -->
           <views:PropertiesView Grid.Row="2" x:Name="PropertiesPanel" DataContext="{Binding Properties}"
                                 IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).ShowsSideBarProperties}" />
-          <views:GitChangesView Grid.Row="0" Grid.RowSpan="3" DataContext="{Binding GitChanges}"
-                                IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsGitChangesSelected}" />
+          <controls:DeferredView ViewType="{x:Type views:GitChangesView}" Grid.Row="0" Grid.RowSpan="3" DataContext="{Binding GitChanges}"
+                                 IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsGitChangesSelected}" />
 
           <!-- The repository's pull requests, beside Git Changes. -->
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsPullRequestsSelected}">
@@ -962,7 +962,7 @@
 
           <!-- The app preview of the running Avalonia app. -->
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsAppPreviewSelected}">
-            <views:AppPreviewView DataContext="{Binding AppPreview}" />
+            <controls:DeferredView ViewType="{x:Type views:AppPreviewView}" DataContext="{Binding AppPreview}" />
           </Panel>
 
           <!-- The Windows Bridge: programs running on the paired Windows PC, streamed live. -->
@@ -971,12 +971,12 @@
           </Panel>
 
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsContainersSelected}">
-            <views:ContainersView DataContext="{Binding Containers}" />
+            <controls:DeferredView ViewType="{x:Type views:ContainersView}" DataContext="{Binding Containers}" />
           </Panel>
 
           <!-- Native backing services from the repository's Compose files. -->
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsServicesSelected}">
-            <views:ServicesView DataContext="{Binding Services}" />
+            <controls:DeferredView ViewType="{x:Type views:ServicesView}" DataContext="{Binding Services}" />
           </Panel>
 
           <!-- The web preview of the running web app. -->
@@ -986,21 +986,21 @@
 
           <!-- Live Share: who is in the session, Follow, and what each participant may do. -->
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsLiveSelected}">
-            <liveViews:LivePanelView DataContext="{Binding LivePanel}" />
+            <controls:DeferredView ViewType="{x:Type liveViews:LivePanelView}" DataContext="{Binding LivePanel}" />
           </Panel>
 
           <!-- The Swarm window: the phones and tablets that run the app, its toggles and the UI test recorder. -->
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsSwarmSelected}">
-            <swarmViews:SwarmView DataContext="{Binding Swarm}" />
+            <controls:DeferredView ViewType="{x:Type swarmViews:SwarmView}" DataContext="{Binding Swarm}" />
           </Panel>
 
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsDatabaseSelected}">
-            <databaseViews:DatabaseExplorerView DataContext="{Binding DatabaseExplorer}" />
+            <controls:DeferredView ViewType="{x:Type databaseViews:DatabaseExplorerView}" DataContext="{Binding DatabaseExplorer}" />
           </Panel>
 
           <!-- GitHub Actions: the commit's checks, runs, workflows and watched repositories. -->
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsActionsSelected}">
-            <actionViews:ActionsView DataContext="{Binding Actions}" />
+            <controls:DeferredView ViewType="{x:Type actionViews:ActionsView}" DataContext="{Binding Actions}" />
           </Panel>
 
         </Grid>
@@ -1145,21 +1145,29 @@
     <views:GitDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding GitChanges}" />
 
     <!-- The swarm's Add a device dialog, with its QR code. -->
-    <swarmViews:SwarmInviteView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Swarm.Invite, FallbackValue={x:Null}}" />
+    <Panel Grid.Row="0" Grid.RowSpan="4" IsVisible="{Binding Swarm.Invite.IsOpen, FallbackValue=False}">
+      <controls:DeferredView ViewType="{x:Type swarmViews:SwarmInviteView}" DataContext="{Binding Swarm.Invite, FallbackValue={x:Null}}" />
+    </Panel>
 
     <!-- TabStudio Live's Share Session dialog, with its QR code. -->
-    <liveViews:LiveShareView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding LivePanel, FallbackValue={x:Null}}" />
+    <Panel Grid.Row="0" Grid.RowSpan="4" IsVisible="{Binding LivePanel.IsShareOpen, FallbackValue=False}">
+      <controls:DeferredView ViewType="{x:Type liveViews:LiveShareView}" DataContext="{Binding LivePanel, FallbackValue={x:Null}}" />
+    </Panel>
 
     <!-- GitHub Actions' dialog: Run workflow. -->
     <actionViews:ActionsDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Actions}" />
 
     <!-- The quick pick: color themes, file icon themes and snippets. -->
-    <extensionViews:QuickPickView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding QuickPick}" />
+    <Panel Grid.Row="0" Grid.RowSpan="4" IsVisible="{Binding QuickPick.IsOpen}">
+      <controls:DeferredView ViewType="{x:Type extensionViews:QuickPickView}" DataContext="{Binding QuickPick}" />
+    </Panel>
     <!-- The Toolchain Store, and offers to install a project's toolchain or packages. -->
     <toolchainViews:ToolchainOverlaysView Grid.Row="0" Grid.RowSpan="4" />
 
     <!-- One search for everything (Ctrl+Q): over the whole IDE, as a dialog at the top. -->
-    <searchViews:UnifiedSearchView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Search}" />
+    <Panel Grid.Row="0" Grid.RowSpan="4" IsVisible="{Binding Search.IsOpen}">
+      <controls:DeferredView ViewType="{x:Type searchViews:UnifiedSearchView}" DataContext="{Binding Search}" />
+    </Panel>
 
     <!-- The in-app dialog that asks for names and confirmations. -->
     <Panel Grid.Row="0" Grid.RowSpan="4" Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding Prompt.IsOpen}">

@@ -371,9 +371,9 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
         var path = project.FilePath;
         Tests.ReportQueued(path, tests);
 
-        // The runner raises these on its own threads.
-        void OnStarted(object? sender, TestStartedEventArgs e) => _ui.Post(() => Tests.ReportStarted(path, e.Test));
-        void OnFinished(object? sender, TestFinishedEventArgs e) => _ui.Post(() => Tests.ReportFinished(path, e.Result));
+        // The runner raises these on its own threads; Test Explorer shows them in batches.
+        void OnStarted(object? sender, TestStartedEventArgs e) => Tests.QueueStarted(path, e.Test);
+        void OnFinished(object? sender, TestFinishedEventArgs e) => Tests.QueueFinished(path, e.Result);
 
         session.TestStarted += OnStarted;
         session.TestFinished += OnFinished;

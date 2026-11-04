@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using TabStudio.App.Services;
 using TabStudio.App.Tests.ViewModels;
 using TabStudio.App.ViewModels;
 using TabStudio.App.Views;
@@ -35,7 +36,7 @@ public sealed class RealRepositoryTests
         Directory.CreateDirectory(output);
         var manifest = JsonNode.Parse(await File.ReadAllTextAsync(Path.Combine(RepositoryRoot(), "build", "ci", "real-repos.json")))!;
         var problems = new List<string>();
-        var summary = new StringBuilder("| Repository | Errors | Baseline | Warnings | Build |\n| --- | --- | --- | --- | --- |\n");
+        var summary = new StringBuilder("| Repository | Errors | Baseline | Warnings | Build | UI stalls over 100 ms (longest) |\n| --- | --- | --- | --- | --- | --- |\n");
         var results = new JsonObject();
         var only = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_ONLY")?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         foreach (var repository in manifest["repositories"]!.AsArray().Where(r => InThisJob(r!) && (only is null || only.Contains(r!["name"]!.GetValue<string>(), StringComparer.OrdinalIgnoreCase))))
@@ -62,9 +63,17 @@ public sealed class RealRepositoryTests
             }
 
             await File.WriteAllTextAsync(Path.Combine(output, name + ".txt"), report.ToString());
-            results[name] = new JsonObject { ["errors"] = outcome.Errors, ["warnings"] = outcome.Warnings, ["seconds"] = Math.Round(outcome.Duration.TotalSeconds, 1), ["served"] = outcome.Served };
+            results[name] = new JsonObject
+            {
+                ["errors"] = outcome.Errors,
+                ["warnings"] = outcome.Warnings,
+                ["seconds"] = Math.Round(outcome.Duration.TotalSeconds, 1),
+                ["served"] = outcome.Served,
+                ["longestUiStallMs"] = Math.Round(outcome.LongestStall.TotalMilliseconds),
+                ["uiStalls"] = outcome.Stalls,
+            };
             var served = outcome.Served switch { true => ", served", false => ", NOT served", null => string.Empty };
-            summary.Append(CultureInfo.InvariantCulture, $"| {name} | {outcome.Errors} | {baseline?.ToString(CultureInfo.InvariantCulture) ?? "none"} | {outcome.Warnings} | {outcome.Duration.TotalSeconds:F0} s{served} |\n");
+            summary.Append(CultureInfo.InvariantCulture, $"| {name} | {outcome.Errors} | {baseline?.ToString(CultureInfo.InvariantCulture) ?? "none"} | {outcome.Warnings} | {outcome.Duration.TotalSeconds:F0} s{served} | {outcome.Stalls} ({outcome.LongestStall.TotalMilliseconds:0} ms) |\n");
             if (outcome.Startup is { } wrongStartup)
             {
                 problems.Add($"{name}: {wrongStartup}; see {name}.txt.");
@@ -378,7 +387,9 @@ public sealed class RealRepositoryTests
     /// <param name="Served">Whether the first page was served as the repository's <c>serve</c> entry expects; <see langword="null"/> without one.</param>
     /// <param name="Startup">What is wrong with the startup project TabStudio chose, when the entry names the one it expects.</param>
     /// <param name="Editor">What the editor's squiggles get wrong next to the build, when they do.</param>
-    private sealed record Outcome(int Errors, int Warnings, TimeSpan Duration, bool? Served = null, string? Startup = null, string? Editor = null);
+    /// <param name="Stalls">How many times the UI thread did not answer for 100 ms or more, from opening to the end.</param>
+    /// <param name="LongestStall">The longest of those times.</param>
+    private sealed record Outcome(int Errors, int Warnings, TimeSpan Duration, bool? Served = null, string? Startup = null, string? Editor = null, int Stalls = 0, TimeSpan LongestStall = default);
 
     /// <param name="tests">How many tests Test Explorer's Run All must pass after the build; <see langword="null"/> to run none.</param>
     private static async Task<Outcome> OpenAndBuildAsync(string solution, string name, string? expectedStartup, JsonNode? serve, StringBuilder report, int? tests = null)
@@ -387,6 +398,8 @@ public sealed class RealRepositoryTests
         var workspace = fixture.Workspace;
         var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = workspace } };
         window.Show();
+        using var stalls = new UiStallMonitor(Avalonia.Threading.Dispatcher.UIThread) { Phase = "opening the solution" };
+        UiStallMonitor.Current = stalls;
         try
         {
             var clock = System.Diagnostics.Stopwatch.StartNew();
@@ -409,7 +422,9 @@ public sealed class RealRepositoryTests
             var startupProblem = expectedStartup is null || workspace.StartupProject?.Name == expectedStartup
                 ? null
                 : $"the startup project is {workspace.StartupProject?.Name ?? "none"}, not {expectedStartup}";
+            stalls.Phase = "screenshots";
             UiTestHelpers.SaveScreenshot(window, $"real-{name}-1-opened");
+            stalls.Phase = "the first build";
             clock.Restart();
             await workspace.BuildCommand.ExecuteAsync(null);
             await UiTestHelpers.WaitUntilAsync(() => workspace.State != IdeState.Busy, TimeSpan.FromMinutes(15), "the build");
@@ -434,21 +449,30 @@ public sealed class RealRepositoryTests
 
             AppendGeneratorPackages(report, fixture.Paths.Packages);
 
+            stalls.Phase = "screenshots";
             UiTestHelpers.SaveScreenshot(window, $"real-{name}-2-built");
+            stalls.Phase = "opening files and their squiggles";
             // A project whose reference has errors is not compiled, so the build has nothing to say about its files.
             var notCompiled = System.Text.RegularExpressions.Regex.Matches(workspace.Output.Text, @"^\d+>(?<name>\S+) was not compiled because", System.Text.RegularExpressions.RegexOptions.Multiline)
                 .Select(m => m.Groups["name"].Value).ToHashSet(StringComparer.Ordinal);
             var editor = await CompareEditorWithBuildAsync(workspace, errors.Select(e => e.Diagnostic).ToList(), notCompiled, report);
+            stalls.Phase = "F5 and the first page";
             bool? served = serve is null ? null : await ServeFirstPageAsync(workspace, window, name, serve, report);
+            stalls.Phase = "Run All Tests";
             if (tests is { } minimum && await RunAllTestsAsync(workspace, minimum, report) is { } testProblem)
             {
                 editor = editor is null ? testProblem : $"{editor}; {testProblem}";
             }
 
+            stalls.Phase = "the end";
+            report.AppendLine(CultureInfo.InvariantCulture, $"UI stalls: {stalls.Summary()}");
+            report.AppendLine(CultureInfo.InvariantCulture, $"UI timings: {stalls.Timings(12)}");
+            report.Append(stalls.Table(15));
             report.AppendLine("Output:");
             var text = workspace.Output.Text;
             report.AppendLine(text.Length > 40000 ? text[^40000..] : text);
-            return new Outcome(errors.Count, warnings, duration, served, startupProblem, editor);
+            var longest = stalls.Stalls.Select(s => s.Duration).DefaultIfEmpty().Max();
+            return new Outcome(errors.Count, warnings, duration, served, startupProblem, editor, stalls.Stalls.Count, longest);
         }
         finally
         {

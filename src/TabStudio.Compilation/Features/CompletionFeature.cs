@@ -17,7 +17,7 @@ namespace TabStudio.Compilation.Features;
 /// </para>
 /// <para>
 /// The last few lists are remembered, so an item can be committed or described after the user typed more to
-/// filter it. Call <see cref="RoslynWorkspaceHost.UpdateText"/> with every keystroke before committing.
+/// filter it. Call <see cref="RoslynWorkspaceHost.UpdateText(string, string)"/> with every keystroke before committing.
 /// </para>
 /// </remarks>
 public sealed partial class CompletionFeature

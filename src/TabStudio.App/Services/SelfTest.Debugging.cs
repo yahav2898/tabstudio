@@ -50,12 +50,60 @@ public static partial class SelfTest
             await workspace.PauseShown.WaitAsync(cancellationToken);
             var where = workspace.StatusText;
             var name = workspace.Locals.Tree.Rows.FirstOrDefault(r => string.Equals(r.Name, "name", StringComparison.Ordinal))?.Value;
-            workspace.StartDebuggingCommand.Execute(null);
+
+            // How long a step takes, from the tap to the new line, Locals and Call Stack shown: three Step Overs.
+            var steps = new List<double>();
+            // Watched through the pause state, which every kind of session (in-process, Link, adapters) sets; a step
+            // that does not pause again within 20 s ends the measurement, never the self test.
+            for (var i = 0; i < 3 && workspace.IsPaused && workspace.StepOverCommand.CanExecute(null); i++)
+            {
+                var resumed = false;
+                var paused = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+                void OnState(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+                {
+                    if (!workspace.IsPaused)
+                    {
+                        resumed = true;
+                    }
+                    else if (resumed)
+                    {
+                        paused.TrySetResult();
+                    }
+                }
+
+                var step = Stopwatch.StartNew();
+                workspace.PropertyChanged += OnState;
+                try
+                {
+                    workspace.StepOverCommand.Execute(null);
+                    using var limit = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                    limit.CancelAfter(TimeSpan.FromSeconds(20));
+                    await paused.Task.WaitAsync(limit.Token);
+                }
+                catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+                finally
+                {
+                    workspace.PropertyChanged -= OnState;
+                }
+
+                steps.Add(step.Elapsed.TotalMilliseconds);
+            }
+
+            if (workspace.IsDebugging)
+            {
+                workspace.StartDebuggingCommand.Execute(null);
+            }
+
             await WaitAsync(() => !workspace.IsDebugging, cancellationToken);
 
             var expected = $"\"{Name}\"";
+            var stepped = steps.Count == 0 ? string.Empty
+                : $", {steps.Count} steps in {string.Join(" / ", steps.Select(s => s.ToString("0", System.Globalization.CultureInfo.InvariantCulture)))} ms";
             return string.Equals(name, expected, StringComparison.Ordinal)
-                ? new SelfTestResult(true, $"Debugger: {where}, name = {name}", clock.Elapsed)
+                ? new SelfTestResult(true, $"Debugger: {where}, name = {name}{stepped}", clock.Elapsed)
                 : new SelfTestResult(false, $"Debugger: stopped, but the local 'name' was {name ?? "missing"}.", clock.Elapsed);
         }
         finally

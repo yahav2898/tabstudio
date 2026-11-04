@@ -118,7 +118,10 @@ public sealed class DocumentHost : Panel
         {
             foreach (var document in documents.Where(d => !_views.ContainsKey(d)))
             {
+                TabStudio.App.Services.UiStallMonitor.Note("creating a document's view");
+                var created = System.Diagnostics.Stopwatch.StartNew();
                 var view = factory(document);
+                TabStudio.App.Services.UiStallMonitor.Time("document view", created.Elapsed);
                 view.IsVisible = false;
                 _views[document] = view;
                 Children.Add(view);

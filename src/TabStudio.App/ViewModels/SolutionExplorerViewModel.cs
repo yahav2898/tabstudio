@@ -19,6 +19,12 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
     private Dictionary<string, CompatibilityReport> _reports = new(StringComparer.Ordinal);
     private List<ExplorerItemViewModel> _treeRows = [];
 
+    // Each node's row and search row, made once per load: expanding a folder of thousands of files or typing a search
+    // made every row again, its icon and file type looked up again, each time.
+    private readonly Dictionary<WorkspaceNode, ExplorerItemViewModel> _rowCache = new(ReferenceEqualityComparer.Instance);
+    private readonly Dictionary<WorkspaceNode, ExplorerItemViewModel> _searchRowCache = new(ReferenceEqualityComparer.Instance);
+    private IReadOnlyList<ExplorerItemViewModel>? _shown;
+
     /// <summary>Creates the Solution Explorer.</summary>
     /// <param name="actions">What the context menu does, or <see langword="null"/> for a read-only explorer.</param>
     public SolutionExplorerViewModel(IExplorerActions? actions = null)
@@ -58,6 +64,8 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
         var selectedPath = SelectedItem?.Node.FullPath;
 
         _workspace = workspace;
+        _rowCache.Clear();
+        _searchRowCache.Clear();
         _reports = reports.GroupBy(r => r.ProjectName, StringComparer.Ordinal).ToDictionary(g => g.Key, g => g.First(), StringComparer.Ordinal);
 
         var root = CreateRow(workspace.Tree, 0);
@@ -87,6 +95,8 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
     {
         _workspace = null;
         _treeRows = [];
+        _rowCache.Clear();
+        _searchRowCache.Clear();
         Rows.Clear();
         SelectedItem = null;
     }
@@ -158,13 +168,27 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
             return;
         }
 
+        // The list is told only of the rows that came or went, not to start over with thousands of rows.
+        var index = _treeRows.IndexOf(item);
+        var showsTree = ReferenceEquals(_shown, _treeRows) && index >= 0 && Rows.Count == _treeRows.Count;
         if (item.IsExpanded)
         {
-            Collapse(item, _treeRows);
+            var count = Collapse(item, _treeRows);
+            if (showsTree)
+            {
+                Rows.RemoveRange(index + 1, count);
+                return;
+            }
         }
         else
         {
-            Expand(item, _treeRows);
+            var children = Expand(item, _treeRows);
+            if (showsTree)
+            {
+                ApplySourceControlStatus(children);
+                Rows.InsertRange(index + 1, children);
+                return;
+            }
         }
 
         ShowRows(_treeRows);
@@ -206,7 +230,7 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
         var matches = _workspace.Tree.DescendantsAndSelf()
             .Where(n => n.IsOpenableFile && n.Name.Contains(text, StringComparison.OrdinalIgnoreCase))
             .Take(MaximumSearchResults)
-            .Select(n => new ExplorerItemViewModel(n, 0, actions: _actions)
+            .Select(n => _searchRowCache.TryGetValue(n, out var cached) ? cached : _searchRowCache[n] = new ExplorerItemViewModel(n, 0, actions: _actions)
             {
                 Location = Path.GetRelativePath(root, Path.GetDirectoryName(n.FullPath!)!) is var folder && folder != "." ? folder : null,
             })
@@ -215,6 +239,18 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
     }
 
     private ExplorerItemViewModel CreateRow(WorkspaceNode node, int depth)
+    {
+        if (_rowCache.TryGetValue(node, out var cached) && cached.Depth == depth)
+        {
+            return cached;
+        }
+
+        var row = NewRow(node, depth);
+        _rowCache[node] = row;
+        return row;
+    }
+
+    private ExplorerItemViewModel NewRow(WorkspaceNode node, int depth)
     {
         var report = node.Project is { } project && _reports.TryGetValue(project.Name, out var found) ? found : null;
         return new ExplorerItemViewModel(node, depth, report, _actions) { Detail = DetailFor(node) };
@@ -231,34 +267,45 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
         return count == 1 ? "(1 project)" : $"({count.ToString(CultureInfo.InvariantCulture)} projects)";
     }
 
-    private void Expand(ExplorerItemViewModel item, List<ExplorerItemViewModel> rows)
+    /// <summary>Expands a row: its children's rows go under it. Returns them.</summary>
+    private List<ExplorerItemViewModel> Expand(ExplorerItemViewModel item, List<ExplorerItemViewModel> rows)
     {
         if (item.IsExpanded || !item.IsExpandable)
         {
-            return;
+            return [];
         }
 
         item.IsExpanded = true;
         var index = rows.IndexOf(item);
         var children = item.Node.Children.Select(child => CreateRow(child, item.Depth + 1)).ToList();
         rows.InsertRange(index + 1, children);
+        return children;
     }
 
-    private static void Collapse(ExplorerItemViewModel item, List<ExplorerItemViewModel> rows)
+    /// <summary>Collapses a row: every row under it goes, collapsed as it was made. Returns how many.</summary>
+    private static int Collapse(ExplorerItemViewModel item, List<ExplorerItemViewModel> rows)
     {
         if (!item.IsExpanded)
         {
-            return;
+            return 0;
         }
 
         item.IsExpanded = false;
         var index = rows.IndexOf(item);
-        var count = rows.Skip(index + 1).TakeWhile(r => r.Depth > item.Depth).Count();
+        var count = 0;
+        while (index + 1 + count < rows.Count && rows[index + 1 + count].Depth > item.Depth)
+        {
+            rows[index + 1 + count].IsExpanded = false;
+            count++;
+        }
+
         rows.RemoveRange(index + 1, count);
+        return count;
     }
 
     private void ShowRows(IReadOnlyList<ExplorerItemViewModel> rows)
     {
+        _shown = rows;
         // A reset clears the list's selection; put it back when the selected row is still shown.
         var selected = SelectedItem;
         ApplySourceControlStatus(rows);
