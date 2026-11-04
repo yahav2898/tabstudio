@@ -1,5 +1,5 @@
 Humanizer at 4574b93883bf48e3f0f3bca73297054537317ab2
-Opened /home/runner/work/_temp/real-repos/Humanizer/Humanizer.slnx in 0.5 s
+Opened /home/runner/work/_temp/real-repos/Humanizer/Humanizer.slnx in 0.7 s
 Compatibility Doctor:
   Benchmarks: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
   Humanizer.Analyzers.Roslyn38: Library via Built with its users - A library is compiled together with the projects that reference it.
@@ -16,7 +16,7 @@ Compatibility Doctor:
   Humanizer.Docs.LanguageCoverage: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   website: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
 Startup project: Humanizer.UnicodeDataGenerator
-Built in 19.8 s: 0 errors, 1 warnings
+Built in 28.3 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -1416,36 +1416,46 @@ Packages with analyzers or MSBuild files:
   xunit.v3.core.mtp-v2 3.2.2
       buildTransitive/xunit.v3.core.mtp-v2.props
       buildTransitive/xunit.v3.core.mtp-v2.targets
-Editor: 21 files opened and analyzed in 1.7 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 3 over 100 ms (0 over 250 ms, 0 over 1 s), 0.5 s in all, longest 201 ms during the first build, 0.1 s of it garbage collection; answer p50 4.3 ms, p95 34.9 ms, p99 69.7 ms over 799 questions in 23 s
-UI timings: document view 29 ms, document view 5 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms
+Editor: 21 files opened and analyzed in 3.5 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 13 over 100 ms (2 over 250 ms, 0 over 1 s), 2.9 s in all, longest 639 ms during screenshots, 0.7 s of it garbage collection; answer p50 8.0 ms, p95 57.4 ms, p99 125.9 ms over 946 questions in 35 s
+UI timings: document view 45 ms, document view 29 ms, document view 26 ms, document view 23 ms, document view 17 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 201 ms | 61 ms | 12.7 s | the first build |
-| 162 ms | 28 ms | 0.6 s | screenshots |
-| 151 ms | 0 ms | 0.9 s | screenshots |
+| 639 ms | 99 ms | 2.1 s | screenshots |
+| 610 ms | 186 ms | 0.9 s | screenshots |
+| 250 ms | 92 ms | 18.4 s | the first build |
+| 210 ms | 11 ms | 31.3 s | screenshots |
+| 150 ms | 0 ms | 31.1 s | screenshots |
+| 149 ms | 37 ms | 10.4 s | the first build |
+| 148 ms | 56 ms | 20.5 s | the first build |
+| 139 ms | 22 ms | 28.5 s | the first build |
+| 126 ms | 52 ms | 15.5 s | the first build |
+| 126 ms | 30 ms | 14.6 s | the first build |
+| 111 ms | 83 ms | 0.8 s | screenshots |
+| 104 ms | 49 ms | 1.6 s | screenshots |
+| 103 ms | 23 ms | 17.5 s | the first build |
 Output:
-Build started at 01:01:44...
+Build started at 02:57:05...
 1>------ Build started: Project: Humanizer.Analyzers.Roslyn38, Configuration: Debug ------
-1>Humanizer.Analyzers.Roslyn38 -> compiled in memory (20 KB, 219 ms)
+1>Humanizer.Analyzers.Roslyn38 -> compiled in memory (20 KB, 533 ms)
 2>------ Build started: Project: Humanizer.Analyzers.Roslyn48, Configuration: Debug ------
-2>Humanizer.Analyzers.Roslyn48 -> compiled in memory (20 KB, 54 ms)
+2>Humanizer.Analyzers.Roslyn48 -> compiled in memory (20 KB, 67 ms)
 3>------ Build started: Project: Humanizer.Analyzers.Roslyn414, Configuration: Debug ------
-3>Humanizer.Analyzers.Roslyn414 -> compiled in memory (20 KB, 46 ms)
+3>Humanizer.Analyzers.Roslyn414 -> compiled in memory (20 KB, 83 ms)
 4>------ Build started: Project: Humanizer.SourceGenerators, Configuration: Debug ------
-4>Humanizer.SourceGenerators -> compiled in memory (519 KB, 333 ms)
+4>Humanizer.SourceGenerators -> compiled in memory (519 KB, 715 ms)
 5>------ Build started: Project: Humanizer, Configuration: Debug ------
-5>Humanizer -> compiled in memory (4341 KB, 3102 ms)
+5>Humanizer -> compiled in memory (4341 KB, 5037 ms)
 6>------ Build started: Project: Benchmarks, Configuration: Debug ------
-6>Benchmarks -> compiled in memory (36 KB, 1575 ms)
+6>Benchmarks -> compiled in memory (36 KB, 2923 ms)
 7>------ Build started: Project: Humanizer.SourceGenerators.Tests, Configuration: Debug ------
-7>Humanizer.SourceGenerators.Tests -> compiled in memory (359.5 KB, 2119 ms)
+7>Humanizer.SourceGenerators.Tests -> compiled in memory (359.5 KB, 4226 ms)
 8>------ Build started: Project: Humanizer.Tests, Configuration: Debug ------
-8>Humanizer.Tests -> compiled in memory (2837.5 KB, 3457 ms)
+8>Humanizer.Tests -> compiled in memory (2837.5 KB, 6292 ms)
 9>------ Build started: Project: Humanizer.UnicodeDataGenerator, Configuration: Debug ------
-9>Humanizer.UnicodeDataGenerator -> compiled in memory (35.5 KB, 54 ms)
+9>Humanizer.UnicodeDataGenerator -> compiled in memory (35.5 KB, 79 ms)
 10>------ Build started: Project: Humanizer.Docs.LanguageCoverage, Configuration: Debug ------
-10>Humanizer.Docs.LanguageCoverage -> compiled in memory (14.5 KB, 331 ms)
+10>Humanizer.Docs.LanguageCoverage -> compiled in memory (14.5 KB, 674 ms)
 11>------ Skipped: Project: Humanizer.Analyzers.Tests.Roslyn38: it targets net11.0, which only the .NET 11 SDK builds; TabStudio compiles with .NET 10 ------
 12>------ Skipped: Project: Humanizer.Analyzers.Tests.Roslyn48: it targets net11.0, which only the .NET 11 SDK builds; TabStudio compiles with .NET 10 ------
 13>------ Skipped: Project: Humanizer.Analyzers.Tests.Roslyn414: it targets net11.0, which only the .NET 11 SDK builds; TabStudio compiles with .NET 10 ------

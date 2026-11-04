@@ -1,5 +1,5 @@
 CleanArchitecture-Template at 345e7fe7612fdaf0cb5da58826a7c57d42e1fdd8
-Opened /home/runner/work/_temp/real-repos/CleanArchitecture-Template/CleanArchitecture.slnx in 0.2 s
+Opened /home/runner/work/_temp/real-repos/CleanArchitecture-Template/CleanArchitecture.slnx in 0.3 s
 Compatibility Doctor:
   AppHost: Not supported via Not on a tablet - An Aspire AppHost starts the app's projects and containers through Aspire's developer control plane, which runs on a computer, and it compiles against code its SDK generates for the projects it references. TabStudio leaves it out of builds; run the projects it starts on their own.
   ServiceDefaults: Library via Built with its users - A library is compiled together with the projects that reference it.
@@ -17,7 +17,7 @@ Compatibility Doctor:
   ClientApp: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
   ClientApp-React: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
 Startup project: Web
-Built in 20.8 s: 0 errors, 0 warnings
+Built in 17.8 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   aspire.hosting.apphost 13.6.4
       analyzers/dotnet/cs/Aspire.Hosting.Analyzers.dll
@@ -1458,36 +1458,42 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net462/_._
       buildTransitive/net6.0/_._
       buildTransitive/netcoreapp2.0/System.Threading.RateLimiting.targets
-Editor: 24 files opened and analyzed in 0.7 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 2 over 100 ms (1 over 250 ms, 0 over 1 s), 0.5 s in all, longest 322 ms during screenshots, 0.1 s of it garbage collection; answer p50 5.4 ms, p95 9.9 ms, p99 21.3 ms over 964 questions in 23 s
-UI timings: document view 37 ms, document view 14 ms, document view 10 ms, document view 8 ms, document view 7 ms, document view 5 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms
+Editor: 24 files opened and analyzed in 1.2 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 5 over 100 ms (3 over 250 ms, 0 over 1 s), 1.6 s in all, longest 524 ms during screenshots, 0.5 s of it garbage collection; answer p50 10.8 ms, p95 23.1 ms, p99 61.0 ms over 695 questions in 21 s
+UI timings: document view 7 ms, document view 7 ms, document view 5 ms, document view 5 ms, document view 5 ms, document view 5 ms, document view 5 ms, document view 5 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 322 ms | 78 ms | 0.2 s | screenshots |
-| 136 ms | 20 ms | 0.8 s | screenshots |
+| 524 ms | 89 ms | 0.3 s | screenshots |
+| 419 ms | 57 ms | 1.1 s | screenshots |
+| 298 ms | 289 ms | 4.5 s | the first build |
+| 180 ms | 14 ms | 19.6 s | screenshots |
+| 148 ms | 0 ms | 19.4 s | screenshots |
 Output:
-Build started at 01:11:24...
+Build started at 03:10:22...
 1>------ Build started: Project: ServiceDefaults, Configuration: Debug ------
-1>ServiceDefaults -> compiled in memory (13.5 KB, 37 ms)
+1>ServiceDefaults -> compiled in memory (13.5 KB, 52 ms)
 2>------ Build started: Project: Domain, Configuration: Debug ------
-2>Domain -> compiled in memory (11.5 KB, 7 ms)
+2>Domain -> compiled in memory (11.5 KB, 63 ms)
 3>------ Build started: Project: Application, Configuration: Debug ------
-3>Application -> compiled in memory (57.5 KB, 67 ms)
+3>Application -> compiled in memory (57.5 KB, 113 ms)
 4>------ Build started: Project: Shared, Configuration: Debug ------
-4>Shared -> compiled in memory (2.5 KB, 1 ms)
+4>Shared -> compiled in memory (2.5 KB, 3 ms)
 5>------ Build started: Project: Infrastructure, Configuration: Debug ------
-5>Infrastructure -> compiled in memory (30.5 KB, 88 ms)
+5>Infrastructure -> compiled in memory (30.5 KB, 185 ms)
 6>------ Build started: Project: Web, Configuration: Debug ------
-6>Web -> compiled in memory (63.5 KB, 114 ms)
+6>Web -> compiled in memory (63.5 KB, 250 ms)
 7>------ Build started: Project: Application.UnitTests, Configuration: Debug ------
-7>Application.UnitTests -> compiled in memory (12 KB, 67 ms)
+7>Application.UnitTests -> compiled in memory (12 KB, 121 ms)
 8>------ Build started: Project: Domain.UnitTests, Configuration: Debug ------
-8>Domain.UnitTests -> compiled in memory (4 KB, 25 ms)
+8>Domain.UnitTests -> compiled in memory (4 KB, 44 ms)
 9>------ Build started: Project: Infrastructure.IntegrationTests, Configuration: Debug ------
-9>Infrastructure.IntegrationTests -> compiled in memory (2.5 KB, 4 ms)
+9>Infrastructure.IntegrationTests -> compiled in memory (2.5 KB, 6 ms)
 10>------ Skipped: Project: AppHost: an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers ------
 11>------ Skipped: Project: Application.FunctionalTests: it references TestAppHost, which is not built on this device ------
 12>------ Skipped: Project: TestAppHost: an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers ------
 13>------ Skipped: Project: Web.AcceptanceTests: it references AppHost, which is not built on this device ------
 ========== Build: 9 succeeded, 0 failed, 4 skipped ==========
+
+added 160 packages in 6s
+========== npm ci: succeeded ==========
 

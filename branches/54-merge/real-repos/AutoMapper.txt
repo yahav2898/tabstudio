@@ -1,5 +1,5 @@
 AutoMapper at f0ecba7a97d1403973825fb3cbe2733e6216ff9a
-Opened /home/runner/work/_temp/real-repos/AutoMapper/AutoMapper.slnx in 0.3 s
+Opened /home/runner/work/_temp/real-repos/AutoMapper/AutoMapper.slnx in 0.4 s
 Compatibility Doctor:
   AutoMapper.DI.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   AutoMapper: Library via Built with its users - A library is compiled together with the projects that reference it.
@@ -8,7 +8,7 @@ Compatibility Doctor:
   TestApp: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   AutoMapper.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: TestApp
-Built in 6.5 s: 0 errors, 0 warnings
+Built in 7.2 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   emptyfiles 4.4.0
       build/EmptyFiles.targets
@@ -227,25 +227,29 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.utility.netcoreapp10.dll
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
-Editor: 17 files opened and analyzed in 2.1 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 2 over 100 ms (0 over 250 ms, 0 over 1 s), 0.3 s in all, longest 199 ms during screenshots, 0.1 s of it garbage collection; answer p50 3.2 ms, p95 13.4 ms, p99 61.6 ms over 408 questions in 10 s
-UI timings: document view 36 ms, document view 22 ms, document view 19 ms, document view 14 ms, document view 10 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+Editor: 17 files opened and analyzed in 0.9 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 6 over 100 ms (2 over 250 ms, 0 over 1 s), 1.1 s in all, longest 379 ms during screenshots, 0.3 s of it garbage collection; answer p50 7.6 ms, p95 58.5 ms, p99 130.7 ms over 253 questions in 10 s
+UI timings: document view 6 ms, document view 6 ms, document view 5 ms, document view 5 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 199 ms | 65 ms | 0.3 s | screenshots |
-| 149 ms | 21 ms | 0.6 s | screenshots |
+| 379 ms | 188 ms | 0.5 s | screenshots |
+| 275 ms | 14 ms | 1.0 s | screenshots |
+| 131 ms | 13 ms | 8.8 s | screenshots |
+| 125 ms | 0 ms | 8.6 s | screenshots |
+| 114 ms | 32 ms | 6.1 s | the first build |
+| 112 ms | 38 ms | 5.4 s | the first build |
 Output:
-Build started at 01:00:48...
+Build started at 02:56:04...
 1>------ Build started: Project: AutoMapper, Configuration: Debug ------
-1>AutoMapper -> compiled in memory (303.5 KB, 284 ms)
+1>AutoMapper -> compiled in memory (303.5 KB, 359 ms)
 2>------ Build started: Project: AutoMapper.DI.Tests, Configuration: Debug ------
-2>AutoMapper.DI.Tests -> compiled in memory (26.5 KB, 252 ms)
+2>AutoMapper.DI.Tests -> compiled in memory (26.5 KB, 307 ms)
 3>------ Build started: Project: AutoMapper.IntegrationTests, Configuration: Debug ------
-3>AutoMapper.IntegrationTests -> compiled in memory (572.5 KB, 883 ms)
+3>AutoMapper.IntegrationTests -> compiled in memory (572.5 KB, 1133 ms)
 4>------ Build started: Project: TestApp, Configuration: Debug ------
-4>TestApp -> compiled in memory (7 KB, 325 ms)
+4>TestApp -> compiled in memory (7 KB, 336 ms)
 5>------ Build started: Project: AutoMapper.UnitTests, Configuration: Debug ------
-5>AutoMapper.UnitTests -> compiled in memory (1773 KB, 1739 ms)
+5>AutoMapper.UnitTests -> compiled in memory (1773 KB, 2253 ms)
 6>------ Skipped: Project: Benchmark: it is not built by the solution's Debug configuration ------
 ========== Build: 5 succeeded, 0 failed, 1 skipped ==========
 

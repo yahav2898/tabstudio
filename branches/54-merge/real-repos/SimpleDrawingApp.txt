@@ -1,19 +1,21 @@
 SimpleDrawingApp at cfe9f5cdf413bbf66db000e27b1b0aa95ba24121
-Opened /home/runner/work/_temp/real-repos/SimpleDrawingApp/Drawing app 2/Paint-v2/Paint-v2.sln in 0.1 s
+Opened /home/runner/work/_temp/real-repos/SimpleDrawingApp/Drawing app 2/Paint-v2/Paint-v2.sln in 0.2 s
 Compatibility Doctor:
   Paint-v2: Ready via Cross-platform Forms layer in the app preview - A .NET Framework project, run with .NET on this tablet. Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
 Startup project: Paint-v2
-Built in 0.0 s: 0 errors, 0 warnings
-Editor: 3 files opened and analyzed in 0.2 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 3 over 100 ms (0 over 250 ms, 0 over 1 s), 0.3 s in all, longest 130 ms during screenshots, 0.0 s of it garbage collection; answer p50 5.3 ms, p95 130.5 ms, p99 130.5 ms over 19 questions in 1 s
-UI timings: document view 10 ms, document view 4 ms, document view 2 ms
+Built in 0.1 s: 0 errors, 0 warnings
+Editor: 3 files opened and analyzed in 0.3 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 5 over 100 ms (0 over 250 ms, 0 over 1 s), 0.8 s in all, longest 213 ms during screenshots, 0.1 s of it garbage collection; answer p50 5.5 ms, p95 175.7 ms, p99 213.2 ms over 22 questions in 1 s
+UI timings: document view 22 ms, document view 3 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 130 ms | 14 ms | 0.2 s | screenshots |
-| 103 ms | 7 ms | 0.7 s | screenshots |
-| 103 ms | 0 ms | 0.3 s | screenshots |
+| 213 ms | 23 ms | 0.2 s | screenshots |
+| 176 ms | 0 ms | 0.4 s | screenshots |
+| 127 ms | 17 ms | 0.9 s | screenshots |
+| 123 ms | 12 ms | 0.7 s | screenshots |
+| 121 ms | 0 ms | 1.1 s | creating a document's view |
 Output:
-Build started at 01:02:10...
+Build started at 02:57:47...
 1>------ Build started: Project: Paint-v2, Configuration: Debug ------
 1>Paint-v2 -> compiled in memory (142.5 KB, 42 ms)
 ========== Build: 1 succeeded, 0 failed ==========

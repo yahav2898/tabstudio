@@ -1,9 +1,9 @@
 WpfSimpleCalculator at 9146bf6b4365f3c22a371e2525ce65ce32cb16ee
-Opened /home/runner/work/_temp/real-repos/WpfSimpleCalculator/Simple Calculator.sln in 0.1 s
+Opened /home/runner/work/_temp/real-repos/WpfSimpleCalculator/Simple Calculator.sln in 0.2 s
 Compatibility Doctor:
   Simple Calculator: Ready via OpenSilver in the web preview - A .NET Framework project, run with .NET on this tablet. Built on OpenSilver, which implements WPF's API, and run in the web preview. What OpenSilver lacks, such as 3D, Window.ShowDialog and some members, is named in the Error List; that code runs on your PC through the Windows Bridge.
 Startup project: Simple Calculator
-Built in 0.2 s: 0 errors, 1 warnings
+Built in 0.4 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   opensilver 3.3.3
       analyzers/dotnet/cs/OpenSilver.Analyzers.dll
@@ -25,17 +25,18 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net6.0/_._
       buildTransitive/netcoreapp2.0/System.Security.Cryptography.Xml.targets
 Editor: 3 files opened and analyzed in 0.1 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 3 over 100 ms (0 over 250 ms, 0 over 1 s), 0.4 s in all, longest 196 ms during screenshots, 0.0 s of it garbage collection; answer p50 1.1 ms, p95 131.2 ms, p99 195.7 ms over 25 questions in 1 s
-UI timings: document view 2 ms, document view 2 ms, document view 2 ms
+UI stalls: 4 over 100 ms (1 over 250 ms, 0 over 1 s), 0.7 s in all, longest 259 ms during screenshots, 0.0 s of it garbage collection; answer p50 6.6 ms, p95 194.0 ms, p99 259.1 ms over 35 questions in 2 s
+UI timings: document view 6 ms, document view 5 ms, document view 3 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 196 ms | 18 ms | 0.1 s | screenshots |
-| 131 ms | 22 ms | 0.4 s | screenshots |
-| 102 ms | 0 ms | 0.7 s | screenshots |
+| 259 ms | 21 ms | 0.2 s | screenshots |
+| 194 ms | 0 ms | 0.6 s | screenshots |
+| 131 ms | 0 ms | 1.2 s | screenshots |
+| 113 ms | 0 ms | 1.4 s | screenshots |
 Output:
-Build started at 01:02:05...
+Build started at 02:57:41...
 1>------ Build started: Project: Simple Calculator, Configuration: Debug ------
 1>MainWindow.xaml(1,1): warning TS7009: In the code OpenSilver's XAML compiler made from MainWindow.xaml: 'MainWindow.Equals' hides inherited member 'object.Equals(object?)'. Use the new keyword if hiding was intended. (CS0108)
-1>Simple Calculator -> compiled in memory (48.5 KB, 159 ms)
+1>Simple Calculator -> compiled in memory (48.5 KB, 336 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 
