@@ -11,7 +11,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: ci-${{ github.ref }}
+  # Each of main's runs publishes its own version's release, so a push to main must not cancel or hold back the run
+  # before it (a waiting run is cancelled by the next one in its group): on main every commit gets its own group.
+  group: ci-${{ github.ref == 'refs/heads/main' && github.sha || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -152,6 +154,9 @@ jobs:
             tests/**/TestResults/**/Sequence_*.xml
 
       - name: Publish logs
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -307,13 +312,27 @@ jobs:
           echo "$RUNNER_TEMP/js-debug/bin" >> "$GITHUB_PATH"
           echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
 
+      # The debugger checks of every language (conditions, hit counts, steps, threads, exceptions, Stop and
+      # Restart) run in their language's step below; Python's and Node.js's here.
+      - name: Test Python and Node.js debuggers
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~debugger_conformance&(FullyQualifiedName~ToolchainLanguageToolsTests.A_Python_template|FullyQualifiedName~ToolchainLanguageToolsTests.A_Node_template)" --logger "console;verbosity=normal" \
+            > ci-out/python-node-debuggers.log 2>&1 || status=$?
+          tail -n 80 ci-out/python-node-debuggers.log
+          exit "$status"
+
       - name: Test Go tools
         env:
           TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
         run: |
           mkdir -p ci-out/screenshots
           status=0
-          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 5m --blame-hang-dump-type none \
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none \
             --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Go_template" --logger "console;verbosity=normal" \
             > ci-out/go-tools.log 2>&1 || status=$?
           tail -n 80 ci-out/go-tools.log
@@ -325,7 +344,7 @@ jobs:
         run: |
           mkdir -p ci-out/screenshots
           status=0
-          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 5m --blame-hang-dump-type none \
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none \
             --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Rust_template" --logger "console;verbosity=normal" \
             > ci-out/rust-tools.log 2>&1 || status=$?
           tail -n 80 ci-out/rust-tools.log
@@ -337,7 +356,7 @@ jobs:
         run: |
           mkdir -p ci-out/screenshots
           status=0
-          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 5m --blame-hang-dump-type none \
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none \
             --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Cpp_template" --logger "console;verbosity=normal" \
             > ci-out/cpp-tools.log 2>&1 || status=$?
           tail -n 80 ci-out/cpp-tools.log
@@ -349,7 +368,7 @@ jobs:
         run: |
           mkdir -p ci-out/screenshots
           status=0
-          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 5m --blame-hang-dump-type none \
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 10m --blame-hang-dump-type none \
             --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Java_template|FullyQualifiedName~ToolchainLanguageToolsTests.Java_" --logger "console;verbosity=normal" \
             > ci-out/java-tools.log 2>&1 || status=$?
           tail -n 80 ci-out/java-tools.log
@@ -438,7 +457,7 @@ jobs:
           # The 100-frame GC stress can take eleven minutes on hosted runners; do not abort a healthy run.
           run_ide_tests() {
             DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
-              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~ScreenshotLifetimeTests&FullyQualifiedName!~TabStudio.App.Tests.Sweep&FullyQualifiedName!~ToolchainLanguageToolsTests.A_PHP_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Swift_package_template" --logger "console;verbosity=normal" > "$1" 2>&1
+              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~ScreenshotLifetimeTests&FullyQualifiedName!~TabStudio.App.Tests.Sweep&FullyQualifiedName!~debugger_conformance&FullyQualifiedName!~template_conformance&FullyQualifiedName!~ToolchainLanguageToolsTests.A_PHP_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Swift_package_template" --logger "console;verbosity=normal" > "$1" 2>&1
           }
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
@@ -461,7 +480,7 @@ jobs:
           mkdir -p ci-out/screenshots/light
           run_light_tests() {
             TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
-              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --no-build --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design&FullyQualifiedName!~TabStudio.App.Tests.Sweep&FullyQualifiedName!~ScreenshotLifetimeTests&FullyQualifiedName!~ToolchainLanguageToolsTests.A_PHP_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Swift_package_template" \
+              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --no-build --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design&FullyQualifiedName!~TabStudio.App.Tests.Sweep&FullyQualifiedName!~ScreenshotLifetimeTests&FullyQualifiedName!~debugger_conformance&FullyQualifiedName!~template_conformance&FullyQualifiedName!~ToolchainLanguageToolsTests.A_PHP_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Swift_package_template" \
               --logger "console;verbosity=normal" > "$1" 2>&1
           }
           light=0
@@ -490,6 +509,8 @@ jobs:
             cp "$RUNNER_TEMP"/crash/*.json ci-out/ 2>/dev/null || true
             find tests/TabStudio.App.Tests/TestResults -name 'Sequence_*.xml' -exec cp {} ci-out/ \; 2>/dev/null || true
           fi
+          # The smoothness benchmarks' reports, in the job's log too: publishing the logs can run out of the job's time.
+          for report in ci-out/screenshots/smoothness-*.md; do [ -f "$report" ] && { echo "== $report"; cat "$report"; }; done
           # The UI test the swarm's test recorded on a phone runs as its users' CI runs it: dotnet test, headless.
           recorded=$(find "$TABSTUDIO_RECORDED_UI_TESTS" -name '*.UITests.csproj' 2>/dev/null | head -n 1)
           if [ -n "$recorded" ]; then
@@ -516,6 +537,9 @@ jobs:
             tests/**/TestResults/**/Sequence_*.xml
 
       - name: Publish logs and screenshots
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -614,6 +638,45 @@ jobs:
   # repositories are set up by the IDE with the computer's toolchains, and Ctrl+F5 must start their programs: a web
   # app must answer in the web preview, a command-line program must exit with code 0. Reports and screenshots are
   # published.
+  templates:
+    name: New Project templates
+    # Every .NET template from New Project, created, restored from nuget.org, built with no errors or warnings, run,
+    # stopped at a breakpoint, and for test projects, its tests run and debugged (TemplateConformanceTests). The
+    # templates of other languages are checked with their tools in the IDE job's tool steps.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-app-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: nuget-app-
+
+      - name: Create, build, run, debug and test every .NET template
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame-hang-timeout 10m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~template_conformance" --logger "console;verbosity=normal" > ci-out/templates.log 2>&1 || status=$?
+          tail -n 120 ci-out/templates.log
+          exit "$status"
+
+      - name: Publish logs
+        continue-on-error: true
+        timeout-minutes: 10
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh templates ${{ job.status }}
+
   real-repos:
     name: Real repositories
     # Ubuntu 24.04, not ubuntu-latest: the tools installed below (Swift's toolchain, LLVM and the PHP and Java
@@ -773,13 +836,17 @@ jobs:
           if-no-files-found: ignore
 
       - name: Publish logs and screenshots
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always()
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: bash build/ci/publish-logs.sh real-repos ${{ job.status }}
 
-  # The repositories of the 0.20.5 sweep, in every language, in two jobs of their own beside the one above, so that no
-  # job takes much longer: build/ci/real-repos.json's entries whose "job" is sweep-1 or sweep-2.
+  # The repositories of the 0.20.5 sweep, in every language, in jobs of their own beside the one above, so that no
+  # job takes much longer: build/ci/real-repos.json's entries whose "job" is sweep-1 or sweep-2. Sweep-3 runs the
+  # tests of .NET libraries on xUnit, NUnit and MSTest with Test Explorer's Run All after their builds.
   real-repos-sweep:
     name: Real repositories (${{ matrix.job }})
     # Ubuntu 24.04, not ubuntu-latest: the tools installed below (Swift's toolchain, LLVM and the PHP and Java
@@ -791,7 +858,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        job: [sweep-1, sweep-2]
+        job: [sweep-1, sweep-2, sweep-3]
     services:
       # The databases the sweep's apps' READMEs ask for, as on a tablet TabStudio's Services or a server on the network.
       mysql:
@@ -932,6 +999,9 @@ jobs:
           if-no-files-found: ignore
 
       - name: Publish logs and screenshots
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always()
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -975,6 +1045,9 @@ jobs:
           mkdir -p ci-out
           { docker ps -a; docker logs tabstudio-openssh; } > ci-out/sshd.log 2>&1 || true
       - name: Publish logs
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -1085,6 +1158,9 @@ jobs:
         run: rm -f ci-out/*.apk
 
       - name: Publish logs
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -1222,6 +1298,9 @@ jobs:
 
       # Pull request runs publish too, under branches/<number>-merge/, so their failures can be read as well.
       - name: Publish logs
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always()
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -1287,6 +1366,9 @@ jobs:
           exit $status
 
       - name: Publish logs and screenshots
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always() && github.event_name == 'push'
         env:
           GH_TOKEN: ${{ github.token }}

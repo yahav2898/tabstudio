@@ -26,6 +26,15 @@ internal static partial class UnixFiles
     private const int DirectoryFile = 0x4000;
     private const int LinkFile = 0xA000;
 
+    [LibraryImport("libc", EntryPoint = "setxattr", StringMarshalling = StringMarshalling.Utf8, SetLastError = true)]
+    private static partial int SetAttributeNative(string path, string name, byte[] value, nuint size, int flags);
+
+    [LibraryImport("libc", EntryPoint = "getxattr", StringMarshalling = StringMarshalling.Utf8, SetLastError = true)]
+    private static partial nint GetAttributeNative(string path, string name, [Out] byte[] value, nuint size);
+
+    /// <summary>The extended attribute that keeps the mode an image gave a file TabStudio made read-only to share it.</summary>
+    private const string SharedModeAttribute = "user.tabstudio.mode";
+
     [LibraryImport("libc", EntryPoint = "kill", SetLastError = true)]
     private static partial int KillNative(int pid, int signal);
 
@@ -71,6 +80,46 @@ internal static partial class UnixFiles
 
         var type = BitConverter.ToInt32(status, 4) & FileTypeMask;
         return type is not (RegularFile or DirectoryFile or LinkFile);
+    }
+
+    /// <summary>
+    /// Records a file's own mode with it, as an extended attribute, before it is made read-only to be shared; false
+    /// where the file system keeps no such attributes.
+    /// </summary>
+    public static bool TrySetSharedMode(string path, UnixFileMode mode)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return false;
+        }
+
+        try
+        {
+            return SetAttributeNative(path, SharedModeAttribute, BitConverter.GetBytes((int)mode), 4, 0) == 0;
+        }
+        catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>The mode <see cref="TrySetSharedMode"/> recorded for a file, or <see langword="null"/>.</summary>
+    public static UnixFileMode? SharedMode(string path)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return null;
+        }
+
+        var value = new byte[4];
+        try
+        {
+            return GetAttributeNative(path, SharedModeAttribute, value, 4) == 4 ? (UnixFileMode)BitConverter.ToInt32(value) : null;
+        }
+        catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException)
+        {
+            return null;
+        }
     }
 
     /// <summary>Sets a path's modification time without following a link.</summary>

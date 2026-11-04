@@ -27,6 +27,60 @@ internal static class VisualBasicCodeBehind
         return Classes(Parse(codeText), className).SelectMany(c => c.Inherits).SelectMany(i => i.Types).Select(t => t.ToString()).FirstOrDefault();
     }
 
+    /// <summary>
+    /// The names of the members the class declares in a file, in every part of it the file has: fields, properties,
+    /// methods, events, nested types and the like, which a new component's field must not take. Visual Basic's names
+    /// ignore case, and so does the set.
+    /// </summary>
+    /// <param name="codeText">The file's text.</param>
+    /// <param name="className">The class's name.</param>
+    public static IReadOnlySet<string> MemberNames(string codeText, string className)
+    {
+        ArgumentNullException.ThrowIfNull(codeText);
+        var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var type in Classes(Parse(codeText), className))
+        {
+            foreach (var member in type.Members)
+            {
+                switch (member)
+                {
+                    case FieldDeclarationSyntax field:
+                        names.UnionWith(field.Declarators.SelectMany(d => d.Names).Select(n => n.Identifier.ValueText));
+                        break;
+                    case MethodBlockBaseSyntax { BlockStatement: MethodStatementSyntax method }:
+                        names.Add(method.Identifier.ValueText);
+                        break;
+                    case MethodStatementSyntax method:
+                        names.Add(method.Identifier.ValueText);
+                        break;
+                    case PropertyBlockSyntax property:
+                        names.Add(property.PropertyStatement.Identifier.ValueText);
+                        break;
+                    case PropertyStatementSyntax property:
+                        names.Add(property.Identifier.ValueText);
+                        break;
+                    case EventBlockSyntax @event:
+                        names.Add(@event.EventStatement.Identifier.ValueText);
+                        break;
+                    case EventStatementSyntax @event:
+                        names.Add(@event.Identifier.ValueText);
+                        break;
+                    case TypeBlockSyntax nested:
+                        names.Add(nested.BlockStatement.Identifier.ValueText);
+                        break;
+                    case EnumBlockSyntax @enum:
+                        names.Add(@enum.EnumStatement.Identifier.ValueText);
+                        break;
+                    case DelegateStatementSyntax @delegate:
+                        names.Add(@delegate.Identifier.ValueText);
+                        break;
+                }
+            }
+        }
+
+        return names;
+    }
+
     /// <summary>The events the class's handlers handle by their Handles clauses.</summary>
     /// <param name="codeText">The code file's text.</param>
     /// <param name="className">The class's name.</param>

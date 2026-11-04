@@ -176,12 +176,16 @@ public sealed partial class MainViewModel : ObservableObject
             session = saved;
         }
 
+        UiStallMonitor.Note("creating the workspace's view model");
+        var created = System.Diagnostics.Stopwatch.StartNew();
         var workspace = _createWorkspace();
+        UiStallMonitor.Time("workspace view model", created.Elapsed);
         workspace.CloseRequested += OnWorkspaceCloseRequested;
         workspace.OpenWorkspaceRequested += OnOpenWorkspaceRequested;
         workspace.NewProjectRequested += OnNewProjectRequested;
         CurrentPage = workspace;
         OnPropertyChanged(nameof(Workspace));
+        UiStallMonitor.Note("showing the workspace");
         if (session is not null)
         {
             _sessions.BeginRestore(path);

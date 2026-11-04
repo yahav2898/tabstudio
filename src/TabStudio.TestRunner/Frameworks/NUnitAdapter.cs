@@ -55,7 +55,7 @@ internal sealed class NUnitAdapter : FrameworkAdapter
             var sources = attributes.Where(a => a.Is(FrameworkNames.NUnitTestCaseSource)).ToList();
             if (cases.Count == 0 && sources.Count == 0)
             {
-                tests.Add(SingleTest(builder, method, attributes));
+                tests.AddRange(SingleTest(builder, type, method, attributes));
                 continue;
             }
 
@@ -91,16 +91,70 @@ internal sealed class NUnitAdapter : FrameworkAdapter
     private static bool IsTestAttribute(AttributeReader attribute) =>
         attribute.Is(FrameworkNames.NUnitTest) || attribute.Is(FrameworkNames.NUnitTestCase) || attribute.Is(FrameworkNames.NUnitTestCaseSource);
 
-    private static RunnableTest SingleTest(TestMethodBuilder builder, MethodInfo method, List<AttributeReader> attributes)
+    private static List<RunnableTest> SingleTest(TestMethodBuilder builder, Type type, MethodInfo method, List<AttributeReader> attributes)
     {
         if (method.GetParameters().Any(p => !p.IsOptional))
         {
-            return builder.Single("Parameter data such as [Values], [Range] and [Random] is not supported by TabStudio yet. Use [TestCase] or [TestCaseSource].");
+            return ParameterDataTests(builder, type, method, attributes);
         }
 
         var test = attributes.Find(a => a.Is(FrameworkNames.NUnitTest));
         var hasExpected = test?.IsSet("ExpectedResult") ?? false;
-        return builder.Single(hasExpectedResult: hasExpected, expectedResult: hasExpected ? test!.Named("ExpectedResult") : null);
+        return [builder.Single(hasExpectedResult: hasExpected, expectedResult: hasExpected ? test!.Named("ExpectedResult") : null)];
+    }
+
+    /// <summary>
+    /// The tests of a method whose parameters carry their data, as <c>[Values]</c>, <c>[Range]</c>, <c>[Random]</c> and
+    /// <c>[ValueSource]</c> do: NUnit's own attributes give each parameter's values, and NUnit's own strategy combines
+    /// them, every combination by default, in step with <c>[Sequential]</c>, or in pairs with <c>[Pairwise]</c>.
+    /// </summary>
+    private static List<RunnableTest> ParameterDataTests(TestMethodBuilder builder, Type type, MethodInfo method, List<AttributeReader> attributes)
+    {
+        try
+        {
+            var nunit = attributes.First(IsTestAttribute).Type.Assembly;
+            Type Required(string name) => nunit.GetType(name, throwOnError: true)!;
+            var methodInfo = Activator.CreateInstance(Required("NUnit.Framework.Internal.MethodWrapper"), type, method);
+            var sources = new List<IEnumerable>();
+            foreach (var parameter in method.GetParameters())
+            {
+                var providers = parameter.GetCustomAttributes(inherit: false)
+                    .Where(a => TypeMatching.FindInterface(a.GetType(), "NUnit.Framework.Interfaces.IParameterDataSource") is not null)
+                    .ToList();
+                if (providers.Count == 0)
+                {
+                    return [builder.Single($"Parameter '{parameter.Name}' has no data: give it [Values], [Range], [Random] or [ValueSource], or give the method [TestCase] or [TestCaseSource].")];
+                }
+
+                var wrapped = Activator.CreateInstance(Required("NUnit.Framework.Internal.ParameterWrapper"), methodInfo, parameter);
+                var values = new List<object?>();
+                foreach (var provider in providers)
+                {
+                    var getData = TypeMatching.FindInterface(provider.GetType(), "NUnit.Framework.Interfaces.IParameterDataSource")!.GetMethod("GetData")!;
+                    values.AddRange(((IEnumerable)getData.Invoke(provider, BindingFlags.DoNotWrapExceptions, binder: null, [wrapped], culture: null)!).Cast<object?>());
+                }
+
+                sources.Add(values);
+            }
+
+            var strategyName = attributes.Exists(a => a.Is("NUnit.Framework.SequentialAttribute")) ? "SequentialStrategy"
+                : attributes.Exists(a => a.Is("NUnit.Framework.PairwiseAttribute")) ? "PairwiseStrategy"
+                : "CombinatorialStrategy";
+            var strategy = Activator.CreateInstance(Required("NUnit.Framework.Internal.Builders." + strategyName))!;
+            var cases = (IEnumerable)strategy.GetType().GetMethod("GetTestCases")!.Invoke(strategy, BindingFlags.DoNotWrapExceptions, binder: null, [sources.ToArray()], culture: null)!;
+            var tests = new List<RunnableTest>();
+            foreach (var testCase in cases)
+            {
+                var arguments = (object?[])testCase.GetType().GetProperty("Arguments")!.GetValue(testCase)!;
+                tests.Add(builder.Row(arguments));
+            }
+
+            return tests.Count > 0 ? tests : [builder.Single("The parameters' data gave no values.")];
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            return [builder.Single($"The parameters' data could not be read: {OutcomeClassifier.Describe(OutcomeClassifier.Unwrap(ex))}")];
+        }
     }
 
     private static RowOptions CaseOptions(AttributeReader testCase) => new(

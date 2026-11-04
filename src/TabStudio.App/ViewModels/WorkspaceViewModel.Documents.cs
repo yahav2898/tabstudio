@@ -136,6 +136,13 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Saves the session now, for example when Android sends the app to the background.</summary>
     public void SaveSessionNow()
     {
+        // A crash on a background thread: the editor's text can be read only on the UI thread, which will not run again.
+        if (!_ui.CheckAccess())
+        {
+            SaveSessionFromAnyThread();
+            return;
+        }
+
         // A guest's copy of another device's workspace keeps no session: it is deleted when the session ends.
         if (Workspace is not { } workspace || IsLiveGuest || _restoringSession)
         {
@@ -176,7 +183,7 @@ public sealed partial class WorkspaceViewModel
             .Select(d => new SessionDocument(d.FilePath, d.CaretOffset, d.IsDirty ? d.CurrentText : null))
             .ToList();
         var path = workspace.Solution?.FilePath ?? workspace.RootDirectory;
-        return WithShellState(WithDebuggingState(new SessionState(path, documents, ActiveDocument?.FilePath, StartupProject?.FilePath) { IsStartupProjectChosen = _isStartupProjectChosen }));
+        return RememberSession(WithShellState(WithDebuggingState(new SessionState(path, documents, ActiveDocument?.FilePath, StartupProject?.FilePath) { IsStartupProjectChosen = _isStartupProjectChosen })));
     }
 
     /// <summary>
@@ -428,6 +435,7 @@ public sealed partial class WorkspaceViewModel
         document.DiagnosticsChanged += OnDocumentDiagnosticsChanged;
         document.PropertyChanged += OnDocumentPropertyChanged;
         document.Document.TextChanged += OnDocumentTextChanged;
+        TakeTextSnapshot(document);
         AttachDebugging(document);
         AttachXamlDesigner(document);
         AttachWpfXaml(document);
@@ -442,6 +450,7 @@ public sealed partial class WorkspaceViewModel
         document.DiagnosticsChanged -= OnDocumentDiagnosticsChanged;
         document.PropertyChanged -= OnDocumentPropertyChanged;
         document.Document.TextChanged -= OnDocumentTextChanged;
+        ForgetTextSnapshot(document);
         DetachDebugging(document);
         DetachXamlDesigner(document);
         DetachFormsDesigner(document);
@@ -621,6 +630,7 @@ public sealed partial class WorkspaceViewModel
         ScheduleSessionSave(throttle: true);
         if (sender is AvaloniaEdit.Document.TextDocument text && Documents.FirstOrDefault(d => ReferenceEquals(d.Document, text)) is { } document)
         {
+            TakeTextSnapshot(document);
             CancelProjectAnalysis(document);
         }
     }

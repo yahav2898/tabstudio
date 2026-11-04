@@ -107,8 +107,15 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
         Items.Clear(); SelectedItem = null; _files = null;
         try
         {
-            var project = await Task.Run(() => Discover(_root));
-            _configuration = JsonSerializer.Serialize(project);
+            // Read and serialized off the UI thread: the serializer's first use, at every workspace's opening, held the
+            // UI thread for seconds on a tablet.
+            var root = _root;
+            var (project, configuration) = await Task.Run(() =>
+            {
+                var discovered = Discover(root);
+                return (discovered, JsonSerializer.Serialize(discovered));
+            });
+            _configuration = configuration;
             if (project is null) { Summary = "Add compose.yaml to the repository, and its databases, caches and queues run here, without Docker."; return; }
             _manager = new ServiceManager(project, _toolchains.Runtime, new ServicePackages(_toolchains), new ServiceStorage(_paths.Root, _root), images: Images);
             _manager.Changed += OnChanged; _manager.Logged += OnLogged;

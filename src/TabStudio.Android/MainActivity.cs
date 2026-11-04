@@ -45,11 +45,9 @@ namespace TabStudio.Android;
     Theme = "@style/Theme.TabStudio.Starting",
     MainLauncher = true,
     Exported = true,
-    WindowSoftInputMode = SoftInput.AdjustResize,
-    ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.SmallestScreenSize
-        | ConfigChanges.ScreenLayout | ConfigChanges.UiMode | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden
-        | ConfigChanges.Navigation | ConfigChanges.FontScale | ConfigChanges.Locale | ConfigChanges.LayoutDirection
-        | ConfigChanges.Touchscreen | ConfigChanges.ColorMode | ConfigChanges.Mcc | ConfigChanges.Mnc)]
+    WindowSoftInputMode = SoftInput.AdjustResize)]
+// The configuration changes the activity handles itself, instead of being recreated, are in
+// Properties/AndroidManifest.xml: the attribute cannot name fontWeightAdjustment.
 public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplication>
 {
     /// <summary>The intent extra that runs the self test.</summary>
@@ -75,6 +73,16 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         _current = this;
+
+        // The start's timeline, from the first activity: Android's part (the process and the runtime) comes from the
+        // process's start time, and the rest is marked as TabStudio starts. Logged once the first frame is drawn and
+        // the start screen or the restored workspace is ready.
+        if (StartupTimeline.All.Count == 0)
+        {
+            StartupTimeline.Mark("activity");
+            StartupTimeline.BeforeOrigin = TimeSpan.FromMilliseconds(Math.Max(0, SystemClock.ElapsedRealtime() - global::Android.OS.Process.StartElapsedRealtime));
+            StartupTimeline.Reported += summary => AndroidLog.Info(LogTag, summary);
+        }
 
         // Before base.OnCreate: shows the splash screen, then switches to the app theme.
         AndroidXSplashScreen.InstallSplashScreen(this);
@@ -187,6 +195,9 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
             AndroidLog.Info(LogTag, $"Toolchain preparation: {status.Toolchain.Id} {phase} at {preparationClock.Elapsed.TotalSeconds:0.0} s");
         }
 
+        // Every time the UI thread did not answer for 100 ms or more during the run, with the step it happened in.
+        using var stalls = new UiStallMonitor(Dispatcher.UIThread);
+        UiStallMonitor.Current = stalls;
         SelfTestResult result;
         toolchains.StatusChanged += ReportPreparation;
         try
@@ -203,6 +214,7 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
         {
             var scrolling = await SelfTest.ScrollEditorAsync(main, services.GetRequiredService<SampleLibrary>(), new AndroidTouchSelfTestDevice(() => _current), line => AndroidLog.Info(LogTag, line), timeout.Token);
             result = new SelfTestResult(scrolling.Success, $"{result.Message} | {scrolling.Message}", result.Duration + scrolling.Duration);
+            stalls.Mark(scrolling.Message);
         }
 
         if (result.Success && desktop && !flutter && (shard is SelfTestShard.All or SelfTestShard.Ui))
@@ -213,6 +225,15 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
                 ? new SelfTestResult(false, "Desktop: the tablet's view is missing.", TimeSpan.Zero)
                 : await SelfTest.RunDesktopModeAsync(main, tablet, input, screenshots, timeout.Token);
             result = new SelfTestResult(part.Success, $"{result.Message} | {part.Message}", result.Duration + part.Duration);
+            stalls.Mark(part.Message);
+        }
+
+        AndroidLog.Info(LogTag, StartupTimeline.Summary());
+        AndroidLog.Info(LogTag, $"TabStudio UI stalls: {stalls.Summary()}");
+        AndroidLog.Info(LogTag, $"TabStudio UI timings: {stalls.Timings(12)}");
+        foreach (var stall in stalls.Worst(15))
+        {
+            AndroidLog.Info(LogTag, $"TabStudio UI stall: {stall}");
         }
 
         var seconds = result.Duration.TotalSeconds.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);

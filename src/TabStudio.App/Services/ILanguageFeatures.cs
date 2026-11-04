@@ -9,7 +9,7 @@ namespace TabStudio.App.Services;
 /// <remarks>
 /// <para>
 /// Positions are zero-based offsets into the text the language service last received through
-/// <see cref="ILanguageService.UpdateText"/>, so editors send their text before they ask. Results are plain records
+/// <see cref="ILanguageService.UpdateText(string, string)"/>, so editors send their text before they ask. Results are plain records
 /// from <c>TabStudio.Compilation.Features</c>, never Roslyn types.
 /// </para>
 /// <para>

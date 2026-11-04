@@ -61,7 +61,7 @@ internal static class ProjectFiles
         text.Append("    <AvaloniaResource Include=\"Assets\\**\" />\n");
         foreach (var resource in source.Resources.Where(r => !r.StartsWith("Assets/", StringComparison.Ordinal)))
         {
-            text.Append(CultureInfo.InvariantCulture, $"    <AvaloniaResource Include=\"{Escape(resource.Replace('/', '\\'))}\" />\n");
+            text.Append(CultureInfo.InvariantCulture, $"    <AvaloniaResource Include=\"{Escape(MSBuildEscape(resource).Replace('/', '\\'))}\" />\n");
         }
 
         text.Append("  </ItemGroup>\n\n");
@@ -206,4 +206,29 @@ internal static class ProjectFiles
     }
 
     private static string Escape(string value) => SecurityElement.Escape(value) ?? value;
+
+    /// <summary>
+    /// An item's file name as MSBuild reads it literally: <c>%</c>, <c>;</c>, <c>$</c>, <c>@</c>, <c>'</c>, <c>*</c>
+    /// and <c>?</c> escaped as <c>%25</c>, <c>%3B</c> and so on, so <c>a;b.png</c> is one file and not two, and
+    /// <c>100%.png</c> is not read as an escape.
+    /// </summary>
+    /// <param name="value">The file name or path.</param>
+    internal static string MSBuildEscape(string value)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+        var builder = new StringBuilder(value.Length);
+        foreach (var c in value)
+        {
+            if (c is '%' or ';' or '$' or '@' or '\'' or '*' or '?')
+            {
+                builder.Append('%').Append(((int)c).ToString("X2", CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                builder.Append(c);
+            }
+        }
+
+        return builder.ToString();
+    }
 }

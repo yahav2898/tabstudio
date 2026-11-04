@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Globalization;
 using TabStudio.TestRunner;
 
@@ -6,6 +7,9 @@ namespace TabStudio.App.ViewModels;
 /// <summary>A run as it happens: tests queued, started and finished, the counts, and the summary at the end.</summary>
 public sealed partial class TestExplorerViewModel
 {
+    private readonly ConcurrentQueue<(string ProjectFilePath, TestCase? Started, TestResult? Finished)> _progress = new();
+    private int _progressScheduled;
+
     /// <summary>Reports that the build before a run failed, so no test runs.</summary>
     public void ReportBuildFailed() => _buildFailed = true;
 
@@ -50,16 +54,7 @@ public sealed partial class TestExplorerViewModel
     public void ReportFinished(string projectFilePath, TestResult result)
     {
         ArgumentNullException.ThrowIfNull(result);
-        if (Find(projectFilePath, result.Test.Id) is { } entry && entry.Apply(result))
-        {
-            if (IsRunning)
-            {
-                _runCompleted++;
-                UpdateRunProgress();
-            }
-
-            RefreshNodes([entry]);
-        }
+        ApplyResults(projectFilePath, [result]);
     }
 
     /// <summary>Reports that the run of a project's tests ended, with every result.</summary>
@@ -68,12 +63,112 @@ public sealed partial class TestExplorerViewModel
     public void ReportFinished(string projectFilePath, TestRunSummary summary)
     {
         ArgumentNullException.ThrowIfNull(summary);
-        foreach (var result in summary.Results)
+
+        // What the runner reported as it went comes first, in its order.
+        ApplyQueuedProgress();
+        ApplyResults(projectFilePath, summary.Results);
+        _runSummaries.Add(summary);
+    }
+
+    /// <summary>
+    /// Queues that a test started, from the runner's own thread. Starts and results are shown in batches on the UI
+    /// thread, behind input and drawing, each row refreshed once a batch: a run of thousands of quick tests reported
+    /// one by one refreshed every row above each test, and the count of every test, thousands of times a second.
+    /// </summary>
+    /// <param name="projectFilePath">The test project.</param>
+    /// <param name="test">The test.</param>
+    public void QueueStarted(string projectFilePath, TestCase test)
+    {
+        ArgumentNullException.ThrowIfNull(test);
+        _progress.Enqueue((projectFilePath, test, null));
+        ScheduleProgress();
+    }
+
+    /// <summary>Queues that a test finished, from the runner's own thread; see <see cref="QueueStarted"/>.</summary>
+    /// <param name="projectFilePath">The test project.</param>
+    /// <param name="result">The result.</param>
+    public void QueueFinished(string projectFilePath, TestResult result)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        _progress.Enqueue((projectFilePath, null, result));
+        ScheduleProgress();
+    }
+
+    /// <summary>Shows every start and result queued so far, at once. Runs on the UI thread.</summary>
+    public void ApplyQueuedProgress()
+    {
+        Interlocked.Exchange(ref _progressScheduled, 0);
+        var changed = new HashSet<TestEntry>();
+        while (_progress.TryDequeue(out var item))
         {
-            ReportFinished(projectFilePath, result);
+            if (item.Started is { } test)
+            {
+                if (Find(item.ProjectFilePath, test.Id) is { State: TestState.Queued } started)
+                {
+                    started.State = TestState.Running;
+                    changed.Add(started);
+                }
+            }
+            else if (item.Finished is { } result && Find(item.ProjectFilePath, result.Test.Id) is { } finished && finished.Apply(result))
+            {
+                if (IsRunning)
+                {
+                    _runCompleted++;
+                }
+
+                changed.Add(finished);
+            }
         }
 
-        _runSummaries.Add(summary);
+        if (changed.Count == 0)
+        {
+            return;
+        }
+
+        if (IsRunning)
+        {
+            UpdateRunProgress();
+        }
+
+        RefreshNodes(changed);
+    }
+
+    private void ScheduleProgress()
+    {
+        if (Interlocked.Exchange(ref _progressScheduled, 1) == 0)
+        {
+            _ui.PostBackground(ApplyQueuedProgress);
+        }
+    }
+
+    /// <summary>Applies results of a project's tests, and refreshes each row they change once.</summary>
+    private void ApplyResults(string projectFilePath, IEnumerable<TestResult> results)
+    {
+        var changed = new List<TestEntry>();
+        foreach (var result in results)
+        {
+            if (Find(projectFilePath, result.Test.Id) is { } entry && entry.Apply(result))
+            {
+                if (IsRunning)
+                {
+                    _runCompleted++;
+                }
+
+                changed.Add(entry);
+            }
+        }
+
+        if (changed.Count == 0)
+        {
+            return;
+        }
+
+        if (IsRunning)
+        {
+            UpdateRunProgress();
+        }
+
+        RefreshNodes(changed);
     }
 
     private void UpdateCounts()

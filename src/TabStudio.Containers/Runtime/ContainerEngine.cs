@@ -26,7 +26,8 @@ public sealed record ExecSpec(IReadOnlyList<string> Command)
 
 /// <summary>
 /// The container engine: images, containers, volumes and their events, all under PRoot without root. A container
-/// is its image's configuration, a writable copy of the image's files, a loopback address and published ports on
+/// is its image's configuration, its own tree of the image's files (large program and library files shared with the
+/// image, the rest copied: <see cref="TreeCopy.ShareAsync"/>), a loopback address and published ports on
 /// the shared network, and a PRoot process tree; restart policies, health checks, logs, exec and stats work as
 /// Docker's do, within what Android allows.
 /// </summary>
@@ -40,6 +41,7 @@ public sealed class ContainerEngine : IAsyncDisposable
         "Memory and CPU limits need cgroups, which apps cannot use; containers share the device's resources.",
         "Containers share the device's network: each gets its own loopback address, but there is no isolation between them.",
         "Read-only mounts and file ownership are simulated by PRoot; a process can still write a read-only mount.",
+        "Where the device allows hard links, large program and library files are shared with the image and read-only: replace such a file rather than writing it in place.",
     ];
 
     private static readonly JsonSerializerOptions StateJson = new() { WriteIndented = true };
@@ -177,7 +179,11 @@ public sealed class ContainerEngine : IAsyncDisposable
         finally { instance.Gate.Release(); }
     }
 
-    /// <summary>Creates a container: its writable copy of the image and its record. Nothing runs yet.</summary>
+    /// <summary>
+    /// Creates a container: its own tree of the image's files and its record. Nothing runs yet. Large program and
+    /// library files are shared with the image rather than copied (<see cref="TreeCopy.ShareAsync"/>), so a large
+    /// image does not need its space again for every container.
+    /// </summary>
     public async Task<ContainerInfo> CreateAsync(ContainerSpec spec, IProgress<PullProgress>? progress = null, CancellationToken cancellationToken = default)
     {
         if (_options.Problem is { } problem) throw new ContainerException(problem);
@@ -208,7 +214,7 @@ public sealed class ContainerEngine : IAsyncDisposable
         try
         {
             var folder = Path.Combine(Store.ContainersFolder, id);
-            await TreeCopy.CopyAsync(Store.RootfsOf(image.Id), Path.Combine(folder, "rootfs"), cancellationToken).ConfigureAwait(false);
+            await TreeCopy.ShareAsync(Store.RootfsOf(image.Id), Path.Combine(folder, "rootfs"), cancellationToken).ConfigureAwait(false);
             var info = Get(id).Info;
             Save(info);
             Publish("container", "create", id, Attributes(info));
@@ -1170,9 +1176,16 @@ public sealed class ContainerEngine : IAsyncDisposable
         }
     }
 
-    private static void WriteReplacing(string path, string text)
+    /// <summary>
+    /// Writes one of a container's files, such as its <c>/etc/hosts</c>. What was there is removed first, never
+    /// written through: a link may lead elsewhere, and a file the container shares with its image
+    /// (<see cref="TreeCopy.ShareAsync"/>) must be broken off, so the image and its other containers keep their copy.
+    /// </summary>
+    /// <param name="path">The file on the device, in the container's root file system.</param>
+    /// <param name="text">What it holds.</param>
+    internal static void WriteReplacing(string path, string text)
     {
-        if (new FileInfo(path).LinkTarget is not null || Directory.Exists(path)) LayerUnpacker.Delete(path);
+        if (File.Exists(path) || new FileInfo(path).LinkTarget is not null || Directory.Exists(path)) LayerUnpacker.Delete(path);
         File.WriteAllText(path, text);
     }
 

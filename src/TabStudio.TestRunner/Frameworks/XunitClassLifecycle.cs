@@ -68,7 +68,36 @@ internal sealed class XunitClassLifecycle(Type testClass, RunScope scope) : Clas
                 ObjectLifetime.Initialize(instance);
             }
 
-            UserCode.Invoke(method, instance, arguments);
+            // xUnit's BeforeAfterTestAttribute, as Verify's [UsesVerify] and culture attributes are: Before in the
+            // order of the assembly's, the class's and the method's, then the test, then After in reverse, every one
+            // whose Before ran, whatever the test did.
+            var hooks = BeforeAfterAttributes(method);
+            var ran = 0;
+            try
+            {
+                for (; ran < hooks.Count; ran++)
+                {
+                    CallHook(hooks[ran], "Before", method);
+                }
+
+                UserCode.Invoke(method, instance, arguments);
+            }
+            catch (Exception ex)
+            {
+                failures.Add(ex);
+            }
+
+            for (var i = ran - 1; i >= 0; i--)
+            {
+                try
+                {
+                    CallHook(hooks[i], "After", method);
+                }
+                catch (Exception ex)
+                {
+                    failures.Add(ex, hooks[i].GetType().Name + ".After");
+                }
+            }
         }
         catch (Exception ex)
         {
@@ -88,6 +117,35 @@ internal sealed class XunitClassLifecycle(Type testClass, RunScope scope) : Clas
         }
 
         return failures.ToOutcome();
+    }
+
+    private const string BeforeAfterTestAttribute = "Xunit.Sdk.BeforeAfterTestAttribute";
+
+    /// <summary>The test's BeforeAfterTestAttribute instances: the assembly's, the class's (with its bases'), then the method's.</summary>
+    private static List<Attribute> BeforeAfterAttributes(MethodInfo method)
+    {
+        var declaring = method.ReflectedType ?? method.DeclaringType;
+        IEnumerable<object> all = [
+            .. declaring?.Assembly.GetCustomAttributes(inherit: false) ?? [],
+            .. declaring?.GetCustomAttributes(inherit: true) ?? [],
+            .. method.GetCustomAttributes(inherit: true),
+        ];
+        return [.. all.OfType<Attribute>().Where(a => TypeMatching.Is(a.GetType(), BeforeAfterTestAttribute))];
+    }
+
+    /// <summary>Calls Before or After: xUnit v2's takes the test method, v3's also the test, which TabStudio has no object for.</summary>
+    private static void CallHook(Attribute hook, string name, MethodInfo method)
+    {
+        var candidate = hook.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance)
+            .Where(m => m.Name == name && m.GetParameters() is [{ ParameterType: var first }, ..] && first.IsAssignableFrom(typeof(MethodInfo)))
+            .OrderBy(m => m.GetParameters().Length)
+            .FirstOrDefault();
+        if (candidate is not null)
+        {
+            var arguments = new object?[candidate.GetParameters().Length];
+            arguments[0] = method;
+            candidate.Invoke(hook, BindingFlags.DoNotWrapExceptions, binder: null, arguments, culture: null);
+        }
     }
 
     /// <inheritdoc />

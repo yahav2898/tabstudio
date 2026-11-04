@@ -145,8 +145,22 @@ public sealed class LocalLanguageService : ILanguageService
     }
 
     /// <inheritdoc />
-    public IReadOnlyList<string> GetPackageRuntimeAssemblies(string projectFilePath) =>
-        _runtimeAssemblies.TryGetValue(projectFilePath, out var assemblies) ? assemblies : [];
+    public IReadOnlyList<string> GetPackageRuntimeAssemblies(string projectFilePath)
+    {
+        var assemblies = _runtimeAssemblies.TryGetValue(projectFilePath, out var restored) ? restored : [];
+
+        // What the project references by HintPath, as MSTest 4's targets reference TestFramework.Extensions, is copied
+        // to the output folder by the SDK, so it is loaded at run time too; a restored assembly of the same name wins.
+        var hinted = _host.GetHintPathAssemblyPaths(projectFilePath);
+        if (hinted.Count == 0)
+        {
+            return assemblies;
+        }
+
+        var names = assemblies.Select(path => Path.GetFileNameWithoutExtension(path)).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var added = hinted.Where(path => names.Add(Path.GetFileNameWithoutExtension(path))).ToList();
+        return added.Count == 0 ? assemblies : [.. assemblies, .. added];
+    }
 
     /// <inheritdoc />
     public void Dispose() => _host.Dispose();

@@ -52,6 +52,7 @@ public static class PolyglotNotebookFormat
         var cells = new List<NotebookCell>();
         var content = new List<string>();
         var language = NotebookLanguages.CSharp;
+        string? suffix = null;
         var foundMetadata = false;
 
         for (var i = 0; i < lines.Length; i++)
@@ -71,11 +72,14 @@ public static class PolyglotNotebookFormat
                 continue;
             }
 
+            // The kernel's name is the marker's first word: "#!csharp " and "#!csharp --name x" start C# cells.
             if (line.StartsWith(MagicPrefix, StringComparison.Ordinal) &&
-                TryGetKernel(line[MagicPrefix.Length..], declaredKernels, out var kernel))
+                SplitMarker(line[MagicPrefix.Length..]) is var (name, rest) &&
+                TryGetKernel(name, declaredKernels, out var kernel))
             {
-                AddCell(cells, language, content);
+                AddCell(cells, language, content, suffix);
                 language = kernel;
+                suffix = rest.Length > 0 ? rest : null;
                 content.Clear();
             }
             else
@@ -84,21 +88,31 @@ public static class PolyglotNotebookFormat
             }
         }
 
-        AddCell(cells, language, content);
+        AddCell(cells, language, content, suffix);
         if (cells.Count == 0)
         {
             cells.Add(CreateCell(language, string.Empty));
         }
 
-        return new NotebookDocument { Cells = cells, Metadata = metadata, Format = NotebookFormat.Polyglot };
+        return new NotebookDocument
+        {
+            Cells = cells,
+            Metadata = metadata,
+            Format = NotebookFormat.Polyglot,
+            NewLine = text.Contains("\r\n", StringComparison.Ordinal) ? "\r\n" : "\n",
+        };
     }
 
     /// <summary>Writes a notebook as the text of a <c>.dib</c> file. Outputs are not part of the format.</summary>
     /// <param name="document">The notebook.</param>
-    /// <param name="newLine">The line break to write: <c>\n</c> unless given, as dotnet/interactive writes.</param>
-    public static string Serialize(NotebookDocument document, string newLine = "\n")
+    /// <param name="newLine">
+    /// The line break to write: unless given, that of the file the notebook was read from, so a Windows file keeps
+    /// its <c>\r\n</c>, or <c>\n</c>, as dotnet/interactive writes.
+    /// </param>
+    public static string Serialize(NotebookDocument document, string? newLine = null)
     {
         ArgumentNullException.ThrowIfNull(document);
+        newLine ??= document.Format == NotebookFormat.Polyglot ? document.NewLine ?? "\n" : "\n";
         ArgumentException.ThrowIfNullOrEmpty(newLine);
 
         var lines = new List<string>();
@@ -118,7 +132,8 @@ public static class PolyglotNotebookFormat
                 continue;
             }
 
-            lines.Add(MagicPrefix + (cell.Kind == NotebookCellKind.Code ? cell.Language : NotebookLanguages.Markdown));
+            var marker = cell.Kind == NotebookCellKind.Code ? cell.Language : NotebookLanguages.Markdown;
+            lines.Add(MagicPrefix + marker + cell.DibMarkerSuffix);
             lines.Add(string.Empty);
             lines.AddRange(cellLines);
             lines.Add(string.Empty);
@@ -164,13 +179,25 @@ public static class PolyglotNotebookFormat
         return false;
     }
 
-    private static void AddCell(List<NotebookCell> cells, string language, List<string> lines)
+    private static void AddCell(List<NotebookCell> cells, string language, List<string> lines, string? suffix)
     {
         var trimmed = TrimBlankLines(lines);
         if (trimmed.Count > 0)
         {
-            cells.Add(CreateCell(language, string.Join('\n', trimmed)));
+            cells.Add(CreateCell(language, string.Join('\n', trimmed)) with { DibMarkerSuffix = suffix });
         }
+    }
+
+    /// <summary>A <c>#!</c> line after the <c>#!</c>: its first word, and the rest as written, such as <c> --name x</c>.</summary>
+    private static (string Name, string Options) SplitMarker(string marker)
+    {
+        var end = 0;
+        while (end < marker.Length && !char.IsWhiteSpace(marker[end]))
+        {
+            end++;
+        }
+
+        return (marker[..end], marker[end..]);
     }
 
     private static List<string> TrimBlankLines(IReadOnlyList<string> lines)

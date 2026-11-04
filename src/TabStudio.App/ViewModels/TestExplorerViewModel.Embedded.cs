@@ -33,10 +33,7 @@ public sealed partial class TestExplorerViewModel
         {
             ReportQueued(project.FilePath, converted.Select(r => r.Test).ToArray());
         }
-        foreach (var result in converted)
-        {
-            ReportFinished(project.FilePath, result);
-        }
+        ApplyResults(project.FilePath, converted);
         if (IsRunning)
         {
             _runSummaries.Add(new TestRunSummary

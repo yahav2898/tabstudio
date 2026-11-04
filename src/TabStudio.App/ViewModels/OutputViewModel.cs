@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Text;
 using Avalonia.Media;
 using AvaloniaEdit.Document;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -40,8 +41,9 @@ public enum OutputKind
 /// <see cref="Console.ReadLine"/>.
 /// </summary>
 /// <remarks>
-/// The program writes from its own thread. Writes are queued and appended to the document on the UI
-/// thread in batches, so a program printing in a tight loop cannot flood the UI.
+/// The program writes from its own thread. Writes are queued and appended to the document on the UI thread in
+/// batches behind input and drawing, at most <see cref="MaxCharactersPerFlush"/> characters at a time and one insertion
+/// for each run of text of the same kind, so a program printing in a tight loop cannot freeze the IDE.
 /// </remarks>
 public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
 {
@@ -55,8 +57,14 @@ public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
 
     private static IBrush SuccessBrush => ThemeBrushes.Get("Brush.Output.Success");
 
+    /// <summary>The most text one batch appends; the rest waits for the next batch, after a frame.</summary>
+    internal const int MaxCharactersPerFlush = 64 * 1024;
+
     private readonly IUiDispatcher _ui;
     private readonly int _characterLimit;
+    private readonly StringBuilder _run = new();
+    private readonly List<(string Text, OutputKind Kind)> _written = [];
+    private readonly Action _flushQueued;
     private readonly ConcurrentQueue<(string Text, OutputKind Kind)> _pending = new();
     private readonly List<TrackedRange<IBrush>> _segments = [];
     private int _flushScheduled;
@@ -71,6 +79,7 @@ public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
         _ui = ui;
         _characterLimit = Math.Max(10_000, characterLimit);
         Document.UndoStack.SizeLimit = 0;
+        _flushQueued = FlushQueued;
     }
 
     /// <summary>The panel's text.</summary>
@@ -124,7 +133,7 @@ public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
         _pending.Enqueue((text, kind));
         if (Interlocked.Exchange(ref _flushScheduled, 1) == 0)
         {
-            _ui.Post(Flush);
+            _ui.PostBackground(_flushQueued);
         }
     }
 
@@ -204,33 +213,94 @@ public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
         }
     });
 
-    /// <summary>Appends everything queued. Runs on the UI thread.</summary>
+    /// <summary>Appends everything queued, at once, for the text and for copying. Runs on the UI thread.</summary>
     private void Flush()
     {
         Interlocked.Exchange(ref _flushScheduled, 0);
+        while (!_pending.IsEmpty)
+        {
+            Append(int.MaxValue);
+        }
+    }
+
+    /// <summary>
+    /// Appends the next batch of what is queued, and queues the next batch behind input and drawing when more is
+    /// waiting: a program that never stops printing gets a batch per frame rather than the whole UI thread.
+    /// </summary>
+    private void FlushQueued()
+    {
+        Interlocked.Exchange(ref _flushScheduled, 0);
+        Append(MaxCharactersPerFlush);
+        if (!_pending.IsEmpty && Interlocked.Exchange(ref _flushScheduled, 1) == 0)
+        {
+            _ui.PostBackground(_flushQueued);
+        }
+    }
+
+    /// <summary>Appends queued text, up to about a number of characters, one insertion for each run of one kind.</summary>
+    private void Append(int maxCharacters)
+    {
         if (_pending.IsEmpty)
         {
             return;
         }
 
         var wasEmpty = Document.TextLength == 0;
-        while (_pending.TryDequeue(out var item))
+        var characters = 0;
+        OutputKind? kind = null;
+        Document.BeginUpdate();
+        try
         {
-            var start = Document.TextLength;
-            Document.Insert(start, item.Text);
-            if (BrushFor(item.Kind) is { } brush)
+            while (characters < maxCharacters && _pending.TryDequeue(out var item))
             {
-                AddSegment(new TrackedRange<IBrush>(start, item.Text.Length, brush));
+                if (kind is { } current && current != item.Kind)
+                {
+                    InsertRun(current);
+                }
+
+                kind = item.Kind;
+                _run.Append(item.Text);
+                _written.Add(item);
+                characters += item.Text.Length;
             }
 
-            Written?.Invoke(this, new OutputWrittenEventArgs(item.Text, item.Kind));
+            if (kind is { } last)
+            {
+                InsertRun(last);
+            }
+
+            TrimToLimit();
+        }
+        finally
+        {
+            Document.EndUpdate();
         }
 
-        TrimToLimit();
         TextAppended?.Invoke(this, EventArgs.Empty);
         if (wasEmpty && Document.TextLength > 0)
         {
             OnPropertyChanged(nameof(IsEmpty));
+        }
+    }
+
+    /// <summary>Inserts the text gathered for one kind in one go, and tells the listeners of each piece of it.</summary>
+    private void InsertRun(OutputKind kind)
+    {
+        var start = Document.TextLength;
+        var text = _run.ToString();
+        _run.Clear();
+        Document.Insert(start, text);
+        if (BrushFor(kind) is { } brush)
+        {
+            AddSegment(new TrackedRange<IBrush>(start, text.Length, brush));
+        }
+
+        // A listener may read the text, which appends what is queued: it gets a list of its own.
+        var written = _written.ToArray();
+        _written.Clear();
+        foreach (var (piece, pieceKind) in written)
+        {
+            Written?.Invoke(this, new OutputWrittenEventArgs(piece, pieceKind));
         }
     }
 

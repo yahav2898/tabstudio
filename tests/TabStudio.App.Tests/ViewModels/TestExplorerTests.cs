@@ -186,6 +186,67 @@ public sealed class TestExplorerTests : IClassFixture<SharedToolchain>, IDisposa
         _temp.Dispose();
     }
 
+    [AvaloniaFact]
+    public async Task Debugging_a_test_stops_at_its_breakpoints_steps_into_the_library_and_reports_its_result()
+    {
+        var workspace = await OpenAsync();
+        var tests = workspace.Tests;
+        var library = _temp.Resolve(CalculatorSolution.Folder + "/Calculator/Arithmetic.cs");
+        var testLine = CalculatorSolution.FailingLine;
+        workspace.Breakpoints.Toggle(TestFile, testLine);
+        var failing = tests.Rows.Single(r => r.Name == "Subtracts_with_a_mistake");
+
+        var debugging = failing.DebugCommand.ExecuteAsync(null);
+        await UiTestHelpers.WaitUntilAsync(
+            () => workspace.IsPaused && workspace.CallStack.Frames.Count > 0 && workspace.CallStack.Frames[0].Location?.Line == testLine,
+            TimeSpan.FromSeconds(120),
+            because: "the breakpoint in the test");
+        await workspace.PauseShown;
+        Assert.True(tests.IsRunning);
+        Assert.Equal(TestFile, workspace.ActiveDocument?.FilePath);
+        Assert.StartsWith("Paused at a breakpoint", workspace.StatusText, StringComparison.Ordinal);
+        Assert.Contains("Subtracts_with_a_mistake", workspace.CallStack.Frames[0].MethodName, StringComparison.Ordinal);
+
+        // Step Into enters the library the test calls, and Step Out comes back.
+        await workspace.StepIntoCommand.ExecuteAsync(null);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.IsPaused && workspace.CallStack.Frames.FirstOrDefault()?.Location?.FilePath == library, because: "Step Into the library");
+        await workspace.PauseShown;
+        await UiTestHelpers.WaitUntilAsync(() => workspace.Locals.Tree.Rows.Any(r => r.Name == "a" && r.Value == "5"), because: "the library's locals");
+
+        // The assertion's exception leaves the test, which pauses there with the exception helper, as unhandled by user code.
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.IsPaused && workspace.ActiveDocument?.ExceptionHelper is not null, because: "the failed assertion");
+        Assert.Contains("EqualException", workspace.ActiveDocument!.ExceptionHelper!.ExceptionType, StringComparison.Ordinal);
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await debugging;
+
+        Assert.False(workspace.IsDebugging);
+        Assert.Equal(IdeState.Ready, workspace.State);
+        Assert.Equal(TestState.Failed, tests.Entries.Single(e => e.MethodName == "Subtracts_with_a_mistake").State);
+        Assert.Contains("========== Starting test run under the debugger ==========", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Contains("1 Tests (0 Passed, 1 Failed, 0 Skipped)", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Empty(workspace.CallStack.Frames);
+    }
+
+    [AvaloniaFact]
+    public async Task Stop_ends_a_debugged_test_run_and_the_tests_can_run_again()
+    {
+        var workspace = await OpenAsync();
+        var tests = workspace.Tests;
+        workspace.Breakpoints.Toggle(TestFile, CalculatorSolution.LineOf("Assert.Equal(4,"));
+
+        var debugging = tests.DebugAllCommand.ExecuteAsync(null);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.IsPaused, TimeSpan.FromSeconds(120), because: "the breakpoint in Adds");
+        workspace.StopDebuggingCommand.Execute(null);
+        await debugging;
+
+        Assert.False(workspace.IsDebugging);
+        Assert.False(tests.IsRunning);
+        Assert.True(tests.RunAllCommand.CanExecute(null));
+        await tests.RunAllCommand.ExecuteAsync(null);
+        Assert.Equal((3, 1, 1), (tests.PassedCount, tests.FailedCount, tests.SkippedCount));
+    }
+
     private async Task<WorkspaceViewModel> OpenAsync()
     {
         var device = new DefaultDeviceStatus(new DeviceInfo(8L * 1024 * 1024 * 1024, 8, IsLowRamDevice: false));

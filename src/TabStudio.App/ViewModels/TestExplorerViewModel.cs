@@ -70,7 +70,7 @@ public sealed partial class TestExplorerViewModel : ObservableObject, ITestNodeA
 
     /// <summary>The selected row.</summary>
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(RunSelectedCommand))]
+    [NotifyCanExecuteChangedFor(nameof(RunSelectedCommand), nameof(DebugSelectedCommand))]
     public partial TestNodeViewModel? SelectedNode { get; set; }
 
     /// <summary>The details of the selected row.</summary>
@@ -128,7 +128,7 @@ public sealed partial class TestExplorerViewModel : ObservableObject, ITestNodeA
 
     /// <summary>Whether the workspace has test projects.</summary>
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(RunAllCommand))]
+    [NotifyCanExecuteChangedFor(nameof(RunAllCommand), nameof(DebugAllCommand))]
     public partial bool HasTestProjects { get; private set; }
 
     /// <summary>What the tree area says when it has no rows, or <see langword="null"/> when it has some.</summary>
@@ -166,7 +166,13 @@ public sealed partial class TestExplorerViewModel : ObservableObject, ITestNodeA
 
     /// <summary>Builds and runs tests, showing their results as they finish.</summary>
     /// <param name="request">The tests to run.</param>
-    public async Task RunAsync(TestRunRequest request)
+    public Task RunAsync(TestRunRequest request) => RunAsync(request, debug: false);
+
+    /// <summary>Builds tests for debugging and runs them under the debugger, showing their results as they finish.</summary>
+    /// <param name="request">The tests to debug.</param>
+    public Task DebugAsync(TestRunRequest request) => RunAsync(request, debug: true);
+
+    private async Task RunAsync(TestRunRequest request, bool debug)
     {
         ArgumentNullException.ThrowIfNull(request);
         if (!CanStartRun || request.Projects.Count == 0)
@@ -184,11 +190,11 @@ public sealed partial class TestExplorerViewModel : ObservableObject, ITestNodeA
         IsProgressIndeterminate = true;
         Progress = 0;
         RunStatusState = TestState.Running;
-        RunStatusText = $"Building to run {request.Description}…";
+        RunStatusText = debug ? $"Building to debug {request.Description}…" : $"Building to run {request.Description}…";
         RefreshCommands();
         try
         {
-            await _host.RunTestsAsync(request);
+            await (debug ? _host.DebugTestsAsync(request) : _host.RunTestsAsync(request));
         }
         finally
         {
@@ -204,6 +210,8 @@ public sealed partial class TestExplorerViewModel : ObservableObject, ITestNodeA
         RunAllCommand.NotifyCanExecuteChanged();
         RunFailedCommand.NotifyCanExecuteChanged();
         RunSelectedCommand.NotifyCanExecuteChanged();
+        DebugAllCommand.NotifyCanExecuteChanged();
+        DebugSelectedCommand.NotifyCanExecuteChanged();
         RepeatLastRunCommand.NotifyCanExecuteChanged();
         CancelCommand.NotifyCanExecuteChanged();
     }
@@ -211,6 +219,10 @@ public sealed partial class TestExplorerViewModel : ObservableObject, ITestNodeA
     /// <inheritdoc />
     Task ITestNodeActions.RunAsync(TestNodeViewModel node) =>
         RunAsync(new TestRunRequest(node.Name, node.Selection()));
+
+    /// <inheritdoc />
+    Task ITestNodeActions.DebugAsync(TestNodeViewModel node) =>
+        DebugAsync(new TestRunRequest(node.Name, node.Selection()));
 
     /// <inheritdoc />
     Task ITestNodeActions.GoToAsync(TestNodeViewModel node) =>
@@ -240,6 +252,16 @@ public sealed partial class TestExplorerViewModel : ObservableObject, ITestNodeA
         SelectedNode is { } node ? ((ITestNodeActions)this).RunAsync(node) : Task.CompletedTask;
 
     private bool CanRunSelected() => CanStartRun && SelectedNode is not null;
+
+    /// <summary>Debug All Tests (Ctrl+R, Ctrl+A).</summary>
+    [RelayCommand(CanExecute = nameof(CanRunAll))]
+    private Task DebugAllAsync() =>
+        DebugAsync(new TestRunRequest("all tests", _projects.Select(p => new TestProjectSelection(p.FilePath, null)).ToList()));
+
+    /// <summary>Debug Selected Tests.</summary>
+    [RelayCommand(CanExecute = nameof(CanRunSelected))]
+    private Task DebugSelectedAsync() =>
+        SelectedNode is { } node ? ((ITestNodeActions)this).DebugAsync(node) : Task.CompletedTask;
 
     [RelayCommand(CanExecute = nameof(CanRepeatLastRun))]
     private Task RepeatLastRunAsync() => LastRequest is { } request ? RunAsync(request) : Task.CompletedTask;

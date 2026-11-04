@@ -36,14 +36,27 @@ test -f "$notes" || { echo "Release notes are missing: ${notes}" >&2; exit 1; }
 staging="$(mktemp -d)"
 cp "$apk" "$staging/TabStudio-${version}.apk"
 
-if gh release view "$tag" > /dev/null 2>&1; then
-  # A re-run of the same tag replaces the notes and the APK.
-  gh release edit "$tag" --title "TabStudio ${version}" --notes-file "$notes" --latest
-  gh release upload "$tag" "$staging/TabStudio-${version}.apk" --clobber
-else
-  gh release create "$tag" "$staging/TabStudio-${version}.apk" --target "$sha" --latest \
-    --title "TabStudio ${version}" --notes-file "$notes"
-fi
+# Main's runs no longer cancel each other, so an older version's run can finish after a newer one's: only the
+# highest version published is marked latest, which is where the README's Download link goes.
+newest="$({ gh release list --limit 200 --json tagName,isPrerelease --jq '.[] | select(.isPrerelease | not) | .tagName'
+           echo "$tag"; } | sed 's/^v//' | sort -V | tail -n 1)"
+latest="--latest"
+[ "$newest" = "$version" ] || latest="--latest=false"
+
+# GitHub sometimes answers a release request with a 500 (0.21.4's first try): try again, and a release that was
+# created before the error is completed instead of created twice.
+for attempt in 1 2 3 4; do
+  if gh release view "$tag" > /dev/null 2>&1; then
+    # A re-run of the same tag replaces the notes and the APK.
+    gh release edit "$tag" --title "TabStudio ${version}" --notes-file "$notes" "$latest" &&
+      gh release upload "$tag" "$staging/TabStudio-${version}.apk" --clobber && break
+  elif gh release create "$tag" "$staging/TabStudio-${version}.apk" --target "$sha" "$latest" \
+         --title "TabStudio ${version}" --notes-file "$notes"; then
+    break
+  fi
+  [ "$attempt" -lt 4 ] || { echo "Could not publish ${tag}" >&2; exit 1; }
+  sleep $((attempt * 15))
+done
 
 rm -rf "$staging"
 gh release view "$tag" --json tagName,url,assets --jq '"\(.tagName) \(.url) \([.assets[] | "\(.name) (\(.size) bytes)"] | join(", "))"'

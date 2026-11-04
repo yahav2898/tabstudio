@@ -51,4 +51,23 @@ public sealed record TestRunOptions
     /// memory this way. The packages' static state then lives on from one session to the next.
     /// </remarks>
     public bool ShareRuntimeAssemblies { get; init; }
+
+    /// <summary>
+    /// The test project's output folder, such as <c>bin/Debug/net8.0</c> under the project, or <see langword="null"/>
+    /// to load the assemblies from memory. With a folder, the session writes the compiled assemblies there and loads
+    /// them from their files, and the folder is the current directory and <see cref="AppContext.BaseDirectory"/>
+    /// while tests are found and run, as under <c>dotnet test</c>: tests that read files next to their assembly, or
+    /// relative to it, find them.
+    /// </summary>
+    /// <remarks>
+    /// When the files there were loaded by an earlier session and have changed since, a sibling folder at the same
+    /// depth is used (<c>net8.0-2</c>), since a loaded file cannot be replaced while TabStudio runs.
+    /// </remarks>
+    public string? OutputDirectory { get; init; }
+
+    /// <summary>
+    /// Whether the tests' own timeouts (NUnit's and MSTest's <c>[Timeout]</c>, xUnit's <c>Timeout =</c>) are ignored
+    /// too, as under a debugger, where a test paused at a breakpoint must not be abandoned as timed out.
+    /// </summary>
+    public bool IgnoreTestTimeouts { get; init; }
 }

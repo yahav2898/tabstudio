@@ -66,4 +66,30 @@ public sealed class WpfTemplateTests
     {
         Assert.Empty(SampleProjects.Port("WpfTemplate").Notes);
     }
+
+    [Fact]
+    public void Resource_names_with_semicolons_and_percent_signs_are_escaped_for_MSBuild()
+    {
+        var sample = SampleProjects.Load("WpfTemplate");
+        var source = new PortSource
+        {
+            Name = sample.Name,
+            Kind = sample.Kind,
+            Properties = sample.Properties,
+            Packages = sample.Packages,
+            Files = sample.Files,
+            Resources = ["Images/a;b.png", "Images/100%.png", "Images/plain.png", "Images/what?*.png"],
+        };
+
+        var result = AvaloniaPorter.Port(source, new PortOptions("WpfApp1.Avalonia", Path.Combine(Path.GetTempPath(), "tabstudio-port", "escape"), SampleProjects.AvaloniaVersion));
+        var project = result.Files.Single(f => f.Path == "WpfApp1.Avalonia.csproj").Text!;
+
+        // "a;b.png" would be two items, a and b.png, and "100%.png" an escape MSBuild cannot read.
+        Assert.Contains("<AvaloniaResource Include=\"Images\\a%3Bb.png\" />", project, StringComparison.Ordinal);
+        Assert.Contains("<AvaloniaResource Include=\"Images\\100%25.png\" />", project, StringComparison.Ordinal);
+        Assert.Contains("<AvaloniaResource Include=\"Images\\plain.png\" />", project, StringComparison.Ordinal);
+        Assert.Contains("<AvaloniaResource Include=\"Images\\what%3F%2A.png\" />", project, StringComparison.Ordinal);
+        Assert.DoesNotContain("a;b", project, StringComparison.Ordinal);
+        Assert.Equal("%24(x)%40y%27", TabStudio.Porting.Output.ProjectFiles.MSBuildEscape("$(x)@y'"));
+    }
 }

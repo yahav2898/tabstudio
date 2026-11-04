@@ -90,6 +90,48 @@ internal static class CodeBehind
         return (codeText.Insert(insertAt, method.ToString()), insertAt + caretLine);
     }
 
+    /// <summary>
+    /// The names of the members the class declares in a file, in every part of it the file has: fields, properties,
+    /// methods, events, nested types and the like, which a new component's field must not take.
+    /// </summary>
+    /// <param name="codeText">The file's text.</param>
+    /// <param name="className">The class's name.</param>
+    public static IReadOnlySet<string> MemberNames(string codeText, string className)
+    {
+        ArgumentNullException.ThrowIfNull(codeText);
+        var names = new HashSet<string>(StringComparer.Ordinal);
+        var root = CSharpSyntaxTree.ParseText(codeText).GetCompilationUnitRoot();
+        foreach (var type in root.DescendantNodes().OfType<ClassDeclarationSyntax>().Where(c => c.Identifier.ValueText == className))
+        {
+            foreach (var member in type.Members)
+            {
+                switch (member)
+                {
+                    case BaseFieldDeclarationSyntax field:
+                        names.UnionWith(field.Declaration.Variables.Select(v => v.Identifier.ValueText));
+                        break;
+                    case PropertyDeclarationSyntax property:
+                        names.Add(property.Identifier.ValueText);
+                        break;
+                    case EventDeclarationSyntax @event:
+                        names.Add(@event.Identifier.ValueText);
+                        break;
+                    case MethodDeclarationSyntax method:
+                        names.Add(method.Identifier.ValueText);
+                        break;
+                    case BaseTypeDeclarationSyntax nested:
+                        names.Add(nested.Identifier.ValueText);
+                        break;
+                    case DelegateDeclarationSyntax @delegate:
+                        names.Add(@delegate.Identifier.ValueText);
+                        break;
+                }
+            }
+        }
+
+        return names;
+    }
+
     /// <summary>Renames a component's field wherever the code file names it.</summary>
     /// <param name="codeText">The code file's text.</param>
     /// <param name="oldName">The old name.</param>

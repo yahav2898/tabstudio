@@ -1,3 +1,5 @@
+using TabStudio.Forms.Design.Code;
+
 namespace TabStudio.Forms.Design.Model;
 
 /// <summary>How the designer file writes code, which the designer keeps when it writes the file again.</summary>
@@ -55,6 +57,12 @@ internal sealed class DesignDocument
     /// <summary>Statements before the components are created that the designer keeps, such as a resource manager's.</summary>
     public List<string> LeadingStatements { get; } = [];
 
+    /// <summary>
+    /// The comments InitializeComponent has with its statements, which the designer writes again with them, as
+    /// Visual Studio's designer does not.
+    /// </summary>
+    public List<KeptComment> Comments { get; } = [];
+
     /// <summary>The root and the components.</summary>
     public IEnumerable<DesignComponent> All => [Root, .. Components];
 
@@ -71,14 +79,18 @@ internal sealed class DesignDocument
     /// Visual Basic, <c>Button1</c>, then <c>Button2</c>.
     /// </summary>
     /// <param name="type">The type.</param>
-    public string NewName(Type type)
+    /// <param name="isTaken">
+    /// Whether a name is taken other than by a component, as by a field or a method in the form's code file, or a
+    /// member the form inherits; <see langword="null"/> when only the components count.
+    /// </param>
+    public string NewName(Type type, Func<string, bool>? isTaken = null)
     {
         ArgumentNullException.ThrowIfNull(type);
         var stem = Style.Language == DesignerLanguage.VisualBasic ? type.Name : char.ToLowerInvariant(type.Name[0]) + type.Name[1..];
         for (var i = 1; ; i++)
         {
             var name = stem + i.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            if (Find(name) is null)
+            if (Find(name) is null && isTaken?.Invoke(name) != true)
             {
                 return name;
             }
