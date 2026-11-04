@@ -109,6 +109,9 @@ jobs:
           path: ci-out/embedded-unit/
           if-no-files-found: error
       - name: Publish logs
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}

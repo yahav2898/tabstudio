@@ -154,6 +154,9 @@ jobs:
             tests/**/TestResults/**/Sequence_*.xml
 
       - name: Publish logs
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -518,6 +521,9 @@ jobs:
             tests/**/TestResults/**/Sequence_*.xml
 
       - name: Publish logs and screenshots
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -687,6 +693,9 @@ jobs:
           if-no-files-found: ignore
 
       - name: Publish logs and screenshots
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always()
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -846,6 +855,9 @@ jobs:
           if-no-files-found: ignore
 
       - name: Publish logs and screenshots
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always()
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -889,6 +901,9 @@ jobs:
           mkdir -p ci-out
           { docker ps -a; docker logs tabstudio-openssh; } > ci-out/sshd.log 2>&1 || true
       - name: Publish logs
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -999,6 +1014,9 @@ jobs:
         run: rm -f ci-out/*.apk
 
       - name: Publish logs
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -1136,6 +1154,9 @@ jobs:
 
       # Pull request runs publish too, under branches/<number>-merge/, so their failures can be read as well.
       - name: Publish logs
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always()
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -1201,6 +1222,9 @@ jobs:
           exit $status
 
       - name: Publish logs and screenshots
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always() && github.event_name == 'push'
         env:
           GH_TOKEN: ${{ github.token }}

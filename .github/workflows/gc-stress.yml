@@ -111,6 +111,9 @@ jobs:
           retention-days: 3
 
       - name: Publish logs
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: failure()
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -177,6 +180,9 @@ jobs:
           if-no-files-found: ignore
 
       - name: Publish logs
+        # Publishing can never fail a job or hold it up: the logs help to read a run, they are not its result.
+        continue-on-error: true
+        timeout-minutes: 10
         if: always()
         env:
           GITHUB_TOKEN: ${{ github.token }}
