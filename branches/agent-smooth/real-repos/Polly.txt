@@ -1,5 +1,5 @@
 Polly at 87a2e4a0074f01b4b9a430d2f67b28f39f01274d
-Opened /home/runner/work/_temp/real-repos/Polly/Polly.slnx in 0.4 s
+Opened /home/runner/work/_temp/real-repos/Polly/Polly.slnx in 0.7 s
 Compatibility Doctor:
   Polly.Benchmarks: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
   Polly.Core.Benchmarks: Not supported via Benchmarks, on a computer - BenchmarkDotNet benchmarks: BenchmarkDotNet builds and starts separate processes with the .NET SDK, on a computer.
@@ -17,7 +17,7 @@ Compatibility Doctor:
   Polly.Testing.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   Polly.TestUtils: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: Polly.AotTest
-Built in 18.3 s: 0 errors, 21 warnings
+Built in 14.8 s: 0 errors, 21 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -992,18 +992,15 @@ Packages with analyzers or MSBuild files:
   xunit.v3.core.mtp-v2 4.0.2
       buildTransitive/xunit.v3.core.mtp-v2.props
       buildTransitive/xunit.v3.core.mtp-v2.targets
-Editor: 24 files opened and analyzed in 0.8 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 5 over 100 ms (2 over 250 ms, 0 over 1 s), 1.0 s in all, longest 402 ms during screenshots, 0.2 s of it garbage collection; answer p50 6.5 ms, p95 39.2 ms, p99 84.4 ms over 660 questions in 21 s
-UI timings: document view 11 ms, document view 9 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms
+Editor: 24 files opened and analyzed in 0.6 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 2 over 100 ms (0 over 250 ms, 0 over 1 s), 0.4 s in all, longest 185 ms during screenshots, 0.1 s of it garbage collection; answer p50 4.3 ms, p95 33.2 ms, p99 78.5 ms over 650 questions in 17 s
+UI timings: document view 21 ms, document view 4 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 402 ms | 148 ms | 0.4 s | screenshots |
-| 259 ms | 53 ms | 1.0 s | screenshots |
-| 130 ms | 0 ms | 19.8 s | screenshots |
-| 122 ms | 24 ms | 4.6 s | the first build |
-| 116 ms | 0 ms | 19.7 s | screenshots |
+| 185 ms | 34 ms | 0.7 s | screenshots |
+| 174 ms | 28 ms | 1.1 s | screenshots |
 Output:
-Build started at 20:49:19...
+Build started at 23:59:06...
 1>------ Build started: Project: Polly.Core, Configuration: Debug ------
 1>TaskExecution.cs(207,6): warning CS0436: The type 'DebuggerDisableUserUnhandledExceptionsAttribute' in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs' conflicts with the imported type 'DebuggerDisableUserUnhandledExceptionsAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs'.
 1>TaskExecution.cs(234,6): warning CS0436: The type 'DebuggerDisableUserUnhandledExceptionsAttribute' in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs' conflicts with the imported type 'DebuggerDisableUserUnhandledExceptionsAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs'.
@@ -1016,7 +1013,7 @@ Build started at 20:49:19...
 1>ResiliencePipeline.AsyncT.cs(133,18): warning CS0436: The type 'DebuggerDisableUserUnhandledExceptionsAttribute' in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs' conflicts with the imported type 'DebuggerDisableUserUnhandledExceptionsAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs'.
 1>ResiliencePipeline.AsyncT.cs(174,18): warning CS0436: The type 'DebuggerDisableUserUnhandledExceptionsAttribute' in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs' conflicts with the imported type 'DebuggerDisableUserUnhandledExceptionsAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs'.
 1>PipelineComponent.cs(24,25): warning CS0436: The type 'DebuggerDisableUserUnhandledExceptionsAttribute' in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs' conflicts with the imported type 'DebuggerDisableUserUnhandledExceptionsAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs'.
-1>Polly.Core -> compiled in memory (229 KB, 316 ms)
+1>Polly.Core -> compiled in memory (229 KB, 191 ms)
 2>------ Build started: Project: Polly, Configuration: Debug ------
 2>AsyncCacheEngine.cs(6,6): warning CS0436: The type 'DebuggerDisableUserUnhandledExceptionsAttribute' in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs' conflicts with the imported type 'DebuggerDisableUserUnhandledExceptionsAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs'.
 2>CacheEngine.cs(6,6): warning CS0436: The type 'DebuggerDisableUserUnhandledExceptionsAttribute' in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs' conflicts with the imported type 'DebuggerDisableUserUnhandledExceptionsAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs'.
@@ -1028,32 +1025,32 @@ Build started at 20:49:19...
 2>RetryEngine.cs(6,6): warning CS0436: The type 'DebuggerDisableUserUnhandledExceptionsAttribute' in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs' conflicts with the imported type 'DebuggerDisableUserUnhandledExceptionsAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs'.
 2>AsyncTimeoutEngine.cs(5,6): warning CS0436: The type 'DebuggerDisableUserUnhandledExceptionsAttribute' in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs' conflicts with the imported type 'DebuggerDisableUserUnhandledExceptionsAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs'.
 2>TimeoutEngine.cs(7,6): warning CS0436: The type 'DebuggerDisableUserUnhandledExceptionsAttribute' in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs' conflicts with the imported type 'DebuggerDisableUserUnhandledExceptionsAttribute' in 'System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Using the type defined in '/home/runner/work/_temp/real-repos/Polly/src/Shared/DebuggerDisableUserUnhandledExceptionsAttribute.cs'.
-2>Polly -> compiled in memory (284 KB, 776 ms)
+2>Polly -> compiled in memory (284 KB, 611 ms)
 3>------ Build started: Project: Polly.Benchmarks, Configuration: Debug ------
-3>Polly.Benchmarks -> compiled in memory (25 KB, 839 ms)
+3>Polly.Benchmarks -> compiled in memory (25 KB, 507 ms)
 4>------ Build started: Project: Polly.Extensions, Configuration: Debug ------
-4>Polly.Extensions -> compiled in memory (43.5 KB, 362 ms)
+4>Polly.Extensions -> compiled in memory (43.5 KB, 222 ms)
 5>------ Build started: Project: Polly.RateLimiting, Configuration: Debug ------
-5>Polly.RateLimiting -> compiled in memory (14 KB, 251 ms)
+5>Polly.RateLimiting -> compiled in memory (14 KB, 201 ms)
 6>------ Build started: Project: Polly.Core.Benchmarks, Configuration: Debug ------
-6>Polly.Core.Benchmarks -> compiled in memory (53 KB, 1074 ms)
+6>Polly.Core.Benchmarks -> compiled in memory (53 KB, 706 ms)
 7>------ Build started: Project: Polly.Testing, Configuration: Debug ------
-7>Polly.Testing -> compiled in memory (7 KB, 286 ms)
+7>Polly.Testing -> compiled in memory (7 KB, 180 ms)
 8>------ Build started: Project: Snippets, Configuration: Debug ------
-8>Snippets -> compiled in memory (170 KB, 1174 ms)
+8>Snippets -> compiled in memory (170 KB, 874 ms)
 9>------ Build started: Project: Polly.AotTest, Configuration: Debug ------
-9>Polly.AotTest -> compiled in memory (3 KB, 352 ms)
+9>Polly.AotTest -> compiled in memory (3 KB, 237 ms)
 10>------ Build started: Project: Polly.TestUtils, Configuration: Debug ------
-10>Polly.TestUtils -> compiled in memory (23.5 KB, 342 ms)
+10>Polly.TestUtils -> compiled in memory (23.5 KB, 214 ms)
 11>------ Build started: Project: Polly.Core.Tests, Configuration: Debug ------
-11>Polly.Core.Tests -> compiled in memory (830.5 KB, 1355 ms)
+11>Polly.Core.Tests -> compiled in memory (830.5 KB, 992 ms)
 12>------ Build started: Project: Polly.Extensions.Tests, Configuration: Debug ------
-12>Polly.Extensions.Tests -> compiled in memory (111 KB, 546 ms)
+12>Polly.Extensions.Tests -> compiled in memory (111 KB, 375 ms)
 13>------ Build started: Project: Polly.RateLimiting.Tests, Configuration: Debug ------
-13>Polly.RateLimiting.Tests -> compiled in memory (31 KB, 382 ms)
+13>Polly.RateLimiting.Tests -> compiled in memory (31 KB, 322 ms)
 14>------ Build started: Project: Polly.Specs, Configuration: Debug ------
-14>Polly.Specs -> compiled in memory (2352 KB, 3772 ms)
+14>Polly.Specs -> compiled in memory (2352 KB, 3121 ms)
 15>------ Build started: Project: Polly.Testing.Tests, Configuration: Debug ------
-15>Polly.Testing.Tests -> compiled in memory (14 KB, 375 ms)
+15>Polly.Testing.Tests -> compiled in memory (14 KB, 342 ms)
 ========== Build: 15 succeeded, 0 failed ==========
 

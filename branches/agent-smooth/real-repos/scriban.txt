@@ -1,5 +1,5 @@
 scriban at 466aeb2f0cf66cc67e8c0c30461839e0a082eaf8
-Opened /home/runner/work/_temp/real-repos/scriban/src/scriban.slnx in 0.3 s
+Opened /home/runner/work/_temp/real-repos/scriban/src/scriban.slnx in 0.5 s
 Compatibility Doctor:
   liquid2scriban: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   Scriban.AsyncCodeGen: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
@@ -11,7 +11,7 @@ Compatibility Doctor:
   Scriban.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   Scriban: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: Scriban.AppService
-Built in 12.6 s: 0 errors, 5 warnings
+Built in 11.7 s: 0 errors, 5 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -1293,35 +1293,34 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net462/_._
       buildTransitive/net8.0/_._
       buildTransitive/netcoreapp2.0/System.Security.Cryptography.Xml.targets
-Editor: 15 files opened and analyzed in 1.2 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 5 over 100 ms (1 over 250 ms, 0 over 1 s), 1.0 s in all, longest 388 ms during screenshots, 0.2 s of it garbage collection; answer p50 6.5 ms, p95 41.1 ms, p99 126.1 ms over 499 questions in 15 s
-UI timings: document view 26 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms
+Editor: 15 files opened and analyzed in 1.0 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 4 over 100 ms (1 over 250 ms, 0 over 1 s), 0.7 s in all, longest 328 ms during screenshots, 0.2 s of it garbage collection; answer p50 6.4 ms, p95 37.1 ms, p99 89.4 ms over 464 questions in 14 s
+UI timings: document view 5 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 388 ms | 117 ms | 0.4 s | screenshots |
-| 199 ms | 34 ms | 0.9 s | screenshots |
-| 169 ms | 26 ms | 14.0 s | screenshots |
-| 127 ms | 22 ms | 9.4 s | the first build |
-| 126 ms | 0 ms | 13.9 s | screenshots |
+| 328 ms | 138 ms | 0.5 s | screenshots |
+| 198 ms | 16 ms | 1.0 s | screenshots |
+| 114 ms | 32 ms | 11.1 s | the first build |
+| 103 ms | 0 ms | 13.1 s | screenshots |
 Output:
-Build started at 21:00:55...
+Build started at 00:08:41...
 1>------ Build started: Project: Scriban, Configuration: Debug ------
-1>Scriban -> compiled in memory (620 KB, 1056 ms)
+1>Scriban -> compiled in memory (620 KB, 849 ms)
 2>------ Build started: Project: liquid2scriban, Configuration: Debug ------
-2>liquid2scriban -> compiled in memory (7 KB, 844 ms)
+2>liquid2scriban -> compiled in memory (7 KB, 621 ms)
 3>------ Build started: Project: Scriban.AsyncCodeGen, Configuration: Debug ------
-3>Scriban.AsyncCodeGen -> compiled in memory (75.5 KB, 1235 ms)
+3>Scriban.AsyncCodeGen -> compiled in memory (75.5 KB, 884 ms)
 4>------ Build started: Project: Scriban.Benchmarks, Configuration: Debug ------
-4>Scriban.Benchmarks -> compiled in memory (20.5 KB, 853 ms)
+4>Scriban.Benchmarks -> compiled in memory (20.5 KB, 647 ms)
 5>------ Build started: Project: Scriban.CheckSourceEmbedded, Configuration: Debug ------
-5>Scriban.CheckSourceEmbedded -> compiled in memory (617 KB, 945 ms)
+5>Scriban.CheckSourceEmbedded -> compiled in memory (617 KB, 713 ms)
 6>------ Build started: Project: Scriban.DelegateCodeGen, Configuration: Debug ------
-6>Scriban.DelegateCodeGen -> compiled in memory (16.5 KB, 47 ms)
+6>Scriban.DelegateCodeGen -> compiled in memory (16.5 KB, 26 ms)
 7>------ Build started: Project: Scriban.AppService, Configuration: Debug ------
-7>Scriban.AppService -> compiled in memory (17 KB, 860 ms)
+7>Scriban.AppService -> compiled in memory (17 KB, 779 ms)
 8>------ Build started: Project: Scriban.DocGen, Configuration: Debug ------
-8>Scriban.DocGen -> compiled in memory (13 KB, 852 ms)
+8>Scriban.DocGen -> compiled in memory (13 KB, 620 ms)
 9>------ Build started: Project: Scriban.Tests, Configuration: Debug ------
-9>Scriban.Tests -> compiled in memory (318.5 KB, 1052 ms)
+9>Scriban.Tests -> compiled in memory (318.5 KB, 814 ms)
 ========== Build: 9 succeeded, 0 failed ==========
 

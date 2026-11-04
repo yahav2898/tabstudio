@@ -6,7 +6,7 @@ Compatibility Doctor:
   ContosoUniversity.AppHost: Not supported via Not on a tablet - An Aspire AppHost starts the app's projects and containers through Aspire's developer control plane, which runs on a computer, and it compiles against code its SDK generates for the projects it references. TabStudio leaves it out of builds; run the projects it starts on their own.
   ContosoUniversity.ServiceDefaults: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: ContosoUniversity
-Built in 8.6 s: 0 errors, 0 warnings
+Built in 7.5 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   aspire.hosting.apphost 13.0.1
       analyzers/dotnet/cs/Aspire.Hosting.Analyzers.dll
@@ -1139,24 +1139,21 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.utility.netcoreapp10.dll
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
-Editor: 8 files opened and analyzed in 0.3 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 5 over 100 ms (2 over 250 ms, 0 over 1 s), 1.1 s in all, longest 448 ms during screenshots, 0.1 s of it garbage collection; answer p50 7.6 ms, p95 17.5 ms, p99 121.9 ms over 366 questions in 10 s
-UI timings: document view 12 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+Editor: 8 files opened and analyzed in 0.2 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 2 over 100 ms (1 over 250 ms, 0 over 1 s), 0.5 s in all, longest 349 ms during screenshots, 0.1 s of it garbage collection; answer p50 6.4 ms, p95 11.8 ms, p99 90.7 ms over 338 questions in 9 s
+UI timings: document view 23 ms, document view 18 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 448 ms | 66 ms | 0.2 s | screenshots |
-| 294 ms | 13 ms | 0.9 s | screenshots |
-| 127 ms | 0 ms | 9.8 s | screenshots |
-| 122 ms | 0 ms | 10.0 s | screenshots |
-| 105 ms | 44 ms | 9.5 s | the first build |
+| 349 ms | 86 ms | 0.2 s | screenshots |
+| 190 ms | 0 ms | 0.7 s | screenshots |
 Output:
-Build started at 20:53:27...
+Build started at 00:02:33...
 1>------ Build started: Project: ContosoUniversity.ServiceDefaults, Configuration: Debug ------
-1>ContosoUniversity.ServiceDefaults -> compiled in memory (14.5 KB, 63 ms)
+1>ContosoUniversity.ServiceDefaults -> compiled in memory (14.5 KB, 47 ms)
 2>------ Build started: Project: ContosoUniversity, Configuration: Debug ------
-2>ContosoUniversity -> compiled in memory (437 KB, 714 ms)
+2>ContosoUniversity -> compiled in memory (437 KB, 536 ms)
 3>------ Build started: Project: ContosoUniversity.IntegrationTests, Configuration: Debug ------
-3>ContosoUniversity.IntegrationTests -> compiled in memory (81.5 KB, 348 ms)
+3>ContosoUniversity.IntegrationTests -> compiled in memory (81.5 KB, 305 ms)
 4>------ Skipped: Project: ContosoUniversity.AppHost: an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers ------
 ========== Build: 3 succeeded, 0 failed, 1 skipped ==========
 
