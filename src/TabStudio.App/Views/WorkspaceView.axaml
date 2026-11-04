@@ -94,7 +94,7 @@
       <Setter Property="IsVisible" Value="False" />
     </Style>
     <!-- Beside Locals with no room, the Call Stack is hidden rather than squeezed to nothing (WorkspaceView.Layout.cs). -->
-    <Style Selector="Border#CallStackBeside.folded > views|CallStackView">
+    <Style Selector="Border#CallStackBeside.folded > controls|DeferredView">
       <Setter Property="IsVisible" Value="False" />
     </Style>
     <!-- The status bar's items: touch targets (Theme/Accessibility.axaml), small text, white on teal. -->

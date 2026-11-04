@@ -54,9 +54,9 @@ public sealed class DocumentSmoothnessTests
             opening.Add(Smoothness.Measure(window, () => { }) with { Time = clock.Elapsed - started });
         }
 
-        // Every tab colored, as after a while of work.
-        stalls.Phase = "the tabs' first analysis";
-        await UiTestHelpers.WaitUntilAsync(() => fixture.Workspace.Documents.All(d => d.Classifications.Count > 1000), TimeSpan.FromMinutes(3), "every tab's colors");
+        // The tab in view colored by Roslyn, as after a moment of work.
+        stalls.Phase = "the tab's first analysis";
+        await UiTestHelpers.WaitUntilAsync(() => fixture.Workspace.ActiveDocument?.Classifications.Count > 1000, TimeSpan.FromMinutes(3), "the active tab's colors");
         var analysed = clock.Elapsed;
 
         stalls.Phase = "switching tabs";
@@ -93,7 +93,7 @@ public sealed class DocumentSmoothnessTests
         var report = new StringBuilder("# Twenty long tabs\n\n");
         var culture = CultureInfo.InvariantCulture;
         report.AppendLine(culture, $"- The sample with {Tabs} more C# files of about 1,500 lines each, in the IDE's window at 1280 × 800.");
-        report.AppendLine(culture, $"- Every tab colored by Roslyn {analysed.TotalSeconds:0.0} s after the first was opened.\n");
+        report.AppendLine(culture, $"- The tab in view colored by Roslyn {analysed.TotalSeconds:0.0} s after the first was opened.\n");
         report.AppendLine("| Action | Cost |");
         report.AppendLine("| --- | --- |");
         report.AppendLine(culture, $"| Opening a tab, to its first frame | {Smoothness.Spread(opening)} |");
