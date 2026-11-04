@@ -6,7 +6,7 @@ Compatibility Doctor:
   Newtonsoft.Json.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   Newtonsoft.Json: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: Newtonsoft.Json.TestConsole
-Built in 25.3 s: 0 errors, 0 warnings
+Built in 29.9 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   microsoft.build.tasks.git 1.0.0
       build/Microsoft.Build.Tasks.Git.props
@@ -82,16 +82,25 @@ Packages with analyzers or MSBuild files:
       build/uap10.0/xunit.runner.visualstudio.targets
       build/uap10.0/xunit.runner.visualstudio.uwp.dll
       build/uap10.0/xunit.runner.visualstudio.uwp.pri
-Editor: 8 files opened and analyzed in 0.3 s, 0 errors only the editor shows, 0 only the build shows
+Editor: 8 files opened and analyzed in 0.4 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 5 over 100 ms (0 over 250 ms, 0 over 1 s), 0.7 s in all, longest 221 ms during screenshots, 0.1 s of it garbage collection; answer p50 6.5 ms, p95 27.3 ms, p99 63.7 ms over 1175 questions in 32 s
+UI timings: document view 4 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 221 ms | 55 ms | 0.6 s | screenshots |
+| 128 ms | 14 ms | 0.9 s | screenshots |
+| 115 ms | 0 ms | 31.0 s | screenshots |
+| 114 ms | 0 ms | 31.1 s | screenshots |
+| 106 ms | 49 ms | 6.7 s | the first build |
 Output:
-Build started at 05:31:26...
+Build started at 07:49:02...
 1>------ Build started: Project: Newtonsoft.Json, Configuration: Debug ------
-1>Newtonsoft.Json -> compiled in memory (833 KB, 2919 ms)
+1>Newtonsoft.Json -> compiled in memory (833 KB, 3883 ms)
 2>------ Build started: Project: Newtonsoft.Json.FuzzTests, Configuration: Debug ------
-2>Newtonsoft.Json.FuzzTests -> compiled in memory (4 KB, 2272 ms)
+2>Newtonsoft.Json.FuzzTests -> compiled in memory (4 KB, 3030 ms)
 3>------ Build started: Project: Newtonsoft.Json.Tests, Configuration: Debug ------
-3>Newtonsoft.Json.Tests -> compiled in memory (2972.5 KB, 8079 ms)
+3>Newtonsoft.Json.Tests -> compiled in memory (2972.5 KB, 11871 ms)
 4>------ Build started: Project: Newtonsoft.Json.TestConsole, Configuration: Debug ------
-4>Newtonsoft.Json.TestConsole -> compiled in memory (3.5 KB, 5113 ms)
+4>Newtonsoft.Json.TestConsole -> compiled in memory (3.5 KB, 7207 ms)
 ========== Build: 4 succeeded, 0 failed ==========
 
