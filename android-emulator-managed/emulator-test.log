@@ -1,15 +1,34 @@
 Device: Android 15 (API 35), x86_64, screen 2560x1800
 Displays:
 Built-in Screen, displayId 0
+Overlay #1, displayId 2: a presentation display
 Performing Streamed Install
 Success
 Measurements:
-Startup to self test start: 15.85 s
+Startup to self test start: 18.66 s
+TabStudio startup: first frame at 18432 ms, ready at 18432 ms; process start to activity 4490 ms, application +914 ms, styles +1301 ms, services +1159 ms, theme +264 ms, view models +3335 ms, main view +3527 ms, start screen +28 ms, first frame +3414 ms
+TabStudio UI stalls: 319 over 100 ms (131 over 250 ms, 19 over 1 s), 128.1 s in all, longest 8676 ms during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution; answer p50 4.3 ms, p95 65.6 ms, p99 342.3 ms over 9609 questions in 431 s
+TabStudio UI timings: workspace view 4485 ms, workspace view model 1719 ms, document view 1702 ms, workspace view model 1569 ms, document view 1048 ms, document view 1015 ms, LivePanelView 715 ms, DatabaseExplorerView 503 ms, document view 455 ms, document view 405 ms, document view 316 ms, document view 265 ms
+TabStudio UI stall: 8676 ms at 0.0 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 7438 ms at 13.5 s during backing services
+TabStudio UI stall: 2860 ms at 23.1 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 2606 ms at 130.1 s during creating a document's view
+TabStudio UI stall: 2022 ms at 86.9 s during creating the DatabaseExplorerView
+TabStudio UI stall: 2008 ms at 409.8 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 1938 ms at 125.4 s during creating a document's view
+TabStudio UI stall: 1843 ms at 8.7 s during reading the solution
+TabStudio UI stall: 1602 ms at 139.7 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 1348 ms at 21.4 s during loading C#
+TabStudio UI stall: 1256 ms at 110.8 s during the step that ended with: Web: served on 127.0.0.1:44315 in 24.2 s, the API said "Hello, Tablet!" | Web screen: type…
+TabStudio UI stall: 1220 ms at 123.2 s during creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 1192 ms at 10.7 s during reading the solution
+TabStudio UI stall: 1187 ms at 142.3 s during creating a document's view → starting restore and analysis
+TabStudio UI stall: 1167 ms at 223.8 s during the step that ended with: WebAssembly: served on 127.0.0.1:43961 in 61.9 s with its boot files, no errors, run in th…
 Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
- Native Heap 640505 640464 36 42695 641456 718756 706521 7532
- Dalvik Heap 2882 2856 0 138 4912 8209 4105 4104
- TOTAL 1266903 1070788 41056 132559 1281448 726965 710626 11636
- TOTAL PSS: 1266903 TOTAL RSS: 1281448 TOTAL SWAP PSS: 132559
-TABSTUDIO_SELFTEST_OK 393.4 s: Shard: managed | What's your name? Tablet | Good morning, Tablet! This program was compiled and run on your tablet. | Statically typed languages, oldest first: | C#         since 2000 (26 years) | Rust       since 2015 (11 years) | The program 'HelloTablet' has exited with code 0 (0x0). | Debugger: Paused at a breakpoint · Program.cs, line 15, name = "Tablet" | Recording: historical loop total = 3 (expected 3). | Local AI: tiny GGUF generated 16 tokens / 55 characters at 60.0 tokens/s on device | Link: debugged on Self-test host over TLS 1.3 (6 requests), built on this device after it left | Live: shared the sample, Self-test guest joined over TLS (2 participants), edits went both ways within 36 ms | Language servers: Loopback Server ready, warning LB0003 on line 5, completion and Quick Info | Debug adapters: Paused at a breakpoint · greet.loopback, line 4, name = "Tablet" | SSH: device key generation, non-exportable signing provider and config import verified | Database: Keystore connection, SQLite schema, multiple SQL results and package native SQLite passed | Web: served on 127.0.0.1:45027 in 24.1 s, the API said "Hello, Tablet!" | Web screen: typed "Tablet" and tapped Greet through the browser's input on a 330 × 656 page, 3 layout findings, in 7.8 s | Static site: served on 127.0.0.1:44999 in 6.5 s | Static site preview: the page showed in 3.3 s, CSS applied without a reload and saved HTML reloaded in 3.0 s | WebAssembly: served on 127.0.0.1:34951 in 71.3 s with its boot files, no errors, run in the preview in 7.9 s: its Weather page fetched its forecast | Blazor: served on 127.0.0.1:43475 in 34.7 s with blazor.web.js (195 KB), no errors, left running | Go debugging: stopped at 13, name = "Tablet", console input and completed greeting | Rust debugging: stopped at 6, answer = 42, console input and completed greeting
+ Native Heap 666791 666724 56 13849 667788 714188 703216 7080
+ Dalvik Heap 3045 3016 0 157 4472 8217 4109 4108
+ TOTAL 1192808 1042600 29568 100249 1212760 722405 707325 11188
+ TOTAL PSS: 1192808 TOTAL RSS: 1212760 TOTAL SWAP PSS: 100249
+TABSTUDIO_SELFTEST_OK 430.8 s: Shard: managed | What's your name? Tablet | Good morning, Tablet! This program was compiled and run on your tablet. | Statically typed languages, oldest first: | C#         since 2000 (26 years) | Rust       since 2015 (11 years) | The program 'HelloTablet' has exited with code 0 (0x0). | Debugger: Paused at a breakpoint · Program.cs, line 15, name = "Tablet", 3 steps in 394 / 75 / 61 ms | Recording: historical loop total = 3 (expected 3). | Local AI: tiny GGUF generated 16 tokens / 55 characters at 25.4 tokens/s on device | Link: debugged on Self-test host over TLS 1.3 (6 requests), built on this device after it left | Live: shared the sample, Self-test guest joined over TLS (2 participants), edits went both ways within 122 ms | Language servers: Loopback Server ready, warning LB0003 on line 5, completion and Quick Info | Debug adapters: Paused at a breakpoint · greet.loopback, line 4, name = "Tablet" | SSH: device key generation, non-exportable signing provider and config import verified | Database: Keystore connection, SQLite schema, multiple SQL results and package native SQLite passed | Web: served on 127.0.0.1:44315 in 24.2 s, the API said "Hello, Tablet!" | Web screen: typed "Tablet" and tapped Greet through the browser's input on a 330 × 656 page, 3 layout findings, in 6.8 s | Static site: served on 127.0.0.1:34171 in 6.1 s | Static site preview: the page showed in 4.0 s, CSS applied without a reload and saved HTML reloaded in 3.7 s | WebAssembly: served on 127.0.0.1:43961 in 61.9 s with its boot files, no errors, run in the preview in 8.5 s: its Weather page fetched its forecast | Blazor: served on 127.0.0.1:39713 in 11.1 s with blazor.web.js (195 KB), no errors, left running | Go debugging: stopped at 13, name = "Tablet", console input and completed greeting | Rust debugging: stopped at 6, answer = 42, console input and completed greeting
 Shard: managed
-Seconds from launch to verdict: 412
+Seconds from launch to verdict: 453
