@@ -11,7 +11,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: ci-${{ github.ref }}
+  # Each of main's runs publishes its own version's release, so a push to main must not cancel or hold back the run
+  # before it (a waiting run is cancelled by the next one in its group): on main every commit gets its own group.
+  group: ci-${{ github.ref == 'refs/heads/main' && github.sha || github.ref }}
   cancel-in-progress: true
 
 env:
