@@ -72,7 +72,7 @@ public sealed class SolutionExplorerSmoothnessTests
             collapsing.Add(Smoothness.Measure(window, () => explorer.Toggle(row)));
         }
 
-        // Before 0.21.11 each toggle reset the list and made every row again.
+        // Before 0.21.7 each toggle reset the list and made every row again.
         Assert.Equal(0, resets);
         explorer.Toggle(row);
         var first = explorer.Rows[explorer.Rows.IndexOf(row) + 1];

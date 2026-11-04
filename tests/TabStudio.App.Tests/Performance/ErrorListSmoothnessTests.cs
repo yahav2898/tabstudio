@@ -54,7 +54,7 @@ public sealed class ErrorListSmoothnessTests
         var perUpdate = notifications / 30.0;
         Assert.Equal(Files * PerFile, errors.Items.Count);
 
-        // Before 0.21.11, the same update cleared the list and added every row back, one notification each: done here
+        // Before 0.21.7, the same update cleared the list and added every row back, one notification each: done here
         // to the same list, with the rows the update makes, for the comparison.
         var rows = errors.Items.ToList();
         var before = new List<UiCost>();
@@ -90,12 +90,12 @@ public sealed class ErrorListSmoothnessTests
         report.AppendLine("| --- | --- |");
         report.AppendLine(culture, $"| The solution's diagnostics arrive | {load} |");
         report.AppendLine(culture, $"| One file's analysis adds or removes an error (30 times) | {Smoothness.Spread(typing)}; {perUpdate:0.#} list notifications each |");
-        report.AppendLine(culture, $"| The same update as before 0.21.11: the list cleared and every row added back (10 times) | {Smoothness.Spread(before)}; {rows.Count + 1} list notifications each |");
+        report.AppendLine(culture, $"| The same update as before 0.21.7: the list cleared and every row added back (10 times) | {Smoothness.Spread(before)}; {rows.Count + 1} list notifications each |");
         report.AppendLine(culture, $"| Warnings filter on and off | {Smoothness.Spread(filters)} |");
         report.AppendLine(culture, $"| Typing a search, letter by letter, and erasing it | {Smoothness.Spread(search)} |");
         Smoothness.Write("error-list", report.ToString());
 
-        // Before 0.21.11 every such update cleared the list and added its 3,000 rows back one notification at a time.
+        // Before 0.21.7 every such update cleared the list and added its 3,000 rows back one notification at a time.
         Assert.True(perUpdate <= 2, $"one file's new analysis told the list about {perUpdate:0.#} changes, not the one row that changed");
         window.Close();
     }

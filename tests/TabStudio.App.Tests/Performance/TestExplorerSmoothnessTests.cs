@@ -46,12 +46,12 @@ public sealed class TestExplorerSmoothnessTests
         report.AppendLine(culture, $"- Discovery (the build's 5,000 tests arrive): {discovery}.\n");
         report.AppendLine("| Run All, the runner reporting from its threads | From the first start to the last result shown | The UI thread meanwhile |");
         report.AppendLine("| --- | --- | --- |");
-        report.AppendLine(culture, $"| Each start and result posted on its own, as before 0.21.11 | {beforeTime.TotalSeconds:0.00} s | {beforeStalls} |");
+        report.AppendLine(culture, $"| Each start and result posted on its own, as before 0.21.7 | {beforeTime.TotalSeconds:0.00} s | {beforeStalls} |");
         report.AppendLine(culture, $"| Queued and shown in batches | {afterTime.TotalSeconds:0.00} s | {afterStalls} |");
         Smoothness.Write("test-explorer", report.ToString());
     }
 
-    /// <summary>Run All with every test passing, reported as the workspace reported them before 0.21.11 or as it does now.</summary>
+    /// <summary>Run All with every test passing, reported as the workspace reported them before 0.21.7 or as it does now.</summary>
     private static async Task<(TimeSpan Ran, string Stalls, UiCost Discovery)> RunAllAsync(List<TestCase> cases, bool batched)
     {
         var ui = new AvaloniaUiDispatcher();

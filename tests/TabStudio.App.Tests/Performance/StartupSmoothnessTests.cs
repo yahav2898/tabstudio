@@ -126,7 +126,7 @@ public sealed class StartupSmoothnessTests
         Smoothness.Settle(window);
         Assert.Single(window.GetVisualDescendants().OfType<TabStudio.App.Views.Swarm.SwarmView>());
 
-        // What opening built before 0.21.11 besides: every other tool window, hidden.
+        // What opening built before 0.21.7 besides: every other tool window, hidden.
         var unbuilt = window.GetVisualDescendants().OfType<TabStudio.App.Controls.DeferredView>().Where(d => !d.IsRealized).ToList();
         clock.Restart();
         foreach (var view in unbuilt)
@@ -141,7 +141,7 @@ public sealed class StartupSmoothnessTests
         {
             Smoothness.Write("workspace-view", string.Create(
                 CultureInfo.InvariantCulture,
-                $"# The workspace's view\n\n- Built and drawn for the first time in {shown.TotalMilliseconds:0} ms with {visuals} visuals, the sample open.\n- The {unbuilt.Count} tool windows it no longer builds until they are shown, built as before 0.21.11: {rest.TotalMilliseconds:0} ms more, {allVisuals} visuals in all.\n"));
+                $"# The workspace's view\n\n- Built and drawn for the first time in {shown.TotalMilliseconds:0} ms with {visuals} visuals, the sample open.\n- The {unbuilt.Count} tool windows it no longer builds until they are shown, built as before 0.21.7: {rest.TotalMilliseconds:0} ms more, {allVisuals} visuals in all.\n"));
         }
 
         window.Close();

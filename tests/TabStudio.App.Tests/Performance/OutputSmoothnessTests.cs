@@ -37,14 +37,14 @@ public sealed class OutputSmoothnessTests
         report.AppendLine("- The Output panel shown in a 1280 × 400 window, keeping its last 1,000,000 characters; a frame asked for every 16 ms meanwhile.\n");
         report.AppendLine("| Appending | Every line shown after | Frames drawn meanwhile | The UI thread meanwhile |");
         report.AppendLine("| --- | --- | --- | --- |");
-        report.AppendLine(culture, $"| As before 0.21.11: everything queued in one job at normal priority, one insertion per write | {beforeTime.TotalSeconds:0.00} s | {beforeFrames} | {beforeStalls} |");
+        report.AppendLine(culture, $"| As before 0.21.7: everything queued in one job at normal priority, one insertion per write | {beforeTime.TotalSeconds:0.00} s | {beforeFrames} | {beforeStalls} |");
         report.AppendLine(culture, $"| In batches of 64 KB behind input and drawing | {afterTime.TotalSeconds:0.00} s | {afterFrames} | {afterStalls} |");
         Smoothness.Write("output", report.ToString());
     }
 
     /// <summary>
     /// Prints the lines from a thread of their own into a shown Output panel, through the panel, or the way the panel
-    /// appended them before 0.21.11: a copy of that code, writing into the same kind of view.
+    /// appended them before 0.21.7: a copy of that code, writing into the same kind of view.
     /// </summary>
     private static async Task<(TimeSpan Shown, string Stalls, int Frames)> FloodAsync(bool oldWay)
     {
