@@ -1,0 +1,9 @@
+run	menu: Extensions > File Icon Theme
+slow	menu: Extensions > File Icon Theme	still running after 20 s
+done	menu: Extensions > File Icon Theme	focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView/LightBulbView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/popup:LightBulbView/LightBulbView/PART_ContentPresenter
+run	menu: Extensions > Check for Updates
+done	menu: Extensions > Check for Updates	vm.ShowsEditorTouchBar=False, vm.CaretText=Ln 1, Col 1, vm.ShowsEditorStatus=False, focus=none
+run	menu: Tools > Toolchain Store
+done	menu: Tools > Toolchain Store	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/ToolchainOverlaysView/PART_ContentPresenter/StoreScrim, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/ToolchainOverlaysView/PART_ContentPresenter/StoreScrim/Store, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/ToolchainOverlaysView/PART_ContentPresenter/StoreScrim/Store/text:-1074083748, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/ToolchainOverlaysView/PART_ContentPresenter/StoreScrim/Store/text:-184014744
+run	menu: Tools > Theme > Dark
+done	menu: Tools > Theme > Dark	no change

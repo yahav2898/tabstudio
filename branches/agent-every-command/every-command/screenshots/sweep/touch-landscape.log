@@ -1,0 +1,297 @@
+run	tap (landscape): WorkspaceView > SearchButton "Search (Ctrl+Q)"
+done	tap (landscape): WorkspaceView > SearchButton "Search (Ctrl+Q)"	vm.Search=True, focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/UnifiedSearchView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/UnifiedSearchView/PART_ContentPresenter
+run	tap (landscape): WorkspaceView > "Save"
+done	tap (landscape): WorkspaceView > "Save"	vm.StatusText=Saved Program.cs, focus=AdaptiveBarItem, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1655179089, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-1030230043
+run	tap (landscape): WorkspaceView > "Save All"
+done	tap (landscape): WorkspaceView > "Save All"	no change
+problem	no-effect	tap (landscape): WorkspaceView > "Save All"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	tap (landscape): WorkspaceView > ConfigurationItem "Debug"
+done	tap (landscape): WorkspaceView > ConfigurationItem "Debug"	focus=MenuItem, +w/PART_ContentPresenter/list12878241, +w/PART_ContentPresenter/LayoutRoot, +w/PART_ContentPresenter/LayoutRoot/PART_ContentPresenter
+skipped	WorkspaceView > RunButton "Start Debugging (F5)"
+run	tap (landscape): WorkspaceView > RunTargetButton "Choose Startup Project or Launch Configuration"
+done	tap (landscape): WorkspaceView > RunTargetButton "Choose Startup Project or Launch Configuration"	focus=MenuItem, +w/PART_ContentPresenter/list55487211, +w/PART_ContentPresenter/LayoutRoot, +w/PART_ContentPresenter/LayoutRoot/PART_ContentPresenter
+run	tap (landscape): WorkspaceView > "Start Without Debugging"
+done	tap (landscape): WorkspaceView > "Start Without Debugging"	vm.StatusText=Ready, vm.Output=467, focus=none, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar
+run	tap (landscape): WorkspaceView > RunHostItem "Run on In-process"
+done	tap (landscape): WorkspaceView > RunHostItem "Run on In-process"	focus=MenuItem, +w/PART_ContentPresenter/list17334014, +w/PART_ContentPresenter/LayoutRoot, +w/PART_ContentPresenter/LayoutRoot/PART_ContentPresenter
+run	tap (landscape): WorkspaceView > "Toggle Line Comment"
+done	tap (landscape): WorkspaceView > "Toggle Line Comment"	focus=TextArea, editor=1190:-1551601797:0:0+0:0, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/border/PART_ScrollViewer/PART_ContentPresenter/PART_ItemsPresenter/PART_ContentPresenter/text:-1376769718, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/border/PART_ScrollViewer/PART_ContentPresenter/PART_ItemsPresenter/PART_ContentPresenter/text:-1719034114
+run	tap (landscape): WorkspaceView > "Undo"
+done	tap (landscape): WorkspaceView > "Undo"	focus=AdaptiveBarItem, editor=1190:-1551601797:0:0+0:0, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/border/PART_ScrollViewer/PART_ContentPresenter/PART_ItemsPresenter/PART_ContentPresenter/text:-1376769718, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/border/PART_ScrollViewer/PART_ContentPresenter/PART_ItemsPresenter/PART_ContentPresenter/text:-1719034114
+run	tap (landscape): WorkspaceView > "Format Document"
+done	tap (landscape): WorkspaceView > "Format Document"	vm.StatusText=Already formatted, focus=none, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-147084881, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1655179089
+run	tap (landscape): WorkspaceView > "Find"
+done	tap (landscape): WorkspaceView > "Find"	focus=AdaptiveBarItem, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_ContentPresenter/PART_Border, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_ContentPresenter/PART_Border/Expander, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_ContentPresenter/PART_Border/Expander/toggle16607508
+run	tap (landscape): WorkspaceView > ProblemsButton "Error List"
+done	tap (landscape): WorkspaceView > ProblemsButton "Error List"	vm.SelectedPanel=ErrorList, vm.IsErrorListSelected=True, vm.IsOutputSelected=False, focus=Button
+run	tap (landscape): WorkspaceView > FoldTouchBarButton "Fold the touch buttons away"
+done	tap (landscape): WorkspaceView > FoldTouchBarButton "Fold the touch buttons away"	vm.IsTouchBarCollapsed=True, focus=none, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/TouchBarHost/TouchBarFader/UnfoldTouchBarButton, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/TouchBarHost/TouchBarFader/UnfoldTouchBarButton/PART_HitArea
+run	tap (landscape): WorkspaceView > UnfoldTouchBarButton "Show the touch buttons"
+done	tap (landscape): WorkspaceView > UnfoldTouchBarButton "Show the touch buttons"	vm.IsTouchBarCollapsed=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/TouchBarHost/TouchBarFader/EditTouchBar, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/TouchBarHost/TouchBarFader/EditTouchBar/FoldTouchBarButton, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/TouchBarHost/TouchBarFader/EditTouchBar/FoldTouchBarButton/PART_HitArea
+run	tap (landscape): WorkspaceView > "Rename"
+done	tap (landscape): WorkspaceView > "Rename"	vm.StatusText=Place the caret on a name to rename it., +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-1487118457, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-147084881
+run	tap (landscape): WorkspaceView > "Peek"
+done	tap (landscape): WorkspaceView > "Peek"	vm.StatusText=Cannot peek at the symbol under the car…, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1586861530, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-1487118457
+run	tap (landscape): WorkspaceView > "Comment"
+done	tap (landscape): WorkspaceView > "Comment"	focus=TextArea, editor=1190:-1551601797:0:0+0:0, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/border/PART_ScrollViewer/PART_ContentPresenter/PART_ItemsPresenter/PART_ContentPresenter/text:-1376769718, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/EditorPanel/Editors/CodeEditorView/PART_ContentPresenter/PART_ScrollViewer/PART_ContentPresenter/PART_Border/PART_MessageView
+run	tap (landscape): WorkspaceView > "To Cursor"
+done	tap (landscape): WorkspaceView > "To Cursor"	vm.SelectedPanel=Locals, vm.IsOutputSelected=False, vm.State=Paused, vm.StatusText=Paused at the cursor · Program.cs, line…
+run	tap (landscape): WorkspaceView > "Format"
+done	tap (landscape): WorkspaceView > "Format"	vm.StatusText=Already formatted, focus=none, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:-147084881, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:319801217
+run	tap (landscape): WorkspaceView > "Run"
+done	tap (landscape): WorkspaceView > "Run"	vm.StatusText=Ready, vm.Output=465, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar/Root
+run	tap (landscape): WorkspaceView > "Error List"
+done	tap (landscape): WorkspaceView > "Error List"	vm.SelectedPanel=ErrorList, vm.IsErrorListSelected=True, vm.IsOutputSelected=False, focus=Button
+run	tap (landscape): WorkspaceView > "Output"
+done	tap (landscape): WorkspaceView > "Output"	no change
+problem	no-effect	tap (landscape): WorkspaceView > "Output"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	tap (landscape): WorkspaceView > "Compatibility Doctor"
+done	tap (landscape): WorkspaceView > "Compatibility Doctor"	vm.SelectedPanel=Compatibility, vm.IsOutputSelected=False, vm.IsCompatibilitySelected=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/CompatibilityView
+run	tap (landscape): WorkspaceView > "References"
+done	tap (landscape): WorkspaceView > "References"	vm.SelectedPanel=References, vm.IsOutputSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/ReferencesView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/ReferencesView/PART_ContentPresenter
+run	tap (landscape): WorkspaceView > "Terminal"
+done	tap (landscape): WorkspaceView > "Terminal"	vm.SelectedPanel=Terminal, vm.IsOutputSelected=False, vm.IsTerminalSelected=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/PART_HitArea/PART_ContentPresenter/text:1868693768
+run	tap (landscape): WorkspaceView > "Clear"
+done	tap (landscape): WorkspaceView > "Clear"	vm.Output=0, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_ContentPresenter/PART_Watermark, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/OutputView/PART_ContentPresenter/Editor/PART_ScrollViewer/PART_VerticalScrollBar/Root
+run	tap (landscape): WorkspaceView > HideBottomPanelButton "Hide"
+done	tap (landscape): WorkspaceView > HideBottomPanelButton "Hide"	vm.IsBottomPanelVisible=False, focus=none, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomSplitter, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock
+run	tap (landscape): SolutionExplorerView > "Collapse All"
+done	tap (landscape): SolutionExplorerView > "Collapse All"	focus=Button, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/SolutionExplorerView/PART_ContentPresenter/Tree/list61283886=2:0, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/SolutionExplorerView/PART_ContentPresenter/Tree/border/PART_ScrollViewer/PART_ContentPresenter/PART_ItemsPresenter/PART_ContentPresenter/text:-1310743347, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/SolutionExplorerView/PART_ContentPresenter/Tree/border/PART_ScrollViewer/PART_ContentPresenter/PART_ItemsPresenter/PART_ContentPresenter/text:-1380826538
+run	tap (landscape): PropertiesView > HeaderButton "Show or hide Properties"
+done	tap (landscape): PropertiesView > HeaderButton "Show or hide Properties"	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/PropertiesSplitter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/PropertiesPanel/PART_ContentPresenter/Rows, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/PropertiesPanel/PART_ContentPresenter/Rows/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/PropertiesPanel/PART_ContentPresenter/Rows/PART_ContentPresenter/text:1688454985
+problem	overlap	tap (landscape): PropertiesView > HeaderButton "Show or hide Properties"	Grid#SideBar > PropertiesView#PropertiesPanel > ContentPresenter#PART_ContentPresenter > Button#HeaderButton: Button HeaderButton lies under GridSplitter PropertiesSplitter: 330 × 3 dips of them overlap, and a tap there goes to GridSplitter PropertiesSplitter. [touch-landscape-dark-001.png]
+run	tap (landscape): WorkspaceView > "Solution Explorer (Ctrl+Alt+L)"
+done	tap (landscape): WorkspaceView > "Solution Explorer (Ctrl+Alt+L)"	vm.IsSideBarVisible=False, focus=ActivityButton, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideSplitter, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame
+run	tap (landscape): WorkspaceView > "Git Changes"
+done	tap (landscape): WorkspaceView > "Git Changes"	vm.SelectedSideBarPanel=GitChanges, vm.IsSolutionExplorerSelected=False, vm.IsGitChangesSelected=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/GitChangesView
+run	tap (landscape): WorkspaceView > "Pull Requests"
+done	tap (landscape): WorkspaceView > "Pull Requests"	vm.IsPullRequestsSelected=True, vm.SelectedSideBarPanel=PullRequests, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/PullRequestList
+run	tap (landscape): WorkspaceView > "Test Explorer (Ctrl+E, T)"
+done	tap (landscape): WorkspaceView > "Test Explorer (Ctrl+E, T)"	vm.SelectedSideBarPanel=TestExplorer, vm.IsSolutionExplorerSelected=False, vm.IsTestExplorerSelected=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/TestExplorer
+run	tap (landscape): WorkspaceView > "Claude"
+done	tap (landscape): WorkspaceView > "Claude"	vm.SelectedSideBarPanel=Agent, vm.IsSolutionExplorerSelected=False, vm.IsAgentSelected=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/AgentPanelView
+run	tap (landscape): WorkspaceView > "Swarm"
+done	tap (landscape): WorkspaceView > "Swarm"	vm.SelectedSideBarPanel=Swarm, vm.IsSolutionExplorerSelected=False, vm.IsSwarmSelected=True, vm.ShowsSwarmTab=True
+run	tap (landscape): WorkspaceView > "Live Share"
+done	tap (landscape): WorkspaceView > "Live Share"	vm.IsLiveSelected=True, vm.SelectedSideBarPanel=Live, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/LivePanelView
+run	tap (landscape): WorkspaceView > "Services"
+done	tap (landscape): WorkspaceView > "Services"	vm.IsServicesSelected=True, vm.SelectedSideBarPanel=Services, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/ServicesView
+run	tap (landscape): WorkspaceView > "Containers"
+done	tap (landscape): WorkspaceView > "Containers"	vm.IsContainersSelected=True, vm.SelectedSideBarPanel=Containers, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/ContainersView
+run	tap (landscape): WorkspaceView > "Database Explorer"
+done	tap (landscape): WorkspaceView > "Database Explorer"	vm.IsDatabaseSelected=True, vm.SelectedSideBarPanel=Database, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/DatabaseExplorerView
+run	tap (landscape): WorkspaceView > "Remote Explorer (SSH)"
+done	tap (landscape): WorkspaceView > "Remote Explorer (SSH)"	vm.IsRemoteExplorerSelected=True, vm.SelectedSideBarPanel=RemoteExplorer, vm.IsSolutionExplorerSelected=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView
+run	tap (landscape): WorkspaceView > "Extensions (Ctrl+Shift+X)"
+done	tap (landscape): WorkspaceView > "Extensions (Ctrl+Shift+X)"	vm.ShowsEditorTouchBar=False, vm.CaretText=Ln 1, Col 1, vm.ShowsEditorStatus=False, vm.Documents=/tmp/tabstudio-tests/080cfd6d89c54089b1…
+run	tap (landscape): WorkspaceView > "Navigate Backward"
+done	tap (landscape): WorkspaceView > "Navigate Backward"	vm.ShowsEditorTouchBar=False, vm.CaretText=Ln 1, Col 1, vm.ShowsEditorStatus=False, focus=AdaptiveBarItem
+run	tap (landscape): WorkspaceView > "Ln 12, Col 1"
+done	tap (landscape): WorkspaceView > "Ln 12, Col 1"	vm.Prompt=Go To Line, focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog/text:-1699758302
+run	tap (landscape: GitChanges): GitChangesView > "Sign in"
+done	tap (landscape: GitChanges): GitChangesView > "Sign in"	focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/GitHubSignInView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/GitHubSignInView/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/GitHubSignInView/PART_ContentPresenter/text:-1601544141
+run	tap (landscape: GitChanges): GitChangesView > "Sign in to GitHub"
+done	tap (landscape: GitChanges): GitChangesView > "Sign in to GitHub"	focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/GitHubSignInView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/GitHubSignInView/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/GitHubSignInView/PART_ContentPresenter/text:-1601544141
+run	tap (landscape: GitChanges): GitChangesView > "Private repository, Only you and the people you invite can see it."
+done	tap (landscape: GitChanges): GitChangesView > "Private repository, Only you and the people you invite can see it."	focus=CheckBox, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/GitChangesView/PART_ContentPresenter/PART_ContentPresenter/toggle55862302=False
+skipped	GitChangesView > "Publish to GitHub"
+run	tap (landscape: TestExplorer): TestExplorerView > "Start Live Unit Testing"
+done	tap (landscape: TestExplorer): TestExplorerView > "Start Live Unit Testing"	focus=Button
+run	tap (landscape: TestExplorer): TestExplorerView > "All tests"
+done	tap (landscape: TestExplorer): TestExplorerView > "All tests"	focus=Button
+run	tap (landscape: TestExplorer): TestExplorerView > "Passed tests"
+done	tap (landscape: TestExplorer): TestExplorerView > "Passed tests"	focus=Button
+run	tap (landscape: TestExplorer): TestExplorerView > "Failed tests"
+done	tap (landscape: TestExplorer): TestExplorerView > "Failed tests"	focus=Button
+run	tap (landscape: TestExplorer): TestExplorerView > "Skipped tests"
+done	tap (landscape: TestExplorer): TestExplorerView > "Skipped tests"	focus=Button
+run	tap (landscape: TestExplorer): TestExplorerView > "Tests not run"
+done	tap (landscape: TestExplorer): TestExplorerView > "Tests not run"	focus=Button
+run	tap (landscape: TestExplorer): TestExplorerView > "Group By: Project, Namespace, Class"
+done	tap (landscape: TestExplorer): TestExplorerView > "Group By: Project, Namespace, Class"	focus=MenuItem, +w/PART_ContentPresenter/list24994489, +w/PART_ContentPresenter/LayoutRoot, +w/PART_ContentPresenter/LayoutRoot/PART_ContentPresenter
+run	tap (landscape: Agent): AgentPanelView > "New Conversation"
+done	tap (landscape: Agent): AgentPanelView > "New Conversation"	focus=Button
+run	tap (landscape: Agent): AgentPanelView > "Agent Settings"
+done	tap (landscape: Agent): AgentPanelView > "Agent Settings"	focus=Button
+run	tap (landscape: Agent): AgentPanelView > "Local mode: a model on this device"
+done	tap (landscape: Agent): AgentPanelView > "Local mode: a model on this device"	focus=CheckBox, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/AgentPanelView/PART_ContentPresenter/Settings/PART_ContentPresenter/toggle29793640=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/AgentPanelView/PART_ContentPresenter/Settings/PART_ContentPresenter/text:968870048, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/AgentPanelView/PART_ContentPresenter/Settings/PART_ContentPresenter/text:976028110
+run	tap (landscape: Agent): AgentPanelView > "Inline completions: Tab accepts"
+done	tap (landscape: Agent): AgentPanelView > "Inline completions: Tab accepts"	focus=CheckBox, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/AgentPanelView/PART_ContentPresenter/Settings/PART_ContentPresenter/toggle28555995=True
+run	tap (landscape: Agent): AgentPanelView > ExpanderHeader "The model's license"
+done	tap (landscape: Agent): AgentPanelView > ExpanderHeader "The model's license"	focus=ToggleButton, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/AgentPanelView/PART_ContentPresenter/Settings/PART_ContentPresenter/ExpanderHeader/toggle22713713=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/AgentPanelView/PART_ContentPresenter/Settings/PART_ContentPresenter/ExpanderContent, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/AgentPanelView/PART_ContentPresenter/Settings/PART_ContentPresenter/ExpanderContent/PART_ContentPresenter
+run	tap (landscape: WebPreview): WebPreviewView > "Back"
+done	tap (landscape: WebPreview): WebPreviewView > "Back"	focus=Button
+run	tap (landscape: WebPreview): WebPreviewView > "Forward"
+done	tap (landscape: WebPreview): WebPreviewView > "Forward"	focus=Button
+run	tap (landscape: WebPreview): WorkspaceView > "Web Preview"
+done	tap (landscape: WebPreview): WorkspaceView > "Web Preview"	vm.IsSideBarVisible=False, focus=ActivityButton, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideSplitter, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame
+run	tap (landscape: AppPreview): AppPreviewView > "Device Matrix: the app on every screen"
+done	tap (landscape: AppPreview): AppPreviewView > "Device Matrix: the app on every screen"	vm.ShowsEditorTouchBar=False, vm.CaretText=Ln 1, Col 1, vm.Documents=/tmp/tabstudio-tests/080cfd6d89c54089b1…, focus=Button
+run	tap (landscape: AppPreview): WorkspaceView > "App Preview"
+done	tap (landscape: AppPreview): WorkspaceView > "App Preview"	vm.IsSideBarVisible=False, focus=ActivityButton, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideSplitter, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame
+run	tap (landscape: Actions): ActionsView > "Sign in"
+done	tap (landscape: Actions): ActionsView > "Sign in"	focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/GitHubSignInView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/GitHubSignInView/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/GitHubSignInView/PART_ContentPresenter/text:-1601544141
+run	tap (landscape: Actions): ActionsView > "Tell me when a run finishes, Runs on this branch, and runs you start or re-run here. Only while TabStudio is running."
+done	tap (landscape: Actions): ActionsView > "Tell me when a run finishes, Runs on this branch, and runs you start or re-run here. Only while TabStudio is running."	focus=CheckBox, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/ActionsView/PART_ContentPresenter/Refresher/PART_ContentPresenter/MainScroller/PART_ContentPresenter/toggle16669395=False
+run	tap (landscape: Actions): WorkspaceView > "GitHub Actions"
+done	tap (landscape: Actions): WorkspaceView > "GitHub Actions"	vm.IsSideBarVisible=False, focus=ActivityButton, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideSplitter, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame
+run	tap (landscape: Swarm): SwarmView > "Add a device"
+done	tap (landscape: Swarm): SwarmView > "Add a device"	focus=Button, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/SwarmView/PART_ContentPresenter/text:232131656, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/SwarmView/PART_ContentPresenter/PART_ContentPresenter/text:-494346012, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/SwarmView/PART_ContentPresenter/PART_ContentPresenter/text:-582196301
+run	tap (landscape: Swarm): SwarmView > "Device Matrix: every screen at once"
+done	tap (landscape: Swarm): SwarmView > "Device Matrix: every screen at once"	vm.ShowsEditorTouchBar=False, vm.CaretText=Ln 1, Col 1, focus=Button, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/list7171417=3:1
+run	tap (landscape: Swarm): SwarmView > "Record a UI test"
+done	tap (landscape: Swarm): SwarmView > "Record a UI test"	focus=Button, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/SwarmView/PART_ContentPresenter/PART_ContentPresenter/UiTestRecorderView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/SwarmView/PART_ContentPresenter/PART_ContentPresenter/UiTestRecorderView/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/SwarmView/PART_ContentPresenter/PART_ContentPresenter/UiTestRecorderView/PART_ContentPresenter/text:-391824176
+run	tap (landscape: Swarm): SwarmView > "More"
+done	tap (landscape: Swarm): SwarmView > "More"	focus=MenuItem, +w/PART_ContentPresenter/list41145072, +w/PART_ContentPresenter/LayoutRoot, +w/PART_ContentPresenter/LayoutRoot/PART_ContentPresenter
+run	tap (landscape: Swarm): SwarmView > "Mirror input"
+done	tap (landscape: Swarm): SwarmView > "Mirror input"	focus=ToggleSwitch, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/SwarmView/PART_ContentPresenter/PART_ContentPresenter/toggle39750562=True
+run	tap (landscape: Swarm): SwarmView > "Pause all on a breakpoint"
+done	tap (landscape: Swarm): SwarmView > "Pause all on a breakpoint"	focus=ToggleSwitch, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/SwarmView/PART_ContentPresenter/PART_ContentPresenter/toggle32123075=False
+skipped	UiTestRecorderView > "Discard the recording"
+run	tap (landscape: Swarm): UiTestRecorderView > "Record"
+done	tap (landscape: Swarm): UiTestRecorderView > "Record"	no change
+problem	no-effect	tap (landscape: Swarm): UiTestRecorderView > "Record"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	tap (landscape: Swarm): WorkspaceView > "Swarm: 0 devices"
+done	tap (landscape: Swarm): WorkspaceView > "Swarm: 0 devices"	focus=AdaptiveBarItem
+run	tap (landscape: WindowsBridge): WorkspaceView > "Windows Bridge"
+done	tap (landscape: WindowsBridge): WorkspaceView > "Windows Bridge"	vm.IsSideBarVisible=False, focus=ActivityButton, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideSplitter, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame
+run	tap (landscape: Database): DatabaseExplorerView > "Add Connection"
+done	tap (landscape: Database): DatabaseExplorerView > "Add Connection"	focus=Button, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/DatabaseExplorerView/PART_ContentPresenter/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/DatabaseExplorerView/PART_ContentPresenter/PART_ContentPresenter/text:1597952765, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/DatabaseExplorerView/PART_ContentPresenter/PART_ContentPresenter/text:1365381696
+run	tap (landscape: Database): DatabaseExplorerView > "New Query"
+done	tap (landscape: Database): DatabaseExplorerView > "New Query"	focus=Button
+run	tap (landscape: Database): DatabaseExplorerView > "More"
+done	tap (landscape: Database): DatabaseExplorerView > "More"	focus=MenuItem, +w/PART_ContentPresenter/list28774651, +w/PART_ContentPresenter/LayoutRoot, +w/PART_ContentPresenter/LayoutRoot/PART_ContentPresenter
+run	tap (landscape: Database): DatabaseExplorerView > ConnectionsTab "Connections"
+done	tap (landscape: Database): DatabaseExplorerView > ConnectionsTab "Connections"	focus=Button
+run	tap (landscape: Database): DatabaseExplorerView > EfCoreTab "EF Core"
+done	tap (landscape: Database): DatabaseExplorerView > EfCoreTab "EF Core"	focus=Button, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/DatabaseExplorerView/PART_ContentPresenter/PART_ContentPresenter/text:-664064860, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/DatabaseExplorerView/PART_ContentPresenter/PART_ContentPresenter/list11214205, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/DatabaseExplorerView/PART_ContentPresenter/PART_ContentPresenter/PART_ContentPresenter/ContentPresenter/PART_ContentPresenter/text:197528772
+run	tap (landscape: Database): DatabaseExplorerView > "Build and Find DbContexts"
+done	tap (landscape: Database): DatabaseExplorerView > "Build and Find DbContexts"	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/DatabaseExplorerView/PART_ContentPresenter/PART_ContentPresenter/text:-2080654007, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/DatabaseExplorerView/PART_ContentPresenter/PART_ContentPresenter/text:-1888070070
+run	tap (landscape: Database): DatabaseExplorerView > "List Migrations"
+done	tap (landscape: Database): DatabaseExplorerView > "List Migrations"	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/DatabaseExplorerView/PART_ContentPresenter/PART_ContentPresenter/text:-274621730, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/DatabaseExplorerView/PART_ContentPresenter/PART_ContentPresenter/text:-2080654007, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/DatabaseExplorerView/PART_ContentPresenter/PART_VerticalScrollBar, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/DatabaseExplorerView/PART_ContentPresenter/PART_VerticalScrollBar/Root
+run	tap (landscape: Database): DatabaseExplorerView > "Update Database"
+done	tap (landscape: Database): DatabaseExplorerView > "Update Database"	no change
+problem	no-effect	tap (landscape: Database): DatabaseExplorerView > "Update Database"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	tap (landscape: Database): DatabaseExplorerView > "Add"
+done	tap (landscape: Database): DatabaseExplorerView > "Add"	no change
+problem	no-effect	tap (landscape: Database): DatabaseExplorerView > "Add"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	tap (landscape: RemoteExplorer): RemoteExplorerView > "Refresh the remote folder"
+done	tap (landscape: RemoteExplorer): RemoteExplorerView > "Refresh the remote folder"	focus=Button, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/text:-1060002169, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/text:-36965202
+run	tap (landscape: RemoteExplorer): RemoteExplorerView > "More"
+done	tap (landscape: RemoteExplorer): RemoteExplorerView > "More"	focus=MenuItem, +w/PART_ContentPresenter/list18969075, +w/PART_ContentPresenter/LayoutRoot, +w/PART_ContentPresenter/LayoutRoot/PART_ContentPresenter
+run	tap (landscape: RemoteExplorer): RemoteExplorerView > "Open Folder"
+done	tap (landscape: RemoteExplorer): RemoteExplorerView > "Open Folder"	focus=Button, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/text:-21633201, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/text:-1060002169
+run	tap (landscape: RemoteExplorer): RemoteExplorerView > ExpanderHeader "Add or edit a host"
+done	tap (landscape: RemoteExplorer): RemoteExplorerView > ExpanderHeader "Add or edit a host"	focus=ToggleButton, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/PART_ContentPresenter/ExpanderHeader/toggle58177639=False, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/PART_ContentPresenter/ExpanderContent, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/PART_ContentPresenter/ExpanderContent/PART_ContentPresenter
+run	tap (landscape: RemoteExplorer): RemoteExplorerView > ExpanderHeader "Find in remote files"
+done	tap (landscape: RemoteExplorer): RemoteExplorerView > ExpanderHeader "Find in remote files"	focus=ToggleButton, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/PART_ContentPresenter/ExpanderHeader/toggle7374870=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/PART_ContentPresenter/ExpanderContent, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/PART_ContentPresenter/ExpanderContent/PART_ContentPresenter
+run	tap (landscape: RemoteExplorer): RemoteExplorerView > "Find All"
+done	tap (landscape: RemoteExplorer): RemoteExplorerView > "Find All"	focus=Button, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/text:1519497893, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/text:-21633201
+run	tap (landscape: RemoteExplorer): RemoteExplorerView > "Open Match"
+done	tap (landscape: RemoteExplorer): RemoteExplorerView > "Open Match"	focus=Button
+run	tap (landscape: RemoteExplorer): RemoteExplorerView > ExpanderHeader "Build and run on the server"
+done	tap (landscape: RemoteExplorer): RemoteExplorerView > ExpanderHeader "Build and run on the server"	focus=ToggleButton, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/PART_ContentPresenter/ExpanderHeader/toggle56217376=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/PART_ContentPresenter/ExpanderContent/PART_ContentPresenter/text:-1223014030, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/RemoteExplorerView/PART_ContentPresenter/PART_ContentPresenter/ExpanderContent/PART_ContentPresenter/text:-1418146821
+run	tap (landscape: Containers): ContainersView > "Refresh images and containers"
+done	tap (landscape: Containers): ContainersView > "Refresh images and containers"	focus=Button
+run	tap (landscape: Containers): ContainersView > "Pull image"
+done	tap (landscape: Containers): ContainersView > "Pull image"	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/ContainersView/PART_ContentPresenter/PART_ContentPresenter/text:-858403428, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/OperationsButton, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/OperationsButton/PART_HitArea, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/OperationsButton/PART_HitArea/PART_ContentPresenter
+run	tap (landscape: Containers): ContainersView > "Run image"
+done	tap (landscape: Containers): ContainersView > "Run image"	focus=Button
+run	tap (landscape: Containers): ContainersView > "Cancel"
+done	tap (landscape: Containers): ContainersView > "Cancel"	+w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/ContainersView/PART_ContentPresenter/text:-1084416696, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/ContainersView/PART_ContentPresenter/PART_ContentPresenter/text:-858403428, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/OperationsButton, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/OperationsButton/PART_HitArea
+run	tap (landscape: Containers): ContainersView > "Start"
+done	tap (landscape: Containers): ContainersView > "Start"	-w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/ContainersView/PART_ContentPresenter/text:-1084416696
+run	tap (landscape: Containers): ContainersView > "Stop"
+done	tap (landscape: Containers): ContainersView > "Stop"	no change
+problem	no-effect	tap (landscape: Containers): ContainersView > "Stop"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+run	tap (landscape: Containers): ContainersView > "Restart"
+done	tap (landscape: Containers): ContainersView > "Restart"	no change
+problem	no-effect	tap (landscape: Containers): ContainersView > "Restart"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+skipped	ContainersView > "Remove"
+run	tap (landscape: Containers): ContainersView > "Terminal"
+done	tap (landscape: Containers): ContainersView > "Terminal"	focus=Button, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/ContainersView/PART_ContentPresenter/text:311280377
+run	tap (landscape: Live): LivePanelView > "More"
+done	tap (landscape: Live): LivePanelView > "More"	focus=MenuItem, +w/PART_ContentPresenter/list39923084, +w/PART_ContentPresenter/LayoutRoot, +w/PART_ContentPresenter/LayoutRoot/PART_ContentPresenter
+run	tap (landscape: Live): LivePanelView > "Share session"
+done	tap (landscape: Live): LivePanelView > "Share session"	vm.StatusText=Sharing the workspace: scan the code to…, vm.IsLiveHost=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/LivePanelView/PART_ContentPresenter/text:-1244692217, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/LivePanelView/PART_ContentPresenter/PART_ContentPresenter/text:716946080
+run	tap (landscape: Live): LivePanelView > "Show the session's code"
+done	tap (landscape: Live): LivePanelView > "Show the session's code"	focus=Button, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/LiveShareView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/LiveShareView/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/LiveShareView/PART_ContentPresenter/text:326573209
+run	tap (landscape: Live): LivePanelView > "Guests can edit"
+done	tap (landscape: Live): LivePanelView > "Guests can edit"	focus=CheckBox, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/LivePanelView/PART_ContentPresenter/PART_ContentPresenter/toggle28398877=False
+run	tap (landscape: Live): LivePanelView > "Classroom: everyone follows the presenter"
+done	tap (landscape: Live): LivePanelView > "Classroom: everyone follows the presenter"	focus=CheckBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/LivePanelView/PART_ContentPresenter/PART_ContentPresenter/text:-1278988946, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/LivePanelView/PART_ContentPresenter/PART_ContentPresenter/toggle8123258=True, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/LivePanelView/PART_ContentPresenter/PART_ContentPresenter/PART_HitArea/PART_ContentPresenter/text:-1212109987
+run	tap (landscape: Live): LivePanelView > "Let no one else join"
+done	tap (landscape: Live): LivePanelView > "Let no one else join"	focus=CheckBox, w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/LivePanelView/PART_ContentPresenter/PART_ContentPresenter/toggle60372542=True
+run	tap (landscape: Live): LivePanelView > "Take control back"
+done	tap (landscape: Live): LivePanelView > "Take control back"	focus=Button
+run	tap (landscape: Live): LivePanelView > "End the session"
+done	tap (landscape: Live): LivePanelView > "End the session"	vm.StatusText=You ended the session for 0 guests., vm.IsLiveHost=False, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/LivePanelView/PART_ContentPresenter/PART_ContentPresenter/text:199092927, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/SideBarFrame/SideBar/LivePanelView/PART_ContentPresenter/PART_ContentPresenter/text:-878055739
+run	tap (landscape: Live): LivePanelView > "Join a session"
+done	tap (landscape: Live): LivePanelView > "Join a session"	focus=Button, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LiveJoinView, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LiveJoinView/PART_ContentPresenter, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/LiveJoinView/PART_ContentPresenter/text:-516356113
+run	tap (landscape: ErrorList): ErrorListView > "Entire Solution"
+done	tap (landscape: ErrorList): ErrorListView > "Entire Solution"	focus=Button, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/ErrorListView/PART_ContentPresenter/FilterBar/PART_ContentPresenter/PART_HitArea/PART_ContentPresenter/text:-211134218, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/ErrorListView/PART_ContentPresenter/FilterBar/PART_ContentPresenter/PART_HitArea/PART_ContentPresenter/text:1625247120
+run	tap (landscape: ErrorList): ErrorListView > "Current Document"
+done	tap (landscape: ErrorList): ErrorListView > "Current Document"	focus=Button, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/ErrorListView/PART_ContentPresenter/FilterBar/PART_ContentPresenter/PART_HitArea/PART_ContentPresenter/text:1625247120, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/MainArea/EditorArea/BottomDock/ErrorListView/PART_ContentPresenter/FilterBar/PART_ContentPresenter/PART_HitArea/PART_ContentPresenter/text:-211134218
+run	tap (landscape: ErrorList): ErrorListView > "0 Errors"
+done	tap (landscape: ErrorList): ErrorListView > "0 Errors"	focus=Button
+run	tap (landscape: ErrorList): ErrorListView > "0 Warnings"
+done	tap (landscape: ErrorList): ErrorListView > "0 Warnings"	focus=Button
+run	tap (landscape: ErrorList): ErrorListView > "0 Messages"
+done	tap (landscape: ErrorList): ErrorListView > "0 Messages"	focus=Button
+run	tap (landscape: Locals): WorkspaceView > "Locals"
+done	tap (landscape: Locals): WorkspaceView > "Locals"	focus=Button
+run	tap (landscape: Locals): WorkspaceView > "Watch"
+done	tap (landscape: Locals): WorkspaceView > "Watch"	vm.SelectedPanel=Watch, vm.IsLocalsSelected=False, vm.IsWatchSelected=True, focus=Button
+run	tap (landscape: Locals): WorkspaceView > "Call Stack"
+done	tap (landscape: Locals): WorkspaceView > "Call Stack"	vm.SelectedPanel=CallStack, vm.IsLocalsSelected=False, vm.IsCallStackSelected=True, focus=Button
+run	tap (landscape: Terminal): WorkspaceView > "Restart"
+done	tap (landscape: Terminal): WorkspaceView > "Restart"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "Esc"
+done	tap (landscape: Terminal): TerminalPanelView > "Esc"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "Tab"
+done	tap (landscape: Terminal): TerminalPanelView > "Tab"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "Ctrl"
+done	tap (landscape: Terminal): TerminalPanelView > "Ctrl"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "Alt"
+done	tap (landscape: Terminal): TerminalPanelView > "Alt"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "←"
+done	tap (landscape: Terminal): TerminalPanelView > "←"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "↑"
+done	tap (landscape: Terminal): TerminalPanelView > "↑"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "↓"
+done	tap (landscape: Terminal): TerminalPanelView > "↓"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "→"
+done	tap (landscape: Terminal): TerminalPanelView > "→"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "Home"
+done	tap (landscape: Terminal): TerminalPanelView > "Home"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "End"
+done	tap (landscape: Terminal): TerminalPanelView > "End"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "PgUp"
+done	tap (landscape: Terminal): TerminalPanelView > "PgUp"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "PgDn"
+done	tap (landscape: Terminal): TerminalPanelView > "PgDn"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "|"
+done	tap (landscape: Terminal): TerminalPanelView > "|"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "~"
+done	tap (landscape: Terminal): TerminalPanelView > "~"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "/"
+done	tap (landscape: Terminal): TerminalPanelView > "/"	focus=TerminalView
+run	tap (landscape: Terminal): TerminalPanelView > "-"
+done	tap (landscape: Terminal): TerminalPanelView > "-"	focus=TerminalView
+run	tap (landscape: Logcat): WorkspaceView > "Logcat"
+done	tap (landscape: Logcat): WorkspaceView > "Logcat"	focus=Button
+run	tap (landscape: Logcat): WorkspaceView > PART_Action "Run Android App"
+done	tap (landscape: Logcat): WorkspaceView > PART_Action "Run Android App"	vm.StatusText=Choose a Gradle Android or Capacitor st…, focus=Button, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:1919287468, -w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/StatusBar/StatusMessage/StatusMessageText/text:99225684
+run	tap (landscape: SerialMonitor): WorkspaceView > "Serial Monitor"
+done	tap (landscape: SerialMonitor): WorkspaceView > "Serial Monitor"	focus=Button
+run	tap (landscape: SerialMonitor): SerialMonitorView > "Speed and interface; 8 data bits, no parity, 1 stop bit (8-N-1)"
+done	tap (landscape: SerialMonitor): SerialMonitorView > "Speed and interface; 8 data bits, no parity, 1 stop bit (8-N-1)"	focus=TextBox, +w/PART_ContentPresenter/LayoutRoot, +w/PART_ContentPresenter/LayoutRoot/PART_ContentPresenter, +w/PART_ContentPresenter/LayoutRoot/PART_ContentPresenter/PART_ContentPresenter
+run	tap (landscape: SerialMonitor): SerialMonitorView > "Refresh the USB devices"
+done	tap (landscape: SerialMonitor): SerialMonitorView > "Refresh the USB devices"	focus=Button
+run	tap (landscape: SerialMonitor): SerialMonitorView > "Connect"
+done	tap (landscape: SerialMonitor): SerialMonitorView > "Connect"	focus=Button
+run	tap (landscape: Peripherals): WorkspaceView > "Peripherals"
+done	tap (landscape: Peripherals): WorkspaceView > "Peripherals"	focus=Button
+run	tap (landscape: Peripherals): EmbeddedPeripheralsView > "Load SVD"
+done	tap (landscape: Peripherals): EmbeddedPeripheralsView > "Load SVD"	vm.Prompt=Load device registers, focus=TextBox, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog, +w/PART_ContentPresenter/MainView/PART_ContentPresenter/Root/Ide/WorkspaceView/PART_ContentPresenter/PromptDialog/text:-662073184
+tapped	146
