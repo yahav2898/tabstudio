@@ -116,6 +116,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         InitializeTouchScrolling();
         InitializeLive();
         InitializeAccessibility();
+        InitializeCaretKeeping();
     }
 
     /// <summary>The editor control, for tests and keyboard focus.</summary>
@@ -300,6 +301,15 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
                 break;
             case EditorAction.SelectAll:
                 _editor.SelectAll();
+                break;
+            case EditorAction.Cut:
+                _editor.Cut();
+                break;
+            case EditorAction.Copy:
+                _editor.Copy();
+                break;
+            case EditorAction.Paste:
+                _editor.Paste();
                 break;
             case EditorAction.Focus:
                 InputModality.FocusUnlessTouch(_editor.TextArea);

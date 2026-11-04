@@ -277,7 +277,7 @@ public sealed class IntelliSenseEditorTests
             new string?[]
             {
                 "Quick Actions and Refactorings...", "Rename...", "Go To Definition", "Peek Definition", "Go To Implementation", "Find All References",
-                "Cut", "Copy", "Paste", "Format Document", "Toggle Line Comment",
+                "Cut", "Copy", "Paste", "Select All", "Format Document", "Toggle Line Comment",
             },
             headers);
         window.Close();

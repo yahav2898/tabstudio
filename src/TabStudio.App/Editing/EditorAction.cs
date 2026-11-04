@@ -41,4 +41,13 @@ public enum EditorAction
 
     /// <summary>Show Quick Info for the symbol at the caret (Ctrl+K, Ctrl+I).</summary>
     QuickInfo,
+
+    /// <summary>Cut the selection to the clipboard.</summary>
+    Cut,
+
+    /// <summary>Copy the selection to the clipboard.</summary>
+    Copy,
+
+    /// <summary>Paste the clipboard at the caret.</summary>
+    Paste,
 }

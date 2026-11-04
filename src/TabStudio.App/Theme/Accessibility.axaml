@@ -1,7 +1,8 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:TabStudio.App.Controls"
-        xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit">
+        xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+        xmlns:aes="clr-namespace:AvaloniaEdit.Search;assembly=AvaloniaEdit">
 
   <!--
     The accessibility rules every view follows without saying so (docs/design/README.md, "Accessibility").
@@ -34,6 +35,14 @@
   </Style>
   <!-- The few toggle buttons a view draws itself, such as the anchor editor's sides. -->
   <Style Selector="ToggleButton.target">
+    <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
+    <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
+  </Style>
+  <!--
+    The editor's find panel (AvaloniaEdit's SearchPanel): its Match case, Whole word and Regular expression toggles and
+    its expander were 22 × 20, under half a fingertip.
+  -->
+  <Style Selector="aes|SearchPanel ToggleButton">
     <Setter Property="MinHeight" Value="{DynamicResource Target.Size}" />
     <Setter Property="MinWidth" Value="{DynamicResource Target.Size}" />
   </Style>

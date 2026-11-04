@@ -365,7 +365,8 @@ public sealed class AdaptiveBar : Panel
                 Header = GetMenuHeader(item) ?? item.Label,
                 Command = item.Command,
                 CommandParameter = item.CommandParameter,
-                IsEnabled = item.IsEffectivelyEnabled,
+                // A label, such as the encoding, says what it says; tapping it runs nothing.
+                IsEnabled = item.IsEffectivelyEnabled && !item.IsLabel,
                 Icon = item.Icon is null ? null : MenuIcon(item),
             };
             if (item.Gesture is { } gesture)
