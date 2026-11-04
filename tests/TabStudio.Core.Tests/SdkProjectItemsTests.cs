@@ -553,6 +553,10 @@ public sealed class SdkProjectItemsTests
                   <AdditionalFiles Include="@(Constant)" />
                 </ItemGroup>
               </Target>
+              <!-- Not ThisAssembly's: shows the file constants in the message below when the test fails. -->
+              <Target Name="ShowFileConstants" AfterTargets="_InjectConstantAdditionalFiles">
+                <ItemGroup><AdditionalFiles Include="@(FileConstant)" /></ItemGroup>
+              </Target>
             </Project>
             """);
 
