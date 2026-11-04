@@ -258,6 +258,11 @@ public sealed class TestSession : IDisposable
             _disposed = true;
         }
 
+        if (_folder is not null)
+        {
+            OutputFolder.Release(_folder);
+        }
+
         foreach (var locator in _locators)
         {
             locator.Dispose();

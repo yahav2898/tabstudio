@@ -51,6 +51,10 @@ public sealed class RunEnvironmentTests : IDisposable
                 Assert.Equal(Folder, Directory.GetCurrentDirectory());
 
             [Fact]
+            public void ItsFileIsThere() =>
+                Assert.True(File.Exists(typeof(EnvironmentTests).Assembly.Location) && Directory.Exists(AppContext.BaseDirectory));
+
+            [Fact]
             public void FindsItsOwnTypesByName() =>
                 Assert.Same(AssemblyLoadContext.GetLoadContext(typeof(EnvironmentTests).Assembly), AssemblyLoadContext.CurrentContextualReflectionContext);
 
@@ -145,7 +149,7 @@ public sealed class RunEnvironmentTests : IDisposable
         var summary = await UserProject.RunAllAsync(EnvironmentSource.Replace("FOLDER", _folder, StringComparison.Ordinal), UserProject.XunitAssemblies, new TestRunOptions { OutputDirectory = _folder });
 
         Assert.All(summary.Results, r => Assert.True(r.Outcome == TestOutcome.Passed, $"{r.Test.DisplayName}: {r.Message}"));
-        Assert.Equal(5, summary.Passed);
+        Assert.Equal(6, summary.Passed);
 
         // The IDE's own directories come back when the run ends.
         Assert.Equal(before, Directory.GetCurrentDirectory());
@@ -162,16 +166,25 @@ public sealed class RunEnvironmentTests : IDisposable
 
         // The same assembly name with other code, as after an edit: the first session's file stays as it was.
         var changed = UserProject.Compile(source + "\npublic sealed class Added { }\n", UserProject.XunitAssemblies) with { Name = first.Tests[0].AssemblyName };
-        using var second = TestSession.Load([changed], UserProject.XunitAssemblies, new TestRunOptions { OutputDirectory = _folder });
-        Assert.Equal(_folder + "-2", second.OutputDirectory);
+        using (var second = TestSession.Load([changed], UserProject.XunitAssemblies, new TestRunOptions { OutputDirectory = _folder }))
+        {
+            Assert.Equal(_folder + "-2", second.OutputDirectory);
 
-        var summary = await second.RunSelectedAsync(["Output.Tests.EnvironmentTests.FindsItsOwnTypesByName"]);
-        Assert.Equal(1, summary.Passed);
+            // A third build while the second session is still open, as Test Explorer's beside a paused Debug Tests:
+            // it takes the next name and leaves the open session's folder, files and base directory alone.
+            var third = UserProject.Compile(source + "\npublic sealed class AddedAgain { }\n", UserProject.XunitAssemblies) with { Name = first.Tests[0].AssemblyName };
+            using var thirdSession = TestSession.Load([third], UserProject.XunitAssemblies, new TestRunOptions { OutputDirectory = _folder });
+            Assert.Equal(_folder + "-3", thirdSession.OutputDirectory);
+            Assert.True(Directory.Exists(_folder + "-2"));
 
-        // A third build takes the next name and deletes the sibling before it, so edits leave at most one behind.
-        var third = UserProject.Compile(source + "\npublic sealed class AddedAgain { }\n", UserProject.XunitAssemblies) with { Name = first.Tests[0].AssemblyName };
-        using var thirdSession = TestSession.Load([third], UserProject.XunitAssemblies, new TestRunOptions { OutputDirectory = _folder });
-        Assert.Equal(_folder + "-3", thirdSession.OutputDirectory);
+            var summary = await second.RunSelectedAsync(["Output.Tests.EnvironmentTests.FindsItsOwnTypesByName", "Output.Tests.EnvironmentTests.ItsFileIsThere"]);
+            Assert.Equal(2, summary.Passed);
+        }
+
+        // Once no session uses it, the next build deletes it, so edits do not pile siblings up.
+        var fourth = UserProject.Compile(source + "\npublic sealed class AddedOnceMore { }\n", UserProject.XunitAssemblies) with { Name = first.Tests[0].AssemblyName };
+        using var fourthSession = TestSession.Load([fourth], UserProject.XunitAssemblies, new TestRunOptions { OutputDirectory = _folder });
+        Assert.Equal(_folder + "-4", fourthSession.OutputDirectory);
         Assert.False(Directory.Exists(_folder + "-2"));
         Assert.True(Directory.Exists(_folder));
     }

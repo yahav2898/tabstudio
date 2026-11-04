@@ -22,6 +22,12 @@ internal static class OutputFolder
     private static readonly Dictionary<string, string> Loaded = new(StringComparer.Ordinal);
 
     /// <summary>
+    /// How many live sessions use each folder: they load project references from it lazily, the first time a test
+    /// needs one, and it is their current directory and base directory while they run, so it is never deleted.
+    /// </summary>
+    private static readonly Dictionary<string, int> InUse = new(StringComparer.Ordinal);
+
+    /// <summary>
     /// Chooses the folder for a set of assemblies and writes them there, with their symbols, unless the files there
     /// are already these.
     /// </summary>
@@ -57,16 +63,36 @@ internal static class OutputFolder
                 files[assembly.Name] = file;
             }
 
+            InUse[chosen] = InUse.GetValueOrDefault(chosen) + 1;
             RemoveOtherSiblings(root, chosen);
             return files;
         }
     }
 
+    /// <summary>Ends a session's use of the folder <see cref="Write"/> gave it, so a later load may delete it.</summary>
+    /// <param name="folder">The folder.</param>
+    public static void Release(string folder)
+    {
+        lock (Gate)
+        {
+            if (InUse.TryGetValue(folder, out var count))
+            {
+                if (count <= 1)
+                {
+                    _ = InUse.Remove(folder);
+                }
+                else
+                {
+                    InUse[folder] = count - 1;
+                }
+            }
+        }
+    }
+
     /// <summary>
-    /// Deletes the siblings (<c>net8.0-2</c> and on) other than the one just used, so an afternoon of edits leaves at
-    /// most one beside the output folder. Their assemblies were loaded whole when their sessions loaded, so the sessions
-    /// keep running; their names stay claimed, since the runtime would serve the old image for the same path. A
-    /// sibling that cannot be deleted, as on Windows while loaded, stays until a later run.
+    /// Deletes the siblings (<c>net8.0-2</c> and on) that no live session uses, so an afternoon of edits does not pile
+    /// them up beside the output folder. Their names stay claimed, since the runtime would serve the old image for the
+    /// same path. A sibling that cannot be deleted, as on Windows while loaded, stays until a later run.
     /// </summary>
     private static void RemoveOtherSiblings(string root, string chosen)
     {
@@ -78,7 +104,8 @@ internal static class OutputFolder
         var prefix = Path.GetFileName(root) + "-";
         foreach (var sibling in Directory.EnumerateDirectories(parent, prefix + "*"))
         {
-            if (string.Equals(sibling, chosen, StringComparison.Ordinal) || !Path.GetFileName(sibling)[prefix.Length..].All(char.IsAsciiDigit))
+            if (string.Equals(sibling, chosen, StringComparison.Ordinal) || InUse.ContainsKey(sibling)
+                || !Path.GetFileName(sibling)[prefix.Length..].All(char.IsAsciiDigit))
             {
                 continue;
             }
