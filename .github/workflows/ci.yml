@@ -457,7 +457,7 @@ jobs:
           # The 100-frame GC stress can take eleven minutes on hosted runners; do not abort a healthy run.
           run_ide_tests() {
             DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
-              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~ScreenshotLifetimeTests&FullyQualifiedName!~debugger_conformance&FullyQualifiedName!~template_conformance&FullyQualifiedName!~ToolchainLanguageToolsTests.A_PHP_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Swift_package_template" --logger "console;verbosity=normal" > "$1" 2>&1
+              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~ScreenshotLifetimeTests&FullyQualifiedName!~TabStudio.App.Tests.Sweep&FullyQualifiedName!~debugger_conformance&FullyQualifiedName!~template_conformance&FullyQualifiedName!~ToolchainLanguageToolsTests.A_PHP_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Swift_package_template" --logger "console;verbosity=normal" > "$1" 2>&1
           }
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
@@ -480,7 +480,7 @@ jobs:
           mkdir -p ci-out/screenshots/light
           run_light_tests() {
             TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
-              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --no-build --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design&FullyQualifiedName!~ScreenshotLifetimeTests&FullyQualifiedName!~debugger_conformance&FullyQualifiedName!~template_conformance&FullyQualifiedName!~ToolchainLanguageToolsTests.A_PHP_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Swift_package_template" \
+              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --no-build --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design&FullyQualifiedName!~TabStudio.App.Tests.Sweep&FullyQualifiedName!~ScreenshotLifetimeTests&FullyQualifiedName!~debugger_conformance&FullyQualifiedName!~template_conformance&FullyQualifiedName!~ToolchainLanguageToolsTests.A_PHP_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Kotlin_Gradle_template&FullyQualifiedName!~ToolchainLanguageToolsTests.A_Swift_package_template" \
               --logger "console;verbosity=normal" > "$1" 2>&1
           }
           light=0
@@ -544,6 +544,94 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: bash build/ci/publish-logs.sh app ${{ job.status }}
+
+  # Every command a person can reach, run in the real IDE on the sample solution (tests/TabStudio.App.Tests/Sweep):
+  # each menu and Ctrl+Q command, each key gesture the IDE shows, each button of the shell and its tool windows
+  # tapped with a finger in landscape and portrait, each context menu item and the Start window's buttons, then the
+  # tablet's own situations (split screen and pop-up sizes, rotation, the app sent to the background in the middle
+  # of a build and of a debug session, a hardware keyboard attached and detached, the on-screen keyboard over the
+  # caret, Hebrew and IME composition). Any exception, error in the Output, frozen UI thread, dialog that cannot be
+  # closed, command that does nothing or screen that breaks the accessibility and layout rules fails it, in the dark
+  # and the light theme, unless tests/TabStudio.App.Tests/Sweep/SweepAllowances.cs names it with its reason. The
+  # reports are sweep/<name>.<theme>.tsv beside the screenshots.
+  every-command:
+    name: Every command
+    runs-on: ubuntu-24.04
+    # About 12 minutes of sweep in each theme after a 3-minute build; a hung run ends at its 20-minute hang timeout.
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-app-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: nuget-app-
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run every command in both themes
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots/light
+          status=0
+          dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true > ci-out/every-command-build.log 2>&1 || status=1
+          tail -n 20 ci-out/every-command-build.log
+          sweep() {
+            dotnet test tests/TabStudio.App.Tests -c Release --no-build --blame --blame-hang-timeout 20m --blame-hang-dump-type none \
+              --filter "FullyQualifiedName~TabStudio.App.Tests.Sweep" --logger "console;verbosity=normal" > "$1" 2>&1
+          }
+          if [ $status -eq 0 ]; then
+            for theme in Dark Light; do
+              folder="$TABSTUDIO_SCREENSHOTS"; [ "$theme" = Light ] && folder="$TABSTUDIO_SCREENSHOTS/light"
+              log="ci-out/every-command.$theme.log"
+              if ! TABSTUDIO_THEME=$theme TABSTUDIO_SCREENSHOTS="$folder" sweep "$log"; then
+                grep -A 40 "^  Failed " "$log" | head -n 300
+                # One retry in a fresh host, as the IDE's tests have: a second failure fails the job.
+                echo "::warning::The sweep of every command failed once in the $theme theme; running it again. The first attempt is in $log."
+                rm -rf "$folder/sweep"
+                if TABSTUDIO_THEME=$theme TABSTUDIO_SCREENSHOTS="$folder" sweep "ci-out/every-command.$theme.retry.log"; then
+                  echo "Every command ($theme): the first attempt failed and the retry passed (see every-command.$theme.log)" >> ci-out/FLAKY.txt
+                else
+                  grep -A 40 "^  Failed " "ci-out/every-command.$theme.retry.log" | head -n 300
+                  cat "$folder"/sweep/*.tsv 2>/dev/null | head -n 400
+                  status=1
+                fi
+              fi
+              tail -n 25 "$log"
+            done
+          fi
+          exit $status
+
+      - name: Save the sweep's reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: every-command
+          retention-days: 14
+          if-no-files-found: ignore
+          path: |
+            ci-out/*.log
+            ci-out/FLAKY.txt
+            ci-out/screenshots/sweep/**
+            ci-out/screenshots/light/sweep/**
+
+      - name: Publish logs
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh every-command ${{ job.status }}
 
   # Public repositories, pinned to commits in build/ci/real-repos.json, opened in the real IDE as a person would on
   # the tablet. .NET repositories are built, each with an error baseline that may only go down. Python, Java, Rust and Node.js
@@ -1291,7 +1379,7 @@ jobs:
   release:
     name: Publish the release
     if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main')
-    needs: [libraries, app, services, android, android-emulator-verdict, windows, ssh, mobile-android]
+    needs: [libraries, app, every-command, services, android, android-emulator-verdict, windows, ssh, mobile-android]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

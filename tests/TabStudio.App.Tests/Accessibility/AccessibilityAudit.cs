@@ -60,10 +60,78 @@ internal static partial class AccessibilityAudit
     /// <param name="window">The window, laid out and rendered.</param>
     /// <param name="dark">Whether the dark theme shows.</param>
     /// <param name="clipping">Whether to report clipped text too, as at the largest text size.</param>
-    public static IReadOnlyList<AccessibilityFinding> In(Window window, bool dark, bool clipping = false)
+    public static IReadOnlyList<AccessibilityFinding> In(Window window, bool dark, bool clipping = false) => In(window, window, dark, clipping);
+
+    /// <summary>
+    /// Checks everything a window shows, as the sweep of every command does (tests/TabStudio.App.Tests/Sweep): the
+    /// window and the content of each popup it has open, clipping included, and on top of the accessibility rules the
+    /// layout checks' errors for controls a person cannot reach (off the screen) and for controls that lie over each
+    /// other, so a tap meant for one goes to the other.
+    /// </summary>
+    /// <param name="window">The window, laid out and rendered.</param>
+    /// <param name="dark">Whether the dark theme shows.</param>
+    /// <param name="overlaps">
+    /// Whether to look for controls over each other: not while a dialog, the search or a menu shows over the IDE, whose
+    /// controls lie over the IDE's by design, behind a scrim that takes the taps.
+    /// </param>
+    public static IReadOnlyList<AccessibilityFinding> Everything(Window window, bool dark, bool overlaps = true)
+    {
+        var found = new List<AccessibilityFinding>(In(window, window, dark, clipping: true));
+        found.AddRange(Layout(window, window, dark, overlaps));
+        foreach (var popup in window.GetVisualDescendants().OfType<Popup>())
+        {
+            if (popup.IsOpen && popup.Child is { IsVisible: true } child && child.Bounds.Width >= 1 && child.Bounds.Height >= 1 && child is not ToolTip)
+            {
+                found.AddRange(In(child, window, dark, clipping: true).Select(f => f with { Path = "popup > " + f.Path }));
+            }
+        }
+
+        return [.. found.DistinctBy(f => (f.Kind, f.Path))];
+    }
+
+    /// <summary>
+    /// The layout checks' errors for the IDE itself: controls off the screen or beyond what their scroll viewer
+    /// reaches, and controls that lie over each other. What the bars fold away, the user's content and the parts that
+    /// are not targets of their own are left out, as in the accessibility rules; so are the editor's own text area and
+    /// what floats over it by design (the touch bar, the editor's popups), which a tap reaches on its own.
+    /// </summary>
+    private static IEnumerable<AccessibilityFinding> Layout(Visual root, TopLevel window, bool dark, bool overlaps)
     {
         var profile = new ScreenProfile("audit", FormFactor.Tablet, window.Bounds.Width, window.Bounds.Height, IsDark: dark);
-        var scan = LayoutScan.Run(window, profile);
+        var scan = LayoutScan.Run(root, profile);
+        var offScreen = new HashSet<Visual>(ReferenceEqualityComparer.Instance);
+        foreach (var (element, severity, message) in OffScreenRule.Find(scan, offScreen).ToList())
+        {
+            // The bars park what they fold far off the screen, until More shows it.
+            if (severity == LayoutIssueSeverity.Error && Counts(element.Visual) && element.Bounds.X > AdaptiveLayout.Parked.X + 1
+                && !element.Visual.GetVisualAncestors().Any(a => a is AdaptiveBar or ActivityBar))
+            {
+                yield return new("off-screen", PathOf(root, element.Visual), message);
+            }
+        }
+
+        if (!overlaps)
+        {
+            yield break;
+        }
+
+        foreach (var (element, severity, message) in OverlapRule.Find(scan, offScreen))
+        {
+            if (severity == LayoutIssueSeverity.Error && Counts(element.Visual)
+                && element.Visual is not AvaloniaEdit.Editing.TextArea && !element.Visual.GetVisualAncestors().Any(a => a is AvaloniaEdit.Editing.TextArea))
+            {
+                yield return new("overlap", PathOf(root, element.Visual), message);
+            }
+        }
+
+        static bool Counts(Visual visual) => !IsContent(visual) && !IsExempt(visual) && !IsFolded(visual);
+    }
+
+    /// <summary>Checks a part of a window, such as a popup's content, at the window's touch target.</summary>
+    private static IReadOnlyList<AccessibilityFinding> In(Visual root, TopLevel window, bool dark, bool clipping)
+    {
+        var profile = new ScreenProfile("audit", FormFactor.Tablet, window.Bounds.Width, window.Bounds.Height, IsDark: dark);
+        var scan = LayoutScan.Run(root, profile);
         var target = TargetFor(window);
         var found = new List<AccessibilityFinding>();
         foreach (var element in scan.Elements)
@@ -77,12 +145,12 @@ internal static partial class AccessibilityAudit
             var size = control.Bounds.Size;
             if (size.Width < target - 0.5 || size.Height < target - 0.5)
             {
-                found.Add(new("target", PathOf(window, control), $"{Label(control)} is {LayoutText.Dips(size)}; a tap needs {target} × {target}."));
+                found.Add(new("target", PathOf(root, control), $"{Label(control)} is {LayoutText.Dips(size)}; a tap needs {target} × {target}."));
             }
 
             if (NameProblem(control) is { } problem)
             {
-                found.Add(new("name", PathOf(window, control),
+                found.Add(new("name", PathOf(root, control),
                     $"{Label(control)} {problem} (its data is {control.DataContext?.GetType().Name ?? "none"}; named \"{AutomationProperties.GetName(control)}\")."));
             }
         }
@@ -93,7 +161,7 @@ internal static partial class AccessibilityAudit
             {
                 var colors = element.Visual is Control text && TextElement.GetForeground(text) is ISolidColorBrush fg && ContrastRule.Background(text, profile) is { } bg
                     ? $" ({fg.Color} on {bg})" : string.Empty;
-                found.Add(new("contrast", PathOf(window, element.Visual), message + colors));
+                found.Add(new("contrast", PathOf(root, element.Visual), message + colors));
             }
         }
 
@@ -106,7 +174,7 @@ internal static partial class AccessibilityAudit
                 var ratio = ContrastMath.Ratio(ContrastMath.Over(color, background), background);
                 if (ratio < IconMinimum - 0.005)
                 {
-                    found.Add(new("icon-contrast", PathOf(window, icon), string.Create(CultureInfo.InvariantCulture,
+                    found.Add(new("icon-contrast", PathOf(root, icon), string.Create(CultureInfo.InvariantCulture,
                         $"An icon has a contrast of {ratio:0.0}:1 with its background; icons need {IconMinimum}:1 ({brush.Color} at {element.Opacity:0.##} on {background}).")));
                 }
             }
@@ -148,7 +216,7 @@ internal static partial class AccessibilityAudit
                 var within = WhollyHidden().IsMatch(message)
                     ? " (inside " + string.Join(" < ", element.Visual.GetVisualAncestors().Take(8).Select(a => a.GetType().Name)) + ")"
                     : string.Empty;
-                found.Add(new("clipped", PathOf(window, element.Visual), message + within));
+                found.Add(new("clipped", PathOf(root, element.Visual), message + within));
             }
         }
 

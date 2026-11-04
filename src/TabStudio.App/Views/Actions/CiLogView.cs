@@ -339,6 +339,10 @@ public sealed class CiLogView : UserControl, IDisposable
             case EditorAction.SelectAll:
                 _editor.SelectAll();
                 break;
+            case EditorAction.Copy or EditorAction.Cut:
+                // Read-only: Cut copies, as Visual Studio's does in a read-only view.
+                _editor.Copy();
+                break;
             case EditorAction.Focus:
                 _editor.TextArea.Focus();
                 break;

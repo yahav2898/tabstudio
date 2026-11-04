@@ -74,6 +74,28 @@ public sealed class ProgramRunnerTests
     }
 
     [Fact]
+    public async Task The_debuggers_stop_ends_the_program_as_stopped_without_an_error()
+    {
+        // Stop Debugging throws TabStudio.Debugging's DebugSessionStoppedException inside the program; when it won the
+        // race with the cancellation, the Output said "Unhandled exception." in red.
+        var console = new CapturingConsole();
+
+        var result = await RunAsync("""
+            Console.WriteLine("before");
+            throw new TabStudio.Debugging.DebugSessionStoppedException();
+
+            namespace TabStudio.Debugging
+            {
+                public sealed class DebugSessionStoppedException() : System.Exception("The debugging session was stopped.");
+            }
+            """, console);
+
+        Assert.Equal(RunOutcome.Stopped, result.Outcome);
+        Assert.Equal("before\n", console.Output);
+        Assert.Equal(string.Empty, console.Error);
+    }
+
+    [Fact]
     public async Task Reads_lines_from_console_input()
     {
         var console = new CapturingConsole();

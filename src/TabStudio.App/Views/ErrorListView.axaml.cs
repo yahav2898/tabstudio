@@ -21,19 +21,24 @@ public sealed partial class ErrorListView : UserControl
         private set => SetValue(IsCompactProperty, value);
     }
 
+    /// <summary>Below this height the panel keeps its filters and search on one row.</summary>
+    private const double ShortHeight = 220;
+
     /// <inheritdoc />
     protected override void OnSizeChanged(SizeChangedEventArgs e)
     {
         base.OnSizeChanged(e);
         IsCompact = e.NewSize.Width < TabStudio.App.Controls.ResponsiveColumns.CompactWidth;
 
-        // A narrow panel puts the search under the filters, the width of the panel.
+        // A narrow panel puts the search under the filters, the width of the panel; a narrow and short one, as in a
+        // pop-up window, keeps one row with a shorter search, or the two rows left the list no room for a single error.
         var narrow = e.NewSize.Width < 640;
-        Grid.SetRow(SearchBox, narrow ? 1 : 0);
-        Grid.SetColumn(SearchBox, narrow ? 0 : 1);
-        Grid.SetColumnSpan(SearchBox, narrow ? 2 : 1);
-        SearchBox.Width = narrow ? double.NaN : 220;
-        SearchBox.Margin = narrow ? new Thickness(0, 0, 0, 6) : default;
+        var below = narrow && e.NewSize.Height >= ShortHeight;
+        Grid.SetRow(SearchBox, below ? 1 : 0);
+        Grid.SetColumn(SearchBox, below ? 0 : 1);
+        Grid.SetColumnSpan(SearchBox, below ? 2 : 1);
+        SearchBox.Width = below ? double.NaN : narrow ? Math.Max(120, Math.Floor(e.NewSize.Width * 0.35)) : 220;
+        SearchBox.Margin = below ? new Thickness(0, 0, 0, 6) : narrow ? new Thickness(6, 0, 0, 0) : default;
     }
 
     /// <summary>Creates the view.</summary>

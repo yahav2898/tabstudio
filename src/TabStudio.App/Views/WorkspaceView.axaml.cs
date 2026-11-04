@@ -1,6 +1,8 @@
 using System.ComponentModel;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.VisualTree;
 using TabStudio.App.ViewModels;
 
 namespace TabStudio.App.Views;
@@ -15,6 +17,7 @@ public sealed partial class WorkspaceView : UserControl
 {
     private WorkspaceViewModel? _viewModel;
     private KeyBinding? _searchBinding;
+    private InputElement? _beforePrompt;
 
     /// <summary>Creates the view.</summary>
     public WorkspaceView()
@@ -38,6 +41,7 @@ public sealed partial class WorkspaceView : UserControl
             _ => (Control)new CodeEditorView((DocumentViewModel)document),
         };
         PromptBox.KeyDown += OnPromptKeyDown;
+        AddHandler(KeyDownEvent, OnPromptTunnelKeyDown, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         InitializeKeyboard();
         PromptChoices.KeyDown += OnPromptKeyDown;
         PromptChoices.DoubleTapped += OnPromptChoiceDoubleTapped;
@@ -129,7 +133,7 @@ public sealed partial class WorkspaceView : UserControl
             case nameof(WorkspaceViewModel.HasRecording):
                 UpdateBottomPanel();
                 break;
-            case nameof(WorkspaceViewModel.ShowsSideBarProperties):
+            case nameof(WorkspaceViewModel.ShowsSideBarProperties) or nameof(WorkspaceViewModel.SelectedSideBarPanel):
                 UpdateProperties();
                 break;
             case nameof(WorkspaceViewModel.ActiveDocument):
@@ -166,6 +170,30 @@ public sealed partial class WorkspaceView : UserControl
 
     private void OnPromptPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (e.PropertyName == nameof(PromptViewModel.IsOpen) && _viewModel?.Prompt.IsOpen == true)
+        {
+            _beforePrompt = TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() as InputElement;
+        }
+        else if (e.PropertyName == nameof(PromptViewModel.IsOpen) && _beforePrompt is { } before)
+        {
+            // Back to where the keyboard was, such as the editor after Rename, instead of nowhere.
+            _beforePrompt = null;
+            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            {
+                if (before.IsEffectivelyVisible && before.IsEffectivelyEnabled)
+                {
+                    Input.InputModality.FocusUnlessTouch(before);
+                }
+            }, Avalonia.Threading.DispatcherPriority.Background);
+        }
+
+        if (e.PropertyName == nameof(PromptViewModel.IsOpen) && _viewModel?.Prompt is { IsOpen: true, HasInput: false, HasChoices: false })
+        {
+            // A confirmation has no box to type in: its button takes the keyboard, so Enter and Escape answer it and
+            // keys no longer type into the editor behind the dialog.
+            Avalonia.Threading.Dispatcher.UIThread.Post(() => PromptConfirm.Focus(), Avalonia.Threading.DispatcherPriority.Background);
+        }
+
         if (e.PropertyName == nameof(PromptViewModel.IsOpen) && _viewModel?.Prompt.IsOpen == true && _viewModel.Prompt.HasInput)
         {
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
@@ -189,6 +217,52 @@ public sealed partial class WorkspaceView : UserControl
             e.Handled = true;
         }
     }
+
+    /// <summary>
+    /// While the in-app dialog shows, the keyboard answers it wherever the focus was: Escape cancels and Enter
+    /// confirms, unless a button of the dialog has the focus and takes Enter itself; other keys are kept from the
+    /// editor and the panels behind it, and Tab goes into the dialog.
+    /// </summary>
+    private void OnPromptTunnelKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (_viewModel?.Prompt is not { IsOpen: true } prompt)
+        {
+            return;
+        }
+
+        var focused = TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() as Visual;
+        var inside = focused is not null && (ReferenceEquals(focused, PromptDialog) || PromptDialog.IsVisualAncestorOf(focused));
+        if (e.Key == Key.Escape)
+        {
+            prompt.CancelCommand.Execute(null);
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Enter && !(inside && focused is Button) && prompt.ConfirmCommand.CanExecute(null))
+        {
+            prompt.ConfirmCommand.Execute(null);
+            e.Handled = true;
+        }
+        else if (!inside && !IsModifier(e.Key))
+        {
+            if (prompt.HasInput)
+            {
+                PromptBox.Focus(NavigationMethod.Tab);
+            }
+            else if (prompt.HasChoices)
+            {
+                PromptChoices.Focus(NavigationMethod.Tab);
+            }
+            else
+            {
+                PromptConfirm.Focus(NavigationMethod.Tab);
+            }
+
+            e.Handled = true;
+        }
+    }
+
+    private static bool IsModifier(Key key) => key is Key.LeftCtrl or Key.RightCtrl or Key.LeftShift or Key.RightShift
+        or Key.LeftAlt or Key.RightAlt or Key.LWin or Key.RWin;
 
     private void OnPromptKeyDown(object? sender, KeyEventArgs e)
     {
