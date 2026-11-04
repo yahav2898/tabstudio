@@ -1,0 +1,24 @@
+Startup to self test start: 17.98 s
+TabStudio startup: first frame at 17634 ms, ready at 17634 ms; process start to activity 5122 ms, application +1466 ms, styles +1576 ms, services +961 ms, theme +442 ms, view models +3266 ms, main view +2849 ms, start screen +72 ms, first frame +1880 ms
+TabStudio UI stalls: 144 over 100 ms (70 over 250 ms, 10 over 1 s), 90.6 s in all, longest 24076 ms during the step that ended with: Processes: started 200 programs in 26.1 s while 326 minor and 2 major collections ran; answer p50 2.6 ms, p95 24.9 ms, p99 122.2 ms over 12619 questions in 417 s
+TabStudio UI timings: workspace view 3013 ms, document view 2328 ms, workspace view model 1532 ms, document view 680 ms, document view 481 ms, document view 198 ms, LocalsView 100 ms, CallStackView 35 ms, workspace view model 21 ms, workspace view model 15 ms, document view 11 ms, workspace view model 4 ms
+TabStudio UI stall: 24076 ms at 24.2 s during the step that ended with: Processes: started 200 programs in 26.1 s while 326 minor and 2 major collections ran
+TabStudio UI stall: 7361 ms at 0.6 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 7129 ms at 9.2 s during reading the solution → showing the solution in Solution Explorer
+TabStudio UI stall: 2784 ms at 287.2 s during creating a document's view
+TabStudio UI stall: 1842 ms at 358.2 s during creating a document's view → starting restore and analysis
+TabStudio UI stall: 1759 ms at 22.4 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 1128 ms at 8.0 s during reading the solution
+TabStudio UI stall: 1125 ms at 16.4 s during showing the solution in Solution Explorer → databases, startup projects and toolchains
+TabStudio UI stall: 1054 ms at 415.7 s during creating a document's view
+TabStudio UI stall: 1032 ms at 285.5 s during creating the workspace's view model → showing the workspace → reading the solution → showing the solution in Solution Explorer → databases, startup projects and toolchains
+TabStudio UI stall: 963 ms at 293.1 s during creating a document's view
+TabStudio UI stall: 955 ms at 409.5 s during creating the LocalsView → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 950 ms at 17.5 s during databases, startup projects and toolchains
+TabStudio UI stall: 936 ms at 324.6 s during creating a document's view
+TabStudio UI stall: 915 ms at 290.1 s during creating a document's view
+Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
+ Native Heap 369518 369512 0 34 370524 387156 379099 3081
+ Dalvik Heap 2668 2636 0 72 5004 7968 4016 3952
+ TOTAL 795293 749348 25100 203 943464 395124 383115 7033
+ TOTAL PSS: 795293 TOTAL RSS: 943464 TOTAL SWAP PSS: 203
