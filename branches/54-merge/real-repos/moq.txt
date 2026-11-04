@@ -14,7 +14,7 @@ Compatibility Doctor:
   Moq.Vsix: Library via Built with its users - A library is compiled together with the projects that reference it.
   Moq: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: none
-Built in 6.0 s: 16 errors, 41 warnings
+Built in 5.6 s: 16 errors, 41 warnings
   8 x CS0117
       [Moq.Sdk] CallContext.cs(99,73): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'UnexpectedNullContextState'
       [Moq.Sdk] DefaultMockRuntime.cs(88,82): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'DuplicateContextBehavior'
@@ -1346,19 +1346,18 @@ Packages with analyzers or MSBuild files:
       build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.dll
       build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.pri
 Editor: 6 files opened and analyzed in 0.3 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 5 over 100 ms (1 over 250 ms, 0 over 1 s), 0.8 s in all, longest 316 ms during screenshots, 0.2 s of it garbage collection; answer p50 6.4 ms, p95 10.3 ms, p99 151.0 ms over 289 questions in 8 s
-UI timings: document view 5 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms
+UI stalls: 4 over 100 ms (0 over 250 ms, 0 over 1 s), 0.5 s in all, longest 138 ms during screenshots, 0.1 s of it garbage collection; answer p50 4.2 ms, p95 9.3 ms, p99 101.6 ms over 301 questions in 7 s
+UI timings: document view 24 ms, document view 4 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 1 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 316 ms | 127 ms | 0.2 s | screenshots |
-| 155 ms | 11 ms | 7.0 s | screenshots |
-| 151 ms | 0 ms | 0.7 s | screenshots |
-| 114 ms | 0 ms | 6.9 s | screenshots |
-| 105 ms | 98 ms | 0.8 s | the first build |
+| 138 ms | 44 ms | 0.3 s | screenshots |
+| 124 ms | 7 ms | 6.5 s | screenshots |
+| 105 ms | 9 ms | 6.3 s | screenshots |
+| 102 ms | 0 ms | 0.5 s | screenshots |
 Output:
-Build started at 23:21:42...
+Build started at 01:09:55...
 1>------ Build started: Project: Moq.CodeAnalysis, Configuration: Debug ------
-1>Moq.CodeAnalysis -> compiled in memory (41.5 KB, 211 ms)
+1>Moq.CodeAnalysis -> compiled in memory (41.5 KB, 154 ms)
 2>------ Build started: Project: Moq.Sdk, Configuration: Debug ------
 2>AnyMatcher.cs(59,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
 2>AnyMatcher`1.cs(55,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)

@@ -1,9 +1,9 @@
 blazor-samples at 9729f03106b6e146863ff9198e9d751e113d78c5
-Opened /home/runner/work/_temp/real-repos/blazor-samples/10.0/BlazorSample_BlazorWebApp/BlazorSample.sln in 0.3 s
+Opened /home/runner/work/_temp/real-repos/blazor-samples/10.0/BlazorSample_BlazorWebApp/BlazorSample.sln in 0.2 s
 Compatibility Doctor:
   BlazorSample: Ready via Local server + WebView - Served on this device and shown in the web preview. Interactive Server components run here over a live circuit; WebAssembly components run in the preview on .NET for WebAssembly, without the debugger. Saving a file restarts it.
 Startup project: BlazorSample
-Built in 1.5 s: 0 errors, 0 warnings
+Built in 1.4 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   microsoft.aspnetcore.app.ref 10.0.14
       analyzers/dotnet/cs/Microsoft.AspNetCore.App.Analyzers.dll
@@ -87,27 +87,28 @@ Packages with analyzers or MSBuild files:
   microsoft.extensions.validation 10.0.0
       analyzers/dotnet/cs/Microsoft.Extensions.Validation.ValidationsGenerator.dll
 Editor: 3 files opened and analyzed in 0.1 s, 0 errors only the editor shows, 0 only the build shows
-Serve: GET / answered 200 in 0.8 s after F5, 19387 characters; expected 200: OK
-UI stalls: 2 over 100 ms (1 over 250 ms, 0 over 1 s), 0.5 s in all, longest 395 ms during screenshots, 0.2 s of it garbage collection; answer p50 5.3 ms, p95 84.4 ms, p99 123.6 ms over 111 questions in 4 s
-UI timings: document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms
+Serve: GET / answered 200 in 0.7 s after F5, 19387 characters; expected 200: OK
+UI stalls: 3 over 100 ms (1 over 250 ms, 0 over 1 s), 0.5 s in all, longest 266 ms during screenshots, 0.2 s of it garbage collection; answer p50 3.2 ms, p95 62.5 ms, p99 174.8 ms over 112 questions in 3 s
+UI timings: document view 4 ms, document view 2 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 395 ms | 151 ms | 0.5 s | screenshots |
-| 124 ms | 0 ms | 0.3 s | screenshots |
+| 266 ms | 89 ms | 0.4 s | screenshots |
+| 175 ms | 65 ms | 0.2 s | screenshots |
+| 101 ms | 0 ms | 2.2 s | screenshots |
 Output:
-Build started at 23:24:08...
+Build started at 01:12:04...
 1>------ Build started: Project: BlazorSample, Configuration: Debug ------
-1>BlazorSample -> compiled in memory (293.5 KB, 366 ms)
+1>BlazorSample -> compiled in memory (293.5 KB, 253 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 info: Microsoft.Hosting.Lifetime[14]
-      Now listening on: http://127.0.0.1:41677
+      Now listening on: http://127.0.0.1:39091
 info: Microsoft.Hosting.Lifetime[0]
       Application started. Press Ctrl+C to shut down.
 info: Microsoft.Hosting.Lifetime[0]
       Hosting environment: Development
 info: Microsoft.Hosting.Lifetime[0]
       Content root path: /home/runner/work/_temp/real-repos/blazor-samples/10.0/BlazorSample_BlazorWebApp
-BlazorSample is listening on http://127.0.0.1:41677/
+BlazorSample is listening on http://127.0.0.1:39091/
 warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
       Failed to determine the https port for redirect.
 info: Microsoft.Hosting.Lifetime[0]

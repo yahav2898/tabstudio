@@ -16,7 +16,7 @@ Compatibility Doctor:
   MediatR.DependencyInjectionTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   MediatR.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: MediatR.Examples.AspNetCore
-Built in 11.1 s: 0 errors, 1 warnings
+Built in 8.0 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   dryioc.dll 6.0.0-preview-09
       build/DryIoc.dll.targets
@@ -557,42 +557,41 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll
       build/net6.0/xunit.runner.visualstudio.props
 Editor: 24 files opened and analyzed in 0.7 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 3 over 100 ms (0 over 250 ms, 0 over 1 s), 0.4 s in all, longest 183 ms during screenshots, 0.1 s of it garbage collection; answer p50 4.4 ms, p95 13.3 ms, p99 57.6 ms over 539 questions in 13 s
-UI timings: document view 79 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+UI stalls: 2 over 100 ms (0 over 250 ms, 0 over 1 s), 0.3 s in all, longest 148 ms during screenshots, 0.0 s of it garbage collection; answer p50 4.2 ms, p95 11.7 ms, p99 47.0 ms over 422 questions in 10 s
+UI timings: document view 30 ms, document view 7 ms, document view 4 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 183 ms | 0 ms | 0.5 s | screenshots |
-| 136 ms | 136 ms | 1.5 s | the first build |
-| 129 ms | 0 ms | 0.3 s | screenshots |
+| 148 ms | 0 ms | 0.5 s | screenshots |
+| 135 ms | 14 ms | 0.2 s | screenshots |
 Output:
-Build started at 23:11:04...
+Build started at 01:00:15...
 1>------ Build started: Project: MediatR, Configuration: Debug ------
-1>MediatR -> compiled in memory (95 KB, 507 ms)
+1>MediatR -> compiled in memory (95 KB, 268 ms)
 2>------ Build started: Project: MediatR.Examples, Configuration: Debug ------
-2>MediatR.Examples -> compiled in memory (52 KB, 474 ms)
+2>MediatR.Examples -> compiled in memory (52 KB, 229 ms)
 3>------ Build started: Project: MediatR.Examples.AspNetCore, Configuration: Debug ------
-3>MediatR.Examples.AspNetCore -> compiled in memory (4.5 KB, 424 ms)
+3>MediatR.Examples.AspNetCore -> compiled in memory (4.5 KB, 253 ms)
 4>------ Build started: Project: MediatR.Examples.Autofac, Configuration: Debug ------
-4>MediatR.Examples.Autofac -> compiled in memory (5.5 KB, 480 ms)
+4>MediatR.Examples.Autofac -> compiled in memory (5.5 KB, 268 ms)
 5>------ Build started: Project: MediatR.Examples.DryIoc, Configuration: Debug ------
-5>MediatR.Examples.DryIoc -> compiled in memory (5 KB, 552 ms)
+5>MediatR.Examples.DryIoc -> compiled in memory (5 KB, 236 ms)
 6>------ Build started: Project: MediatR.Examples.Lamar, Configuration: Debug ------
-6>MediatR.Examples.Lamar -> compiled in memory (5 KB, 472 ms)
+6>MediatR.Examples.Lamar -> compiled in memory (5 KB, 283 ms)
 7>------ Build started: Project: MediatR.Examples.LightInject, Configuration: Debug ------
-7>MediatR.Examples.LightInject -> compiled in memory (5.5 KB, 455 ms)
+7>MediatR.Examples.LightInject -> compiled in memory (5.5 KB, 298 ms)
 8>------ Build started: Project: MediatR.Examples.PublishStrategies, Configuration: Debug ------
-8>MediatR.Examples.PublishStrategies -> compiled in memory (15.5 KB, 489 ms)
+8>MediatR.Examples.PublishStrategies -> compiled in memory (15.5 KB, 415 ms)
 9>------ Build started: Project: MediatR.Examples.SimpleInjector, Configuration: Debug ------
-9>MediatR.Examples.SimpleInjector -> compiled in memory (7.5 KB, 440 ms)
+9>MediatR.Examples.SimpleInjector -> compiled in memory (7.5 KB, 339 ms)
 10>------ Build started: Project: MediatR.Examples.Stashbox, Configuration: Debug ------
-10>MediatR.Examples.Stashbox -> compiled in memory (4 KB, 451 ms)
+10>MediatR.Examples.Stashbox -> compiled in memory (4 KB, 360 ms)
 11>------ Build started: Project: MediatR.Contracts, Configuration: Debug ------
-11>MediatR.Contracts -> compiled in memory (4 KB, 16 ms)
+11>MediatR.Contracts -> compiled in memory (4 KB, 13 ms)
 12>------ Build started: Project: MediatR.Benchmarks, Configuration: Debug ------
-12>MediatR.Benchmarks -> compiled in memory (13 KB, 332 ms)
+12>MediatR.Benchmarks -> compiled in memory (13 KB, 298 ms)
 13>------ Build started: Project: MediatR.DependencyInjectionTests, Configuration: Debug ------
-13>MediatR.DependencyInjectionTests -> compiled in memory (19 KB, 385 ms)
+13>MediatR.DependencyInjectionTests -> compiled in memory (19 KB, 301 ms)
 14>------ Build started: Project: MediatR.Tests, Configuration: Debug ------
-14>MediatR.Tests -> compiled in memory (279.5 KB, 1165 ms)
+14>MediatR.Tests -> compiled in memory (279.5 KB, 884 ms)
 ========== Build: 14 succeeded, 0 failed ==========
 

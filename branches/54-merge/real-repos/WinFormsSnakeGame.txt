@@ -5,14 +5,16 @@ Compatibility Doctor:
 Startup project: Classic Snakes Game Tutorial - MOO ICT
 Built in 0.0 s: 0 errors, 0 warnings
 Editor: 3 files opened and analyzed in 0.1 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 1 over 100 ms (1 over 250 ms, 0 over 1 s), 0.3 s in all, longest 322 ms during screenshots, 0.1 s of it garbage collection; answer p50 5.4 ms, p95 321.8 ms, p99 321.8 ms over 16 questions in 1 s
-UI timings: document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms
+UI stalls: 3 over 100 ms (0 over 250 ms, 0 over 1 s), 0.4 s in all, longest 142 ms during screenshots, 0.1 s of it garbage collection; answer p50 4.3 ms, p95 142.3 ms, p99 142.3 ms over 17 questions in 1 s
+UI timings: document view 4 ms, document view 2 ms, document view 2 ms, document view 1 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 322 ms | 116 ms | 0.1 s | screenshots |
+| 142 ms | 27 ms | 0.2 s | screenshots |
+| 117 ms | 18 ms | 0.4 s | screenshots |
+| 101 ms | 9 ms | 0.6 s | screenshots |
 Output:
-Build started at 23:13:20...
+Build started at 01:02:11...
 1>------ Build started: Project: Classic Snakes Game Tutorial - MOO ICT, Configuration: Debug ------
-1>Classic Snakes Game Tutorial - MOO ICT -> compiled in memory (20.5 KB, 26 ms)
+1>Classic Snakes Game Tutorial - MOO ICT -> compiled in memory (20.5 KB, 11 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 

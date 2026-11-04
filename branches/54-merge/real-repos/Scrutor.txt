@@ -4,7 +4,7 @@ Compatibility Doctor:
   Scrutor: Library via Built with its users - A library is compiled together with the projects that reference it.
   Scrutor.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: none
-Built in 1.6 s: 0 errors, 0 warnings
+Built in 1.1 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   microsoft.build.tasks.git 8.0.0
       build/Microsoft.Build.Tasks.Git.props
@@ -424,17 +424,18 @@ Packages with analyzers or MSBuild files:
       buildTransitive/xunit.v3.core.mtp-v2.props
       buildTransitive/xunit.v3.core.mtp-v2.targets
 Editor: 6 files opened and analyzed in 0.2 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 2 over 100 ms (0 over 250 ms, 0 over 1 s), 0.3 s in all, longest 170 ms during screenshots; answer p50 6.4 ms, p95 22.8 ms, p99 169.7 ms over 85 questions in 3 s
-UI timings: document view 21 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms, document view 1 ms
+UI stalls: 3 over 100 ms (0 over 250 ms, 0 over 1 s), 0.4 s in all, longest 174 ms during screenshots, 0.1 s of it garbage collection; answer p50 4.3 ms, p95 64.8 ms, p99 174.5 ms over 72 questions in 2 s
+UI timings: document view 31 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms, document view 1 ms, document view 1 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 170 ms | 0 ms | 0.6 s | screenshots |
-| 156 ms | 0 ms | 0.3 s | screenshots |
+| 174 ms | 54 ms | 0.2 s | screenshots |
+| 107 ms | 0 ms | 0.5 s | screenshots |
+| 100 ms | 5 ms | 1.7 s | screenshots |
 Output:
-Build started at 23:21:06...
+Build started at 01:09:25...
 1>------ Build started: Project: Scrutor, Configuration: Debug ------
-1>Scrutor -> compiled in memory (63 KB, 240 ms)
+1>Scrutor -> compiled in memory (63 KB, 57 ms)
 2>------ Build started: Project: Scrutor.Tests, Configuration: Debug ------
-2>Scrutor.Tests -> compiled in memory (76.5 KB, 180 ms)
+2>Scrutor.Tests -> compiled in memory (76.5 KB, 125 ms)
 ========== Build: 2 succeeded, 0 failed ==========
 
