@@ -3,8 +3,8 @@ Toolchain projects:
   swift: /home/runner/work/_temp/real-repos/swift-argument-parser/Package.swift
   cpp: /home/runner/work/_temp/real-repos/swift-argument-parser/CMakeLists.txt
 Startup project: swift /home/runner/work/_temp/real-repos/swift-argument-parser/Package.swift
-Set up in 3.7 s
-Ran in 41.8 s
+Set up in 4.0 s
+Ran in 9.5 s
 Project setup:
 
 Output:
@@ -12,276 +12,37 @@ Running roll with Swift 6.4.1
 > swift build --product roll
 Building for debugging...
 [Pre-planning 1 / 94]
+[Planning deferred tasks]
+[30 / 48] ArgumentParserToolInfo
+[40 / 54] ArgumentParser
+[41 / 54] ArgumentParser
+[43 / 55] ArgumentParser
+/home/runner/work/_temp/real-repos/swift-argument-parser/Sources/ArgumentParser/Usage/DumpHelpGenerator.swift:208:15: warning: 'customDeprecated' is deprecated: Use custom instead. [#DeprecatedDeclaration]
+206 |       self = .customAsync
+207 |     case .customDeprecated(_):
+208 |       self = .customDeprecated
+    |               `- warning: 'customDeprecated' is deprecated: Use custom instead. [#DeprecatedDeclaration]
+209 |     }
+210 |   }
 
-*** Signal 11: Backtracing from 0x7f30b46cf96a... done ***
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[50 / 56] roll-product
+[53 / 59] roll-product
+[54 / 59] roll-product
+/home/runner/work/_temp/real-repos/swift-argument-parser/Sources/ArgumentParser/Parsable Types/ParsableArguments.swift:76:8: warning: '_errorLabel' is deprecated: Use _errorPrefix instead. [#DeprecatedDeclaration]
+ 74 |   /// Defaults to `"\(_errorLabel): "`.
+ 75 |   public static var _errorPrefix: String {
+ 76 |     "\(_errorLabel): "
+    |        `- warning: '_errorLabel' is deprecated: Use _errorPrefix instead. [#DeprecatedDeclaration]
+ 77 |   }
+ 78 | }
 
-*** Program crashed: Bad pointer dereference at 0xffffaa481c507852 ***
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[57 / 60] ArgumentParser
+[60 / 61] ArgumentParser
+[61 / 61] roll-product
+Build complete! (8.06 secs)
+4
 
-Platform: x86_64 Linux (Ubuntu 24.04.5 LTS)
-
-Thread 2 "DispatchWorker" crashed:
-
-0      0x00007f30b46cf96a _dispatch_event_loop_drain + 1130 in libdispatch.so
-1 [ra] 0x00007f30b46c5022 _dispatch_mgr_invoke + 129 in libdispatch.so
-2 [ra] 0x00007f30b46c4f8d _dispatch_mgr_thread + 108 in libdispatch.so
-3 [ra] 0x00007f30b46c81b5 _dispatch_worker_thread + 660 in libdispatch.so
-4 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 0 "swift-build":
-
-0      0x00007f30b2e455eb <unknown> in libc.so.6
-1 [ra] 0x00007f30b46c8788 _dispatch_sigsuspend + 23 in libdispatch.so
-2 [ra] 0x00007f30b46c5c59 _dispatch_sig_thread + 8 in libdispatch.so
-3 [ra] 0x00007f30b2e99420 <unknown> in libc.so.6
-4 [ra] 0x00007f30b2e2a1d6 <unknown> in libc.so.6
-5 [ra] 0x00007f30b2e2a28b <unknown> in libc.so.6
-
-Thread 1 "DispatchWorker":
-
-0      0x00007f30b2e98e51 <unknown> in libc.so.6
-1 [ra] 0x00007f30b2ea4e73 <unknown> in libc.so.6
-2 [ra] 0x00007f30b46cfd21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007f30b46c8a21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007f30b46c834e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 3 "DispatchWorker":
-
-0      0x00007f30b2e98e51 <unknown> in libc.so.6
-1 [ra] 0x00007f30b2ea4e73 <unknown> in libc.so.6
-2 [ra] 0x00007f30b46cfd21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007f30b46c8a21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007f30b46c834e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 4 "DispatchWorker":
-
-0      0x00007f30b2e98e51 <unknown> in libc.so.6
-1 [ra] 0x00007f30b2ea4e73 <unknown> in libc.so.6
-2 [ra] 0x00007f30b46cfd21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007f30b46c8a21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007f30b46c834e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 5 "DispatchWorker":
-
-0      0x00007f30b2e98e51 <unknown> in libc.so.6
-1 [ra] 0x00007f30b2ea4e73 <unknown> in libc.so.6
-2 [ra] 0x00007f30b46cfd21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007f30b46c8a21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007f30b46c834e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 6 "DispatchWorker":
-
-0      0x00007f30b2e98e51 <unknown> in libc.so.6
-1 [ra] 0x00007f30b2ea4e73 <unknown> in libc.so.6
-2 [ra] 0x00007f30b46cfd21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007f30b46c8a21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007f30b46c834e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 7 "DispatchWorker":
-
-0      0x00007f30b2e98e51 <unknown> in libc.so.6
-1 [ra] 0x00007f30b2ea4e73 <unknown> in libc.so.6
-2 [ra] 0x00007f30b46cfd21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007f30b46c8a21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007f30b46c834e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 8 "DispatchWorker":
-
- 0                        0x00007f30b4c7547d swift_retain + 77 in libswiftCore.so
- 1 [ra] [system]          0x000055b7e1a0e46f SpecRegistry._findProxiesInSubregistry(_:domain:includeInherited:) + 702 in swift-package at //<compiler-generated>
- 2 [ra]                   0x000055b7e1a12480 partial apply for closure #2 in SpecRegistry.findProxiesInSubregistry(_:domain:includeInherited:) + 47 in swift-package
- 3 [ra] [thunk]           0x000055b7e1a11489 partial apply for closure #2 in SpecRegistry.findProxiesInSubregistry(_:domain:includeInherited:) + 8 in swift-package
- 4 [ra] [thunk]           0x000055b7e1a125e9 partial apply for closure #2 in SpecRegistry.findProxiesInSubregistry(_:domain:includeInherited:) + 8 in swift-package
- 5 [ra]                   0x000055b7e16c056c Cache.getOrInsert(_:_:) + 331 in swift-package at /home/build-user/swift-build/Sources/SWBUtil/Cache.swift:122:25
- 6 [ra]                   0x000055b7e1a09dc9 specialized SpecRegistry.findSpecs<A>(_:domain:includeInherited:) + 344 in swift-package
- 7 [ra]                   0x000055b7e1b9d6c7 SpecRegistry.lookupFileType(fileName:domain:) + 70 in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/SpecRegistry.swift:1025:25
- 8 [ra]                   0x000055b7e1b9be0b SpecLookupContext.lookupFileType(fileName:) + 74 in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/SpecRegistry.swift:1120:29
- 9 [ra]                   0x000055b7e18bc08f specialized FileToBuild.init(absolutePath:inferringTypeUsing:buildFile:additionalArgs:uniquingSuffix:shouldUsePrefixHeader:regionVariantName:indexingInputReplacement:) + 78 in swift-package at /home/build-user/swift-build/Sources/SWBCore/FileToBuild.swift:102:42
-10 [ra] [inlined] [thunk] 0x000055b7e1acc752 FileToBuild.init(absolutePath:inferringTypeUsing:buildFile:additionalArgs:uniquingSuffix:shouldUsePrefixHeader:regionVariantName:indexingInputReplacement:) in swift-package at /home/build-user/<stdin>
-11 [ra]                   0x000055b7e1acc752 specialized copyModuleContent #1 (_:isProject:additionalTaskOrderingOptions:) in constructSwiftCompilationTasks #1 (compilationMode:inputMode:lookup:) in SwiftCompilerSpec.constructTasks(_:_:) + 1153 in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/Tools/SwiftCompiler.swift:2117:139
-12 [async]                0x000055b7e1adbc00 specialized constructSwiftCompilationTasks #1 (compilationMode:inputMode:lookup:) in SwiftCompilerSpec.constructTasks(_:_:) in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/Tools/SwiftCompiler.swift:2152
-13 [async]                0x000055b7e1ab7670 SwiftCompilerSpec.constructTasks(_:_:) in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/Tools/SwiftCompiler.swift:2384
-14 [async]                0x000055b7e1e86680 FilesBasedBuildPhaseTaskProducerBase.constructTasksForRule(_:_:_:) in swift-package at /home/build-user/swift-build/Sources/SWBTaskConstruction/TaskProducers/BuildPhaseTaskProducers/FilesBasedBuildPhaseTaskProducer.swift:966
-15 [async]                0x000055b7e1f20dd0 SourcesTaskProducer.constructTasksForRule(_:_:_:_:_:) in swift-package at /home/build-user/swift-build/Sources/SWBTaskConstruction/TaskProducers/BuildPhaseTaskProducers/SourcesTaskProducer.swift:1798
-16 [async]                0x000055b7e1e8a5d0 closure #1 in FilesBasedBuildPhaseTaskProducerBase.addTasksForRule<A>(groupContext:_:_:_:_:_:_:) in swift-package at /home/build-user/swift-build/Sources/SWBTaskConstruction/TaskProducers/BuildPhaseTaskProducers/FilesBasedBuildPhaseTaskProducer.swift:776
-17 [async]                0x000055b7e1f2b4c0 partial apply for closure #1 in FilesBasedBuildPhaseTaskProducerBase.addTasksForRule<A>(groupContext:_:_:_:_:_:_:) in swift-package
-18 [async]                0x000055b7e1ec4040 SourcesTaskProducer.appendGeneratedTasks(_:options:staleFileRemovalScope:body:) in swift-package at /home/build-user/swift-build/Sources/SWBTaskConstruction/TaskProducers/BuildPhaseTaskProducers/SourcesTaskProducer.swift:313
-19 [async]                0x000055b7e1ec2430 specialized FilesBasedBuildPhaseTaskProducerBase.addTasksForGroup<A>(_:_:_:_:_:_:) in swift-package at swift-build/Sources/SWBTaskConstruction/TaskProducers/BuildPhaseTaskProducers/FilesBasedBuildPhaseTaskProducer.swift:770
-20 [async]                0x000055b7e1eb4fa0 specialized FilesBasedBuildPhaseTaskProducerBase.groupAndAddTasksForFiles<A>(_:_:_:filterToAPIRules:filterToHeaderRules:_:extraResolvedBuildFiles:) in swift-package at swift-build/Sources/SWBTaskConstruction/TaskProducers/BuildPhaseTaskProducers/FilesBasedBuildPhaseTaskProducer.swift:738
-21 [async]                0x000055b7e1edd580 SourcesTaskProducer.generateTasks() in swift-package at /home/build-user/swift-build/Sources/SWBTaskConstruction/TaskProducers/BuildPhaseTaskProducers/SourcesTaskProducer.swift:944
-22 [async] [thunk]        0x000055b7e1f22940 protocol witness for TaskProducer.generateTasks() in conformance SourcesTaskProducer in swift-package at //<compiler-generated>
-23 [async]                0x000055b7e1e394f0 closure #2 in closure #4 in BuildPlan.init(planRequest:taskPlanningDelegate:) in swift-package at /home/build-user/swift-build/Sources/SWBTaskConstruction/ProductPlanning/BuildPlan.swift:175
-24 [async] [thunk]        0x000055b7e1e469b0 partial apply for closure #2 in closure #4 in BuildPlan.init(planRequest:taskPlanningDelegate:) in swift-package
-25 [async] [thunk]        0x000055b7e1e46970 thunk for @escaping @callee_guaranteed @Sendable @async (@guaranteed ProductPlanResultContext, @in_guaranteed TaskProducer) -> () in swift-package
-26 [async] [system]       0x000055b7e1e45b40 partial apply for thunk for @escaping @callee_guaranteed @Sendable @async (@guaranteed ProductPlanResultContext, @in_guaranteed TaskProducer) -> () in swift-package at //<compiler-generated>
-27 [async]                0x000055b7e1650170 closure #1 in Sequence<>.parallelForEach<A>(group:maximumParallelism:_:) in swift-package
-28 [async] [thunk]        0x000055b7e164fe10 partial apply for closure #1 in Sequence<>.parallelForEach<A>(group:maximumParallelism:_:) in swift-package at //<compiler-generated>
-29 [async] [thunk]        0x000055b7e164fc70 thunk for @escaping @isolated(any) @callee_guaranteed @async () -> (@out A) in swift-package at //<compiler-generated>
-30 [async] [thunk]        0x000055b7e16500f0 partial apply for thunk for @escaping @isolated(any) @callee_guaranteed @async () -> (@out A) in swift-package
-31 [async] [system]       0x00007f30b509ff50 completeTaskWithClosure(swift::AsyncContext*, swift::SwiftError*) in libswift_Concurrency.so
-
-Thread 9 "DispatchWorker":
-
-0      0x00007f30b2e98e51 <unknown> in libc.so.6
-1 [ra] 0x00007f30b2ea4e73 <unknown> in libc.so.6
-2 [ra] 0x00007f30b46cfd21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007f30b46c8a21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007f30b46c834e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 10 "DispatchWorker":
-
-0      0x00007f30b2e98e51 <unknown> in libc.so.6
-1 [ra] 0x00007f30b2ea4e73 <unknown> in libc.so.6
-2 [ra] 0x00007f30b46cfd21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007f30b46c8a21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007f30b46c834e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 11 "DispatchWorker":
-
-0      0x00007f30b2e98e51 <unknown> in libc.so.6
-1 [ra] 0x00007f30b2ea4e73 <unknown> in libc.so.6
-2 [ra] 0x00007f30b46cfd21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007f30b46c8a21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007f30b46c834e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 12 "DispatchWorker":
-
-0      0x00007f30b2e98e51 <unknown> in libc.so.6
-1 [ra] 0x00007f30b2ea4e73 <unknown> in libc.so.6
-2 [ra] 0x00007f30b46cfd21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007f30b46c8a21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007f30b46c834e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 13 "DispatchWorker":
-
-0      0x00007f30b2e98e51 <unknown> in libc.so.6
-1 [ra] 0x00007f30b2ea4e73 <unknown> in libc.so.6
-2 [ra] 0x00007f30b46cfd21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007f30b46c8a21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007f30b46c834e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 14 "DispatchWorker":
-
-0      0x00007f30b2e98e51 <unknown> in libc.so.6
-1 [ra] 0x00007f30b2ea4e73 <unknown> in libc.so.6
-2 [ra] 0x00007f30b46cfd21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007f30b46c8a21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007f30b46c834e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 15 "DispatchWorker":
-
- 0                  0x00007f30b2ea48f5 <unknown> in libc.so.6
- 1 [ra]             0x00007f30b46c89d2 _dispatch_semaphore_signal_slow + 17 in libdispatch.so
- 2 [ra]             0x00007f30b46c50f8 _dispatch_root_queue_poke_slow + 55 in libdispatch.so
- 3 [ra]             0x00007f30b507dcd5 swift_task_enqueueGlobalImpl + 68 in libswift_Concurrency.so
- 4 [ra]             0x00007f30b509d5e4 swift::AsyncTask::flagAsAndEnqueueOnExecutor(swift::SerialExecutorRef) + 291 in libswift_Concurrency.so
- 5 [ra]             0x00007f30b5054030 UnsafeContinuation.resume(returning:) + 79 in libswift_Concurrency.so
- 6 [ra]             0x000055b7e15fae16 AsyncCache.value(forKey:_:) + 341 in swift-package at /home/build-user/swift-build/Sources/SWBUtil/AsyncCache.swift:44:34
- 7 [async]          0x000055b7e19da730 DiscoveredCommandLineToolSpecInfoCache.run(_:_:_:_:) in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/CommandLineToolSpec.swift:139
- 8 [async] [thunk]  0x000055b7e1fb22a0 protocol witness for CommandProducer.discoveredCommandLineToolSpecInfo(_:_:_:_:) in conformance TaskProducerContext in swift-package
- 9 [async]          0x000055b7e1a77020 discoveredLinkerToolsInfo(_:_:at:) in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/Tools/LinkerTools.swift:1976
-10 [async]          0x000055b7e1a70eb0 LdLinkerSpec.discoveredCommandLineToolSpecInfo(_:_:_:) in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/Tools/LinkerTools.swift:1632
-11 [async]          0x000055b7e19e1210 CommandLineToolSpec.additionalEvaluatedOutputs(_:_:) in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/CommandLineToolSpec.swift:1026
-12 [async]          0x000055b7e1a69540 LdLinkerSpec.constructLinkerTasks(_:_:libraries:usedTools:) in swift-package at /home/build-user/swift-build/Sources/SWBCore/SpecImplementations/Tools/LinkerTools.swift:554
-13 [async]          0x000055b7e1f19c30 closure #24 in SourcesTaskProducer.generateTasks() in swift-package at /home/build-user/swift-build/Sources/SWBTaskConstruction/TaskProducers/BuildPhaseTaskProducers/SourcesTaskProducer.swift:1111
-14 [async] [thunk]  0x000055b7e1f2b420 partial apply for closure #24 in SourcesTaskProducer.generateTasks() in swift-package
-15 [async]          0x000055b7e1ec4040 SourcesTaskProducer.appendGeneratedTasks(_:options:staleFileRemovalScope:body:) in swift-package at /home/build-user/swift-build/Sources/SWBTaskConstruction/TaskProducers/BuildPhaseTaskProducers/SourcesTaskProducer.swift:313
-16 [async]          0x000055b7e1ee2c80 SourcesTaskProducer.generateTasks() in swift-package at /home/build-user/swift-build/Sources/SWBTaskConstruction/TaskProducers/BuildPhaseTaskProducers/SourcesTaskProducer.swift:1106
-17 [async] [thunk]  0x000055b7e1f22940 protocol witness for TaskProducer.generateTasks() in conformance SourcesTaskProducer in swift-package at //<compiler-generated>
-18 [async]          0x000055b7e1e394f0 closure #2 in closure #4 in BuildPlan.init(planRequest:taskPlanningDelegate:) in swift-package at /home/build-user/swift-build/Sources/SWBTaskConstruction/ProductPlanning/BuildPlan.swift:175
-19 [async] [thunk]  0x000055b7e1e469b0 partial apply for closure #2 in closure #4 in BuildPlan.init(planRequest:taskPlanningDelegate:) in swift-package
-20 [async] [thunk]  0x000055b7e1e46970 thunk for @escaping @callee_guaranteed @Sendable @async (@guaranteed ProductPlanResultContext, @in_guaranteed TaskProducer) -> () in swift-package
-21 [async] [system] 0x000055b7e1e45b40 partial apply for thunk for @escaping @callee_guaranteed @Sendable @async (@guaranteed ProductPlanResultContext, @in_guaranteed TaskProducer) -> () in swift-package at //<compiler-generated>
-22 [async]          0x000055b7e1650170 closure #1 in Sequence<>.parallelForEach<A>(group:maximumParallelism:_:) in swift-package
-23 [async] [thunk]  0x000055b7e164fe10 partial apply for closure #1 in Sequence<>.parallelForEach<A>(group:maximumParallelism:_:) in swift-package at //<compiler-generated>
-24 [async] [thunk]  0x000055b7e164fc70 thunk for @escaping @isolated(any) @callee_guaranteed @async () -> (@out A) in swift-package at //<compiler-generated>
-25 [async] [thunk]  0x000055b7e16500f0 partial apply for thunk for @escaping @isolated(any) @callee_guaranteed @async () -> (@out A) in swift-package
-26 [async] [system] 0x00007f30b509ff50 completeTaskWithClosure(swift::AsyncContext*, swift::SwiftError*) in libswift_Concurrency.so
-
-Thread 16 "DispatchWorker":
-
-0      0x00007f30b2e98e51 <unknown> in libc.so.6
-1 [ra] 0x00007f30b2ea4e73 <unknown> in libc.so.6
-2 [ra] 0x00007f30b46cfd21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007f30b46c8a21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007f30b46c834e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 17 "DispatchWorker":
-
-0      0x00007f30b2e98e51 <unknown> in libc.so.6
-1 [ra] 0x00007f30b2ea4e73 <unknown> in libc.so.6
-2 [ra] 0x00007f30b46cfd21 _dispatch_sema4_timedwait + 80 in libdispatch.so
-3 [ra] 0x00007f30b46c8a21 _dispatch_semaphore_wait_slow + 32 in libdispatch.so
-4 [ra] 0x00007f30b46c834e _dispatch_worker_thread + 1069 in libdispatch.so
-5 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 18 "DispatchWorker":
-
-0      0x00007f30b2f1bcd0 <unknown> in libc.so.6
-1 [ra] 0x00007f30b43d3c75 __CFRunLoopServiceFileDescriptors + 100 in libFoundation.so
-2 [ra] 0x00007f30b43cf778 __CFRunLoopRun + 1047 in libFoundation.so
-3 [ra] 0x00007f30b43cf0b8 CFRunLoopRunSpecific + 503 in libFoundation.so
-4 [ra] 0x00007f30b434e5e9 RunLoop.run() + 184 in libFoundation.so
-5 [ra] 0x00007f30b43407df closure #1 in closure #1 in static Process.setup() + 510 in libFoundation.so
-6 [ra] 0x00007f30b4362419 Thread.main() + 24 in libFoundation.so
-7 [ra] 0x00007f30b4361207 NSThreadStart(_:) + 150 in libFoundation.so
-8 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-Thread 19 "DispatchWorker":
-
-0      0x00007f30b2f26fa7 <unknown> in libc.so.6
-1 [ra] 0x00007f30b43da29f __CFSocketManager + 622 in libFoundation.so
-2 [ra] 0x00007f30b2e9cb84 <unknown> in libc.so.6
-
-
-Registers:
-
-rax 0x000055b7e38b93c0  00 00 00 00 00 00 00 00 30 00 00 00 00 00 00 00  ········0·······
-rdx 0x0000000000000001  1
-rcx 0xffffaa481c50784a  18446649825422243914
-rbx 0x0000000000000001  1
-rsi 0x00007f30b46ef1d0  00 00 00 00 02 00 00 00 00 00 00 00 00 00 00 00  ················
-rdi 0x0000000000000081  129
-rbp 0x00007f30a7ffeab0  30 eb ff a7 30 7f 00 00 22 50 6c b4 30 7f 00 00  0ëÿ§0···"Pl´0···
-rsp 0x00007f30a7ffe930  01 00 00 00 01 00 00 00 00 00 00 00 10 00 00 00  ················
- r8 0x0000000000000004  4
- r9 0x00007f305c008220  f8 40 05 af 37 7f 00 00 ff ff ff ff ff ff ff ff  ø@·¯7···ÿÿÿÿÿÿÿÿ
-r10 0x0000000000000000  0
-r11 0x0000000000000246  582
-r12 0x00007f30a7ffe9f8  01 00 00 00 00 00 00 00 40 cc 6e b4 30 7f 00 00  ········@Ìn´0···
-r13 0x00007f30b46d2374  63 d2 ff ff a6 d2 ff ff 02 d2 ff ff 84 d2 ff ff  cÒÿÿ¦Òÿÿ·Òÿÿ·Òÿÿ
-r14 0x0000000000000000  0
-r15 0x0000000000000002  2
-rip 0x00007f30b46cf96a  8b 51 08 81 fa ff ff ff 7f 74 12 ba 02 00 00 00  ·Q··úÿÿÿ·t·º····
-
-rflags 0x0000000000010206  PF
-
-cs 0x0033  fs 0x0000  gs 0x0000
-
-
-Images (71 omitted):
-
-0x000055b7e0342000–0x000055b7e380c4c8 184e3719c821b22a25ae4aaaa49a5cd4f46a65c5 swift-package           /home/runner/work/_temp/swift/usr/bin/swift-package
-0x00007f30b2e00000–0x00007f30b2fb0039 a4a7992a8e66555c8141ab2a08a8465ff6e0ea65 libc.so.6               /usr/lib/x86_64-linux-gnu/libc.so.6
-0x00007f30b4000000–0x00007f30b44d60d8 ec5f28a4914b13096b6806391b770e992fc0ab9a libFoundation.so        /home/runner/work/_temp/swift/usr/lib/swift/linux/libFoundation.so
-0x00007f30b4693000–0x00007f30b46db1c0 37138795bda5c9dff39febf66624c331261c921b libdispatch.so          /home/runner/work/_temp/swift/usr/lib/swift/linux/libdispatch.so
-0x00007f30b4800000–0x00007f30b4dd9b30 7f58c0a650758160f6344ec08a47634d4f888be7 libswiftCore.so         /home/runner/work/_temp/swift/usr/lib/swift/linux/libswiftCore.so
-0x00007f30b5029000–0x00007f30b50bd2a8 fddba3304bf1d23be98145f0dade7926fafd25cf libswift_Concurrency.so /home/runner/work/_temp/swift/usr/lib/swift/linux/libswift_Concurrency.so
-
-Backtrace took 38.96s
-
-
-The program 'roll' has exited with code 139 (0x8b).
+The program 'roll' has exited with code 0 (0x0).
 
