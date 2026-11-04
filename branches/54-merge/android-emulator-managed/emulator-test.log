@@ -4,13 +4,30 @@ Built-in Screen, displayId 0
 Performing Streamed Install
 Success
 Measurements:
-Startup to self test start: 22.04 s
-TabStudio startup: first frame at 21586 ms, ready at 21586 ms; process start to activity 9837 ms, application +1456 ms, styles +1289 ms, services +1207 ms, theme +411 ms, view models +2757 ms, main view +2076 ms, start screen +117 ms, first frame +2435 ms
+Startup to self test start: 10.45 s
+TabStudio startup: first frame at 10066 ms, ready at 10066 ms; process start to activity 2764 ms, application +1366 ms, styles +788 ms, services +828 ms, theme +154 ms, view models +1624 ms, main view +1534 ms, start screen +54 ms, first frame +954 ms
+TabStudio UI stalls: 198 over 100 ms (71 over 250 ms, 6 over 1 s), 61.9 s in all, longest 5281 ms during the step that ended with: Extracting the sample; answer p50 3.8 ms, p95 66.7 ms, p99 261.4 ms over 6507 questions in 267 s
+TabStudio UI timings: workspace view 1673 ms, document view 731 ms, workspace view model 654 ms, workspace view model 577 ms, document view 491 ms, LivePanelView 406 ms, document view 357 ms, document view 257 ms, document view 219 ms, document view 197 ms, document view 111 ms, document view 96 ms
+TabStudio UI stall: 5281 ms at 0.6 s during the step that ended with: Extracting the sample
+TabStudio UI stall: 2933 ms at 6.3 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 1485 ms at 12.4 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 1183 ms at 131.3 s during the step that ended with: WebAssembly: served on 127.0.0.1:33345 in 52.9 s with its boot files, no errors, run in th…
+TabStudio UI stall: 1146 ms at 47.9 s during creating the DatabaseExplorerView
+TabStudio UI stall: 1010 ms at 67.8 s during creating the workspace's view model → showing the workspace → reading the solution → showing the solution in Solution Explorer → databases, startup projects and toolchains → backing services → loading…
+TabStudio UI stall: 955 ms at 135.6 s during creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 954 ms at 70.4 s during the step that ended with: Static site: served on 127.0.0.1:42201 in 3.8 s | Static site preview: the page showed in …
+TabStudio UI stall: 893 ms at 73.7 s during creating a document's view
+TabStudio UI stall: 875 ms at 75.3 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution → showing the solution in Solution Explorer → databases, startup projects and toolchains…
+TabStudio UI stall: 823 ms at 69.2 s during starting restore and analysis → creating a document's view
+TabStudio UI stall: 801 ms at 9.2 s during reading the solution
+TabStudio UI stall: 778 ms at 218.5 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 688 ms at 72.8 s during creating a document's view
+TabStudio UI stall: 675 ms at 14.6 s during the step that ended with: F5: What's your name? Tablet | Good morning, Tablet! This program was compiled and run on …
 Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
- Native Heap 333337 333316 0 77 334376 349296 341775 3185
- Dalvik Heap 2519 2452 0 146 4772 5573 2787 2786
- TOTAL 691553 607216 78444 438 800880 354869 344562 5971
- TOTAL PSS: 691553 TOTAL RSS: 800880 TOTAL SWAP PSS: 438
-TABSTUDIO_SELFTEST_TIMEOUT no verdict after 900 s
+ Native Heap 674582 674536 40 6439 675600 713096 701747 6728
+ Dalvik Heap 2960 2912 20 115 4888 8105 4053 4052
+ TOTAL 1208805 1090528 38964 57622 1275888 721201 705800 10780
+ TOTAL PSS: 1208805 TOTAL RSS: 1275888 TOTAL SWAP PSS: 57622
+TABSTUDIO_SELFTEST_OK 266.4 s: Shard: managed | What's your name? Tablet | Good morning, Tablet! This program was compiled and run on your tablet. | Statically typed languages, oldest first: | C#         since 2000 (26 years) | Rust       since 2015 (11 years) | The program 'HelloTablet' has exited with code 0 (0x0). | Debugger: Paused at a breakpoint · Program.cs, line 15, name = "Tablet", 3 steps in 90 / 217 / 61 ms | Recording: historical loop total = 3 (expected 3). | Local AI: tiny GGUF generated 16 tokens / 55 characters at 158.9 tokens/s on device | Link: debugged on Self-test host over TLS 1.3 (6 requests), built on this device after it left | Live: shared the sample, Self-test guest joined over TLS (2 participants), edits went both ways within 48 ms | Language servers: Loopback Server ready, warning LB0003 on line 5, completion and Quick Info | Debug adapters: Paused at a breakpoint · greet.loopback, line 4, name = "Tablet" | SSH: device key generation, non-exportable signing provider and config import verified | Database: Keystore connection, SQLite schema, multiple SQL results and package native SQLite passed | Web: served on 127.0.0.1:46051 in 11.2 s, the API said "Hello, Tablet!" | Web screen: typed "Tablet" and tapped Greet through the browser's input on a 330 × 320 page, 3 layout findings, in 5.6 s | Static site: served on 127.0.0.1:42201 in 3.8 s | Static site preview: the page showed in 0.6 s, CSS applied without a reload and saved HTML reloaded in 1.8 s | WebAssembly: served on 127.0.0.1:33345 in 52.9 s with its boot files, no errors, run in the preview in 6.7 s: its Weather page fetched its forecast | Blazor: served on 127.0.0.1:44425 in 25.6 s with blazor.web.js (195 KB), no errors, left running | Go debugging: stopped at 13, name = "Tablet", console input and completed greeting | Rust debugging: stopped at 6, answer = 42, console input and completed greeting
 Shard: managed
-Seconds from launch to verdict: 900
+Seconds from launch to verdict: 281
