@@ -1,0 +1,61 @@
+11-04 06:52:44.724  3249  3249 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-04 06:52:44.727  3249  3249 I AndroidRuntime: Using default boot image
+11-04 06:52:44.727  3249  3249 I AndroidRuntime: Leaving lock profiling enabled
+11-04 06:52:44.946  3249  3249 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+11-04 06:52:44.969  3249  3249 I AndroidRuntime: VM exiting with result code 0.
+11-04 06:52:45.120  3285  3285 D nativeloader: Load /data/app/~~aYSTOPaFgMyvSLr3zNlMQQ==/com.tabstudio.ide-6TJ-7KQIaet0qVAaWa8Itw==/lib/x86_64/libmonosgen-2.0.so using ns clns-7 from class loader (caller=/data/app/~~aYSTOPaFgMyvSLr3zNlMQQ==/com.tabstudio.ide-6TJ-7KQIaet0qVAaWa8Itw==/base.apk): ok
+11-04 06:52:45.120  3285  3285 D nativeloader: Load /data/app/~~aYSTOPaFgMyvSLr3zNlMQQ==/com.tabstudio.ide-6TJ-7KQIaet0qVAaWa8Itw==/lib/x86_64/libmonodroid.so using ns clns-7 from class loader (caller=/data/app/~~aYSTOPaFgMyvSLr3zNlMQQ==/com.tabstudio.ide-6TJ-7KQIaet0qVAaWa8Itw==/base.apk): ok
+11-04 06:52:45.271  3285  3285 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
+11-04 06:52:45.271  3285  3285 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
+11-04 06:52:52.173  3285  3285 I TabStudio: TabStudio startup: first frame at 7063 ms, ready at 7063 ms; process start to activity 959 ms, application +1047 ms, styles +665 ms, services +612 ms, theme +90 ms, view models +1036 ms, main view +1452 ms, start screen +35 ms, first frame +1167 ms
+11-04 06:52:52.201  3285  3285 I TabStudio: TABSTUDIO_SELFTEST_START shard=containers
+11-04 06:52:57.641  3285  3334 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
+11-04 06:53:46.918  3285  3356 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'utimensat' may fail
+11-04 06:53:51.744  3285  3899 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'link' may fail
+11-04 06:53:51.740  3285  3285 W com.tabstudio.ide: type=1400 audit(0.0:57): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/tmp/002cc9f20b03429b8be90d51401522e9/usr/share/zoneinfo/Africa/Accra" dev="dm-46" ino=439 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+11-04 06:53:51.744  3285  3285 W com.tabstudio.ide: type=1400 audit(0.0:59): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/tmp/002cc9f20b03429b8be90d51401522e9/usr/share/zoneinfo/Africa/Asmara" dev="dm-46" ino=442 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+11-04 06:53:51.744  3285  3285 W com.tabstudio.ide: type=1400 audit(0.0:61): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/tmp/002cc9f20b03429b8be90d51401522e9/usr/share/zoneinfo/Africa/Asmera" dev="dm-46" ino=443 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+11-04 06:53:52.746  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'pipe2' may fail
+11-04 06:53:52.746  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'fcntl' may fail
+11-04 06:53:52.747  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_init' may fail
+11-04 06:53:52.747  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_init' may fail
+11-04 06:53:52.747  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_adddup2' may fail
+11-04 06:53:52.747  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setflags' may fail
+11-04 06:53:52.748  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setpgroup' may fail
+11-04 06:53:52.748  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'sigemptyset' may fail
+11-04 06:53:52.748  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'sigaddset' may fail
+11-04 06:53:52.748  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setsigdefault' may fail
+11-04 06:53:52.748  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setsigmask' may fail
+11-04 06:53:52.748  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn' may fail
+11-04 06:53:52.763  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_destroy' may fail
+11-04 06:53:52.764  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_destroy' may fail
+11-04 06:53:52.766  3285  4021 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'close' may fail
+11-04 06:53:52.770  3285  4823 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'waitpid' may fail
+11-04 06:53:52.796  3285  4824 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'read' may fail
+11-04 06:54:04.124  3285  3285 W com.tabstudio.ide: type=1400 audit(0.0:16221): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/containers/c3243eccbcdafc01161d182f044e5b34aa767ae619af2525ec28d7e11449ef4c/rootfs/usr/share/zoneinfo/CET" dev="dm-46" ino=59444 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+11-04 06:54:04.124  3285  3285 W com.tabstudio.ide: type=1400 audit(0.0:16222): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/containers/c3243eccbcdafc01161d182f044e5b34aa767ae619af2525ec28d7e11449ef4c/rootfs/usr/share/zoneinfo/CST6CDT" dev="dm-46" ino=59445 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+11-04 06:54:04.124  3285  3285 W com.tabstudio.ide: type=1400 audit(0.0:16223): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/containers/c3243eccbcdafc01161d182f044e5b34aa767ae619af2525ec28d7e11449ef4c/rootfs/usr/share/zoneinfo/Cuba" dev="dm-46" ino=59446 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+11-04 06:54:04.124  3285  3285 W com.tabstudio.ide: type=1400 audit(0.0:16224): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/containers/c3243eccbcdafc01161d182f044e5b34aa767ae619af2525ec28d7e11449ef4c/rootfs/usr/share/zoneinfo/EET" dev="dm-46" ino=59447 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+11-04 06:54:04.124  3285  3285 W com.tabstudio.ide: type=1400 audit(0.0:16225): avc:  denied  { ioctl } for  comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Containers/containers/c3243eccbcdafc01161d182f044e5b34aa767ae619af2525ec28d7e11449ef4c/rootfs/usr/share/zoneinfo/EST" dev="dm-46" ino=59448 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c209,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c209,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
+11-04 06:54:13.759  3285  3285 D nativeloader: Load /data/app/~~L3fz7hw20Ce6UCW1r3cIPA==/com.google.android.trichromelibrary_636771938-Cr2s7SP3BUPaiHZCxfqgmw==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-9 from class loader (caller=/data/app/~~c8FJGhwBO5F2l8aL0I4vrA==/com.google.android.webview-HZBjnTTHqFZtS5yOABBZ_g==/WebViewGoogle.apk): ok
+11-04 06:54:15.218  3285  3360 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'write' may fail
+11-04 06:54:15.264  3285  3285 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'kill' may fail
+11-04 06:54:15.475  3285  3285 I TabStudio: TabStudio startup: first frame at 7063 ms, ready at 7063 ms; process start to activity 959 ms, application +1047 ms, styles +665 ms, services +612 ms, theme +90 ms, view models +1036 ms, main view +1452 ms, start screen +35 ms, first frame +1167 ms
+11-04 06:54:15.493  3285  3285 I TabStudio: TabStudio UI stalls: 22 over 100 ms (10 over 250 ms, 4 over 1 s), 13.5 s in all, longest 3362 ms during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution; answer p50 2.1 ms, p95 24.0 ms, p99 83.2 ms over 2769 questions in 83 s
+11-04 06:54:15.497  3285  3285 I TabStudio: TabStudio UI timings: workspace view 1444 ms, workspace view model 745 ms, document view 354 ms
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 3362 ms at 0.3 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 2957 ms at 4.3 s during reading the solution
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 1931 ms at 9.5 s during opening the session's documents → creating a document's view → starting restore and analysis
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 1260 ms at 11.5 s during the end of the run
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 551 ms at 3.7 s during reading the solution
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 456 ms at 7.3 s during showing the solution in Solution Explorer → databases, startup projects and toolchains
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 383 ms at 14.6 s during the end of the run
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 299 ms at 7.8 s during databases, startup projects and toolchains
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 296 ms at 8.2 s during backing services
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 258 ms at 22.3 s during the end of the run
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 230 ms at 75.4 s during the end of the run
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 211 ms at 15.1 s during the end of the run
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 171 ms at 0.0 s during the end of the run
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 140 ms at 80.3 s during the end of the run
+11-04 06:54:15.502  3285  3285 I TabStudio: TabStudio UI stall: 138 ms at 81.0 s during the end of the run
+11-04 06:54:15.502  3285  3285 I TabStudio: TABSTUDIO_SELFTEST_OK 82.5 s: Containers: PostgreSQL query=42 and TCP connected; Redis PING=PONG; nginx rendered in web preview; docker ps and exec stdin/output/exit; 3 verified images; 82.5 s; postgres:17-alpine@sha256:e4cb93687b062cd25a0e8f672d85a7708235009d70d31f8a7698d9370092a9c4, redis:7-alpine@sha256:1cf73a2f04808e55a8bd2f5706c2aa0ebb0f71938f93deb7af79f48311cd5cb9, nginx:alpine@sha256:2db7d28517d1fba17c2da3210395f7be11a11b419246ad0da2edf782af72f367; 8 run variables
