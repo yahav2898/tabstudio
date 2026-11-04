@@ -580,6 +580,8 @@ jobs:
           exit "$status"
 
       - name: Publish logs
+        continue-on-error: true
+        timeout-minutes: 10
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
