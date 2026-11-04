@@ -865,7 +865,10 @@ public sealed partial class EveryCommandTests
 
         if (sweep.Window.InputHitTest(middle) is Visual hit && !ReferenceEquals(hit, button) && !button.IsVisualAncestorOf(hit))
         {
-            sweep.Add("covered", where, $"A tap on its middle reaches {hit.GetType().Name}{(hit is Control { Name: { Length: > 0 } name } ? "#" + name : string.Empty)} instead.");
+            var path = string.Join(" < ", hit.GetVisualAncestors().Prepend(hit).Take(6)
+                .Select(v => v.GetType().Name + (v is Control { Name: { Length: > 0 } n } ? "#" + n : string.Empty)));
+            sweep.Add("covered", where, string.Create(CultureInfo.InvariantCulture,
+                $"A tap on its middle {middle} reaches {path} instead (the button is {button.Bounds.Size} in a {sweep.Window.Bounds.Size} window). [{sweep.Shoot()}]"));
         }
 
         finger.Down(middle);
