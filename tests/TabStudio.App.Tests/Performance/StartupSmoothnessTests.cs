@@ -36,7 +36,14 @@ public sealed class StartupSmoothnessTests
         report.AppendLine("## This test process's own start (cold)\n");
         report.AppendLine("| Part | Took | At |");
         report.AppendLine("| --- | --- | --- |");
-        var marks = StartupTimeline.All;
+        // The first start only: every test application of this process marks its own start again after it.
+        var marks = StartupTimeline.All.ToList();
+        var first = marks.FindIndex(1, m => m.Name == marks[0].Name);
+        if (first > 0)
+        {
+            marks = marks[..first];
+        }
+
         for (var i = 1; i < marks.Count; i++)
         {
             report.AppendLine(culture, $"| {marks[i].Name} | {(marks[i].At - marks[i - 1].At).TotalMilliseconds:0} ms | {marks[i].At.TotalMilliseconds:0} ms |");

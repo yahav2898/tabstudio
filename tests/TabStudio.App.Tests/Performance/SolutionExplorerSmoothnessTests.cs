@@ -61,6 +61,8 @@ public sealed class SolutionExplorerSmoothnessTests
 
         var explorer = fixture.Workspace.Explorer;
         var row = explorer.Rows.First(r => r.Node.Name == "big");
+        var resets = 0;
+        explorer.Rows.CollectionChanged += (_, e) => resets += e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset ? 1 : 0;
         var expanding = new List<UiCost>();
         var collapsing = new List<UiCost>();
         for (var i = 0; i < 4; i++)
@@ -69,6 +71,15 @@ public sealed class SolutionExplorerSmoothnessTests
             Assert.True(explorer.Rows.Count > 3000);
             collapsing.Add(Smoothness.Measure(window, () => explorer.Toggle(row)));
         }
+
+        // Before 0.21.11 each toggle reset the list and made every row again.
+        Assert.Equal(0, resets);
+        explorer.Toggle(row);
+        var first = explorer.Rows[explorer.Rows.IndexOf(row) + 1];
+        explorer.Toggle(row);
+        explorer.Toggle(row);
+        Assert.Same(first, explorer.Rows[explorer.Rows.IndexOf(row) + 1]);
+        explorer.Toggle(row);
 
         var search = new List<UiCost>();
         foreach (var text in new[] { "n", "no", "not", "note", "note1", "note12", "note1", "note", "not", "no", "n", string.Empty })

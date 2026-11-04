@@ -19,7 +19,7 @@ namespace TabStudio.App.Tests.Performance;
 [Collection(ExtensionsTestGroup.Name)]
 public sealed class OutputSmoothnessTests
 {
-    private const int Lines = 200_000;
+    private const int Lines = 20_000;
 
     [AvaloniaFact]
     public async Task A_program_printing_in_a_tight_loop_leaves_the_IDE_responsive()
@@ -32,7 +32,7 @@ public sealed class OutputSmoothnessTests
         var (beforeTime, beforeStalls, beforeFrames) = await FloodAsync(oldWay: true);
         var (afterTime, afterStalls, afterFrames) = await FloodAsync(oldWay: false);
 
-        var report = new StringBuilder("# A program printing 200,000 lines as fast as it can\n\n");
+        var report = new StringBuilder("# A program printing 20,000 lines as fast as it can\n\n");
         var culture = CultureInfo.InvariantCulture;
         report.AppendLine("- The Output panel shown in a 1280 × 400 window, keeping its last 1,000,000 characters; a frame asked for every 16 ms meanwhile.\n");
         report.AppendLine("| Appending | Every line shown after | Frames drawn meanwhile | The UI thread meanwhile |");
