@@ -1,11 +1,11 @@
 Respawn at f550203c2caaded99ede64d85ff07acc6bb7514d
-Opened /home/runner/work/_temp/real-repos/Respawn/Respawn.sln in 0.6 s
+Opened /home/runner/work/_temp/real-repos/Respawn/Respawn.sln in 0.5 s
 Compatibility Doctor:
   Respawn: Library via Built with its users - A library is compiled together with the projects that reference it.
   Respawn.DatabaseTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   Respawn.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: none
-Built in 13.2 s: 0 errors, 0 warnings
+Built in 10.7 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   awssdk.s3 3.7.0.4
       analyzers/dotnet/cs/AWSSDK.S3.CodeAnalysis.dll
@@ -402,19 +402,20 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.abstractions.dll
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
-Editor: 7 files opened and analyzed in 0.8 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 1 over 100 ms (0 over 250 ms, 0 over 1 s), 0.1 s in all, longest 123 ms during creating a document's view → starting restore and analysis, 0.1 s of it garbage collection; answer p50 5.3 ms, p95 9.6 ms, p99 37.4 ms over 679 questions in 15 s
-UI timings: document view 112 ms, document view 15 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 1 ms, document view 1 ms
+Editor: 7 files opened and analyzed in 0.9 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 2 over 100 ms (0 over 250 ms, 0 over 1 s), 0.3 s in all, longest 150 ms during screenshots, 0.0 s of it garbage collection; answer p50 6.4 ms, p95 13.6 ms, p99 48.7 ms over 531 questions in 13 s
+UI timings: document view 52 ms, document view 24 ms, document view 16 ms, document view 4 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 123 ms | 59 ms | 0.5 s | creating a document's view → starting restore and analysis |
+| 150 ms | 9 ms | 0.6 s | screenshots |
+| 141 ms | 20 ms | 0.8 s | screenshots |
 Output:
-Build started at 23:07:45...
+Build started at 00:53:55...
 1>------ Build started: Project: Respawn, Configuration: Debug ------
-1>Respawn -> compiled in memory (96 KB, 738 ms)
+1>Respawn -> compiled in memory (96 KB, 740 ms)
 2>------ Build started: Project: Respawn.DatabaseTests, Configuration: Debug ------
-2>Respawn.DatabaseTests -> compiled in memory (260 KB, 2009 ms)
+2>Respawn.DatabaseTests -> compiled in memory (260 KB, 1048 ms)
 3>------ Build started: Project: Respawn.UnitTests, Configuration: Debug ------
-3>Respawn.UnitTests -> compiled in memory (7 KB, 798 ms)
+3>Respawn.UnitTests -> compiled in memory (7 KB, 683 ms)
 ========== Build: 3 succeeded, 0 failed ==========
 
