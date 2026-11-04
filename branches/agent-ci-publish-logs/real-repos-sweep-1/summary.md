@@ -1,11 +1,11 @@
 | Repository | Errors | Baseline | Warnings | Build |
 | --- | --- | --- | --- | --- |
-| Newtonsoft.Json | 0 | 0 | 0 | 33 s |
-| Community.VisualBasic | 0 | 0 | 9 | 12 s |
+| Newtonsoft.Json | 0 | 0 | 0 | 30 s |
+| Community.VisualBasic | 0 | 0 | 9 | 11 s |
 | commandline-ReadText-VB | 0 | 0 | 0 | 0 s |
 | LINQIntro | 0 | 0 | 0 | 0 s |
 | CSVFiles | 0 | 0 | 0 | 0 s |
-| Solitaire | 0 | 0 | 0 | 1 s |
-| SukiUI | 0 | 0 | 136 | 21 s |
-| SmartEnum | 0 | 0 | 4 | 7 s |
+| Solitaire | 0 | 0 | 0 | 0 s |
+| SukiUI | 0 | 0 | 136 | 19 s |
+| SmartEnum | 0 | 0 | 4 | 10 s |
 | ErrorOr | 0 | 0 | 8 | 1 s |
