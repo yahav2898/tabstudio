@@ -1,5 +1,5 @@
 refit at 92ae878250798dc103a01304704a99bb8033ed77
-Opened /home/runner/work/_temp/real-repos/refit/src/Refit.slnx in 1.1 s
+Opened /home/runner/work/_temp/real-repos/refit/src/Refit.slnx in 1.3 s
 Compatibility Doctor:
   index: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   advanced-index: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
@@ -88,7 +88,7 @@ Compatibility Doctor:
   Refit.Xml: Library via Built with its users - A library is compiled together with the projects that reference it.
   Refit: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: RestApiForTest
-Built in 53.1 s: 25 errors, 4 warnings
+Built in 50.9 s: 25 errors, 4 warnings
   25 x CS0103
       [InterfaceStubGenerator.Roslyn48] InlineRequestClassification.cs(90,44): error CS0103: The name 'with' does not exist in the current context
       [InterfaceStubGenerator.Roslyn48] InlineRequestClassification.cs(90,84): error CS0103: The name 'with' does not exist in the current context
@@ -817,30 +817,32 @@ Packages with analyzers or MSBuild files:
   xunit.v3.core.mtp-v2 4.0.2
       buildTransitive/xunit.v3.core.mtp-v2.props
       buildTransitive/xunit.v3.core.mtp-v2.targets
-Editor: 24 files opened and analyzed in 1.0 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 5 over 100 ms (2 over 250 ms, 0 over 1 s), 1.0 s in all, longest 337 ms during screenshots, 0.3 s of it garbage collection; answer p50 5.3 ms, p95 23.6 ms, p99 49.0 ms over 2163 questions in 56 s
-UI timings: document view 5 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+Editor: 24 files opened and analyzed in 1.1 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 7 over 100 ms (1 over 250 ms, 0 over 1 s), 1.1 s in all, longest 317 ms during screenshots, 0.4 s of it garbage collection; answer p50 4.4 ms, p95 18.2 ms, p99 69.1 ms over 2075 questions in 54 s
+UI timings: document view 32 ms, document view 9 ms, document view 7 ms, document view 6 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 337 ms | 88 ms | 1.2 s | screenshots |
-| 251 ms | 114 ms | 0.2 s | databases, startup projects and toolchains |
-| 179 ms | 48 ms | 1.8 s | screenshots |
-| 110 ms | 13 ms | 55.1 s | screenshots |
-| 103 ms | 0 ms | 55.3 s | screenshots |
+| 317 ms | 64 ms | 1.3 s | screenshots |
+| 234 ms | 21 ms | 1.8 s | screenshots |
+| 137 ms | 48 ms | 0.2 s | databases, startup projects and toolchains |
+| 126 ms | 97 ms | 12.0 s | the first build |
+| 105 ms | 0 ms | 53.7 s | creating a document's view |
+| 104 ms | 62 ms | 53.5 s | creating a document's view |
+| 101 ms | 88 ms | 25.3 s | the first build |
 Output:
-Build started at 00:01:08...
+Build started at 01:11:41...
 1>------ Build started: Project: Refit, Configuration: Debug ------
-1>Refit -> compiled in memory (267 KB, 472 ms)
+1>Refit -> compiled in memory (266.5 KB, 400 ms)
 2>------ Build started: Project: Refit.HttpClientFactory, Configuration: Debug ------
-2>Refit.HttpClientFactory -> compiled in memory (34.5 KB, 243 ms)
+2>Refit.HttpClientFactory -> compiled in memory (34.5 KB, 406 ms)
 3>------ Build started: Project: Refit.Reflection, Configuration: Debug ------
 3>RequestBuilderImplementation.QueryAndHeaders.cs(482,37): error CS0103: The name 'with' does not exist in the current context
 4>------ Build started: Project: Refit.Testing, Configuration: Debug ------
-4>Refit.Testing -> compiled in memory (58.5 KB, 300 ms)
+4>Refit.Testing -> compiled in memory (58.5 KB, 313 ms)
 5>------ Build started: Project: Refit.Newtonsoft.Json, Configuration: Debug ------
-5>Refit.Newtonsoft.Json -> compiled in memory (9 KB, 212 ms)
+5>Refit.Newtonsoft.Json -> compiled in memory (9 KB, 168 ms)
 6>------ Build started: Project: Refit.Xml, Configuration: Debug ------
-6>Refit.Xml -> compiled in memory (11.5 KB, 229 ms)
+6>Refit.Xml -> compiled in memory (11.5 KB, 270 ms)
 7>------ Build started: Project: InterfaceStubGenerator.Roslyn48, Configuration: Debug ------
 7>InlineRequestClassification.cs(90,44): error CS0103: The name 'with' does not exist in the current context
 7>InlineRequestClassification.cs(90,84): error CS0103: The name 'with' does not exist in the current context
@@ -965,53 +967,53 @@ Build started at 00:01:08...
 50>aot was not compiled because Refit.Reflection, which it references, has errors.
 51>------ Build started: Project: NativeClient, Configuration: Debug ------
 51>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-51>NativeClient -> compiled in memory (424 KB, 724 ms)
+51>NativeClient -> compiled in memory (424 KB, 676 ms)
 52>------ Build started: Project: Reflection, Configuration: Debug ------
 52>Reflection was not compiled because Refit.Reflection, which it references, has errors.
 53>------ Build started: Project: Other, Configuration: Debug ------
-53>Other -> compiled in memory (16 KB, 237 ms)
+53>Other -> compiled in memory (16 KB, 288 ms)
 54>------ Build started: Project: Refit.CodeFixes.Roslyn48, Configuration: Debug ------
-54>Refit.CodeFixes.Roslyn48 -> compiled in memory (11.5 KB, 27 ms)
+54>Refit.CodeFixes.Roslyn48 -> compiled in memory (11.5 KB, 22 ms)
 55>------ Build started: Project: Tooling, Configuration: Debug ------
 55>Tooling was not compiled because InterfaceStubGenerator.Roslyn48, which it references, has errors.
 56>------ Build started: Project: RuntimeHelpers, Configuration: Debug ------
 56>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-56>RuntimeHelpers -> compiled in memory (64.5 KB, 249 ms)
+56>RuntimeHelpers -> compiled in memory (64.5 KB, 257 ms)
 57>------ Build started: Project: Content, Configuration: Debug ------
 57>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-57>Content -> compiled in memory (42 KB, 306 ms)
+57>Content -> compiled in memory (41.5 KB, 299 ms)
 58>------ Build started: Project: Multipart, Configuration: Debug ------
 58>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-58>Multipart -> compiled in memory (38.5 KB, 247 ms)
+58>Multipart -> compiled in memory (38.5 KB, 199 ms)
 59>------ Build started: Project: Legacy, Configuration: Debug ------
 59>Legacy was not compiled because Refit.Reflection, which it references, has errors.
 60>------ Build started: Project: XUnitTests, Configuration: Debug ------
 60>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-60>XUnitTests -> compiled in memory (30 KB, 348 ms)
+60>XUnitTests -> compiled in memory (30 KB, 291 ms)
 61>------ Build started: Project: NUnitTests, Configuration: Debug ------
 61>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-61>NUnitTests -> compiled in memory (30.5 KB, 379 ms)
+61>NUnitTests -> compiled in memory (30.5 KB, 366 ms)
 62>------ Build started: Project: MSTestTests, Configuration: Debug ------
 62>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-62>MSTestTests -> compiled in memory (31 KB, 317 ms)
+62>MSTestTests -> compiled in memory (31 KB, 379 ms)
 63>------ Build started: Project: TUnitTests, Configuration: Debug ------
 63>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-63>TUnitTests -> compiled in memory (47.5 KB, 469 ms)
+63>TUnitTests -> compiled in memory (47.5 KB, 452 ms)
 64>------ Build started: Project: BlazorWasmSample, Configuration: Debug ------
 64>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-64>BlazorWasmSample -> compiled in memory (20 KB, 275 ms)
+64>BlazorWasmSample -> compiled in memory (20 KB, 284 ms)
 65>------ Build started: Project: Meow.Common, Configuration: Debug ------
 65>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-65>Meow.Common -> compiled in memory (24.5 KB, 225 ms)
+65>Meow.Common -> compiled in memory (24.5 KB, 166 ms)
 66>------ Build started: Project: Meow, Configuration: Debug ------
-66>Meow -> compiled in memory (5.5 KB, 245 ms)
+66>Meow -> compiled in memory (5.5 KB, 261 ms)
 67>------ Build started: Project: LibraryWithSDKandRefitService, Configuration: Debug ------
 67>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-67>LibraryWithSDKandRefitService -> compiled in memory (3.5 KB, 198 ms)
+67>LibraryWithSDKandRefitService -> compiled in memory (3.5 KB, 207 ms)
 68>------ Build started: Project: ConsoleSampleUsingLocalApi, Configuration: Debug ------
-68>ConsoleSampleUsingLocalApi -> compiled in memory (6.5 KB, 205 ms)
+68>ConsoleSampleUsingLocalApi -> compiled in memory (6.5 KB, 163 ms)
 69>------ Build started: Project: RestApiForTest, Configuration: Debug ------
-69>RestApiForTest -> compiled in memory (6.5 KB, 219 ms)
+69>RestApiForTest -> compiled in memory (6.5 KB, 224 ms)
 70>------ Build started: Project: Refit.Benchmarks, Configuration: Debug ------
 70>Refit.Benchmarks was not compiled because Refit.Reflection, which it references, has errors.
 71>------ Build started: Project: Refit.Generator.Benchmarks, Configuration: Debug ------
@@ -1026,11 +1028,11 @@ Build started at 00:01:08...
 75>Refit.CodeFixes.Tests was not compiled because Refit.Analyzers.Roslyn48, which it references, has errors.
 76>------ Build started: Project: Refit.GeneratedCode.TestModels, Configuration: Debug ------
 76>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-76>Refit.GeneratedCode.TestModels -> compiled in memory (7 KB, 202 ms)
+76>Refit.GeneratedCode.TestModels -> compiled in memory (7 KB, 212 ms)
 77>------ Build started: Project: Refit.GeneratorTests, Configuration: Debug ------
 77>Refit.GeneratorTests was not compiled because InterfaceStubGenerator.Roslyn48, which it references, has errors.
 78>------ Build started: Project: Refit.HttpClientFactory.Tests, Configuration: Debug ------
-78>Refit.HttpClientFactory.Tests -> compiled in memory (17 KB, 255 ms)
+78>Refit.HttpClientFactory.Tests -> compiled in memory (17 KB, 265 ms)
 79>------ Build started: Project: Refit.MockInterop.Tests, Configuration: Debug ------
 79>Refit.MockInterop.Tests was not compiled because Refit.Reflection, which it references, has errors.
 80>------ Build started: Project: Refit.Newtonsoft.Json.Tests, Configuration: Debug ------
@@ -1043,7 +1045,7 @@ Build started at 00:01:08...
 83>Refit.Tests was not compiled because Refit.Reflection, which it references, has errors.
 84>------ Build started: Project: Refit.NetFrameworkSmoke, Configuration: Debug ------
 84>warning TS2006: The source generators of project InterfaceStubGenerator.Roslyn48 did not run: it does not compile (24 errors; the first: UniqueNameBuilder.cs(14,52): error CS0103: The name 'with' does not exist in the current context). The code they generate is missing.
-84>Refit.NetFrameworkSmoke -> compiled in memory (14 KB, 199 ms)
+84>Refit.NetFrameworkSmoke -> compiled in memory (14 KB, 212 ms)
 85>------ Skipped: Project: Compression: it targets net11.0, which only the .NET 11 SDK builds; TabStudio compiles with .NET 10 ------
 86>------ Skipped: Project: Refit.NativeAotSmoke: it targets net11.0, which only the .NET 11 SDK builds; TabStudio compiles with .NET 10 ------
 ========== Build: 24 succeeded, 60 failed, 2 skipped ==========

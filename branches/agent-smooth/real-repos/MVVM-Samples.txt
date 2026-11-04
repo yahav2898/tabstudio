@@ -1,5 +1,5 @@
 MVVM-Samples at 7d67102cd25e918f7a687427225dfbabe9ec9deb
-Opened /home/runner/work/_temp/real-repos/MVVM-Samples/samples/MvvmSampleXF.sln in 0.1 s
+Opened /home/runner/work/_temp/real-repos/MVVM-Samples/samples/MvvmSampleXF.sln in 0.2 s
 Compatibility Doctor:
   MvvmSampleXF.Android: Not supported via Xamarin, on a computer - Not supported: a Xamarin project is built by Xamarin's tools in Visual Studio, on a computer. TabStudio leaves it out of builds.
   MvvmSampleXF.iOS: Not supported via Xamarin, on a computer - Not supported: a Xamarin project is built by Xamarin's tools in Visual Studio, on a computer. TabStudio leaves it out of builds.
@@ -21,20 +21,20 @@ Packages with analyzers or MSBuild files:
       buildTransitive/netstandard2.0/refit.props
       buildTransitive/netstandard2.0/refit.targets
 Editor: 12 files opened and analyzed in 0.4 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 4 over 100 ms (0 over 250 ms, 0 over 1 s), 0.6 s in all, longest 171 ms during screenshots, 0.0 s of it garbage collection; answer p50 5.3 ms, p95 150.2 ms, p99 171.4 ms over 27 questions in 1 s
-UI timings: document view 44 ms, document view 36 ms, document view 14 ms, document view 7 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms
+UI stalls: 4 over 100 ms (0 over 250 ms, 0 over 1 s), 0.6 s in all, longest 146 ms during screenshots; answer p50 5.4 ms, p95 144.2 ms, p99 145.8 ms over 27 questions in 1 s
+UI timings: document view 57 ms, document view 14 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 171 ms | 17 ms | 0.4 s | screenshots |
-| 150 ms | 0 ms | 0.1 s | screenshots |
-| 143 ms | 9 ms | 0.8 s | screenshots |
-| 143 ms | 0 ms | 0.6 s | screenshots |
+| 146 ms | 0 ms | 0.8 s | screenshots |
+| 144 ms | 0 ms | 0.2 s | screenshots |
+| 140 ms | 0 ms | 0.4 s | screenshots |
+| 130 ms | 0 ms | 0.7 s | screenshots |
 Output:
-Build started at 00:02:16...
+Build started at 01:12:50...
 1>------ Build started: Project: MvvmSample.Core, Configuration: Debug ------
 1>SamplePageViewModel.cs(67,28): warning CS8600: Converting null literal or possible null value to non-nullable type.
 1>SamplePageViewModel.cs(69,54): warning CS8604: Possible null reference argument for parameter 'path3' in 'string Path.Combine(string path1, string path2, string path3, string path4)'.
-1>MvvmSample.Core -> compiled in memory (40.5 KB, 46 ms)
+1>MvvmSample.Core -> compiled in memory (40 KB, 24 ms)
 2>------ Skipped: Project: MvvmSampleXF.Android: it is a Xamarin project, which only Xamarin's tools in Visual Studio build, on a computer ------
 3>------ Skipped: Project: MvvmSampleXF.iOS: it is a Xamarin project, which only Xamarin's tools in Visual Studio build, on a computer ------
 4>------ Skipped: Project: MvvmSampleXF: it is a Xamarin project, which only Xamarin's tools in Visual Studio build, on a computer ------

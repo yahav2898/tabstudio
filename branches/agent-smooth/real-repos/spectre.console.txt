@@ -11,7 +11,7 @@ Compatibility Doctor:
   Spectre.Console.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   Spectre.Console: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: none
-Built in 6.9 s: 0 errors, 1 warnings
+Built in 7.3 s: 0 errors, 1 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -873,34 +873,33 @@ Packages with analyzers or MSBuild files:
       build/net8.0/xunit.runner.visualstudio.props
       build/net8.0/xunit.runner.visualstudio.testadapter.dll
 Editor: 24 files opened and analyzed in 0.6 s, 0 errors only the editor shows, 0 only the build shows
-UI stalls: 5 over 100 ms (1 over 250 ms, 0 over 1 s), 0.9 s in all, longest 333 ms during screenshots, 0.1 s of it garbage collection; answer p50 5.3 ms, p95 30.0 ms, p99 130.4 ms over 299 questions in 9 s
-UI timings: document view 32 ms, document view 5 ms, document view 4 ms, document view 4 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+UI stalls: 4 over 100 ms (0 over 250 ms, 0 over 1 s), 0.6 s in all, longest 187 ms during screenshots; answer p50 4.3 ms, p95 15.1 ms, p99 124.8 ms over 337 questions in 9 s
+UI timings: document view 63 ms, document view 5 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
 | Stall | Of it, GC | At | During |
 | --- | --- | --- | --- |
-| 333 ms | 76 ms | 0.3 s | screenshots |
-| 148 ms | 0 ms | 0.8 s | screenshots |
-| 130 ms | 0 ms | 8.1 s | screenshots |
-| 127 ms | 0 ms | 7.9 s | screenshots |
-| 114 ms | 27 ms | 5.8 s | the first build |
+| 187 ms | 0 ms | 0.4 s | screenshots |
+| 134 ms | 0 ms | 8.3 s | screenshots |
+| 134 ms | 0 ms | 0.8 s | screenshots |
+| 125 ms | 0 ms | 8.4 s | screenshots |
 Output:
-Build started at 00:02:10...
+Build started at 01:12:43...
 1>------ Build started: Project: Spectre.Console.SourceGenerator, Configuration: Debug ------
-1>Spectre.Console.SourceGenerator -> compiled in memory (42.5 KB, 50 ms)
+1>Spectre.Console.SourceGenerator -> compiled in memory (42.5 KB, 46 ms)
 2>------ Build started: Project: Spectre.Console.Ansi, Configuration: Debug ------
-2>Spectre.Console.Ansi -> compiled in memory (185 KB, 194 ms)
+2>Spectre.Console.Ansi -> compiled in memory (185 KB, 181 ms)
 3>------ Build started: Project: Spectre.Console, Configuration: Debug ------
-3>Spectre.Console -> compiled in memory (705 KB, 793 ms)
+3>Spectre.Console -> compiled in memory (705 KB, 625 ms)
 4>------ Build started: Project: Spectre.Console.ImageSharp, Configuration: Debug ------
-4>Spectre.Console.ImageSharp -> compiled in memory (7 KB, 516 ms)
+4>Spectre.Console.ImageSharp -> compiled in memory (7 KB, 598 ms)
 5>------ Build started: Project: Spectre.Console.Json, Configuration: Debug ------
-5>Spectre.Console.Json -> compiled in memory (26.5 KB, 629 ms)
+5>Spectre.Console.Json -> compiled in memory (26.5 KB, 556 ms)
 6>------ Build started: Project: Benchmarks, Configuration: Debug ------
-6>Benchmarks -> compiled in memory (11 KB, 568 ms)
+6>Benchmarks -> compiled in memory (11 KB, 682 ms)
 7>------ Build started: Project: Spectre.Console.Ansi.Tests, Configuration: Debug ------
-7>Spectre.Console.Ansi.Tests -> compiled in memory (38.5 KB, 149 ms)
+7>Spectre.Console.Ansi.Tests -> compiled in memory (38.5 KB, 151 ms)
 8>------ Build started: Project: Spectre.Console.Testing, Configuration: Debug ------
-8>Spectre.Console.Testing -> compiled in memory (12.5 KB, 516 ms)
+8>Spectre.Console.Testing -> compiled in memory (12.5 KB, 522 ms)
 9>------ Build started: Project: Spectre.Console.Tests, Configuration: Debug ------
-9>Spectre.Console.Tests -> compiled in memory (1170.5 KB, 1013 ms)
+9>Spectre.Console.Tests -> compiled in memory (1170.5 KB, 1006 ms)
 ========== Build: 9 succeeded, 0 failed ==========
 
