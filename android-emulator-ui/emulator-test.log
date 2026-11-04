@@ -1,18 +1,37 @@
 Device: Android 15 (API 35), x86_64, screen 2560x1800
 Displays:
 Built-in Screen, displayId 0
+Overlay #1, displayId 2: a presentation display
 Performing Streamed Install
 Success
 Typing on the tablet's keyboard: ' by keyboard'
 Taking screenshots of the device
 Measurements:
-Startup to self test start: 19.55 s
+Startup to self test start: 15.12 s
+TabStudio startup: first frame at 14430 ms, ready at 14430 ms; process start to activity 5077 ms, application +1172 ms, styles +834 ms, services +922 ms, theme +106 ms, view models +1918 ms, main view +2009 ms, start screen +28 ms, first frame +2364 ms
+TabStudio UI stalls: 150 over 100 ms (83 over 250 ms, 15 over 1 s), 85.4 s in all, longest 6218 ms during the step that ended with: Avalonia: shown in 29.0 s, the button counted 2 taps | Designer: previewed MainView.axaml …; answer p50 3.5 ms, p95 52.1 ms, p99 542.0 ms over 4898 questions in 227 s
+TabStudio UI timings: workspace view 2344 ms, workspace view model 1862 ms, document view 1383 ms, SwarmView 1110 ms, document view 692 ms, document view 471 ms, document view 363 ms, document view 266 ms, document view 244 ms, workspace view 227 ms, workspace view model 173 ms, document view 153 ms
+TabStudio UI stall: 6218 ms at 38.6 s during the step that ended with: Avalonia: shown in 29.0 s, the button counted 2 taps | Designer: previewed MainView.axaml …
+TabStudio UI stall: 5193 ms at 5.9 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 5039 ms at 0.5 s during the step that ended with: Extracting the sample
+TabStudio UI stall: 3274 ms at 14.8 s during opening the session's documents → creating a document's view → starting restore and analysis → creating the workspace's view model → showing the workspace → reading the solution → showing the solution…
+TabStudio UI stall: 2470 ms at 58.3 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution → showing the solution in Solution Explorer → databases, startup projects and toolchains
+TabStudio UI stall: 2270 ms at 163.6 s during the step that ended with: Swarm: tapped MainView/StackPanel[0]/Button#CountButton on a small phone through real inpu…
+TabStudio UI stall: 2040 ms at 204.0 s during creating a document's view
+TabStudio UI stall: 1901 ms at 18.1 s during the step that ended with: Avalonia: shown in 29.0 s, the button counted 2 taps | Designer: previewed MainView.axaml …
+TabStudio UI stall: 1869 ms at 45.2 s during creating the AppPreviewView → creating a document's view
+TabStudio UI stall: 1678 ms at 199.3 s during creating a document's view
+TabStudio UI stall: 1638 ms at 201.4 s during creating a document's view
+TabStudio UI stall: 1318 ms at 168.5 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 1227 ms at 176.1 s during creating the SwarmView
+TabStudio UI stall: 1199 ms at 165.9 s during creating a document's view
+TabStudio UI stall: 1025 ms at 29.3 s during the step that ended with: Avalonia: shown in 29.0 s, the button counted 2 taps | Designer: previewed MainView.axaml …
 Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
- Native Heap 620340 620204 128 11756 621516 664836 651262 9038
- Dalvik Heap 3089 3036 24 101 5176 8659 4330 4329
- TOTAL 1312503 1162844 59252 67778 1389016 673495 655592 13367
- TOTAL PSS: 1312503 TOTAL RSS: 1389016 TOTAL SWAP PSS: 67778
-Scrolling: a 254 dip drag moved the text 261 dip; a flick glided 972 dip (717 dip in 966 ms on Android's curve); 58 Hz display: the text moved on 4 of the 47 frames of the glide, 43 frame gaps on the UI thread 
-TABSTUDIO_SELFTEST_OK 256.3 s: Shard: ui | Avalonia: shown in 36.6 s, the button counted 2 taps | Designer: previewed MainView.axaml in 2.4 s | Extensions: installed vscode.perl 1.95.3 from open-vsx.org (Signature) in 5.2 s; Perl colored, comment #ff8ca77a, string #ffe6a26b | Windows Forms: Form1 shown in 4.1 s | Forms designer: added a button to Form1 in 3.0 s | Port to Avalonia: event=OK, original=unchanged, 0 notes | Design: the activity bar with 13 tool windows, the search found Build Solution, the bars fit 1280 pixels; 178 lines of text centered in the Forms designer and on the Start screen, in the light and dark themes; Follow the system is Light | WPF: F5 rendered "Hello from WPF on the tablet" on OpenSilver, the whole window in Fit (fits: scale 0.412 of 0.412, window 800x450 ends at 330,421 in a 330x656 pane), in 36.2 s | WinUI: Uno window 'SelfTestWinUI' shown | Swarm: tapped MainView/StackPanel[0]/Button#CountButton on a small phone through real input, counted there alone, 3 screens, 1 layout findings, in 9.3 s | Swarm: Self-test phone joined over TLS 1.3, showed SelfTestSwarm in 9.1 s, paused at the breakpoint in MainViewModel.Count() (MainViewModel.cs, line 17) with next = 1, counted on, and its screen read "Clicked 1 times" | Scrolling: a 254 dip drag moved the text 261 dip; a flick glided 972 dip (717 dip in 966 ms on Android's curve); 58 Hz display: the text moved on 4 of the 47 frames of the glide, 43 frame gaps on the UI thread | Desktop: the IDE on Overlay #1 (1920 × 1080 at 135%, 1422×800) · the Toolbox put a Button into MainView.axaml · the Properties panel set its Content · the tablet's keyboard typed on the display and the designer showed it · a keyboard is connected, so the companion shows no typing bar · the tablet's mouse moved TabStudio's pointer to the Output tab and clicked it · its wheel reached the editor · back on the tablet with the caret at line 19 and its touch buttons
+ Native Heap 621334 621328 0 7671 622272 662036 647053 10016
+ Dalvik Heap 3179 3132 20 107 5256 8963 4482 4481
+ TOTAL 1326771 1169992 55644 80396 1394468 670999 651535 14497
+ TOTAL PSS: 1326771 TOTAL RSS: 1394468 TOTAL SWAP PSS: 80396
+Scrolling: a 254 dip drag moved the text 261 dip; a flick glided 972 dip (717 dip in 966 ms on Android's curve); 55 Hz display: the text moved on 5 of the 62 frames of the glide, 51 frame gaps on the UI thread 
+TABSTUDIO_SELFTEST_OK 225.5 s: Shard: ui | Avalonia: shown in 29.0 s, the button counted 2 taps | Designer: previewed MainView.axaml in 2.4 s | Extensions: installed vscode.perl 1.95.3 from open-vsx.org (Signature) in 4.0 s; Perl colored, comment #ff8ca77a, string #ffe6a26b | Windows Forms: Form1 shown in 3.8 s | Forms designer: added a button to Form1 in 2.2 s | Port to Avalonia: event=OK, original=unchanged, 0 notes | Design: the activity bar with 13 tool windows, the search found Build Solution, the bars fit 1280 pixels; 178 lines of text centered in the Forms designer and on the Start screen, in the light and dark themes; Follow the system is Light | WPF: F5 rendered "Hello from WPF on the tablet" on OpenSilver, the whole window in Fit (fits: scale 0.412 of 0.412, window 800x450 ends at 330,421 in a 330x656 pane), in 33.2 s | WinUI: Uno window 'SelfTestWinUI' shown | Swarm: tapped MainView/StackPanel[0]/Button#CountButton on a small phone through real input, counted there alone, 3 screens, 1 layout findings, in 8.2 s | Swarm: Self-test phone joined over TLS 1.3, showed SelfTestSwarm in 10.0 s, paused at the breakpoint in MainViewModel.Count() (MainViewModel.cs, line 17) with next = 1, counted on, and its screen read "Clicked 1 times" | Scrolling: a 254 dip drag moved the text 261 dip; a flick glided 972 dip (717 dip in 966 ms on Android's curve); 55 Hz display: the text moved on 5 of the 62 frames of the glide, 51 frame gaps on the UI thread | Desktop: the IDE on Overlay #1 (1920 × 1080 at 135%, 1422×800) · the Toolbox put a Button into MainView.axaml · the Properties panel set its Content · the tablet's keyboard typed on the display and the designer showed it · a keyboard is connected, so the companion shows no typing bar · the tablet's mouse moved TabStudio's pointer to the Output tab and clicked it · its wheel reached the editor · back on the tablet with the caret at line 19 and its touch buttons
 Shard: ui
-Seconds from launch to verdict: 282
+Seconds from launch to verdict: 245
