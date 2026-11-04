@@ -1,27 +1,27 @@
 | Repository | Toolchain | Startup project | Program | Result | Time |
 | --- | --- | --- | --- | --- | --- |
-| click | python | python | none | started | 15 s |
-| marshmallow | python | python | none | started | 29 s |
-| httpx | python | python | none | started | 25 s |
-| tqdm | python | python | none | started | 56 s |
-| attrs | python | python | none | started | 17 s |
-| rich | python | python | none | started | 12 s |
-| requests | python | python | none | started | 115 s |
-| gs-spring-boot | java | java | complete | the program did not start listening | 64 s |
-| gs-serving-web-content | java | java | complete | started | 91 s |
-| gs-securing-web | java | java | complete | started | 13 s |
-| gs-maven | java | java | complete | started | 9 s |
-| junit5-starter-maven | java | java | none | started | 11 s |
-| react-redux-realworld-example-app | node | node | npm start | started | 4 s |
-| typescript-starter | node | node | npm start | started | 6 s |
+| click | python | python | none | started | 9 s |
+| marshmallow | python | python | none | started | 6 s |
+| httpx | python | python | none | started | 9 s |
+| tqdm | python | python | none | started | 23 s |
+| attrs | python | python | none | started | 10 s |
+| rich | python | python | none | started | 8 s |
+| requests | python | python | none | started | 84 s |
+| gs-spring-boot | java | java | complete | started | 63 s |
+| gs-serving-web-content | java | java | complete | started | 12 s |
+| gs-securing-web | java | java | complete | started | 8 s |
+| gs-maven | java | java | complete | started | 10 s |
+| junit5-starter-maven | java | java | none | started | 6 s |
+| react-redux-realworld-example-app | node | node | npm start | started | 3 s |
+| typescript-starter | node | node | npm start | started | 4 s |
 | svelte-template | node | node | npm start | started | 1 s |
-| nuxt-starter-v3 | node | node | npm run dev | started | 5 s |
-| react-router-default | node | node | npm run dev | started | 2 s |
+| nuxt-starter-v3 | node | node | npm run dev | started | 4 s |
+| react-router-default | node | node | npm run dev | started | 1 s |
 | chalk | node | node | none | started | 2 s |
-| express | node | node | none | started | 4 s |
-| symfony-demo | php | php | php -S | started | 6 s |
+| express | node | node | none | started | 3 s |
+| symfony-demo | php | php | php -S | started | 3 s |
 | codeigniter-appstarter | php | php | php -S | started | 1 s |
-| monolog | php | php | none | started | 49 s |
-| PHPMailer | php | php | none | started | 1 s |
+| monolog | php | php | none | started | 18 s |
+| PHPMailer | php | php | none | started | 0 s |
 | WordPress | php | php | php -S | started | 1 s |
-| itsdangerous | python | python | none | started | 6 s |
+| itsdangerous | python | python | none | started | 3 s |
