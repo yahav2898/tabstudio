@@ -533,7 +533,7 @@ public sealed class SdkProjectItemsTests
                     <FileExtension Condition="!$([System.IO.Path]::IsPathRooted('%(RelativeDir)'))">%(Extension)</FileExtension>
                   </FileConstant>
                   <FileConstant Condition="'%(AreaPath)' != ''">
-                    <Area>$([MSBuild]::ValueOrDefault('%(AreaPath)', '').Replace('', '.').Replace('/', '.'))</Area>
+                    <Area>$([MSBuild]::ValueOrDefault('%(AreaPath)', '').Replace('\', '.').Replace('/', '.'))</Area>
                     <Value>%(AreaPath)%(FileExtension)</Value>
                   </FileConstant>
                   <Constant Include="@(FileConstant -> '%(Area)')" Condition="'%(FileConstant.Area)' != '' AND '%(FileConstant.Value)' != ''"
@@ -552,10 +552,6 @@ public sealed class SdkProjectItemsTests
                   </Constant>
                   <AdditionalFiles Include="@(Constant)" />
                 </ItemGroup>
-              </Target>
-              <!-- Not ThisAssembly's: shows the file constants in the message below when the test fails. -->
-              <Target Name="ShowFileConstants" AfterTargets="_InjectConstantAdditionalFiles">
-                <ItemGroup><AdditionalFiles Include="@(FileConstant)" /></ItemGroup>
               </Target>
             </Project>
             """);
