@@ -3,16 +3,12 @@ Displays:
 Built-in Screen, displayId 0
 Performing Streamed Install
 Success
-Typing on the tablet's keyboard: ' by keyboard'
-Taking screenshots of the device
 Measurements:
-Startup to self test start: 14.67 s
 Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
- Native Heap 628916 628904 0 40 630144 659824 648077 7209
- Dalvik Heap 3078 3020 20 89 5296 8651 4326 4325
- TOTAL 1374766 1277464 73100 253 1521556 668475 652403 11534
- TOTAL PSS: 1374766 TOTAL RSS: 1521556 TOTAL SWAP PSS: 253
-Scrolling: a 254 dip drag moved the text 261 dip; a flick glided 972 dip (717 dip in 966 ms on Android's curve); 59 Hz display: the text moved on 3 of the 61 frames of the glide, 34 frame gaps on the UI thread 
-TABSTUDIO_SELFTEST_OK 249.5 s: Shard: ui | Avalonia: shown in 35.7 s, the button counted 2 taps | Designer: previewed MainView.axaml in 2.1 s | Extensions: installed vscode.perl 1.95.3 from open-vsx.org (Signature) in 4.1 s; Perl colored, comment #ff8ca77a, string #ffe6a26b | Windows Forms: Form1 shown in 4.3 s | Forms designer: added a button to Form1 in 0.9 s | Port to Avalonia: event=OK, original=unchanged, 0 notes | Design: the activity bar with 13 tool windows, the search found Build Solution, the bars fit 1280 pixels; 148 lines of text centered in the Forms designer and on the Start screen, in the light and dark themes; Follow the system is Light | WPF: F5 rendered "Hello from WPF on the tablet" on OpenSilver, the whole window in Fit (fits: scale 0.412 of 0.412, window 800x450 ends at 330,421 in a 330x656 pane), in 32.5 s | WinUI: Uno window 'SelfTestWinUI' shown | Swarm: tapped MainView/StackPanel[0]/Button#CountButton on a small phone through real input, counted there alone, 3 screens, 1 layout findings, in 8.5 s | Swarm: Self-test phone joined over TLS 1.3, showed SelfTestSwarm in 9.4 s, paused at the breakpoint in MainViewModel.Count() (MainViewModel.cs, line 17) with next = 1, counted on, and its screen read "Clicked 1 times" | Scrolling: a 254 dip drag moved the text 261 dip; a flick glided 972 dip (717 dip in 966 ms on Android's curve); 59 Hz display: the text moved on 3 of the 61 frames of the glide, 34 frame gaps on the UI thread | Desktop: the IDE on Overlay #1 (1920 × 1080 at 135%, 1422×800) · the Toolbox put a Button into MainView.axaml · the Properties panel set its Content · the tablet's keyboard typed on the display and the designer showed it · a keyboard is connected, so the companion shows no typing bar · the tablet's mouse moved TabStudio's pointer to the Output tab and clicked it · its wheel reached the editor · back on the tablet with the caret at line 19 and its touch buttons
+ Native Heap 51630 51556 0 0 55688 66072 54926 6798
+ Dalvik Heap 3740 3584 0 0 11384 4243 2122 2121
+ TOTAL 236173 176780 55860 0 353144 70315 57048 8919
+ TOTAL PSS: 236173 TOTAL RSS: 353144 TOTAL SWAP (KB): 0
+TABSTUDIO_SELFTEST_FAIL TabStudio is not running: it crashed or was killed before the self test finished.
 Shard: ui
-Seconds from launch to verdict: 270
+Seconds from launch to verdict: 3
