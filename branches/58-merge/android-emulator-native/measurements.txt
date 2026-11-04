@@ -1,0 +1,24 @@
+Startup to self test start: 18.39 s
+TabStudio startup: first frame at 17759 ms, ready at 17759 ms; process start to activity 5179 ms, application +1270 ms, styles +1780 ms, services +1428 ms, theme +265 ms, view models +2729 ms, main view +2445 ms, start screen +52 ms, first frame +2610 ms
+TabStudio UI stalls: 134 over 100 ms (53 over 250 ms, 9 over 1 s), 77.9 s in all, longest 22258 ms during the step that ended with: Processes: started 200 programs in 23.9 s while 254 minor and 1 major collections ran; answer p50 2.5 ms, p95 26.0 ms, p99 121.0 ms over 11151 questions in 372 s
+TabStudio UI timings: workspace view model 2037 ms, workspace view 2015 ms, document view 1775 ms, LocalsView 423 ms, document view 331 ms, document view 188 ms, document view 180 ms, CallStackView 168 ms, document view 25 ms, workspace view model 20 ms, workspace view model 17 ms, workspace view model 13 ms
+TabStudio UI stall: 22258 ms at 18.9 s during the step that ended with: Processes: started 200 programs in 23.9 s while 254 minor and 1 major collections ran
+TabStudio UI stall: 5998 ms at 0.4 s during the step that ended with: Extracting the sample
+TabStudio UI stall: 5162 ms at 6.5 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 2710 ms at 369.2 s during creating a document's view
+TabStudio UI stall: 2094 ms at 312.9 s during creating a document's view → starting restore and analysis
+TabStudio UI stall: 1941 ms at 248.7 s during creating a document's view
+TabStudio UI stall: 1463 ms at 17.4 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 1429 ms at 11.6 s during reading the solution
+TabStudio UI stall: 1076 ms at 311.2 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 890 ms at 263.7 s during creating a document's view
+TabStudio UI stall: 852 ms at 261.2 s during creating a document's view
+TabStudio UI stall: 840 ms at 353.3 s during creating a document's view
+TabStudio UI stall: 827 ms at 270.9 s during creating a document's view
+TabStudio UI stall: 805 ms at 41.1 s during the step that ended with: Processes: started 200 programs in 23.9 s while 254 minor and 1 major collections ran
+TabStudio UI stall: 790 ms at 71.7 s during the step that ended with: Toolchains: installed in 1 s, Hello, Tablet! This is Python 3.14.10 on TabStudio. | node v…
+Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
+ Native Heap 367767 367756 0 40 368976 384844 377105 2920
+ Dalvik Heap 2984 2956 0 96 4756 7952 3976 3976
+ TOTAL 854012 757640 74872 255 995880 392796 381081 6896
+ TOTAL PSS: 854012 TOTAL RSS: 995880 TOTAL SWAP PSS: 255
