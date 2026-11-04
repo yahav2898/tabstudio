@@ -1,55 +1,43 @@
-| Repository | Errors | Baseline | Warnings | Build |
-| --- | --- | --- | --- | --- |
-| GuardClauses | 0 | 0 | 0 | 5 s |
-| MediatR | 0 | 0 | 1 | 13 s |
-| CleanArchitecture | 0 | 0 | 0 | 13 s |
-| FluentValidation | 0 | 0 | 1 | 4 s |
-| AutoMapper | 0 | 0 | 0 | 6 s |
-| Serilog | 0 | 0 | 0 | 3 s |
-| eShopOnWeb | 0 | 0 | 27 | 14 s |
-| Polly | 0 | 0 | 21 | 23 s |
-| Humanizer | 0 | 0 | 1 | 31 s |
-| BlazingPizza | 0 | 0 | 14 | 4 s |
-| WpfCalculatorTutorial | 0 | 0 | 0 | 0 s |
-| WpfSimpleCalculator | 0 | 0 | 1 | 0 s |
-| WpfTicTacToe | 0 | 0 | 0 | 0 s |
-| WinFormsToDoList | 0 | 0 | 0 | 0 s |
-| SimplePaint | 0 | 0 | 0 | 0 s |
-| SimpleDrawingApp | 0 | 0 | 0 | 0 s |
-| WinFormsSnakeGame | 0 | 0 | 0 | 0 s |
-| VbPong | 0 | 0 | 0 | 0 s |
-| VbConsoleExample | 0 | 0 | 4 | 1 s |
-| Conduit | 0 | 0 | 0 | 5 s, served |
-| AvaloniaSamples | 0 | 0 | 18 | 8 s |
-| AvaloniaAdvancedToDoList | 0 | 0 | 1 | 5 s |
-| refit | 25 | 25 | 4 | 63 s |
-| Mediator | 0 | 0 | 4 | 19 s |
-| StronglyTypedId | 0 | 0 | 0 | 5 s |
-| spectre.console | 0 | 0 | 1 | 8 s |
-| MVVM-Samples | 0 | 0 | 2 | 0 s |
-| TodoApi | 1 | 1 | 0 | 4 s |
-| ContosoUniversity | 0 | 0 | 0 | 7 s |
-| MudBlazor | 0 | 0 | 3 | 152 s |
-| eShop | 0 | 0 | 1 | 24 s |
-| maui-TodoSQLite | 0 | 0 | 0 | 0 s |
-| Dock | 43 | 43 | 23 | 109 s |
-| Terminal.Gui | 9 | 9 | 352 | 71 s |
-| Dapper | 2 | 2 | 6 | 13 s |
-| CsvHelper | 0 | 0 | 3 | 13 s |
-| Scrutor | 0 | 0 | 0 | 1 s |
-| markdig | 0 | 0 | 0 | 7 s |
-| scriban | 0 | 0 | 5 | 12 s |
-| NSubstitute | 0 | 0 | 55 | 2 s |
-| moq | 16 | 16 | 41 | 6 s |
-| Mapster | 0 | 0 | 218 | 14 s |
-| RestSharp | 0 | 0 | 13 | 10 s |
-| Ocelot | 0 | 0 | 67 | 11 s |
-| NodaTime | 0 | 0 | 15 | 10 s |
-| CommunityToolkit | 0 | 0 | 125 | 21 s |
-| CleanArchitecture-Template | 0 | 0 | 0 | 18 s |
-| Specification | 0 | 0 | 3 | 7 s |
-| AutoFixture | 0 | 0 | 3 | 12 s |
-| YamlDotNet | 0 | 0 | 2 | 4 s |
-| Bogus | 0 | 0 | 18 | 4 s |
-| blazor-samples | 0 | 0 | 0 | 12 s, served |
-| SimplCommerce | 0 | 0 | 0 | 180 s, served |
+| Repository | Errors | Baseline | Warnings | Build | UI stalls over 100 ms (longest) |
+| --- | --- | --- | --- | --- | --- |
+| CleanArchitecture | 0 | 0 | 0 | 14 s | 4 (220 ms) |
+| AutoMapper | 0 | 0 | 0 | 22 s | 4 (530 ms) |
+| Serilog | 0 | 0 | 0 | 4 s | 4 (481 ms) |
+| eShopOnWeb | 0 | 0 | 27 | 16 s | 4 (213 ms) |
+| Polly | 0 | 0 | 21 | 23 s | 4 (259 ms) |
+| Humanizer | 0 | 0 | 1 | 30 s | 13 (422 ms) |
+| BlazingPizza | 0 | 0 | 14 | 4 s | 4 (372 ms) |
+| WpfCalculatorTutorial | 0 | 0 | 0 | 0 s | 4 (224 ms) |
+| WpfSimpleCalculator | 0 | 0 | 1 | 0 s | 4 (249 ms) |
+| WpfTicTacToe | 0 | 0 | 0 | 0 s | 4 (267 ms) |
+| WinFormsToDoList | 0 | 0 | 0 | 0 s | 4 (185 ms) |
+| SimplePaint | 0 | 0 | 0 | 0 s | 4 (260 ms) |
+| SimpleDrawingApp | 0 | 0 | 0 | 0 s | 5 (202 ms) |
+| WinFormsSnakeGame | 0 | 0 | 0 | 0 s | 4 (234 ms) |
+| VbPong | 0 | 0 | 0 | 2 s | 4 (232 ms) |
+| VbConsoleExample | 0 | 0 | 4 | 0 s | 4 (300 ms) |
+| Conduit | 0 | 0 | 0 | 4 s, served | 6 (322 ms) |
+| AvaloniaSamples | 0 | 0 | 18 | 7 s | 4 (185 ms) |
+| AvaloniaAdvancedToDoList | 0 | 0 | 1 | 5 s | 4 (304 ms) |
+| refit | 25 | 25 | 4 | 63 s | 10 (416 ms) |
+| Mediator | 0 | 0 | 4 | 17 s | 5 (510 ms) |
+| StronglyTypedId | 0 | 0 | 0 | 3 s | 4 (572 ms) |
+| spectre.console | 0 | 0 | 1 | 8 s | 5 (378 ms) |
+| MVVM-Samples | 0 | 0 | 2 | 0 s | 4 (214 ms) |
+| TodoApi | 1 | 1 | 0 | 4 s | 4 (298 ms) |
+| ContosoUniversity | 0 | 0 | 0 | 6 s | 4 (377 ms) |
+| MudBlazor | 0 | 0 | 3 | 139 s | 97 (566 ms) |
+| eShop | 0 | 0 | 1 | 22 s | 4 (407 ms) |
+| maui-TodoSQLite | 0 | 0 | 0 | 0 s | 4 (215 ms) |
+| Dock | 43 | 43 | 23 | 103 s | 11 (480 ms) |
+| Terminal.Gui | 9 | 9 | 352 | 71 s | 35 (927 ms) |
+| Dapper | 2 | 2 | 6 | 11 s | 4 (290 ms) |
+| moq | 16 | 16 | 41 | 5 s | 4 (381 ms) |
+| RestSharp | 0 | 0 | 13 | 10 s | 4 (252 ms) |
+| Ocelot | 0 | 0 | 67 | 10 s | 7 (420 ms) |
+| NodaTime | 0 | 0 | 15 | 10 s | 9 (413 ms) |
+| CommunityToolkit | 0 | 0 | 125 | 27 s | 5 (303 ms) |
+| CleanArchitecture-Template | 0 | 0 | 0 | 17 s | 5 (404 ms) |
+| AutoFixture | 0 | 0 | 3 | 11 s | 6 (317 ms) |
+| blazor-samples | 0 | 0 | 0 | 1 s, served | 6 (497 ms) |
+| SimplCommerce | 0 | 0 | 0 | 47 s, served | 6 (443 ms) |

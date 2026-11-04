@@ -14,7 +14,7 @@ Compatibility Doctor:
   Moq.Vsix: Library via Built with its users - A library is compiled together with the projects that reference it.
   Moq: Library via Built with its users - A library is compiled together with the projects that reference it.
 Startup project: none
-Built in 6.4 s: 16 errors, 41 warnings
+Built in 5.4 s: 16 errors, 41 warnings
   8 x CS0117
       [Moq.Sdk] CallContext.cs(99,73): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'UnexpectedNullContextState'
       [Moq.Sdk] DefaultMockRuntime.cs(88,82): error CS0117: 'ThisAssembly.Strings' does not contain a definition for 'DuplicateContextBehavior'
@@ -1345,11 +1345,19 @@ Packages with analyzers or MSBuild files:
       build/uap10.0.16299/xunit.runner.visualstudio.targets
       build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.dll
       build/uap10.0.16299/xunit.runner.visualstudio.uwp.testadapter.pri
-Editor: 6 files opened and analyzed in 0.6 s, 0 errors only the editor shows, 0 only the build shows
+Editor: 6 files opened and analyzed in 0.5 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 4 over 100 ms (1 over 250 ms, 0 over 1 s), 0.9 s in all, longest 381 ms during screenshots, 0.1 s of it garbage collection; answer p50 6.5 ms, p95 21.8 ms, p99 178.8 ms over 240 questions in 7 s
+UI timings: document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 381 ms | 92 ms | 0.3 s | screenshots |
+| 185 ms | 0 ms | 0.7 s | screenshots |
+| 179 ms | 0 ms | 6.4 s | screenshots |
+| 178 ms | 0 ms | 6.7 s | screenshots |
 Output:
-Build started at 05:54:30...
+Build started at 07:57:16...
 1>------ Build started: Project: Moq.CodeAnalysis, Configuration: Debug ------
-1>Moq.CodeAnalysis -> compiled in memory (41.5 KB, 315 ms)
+1>Moq.CodeAnalysis -> compiled in memory (41.5 KB, 287 ms)
 2>------ Build started: Project: Moq.Sdk, Configuration: Debug ------
 2>AnyMatcher.cs(59,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
 2>AnyMatcher`1.cs(55,68): error CS1061: 'Type' does not contain a definition for 'GetFormattedName' and no accessible extension method 'GetFormattedName' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)

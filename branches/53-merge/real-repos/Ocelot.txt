@@ -1,5 +1,5 @@
 Ocelot at 80268bc9a950cd4544e70d9582374ca55fc6029f
-Opened /home/runner/work/_temp/real-repos/Ocelot/Ocelot.slnx in 0.6 s
+Opened /home/runner/work/_temp/real-repos/Ocelot/Ocelot.slnx in 0.4 s
 Compatibility Doctor:
   Ocelot: Library via Built with its users - A library is compiled together with the projects that reference it.
   Ocelot.Acceptance: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
@@ -8,7 +8,7 @@ Compatibility Doctor:
   Ocelot.Testing: Library via Built with its users - A library is compiled together with the projects that reference it.
   Ocelot.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: Ocelot.ManualTest
-Built in 10.8 s: 0 errors, 67 warnings
+Built in 9.9 s: 0 errors, 67 warnings
 Packages with analyzers or MSBuild files:
   benchmarkdotnet.annotations 0.15.8
       analyzers/dotnet/roslyn2.8/cs/BenchmarkDotNet.Analyzers.dll
@@ -933,9 +933,20 @@ Packages with analyzers or MSBuild files:
   xunit.v3.core.mtp-v2 4.0.2
       buildTransitive/xunit.v3.core.mtp-v2.props
       buildTransitive/xunit.v3.core.mtp-v2.targets
-Editor: 18 files opened and analyzed in 1.2 s, 0 errors only the editor shows, 0 only the build shows
+Editor: 18 files opened and analyzed in 1.3 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 7 over 100 ms (1 over 250 ms, 0 over 1 s), 1.4 s in all, longest 420 ms during screenshots, 0.3 s of it garbage collection; answer p50 6.6 ms, p95 53.8 ms, p99 168.9 ms over 382 questions in 13 s
+UI timings: document view 15 ms, document view 6 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 2 ms, document view 2 ms, document view 2 ms, document view 2 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 420 ms | 136 ms | 0.4 s | screenshots |
+| 248 ms | 28 ms | 1.2 s | screenshots |
+| 201 ms | 72 ms | 10.4 s | the first build |
+| 169 ms | 52 ms | 2.6 s | the first build |
+| 129 ms | 43 ms | 6.4 s | the first build |
+| 129 ms | 0 ms | 11.7 s | screenshots |
+| 118 ms | 0 ms | 11.5 s | screenshots |
 Output:
-Build started at 05:55:12...
+Build started at 07:57:37...
 1>------ Build started: Project: Ocelot, Configuration: Debug ------
 1>AuthenticationOptions.cs(19,44): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
 1>AuthenticationOptionsCreator.cs(55,9): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
@@ -1003,16 +1014,16 @@ Build started at 05:55:12...
 1>RateLimitOptions.cs(64,51): warning CS0618: 'FileRateLimitRule.PeriodTimespan' is obsolete: 'Use Wait instead of PeriodTimespan! Note that PeriodTimespan will be removed in version 25.0!'
 1>FileAuthenticationOptionsValidator.cs(24,13): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
 1>FileAuthenticationOptionsValidator.cs(31,23): warning CS0618: 'FileAuthenticationOptions.AuthenticationProviderKey' is obsolete: 'Use AuthenticationProviderKeys instead of AuthenticationProviderKey! Note that AuthenticationProviderKey will be removed in version 25.0!'
-1>Ocelot -> compiled in memory (432.5 KB, 833 ms)
+1>Ocelot -> compiled in memory (432.5 KB, 918 ms)
 2>------ Build started: Project: Ocelot.Testing, Configuration: Debug ------
-2>Ocelot.Testing -> compiled in memory (119.5 KB, 517 ms)
+2>Ocelot.Testing -> compiled in memory (119.5 KB, 505 ms)
 3>------ Build started: Project: Ocelot.Acceptance, Configuration: Debug ------
-3>Ocelot.Acceptance -> compiled in memory (740.5 KB, 1193 ms)
+3>Ocelot.Acceptance -> compiled in memory (740.5 KB, 1114 ms)
 4>------ Build started: Project: Ocelot.Benchmarks, Configuration: Debug ------
-4>Ocelot.Benchmarks -> compiled in memory (46 KB, 637 ms)
+4>Ocelot.Benchmarks -> compiled in memory (46 KB, 671 ms)
 5>------ Build started: Project: Ocelot.ManualTest, Configuration: Debug ------
-5>Ocelot.ManualTest -> compiled in memory (11.5 KB, 533 ms)
+5>Ocelot.ManualTest -> compiled in memory (11.5 KB, 516 ms)
 6>------ Build started: Project: Ocelot.UnitTests, Configuration: Debug ------
-6>Ocelot.UnitTests -> compiled in memory (1306 KB, 2274 ms)
+6>Ocelot.UnitTests -> compiled in memory (1306 KB, 2287 ms)
 ========== Build: 6 succeeded, 0 failed ==========
 

@@ -25,9 +25,17 @@ Packages with analyzers or MSBuild files:
       buildTransitive/net6.0/_._
       buildTransitive/netcoreapp2.0/System.Security.Cryptography.Xml.targets
 Editor: 3 files opened and analyzed in 0.1 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 4 over 100 ms (1 over 250 ms, 0 over 1 s), 0.7 s in all, longest 267 ms during screenshots, 0.0 s of it garbage collection; answer p50 4.4 ms, p95 171.6 ms, p99 267.0 ms over 34 questions in 1 s
+UI timings: document view 3 ms, document view 3 ms, document view 2 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 267 ms | 48 ms | 0.2 s | screenshots |
+| 172 ms | 0 ms | 0.5 s | screenshots |
+| 117 ms | 0 ms | 1.1 s | screenshots |
+| 108 ms | 0 ms | 1.3 s | screenshots |
 Output:
-Build started at 05:43:45...
+Build started at 07:48:07...
 1>------ Build started: Project: TTTcs, Configuration: Debug ------
-1>TTTcs -> compiled in memory (41 KB, 297 ms)
+1>TTTcs -> compiled in memory (41 KB, 308 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 
