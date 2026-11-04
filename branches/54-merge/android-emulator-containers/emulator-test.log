@@ -2,30 +2,30 @@ Device: Android 15 (API 35), x86_64, screen 2560x1800
 Performing Streamed Install
 Success
 Measurements:
-Startup to self test start: 6.27 s
-TabStudio startup: first frame at 6143 ms, ready at 6143 ms; process start to activity 1715 ms, application +974 ms, styles +465 ms, services +306 ms, theme +76 ms, view models +846 ms, main view +974 ms, start screen +12 ms, first frame +776 ms
-TabStudio UI stalls: 15 over 100 ms (7 over 250 ms, 4 over 1 s), 9.8 s in all, longest 2511 ms during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution; answer p50 2.1 ms, p95 19.1 ms, p99 55.6 ms over 2501 questions in 70 s
-TabStudio UI timings: workspace view 1010 ms, workspace view model 497 ms, document view 161 ms
-TabStudio UI stall: 2511 ms at 0.0 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
-TabStudio UI stall: 2511 ms at 3.7 s during backing services
-TabStudio UI stall: 1152 ms at 8.2 s during the end of the run
-TabStudio UI stall: 1104 ms at 7.1 s during opening the session's documents → creating a document's view → starting restore and analysis
-TabStudio UI stall: 561 ms at 6.4 s during loading C#
-TabStudio UI stall: 412 ms at 2.5 s during reading the solution
-TabStudio UI stall: 279 ms at 10.2 s during the end of the run
-TabStudio UI stall: 216 ms at 3.2 s during showing the solution in Solution Explorer → databases, startup projects and toolchains
-TabStudio UI stall: 209 ms at 3.0 s during reading the solution
-TabStudio UI stall: 171 ms at 68.4 s during the end of the run
-TabStudio UI stall: 142 ms at 29.5 s during the end of the run
-TabStudio UI stall: 141 ms at 18.1 s during the end of the run
-TabStudio UI stall: 132 ms at 39.6 s during the end of the run
-TabStudio UI stall: 117 ms at 69.0 s during the end of the run
-TabStudio UI stall: 103 ms at 60.9 s during the end of the run
+Startup to self test start: 11.97 s
+TabStudio startup: first frame at 11043 ms, ready at 11043 ms; process start to activity 2032 ms, application +1375 ms, styles +704 ms, services +1490 ms, theme +224 ms, view models +2487 ms, main view +1593 ms, start screen +32 ms, first frame +1107 ms
+TabStudio UI stalls: 38 over 100 ms (16 over 250 ms, 6 over 1 s), 24.2 s in all, longest 6466 ms during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution; answer p50 2.3 ms, p95 30.5 ms, p99 124.9 ms over 3287 questions in 110 s
+TabStudio UI timings: workspace view 2521 ms, workspace view model 1364 ms, document view 373 ms
+TabStudio UI stall: 6466 ms at 0.0 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 3811 ms at 10.0 s during backing services
+TabStudio UI stall: 1758 ms at 15.9 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 1712 ms at 17.7 s during the end of the run
+TabStudio UI stall: 1450 ms at 6.5 s during reading the solution
+TabStudio UI stall: 1082 ms at 14.3 s during loading C#
+TabStudio UI stall: 889 ms at 8.0 s during reading the solution
+TabStudio UI stall: 581 ms at 8.9 s during showing the solution in Solution Explorer → databases, startup projects and toolchains
+TabStudio UI stall: 507 ms at 21.9 s during the end of the run
+TabStudio UI stall: 455 ms at 107.8 s during the end of the run
+TabStudio UI stall: 444 ms at 106.6 s during the end of the run
+TabStudio UI stall: 390 ms at 31.5 s during the end of the run
+TabStudio UI stall: 341 ms at 37.9 s during the end of the run
+TabStudio UI stall: 334 ms at 54.7 s during the end of the run
+TabStudio UI stall: 329 ms at 55.0 s during the end of the run
 Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
- Native Heap 280337 280284 44 35 281336 299556 289289 5858
- Dalvik Heap 2450 2420 0 71 4620 7936 3968 3968
- TOTAL 655165 545016 86556 206 802236 307492 293257 9826
- TOTAL PSS: 655165 TOTAL RSS: 802236 TOTAL SWAP PSS: 206
-TABSTUDIO_SELFTEST_OK 69.4 s: Containers: PostgreSQL query=42 and TCP connected; Redis PING=PONG; nginx rendered in web preview; docker ps and exec stdin/output/exit; 3 verified images; 69.4 s; postgres:17-alpine@sha256:e4cb93687b062cd25a0e8f672d85a7708235009d70d31f8a7698d9370092a9c4, redis:7-alpine@sha256:1cf73a2f04808e55a8bd2f5706c2aa0ebb0f71938f93deb7af79f48311cd5cb9, nginx:alpine@sha256:2db7d28517d1fba17c2da3210395f7be11a11b419246ad0da2edf782af72f367; 8 run variables
+ Native Heap 280442 280416 20 35 281440 300176 289581 5829
+ Dalvik Heap 2455 2432 0 76 4240 7936 3968 3968
+ TOTAL 596785 543032 29524 209 735712 308112 293549 9797
+ TOTAL PSS: 596785 TOTAL RSS: 735712 TOTAL SWAP PSS: 209
+TABSTUDIO_SELFTEST_OK 109.1 s: Containers: PostgreSQL query=42 and TCP connected; Redis PING=PONG; nginx rendered in web preview; docker ps and exec stdin/output/exit; 3 verified images; 109.1 s; postgres:17-alpine@sha256:e4cb93687b062cd25a0e8f672d85a7708235009d70d31f8a7698d9370092a9c4, redis:7-alpine@sha256:1cf73a2f04808e55a8bd2f5706c2aa0ebb0f71938f93deb7af79f48311cd5cb9, nginx:alpine@sha256:2db7d28517d1fba17c2da3210395f7be11a11b419246ad0da2edf782af72f367; 8 run variables
 Shard: containers
-Seconds from launch to verdict: 78
+Seconds from launch to verdict: 124
