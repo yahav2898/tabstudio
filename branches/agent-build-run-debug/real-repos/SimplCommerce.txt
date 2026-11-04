@@ -51,7 +51,7 @@ Compatibility Doctor:
   SimplCommerce.Module.ProductComparison.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   SimplCommerce.Module.ShippingFree.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: SimplCommerce.WebHost
-Built in 48.9 s: 0 errors, 0 warnings
+Built in 48.3 s: 0 errors, 0 warnings
 Packages with analyzers or MSBuild files:
   awssdk.s3 3.7.205.15
       analyzers/dotnet/cs/AWSSDK.S3.CodeAnalysis.dll
@@ -587,13 +587,13 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.utility.netcoreapp10.dll
       build/net6.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll
       build/net6.0/xunit.runner.visualstudio.props
-Editor: 24 files opened and analyzed in 1.2 s, 0 errors only the editor shows, 0 only the build shows
-Serve: GET / answered 200 in 7.7 s after F5, 7287 characters; expected 200 with ' - SimplCommerce</title>': OK
+Editor: 24 files opened and analyzed in 0.9 s, 0 errors only the editor shows, 0 only the build shows
+Serve: GET / answered 200 in 8.2 s after F5, 7287 characters; expected 200 with ' - SimplCommerce</title>': OK
 Output:
-Build started at 23:36:25...
+Build started at 02:13:08...
 'DefaultConnection' comes from the Database Explorer connection 'SimplCommerce.WebHost: DefaultConnection' for this run (ConnectionStrings__DefaultConnection); appsettings.json is unchanged.
 1>------ Build started: Project: SimplCommerce.WebHost, Configuration: Debug ------
-1>SimplCommerce.WebHost -> compiled in memory (1043.5 KB, 3674 ms)
+1>SimplCommerce.WebHost -> compiled in memory (1043.5 KB, 3702 ms)
 ========== Build: 1 succeeded, 0 failed ==========
 info: IdentityServer4.Startup[0]
       Starting IdentityServer4 version 4.1.2+997a6cdd643e46cd5762b710c4ddc43574cbec2e
@@ -680,20 +680,20 @@ info: SimplCommerce.Module.Orders.Services.OrderCancellationBackgroundService[0]
 info: SimplCommerce.Module.Orders.Services.OrderCancellationBackgroundService[0]
       OrderCancellationBackgroundService is working.
 info: Microsoft.Hosting.Lifetime[14]
-      Now listening on: http://127.0.0.1:38635
+      Now listening on: http://127.0.0.1:46863
 info: Microsoft.Hosting.Lifetime[0]
       Application started. Press Ctrl+C to shut down.
 info: Microsoft.Hosting.Lifetime[0]
       Hosting environment: Development
 info: Microsoft.Hosting.Lifetime[0]
       Content root path: /home/runner/work/_temp/real-repos/SimplCommerce/src/SimplCommerce.WebHost
-SimplCommerce.WebHost is listening on http://127.0.0.1:38635/
+SimplCommerce.WebHost is listening on http://127.0.0.1:46863/
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
-      Request starting HTTP/1.1 GET http://127.0.0.1:38635/ - - -
+      Request starting HTTP/1.1 GET http://127.0.0.1:46863/ - - -
 warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
       Failed to determine the https port for redirect.
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (23ms) [Parameters=[@__requestPath_0='' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (28ms) [Parameters=[@__requestPath_0='' (Size = 450)], CommandType='Text', CommandTimeout='30']
       SELECT TOP(1) [c].[Id], [c].[EntityId], [c].[EntityTypeId], [c].[Name], [c].[Slug], [c0].[Id], [c0].[AreaName], [c0].[IsMenuable], [c0].[RoutingAction], [c0].[RoutingController]
       FROM [Core_Entity] AS [c]
       LEFT JOIN [Core_EntityType] AS [c0] ON [c].[EntityTypeId] = [c0].[Id]
@@ -713,19 +713,19 @@ dbug: IdentityServer4.Startup[0]
 dbug: IdentityServer4.Startup[0]
       Error Id Parameter: errorId
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (7ms) [Parameters=[@__normalizedUserName_0='C2ECFDBD-5375-4E87-B664-94F7670396B7@GUEST.SIMPLCOMMERCE.COM' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (22ms) [Parameters=[@__normalizedUserName_0='E24FCC53-54D2-4D3D-A024-93FB9FFC77E2@GUEST.SIMPLCOMMERCE.COM' (Size = 256)], CommandType='Text', CommandTimeout='30']
       SELECT TOP(1) [c].[Id], [c].[AccessFailedCount], [c].[ConcurrencyStamp], [c].[CreatedOn], [c].[Culture], [c].[DefaultBillingAddressId], [c].[DefaultShippingAddressId], [c].[Email], [c].[EmailConfirmed], [c].[ExtensionData], [c].[FullName], [c].[IsDeleted], [c].[LatestUpdatedOn], [c].[LockoutEnabled], [c].[LockoutEnd], [c].[NormalizedEmail], [c].[NormalizedUserName], [c].[PasswordHash], [c].[PhoneNumber], [c].[PhoneNumberConfirmed], [c].[RefreshTokenHash], [c].[SecurityStamp], [c].[TwoFactorEnabled], [c].[UserGuid], [c].[UserName], [c].[VendorId]
       FROM [Core_User] AS [c]
       WHERE [c].[NormalizedUserName] = @__normalizedUserName_0
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (7ms) [Parameters=[@p0='0', @p1='067dc376-9a9e-4fbe-8f18-17892ff671af' (Size = 4000), @p2='2026-11-03T23:36:32.3855648+00:00', @p3='en-US' (Size = 450), @p4=NULL (DbType = Int64), @p5=NULL (DbType = Int64), @p6='c2ecfdbd-5375-4e87-b664-94f7670396b7@guest.simplcommerce.com' (Size = 256), @p7='False', @p8=NULL (Size = 4000), @p9='Guest' (Nullable = false) (Size = 450), @p10='False', @p11='2026-11-03T23:36:32.3855658+00:00', @p12='True', @p13=NULL (DbType = DateTimeOffset), @p14='C2ECFDBD-5375-4E87-B664-94F7670396B7@GUEST.SIMPLCOMMERCE.COM' (Size = 256), @p15='C2ECFDBD-5375-4E87-B664-94F7670396B7@GUEST.SIMPLCOMMERCE.COM' (Size = 256), @p16='AQAAAAIAAYagAAAAEOje7KK7T3DGWPgyZG0+jdOfp9b8mXDXjwkGcetczrIf2oNqXudOkbkcaKVyI0b31Q==' (Size = 4000), @p17=NULL (Size = 4000), @p18='False', @p19=NULL (Size = 450), @p20='XN7JHF2CX6HHIGYVMQ6FYV73SOINMSYU' (Size = 4000), @p21='False', @p22='c2ecfdbd-5375-4e87-b664-94f7670396b7', @p23='c2ecfdbd-5375-4e87-b664-94f7670396b7@guest.simplcommerce.com' (Size = 256), @p24=NULL (DbType = Int64)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (6ms) [Parameters=[@p0='0', @p1='fba277d8-6765-4b0a-a6ba-695c1698d172' (Size = 4000), @p2='2026-11-04T02:13:15.2773622+00:00', @p3='en-US' (Size = 450), @p4=NULL (DbType = Int64), @p5=NULL (DbType = Int64), @p6='e24fcc53-54d2-4d3d-a024-93fb9ffc77e2@guest.simplcommerce.com' (Size = 256), @p7='False', @p8=NULL (Size = 4000), @p9='Guest' (Nullable = false) (Size = 450), @p10='False', @p11='2026-11-04T02:13:15.2773630+00:00', @p12='True', @p13=NULL (DbType = DateTimeOffset), @p14='E24FCC53-54D2-4D3D-A024-93FB9FFC77E2@GUEST.SIMPLCOMMERCE.COM' (Size = 256), @p15='E24FCC53-54D2-4D3D-A024-93FB9FFC77E2@GUEST.SIMPLCOMMERCE.COM' (Size = 256), @p16='AQAAAAIAAYagAAAAEGBHa/lUdpqAdCtWIbUoAY8YALiSKhwqv9ZEH6FqlnVu9yXtfPIIMxl/hXlHw+mEWQ==' (Size = 4000), @p17=NULL (Size = 4000), @p18='False', @p19=NULL (Size = 450), @p20='HXZ63VUIFBTUNVNEF5YQSLZSCNZYC7Y5' (Size = 4000), @p21='False', @p22='e24fcc53-54d2-4d3d-a024-93fb9ffc77e2', @p23='e24fcc53-54d2-4d3d-a024-93fb9ffc77e2@guest.simplcommerce.com' (Size = 256), @p24=NULL (DbType = Int64)], CommandType='Text', CommandTimeout='30']
       SET IMPLICIT_TRANSACTIONS OFF;
       SET NOCOUNT ON;
       INSERT INTO [Core_User] ([AccessFailedCount], [ConcurrencyStamp], [CreatedOn], [Culture], [DefaultBillingAddressId], [DefaultShippingAddressId], [Email], [EmailConfirmed], [ExtensionData], [FullName], [IsDeleted], [LatestUpdatedOn], [LockoutEnabled], [LockoutEnd], [NormalizedEmail], [NormalizedUserName], [PasswordHash], [PhoneNumber], [PhoneNumberConfirmed], [RefreshTokenHash], [SecurityStamp], [TwoFactorEnabled], [UserGuid], [UserName], [VendorId])
       OUTPUT INSERTED.[Id]
       VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24);
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (5ms) [Parameters=[@__normalizedRoleName_0='GUEST' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (4ms) [Parameters=[@__normalizedRoleName_0='GUEST' (Size = 256)], CommandType='Text', CommandTimeout='30']
       SELECT TOP(2) [c].[Id], [c].[ConcurrencyStamp], [c].[Name], [c].[NormalizedName]
       FROM [Core_Role] AS [c]
       WHERE [c].[NormalizedName] = @__normalizedRoleName_0
@@ -740,12 +740,12 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       FROM [Core_Role] AS [c]
       WHERE [c].[NormalizedName] = @__normalizedRoleName_0
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (1ms) [Parameters=[@__normalizedUserName_0='C2ECFDBD-5375-4E87-B664-94F7670396B7@GUEST.SIMPLCOMMERCE.COM' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[@__normalizedUserName_0='E24FCC53-54D2-4D3D-A024-93FB9FFC77E2@GUEST.SIMPLCOMMERCE.COM' (Size = 256)], CommandType='Text', CommandTimeout='30']
       SELECT TOP(1) [c].[Id], [c].[AccessFailedCount], [c].[ConcurrencyStamp], [c].[CreatedOn], [c].[Culture], [c].[DefaultBillingAddressId], [c].[DefaultShippingAddressId], [c].[Email], [c].[EmailConfirmed], [c].[ExtensionData], [c].[FullName], [c].[IsDeleted], [c].[LatestUpdatedOn], [c].[LockoutEnabled], [c].[LockoutEnd], [c].[NormalizedEmail], [c].[NormalizedUserName], [c].[PasswordHash], [c].[PhoneNumber], [c].[PhoneNumberConfirmed], [c].[RefreshTokenHash], [c].[SecurityStamp], [c].[TwoFactorEnabled], [c].[UserGuid], [c].[UserName], [c].[VendorId]
       FROM [Core_User] AS [c]
       WHERE [c].[NormalizedUserName] = @__normalizedUserName_0
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (10ms) [Parameters=[@p25='11', @p0='0', @p1='5fb64aaf-8336-45e3-9d70-ccfeac8947ac' (Size = 4000), @p26='067dc376-9a9e-4fbe-8f18-17892ff671af' (Size = 4000), @p2='2026-11-03T23:36:32.3855648+00:00', @p3='en-US' (Size = 450), @p4=NULL (DbType = Int64), @p5=NULL (DbType = Int64), @p6='c2ecfdbd-5375-4e87-b664-94f7670396b7@guest.simplcommerce.com' (Size = 256), @p7='False', @p8=NULL (Size = 4000), @p9='Guest' (Nullable = false) (Size = 450), @p10='False', @p11='2026-11-03T23:36:32.3855658+00:00', @p12='True', @p13=NULL (DbType = DateTimeOffset), @p14='C2ECFDBD-5375-4E87-B664-94F7670396B7@GUEST.SIMPLCOMMERCE.COM' (Size = 256), @p15='C2ECFDBD-5375-4E87-B664-94F7670396B7@GUEST.SIMPLCOMMERCE.COM' (Size = 256), @p16='AQAAAAIAAYagAAAAEOje7KK7T3DGWPgyZG0+jdOfp9b8mXDXjwkGcetczrIf2oNqXudOkbkcaKVyI0b31Q==' (Size = 4000), @p17=NULL (Size = 4000), @p18='False', @p19=NULL (Size = 450), @p20='XN7JHF2CX6HHIGYVMQ6FYV73SOINMSYU' (Size = 4000), @p21='False', @p22='c2ecfdbd-5375-4e87-b664-94f7670396b7', @p23='c2ecfdbd-5375-4e87-b664-94f7670396b7@guest.simplcommerce.com' (Size = 256), @p24=NULL (DbType = Int64), @p27='3', @p28='11'], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (10ms) [Parameters=[@p25='11', @p0='0', @p1='6debd8a0-30c2-4a8d-9b1b-f1c695e57fc0' (Size = 4000), @p26='fba277d8-6765-4b0a-a6ba-695c1698d172' (Size = 4000), @p2='2026-11-04T02:13:15.2773622+00:00', @p3='en-US' (Size = 450), @p4=NULL (DbType = Int64), @p5=NULL (DbType = Int64), @p6='e24fcc53-54d2-4d3d-a024-93fb9ffc77e2@guest.simplcommerce.com' (Size = 256), @p7='False', @p8=NULL (Size = 4000), @p9='Guest' (Nullable = false) (Size = 450), @p10='False', @p11='2026-11-04T02:13:15.2773630+00:00', @p12='True', @p13=NULL (DbType = DateTimeOffset), @p14='E24FCC53-54D2-4D3D-A024-93FB9FFC77E2@GUEST.SIMPLCOMMERCE.COM' (Size = 256), @p15='E24FCC53-54D2-4D3D-A024-93FB9FFC77E2@GUEST.SIMPLCOMMERCE.COM' (Size = 256), @p16='AQAAAAIAAYagAAAAEGBHa/lUdpqAdCtWIbUoAY8YALiSKhwqv9ZEH6FqlnVu9yXtfPIIMxl/hXlHw+mEWQ==' (Size = 4000), @p17=NULL (Size = 4000), @p18='False', @p19=NULL (Size = 450), @p20='HXZ63VUIFBTUNVNEF5YQSLZSCNZYC7Y5' (Size = 4000), @p21='False', @p22='e24fcc53-54d2-4d3d-a024-93fb9ffc77e2', @p23='e24fcc53-54d2-4d3d-a024-93fb9ffc77e2@guest.simplcommerce.com' (Size = 256), @p24=NULL (DbType = Int64), @p27='3', @p28='11'], CommandType='Text', CommandTimeout='30']
       SET NOCOUNT ON;
       UPDATE [Core_User] SET [AccessFailedCount] = @p0, [ConcurrencyStamp] = @p1, [CreatedOn] = @p2, [Culture] = @p3, [DefaultBillingAddressId] = @p4, [DefaultShippingAddressId] = @p5, [Email] = @p6, [EmailConfirmed] = @p7, [ExtensionData] = @p8, [FullName] = @p9, [IsDeleted] = @p10, [LatestUpdatedOn] = @p11, [LockoutEnabled] = @p12, [LockoutEnd] = @p13, [NormalizedEmail] = @p14, [NormalizedUserName] = @p15, [PasswordHash] = @p16, [PhoneNumber] = @p17, [PhoneNumberConfirmed] = @p18, [RefreshTokenHash] = @p19, [SecurityStamp] = @p20, [TwoFactorEnabled] = @p21, [UserGuid] = @p22, [UserName] = @p23, [VendorId] = @p24
       OUTPUT 1
@@ -762,7 +762,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       FROM [Localization_LocalizedContentProperty] AS [l]
       WHERE [l].[EntityType] = @__entityType_0 AND [l].[CultureId] = @__cultureId_1
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (3ms) [Parameters=[@__now_0='2026-11-03T23:36:32.8613746+00:00' (Nullable = true)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (3ms) [Parameters=[@__now_0='2026-11-04T02:13:15.8005491+00:00' (Nullable = true)], CommandType='Text', CommandTimeout='30']
       SELECT [c].[Id], [c].[Name], [c0].[ViewComponentName], [c].[WidgetId], [c].[WidgetZoneId], [c].[Data], [c].[HtmlData]
       FROM [Core_WidgetInstance] AS [c]
       LEFT JOIN [Core_Widget] AS [c0] ON [c].[WidgetId] = [c0].[Id]
@@ -777,13 +777,13 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       INNER JOIN [Localization_Culture] AS [l0] ON [l].[CultureId] = [l0].[Id]
       WHERE [l0].[Id] = @__culture_0
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       SELECT [c].[Slug] AS [Value], [c].[Name] AS [Text]
       FROM [Catalog_Category] AS [c]
       LEFT JOIN [Catalog_Category] AS [c0] ON [c].[ParentId] = [c0].[Id]
       WHERE [c].[IsPublished] = CAST(1 AS bit) AND [c0].[Id] IS NULL
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[@__customerId_0='11'], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (3ms) [Parameters=[@__customerId_0='11'], CommandType='Text', CommandTimeout='30']
       SELECT [s].[Id], [s].[CreatedOn], [s].[CustomerId], [s].[LatestUpdatedOn], [s].[ProductId], [s].[Quantity], [s].[VendorId]
       FROM [ShoppingCart_CartItem] AS [s]
       WHERE [s].[CustomerId] = @__customerId_0
@@ -821,13 +821,13 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ) AS [t0] ON [t].[Id] = [t0].[MenuId]
       ORDER BY [t].[Id], [t0].[Id]
 info: Microsoft.AspNetCore.Mvc.ViewFeatures.ViewResultExecutor[4]
-      Executed ViewResult - view Index executed in 333.0022ms.
+      Executed ViewResult - view Index executed in 360.8858ms.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action SimplCommerce.Module.Core.Areas.Core.Controllers.HomeController.Index (SimplCommerce.Module.Core) in 372.4991ms
+      Executed action SimplCommerce.Module.Core.Areas.Core.Controllers.HomeController.Index (SimplCommerce.Module.Core) in 400.5901ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'SimplCommerce.Module.Core.Areas.Core.Controllers.HomeController.Index (SimplCommerce.Module.Core)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 GET http://127.0.0.1:38635/ - 200 - text/html;+charset=utf-8 1082.6844ms
+      Request finished HTTP/1.1 GET http://127.0.0.1:46863/ - 200 - text/html;+charset=utf-8 1169.8985ms
 info: Microsoft.Hosting.Lifetime[0]
       Application is shutting down...
 
