@@ -2,79 +2,79 @@ chalk at 72110019e147683f60e13fa0ff5c14a0c27cd9fe
 Toolchain projects:
   node: /home/runner/work/_temp/real-repos/chalk/package.json
 Startup project: node /home/runner/work/_temp/real-repos/chalk/package.json
-Set up in 15.7 s
-Tests: 59 passed, 0 failed, 0 skipped of 59: 59 tests run in 1.3 sec: 59 passed, 0 failed, 0 skipped.
+Set up in 9.6 s
+Tests: 59 passed, 0 failed, 0 skipped of 59: 59 tests run in 1.1 sec: 59 passed, 0 failed, 0 skipped.
 Project setup:
 
 Output:
 ------ Setting up chalk: npm install ------
 > npm install --no-fund --no-audit
 
-added 420 packages in 13s
+added 420 packages in 7s
 ========== npm install: succeeded ==========
 ========== Running chalk's tests with NodeTest ==========
-> sh -c 'exec node --test "$@" '\''test/[!_]*.js'\''' node --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=/home/runner/work/_temp/real-repos/chalk/.tabstudio/test-results/86c5556327a84910acd821540a549d93/node.xml
+> sh -c 'exec node --test "$@" '\''test/[!_]*.js'\''' node --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=/home/runner/work/_temp/real-repos/chalk/.tabstudio/test-results/ca408d96961040d98a4cdd891cec94e0/node.xml
 TERM: dumb
 platform: linux
-✔ don't add any styling when called as the base function (1.340999ms)
-✔ support multiple arguments in base function (0.297396ms)
-✔ support automatic casting to string (0.435688ms)
-✔ style string (0.195372ms)
-✔ support applying multiple styles at once (0.960689ms)
-✔ support nesting styles (0.256119ms)
-✔ support nesting styles of the same type (color, underline, bg) (0.12469ms)
-✔ reset all styles with `.reset()` (0.090177ms)
-✔ support caching multiple styles (0.301972ms)
-✔ alias gray to grey (0.307622ms)
-✔ support variable number of arguments (0.125092ms)
-✔ convert multiple arguments the same way regardless of their count (0.148837ms)
-✔ support falsy values (0.054293ms)
-✔ don't output escape codes if the input is empty (0.055773ms)
-✔ keep Function.prototype methods (0.066714ms)
-✔ line breaks should open and close colors (0.079964ms)
-✔ line breaks should open and close colors with CRLF (0.042876ms)
-✔ properly convert RGB to 16 colors on basic color terminals (0.394258ms)
-✔ properly convert RGB to 256 colors on basic color terminals (0.232301ms)
-✔ properly convert ANSI 256 to 16 colors on basic color terminals (0.185152ms)
-✔ keep ANSI 256 colors on 256 color and Truecolor terminals (0.070607ms)
-✔ don't emit color codes if level is 0 (0.125353ms)
-✔ support extended underline styles (0.069898ms)
-✔ support nesting underline styles (0.054236ms)
-✔ support underline colors (0.071366ms)
-✔ support nesting underline colors (0.050357ms)
-✔ properly downsample underline colors (0.932262ms)
-✔ expose the underline style names (0.159992ms)
-✔ supports blackBright color (0.095099ms)
-✔ sets correct level for chalkStderr and respects it (0.054106ms)
-✔ keeps function prototype methods (0.054002ms)
-✔ `FORCE_COLOR=1` is an exact level, not a minimum (89.372905ms)
-✔ `FORCE_COLOR=2` is an exact level, not a minimum (52.930095ms)
-✔ `FORCE_COLOR=3` enables truecolor (48.376423ms)
-✔ `FORCE_COLOR=1` overrides CI detection (40.328028ms)
-✔ `FORCE_COLOR=1` overrides TERM detection (40.977366ms)
-✔ a `FORCE_COLOR` above 3 is clamped to 3 (38.39746ms)
-✔ the `--color=256` and `--color=16m` flags take precedence over a numeric `FORCE_COLOR` (80.583111ms)
-✔ `FORCE_COLOR=0` disables color (37.736577ms)
-✔ `FORCE_COLOR=true` only enables color and lets the level be detected (127.521796ms)
-✔ an empty `FORCE_COLOR` behaves like `FORCE_COLOR=true` (46.893162ms)
-✔ `FORCE_COLOR=false` disables color (44.141795ms)
-✔ a non-numeric `FORCE_COLOR` is treated as unset, not as disabled (129.085816ms)
-✔ a partly numeric `FORCE_COLOR` is treated as unset, not as a level (296.085314ms)
-✔ create an isolated context where colors can be disabled (by level) (1.291552ms)
-✔ the `level` option should be a number from 0 to 3 (1.021926ms)
-✔ an omitted `level` option is detected rather than rejected (0.192037ms)
-✔ assigning `level` is validated (0.349578ms)
-✔ a cached model style keeps following the level (0.539015ms)
-✔ a model style cached on a style in the chain keeps following the level (0.228721ms)
-✔ a deep chain reads the level from the instance it started on (0.321563ms)
-✔ don't output colors when manually disabled (1.300541ms)
-✔ enable/disable colors based on overall chalk .level property, not individual instances (0.220063ms)
-✔ propagate enable/disable changes from child colors (0.219149ms)
-✔ disable colors if they are not supported (61.73944ms)
-✔ colors can be forced by using chalk.level (4.312879ms)
-✔ visible: normal output when level > 0 (1.293643ms)
-✔ visible: no output when level is too low (0.31136ms)
-✔ test switching back and forth between level == 0 and level > 0 (1.987312ms)
+✔ don't add any styling when called as the base function (0.970081ms)
+✔ support multiple arguments in base function (0.218294ms)
+✔ support automatic casting to string (0.271774ms)
+✔ style string (0.125792ms)
+✔ support applying multiple styles at once (0.156659ms)
+✔ support nesting styles (0.173305ms)
+✔ support nesting styles of the same type (color, underline, bg) (0.092451ms)
+✔ reset all styles with `.reset()` (0.071309ms)
+✔ support caching multiple styles (0.285266ms)
+✔ alias gray to grey (0.293849ms)
+✔ support variable number of arguments (0.121826ms)
+✔ convert multiple arguments the same way regardless of their count (0.103879ms)
+✔ support falsy values (0.044958ms)
+✔ don't output escape codes if the input is empty (0.056045ms)
+✔ keep Function.prototype methods (0.06514ms)
+✔ line breaks should open and close colors (0.089056ms)
+✔ line breaks should open and close colors with CRLF (0.05237ms)
+✔ properly convert RGB to 16 colors on basic color terminals (0.473863ms)
+✔ properly convert RGB to 256 colors on basic color terminals (0.194877ms)
+✔ properly convert ANSI 256 to 16 colors on basic color terminals (0.222009ms)
+✔ keep ANSI 256 colors on 256 color and Truecolor terminals (0.079671ms)
+✔ don't emit color codes if level is 0 (0.136909ms)
+✔ support extended underline styles (0.073793ms)
+✔ support nesting underline styles (0.067023ms)
+✔ support underline colors (0.091449ms)
+✔ support nesting underline colors (0.056216ms)
+✔ properly downsample underline colors (1.278281ms)
+✔ expose the underline style names (0.179794ms)
+✔ supports blackBright color (0.061784ms)
+✔ sets correct level for chalkStderr and respects it (0.049635ms)
+✔ keeps function prototype methods (0.053101ms)
+✔ `FORCE_COLOR=1` is an exact level, not a minimum (59.045592ms)
+✔ `FORCE_COLOR=2` is an exact level, not a minimum (48.320778ms)
+✔ `FORCE_COLOR=3` enables truecolor (40.072113ms)
+✔ `FORCE_COLOR=1` overrides CI detection (34.695352ms)
+✔ `FORCE_COLOR=1` overrides TERM detection (34.119675ms)
+✔ a `FORCE_COLOR` above 3 is clamped to 3 (31.996615ms)
+✔ the `--color=256` and `--color=16m` flags take precedence over a numeric `FORCE_COLOR` (64.769212ms)
+✔ `FORCE_COLOR=0` disables color (32.03955ms)
+✔ `FORCE_COLOR=true` only enables color and lets the level be detected (95.356244ms)
+✔ an empty `FORCE_COLOR` behaves like `FORCE_COLOR=true` (32.216971ms)
+✔ `FORCE_COLOR=false` disables color (34.600006ms)
+✔ a non-numeric `FORCE_COLOR` is treated as unset, not as disabled (104.070004ms)
+✔ a partly numeric `FORCE_COLOR` is treated as unset, not as a level (230.67477ms)
+✔ create an isolated context where colors can be disabled (by level) (0.6161ms)
+✔ the `level` option should be a number from 0 to 3 (0.461835ms)
+✔ an omitted `level` option is detected rather than rejected (0.076006ms)
+✔ assigning `level` is validated (0.157821ms)
+✔ a cached model style keeps following the level (0.331024ms)
+✔ a model style cached on a style in the chain keeps following the level (0.099872ms)
+✔ a deep chain reads the level from the instance it started on (0.118822ms)
+✔ don't output colors when manually disabled (0.640177ms)
+✔ enable/disable colors based on overall chalk .level property, not individual instances (0.095546ms)
+✔ propagate enable/disable changes from child colors (0.087403ms)
+✔ disable colors if they are not supported (61.134274ms)
+✔ colors can be forced by using chalk.level (0.829577ms)
+✔ visible: normal output when level > 0 (0.893153ms)
+✔ visible: no output when level is too low (0.3146ms)
+✔ test switching back and forth between level == 0 and level > 0 (0.306368ms)
 ℹ tests 59
 ℹ suites 0
 ℹ pass 59
@@ -82,5 +82,5 @@ platform: linux
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 1238.384249
+ℹ duration_ms 964.510466
 
