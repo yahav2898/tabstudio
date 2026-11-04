@@ -1,0 +1,19 @@
+# touch-portrait (dark): 149 actions, 18 problems
+covered	tap (portrait): WorkspaceView > "Terminal"	A tap on its middle reaches Border instead.
+covered	tap (portrait: Agent): AgentPanelView > "Save"	A tap on its middle reaches ScrollContentPresenter#PART_ContentPresenter instead.
+covered	tap (portrait: Terminal): TerminalPanelView > "~"	A tap on its middle reaches ContentPresenter#PART_ContentPresenter instead.
+covered	tap (portrait: Terminal): TerminalPanelView > "/"	A tap on its middle reaches TextBlock instead.
+covered	tap (portrait: Terminal): TerminalPanelView > "-"	A tap on its middle reaches TextBlock instead.
+no-effect	tap (portrait): WorkspaceView > "Output"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (portrait: Agent): AgentPanelView > "Save"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (portrait: Swarm): UiTestRecorderView > "Record"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (portrait: Database): DatabaseExplorerView > "Update Database"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (portrait: Database): DatabaseExplorerView > "Add"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (portrait: Containers): ContainersView > "Start"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (portrait: Containers): ContainersView > "Stop"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+no-effect	tap (portrait: Containers): ContainersView > "Restart"	It changed nothing a person can see: no panel, dialog, text, selection or status.
+overlap	tap (portrait: SolutionExplorer): PropertiesView > HeaderButton "Show or hide Properties"	Grid#MainArea > Grid#EditorArea > Border#BottomDock > ComboBox#OutputSourceBox: ComboBox OutputSourceBox lies under Button HeaderButton: 170 × 30 dips of them overlap, and a tap there goes to Button HeaderButton. [touch-portrait-dark-001.png]
+overlap	tap (portrait: SolutionExplorer): PropertiesView > HeaderButton "Show or hide Properties"	Grid#MainArea > Grid#EditorArea > Border#BottomDock > Button: Button "Clear" lies under Button HeaderButton: 56 × 30 dips of them overlap, and a tap there goes to Button HeaderButton. [touch-portrait-dark-001.png]
+overlap	tap (portrait: SolutionExplorer): PropertiesView > HeaderButton "Show or hide Properties"	Grid#MainArea > Grid#EditorArea > Border#BottomDock > Button#HideBottomPanelButton: Button HideBottomPanelButton lies under Button HeaderButton: 44 × 30 dips of them overlap, and a tap there goes to Button HeaderButton. [touch-portrait-dark-001.png]
+overlap	tap (portrait: SolutionExplorer): PropertiesView > HeaderButton "Show or hide Properties"	Grid#SideBar > PropertiesView#PropertiesPanel > ContentPresenter#PART_ContentPresenter > Button#HeaderButton: Button HeaderButton lies under GridSplitter PropertiesSplitter: 329 × 3 dips of them overlap, and a tap there goes to GridSplitter PropertiesSplitter. [touch-portrait-dark-001.png]
+overlap	portrait: TestExplorer	Panel#TouchBarFader > Border#EditTouchBar > AdaptiveBar#TouchBar > AdaptiveBarItem: AdaptiveBarItem lies under TextBox: 41 × 40 dips of them overlap, and a tap there goes to TextBox. [touch-portrait-dark-002.png]
