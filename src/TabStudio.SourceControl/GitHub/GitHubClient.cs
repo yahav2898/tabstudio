@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
@@ -295,21 +296,76 @@ public sealed partial class GitHubClient
     /// <param name="maximumBytes">The largest archive to accept.</param>
     /// <param name="progress">Receives the number of bytes downloaded so far and the total, when known.</param>
     /// <param name="cancellationToken">Cancels the download.</param>
-    public async Task DownloadArchiveAsync(
+    public Task DownloadArchiveAsync(
         string owner,
         string repository,
         string reference,
         Stream destination,
         long maximumBytes,
         IProgress<(long Received, long? Total)>? progress = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default) =>
+        DownloadArchiveAsync(owner, repository, reference, destination, maximumBytes, null, progress, cancellationToken);
+
+    /// <summary>
+    /// Downloads a commit's archive into a seekable stream that may hold the start of it from a download that broke:
+    /// the rest is asked for with a <c>Range</c> request, and when the server sends the whole archive instead, the
+    /// stream starts over.
+    /// </summary>
+    /// <param name="owner">The owner.</param>
+    /// <param name="repository">The repository name.</param>
+    /// <param name="reference">The commit, branch or tag.</param>
+    /// <param name="destination">A seekable stream positioned at its end, holding what arrived before.</param>
+    /// <param name="maximumBytes">The largest archive to accept.</param>
+    /// <param name="validator">The <c>ETag</c> the earlier download had, if any; receives this one's when it has one.</param>
+    /// <param name="progress">Receives the number of bytes downloaded so far and the total, when known.</param>
+    /// <param name="cancellationToken">Cancels the download.</param>
+    internal async Task DownloadArchiveAsync(
+        string owner,
+        string repository,
+        string reference,
+        Stream destination,
+        long maximumBytes,
+        StrongBox<string?>? validator,
+        IProgress<(long Received, long? Total)>? progress,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(destination);
+        var have = validator is not null && destination.CanSeek ? destination.Length : 0;
         using var request = CreateRequest(HttpMethod.Get, $"{Repo(owner, repository)}/zipball/{EscapePath(reference)}", null);
-        using var response = await SendRawAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-        await EnsureSuccessAsync(response, cancellationToken).ConfigureAwait(false);
+        if (have > 0)
+        {
+            request.Headers.Range = new RangeHeaderValue(have, null);
+            if (validator?.Value is { } etag && EntityTagHeaderValue.TryParse(etag, out var tag))
+            {
+                request.Headers.IfRange = new RangeConditionHeaderValue(tag);
+            }
+        }
 
-        var total = response.Content.Headers.ContentLength;
+        using var response = await SendRawAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+        if (response.StatusCode == HttpStatusCode.RequestedRangeNotSatisfiable && have > 0)
+        {
+            // Everything had arrived.
+            return;
+        }
+
+        await EnsureSuccessAsync(response, cancellationToken).ConfigureAwait(false);
+        long received = 0;
+        if (response.StatusCode == HttpStatusCode.PartialContent && response.Content.Headers.ContentRange?.From == have)
+        {
+            received = have;
+        }
+        else if (have > 0)
+        {
+            destination.SetLength(0);
+            destination.Position = 0;
+        }
+
+        if (validator is not null)
+        {
+            validator.Value = response.Headers.ETag?.ToString();
+        }
+
+        var total = response.Content.Headers.ContentLength is { } length ? length + received : (long?)null;
         if (total > maximumBytes)
         {
             throw new GitHubApiException(HttpStatusCode.RequestEntityTooLarge, "The repository is larger than TabStudio downloads.");
@@ -317,7 +373,6 @@ public sealed partial class GitHubClient
 
         await using var source = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
         var buffer = new byte[81920];
-        long received = 0;
         int read;
         while ((read = await ReadBodyAsync(source, buffer, cancellationToken).ConfigureAwait(false)) > 0)
         {

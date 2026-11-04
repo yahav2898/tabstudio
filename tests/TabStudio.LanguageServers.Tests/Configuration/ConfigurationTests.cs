@@ -110,6 +110,27 @@ public sealed class RegistryTests
     }
 
     [Fact]
+    public void Pyright_uses_the_projects_venv_and_shows_type_findings_as_warnings_unless_the_project_configures_it()
+    {
+        // Red is for code that does not compile: Pyright's default (standard) rules squiggled the attributes microblog
+        // sets on its Flask app red, though Python runs them. A project's own pyrightconfig.json or
+        // [tool.pyright] wins over these, as Pyright gives its configuration file precedence over the client's settings.
+        var registry = LanguageServerRegistry.BuiltIn;
+        var settings = registry.SettingsFor(registry.FindServers("python").First());
+
+        Assert.Equal("${workspaceFile:.venv/bin/python|venv/bin/python|.venv/Scripts/python.exe}", (string?)JsonSettings.Select(settings, "python.pythonPath"));
+        var overrides = (JsonObject)JsonSettings.Select(settings, "python.analysis.diagnosticSeverityOverrides")!;
+        Assert.Equal(34, overrides.Count);
+        Assert.All(overrides, rule => Assert.Equal("warning", (string?)rule.Value));
+        foreach (var rule in new[] { "reportMissingImports", "reportAttributeAccessIssue", "reportArgumentType", "reportCallIssue", "reportOptionalMemberAccess", "reportUndefinedVariable", "reportPossiblyUnboundVariable" })
+        {
+            Assert.True(overrides.ContainsKey(rule), rule);
+        }
+
+        Assert.Null(JsonSettings.Select(settings, "python.analysis.typeCheckingMode"));
+    }
+
+    [Fact]
     public void A_server_turned_off_is_skipped()
     {
         var registry = LanguageServerRegistry.BuiltIn.WithWorkspaceSettings(JsonSettings.ParseObject("""{ "languageServers": { "pyright": { "enabled": false } } }"""));
@@ -312,6 +333,27 @@ public sealed class InitializationOptionsTests
 
         Assert.Equal("/usr/local/lib/node_modules/typescript/lib/tsserver.js", resolved?["tsserver"]?["path"]?.GetValue<string>());
         Assert.Contains("/root/workspace/node_modules/typescript/lib/tsserver.js", checkedPaths);
+    }
+
+    [Fact]
+    public void A_workspace_file_is_the_first_of_its_alternatives_that_exists_and_is_left_out_until_one_does()
+    {
+        using var temp = new TempDirectory();
+        var options = new JsonObject { ["python"] = new JsonObject { ["pythonPath"] = "${workspaceFile:.venv/bin/python|venv/bin/python}" } };
+
+        Assert.False(InitializationOptions.Resolve(options, temp.Path, "/usr/bin/pyright-langserver")?["python"]?.AsObject().ContainsKey("pythonPath"));
+
+        var venv = temp.Write("venv/bin/python", string.Empty);
+        Assert.Equal(venv, InitializationOptions.Resolve(options, temp.Path, "/usr/bin/pyright-langserver")?["python"]?["pythonPath"]?.GetValue<string>());
+
+        if (!OperatingSystem.IsWindows())
+        {
+            // A .venv's python links to an interpreter only the server's Linux environment has on Android.
+            var link = temp.Resolve(".venv/bin/python");
+            Directory.CreateDirectory(Path.GetDirectoryName(link)!);
+            File.CreateSymbolicLink(link, "/nonexistent/usr/bin/python3.12");
+            Assert.Equal(link, InitializationOptions.Resolve(options, temp.Path, "/usr/bin/pyright-langserver")?["python"]?["pythonPath"]?.GetValue<string>());
+        }
     }
 
     [Fact]

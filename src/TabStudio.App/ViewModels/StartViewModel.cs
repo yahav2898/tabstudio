@@ -244,18 +244,31 @@ public sealed partial class StartViewModel : ObservableObject, IDisposable
     [RelayCommand(CanExecute = nameof(CanDownload))]
     private async Task DownloadAsync()
     {
-        if (!GitHubRepository.TryParse(RepositoryText, out var repository))
+        if (GitHubRepository.TryParse(RepositoryText, out var repository))
         {
-            ErrorText = "Enter a GitHub repository, such as github.com/owner/name.";
+            await RunAsync(async token =>
+            {
+                var progress = new Progress<ImportProgress>(p => ProgressText = Describe(p));
+                ProgressText = $"Connecting to GitHub";
+                var folder = await _gitHub.ImportAsync(repository, progress, token);
+                await ShowPreviewAsync(folder, repository.ToString(), _gitHub.LastNotes, token);
+            });
+            return;
+        }
+
+        // Any other Git host: GitLab, Bitbucket, Azure DevOps, Codeberg, Gitea or a server of one's own.
+        if (!global::TabStudio.SourceControl.Git.GitRemoteAddress.TryParse(RepositoryText, out var address, out var reference, out var credentials))
+        {
+            ErrorText = "Enter a repository's address, such as github.com/owner/name or https://gitlab.com/group/project.git.";
             return;
         }
 
         await RunAsync(async token =>
         {
             var progress = new Progress<ImportProgress>(p => ProgressText = Describe(p));
-            ProgressText = $"Connecting to GitHub";
-            var folder = await _gitHub.ImportAsync(repository, progress, token);
-            await ShowPreviewAsync(folder, repository.ToString(), _gitHub.LastNotes, token);
+            ProgressText = $"Connecting to {address.Host}";
+            var folder = await _gitHub.ImportAsync(address, reference, credentials, progress, token);
+            await ShowPreviewAsync(folder, address.FullName, _gitHub.LastNotes, token);
         });
     }
 

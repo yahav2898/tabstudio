@@ -50,6 +50,21 @@ public sealed record PackageRestoreOptions
     /// </summary>
     public bool UseRestoreCache { get; init; } = true;
 
+    /// <summary>
+    /// The delays before each new try of a request to a web source that failed in a way that may pass: 0.5, 2 and 5
+    /// seconds, so a request is sent at most four times.
+    /// </summary>
+    public static IReadOnlyList<TimeSpan> DefaultHttpRetryDelays { get; } =
+        [TimeSpan.FromMilliseconds(500), TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(5)];
+
+    /// <summary>
+    /// How long to wait before each new try of a request to a web source that failed in a way that may pass: a
+    /// connection that was reset or refused, a body cut short, a timeout, a server error (5xx), 408 Request Timeout,
+    /// 429 Too Many Requests, or a 304 Not Modified that a cache on the way gave to a request that did not ask for one.
+    /// One entry per retry; empty sends every request once. See <see cref="DefaultHttpRetryDelays"/>.
+    /// </summary>
+    public IReadOnlyList<TimeSpan> HttpRetryDelays { get; init; } = DefaultHttpRetryDelays;
+
     /// <summary>How many packages are downloaded at the same time.</summary>
     public int MaxParallelDownloads { get; init; } = 4;
 

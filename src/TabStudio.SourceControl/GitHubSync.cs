@@ -1,3 +1,4 @@
+using TabStudio.SourceControl.Git;
 using TabStudio.SourceControl.GitHub;
 
 namespace TabStudio.SourceControl;
@@ -20,11 +21,15 @@ public sealed partial class GitHubSync
 {
     private readonly GitHubClient _client;
 
-    private GitHubSync(GitHubClient client, string root, SyncMetadata metadata)
+    /// <summary>The folder's Git clone, when commits and pulls go through Git's own protocol instead of GitHub's API.</summary>
+    private readonly GitWorkingCopy? _git;
+
+    private GitHubSync(GitHubClient client, string root, SyncMetadata metadata, GitWorkingCopy? git = null)
     {
         _client = client;
         Root = root;
         Metadata = metadata;
+        _git = git;
     }
 
     /// <summary>The linked folder.</summary>
@@ -44,7 +49,12 @@ public sealed partial class GitHubSync
     {
         ArgumentNullException.ThrowIfNull(client);
         ArgumentException.ThrowIfNullOrEmpty(root);
-        return SyncMetadata.Load(root) is { } metadata ? new GitHubSync(client, root, metadata) : null;
+        if (SyncMetadata.Load(root) is not { } metadata)
+        {
+            return null;
+        }
+
+        return new GitHubSync(client, root, metadata, metadata.Link.Remote is null ? null : OpenWorkingCopy(client, root, metadata.Link));
     }
 
     /// <summary>Finds the linked folder that contains a path: the path itself or one of its parents.</summary>
@@ -71,7 +81,11 @@ public sealed partial class GitHubSync
     {
         var changes = await Task.Run(() => ScanChanges(cancellationToken), cancellationToken).ConfigureAwait(false);
         int? incoming = null;
-        if (checkGitHub && Link.Branch is { } branch)
+        if (checkGitHub && Link.Branch is { } gitBranch && _git is not null)
+        {
+            incoming = await IncomingViaGitAsync(gitBranch, cancellationToken).ConfigureAwait(false);
+        }
+        else if (checkGitHub && Link.Branch is { } branch)
         {
             var head = await _client.GetBranchHeadAsync(Link.Owner, Link.Repository, branch, cancellationToken).ConfigureAwait(false);
             incoming = head == Link.BaseCommit
@@ -88,19 +102,21 @@ public sealed partial class GitHubSync
     /// <returns>The content, or <see langword="null"/> when the file is new.</returns>
     public async Task<byte[]?> GetBaseContentAsync(string relativePath, CancellationToken cancellationToken = default) =>
         Metadata.Files.TryGetValue(relativePath, out var file)
-            ? await _client.GetBlobAsync(Link.Owner, Link.Repository, file.Sha, cancellationToken).ConfigureAwait(false)
+            ? await Source().ReadAsync(file.Sha, cancellationToken).ConfigureAwait(false)
             : null;
 
     /// <summary>Lists the repository's branches.</summary>
     /// <param name="cancellationToken">Cancels the request.</param>
     public Task<IReadOnlyList<GitHubBranch>> GetBranchesAsync(CancellationToken cancellationToken = default) =>
-        _client.GetBranchesAsync(Link.Owner, Link.Repository, cancellationToken);
+        _git is null ? _client.GetBranchesAsync(Link.Owner, Link.Repository, cancellationToken) : BranchesViaGitAsync(cancellationToken);
 
     /// <summary>Lists the latest commits of the branch, newest first.</summary>
     /// <param name="count">How many commits, at most 100.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
     public Task<IReadOnlyList<GitCommit>> GetHistoryAsync(int count = 30, CancellationToken cancellationToken = default) =>
-        _client.GetHistoryAsync(Link.Owner, Link.Repository, Link.Branch ?? Link.BaseCommit, count, cancellationToken);
+        _git is null
+            ? _client.GetHistoryAsync(Link.Owner, Link.Repository, Link.Branch ?? Link.BaseCommit, count, cancellationToken)
+            : Task.FromResult<IReadOnlyList<GitCommit>>(_git.History(Link.BaseCommit, Math.Clamp(count, 1, 100)));
 
     /// <summary>Opens a pull request from the folder's branch.</summary>
     /// <param name="title">The title.</param>
@@ -111,6 +127,7 @@ public sealed partial class GitHubSync
     public async Task<GitHubPullRequest> CreatePullRequestAsync(string title, string? body = null, string? baseBranch = null, bool draft = false, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(title);
+        RequireGitHub("Pull requests");
         var branch = RequireBranch("open a pull request");
         baseBranch ??= (await _client.GetRepositoryAsync(Link.Owner, Link.Repository, cancellationToken).ConfigureAwait(false)).DefaultBranch;
         if (string.Equals(baseBranch, branch, StringComparison.Ordinal))
@@ -128,6 +145,14 @@ public sealed partial class GitHubSync
         var changes = WorkingTree.GetChanges(Root, Metadata.Files, hashes, cancellationToken);
         hashes.Save(Root);
         return changes;
+    }
+
+    private void RequireGitHub(string feature)
+    {
+        if (!Link.IsGitHub)
+        {
+            throw new SyncException($"{feature} are a GitHub feature, and this repository is on {Link.Host}. Use {Link.Host}'s site for them.");
+        }
     }
 
     private string RequireBranch(string action) =>

@@ -28,6 +28,8 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
     private Task _run = Task.CompletedTask;
     private int _started;
     private volatile bool _stopping;
+    private volatile bool _restarting;
+    private string? _initializationOptions;
     private volatile LanguageServerCapabilities _capabilities = LanguageServerCapabilities.None;
 
     /// <summary>Creates the instance; nothing starts until <see cref="Start"/> or a document is added.</summary>
@@ -168,7 +170,7 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
             {
                 await connection.SendNotificationAsync(
                     "workspace/didChangeConfiguration",
-                    new DidChangeConfigurationParamsDto(settings.DeepClone()),
+                    new DidChangeConfigurationParamsDto(ResolvedSettings()),
                     LspJsonContext.Default.DidChangeConfigurationParamsDto).ConfigureAwait(false);
             }
             catch (JsonRpcException)
@@ -176,6 +178,29 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
                 // The server stopped; it reads the settings again when it restarts.
             }
         }
+    }
+
+    /// <summary>
+    /// Catches up with packages a project's setup installed after the server started. A server whose initialization
+    /// options now come out differently, such as typescript-language-server once <c>npm install</c> brought the
+    /// workspace its own TypeScript, starts again with them; any other gets its settings again, whose variables may name
+    /// new files, such as the interpreter of the <c>.venv</c> Pyright needs to resolve the project's imports.
+    /// </summary>
+    public async Task RefreshAsync()
+    {
+        if (_stopping || State != LanguageServerState.Running || _connection is not { IsClosed: false } connection)
+        {
+            return;
+        }
+
+        var options = InitializationOptions.Resolve(Definition.InitializationOptions, RootDirectory, _executable, toLocalPath: _host.Launcher.ToLocalPath)?.ToJsonString();
+        if (!string.Equals(options, _initializationOptions, StringComparison.Ordinal))
+        {
+            await RestartAsync(connection, "its initialization options changed, such as the TypeScript the workspace installed").ConfigureAwait(false);
+            return;
+        }
+
+        await UpdateSettingsAsync(Settings).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -262,6 +287,36 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
 
     private static TaskCompletionSource<bool> NewReadiness() => new(TaskCreationOptions.RunContinuationsAsynchronously);
 
+    /// <summary>The settings as the server reads them, with their variables filled in for its folder as it is now.</summary>
+    private JsonObject ResolvedSettings() =>
+        InitializationOptions.Resolve(Settings, RootDirectory, _executable, toLocalPath: _host.Launcher.ToLocalPath) as JsonObject ?? new JsonObject();
+
+    /// <summary>
+    /// Shuts the server down politely and lets <see cref="RunAsync"/> start it again at once, without counting a crash;
+    /// its documents are opened on the new server, as after a crash.
+    /// </summary>
+    private async Task RestartAsync(JsonRpcConnection connection, string reason)
+    {
+        _host.Log(Name, LanguageServerLogLevel.Info, $"Restarting {Name}: {reason}.");
+        _restarting = true;
+        var process = _process;
+        try
+        {
+            using var timeout = new CancellationTokenSource(_host.Options.ShutdownTimeout);
+            await connection.SendRequestAsync("shutdown", null, timeout.Token).ConfigureAwait(false);
+            await connection.SendNotificationAsync("exit", null, timeout.Token).ConfigureAwait(false);
+            if (process is not null)
+            {
+                await process.Exited.WaitAsync(timeout.Token).ConfigureAwait(false);
+            }
+        }
+        catch (Exception ex) when (ex is JsonRpcException or OperationCanceledException)
+        {
+            // A server that does not stop in time is ended; the run loop starts it again either way.
+            process?.Kill();
+        }
+    }
+
     /// <summary>Runs the server, and runs it again after it stopped unexpectedly, until it fails too often.</summary>
     private async Task RunAsync()
     {
@@ -270,6 +325,14 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
             if (!await RunOnceAsync().ConfigureAwait(false) || _stopping || _life.IsCancellationRequested)
             {
                 return;
+            }
+
+            if (_restarting)
+            {
+                // Stopped on purpose by RefreshAsync: start it again at once.
+                _restarting = false;
+                SetState(LanguageServerState.Restarting, "Restarting with the workspace's new packages");
+                continue;
             }
 
             int crashes;
@@ -401,7 +464,10 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
             Volatile.Write(ref _ready, NewReadiness());
             NotifyDocuments(d => d.OnServerStopped());
             var exit = process.Exited.IsCompleted ? $"exit code {await process.Exited.ConfigureAwait(false)}" : "its output closed";
-            _host.Log(Name, LanguageServerLogLevel.Error, $"{Name} stopped unexpectedly ({exit}).");
+            if (!_restarting)
+            {
+                _host.Log(Name, LanguageServerLogLevel.Error, $"{Name} stopped unexpectedly ({exit}).");
+            }
         }
 
         if (Interlocked.Exchange(ref _process, null) is { } ended)
@@ -417,13 +483,15 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(_life.Token);
         timeout.CancelAfter(_host.Options.InitializeTimeout);
         var folderName = Path.GetFileName(RootDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+        var options = InitializationOptions.Resolve(Definition.InitializationOptions, RootDirectory, _executable, (message, isWarning) => _host.Log(Name, isWarning ? LanguageServerLogLevel.Warning : LanguageServerLogLevel.Info, message), _host.Launcher.ToLocalPath);
+        _initializationOptions = options?.ToJsonString();
         var parameters = new InitializeParamsDto(
             Definition.SendsClientProcessId ? Environment.ProcessId : null,
             new ClientInfoDto(_host.Options.ClientName, _host.Options.ClientVersion),
             "en",
             RootDirectory,
             RootUri,
-            InitializationOptions.Resolve(Definition.InitializationOptions, RootDirectory, _executable, (message, isWarning) => _host.Log(Name, isWarning ? LanguageServerLogLevel.Warning : LanguageServerLogLevel.Info, message), _host.Launcher.ToLocalPath),
+            options,
             ClientCapabilities.Create(),
             _host.Options.TraceMessages ? "messages" : "off",
             [new WorkspaceFolderDto(RootUri, folderName.Length == 0 ? RootDirectory : folderName)]);
@@ -442,7 +510,7 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
         await connection.SendNotificationAsync("initialized", new JsonObject(), timeout.Token).ConfigureAwait(false);
         await connection.SendNotificationAsync(
             "workspace/didChangeConfiguration",
-            new DidChangeConfigurationParamsDto(Settings.DeepClone()),
+            new DidChangeConfigurationParamsDto(ResolvedSettings()),
             LspJsonContext.Default.DidChangeConfigurationParamsDto,
             timeout.Token).ConfigureAwait(false);
     }

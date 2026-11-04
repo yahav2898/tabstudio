@@ -556,6 +556,111 @@ public sealed class GitHubSyncTests : IDisposable
         Assert.Contains("limit", SyncErrors.Describe(limited), StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task A_repository_past_the_archive_and_blob_limits_comes_over_Git_in_batches()
+    {
+        // Past GitHub's 1 GB archive or its API's 100 MB blob limit, a repository could not be downloaded at all.
+        var files = Enumerable.Range(0, 60).ToDictionary(i => $"src/File{i}.cs", i => $"class File{i};\n", StringComparer.Ordinal);
+        _github.AddRepository("huge", files);
+        var big = Enumerable.Range(0, 5000).Select(i => (byte)(i * 7 % 251)).ToArray();
+        _github.PushBytes("huge", "assets/big.bin", big);
+        _github.ArchiveClaimsBytes = (1L << 30) + 1;
+        _github.BlobApiLimit = 1000;
+
+        var sync = await GitHubSync.CloneAsync(_github.CreateClient(), FakeGitHub.Login, "huge", null, Folder);
+
+        Assert.Equal("class File42;\n", Read("src/File42.cs"));
+        Assert.Equal(big, await File.ReadAllBytesAsync(Path.Combine(Folder, "assets", "big.bin")));
+        Assert.True(_github.UploadPackFetches > 0);
+        Assert.Empty((await sync.GetStatusAsync()).Changes);
+        Assert.False(Directory.Exists(Path.Combine(Folder, SyncMetadata.FolderName, "objects")));
+    }
+
+    [Fact]
+    public async Task A_single_file_past_the_API_limit_comes_over_Git()
+    {
+        var big = Enumerable.Range(0, 3000).Select(i => (byte)(i % 13)).ToArray();
+        _github.PushBytes(Repo, "data/big.bin", big);
+        _github.BlobApiLimit = 1000;
+
+        await CloneAsync();
+
+        Assert.Equal(big, await File.ReadAllBytesAsync(Path.Combine(Folder, "data", "big.bin")));
+        Assert.Equal(1, _github.UploadPackFetches);
+    }
+
+    [Fact]
+    public async Task A_download_that_breaks_asks_only_for_the_rest_of_the_archive()
+    {
+        // An interrupted download started over from zero.
+        _github.AddRepository("many", Enumerable.Range(0, 50).ToDictionary(i => $"f{i}.txt", i => new string('x', 200 + i), StringComparer.Ordinal));
+        _github.BreakArchiveAfter = 300;
+
+        await Assert.ThrowsAsync<GitHubApiException>(() => GitHubSync.CloneAsync(_github.CreateClient(), FakeGitHub.Login, "many", null, Folder));
+        Assert.True(GitHubSync.IsIncompleteClone(Folder));
+        var sync = await GitHubSync.CloneAsync(_github.CreateClient(), FakeGitHub.Login, "many", null, Folder);
+
+        Assert.Equal(["", "bytes=300-"], _github.ArchiveRanges);
+        Assert.Equal(new string('x', 249), Read("f49.txt"));
+        Assert.False(GitHubSync.IsIncompleteClone(Folder));
+        Assert.Empty((await sync.GetStatusAsync()).Changes);
+        Assert.Empty(Directory.EnumerateFiles(Path.Combine(Folder, SyncMetadata.FolderName), "download-*"));
+    }
+
+    [Fact]
+    public async Task Pull_moves_a_submodule_whose_pin_changed()
+    {
+        // Pull ignored submodules: a commit that moved a submodule's pin left its folder at the old commit.
+        _github.AddRepository("lib", new Dictionary<string, string> { ["lib.h"] = "int lib(void);\n" });
+        _github.AddRepository("app", new Dictionary<string, string>
+        {
+            ["main.c"] = "#include \"lib.h\"\n",
+            [".gitmodules"] = "[submodule \"lib\"]\n\tpath = external/lib\n\turl = ../lib.git\n",
+        });
+        _github.AddSubmodule("app", "external/lib", "lib");
+        var sync = await GitHubSync.CloneAsync(_github.CreateClient(), FakeGitHub.Login, "app", null, Folder);
+        Assert.Equal("int lib(void);\n", Read("external/lib/lib.h"));
+
+        var moved = _github.Push("lib", "main", "Newer", new Dictionary<string, string?> { ["lib.h"] = "int lib(int);\n" });
+        _github.PinSubmodule("app", "external/lib", moved);
+        var pull = await sync.PullAsync();
+
+        Assert.Contains("external/lib", pull.Updated);
+        Assert.Equal("int lib(int);\n", Read("external/lib/lib.h"));
+        Assert.Equal(moved, SyncMetadata.Load(Path.Combine(Folder, "external", "lib"))!.Link.BaseCommit);
+        Assert.Equal(moved, sync.Metadata.Submodules["external/lib"]);
+        Assert.Empty((await sync.GetStatusAsync()).Changes);
+    }
+
+    [Fact]
+    public async Task Committing_an_edited_Git_LFS_file_uploads_it_and_commits_its_pointer()
+    {
+        // The edited file was uploaded as a normal blob, which took it out of Git LFS.
+        var pointer = _github.AddLfsObject(Encoding.UTF8.GetBytes(new string('a', 400)));
+        _github.AddRepository("models", new Dictionary<string, string>
+        {
+            [".gitattributes"] = "*.bin filter=lfs diff=lfs merge=lfs -text\n",
+            ["model.bin"] = pointer,
+            ["notes.txt"] = "notes\n",
+        });
+        var sync = await GitHubSync.CloneAsync(_github.CreateClient(), FakeGitHub.Login, "models", null, Folder);
+        var edited = Enumerable.Range(0, 4000).Select(i => (byte)(i % 199)).ToArray();
+        await File.WriteAllBytesAsync(Path.Combine(Folder, "model.bin"), edited);
+        await File.WriteAllBytesAsync(Path.Combine(Folder, "added.bin"), [1, 2, 3]);
+        Write("notes.txt", "more notes\n");
+
+        await sync.CommitAsync("Retrain the model");
+
+        var committed = _github.Files("models", "main");
+        var oid = Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(edited));
+        Assert.Equal($"version https://git-lfs.github.com/spec/v1\noid sha256:{oid}\nsize 4000\n", committed["model.bin"]);
+        Assert.StartsWith("version https://git-lfs.github.com/spec/v1\n", committed["added.bin"], StringComparison.Ordinal);
+        Assert.Equal("more notes\n", committed["notes.txt"]);
+        Assert.Equal(edited, _github.LfsObject(oid));
+        Assert.Equal(edited, await File.ReadAllBytesAsync(Path.Combine(Folder, "model.bin")));
+        Assert.Empty((await sync.GetStatusAsync()).Changes);
+    }
+
     public void Dispose() => _temp.Dispose();
 
     private Task<GitHubSync> CloneAsync() =>

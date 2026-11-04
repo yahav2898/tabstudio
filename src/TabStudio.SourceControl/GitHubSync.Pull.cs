@@ -1,3 +1,4 @@
+using TabStudio.SourceControl.Git;
 using TabStudio.SourceControl.GitHub;
 using TabStudio.SourceControl.Merging;
 
@@ -15,7 +16,33 @@ public sealed partial class GitHubSync
     public async Task<PullResult> PullAsync(IProgress<SyncProgress>? progress = null, CancellationToken cancellationToken = default)
     {
         var branch = RequireBranch("pull");
-        progress?.Report(new SyncProgress("Checking GitHub for new commits"));
+        progress?.Report(new SyncProgress($"Checking {Link.Host} for new commits"));
+        if (_git is { } git)
+        {
+            var remote = await git.RemoteBranchAsync(branch, refresh: true, cancellationToken).ConfigureAwait(false)
+                ?? throw new SyncException($"{Link.Host} no longer has the branch '{branch}'.");
+            if (remote == Link.BaseCommit)
+            {
+                return new PullResult(remote, [], []);
+            }
+
+            await git.FetchCommitAsync(remote, [Link.BaseCommit], depth: 0, progress, cancellationToken).ConfigureAwait(false);
+            if (git.IsAncestor(remote, Link.BaseCommit))
+            {
+                // Commits made here and not pushed yet: nothing is new on the remote.
+                return new PullResult(Link.BaseCommit, [], []);
+            }
+
+            if (!git.IsAncestor(Link.BaseCommit, remote) && !git.Git.Shallow.Contains(Link.BaseCommit))
+            {
+                throw new SyncException(
+                    SyncFailure.Other,
+                    $"'{branch}' has commits here that {Link.Host} does not have, and {Link.Host} has new ones too. Merge them in the Terminal with 'git pull', then refresh Git Changes.");
+            }
+
+            return await CheckOutViaGitAsync(branch, remote, progress, cancellationToken).ConfigureAwait(false);
+        }
+
         var head = await _client.GetBranchHeadAsync(Link.Owner, Link.Repository, branch, cancellationToken).ConfigureAwait(false);
         if (head == Link.BaseCommit)
         {
@@ -30,11 +57,30 @@ public sealed partial class GitHubSync
     /// <param name="cancellationToken">Cancels the request.</param>
     public async Task CreateBranchAsync(string name, CancellationToken cancellationToken = default)
     {
-        RequireSignedIn("create a branch");
         if (!BranchNames.IsValid(name, out var reason))
         {
             throw new SyncException(reason);
         }
+
+        if (_git is { } git)
+        {
+            if (await git.RemoteBranchAsync(name, refresh: true, cancellationToken).ConfigureAwait(false) is not null)
+            {
+                throw new SyncException($"A branch named '{name}' already exists.");
+            }
+
+            var refused = await git.PushAsync(name, GitHash.Zero, Link.BaseCommit, remoteHasCommit: true, cancellationToken).ConfigureAwait(false);
+            if (refused is not null)
+            {
+                throw new SyncException($"{Link.Host} did not create the branch '{name}': {refused}.");
+            }
+
+            git.MoveBranch(name, Link.BaseCommit, $"branch: Created from {Link.BaseCommit[..7]}");
+            Save(Metadata with { Link = Link with { Branch = name } });
+            return;
+        }
+
+        RequireSignedIn("create a branch");
 
         try
         {
@@ -61,19 +107,42 @@ public sealed partial class GitHubSync
             throw new SyncException(SyncFailure.UncommittedChanges, "Commit or discard your changes before switching branches.");
         }
 
+        if (_git is { } git)
+        {
+            var remote = await git.RemoteBranchAsync(name, refresh: true, cancellationToken).ConfigureAwait(false)
+                ?? throw new SyncException($"{Link.Host} has no branch '{name}'.");
+            return await CheckOutViaGitAsync(name, remote, progress, cancellationToken).ConfigureAwait(false);
+        }
+
         var head = await _client.GetBranchHeadAsync(Link.Owner, Link.Repository, name, cancellationToken).ConfigureAwait(false);
         return await CheckOutAsync(name, head, progress, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>Moves the folder to a commit, keeping and merging local changes.</summary>
-    private async Task<PullResult> CheckOutAsync(string branch, string head, IProgress<SyncProgress>? progress, CancellationToken cancellationToken)
+    /// <summary>Moves the folder to a commit through GitHub's API, keeping and merging local changes.</summary>
+    private async Task<PullResult> CheckOutAsync(string? branch, string head, IProgress<SyncProgress>? progress, CancellationToken cancellationToken)
     {
         var commit = await _client.GetCommitAsync(Link.Owner, Link.Repository, head, cancellationToken).ConfigureAwait(false);
-        var remote = await ReadFilesAsync(_client, Link.Owner, Link.Repository, commit.TreeSha, cancellationToken).ConfigureAwait(false);
+        var others = new List<GitTreeEntry>();
+        var remote = await ReadFilesAsync(_client, Link.Owner, Link.Repository, commit.TreeSha, others, cancellationToken).ConfigureAwait(false);
+        var pins = others.Where(e => e.Kind == GitTreeEntryKind.Commit).ToDictionary(e => e.Path, e => e.Sha, StringComparer.Ordinal);
+        return await ApplyAsync(branch, head, remote, pins, new FileFetcher(_client, Link.Owner, Link.Repository), progress, cancellationToken).ConfigureAwait(false);
+    }
 
+    /// <summary>
+    /// Moves the folder to a commit whose files and submodule pins are known, keeping and merging local changes, and
+    /// moves each submodule whose pin changed.
+    /// </summary>
+    private async Task<PullResult> ApplyAsync(
+        string? branch,
+        string head,
+        Dictionary<string, TrackedFile> remote,
+        Dictionary<string, string> pins,
+        IFileSource fetcher,
+        IProgress<SyncProgress>? progress,
+        CancellationToken cancellationToken)
+    {
         var hashes = HashCache.Load(Root);
         var local = WorkingTree.GetChanges(Root, Metadata.Files, hashes, cancellationToken).ToDictionary(c => c.Path, StringComparer.Ordinal);
-        var fetcher = new FileFetcher(_client, Link.Owner, Link.Repository);
         var write = new Dictionary<string, TrackedFile>(StringComparer.Ordinal);
         var updated = new List<string>();
         var conflicts = new List<string>();
@@ -155,14 +224,18 @@ public sealed partial class GitHubSync
         await fetcher.WriteAsync(Root, head, write, hashes, progress, cancellationToken).ConfigureAwait(false);
         updated.AddRange(write.Keys.Where(p => !conflicts.Contains(p)));
 
+        var before = Metadata.Submodules;
         var allConflicts = Metadata.Conflicts.Union(conflicts, StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
-        Save(new SyncMetadata(Link with { Branch = branch, BaseCommit = head }, remote) { Conflicts = allConflicts });
+        Save(new SyncMetadata(Link with { Branch = branch, BaseCommit = head }, remote) { Conflicts = allConflicts, Submodules = pins });
         hashes.Save(Root);
+
+        // A commit that moves a submodule's pin moves its folder too, as 'git submodule update' does after 'git pull'.
+        updated.AddRange(await UpdateSubmodulesAsync(before, pins, progress, cancellationToken).ConfigureAwait(false));
         return new PullResult(head, [.. updated.Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal)], conflicts);
     }
 
     /// <summary>Merges a file changed on both sides; null when it is not text.</summary>
-    private static async Task<MergeResult?> MergeAsync(FileFetcher fetcher, TrackedFile? original, TrackedFile theirs, byte[] mine, CancellationToken cancellationToken)
+    private static async Task<MergeResult?> MergeAsync(IFileSource fetcher, TrackedFile? original, TrackedFile theirs, byte[] mine, CancellationToken cancellationToken)
     {
         var baseBytes = original is null ? [] : await fetcher.ReadAsync(original.Sha, cancellationToken).ConfigureAwait(false);
         var theirBytes = await fetcher.ReadAsync(theirs.Sha, cancellationToken).ConfigureAwait(false);

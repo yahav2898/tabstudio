@@ -158,7 +158,7 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
             response = Handle(request.Method.Method, path, Query(uri), body, signedIn);
         }
 
-        return await ApplyETagAsync(request, response).ConfigureAwait(false);
+        return ShapeArchive(request, path, await ApplyETagAsync(request, response).ConfigureAwait(false));
     }
 
     private HttpResponseMessage Handle(string method, string path, Dictionary<string, string> query, JsonNode? body, bool signedIn)
@@ -409,7 +409,8 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
         using (var zip = new ZipArchive(stream, ZipArchiveMode.Create, leaveOpen: true))
         {
             var top = $"{repo.Owner}-{repo.Name}-{sha[..7]}/";
-            zip.CreateEntry(top);
+            // Fixed times, so the same commit's archive is the same bytes every time, as GitHub's is.
+            zip.CreateEntry(top).LastWriteTime = ArchiveTime;
             foreach (var (path, file) in repo.Trees[repo.Commits[sha].Tree])
             {
                 if (ArchiveOmits.Contains(path))
@@ -418,6 +419,7 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
                 }
 
                 var entry = zip.CreateEntry(top + path);
+                entry.LastWriteTime = ArchiveTime;
                 using var output = entry.Open();
                 var content = repo.Blobs[file.Sha];
                 output.Write(ArchiveAlters.Contains(path) ? [.. content, .. "// substituted\n"u8] : content);
@@ -426,6 +428,8 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
 
         return new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(stream.ToArray()) };
     }
+
+    private static readonly DateTimeOffset ArchiveTime = new(2026, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
     private static string StoreBlob(Repo repo, byte[] content)
     {

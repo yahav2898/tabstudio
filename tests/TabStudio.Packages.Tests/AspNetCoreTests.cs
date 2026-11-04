@@ -77,6 +77,56 @@ public sealed class AspNetCoreTests : IDisposable
     }
 
     [Fact]
+    public async Task A_web_project_for_an_older_NET_compiles_against_its_own_ASP_NET_Core_and_runs_on_TabStudios()
+    {
+        // TodoApi targets .NET 9 and calls UserLoginInfo(..., displayName:), a parameter ASP.NET Core 10 renamed: compiled
+        // against ASP.NET Core 10 whatever the project targeted, it got CS1739, which the SDK never reports.
+        var projectPath = _temp.Write("OldWeb/OldWeb.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.Web">
+              <PropertyGroup>
+                <TargetFramework>net9.0</TargetFramework>
+                <ImplicitUsings>enable</ImplicitUsings>
+                <Nullable>enable</Nullable>
+              </PropertyGroup>
+            </Project>
+            """);
+        _temp.Write("OldWeb/Program.cs", """
+            using Microsoft.AspNetCore.Identity;
+
+            var login = new UserLoginInfo("GitHub", "42", displayName: null);
+            var builder = WebApplication.CreateBuilder(args);
+            var app = builder.Build();
+            app.MapGet("/", () => $"{login.LoginProvider} on {System.Environment.Version.Major}");
+            app.Run();
+            """);
+
+        var workspace = WorkspaceLoader.Load(projectPath);
+        var project = Assert.Single(workspace.Projects);
+        var restorer = CreateRestorer();
+        Assert.Equal("net9.0", restorer.OlderTargetFrameworkOf(project));
+
+        var restore = await restorer.RestoreAsync(project);
+
+        NuGetOrgTests.AssertNuGetOrgReachable(restore);
+        Assert.True(restore.Success, string.Join('\n', restore.Diagnostics));
+        Assert.Contains(restore.CompileAssemblies, path => Path.GetFileName(path) == "Microsoft.Extensions.Identity.Core.dll"
+            && path.Replace('\\', '/').Contains("/ref/net9.0/", StringComparison.Ordinal));
+        Assert.StartsWith("10.", Assert.Single(restore.Frameworks).Version, StringComparison.Ordinal);
+
+        using var host = new RoslynWorkspaceHost();
+        host.Load(workspace, FileSystemTextProvider.Instance);
+        host.SetPackageReferences(project.FilePath, restore.CompileAssemblies);
+        var build = await new ProjectBuilder(host).BuildAsync(project);
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+
+        var console = new CapturingConsole();
+        await using var web = await WebAppHost.StartAsync(build.EntryAssembly!, build.Dependencies, restore.RuntimeAssemblies, project.DirectoryPath, console);
+        Assert.True(web.IsRunning, console.Output + console.Error);
+        Assert.Equal("GitHub on 10", await _http.GetStringAsync(web.Address));
+        await web.StopAsync();
+    }
+
+    [Fact]
     public async Task A_web_app_that_crashes_at_startup_reports_the_crash()
     {
         var projectPath = _temp.Write("Broken/Broken.csproj", """

@@ -44,10 +44,19 @@ public static partial class ProjectParser
 
         // The items the project's and its packages' targets add just before the compiler runs, such as the .resx files
         // ResxSourceGenerator and ThisAssembly.Strings generate code from, read with every property the files set.
-        var compilerTargets = TargetItems.CompilerTargetsOf([new XElement("Project", project.CompilerTargets.Concat(state.Targets).Select(t => new XElement(t)))]);
+        var compilerTargets = TargetItems.CompilerTargetsOf(
+            [new XElement("Project", project.CompilerTargets.Concat(state.Targets).Select(t => new XElement(t)))],
+            TargetItems.RunningTargets(state.Properties));
+        var withTargets = project with { CompilerTargets = compilerTargets };
         var targetFiles = compilerTargets.Count == 0
             ? []
-            : TargetItems.AdditionalFiles(project with { CompilerTargets = compilerTargets }, state.Properties);
+            : TargetItems.AdditionalFiles(withTargets, state.Properties);
+
+        // The sources the packages add to the Compile items, and those the targets write and add, as TypeNameFormatter's
+        // and IFluentInterface's do into obj/, which TabStudio keeps in memory.
+        var compileFiles = project.Language == ProjectLanguage.CSharp
+            ? TargetItems.CompileFiles(withTargets, state.Properties, [.. state.CompileIncludes.Except(state.CompileRemoves, StringComparer.Ordinal)])
+            : [];
 
         // The SDK's own properties were there for conditions; unless a package changed one, the project keeps none.
         foreach (var (name, value) in state.SdkDefaults)
@@ -69,6 +78,7 @@ public static partial class ProjectParser
             CompilerTargets = compilerTargets,
             AssemblyReferences = [.. project.AssemblyReferences.Concat(state.References).DistinctBy(r => r.Name, StringComparer.OrdinalIgnoreCase)],
             PackageBuildFiles = buildFiles,
+            PackageCompileFiles = compileFiles,
         };
     }
 
@@ -114,6 +124,12 @@ public static partial class ProjectParser
 
         /// <summary>The assemblies the files reference by <c>HintPath</c>, such as MSTest's TestFramework.Extensions.</summary>
         public List<AssemblyReferenceInfo> References { get; } = [];
+
+        /// <summary>The <c>Include</c> of the files' <c>Compile</c> items, expanded: a source-only package's files.</summary>
+        public List<string> CompileIncludes { get; } = [];
+
+        /// <summary>The <c>Remove</c> of the files' <c>Compile</c> items, expanded.</summary>
+        public List<string> CompileRemoves { get; } = [];
     }
 
     /// <summary>
@@ -143,7 +159,27 @@ public static partial class ProjectParser
 
         yield return ("MSBuildProjectExtension", Path.GetExtension(project.FilePath));
         yield return ("MSBuildProjectFullPath", project.FilePath);
+        yield return ("MSBuildProjectDirectory", project.DirectoryPath);
+        yield return ("MSBuildProjectName", Path.GetFileNameWithoutExtension(project.FilePath));
+        yield return ("MSBuildProjectFile", Path.GetFileName(project.FilePath));
         yield return ("DesignTimeBuild", string.Empty);
+
+        // Microsoft.NET.Sdk.props sets the root namespace before the project; the paths come from Microsoft.Common's
+        // targets, before the packages' targets, which name files there: TypeNameFormatter copies its source into
+        // $(BaseIntermediateOutputPath), IFluentInterface writes its interface into $(IntermediateOutputPath).
+        yield return ("RootNamespace", Path.GetFileNameWithoutExtension(project.FilePath).Replace(' ', '_'));
+        yield return ("DefaultLanguageSourceExtension", project.Language switch
+        {
+            ProjectLanguage.VisualBasic => ".vb",
+            ProjectLanguage.FSharp => ".fs",
+            ProjectLanguage.Cpp => ".cpp",
+            _ => ".cs",
+        });
+        var configuration = project.GetProperty("Configuration") is { Length: > 0 } own ? own : "Debug";
+        yield return ("BaseIntermediateOutputPath", "obj\\");
+        yield return ("IntermediateOutputPath", EvaluationTargetFramework(project.TargetFrameworks) is { } inner
+            ? $"obj\\{configuration}\\{inner}\\"
+            : $"obj\\{configuration}\\");
     }
 
     private static void ReadBuildFile(string file, BuildFileState state, bool isProps, int depth, HashSet<string> visited)
@@ -185,7 +221,7 @@ public static partial class ProjectParser
                             continue;
                         }
 
-                        state.Properties[property.Name.LocalName] = Expand(property.Value.Trim(), state, file);
+                        state.Properties[property.Name.LocalName] = ExpandValue(property.Value.Trim(), state, file);
                     }
 
                     break;
@@ -326,6 +362,11 @@ public static partial class ProjectParser
                 }
 
                 break;
+            case "Compile":
+                // A source-only package's files, such as TypeNameFormatter's, which the SDK compiles with the project.
+                state.CompileIncludes.AddRange(Split(include).Where(p => !p.Contains("@(", StringComparison.Ordinal) && !p.Contains("%(", StringComparison.Ordinal)));
+                state.CompileRemoves.AddRange(Split(remove));
+                break;
             case "Using":
                 foreach (var name in Split(include).Where(n => !n.Contains("$(", StringComparison.Ordinal)))
                 {
@@ -405,6 +446,16 @@ public static partial class ProjectParser
     /// unknown property is empty, as in MSBuild. Property functions are left as they are.
     /// </summary>
     private static string Expand(string text, BuildFileState state, string file) => Expand(text, state.Properties, file);
+
+    /// <summary>
+    /// A property's value, with property functions such as <c>$([System.IO.Path]::Combine(...))</c> evaluated as MSBuild
+    /// evaluates them, from the project's folder, which Microsoft.Testing.Platform's path of its generated source needs;
+    /// when they cannot be, the value of <see cref="Expand(string, BuildFileState, string)"/>.
+    /// </summary>
+    private static string ExpandValue(string text, BuildFileState state, string file) =>
+        text.Contains("$(", StringComparison.Ordinal)
+            ? MsBuildExpressions.Expand(text, state.Properties, file, state.ProjectDirectory) ?? Expand(text, state, file)
+            : text;
 
     private static string Expand(string text, Dictionary<string, string> properties, string file) =>
         PropertyReference().Replace(ThisFile(text, file), match =>

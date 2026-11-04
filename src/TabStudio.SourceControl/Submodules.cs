@@ -88,6 +88,41 @@ internal static partial class Submodules
         return match.Success ? (match.Groups["owner"].Value, TrimGit(match.Groups["name"].Value)) : null;
     }
 
+    /// <summary>
+    /// The repository a submodule URL names on any host: an HTTPS or SSH address, or one relative to the address of the
+    /// repository that has the submodule, as Git resolves <c>../lib.git</c>; <see langword="null"/> when it is neither.
+    /// </summary>
+    /// <param name="url">The submodule's URL.</param>
+    /// <param name="parent">The address of the repository that has the submodule.</param>
+    public static Git.GitRemoteAddress? Resolve(string url, Uri parent)
+    {
+        var text = url.Trim();
+        if (text.StartsWith("./", StringComparison.Ordinal) || text.StartsWith("../", StringComparison.Ordinal))
+        {
+            var parts = parent.AbsolutePath.Split('/', StringSplitOptions.RemoveEmptyEntries).ToList();
+            foreach (var part in text.Split('/', StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (part == "..")
+                {
+                    if (parts.Count == 0)
+                    {
+                        return null;
+                    }
+
+                    parts.RemoveAt(parts.Count - 1);
+                }
+                else if (part != ".")
+                {
+                    parts.Add(part);
+                }
+            }
+
+            text = new UriBuilder(parent.Scheme, parent.Host, parent.IsDefaultPort ? -1 : parent.Port, "/" + string.Join('/', parts)).Uri.ToString();
+        }
+
+        return Git.GitRemoteAddress.TryParse(text, out var address, out _, out _) ? address : null;
+    }
+
     private static string TrimGit(string name) => name.EndsWith(".git", StringComparison.OrdinalIgnoreCase) ? name[..^4] : name;
 
     [GeneratedRegex(@"^(?:(?:https?|git|ssh)://(?:[^@/]+@)?(?:www\.)?github\.com(?::\d+)?/|git@github\.com:)(?<owner>[A-Za-z0-9-]+)/(?<name>[A-Za-z0-9._-]+?)/?$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)]

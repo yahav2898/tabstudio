@@ -46,6 +46,11 @@ public sealed partial class PackageRestorer
     /// <param name="http">The client for web sources. The caller owns it and decides its timeout and proxy.</param>
     /// <exception cref="ArgumentException">The options name no packages folder or an unknown target framework.</exception>
     public PackageRestorer(PackageRestoreOptions options, HttpClient http)
+        : this(options, http, runtimeTargetFramework: null)
+    {
+    }
+
+    private PackageRestorer(PackageRestoreOptions options, HttpClient http, string? runtimeTargetFramework)
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(http);
@@ -69,8 +74,50 @@ public sealed partial class PackageRestorer
             .ToList();
         _frameworkPackages = new FrameworkPackages(options.FrameworkAssemblyNames, framework);
         _packages = new GlobalPackagesFolder(options.GlobalPackagesFolder);
-        _sharedFrameworks = new SharedFrameworks(_packages, CreateFeeds, options.TargetFramework, options.CompilerVersion);
+        _sharedFrameworks = new SharedFrameworks(_packages, CreateFeeds, options.TargetFramework, options.CompilerVersion, runtimeTargetFramework);
+        _runtimeTargetFramework = runtimeTargetFramework;
     }
+
+    private readonly string? _runtimeTargetFramework;
+    private readonly ConcurrentDictionary<string, PackageRestorer> _olderFrameworks = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// The older .NET a project targets, which its packages and shared frameworks are restored for, as the SDK restores
+    /// them; <see langword="null"/> when it targets <see cref="PackageRestoreOptions.TargetFramework"/> or newer, more than
+    /// one platform, .NET Framework or .NET Standard. Its programs still run on TabStudio's .NET, as a program that rolls
+    /// forward does.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public string? OlderTargetFrameworkOf(ProjectInfo project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        if (_runtimeTargetFramework is not null || project.TargetFrameworks.Count == 0)
+        {
+            return null;
+        }
+
+        NuGetFramework? newest = null;
+        foreach (var name in project.TargetFrameworks)
+        {
+            var framework = NuGetFramework.Parse(name);
+            if (framework.IsUnsupported
+                || framework.Framework != FrameworkConstants.FrameworkIdentifiers.NetCoreApp
+                || framework.HasPlatform
+                || framework.Version.Major < 6
+                || framework.Version >= _framework.Version)
+            {
+                return null;
+            }
+
+            newest = newest is null || framework.Version > newest.Version ? framework : newest;
+        }
+
+        return newest?.GetShortFolderName();
+    }
+
+    /// <summary>A restorer for an older .NET, whose programs run on this restorer's .NET.</summary>
+    private PackageRestorer ForOlderFramework(string targetFramework) =>
+        _olderFrameworks.GetOrAdd(targetFramework, name => new PackageRestorer(Options with { TargetFramework = name }, _http, Options.TargetFramework));
 
     /// <summary>The options the restorer was created with.</summary>
     public PackageRestoreOptions Options { get; }
@@ -99,12 +146,17 @@ public sealed partial class PackageRestorer
     public async Task<RestoreResult> RestoreAsync(ProjectInfo project, IProgress<RestoreProgress>? progress = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(project);
+        if (OlderTargetFrameworkOf(project) is { } older)
+        {
+            return await ForOlderFramework(older).RestoreAsync(project, progress, cancellationToken).ConfigureAwait(false);
+        }
 
         var stopwatch = Stopwatch.StartNew();
         var diagnostics = new List<BuildDiagnostic>();
         var frameworkDiagnostics = new List<BuildDiagnostic>();
         var frameworks = await RestoreFrameworksAsync(project, frameworkDiagnostics, cancellationToken).ConfigureAwait(false);
         project = await WithUnoPackagesAsync(project, diagnostics, cancellationToken).ConfigureAwait(false);
+        project = WithForwardedFrameworkPackages(project);
         var graph = ProjectPackageReferences.ReadGraph(project, diagnostics);
         var cachePath = GetCacheFilePath(project);
         var inputsHash = RestoreCache.ComputeInputsHash(graph, Options);
@@ -127,6 +179,7 @@ public sealed partial class PackageRestorer
                 project.Name)));
 
         IReadOnlyList<RestoredPackage> packages = [];
+        var sourcesFailed = false;
         if (graph.HasPackages)
         {
             progress?.Report(new RestoreProgress(RestoreStage.Resolving, $"Resolving the packages of {project.Name}", 0, 0));
@@ -142,6 +195,7 @@ public sealed partial class PackageRestorer
                 }
             }
 
+            sourcesFailed = finder.Failures.Count > 0;
             diagnostics.AddRange(finder.Failures.Select(f => DescribeSourceFailure(f, project.Name, isError: resolution.Unresolved.Count > 0)));
             packages = await InstallAsync(resolution.Packages, project.Name, diagnostics, progress, cancellationToken).ConfigureAwait(false);
         }
@@ -160,8 +214,10 @@ public sealed partial class PackageRestorer
         };
 
         // A restore with errors still returns the packages it restored, but it is never remembered: the next
-        // restore with the same inputs tries the sources again and reports the errors again.
-        if (Options.UseRestoreCache && result.Success)
+        // restore with the same inputs tries the sources again and reports the errors again. Nor is one that could not
+        // read a source and settled for the versions already on the device (a warning): remembered, it kept those
+        // versions for good, even once the source answered again with the ones NuGet would pick.
+        if (Options.UseRestoreCache && result.Success && !sourcesFailed)
         {
             RestoreCache.TryWrite(cachePath, inputsHash, result);
         }
@@ -300,7 +356,7 @@ public sealed partial class PackageRestorer
 
     private List<IPackageFeed> CreateFeeds() =>
         Options.Sources
-            .Select(source => source.IsLocal ? (IPackageFeed)new LocalFolderPackageFeed(source) : new HttpPackageFeed(source, _http))
+            .Select(source => source.IsLocal ? (IPackageFeed)new LocalFolderPackageFeed(source) : new HttpPackageFeed(source, _http, Options.HttpRetryDelays))
             .ToList();
 
     /// <summary>Downloads the packages that are not installed yet and selects the assets of every package.</summary>

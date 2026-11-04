@@ -224,6 +224,11 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
             return download;
         }
 
+        if (await HandleGitAsync(request, path, cancellationToken).ConfigureAwait(false) is { } git)
+        {
+            return git;
+        }
+
         if (await HandleLfsAsync(request, path, cancellationToken).ConfigureAwait(false) is { } lfs)
         {
             return lfs;
@@ -253,7 +258,7 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
             response = Handle(request.Method.Method, path, Query(uri), body, signedIn);
         }
 
-        return await ApplyETagAsync(request, response).ConfigureAwait(false);
+        return ShapeArchive(request, path, await ApplyETagAsync(request, response).ConfigureAwait(false));
     }
 
     private HttpResponseMessage Handle(string method, string path, Dictionary<string, string> query, JsonNode? body, bool signedIn)
@@ -318,7 +323,7 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
             ("POST", "git/commits") => CreateCommit(repo, body!),
             ("GET", _) when rest.StartsWith("git/trees/", StringComparison.Ordinal) => GetTree(repo, rest["git/trees/".Length..], query.ContainsKey("recursive")),
             ("POST", "git/trees") => CreateTree(repo, body!),
-            ("GET", _) when rest.StartsWith("git/blobs/", StringComparison.Ordinal) => GetBlob(repo, rest["git/blobs/".Length..]),
+            ("GET", _) when rest.StartsWith("git/blobs/", StringComparison.Ordinal) => TooLargeBlob(repo, rest["git/blobs/".Length..]) ?? GetBlob(repo, rest["git/blobs/".Length..]),
             ("POST", "git/blobs") => Json(new JsonObject { ["sha"] = StoreBlob(repo, Convert.FromBase64String(body!["content"]!.GetValue<string>())) }, HttpStatusCode.Created),
             ("GET", "commits") => History(repo, query["sha"], int.Parse(query["per_page"], System.Globalization.CultureInfo.InvariantCulture)),
             ("GET", _) when rest.StartsWith("commits/", StringComparison.Ordinal) => ResolveCommit(repo, rest["commits/".Length..]),
@@ -526,7 +531,8 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
         using (var zip = new ZipArchive(stream, ZipArchiveMode.Create, leaveOpen: true))
         {
             var top = $"{repo.Owner}-{repo.Name}-{sha[..7]}/";
-            zip.CreateEntry(top);
+            // Fixed times, so the same commit's archive is the same bytes every time, as GitHub's is.
+            zip.CreateEntry(top).LastWriteTime = ArchiveTime;
             foreach (var (path, file) in repo.Trees[repo.Commits[sha].Tree])
             {
                 if (ArchiveOmits.Contains(path) || file.Mode == "160000")
@@ -535,6 +541,7 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
                 }
 
                 var entry = zip.CreateEntry(top + path);
+                entry.LastWriteTime = ArchiveTime;
                 using var output = entry.Open();
                 var content = repo.Blobs[file.Sha];
                 output.Write(ArchiveAlters.Contains(path) ? [.. content, .. "// substituted\n"u8] : content);
@@ -543,6 +550,8 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
 
         return new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(stream.ToArray()) };
     }
+
+    private static readonly DateTimeOffset ArchiveTime = new(2026, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
     private static string StoreBlob(Repo repo, byte[] content)
     {

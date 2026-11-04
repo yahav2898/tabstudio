@@ -178,6 +178,163 @@ public sealed class SdkProjectItemsTests
     }
 
     [Fact]
+    public void A_resx_file_two_packages_add_keeps_what_each_says_about_it()
+    {
+        // moq's Moq.Sdk: ThisAssembly.Resources adds every EmbeddedResource as an additional file before ThisAssembly.Strings
+        // adds its .resx files from ResxCode items. The SDK writes build_metadata.ResxCode.* for the file all the same, and
+        // without them the strings generator wrote an empty ThisAssembly.Strings (CS0117 for every string).
+        using var temp = new TempDirectory();
+        temp.Write("Lib/Resources.resx", "<root />");
+        var path = temp.Write("Lib/Lib.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        var resources = temp.Write("packages/thisassembly.resources/build/netstandard2.0/ThisAssembly.Resources.targets", """
+            <Project>
+              <ItemGroup>
+                <CompilerVisibleItemMetadata Include="EmbeddedResource" MetadataName="ThisAssemblyResource" />
+              </ItemGroup>
+              <Target Name="PrepareEmbeddedResources" DependsOnTargets="PrepareResourceNames" />
+              <Target Name="_InjectResourcesAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="PrepareEmbeddedResources">
+                <ItemGroup>
+                  <EmbeddedResource ThisAssemblyResource="true" />
+                  <AdditionalFiles Include="@(EmbeddedResource)" />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+        var strings = temp.Write("packages/thisassembly.strings/build/netstandard2.0/ThisAssembly.Strings.targets", """
+            <Project>
+              <Target Name="_InjectResxAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="PrepareResourceNames">
+                <ItemGroup>
+                  <ResxCode Include="@(EmbeddedResource)" ThisAssemblyStrings="true"
+                            Condition="'%(EmbeddedResource.Type)' == 'Resx' And '%(EmbeddedResource.WithCulture)' != 'true' And '%(EmbeddedResource.GenerateResource)' != 'false' And '%(EmbeddedResource.ManifestResourceName)' != ''" />
+                  <AdditionalFiles Include="@(ResxCode)" />
+                </ItemGroup>
+              </Target>
+              <ItemGroup>
+                <CompilerVisibleItemMetadata Include="ResxCode" MetadataName="ThisAssemblyStrings" />
+                <CompilerVisibleItemMetadata Include="ResxCode" MetadataName="ManifestResourceName" />
+              </ItemGroup>
+            </Project>
+            """);
+
+        var project = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(path), [resources, strings]);
+
+        var file = Assert.Single(project.AdditionalFiles, f => f.ItemTypes is not null);
+        Assert.Equal("Resources.resx", file.Include);
+        Assert.Contains("ResxCode", file.ItemTypes!);
+        Assert.Contains("EmbeddedResource", file.ItemTypes!);
+        Assert.Equal("true", file.Metadata["ThisAssemblyStrings"]);
+        Assert.Equal("true", file.Metadata["ThisAssemblyResource"]);
+        Assert.Equal("Lib.Resources", file.Metadata["ManifestResourceName"]);
+    }
+
+    [Fact]
+    public void Microsoft_Testing_Platform_s_SelfRegisteredExtensions_is_generated_in_the_root_namespace()
+    {
+        // Terminal.Gui's UnitTests.Parallelizable has `using UnitTests.Parallelizable;`, a namespace only the class
+        // Microsoft.Testing.Platform's task generates for an xUnit.net v3 project declares (CS0234 without it).
+        using var temp = new TempDirectory();
+        var path = temp.Write("UnitTestsParallelizable/UnitTests.Parallelizable.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework><OutputType>Exe</OutputType></PropertyGroup>
+            </Project>
+            """);
+        var props = temp.Write("packages/xunit.v3.core/buildTransitive/xunit.v3.core.props", """
+            <Project>
+              <PropertyGroup>
+                <GenerateSelfRegisteredExtensions>true</GenerateSelfRegisteredExtensions>
+                <IsTestingPlatformApplication Condition=" '$(IsTestingPlatformApplication)' == '' ">true</IsTestingPlatformApplication>
+              </PropertyGroup>
+            </Project>
+            """);
+        var targets = temp.Write("packages/microsoft.testing.platform.msbuild/buildMultiTargeting/Microsoft.Testing.Platform.MSBuild.targets", """
+            <Project>
+              <Target Name="_CalculateGenerateSelfRegisteredExtensions">
+                <PropertyGroup>
+                  <GenerateSelfRegisteredExtensions Condition=" '$(GenerateSelfRegisteredExtensions)' == '' " >$(IsTestingPlatformApplication)</GenerateSelfRegisteredExtensions>
+                </PropertyGroup>
+              </Target>
+              <PropertyGroup>
+                <_SelfRegisteredExtensionsSourceName>SelfRegisteredExtensions$(DefaultLanguageSourceExtension)</_SelfRegisteredExtensionsSourceName>
+                <_SelfRegisteredExtensionsSourcePath>$([System.IO.Path]::Combine($(IntermediateOutputPath),$(_SelfRegisteredExtensionsSourceName)))</_SelfRegisteredExtensionsSourcePath>
+                <_SelfRegisteredExtensionsSourcePath>$([MSBuild]::NormalizePath($(MSBuildProjectDirectory), $(_SelfRegisteredExtensionsSourcePath)))</_SelfRegisteredExtensionsSourcePath>
+              </PropertyGroup>
+              <Target Name="_GenerateSelfRegisteredExtensions" Condition=" '$(GenerateSelfRegisteredExtensions)' == 'true' " >
+                <TestingPlatformSelfRegisteredExtensions SelfRegisteredExtensionsSourcePath="$(_SelfRegisteredExtensionsSourcePath)"
+                                                         SelfRegisteredExtensionsBuilderHook="@(TestingPlatformBuilderHook)"
+                                                         RootNamespace="$(RootNamespace)"
+                                                         Language="$(Language)" />
+              </Target>
+              <Target Name="_IncludeGenerateAutoRegisteredExtensionsIntoCompilation" BeforeTargets="BeforeCompile;XamlPreCompile"
+                      DependsOnTargets="_CalculateGenerateSelfRegisteredExtensions;_GenerateSelfRegisteredExtensions">
+                <ItemGroup Condition=" '$(GenerateSelfRegisteredExtensions)' == 'true' ">
+                  <Compile Include="$(_SelfRegisteredExtensionsSourcePath)" />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+
+        var project = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(path), [props, targets]);
+
+        var file = Assert.Single(project.PackageCompileFiles);
+        Assert.Equal(Path.Combine(temp.Path, "UnitTestsParallelizable", "obj", "Debug", "net10.0", "SelfRegisteredExtensions.cs"), file.FullPath);
+        Assert.Contains("namespace UnitTests.Parallelizable", file.Text, StringComparison.Ordinal);
+        Assert.Contains("internal static class SelfRegisteredExtensions", file.Text, StringComparison.Ordinal);
+        Assert.False(File.Exists(file.FullPath));
+        Assert.Null(project.GetProperty("RootNamespace"));
+    }
+
+    [Fact]
+    public void A_source_a_target_writes_from_a_property_gets_the_characters_its_escapes_stand_for()
+    {
+        // FastEndpoints.Swagger writes its module initializer from a property whose semicolons are written %3b; MSBuild
+        // hands WriteLinesToFile the text unescaped. Written as it was, CleanArchitecture's web project had 14 errors.
+        using var temp = new TempDirectory();
+        var path = temp.Write("Web/Web.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.Web">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        var targets = temp.Write("packages/fastendpoints.swagger/build/FastEndpoints.Swagger.targets", """
+            <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+              <PropertyGroup>
+                <SwaggerExportPath Condition="'$(SwaggerExportPath)' == ''">wwwroot/openapi</SwaggerExportPath>
+              </PropertyGroup>
+              <Target Name="GenerateSwaggerExportPathInitializer" BeforeTargets="CoreCompile" Condition="'$(MSBuildProjectName)' != 'FastEndpoints.Swagger'">
+                <PropertyGroup>
+                  <_SwaggerInitFile>$(IntermediateOutputPath)SwaggerExportPathInitializer.g.cs</_SwaggerInitFile>
+                  <_SwaggerInitFileContent>
+            using System.Runtime.CompilerServices%3b
+            namespace FastEndpoints.Swagger%3b
+            internal static class SwaggerExportPathInitializer
+            {
+                [ModuleInitializer]
+                internal static void Initialize() => DocumentOptions.SwaggerExportPath = "$(SwaggerExportPath)"%3b
+            }
+                  </_SwaggerInitFileContent>
+                </PropertyGroup>
+                <WriteLinesToFile File="$(_SwaggerInitFile)" Lines="$(_SwaggerInitFileContent)" Overwrite="true" WriteOnlyWhenDifferent="true"/>
+                <ItemGroup>
+                  <Compile Include="$(_SwaggerInitFile)"/>
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+
+        var project = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(path), [targets]);
+
+        var file = Assert.Single(project.PackageCompileFiles);
+        Assert.Equal("SwaggerExportPathInitializer.g.cs", Path.GetFileName(file.FullPath));
+        Assert.DoesNotContain("%3b", file.Text, StringComparison.Ordinal);
+        Assert.Contains("using System.Runtime.CompilerServices;", file.Text, StringComparison.Ordinal);
+        Assert.Contains("DocumentOptions.SwaggerExportPath = \"wwwroot/openapi\";", file.Text, StringComparison.Ordinal);
+        Assert.Contains("namespace FastEndpoints.Swagger;", file.Text, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void A_package_s_targets_remove_the_generator_it_replaces()
     {
         // eShop's Ordering.API: Microsoft.Extensions.Telemetry.Abstractions writes [LoggerMessage] code itself and removes
@@ -217,6 +374,200 @@ public sealed class SdkProjectItemsTests
             new AnalyzerItem(telemetry, "microsoft.extensions.telemetry.abstractions")]);
 
         Assert.Equal(new[] { framework, package }, removed);
+    }
+
+    [Fact]
+    public void CommunityToolkit_Mvvm_keeps_its_generators_in_a_C_sharp_project()
+    {
+        // Its targets remove its generators where no C# compiler is found (CSharpCoreTargetsPath empty) or the compiler
+        // is older than Roslyn 4. Running their DependsOnTargets took [ObservableProperty]'s generator away (CS0103 on the
+        // properties it writes); the generators stay in C# and go in Visual Basic, as with the SDK.
+        using var temp = new TempDirectory();
+        var targets = temp.Write("packages/communitytoolkit.mvvm/8.4.0/buildTransitive/CommunityToolkit.Mvvm.SourceGenerators.targets", """
+            <Project>
+              <Target Name="MVVMToolkitGatherAnalyzers">
+                <ItemGroup>
+                  <MVVMToolkitAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'CommunityToolkit.Mvvm'" />
+                </ItemGroup>
+              </Target>
+              <Target Name="MVVMToolkitRemoveAnalyzersForRosynNotFound" Condition="'$(CSharpCoreTargetsPath)' == ''"
+                      AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets" DependsOnTargets="MVVMToolkitGatherAnalyzers">
+                <ItemGroup><Analyzer Remove="@(MVVMToolkitAnalyzer)"/></ItemGroup>
+              </Target>
+              <Target Name="MVVMToolkitRemoveAnalyzersForRoslyn3" Condition="'$(CSharpCoreTargetsPath)' != ''"
+                      AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets" DependsOnTargets="MVVMToolkitGatherAnalyzers">
+                <GetAssemblyIdentity AssemblyFiles="$([System.IO.Path]::Combine(`$([System.IO.Path]::GetDirectoryName($(CSharpCoreTargetsPath)))`,`Microsoft.Build.Tasks.CodeAnalysis.dll`))">
+                  <Output TaskParameter="Assemblies" ItemName="MVVMToolkitCurrentCompilerAssemblyIdentity"/>
+                </GetAssemblyIdentity>
+                <PropertyGroup>
+                  <MVVMToolkitCurrentCompilerVersion>@(MVVMToolkitCurrentCompilerAssemblyIdentity->'%(Version)')</MVVMToolkitCurrentCompilerVersion>
+                  <MVVMToolkitCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(MVVMToolkitCurrentCompilerVersion), 4.0))">true</MVVMToolkitCurrentCompilerVersionIsNotNewEnough>
+                </PropertyGroup>
+                <ItemGroup Condition ="'$(MVVMToolkitCurrentCompilerVersionIsNotNewEnough)' == 'true'">
+                  <Analyzer Remove="@(MVVMToolkitAnalyzer)"/>
+                </ItemGroup>
+                <PropertyGroup>
+                  <MVVMToolkitIsManualRoslynMultiTargetingLogicNeeded Condition="'$(MVVMToolkitCurrentCompilerVersionIsNotNewEnough)' != 'true' AND '$(SupportsRoslynComponentVersioning)' != 'true'">true</MVVMToolkitIsManualRoslynMultiTargetingLogicNeeded>
+                </PropertyGroup>
+              </Target>
+            </Project>
+            """);
+        var generator = Path.Combine(temp.Path, "packages", "communitytoolkit.mvvm", "8.4.0", "analyzers", "dotnet", "roslyn4.12", "cs", "CommunityToolkit.Mvvm.SourceGenerators.dll");
+        var csharp = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(temp.Write("App/App.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup></Project>
+            """)), [targets]);
+        var basic = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(temp.Write("Vb/Vb.vbproj", """
+            <Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup></Project>
+            """)), [targets]);
+
+        Assert.Empty(TargetItems.RemovedAnalyzers(csharp, [new AnalyzerItem(generator, "CommunityToolkit.Mvvm")]));
+        Assert.Equal(new[] { generator }, TargetItems.RemovedAnalyzers(basic, [new AnalyzerItem(generator, "CommunityToolkit.Mvvm")]));
+    }
+
+    [Fact]
+    public void A_target_reads_the_Compile_items_with_their_well_known_metadata()
+    {
+        // Moq's AddConstants picks the Compile items under Scenarios/ by %(RelativeDir).
+        using var temp = new TempDirectory();
+        temp.Write("Tests/Scenarios/MultipleUses.cs", "class MultipleUses { }");
+        temp.Write("Tests/Other.cs", "class Other { }");
+        var path = temp.Write("Tests/Tests.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <Target Name="AddScenarios" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+                <ItemGroup>
+                  <AdditionalFiles Include="@(Compile)" Condition="$([MSBuild]::ValueOrDefault('%(RelativeDir)', '').StartsWith('Scenarios'))" />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+
+        var project = ProjectParser.Load(path);
+
+        var files = project.AdditionalFiles.Where(f => f.ItemTypes is not null).Select(f => f.Include.Replace('\\', '/')).ToList();
+        Assert.Equal(new[] { "Scenarios/MultipleUses.cs" }, files);
+    }
+
+    [Fact]
+    public void Metadata_a_target_sets_from_other_metadata_follows_its_property_functions()
+    {
+        // ThisAssembly.Constants' PrepareConstants: AreaPath from RelativeDir and Filename, then Area with '\' and '/' as dots.
+        using var temp = new TempDirectory();
+        temp.Write("Tests/Scenarios/MultipleUses.cs", "class MultipleUses { }");
+        var path = temp.Write("Tests/Tests.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <Target Name="Areas" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+                <ItemGroup>
+                  <FileConstant Include="@(Compile)" />
+                  <FileConstant Condition="!$([System.IO.Path]::IsPathRooted('%(RelativeDir)')) OR '%(Link)' != ''">
+                    <AreaPath Condition="!$([System.IO.Path]::IsPathRooted('%(RelativeDir)'))">%(RelativeDir)%(Filename)</AreaPath>
+                    <FileExtension Condition="!$([System.IO.Path]::IsPathRooted('%(RelativeDir)'))">%(Extension)</FileExtension>
+                  </FileConstant>
+                  <FileConstant Condition="'%(AreaPath)' != ''">
+                    <Area>$([MSBuild]::ValueOrDefault('%(AreaPath)', '').Replace('\', '.').Replace('/', '.'))</Area>
+                    <Value>%(AreaPath)%(FileExtension)</Value>
+                  </FileConstant>
+                  <AdditionalFiles Include="@(FileConstant)" />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+
+        var file = Assert.Single(ProjectParser.Load(path).AdditionalFiles, f => f.ItemTypes is not null);
+
+        Assert.Equal("Scenarios/MultipleUses", file.Metadata.GetValueOrDefault("AreaPath")?.Replace('\\', '/'));
+        Assert.Equal("Scenarios.MultipleUses", file.Metadata.GetValueOrDefault("Area"));
+        Assert.Equal("Scenarios/MultipleUses.cs", file.Metadata.GetValueOrDefault("Value")?.Replace('\\', '/'));
+    }
+
+    [Fact]
+    public void ThisAssembly_Constants_and_Project_get_the_constants_their_targets_make()
+    {
+        // Moq's static proxy tests use ThisAssembly.Constants.Scenarios.MultipleUses, a FileConstant its own target adds
+        // from each Compile item under Scenarios/, and ThisAssembly.Project.MSBuildProjectDirectory, from a ProjectProperty
+        // item: the packages' targets turn both into Constant items, which reach the generator as additional files without
+        // a file. None did: 10 CS0117 on ThisAssembly.
+        using var temp = new TempDirectory();
+        temp.Write("Tests/Scenarios/MultipleUses.cs", "class MultipleUses { }");
+        temp.Write("Tests/Other.cs", "class Other { }");
+        var path = temp.Write("Tests/Tests.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup>
+                <ProjectProperty Include="MSBuildProjectDirectory" />
+                <ProjectProperty Include="CI" />
+                <ProjectProperty Include="CI" />
+              </ItemGroup>
+              <Target Name="AddConstants" BeforeTargets="PrepareForBuild;CompileDesignTime;GenerateMSBuildEditorConfigFileShouldRun">
+                <ItemGroup>
+                  <FileConstant Include="@(Compile)" Condition="$([MSBuild]::ValueOrDefault('%(RelativeDir)', '').StartsWith('Scenarios'))" />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+        var project = temp.Write("packages/thisassembly.project/build/ThisAssembly.Project.targets", """
+            <Project>
+              <Target Name="PrepareProjectProperties" BeforeTargets="PrepareConstants" DependsOnTargets="$(PrepareProjectPropertiesDependsOn)">
+                <ItemGroup>
+                  <ProjectProperty Include="$(ProjectProperty)" Condition="'$(ProjectProperty)' != ''" />
+                  <ProjectPropertyDistinct Include="@(ProjectProperty -> Distinct())" />
+                </ItemGroup>
+                <ItemGroup>
+                  <Constant Include="@(ProjectPropertyDistinct -> 'Project.%(Identity)')" Value="$(%(ProjectPropertyDistinct.Identity))" Comment="%(ProjectPropertyDistinct.Comment)" Root="." />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+        var constants = temp.Write("packages/thisassembly.constants/build/ThisAssembly.Constants.targets", """
+            <Project>
+              <ItemGroup>
+                <CompilerVisibleItemMetadata Include="Constant" MetadataName="ItemType" />
+                <CompilerVisibleItemMetadata Include="Constant" MetadataName="Value" />
+                <CompilerVisibleItemMetadata Include="Constant" MetadataName="Root" />
+              </ItemGroup>
+              <Target Name="PrepareConstants">
+                <ItemGroup>
+                  <FileConstant Condition="!$([System.IO.Path]::IsPathRooted('%(RelativeDir)')) OR '%(Link)' != ''">
+                    <AreaPath Condition="!$([System.IO.Path]::IsPathRooted('%(RelativeDir)'))">%(RelativeDir)%(Filename)</AreaPath>
+                    <FileExtension Condition="!$([System.IO.Path]::IsPathRooted('%(RelativeDir)'))">%(Extension)</FileExtension>
+                  </FileConstant>
+                  <FileConstant Condition="'%(AreaPath)' != ''">
+                    <Area>$([MSBuild]::ValueOrDefault('%(AreaPath)', '').Replace('\', '.').Replace('/', '.'))</Area>
+                    <Value>%(AreaPath)%(FileExtension)</Value>
+                  </FileConstant>
+                  <Constant Include="@(FileConstant -> '%(Area)')" Condition="'%(FileConstant.Area)' != '' AND '%(FileConstant.Value)' != ''"
+                            Value="%(FileConstant.Value)" Comment="%(FileConstant.Comment)" />
+                </ItemGroup>
+                <ItemGroup>
+                  <Constant Update="@(Constant)">
+                    <Value>$([MSBuild]::ValueOrDefault('%(Constant.Value)', '').Replace('&#xD;&#xA;', '`n').Replace('&#xA;', '`n'))</Value>
+                  </Constant>
+                </ItemGroup>
+              </Target>
+              <Target Name="_InjectConstantAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="PrepareResourceNames;PrepareConstants">
+                <ItemGroup>
+                  <Constant Update="@(Constant)" Condition="$([MSBuild]::ValueOrdefault('%(Constant.Value)', '').Contains(';'))">
+                    <Value>|$([MSBuild]::ValueOrdefault('%(Constant.Value)', '').Replace(';', '|'))|</Value>
+                  </Constant>
+                  <AdditionalFiles Include="@(Constant)" />
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+
+        var result = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(path), [project, constants]);
+
+        var items = result.AdditionalFiles.Where(f => f.ItemTypes?.Contains("Constant") == true).ToDictionary(f => f.Include, StringComparer.Ordinal);
+        var seen = "targets: " + string.Join(", ", result.CompilerTargets.Select(t => t.Attribute("Name")?.Value)) + "\n"
+            + string.Join("\n", result.AdditionalFiles.Select(f => $"{f.Include} [{string.Join(",", f.ItemTypes ?? [])}] {string.Join("; ", f.Metadata.Select(m => m.Key + "=" + m.Value))}"));
+        Assert.True(items.ContainsKey("Scenarios.MultipleUses"), seen);
+        Assert.Equal(new[] { "Project.CI", "Project.MSBuildProjectDirectory", "Scenarios.MultipleUses" }, items.Keys.Order(StringComparer.Ordinal));
+        Assert.All(items.Values, f => Assert.True(f.IsItemOnly));
+        Assert.Equal("Scenarios/MultipleUses.cs", items["Scenarios.MultipleUses"].Metadata["Value"].Replace('\\', '/'));
+        Assert.Equal(Path.GetDirectoryName(path), items["Project.MSBuildProjectDirectory"].Metadata["Value"]);
+        Assert.Equal(".", items["Project.MSBuildProjectDirectory"].Metadata["Root"]);
+        Assert.Contains(result.CompilerVisibleItemMetadata, m => m is { ItemType: "Constant", MetadataName: "ItemType" });
     }
 
     [Fact]

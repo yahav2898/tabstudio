@@ -131,6 +131,8 @@ jobs:
                 echo "$name: the first attempt failed and the retry passed (see $name.log)" >> ci-out/FLAKY.txt
               else
                 status=1
+                # The failures themselves, which the tail below (the end of the first run) does not reach.
+                grep -E -A30 "^  Failed " "ci-out/$name.retry.log" | head -n 200 || true
               fi
             fi
             tail -n 40 "ci-out/$name.log"
@@ -238,7 +240,7 @@ jobs:
           curl -fsSL https://download.eclipse.org/jdtls/milestones/1.58.0/jdt-language-server-1.58.0-202604151538.tar.gz -o "$RUNNER_TEMP/jdtls.tar.gz"
           echo "2a5bbe55ec91b4325392050dc422cead3220a2459b3766be35e1fff45b4a50d9  $RUNNER_TEMP/jdtls.tar.gz" | sha256sum -c -
           tar -xzf "$RUNNER_TEMP/jdtls.tar.gz" -C "$RUNNER_TEMP/jdtls"
-          curl -fsSL https://open-vsx.org/api/vscjava/vscode-java-debug/0.60.0/file/vscjava.vscode-java-debug-0.60.0.vsix -o "$RUNNER_TEMP/java-debug.vsix"
+          curl --retry 5 --retry-delay 5 --retry-all-errors -fsSL https://open-vsx.org/api/vscjava/vscode-java-debug/0.60.0/file/vscjava.vscode-java-debug-0.60.0.vsix -o "$RUNNER_TEMP/java-debug.vsix"
           echo "f09ebe358a7b08b3c17b21b8d8207b0649acad120eb6f1604dc4f15379f59d66  $RUNNER_TEMP/java-debug.vsix" | sha256sum -c -
           unzip -q "$RUNNER_TEMP/java-debug.vsix" -d "$RUNNER_TEMP/java-debug"
           echo "$RUNNER_TEMP/jdtls/bin" >> "$GITHUB_PATH"
@@ -569,6 +571,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # The repositories, their packages and the toolchains above filled the runner's disk while cloning ("No space left
+      # on device", with no step's log kept). None of these is used here: Swift is installed below in its own version.
+      - name: Make room for the repositories
+        run: |
+          df -h "$HOME"
+          sudo rm -rf /usr/share/swift /opt/ghc /usr/local/.ghcup /usr/local/share/boost /usr/local/share/powershell \
+            /opt/hostedtoolcache/CodeQL /opt/hostedtoolcache/PyPy /opt/hostedtoolcache/Ruby /opt/microsoft/msedge || true
+          df -h "$HOME"
+
       - uses: actions/setup-dotnet@v4
         with:
           global-json-file: global.json
@@ -595,7 +606,10 @@ jobs:
           distribution: temurin
           java-version: '21'
 
+      # rust-analyzer and the Rust sources it reads, for the squiggles the Rust repositories' files are compared by.
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rust-analyzer, rust-src
 
       - uses: actions/setup-node@v4
         with:
@@ -608,9 +622,33 @@ jobs:
 
       - name: Install Maven
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y maven
+          sudo apt-get -o Acquire::Retries=5 update -qq
+          sudo apt-get -o Acquire::Retries=5 install -y maven
           mvn -v; cargo --version; uv --version; python3 --version; node --version; go version; cmake --version | head -1
+
+      # The language servers whose squiggles RealRepositoryTests compares with each repository's compiler, at the
+      # versions the Toolchain Store installs (toolchains.json): Pyright (whose command line is also the type checker
+      # of projects that configure Pyright), typescript-language-server with TypeScript, gopls, and Eclipse JDT with
+      # its java-debug bundle, as the IDE job installs them. rust-analyzer comes with the Rust toolchain above.
+      - name: Install language servers
+        timeout-minutes: 10
+        run: |
+          # A network blip on the package registries is tried again rather than failing the job.
+          retry() { for wait in 5 15 30 0; do "$@" && return 0; [ "$wait" = 0 ] && return 1; echo "::warning::'$*' failed; trying again in $wait s"; sleep "$wait"; done; }
+          retry npm install -g pyright@1.1.403 typescript-language-server@6.0.2 typescript@5.9.3
+          retry go install golang.org/x/tools/gopls@v0.21.1
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+          mkdir -p "$RUNNER_TEMP/jdtls" "$RUNNER_TEMP/java-debug"
+          curl --retry 5 --retry-delay 5 --retry-all-errors -fsSL https://download.eclipse.org/jdtls/milestones/1.58.0/jdt-language-server-1.58.0-202604151538.tar.gz -o "$RUNNER_TEMP/jdtls.tar.gz"
+          echo "2a5bbe55ec91b4325392050dc422cead3220a2459b3766be35e1fff45b4a50d9  $RUNNER_TEMP/jdtls.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/jdtls.tar.gz" -C "$RUNNER_TEMP/jdtls"
+          curl --retry 5 --retry-delay 5 --retry-all-errors -fsSL https://open-vsx.org/api/vscjava/vscode-java-debug/0.60.0/file/vscjava.vscode-java-debug-0.60.0.vsix -o "$RUNNER_TEMP/java-debug.vsix"
+          echo "f09ebe358a7b08b3c17b21b8d8207b0649acad120eb6f1604dc4f15379f59d66  $RUNNER_TEMP/java-debug.vsix" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/java-debug.vsix" -d "$RUNNER_TEMP/java-debug"
+          echo "$RUNNER_TEMP/jdtls/bin" >> "$GITHUB_PATH"
+          echo "TABSTUDIO_JAVA_DEBUG_BUNDLE=$RUNNER_TEMP/java-debug/extension/server/com.microsoft.java.debug.plugin-0.53.2.jar" >> "$GITHUB_ENV"
+          export PATH="$(go env GOPATH)/bin:$RUNNER_TEMP/jdtls/bin:$PATH"
+          pyright --version; typescript-language-server --version; tsc --version; gopls version | head -1; rust-analyzer --version
 
       # PHP with Composer, the Kotlin compiler with Gradle, and Swift, for the PHP, Kotlin and Swift repositories, at the
       # versions the Toolchain Store installs.
@@ -624,16 +662,16 @@ jobs:
       - name: Install Kotlin, Gradle and Swift
         timeout-minutes: 15
         run: |
-          curl -fsSL https://services.gradle.org/distributions/gradle-8.14.4-bin.zip -o "$RUNNER_TEMP/gradle.zip"
+          curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors https://services.gradle.org/distributions/gradle-8.14.4-bin.zip -o "$RUNNER_TEMP/gradle.zip"
           echo "f1771298a70f6db5a29daf62378c4e18a17fc33c9ba6b14362e0cdf40610380d  $RUNNER_TEMP/gradle.zip" | sha256sum -c -
           unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/gradle-8.14.4/bin" >> "$GITHUB_PATH"
-          curl -fsSL https://github.com/JetBrains/kotlin/releases/download/v2.4.21/kotlin-compiler-2.4.21.zip -o "$RUNNER_TEMP/kotlinc.zip"
+          curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors https://github.com/JetBrains/kotlin/releases/download/v2.4.21/kotlin-compiler-2.4.21.zip -o "$RUNNER_TEMP/kotlinc.zip"
           echo "7cc140e76daf416a0424a5557f99afd7ca89ebd463ea1101261e3e01c33e75cd  $RUNNER_TEMP/kotlinc.zip" | sha256sum -c -
           unzip -q "$RUNNER_TEMP/kotlinc.zip" -d "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/kotlinc/bin" >> "$GITHUB_PATH"
-          sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq libz3-dev libncurses-dev libedit2 libpython3-dev > /dev/null
-          curl -fsSL https://download.swift.org/swift-6.4.1-release/ubuntu2404/swift-6.4.1-RELEASE/swift-6.4.1-RELEASE-ubuntu24.04.tar.gz -o "$RUNNER_TEMP/swift.tar.gz"
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=5 install -y -qq libz3-dev libncurses-dev libedit2 libpython3-dev > /dev/null
+          curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors https://download.swift.org/swift-6.4.1-release/ubuntu2404/swift-6.4.1-RELEASE/swift-6.4.1-RELEASE-ubuntu24.04.tar.gz -o "$RUNNER_TEMP/swift.tar.gz"
           echo "7d246c7114077ad01dba4ad897628446ada4c489d6c7dbcf39ae3f25cbe17e8b  $RUNNER_TEMP/swift.tar.gz" | sha256sum -c -
           mkdir -p "$RUNNER_TEMP/swift"
           tar -xzf "$RUNNER_TEMP/swift.tar.gz" -C "$RUNNER_TEMP/swift" --strip-components=1
@@ -672,7 +710,11 @@ jobs:
           dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame-hang-timeout 90m --blame-hang-dump-type none \
             --filter "FullyQualifiedName~RealRepositoryTests" --logger "console;verbosity=normal" > ci-out/test.log 2>&1 || status=$?
           tail -n 60 ci-out/test.log
-          for summary in ci-out/summary.md ci-out/summary-polyglot.md; do
+          # What failed the gate, which the end of the log (the summary table) does not reach.
+          grep -E -A12 "^  Failed |Error Message:" ci-out/test.log | grep -v -E "^\| " | head -n 120 || true
+          # A repository whose first attempt failed on the network and was restored and built again (RealRepositoryTests).
+          if [ -f ci-out/FLAKY.txt ]; then while read -r line; do echo "::warning::$line"; done < ci-out/FLAKY.txt; fi
+          for summary in ci-out/summary.md ci-out/summary-polyglot.md ci-out/summary-squiggles.md; do
             if [ -f "$summary" ]; then cat "$summary" >> "$GITHUB_STEP_SUMMARY"; echo >> "$GITHUB_STEP_SUMMARY"; cat "$summary"; fi
           done
           exit "$status"
@@ -753,7 +795,10 @@ jobs:
           distribution: temurin
           java-version: '21'
 
+      # rust-analyzer and the Rust sources it reads, for the squiggles the Rust repositories' files are compared by.
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rust-analyzer, rust-src
 
       - uses: actions/setup-node@v4
         with:
@@ -768,12 +813,36 @@ jobs:
         run: |
           # Maven 3.9, as the Toolchain Store installs it: commons-lang's build requires it.
           maven=https://archive.apache.org/dist/maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz
-          curl -fsSL "$maven" -o "$RUNNER_TEMP/maven.tar.gz"
-          echo "$(curl -fsSL "$maven.sha512" | cut -d' ' -f1)  $RUNNER_TEMP/maven.tar.gz" | sha512sum -c -
+          curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors "$maven" -o "$RUNNER_TEMP/maven.tar.gz"
+          echo "$(curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors "$maven.sha512" | cut -d' ' -f1)  $RUNNER_TEMP/maven.tar.gz" | sha512sum -c -
           tar -xzf "$RUNNER_TEMP/maven.tar.gz" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/apache-maven-3.9.11/bin" >> "$GITHUB_PATH"
           export PATH="$RUNNER_TEMP/apache-maven-3.9.11/bin:$PATH"
           mvn -v; cargo --version; uv --version; python3 --version; node --version; go version; cmake --version | head -1
+
+      # The language servers whose squiggles RealRepositoryTests compares with each repository's compiler, at the
+      # versions the Toolchain Store installs (toolchains.json): Pyright (whose command line is also the type checker
+      # of projects that configure Pyright), typescript-language-server with TypeScript, gopls, and Eclipse JDT with
+      # its java-debug bundle, as the IDE job installs them. rust-analyzer comes with the Rust toolchain above.
+      - name: Install language servers
+        timeout-minutes: 10
+        run: |
+          # A network blip on the package registries is tried again rather than failing the job.
+          retry() { for wait in 5 15 30 0; do "$@" && return 0; [ "$wait" = 0 ] && return 1; echo "::warning::'$*' failed; trying again in $wait s"; sleep "$wait"; done; }
+          retry npm install -g pyright@1.1.403 typescript-language-server@6.0.2 typescript@5.9.3
+          retry go install golang.org/x/tools/gopls@v0.21.1
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+          mkdir -p "$RUNNER_TEMP/jdtls" "$RUNNER_TEMP/java-debug"
+          curl --retry 5 --retry-delay 5 --retry-all-errors -fsSL https://download.eclipse.org/jdtls/milestones/1.58.0/jdt-language-server-1.58.0-202604151538.tar.gz -o "$RUNNER_TEMP/jdtls.tar.gz"
+          echo "2a5bbe55ec91b4325392050dc422cead3220a2459b3766be35e1fff45b4a50d9  $RUNNER_TEMP/jdtls.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/jdtls.tar.gz" -C "$RUNNER_TEMP/jdtls"
+          curl --retry 5 --retry-delay 5 --retry-all-errors -fsSL https://open-vsx.org/api/vscjava/vscode-java-debug/0.60.0/file/vscjava.vscode-java-debug-0.60.0.vsix -o "$RUNNER_TEMP/java-debug.vsix"
+          echo "f09ebe358a7b08b3c17b21b8d8207b0649acad120eb6f1604dc4f15379f59d66  $RUNNER_TEMP/java-debug.vsix" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/java-debug.vsix" -d "$RUNNER_TEMP/java-debug"
+          echo "$RUNNER_TEMP/jdtls/bin" >> "$GITHUB_PATH"
+          echo "TABSTUDIO_JAVA_DEBUG_BUNDLE=$RUNNER_TEMP/java-debug/extension/server/com.microsoft.java.debug.plugin-0.53.2.jar" >> "$GITHUB_ENV"
+          export PATH="$(go env GOPATH)/bin:$RUNNER_TEMP/jdtls/bin:$PATH"
+          pyright --version; typescript-language-server --version; tsc --version; gopls version | head -1; rust-analyzer --version
 
       # PHP with Composer, the Kotlin compiler with Gradle, and Swift, for the PHP, Kotlin and Swift repositories, at the
       # versions the Toolchain Store installs.
@@ -787,16 +856,16 @@ jobs:
       - name: Install Kotlin, Gradle and Swift
         timeout-minutes: 15
         run: |
-          curl -fsSL https://services.gradle.org/distributions/gradle-8.14.4-bin.zip -o "$RUNNER_TEMP/gradle.zip"
+          curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors https://services.gradle.org/distributions/gradle-8.14.4-bin.zip -o "$RUNNER_TEMP/gradle.zip"
           echo "f1771298a70f6db5a29daf62378c4e18a17fc33c9ba6b14362e0cdf40610380d  $RUNNER_TEMP/gradle.zip" | sha256sum -c -
           unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/gradle-8.14.4/bin" >> "$GITHUB_PATH"
-          curl -fsSL https://github.com/JetBrains/kotlin/releases/download/v2.4.21/kotlin-compiler-2.4.21.zip -o "$RUNNER_TEMP/kotlinc.zip"
+          curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors https://github.com/JetBrains/kotlin/releases/download/v2.4.21/kotlin-compiler-2.4.21.zip -o "$RUNNER_TEMP/kotlinc.zip"
           echo "7cc140e76daf416a0424a5557f99afd7ca89ebd463ea1101261e3e01c33e75cd  $RUNNER_TEMP/kotlinc.zip" | sha256sum -c -
           unzip -q "$RUNNER_TEMP/kotlinc.zip" -d "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/kotlinc/bin" >> "$GITHUB_PATH"
-          sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq libz3-dev libncurses-dev libedit2 libpython3-dev > /dev/null
-          curl -fsSL https://download.swift.org/swift-6.4.1-release/ubuntu2404/swift-6.4.1-RELEASE/swift-6.4.1-RELEASE-ubuntu24.04.tar.gz -o "$RUNNER_TEMP/swift.tar.gz"
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=5 install -y -qq libz3-dev libncurses-dev libedit2 libpython3-dev > /dev/null
+          curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors https://download.swift.org/swift-6.4.1-release/ubuntu2404/swift-6.4.1-RELEASE/swift-6.4.1-RELEASE-ubuntu24.04.tar.gz -o "$RUNNER_TEMP/swift.tar.gz"
           echo "7d246c7114077ad01dba4ad897628446ada4c489d6c7dbcf39ae3f25cbe17e8b  $RUNNER_TEMP/swift.tar.gz" | sha256sum -c -
           mkdir -p "$RUNNER_TEMP/swift"
           tar -xzf "$RUNNER_TEMP/swift.tar.gz" -C "$RUNNER_TEMP/swift" --strip-components=1
@@ -831,7 +900,11 @@ jobs:
           dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame-hang-timeout 90m --blame-hang-dump-type none \
             --filter "FullyQualifiedName~RealRepositoryTests" --logger "console;verbosity=normal" > ci-out/test.log 2>&1 || status=$?
           tail -n 60 ci-out/test.log
-          for summary in ci-out/summary.md ci-out/summary-polyglot.md; do
+          # What failed the gate, which the end of the log (the summary table) does not reach.
+          grep -E -A12 "^  Failed |Error Message:" ci-out/test.log | grep -v -E "^\| " | head -n 120 || true
+          # A repository whose first attempt failed on the network and was restored and built again (RealRepositoryTests).
+          if [ -f ci-out/FLAKY.txt ]; then while read -r line; do echo "::warning::$line"; done < ci-out/FLAKY.txt; fi
+          for summary in ci-out/summary.md ci-out/summary-polyglot.md ci-out/summary-squiggles.md; do
             if [ -f "$summary" ]; then cat "$summary" >> "$GITHUB_STEP_SUMMARY"; echo >> "$GITHUB_STEP_SUMMARY"; cat "$summary"; fi
           done
           exit "$status"

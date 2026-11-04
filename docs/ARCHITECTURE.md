@@ -153,11 +153,19 @@ sequenceDiagram
   folder in private app storage: Android's W^X rule forbids `exec()` there, not `dlopen`, so nothing is copied.
   Swarm devices get the managed assemblies only, and WebAssembly apps never get native files.
 - **No-op restores** are instant: the inputs are hashed, and an unchanged project reuses its last result.
-  Offline, versions already on the device are used.
+  Offline, versions already on the device are used; such a restore, like one with errors, is not remembered, so the
+  next one asks the sources again.
+- **Transient failures** are tried again, up to three times with growing delays (`PackageRestoreOptions.HttpRetryDelays`):
+  a reset or refused connection, a body cut short, a timeout, 5xx, 408 and 429, and a 304 Not Modified to a request
+  that asked for no such thing (a CDN glitch), which is asked again with `Cache-Control: no-cache`. A source whose
+  name does not resolve (offline) is not retried, and one that stays down through the retries is asked once from then on.
 - **Shared frameworks.** A project on the Web SDK, or with a `FrameworkReference` to `Microsoft.AspNetCore.App`,
   gets ASP.NET Core the way a self-contained app does: its targeting pack (`Microsoft.AspNetCore.App.Ref`) to
   compile against and the runtime pack for the device's processor to run with, both from NuGet. The packs'
   assemblies are IL, so the Linux pack serves Android too.
+- **.NET Framework projects** compile with .NET, whose framework assemblies forward some of .NET Framework's types
+  to packages: a project whose code names `System.Data.SqlClient` gets the System.Data.SqlClient package, as
+  Dapper.EntityFramework's `SqlParameter` needs. A project that uses none of them restores nothing more.
 
 ## Source generators
 
@@ -193,7 +201,16 @@ errors, builds and the debugger all see the code they generate.
   NuGet imports them (`buildTransitive` in place of `build` for a package referenced through another, the nearest
   target framework's folder, props before the project and targets after it). `ProjectParser.WithPackageBuildFiles`
   evaluates what generators need from them: `CompilerVisibleProperty`, `CompilerVisibleItemMetadata`, `Using` items
-  (ReactiveUI's global usings), `AdditionalFiles` and the interceptor namespaces their targets add.
+  (ReactiveUI's global usings), `AdditionalFiles` and the interceptor namespaces their targets add. A file two
+  targets add, as ThisAssembly.Resources and ThisAssembly.Strings add a `.resx` file, keeps the metadata of every item
+  type it was. `TargetItems` runs the targets before the compiler with their dependencies (`DependsOnTargets`), those
+  `CoreCompileDependsOn` lists, their property groups, and the tasks that write a source the project then compiles,
+  in memory: `Copy` (TypeNameFormatter.Sources copies its source into `obj/`), `WriteLinesToFile` (IFluentInterface
+  writes its interface there) and Microsoft.Testing.Platform's `SelfRegisteredExtensions`, whose namespace xUnit.net
+  v3 tests may import.
+- **Language version.** A project compiles with the C# version its `LangVersion` asks for, as generators check it:
+  ReactiveUI's writes a backing field for a partial property below C# 14 and uses `field` from C# 14 on. The latest
+  is used for `latest`, `default` or none, and C# 13 for anything older, which the code TabStudio adds needs.
 - **Build properties.** A generated global `.editorconfig` hands generators the project's MSBuild properties as
   `build_property.*` (empty when unset, as the SDK writes them) and each additional file's metadata as
   `build_metadata.*`; Avalonia's `.axaml` files are additional files with `SourceItemGroup=AvaloniaXaml`. `SdkGenerators` applies the SDK's other rules: ASP.NET Core's request delegate generator and
@@ -938,6 +955,29 @@ breakpoints, Locals, Watch, Call Stack and DataTips. `.tabstudio/settings.json` 
 `.tabstudio/launch.json` holds launch configurations in VS Code's format. Servers and adapters start through
 `IServerProcessLauncher`, which the Toolchain Store implements on the tablet.
 
+Red squiggles mean what the language's compiler rejects, and the Real repositories jobs check that on every pinned
+TypeScript, Go, Rust, Java and Python repository: `build/ci/squiggles.py` compares the editor's errors in some of each
+repository's files, per line, with tsc, `go build`/`go vet`, `cargo check`, javac through Maven or Gradle, and Python's
+`py_compile` plus the Pyright command line where the project configures Pyright, and holds each repository to a
+baseline (`squiggleBaselines` in `build/ci/real-repos.json`, 0 unless a comment there says why). Two things keep them
+in step:
+
+- **Packages installed after a server started.** The project setup installs a repository's packages while its first
+  files are already open. Once an install succeeds, `LanguageServerHost.RefreshAsync` brings the servers up to date:
+  settings and initialization options may name files with `${workspaceFile:a|b}` (the first that exists in the
+  server's folder) and `${packageFile:...}`, which are filled in again whenever they are sent. A server whose
+  initialization options now come out differently starts again with them, as typescript-language-server does once
+  `npm install` brought the workspace its own TypeScript; every other server gets its settings again, which is how
+  Pyright learns the project's new `.venv` interpreter (`python.pythonPath`) and resolves its imports.
+- **Pyright's type rules.** Without a configuration of the project's own, Pyright's standard rules showed the
+  attributes microblog sets on its Flask app (`app.redis = ...`) as errors, though Python runs them, and every import
+  of an optional package. The built-in settings report every rule standard mode makes an error as a warning instead
+  (`diagnosticSeverityOverrides`), as Visual Studio and VS Code, whose default is no type checking, would not show
+  them as errors either; syntax errors stay errors. A project's `pyrightconfig.json` or `[tool.pyright]` wins over the
+  client's settings, so a project that configures Pyright gets exactly the errors its own `pyright` run reports. A
+  workspace can bring the errors back in `.tabstudio/settings.json` with
+  `"python.analysis.diagnosticSeverityOverrides": null`.
+
 An orderly connection EOF during `initialize` uses the same bounded restart budget and backoff as a later server
 crash. Readiness and queued commands stay pending across those attempts, and the restarted server receives the
 latest document text. Initialization rejection, protocol/read errors, timeouts and missing launchers still fail;
@@ -979,7 +1019,8 @@ and is split into partial classes by concern (`.Build`, `.Debugging`, `.Tests`, 
 
 - **Tool windows.** The side bar holds Solution Explorer with Properties, Git Changes, Test Explorer, the web
   preview and the agent, one at a time, chosen with tabs at its bottom (`SideBarPanel`). The bottom dock holds
-  the Error List, Output, the Compatibility Doctor, References, and Locals, Watch and Call Stack while
+  the Error List, Output, the Compatibility Doctor, References, Find Results (Find and Replace in Files, with a
+  list of its own, so Find All References never replaces its matches), and Locals, Watch and Call Stack while
   debugging (`BottomPanel`).
 - **The editor.** `CodeEditorView` is AvaloniaEdit with Roslyn's classifications and squiggles, split into
   partial files: completion, Parameter Info, Quick Info, quick actions, Peek Definition, the context menu,

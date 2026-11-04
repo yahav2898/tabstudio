@@ -12,13 +12,16 @@ namespace TabStudio.SourceControl;
 /// <c>export-ignore</c> and <c>export-subst</c> attributes to archives) is then downloaded on its own. Signed out,
 /// those come from the raw file host, since GitHub's API answers only 60 requests an hour without a token.
 /// </summary>
-internal sealed class FileFetcher(GitHubClient client, string owner, string repository)
+internal sealed class FileFetcher(GitHubClient client, string owner, string repository) : IFileSource
 {
     /// <summary>From this many files on, one archive is cheaper than a request per file.</summary>
     internal const int ArchiveThreshold = 40;
 
-    /// <summary>The largest archive TabStudio downloads: 1 GB.</summary>
-    internal const long MaximumArchiveBytes = 1L << 30;
+    /// <summary>
+    /// The largest archive TabStudio downloads: 1 GB. A larger repository's files come over Git's own protocol instead,
+    /// in batches.
+    /// </summary>
+    internal static long MaximumArchiveBytes { get; set; } = 1L << 30;
 
     private const int Parallelism = 4;
 
@@ -47,11 +50,37 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
         }
 
         var pointers = new ConcurrentDictionary<string, LfsPointer>(StringComparer.Ordinal);
-        var remaining = files.Count >= ArchiveThreshold
-            ? await WriteFromArchiveAsync(root, commitSha, files, hashes, pointers, progress, cancellationToken).ConfigureAwait(false)
-            : [.. files.Keys];
+        List<string> remaining = [.. files.Keys];
+        var overArchiveLimit = false;
+        if (files.Count >= ArchiveThreshold)
+        {
+            try
+            {
+                remaining = await WriteFromArchiveAsync(root, commitSha, files, hashes, pointers, progress, cancellationToken).ConfigureAwait(false);
+            }
+            catch (GitHubApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.RequestEntityTooLarge && client.GitAddress(owner, repository) is not null)
+            {
+                // Past GitHub's archive limit: the files come over Git's own protocol, in batches.
+                overArchiveLimit = true;
+            }
+        }
 
-        await WriteBlobsAsync(root, commitSha, remaining, files, hashes, pointers, progress, cancellationToken).ConfigureAwait(false);
+        // A repository past the archive limit, or a file past the API's 100 MB, comes over Git's own protocol; a broken
+        // download keeps each batch that arrived.
+        if (overArchiveLimit)
+        {
+            await WriteWithGitAsync(root, remaining, files, hashes, pointers, progress, cancellationToken).ConfigureAwait(false);
+            remaining = [];
+        }
+
+        var large = await WriteBlobsAsync(root, commitSha, remaining, files, hashes, pointers, progress, cancellationToken).ConfigureAwait(false);
+        if (large.Count > 0)
+        {
+            await WriteWithGitAsync(root, large, files, hashes, pointers, progress, cancellationToken).ConfigureAwait(false);
+        }
+
+        hashes.Save(root);
+        DeleteGitObjects(root);
         return await WriteLfsObjectsAsync(root, files, hashes, pointers, progress, cancellationToken).ConfigureAwait(false);
     }
 
@@ -233,21 +262,48 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
         IProgress<SyncProgress>? progress,
         CancellationToken cancellationToken)
     {
-        var temporary = Path.Combine(root, SyncMetadata.FolderName, $"download-{Guid.NewGuid():N}.zip");
+        // Named by the commit and kept when the download breaks, so the next attempt asks only for the rest of it.
+        var temporary = Path.Combine(root, SyncMetadata.FolderName, $"download-{commitSha}.zip");
+        var tagPath = temporary + ".etag";
         Directory.CreateDirectory(Path.GetDirectoryName(temporary)!);
+        var complete = false;
         try
         {
-            await using (var stream = File.Create(temporary))
+            var validator = new System.Runtime.CompilerServices.StrongBox<string?>(File.Exists(tagPath) ? File.ReadAllText(tagPath) : null);
+            await using (var stream = new FileStream(temporary, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
             {
+                stream.Seek(0, SeekOrigin.End);
                 var bytes = new Progress<(long Received, long? Total)>(p =>
                     progress?.Report(new SyncProgress($"Downloading {FormatSize(p.Received)}", (int)(p.Received / 1024), (int)((p.Total ?? 0) / 1024))));
-                await client.DownloadArchiveAsync(owner, repository, commitSha, stream, MaximumArchiveBytes, bytes, cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    await client.DownloadArchiveAsync(owner, repository, commitSha, stream, MaximumArchiveBytes, validator, bytes, cancellationToken).ConfigureAwait(false);
+                }
+                finally
+                {
+                    if (validator.Value is { } tag)
+                    {
+                        await File.WriteAllTextAsync(tagPath, tag, CancellationToken.None).ConfigureAwait(false);
+                    }
+                }
             }
 
+            complete = true;
             var missing = new HashSet<string>(files.Keys, StringComparer.Ordinal);
-            using var zip = ZipFile.OpenRead(temporary);
+            ZipArchive zip;
+            try
+            {
+                zip = ZipFile.OpenRead(temporary);
+            }
+            catch (InvalidDataException)
+            {
+                // A damaged archive: every file is fetched on its own instead.
+                return [.. missing];
+            }
+
+            using var archive = zip;
             var written = 0;
-            foreach (var entry in zip.Entries)
+            foreach (var entry in archive.Entries)
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 var path = StripRoot(entry.FullName);
@@ -280,19 +336,100 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
                 {
                     progress?.Report(new SyncProgress("Writing files", written, files.Count));
                 }
+
+                if (written % 500 == 0)
+                {
+                    hashes.Save(root);
+                }
             }
 
             return [.. missing];
         }
+        catch (GitHubApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.RequestEntityTooLarge)
+        {
+            complete = true;
+            throw;
+        }
         finally
         {
-            TryDelete(temporary);
+            if (complete)
+            {
+                TryDelete(temporary);
+                TryDelete(tagPath);
+            }
         }
     }
 
-    private async Task WriteBlobsAsync(
+    /// <returns>The files past the API's size limit, which have to come over Git's own protocol.</returns>
+    private async Task<List<string>> WriteBlobsAsync(
         string root,
         string commitSha,
+        List<string> paths,
+        IReadOnlyDictionary<string, TrackedFile> files,
+        HashCache hashes,
+        ConcurrentDictionary<string, LfsPointer> pointers,
+        IProgress<SyncProgress>? progress,
+        CancellationToken cancellationToken)
+    {
+        var large = new List<string>();
+        if (paths.Count == 0)
+        {
+            return large;
+        }
+
+        var done = 0;
+        var gate = new Lock();
+        progress?.Report(new SyncProgress(paths.Count == 1 ? "Downloading 1 file" : $"Downloading {paths.Count} files", 0, paths.Count));
+        var options = new ParallelOptions { MaxDegreeOfParallelism = Parallelism, CancellationToken = cancellationToken };
+        await Parallel.ForEachAsync(paths, options, async (path, token) =>
+        {
+            byte[] content;
+            try
+            {
+                content = await ReadFileAsync(commitSha, path, files[path].Sha, token).ConfigureAwait(false);
+            }
+            catch (GitHubApiException ex) when (IsTooLarge(ex) && client.GitAddress(owner, repository) is not null)
+            {
+                lock (gate)
+                {
+                    large.Add(path);
+                }
+
+                return;
+            }
+
+            await WriteFileAsync(root, path, content, token).ConfigureAwait(false);
+            if (LfsPointer.TryParse(content) is { } pointer)
+            {
+                pointers[path] = pointer;
+            }
+            lock (gate)
+            {
+                hashes.Remember(root, path, files[path].Sha);
+                done++;
+                progress?.Report(new SyncProgress($"Downloading {paths.Count} files", done, paths.Count));
+                if (done % 200 == 0)
+                {
+                    hashes.Save(root);
+                }
+            }
+        }).ConfigureAwait(false);
+
+        return large;
+    }
+
+    /// <summary>Whether GitHub refused a blob because the API does not serve files past 100 MB.</summary>
+    private static bool IsTooLarge(GitHubApiException exception) =>
+        exception.StatusCode is System.Net.HttpStatusCode.Forbidden or System.Net.HttpStatusCode.UnprocessableEntity or System.Net.HttpStatusCode.RequestEntityTooLarge
+        && exception.Message.Contains("too large", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Writes files whose contents come over Git's own protocol from the repository's Git address, as <c>git fetch</c>
+    /// gets them: by name, in batches, into an object database under <c>.tabstudio</c> that a broken download keeps, so
+    /// neither GitHub's 1 GB archive limit nor its 100 MB API limit applies and an interrupted download goes on.
+    /// </summary>
+    private async Task WriteWithGitAsync(
+        string root,
         List<string> paths,
         IReadOnlyDictionary<string, TrackedFile> files,
         HashCache hashes,
@@ -305,25 +442,83 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
             return;
         }
 
-        var done = 0;
-        var gate = new Lock();
-        progress?.Report(new SyncProgress(paths.Count == 1 ? "Downloading 1 file" : $"Downloading {paths.Count} files", 0, paths.Count));
-        var options = new ParallelOptions { MaxDegreeOfParallelism = Parallelism, CancellationToken = cancellationToken };
-        await Parallel.ForEachAsync(paths, options, async (path, token) =>
+        var address = client.GitAddress(owner, repository)!;
+        var remote = new Git.GitHttpClient(client.Http, address, client.GitCredentialsFor(address));
+        var store = new Git.ObjectStore(GitObjectsFolder(root));
+        try
         {
-            var content = await ReadFileAsync(commitSha, path, files[path].Sha, token).ConfigureAwait(false);
-            await WriteFileAsync(root, path, content, token).ConfigureAwait(false);
-            if (LfsPointer.TryParse(content) is { } pointer)
+            var refs = await remote.ListRefsAsync(cancellationToken).ConfigureAwait(false);
+            if (!refs.CanWantAnyObject)
+            {
+                throw new GitHubApiException("GitHub's Git server would not send the files by name.");
+            }
+
+            var missing = paths.Select(p => files[p].Sha).Distinct(StringComparer.Ordinal).Where(id => !store.Contains(id)).ToList();
+            var done = 0;
+            foreach (var batch in missing.Chunk(Git.GitWorkingCopy.BlobBatch))
+            {
+                progress?.Report(new SyncProgress($"Downloading {Files(missing.Count)}", done, missing.Count));
+                await Git.GitWorkingCopy.FetchIntoAsync(remote, store, new Git.FetchRequest([.. batch], [], 0, false), promisor: false, $"Downloading {Files(missing.Count)}", progress, cancellationToken).ConfigureAwait(false);
+                done += batch.Length;
+            }
+        }
+        catch (Git.GitTransportException ex)
+        {
+            throw new GitHubApiException(ex.StatusCode ?? System.Net.HttpStatusCode.ServiceUnavailable, ex.Message);
+        }
+        catch (Exception ex) when (ex is IOException or HttpRequestException or InvalidDataException)
+        {
+            throw new GitHubApiException($"The connection to GitHub broke during the download: {ex.Message}", ex);
+        }
+
+        var written = 0;
+        foreach (var path in paths)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var full = WorkingTree.FullPath(root, path);
+            Directory.CreateDirectory(Path.GetDirectoryName(full)!);
+            if (File.Exists(full))
+            {
+                File.SetAttributes(full, FileAttributes.Normal);
+            }
+
+            await using (var stream = new FileStream(full, FileMode.Create, FileAccess.Write))
+            {
+                if (!store.TryCopyBlob(files[path].Sha, stream))
+                {
+                    throw new GitHubApiException($"GitHub did not send {path}.");
+                }
+            }
+
+            if (new FileInfo(full).Length <= 1024 && LfsPointer.TryParse(await File.ReadAllBytesAsync(full, cancellationToken).ConfigureAwait(false)) is { } pointer)
             {
                 pointers[path] = pointer;
             }
-            lock (gate)
+
+            hashes.Remember(root, path, files[path].Sha);
+            if (++written % 200 == 0)
             {
-                hashes.Remember(root, path, files[path].Sha);
-                done++;
-                progress?.Report(new SyncProgress($"Downloading {paths.Count} files", done, paths.Count));
+                hashes.Save(root);
+                progress?.Report(new SyncProgress("Writing files", written, paths.Count));
             }
-        }).ConfigureAwait(false);
+        }
+    }
+
+    private static string GitObjectsFolder(string root) => Path.Combine(root, SyncMetadata.FolderName, "objects");
+
+    private static void DeleteGitObjects(string root)
+    {
+        try
+        {
+            if (Directory.Exists(GitObjectsFolder(root)))
+            {
+                Directory.Delete(GitObjectsFolder(root), recursive: true);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Left over objects only take storage in .tabstudio.
+        }
     }
 
     /// <summary>

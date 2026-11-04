@@ -24,6 +24,9 @@ public sealed partial class RoslynWorkspaceHost
     /// <summary>The projects as read from their files, before their packages' props and targets were read into them.</summary>
     private readonly Dictionary<ProjectId, TsProject> _projectsAsRead = [];
 
+    /// <summary>The paths of the documents each project has from <see cref="TabStudio.Core.Workspaces.ProjectInfo.PackageCompileFiles"/>.</summary>
+    private readonly Dictionary<ProjectId, HashSet<string>> _packageCompileDocuments = [];
+
     /// <summary>
     /// Sets the props and targets a project imports from its packages, such as <c>RestoreResult.BuildFiles</c>, and
     /// updates the project's build properties, global usings, additional files and parse options from them.
@@ -109,6 +112,26 @@ public sealed partial class RoslynWorkspaceHost
                 ? CreateDocumentInfo(DocumentId.CreateNewId(id, path[..^3]), path[..^3], Preprocess(ReadFileOrEmpty(path), project), isGenerated: true)
                 : CreateDocumentInfo(DocumentId.CreateNewId(id, path), path, ReadFileOrEmpty(path), isGenerated: true));
 
+    /// <summary>
+    /// The documents of the sources a project's packages' props and targets add to its <c>Compile</c> items, such as the
+    /// file TypeNameFormatter.Sources copies into <c>obj/</c> or the interface IFluentInterface writes there, with the text
+    /// their targets would write (see <see cref="TabStudio.Core.Workspaces.ProjectInfo.PackageCompileFiles"/>); a file the project already compiles
+    /// is left to it. The caller holds the gate.
+    /// </summary>
+    /// <param name="id">The project's id.</param>
+    /// <param name="project">The project, with its packages' build files read into it.</param>
+    /// <param name="compiled">The paths of the documents the project has already.</param>
+    private List<DocumentInfo> PackageCompileDocuments(ProjectId id, TsProject project, HashSet<string> compiled)
+    {
+        var documents = project.PackageCompileFiles
+            .Where(f => f.FullPath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) && !compiled.Contains(f.FullPath))
+            .DistinctBy(f => f.FullPath, StringComparer.Ordinal)
+            .Select(f => CreateDocumentInfo(DocumentId.CreateNewId(id, f.FullPath), f.FullPath, f.Text, isGenerated: true))
+            .ToList();
+        _packageCompileDocuments[id] = [.. documents.Select(d => d.FilePath).OfType<string>()];
+        return documents;
+    }
+
     /// <summary>NuGet's content preprocessing: each <c>$name$</c> that names one of the project's properties becomes its value.</summary>
     private static string Preprocess(string text, TsProject project)
     {
@@ -182,6 +205,31 @@ public sealed partial class RoslynWorkspaceHost
             solution = solution.AddAdditionalDocument(CreateDocumentInfo(AdditionalFileDocumentId(id, path), path, ReadFileOrEmpty(path), isGenerated: false));
         }
 
+        // The sources the packages add, as they are now: those of the packages before are replaced.
+        var previous = _packageCompileDocuments.GetValueOrDefault(id) ?? [];
+        var kept = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var document in roslyn.Documents)
+        {
+            if (document.FilePath is not { } path)
+            {
+                continue;
+            }
+
+            if (previous.Contains(path))
+            {
+                solution = solution.RemoveDocument(document.Id);
+            }
+            else
+            {
+                kept.Add(path);
+            }
+        }
+
+        foreach (var document in PackageCompileDocuments(id, project, kept))
+        {
+            solution = solution.AddDocument(document);
+        }
+
         solution = solution.WithProjectAnalyzerReferences(id, GetAnalyzerReferences(project));
 
         // Assemblies the packages' targets reference by path, such as MSTest's TestFramework.Extensions.
@@ -193,7 +241,8 @@ public sealed partial class RoslynWorkspaceHost
     private static IReadOnlyList<string> AdditionalFilePaths(TsProject project) =>
         project.AdditionalFiles.Count == 0
             ? []
-            : ProjectSourceFiles.EnumerateItems(project, [.. project.AdditionalFiles.Select(i => i.Include).Distinct(StringComparer.Ordinal)], []);
+            : [.. ProjectSourceFiles.EnumerateItems(project, [.. project.AdditionalFiles.Where(i => !i.IsItemOnly).Select(i => i.Include).Distinct(StringComparer.Ordinal)], []),
+                .. project.AdditionalFiles.Where(i => i.IsItemOnly).Select(i => Path.GetFullPath(Path.Combine(i.BaseDirectory, i.Include))).Distinct(StringComparer.Ordinal)];
 
     /// <summary>
     /// The sections of a project's analyzer configuration for its additional files: for each file, the metadata of
@@ -239,7 +288,9 @@ public sealed partial class RoslynWorkspaceHost
             text.Append(CultureInfo.InvariantCulture, $"\n[{path.Replace('\\', '/')}]\n");
             foreach (var line in lines)
             {
-                var value = metadata.GetValueOrDefault(line.MetadataName) ?? string.Empty;
+                // The SDK gives each item its type as ItemType, which ThisAssembly.Constants' generator checks.
+                var value = metadata.GetValueOrDefault(line.MetadataName)
+                    ?? (string.Equals(line.MetadataName, "ItemType", StringComparison.OrdinalIgnoreCase) ? line.ItemType : string.Empty);
                 text.Append(CultureInfo.InvariantCulture, $"build_metadata.{line.ItemType}.{line.MetadataName} = {value.ReplaceLineEndings(" ")}\n");
             }
         }

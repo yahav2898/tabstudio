@@ -20,7 +20,11 @@ public sealed partial class GitHubSync
     public async Task<CommitResult> CommitAsync(string message, IReadOnlyCollection<string>? paths = null, IProgress<SyncProgress>? progress = null, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(message);
-        RequireSignedIn("commit");
+        if (_git is null)
+        {
+            RequireSignedIn("commit");
+        }
+
         var branch = RequireBranch("commit");
 
         var hashes = HashCache.Load(Root);
@@ -45,6 +49,11 @@ public sealed partial class GitHubSync
             throw new SyncException(SyncFailure.UnresolvedConflicts, $"Resolve the conflicts in {Describe(unresolved)} before committing.");
         }
 
+        if (_git is not null)
+        {
+            return await CommitViaGitAsync(message, branch, changes, hashes, progress, cancellationToken).ConfigureAwait(false);
+        }
+
         progress?.Report(new SyncProgress("Checking GitHub for new commits"));
         var head = await _client.GetBranchHeadAsync(Link.Owner, Link.Repository, branch, cancellationToken).ConfigureAwait(false);
         if (head != Link.BaseCommit)
@@ -52,7 +61,10 @@ public sealed partial class GitHubSync
             throw BehindRemote(branch);
         }
 
-        var uploaded = await UploadAsync(_client, Link.Owner, Link.Repository, Root, changes, hashes, progress, cancellationToken, Metadata.Files).ConfigureAwait(false);
+        // Files .gitattributes sends to Git LFS go to GitHub's Git LFS storage, and their pointers into the commit, as
+        // Git LFS's clean filter does; before 0.21.9 the file itself was committed and so taken out of Git LFS.
+        var pointers = await UploadLfsAsync(changes, cancellationToken).ConfigureAwait(false);
+        var uploaded = await UploadAsync(_client, Link.Owner, Link.Repository, Root, changes, hashes, progress, cancellationToken, Metadata.Files, pointers).ConfigureAwait(false);
         var treeChanges = changes.Select(c => c.Kind == ChangeKind.Deleted
             ? new GitTreeChange(c.Path, Metadata.Files[c.Path].Mode, null)
             : new GitTreeChange(c.Path, uploaded[c.Path].Mode, uploaded[c.Path].Sha));
@@ -94,7 +106,7 @@ public sealed partial class GitHubSync
         }
 
         var committed = changes.Select(c => c.Path).ToHashSet(StringComparer.Ordinal);
-        Save(new SyncMetadata(Link with { BaseCommit = commit.Sha }, files) { Conflicts = [.. Metadata.Conflicts.Where(c => !committed.Contains(c))] });
+        Save(new SyncMetadata(Link with { BaseCommit = commit.Sha }, files) { Conflicts = [.. Metadata.Conflicts.Where(c => !committed.Contains(c))], Submodules = Metadata.Submodules });
         hashes.Save(Root);
         foreach (var path in committed)
         {
@@ -125,8 +137,7 @@ public sealed partial class GitHubSync
             }
         }
 
-        await new FileFetcher(_client, Link.Owner, Link.Repository)
-            .WriteAsync(Root, Link.BaseCommit, restore, hashes, progress: null, cancellationToken).ConfigureAwait(false);
+        await Source().WriteAsync(Root, Link.BaseCommit, restore, hashes, progress: null, cancellationToken).ConfigureAwait(false);
 
         var discarded = paths.ToHashSet(StringComparer.Ordinal);
         Save(Metadata with { Conflicts = [.. Metadata.Conflicts.Where(c => !discarded.Contains(c))] });
@@ -159,7 +170,7 @@ public sealed partial class GitHubSync
                 FileFetcher.DeleteFile(Root, path);
                 break;
             case ConflictResolution.TakeTheirs when Metadata.Files.TryGetValue(path, out var theirs):
-                var content = await _client.GetBlobAsync(Link.Owner, Link.Repository, theirs.Sha, cancellationToken).ConfigureAwait(false);
+                var content = await Source().ReadAsync(theirs.Sha, cancellationToken).ConfigureAwait(false);
                 await FileFetcher.WriteFileAsync(Root, path, content, cancellationToken).ConfigureAwait(false);
                 break;
             case ConflictResolution.TakeTheirs:
@@ -169,6 +180,30 @@ public sealed partial class GitHubSync
 
         ConflictStore.Delete(Root, path);
         Save(Metadata with { Conflicts = [.. Metadata.Conflicts.Where(c => c != path)] });
+    }
+
+    /// <summary>Uploads the changed files stored with Git LFS to GitHub's Git LFS storage and returns the pointers to commit.</summary>
+    private async Task<Dictionary<string, byte[]>> UploadLfsAsync(IReadOnlyList<FileChange> changes, CancellationToken cancellationToken)
+    {
+        var paths = LfsAttributes.Select(Root, changes.Where(c => c.Kind != ChangeKind.Deleted && !IsLfsPointerFile(c.Path)).Select(c => c.Path));
+        if (paths.Count == 0)
+        {
+            return new Dictionary<string, byte[]>(StringComparer.Ordinal);
+        }
+
+        var address = _client.GitAddress(Link.Owner, Link.Repository)
+            ?? throw new SyncException($"{paths[0]} is stored with Git LFS, and this server does not take Git LFS files from TabStudio.");
+        var uploads = paths.Select(p => (Object: Git.LfsObject.Of(WorkingTree.FullPath(Root, p)), Path: WorkingTree.FullPath(Root, p))).ToList();
+        try
+        {
+            await new Git.LfsClient(_client.Http, Git.LfsClient.EndpointFor(address), _client.GitCredentialsFor(address)).UploadAsync(uploads, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Git.GitTransportException ex)
+        {
+            throw new SyncException($"The files stored with Git LFS could not be uploaded, so nothing was committed: {ex.Message}", ex);
+        }
+
+        return paths.Zip(uploads).ToDictionary(p => p.First, p => p.Second.Object.Pointer(), StringComparer.Ordinal);
     }
 
     private bool HasConflictMarkers(string path)
