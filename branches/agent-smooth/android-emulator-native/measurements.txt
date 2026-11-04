@@ -1,23 +1,24 @@
-Startup to self test start: 20.97 s
-TabStudio startup: first frame at 19483 ms, ready at 19483 ms; process start to activity 5852 ms, application +1322 ms, styles +1356 ms, services +1235 ms, theme +196 ms, view models +2659 ms, main view +3487 ms, start screen +75 ms, first frame +3301 ms
-TabStudio UI stalls: 94 over 100 ms (47 over 250 ms, 13 over 1 s), 108.3 s in all, longest 31506 ms during the step that ended with: Embedded bridge: native PTY byte transport, baud, modem lines and hangup passed with virtu…; answer p50 2.4 ms, p95 19.5 ms, p99 75.0 ms over 12974 questions in 426 s
-TabStudio UI stall: 31506 ms at 317.6 s during the step that ended with: Embedded bridge: native PTY byte transport, baud, modem lines and hangup passed with virtu…
-TabStudio UI stall: 25550 ms at 22.1 s during the step that ended with: Processes: started 200 programs in 29.2 s while 327 minor and 1 major collections ran
-TabStudio UI stall: 8055 ms at 1.0 s during the step that ended with: Extracting the sample
-TabStudio UI stall: 5368 ms at 9.5 s during the step that ended with: Opening the sample
-TabStudio UI stall: 2280 ms at 299.1 s during the step that ended with: Toolchains: installed in 1 s, Hello, Tablet! This is Python 3.14.10 on TabStudio. | node v…
-TabStudio UI stall: 2195 ms at 19.8 s during the step that ended with: Opening the sample
-TabStudio UI stall: 1839 ms at 424.1 s during the step that ended with: Listening port: 34153, preview passed
-TabStudio UI stall: 1645 ms at 362.6 s during the step that ended with: Services: PostgreSQL in PRoot on port 43851, init script and SELECT verified in 39.3 s
-TabStudio UI stall: 1209 ms at 14.8 s during the step that ended with: Opening the sample
-TabStudio UI stall: 1143 ms at 48.1 s during the step that ended with: Processes: started 200 programs in 29.2 s while 327 minor and 1 major collections ran
-TabStudio UI stall: 1130 ms at 419.6 s during the step that ended with: Listening port: 34153, preview passed
-TabStudio UI stall: 1085 ms at 16.3 s during the step that ended with: Opening the sample
-TabStudio UI stall: 1053 ms at 311.0 s during the step that ended with: Embedded bridge: native PTY byte transport, baud, modem lines and hangup passed with virtu…
-TabStudio UI stall: 994 ms at 315.5 s during the step that ended with: Embedded bridge: native PTY byte transport, baud, modem lines and hangup passed with virtu…
-TabStudio UI stall: 964 ms at 416.3 s during the step that ended with: Python tools: Pyright ready in 2 s, squiggled undefined_name (reportUndefinedVariable) | d…
+Startup to self test start: 16.31 s
+TabStudio startup: first frame at 16164 ms, ready at 16164 ms; process start to activity 4504 ms, application +1106 ms, styles +1261 ms, services +1088 ms, theme +238 ms, view models +3084 ms, main view +2120 ms, start screen +97 ms, first frame +2666 ms
+TabStudio UI stalls: 144 over 100 ms (57 over 250 ms, 11 over 1 s), 82.4 s in all, longest 21094 ms during the step that ended with: Processes: started 200 programs in 23.4 s while 261 minor and 2 major collections ran; answer p50 2.6 ms, p95 24.1 ms, p99 118.9 ms over 12755 questions in 410 s
+TabStudio UI timings: workspace view 1909 ms, document view 1887 ms, workspace view model 1058 ms, document view 804 ms, document view 638 ms, document view 218 ms, CallStackView 72 ms, LocalsView 58 ms, workspace view model 49 ms, workspace view model 15 ms, document view 8 ms, workspace view model 6 ms
+TabStudio UI stall: 21094 ms at 20.5 s during the step that ended with: Processes: started 200 programs in 23.4 s while 261 minor and 2 major collections ran
+TabStudio UI stall: 8036 ms at 0.5 s during the step that ended with: Extracting the sample
+TabStudio UI stall: 4480 ms at 9.1 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 2319 ms at 18.1 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 2173 ms at 280.7 s during creating a document's view
+TabStudio UI stall: 1953 ms at 407.8 s during the step that ended with: Listening port: 40275, preview passed
+TabStudio UI stall: 1739 ms at 347.0 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 1210 ms at 397.8 s during creating a document's view
+TabStudio UI stall: 1141 ms at 13.6 s during reading the solution
+TabStudio UI stall: 1027 ms at 73.7 s during the step that ended with: Toolchains: installed in 1 s, Hello, Tablet! This is Python 3.14.10 on TabStudio. | node v…
+TabStudio UI stall: 1025 ms at 402.8 s during starting restore and analysis → creating a document's view
+TabStudio UI stall: 935 ms at 400.3 s during creating the LocalsView
+TabStudio UI stall: 884 ms at 345.1 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 878 ms at 404.6 s during the step that ended with: Listening port: 40275, preview passed
+TabStudio UI stall: 805 ms at 279.3 s during creating the workspace's view model → showing the workspace → reading the solution
 Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
- Native Heap 370388 370380 0 41 371444 387572 379875 2745
- Dalvik Heap 4055 4016 4 80 6336 8176 4088 4088
- TOTAL 838816 768700 47864 231 978916 395748 383963 6833
- TOTAL PSS: 838816 TOTAL RSS: 978916 TOTAL SWAP PSS: 231
+ Native Heap 368422 368416 0 35 369400 386404 378231 3044
+ Dalvik Heap 4233 4204 0 71 6388 8248 4156 4092
+ TOTAL 833718 764640 47752 205 973020 394652 382387 7136
+ TOTAL PSS: 833718 TOTAL RSS: 973020 TOTAL SWAP PSS: 205
