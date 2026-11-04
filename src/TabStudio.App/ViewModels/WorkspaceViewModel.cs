@@ -158,6 +158,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeAgent();
         InitializeLink();
         Documents.CollectionChanged += (_, _) => UpdateActiveProjects();
+        Documents.CollectionChanged += (_, _) => UpdateNavigationCommands();
         InitializeActions(browser, notifications, appActivity);
         InitializeOperations(notifications, appActivity);
         InitializePullRequests();

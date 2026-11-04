@@ -186,6 +186,20 @@ public sealed class ProgramRunner
         }
     }
 
+    /// <summary>Whether an exception is the debugger's stop, on its own or wrapped by a task or a type initializer.</summary>
+    internal static bool IsDebuggerStop(Exception? exception)
+    {
+        for (var depth = 0; exception is not null && depth < 8; depth++, exception = exception.InnerException)
+        {
+            if (exception.GetType().FullName == "TabStudio.Debugging.DebugSessionStoppedException")
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static int Await(Task task)
     {
         task.GetAwaiter().GetResult();
@@ -194,6 +208,14 @@ public sealed class ProgramRunner
 
     private static RunResult Crashed(Exception exception, TextWriter error)
     {
+        // Stop Debugging ends a program that is still running by throwing this inside it (TabStudio.Debugging, which
+        // this library does not reference). The program was stopped, not crashed: printing it as "Unhandled exception"
+        // put an error in the Output every time Stop Debugging won the race with the stop's cancellation.
+        if (IsDebuggerStop(exception))
+        {
+            return new RunResult(RunOutcome.Stopped, -1, TimeSpan.Zero);
+        }
+
         error.WriteLine();
         error.WriteLine($"Unhandled exception. {exception}");
         error.Flush();

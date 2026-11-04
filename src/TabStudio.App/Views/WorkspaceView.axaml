@@ -54,6 +54,7 @@
     <KeyBinding Gesture="Ctrl+OemQuestion" Command="{Binding ToggleCommentCommand}" />
     <KeyBinding Gesture="Shift+Alt+F" Command="{Binding FormatDocumentCommand}" />
     <KeyBinding Gesture="Ctrl+H" Command="{Binding ReplaceCommand}" />
+    <KeyBinding Gesture="Ctrl+G" Command="{Binding GoToLineCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+F" Command="{Binding FindInFilesCommand}" />
     <KeyBinding Gesture="Ctrl+F4" Command="{Binding CloseDocumentCommand}" />
     <KeyBinding Gesture="Ctrl+W" Command="{Binding CloseDocumentCommand}" />
@@ -61,7 +62,7 @@
     <KeyBinding Gesture="Ctrl+Shift+Tab" Command="{Binding PreviousDocumentCommand}" />
     <KeyBinding Gesture="Alt+Left" Command="{Binding NavigateBackCommand}" />
     <KeyBinding Gesture="Alt+Right" Command="{Binding NavigateForwardCommand}" />
-    <KeyBinding Gesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
+    <KeyBinding Gesture="Ctrl+Alt+L" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.SolutionExplorer}" />
     <KeyBinding Gesture="Ctrl+Shift+X" Command="{Binding ShowExtensionsCommand}" />
     <KeyBinding Gesture="Ctrl+OemTilde" Command="{Binding ShowTerminalCommand}" />
   </UserControl.KeyBindings>
@@ -153,9 +154,15 @@
             <MenuItem Header="_Undo" InputGesture="Ctrl+Z" Command="{Binding UndoCommand}" />
             <MenuItem Header="_Redo" InputGesture="Ctrl+Y" Command="{Binding RedoCommand}" />
             <Separator />
+            <MenuItem Header="Cu_t" InputGesture="Ctrl+X" Command="{Binding CutCommand}" />
+            <MenuItem Header="Cop_y" InputGesture="Ctrl+C" Command="{Binding CopyCommand}" />
+            <MenuItem Header="P_aste" InputGesture="Ctrl+V" Command="{Binding PasteCommand}" />
+            <MenuItem Header="Select A_ll" InputGesture="Ctrl+A" Command="{Binding SelectAllCommand}" />
+            <Separator />
             <MenuItem Header="_Find" InputGesture="Ctrl+F" Command="{Binding FindCommand}" />
             <MenuItem Header="Re_place" InputGesture="Ctrl+H" Command="{Binding ReplaceCommand}" />
             <MenuItem Header="Find in F_iles" InputGesture="Ctrl+Shift+F" Command="{Binding FindInFilesCommand}" />
+            <MenuItem Header="_Go To Line..." InputGesture="Ctrl+G" Command="{Binding GoToLineCommand}" />
             <Separator />
             <MenuItem Header="Toggle Line _Comment (Ctrl+/)" Command="{Binding ToggleCommentCommand}" />
             <MenuItem Header="F_ormat Document" InputGesture="Shift+Alt+F" Command="{Binding FormatDocumentCommand}" />
@@ -173,7 +180,8 @@
             <MenuItem Header="_Quick Actions and Refactorings..." InputGesture="Ctrl+OemPeriod" Command="{Binding QuickActionsCommand}" />
           </MenuItem>
           <MenuItem Header="_View">
-            <MenuItem Header="_Solution Explorer" InputGesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
+            <!-- Shows Solution Explorer, as Visual Studio's Ctrl+Alt+L does, whatever tool window was on the side bar. -->
+            <MenuItem Header="_Solution Explorer" InputGesture="Ctrl+Alt+L" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.SolutionExplorer}" />
             <MenuItem Header="_Git Changes" Command="{Binding ShowGitChangesCommand}" />
             <MenuItem Header="_Database Explorer" Command="{Binding ShowDatabaseCommand}" />
             <MenuItem Header="GitHub Actio_ns" Command="{Binding ShowActionsCommand}" />
@@ -199,6 +207,7 @@
             <MenuItem Header="_Serial Monitor" Command="{Binding ShowSerialMonitorCommand}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
             <MenuItem Header="Re_ferences" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.References}" />
+            <MenuItem Header="Side Ba_r" Command="{Binding ToggleSideBarCommand}" />
             <MenuItem Header="_Bottom Panel" Command="{Binding ToggleBottomPanelCommand}" />
             <MenuItem Header="Des_ktop Mode" ToggleType="CheckBox" IsChecked="{Binding DesktopMode.IsActive, Mode=TwoWay, FallbackValue=False}"
                       IsEnabled="{Binding DesktopMode.HasDisplay, FallbackValue=False}" IsVisible="{Binding DesktopMode.IsSupported, FallbackValue=False}" />
@@ -926,7 +935,12 @@
       -->
       <Border x:Name="SideBarFrame" Grid.Column="2" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.Border}" ZIndex="10">
         <Grid x:Name="SideBar" RowDefinitions="*,Auto,Auto">
-          <views:SolutionExplorerView DataContext="{Binding Explorer}" />
+          <!--
+            Only the chosen tool window shows. Solution Explorer and Properties stayed visible under the others, where
+            Tab, F6 and TalkBack still reached their controls and the layout checks found them under the shown window.
+          -->
+          <views:SolutionExplorerView DataContext="{Binding Explorer}"
+                                      IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsSolutionExplorerSelected}" />
           <Panel Grid.RowSpan="3" ZIndex="20" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsRemoteExplorerSelected}">
             <controls:DeferredView ViewType="{x:Type views:RemoteExplorerView}" DataContext="{Binding RemoteExplorer}" />
           </Panel>
@@ -940,8 +954,14 @@
             </GridSplitter.Template>
           </GridSplitter>
           <!-- Properties, folded into its header until a tap opens it; hidden while a designer shows its own. -->
-          <views:PropertiesView Grid.Row="2" x:Name="PropertiesPanel" DataContext="{Binding Properties}"
-                                IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).ShowsSideBarProperties}" />
+          <views:PropertiesView Grid.Row="2" x:Name="PropertiesPanel" DataContext="{Binding Properties}">
+            <views:PropertiesView.IsVisible>
+              <MultiBinding Converter="{x:Static BoolConverters.And}">
+                <Binding Path="$parent[UserControl].((vm:WorkspaceViewModel)DataContext).ShowsSideBarProperties" />
+                <Binding Path="$parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsSolutionExplorerSelected" />
+              </MultiBinding>
+            </views:PropertiesView.IsVisible>
+          </views:PropertiesView>
           <controls:DeferredView ViewType="{x:Type views:GitChangesView}" Grid.Row="0" Grid.RowSpan="3" DataContext="{Binding GitChanges}"
                                  IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsGitChangesSelected}" />
 
@@ -1130,7 +1150,9 @@
         <controls:AdaptiveBarSpacer />
 
         <!-- The editor: the caret stays; the language, encoding, line endings and indentation fold into More. -->
-        <controls:AdaptiveBarItem Classes="status" Label="{Binding CaretText}" IsPinned="True" Priority="90" IsVisible="{Binding ShowsEditorStatus}" />
+        <!-- The caret's place: tap to go to another line, as in Visual Studio. The items after it are labels. -->
+        <controls:AdaptiveBarItem Classes="status" Label="{Binding CaretText}" Gesture="Ctrl+G" IsPinned="True" Priority="90" IsVisible="{Binding ShowsEditorStatus}"
+                                  Command="{Binding GoToLineCommand}" />
         <controls:AdaptiveBarItem Classes="status" Label="Spaces: 4" Priority="20" IsVisible="{Binding ShowsEditorStatus}" />
         <controls:AdaptiveBarItem Classes="status" Label="{Binding ActiveDocument.EncodingLabel, FallbackValue={x:Null}}" Priority="30"
                                   IsVisible="{Binding ShowsEditorStatus}" />
@@ -1182,7 +1204,7 @@
           <!-- A choice, such as which APK to install: rows to tap rather than a number to type. -->
           <Border CornerRadius="{StaticResource Radius.Control}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1"
                   Background="{DynamicResource Brush.Control}" ClipToBounds="True" IsVisible="{Binding Prompt.HasChoices}">
-            <ListBox x:Name="PromptChoices" ItemsSource="{Binding Prompt.Choices}" SelectedIndex="{Binding Prompt.SelectedIndex}" MaxHeight="264"
+            <ListBox x:Name="PromptChoices" ItemsSource="{Binding Prompt.Choices}" AutomationProperties.Name="{Binding Prompt.Title}" SelectedIndex="{Binding Prompt.SelectedIndex}" MaxHeight="264"
                      ItemContainerTheme="{StaticResource ListRow}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
               <ListBox.Styles>
                 <Style Selector="ListBoxItem">
@@ -1197,10 +1219,10 @@
               </ListBox.ItemTemplate>
             </ListBox>
           </Border>
-          <TextBox x:Name="PromptBox" Classes="large mono" Text="{Binding Prompt.Text}" PasswordChar="{Binding Prompt.PasswordCharacter}" IsVisible="{Binding Prompt.HasInput}" />
+          <TextBox x:Name="PromptBox" Classes="large mono" Text="{Binding Prompt.Text}" AutomationProperties.Name="{Binding Prompt.Title}" PasswordChar="{Binding Prompt.PasswordCharacter}" IsVisible="{Binding Prompt.HasInput}" />
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
             <Button Theme="{StaticResource SecondaryButton}" Padding="18,0" Content="Cancel" Command="{Binding Prompt.CancelCommand}" />
-            <Button Theme="{StaticResource AccentButton}" Padding="18,0" Content="{Binding Prompt.ConfirmText}"
+            <Button x:Name="PromptConfirm" Theme="{StaticResource AccentButton}" Padding="18,0" Content="{Binding Prompt.ConfirmText}"
                     Classes.destructive="{Binding Prompt.IsDestructive}" Command="{Binding Prompt.ConfirmCommand}" />
           </StackPanel>
         </StackPanel>

@@ -37,6 +37,9 @@ public sealed partial class CodeEditorView
         menu.Items.Add(_cutItem);
         menu.Items.Add(_copyItem);
         menu.Items.Add(MenuEntry("Paste", new KeyGesture(Key.V, KeyModifiers.Control), null, _editor.Paste));
+
+        // Without a keyboard there was no Ctrl+A: a finger had to drag across every line.
+        menu.Items.Add(MenuEntry("Select All", new KeyGesture(Key.A, KeyModifiers.Control), null, _editor.SelectAll));
         menu.Items.Add(new Separator());
         menu.Items.Add(MenuEntry("Format Document", new KeyGesture(Key.F, KeyModifiers.Shift | KeyModifiers.Alt), null, () => _ = Workspace?.FormatDocumentCommand.ExecuteAsync(null)));
         menu.Items.Add(MenuEntry("Toggle Line Comment", new KeyGesture(Key.OemQuestion, KeyModifiers.Control), null, ToggleComment));

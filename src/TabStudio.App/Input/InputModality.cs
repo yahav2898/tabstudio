@@ -74,14 +74,17 @@ public static class InputModality
 
     /// <summary>
     /// Whether a key press came from a hardware keyboard. On-screen keyboards type text rather than keys, apart from a
-    /// few such as Enter and Backspace; letters, digits, function keys, arrows and shortcuts come from a hardware keyboard.
+    /// few such as Enter and Backspace; letters, digits, function keys, arrows, Home, End, Page Up and Page Down
+    /// and shortcuts come from a hardware keyboard. Home and End were left out, so a keyboard's first key could leave
+    /// the IDE showing its touch bar over the code.
     /// </summary>
     /// <param name="key">The key.</param>
     /// <param name="modifiers">The modifiers held with it.</param>
     public static bool IsHardwareKey(Key key, KeyModifiers modifiers) =>
         modifiers is not (KeyModifiers.None or KeyModifiers.Shift)
         || key is (>= Key.A and <= Key.Z) or (>= Key.D0 and <= Key.D9) or (>= Key.F1 and <= Key.F24)
-            or Key.Up or Key.Down or Key.Left or Key.Right or Key.Tab;
+            or Key.Up or Key.Down or Key.Left or Key.Right or Key.Tab
+            or Key.Home or Key.End or Key.PageUp or Key.PageDown;
 
     private static void OnKeyDown(object? sender, KeyEventArgs e)
     {

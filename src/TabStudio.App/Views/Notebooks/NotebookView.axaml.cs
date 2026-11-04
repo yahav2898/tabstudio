@@ -153,6 +153,15 @@ public sealed partial class NotebookView : UserControl, IDisposable
             case EditorAction.SelectAll when selected is not null:
                 EditorFor(selected)?.Editor.SelectAll();
                 break;
+            case EditorAction.Cut when selected is not null:
+                EditorFor(selected)?.Editor.Cut();
+                break;
+            case EditorAction.Copy when selected is not null:
+                EditorFor(selected)?.Editor.Copy();
+                break;
+            case EditorAction.Paste when selected is not null:
+                EditorFor(selected)?.Editor.Paste();
+                break;
             case EditorAction.Focus when selected is { ShowsEditor: true }:
                 selected.RequestFocus();
                 break;
