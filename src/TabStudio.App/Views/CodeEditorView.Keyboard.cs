@@ -12,12 +12,36 @@ namespace TabStudio.App.Views;
 public sealed partial class CodeEditorView
 {
     /// <summary>Starts keeping the caret in view as the editor gets shorter. Called by the constructor.</summary>
-    private void InitializeCaretKeeping() => TextView.PropertyChanged += OnTextViewBoundsChanged;
+    private void InitializeCaretKeeping()
+    {
+        TextView.PropertyChanged += OnTextViewBoundsChanged;
+        AttachedToVisualTree += (_, _) => _windowHeight = AvailableHeight();
+    }
+
+    /// <summary>
+    /// The window's height above the on-screen keyboard: Android resizes the window for it, or, drawn edge to edge,
+    /// keeps the window and reports the keyboard's height.
+    /// </summary>
+    private double AvailableHeight() => TopLevel.GetTopLevel(this) is { } top
+        ? top.ClientSize.Height - (top.InputPane is { State: Avalonia.Controls.Platform.InputPaneState.Open } pane ? pane.OccludedRect.Height : 0)
+        : 0;
+
+    private double _windowHeight;
 
     private void OnTextViewBoundsChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.Property != BoundsProperty || e.OldValue is not Rect before || e.NewValue is not Rect after
             || after.Height >= before.Height - 0.5 || after.Height < 1 || !_editor.TextArea.IsKeyboardFocusWithin)
+        {
+            return;
+        }
+
+        // Only when the window itself got shorter (the keyboard, a split screen, rotation): a change of the text size
+        // or a panel's height also shortens the editor, and must not scroll it and close Quick Info at the caret.
+        var window = AvailableHeight();
+        var shorter = window < _windowHeight - 0.5;
+        _windowHeight = window;
+        if (!shorter)
         {
             return;
         }

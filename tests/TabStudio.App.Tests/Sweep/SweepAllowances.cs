@@ -27,6 +27,7 @@ internal static class SweepAllowances
         ("no-effect", "\"Save All\"", "Nothing is unsaved after the sweep puts the sample back."),
         ("no-effect", "> \"Output\"", "The Output tab is already the one shown."),
         ("no-effect", "Run Android App", "It repeats the status Build Android APK just showed: choose an Android startup project first."),
+        ("no-effect", "Debug Tests in Context", "It repeats the status Run Tests in Context just showed: there are no tests at the caret of the sample."),
         ("no-effect", "Edit register field", "It repeats the status the register commands just showed: load the chip's SVD first."),
 
         // Left to their areas, in the pull request's remaining problems.
