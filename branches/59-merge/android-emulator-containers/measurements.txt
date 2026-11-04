@@ -1,0 +1,24 @@
+Startup to self test start: 13.87 s
+TabStudio startup: first frame at 13617 ms, ready at 13617 ms; process start to activity 4497 ms, application +2086 ms, styles +642 ms, services +729 ms, theme +243 ms, view models +2167 ms, main view +1368 ms, start screen +53 ms, first frame +1832 ms
+TabStudio UI stalls: 31 over 100 ms (13 over 250 ms, 6 over 1 s), 18.6 s in all, longest 4696 ms during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution; answer p50 2.4 ms, p95 25.1 ms, p99 74.5 ms over 3636 questions in 111 s
+TabStudio UI timings: workspace view 2490 ms, workspace view model 1054 ms, document view 239 ms
+TabStudio UI stall: 4696 ms at 0.5 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 3827 ms at 7.5 s during backing services
+TabStudio UI stall: 1309 ms at 12.9 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 1251 ms at 14.4 s during the end of the run
+TabStudio UI stall: 1059 ms at 5.2 s during reading the solution
+TabStudio UI stall: 1050 ms at 11.6 s during loading C#
+TabStudio UI stall: 750 ms at 6.3 s during showing the solution in Solution Explorer → databases, startup projects and toolchains
+TabStudio UI stall: 356 ms at 35.1 s during the end of the run
+TabStudio UI stall: 323 ms at 17.6 s during the end of the run
+TabStudio UI stall: 309 ms at 108.9 s during the end of the run
+TabStudio UI stall: 281 ms at 0.0 s during the end of the run
+TabStudio UI stall: 272 ms at 110.1 s during the end of the run
+TabStudio UI stall: 265 ms at 27.8 s during the end of the run
+TabStudio UI stall: 230 ms at 109.8 s during the end of the run
+TabStudio UI stall: 220 ms at 63.8 s during the end of the run
+Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
+ Native Heap 280838 280812 20 34 281808 299436 289254 5797
+ Dalvik Heap 2555 2524 0 77 4732 7936 3968 3968
+ TOTAL 601250 546568 29716 212 743928 307372 293222 9765
+ TOTAL PSS: 601250 TOTAL RSS: 743928 TOTAL SWAP PSS: 212
