@@ -299,7 +299,7 @@ internal sealed class SweepHarness : IDisposable
         IReadOnlyList<AccessibilityFinding> found;
         try
         {
-            found = AccessibilityAudit.Everything(Window, IsDark, overlaps: OpenOverlay() is null && !HasLightDismissPopup());
+            found = AccessibilityAudit.Everything(Window, IsDark, overlaps: OpenOverlay() is null && !HasLightDismissPopup() && !IsDrawerOpen());
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
@@ -335,6 +335,13 @@ internal sealed class SweepHarness : IDisposable
 
         return name;
     }
+
+    /// <summary>
+    /// Whether the side bar is open as a drawer over the editor, as in portrait: it lies over the editor and the bottom
+    /// panel by design, and a tap beside it closes it.
+    /// </summary>
+    public bool IsDrawerOpen() =>
+        Main.Workspace is { IsSideBarVisible: true } && Window.GetVisualDescendants().OfType<WorkspaceView>().FirstOrDefault() is { IsSideBarDocked: false };
 
     /// <summary>Whether a flyout, context menu or other light-dismiss popup is open: the first tap only closes it.</summary>
     public bool HasLightDismissPopup() =>

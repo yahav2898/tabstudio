@@ -37,6 +37,8 @@ internal static class SweepAllowances
         ("no-effect", "ContainersView > \"Stop\"", "Containers: Stop is enabled with no container selected."),
         ("no-effect", "ContainersView > \"Restart\"", "Containers: Restart is enabled with no container selected."),
         ("no-effect", "ContainersView > \"Start\"", "Containers: Start is enabled with no container selected."),
+        ("no-effect", "ContainersView > \"Cancel\"", "Containers: the run form's Cancel lies under the form's content, left to the containers area."),
+        ("covered", "ContainersView > \"Cancel\"", "Containers: the run form's Cancel lies under the form's content, left to the containers area."),
 
         // A splitter's grab area reaches a few pixels past its line by design, so a finger can find it.
         ("overlap", "lies under GridSplitter", "A splitter takes the few pixels at the edge of what it resizes, by design."),

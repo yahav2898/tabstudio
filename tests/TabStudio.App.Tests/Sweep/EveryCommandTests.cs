@@ -181,6 +181,7 @@ public sealed partial class EveryCommandTests
     [AvaloniaFact]
     public async Task Every_button_of_the_shell_and_its_tool_windows_works_by_touch_in_both_orientations()
     {
+        var failures = new List<string>();
         foreach (var (name, width, height) in new[] { ("landscape", 1280.0, 800.0), ("portrait", 800.0, 1280.0) })
         {
             using var sweep = new SweepHarness("touch-" + name);
@@ -206,8 +207,19 @@ public sealed partial class EveryCommandTests
             }
 
             sweep.Note(string.Create(CultureInfo.InvariantCulture, $"tapped\t{done.Count}"));
-            Finish(sweep);
+
+            // Both orientations run before anything fails, so one run reports what each finds.
+            try
+            {
+                Finish(sweep);
+            }
+            catch (Xunit.Sdk.XunitException ex)
+            {
+                failures.Add(ex.Message);
+            }
         }
+
+        Assert.True(failures.Count == 0, string.Join("\n", failures));
     }
 
     [AvaloniaFact]
@@ -828,8 +840,29 @@ public sealed partial class EveryCommandTests
             sweep.Pump();
         }
 
+        // As a finger scrolls a list or a strip until the whole button shows, not just its edge.
+        foreach (var scroller in button.GetVisualAncestors().OfType<ScrollViewer>().ToList())
+        {
+            if (button.TranslatePoint(default, scroller) is { } at)
+            {
+                var offset = scroller.Offset;
+                var x = at.X < 0 ? offset.X + at.X : at.X + button.Bounds.Width > scroller.Viewport.Width ? offset.X + at.X + button.Bounds.Width - scroller.Viewport.Width : offset.X;
+                var y = at.Y < 0 ? offset.Y + at.Y : at.Y + button.Bounds.Height > scroller.Viewport.Height ? offset.Y + at.Y + button.Bounds.Height - scroller.Viewport.Height : offset.Y;
+                scroller.Offset = new Vector(Math.Max(0, x), Math.Max(0, y));
+            }
+        }
+
+        sweep.Window.UpdateLayout();
+        sweep.Pump();
         var middle = button.TranslatePoint(new Point(button.Bounds.Width / 2, button.Bounds.Height / 2), sweep.Window)
             ?? throw new InvalidOperationException("The button left the window.");
+        if (sweep.IsDrawerOpen() && sweep.Window.InputHitTest(middle) is Control { Name: "DrawerDismiss" })
+        {
+            // Beside the open drawer, a tap closes the drawer first, as on a tablet: close it, then tap.
+            sweep.Workspace.IsSideBarVisible = false;
+            sweep.Pump();
+        }
+
         if (sweep.Window.InputHitTest(middle) is Visual hit && !ReferenceEquals(hit, button) && !button.IsVisualAncestorOf(hit))
         {
             sweep.Add("covered", where, $"A tap on its middle reaches {hit.GetType().Name}{(hit is Control { Name: { Length: > 0 } name } ? "#" + name : string.Empty)} instead.");
