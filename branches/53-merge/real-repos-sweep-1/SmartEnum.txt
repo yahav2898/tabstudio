@@ -26,7 +26,7 @@ Compatibility Doctor:
   SmartEnum.GuardClauses: Library via Built with its users - A library is compiled together with the projects that reference it.
   SmartEnum.GuardClauses.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
 Startup project: none
-Built in 6.7 s: 0 errors, 4 warnings
+Built in 6.8 s: 0 errors, 4 warnings
 Packages with analyzers or MSBuild files:
   coverlet.collector 6.0.2
       build/netstandard2.0/Microsoft.Bcl.AsyncInterfaces.dll
@@ -407,34 +407,42 @@ Packages with analyzers or MSBuild files:
       build/net6.0/xunit.runner.visualstudio.props
       build/net6.0/xunit.runner.visualstudio.testadapter.dll
 Editor: 24 files opened and analyzed in 0.8 s, 0 errors only the editor shows, 0 only the build shows
-Tests: 431 passed, 0 failed, 0 skipped of 431: 431 tests run in 3.6 sec: 431 passed, 0 failed, 0 skipped.
+Tests: 431 passed, 0 failed, 0 skipped of 431: 431 tests run in 3.9 sec: 431 passed, 0 failed, 0 skipped.
+UI stalls: 4 over 100 ms (2 over 250 ms, 0 over 1 s), 0.9 s in all, longest 343 ms during screenshots, 0.0 s of it garbage collection; answer p50 7.6 ms, p95 16.3 ms, p99 67.2 ms over 543 questions in 15 s
+UI timings: document view 52 ms, document view 39 ms, document view 5 ms, document view 5 ms, document view 4 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms, document view 3 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 343 ms | 35 ms | 0.5 s | screenshots |
+| 267 ms | 0 ms | 1.1 s | screenshots |
+| 181 ms | 9 ms | 8.2 s | screenshots |
+| 129 ms | 0 ms | 8.5 s | screenshots |
 Output:
-Build started at 05:35:07...
+Build started at 07:46:10...
 1>------ Build started: Project: SmartEnum.UnitTests, Configuration: Debug ------
-1>SmartEnum.UnitTests -> compiled in memory (28 KB, 84 ms)
+1>SmartEnum.UnitTests -> compiled in memory (28 KB, 98 ms)
 2>------ Build started: Project: SmartEnum.AutoFixture.UnitTests, Configuration: Debug ------
-2>SmartEnum.AutoFixture.UnitTests -> compiled in memory (4 KB, 85 ms)
+2>SmartEnum.AutoFixture.UnitTests -> compiled in memory (4 KB, 95 ms)
 3>------ Build started: Project: SmartEnum.JsonNet.UnitTests, Configuration: Debug ------
-3>SmartEnum.JsonNet.UnitTests -> compiled in memory (23.5 KB, 75 ms)
+3>SmartEnum.JsonNet.UnitTests -> compiled in memory (23.5 KB, 109 ms)
 4>------ Build started: Project: SmartEnum.MessagePack.UnitTests, Configuration: Debug ------
-4>SmartEnum.MessagePack.UnitTests -> compiled in memory (14 KB, 58 ms)
+4>SmartEnum.MessagePack.UnitTests -> compiled in memory (14 KB, 63 ms)
 5>------ Build started: Project: SmartEnum.ProtoBufNet.UnitTests, Configuration: Debug ------
-5>SmartEnum.ProtoBufNet.UnitTests -> compiled in memory (11 KB, 78 ms)
+5>SmartEnum.ProtoBufNet.UnitTests -> compiled in memory (11 KB, 58 ms)
 6>------ Build started: Project: SmartEnum.Utf8Json.UnitTests, Configuration: Debug ------
-6>SmartEnum.Utf8Json.UnitTests -> compiled in memory (18 KB, 98 ms)
+6>SmartEnum.Utf8Json.UnitTests -> compiled in memory (18 KB, 74 ms)
 7>------ Build started: Project: SmartFlagEnum.UnitTests, Configuration: Debug ------
-7>SmartFlagEnum.UnitTests -> compiled in memory (31 KB, 98 ms)
+7>SmartFlagEnum.UnitTests -> compiled in memory (31 KB, 208 ms)
 8>------ Build started: Project: SmartEnum.SystemTextJson.UnitTests, Configuration: Debug ------
-8>SmartEnum.SystemTextJson.UnitTests -> compiled in memory (28.5 KB, 76 ms)
+8>SmartEnum.SystemTextJson.UnitTests -> compiled in memory (28.5 KB, 108 ms)
 9>------ Build started: Project: SmartEnum.EFCore.IntegrationTests, Configuration: Debug ------
-9>SmartEnum.EFCore.IntegrationTests -> compiled in memory (16 KB, 83 ms)
+9>SmartEnum.EFCore.IntegrationTests -> compiled in memory (16 KB, 112 ms)
 10>------ Build started: Project: SmartEnum.Dapper.UnitTests, Configuration: Debug ------
-10>SmartEnum.Dapper.UnitTests -> compiled in memory (20 KB, 98 ms)
+10>SmartEnum.Dapper.UnitTests -> compiled in memory (20 KB, 96 ms)
 11>------ Build started: Project: SmartEnum.Dapper.IntegrationTests, Configuration: Debug ------
-11>SmartEnum.Dapper.IntegrationTests -> compiled in memory (6.5 KB, 68 ms)
+11>SmartEnum.Dapper.IntegrationTests -> compiled in memory (6.5 KB, 69 ms)
 12>------ Build started: Project: SmartEnum.GuardClauses.UnitTests, Configuration: Debug ------
-12>SmartEnum.GuardClauses.UnitTests -> compiled in memory (8 KB, 59 ms)
+12>SmartEnum.GuardClauses.UnitTests -> compiled in memory (8 KB, 60 ms)
 ========== Build: 12 succeeded, 0 failed ==========
 ========== Starting test run ==========
-========== Test run finished: 431 Tests (431 Passed, 0 Failed, 0 Skipped) run in 3.6 sec ==========
+========== Test run finished: 431 Tests (431 Passed, 0 Failed, 0 Skipped) run in 3.9 sec ==========
 
