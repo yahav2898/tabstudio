@@ -288,6 +288,53 @@ public sealed class SdkProjectItemsTests
     }
 
     [Fact]
+    public void A_source_a_target_writes_from_a_property_gets_the_characters_its_escapes_stand_for()
+    {
+        // FastEndpoints.Swagger writes its module initializer from a property whose semicolons are written %3b; MSBuild
+        // hands WriteLinesToFile the text unescaped. Written as it was, CleanArchitecture's web project had 14 errors.
+        using var temp = new TempDirectory();
+        var path = temp.Write("Web/Web.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.Web">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+            </Project>
+            """);
+        var targets = temp.Write("packages/fastendpoints.swagger/build/FastEndpoints.Swagger.targets", """
+            <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+              <PropertyGroup>
+                <SwaggerExportPath Condition="'$(SwaggerExportPath)' == ''">wwwroot/openapi</SwaggerExportPath>
+              </PropertyGroup>
+              <Target Name="GenerateSwaggerExportPathInitializer" BeforeTargets="CoreCompile" Condition="'$(MSBuildProjectName)' != 'FastEndpoints.Swagger'">
+                <PropertyGroup>
+                  <_SwaggerInitFile>$(IntermediateOutputPath)SwaggerExportPathInitializer.g.cs</_SwaggerInitFile>
+                  <_SwaggerInitFileContent>
+            using System.Runtime.CompilerServices%3b
+            namespace FastEndpoints.Swagger%3b
+            internal static class SwaggerExportPathInitializer
+            {
+                [ModuleInitializer]
+                internal static void Initialize() => DocumentOptions.SwaggerExportPath = "$(SwaggerExportPath)"%3b
+            }
+                  </_SwaggerInitFileContent>
+                </PropertyGroup>
+                <WriteLinesToFile File="$(_SwaggerInitFile)" Lines="$(_SwaggerInitFileContent)" Overwrite="true" WriteOnlyWhenDifferent="true"/>
+                <ItemGroup>
+                  <Compile Include="$(_SwaggerInitFile)"/>
+                </ItemGroup>
+              </Target>
+            </Project>
+            """);
+
+        var project = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(path), [targets]);
+
+        var file = Assert.Single(project.PackageCompileFiles);
+        Assert.Equal("SwaggerExportPathInitializer.g.cs", Path.GetFileName(file.FullPath));
+        Assert.DoesNotContain("%3b", file.Text, StringComparison.Ordinal);
+        Assert.Contains("using System.Runtime.CompilerServices;", file.Text, StringComparison.Ordinal);
+        Assert.Contains("DocumentOptions.SwaggerExportPath = \"wwwroot/openapi\";", file.Text, StringComparison.Ordinal);
+        Assert.Contains("namespace FastEndpoints.Swagger;", file.Text, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void A_package_s_targets_remove_the_generator_it_replaces()
     {
         // eShop's Ordering.API: Microsoft.Extensions.Telemetry.Abstractions writes [LoggerMessage] code itself and removes

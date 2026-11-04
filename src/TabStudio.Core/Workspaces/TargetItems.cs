@@ -531,6 +531,10 @@ public static partial class TargetItems
                             return;
                         }
 
+                        // MSBuild hands a task its parameters unescaped: FastEndpoints.Swagger writes its module
+                        // initializer from a property whose semicolons are %3b, which reached the compiler as written
+                        // (14 errors in CleanArchitecture's web project).
+                        line = Unescape(line);
                         if (line.Length > 0)
                         {
                             written.Append(line).Append('\n');
@@ -655,6 +659,17 @@ public static partial class TargetItems
         text = string.Empty;
         return false;
     }
+
+    /// <summary>
+    /// A value as a task gets it: MSBuild's escapes of its own special characters (<c>%3B</c> for <c>;</c>, <c>%24</c> for
+    /// <c>$</c>, <c>%40</c>, <c>%25</c>, <c>%27</c>, <c>%3F</c>, <c>%2A</c>) turned back into the characters. Other
+    /// <c>%</c> sequences are left as they are, as text a property function read from a file may have them.
+    /// </summary>
+    private static string Unescape(string text) =>
+        text.Contains('%', StringComparison.Ordinal) ? MsBuildEscape().Replace(text, m => ((char)Convert.ToInt32(m.Groups[1].Value, 16)).ToString()) : text;
+
+    [GeneratedRegex("%(3[Bb]|24|40|25|27|3[Ff]|2[Aa])", RegexOptions.CultureInvariant, 100)]
+    private static partial Regex MsBuildEscape();
 
     /// <summary>The parts of a text between its semicolons, outside <c>$( … )</c>.</summary>
     private static List<string> SplitOutside(string text)
