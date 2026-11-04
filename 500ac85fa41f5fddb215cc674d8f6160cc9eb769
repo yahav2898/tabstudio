@@ -1,0 +1,22 @@
+Solitaire at b61b42b86fc14c54cf2c8639a765234952579b5f
+Opened /home/runner/work/_temp/real-repos/Solitaire/Solitaire.sln in 0.3 s
+Compatibility Doctor:
+  Solitaire: Ready via Cross-platform Forms layer in the app preview - Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here.
+Startup project: Solitaire
+Built in 0.2 s: 0 errors, 0 warnings
+Editor: 3 files opened and analyzed in 0.2 s, 0 errors only the editor shows, 0 only the build shows
+UI stalls: 5 over 100 ms (0 over 250 ms, 0 over 1 s), 0.8 s in all, longest 215 ms during screenshots, 0.1 s of it garbage collection; answer p50 5.4 ms, p95 173.6 ms, p99 214.5 ms over 27 questions in 2 s
+UI timings: document view 116 ms, document view 3 ms, document view 2 ms, document view 1 ms
+| Stall | Of it, GC | At | During |
+| --- | --- | --- | --- |
+| 215 ms | 35 ms | 0.4 s | screenshots |
+| 174 ms | 20 ms | 0.6 s | screenshots |
+| 145 ms | 0 ms | 1.0 s | screenshots |
+| 128 ms | 7 ms | 1.2 s | screenshots |
+| 118 ms | 58 ms | 0.1 s | creating a document's view → starting restore and analysis |
+Output:
+Build started at 10:32:02...
+1>------ Build started: Project: Solitaire, Configuration: Debug ------
+1>Solitaire -> compiled in memory (1652 KB, 172 ms)
+========== Build: 1 succeeded, 0 failed ==========
+
