@@ -1,71 +1,71 @@
 Activity Resolver Table:
   Non-Data Actions:
       android.intent.action.MAIN:
-        91baaa2 com.tabstudio.ide/.MainActivity filter a113333
+        ed2a0f2 com.tabstudio.ide/.MainActivity filter 9e47343
           Action: "android.intent.action.MAIN"
           Category: "android.intent.category.LAUNCHER"
 
 Receiver Resolver Table:
   Non-Data Actions:
       androidx.profileinstaller.action.SAVE_PROFILE:
-        35e86f0 com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter 721cf8f
+        a35adc0 com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter 151009f
           Action: "androidx.profileinstaller.action.SAVE_PROFILE"
       androidx.profileinstaller.action.INSTALL_PROFILE:
-        35e86f0 com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter 9fcc469
+        a35adc0 com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter 64baaf9
           Action: "androidx.profileinstaller.action.INSTALL_PROFILE"
       androidx.profileinstaller.action.SKIP_FILE:
-        35e86f0 com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter 6adceee
+        a35adc0 com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter 1e5da3e
           Action: "androidx.profileinstaller.action.SKIP_FILE"
       androidx.profileinstaller.action.BENCHMARK_OPERATION:
-        35e86f0 com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter e3d221c
+        a35adc0 com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter 7a7e5ec
           Action: "androidx.profileinstaller.action.BENCHMARK_OPERATION"
 
 Domain verification status:
 
 Permissions:
-  Permission [com.tabstudio.ide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION] (bbe2525):
+  Permission [com.tabstudio.ide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION] (b1526c9):
     sourcePackage=com.tabstudio.ide
     uid=10209 gids=[] type=0 prot=signature
-    perm=PermissionInfo{ee546fa com.tabstudio.ide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION}
+    perm=PermissionInfo{248f1ce com.tabstudio.ide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION}
     flags=0x0
 
 Registered ContentProviders:
   com.tabstudio.ide/mono.MonoRuntimeProvider:
-    Provider{acc9708 com.tabstudio.ide/mono.MonoRuntimeProvider}
+    Provider{60fe8ef com.tabstudio.ide/mono.MonoRuntimeProvider}
   com.tabstudio.ide/androidx.startup.InitializationProvider:
-    Provider{750eea1 com.tabstudio.ide/androidx.startup.InitializationProvider}
+    Provider{5992ffc com.tabstudio.ide/androidx.startup.InitializationProvider}
   com.tabstudio.ide/crc64cb38354929939e3e.ClipboardImageProvider:
-    Provider{7b0d8c6 com.tabstudio.ide/crc64cb38354929939e3e.ClipboardImageProvider}
+    Provider{7c06685 com.tabstudio.ide/crc64cb38354929939e3e.ClipboardImageProvider}
 
 ContentProvider Authorities:
   [com.tabstudio.ide.androidx-startup]:
-    Provider{750eea1 com.tabstudio.ide/androidx.startup.InitializationProvider}
-      applicationInfo=ApplicationInfo{77cd087 com.tabstudio.ide}
+    Provider{5992ffc com.tabstudio.ide/androidx.startup.InitializationProvider}
+      applicationInfo=ApplicationInfo{c065cda com.tabstudio.ide}
   [com.tabstudio.ide.clipboard]:
-    Provider{7b0d8c6 com.tabstudio.ide/crc64cb38354929939e3e.ClipboardImageProvider}
-      applicationInfo=ApplicationInfo{7181bb4 com.tabstudio.ide}
+    Provider{7c06685 com.tabstudio.ide/crc64cb38354929939e3e.ClipboardImageProvider}
+      applicationInfo=ApplicationInfo{99c250b com.tabstudio.ide}
   [com.tabstudio.ide.mono.MonoRuntimeProvider.__mono_init__]:
-    Provider{acc9708 com.tabstudio.ide/mono.MonoRuntimeProvider}
-      applicationInfo=ApplicationInfo{eecd3dd com.tabstudio.ide}
+    Provider{60fe8ef com.tabstudio.ide/mono.MonoRuntimeProvider}
+      applicationInfo=ApplicationInfo{c474fe8 com.tabstudio.ide}
 
 Key Set Manager:
   [com.tabstudio.ide]
       Signing KeySets: 59
 
 Packages:
-  Package [com.tabstudio.ide] (21cf9e):
+  Package [com.tabstudio.ide] (f5b4eee):
     appId=10209
-    pkg=Package{d51bb52 com.tabstudio.ide}
-    codePath=/data/app/~~D1rKUsrHqsErFuQNTnlUyw==/com.tabstudio.ide-Tmv0Ya8sv1QF1pZSQFh4dw==
-    resourcePath=/data/app/~~D1rKUsrHqsErFuQNTnlUyw==/com.tabstudio.ide-Tmv0Ya8sv1QF1pZSQFh4dw==
-    legacyNativeLibraryDir=/data/app/~~D1rKUsrHqsErFuQNTnlUyw==/com.tabstudio.ide-Tmv0Ya8sv1QF1pZSQFh4dw==/lib
+    pkg=Package{a25e601 com.tabstudio.ide}
+    codePath=/data/app/~~pA0Dxxpb6jJYR5kmBoMp9A==/com.tabstudio.ide-P_g7-dEkM8iCHWtoFmdfgg==
+    resourcePath=/data/app/~~pA0Dxxpb6jJYR5kmBoMp9A==/com.tabstudio.ide-P_g7-dEkM8iCHWtoFmdfgg==
+    legacyNativeLibraryDir=/data/app/~~pA0Dxxpb6jJYR5kmBoMp9A==/com.tabstudio.ide-P_g7-dEkM8iCHWtoFmdfgg==/lib
     extractNativeLibs=true
     primaryCpuAbi=x86_64
     secondaryCpuAbi=null
     cpuAbiOverride=null
-    versionCode=442404 minSdk=28 targetSdk=36
+    versionCode=442531 minSdk=28 targetSdk=36
     minExtensionVersions=[]
-    versionName=0.21.4
+    versionName=0.21.7
     hiddenApiEnforcementPolicy=2
     usesNonSdkApi=false
     splits=[base]
@@ -76,8 +76,8 @@ Packages:
     queriesIntents=[Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] }]
     scannedAsStoppedSystemApp=false
     supportsScreens=[small, medium, large, xlarge, resizeable, anyDensity]
-    timeStamp=2026-11-04 05:40:39
-    lastUpdateTime=2026-11-04 05:40:41
+    timeStamp=2026-11-04 07:45:01
+    lastUpdateTime=2026-11-04 07:45:03
     installerPackageName=null
     installerPackageUid=-1
     initiatingPackageName=com.android.shell
@@ -85,7 +85,7 @@ Packages:
     packageSource=1
     appMetadataFilePath=null
     appMetadataSource=0
-    signatures=PackageSignatures{64bee23 version:3, signatures:[fccb9a2d], past signatures:[]}
+    signatures=PackageSignatures{3fd6ca6 version:3, signatures:[fccb9a2d], past signatures:[]}
     installPermissionsFixed=false
     pkgFlags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
     privatePkgFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
@@ -109,16 +109,16 @@ Packages:
       android.permission.FOREGROUND_SERVICE_DATA_SYNC: granted=true
       android.permission.ACCESS_NETWORK_STATE: granted=true
       android.permission.WAKE_LOCK: granted=true
-    User 0: ceDataInode=492468 deDataInode=278844 installed=true hidden=false suspended=false distractionFlags=0 stopped=true notLaunched=false enabled=0 instant=false virtual=false quarantined=false
+    User 0: ceDataInode=492577 deDataInode=278936 installed=true hidden=false suspended=false distractionFlags=0 stopped=true notLaunched=false enabled=0 instant=false virtual=false quarantined=false
       installReason=0
       dataDir=/data/user/0/com.tabstudio.ide
-      firstInstallTime=2026-11-04 05:30:30
+      firstInstallTime=2026-11-04 07:37:34
       uninstallReason=0
       overlay paths:
         /product/overlay/NavigationBarModeGestural/NavigationBarModeGesturalOverlay.apk
-        /data/resource-cache/com.android.systemui-neutral-X8dk.frro
-        /data/resource-cache/com.android.systemui-accent-vHbb.frro
-        /data/resource-cache/com.android.systemui-dynamic-TNea.frro
+        /data/resource-cache/com.android.systemui-neutral-pwzN.frro
+        /data/resource-cache/com.android.systemui-accent-tDYm.frro
+        /data/resource-cache/com.android.systemui-dynamic-9jVp.frro
       legacy overlay paths:
         /product/overlay/NavigationBarModeGestural/NavigationBarModeGesturalOverlay.apk
       gids=[3003]
@@ -144,14 +144,14 @@ Queries:
       com.google.android.googlequicksearchbox
       com.android.chrome
       com.google.android.deskclock
-      com.google.android.inputmethod.latin
       com.google.android.apps.maps
-      com.android.camera2
+      com.google.android.inputmethod.latin
       com.google.android.apps.youtube.music
-      com.google.android.gm
+      com.android.camera2
       com.google.android.contacts
       com.google.android.apps.docs
       com.google.android.calendar
+      com.google.android.gm
       com.google.android.youtube
       com.google.android.apps.photos
       com.google.android.cellbroadcastreceiver
@@ -161,10 +161,10 @@ Queries:
 
 Dexopt state:
   [com.tabstudio.ide]
-    path: /data/app/~~D1rKUsrHqsErFuQNTnlUyw==/com.tabstudio.ide-Tmv0Ya8sv1QF1pZSQFh4dw==/base.apk
+    path: /data/app/~~pA0Dxxpb6jJYR5kmBoMp9A==/com.tabstudio.ide-P_g7-dEkM8iCHWtoFmdfgg==/base.apk
       x86_64: [status=run-from-apk] [reason=unknown] [primary-abi]
         [location is error]
 
 Compiler stats:
   [com.tabstudio.ide]
-     base.apk - 2118
+     base.apk - 1525
