@@ -512,6 +512,9 @@ public sealed class SdkProjectItemsTests
         var result = ProjectParser.WithPackageBuildFiles(ProjectParser.Load(path), [project, constants]);
 
         var items = result.AdditionalFiles.Where(f => f.ItemTypes?.Contains("Constant") == true).ToDictionary(f => f.Include, StringComparer.Ordinal);
+        var seen = "targets: " + string.Join(", ", result.CompilerTargets.Select(t => t.Attribute("Name")?.Value)) + "\n"
+            + string.Join("\n", result.AdditionalFiles.Select(f => $"{f.Include} [{string.Join(",", f.ItemTypes ?? [])}] {string.Join("; ", f.Metadata.Select(m => m.Key + "=" + m.Value))}"));
+        Assert.True(items.ContainsKey("Scenarios.MultipleUses"), seen);
         Assert.Equal(new[] { "Project.CI", "Project.MSBuildProjectDirectory", "Scenarios.MultipleUses" }, items.Keys.Order(StringComparer.Ordinal));
         Assert.All(items.Values, f => Assert.True(f.IsItemOnly));
         Assert.Equal("Scenarios/MultipleUses.cs", items["Scenarios.MultipleUses"].Metadata["Value"].Replace('\\', '/'));
