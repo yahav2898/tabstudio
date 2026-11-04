@@ -1,0 +1,51 @@
+Device: Android 15 (API 35), x86_64, screen 2560x1800
+Displays:
+Built-in Screen, displayId 0
+Performing Streamed Install
+Success
+Measurements:
+Startup to self test start: 23.05 s
+TabStudio startup: first frame at 21149 ms, ready at 21149 ms; process start to activity 6268 ms, application +1807 ms, styles +1981 ms, services +1289 ms, theme +258 ms, view models +3437 ms, main view +3167 ms, start screen +81 ms, first frame +2861 ms
+TabStudio UI stalls: 131 over 100 ms (54 over 250 ms, 8 over 1 s), 84.4 s in all, longest 25413 ms during the step that ended with: Processes: started 200 programs in 28.5 s while 341 minor and 2 major collections ran; answer p50 2.6 ms, p95 24.1 ms, p99 102.1 ms over 12599 questions in 410 s
+TabStudio UI timings: document view 2866 ms, workspace view 1489 ms, workspace view model 750 ms, document view 707 ms, document view 564 ms, document view 162 ms, document view 36 ms, LocalsView 17 ms, workspace view model 15 ms, CallStackView 14 ms, workspace view model 14 ms, workspace view model 7 ms
+TabStudio UI stall: 25413 ms at 20.7 s during the step that ended with: Processes: started 200 programs in 28.5 s while 341 minor and 2 major collections ran
+TabStudio UI stall: 8537 ms at 0.7 s during the step that ended with: Extracting the sample
+TabStudio UI stall: 3693 ms at 10.4 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 3338 ms at 278.0 s during starting restore and analysis → creating a document's view
+TabStudio UI stall: 2666 ms at 407.1 s during creating a document's view
+TabStudio UI stall: 1936 ms at 18.8 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 1608 ms at 347.6 s during creating a document's view → starting restore and analysis
+TabStudio UI stall: 1048 ms at 14.1 s during reading the solution
+TabStudio UI stall: 973 ms at 281.4 s during the step that ended with: Toolchains: installed in 5 s, Hello, Tablet! This is Python 3.14.10 on TabStudio. | node v…
+TabStudio UI stall: 914 ms at 276.7 s during creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 876 ms at 9.3 s during the step that ended with: Extracting the sample
+TabStudio UI stall: 862 ms at 346.0 s during creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 849 ms at 47.3 s during the step that ended with: Processes: started 200 programs in 28.5 s while 341 minor and 2 major collections ran
+TabStudio UI stall: 848 ms at 297.7 s during the step that ended with: Embedded bridge: native PTY byte transport, baud, modem lines and hangup passed with virtu…
+TabStudio UI stall: 830 ms at 392.5 s during creating a document's view
+Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
+ Native Heap 367714 367708 0 34 368732 385084 376963 3013
+ Dalvik Heap 2967 2936 0 76 5200 7928 3964 3964
+ TOTAL 809323 756576 31424 209 947232 393012 380927 6977
+ TOTAL PSS: 809323 TOTAL RSS: 947232 TOTAL SWAP PSS: 209
+TABSTUDIO_SELFTEST_OK 409.8 s: Shard: native | Hot Reload: local Android updates deferred in 0.15; JIT runtime, restart to apply edits. MetadataUpdater.IsSupported=False; AndroidMono=True; startup environment=unset; Mono interpreter options=default; feature switch=True; local Android Hot Reload deferred; the IDE uses the JIT | Processes: started 200 programs in 28.5 s while 341 minor and 2 major collections ran | Operations service: 41 starts and stops, alive after 10 s | Toolchains: installed in 5 s, Hello, Tablet! This is Python 3.14.10 on TabStudio. | node v24.22.1 says 42 | 8 s in all | Embedded bridge: native PTY byte transport, baud, modem lines and hangup passed with virtual USB; no hardware claim. | Services: PostgreSQL in PRoot on port 43137, init script and SELECT verified in 38.9 s | Python tools: Pyright ready in 2 s, squiggled undefined_name (reportUndefinedVariable) | debugpy: Paused at a breakpoint · main.py, line 11, name = 'Tablet', in 11 s | Listening port: 38163, preview passed
+Shard: native
+Seconds from launch to verdict: 437
+Performing Streamed Install
+Success
++ adb shell run-as com.tabstudio.ide sh -c 'PROOT_LOADER='"'"'/data/app/~~VVaXDD115qYcZhFB7tv4Ww==/com.tabstudio.ide-DueTpyoqNTnawfjt0tCLdA==/lib/x86_64/libproot-loader.so'"'"' PROOT_TMP_DIR=/data/user/0/com.tabstudio.ide/files/pic-phase0/tmp PROOT_NO_SECCOMP=1 '"'"'/data/app/~~VVaXDD115qYcZhFB7tv4Ww==/com.tabstudio.ide-DueTpyoqNTnawfjt0tCLdA==/lib/x86_64/libproot.so'"'"' --kill-on-exit --link2symlink --sysvipc -L -0 -r /data/user/0/com.tabstudio.ide/files/pic-phase0/rootfs -b /dev -b /proc -b /sys -b /data/user/0/com.tabstudio.ide/files/pic-phase0/rootfs/tmp:/dev/shm -b /data/user/0/com.tabstudio.ide/files/pic-phase0/results:/results -w /work /usr/bin/env -i HOME=/root TMPDIR=/tmp PATH=/usr/bin:/bin LANG=C LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu BOX64_LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu BOX64_DYNAREC=0 BOX64_AVX=0 BOX64_LOG=0 BOX64_NOBANNER=1 BOX64_DYNACACHE=0 /bin/true'
+
++ adb shell run-as com.tabstudio.ide sh -c 'PROOT_LOADER='"'"'/data/app/~~VVaXDD115qYcZhFB7tv4Ww==/com.tabstudio.ide-DueTpyoqNTnawfjt0tCLdA==/lib/x86_64/libproot-loader.so'"'"' PROOT_TMP_DIR=/data/user/0/com.tabstudio.ide/files/pic-phase0/tmp PROOT_NO_SECCOMP=1 '"'"'/data/app/~~VVaXDD115qYcZhFB7tv4Ww==/com.tabstudio.ide-DueTpyoqNTnawfjt0tCLdA==/lib/x86_64/libproot.so'"'"' --kill-on-exit --link2symlink --sysvipc -L -0 -r /data/user/0/com.tabstudio.ide/files/pic-phase0/rootfs -b /dev -b /proc -b /sys -b /data/user/0/com.tabstudio.ide/files/pic-phase0/rootfs/tmp:/dev/shm -b /data/user/0/com.tabstudio.ide/files/pic-phase0/results:/results -w /work /usr/bin/env -i HOME=/root TMPDIR=/tmp PATH=/usr/bin:/bin LANG=C LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu BOX64_LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu BOX64_DYNAREC=0 BOX64_AVX=0 BOX64_LOG=0 BOX64_NOBANNER=1 BOX64_DYNACACHE=0 /usr/bin/box64 -v'
+/usr/bin/box64: /usr/lib/x86_64-linux-gnu/libm.so.6: version `GLIBC_2.43' not found (required by /usr/bin/box64)
+
+{
+  "emulatorAbi": "x86_64",
+  "androidApi": "35",
+  "box64Available": false,
+  "linkedFirmware": false,
+  "success": false,
+  "uid": "uid=10209(u0_a209) gid=10209(u0_a209) groups=10209(u0_a209),1004(input),1007(log),1011(adb),1015(sdcard_rw),1028(sdcard_r),1078(ext_data_rw),1079(ext_obb_rw),3001(net_bt_admin),3002(net_bt),3003(inet),3006(net_bw_stats),3009(readproc),3011(uhid),3012(readtracefs),50209(all_a209) context=u:r:runas_app:s0:c209,c256,c512,c768",
+  "nativeLibraryDirectory": "/data/app/~~VVaXDD115qYcZhFB7tv4Ww==/com.tabstudio.ide-DueTpyoqNTnawfjt0tCLdA==/lib/x86_64",
+  "prootNativeProbe": true,
+  "conditionalSkip": "box64 cannot execute on this emulator ABI; see Android probe log. ARM64 runner proof is separate."
+}
