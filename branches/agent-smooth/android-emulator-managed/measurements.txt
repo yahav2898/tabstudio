@@ -1,7 +1,24 @@
-Startup to self test start: 14.01 s
-TabStudio startup: first frame at 13742 ms, ready at 13742 ms; process start to activity 1644 ms, application +1520 ms, styles +939 ms, services +954 ms, theme +267 ms, view models +3195 ms, main view +2506 ms, start screen +65 ms, first frame +2652 ms
+Startup to self test start: 18.68 s
+TabStudio startup: first frame at 17426 ms, ready at 17426 ms; process start to activity 4171 ms, application +1534 ms, styles +1540 ms, services +1182 ms, theme +167 ms, view models +2821 ms, main view +3271 ms, start screen +51 ms, first frame +2689 ms
+TabStudio UI stalls: 301 over 100 ms (106 over 250 ms, 15 over 1 s), 112.9 s in all, longest 7985 ms during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution; answer p50 4.1 ms, p95 61.0 ms, p99 258.1 ms over 10035 questions in 423 s
+TabStudio UI timings: workspace view 3648 ms, workspace view model 2738 ms, document view 1703 ms, document view 1308 ms, document view 1020 ms, document view 613 ms, DatabaseExplorerView 595 ms, document view 560 ms, document view 303 ms, document view 247 ms, LivePanelView 242 ms, document view 196 ms
+TabStudio UI stall: 7985 ms at 8.0 s during creating the workspace's view model → creating the workspace view → the workspace view's first layout → showing the workspace → reading the solution
+TabStudio UI stall: 7269 ms at 0.7 s during creating the workspace's view model
+TabStudio UI stall: 2857 ms at 129.7 s during creating a document's view
+TabStudio UI stall: 2631 ms at 22.1 s during opening the session's documents → creating a document's view → starting restore and analysis
+TabStudio UI stall: 1878 ms at 110.9 s during the step that ended with: Web: served on 127.0.0.1:41467 in 24.7 s, the API said "Hello, Tablet!" | Web screen: type…
+TabStudio UI stall: 1740 ms at 125.6 s during creating a document's view
+TabStudio UI stall: 1536 ms at 358.7 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 1490 ms at 139.1 s during creating a document's view → creating the workspace's view model → showing the workspace → reading the solution
+TabStudio UI stall: 1447 ms at 37.4 s during the step that ended with: F5: What's your name? Tablet | Good morning, Tablet! This program was compiled and run on …
+TabStudio UI stall: 1389 ms at 16.0 s during reading the solution
+TabStudio UI stall: 1342 ms at 47.4 s during creating the CallStackView → creating the LocalsView
+TabStudio UI stall: 1272 ms at 26.0 s during the step that ended with: F5: What's your name? Tablet | Good morning, Tablet! This program was compiled and run on …
+TabStudio UI stall: 1076 ms at 88.3 s during creating the DatabaseExplorerView
+TabStudio UI stall: 1050 ms at 228.8 s during the step that ended with: WebAssembly: served on 127.0.0.1:34735 in 71.3 s with its boot files, no errors, run in th…
+TabStudio UI stall: 1021 ms at 56.4 s during creating the LocalsView
 Memory (KB; columns: PSS total, private dirty, private clean, swap dirty, RSS total, heap size, heap alloc, heap free):
- Native Heap 352513 352488 0 69 353696 369208 359318 5833
- Dalvik Heap 1812 1732 20 148 3760 5958 2979 2979
- TOTAL 677439 633548 38100 424 787040 375166 362297 8812
- TOTAL PSS: 677439 TOTAL RSS: 787040 TOTAL SWAP PSS: 424
+ Native Heap 668886 668852 28 10915 669872 713948 701804 7874
+ Dalvik Heap 2941 2912 0 111 5044 8201 4101 4100
+ TOTAL 1211351 1060168 41040 91016 1236308 722149 705905 11974
+ TOTAL PSS: 1211351 TOTAL RSS: 1236308 TOTAL SWAP PSS: 91016
