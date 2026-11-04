@@ -276,6 +276,91 @@ public sealed class VisualBasicDesignerTests
     }
 
     [AvaloniaFact]
+    public void A_new_control_skips_names_the_code_file_declares_in_any_case_and_a_rename_cannot_hide_a_form_member()
+    {
+        const string code = """
+            Public Class Form1
+                Private button1 As Integer
+                Private Sub BUTTON2()
+                End Sub
+            End Class
+            """;
+        var surface = new DesignSurface(VisualBasicSamples.Template, "Form", simplified: true, DesignerLanguage.VisualBasic, code);
+
+        var name = surface.Add(typeof(Button), new Point(16, 16));
+
+        Assert.Equal("Button3", name);
+        Compiles(surface.Text, code);
+        var button = surface.Document!.Find(name)!;
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "Button1"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "button2"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "text"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "Size"));
+        surface.Rename(button, "OkButton");
+        Compiles(surface.Text, code);
+    }
+
+    [AvaloniaFact]
+    public void Comments_and_conditional_blocks_in_InitializeComponent_survive_an_edit_and_stay_conditional()
+    {
+        var designer = VisualBasicSamples.Button
+            .Replace("        Button1.Size = New Size(94, 29)\n", "        ' Sized for the touch screen.\n        Button1.Size = New Size(94, 29)\n", StringComparison.Ordinal)
+            .Replace("        Button1.Text = \"Button1\"\n", "        Button1.Text = \"Button1\" ' the default action\n", StringComparison.Ordinal)
+            .Replace("        Button1.UseVisualStyleBackColor = True\n", "        Button1.UseVisualStyleBackColor = True\n#If DEBUG Then\n        Button1.BackColor = Color.Red\n#End If\n", StringComparison.Ordinal);
+        Assert.Contains("#If DEBUG Then", designer, StringComparison.Ordinal);
+        var surface = new DesignSurface(designer, "Form", simplified: true, DesignerLanguage.VisualBasic, VisualBasicSamples.ButtonCode);
+
+        surface.SetProperty(surface.Document!.Find("Button1")!, "Text", "Save");
+
+        var text = surface.Text;
+        Assert.Contains("' Sized for the touch screen.\n        Button1.Size = New Size(94, 29)\n", text, StringComparison.Ordinal);
+        Assert.Contains("Button1.Text = \"Save\" ' the default action\n", text, StringComparison.Ordinal);
+        var opening = text.IndexOf("#If DEBUG Then", StringComparison.Ordinal);
+        var color = text.IndexOf("Button1.BackColor = ", StringComparison.Ordinal);
+        var closing = text.IndexOf("#End If", StringComparison.Ordinal);
+        Assert.True(opening >= 0 && opening < color && color < closing, text);
+        Assert.Equal(color, text.LastIndexOf("Button1.BackColor = ", StringComparison.Ordinal));
+        Compiles(text, VisualBasicSamples.ButtonCode);
+    }
+
+    [AvaloniaFact]
+    public void Two_components_declared_together_are_declared_once_each_after_an_edit()
+    {
+        var designer = VisualBasicSamples.Button
+            .Replace("        Button1 = New Button()\n", "        Button1 = New Button()\n        Button2 = New Button()\n", StringComparison.Ordinal)
+            .Replace("        Controls.Add(Button1)\n", "        Controls.Add(Button2)\n        Controls.Add(Button1)\n", StringComparison.Ordinal)
+            .Replace("    Friend WithEvents Button1 As Button\n", "    Dim Button1, Button2 As Button\n", StringComparison.Ordinal);
+        Assert.Contains("Dim Button1, Button2 As Button", designer, StringComparison.Ordinal);
+        var surface = new DesignSurface(designer, "Form", simplified: true, DesignerLanguage.VisualBasic, VisualBasicSamples.ButtonCode);
+
+        surface.SetProperty(surface.Document!.Find("Button1")!, "Text", "Save");
+
+        var text = surface.Text;
+        Assert.DoesNotContain("Button1, Button2", text, StringComparison.Ordinal);
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(text, @"^\s*Dim Button1 As Button\r?$", System.Text.RegularExpressions.RegexOptions.Multiline));
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(text, @"^\s*Dim Button2 As Button\r?$", System.Text.RegularExpressions.RegexOptions.Multiline));
+        Compiles(text, "Public Class Form1\nEnd Class\n");
+    }
+
+    [AvaloniaFact]
+    public void Renaming_a_control_whose_field_is_declared_with_another_field_renames_it_in_that_declaration()
+    {
+        // The declaration shared with a field that is not a control's stays, and no field is written for the control,
+        // so a rename left Button1 declared and OkButton not: the designer file no longer compiled.
+        var designer = VisualBasicSamples.Button.Replace("    Friend WithEvents Button1 As Button\n", "    Friend WithEvents Button1, Spare As Button\n", StringComparison.Ordinal);
+        Assert.Contains("Button1, Spare", designer, StringComparison.Ordinal);
+        var surface = new DesignSurface(designer, "Form", simplified: true, DesignerLanguage.VisualBasic, VisualBasicSamples.ButtonCode);
+
+        surface.Rename(surface.Document!.Find("Button1")!, "OkButton");
+        var code = surface.RenameInCode(VisualBasicSamples.ButtonCode, "Button1", "OkButton");
+
+        var text = surface.Text;
+        Assert.Contains("    Friend WithEvents OkButton, Spare As Button\n", text, StringComparison.Ordinal);
+        Assert.DoesNotContain("Friend WithEvents OkButton As Button", text, StringComparison.Ordinal);
+        Compiles(text, code);
+    }
+
+    [AvaloniaFact]
     public void Deleting_a_control_takes_it_off_the_Handles_clauses_and_leaves_its_handler()
     {
         var surface = new DesignSurface(VisualBasicSamples.Button, "Form", simplified: true, DesignerLanguage.VisualBasic, VisualBasicSamples.ButtonCode);

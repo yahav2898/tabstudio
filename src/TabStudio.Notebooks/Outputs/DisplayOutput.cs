@@ -24,4 +24,10 @@ public sealed record DisplayOutput(MimeBundle Data) : NotebookOutput
 
     /// <summary>For a result, the execution count of the run that produced it.</summary>
     public int? ExecutionCount { get; init; }
+
+    /// <summary>
+    /// The JSON MIME types, such as <c>application/json</c>, whose value the file stored as a JSON string rather
+    /// than as a JSON value, which writing the file again keeps; <see langword="null"/> when there are none.
+    /// </summary>
+    internal IReadOnlySet<string>? JsonAsText { get; init; }
 }

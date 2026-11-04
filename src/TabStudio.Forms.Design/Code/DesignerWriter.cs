@@ -48,6 +48,7 @@ internal static class DesignerWriter
             edits.Add((file.FieldsInsertionPoint, file.FieldsInsertionPoint, style.NewLine + fields));
         }
 
+        RenameKeptFields(text, document, edits);
         var builder = new StringBuilder(text);
         foreach (var (start, end, replacement) in edits.OrderByDescending(e => e.Start))
         {
@@ -116,6 +117,7 @@ internal static class DesignerWriter
             lines.Add($"{Target(document.Root, string.Empty, style)}PerformLayout();");
         }
 
+        KeptLines.Apply(lines, document);
         var builder = new StringBuilder("{").Append(style.NewLine);
         foreach (var line in lines)
         {
@@ -252,10 +254,25 @@ internal static class DesignerWriter
     private static string? EventType(DesignComponent component, string eventName) =>
         (component.Type ?? (component.IsRoot ? typeof(System.Windows.Forms.Form) : null))?.GetEvent(eventName)?.EventHandlerType?.FullName?.Replace('+', '.');
 
+    /// <summary>
+    /// Writes each component's name in the declaration it shares with a field that is not a component's, which stays
+    /// as it is: a renamed component's field is renamed there, as no other field is written for it.
+    /// </summary>
+    internal static void RenameKeptFields(string text, DesignDocument document, List<(int Start, int End, string Text)> edits)
+    {
+        foreach (var component in document.Components)
+        {
+            if (component.FieldKept && component.KeptFieldName is (var start, var end) && text[start..end] != component.Name)
+            {
+                edits.Add((start, end, component.Name));
+            }
+        }
+    }
+
     private static string WriteFields(DesignDocument document, string indent)
     {
         var builder = new StringBuilder();
-        foreach (var component in document.Components)
+        foreach (var component in document.Components.Where(c => !c.FieldKept))
         {
             builder.Append(indent).Append(component.FieldModifiers).Append(' ').Append(component.TypeName).Append(' ').Append(component.Name).Append(';').Append(document.Style.NewLine);
         }

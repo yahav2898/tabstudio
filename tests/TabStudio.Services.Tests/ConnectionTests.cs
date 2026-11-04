@@ -49,6 +49,45 @@ public sealed class ConnectionTests
     }
 
     [Fact]
+    public void A_host_naming_a_container_name_or_a_network_alias_is_rewritten_like_a_service_name()
+    {
+        // Only Compose service names were matched: DATABASE_HOST=my-postgres, its container_name, stayed my-postgres.
+        using var temp = new TempDirectory();
+        var file = temp.Write("compose.yaml", """
+            services:
+              api:
+                build: .
+                environment:
+                  DATABASE_HOST: my-postgres
+                  ConnectionStrings__Default: Host=my-postgres;Port=5432;Database=app
+                  CACHE_URL: redis://cache.internal:6379/0
+              db:
+                image: postgres:17
+                container_name: my-postgres
+              cache:
+                image: redis:7
+                networks:
+                  backend:
+                    aliases: [cache.internal]
+            networks:
+              backend: {}
+            """);
+        var project = ComposeReader.Read([file]);
+        Assert.Equal("my-postgres", project.Services["db"].ContainerName);
+        Assert.Equal(["cache.internal"], project.Services["cache"].Aliases);
+        var endpoints = new Dictionary<string, IReadOnlyList<ServicePort>> { ["db"] = [new(5432, 15432)], ["cache"] = [new(6379, 16379)] };
+
+        var environment = ConnectionEnvironment.ForProject(project, temp.Path, endpoints);
+
+        Assert.Equal("127.0.0.1", environment["DATABASE_HOST"]);
+        Assert.Equal("Host=127.0.0.1;Port=15432;Database=app", environment["ConnectionStrings__Default"]);
+        Assert.Equal("redis://127.0.0.1:16379/0", environment["CACHE_URL"]);
+        // F5 starts the services a run reaches by those names too.
+        Assert.Equal(["db"], ServiceTargets.Targets("Host=my-postgres;Port=5432", project));
+        Assert.Equal(["cache"], ServiceTargets.Targets("redis://cache.internal:6379/0", project));
+    }
+
+    [Fact]
     public void Compose_application_environment_wins_and_appsettings_are_overridden_without_editing_files()
     {
         using var temp = new TempDirectory();

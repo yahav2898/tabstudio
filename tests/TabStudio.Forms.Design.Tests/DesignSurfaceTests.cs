@@ -230,6 +230,25 @@ public sealed class DesignSurfaceTests
     }
 
     [AvaloniaFact]
+    public void A_paste_reads_the_form_s_files_once_for_all_the_names_it_gives()
+    {
+        // Each pasted component's name was checked by a new checker, which parsed the code and designer files with
+        // Roslyn and listed the form's inherited members again: on the UI thread, once per pasted control.
+        var surface = new DesignSurface(Samples.Orders, "Form", simplified: true);
+        var clip = surface.Copy([surface.Document!.Find("detailsGroup")!])!;
+        Assert.Equal(3, clip.Components.Count);
+        var before = surface.NameCheckers;
+
+        var pasted = surface.Paste(clip);
+
+        Assert.Equal(1, surface.NameCheckers - before);
+        Assert.Equal(["groupBox1"], pasted);
+        Assert.NotNull(surface.Document!.Find("label1"));
+        Assert.NotNull(surface.Document!.Find("textBox1"));
+        Compiles(surface.Text, Samples.OrdersCode);
+    }
+
+    [AvaloniaFact]
     public void A_control_moved_into_a_group_box_joins_its_controls()
     {
         var surface = new DesignSurface(Samples.Orders, "Form", simplified: true);
@@ -259,6 +278,219 @@ public sealed class DesignSurfaceTests
         Assert.Contains("toolTip1.SetToolTip(nameTextBox, \"The customer's name, as on the invoice.\");", surface.Text, StringComparison.Ordinal);
         Assert.Contains("nameTextBox.TextChanged += (s, e) => System.Diagnostics.Debug.WriteLine(\"changed\");", surface.Text, StringComparison.Ordinal);
         Assert.Contains("saveButton.Text = \"Save customer\";", surface.Text, StringComparison.Ordinal);
+    }
+
+    [AvaloniaFact]
+    public void A_new_control_skips_names_the_code_file_declares_and_a_rename_cannot_take_them_or_hide_a_form_member()
+    {
+        const string code = """
+            namespace HelloForms
+            {
+                public partial class Form1 : Form
+                {
+                    private int button1;
+                    private string label1 = "";
+
+                    public Form1()
+                    {
+                        InitializeComponent();
+                    }
+
+                    private void button2() { }
+                    public event EventHandler button3;
+                }
+            }
+            """;
+        var surface = new DesignSurface(Samples.Template, "Form", simplified: true, codeText: code);
+
+        // button1 is a field and button2 a method in Form1.cs, and button3 an event: the designer goes on to button4.
+        var name = surface.Add(typeof(Button), new Point(16, 16));
+        Assert.Equal("button4", name);
+        var label = surface.Add(typeof(Label), new Point(16, 64));
+        Assert.Equal("label2", label);
+        Compiles(surface.Text, code);
+
+        var button = surface.Document!.Find(name)!;
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "button1"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "button2"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "label1"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "InitializeComponent"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "components"));
+
+        // A field named Text or Size would hide the form's own property.
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "Text"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "Size"));
+        Assert.Throws<ArgumentException>(() => surface.Rename(button, "Form1"));
+        Assert.Equal(name, surface.Document!.Find(name)!.Name);
+
+        surface.Rename(button, "okButton");
+        Compiles(surface.Text, code);
+    }
+
+    [AvaloniaFact]
+    public void Comments_and_conditional_blocks_in_InitializeComponent_survive_an_edit_and_stay_conditional()
+    {
+        var designer = Samples.Template.Replace(
+            """
+                        this.components = new System.ComponentModel.Container();
+                        this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+                        this.ClientSize = new System.Drawing.Size(800, 450);
+                        this.Text = "Form1";
+            """,
+            """
+                        // Created first so the others can use it.
+                        this.button1 = new System.Windows.Forms.Button();
+                        this.SuspendLayout();
+                        //
+                        // button1
+                        //
+                        this.button1.Location = new System.Drawing.Point(12, 12);
+                        this.button1.Name = "button1";
+                        this.button1.Text = "OK"; // the default action
+            #if DEBUG
+                        this.button1.BackColor = System.Drawing.Color.Red;
+            #endif
+                        //
+                        // Form1
+                        //
+                        this.ClientSize = new System.Drawing.Size(800, 450);
+                        this.Controls.Add(this.button1);
+                        this.Name = "Form1";
+                        this.Text = "Form1";
+                        this.ResumeLayout(false);
+                        // Last of all.
+            """,
+            StringComparison.Ordinal).Replace("#endregion", "#endregion\n\n        private System.Windows.Forms.Button button1;", StringComparison.Ordinal);
+        Assert.Contains("#if DEBUG", designer, StringComparison.Ordinal);
+        var surface = new DesignSurface(designer, "Form", simplified: true);
+
+        surface.SetProperty(surface.Document!.Find("button1")!, "Text", "Save");
+
+        var text = Lines(surface.Text);
+        Assert.Contains("// Created first so the others can use it.\n            button1 = new Button();", text, StringComparison.Ordinal);
+        Assert.Contains("button1.Text = \"Save\"; // the default action", text, StringComparison.Ordinal);
+        Assert.Contains("// Last of all.", text, StringComparison.Ordinal);
+
+        // The back color is still set only in a Debug build: once, between #if DEBUG and #endif.
+        var opening = text.IndexOf("#if DEBUG", StringComparison.Ordinal);
+        var color = text.IndexOf("button1.BackColor = ", StringComparison.Ordinal);
+        var closing = text.IndexOf("#endif", StringComparison.Ordinal);
+        Assert.True(opening >= 0 && opening < color && color < closing, text);
+        Assert.Equal(color, text.LastIndexOf("button1.BackColor = ", StringComparison.Ordinal));
+        Assert.Null(surface.Document!.Find("button1")!.GetCode("BackColor"));
+        Compiles(surface.Text, Samples.TemplateCode);
+
+        // A second edit, with the file read back, keeps them again.
+        surface.SetProperty(surface.Document!.Find("button1")!, "Text", "Send");
+        text = Lines(surface.Text);
+        Assert.Contains("button1.Text = \"Send\"; // the default action", text, StringComparison.Ordinal);
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(text, "#if DEBUG"));
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(text, "// Created first"));
+        Compiles(surface.Text, Samples.TemplateCode);
+    }
+
+    [AvaloniaFact]
+    public void A_control_created_inside_a_region_of_InitializeComponent_is_designed_and_the_regions_still_pair_up()
+    {
+        // A #region was kept like an #if block: the statements inside it were not read, so its button was not on the
+        // design surface, although a region changes nothing that is compiled.
+        var designer = Samples.Template.Replace("#endregion", "#endregion\n\n        private System.Windows.Forms.Button button1;", StringComparison.Ordinal).Replace(
+            """
+                        this.components = new System.ComponentModel.Container();
+                        this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+                        this.ClientSize = new System.Drawing.Size(800, 450);
+                        this.Text = "Form1";
+            """,
+            """
+                        #region Form
+                        this.ClientSize = new System.Drawing.Size(800, 450);
+                        #endregion
+                        #region Buttons
+                        this.button1 = new System.Windows.Forms.Button();
+                        this.button1.Location = new System.Drawing.Point(12, 12);
+                        this.button1.Name = "button1";
+                        this.button1.Text = "OK";
+                        #endregion
+                        this.SuspendLayout();
+                        this.Controls.Add(this.button1);
+                        this.Name = "Form1";
+                        this.Text = "Form1";
+                        this.ResumeLayout(false);
+            """,
+            StringComparison.Ordinal);
+        Assert.Contains("#region Buttons", designer, StringComparison.Ordinal);
+
+        var surface = new DesignSurface(designer, "Form", simplified: true);
+
+        Assert.Null(surface.LoadError);
+        Assert.Equal("OK", surface.Root!.Controls["button1"]!.Text);
+        surface.SetProperty(surface.Document!.Find("button1")!, "Text", "Save");
+
+        // The writer puts the form's section after the buttons', so "#region Form" now comes after its #endregion:
+        // that pair goes, and the region around the button's creation stays.
+        var text = Lines(surface.Text);
+        Assert.Contains("button1.Text = \"Save\";", text, StringComparison.Ordinal);
+        Assert.Contains("#region Buttons\n            button1 = new Button();\n            #endregion", text, StringComparison.Ordinal);
+        Assert.DoesNotContain("#region Form", text, StringComparison.Ordinal);
+        Assert.Equal(System.Text.RegularExpressions.Regex.Count(text, "#region"), System.Text.RegularExpressions.Regex.Count(text, "#endregion"));
+        Compiles(surface.Text, Samples.TemplateCode);
+        Assert.Equal("Save", surface.Root!.Controls["button1"]!.Text);
+    }
+
+    [AvaloniaFact]
+    public void Renaming_a_control_whose_field_is_declared_with_another_field_renames_it_in_that_declaration()
+    {
+        // The shared declaration stays as it is and the writer writes no field for the control, so a rename left the
+        // old name declared and the new one not: the designer file no longer compiled.
+        var designer = Samples.Template.Replace("#endregion", "#endregion\n\n        private System.Windows.Forms.Button button1, spare;", StringComparison.Ordinal).Replace(
+            """
+                        this.components = new System.ComponentModel.Container();
+                        this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            """,
+            """
+                        this.button1 = new System.Windows.Forms.Button();
+                        this.button1.Name = "button1";
+                        this.Controls.Add(this.button1);
+            """,
+            StringComparison.Ordinal);
+        var surface = new DesignSurface(designer, "Form", simplified: true);
+
+        surface.Rename(surface.Document!.Find("button1")!, "okButton");
+
+        Assert.Contains("private System.Windows.Forms.Button okButton, spare;", surface.Text, StringComparison.Ordinal);
+        Assert.DoesNotContain("button1", surface.Text, StringComparison.Ordinal);
+        Compiles(surface.Text, Samples.TemplateCode);
+
+        // Read back, the declaration is still shared with the field that is not a control's, and is not written twice.
+        surface.SetProperty(surface.Document!.Find("okButton")!, "Text", "OK");
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(surface.Text, @"\bokButton[,;]"));
+        Compiles(surface.Text, Samples.TemplateCode);
+    }
+
+    [Fact]
+    public void Reading_a_large_InitializeComponent_takes_time_in_proportion_to_its_lines()
+    {
+        // Finding a statement's line looked at every line before it, so a form of many statements took quadratic time
+        // on the UI thread, every time the designer read the file.
+        const int count = 100_000;
+        var text = new System.Text.StringBuilder();
+        var statements = new List<Microsoft.CodeAnalysis.Text.TextSpan>(count);
+        for (var i = 0; i < count; i++)
+        {
+            text.Append("            ");
+            var start = text.Length;
+            text.Append("this.label").Append(i).Append(".Text = \"x\";");
+            statements.Add(new Microsoft.CodeAnalysis.Text.TextSpan(start, text.Length - start));
+            text.Append(i % 10 == 0 ? " // a comment\n" : "\n");
+        }
+
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        var layout = KeptLines.Analyze(text.ToString(), 0, text.Length, statements, Model.DesignerLanguage.CSharp, "            ", "\n");
+        watch.Stop();
+
+        Assert.Equal(count / 10, layout.Comments.Count);
+        Assert.Equal("// a comment", layout.Comments[count - 10].After);
+        Assert.True(watch.Elapsed < TimeSpan.FromSeconds(3), $"Analyzing {count} statements took {watch.Elapsed}.");
     }
 
     /// <summary>The text with its line endings as <c>\n</c> and no spaces at their ends, for comparing blocks of lines.</summary>

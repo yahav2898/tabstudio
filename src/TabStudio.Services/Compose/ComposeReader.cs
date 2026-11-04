@@ -162,6 +162,9 @@ public static partial class ComposeReader
             dependencies.AddRange(SequenceOrOne(Get(node, "depends_on")).Select(x => new ServiceDependency(Text(x))));
         }
         var volumes = SequenceOrOne(Get(node, "volumes")).Select(x => ReadVolume(x, directory)).ToArray();
+        var build = Get(node, "build");
+        var buildSettings = build as YamlMappingNode;
+        var buildContext = build is not null && !IsNull(build) ? Path.GetFullPath(Path.Combine(directory, buildSettings is not null ? Text(Get(buildSettings, "context")) : Text(build))) : null;
         var health = Get(node, "healthcheck") as YamlMappingNode;
         var unsupported = new List<string>();
         foreach (var key in ContainerOnlyKeys)
@@ -176,7 +179,11 @@ public static partial class ComposeReader
             Dependencies = dependencies,
             Command = ReadCommand(Get(node, "command")),
             Entrypoint = ReadCommand(Get(node, "entrypoint")),
-            BuildContext = Get(node, "build") is { } build ? Path.GetFullPath(Path.Combine(directory, build is YamlMappingNode b ? Text(Get(b, "context")) : Text(build))) : null,
+            BuildContext = buildContext,
+            BuildDockerfile = buildContext is not null && buildSettings is not null && Get(buildSettings, "dockerfile") is { } dockerfile && !IsNull(dockerfile)
+                ? Path.GetFullPath(Path.Combine(buildContext, Text(dockerfile))) : null,
+            BuildArgs = ReadBuildArgs(buildSettings is null ? null : Get(buildSettings, "args"), variables),
+            BuildTarget = buildSettings is not null && Get(buildSettings, "target") is { } target && !IsNull(target) ? Text(target) : null,
             WorkingDirectory = Get(node, "working_dir") is { } workdir ? Text(workdir) : null,
             User = Get(node, "user") is { } user ? Text(user) : null,
             Platform = Get(node, "platform") is { } platform ? Text(platform) : null,
@@ -199,6 +206,33 @@ public static partial class ComposeReader
                 Retries = Get(health, "retries") is { } retry && int.TryParse(Text(retry), out var count) && count > 0 ? count : 3,
             },
         };
+    }
+
+    /// <summary>
+    /// <c>build: args:</c>, as a mapping or a list of <c>NAME=value</c>. An argument without a value takes it from
+    /// the environment and <c>.env</c>, as Compose does.
+    /// </summary>
+    private static Dictionary<string, string?> ReadBuildArgs(YamlNode? args, Dictionary<string, string?> variables)
+    {
+        var result = new Dictionary<string, string?>(StringComparer.Ordinal);
+        if (args is YamlMappingNode map)
+        {
+            foreach (var pair in map.Children)
+            {
+                var key = Text(pair.Key);
+                result[key] = IsNull(pair.Value) ? variables.GetValueOrDefault(key) : Text(pair.Value);
+            }
+
+            return result;
+        }
+
+        foreach (var entry in SequenceOrOne(args))
+        {
+            var parts = Text(entry).Split('=', 2);
+            result[parts[0]] = parts.Length == 2 ? parts[1] : variables.GetValueOrDefault(parts[0]);
+        }
+
+        return result;
     }
 
     /// <summary>

@@ -28,7 +28,7 @@ public sealed record InstalledExtension(ExtensionManifest Manifest, string Folde
     /// <param name="relativePath">The relative path, with forward or back slashes.</param>
     internal static string? ResolveInFolder(string folder, string? relativePath)
     {
-        if (string.IsNullOrWhiteSpace(relativePath) || Path.IsPathRooted(relativePath) || relativePath.Contains(':', StringComparison.Ordinal))
+        if (string.IsNullOrWhiteSpace(relativePath) || Path.IsPathRooted(relativePath) || Packages.VsixPackage.HasUnsafeColon(relativePath))
         {
             return null;
         }

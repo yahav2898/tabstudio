@@ -29,7 +29,7 @@ internal sealed partial class DesignSurface
         ArgumentNullException.ThrowIfNull(type);
         var document = Document ?? throw new InvalidOperationException(LoadError);
         var (owner, collection, origin) = ContainerAt(point);
-        var name = document.NewName(type);
+        var name = NewName(document, type);
         Edit(doc =>
         {
             var style = doc.Style;
@@ -128,18 +128,19 @@ internal sealed partial class DesignSurface
     /// The name Visual Studio gives a new strip item: a menu item's comes from its text, as in <c>fileToolStripMenuItem</c>,
     /// or <c>FileToolStripMenuItem</c> in Visual Basic.
     /// </summary>
-    private static string ItemName(DesignDocument document, Type type, string text)
+    private string ItemName(DesignDocument document, Type type, string text)
     {
         var letters = new string([.. text.Where(char.IsLetterOrDigit)]);
         if (type != typeof(ToolStripMenuItem) || letters.Length == 0 || !char.IsLetter(letters[0]))
         {
-            return document.NewName(type);
+            return NewName(document, type);
         }
 
         var first = document.Style.Language == DesignerLanguage.VisualBasic ? char.ToUpperInvariant(letters[0]) : char.ToLowerInvariant(letters[0]);
         var name = first + letters[1..] + nameof(ToolStripMenuItem);
         var candidate = name;
-        for (var number = 1; document.Find(candidate) is not null; number++)
+        var isTaken = NameChecker(document);
+        for (var number = 1; isTaken(candidate); number++)
         {
             candidate = name + number.ToString(System.Globalization.CultureInfo.InvariantCulture);
         }
@@ -289,6 +290,13 @@ internal sealed partial class DesignSurface
             throw new ArgumentException($"There is already a component named '{name}'.", nameof(name));
         }
 
+        // A field or method of the form's code, or a member the form inherits, such as Text or Size, would not compile
+        // or would be hidden by the field.
+        if (Document is { } current && IsNameTaken(current, name, component.Name))
+        {
+            throw new ArgumentException($"'{name}' is already a member of {(ClassName.Length > 0 ? ClassName : "the form")}: choose another name.", nameof(name));
+        }
+
         var old = component.Name;
         Edit(doc =>
         {
@@ -314,6 +322,12 @@ internal sealed partial class DesignSurface
                 {
                     each.OtherStatements[i] = DesignCode.Rename(doc.Style, each.OtherStatements[i], old, name);
                 }
+            }
+
+            // The comments stay with the renamed component's statements.
+            foreach (var comment in doc.Comments)
+            {
+                comment.Statement = DesignCode.Rename(doc.Style, comment.Statement, old, name);
             }
         });
     }

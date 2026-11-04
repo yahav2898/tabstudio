@@ -1,3 +1,5 @@
+using TabStudio.Containers.Build;
+using TabStudio.Containers.Registry;
 using TabStudio.Containers.Runtime;
 using TabStudio.Services.Compose;
 using TabStudio.Testing;
@@ -73,7 +75,108 @@ public sealed class ComposeTests
         Assert.EndsWith("-data", Assert.Single(spec.Mounts).Source, StringComparison.Ordinal);
         Assert.Equal("db", Assert.Single(spec.Aliases));
         Assert.Equal(TimeSpan.FromSeconds(1), spec.Healthcheck!.Interval);
-        Assert.Throws<ComposeException>(() => ComposeImages.ToSpec(project, project.Services["app"], []));
+        Assert.Equal(ComposeImages.BuiltImageName(project, project.Services["app"]), ComposeImages.ToSpec(project, project.Services["app"], []).Image);
+    }
+
+    [Fact]
+    public async Task A_service_with_only_a_build_is_built_from_its_Dockerfile_and_created_like_an_image_service()
+    {
+        // A service with build: and no image: could not run at all: Services refused it and ToSpec threw.
+        using var registry = new FakeRegistry();
+        registry.PublishImage("team/base", "1.0", "amd64", "arm64");
+        using var temp = new TempDirectory();
+        // Creating a container only needs PRoot to exist; nothing runs in this test.
+        var proot = temp.Write("tools/proot");
+        temp.Write("app/Dockerfile.dev", """
+            ARG BASE
+            FROM ${BASE}
+            ENV GREETING=hello
+            WORKDIR /srv/app
+            COPY site/ ./
+            COPY --chmod=755 run.sh /usr/local/bin/run
+            EXPOSE 8080
+            CMD ["/usr/local/bin/run"]
+            """);
+        temp.Write("app/site/index.html", "<h1>hi</h1>");
+        temp.Write("app/site/secret.txt", "left out");
+        temp.Write("app/.dockerignore", "site/secret.txt\n");
+        temp.Write("app/run.sh", "#!/bin/sh\necho \"$GREETING\"\n");
+        var file = temp.Write("compose.yaml", $$"""
+            services:
+              web:
+                build:
+                  context: ./app
+                  dockerfile: Dockerfile.dev
+                  args:
+                    BASE: {{registry.Host}}/team/base:1.0
+            """);
+        var project = ComposeReader.Read([file]);
+        var service = project.Services["web"];
+        Assert.Null(service.Image);
+        Assert.Equal(Path.Combine(temp.Path, "app", "Dockerfile.dev"), service.BuildDockerfile);
+        Assert.Equal($"{registry.Host}/team/base:1.0", service.BuildArgs["BASE"]);
+        using var http = new HttpClient();
+        await using var engine = new ContainerEngine(new() { StoreRoot = Path.Combine(temp.Path, "store"), ProotPath = proot },
+            new RegistryClient(http, new SessionRegistryCredentialStore()));
+        var images = new ComposeImages(engine);
+        Assert.True(images.CanRun(service));
+
+        var image = await images.BuildAsync(project, service, _ => { }, CancellationToken.None);
+        var spec = ComposeImages.ToSpec(project, service, []);
+        var container = await engine.CreateAsync(spec);
+
+        Assert.Equal(ComposeImages.BuiltImageName(project, service), spec.Image);
+        Assert.Equal(image.Id, container.ImageId);
+        var rootfs = engine.RootfsOf(container.Id);
+        Assert.True(File.Exists(Path.Combine(rootfs, "bin/hello")));
+        Assert.Equal("<h1>hi</h1>", File.ReadAllText(Path.Combine(rootfs, "srv/app/index.html")));
+        Assert.False(File.Exists(Path.Combine(rootfs, "srv/app/secret.txt")));
+        Assert.True(File.Exists(Path.Combine(rootfs, "usr/local/bin/run")));
+        if (!OperatingSystem.IsWindows()) Assert.Equal((UnixFileMode)0b111_101_101, File.GetUnixFileMode(Path.Combine(rootfs, "usr/local/bin/run")));
+        Assert.Equal(["/usr/local/bin/run"], image.Config.Config.Cmd!);
+        Assert.Contains("GREETING=hello", image.Config.Config.Env!);
+        Assert.Equal("/srv/app", image.Config.Config.WorkingDir);
+        Assert.Contains("8080/tcp", image.Config.Config.ExposedPorts!.Keys);
+
+        // Nothing it is built from changed, so the next start uses the same image instead of building it again.
+        Assert.Equal(image.Id, (await images.BuildAsync(project, service, _ => { }, CancellationToken.None)).Id);
+    }
+
+    [Fact]
+    public async Task COPY_and_ADD_never_follow_a_link_out_of_the_build_context()
+    {
+        // Sources were opened by their path on the device, which follows links: a link in a repository could copy
+        // TabStudio's own files, such as its tokens, into an image. Docker never takes a source from outside the
+        // context; a link is followed as if the context were /.
+        if (OperatingSystem.IsWindows()) return;
+        using var temp = new TempDirectory();
+        var proot = temp.Write("tools/proot");
+        var secret = temp.Write("private/token.txt", "ghp_not_for_images");
+        Directory.CreateDirectory(temp.Resolve("private/bundle"));
+        File.Copy(secret, temp.Resolve("private/bundle/token.txt"));
+        System.Formats.Tar.TarFile.CreateFromDirectory(temp.Resolve("private/bundle"), temp.Resolve("private/bundle.tar"), includeBaseDirectory: false);
+        var context = Path.GetDirectoryName(temp.Write("app/real.txt", "real"))!;
+        File.CreateSymbolicLink(Path.Combine(context, "token"), secret);
+        File.CreateSymbolicLink(Path.Combine(context, "api.key"), secret);
+        File.CreateSymbolicLink(Path.Combine(context, "outside"), "../private");
+        File.CreateSymbolicLink(Path.Combine(context, "bundle.tar"), "../private/bundle.tar");
+        File.CreateSymbolicLink(Path.Combine(context, "alias.txt"), "real.txt");
+        using var http = new HttpClient();
+        await using var engine = new ContainerEngine(new() { StoreRoot = temp.Resolve("store"), ProotPath = proot },
+            new RegistryClient(http, new SessionRegistryCredentialStore()));
+        var builder = new DockerfileBuilder(engine);
+
+        foreach (var (name, copy) in new[] { ("absolute", "COPY token /token"), ("folder", "COPY outside/token.txt /token"), ("wildcard", "COPY *.key /keys/"), ("archive", "ADD bundle.tar /unpacked/") })
+        {
+            File.WriteAllText(Path.Combine(context, "Dockerfile." + name), "FROM scratch\n" + copy + "\n");
+            var error = await Assert.ThrowsAsync<ContainerException>(() => builder.BuildAsync(new BuildRequest(context, "escape/" + name + ":1") { DockerfilePath = "Dockerfile." + name }, _ => { }));
+            Assert.Contains("not in the build context", error.Message, StringComparison.Ordinal);
+        }
+
+        // A link to a file in the context is followed, and the copy has the link's name.
+        File.WriteAllText(Path.Combine(context, "Dockerfile"), "FROM scratch\nCOPY alias.txt /copied/\n");
+        var image = await builder.BuildAsync(new BuildRequest(context, "escape/inside:1"), _ => { });
+        Assert.Equal("real", File.ReadAllText(Path.Combine(engine.Store.RootfsOf(image.Id), "copied/alias.txt")));
     }
 
     [Fact]

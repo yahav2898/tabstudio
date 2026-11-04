@@ -74,10 +74,8 @@ internal static class VisualBasicDesignerFile
         var reader = new Reader(
             new DesignDocument(new DesignComponent(className, rootTypeName, isRoot: true), style),
             fieldNames.Select(f => f.Name).ToHashSet(StringComparer.OrdinalIgnoreCase));
-        foreach (var statement in statements)
-        {
-            reader.Read(statement);
-        }
+        var layout = KeptLines.Analyze(text, bodyStart, bodyEnd, [.. statements.Select(s => s.Span)], DesignerLanguage.VisualBasic, style.Indent, style.NewLine);
+        DesignerFile.ReadAll(reader.Document, statements, layout, reader.Read, reader.KeepBlock);
 
         var document = reader.Document;
         document.Root.Type = TypeResolver.Resolve(rootTypeName) ?? typeof(System.Windows.Forms.Form);
@@ -86,11 +84,29 @@ internal static class VisualBasicDesignerFile
         {
             component.Type = TypeResolver.Resolve(component.TypeName);
             var index = fieldNames.FindIndex(f => string.Equals(f.Name, component.Name, StringComparison.OrdinalIgnoreCase));
-            if (index >= 0 && fieldNames[index].Field is { } field && field.Declarators.Count == 1 && field.Declarators[0].Names.Count == 1)
+            if (index < 0 || fieldNames[index].Field is not { } field)
+            {
+                continue;
+            }
+
+            // "Dim a, b As Button" declares two components: the writer writes a field for each, so the shared
+            // declaration goes, or both were declared twice. One that also declares another field stays as it is,
+            // and the writer writes no field for its components.
+            if (field.Declarators.SelectMany(d => d.Names).All(n => document.Find(n.Identifier.ValueText) is { IsRoot: false } c && document.Components.Contains(c)))
             {
                 component.FieldModifiers = field.Modifiers.ToString();
                 component.FieldIndex = index;
-                componentFields.Add(field.Span);
+                if (!componentFields.Contains(field.Span))
+                {
+                    componentFields.Add(field.Span);
+                }
+            }
+            else
+            {
+                component.FieldKept = true;
+                var identifier = field.Declarators.SelectMany(d => d.Names)
+                    .First(n => string.Equals(n.Identifier.ValueText, component.Name, StringComparison.OrdinalIgnoreCase)).Identifier.Span;
+                component.KeptFieldName = (identifier.Start, identifier.End);
             }
         }
 
@@ -290,6 +306,16 @@ internal static class VisualBasicDesignerFile
             }
 
             Keep(statement, null);
+        }
+
+        /// <summary>
+        /// Keeps a block of conditional compilation as it is written, in the section of the first component it names
+        /// that is created before it, or the form's.
+        /// </summary>
+        public void KeepBlock(string text)
+        {
+            var component = KeptLines.NamedFields(text, fields).Select(Document.Find).FirstOrDefault(c => c is not null && Document.Components.Contains(c));
+            (component ?? Document.Root).OtherStatements.Add(text);
         }
 
         /// <summary>

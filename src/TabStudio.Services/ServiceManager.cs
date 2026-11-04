@@ -291,7 +291,8 @@ public sealed class ServiceManager : IAsyncDisposable
             }
             lock (_gate) _statuses[name] = _statuses[name] with { Mapping = resolved.Mapping };
             if (resolved.Mapping!.Note is { } note) Log(name, note);
-            var plan = NativeServicePlan.Create(definition, resolved.Mapping, _storage, Endpoints[name], value => ConnectionEnvironment.Rewrite(value, Endpoints), (key, value) => ConnectionEnvironment.Rewrite(value, Endpoints, key));
+            var names = ConnectionEnvironment.WithNames(Project, Endpoints);
+            var plan = NativeServicePlan.Create(definition, resolved.Mapping, _storage, Endpoints[name], value => ConnectionEnvironment.Rewrite(value, names), (key, value) => ConnectionEnvironment.Rewrite(value, names, key));
             var instance = new Instance(plan, CancellationTokenSource.CreateLinkedTokenSource(_lifetime.Token));
             lock (_gate) { _running.Add(name, instance); _startedOrder.Add(name); }
             Update(name, ServiceState.Starting, "Initializing and waiting for health");

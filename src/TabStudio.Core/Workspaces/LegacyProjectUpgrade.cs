@@ -309,6 +309,14 @@ public static class LegacyProjectUpgrader
                     continue;
                 }
 
+                // An analyzer of a package in ..\packages\, which packages.config restored there: that folder is not
+                // restored once packages.config is gone, so the item would name a missing file. The package's
+                // PackageReference brings its analyzers.
+                if (type == "Analyzer" && include is not null && ConvertPackageAnalyzer(include, packagesFromConfig))
+                {
+                    continue;
+                }
+
                 if (condition is not null)
                 {
                     // An item for one configuration is kept as written. A file the SDK includes by default is first
@@ -349,6 +357,59 @@ public static class LegacyProjectUpgrader
             }
         }
 
+        /// <summary>
+        /// Drops an Analyzer item whose file is in a package's folder under <c>packages</c>, giving the package a
+        /// PackageReference when packages.config did not list it.
+        /// </summary>
+        /// <returns>Whether the item is dropped.</returns>
+        private bool ConvertPackageAnalyzer(string include, IReadOnlyList<PackageReferenceInfo> packagesFromConfig)
+        {
+            var folder = include.Replace('\\', '/').Split('/', StringSplitOptions.RemoveEmptyEntries);
+            var index = Array.FindIndex(folder, p => string.Equals(p, "packages", StringComparison.OrdinalIgnoreCase));
+            if (index < 0 || index + 2 >= folder.Length)
+            {
+                return false;
+            }
+
+            var packageFolder = folder[index + 1];
+            if (packagesFromConfig.Any(p => IsFolderOf(packageFolder, p.Name)))
+            {
+                return true;
+            }
+
+            // Name.1.2.3: the name ends before the first part that starts with a digit.
+            var parts = packageFolder.Split('.');
+            var version = Array.FindIndex(parts, p => p.Length > 0 && char.IsAsciiDigit(p[0]));
+            if (version <= 0)
+            {
+                _notes.Add($"The analyzer {include} is in the packages folder, which is not restored without packages.config: it is left out.");
+                return true;
+            }
+
+            var name = string.Join('.', parts[..version]);
+            AddPackage(name, string.Join('.', parts[version..]), "all");
+            _notes.Add($"The analyzer {include} is the {name} package's: it is a PackageReference now.");
+            return true;
+        }
+
+        /// <summary>
+        /// Whether a folder under <c>packages</c> is the package's: its name, a dot and a version, such as
+        /// <c>Foo.1.0.0</c> or <c>Foo.2.0.0-beta1</c>. <c>Foo.Analyzers.1.0.0</c> is another package's, not Foo's.
+        /// </summary>
+        private static bool IsFolderOf(string folder, string package) =>
+            folder.Length > package.Length + 1
+            && folder.StartsWith(package, StringComparison.OrdinalIgnoreCase)
+            && folder[package.Length] == '.'
+            && IsVersion(folder[(package.Length + 1)..]);
+
+        /// <summary>A NuGet version: one to four numbers, then perhaps <c>-prerelease</c> or <c>+metadata</c>.</summary>
+        private static bool IsVersion(string text)
+        {
+            var end = text.IndexOfAny(['-', '+']);
+            var numbers = (end < 0 ? text : text[..end]).Split('.');
+            return numbers.Length <= 4 && numbers.All(n => n.Length > 0 && n.All(char.IsAsciiDigit));
+        }
+
         private void ConvertReference(XElement item, string include, IReadOnlyList<PackageReferenceInfo> packagesFromConfig)
         {
             var name = include.Split(',')[0].Trim();
@@ -359,7 +420,7 @@ public static class LegacyProjectUpgrader
                 var folder = hintPath.Replace('\\', '/').Split('/', StringSplitOptions.RemoveEmptyEntries);
                 var index = Array.FindIndex(folder, p => string.Equals(p, "packages", StringComparison.OrdinalIgnoreCase));
                 if (index >= 0 && index + 1 < folder.Length
-                    && packagesFromConfig.Any(p => folder[index + 1].StartsWith(p.Name + ".", StringComparison.OrdinalIgnoreCase)))
+                    && packagesFromConfig.Any(p => IsFolderOf(folder[index + 1], p.Name)))
                 {
                     return;
                 }

@@ -34,6 +34,12 @@ public sealed record ComposeService(string Name, string? Image)
     public IReadOnlyList<string>? Command { get; init; }
     public IReadOnlyList<string>? Entrypoint { get; init; }
     public string? BuildContext { get; init; }
+    /// <summary><c>build: dockerfile:</c>, as a full path; <see langword="null"/> for <c>Dockerfile</c> in <see cref="BuildContext"/>.</summary>
+    public string? BuildDockerfile { get; init; }
+    /// <summary><c>build: args:</c>, the build arguments; an argument without a value takes it from the environment, and is <see langword="null"/> when that has none.</summary>
+    public IReadOnlyDictionary<string, string?> BuildArgs { get; init; } = new Dictionary<string, string?>();
+    /// <summary><c>build: target:</c>, the Dockerfile stage to build; the last stage when <see langword="null"/>.</summary>
+    public string? BuildTarget { get; init; }
     public string? WorkingDirectory { get; init; }
     public string? User { get; init; }
     public string? Platform { get; init; }
